@@ -1,0 +1,138 @@
+.App {
+  text-align: center;
+  background-size: 100%;
+  height:100vh;
+  background-image: url('./images/background.jpg');
+  background-repeat: repeat-y;
+  font-family: Optima, sans-serif;
+}
+
+.App-header {
+  height: 1px;
+  color: rgb(209, 151, 245);
+  text-shadow: 2.5px 2px 6px #ff78e5;
+  font-family: Optima, sans-serif;
+}
+
+.App-title {
+  position: fixed;
+  font-size: 8vh;
+  margin-top: 1vh;
+  float: left;
+  padding-left: 2vh;
+}
+
+.ethLogo {
+  position: fixed;
+  right: 25vh;
+  position: fixed;
+  height: 12vh;
+  z-index: 1;
+  padding-top: 11px;
+  padding-right: 12px;
+  opacity: 0.8;
+  -webkit-filter: invert(.8);
+  filter: invert(.8);
+  -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}.ethLogo:hover {
+  opacity: 1;
+}
+
+.unicorn {
+  position: fixed;
+  right: 0;
+  clear: both;
+  z-index: 1;
+  height:25vh;
+  opacity: 0.85;
+  -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}.unicorn:hover {
+  opacity: 1;
+}
+
+
+.Account-info {
+  position: relative;
+  z-index: 2;
+  font-size: 15px;
+  text-align: left;
+  color: rgb(122, 251, 255);
+  text-shadow: 2px 2px 6px #2daae0;
+  padding-top: 37px;
+  padding-left: 27em;
+}
+
+.Approval{
+  font-size: 15px;
+  text-align: left;
+  color: rgb(122, 251, 255);
+  text-shadow: 2px 2px 6px #2daae0;
+  padding-left: 27em;
+}
+
+.Buy{
+  font-size: 15px;
+  text-align: left;
+  color: rgb(122, 251, 255);
+  text-shadow: 2px 2px 6px #2daae0;
+  padding-left: 27em;
+}
+
+.approveZero {
+    background-color: rgba(209, 151, 245, 0.25);
+    font-size: 14px;
+    /*text-shadow: 1px 1px 6px #2daae0;*/
+    font-family: Optima, sans-serif;
+    font-weight: bolder;
+    border-radius: 2px;
+    padding: 2px 4px;
+    color: rgb(122, 251, 255);
+    border: 2px solid rgb(122, 251, 255);
+    -webkit-transition-duration: 0.5s;
+    transition-duration: 0.5s;
+}.approveZero:hover {
+    background-color: rgba(122, 251, 255, 0.15);
+    color: rgb(209, 151, 245);
+    border: 2px solid rgb(209, 151, 245);
+    /*text-shadow: 0px, 0px, 0px #fff;*/
+    /*text-shadow: 1px 1px 6px #ff78e5;*/
+}
+
+.buyButton {
+  padding: 10px;
+}
+
+.buyInput {
+    font-family: Optima, sans-serif;
+    font-size: 14px;
+    width: 100px;
+    height: 20px;
+    text-align: center;
+    color: rgb(209, 151, 245);
+    vertical-align: middle;
+    border: 2px solid rgba(209, 151, 245, .15);
+    background-color: rgba(122, 251, 255, 0.15);
+}
+
+input[type="button"] {
+    font-family: Optima, sans-serif;
+    font-size: 14px;
+    width: 50px;
+    margin-top: 10px;
+    height: 26px;
+    background-color: rgba(209, 151, 245, 0.15);
+    color: rgb(209, 151, 245);
+    vertical-align: middle;
+    margin-top: -1px;
+    border: 2px solid rgb(209, 151, 245);
+}.input[type="button"]:hover{
+  color: rgb(209, 151, 245);
+}
