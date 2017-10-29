@@ -3,8 +3,6 @@ import unicorn from './images/unicornNoBackground.png';
 import ethLogo from './images/ethLogo.png';
 import './App.css';
 
-//window.web3.eth.defaultAccount = window.web3.eth.accounts[0]
-
 var uniswapABI = [{"constant":false,"inputs":[{"name":"tokenAmount","type":"uint256"}],"name":"ownerTokenWithdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"ethAmount","type":"uint256"}],"name":"ownerEthWithdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"sellQuantity","type":"uint256"},{"name":"minimumEth","type":"uint256"},{"name":"timeout","type":"uint256"}],"name":"tokenToEth","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalTokenQuantity","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"minimumTokens","type":"uint256"},{"name":"timeout","type":"uint256"}],"name":"ethToTokens","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"initialTokenQuantity","type":"uint256"}],"name":"initiateUniswap","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"totalEthQuantity","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"tokenAddress","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"invariant","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_tokenAddress","type":"address"}],"payable":true,"stateMutability":"payable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"buyer","type":"address"},{"indexed":false,"name":"tokensPurchased","type":"uint256"},{"indexed":false,"name":"ethSpent","type":"uint256"}],"name":"TokenPurchase","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"buyer","type":"address"},{"indexed":false,"name":"ethPurchased","type":"uint256"},{"indexed":false,"name":"tokensSpent","type":"uint256"}],"name":"EthPurchase","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"}]
 var uniswapAddress = '0xe52dd7e4c3652600bc6daf601e5a0eea2b072597';
 var uniswapContract = window.web3.eth.contract(uniswapABI).at(uniswapAddress);
@@ -12,8 +10,6 @@ var uniswapContract = window.web3.eth.contract(uniswapABI).at(uniswapAddress);
 var tokenABI = [{"constant":true,"inputs":[],"name":"mintingFinished","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_amount","type":"uint256"}],"name":"mint","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_subtractedValue","type":"uint256"}],"name":"decreaseApproval","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"finishMinting","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_addedValue","type":"uint256"}],"name":"increaseApproval","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"amount","type":"uint256"}],"name":"Mint","type":"event"},{"anonymous":false,"inputs":[],"name":"MintFinished","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"}]
 var tokenAddress = '0x8e2183e0Ac73e6FBd1F9E0fAb24368728f978092';
 var tokenContract = window.web3.eth.contract(tokenABI).at(tokenAddress);
-
-//console.log(tokenContract);
 
 /*
 tokenContract.Transfer().watch((err, response) => {
@@ -39,7 +35,10 @@ class App extends Component {
                   tokenBalance: null,
                   tokenAllowance: null,
                   currentMaskAddress: window.web3.eth.accounts[0],
-                  minimumTokensPurchased: null
+                  minimumTokensPurchased: null,
+                  invariant: null,
+                  marketEth: null,
+                  marketTokens: null
     }
 
     this.buyTokens = this.buyTokens.bind(this);
@@ -47,36 +46,18 @@ class App extends Component {
   }
 
   componentWillMount(){
-  //  self.setState(currentMaskAddress: window.web3.eth.defaultAccount)
-  /*  window.web3.eth.getAccounts(function(error, accounts) {
-      var defaultAccount = accounts[0];
-      alert(defaultAccount);
-      self.setState(currentMaskAddress: defaultAccount);
-    }); */
   }
 
 
   componentDidMount(){
+    this.getInvarient();
+    this.getMarketEth();
+    this.getMarketTokens();
+    this.getEthBalance();
+    this.getTokenBalance();
+    this.getAllowance();
 
-    var self = this;
 
-    window.web3.eth.getBalance(this.state.currentMaskAddress, function(error, balance) {
-      var ethValue = window.web3.fromWei(balance.toNumber());
-      var roundedValue=Math.round(ethValue*10000)/10000;
-      self.setState({ethBalance: roundedValue});
-    });
-
-    tokenContract.balanceOf(this.state.currentMaskAddress, function(error, balance) {
-      var tokenAmount = (balance.toNumber())/1000000;
-      self.setState({tokenBalance: tokenAmount});
-    });
-
-    tokenContract.allowance(this.state.currentMaskAddress, uniswapAddress, function(error, balance) {
-      var tokensAllowed = (balance.toNumber())/1000000;
-      self.setState({tokenAllowance: tokensAllowed});
-    });
-
-    //window.web3.eth.getAccounts(accounts => console.log(accounts[0]))
   }
 
   approveAllowance(value) {
@@ -86,15 +67,76 @@ class App extends Component {
     });
   }
 
+  getMaskAddress() {
+    var address = window.web3.eth.accounts[0];
+    this.setState({currentMaskAddress: address})
+  }
+
+  getEthBalance() {
+    var self = this;
+
+    window.web3.eth.getBalance(this.state.currentMaskAddress, function(error, balance) {
+      var ethValue = window.web3.fromWei(balance.toNumber());
+      var roundedValue=Math.round(ethValue*10000)/10000;
+      self.setState({ethBalance: roundedValue});
+    });
+  }
+
+  getTokenBalance() {
+    var self = this;
+
+    tokenContract.balanceOf(this.state.currentMaskAddress, function(error, balance) {
+      var tokenAmount = (balance.toNumber())/1000000;
+      self.setState({tokenBalance: tokenAmount});
+    });
+  }
+
+  getAllowance() {
+    var self = this;
+
+    tokenContract.allowance(this.state.currentMaskAddress, uniswapAddress, function(error, balance) {
+      var tokensAllowed = (balance.toNumber())/1000000;
+      self.setState({tokenAllowance: tokensAllowed});
+    });
+  }
+
+  getInvarient() {
+    var self = this;
+
+    uniswapContract.invariant.call(function(err, value){
+      var number = value.toNumber();
+      console.log("invariant: " + number/(10**24));
+      self.setState({invariant: number});
+    });
+  }
+
+  getMarketEth() {
+    var self = this
+
+    uniswapContract.totalEthQuantity.call(function(err, value){
+      var number = value.toNumber();
+      console.log("marketEthQuantity: " + number/(10**18));
+      self.setState({marketEth: number});
+    });
+  }
+
+  getMarketTokens() {
+    var self = this
+
+    uniswapContract.totalTokenQuantity.call(function(err, value){
+      var number = value.toNumber();
+      console.log("marketTokenQuantity: " + number/(10**6));
+      self.setState({marketTokens: number});
+    });
+  }
+
+
   buyTokens() {
-    console.log(this.state.minimumTokensPurchased);
 
     var minTokens = this.state.minimumTokensPurchased
 
     window.web3.eth.getBlock('latest', function(error, blockInfo) {
-        console.log(blockInfo);
         var time = blockInfo.timestamp;
-        console.log(time)
         var maxTime = time + 300; //current block time + 5mins
 
         uniswapContract.ethToTokens.sendTransaction(minTokens, maxTime, {
