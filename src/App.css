@@ -7,30 +7,78 @@
   font-family: Optima, sans-serif;
 }
 
-.App-header {
-  height: 1px;
-  color: rgb(209, 151, 245);
-  text-shadow: 2.5px 2px 6px #ff78e5;
-  font-family: Optima, sans-serif;
+.title {
+  position: fixed;
+  font-size: 9vh;
+  margin-top: 1vh;
+  margin-left: 2vh;
+  float: left;
+  text-shadow: 3px 3px 10px #f29ae1;
+  color: rgb(220, 173, 247);
+  font-weight: bold;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: rgb(180, 81, 179);
+}.title:hover{
+  color: rgb(122, 251, 255);
+  text-shadow: 3px 3px 10px #2daae0;
+  font-weight: bold;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: rgb(22, 177, 210);
 }
 
-.App-title {
-  position: fixed;
-  font-size: 8vh;
-  margin-top: 1vh;
-  float: left;
-  padding-left: 2vh;
+/* entire container, keeps perspective */
+.titled-container {
+	perspective: 1000px;
+}
+	/* flip the pane when hovered */
+	.titled-container:hover .title, .titled-container.hover .title {
+		transform: rotateX(180deg);
+	}
+
+.titled-container, .front, .back {
+	width: 1vh;
+	height: 0.1vh;
+}
+
+/* flip speed goes here */
+.title {
+	transition: 0.6s;
+	transform-style: preserve-3d;
+
+	position: relative;
+}
+
+/* hide back of pane during swap */
+.front, .back {
+	backface-visibility: hidden;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+/* front pane, placed above back */
+.front {
+	z-index: 2;
+	/* for firefox 31 */
+	transform: rotateX(0deg);
+}
+
+/* back, initially hidden pane */
+.back {
+	transform: rotateX(180deg);
 }
 
 .ethLogo {
   position: fixed;
-  right: 25vh;
+  z-index: 0;
+  right: 22vh;
   position: fixed;
-  height: 12vh;
+  height: 10vh;
   z-index: 1;
-  padding-top: 11px;
-  padding-right: 12px;
-  opacity: 0.8;
+  margin-top: 1vh;
+  margin-right: 5vh;
+  opacity: 0.6;
   -webkit-filter: invert(.8);
   filter: invert(.8);
   -moz-user-select: -moz-none;
@@ -48,7 +96,7 @@
   clear: both;
   z-index: 1;
   height:25vh;
-  opacity: 0.85;
+  opacity: 0.75;
   -moz-user-select: -moz-none;
     -khtml-user-select: none;
     -webkit-user-select: none;
@@ -58,81 +106,199 @@
   opacity: 1;
 }
 
+.Warning {
+  position: fixed;
+  z-index: 3;
+  font-size: 16px;
+  text-align: center;
+  left: 35vw;
+  /*color: rgb(122, 251, 255);
+  text-shadow: 2px 2px 10px #2daae0;*/
+  color: rgb(238, 0, 0);
+  text-shadow: 2px 2px 10px #2daae0;
+}
 
 .Account-info {
-  position: relative;
+  position: fixed;
   z-index: 2;
-  font-size: 15px;
   text-align: left;
+  font-size: 14px;
+  top: 60px;
+  left: 40vw;
   color: rgb(122, 251, 255);
-  text-shadow: 2px 2px 6px #2daae0;
-  padding-top: 37px;
-  padding-left: 27em;
+  text-shadow: 2px 2px 10px #2daae0;
+  width: 35vw;
+}.Account-info:hover{
+  color: rgb(209, 151, 245);
+  text-shadow: 2px 2px 10px #ff69f0;
+}
+
+.pinkText {
+  position: fixed;
+  z-index: 3;
+  color: rgb(216, 169, 236);
+  text-shadow: 1px 1px 5px #ff69f0;
+  text-align: left;
+}.pinkText:hover{
+  color: rgb(122, 251, 255);
+  text-shadow: 2px 2px 10px #2daae0;
+}
+
+.greenText {
+  z-index: 2;
+  color: rgb(122, 251, 255);
+  text-shadow: 2px 2px 10px #1c5f7c;
+  text-align: left;
+}.greenText:hover{
+  color: rgb(220, 160, 245);
+  text-shadow: 1px 1px 5px #ff69f0;
 }
 
 .Approval{
+  position:fixed;
+  z-index: 3;
   font-size: 15px;
-  text-align: left;
   color: rgb(122, 251, 255);
+  right: 10vw;
+  top: 30vh;
+  margin-left: 40vw;
   text-shadow: 2px 2px 6px #2daae0;
-  padding-left: 27em;
 }
 
-.Buy{
-  font-size: 15px;
-  text-align: left;
+.approveButton {
+  position: fixed;
+  background-color: rgba(209, 151, 245, 0.25);
+  font-size: 18px;
+  /*text-shadow: 1px 1px 6px #2daae0;*/
+  font-family: Optima, sans-serif;
+  font-weight: bolder;
+  border-radius: 8px;
+  padding: 4px 8px;
   color: rgb(122, 251, 255);
-  text-shadow: 2px 2px 6px #2daae0;
-  padding-left: 27em;
+  border: 2px solid rgb(122, 251, 255);
+  -webkit-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+}.approveButton:hover {
+  background-color: rgba(122, 251, 255, 0.15);
+  color: rgb(209, 151, 245);
+  border: 2px solid rgb(209, 151, 245);
+  cursor: pointer;
 }
 
-.approveZero {
-    background-color: rgba(209, 151, 245, 0.25);
-    font-size: 14px;
-    /*text-shadow: 1px 1px 6px #2daae0;*/
-    font-family: Optima, sans-serif;
-    font-weight: bolder;
-    border-radius: 2px;
-    padding: 2px 4px;
-    color: rgb(122, 251, 255);
-    border: 2px solid rgb(122, 251, 255);
-    -webkit-transition-duration: 0.5s;
-    transition-duration: 0.5s;
-}.approveZero:hover {
-    background-color: rgba(122, 251, 255, 0.15);
-    color: rgb(209, 151, 245);
-    border: 2px solid rgb(209, 151, 245);
-    /*text-shadow: 0px, 0px, 0px #fff;*/
-    /*text-shadow: 1px 1px 6px #ff78e5;*/
+.exchange {
+  position: fixed;
+  font-family: Optima, sans-serif;
+  font-size: 18px;
+  color: rgb(122, 251, 255);
+  text-shadow: 2px 2px 10px #2daae0;
 }
 
-.buyButton {
-  padding: 10px;
+.exchange-buyTokensButton {
+  position: fixed;
+  float: left;
+  bottom: 74vh;
+  margin-left: 35vw;
 }
 
-.buyInput {
-    font-family: Optima, sans-serif;
-    font-size: 14px;
-    width: 100px;
-    height: 20px;
+.exchange-buyEthButton {
+  position: fixed;
+  float: left;
+  bottom: 74vh;
+  margin-left: 60vw;
+}
+
+.exchange-buyTokensInput {
+    width: 110px;
+    height: 30px;
     text-align: center;
     color: rgb(209, 151, 245);
     vertical-align: middle;
-    border: 2px solid rgba(209, 151, 245, .15);
+    border: 1px solid rgba(180, 81, 179, 0.55);
     background-color: rgba(122, 251, 255, 0.15);
+    border-radius: 8px 0 0 8px;
+    font-size: 18px;
+    font-family: Optima, sans-serif;
 }
 
-input[type="button"] {
-    font-family: Optima, sans-serif;
-    font-size: 14px;
-    width: 50px;
-    margin-top: 10px;
-    height: 26px;
-    background-color: rgba(209, 151, 245, 0.15);
+.exchange-buyEthInput {
+    width: 110px;
+    height: 30px;
+    text-align: center;
     color: rgb(209, 151, 245);
     vertical-align: middle;
-    margin-top: -1px;
-    border: 2px solid rgb(209, 151, 245);
-}.input[type="button"]:hover{
-  color: rgb(209, 151, 245);
+    border: 1px solid rgba(180, 81, 179, 0.55);
+    border-radius: 8px 0 0 8px;
+    background-color: rgba(122, 251, 255, 0.15);
+    font-size: 18px;
+    font-family: Optima, sans-serif;
+}
+
+.exchange-buyEthInputButton, .exchange-buyTokensInputButton{
+  position: fixed;
+  font-size: 20px;
+  width: 90px;
+  text-shadow: 3px 3px 10px #1c5f7c;
+  margin-top: 10px;
+  height: 30px;
+  text-align: center;
+  color: rgb(220, 160, 245);
+  text-shadow: 1px 1px 5px #ff69f0;
+  background-color: rgba(126, 228, 255, 0.26);
+  vertical-align: middle;
+  margin-top: 1px;
+  border: 1px solid rgb(180, 81, 179);
+  border-radius: 0 8px 8px 0;
+  font-family: Optima, sans-serif;
+}.exchange-buyEthInputButton:hover, .exchange-buyTokensInputButton:hover{
+  cursor: pointer;
+  color: rgb(220, 173, 247);
+  background-color: rgba(209, 151, 245, 0.6);
+}
+
+.instructions {
+  position: fixed;
+  background-color: rgba(0,0,0,0.4);
+  bottom: 1vh;
+  border-radius: 15px;
+  border: 1px solid rgb(180, 81, 179);
+  color: rgb(122, 251, 255);
+  text-shadow: 2px 2px 10px #2daae0;
+  margin-left: 35vw;
+  margin-right: 1vw;
+} .instructions:hover{
+  color: rgb(216, 169, 236);
+  text-shadow: 1px 1px 5px #ff69f0;
+}
+
+.instructions-title {
+  text-align: left;
+  padding-left: 40px;
+  padding-top: 10px;
+  font-size: 22px;
+}
+
+.instructions-text {
+  font-size: 15px;
+  padding-top: 10px;
+  text-align: left;
+  padding-left: 25px;
+  padding-right: 15px;
+}
+
+a:visited {
+  color: rgb(122, 251, 255);
+}
+
+a:link {
+  color: rgb(122, 251, 255);
+}
+
+a:hover {
+  color: rgb(216, 169, 236);
+  text-shadow: 1px 1px 5px #ff69f0;
+}
+
+.instructions-link {
+  padding-top: 14px;
+  text-align: left;
 }

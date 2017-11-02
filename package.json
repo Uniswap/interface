@@ -1,5 +1,6 @@
 {
-  "name": "hello-world",
+  "name": "uniswap",
+  "homepage": "https://haydenadams.github.io/uniswap/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -7,12 +8,17 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-scripts": "1.0.14",
+    "react-web3": "^0.4.3",
     "web3": "^1.0.0-beta.23"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "npm run build&&gh-pages -d build"
+  },
+  "devDependencies": {
+    "gh-pages": "^1.0.0"
   }
 }
