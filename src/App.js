@@ -84,14 +84,14 @@ class App extends Component {
       switch (netId) {
       case "1":
       console.log('This is mainnet')
-      self.setState({networkMessage: 'Connected to Ethereum Mainet, please switch to Rinkeby and refresh'});
+      self.setState({networkMessage: 'MetaMask connected to Ethereum Mainet. Switch to Rinkeby and refresh!'});
       break
       case "2":
       console.log('This is the deprecated Morden test network.')
-      self.setState({networkMessage: 'Connected to Morden testnet, please switch to Rinkeby and refresh'});
+      self.setState({networkMessage: 'MetaMask connected to Morden testnet. Switch to Rinkeby and refresh!'});
       break
       case "3":
-      self.setState({networkMessage: 'Connected to Ropstein testnet, please switch to Rinkeby and refresh'})
+      self.setState({networkMessage: 'MetaMask connected to Ropstein testnet. Switch to Rinkeby and refresh!'})
       break
       default:
       console.log('This is an unknown network.')
@@ -288,13 +288,16 @@ class App extends Component {
             <div className="back">UNISWAP</div>
           </div>
         </div>
+        <div className="noICO">UNI is an ERC20 test token. We are NOT doing an ICO.</div>
         <img src={unicorn} className="unicorn" alt="unicorn"/>
         <img src={ethLogo} className="ethLogo" alt = "ethLogo"/>
         <div className="Warning">{this.state.networkMessage}</div>
         <div className="Account-info">
-        Address : {this.state.currentMaskAddress}<br />
-        Ether : {this.state.ethBalance} ETH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        Tokens: {this.state.tokenBalance.toFixed(2)} UNI<br/>
+        Account Detected:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{this.state.ethBalance} ETH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {this.state.tokenBalance.toFixed(2)} UNI<br/>
+        {this.state.currentMaskAddress}
+        &nbsp;&nbsp;
+        <br/>
         </div>
         <div className="instructions">
           <div className="instructions-title">Instructions and Stuff</div>
@@ -309,7 +312,8 @@ class App extends Component {
             6) This is a proof-of-concept for a decentralized Market Maker exchange. Stay tuned for token-to-token pairs, the ability to become a Market Creator and collect fees,
             and a Mainet launch! :) <br/> <br/>
             7) This demo was hastily programmed by a single developer <i>(Hi, my name is Hayden!)</i>. Please reach out to me with any questions, comments, complaints, or bug reports.<br/><br/>
-            &nbsp;&nbsp;Email: hayden@uniswap.io &nbsp;&nbsp; GitHub: https://github.com/haydenadams/uniswap<br/>
+            &nbsp;&nbsp;Email: hayden@uniswap.io &nbsp;&nbsp;
+            <span className="instructions-link"><a href= "https://faucet.rinkeby.io/">GitHub: https://github.com/haydenadams/uniswap<br/></a></span>
             &nbsp;&nbsp;ETH Address: 0x4779721CaC18A46DbCF148f2Dd7A8E6cc1F90078<br/><br/>
           </div>
         </div>

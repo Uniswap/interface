@@ -9,7 +9,7 @@
 
 .title {
   position: fixed;
-  font-size: 9vh;
+  font-size: 10vh;
   margin-top: 1vh;
   margin-left: 2vh;
   float: left;
@@ -44,7 +44,6 @@
 .title {
 	transition: 0.6s;
 	transform-style: preserve-3d;
-
 	position: relative;
 }
 
@@ -67,6 +66,14 @@
 /* back, initially hidden pane */
 .back {
 	transform: rotateX(180deg);
+}
+
+.noICO {
+  position:fixed;
+  top:3vh;
+  left: 37vw;
+  color: rgb(216, 169, 236);
+  text-shadow: 1px 1px 5px #ff69f0;
 }
 
 .ethLogo {
@@ -122,9 +129,8 @@
   position: fixed;
   z-index: 2;
   text-align: left;
-  font-size: 14px;
-  top: 60px;
-  left: 40vw;
+  top: 13vh;
+  left: 37vw;
   color: rgb(122, 251, 255);
   text-shadow: 2px 2px 10px #2daae0;
   width: 35vw;
