@@ -97,15 +97,15 @@ contract uniswap is Ownable{
     }
 
 
-
     function ethToTokens(uint256 minimumTokens, uint256 timeout) public payable {
+        require(msg.value != 0 && timeout != 0);
         uint256 fee = msg.value/500;
         uint256 ethInPurchase = msg.value.sub(fee);
         uint256 newTotalEth = totalEthQuantity.add(ethInPurchase);
         uint256 newTotalTokens = invariant/newTotalEth;
         uint256 purchasedTokens = totalTokenQuantity.sub(newTotalTokens);
         require(purchasedTokens >= minimumTokens);
-        require(now < timeout);                             
+        require(now < timeout);
         token.transfer(msg.sender, purchasedTokens);
         totalEthQuantity = newTotalEth;
         totalTokenQuantity = newTotalTokens;
@@ -114,9 +114,11 @@ contract uniswap is Ownable{
 
 
     function tokenToEth(uint256 sellQuantity, uint256 minimumEth, uint256 timeout) public {
+        require(sellQuantity!=0 && minimumEth != 0 && timeout != 0);
+        token.transferFrom(msg.sender, address(this), sellQuantity);
         uint256 fee = sellQuantity/500;
         uint256 tokensInPurchase = sellQuantity - fee;
-        uint256 newTotalTokens = totalTokenQuantity.sub(fee);
+        uint256 newTotalTokens = totalTokenQuantity.add(tokensInPurchase);
         uint256 newTotalEth = invariant/newTotalTokens;
         uint256 purchasedEth = totalEthQuantity.sub(newTotalEth);
         require(purchasedEth >= minimumEth);
@@ -128,7 +130,23 @@ contract uniswap is Ownable{
     }
 
 
+    function ownerTokenDeposit(uint256 tokenAmount) public onlyOwner {
+        require(tokenAmount !=0);
+        token.transferFrom(msg.sender, address(this), tokenAmount);
+        totalTokenQuantity = totalTokenQuantity.add(tokenAmount);
+        invariant = totalTokenQuantity.mul(totalEthQuantity);
+    }
+
+
+    function ownerEthDeposit() public payable onlyOwner {
+        require(msg.value != 0);
+        totalEthQuantity = totalEthQuantity.add(msg.value);
+        invariant = totalEthQuantity.mul(totalTokenQuantity);
+    }
+
+
     function ownerTokenWithdraw(uint256 tokenAmount) public onlyOwner {
+        require(tokenAmount !=0);
         token.transfer(msg.sender, tokenAmount);
         totalTokenQuantity = totalTokenQuantity.sub(tokenAmount);
         invariant = totalTokenQuantity.mul(totalEthQuantity);
@@ -136,6 +154,7 @@ contract uniswap is Ownable{
 
 
     function ownerEthWithdraw(uint256 ethAmount) public onlyOwner {
+        require(ethAmount !=0);
         msg.sender.transfer(ethAmount);
         totalEthQuantity = totalEthQuantity.sub(ethAmount);
         invariant = totalEthQuantity.mul(totalTokenQuantity);
