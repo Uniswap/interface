@@ -42,7 +42,7 @@
 
 /* flip speed goes here */
 .title {
-	transition: 0.6s;
+	transition: 1s;
 	transform-style: preserve-3d;
 	position: relative;
 }
@@ -255,10 +255,14 @@
   border: 1px solid rgb(180, 81, 179);
   border-radius: 0 8px 8px 0;
   font-family: Optima, sans-serif;
+  -webkit-transition-duration: 0.8s;
+  transition-duration: 0.8s;
 }.exchange-buyEthInputButton:hover, .exchange-buyTokensInputButton:hover{
   cursor: pointer;
-  color: rgb(220, 173, 247);
+  color: rgb(122, 251, 255);
+  text-shadow: 2px 2px 10px #1c5f7c;
   background-color: rgba(209, 151, 245, 0.6);
+  /*border-color: rgb(122, 251, 255);*/
 }
 
 .instructions {
@@ -271,6 +275,8 @@
   text-shadow: 2px 2px 10px #2daae0;
   margin-left: 35vw;
   margin-right: 1vw;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
 } .instructions:hover{
   color: rgb(216, 169, 236);
   text-shadow: 1px 1px 5px #ff69f0;
