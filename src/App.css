@@ -7,67 +7,6 @@
   font-family: Optima, sans-serif;
 }
 
-.title {
-  position: fixed;
-  font-size: 10vh;
-  margin-top: 1vh;
-  margin-left: 2vh;
-  float: left;
-  text-shadow: 3px 3px 10px #f29ae1;
-  color: rgb(220, 173, 247);
-  font-weight: bold;
-  -webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: rgb(180, 81, 179);
-}.title:hover{
-  color: rgb(122, 251, 255);
-  text-shadow: 3px 3px 10px #2daae0;
-  font-weight: bold;
-  -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: rgb(22, 177, 210);
-}
-
-/* entire container, keeps perspective */
-.titled-container {
-	perspective: 1000px;
-}
-	/* flip the pane when hovered */
-	.titled-container:hover .title, .titled-container.hover .title {
-		transform: rotateX(180deg);
-	}
-
-.titled-container, .front, .back {
-	width: 1vh;
-	height: 0.1vh;
-}
-
-/* flip speed goes here */
-.title {
-	transition: 1s;
-	transform-style: preserve-3d;
-	position: relative;
-}
-
-/* hide back of pane during swap */
-.front, .back {
-	backface-visibility: hidden;
-
-	position: absolute;
-	top: 0;
-	left: 0;
-}
-
-/* front pane, placed above back */
-.front {
-	z-index: 2;
-	/* for firefox 31 */
-	transform: rotateX(0deg);
-}
-
-/* back, initially hidden pane */
-.back {
-	transform: rotateX(180deg);
-}
-
 .noICO {
   position:fixed;
   top:3vh;
@@ -265,38 +204,6 @@
   /*border-color: rgb(122, 251, 255);*/
 }
 
-.instructions {
-  position: fixed;
-  background-color: rgba(0,0,0,0.4);
-  bottom: 1vh;
-  border-radius: 15px;
-  border: 1px solid rgb(180, 81, 179);
-  color: rgb(122, 251, 255);
-  text-shadow: 2px 2px 10px #2daae0;
-  margin-left: 35vw;
-  margin-right: 1vw;
-  -webkit-transition-duration: 0.4s;
-  transition-duration: 0.4s;
-} .instructions:hover{
-  color: rgb(216, 169, 236);
-  text-shadow: 1px 1px 5px #ff69f0;
-}
-
-.instructions-title {
-  text-align: left;
-  padding-left: 40px;
-  padding-top: 10px;
-  font-size: 22px;
-}
-
-.instructions-text {
-  font-size: 15px;
-  padding-top: 10px;
-  text-align: left;
-  padding-left: 25px;
-  padding-right: 15px;
-}
-
 a:visited {
   color: rgb(122, 251, 255);
 }
@@ -308,9 +215,4 @@ a:link {
 a:hover {
   color: rgb(216, 169, 236);
   text-shadow: 1px 1px 5px #ff69f0;
-}
-
-.instructions-link {
-  padding-top: 14px;
-  text-align: left;
 }

@@ -5,11 +5,11 @@
   "private": true,
   "dependencies": {
     "ramda": "^0.25.0",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1",
     "react-scripts": "1.0.14",
     "react-web3": "^0.4.3",
-    "web3": "^1.0.0-beta.23"
+    "web3": "^1.0.0-beta.26"
   },
   "scripts": {
     "start": "react-scripts start",
