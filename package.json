@@ -1,6 +1,6 @@
 {
   "name": "uniswap",
-  "homepage": "https://haydenadams.github.io/uniswap/",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
