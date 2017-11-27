@@ -7,8 +7,6 @@ import unicorn from './images/unicornNoBackground.png';
 import ethLogo from './images/ethLogo.png';
 
 const localweb3 = new Web3(window.web3.currentProvider);
-//console.log(localweb3);
-console.log(localweb3);
 
 var uniswapABI = [{"constant":false,"inputs":[{"name":"tokenAmount","type":"uint256"}],"name":"ownerTokenWithdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"tokenAmount","type":"uint256"}],"name":"ownerTokenDeposit","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"ethAmount","type":"uint256"}],"name":"ownerEthWithdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"sellQuantity","type":"uint256"},{"name":"minimumEth","type":"uint256"},{"name":"timeout","type":"uint256"}],"name":"tokenToEth","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalTokenQuantity","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"minimumTokens","type":"uint256"},{"name":"timeout","type":"uint256"}],"name":"ethToTokens","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"initialTokenQuantity","type":"uint256"}],"name":"initiateUniswap","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"totalEthQuantity","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"tokenAddress","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"invariant","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"ownerEthDeposit","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_tokenAddress","type":"address"}],"payable":true,"stateMutability":"payable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"buyer","type":"address"},{"indexed":false,"name":"tokensPurchased","type":"uint256"},{"indexed":false,"name":"ethSpent","type":"uint256"}],"name":"TokenPurchase","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"buyer","type":"address"},{"indexed":false,"name":"ethPurchased","type":"uint256"},{"indexed":false,"name":"tokensSpent","type":"uint256"}],"name":"EthPurchase","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"}]
 var uniswapAddress = '0x60e5f3cd0381c501971b6fbbddaa49cfd58a4fa1';
@@ -24,6 +22,7 @@ localweb3.eth.getAccounts().then(function(result, error){
 });
 
 
+
 class App extends Component {
   constructor(props){
     super(props)
@@ -33,9 +32,9 @@ class App extends Component {
                   currentMaskAddress: addr,
                   minimumTokensPurchased: null,
                   minimumEthPurchased: null,
-                  invariant: null,
-                  marketEth: null,
-                  marketTokens: null,
+                  invariant: 0,
+                  marketEth: 0,
+                  marketTokens: 0,
                   tokenBuyRate: 0,
                   ethBuyRate: 0,
                   tokenCost: 0,       //eth price of tokens
@@ -52,18 +51,32 @@ class App extends Component {
   }
 
   componentWillMount(){
+    this.getMetaMaskAddress();
     this.checkNetwork();
-    this.getMaskAddress();
     this.getInvarient();
     this.getMarketEth();
     this.getMarketTokens();
+    this.getAccountInfo();
+    this.getContractInfo();
   }
 
 
   componentDidMount(){
-    this.getTokenBalance();
-    this.getEthBalance();
-    this.getAllowance();
+  }
+
+  getAccountInfo(){
+    setTimeout(() => {
+      this.getEthBalance();
+      this.getTokenBalance();
+      this.getAllowance();
+    }, 1000);
+  }
+
+  getContractInfo(){
+    setTimeout(() => {
+      this.ethBuyRate(0.1);
+      this.tokenBuyRate(0.1);
+    }, 1000);
   }
 
   checkNetwork() {
@@ -95,7 +108,7 @@ class App extends Component {
       function(err, txHash) {})
   }
 
-  getMaskAddress() {
+  getMetaMaskAddress() {
     var self = this;
 
     localweb3.eth.getAccounts().then(function(result, error){
@@ -124,7 +137,7 @@ class App extends Component {
     // })
 
     tokenContract.methods.balanceOf(this.state.currentMaskAddress).call(function(error, balance) {
-      var amount = (balance/10**6);
+      var amount = balance/10**6;
       self.setState({tokenBalance: amount});
     });
   }
@@ -196,6 +209,7 @@ class App extends Component {
     if(buyTokensInput && buyTokensInput !== 0){
       this.setState({ minimumTokensPurchased: buyTokensInput });
       this.tokenBuyRate(buyTokensInput);
+      this.getEthBalance();
       this.getTokenBalance();
     }
   }
@@ -205,6 +219,8 @@ class App extends Component {
     if(buyEthInput && buyEthInput !== 0){
       this.setState({ minimumEthPurchased: buyEthInput });
       this.ethBuyRate(buyEthInput);
+      this.getEthBalance();
+      this.getTokenBalance();
     }
   }
 

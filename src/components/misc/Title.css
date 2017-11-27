@@ -1,7 +1,14 @@
+@font-face {
+    font-family: 'LeveloLineBold'; /*a name to be used later*/
+    src: url('../../fonts/LoveloLineBold.otf'); /*URL to font*/
+}
+
 .title {
+  font-family: 'LeveloLineBold';
+  /*font-family: Optima, sans-serif;*/
   position: fixed;
   font-size: 10vh;
-  margin-top: 1vh;
+  margin-top: 2vh;
   margin-left: 2vh;
   float: left;
   text-shadow: 3px 3px 10px #f29ae1;
@@ -9,31 +16,37 @@
   font-weight: bold;
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: rgb(180, 81, 179);
-}.title:hover{
-  color: rgb(122, 251, 255);
-  text-shadow: 3px 3px 10px #2daae0;
-  font-weight: bold;
-  -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: rgb(22, 177, 210);
 }
 
 /* entire container, keeps perspective */
 .titled-container {
-	perspective: 1000px;
+  position: fixed;
+	perspective: 800px;
+  /*border: 2px solid rgb(207, 9, 158);*/
 }
 	/* flip the pane when hovered */
-	.titled-container:hover .title, .titled-container.hover .title {
+	.titled-container:hover > .title{
 		transform: rotateX(180deg);
+    color: rgb(122, 251, 255);
+    text-shadow: 3px 3px 10px #2daae0;
+    font-weight: bold;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: rgb(22, 177, 210);
 	}
 
 .titled-container, .front, .back {
-	width: 1vh;
-	height: 0.1vh;
+	width: 26vw;
+	height: 11vh;
+}
+
+.front, .back {
+  width: 0.1vh;
+	height: 0.001vh;
 }
 
 /* flip speed goes here */
 .title {
-	transition: 1s;
+	transition: 2.5s;
 	transform-style: preserve-3d;
 	position: relative;
 }

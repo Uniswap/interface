@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'LeveloLineBold'; /*a name to be used later*/
+    src: url('./fonts/LoveloLineBold.otf'); /*URL to font*/
+}
+
 .App {
   text-align: center;
   background-size: 100%;
@@ -42,7 +47,7 @@
   clear: both;
   z-index: 1;
   height:25vh;
-  opacity: 0.75;
+  opacity: 0.9;
   -moz-user-select: -moz-none;
     -khtml-user-select: none;
     -webkit-user-select: none;
