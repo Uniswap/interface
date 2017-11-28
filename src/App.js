@@ -192,13 +192,14 @@ class App extends Component {
   buyEth() {
     var self = this;
     var minEth = this.state.minimumEthPurchased;
+    var minWei = localweb3.utils.toWei(minEth);
     var tokensSold = this.state.ethCost*10**6;
 
     localweb3.eth.getBlock('latest', function(error, blockInfo) {
         var time = blockInfo.timestamp;
         var maxTime = time + 300; //current block time + 5mins
 
-        uniswapContract.methods.tokenToEth(tokensSold, minEth, maxTime).send(
+        uniswapContract.methods.tokenToEth(tokensSold, minWei, maxTime).send(
           {from: self.state.currentMaskAddress},
           function(err, txHash) {})
     });
@@ -209,8 +210,6 @@ class App extends Component {
     if(buyTokensInput && buyTokensInput !== 0){
       this.setState({ minimumTokensPurchased: buyTokensInput });
       this.tokenBuyRate(buyTokensInput);
-      this.getEthBalance();
-      this.getTokenBalance();
     }
   }
 
@@ -219,8 +218,6 @@ class App extends Component {
     if(buyEthInput && buyEthInput !== 0){
       this.setState({ minimumEthPurchased: buyEthInput });
       this.ethBuyRate(buyEthInput);
-      this.getEthBalance();
-      this.getTokenBalance();
     }
   }
 
@@ -295,35 +292,35 @@ class App extends Component {
         <br/>
         </div>
         <Instructions />
-        <div className="Approval">
+        <div className="approveButtonContainer">
             <button className="approveButton" onClick={() => {this.approveAllowance(20000*10**6) }}>Approve</button><br/><br/>
             {/*Tokens approved: {this.state.tokenAllowance}&nbsp;&nbsp;&nbsp;*/}
         </div>
         <div className="exchange">
-          <div className="exchange-buyTokensButton">
+          <div className="exchange-buyTokens">
               <input
                 className="exchange-buyTokensInput"
                 //value={this.state.value}
                 onChange={this.onBuyTokensInputChange}
               />
-              <input className="exchange-buyTokensInputButton" type="exchange-button" defaultValue="Buy UNI" readOnly="readOnly" onClick={() => {this.buyTokens() }}/>
+              <input className="exchange-buyTokensButton" type="exchange-button" defaultValue="Buy UNI" readOnly="readOnly" onClick={() => {this.buyTokens() }}/>
               <p className="pinkText">
-                &nbsp;&nbsp;Rate :&nbsp;&nbsp;&nbsp;{this.state.tokenBuyRate.toFixed(3)} UNI/ETH<br/>
-                &nbsp;&nbsp;Cost :&nbsp;&nbsp;&nbsp;{this.state.tokenCost.toFixed(5)} ETH<br/>
-                &nbsp;&nbsp;Fee :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{this.state.tokenFee.toFixed(5)} ETH<br/>
+                &nbsp;&nbsp;Rate :&nbsp;&nbsp;{this.state.tokenBuyRate.toFixed(3)} UNI/ETH<br/>
+                &nbsp;&nbsp;Cost :&nbsp;&nbsp;{this.state.tokenCost.toFixed(5)} ETH<br/>
+                &nbsp;&nbsp;Fee :&nbsp;&nbsp;&nbsp;&nbsp;{this.state.tokenFee.toFixed(5)} ETH<br/>
               </p>
           </div>
-          <div className="exchange-buyEthButton">
+          <div className="exchange-buyEth">
               <input
                 className="exchange-buyEthInput"
                 //value={this.state.value}
                 onChange={this.onBuyEthInputChange}
               />
-              <input className="exchange-buyEthInputButton" type="exchange-button" defaultValue="Buy ETH" readOnly="readOnly" onClick={() => {this.buyEth() }}/>
+              <input className="exchange-buyEthButton" type="exchange-button" defaultValue="Buy ETH" readOnly="readOnly" onClick={() => {this.buyEth() }}/>
               <p className="pinkText">
-                &nbsp;&nbsp;Rate :&nbsp;&nbsp;&nbsp;{this.state.ethBuyRate.toFixed(4)} ETH/UNI<br/>
-                &nbsp;&nbsp;Cost :&nbsp;&nbsp;&nbsp;{this.state.ethCost.toFixed(5)} UNI<br/>
-                &nbsp;&nbsp;Fee :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{this.state.ethFee.toFixed(5)} UNI
+                &nbsp;&nbsp;Rate :&nbsp;&nbsp;{this.state.ethBuyRate.toFixed(4)} ETH/UNI<br/>
+                &nbsp;&nbsp;Cost :&nbsp;&nbsp;{this.state.ethCost.toFixed(5)} UNI<br/>
+                &nbsp;&nbsp;Fee :&nbsp;&nbsp;&nbsp;&nbsp;{this.state.ethFee.toFixed(5)} UNI
               </p>
           </div>
         </div>
