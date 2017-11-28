@@ -16,6 +16,7 @@
   font-weight: bold;
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: rgb(180, 81, 179);
+  cursor: default;
 }
 
 /* entire container, keeps perspective */

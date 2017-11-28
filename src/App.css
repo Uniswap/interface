@@ -3,6 +3,10 @@
     src: url('./fonts/LoveloLineBold.otf'); /*URL to font*/
 }
 
+@keyframes blinker {
+  50% { opacity: 0.55; }
+}
+
 .App {
   text-align: center;
   background-size: 100%;
@@ -14,15 +18,16 @@
 
 .noICO {
   position:fixed;
+  font-size: 14px;
   top:3vh;
-  left: 37vw;
+  left: 40vw;
+  right: 28vw;
   color: rgb(216, 169, 236);
   text-shadow: 1px 1px 5px #ff69f0;
 }
 
 .ethLogo {
   position: fixed;
-  z-index: 0;
   right: 22vh;
   position: fixed;
   height: 10vh;
@@ -33,10 +38,10 @@
   -webkit-filter: invert(.8);
   filter: invert(.8);
   -moz-user-select: -moz-none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    -o-user-select: none;
-    user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }.ethLogo:hover {
   opacity: 1;
 }
@@ -49,10 +54,10 @@
   height:25vh;
   opacity: 0.9;
   -moz-user-select: -moz-none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    -o-user-select: none;
-    user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }.unicorn:hover {
   opacity: 1;
 }
@@ -60,78 +65,73 @@
 .Warning {
   position: fixed;
   z-index: 3;
-  font-size: 16px;
   text-align: center;
   left: 35vw;
-  /*color: rgb(122, 251, 255);
-  text-shadow: 2px 2px 10px #2daae0;*/
   color: rgb(238, 0, 0);
   text-shadow: 2px 2px 10px #2daae0;
+  animation: blinker 1s linear infinite;
 }
 
 .Account-info {
   position: fixed;
   z-index: 2;
   text-align: left;
+  font-size: 14px;
   top: 13vh;
-  left: 37vw;
+  left: 40vw;
   color: rgb(122, 251, 255);
-  text-shadow: 2px 2px 10px #2daae0;
+  text-shadow: 1px 1px 5px #2daae0;
   width: 35vw;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: auto;
+  text-overflow: ellipsis;
+  -webkit-transition-duration: 0.5s;
+  transition-duration: 0.5s;
 }.Account-info:hover{
   color: rgb(209, 151, 245);
-  text-shadow: 2px 2px 10px #ff69f0;
+  text-shadow: 1px 1px 5px #ff69f0;
 }
 
 .pinkText {
   position: fixed;
+  font-size: 16px;
   z-index: 3;
   color: rgb(216, 169, 236);
   text-shadow: 1px 1px 5px #ff69f0;
   text-align: left;
+  -webkit-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  /*overflow-x: auto;*/
 }.pinkText:hover{
   color: rgb(122, 251, 255);
-  text-shadow: 2px 2px 10px #2daae0;
+  text-shadow: 1px 1px 5px #2daae0;
 }
 
-.greenText {
-  z-index: 2;
-  color: rgb(122, 251, 255);
-  text-shadow: 2px 2px 10px #1c5f7c;
-  text-align: left;
-}.greenText:hover{
-  color: rgb(220, 160, 245);
-  text-shadow: 1px 1px 5px #ff69f0;
-}
-
-.Approval{
+.approveButtonContainer{
   position:fixed;
   z-index: 3;
-  font-size: 15px;
-  color: rgb(122, 251, 255);
   right: 10vw;
   top: 30vh;
-  margin-left: 40vw;
-  text-shadow: 2px 2px 6px #2daae0;
 }
 
 .approveButton {
   position: fixed;
-  background-color: rgba(209, 151, 245, 0.25);
-  font-size: 18px;
-  /*text-shadow: 1px 1px 6px #2daae0;*/
   font-family: Optima, sans-serif;
+  font-size: 18px;
   font-weight: bolder;
   border-radius: 8px;
   padding: 4px 8px;
-  color: rgb(122, 251, 255);
-  border: 2px solid rgb(122, 251, 255);
+  color: rgb(220, 160, 245);
+  background-color: rgba(126, 228, 255, 0.25);
+  border: 2px solid rgba(180, 81, 179, 0.55);
   -webkit-transition-duration: 0.5s;
   transition-duration: 0.5s;
 }.approveButton:hover {
-  background-color: rgba(122, 251, 255, 0.15);
-  color: rgb(209, 151, 245);
-  border: 2px solid rgb(209, 151, 245);
+  color: rgb(122, 251, 255);
+  border: 2px solid rgb(122, 251, 255);
+  text-shadow: 1px 1px 5px #2daae0;
   cursor: pointer;
 }
 
@@ -140,84 +140,61 @@
   font-family: Optima, sans-serif;
   font-size: 18px;
   color: rgb(122, 251, 255);
-  text-shadow: 2px 2px 10px #2daae0;
+  text-shadow: 1px 1px 5px #2daae0;
 }
 
-.exchange-buyTokensButton {
-  position: fixed;
-  float: left;
-  bottom: 74vh;
+.exchange-buyTokens {
   margin-left: 35vw;
 }
 
-.exchange-buyEthButton {
-  position: fixed;
-  float: left;
-  bottom: 74vh;
+.exchange-buyEth {
   margin-left: 60vw;
 }
 
-.exchange-buyTokensInput {
-    width: 110px;
-    height: 30px;
-    text-align: center;
-    color: rgb(209, 151, 245);
-    vertical-align: middle;
-    border: 1px solid rgba(180, 81, 179, 0.55);
-    background-color: rgba(122, 251, 255, 0.15);
-    border-radius: 8px 0 0 8px;
-    font-size: 18px;
-    font-family: Optima, sans-serif;
-}
-
-.exchange-buyEthInput {
-    width: 110px;
-    height: 30px;
-    text-align: center;
-    color: rgb(209, 151, 245);
-    vertical-align: middle;
-    border: 1px solid rgba(180, 81, 179, 0.55);
-    border-radius: 8px 0 0 8px;
-    background-color: rgba(122, 251, 255, 0.15);
-    font-size: 18px;
-    font-family: Optima, sans-serif;
-}
-
-.exchange-buyEthInputButton, .exchange-buyTokensInputButton{
+.exchange-buyEth, .exchange-buyTokens {
   position: fixed;
-  font-size: 20px;
-  width: 90px;
+  float: left;
+  bottom: 72vh;
+}
+
+.exchange-buyEthInput, .exchange-buyTokensInput{
+    width: 10vw;
+    height: 4.5vh;
+    text-align: center;
+    color: rgb(209, 151, 245);
+    vertical-align: middle;
+    border: 1px solid rgba(180, 81, 179, 0.55);
+    border-radius: 8px 0 0 8px;
+    background-color: rgba(122, 251, 255, 0.15);
+    font-size: 18px;
+    font-family: Optima, sans-serif;
+    -webkit-transition-duration: 0.8s;
+    transition-duration: 0.8s;
+}.exchange-buyEthInput:hover, .exchange-buyTokensInput:hover{
+    border: 1px solid rgb(122, 251, 255);
+}
+
+.exchange-buyEthButton, .exchange-buyTokensButton{
+  position: fixed;
+  font-size: 2.5vh;
+  width: 7vw;
   text-shadow: 3px 3px 10px #1c5f7c;
   margin-top: 10px;
-  height: 30px;
+  height: 4.5vh;
   text-align: center;
   color: rgb(220, 160, 245);
   text-shadow: 1px 1px 5px #ff69f0;
-  background-color: rgba(126, 228, 255, 0.26);
+  background-color: rgba(126, 228, 255, 0.25);
   vertical-align: middle;
-  margin-top: 1px;
+  margin-top: 0px;
   border: 1px solid rgb(180, 81, 179);
   border-radius: 0 8px 8px 0;
   font-family: Optima, sans-serif;
   -webkit-transition-duration: 0.8s;
   transition-duration: 0.8s;
-}.exchange-buyEthInputButton:hover, .exchange-buyTokensInputButton:hover{
+}.exchange-buyEthButton:hover, .exchange-buyTokensButton:hover{
   cursor: pointer;
   color: rgb(122, 251, 255);
   text-shadow: 2px 2px 10px #1c5f7c;
-  background-color: rgba(209, 151, 245, 0.6);
-  /*border-color: rgb(122, 251, 255);*/
-}
-
-a:visited {
-  color: rgb(122, 251, 255);
-}
-
-a:link {
-  color: rgb(122, 251, 255);
-}
-
-a:hover {
-  color: rgb(216, 169, 236);
-  text-shadow: 1px 1px 5px #ff69f0;
+  border: 1px solid rgb(122, 251, 255);
 }
