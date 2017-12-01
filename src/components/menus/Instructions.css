@@ -9,7 +9,7 @@
   text-shadow: 2px 2px 10px #2daae0;
   margin-left: 35vw;
   margin-right: 1vw;
-  height: 55vh;
+  max-height: 55vh;
   -webkit-transition-duration: 0.5s;
   transition-duration: 0.5s;
   overflow-y: scroll;

@@ -159,7 +159,7 @@
 
 .exchange-buyEthInput, .exchange-buyTokensInput{
     width: 10vw;
-    height: 4.5vh;
+    height: 4.2vh;
     text-align: center;
     color: rgb(209, 151, 245);
     vertical-align: middle;
@@ -176,11 +176,11 @@
 
 .exchange-buyEthButton, .exchange-buyTokensButton{
   position: fixed;
-  font-size: 2.5vh;
+  font-size: 1.55vw;
   width: 7vw;
   text-shadow: 3px 3px 10px #1c5f7c;
   margin-top: 10px;
-  height: 4.5vh;
+  height: 4.2vh;
   text-align: center;
   color: rgb(220, 160, 245);
   text-shadow: 1px 1px 5px #ff69f0;

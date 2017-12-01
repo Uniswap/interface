@@ -1,0 +1,11 @@
+.install-metamask {
+  width: 100vw;
+  top: 70vh;
+  position: fixed;
+  font-family: Optima, sans-serif;
+  font-size: 26px;
+  text-align: center;
+}
+
+.install-metamask a {
+}
