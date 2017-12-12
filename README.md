@@ -1,6 +1,6 @@
 # Uniswap - a trustless, decentralized exchange for Ether and ERC20 tokens
 
-Uniswap exchange uses a "Market Maker" mechanism, where liquidity providers store 2 tokens within an Ethereum smart contract. An exchange rate is set between the tokens based on the relative availibility of each token. Arbitrage ensures that the rate will be the same as on other exchanges. Buyers who send Token1 to the smart contract will receive back Token2 at the current rate. A small fee is paid from the buyer to the liquidity providers in to incentive participation.
+Uniswap exchange uses a "Market Maker" mechanism, where liquidity providers store a reserve of ETH and ERC20 tokens within an Ethereum smart contract. An exchange rate is set between the tokens and ETH based on the relative availibility of each token. Arbitrage ensures that the rate will be the same as on other exchanges. Buyers who send Token 1 to the smart contract will receive back Token 2 at the current rate. A small fee is paid from the buyer to the liquidity providers to incentive participation.
 
 A full writeup with math and whatnot will be written soon. Until then, here is some more info on Market Makers:
 
