@@ -1,25 +1,20 @@
 {
   "name": "uniswap",
-  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "metamask-logo": "^2.1.3",
-    "ramda": "^0.25.0",
-    "react": "^16.1.1",
-    "react-dom": "^16.1.1",
-    "react-scripts": "1.0.14",
-    "react-web3": "^0.4.3",
-    "web3": "^1.0.0-beta.26"
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-helmet": "^5.2.0",
+    "react-scripts": "1.1.0",
+    "react-select": "^1.2.1",
+    "react-web3": "^0.4.4",
+    "web3": "1.0.0-beta.18"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "deploy": "npm run build&&gh-pages -d build"
-  },
-  "devDependencies": {
-    "gh-pages": "^1.0.0"
+    "eject": "react-scripts eject"
   }
 }
