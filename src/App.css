@@ -1,200 +1,152 @@
-@font-face {
-    font-family: 'LeveloLineBold'; /*a name to be used later*/
-    src: url('./fonts/LoveloLineBold.otf'); /*URL to font*/
+body{
+  margin: 0;
+  padding: 0;
+  font-family: "Inter UI", sans-serif;
+  font-size: 24px;
+  line-height: 1.2;
 }
 
-@keyframes blinker {
-  50% { opacity: 0.55; }
+input{
+  font-size: 24px;
+  line-height: 1.2;
 }
 
-.App {
-  text-align: center;
-  background-size: 100%;
-  height:100vh;
-  background-image: url('./images/background.jpg');
-  background-repeat: repeat-y;
-  font-family: Optima, sans-serif;
+p{
+  margin: 0px;
 }
 
-.noICO {
-  position:fixed;
-  font-size: 14px;
-  top:3vh;
-  left: 40vw;
-  right: 28vw;
-  color: rgb(216, 169, 236);
-  text-shadow: 1px 1px 5px #ff69f0;
+/* .app{
+  margin: 10rem;
+  margin-top: 5rem;
+} */
+
+.pa2 {
+  padding: 3rem;
 }
 
-.ethLogo {
-  position: fixed;
-  right: 22vh;
-  position: fixed;
-  height: 10vh;
-  z-index: 1;
-  margin-top: 1vh;
-  margin-right: 5vh;
-  opacity: 0.6;
-  -webkit-filter: invert(.8);
-  filter: invert(.8);
-  -moz-user-select: -moz-none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-}.ethLogo:hover {
-  opacity: 1;
+.title{
+  display: flex;
+  flex-direction: row;
+}
+.border{
+  border: 1px solid #f2f2f2;
+}
+.title {
+  width: 100%;
+}
+.logo{
+  /* width: 10vw; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.connection{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #27AE60;
+  flex: 1;
 }
 
-.unicorn {
-  position: fixed;
-  right: 0;
-  clear: both;
-  z-index: 1;
-  height:25vh;
-  opacity: 0.9;
-  -moz-user-select: -moz-none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-}.unicorn:hover {
-  opacity: 1;
+.connection a{
+  text-decoration: none;
+  color: #27AE60;
 }
 
-.Warning {
-  position: fixed;
-  z-index: 3;
-  text-align: center;
-  left: 35vw;
-  color: rgb(238, 0, 0);
-  text-shadow: 2px 2px 10px #2daae0;
-  animation: blinker 1s linear infinite;
+.order {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-between; */
 }
-
-.Account-info {
-  position: fixed;
-  z-index: 2;
-  text-align: left;
-  font-size: 14px;
-  top: 13vh;
-  left: 40vw;
-  color: rgb(122, 251, 255);
-  text-shadow: 1px 1px 5px #2daae0;
+.arrow{
+  max-width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+.value{
   width: 35vw;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: auto;
-  text-overflow: ellipsis;
-  -webkit-transition-duration: 0.5s;
-  transition-duration: 0.5s;
-}.Account-info:hover{
-  color: rgb(209, 151, 245);
-  text-shadow: 1px 1px 5px #ff69f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.value input, select{
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.value input:focus{
+    outline: none;
 }
 
-.pinkText {
-  position: fixed;
-  font-size: 16px;
-  z-index: 3;
-  color: rgb(216, 169, 236);
-  text-shadow: 1px 1px 5px #ff69f0;
-  text-align: left;
-  -webkit-transition-duration: 0.5s;
-  transition-duration: 0.5s;
-  /*overflow-x: auto;*/
-}.pinkText:hover{
-  color: rgb(122, 251, 255);
-  text-shadow: 1px 1px 5px #2daae0;
+.dropdown{
+  transform: rotate(-90deg);
+  opacity: .4;
+  position: relative;
+  z-index: -99;
+  left: -5px;
 }
 
-.approveButtonContainer{
-  position:fixed;
-  z-index: 3;
-  right: 10vw;
-  top: 30vh;
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-.approveButton {
-  position: fixed;
-  font-family: Optima, sans-serif;
-  font-size: 18px;
-  font-weight: bolder;
-  border-radius: 8px;
-  padding: 4px 8px;
-  color: rgb(220, 160, 245);
-  background-color: rgba(126, 228, 255, 0.25);
-  border: 2px solid rgba(180, 81, 179, 0.55);
-  -webkit-transition-duration: 0.5s;
-  transition-duration: 0.5s;
-}.approveButton:hover {
-  color: rgb(122, 251, 255);
-  border: 2px solid rgb(122, 251, 255);
-  text-shadow: 1px 1px 5px #2daae0;
-  cursor: pointer;
+.rate-info{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-.exchange {
-  position: fixed;
-  font-family: Optima, sans-serif;
-  font-size: 18px;
-  color: rgb(122, 251, 255);
-  text-shadow: 1px 1px 5px #2daae0;
+.info{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-.exchange-buyTokens {
-  margin-left: 35vw;
+.links{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
-.exchange-buyEth {
-  margin-left: 60vw;
+.link{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex: 1;
+  text-decoration: none;
+  color: black;
 }
 
-.exchange-buyEth, .exchange-buyTokens {
-  position: fixed;
-  float: left;
-  bottom: 72vh;
+.link:hover .underline{
+  text-decoration: underline;
 }
 
-.exchange-buyEthInput, .exchange-buyTokensInput{
-    width: 10vw;
-    height: 4.2vh;
-    text-align: center;
-    color: rgb(209, 151, 245);
-    vertical-align: middle;
-    border: 1px solid rgba(180, 81, 179, 0.55);
-    border-radius: 8px 0 0 8px;
-    background-color: rgba(122, 251, 255, 0.15);
-    font-size: 18px;
-    font-family: Optima, sans-serif;
-    -webkit-transition-duration: 0.8s;
-    transition-duration: 0.8s;
-}.exchange-buyEthInput:hover, .exchange-buyTokensInput:hover{
-    border: 1px solid rgb(122, 251, 255);
+.swap{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: #f2f2f2;
+  color: blue;
+  height: 48px;
+  transition: height .3s ease;
 }
 
-.exchange-buyEthButton, .exchange-buyTokensButton{
-  position: fixed;
-  font-size: 1.55vw;
-  width: 7vw;
-  text-shadow: 3px 3px 10px #1c5f7c;
-  margin-top: 10px;
-  height: 4.2vh;
-  text-align: center;
-  color: rgb(220, 160, 245);
-  text-shadow: 1px 1px 5px #ff69f0;
-  background-color: rgba(126, 228, 255, 0.25);
-  vertical-align: middle;
-  margin-top: 0px;
-  border: 1px solid rgb(180, 81, 179);
-  border-radius: 0 8px 8px 0;
-  font-family: Optima, sans-serif;
-  -webkit-transition-duration: 0.8s;
-  transition-duration: 0.8s;
-}.exchange-buyEthButton:hover, .exchange-buyTokensButton:hover{
-  cursor: pointer;
-  color: rgb(122, 251, 255);
-  text-shadow: 2px 2px 10px #1c5f7c;
-  border: 1px solid rgb(122, 251, 255);
+.red{
+  color: red;
+}
+
+.dim .order, .rate{
+  opacity: .4;
+}
+
+.hidden{
+  padding: 0px;
+  height: 0px;
+  border: 0px solid #f2f2f2;
 }
