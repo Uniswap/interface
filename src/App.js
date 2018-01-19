@@ -7,7 +7,8 @@ import HelperMessages from './components/HelperMessages'
 import SelectToken from './components/SelectToken'
 import './App.css';
 
-import {uniswapABI, tokenABI} from './helpers/abi.js'
+import {exchangeABI} from './helpers/exchangeABI.js'
+import {tokenABI} from './helpers/tokenABI.js'
 
 var localweb3;
 
@@ -20,32 +21,27 @@ class App extends Component {
       localweb3 = null
     }
 
-    const uniswapAddress = '0x60e5f3cd0381c501971b6fbbddaa49cfd58a4fa1';
-    const uniContract = new localweb3.eth.Contract(uniswapABI, uniswapAddress);
+    const exchangeAddress = '0xcDc30C3b02c5776495298198377D2Fc0fd6B1F1C';
+    const uniContract = new localweb3.eth.Contract(exchangeABI, exchangeAddress);
 
-    const tokenAddress = '0xca9901076d02f89794262869aad1340bd45d8489';
+    const tokenAddress = '0x350E5DD084ecF271e8d3531D4324443952F47756';
     const tokenContract = new localweb3.eth.Contract(tokenABI, tokenAddress);
 
     this.state = {
-      uniswapAddress: '0x60e5f3cd0381c501971b6fbbddaa49cfd58a4fa1',
-      tokenAddress: '0xca9901076d02f89794262869aad1340bd45d8489',
+      exchangeAddress: '0xcDc30C3b02c5776495298198377D2Fc0fd6B1F1C',
+      tokenAddress: '0x350E5DD084ecF271e8d3531D4324443952F47756',
+      currentMaskAddress: '0x0000000000000000000000000000000000000000',
       uniswapContract: uniContract,
       tokenContract: tokenContract,
       ethBalance: 0,
       tokenBalance: 0,
       tokenAllowance: null,
-      currentMaskAddress: '0x0000000000000000000000000000000000000000',
-      minimumTokensPurchased: null,
-      minimumEthPurchased: null,
       invariant: 0,
       marketEth: 0,
       marketTokens: 0,
-      tokenBuyRate: 0,
-      ethBuyRate: 0,
-      tokenCost: 0,       //eth price of tokens
-      ethCost: 0,        //token price of eth
-      tokenFee: 0,
-      ethFee: 0,
+      rate: 0,
+      fee: 0,
+      cost: 0,
       networkMessage: '',
       locked: false,
       connected: false,
@@ -56,23 +52,19 @@ class App extends Component {
       outputToken: { value: 'OMG', label: 'OMG', clearableValue: false }
     }
 
-    this.onBuyEthInputChange = this.onBuyEthInputChange.bind(this);
-    this.onBuyTokensInputChange = this.onBuyTokensInputChange.bind(this);
-    this.tokenBuyRate = this.tokenBuyRate.bind(this);
-    this.ethBuyRate = this.ethBuyRate.bind(this);
+    this.onInputChange = this.onInputChange.bind(this);
+    this.ethToTokenRate = this.ethToTokenRate.bind(this);
+    this.getMarketInfo = this.getMarketInfo.bind(this);
   }
 
   componentWillMount(){
     this.getMetaMaskAddress();
     this.checkNetwork();
-    this.getInvarient();
-    this.getMarketEth();
-    this.getMarketTokens();
+    this.getMarketInfo();
   }
 
   componentDidMount(){
     this.getAccountInfo();
-    this.getContractInfo();
   }
 
   getAccountInfo(){
@@ -83,11 +75,14 @@ class App extends Component {
     }, 1000);
   }
 
-  getContractInfo(){
-    setTimeout(() => {
-      this.ethBuyRate(1);
-      this.tokenBuyRate(1);
-    }, 1000);
+  getMarketInfo(){
+    this.getInvarient();
+    this.getMarketEth();
+    this.getMarketTokens();
+  }
+
+  getRate(){
+    this.ethToTokenRate(1);
   }
 
   getMetaMaskAddress() {
@@ -103,24 +98,22 @@ class App extends Component {
   getEthBalance() {
     var self = this;
     localweb3.eth.getBalance(this.state.currentMaskAddress, function(error, balance) {
-      var ethValue = (balance/10**18);
-      var roundedValue=Math.round(ethValue*10000)/10000;
-      self.setState({ethBalance: roundedValue});
+      self.setState({ethBalance: balance});
     });
   }
 
   getTokenBalance() {
     var self = this;
     this.state.tokenContract.methods.balanceOf(this.state.currentMaskAddress).call(function(error, balance) {
-      var amount = balance/10**6;
+      var amount = balance;
       self.setState({tokenBalance: amount});
     });
   }
 
   getAllowance() {
-    var self = this;
-    // this.state.tokenContract.methods.allowance(this.state.currentMaskAddress, this.uniswapAddress).call().then(function(result, error){
-    //   var amount = result/10**6
+    // var self = this;
+    // this.state.tokenContract.methods.allowance(this.state.currentMaskAddress, this.exchangeAddress).call().then(function(result, error){
+    //   var amount = result
     //   self.setState({tokenAllowance: amount});
     // })
   }
@@ -129,7 +122,7 @@ class App extends Component {
     var self = this;
 
     localweb3.eth.net.getNetworkType((err, networkId) => {
-      console.log(networkId)
+      console.log("Connected to " + networkId)
       switch (networkId) {
         case "main":
           self.setState({networkMessage: 'Ethereum Mainet', connected: false, interaction: 'disconnected'});
@@ -156,107 +149,24 @@ class App extends Component {
     var self = this;
     this.state.uniswapContract.methods.invariant().call().then(function(result, error){
       self.setState({invariant: result});
+      // console.log("invariant: " + result);
     })
   }
+
   getMarketEth() {
     var self = this
-    this.state.uniswapContract.methods.totalEthQuantity().call().then(function(result, error){
+    this.state.uniswapContract.methods.ethInMarket().call().then(function(result, error){
       self.setState({marketEth: result});
+      // console.log("marketEth: " + result);
     })
   }
+
   getMarketTokens() {
     var self = this
-    this.state.uniswapContract.methods.totalTokenQuantity().call().then(function(result, error){
+    this.state.uniswapContract.methods.tokensInMarket().call().then(function(result, error){
       self.setState({marketTokens: result});
+      // console.log("marketTokens: " + result);
     })
-  }
-
-  tokenBuyRate(buyTokensInput) {
-    if(buyTokensInput >= this.state.marketTokens/10**6) {
-      this.setState(
-        {tokenBuyRate: 0,
-         tokenCost: 0,
-         tokenFee: 0,
-         tokenBuyError: 'Not enough tokens'
-        });
-    }
-    else{
-      var tokensPurchased = buyTokensInput;
-      var invar = this.state.invariant/10**24;
-      var totalTokens = this.state.marketTokens/10**6;
-      var totalEth = this.state.marketEth/10**18;
-      var newTotalEth = invar/(totalTokens-tokensPurchased);
-      var fee = (newTotalEth - totalEth)/500;
-      var ethRequired = newTotalEth - totalEth + fee;
-      var rate = tokensPurchased/ethRequired;
-      //add 1% to cost displayed, some people will get more tokens than purchased
-      //less TX's will fail the minTokens smart contract check
-      var adjustedTokenCost = ethRequired*1.01;
-      this.setState(
-        {tokenBuyRate: rate,
-         tokenCost: adjustedTokenCost,
-         tokenFee: fee
-         });
-    }
-  }
-
-  ethBuyRate(buyEthInput) {
-    if(buyEthInput >= this.state.marketEth/10**18) {
-      this.setState(
-        {ethBuyRate: 0,
-         ethCost: 0,
-         ethFee: 0,
-         ethBuyError: 'Not enough tokens'
-        });
-    }
-    else{
-      var ethPurchased = buyEthInput;
-      var invar = this.state.invariant/10**24;
-      var totalEth = this.state.marketEth/10**18;
-      var totalTokens = this.state.marketTokens/10**6;
-      var newTotalTokens = invar/(totalEth-ethPurchased);
-      var fee = (newTotalTokens - totalTokens)/500;
-      var tokensRequired = newTotalTokens - totalTokens + fee;
-      var rate = ethPurchased/(tokensRequired);
-      //add 1% to cost displayed, some people will get more eth than purchased
-      //less TX's will fail the minEth smart contract check
-      var adjustedEthCost = tokensRequired*1.01;
-      this.setState(
-        {ethBuyRate: rate,
-         ethCost: adjustedEthCost,
-         ethFee: fee
-         });
-    }
-  }
-
-  buyTokens() {
-    var self = this;
-    var minTokens = this.state.minimumTokensPurchased
-
-    localweb3.eth.getBlock('latest', function(error, blockInfo) {
-        var time = blockInfo.timestamp;
-        var maxTime = time + 300; //current block time + 5mins
-
-        self.state.uniswapContract.methods.ethToTokens(minTokens, maxTime).send(
-          {from: self.state.currentMaskAddress, value: self.state.tokenCost*10**18},
-          function(err, txHash) {})
-    });
-  }
-
-  buyEth() {
-    var self = this;
-    var minEth = this.state.minimumEthPurchased;
-    var minWei = localweb3.utils.toWei(minEth);
-    var tokensSold = this.state.ethCost*10**6;
-
-    localweb3.eth.getBlock('latest', function(error, blockInfo) {
-        var time = blockInfo.timestamp;
-        var maxTime = time + 300; //current block time + 5mins
-
-        self.state.uniswapContract.methods.tokenToEth(tokensSold, minWei, maxTime).send(
-          {from: self.state.currentMaskAddress},
-          function(err, txHash) {})
-    });
   }
 
   onSelectToken = (selected, type) => {
@@ -271,26 +181,89 @@ class App extends Component {
     }
   }
 
-  onBuyTokensInputChange = (event) => {
-    var buyTokensInput = event.target.value;
-    if(buyTokensInput && buyTokensInput !== 0){
-      this.setState({ minimumTokensPurchased: buyTokensInput });
-      this.tokenBuyRate(buyTokensInput);
+  onInputChange = (event) => {
+    this.getMarketInfo();
+    var inputValue = event.target.value;
+    if(inputValue && inputValue !== 0){
+      this.ethToTokenRate(inputValue);
+      this.setState({input: inputValue, interaction: 'input'});
+    } else {
+      this.setState({input: inputValue, output: 0, interaction: 'connected'});
     }
   }
 
-  onBuyEthInputChange = (event) => {
-    var buyEthInput = event.target.value;
-    if(buyEthInput && buyEthInput !== 0){
-      this.setState({ minimumEthPurchased: buyEthInput, input: buyEthInput, output: this.state.tokenBuyRate.toFixed(3)*buyEthInput, interaction: 'input'});
-      this.ethBuyRate(buyEthInput);
-    } else {
-      this.setState({input: buyEthInput, output: this.state.tokenBuyRate.toFixed(3)*buyEthInput, interaction: 'connected'});
-    }
+  ethToTokenRate(ethInput) {
+    var ethInMarket = +this.state.marketEth;
+    var tokensInMarket = +this.state.marketTokens;
+    var invar = +this.state.invariant;
+    var ethIn = ethInput*10**18;
+    var exchangeFee = ethIn/500;
+    var ethSold = ethIn - exchangeFee;
+    var newEthInMarket = ethInMarket + ethSold;
+    var newTokensInMarket = invar/newEthInMarket;
+    var tokensOut = tokensInMarket - newTokensInMarket;
+    var adjustedTokensOut = tokensOut * 0.99
+    var buyRate = adjustedTokensOut/ethIn;
+    this.setState({rate: buyRate,
+                   fee: exchangeFee,
+                   output: adjustedTokensOut
+                   });
   }
+
+  ethToTokenPurchase() {
+    var self = this;
+    var minTokens = this.state.output/10**18;
+    var minTokensInt = localweb3.utils.toWei(minTokens);
+    var ethSold = this.state.input;
+    var weiSold = localweb3.utils.toWei(ethSold);
+
+    localweb3.eth.getBlock('latest', function(error, blockInfo) {
+        var time = blockInfo.timestamp;
+        var timeout = time + 300; //current block time + 5mins
+
+        self.state.uniswapContract.methods.ethToTokenSwap(minTokensInt, timeout).send(
+          {from: self.state.currentMaskAddress, value: weiSold},
+          function(err, txHash) {})
+    });
+  }
+
+  tokenToEthRate(tokenInput) {
+    var ethInMarket = +this.state.marketEth;
+    var tokensInMarket = +this.state.marketTokens;
+    var invar = +this.state.invariant;
+    var tokensIn = tokenInput*10**18;
+    var exchangeFee = tokensIn/500;
+    var tokensSold = tokensIn - exchangeFee;
+    var newTokensInMarket = tokensInMarket + tokensSold;
+    var newEthInMarket = invar/newTokensInMarket;
+    var ethOut = ethInMarket - newEthInMarket;
+    var adjustedEthOut = ethOut * 0.99;
+    var buyRate = adjustedEthOut/tokensIn;
+    this.setState({rate: buyRate,
+                   fee: exchangeFee,
+                   output: adjustedEthOut
+                   });
+  }
+
+  // tokenToTokenRate(tokenInput) {
+  //   var ethInMarket = +this.state.marketEth;
+  //   var tokensInMarket = +this.state.marketTokens;
+  //   var invar = +this.state.invariant;
+  //   var ethIn = tokenInput*10**18;
+  //   var exchangeFee = ethIn/500;
+  //   var ethSold = ethIn - exchangeFee;
+  //   var newEthInMarket = ethInMarket + ethSold;
+  //   var newTokensInMarket = invar/newEthInMarket;
+  //   var tokensOut = tokensInMarket - newTokensInMarket;
+  //   var buyRate = tokensOut/ethIn;
+  //   this.setState({rate: buyRate,
+  //                  fee: exchangeFee,
+  //                  output: tokensOut
+  //                  });
+  // }
 
   render() {
-    console.log(localweb3)
+    //console.log(localweb3)
     return (
       <div className={this.state.connected ? "App" : "App dim"}>
         <Head />
@@ -303,7 +276,7 @@ class App extends Component {
         <HelperMessages interaction={this.state.interaction} inputToken={this.state.inputToken} outputToken={this.state.outputToken}/>
         <section className="order">
           <div className="value border pa2">
-            <input type="number" value={this.state.input} placeholder="0" onChange={this.onBuyEthInputChange} onChange={this.onBuyEthInputChange} />
+            <input type="number" value={this.state.input} placeholder="0" onChange={this.onInputChange} />
             <SelectToken token={this.state.inputToken} onSelectToken={this.onSelectToken} type="input" />
             <p className="dropdown">{'<'}</p>
           </div>
@@ -311,7 +284,7 @@ class App extends Component {
             <p>→</p>
           </div>
           <div className="value border pa2">
-            <input type="number" value={this.state.output} placeholder="0" onChange={this.onBuyTokensInputChange}/>
+            <input type="number" value={this.state.output/10**18} placeholder="0"/>
             <SelectToken token={this.state.outputToken} onSelectToken={this.onSelectToken} type="output"/>
             <p className="dropdown">{'<'}</p>
           </div>
@@ -319,20 +292,18 @@ class App extends Component {
         <section className="rate border pa2">
           <span className="rate-info">
             <p>Rate</p>
-            <p>{this.state.tokenBuyRate.toFixed(3)} UNI/ETH</p>
-          </span>
-          <span className="rate-info">
-            <p>Cost</p>
-            <p>{this.state.tokenCost.toFixed(5)} ETH</p>
+            <p>{this.state.rate} UNI/ETH</p>
           </span>
           <span className="rate-info">
             <p>Fee</p>
-            <p>{this.state.tokenFee.toFixed(5)} ETH</p>
+            <p>{this.state.fee/10**18} ETH</p>
           </span>
         </section>
         {this.state.interaction === 'input' ?
           <section className="swap border pa2">
-            <a href="">{"I want to swap " + this.state.input + " " + this.state.inputToken.value + " for " + this.state.output + " " + this.state.outputToken.value}</a>
+            <a href="#" role="button" onClick={() => {this.ethToTokenPurchase() }}>
+              {"I want to swap " + this.state.input + " " + this.state.inputToken.value + " for " + this.state.output/10**18 + " " + this.state.outputToken.value}
+            </a>
           </section>
           : <section className="swap hidden border pa2"></section>}
         <section className="links">
@@ -344,7 +315,6 @@ class App extends Component {
             <p className="underline">Add a new token</p>
             <p>+</p>
           </a>
-
         </section>
         <section className="links">
           <a href="" className="link border pa2">
