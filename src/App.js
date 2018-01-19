@@ -292,11 +292,11 @@ class App extends Component {
         <section className="rate border pa2">
           <span className="rate-info">
             <p>Rate</p>
-            <p>{this.state.rate} UNI/ETH</p>
+            <p>{this.state.rate} {this.state.outputToken.value + "/" + this.state.inputToken.value}</p>
           </span>
           <span className="rate-info">
             <p>Fee</p>
-            <p>{this.state.fee/10**18} ETH</p>
+            <p>{this.state.fee/10**18} {this.state.inputToken.value}</p>
           </span>
         </section>
         {this.state.interaction === 'input' ?
