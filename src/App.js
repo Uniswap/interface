@@ -396,6 +396,7 @@ class App extends Component {
           {from: this.state.currentMaskAddress, value: weiSold})
           .on('transactionHash', console.log('Transaction Hash created'))
           .on('receipt', (receipt) => {console.log(receipt)})  //Success
+          .on('confirmation', (confirmationNumber, receipt) => {console.log(confirmationNumber)})  //Transaction Mined - Not working?
           .on('error', console.error);
     });
   }
@@ -422,7 +423,8 @@ class App extends Component {
         exchange.methods.tokenToEthSwap(tokensSoldInt, minEthInt, timeout).send(
           {from: this.state.currentMaskAddress})
           .on('transactionHash', console.log('Transaction Hash created'))
-          .on('receipt', (receipt) => {console.log(receipt)})  //Success
+          .on('receipt', (receipt) => {console.log(receipt)})  //Transaction submitted to blockchain
+          .on('confirmation', (confirmationNumber, receipt) => {console.log(confirmationNumber)})  //Transaction Mined - Not working?
           .on('error', console.error);
     });
   }
@@ -453,6 +455,7 @@ class App extends Component {
           {from: this.state.currentMaskAddress})
           .on('transactionHash', console.log('Transaction Hash created'))
           .on('receipt', (receipt) => {console.log(receipt)})  //Success
+          .on('confirmation', (confirmationNumber, receipt) => {console.log(confirmationNumber)})  //Transaction Mined - Not working?
           .on('error', console.error);
     });
   }
