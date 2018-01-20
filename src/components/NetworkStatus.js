@@ -5,7 +5,7 @@ function NetworkStatus(props) {
   if (isConnected){
     return (
       <div className="connection border pa2">
-        <a href={'https://rinkeby.etherscan.io/search?q=' + props.address}>{props.address}</a>
+        <a href={'https://rinkeby.etherscan.io/search?q=' + props.address} target="_blank">{props.address}</a>
         <p>●</p>
       </div>
     )

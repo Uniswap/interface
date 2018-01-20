@@ -4,14 +4,14 @@ function HelperMessages(props) {
   let message = ''
   switch (props.interaction) {
     case 'connected':
-      message = "Nice! You're connected. Enter a value below to get started."
+      message = "Nice! You're connected. Enter an input value below to get started."
       break;
     case 'input':
       message = "You're swapping " + props.inputToken.value + " for " + props.outputToken.value + ". Want to know more about how the prices are determined?"
       // message = "Oops, looks like this address doesn't have a enough " + props.inputToken.value + " to make this trade. Add more funds to make this swap."
       break;
     case 'error1':
-      message = "You can't swap a token for itself!"
+      message = "You can't swap a token for itself! 😂" 
       // message = "Oops, looks like this address doesn't have a enough " + props.inputToken.value + " to make this trade. Add more funds to make this swap."
       break;
     default:

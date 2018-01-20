@@ -12,7 +12,7 @@ class SelectToken extends Component {
   handleChange = (selectedOption) => {
     this.setState({ selectedOption })
     this.props.onSelectToken(selectedOption, this.props.type)
-    console.log(`Selected: ${selectedOption.label}`)
+    // console.log(`Selected: ${selectedOption.label}`)
   }
   render () {
     const { selectedOption } = this.state
