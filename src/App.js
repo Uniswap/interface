@@ -9,6 +9,7 @@ import './App.css';
 
 import {exchangeABI} from './helpers/exchangeABI.js'
 import {tokenABI} from './helpers/tokenABI.js'
+import {factoryABI} from './helpers/factoryABI.js'
 
 var localweb3;
 
@@ -30,18 +31,24 @@ class App extends Component {
     const uniTokenAddress = '0x350E5DD084ecF271e8d3531D4324443952F47756';
     const uniTokenContract = new localweb3.eth.Contract(tokenABI, uniTokenAddress);
 
-    const swapTokenAddress = '0x350E5DD084ecF271e8d3531D4324443952F47756';
+    const swapTokenAddress = '0x8B2A87F8243f23C33fb97E23a21Ae8EDB3b71AcA';
     const swapTokenContract = new localweb3.eth.Contract(tokenABI, swapTokenAddress);
+
+    const factoryAddress = '0xD6D22d102A4237F3D35361BC022a78789E6174Aa';
+    const factoryContract = new localweb3.eth.Contract(factoryABI, factoryAddress);
 
     this.state = {
       uniExchangeAddress: '0xcDc30C3b02c5776495298198377D2Fc0fd6B1F1C',
       swapExchangeAddress: '0x4632a7Cd732c625dcc48d75E289c209422e1D2B7',
       uniTokenAddress: '0x350E5DD084ecF271e8d3531D4324443952F47756',
+      swapTokenAddress: '0x8B2A87F8243f23C33fb97E23a21Ae8EDB3b71AcA',
       currentMaskAddress: '0x0000000000000000000000000000000000000000',
+      factoryAddress: '0xD6D22d102A4237F3D35361BC022a78789E6174Aa',
       uniExchange: uniExchangeContract,
       uniToken: uniTokenContract,
       swapExchange: swapExchangeContract,
       swapToken: swapTokenContract,
+      factory: factoryContract,
       ethBalance: 0,
       tokenBalance: 0,
       tokenAllowance: null,
@@ -80,14 +87,17 @@ class App extends Component {
   componentDidMount(){
     this.getAccountInfo();
     this.getMarketInfo('output', 'UNI');
+    // setInterval(this.helloWorld, 2000);
   }
 
+  // helloWorld = () => {
+  //   console.log('Hello World')
+  // }
+
   getAccountInfo = () => {
-    setTimeout(() => {
-      this.getEthBalance();
-      this.getTokenBalance();
-      this.getAllowance();
-    }, 1000);
+    this.getEthBalance();
+    this.getTokenBalance();
+    this.getAllowance();
   }
 
   getMarketInfo = (type, symbol) => {
@@ -123,6 +133,12 @@ class App extends Component {
     //   var amount = result
     //   this.setState({tokenAllowance: amount});
     // })
+  }
+
+  tokenToExchangeFactoryLookup = (tokenAddress) => {
+    this.state.factory.methods.tokenToExchangeLookup(tokenAddress).call((error, exchangeAddress) => {
+        console.log(exchangeAddress)
+    });
   }
 
   checkNetwork() {
@@ -216,11 +232,13 @@ class App extends Component {
   onSelectToken = (selected, type) => {
     // console.log(selected)
     // console.log(type)
+    this.setState({input: 0, output:0, rate:0, fee: 0, interaction: 'connected'})
     var marketType = '';
     if (type === 'input') {
       this.setState({inputToken: selected});
       if (selected.value === this.state.outputToken.value) {
         marketType = 'Invalid';
+        this.setState({interaction: 'error1'});
       } else if (selected.value === 'ETH'){
           marketType = 'ETH to Token';
           this.getMarketInfo('output', this.state.outputToken.value);
@@ -236,6 +254,7 @@ class App extends Component {
       this.setState({outputToken: selected});
       if (selected.value === this.state.inputToken.value) {
         marketType = 'Invalid';
+        this.setState({interaction: 'error1'});
       } else if (selected.value === 'ETH'){
           marketType = 'Token to ETH';
           this.getMarketInfo('input', this.state.outputToken.value);
@@ -248,32 +267,39 @@ class App extends Component {
           this.getMarketInfo('output', selected.value);
       }
     }
-    console.log("Exchange Type: " + marketType)
+    console.log(type + ': ' + selected.value);
+    console.log('Exchange Type: ' + marketType);
     this.setState({exchangeType: marketType});
   }
 
   onInputChange = (event) => {
     var inputValue = event.target.value;
-    if(inputValue && inputValue !== 0){
-      this.setState({input: inputValue, interaction: 'input'});
-      this.getExchangeRate(inputValue);
+    var marketType = this.state.exchangeType;
+
+    if (marketType === 'Invalid'){
+      this.setState({input: inputValue, output: 0, interaction: 'error1'});
+    } else if(inputValue && inputValue !== 0 && inputValue !== '0'){
+        this.setState({input: inputValue, interaction: 'input'});
+        this.getExchangeRate(inputValue);
     } else {
-      this.setState({input: inputValue, output: 0, interaction: 'connected'});
+        this.setState({input: inputValue, output: 0, interaction: 'connected'});
     }
   }
 
   getExchangeRate = (input) => {
     if (this.state.exchangeType === 'ETH to Token') {
+      console.log('Getting Rate: ETH to ' + this.state.outputToken.value);
       this.ethToTokenRate(input);
     } else if (this.state.exchangeType === 'Token to ETH') {
+      console.log('Getting Rate: ETH to ' + this.state.outputToken.value);
       this.tokenToEthRate(input);
     } else if (this.state.exchangeType === 'Token to Token') {
+      console.log('Getting Rate: ' + this.state.inputToken.value + ' to '  + this.state.outputToken.value);
       this.tokenToTokenRate(input);
     }
   }
 
   purchaseTokens = () => {
-    console.log(this.state.exchangeType);
     if (this.state.exchangeType === 'ETH to Token') {
       this.ethToTokenPurchase();
     } else if (this.state.exchangeType === 'Token to ETH') {
@@ -293,7 +319,7 @@ class App extends Component {
     var newEthInMarket = ethInMarket + ethSold;
     var newTokensInMarket = invar/newEthInMarket;
     var tokensOut = tokensInMarket - newTokensInMarket;
-    var adjustedTokensOut = tokensOut * 0.99;
+    var adjustedTokensOut = tokensOut * 0.98;
     var buyRate = adjustedTokensOut/ethIn;
     this.setState({rate: buyRate,
                    fee: exchangeFee,
@@ -311,7 +337,7 @@ class App extends Component {
     var newTokensInMarket = tokensInMarket + tokensSold;
     var newEthInMarket = invar/newTokensInMarket;
     var ethOut = ethInMarket - newEthInMarket;
-    var adjustedEthOut = ethOut * 0.99;
+    var adjustedEthOut = ethOut * 0.98;
     var buyRate = adjustedEthOut/tokensIn;
     this.setState({rate: buyRate,
                    fee: exchangeFee,
@@ -339,7 +365,7 @@ class App extends Component {
     var newEthInMarket2 = ethInMarket2 + ethSold;
     var newTokensInMarket2 = invar2/newEthInMarket2;
     var tokensOut = tokensInMarket2 - newTokensInMarket2;
-    var adjustedTokensOut = tokensOut * 0.99;
+    var adjustedTokensOut = tokensOut * 0.98;
     var buyRate = adjustedTokensOut/tokensIn;
     this.setState({rate: buyRate,
                    fee: exchangeFee1,
@@ -367,8 +393,10 @@ class App extends Component {
         var timeout = time + 300; //current block time + 5mins
 
         exchange.methods.ethToTokenSwap(minTokensInt, timeout).send(
-          {from: this.state.currentMaskAddress, value: weiSold},
-          function(err, txHash) {})
+          {from: this.state.currentMaskAddress, value: weiSold})
+          .on('transactionHash', console.log('Transaction Hash created'))
+          .on('receipt', (receipt) => {console.log(receipt)})  //Success
+          .on('error', console.error);
     });
   }
 
@@ -392,8 +420,10 @@ class App extends Component {
         var timeout = time + 300; //current block time + 5mins
 
         exchange.methods.tokenToEthSwap(tokensSoldInt, minEthInt, timeout).send(
-          {from: this.state.currentMaskAddress},
-          function(err, txHash) {})
+          {from: this.state.currentMaskAddress})
+          .on('transactionHash', console.log('Transaction Hash created'))
+          .on('receipt', (receipt) => {console.log(receipt)})  //Success
+          .on('error', console.error);
     });
   }
 
@@ -420,8 +450,10 @@ class App extends Component {
         var timeout = time + 300; //current block time + 5mins
 
         exchange.methods.tokenToTokenSwap(tokenOutAddress, tokensSoldInt, minTokensInt, timeout).send(
-          {from: this.state.currentMaskAddress},
-          function(err, txHash) {})
+          {from: this.state.currentMaskAddress})
+          .on('transactionHash', console.log('Transaction Hash created'))
+          .on('receipt', (receipt) => {console.log(receipt)})  //Success
+          .on('error', console.error);
     });
   }
 
