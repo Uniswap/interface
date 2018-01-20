@@ -58,7 +58,7 @@ class App extends Component {
       locked: false,
       connected: false,
       interaction: 'disconnected',
-      exchangeType: 'Eth to Token',
+      exchangeType: 'ETH to Token',
       input: 0,
       output: 0,
       inputToken: { value: 'ETH',
