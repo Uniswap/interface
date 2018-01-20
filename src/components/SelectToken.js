@@ -25,10 +25,9 @@ class SelectToken extends Component {
         onChange={this.handleChange}
         className="select"
         options={[
-          { value: 'OMG', label: 'OMG', clearableValue: false },
           { value: 'ETH', label: 'ETH', clearableValue: false },
-          { value: 'BNT', label: 'BNT', clearableValue: false },
-          { value: 'FOM', label: 'FOAM', clearableValue: false },
+          { value: 'UNI', label: 'UNI', clearableValue: false },
+          { value: 'SWAP', label: 'SWAP', clearableValue: false },
         ]}
       />
     )

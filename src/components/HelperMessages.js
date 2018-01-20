@@ -10,6 +10,10 @@ function HelperMessages(props) {
       message = "You're swapping " + props.inputToken.value + " for " + props.outputToken.value + ". Want to know more about how the prices are determined?"
       // message = "Oops, looks like this address doesn't have a enough " + props.inputToken.value + " to make this trade. Add more funds to make this swap."
       break;
+    case 'error1':
+      message = "You can't swap a token for itself!"
+      // message = "Oops, looks like this address doesn't have a enough " + props.inputToken.value + " to make this trade. Add more funds to make this swap."
+      break;
     default:
       message = "Hi there! This site helps you swap ERC20 tokens. Looks like you aren't connected. Need help?"
   }
