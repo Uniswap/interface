@@ -50,8 +50,8 @@ class App extends Component {
       swapToken: swapTokenContract,
       factory: factoryContract,
       blockTimestamp: 0,
-      ethBalance: 0,
-      tokenBalance: 0,
+      inputBalance: 0,
+      outputBalance: 0,
       tokenAllowance: null,
       invariant1: 0,
       marketEth1: 0,
@@ -81,94 +81,16 @@ class App extends Component {
   }
 
   componentWillMount(){
-    this.getMetaMaskAddress();
+    this.getUserAddress();
     this.checkNetwork();
+    this.getBlock();
   }
 
   componentDidMount(){
-    this.getAccountInfo();
-    this.getMarketInfo('output', 'UNI');
-    setInterval(this.getBlock, 3000);
-  }
+    setInterval(this.getBlock, 10000);
+    setInterval(this.getMarketInfo, 15000);
+    setInterval(this.getAccountInfo, 15000);
 
-  getBlock = () => {
-    localweb3.eth.getBlock('latest', (error, blockInfo) => {
-      this.setState({blockTimestamp: blockInfo.timestamp})
-    });
-  }
-
-  getAccountInfo = () => {
-    this.getEthBalance();
-    this.getTokenBalance();
-    this.getExchangeAllowance();
-  }
-
-  getMarketInfo = (type, symbol) => {
-    var exchangeContract = this.symbolToExchangeContract(symbol);
-    this.getInvarient(type, exchangeContract);
-    this.getMarketEth(type, exchangeContract);
-    this.getMarketTokens(type, exchangeContract);
-  }
-
-  getMetaMaskAddress = () => {
-    localweb3.eth.getAccounts((error, result) => {
-      if(!error)
-          this.setState({currentMaskAddress: result[0]})
-      else
-        this.setState({locked: true})
-    })
-  }
-
-  symbolToTokenAddress = (symbol) => {
-    if(symbol === 'UNI') {
-      return this.state.uniTokenAddress;
-    } else if(symbol === 'SWAP') {
-      return this.state.swapTokenAddress;
-    }
-  }
-
-  symbolToTokenContract = (symbol) => {
-    if(symbol === 'UNI') {
-      return this.state.uniToken;
-    } else if(symbol === 'SWAP') {
-      return this.state.swapToken;
-    }
-  }
-
-  symbolToExchangeContract = (symbol) => {
-    if(symbol === 'UNI') {
-      return this.state.uniExchange;
-    } else if(symbol === 'SWAP') {
-      return this.state.swapExchange;
-    }
-  }
-
-  getEthBalance = () => {
-    localweb3.eth.getBalance(this.state.currentMaskAddress, (error, balance) => {
-      this.setState({ethBalance: balance});
-    });
-  }
-
-  getTokenBalance = () => {
-    this.state.uniToken.methods.balanceOf(this.state.currentMaskAddress).call((error, balance) => {
-      this.setState({tokenBalance: balance});
-    });
-  }
-
-  getExchangeAllowance = () => {
-    this.state.uniToken.methods.allowance(this.state.currentMaskAddress, this.state.uniExchangeAddress).call().then((result, error) => {
-      this.setState({tokenAllowance: result});
-    })
-  }
-
-  approveAllowance = () => {
-
-  }
-
-  tokenToExchangeFactoryLookup = (tokenAddress) => {
-    this.state.factory.methods.tokenToExchangeLookup(tokenAddress).call((error, exchangeAddress) => {
-        console.log(exchangeAddress)
-    });
   }
 
   checkNetwork() {
@@ -196,40 +118,195 @@ class App extends Component {
     })
   }
 
-  getInvarient = (type, exchange) => {
-    if (type === 'input') {
-      exchange.methods.invariant().call().then((result, error) => {this.setState({invariant1: result});
-        // console.log("invariant1: " + result);
-      })
-    } else if (type === 'output') {
-        exchange.methods.invariant().call().then((result, error) => {this.setState({invariant2: result});
-          // console.log("invariant2: " + result);
-        })
+  getBlock = () => {
+    localweb3.eth.getBlock('latest', (error, blockInfo) => {
+      this.setState({blockTimestamp: blockInfo.timestamp})
+    });
+  }
+
+  getUserAddress = () => {
+    localweb3.eth.getAccounts((error, result) => {
+      if(!error)
+          this.setState({currentMaskAddress: result[0]})
+      else
+        this.setState({locked: true})
+    })
+  }
+
+  symbolToTokenAddress = (symbol) => {
+    if(symbol === 'UNI') {
+      return this.state.uniTokenAddress;
+    } else if(symbol === 'SWAP') {
+      return this.state.swapTokenAddress;
     }
   }
 
-  getMarketEth = (type, exchange) => {
-    if (type === 'input') {
-      exchange.methods.ethInMarket().call().then((result, error) => {this.setState({marketEth1: result});
-        // console.log("marketEth1: " + result);
-      })
-    } else if (type === 'output') {
-        exchange.methods.ethInMarket().call().then((result, error) => {this.setState({marketEth2: result});
-          // console.log("marketEth2: " + result);
-        })
+  symbolToTokenContract = (symbol) => {
+    if(symbol === 'UNI') {
+      return this.state.uniToken;
+    } else if(symbol === 'SWAP') {
+      return this.state.swapToken;
     }
   }
 
-  getMarketTokens = (type, exchange) => {
-    if (type === 'input') {
-      exchange.methods.tokensInMarket().call().then((result, error) => {this.setState({marketTokens1: result});
-        // console.log("marketTokens1: " + result);
-      })
-    } else if (type === 'output') {
-        exchange.methods.tokensInMarket().call().then((result, error) => {this.setState({marketTokens2: result});
-          // console.log("marketTokens2: " + result);
-        })
+  symbolToExchangeAddress = (symbol) => {
+    if(symbol === 'UNI') {
+      return this.state.uniExchangeAddress;
+    } else if(symbol === 'SWAP') {
+      return this.state.swapExchangeAddress;
     }
+  }
+
+  symbolToExchangeContract = (symbol) => {
+    if(symbol === 'UNI') {
+      return this.state.uniExchange;
+    } else if(symbol === 'SWAP') {
+      return this.state.swapExchange;
+    }
+  }
+
+  getInfo = () => {
+    this.getMarketInfo();
+    this.getAccountInfo();
+  }
+
+  getMarketInfo = () => {
+    switch (this.state.exchangeType) {
+      case 'ETH to Token':
+        this.getExchangeState('output');
+        break;
+      case 'Token to ETH':
+        this.getExchangeState('input');
+        break;
+      case 'Token to Token':
+        this.getExchangeState('input');
+        this.getExchangeState('output');
+        break;
+      default:
+    }
+  }
+
+  getAccountInfo = () => {
+    switch (this.state.exchangeType) {
+      case 'ETH to Token':
+        this.getEthBalance('input');
+        this.getTokenBalance('output');
+        break;
+      case 'Token to ETH':
+        this.getEthBalance('output');
+        this.getTokenBalance('input');
+        this.getAllowance();
+        break;
+      case 'Token to Token':
+        this.getTokenBalance('input');
+        this.getTokenBalance('output');
+        this.getAllowance();
+        break;
+      default:
+    }
+  }
+
+  getExchangeState = (type) => {
+    var exchange;
+    if (type === 'input') {
+      exchange = this.symbolToExchangeContract(this.state.inputToken.value);
+
+      exchange.methods.invariant().call().then((result, error) => {
+        this.setState({invariant1: result});
+        // console.log('Input Invariant: ' + result);
+      });
+
+      exchange.methods.ethInMarket().call().then((result, error) => {
+        this.setState({marketEth1: result});
+        // console.log('Input Market ETH: ' + result);
+      });
+
+      exchange.methods.tokensInMarket().call().then((result, error) => {
+        this.setState({marketTokens1: result});
+        // console.log('Input Market Tokens: ' + result);
+      });
+
+    } else if (type === 'output') {
+        exchange = this.symbolToExchangeContract(this.state.outputToken.value);
+        exchange.methods.invariant().call().then((result, error) => {
+          this.setState({invariant2: result});
+          // console.log('Output Invariant: ' + result);
+        });
+
+        exchange.methods.ethInMarket().call().then((result, error) => {
+          this.setState({marketEth2: result});
+          // console.log('Output Market ETH: ' + result);
+        });
+
+        exchange.methods.tokensInMarket().call().then((result, error) => {
+          this.setState({marketTokens2: result})
+          // console.log('Output Market Tokens: ' + result);
+        });
+    }
+  }
+
+  getEthBalance = (type) => {
+    if (type === 'input') {
+      localweb3.eth.getBalance(this.state.currentMaskAddress, (error, balance) => {
+        this.setState({inputBalance: balance});
+        // console.log('ETH Balance: ' + balance);
+      });
+    } else if (type === 'output') {
+        localweb3.eth.getBalance(this.state.currentMaskAddress, (error, balance) => {
+          this.setState({outputBalance: balance});
+          // console.log('ETH Balance: ' + balance);
+        });
+    }
+  }
+
+  getTokenBalance = (type) => {
+    var token;
+    if (type === 'input') {
+      token = this.symbolToTokenContract(this.state.inputToken.value);
+      token.methods.balanceOf(this.state.currentMaskAddress).call((error, balance) => {
+        this.setState({inputBalance: balance});
+        // console.log(this.state.inputToken.value + ' Balance: ' + balance);
+      });
+    } else if (type === 'output') {
+        token = this.symbolToTokenContract(this.state.outputToken.value);
+        token.methods.balanceOf(this.state.currentMaskAddress).call((error, balance) => {
+          this.setState({outputBalance: balance});
+          // console.log(this.state.outputToken.value + ' Balance: ' + balance);
+        });
+    }
+  }
+
+  getAllowance = () => {
+    var type = this.state.exchangeType;
+    if(type === 'Token to ETH' || type === 'Token to Token') {
+      var token = this.symbolToTokenContract(this.state.inputToken.value);
+      var exchangeAddress = this.symbolToExchangeAddress(this.state.inputToken.value);
+
+      token.methods.allowance(this.state.currentMaskAddress, exchangeAddress).call().then((result, error) => {
+        console.log(this.state.inputToken.value + ' allowance: ' + result);
+      })
+    }
+  }
+
+  approveAllowance = () => {
+    var type = this.state.exchangeType;
+    if(type === 'Token to ETH' || type === 'Token to Token') {
+      var token = this.symbolToTokenContract(this.state.inputToken.value);
+      var exchangeAddress = this.symbolToExchangeAddress(this.state.inputToken.value);
+      var amount = localweb3.utils.toWei('100000');
+
+      token.methods.approve(exchangeAddress, amount).send({from: this.state.currentMaskAddress})
+      .on('transactionHash', console.log('Transaction Hash created'))
+      .on('receipt', (receipt) => {console.log(receipt)})  //Transaction Submitted to blockchain
+      .on('confirmation', (confirmationNumber, receipt) => {console.log("Block Confirmations: " + confirmationNumber)})  //Transaction Mined
+      .on('error', console.error);
+    }
+  }
+
+  tokenToExchangeFactoryLookup = (tokenAddress) => {
+    this.state.factory.methods.tokenToExchangeLookup(tokenAddress).call((error, exchangeAddress) => {
+        console.log(exchangeAddress)
+    });
   }
 
   onSelectToken = (selected, type) => {
@@ -239,17 +316,12 @@ class App extends Component {
       this.setState({inputToken: selected});
       if (selected.value === this.state.outputToken.value) {
         marketType = 'Invalid';
-        this.setState({interaction: 'error1'});
       } else if (selected.value === 'ETH'){
           marketType = 'ETH to Token';
-          this.getMarketInfo('output', this.state.outputToken.value);
       } else if (this.state.outputToken.value === 'ETH'){
           marketType = 'Token to ETH';
-          this.getMarketInfo('input', selected.value);
       } else{
           marketType = 'Token to Token';
-          this.getMarketInfo('input', selected.value);
-          this.getMarketInfo('output', this.state.outputToken.value);
       }
     } else if (type === 'output'){
       this.setState({outputToken: selected});
@@ -258,19 +330,14 @@ class App extends Component {
         this.setState({interaction: 'error1'});
       } else if (selected.value === 'ETH'){
           marketType = 'Token to ETH';
-          this.getMarketInfo('input', this.state.outputToken.value);
       } else if (this.state.inputToken.value === 'ETH'){
           marketType = 'ETH to Token';
-          this.getMarketInfo('output', selected.value);
       } else{
           marketType = 'Token to Token';
-          this.getMarketInfo('input', this.state.inputToken.value);
-          this.getMarketInfo('output', selected.value);
       }
     }
     console.log(type + ': ' + selected.value);
-    console.log('Exchange Type: ' + marketType);
-    this.setState({exchangeType: marketType});
+    this.setState({exchangeType: marketType}, this.getInfo);
   }
 
   onInputChange = (event) => {
@@ -292,7 +359,7 @@ class App extends Component {
       console.log('Getting Rate: ETH to ' + this.state.outputToken.value);
       this.ethToTokenRate(input);
     } else if (this.state.exchangeType === 'Token to ETH') {
-      console.log('Getting Rate: ETH to ' + this.state.outputToken.value);
+      console.log('Getting Rate: ' + this.state.inputToken.value + ' to ETH');
       this.tokenToEthRate(input);
     } else if (this.state.exchangeType === 'Token to Token') {
       console.log('Getting Rate: ' + this.state.inputToken.value + ' to '  + this.state.outputToken.value);
@@ -376,11 +443,12 @@ class App extends Component {
 
   ethToTokenPurchase = () => {
     var exchange = this.symbolToExchangeContract(this.state.outputToken.value);
-    var minTokens = this.state.output/10**18;
+    var minTokens = (this.state.output/10**18).toString();
     var minTokensInt = localweb3.utils.toWei(minTokens);
     var ethSold = this.state.input;
     var weiSold = localweb3.utils.toWei(ethSold);
     var timeout = this.state.blockTimestamp + 300; //current block time + 5mins
+    console.log(minTokensInt, weiSold, timeout);
 
     exchange.methods.ethToTokenSwap(minTokensInt, timeout).send({from: this.state.currentMaskAddress, value: weiSold})
       .on('transactionHash', console.log('Transaction Hash created'))
@@ -391,7 +459,7 @@ class App extends Component {
 
   tokenToEthPurchase = () => {
     var exchange = this.symbolToExchangeContract(this.state.inputToken.value);
-    var minEth = this.state.output/10**18;
+    var minEth = (this.state.output/10**18).toString();
     var minEthInt = localweb3.utils.toWei(minEth);
     var tokensSold = this.state.input;
     var tokensSoldInt = localweb3.utils.toWei(tokensSold);
@@ -407,7 +475,7 @@ class App extends Component {
   tokenToTokenPurchase = () => {
     var exchange = this.symbolToExchangeContract(this.state.inputToken.value);
     var tokenOutAddress = this.symbolToTokenAddress(this.state.outputToken.value);
-    var minTokens = this.state.output/10**18;
+    var minTokens = (this.state.output/10**18).toString();
     var minTokensInt = localweb3.utils.toWei(minTokens);
     var tokensSold = this.state.input;
     var tokensSoldInt = localweb3.utils.toWei(tokensSold);
@@ -439,7 +507,7 @@ class App extends Component {
             <p className="dropdown">{'<'}</p>
           </div>
           <div className="arrow border pa2">
-            <p>→</p>
+            <p onClick={() => {this.approveAllowance()}}>→</p>
           </div>
           <div className="value border pa2">
             <input type="number" value={this.state.output/10**18} placeholder="0"/>
@@ -459,9 +527,10 @@ class App extends Component {
         </section>
         {this.state.interaction === 'input' ?
           <section className="swap border pa2">
-            <a href="#" role="button" onClick={() => {this.purchaseTokens() }}>
+            <a href="#" role="button" onClick={() => {this.purchaseTokens()}}>
               {"I want to swap " + this.state.input + " " + this.state.inputToken.value + " for " + this.state.output/10**18 + " " + this.state.outputToken.value}
             </a>
+            <button> Approve </button>
           </section>
           : <section className="swap hidden border pa2"></section>}
         <section className="links">
