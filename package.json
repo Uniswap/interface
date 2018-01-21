@@ -1,5 +1,6 @@
 {
   "name": "uniswap",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,12 +9,15 @@
     "react-helmet": "^5.2.0",
     "react-scripts": "1.1.0",
     "react-select": "^1.2.1",
-    "web3": "1.0.0-beta.18"
+    "web3": "1.0.0-beta.22"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "gh-pages": "^1.1.0"
   }
 }
