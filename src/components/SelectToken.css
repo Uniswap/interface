@@ -25,11 +25,12 @@
 .Select-value{
   position: absolute;
   width: 5rem;
-  margin-top: 1px;
+  margin-top: 5px;
 }
 
 .Select-input{
   width: 5rem;
+    margin-top: 5px;
 }
 
 .Select-menu-outer {
