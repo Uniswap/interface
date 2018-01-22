@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import Web3 from 'web3';
+import scrollToComponent from 'react-scroll-to-component';
 
 import Head from './components/Head'
 import NetworkStatus from './components/NetworkStatus'
-import HelperMessages from './components/HelperMessages'
+import ConnectionHelper from './components/ConnectionHelper'
+import Transactions from './components/Transactions'
 import SelectToken from './components/SelectToken'
 import './App.css';
 
@@ -19,9 +21,86 @@ class App extends Component {
     if (typeof props.metamask !== 'undefined'){
       localweb3 = new Web3(window.web3.currentProvider)
     } else {
-      localweb3 = null
+      localweb3 = 'undefined'
     }
 
+    this.state = {
+      uniExchangeAddress: '',
+      swapExchangeAddress: '',
+      uniTokenAddress: '',
+      swapTokenAddress: '',
+      currentMaskAddress: '',
+      factoryAddress: '',
+      uniExchange: {},
+      uniToken: {},
+      swapExchange: {},
+      swapToken: {},
+      factory: {},
+      blockTimestamp: 0,
+      inputBalance: 0,
+      outputBalance: 0,
+      tokenAllowance: null,
+      invariant1: 0,
+      marketEth1: 0,
+      marketTokens1: 0,
+      invariant2: 0,
+      marketEth2: 0,
+      marketTokens2: 0,
+      rate: 0,
+      fee: 0,
+      cost: 0,
+      networkMessage: '',
+      locked: true,
+      connected: false,
+      approved: true,
+      firstRun: true,
+      about: false,
+      interaction: 'disconnected',
+      exchangeType: 'ETH to Token',
+      input: 0,
+      output: 0,
+      transactionStatus: 'waiting',
+      transactions: [],
+      inputToken: { value: 'ETH',
+                    label: 'ETH',
+                    clearableValue: false
+                  },
+      outputToken: { value: 'UNI',
+                     label: 'UNI',
+                     clearableValue: false
+                  }
+    }
+  }
+
+  componentWillMount(){
+    if(localweb3 === 'undefined'){
+      this.setState({connected: false})
+    } else {
+      this.getContracts();
+      this.getUserAddress();
+      this.checkNetwork();
+      this.getBlock();
+    }
+  }
+
+  componentDidMount(){
+    if(localweb3 === 'undefined'){
+      this.setState({connected: false})
+    } else if(this.state.connected === true) {
+      setInterval(this.getBlock, 10000);
+      setInterval(this.getMarketInfo, 15000);
+      setInterval(this.getAccountInfo, 15000);
+      setInterval(this.getUserAddress, 10000);
+    } else {
+      setInterval(this.getUserAddress, 500);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps)
+  }
+
+  getContracts() {
     const uniExchangeAddress = '0xcDc30C3b02c5776495298198377D2Fc0fd6B1F1C';
     const uniExchangeContract = new localweb3.eth.Contract(exchangeABI, uniExchangeAddress);
 
@@ -37,60 +116,18 @@ class App extends Component {
     const factoryAddress = '0xD6D22d102A4237F3D35361BC022a78789E6174Aa';
     const factoryContract = new localweb3.eth.Contract(factoryABI, factoryAddress);
 
-    this.state = {
-      uniExchangeAddress: '0xcDc30C3b02c5776495298198377D2Fc0fd6B1F1C',
-      swapExchangeAddress: '0x4632a7Cd732c625dcc48d75E289c209422e1D2B7',
-      uniTokenAddress: '0x350E5DD084ecF271e8d3531D4324443952F47756',
-      swapTokenAddress: '0x8B2A87F8243f23C33fb97E23a21Ae8EDB3b71AcA',
-      currentMaskAddress: '0x0000000000000000000000000000000000000000',
-      factoryAddress: '0xD6D22d102A4237F3D35361BC022a78789E6174Aa',
+    this.setState({
+      uniExchangeAddress: uniExchangeAddress,
+      swapExchangeAddress: swapExchangeAddress,
+      uniTokenAddress: uniTokenAddress,
+      swapTokenAddress: swapTokenAddress,
+      factoryAddress: factoryAddress,
       uniExchange: uniExchangeContract,
       uniToken: uniTokenContract,
       swapExchange: swapExchangeContract,
       swapToken: swapTokenContract,
       factory: factoryContract,
-      blockTimestamp: 0,
-      inputBalance: 0,
-      outputBalance: 0,
-      tokenAllowance: null,
-      invariant1: 0,
-      marketEth1: 0,
-      marketTokens1: 0,
-      invariant2: 0,
-      marketEth2: 0,
-      marketTokens2: 0,
-      rate: 0,
-      fee: 0,
-      cost: 0,
-      networkMessage: '',
-      locked: false,
-      connected: false,
-      interaction: 'disconnected',
-      exchangeType: 'ETH to Token',
-      input: 0,
-      output: 0,
-      inputToken: { value: 'ETH',
-                    label: 'ETH',
-                    clearableValue: false
-                  },
-      outputToken: { value: 'UNI',
-                     label: 'UNI',
-                     clearableValue: false
-                  }
-    }
-  }
-
-  componentWillMount(){
-    this.getUserAddress();
-    this.checkNetwork();
-    this.getBlock();
-  }
-
-  componentDidMount(){
-    setInterval(this.getBlock, 10000);
-    setInterval(this.getMarketInfo, 15000);
-    setInterval(this.getAccountInfo, 15000);
-
+    })
   }
 
   checkNetwork() {
@@ -107,7 +144,7 @@ class App extends Component {
           this.setState({networkMessage: 'Ropsten testnet', connected: false, interaction: 'disconnected'});
           break;
         case "rinkeby":
-          this.setState({networkMessage: '', connected: true, interaction: 'connected'});
+          this.setState({networkMessage: 'Rinkeby testnet', connected: true, interaction: 'connected'});
           break;
         case "kovan":
           this.setState({networkMessage: 'Kovan testnet', connected: false, interaction: 'disconnected'});
@@ -126,10 +163,10 @@ class App extends Component {
 
   getUserAddress = () => {
     localweb3.eth.getAccounts((error, result) => {
-      if(!error)
-          this.setState({currentMaskAddress: result[0]})
+      if(result.length > 0)
+          this.setState({currentMaskAddress: result[0], locked: false, connected: true})
       else
-        this.setState({locked: true})
+        this.setState({locked: true, connected: false, interaction: 'locked'})
     })
   }
 
@@ -284,6 +321,10 @@ class App extends Component {
 
       token.methods.allowance(this.state.currentMaskAddress, exchangeAddress).call().then((result, error) => {
         console.log(this.state.inputToken.value + ' allowance: ' + result);
+        if(result === '0'){
+          this.setState({approved: false})
+          console.log(this.state.approved)
+        }
       })
     }
   }
@@ -297,7 +338,10 @@ class App extends Component {
 
       token.methods.approve(exchangeAddress, amount).send({from: this.state.currentMaskAddress})
       .on('transactionHash', console.log('Transaction Hash created'))
-      .on('receipt', (receipt) => {console.log(receipt)})  //Transaction Submitted to blockchain
+      .on('receipt', (receipt) => {
+        console.log(receipt)
+        this.setState({approved: true})
+      })  //Transaction Submitted to blockchain
       .on('confirmation', (confirmationNumber, receipt) => {console.log("Block Confirmations: " + confirmationNumber)})  //Transaction Mined
       .on('error', console.error);
     }
@@ -310,7 +354,7 @@ class App extends Component {
   }
 
   onSelectToken = (selected, type) => {
-    this.setState({input: 0, output:0, rate:0, fee: 0, interaction: 'connected'})
+    this.setState({input: 0, output:0, rate:0, fee: 0, interaction: 'connected', firstRun: true})
     var marketType = '';
     if (type === 'input') {
       this.setState({inputToken: selected});
@@ -348,6 +392,7 @@ class App extends Component {
       this.setState({input: inputValue, output: 0, interaction: 'error1'});
     } else if(inputValue && inputValue !== 0 && inputValue !== '0'){
         this.setState({input: inputValue, interaction: 'input'});
+        console.log('input something')
         this.getExchangeRate(inputValue);
     } else {
         this.setState({input: inputValue, output: 0, interaction: 'connected'});
@@ -451,8 +496,15 @@ class App extends Component {
     console.log(minTokensInt, weiSold, timeout);
 
     exchange.methods.ethToTokenSwap(minTokensInt, timeout).send({from: this.state.currentMaskAddress, value: weiSold})
-      .on('transactionHash', console.log('Transaction Hash created'))
-      .on('receipt', (receipt) => {console.log(receipt)})  //Transaction Submitted to blockchain
+      .on('transactionHash', (result) => {
+        console.log('Transaction Hash created')
+        let transactions = this.state.transactions
+        transactions.push(result)
+        this.setState({transactions: transactions, input: '', output: '', interaction: 'submitted'})
+      })
+      .on('receipt', (receipt) => {
+        console.log(receipt)
+      })  //Transaction Submitted to blockchain
       .on('confirmation', (confirmationNumber, receipt) => {console.log("Block Confirmations: " + confirmationNumber)})  //Transaction Mined
       .on('error', console.error);
   }
@@ -466,7 +518,12 @@ class App extends Component {
     var timeout = this.state.blockTimestamp + 300; //current block time + 5mins
 
     exchange.methods.tokenToEthSwap(tokensSoldInt, minEthInt, timeout).send({from: this.state.currentMaskAddress})
-      .on('transactionHash', console.log('Transaction Hash created'))
+      .on('transactionHash', (result) => {
+        console.log('Transaction Hash created')
+        let transactions = this.state.transactions
+        transactions.push(result)
+        this.setState({transactions: transactions, input: '', output: '', interaction: 'submitted'})
+      })
       .on('receipt', (receipt) => {console.log(receipt)})  //Transaction Submitted to blockchain
       .on('confirmation', (confirmationNumber, receipt) => {console.log("Block Confirmations: " + confirmationNumber)})  //Transaction Mined
       .on('error', console.error);
@@ -482,24 +539,66 @@ class App extends Component {
     var timeout = this.state.blockTimestamp + 300; //current block time + 5mins
 
     exchange.methods.tokenToTokenSwap(tokenOutAddress, tokensSoldInt, minTokensInt, timeout).send({from: this.state.currentMaskAddress})
-      .on('transactionHash', console.log('Transaction Hash created'))
+      .on('transactionHash', (result) => {
+        console.log('Transaction Hash created')
+        let transactions = this.state.transactions
+        transactions.push(result)
+        this.setState({transactions: transactions, input: '', output: '', interaction: 'submitted'})
+      })
       .on('receipt', (receipt) => {console.log(receipt)})  //Transaction Submitted to blockchain
       .on('confirmation', (confirmationNumber, receipt) => {console.log("Block Confirmations: " + confirmationNumber)})  //Transaction Mined
       .on('error', console.error);
   }
 
+  onCloseHelper = () => {
+    this.setState({firstRun: !this.state.firstRun})
+  }
+
+  toggleAbout = () => {
+    this.setState({about: !this.state.about})
+    setTimeout(this.scrollToAbout, 300)
+  }
+
+  scrollToAbout = () => {
+      scrollToComponent(this.About, { offset: 0, align: 'top', duration: 500})
+  }
+
   render() {
-    //console.log(localweb3)
     return (
-      <div className={this.state.connected ? "App" : "App dim"}>
+      <div className={this.state.connected && !this.state.locked ? "App" : "App dim"}>
         <Head />
         <section className="title">
           <div className="logo border pa2">
             <span role="img" aria-label="Unicorn">🦄</span>
           </div>
-          <NetworkStatus network={this.state.networkMessage} connected={this.state.connected} address={this.state.currentMaskAddress}/>
+          <NetworkStatus
+            network={this.state.networkMessage}
+            connected={this.state.connected}
+            metamask={this.props.metamask}
+            address={this.state.currentMaskAddress}
+            locked={this.state.locked}
+            balance={this.state.inputBalance}/>
         </section>
-        <HelperMessages interaction={this.state.interaction} inputToken={this.state.inputToken} outputToken={this.state.outputToken}/>
+        <ConnectionHelper
+          network={this.state.networkMessage}
+          connected={this.state.connected}
+          metamask={this.props.metamask}
+          address={this.state.currentMaskAddress}
+          locked={this.state.locked}
+          approved={this.state.approved}
+          tokenAdded={this.state.tokenAdded}
+          approveAllowance={this.approveAllowance}
+          interaction={this.state.interaction}
+          exchangeType={this.state.exchangeType}
+          firstRun={this.state.firstRun}
+          onCloseHelper={this.onCloseHelper}
+          input={this.state.input}
+          balance={this.state.inputBalance}
+          toggleAbout={this.toggleAbout}
+          inputToken={this.state.inputToken}
+          outputToken={this.state.outputToken}
+          about={this.state.about}
+        />
         <section className="order">
           <div className="value border pa2">
             <input type="number" value={this.state.input} placeholder="0" onChange={this.onInputChange} />
@@ -507,7 +606,7 @@ class App extends Component {
             <p className="dropdown">{'<'}</p>
           </div>
           <div className="arrow border pa2">
-            <p onClick={() => {this.approveAllowance()}}>→</p>
+            <p>→</p>
           </div>
           <div className="value border pa2">
             <input type="number" value={this.state.output/10**18} placeholder="0"/>
@@ -525,32 +624,55 @@ class App extends Component {
             <p>{this.state.fee/10**18} {this.state.inputToken.value}</p>
           </span>
         </section>
+
         {this.state.interaction === 'input' ?
-          <section className="swap border pa2">
+          <section className="swap grey-bg border pa2">
             <a href="#" role="button" onClick={() => {this.purchaseTokens()}}>
-              {"I want to swap " + this.state.input + " " + this.state.inputToken.value + " for " + this.state.output/10**18 + " " + this.state.outputToken.value}
+              <b>{"I want to swap " + this.state.input + " " + this.state.inputToken.value + " for " + this.state.output/10**18 + " " + this.state.outputToken.value}</b>
             </a>
-            <button> Approve </button>
+            {/* <button> Approve </button> */}
           </section>
-          : <section className="swap hidden border pa2"></section>}
+          : <section className="swap grey-bg hidden border pa2"></section>}
+
+        {this.state.transactions.length > 0 ?
+        <section className="transaction border grey-bg pa2">
+          <p className="underline">Transactions submitted</p>
+          <Transactions transactions={this.state.transactions}/>
+        </section>
+        : <section className="hidden border pa2"></section>}
+
+        <section className="About" ref={(section) => { this.About = section; }}>
+          <a onClick={() => {this.toggleAbout()}} className="link border pa2 f-a">
+            <p className="underline">About Uniswap.</p>
+            <p>↘</p>
+          </a>
+        </section>
+
+        {this.state.about ?
+          <section className="expand grey-bg border pa2">
+            <p>Uniswap is a trustless, decentralized exchange for Ether and ERC20 tokens</p>
+            <p>Uniswap exchange uses a "Market Maker" mechanism, where liquidity providers store a reserve of ETH and ERC20 tokens within an Ethereum smart contract. An exchange rate is set between the tokens and ETH based on the relative availibility of each token. Arbitrage ensures that the rate will be the same as on other exchanges. Buyers who send Token 1 to the smart contract will receive back Token 2 at the current rate. A small fee is paid from the buyer to the liquidity providers to incentive participation.</p>
+            <p>Until then, here is some more info on Market Makers:</p>
+            <a href="https://www.reddit.com/r/ethereum/comments/55m04x/lets_run_onchain_decentralized_exchanges_the_way/">https://www.reddit.com/r/ethereum/comments/55m04x/lets_run_onchain_decentralized_exchanges_the_way/</a>
+            <a href="http://vitalik.ca/general/2017/06/22/marketmakers.html">http://vitalik.ca/general/2017/06/22/marketmakers.html</a>
+            <p>Please reach out if you would like to get involved or support the project.</p>
+            <p>Email: <a href="mailto:hayden@uniswap.io">hayden@uniswap.io</a> ETH Address: 0x4779721CaC18A46DbCF148f2Dd7A8E6cc1F90078</p>
+          </section>
+          : <section className="expand grey-bg border pa2 hidden">  </section>
+        }
+
         <section className="links">
-          <a href="" className="link border pa2">
+          <a href="" className="link border pa2 liq">
             <p className="underline">Provide liquidity to collect fees</p>
             <p>+</p>
           </a>
-          <a href="" className="link border pa2">
+          <a href="" className="link border pa2 ex">
             <p className="underline">Launch a new exchange</p>
             <p>+</p>
           </a>
         </section>
-        <section className="links">
-          <a href="" className="link border pa2">
-            <p className="underline">About</p>
-            <p>↘</p>
-          </a>
-        </section>
       </div>
-    );
+    )
   }
 }
 
