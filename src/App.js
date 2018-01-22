@@ -85,7 +85,8 @@ class App extends Component {
         uniAdded: cookie.load('uniAdded') || false,
         transactions: cookie.load('transactions') || [],
       })
-      this.getContracts();
+      this.getInfoFirstTime();
+      // this.getContracts();
       this.getUserAddress();
       this.checkNetwork();
       this.getBlock();
@@ -107,6 +108,15 @@ class App extends Component {
 
   componentWillReceiveProps(nextProps) {
     console.log(nextProps)
+  }
+
+  getInfoFirstTime = () => {
+    localweb3.eth.getAccounts((error, result) => {
+      if(result.length > 0)
+          this.setState({currentMaskAddress: result[0], locked: false, connected: true}, this.getContracts)
+      else
+        this.setState({locked: true, connected: false, interaction: 'locked'})
+    })
   }
 
   getContracts() {
@@ -136,7 +146,7 @@ class App extends Component {
       swapExchange: swapExchangeContract,
       swapToken: swapTokenContract,
       factory: factoryContract,
-    }, this.getMarketInfo)
+    }, this.getInfo)
 
 
   }
@@ -657,7 +667,7 @@ class App extends Component {
         {this.state.interaction === 'input' ?
           <section className="swap grey-bg border pa2">
             <a role="button" onClick={() => {this.purchaseTokens()}}>
-              <b>{"I want to swap " + this.state.input + " " + this.state.inputToken.value + " for " + this.state.output/10**18 + " " + this.state.outputToken.value}</b>
+              <b>{"I want to swap " + this.state.input + " " + this.state.inputToken.value + " for " + (this.state.output/10**18).toFixed(5) + " " + this.state.outputToken.value}</b>
             </a>
             {/* <button> Approve </button> */}
           </section>
