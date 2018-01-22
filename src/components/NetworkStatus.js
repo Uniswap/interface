@@ -5,7 +5,7 @@ function NetworkStatus(props) {
   let metamask = props.metamask
   let locked = props.locked
 
-  if (isConnected){
+  if (isConnected && props.interaction !== 'disconnected'){
     return (
       <div className="connection border pa2 green">
         <a target="_blank" href={'https://rinkeby.etherscan.io/search?q=' + props.address}>{props.address}</a>
