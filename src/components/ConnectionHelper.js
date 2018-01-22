@@ -53,17 +53,22 @@ function ConnectionHelper(props) {
         <p>You can't swap a token for itself! 😂</p>
       </div>
     )
-  }
-  else if (props.interaction === "submitted") {
+  } else if (props.interaction === "submitted") {
     return (
       <div className="grey-bg connection border pa2">
         <p>{"Transaction submitted! Click on the transaction hash below to check its status?"}</p>
       </div>
     )
-  }  else if (props.input > props.balance/10**18) {
+  } else if (props.input > props.balance/10**18 && props.inputToken.value === 'ETH') {
     return (
       <div className="grey-bg red connection border pa2">
-        <p>This account doesn't have enough balance to make this transaction! Get more ETH with the <a target="_blank" href="https://faucet.rinkeby.io/">Rinkeby Faucet.</a></p>
+        <p>This account doesn't have enough balance to make this transaction! Get more {props.inputToken.value} with the <a target="_blank" href="https://faucet.rinkeby.io/">Rinkeby Faucet.</a></p>
+      </div>
+    )
+  } else if (props.input > props.balance/10**18) {
+    return (
+      <div className="grey-bg red connection border pa2">
+        <p>{"This account doesn't have enough balance to make this transaction! You'll need to swap some ETH for " + props.inputToken.value + "."}</p>
       </div>
     )
   } else {

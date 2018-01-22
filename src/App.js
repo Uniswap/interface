@@ -588,7 +588,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className={this.state.connected && !this.state.locked ? "App" : "App dim"}>
+      <div className={this.state.connected && !this.state.locked && this.state.interaction !== 'disconnected' ? "App" : "App dim"}>
         <Head />
         <section className="title">
           <div className="logo border pa2">
@@ -598,6 +598,7 @@ class App extends Component {
             network={this.state.networkMessage}
             connected={this.state.connected}
             metamask={this.props.metamask}
+            interaction={this.state.interaction}
             address={this.state.currentMaskAddress}
             locked={this.state.locked}
             balance={this.state.inputBalance}/>
@@ -691,7 +692,7 @@ class App extends Component {
           </a>
         </section>
 
-        {this.state.transactions.length > 0 ?
+        {this.state.transactions.length > 0 && this.state.interaction !== 'disconnected' ?
         <section className="transaction border pa2">
           <p className="underline">Past Transactions:</p>
           <Transactions transactions={this.state.transactions}/>
