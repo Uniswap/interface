@@ -165,9 +165,12 @@ input[type=number]::-webkit-outer-spin-button {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  color: blue;
-  height: 64px;
+  color: white;
+  height: 48px;
   transition: height .3s ease;
+  background-color: #27AE60;
+  background-color: #2F80ED;
+  cursor: pointer;
 }
 
 .expand{

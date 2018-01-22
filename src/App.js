@@ -665,13 +665,12 @@ class App extends Component {
         </section>
 
         {this.state.interaction === 'input' ?
-          <section className="swap grey-bg border pa2">
-            <a role="button" onClick={() => {this.purchaseTokens()}}>
-              <b>{"I want to swap " + this.state.input + " " + this.state.inputToken.value + " for " + (this.state.output/10**18).toFixed(5) + " " + this.state.outputToken.value}</b>
-            </a>
+          <a className="swap border pa2" role="button" onClick={() => {this.purchaseTokens()}}>
+
+              <b>{"I want to swap " + this.state.input + " " + this.state.inputToken.value + " for " + this.state.output/10**18 + " " + this.state.outputToken.value}</b>
             {/* <button> Approve </button> */}
-          </section>
-          : <section className="swap grey-bg hidden border pa2"></section>}
+          </a>
+          : <a className="swap grey-bg hidden border pa2"></a>}
 
         <section className="About" ref={(section) => { this.About = section; }}>
           <a onClick={() => {this.toggleAbout()}} className="link border pa2 f-a">
