@@ -136,7 +136,9 @@ class App extends Component {
       swapExchange: swapExchangeContract,
       swapToken: swapTokenContract,
       factory: factoryContract,
-    })
+    }, this.getMarketInfo)
+
+
   }
 
   checkNetwork() {
