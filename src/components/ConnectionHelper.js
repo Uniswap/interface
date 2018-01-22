@@ -82,7 +82,7 @@ function ConnectionHelper(props) {
     return (
       <div className="grey-bg connection border pa2">
         <p>Welcome! Uniswap is a decentralized exhange platform for ERC20 Tokens. <a onClick={() => {props.toggleAbout()}} className="f-a">How it works ↘</a><br /><br />
-        Enter an input value below to get started.</p>
+        You're connected. Enter a value below to get started.</p>
         <p>↓</p>
       </div>
     )
