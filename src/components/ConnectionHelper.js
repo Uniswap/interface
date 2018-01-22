@@ -8,7 +8,14 @@ function ConnectionHelper(props) {
         <b>To get started, please install <a href="">Metamask</a>.</b></p>
       </div>
     )
-  } if (props.locked) {
+  } else if (props.connected && props.interaction === 'disconnected') {
+    return (
+      <div className="grey-bg connection border pa2">
+        <p>Welcome! Uniswap is a decentralized exhange platform for ERC20 Tokens. <a onClick={() => {props.toggleAbout()}} className="f-a" >How it works ↘</a><br /><br />
+        Looks like you aren't connected. <b>Please switch to the correct network.</b></p>
+      </div>
+    )
+  } else if (props.locked) {
     return (
       <div className="grey-bg connection border pa2">
         <p>Welcome! Uniswap is a decentralized exhange platform for ERC20 Tokens. <a onClick={() => {props.toggleAbout()}} className="f-a" >How it works ↘</a><br /><br />
