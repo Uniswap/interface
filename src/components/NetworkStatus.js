@@ -8,7 +8,7 @@ function NetworkStatus(props) {
   if (isConnected && props.interaction !== 'disconnected'){
     return (
       <div className="connection border pa2 green">
-        <a target="_blank" href={'https://rinkeby.etherscan.io/search?q=' + props.address}>{props.address}</a>
+        <a target="_blank" rel="noopener noreferrer" href={'https://rinkeby.etherscan.io/search?q=' + props.address}>{props.address}</a>
         <p>●</p>
       </div>
     )
