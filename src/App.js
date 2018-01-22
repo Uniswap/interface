@@ -371,6 +371,7 @@ class App extends Component {
       this.setState({inputToken: selected});
       if (selected.value === this.state.outputToken.value) {
         marketType = 'Invalid';
+        this.setState({interaction: 'error1'});
       } else if (selected.value === 'ETH'){
           marketType = 'ETH to Token';
       } else if (this.state.outputToken.value === 'ETH'){
@@ -637,7 +638,7 @@ class App extends Component {
             <p>→</p>
           </div>
           <div className="value border pa2">
-            <input type="number" value={this.state.output/10**18} placeholder="0"/>
+            <input type="number" readOnly={true} value={(this.state.output/10**18).toFixed(5)} placeholder="0"/>
             <SelectToken token={this.state.outputToken} onSelectToken={this.onSelectToken} type="output"/>
             <p className="dropdown">{'<'}</p>
           </div>
@@ -645,11 +646,11 @@ class App extends Component {
         <section className="rate border pa2">
           <span className="rate-info">
             <p>Rate</p>
-            <p>{this.state.rate} {this.state.outputToken.value + "/" + this.state.inputToken.value}</p>
+            <p>{(this.state.rate).toFixed(5)} {this.state.outputToken.value + "/" + this.state.inputToken.value}</p>
           </span>
           <span className="rate-info">
             <p>Fee</p>
-            <p>{this.state.fee/10**18} {this.state.inputToken.value}</p>
+            <p>{(this.state.fee/10**18).toFixed(5)} {this.state.inputToken.value}</p>
           </span>
         </section>
 
