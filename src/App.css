@@ -20,7 +20,7 @@ input{
 }
 
 p{
-  /* margin: .25rem; */
+  margin: 0;
 }
 
 a{
@@ -34,8 +34,8 @@ a:hover{
 
 .pa2 {
   padding: 2.5rem;
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
+  /* padding-top: 1.5rem; */
+  /* padding-bottom: 1.5rem; */
 }
 
 .title{
@@ -118,7 +118,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .rate p{
   margin: 0px;
-  padding: 0px;
+  padding: .25rem;
 }
 
 .info{
@@ -230,4 +230,16 @@ input[type=number]::-webkit-outer-spin-button {
 
 .f-a{
   cursor: pointer;
+}
+
+.About p{
+  /* margin: .5rem; */
+}
+.expand p{
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+  /* margin-before: 1em;
+  margin-after: 1em;
+  margin-start: 0px;
+  margin-end: 0px; */
 }

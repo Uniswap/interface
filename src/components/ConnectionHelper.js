@@ -33,7 +33,7 @@ function ConnectionHelper(props) {
     return (
       <div className="grey-bg connection border pa2">
         <p>Welcome! Uniswap is a decentralized exhange platform for ERC20 Tokens. <a  onClick={() => {props.toggleAbout()}} className="f-a" >How it works ↘</a><br /><br />
-        You’ll need to add the UNI tokens to Metamask. <a target="_blank" href="http://metamask.consensyssupport.happyfox.com/kb/article/4-managing-tokens">Here’s a step by step guide.</a><br />
+        You’ll need to add the UNI tokens to Metamask. <a target="_blank" rel="noopener noreferrer" href="http://metamask.consensyssupport.happyfox.com/kb/article/4-managing-tokens">Here’s a step by step guide.</a><br />
         Add UNI with <a href="">0x350E5DD084ecF271e8d3531D4324443952F47756</a>.</p>
         <a className="f-a" onClick={() => props.onCloseHelper()}>I've added the token</a>
       </div>
@@ -42,7 +42,7 @@ function ConnectionHelper(props) {
     return (
       <div className="grey-bg connection border pa2">
         <p>Welcome! Uniswap is a decentralized exhange platform for ERC20 Tokens. <a  onClick={() => {props.toggleAbout()}} className="f-a" >How it works</a>.<br /><br />
-        You’ll need to add the SWAP tokens to Metamask. <a target="_blank" href="http://metamask.consensyssupport.happyfox.com/kb/article/4-managing-tokens">Here’s a step by step guide.</a><br />
+        You’ll need to add the SWAP tokens to Metamask. <a target="_blank" rel="noopener noreferrer" href="http://metamask.consensyssupport.happyfox.com/kb/article/4-managing-tokens">Here’s a step by step guide.</a><br />
         Add UNI with <a href="">0x8B2A87F8243f23C33fb97E23a21Ae8EDB3b71AcA</a>.</p>
         <a className="f-a" onClick={() => props.onCloseHelper()}>I've added the token</a>
       </div>
@@ -50,7 +50,7 @@ function ConnectionHelper(props) {
   } else if (props.interaction === "error1") {
     return (
       <div className="grey-bg connection border pa2">
-        <p>You can't swap a token for itself! 😂</p>
+        <p>You can't swap a token for itself! <span role="img" aria-label="Crying">😂</span></p>
       </div>
     )
   } else if (props.interaction === "submitted") {
@@ -62,7 +62,7 @@ function ConnectionHelper(props) {
   } else if (props.input > props.balance/10**18 && props.inputToken.value === 'ETH') {
     return (
       <div className="grey-bg red connection border pa2">
-        <p>This account doesn't have enough balance to make this transaction! Get more {props.inputToken.value} with the <a target="_blank" href="https://faucet.rinkeby.io/">Rinkeby Faucet.</a></p>
+        <p>This account doesn't have enough balance to make this transaction! Get more {props.inputToken.value} with the <a target="_blank" rel="noopener noreferrer" href="https://faucet.rinkeby.io/">Rinkeby Faucet.</a></p>
       </div>
     )
   } else if (props.input > props.balance/10**18) {
