@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Web3 from 'web3';
 import scrollToComponent from 'react-scroll-to-component';
+import cookie from 'react-cookies'
 
 import Head from './components/Head'
 import NetworkStatus from './components/NetworkStatus'
@@ -78,6 +79,12 @@ class App extends Component {
     if(localweb3 === 'undefined'){
       this.setState({connected: false})
     } else {
+      this.setState({
+        firstRun: cookie.load('firstRun'),
+        swapAdded: cookie.load('swapAdded'),
+        uniAdded: cookie.load('uniAdded'),
+        transactions: cookie.load('transactions') || [],
+      })
       this.getContracts();
       this.getUserAddress();
       this.checkNetwork();
@@ -503,11 +510,14 @@ class App extends Component {
         let transactions = this.state.transactions
         transactions.push(result)
         this.setState({transactions: transactions, input: '', output: '', interaction: 'submitted'})
+        cookie.save('transactions', transactions, { path: '/' })
       })
       .on('receipt', (receipt) => {
         console.log(receipt)
       })  //Transaction Submitted to blockchain
-      .on('confirmation', (confirmationNumber, receipt) => {console.log("Block Confirmations: " + confirmationNumber)})  //Transaction Mined
+      .on('confirmation', (confirmationNumber, receipt) => {
+        console.log("Block Confirmations: " + confirmationNumber)
+      })  //Transaction Mined
       .on('error', console.error);
   }
 
@@ -525,6 +535,7 @@ class App extends Component {
         let transactions = this.state.transactions
         transactions.push(result)
         this.setState({transactions: transactions, input: '', output: '', interaction: 'submitted'})
+        cookie.save('transactions', transactions, { path: '/' })
       })
       .on('receipt', (receipt) => {console.log(receipt)})  //Transaction Submitted to blockchain
       .on('confirmation', (confirmationNumber, receipt) => {console.log("Block Confirmations: " + confirmationNumber)})  //Transaction Mined
@@ -546,6 +557,7 @@ class App extends Component {
         let transactions = this.state.transactions
         transactions.push(result)
         this.setState({transactions: transactions, input: '', output: '', interaction: 'submitted'})
+        cookie.save('transactions', transactions, { path: '/' })
       })
       .on('receipt', (receipt) => {console.log(receipt)})  //Transaction Submitted to blockchain
       .on('confirmation', (confirmationNumber, receipt) => {console.log("Block Confirmations: " + confirmationNumber)})  //Transaction Mined
@@ -555,10 +567,13 @@ class App extends Component {
   onCloseHelper = () => {
     if(this.state.outputToken.value === 'UNI'){
       this.setState({uniAdded: true})
+      cookie.save('uniAdded', true, { path: '/' })
     } else if(this.state.outputToken.value === 'SWAP'){
       this.setState({swapAdded: true})
+      cookie.save('swapAdded', true, { path: '/' })
     } else {
       this.setState({firstRun: !this.state.firstRun})
+      cookie.save('firstRun', !this.state.firstRun, { path: '/' })
     }
   }
 
@@ -644,13 +659,6 @@ class App extends Component {
           </section>
           : <section className="swap grey-bg hidden border pa2"></section>}
 
-        {this.state.transactions.length > 0 ?
-        <section className="transaction border grey-bg pa2">
-          <p className="underline">Transactions submitted</p>
-          <Transactions transactions={this.state.transactions}/>
-        </section>
-        : <section className="hidden border pa2"></section>}
-
         <section className="About" ref={(section) => { this.About = section; }}>
           <a onClick={() => {this.toggleAbout()}} className="link border pa2 f-a">
             <p className="underline">About Uniswap.</p>
@@ -662,11 +670,12 @@ class App extends Component {
           <section className="expand grey-bg border pa2">
             <p>Uniswap is a trustless, decentralized exchange for Ether and ERC20 tokens</p>
             <p>Uniswap exchange uses a "Market Maker" mechanism, where liquidity providers store a reserve of ETH and ERC20 tokens within an Ethereum smart contract. An exchange rate is set between the tokens and ETH based on the relative availibility of each token. Arbitrage ensures that the rate will be the same as on other exchanges. Buyers who send Token 1 to the smart contract will receive back Token 2 at the current rate. A small fee is paid from the buyer to the liquidity providers to incentive participation.</p>
-            <p>Until then, here is some more info on Market Makers:</p>
+            <p>A full writeup with math and whatnot will be written soon.Until then, here is some more info on Market Makers:</p>
             <a target="_blank" href="https://www.reddit.com/r/ethereum/comments/55m04x/lets_run_onchain_decentralized_exchanges_the_way/">https://www.reddit.com/r/ethereum/comments/55m04x/lets_run_onchain_decentralized_exchanges_the_way/</a>
             <a target="_blank" href="http://vitalik.ca/general/2017/06/22/marketmakers.html">http://vitalik.ca/general/2017/06/22/marketmakers.html</a>
             <p>Please reach out if you would like to get involved or support the project.</p>
-            <p>Email: <a href="mailto:hayden@uniswap.io">hayden@uniswap.io</a> ETH Address: 0x4779721CaC18A46DbCF148f2Dd7A8E6cc1F90078</p>
+            <p>Email: <a href="mailto:hayden@uniswap.io">hayden@uniswap.io</a></p>
+            <p>ETH Address: 0x4779721CaC18A46DbCF148f2Dd7A8E6cc1F90078</p>
           </section>
           : <section className="expand grey-bg border pa2 hidden">  </section>
         }
@@ -681,6 +690,13 @@ class App extends Component {
             <p>+</p>
           </a>
         </section>
+
+        {this.state.transactions.length > 0 ?
+        <section className="transaction border pa2">
+          <p className="underline">Past Transactions:</p>
+          <Transactions transactions={this.state.transactions}/>
+        </section>
+        : <section className="hidden border pa2"></section>}
       </div>
     )
   }
