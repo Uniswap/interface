@@ -5,7 +5,7 @@ function ConnectionHelper(props) {
     return (
       <div className="grey-bg connection border pa2">
         <p>Welcome! Uniswap is a decentralized exhange platform for ERC20 Tokens. <a onClick={() => {props.toggleAbout()}} className="f-a">How it works ↘</a><br /><br />
-        <b>To get started, please install <a href="">Metamask</a>.</b></p>
+        <b>To get started, please install <a href="https://metamask.io/">Metamask</a>.</b></p>
       </div>
     )
   } else if (props.connected && props.interaction === 'disconnected') {
