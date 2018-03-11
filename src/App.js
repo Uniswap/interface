@@ -10,11 +10,40 @@ import Transactions from './components/Transactions'
 import SelectToken from './components/SelectToken'
 import './App.css';
 
-import {exchangeABI} from './helpers/exchangeABI.js'
-import {tokenABI} from './helpers/tokenABI.js'
-import {factoryABI} from './helpers/factoryABI.js'
+import { exchangeABI } from './helpers/exchangeABI.js'
+import { tokenABI } from './helpers/tokenABI.js'
+import { factoryABI } from './helpers/factoryABI.js'
 
-var localweb3;
+// enter redux 
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux';
+import { 
+  web3ConnectionSuccessful, 
+  web3ConnectionUnsuccessful,
+  setCurrentMaskAddress,
+  metamaskLocked,
+  metamaskUnlocked,
+  setInteractionState,
+  factoryContractReady, 
+  setNetworkMessage,
+  setBlockTimestamp,
+  setExchangeType
+} from './actions/web3-actions';
+
+import {
+  uniExchangeContractReady,
+  swtExchangeContractReady
+} from './actions/exchangeContract-actions';
+
+import {
+  uniTokenContractReady,
+  swtTokenContractReady
+} from './actions/tokenContract-actions';
+
+// enter d3
+import Candlesticks from './components/Candlesticks'
+
+var localweb3; // this isn't even in state 
 
 class App extends Component {
   constructor (props) {
@@ -26,17 +55,6 @@ class App extends Component {
     }
 
     this.state = {
-      uniExchangeAddress: '',
-      swapExchangeAddress: '',
-      uniTokenAddress: '',
-      swapTokenAddress: '',
-      currentMaskAddress: '',
-      factoryAddress: '',
-      uniExchange: {},
-      uniToken: {},
-      swapExchange: {},
-      swapToken: {},
-      factory: {},
       blockTimestamp: 0,
       inputBalance: 0,
       outputBalance: 0,
@@ -44,26 +62,24 @@ class App extends Component {
       invariant1: 0,
       marketEth1: 0,
       marketTokens1: 0,
-      invariant2: 0,
+      invariant2: 0, 
       marketEth2: 0,
       marketTokens2: 0,
       rate: 0,
       fee: 0,
       cost: 0,
       networkMessage: '',
-      locked: true,
-      connected: false,
       approved: true,
-      uniAdded: false,
-      swapAdded: false,
-      firstRun: true,
+      uniAdded: false, //  cookie stuff, we'll keep this here for now
+      swapAdded: false, // cookie stuff, we'll keep this here for now
+      firstRun: true, // cookie stuff, we'll keep this here for now
       about: false,
       interaction: 'disconnected',
       exchangeType: 'ETH to Token',
       input: 0,
       output: 0,
       transactionStatus: 'waiting',
-      transactions: [],
+      transactions: [], // cookie stuff, we'll keep this here for now
       inputToken: { value: 'ETH',
                     label: 'ETH',
                     clearableValue: false
@@ -71,13 +87,15 @@ class App extends Component {
       outputToken: { value: 'UNI',
                      label: 'UNI',
                      clearableValue: false
-                  }
+                    }
     }
   }
 
+  // lets start with what's in the componentDidMount
   componentWillMount(){
-    if(localweb3 === 'undefined'){
-      this.setState({connected: false})
+    console.log('props', this.props)
+    if(localweb3 === 'undefined') {
+      this.props.web3ConnectionUnsuccessful();
     } else {
       this.setState({
         firstRun: cookie.load('firstRun') || true,
@@ -87,16 +105,18 @@ class App extends Component {
       })
       this.getInfoFirstTime();
       // this.getContracts();
-      this.getUserAddress();
-      this.checkNetwork();
-      this.getBlock();
+      this.getUserAddress(); 
+      this.checkNetwork(); 
+      this.getBlock(); 
     }
   }
-
+  
   componentDidMount(){
-    if(localweb3 === 'undefined'){
-      this.setState({connected: false})
-    } else if(this.state.connected === true) {
+    if(localweb3 === 'undefined') {
+      this.props.web3ConnectionUnsuccessful();
+      console.log('props here', this.props)
+    } else if(this.props.web3.connected === true) {
+      console.log('successfully connected to metamask')
       setInterval(this.getBlock, 10000);
       setInterval(this.getMarketInfo, 15000);
       setInterval(this.getAccountInfo, 15000);
@@ -107,48 +127,75 @@ class App extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps)
+    console.log('nextProps', nextProps)
   }
 
   getInfoFirstTime = () => {
     localweb3.eth.getAccounts((error, result) => {
-      if(result.length > 0)
-          this.setState({currentMaskAddress: result[0], locked: false, connected: true}, this.getContracts)
-      else
-        this.setState({locked: true, connected: false, interaction: 'locked'})
+      console.log('getInfoFirstTime result', result)
+      if(result.length > 0){
+        // REEEEDUUUUUUXXX
+        this.props.setCurrentMaskAddress(result[0]);
+        this.props.metamaskUnlocked();
+        this.props.web3ConnectionSuccessful();
+        this.getContracts();
+      }
+      else {
+        this.props.metamaskLocked();
+        this.props.web3ConnectionUnsuccessful();
+        this.props.setInteractionState('locked');
+      }
+    })
+  }
+
+  getUserAddress = () => {
+    // kind of redundant 
+    // only difference is getInfoFirstTime fires getContracts too
+    // THIS FIRES EVERY TEN SECONDS, NEEDS A REFACTOR 
+    localweb3.eth.getAccounts((error, result) => {
+      if(result.length > 0) {
+        this.props.setCurrentMaskAddress(result[0]);
+        this.props.metamaskUnlocked();
+        this.props.web3ConnectionSuccessful();
+        // this.setState({ currentMaskAddress: result[0], locked: false, connected: true });
+      }
+      else {
+        this.props.metamaskLocked();
+        this.props.web3ConnectionUnsuccessful();
+        this.props.setInteractionState('locked');
+        // this.setState({ locked: true, connected: false, interaction: 'locked' });
+      }   
     })
   }
 
   getContracts() {
-    const uniExchangeAddress = '0xcDc30C3b02c5776495298198377D2Fc0fd6B1F1C';
+    // exchange and token addressess are now being held in default state 
+    // we can instantiate the contracts on getContracts 
+    // contracts are being created aysnchronously 
+    // once they're ready, add them to the state 
+    const uniExchangeAddress = this.props.web3.exchangeAddresses.UNI;
     const uniExchangeContract = new localweb3.eth.Contract(exchangeABI, uniExchangeAddress);
-
-    const swapExchangeAddress = '0x4632a7Cd732c625dcc48d75E289c209422e1D2B7';
+    this.props.uniExchangeContractReady(uniExchangeContract);
+    
+    const swapExchangeAddress = this.props.web3.exchangeAddresses.SWT;
+    
     const swapExchangeContract = new localweb3.eth.Contract(exchangeABI, swapExchangeAddress);
+    this.props.swtExchangeContractReady(swapExchangeContract);
 
-    const uniTokenAddress = '0x350E5DD084ecF271e8d3531D4324443952F47756';
+    const uniTokenAddress = this.props.web3.tokenAddresses.UNI;
     const uniTokenContract = new localweb3.eth.Contract(tokenABI, uniTokenAddress);
+    this.props.uniTokenContractReady(uniTokenContract);
 
-    const swapTokenAddress = '0x8B2A87F8243f23C33fb97E23a21Ae8EDB3b71AcA';
+    const swapTokenAddress = this.props.web3.tokenAddresses.SWT;
     const swapTokenContract = new localweb3.eth.Contract(tokenABI, swapTokenAddress);
+    this.props.swtTokenContractReady(swapTokenContract);
 
-    const factoryAddress = '0xD6D22d102A4237F3D35361BC022a78789E6174Aa';
+    const factoryAddress = this.props.web3.factoryAddress;
     const factoryContract = new localweb3.eth.Contract(factoryABI, factoryAddress);
+    this.props.factoryContractReady(factoryContract);
 
-    this.setState({
-      uniExchangeAddress: uniExchangeAddress,
-      swapExchangeAddress: swapExchangeAddress,
-      uniTokenAddress: uniTokenAddress,
-      swapTokenAddress: swapTokenAddress,
-      factoryAddress: factoryAddress,
-      uniExchange: uniExchangeContract,
-      uniToken: uniTokenContract,
-      swapExchange: swapExchangeContract,
-      swapToken: swapTokenContract,
-      factory: factoryContract,
-    }, this.getInfo)
-
-
+    this.getInfo();
+    
   }
 
   checkNetwork() {
@@ -156,70 +203,79 @@ class App extends Component {
       console.log("Connected to " + networkId)
       switch (networkId) {
         case "main":
-          this.setState({networkMessage: 'Ethereum Mainet', connected: false, interaction: 'disconnected'});
+          // this.setState({networkMessage: 'Ethereum Mainet', connected: false, interaction: 'disconnected'});
+          this.props.setNetworkMessage('Ethereum Mainet');
+          this.props.web3ConnectionUnsuccessful();
+          this.props.setInteractionState('disconnected');
           break;
         case "morden":
-         this.setState({networkMessage: 'Morden testnet', connected: false, interaction: 'disconnected'});
-         break;
+          // this.setState({networkMessage: 'Morden testnet', connected: false, interaction: 'disconnected'});
+          this.props.setNetworkMessage('Morden testnet');
+          this.props.web3ConnectionUnsuccessful();
+          this.props.setInteractionState('disconnected');
+          break;
         case "ropsten":
-          this.setState({networkMessage: 'Ropsten testnet', connected: false, interaction: 'disconnected'});
+          // this.setState({networkMessage: 'Ropsten testnet', connected: false, interaction: 'disconnected'});
+          this.props.setNetworkMessage('Ropsten testnet');
+          this.props.web3ConnectionUnsuccessful();
+          this.props.setInteractionState('disconnected');
           break;
         case "rinkeby":
-          this.setState({networkMessage: 'Rinkeby testnet', connected: true, interaction: 'connected'});
+          // this.setState({networkMessage: 'Rinkeby testnet', connected: true, interaction: 'connected'});
+          this.props.setNetworkMessage('Rinkeby testnet');
+          this.props.web3ConnectionSuccessful();
+          this.props.setInteractionState('connected');
           break;
         case "kovan":
-          this.setState({networkMessage: 'Kovan testnet', connected: false, interaction: 'disconnected'});
+          // this.setState({networkMessage: 'Kovan testnet', connected: false, interaction: 'disconnected'});
+          this.props.setNetworkMessage('Kovan testnet');
+          this.props.web3ConnectionUnsuccessful();
+          this.props.setInteractionState('disconnected');
           break;
         default:
-          this.setState({networkMessage: 'an unknown network', connected: false, interaction: 'disconnected'});
+          // this.setState({networkMessage: 'an unknown network', connected: false, interaction: 'disconnected'});
+          this.props.setNetworkMessage('an unknown network');
+          this.props.web3ConnectionUnsuccessful();
+          this.props.setInteractionState('disconnected');
       }
     })
   }
 
   getBlock = () => {
     localweb3.eth.getBlock('latest', (error, blockInfo) => {
-      this.setState({blockTimestamp: blockInfo.timestamp})
+      this.props.setBlockTimestamp(blockInfo.timestamp);
     });
   }
-
-  getUserAddress = () => {
-    localweb3.eth.getAccounts((error, result) => {
-      if(result.length > 0)
-          this.setState({currentMaskAddress: result[0], locked: false, connected: true})
-      else
-        this.setState({locked: true, connected: false, interaction: 'locked'})
-    })
-  }
-
+  
   symbolToTokenAddress = (symbol) => {
     if(symbol === 'UNI') {
-      return this.state.uniTokenAddress;
-    } else if(symbol === 'SWAP') {
-      return this.state.swapTokenAddress;
+      return this.props.web3.exchangeAddresses.UNI;
+    } else if (symbol === 'SWAP') {
+      return this.props.web3.exchangeAddresses.SWT;
     }
   }
 
   symbolToTokenContract = (symbol) => {
     if(symbol === 'UNI') {
-      return this.state.uniToken;
+      return this.props.tokenContracts.UNI;
     } else if(symbol === 'SWAP') {
-      return this.state.swapToken;
+      return this.props.tokenContracts.SWT;
     }
   }
 
   symbolToExchangeAddress = (symbol) => {
     if(symbol === 'UNI') {
-      return this.state.uniExchangeAddress;
+      return this.props.web3.exchangeAddresses.UNI;
     } else if(symbol === 'SWAP') {
-      return this.state.swapExchangeAddress;
+      return this.props.web3.exchangeAddresses.SWT;
     }
   }
 
   symbolToExchangeContract = (symbol) => {
     if(symbol === 'UNI') {
-      return this.state.uniExchange;
+      return this.props.exchangeContracts.UNI;
     } else if(symbol === 'SWAP') {
-      return this.state.swapExchange;
+      return this.props.exchangeContracts.SWT;
     }
   }
 
@@ -228,8 +284,8 @@ class App extends Component {
     this.getAccountInfo();
   }
 
-  getMarketInfo = () => {
-    switch (this.state.exchangeType) {
+  getMarketInfo = () => {    
+    switch (this.props.web3.exchangeType) {
       case 'ETH to Token':
         this.getExchangeState('output');
         break;
@@ -245,7 +301,7 @@ class App extends Component {
   }
 
   getAccountInfo = () => {
-    switch (this.state.exchangeType) {
+    switch (this.props.web3.exchangeType) {
       case 'ETH to Token':
         this.getEthBalance('input');
         this.getTokenBalance('output');
@@ -305,12 +361,12 @@ class App extends Component {
 
   getEthBalance = (type) => {
     if (type === 'input') {
-      localweb3.eth.getBalance(this.state.currentMaskAddress, (error, balance) => {
+      localweb3.eth.getBalance(this.props.web3.currentMaskAddress, (error, balance) => {
         this.setState({inputBalance: balance});
         // console.log('ETH Balance: ' + balance);
       });
     } else if (type === 'output') {
-        localweb3.eth.getBalance(this.state.currentMaskAddress, (error, balance) => {
+        localweb3.eth.getBalance(this.props.web3.currentMaskAddress, (error, balance) => {
           this.setState({outputBalance: balance});
           // console.log('ETH Balance: ' + balance);
         });
@@ -321,13 +377,13 @@ class App extends Component {
     var token;
     if (type === 'input') {
       token = this.symbolToTokenContract(this.state.inputToken.value);
-      token.methods.balanceOf(this.state.currentMaskAddress).call((error, balance) => {
+      token.methods.balanceOf(this.props.web3.currentMaskAddress).call((error, balance) => {
         this.setState({inputBalance: balance});
         // console.log(this.state.inputToken.value + ' Balance: ' + balance);
       });
     } else if (type === 'output') {
         token = this.symbolToTokenContract(this.state.outputToken.value);
-        token.methods.balanceOf(this.state.currentMaskAddress).call((error, balance) => {
+        token.methods.balanceOf(this.props.web3.currentMaskAddress).call((error, balance) => {
           this.setState({outputBalance: balance});
           // console.log(this.state.outputToken.value + ' Balance: ' + balance);
         });
@@ -335,12 +391,12 @@ class App extends Component {
   }
 
   getAllowance = () => {
-    var type = this.state.exchangeType;
+    var type = this.props.web3.exchangeType;
     if(type === 'Token to ETH' || type === 'Token to Token') {
       var token = this.symbolToTokenContract(this.state.inputToken.value);
       var exchangeAddress = this.symbolToExchangeAddress(this.state.inputToken.value);
 
-      token.methods.allowance(this.state.currentMaskAddress, exchangeAddress).call().then((result, error) => {
+      token.methods.allowance(this.props.web3.currentMaskAddress, exchangeAddress).call().then((result, error) => {
         console.log(this.state.inputToken.value + ' allowance: ' + result);
         if(result === '0'){
           this.setState({approved: false})
@@ -351,13 +407,13 @@ class App extends Component {
   }
 
   approveAllowance = () => {
-    var type = this.state.exchangeType;
+    var type = this.props.web3.exchangeType;
     if(type === 'Token to ETH' || type === 'Token to Token') {
       var token = this.symbolToTokenContract(this.state.inputToken.value);
       var exchangeAddress = this.symbolToExchangeAddress(this.state.inputToken.value);
       var amount = localweb3.utils.toWei('100000');
 
-      token.methods.approve(exchangeAddress, amount).send({from: this.state.currentMaskAddress})
+      token.methods.approve(exchangeAddress, amount).send({from: this.props.web3.currentMaskAddress})
       .on('transactionHash', console.log('Transaction Hash created'))
       .on('receipt', (receipt) => {
         console.log(receipt)
@@ -369,7 +425,7 @@ class App extends Component {
   }
 
   tokenToExchangeFactoryLookup = (tokenAddress) => {
-    this.state.factory.methods.tokenToExchangeLookup(tokenAddress).call((error, exchangeAddress) => {
+    this.props.web3.factoryContract.methods.tokenToExchangeLookup(tokenAddress).call((error, exchangeAddress) => {
         console.log(exchangeAddress)
     });
   }
@@ -398,18 +454,19 @@ class App extends Component {
           marketType = 'Token to ETH';
       } else if (this.state.inputToken.value === 'ETH'){
           marketType = 'ETH to Token';
-      } else{
+      } else {
           marketType = 'Token to Token';
       }
     }
     console.log(type + ': ' + selected.value);
+    this.props.setExchangeType(marketType);
     this.setState({exchangeType: marketType}, this.getInfo);
   }
 
   onInputChange = (event) => {
     var inputValue = event.target.value;
-    var marketType = this.state.exchangeType;
-
+    var marketType = this.props.web3.exchangeType;
+    
     if (marketType === 'Invalid'){
       this.setState({input: inputValue, output: 0, interaction: 'error1'});
     } else if(inputValue && inputValue !== 0 && inputValue !== '0'){
@@ -422,24 +479,24 @@ class App extends Component {
   }
 
   getExchangeRate = (input) => {
-    if (this.state.exchangeType === 'ETH to Token') {
+    if (this.props.web3.exchangeType === 'ETH to Token') {
       console.log('Getting Rate: ETH to ' + this.state.outputToken.value);
       this.ethToTokenRate(input);
-    } else if (this.state.exchangeType === 'Token to ETH') {
+    } else if (this.props.web3.exchangeType === 'Token to ETH') {
       console.log('Getting Rate: ' + this.state.inputToken.value + ' to ETH');
       this.tokenToEthRate(input);
-    } else if (this.state.exchangeType === 'Token to Token') {
+    } else if (this.props.web3.exchangeType === 'Token to Token') {
       console.log('Getting Rate: ' + this.state.inputToken.value + ' to '  + this.state.outputToken.value);
       this.tokenToTokenRate(input);
     }
   }
 
   purchaseTokens = () => {
-    if (this.state.exchangeType === 'ETH to Token') {
+    if (this.props.web3.exchangeType === 'ETH to Token') {
       this.ethToTokenPurchase();
-    } else if (this.state.exchangeType === 'Token to ETH') {
+    } else if (this.props.web3.exchangeType === 'Token to ETH') {
       this.tokenToEthPurchase();
-    } else if (this.state.exchangeType === 'Token to Token') {
+    } else if (this.props.web3.exchangeType=== 'Token to Token') {
       this.tokenToTokenPurchase();
     }
   }
@@ -514,10 +571,10 @@ class App extends Component {
     var minTokensInt = localweb3.utils.toWei(minTokens);
     var ethSold = this.state.input;
     var weiSold = localweb3.utils.toWei(ethSold);
-    var timeout = this.state.blockTimestamp + 300; //current block time + 5mins
+    var timeout = this.props.web3.blockTimestamp + 300; //current block time + 5mins
     console.log(minTokensInt, weiSold, timeout);
 
-    exchange.methods.ethToTokenSwap(minTokensInt, timeout).send({from: this.state.currentMaskAddress, value: weiSold})
+    exchange.methods.ethToTokenSwap(minTokensInt, timeout).send({from: this.props.web3.currentMaskAddress, value: weiSold})
       .on('transactionHash', (result) => {
         console.log('Transaction Hash created')
         let transactions = this.state.transactions
@@ -540,9 +597,9 @@ class App extends Component {
     var minEthInt = localweb3.utils.toWei(minEth);
     var tokensSold = this.state.input;
     var tokensSoldInt = localweb3.utils.toWei(tokensSold);
-    var timeout = this.state.blockTimestamp + 300; //current block time + 5mins
+    var timeout = this.props.web3.blockTimestamp + 300; //current block time + 5mins
 
-    exchange.methods.tokenToEthSwap(tokensSoldInt, minEthInt, timeout).send({from: this.state.currentMaskAddress})
+    exchange.methods.tokenToEthSwap(tokensSoldInt, minEthInt, timeout).send({from: this.props.web3.currentMaskAddress})
       .on('transactionHash', (result) => {
         console.log('Transaction Hash created')
         let transactions = this.state.transactions
@@ -562,9 +619,9 @@ class App extends Component {
     var minTokensInt = localweb3.utils.toWei(minTokens);
     var tokensSold = this.state.input;
     var tokensSoldInt = localweb3.utils.toWei(tokensSold);
-    var timeout = this.state.blockTimestamp + 300; //current block time + 5mins
+    var timeout = this.props.web3.blockTimestamp + 300; //current block time + 5mins
 
-    exchange.methods.tokenToTokenSwap(tokenOutAddress, tokensSoldInt, minTokensInt, timeout).send({from: this.state.currentMaskAddress})
+    exchange.methods.tokenToTokenSwap(tokenOutAddress, tokensSoldInt, minTokensInt, timeout).send({from: this.props.web3.currentMaskAddress})
       .on('transactionHash', (result) => {
         console.log('Transaction Hash created')
         let transactions = this.state.transactions
@@ -601,32 +658,32 @@ class App extends Component {
 
   render() {
     return (
-      <div className={this.state.connected && !this.state.locked && this.state.interaction !== 'disconnected' ? "App" : "App dim"}>
+      <div className={this.props.web3.connected && !this.props.web3.metamaskLocked && this.props.web3.interaction !== 'disconnected' ? "App" : "App dim"}>
         <Head />
         <section className="title">
           <div className="logo border pa2">
             <span role="img" aria-label="Unicorn">🦄</span>
           </div>
           <NetworkStatus
-            network={this.state.networkMessage}
-            connected={this.state.connected}
+            network={this.props.web3.networkMessage}
+            connected={this.props.web3.connected}
             metamask={this.props.metamask}
-            interaction={this.state.interaction}
-            address={this.state.currentMaskAddress}
-            locked={this.state.locked}
+            interaction={this.props.web3.interaction}
+            address={this.props.web3.currentMaskAddress}
+            locked={this.props.web3.metamaskLocked}
             balance={this.state.inputBalance}/>
         </section>
         <ConnectionHelper
-          network={this.state.networkMessage}
-          connected={this.state.connected}
+          network={this.props.web3.networkMessage}
+          connected={this.props.web3.connected}
           metamask={this.props.metamask}
-          address={this.state.currentMaskAddress}
-          locked={this.state.locked}
+          address={this.props.web3.currentMaskAddress}
+          locked={this.props.web3.metamaskLocked}
           approved={this.state.approved}
           tokenAdded={this.state.tokenAdded}
           approveAllowance={this.approveAllowance}
-          interaction={this.state.interaction}
-          exchangeType={this.state.exchangeType}
+          interaction={this.props.web3.interaction}
+          exchangeType={this.props.web3.exchangeType}
           firstRun={this.state.firstRun}
           uniAdded={this.state.uniAdded}
           swapAdded={this.state.swapAdded}
@@ -638,6 +695,9 @@ class App extends Component {
           outputToken={this.state.outputToken}
           about={this.state.about}
         />
+        <section className="candlestick">
+          <Candlesticks />
+        </section>
         <section className="order">
           <div className="value border pa2">
             <input type="number" value={this.state.input} placeholder="0" onChange={this.onInputChange} />
@@ -664,7 +724,7 @@ class App extends Component {
           </span>
         </section>
 
-        {this.state.interaction === 'input' ?
+        {this.props.web3.interaction === 'input' ?
           <a className="swap border pa2" role="button" onClick={() => {this.purchaseTokens()}}>
 
               <b>{"I want to swap " + this.state.input + " " + this.state.inputToken.value + " for " + this.state.output/10**18 + " " + this.state.outputToken.value}</b>
@@ -701,7 +761,7 @@ class App extends Component {
           </a>
         </section>
 
-        {this.state.transactions.length > 0 && this.state.interaction !== 'disconnected' ?
+        {this.state.transactions.length > 0 && this.props.web3.interaction !== 'disconnected' ?
         <section className="transaction border pa2">
           <p className="underline">Past Transactions:</p>
           <Transactions transactions={this.state.transactions}/>
@@ -712,4 +772,29 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => ({ 
+  web3: state.web3,  
+  exchangeContracts: state.exchangeContracts,
+  tokenContracts: state.tokenContracts
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    web3ConnectionSuccessful,
+    web3ConnectionUnsuccessful,
+    setCurrentMaskAddress,
+    metamaskLocked,
+    metamaskUnlocked,
+    setInteractionState,
+    factoryContractReady,
+    uniExchangeContractReady,
+    swtExchangeContractReady,
+    uniTokenContractReady,
+    swtTokenContractReady,
+    setNetworkMessage,
+    setBlockTimestamp,
+    setExchangeType
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
