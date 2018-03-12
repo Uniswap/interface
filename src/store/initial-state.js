@@ -10,6 +10,7 @@
 export default {
   // lets check if metamask is installed 
   // also, lets assume that we're disconnected initially 
+  // we're going to need to include a seperate nest for exchange actions
   web3: { 
     connected: false,
     currentMaskAddress: '',
@@ -36,5 +37,22 @@ export default {
   tokenContracts: {
     UNI: '',
     SWT: ''
+  },
+  exchange: {
+    inputBalance: 0,
+    outputBalance: 0,
+    inputToken: { value: 'ETH', label: 'ETH', clearableValue: false },
+    outputToken: { value: 'UNI', label: 'UNI', clearableValue: false },
+    invariant1: 0,
+    invariant2: 0,
+    marketEth1: 0,
+    marketEth2: 0,
+    marketTokens1: 0,
+    marketTokens2: 0,
+    allowanceApproved: true,
+    inputValue: 0,
+    outputValue: 0,
+    rate: 0,
+    fee: 0,
   }
 }
