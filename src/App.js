@@ -14,17 +14,17 @@ import { exchangeABI } from './helpers/exchangeABI.js'
 import { tokenABI } from './helpers/tokenABI.js'
 import { factoryABI } from './helpers/factoryABI.js'
 
-// enter redux 
+// enter redux
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
-import { 
-  web3ConnectionSuccessful, 
+import {
+  web3ConnectionSuccessful,
   web3ConnectionUnsuccessful,
   setCurrentMaskAddress,
   metamaskLocked,
   metamaskUnlocked,
   setInteractionState,
-  factoryContractReady, 
+  factoryContractReady,
   setNetworkMessage,
   setBlockTimestamp,
   setExchangeType
@@ -53,15 +53,15 @@ import {
   setMarketTokens2,
   setAllowanceApprovalState,
   setExchangeInputValue,
-  setExchangeOutputValue, 
+  setExchangeOutputValue,
   setExchangeRate,
   setExchangeFee
 } from './actions/exchange-actions';
 
 // enter d3
-import Candlesticks from './components/Candlesticks'
+// import Candlesticks from './components/Candlesticks'
 
-var localweb3; // this isn't even in state 
+var localweb3; // this isn't even in state
 
 class App extends Component {
   constructor (props) {
@@ -94,13 +94,11 @@ class App extends Component {
         transactions: cookie.load('transactions') || [],
       })
       this.getInfoFirstTime();
-      // this.getContracts();
-      this.getUserAddress(); 
-      this.checkNetwork(); 
-      this.getBlock(); 
+      this.checkNetwork();
+      this.getBlock();
     }
   }
-  
+
   componentDidMount(){
     if(localweb3 === 'undefined') {
       this.props.web3ConnectionUnsuccessful();
@@ -117,8 +115,17 @@ class App extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('nextProps', nextProps)
+    // console.log('nextProps', nextProps)
   }
+
+  // getInfoFirstTime = async () => {
+  //     await this.getUserAddress();
+  //     if(this.props.web3.currentMaskAddress !== '') {
+  //       await this.getContracts();
+  //       this.getMarketInfo();
+  //       this.getAccountInfo();
+  //     }
+  // }
 
   getInfoFirstTime = () => {
     localweb3.eth.getAccounts((error, result) => {
@@ -134,15 +141,16 @@ class App extends Component {
         this.props.metamaskLocked();
         this.props.web3ConnectionUnsuccessful();
         this.props.setInteractionState('locked');
+
       }
     })
   }
 
-  getUserAddress = () => {
-    // kind of redundant 
+  getUserAddress = async () => {
+    // kind of redundant
     // only difference is getInfoFirstTime fires getContracts too
-    // THIS FIRES EVERY TEN SECONDS, NEEDS A REFACTOR 
-    localweb3.eth.getAccounts((error, result) => {
+    // THIS FIRES EVERY TEN SECONDS, NEEDS A REFACTOR
+    await localweb3.eth.getAccounts(async (error, result) => {
       if(result.length > 0) {
         this.props.setCurrentMaskAddress(result[0]);
         this.props.metamaskUnlocked();
@@ -152,15 +160,15 @@ class App extends Component {
         this.props.metamaskLocked();
         this.props.web3ConnectionUnsuccessful();
         this.props.setInteractionState('locked');
-      }   
+      }
     })
   }
 
-  getContracts() {
+  getContracts = async () => {
     const uniExchangeAddress = this.props.web3.exchangeAddresses.UNI;
     const uniExchangeContract = new localweb3.eth.Contract(exchangeABI, uniExchangeAddress);
     this.props.uniExchangeContractReady(uniExchangeContract);
-    
+
     const swapExchangeAddress = this.props.web3.exchangeAddresses.SWT;
     const swapExchangeContract = new localweb3.eth.Contract(exchangeABI, swapExchangeAddress);
     this.props.swtExchangeContractReady(swapExchangeContract);
@@ -177,8 +185,8 @@ class App extends Component {
     const factoryContract = new localweb3.eth.Contract(factoryABI, factoryAddress);
     this.props.factoryContractReady(factoryContract);
 
-    this.getInfo();
-    
+    this.getAccountInfo();
+    this.getMarketInfo();
   }
 
   checkNetwork() {
@@ -223,7 +231,7 @@ class App extends Component {
       this.props.setBlockTimestamp(blockInfo.timestamp);
     });
   }
-  
+
   symbolToTokenAddress = (symbol) => {
     if(symbol === 'UNI') {
       return this.props.web3.exchangeAddresses.UNI;
@@ -256,12 +264,7 @@ class App extends Component {
     }
   }
 
-  getInfo = () => {
-    this.getMarketInfo();
-    this.getAccountInfo();
-  }
-  
-  getMarketInfo = () => {    
+  getMarketInfo = () => {
     switch (this.props.web3.exchangeType) {
       case 'ETH to Token':
         this.getExchangeState('output');
@@ -295,6 +298,7 @@ class App extends Component {
         break;
       default:
     }
+    console.log("Getting account info");
   }
 
   getExchangeState = (type) => {
@@ -322,7 +326,7 @@ class App extends Component {
           this.props.setInvariant2(result);
           // console.log('Output Invariant: ' + result);
         });
-        
+
         exchange.methods.ethInMarket().call().then((result, error) => {
           this.props.setMarketEth2(result);
           // console.log('Output Market ETH: ' + result);
@@ -334,7 +338,7 @@ class App extends Component {
         });
     }
   }
- 
+
   getEthBalance = (type) => {
     if (type === 'input') {
       localweb3.eth.getBalance(this.props.web3.currentMaskAddress, (error, balance) => {
@@ -388,7 +392,7 @@ class App extends Component {
       var token = this.symbolToTokenContract(this.props.exchange.inputToken.value);
       var exchangeAddress = this.symbolToExchangeAddress(this.props.exchange.inputToken.value);
       var amount = localweb3.utils.toWei('100000');
-      
+
       token.methods.approve(exchangeAddress, amount).send({from: this.props.web3.currentMaskAddress})
       .on('transactionHash', console.log('Transaction Hash created'))
       .on('receipt', (receipt) => {
@@ -400,13 +404,14 @@ class App extends Component {
     }
   }
 
+  // TODO: stuff
   tokenToExchangeFactoryLookup = (tokenAddress) => {
     this.props.web3.factoryContract.methods.tokenToExchangeLookup(tokenAddress).call((error, exchangeAddress) => {
         console.log(exchangeAddress)
     });
   }
 
-  onSelectToken = (selected, type) => {
+  onSelectToken = async (selected, type) => {
     this.props.setExchangeInputValue(0);
     this.props.setExchangeOutputValue(0);
     this.props.setExchangeRate(0);
@@ -414,52 +419,51 @@ class App extends Component {
     this.props.setInteractionState('connected');
     this.setState({ firstRun: true })
 
-    var marketType = '';
     if (type === 'input') {
-      this.props.setInputToken(selected);
-      if (selected.value === this.props.exchange.outputToken.value) {
-        marketType = 'Invalid';
-        this.props.setInteractionState('error1');
-      } else if (selected.value === 'ETH'){
-          marketType = 'ETH to Token';
-      } else if (this.props.exchange.outputToken.value === 'ETH'){
-          marketType = 'Token to ETH';
-      } else{
-          marketType = 'Token to Token';
-      }
+      await this.props.setInputToken(selected);
     } else if (type === 'output'){
-      this.props.setOutputToken(selected);
-      if (selected.value === this.props.exchange.inputToken.value) {
-        marketType = 'Invalid';
-        this.props.setInteractionState('error1');
-      } else if (selected.value === 'ETH'){
-          marketType = 'Token to ETH';
-      } else if (this.props.exchange.inputToken.value === 'ETH'){
-          marketType = 'ETH to Token';
-      } else {
-          marketType = 'Token to Token';
-      }
+      await this.props.setOutputToken(selected);
     }
-    console.log(type + ': ' + selected.value);
-    this.props.setExchangeType(marketType);
-    this.getInfo();
+
+    await this.getMarketType();
+    this.getAccountInfo();
+    this.getMarketInfo();
   }
 
-  onInputChange = (event) => {
+  getMarketType = () => {
+    var marketType = '';
+
+    if (this.props.exchange.inputToken.value === this.props.exchange.outputToken.value) {
+      marketType = 'Invalid';
+      this.props.setInteractionState('error1');
+    } else if (this.props.exchange.inputToken.value === 'ETH'){
+        marketType = 'ETH to Token';
+    } else if (this.props.exchange.outputToken.value === 'ETH'){
+        marketType = 'Token to ETH';
+    } else{
+        marketType = 'Token to Token';
+    }
+    this.props.setExchangeType(marketType);
+    console.log('type: ', marketType);
+    console.log('input: ', this.props.exchange.inputToken.value);
+    console.log('output: ', this.props.exchange.outputToken.value);
+  }
+
+  onInputChange = async (event) => {
     var inputValue = event.target.value;
-    var marketType = this.props.web3.exchangeType;
-    
-    if (marketType === 'Invalid'){
-      this.props.setExchangeInputValue(inputValue);
+    await this.props.setExchangeInputValue(inputValue);
+    this.setExchangeOutput();
+  }
+
+  setExchangeOutput = () => {
+    var inputValue = this.props.exchange.inputValue;
+    if (this.props.web3.exchangeType === 'Invalid'){
       this.props.setExchangeOutputValue(0);
       this.props.setInteractionState('error1');
     } else if(inputValue && inputValue !== 0 && inputValue !== '0'){
-        this.props.setExchangeInputValue(inputValue);
         this.props.setInteractionState('input');
-        console.log('input something');
         this.getExchangeRate(inputValue);
     } else {
-        this.props.setExchangeInputValue(inputValue);
         this.props.setExchangeOutputValue(0);
         this.props.setInteractionState('connected');
     }
@@ -548,7 +552,8 @@ class App extends Component {
     this.props.setExchangeFee(exchangeFee1);
     this.props.setExchangeOutputValue(adjustedTokensOut);
   }
-  // YOU ARE HERE NOW 
+
+  // YOU ARE HERE NOW
   ethToTokenPurchase = () => {
     var exchange = this.symbolToExchangeContract(this.props.exchange.outputToken.value);
     var minTokens = (this.props.exchange.outputValue/10**18).toString();
@@ -563,7 +568,7 @@ class App extends Component {
         console.log('Transaction Hash created')
         let transactions = this.state.transactions
         transactions.push(result);
-        // transactions is cookie stuff, we'll keep that in state 
+        // transactions is cookie stuff, we'll keep that in state
         this.setState({ transactions: transactions })
         // any particular reason why there are initialized as 0, but get turned to empty strings after the transaction is over?
         this.props.setExchangeInputValue('');
@@ -576,11 +581,15 @@ class App extends Component {
       })  //Transaction Submitted to blockchain
       .on('confirmation', (confirmationNumber, receipt) => {
         console.log("Block Confirmations: " + confirmationNumber)
+        if(confirmationNumber === 1) {
+          this.getAccountInfo();
+        }
       })  //Transaction Mined
       .on('error', console.error);
   }
+
   // tokenToEth and EthToToken purchase functions are very similar structurally
-  // maybe we can make this more DRY in refactor 
+  // maybe we can make this more DRY in refactor
   tokenToEthPurchase = () => {
     var exchange = this.symbolToExchangeContract(this.props.exchange.inputToken.value);
     var minEth = (this.props.exchange.outputValue/10**18).toString();
@@ -632,13 +641,13 @@ class App extends Component {
 
   onCloseHelper = () => {
     if(this.props.exchange.outputToken.value === 'UNI'){
-      this.setState({ uniAdded: true }) // cookie stuff 
+      this.setState({ uniAdded: true }) // cookie stuff
       cookie.save('uniAdded', true, { path: '/' })
     } else if(this.props.exchange.outputToken.value === 'SWAP'){
-      this.setState({ swapAdded: true }) // more cookie stuff 
+      this.setState({ swapAdded: true }) // more cookie stuff
       cookie.save('swapAdded', true, { path: '/' })
     } else {
-      this.setState({ firstRun: !this.state.firstRun }) // also cookie stuff 
+      this.setState({ firstRun: !this.state.firstRun }) // also cookie stuff
       cookie.save('firstRun', !this.state.firstRun, { path: '/' })
     }
   }
@@ -692,9 +701,6 @@ class App extends Component {
           outputToken={this.props.exchange.outputToken}
           about={this.state.about}
         />
-        <section className="candlestick">
-          <Candlesticks />
-        </section>
         <section className="order">
           <div className="value border pa2">
             <input type="number" value={this.props.exchange.inputValue} placeholder="0" onChange={this.onInputChange} />
@@ -725,7 +731,6 @@ class App extends Component {
           <a className="swap border pa2" role="button" onClick={() => {this.purchaseTokens()}}>
 
               <b>{"I want to swap " + this.props.exchange.inputValue + " " + this.props.exchange.inputToken.value + " for " + this.props.exchange.outputValue/10**18 + " " + this.props.exchange.outputToken.value}</b>
-            {/* <button> Approve </button> */}
           </a>
           : <a className="swap grey-bg hidden border pa2"></a>}
 
@@ -769,8 +774,8 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => ({ 
-  web3: state.web3,  
+const mapStateToProps = state => ({
+  web3: state.web3,
   exchangeContracts: state.exchangeContracts,
   tokenContracts: state.tokenContracts,
   exchange: state.exchange
@@ -802,7 +807,7 @@ const mapDispatchToProps = (dispatch) => {
     setMarketEth2,
     setMarketTokens1,
     setMarketTokens2,
-    setAllowanceApprovalState, 
+    setAllowanceApprovalState,
     setExchangeInputValue,
     setExchangeOutputValue,
     setExchangeRate,
