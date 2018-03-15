@@ -1,4 +1,4 @@
-import { 
+import {
   WEB3_CONNECTION_SUCCESSFUL,
   WEB3_CONNECTION_UNSUCCESSFUL,
   SET_CURRENT_MASK_ADDRESS,
@@ -7,12 +7,13 @@ import {
   SET_INTERACTION_STATE,
   FACTORY_CONTRACT_READY,
   SET_NETWORK_MESSAGE,
-  SET_BLOCK_TIMESTAMP, 
-  SET_EXCHANGE_TYPE
+  SET_BLOCK_TIMESTAMP,
+  SET_EXCHANGE_TYPE,
+  PUT_WEB3_IN_STORE
 } from '../constants';
 
-// this actions folder is actually full of action creators 
-// your asynchronous calls are going to be in redux-thunk style action creators 
+// this actions folder is actually full of action creators
+// your asynchronous calls are going to be in redux-thunk style action creators
 
 export const web3ConnectionSuccessful = () => ({
   type: WEB3_CONNECTION_SUCCESSFUL,
@@ -54,7 +55,7 @@ export const setNetworkMessage = (networkMessage) => ({
   networkMessage
 });
 
-export const setBlockTimestamp = (timestamp) => ({ 
+export const setBlockTimestamp = (timestamp) => ({
   type: SET_BLOCK_TIMESTAMP,
   timestamp
 });
@@ -63,3 +64,8 @@ export const setExchangeType = (exchangeType) => ({
   type: SET_EXCHANGE_TYPE,
   exchangeType
 });
+
+export const putWeb3InStore = (globalWeb3) => ({
+  type: PUT_WEB3_IN_STORE,
+  globalWeb3
+})

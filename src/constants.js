@@ -1,7 +1,7 @@
-// here is where we put the string literals for the actions 
+// here is where we put the string literals for the actions
 // maybe there's an action to see if you've been connected to web3
 
-// web3 actions, all set from action creator to reducer to app 
+// web3 actions, all set from action creator to reducer to app
 export const CHECK_WEB3_CONNECTION = 'CHECK_WEB3_CONNECTION';
 export const WEB3_CONNECTION_SUCCESSFUL = 'WEB3_CONNECTION_SUCCESSFUL';
 export const WEB3_CONNECTION_UNSUCCESSFUL = 'WEB3_CONNECTION_UNSUCCESSFUL';
@@ -26,7 +26,7 @@ export const SWT_EXCHANGE_CONTRACT_READY = 'SWT_EXCHANGE_CONTRACT_READY';
 export const UNI_TOKEN_CONTRACT_READY = 'UNI_TOKEN_CONTRACT_READY';
 export const SWT_TOKEN_CONTRACT_READY = 'SWT_TOKEN_CONTRACT_READY';
 
-// actions for the exchange, all in one place 
+// actions for the exchange, all in one place
 export const SET_INPUT_BALANCE = 'SET_INPUT_BALANCE';
 export const SET_OUTPUT_BALANCE = 'SET_OUTPUT_BALANCE';
 export const SET_INPUT_TOKEN = 'SET_INPUT_TOKEN';
@@ -42,3 +42,6 @@ export const SET_EXCHANGE_INPUT_VALUE = 'SET_EXCHANGE_INPUT_VALUE';
 export const SET_EXCHANGE_OUTPUT_VALUE = 'SET_EXCHANGE_OUTPUT_VALUE';
 export const SET_EXCHANGE_RATE = 'SET_EXCHANGE_RATE';
 export const SET_EXCHANGE_FEE = 'SET_EXCHANGE_FEE';
+
+// test setInteractionState
+export const PUT_WEB3_IN_STORE = 'PUT_WEB3_IN_STORE';
