@@ -55,10 +55,17 @@ export const setNetworkMessage = (networkMessage) => ({
   networkMessage
 });
 
-export const setBlockTimestamp = (timestamp) => ({
-  type: SET_BLOCK_TIMESTAMP,
-  timestamp
-});
+export const setBlockTimestamp = (globalWeb3) => {
+  return async (dispatch, getState) => {
+    await globalWeb3.eth.getBlock('latest', (error, blockInfo) => {
+      console.log(blockInfo.timestamp, 'BLOCKTIMESTAMP');
+      dispatch({
+        type: SET_BLOCK_TIMESTAMP,
+        timestamp: blockInfo.timestamp
+      })
+    });
+  }
+}
 
 export const setExchangeType = (exchangeType) => ({
   type: SET_EXCHANGE_TYPE,

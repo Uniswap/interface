@@ -84,6 +84,7 @@ class App extends Component {
 
   // lets start with what's in the componentDidMount
   componentWillMount(){
+    this.props.putWeb3InStore(localweb3);
     console.log('props', this.props)
     if(localweb3 === 'undefined') {
       this.props.web3ConnectionUnsuccessful();
@@ -223,12 +224,6 @@ class App extends Component {
           this.props.setInteractionState('disconnected');
       }
     })
-  }
-
-  getBlock = () => {
-    localweb3.eth.getBlock('latest', (error, blockInfo) => {
-      this.props.setBlockTimestamp(blockInfo.timestamp);
-    });
   }
 
   symbolToTokenAddress = (symbol) => {
@@ -469,6 +464,7 @@ class App extends Component {
   }
 
   getExchangeRate = (input) => {
+    console.log(this.props.web3Store.globalWeb3, 'this better be defined')
     if (this.props.web3Store.exchangeType === 'ETH to Token') {
       console.log('Getting Rate: ETH to ' + this.props.exchange.outputToken.value);
       this.ethToTokenRate(input);
@@ -478,16 +474,6 @@ class App extends Component {
     } else if (this.props.web3Store.exchangeType === 'Token to Token') {
       console.log('Getting Rate: ' + this.props.exchange.inputToken.value + ' to '  + this.props.exchange.outputToken.value);
       this.tokenToTokenRate(input);
-    }
-  }
-
-  purchaseTokens = () => {
-    if (this.props.web3Store.exchangeType === 'ETH to Token') {
-      this.ethToTokenPurchase();
-    } else if (this.props.web3Store.exchangeType === 'Token to ETH') {
-      this.tokenToEthPurchase();
-    } else if (this.props.web3Store.exchangeType=== 'Token to Token') {
-      this.tokenToTokenPurchase();
     }
   }
 
@@ -552,16 +538,26 @@ class App extends Component {
     this.props.setExchangeOutputValue(adjustedTokensOut);
   }
 
+  purchaseTokens = async () => {
+    await this.props.setBlockTimestamp(this.props.web3Store.globalWeb3);
+    if (this.props.web3Store.exchangeType === 'ETH to Token') {
+      this.ethToTokenPurchase();
+    } else if (this.props.web3Store.exchangeType === 'Token to ETH') {
+      this.tokenToEthPurchase();
+    } else if (this.props.web3Store.exchangeType=== 'Token to Token') {
+      this.tokenToTokenPurchase();
+    }
+  }
+  
   // YOU ARE HERE NOW
-  ethToTokenPurchase = async () => {
-    await this.getBlock();
+  ethToTokenPurchase = () => {
     var exchange = this.symbolToExchangeContract(this.props.exchange.outputToken.value);
     var minTokens = (this.props.exchange.outputValue/10**18).toString();
     var minTokensInt = localweb3.utils.toWei(minTokens);
     var ethSold = this.props.exchange.inputValue;
     var weiSold = localweb3.utils.toWei(ethSold);
     var timeout = this.props.web3Store.blockTimestamp + 300; //current block time + 5mins
-    console.log(minTokensInt, weiSold, timeout);
+    // console.log(minTokensInt, weiSold, timeout);
 
     exchange.methods.ethToTokenSwap(minTokensInt, timeout).send({from: this.props.web3Store.currentMaskAddress, value: weiSold})
       .on('transactionHash', (result) => {
@@ -590,8 +586,7 @@ class App extends Component {
 
   // tokenToEth and EthToToken purchase functions are very similar structurally
   // maybe we can make this more DRY in refactor
-  tokenToEthPurchase = async () => {
-    await this.getBlock();
+  tokenToEthPurchase = () => {
     var exchange = this.symbolToExchangeContract(this.props.exchange.inputToken.value);
     var minEth = (this.props.exchange.outputValue/10**18).toString();
     var minEthInt = localweb3.utils.toWei(minEth);
@@ -615,8 +610,7 @@ class App extends Component {
       .on('error', console.error);
   }
 
-  tokenToTokenPurchase = async () => {
-    await this.getBlock();
+  tokenToTokenPurchase = () => {
     var exchange = this.symbolToExchangeContract(this.props.exchange.inputToken.value);
     var tokenOutAddress = this.symbolToTokenAddress(this.props.exchange.outputToken.value);
     var minTokens = (this.props.exchange.outputValue/10**18).toString();
