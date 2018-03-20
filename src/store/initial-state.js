@@ -13,6 +13,7 @@ export default {
   // we're going to need to include a seperate nest for exchange actions
   web3Store: {
     connected: false,
+    globalWeb3: {},
     currentMaskAddress: '',
     metamaskLocked: true,
     interaction: '',

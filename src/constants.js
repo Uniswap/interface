@@ -44,4 +44,4 @@ export const SET_EXCHANGE_RATE = 'SET_EXCHANGE_RATE';
 export const SET_EXCHANGE_FEE = 'SET_EXCHANGE_FEE';
 
 // test setInteractionState
-export const PUT_WEB3_IN_STORE = 'PUT_WEB3_IN_STORE';
+export const INITIALIZE_GLOBAL_WEB3 = 'INITIALIZE_GLOBAL_WEB3';
