@@ -10,7 +10,7 @@ import {
   SET_NETWORK_MESSAGE,
   SET_BLOCK_TIMESTAMP,
   SET_EXCHANGE_TYPE,
-  PUT_WEB3_IN_STORE
+  INITIALIZE_GLOBAL_WEB3
 } from '../constants';
 
 export default (state = {}, action) => {
@@ -36,7 +36,7 @@ export default (state = {}, action) => {
       return Object.assign({}, state, { blockTimestamp: timestamp });
     case SET_EXCHANGE_TYPE: 
       return Object.assign({}, state, { exchangeType: exchangeType });
-    case PUT_WEB3_IN_STORE:
+    case INITIALIZE_GLOBAL_WEB3:
       return Object.assign({}, state, { globalWeb3: globalWeb3 });
     default: return state;
   }
