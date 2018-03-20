@@ -9,7 +9,7 @@ import {
   SET_NETWORK_MESSAGE,
   SET_BLOCK_TIMESTAMP,
   SET_EXCHANGE_TYPE,
-  PUT_WEB3_IN_STORE
+  INITIALIZE_GLOBAL_WEB3
 } from '../constants';
 
 // this actions folder is actually full of action creators
@@ -55,8 +55,9 @@ export const setNetworkMessage = (networkMessage) => ({
   networkMessage
 });
 
-export const setBlockTimestamp = (globalWeb3) => {
+export const setBlockTimestamp = () => {
   return async (dispatch, getState) => {
+    const { globalWeb3 } = getState().web3Store
     await globalWeb3.eth.getBlock('latest', (error, blockInfo) => {
       console.log(blockInfo.timestamp, 'BLOCKTIMESTAMP');
       dispatch({
@@ -72,7 +73,7 @@ export const setExchangeType = (exchangeType) => ({
   exchangeType
 });
 
-export const putWeb3InStore = (globalWeb3) => ({
-  type: PUT_WEB3_IN_STORE,
+export const initializeGlobalWeb3 = (globalWeb3) => ({
+  type: INITIALIZE_GLOBAL_WEB3,
   globalWeb3
 })

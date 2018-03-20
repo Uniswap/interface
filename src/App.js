@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import Web3 from 'web3';
-import scrollToComponent from 'react-scroll-to-component';
 import cookie from 'react-cookies'
 
 import Head from './components/Head'
 import NetworkStatus from './components/NetworkStatus'
 import ConnectionHelper from './components/ConnectionHelper'
 import Transactions from './components/Transactions'
-import SelectToken from './components/SelectToken'
+// import SelectToken from './components/SelectToken'
 import './App.css';
+
+// enter the react refactor 
+import About from './components/About';
+import Links from './components/Links';
+import Swap from './components/Swap';
+import Order from './components/Order';
+import OrderContainer from './containers/OrderContainer';
+import RateAndFee from './components/RateAndFee';
 
 import { exchangeABI } from './helpers/exchangeABI.js'
 import { tokenABI } from './helpers/tokenABI.js'
@@ -28,7 +35,7 @@ import {
   setNetworkMessage,
   setBlockTimestamp,
   setExchangeType,
-  putWeb3InStore
+  initializeGlobalWeb3
 } from './actions/web3-actions';
 
 import {
@@ -59,6 +66,9 @@ import {
   setExchangeFee
 } from './actions/exchange-actions';
 
+// redux-subscribe 
+import { subscribe } from 'redux-subscriber';
+
 // enter d3
 // import Candlesticks from './components/Candlesticks'
 
@@ -78,14 +88,12 @@ class App extends Component {
       swapAdded: false, // cookie stuff
       firstRun: true, // cookie stuff
       transactions: [], // cookie stuff
-      about: false,
     }
   }
-
-  // lets start with what's in the componentDidMount
-  componentWillMount(){
-    this.props.putWeb3InStore(localweb3);
-    console.log('props', this.props)
+  // TODO: get rid of redundant localweb3 === 'undefined' checks in componentWill/DidMount
+  // STATUS: kind of done 
+  componentWillMount() {
+    console.log('props', this.props);
     if(localweb3 === 'undefined') {
       this.props.web3ConnectionUnsuccessful();
     } else {
@@ -95,63 +103,52 @@ class App extends Component {
         uniAdded: cookie.load('uniAdded') || false,
         transactions: cookie.load('transactions') || [],
       })
+      // we're working with asynchronous redux 
+      this.props.initializeGlobalWeb3(localweb3)
       this.getInfoFirstTime();
       this.checkNetwork();
     }
   }
 
   componentDidMount (){
-    if(localweb3 === 'undefined') {
-      this.props.web3ConnectionUnsuccessful();
-      this.props.putWeb3InStore(localweb3);
-    } else if(this.props.web3Store.connected === true) {
-      console.log('successfully connected to metamask');
-      setInterval(this.getMarketInfo, 15000);
-      setInterval(this.getAccountInfo, 15000);
-      setInterval(this.getUserAddress, 10000);
-    } else {
-      setInterval(this.getUserAddress, 500);
-    }
+    // basic format to wrap functions you want firing upon a certain state change
+    // eslint-disable-next-line no-unused-vars
+    const web3Subscriber = subscribe('web3Store.connected', state => {
+      if(state.web3Store.connected === true && !state.web3Store.metamaskLocked) {
+        console.log('successfully connected to metamask', state.web3Store.currentMaskAddress);
+        setInterval(this.getMarketInfo, 15000);
+        setInterval(this.getAccountInfo, 15000);
+        setInterval(this.getUserAddress, 10000);
+      } else {
+        console.log('web3 not connected, getting user address')
+        setInterval(this.getUserAddress, 500);
+      }
+    })   
   }
-
+ 
   componentWillReceiveProps(nextProps) {
-    // console.log('nextProps', nextProps)
+    //console.log('nextProps', nextProps)
   }
-
-  // getInfoFirstTime = async () => {
-  //     await this.getUserAddress();
-  //     if(this.props.web3Store.currentMaskAddress !== '') {
-  //       await this.getContracts();
-  //       this.getMarketInfo();
-  //       this.getAccountInfo();
-  //     }
-  // }
-
+  // TODO: getInfoFirstTime and getUserAddress are WET af 
+  // lets do something about it 
   getInfoFirstTime = () => {
     localweb3.eth.getAccounts((error, result) => {
-      console.log('getInfoFirstTime result', result)
       if(result.length > 0){
-        // REEEEDUUUUUUXXX
         this.props.setCurrentMaskAddress(result[0]);
         this.props.metamaskUnlocked();
         this.props.web3ConnectionSuccessful();
         this.getContracts();
-      }
-      else {
+      } else {
         this.props.metamaskLocked();
         this.props.web3ConnectionUnsuccessful();
         this.props.setInteractionState('locked');
-
       }
     })
   }
-
-  getUserAddress = async () => {
-    // kind of redundant
-    // only difference is getInfoFirstTime fires getContracts too
-    // THIS FIRES EVERY TEN SECONDS, NEEDS A REFACTOR
-    await localweb3.eth.getAccounts(async (error, result) => {
-      if(result.length > 0) {
+  // fun fact, localweb3.eth.getAccounts will return something even without anything inside 
+  getUserAddress = () => {
+   localweb3.eth.getAccounts((error, result) => {
+      if (result.length > 0) {
         this.props.setCurrentMaskAddress(result[0]);
         this.props.metamaskUnlocked();
         this.props.web3ConnectionSuccessful();
@@ -163,33 +160,8 @@ class App extends Component {
       }
     })
   }
-
-  getContracts = async () => {
-    const uniExchangeAddress = this.props.web3Store.exchangeAddresses.UNI;
-    const uniExchangeContract = new localweb3.eth.Contract(exchangeABI, uniExchangeAddress);
-    this.props.uniExchangeContractReady(uniExchangeContract);
-
-    const swapExchangeAddress = this.props.web3Store.exchangeAddresses.SWT;
-    const swapExchangeContract = new localweb3.eth.Contract(exchangeABI, swapExchangeAddress);
-    this.props.swtExchangeContractReady(swapExchangeContract);
-
-    const uniTokenAddress = this.props.web3Store.tokenAddresses.UNI;
-    const uniTokenContract = new localweb3.eth.Contract(tokenABI, uniTokenAddress);
-    this.props.uniTokenContractReady(uniTokenContract);
-
-    const swapTokenAddress = this.props.web3Store.tokenAddresses.SWT;
-    const swapTokenContract = new localweb3.eth.Contract(tokenABI, swapTokenAddress);
-    this.props.swtTokenContractReady(swapTokenContract);
-
-    const factoryAddress = this.props.web3Store.factoryAddress;
-    const factoryContract = new localweb3.eth.Contract(factoryABI, factoryAddress);
-    this.props.factoryContractReady(factoryContract);
-
-    this.getAccountInfo();
-    this.getMarketInfo();
-  }
-
-  checkNetwork() {
+  
+  checkNetwork = () => {
     localweb3.eth.net.getNetworkType((err, networkId) => {
       console.log("Connected to " + networkId)
       switch (networkId) {
@@ -226,11 +198,42 @@ class App extends Component {
     })
   }
 
+  // will require rewriting the connectionStatus reducer to take in true or falsa
+  // connectionSetter = (networkMessage, connectionStatus, interactionState) => {
+  //   this.props.setNetworkMessage(networkMessage)
+  // }
+
+  // could possibly use refactoring 
+  getContracts = () => {
+    const uniExchangeAddress = this.props.web3Store.exchangeAddresses.UNI;
+    const uniExchangeContract = new localweb3.eth.Contract(exchangeABI, uniExchangeAddress);
+    this.props.uniExchangeContractReady(uniExchangeContract);
+
+    const swapExchangeAddress = this.props.web3Store.exchangeAddresses.SWT;
+    const swapExchangeContract = new localweb3.eth.Contract(exchangeABI, swapExchangeAddress);
+    this.props.swtExchangeContractReady(swapExchangeContract);
+
+    const uniTokenAddress = this.props.web3Store.tokenAddresses.UNI;
+    const uniTokenContract = new localweb3.eth.Contract(tokenABI, uniTokenAddress);
+    this.props.uniTokenContractReady(uniTokenContract);
+
+    const swapTokenAddress = this.props.web3Store.tokenAddresses.SWT;
+    const swapTokenContract = new localweb3.eth.Contract(tokenABI, swapTokenAddress);
+    this.props.swtTokenContractReady(swapTokenContract);
+
+    const factoryAddress = this.props.web3Store.factoryAddress;
+    const factoryContract = new localweb3.eth.Contract(factoryABI, factoryAddress);
+    this.props.factoryContractReady(factoryContract);
+
+    this.getAccountInfo();
+    this.getMarketInfo();
+  }
+   
   symbolToTokenAddress = (symbol) => {
     if(symbol === 'UNI') {
-      return this.props.web3Store.exchangeAddresses.UNI;
+      return this.props.web3Store.tokenAddresses.UNI;
     } else if (symbol === 'SWAP') {
-      return this.props.web3Store.exchangeAddresses.SWT;
+      return this.props.web3Store.tokenAddresses.SWT;
     }
   }
 
@@ -273,7 +276,9 @@ class App extends Component {
       default:
     }
   }
-
+  // this quadruplet of functions will end up being shared amongst multiple components 
+  // will need to bring this out into a higher order component (we'll put that to the side for now)
+  // TODO: multiple components currently need this function, we will pass it to them via props 
   getAccountInfo = () => {
     switch (this.props.web3Store.exchangeType) {
       case 'ETH to Token':
@@ -294,7 +299,7 @@ class App extends Component {
     }
     console.log("Getting account info");
   }
-
+  
   getExchangeState = (type) => {
     var exchange;
     if (type === 'input') {
@@ -398,73 +403,13 @@ class App extends Component {
     }
   }
 
-  // TODO: stuff
   tokenToExchangeFactoryLookup = (tokenAddress) => {
     this.props.web3Store.factoryContract.methods.tokenToExchangeLookup(tokenAddress).call((error, exchangeAddress) => {
-        console.log(exchangeAddress)
+      console.log(exchangeAddress)
     });
   }
-
-  onSelectToken = async (selected, type) => {
-    this.props.setExchangeInputValue(0);
-    this.props.setExchangeOutputValue(0);
-    this.props.setExchangeRate(0);
-    this.props.setExchangeFee(0);
-    this.props.setInteractionState('connected');
-    this.setState({ firstRun: true })
-
-    if (type === 'input') {
-      await this.props.setInputToken(selected);
-    } else if (type === 'output'){
-      await this.props.setOutputToken(selected);
-    }
-
-    await this.getMarketType();
-    this.getAccountInfo();
-    this.getMarketInfo();
-  }
-
-  getMarketType = () => {
-    var marketType = '';
-
-    if (this.props.exchange.inputToken.value === this.props.exchange.outputToken.value) {
-      marketType = 'Invalid';
-      this.props.setInteractionState('error1');
-    } else if (this.props.exchange.inputToken.value === 'ETH'){
-        marketType = 'ETH to Token';
-    } else if (this.props.exchange.outputToken.value === 'ETH'){
-        marketType = 'Token to ETH';
-    } else{
-        marketType = 'Token to Token';
-    }
-    this.props.setExchangeType(marketType);
-    console.log('type: ', marketType);
-    console.log('input: ', this.props.exchange.inputToken.value);
-    console.log('output: ', this.props.exchange.outputToken.value);
-  }
-
-  onInputChange = async (event) => {
-    var inputValue = event.target.value;
-    await this.props.setExchangeInputValue(inputValue);
-    this.setExchangeOutput();
-  }
-
-  setExchangeOutput = () => {
-    var inputValue = this.props.exchange.inputValue;
-    if (this.props.web3Store.exchangeType === 'Invalid'){
-      this.props.setExchangeOutputValue(0);
-      this.props.setInteractionState('error1');
-    } else if(inputValue && inputValue !== 0 && inputValue !== '0'){
-        this.props.setInteractionState('input');
-        this.getExchangeRate(inputValue);
-    } else {
-        this.props.setExchangeOutputValue(0);
-        this.props.setInteractionState('connected');
-    }
-  }
-
+ 
   getExchangeRate = (input) => {
-    console.log(this.props.web3Store.globalWeb3, 'this better be defined')
     if (this.props.web3Store.exchangeType === 'ETH to Token') {
       console.log('Getting Rate: ETH to ' + this.props.exchange.outputToken.value);
       this.ethToTokenRate(input);
@@ -593,7 +538,7 @@ class App extends Component {
     var tokensSold = this.props.exchange.inputValue;
     var tokensSoldInt = localweb3.utils.toWei(tokensSold);
     var timeout = this.props.web3Store.blockTimestamp + 300; //current block time + 5mins
-
+  
     exchange.methods.tokenToEthSwap(tokensSoldInt, minEthInt, timeout).send({from: this.props.web3Store.currentMaskAddress})
       .on('transactionHash', (result) => {
         console.log('Transaction Hash created')
@@ -618,6 +563,10 @@ class App extends Component {
     var tokensSold = this.props.exchange.inputValue;
     var tokensSoldInt = localweb3.utils.toWei(tokensSold);
     var timeout = this.props.web3Store.blockTimestamp + 300; //current block time + 5mins
+    console.log('tokenOutAddress', tokenOutAddress);
+    console.log('minTokensInt', minTokensInt);
+    console.log('tokensSoldInt', tokensSoldInt);
+    console.log('timeout', timeout);
 
     exchange.methods.tokenToTokenSwap(tokenOutAddress, tokensSoldInt, minTokensInt, timeout).send({from: this.props.web3Store.currentMaskAddress})
       .on('transactionHash', (result) => {
@@ -648,16 +597,6 @@ class App extends Component {
     }
   }
 
-  toggleAbout = () => {
-
-    this.setState({about: !this.state.about})
-    setTimeout(this.scrollToAbout, 300);
-  }
-
-  scrollToAbout = () => {
-    scrollToComponent(this.About, { offset: 0, align: 'top', duration: 500})
-  }
-
   render() {
     return (
       <div className={this.props.web3Store.connected && !this.props.web3Store.metamaskLocked && this.props.web3Store.interaction !== 'disconnected' ? "App" : "App dim"}>
@@ -673,7 +612,8 @@ class App extends Component {
             interaction={this.props.web3Store.interaction}
             address={this.props.web3Store.currentMaskAddress}
             locked={this.props.web3Store.metamaskLocked}
-            balance={this.props.exchange.inputBalance}/>
+            balance={this.props.exchange.inputBalance}
+          />
         </section>
         <ConnectionHelper
           network={this.props.web3Store.networkMessage}
@@ -697,74 +637,30 @@ class App extends Component {
           outputToken={this.props.exchange.outputToken}
           about={this.state.about}
         />
-        <section className="order">
-          <div className="value border pa2">
-            <input type="number" value={this.props.exchange.inputValue} placeholder="0" onChange={this.onInputChange} />
-            <SelectToken token={this.props.exchange.inputToken} onSelectToken={this.onSelectToken} type="input" />
-            <p className="dropdown">{'<'}</p>
-          </div>
-          <div className="arrow border pa2">
-            <p>→</p>
-          </div>
-          <div className="value border pa2">
-            <input type="number" readOnly={true} value={(this.props.exchange.outputValue/10**18).toFixed(5)} placeholder="0"/>
-            <SelectToken token={this.props.exchange.outputToken} onSelectToken={this.onSelectToken} type="output"/>
-            <p className="dropdown">{'<'}</p>
-          </div>
-        </section>
-        <section className="rate border pa2">
-          <span className="rate-info">
-            <p>Rate</p>
-            <p>{(this.props.exchange.rate).toFixed(5)} {this.props.exchange.outputToken.value + "/" + this.props.exchange.inputToken.value}</p>
-          </span>
-          <span className="rate-info">
-            <p>Fee</p>
-            <p>{(this.props.exchange.fee/10**18).toFixed(5)} {this.props.exchange.inputToken.value}</p>
-          </span>
-        </section>
-
-        {this.props.web3Store.interaction === 'input' ?
-          <a className="swap border pa2" role="button" onClick={() => {this.purchaseTokens()}}>
-
-              <b>{"I want to swap " + this.props.exchange.inputValue + " " + this.props.exchange.inputToken.value + " for " + this.props.exchange.outputValue/10**18 + " " + this.props.exchange.outputToken.value}</b>
-          </a>
-          : <a className="swap grey-bg hidden border pa2"></a>}
-
-        <section className="About" ref={(section) => { this.About = section; }}>
-          <a onClick={() => {this.toggleAbout()}} className="link border pa2 f-a">
-            <p className="underline">About Uniswap.</p>
-            <p>↘</p>
-          </a>
-        </section>
-
-        {this.state.about ?
-          <section className="expand grey-bg border pa2">
-            <p>Uniswap is a trustless, decentralized exchange for Ether and ERC20 tokens. It uses a market maker mechanism, where liquidity providers invest a reserve of ETH and a single ERC20 token within an Ethereum smart contract. An exchange rate is set between the tokens and ETH based on the relative availibility of each token. A small transaction fee is payed to the liquidity providers proportional to their investment.</p>
-            <p>There is a separate contract for each ETH-ERC20 pair. These contracts can "tunnel" between each other for direct ERC20-ERC20 trades. Only one exchange can exist per token, and anyone can contribute liquidity to any exchange. A factory/registry contract provides a public interface for creating new Uniswap exchanges, and looking up the exchange associated a given token address.</p>
-            <p>A full writeup will be available soon. Until then, here is some more info on Market Makers:</p>
-            <p>Please reach out if you would like to get involved or support the project.</p>
-            <p>Email: <a href="mailto:hayden@uniswap.io">hayden@uniswap.io</a></p>
-          </section>
-          : <section className="expand grey-bg border pa2 hidden">  </section>
-        }
-
-        <section className="links">
-          <a href="" className="link border pa2 liq">
-            <p className="underline">Provide liquidity to collect fees</p>
-            <p>+</p>
-          </a>
-          <a href="" className="link border pa2 ex">
-            <p className="underline">Launch a new exchange</p>
-            <p>+</p>
-          </a>
-        </section>
-
-        {this.state.transactions.length > 0 && this.props.web3Store.interaction !== 'disconnected' ?
-        <section className="transaction border pa2">
-          <p className="underline">Past Transactions:</p>
-          <Transactions transactions={this.state.transactions}/>
-        </section>
-        : <section className="hidden border pa2"></section>}
+        <Order 
+          getAccountInfo={this.getAccountInfo} 
+          getMarketInfo={this.getMarketInfo}
+          getExchangeRate={this.getExchangeRate}
+          symbolToTokenContract={this.symbolToTokenContract}
+          symbolToExchangeAddress={this.symbolToExchangeAddress}
+        />
+        <RateAndFee
+          exchangeRate={this.props.exchange.rate}
+          outputTokenValue={this.props.exchange.outputToken.value}
+          inputTokenValue={this.props.exchange.inputToken.value}
+          exchangeFee={this.props.exchange.fee}
+        />
+        <Swap
+          interaction={this.props.web3Store.interaction}
+          inputValue={this.props.exchange.inputValue }
+          inputTokenValue={this.props.exchange.inputToken.value}
+          outputValue={this.props.exchange.outputValue}
+          outputTokenValue={this.props.exchange.outputToken.value}
+          purchaseTokens={this.purchaseTokens}
+        />
+        <About />
+        <Links />
+        <Transactions transactions={this.state.transactions} interaction={this.props.web3Store.interaction} />
       </div>
     )
   }
@@ -808,7 +704,7 @@ const mapDispatchToProps = (dispatch) => {
     setExchangeOutputValue,
     setExchangeRate,
     setExchangeFee,
-    putWeb3InStore
+    initializeGlobalWeb3
   }, dispatch)
 }
 

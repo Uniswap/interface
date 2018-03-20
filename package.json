@@ -15,6 +15,7 @@
     "react-scroll-to-component": "^1.0.2",
     "react-select": "^1.2.1",
     "redux": "^3.7.2",
+    "redux-subscriber": "^1.1.0",
     "redux-thunk": "^2.2.0",
     "web3": "1.0.0-beta.22"
   },
