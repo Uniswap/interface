@@ -2,9 +2,8 @@
 // maybe there's an action to see if you've been connected to web3
 
 // web3 actions, all set from action creator to reducer to app
+export const SET_WEB3_CONNECTION_STATUS = 'WEB3_CONNECTION_STATUS';
 export const CHECK_WEB3_CONNECTION = 'CHECK_WEB3_CONNECTION';
-export const WEB3_CONNECTION_SUCCESSFUL = 'WEB3_CONNECTION_SUCCESSFUL';
-export const WEB3_CONNECTION_UNSUCCESSFUL = 'WEB3_CONNECTION_UNSUCCESSFUL';
 export const SET_CURRENT_MASK_ADDRESS = 'SET_CURRENT_MASK_ADDRESS';
 
 export const METAMASK_LOCKED = 'METAMASK_LOCKED';
@@ -14,6 +13,9 @@ export const SET_NETWORK_MESSAGE = 'SET_NETWORK_MESSAGE';
 
 export const SET_BLOCK_TIMESTAMP = 'SET_BLOCK_TIMESTAMP';
 export const SET_EXCHANGE_TYPE = 'SET_EXCHANGE_TYPE';
+
+// action to toggle the 'about' div 
+export const TOGGLE_ABOUT = 'TOGGLE_ABOUT';
 
 // factory contract action, also set
 export const FACTORY_CONTRACT_READY = 'FACTORY_CONTRACT_READY';

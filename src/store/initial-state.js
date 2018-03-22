@@ -1,18 +1,8 @@
-// what states do you need upon initialization?
-
-// connected: are you connnected? default state = false
-// props.metamask --> maybe we should keep this in global state too?
-
-// both of these are set to false in the default state
-// fire dispatch functions to check for installation and connection in the default store
-// you are probably going to be storing stuff like invariants and all that jazz here
-
 export default {
-  // lets check if metamask is installed
-  // also, lets assume that we're disconnected initially
-  // we're going to need to include a seperate nest for exchange actions
+  global: {},
   web3Store: {
     connected: false,
+    aboutToggle: false,
     globalWeb3: {},
     currentMaskAddress: '',
     metamaskLocked: true,
