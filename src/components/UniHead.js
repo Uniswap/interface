@@ -1,9 +1,9 @@
 import React from 'react';
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
 
 import unicorn from '../images/🦄.png'
 
-function Head(props) {
+function UniHead(props) {
   return (
     <Helmet>
        <meta charSet="utf-8" />
@@ -13,4 +13,4 @@ function Head(props) {
   );
 }
 
-export default Head;
+export default UniHead;
