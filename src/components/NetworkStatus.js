@@ -1,17 +1,26 @@
 import React, { Component }from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { setWeb3ConnectionStatus, setInteractionState, setNetworkMessage } from '../actions/web3-actions';
+import { subscribe } from 'redux-subscriber';
+import { setWeb3ConnectionStatus, setInteractionState, setNetworkMessage, metamaskLocked } from '../actions/web3-actions';
 
 class NetworkStatus extends Component {
   componentDidMount(){
-    if (this.props.global.web3 !== undefined){
-      this.checkNetwork();
-    } 
+    const interactionStateSubscriber = subscribe('web3Store.metamaskLocked', state => {
+      if (state.web3Store.metamaskLocked !== true) {
+        console.log('metamask is unlocked')
+        this.checkNetwork();
+      } else { 
+        console.log('metamask is locked')
+      }
+    })
+    // if (this.props.web3Store.web3 !== undefined){
+    //   this.checkNetwork();
+    // } 
   }
 
   checkNetwork = () => {
-    this.props.global.web3.eth.net.getNetworkType((err, networkId) => {
+    this.props.web3Store.web3.eth.net.getNetworkType((err, networkId) => {
       console.log("Connected to " + networkId)
       let interactionState = networkId === 'rinkeby' ? 'connected' : 'disconnected';
       let connectionStatus = networkId === 'rinkeby' ? true : false;
@@ -64,6 +73,7 @@ const mapDispatchToProps = (dispatch) => {
     setWeb3ConnectionStatus,
     setInteractionState,
     setNetworkMessage,
+    metamaskLocked
   }, dispatch)
 }
 
