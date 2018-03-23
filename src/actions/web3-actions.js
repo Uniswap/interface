@@ -1,4 +1,5 @@
 import {
+  INITIALIZE_GLOBAL_WEB3,
   SET_WEB3_CONNECTION_STATUS,
   SET_CURRENT_MASK_ADDRESS,
   METAMASK_LOCKED,
@@ -94,4 +95,10 @@ export const setExchangeType = (exchangeType) => ({
 export const toggleAbout = (toggle) => ({
   type: TOGGLE_ABOUT,
   aboutToggle: toggle
-})
+});
+
+export const initializeGlobalWeb3 = (web3) => ({
+  type: INITIALIZE_GLOBAL_WEB3,
+  web3
+});
+  

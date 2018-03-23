@@ -1,6 +1,6 @@
 export default {
-  global: {},
   web3Store: {
+    web3: {},
     connected: false,
     aboutToggle: false,
     globalWeb3: {},
