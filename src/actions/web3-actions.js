@@ -1,6 +1,5 @@
 import {
-  WEB3_CONNECTION_SUCCESSFUL,
-  WEB3_CONNECTION_UNSUCCESSFUL,
+  SET_WEB3_CONNECTION_STATUS,
   SET_CURRENT_MASK_ADDRESS,
   METAMASK_LOCKED,
   METAMASK_UNLOCKED,
@@ -9,21 +8,16 @@ import {
   SET_NETWORK_MESSAGE,
   SET_BLOCK_TIMESTAMP,
   SET_EXCHANGE_TYPE,
-  INITIALIZE_GLOBAL_WEB3
+  TOGGLE_ABOUT
 } from '../constants';
 
 // this actions folder is actually full of action creators
 // your asynchronous calls are going to be in redux-thunk style action creators
 
-export const web3ConnectionSuccessful = () => ({
-  type: WEB3_CONNECTION_SUCCESSFUL,
-  connected: true
-});
-
-export const web3ConnectionUnsuccessful = () => ({
-  type: WEB3_CONNECTION_UNSUCCESSFUL,
-  connected: false
-});
+export const setWeb3ConnectionStatus = (connected) => ({
+  type: SET_WEB3_CONNECTION_STATUS,
+  connected
+})
 
 export const setCurrentMaskAddress = (currentMaskAddress) => ({
   type: SET_CURRENT_MASK_ADDRESS,
@@ -43,17 +37,41 @@ export const metamaskUnlocked = () => ({
 export const setInteractionState = (interaction) => ({
   type: SET_INTERACTION_STATE,
   interaction
-});
+})
 
 export const factoryContractReady = (factoryContract) => ({
   type: FACTORY_CONTRACT_READY,
   factoryContract
 });
 
-export const setNetworkMessage = (networkMessage) => ({
-  type: SET_NETWORK_MESSAGE,
-  networkMessage
-});
+export const setNetworkMessage = (networkMessage) => {
+  return async (dispatch) => {
+    let networkName;
+    switch (networkMessage) {
+      case "main":
+        networkName = 'Ethereum Mainet'
+        break;
+      case "morden":
+        networkName = 'Morden testnet'
+        break;
+      case "ropsten":
+        networkName = 'Ropsten testnet'
+        break;
+      case "rinkeby":
+        networkName = 'Rinkeby testnet'
+        break;
+      case "kovan":
+        networkName = 'Kovan testnet'
+        break;
+      default:
+        networkName = 'an unknown network'
+    }
+    dispatch ({
+      type: SET_NETWORK_MESSAGE,
+      networkMessage: networkName
+    })
+  }
+};
 
 export const setBlockTimestamp = () => {
   return async (dispatch, getState) => {
@@ -73,7 +91,7 @@ export const setExchangeType = (exchangeType) => ({
   exchangeType
 });
 
-export const initializeGlobalWeb3 = (globalWeb3) => ({
-  type: INITIALIZE_GLOBAL_WEB3,
-  globalWeb3
+export const toggleAbout = (toggle) => ({
+  type: TOGGLE_ABOUT,
+  aboutToggle: toggle
 })

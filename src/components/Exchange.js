@@ -2,31 +2,16 @@ import React, { Component }from 'react';
 import SelectToken from './SelectToken';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { subscribe } from 'redux-subscriber';
 import { setInteractionState, setExchangeType } from '../actions/web3-actions';
-import { 
-    setExchangeInputValue,
-    setExchangeOutputValue,
-    setExchangeRate,
-    setExchangeFee,
-    setInputToken,
-    setOutputToken,
-    setInputBalance,
-    setOutputBalance,
-    setAllowanceApprovalState
-  } from '../actions/exchange-actions';
+import { setExchangeInputValue, setExchangeOutputValue, setExchangeRate, setExchangeFee, setInputToken, setOutputToken, setInputBalance, setOutputBalance, setAllowanceApprovalState } from '../actions/exchange-actions';
 
-class Order extends Component {
-  constructor (props){
-    super(props)
-  }
-  // props and functions ready
+class Exchange extends Component {
   onInputChange = async (event) => {
     var inputValue = event.target.value;
     await this.props.setExchangeInputValue(inputValue);
     this.setExchangeOutput();
   }
-  // props ready, 
+
   onSelectToken = async (selected, type) => {
     this.props.setExchangeInputValue(0);
     this.props.setExchangeOutputValue(0);
@@ -57,13 +42,12 @@ class Order extends Component {
     } else if(inputValue && inputValue !== 0 && inputValue !== '0'){
         this.props.setInteractionState('input');
         // another function to be pulled out into HOC 
-        this.props.getExchangeRate(inputValue);
+        this.getExchangeRate(inputValue);
     } else {
         this.props.setExchangeOutputValue(0);
         this.props.setInteractionState('connected');
     }
   }
-  
   // props ready
   // TODO: change this to use the redux-subscribe pattern
   getMarketType = () => {
@@ -83,82 +67,81 @@ class Order extends Component {
     console.log('input: ', this.props.exchange.inputToken.value);
     console.log('output: ', this.props.exchange.outputToken.value);
   }
-  // we are here 
-  // TODO: change this to use the redux-subscribe pattern 
-  getAccountInfo = () => {
-    switch (this.props.web3Store.exchangeType) {
-      case 'ETH to Token':
-        this.getEthBalance('input');
-        this.getTokenBalance('output');
-        break;
-      case 'Token to ETH':
-        this.getEthBalance('output');
-        this.getTokenBalance('input');
-        this.getAllowance();
-        break;
-      case 'Token to Token':
-        this.getTokenBalance('input');
-        this.getTokenBalance('output');
-        this.getAllowance();
-        break;
-      default:
-    }
-    console.log("Getting account info");
-  }
 
-  // props ready 
-  // TODO: TODO: TODO: TURN THIS INTO A REDUX-SUBSCRIBE LISTENER NOW!!!
-  getEthBalance = (type) => {
-    // this.props.web3Store.globalWeb3
-    if (type === 'input') {
-      this.props.web3Store.globalWeb3.eth.getBalance(this.props.web3Store.currentMaskAddress, (error, balance) => {
-        this.props.setInputBalance(balance);
-        // console.log('ETH Balance: ' + balance);
-      });
-    } else if (type === 'output') {
-      this.props.web3Store.globalWeb3.eth.getBalance(this.props.web3Store.currentMaskAddress, (error, balance) => {
-         this.props.setOutputBalance(balance);
-          // console.log('ETH Balance: ' + balance);
-      });
-    }
-  }
-  // props ready 
-  // TODO: this might also be able to change to the redux-subscribe method 
-  getTokenBalance = (type) => {
-    var token;
-    if (type === 'input') {
-      token = this.symbolToTokenContract(this.props.exchange.inputToken.value);
-      token.methods.balanceOf(this.props.web3Store.currentMaskAddress).call((error, balance) => {
-        this.props.setInputBalance(balance);
-        // console.log(this.props.exchange.inputToken.value + ' Balance: ' + balance);
-      });
-    } else if (type === 'output') {
-        token = this.symbolToTokenContract(this.props.exchange.outputToken.value);
-        token.methods.balanceOf(this.props.web3Store.currentMaskAddress).call((error, balance) => {
-          this.props.setOutputBalance(balance);
-          // console.log(this.props.exchange.outputToken.value + ' Balance: ' + balance);
-        });
-      } 
-  }
-  // TODO: refactor to redux-subscribe 
-  // props ready
-  getAllowance = () => {
-    var type = this.props.web3Store.exchangeType;
-    if(type === 'Token to ETH' || type === 'Token to Token') {
-      // another pair of functions to be exported to a HOC 
-      var token = this.props.symbolToTokenContract(this.props.exchange.inputToken.value);
-      var exchangeAddress = this.props.symbolToExchangeAddress(this.props.exchange.inputToken.value);
-
-      token.methods.allowance(this.props.web3Store.currentMaskAddress, exchangeAddress).call().then((result, error) => {
-        console.log(this.props.exchange.inputToken.value + ' allowance: ' + result);
-        if(result === '0'){
-          this.props.setAllowanceApprovalState(false)
-          console.log(this.props.exchange.allowanceApproved)
-        }
-      })
+  getExchangeRate = (input) => {
+    if (this.props.web3Store.exchangeType === 'ETH to Token') {
+      console.log('Getting Rate: ETH to ' + this.props.exchange.outputToken.value);
+      this.ethToTokenRate(input);
+    } else if (this.props.web3Store.exchangeType === 'Token to ETH') {
+      console.log('Getting Rate: ' + this.props.exchange.inputToken.value + ' to ETH');
+      this.tokenToEthRate(input);
+    } else if (this.props.web3Store.exchangeType === 'Token to Token') {
+      console.log('Getting Rate: ' + this.props.exchange.inputToken.value + ' to '  + this.props.exchange.outputToken.value);
+      this.tokenToTokenRate(input);
     }
   }
  
+  ethToTokenRate = (ethInput) => {
+    var ethInMarket = +this.props.exchange.marketEth2;
+    var tokensInMarket = +this.props.exchange.marketTokens2;
+    var invar = +this.props.exchange.invariant2;
+    var ethIn = ethInput*10**18;
+    var exchangeFee = ethIn/500;
+    var ethSold = ethIn - exchangeFee;
+    var newEthInMarket = ethInMarket + ethSold;
+    var newTokensInMarket = invar/newEthInMarket;
+    var tokensOut = tokensInMarket - newTokensInMarket;
+    var adjustedTokensOut = tokensOut * 0.98;
+    var buyRate = adjustedTokensOut/ethIn;
+    this.props.setExchangeRate(buyRate);
+    this.props.setExchangeFee(exchangeFee);
+    this.props.setExchangeOutputValue(adjustedTokensOut);
+  }
+
+  tokenToEthRate = (tokenInput) => {
+    var ethInMarket = +this.props.exchange.marketEth1;
+    var tokensInMarket = +this.props.exchange.marketTokens1;
+    var invar = +this.props.exchange.invariant1;
+    var tokensIn = tokenInput*10**18;
+    var exchangeFee = tokensIn/500;
+    var tokensSold = tokensIn - exchangeFee;
+    var newTokensInMarket = tokensInMarket + tokensSold;
+    var newEthInMarket = invar/newTokensInMarket;
+    var ethOut = ethInMarket - newEthInMarket;
+    var adjustedEthOut = ethOut * 0.98;
+    var buyRate = adjustedEthOut/tokensIn;
+    this.props.setExchangeRate(buyRate);
+    this.props.setExchangeFee(exchangeFee);
+    this.props.setExchangeOutputValue(adjustedEthOut);
+  }
+
+  tokenToTokenRate = (tokenInput) => {
+    // Token to ETH on Exchange 1
+    var ethInMarket1 = +this.props.exchange.marketEth1;
+    var tokensInMarket1 = +this.props.exchange.marketTokens1;
+    var invar1 = +this.props.exchange.invariant1;
+    var tokensIn = tokenInput*10**18;
+    var exchangeFee1 = tokensIn/500;
+    var tokensSold = tokensIn - exchangeFee1;
+    var newTokensInMarket1 = tokensInMarket1 + tokensSold;
+    var newEthInMarket1 = invar1/newTokensInMarket1;
+    var ethToExchange2 = ethInMarket1 - newEthInMarket1;
+    // ETH to Token on Exchange 2
+    var ethInMarket2 = +this.props.exchange.marketEth2;
+    var tokensInMarket2 = +this.props.exchange.marketTokens2;
+    var invar2 = +this.props.exchange.invariant2;
+    var exchangeFee2 = ethToExchange2/500;
+    var ethSold = ethToExchange2 - exchangeFee2;
+    var newEthInMarket2 = ethInMarket2 + ethSold;
+    var newTokensInMarket2 = invar2/newEthInMarket2;
+    var tokensOut = tokensInMarket2 - newTokensInMarket2;
+    var adjustedTokensOut = tokensOut * 0.98;
+    var buyRate = adjustedTokensOut/tokensIn;
+    this.props.setExchangeRate(buyRate);
+    this.props.setExchangeFee(exchangeFee1);
+    this.props.setExchangeOutputValue(adjustedTokensOut);
+  }
+
   render () {
     return (
       <section className="order">
@@ -178,13 +161,12 @@ class Order extends Component {
       </section>
     )
   }
-  
 }
 
 const mapStateToProps = state => ({
     web3Store: state.web3Store,
     exchange: state.exchange
-  })
+})
   
   const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
@@ -202,4 +184,4 @@ const mapStateToProps = state => ({
     }, dispatch);
   }
 
-  export default connect(mapStateToProps, mapDispatchToProps)(Order);
+  export default connect(mapStateToProps, mapDispatchToProps)(Exchange);
