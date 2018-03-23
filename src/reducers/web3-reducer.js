@@ -14,8 +14,10 @@ import {
 } from '../constants';
 
 export default (state = {}, action) => {
-  const { connected, currentMaskAddress, metamaskLocked, interaction, factoryContract, networkMessage, timestamp, exchangeType, globalWeb3, aboutToggle } = action
+  const { connected, currentMaskAddress, metamaskLocked, interaction, factoryContract, networkMessage, timestamp, exchangeType, web3, aboutToggle } = action
   switch (action.type) {
+    case INITIALIZE_GLOBAL_WEB3:
+      return Object.assign({}, state, { web3: web3 });
     case SET_WEB3_CONNECTION_STATUS:
       return Object.assign({}, state, { connected: connected });
     case SET_CURRENT_MASK_ADDRESS:
@@ -34,8 +36,6 @@ export default (state = {}, action) => {
       return Object.assign({}, state, { blockTimestamp: timestamp });
     case SET_EXCHANGE_TYPE: 
       return Object.assign({}, state, { exchangeType: exchangeType });
-    case INITIALIZE_GLOBAL_WEB3:
-      return Object.assign({}, state, { globalWeb3: globalWeb3 });
     case TOGGLE_ABOUT: 
       return Object.assign({}, state, { aboutToggle: aboutToggle })
     default: return state;

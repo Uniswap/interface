@@ -14,16 +14,16 @@ import Purchase from './components/Purchase';
 import About from './components/About';
 import Links from './components/Links';
 import Transactions from './components/Transactions';
-import SelectToken from './components/SelectToken'
+// import SelectToken from './components/SelectToken'
 // enter redux
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 import { subscribe } from 'redux-subscriber';
 // redux actions
-import { initializeGlobalWeb3 } from './actions/global-actions';
+// import { initializeGlobalWeb3 } from './actions/global-actions';
 import { uniExchangeContractReady, swtExchangeContractReady } from './actions/exchangeContract-actions';
 import { uniTokenContractReady, swtTokenContractReady } from './actions/tokenContract-actions';
-import { setWeb3ConnectionStatus, setCurrentMaskAddress, metamaskLocked, metamaskUnlocked, setInteractionState, factoryContractReady, toggleAbout } from './actions/web3-actions';
+import { initializeGlobalWeb3, setWeb3ConnectionStatus, setCurrentMaskAddress, metamaskLocked, metamaskUnlocked, setInteractionState, factoryContractReady, toggleAbout } from './actions/web3-actions';
 import { setInputBalance, setOutputBalance, setInvariant1, setInvariant2, setMarketEth1, setMarketEth2, setMarketTokens1, setMarketTokens2, setAllowanceApprovalState } from './actions/exchange-actions';
 // enter d3 & misc. tools
 import './App.css';
@@ -75,11 +75,11 @@ class App extends Component {
       if(state.web3Store.connected === true && !state.web3Store.metamaskLocked) {
         console.log('successfully connected to metamask', state.web3Store.currentMaskAddress);
         setInterval(this.getMarketInfo, 15000);
-        // setInterval(this.getAccountInfo, 15000);
-        // setInterval(this.getUserAddress, 10000);
+        setInterval(this.getAccountInfo, 15000);
+        setInterval(this.getUserAddress, 10000);
       } else {
         console.log('web3 not connected, getting user address')
-        // setInterval(this.getUserAddress, 500);
+        setInterval(this.getUserAddress, 500);
       }
     })   
   }
@@ -107,11 +107,13 @@ class App extends Component {
   getUserAddress = () => {
    localweb3.eth.getAccounts((error, result) => {
       if (result.length > 0) {
+        console.log('getUserAddress metamask unlocked')
         this.props.setCurrentMaskAddress(result[0]);
         this.props.metamaskUnlocked();
         this.props.setWeb3ConnectionStatus(true);
       }
       else {
+        console.log('getUserAddress metamask Locked ')
         this.props.metamaskLocked();
         this.props.setWeb3ConnectionStatus(false);
         this.props.setInteractionState('locked');
@@ -375,8 +377,8 @@ class App extends Component {
           inputTokenValue={this.props.exchange.inputToken.value}
           exchangeFee={this.props.exchange.fee}
         />
-        <Purchase
-          symbolToExchangeContract={this.symbolToExchangeContract}
+        <Purchase 
+          symbolToExchangeContract={this.symbolToExchangeContract} 
           symbolToTokenAddress={this.symbolToTokenAddress}
         /> 
         <About toggleAbout={this.toggleAbout} location={this}/>

@@ -6,7 +6,7 @@ import { setExchangeInputValue, setExchangeOutputValue } from '../actions/exchan
 
 class Purchase extends Component {
   purchaseTokens = async () => {
-    await this.props.setBlockTimestamp(this.props.global.web3);
+    await this.props.setBlockTimestamp(this.props.web3Store.web3);
     if (this.props.web3Store.exchangeType === 'ETH to Token') {
       this.ethToTokenPurchase();
     } else if (this.props.web3Store.exchangeType === 'Token to ETH') {
@@ -19,9 +19,9 @@ class Purchase extends Component {
   ethToTokenPurchase = () => {
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.outputToken.value);
     var minTokens = (this.props.exchange.outputValue/10**18).toString();
-    var minTokensInt = this.props.global.web3.utils.toWei(minTokens);
+    var minTokensInt = this.props.web3Store.web3.utils.toWei(minTokens);
     var ethSold = this.props.exchange.inputValue;
-    var weiSold = this.props.global.web3.utils.toWei(ethSold);
+    var weiSold = this.props.web3Store.web3.utils.toWei(ethSold);
     var timeout = this.props.web3Store.blockTimestamp + 300; //current block time + 5mins
     // console.log(minTokensInt, weiSold, timeout);
 
@@ -53,9 +53,9 @@ class Purchase extends Component {
   tokenToEthPurchase = () => {
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.inputToken.value);
     var minEth = (this.props.exchange.outputValue/10**18).toString();
-    var minEthInt = this.props.global.web3.utils.toWei(minEth);
+    var minEthInt = this.props.web3Store.web3.utils.toWei(minEth);
     var tokensSold = this.props.exchange.inputValue;
-    var tokensSoldInt = this.props.global.web3.utils.toWei(tokensSold);
+    var tokensSoldInt = this.props.web3Store.web3.utils.toWei(tokensSold);
     var timeout = this.props.web3Store.blockTimestamp + 300; //current block time + 5mins
   
     exchange.methods.tokenToEthSwap(tokensSoldInt, minEthInt, timeout).send({from: this.props.web3Store.currentMaskAddress})
@@ -78,9 +78,9 @@ class Purchase extends Component {
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.inputToken.value);
     var tokenOutAddress = this.props.symbolToTokenAddress(this.props.exchange.outputToken.value);
     var minTokens = (this.props.exchange.outputValue/10**18).toString();
-    var minTokensInt = this.props.global.web3.utils.toWei(minTokens);
+    var minTokensInt = this.props.web3Store.web3.utils.toWei(minTokens);
     var tokensSold = this.props.exchange.inputValue;
-    var tokensSoldInt = this.props.global.web3.utils.toWei(tokensSold);
+    var tokensSoldInt = this.props.web3Store.web3.utils.toWei(tokensSold);
     var timeout = this.props.web3Store.blockTimestamp + 300; //current block time + 5mins
     console.log('tokenOutAddress', tokenOutAddress);
     console.log('minTokensInt', minTokensInt);
