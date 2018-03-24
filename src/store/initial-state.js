@@ -3,8 +3,7 @@ export default {
     web3: {},
     connected: false,
     aboutToggle: false,
-    globalWeb3: {},
-    currentMaskAddress: '',
+    currentMaskAddress: undefined,
     metamaskLocked: true,
     interaction: '',
     networkMessage: '',
@@ -13,22 +12,20 @@ export default {
     blockTimestamp: '',
     exchangeType: 'ETH to Token',
     exchangeAddresses: {
-      UNI: '0xcDc30C3b02c5776495298198377D2Fc0fd6B1F1C',
-      SWT: '0x4632a7Cd732c625dcc48d75E289c209422e1D2B7'
+      addresses: [
+        ['UNI','0xcDc30C3b02c5776495298198377D2Fc0fd6B1F1C'], 
+        ['SWAP','0x4632a7Cd732c625dcc48d75E289c209422e1D2B7']
+      ]
     },
     tokenAddresses: {
-      UNI: '0x350E5DD084ecF271e8d3531D4324443952F47756',
-      SWT: '0x8B2A87F8243f23C33fb97E23a21Ae8EDB3b71AcA'
+      addresses: [
+        ['UNI','0x350E5DD084ecF271e8d3531D4324443952F47756'], 
+        ['SWAP','0x8B2A87F8243f23C33fb97E23a21Ae8EDB3b71AcA']
+      ]
     }
   },
-  exchangeContracts: {
-    UNI: '',
-    SWT: ''
-  },
-  tokenContracts: {
-    UNI: '',
-    SWT: ''
-  },
+  exchangeContracts: {},
+  tokenContracts: {},
   exchange: {
     inputBalance: 0,
     outputBalance: 0,

@@ -23,10 +23,12 @@ export const FACTORY_CONTRACT_READY = 'FACTORY_CONTRACT_READY';
 // token EXCHANGE contract actions, in action creator, reducer, and app
 export const UNI_EXCHANGE_CONTRACT_READY = 'UNI_EXCHANGE_CONTRACT_READY';
 export const SWT_EXCHANGE_CONTRACT_READY = 'SWT_EXCHANGE_CONTRACT_READY';
+export const EXCHANGE_CONTRACT_READY = 'EXCHANGE_CONTRACT_READY';
 
 // token CONTRACT actions in actions, action creator, reducer
 export const UNI_TOKEN_CONTRACT_READY = 'UNI_TOKEN_CONTRACT_READY';
 export const SWT_TOKEN_CONTRACT_READY = 'SWT_TOKEN_CONTRACT_READY';
+export const TOKEN_CONTRACT_READY = 'TOKEN_CONTRACT_READY';
 
 // actions for the exchange, all in one place
 export const SET_INPUT_BALANCE = 'SET_INPUT_BALANCE';
