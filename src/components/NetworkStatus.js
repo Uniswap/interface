@@ -6,17 +6,13 @@ import { setWeb3ConnectionStatus, setInteractionState, setNetworkMessage, metama
 
 class NetworkStatus extends Component {
   componentDidMount(){
-    const interactionStateSubscriber = subscribe('web3Store.metamaskLocked', state => {
-      if (state.web3Store.metamaskLocked !== true) {
-        console.log('metamask is unlocked')
+    // eslint-disable-next-line no-unused-vars
+    const interactionStateSubscriber = subscribe('web3Store.currentMaskAddress', state => {
+      if (state.web3Store.currentMaskAddress !== undefined) {
+        console.log('METAMASK UNLOCKED FROM NETWORK STATUS')
         this.checkNetwork();
-      } else { 
-        console.log('metamask is locked')
-      }
+      } else { console.log('METAMASK LOCKED FROM NETWORK STATUS') }
     })
-    // if (this.props.web3Store.web3 !== undefined){
-    //   this.checkNetwork();
-    // } 
   }
 
   checkNetwork = () => {

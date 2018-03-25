@@ -33,8 +33,8 @@ class Purchase extends Component {
         // transactions is cookie stuff, we'll keep that in state
         // this.setState({ transactions: transactions })
         // any particular reason why there are initialized as 0, but get turned to empty strings after the transaction is over?
-        this.props.setExchangeInputValue('');
-        this.props.setExchangeOutputValue('');
+        // this.props.setExchangeInputValue(0);
+        // this.props.setExchangeOutputValue(0);
         this.props.setInteractionState('submitted');
         // cookie.save('transactions', transactions, { path: '/' })
       })
@@ -64,8 +64,8 @@ class Purchase extends Component {
         // let transactions = this.state.transactions
         // transactions.push(result)
         // this.setState({ transactions: transactions });
-        this.props.setExchangeInputValue('');
-        this.props.setExchangeOutputValue('');
+        // this.props.setExchangeInputValue(0);
+        // this.props.setExchangeOutputValue(0);
         this.props.setInteractionState('submitted');
         // cookie.save('transactions', transactions, { path: '/' })
       })
@@ -93,8 +93,8 @@ class Purchase extends Component {
         // let transactions = this.state.transactions
         // transactions.push(result)
         // this.setState({ transactions: transactions });
-        this.props.setExchangeInputValue('');
-        this.props.setExchangeOutputValue('');
+        // this.props.setExchangeInputValue(0);
+        // this.props.setExchangeOutputValue(0);
         this.props.setInteractionState('submitted');
         // cookie.save('transactions', transactions, { path: '/' })
       })
