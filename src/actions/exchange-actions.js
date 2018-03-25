@@ -84,9 +84,9 @@ export const setExchangeOutputValue = (outputValue) => ({
 export const setExchangeRate = (rate) => ({
   type: SET_EXCHANGE_RATE,
   rate
-})
+});
 
 export const setExchangeFee = (fee) => ({
   type: SET_EXCHANGE_FEE,
   fee 
-})
+});

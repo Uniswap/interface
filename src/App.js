@@ -21,8 +21,8 @@ import { connect } from 'react-redux';
 import { subscribe } from 'redux-subscriber';
 // redux actions
 // import { initializeGlobalWeb3 } from './actions/global-actions';
-import { uniExchangeContractReady, swtExchangeContractReady } from './actions/exchangeContract-actions';
-import { uniTokenContractReady, swtTokenContractReady } from './actions/tokenContract-actions';
+import { uniExchangeContractReady, swtExchangeContractReady, exchangeContractReady } from './actions/exchangeContract-actions';
+import { uniTokenContractReady, swtTokenContractReady, tokenContractReady } from './actions/tokenContract-actions';
 import { initializeGlobalWeb3, setWeb3ConnectionStatus, setCurrentMaskAddress, metamaskLocked, metamaskUnlocked, setInteractionState, factoryContractReady, toggleAbout } from './actions/web3-actions';
 import { setInputBalance, setOutputBalance, setInvariant1, setInvariant2, setMarketEth1, setMarketEth2, setMarketTokens1, setMarketTokens2, setAllowanceApprovalState } from './actions/exchange-actions';
 // enter d3 & misc. tools
@@ -74,12 +74,13 @@ class App extends Component {
     const web3Subscriber = subscribe('web3Store.connected', state => {
       if(state.web3Store.connected === true && !state.web3Store.metamaskLocked) {
         console.log('successfully connected to metamask', state.web3Store.currentMaskAddress);
-        setInterval(this.getMarketInfo, 15000);
-        setInterval(this.getAccountInfo, 15000);
-        setInterval(this.getUserAddress, 10000);
+        this.marketInterval = setInterval(this.getMarketInfo, 15000);
+        this.accountInterval = setInterval(this.getAccountInfo, 15000);
+        this.userInterval = setInterval(this.getUserAddress, 500);
       } else {
         console.log('web3 not connected, getting user address')
-        setInterval(this.getUserAddress, 500);
+        console.log('this.props.currentMaskAddress', this.props.currentMaskAddress)
+        this.otherUserInterval = setInterval(this.getUserAddress, 500);
       }
     })   
   }
@@ -90,12 +91,14 @@ class App extends Component {
   // TODO: getInfoFirstTime and getUserAddress are WET af 
   // lets do something about it 
   getInfoFirstTime = () => {
-    localweb3.eth.getAccounts((error, result) => {
+    localweb3.eth.getAccounts(async (error, result) => {
       if(result.length > 0){
         this.props.setCurrentMaskAddress(result[0]);
         this.props.metamaskUnlocked();
         this.props.setWeb3ConnectionStatus(true)
-        this.getContracts();
+        await this.getContracts();
+        this.getAccountInfo();
+        this.getMarketInfo();
       } else {
         this.props.metamaskLocked();
         this.props.setWeb3ConnectionStatus(false)
@@ -107,13 +110,15 @@ class App extends Component {
   getUserAddress = () => {
    localweb3.eth.getAccounts((error, result) => {
       if (result.length > 0) {
-        console.log('getUserAddress metamask unlocked')
         this.props.setCurrentMaskAddress(result[0]);
         this.props.metamaskUnlocked();
         this.props.setWeb3ConnectionStatus(true);
       }
       else {
-        console.log('getUserAddress metamask Locked ')
+        this.props.setCurrentMaskAddress(undefined);
+        clearInterval(this.marketInterval);
+        clearInterval(this.accountInterval);
+        clearInterval(this.userInterval);
         this.props.metamaskLocked();
         this.props.setWeb3ConnectionStatus(false);
         this.props.setInteractionState('locked');
@@ -123,61 +128,55 @@ class App extends Component {
 
   // could possibly use refactoring 
   getContracts = () => {
-    const uniExchangeAddress = this.props.web3Store.exchangeAddresses.UNI;
-    const uniExchangeContract = new localweb3.eth.Contract(exchangeABI, uniExchangeAddress);
-    this.props.uniExchangeContractReady(uniExchangeContract);
-
-    const swapExchangeAddress = this.props.web3Store.exchangeAddresses.SWT;
-    const swapExchangeContract = new localweb3.eth.Contract(exchangeABI, swapExchangeAddress);
-    this.props.swtExchangeContractReady(swapExchangeContract);
-
-    const uniTokenAddress = this.props.web3Store.tokenAddresses.UNI;
-    const uniTokenContract = new localweb3.eth.Contract(tokenABI, uniTokenAddress);
-    this.props.uniTokenContractReady(uniTokenContract);
-
-    const swapTokenAddress = this.props.web3Store.tokenAddresses.SWT;
-    const swapTokenContract = new localweb3.eth.Contract(tokenABI, swapTokenAddress);
-    this.props.swtTokenContractReady(swapTokenContract);
-
+    this.props.web3Store.exchangeAddresses.addresses.map(async exchangeAddress => {
+      // receive the exchange address, create the exchange contract
+      let exchangeContract = await new localweb3.eth.Contract(exchangeABI, exchangeAddress[1]);
+      // send the exchange contract to redux store
+      await this.props.exchangeContractReady(exchangeAddress[0], exchangeContract);
+    })
+    
+    this.props.web3Store.tokenAddresses.addresses.map(async tokenAddress => {
+      // receive the token address, create the token contract
+      let tokenContract = await new localweb3.eth.Contract(tokenABI, tokenAddress[1]);
+      // send the token contract to redux store 
+      await this.props.tokenContractReady(tokenAddress[0], tokenContract);
+    })
+    
+    // happens only once 
     const factoryAddress = this.props.web3Store.factoryAddress;
     const factoryContract = new localweb3.eth.Contract(factoryABI, factoryAddress);
     this.props.factoryContractReady(factoryContract);
-
-    this.getAccountInfo();
-    this.getMarketInfo();
+    
+    // this.getAccountInfo();
+    // this.getMarketInfo();
   }
    
   symbolToTokenAddress = (symbol) => {
-    if(symbol === 'UNI') {
-      return this.props.web3Store.tokenAddresses.UNI;
-    } else if (symbol === 'SWAP') {
-      return this.props.web3Store.tokenAddresses.SWT;
+    let tokenAddresses = this.props.web3Store.tokenAddresses.addresses;
+    for (let i = 0; i < tokenAddresses.length; i++) {
+      if (tokenAddresses[i][0] === symbol) {
+        return tokenAddresses[i][1];
+      }
     }
   }
 
   symbolToTokenContract = (symbol) => {
-    if(symbol === 'UNI') {
-      return this.props.tokenContracts.UNI;
-    } else if(symbol === 'SWAP') {
-      return this.props.tokenContracts.SWT;
-    }
+    return this.props.tokenContracts[symbol]
   }
 
   symbolToExchangeAddress = (symbol) => {
-    if(symbol === 'UNI') {
-      return this.props.web3Store.exchangeAddresses.UNI;
-    } else if(symbol === 'SWAP') {
-      return this.props.web3Store.exchangeAddresses.SWT;
+    let exchangeAddresses = this.props.web3Store.exchangeAddresses.addresses;
+    for (let i = 0; i < exchangeAddresses.length; i++) {
+      if (exchangeAddresses[i][0] === symbol) {
+        return exchangeAddresses[i][1];
+      }
     }
   }
 
   symbolToExchangeContract = (symbol) => {
-    if(symbol === 'UNI') {
-      return this.props.exchangeContracts.UNI;
-    } else if(symbol === 'SWAP') {
-      return this.props.exchangeContracts.SWT;
-    }
+    return this.props.exchangeContracts[symbol]
   }
+
 
   getMarketInfo = () => {
     switch (this.props.web3Store.exchangeType) {
@@ -227,12 +226,12 @@ class App extends Component {
         // console.log('Input Invariant: ' + result);
       });
 
-      exchange.methods.ethInMarket().call().then((result, error) => {
+      exchange.methods.ethPool().call().then((result, error) => {
         this.props.setMarketEth1(result);
         // console.log('Input Market ETH: ' + result);
       });
 
-      exchange.methods.tokensInMarket().call().then((result, error) => {
+      exchange.methods.tokenPool().call().then((result, error) => {
         this.props.setMarketTokens1(result);
         // console.log('Input Market Tokens: ' + result);
       });
@@ -244,12 +243,12 @@ class App extends Component {
           // console.log('Output Invariant: ' + result);
         });
 
-        exchange.methods.ethInMarket().call().then((result, error) => {
+        exchange.methods.ethPool().call().then((result, error) => {
           this.props.setMarketEth2(result);
           // console.log('Output Market ETH: ' + result);
         });
 
-        exchange.methods.tokensInMarket().call().then((result, error) => {
+        exchange.methods.tokenPool().call().then((result, error) => {
           this.props.setMarketTokens2(result);
           // console.log('Output Market Tokens: ' + result);
         });
@@ -292,7 +291,7 @@ class App extends Component {
     if(type === 'Token to ETH' || type === 'Token to Token') {
       var token = this.symbolToTokenContract(this.props.exchange.inputToken.value);
       var exchangeAddress = this.symbolToExchangeAddress(this.props.exchange.inputToken.value);
-
+      
       token.methods.allowance(this.props.web3Store.currentMaskAddress, exchangeAddress).call().then((result, error) => {
         console.log(this.props.exchange.inputToken.value + ' allowance: ' + result);
         if(result === '0'){
@@ -418,7 +417,9 @@ const mapDispatchToProps = (dispatch) => {
     setMarketTokens2,
     setAllowanceApprovalState,
     initializeGlobalWeb3,
-    toggleAbout
+    toggleAbout,
+    exchangeContractReady,
+    tokenContractReady
   }, dispatch)
 }
 
