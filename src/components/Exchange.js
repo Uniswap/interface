@@ -8,6 +8,7 @@ import { setExchangeInputValue, setExchangeOutputValue, setExchangeRate, setExch
 class Exchange extends Component {
   onInputChange = async (event) => {
     var inputValue = event.target.value;
+    console.log(inputValue, 'onInputChange value')
     await this.props.setExchangeInputValue(inputValue);
     this.setExchangeOutput();
   }
@@ -36,6 +37,8 @@ class Exchange extends Component {
   
   setExchangeOutput = () => {
     var inputValue = this.props.exchange.inputValue;
+    console.log(inputValue, 'from setExchangeOutput')
+    console.log('outputToken', this.props.exchange.outputToken);
     if (this.props.web3Store.exchangeType === 'Invalid'){
       this.props.setExchangeOutputValue(0);
       this.props.setInteractionState('error1');

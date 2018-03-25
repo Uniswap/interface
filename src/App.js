@@ -226,12 +226,12 @@ class App extends Component {
         // console.log('Input Invariant: ' + result);
       });
 
-      exchange.methods.ethInMarket().call().then((result, error) => {
+      exchange.methods.ethPool().call().then((result, error) => {
         this.props.setMarketEth1(result);
         // console.log('Input Market ETH: ' + result);
       });
 
-      exchange.methods.tokensInMarket().call().then((result, error) => {
+      exchange.methods.tokenPool().call().then((result, error) => {
         this.props.setMarketTokens1(result);
         // console.log('Input Market Tokens: ' + result);
       });
@@ -243,12 +243,12 @@ class App extends Component {
           // console.log('Output Invariant: ' + result);
         });
 
-        exchange.methods.ethInMarket().call().then((result, error) => {
+        exchange.methods.ethPool().call().then((result, error) => {
           this.props.setMarketEth2(result);
           // console.log('Output Market ETH: ' + result);
         });
 
-        exchange.methods.tokensInMarket().call().then((result, error) => {
+        exchange.methods.tokenPool().call().then((result, error) => {
           this.props.setMarketTokens2(result);
           // console.log('Output Market Tokens: ' + result);
         });
