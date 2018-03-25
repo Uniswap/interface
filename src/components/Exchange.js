@@ -19,7 +19,7 @@ class Exchange extends Component {
     this.props.setExchangeRate(0);
     this.props.setExchangeFee(0);
     this.props.setInteractionState('connected');
-    // what the flip does this do 
+    // what the flip does this do
     // this.setState({ firstRun: true })
 
     if (type === 'input') {
@@ -27,14 +27,14 @@ class Exchange extends Component {
     } else if (type === 'output'){
       await this.props.setOutputToken(selected);
     }
-    
+
     await this.getMarketType();
     // these two functions are actually being passed from the parent component, because they're used in multiple places
     // eventually pull these out into HOC
     this.props.getAccountInfo();
     this.props.getMarketInfo();
   }
-  
+
   setExchangeOutput = () => {
     var inputValue = this.props.exchange.inputValue;
     console.log(inputValue, 'from setExchangeOutput')
@@ -44,7 +44,7 @@ class Exchange extends Component {
       this.props.setInteractionState('error1');
     } else if(inputValue && inputValue !== 0 && inputValue !== '0'){
         this.props.setInteractionState('input');
-        // another function to be pulled out into HOC 
+        // another function to be pulled out into HOC
         this.getExchangeRate(inputValue);
     } else {
         this.props.setExchangeOutputValue(0);
@@ -83,7 +83,7 @@ class Exchange extends Component {
       this.tokenToTokenRate(input);
     }
   }
- 
+
   ethToTokenRate = (ethInput) => {
     var ethInMarket = +this.props.exchange.marketEth2;
     var tokensInMarket = +this.props.exchange.marketTokens2;
@@ -157,7 +157,7 @@ class Exchange extends Component {
           <p>→</p>
         </div>
         <div className="value border pa2">
-          <input type="number" readOnly={true} value={(this.props.exchange.outputValue/10**18).toFixed(5)} placeholder="0"/>
+          <input type="number" readOnly={true} value={(this.props.exchange.outputValue/10**18).toFixed(6)} placeholder="0"/>
           <SelectToken token={this.props.exchange.outputToken} onSelectToken={this.onSelectToken} type="output"/>
            <p className="dropdown">{'<'}</p>
         </div>
@@ -170,7 +170,7 @@ const mapStateToProps = state => ({
     web3Store: state.web3Store,
     exchange: state.exchange
 })
-  
+
   const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
       setExchangeInputValue,
