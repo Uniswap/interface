@@ -7,7 +7,7 @@ export default {
     metamaskLocked: true,
     interaction: '',
     networkMessage: '',
-    factoryAddress: '0xD6D22d102A4237F3D35361BC022a78789E6174Aa',
+    factoryAddress: '0x1dCcdeD9c35C0dd22dfC644BC17011Eb8e61ad91',
     factoryContract: '',
     blockTimestamp: '',
     exchangeType: 'ETH to Token',

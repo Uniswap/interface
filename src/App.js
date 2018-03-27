@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// web3 
+// web3
 import Web3 from 'web3';
 import { exchangeABI } from './helpers/exchangeABI.js'
 import { tokenABI } from './helpers/tokenABI.js'
@@ -50,9 +50,9 @@ class App extends Component {
     }
   }
   // TODO: get rid of redundant localweb3 === 'undefined' checks in componentWill/DidMount
-  // STATUS: kind of done 
+  // STATUS: kind of done
   componentWillMount() {
-    console.log('props', this.props);
+    //console.log('props', this.props);
     if(localweb3 === 'undefined') {
       this.props.setWeb3ConnectionStatus(false);
     } else {
@@ -62,7 +62,7 @@ class App extends Component {
         uniAdded: cookie.load('uniAdded') || false,
         transactions: cookie.load('transactions') || [],
       })
-      // we're working with asynchronous redux 
+      // we're working with asynchronous redux
       this.props.initializeGlobalWeb3(localweb3)
       this.getInfoFirstTime();
     }
@@ -73,7 +73,7 @@ class App extends Component {
     // eslint-disable-next-line no-unused-vars
     const web3Subscriber = subscribe('web3Store.connected', state => {
       if(state.web3Store.connected === true && !state.web3Store.metamaskLocked) {
-        console.log('successfully connected to metamask', state.web3Store.currentMaskAddress);
+        //console.log('successfully connected to metamask', state.web3Store.currentMaskAddress);
         this.marketInterval = setInterval(this.getMarketInfo, 15000);
         this.accountInterval = setInterval(this.getAccountInfo, 15000);
         this.userInterval = setInterval(this.getUserAddress, 500);
@@ -82,14 +82,14 @@ class App extends Component {
         console.log('this.props.currentMaskAddress', this.props.currentMaskAddress)
         this.otherUserInterval = setInterval(this.getUserAddress, 500);
       }
-    })   
+    })
   }
- 
+
   componentWillReceiveProps(nextProps) {
     //console.log('nextProps', nextProps)
   }
-  // TODO: getInfoFirstTime and getUserAddress are WET af 
-  // lets do something about it 
+  // TODO: getInfoFirstTime and getUserAddress are WET af
+  // lets do something about it
   getInfoFirstTime = () => {
     localweb3.eth.getAccounts(async (error, result) => {
       if(result.length > 0){
@@ -106,7 +106,7 @@ class App extends Component {
       }
     })
   }
-  // fun fact, localweb3.eth.getAccounts will return something even without anything inside 
+  // fun fact, localweb3.eth.getAccounts will return something even without anything inside
   getUserAddress = () => {
    localweb3.eth.getAccounts((error, result) => {
       if (result.length > 0) {
@@ -126,31 +126,30 @@ class App extends Component {
     })
   }
 
-  // could possibly use refactoring 
+  // could possibly use refactoring
   getContracts = () => {
+    const factoryAddress = this.props.web3Store.factoryAddress;
+    const factoryContract = new localweb3.eth.Contract(factoryABI, factoryAddress);
+    this.props.factoryContractReady(factoryContract);
+
     this.props.web3Store.exchangeAddresses.addresses.map(async exchangeAddress => {
       // receive the exchange address, create the exchange contract
       let exchangeContract = await new localweb3.eth.Contract(exchangeABI, exchangeAddress[1]);
       // send the exchange contract to redux store
       await this.props.exchangeContractReady(exchangeAddress[0], exchangeContract);
     })
-    
+
     this.props.web3Store.tokenAddresses.addresses.map(async tokenAddress => {
       // receive the token address, create the token contract
       let tokenContract = await new localweb3.eth.Contract(tokenABI, tokenAddress[1]);
-      // send the token contract to redux store 
+      // send the token contract to redux store
       await this.props.tokenContractReady(tokenAddress[0], tokenContract);
     })
-    
-    // happens only once 
-    const factoryAddress = this.props.web3Store.factoryAddress;
-    const factoryContract = new localweb3.eth.Contract(factoryABI, factoryAddress);
-    this.props.factoryContractReady(factoryContract);
-    
+
     // this.getAccountInfo();
     // this.getMarketInfo();
   }
-   
+
   symbolToTokenAddress = (symbol) => {
     let tokenAddresses = this.props.web3Store.tokenAddresses.addresses;
     for (let i = 0; i < tokenAddresses.length; i++) {
@@ -193,9 +192,9 @@ class App extends Component {
       default:
     }
   }
-  // this quadruplet of functions will end up being shared amongst multiple components 
+  // this quadruplet of functions will end up being shared amongst multiple components
   // will need to bring this out into a higher order component (we'll put that to the side for now)
-  // TODO: multiple components currently need this function, we will pass it to them via props 
+  // TODO: multiple components currently need this function, we will pass it to them via props
   getAccountInfo = () => {
     switch (this.props.web3Store.exchangeType) {
       case 'ETH to Token':
@@ -212,11 +211,20 @@ class App extends Component {
         this.getTokenBalance('output');
         this.getAllowance();
         break;
+      case 'ETH to ETH':
+        this.getEthBalance('input');
+        this.getEthBalance('output');
+        break;
+      case 'Token to itself':
+        this.getTokenBalance('input');
+        this.getTokenBalance('output');
+        this.getAllowance();
+        break;
       default:
     }
-    console.log("Getting account info");
+    // console.log("Getting account info");
   }
-  
+
   getExchangeState = (type) => {
     var exchange;
     if (type === 'input') {
@@ -291,7 +299,7 @@ class App extends Component {
     if(type === 'Token to ETH' || type === 'Token to Token') {
       var token = this.symbolToTokenContract(this.props.exchange.inputToken.value);
       var exchangeAddress = this.symbolToExchangeAddress(this.props.exchange.inputToken.value);
-      
+
       token.methods.allowance(this.props.web3Store.currentMaskAddress, exchangeAddress).call().then((result, error) => {
         console.log(this.props.exchange.inputToken.value + ' allowance: ' + result);
         if(result === '0'){
@@ -321,11 +329,26 @@ class App extends Component {
   }
 
   tokenToExchangeFactoryLookup = (tokenAddress) => {
-    this.props.web3Store.factoryContract.methods.tokenToExchangeLookup(tokenAddress).call((error, exchangeAddress) => {
-      console.log(exchangeAddress)
+    console.log('looking up exchange for token: ', tokenAddress)
+    this.props.web3Store.factoryContract.methods.tokenToExchangeLookup(tokenAddress).call().then((result, error) => {
+      if(error) {
+        console.log(error);
+      } else {
+        console.log('exchange address: ', result);
+      }
     });
   }
- 
+
+  launchExchange = (tokenAddress) => {
+    this.props.web3Store.factoryContract.methods.launchExchange(tokenAddress).send({from: this.props.web3Store.currentMaskAddress})
+    .on('transactionHash', console.log('Transaction Hash created'))
+    .on('receipt', (receipt) => {
+      console.log(receipt)
+    })  //Transaction Submitted to blockchain
+    .on('confirmation', (confirmationNumber, receipt) => {console.log("Block Confirmations: " + confirmationNumber)})  //Transaction Mined
+    .on('error', console.error);
+  }
+
   onCloseHelper = () => {
     if(this.props.exchange.outputToken.value === 'UNI'){
       this.setState({ uniAdded: true }) // cookie stuff
@@ -349,7 +372,7 @@ class App extends Component {
     scrollToComponent(this.About, { offset: 0, align: 'top', duration: 500})
   }
 
-  
+
   render() {
     return (
       <div className={this.props.web3Store.connected && !this.props.web3Store.metamaskLocked && this.props.web3Store.interaction !== 'disconnected' ? "App" : "App dim"}>
@@ -364,8 +387,8 @@ class App extends Component {
           onCloseHelper={this.onCloseHelper}
           toggleAbout={this.toggleAbout}
         />
-        <Exchange 
-          getAccountInfo={this.getAccountInfo} 
+        <Exchange
+          getAccountInfo={this.getAccountInfo}
           getMarketInfo={this.getMarketInfo}
           symbolToTokenContract={this.symbolToTokenContract}
           symbolToExchangeAddress={this.symbolToExchangeAddress}
@@ -376,10 +399,10 @@ class App extends Component {
           inputTokenValue={this.props.exchange.inputToken.value}
           exchangeFee={this.props.exchange.fee}
         />
-        <Purchase 
-          symbolToExchangeContract={this.symbolToExchangeContract} 
+        <Purchase
+          symbolToExchangeContract={this.symbolToExchangeContract}
           symbolToTokenAddress={this.symbolToTokenAddress}
-        /> 
+        />
         <About toggleAbout={this.toggleAbout} location={this}/>
         <Links />
         <Transactions transactions={this.state.transactions} interaction={this.props.web3Store.interaction} />

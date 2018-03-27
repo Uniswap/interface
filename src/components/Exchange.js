@@ -39,7 +39,7 @@ class Exchange extends Component {
     var inputValue = this.props.exchange.inputValue;
     console.log(inputValue, 'from setExchangeOutput')
     console.log('outputToken', this.props.exchange.outputToken);
-    if (this.props.web3Store.exchangeType === 'Invalid'){
+    if (this.props.web3Store.exchangeType === 'ETH to ETH' || this.props.web3Store.exchangeType === 'Token to itself'){
       this.props.setExchangeOutputValue(0);
       this.props.setInteractionState('error1');
     } else if(inputValue && inputValue !== 0 && inputValue !== '0'){
@@ -55,9 +55,11 @@ class Exchange extends Component {
   // TODO: change this to use the redux-subscribe pattern
   getMarketType = () => {
     var marketType = '';
-    if (this.props.exchange.inputToken.value === this.props.exchange.outputToken.value) {
-      marketType = 'Invalid';
+    if (this.props.exchange.inputToken.value === 'ETH' && this.props.exchange.outputToken.value === 'ETH') {
+      marketType = 'ETH to ETH';
       this.props.setInteractionState('error1');
+    } else if (this.props.exchange.inputToken.value === this.props.exchange.outputToken.value){
+        marketType = 'Token to itself';
     } else if (this.props.exchange.inputToken.value === 'ETH'){
         marketType = 'ETH to Token';
     } else if (this.props.exchange.outputToken.value === 'ETH'){
