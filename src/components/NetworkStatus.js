@@ -9,7 +9,7 @@ class NetworkStatus extends Component {
     // eslint-disable-next-line no-unused-vars
     const interactionStateSubscriber = subscribe('web3Store.currentMaskAddress', state => {
       if (state.web3Store.currentMaskAddress !== undefined) {
-        console.log('METAMASK UNLOCKED FROM NETWORK STATUS')
+        // console.log('METAMASK UNLOCKED FROM NETWORK STATUS')
         this.checkNetwork();
       } else { console.log('METAMASK LOCKED FROM NETWORK STATUS') }
     })
@@ -24,13 +24,15 @@ class NetworkStatus extends Component {
       this.props.setWeb3ConnectionStatus(connectionStatus);
       this.props.setInteractionState(interactionState);
     })
-  } 
+  }
 
   render () {
     if (this.props.web3Store.connected && this.props.web3Store.interaction !== 'disconnected'){
       return (
         <div className="connection border pa2 green">
           <a target="_blank" rel="noopener noreferrer" href={'https://rinkeby.etherscan.io/search?q=' + this.props.web3Store.currentMaskAddress}>{this.props.web3Store.currentMaskAddress}</a>
+          <p>{this.props.exchange.inputToken.value + ": " + (this.props.exchange.inputBalance/10**18).toFixed(2)}</p>
+          <p>{this.props.exchange.outputToken.value + ": " + (this.props.exchange.outputBalance/10**18).toFixed(2)}</p>
           <p>●</p>
         </div>
       )

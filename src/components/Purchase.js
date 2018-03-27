@@ -18,8 +18,8 @@ class Purchase extends Component {
 
   ethToTokenPurchase = () => {
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.outputToken.value);
-    var minTokens = (this.props.exchange.outputValue/10**18).toString();
-    var minTokensInt = this.props.web3Store.web3.utils.toWei(minTokens);
+    var minTokens = this.props.exchange.outputValue.toString();
+    var minTokensInt = parseInt(minTokens, 10).toString();
     var ethSold = this.props.exchange.inputValue;
     var weiSold = this.props.web3Store.web3.utils.toWei(ethSold);
     var timeout = this.props.web3Store.blockTimestamp + 300; //current block time + 5mins
@@ -42,19 +42,20 @@ class Purchase extends Component {
         console.log(receipt)
       })  //Transaction Submitted to blockchain
       .on('confirmation', (confirmationNumber, receipt) => {
-        console.log("Block Confirmations: " + confirmationNumber)
-        if(confirmationNumber === 1) {
-          this.getAccountInfo();
-        }
+        console.log("Block Confirmations: " + confirmationNumber);
+        // if(confirmationNumber === 1) {
+        //   this.getAccountInfo();
+        // }
       })  //Transaction Mined
       .on('error', console.error);
   }
 
   tokenToEthPurchase = () => {
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.inputToken.value);
-    var minEth = (this.props.exchange.outputValue/10**18).toString();
-    var minEthInt = this.props.web3Store.web3.utils.toWei(minEth);
+    var minEth = this.props.exchange.outputValue.toString();
+    var minEthInt = parseInt(minEth, 10).toString();
     var tokensSold = this.props.exchange.inputValue;
+    // toWei needs to be replaced with *decimals
     var tokensSoldInt = this.props.web3Store.web3.utils.toWei(tokensSold);
     var timeout = this.props.web3Store.blockTimestamp + 300; //current block time + 5mins
 
@@ -77,15 +78,15 @@ class Purchase extends Component {
   tokenToTokenPurchase = () => {
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.inputToken.value);
     var tokenOutAddress = this.props.symbolToTokenAddress(this.props.exchange.outputToken.value);
-    var minTokens = (this.props.exchange.outputValue/10**18).toString();
-    var minTokensInt = this.props.web3Store.web3.utils.toWei(minTokens);
+    var minTokens = this.props.exchange.outputValue.toString();
+    var minTokensInt = parseInt(minTokens, 10).toString();
     var tokensSold = this.props.exchange.inputValue;
     var tokensSoldInt = this.props.web3Store.web3.utils.toWei(tokensSold);
     var timeout = this.props.web3Store.blockTimestamp + 300; //current block time + 5mins
-    console.log('tokenOutAddress', tokenOutAddress);
-    console.log('minTokensInt', minTokensInt);
-    console.log('tokensSoldInt', tokensSoldInt);
-    console.log('timeout', timeout);
+    // console.log('tokenOutAddress', tokenOutAddress);
+    // console.log('minTokensInt', minTokensInt);
+    // console.log('tokensSoldInt', tokensSoldInt);
+    // console.log('timeout', timeout);
 
     exchange.methods.tokenToTokenSwap(tokenOutAddress, tokensSoldInt, minTokensInt, timeout).send({from: this.props.web3Store.currentMaskAddress})
       .on('transactionHash', (result) => {
