@@ -14,7 +14,8 @@ import Purchase from './components/Purchase';
 import About from './components/About';
 import Links from './components/Links';
 import Transactions from './components/Transactions';
-// import SelectToken from './components/SelectToken'
+// d3 
+import Visualization from './components/Visualization';
 // enter redux
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
@@ -29,7 +30,6 @@ import { setInputBalance, setOutputBalance, setInvariant1, setInvariant2, setMar
 import './App.css';
 import cookie from 'react-cookies'
 import scrollToComponent from 'react-scroll-to-component';
-// import Candlesticks from './components/Candlesticks'
 
 var localweb3; // this isn't even in state
 
@@ -399,6 +399,7 @@ class App extends Component {
           inputTokenValue={this.props.exchange.inputToken.value}
           exchangeFee={this.props.exchange.fee}
         />
+        <Visualization />
         <Purchase
           symbolToExchangeContract={this.symbolToExchangeContract}
           symbolToTokenAddress={this.symbolToTokenAddress}
