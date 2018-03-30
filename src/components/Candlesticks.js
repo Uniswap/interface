@@ -10,7 +10,6 @@ class Candlesticks extends Component {
     }
     this.visualizeData.bind(this)
   }
-
   // note, this url is being used for development
   // the actual url will be wherever the API is hosted 
   componentDidMount() {
