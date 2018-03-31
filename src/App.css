@@ -42,13 +42,13 @@ a:hover{
 .title{
   display: flex;
   flex-direction: row;
+  width: 100%;
 }
+
 .border{
   border: 1px solid #f7f7f7;
 }
-.title {
-  width: 100%;
-}
+
 .logo{
   /* width: 10vw; */
   display: flex;
@@ -61,6 +61,7 @@ a:hover{
   align-items: center;
   /* color: #27AE60; */
   flex: 1;
+  font-family: "Inter UI", sans-serif;
 }
 
 .connection a{
@@ -72,6 +73,7 @@ a:hover{
   width: 100%;
   display: flex;
   flex-direction: row;
+  font-family: "Inter UI", sans-serif;
   /* justify-content: space-between; */
 }
 .arrow{
@@ -87,13 +89,22 @@ a:hover{
   justify-content: space-between;
   align-items: center;
 }
+
 .value input, select{
   width: 100%;
   height: 100%;
   border: none;
 }
+
 .value input:focus{
     outline: none;
+}
+
+.investValue{
+  width: 80vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .dropdown{
@@ -120,18 +131,21 @@ input[type=number]::-webkit-outer-spin-button {
 .rate p{
   margin: 0px;
   padding: .25rem;
+  font-family: "Inter UI", sans-serif;
 }
 
 .info{
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  font-family: "Inter UI", sans-serif;
 }
 
 .links{
   display: flex;
   flex-direction: row;
   justify-content: center;
+  font-family: "Inter UI", sans-serif;
 }
 
 .link{
@@ -154,6 +168,7 @@ input[type=number]::-webkit-outer-spin-button {
   flex: 1;
   text-decoration: none;
   color: black;
+  font-family: "Inter UI", sans-serif;
 }
 
 .about:hover .underline{
@@ -171,6 +186,7 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: #27AE60;
   background-color: #2F80ED;
   cursor: pointer;
+  font-family: "Inter UI", sans-serif;
 }
 
 .expand{
@@ -180,10 +196,12 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: #f2f2f2;
   height: auto;
   transition: height .3s ease;
+  font-family: "Inter UI", sans-serif;
 }
 
 .transaction p{
   margin: 0px;
+  font-family: "Inter UI", sans-serif;
 }
 
 .transaction ol{
@@ -193,6 +211,10 @@ input[type=number]::-webkit-outer-spin-button {
 
 .grey-bg{
   background-color: #f7f7f7;
+}
+
+.white-bg{
+  background-color: #ffffff;
 }
 
 .red{
@@ -246,4 +268,41 @@ input[type=number]::-webkit-outer-spin-button {
   margin-after: 1em;
   margin-start: 0px;
   margin-end: 0px; */
+}
+
+.invest {
+  font-family: "Inter UI", sans-serif;
+}
+
+.investValue {
+  width: 90vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.investValue input {
+  width: 15vw;
+  height: 100%;
+  border: none;
+  outline: none;
+}
+
+.investValueInput {
+  background-color: #ffffff;
+}
+
+.investSelectToken {
+  /* background-color: #ffffff; */
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.investDropdown {
+  transform: rotate(-90deg);
+  opacity: .4;
+  position: relative;
+  left: -5px;
 }

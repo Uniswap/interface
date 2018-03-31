@@ -10,11 +10,12 @@ import {
   SET_BLOCK_TIMESTAMP,
   SET_EXCHANGE_TYPE,
   INITIALIZE_GLOBAL_WEB3,
-  TOGGLE_ABOUT
+  TOGGLE_ABOUT,
+  TOGGLE_INVEST
 } from '../constants';
 
 export default (state = {}, action) => {
-  const { connected, currentMaskAddress, metamaskLocked, interaction, factoryContract, networkMessage, timestamp, exchangeType, web3, aboutToggle } = action
+  const { connected, currentMaskAddress, metamaskLocked, interaction, factoryContract, networkMessage, timestamp, exchangeType, web3, aboutToggle, investToggle } = action
   switch (action.type) {
     case INITIALIZE_GLOBAL_WEB3:
       return Object.assign({}, state, { web3: web3 });
@@ -34,10 +35,12 @@ export default (state = {}, action) => {
       return Object.assign({}, state, { networkMessage: networkMessage });
     case SET_BLOCK_TIMESTAMP:
       return Object.assign({}, state, { blockTimestamp: timestamp });
-    case SET_EXCHANGE_TYPE: 
+    case SET_EXCHANGE_TYPE:
       return Object.assign({}, state, { exchangeType: exchangeType });
-    case TOGGLE_ABOUT: 
+    case TOGGLE_ABOUT:
       return Object.assign({}, state, { aboutToggle: aboutToggle })
+    case TOGGLE_INVEST:
+      return Object.assign({}, state, { investToggle: investToggle })
     default: return state;
   }
 }

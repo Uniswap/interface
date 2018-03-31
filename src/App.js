@@ -13,6 +13,7 @@ import RateAndFee from './components/RateAndFee';
 import Purchase from './components/Purchase';
 import About from './components/About';
 import Links from './components/Links';
+import SharePurchase from './components/SharePurchase';
 import Transactions from './components/Transactions';
 // import SelectToken from './components/SelectToken'
 // enter redux
@@ -23,8 +24,23 @@ import { subscribe } from 'redux-subscriber';
 // import { initializeGlobalWeb3 } from './actions/global-actions';
 import { uniExchangeContractReady, swtExchangeContractReady, exchangeContractReady } from './actions/exchangeContract-actions';
 import { uniTokenContractReady, swtTokenContractReady, tokenContractReady } from './actions/tokenContract-actions';
-import { initializeGlobalWeb3, setWeb3ConnectionStatus, setCurrentMaskAddress, metamaskLocked, metamaskUnlocked, setInteractionState, factoryContractReady, toggleAbout } from './actions/web3-actions';
-import { setInputBalance, setOutputBalance, setInvariant1, setInvariant2, setMarketEth1, setMarketEth2, setMarketTokens1, setMarketTokens2, setAllowanceApprovalState } from './actions/exchange-actions';
+import { initializeGlobalWeb3, setWeb3ConnectionStatus, setCurrentMaskAddress, metamaskLocked, metamaskUnlocked, setInteractionState, factoryContractReady, toggleAbout, toggleInvest } from './actions/web3-actions';
+import {  setInputBalance,
+          setOutputBalance,
+          setInvariant1,
+          setInvariant2,
+          setMarketEth1,
+          setMarketEth2,
+          setMarketTokens1,
+          setMarketTokens2,
+          setAllowanceApprovalState,
+          setInvestToken,
+          setInvestInvariant,
+          setInvestEthPool,
+          setInvestTokenPool,
+          setInvestShares,
+          setInvestTokenBalance,
+          setInvestEthBalance } from './actions/exchange-actions';
 // enter d3 & misc. tools
 import './App.css';
 import cookie from 'react-cookies'
@@ -225,6 +241,35 @@ class App extends Component {
     // console.log("Getting account info");
   }
 
+  getInvestInfo = () => {
+    var exchange = this.symbolToExchangeContract(this.props.exchange.investToken.value);
+    var token = this.symbolToTokenContract(this.props.exchange.investToken.value);
+
+    exchange.methods.invariant().call().then((result, error) => {
+      this.props.setInvestInvariant(result);
+    });
+
+    exchange.methods.ethPool().call().then((result, error) => {
+      this.props.setInvestEthPool(result);
+    });
+
+    exchange.methods.tokenPool().call().then((result, error) => {
+      this.props.setInvestTokenPool(result);
+    });
+
+    exchange.methods.totalShares().call().then((result, error) => {
+      this.props.setInvestShares(result);
+    });
+
+    token.methods.balanceOf(this.props.web3Store.currentMaskAddress).call((error, balance) => {
+      this.props.setInvestTokenBalance(balance);
+    });
+
+    this.props.web3Store.web3.eth.getBalance(this.props.web3Store.currentMaskAddress, (error, balance) => {
+      this.props.setInvestEthBalance(balance);
+    });
+  }
+
   getExchangeState = (type) => {
     var exchange;
     if (type === 'input') {
@@ -372,6 +417,17 @@ class App extends Component {
     scrollToComponent(this.About, { offset: 0, align: 'top', duration: 500})
   }
 
+  toggleInvest = () => {
+    this.getInvestInfo();
+    let current = this.props.web3Store.investToggle;
+    this.props.toggleInvest(!current);
+    setTimeout(this.scrollToInvest, 300);
+  }
+
+  scrollToInvest = () => {
+    scrollToComponent(this.Links, { offset: 0, align: 'top', duration: 500})
+  }
+
 
   render() {
     return (
@@ -403,8 +459,17 @@ class App extends Component {
           symbolToExchangeContract={this.symbolToExchangeContract}
           symbolToTokenAddress={this.symbolToTokenAddress}
         />
+        <Links
+          toggleInvest={this.toggleInvest}
+          location={this}
+          symbolToTokenContract={this.symbolToTokenContract}
+          symbolToExchangeContract={this.symbolToExchangeContract}
+        />
+        <SharePurchase
+          symbolToExchangeContract={this.symbolToExchangeContract}
+          symbolToTokenAddress={this.symbolToTokenAddress}
+        />
         <About toggleAbout={this.toggleAbout} location={this}/>
-        <Links />
         <Transactions transactions={this.state.transactions} interaction={this.props.web3Store.interaction} />
       </div>
     )
@@ -441,8 +506,16 @@ const mapDispatchToProps = (dispatch) => {
     setAllowanceApprovalState,
     initializeGlobalWeb3,
     toggleAbout,
+    toggleInvest,
     exchangeContractReady,
-    tokenContractReady
+    tokenContractReady,
+    setInvestToken,
+    setInvestEthPool,
+    setInvestTokenPool,
+    setInvestInvariant,
+    setInvestShares,
+    setInvestTokenBalance,
+    setInvestEthBalance
   }, dispatch)
 }
 
