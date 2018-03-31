@@ -9,7 +9,8 @@ import {
   SET_NETWORK_MESSAGE,
   SET_BLOCK_TIMESTAMP,
   SET_EXCHANGE_TYPE,
-  TOGGLE_ABOUT
+  TOGGLE_ABOUT,
+  TOGGLE_INVEST
 } from '../constants';
 
 // this actions folder is actually full of action creators
@@ -97,8 +98,12 @@ export const toggleAbout = (toggle) => ({
   aboutToggle: toggle
 });
 
+export const toggleInvest = (toggle) => ({
+  type: TOGGLE_INVEST,
+  investToggle: toggle
+});
+
 export const initializeGlobalWeb3 = (web3) => ({
   type: INITIALIZE_GLOBAL_WEB3,
   web3
 });
-  
