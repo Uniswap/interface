@@ -3,6 +3,7 @@ export default {
     web3: {},
     connected: false,
     aboutToggle: false,
+    investToggle: false,
     currentMaskAddress: undefined,
     metamaskLocked: true,
     interaction: '',
@@ -37,6 +38,7 @@ export default {
     outputBalance: 0,
     inputToken: { value: 'ETH', label: 'ETH', clearableValue: false },
     outputToken: { value: 'MKR', label: 'MKR', clearableValue: false },
+    investToken: { value: 'BAT', label: 'BAT', clearableValue: false },
     invariant1: 0,
     invariant2: 0,
     marketEth1: 0,
@@ -48,5 +50,14 @@ export default {
     outputValue: 0,
     rate: 0,
     fee: 0,
+    investInvariant: 0,
+    investEthPool: 0,
+    investTokenPool: 0,
+    investShares: 0,
+    investTokenBalance: 0,
+    investEthBalance: 0,
+    investSharesInput: 0,
+    investEthRequired: 0,
+    investTokensRequired: 0
   }
 }
