@@ -19,6 +19,7 @@ import {
   SET_INVEST_ETH_POOL,
   SET_INVEST_TOKEN_POOL,
   SET_INVEST_SHARES,
+  SET_USER_SHARES,
   SET_INVEST_TOKEN_BALANCE,
   SET_INVEST_ETH_BALANCE,
   SET_INVEST_SHARES_INPUT,
@@ -126,6 +127,10 @@ export const setInvestShares = (investShares) => ({
   investShares
 });
 
+export const setUserShares = (userShares) => ({
+  type: SET_USER_SHARES,
+  userShares
+});
 
 export const setInvestTokenBalance = (investTokenBalance) => ({
   type: SET_INVEST_TOKEN_BALANCE,
