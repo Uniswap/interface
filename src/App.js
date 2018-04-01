@@ -15,7 +15,7 @@ import About from './components/About';
 import Links from './components/Links';
 import SharePurchase from './components/SharePurchase';
 import Transactions from './components/Transactions';
-// d3 
+// d3
 import Visualization from './components/Visualization';
 // enter redux
 import { bindActionCreators } from 'redux'
@@ -40,6 +40,7 @@ import {  setInputBalance,
           setInvestEthPool,
           setInvestTokenPool,
           setInvestShares,
+          setUserShares,
           setInvestTokenBalance,
           setInvestEthBalance } from './actions/exchange-actions';
 // enter d3 & misc. tools
@@ -261,6 +262,10 @@ class App extends Component {
       this.props.setInvestShares(result);
     });
 
+    exchange.methods.getShares(this.props.web3Store.currentMaskAddress).call().then((result, error) => {
+      this.props.setUserShares(result);
+    });
+
     token.methods.balanceOf(this.props.web3Store.currentMaskAddress).call((error, balance) => {
       this.props.setInvestTokenBalance(balance);
     });
@@ -455,11 +460,11 @@ class App extends Component {
           inputTokenValue={this.props.exchange.inputToken.value}
           exchangeFee={this.props.exchange.fee}
         />
-        <Visualization />
         <Purchase
           symbolToExchangeContract={this.symbolToExchangeContract}
           symbolToTokenAddress={this.symbolToTokenAddress}
         />
+        <Visualization />
         <Links
           toggleInvest={this.toggleInvest}
           location={this}
@@ -515,6 +520,7 @@ const mapDispatchToProps = (dispatch) => {
     setInvestTokenPool,
     setInvestInvariant,
     setInvestShares,
+    setUserShares,
     setInvestTokenBalance,
     setInvestEthBalance
   }, dispatch)
