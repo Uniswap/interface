@@ -37,7 +37,7 @@ export default {
     inputBalance: 0,
     outputBalance: 0,
     inputToken: { value: 'ETH', label: 'ETH', clearableValue: false },
-    outputToken: { value: 'MKR', label: 'MKR', clearableValue: false },
+    outputToken: { value: 'BAT', label: 'BAT', clearableValue: false },
     investToken: { value: 'BAT', label: 'BAT', clearableValue: false },
     invariant1: 0,
     invariant2: 0,

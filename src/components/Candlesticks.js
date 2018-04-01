@@ -10,7 +10,6 @@ class Candlesticks extends Component {
     }
     this.visualizeData.bind(this)
   }
-
   // note, this url is being used for development
   // the actual url will be wherever the API is hosted 
   componentDidMount() {
@@ -21,7 +20,7 @@ class Candlesticks extends Component {
       }
     }`;
 
-    axios.get('http://localhost:3000/graphql', { params: { query: query } })
+    axios.get('http://ec2-18-233-168-186.compute-1.amazonaws.com:3000/graphql', { params: { query: query } })
     .then(data => this.setState({data: data.data.data.Event}))
     .then(()=> this.visualizeData())
     .catch(err => console.error(err));
