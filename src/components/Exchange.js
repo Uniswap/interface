@@ -173,20 +173,20 @@ const mapStateToProps = state => ({
     exchange: state.exchange
 })
 
-  const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({
-      setExchangeInputValue,
-      setExchangeOutputValue,
-      setExchangeRate,
-      setExchangeFee,
-      setInteractionState,
-      setInputToken,
-      setOutputToken,
-      setExchangeType,
-      setInputBalance,
-      setOutputBalance,
-      setAllowanceApprovalState
-    }, dispatch);
-  }
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    setExchangeInputValue,
+    setExchangeOutputValue,
+    setExchangeRate,
+    setExchangeFee,
+    setInteractionState,
+    setInputToken,
+    setOutputToken,
+    setExchangeType,
+    setInputBalance,
+    setOutputBalance,
+    setAllowanceApprovalState
+  }, dispatch);
+}
 
-  export default connect(mapStateToProps, mapDispatchToProps)(Exchange);
+export default connect(mapStateToProps, mapDispatchToProps)(Exchange);

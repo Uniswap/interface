@@ -14,8 +14,11 @@ export const SET_NETWORK_MESSAGE = 'SET_NETWORK_MESSAGE';
 export const SET_BLOCK_TIMESTAMP = 'SET_BLOCK_TIMESTAMP';
 export const SET_EXCHANGE_TYPE = 'SET_EXCHANGE_TYPE';
 
-// action to toggle the 'about' div 
+// action to toggle the 'about' div
 export const TOGGLE_ABOUT = 'TOGGLE_ABOUT';
+
+// action to toggle the 'invest' div
+export const TOGGLE_INVEST = 'TOGGLE_INVEST';
 
 // factory contract action, also set
 export const FACTORY_CONTRACT_READY = 'FACTORY_CONTRACT_READY';
@@ -46,6 +49,16 @@ export const SET_EXCHANGE_INPUT_VALUE = 'SET_EXCHANGE_INPUT_VALUE';
 export const SET_EXCHANGE_OUTPUT_VALUE = 'SET_EXCHANGE_OUTPUT_VALUE';
 export const SET_EXCHANGE_RATE = 'SET_EXCHANGE_RATE';
 export const SET_EXCHANGE_FEE = 'SET_EXCHANGE_FEE';
+export const SET_INVEST_TOKEN = 'SET_INVEST_TOKEN';
+export const SET_INVEST_INVARIANT = 'SET_INVEST_INVARIANT';
+export const SET_INVEST_ETH_POOL = 'SET_INVEST_ETH';
+export const SET_INVEST_TOKEN_POOL = 'SET_INVEST_TOKENS';
+export const SET_INVEST_SHARES = 'SET_INVEST_SHARES';
+export const SET_INVEST_TOKEN_BALANCE = 'SET_INVEST_TOKEN_BALANCE';
+export const SET_INVEST_ETH_BALANCE = 'SET_INVEST_ETH_BALANCE';
+export const SET_INVEST_SHARES_INPUT = 'SET_INVEST_SHARES_INPUT';
+export const SET_INVEST_ETH_REQUIRED = 'SET_INVEST_ETH_REQUIRED';
+export const SET_INVEST_TOKENS_REQUIRED = 'SET_INVEST_TOKENS_REQUIRED';
 
 // test setInteractionState
 export const INITIALIZE_GLOBAL_WEB3 = 'INITIALIZE_GLOBAL_WEB3';
