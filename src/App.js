@@ -433,7 +433,6 @@ class App extends Component {
     scrollToComponent(this.Links, { offset: 0, align: 'top', duration: 500})
   }
 
-
   render() {
     return (
       <div className={this.props.web3Store.connected && !this.props.web3Store.metamaskLocked && this.props.web3Store.interaction !== 'disconnected' ? "App" : "App dim"}>
@@ -476,7 +475,8 @@ class App extends Component {
           symbolToTokenAddress={this.symbolToTokenAddress}
         />
         <About toggleAbout={this.toggleAbout} location={this}/>
-        <Transactions transactions={this.state.transactions} interaction={this.props.web3Store.interaction} />
+        {//<Transactions transactions={this.state.transactions} interaction={this.props.web3Store.interaction} />
+        }
       </div>
     )
   }

@@ -1,14 +1,14 @@
-import React from 'react' 
+import React from 'react'
 
 function AboutMessage ({ toggled }) {
   if (toggled === true) {
     return (
       <section className="expand grey-bg border pa2">
-        <p>Uniswap is a trustless, decentralized exchange for Ether and ERC20 tokens. It uses a market maker mechanism, where liquidity providers invest a reserve of ETH and a single ERC20 token within an Ethereum smart contract. An exchange rate is set between the tokens and ETH based on the relative availibility of each token. A small transaction fee is payed to the liquidity providers proportional to their investment.</p>
-        <p>There is a separate contract for each ETH-ERC20 pair. These contracts can "tunnel" between each other for direct ERC20-ERC20 trades. Only one exchange can exist per token, and anyone can contribute liquidity to any exchange. A factory/registry contract provides a public interface for creating new Uniswap exchanges, and looking up the exchange associated a given token address.</p>
-        <p>A full writeup will be available soon. Until then, here is some more info on Market Makers:</p>
+        <p>Uniswap is an automated market maker exchange capable of both ETH-to-ERC20 and ERC20-to-ERC20 trades. Anyone can become a liquidity provider, and invest in the liquidity pool of an ERC20 token. This allows other users to trade that token for any other token with liquidity, at an exchange rate based on their relative availibility. When a token trade is executed, a small fee is payed to the liquidity providers for both tokens, proportional to their investment.</p>
+        <p>A full writeup can be found here: <a href="https://hackmd.io/Tlf08KuPTbqsHLKk5hzAvA">Uniswap Project Overview</a></p>
         <p>Please reach out if you would like to get involved or support the project.</p>
-        <p>Email: <a href="mailto:hayden@uniswap.io">hayden@uniswap.io</a></p>
+        <p><span role="img" aria-label="GitHub">⟪⟫</span> <a href="https://github.com/uniswap">github.com/uniswap</a></p>
+        <p><span role="img" aria-label="Email">📧 </span><a href="mailto:hayden@uniswap.io">hayden@uniswap.io</a></p>
       </section>
     )
   } else {

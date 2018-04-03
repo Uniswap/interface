@@ -59,6 +59,7 @@ export default {
     investEthBalance: 0,
     investSharesInput: 0,
     investEthRequired: 0,
-    investTokensRequired: 0
+    investTokensRequired: 0,
+    investChecked: true
   }
 }

@@ -5,13 +5,17 @@ import { setBlockTimestamp, setInteractionState } from '../actions/web3-actions'
 import { setExchangeInputValue, setExchangeOutputValue } from '../actions/exchange-actions';
 
 class Purchase extends Component {
-  purchaseShares = async () => {
+  buyOrSellShares = async () => {
     await this.props.setBlockTimestamp(this.props.web3Store.web3);
-    this.sharesPurchase();
+    if(this.props.exchange.investChecked) {
+      this.buyShares();
+    } else {
+      this.sellShares();
+    }
   }
 
 
-  sharesPurchase = () => {
+  buyShares = () => {
     console.log(this.props.exchange.inputToken.value, 'ahh')
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.investToken.value);
     var minShares = 1;
@@ -35,16 +39,58 @@ class Purchase extends Component {
       .on('error', console.error);
   }
 
+  sellShares = () => {
+    var exchange = this.props.symbolToExchangeContract(this.props.exchange.investToken.value);
+    var minEth = 1;
+    var minTokens = 1;
+    var sharesInt = parseInt(this.props.exchange.investSharesInput, 10).toString();
+    // var timeout = this.props.web3Store.blockTimestamp + 300; //current block time + 5mins
+
+    exchange.methods.divestLiquidity(sharesInt, minEth, minTokens).send({from: this.props.web3Store.currentMaskAddress})
+      .on('transactionHash', (result) => {
+        // console.log('Transaction Hash created')
+        // let transactions = this.state.transactions
+        // transactions.push(result)
+        // this.setState({ transactions: transactions });
+        // this.props.setExchangeInputValue(0);
+        // this.props.setExchangeOutputValue(0);
+        // this.props.setInteractionState('submitted');
+        console.log(result);
+        // cookie.save('transactions', transactions, { path: '/' })
+      })
+      .on('receipt', (receipt) => {console.log(receipt)})  //Transaction Submitted to blockchain
+      .on('confirmation', (confirmationNumber, receipt) => {console.log("Block Confirmations: " + confirmationNumber)})  //Transaction Mined
+      .on('error', console.error);
+  }
+
+  buyOrSell = (input) => {
+    if(input) {
+      return 'buy'
+    } else {
+      return 'sell'
+    }
+  }
+
   render() {
     if (this.props.exchange.investEthRequired > 0) {
+      // fix later
+      if (!this.props.exchange.investChecked && 1 === 0) {
         return (
-          <a className="swap border pa2" role="button" onClick={() => {this.purchaseShares()}}>
-            <b>{"I want to buy " + this.props.exchange.investSharesInput + " shares for " + (this.props.exchange.investEthRequired/10**18).toFixed(4) + " ETH and " + (this.props.exchange.investTokensRequired/10**18).toFixed(4) + " " + this.props.exchange.investToken.value}</b>
-          </a>
+          <p className="swap border pa2">
+            <b>Not enough shares!</b>
+          </p>
         )
       } else {
-        return (<a className="swap grey-bg hidden border pa2"></a>)
+        return (
+          <a className="swap border pa2" role="button" onClick={() => {this.buyOrSellShares()}}>
+            <b>I want to {this.buyOrSell(this.props.exchange.investChecked)} {this.props.exchange.investSharesInput} shares for {(this.props.exchange.investEthRequired/10**18).toFixed(4)} ETH and {(this.props.exchange.investTokensRequired/10**18).toFixed(4)} {this.props.exchange.investToken.value}</b>
+          </a>
+        )
       }
+
+    } else {
+        return (<a className="swap grey-bg hidden border pa2"></a>)
+    }
   }
 }
 

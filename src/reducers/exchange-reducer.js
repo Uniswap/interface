@@ -24,7 +24,8 @@ import {
   SET_INVEST_TOKEN_BALANCE,
   SET_INVEST_SHARES_INPUT,
   SET_INVEST_ETH_REQUIRED,
-  SET_INVEST_TOKENS_REQUIRED
+  SET_INVEST_TOKENS_REQUIRED,
+  SET_INVEST_CHECKED
 } from '../constants';
 
 export default (state = {}, action) => {
@@ -54,7 +55,8 @@ export default (state = {}, action) => {
     investTokenBalance,
     investSharesInput,
     investEthRequired,
-    investTokensRequired
+    investTokensRequired,
+    investChecked
    } = action;
 
   switch(action.type) {
@@ -110,6 +112,8 @@ export default (state = {}, action) => {
       return Object.assign({}, state, { investEthRequired: investEthRequired });
     case SET_INVEST_TOKENS_REQUIRED:
       return Object.assign({}, state, { investTokensRequired: investTokensRequired });
+    case SET_INVEST_CHECKED:
+      return Object.assign({}, state, { investChecked: investChecked });
     default: return state;
   }
 }
