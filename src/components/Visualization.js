@@ -61,25 +61,27 @@ class Visualization extends Component {
   createLineGraph() {
     // TODO: as you change whether you want to see days or years, change the extent
     // scales are wicked important
-    let width = 1039;
-    let height = 200;
     let margin = {top: 20, bottom:20, left:20, right:20}
+    let width = 1039 - margin.left - margin.right;
+    let height = 325 - margin.top - margin.bottom;
     let svg = this.d3Graph
     // first we want to see the min and max of our token prices
     let ethValueOfTokenExtent = d3.extent(this.state.data, element => element.ethValueOfToken);
-    console.log('initial data visualized', this.state.data)
+    console.log('initial data visualized', this.state.data, 'extent of data', ethValueOfTokenExtent)
     // create a y scale, for the eth value of the token
     let yScale = d3.scaleLinear()
-      .domain(ethValueOfTokenExtent)
+      .domain([ethValueOfTokenExtent[1], ethValueOfTokenExtent[0]])
       .range([margin.bottom, height - margin.top]);
 
     // now that we have the scale, we create the actual axis
     let yAxis = d3.axisLeft()
-      .scale(yScale);
+      .scale(yScale)
+      .ticks(8)
+ 
     // time to put this y axis on the page
     svg.append('g')
      .attr('class', 'y axis')
-     .attr('transform', 'translate(50)')
+     .attr('transform', 'translate(100)')
      .call(yAxis);
 
     // sanitize the data for the x-axis
@@ -99,9 +101,18 @@ class Visualization extends Component {
     // append the axis to the DOM, make sure it's positioned correctly
     svg.append('g')
       .attr('class', 'x axis')
-      .attr('transform', 'translate(30, 180)')
+      .attr('transform', 'translate(80, 265)')
       .call(xAxis);
-
+    // this right here is the x-axis label 
+    svg.append("text")
+     .attr("transform", "rotate(-90)")
+     .attr("y", 20 )
+     .attr("x", 0 - (height / 2))
+     .attr("dy", "1em")
+     .attr('font-size', '15px')
+     .style("text-anchor", "middle")
+     .text("Price (ETH)");
+    
     let line = d3.line()
       .x(element => xScale(element.createdAt))
       .y(element => yScale(element.ethValueOfToken))
@@ -114,14 +125,14 @@ class Visualization extends Component {
       .attr("stroke", "steelblue")
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
-      .attr("stroke-width", 1.5)
-      .attr('transform', 'translate(30)')
+      .attr("stroke-width", 2.5)
+      .attr('transform', 'translate(80)')
   }
 
-  createNewLineGraph(){
-    let width = 1039;
-    let height = 200;
+  createNewLineGraph() {
     let margin = {top: 20, bottom:20, left:20, right:20}
+    let width = 1039 - margin.left - margin.right;
+    let height = 325 - margin.top - margin.bottom;
     this.state.data.map(e => e.createdAt = new Date(e.createdAt));
     console.log('data is being set correctly', this.state.data)
     // we set the range of the data again
@@ -131,7 +142,7 @@ class Visualization extends Component {
     console.log('new xExtent', xExtent)
     // we also redefine the scales for the new data
     let yScale = d3.scaleLinear()
-      .domain(yExtent)
+      .domain([yExtent[1], yExtent[0]])
       .range([margin.bottom, height - margin.top]);
     let xScale = d3.scaleTime()
       .domain(xExtent)
@@ -141,6 +152,7 @@ class Visualization extends Component {
       .scale(xScale)
     let yAxis = d3.axisLeft()
       .scale(yScale)
+      .ticks(8)
 
     let svg = this.d3Graph.transition()
     let line = d3.line()
@@ -159,10 +171,10 @@ class Visualization extends Component {
   }
 
   render () {
-    const width = 1000;
-    const height = 200;
+    const width = 1039;
+    const height = 375;
     return (
-      <div className="visualization" align="center">
+      <div align="center">
         <svg width={width} height={height}>
           <g ref="graph"/>
         </svg>
