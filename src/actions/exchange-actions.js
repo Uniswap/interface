@@ -24,7 +24,8 @@ import {
   SET_INVEST_ETH_BALANCE,
   SET_INVEST_SHARES_INPUT,
   SET_INVEST_ETH_REQUIRED,
-  SET_INVEST_TOKENS_REQUIRED
+  SET_INVEST_TOKENS_REQUIRED,
+  SET_INVEST_CHECKED
 } from '../constants';
 
 export const setInputBalance = (inputBalance) => ({
@@ -155,4 +156,9 @@ export const setInvestEthRequired = (investEthRequired) => ({
 export const setInvestTokensRequired = (investTokensRequired) => ({
   type: SET_INVEST_TOKENS_REQUIRED,
   investTokensRequired
+});
+
+export const setInvestChecked = (investChecked) => ({
+  type: SET_INVEST_CHECKED,
+  investChecked
 });

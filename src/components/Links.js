@@ -10,6 +10,7 @@ class Links extends Component {
         <section className="links"  ref={(section) => { this.props.location.Links = section; }} >
           <a onClick={() => {this.props.toggleInvest()}} className="link border pa2 f-a">
             <p className="underline">Invest liquidity to collect fees</p>
+            <p>↘</p>
           </a>
         </section>
         <Invest

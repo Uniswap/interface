@@ -159,7 +159,7 @@ class Exchange extends Component {
           <p>→</p>
         </div>
         <div className="value border pa2">
-          <input type="number" readOnly={true} value={(this.props.exchange.outputValue/10**18).toFixed(6)} placeholder="0"/>
+          <input type="number" readOnly={true} value={(this.props.exchange.outputValue/10**18).toFixed(4)} placeholder="0"/>
           <SelectToken token={this.props.exchange.outputToken} onSelectToken={this.onSelectToken} type="output"/>
           <p className="dropdown">{'<'}</p>
         </div>

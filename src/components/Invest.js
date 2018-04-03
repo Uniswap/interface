@@ -3,7 +3,18 @@ import SelectToken from './SelectToken';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { setInvestToken, setInvestInvariant, setInvestEthPool, setInvestTokenPool, setInvestShares, setInvestTokenBalance, setInvestEthBalance, setInvestSharesInput, setUserShares, setInvestEthRequired, setInvestTokensRequired} from '../actions/exchange-actions';
+import { setInvestToken,
+         setInvestInvariant,
+         setInvestEthPool,
+         setInvestTokenPool,
+         setInvestShares,
+         setInvestTokenBalance,
+         setInvestEthBalance,
+         setInvestSharesInput,
+         setUserShares,
+         setInvestEthRequired,
+         setInvestTokensRequired,
+         setInvestChecked} from '../actions/exchange-actions';
 
 class Invest extends Component {
 
@@ -29,6 +40,10 @@ class Invest extends Component {
     this.getInvestOutput();
   }
 
+  toggleCheck = () => {
+    this.props.setInvestChecked(!this.props.exchange.investChecked);
+  }
+
   getInvestExchangeState = () => {
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.investToken.value);
 
@@ -50,7 +65,6 @@ class Invest extends Component {
   }
 
   getInvestBalance = () => {
-    console.log('yo');
     var token = this.props.symbolToTokenContract(this.props.exchange.investToken.value);
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.investToken.value);
 
@@ -75,7 +89,7 @@ class Invest extends Component {
       var tokensRequired = ((this.props.exchange.investTokenPool)/this.props.exchange.investShares)*inputValue;
       this.props.setInvestEthRequired(ethRequired);
       this.props.setInvestTokensRequired(tokensRequired);
-      console.log("requires ", ethRequired, " ETH ", tokensRequired, this.props.exchange.investToken.value);
+      // console.log("requires ", ethRequired, " ETH ", tokensRequired, this.props.exchange.investToken.value);
     } else {
       this.props.setInvestEthRequired(0);
       this.props.setInvestTokensRequired(0);
@@ -86,6 +100,10 @@ class Invest extends Component {
     if (this.props.web3Store.investToggle === true) {
       return (
         <section className="grey-bg border pa2">
+          <div onChange={this.toggleCheck.bind(this)}>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Invest <input type="radio" checked={this.props.exchange.investChecked} onChange={()=>{}} /> &nbsp;&nbsp;&nbsp;&nbsp;
+            Divest <input type="radio" checked={!this.props.exchange.investChecked} onChange={()=>{}} />
+          </div>
           <div className="invest investValue border pa2">
             <p> Select token and input number of shares: &nbsp;&nbsp;&nbsp;</p>
             <div className="investSelectToken">
@@ -101,18 +119,18 @@ class Invest extends Component {
           </div>
           <div className="investValue border pa2">
             <p> Total Liquidity </p>
-            <p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{(this.props.exchange.investEthPool/10**18).toFixed(2)} ETH </p>
-            <p> {(this.props.exchange.investTokenPool/10**18).toFixed(2)} {this.props.exchange.investToken.value} </p>
+            <p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{(this.props.exchange.investEthPool/10**18).toFixed(4)} ETH </p>
+            <p> {(this.props.exchange.investTokenPool/10**18).toFixed(4)} {this.props.exchange.investToken.value} </p>
           </div>
           <div className="investValue border pa2">
             <p> &nbsp;Each share is worth: </p>
-            <p> {((this.props.exchange.investEthPool/10**18)/this.props.exchange.investShares).toFixed(5)} ETH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-            <p> {((this.props.exchange.investTokenPool/10**18)/this.props.exchange.investShares).toFixed(5)} {this.props.exchange.investToken.value} </p>
+            <p> {((this.props.exchange.investEthPool/10**18)/this.props.exchange.investShares).toFixed(4)} ETH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p> {((this.props.exchange.investTokenPool/10**18)/this.props.exchange.investShares).toFixed(4)} {this.props.exchange.investToken.value} </p>
           </div>
           <div className="investValue border pa2">
             <p> Account Balance: </p>
-            <p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{(this.props.exchange.investEthBalance/10**18).toFixed(5)} ETH </p>
-            <p> {(this.props.exchange.investTokenBalance/10**18).toFixed(5)} {this.props.exchange.investToken.value} </p>
+            <p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{(this.props.exchange.investEthBalance/10**18).toFixed(4)} ETH </p>
+            <p> {(this.props.exchange.investTokenBalance/10**18).toFixed(4)} {this.props.exchange.investToken.value} </p>
           </div>
         </section>
       )
@@ -139,7 +157,8 @@ const mapDispatchToProps = (dispatch) => {
     setInvestSharesInput,
     setInvestEthRequired,
     setInvestTokensRequired,
-    setUserShares
+    setUserShares,
+    setInvestChecked
   }, dispatch);
 }
 
