@@ -14,7 +14,7 @@ import Purchase from './components/Purchase';
 import About from './components/About';
 import Links from './components/Links';
 import SharePurchase from './components/SharePurchase';
-import Transactions from './components/Transactions';
+//import Transactions from './components/Transactions';
 // d3
 import Visualization from './components/Visualization';
 // enter redux
