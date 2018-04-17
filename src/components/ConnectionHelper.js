@@ -5,14 +5,14 @@ function ConnectionHelper(props) {
   if (!props.metamask) {
     return (
       <div className="grey-bg connection border pa2">
-        <p>Welcome! Uniswap is a decentralized exhange platform for ERC20 Tokens. <a onClick={() => {props.toggleAbout()}} className="f-a">How it works ↘</a><br /><br />
+        <p>Welcome! Uniswap is a decentralized exhange for ETH and ERC20 Tokens. <a onClick={() => {props.toggleAbout()}} className="f-a">How it works ↘</a><br /><br />
         <b>To get started, please install <a href="https://metamask.io/">Metamask</a>.</b></p>
       </div>
     )
   } else if (props.web3Store.connected && props.web3Store.interaction === 'disconnected') {
     return (
       <div className="grey-bg connection border pa2">
-        <p>Welcome! Uniswap is a decentralized exhange platform for ERC20 Tokens. <a onClick={() => {props.toggleAbout()}} className="f-a" >How it works ↘</a><br /><br />
+        <p>Welcome! Uniswap is a decentralized exchange for ETH and ERC20 Tokens. <a onClick={() => {props.toggleAbout()}} className="f-a" >How it works ↘</a><br /><br />
         Looks like you aren't connected. <b>Please switch to the correct network.</b></p>
       </div>
     )
@@ -32,7 +32,7 @@ function ConnectionHelper(props) {
   } else if (props.web3Store.interaction === "submitted") {
     return (
       <div className="grey-bg connection border pa2">
-        <p>{"Transaction submitted! Click on the transaction hash below to check its status?"}</p>
+        <p>{"Transaction submitted!"}</p>
       </div>
     )
   } else if (props.exchange.inputValue > props.exchange.inputBalance/10**18 && props.exchange.inputToken.value === 'ETH') {
@@ -44,7 +44,7 @@ function ConnectionHelper(props) {
   } else if (!props.exchange.allowanceApproved &&  props.web3Store.exchangeType === "Token to Token") {
     return (
       <div className="grey-bg connection border pa2">
-        <p>Our smart contract has to be approved by your address to be able to swap  this token for other tokens.<br /> We set a high transfer limit for the demo (<a onClick={() => {props.toggleAbout()}} className="f-a">Why?</a>).</p>
+        <p>Our smart contract has to be approved by your address to be able to swap this token for other tokens.<br /> We set a high transfer limit for the demo (<a onClick={() => {props.toggleAbout()}} className="f-a">Why?</a>).</p>
         <a className="f-a"  onClick={() => props.approveAllowance()}>Approve ⭞</a>
       </div>
     )
@@ -82,7 +82,7 @@ function ConnectionHelper(props) {
   } else {
     return (
       <div className="grey-bg connection border pa2">
-        <p>Welcome! Uniswap is a decentralized exhange platform for ERC20 Tokens. <a onClick={() => {props.toggleAbout()}} className="f-a">How it works ↘</a><br /><br />
+        <p>Welcome! Uniswap is a decentralized exhange for ETH and ERC20 Tokens. <a onClick={() => {props.toggleAbout()}} className="f-a">How it works ↘</a><br /><br />
         You're connected. Enter a value below to get started.</p>
         <p>↓</p>
       </div>

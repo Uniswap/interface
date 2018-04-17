@@ -115,22 +115,22 @@ class Invest extends Component {
           <div className="investValue border pa2">
             <p> Total Shares: {this.props.exchange.investShares} </p>
             <p> You own: {this.props.exchange.userShares} shares </p>
-            <p> You get {((this.props.exchange.userShares*100)/this.props.exchange.investShares).toFixed(2)} % of fees </p>
+            <p> You get {((this.props.exchange.userShares*100)/this.props.exchange.investShares).toFixed(2)}% of fees </p>
           </div>
           <div className="investValue border pa2">
             <p> Total Liquidity </p>
-            <p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{(this.props.exchange.investEthPool/10**18).toFixed(4)} ETH </p>
-            <p> {(this.props.exchange.investTokenPool/10**18).toFixed(4)} {this.props.exchange.investToken.value} </p>
+            <p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{(this.props.exchange.investEthPool/10**18).toFixed(5)} ETH </p>
+            <p> {(this.props.exchange.investTokenPool/10**18).toFixed(5)} {this.props.exchange.investToken.value} </p>
           </div>
           <div className="investValue border pa2">
             <p> &nbsp;Each share is worth: </p>
-            <p> {((this.props.exchange.investEthPool/10**18)/this.props.exchange.investShares).toFixed(4)} ETH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-            <p> {((this.props.exchange.investTokenPool/10**18)/this.props.exchange.investShares).toFixed(4)} {this.props.exchange.investToken.value} </p>
+            <p> {((this.props.exchange.investEthPool/10**18)/this.props.exchange.investShares).toFixed(5)} ETH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <p> {((this.props.exchange.investTokenPool/10**18)/this.props.exchange.investShares).toFixed(5)} {this.props.exchange.investToken.value} </p>
           </div>
           <div className="investValue border pa2">
             <p> Account Balance: </p>
-            <p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{(this.props.exchange.investEthBalance/10**18).toFixed(4)} ETH </p>
-            <p> {(this.props.exchange.investTokenBalance/10**18).toFixed(4)} {this.props.exchange.investToken.value} </p>
+            <p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{(this.props.exchange.investEthBalance/10**18).toFixed(5)} ETH </p>
+            <p> {(this.props.exchange.investTokenBalance/10**18).toFixed(5)} {this.props.exchange.investToken.value} </p>
           </div>
         </section>
       )

@@ -16,9 +16,9 @@ class Visualization extends Component {
   componentDidMount() {
     this.d3Graph = d3.select(ReactDOM.findDOMNode(this.refs.graph));
 
-    let inputToken = this.props.exchange.inputToken.value;
+    //let inputToken = this.props.exchange.inputToken.value;
     let outputToken = this.props.exchange.outputToken.value;
-    console.log(outputToken, 'output token');
+    //console.log(outputToken, 'output token');
 
     let query = `{
       Event(input:"${outputToken}"){
@@ -27,9 +27,9 @@ class Visualization extends Component {
       }
     }`;
 
-    console.log(query, 'query')
+    //console.log(query, 'query')
 
-    axios.get('http://ec2-34-193-175-237.compute-1.amazonaws.com:3000/graphql', { params: {query: query } })
+    axios.get('http://ec2-34-205-17-195.compute-1.amazonaws.com:3000/graphql', { params: {query: query } })
     .then(data => this.setState({data: data.data.data.Event }))
     .then(() => this.createLineGraph())
     .catch(err => console.error(err));
@@ -49,7 +49,7 @@ class Visualization extends Component {
         }
       }`;
 
-      axios.get('http://ec2-34-193-175-237.compute-1.amazonaws.com:3000/graphql', { params: { query: query }})
+      axios.get('http://ec2-34-205-17-195.compute-1.amazonaws.com:3000/graphql', { params: { query: query }})
       .then(data => this.setState({data: data.data.data.Event}))
       .then(() => {
         this.createNewLineGraph()
@@ -67,7 +67,7 @@ class Visualization extends Component {
     let svg = this.d3Graph
     // first we want to see the min and max of our token prices
     let ethValueOfTokenExtent = d3.extent(this.state.data, element => element.ethValueOfToken);
-    console.log('initial data visualized', this.state.data, 'extent of data', ethValueOfTokenExtent)
+    // console.log('initial data visualized', this.state.data, 'extent of data', ethValueOfTokenExtent)
     // create a y scale, for the eth value of the token
     let yScale = d3.scaleLinear()
       .domain([ethValueOfTokenExtent[1], ethValueOfTokenExtent[0]])
@@ -77,7 +77,7 @@ class Visualization extends Component {
     let yAxis = d3.axisLeft()
       .scale(yScale)
       .ticks(8)
- 
+
     // time to put this y axis on the page
     svg.append('g')
      .attr('class', 'y axis')
@@ -88,7 +88,7 @@ class Visualization extends Component {
     this.state.data.map(e => e.createdAt = new Date(e.createdAt));
     // similarly, check the min and max of our times
     let timeExtent = d3.extent(this.state.data, element => element.createdAt)
-    console.log('previous time extent', timeExtent)
+    // console.log('previous time extent', timeExtent)
     // with this extent, create a scale for the x axis
     // BIG NOTE: for timeScales, you need to create new Date objects from the date string
     // also, domain needs to take in an array
@@ -103,7 +103,7 @@ class Visualization extends Component {
       .attr('class', 'x axis')
       .attr('transform', 'translate(80, 265)')
       .call(xAxis);
-    // this right here is the x-axis label 
+    // this right here is the x-axis label
     svg.append("text")
      .attr("transform", "rotate(-90)")
      .attr("y", 20 )
@@ -112,7 +112,7 @@ class Visualization extends Component {
      .attr('font-size', '15px')
      .style("text-anchor", "middle")
      .text("Price (ETH)");
-    
+
     let line = d3.line()
       .x(element => xScale(element.createdAt))
       .y(element => yScale(element.ethValueOfToken))
