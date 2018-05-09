@@ -18,6 +18,7 @@ class Links extends Component {
           token={this.props.exchange.investToken}
           symbolToTokenContract={this.props.symbolToTokenContract}
           symbolToExchangeContract={this.props.symbolToExchangeContract}
+          symbolToExchangeAddress={this.props.symbolToExchangeAddress}
         />
       </div>
     )

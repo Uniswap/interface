@@ -6,6 +6,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "d3": "^4.13.0",
+    "npm": "^6.0.0",
     "react": "^16.2.0",
     "react-cookies": "^0.1.0",
     "react-dom": "^16.2.0",

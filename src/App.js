@@ -16,15 +16,15 @@ import Links from './components/Links';
 import SharePurchase from './components/SharePurchase';
 //import Transactions from './components/Transactions';
 // d3
-import Visualization from './components/Visualization';
+// import Visualization from './components/Visualization';
 // enter redux
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 import { subscribe } from 'redux-subscriber';
 // redux actions
 // import { initializeGlobalWeb3 } from './actions/global-actions';
-import { uniExchangeContractReady, swtExchangeContractReady, exchangeContractReady } from './actions/exchangeContract-actions';
-import { uniTokenContractReady, swtTokenContractReady, tokenContractReady } from './actions/tokenContract-actions';
+import { exchangeContractReady } from './actions/exchangeContract-actions';
+import { tokenContractReady } from './actions/tokenContract-actions';
 import { initializeGlobalWeb3, setWeb3ConnectionStatus, setCurrentMaskAddress, metamaskLocked, metamaskUnlocked, setInteractionState, factoryContractReady, toggleAbout, toggleInvest } from './actions/web3-actions';
 import {  setInputBalance,
           setOutputBalance,
@@ -39,6 +39,7 @@ import {  setInputBalance,
           setInvestInvariant,
           setInvestEthPool,
           setInvestTokenPool,
+          setInvestTokenAllowance,
           setInvestShares,
           setUserShares,
           setInvestTokenBalance,
@@ -245,6 +246,7 @@ class App extends Component {
   getInvestInfo = () => {
     var exchange = this.symbolToExchangeContract(this.props.exchange.investToken.value);
     var token = this.symbolToTokenContract(this.props.exchange.investToken.value);
+    var exchangeAddress = this.symbolToExchangeAddress(this.props.exchange.investToken.value)
 
     exchange.methods.invariant().call().then((result, error) => {
       this.props.setInvestInvariant(result);
@@ -268,6 +270,10 @@ class App extends Component {
 
     token.methods.balanceOf(this.props.web3Store.currentMaskAddress).call((error, balance) => {
       this.props.setInvestTokenBalance(balance);
+    });
+
+    token.methods.allowance(this.props.web3Store.currentMaskAddress, exchangeAddress).call((error, balance) => {
+      this.props.setInvestTokenAllowance(balance);
     });
 
     this.props.web3Store.web3.eth.getBalance(this.props.web3Store.currentMaskAddress, (error, balance) => {
@@ -463,12 +469,13 @@ class App extends Component {
           symbolToExchangeContract={this.symbolToExchangeContract}
           symbolToTokenAddress={this.symbolToTokenAddress}
         />
-        <Visualization />
+        {/* <Visualization /> */}
         <Links
           toggleInvest={this.toggleInvest}
           location={this}
           symbolToTokenContract={this.symbolToTokenContract}
           symbolToExchangeContract={this.symbolToExchangeContract}
+          symbolToExchangeAddress={this.symbolToExchangeAddress}
         />
         <SharePurchase
           symbolToExchangeContract={this.symbolToExchangeContract}
@@ -497,10 +504,6 @@ const mapDispatchToProps = (dispatch) => {
     metamaskUnlocked,
     setInteractionState,
     factoryContractReady,
-    uniExchangeContractReady,
-    swtExchangeContractReady,
-    uniTokenContractReady,
-    swtTokenContractReady,
     setInputBalance,
     setOutputBalance,
     setInvariant1,
@@ -518,6 +521,7 @@ const mapDispatchToProps = (dispatch) => {
     setInvestToken,
     setInvestEthPool,
     setInvestTokenPool,
+    setInvestTokenAllowance,
     setInvestInvariant,
     setInvestShares,
     setUserShares,

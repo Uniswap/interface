@@ -30,9 +30,9 @@ class NetworkStatus extends Component {
     if (this.props.web3Store.connected && this.props.web3Store.interaction !== 'disconnected'){
       return (
         <div className="connection border pa2 green">
+            <p className="userBalance">{this.props.exchange.inputToken.value + ": " + (this.props.exchange.inputBalance/10**18).toFixed(2)}</p>
+            <p className="userBalance">{this.props.exchange.outputToken.value + ": " + (this.props.exchange.outputBalance/10**18).toFixed(2)}</p>
           <a target="_blank" rel="noopener noreferrer" href={'https://rinkeby.etherscan.io/search?q=' + this.props.web3Store.currentMaskAddress}>{this.props.web3Store.currentMaskAddress}</a>
-          <p>{this.props.exchange.inputToken.value + ": " + (this.props.exchange.inputBalance/10**18).toFixed(2)}</p>
-          <p>{this.props.exchange.outputToken.value + ": " + (this.props.exchange.outputBalance/10**18).toFixed(2)}</p>
           <p>●</p>
         </div>
       )
@@ -53,7 +53,7 @@ class NetworkStatus extends Component {
     } else {
       return (
         <div className="connection yellow border pa2">
-          <p>{'MetaMask connected to ' + this.props.web3Store.networkMessage + ' Switch to Rinkeby and refresh!'}</p>
+          <p>{'MetaMask connected to ' + this.props.web3Store.networkMessage + '. Please switch to Rinkeby!'}</p>
           <p>●</p>
         </div>
       )

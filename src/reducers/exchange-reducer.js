@@ -18,6 +18,7 @@ import {
   SET_INVEST_INVARIANT,
   SET_INVEST_ETH_POOL,
   SET_INVEST_TOKEN_POOL,
+  SET_INVEST_TOKEN_ALLOWANCE,
   SET_INVEST_SHARES,
   SET_USER_SHARES,
   SET_INVEST_ETH_BALANCE,
@@ -53,6 +54,7 @@ export default (state = {}, action) => {
     userShares,
     investEthBalance,
     investTokenBalance,
+    investTokenAllowance,
     investSharesInput,
     investEthRequired,
     investTokensRequired,
@@ -106,6 +108,8 @@ export default (state = {}, action) => {
       return Object.assign({}, state, { investEthBalance: investEthBalance });
     case SET_INVEST_TOKEN_BALANCE:
       return Object.assign({}, state, { investTokenBalance: investTokenBalance });
+    case SET_INVEST_TOKEN_ALLOWANCE:
+      return Object.assign({}, state, { investTokenAllowance: investTokenAllowance });
     case SET_INVEST_SHARES_INPUT:
       return Object.assign({}, state, { investSharesInput: investSharesInput });
     case SET_INVEST_ETH_REQUIRED:

@@ -57,6 +57,7 @@ export default {
     userShares: 0,
     investTokenBalance: 0,
     investEthBalance: 0,
+    investTokenAllowance: 0,
     investSharesInput: 0,
     investEthRequired: 0,
     investTokensRequired: 0,

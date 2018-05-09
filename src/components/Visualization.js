@@ -29,7 +29,7 @@ class Visualization extends Component {
 
     //console.log(query, 'query')
 
-    axios.get('http://ec2-34-205-17-195.compute-1.amazonaws.com:3000/graphql', { params: {query: query } })
+    axios.get('http://ec2-34-197-169-170.compute-1.amazonaws.com:3000/graphql', { params: {query: query } })
     .then(data => this.setState({data: data.data.data.Event }))
     .then(() => this.createLineGraph())
     .catch(err => console.error(err));
@@ -49,7 +49,7 @@ class Visualization extends Component {
         }
       }`;
 
-      axios.get('http://ec2-34-205-17-195.compute-1.amazonaws.com:3000/graphql', { params: { query: query }})
+      axios.get('http://ec2-34-197-169-170.compute-1.amazonaws.com:3000/graphql', { params: { query: query }})
       .then(data => this.setState({data: data.data.data.Event}))
       .then(() => {
         this.createNewLineGraph()

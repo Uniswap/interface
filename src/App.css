@@ -8,6 +8,7 @@ body{
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 .dim input{
@@ -61,12 +62,22 @@ a:hover{
   align-items: center;
   /* color: #27AE60; */
   flex: 1;
+  z-index: 2;
   font-family: "Inter UI", sans-serif;
 }
 
 .connection a{
   /* text-decoration: none; */
   /* color: #27AE60; */
+  padding-right: 2em;
+}
+
+.userBalance{
+  overflow-y: hidden;
+  overflow-x: scroll;
+  white-space: nowrap;
+  z-index: 10;
+  padding-right: 2em;
 }
 
 .order {
