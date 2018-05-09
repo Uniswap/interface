@@ -112,6 +112,7 @@ class Purchase extends Component {
           </a>
         )
       } else {
+        // eslint-disable-next-line
         return (<a className="swap grey-bg hidden border pa2"></a>)
       }
   }

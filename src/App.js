@@ -14,18 +14,23 @@ import Purchase from './components/Purchase';
 import About from './components/About';
 import Links from './components/Links';
 import SharePurchase from './components/SharePurchase';
-//import Transactions from './components/Transactions';
-// d3
+// import Transactions from './components/Transactions';
 // import Visualization from './components/Visualization';
-// enter redux
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 import { subscribe } from 'redux-subscriber';
 // redux actions
-// import { initializeGlobalWeb3 } from './actions/global-actions';
-import { exchangeContractReady } from './actions/exchangeContract-actions';
-import { tokenContractReady } from './actions/tokenContract-actions';
-import { initializeGlobalWeb3, setWeb3ConnectionStatus, setCurrentMaskAddress, metamaskLocked, metamaskUnlocked, setInteractionState, factoryContractReady, toggleAbout, toggleInvest } from './actions/web3-actions';
+import {  exchangeContractReady } from './actions/exchangeContract-actions';
+import {  tokenContractReady } from './actions/tokenContract-actions';
+import {  initializeGlobalWeb3,
+          setWeb3ConnectionStatus,
+          setCurrentMaskAddress,
+          metamaskLocked,
+          metamaskUnlocked,
+          setInteractionState,
+          factoryContractReady,
+          toggleAbout,
+          toggleInvest } from './actions/web3-actions';
 import {  setInputBalance,
           setOutputBalance,
           setInvariant1,
@@ -44,34 +49,30 @@ import {  setInputBalance,
           setUserShares,
           setInvestTokenBalance,
           setInvestEthBalance } from './actions/exchange-actions';
-// enter d3 & misc. tools
 import './App.css';
 import cookie from 'react-cookies'
 import scrollToComponent from 'react-scroll-to-component';
 
-var localweb3; // this isn't even in state
+var web3;
 
 class App extends Component {
   constructor (props) {
     super(props)
     if (typeof props.metamask !== 'undefined'){
-      localweb3 = new Web3(window.web3.currentProvider)
+      web3 = new Web3(window.web3.currentProvider)
     } else {
-      localweb3 = 'undefined'
+      web3 = 'undefined'
     }
 
     this.state = {
-      uniAdded: false, // cookie stuff,
-      swapAdded: false, // cookie stuff
-      firstRun: true, // cookie stuff
-      transactions: [], // cookie stuff
+      transactions: []
     }
   }
-  // TODO: get rid of redundant localweb3 === 'undefined' checks in componentWill/DidMount
+  // TODO: get rid of redundant web3 === 'undefined' checks in componentWill/DidMount
   // STATUS: kind of done
   componentWillMount() {
     //console.log('props', this.props);
-    if(localweb3 === 'undefined') {
+    if(web3 === 'undefined') {
       this.props.setWeb3ConnectionStatus(false);
     } else {
       this.setState({
@@ -81,7 +82,7 @@ class App extends Component {
         transactions: cookie.load('transactions') || [],
       })
       // we're working with asynchronous redux
-      this.props.initializeGlobalWeb3(localweb3)
+      this.props.initializeGlobalWeb3(web3)
       this.getInfoFirstTime();
     }
   }
@@ -109,7 +110,7 @@ class App extends Component {
   // TODO: getInfoFirstTime and getUserAddress are WET af
   // lets do something about it
   getInfoFirstTime = () => {
-    localweb3.eth.getAccounts(async (error, result) => {
+    web3.eth.getAccounts(async (error, result) => {
       if(result.length > 0){
         this.props.setCurrentMaskAddress(result[0]);
         this.props.metamaskUnlocked();
@@ -124,9 +125,9 @@ class App extends Component {
       }
     })
   }
-  // fun fact, localweb3.eth.getAccounts will return something even without anything inside
+
   getUserAddress = () => {
-   localweb3.eth.getAccounts((error, result) => {
+   this.props.web3Store.web3.eth.getAccounts((error, result) => {
       if (result.length > 0) {
         this.props.setCurrentMaskAddress(result[0]);
         this.props.metamaskUnlocked();
@@ -147,19 +148,19 @@ class App extends Component {
   // could possibly use refactoring
   getContracts = () => {
     const factoryAddress = this.props.web3Store.factoryAddress;
-    const factoryContract = new localweb3.eth.Contract(factoryABI, factoryAddress);
+    const factoryContract = new this.props.web3Store.web3.eth.Contract(factoryABI, factoryAddress);
     this.props.factoryContractReady(factoryContract);
 
     this.props.web3Store.exchangeAddresses.addresses.map(async exchangeAddress => {
       // receive the exchange address, create the exchange contract
-      let exchangeContract = await new localweb3.eth.Contract(exchangeABI, exchangeAddress[1]);
+      let exchangeContract = await new this.props.web3Store.web3.eth.Contract(exchangeABI, exchangeAddress[1]);
       // send the exchange contract to redux store
       await this.props.exchangeContractReady(exchangeAddress[0], exchangeContract);
     })
 
     this.props.web3Store.tokenAddresses.addresses.map(async tokenAddress => {
       // receive the token address, create the token contract
-      let tokenContract = await new localweb3.eth.Contract(tokenABI, tokenAddress[1]);
+      let tokenContract = await new this.props.web3Store.web3.eth.Contract(tokenABI, tokenAddress[1]);
       // send the token contract to redux store
       await this.props.tokenContractReady(tokenAddress[0], tokenContract);
     })
@@ -193,7 +194,6 @@ class App extends Component {
   symbolToExchangeContract = (symbol) => {
     return this.props.exchangeContracts[symbol]
   }
-
 
   getMarketInfo = () => {
     switch (this.props.web3Store.exchangeType) {
@@ -240,7 +240,6 @@ class App extends Component {
         break;
       default:
     }
-    // console.log("Getting account info");
   }
 
   getInvestInfo = () => {
@@ -321,12 +320,12 @@ class App extends Component {
 
   getEthBalance = (type) => {
     if (type === 'input') {
-      localweb3.eth.getBalance(this.props.web3Store.currentMaskAddress, (error, balance) => {
+      this.props.web3Store.web3.eth.getBalance(this.props.web3Store.currentMaskAddress, (error, balance) => {
         this.props.setInputBalance(balance);
         // console.log('ETH Balance: ' + balance);
       });
     } else if (type === 'output') {
-        localweb3.eth.getBalance(this.props.web3Store.currentMaskAddress, (error, balance) => {
+        this.props.web3Store.web3.eth.getBalance(this.props.web3Store.currentMaskAddress, (error, balance) => {
           this.props.setOutputBalance(balance);
           // console.log('ETH Balance: ' + balance);
         });
@@ -357,10 +356,8 @@ class App extends Component {
       var exchangeAddress = this.symbolToExchangeAddress(this.props.exchange.inputToken.value);
 
       token.methods.allowance(this.props.web3Store.currentMaskAddress, exchangeAddress).call().then((result, error) => {
-        console.log(this.props.exchange.inputToken.value + ' allowance: ' + result);
         if(result === '0'){
           this.props.setAllowanceApprovalState(false)
-          console.log(this.props.exchange.allowanceApproved)
         }
       })
     }
@@ -371,7 +368,7 @@ class App extends Component {
     if(type === 'Token to ETH' || type === 'Token to Token') {
       var token = this.symbolToTokenContract(this.props.exchange.inputToken.value);
       var exchangeAddress = this.symbolToExchangeAddress(this.props.exchange.inputToken.value);
-      var amount = localweb3.utils.toWei('100000');
+      var amount = this.props.web3Store.web3.utils.toWei('100000');
 
       token.methods.approve(exchangeAddress, amount).send({from: this.props.web3Store.currentMaskAddress})
       .on('transactionHash', console.log('Transaction Hash created'))
@@ -405,19 +402,6 @@ class App extends Component {
     .on('error', console.error);
   }
 
-  onCloseHelper = () => {
-    if(this.props.exchange.outputToken.value === 'UNI'){
-      this.setState({ uniAdded: true }) // cookie stuff
-      cookie.save('uniAdded', true, { path: '/' })
-    } else if(this.props.exchange.outputToken.value === 'SWAP'){
-      this.setState({ swapAdded: true }) // more cookie stuff
-      cookie.save('swapAdded', true, { path: '/' })
-    } else {
-      this.setState({ firstRun: !this.state.firstRun }) // also cookie stuff
-      cookie.save('firstRun', !this.state.firstRun, { path: '/' })
-    }
-  }
-
   toggleAbout = () => {
     let current = this.props.web3Store.aboutToggle;
     this.props.toggleAbout(!current);
@@ -447,10 +431,6 @@ class App extends Component {
         <ConnectionHelper
           metamask={this.props.metamask}
           approveAllowance={this.approveAllowance}
-          firstRun={this.state.firstRun}
-          uniAdded={this.state.uniAdded}
-          swapAdded={this.state.swapAdded}
-          onCloseHelper={this.onCloseHelper}
           toggleAbout={this.toggleAbout}
         />
         <Exchange

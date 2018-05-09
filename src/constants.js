@@ -1,5 +1,4 @@
 // here is where we put the string literals for the actions
-// maybe there's an action to see if you've been connected to web3
 
 // web3 actions, all set from action creator to reducer to app
 export const SET_WEB3_CONNECTION_STATUS = 'WEB3_CONNECTION_STATUS';

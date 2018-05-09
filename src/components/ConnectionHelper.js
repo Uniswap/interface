@@ -25,7 +25,7 @@ function ConnectionHelper(props) {
         It looks like you aren't connected. <b>Please unlock Metamask to continue.</b></p>
       </div>
     )
-  } else if (props.web3Store.interaction === "error1") {
+  } else if (props.web3Store.exchangeType === "Token to itself" || props.web3Store.exchangeType === "ETH to ETH") {
     return (
       <div className="grey-bg connection border pa2">
         <p>You can't swap a token for itself! <span role="img" aria-label="Crying">😂</span></p>
