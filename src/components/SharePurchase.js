@@ -16,7 +16,6 @@ class Purchase extends Component {
 
 
   buyShares = () => {
-    console.log(this.props.exchange.inputToken.value, 'ahh')
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.investToken.value);
     var minShares = 1;
     var ethRequiredInt = parseInt(this.props.exchange.investEthRequired, 10).toString();
@@ -56,7 +55,6 @@ class Purchase extends Component {
         // this.props.setExchangeOutputValue(0);
         // this.props.setInteractionState('submitted');
         console.log(result);
-        // cookie.save('transactions', transactions, { path: '/' })
       })
       .on('receipt', (receipt) => {console.log(receipt)})  //Transaction Submitted to blockchain
       .on('confirmation', (confirmationNumber, receipt) => {console.log("Block Confirmations: " + confirmationNumber)})  //Transaction Mined
@@ -81,11 +79,11 @@ class Purchase extends Component {
           </p>
         )
       } else {
-        return (
-          <a className="swap border pa2" role="button" onClick={() => {this.buyOrSellShares()}}>
-            <b>I want to {this.buyOrSell(this.props.exchange.investChecked)} {this.props.exchange.investSharesInput} shares for {(this.props.exchange.investEthRequired/10**18).toFixed(4)} ETH and {(this.props.exchange.investTokensRequired/10**18).toFixed(4)} {this.props.exchange.investToken.value}</b>
-          </a>
-        )
+          return (
+            <a className="swap border pa2" role="button" onClick={() => {this.buyOrSellShares()}}>
+              <b>I want to {this.buyOrSell(this.props.exchange.investChecked)} {this.props.exchange.investSharesInput} shares for {(this.props.exchange.investEthRequired/10**18).toFixed(4)} ETH and {(this.props.exchange.investTokensRequired/10**18).toFixed(4)} {this.props.exchange.investToken.value}</b>
+            </a>
+          )
       }
 
     } else {

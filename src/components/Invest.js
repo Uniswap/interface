@@ -10,6 +10,7 @@ import { setInvestToken,
          setInvestShares,
          setInvestTokenBalance,
          setInvestEthBalance,
+         setInvestTokenAllowance,
          setInvestSharesInput,
          setUserShares,
          setInvestEthRequired,
@@ -29,6 +30,7 @@ class Invest extends Component {
       this.props.setInvestEthPool(0);
       this.props.setInvestTokenBalance(0);
       this.props.setInvestEthBalance(0);
+      this.props.setInvestTokenAllowance(0);
       this.props.setInvestShares(0);
       this.props.setUserShares(0);
     }
@@ -65,20 +67,27 @@ class Invest extends Component {
   }
 
   getInvestBalance = () => {
-    var token = this.props.symbolToTokenContract(this.props.exchange.investToken.value);
-    var exchange = this.props.symbolToExchangeContract(this.props.exchange.investToken.value);
+    var symbol = this.props.exchange.investToken.value;
+    var investor = this.props.web3Store.currentMaskAddress;
+    var token = this.props.symbolToTokenContract(symbol);
+    var exchange = this.props.symbolToExchangeContract(symbol);
+    var exchangeAddr = this.props.symbolToExchangeAddress(symbol);
 
-    this.props.web3Store.web3.eth.getBalance(this.props.web3Store.currentMaskAddress, (error, balance) => {
+    this.props.web3Store.web3.eth.getBalance(investor, (error, balance) => {
       this.props.setInvestEthBalance(balance);
     });
 
-    token.methods.balanceOf(this.props.web3Store.currentMaskAddress).call((error, balance) => {
+    token.methods.balanceOf(investor).call((error, balance) => {
       this.props.setInvestTokenBalance(balance);
     });
 
-    exchange.methods.getShares(this.props.web3Store.currentMaskAddress).call().then((result, error) => {
+    token.methods.allowance(investor, exchangeAddr).call((error, balance) => {
+      this.props.setInvestTokenAllowance(balance);
+      console.log('invest allowance: ', balance)
+    });
+
+    exchange.methods.getShares(investor).call().then((result, error) => {
       this.props.setUserShares(result);
-      console.log(result);
     });
   }
 
@@ -96,6 +105,23 @@ class Invest extends Component {
     }
   }
 
+  approveInvestAllowance = () => {
+    var symbol = this.props.exchange.investToken.value;
+    var token = this.props.symbolToTokenContract(symbol);
+    var exchangeAddress = this.props.symbolToExchangeAddress(symbol);
+    var amount = this.props.web3Store.web3.utils.toWei('100000');
+    var gasCost = this.props.web3Store.web3.utils.toWei('25', 'gwei')
+    token.methods.approve(exchangeAddress, amount).send({from: this.props.web3Store.currentMaskAddress, gasPrice: gasCost})
+    .on('transactionHash', console.log('Transaction Hash created'))
+    .on('receipt', (receipt) => {
+      console.log(receipt)
+      this.props.setAllowanceApprovalState(true);
+    })  //Transaction Submitted to blockchain
+    .on('confirmation', (confirmationNumber, receipt) => {console.log("Block Confirmations: " + confirmationNumber)})  //Transaction Mined
+    .on('error', console.error);
+
+  }
+
   render () {
     if (this.props.web3Store.investToggle === true) {
       return (
@@ -106,6 +132,7 @@ class Invest extends Component {
           </div>
           <div className="invest investValue border pa2">
             <p> Select token and input number of shares: &nbsp;&nbsp;&nbsp;</p>
+
             <div className="investSelectToken">
               <SelectToken token={this.props.exchange.investToken} onSelectToken={this.onSelectToken} />
               <p className="investDropdown">{'<'}</p>
@@ -114,8 +141,8 @@ class Invest extends Component {
           </div>
           <div className="investValue border pa2">
             <p> Total Shares: {this.props.exchange.investShares} </p>
-            <p> You own: {this.props.exchange.userShares} shares </p>
-            <p> You get {((this.props.exchange.userShares*100)/this.props.exchange.investShares).toFixed(2)}% of fees </p>
+            <p> Your shares: {this.props.exchange.userShares} </p>
+            <p> Your fees {((this.props.exchange.userShares*100)/this.props.exchange.investShares).toFixed(2)}% </p>
           </div>
           <div className="investValue border pa2">
             <p> Total Liquidity </p>
@@ -132,7 +159,13 @@ class Invest extends Component {
             <p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{(this.props.exchange.investEthBalance/10**18).toFixed(5)} ETH </p>
             <p> {(this.props.exchange.investTokenBalance/10**18).toFixed(5)} {this.props.exchange.investToken.value} </p>
           </div>
+          <div className="investValue border pa2 grey-bg connection">
+            <p> Allowance: </p>
+            <p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{(this.props.exchange.investTokenAllowance/10**18).toFixed(5)} {this.props.exchange.investToken.value} </p>
+            <a className="f-a"  onClick={() => this.approveInvestAllowance()}>Approve ⭞</a>
+          </div>
         </section>
+
       )
     } else {
       return (<section className="expand grey-bg border pa2 hidden"></section>)
@@ -154,6 +187,7 @@ const mapDispatchToProps = (dispatch) => {
     setInvestShares,
     setInvestTokenBalance,
     setInvestEthBalance,
+    setInvestTokenAllowance,
     setInvestSharesInput,
     setInvestEthRequired,
     setInvestTokensRequired,
