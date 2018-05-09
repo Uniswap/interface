@@ -8,7 +8,6 @@ import { setExchangeInputValue, setExchangeOutputValue, setExchangeRate, setExch
 class Exchange extends Component {
   onInputChange = async (event) => {
     var inputValue = event.target.value;
-    console.log(inputValue, 'onInputChange value')
     await this.props.setExchangeInputValue(inputValue);
     this.setExchangeOutput();
   }
@@ -19,8 +18,6 @@ class Exchange extends Component {
     this.props.setExchangeRate(0);
     this.props.setExchangeFee(0);
     this.props.setInteractionState('connected');
-    // what the flip does this do
-    // this.setState({ firstRun: true })
 
     if (type === 'input') {
       await this.props.setInputToken(selected);
@@ -29,7 +26,6 @@ class Exchange extends Component {
     }
 
     await this.getMarketType();
-    // these two functions are actually being passed from the parent component, because they're used in multiple places
     // eventually pull these out into HOC
     this.props.getAccountInfo();
     this.props.getMarketInfo();
@@ -37,8 +33,6 @@ class Exchange extends Component {
 
   setExchangeOutput = () => {
     var inputValue = this.props.exchange.inputValue;
-    console.log(inputValue, 'from setExchangeOutput')
-    console.log('outputToken', this.props.exchange.outputToken);
     if (this.props.web3Store.exchangeType === 'ETH to ETH' || this.props.web3Store.exchangeType === 'Token to itself'){
       this.props.setExchangeOutputValue(0);
       this.props.setInteractionState('error1');
@@ -75,13 +69,13 @@ class Exchange extends Component {
 
   getExchangeRate = (input) => {
     if (this.props.web3Store.exchangeType === 'ETH to Token') {
-      console.log('Getting Rate: ETH to ' + this.props.exchange.outputToken.value);
+      // console.log('Getting Rate: ETH to ' + this.props.exchange.outputToken.value);
       this.ethToTokenRate(input);
     } else if (this.props.web3Store.exchangeType === 'Token to ETH') {
-      console.log('Getting Rate: ' + this.props.exchange.inputToken.value + ' to ETH');
+      // console.log('Getting Rate: ' + this.props.exchange.inputToken.value + ' to ETH');
       this.tokenToEthRate(input);
     } else if (this.props.web3Store.exchangeType === 'Token to Token') {
-      console.log('Getting Rate: ' + this.props.exchange.inputToken.value + ' to '  + this.props.exchange.outputToken.value);
+      // console.log('Getting Rate: ' + this.props.exchange.inputToken.value + ' to '  + this.props.exchange.outputToken.value);
       this.tokenToTokenRate(input);
     }
   }

@@ -11,7 +11,7 @@ class NetworkStatus extends Component {
       if (state.web3Store.currentMaskAddress !== undefined) {
         // console.log('METAMASK UNLOCKED FROM NETWORK STATUS')
         this.checkNetwork();
-      } else { console.log('METAMASK LOCKED FROM NETWORK STATUS') }
+      } else { console.log('METAMASK LOCKED') }
     })
   }
 
