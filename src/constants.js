@@ -1,4 +1,7 @@
-// here is where we put the string literals for the actions
+// string literals for actions
+
+// set global web3 object
+export const INITIALIZE_GLOBAL_WEB3 = 'INITIALIZE_GLOBAL_WEB3';
 
 // web3 actions, all set from action creator to reducer to app
 export const SET_WEB3_CONNECTION_STATUS = 'WEB3_CONNECTION_STATUS';
@@ -13,43 +16,30 @@ export const SET_NETWORK_MESSAGE = 'SET_NETWORK_MESSAGE';
 export const SET_BLOCK_TIMESTAMP = 'SET_BLOCK_TIMESTAMP';
 export const SET_EXCHANGE_TYPE = 'SET_EXCHANGE_TYPE';
 
-// action to toggle the 'about' div
+// actions to toggle divs
 export const TOGGLE_ABOUT = 'TOGGLE_ABOUT';
-
-// action to toggle the 'invest' div
 export const TOGGLE_INVEST = 'TOGGLE_INVEST';
 
-// factory contract action, also set
+// CONTRACT actions in actions, action creator, reducer
 export const FACTORY_CONTRACT_READY = 'FACTORY_CONTRACT_READY';
-
-// token EXCHANGE contract actions, in action creator, reducer, and app
-export const UNI_EXCHANGE_CONTRACT_READY = 'UNI_EXCHANGE_CONTRACT_READY';
-export const SWT_EXCHANGE_CONTRACT_READY = 'SWT_EXCHANGE_CONTRACT_READY';
 export const EXCHANGE_CONTRACT_READY = 'EXCHANGE_CONTRACT_READY';
-
-// token CONTRACT actions in actions, action creator, reducer
-export const UNI_TOKEN_CONTRACT_READY = 'UNI_TOKEN_CONTRACT_READY';
-export const SWT_TOKEN_CONTRACT_READY = 'SWT_TOKEN_CONTRACT_READY';
 export const TOKEN_CONTRACT_READY = 'TOKEN_CONTRACT_READY';
 
-// actions for the exchange, all in one place
+// actions for the exchange
 export const SET_INPUT_BALANCE = 'SET_INPUT_BALANCE';
 export const SET_OUTPUT_BALANCE = 'SET_OUTPUT_BALANCE';
 export const SET_INPUT_TOKEN = 'SET_INPUT_TOKEN';
 export const SET_OUTPUT_TOKEN = 'SET_OUTPUT_TOKEN';
-export const SET_INVARIANT_1 = 'SET_INVARIANT_1';
-export const SET_INVARIANT_2 = 'SET_INVARIANT_2';
-export const SET_MARKET_ETH_1 = 'SET_MARKET_ETH_1';
-export const SET_MARKET_ETH_2 = 'SET_MARKET_ETH_2';
-export const SET_MARKET_TOKENS_1 = 'SET_MARKET_TOKENS_1';
-export const SET_MARKET_TOKENS_2 = 'SET_MARKET_TOKENS_2';
+export const SET_ETH_POOL_1 = 'SET_ETH_POOL_1';
+export const SET_ETH_POOL_2 = 'SET_ETH_POOL_2';
+export const SET_TOKEN_POOL_1 = 'SET_TOKEN_POOL_1';
+export const SET_TOKEN_POOL_2 = 'SET_TOKEN_POOL_2';
 export const SET_ALLOWANCE_APPROVAL_STATE = 'SET_ALLOWANCE_APPROVAL_STATE';
 export const SET_EXCHANGE_INPUT_VALUE = 'SET_EXCHANGE_INPUT_VALUE';
 export const SET_EXCHANGE_OUTPUT_VALUE = 'SET_EXCHANGE_OUTPUT_VALUE';
 export const SET_EXCHANGE_RATE = 'SET_EXCHANGE_RATE';
 export const SET_EXCHANGE_FEE = 'SET_EXCHANGE_FEE';
 export const SET_INVEST_TOKEN = 'SET_INVEST_TOKEN';
-export const SET_INVEST_INVARIANT = 'SET_INVEST_INVARIANT';
 export const SET_INVEST_ETH_POOL = 'SET_INVEST_ETH';
 export const SET_INVEST_TOKEN_POOL = 'SET_INVEST_TOKENS';
 export const SET_INVEST_TOKEN_ALLOWANCE = 'SET_INVEST_TOKEN_ALLOWANCE';
@@ -61,7 +51,3 @@ export const SET_INVEST_SHARES_INPUT = 'SET_INVEST_SHARES_INPUT';
 export const SET_INVEST_ETH_REQUIRED = 'SET_INVEST_ETH_REQUIRED';
 export const SET_INVEST_TOKENS_REQUIRED = 'SET_INVEST_TOKENS_REQUIRED';
 export const SET_INVEST_CHECKED = 'SET_INVEST_CHECKED';
-
-
-// test setInteractionState
-export const INITIALIZE_GLOBAL_WEB3 = 'INITIALIZE_GLOBAL_WEB3';

@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { setInvestToken,
-         setInvestInvariant,
          setInvestEthPool,
          setInvestTokenPool,
          setInvestShares,
@@ -25,7 +24,6 @@ class Invest extends Component {
       this.getInvestExchangeState();
       this.getInvestBalance();
     } else {
-      this.props.setInvestInvariant(0);
       this.props.setInvestTokenPool(0);
       this.props.setInvestEthPool(0);
       this.props.setInvestTokenBalance(0);
@@ -48,10 +46,6 @@ class Invest extends Component {
 
   getInvestExchangeState = () => {
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.investToken.value);
-
-    exchange.methods.invariant().call().then((result, error) => {
-      this.props.setInvestInvariant(result);
-    });
 
     exchange.methods.ethPool().call().then((result, error) => {
       this.props.setInvestEthPool(result);
@@ -181,7 +175,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     setInvestToken,
-    setInvestInvariant,
     setInvestEthPool,
     setInvestTokenPool,
     setInvestShares,

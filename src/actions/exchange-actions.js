@@ -3,19 +3,16 @@ import {
   SET_OUTPUT_BALANCE,
   SET_INPUT_TOKEN,
   SET_OUTPUT_TOKEN,
-  SET_INVARIANT_1,
-  SET_INVARIANT_2,
-  SET_MARKET_ETH_1,
-  SET_MARKET_ETH_2,
-  SET_MARKET_TOKENS_1,
-  SET_MARKET_TOKENS_2,
+  SET_ETH_POOL_1,
+  SET_ETH_POOL_2,
+  SET_TOKEN_POOL_1,
+  SET_TOKEN_POOL_2,
   SET_ALLOWANCE_APPROVAL_STATE,
   SET_EXCHANGE_INPUT_VALUE,
   SET_EXCHANGE_OUTPUT_VALUE,
   SET_EXCHANGE_RATE,
   SET_EXCHANGE_FEE,
   SET_INVEST_TOKEN,
-  SET_INVEST_INVARIANT,
   SET_INVEST_ETH_POOL,
   SET_INVEST_TOKEN_POOL,
   SET_INVEST_SHARES,
@@ -49,34 +46,24 @@ export const setOutputToken = (outputToken) => ({
   outputToken
 });
 
-export const setInvariant1 = (invariant1) => ({
-  type: SET_INVARIANT_1,
-  invariant1
+export const setEthPool1 = (ethPool1) => ({
+  type: SET_ETH_POOL_1,
+  ethPool1
 });
 
-export const setInvariant2 = (invariant2) => ({
-  type: SET_INVARIANT_2,
-  invariant2
+export const setEthPool2 = (ethPool2) => ({
+  type: SET_ETH_POOL_2,
+  ethPool2
 });
 
-export const setMarketEth1 = (marketEth1) => ({
-  type: SET_MARKET_ETH_1,
-  marketEth1
+export const setTokenPool1 = (tokenPool1) => ({
+  type: SET_TOKEN_POOL_2,
+  tokenPool1
 });
 
-export const setMarketEth2 = (marketEth2) => ({
-  type: SET_MARKET_ETH_2,
-  marketEth2
-});
-
-export const setMarketTokens1 = (marketTokens1) => ({
-  type: SET_MARKET_TOKENS_1,
-  marketTokens1
-});
-
-export const setMarketTokens2 = (marketTokens2) => ({
-  type: SET_MARKET_TOKENS_2,
-  marketTokens2
+export const setTokenPool2 = (tokenPool2) => ({
+  type: SET_TOKEN_POOL_2,
+  tokenPool2
 });
 
 export const setAllowanceApprovalState = (allowanceApproved) => ({
@@ -107,11 +94,6 @@ export const setExchangeFee = (fee) => ({
 export const setInvestToken = (investToken) => ({
   type: SET_INVEST_TOKEN,
   investToken
-});
-
-export const setInvestInvariant = (investInvariant) => ({
-  type: SET_INVEST_INVARIANT,
-  investInvariant
 });
 
 export const setInvestEthPool = (investEthPool) => ({

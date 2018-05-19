@@ -49,22 +49,22 @@ class Exchange extends Component {
   // TODO: change this to use the redux-subscribe pattern
   getMarketType = () => {
     var marketType = '';
-    if (this.props.exchange.inputToken.value === 'ETH' && this.props.exchange.outputToken.value === 'ETH') {
+    var inputSymbol = this.props.exchange.inputToken.value;
+    var outputSymbol = this.props.exchange.outputToken.value;
+    if (inputSymbol === 'ETH' && outputSymbol === 'ETH') {
       marketType = 'ETH to ETH';
       this.props.setInteractionState('error1');
-    } else if (this.props.exchange.inputToken.value === this.props.exchange.outputToken.value){
+    } else if (inputSymbol === outputSymbol){
         marketType = 'Token to itself';
-    } else if (this.props.exchange.inputToken.value === 'ETH'){
+    } else if (inputSymbol === 'ETH'){
         marketType = 'ETH to Token';
-    } else if (this.props.exchange.outputToken.value === 'ETH'){
+    } else if (outputSymbol === 'ETH'){
         marketType = 'Token to ETH';
     } else{
         marketType = 'Token to Token';
     }
     this.props.setExchangeType(marketType);
-    console.log('type: ', marketType);
-    console.log('input: ', this.props.exchange.inputToken.value);
-    console.log('output: ', this.props.exchange.outputToken.value);
+    console.log('type: ', marketType, 'input: ', inputSymbol, 'output: ', outputSymbol);
   }
 
   getExchangeRate = (input) => {
@@ -81,44 +81,42 @@ class Exchange extends Component {
   }
 
   ethToTokenRate = (ethInput) => {
-    var ethInMarket = +this.props.exchange.marketEth2;
-    var tokensInMarket = +this.props.exchange.marketTokens2;
-    var invar = +this.props.exchange.invariant2;
+    var ethInMarket = +this.props.exchange.ethPool2;
+    var tokensInMarket = +this.props.exchange.tokenPool2;
+    var invar = ethInMarket*tokensInMarket
     var ethIn = ethInput*10**18;
     var exchangeFee = ethIn/500;
     var ethSold = ethIn - exchangeFee;
     var newEthInMarket = ethInMarket + ethSold;
     var newTokensInMarket = invar/newEthInMarket;
     var tokensOut = tokensInMarket - newTokensInMarket;
-    var adjustedTokensOut = tokensOut * 0.98;
-    var buyRate = adjustedTokensOut/ethIn;
+    var buyRate = tokensOut/ethIn;
     this.props.setExchangeRate(buyRate);
     this.props.setExchangeFee(exchangeFee);
-    this.props.setExchangeOutputValue(adjustedTokensOut);
+    this.props.setExchangeOutputValue(tokensOut);
   }
 
   tokenToEthRate = (tokenInput) => {
-    var ethInMarket = +this.props.exchange.marketEth1;
-    var tokensInMarket = +this.props.exchange.marketTokens1;
-    var invar = +this.props.exchange.invariant1;
+    var ethInMarket = +this.props.exchange.ethPool1;
+    var tokensInMarket = +this.props.exchange.tokenPool1;
+    var invar = ethInMarket*tokensInMarket;
     var tokensIn = tokenInput*10**18;
     var exchangeFee = tokensIn/500;
     var tokensSold = tokensIn - exchangeFee;
     var newTokensInMarket = tokensInMarket + tokensSold;
     var newEthInMarket = invar/newTokensInMarket;
     var ethOut = ethInMarket - newEthInMarket;
-    var adjustedEthOut = ethOut * 0.98;
-    var buyRate = adjustedEthOut/tokensIn;
+    var buyRate = ethOut/tokensIn;
     this.props.setExchangeRate(buyRate);
     this.props.setExchangeFee(exchangeFee);
-    this.props.setExchangeOutputValue(adjustedEthOut);
+    this.props.setExchangeOutputValue(ethOut);
   }
 
   tokenToTokenRate = (tokenInput) => {
     // Token to ETH on Exchange 1
-    var ethInMarket1 = +this.props.exchange.marketEth1;
-    var tokensInMarket1 = +this.props.exchange.marketTokens1;
-    var invar1 = +this.props.exchange.invariant1;
+    var ethInMarket1 = +this.props.exchange.ethPool1;
+    var tokensInMarket1 = +this.props.exchange.tokenPool1;
+    var invar1 = ethInMarket1*tokensInMarket1;
     var tokensIn = tokenInput*10**18;
     var exchangeFee1 = tokensIn/500;
     var tokensSold = tokensIn - exchangeFee1;
@@ -126,19 +124,18 @@ class Exchange extends Component {
     var newEthInMarket1 = invar1/newTokensInMarket1;
     var ethToExchange2 = ethInMarket1 - newEthInMarket1;
     // ETH to Token on Exchange 2
-    var ethInMarket2 = +this.props.exchange.marketEth2;
-    var tokensInMarket2 = +this.props.exchange.marketTokens2;
-    var invar2 = +this.props.exchange.invariant2;
+    var ethInMarket2 = +this.props.exchange.ethPool2;
+    var tokensInMarket2 = +this.props.exchange.tokenPool2;
+    var invar2 = ethInMarket2*tokensInMarket2;
     var exchangeFee2 = ethToExchange2/500;
     var ethSold = ethToExchange2 - exchangeFee2;
     var newEthInMarket2 = ethInMarket2 + ethSold;
     var newTokensInMarket2 = invar2/newEthInMarket2;
     var tokensOut = tokensInMarket2 - newTokensInMarket2;
-    var adjustedTokensOut = tokensOut * 0.98;
-    var buyRate = adjustedTokensOut/tokensIn;
+    var buyRate = tokensOut/tokensIn;
     this.props.setExchangeRate(buyRate);
     this.props.setExchangeFee(exchangeFee1);
-    this.props.setExchangeOutputValue(adjustedTokensOut);
+    this.props.setExchangeOutputValue(tokensOut);
   }
 
   render () {
