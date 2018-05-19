@@ -3,19 +3,16 @@ import {
   SET_OUTPUT_BALANCE,
   SET_INPUT_TOKEN,
   SET_OUTPUT_TOKEN,
-  SET_INVARIANT_1,
-  SET_INVARIANT_2,
-  SET_MARKET_ETH_1,
-  SET_MARKET_ETH_2,
-  SET_MARKET_TOKENS_1,
-  SET_MARKET_TOKENS_2,
+  SET_ETH_POOL_1,
+  SET_ETH_POOL_2,
+  SET_TOKEN_POOL_1,
+  SET_TOKEN_POOL_2,
   SET_ALLOWANCE_APPROVAL_STATE,
   SET_EXCHANGE_INPUT_VALUE,
   SET_EXCHANGE_OUTPUT_VALUE,
   SET_EXCHANGE_RATE,
   SET_EXCHANGE_FEE,
   SET_INVEST_TOKEN,
-  SET_INVEST_INVARIANT,
   SET_INVEST_ETH_POOL,
   SET_INVEST_TOKEN_POOL,
   SET_INVEST_TOKEN_ALLOWANCE,
@@ -37,10 +34,10 @@ export default (state = {}, action) => {
     outputToken,
     invariant1,
     invariant2,
-    marketEth1,
-    marketEth2,
-    marketTokens1,
-    marketTokens2,
+    ethPool1,
+    ethPool2,
+    tokenPool1,
+    tokenPool2,
     allowanceApproved,
     inputValue,
     outputValue,
@@ -70,18 +67,14 @@ export default (state = {}, action) => {
       return Object.assign({}, state, { inputToken: inputToken });
     case SET_OUTPUT_TOKEN:
       return Object.assign({}, state, { outputToken: outputToken });
-    case SET_INVARIANT_1:
-      return Object.assign({}, state, { invariant1: invariant1 });
-    case SET_INVARIANT_2:
-      return Object.assign({}, state, { invariant2: invariant2 });
-    case SET_MARKET_ETH_1:
-      return Object.assign({}, state, { marketEth1: marketEth1 });
-    case SET_MARKET_ETH_2:
-      return Object.assign({}, state, { marketEth2: marketEth2 });
-    case SET_MARKET_TOKENS_1:
-      return Object.assign({}, state, { marketTokens1: marketTokens1 });
-    case SET_MARKET_TOKENS_2:
-      return Object.assign({}, state, { marketTokens2: marketTokens2 });
+    case SET_ETH_POOL_1:
+      return Object.assign({}, state, { ethPool1: ethPool1 });
+    case SET_ETH_POOL_2:
+      return Object.assign({}, state, { ethPool2: ethPool2 });
+    case SET_TOKEN_POOL_1:
+      return Object.assign({}, state, { tokenPool1: tokenPool1 });
+    case SET_TOKEN_POOL_2:
+      return Object.assign({}, state, { tokenPool2: tokenPool2 });
     case SET_ALLOWANCE_APPROVAL_STATE:
       return Object.assign({}, state, { allowanceApproved: allowanceApproved });
     case SET_EXCHANGE_INPUT_VALUE:
@@ -94,8 +87,6 @@ export default (state = {}, action) => {
       return Object.assign({}, state, { fee: fee });
     case SET_INVEST_TOKEN:
       return Object.assign({}, state, { investToken: investToken });
-    case SET_INVEST_INVARIANT:
-      return Object.assign({}, state, { investInvariant: investInvariant });
     case SET_INVEST_ETH_POOL:
       return Object.assign({}, state, { investEthPool: investEthPool });
     case SET_INVEST_TOKEN_POOL:
