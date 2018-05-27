@@ -107,7 +107,7 @@ class Purchase extends Component {
   render() {
     if (this.props.web3Store.interaction === 'input') {
         return (
-          <a className="swap border pa2" role="button" onClick={() => {this.purchaseTokens()}}>
+          <a className="swap border pa2 blue-bg" role="button" onClick={() => {this.purchaseTokens()}}>
             <b>{"I want to swap " + this.props.exchange.inputValue + " " + this.props.exchange.inputToken.value + " for " + (this.props.exchange.outputValue/10**18).toFixed(4) + " " + this.props.exchange.outputToken.value}</b>
           </a>
         )

@@ -57,7 +57,7 @@ export const setEthPool2 = (ethPool2) => ({
 });
 
 export const setTokenPool1 = (tokenPool1) => ({
-  type: SET_TOKEN_POOL_2,
+  type: SET_TOKEN_POOL_1,
   tokenPool1
 });
 

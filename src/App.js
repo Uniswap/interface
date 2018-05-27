@@ -47,7 +47,6 @@ import {  setInputBalance,
           setInvestTokenBalance,
           setInvestEthBalance } from './actions/exchange-actions';
 import './App.css';
-import cookie from 'react-cookies'
 import scrollToComponent from 'react-scroll-to-component';
 
 var web3;
@@ -432,8 +431,10 @@ class App extends Component {
           symbolToExchangeAddress={this.symbolToExchangeAddress}
         />
         <SharePurchase
+          symbolToTokenContract={this.symbolToTokenContract}
           symbolToExchangeContract={this.symbolToExchangeContract}
           symbolToTokenAddress={this.symbolToTokenAddress}
+          symbolToExchangeAddress={this.symbolToExchangeAddress}
         />
         <About toggleAbout={this.toggleAbout} location={this}/>
         {//<Transactions transactions={this.state.transactions} interaction={this.props.web3Store.interaction} />
