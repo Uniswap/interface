@@ -79,7 +79,6 @@ export const setBlockTimestamp = () => {
   return async (dispatch, getState) => {
     const { web3 } = getState().web3Store;
     await web3.eth.getBlock('latest', (error, blockInfo) => {
-      console.log(blockInfo.timestamp, 'BLOCKTIMESTAMP');
       dispatch({
         type: SET_BLOCK_TIMESTAMP,
         timestamp: blockInfo.timestamp

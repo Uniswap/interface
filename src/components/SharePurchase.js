@@ -14,7 +14,6 @@ class Purchase extends Component {
     }
   }
 
-
   buyShares = () => {
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.investToken.value);
     var minShares = 1;
@@ -61,33 +60,64 @@ class Purchase extends Component {
       .on('error', console.error);
   }
 
-  buyOrSell = (input) => {
-    if(input) {
-      return 'buy'
-    } else {
-      return 'sell'
-    }
+  approveInvestAllowance = () => {
+    var symbol = this.props.exchange.investToken.value;
+    var token = this.props.symbolToTokenContract(symbol);
+    var exchangeAddress = this.props.symbolToExchangeAddress(symbol);
+    var amount = this.props.web3Store.web3.utils.toWei('100000');
+    var gasCost = this.props.web3Store.web3.utils.toWei('25', 'gwei')
+    token.methods.approve(exchangeAddress, amount).send({from: this.props.web3Store.currentMaskAddress, gasPrice: gasCost})
+    .on('transactionHash', console.log('Transaction Hash created'))
+    .on('receipt', (receipt) => {
+      console.log(receipt)
+      this.props.setAllowanceApprovalState(true);
+    })  //Transaction Submitted to blockchain
+    .on('confirmation', (confirmationNumber, receipt) => {console.log("Block Confirmations: " + confirmationNumber)})  //Transaction Mined
+    .on('error', console.error);
   }
 
   render() {
-    if (this.props.exchange.investEthRequired > 0) {
-      // fix later
-      if (!this.props.exchange.investChecked && 1 === 0) {
+  if (this.props.exchange.investToken.value == "ETH") {
+    return (<a className="swap grey-bg hidden border pa2"></a>)
+  } else if(this.props.web3Store.investToggle == true && this.props.exchange.investSharesInput > 0) {
+      if(this.props.exchange.investTokenAllowance == 0) {
         return (
-          <p className="swap border pa2">
-            <b>Not enough shares!</b>
-          </p>
+          <div className="swap border pa2 blue-bg" role="button" onClick={() => {this.approveInvestAllowance()}}>
+            <b><p>Click to approve {this.props.exchange.investToken.value} spending</p></b>
+          </div>
         )
+      } else if(this.props.exchange.investChecked) {
+          if(this.props.exchange.investEthRequired > this.props.exchange.investEthBalance) {
+            return (
+              <div className="swap border pa2 red-bg">
+                <b><p>You can't afford to invest {(this.props.exchange.investEthRequired/10**18).toFixed(4)} ETH and {(this.props.exchange.investTokensRequired/10**18).toFixed(4)} {this.props.exchange.investToken.value} for {this.props.exchange.investSharesInput} shares</p></b>
+              </div>
+            )
+          } else {
+            return (
+              <a className="swap border pa2 blue-bg" role="button" onClick={() => {this.buyOrSellShares()}}>
+                <b>I want to invest {(this.props.exchange.investEthRequired/10**18).toFixed(4)} ETH and {(this.props.exchange.investTokensRequired/10**18).toFixed(4)} {this.props.exchange.investToken.value} for {this.props.exchange.investSharesInput} shares</b>
+              </a>
+            )
+          }
       } else {
-          return (
-            <a className="swap border pa2" role="button" onClick={() => {this.buyOrSellShares()}}>
-              <b>I want to {this.buyOrSell(this.props.exchange.investChecked)} {this.props.exchange.investSharesInput} shares for {(this.props.exchange.investEthRequired/10**18).toFixed(4)} ETH and {(this.props.exchange.investTokensRequired/10**18).toFixed(4)} {this.props.exchange.investToken.value}</b>
-            </a>
-          )
-      }
+          if(this.props.exchange.investSharesInput > this.props.exchange.userShares) {
+            return (
+              <a className="swap border pa2 red-bg">
+                <b>You do not have {this.props.exchange.investSharesInput} shares.</b>
+              </a>
+            )
+          } else {
+            return (
+              <a className="swap border pa2 blue-bg" role="button" onClick={() => {this.buyOrSellShares()}}>
+                <b>{this.props.exchange.investSharesInput > this.props.exchange.userShares} I want to divest {(this.props.exchange.investEthRequired/10**18).toFixed(4)} ETH and {(this.props.exchange.investTokensRequired/10**18).toFixed(4)} {this.props.exchange.investToken.value} for {this.props.exchange.investSharesInput} shares</b>
+              </a>
+            )
+          }
 
-    } else {
-        return (<a className="swap grey-bg hidden border pa2"></a>)
+        }
+      } else {
+      return (<a className="swap grey-bg hidden border pa2"></a>)
     }
   }
 }

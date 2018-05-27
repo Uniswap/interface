@@ -113,7 +113,6 @@ class Invest extends Component {
     })  //Transaction Submitted to blockchain
     .on('confirmation', (confirmationNumber, receipt) => {console.log("Block Confirmations: " + confirmationNumber)})  //Transaction Mined
     .on('error', console.error);
-
   }
 
   render () {
@@ -152,11 +151,6 @@ class Invest extends Component {
             <p> Account Balance: </p>
             <p>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{(this.props.exchange.investEthBalance/10**18).toFixed(5)} ETH </p>
             <p> {(this.props.exchange.investTokenBalance/10**18).toFixed(5)} {this.props.exchange.investToken.value} </p>
-          </div>
-          <div className="investValue border pa2 grey-bg connection">
-            <p> Allowance: </p>
-            <p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{(this.props.exchange.investTokenAllowance/10**18).toFixed(5)} {this.props.exchange.investToken.value} </p>
-            <a className="f-a"  onClick={() => this.approveInvestAllowance()}>Approve ⭞</a>
           </div>
         </section>
 
