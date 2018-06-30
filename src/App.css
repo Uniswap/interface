@@ -227,7 +227,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .red-bg{
-  background-color: red;
+  /* background-color: red; */
+  background-color: #d73a49;
 }
 
 .blue-bg{
@@ -235,7 +236,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .red{
-  color: red;
+  /* color: red; */
+  color: #d73a49;
 }
 
 .green{

@@ -77,10 +77,13 @@ class Purchase extends Component {
   }
 
   render() {
-  if (this.props.exchange.investToken.value == "ETH") {
-    return (<a className="swap grey-bg hidden border pa2"></a>)
-  } else if(this.props.web3Store.investToggle == true && this.props.exchange.investSharesInput > 0) {
-      if(this.props.exchange.investTokenAllowance == 0) {
+    if(this.props.web3Store.investToggle == true && this.props.exchange.investSharesInput > 0) {
+      // Doesn't work
+      if (this.props.exchange.investToken.value == "ETH") {
+        <div className="swap border pa2 red-bg">
+          <b><p>Please select a token other than ETH.</p></b>
+        </div>
+      } else if(this.props.exchange.investTokenAllowance == 0) {
         return (
           <div className="swap border pa2 blue-bg" role="button" onClick={() => {this.approveInvestAllowance()}}>
             <b><p>Click to approve {this.props.exchange.investToken.value} spending</p></b>
@@ -90,7 +93,7 @@ class Purchase extends Component {
           if(this.props.exchange.investEthRequired > this.props.exchange.investEthBalance) {
             return (
               <div className="swap border pa2 red-bg">
-                <b><p>You can't afford to invest {(this.props.exchange.investEthRequired/10**18).toFixed(4)} ETH and {(this.props.exchange.investTokensRequired/10**18).toFixed(4)} {this.props.exchange.investToken.value} for {this.props.exchange.investSharesInput} shares</p></b>
+                <b><p>😭 You can't afford to invest {(this.props.exchange.investEthRequired/10**18).toFixed(4)} ETH and {(this.props.exchange.investTokensRequired/10**18).toFixed(4)} {this.props.exchange.investToken.value} for {this.props.exchange.investSharesInput} shares 😭</p></b>
               </div>
             )
           } else {

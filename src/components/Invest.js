@@ -24,6 +24,7 @@ class Invest extends Component {
       this.getInvestExchangeState();
       this.getInvestBalance();
     } else {
+      await this.props.setInvestToken(selected);
       this.props.setInvestTokenPool(0);
       this.props.setInvestEthPool(0);
       this.props.setInvestTokenBalance(0);
@@ -35,9 +36,11 @@ class Invest extends Component {
   }
 
   onInputChange = async (event) => {
-    var inputValue = event.target.value;
-    await this.props.setInvestSharesInput(inputValue);
-    this.getInvestOutput();
+    if (this.props.exchange.investToken.value != "ETH") {
+      await this.props.setInvestSharesInput(event.target.value);
+      this.getInvestOutput();
+      console.log('investToken', this.props.exchange.investToken.value)
+    } 
   }
 
   toggleCheck = () => {
