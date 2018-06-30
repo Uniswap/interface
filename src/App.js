@@ -15,7 +15,7 @@ import About from './components/About';
 import Links from './components/Links';
 import SharePurchase from './components/SharePurchase';
 // import Transactions from './components/Transactions';
-// import Visualization from './components/Visualization';
+import Visualization from './components/Visualization';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 import { subscribe } from 'redux-subscriber';
@@ -59,13 +59,8 @@ class App extends Component {
     } else {
       web3 = 'undefined'
     }
-
-    this.state = {
-      transactions: []
-    }
   }
   // TODO: get rid of redundant web3 === 'undefined' checks in componentWill/DidMount
-  // STATUS: kind of done
   componentWillMount() {
     //console.log('props', this.props);
     if(web3 === 'undefined') {
@@ -228,37 +223,39 @@ class App extends Component {
 
   getInvestInfo = () => {
     var symbol = this.props.exchange.investToken.value;
-    var exchange = this.symbolToExchangeContract(symbol);
-    var token = this.symbolToTokenContract(symbol);
-    var exchangeAddress = this.symbolToExchangeAddress(symbol);
+    if (symbol != "ETH") {
+      var exchange = this.symbolToExchangeContract(symbol);
+      var token = this.symbolToTokenContract(symbol);
+      var exchangeAddress = this.symbolToExchangeAddress(symbol);
 
-    exchange.methods.ethPool().call().then((result, error) => {
-      this.props.setInvestEthPool(result);
-    });
+      exchange.methods.ethPool().call().then((result, error) => {
+        this.props.setInvestEthPool(result);
+      });
 
-    exchange.methods.tokenPool().call().then((result, error) => {
-      this.props.setInvestTokenPool(result);
-    });
+      exchange.methods.tokenPool().call().then((result, error) => {
+        this.props.setInvestTokenPool(result);
+      });
 
-    exchange.methods.totalShares().call().then((result, error) => {
-      this.props.setInvestShares(result);
-    });
+      exchange.methods.totalShares().call().then((result, error) => {
+        this.props.setInvestShares(result);
+      });
 
-    exchange.methods.getShares(this.props.web3Store.currentMaskAddress).call().then((result, error) => {
-      this.props.setUserShares(result);
-    });
+      exchange.methods.getShares(this.props.web3Store.currentMaskAddress).call().then((result, error) => {
+        this.props.setUserShares(result);
+      });
 
-    token.methods.balanceOf(this.props.web3Store.currentMaskAddress).call((error, balance) => {
-      this.props.setInvestTokenBalance(balance);
-    });
+      token.methods.balanceOf(this.props.web3Store.currentMaskAddress).call((error, result) => {
+        this.props.setInvestTokenBalance(result);
+      });
 
-    token.methods.allowance(this.props.web3Store.currentMaskAddress, exchangeAddress).call((error, balance) => {
-      this.props.setInvestTokenAllowance(balance);
-    });
+      token.methods.allowance(this.props.web3Store.currentMaskAddress, exchangeAddress).call((error, result) => {
+        this.props.setInvestTokenAllowance(result);
+      });
 
-    this.props.web3Store.web3.eth.getBalance(this.props.web3Store.currentMaskAddress, (error, balance) => {
-      this.props.setInvestEthBalance(balance);
-    });
+      this.props.web3Store.web3.eth.getBalance(this.props.web3Store.currentMaskAddress, (error, result) => {
+        this.props.setInvestEthBalance(result);
+      });
+    }
   }
 
   getExchangeState = (type) => {
@@ -268,12 +265,10 @@ class App extends Component {
 
       exchange.methods.ethPool().call().then((result, error) => {
         this.props.setEthPool1(result);
-        // console.log('Input Market ETH: ' + result);
       });
 
       exchange.methods.tokenPool().call().then((result, error) => {
         this.props.setTokenPool1(result);
-        // console.log('Input Market Tokens: ' + result);
       });
 
     } else if (type === 'output') {
@@ -281,26 +276,22 @@ class App extends Component {
 
         exchange.methods.ethPool().call().then((result, error) => {
           this.props.setEthPool2(result);
-          // console.log('Output Market ETH: ' + result);
         });
 
         exchange.methods.tokenPool().call().then((result, error) => {
           this.props.setTokenPool2(result);
-          // console.log('Output Market Tokens: ' + result);
         });
     }
   }
 
   getEthBalance = (type) => {
     if (type === 'input') {
-      this.props.web3Store.web3.eth.getBalance(this.props.web3Store.currentMaskAddress, (error, balance) => {
-        this.props.setInputBalance(balance);
-        // console.log('ETH Balance: ' + balance);
+      this.props.web3Store.web3.eth.getBalance(this.props.web3Store.currentMaskAddress, (error, result) => {
+        this.props.setInputBalance(result);
       });
     } else if (type === 'output') {
-        this.props.web3Store.web3.eth.getBalance(this.props.web3Store.currentMaskAddress, (error, balance) => {
-          this.props.setOutputBalance(balance);
-          // console.log('ETH Balance: ' + balance);
+        this.props.web3Store.web3.eth.getBalance(this.props.web3Store.currentMaskAddress, (error, result) => {
+          this.props.setOutputBalance(result);
         });
     }
   }
@@ -309,15 +300,13 @@ class App extends Component {
     var token;
     if (type === 'input') {
       token = this.symbolToTokenContract(this.props.exchange.inputToken.value);
-      token.methods.balanceOf(this.props.web3Store.currentMaskAddress).call((error, balance) => {
-        this.props.setInputBalance(balance);
-        // console.log(this.props.exchange.inputToken.value + ' Balance: ' + balance);
+      token.methods.balanceOf(this.props.web3Store.currentMaskAddress).call((error, result) => {
+        this.props.setInputBalance(result);
       });
     } else if (type === 'output') {
         token = this.symbolToTokenContract(this.props.exchange.outputToken.value);
-        token.methods.balanceOf(this.props.web3Store.currentMaskAddress).call((error, balance) => {
-          this.props.setOutputBalance(balance);
-          // console.log(this.props.exchange.outputToken.value + ' Balance: ' + balance);
+        token.methods.balanceOf(this.props.web3Store.currentMaskAddress).call((error, result) => {
+          this.props.setOutputBalance(result);
         });
     }
   }
