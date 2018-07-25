@@ -17,13 +17,17 @@ class Purchase extends Component {
   }
 
   ethToTokenPurchase = () => {
+    // console.log('symbol: ', this.props.exchange.outputToken.value);
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.outputToken.value);
-    var minTokens = this.props.exchange.outputValue.toString();
-    var minTokensInt = parseInt(minTokens, 10).toString();
+    // console.log('exchange: ', exchange);
+    var estimatedTokens = this.props.exchange.outputValue
+    var minTokensInt = parseInt((estimatedTokens*0.9), 10).toString();
     var ethSold = this.props.exchange.inputValue;
     var weiSold = this.props.web3Store.web3.utils.toWei(ethSold);
     var timeout = this.props.web3Store.blockTimestamp + 300; //current block time + 5mins
-    // console.log(minTokensInt, weiSold, timeout);
+    // console.log('minTokensInt: ', minTokensInt);
+    // console.log('weiSold: ', weiSold);
+    // console.log('timeout: ', timeout);
 
     exchange.methods.ethToTokenSwap(minTokensInt, timeout).send({from: this.props.web3Store.currentMaskAddress, value: weiSold})
       .on('transactionHash', (result) => {
@@ -52,8 +56,8 @@ class Purchase extends Component {
 
   tokenToEthPurchase = () => {
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.inputToken.value);
-    var minEth = this.props.exchange.outputValue.toString();
-    var minEthInt = parseInt(minEth, 10).toString();
+    var estimatedEth = this.props.exchange.outputValue
+    var minEthInt = parseInt((estimatedEth*0.9), 10).toString();
     var tokensSold = this.props.exchange.inputValue;
     // toWei needs to be replaced with *decimals
     var tokensSoldInt = this.props.web3Store.web3.utils.toWei(tokensSold);
@@ -78,8 +82,8 @@ class Purchase extends Component {
   tokenToTokenPurchase = () => {
     var exchange = this.props.symbolToExchangeContract(this.props.exchange.inputToken.value);
     var tokenOutAddress = this.props.symbolToTokenAddress(this.props.exchange.outputToken.value);
-    var minTokens = this.props.exchange.outputValue.toString();
-    var minTokensInt = parseInt(minTokens, 10).toString();
+    var estimatedTokens = this.props.exchange.outputValue;
+    var minTokensInt = parseInt((estimatedTokens*0.9), 10).toString();
     var tokensSold = this.props.exchange.inputValue;
     var tokensSoldInt = this.props.web3Store.web3.utils.toWei(tokensSold);
     var timeout = this.props.web3Store.blockTimestamp + 300; //current block time + 5mins

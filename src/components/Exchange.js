@@ -94,6 +94,7 @@ class Exchange extends Component {
     this.props.setExchangeRate(buyRate);
     this.props.setExchangeFee(exchangeFee);
     this.props.setExchangeOutputValue(tokensOut);
+    console.log('ethToTokenRate', buyRate);
   }
 
   tokenToEthRate = (tokenInput) => {
