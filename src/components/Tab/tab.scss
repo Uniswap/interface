@@ -1,0 +1,39 @@
+@import '../../variables.scss';
+
+.tabs {
+  @extend %row-nowrap;
+  align-items: center;
+  height: 3rem;
+  background-color: $concrete-gray;
+  border-radius: 3rem;
+  border: 1px solid $mercury-gray;
+}
+
+.tab {
+  @extend %row-nowrap;
+  align-items: center;
+  justify-content: center;
+  height: 3rem;
+  flex: 1 0 auto;
+  border-radius: 3rem;
+  border: 1px solid transparent;
+  transition: 250ms ease-in-out;
+  left: -1px;
+  position: relative;
+
+  span {
+    color: $dove-gray;
+    font-size: 1rem;
+  }
+
+  &--selected {
+    background-color: $white;
+    border-radius: 3rem;
+    border: 1px solid $mercury-gray;
+    font-weight: 500;
+
+    span {
+      color: $royal-blue;
+    }
+  }
+}

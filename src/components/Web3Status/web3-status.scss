@@ -2,15 +2,15 @@
 
 .web3-status {
   @extend %row-nowrap;
-  width: 9.5rem;
-  font-size: .75rem;
+  width: 10rem;
+  font-size: .9rem;
   line-height: 1rem;
   align-items: center;
   border: 1px solid $mercury-gray;
   padding: .5rem 1rem;
   border-radius: 2rem;
   color: $dove-gray;
-  font-weight: 500;
+  font-weight: 400;
   box-sizing: border-box;
 
   &__identicon {
