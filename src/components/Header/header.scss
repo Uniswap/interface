@@ -1,0 +1,20 @@
+@import "../../variables.scss";
+
+.header {
+  @extend %row-nowrap;
+  padding: 1.5rem;
+  align-items: center;
+
+  &__title {
+    font-size: 1rem;
+    margin-left: 1rem;
+    line-height: 1.5rem;
+    color: $wisteria-purple;
+  }
+
+  &__center-group {
+    flex: 1 1 auto;
+    width: 0;
+  }
+}
+

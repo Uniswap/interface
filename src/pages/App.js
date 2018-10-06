@@ -10,6 +10,8 @@ import Purchase from '../components/Purchase';
 import About from '../components/About';
 import Links from '../components/Links';
 import SharePurchase from '../components/SharePurchase';
+
+import Swap from './Swap';
 import './App.scss';
 
 class App extends Component {
@@ -61,7 +63,7 @@ class App extends Component {
   render() {
     return (
       <Switch>
-        <Route exact path="/" component={() => this.renderMain()} />
+        <Route exact path="/swap" component={Swap} />
       </Switch>
     )
   }
