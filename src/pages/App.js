@@ -64,6 +64,8 @@ class App extends Component {
     return (
       <Switch>
         <Route exact path="/swap" component={Swap} />
+        <Route exact path="/send" component={Swap} />
+        <Route exact path="/pool" component={Swap} />
       </Switch>
     )
   }
