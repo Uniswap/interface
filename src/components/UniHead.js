@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from "react-helmet";
 
-import unicorn from '../images/🦄.png'
+import unicorn from '../assets/images/logo.png'
 
 function UniHead(props) {
   return (

@@ -80,9 +80,11 @@ class Purchase extends Component {
     if(this.props.web3Store.investToggle == true && this.props.exchange.investSharesInput > 0) {
       // Doesn't work
       if (this.props.exchange.investToken.value == "ETH") {
-        <div className="swap border pa2 red-bg">
-          <b><p>Please select a token other than ETH.</p></b>
-        </div>
+        return (
+          <div className="swap border pa2 red-bg">
+            <b><p>Please select a token other than ETH.</p></b>
+          </div>
+        )
       } else if(this.props.exchange.investTokenAllowance == 0) {
         return (
           <div className="swap border pa2 blue-bg" role="button" onClick={() => {this.approveInvestAllowance()}}>
