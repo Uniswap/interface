@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
-import { setBlockTimestamp, setInteractionState } from '../actions/web3-actions';
-import { setExchangeInputValue, setExchangeOutputValue } from '../actions/exchange-actions';
+import { setBlockTimestamp, setInteractionState } from '../ducks/web3';
+import { setExchangeInputValue, setExchangeOutputValue } from '../ducks/exchange';
 
 class Purchase extends Component {
   purchaseTokens = async () => {

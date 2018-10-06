@@ -2,8 +2,8 @@ import React, { Component }from 'react';
 import SelectToken from './SelectToken';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { setInteractionState, setExchangeType } from '../actions/web3-actions';
-import { setExchangeInputValue, setExchangeOutputValue, setExchangeRate, setExchangeFee, setInputToken, setOutputToken, setInputBalance, setOutputBalance, setAllowanceApprovalState } from '../actions/exchange-actions';
+import { setInteractionState, setExchangeType } from '../ducks/web3';
+import { setExchangeInputValue, setExchangeOutputValue, setExchangeRate, setExchangeFee, setInputToken, setOutputToken, setInputBalance, setOutputBalance, setAllowanceApprovalState } from '../ducks/exchange';
 
 class Exchange extends Component {
   onInputChange = async (event) => {

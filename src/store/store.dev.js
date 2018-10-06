@@ -1,5 +1,5 @@
 import { applyMiddleware, compose, createStore } from 'redux';
-import reducer from '../reducers';
+import reducer from '../ducks';
 import thunk from 'redux-thunk'
 import initSubscriber from 'redux-subscriber';
 import initialState from './initial-state';
