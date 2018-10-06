@@ -1,0 +1,18 @@
+// Gray
+$concrete-gray: #F2F2F2;
+$silver-gray: #C4C4C4;
+$mercury-gray: #E1E1E1;
+$dove-gray: #737373;
+
+// Purple
+$wisteria-purple: #AE60B9;
+
+%col-nowrap {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+%row-nowrap {
+  display: flex;
+  flex-flow: row nowrap;
+}

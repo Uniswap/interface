@@ -6,7 +6,7 @@ import App from './pages/App';
 import { Provider } from 'react-redux';
 import store from './store';
 
-import './index.css';
+import './index.scss';
 
 import registerServiceWorker from './registerServiceWorker';
 // provider is going to need a store object passed into it 

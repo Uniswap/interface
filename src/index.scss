@@ -1,4 +1,5 @@
 @import url('https://rsms.me/inter/inter-ui.css');
+@import "./variables.scss";
 
 html, body {
   margin: 0;
@@ -10,11 +11,12 @@ html, body {
   overflow-x: hidden;
 }
 
-.root {
+#root {
   display: flex;
   flex-flow: column nowrap;
   height: 100vh;
   width: 100vw;
   overflow-x: hidden;
   overflow-y: auto;
+  background-color: $concrete-gray;
 }
