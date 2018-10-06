@@ -14,7 +14,7 @@ import { setInvestToken,
          setUserShares,
          setInvestEthRequired,
          setInvestTokensRequired,
-         setInvestChecked} from '../actions/exchange-actions';
+         setInvestChecked} from '../ducks/exchange';
 
 class Invest extends Component {
 

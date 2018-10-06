@@ -20,8 +20,8 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 import { subscribe } from 'redux-subscriber';
 // redux actions
-import {  exchangeContractReady } from './actions/exchangeContract-actions';
-import {  tokenContractReady } from './actions/tokenContract-actions';
+import {  exchangeContractReady } from './ducks/exchange-contract';
+import {  tokenContractReady } from './ducks/token-contract';
 import {  initializeGlobalWeb3,
           setWeb3ConnectionStatus,
           setCurrentMaskAddress,
@@ -30,7 +30,7 @@ import {  initializeGlobalWeb3,
           setInteractionState,
           factoryContractReady,
           toggleAbout,
-          toggleInvest } from './actions/web3-actions';
+          toggleInvest } from './ducks/web3';
 import {  setInputBalance,
           setOutputBalance,
           setEthPool1,
@@ -45,7 +45,7 @@ import {  setInputBalance,
           setInvestShares,
           setUserShares,
           setInvestTokenBalance,
-          setInvestEthBalance } from './actions/exchange-actions';
+          setInvestEthBalance } from './ducks/exchange';
 import './App.css';
 import scrollToComponent from 'react-scroll-to-component';
 
