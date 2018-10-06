@@ -1,0 +1,30 @@
+@import "../../variables.scss";
+
+.web3-status {
+  @extend %row-nowrap;
+  width: 9.5rem;
+  font-size: .75rem;
+  line-height: 1rem;
+  align-items: center;
+  border: 1px solid $mercury-gray;
+  padding: .5rem 1rem;
+  border-radius: 2rem;
+  color: $dove-gray;
+  font-weight: 500;
+  box-sizing: border-box;
+
+  &__identicon {
+    height: 1.125rem;
+    width: 1.125rem;
+    border-radius: 1.125rem;
+    background-color: $silver-gray;
+  }
+
+  &__text {
+    flex: 1 1 auto;
+    width: 0;
+    overflow: hidden;
+    text-align: right;
+    margin-left: 1rem;
+  }
+}
