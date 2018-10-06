@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Switch, Route } from 'react-router-dom';
 import UniHead from '../components/UniHead'
 import Header from '../components/Header';
 import ConnectionHelper from '../components/ConnectionHelper'
@@ -12,7 +13,7 @@ import SharePurchase from '../components/SharePurchase';
 import './App.scss';
 
 class App extends Component {
-  render() {
+  renderMain() {
     return (
       <div className="app">
         <UniHead />
@@ -54,6 +55,14 @@ class App extends Component {
         />
         <About toggleAbout={this.toggleAbout} location={this}/>
       </div>
+    )
+  }
+
+  render() {
+    return (
+      <Switch>
+        <Route exact path="/" component={() => this.renderMain()} />
+      </Switch>
     )
   }
 }
