@@ -21,7 +21,7 @@ class Swap extends Component {
     return (
       <div className="swap">
         <Header />
-        <NavigationTabs className="swap__navigation" />
+        {/*<NavigationTabs className="swap__navigation" />*/}
         <div className="swap__content">
           <CurrencyInputPanel
             title="Input"
