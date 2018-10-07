@@ -4,6 +4,10 @@
   @extend %col-nowrap;
   height: 100%;
 
+  &--inactive {
+    opacity: .5;
+  }
+
   &__content {
     padding: 1rem .75rem;
     margin-top: 1rem;
