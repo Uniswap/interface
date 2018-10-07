@@ -41,16 +41,7 @@
   }
 
   &__input {
-    color: $mine-shaft-gray;
-    font-size: 1.5rem;
-    outline: none;
-    border: none;
-    flex: 1 1 auto;
-    width: 0;
-
-    &::placeholder {
-      color: $chalice-gray;
-    }
+    @extend %borderless-input;
   }
 
   &__currency-select {
@@ -70,6 +61,17 @@
     &:active {
       background-color: rgba($zumthor-blue, .8);
     }
+
+    &--selected {
+      background-color: $concrete-gray;
+      border-color: $mercury-gray;
+      color: $black;
+      padding: 0 .5rem;
+
+      .currency-input-panel__dropdown-icon {
+        background-image: url(../../assets/images/dropdown.svg);
+      }
+    }
   }
 
   &__dropdown-icon {
@@ -81,5 +83,82 @@
     background-size: contain;
     background-position: 50% 50%;
   }
+
+  &__selected-token-logo {
+    margin-right: .4rem;
+    object-fit: contain;
+  }
 }
+
+
+.token-modal {
+  background-color: $white;
+  position: relative;
+  bottom: 21rem;
+  width: 100%;
+  height: 21rem;
+  z-index: 2000;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  transition: 250ms ease-in-out;
+
+  &__search-container {
+    @extend %row-nowrap;
+    padding: 1rem;
+    border-bottom: 1px solid $mercury-gray;
+  }
+
+  &__search-input {
+    @extend %borderless-input;
+  }
+
+  &__search-icon {
+    margin-right: .2rem;
+  }
+
+  &__token-list {
+    height: 17.5rem;
+    overflow-y: auto;
+  }
+
+  &__token-row {
+    @extend %row-nowrap;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      background-color: $concrete-gray;
+
+      .token-modal__token-label {
+        color: $black;
+      }
+    }
+
+    &:active {
+      background-color: darken($concrete-gray, 1);
+    }
+  }
+
+  &__token-logo {
+    object-fit: contain;
+  }
+
+  &__token-label {
+    color: $silver-gray;
+    font-weight: 200;
+  }
+}
+
+
+.token-modal-appear {
+  bottom: 0;
+}
+
+.token-modal-appear.modal-container-appear-active {
+  bottom: 0;
+}
+
 

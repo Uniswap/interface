@@ -12,6 +12,7 @@ html, body {
 }
 
 #root {
+  position: relative;
   display: flex;
   flex-flow: column nowrap;
   height: 100vh;
@@ -19,4 +20,13 @@ html, body {
   overflow-x: hidden;
   overflow-y: auto;
   background-color: $white;
+  z-index: 100;
+  -webkit-tap-highlight-color:  rgba(255, 255, 255, 0);
+}
+
+#modal-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
 }
