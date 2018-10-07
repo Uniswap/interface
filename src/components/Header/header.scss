@@ -1,9 +1,13 @@
 @import "../../variables.scss";
 
 .header {
-  @extend %row-nowrap;
-  padding: 1.5rem;
-  align-items: center;
+  @extend %col-nowrap;
+
+  &__top {
+    @extend %row-nowrap;
+    padding: 1.5rem;
+    align-items: center;
+  }
 
   &__title {
     font-size: 1rem;
@@ -15,6 +19,10 @@
   &__center-group {
     flex: 1 1 auto;
     width: 0;
+  }
+
+  &__navigation {
+    margin: 0 .75rem;
   }
 }
 
