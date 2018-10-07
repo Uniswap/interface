@@ -8,12 +8,14 @@ class NavigationTabs extends Component {
     history: PropTypes.shape({
       push: PropTypes.func.isRequired,
     }),
+    className: PropTypes.string,
   };
 
   constructor(props) {
     super(props);
     this.state = {
       selectedPath: this.props.location.pathname,
+      className: '',
     };
   }
 
@@ -34,7 +36,7 @@ class NavigationTabs extends Component {
 
   render() {
     return (
-      <Tabs>
+      <Tabs className={this.props.className}>
         { this.renderTab('Swap', '/swap') }
         { this.renderTab('Send', '/send') }
         { this.renderTab('Pool', '/pool') }
