@@ -1,4 +1,5 @@
 import React, { Component }from 'react';
+import React, { Component }from 'react';
 import SelectToken from './SelectToken';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
