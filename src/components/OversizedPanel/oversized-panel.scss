@@ -1,0 +1,30 @@
+@import '../../variables.scss';
+
+.oversized-panel {
+  position: relative;
+  background-color: $concrete-gray;
+  width: calc(100% - 1rem);
+  margin: 0 auto;
+  border-radius: .625rem;
+
+  &__top {
+    content: "";
+    position: absolute;
+    top: -.5rem;
+    left: 0;
+    height: 1rem;
+    width: 100%;
+    background-color: $concrete-gray;
+    z-index: 100;
+  }
+
+  &__bottom {
+    position: absolute;
+    top: 80%;
+    left: 0;
+    height: 1rem;
+    width: 100%;
+    background-color: $concrete-gray;
+    z-index: 100;
+  }
+}
