@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import classnames from "classnames";
 import Header from '../../components/Header';
-import NavigationTabs from '../../components/NavigationTabs';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
 import ArrowDown from '../../assets/images/arrow-down-blue.svg';
@@ -20,13 +20,20 @@ class Pool extends Component {
     // Injected by React Router Dom
     push: PropTypes.func.isRequired,
     pathname: PropTypes.string.isRequired,
+    web3: PropTypes.object.isRequired,
+    currentAddress: PropTypes.string,
+    isConnected: PropTypes.bool.isRequired,
   };
 
   render() {
     return (
       <div className="pool">
         <Header />
-        <div className="swap__content">
+        <div
+          className={classnames('swap__content', {
+            'swap--inactive': !this.props.isConnected,
+          })}
+        >
           <OversizedPanel hideTop>
             <div className="pool__liquidity-container">
               <span className="pool__liquidity-label">Add Liquidity</span>
@@ -75,6 +82,9 @@ export default withRouter(
     (state, ownProps) => ({
       push: ownProps.history.push,
       pathname: ownProps.location.pathname,
+      web3: state.web3.web3,
+      currentAddress: state.web3.currentAddress,
+      isConnected: !!(state.web3.web3 && state.web3.currentAddress),
     }),
   )(Pool)
 );
