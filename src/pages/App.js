@@ -10,9 +10,9 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 // import About from '../components/About';
 // import Links from '../components/Links';
 // import SharePurchase from '../components/SharePurchase';
-
 import Swap from './Swap';
 import Send from './Send';
+import Pool from './Pool';
 
 import './App.scss';
 
@@ -68,7 +68,7 @@ class App extends Component {
         <Switch>
           <Route exact path="/swap" component={Swap} />
           <Route exact path="/send" component={Send} />
-          <Route exact path="/pool" component={Swap} />
+          <Route exact path="/pool" component={Pool} />
         </Switch>
       </BrowserRouter>
     )
