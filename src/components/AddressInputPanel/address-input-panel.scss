@@ -1,0 +1,19 @@
+@import '../../variables.scss';
+
+.address-input-panel {
+  @extend %col-nowrap;
+
+  &__input {
+    color: $mine-shaft-gray;
+    font-size: .9rem;
+    outline: none;
+    border: none;
+    flex: 1 1 auto;
+    width: 0;
+    color: $royal-blue;
+
+    &::placeholder {
+      color: $chalice-gray;
+    }
+  }
+}

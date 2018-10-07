@@ -1,0 +1,6 @@
+@import "../../variables.scss";
+
+.send {
+  @extend %col-nowrap;
+  height: 100%;
+}

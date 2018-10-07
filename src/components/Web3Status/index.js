@@ -18,6 +18,10 @@ function Web3Status(props) {
       <div
         className="web3-status__identicon"
         ref={el => {
+          if (!el) {
+            return;
+          }
+
           if (!address|| address.length < 42 || !Web3.utils.isHexStrict(address)) {
             return;
           }
