@@ -2,7 +2,7 @@ $white: #fff;
 $black: #000;
 
 // Gray
-$concrete-gray: #FBFBFB;
+$concrete-gray: #FAFAFA;
 $mercury-gray: #E1E1E1;
 $silver-gray: #C4C4C4;
 $chalice-gray: #AEAEAE;
@@ -24,4 +24,25 @@ $wisteria-purple: #AE60B9;
 %row-nowrap {
   display: flex;
   flex-flow: row nowrap;
+}
+
+%primary-button {
+  font-size: 1rem;
+  min-width: 16rem;
+  padding: 1rem;
+  background-color: $royal-blue;
+  cursor: pointer;
+  border-radius: 3rem;
+  color: $white;
+  outline: none;
+  border: 1px solid transparent;
+
+  &:hover {
+    background-color: lighten($royal-blue, 5);
+  }
+
+  &:active {
+    background-color: darken($royal-blue, 5);
+  }
+
 }
