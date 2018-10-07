@@ -1,5 +1,10 @@
 .swap {
   &__content {
     padding: 1rem .75rem;
+    margin-top: 1rem;
+  }
+
+  &__navigation {
+    margin: 0 .75rem;
   }
 }

@@ -6,7 +6,7 @@ import './tab.scss';
 
 export const Tabs = props => {
   return (
-    <div className="tabs">
+    <div className={classnames("tabs", props.className)}>
       { props.children }
     </div>
   );
