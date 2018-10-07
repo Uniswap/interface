@@ -25,7 +25,7 @@
     "redux": "^3.7.2",
     "redux-subscriber": "^1.1.0",
     "redux-thunk": "^2.2.0",
-    "web3": "1.0.0-beta.22"
+    "web3": "^1.0.0-beta.36"
   },
   "scripts": {
     "start": "react-scripts start",
