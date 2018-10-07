@@ -1,10 +1,62 @@
+@import "../../variables.scss";
+
 .swap {
+  @extend %col-nowrap;
+  height: 100%;
+
   &__content {
     padding: 1rem .75rem;
     margin-top: 1rem;
+    flex: 1 1 auto;
+    height: 0;
+    overflow-y: auto;
   }
 
   &__navigation {
     margin: 0 .75rem;
+  }
+
+  &__down-arrow {
+    width: .625rem;
+    height: .625rem;
+    position: relative;
+    z-index: 200;
+    padding: .875rem;
+  }
+
+  &__down-arrow-background {
+    @extend %row-nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__exchange-rate-wrapper {
+    @extend %row-nowrap;
+    align-items: center;
+    color: $dove-gray;
+    font-size: .75rem;
+    padding: .5rem 1rem;
+  }
+
+  &__exchange-rate {
+    flex: 1 1 auto;
+    width: 0;
+    color: $chalice-gray;
+  }
+
+  &__summary-wrapper {
+    margin-top: 2rem;
+    color: #737373;
+    font-size: .75rem;
+    text-align: center;
+  }
+
+  &__highlight-text {
+    color: $royal-blue;
+  }
+
+  &__cta-btn {
+    @extend %primary-button;
+    margin: 1rem auto;
   }
 }
