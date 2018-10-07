@@ -22,15 +22,12 @@ class App extends Component {
           <Route exact path="/pool" component={Pool} />
         </Switch>
       </BrowserRouter>
-    )
+    );
   }
 }
 
 export default connect(
-  ({ web3: { web3, currentAddress } }) => ({
-    address: currentAddress,
-    isConnected: !!(web3 && currentAddress),
-  }),
+  null,
   dispatch => ({
     initializeWeb3: () => dispatch(initialize()),
   })
