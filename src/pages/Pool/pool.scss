@@ -1,0 +1,45 @@
+@import "../../variables.scss";
+
+.pool {
+  @extend %col-nowrap;
+  height: 100%;
+
+  &__liquidity-container {
+    @extend %row-nowrap;
+    align-items: center;
+    padding: 1rem;
+    font-size: .75rem;
+
+    img {
+      height: .75rem;
+      width: .75rem;
+    }
+  }
+
+  &__liquidity-label {
+    flex: 1 0 auto;
+  }
+
+  &__summary-panel {
+    @extend %col-nowrap;
+    padding: 1rem 0;
+  }
+
+  &__last-summary-text {
+    margin-top: 1rem;
+  }
+
+  &__exchange-rate-wrapper {
+    @extend %row-nowrap;
+    align-items: center;
+    color: $dove-gray;
+    font-size: .75rem;
+    padding: .25rem 1rem 0;
+  }
+
+  &__exchange-rate {
+    flex: 1 1 auto;
+    width: 0;
+    color: $chalice-gray;
+  }
+}
