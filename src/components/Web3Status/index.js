@@ -56,4 +56,9 @@ Web3Status.defaultProps = {
   address: 'Disconnected',
 };
 
-export default connect()(Web3Status);
+export default connect(
+  ({ web3: { web3, currentAddress } }) => ({
+    address: currentAddress,
+    isConnected: !!(web3 && currentAddress),
+  })
+)(Web3Status);
