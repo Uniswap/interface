@@ -36,6 +36,7 @@ $wisteria-purple: #AE60B9;
   color: $white;
   outline: none;
   border: 1px solid transparent;
+  user-select: none;
 
   &:hover {
     background-color: lighten($royal-blue, 5);
@@ -45,4 +46,18 @@ $wisteria-purple: #AE60B9;
     background-color: darken($royal-blue, 5);
   }
 
+}
+
+%borderless-input {
+  color: $mine-shaft-gray;
+  font-size: 1rem;
+  outline: none;
+  border: none;
+  flex: 1 1 auto;
+  width: 0;
+
+
+  &::placeholder {
+    color: $chalice-gray;
+  }
 }
