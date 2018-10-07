@@ -26,7 +26,6 @@ class Pool extends Component {
     return (
       <div className="pool">
         <Header />
-        <NavigationTabs className="swap__navigation" />
         <div className="swap__content">
           <OversizedPanel hideTop>
             <div className="pool__liquidity-container">

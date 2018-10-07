@@ -27,11 +27,9 @@ class App extends Component {
 }
 
 export default connect(
-  state => ({
-    web3: state.web3.web3,
-    exchangeContracts: state.exchangeContracts,
-    tokenContracts: state.tokenContracts,
-    exchange: state.exchange,
+  ({ web3: { web3, currentAddress } }) => ({
+    address: currentAddress,
+    isConnected: !!(web3 && currentAddress),
   }),
   dispatch => ({
     initializeWeb3: () => dispatch(initialize()),

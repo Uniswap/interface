@@ -22,7 +22,6 @@ class Send extends Component {
     return (
       <div className="send">
         <Header />
-        <NavigationTabs className="swap__navigation" />
         <div className="swap__content">
           <CurrencyInputPanel
             title="Input"
