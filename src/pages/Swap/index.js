@@ -54,7 +54,13 @@ class Swap extends Component {
             <div>You will receive between <span className="swap__highlight-text">12.80</span> and <span className="swap__highlight-text">12.83 BAT</span></div>
           </div>
         </div>
-        <button className="swap__cta-btn">Swap</button>
+        <button
+          className={classnames('swap__cta-btn', {
+            'swap--inactive': !this.props.isConnected,
+          })}
+        >
+          Swap
+        </button>
       </div>
     );
   }
