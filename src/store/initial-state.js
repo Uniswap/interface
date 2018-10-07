@@ -1,17 +1,6 @@
 export default {
-  web3Store: {
+  web3: {
     web3: {},
-    connected: false,
-    aboutToggle: false,
-    investToggle: false,
-    currentMaskAddress: undefined,
-    metamaskLocked: true,
-    interaction: '',
-    networkMessage: '',
-    factoryAddress: '0x1dCcdeD9c35C0dd22dfC644BC17011Eb8e61ad91',
-    factoryContract: '',
-    blockTimestamp: '',
-    exchangeType: 'ETH to Token',
     exchangeAddresses: {
       addresses: [
         ['BAT','0x80f5C1beA2Ea4a9C21E4c6D7831ae2Dbce45674d'],

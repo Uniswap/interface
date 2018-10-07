@@ -10,7 +10,6 @@ import SearchIcon from '../../assets/images/magnifying-glass.svg';
 
 import './currency-panel.scss';
 
-const TOKEN_ICON_API = 'https://raw.githubusercontent.com/TrustWallet/tokens/master/images';
 const FUSE_OPTIONS = {
   includeMatches: false,
   threshold: 0.0,
@@ -41,7 +40,7 @@ class CurrencyInputPanel extends Component {
   };
 
   createTokenList = () => {
-    let tokens = this.props.web3Store.tokenAddresses.addresses;
+    let tokens = this.props.web3.tokenAddresses.addresses;
     let tokenList = [ { value: 'ETH', label: 'ETH', address: 'ETH', clearableValue: false } ];
 
     for (let i = 0; i < tokens.length; i++) {
@@ -170,5 +169,7 @@ class CurrencyInputPanel extends Component {
 }
 
 export default connect(
-  state => ({ web3Store: state.web3Store })
+  state => ({
+    web3: state.web3,
+  }),
 )(CurrencyInputPanel);
