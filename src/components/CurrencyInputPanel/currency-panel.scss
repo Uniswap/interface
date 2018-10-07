@@ -1,0 +1,83 @@
+@import '../../variables.scss';
+
+.currency-input-panel {
+  @extend %col-nowrap;
+
+  &__container {
+    border-radius: 1.25rem;
+    border: 1px solid $mercury-gray;
+    background-color: $white;
+    box-shadow: 0px 4px 4px 0px rgba($royal-blue, 0.05);
+  }
+
+  &__label-row {
+    @extend %row-nowrap;
+    align-items: center;
+    color: $dove-gray;
+    font-size: .75rem;
+    line-height: 1rem;
+    padding: .75rem 1rem;
+  }
+
+  &__label-container {
+    flex: 1 1 auto;
+    width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  &__label-description {
+    opacity: .75;
+    margin-left: .25rem;
+  }
+
+  &__input-row {
+    @extend %row-nowrap;
+    align-items: center;
+    padding: .25rem .85rem .75rem;
+  }
+
+  &__input {
+    color: $mine-shaft-gray;
+    font-size: 1.5rem;
+    outline: none;
+    border: none;
+    flex: 1 1 auto;
+    width: 0;
+
+    &::placeholder {
+      color: $chalice-gray;
+    }
+  }
+
+  &__currency-select {
+    @extend %row-nowrap;
+    align-items: center;
+    font-size: 1rem;
+    color: $royal-blue;
+    height: 2.5rem;
+    padding: .5rem 1rem;
+    border: 1px solid $royal-blue;
+    border-radius: 2.5rem;
+    background-color: $zumthor-blue;
+    outline: none;
+    cursor: pointer;
+    user-select: none;
+
+    &:active {
+      background-color: rgba($zumthor-blue, .8);
+    }
+  }
+
+  &__dropdown-icon {
+    height: 1rem;
+    width: .75rem;
+    margin-left: .4rem;
+    background-image: url(../../assets/images/dropdown-blue.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: 50% 50%;
+  }
+}
+

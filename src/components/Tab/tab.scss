@@ -7,6 +7,14 @@
   background-color: $concrete-gray;
   border-radius: 3rem;
   border: 1px solid $mercury-gray;
+
+  .tab:first-child {
+    margin-left: -1px;
+  }
+
+  .tab:last-child {
+    margin-right: -1px;
+  }
 }
 
 .tab {
@@ -17,9 +25,8 @@
   flex: 1 0 auto;
   border-radius: 3rem;
   border: 1px solid transparent;
-  transition: 250ms ease-in-out;
-  left: -1px;
-  position: relative;
+  transition: 300ms ease-in-out;
+  cursor: pointer;
 
   span {
     color: $dove-gray;
