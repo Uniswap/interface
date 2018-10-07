@@ -71,7 +71,13 @@ class Pool extends Component {
             <div className="pool__last-summary-text">You will receive between {b`66%`} and {b`67%`} of the BAT/ETH pool tokens.</div>
           </div>
         </div>
-        <button className="swap__cta-btn">Add Liquidity</button>
+        <button
+          className={classnames('swap__cta-btn', {
+            'swap--inactive': !this.props.isConnected,
+          })}
+        >
+          Add Liquidity
+        </button>
       </div>
     );
   }

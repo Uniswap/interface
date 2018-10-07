@@ -24,5 +24,46 @@
   &__navigation {
     margin: 0 .75rem;
   }
+
+  &--inactive {
+    opacity: .5;
+  }
+
+  &__dialog {
+    @extend %col-nowrap;
+    border-radius: .875rem;
+    border: 1px solid $mercury-gray;
+    margin: 1rem .75rem 0 .75rem;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    display: none;
+
+    &__description {
+      font-size: .75rem;
+      color: $dove-gray;
+      margin-top: .4rem;
+    }
+
+    &--disconnected {
+      display: inherit;
+    }
+  }
+
+  &__download {
+    @extend %row-nowrap;
+    justify-content: center;
+    margin-top: 1rem;
+
+    img {
+      height: 3.5rem;
+      width: 3.5rem;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    img + img {
+      margin-left: 1rem;
+    }
+  }
 }
 
