@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { CSSTransitionGroup } from "react-transition-group";
 import classnames from 'classnames';
 import Fuse from '../../helpers/fuse';
+import { updateField } from '../../ducks/swap';
 import Modal from '../Modal';
 import TokenLogo from '../TokenLogo';
 import SearchIcon from '../../assets/images/magnifying-glass.svg';
@@ -40,7 +41,7 @@ class CurrencyInputPanel extends Component {
   };
 
   createTokenList = () => {
-    let tokens = this.props.web3.tokenAddresses.addresses;
+    let tokens = this.props.tokenAddresses.addresses;
     let tokenList = [ { value: 'ETH', label: 'ETH', address: 'ETH', clearableValue: false } ];
 
     for (let i = 0; i < tokens.length; i++) {
@@ -140,7 +141,14 @@ class CurrencyInputPanel extends Component {
             <span className="currency-input-panel__extra-text">{extraText}</span>
           </div>
           <div className="currency-input-panel__input-row">
-            <input type="number" className="currency-input-panel__input" placeholder="0.0" />
+            <input
+              type="number"
+              className="currency-input-panel__input"
+              placeholder="0.0"
+              onChange={e => {
+                this.props.updateField('input', e.target.value);
+              }}
+            />
             <button
               className={classnames("currency-input-panel__currency-select", {
                 'currency-input-panel__currency-select--selected': selectedTokenAddress,
@@ -170,6 +178,10 @@ class CurrencyInputPanel extends Component {
 
 export default connect(
   state => ({
-    web3: state.web3,
+    tokenAddresses: state.web3.tokenAddresses,
+    balance: state.web3.balance,
   }),
+  dispatch => ({
+    updateField: (name, value) => dispatch(updateField({ name, value })),
+  })
 )(CurrencyInputPanel);
