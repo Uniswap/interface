@@ -26,6 +26,7 @@ class App extends Component {
           <Route exact path="/swap" component={Swap} />
           <Route exact path="/send" component={Send} />
           <Route exact path="/pool" component={Pool} />
+          <Route component={Swap} />
         </AnimatedSwitch>
       </BrowserRouter>
     );
