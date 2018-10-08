@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { AnimatedSwitch } from 'react-router-transition';
 import { initialize } from '../ducks/web3'
 import Swap from './Swap';
 import Send from './Send';
@@ -16,11 +17,16 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <Switch>
+        <AnimatedSwitch
+          atEnter={{ opacity: 0 }}
+          atLeave={{ opacity: 0 }}
+          atActive={{ opacity: 1 }}
+          className="app__switch-wrapper"
+        >
           <Route exact path="/swap" component={Swap} />
           <Route exact path="/send" component={Send} />
           <Route exact path="/pool" component={Pool} />
-        </Switch>
+        </AnimatedSwitch>
       </BrowserRouter>
     );
   }

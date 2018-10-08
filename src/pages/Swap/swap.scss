@@ -3,6 +3,7 @@
 .swap {
   @extend %col-nowrap;
   height: 100%;
+  background-color: $white;
 
   &--inactive {
     opacity: .5;

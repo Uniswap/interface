@@ -3,6 +3,7 @@
 .pool {
   @extend %col-nowrap;
   height: 100%;
+  background-color: $white;
 
   &__liquidity-container {
     @extend %row-nowrap;
