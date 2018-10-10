@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { drizzleConnect } from 'drizzle-react'
 import classnames from 'classnames';
 import UAParser from 'ua-parser-js';
 import Logo from '../Logo';
@@ -57,7 +57,9 @@ function Header (props) {
         })}
       >
         <div>No Ethereum wallet found</div>
-        <div className="header__dialog__description">Please visit us from a web3-enabled mobile browser, such as Trust Wallet and Cipher Browser.</div>
+        <div className="header__dialog__description">
+          Please visit us from a web3-enabled mobile browser, such as Trust Wallet and Cipher Browser.
+        </div>
         <div className="header__download">
           <img src={CipherLogo} onClick={() => window.open(getCipherLink(), '_blank')} />
           <img src={TrustLogo} onClick={() => window.open(getTrustLink(), '_blank')} />
@@ -72,7 +74,7 @@ function Header (props) {
         <div className="header__center-group">
           <span className="header__title">Uniswap</span>
         </div>
-        <Web3Status address="0xcf1de0b4d1e492080336909f70413a5f4e7eec62" isConnected />
+        <Web3Status isConnected />
       </div>
       <NavigationTabs
         className={classnames('header__navigation', {
@@ -84,15 +86,15 @@ function Header (props) {
 }
 
 Header.propTypes = {
-  web3: PropTypes.object.isRequired,
   currentAddress: PropTypes.string,
   isConnected: PropTypes.bool.isRequired,
 };
 
-export default connect(
+export default drizzleConnect(
+  Header,
   state => ({
-    web3: state.web3.web3,
-    currentAddress: state.web3.currentAddress,
-    isConnected: !!(state.web3.web3 && state.web3.currentAddress),
+    // web3: console.log(state) || state.web3,
+    currentAddress: state.accounts[0],
+    isConnected: !!(state.drizzleStatus.initialized && state.accounts[0]),
   }),
-)(Header)
+);

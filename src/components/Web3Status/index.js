@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { drizzleConnect } from 'drizzle-react'
 import classnames from 'classnames';
 import Web3 from 'web3';
 import Jazzicon from 'jazzicon';
@@ -26,6 +26,7 @@ function Web3Status(props) {
             return;
           }
 
+          el.innerHTML = '';
           el.appendChild(Jazzicon(18, parseInt(address.slice(2), 16)));
         }}
       />
@@ -41,7 +42,7 @@ function getText(text) {
     return 'Disconnected';
   }
 
-  const address = Web3.utils.toChecksumAddress(text)
+  const address = Web3.utils.toChecksumAddress(text);
 
   return `${address.substring(0, 6)}...${address.substring(38)}`;
 }
@@ -56,9 +57,10 @@ Web3Status.defaultProps = {
   address: 'Disconnected',
 };
 
-export default connect(
-  ({ web3: { web3, currentAddress } }) => ({
-    address: currentAddress,
-    isConnected: !!(web3 && currentAddress),
+export default drizzleConnect(
+  Web3Status,
+  state => ({
+    address: state.accounts[0],
+    isConnected: !!(state.drizzleStatus.initialized && state.accounts[0]),
   })
-)(Web3Status);
+);

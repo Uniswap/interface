@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { drizzleConnect } from 'drizzle-react';
 import PropTypes from 'prop-types';
 
 import './address-input-panel.scss';
@@ -39,4 +39,4 @@ class AddressInputPanel extends Component {
   }
 }
 
-export default connect()(AddressInputPanel);
+export default drizzleConnect(AddressInputPanel);
