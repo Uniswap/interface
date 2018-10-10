@@ -32,6 +32,7 @@ class CurrencyInputPanel extends Component {
     title: PropTypes.string,
     description: PropTypes.string,
     extraText: PropTypes.string,
+    web3: PropTypes.object.isRequired,
   };
 
   state = {
@@ -40,12 +41,33 @@ class CurrencyInputPanel extends Component {
     selectedTokenAddress: '',
   };
 
+  getBalance() {
+    const {
+      balance,
+      web3,
+    } = this.props;
+
+    const { selectedTokenAddress } = this.state;
+
+    if (!selectedTokenAddress) {
+      return '';
+    }
+
+    const bn = balance[selectedTokenAddress];
+
+    if (!bn) {
+      return '';
+    }
+
+    return `Balance: ${web3.utils.fromWei(bn, 'ether')}`;
+  }
+
   createTokenList = () => {
     let tokens = this.props.tokenAddresses.addresses;
-    let tokenList = [ { value: 'ETH', label: 'ETH', address: 'ETH', clearableValue: false } ];
+    let tokenList = [ { value: 'ETH', label: 'ETH', address: 'ETH' } ];
 
     for (let i = 0; i < tokens.length; i++) {
-      let entry = { value: '', label: '', clearableValue: false }
+      let entry = { value: '', label: '' }
       entry.value = tokens[i][0];
       entry.label = tokens[i][0];
       entry.address = tokens[i][1];
@@ -54,7 +76,7 @@ class CurrencyInputPanel extends Component {
     }
 
     return tokenList;
-  }
+  };
 
   renderTokenList() {
     const tokens = this.createTokenList();
@@ -125,7 +147,8 @@ class CurrencyInputPanel extends Component {
     const {
       title,
       description,
-      extraText,
+      balance,
+      web3,
     } = this.props;
 
     const { selectedTokenAddress } = this.state;
@@ -138,7 +161,9 @@ class CurrencyInputPanel extends Component {
               <span className="currency-input-panel__label">{title}</span>
               <span className="currency-input-panel__label-description">{description}</span>
             </div>
-            <span className="currency-input-panel__extra-text">{extraText}</span>
+            <span className="currency-input-panel__extra-text">
+              {this.getBalance()}
+            </span>
           </div>
           <div className="currency-input-panel__input-row">
             <input
@@ -180,6 +205,7 @@ export default connect(
   state => ({
     tokenAddresses: state.web3.tokenAddresses,
     balance: state.web3.balance,
+    web3: state.web3.web3,
   }),
   dispatch => ({
     updateField: (name, value) => dispatch(updateField({ name, value })),
