@@ -3,11 +3,13 @@ import { drizzleConnect } from 'drizzle-react'
 import PropTypes from 'prop-types';
 import { CSSTransitionGroup } from "react-transition-group";
 import classnames from 'classnames';
+import {BigNumber as BN} from 'bignumber.js';
 import Fuse from '../../helpers/fuse';
 import { updateField } from '../../ducks/swap';
 import Modal from '../Modal';
 import TokenLogo from '../TokenLogo';
 import SearchIcon from '../../assets/images/magnifying-glass.svg';
+import ERC20_ABI from '../../abi/erc20';
 
 import './currency-panel.scss';
 
@@ -45,13 +47,45 @@ class CurrencyInputPanel extends Component {
     selectedTokenAddress: '',
   };
 
+  getTokenData(address) {
+    const {
+      initialized,
+      contracts,
+      account,
+    } = this.props;
+    const { drizzle } = this.context;
+    const { web3 } = drizzle;
+
+    if (!initialized || !web3) {
+      return;
+    }
+
+    const balanceKey = drizzle.contracts[address].methods.balanceOf.cacheCall(account);
+    const decimalsKey = drizzle.contracts[address].methods.decimals.cacheCall();
+    const token = contracts[address];
+
+    const balance = token.balanceOf[balanceKey];
+    const decimals = token.decimals[decimalsKey];
+
+    if (!balance || !decimals) {
+      return;
+    }
+
+
+    return {
+      balance: balance.value,
+      decimals: decimals.value,
+    };
+  }
+
   getBalance() {
     const {
       balance,
       initialized,
     } = this.props;
     const { selectedTokenAddress } = this.state;
-    const { drizzle: { web3 } } = this.context;
+    const { drizzle } = this.context;
+    const { web3 } = drizzle;
 
     if (!selectedTokenAddress || !initialized || !web3 || !balance) {
       return '';
@@ -61,13 +95,17 @@ class CurrencyInputPanel extends Component {
       return `Balance: ${web3.utils.fromWei(balance, 'ether')}`;
     }
 
-    const bn = balance[selectedTokenAddress];
+    const tokenData = this.getTokenData(selectedTokenAddress);
 
-    if (!bn) {
+    if (!tokenData) {
       return '';
     }
 
-    return `Balance: ${web3.utils.fromWei(bn, 'ether')}`;
+    const tokenBalance = BN(tokenData.balance);
+    const denomination = Math.pow(10, tokenData.decimals);
+    const adjustedBalance = tokenBalance.dividedBy(denomination);
+
+    return `Balance: ${adjustedBalance.toFixed(2)}`;
   }
 
   createTokenList = () => {
@@ -103,11 +141,25 @@ class CurrencyInputPanel extends Component {
       <div
         key={label}
         className="token-modal__token-row"
-        onClick={() => this.setState({
-          selectedTokenAddress: address || 'ETH',
-          searchQuery: '',
-          isShowingModal: false,
-        })}
+        onClick={() => {
+          this.setState({
+            selectedTokenAddress: address || 'ETH',
+            searchQuery: '',
+            isShowingModal: false,
+          });
+
+          if (address && address !== 'ETH') {
+            const { drizzle } = this.context;
+            const { web3 } = drizzle;
+            const contractConfig = {
+              contractName: address,
+              web3Contract: new web3.eth.Contract(ERC20_ABI, address),
+            };
+            const events = ['Approval', 'Transfer'];
+
+            this.context.drizzle.addContract(contractConfig, events, { from: this.props.account });
+          }
+        }}
       >
         <TokenLogo className="token-modal__token-logo" address={address} />
         <div className="token-modal__token-label" >{label}</div>
@@ -220,6 +272,8 @@ export default drizzleConnect(
       tokenAddresses: state.addresses.tokenAddresses,
       initialized,
       balance: accountBalances[accounts[0]] || null,
+      account: accounts[0],
+      contracts: state.contracts,
     };
   },
   dispatch => ({
