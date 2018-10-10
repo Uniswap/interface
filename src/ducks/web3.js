@@ -36,6 +36,8 @@ export const initialize = () => dispatch => {
       payload: web3,
     });
     dispatch(updateCurrentAddress());
+
+    setInterval(() => dispatch(updateBalance()), 15000)
   }
 };
 
@@ -55,7 +57,9 @@ export const updateCurrentAddress = () => (dispatch, getState) => {
       type: UPDATE_CURRENT_ADDRESS,
       payload: accounts[0],
     });
-  })
+
+    dispatch(updateBalance());
+  });
 };
 
 export const updateBalance = () => (dispatch, getState) => {
@@ -76,7 +80,7 @@ export const updateBalance = () => (dispatch, getState) => {
         address: 'ETH',
         balance: data,
       }
-    })
+    });
   });
 };
 
