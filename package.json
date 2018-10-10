@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "bignumber.js": "^7.2.1",
     "classnames": "^2.2.6",
     "d3": "^4.13.0",
     "drizzle": "^1.2.3",
