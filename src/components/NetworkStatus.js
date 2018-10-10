@@ -2,7 +2,7 @@ import React, { Component }from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { subscribe } from 'redux-subscriber';
-import { setWeb3ConnectionStatus, setInteractionState, setNetworkMessage, metamaskLocked } from '../ducks/web3';
+import { setWeb3ConnectionStatus, setInteractionState, setNetworkMessage, metamaskLocked } from '../ducks/addresses';
 
 class NetworkStatus extends Component {
   componentDidMount(){

@@ -3,7 +3,7 @@ import React, { Component }from 'react';
 import SelectToken from './SelectToken';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { setInteractionState, setExchangeType } from '../ducks/web3';
+import { setInteractionState, setExchangeType } from '../ducks/addresses';
 import { setExchangeInputValue, setExchangeOutputValue, setExchangeRate, setExchangeFee, setInputToken, setOutputToken, setInputBalance, setOutputBalance, setAllowanceApprovalState } from '../ducks/exchange';
 
 class Exchange extends Component {

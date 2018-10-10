@@ -1,20 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Web3 from 'web3';
+import { DrizzleProvider } from 'drizzle-react';
 import App from './pages/App';
-
-import { Provider } from 'react-redux';
 import store from './store';
 
 import './index.scss';
 
 import registerServiceWorker from './registerServiceWorker';
 
+
 window.addEventListener('load', function() {
   ReactDOM.render(
-    <Provider store={store}>
+    <DrizzleProvider options={{
+      contracts: [],
+      events: [],
+      polls: { accounts: 3000, blocks: 3000 },
+    }} store={store}>
       <App />
-    </Provider>
+    </DrizzleProvider>
     , document.getElementById('root')
   );
 
