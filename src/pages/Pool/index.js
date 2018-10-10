@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { drizzleConnect } from 'drizzle-react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classnames from "classnames";
@@ -20,7 +20,6 @@ class Pool extends Component {
     // Injected by React Router Dom
     push: PropTypes.func.isRequired,
     pathname: PropTypes.string.isRequired,
-    web3: PropTypes.object.isRequired,
     currentAddress: PropTypes.string,
     isConnected: PropTypes.bool.isRequired,
   };
@@ -84,13 +83,13 @@ class Pool extends Component {
 }
 
 export default withRouter(
-  connect(
+  drizzleConnect(
+    Pool,
     (state, ownProps) => ({
       push: ownProps.history.push,
       pathname: ownProps.location.pathname,
-      web3: state.web3.web3,
-      currentAddress: state.web3.currentAddress,
-      isConnected: !!(state.web3.web3 && state.web3.currentAddress),
+      currentAddress: state.accounts[0],
+      isConnected: !!(state.drizzleStatus.initialized && state.accounts[0]),
     }),
-  )(Pool)
+  ),
 );

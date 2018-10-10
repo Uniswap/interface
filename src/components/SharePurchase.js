@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
-import { setBlockTimestamp, setInteractionState } from '../ducks/web3';
+import { setBlockTimestamp, setInteractionState } from '../ducks/addresses';
 import { setExchangeInputValue, setExchangeOutputValue } from '../ducks/exchange';
 
 class Purchase extends Component {

@@ -1,6 +1,7 @@
+import { generateContractsInitialState } from 'drizzle'
+
 export default {
-  web3: {
-    web3: {},
+  addresses: {
     exchangeAddresses: {
       addresses: [
         ['BAT','0x80f5C1beA2Ea4a9C21E4c6D7831ae2Dbce45674d'],
@@ -20,6 +21,7 @@ export default {
       ]
     }
   },
+  contracts: generateContractsInitialState({ contracts: [], events: [], polls: [] }),
   exchangeContracts: {},
   tokenContracts: {},
   exchange: {

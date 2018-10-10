@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { drizzleConnect } from 'drizzle-react'
 import PropTypes from 'prop-types';
 import { CSSTransitionGroup } from "react-transition-group";
 import classnames from 'classnames';
@@ -32,7 +32,11 @@ class CurrencyInputPanel extends Component {
     title: PropTypes.string,
     description: PropTypes.string,
     extraText: PropTypes.string,
-    web3: PropTypes.object.isRequired,
+    initialized: PropTypes.bool,
+  };
+
+  static contextTypes = {
+    drizzle: PropTypes.object,
   };
 
   state = {
@@ -44,13 +48,17 @@ class CurrencyInputPanel extends Component {
   getBalance() {
     const {
       balance,
-      web3,
+      initialized,
     } = this.props;
-
     const { selectedTokenAddress } = this.state;
+    const { drizzle: { web3 } } = this.context;
 
-    if (!selectedTokenAddress) {
+    if (!selectedTokenAddress || !initialized || !web3 || !balance) {
       return '';
+    }
+
+    if (selectedTokenAddress === 'ETH') {
+      return `Balance: ${web3.utils.fromWei(balance, 'ether')}`;
     }
 
     const bn = balance[selectedTokenAddress];
@@ -147,8 +155,6 @@ class CurrencyInputPanel extends Component {
     const {
       title,
       description,
-      balance,
-      web3,
     } = this.props;
 
     const { selectedTokenAddress } = this.state;
@@ -201,13 +207,22 @@ class CurrencyInputPanel extends Component {
   }
 }
 
-export default connect(
-  state => ({
-    tokenAddresses: state.web3.tokenAddresses,
-    balance: state.web3.balance,
-    web3: state.web3.web3,
-  }),
+export default drizzleConnect(
+  CurrencyInputPanel,
+  state => {
+    const {
+      drizzleStatus: { initialized },
+      accounts,
+      accountBalances,
+    } = state;
+
+    return {
+      tokenAddresses: state.addresses.tokenAddresses,
+      initialized,
+      balance: accountBalances[accounts[0]] || null,
+    };
+  },
   dispatch => ({
     updateField: (name, value) => dispatch(updateField({ name, value })),
-  })
-)(CurrencyInputPanel);
+  }),
+);
