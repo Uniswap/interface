@@ -86,27 +86,30 @@ function Header (props) {
         <div>No Ethereum wallet found</div>
         <div className="header__dialog__description">
           {
-            isMobile() ?
-              'Please visit us from a web3-enabled mobile browser, such as Trust Wallet and Cipher Browser.' :
+            isMobile()
+              ?
+              'Please visit us from a web3-enabled mobile browser, such as Trust Wallet and Cipher Browser.'
+              :
               'Please visit us after installing Metamask on Chrome or Brave'
 
           }
         </div>
         <div className="header__download">
           {
-            isMobile() ?
-            (
-              [
-                <img src={CipherLogo} key="cipher" onClick={() => window.open(getCipherLink(), '_blank')} />,
-                <img src={TrustLogo} key="trust" onClick={() => window.open(getTrustLink(), '_blank')} />
-              ]
-            ) :
-            (
-              [
-                <img src={MetamaskLogo} key="metamask" onClick={() => window.open(getMetamaskLink(), '_blank')} />,
-                <img src={BraveLogo} key="brave" onClick={() => window.open(getBraveLink(), '_blank')} />
-              ]
-            )
+            isMobile()
+              ? (
+                [
+                  <img src={CipherLogo} key="cipher" onClick={() => window.open(getCipherLink(), '_blank')} />,
+                  <img src={TrustLogo} key="trust" onClick={() => window.open(getTrustLink(), '_blank')} />
+                ]
+              )
+              :
+              (
+                [
+                  <img src={MetamaskLogo} key="metamask" onClick={() => window.open(getMetamaskLink(), '_blank')} />,
+                  <img src={BraveLogo} key="brave" onClick={() => window.open(getBraveLink(), '_blank')} />
+                ]
+              )
           }
         </div>
       </div>
