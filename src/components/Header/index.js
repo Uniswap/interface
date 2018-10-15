@@ -90,7 +90,7 @@ function Header (props) {
               ?
               'Please visit us from a web3-enabled mobile browser, such as Trust Wallet and Cipher Browser.'
               :
-              'Please visit us after installing Metamask on Chrome or Brave'
+              'Please visit us after installing Metamask on Chrome or Brave.'
 
           }
         </div>
