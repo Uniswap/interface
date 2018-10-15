@@ -2,15 +2,15 @@ const UPDATE_FIELD = 'app/swap/updateField';
 
 const initialState = {
   input: '',
-  inputToken: '',
   output: '',
-  outputToken: '',
+  inputCurrency: '',
+  outputCurrency: '',
 };
 
 export const updateField = ({ name, value }) => ({
   type: UPDATE_FIELD,
   payload: { name, value },
-});
+})
 
 export default function swapReducer(state = initialState, { type, payload }) {
   switch (type) {

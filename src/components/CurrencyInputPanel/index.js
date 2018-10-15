@@ -33,8 +33,15 @@ class CurrencyInputPanel extends Component {
   static propTypes = {
     title: PropTypes.string,
     description: PropTypes.string,
-    extraText: PropTypes.string,
+    value: PropTypes.string,
     initialized: PropTypes.bool,
+    onCurrencySelected: PropTypes.func,
+    onValueChange: PropTypes.func,
+  };
+
+  static defaultProps = {
+    onCurrencySelected() {},
+    onValueChange() {},
   };
 
   static contextTypes = {
@@ -113,7 +120,7 @@ class CurrencyInputPanel extends Component {
     let tokenList = [ { value: 'ETH', label: 'ETH', address: 'ETH' } ];
 
     for (let i = 0; i < tokens.length; i++) {
-      let entry = { value: '', label: '' }
+      let entry = { value: '', label: '' };
       entry.value = tokens[i][0];
       entry.label = tokens[i][0];
       entry.address = tokens[i][1];
@@ -122,6 +129,28 @@ class CurrencyInputPanel extends Component {
     }
 
     return tokenList;
+  };
+
+  onTokenSelect = (address) => {
+    this.setState({
+      selectedTokenAddress: address || 'ETH',
+      searchQuery: '',
+      isShowingModal: false,
+    });
+
+    this.props.onCurrencySelected(address);
+
+    if (address && address !== 'ETH') {
+      const { drizzle } = this.context;
+      const { web3 } = drizzle;
+      const contractConfig = {
+        contractName: address,
+        web3Contract: new web3.eth.Contract(ERC20_ABI, address),
+      };
+      const events = ['Approval', 'Transfer'];
+
+      this.context.drizzle.addContract(contractConfig, events, { from: this.props.account });
+    }
   };
 
   renderTokenList() {
@@ -141,25 +170,7 @@ class CurrencyInputPanel extends Component {
       <div
         key={label}
         className="token-modal__token-row"
-        onClick={() => {
-          this.setState({
-            selectedTokenAddress: address || 'ETH',
-            searchQuery: '',
-            isShowingModal: false,
-          });
-
-          if (address && address !== 'ETH') {
-            const { drizzle } = this.context;
-            const { web3 } = drizzle;
-            const contractConfig = {
-              contractName: address,
-              web3Contract: new web3.eth.Contract(ERC20_ABI, address),
-            };
-            const events = ['Approval', 'Transfer'];
-
-            this.context.drizzle.addContract(contractConfig, events, { from: this.props.account });
-          }
-        }}
+        onClick={() => this.onTokenSelect(address)}
       >
         <TokenLogo className="token-modal__token-logo" address={address} />
         <div className="token-modal__token-label" >{label}</div>
@@ -188,9 +199,9 @@ class CurrencyInputPanel extends Component {
                 type="text"
                 placeholder="Search Token or Paste Address"
                 className="token-modal__search-input"
-                onChange={e => this.setState({
-                  searchQuery: e.target.value,
-                })}
+                onChange={e => {
+                  this.setState({ searchQuery: e.target.value });
+                }}
               />
               <img src={SearchIcon} className="token-modal__search-icon" />
             </div>
@@ -228,9 +239,8 @@ class CurrencyInputPanel extends Component {
               type="number"
               className="currency-input-panel__input"
               placeholder="0.0"
-              onChange={e => {
-                this.props.updateField('input', e.target.value);
-              }}
+              onChange={e => this.props.onValueChange(e.target.value)}
+              value={this.props.value}
             />
             <button
               className={classnames("currency-input-panel__currency-select", {
