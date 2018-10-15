@@ -6,6 +6,8 @@ import UAParser from 'ua-parser-js';
 import Logo from '../Logo';
 import CipherLogo from '../../assets/images/cipher-browser-logo.svg';
 import TrustLogo from '../../assets/images/trust-wallet-logo.svg';
+import BraveLogo from '../../assets/images/brave-logo.png';
+import MetamaskLogo from '../../assets/images/metamask-logo.png';
 import Web3Status from '../Web3Status';
 
 import "./header.scss";
@@ -19,6 +21,13 @@ const links = {
   trust: {
     android: 'https://play.google.com/store/apps/details?id=com.wallet.crypto.trustapp&hl=en_US',
     ios: 'https://itunes.apple.com/us/app/trust-ethereum-wallet/id1288339409?mt=8',
+  },
+  metamask: {
+    chrome: 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
+  },
+  brave: {
+    android: 'https://play.google.com/store/apps/details?id=com.brave.browser',
+    ios: 'https://itunes.apple.com/us/app/brave-browser-fast-adblocker/id1052879175',
   },
 };
 
@@ -48,6 +57,24 @@ function getCipherLink() {
   }
 }
 
+function getBraveLink() {
+  const os = ua.getOS();
+
+  if (os.name === 'Mac OS') {
+    return links.brave.ios;
+  }
+
+  return links.brave.android;
+}
+
+function getMetamaskLink() {
+  return links.metamask.chrome;
+}
+
+function isMobile() {
+  return ua.getDevice().type === 'mobile';
+}
+
 function Header (props) {
   return (
     <div className="header">
@@ -61,8 +88,21 @@ function Header (props) {
           Please visit us from a web3-enabled mobile browser, such as Trust Wallet and Cipher Browser.
         </div>
         <div className="header__download">
-          <img src={CipherLogo} onClick={() => window.open(getCipherLink(), '_blank')} />
-          <img src={TrustLogo} onClick={() => window.open(getTrustLink(), '_blank')} />
+          {
+            isMobile() ?
+            (
+              [
+                <img src={CipherLogo} key="cipher" onClick={() => window.open(getCipherLink(), '_blank')} />,
+                <img src={TrustLogo} key="trust" onClick={() => window.open(getTrustLink(), '_blank')} />
+              ]
+            ) :
+            (
+              [
+                <img src={MetamaskLogo} key="metamask" onClick={() => window.open(getMetamaskLink(), '_blank')} />,
+                <img src={BraveLogo} key="brave" onClick={() => window.open(getBraveLink(), '_blank')} />
+              ]
+            )
+          }
         </div>
       </div>
       <div
