@@ -13,8 +13,8 @@ import NavigationTabs from "../NavigationTabs";
 
 const links = {
   cipher: {
-    android: 'https://play.google.com/store/apps/details?id=com.cipherbrowser.cipher&hl=en_US',
-    ios: 'https://itunes.apple.com/us/app/cipher-browser-ethereum/id1294572970?mt=8',
+    android: 'https://play.google.com/store/apps/details?id=org.toshi',
+    ios: 'https://itunes.apple.com/us/app/coinbase-wallet/id1278383455'
   },
   trust: {
     android: 'https://play.google.com/store/apps/details?id=com.wallet.crypto.trustapp&hl=en_US',
