@@ -137,11 +137,6 @@ class Swap extends Component {
     this.props.updateField('lastEditedField', '');
   }
 
-  onCurrencySelected(field, data) {
-    this.props.updateField(field, data);
-    // this.props
-  }
-
   render() {
     const { lastEditedField, inputCurrency, outputCurrency, input, output } = this.props;
     const { exchangeRate } = this.state;
@@ -202,6 +197,20 @@ class Swap extends Component {
           className={classnames('swap__cta-btn', {
             'swap--inactive': !this.props.isConnected,
           })}
+          onClick={() => {
+            const { input, output, outputCurrency, exchangeAddresses: { fromToken } } = this.props;
+            const exchange = this.context.drizzle.contracts[fromToken[outputCurrency]];
+            if (!exchange) {
+              return;
+            }
+            this.context.drizzle.web3.eth.getBlockNumber((_, d) => this.context.drizzle.web3.eth.getBlock(d, (_,d) => {
+              const deadline = d.timestamp + 300;
+              const id = exchange.methods.ethToTokenSwapInput.cacheSend(`${output * 10 ** 18}`, deadline, {
+                from: "0xCf1dE0b4d1e492080336909f70413a5F4E7eEc62",
+                value: `${input * 10 ** 18}`,
+              }, );
+            }));
+          }}
         >
           Swap
         </button>
