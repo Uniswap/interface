@@ -99,24 +99,24 @@ class CurrencyInputPanel extends Component {
     const { web3 } = drizzle;
 
     if (!selectedTokenAddress || !initialized || !web3 || !balance) {
-      return '';
+      return null;
     }
 
     if (selectedTokenAddress === 'ETH') {
-      return `Balance: ${BN(web3.utils.fromWei(balance, 'ether')).toFixed(2)}`;
+      return BN(web3.utils.fromWei(balance, 'ether')).toFixed(2);
     }
 
     const tokenData = this.getTokenData(selectedTokenAddress);
 
     if (!tokenData) {
-      return '';
+      return null;
     }
 
     const tokenBalance = BN(tokenData.balance);
     const denomination = Math.pow(10, tokenData.decimals);
     const adjustedBalance = tokenBalance.dividedBy(denomination);
 
-    return `Balance: ${adjustedBalance.toFixed(2)}`;
+    return adjustedBalance.toFixed(2);
   }
 
   createTokenList = () => {
@@ -177,6 +177,14 @@ class CurrencyInputPanel extends Component {
       }
     }
   };
+
+  renderBalance(balance) {
+    if (balance === null) {
+      return null;
+    }
+
+    return `Balance: ${balance}`;
+  }
 
   renderTokenList() {
     const tokens = this.createTokenList();
@@ -250,20 +258,27 @@ class CurrencyInputPanel extends Component {
     const {
       title,
       description,
+      value
     } = this.props;
 
     const { selectedTokenAddress } = this.state;
+    const balance = this.getBalance();
+    const hasError = balance < value;
 
     return (
       <div className="currency-input-panel">
-        <div className="currency-input-panel__container">
+        <div className={
+          classnames('currency-input-panel__container',
+            { 'currency-input-panel__container--error': hasError }
+          )
+        }>
           <div className="currency-input-panel__label-row">
             <div className="currency-input-panel__label-container">
               <span className="currency-input-panel__label">{title}</span>
               <span className="currency-input-panel__label-description">{description}</span>
             </div>
             <span className="currency-input-panel__extra-text">
-              {this.getBalance()}
+              {this.renderBalance(balance)}
             </span>
           </div>
           <div className="currency-input-panel__input-row">
