@@ -6,6 +6,8 @@ import UAParser from 'ua-parser-js';
 import Logo from '../Logo';
 import CoinbaseWalletLogo from '../../assets/images/coinbase-wallet-logo.png';
 import TrustLogo from '../../assets/images/trust-wallet-logo.svg';
+import BraveLogo from '../../assets/images/brave-logo.png';
+import MetamaskLogo from '../../assets/images/metamask-logo.png';
 import Web3Status from '../Web3Status';
 
 import "./header.scss";
@@ -19,6 +21,13 @@ const links = {
   trust: {
     android: 'https://play.google.com/store/apps/details?id=com.wallet.crypto.trustapp&hl=en_US',
     ios: 'https://itunes.apple.com/us/app/trust-ethereum-wallet/id1288339409?mt=8',
+  },
+  metamask: {
+    chrome: 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
+  },
+  brave: {
+    android: 'https://play.google.com/store/apps/details?id=com.brave.browser',
+    ios: 'https://itunes.apple.com/us/app/brave-browser-fast-adblocker/id1052879175',
   },
 };
 
@@ -48,6 +57,24 @@ function getCoinbaseWalletLink() {
   }
 }
 
+function getBraveLink() {
+  const os = ua.getOS();
+
+  if (os.name === 'Mac OS') {
+    return links.brave.ios;
+  }
+
+  return links.brave.android;
+}
+
+function getMetamaskLink() {
+  return links.metamask.chrome;
+}
+
+function isMobile() {
+  return ua.getDevice().type === 'mobile';
+}
+
 function Header (props) {
   return (
     <div className="header">
@@ -58,11 +85,29 @@ function Header (props) {
       >
         <div>No Ethereum wallet found</div>
         <div className="header__dialog__description">
-          Please visit us from a web3-enabled mobile browser, such as Trust Wallet and Coinbase Wallet.
+          {
+            isMobile()
+              ? 'Please visit us from a web3-enabled mobile browser, such as Trust Wallet and Cipher Browser.'
+              : 'Please visit us after installing Metamask on Chrome or Brave.'
+
+          }
         </div>
         <div className="header__download">
-          <img src={CoinbaseWalletLogo} onClick={() => window.open(getCoinbaseWalletLink(), '_blank')} />
-          <img src={TrustLogo} onClick={() => window.open(getTrustLink(), '_blank')} />
+          {
+            isMobile()
+              ? (
+                [
+                  <img src={CoinbaseWalletLogo} onClick={() => window.open(getCoinbaseWalletLink(), '_blank')} />,
+                  <img src={TrustLogo} key="trust" onClick={() => window.open(getTrustLink(), '_blank')} />
+                ]
+              )
+              : (
+                [
+                  <img src={MetamaskLogo} key="metamask" onClick={() => window.open(getMetamaskLink(), '_blank')} />,
+                  <img src={BraveLogo} key="brave" onClick={() => window.open(getBraveLink(), '_blank')} />
+                ]
+              )
+          }
         </div>
       </div>
       <div
