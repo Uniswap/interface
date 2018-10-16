@@ -11,10 +11,10 @@ const initialState = {
 export const isValidSwap = (state) => {
   const { swap } = state;
 
-  return swap.input !== '' &&
-    swap.output !== '' &&
-    swap.inputCurrency &&
-    swap.outputCurrency;
+  return swap.outputCurrency !== '' &&
+    swap.inputCurrency !== '' &&
+    swap.input !== '' &&
+    swap.output !== '';
 };
 
 export const updateField = ({ name, value }) => ({
