@@ -11,11 +11,6 @@ export default class Modal extends Component {
     onClose: PropTypes.func.isRequired,
   };
 
-  constructor(props) {
-    super(props);
-    // this.el = document.createElement('div');
-  }
-
   componentDidMount() {
     // The portal element is inserted in the DOM tree after
     // the Modal's children are mounted, meaning that children

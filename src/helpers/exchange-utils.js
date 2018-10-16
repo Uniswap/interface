@@ -1,24 +1,56 @@
-import EXCHANGE_ABI from "../abi/exchange";
 import {BigNumber as BN} from "bignumber.js";
 
-export const calculateExchangeRate = async ({drizzleCtx, contractStore, input, inputCurrency, outputCurrency, exchangeAddresses }) => {
-  if (!inputCurrency || !outputCurrency || !input) {
-    return 0;
-  }
-
+export const calculateExchangeRateFromInput = async opts => {
+  const { inputCurrency, outputCurrency } = opts;
   if (inputCurrency === outputCurrency) {
     console.error(`Input and Output currency cannot be the same`);
-    return 0;
+    return;
   }
 
-  const currencies = [ inputCurrency, outputCurrency ];
-  const exchangeAddress = exchangeAddresses.fromToken[currencies.filter(d => d !== 'ETH')[0]];
-
-  if (!exchangeAddress) {
-    return 0;
+  if (inputCurrency === 'ETH' && outputCurrency !== 'ETH') {
+    return ETH_TO_ERC20.calculateOutput(opts);
   }
 
-  if (currencies.includes('ETH')) {
+  if (outputCurrency === 'ETH' && inputCurrency !== 'ETH') {
+    return ERC20_TO_ETH.calculateOutput(opts);
+  }
+};
+
+export const calculateExchangeRateFromOutput = async opts => {
+  const { inputCurrency, outputCurrency } = opts;
+  if (inputCurrency === outputCurrency) {
+    console.error(`Input and Output currency cannot be the same`);
+    return;
+  }
+
+  if (inputCurrency === 'ETH' && outputCurrency !== 'ETH') {
+    return ETH_TO_ERC20.calculateInput(opts);
+  }
+
+  if (outputCurrency === 'ETH' && inputCurrency !== 'ETH') {
+    return ERC20_TO_ETH.calculateInput(opts);
+  }
+};
+
+const ETH_TO_ERC20 = {
+  calculateOutput: async ({drizzleCtx, contractStore, input, inputCurrency, outputCurrency, exchangeAddresses }) => {
+    if (inputCurrency !== 'ETH') {
+      console.error('Input Currency should be ETH');
+      return;
+    }
+
+    if (!outputCurrency || outputCurrency === 'ETH') {
+      console.error('Output Currency should be ERC20');
+      return;
+    }
+
+    const exchangeAddress = exchangeAddresses.fromToken[outputCurrency];
+
+    if (!exchangeAddress) {
+      console.error(`Cannot find Exchange Address for ${outputCurrency}`);
+      return;
+    }
+
     const inputReserve = await getBalance({
       currency: inputCurrency,
       address: exchangeAddress,
@@ -33,8 +65,99 @@ export const calculateExchangeRate = async ({drizzleCtx, contractStore, input, i
       contractStore,
     });
 
-    const inputDecimals = await getDecimals({ address: inputCurrency, drizzleCtx, contractStore });
-    const outputDecimals = await getDecimals({ address: outputCurrency, drizzleCtx, contractStore });
+    const inputAmount = BN(input).multipliedBy(BN(10 ** 18));
+    const numerator = inputAmount.multipliedBy(BN(outputReserve).multipliedBy(997));
+    const denominator = BN(inputReserve).multipliedBy(1000).plus(BN(inputAmount).multipliedBy(997));
+    const outputAmount = numerator.dividedBy(denominator);
+    const exchangeRate = outputAmount.dividedBy(inputAmount);
+
+    if (exchangeRate.isNaN()) {
+      return;
+    }
+
+    return exchangeRate;
+  },
+  calculateInput: async ({drizzleCtx, contractStore, output, inputCurrency, outputCurrency, exchangeAddresses }) => {
+    if (inputCurrency !== 'ETH') {
+      console.error('Input Currency should be ETH');
+      return;
+    }
+
+    if (!outputCurrency || outputCurrency === 'ETH') {
+      console.error('Output Currency should be ERC20');
+      return;
+    }
+
+    const exchangeAddress = exchangeAddresses.fromToken[outputCurrency];
+
+    if (!exchangeAddress) {
+      console.error(`Cannot find Exchange Address for ${outputCurrency}`);
+      return;
+    }
+
+    const inputReserve = await getBalance({
+      currency: inputCurrency,
+      address: exchangeAddress,
+      drizzleCtx,
+      contractStore,
+    });
+
+    const outputReserve = await getBalance({
+      currency: outputCurrency,
+      address: exchangeAddress,
+      drizzleCtx,
+      contractStore,
+    });
+
+    const outputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
+    const outputAmount = BN(output).multipliedBy(10 ** outputDecimals);
+    const numerator = outputAmount .multipliedBy(BN(inputReserve).multipliedBy(1000));
+    const denominator = BN(outputReserve).minus(outputAmount).multipliedBy(997);
+    const inputAmount = numerator.dividedBy(denominator.plus(1));
+    const exchangeRate = outputAmount.dividedBy(inputAmount);
+
+    if (exchangeRate.isNaN()) {
+      return;
+    }
+
+    return exchangeRate;
+  },
+};
+
+const ERC20_TO_ETH = {
+  calculateOutput: async ({drizzleCtx, contractStore, input, inputCurrency, outputCurrency, exchangeAddresses }) => {
+    if (outputCurrency !== 'ETH') {
+      console.error('Output Currency should be ETH');
+      return;
+    }
+
+    if (!inputCurrency || inputCurrency === 'ETH') {
+      console.error('Input Currency should be ERC20');
+      return;
+    }
+
+    const exchangeAddress = exchangeAddresses.fromToken[inputCurrency];
+
+    if (!exchangeAddress) {
+      console.error(`Cannot find Exchange Address for ${inputCurrency}`);
+      return;
+    }
+
+    const inputReserve = await getBalance({
+      currency: inputCurrency,
+      address: exchangeAddress,
+      drizzleCtx,
+      contractStore,
+    });
+
+    const outputReserve = await getBalance({
+      currency: outputCurrency,
+      address: exchangeAddress,
+      drizzleCtx,
+      contractStore,
+    });
+
+    const inputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
     const inputAmount = BN(input).multipliedBy(BN(10 ** inputDecimals));
     const numerator = inputAmount.multipliedBy(BN(outputReserve).multipliedBy(997));
     const denominator = BN(inputReserve).multipliedBy(1000).plus(BN(inputAmount).multipliedBy(997));
@@ -42,14 +165,59 @@ export const calculateExchangeRate = async ({drizzleCtx, contractStore, input, i
     const exchangeRate = outputAmount.dividedBy(inputAmount);
 
     if (exchangeRate.isNaN()) {
-      return 0;
+      return;
     }
 
-    return exchangeRate.toFixed(7);
-  } else {
-    return 0;
-  }
+    return exchangeRate;
+  },
+  calculateInput: async ({drizzleCtx, contractStore, output, inputCurrency, outputCurrency, exchangeAddresses }) => {
+    if (outputCurrency !== 'ETH') {
+      console.error('Output Currency should be ETH');
+      return;
+    }
+
+    if (!inputCurrency || inputCurrency === 'ETH') {
+      console.error('Output Currency should be ERC20');
+      return;
+    }
+
+    const exchangeAddress = exchangeAddresses.fromToken[inputCurrency];
+
+    if (!exchangeAddress) {
+      console.error(`Cannot find Exchange Address for ${inputCurrency}`);
+      return;
+    }
+
+    const inputReserve = await getBalance({
+      currency: inputCurrency,
+      address: exchangeAddress,
+      drizzleCtx,
+      contractStore,
+    });
+
+    const outputReserve = await getBalance({
+      currency: outputCurrency,
+      address: exchangeAddress,
+      drizzleCtx,
+      contractStore,
+    });
+
+    // const outputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
+    const outputAmount = BN(output).multipliedBy(10 ** 18);
+    const numerator = outputAmount .multipliedBy(BN(inputReserve).multipliedBy(1000));
+    const denominator = BN(outputReserve).minus(outputAmount).multipliedBy(997);
+    const inputAmount = numerator.dividedBy(denominator.plus(1));
+    const exchangeRate = outputAmount.dividedBy(inputAmount);
+
+    if (exchangeRate.isNaN()) {
+      return;
+    }
+
+    return exchangeRate;
+  },
 };
+
+
 
 function getDecimals({ address, drizzleCtx, contractStore }) {
   return new Promise(async (resolve, reject) => {

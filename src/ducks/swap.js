@@ -5,6 +5,7 @@ const initialState = {
   output: '',
   inputCurrency: '',
   outputCurrency: '',
+  lastEditedField: '',
 };
 
 export const updateField = ({ name, value }) => ({

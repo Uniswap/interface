@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-escape
 const SPECIAL_CHARS_REGEX = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g
 
 export default function (text, pattern, tokenSeparator = / +/g) {
