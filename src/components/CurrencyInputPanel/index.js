@@ -177,6 +177,7 @@ class CurrencyInputPanel extends Component {
   renderTokenList() {
     const tokens = this.createTokenList();
     const { searchQuery } = this.state;
+    const { selectedTokens } = this.props;
     let results;
 
     if (!searchQuery) {
@@ -187,16 +188,22 @@ class CurrencyInputPanel extends Component {
 
     }
 
-    return results.map(({ label, address }) => (
-      <div
-        key={label}
-        className="token-modal__token-row"
-        onClick={() => this.onTokenSelect(address)}
-      >
-        <TokenLogo className="token-modal__token-logo" address={address} />
-        <div className="token-modal__token-label" >{label}</div>
-      </div>
-    ));
+    return results.map(({ label, address }) => {
+      const isSelected = selectedTokens.indexOf(address) > -1;
+
+      return (
+        <div
+          key={label}
+          className={
+            classnames('token-modal__token-row', { 'token-modal__token-row--selected': isSelected })
+          }
+          onClick={() => this.onTokenSelect(address)}
+        >
+          <TokenLogo className="token-modal__token-logo" address={address} />
+          <div className="token-modal__token-label" >{label}</div>
+        </div>
+      );
+    });
   }
 
   renderModal() {
