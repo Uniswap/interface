@@ -4,7 +4,7 @@ import { drizzleConnect } from 'drizzle-react'
 import classnames from 'classnames';
 import UAParser from 'ua-parser-js';
 import Logo from '../Logo';
-import CipherLogo from '../../assets/images/cipher-browser-logo.svg';
+import CoinbaseWalletLogo from '../../assets/images/coinbase-wallet-logo.png';
 import TrustLogo from '../../assets/images/trust-wallet-logo.svg';
 import Web3Status from '../Web3Status';
 
@@ -12,9 +12,9 @@ import "./header.scss";
 import NavigationTabs from "../NavigationTabs";
 
 const links = {
-  cipher: {
-    android: 'https://play.google.com/store/apps/details?id=com.cipherbrowser.cipher&hl=en_US',
-    ios: 'https://itunes.apple.com/us/app/cipher-browser-ethereum/id1294572970?mt=8',
+  coinbaseWallet: {
+    android: 'https://play.google.com/store/apps/details?id=org.toshi',
+    ios: 'https://itunes.apple.com/us/app/coinbase-wallet/id1278383455'
   },
   trust: {
     android: 'https://play.google.com/store/apps/details?id=com.wallet.crypto.trustapp&hl=en_US',
@@ -36,15 +36,15 @@ function getTrustLink() {
   }
 }
 
-function getCipherLink() {
+function getCoinbaseWalletLink() {
   const os = ua.getOS();
 
   if (os.name === 'Android') {
-    return links.cipher.android;
+    return links.coinbaseWallet.android;
   }
 
   if (os.name === 'iOS') {
-    return links.cipher.ios;
+    return links.coinbaseWallet.ios;
   }
 }
 
@@ -58,10 +58,10 @@ function Header (props) {
       >
         <div>No Ethereum wallet found</div>
         <div className="header__dialog__description">
-          Please visit us from a web3-enabled mobile browser, such as Trust Wallet and Cipher Browser.
+          Please visit us from a web3-enabled mobile browser, such as Trust Wallet and Coinbase Wallet.
         </div>
         <div className="header__download">
-          <img src={CipherLogo} onClick={() => window.open(getCipherLink(), '_blank')} />
+          <img src={CoinbaseWalletLogo} onClick={() => window.open(getCoinbaseWalletLink(), '_blank')} />
           <img src={TrustLogo} onClick={() => window.open(getTrustLink(), '_blank')} />
         </div>
       </div>
