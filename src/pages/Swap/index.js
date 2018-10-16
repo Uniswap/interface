@@ -3,15 +3,15 @@ import { drizzleConnect } from 'drizzle-react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import {BigNumber as BN} from "bignumber.js";
 import { updateField } from '../../ducks/swap';
 import Header from '../../components/Header';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
 import ArrowDown from '../../assets/images/arrow-down-blue.svg';
-import { calculateExchangeRate } from '../../helpers/exchange-utils';
+import { calculateExchangeRateFromInput, calculateExchangeRateFromOutput } from '../../helpers/exchange-utils';
 
 import "./swap.scss";
-import EXCHANGE_ABI from "../../abi/exchange";
 
 class Swap extends Component {
   static propTypes = {
@@ -25,6 +25,7 @@ class Swap extends Component {
     output: PropTypes.string,
     inputCurrency: PropTypes.string,
     outputCurrency: PropTypes.string,
+    lastEditedField: PropTypes.string,
   };
 
   static contextTypes = {
@@ -32,7 +33,7 @@ class Swap extends Component {
   };
 
   state = {
-    exchangeRate: 0,
+    exchangeRate: BN(0),
   };
 
   getTokenLabel(address) {
@@ -62,36 +63,20 @@ class Swap extends Component {
     return symbol.value;
   }
 
-  async updateInput(input) {
-    const {
-      outputCurrency,
-      exchangeAddresses: { fromToken },
-    } = this.props;
-
-    this.props.updateField('input', input);
-
-    if (!outputCurrency) {
-      return;
+  updateInput(amount) {
+    this.props.updateField('input', amount);
+    if (!amount) {
+      this.props.updateField('output', '');
     }
+    this.props.updateField('lastEditedField', 'input');
+  }
 
-    const { drizzle } = this.context;
-    const { web3 } = drizzle;
-    const exchangeAddress = fromToken[outputCurrency];
-    const token = drizzle.contracts[outputCurrency];
-
-    if (!exchangeAddress || !token) {
-      return;
+  updateOutput(amount) {
+    this.props.updateField('output', amount);
+    if (!amount) {
+      this.props.updateField('input', '');
     }
-
-    if (!drizzle.contracts[exchangeAddress]) {
-      const contractConfig = {
-        contractName: exchangeAddress,
-        web3Contract: new web3.eth.Contract(EXCHANGE_ABI, exchangeAddress),
-      };
-      const events = ['Approval', 'Transfer', 'TokenPurchase', 'EthPurchase', 'AddLiquidity', 'RemoveLiquidity'];
-
-      this.context.drizzle.addContract(contractConfig, events, { from: this.props.account });
-    }
+    this.props.updateField('lastEditedField', 'output');
   }
 
   async getExchangeRate(props) {
@@ -101,18 +86,31 @@ class Swap extends Component {
       inputCurrency,
       outputCurrency,
       exchangeAddresses,
+      lastEditedField,
       contracts,
     } = props;
+
     const { drizzle } = this.context;
-    return await calculateExchangeRate({
-      drizzleCtx: drizzle,
-      contractStore: contracts,
-      input,
-      output,
-      inputCurrency,
-      outputCurrency,
-      exchangeAddresses,
-    });
+
+    return lastEditedField === 'input'
+      ? await calculateExchangeRateFromInput({
+        drizzleCtx: drizzle,
+        contractStore: contracts,
+        input,
+        output,
+        inputCurrency,
+        outputCurrency,
+        exchangeAddresses,
+      })
+      : await calculateExchangeRateFromOutput({
+        drizzleCtx: drizzle,
+        contractStore: contracts,
+        input,
+        output,
+        inputCurrency,
+        outputCurrency,
+        exchangeAddresses,
+      }) ;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -122,7 +120,12 @@ class Swap extends Component {
         if (!exchangeRate) {
           return;
         }
-        this.props.updateField('output', `${nextProps.input * exchangeRate}`);
+
+        if (nextProps.lastEditedField === 'input') {
+          this.props.updateField('output', `${BN(nextProps.input).multipliedBy(exchangeRate).toFixed(7)}`);
+        } else if (nextProps.lastEditedField === 'output') {
+          this.props.updateField('input', `${BN(nextProps.output).multipliedBy(BN(1).dividedBy(exchangeRate)).toFixed(7)}`);
+        }
       });
   }
 
@@ -131,6 +134,12 @@ class Swap extends Component {
     this.props.updateField('input', '');
     this.props.updateField('outputCurrency', '');
     this.props.updateField('inputCurrency', '');
+    this.props.updateField('lastEditedField', '');
+  }
+
+  onCurrencySelected(field, data) {
+    this.props.updateField(field, data);
+    // this.props
   }
 
   render() {
@@ -162,14 +171,14 @@ class Swap extends Component {
             title="Output"
             description="(estimated)"
             onCurrencySelected={d => this.props.updateField('outputCurrency', d)}
-            onValueChange={d => this.props.updateField('output', d)}
+            onValueChange={d => this.updateOutput(d)}
             value={output}
           />
           <OversizedPanel hideBottom>
             <div className="swap__exchange-rate-wrapper">
               <span className="swap__exchange-rate">Exchange Rate</span>
               <span>
-                {exchangeRate ? `1 ${inputLabel} = ${exchangeRate} ${outputLabel}` : ' - '}
+                {exchangeRate ? `1 ${inputLabel} = ${exchangeRate.toFixed(7)} ${outputLabel}` : ' - '}
               </span>
             </div>
           </OversizedPanel>
@@ -218,6 +227,7 @@ export default withRouter(
       output: state.swap.output,
       inputCurrency: state.swap.inputCurrency,
       outputCurrency: state.swap.outputCurrency,
+      lastEditedField: state.swap.lastEditedField,
       exchangeAddresses: state.addresses.exchangeAddresses,
     }),
     dispatch => ({
@@ -225,9 +235,3 @@ export default withRouter(
     })
   ),
 );
-
-function timeout(time = 0) {
-  return new Promise(resolve => {
-    setTimeout(resolve, time);
-  });
-}

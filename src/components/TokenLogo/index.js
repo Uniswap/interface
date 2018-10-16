@@ -4,7 +4,7 @@ import EthereumLogo from '../../assets/images/ethereum-logo.png';
 import GenericTokenLogo from '../../assets/images/generic-token-logo.png';
 
 const TOKEN_ICON_API = 'https://raw.githubusercontent.com/TrustWallet/tokens/master/images';
-
+const BAD_IMAGES = {};
 export default class TokenLogo extends Component {
   static propTypes = {
     address: PropTypes.string,
@@ -30,10 +30,9 @@ export default class TokenLogo extends Component {
       path = EthereumLogo;
     }
 
-    if (!this.state.error) {
+    if (!this.state.error && !BAD_IMAGES[address]) {
       path = `${TOKEN_ICON_API}/${address}.png`;
     }
-
 
     return (
       <img
@@ -43,7 +42,10 @@ export default class TokenLogo extends Component {
           width: size,
           height: size,
         }}
-        onError={() => this.setState({ error: true })}
+        onError={() => {
+          this.setState({ error: true });
+          BAD_IMAGES[address] = true;
+        }}
       />
     );
   }

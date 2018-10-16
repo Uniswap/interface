@@ -97,7 +97,7 @@ function Header (props) {
             isMobile()
               ? (
                 [
-                  <img src={CoinbaseWalletLogo} onClick={() => window.open(getCoinbaseWalletLink(), '_blank')} />,
+                  <img src={CoinbaseWalletLogo} key="coinbase-wallet" onClick={() => window.open(getCoinbaseWalletLink(), '_blank')} />,
                   <img src={TrustLogo} key="trust" onClick={() => window.open(getTrustLink(), '_blank')} />
                 ]
               )
