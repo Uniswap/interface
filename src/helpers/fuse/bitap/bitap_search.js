@@ -1,5 +1,3 @@
-import Bitap from "./index";
-
 import bitapScore from './bitap_score';
 import matchedIndices from './bitap_matched_indices';
 

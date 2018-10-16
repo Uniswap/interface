@@ -12,6 +12,7 @@ import SearchIcon from '../../assets/images/magnifying-glass.svg';
 import ERC20_ABI from '../../abi/erc20';
 
 import './currency-panel.scss';
+import EXCHANGE_ABI from "../../abi/exchange";
 
 const FUSE_OPTIONS = {
   includeMatches: false,
@@ -37,6 +38,9 @@ class CurrencyInputPanel extends Component {
     initialized: PropTypes.bool,
     onCurrencySelected: PropTypes.func,
     onValueChange: PropTypes.func,
+    exchangeAddresses: PropTypes.shape({
+      fromToken: PropTypes.object.isRequired,
+    }).isRequired,
   };
 
   static defaultProps = {
@@ -141,15 +145,32 @@ class CurrencyInputPanel extends Component {
     this.props.onCurrencySelected(address);
 
     if (address && address !== 'ETH') {
+      // Add Token Contract
       const { drizzle } = this.context;
+      const { fromToken } = this.props.exchangeAddresses;
       const { web3 } = drizzle;
-      const contractConfig = {
+      const tokenConfig = {
         contractName: address,
         web3Contract: new web3.eth.Contract(ERC20_ABI, address),
       };
-      const events = ['Approval', 'Transfer'];
+      const tokenEvents = ['Approval', 'Transfer'];
 
-      this.context.drizzle.addContract(contractConfig, events, { from: this.props.account });
+      this.context.drizzle.addContract(tokenConfig, tokenEvents, { from: this.props.account });
+
+      // Add Exchange Contract
+      const exchangeAddress = fromToken[address];
+
+      if (!exchangeAddress) {
+        return;
+      }
+
+      const exchangeConfig = {
+        contractName: exchangeAddress,
+        web3Contract: new web3.eth.Contract(EXCHANGE_ABI, exchangeAddress),
+      };
+      const exchangeEvents = ['Approval', 'Transfer', 'TokenPurchase', 'EthPurchase', 'AddLiquidity', 'RemoveLiquidity'];
+
+      this.context.drizzle.addContract(exchangeConfig, exchangeEvents , { from: this.props.account });
     }
   };
 
@@ -280,6 +301,7 @@ export default drizzleConnect(
 
     return {
       tokenAddresses: state.addresses.tokenAddresses,
+      exchangeAddresses: state.addresses.exchangeAddresses,
       initialized,
       balance: accountBalances[accounts[0]] || null,
       account: accounts[0],
