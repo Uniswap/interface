@@ -8,6 +8,15 @@ const initialState = {
   lastEditedField: '',
 };
 
+export const isValidSwap = (state) => {
+  const { swap } = state;
+
+  return swap.input !== '' &&
+    swap.output !== '' &&
+    swap.inputCurrency &&
+    swap.outputCurrency;
+};
+
 export const updateField = ({ name, value }) => ({
   type: UPDATE_FIELD,
   payload: { name, value },
