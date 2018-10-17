@@ -67,8 +67,8 @@ export const swapInput = async opts => {
   if (outputCurrency === 'ETH' && inputCurrency !== 'ETH') {
     return ERC20_TO_ETH.swapInput(opts);
   }
-  //
-  // return ERC20_TO_ERC20.calculateInput(opts);
+
+  return ERC20_TO_ERC20.swapInput(opts);
 };
 
 export const swapOutput = async opts => {
@@ -87,9 +87,9 @@ export const swapOutput = async opts => {
     return ETH_TO_ERC20.swapOutput(opts);
   }
 
-  // if (outputCurrency === 'ETH' && inputCurrency !== 'ETH') {
-  //   return ERC20_TO_ETH.swapInput(opts);
-  // }
+  if (outputCurrency === 'ETH' && inputCurrency !== 'ETH') {
+    return ERC20_TO_ETH.swapOutput(opts);
+  }
   //
   // return ERC20_TO_ERC20.calculateInput(opts);
 };
@@ -380,6 +380,42 @@ const ERC20_TO_ETH = {
       { from: account, value: '0x0' },
     );
   },
+  swapOutput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses }) => {
+    if (outputCurrency !== 'ETH') {
+      console.error('Output Currency should be ETH');
+      return;
+    }
+
+    if (!inputCurrency || inputCurrency === 'ETH') {
+      console.error('Output Currency should be ERC20');
+      return;
+    }
+
+    const exchangeAddress = exchangeAddresses.fromToken[inputCurrency];
+    const exchange = drizzleCtx.contracts[exchangeAddress];
+    if (!exchangeAddress || !exchange) {
+      console.error(`Cannot find Exchange Address for ${inputCurrency}`);
+      return;
+    }
+
+    const { web3 } = drizzleCtx;
+    const blockNumber = await promisify(web3, 'getBlockNumber');
+    const block = await promisify(web3, 'getBlock', blockNumber);
+
+
+    const deadline = block.timestamp + 300;
+    const ALLOWED_SLIPPAGE = BN(0.025);
+    const inputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
+    const maxInput = BN(input).multipliedBy(10 ** inputDecimals).multipliedBy(BN(1).plus(ALLOWED_SLIPPAGE));
+    const outputAmount = BN(output).multipliedBy(10 ** 18);
+
+    exchange.methods.tokenToEthSwapOutput.cacheSend(
+      outputAmount.toFixed(0),
+      maxInput.toFixed(0),
+      deadline,
+      { from: account },
+    );
+  },
 };
 
 const ERC20_TO_ERC20 = {
@@ -429,6 +465,9 @@ const ERC20_TO_ERC20 = {
 
     return exchangeRateA.multipliedBy(exchangeRateB);
   },
+  swapInput: async opts => {
+
+  }
 };
 
 function getDecimals({ address, drizzleCtx, contractStore }) {
