@@ -160,6 +160,7 @@ class Swap extends Component {
             title="Input"
             onCurrencySelected={d => this.props.updateField('inputCurrency', d)}
             onValueChange={d => this.updateInput(d)}
+            selectedTokens={[inputCurrency, outputCurrency]}
             value={input}
           />
           <OversizedPanel>
@@ -172,6 +173,7 @@ class Swap extends Component {
             description="(estimated)"
             onCurrencySelected={d => this.props.updateField('outputCurrency', d)}
             onValueChange={d => this.updateOutput(d)}
+            selectedTokens={[inputCurrency, outputCurrency]}
             value={output}
           />
           <OversizedPanel hideBottom>
