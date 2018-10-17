@@ -386,6 +386,8 @@ function getDecimals({ address, drizzleCtx, contractStore }) {
   });
 }
 
+const BALANCE_KEY = {};
+
 function getBalance({ currency, address, drizzleCtx, contractStore }) {
   return new Promise(async (resolve, reject) => {
     if (currency === 'ETH') {
@@ -401,7 +403,15 @@ function getBalance({ currency, address, drizzleCtx, contractStore }) {
       if (!token) {
         return;
       }
-      const balanceKey = token.methods.balanceOf.cacheCall(address);
+
+      let balanceKey = BALANCE_KEY[address];
+
+      if (!balanceKey) {
+        balanceKey = token.methods.balanceOf.cacheCall(address);
+        BALANCE_KEY[address] = balanceKey;
+      }
+
+
       const tokenStore = contractStore[currency];
 
       if (!tokenStore) {
