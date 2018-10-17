@@ -9,7 +9,13 @@ import Header from '../../components/Header';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
 import ArrowDown from '../../assets/images/arrow-down-blue.svg';
-import { calculateExchangeRateFromInput, calculateExchangeRateFromOutput } from '../../helpers/exchange-utils';
+import {
+  calculateExchangeRateFromInput,
+  calculateExchangeRateFromOutput,
+  swapInput,
+  swapOutput,
+} from '../../helpers/exchange-utils';
+import promisify from '../../helpers/web3-promisfy';
 
 import "./swap.scss";
 
@@ -35,6 +41,30 @@ class Swap extends Component {
   state = {
     exchangeRate: BN(0),
   };
+
+  componentWillReceiveProps(nextProps) {
+    this.getExchangeRate(nextProps)
+      .then(exchangeRate => {
+        this.setState({ exchangeRate });
+        if (!exchangeRate) {
+          return;
+        }
+
+        if (nextProps.lastEditedField === 'input') {
+          this.props.updateField('output', `${BN(nextProps.input).multipliedBy(exchangeRate).toFixed(7)}`);
+        } else if (nextProps.lastEditedField === 'output') {
+          this.props.updateField('input', `${BN(nextProps.output).multipliedBy(BN(1).dividedBy(exchangeRate)).toFixed(7)}`);
+        }
+      });
+  }
+
+  componentWillUnmount() {
+    this.props.updateField('output', '');
+    this.props.updateField('input', '');
+    this.props.updateField('outputCurrency', '');
+    this.props.updateField('inputCurrency', '');
+    this.props.updateField('lastEditedField', '');
+  }
 
   getTokenLabel(address) {
     if (address === 'ETH') {
@@ -113,41 +143,60 @@ class Swap extends Component {
       }) ;
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.getExchangeRate(nextProps)
-      .then(exchangeRate => {
-        this.setState({ exchangeRate });
-        if (!exchangeRate) {
-          return;
-        }
+  onSwap = async () => {
+    const {
+      input,
+      output,
+      inputCurrency,
+      outputCurrency,
+      exchangeAddresses,
+      lastEditedField,
+      account,
+      contracts,
+    } = this.props;
 
-        if (nextProps.lastEditedField === 'input') {
-          this.props.updateField('output', `${BN(nextProps.input).multipliedBy(exchangeRate).toFixed(7)}`);
-        } else if (nextProps.lastEditedField === 'output') {
-          this.props.updateField('input', `${BN(nextProps.output).multipliedBy(BN(1).dividedBy(exchangeRate)).toFixed(7)}`);
-        }
+    const { drizzle } = this.context;
+
+    if (lastEditedField === 'input') {
+      swapInput({
+        drizzleCtx: drizzle,
+        contractStore: contracts,
+        input,
+        output,
+        inputCurrency,
+        outputCurrency,
+        exchangeAddresses,
+        account,
       });
-  }
+    }
 
-  componentWillUnmount() {
-    this.props.updateField('output', '');
-    this.props.updateField('input', '');
-    this.props.updateField('outputCurrency', '');
-    this.props.updateField('inputCurrency', '');
-    this.props.updateField('lastEditedField', '');
-  }
-
-  onCurrencySelected(field, data) {
-    this.props.updateField(field, data);
-    // this.props
-  }
+    if (lastEditedField === 'output') {
+      swapOutput({
+        drizzleCtx: drizzle,
+        contractStore: contracts,
+        input,
+        output,
+        inputCurrency,
+        outputCurrency,
+        exchangeAddresses,
+        account,
+      });
+    }
+    // this.context.drizzle.web3.eth.getBlockNumber((_, d) => this.context.drizzle.web3.eth.getBlock(d, (_,d) => {
+    //   const deadline = d.timestamp + 300;
+    //   const id = exchange.methods.ethToTokenSwapInput.cacheSend(`${output * 10 ** 18}`, deadline, {
+    //     from: "0xCf1dE0b4d1e492080336909f70413a5F4E7eEc62",
+    //     value: `${input * 10 ** 18}`,
+    //   }, );
+    // }));
+  };
 
   render() {
     const { lastEditedField, inputCurrency, outputCurrency, input, output } = this.props;
     const { exchangeRate } = this.state;
     const inputLabel = this.getTokenLabel(inputCurrency);
     const outputLabel = this.getTokenLabel(outputCurrency);
-    const estimatedText = '(estimated)'
+    const estimatedText = '(estimated)';
 
     return (
       <div className="swap">
@@ -202,6 +251,7 @@ class Swap extends Component {
           className={classnames('swap__cta-btn', {
             'swap--inactive': !this.props.isConnected,
           })}
+          onClick={this.onSwap}
         >
           Swap
         </button>

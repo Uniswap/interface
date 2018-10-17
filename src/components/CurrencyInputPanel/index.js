@@ -103,7 +103,7 @@ class CurrencyInputPanel extends Component {
     }
 
     if (selectedTokenAddress === 'ETH') {
-      return `Balance: ${web3.utils.fromWei(balance, 'ether')}`;
+      return `Balance: ${BN(web3.utils.fromWei(balance, 'ether')).toFixed(2)}`;
     }
 
     const tokenData = this.getTokenData(selectedTokenAddress);
@@ -145,32 +145,36 @@ class CurrencyInputPanel extends Component {
     this.props.onCurrencySelected(address);
 
     if (address && address !== 'ETH') {
-      // Add Token Contract
       const { drizzle } = this.context;
       const { fromToken } = this.props.exchangeAddresses;
       const { web3 } = drizzle;
-      const tokenConfig = {
-        contractName: address,
-        web3Contract: new web3.eth.Contract(ERC20_ABI, address),
-      };
-      const tokenEvents = ['Approval', 'Transfer'];
 
-      this.context.drizzle.addContract(tokenConfig, tokenEvents, { from: this.props.account });
+      // Add Token Contract
+      if (!this.props.contracts[address]) {
+        // console.log(`Adding Token Contract - ${address}`);
+        const tokenConfig = {
+          contractName: address,
+          web3Contract: new web3.eth.Contract(ERC20_ABI, address),
+        };
+        const tokenEvents = ['Approval', 'Transfer'];
+        this.context.drizzle.addContract(tokenConfig, tokenEvents, { from: this.props.account });
+      }
 
       // Add Exchange Contract
       const exchangeAddress = fromToken[address];
-
       if (!exchangeAddress) {
         return;
       }
 
-      const exchangeConfig = {
-        contractName: exchangeAddress,
-        web3Contract: new web3.eth.Contract(EXCHANGE_ABI, exchangeAddress),
-      };
-      const exchangeEvents = ['Approval', 'Transfer', 'TokenPurchase', 'EthPurchase', 'AddLiquidity', 'RemoveLiquidity'];
-
-      this.context.drizzle.addContract(exchangeConfig, exchangeEvents , { from: this.props.account });
+      if (!this.props.contracts[exchangeAddress]) {
+        // console.log(`Adding Exchange Contract - ${exchangeAddress}`);
+        const exchangeConfig = {
+          contractName: exchangeAddress,
+          web3Contract: new web3.eth.Contract(EXCHANGE_ABI, exchangeAddress),
+        };
+        const exchangeEvents = ['Approval', 'Transfer', 'TokenPurchase', 'EthPurchase', 'AddLiquidity', 'RemoveLiquidity'];
+        this.context.drizzle.addContract(exchangeConfig, exchangeEvents , { from: this.props.account });
+      }
     }
   };
 
