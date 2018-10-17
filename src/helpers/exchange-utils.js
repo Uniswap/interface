@@ -307,7 +307,7 @@ const ERC20_TO_ETH = {
     }
 
     if (!inputCurrency || inputCurrency === 'ETH') {
-      console.error('Output Currency should be ERC20');
+      console.error('Input Currency should be ERC20');
       return;
     }
 
@@ -351,7 +351,7 @@ const ERC20_TO_ETH = {
     }
 
     if (!inputCurrency || inputCurrency === 'ETH') {
-      console.error('Output Currency should be ERC20');
+      console.error('Input Currency should be ERC20');
       return;
     }
 
@@ -465,9 +465,58 @@ const ERC20_TO_ERC20 = {
 
     return exchangeRateA.multipliedBy(exchangeRateB);
   },
-  swapInput: async opts => {
+  swapInput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses }) => {
+    if (!outputCurrency || outputCurrency === 'ETH') {
+      console.error('Output Currency should be ERC20');
+      return;
+    }
 
-  }
+    if (!inputCurrency || inputCurrency === 'ETH') {
+      console.error('Input Currency should be ERC20');
+      return;
+    }
+
+    const exchangeAddress = exchangeAddresses.fromToken[inputCurrency];
+    const exchange = drizzleCtx.contracts[exchangeAddress];
+    if (!exchangeAddress || !exchange) {
+      console.error(`Cannot find Exchange Address for ${inputCurrency}`);
+      return;
+    }
+
+    const { web3 } = drizzleCtx;
+    const blockNumber = await promisify(web3, 'getBlockNumber');
+    const block = await promisify(web3, 'getBlock', blockNumber);
+
+
+    const deadline = block.timestamp + 300;
+    const ALLOWED_SLIPPAGE = BN(0.04);
+    const inputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
+    const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
+    const inputAmount = BN(input).multipliedBy(BN(10 ** inputDecimals));
+    const outputAmount = BN(input).multipliedBy(BN(10 ** outputDecimals));
+
+    const tokenAddress = outputCurrency;
+    const tokensSold = inputAmount.toFixed(0);
+    const minTokensBought = outputAmount.multipliedBy(BN(1).plus(ALLOWED_SLIPPAGE)).toFixed(0);
+    const minEthBought = 1;
+
+    console.log({
+      tokensSold,
+      minTokensBought,
+      minEthBought,
+      deadline,
+      tokenAddress,
+    });
+
+    exchange.methods.tokenToTokenSwapInput.cacheSend(
+      tokensSold,
+      minTokensBought,
+      minEthBought,
+      deadline,
+      tokenAddress,
+      { from: account },
+    );
+  },
 };
 
 function getDecimals({ address, drizzleCtx, contractStore }) {
