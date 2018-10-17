@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { drizzleConnect } from 'drizzle-react'
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Redirect, Route } from 'react-router-dom';
 import { AnimatedSwitch } from 'react-router-transition';
 import Swap from './Swap';
 import Send from './Send';
@@ -25,7 +25,7 @@ class App extends Component {
           <Route exact path="/swap" component={Swap} />
           <Route exact path="/send" component={Send} />
           <Route exact path="/pool" component={Pool} />
-          <Route component={Swap} />
+          <Redirect exact from="/" to="/swap" />
         </AnimatedSwitch>
       </BrowserRouter>
     );
