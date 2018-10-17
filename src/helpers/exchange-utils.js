@@ -560,16 +560,6 @@ const ERC20_TO_ERC20 = {
     const maxTokensSold = inputAmount.multipliedBy(BN(1).plus(ALLOWED_SLIPPAGE)).toFixed(0);
     const maxEthSold = inputAmountB.multipliedBy(1.2).toFixed(0);
 
-    console.log({
-      tokensBought,
-      maxTokensSold,
-      maxEthSold,
-      deadline,
-      tokenAddress,
-      inputAmountB: inputAmountB.toFixed(0),
-      exchangeRateA: exchangeRateA.toNumber()
-    });
-
     exchange.methods.tokenToTokenSwapOutput.cacheSend(
       tokensBought,
       maxTokensSold,
