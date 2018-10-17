@@ -42,11 +42,17 @@ class CurrencyInputPanel extends Component {
     exchangeAddresses: PropTypes.shape({
       fromToken: PropTypes.object.isRequired,
     }).isRequired,
+    errors: PropTypes.arrayOf(PropTypes.string),
+    addError: PropTypes.func,
+    removeError: PropTypes.func,
   };
 
   static defaultProps = {
     onCurrencySelected() {},
     onValueChange() {},
+    addError() {},
+    removeError() {},
+    errors: [],
   };
 
   static contextTypes = {
@@ -139,10 +145,11 @@ class CurrencyInputPanel extends Component {
   validate = (balance) => {
     const { value, addError, removeError, errors } = this.props;
     const hasInsufficientBalance = errors.indexOf(INSUFFICIENT_BALANCE) > -1;
+    const balanceIsLess = Number.parseFloat(value) > Number.parseFloat(balance);
 
-    if (value > balance && !hasInsufficientBalance) {
+    if (balanceIsLess && !hasInsufficientBalance) {
       addError(INSUFFICIENT_BALANCE);
-    } else if (value <= balance && hasInsufficientBalance) {
+    } else if (!balanceIsLess && hasInsufficientBalance) {
       removeError(INSUFFICIENT_BALANCE);
     }
   };

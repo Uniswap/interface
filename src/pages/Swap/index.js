@@ -32,6 +32,8 @@ class Swap extends Component {
     inputCurrency: PropTypes.string,
     outputCurrency: PropTypes.string,
     lastEditedField: PropTypes.string,
+    inputErrors: PropTypes.arrayOf(PropTypes.string),
+    outputErrors: PropTypes.arrayOf(PropTypes.string),
   };
 
   static contextTypes = {
