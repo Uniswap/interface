@@ -6,6 +6,7 @@ import classnames from 'classnames';
 import {BigNumber as BN} from 'bignumber.js';
 import Fuse from '../../helpers/fuse';
 import { updateField } from '../../ducks/swap';
+import { INSUFFICIENT_BALANCE } from '../../constants/currencyInputErrorTypes';
 import Modal from '../Modal';
 import TokenLogo from '../TokenLogo';
 import SearchIcon from '../../assets/images/magnifying-glass.svg';
@@ -135,6 +136,17 @@ class CurrencyInputPanel extends Component {
     return tokenList;
   };
 
+  validate = (balance) => {
+    const { value, addError, removeError, errors } = this.props;
+    const hasInsufficientBalance = errors.indexOf(INSUFFICIENT_BALANCE) > -1;
+
+    if (value > balance && !hasInsufficientBalance) {
+      addError(INSUFFICIENT_BALANCE);
+    } else if (value <= balance && hasInsufficientBalance) {
+      removeError(INSUFFICIENT_BALANCE);
+    }
+  };
+
   onTokenSelect = (address) => {
     this.setState({
       selectedTokenAddress: address || 'ETH',
@@ -258,18 +270,20 @@ class CurrencyInputPanel extends Component {
     const {
       title,
       description,
-      value
+      value,
+      errors
     } = this.props;
 
     const { selectedTokenAddress } = this.state;
     const balance = this.getBalance();
-    const hasError = balance < value;
+    this.validate(balance);
+    const hasInsufficientBalance = errors.indexOf(INSUFFICIENT_BALANCE) > -1;
 
     return (
       <div className="currency-input-panel">
         <div className={
           classnames('currency-input-panel__container',
-            { 'currency-input-panel__container--error': hasError }
+            { 'currency-input-panel__container--error': hasInsufficientBalance }
           )
         }>
           <div className="currency-input-panel__label-row">
@@ -277,14 +291,22 @@ class CurrencyInputPanel extends Component {
               <span className="currency-input-panel__label">{title}</span>
               <span className="currency-input-panel__label-description">{description}</span>
             </div>
-            <span className="currency-input-panel__extra-text">
+            <span className={
+              classnames('currency-input-panel__extra-text',
+                { 'currency-input-panel__extra-text--error': hasInsufficientBalance }
+              )
+            }>
               {this.renderBalance(balance)}
             </span>
           </div>
           <div className="currency-input-panel__input-row">
             <input
               type="number"
-              className="currency-input-panel__input"
+              className={
+                classnames('currency-input-panel__input',
+                  { 'currency-input-panel__input--error': hasInsufficientBalance }
+                )
+              }
               placeholder="0.0"
               onChange={e => this.props.onValueChange(e.target.value)}
               value={this.props.value}
