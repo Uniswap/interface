@@ -143,10 +143,11 @@ class Swap extends Component {
   }
 
   render() {
-    const { inputCurrency, outputCurrency, input, output } = this.props;
+    const { lastEditedField, inputCurrency, outputCurrency, input, output } = this.props;
     const { exchangeRate } = this.state;
     const inputLabel = this.getTokenLabel(inputCurrency);
     const outputLabel = this.getTokenLabel(outputCurrency);
+    const estimatedText = '(estimated)'
 
     return (
       <div className="swap">
@@ -158,6 +159,7 @@ class Swap extends Component {
         >
           <CurrencyInputPanel
             title="Input"
+            description={lastEditedField === 'output' ? estimatedText : ''}
             onCurrencySelected={d => this.props.updateField('inputCurrency', d)}
             onValueChange={d => this.updateInput(d)}
             selectedTokens={[inputCurrency, outputCurrency]}
@@ -170,7 +172,7 @@ class Swap extends Component {
           </OversizedPanel>
           <CurrencyInputPanel
             title="Output"
-            description="(estimated)"
+            description={lastEditedField === 'input' ? estimatedText : ''}
             onCurrencySelected={d => this.props.updateField('outputCurrency', d)}
             onValueChange={d => this.updateOutput(d)}
             selectedTokens={[inputCurrency, outputCurrency]}
