@@ -145,7 +145,7 @@ class CurrencyInputPanel extends Component {
   validate = (balance) => {
     const { value, addError, removeError, errors } = this.props;
     const hasInsufficientBalance = errors.indexOf(INSUFFICIENT_BALANCE) > -1;
-    const balanceIsLess = Number.parseFloat(value) > Number.parseFloat(balance);
+    const balanceIsLess = BN(value).isGreaterThan(BN(balance));
 
     if (balanceIsLess && !hasInsufficientBalance) {
       addError(INSUFFICIENT_BALANCE);
