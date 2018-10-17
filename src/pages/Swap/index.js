@@ -13,6 +13,7 @@ import {
   calculateExchangeRateFromInput,
   calculateExchangeRateFromOutput,
   swapInput,
+  swapOutput,
 } from '../../helpers/exchange-utils';
 import promisify from '../../helpers/web3-promisfy';
 
@@ -158,6 +159,19 @@ class Swap extends Component {
 
     if (lastEditedField === 'input') {
       swapInput({
+        drizzleCtx: drizzle,
+        contractStore: contracts,
+        input,
+        output,
+        inputCurrency,
+        outputCurrency,
+        exchangeAddresses,
+        account,
+      });
+    }
+
+    if (lastEditedField === 'output') {
+      swapOutput({
         drizzleCtx: drizzle,
         contractStore: contracts,
         input,

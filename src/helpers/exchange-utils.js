@@ -71,6 +71,30 @@ export const swapInput = async opts => {
   // return ERC20_TO_ERC20.calculateInput(opts);
 };
 
+export const swapOutput = async opts => {
+  const { inputCurrency, outputCurrency } = opts;
+
+  if (!inputCurrency || !outputCurrency) {
+    return;
+  }
+
+  if (inputCurrency === outputCurrency) {
+    console.error(`Input and Output currency cannot be the same`);
+    return;
+  }
+
+  if (inputCurrency === 'ETH' && outputCurrency !== 'ETH') {
+    return ETH_TO_ERC20.swapOutput(opts);
+  }
+
+  // if (outputCurrency === 'ETH' && inputCurrency !== 'ETH') {
+  //   return ERC20_TO_ETH.swapInput(opts);
+  // }
+  //
+  // return ERC20_TO_ERC20.calculateInput(opts);
+};
+
+
 const ETH_TO_ERC20 = {
   calculateOutput: async ({drizzleCtx, contractStore, input, inputCurrency, outputCurrency, exchangeAddresses }) => {
     if (inputCurrency !== 'ETH') {
@@ -192,6 +216,40 @@ const ETH_TO_ERC20 = {
     exchange.methods.ethToTokenSwapInput.cacheSend(minOutput.toFixed(0), deadline, {
       from: account,
       value: BN(input).multipliedBy(10 ** 18).toFixed(0),
+    });
+  },
+  swapOutput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses }) => {
+    if (inputCurrency !== 'ETH') {
+      console.error('Input Currency should be ETH');
+      return;
+    }
+
+    if (!outputCurrency || outputCurrency === 'ETH') {
+      console.error('Output Currency should be ERC20');
+      return;
+    }
+
+    const exchangeAddress = exchangeAddresses.fromToken[outputCurrency];
+    const exchange = drizzleCtx.contracts[exchangeAddress];
+    if (!exchangeAddress || !exchange) {
+      console.error(`Cannot find Exchange Address for ${outputCurrency}`);
+      return;
+
+    }
+
+    const { web3 } = drizzleCtx;
+    const blockNumber = await promisify(web3, 'getBlockNumber');
+    const block = await promisify(web3, 'getBlock', blockNumber);
+
+
+    const deadline = block.timestamp + 300;
+    const ALLOWED_SLIPPAGE = BN(0.025);
+    const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
+    const outputAmount = BN(output).multipliedBy(BN(10 ** outputDecimals));
+    const maxInput = BN(input).multipliedBy(10 ** 18).multipliedBy(BN(1).plus(ALLOWED_SLIPPAGE));
+    exchange.methods.ethToTokenSwapOutput.cacheSend(outputAmount.toFixed(0), deadline, {
+      from: account,
+      value: maxInput.toFixed(0),
     });
   },
 };
@@ -410,7 +468,6 @@ function getBalance({ currency, address, drizzleCtx, contractStore }) {
         balanceKey = token.methods.balanceOf.cacheCall(address);
         BALANCE_KEY[address] = balanceKey;
       }
-
 
       const tokenStore = contractStore[currency];
 
