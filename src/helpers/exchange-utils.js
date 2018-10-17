@@ -64,9 +64,9 @@ export const swapInput = async opts => {
     return ETH_TO_ERC20.swapInput(opts);
   }
 
-  // if (outputCurrency === 'ETH' && inputCurrency !== 'ETH') {
-  //   return ERC20_TO_ETH.calculateInput(opts);
-  // }
+  if (outputCurrency === 'ETH' && inputCurrency !== 'ETH') {
+    return ERC20_TO_ETH.swapInput(opts);
+  }
   //
   // return ERC20_TO_ERC20.calculateInput(opts);
 };
@@ -187,14 +187,12 @@ const ETH_TO_ERC20 = {
 
     const deadline = block.timestamp + 300;
     const ALLOWED_SLIPPAGE = BN(0.025);
-    const outputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
+    const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
     const minOutput = BN(output).multipliedBy(10 ** outputDecimals).multipliedBy(BN(1).minus(ALLOWED_SLIPPAGE));
-    console.log(minOutput.toFixed(0), BN(input).multipliedBy(10 ** 18).toFixed(0));
     exchange.methods.ethToTokenSwapInput.cacheSend(minOutput.toFixed(0), deadline, {
       from: account,
       value: BN(input).multipliedBy(10 ** 18).toFixed(0),
     });
-
   },
 };
 
@@ -287,6 +285,42 @@ const ERC20_TO_ETH = {
     }
 
     return exchangeRate;
+  },
+  swapInput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses }) => {
+    if (outputCurrency !== 'ETH') {
+      console.error('Output Currency should be ETH');
+      return;
+    }
+
+    if (!inputCurrency || inputCurrency === 'ETH') {
+      console.error('Output Currency should be ERC20');
+      return;
+    }
+
+    const exchangeAddress = exchangeAddresses.fromToken[inputCurrency];
+    const exchange = drizzleCtx.contracts[exchangeAddress];
+    if (!exchangeAddress || !exchange) {
+      console.error(`Cannot find Exchange Address for ${inputCurrency}`);
+      return;
+    }
+
+    const { web3 } = drizzleCtx;
+    const blockNumber = await promisify(web3, 'getBlockNumber');
+    const block = await promisify(web3, 'getBlock', blockNumber);
+
+
+    const deadline = block.timestamp + 300;
+    const ALLOWED_SLIPPAGE = BN(0.025);
+    const inputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
+    const minOutput = BN(output).multipliedBy(10 ** 18).multipliedBy(BN(1).minus(ALLOWED_SLIPPAGE));
+    const inputAmount = BN(input).multipliedBy(10 ** inputDecimals);
+
+    exchange.methods.tokenToEthSwapInput.cacheSend(
+      inputAmount.toFixed(0),
+      minOutput.toFixed(0),
+      deadline,
+      { from: account, value: '0x0' },
+    );
   },
 };
 
