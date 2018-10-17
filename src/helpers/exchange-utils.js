@@ -90,8 +90,8 @@ export const swapOutput = async opts => {
   if (outputCurrency === 'ETH' && inputCurrency !== 'ETH') {
     return ERC20_TO_ETH.swapOutput(opts);
   }
-  //
-  // return ERC20_TO_ERC20.calculateInput(opts);
+
+  return ERC20_TO_ERC20.swapOutput(opts);
 };
 
 
@@ -500,18 +500,80 @@ const ERC20_TO_ERC20 = {
     const minTokensBought = outputAmount.multipliedBy(BN(1).plus(ALLOWED_SLIPPAGE)).toFixed(0);
     const minEthBought = 1;
 
-    console.log({
+    exchange.methods.tokenToTokenSwapInput.cacheSend(
       tokensSold,
       minTokensBought,
       minEthBought,
       deadline,
       tokenAddress,
+      { from: account },
+    );
+  },
+  swapOutput: async opts => {
+    const {
+      drizzleCtx,
+      contractStore,
+      input,
+      output,
+      account,
+      inputCurrency,
+      outputCurrency,
+      exchangeAddresses
+    } = opts;
+    const exchangeRateA = await ETH_TO_ERC20.calculateInput({ ...opts, inputCurrency: 'ETH' });
+    if (!exchangeRateA) {
+      return;
+    }
+
+    if (!outputCurrency || outputCurrency === 'ETH') {
+      console.error('Output Currency should be ERC20');
+      return;
+    }
+
+    if (!inputCurrency || inputCurrency === 'ETH') {
+      console.error('Input Currency should be ERC20');
+      return;
+    }
+
+    const exchangeAddress = exchangeAddresses.fromToken[inputCurrency];
+    const exchange = drizzleCtx.contracts[exchangeAddress];
+    if (!exchangeAddress || !exchange) {
+      console.error(`Cannot find Exchange Address for ${inputCurrency}`);
+      return;
+    }
+
+    const { web3 } = drizzleCtx;
+    const blockNumber = await promisify(web3, 'getBlockNumber');
+    const block = await promisify(web3, 'getBlock', blockNumber);
+
+
+    const deadline = block.timestamp + 300;
+    const ALLOWED_SLIPPAGE = BN(0.04);
+    const inputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
+    const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
+    const inputAmount = BN(input).multipliedBy(BN(10 ** inputDecimals));
+    const outputAmount = BN(output).multipliedBy(BN(10 ** outputDecimals));
+    const inputAmountB = BN(output).dividedBy(exchangeRateA).multipliedBy(BN(10 ** 18));
+
+    const tokenAddress = outputCurrency;
+    const tokensBought = outputAmount.toFixed(0);
+    const maxTokensSold = inputAmount.multipliedBy(BN(1).plus(ALLOWED_SLIPPAGE)).toFixed(0);
+    const maxEthSold = inputAmountB.multipliedBy(1.2).toFixed(0);
+
+    console.log({
+      tokensBought,
+      maxTokensSold,
+      maxEthSold,
+      deadline,
+      tokenAddress,
+      inputAmountB: inputAmountB.toFixed(0),
+      exchangeRateA: exchangeRateA.toNumber()
     });
 
-    exchange.methods.tokenToTokenSwapInput.cacheSend(
-      tokensSold,
-      minTokensBought,
-      minEthBought,
+    exchange.methods.tokenToTokenSwapOutput.cacheSend(
+      tokensBought,
+      maxTokensSold,
+      maxEthSold,
       deadline,
       tokenAddress,
       { from: account },
