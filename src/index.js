@@ -6,9 +6,6 @@ import store from './store';
 
 import './index.scss';
 
-import registerServiceWorker from './registerServiceWorker';
-
-
 window.addEventListener('load', function() {
   ReactDOM.render(
     <DrizzleProvider options={{
@@ -20,7 +17,5 @@ window.addEventListener('load', function() {
     </DrizzleProvider>
     , document.getElementById('root')
   );
-
-  registerServiceWorker();
 });
 
