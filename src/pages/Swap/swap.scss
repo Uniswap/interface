@@ -59,5 +59,9 @@
   &__cta-btn {
     @extend %primary-button;
     margin: 1rem auto;
+
+    &--inactive {
+      background: $mercury-gray;
+    }
   }
 }
