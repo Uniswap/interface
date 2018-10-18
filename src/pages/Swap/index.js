@@ -15,6 +15,11 @@ import {
   swapInput,
   swapOutput,
 } from '../../helpers/exchange-utils';
+import {
+  isExchangeUnapproved,
+  getApprovalTxStatus,
+  approveExchange,
+} from '../../helpers/approval-utils';
 import promisify from '../../helpers/web3-promisfy';
 
 import "./swap.scss";
@@ -43,12 +48,13 @@ class Swap extends Component {
 
   state = {
     exchangeRate: BN(0),
+    approvalTxId: null,
   };
 
   componentWillReceiveProps(nextProps) {
     this.getExchangeRate(nextProps)
       .then(exchangeRate => {
-        this.setState({ exchangeRate });
+        // this.setState({ exchangeRate });
         if (!exchangeRate) {
           return;
         }
@@ -146,6 +152,54 @@ class Swap extends Component {
       }) ;
   }
 
+  getIsUnapproved() {
+    const {
+      input,
+      inputCurrency,
+      account,
+      contracts,
+      exchangeAddresses
+    } = this.props;
+    const { drizzle } = this.context;
+
+    return isExchangeUnapproved({
+      value: input,
+      currency: inputCurrency,
+      drizzleCtx: drizzle,
+      contractStore: contracts,
+      account,
+      exchangeAddresses,
+    });
+  }
+
+  approveExchange = () => {
+    const {
+      inputCurrency,
+      exchangeAddresses,
+      account,
+    } = this.props;
+    const { drizzle } = this.context;
+
+    if (this.getIsUnapproved()) {
+      const approvalTxId = approveExchange({
+        currency: inputCurrency,
+        drizzleCtx: drizzle,
+        account,
+        exchangeAddresses,
+      });
+      this.setState({ approvalTxId })
+    }
+  }
+
+  getApprovalStatus() {
+    const { drizzle } = this.context;
+
+    return getApprovalTxStatus({
+      drizzleCtx: drizzle,
+      txId: this.state.approvalTxId,
+    });
+  }
+
   onSwap = async () => {
     const {
       input,
@@ -194,13 +248,27 @@ class Swap extends Component {
     // }));
   };
 
+  handleSubButtonClick = () => {
+    if (this.getIsUnapproved() && this.getApprovalStatus() !== 'pending') {
+      this.approveExchange();
+    }
+  }
+
+  renderSubButtonText() {
+    if (this.getApprovalStatus() === 'pending') {
+      return 'Pending';
+    } else {
+      return '🔒 Unlock'
+    }
+  }
+
   render() {
     const { lastEditedField, inputCurrency, outputCurrency, input, output, isValid, outputErrors, inputErrors } = this.props;
     const { exchangeRate } = this.state;
     const inputLabel = this.getTokenLabel(inputCurrency);
     const outputLabel = this.getTokenLabel(outputCurrency);
     const estimatedText = '(estimated)';
-
+    console.count('render');
     return (
       <div className="swap">
         <Header />
@@ -219,6 +287,10 @@ class Swap extends Component {
             removeError={error => this.props.removeError('inputErrors', error)}
             errors={inputErrors}
             value={input}
+            validateBalance
+            showSubButton={this.getIsUnapproved()}
+            subButtonContent={this.renderSubButtonText()}
+            onSubButtonClick={this.handleSubButtonClick}
           />
           <OversizedPanel>
             <div className="swap__down-arrow-background">
