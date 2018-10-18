@@ -24,7 +24,7 @@ import {
   SET_INVEST_ETH_REQUIRED,
   SET_INVEST_TOKENS_REQUIRED,
   SET_INVEST_CHECKED
-} from '../constants';
+} from '../constants/actionTypes';
 
 
 export const setInputBalance = (inputBalance) => ({
