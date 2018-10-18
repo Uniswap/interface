@@ -7,9 +7,13 @@
     position: relative;
     z-index: 200;
     border-radius: 1.25rem;
-    border: 1px solid $mercury-gray;
+    border: 0.5px solid $mercury-gray;
     background-color: $white;
     box-shadow: 0px 4px 4px 2px rgba($royal-blue, 0.05);
+
+    &--error {
+      border: 0.5px solid $salmon-red;
+    }
   }
 
   &__label-row {
@@ -42,6 +46,15 @@
 
   &__input {
     @extend %borderless-input;
+    &--error {
+      color: $salmon-red;
+    }
+  }
+
+  &__extra-text {
+    &--error {
+      color: $salmon-red;
+    }
   }
 
   &__currency-select {
