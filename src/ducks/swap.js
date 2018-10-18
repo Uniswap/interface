@@ -18,7 +18,9 @@ export const isValidSwap = (state) => {
   return swap.outputCurrency !== '' &&
     swap.inputCurrency !== '' &&
     swap.input !== '' &&
-    swap.output !== '';
+    swap.output !== '' &&
+    swap.inputErrors.length === 0 &&
+    swap.outputErrors.length === 0;
 };
 
 export const updateField = ({ name, value }) => ({
