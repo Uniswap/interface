@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import {BigNumber as BN} from "bignumber.js";
-import { updateField, addError, removeError } from '../../ducks/swap';
+import { isValidSwap, updateField, addError, removeError } from '../../ducks/swap';
 import Header from '../../components/Header';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
@@ -26,6 +26,7 @@ class Swap extends Component {
     pathname: PropTypes.string.isRequired,
     currentAddress: PropTypes.string,
     isConnected: PropTypes.bool.isRequired,
+    isValid: PropTypes.bool.isRequired,
     updateField: PropTypes.func.isRequired,
     input: PropTypes.string,
     output: PropTypes.string,
@@ -194,7 +195,7 @@ class Swap extends Component {
   };
 
   render() {
-    const { lastEditedField, inputCurrency, outputCurrency, input, output, outputErrors, inputErrors } = this.props;
+    const { lastEditedField, inputCurrency, outputCurrency, input, output, isValid, outputErrors, inputErrors } = this.props;
     const { exchangeRate } = this.state;
     const inputLabel = this.getTokenLabel(inputCurrency);
     const outputLabel = this.getTokenLabel(outputCurrency);
@@ -258,7 +259,9 @@ class Swap extends Component {
         <button
           className={classnames('swap__cta-btn', {
             'swap--inactive': !this.props.isConnected,
+            'swap__cta-btn--inactive': !this.props.isValid,
           })}
+          disabled={!this.props.isValid}
           onClick={this.onSwap}
         >
           Swap
@@ -291,6 +294,7 @@ export default withRouter(
       outputCurrency: state.swap.outputCurrency,
       lastEditedField: state.swap.lastEditedField,
       exchangeAddresses: state.addresses.exchangeAddresses,
+      isValid: isValidSwap(state),
       inputErrors: state.swap.inputErrors,
       outputErrors: state.swap.outputErrors,
     }),
