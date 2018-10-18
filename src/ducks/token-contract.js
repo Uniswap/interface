@@ -1,6 +1,6 @@
 import {
   TOKEN_CONTRACT_READY
-} from '../constants';
+} from '../constants/actionTypes';
 
 // again, needs to be redux thunk
 export const tokenContractReady = (symbol, tokenContract) => ({

@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import {BigNumber as BN} from "bignumber.js";
-import { isValidSwap, updateField } from '../../ducks/swap';
+import { isValidSwap, updateField, addError, removeError } from '../../ducks/swap';
 import Header from '../../components/Header';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
@@ -33,6 +33,8 @@ class Swap extends Component {
     inputCurrency: PropTypes.string,
     outputCurrency: PropTypes.string,
     lastEditedField: PropTypes.string,
+    inputErrors: PropTypes.arrayOf(PropTypes.string),
+    outputErrors: PropTypes.arrayOf(PropTypes.string),
   };
 
   static contextTypes = {
@@ -193,7 +195,7 @@ class Swap extends Component {
   };
 
   render() {
-    const { lastEditedField, inputCurrency, outputCurrency, input, output, isValid } = this.props;
+    const { lastEditedField, inputCurrency, outputCurrency, input, output, isValid, outputErrors, inputErrors } = this.props;
     const { exchangeRate } = this.state;
     const inputLabel = this.getTokenLabel(inputCurrency);
     const outputLabel = this.getTokenLabel(outputCurrency);
@@ -213,6 +215,9 @@ class Swap extends Component {
             onCurrencySelected={d => this.props.updateField('inputCurrency', d)}
             onValueChange={d => this.updateInput(d)}
             selectedTokens={[inputCurrency, outputCurrency]}
+            addError={error => this.props.addError('inputErrors', error)}
+            removeError={error => this.props.removeError('inputErrors', error)}
+            errors={inputErrors}
             value={input}
           />
           <OversizedPanel>
@@ -226,6 +231,9 @@ class Swap extends Component {
             onCurrencySelected={d => this.props.updateField('outputCurrency', d)}
             onValueChange={d => this.updateOutput(d)}
             selectedTokens={[inputCurrency, outputCurrency]}
+            addError={error => this.props.addError('outputErrors', error)}
+            removeError={error => this.props.removeError('outputErrors', error)}
+            errors={outputErrors}
             value={output}
           />
           <OversizedPanel hideBottom>
@@ -287,9 +295,13 @@ export default withRouter(
       lastEditedField: state.swap.lastEditedField,
       exchangeAddresses: state.addresses.exchangeAddresses,
       isValid: isValidSwap(state),
+      inputErrors: state.swap.inputErrors,
+      outputErrors: state.swap.outputErrors,
     }),
     dispatch => ({
       updateField: (name, value) => dispatch(updateField({ name, value })),
+      addError: (name, value) => dispatch(addError({ name, value })),
+      removeError: (name, value) => dispatch(removeError({ name, value }))
     })
   ),
 );
