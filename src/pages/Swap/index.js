@@ -10,6 +10,7 @@ import Header from '../../components/Header';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
 import ArrowDown from '../../assets/images/arrow-down-blue.svg';
+import Pending from '../../assets/images/pending.svg';
 import {
   calculateExchangeRateFromInput,
   calculateExchangeRateFromOutput,
@@ -265,7 +266,10 @@ class Swap extends Component {
 
   renderSubButtonText() {
     if (this.getApprovalStatus() === 'pending') {
-      return 'Pending';
+      return [
+        (<img key="pending" className="swap__sub-icon" src={Pending} />),
+        (<span key="text" className="swap__sub-text">Pending</span>)
+      ];
     } else {
       return '🔒 Unlock'
     }
