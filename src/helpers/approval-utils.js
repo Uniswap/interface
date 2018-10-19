@@ -35,15 +35,17 @@ export const approveExchange = async opts => {
     account,
     exchangeAddresses,
   } = opts;
+  const { web3 } = drizzleCtx;
   const inputExchange = exchangeAddresses.fromToken[currency];
   if (!inputExchange) {
     return;
   }
 
   const decimals = await getDecimals({ address: currency, drizzleCtx, contractStore });
+
   return drizzleCtx.contracts[inputExchange].methods.approve.cacheSend(
     inputExchange,
-    `0x${(decimals*10**18).toString(16).toUpperCase()}`,
+    web3.utils.toHex(decimals*10**18),
     { from: account }
   );
 };
