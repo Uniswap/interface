@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import {BigNumber as BN} from "bignumber.js";
+import deepEqual from 'deep-equal';
 import { isValidSwap, updateField, addError, removeError } from '../../ducks/swap';
 import Header from '../../components/Header';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
@@ -65,6 +66,11 @@ class Swap extends Component {
           this.props.updateField('input', `${BN(nextProps.output).multipliedBy(BN(1).dividedBy(exchangeRate)).toFixed(7)}`);
         }
       });
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return !deepEqual(nextProps, this.props) ||
+      !deepEqual(nextState, this.state);
   }
 
   componentWillUnmount() {
@@ -172,7 +178,7 @@ class Swap extends Component {
     });
   }
 
-  approveExchange = () => {
+  approveExchange = async () => {
     const {
       inputCurrency,
       exchangeAddresses,
@@ -182,13 +188,14 @@ class Swap extends Component {
     const { drizzle } = this.context;
 
     if (this.getIsUnapproved()) {
-      const approvalTxId = approveExchange({
+      const approvalTxId = await approveExchange({
         currency: inputCurrency,
         drizzleCtx: drizzle,
         contractStore: contracts,
         account,
         exchangeAddresses,
       });
+
       this.setState({ approvalTxId })
     }
   }
