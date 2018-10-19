@@ -54,7 +54,7 @@ class Swap extends Component {
   componentWillReceiveProps(nextProps) {
     this.getExchangeRate(nextProps)
       .then(exchangeRate => {
-        // this.setState({ exchangeRate });
+        this.setState({ exchangeRate });
         if (!exchangeRate) {
           return;
         }
@@ -177,6 +177,7 @@ class Swap extends Component {
       inputCurrency,
       exchangeAddresses,
       account,
+      contracts,
     } = this.props;
     const { drizzle } = this.context;
 
@@ -184,6 +185,7 @@ class Swap extends Component {
       const approvalTxId = approveExchange({
         currency: inputCurrency,
         drizzleCtx: drizzle,
+        contractStore: contracts,
         account,
         exchangeAddresses,
       });
@@ -268,7 +270,7 @@ class Swap extends Component {
     const inputLabel = this.getTokenLabel(inputCurrency);
     const outputLabel = this.getTokenLabel(outputCurrency);
     const estimatedText = '(estimated)';
-    console.count('render');
+
     return (
       <div className="swap">
         <Header />

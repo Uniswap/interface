@@ -1,4 +1,5 @@
 import {BigNumber as BN} from "bignumber.js";
+import { getDecimals } from './contract-utils';
 
 export const isExchangeUnapproved = opts => {
   const {
@@ -26,22 +27,23 @@ export const isExchangeUnapproved = opts => {
   return BN(value).isGreaterThan(BN(allowance.value));
 };
 
-export const approveExchange = opts => {
+export const approveExchange = async opts => {
   const {
     currency,
+    contractStore,
     drizzleCtx,
     account,
     exchangeAddresses,
   } = opts;
   const inputExchange = exchangeAddresses.fromToken[currency];
-  console.log(inputExchange);
   if (!inputExchange) {
     return;
   }
 
+  const decimals = await getDecimals({ address: currency, drizzleCtx, contractStore });
   return drizzleCtx.contracts[inputExchange].methods.approve.cacheSend(
     inputExchange,
-    300, // TODO: what is this number?
+    `0x${(decimals*10**18).toString(16).toUpperCase()}`,
     { from: account }
   );
 };

@@ -115,7 +115,7 @@ class CurrencyInputPanel extends Component {
     }
 
     if (selectedTokenAddress === 'ETH') {
-      return BN(web3.utils.fromWei(balance, 'ether')).toFixed(4);
+      return BN(web3.utils.fromWei(balance, 'ether')).toFixed(2);
     }
 
     const tokenData = this.getTokenData(selectedTokenAddress);
