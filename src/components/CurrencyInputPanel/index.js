@@ -48,7 +48,7 @@ class CurrencyInputPanel extends Component {
     showSubButton: PropTypes.bool,
     subButtonContent: PropTypes.node,
     onSubButtonClick: PropTypes.func,
-    validateBalance: PropTypes.bool,
+    shouldValidateBalance: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -148,11 +148,11 @@ class CurrencyInputPanel extends Component {
   };
 
   validate = (balance) => {
-    const { value, addError, removeError, errors, validateBalance } = this.props;
+    const { value, addError, removeError, errors, shouldValidateBalance } = this.props;
     const hasInsufficientBalance = errors.indexOf(INSUFFICIENT_BALANCE) > -1;
     const balanceIsLess = BN(value).isGreaterThan(BN(balance));
 
-    if (validateBalance) {
+    if (shouldValidateBalance) {
       if (balanceIsLess && !hasInsufficientBalance) {
         addError(INSUFFICIENT_BALANCE);
       } else if (!balanceIsLess && hasInsufficientBalance) {

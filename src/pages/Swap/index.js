@@ -289,7 +289,7 @@ class Swap extends Component {
             removeError={error => this.props.removeError('inputErrors', error)}
             errors={inputErrors}
             value={input}
-            validateBalance
+            shouldValidateBalance
             showSubButton={this.getIsUnapproved()}
             subButtonContent={this.renderSubButtonText()}
             onSubButtonClick={this.handleSubButtonClick}
