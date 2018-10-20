@@ -28,4 +28,74 @@
     margin-left: 1rem;
     font-size: .85rem;
   }
+
+  &__pending-container {
+    display: flex;
+    justify-content: space-around;
+  }
 }
+
+
+.pending-modal {
+  background-color: $white;
+  position: relative;
+  bottom: 12rem;
+  height: 12rem;
+  width: 100%;
+  z-index: 2000;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  transition: 250ms ease-in-out;
+
+  &__transaction-list {
+    height: 12rem;
+    overflow-y: auto;
+  }
+
+  &__transaction-row {
+    @extend %row-nowrap;
+    box-sizing: border-box;
+    align-items: center;
+    padding: 0.25rem 1.5rem;
+    justify-content: space-between;
+    cursor: pointer;
+    width: 100%;
+    user-select: none;
+  }
+
+  &__transaction-label {
+    color: $royal-blue;
+    width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 200;
+  }
+
+  &__pending-indicator {
+    color: $royal-blue;
+    border: 1px solid $zumthor-blue;
+    padding: 10px;
+    border-radius: 100px;
+
+    & > img {
+      margin-right: 10px;
+    }
+  }
+
+  &__header {
+    font-size: 1rem;
+    color: $dove-gray;
+    padding: 1rem 1.5rem 0.25rem 1.5rem;
+  }
+}
+
+
+.pending-modal-appear {
+  bottom: 0;
+}
+
+.pending-modal-appear.modal-container-appear-active {
+  bottom: 0;
+}
+
+
