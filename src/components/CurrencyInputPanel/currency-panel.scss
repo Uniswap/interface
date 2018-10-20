@@ -14,6 +14,14 @@
     &--error {
       border: 0.5px solid $salmon-red;
     }
+
+    &:focus-within {
+      border-color: $royal-blue;
+    }
+
+    &--error:focus-within {
+      border-color: $salmon-red;
+    }
   }
 
   &__label-row {
