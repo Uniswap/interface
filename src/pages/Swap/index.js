@@ -4,17 +4,24 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import {BigNumber as BN} from "bignumber.js";
+import deepEqual from 'deep-equal';
 import { isValidSwap, updateField, addError, removeError } from '../../ducks/swap';
 import Header from '../../components/Header';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
 import ArrowDown from '../../assets/images/arrow-down-blue.svg';
+import Pending from '../../assets/images/pending.svg';
 import {
   calculateExchangeRateFromInput,
   calculateExchangeRateFromOutput,
   swapInput,
   swapOutput,
 } from '../../helpers/exchange-utils';
+import {
+  isExchangeUnapproved,
+  getApprovalTxStatus,
+  approveExchange,
+} from '../../helpers/approval-utils';
 import promisify from '../../helpers/web3-promisfy';
 
 import "./swap.scss";
@@ -43,6 +50,7 @@ class Swap extends Component {
 
   state = {
     exchangeRate: BN(0),
+    approvalTxId: null,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -59,6 +67,11 @@ class Swap extends Component {
           this.props.updateField('input', `${BN(nextProps.output).multipliedBy(BN(1).dividedBy(exchangeRate)).toFixed(7)}`);
         }
       });
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return !deepEqual(nextProps, this.props) ||
+      !deepEqual(nextState, this.state);
   }
 
   componentWillUnmount() {
@@ -146,6 +159,57 @@ class Swap extends Component {
       }) ;
   }
 
+  getIsUnapproved() {
+    const {
+      input,
+      inputCurrency,
+      account,
+      contracts,
+      exchangeAddresses
+    } = this.props;
+    const { drizzle } = this.context;
+
+    return isExchangeUnapproved({
+      value: input,
+      currency: inputCurrency,
+      drizzleCtx: drizzle,
+      contractStore: contracts,
+      account,
+      exchangeAddresses,
+    });
+  }
+
+  approveExchange = async () => {
+    const {
+      inputCurrency,
+      exchangeAddresses,
+      account,
+      contracts,
+    } = this.props;
+    const { drizzle } = this.context;
+
+    if (this.getIsUnapproved()) {
+      const approvalTxId = await approveExchange({
+        currency: inputCurrency,
+        drizzleCtx: drizzle,
+        contractStore: contracts,
+        account,
+        exchangeAddresses,
+      });
+
+      this.setState({ approvalTxId })
+    }
+  }
+
+  getApprovalStatus() {
+    const { drizzle } = this.context;
+
+    return getApprovalTxStatus({
+      drizzleCtx: drizzle,
+      txId: this.state.approvalTxId,
+    });
+  }
+
   onSwap = async () => {
     const {
       input,
@@ -194,6 +258,23 @@ class Swap extends Component {
     // }));
   };
 
+  handleSubButtonClick = () => {
+    if (this.getIsUnapproved() && this.getApprovalStatus() !== 'pending') {
+      this.approveExchange();
+    }
+  }
+
+  renderSubButtonText() {
+    if (this.getApprovalStatus() === 'pending') {
+      return [
+        (<img key="pending" className="swap__sub-icon" src={Pending} />),
+        (<span key="text" className="swap__sub-text">Pending</span>)
+      ];
+    } else {
+      return '🔒 Unlock'
+    }
+  }
+
   render() {
     const { lastEditedField, inputCurrency, outputCurrency, input, output, isValid, outputErrors, inputErrors } = this.props;
     const { exchangeRate } = this.state;
@@ -219,6 +300,10 @@ class Swap extends Component {
             removeError={error => this.props.removeError('inputErrors', error)}
             errors={inputErrors}
             value={input}
+            shouldValidateBalance
+            showSubButton={this.getIsUnapproved()}
+            subButtonContent={this.renderSubButtonText()}
+            onSubButtonClick={this.handleSubButtonClick}
           />
           <OversizedPanel>
             <div className="swap__down-arrow-background">

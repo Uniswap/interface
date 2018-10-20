@@ -45,10 +45,15 @@ class CurrencyInputPanel extends Component {
     errors: PropTypes.arrayOf(PropTypes.string),
     addError: PropTypes.func,
     removeError: PropTypes.func,
+    showSubButton: PropTypes.bool,
+    subButtonContent: PropTypes.node,
+    onSubButtonClick: PropTypes.func,
+    shouldValidateBalance: PropTypes.bool,
   };
 
   static defaultProps = {
     onCurrencySelected() {},
+    onSubButtonClick() {},
     onValueChange() {},
     addError() {},
     removeError() {},
@@ -143,14 +148,16 @@ class CurrencyInputPanel extends Component {
   };
 
   validate = (balance) => {
-    const { value, addError, removeError, errors } = this.props;
+    const { value, addError, removeError, errors, shouldValidateBalance } = this.props;
     const hasInsufficientBalance = errors.indexOf(INSUFFICIENT_BALANCE) > -1;
     const balanceIsLess = BN(value).isGreaterThan(BN(balance));
 
-    if (balanceIsLess && !hasInsufficientBalance) {
-      addError(INSUFFICIENT_BALANCE);
-    } else if (!balanceIsLess && hasInsufficientBalance) {
-      removeError(INSUFFICIENT_BALANCE);
+    if (shouldValidateBalance) {
+      if (balanceIsLess && !hasInsufficientBalance) {
+        addError(INSUFFICIENT_BALANCE);
+      } else if (!balanceIsLess && hasInsufficientBalance) {
+        removeError(INSUFFICIENT_BALANCE);
+      }
     }
   };
 
@@ -278,7 +285,10 @@ class CurrencyInputPanel extends Component {
       title,
       description,
       value,
-      errors
+      errors,
+      showSubButton,
+      subButtonContent,
+      onSubButtonClick,
     } = this.props;
 
     const { selectedTokenAddress } = this.state;
@@ -318,6 +328,18 @@ class CurrencyInputPanel extends Component {
               onChange={e => this.props.onValueChange(e.target.value)}
               value={this.props.value}
             />
+            {
+              showSubButton
+              ? (
+                <button
+                  onClick={onSubButtonClick}
+                  className={classnames("currency-input-panel__sub-currency-select")}
+                >
+                  { subButtonContent }
+                </button>
+              )
+              : null
+            }
             <button
               className={classnames("currency-input-panel__currency-select", {
                 'currency-input-panel__currency-select--selected': selectedTokenAddress,
