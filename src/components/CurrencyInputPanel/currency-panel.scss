@@ -95,6 +95,18 @@
     }
   }
 
+  &__sub-currency-select {
+    @extend %row-nowrap;
+    line-height: 0;
+    background: $zumthor-blue;
+    border: 1px solid $royal-blue;
+    color: $royal-blue;
+    height: 2rem;
+    padding: 10px 50px 10px 10px;
+    margin-right: -40px;
+    border-radius: 2.5rem;
+  }
+
   &__dropdown-icon {
     height: 1rem;
     width: .75rem;

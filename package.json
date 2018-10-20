@@ -8,6 +8,7 @@
     "bignumber.js": "^7.2.1",
     "classnames": "^2.2.6",
     "d3": "^4.13.0",
+    "deep-equal": "^1.0.1",
     "drizzle": "^1.2.3",
     "drizzle-react": "^1.2.0",
     "fuse": "^0.4.0",
