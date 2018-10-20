@@ -44,12 +44,14 @@ class CurrencyInputPanel extends Component {
     }).isRequired,
     selectedTokens: PropTypes.array.isRequired,
     errorMessage: PropTypes.string,
+    selectedTokenAddress: PropTypes.string,
   };
 
   static defaultProps = {
     selectedTokens: [],
     onCurrencySelected() {},
     onValueChange() {},
+    selectedTokenAddress: '',
   };
 
   static contextTypes = {
@@ -59,7 +61,6 @@ class CurrencyInputPanel extends Component {
   state = {
     isShowingModal: false,
     searchQuery: '',
-    selectedTokenAddress: '',
   };
 
   createTokenList = () => {
@@ -80,7 +81,6 @@ class CurrencyInputPanel extends Component {
 
   onTokenSelect = (address) => {
     this.setState({
-      selectedTokenAddress: address || 'ETH',
       searchQuery: '',
       isShowingModal: false,
     });
@@ -195,9 +195,8 @@ class CurrencyInputPanel extends Component {
       errorMessage,
       value,
       onValueChange,
+      selectedTokenAddress,
     } = this.props;
-
-    const { selectedTokenAddress } = this.state;
 
     return (
       <div className="currency-input-panel">

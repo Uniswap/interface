@@ -214,7 +214,7 @@ const ETH_TO_ERC20 = {
     const ALLOWED_SLIPPAGE = BN(0.025);
     const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
     const minOutput = BN(output).multipliedBy(10 ** outputDecimals).multipliedBy(BN(1).minus(ALLOWED_SLIPPAGE));
-    exchange.methods.ethToTokenSwapInput.cacheSend(minOutput.toFixed(0), deadline, {
+    return exchange.methods.ethToTokenSwapInput.cacheSend(minOutput.toFixed(0), deadline, {
       from: account,
       value: BN(input).multipliedBy(10 ** 18).toFixed(0),
     });
@@ -248,7 +248,7 @@ const ETH_TO_ERC20 = {
     const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
     const outputAmount = BN(output).multipliedBy(BN(10 ** outputDecimals));
     const maxInput = BN(input).multipliedBy(10 ** 18).multipliedBy(BN(1).plus(ALLOWED_SLIPPAGE));
-    exchange.methods.ethToTokenSwapOutput.cacheSend(outputAmount.toFixed(0), deadline, {
+    return exchange.methods.ethToTokenSwapOutput.cacheSend(outputAmount.toFixed(0), deadline, {
       from: account,
       value: maxInput.toFixed(0),
     });
@@ -374,7 +374,7 @@ const ERC20_TO_ETH = {
     const minOutput = BN(output).multipliedBy(10 ** 18).multipliedBy(BN(1).minus(ALLOWED_SLIPPAGE));
     const inputAmount = BN(input).multipliedBy(10 ** inputDecimals);
 
-    exchange.methods.tokenToEthSwapInput.cacheSend(
+    return exchange.methods.tokenToEthSwapInput.cacheSend(
       inputAmount.toFixed(0),
       minOutput.toFixed(0),
       deadline,
@@ -410,7 +410,7 @@ const ERC20_TO_ETH = {
     const maxInput = BN(input).multipliedBy(10 ** inputDecimals).multipliedBy(BN(1).plus(ALLOWED_SLIPPAGE));
     const outputAmount = BN(output).multipliedBy(10 ** 18);
 
-    exchange.methods.tokenToEthSwapOutput.cacheSend(
+    return exchange.methods.tokenToEthSwapOutput.cacheSend(
       outputAmount.toFixed(0),
       maxInput.toFixed(0),
       deadline,
@@ -501,7 +501,7 @@ const ERC20_TO_ERC20 = {
     const minTokensBought = outputAmount.multipliedBy(BN(1).plus(ALLOWED_SLIPPAGE)).toFixed(0);
     const minEthBought = 1;
 
-    exchange.methods.tokenToTokenSwapInput.cacheSend(
+    return exchange.methods.tokenToTokenSwapInput.cacheSend(
       tokensSold,
       minTokensBought,
       minEthBought,
@@ -561,7 +561,7 @@ const ERC20_TO_ERC20 = {
     const maxTokensSold = inputAmount.multipliedBy(BN(1).plus(ALLOWED_SLIPPAGE)).toFixed(0);
     const maxEthSold = inputAmountB.multipliedBy(1.2).toFixed(0);
 
-    exchange.methods.tokenToTokenSwapOutput.cacheSend(
+    return exchange.methods.tokenToTokenSwapOutput.cacheSend(
       tokensBought,
       maxTokensSold,
       maxEthSold,
