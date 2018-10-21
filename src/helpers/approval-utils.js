@@ -18,8 +18,14 @@ export const isExchangeUnapproved = opts => {
     return false;
   }
 
-  const allowanceKey = drizzleCtx.contracts[inputExchange].methods.allowance.cacheCall(account, inputExchange);
-  const allowance = contractStore[inputExchange].allowance[allowanceKey];
+  const allowanceKey = drizzleCtx.contracts[currency].methods.allowance.cacheCall(account, inputExchange);
+
+  if (!contractStore[currency]) {
+    return false;
+  }
+
+  const allowance = contractStore[currency].allowance[allowanceKey];
+
   if (!allowance) {
     return false;
   }
@@ -42,10 +48,10 @@ export const approveExchange = async opts => {
   }
 
   const decimals = await getDecimals({ address: currency, drizzleCtx, contractStore });
-
-  return drizzleCtx.contracts[inputExchange].methods.approve.cacheSend(
+  const approvals = BN(10 ** decimals).multipliedBy(BN(10 ** 8)).toFixed(0);
+  return drizzleCtx.contracts[currency].methods.approve.cacheSend(
     inputExchange,
-    web3.utils.toHex(decimals*10**18),
+    web3.utils.toHex(approvals),
     { from: account }
   );
 };
