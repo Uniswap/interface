@@ -284,7 +284,6 @@ class CurrencyInputPanel extends Component {
     const {
       title,
       description,
-      value,
       errors,
       showSubButton,
       subButtonContent,
