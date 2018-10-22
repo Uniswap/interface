@@ -14,3 +14,9 @@
     }
   }
 }
+
+#app-container {
+  width: 100vw;
+  height: 100vh;
+  @extend %col-nowrap;
+}
