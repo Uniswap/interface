@@ -32,6 +32,38 @@ const initialState = {
   contracts: {},
 };
 
+// selectors
+export const Selectors = () => (dispatch, getState) => {
+  const state = getState().web3connect;
+
+  return {
+    getBalance: address => {
+      const balance = state.balances.ethereum[address];
+      if (!balance) {
+        dispatch(watchBalance({ balanceOf: address }));
+        return Balance(0, 'ETH');
+      }
+      return balance;
+    },
+
+    getTokenBalance: (tokenAddress, address) => {
+      const tokenBalances = state.balances[tokenAddress];
+
+      if (!tokenBalances) {
+        dispatch(watchBalance({ balanceOf: address, tokenAddress }));
+        return Balance(0);
+      }
+
+      const balance = tokenBalances[address];
+      if (!balance) {
+        dispatch(watchBalance({ balanceOf: address, tokenAddress }));
+        return Balance(0);
+      }
+      return balance;
+    },
+  }
+};
+
 const Balance = (value, label = '', decimals = 18) => ({
   value: BN(value),
   label: label.toUpperCase(),
@@ -77,7 +109,7 @@ export const initialize = () => (dispatch, getState) => {
 
 export const watchBalance = ({ balanceOf, tokenAddress }) => {
   if (!balanceOf) {
-    return;
+    return { type: '' };
   }
 
   if (!tokenAddress) {
@@ -110,7 +142,7 @@ export const sync = () => async (dispatch, getState) => {
   if (account !== accounts[0]) {
     dispatch({ type: UPDATE_ACCOUNT, payload: accounts[0] });
     dispatch(watchBalance({ balanceOf: accounts[0] }));
-    dispatch(watchBalance({ balanceOf: accounts[0], tokenAddress: '0xDA5B056Cfb861282B4b59d29c9B395bcC238D29B' }));
+    // dispatch(watchBalance({ balanceOf: accounts[0], tokenAddress: '0xDA5B056Cfb861282B4b59d29c9B395bcC238D29B' }));
   }
 
   // Sync Ethereum Balances
@@ -141,7 +173,7 @@ export const sync = () => async (dispatch, getState) => {
             address: tokenAddress,
             contract: contract,
           },
-        })
+        });
       }
 
       const watchlist = watched.balances[tokenAddress] || [];

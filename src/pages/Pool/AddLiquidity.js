@@ -4,27 +4,84 @@ import PropTypes from 'prop-types';
 import classnames from "classnames";
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
+import { Selectors } from '../../ducks/web3connect';
 import ArrowDown from '../../assets/images/arrow-down-blue.svg';
 import ModeSelector from './ModeSelector';
 import "./pool.scss";
 
+const INPUT = 0;
+const OUTPUT = 1;
+
 class AddLiquidity extends Component {
   static propTypes = {
-    currentAddress: PropTypes.string,
     isConnected: PropTypes.bool.isRequired,
+    account: PropTypes.string.isRequired,
+    selectors: PropTypes.shape({
+      getBalance: PropTypes.func.isRequired,
+      getTokenBalance: PropTypes.func.isRequired,
+    }).isRequired,
+  };
+
+  state = {
+    inputValue: '',
+    outputValue: '',
+    inputCurrency: '',
+    outputCurrency: '',
+    lastEditedField: '',
+  };
+
+  getBalance(currency) {
+    const { selectors, account } = this.props;
+
+    if (!currency) {
+      return '';
+    }
+
+    if (currency === 'ETH') {
+      const { value, decimals } = selectors().getBalance(account);
+      return `Balance: ${value.dividedBy(10 ** decimals).toFixed(4)}`;
+    }
+
+    const { value, decimals } = selectors().getTokenBalance(currency, account);
+    return `Balance: ${value.dividedBy(10 ** decimals).toFixed(4)}`;
+  }
+
+  onInputChange = value => {
+    this.setState({
+      outputValue: value,
+      lastEditedField: INPUT,
+    });
+  };
+
+  onOutputChange = value => {
+    this.setState({
+      outputValue: value,
+      lastEditedField: OUTPUT,
+    });
   };
 
   render() {
+    const {
+      isConnected,
+    } = this.props;
+
+    const {
+      inputValue,
+      outputValue,
+      inputCurrency,
+      outputCurrency,
+      lastEditedField,
+    } = this.state;
+
     return (
-      <div
-        className={classnames('swap__content', {
-          'swap--inactive': !this.props.isConnected,
-        })}
-      >
+      <div className={classnames('swap__content', { 'swap--inactive': !isConnected })}>
         <ModeSelector />
         <CurrencyInputPanel
           title="Deposit"
-          extraText="Balance: 0.03141"
+          description={lastEditedField === OUTPUT ? '(estimated)' : ''}
+          extraText={this.getBalance(inputCurrency)}
+          onCurrencySelected={currency => this.setState({ inputCurrency: currency })}
+          onValueChange={this.onInputChange}
         />
         <OversizedPanel>
           <div className="swap__down-arrow-background">
@@ -33,8 +90,10 @@ class AddLiquidity extends Component {
         </OversizedPanel>
         <CurrencyInputPanel
           title="Deposit"
-          description="(estimated)"
-          extraText="Balance: 0.0"
+          description={lastEditedField === INPUT ? '(estimated)' : ''}
+          extraText={this.getBalance(outputCurrency)}
+          onCurrencySelected={currency => this.setState({ outputCurrency: currency })}
+          onValueChange={this.onOutputChange}
         />
         <OversizedPanel hideBottom>
           <div className="pool__summary-panel">
@@ -71,10 +130,13 @@ class AddLiquidity extends Component {
 
 export default drizzleConnect(
   AddLiquidity,
-  (state, ownProps) => ({
-    currentAddress: state.accounts[0],
-    isConnected: !!(state.drizzleStatus.initialized && state.accounts[0]),
+  state => ({
+    isConnected: Boolean(state.web3connect.account),
+    account: state.web3connect.account,
   }),
+  dispatch => ({
+    selectors: () => dispatch(Selectors())
+  })
 )
 
 function b(text) {
