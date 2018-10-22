@@ -8,8 +8,10 @@
   &__liquidity-container {
     @extend %row-nowrap;
     align-items: center;
-    padding: 1rem;
     font-size: .75rem;
+    padding: .625rem 1rem;
+    font-size: .75rem;
+    color: $dove-gray;
 
     img {
       height: .75rem;
@@ -43,4 +45,55 @@
     width: 0;
     color: $chalice-gray;
   }
+
+  &__cta-container {
+    display: flex;
+  }
+
+  &__cta-btn {
+    @extend %primary-button;
+    margin: 2rem auto 0;
+
+    &--inactive {
+      background: $mercury-gray;
+    }
+  }
+}
+
+.pool-modal {
+  background-color: $white;
+  position: relative;
+  bottom: 7.875rem;
+  width: 100%;
+  height: 7.875rem;
+  z-index: 2000;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  transition: 250ms ease-in-out;
+  padding: 1rem 0 .5rem;
+
+  &__item {
+    padding: 1rem;
+    font-size: 1rem;
+
+    &:hover {
+      background-color: $concrete-gray;
+
+      .token-modal__token-label {
+        color: $black;
+      }
+    }
+
+    &:active {
+      background-color: darken($concrete-gray, 1);
+    }
+  }
+}
+
+.pool-modal-appear {
+  bottom: 0;
+}
+
+.pool-modal-appear.modal-container-appear-active {
+  bottom: 0;
 }

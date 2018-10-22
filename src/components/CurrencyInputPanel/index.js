@@ -3,10 +3,7 @@ import { drizzleConnect } from 'drizzle-react'
 import PropTypes from 'prop-types';
 import { CSSTransitionGroup } from "react-transition-group";
 import classnames from 'classnames';
-import {BigNumber as BN} from 'bignumber.js';
 import Fuse from '../../helpers/fuse';
-import { updateField } from '../../ducks/swap';
-import { INSUFFICIENT_BALANCE } from '../../constants/currencyInputErrorTypes';
 import Modal from '../Modal';
 import TokenLogo from '../TokenLogo';
 import SearchIcon from '../../assets/images/magnifying-glass.svg';
@@ -35,29 +32,24 @@ class CurrencyInputPanel extends Component {
   static propTypes = {
     title: PropTypes.string,
     description: PropTypes.string,
+    extraText: PropTypes.string,
     value: PropTypes.string,
-    initialized: PropTypes.bool,
     onCurrencySelected: PropTypes.func,
     onValueChange: PropTypes.func,
+    tokenAddresses: PropTypes.shape({
+      address: PropTypes.array.isRequired,
+    }).isRequired,
     exchangeAddresses: PropTypes.shape({
       fromToken: PropTypes.object.isRequired,
     }).isRequired,
-    errors: PropTypes.arrayOf(PropTypes.string),
-    addError: PropTypes.func,
-    removeError: PropTypes.func,
-    showSubButton: PropTypes.bool,
-    subButtonContent: PropTypes.node,
-    onSubButtonClick: PropTypes.func,
-    shouldValidateBalance: PropTypes.bool,
+    selectedTokens: PropTypes.array.isRequired,
+    errorMessage: PropTypes.string,
   };
 
   static defaultProps = {
+    selectedTokens: [],
     onCurrencySelected() {},
-    onSubButtonClick() {},
     onValueChange() {},
-    addError() {},
-    removeError() {},
-    errors: [],
   };
 
   static contextTypes = {
@@ -69,67 +61,6 @@ class CurrencyInputPanel extends Component {
     searchQuery: '',
     selectedTokenAddress: '',
   };
-
-  getTokenData(address) {
-    const {
-      initialized,
-      contracts,
-      account,
-    } = this.props;
-    const { drizzle } = this.context;
-    const { web3 } = drizzle;
-
-    if (!initialized || !web3) {
-      return;
-    }
-
-    const balanceKey = drizzle.contracts[address].methods.balanceOf.cacheCall(account);
-    const decimalsKey = drizzle.contracts[address].methods.decimals.cacheCall();
-    const token = contracts[address];
-
-    const balance = token.balanceOf[balanceKey];
-    const decimals = token.decimals[decimalsKey];
-
-    if (!balance || !decimals) {
-      return;
-    }
-
-
-    return {
-      balance: balance.value,
-      decimals: decimals.value,
-    };
-  }
-
-  getBalance() {
-    const {
-      balance,
-      initialized,
-    } = this.props;
-    const { selectedTokenAddress } = this.state;
-    const { drizzle } = this.context;
-    const { web3 } = drizzle;
-
-    if (!selectedTokenAddress || !initialized || !web3 || !balance) {
-      return null;
-    }
-
-    if (selectedTokenAddress === 'ETH') {
-      return BN(web3.utils.fromWei(balance, 'ether')).toFixed(2);
-    }
-
-    const tokenData = this.getTokenData(selectedTokenAddress);
-
-    if (!tokenData) {
-      return null;
-    }
-
-    const tokenBalance = BN(tokenData.balance);
-    const denomination = Math.pow(10, tokenData.decimals);
-    const adjustedBalance = tokenBalance.dividedBy(denomination);
-
-    return adjustedBalance.toFixed(2);
-  }
 
   createTokenList = () => {
     let tokens = this.props.tokenAddresses.addresses;
@@ -145,20 +76,6 @@ class CurrencyInputPanel extends Component {
     }
 
     return tokenList;
-  };
-
-  validate = (balance) => {
-    const { value, addError, removeError, errors, shouldValidateBalance } = this.props;
-    const hasInsufficientBalance = errors.indexOf(INSUFFICIENT_BALANCE) > -1;
-    const balanceIsLess = BN(value).isGreaterThan(BN(balance));
-
-    if (shouldValidateBalance) {
-      if (balanceIsLess && !hasInsufficientBalance) {
-        addError(INSUFFICIENT_BALANCE);
-      } else if (!balanceIsLess && hasInsufficientBalance) {
-        removeError(INSUFFICIENT_BALANCE);
-      }
-    }
   };
 
   onTokenSelect = (address) => {
@@ -177,7 +94,6 @@ class CurrencyInputPanel extends Component {
 
       // Add Token Contract
       if (!this.props.contracts[address]) {
-        // console.log(`Adding Token Contract - ${address}`);
         const tokenConfig = {
           contractName: address,
           web3Contract: new web3.eth.Contract(ERC20_ABI, address),
@@ -193,7 +109,6 @@ class CurrencyInputPanel extends Component {
       }
 
       if (!this.props.contracts[exchangeAddress]) {
-        // console.log(`Adding Exchange Contract - ${exchangeAddress}`);
         const exchangeConfig = {
           contractName: exchangeAddress,
           web3Contract: new web3.eth.Contract(EXCHANGE_ABI, exchangeAddress),
@@ -203,14 +118,6 @@ class CurrencyInputPanel extends Component {
       }
     }
   };
-
-  renderBalance(balance) {
-    if (balance === null) {
-      return null;
-    }
-
-    return `Balance: ${balance}`;
-  }
 
   renderTokenList() {
     const tokens = this.createTokenList();
@@ -284,61 +191,45 @@ class CurrencyInputPanel extends Component {
     const {
       title,
       description,
-      errors,
-      showSubButton,
-      subButtonContent,
-      onSubButtonClick,
+      extraText,
+      errorMessage,
+      value,
+      onValueChange,
     } = this.props;
 
     const { selectedTokenAddress } = this.state;
-    const balance = this.getBalance();
-    this.validate(balance);
-    const hasInsufficientBalance = errors.indexOf(INSUFFICIENT_BALANCE) > -1;
 
     return (
       <div className="currency-input-panel">
-        <div className={
-          classnames('currency-input-panel__container',
-            { 'currency-input-panel__container--error': hasInsufficientBalance }
-          )
-        }>
+        <div className={classnames('currency-input-panel__container', {
+          'currency-input-panel__container--error': errorMessage,
+        })}>
           <div className="currency-input-panel__label-row">
             <div className="currency-input-panel__label-container">
               <span className="currency-input-panel__label">{title}</span>
               <span className="currency-input-panel__label-description">{description}</span>
             </div>
-            <span className={
-              classnames('currency-input-panel__extra-text',
-                { 'currency-input-panel__extra-text--error': hasInsufficientBalance }
-              )
-            }>
-              {this.renderBalance(balance)}
+            <span className={classnames('currency-input-panel__extra-text', {
+              'currency-input-panel__extra-text--error': errorMessage,
+            })}>
+              {extraText}
             </span>
           </div>
           <div className="currency-input-panel__input-row">
             <input
               type="number"
-              className={
-                classnames('currency-input-panel__input',
-                  { 'currency-input-panel__input--error': hasInsufficientBalance }
-                )
-              }
+              className={classnames('currency-input-panel__input',{
+                'currency-input-panel__input--error': errorMessage,
+              })}
               placeholder="0.0"
-              onChange={e => this.props.onValueChange(e.target.value)}
-              value={this.props.value}
+              onChange={e => onValueChange(e.target.value)}
+              value={value}
             />
-            {
-              showSubButton
-              ? (
-                <button
-                  onClick={onSubButtonClick}
-                  className={classnames("currency-input-panel__sub-currency-select")}
-                >
-                  { subButtonContent }
-                </button>
-              )
-              : null
-            }
+            {/*<button*/}
+              {/*className='currency-input-panel__sub-currency-select'*/}
+            {/*>*/}
+              {/*Unlock*/}
+            {/*</button>*/}
             <button
               className={classnames("currency-input-panel__currency-select", {
                 'currency-input-panel__currency-select--selected': selectedTokenAddress,
@@ -355,7 +246,7 @@ class CurrencyInputPanel extends Component {
                   )
                   : null
               }
-              { TOKEN_ADDRESS_TO_LABEL[selectedTokenAddress]|| 'Select a token' }
+              { TOKEN_ADDRESS_TO_LABEL[selectedTokenAddress] || 'Select a token' }
               <span className="currency-input-panel__dropdown-icon" />
             </button>
           </div>
@@ -368,23 +259,9 @@ class CurrencyInputPanel extends Component {
 
 export default drizzleConnect(
   CurrencyInputPanel,
-  state => {
-    const {
-      drizzleStatus: { initialized },
-      accounts,
-      accountBalances,
-    } = state;
-
-    return {
-      tokenAddresses: state.addresses.tokenAddresses,
-      exchangeAddresses: state.addresses.exchangeAddresses,
-      initialized,
-      balance: accountBalances[accounts[0]] || null,
-      account: accounts[0],
-      contracts: state.contracts,
-    };
-  },
-  dispatch => ({
-    updateField: (name, value) => dispatch(updateField({ name, value })),
+  state => ({
+    exchangeAddresses: state.addresses.exchangeAddresses,
+    tokenAddresses: state.addresses.tokenAddresses,
+    contracts: state.contracts,
   }),
 );
