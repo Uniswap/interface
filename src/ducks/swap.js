@@ -1,15 +1,18 @@
 const UPDATE_FIELD = 'app/swap/updateField';
 const ADD_ERROR = 'app/swap/addError';
 const REMOVE_ERROR = 'app/swap/removeError';
+const RESET_SWAP = 'app/swap/resetSwap';
 
-const initialState = {
-  input: '',
-  output: '',
-  inputCurrency: '',
-  outputCurrency: '',
-  lastEditedField: '',
-  inputErrors: [],
-  outputErrors: [],
+const getInitialState = () => {
+  return {
+    input: '',
+    output: '',
+    inputCurrency: '',
+    outputCurrency: '',
+    lastEditedField: '',
+    inputErrors: [],
+    outputErrors: [],
+  };
 };
 
 export const isValidSwap = (state) => {
@@ -38,6 +41,10 @@ export const removeError = ({ name, value }) => ({
   payload: { name, value },
 });
 
+export const resetSwap = () => ({
+  type: RESET_SWAP,
+});
+
 function reduceAddError(state, payload) {
   const { name, value } = payload;
   let nextErrors = state[name];
@@ -60,7 +67,7 @@ function reduceRemoveError(state, payload) {
   };
 }
 
-export default function swapReducer(state = initialState, { type, payload }) {
+export default function swapReducer(state = getInitialState(), { type, payload }) {
   switch (type) {
     case UPDATE_FIELD:
       return {
@@ -71,6 +78,8 @@ export default function swapReducer(state = initialState, { type, payload }) {
       return reduceAddError(state, payload);
     case REMOVE_ERROR:
       return reduceRemoveError(state, payload);
+    case RESET_SWAP:
+      return getInitialState();
     default:
       return state;
   }
