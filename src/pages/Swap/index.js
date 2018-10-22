@@ -6,6 +6,7 @@ import classnames from 'classnames';
 import {BigNumber as BN} from "bignumber.js";
 import deepEqual from 'deep-equal';
 import { isValidSwap, updateField, addError, removeError, resetSwap } from '../../ducks/swap';
+import { selectors, sync } from '../../ducks/web3connect';
 import Header from '../../components/Header';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
@@ -44,6 +45,7 @@ class Swap extends Component {
     lastEditedField: PropTypes.string,
     inputErrors: PropTypes.arrayOf(PropTypes.string),
     outputErrors: PropTypes.arrayOf(PropTypes.string),
+    selectors: PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -59,29 +61,6 @@ class Swap extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return !deepEqual(nextProps, this.props) ||
       !deepEqual(nextState, this.state);
-  }
-
-  componentDidUpdate() {
-    if (this.getSwapStatus() === 'pending') {
-      this.resetSwap();
-    }
-
-    this.getExchangeRate(this.props)
-      .then(exchangeRate => {
-        if (exchangeRate !== this.state.exchangeRate) {
-          this.setState({ exchangeRate });
-        }
-
-        if (!exchangeRate) {
-          return;
-        }
-
-        if (this.props.lastEditedField === 'input') {
-          this.props.updateField('output', `${BN(this.props.input).multipliedBy(exchangeRate).toFixed(7)}`);
-        } else if (this.props.lastEditedField === 'output') {
-          this.props.updateField('input', `${BN(this.props.output).multipliedBy(BN(1).dividedBy(exchangeRate)).toFixed(7)}`);
-        }
-      });
   }
 
   componentWillUnmount() {
@@ -125,6 +104,9 @@ class Swap extends Component {
     if (!amount) {
       this.props.updateField('output', '');
     }
+    // calculate exchangerate
+    // output = amount * exchagerate
+    // this.props.updateField('output', output);
     this.props.updateField('lastEditedField', 'input');
   }
 
@@ -270,7 +252,8 @@ class Swap extends Component {
         account,
       });
     }
-
+    
+    this.resetSwap();
     this.setState({swapTxId});
 
     // this.context.drizzle.web3.eth.getBlockNumber((_, d) => this.context.drizzle.web3.eth.getBlock(d, (_,d) => {
@@ -297,6 +280,58 @@ class Swap extends Component {
     } else {
       return '🔒 Unlock'
     }
+  }
+
+  renderExchangeRate() {
+    const {
+      inputCurrency,
+      outputCurrency,
+      input,
+      exchangeAddresses: { fromToken },
+      selectors,
+    } = this.props;
+
+    if (!inputCurrency || !outputCurrency || !input) {
+      return (
+        <OversizedPanel hideBottom>
+          <div className="swap__exchange-rate-wrapper">
+            <span className="swap__exchange-rate">Exchange Rate</span>
+          </div>
+        </OversizedPanel>
+      )
+    }
+    const exchangeAddress = fromToken[outputCurrency];
+    const { value: inputReserve, decimals: inputDecimals, label: inputLabel } = selectors().getBalance(exchangeAddress);
+    const { value: outputReserve, decimals: outputDecimals, label: outputLabel }= selectors().getTokenBalance(outputCurrency, exchangeAddress);
+
+    const inputAmount = BN(input).multipliedBy(BN(10 ** 18));
+    const numerator = inputAmount.multipliedBy(outputReserve).multipliedBy(997);
+    const denominator = inputReserve.multipliedBy(1000).plus(inputAmount.multipliedBy(997));
+    const outputAmount = numerator.dividedBy(denominator);
+    const exchangeRate = outputAmount.dividedBy(inputAmount);
+
+    // console.log({
+    //   exchangeAddress,
+    //   outputCurrency,
+    //   inputReserve: inputReserve.toFixed(),
+    //   outputReserve: outputReserve.toFixed(),
+    //   inputAmount: inputAmount.toFixed(),
+    //   numerator: numerator.toFixed(),
+    //   denominator: denominator.toFixed(),
+    //   outputAmount: outputAmount.toFixed(),
+    //   exchangeRate: exchangeRate.toFixed(),
+    // });
+
+    return (
+      <OversizedPanel hideBottom>
+        <div className="swap__exchange-rate-wrapper">
+          <span className="swap__exchange-rate">Exchange Rate</span>
+          <span>
+            {`1 ${inputLabel} = ${exchangeRate.toFixed(7)} ${outputLabel}`}
+          </span>
+        </div>
+      </OversizedPanel>
+    )
   }
 
   render() {
@@ -347,14 +382,7 @@ class Swap extends Component {
             value={output}
             selectedTokenAddress={outputCurrency}
           />
-          <OversizedPanel hideBottom>
-            <div className="swap__exchange-rate-wrapper">
-              <span className="swap__exchange-rate">Exchange Rate</span>
-              <span>
-                {exchangeRate ? `1 ${inputLabel} = ${exchangeRate.toFixed(7)} ${outputLabel}` : ' - '}
-              </span>
-            </div>
-          </OversizedPanel>
+          { this.renderExchangeRate() }
           {
             inputLabel && input
               ? (
@@ -386,6 +414,7 @@ export default withRouter(
   drizzleConnect(
     Swap,
     (state, ownProps) => ({
+      balances: state.web3connect.balances,
       // React Router
       push: ownProps.history.push,
       pathname: ownProps.location.pathname,
@@ -414,6 +443,7 @@ export default withRouter(
       addError: (name, value) => dispatch(addError({ name, value })),
       removeError: (name, value) => dispatch(removeError({ name, value })),
       resetSwap: () => dispatch(resetSwap()),
+      selectors: () => dispatch(selectors()),
     })
   ),
 );
