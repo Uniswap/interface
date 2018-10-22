@@ -22,7 +22,6 @@ import {
   getApprovalTxStatus,
   approveExchange,
 } from '../../helpers/approval-utils';
-import promisify from '../../helpers/web3-promisfy';
 
 import "./swap.scss";
 
