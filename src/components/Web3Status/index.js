@@ -72,7 +72,6 @@ class Web3Status extends Component {
 
   render() {
     const { address, transactions, pendingTransactions, hasPendingTransactions } = this.props;
-    console.count('hi');
     let text = getText(address);
     if (hasPendingTransactions) {
       text = getPendingText(pendingTransactions);

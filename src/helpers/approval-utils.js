@@ -18,8 +18,14 @@ export const isExchangeUnapproved = opts => {
     return false;
   }
 
-  const allowanceKey = drizzleCtx.contracts[inputExchange].methods.allowance.cacheCall(account, inputExchange);
-  const allowance = contractStore[inputExchange].allowance[allowanceKey];
+  const allowanceKey = drizzleCtx.contracts[currency].methods.allowance.cacheCall(account, inputExchange);
+
+  if (!contractStore[currency]) {
+    return false;
+  }
+
+  const allowance = contractStore[currency].allowance[allowanceKey];
+
   if (!allowance) {
     return false;
   }
@@ -42,21 +48,9 @@ export const approveExchange = async opts => {
   }
 
   const decimals = await getDecimals({ address: currency, drizzleCtx, contractStore });
-
-  return drizzleCtx.contracts[inputExchange].methods.approve.cacheSend(
-    inputExchange,
-    web3.utils.toHex(decimals*10**18),
-    { from: account }
-  );
-};
-
-export const getApprovalTxStatus = opts => {
-  const {
-    drizzleCtx,
-    txId
-  } = opts;
-  const st = drizzleCtx.store.getState();
-  const tx = st.transactionStack[txId];
-  const status = st.transactions[tx] && st.transactions[tx].status;
-  return status;
+  const approvals = BN(10 ** decimals).multipliedBy(BN(10 ** 8)).toFixed(0);
+  return drizzleCtx.contracts[currency].methods
+    .approve(inputExchange, web3.utils.toHex(approvals))
+    .send({ from: account })
+    // .then((e, d) => console.log(e, d));
 };

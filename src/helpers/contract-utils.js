@@ -48,3 +48,14 @@ export function getBalance({ currency, address, drizzleCtx, contractStore }) {
     }
   });
 }
+
+export const getTxStatus = opts => {
+  const {
+    drizzleCtx,
+    txId
+  } = opts;
+  const st = drizzleCtx.store.getState();
+  const tx = st.transactionStack[txId];
+  const status = st.transactions[tx] && st.transactions[tx].status;
+  return status;
+};

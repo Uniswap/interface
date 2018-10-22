@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import {BigNumber as BN} from "bignumber.js";
 import deepEqual from 'deep-equal';
-import { isValidSwap, updateField, addError, removeError } from '../../ducks/swap';
+import { isValidSwap, updateField, addError, removeError, resetSwap } from '../../ducks/swap';
+import { selectors, sync } from '../../ducks/web3connect';
 import Header from '../../components/Header';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
@@ -19,9 +20,11 @@ import {
 } from '../../helpers/exchange-utils';
 import {
   isExchangeUnapproved,
-  getApprovalTxStatus,
   approveExchange,
 } from '../../helpers/approval-utils';
+import {
+  getTxStatus,
+} from '../../helpers/contract-utils';
 import promisify from '../../helpers/web3-promisfy';
 
 import "./swap.scss";
@@ -42,6 +45,7 @@ class Swap extends Component {
     lastEditedField: PropTypes.string,
     inputErrors: PropTypes.arrayOf(PropTypes.string),
     outputErrors: PropTypes.arrayOf(PropTypes.string),
+    selectors: PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -51,23 +55,8 @@ class Swap extends Component {
   state = {
     exchangeRate: BN(0),
     approvalTxId: null,
+    swapTxId: null,
   };
-
-  componentWillReceiveProps(nextProps) {
-    this.getExchangeRate(nextProps)
-      .then(exchangeRate => {
-        this.setState({ exchangeRate });
-        if (!exchangeRate) {
-          return;
-        }
-
-        if (nextProps.lastEditedField === 'input') {
-          this.props.updateField('output', `${BN(nextProps.input).multipliedBy(exchangeRate).toFixed(7)}`);
-        } else if (nextProps.lastEditedField === 'output') {
-          this.props.updateField('input', `${BN(nextProps.output).multipliedBy(BN(1).dividedBy(exchangeRate)).toFixed(7)}`);
-        }
-      });
-  }
 
   shouldComponentUpdate(nextProps, nextState) {
     return !deepEqual(nextProps, this.props) ||
@@ -75,11 +64,12 @@ class Swap extends Component {
   }
 
   componentWillUnmount() {
-    this.props.updateField('output', '');
-    this.props.updateField('input', '');
-    this.props.updateField('outputCurrency', '');
-    this.props.updateField('inputCurrency', '');
-    this.props.updateField('lastEditedField', '');
+    this.resetSwap();
+  }
+
+  resetSwap() {
+    this.props.resetSwap();
+    this.setState({approvalTxId: null, swapTxId: null});
   }
 
   getTokenLabel(address) {
@@ -114,6 +104,9 @@ class Swap extends Component {
     if (!amount) {
       this.props.updateField('output', '');
     }
+    // calculate exchangerate
+    // output = amount * exchagerate
+    // this.props.updateField('output', output);
     this.props.updateField('lastEditedField', 'input');
   }
 
@@ -204,9 +197,18 @@ class Swap extends Component {
   getApprovalStatus() {
     const { drizzle } = this.context;
 
-    return getApprovalTxStatus({
+    return getTxStatus({
       drizzleCtx: drizzle,
       txId: this.state.approvalTxId,
+    });
+  }
+
+  getSwapStatus() {
+    const { drizzle } = this.context;
+
+    return getTxStatus({
+      drizzleCtx: drizzle,
+      txId: this.state.swapTxId,
     });
   }
 
@@ -223,9 +225,10 @@ class Swap extends Component {
     } = this.props;
 
     const { drizzle } = this.context;
+    let swapTxId;
 
     if (lastEditedField === 'input') {
-      swapInput({
+      swapTxId = await swapInput({
         drizzleCtx: drizzle,
         contractStore: contracts,
         input,
@@ -238,7 +241,7 @@ class Swap extends Component {
     }
 
     if (lastEditedField === 'output') {
-      swapOutput({
+      swapTxId = await swapOutput({
         drizzleCtx: drizzle,
         contractStore: contracts,
         input,
@@ -249,6 +252,10 @@ class Swap extends Component {
         account,
       });
     }
+    
+    this.resetSwap();
+    this.setState({swapTxId});
+
     // this.context.drizzle.web3.eth.getBlockNumber((_, d) => this.context.drizzle.web3.eth.getBlock(d, (_,d) => {
     //   const deadline = d.timestamp + 300;
     //   const id = exchange.methods.ethToTokenSwapInput.cacheSend(`${output * 10 ** 18}`, deadline, {
@@ -273,6 +280,58 @@ class Swap extends Component {
     } else {
       return '🔒 Unlock'
     }
+  }
+
+  renderExchangeRate() {
+    const {
+      inputCurrency,
+      outputCurrency,
+      input,
+      exchangeAddresses: { fromToken },
+      selectors,
+    } = this.props;
+
+    if (!inputCurrency || !outputCurrency || !input) {
+      return (
+        <OversizedPanel hideBottom>
+          <div className="swap__exchange-rate-wrapper">
+            <span className="swap__exchange-rate">Exchange Rate</span>
+          </div>
+        </OversizedPanel>
+      )
+    }
+    const exchangeAddress = fromToken[outputCurrency];
+    const { value: inputReserve, decimals: inputDecimals, label: inputLabel } = selectors().getBalance(exchangeAddress);
+    const { value: outputReserve, decimals: outputDecimals, label: outputLabel }= selectors().getTokenBalance(outputCurrency, exchangeAddress);
+
+    const inputAmount = BN(input).multipliedBy(BN(10 ** 18));
+    const numerator = inputAmount.multipliedBy(outputReserve).multipliedBy(997);
+    const denominator = inputReserve.multipliedBy(1000).plus(inputAmount.multipliedBy(997));
+    const outputAmount = numerator.dividedBy(denominator);
+    const exchangeRate = outputAmount.dividedBy(inputAmount);
+
+    // console.log({
+    //   exchangeAddress,
+    //   outputCurrency,
+    //   inputReserve: inputReserve.toFixed(),
+    //   outputReserve: outputReserve.toFixed(),
+    //   inputAmount: inputAmount.toFixed(),
+    //   numerator: numerator.toFixed(),
+    //   denominator: denominator.toFixed(),
+    //   outputAmount: outputAmount.toFixed(),
+    //   exchangeRate: exchangeRate.toFixed(),
+    // });
+
+    return (
+      <OversizedPanel hideBottom>
+        <div className="swap__exchange-rate-wrapper">
+          <span className="swap__exchange-rate">Exchange Rate</span>
+          <span>
+            {`1 ${inputLabel} = ${exchangeRate.toFixed(7)} ${outputLabel}`}
+          </span>
+        </div>
+      </OversizedPanel>
+    )
   }
 
   render() {
@@ -300,6 +359,7 @@ class Swap extends Component {
             removeError={error => this.props.removeError('inputErrors', error)}
             errors={inputErrors}
             value={input}
+            selectedTokenAddress={inputCurrency}
             shouldValidateBalance
             showSubButton={this.getIsUnapproved()}
             subButtonContent={this.renderSubButtonText()}
@@ -320,15 +380,9 @@ class Swap extends Component {
             removeError={error => this.props.removeError('outputErrors', error)}
             errors={outputErrors}
             value={output}
+            selectedTokenAddress={outputCurrency}
           />
-          <OversizedPanel hideBottom>
-            <div className="swap__exchange-rate-wrapper">
-              <span className="swap__exchange-rate">Exchange Rate</span>
-              <span>
-                {exchangeRate ? `1 ${inputLabel} = ${exchangeRate.toFixed(7)} ${outputLabel}` : ' - '}
-              </span>
-            </div>
-          </OversizedPanel>
+          { this.renderExchangeRate() }
           {
             inputLabel && input
               ? (
@@ -360,6 +414,7 @@ export default withRouter(
   drizzleConnect(
     Swap,
     (state, ownProps) => ({
+      balances: state.web3connect.balances,
       // React Router
       push: ownProps.history.push,
       pathname: ownProps.location.pathname,
@@ -386,7 +441,9 @@ export default withRouter(
     dispatch => ({
       updateField: (name, value) => dispatch(updateField({ name, value })),
       addError: (name, value) => dispatch(addError({ name, value })),
-      removeError: (name, value) => dispatch(removeError({ name, value }))
+      removeError: (name, value) => dispatch(removeError({ name, value })),
+      resetSwap: () => dispatch(resetSwap()),
+      selectors: () => dispatch(selectors()),
     })
   ),
 );
