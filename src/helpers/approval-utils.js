@@ -49,11 +49,10 @@ export const approveExchange = async opts => {
 
   const decimals = await getDecimals({ address: currency, drizzleCtx, contractStore });
   const approvals = BN(10 ** decimals).multipliedBy(BN(10 ** 8)).toFixed(0);
-  return drizzleCtx.contracts[currency].methods.approve.cacheSend(
-    inputExchange,
-    web3.utils.toHex(approvals),
-    { from: account }
-  );
+  return drizzleCtx.contracts[currency].methods
+    .approve(inputExchange, web3.utils.toHex(approvals))
+    .send({ from: account })
+    // .then((e, d) => console.log(e, d));
 };
 
 export const getApprovalTxStatus = opts => {
