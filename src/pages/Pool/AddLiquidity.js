@@ -4,9 +4,10 @@ import PropTypes from 'prop-types';
 import classnames from "classnames";
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
-import { Selectors } from '../../ducks/web3connect';
+import { selectors, sync } from '../../ducks/web3connect';
 import ArrowDown from '../../assets/images/arrow-down-blue.svg';
 import ModeSelector from './ModeSelector';
+import {BigNumber as BN} from 'bignumber.js';
 import "./pool.scss";
 
 const INPUT = 0;
@@ -16,9 +17,9 @@ class AddLiquidity extends Component {
   static propTypes = {
     isConnected: PropTypes.bool.isRequired,
     account: PropTypes.string.isRequired,
-    selectors: PropTypes.shape({
-      getBalance: PropTypes.func.isRequired,
-      getTokenBalance: PropTypes.func.isRequired,
+    selectors: PropTypes.func.isRequired,
+    exchangeAddresses: PropTypes.shape({
+      fromToken: PropTypes.object.isRequired,
     }).isRequired,
   };
 
@@ -47,18 +48,103 @@ class AddLiquidity extends Component {
   }
 
   onInputChange = value => {
+    const { inputCurrency, outputCurrency } = this.state;
+    const exchangeRate = this.getExchangeRate();
+    let outputValue;
+
+    if (inputCurrency === 'ETH' && outputCurrency && outputCurrency !== 'ETH') {
+      outputValue = exchangeRate.multipliedBy(value).toFixed(7);
+    }
+
+    if (outputCurrency === 'ETH' && inputCurrency && inputCurrency !== 'ETH') {
+      outputValue = BN(value).dividedBy(exchangeRate).toFixed(7);
+    }
+
     this.setState({
-      outputValue: value,
+      outputValue,
+      inputValue: value,
       lastEditedField: INPUT,
     });
   };
 
   onOutputChange = value => {
+    const { inputCurrency, outputCurrency } = this.state;
+    const exchangeRate = this.getExchangeRate();
+    let inputValue;
+
+    if (inputCurrency === 'ETH' && outputCurrency && outputCurrency !== 'ETH') {
+      inputValue = BN(value).dividedBy(exchangeRate).toFixed(7);
+    }
+
+    if (outputCurrency === 'ETH' && inputCurrency && inputCurrency !== 'ETH') {
+      inputValue = exchangeRate.multipliedBy(value).toFixed(7);
+    }
+
     this.setState({
+      inputValue,
       outputValue: value,
       lastEditedField: OUTPUT,
     });
   };
+
+  getExchangeRate() {
+    const { selectors, exchangeAddresses: { fromToken } } = this.props;
+    const { inputCurrency, outputCurrency } = this.state;
+    const eth = [inputCurrency, outputCurrency].filter(currency => currency === 'ETH')[0];
+    const token = [inputCurrency, outputCurrency].filter(currency => currency !== 'ETH')[0];
+
+    if (!eth || !token) {
+      return;
+    }
+
+    const { value: tokenValue } = selectors().getTokenBalance(token, fromToken[token]);
+    const { value: ethValue } = selectors().getBalance(fromToken[token]);
+
+    return tokenValue.dividedBy(ethValue);
+  }
+
+  renderInfo() {
+    const { selectors, exchangeAddresses: { fromToken } } = this.props;
+    const { inputCurrency, outputCurrency } = this.state;
+    const eth = [inputCurrency, outputCurrency].filter(currency => currency === 'ETH')[0];
+    const token = [inputCurrency, outputCurrency].filter(currency => currency !== 'ETH')[0];
+
+    if (!eth || !token) {
+      return (
+        <div className="pool__summary-panel">
+          <div className="pool__exchange-rate-wrapper">
+            <span className="pool__exchange-rate">Exchange Rate</span>
+            <span> - </span>
+          </div>
+          <div className="pool__exchange-rate-wrapper">
+            <span className="swap__exchange-rate">Current Pool Size</span>
+            <span> - </span>
+          </div>
+        </div>
+      )
+    }
+
+    const {
+      value: tokenValue,
+      decimals,
+      label
+    } = selectors().getTokenBalance(token, fromToken[token]);
+
+    const { value: ethValue } = selectors().getBalance(fromToken[token]);
+
+    return (
+      <div className="pool__summary-panel">
+        <div className="pool__exchange-rate-wrapper">
+          <span className="pool__exchange-rate">Exchange Rate</span>
+          <span>{`1 ETH = ${tokenValue.dividedBy(ethValue).toFixed(4)} BAT`}</span>
+        </div>
+        <div className="pool__exchange-rate-wrapper">
+          <span className="swap__exchange-rate">Current Pool Size</span>
+          <span>{` ${ethValue.dividedBy(10 ** 18).toFixed(2)} ${eth} / ${tokenValue.dividedBy(10 ** decimals).toFixed(2)} ${label}`}</span>
+        </div>
+      </div>
+    )
+  }
 
   render() {
     const {
@@ -80,8 +166,12 @@ class AddLiquidity extends Component {
           title="Deposit"
           description={lastEditedField === OUTPUT ? '(estimated)' : ''}
           extraText={this.getBalance(inputCurrency)}
-          onCurrencySelected={currency => this.setState({ inputCurrency: currency })}
+          onCurrencySelected={currency => {
+            this.setState({ inputCurrency: currency });
+            this.props.sync();
+          }}
           onValueChange={this.onInputChange}
+          value={inputValue}
         />
         <OversizedPanel>
           <div className="swap__down-arrow-background">
@@ -92,20 +182,15 @@ class AddLiquidity extends Component {
           title="Deposit"
           description={lastEditedField === INPUT ? '(estimated)' : ''}
           extraText={this.getBalance(outputCurrency)}
-          onCurrencySelected={currency => this.setState({ outputCurrency: currency })}
+          onCurrencySelected={currency => {
+            this.setState({ outputCurrency: currency });
+            this.props.sync();
+          }}
           onValueChange={this.onOutputChange}
+          value={outputValue}
         />
         <OversizedPanel hideBottom>
-          <div className="pool__summary-panel">
-            <div className="pool__exchange-rate-wrapper">
-              <span className="pool__exchange-rate">Exchange Rate</span>
-              <span>1 ETH = 1283.878 BAT</span>
-            </div>
-            <div className="pool__exchange-rate-wrapper">
-              <span className="swap__exchange-rate">Current Pool Size</span>
-              <span>321 ETH / 321,000 BAT</span>
-            </div>
-          </div>
+        { this.renderInfo() }
         </OversizedPanel>
         <div className="swap__summary-wrapper">
           <div>You are adding between {b`212000.00 - 216000.00 BAT`} + {b`166.683543 ETH`} into the liquidity pool.</div>
@@ -133,9 +218,12 @@ export default drizzleConnect(
   state => ({
     isConnected: Boolean(state.web3connect.account),
     account: state.web3connect.account,
+    balances: state.web3connect.balances,
+    exchangeAddresses: state.addresses.exchangeAddresses,
   }),
   dispatch => ({
-    selectors: () => dispatch(Selectors())
+    selectors: () => dispatch(selectors()),
+    sync: () => dispatch(sync()),
   })
 )
 

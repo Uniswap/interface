@@ -33,12 +33,13 @@ const initialState = {
 };
 
 // selectors
-export const Selectors = () => (dispatch, getState) => {
+export const selectors = () => (dispatch, getState) => {
   const state = getState().web3connect;
 
   return {
     getBalance: address => {
       const balance = state.balances.ethereum[address];
+      console.log({balance})
       if (!balance) {
         dispatch(watchBalance({ balanceOf: address }));
         return Balance(0, 'ETH');
@@ -129,7 +130,6 @@ export const watchBalance = ({ balanceOf, tokenAddress }) => {
 }
 
 export const sync = () => async (dispatch, getState) => {
-  console.log('Syncing...');
   const web3 = await dispatch(initialize());
   const {
     account,
