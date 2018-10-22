@@ -95,6 +95,49 @@ export const swapOutput = async opts => {
   return ERC20_TO_ERC20.swapOutput(opts);
 };
 
+export const sendInput = async opts => {
+  const { inputCurrency, outputCurrency } = opts;
+  if (!inputCurrency || !outputCurrency) {
+    return;
+  }
+
+  if (inputCurrency === outputCurrency) {
+    console.error(`Input and Output currency cannot be the same`);
+    return;
+  }
+
+  if (inputCurrency === 'ETH' && outputCurrency !== 'ETH') {
+    return ETH_TO_ERC20.sendInput(opts);
+  }
+
+  if (outputCurrency === 'ETH' && inputCurrency !== 'ETH') {
+    return ERC20_TO_ETH.sendInput(opts);
+  }
+
+  return ERC20_TO_ERC20.sendInput(opts);
+};
+
+export const sendOutput = async opts => {
+  const { inputCurrency, outputCurrency } = opts;
+  if (!inputCurrency || !outputCurrency) {
+    return;
+  }
+
+  if (inputCurrency === outputCurrency) {
+    console.error(`Input and Output currency cannot be the same`);
+    return;
+  }
+
+  if (inputCurrency === 'ETH' && outputCurrency !== 'ETH') {
+    return ETH_TO_ERC20.sendOutput(opts);
+  }
+
+  if (outputCurrency === 'ETH' && inputCurrency !== 'ETH') {
+    return ERC20_TO_ETH.sendOutput(opts);
+  }
+
+  return ERC20_TO_ERC20.sendOutput(opts);
+};
 
 const ETH_TO_ERC20 = {
   calculateOutput: async ({drizzleCtx, contractStore, input, inputCurrency, outputCurrency, exchangeAddresses }) => {
@@ -187,13 +230,7 @@ const ETH_TO_ERC20 = {
     return exchangeRate;
   },
   swapInput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses }) => {
-    if (inputCurrency !== 'ETH') {
-      console.error('Input Currency should be ETH');
-      return;
-    }
-
-    if (!outputCurrency || outputCurrency === 'ETH') {
-      console.error('Output Currency should be ERC20');
+    if (!validEthToErc20(inputCurrency, outputCurrency)) {
       return;
     }
 
@@ -202,15 +239,9 @@ const ETH_TO_ERC20 = {
     if (!exchangeAddress || !exchange) {
       console.error(`Cannot find Exchange Address for ${outputCurrency}`);
       return;
-
     }
 
-    const { web3 } = drizzleCtx;
-    const blockNumber = await promisify(web3, 'getBlockNumber');
-    const block = await promisify(web3, 'getBlock', blockNumber);
-
-
-    const deadline = block.timestamp + 300;
+    const deadline = await getDeadline(drizzleCtx, 300);
     const ALLOWED_SLIPPAGE = BN(0.025);
     const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
     const minOutput = BN(output).multipliedBy(10 ** outputDecimals).multipliedBy(BN(1).minus(ALLOWED_SLIPPAGE));
@@ -219,14 +250,8 @@ const ETH_TO_ERC20 = {
       value: BN(input).multipliedBy(10 ** 18).toFixed(0),
     });
   },
-  swapOutput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses }) => {
-    if (inputCurrency !== 'ETH') {
-      console.error('Input Currency should be ETH');
-      return;
-    }
-
-    if (!outputCurrency || outputCurrency === 'ETH') {
-      console.error('Output Currency should be ERC20');
+  swapOutput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses}) => {
+    if (!validEthToErc20(inputCurrency, outputCurrency)) {
       return;
     }
 
@@ -238,12 +263,7 @@ const ETH_TO_ERC20 = {
 
     }
 
-    const { web3 } = drizzleCtx;
-    const blockNumber = await promisify(web3, 'getBlockNumber');
-    const block = await promisify(web3, 'getBlock', blockNumber);
-
-
-    const deadline = block.timestamp + 300;
+    const deadline = await getDeadline(drizzleCtx, 300);
     const ALLOWED_SLIPPAGE = BN(0.025);
     const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
     const outputAmount = BN(output).multipliedBy(BN(10 ** outputDecimals));
@@ -253,6 +273,60 @@ const ETH_TO_ERC20 = {
       value: maxInput.toFixed(0),
     });
   },
+  sendInput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses, recipient}) => {
+    if (!validEthToErc20(inputCurrency, outputCurrency)) {
+      return;
+    }
+
+    const exchangeAddress = exchangeAddresses.fromToken[outputCurrency];
+    const exchange = drizzleCtx.contracts[exchangeAddress];
+    if (!exchangeAddress || !exchange) {
+      console.error(`Cannot find Exchange Address for ${outputCurrency}`);
+      return;
+    }
+
+    const deadline = await getDeadline(drizzleCtx, 300);
+    const ALLOWED_SLIPPAGE = BN(0.025);
+    const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
+    const minOutput = BN(output).multipliedBy(10 ** outputDecimals).multipliedBy(BN(1).minus(ALLOWED_SLIPPAGE));
+
+    return exchange.methods.ethToTokenTransferInput.cacheSend(
+      minOutput.toFixed(0),
+      deadline,
+      recipient,
+      {
+        from: account,
+        value: BN(input).multipliedBy(10 ** 18).toFixed(0),
+      }
+    );
+  },
+  sendOutput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses, recipient}) => {
+    if (!validEthToErc20(inputCurrency, outputCurrency)) {
+      return;
+    }
+
+    const exchangeAddress = exchangeAddresses.fromToken[outputCurrency];
+    const exchange = drizzleCtx.contracts[exchangeAddress];
+    if (!exchangeAddress || !exchange) {
+      console.error(`Cannot find Exchange Address for ${outputCurrency}`);
+      return;
+    }
+
+    const deadline = await getDeadline(drizzleCtx, 300);
+    const ALLOWED_SLIPPAGE = BN(0.025);
+    const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
+    const outputAmount = BN(output).multipliedBy(BN(10 ** outputDecimals));
+    const maxInput = BN(input).multipliedBy(10 ** 18).multipliedBy(BN(1).plus(ALLOWED_SLIPPAGE));
+    return exchange.methods.ethToTokenTransferOutput.cacheSend(
+      outputAmount.toFixed(0),
+      deadline,
+      recipient,
+      {
+        from: account,
+        value: maxInput.toFixed(0),
+      }
+    );
+  }
 };
 
 const ERC20_TO_ETH = {
@@ -345,7 +419,7 @@ const ERC20_TO_ETH = {
 
     return exchangeRate;
   },
-  swapInput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses }) => {
+  swapInput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses}) => {
     if (outputCurrency !== 'ETH') {
       console.error('Output Currency should be ETH');
       return;
@@ -363,12 +437,7 @@ const ERC20_TO_ETH = {
       return;
     }
 
-    const { web3 } = drizzleCtx;
-    const blockNumber = await promisify(web3, 'getBlockNumber');
-    const block = await promisify(web3, 'getBlock', blockNumber);
-
-
-    const deadline = block.timestamp + 300;
+    const deadline = await getDeadline(drizzleCtx, 300);
     const ALLOWED_SLIPPAGE = BN(0.025);
     const inputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
     const minOutput = BN(output).multipliedBy(10 ** 18).multipliedBy(BN(1).minus(ALLOWED_SLIPPAGE));
@@ -381,7 +450,7 @@ const ERC20_TO_ETH = {
       { from: account, value: '0x0' },
     );
   },
-  swapOutput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses }) => {
+  swapOutput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses}) => {
     if (outputCurrency !== 'ETH') {
       console.error('Output Currency should be ETH');
       return;
@@ -399,12 +468,7 @@ const ERC20_TO_ETH = {
       return;
     }
 
-    const { web3 } = drizzleCtx;
-    const blockNumber = await promisify(web3, 'getBlockNumber');
-    const block = await promisify(web3, 'getBlock', blockNumber);
-
-
-    const deadline = block.timestamp + 300;
+    const deadline = await getDeadline(drizzleCtx, 300);
     const ALLOWED_SLIPPAGE = BN(0.025);
     const inputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
     const maxInput = BN(input).multipliedBy(10 ** inputDecimals).multipliedBy(BN(1).plus(ALLOWED_SLIPPAGE));
@@ -417,6 +481,58 @@ const ERC20_TO_ETH = {
       { from: account },
     );
   },
+  sendInput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses, recipient}) => {
+    if (!validErc20ToEth(inputCurrency, outputCurrency)) {
+      return;
+    }
+
+    const exchangeAddress = exchangeAddresses.fromToken[inputCurrency];
+    const exchange = drizzleCtx.contracts[exchangeAddress];
+    if (!exchangeAddress || !exchange) {
+      console.error(`Cannot find Exchange Address for ${inputCurrency}`);
+      return;
+    }
+
+    const deadline = await getDeadline(drizzleCtx, 300);
+    const ALLOWED_SLIPPAGE = BN(0.025);
+    const inputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
+    const minOutput = BN(output).multipliedBy(10 ** 18).multipliedBy(BN(1).minus(ALLOWED_SLIPPAGE));
+    const inputAmount = BN(input).multipliedBy(10 ** inputDecimals);
+
+    return exchange.methods.tokenToEthTransferInput.cacheSend(
+      inputAmount.toFixed(0),
+      minOutput.toFixed(0),
+      deadline,
+      recipient,
+      { from: account, value: '0x0' },
+    );
+  },
+  sendOutput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses, recipient}) => {
+    if (!validErc20ToEth(inputCurrency, outputCurrency)) {
+      return;
+    }
+
+    const exchangeAddress = exchangeAddresses.fromToken[inputCurrency];
+    const exchange = drizzleCtx.contracts[exchangeAddress];
+    if (!exchangeAddress || !exchange) {
+      console.error(`Cannot find Exchange Address for ${inputCurrency}`);
+      return;
+    }
+
+    const deadline = await getDeadline(drizzleCtx, 300);
+    const ALLOWED_SLIPPAGE = BN(0.025);
+    const inputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
+    const maxInput = BN(input).multipliedBy(10 ** inputDecimals).multipliedBy(BN(1).plus(ALLOWED_SLIPPAGE));
+    const outputAmount = BN(output).multipliedBy(10 ** 18);
+
+    return exchange.methods.tokenToEthSwapOutput.cacheSend(
+      outputAmount.toFixed(0),
+      maxInput.toFixed(0),
+      deadline,
+      recipient,
+      { from: account },
+    );
+  }
 };
 
 const ERC20_TO_ERC20 = {
@@ -484,12 +600,7 @@ const ERC20_TO_ERC20 = {
       return;
     }
 
-    const { web3 } = drizzleCtx;
-    const blockNumber = await promisify(web3, 'getBlockNumber');
-    const block = await promisify(web3, 'getBlock', blockNumber);
-
-
-    const deadline = block.timestamp + 300;
+    const deadline = await getDeadline(drizzleCtx, 300);
     const ALLOWED_SLIPPAGE = BN(0.04);
     const inputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
     const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
@@ -543,12 +654,7 @@ const ERC20_TO_ERC20 = {
       return;
     }
 
-    const { web3 } = drizzleCtx;
-    const blockNumber = await promisify(web3, 'getBlockNumber');
-    const block = await promisify(web3, 'getBlock', blockNumber);
-
-
-    const deadline = block.timestamp + 300;
+    const deadline = await getDeadline(drizzleCtx, 300);
     const ALLOWED_SLIPPAGE = BN(0.04);
     const inputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
     const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
@@ -570,4 +676,137 @@ const ERC20_TO_ERC20 = {
       { from: account },
     );
   },
+  sendInput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses, recipient}) => {
+    if (!validErc20ToErc20(inputCurrency, outputCurrency)) {
+      return;
+    }
+    const exchangeAddress = exchangeAddresses.fromToken[inputCurrency];
+    const exchange = drizzleCtx.contracts[exchangeAddress];
+    if (!exchangeAddress || !exchange) {
+      console.error(`Cannot find Exchange Address for ${inputCurrency}`);
+      return;
+    }
+    const deadline = await getDeadline(drizzleCtx, 300);
+    const ALLOWED_SLIPPAGE = BN(0.04);
+    const inputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
+    const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
+    const inputAmount = BN(input).multipliedBy(BN(10 ** inputDecimals));
+    const outputAmount = BN(input).multipliedBy(BN(10 ** outputDecimals));
+
+    const tokenAddress = outputCurrency;
+    const tokensSold = inputAmount.toFixed(0);
+    const minTokensBought = outputAmount.multipliedBy(BN(1).plus(ALLOWED_SLIPPAGE)).toFixed(0);
+    const minEthBought = 1;
+
+    return exchange.methods.tokenToTokenTransferInput.cacheSend(
+      tokensSold,
+      minTokensBought,
+      minEthBought,
+      deadline,
+      recipient,
+      tokenAddress,
+      { from: account },
+    );
+  },
+  sendOutput: async opts => {
+    const {
+      drizzleCtx,
+      contractStore,
+      input,
+      output,
+      account,
+      inputCurrency,
+      outputCurrency,
+      exchangeAddresses,
+      recipient,
+    } = opts;
+    const exchangeRateA = await ETH_TO_ERC20.calculateInput({ ...opts, inputCurrency: 'ETH' });
+    if (!exchangeRateA) {
+      return;
+    }
+
+    if (!validErc20ToErc20(inputCurrency, outputCurrency)) {
+      return;
+    }
+
+    const exchangeAddress = exchangeAddresses.fromToken[inputCurrency];
+    const exchange = drizzleCtx.contracts[exchangeAddress];
+    if (!exchangeAddress || !exchange) {
+      console.error(`Cannot find Exchange Address for ${inputCurrency}`);
+      return;
+    }
+
+    const deadline = await getDeadline(drizzleCtx, 300);
+    const ALLOWED_SLIPPAGE = BN(0.04);
+    const inputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
+    const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
+    const inputAmount = BN(input).multipliedBy(BN(10 ** inputDecimals));
+    const outputAmount = BN(output).multipliedBy(BN(10 ** outputDecimals));
+    const inputAmountB = BN(output).dividedBy(exchangeRateA).multipliedBy(BN(10 ** 18));
+
+    const tokenAddress = outputCurrency;
+    const tokensBought = outputAmount.toFixed(0);
+    const maxTokensSold = inputAmount.multipliedBy(BN(1).plus(ALLOWED_SLIPPAGE)).toFixed(0);
+    const maxEthSold = inputAmountB.multipliedBy(1.2).toFixed(0);
+
+    return exchange.methods.tokenToTokenTransferOutput.cacheSend(
+      tokensBought,
+      maxTokensSold,
+      maxEthSold,
+      deadline,
+      recipient,
+      tokenAddress,
+      { from: account },
+    );
+  },
 };
+
+async function getDeadline(drizzleCtx, additional) {
+  const { web3 } = drizzleCtx;
+  const blockNumber = await promisify(web3, 'getBlockNumber');
+  const block = await promisify(web3, 'getBlock', blockNumber);
+
+  return block.timestamp + additional;
+}
+
+function validEthToErc20(inputCurrency, outputCurrency) {
+  if (inputCurrency !== 'ETH') {
+    console.error('Input Currency should be ETH');
+    return false;
+  }
+
+  if (!outputCurrency || outputCurrency === 'ETH') {
+    console.error('Output Currency should be ERC20');
+    return false;
+  }
+
+  return true;
+}
+
+function validErc20ToEth(inputCurrency, outputCurrency) {
+  if (outputCurrency !== 'ETH') {
+    console.error('Output Currency should be ETH');
+    return false;
+  }
+
+  if (!inputCurrency || inputCurrency === 'ETH') {
+    console.error('Input Currency should be ERC20');
+    return false;
+  }
+
+  return true;
+}
+
+function validErc20ToErc20(inputCurrency, outputCurrency) {
+  if (!outputCurrency || outputCurrency === 'ETH') {
+    console.error('Output Currency should be ERC20');
+    return false;
+  }
+
+  if (!inputCurrency || inputCurrency === 'ETH') {
+    console.error('Input Currency should be ERC20');
+    return false;
+  }
+
+  return true;
+}
