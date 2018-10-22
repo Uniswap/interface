@@ -54,14 +54,3 @@ export const approveExchange = async opts => {
     .send({ from: account })
     // .then((e, d) => console.log(e, d));
 };
-
-export const getApprovalTxStatus = opts => {
-  const {
-    drizzleCtx,
-    txId
-  } = opts;
-  const st = drizzleCtx.store.getState();
-  const tx = st.transactionStack[txId];
-  const status = st.transactions[tx] && st.transactions[tx].status;
-  return status;
-};
