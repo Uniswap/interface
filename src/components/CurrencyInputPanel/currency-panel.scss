@@ -94,6 +94,12 @@
         background-image: url(../../assets/images/dropdown.svg);
       }
     }
+
+    &--disabled {
+      .currency-input-panel__dropdown-icon {
+        opacity: 0;
+      }
+    }
   }
 
   &__sub-currency-select {

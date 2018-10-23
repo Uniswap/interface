@@ -45,10 +45,13 @@ class CurrencyInputPanel extends Component {
     selectedTokens: PropTypes.array.isRequired,
     errorMessage: PropTypes.string,
     selectedTokenAddress: PropTypes.string,
+    disableTokenSelect: PropTypes.bool,
+    filteredTokens: PropTypes.arrayOf(PropTypes.string),
   };
 
   static defaultProps = {
     selectedTokens: [],
+    filteredTokens: [],
     onCurrencySelected() {},
     onValueChange() {},
     selectedTokenAddress: '',
@@ -64,19 +67,20 @@ class CurrencyInputPanel extends Component {
   };
 
   createTokenList = () => {
+    const { filteredTokens } = this.props;
     let tokens = this.props.tokenAddresses.addresses;
     let tokenList = [ { value: 'ETH', label: 'ETH', address: 'ETH' } ];
 
     for (let i = 0; i < tokens.length; i++) {
-      let entry = { value: '', label: '' };
-      entry.value = tokens[i][0];
-      entry.label = tokens[i][0];
-      entry.address = tokens[i][1];
-      tokenList.push(entry);
-      TOKEN_ADDRESS_TO_LABEL[tokens[i][1]] = tokens[i][0];
+        let entry = { value: '', label: '' };
+        entry.value = tokens[i][0];
+        entry.label = tokens[i][0];
+        entry.address = tokens[i][1];
+        tokenList.push(entry);
+        TOKEN_ADDRESS_TO_LABEL[tokens[i][1]] = tokens[i][0];
     }
 
-    return tokenList;
+    return tokenList.filter(({ address }) => !filteredTokens.includes(address));
   };
 
   onTokenSelect = (address) => {
@@ -122,7 +126,12 @@ class CurrencyInputPanel extends Component {
   renderTokenList() {
     const tokens = this.createTokenList();
     const { searchQuery } = this.state;
-    const { selectedTokens } = this.props;
+    const { selectedTokens, disableTokenSelect } = this.props;
+
+    if (disableTokenSelect) {
+      return;
+    }
+
     let results;
 
     if (!searchQuery) {
@@ -196,6 +205,7 @@ class CurrencyInputPanel extends Component {
       value,
       onValueChange,
       selectedTokenAddress,
+      disableTokenSelect,
     } = this.props;
 
     return (
@@ -232,8 +242,13 @@ class CurrencyInputPanel extends Component {
             <button
               className={classnames("currency-input-panel__currency-select", {
                 'currency-input-panel__currency-select--selected': selectedTokenAddress,
+                'currency-input-panel__currency-select--disabled': disableTokenSelect,
               })}
-              onClick={() => this.setState({ isShowingModal: true })}
+              onClick={() => {
+                if (!disableTokenSelect) {
+                  this.setState({ isShowingModal: true });
+                }
+              }}
             >
               {
                 selectedTokenAddress
