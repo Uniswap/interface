@@ -273,7 +273,7 @@ const ETH_TO_ERC20 = {
       value: maxInput.toFixed(0),
     });
   },
-  sendInput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses, recipient}) => {
+  sendInput: async ({drizzleCtx, contractStore, input, output, outputDecimals, account, inputCurrency, outputCurrency, exchangeAddresses, recipient}) => {
     if (!validEthToErc20(inputCurrency, outputCurrency)) {
       return;
     }
@@ -287,7 +287,6 @@ const ETH_TO_ERC20 = {
 
     const deadline = await getDeadline(drizzleCtx, 300);
     const ALLOWED_SLIPPAGE = BN(0.025);
-    const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
     const minOutput = BN(output).multipliedBy(10 ** outputDecimals).multipliedBy(BN(1).minus(ALLOWED_SLIPPAGE));
 
     return exchange.methods.ethToTokenTransferInput.cacheSend(
@@ -300,7 +299,7 @@ const ETH_TO_ERC20 = {
       }
     );
   },
-  sendOutput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses, recipient}) => {
+  sendOutput: async ({drizzleCtx, contractStore, input, output, outputDecimals, account, inputCurrency, outputCurrency, exchangeAddresses, recipient}) => {
     if (!validEthToErc20(inputCurrency, outputCurrency)) {
       return;
     }
@@ -314,7 +313,6 @@ const ETH_TO_ERC20 = {
 
     const deadline = await getDeadline(drizzleCtx, 300);
     const ALLOWED_SLIPPAGE = BN(0.025);
-    const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
     const outputAmount = BN(output).multipliedBy(BN(10 ** outputDecimals));
     const maxInput = BN(input).multipliedBy(10 ** 18).multipliedBy(BN(1).plus(ALLOWED_SLIPPAGE));
     return exchange.methods.ethToTokenTransferOutput.cacheSend(
@@ -481,7 +479,7 @@ const ERC20_TO_ETH = {
       { from: account },
     );
   },
-  sendInput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses, recipient}) => {
+  sendInput: async ({drizzleCtx, contractStore, input, output, inputDecimals, account, inputCurrency, outputCurrency, exchangeAddresses, recipient}) => {
     if (!validErc20ToEth(inputCurrency, outputCurrency)) {
       return;
     }
@@ -495,7 +493,6 @@ const ERC20_TO_ETH = {
 
     const deadline = await getDeadline(drizzleCtx, 300);
     const ALLOWED_SLIPPAGE = BN(0.025);
-    const inputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
     const minOutput = BN(output).multipliedBy(10 ** 18).multipliedBy(BN(1).minus(ALLOWED_SLIPPAGE));
     const inputAmount = BN(input).multipliedBy(10 ** inputDecimals);
 
@@ -507,7 +504,7 @@ const ERC20_TO_ETH = {
       { from: account, value: '0x0' },
     );
   },
-  sendOutput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses, recipient}) => {
+  sendOutput: async ({drizzleCtx, contractStore, input, output, inputDecimals, account, inputCurrency, outputCurrency, exchangeAddresses, recipient}) => {
     if (!validErc20ToEth(inputCurrency, outputCurrency)) {
       return;
     }
@@ -521,7 +518,6 @@ const ERC20_TO_ETH = {
 
     const deadline = await getDeadline(drizzleCtx, 300);
     const ALLOWED_SLIPPAGE = BN(0.025);
-    const inputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
     const maxInput = BN(input).multipliedBy(10 ** inputDecimals).multipliedBy(BN(1).plus(ALLOWED_SLIPPAGE));
     const outputAmount = BN(output).multipliedBy(10 ** 18);
 
@@ -676,7 +672,7 @@ const ERC20_TO_ERC20 = {
       { from: account },
     );
   },
-  sendInput: async ({drizzleCtx, contractStore, input, output, account, inputCurrency, outputCurrency, exchangeAddresses, recipient}) => {
+  sendInput: async ({drizzleCtx, contractStore, input, output, inputDecimals, outputDecimals, account, inputCurrency, outputCurrency, exchangeAddresses, recipient}) => {
     if (!validErc20ToErc20(inputCurrency, outputCurrency)) {
       return;
     }
@@ -688,8 +684,6 @@ const ERC20_TO_ERC20 = {
     }
     const deadline = await getDeadline(drizzleCtx, 300);
     const ALLOWED_SLIPPAGE = BN(0.04);
-    const inputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
-    const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
     const inputAmount = BN(input).multipliedBy(BN(10 ** inputDecimals));
     const outputAmount = BN(input).multipliedBy(BN(10 ** outputDecimals));
 
@@ -719,6 +713,8 @@ const ERC20_TO_ERC20 = {
       outputCurrency,
       exchangeAddresses,
       recipient,
+      inputDecimals,
+      outputDecimals,
     } = opts;
     const exchangeRateA = await ETH_TO_ERC20.calculateInput({ ...opts, inputCurrency: 'ETH' });
     if (!exchangeRateA) {
@@ -738,8 +734,6 @@ const ERC20_TO_ERC20 = {
 
     const deadline = await getDeadline(drizzleCtx, 300);
     const ALLOWED_SLIPPAGE = BN(0.04);
-    const inputDecimals = await getDecimals({ address: inputCurrency, contractStore, drizzleCtx });
-    const outputDecimals = await getDecimals({ address: outputCurrency, contractStore, drizzleCtx });
     const inputAmount = BN(input).multipliedBy(BN(10 ** inputDecimals));
     const outputAmount = BN(output).multipliedBy(BN(10 ** outputDecimals));
     const inputAmountB = BN(output).dividedBy(exchangeRateA).multipliedBy(BN(10 ** 18));
