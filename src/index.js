@@ -11,7 +11,7 @@ window.addEventListener('load', function() {
     <DrizzleProvider options={{
       contracts: [],
       events: [],
-      polls: { accounts: 3000, blocks: 3000 },
+      polls: { accounts: 60000, blocks: 60000 },
     }} store={store}>
       <App />
     </DrizzleProvider>

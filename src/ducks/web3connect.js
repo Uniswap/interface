@@ -17,6 +17,7 @@ export const ADD_CONTRACT = 'web3connect/addContract';
 
 const initialState = {
   web3: null,
+  initialized: false,
   account: '',
   balances: {
     ethereum: {},
@@ -39,7 +40,7 @@ export const selectors = () => (dispatch, getState) => {
   return {
     getBalance: address => {
       const balance = state.balances.ethereum[address];
-      console.log({balance})
+
       if (!balance) {
         dispatch(watchBalance({ balanceOf: address }));
         return Balance(0, 'ETH');
@@ -98,7 +99,6 @@ export const initialize = () => (dispatch, getState) => {
 
     if (typeof window.web3 !== 'undefined') {
       const web3 = new Web3(window.web3.currentProvider);
-      await window.ethereum.enable();
       dispatch({
         type: INITIALIZE,
         payload: web3,
@@ -108,28 +108,38 @@ export const initialize = () => (dispatch, getState) => {
   })
 };
 
-export const watchBalance = ({ balanceOf, tokenAddress }) => {
+export const watchBalance = ({ balanceOf, tokenAddress }) => (dispatch, getState) => {
   if (!balanceOf) {
-    return { type: '' };
+    return;
   }
 
+  const { web3connect } = getState();
+  const { watched } = web3connect;
+
   if (!tokenAddress) {
-    return {
+    if (watched.balances.ethereum.includes(balanceOf)) {
+      return;
+    }
+    dispatch({
       type: WATCH_ETH_BALANCE,
       payload: balanceOf,
-    };
+    });
   } else if (tokenAddress) {
-    return {
+    if (watched.balances[tokenAddress] && watched.balances[tokenAddress].includes(balanceOf)) {
+      return;
+    }
+    dispatch({
       type: WATCH_TOKEN_BALANCE,
       payload: {
         tokenAddress,
         balanceOf,
       },
-    };
+    });
   }
-}
+};
 
 export const sync = () => async (dispatch, getState) => {
+  const { getBalance, getTokenBalance } = dispatch(selectors());
   const web3 = await dispatch(initialize());
   const {
     account,
@@ -142,12 +152,17 @@ export const sync = () => async (dispatch, getState) => {
   if (account !== accounts[0]) {
     dispatch({ type: UPDATE_ACCOUNT, payload: accounts[0] });
     dispatch(watchBalance({ balanceOf: accounts[0] }));
-    // dispatch(watchBalance({ balanceOf: accounts[0], tokenAddress: '0xDA5B056Cfb861282B4b59d29c9B395bcC238D29B' }));
   }
 
   // Sync Ethereum Balances
   watched.balances.ethereum.forEach(async address => {
     const balance = await web3.eth.getBalance(address);
+    const { value } = getBalance(address);
+
+
+    if (value.isEqualTo(BN(balance))) {
+      return;
+    }
     dispatch({
       type: UPDATE_ETH_BALANCE,
       payload: {
@@ -178,9 +193,16 @@ export const sync = () => async (dispatch, getState) => {
 
       const watchlist = watched.balances[tokenAddress] || [];
       watchlist.forEach(async address => {
+        const tokenBalance = getTokenBalance(tokenAddress, address);
         const balance = await contract.methods.balanceOf(address).call();
-        const decimals = await contract.methods.decimals().call();
-        const symbol = await contract.methods.symbol().call();
+        const decimals = tokenBalance.decimals || await contract.methods.decimals().call();
+        const symbol = tokenBalance.label || await contract.methods.symbol().call();
+
+        if (tokenBalance.value.isEqualTo(BN(balance))) {
+          console.log('block');
+          return;
+        }
+
         dispatch({
           type: UPDATE_TOKEN_BALANCE,
           payload: {
@@ -200,7 +222,6 @@ export const startWatching = () => async (dispatch, getState) => {
     : 5000;
 
   dispatch(sync());
-
   setTimeout(() => dispatch(startWatching()), timeout);
 };
 

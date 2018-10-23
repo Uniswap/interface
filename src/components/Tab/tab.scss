@@ -6,14 +6,14 @@
   height: 3rem;
   background-color: $concrete-gray;
   border-radius: 3rem;
-  border: 1px solid $mercury-gray;
+  box-shadow: 0 0 0 .5px darken($concrete-gray, 5);
 
   .tab:first-child {
-    margin-left: -1px;
+    //margin-left: -1px;
   }
 
   .tab:last-child {
-    margin-right: -1px;
+    //margin-right: -1px;
   }
 }
 
@@ -24,7 +24,6 @@
   height: 3rem;
   flex: 1 0 auto;
   border-radius: 3rem;
-  border: 1px solid transparent;
   transition: 300ms ease-in-out;
   cursor: pointer;
 
@@ -36,7 +35,7 @@
   &--selected {
     background-color: $white;
     border-radius: 3rem;
-    border: 1px solid $mercury-gray;
+    box-shadow: 0 0 .5px .5px $mercury-gray;
     font-weight: 500;
 
     span {
