@@ -37,7 +37,7 @@ class CurrencyInputPanel extends Component {
     onCurrencySelected: PropTypes.func,
     onValueChange: PropTypes.func,
     tokenAddresses: PropTypes.shape({
-      address: PropTypes.array.isRequired,
+      addresses: PropTypes.array.isRequired,
     }).isRequired,
     exchangeAddresses: PropTypes.shape({
       fromToken: PropTypes.object.isRequired,

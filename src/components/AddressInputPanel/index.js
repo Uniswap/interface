@@ -9,6 +9,13 @@ class AddressInputPanel extends Component {
     title: PropTypes.string,
     description: PropTypes.string,
     extraText: PropTypes.string,
+    onChange: PropTypes.func,
+    value: PropTypes.string,
+  };
+
+  static defaultProps = {
+    onChange() {},
+    value: '',
   };
 
   render() {
@@ -16,6 +23,8 @@ class AddressInputPanel extends Component {
       title,
       description,
       extraText,
+      onChange,
+      value
     } = this.props;
 
     return (
@@ -31,6 +40,8 @@ class AddressInputPanel extends Component {
               type="text"
               className="address-input-panel__input"
               placeholder="0x1234..."
+              onChange={e => onChange(e.target.value)}
+              value={value}
             />
           </div>
         </div>
