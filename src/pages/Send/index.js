@@ -95,7 +95,7 @@ class Send extends Component {
 
   resetSend() {
     this.props.resetSend();
-    this.setState({approvalTxId: null, swapTxId: null});
+    this.setState({approvalTxId: null, sendTxId: null});
   }
 
   getSendStatus() {
@@ -103,7 +103,7 @@ class Send extends Component {
 
     return getTxStatus({
       drizzleCtx: drizzle,
-      txId: this.state.swapTxId,
+      txId: this.state.sendTxId,
     });
   }
 
@@ -147,7 +147,6 @@ class Send extends Component {
     }
 
     const { value, decimals } = selectors().getTokenBalance(currency, account);
-    console.log(currency, value, decimals);
     return `Balance: ${value.dividedBy(10 ** decimals).toFixed(4)}`;
   }
 
@@ -276,8 +275,7 @@ class Send extends Component {
     let sendTxId;
 
     if (lastEditedField === 'input') {
-      const { decimals } =
-      sendTxId = sendInput({
+      sendTxId = await sendInput({
         drizzleCtx: drizzle,
         contractStore: contracts,
         input,
@@ -293,7 +291,7 @@ class Send extends Component {
     }
 
     if (lastEditedField === 'output') {
-      sendTxId = sendOutput({
+      sendTxId = await sendOutput({
         drizzleCtx: drizzle,
         contractStore: contracts,
         input,
@@ -392,7 +390,9 @@ class Send extends Component {
           <OversizedPanel hideBottom>
             <div className="swap__exchange-rate-wrapper">
               <span className="swap__exchange-rate">Exchange Rate</span>
-              <span>1 ETH = 1283.878 BAT</span>
+              <span>
+                {exchangeRate ? `1 ${inputLabel} = ${exchangeRate.toFixed(7)} ${outputLabel}` : ' - '}
+              </span>
             </div>
           </OversizedPanel>
           {
@@ -440,6 +440,7 @@ export default withRouter(
       isConnected: !!(state.drizzleStatus.initialized && state.accounts[0]),
 
       // Redux Store
+      balances: state.web3connect.balances,
       input: state.send.input,
       output: state.send.output,
       inputCurrency: state.send.inputCurrency,
