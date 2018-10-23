@@ -140,10 +140,14 @@ class AddLiquidity extends Component {
         </div>
         <div className="pool__exchange-rate-wrapper">
           <span className="swap__exchange-rate">Current Pool Size</span>
-          <span>{` ${ethValue.dividedBy(10 ** 18).toFixed(2)} ${eth} / ${tokenValue.dividedBy(10 ** decimals).toFixed(2)} ${label}`}</span>
+          <span>{` ${ethValue.dividedBy(10 ** 18).toFixed(2)} ${eth} + ${tokenValue.dividedBy(10 ** decimals).toFixed(2)} ${label}`}</span>
         </div>
       </div>
     )
+  }
+
+  renderSummary() {
+
   }
 
   render() {
@@ -171,6 +175,7 @@ class AddLiquidity extends Component {
             this.props.sync();
           }}
           onValueChange={this.onInputChange}
+          selectedTokenAddress={inputCurrency}
           value={inputValue}
         />
         <OversizedPanel>
@@ -182,6 +187,7 @@ class AddLiquidity extends Component {
           title="Deposit"
           description={lastEditedField === INPUT ? '(estimated)' : ''}
           extraText={this.getBalance(outputCurrency)}
+          selectedTokenAddress={outputCurrency}
           onCurrencySelected={currency => {
             this.setState({ outputCurrency: currency });
             this.props.sync();

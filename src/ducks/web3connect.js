@@ -39,7 +39,7 @@ export const selectors = () => (dispatch, getState) => {
   return {
     getBalance: address => {
       const balance = state.balances.ethereum[address];
-      console.log({balance})
+
       if (!balance) {
         dispatch(watchBalance({ balanceOf: address }));
         return Balance(0, 'ETH');
