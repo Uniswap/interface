@@ -57,12 +57,12 @@ class AddLiquidity extends Component {
       return '';
     }
 
-    if (currency === 'ETH') {
-      const { value, decimals } = selectors().getBalance(account);
-      return `Balance: ${value.dividedBy(10 ** decimals).toFixed(4)}`;
-    }
+    // if (currency === 'ETH') {
+    //   const { value, decimals } = selectors().getBalance(account, currency);
+    //   return `Balance: ${value.dividedBy(10 ** decimals).toFixed(4)}`;
+    // }
 
-    const { value, decimals } = selectors().getTokenBalance(currency, account);
+    const { value, decimals } = selectors().getBalance(account, currency);
     return `Balance: ${value.dividedBy(10 ** decimals).toFixed(4)}`;
   }
 
@@ -144,8 +144,8 @@ class AddLiquidity extends Component {
       return;
     }
 
-    const { value: tokenValue } = selectors().getTokenBalance(token, fromToken[token]);
-    const { value: ethValue } = selectors().getBalance(fromToken[token]);
+    const { value: tokenValue } = selectors().getBalance(fromToken[token], token);
+    const { value: ethValue } = selectors().getBalance(fromToken[token], eth);
 
     return tokenValue.dividedBy(ethValue);
   }
@@ -165,8 +165,8 @@ class AddLiquidity extends Component {
       isValid = false;
     }
 
-    const { value: ethValue } = selectors().getBalance(account);
-    const { value: tokenValue, decimals } = selectors().getTokenBalance(outputCurrency, account);
+    const { value: ethValue } = selectors().getBalance(account, inputCurrency);
+    const { value: tokenValue, decimals } = selectors().getBalance(account, outputCurrency);
 
     if (ethValue.isLessThan(BN(inputValue * 10 ** 18))) {
       inputError = 'Insufficient Balance';
@@ -329,7 +329,6 @@ class AddLiquidity extends Component {
           selectedTokenAddress={outputCurrency}
           onCurrencySelected={currency => {
             this.setState({ outputCurrency: currency });
-            this.props.sync();
           }}
           onValueChange={this.onOutputChange}
           value={outputValue}
