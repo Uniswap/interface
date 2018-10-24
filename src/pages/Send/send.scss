@@ -4,4 +4,8 @@
   @extend %col-nowrap;
   height: 100%;
   background-color: $white;
+
+  &__last-summary-text {
+    margin-top: 1rem;
+  }
 }

@@ -332,9 +332,6 @@ class Send extends Component {
     const { value: inputBalance, decimals: inputDecimals } = inputCurrency === 'ETH' ?
       selectors().getBalance(account)
       : selectors().getTokenBalance(inputCurrency, account);
-    const { value: outputBalance, decimals: outputDecimals } = inputCurrency === 'ETH' ?
-      selectors().getBalance(account)
-      : selectors().getTokenBalance(outputCurrency, account);
 
     if (inputBalance.isLessThan(BN(input * 10 ** inputDecimals))) {
       inputError = 'Insufficient Balance';
