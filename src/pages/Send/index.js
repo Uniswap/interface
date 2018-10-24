@@ -344,21 +344,9 @@ class Send extends Component {
     };
   }
 
-  renderSubButtonText() {
-    if (this.getApprovalStatus() === 'pending') {
-      return [
-        (<img key="pending" className="swap__sub-icon" src={Pending} />),
-        (<span key="text" className="swap__sub-text">Pending</span>)
-      ];
-    } else {
-      return '🔒 Unlock'
-    }
-  }
-
   renderSummary(inputError, outputError, inputLabel, outputLabel) {
     const {
       selectors,
-      exchangeAddresses: { fromToken },
       input,
       output,
       inputCurrency,
