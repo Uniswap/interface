@@ -57,11 +57,6 @@ class AddLiquidity extends Component {
       return '';
     }
 
-    // if (currency === 'ETH') {
-    //   const { value, decimals } = selectors().getBalance(account, currency);
-    //   return `Balance: ${value.dividedBy(10 ** decimals).toFixed(4)}`;
-    // }
-
     const { value, decimals } = selectors().getBalance(account, currency);
     return `Balance: ${value.dividedBy(10 ** decimals).toFixed(4)}`;
   }
@@ -85,7 +80,7 @@ class AddLiquidity extends Component {
     const maxTokens = tokenAmount.multipliedBy(1 + MAX_LIQUIDITY_SLIPPAGE);
 
     try {
-      const tx = await exchange.methods.addLiquidity(minLiquidity.toFixed(0), maxTokens.toFixed(0), deadline).send({
+      await exchange.methods.addLiquidity(minLiquidity.toFixed(0), maxTokens.toFixed(0), deadline).send({
         from: account,
         value: ethAmount.toFixed(0)
       });
