@@ -41,6 +41,7 @@ $salmon-red: #FF8368;
   outline: none;
   border: 1px solid transparent;
   user-select: none;
+  transition: background-color 300ms ease-in-out;
 
   &:hover {
     background-color: lighten($royal-blue, 5);
@@ -48,6 +49,10 @@ $salmon-red: #FF8368;
 
   &:active {
     background-color: darken($royal-blue, 5);
+  }
+
+  &:disabled {
+    background-color: $mercury-gray;
   }
 
 }
