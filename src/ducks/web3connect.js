@@ -37,8 +37,28 @@ const initialState = {
 export const selectors = () => (dispatch, getState) => {
   const state = getState().web3connect;
 
-  return {
-    getBalance: address => {
+  const getTokenBalance = (tokenAddress, address) => {
+    const tokenBalances = state.balances[tokenAddress];
+
+    if (!tokenBalances) {
+      dispatch(watchBalance({ balanceOf: address, tokenAddress }));
+      return Balance(0);
+    }
+
+    const balance = tokenBalances[address];
+    if (!balance) {
+      dispatch(watchBalance({ balanceOf: address, tokenAddress }));
+      return Balance(0);
+    }
+    return balance;
+  };
+
+  const getBalance = (address, tokenAddress) => {
+    if (process.env.NODE_ENV === 'production' || !tokenAddress) {
+      console.warn('No token address found - return ETH balance');
+    }
+
+    if (!tokenAddress || tokenAddress === 'ETH') {
       const balance = state.balances.ethereum[address];
 
       if (!balance) {
@@ -46,23 +66,16 @@ export const selectors = () => (dispatch, getState) => {
         return Balance(0, 'ETH');
       }
       return balance;
-    },
+    } else if (tokenAddress) {
+      return getTokenBalance(tokenAddress, address);
+    }
 
-    getTokenBalance: (tokenAddress, address) => {
-      const tokenBalances = state.balances[tokenAddress];
+    return Balance(NaN);
+  };
 
-      if (!tokenBalances) {
-        dispatch(watchBalance({ balanceOf: address, tokenAddress }));
-        return Balance(0);
-      }
-
-      const balance = tokenBalances[address];
-      if (!balance) {
-        dispatch(watchBalance({ balanceOf: address, tokenAddress }));
-        return Balance(0);
-      }
-      return balance;
-    },
+  return {
+    getBalance,
+    getTokenBalance,
   }
 };
 
@@ -124,6 +137,7 @@ export const watchBalance = ({ balanceOf, tokenAddress }) => (dispatch, getState
       type: WATCH_ETH_BALANCE,
       payload: balanceOf,
     });
+    setTimeout(() => dispatch(sync()), 0);
   } else if (tokenAddress) {
     if (watched.balances[tokenAddress] && watched.balances[tokenAddress].includes(balanceOf)) {
       return;
@@ -135,6 +149,7 @@ export const watchBalance = ({ balanceOf, tokenAddress }) => (dispatch, getState
         balanceOf,
       },
     });
+    setTimeout(() => dispatch(sync()), 0);
   }
 };
 
@@ -199,7 +214,6 @@ export const sync = () => async (dispatch, getState) => {
         const symbol = tokenBalance.label || await contract.methods.symbol().call();
 
         if (tokenBalance.value.isEqualTo(BN(balance))) {
-          console.log('block');
           return;
         }
 

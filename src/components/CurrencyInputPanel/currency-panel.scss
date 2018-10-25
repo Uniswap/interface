@@ -11,6 +11,7 @@
     border-radius: 1.25rem;
     box-shadow: 0 0 0 .5px $mercury-gray;
     background-color: $white;
+    transition: box-shadow 200ms ease-in-out;
 
     &--error {
       box-shadow: 0 0 0 .5px $salmon-red;
