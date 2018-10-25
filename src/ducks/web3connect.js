@@ -12,6 +12,8 @@ export const WATCH_ETH_BALANCE = 'web3connect/watchEthBalance';
 export const WATCH_TOKEN_BALANCE = 'web3connect/watchTokenBalance';
 export const UPDATE_ETH_BALANCE = 'web3connect/updateEthBalance';
 export const UPDATE_TOKEN_BALANCE = 'web3connect/updateTokenBalance';
+export const WATCH_APPROVALS = 'web3connect/watchApprovals';
+export const UPDATE_APPROVALS = 'web3connect/updateApprovals';
 export const ADD_CONTRACT = 'web3connect/addContract';
 
 
@@ -22,6 +24,13 @@ const initialState = {
   balances: {
     ethereum: {},
   },
+  approvals: {
+    '0x0': {
+      TOKEN_OWNER: {
+        SPENDER: {},
+      },
+    },
+  },
   pendingTransactions: [],
   transactions: {},
   errorMessage: '',
@@ -29,6 +38,7 @@ const initialState = {
     balances: {
       ethereum: [],
     },
+    approvals: {},
   },
   contracts: {},
 };
@@ -54,7 +64,7 @@ export const selectors = () => (dispatch, getState) => {
   };
 
   const getBalance = (address, tokenAddress) => {
-    if (process.env.NODE_ENV === 'production' || !tokenAddress) {
+    if (process.env.NODE_ENV !== 'production' && !tokenAddress) {
       console.warn('No token address found - return ETH balance');
     }
 
@@ -73,10 +83,23 @@ export const selectors = () => (dispatch, getState) => {
     return Balance(NaN);
   };
 
+  const getApprovals = (tokenAddress, tokenOwner, spender) => {
+    const token = state.approvals[tokenAddress] || {};
+    const owner = token[tokenOwner] || {};
+
+    if (!owner[spender]) {
+      dispatch(watchApprovals({ tokenAddress, tokenOwner, spender }));
+      return Balance(0);
+    }
+
+    return owner[spender];
+  };
+
   return {
     getBalance,
     getTokenBalance,
-  }
+    getApprovals,
+  };
 };
 
 const Balance = (value, label = '', decimals = 18) => ({
@@ -153,8 +176,35 @@ export const watchBalance = ({ balanceOf, tokenAddress }) => (dispatch, getState
   }
 };
 
+export const watchApprovals = ({ tokenAddress, tokenOwner, spender }) => (dispatch, getState) => {
+  const { web3connect: { watched } } = getState();
+  const token = watched.approvals[tokenAddress] || {};
+  const owner = token[tokenOwner] || [];
+  if (owner.includes(spender)) {
+    return;
+  }
+  return dispatch({
+    type: WATCH_APPROVALS,
+    payload: {
+      tokenAddress,
+      tokenOwner,
+      spender,
+    },
+  });
+};
+
+export const updateApprovals = ({ tokenAddress, tokenOwner, spender, balance }) => ({
+  type: UPDATE_APPROVALS,
+  payload: {
+    tokenAddress,
+    tokenOwner,
+    spender,
+    balance,
+  },
+});
+
 export const sync = () => async (dispatch, getState) => {
-  const { getBalance, getTokenBalance } = dispatch(selectors());
+  const { getBalance, getTokenBalance, getApprovals } = dispatch(selectors());
   const web3 = await dispatch(initialize());
   const {
     account,
@@ -195,7 +245,6 @@ export const sync = () => async (dispatch, getState) => {
       }
 
       const contract = contracts[tokenAddress] || new web3.eth.Contract(ERC20_ABI, tokenAddress);
-
       if (!contracts[tokenAddress]) {
         dispatch({
           type: ADD_CONTRACT,
@@ -227,6 +276,33 @@ export const sync = () => async (dispatch, getState) => {
         });
       });
     });
+
+    // Update Approvals
+    Object.entries(watched.approvals)
+      .forEach(([tokenAddress, token]) => {
+        const contract = contracts[tokenAddress] || new web3.eth.Contract(ERC20_ABI, tokenAddress);
+        Object.entries(token)
+          .forEach(([ tokenOwnerAddress, tokenOwner ]) => {
+            tokenOwner.forEach(async spenderAddress => {
+              const approvalBalance = getApprovals(tokenAddress, tokenOwnerAddress, spenderAddress);
+              const balance = await contract.methods.allowance(tokenOwnerAddress, spenderAddress).call();
+              const decimals = approvalBalance.decimals || await contract.methods.decimals().call();
+              const symbol = approvalBalance.label || await contract.methods.symbol().call();
+
+              if (approvalBalance.label && approvalBalance.value.isEqualTo(BN(balance))) {
+                return;
+              }
+
+              dispatch(updateApprovals({
+                tokenAddress,
+                tokenOwner: tokenOwnerAddress,
+                spender: spenderAddress,
+                balance: Balance(balance, symbol, decimals),
+              }));
+            });
+          });
+      });
+
 };
 
 export const startWatching = () => async (dispatch, getState) => {
@@ -303,6 +379,40 @@ export default function web3connectReducer(state = initialState, { type, payload
         contracts: {
           ...state.contracts,
           [payload.address]: payload.contract,
+        },
+      };
+    case WATCH_APPROVALS:
+      const token = state.watched.approvals[payload.tokenAddress] || {};
+      const tokenOwner = token[payload.tokenOwner] || [];
+
+      return {
+        ...state,
+        watched: {
+          ...state.watched,
+          approvals: {
+            ...state.watched.approvals,
+            [payload.tokenAddress]: {
+              ...token,
+              [payload.tokenOwner]: [ ...tokenOwner, payload.spender ],
+            },
+          },
+        },
+      };
+    case UPDATE_APPROVALS:
+      const erc20 = state.approvals[payload.tokenAddress] || {};
+      const erc20Owner = erc20[payload.tokenOwner] || {};
+
+      return {
+        ...state,
+        approvals: {
+          ...state.approvals,
+          [payload.tokenAddress]: {
+            ...erc20,
+            [payload.tokenOwner]: {
+              ...erc20Owner,
+              [payload.spender]: payload.balance,
+            },
+          },
         },
       };
     default:

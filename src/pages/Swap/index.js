@@ -562,6 +562,7 @@ class Swap extends Component {
             value={outputValue}
             selectedTokenAddress={outputCurrency}
             errorMessage={outputError}
+            disableUnlock
           />
           { this.renderExchangeRate() }
           { this.renderSummary() }

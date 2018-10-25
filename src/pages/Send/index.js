@@ -444,6 +444,7 @@ class Send extends Component {
             value={output}
             selectedTokenAddress={outputCurrency}
             extraText={this.getBalance(outputCurrency)}
+            disableUnlock
           />
           <OversizedPanel>
             <div className="swap__down-arrow-background">

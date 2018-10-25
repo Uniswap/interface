@@ -113,6 +113,9 @@
     padding: 10px 50px 10px 10px;
     margin-right: -40px;
     border-radius: 2.5rem;
+    outline: none;
+    cursor: pointer;
+    user-select: none;
   }
 
   &__dropdown-icon {
