@@ -15,4 +15,27 @@
       color: $chalice-gray;
     }
   }
+
+  &__recipient-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__input-container {
+    flex: 1;
+  }
+
+  &__qr-container {
+    padding: 10px;
+    background: $concrete-gray;
+    border: 1px solid $mercury-gray;
+    border-radius: 10px;
+    margin-right: 16px;
+    height: 21px;
+
+    & > img {
+      height: 21px;
+    }
+  }
 }
