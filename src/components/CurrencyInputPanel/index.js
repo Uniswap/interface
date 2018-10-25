@@ -48,11 +48,11 @@ class CurrencyInputPanel extends Component {
     selectedTokens: PropTypes.array.isRequired,
     errorMessage: PropTypes.string,
     account: PropTypes.string,
-    balances: PropTypes.object.isRequired,
     selectedTokenAddress: PropTypes.string,
     disableTokenSelect: PropTypes.bool,
     selectors: PropTypes.func.isRequired,
     filteredTokens: PropTypes.arrayOf(PropTypes.string),
+    disableUnlock: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -209,9 +209,10 @@ class CurrencyInputPanel extends Component {
       account,
       exchangeAddresses: { fromToken },
       web3,
+      disableUnlock,
     } = this.props;
 
-    if (!selectedTokenAddress || selectedTokenAddress === 'ETH') {
+    if (disableUnlock || !selectedTokenAddress || selectedTokenAddress === 'ETH') {
       return;
     }
 
@@ -226,18 +227,18 @@ class CurrencyInputPanel extends Component {
         className='currency-input-panel__sub-currency-select'
         onClick={() => {
           const contract = new web3.eth.Contract(ERC20_ABI, selectedTokenAddress);
-          contract.methods
-            .approve(fromToken[selectedTokenAddress], BN(10 ** decimals).multipliedBy(10 ** 8).toFixed(0))
+          const amount = BN(10 ** decimals).multipliedBy(10 ** 8).toFixed(0);
+          contract.methods.approve(fromToken[selectedTokenAddress], amount)
             .send({ from: account }, (err, data) => {
               if (data) {
                 // TODO: Handle Pending in Redux
               }
-            })
+            });
         }}
       >
         Unlock
       </button>
-    )
+    );
   }
 
   render() {

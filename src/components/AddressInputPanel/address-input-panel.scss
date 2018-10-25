@@ -27,6 +27,7 @@
   }
 
   &__qr-container {
+    display: none;
     padding: 10px;
     background: $concrete-gray;
     border: 1px solid $mercury-gray;
