@@ -5,6 +5,10 @@
     height: 100%;
     position: relative;
 
+    @media only screen and (min-device-width : 768px) {
+      box-shadow: 0 0 8px 1px $mercury-gray;
+    }
+
     & > div {
       position: absolute;
       width: 100%;
@@ -19,4 +23,10 @@
   width: 100vw;
   height: 100vh;
   @extend %col-nowrap;
+
+  @media only screen and (min-device-width : 768px) {
+    max-width: 400px;
+    max-height: 600px;
+    margin: auto;
+  }
 }

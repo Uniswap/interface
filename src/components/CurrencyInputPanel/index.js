@@ -7,9 +7,12 @@ import Fuse from '../../helpers/fuse';
 import Modal from '../Modal';
 import TokenLogo from '../TokenLogo';
 import SearchIcon from '../../assets/images/magnifying-glass.svg';
-import ERC20_ABI from '../../abi/erc20';
+import { selectors } from "../../ducks/web3connect";
+import { BigNumber as BN } from 'bignumber.js';
 
 import './currency-panel.scss';
+
+import ERC20_ABI from '../../abi/erc20';
 import EXCHANGE_ABI from "../../abi/exchange";
 
 const FUSE_OPTIONS = {
@@ -44,9 +47,12 @@ class CurrencyInputPanel extends Component {
     }).isRequired,
     selectedTokens: PropTypes.array.isRequired,
     errorMessage: PropTypes.string,
+    account: PropTypes.string,
     selectedTokenAddress: PropTypes.string,
     disableTokenSelect: PropTypes.bool,
+    selectors: PropTypes.func.isRequired,
     filteredTokens: PropTypes.arrayOf(PropTypes.string),
+    disableUnlock: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -196,6 +202,45 @@ class CurrencyInputPanel extends Component {
     );
   }
 
+  renderUnlockButton() {
+    const {
+      selectors,
+      selectedTokenAddress,
+      account,
+      exchangeAddresses: { fromToken },
+      web3,
+      disableUnlock,
+    } = this.props;
+
+    if (disableUnlock || !selectedTokenAddress || selectedTokenAddress === 'ETH') {
+      return;
+    }
+
+    const { value, decimals, label } = selectors().getApprovals(selectedTokenAddress, account, fromToken[selectedTokenAddress]);
+
+    if (!label || value.isGreaterThan(BN(10 ** 22))) {
+      return;
+    }
+
+    return (
+      <button
+        className='currency-input-panel__sub-currency-select'
+        onClick={() => {
+          const contract = new web3.eth.Contract(ERC20_ABI, selectedTokenAddress);
+          const amount = BN(10 ** decimals).multipliedBy(10 ** 8).toFixed(0);
+          contract.methods.approve(fromToken[selectedTokenAddress], amount)
+            .send({ from: account }, (err, data) => {
+              if (data) {
+                // TODO: Handle Pending in Redux
+              }
+            });
+        }}
+      >
+        Unlock
+      </button>
+    );
+  }
+
   render() {
     const {
       title,
@@ -234,11 +279,7 @@ class CurrencyInputPanel extends Component {
               onChange={e => onValueChange(e.target.value)}
               value={value}
             />
-            {/*<button*/}
-              {/*className='currency-input-panel__sub-currency-select'*/}
-            {/*>*/}
-              {/*Unlock*/}
-            {/*</button>*/}
+            { this.renderUnlockButton() }
             <button
               className={classnames("currency-input-panel__currency-select", {
                 'currency-input-panel__currency-select--selected': selectedTokenAddress,
@@ -277,5 +318,11 @@ export default drizzleConnect(
     exchangeAddresses: state.addresses.exchangeAddresses,
     tokenAddresses: state.addresses.tokenAddresses,
     contracts: state.contracts,
+    account: state.web3connect.account,
+    approvals: state.web3connect.approvals,
+    web3: state.web3connect.web3,
+  }),
+  dispatch => ({
+    selectors: () => dispatch(selectors()),
   }),
 );
