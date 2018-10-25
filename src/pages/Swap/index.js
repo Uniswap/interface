@@ -30,6 +30,7 @@ class Swap extends Component {
     outputValue: '',
     inputCurrency: '',
     outputCurrency: '',
+    inputAmountB: '',
     lastEditedField: '',
   };
 
@@ -43,6 +44,7 @@ class Swap extends Component {
       outputValue: '',
       inputCurrency: '',
       outputCurrency: '',
+      inputAmountB: '',
       lastEditedField: '',
     });
   }
@@ -119,6 +121,7 @@ class Swap extends Component {
       outputCurrency,
       lastEditedField,
       exchangeRate: oldExchangeRate,
+      inputAmountB: oldInputAmountB,
     } = this.state;
 
     const exchangeAddressA = fromToken[inputCurrency];
@@ -207,6 +210,10 @@ class Swap extends Component {
         appendState.inputValue = inputValue;
       }
 
+      if (!inputAmountB.isEqualTo(BN(oldInputAmountB))) {
+        appendState.inputAmountB = inputAmountB;
+      }
+
       this.setState(appendState);
     }
 
@@ -216,7 +223,6 @@ class Swap extends Component {
     const {
       exchangeAddresses: { fromToken },
       selectors,
-      account,
     } = this.props;
 
     const {
@@ -315,6 +321,7 @@ class Swap extends Component {
       outputValue,
       inputCurrency,
       outputCurrency,
+      inputAmountB,
       lastEditedField,
     } = this.state;
     const ALLOWED_SLIPPAGE = 0.025;
@@ -354,6 +361,7 @@ class Swap extends Component {
             .send({
               from: account,
             }, err => !err && this.reset());
+          break;
         case 'TOKEN_TO_TOKEN':
           new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
             .methods
@@ -367,6 +375,7 @@ class Swap extends Component {
             .send({
               from: account,
             }, err => !err && this.reset());
+          break;
         default:
           break;
       }
@@ -374,6 +383,58 @@ class Swap extends Component {
 
     if (lastEditedField === OUTPUT) {
       // swap output
+      switch (type) {
+        case 'ETH_TO_TOKEN':
+          new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency])
+            .methods
+            .ethToTokenSwapOutput(
+              BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
+              deadline,
+            )
+            .send({
+              from: account,
+              value: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
+            }, err => !err && this.reset());
+          break;
+        case 'TOKEN_TO_ETH':
+          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
+            .methods
+            .tokenToEthSwapOutput(
+              BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
+              BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
+              deadline,
+            )
+            .send({
+              from: account,
+            }, err => !err && this.reset());
+          break;
+        case 'TOKEN_TO_TOKEN':
+          if (!inputAmountB) {
+            return;
+          }
+
+          console.log(
+            BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
+            BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE).toFixed(0),
+            inputAmountB.multipliedBy(1.2).toFixed(0),
+            deadline,
+            outputCurrency,
+          )
+          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
+            .methods
+            .tokenToTokenSwapOutput(
+              BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
+              BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE).toFixed(0),
+              inputAmountB.multipliedBy(1.2).toFixed(0),
+              deadline,
+              outputCurrency,
+            ).send({
+              from: account,
+            }, err => !err && this.reset());
+          break;
+        default:
+          break;
+      }
     }
   };
 
