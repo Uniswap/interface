@@ -39,7 +39,6 @@ class Send extends Component {
     pathname: PropTypes.string.isRequired,
     currentAddress: PropTypes.string,
     isConnected: PropTypes.bool.isRequired,
-    isValid: PropTypes.bool.isRequired,
     updateField: PropTypes.func.isRequired,
     input: PropTypes.string,
     output: PropTypes.string,
@@ -47,8 +46,6 @@ class Send extends Component {
     outputCurrency: PropTypes.string,
     recipient: PropTypes.string,
     lastEditedField: PropTypes.string,
-    inputErrors: PropTypes.arrayOf(PropTypes.string),
-    outputErrors: PropTypes.arrayOf(PropTypes.string),
   };
 
   static contextTypes = {
@@ -315,24 +312,98 @@ class Send extends Component {
     }
   }
 
-  renderSubButtonText() {
-    if (this.getApprovalStatus() === 'pending') {
-      return [
-        (<img key="pending" className="swap__sub-icon" src={Pending} />),
-        (<span key="text" className="swap__sub-text">Pending</span>)
-      ];
-    } else {
-      return '🔒 Unlock'
+  validate() {
+    const {
+      selectors,
+      account,
+      input,
+      output,
+      inputCurrency,
+      outputCurrency
+    } = this.props;
+
+    let inputError;
+    let isValid = true;
+
+    if (!input || !output || !inputCurrency || !outputCurrency) {
+      isValid = false;
     }
+
+    const { value: inputBalance, decimals: inputDecimals } = inputCurrency === 'ETH' ?
+      selectors().getBalance(account)
+      : selectors().getTokenBalance(inputCurrency, account);
+
+    if (inputBalance.isLessThan(BN(input * 10 ** inputDecimals))) {
+      inputError = 'Insufficient Balance';
+    }
+
+    return {
+      inputError,
+      outputError: '',
+      isValid: isValid && !inputError,
+    };
+  }
+
+  renderSummary(inputError, outputError, inputLabel, outputLabel) {
+    const {
+      selectors,
+      input,
+      output,
+      inputCurrency,
+      outputCurrency,
+      recipient,
+    } = this.props;
+    const { exchangeRate } = this.state;
+
+    let nextStepMessage;
+    if (inputError || outputError) {
+      nextStepMessage = inputError || outputError;
+    } else if (!inputCurrency || !outputCurrency) {
+      nextStepMessage = 'Select a token to continue.';
+    } else if (inputCurrency === outputCurrency) {
+      nextStepMessage = 'Must be different token.';
+    } else if (!input || !output) {
+      const missingCurrencyValue = !input ? inputCurrency : outputCurrency;
+      nextStepMessage = `Enter a ${missingCurrencyValue} value to continue.`;
+    } else if (!recipient) {
+      nextStepMessage = 'Enter a wallet address to send to.';
+    }
+
+    if (nextStepMessage) {
+      return (
+        <div className="swap__summary-wrapper">
+          <div>{nextStepMessage}</div>
+        </div>
+      )
+    }
+
+    const SLIPPAGE = 0.025;
+    const exchangedOutput = BN(input).multipliedBy(BN(exchangeRate));
+    const minOutput = exchangedOutput.multipliedBy(1 - SLIPPAGE).toFixed(8);
+    const maxOutput = exchangedOutput.multipliedBy(1 + SLIPPAGE).toFixed(8);
+
+    return (
+      <div className="swap__summary-wrapper">
+        <div>
+          You are selling {b(`${input} ${inputLabel}`)}
+        </div>
+        <div className="send__last-summary-text">
+          <span className="swap__highlight-text">{recipient.slice(0, 6)}</span>
+          will receive between {b(`${minOutput} ${outputLabel}`)} and {b(`${maxOutput} ${outputLabel}`)}
+        </div>
+      </div>
+    )
   }
 
   render() {
-    const { lastEditedField, inputCurrency, outputCurrency, input, output, recipient, isValid, outputErrors, inputErrors } = this.props;
+    const { lastEditedField, inputCurrency, outputCurrency, input, output, recipient } = this.props;
     const { exchangeRate } = this.state;
     const inputLabel = this.getTokenLabel(inputCurrency);
     const outputLabel = this.getTokenLabel(outputCurrency);
     const estimatedText = '(estimated)';
-    // 0xc41c71CAeA8ccc9AE19c6d8a66c6870C6E9c3632
+
+    const { inputError, outputError, isValid } = this.validate();
+
     return (
       <div className="send">
         <Header />
@@ -350,9 +421,7 @@ class Send extends Component {
             }}
             onValueChange={d => this.updateInput(d)}
             selectedTokens={[inputCurrency, outputCurrency]}
-            addError={error => this.props.addError('inputErrors', error)}
-            removeError={error => this.props.removeError('inputErrors', error)}
-            errors={inputErrors}
+            errorMessage={inputError}
             value={input}
             selectedTokenAddress={inputCurrency}
             extraText={this.getBalance(inputCurrency)}
@@ -371,9 +440,7 @@ class Send extends Component {
             }}
             onValueChange={d => this.updateOutput(d)}
             selectedTokens={[inputCurrency, outputCurrency]}
-            addError={error => this.props.addError('outputErrors', error)}
-            removeError={error => this.props.removeError('outputErrors', error)}
-            errors={outputErrors}
+            errorMessage={outputError}
             value={output}
             selectedTokenAddress={outputCurrency}
             extraText={this.getBalance(outputCurrency)}
@@ -395,24 +462,14 @@ class Send extends Component {
               </span>
             </div>
           </OversizedPanel>
-          {
-            inputLabel && input
-              ? (
-                <div className="swap__summary-wrapper">
-                  <div>You are selling <span className="swap__highlight-text">{`${input} ${inputLabel}`}</span></div>
-                  <div>You will receive between <span className="swap__highlight-text">12.80</span> and <span
-                    className="swap__highlight-text">12.83 BAT</span></div>
-                </div>
-              )
-              : null
-          }
+          { this.renderSummary(inputError, outputError, inputLabel, outputLabel) }
         </div>
         <button
           className={classnames('swap__cta-btn', {
             'swap--inactive': !this.props.isConnected,
-            'swap__cta-btn--inactive': !this.props.isValid,
+            'swap__cta-btn--inactive': !isValid,
           })}
-          disabled={!this.props.isValid}
+          disabled={!isValid}
           onClick={this.onSend}
         >
           Send
@@ -448,9 +505,6 @@ export default withRouter(
       recipient: state.send.recipient,
       lastEditedField: state.send.lastEditedField,
       exchangeAddresses: state.addresses.exchangeAddresses,
-      isValid: isValidSend(state),
-      inputErrors: state.send.inputErrors,
-      outputErrors: state.send.outputErrors,
     }),
     dispatch => ({
       updateField: (name, value) => dispatch(updateField({ name, value })),
@@ -462,3 +516,7 @@ export default withRouter(
     })
   ),
 );
+
+function b(text) {
+  return <span className="swap__highlight-text">{text}</span>
+}
