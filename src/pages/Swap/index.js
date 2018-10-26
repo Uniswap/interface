@@ -4,10 +4,14 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import {BigNumber as BN} from "bignumber.js";
 import { selectors } from '../../ducks/web3connect';
+import { CSSTransitionGroup } from "react-transition-group";
 import Header from '../../components/Header';
 import NavigationTabs from '../../components/NavigationTabs';
+import Modal from '../../components/Modal';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
+import DropdownBlue from "../../assets/images/dropdown-blue.svg";
+import DropupBlue from "../../assets/images/dropup-blue.svg";
 import ArrowDown from '../../assets/images/arrow-down-blue.svg';
 import EXCHANGE_ABI from '../../abi/exchange';
 
@@ -33,6 +37,7 @@ class Swap extends Component {
     outputCurrency: '',
     inputAmountB: '',
     lastEditedField: '',
+    showSummaryModal: false,
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -47,6 +52,7 @@ class Swap extends Component {
       outputCurrency: '',
       inputAmountB: '',
       lastEditedField: '',
+      showSummaryModal: false,
     });
   }
 
@@ -477,12 +483,6 @@ class Swap extends Component {
       outputCurrency,
     } = this.state;
 
-    const { selectors, account } = this.props;
-    const { label: inputLabel } = selectors().getBalance(account, inputCurrency);
-    const { label: outputLabel } = selectors().getBalance(account, outputCurrency);
-    const SLIPPAGE = 0.025;
-    const minOutput = BN(outputValue).multipliedBy(1 - SLIPPAGE).toFixed(5);
-    const maxOutput = BN(outputValue).multipliedBy(1 + SLIPPAGE).toFixed(5);
     const inputIsZero = BN(inputValue).isEqualTo(BN(0));
     const outputIsZero = BN(outputValue).isEqualTo(BN(0));
 
@@ -518,12 +518,128 @@ class Swap extends Component {
       );
     }
 
+    return [
+      <div
+        key="open-details"
+        className="swap__summary-wrapper swap__open-details-container"
+        onClick={() => this.setState({showSummaryModal: true})}
+      >
+        <span>Transaction Details</span>
+        <img src={DropdownBlue} />
+      </div>,
+      this.renderSummaryModal()
+    ];
+  }
+
+  renderSummaryModal() {
+    const {
+      inputValue,
+      inputCurrency,
+      inputError,
+      outputValue,
+      outputCurrency,
+      outputError,
+      showSummaryModal,
+      inputAmountB,
+      lastEditedField,
+    } = this.state;
+    const { selectors, account } = this.props;
+    if (!this.state.showSummaryModal) {
+      return null;
+    }
+
+    const ALLOWED_SLIPPAGE = 0.025;
+    const TOKEN_ALLOWED_SLIPPAGE = 0.04;
+
+    const type = getSwapType(inputCurrency, outputCurrency);
+    const { label: inputLabel, decimals: inputDecimals } = selectors().getBalance(account, inputCurrency);
+    const { label: outputLabel, decimals: outputDecimals } = selectors().getBalance(account, outputCurrency);
+
+    const label = lastEditedField === INPUT ? outputLabel : inputLabel;
+    let minOutput;
+    let maxInput;
+
+    if (lastEditedField === INPUT) {
+      switch(type) {
+        case 'ETH_TO_TOKEN':
+          minOutput = BN(outputValue).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(5)
+          break;
+        case 'TOKEN_TO_ETH':
+          minOutput = BN(outputValue).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(5);
+          break;
+        case 'TOKEN_TO_TOKEN':
+          minOutput = BN(outputValue).multipliedBy(1 - TOKEN_ALLOWED_SLIPPAGE).toFixed(5);
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (lastEditedField === OUTPUT) {
+      switch (type) {
+        case 'ETH_TO_TOKEN':
+          maxInput = BN(inputValue).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(5);
+          break;
+        case 'TOKEN_TO_ETH':
+          maxInput = BN(inputValue).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(5);
+          break;
+        case 'TOKEN_TO_TOKEN':
+          maxInput = BN(inputValue).multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE).toFixed(5);
+          break;
+        default:
+          break;
+      }
+    }
+
+    let description;
+    if (lastEditedField === INPUT) {
+      description = (
+        <div>
+          <div>
+            You are selling {b(`${inputValue} ${inputLabel}`)}.
+          </div>
+          <div className="send__last-summary-text">
+            You will receive between {b(`${minOutput} ${outputLabel}`)} and {b(`${outputValue} ${outputLabel}`)}.
+          </div>
+        </div>
+      );
+    } else {
+      description = (
+        <div>
+          <div>
+            You are selling between {b(`${inputValue} ${inputLabel}`)} to {b(`${maxInput} ${inputLabel}`)}.
+          </div>
+          <div className="send__last-summary-text">
+            You will receive {b(`${outputValue} ${outputLabel}`)}.
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <div className="swap__summary-wrapper">
-        <div>You are selling {b(`${inputValue} ${inputLabel}`)}</div>
-        <div>You will receive between {b(minOutput)} and {b(`${maxOutput} ${outputLabel}`)}</div>
-      </div>
-    )
+      <Modal key="modal" onClose={() => this.setState({ showSummaryModal: false })}>
+        <CSSTransitionGroup
+          transitionName="summary-modal"
+          transitionAppear={true}
+          transitionLeave={true}
+          transitionAppearTimeout={200}
+          transitionLeaveTimeout={200}
+          transitionEnterTimeout={200}
+        >
+          <div className="swap__summary-modal">
+            <div
+              key="open-details"
+              className="swap__open-details-container"
+              onClick={() => this.setState({showSummaryModal: false})}
+            >
+              <span>Transaction Details</span>
+              <img src={DropupBlue} />
+            </div>
+            {description}
+          </div>
+        </CSSTransitionGroup>
+      </Modal>
+    );
   }
 
   renderExchangeRate() {
