@@ -60,13 +60,14 @@ class Send extends Component {
     const {
       inputValue, outputValue,
       inputCurrency, outputCurrency,
+      recipient,
     } = this.state;
 
     let inputError = '';
     let outputError = '';
     let isValid = true;
 
-    if (!inputValue || !outputValue || !inputCurrency || !outputCurrency) {
+    if (!inputValue || !outputValue || !inputCurrency || !outputCurrency || !recipient) {
       isValid = false;
     }
 
