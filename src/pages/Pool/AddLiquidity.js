@@ -2,11 +2,15 @@ import React, { Component } from 'react';
 import { drizzleConnect } from 'drizzle-react';
 import PropTypes from 'prop-types';
 import classnames from "classnames";
+import { CSSTransitionGroup } from "react-transition-group";
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
 import NavigationTabs from '../../components/NavigationTabs';
+import Modal from '../../components/Modal';
 import { selectors, sync } from '../../ducks/web3connect';
 import ArrowDown from '../../assets/images/arrow-down-blue.svg';
+import DropdownBlue from "../../assets/images/dropdown-blue.svg";
+import DropupBlue from "../../assets/images/dropup-blue.svg";
 import ModeSelector from './ModeSelector';
 import {BigNumber as BN} from 'bignumber.js';
 import EXCHANGE_ABI from '../../abi/exchange';
@@ -33,11 +37,12 @@ class AddLiquidity extends Component {
     inputCurrency: 'ETH',
     outputCurrency: '',
     lastEditedField: '',
+    showSummaryModal: false,
   };
 
   shouldComponentUpdate(nextProps, nextState) {
     const { isConnected, account, exchangeAddresses, balances, web3 } = this.props;
-    const { inputValue, outputValue, inputCurrency, outputCurrency, lastEditedField } = this.state;
+    const { inputValue, outputValue, inputCurrency, outputCurrency, lastEditedField, showSummaryModal } = this.state;
 
     return isConnected !== nextProps.isConnected ||
       account !== nextProps.account ||
@@ -48,7 +53,8 @@ class AddLiquidity extends Component {
       outputValue !== nextState.outputValue ||
       inputCurrency !== nextState.inputCurrency ||
       outputCurrency !== nextState.outputCurrency ||
-      lastEditedField !== nextState.lastEditedField;
+      lastEditedField !== nextState.lastEditedField ||
+      showSummaryModal !== nextState.showSummaryModal;
   }
 
   getBalance(currency) {
@@ -306,6 +312,34 @@ class AddLiquidity extends Component {
       )
     }
 
+    return [
+      <div
+        key="open-details"
+        className="swap__summary-wrapper swap__open-details-container"
+        onClick={() => this.setState({showSummaryModal: true})}
+      >
+        <span>Transaction Details</span>
+        <img src={DropdownBlue} />
+      </div>,
+      this.renderSummaryModal()
+    ];
+  }
+
+  renderSummaryModal() {
+    const { selectors, exchangeAddresses: { fromToken } } = this.props;
+    const {
+      inputValue,
+      outputValue,
+      inputCurrency,
+      outputCurrency,
+      showSummaryModal,
+    } = this.state;
+    if (!showSummaryModal) {
+      return null;
+    }
+
+    const { value, decimals, label } = selectors().getTokenBalance(outputCurrency, fromToken[outputCurrency]);
+
     const SLIPPAGE = 0.025;
     const minOutput = BN(outputValue).multipliedBy(1 - SLIPPAGE);
     const maxOutput = BN(outputValue).multipliedBy(1 + SLIPPAGE);
@@ -314,13 +348,34 @@ class AddLiquidity extends Component {
     const maxPercentage = maxOutput.dividedBy(maxOutput.plus(tokenReserve)).multipliedBy(100);
 
     return (
-      <div key="summary" className="swap__summary-wrapper">
-        <div>You are adding between {b(`${minOutput.toFixed(5)} - ${maxOutput.toFixed(5)} ${label}`)} + {b(`${BN(inputValue).toFixed(5)} ETH`)} into the liquidity pool.</div>
-        <div className="pool__last-summary-text">
-          You will receive between {b(`${minPercentage.toFixed(5)}%`)} and {b(`${maxPercentage.toFixed(5)}%`)} of the {`${label}/ETH`} pool tokens.
-        </div>
-      </div>
-    )
+      <Modal key="modal" onClose={() => this.setState({ showSummaryModal: false })}>
+        <CSSTransitionGroup
+          transitionName="summary-modal"
+          transitionAppear={true}
+          transitionLeave={true}
+          transitionAppearTimeout={200}
+          transitionLeaveTimeout={200}
+          transitionEnterTimeout={200}
+        >
+          <div className="swap__summary-modal">
+            <div
+              key="open-details"
+              className="swap__open-details-container"
+              onClick={() => this.setState({showSummaryModal: false})}
+            >
+              <span>Transaction Details</span>
+              <img src={DropupBlue} />
+            </div>
+            <div>
+              <div>You are adding between {b(`${minOutput.toFixed(5)} - ${maxOutput.toFixed(5)} ${label}`)} + {b(`${BN(inputValue).toFixed(5)} ETH`)} into the liquidity pool.</div>
+              <div className="pool__last-summary-text">
+                You will receive between {b(`${minPercentage.toFixed(5)}%`)} and {b(`${maxPercentage.toFixed(5)}%`)} of the {`${label}/ETH`} pool tokens.
+              </div>
+            </div>
+          </div>
+        </CSSTransitionGroup>
+      </Modal>
+    );
   }
 
   render() {
