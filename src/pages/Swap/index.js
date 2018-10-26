@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import {BigNumber as BN} from "bignumber.js";
 import { selectors } from '../../ducks/web3connect';
 import Header from '../../components/Header';
+import NavigationTabs from '../../components/NavigationTabs';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
 import ArrowDown from '../../assets/images/arrow-down-blue.svg';
@@ -28,7 +29,7 @@ class Swap extends Component {
   state = {
     inputValue: '',
     outputValue: '',
-    inputCurrency: '',
+    inputCurrency: 'ETH',
     outputCurrency: '',
     inputAmountB: '',
     lastEditedField: '',
@@ -63,8 +64,11 @@ class Swap extends Component {
     let inputError = '';
     let outputError = '';
     let isValid = true;
+    let isUnapproved = this.isUnapproved();
+    const inputIsZero = BN(inputValue).isEqualTo(BN(0));
+    const outputIsZero = BN(outputValue).isEqualTo(BN(0));
 
-    if (!inputValue || !outputValue || !inputCurrency || !outputCurrency) {
+    if (!inputValue || inputIsZero || !outputValue || outputIsZero || !inputCurrency || !outputCurrency || isUnapproved) {
       isValid = false;
     }
 
@@ -85,10 +89,37 @@ class Swap extends Component {
     };
   }
 
+  isUnapproved() {
+    const { account, exchangeAddresses, selectors } = this.props;
+    const { inputCurrency } = this.state;
+
+    if (!inputCurrency || inputCurrency === 'ETH') {
+      return false;
+    }
+
+    const { value, label } = selectors().getApprovals(
+      inputCurrency,
+      account,
+      exchangeAddresses.fromToken[inputCurrency]
+    );
+
+    if (!label || value.isLessThan(BN(10 ** 22))) {
+      return true;
+    }
+
+    return false;
+  }
+
   recalcForm() {
-    const { inputCurrency, outputCurrency } = this.state;
+    const { inputCurrency, outputCurrency, lastEditedField } = this.state;
 
     if (!inputCurrency || !outputCurrency) {
+      return;
+    }
+
+    const editedValue = lastEditedField === INPUT ? this.state.inputValue : this.state.outputValue;
+
+    if (BN(editedValue).isEqualTo(BN(0))) {
       return;
     }
 
@@ -450,8 +481,10 @@ class Swap extends Component {
     const { label: inputLabel } = selectors().getBalance(account, inputCurrency);
     const { label: outputLabel } = selectors().getBalance(account, outputCurrency);
     const SLIPPAGE = 0.025;
-    const minOutput = BN(outputValue).multipliedBy(1 - SLIPPAGE).toFixed(2);
-    const maxOutput = BN(outputValue).multipliedBy(1 + SLIPPAGE).toFixed(2);
+    const minOutput = BN(outputValue).multipliedBy(1 - SLIPPAGE).toFixed(5);
+    const maxOutput = BN(outputValue).multipliedBy(1 + SLIPPAGE).toFixed(5);
+    const inputIsZero = BN(inputValue).isEqualTo(BN(0));
+    const outputIsZero = BN(outputValue).isEqualTo(BN(0));
 
     if (!inputCurrency || !outputCurrency) {
       return (
@@ -467,6 +500,22 @@ class Swap extends Component {
           <div>Enter a value to continue.</div>
         </div>
       )
+    }
+
+    if (inputIsZero || outputIsZero) {
+      return (
+        <div className="swap__summary-wrapper">
+          <div>Amount cannot be zero.</div>
+        </div>
+      )
+    }
+
+    if (this.isUnapproved()) {
+      return (
+        <div className="swap__summary-wrapper">
+          <div>Please unlock token to continue.</div>
+        </div>
+      );
     }
 
     return (
@@ -530,6 +579,11 @@ class Swap extends Component {
             'swap--inactive': !this.props.isConnected,
           })}
         >
+          <NavigationTabs
+            className={classnames('header__navigation', {
+              'header--inactive': !this.props.isConnected,
+            })}
+          />
           <CurrencyInputPanel
             title="Input"
             description={lastEditedField === OUTPUT ? estimatedText : ''}
@@ -565,17 +619,19 @@ class Swap extends Component {
             disableUnlock
           />
           { this.renderExchangeRate() }
-          { this.renderSummary() }
+          <div className="swap__cta-container">
+            <button
+              className={classnames('swap__cta-btn', {
+                'swap--inactive': !this.props.isConnected,
+              })}
+              disabled={!isValid}
+              onClick={this.onSwap}
+            >
+              Swap
+            </button>
+          </div>
         </div>
-        <button
-          className={classnames('swap__cta-btn', {
-            'swap--inactive': !this.props.isConnected,
-          })}
-          disabled={!isValid}
-          onClick={this.onSwap}
-        >
-          Swap
-        </button>
+        { this.renderSummary() }
       </div>
     );
   }
