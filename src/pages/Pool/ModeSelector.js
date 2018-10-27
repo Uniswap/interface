@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { drizzleConnect } from 'drizzle-react';
 import OversizedPanel from "../../components/OversizedPanel";
 import Dropdown from "../../assets/images/dropdown.svg";
 import Modal from "../../components/Modal";

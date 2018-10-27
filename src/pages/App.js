@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { drizzleConnect } from 'drizzle-react'
-import { BrowserRouter, Switch, Redirect, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { BrowserRouter, Redirect, Route } from 'react-router-dom';
+import MediaQuery from 'react-responsive';
 import { AnimatedSwitch } from 'react-router-transition';
 import { Web3Connect, startWatching, initialize } from '../ducks/web3connect';
 import { setAddresses } from '../ducks/addresses';
+import Header from '../components/Header';
 import Swap from './Swap';
 import Send from './Send';
 import Pool from './Pool';
@@ -11,9 +13,6 @@ import Pool from './Pool';
 import './App.scss';
 
 class App extends Component {
-  shouldComponentUpdate() {
-    return true;
-  }
   componentWillMount() {
     const { initialize, startWatching} = this.props;
     initialize().then(startWatching);
@@ -41,6 +40,9 @@ class App extends Component {
 
     return (
       <div id="app-container">
+        <MediaQuery query="(min-device-width: 768px)">
+          <Header />
+        </MediaQuery>
         <Web3Connect />
         <BrowserRouter>
           <AnimatedSwitch
@@ -60,11 +62,10 @@ class App extends Component {
   }
 }
 
-export default drizzleConnect(
-  App,
+export default connect(
   state => ({
     account: state.web3connect.account,
-    initialized: !!state.web3connect.web3,
+    initialized: state.web3connect.initialized,
     web3: state.web3connect.web3,
   }),
   dispatch => ({
@@ -72,4 +73,4 @@ export default drizzleConnect(
     initialize: () => dispatch(initialize()),
     startWatching: () => dispatch(startWatching()),
   }),
-);
+)(App);

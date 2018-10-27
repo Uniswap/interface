@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import { connect } from 'react-redux';
-import { drizzleConnect } from 'drizzle-react';
+import { connect } from 'react-redux';
 import {BigNumber as BN} from 'bignumber.js';
 import Web3 from 'web3';
 import ERC20_ABI from "../abi/erc20";
@@ -108,7 +107,7 @@ const Balance = (value, label = '', decimals = 18) => ({
 export const initialize = () => (dispatch, getState) => {
   const { web3connect } = getState();
 
-  return new Promise(async resolve => {
+  return new Promise(async (resolve, reject) => {
     if (web3connect.web3) {
       resolve(web3connect.web3);
       return;
@@ -126,6 +125,8 @@ export const initialize = () => (dispatch, getState) => {
         return;
       } catch (error) {
         console.error('User denied access.');
+        dispatch({ type: INITIALIZE });
+        reject();
         return;
       }
     }
@@ -138,6 +139,9 @@ export const initialize = () => (dispatch, getState) => {
       });
       resolve(web3);
     }
+
+    dispatch({ type: INITIALIZE });
+    reject();
   })
 };
 
@@ -442,8 +446,7 @@ export class _Web3Connect extends Component {
   }
 }
 
-export const Web3Connect = drizzleConnect(
-  _Web3Connect,
+export const Web3Connect = connect(
   ({ web3connect }) => ({
     web3: web3connect.web3,
   }),
@@ -451,4 +454,4 @@ export const Web3Connect = drizzleConnect(
     initialize: () => dispatch(initialize()),
     startWatching: () => dispatch(startWatching()),
   }),
-);
+)(_Web3Connect);

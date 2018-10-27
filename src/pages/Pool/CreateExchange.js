@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { drizzleConnect } from 'drizzle-react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {selectors} from "../../ducks/web3connect";
 import classnames from "classnames";
@@ -205,8 +205,7 @@ class CreateExchange extends Component {
   }
 }
 
-export default drizzleConnect(
-  CreateExchange,
+export default connect(
   state => ({
     isConnected: Boolean(state.web3connect.account),
     account: state.web3connect.account,
@@ -219,4 +218,4 @@ export default drizzleConnect(
     selectors: () => dispatch(selectors()),
     addExchange: opts => dispatch(addExchange(opts)),
   })
-);
+)(CreateExchange);

@@ -6,7 +6,8 @@
     position: relative;
 
     @media only screen and (min-device-width : 768px) {
-      margin-top: 4rem;
+      margin: auto;
+      width: 560px;
     }
 
     & > div {
@@ -25,6 +26,6 @@
   @extend %col-nowrap;
 
   @media only screen and (min-device-width : 768px) {
-    max-width: 560px;
+    //max-width: 560px;
   }
 }

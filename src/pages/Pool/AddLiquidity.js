@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { drizzleConnect } from 'drizzle-react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classnames from "classnames";
 import { CSSTransitionGroup } from "react-transition-group";
@@ -551,8 +551,7 @@ class AddLiquidity extends Component {
   }
 }
 
-export default drizzleConnect(
-  AddLiquidity,
+export default connect(
   state => ({
     isConnected: Boolean(state.web3connect.account),
     account: state.web3connect.account,
@@ -563,7 +562,7 @@ export default drizzleConnect(
   dispatch => ({
     selectors: () => dispatch(selectors()),
   })
-)
+)(AddLiquidity);
 
 function b(text) {
   return <span className="swap__highlight-text">{text}</span>
