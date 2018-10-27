@@ -5,6 +5,7 @@ import "./pool.scss";
 
 const ADD_LIQUIDITY = 'Add Liquidity';
 const REMOVE_LIQUIDITY = 'Remove Liquidity';
+const CREATE_EXCHANGE = 'Create Exchange';
 
 class Pool extends Component {
   state = {
@@ -14,6 +15,8 @@ class Pool extends Component {
   renderContent() {
     switch (this.state.selectedMode) {
       case ADD_LIQUIDITY:
+      case CREATE_EXCHANGE:
+      case REMOVE_LIQUIDITY:
       default:
         return <AddLiquidity />
     }

@@ -38,6 +38,12 @@ class ModeSelector extends Component {
             >
               Remove Liquidity
             </div>
+            <div
+              className="pool-modal__item"
+              onClick={() => this.setState({ isShowingModal: false })}
+            >
+              Create Exchange
+            </div>
           </div>
         </CSSTransitionGroup>
       </Modal>
