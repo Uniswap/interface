@@ -210,15 +210,16 @@ class CurrencyInputPanel extends Component {
       exchangeAddresses: { fromToken },
       web3,
       disableUnlock,
+      value,
     } = this.props;
 
     if (disableUnlock || !selectedTokenAddress || selectedTokenAddress === 'ETH') {
       return;
     }
 
-    const { value, decimals, label } = selectors().getApprovals(selectedTokenAddress, account, fromToken[selectedTokenAddress]);
+    const { value: allowance, decimals, label } = selectors().getApprovals(selectedTokenAddress, account, fromToken[selectedTokenAddress]);
 
-    if (!label || value.isGreaterThan(BN(10 ** 22))) {
+    if (!label || allowance.isGreaterThanOrEqualTo(BN(value * 10 ** decimals || 0))) {
       return;
     }
 
@@ -272,11 +273,21 @@ class CurrencyInputPanel extends Component {
           <div className="currency-input-panel__input-row">
             <input
               type="number"
+              min="0"
               className={classnames('currency-input-panel__input',{
                 'currency-input-panel__input--error': errorMessage,
               })}
               placeholder="0.0"
               onChange={e => onValueChange(e.target.value)}
+              onKeyPress={e => {
+                const charCode = e.which ? e.which : e.keyCode;
+
+                // Prevent 'minus' character
+                if (charCode === 45) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
+              }}
               value={value}
             />
             { this.renderUnlockButton() }

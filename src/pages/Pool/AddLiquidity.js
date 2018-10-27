@@ -2,10 +2,15 @@ import React, { Component } from 'react';
 import { drizzleConnect } from 'drizzle-react';
 import PropTypes from 'prop-types';
 import classnames from "classnames";
+import { CSSTransitionGroup } from "react-transition-group";
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
+import NavigationTabs from '../../components/NavigationTabs';
+import Modal from '../../components/Modal';
 import { selectors, sync } from '../../ducks/web3connect';
 import ArrowDown from '../../assets/images/arrow-down-blue.svg';
+import DropdownBlue from "../../assets/images/dropdown-blue.svg";
+import DropupBlue from "../../assets/images/dropup-blue.svg";
 import ModeSelector from './ModeSelector';
 import {BigNumber as BN} from 'bignumber.js';
 import EXCHANGE_ABI from '../../abi/exchange';
@@ -32,11 +37,12 @@ class AddLiquidity extends Component {
     inputCurrency: 'ETH',
     outputCurrency: '',
     lastEditedField: '',
+    showSummaryModal: false,
   };
 
   shouldComponentUpdate(nextProps, nextState) {
     const { isConnected, account, exchangeAddresses, balances, web3 } = this.props;
-    const { inputValue, outputValue, inputCurrency, outputCurrency, lastEditedField } = this.state;
+    const { inputValue, outputValue, inputCurrency, outputCurrency, lastEditedField, showSummaryModal } = this.state;
 
     return isConnected !== nextProps.isConnected ||
       account !== nextProps.account ||
@@ -47,7 +53,8 @@ class AddLiquidity extends Component {
       outputValue !== nextState.outputValue ||
       inputCurrency !== nextState.inputCurrency ||
       outputCurrency !== nextState.outputCurrency ||
-      lastEditedField !== nextState.lastEditedField;
+      lastEditedField !== nextState.lastEditedField ||
+      showSummaryModal !== nextState.showSummaryModal;
   }
 
   getBalance(currency) {
@@ -59,6 +66,27 @@ class AddLiquidity extends Component {
 
     const { value, decimals } = selectors().getBalance(account, currency);
     return `Balance: ${value.dividedBy(10 ** decimals).toFixed(4)}`;
+  }
+
+  isUnapproved() {
+    const { account, exchangeAddresses, selectors } = this.props;
+    const { outputCurrency, outputValue } = this.state;
+
+    if (!outputCurrency) {
+      return false;
+    }
+
+    const { value: allowance, label, decimals } = selectors().getApprovals(
+      outputCurrency,
+      account,
+      exchangeAddresses.fromToken[outputCurrency]
+    );
+
+    if (label && allowance.isLessThan(BN(outputValue * 10 ** decimals || 0))) {
+      return true;
+    }
+
+    return false;
   }
 
   onAddLiquidity = async () => {
@@ -155,8 +183,10 @@ class AddLiquidity extends Component {
     let inputError;
     let outputError;
     let isValid = true;
+    const inputIsZero = BN(inputValue).isZero();
+    const outputIsZero = BN(outputValue).isZero();
 
-    if (!inputValue || !outputValue || !inputCurrency || !outputCurrency) {
+    if (!inputValue || inputIsZero || !outputValue || outputIsZero || !inputCurrency || !outputCurrency || this.isUnapproved()) {
       isValid = false;
     }
 
@@ -229,10 +259,12 @@ class AddLiquidity extends Component {
       inputCurrency,
       outputCurrency,
     } = this.state;
+    const inputIsZero = BN(inputValue).isZero();
+    const outputIsZero = BN(outputValue).isZero();
 
     if (!inputCurrency || !outputCurrency) {
       return (
-        <div className="swap__summary-wrapper">
+        <div key="summary" className="swap__summary-wrapper">
           <div>Select a token to continue.</div>
         </div>
       )
@@ -240,7 +272,7 @@ class AddLiquidity extends Component {
 
     if (inputCurrency === outputCurrency) {
       return (
-        <div className="swap__summary-wrapper">
+        <div key="summary" className="swap__summary-wrapper">
           <div>Must be different token.</div>
         </div>
       )
@@ -248,8 +280,24 @@ class AddLiquidity extends Component {
 
     if (![inputCurrency, outputCurrency].includes('ETH')) {
       return (
-        <div className="swap__summary-wrapper">
+        <div key="summary" className="swap__summary-wrapper">
           <div>One of the input must be ETH.</div>
+        </div>
+      )
+    }
+
+    if (inputIsZero || outputIsZero) {
+      return (
+        <div key="summary" className="swap__summary-wrapper">
+          <div>Amount cannot be zero.</div>
+        </div>
+      )
+    }
+
+    if (this.isUnapproved()) {
+      return (
+        <div key="summary" className="swap__summary-wrapper">
+          <div>Please unlock token to continue.</div>
         </div>
       )
     }
@@ -258,11 +306,39 @@ class AddLiquidity extends Component {
 
     if (!inputValue || !outputValue) {
       return (
-        <div className="swap__summary-wrapper">
+        <div key="summary" className="swap__summary-wrapper">
           <div>{`Enter a ${inputCurrency} or ${label} value to continue.`}</div>
         </div>
       )
     }
+
+    return [
+      <div
+        key="open-details"
+        className="swap__summary-wrapper swap__open-details-container"
+        onClick={() => this.setState({showSummaryModal: true})}
+      >
+        <span>Transaction Details</span>
+        <img src={DropdownBlue} />
+      </div>,
+      this.renderSummaryModal()
+    ];
+  }
+
+  renderSummaryModal() {
+    const { selectors, exchangeAddresses: { fromToken } } = this.props;
+    const {
+      inputValue,
+      outputValue,
+      inputCurrency,
+      outputCurrency,
+      showSummaryModal,
+    } = this.state;
+    if (!showSummaryModal) {
+      return null;
+    }
+
+    const { value, decimals, label } = selectors().getTokenBalance(outputCurrency, fromToken[outputCurrency]);
 
     const SLIPPAGE = 0.025;
     const minOutput = BN(outputValue).multipliedBy(1 - SLIPPAGE);
@@ -272,13 +348,34 @@ class AddLiquidity extends Component {
     const maxPercentage = maxOutput.dividedBy(maxOutput.plus(tokenReserve)).multipliedBy(100);
 
     return (
-      <div className="swap__summary-wrapper">
-        <div>You are adding between {b(`${minOutput.toFixed(2)} - ${maxOutput.toFixed(2)} ${label}`)} + {b(`${BN(inputValue).toFixed(2)} ETH`)} into the liquidity pool.</div>
-        <div className="pool__last-summary-text">
-          You will receive between {b(`${minPercentage.toFixed(2)}%`)} and {b(`${maxPercentage.toFixed(2)}%`)} of the {`${label}/ETH`} pool tokens.
-        </div>
-      </div>
-    )
+      <Modal key="modal" onClose={() => this.setState({ showSummaryModal: false })}>
+        <CSSTransitionGroup
+          transitionName="summary-modal"
+          transitionAppear={true}
+          transitionLeave={true}
+          transitionAppearTimeout={200}
+          transitionLeaveTimeout={200}
+          transitionEnterTimeout={200}
+        >
+          <div className="swap__summary-modal">
+            <div
+              key="open-details"
+              className="swap__open-details-container"
+              onClick={() => this.setState({showSummaryModal: false})}
+            >
+              <span>Transaction Details</span>
+              <img src={DropupBlue} />
+            </div>
+            <div>
+              <div>You are adding between {b(`${minOutput.toFixed(5)} - ${maxOutput.toFixed(5)} ${label}`)} + {b(`${BN(inputValue).toFixed(5)} ETH`)} into the liquidity pool.</div>
+              <div className="pool__last-summary-text">
+                You will receive between {b(`${minPercentage.toFixed(5)}%`)} and {b(`${maxPercentage.toFixed(5)}%`)} of the {`${label}/ETH`} pool tokens.
+              </div>
+            </div>
+          </div>
+        </CSSTransitionGroup>
+      </Modal>
+    );
   }
 
   render() {
@@ -296,12 +393,18 @@ class AddLiquidity extends Component {
 
     const { inputError, outputError, isValid } = this.validate();
 
-    return (
+    return [
       <div
+        key="content"
         className={classnames('swap__content', {
           'swap--inactive': !isConnected,
         })}
       >
+        <NavigationTabs
+          className={classnames('header__navigation', {
+            'header--inactive': !isConnected,
+          })}
+        />
         <ModeSelector />
         <CurrencyInputPanel
           title="Deposit"
@@ -333,7 +436,6 @@ class AddLiquidity extends Component {
         <OversizedPanel hideBottom>
           { this.renderInfo() }
         </OversizedPanel>
-        { this.renderSummary() }
         <div className="pool__cta-container">
           <button
             className={classnames('pool__cta-btn', {
@@ -346,8 +448,9 @@ class AddLiquidity extends Component {
             Add Liquidity
           </button>
         </div>
-      </div>
-    );
+      </div>,
+      this.renderSummary()
+    ];
   }
 }
 
