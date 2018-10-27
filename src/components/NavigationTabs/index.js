@@ -19,17 +19,13 @@ class NavigationTabs extends Component {
     };
   }
 
-  renderTab(name, path) {
+  renderTab(name, path, regex) {
     const { push } = this.props.history;
-    const { selectedPath } = this.state;
     return (
       <Tab
         text={name}
-        onClick={() => {
-          push(path);
-          this.setState({ selectedPath: path });
-        }}
-        isSelected={selectedPath.indexOf(path) > -1}
+        onClick={() => push(path)}
+        isSelected={regex.test(this.props.location.pathname)}
       />
     )
   }
@@ -37,9 +33,9 @@ class NavigationTabs extends Component {
   render() {
     return (
       <Tabs className={this.props.className}>
-        { this.renderTab('Swap', '/swap') }
-        { this.renderTab('Send', '/send') }
-        { this.renderTab('Pool', '/pool') }
+        { this.renderTab('Swap', '/swap', /swap/) }
+        { this.renderTab('Send', '/send', /send/) }
+        { this.renderTab('Pool', '/add-liquidity', /add-liquidity|remove-liquidity|create-exchange/) }
       </Tabs>
     );
   }
