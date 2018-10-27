@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { drizzleConnect } from 'drizzle-react'
 import { BrowserRouter, Switch, Redirect, Route } from 'react-router-dom';
 import { AnimatedSwitch } from 'react-router-transition';
-import { Web3Connect } from '../ducks/web3connect';
+import { Web3Connect, startWatching, initialize } from '../ducks/web3connect';
+import { setAddresses } from '../ducks/addresses';
 import Swap from './Swap';
 import Send from './Send';
 import Pool from './Pool';
@@ -10,6 +11,29 @@ import Pool from './Pool';
 import './App.scss';
 
 class App extends Component {
+  shouldComponentUpdate() {
+    return true;
+  }
+  componentWillMount() {
+    const { initialize, startWatching} = this.props;
+    initialize().then(startWatching);
+  };
+
+  componentWillUpdate() {
+    const { web3, setAddresses } = this.props;
+
+    if (this.hasSetNetworkId || !web3 || !web3.eth || !web3.eth.net || !web3.eth.net.getId) {
+      return;
+    }
+
+    web3.eth.net.getId((err, networkId) => {
+      if (!err && !this.hasSetNetworkId) {
+        setAddresses(networkId);
+        this.hasSetNetworkId = true;
+      }
+    });
+  }
+
   render() {
     if (!this.props.initialized) {
       return <noscript />;
@@ -39,6 +63,13 @@ class App extends Component {
 export default drizzleConnect(
   App,
   state => ({
-    initialized: state.drizzleStatus.initialized,
+    account: state.web3connect.account,
+    initialized: !!state.web3connect.web3,
+    web3: state.web3connect.web3,
+  }),
+  dispatch => ({
+    setAddresses: networkId => dispatch(setAddresses(networkId)),
+    initialize: () => dispatch(initialize()),
+    startWatching: () => dispatch(startWatching()),
   }),
 );

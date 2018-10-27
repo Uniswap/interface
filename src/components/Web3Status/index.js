@@ -153,8 +153,8 @@ export default drizzleConnect(
     });
 
     return {
-      address: state.accounts[0],
-      isConnected: !!(state.drizzleStatus.initialized && state.accounts[0]),
+      address: state.web3connect.account,
+      isConnected: !!(state.web3connect.web3 && state.web3connect.account),
       pendingTransactions,
       hasPendingTransactions: pendingTransactions.length > 0,
     };

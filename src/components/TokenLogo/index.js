@@ -40,7 +40,7 @@ export default class TokenLogo extends Component {
     }
 
     if (!this.state.error && !BAD_IMAGES[mainAddress] && mainAddress !== 'ETH') {
-      path = `${TOKEN_ICON_API}/${mainAddress}.png`;
+      path = `${TOKEN_ICON_API}/${mainAddress.toLowerCase()}.png`;
     }
 
     return (

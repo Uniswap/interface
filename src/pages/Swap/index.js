@@ -103,7 +103,7 @@ class Swap extends Component {
       return false;
     }
 
-    const { value: allowance, label, decmals } = selectors().getApprovals(
+    const { value: allowance, label, decimals } = selectors().getApprovals(
       inputCurrency,
       account,
       exchangeAddresses.fromToken[inputCurrency]

@@ -1,6 +1,4 @@
-const initialState = {
-  currentAddress: '',
-  balance: {},
+const RINKEBY = {
   exchangeAddresses: {
     addresses: [
       ['BAT','0x9B913956036a3462330B0642B20D3879ce68b450'],
@@ -28,8 +26,68 @@ const initialState = {
   },
 };
 
-export default (state = initialState, { type }) => {
+const MAIN = {
+  exchangeAddresses: {
+    addresses: [
+      ['BAT', '0x31684EB08E0d86AE970F4C2f9110afBce9C4C984'],
+      ['DAI', '0xB23601D1E65002fA3173A0982b8E4AD5B46C7863'],
+      ['MKR', '0x405f6187BeE030B1DF486968C673907F0fd58BE1'],
+      ['ANT', '0x264B884Df87fBB97997994181d054e8657eB5c78'],
+      ['REP', '0x997C2c6b08E33313C5512Fd3C6eF235BF0139Ca3'],
+      ['ZRX', '0xE9674e73887bDCCd8fd46861a4f5b1E6485789BE'],
+      ['SNT', '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2'],
+    ],
+    fromToken: {
+      '0x0D8775F648430679A709E98d2b0Cb6250d2887EF': '0x31684EB08E0d86AE970F4C2f9110afBce9C4C984',
+      '0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359': '0xB23601D1E65002fA3173A0982b8E4AD5B46C7863',
+      '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2': '0x405f6187BeE030B1DF486968C673907F0fd58BE1',
+      '0x960b236A07cf122663c4303350609A66A7B288C0': '0x264B884Df87fBB97997994181d054e8657eB5c78',
+      '0x1985365e9f78359a9B6AD760e32412f4a445E862': '0x997C2c6b08E33313C5512Fd3C6eF235BF0139Ca3',
+      '0xE41d2489571d322189246DaFA5ebDe1F4699F498': '0xE9674e73887bDCCd8fd46861a4f5b1E6485789BE',
+      '0x744d70FDBE2Ba4CF95131626614a1763DF805B9E': '0x63d4b39137dF65ebEad4E15456c291284fCB537C',
+    },
+  },
+  tokenAddresses: {
+    addresses: [
+      ['BAT', '0x0D8775F648430679A709E98d2b0Cb6250d2887EF'],
+      ['DAI', '0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359'],
+      ['MKR', '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2'],
+      ['ANT', '0x960b236A07cf122663c4303350609A66A7B288C0'],
+      ['REP', '0x1985365e9f78359a9B6AD760e32412f4a445E862'],
+      ['ZRX', '0xE41d2489571d322189246DaFA5ebDe1F4699F498'],
+      ['SNT', '0x744d70FDBE2Ba4CF95131626614a1763DF805B9E'],
+    ],
+  },
+};
+
+const SET_ADDRESSES = 'app/addresses/setAddresses';
+
+const initialState = RINKEBY;
+
+export const setAddresses = networkId => {
+  switch(networkId) {
+    // Main Net
+    case 1:
+    case '1':
+      return {
+        type: SET_ADDRESSES,
+        payload: MAIN,
+      };
+    // Rinkeby
+    case 4:
+    case '4':
+      return {
+        type: SET_ADDRESSES,
+        payload: RINKEBY,
+      };
+  }
+};
+
+export default (state = initialState, { type, payload }) => {
   switch (type) {
-    default: return state;
+    case SET_ADDRESSES:
+      return payload;
+    default:
+      return state;
   }
 }
