@@ -71,8 +71,8 @@ class Swap extends Component {
     let outputError = '';
     let isValid = true;
     let isUnapproved = this.isUnapproved();
-    const inputIsZero = BN(inputValue).isEqualTo(BN(0));
-    const outputIsZero = BN(outputValue).isEqualTo(BN(0));
+    const inputIsZero = BN(inputValue).isZero();
+    const outputIsZero = BN(outputValue).isZero();
 
     if (!inputValue || inputIsZero || !outputValue || outputIsZero || !inputCurrency || !outputCurrency || isUnapproved) {
       isValid = false;
@@ -97,19 +97,19 @@ class Swap extends Component {
 
   isUnapproved() {
     const { account, exchangeAddresses, selectors } = this.props;
-    const { inputCurrency } = this.state;
+    const { inputCurrency, inputValue } = this.state;
 
     if (!inputCurrency || inputCurrency === 'ETH') {
       return false;
     }
 
-    const { value, label } = selectors().getApprovals(
+    const { value: allowance, label, decmals } = selectors().getApprovals(
       inputCurrency,
       account,
       exchangeAddresses.fromToken[inputCurrency]
     );
 
-    if (!label || value.isLessThan(BN(10 ** 22))) {
+    if (label && allowance.isLessThan(BN(inputValue * 10 ** decimals || 0))) {
       return true;
     }
 
@@ -125,7 +125,7 @@ class Swap extends Component {
 
     const editedValue = lastEditedField === INPUT ? this.state.inputValue : this.state.outputValue;
 
-    if (BN(editedValue).isEqualTo(BN(0))) {
+    if (BN(editedValue).isZero()) {
       return;
     }
 
@@ -483,8 +483,8 @@ class Swap extends Component {
       outputCurrency,
     } = this.state;
 
-    const inputIsZero = BN(inputValue).isEqualTo(BN(0));
-    const outputIsZero = BN(outputValue).isEqualTo(BN(0));
+    const inputIsZero = BN(inputValue).isZero();
+    const outputIsZero = BN(outputValue).isZero();
 
     if (!inputCurrency || !outputCurrency) {
       return (
