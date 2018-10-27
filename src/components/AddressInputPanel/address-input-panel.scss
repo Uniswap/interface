@@ -16,6 +16,10 @@
     &::placeholder {
       color: $chalice-gray;
     }
+
+    &--error {
+      color: $salmon-red;
+    }
   }
 
   &__recipient-row {

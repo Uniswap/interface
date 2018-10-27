@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Header from '../../components/Header';
 import AddLiquidity from './AddLiquidity';
+import CreateExchange from './CreateExchange';
 import "./pool.scss";
 
 const ADD_LIQUIDITY = 'Add Liquidity';
@@ -15,10 +16,12 @@ class Pool extends Component {
   renderContent() {
     switch (this.state.selectedMode) {
       case ADD_LIQUIDITY:
+        // return <AddLiquidity/>;
       case CREATE_EXCHANGE:
+        return <CreateExchange/>;
       case REMOVE_LIQUIDITY:
       default:
-        return <AddLiquidity />
+        return <AddLiquidity/>;
     }
   }
 

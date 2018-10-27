@@ -67,14 +67,30 @@ const ADD_EXCHANGE = 'app/addresses/addExchange';
 
 const initialState = RINKEBY;
 
-export const addExchange = ({label, exchangeAddress, tokenAddress}) => ({
-  type: ADD_EXCHANGE,
-  payload: {
-    label,
-    exchangeAddress,
-    tokenAddress,
-  },
-});
+export const addExchange = ({label, exchangeAddress, tokenAddress}) => (dispatch, getState) => {
+  const { addresses: { tokenAddresses, exchangeAddresses } } = getState();
+
+  if (tokenAddresses.addresses.filter(([ symbol ]) => symbol === label).length) {
+    return;
+  }
+
+  if (tokenAddresses.addresses.filter(([ symbol ]) => symbol === label).length) {
+    return;
+  }
+
+  if (exchangeAddresses.fromToken[tokenAddresses]) {
+    return;
+  }
+
+  dispatch({
+    type: ADD_EXCHANGE,
+      payload: {
+      label,
+        exchangeAddress,
+        tokenAddress,
+    },
+  });
+};
 
 export const setAddresses = networkId => {
   switch(networkId) {
@@ -119,7 +135,7 @@ function handleAddExchange(state, { payload }) {
       ...state.exchangeAddresses,
       addresses: [
         ...state.exchangeAddresses.addresses,
-        [label,exchangeAddress]
+        [label, exchangeAddress]
       ],
       fromToken: {
         ...state.exchangeAddresses.fromToken,
