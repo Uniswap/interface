@@ -260,7 +260,7 @@ export const sync = () => async (dispatch, getState) => {
         const decimals = tokenBalance.decimals || await contract.methods.decimals().call();
         const symbol = TOKEN_LABEL_FALLBACK[tokenAddress] || tokenBalance.label || await contract.methods.symbol().call();
 
-        if (tokenBalance.value.isEqualTo(BN(balance))) {
+        if (tokenBalance.value.isEqualTo(BN(balance)) && tokenBalance.label && tokenBalance.decimals) {
           return;
         }
 
