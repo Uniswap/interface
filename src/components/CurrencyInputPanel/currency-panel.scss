@@ -55,6 +55,7 @@
   }
 
   &__input {
+    font-size: 1.5rem;
     @extend %borderless-input;
     &--error {
       color: $salmon-red;
@@ -139,6 +140,7 @@
 
   &__selected-token-logo {
     margin-right: .4rem;
+    border-radius: 1rem;
     object-fit: contain;
   }
 }
@@ -178,12 +180,16 @@
     @extend %row-nowrap;
     align-items: center;
     padding: 1rem 1.5rem;
+    margin: .25rem .5rem;
     justify-content: space-between;
     cursor: pointer;
     user-select: none;
 
     &--selected {
-      background: $mercury-gray;
+      background-color: $concrete-gray;
+      box-sizing: border-box;
+      border: 1px solid $mercury-gray;
+      border-radius: 2.5rem;
 
       .token-modal__token-label {
         color: $black;
@@ -211,11 +217,27 @@
 
   &__token-logo {
     object-fit: contain;
+    border-radius: 1rem;
   }
 
   &__token-label {
-    color: $silver-gray;
+    color: $dove-gray;
     font-weight: 200;
+  }
+
+  @media only screen and (min-device-width : 768px) {
+    max-width: 560px;
+    max-height: 768px;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 1rem;
+    padding-bottom: 1rem;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    margin-top: 4rem;
   }
 }
 
@@ -227,5 +249,3 @@
 .token-modal-appear.modal-container-appear-active {
   bottom: 0;
 }
-
-

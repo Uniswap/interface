@@ -84,6 +84,13 @@ class Web3Status extends Component {
         })}
         onClick={this.handleClick}
       >
+        <div className="web3-status__text">
+          {
+            hasPendingTransactions ?
+              getPendingText(pendingTransactions) :
+              getText(address)
+          }
+        </div>
         <div
           className="web3-status__identicon"
           ref={el => {
@@ -96,16 +103,9 @@ class Web3Status extends Component {
             }
 
             el.innerHTML = '';
-            el.appendChild(Jazzicon(18, parseInt(address.slice(2), 16)));
+            el.appendChild(Jazzicon(16, parseInt(address.slice(2), 16)));
           }}
         />
-        <div className="web3-status__text">
-          {
-            hasPendingTransactions ?
-              getPendingText(pendingTransactions) :
-              getText(address)
-          }
-        </div>
         {this.renderModal()}
       </div>
     );
