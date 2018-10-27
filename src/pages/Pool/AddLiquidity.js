@@ -139,7 +139,7 @@ class AddLiquidity extends Component {
     const block = await promisify(web3, 'getBlock', blockNumber);
     const deadline = block.timestamp + 300;
     const MAX_LIQUIDITY_SLIPPAGE = 0.025;
-    const minLiquidity = liquidityMinted.multipliedBy(1 - MAX_LIQUIDITY_SLIPPAGE);
+    const minLiquidity = this.isNewExchange() ? BN(0) : liquidityMinted.multipliedBy(1 - MAX_LIQUIDITY_SLIPPAGE);
     const maxTokens = tokenAmount.multipliedBy(1 + MAX_LIQUIDITY_SLIPPAGE);
 
     try {
@@ -500,7 +500,7 @@ class AddLiquidity extends Component {
             )
             : null
         }
-        <ModeSelector />
+        <ModeSelector title="Add Liquidity" />
         <CurrencyInputPanel
           title="Deposit"
           extraText={this.getBalance(inputCurrency)}

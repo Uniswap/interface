@@ -29,7 +29,7 @@ class NavigationTabs extends Component {
           push(path);
           this.setState({ selectedPath: path });
         }}
-        isSelected={path === selectedPath }
+        isSelected={selectedPath.indexOf(path) > -1}
       />
     )
   }

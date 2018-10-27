@@ -82,9 +82,9 @@
 .pool-modal {
   background-color: $white;
   position: relative;
-  bottom: 7.875rem;
+  bottom: 11.0625rem;
   width: 100%;
-  height: 7.875rem;
+  height: 11.0625rem;
   z-index: 2000;
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
@@ -115,4 +115,23 @@
 
 .pool-modal-appear.modal-container-appear-active {
   bottom: 0;
+}
+
+.create-exchange {
+  &__summary-panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: $concrete-gray;
+    width: 100%;
+    text-align: center;
+    border-top-left-radius: .625rem;
+    border-top-right-radius: .625rem;
+  }
+
+  &__summary-text {
+    padding: .75rem;
+    font-size: .75rem;
+    color: $dove-gray;
+  }
 }
