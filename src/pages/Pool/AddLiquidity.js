@@ -70,19 +70,19 @@ class AddLiquidity extends Component {
 
   isUnapproved() {
     const { account, exchangeAddresses, selectors } = this.props;
-    const { outputCurrency } = this.state;
+    const { outputCurrency, outputValue } = this.state;
 
     if (!outputCurrency) {
       return false;
     }
 
-    const { value, label } = selectors().getApprovals(
+    const { value: allowance, label, decimals } = selectors().getApprovals(
       outputCurrency,
       account,
       exchangeAddresses.fromToken[outputCurrency]
     );
 
-    if (!label || value.isLessThan(BN(10 ** 22))) {
+    if (label && allowance.isLessThan(BN(outputValue * 10 ** decimals || 0))) {
       return true;
     }
 
@@ -183,8 +183,8 @@ class AddLiquidity extends Component {
     let inputError;
     let outputError;
     let isValid = true;
-    const inputIsZero = BN(inputValue).isEqualTo(BN(0));
-    const outputIsZero = BN(outputValue).isEqualTo(BN(0));
+    const inputIsZero = BN(inputValue).isZero();
+    const outputIsZero = BN(outputValue).isZero();
 
     if (!inputValue || inputIsZero || !outputValue || outputIsZero || !inputCurrency || !outputCurrency || this.isUnapproved()) {
       isValid = false;
@@ -259,8 +259,8 @@ class AddLiquidity extends Component {
       inputCurrency,
       outputCurrency,
     } = this.state;
-    const inputIsZero = BN(inputValue).isEqualTo(BN(0));
-    const outputIsZero = BN(outputValue).isEqualTo(BN(0));
+    const inputIsZero = BN(inputValue).isZero();
+    const outputIsZero = BN(outputValue).isZero();
 
     if (!inputCurrency || !outputCurrency) {
       return (

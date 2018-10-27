@@ -210,15 +210,16 @@ class CurrencyInputPanel extends Component {
       exchangeAddresses: { fromToken },
       web3,
       disableUnlock,
+      value,
     } = this.props;
 
     if (disableUnlock || !selectedTokenAddress || selectedTokenAddress === 'ETH') {
       return;
     }
 
-    const { value, decimals, label } = selectors().getApprovals(selectedTokenAddress, account, fromToken[selectedTokenAddress]);
+    const { value: allowance, decimals, label } = selectors().getApprovals(selectedTokenAddress, account, fromToken[selectedTokenAddress]);
 
-    if (!label || value.isGreaterThan(BN(10 ** 22))) {
+    if (!label || allowance.isGreaterThanOrEqualTo(BN(value * 10 ** decimals || 0))) {
       return;
     }
 
