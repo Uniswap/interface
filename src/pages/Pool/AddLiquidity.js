@@ -7,8 +7,8 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
 import NavigationTabs from '../../components/NavigationTabs';
 import Modal from '../../components/Modal';
-import { selectors, sync } from '../../ducks/web3connect';
-import ArrowDown from '../../assets/images/arrow-down-blue.svg';
+import { selectors } from '../../ducks/web3connect';
+import ArrowDown from '../../assets/images/plus-blue.svg';
 import DropdownBlue from "../../assets/images/dropdown-blue.svg";
 import DropupBlue from "../../assets/images/dropup-blue.svg";
 import ModeSelector from './ModeSelector';
@@ -55,6 +55,41 @@ class AddLiquidity extends Component {
       outputCurrency !== nextState.outputCurrency ||
       lastEditedField !== nextState.lastEditedField ||
       showSummaryModal !== nextState.showSummaryModal;
+  }
+
+  componentWillReceiveProps() {
+    this.recalcForm();
+  }
+
+  recalcForm = () => {
+    const {
+      outputCurrency,
+      inputValue,
+      outputValue,
+      lastEditedField,
+    } = this.state;
+    const exchangeRate = this.getExchangeRate();
+    const append = {};
+
+    if (!outputCurrency || this.isNewExchange()) {
+      return;
+    }
+
+    if (lastEditedField === INPUT) {
+      const newOutputValue = exchangeRate.multipliedBy(inputValue).toFixed(7);
+      if (newOutputValue !== outputValue) {
+        append.outputValue = newOutputValue;
+      }
+    }
+
+    if (lastEditedField === OUTPUT) {
+      const newInputValue = BN(outputValue).dividedBy(exchangeRate).toFixed(7);
+      if (newInputValue !== inputValue) {
+        append.inputValue = newInputValue;
+      }
+    }
+
+    this.setState(append);
   }
 
   getBalance(currency) {
@@ -130,11 +165,16 @@ class AddLiquidity extends Component {
       outputValue = BN(value).dividedBy(exchangeRate).toFixed(7);
     }
 
-    this.setState({
-      outputValue,
+    const append = {
       inputValue: value,
       lastEditedField: INPUT,
-    });
+    };
+
+    if (!this.isNewExchange()) {
+      append.outputValue = outputValue;
+    }
+
+    this.setState(append);
   };
 
   onOutputChange = value => {
@@ -150,12 +190,33 @@ class AddLiquidity extends Component {
       inputValue = exchangeRate.multipliedBy(value).toFixed(7);
     }
 
-    this.setState({
-      inputValue,
+    const append = {
       outputValue: value,
-      lastEditedField: OUTPUT,
-    });
+      lastEditedField: INPUT,
+    };
+
+    if (!this.isNewExchange()) {
+      append.inputValue = inputValue;
+    }
+
+    this.setState(append);
   };
+
+  isNewExchange() {
+    const { selectors, exchangeAddresses: { fromToken } } = this.props;
+    const { inputCurrency, outputCurrency } = this.state;
+    const eth = [inputCurrency, outputCurrency].filter(currency => currency === 'ETH')[0];
+    const token = [inputCurrency, outputCurrency].filter(currency => currency !== 'ETH')[0];
+
+    if (!eth || !token) {
+      return false;
+    }
+
+    const { value: tokenValue } = selectors().getBalance(fromToken[token], token);
+    const { value: ethValue } = selectors().getBalance(fromToken[token], eth);
+
+    return tokenValue.isZero() && ethValue.isZero();
+  }
 
   getExchangeRate() {
     const { selectors, exchangeAddresses: { fromToken } } = this.props;
@@ -209,33 +270,52 @@ class AddLiquidity extends Component {
   }
 
   renderInfo() {
+    const blank = (
+      <div className="pool__summary-panel">
+        <div className="pool__exchange-rate-wrapper">
+          <span className="pool__exchange-rate">Exchange Rate</span>
+          <span> - </span>
+        </div>
+        <div className="pool__exchange-rate-wrapper">
+          <span className="swap__exchange-rate">Current Pool Size</span>
+          <span> - </span>
+        </div>
+      </div>
+    );
+
     const { selectors, exchangeAddresses: { fromToken } } = this.props;
-    const { inputCurrency, outputCurrency } = this.state;
+    const { getBalance } = selectors();
+    const { inputCurrency, outputCurrency, inputValue, outputValue } = this.state;
     const eth = [inputCurrency, outputCurrency].filter(currency => currency === 'ETH')[0];
     const token = [inputCurrency, outputCurrency].filter(currency => currency !== 'ETH')[0];
 
     if (!eth || !token) {
+      return blank;
+    }
+
+    const { value: tokenValue, decimals, label } = getBalance(fromToken[token], token);
+    const { value: ethValue } = getBalance(fromToken[token]);
+
+    if (this.isNewExchange()) {
+      const rate = BN(outputValue).dividedBy(inputValue);
+      const rateText = rate.isNaN() ? '---' : rate.toFixed(4);
       return (
         <div className="pool__summary-panel">
           <div className="pool__exchange-rate-wrapper">
             <span className="pool__exchange-rate">Exchange Rate</span>
-            <span> - </span>
+            <span>{`1 ETH = ${rateText} ${label}`}</span>
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">Current Pool Size</span>
-            <span> - </span>
+            <span>{` ${ethValue.dividedBy(10 ** 18).toFixed(2)} ${eth} + ${tokenValue.dividedBy(10 ** decimals).toFixed(2)} ${label}`}</span>
           </div>
         </div>
       )
     }
 
-    const {
-      value: tokenValue,
-      decimals,
-      label
-    } = selectors().getTokenBalance(token, fromToken[token]);
-
-    const { value: ethValue } = selectors().getBalance(fromToken[token]);
+    if (tokenValue.dividedBy(ethValue).isNaN()) {
+      return blank;
+    }
 
     return (
       <div className="pool__summary-panel">
@@ -302,7 +382,7 @@ class AddLiquidity extends Component {
       )
     }
 
-    const { value, decimals, label } = selectors().getTokenBalance(outputCurrency, fromToken[outputCurrency]);
+    const { label } = selectors().getTokenBalance(outputCurrency, fromToken[outputCurrency]);
 
     if (!inputValue || !outputValue) {
       return (
@@ -330,7 +410,6 @@ class AddLiquidity extends Component {
     const {
       inputValue,
       outputValue,
-      inputCurrency,
       outputCurrency,
       showSummaryModal,
     } = this.state;
@@ -381,6 +460,8 @@ class AddLiquidity extends Component {
   render() {
     const {
       isConnected,
+      exchangeAddresses: { fromToken },
+      selectors,
     } = this.props;
 
     const {
@@ -388,10 +469,10 @@ class AddLiquidity extends Component {
       outputValue,
       inputCurrency,
       outputCurrency,
-      lastEditedField,
     } = this.state;
 
     const { inputError, outputError, isValid } = this.validate();
+    const { label } = selectors().getTokenBalance(outputCurrency, fromToken[outputCurrency]);
 
     return [
       <div
@@ -405,6 +486,20 @@ class AddLiquidity extends Component {
             'header--inactive': !isConnected,
           })}
         />
+        {
+          this.isNewExchange()
+            ? (
+              <div className="pool__new-exchange-warning">
+                <div className="pool__new-exchange-warning-text">
+                  You are the first person to add liquidity🚰!
+                </div>
+                <div className="pool__new-exchange-warning-text">
+                  {`A new exchange rate will be set based on your deposits. Please make sure that your ETH and ${label} deposits have the same fiat value.`}
+                </div>
+              </div>
+            )
+            : null
+        }
         <ModeSelector />
         <CurrencyInputPanel
           title="Deposit"
@@ -426,7 +521,9 @@ class AddLiquidity extends Component {
           extraText={this.getBalance(outputCurrency)}
           selectedTokenAddress={outputCurrency}
           onCurrencySelected={currency => {
-            this.setState({ outputCurrency: currency });
+            this.setState({
+              outputCurrency: currency,
+            }, this.recalcForm);
           }}
           onValueChange={this.onOutputChange}
           value={outputValue}
@@ -465,7 +562,6 @@ export default drizzleConnect(
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),
-    sync: () => dispatch(sync()),
   })
 )
 

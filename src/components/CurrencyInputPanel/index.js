@@ -8,12 +8,13 @@ import Modal from '../Modal';
 import TokenLogo from '../TokenLogo';
 import SearchIcon from '../../assets/images/magnifying-glass.svg';
 import { selectors } from "../../ducks/web3connect";
+import { addExchange } from "../../ducks/addresses";
 import { BigNumber as BN } from 'bignumber.js';
 
 import './currency-panel.scss';
 
 import ERC20_ABI from '../../abi/erc20';
-import EXCHANGE_ABI from "../../abi/exchange";
+import FACTORY_ABI from '../../abi/factory';
 
 const FUSE_OPTIONS = {
   includeMatches: false,
@@ -45,12 +46,14 @@ class CurrencyInputPanel extends Component {
     exchangeAddresses: PropTypes.shape({
       fromToken: PropTypes.object.isRequired,
     }).isRequired,
+    factoryAddress: PropTypes.string,
     selectedTokens: PropTypes.array.isRequired,
     errorMessage: PropTypes.string,
     account: PropTypes.string,
     selectedTokenAddress: PropTypes.string,
     disableTokenSelect: PropTypes.bool,
     selectors: PropTypes.func.isRequired,
+    addExchange: PropTypes.func.isRequired,
     filteredTokens: PropTypes.arrayOf(PropTypes.string),
     disableUnlock: PropTypes.bool,
   };
@@ -96,43 +99,36 @@ class CurrencyInputPanel extends Component {
     });
 
     this.props.onCurrencySelected(address);
-
-    // if (address && address !== 'ETH') {
-    //   const { drizzle } = this.context;
-    //   const { fromToken } = this.props.exchangeAddresses;
-    //   const { web3 } = drizzle;
-    //
-    //   // Add Token Contract
-    //   if (!this.props.contracts[address]) {
-    //     const tokenConfig = {
-    //       contractName: address,
-    //       web3Contract: new web3.eth.Contract(ERC20_ABI, address),
-    //     };
-    //     const tokenEvents = ['Approval', 'Transfer'];
-    //     this.context.drizzle.addContract(tokenConfig, tokenEvents, { from: this.props.account });
-    //   }
-    //
-    //   // Add Exchange Contract
-    //   const exchangeAddress = fromToken[address];
-    //   if (!exchangeAddress) {
-    //     return;
-    //   }
-    //
-    //   if (!this.props.contracts[exchangeAddress]) {
-    //     const exchangeConfig = {
-    //       contractName: exchangeAddress,
-    //       web3Contract: new web3.eth.Contract(EXCHANGE_ABI, exchangeAddress),
-    //     };
-    //     const exchangeEvents = ['Approval', 'Transfer', 'TokenPurchase', 'EthPurchase', 'AddLiquidity', 'RemoveLiquidity'];
-    //     this.context.drizzle.addContract(exchangeConfig, exchangeEvents , { from: this.props.account });
-    //   }
-    // }
   };
 
   renderTokenList() {
     const tokens = this.createTokenList();
     const { searchQuery } = this.state;
-    const { selectedTokens, disableTokenSelect } = this.props;
+    const {
+      selectedTokens,
+      disableTokenSelect,
+      web3,
+      selectors,
+      account,
+      factoryAddress,
+      exchangeAddresses: { fromToken },
+      addExchange,
+    } = this.props;
+
+    if (web3.utils.isAddress(searchQuery)) {
+      const tokenAddress = searchQuery;
+      const { label } = selectors().getBalance(account, tokenAddress);
+      const factory = new web3.eth.Contract(FACTORY_ABI, factoryAddress);
+      const exchangeAddress = fromToken[tokenAddress];
+
+      if (!exchangeAddress) {
+        factory.methods.getExchange(tokenAddress).call((err, data) => {
+          if (!err && data !== '0x0000000000000000000000000000000000000000') {
+            addExchange({ label, tokenAddress, exchangeAddress: data });
+          }
+        });
+      }
+    }
 
     if (disableTokenSelect) {
       return;
@@ -145,7 +141,14 @@ class CurrencyInputPanel extends Component {
     } else {
       const fuse = new Fuse(tokens, FUSE_OPTIONS);
       results = fuse.search(this.state.searchQuery);
+    }
 
+    if (!results.length) {
+      return (
+        <div className="token-modal__token-row token-modal__token-row--no-exchange">
+          <div>No Exchange Found</div>
+        </div>
+      )
     }
 
     return results.map(({ label, address }) => {
@@ -155,7 +158,9 @@ class CurrencyInputPanel extends Component {
         <div
           key={label}
           className={
-            classnames('token-modal__token-row', { 'token-modal__token-row--selected': isSelected })
+            classnames('token-modal__token-row', {
+              'token-modal__token-row--selected': isSelected,
+            })
           }
           onClick={() => this.onTokenSelect(address)}
         >
@@ -172,7 +177,7 @@ class CurrencyInputPanel extends Component {
     }
 
     return (
-      <Modal onClose={() => this.setState({ isShowingModal: false })}>
+      <Modal onClose={() => this.setState({ isShowingModal: false, searchQuery: '' })}>
         <CSSTransitionGroup
           transitionName="token-modal"
           transitionAppear={true}
@@ -332,6 +337,7 @@ class CurrencyInputPanel extends Component {
 export default drizzleConnect(
   CurrencyInputPanel,
   state => ({
+    factoryAddress: state.addresses.factoryAddress,
     exchangeAddresses: state.addresses.exchangeAddresses,
     tokenAddresses: state.addresses.tokenAddresses,
     contracts: state.contracts,
@@ -341,5 +347,6 @@ export default drizzleConnect(
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),
+    addExchange: opts => dispatch(addExchange(opts)),
   }),
 );

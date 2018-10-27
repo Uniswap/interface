@@ -58,6 +58,25 @@
       background: $mercury-gray;
     }
   }
+
+  &__new-exchange-warning {
+    padding: 1rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba($pizazz-orange, .4);
+    background-color: rgba($pizazz-orange, .1);
+    border-radius: 1rem;
+  }
+
+  &__new-exchange-warning-text {
+    font-size: .75rem;
+    line-height: 1rem;
+    text-align: center;
+
+    &:first-child {
+      padding-bottom: .3rem;
+      font-weight: 500;
+    }
+  }
 }
 
 .pool-modal {
