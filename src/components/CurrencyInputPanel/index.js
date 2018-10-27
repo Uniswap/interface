@@ -219,7 +219,13 @@ class CurrencyInputPanel extends Component {
 
     const { value: allowance, decimals, label } = selectors().getApprovals(selectedTokenAddress, account, fromToken[selectedTokenAddress]);
 
-    if (!label || allowance.isGreaterThanOrEqualTo(BN(value * 10 ** decimals || 0))) {
+    if (
+      !label ||
+      (
+        allowance.isGreaterThanOrEqualTo(BN((value || 0) * 10 ** decimals)) &&
+        !BN(allowance).isZero()
+      )
+    )  {
       return;
     }
 
