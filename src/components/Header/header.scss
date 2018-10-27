@@ -5,12 +5,14 @@
 
   &__top {
     @extend %row-nowrap;
-    padding: 1.5rem 1.5rem .5rem 1.5rem;
+    padding: 1.25rem .75rem;
     align-items: center;
+    border-bottom: 1px solid $concrete-gray;
   }
 
   &__title {
     font-size: 1rem;
+    font-weight: 500;
     margin-left: 1rem;
     line-height: 1.5rem;
     color: $wisteria-purple;
@@ -22,7 +24,7 @@
   }
 
   &__navigation {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
 
   &--inactive {
@@ -65,5 +67,17 @@
       margin-left: 1rem;
     }
   }
-}
 
+  @media only screen and (min-device-width : 768px) {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    width: 100vw;
+
+    &__top {
+      border: none;
+      padding: 1.25rem;
+    }
+  }
+}

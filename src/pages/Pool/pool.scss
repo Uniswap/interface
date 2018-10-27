@@ -91,9 +91,24 @@
   transition: 250ms ease-in-out;
   padding: 1rem 0 .5rem;
 
+  @media only screen and (min-device-width : 768px) {
+    max-width: 560px;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 1rem;
+    padding-bottom: 1rem;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    margin-top: 4rem;
+  }
+
   &__item {
     padding: 1rem;
     font-size: 1rem;
+    cursor: pointer;
 
     &:hover {
       background-color: $concrete-gray;
