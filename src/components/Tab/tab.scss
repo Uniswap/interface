@@ -3,7 +3,7 @@
 .tabs {
   @extend %row-nowrap;
   align-items: center;
-  height: 3rem;
+  height: 2.5rem;
   background-color: $concrete-gray;
   border-radius: 3rem;
   box-shadow: 0 0 0 .5px darken($concrete-gray, 5);
@@ -21,7 +21,7 @@
   @extend %row-nowrap;
   align-items: center;
   justify-content: center;
-  height: 3rem;
+  height: 2.5rem;
   flex: 1 0 auto;
   border-radius: 3rem;
   transition: 300ms ease-in-out;
