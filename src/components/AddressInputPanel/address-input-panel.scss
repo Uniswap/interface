@@ -4,12 +4,14 @@
   @extend %col-nowrap;
 
   &__input {
-    font-size: .75rem;
+    font-size: 1rem;
     outline: none;
     border: none;
     flex: 1 1 auto;
     width: 0;
     color: $royal-blue;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &::placeholder {
       color: $chalice-gray;

@@ -5,7 +5,7 @@
 
   &__top {
     @extend %row-nowrap;
-    padding: 1.5rem;
+    padding: 1.5rem 1.5rem .5rem 1.5rem;
     align-items: center;
   }
 
@@ -22,7 +22,7 @@
   }
 
   &__navigation {
-    margin: 0 .75rem;
+    margin-bottom: 2rem;
   }
 
   &--inactive {

@@ -11,7 +11,6 @@
 
   &__content {
     padding: 1rem .75rem;
-    margin-top: 1rem;
     flex: 1 1 auto;
     height: 0;
     overflow-y: auto;
@@ -46,14 +45,50 @@
   }
 
   &__summary-wrapper {
-    margin: 2rem 1rem 0;
+    margin: 2rem 1rem;
     color: #737373;
     font-size: .75rem;
     text-align: center;
   }
 
+  &__summary-modal {
+    background-color: $white;
+    position: relative;
+    bottom: 12rem;
+    height: 12rem;
+    z-index: 2000;
+    padding: 1rem;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    transition: 250ms ease-in-out;
+
+    .swap__open-details-container {
+      padding: 0.5rem 0;
+      margin-bottom: 1rem;
+    }
+  }
+
+  &__open-details-container {
+    @extend %row-nowrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: .625rem 1rem;
+    font-size: .75rem;
+    color: $royal-blue;
+
+    img {
+      height: .75rem;
+      width: .75rem;
+    }
+  }
+
   &__highlight-text {
     color: $royal-blue;
+  }
+
+  &__cta-container {
+    display: flex;
+    margin-top: 1.5rem;
   }
 
   &__cta-btn {
@@ -68,4 +103,12 @@
   &__sub-text {
     margin-top: 5px;
   }
+}
+
+.summary-modal-appear {
+  bottom: 0;
+}
+
+.summary-modal-appear.modal-container-appear-active {
+  bottom: 0;
 }

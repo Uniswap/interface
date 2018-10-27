@@ -121,11 +121,6 @@ function Header (props) {
         </div>
         <Web3Status isConnected />
       </div>
-      <NavigationTabs
-        className={classnames('header__navigation', {
-          'header--inactive': !props.isConnected,
-        })}
-      />
     </div>
   )
 }
