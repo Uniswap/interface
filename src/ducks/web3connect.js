@@ -5,6 +5,7 @@ import { drizzleConnect } from 'drizzle-react';
 import {BigNumber as BN} from 'bignumber.js';
 import Web3 from 'web3';
 import ERC20_ABI from "../abi/erc20";
+import ERC20_WITH_BYTES_ABI from "../abi/erc20_symbol_bytes32";
 
 export const INITIALIZE = 'we3connect/initialize';
 export const UPDATE_ACCOUNT = 'we3connect/updateAccount';
@@ -15,7 +16,6 @@ export const UPDATE_TOKEN_BALANCE = 'web3connect/updateTokenBalance';
 export const WATCH_APPROVALS = 'web3connect/watchApprovals';
 export const UPDATE_APPROVALS = 'web3connect/updateApprovals';
 export const ADD_CONTRACT = 'web3connect/addContract';
-
 
 const initialState = {
   web3: null,
@@ -33,7 +33,6 @@ const initialState = {
   },
   pendingTransactions: [],
   transactions: {},
-  errorMessage: '',
   watched: {
     balances: {
       ethereum: [],
@@ -43,18 +42,17 @@ const initialState = {
   contracts: {},
 };
 
+const TOKEN_LABEL_FALLBACK = {
+  '0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359': 'DAI',
+  '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2': 'MKR',
+};
+
 // selectors
 export const selectors = () => (dispatch, getState) => {
   const state = getState().web3connect;
 
   const getTokenBalance = (tokenAddress, address) => {
-    const tokenBalances = state.balances[tokenAddress];
-
-    if (!tokenBalances) {
-      dispatch(watchBalance({ balanceOf: address, tokenAddress }));
-      return Balance(0);
-    }
-
+    const tokenBalances = state.balances[tokenAddress] || {};
     const balance = tokenBalances[address];
     if (!balance) {
       dispatch(watchBalance({ balanceOf: address, tokenAddress }));
@@ -70,7 +68,6 @@ export const selectors = () => (dispatch, getState) => {
 
     if (!tokenAddress || tokenAddress === 'ETH') {
       const balance = state.balances.ethereum[address];
-
       if (!balance) {
         dispatch(watchBalance({ balanceOf: address }));
         return Balance(0, 'ETH');
@@ -204,7 +201,7 @@ export const updateApprovals = ({ tokenAddress, tokenOwner, spender, balance }) 
 });
 
 export const sync = () => async (dispatch, getState) => {
-  const { getBalance, getTokenBalance, getApprovals } = dispatch(selectors());
+  const { getBalance, getApprovals } = dispatch(selectors());
   const web3 = await dispatch(initialize());
   const {
     account,
@@ -224,10 +221,10 @@ export const sync = () => async (dispatch, getState) => {
     const balance = await web3.eth.getBalance(address);
     const { value } = getBalance(address);
 
-
     if (value.isEqualTo(BN(balance))) {
       return;
     }
+
     dispatch({
       type: UPDATE_ETH_BALANCE,
       payload: {
@@ -245,6 +242,7 @@ export const sync = () => async (dispatch, getState) => {
       }
 
       const contract = contracts[tokenAddress] || new web3.eth.Contract(ERC20_ABI, tokenAddress);
+
       if (!contracts[tokenAddress]) {
         dispatch({
           type: ADD_CONTRACT,
@@ -257,10 +255,10 @@ export const sync = () => async (dispatch, getState) => {
 
       const watchlist = watched.balances[tokenAddress] || [];
       watchlist.forEach(async address => {
-        const tokenBalance = getTokenBalance(tokenAddress, address);
+        const tokenBalance = getBalance(address, tokenAddress);
         const balance = await contract.methods.balanceOf(address).call();
         const decimals = tokenBalance.decimals || await contract.methods.decimals().call();
-        const symbol = tokenBalance.label || await contract.methods.symbol().call();
+        const symbol = TOKEN_LABEL_FALLBACK[tokenAddress] || tokenBalance.label || await contract.methods.symbol().call();
 
         if (tokenBalance.value.isEqualTo(BN(balance))) {
           return;
@@ -287,7 +285,7 @@ export const sync = () => async (dispatch, getState) => {
               const approvalBalance = getApprovals(tokenAddress, tokenOwnerAddress, spenderAddress);
               const balance = await contract.methods.allowance(tokenOwnerAddress, spenderAddress).call();
               const decimals = approvalBalance.decimals || await contract.methods.decimals().call();
-              const symbol = approvalBalance.label || await contract.methods.symbol().call();
+              const symbol = TOKEN_LABEL_FALLBACK[tokenAddress] || approvalBalance.label || await contract.methods.symbol().call();
 
               if (approvalBalance.label && approvalBalance.value.isEqualTo(BN(balance))) {
                 return;
@@ -318,7 +316,11 @@ export const startWatching = () => async (dispatch, getState) => {
 export default function web3connectReducer(state = initialState, { type, payload }) {
   switch (type) {
     case INITIALIZE:
-      return { ...state, web3: payload };
+      return {
+        ...state,
+        web3: payload,
+        initialized: true,
+      };
     case UPDATE_ACCOUNT:
       return {
         ...state,
