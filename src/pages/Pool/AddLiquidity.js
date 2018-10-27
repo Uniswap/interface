@@ -500,7 +500,7 @@ class AddLiquidity extends Component {
             )
             : null
         }
-        <ModeSelector />
+        <ModeSelector title="Add Liquidity" />
         <CurrencyInputPanel
           title="Deposit"
           extraText={this.getBalance(inputCurrency)}
