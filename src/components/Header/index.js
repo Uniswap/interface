@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { drizzleConnect } from 'drizzle-react'
+import { connect } from 'react-redux';
 import classnames from 'classnames';
 import UAParser from 'ua-parser-js';
 import Logo from '../Logo';
@@ -11,7 +11,6 @@ import MetamaskLogo from '../../assets/images/metamask-logo.png';
 import Web3Status from '../Web3Status';
 
 import "./header.scss";
-import NavigationTabs from "../NavigationTabs";
 
 const links = {
   coinbaseWallet: {
@@ -130,11 +129,10 @@ Header.propTypes = {
   isConnected: PropTypes.bool.isRequired,
 };
 
-export default drizzleConnect(
-  Header,
+export default connect(
   state => ({
     currentAddress: state.web3connect.account,
     initialized: state.web3connect.initialized,
     isConnected: !!state.web3connect.web3 && !!state.web3connect.account,
   }),
-);
+)(Header);

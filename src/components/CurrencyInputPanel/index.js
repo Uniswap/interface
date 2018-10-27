@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { drizzleConnect } from 'drizzle-react'
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { CSSTransitionGroup } from "react-transition-group";
 import classnames from 'classnames';
@@ -64,10 +64,6 @@ class CurrencyInputPanel extends Component {
     onCurrencySelected() {},
     onValueChange() {},
     selectedTokenAddress: '',
-  };
-
-  static contextTypes = {
-    drizzle: PropTypes.object,
   };
 
   state = {
@@ -334,8 +330,7 @@ class CurrencyInputPanel extends Component {
   }
 }
 
-export default drizzleConnect(
-  CurrencyInputPanel,
+export default connect(
   state => ({
     factoryAddress: state.addresses.factoryAddress,
     exchangeAddresses: state.addresses.exchangeAddresses,
@@ -349,4 +344,4 @@ export default drizzleConnect(
     selectors: () => dispatch(selectors()),
     addExchange: opts => dispatch(addExchange(opts)),
   }),
-);
+)(CurrencyInputPanel);

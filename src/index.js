@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { DrizzleProvider } from 'drizzle-react';
+import { Provider } from 'react-redux';
 import App from './pages/App';
 import store from './store';
 
@@ -8,13 +8,9 @@ import './index.scss';
 
 window.addEventListener('load', function() {
   ReactDOM.render(
-    <DrizzleProvider options={{
-      contracts: [],
-      events: [],
-      polls: { accounts: 60000, blocks: 60000 },
-    }} store={store}>
+    <Provider store={store}>
       <App />
-    </DrizzleProvider>
+    </Provider>
     , document.getElementById('root')
   );
 });

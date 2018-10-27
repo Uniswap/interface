@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { drizzleConnect } from 'drizzle-react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import {BigNumber as BN} from "bignumber.js";
 import { selectors } from '../../ducks/web3connect';
 import { CSSTransitionGroup } from "react-transition-group";
+import MediaQuery from 'react-responsive';
 import Header from '../../components/Header';
 import NavigationTabs from '../../components/NavigationTabs';
 import Modal from '../../components/Modal';
@@ -25,7 +26,6 @@ class Swap extends Component {
   static propTypes = {
     account: PropTypes.string,
     isConnected: PropTypes.bool.isRequired,
-    isValid: PropTypes.bool.isRequired,
     selectors: PropTypes.func.isRequired,
     web3: PropTypes.object.isRequired,
   };
@@ -689,7 +689,9 @@ class Swap extends Component {
 
     return (
       <div className="swap">
-        <Header />
+        <MediaQuery query="(max-device-width: 767px)">
+          <Header />
+        </MediaQuery>
         <div
           className={classnames('swap__content', {
             'swap--inactive': !this.props.isConnected,
@@ -753,8 +755,7 @@ class Swap extends Component {
   }
 }
 
-export default drizzleConnect(
-  Swap,
+export default connect(
   state => ({
     balances: state.web3connect.balances,
     isConnected: !!state.web3connect.account,
@@ -765,7 +766,7 @@ export default drizzleConnect(
   dispatch => ({
     selectors: () => dispatch(selectors()),
   }),
-);
+)(Swap);
 
 const b = text => <span className="swap__highlight-text">{text}</span>;
 

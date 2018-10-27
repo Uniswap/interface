@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { drizzleConnect } from 'drizzle-react'
+import { connect } from 'react-redux';
 import classnames from 'classnames';
 import Web3 from 'web3';
 import Jazzicon from 'jazzicon';
@@ -142,15 +142,14 @@ Web3Status.defaultProps = {
   address: 'Disconnected',
 };
 
-export default drizzleConnect(
-  Web3Status,
+export default connect(
   state => {
     const pendingTransactions = [];
-    Object.keys(state.transactions).forEach((transaction) => {
-      if (state.transactions[transaction] && state.transactions[transaction].status === 'pending') {
-        pendingTransactions.push(transaction);
-      }
-    });
+    // Object.keys(state.transactions).forEach((transaction) => {
+    //   if (state.transactions[transaction] && state.transactions[transaction].status === 'pending') {
+    //     pendingTransactions.push(transaction);
+    //   }
+    // });
 
     return {
       address: state.web3connect.account,
@@ -159,4 +158,4 @@ export default drizzleConnect(
       hasPendingTransactions: pendingTransactions.length > 0,
     };
   }
-);
+)(Web3Status);

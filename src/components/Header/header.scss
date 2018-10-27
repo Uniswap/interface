@@ -69,11 +69,10 @@
   }
 
   @media only screen and (min-device-width : 768px) {
-    position: fixed;
+    //position: fixed;
     top: 0px;
     left: 0px;
-    width: 100vw;
-    width: 100vw;
+    flex: 0 0 auto;
 
     &__top {
       border: none;

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { drizzleConnect } from 'drizzle-react';
 import PropTypes from 'prop-types';
 import c from 'classnames';
 
@@ -59,4 +58,4 @@ class AddressInputPanel extends Component {
   }
 }
 
-export default drizzleConnect(AddressInputPanel);
+export default AddressInputPanel;
