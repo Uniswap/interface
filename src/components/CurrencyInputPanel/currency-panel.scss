@@ -201,6 +201,12 @@
     &:active {
       background-color: darken($concrete-gray, 1);
     }
+
+    &--no-exchange {
+      color: $dove-gray;
+      justify-content: center;
+      background-color: darken($concrete-gray, 1);;
+    }
   }
 
   &__token-logo {
