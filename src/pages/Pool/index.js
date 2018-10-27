@@ -15,10 +15,9 @@ class Pool extends Component {
           <Header />
         </MediaQuery>
         <Switch>
-          <Route exact path="/pool/add" component={AddLiquidity} />
+          <Route exact path="/add-liquidity" component={AddLiquidity} />
           {/*<Route exact path="/remove" component={Send} />*/}
-          <Route exact path="/pool/create" component={CreateExchange} />
-          <Redirect exact from="/pool" to="/pool/add" />
+          <Route exact path="/create-exchange" component={CreateExchange} />
         </Switch>
       </div>
     );
