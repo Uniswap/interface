@@ -80,7 +80,7 @@ function Header (props) {
     <div className="header">
       <div
         className={classnames('header__dialog', {
-          'header__dialog--disconnected': !props.isConnected,
+          'header__dialog--disconnected': !props.isConnected && props.initialized,
         })}
       >
         <div>No Ethereum wallet found</div>
@@ -133,8 +133,8 @@ Header.propTypes = {
 export default drizzleConnect(
   Header,
   state => ({
-    // web3: console.log(state) || state.web3,
-    currentAddress: state.accounts[0],
-    isConnected: !!(state.drizzleStatus.initialized && state.accounts[0]),
+    currentAddress: state.web3connect.account,
+    initialized: state.web3connect.initialized,
+    isConnected: !!state.web3connect.web3 && !!state.web3connect.account,
   }),
 );
