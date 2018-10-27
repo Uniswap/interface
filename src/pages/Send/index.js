@@ -458,13 +458,6 @@ class Send extends Component {
             return;
           }
 
-          console.log(
-            BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
-            BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE).toFixed(0),
-            inputAmountB.multipliedBy(1.2).toFixed(0),
-            deadline,
-            outputCurrency,
-          )
           new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
             .methods
             .tokenToTokenTransferOutput(

@@ -51,7 +51,7 @@ class App extends Component {
           >
             <Route exact path="/swap" component={Swap} />
             <Route exact path="/send" component={Send} />
-            <Route exact path="/pool" component={Pool} />
+            <Route path="/pool" component={Pool} />
             <Redirect exact from="/" to="/swap" />
           </AnimatedSwitch>
         </BrowserRouter>
