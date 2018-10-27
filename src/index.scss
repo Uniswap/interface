@@ -23,7 +23,8 @@ html, body {
   z-index: 100;
   -webkit-tap-highlight-color:  rgba(255, 255, 255, 0);
   @media only screen and (min-device-width : 768px) {
-    background-color: $concrete-gray;
+    justify-content: center;
+    align-items: center;
   }
 }
 

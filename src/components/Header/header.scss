@@ -67,4 +67,17 @@
       margin-left: 1rem;
     }
   }
+
+  @media only screen and (min-device-width : 768px) {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    width: 100vw;
+
+    &__top {
+      border: none;
+      padding: 1.25rem;
+    }
+  }
 }
