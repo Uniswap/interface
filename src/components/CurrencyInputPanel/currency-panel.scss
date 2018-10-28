@@ -211,7 +211,20 @@
     &--no-exchange {
       color: $dove-gray;
       justify-content: center;
-      background-color: darken($concrete-gray, 1);;
+      background-color: darken($concrete-gray, 1);
+    }
+
+    &--create-exchange {
+      color: $white;
+      justify-content: center;
+      background-color: $malibu-blue;
+      &:hover {
+        background-color: lighten($malibu-blue, 1)
+      }
+
+      &:active {
+        background-color: darken($malibu-blue, 1);
+      }
     }
   }
 

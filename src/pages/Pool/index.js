@@ -22,7 +22,7 @@ class Pool extends Component {
         <Switch>
           <Route exact path="/add-liquidity" component={AddLiquidity} />
           <Route exact path="/remove-liquidity" component={RemoveLiquidity} />
-          <Route exact path="/create-exchange" component={CreateExchange} />
+          <Route exact path="/create-exchange/:tokenAddress?" component={CreateExchange} />
         </Switch>
       </div>
     );
