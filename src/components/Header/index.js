@@ -83,6 +83,20 @@ class BlockingWarning extends Component {
     } = this.props;
     let content = [];
 
+    const correctNetworkId = process.env.REACT_APP_NETWORK_ID || 1;
+    const correctNetwork = process.env.REACT_APP_NETWORK || 'Main Ethereum Network';
+
+    const wrongNetwork = networkId != correctNetworkId;
+
+    if (wrongNetwork && initialized) {
+      content = [
+        <div key="warning-title">You are on the wrong network</div>,
+        <div key="warning-desc" className="header__dialog__description">
+          {`Please switch to ${correctNetwork}`}
+        </div>,
+      ];
+    }
+
     if (!isConnected && initialized) {
       content = [
         <div key="warning-title">No Ethereum wallet found</div>,
@@ -109,19 +123,6 @@ class BlockingWarning extends Component {
                 ]
               )
           }
-        </div>,
-      ]
-    }
-
-    const correctNetworkId = process.env.REACT_APP_NETWORK_ID || 1;
-    const correctNetwork = process.env.REACT_APP_NETWORK || 'Main Ethereum Network';
-
-    const wrongNetwork = networkId != correctNetworkId;
-    if (wrongNetwork) {
-      content = [
-        <div key="warning-title">You are on the wrong network</div>,
-        <div key="warning-desc" className="header__dialog__description">
-          {`Please switch to ${correctNetwork}`}
         </div>,
       ];
     }
@@ -166,7 +167,7 @@ export default connect(
   state => ({
     currentAddress: state.web3connect.account,
     initialized: state.web3connect.initialized,
-    isConnected: !!state.web3connect.account && state.web3connect.networkId == process.env.REACT_APP_NETWORK_ID,
+    isConnected: !!state.web3connect.account,
     web3: state.web3connect.web3,
     networkId: state.web3connect.networkId,
   }),
