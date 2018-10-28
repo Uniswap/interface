@@ -6,9 +6,13 @@ import RemoveLiquidity from './RemoveLiquidity';
 import { Switch, Route } from 'react-router-dom';
 import "./pool.scss";
 import MediaQuery from "react-responsive";
+import ReactGA from "react-ga";
 
 
 class Pool extends Component {
+  componentWillMount() {
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  }
   render() {
     return (
       <div className="pool">

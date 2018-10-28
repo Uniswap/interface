@@ -16,6 +16,7 @@ import {BigNumber as BN} from 'bignumber.js';
 import EXCHANGE_ABI from '../../abi/exchange';
 import "./pool.scss";
 import promisify from "../../helpers/web3-promisfy";
+import ReactGA from "react-ga";
 
 const INPUT = 0;
 const OUTPUT = 1;
@@ -38,6 +39,15 @@ class AddLiquidity extends Component {
     outputCurrency: '',
     lastEditedField: '',
     showSummaryModal: false,
+  };
+
+  reset = () => {
+    this.setState({
+      inputValue: '',
+      outputValue: '',
+      lastEditedField: '',
+      showSummaryModal: false,
+    });
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -143,9 +153,17 @@ class AddLiquidity extends Component {
     const maxTokens = tokenAmount.multipliedBy(1 + MAX_LIQUIDITY_SLIPPAGE);
 
     try {
-      await exchange.methods.addLiquidity(minLiquidity.toFixed(0), maxTokens.toFixed(0), deadline).send({
+      exchange.methods.addLiquidity(minLiquidity.toFixed(0), maxTokens.toFixed(0), deadline).send({
         from: account,
         value: ethAmount.toFixed(0)
+      }, (err, data) => {
+        this.reset();
+        if (data) {
+          ReactGA.event({
+            category: 'Pool',
+            action: 'AddLiquidity',
+          });
+        }
       });
     } catch (err) {
       console.error(err);
@@ -416,6 +434,11 @@ class AddLiquidity extends Component {
     if (!showSummaryModal) {
       return null;
     }
+
+    ReactGA.event({
+      category: 'TransactionDetail',
+      action: 'Open',
+    });
 
     const { value, decimals, label } = selectors().getTokenBalance(outputCurrency, fromToken[outputCurrency]);
 

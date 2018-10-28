@@ -17,6 +17,7 @@
     "react": "^16.2.0",
     "react-cookies": "^0.1.0",
     "react-dom": "^16.2.0",
+    "react-ga": "^2.5.3",
     "react-helmet": "^5.2.0",
     "react-redux": "^5.0.7",
     "react-responsive": "^5.0.0",

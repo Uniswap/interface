@@ -19,6 +19,7 @@ import EXCHANGE_ABI from '../../abi/exchange';
 import "./send.scss";
 import promisify from "../../helpers/web3-promisfy";
 import MediaQuery from "react-responsive";
+import ReactGA from "react-ga";
 
 const INPUT = 0;
 const OUTPUT = 1;
@@ -41,6 +42,10 @@ class Send extends Component {
     recipient: '',
     showSummaryModal: false,
   };
+
+  componentWillMount() {
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  }
 
   shouldComponentUpdate(nextProps, nextState) {
     return true;
@@ -377,6 +382,10 @@ class Send extends Component {
     const deadline =  block.timestamp + 300;
 
     if (lastEditedField === INPUT) {
+      ReactGA.event({
+        category: type,
+        action: 'TransferInput',
+      });
       // send input
       switch(type) {
         case 'ETH_TO_TOKEN':
@@ -427,6 +436,10 @@ class Send extends Component {
 
     if (lastEditedField === OUTPUT) {
       // send output
+      ReactGA.event({
+        category: type,
+        action: 'TransferOutput',
+      });
       switch (type) {
         case 'ETH_TO_TOKEN':
           new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency])
@@ -555,6 +568,11 @@ class Send extends Component {
     if (!this.state.showSummaryModal) {
       return null;
     }
+
+    ReactGA.event({
+      category: 'TransactionDetail',
+      action: 'Open',
+    });
 
     const ALLOWED_SLIPPAGE = 0.025;
     const TOKEN_ALLOWED_SLIPPAGE = 0.04;
