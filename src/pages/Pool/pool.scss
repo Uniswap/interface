@@ -150,3 +150,22 @@
     color: $dove-gray;
   }
 }
+
+.remove-liquidity {
+  &__output {
+    @extend %row-nowrap;
+    min-height: 3.5rem;
+  }
+
+  &__output-text {
+    font-size: 1.25rem;
+    line-height: 1.5rem;
+    padding: 1rem .75rem;
+  }
+
+  &__output-plus {
+    font-size: 1.25rem;
+    line-height: 1.5rem;
+    padding: 1rem 0;
+  }
+}
