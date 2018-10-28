@@ -156,7 +156,7 @@ class CreateExchange extends Component {
     const { isValid, errorMessage } = this.validate();
     let label, decimals;
 
-    if (web3.utils.isAddress(tokenAddress)) {
+    if (web3 && web3.utils && web3.utils.isAddress(tokenAddress)) {
       const { label: _label, decimals: _decimals } = selectors().getBalance(account, tokenAddress);
       label = _label;
       decimals = _decimals;
