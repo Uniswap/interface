@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import {BigNumber as BN} from "bignumber.js";
+import MediaQuery from 'react-responsive';
+import ReactGA from 'react-ga';
 import { selectors } from '../../ducks/web3connect';
 import { CSSTransitionGroup } from "react-transition-group";
-import MediaQuery from 'react-responsive';
 import Header from '../../components/Header';
 import NavigationTabs from '../../components/NavigationTabs';
 import Modal from '../../components/Modal';
@@ -39,6 +40,10 @@ class Swap extends Component {
     lastEditedField: '',
     showSummaryModal: false,
   };
+
+  componentWillMount() {
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  }
 
   shouldComponentUpdate(nextProps, nextState) {
     return true;
@@ -373,6 +378,10 @@ class Swap extends Component {
 
     if (lastEditedField === INPUT) {
       // swap input
+      ReactGA.event({
+        category: type,
+        action: 'SwapInput',
+      });
       switch(type) {
         case 'ETH_TO_TOKEN':
           // let exchange = new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]);
@@ -420,6 +429,10 @@ class Swap extends Component {
 
     if (lastEditedField === OUTPUT) {
       // swap output
+      ReactGA.event({
+        category: type,
+        action: 'SwapOutput',
+      });
       switch (type) {
         case 'ETH_TO_TOKEN':
           new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency])
@@ -540,6 +553,11 @@ class Swap extends Component {
     if (!this.state.showSummaryModal) {
       return null;
     }
+
+    ReactGA.event({
+      category: 'TransactionDetail',
+      action: 'Open',
+    });
 
     const ALLOWED_SLIPPAGE = 0.025;
     const TOKEN_ALLOWED_SLIPPAGE = 0.04;

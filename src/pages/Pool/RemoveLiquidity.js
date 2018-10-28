@@ -11,6 +11,7 @@ import OversizedPanel from "../../components/OversizedPanel";
 import ArrowPlus from "../../assets/images/plus-blue.svg";
 import EXCHANGE_ABI from "../../abi/exchange";
 import promisify from "../../helpers/web3-promisfy";
+import ReactGA from "react-ga";
 
 class RemoveLiquidity extends Component {
   static propTypes = {
@@ -114,6 +115,10 @@ class RemoveLiquidity extends Component {
     ).send({ from: account }, (err, data) => {
       if (data) {
         this.reset();
+        ReactGA.event({
+          category: 'Pool',
+          action: 'RemoveLiquidity',
+        });
       }
     });
   };

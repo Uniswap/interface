@@ -85,15 +85,15 @@ class BlockingWarning extends Component {
 
     if (!isConnected && initialized) {
       content = [
-        <div>No Ethereum wallet found</div>,
-        <div className="header__dialog__description">
+        <div key="warning-title">No Ethereum wallet found</div>,
+        <div key="warning-desc" className="header__dialog__description">
           {
             isMobile()
               ? 'Please visit us from a web3-enabled mobile browser, such as Trust Wallet and Cipher Browser.'
               : 'Please visit us after installing Metamask on Chrome or Brave.'
           }
         </div>,
-        <div className="header__download">
+        <div key="warning-logos" className="header__download">
           {
             isMobile()
               ? (
@@ -115,13 +115,12 @@ class BlockingWarning extends Component {
 
     const correctNetworkId = process.env.REACT_APP_NETWORK_ID || 1;
     const correctNetwork = process.env.REACT_APP_NETWORK || 'Main Ethereum Network';
-    console.log({correctNetworkId, correctNetwork, networkId })
 
     const wrongNetwork = networkId != correctNetworkId;
     if (wrongNetwork) {
       content = [
-        <div>You are on the wrong network</div>,
-        <div className="header__dialog__description">
+        <div key="warning-title">You are on the wrong network</div>,
+        <div key="warning-desc" className="header__dialog__description">
           {`Please switch to ${correctNetwork}`}
         </div>,
       ];
