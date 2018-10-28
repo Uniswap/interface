@@ -666,7 +666,7 @@ class Send extends Component {
         </OversizedPanel>
       );
     }
-
+    console.log(outputLabel)
     return (
       <OversizedPanel hideBottom>
         <div className="swap__exchange-rate-wrapper">
