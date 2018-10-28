@@ -112,7 +112,7 @@ class CurrencyInputPanel extends Component {
       addExchange,
     } = this.props;
 
-    if (web3.utils.isAddress(searchQuery)) {
+    if (web3 && web3.utils && web3.utils.isAddress(searchQuery)) {
       const tokenAddress = searchQuery;
       const { label } = selectors().getBalance(account, tokenAddress);
       const factory = new web3.eth.Contract(FACTORY_ABI, factoryAddress);
