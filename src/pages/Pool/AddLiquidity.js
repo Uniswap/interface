@@ -307,7 +307,7 @@ class AddLiquidity extends Component {
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">Current Pool Size</span>
-            <span>{` ${ethValue.dividedBy(10 ** 18).toFixed(2)} ${eth} + ${tokenValue.dividedBy(10 ** decimals).toFixed(2)} ${label}`}</span>
+            <span>{` ${ethValue.dividedBy(10 ** 18).toFixed(2)} ${eth} / ${tokenValue.dividedBy(10 ** decimals).toFixed(2)} ${label}`}</span>
           </div>
         </div>
       )
