@@ -104,6 +104,7 @@ export const setAddresses = networkId => {
     // Rinkeby
     case 4:
     case '4':
+    default:
       return {
         type: SET_ADDRESSES,
         payload: RINKEBY,

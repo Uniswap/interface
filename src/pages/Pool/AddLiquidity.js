@@ -307,7 +307,7 @@ class AddLiquidity extends Component {
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">Current Pool Size</span>
-            <span>{` ${ethValue.dividedBy(10 ** 18).toFixed(2)} ${eth} + ${tokenValue.dividedBy(10 ** decimals).toFixed(2)} ${label}`}</span>
+            <span>{` ${ethValue.dividedBy(10 ** 18).toFixed(2)} ${eth} / ${tokenValue.dividedBy(10 ** decimals).toFixed(2)} ${label}`}</span>
           </div>
         </div>
       )
@@ -553,7 +553,7 @@ class AddLiquidity extends Component {
 
 export default connect(
   state => ({
-    isConnected: Boolean(state.web3connect.account),
+    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == process.env.REACT_APP_NETWORK_ID,
     account: state.web3connect.account,
     balances: state.web3connect.balances,
     web3: state.web3connect.web3,

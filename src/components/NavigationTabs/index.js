@@ -3,6 +3,8 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {Tab, Tabs} from "../Tab";
 
+import './beta-message.scss';
+
 class NavigationTabs extends Component {
   static propTypes = {
     history: PropTypes.shape({
@@ -32,11 +34,16 @@ class NavigationTabs extends Component {
 
   render() {
     return (
-      <Tabs className={this.props.className}>
-        { this.renderTab('Swap', '/swap', /swap/) }
-        { this.renderTab('Send', '/send', /send/) }
-        { this.renderTab('Pool', '/add-liquidity', /add-liquidity|remove-liquidity|create-exchange/) }
-      </Tabs>
+      <div>
+        <Tabs className={this.props.className}>
+          { this.renderTab('Swap', '/swap', /swap/) }
+          { this.renderTab('Send', '/send', /send/) }
+          { this.renderTab('Pool', '/add-liquidity', /add-liquidity|remove-liquidity|create-exchange/) }
+        </Tabs>
+        <div className="beta-message">
+          🦄 Uniswap is an experimental project. Use at your own risk 💀
+        </div>
+      </div>
     );
   }
 }
