@@ -792,7 +792,7 @@ class Send extends Component {
 }
 
 export default connect(
-  state => console.log(state) || ({
+  state => ({
     balances: state.web3connect.balances,
     isConnected: !!state.web3connect.account && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||1),
     account: state.web3connect.account,

@@ -55,7 +55,7 @@ class App extends Component {
             <Route exact path="/send" component={Send} />
             <Route exact path="/add-liquidity" component={Pool} />
             <Route exact path="/remove-liquidity" component={Pool} />
-            <Route exact path="/create-exchange" component={Pool} />
+            <Route exact path="/create-exchange/:tokenAddress?" component={Pool} />
             <Redirect exact from="/" to="/swap" />
           </AnimatedSwitch>
         </BrowserRouter>

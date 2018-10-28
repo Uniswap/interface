@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import OversizedPanel from "../../components/OversizedPanel";
-import Dropdown from "../../assets/images/dropdown.svg";
+import Dropdown from "../../assets/images/dropdown-blue.svg";
 import Modal from "../../components/Modal";
 import {CSSTransitionGroup} from "react-transition-group";
 

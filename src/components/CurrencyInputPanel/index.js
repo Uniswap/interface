@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { CSSTransitionGroup } from "react-transition-group";
 import classnames from 'classnames';
+import { withRouter } from 'react-router-dom';
 import Fuse from '../../helpers/fuse';
 import Modal from '../Modal';
 import TokenLogo from '../TokenLogo';
@@ -110,6 +111,7 @@ class CurrencyInputPanel extends Component {
       factoryAddress,
       exchangeAddresses: { fromToken },
       addExchange,
+      history,
     } = this.props;
 
     if (web3 && web3.utils && web3.utils.isAddress(searchQuery)) {
@@ -138,6 +140,25 @@ class CurrencyInputPanel extends Component {
     } else {
       const fuse = new Fuse(tokens, FUSE_OPTIONS);
       results = fuse.search(this.state.searchQuery);
+    }
+
+    if (!results.length && web3.utils.isAddress(searchQuery)) {
+      const { label } = selectors().getBalance(account, searchQuery);
+      return [
+        <div key="token-modal-no-exchange" className="token-modal__token-row token-modal__token-row--no-exchange">
+          <div>No Exchange Found</div>
+        </div>,
+        <div
+          key="token-modal-create-exchange"
+          className="token-modal__token-row token-modal__token-row--create-exchange"
+          onClick={() => {
+            this.setState({ isShowingModal: false });
+            history.push(`/create-exchange/${searchQuery}`);
+          }}
+        >
+          <div>{`Create exchange fro ${label}`}</div>
+        </div>
+      ]
     }
 
     if (!results.length) {
@@ -346,18 +367,20 @@ class CurrencyInputPanel extends Component {
   }
 }
 
-export default connect(
-  state => ({
-    factoryAddress: state.addresses.factoryAddress,
-    exchangeAddresses: state.addresses.exchangeAddresses,
-    tokenAddresses: state.addresses.tokenAddresses,
-    contracts: state.contracts,
-    account: state.web3connect.account,
-    approvals: state.web3connect.approvals,
-    web3: state.web3connect.web3,
-  }),
-  dispatch => ({
-    selectors: () => dispatch(selectors()),
-    addExchange: opts => dispatch(addExchange(opts)),
-  }),
-)(CurrencyInputPanel);
+export default withRouter(
+  connect(
+    state => ({
+      factoryAddress: state.addresses.factoryAddress,
+      exchangeAddresses: state.addresses.exchangeAddresses,
+      tokenAddresses: state.addresses.tokenAddresses,
+      contracts: state.contracts,
+      account: state.web3connect.account,
+      approvals: state.web3connect.approvals,
+      web3: state.web3connect.web3,
+    }),
+    dispatch => ({
+      selectors: () => dispatch(selectors()),
+      addExchange: opts => dispatch(addExchange(opts)),
+    }),
+  )(CurrencyInputPanel)
+);

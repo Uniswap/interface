@@ -8,7 +8,7 @@ import ModeSelector from "./ModeSelector";
 import CurrencyInputPanel from "../../components/CurrencyInputPanel";
 import { selectors } from '../../ducks/web3connect';
 import OversizedPanel from "../../components/OversizedPanel";
-import ArrowPlus from "../../assets/images/plus-blue.svg";
+import ArrowPlus from "../../assets/images/arrow-down-blue.svg";
 import EXCHANGE_ABI from "../../abi/exchange";
 import promisify from "../../helpers/web3-promisfy";
 import ReactGA from "react-ga";
@@ -232,13 +232,13 @@ class RemoveLiquidity extends Component {
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">Current Pool Size</span>
-            <span>{`${ethReserve.dividedBy(10 ** 18).toFixed(2)} ETH / ${tokenReserve.dividedBy(10 ** tokenDecimals).toFixed(2)} ${label}`}</span>
+            <span>{`${ethReserve.dividedBy(10 ** 18).toFixed(2)} ETH + ${tokenReserve.dividedBy(10 ** tokenDecimals).toFixed(2)} ${label}`}</span>
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">
               Your Pool Share ({ownership.multipliedBy(100).toFixed(2)}%)
             </span>
-            <span>{`${ownedEth.toFixed(2)} ETH / ${ownedToken.toFixed(2)} ${label}`}</span>
+            <span>{`${ownedEth.toFixed(2)} ETH + ${ownedToken.toFixed(2)} ${label}`}</span>
           </div>
         </div>
       </OversizedPanel>
