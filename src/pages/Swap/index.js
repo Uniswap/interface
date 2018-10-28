@@ -197,8 +197,8 @@ class Swap extends Component {
         outputReserve: outputReserveB,
       });
 
-      const exchangeRate = outputAmountB.dividedBy(inputAmountA);
       const outputValue = outputAmountB.dividedBy(BN(10 ** outputDecimalsB)).toFixed(7);
+      const exchangeRate = BN(outputValue).dividedBy(BN(oldInputValue));
 
       const appendState = {};
 
@@ -237,10 +237,10 @@ class Swap extends Component {
         outputReserve: outputReserveA,
       });
 
-      const exchangeRate = outputAmountB.dividedBy(inputAmountA);
       const inputValue = inputAmountA.isNegative()
         ? 'N/A'
         : inputAmountA.dividedBy(BN(10 ** inputDecimalsA)).toFixed(7);
+      const exchangeRate = BN(oldOutputValue).dividedBy(BN(inputValue));
 
       const appendState = {};
 
@@ -294,8 +294,8 @@ class Swap extends Component {
 
       const inputAmount = BN(oldInputValue).multipliedBy(10 ** inputDecimals);
       const outputAmount = calculateEtherTokenOutput({ inputAmount, inputReserve, outputReserve });
-      const exchangeRate = outputAmount.dividedBy(inputAmount);
       const outputValue = outputAmount.dividedBy(BN(10 ** outputDecimals)).toFixed(7);
+      const exchangeRate = BN(outputValue).dividedBy(BN(oldInputValue));
 
       const appendState = {};
 
@@ -318,10 +318,10 @@ class Swap extends Component {
 
       const outputAmount = BN(oldOutputValue).multipliedBy(10 ** outputDecimals);
       const inputAmount = calculateEtherTokenInput({ outputAmount, inputReserve, outputReserve });
-      const exchangeRate = outputAmount.dividedBy(inputAmount);
       const inputValue = inputAmount.isNegative()
         ? 'N/A'
         : inputAmount.dividedBy(BN(10 ** inputDecimals)).toFixed(7);
+      const exchangeRate = BN(oldOutputValue).dividedBy(BN(inputValue));
 
       const appendState = {};
 

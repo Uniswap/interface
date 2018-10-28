@@ -46,7 +46,6 @@ const initialState = {
 const TOKEN_LABEL_FALLBACK = {
   '0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359': 'DAI',
   '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2': 'MKR',
-  '0x9B913956036a3462330B0642B20D3879ce68b450': 'BAT + ETH'
 };
 
 // selectors
@@ -101,7 +100,7 @@ export const selectors = () => (dispatch, getState) => {
   };
 };
 
-const Balance = (value, label = '', decimals = 18) => ({
+const Balance = (value, label = '', decimals = 0) => ({
   value: BN(value),
   label: label.toUpperCase(),
   decimals: +decimals,
