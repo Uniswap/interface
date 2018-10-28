@@ -75,25 +75,12 @@ function isMobile() {
 }
 
 class BlockingWarning extends Component {
-  state = {
-    networkId: 0,
-  };
-
-  componentWillReceiveProps(nextProps) {
-    const { web3 } = nextProps;
-    const { networkId } = this.state;
-
-    if (!networkId) {
-      web3.eth.net.getId((_, networkId) => this.setState({ networkId }))
-    }
-  }
-
   render () {
     const {
       isConnected,
       initialized,
+      networkId,
     } = this.props;
-    const { networkId } = this.state;
     let content = [];
 
     if (!isConnected && initialized) {
@@ -128,6 +115,8 @@ class BlockingWarning extends Component {
 
     const correctNetworkId = process.env.REACT_APP_NETWORK_ID || 1;
     const correctNetwork = process.env.REACT_APP_NETWORK || 'Main Ethereum Network';
+    console.log({correctNetworkId, correctNetwork, networkId })
+
     const wrongNetwork = networkId != correctNetworkId;
     if (wrongNetwork) {
       content = [
@@ -180,5 +169,6 @@ export default connect(
     initialized: state.web3connect.initialized,
     isConnected: !!state.web3connect.account && state.web3connect.networkId == process.env.REACT_APP_NETWORK_ID,
     web3: state.web3connect.web3,
+    networkId: state.web3connect.networkId,
   }),
 )(Header);
