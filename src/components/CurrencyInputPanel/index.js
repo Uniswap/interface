@@ -142,7 +142,7 @@ class CurrencyInputPanel extends Component {
       results = fuse.search(this.state.searchQuery);
     }
 
-    if (!results.length && web3.utils.isAddress(searchQuery)) {
+    if (!results.length && web3 && web3.utils && web3.utils.isAddress(searchQuery)) {
       const { label } = selectors().getBalance(account, searchQuery);
       return [
         <div key="token-modal-no-exchange" className="token-modal__token-row token-modal__token-row--no-exchange">
