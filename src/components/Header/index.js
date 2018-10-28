@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
@@ -74,23 +74,38 @@ function isMobile() {
   return ua.getDevice().type === 'mobile';
 }
 
-function Header (props) {
-  return (
-    <div className="header">
-      <div
-        className={classnames('header__dialog', {
-          'header__dialog--disconnected': !props.isConnected && props.initialized,
-        })}
-      >
-        <div>No Ethereum wallet found</div>
+class BlockingWarning extends Component {
+  state = {
+    networkId: 0,
+  };
+
+  componentWillReceiveProps(nextProps) {
+    const { web3 } = nextProps;
+    const { networkId } = this.state;
+
+    if (!networkId) {
+      web3.eth.net.getId((_, networkId) => this.setState({ networkId }))
+    }
+  }
+
+  render () {
+    const {
+      isConnected,
+      initialized,
+    } = this.props;
+    const { networkId } = this.state;
+    let content = [];
+
+    if (!isConnected && initialized) {
+      content = [
+        <div>No Ethereum wallet found</div>,
         <div className="header__dialog__description">
           {
             isMobile()
               ? 'Please visit us from a web3-enabled mobile browser, such as Trust Wallet and Cipher Browser.'
               : 'Please visit us after installing Metamask on Chrome or Brave.'
-
           }
-        </div>
+        </div>,
         <div className="header__download">
           {
             isMobile()
@@ -107,8 +122,38 @@ function Header (props) {
                 ]
               )
           }
-        </div>
+        </div>,
+      ]
+    }
+
+    const correctNetworkId = process.env.REACT_APP_NETWORK_ID || 1;
+    const correctNetwork = process.env.REACT_APP_NETWORK || 'Main Ethereum Network';
+    const wrongNetwork = networkId != correctNetworkId;
+    if (wrongNetwork) {
+      content = [
+        <div>You are on the wrong network</div>,
+        <div className="header__dialog__description">
+          {`Please switch to ${correctNetwork}`}
+        </div>,
+      ];
+    }
+
+    return (
+      <div
+        className={classnames('header__dialog', {
+          'header__dialog--disconnected': (!isConnected || wrongNetwork) && initialized,
+        })}
+      >
+        {content}
       </div>
+    );
+  }
+}
+
+function Header (props) {
+  return (
+    <div className="header">
+      <BlockingWarning {...props} />
       <div
         className={classnames('header__top', {
           'header--inactive': !props.isConnected,
@@ -133,6 +178,7 @@ export default connect(
   state => ({
     currentAddress: state.web3connect.account,
     initialized: state.web3connect.initialized,
-    isConnected: !!state.web3connect.web3 && !!state.web3connect.account,
+    isConnected: !!state.web3connect.account && state.web3connect.networkId == process.env.REACT_APP_NETWORK_ID,
+    web3: state.web3connect.web3,
   }),
 )(Header);
