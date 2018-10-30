@@ -56,7 +56,7 @@ class CreateExchange extends Component {
       };
     }
 
-    if (!web3.utils.isAddress(tokenAddress)) {
+    if (web3 && web3.utils && !web3.utils.isAddress(tokenAddress)) {
       return {
         isValid: false,
         errorMessage: 'Not a valid token address',
@@ -93,7 +93,7 @@ class CreateExchange extends Component {
 
   onChange = tokenAddress => {
     const { selectors, account, web3 } = this.props;
-    if (web3.utils.isAddress(tokenAddress)) {
+    if (web3 && web3.utils && web3.utils.isAddress(tokenAddress)) {
       const { label, decimals } = selectors().getBalance(account, tokenAddress);
       this.setState({
         label,
@@ -113,7 +113,7 @@ class CreateExchange extends Component {
     const { tokenAddress } = this.state;
     const { account, web3, factoryAddress } = this.props;
 
-    if (!web3.utils.isAddress(tokenAddress)) {
+    if (web3 && web3.utils && !web3.utils.isAddress(tokenAddress)) {
       return;
     }
 
