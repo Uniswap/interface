@@ -140,6 +140,7 @@ export const initialize = () => (dispatch, getState) => {
         payload: web3,
       });
       resolve(web3);
+      return;
     }
 
     dispatch({ type: INITIALIZE });
