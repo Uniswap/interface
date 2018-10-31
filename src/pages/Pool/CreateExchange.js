@@ -74,7 +74,7 @@ class CreateExchange extends Component {
         }
       });
     } else {
-      errorMessage = `Already has an exchange for ${label}`;
+      errorMessage = `${label} Exchange already exists!`;
     }
 
     if (!label) {
