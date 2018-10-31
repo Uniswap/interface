@@ -413,6 +413,7 @@ class AddLiquidity extends Component {
 
     return (
       <ContextualInfo
+        key="context-info"
         contextualInfo={contextualInfo}
         isError={isError}
         renderTransactionDetails={this.renderTransactionDetails}

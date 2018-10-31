@@ -3,14 +3,11 @@ import PropTypes from 'prop-types';
 import classnames from "classnames";
 import { connect } from 'react-redux';
 import { BigNumber as BN } from 'bignumber.js';
-import { CSSTransitionGroup } from "react-transition-group";
 import NavigationTabs from "../../components/NavigationTabs";
 import ModeSelector from "./ModeSelector";
-import Modal from '../../components/Modal';
-import DropdownBlue from "../../assets/images/dropdown-blue.svg";
-import DropupBlue from "../../assets/images/dropup-blue.svg";
 import CurrencyInputPanel from "../../components/CurrencyInputPanel";
 import { selectors, addPendingTx } from '../../ducks/web3connect';
+import ContextualInfo from "../../components/ContextualInfo";
 import OversizedPanel from "../../components/OversizedPanel";
 import ArrowDownBlue from "../../assets/images/arrow-down-blue.svg";
 import ArrowDownGrey from "../../assets/images/arrow-down-grey.svg";
@@ -32,13 +29,11 @@ class RemoveLiquidity extends Component {
     tokenAddress: '',
     value: '',
     totalSupply: BN(0),
-    showSummaryModal: false,
   };
 
   reset() {
     this.setState({
       value: '',
-      showSummaryModal: false,
     });
   }
 
@@ -161,56 +156,33 @@ class RemoveLiquidity extends Component {
       tokenAddress,
     } = this.state;
     const inputIsZero = BN(input).isZero();
-
-    if (!tokenAddress) {
-      return (
-        <div key="summary" className="swap__summary-wrapper">
-          <div>Select a token to continue.</div>
-        </div>
-      )
-    }
+    let contextualInfo = '';
+    let isError = false;
 
     if (errorMessage) {
-      return (
-        <div key="summary" className="swap__summary-wrapper">
-          <div>{errorMessage}</div>
-        </div>
-      );
+      contextualInfo = errorMessage;
+      isError = true;
+    } else if (!tokenAddress) {
+      contextualInfo = 'Select a token to continue.';
+    } else if (inputIsZero) {
+      contextualInfo = 'Amount cannot be zero.';
+    } else if (!input) {
+      const { label } = selectors().getTokenBalance(tokenAddress, fromToken[tokenAddress]);
+      contextualInfo = `Enter a ${label} value to continue.`;
     }
 
-    if (inputIsZero) {
-      return (
-        <div key="summary" className="swap__summary-wrapper">
-          <div>Amount cannot be zero.</div>
-        </div>
-      )
-    }
-
-    const { label } = selectors().getTokenBalance(tokenAddress, fromToken[tokenAddress]);
-
-    if (!input) {
-      return (
-        <div key="summary" className="swap__summary-wrapper">
-          <div>{`Enter a ${label} value to continue.`}</div>
-        </div>
-      )
-    }
-
-    return [
-      <div
-        key="open-details"
-        className="swap__summary-wrapper swap__open-details-container"
-        onClick={() => this.setState({showSummaryModal: true})}
-      >
-        <span>Transaction Details</span>
-        <img src={DropdownBlue} />
-      </div>,
-      this.renderSummaryModal()
-    ];
+    return (
+      <ContextualInfo
+        key="context-info"
+        contextualInfo={contextualInfo}
+        isError={isError}
+        renderTransactionDetails={this.renderTransactionDetails}
+      />
+    );
   }
 
-  renderSummaryModal() {
-    const { tokenAddress, value: input, totalSupply, showSummaryModal } = this.state;
+  renderTransactionDetails = () => {
+    const { tokenAddress, value: input, totalSupply } = this.state;
     const {
       exchangeAddresses: { fromToken },
       web3,
@@ -220,7 +192,7 @@ class RemoveLiquidity extends Component {
     const exchangeAddress = fromToken[tokenAddress];
     const { getBalance } = selectors();
 
-    if (!showSummaryModal || !exchangeAddress) {
+    if (!exchangeAddress) {
       return null;
     }
 
@@ -245,33 +217,12 @@ class RemoveLiquidity extends Component {
     const remainingPer = remainingLiquidity.dividedBy(tokenReserve.dividedBy(10 ** decimals).minus(input)).multipliedBy(100);
 
     return (
-      <Modal key="modal" onClose={() => this.setState({ showSummaryModal: false })}>
-        <CSSTransitionGroup
-          transitionName="summary-modal"
-          transitionAppear={true}
-          transitionLeave={true}
-          transitionAppearTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionEnterTimeout={200}
-        >
-          <div className="swap__summary-modal">
-            <div
-              key="open-details"
-              className="swap__open-details-container"
-              onClick={() => this.setState({showSummaryModal: false})}
-            >
-              <span>Transaction Details</span>
-              <img src={DropupBlue} />
-            </div>
-            <div>
-              <div>You are removing between {b(`${minTokenWithdrawn} - ${tokenWithdrawn.toFixed(5)} ${label}`)} + {b(`${minEthWithdrawn} - ${ethWithdrawn.toFixed(5)} ETH`)} from the liquidity pool.</div>
-              <div className="pool__last-summary-text">
-                Your remaining {`${label}/ETH`} token ownership will be {b(`${remainingPer.toFixed(7)}%`)}
-              </div>
-            </div>
-          </div>
-        </CSSTransitionGroup>
-      </Modal>
+      <div>
+        <div>You are removing between {b(`${minTokenWithdrawn} - ${tokenWithdrawn.toFixed(5)} ${label}`)} + {b(`${minEthWithdrawn} - ${ethWithdrawn.toFixed(5)} ETH`)} from the liquidity pool.</div>
+        <div className="pool__last-summary-text">
+          Your remaining {`${label}/ETH`} token ownership will be {b(`${remainingPer.toFixed(7)}%`)}
+        </div>
+      </div>
     );
   }
 
