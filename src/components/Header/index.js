@@ -103,7 +103,7 @@ class BlockingWarning extends Component {
         <div key="warning-desc" className="header__dialog__description">
           {
             isMobile()
-              ? 'Please visit us from a web3-enabled mobile browser, such as Trust Wallet and Cipher Browser.'
+              ? 'Please visit us from a web3-enabled mobile browser such as Trust Wallet or Coinbase Wallet.'
               : 'Please visit us after installing Metamask on Chrome or Brave.'
           }
         </div>,

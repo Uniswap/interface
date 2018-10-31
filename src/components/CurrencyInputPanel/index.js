@@ -156,7 +156,7 @@ class CurrencyInputPanel extends Component {
             history.push(`/create-exchange/${searchQuery}`);
           }}
         >
-          <div>{`Create exchange fro ${label}`}</div>
+          <div>{`Create exchange for ${label}`}</div>
         </div>
       ]
     }
