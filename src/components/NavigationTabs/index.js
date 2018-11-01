@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { dismissBetaMessage } from '../../ducks/app';
 import {Tab, Tabs} from "../Tab";
 
 import './beta-message.scss';
@@ -11,6 +13,8 @@ class NavigationTabs extends Component {
       push: PropTypes.func.isRequired,
     }),
     className: PropTypes.string,
+    dismissBetaMessage: PropTypes.func.isRequired,
+    showBetaMessage: PropTypes.bool.isRequired,
   };
 
   constructor(props) {
@@ -18,6 +22,7 @@ class NavigationTabs extends Component {
     this.state = {
       selectedPath: this.props.location.pathname,
       className: '',
+      showWarning: true,
     };
   }
 
@@ -33,19 +38,33 @@ class NavigationTabs extends Component {
   }
 
   render() {
+    const { showBetaMessage, className, dismissBetaMessage } = this.props;
     return (
       <div>
-        <Tabs className={this.props.className}>
+        <Tabs className={className}>
           { this.renderTab('Swap', '/swap', /swap/) }
           { this.renderTab('Send', '/send', /send/) }
           { this.renderTab('Pool', '/add-liquidity', /add-liquidity|remove-liquidity|create-exchange/) }
         </Tabs>
-        <div className="beta-message">
-          💀 This project is in beta. Use at your own risk.
-        </div>
+        {
+          showBetaMessage && (
+            <div className="beta-message" onClick={dismissBetaMessage}>
+              💀 This project is in beta. Use at your own risk.
+            </div>
+          )
+        }
       </div>
     );
   }
 }
 
-export default withRouter(NavigationTabs);
+export default withRouter(
+  connect(
+    state => ({
+      showBetaMessage: state.app.showBetaMessage,
+    }),
+    dispatch => ({
+      dismissBetaMessage: () => dispatch(dismissBetaMessage()),
+    }),
+  )(NavigationTabs)
+);
