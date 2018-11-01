@@ -13,6 +13,7 @@ class ContextualInfo extends Component {
     openModalText: PropTypes.string,
     renderTransactionDetails: PropTypes.func,
     contextualInfo: PropTypes.string,
+    modalClass: PropTypes.string,
     isError: PropTypes.bool,
   };
 
@@ -20,6 +21,7 @@ class ContextualInfo extends Component {
     openModalText: 'Transaction Details',
     renderTransactionDetails() {},
     contextualInfo: '',
+    modalClass: '',
     isError: false,
   };
 
@@ -32,6 +34,8 @@ class ContextualInfo extends Component {
       return null;
     }
 
+    const { modalClass } = this.props;
+
     return (
       <Modal key="modal" onClose={() => this.setState({ showDetailModal: false })}>
         <CSSTransitionGroup
@@ -42,7 +46,7 @@ class ContextualInfo extends Component {
           transitionLeaveTimeout={200}
           transitionEnterTimeout={200}
         >
-          <div className="contextual-info__summary-modal">
+          <div className={c('contextual-info__summary-modal', modalClass)}>
             <div
               key="open-details"
               className="contextual-info__open-details-container contextual-info__modal-button"

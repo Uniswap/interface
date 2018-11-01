@@ -416,6 +416,7 @@ class AddLiquidity extends Component {
         key="context-info"
         contextualInfo={contextualInfo}
         isError={isError}
+        modalClass="pool__summary-modal"
         renderTransactionDetails={this.renderTransactionDetails}
       />
     );
