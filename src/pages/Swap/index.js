@@ -53,8 +53,6 @@ class Swap extends Component {
     this.setState({
       inputValue: '',
       outputValue: '',
-      inputCurrency: '',
-      outputCurrency: '',
       inputAmountB: '',
       lastEditedField: '',
       showSummaryModal: false,
