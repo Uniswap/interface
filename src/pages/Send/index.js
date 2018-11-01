@@ -55,8 +55,6 @@ class Send extends Component {
     this.setState({
       inputValue: '',
       outputValue: '',
-      inputCurrency: '',
-      outputCurrency: '',
       inputAmountB: '',
       lastEditedField: '',
       recipient: '',
