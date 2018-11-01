@@ -534,7 +534,7 @@ class Swap extends Component {
     if (inputIsZero || outputIsZero) {
       return (
         <div className="swap__summary-wrapper">
-          <div>Amount cannot be zero.</div>
+          <div>No liquidity.</div>
         </div>
       )
     }

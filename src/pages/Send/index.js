@@ -543,7 +543,7 @@ class Send extends Component {
       const missingCurrencyValue = !inputValue ? inputLabel : outputLabel;
       nextStepMessage = `Enter a ${missingCurrencyValue} value to continue.`;
     } else if (inputIsZero || outputIsZero) {
-      nextStepMessage = 'Amount cannot be zero.';
+      nextStepMessage = 'No liquidity.';
     } else if (this.isUnapproved()) {
       nextStepMessage = 'Please unlock token to continue.';
     } else if (!recipient) {
