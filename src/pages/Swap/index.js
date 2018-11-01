@@ -539,12 +539,8 @@ class Swap extends Component {
     const {
       inputValue,
       inputCurrency,
-      inputError,
       outputValue,
       outputCurrency,
-      outputError,
-      showSummaryModal,
-      inputAmountB,
       lastEditedField,
     } = this.state;
     const { selectors, account } = this.props;
@@ -571,13 +567,13 @@ class Swap extends Component {
     if (lastEditedField === INPUT) {
       switch(type) {
         case 'ETH_TO_TOKEN':
-          minOutput = BN(outputValue).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(5)
+          minOutput = BN(outputValue).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(7).trim();
           break;
         case 'TOKEN_TO_ETH':
-          minOutput = BN(outputValue).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(5);
+          minOutput = BN(outputValue).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(7);
           break;
         case 'TOKEN_TO_TOKEN':
-          minOutput = BN(outputValue).multipliedBy(1 - TOKEN_ALLOWED_SLIPPAGE).toFixed(5);
+          minOutput = BN(outputValue).multipliedBy(1 - TOKEN_ALLOWED_SLIPPAGE).toFixed(7);
           break;
         default:
           break;
@@ -587,13 +583,13 @@ class Swap extends Component {
     if (lastEditedField === OUTPUT) {
       switch (type) {
         case 'ETH_TO_TOKEN':
-          maxInput = BN(inputValue).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(5);
+          maxInput = BN(inputValue).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(7).trim();
           break;
         case 'TOKEN_TO_ETH':
-          maxInput = BN(inputValue).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(5);
+          maxInput = BN(inputValue).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(7);
           break;
         case 'TOKEN_TO_TOKEN':
-          maxInput = BN(inputValue).multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE).toFixed(5);
+          maxInput = BN(inputValue).multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE).toFixed(7);
           break;
         default:
           break;
@@ -605,10 +601,10 @@ class Swap extends Component {
       description = (
         <div>
           <div>
-            You are selling {b(`${inputValue} ${inputLabel}`)}.
+            You are selling {b(`${+inputValue} ${inputLabel}`)}.
           </div>
           <div className="send__last-summary-text">
-            You will receive between {b(`${minOutput} ${outputLabel}`)} and {b(`${outputValue} ${outputLabel}`)}.
+            You will receive between {b(`${+minOutput} ${outputLabel}`)} and {b(`${+outputValue} ${outputLabel}`)}.
           </div>
         </div>
       );
@@ -616,10 +612,10 @@ class Swap extends Component {
       description = (
         <div>
           <div>
-            You are selling between {b(`${inputValue} ${inputLabel}`)} to {b(`${maxInput} ${inputLabel}`)}.
+            You are selling between {b(`${+inputValue} ${inputLabel}`)} to {b(`${+maxInput} ${inputLabel}`)}.
           </div>
           <div className="send__last-summary-text">
-            You will receive {b(`${outputValue} ${outputLabel}`)}.
+            You will receive {b(`${+outputValue} ${outputLabel}`)}.
           </div>
         </div>
       );

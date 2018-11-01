@@ -586,13 +586,13 @@ class Send extends Component {
     if (lastEditedField === INPUT) {
       switch(type) {
         case 'ETH_TO_TOKEN':
-          minOutput = BN(outputValue).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(5)
+          minOutput = BN(outputValue).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(7);
           break;
         case 'TOKEN_TO_ETH':
-          minOutput = BN(outputValue).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(5);
+          minOutput = BN(outputValue).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(7);
           break;
         case 'TOKEN_TO_TOKEN':
-          minOutput = BN(outputValue).multipliedBy(1 - TOKEN_ALLOWED_SLIPPAGE).toFixed(5);
+          minOutput = BN(outputValue).multipliedBy(1 - TOKEN_ALLOWED_SLIPPAGE).toFixed(7);
           break;
         default:
           break;
@@ -602,13 +602,13 @@ class Send extends Component {
     if (lastEditedField === OUTPUT) {
       switch (type) {
         case 'ETH_TO_TOKEN':
-          maxInput = BN(inputValue).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(5);
+          maxInput = BN(inputValue).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(7);
           break;
         case 'TOKEN_TO_ETH':
-          maxInput = BN(inputValue).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(5);
+          maxInput = BN(inputValue).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(7);
           break;
         case 'TOKEN_TO_TOKEN':
-          maxInput = BN(inputValue).multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE).toFixed(5);
+          maxInput = BN(inputValue).multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE).toFixed(7);
           break;
         default:
           break;
@@ -620,10 +620,10 @@ class Send extends Component {
       description = (
         <div>
           <div>
-            You are selling {b(`${inputValue} ${inputLabel}`)}.
+            You are selling {b(`${+inputValue} ${inputLabel}`)}.
           </div>
           <div className="send__last-summary-text">
-            <span className="swap__highlight-text">{recipient.slice(0, 6)}</span> will receive between {b(`${minOutput} ${outputLabel}`)} and {b(`${outputValue} ${outputLabel}`)}.
+            {b(`${recipient.slice(0, 6)}...${recipient.slice(-4)}`)} will receive between {b(`${+minOutput} ${outputLabel}`)} and {b(`${+outputValue} ${outputLabel}`)}.
           </div>
         </div>
       );
@@ -631,10 +631,10 @@ class Send extends Component {
       description = (
         <div>
           <div>
-            You are selling between {b(`${inputValue} ${inputLabel}`)} to {b(`${maxInput} ${inputLabel}`)}.
+            You are selling between {b(`${+inputValue} ${inputLabel}`)} to {b(`${+maxInput} ${inputLabel}`)}.
           </div>
           <div className="send__last-summary-text">
-            <span className="swap__highlight-text">{recipient.slice(0, 6)}</span> will receive {b(`${outputValue} ${outputLabel}`)}.
+            {b(`${recipient.slice(0, 6)}...${recipient.slice(-4)}`)} will receive {b(`${+outputValue} ${outputLabel}`)}.
           </div>
         </div>
       );
