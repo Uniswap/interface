@@ -16,6 +16,9 @@ export const WATCH_APPROVALS = 'web3connect/watchApprovals';
 export const UPDATE_APPROVALS = 'web3connect/updateApprovals';
 export const ADD_CONTRACT = 'web3connect/addContract';
 export const UPDATE_NETWORK_ID = 'web3connect/updateNetworkId';
+export const ADD_PENDING_TX = 'web3connect/addPendingTx';
+export const REMOVE_PENDING_TX = 'web3connect/removePendingTx';
+export const ADD_CONFIRMED_TX = 'web3connect/addConfirmedTx';
 
 const initialState = {
   web3: null,
@@ -32,8 +35,10 @@ const initialState = {
       },
     },
   },
-  pendingTransactions: [],
-  transactions: {},
+  transactions: {
+    pending: [],
+    confirmed: [],
+  },
   watched: {
     balances: {
       ethereum: [],
@@ -41,11 +46,6 @@ const initialState = {
     approvals: {},
   },
   contracts: {},
-};
-
-const TOKEN_LABEL_FALLBACK = {
-  '0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359': 'DAI',
-  '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2': 'MKR',
 };
 
 // selectors
@@ -197,6 +197,11 @@ export const watchApprovals = ({ tokenAddress, tokenOwner, spender }) => (dispat
   });
 };
 
+export const addPendingTx = txId => ({
+  type: ADD_PENDING_TX,
+  payload: txId,
+});
+
 export const updateApprovals = ({ tokenAddress, tokenOwner, spender, balance }) => ({
   type: UPDATE_APPROVALS,
   payload: {
@@ -215,6 +220,7 @@ export const sync = () => async (dispatch, getState) => {
     watched,
     contracts,
     networkId,
+    transactions: { pending, confirmed },
   } = getState().web3connect;
 
   // Sync Account
@@ -275,14 +281,12 @@ export const sync = () => async (dispatch, getState) => {
         const balance = await contract.methods.balanceOf(address).call();
         const decimals = tokenBalance.decimals || await contract.methods.decimals().call();
         let symbol = tokenBalance.symbol;
-
         try {
           symbol = symbol || await contract.methods.symbol().call().catch();
         } catch (e) {
           try {
             symbol = symbol || web3.utils.hexToString(await contractBytes32.methods.symbol().call().catch());
           } catch (err) {
-
           }
         }
 
@@ -301,32 +305,56 @@ export const sync = () => async (dispatch, getState) => {
       });
     });
 
-    // Update Approvals
-    Object.entries(watched.approvals)
-      .forEach(([tokenAddress, token]) => {
-        const contract = contracts[tokenAddress] || new web3.eth.Contract(ERC20_ABI, tokenAddress);
-        Object.entries(token)
-          .forEach(([ tokenOwnerAddress, tokenOwner ]) => {
-            tokenOwner.forEach(async spenderAddress => {
-              const approvalBalance = getApprovals(tokenAddress, tokenOwnerAddress, spenderAddress);
-              const balance = await contract.methods.allowance(tokenOwnerAddress, spenderAddress).call();
-              const decimals = approvalBalance.decimals || await contract.methods.decimals().call();
-              const symbol = TOKEN_LABEL_FALLBACK[tokenAddress] || approvalBalance.label || await contract.methods.symbol().call();
+  // Update Approvals
+  Object.entries(watched.approvals)
+    .forEach(([tokenAddress, token]) => {
+      const contract = contracts[tokenAddress] || new web3.eth.Contract(ERC20_ABI, tokenAddress);
+      const contractBytes32 = contracts[tokenAddress] || new web3.eth.Contract(ERC20_WITH_BYTES_ABI, tokenAddress);
 
-              if (approvalBalance.label && approvalBalance.value.isEqualTo(BN(balance))) {
-                return;
+      Object.entries(token)
+        .forEach(([ tokenOwnerAddress, tokenOwner ]) => {
+          tokenOwner.forEach(async spenderAddress => {
+            const approvalBalance = getApprovals(tokenAddress, tokenOwnerAddress, spenderAddress);
+            const balance = await contract.methods.allowance(tokenOwnerAddress, spenderAddress).call();
+            const decimals = approvalBalance.decimals || await contract.methods.decimals().call();
+            let symbol = approvalBalance.label;
+            try {
+              symbol = symbol || await contract.methods.symbol().call();
+            } catch (e) {
+              try {
+                symbol = symbol || web3.utils.hexToString(await contractBytes32.methods.symbol().call());
+              } catch (err) {
               }
+            }
 
-              dispatch(updateApprovals({
-                tokenAddress,
-                tokenOwner: tokenOwnerAddress,
-                spender: spenderAddress,
-                balance: Balance(balance, symbol, decimals),
-              }));
-            });
+            if (approvalBalance.label && approvalBalance.value.isEqualTo(BN(balance))) {
+              return;
+            }
+
+            dispatch(updateApprovals({
+              tokenAddress,
+              tokenOwner: tokenOwnerAddress,
+              spender: spenderAddress,
+              balance: Balance(balance, symbol, decimals),
+            }));
           });
+        });
+    });
+
+  pending.forEach(async txId => {
+    const data = await web3.eth.getTransactionReceipt(txId) || {};
+    if (data.status) {
+      dispatch({
+        type: REMOVE_PENDING_TX,
+        payload: txId,
       });
 
+      dispatch({
+        type: ADD_CONFIRMED_TX,
+        payload: txId,
+      });
+    }
+  });
 };
 
 export const startWatching = () => async (dispatch, getState) => {
@@ -445,6 +473,34 @@ export default function web3connectReducer(state = initialState, { type, payload
       };
     case UPDATE_NETWORK_ID:
       return { ...state, networkId: payload };
+    case ADD_PENDING_TX:
+      return {
+        ...state,
+        transactions: {
+          ...state.transactions,
+          pending: [ ...state.transactions.pending, payload ],
+        },
+      };
+    case REMOVE_PENDING_TX:
+      return {
+        ...state,
+        transactions: {
+          ...state.transactions,
+          pending: state.transactions.pending.filter(id => id !== payload),
+        },
+      };
+    case ADD_CONFIRMED_TX:
+      if (state.transactions.confirmed.includes(payload)) {
+        return state;
+      }
+
+      return {
+        ...state,
+        transactions: {
+          ...state.transactions,
+          confirmed: [ ...state.transactions.confirmed, payload ],
+        },
+      };
     default:
       return state;
   }

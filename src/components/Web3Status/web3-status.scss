@@ -31,6 +31,12 @@
     display: flex;
     justify-content: space-around;
   }
+
+  &--pending {
+    background-color: $zumthor-blue;
+    color: $royal-blue;
+    border: 1px solid $royal-blue;
+  }
 }
 
 
@@ -70,13 +76,16 @@
   }
 
   &__pending-indicator {
+    @extend %row-nowrap;
     color: $royal-blue;
-    border: 1px solid $zumthor-blue;
-    padding: 10px;
+    border: 1px solid $royal-blue;
+    background-color: $zumthor-blue;
+    padding: .5rem .75rem;;
     border-radius: 100px;
+    font-size: .75rem;
 
-    & > img {
-      margin-right: 10px;
+    & > .loading {
+      margin-right: .5rem;
     }
   }
 
