@@ -7,7 +7,7 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
 import NavigationTabs from '../../components/NavigationTabs';
 import Modal from '../../components/Modal';
-import { selectors } from '../../ducks/web3connect';
+import { selectors, addPendingTx } from '../../ducks/web3connect';
 import ArrowDown from '../../assets/images/plus-blue.svg';
 import DropdownBlue from "../../assets/images/dropdown-blue.svg";
 import DropupBlue from "../../assets/images/dropup-blue.svg";
@@ -168,6 +168,7 @@ class AddLiquidity extends Component {
         value: ethAmount.toFixed(0)
       }, (err, data) => {
         this.reset();
+        this.props.addPendingTx(data);
         if (data) {
           ReactGA.event({
             category: 'Pool',
@@ -617,6 +618,7 @@ export default connect(
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),
+    addPendingTx: id => dispatch(addPendingTx(id)),
   })
 )(AddLiquidity);
 

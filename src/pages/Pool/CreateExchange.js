@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import {selectors} from "../../ducks/web3connect";
+import {selectors, addPendingTx} from "../../ducks/web3connect";
 import classnames from "classnames";
 import NavigationTabs from "../../components/NavigationTabs";
 import ModeSelector from "./ModeSelector";
@@ -125,6 +125,7 @@ class CreateExchange extends Component {
           decimals: 0,
           tokenAddress: '',
         });
+        this.props.addPendingTx(data);
         ReactGA.event({
           category: 'Pool',
           action: 'CreateExchange',
@@ -229,6 +230,7 @@ export default withRouter(
     dispatch => ({
       selectors: () => dispatch(selectors()),
       addExchange: opts => dispatch(addExchange(opts)),
+      addPendingTx: id => dispatch(addPendingTx(id)),
     })
   )(CreateExchange)
 );

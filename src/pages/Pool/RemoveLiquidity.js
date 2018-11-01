@@ -6,7 +6,7 @@ import { BigNumber as BN } from 'bignumber.js';
 import NavigationTabs from "../../components/NavigationTabs";
 import ModeSelector from "./ModeSelector";
 import CurrencyInputPanel from "../../components/CurrencyInputPanel";
-import { selectors } from '../../ducks/web3connect';
+import { selectors, addPendingTx } from '../../ducks/web3connect';
 import OversizedPanel from "../../components/OversizedPanel";
 import ArrowPlus from "../../assets/images/arrow-down-blue.svg";
 import EXCHANGE_ABI from "../../abi/exchange";
@@ -115,6 +115,8 @@ class RemoveLiquidity extends Component {
     ).send({ from: account }, (err, data) => {
       if (data) {
         this.reset();
+
+        this.props.addPendingTx(data);
         ReactGA.event({
           category: 'Pool',
           action: 'RemoveLiquidity',
@@ -306,5 +308,6 @@ export default connect(
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),
+    addPendingTx: id => dispatch(addPendingTx(id)),
   })
 )(RemoveLiquidity);
