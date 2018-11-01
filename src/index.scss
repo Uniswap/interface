@@ -35,3 +35,18 @@ html, body {
   right: 0;
   z-index: 200;
 }
+
+.loader {
+  border: 1px solid transparent; /* Light grey */
+  border-top: 1px solid $royal-blue; /* Blue */
+  border-radius: 50%;
+  width: .75rem;
+  height: .75rem;
+  margin-right: .25rem;
+  animation: spin 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
