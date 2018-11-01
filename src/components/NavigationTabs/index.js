@@ -41,8 +41,7 @@ class NavigationTabs extends Component {
           { this.renderTab('Pool', '/add-liquidity', /add-liquidity|remove-liquidity|create-exchange/) }
         </Tabs>
         <div className="beta-message">
-          🦄 Welcome to Uniswap! Learn more by reading the docs. <br/>
-          This project is in beta. Audit the contracts or use at your own risk. 💀
+          💀 This project is in beta. Use at your own risk.
         </div>
       </div>
     );
