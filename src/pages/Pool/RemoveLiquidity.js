@@ -176,6 +176,7 @@ class RemoveLiquidity extends Component {
         key="context-info"
         contextualInfo={contextualInfo}
         isError={isError}
+        modalClass="pool__summary-modal"
         renderTransactionDetails={this.renderTransactionDetails}
       />
     );
@@ -201,7 +202,7 @@ class RemoveLiquidity extends Component {
       action: 'Open',
     });
 
-    const SLIPPAGE = .02;
+    const SLIPPAGE = 0.025;
     const { value: liquidityBalance, decimals } = getBalance(account, exchangeAddress);
     const { value: ethReserve } = getBalance(exchangeAddress);
     const { value: tokenReserve, label, decimals: reserveDecimals } = getBalance(exchangeAddress, tokenAddress);
@@ -210,18 +211,19 @@ class RemoveLiquidity extends Component {
     const tokenPer = tokenReserve.dividedBy(totalSupply);
 
     const ethWithdrawn = ethPer.multipliedBy(input);
-    const minEthWithdrawn = ethWithdrawn.multipliedBy(1 - SLIPPAGE).toFixed(5);
+
     const tokenWithdrawn = tokenPer.multipliedBy(input);
-    const minTokenWithdrawn = tokenWithdrawn.multipliedBy(1 - SLIPPAGE).toFixed(5);
-    const remainingLiquidity = liquidityBalance.dividedBy(10 ** decimals).minus(input);
-    const remainingPer = remainingLiquidity.dividedBy(tokenReserve.dividedBy(10 ** decimals).minus(input)).multipliedBy(100);
+    const minTokenWithdrawn = tokenWithdrawn.multipliedBy(1 - SLIPPAGE).toFixed(7);
+    const maxTokenWithdrawn = tokenWithdrawn.multipliedBy(1 + SLIPPAGE).toFixed(7);
+
+    const adjTotalSupply = totalSupply.dividedBy(10 ** decimals).minus(input);
 
     return (
       <div>
-        <div>You are removing between {b(`${minTokenWithdrawn} - ${tokenWithdrawn.toFixed(5)} ${label}`)} + {b(`${minEthWithdrawn} - ${ethWithdrawn.toFixed(5)} ETH`)} from the liquidity pool.</div>
-        <div className="pool__last-summary-text">
-          Your remaining {`${label}/ETH`} token ownership will be {b(`${remainingPer.toFixed(7)}%`)}
-        </div>
+        <div className="pool__summary-modal__item">You are removing between {b(`${+BN(ethWithdrawn).toFixed(7)} ETH`)} and {b(`${+minTokenWithdrawn} - ${+maxTokenWithdrawn} ${label}`)} into the liquidity pool.</div>
+        <div className="pool__summary-modal__item">You will remove {b(+input)} liquidity tokens.</div>
+        <div className="pool__summary-modal__item">Current total supply of liquidity tokens is {b(+adjTotalSupply.toFixed(7))}</div>
+        <div className="pool__summary-modal__item">At current exchange rate, each pool token is worth {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH and {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
       </div>
     );
   }
