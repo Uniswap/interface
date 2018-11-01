@@ -458,12 +458,13 @@ class AddLiquidity extends Component {
   }
 
   renderSummaryModal() {
-    const { selectors, exchangeAddresses: { fromToken } } = this.props;
+    const { selectors, exchangeAddresses: { fromToken }, account } = this.props;
     const {
       inputValue,
       outputValue,
       outputCurrency,
       showSummaryModal,
+      totalSupply,
     } = this.state;
     if (!showSummaryModal) {
       return null;
@@ -474,14 +475,17 @@ class AddLiquidity extends Component {
       action: 'Open',
     });
 
-    const { value, decimals, label } = selectors().getTokenBalance(outputCurrency, fromToken[outputCurrency]);
+    const { value: tokenReserve, decimals, label } = selectors().getTokenBalance(outputCurrency, fromToken[outputCurrency]);
+    const { value: ethReserve } = selectors().getBalance(fromToken[outputCurrency]);
+    const { decimals: poolTokenDecimals } = selectors().getBalance(account, fromToken[outputCurrency]);
 
     const SLIPPAGE = 0.025;
     const minOutput = BN(outputValue).multipliedBy(1 - SLIPPAGE);
     const maxOutput = BN(outputValue).multipliedBy(1 + SLIPPAGE);
-    const tokenReserve = value.dividedBy(10 ** decimals);
     const minPercentage = minOutput.dividedBy(minOutput.plus(tokenReserve)).multipliedBy(100);
     const maxPercentage = maxOutput.dividedBy(maxOutput.plus(tokenReserve)).multipliedBy(100);
+    const liquidityMinted = BN(inputValue).multipliedBy(totalSupply.dividedBy(ethReserve));
+    const adjTotalSupply = totalSupply.dividedBy(10 ** poolTokenDecimals);
 
     return (
       <Modal key="modal" onClose={() => this.setState({ showSummaryModal: false })}>
@@ -493,7 +497,7 @@ class AddLiquidity extends Component {
           transitionLeaveTimeout={200}
           transitionEnterTimeout={200}
         >
-          <div className="swap__summary-modal">
+          <div className="pool__summary-modal">
             <div
               key="open-details"
               className="swap__open-details-container"
@@ -503,10 +507,10 @@ class AddLiquidity extends Component {
               <img src={DropupBlue} />
             </div>
             <div>
-              <div>You are adding between {b(`${+minOutput.toFixed(7)} - ${+maxOutput.toFixed(7)} ${label}`)} + {b(`${+BN(inputValue).toFixed(7)} ETH`)} into the liquidity pool.</div>
-              <div className="pool__last-summary-text">
-                You will receive between {b(`${+minPercentage.toFixed(5)}%`)} and {b(`${+maxPercentage.toFixed(5)}%`)} of the {`${label}/ETH`} pool tokens.
-              </div>
+              <div className="pool__summary-modal__item">You are adding between {b(`${+BN(inputValue).toFixed(7)} ETH`)} and {b(`${+minOutput.toFixed(7)} - ${+maxOutput.toFixed(7)} ${label}`)} into the liquidity pool.</div>
+              <div className="pool__summary-modal__item">You will mint {b(+liquidityMinted.toFixed(7))} liquidity tokens.</div>
+              <div className="pool__summary-modal__item">Current total supply of liquidity tokens is {b(+adjTotalSupply.toFixed(7))}</div>
+              <div className="pool__summary-modal__item">At current exchange rate, each pool token is worth {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH and {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
             </div>
           </div>
         </CSSTransitionGroup>
