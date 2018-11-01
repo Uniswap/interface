@@ -6,7 +6,6 @@ import Web3 from 'web3';
 import Jazzicon from 'jazzicon';
 import { CSSTransitionGroup } from "react-transition-group";
 import './web3-status.scss';
-import Pending from '../../assets/images/pending.svg';
 import Modal from '../Modal';
 
 function getEtherscanLink(tx) {
@@ -19,13 +18,13 @@ class Web3Status extends Component {
   };
 
   handleClick = () => {
-    if (this.props.hasPendingTransactions && !this.state.isShowingModal) {
+    if (this.props.pending.length && !this.state.isShowingModal) {
       this.setState({isShowingModal: true});
     }
-  }
+  };
 
   renderPendingTransactions() {
-    return this.props.pendingTransactions.map((transaction) => {
+    return this.props.pending.map((transaction) => {
       return (
         <div
           key={transaction}
@@ -36,8 +35,7 @@ class Web3Status extends Component {
             {transaction}
           </div>
           <div className="pending-modal__pending-indicator">
-            <img src={Pending} />
-            Pending
+            <div className="loader" /> Pending
           </div>
         </div>
       );
@@ -71,25 +69,21 @@ class Web3Status extends Component {
   }
 
   render() {
-    const { address, transactions, pendingTransactions, hasPendingTransactions } = this.props;
-    let text = getText(address);
-    if (hasPendingTransactions) {
-      text = getPendingText(pendingTransactions);
-    }
+    const { address, pending, confirmed } = this.props;
+    const hasPendingTransactions = !!pending.length;
+    const hasConfirmedTransactions = !!confirmed.length;
 
     return (
       <div
         className={classnames("web3-status", {
           'web3-status__connected': this.props.isConnected,
+          'web3-status--pending': hasPendingTransactions,
+          'web3-status--confirmed': hasConfirmedTransactions,
         })}
         onClick={this.handleClick}
       >
         <div className="web3-status__text">
-          {
-            hasPendingTransactions ?
-              getPendingText(pendingTransactions) :
-              getText(address)
-          }
+          { hasPendingTransactions ? getPendingText(pending) : getText(address) }
         </div>
         <div
           className="web3-status__identicon"
@@ -117,7 +111,7 @@ class Web3Status extends Component {
 function getPendingText(pendingTransactions) {
   return (
     <div className="web3-status__pending-container">
-      <img key="icon" src={Pending} />
+      <div className="loader" />
       <span key="text">{pendingTransactions.length} Pending</span>
     </div>
   );
@@ -144,18 +138,11 @@ Web3Status.defaultProps = {
 
 export default connect(
   state => {
-    const pendingTransactions = [];
-    // Object.keys(state.transactions).forEach((transaction) => {
-    //   if (state.transactions[transaction] && state.transactions[transaction].status === 'pending') {
-    //     pendingTransactions.push(transaction);
-    //   }
-    // });
-
     return {
       address: state.web3connect.account,
       isConnected: !!(state.web3connect.web3 && state.web3connect.account),
-      pendingTransactions,
-      hasPendingTransactions: pendingTransactions.length > 0,
+      pending: state.web3connect.transactions.pending,
+      confirmed: state.web3connect.transactions.confirmed,
     };
   }
 )(Web3Status);

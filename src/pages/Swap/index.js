@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import {BigNumber as BN} from "bignumber.js";
 import MediaQuery from 'react-responsive';
 import ReactGA from 'react-ga';
-import { selectors } from '../../ducks/web3connect';
+import { selectors, addPendingTx } from '../../ducks/web3connect';
 import { CSSTransitionGroup } from "react-transition-group";
 import Header from '../../components/Header';
 import NavigationTabs from '../../components/NavigationTabs';
@@ -28,6 +28,7 @@ class Swap extends Component {
     account: PropTypes.string,
     isConnected: PropTypes.bool.isRequired,
     selectors: PropTypes.func.isRequired,
+    addPendingTx: PropTypes.func.isRequired,
     web3: PropTypes.object.isRequired,
   };
 
@@ -355,6 +356,7 @@ class Swap extends Component {
       account,
       web3,
       selectors,
+      addPendingTx,
     } = this.props;
     const {
       inputValue,
@@ -392,7 +394,12 @@ class Swap extends Component {
             .send({
               from: account,
               value: BN(inputValue).multipliedBy(10 ** 18).toFixed(0),
-            }, err => !err && this.reset());
+            }, (err, data) => {
+              if (!err) {
+                addPendingTx(data);
+                this.reset();
+              }
+            });
           break;
         case 'TOKEN_TO_ETH':
           new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
@@ -402,9 +409,12 @@ class Swap extends Component {
               BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(0),
               deadline,
             )
-            .send({
-              from: account,
-            }, err => !err && this.reset());
+            .send({ from: account }, (err, data) => {
+              if (!err) {
+                addPendingTx(data);
+                this.reset();
+              }
+            });
           break;
         case 'TOKEN_TO_TOKEN':
           new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
@@ -416,9 +426,12 @@ class Swap extends Component {
               deadline,
               outputCurrency,
             )
-            .send({
-              from: account,
-            }, err => !err && this.reset());
+            .send({ from: account }, (err, data) => {
+              if (!err) {
+                addPendingTx(data);
+                this.reset();
+              }
+            });
           break;
         default:
           break;
@@ -442,7 +455,12 @@ class Swap extends Component {
             .send({
               from: account,
               value: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
-            }, err => !err && this.reset());
+            }, (err, data) => {
+              if (!err) {
+                addPendingTx(data);
+                this.reset();
+              }
+            });
           break;
         case 'TOKEN_TO_ETH':
           new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
@@ -452,9 +470,12 @@ class Swap extends Component {
               BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
               deadline,
             )
-            .send({
-              from: account,
-            }, err => !err && this.reset());
+            .send({ from: account }, (err, data) => {
+              if (!err) {
+                addPendingTx(data);
+                this.reset();
+              }
+            });
           break;
         case 'TOKEN_TO_TOKEN':
           if (!inputAmountB) {
@@ -469,9 +490,13 @@ class Swap extends Component {
               inputAmountB.multipliedBy(1.2).toFixed(0),
               deadline,
               outputCurrency,
-            ).send({
-              from: account,
-            }, err => !err && this.reset());
+            )
+            .send({ from: account }, (err, data) => {
+              if (!err) {
+                addPendingTx(data);
+                this.reset();
+              }
+            });
           break;
         default:
           break;
@@ -770,6 +795,7 @@ export default connect(
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),
+    addPendingTx: id => dispatch(addPendingTx(id)),
   }),
 )(Swap);
 
