@@ -640,6 +640,7 @@ class Send extends Component {
     }
 
     let description;
+    const recipientText = b(`${recipient.slice(0, 6)}...${recipient.slice(-4)}`);
     if (lastEditedField === INPUT) {
       description = (
         <div>
@@ -647,7 +648,7 @@ class Send extends Component {
             You are selling {b(`${+inputValue} ${inputLabel}`)}.
           </div>
           <div className="send__last-summary-text">
-            {b(`${recipient.slice(0, 6)}...${recipient.slice(-4)}`)} will receive between {b(`${+minOutput} ${outputLabel}`)} and {b(`${+outputValue} ${outputLabel}`)}.
+            {recipientText} will receive at least {b(`${+minOutput} ${outputLabel}`)} or the transaction will fail.
           </div>
         </div>
       );
@@ -655,10 +656,12 @@ class Send extends Component {
       description = (
         <div>
           <div>
-            You are selling between {b(`${+inputValue} ${inputLabel}`)} to {b(`${+maxInput} ${inputLabel}`)}.
+            You are sending {b(`${+outputValue} ${outputLabel}`)} to {recipientText}.
+            {/*You are selling between {b(`${+inputValue} ${inputLabel}`)} to {b(`${+maxInput} ${inputLabel}`)}.*/}
           </div>
           <div className="send__last-summary-text">
-            {b(`${recipient.slice(0, 6)}...${recipient.slice(-4)}`)} will receive {b(`${+outputValue} ${outputLabel}`)}.
+            {/*{b(`${recipient.slice(0, 6)}...${recipient.slice(-4)}`)} will receive {b(`${+outputValue} ${outputLabel}`)}.*/}
+            It will cost at most {b(`${+maxInput} ${inputLabel}`)} or the transaction will fail.
           </div>
         </div>
       );

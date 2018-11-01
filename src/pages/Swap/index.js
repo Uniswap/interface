@@ -629,7 +629,7 @@ class Swap extends Component {
             You are selling {b(`${+inputValue} ${inputLabel}`)}.
           </div>
           <div className="send__last-summary-text">
-            You will receive between {b(`${+minOutput} ${outputLabel}`)} and {b(`${+outputValue} ${outputLabel}`)}.
+            You will receive at least {b(`${+minOutput} ${outputLabel}`)} or the transaction will fail.
           </div>
         </div>
       );
@@ -637,10 +637,10 @@ class Swap extends Component {
       description = (
         <div>
           <div>
-            You are selling between {b(`${+inputValue} ${inputLabel}`)} to {b(`${+maxInput} ${inputLabel}`)}.
+            You are buying {b(`${+outputValue} ${outputLabel}`)}.
           </div>
           <div className="send__last-summary-text">
-            You will receive {b(`${+outputValue} ${outputLabel}`)}.
+            It will cost at most {b(`${+maxInput} ${inputLabel}`)} or the transaction will fail.
           </div>
         </div>
       );
