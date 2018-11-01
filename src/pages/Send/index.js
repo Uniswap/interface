@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import {BigNumber as BN} from "bignumber.js";
 import { CSSTransitionGroup } from "react-transition-group";
-import { selectors } from '../../ducks/web3connect';
+import { selectors, addPendingTx } from '../../ducks/web3connect';
 import Header from '../../components/Header';
 import NavigationTabs from '../../components/NavigationTabs';
 import AddressInputPanel from '../../components/AddressInputPanel';
@@ -359,6 +359,7 @@ class Send extends Component {
       account,
       web3,
       selectors,
+      addPendingTx,
     } = this.props;
     const {
       inputValue,
@@ -397,7 +398,12 @@ class Send extends Component {
             .send({
               from: account,
               value: BN(inputValue).multipliedBy(10 ** 18).toFixed(0),
-            }, err => !err && this.reset());
+            }, (err, data) => {
+              if (!err) {
+                addPendingTx(data);
+                this.reset();
+              }
+            });
           break;
         case 'TOKEN_TO_ETH':
           new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
@@ -408,9 +414,12 @@ class Send extends Component {
               deadline,
               recipient,
             )
-            .send({
-              from: account,
-            }, err => !err && this.reset());
+            .send({ from: account }, (err, data) => {
+              if (!err) {
+                addPendingTx(data);
+                this.reset();
+              }
+            });
           break;
         case 'TOKEN_TO_TOKEN':
           new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
@@ -423,9 +432,12 @@ class Send extends Component {
               recipient,
               outputCurrency,
             )
-            .send({
-              from: account,
-            }, err => !err && this.reset());
+            .send({ from: account }, (err, data) => {
+              if (!err) {
+                addPendingTx(data);
+                this.reset();
+              }
+            });
           break;
         default:
           break;
@@ -450,7 +462,12 @@ class Send extends Component {
             .send({
               from: account,
               value: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
-            }, err => !err && this.reset());
+            }, (err, data) => {
+              if (!err) {
+                addPendingTx(data);
+                this.reset();
+              }
+            });
           break;
         case 'TOKEN_TO_ETH':
           new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
@@ -461,9 +478,12 @@ class Send extends Component {
               deadline,
               recipient,
             )
-            .send({
-              from: account,
-            }, err => !err && this.reset());
+            .send({ from: account }, (err, data) => {
+              if (!err) {
+                addPendingTx(data);
+                this.reset();
+              }
+            });
           break;
         case 'TOKEN_TO_TOKEN':
           if (!inputAmountB) {
@@ -479,9 +499,13 @@ class Send extends Component {
               deadline,
               recipient,
               outputCurrency,
-            ).send({
-              from: account,
-            }, err => !err && this.reset());
+            )
+            .send({ from: account }, (err, data) => {
+              if (!err) {
+                addPendingTx(data);
+                this.reset();
+              }
+            });
           break;
         default:
           break;
@@ -798,6 +822,7 @@ export default connect(
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),
+    addPendingTx: id => dispatch(addPendingTx(id)),
   }),
 )(Send);
 
