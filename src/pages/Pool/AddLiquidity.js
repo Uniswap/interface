@@ -502,9 +502,9 @@ class AddLiquidity extends Component {
               <img src={DropupBlue} />
             </div>
             <div>
-              <div>You are adding between {b(`${minOutput.toFixed(5)} - ${maxOutput.toFixed(5)} ${label}`)} + {b(`${BN(inputValue).toFixed(5)} ETH`)} into the liquidity pool.</div>
+              <div>You are adding between {b(`${+minOutput.toFixed(7)} - ${+maxOutput.toFixed(7)} ${label}`)} + {b(`${+BN(inputValue).toFixed(7)} ETH`)} into the liquidity pool.</div>
               <div className="pool__last-summary-text">
-                You will receive between {b(`${minPercentage.toFixed(5)}%`)} and {b(`${maxPercentage.toFixed(5)}%`)} of the {`${label}/ETH`} pool tokens.
+                You will receive between {b(`${+minPercentage.toFixed(5)}%`)} and {b(`${+maxPercentage.toFixed(5)}%`)} of the {`${label}/ETH`} pool tokens.
               </div>
             </div>
           </div>
