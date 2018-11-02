@@ -13,7 +13,8 @@ import Modal from '../../components/Modal';
 import OversizedPanel from '../../components/OversizedPanel';
 import DropdownBlue from "../../assets/images/dropdown-blue.svg";
 import DropupBlue from "../../assets/images/dropup-blue.svg";
-import ArrowDown from '../../assets/images/arrow-down-blue.svg';
+import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg';
+import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg';
 import EXCHANGE_ABI from '../../abi/exchange';
 
 import "./send.scss";
@@ -769,7 +770,7 @@ class Send extends Component {
           />
           <OversizedPanel>
             <div className="swap__down-arrow-background">
-              <img className="swap__down-arrow" src={ArrowDown} />
+              <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} />
             </div>
           </OversizedPanel>
           <CurrencyInputPanel
@@ -789,7 +790,7 @@ class Send extends Component {
           />
           <OversizedPanel>
             <div className="swap__down-arrow-background">
-              <img className="swap__down-arrow" src={ArrowDown} />
+              <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} />
             </div>
           </OversizedPanel>
           <AddressInputPanel
