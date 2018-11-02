@@ -126,6 +126,14 @@
     outline: none;
     cursor: pointer;
     user-select: none;
+
+    &--pending {
+      line-height: .9;
+      .loader {
+        height: .5rem;
+        width: .5rem;
+      }
+    }
   }
 
   &__dropdown-icon {
