@@ -196,6 +196,13 @@
       }
     }
 
+    &--searching {
+      justify-content: center;
+      .loader {
+        margin-right: 1rem;
+      }
+    }
+
     &:hover {
       background-color: $concrete-gray;
 

@@ -71,6 +71,7 @@ class CurrencyInputPanel extends Component {
   state = {
     isShowingModal: false,
     searchQuery: '',
+    loadingExchange: false,
   };
 
   createTokenList = () => {
@@ -101,7 +102,7 @@ class CurrencyInputPanel extends Component {
 
   renderTokenList() {
     const tokens = this.createTokenList();
-    const { searchQuery } = this.state;
+    const { loadingExchange, searchQuery } = this.state;
     const {
       selectedTokens,
       disableTokenSelect,
@@ -114,6 +115,15 @@ class CurrencyInputPanel extends Component {
       history,
     } = this.props;
 
+    if (loadingExchange) {
+      return (
+        <div className="token-modal__token-row token-modal__token-row--searching">
+          <div className="loader" />
+          <div>Searching for Exchange...</div>
+        </div>
+      );
+    }
+
     if (web3 && web3.utils && web3.utils.isAddress(searchQuery)) {
       const tokenAddress = searchQuery;
       const { label } = selectors().getBalance(account, tokenAddress);
@@ -121,11 +131,14 @@ class CurrencyInputPanel extends Component {
       const exchangeAddress = fromToken[tokenAddress];
 
       if (!exchangeAddress) {
+        this.setState({loadingExchange: true});
         factory.methods.getExchange(tokenAddress).call((err, data) => {
           if (!err && data !== '0x0000000000000000000000000000000000000000') {
             addExchange({ label, tokenAddress, exchangeAddress: data });
           }
+          this.setState({loadingExchange: false});
         });
+        return;
       }
     }
 
