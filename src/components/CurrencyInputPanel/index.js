@@ -8,7 +8,8 @@ import Fuse from '../../helpers/fuse';
 import Modal from '../Modal';
 import TokenLogo from '../TokenLogo';
 import SearchIcon from '../../assets/images/magnifying-glass.svg';
-import { selectors } from "../../ducks/web3connect";
+import { selectors, addPendingTx } from "../../ducks/web3connect";
+import { addApprovalTx } from "../../ducks/pending";
 import { addExchange } from "../../ducks/addresses";
 import { BigNumber as BN } from 'bignumber.js';
 
@@ -246,7 +247,11 @@ class CurrencyInputPanel extends Component {
       exchangeAddresses: { fromToken },
       web3,
       disableUnlock,
+      transactions,
+      pendingApprovals,
       value,
+      addApprovalTx,
+      addPendingTx,
     } = this.props;
 
     if (disableUnlock || !selectedTokenAddress || selectedTokenAddress === 'ETH') {
@@ -264,6 +269,17 @@ class CurrencyInputPanel extends Component {
     )  {
       return;
     }
+    const approvalTxId = pendingApprovals[selectedTokenAddress];
+    if (approvalTxId && transactions.pending.includes(approvalTxId)) {
+      return (
+        <button
+          className='currency-input-panel__sub-currency-select currency-input-panel__sub-currency-select--pending'
+        >
+          <div className="loader" />
+          Pending
+        </button>
+      );
+    }
 
     return (
       <button
@@ -273,8 +289,9 @@ class CurrencyInputPanel extends Component {
           const amount = BN(10 ** decimals).multipliedBy(10 ** 8).toFixed(0);
           contract.methods.approve(fromToken[selectedTokenAddress], amount)
             .send({ from: account }, (err, data) => {
-              if (data) {
-                // TODO: Handle Pending in Redux
+              if (!err && data) {
+                addPendingTx(data);
+                addApprovalTx({ tokenAddress: selectedTokenAddress, txId: data});
               }
             });
         }}
@@ -389,11 +406,15 @@ export default withRouter(
       contracts: state.contracts,
       account: state.web3connect.account,
       approvals: state.web3connect.approvals,
+      transactions: state.web3connect.transactions,
       web3: state.web3connect.web3,
+      pendingApprovals: state.pending.approvals,
     }),
     dispatch => ({
       selectors: () => dispatch(selectors()),
       addExchange: opts => dispatch(addExchange(opts)),
+      addPendingTx: opts => dispatch(addPendingTx(opts)),
+      addApprovalTx: opts => dispatch(addApprovalTx(opts)),
     }),
   )(CurrencyInputPanel)
 );
