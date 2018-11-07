@@ -7,6 +7,7 @@ import NavigationTabs from "../../components/NavigationTabs";
 import ModeSelector from "./ModeSelector";
 import CurrencyInputPanel from "../../components/CurrencyInputPanel";
 import { selectors, addPendingTx } from '../../ducks/web3connect';
+import ContextualInfo from "../../components/ContextualInfo";
 import OversizedPanel from "../../components/OversizedPanel";
 import ArrowDownBlue from "../../assets/images/arrow-down-blue.svg";
 import ArrowDownGrey from "../../assets/images/arrow-down-grey.svg";
@@ -148,6 +149,85 @@ class RemoveLiquidity extends Component {
     return `Balance: ${value.dividedBy(10 ** decimals).toFixed(7)}`;
   };
 
+  renderSummary(errorMessage) {
+    const { selectors, exchangeAddresses: { fromToken } } = this.props;
+    const {
+      value: input,
+      tokenAddress,
+    } = this.state;
+    const inputIsZero = BN(input).isZero();
+    let contextualInfo = '';
+    let isError = false;
+
+    if (errorMessage) {
+      contextualInfo = errorMessage;
+      isError = true;
+    } else if (!tokenAddress) {
+      contextualInfo = 'Select a token to continue.';
+    } else if (inputIsZero) {
+      contextualInfo = 'Amount cannot be zero.';
+    } else if (!input) {
+      const { label } = selectors().getTokenBalance(tokenAddress, fromToken[tokenAddress]);
+      contextualInfo = `Enter a ${label} value to continue.`;
+    }
+
+    return (
+      <ContextualInfo
+        key="context-info"
+        contextualInfo={contextualInfo}
+        isError={isError}
+        modalClass="pool__summary-modal"
+        renderTransactionDetails={this.renderTransactionDetails}
+      />
+    );
+  }
+
+  renderTransactionDetails = () => {
+    const { tokenAddress, value: input, totalSupply } = this.state;
+    const {
+      exchangeAddresses: { fromToken },
+      web3,
+      selectors,
+      account,
+    } = this.props;
+    const exchangeAddress = fromToken[tokenAddress];
+    const { getBalance } = selectors();
+
+    if (!exchangeAddress) {
+      return null;
+    }
+
+    ReactGA.event({
+      category: 'TransactionDetail',
+      action: 'Open',
+    });
+
+    const SLIPPAGE = 0.025;
+    const { value: liquidityBalance, decimals } = getBalance(account, exchangeAddress);
+    const { value: ethReserve } = getBalance(exchangeAddress);
+    const { value: tokenReserve, label, decimals: reserveDecimals } = getBalance(exchangeAddress, tokenAddress);
+
+    const ethPer = ethReserve.dividedBy(totalSupply);
+    const tokenPer = tokenReserve.dividedBy(totalSupply);
+
+    const ethWithdrawn = ethPer.multipliedBy(input);
+
+    const tokenWithdrawn = tokenPer.multipliedBy(input);
+    const minTokenWithdrawn = tokenWithdrawn.multipliedBy(1 - SLIPPAGE).toFixed(7);
+    const maxTokenWithdrawn = tokenWithdrawn.multipliedBy(1 + SLIPPAGE).toFixed(7);
+
+    const adjTotalSupply = totalSupply.dividedBy(10 ** decimals).minus(input);
+
+    return (
+      <div>
+        <div className="pool__summary-modal__item">You are removing between {b(`${+BN(ethWithdrawn).toFixed(7)} ETH`)} and {b(`${+minTokenWithdrawn} - ${+maxTokenWithdrawn} ${label}`)} into the liquidity pool.</div>
+        <div className="pool__summary-modal__item">You will remove {b(+input)} liquidity tokens.</div>
+        <div className="pool__summary-modal__item">Current total supply of liquidity tokens is {b(+adjTotalSupply.toFixed(7))}</div>
+        <div className="pool__summary-modal__item">At current exchange rate, each pool token is worth {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH and {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
+      </div>
+    );
+  }
+
   renderOutput() {
     const {
       exchangeAddresses: { fromToken },
@@ -253,7 +333,7 @@ class RemoveLiquidity extends Component {
     const { tokenAddress, value } = this.state;
     const { isValid, errorMessage } = this.validate();
 
-    return (
+    return [
       <div
         key="content"
         className={classnames('swap__content', {
@@ -294,8 +374,9 @@ class RemoveLiquidity extends Component {
             Remove Liquidity
           </button>
         </div>
-      </div>
-    );
+      </div>,
+      this.renderSummary(errorMessage)
+    ];
   }
 }
 
@@ -312,3 +393,7 @@ export default connect(
     addPendingTx: id => dispatch(addPendingTx(id)),
   })
 )(RemoveLiquidity);
+
+function b(text) {
+  return <span className="swap__highlight-text">{text}</span>
+}

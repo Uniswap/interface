@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import {BigNumber as BN} from "bignumber.js";
-import { CSSTransitionGroup } from "react-transition-group";
 import { selectors, addPendingTx } from '../../ducks/web3connect';
 import Header from '../../components/Header';
 import NavigationTabs from '../../components/NavigationTabs';
 import AddressInputPanel from '../../components/AddressInputPanel';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
-import Modal from '../../components/Modal';
+import ContextualInfo from '../../components/ContextualInfo';
 import OversizedPanel from '../../components/OversizedPanel';
 import DropdownBlue from "../../assets/images/dropdown-blue.svg";
 import DropupBlue from "../../assets/images/dropup-blue.svg";
@@ -41,7 +40,6 @@ class Send extends Component {
     inputAmountB: '',
     lastEditedField: '',
     recipient: '',
-    showSummaryModal: false,
   };
 
   componentWillMount() {
@@ -59,7 +57,6 @@ class Send extends Component {
       inputAmountB: '',
       lastEditedField: '',
       recipient: '',
-      showSummaryModal: false,
     });
   }
 
@@ -514,14 +511,12 @@ class Send extends Component {
     }
   };
 
-  renderSummary() {
+  renderSummary(inputError, outputError) {
     const {
       inputValue,
       inputCurrency,
-      inputError,
       outputValue,
       outputCurrency,
-      outputError,
       recipient,
     } = this.state;
     const { web3 } = this.props;
@@ -533,64 +528,49 @@ class Send extends Component {
     const inputIsZero = BN(inputValue).isZero();
     const outputIsZero = BN(outputValue).isZero();
 
-    let nextStepMessage;
+    let contextualInfo = '';
+    let isError = false;
+
     if (inputError || outputError) {
-      nextStepMessage = inputError || outputError;
+      contextualInfo = inputError || outputError;
+      isError = true;
     } else if (!inputCurrency || !outputCurrency) {
-      nextStepMessage = 'Select a token to continue.';
+      contextualInfo = 'Select a token to continue.';
     } else if (inputCurrency === outputCurrency) {
-      nextStepMessage = 'Must be different token.';
+      contextualInfo = 'Must be different token.';
     } else if (!inputValue || !outputValue) {
       const missingCurrencyValue = !inputValue ? inputLabel : outputLabel;
-      nextStepMessage = `Enter a ${missingCurrencyValue} value to continue.`;
+      contextualInfo = `Enter a ${missingCurrencyValue} value to continue.`;
     } else if (inputIsZero || outputIsZero) {
-      nextStepMessage = 'No liquidity.';
+      contextualInfo = 'No liquidity.';
     } else if (this.isUnapproved()) {
-      nextStepMessage = 'Please unlock token to continue.';
+      contextualInfo = 'Please unlock token to continue.';
     } else if (!recipient) {
-      nextStepMessage = 'Enter a wallet address to send to.';
+      contextualInfo = 'Enter a wallet address to send to.';
     } else if (!validRecipientAddress) {
-      nextStepMessage = 'Please enter a valid wallet address recipient.';
+      contextualInfo = 'Please enter a valid wallet address recipient.';
     }
 
-    if (nextStepMessage) {
-      return (
-        <div className="swap__summary-wrapper">
-          <div>{nextStepMessage}</div>
-        </div>
-      )
-    }
-
-    return [
-      <div
-        key="open-details"
-        className="swap__summary-wrapper swap__open-details-container"
-        onClick={() => this.setState({showSummaryModal: true})}
-      >
-        <span>Transaction Details</span>
-        <img src={DropdownBlue} />
-      </div>,
-      this.renderSummaryModal()
-    ];
+    return (
+      <ContextualInfo
+        contextualInfo={contextualInfo}
+        isError={isError}
+        renderTransactionDetails={this.renderTransactionDetails}
+      />
+    );
   }
 
-  renderSummaryModal() {
+  renderTransactionDetails = () => {
     const {
       inputValue,
       inputCurrency,
-      inputError,
       outputValue,
       outputCurrency,
-      outputError,
       recipient,
-      showSummaryModal,
       inputAmountB,
       lastEditedField,
     } = this.state;
     const { selectors, account } = this.props;
-    if (!this.state.showSummaryModal) {
-      return null;
-    }
 
     ReactGA.event({
       category: 'TransactionDetail',
@@ -640,10 +620,9 @@ class Send extends Component {
       }
     }
 
-    let description;
     const recipientText = b(`${recipient.slice(0, 6)}...${recipient.slice(-4)}`);
     if (lastEditedField === INPUT) {
-      description = (
+      return (
         <div>
           <div>
             You are selling {b(`${+inputValue} ${inputLabel}`)}.
@@ -654,7 +633,7 @@ class Send extends Component {
         </div>
       );
     } else {
-      description = (
+      return (
         <div>
           <div>
             You are sending {b(`${+outputValue} ${outputLabel}`)} to {recipientText}.
@@ -667,31 +646,6 @@ class Send extends Component {
         </div>
       );
     }
-
-    return (
-      <Modal key="modal" onClose={() => this.setState({ showSummaryModal: false })}>
-        <CSSTransitionGroup
-          transitionName="summary-modal"
-          transitionAppear={true}
-          transitionLeave={true}
-          transitionAppearTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionEnterTimeout={200}
-        >
-          <div className="swap__summary-modal">
-            <div
-              key="open-details"
-              className="swap__open-details-container"
-              onClick={() => this.setState({showSummaryModal: false})}
-            >
-              <span>Transaction Details</span>
-              <img src={DropupBlue} />
-            </div>
-            {description}
-          </div>
-        </CSSTransitionGroup>
-      </Modal>
-    );
   }
 
   renderExchangeRate() {
@@ -810,7 +764,7 @@ class Send extends Component {
             </button>
           </div>
         </div>
-        { this.renderSummary() }
+        { this.renderSummary(inputError, outputError) }
       </div>
     );
   }
