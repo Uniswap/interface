@@ -6,11 +6,10 @@ import {BigNumber as BN} from "bignumber.js";
 import MediaQuery from 'react-responsive';
 import ReactGA from 'react-ga';
 import { selectors, addPendingTx } from '../../ducks/web3connect';
-import { CSSTransitionGroup } from "react-transition-group";
 import Header from '../../components/Header';
 import NavigationTabs from '../../components/NavigationTabs';
-import Modal from '../../components/Modal';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
+import ContextualInfo from '../../components/ContextualInfo';
 import OversizedPanel from '../../components/OversizedPanel';
 import DropdownBlue from "../../assets/images/dropdown-blue.svg";
 import DropupBlue from "../../assets/images/dropup-blue.svg";
@@ -40,7 +39,6 @@ class Swap extends Component {
     outputCurrency: '',
     inputAmountB: '',
     lastEditedField: '',
-    showSummaryModal: false,
   };
 
   componentWillMount() {
@@ -57,7 +55,6 @@ class Swap extends Component {
       outputValue: '',
       inputAmountB: '',
       lastEditedField: '',
-      showSummaryModal: false,
     });
   }
 
@@ -505,7 +502,7 @@ class Swap extends Component {
     }
   };
 
-  renderSummary() {
+  renderSummary(inputError, outputError) {
     const {
       inputValue,
       inputCurrency,
@@ -515,53 +512,40 @@ class Swap extends Component {
 
     const inputIsZero = BN(inputValue).isZero();
     const outputIsZero = BN(outputValue).isZero();
+    let contextualInfo = '';
+    let isError = false;
 
     if (!inputCurrency || !outputCurrency) {
-      return (
-        <div className="swap__summary-wrapper">
-          <div>Select a token to continue.</div>
-        </div>
-      )
+      contextualInfo = 'Select a token to continue.';
     }
 
     if (!inputValue || !outputValue) {
-      return (
-        <div className="swap__summary-wrapper">
-          <div>Enter a value to continue.</div>
-        </div>
-      )
+      contextualInfo = 'Enter a value to continue.';
+    }
+
+    if (inputError || outputError) {
+      contextualInfo = inputError || outputError;
+      isError = true;
     }
 
     if (inputIsZero || outputIsZero) {
-      return (
-        <div className="swap__summary-wrapper">
-          <div>No liquidity.</div>
-        </div>
-      )
+      contextualInfo = 'No liquidity.';
     }
 
     if (this.isUnapproved()) {
-      return (
-        <div className="swap__summary-wrapper">
-          <div>Please unlock token to continue.</div>
-        </div>
-      );
+      contextualInfo = 'Please unlock token to continue.';
     }
 
-    return [
-      <div
-        key="open-details"
-        className="swap__summary-wrapper swap__open-details-container"
-        onClick={() => this.setState({showSummaryModal: true})}
-      >
-        <span>Transaction Details</span>
-        <img src={DropdownBlue} />
-      </div>,
-      this.renderSummaryModal()
-    ];
+    return (
+      <ContextualInfo
+        contextualInfo={contextualInfo}
+        isError={isError}
+        renderTransactionDetails={this.renderTransactionDetails}
+      />
+    );
   }
 
-  renderSummaryModal() {
+  renderTransactionDetails = () => {
     const {
       inputValue,
       inputCurrency,
@@ -570,9 +554,6 @@ class Swap extends Component {
       lastEditedField,
     } = this.state;
     const { selectors, account } = this.props;
-    if (!this.state.showSummaryModal) {
-      return null;
-    }
 
     ReactGA.event({
       category: 'TransactionDetail',
@@ -622,9 +603,8 @@ class Swap extends Component {
       }
     }
 
-    let description;
     if (lastEditedField === INPUT) {
-      description = (
+      return (
         <div>
           <div>
             You are selling {b(`${+inputValue} ${inputLabel}`)}.
@@ -635,7 +615,7 @@ class Swap extends Component {
         </div>
       );
     } else {
-      description = (
+      return (
         <div>
           <div>
             You are buying {b(`${+outputValue} ${outputLabel}`)}.
@@ -646,31 +626,6 @@ class Swap extends Component {
         </div>
       );
     }
-
-    return (
-      <Modal key="modal" onClose={() => this.setState({ showSummaryModal: false })}>
-        <CSSTransitionGroup
-          transitionName="summary-modal"
-          transitionAppear={true}
-          transitionLeave={true}
-          transitionAppearTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionEnterTimeout={200}
-        >
-          <div className="swap__summary-modal">
-            <div
-              key="open-details"
-              className="swap__open-details-container"
-              onClick={() => this.setState({showSummaryModal: false})}
-            >
-              <span>Transaction Details</span>
-              <img src={DropupBlue} />
-            </div>
-            {description}
-          </div>
-        </CSSTransitionGroup>
-      </Modal>
-    );
   }
 
   renderExchangeRate() {
@@ -780,7 +735,7 @@ class Swap extends Component {
             </button>
           </div>
         </div>
-        { this.renderSummary() }
+        { this.renderSummary(inputError, outputError) }
       </div>
     );
   }

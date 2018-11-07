@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classnames from "classnames";
-import { CSSTransitionGroup } from "react-transition-group";
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import OversizedPanel from '../../components/OversizedPanel';
+import ContextualInfo from '../../components/ContextualInfo';
 import NavigationTabs from '../../components/NavigationTabs';
-import Modal from '../../components/Modal';
 import { selectors, addPendingTx } from '../../ducks/web3connect';
 import PlusBlue from '../../assets/images/plus-blue.svg';
 import PlusGrey from '../../assets/images/plus-grey.svg';
@@ -40,7 +39,6 @@ class AddLiquidity extends Component {
     outputCurrency: '',
     lastEditedField: '',
     totalSupply: BN(0),
-    showSummaryModal: false,
   };
 
   reset = () => {
@@ -48,13 +46,12 @@ class AddLiquidity extends Component {
       inputValue: '',
       outputValue: '',
       lastEditedField: '',
-      showSummaryModal: false,
     });
   };
 
   shouldComponentUpdate(nextProps, nextState) {
     const { isConnected, account, exchangeAddresses, balances, web3 } = this.props;
-    const { inputValue, outputValue, inputCurrency, outputCurrency, lastEditedField, showSummaryModal } = this.state;
+    const { inputValue, outputValue, inputCurrency, outputCurrency, lastEditedField } = this.state;
 
     return isConnected !== nextProps.isConnected ||
       account !== nextProps.account ||
@@ -65,8 +62,7 @@ class AddLiquidity extends Component {
       outputValue !== nextState.outputValue ||
       inputCurrency !== nextState.inputCurrency ||
       outputCurrency !== nextState.outputCurrency ||
-      lastEditedField !== nextState.lastEditedField ||
-      showSummaryModal !== nextState.showSummaryModal;
+      lastEditedField !== nextState.lastEditedField;
   }
 
   componentWillReceiveProps() {
@@ -384,7 +380,7 @@ class AddLiquidity extends Component {
     )
   }
 
-  renderSummary() {
+  renderSummary(inputError, outputError) {
     const { selectors, exchangeAddresses: { fromToken } } = this.props;
     const {
       inputValue,
@@ -395,81 +391,45 @@ class AddLiquidity extends Component {
     const inputIsZero = BN(inputValue).isZero();
     const outputIsZero = BN(outputValue).isZero();
 
-    if (!inputCurrency || !outputCurrency) {
-      return (
-        <div key="summary" className="swap__summary-wrapper">
-          <div>Select a token to continue.</div>
-        </div>
-      )
-    }
-
-    if (inputCurrency === outputCurrency) {
-      return (
-        <div key="summary" className="swap__summary-wrapper">
-          <div>Must be different token.</div>
-        </div>
-      )
-    }
-
-    if (![inputCurrency, outputCurrency].includes('ETH')) {
-      return (
-        <div key="summary" className="swap__summary-wrapper">
-          <div>One of the input must be ETH.</div>
-        </div>
-      )
-    }
-
-    if (inputIsZero || outputIsZero) {
-      return (
-        <div key="summary" className="swap__summary-wrapper">
-          <div>Amount cannot be zero.</div>
-        </div>
-      )
-    }
-
-    if (this.isUnapproved()) {
-      return (
-        <div key="summary" className="swap__summary-wrapper">
-          <div>Please unlock token to continue.</div>
-        </div>
-      )
-    }
-
+    let contextualInfo = '';
+    let isError = false;
     const { label } = selectors().getTokenBalance(outputCurrency, fromToken[outputCurrency]);
-
-    if (!inputValue || !outputValue) {
-      return (
-        <div key="summary" className="swap__summary-wrapper">
-          <div>{`Enter a ${inputCurrency} or ${label} value to continue.`}</div>
-        </div>
-      )
+    if (inputError || outputError) {
+      contextualInfo = inputError || outputError;
+      isError = true;
+    } else if (!inputCurrency || !outputCurrency) {
+      contextualInfo = 'Select a token to continue.';
+    } else if (inputCurrency === outputCurrency) {
+      contextualInfo = 'Must be different token.';
+    } else if (![inputCurrency, outputCurrency].includes('ETH')) {
+      contextualInfo = 'One of the input must be ETH.';
+    } else if (inputIsZero || outputIsZero) {
+      contextualInfo = 'Amount cannot be zero.';
+    } else if (this.isUnapproved()) {
+      contextualInfo = 'Please unlock token to continue.';
+    } else if (!inputValue || !outputValue) {
+      contextualInfo = `Enter a ${inputCurrency} or ${label} value to continue.`;
     }
 
-    return [
-      <div
-        key="open-details"
-        className="swap__summary-wrapper swap__open-details-container"
-        onClick={() => this.setState({showSummaryModal: true})}
-      >
-        <span>Transaction Details</span>
-        <img src={DropdownBlue} />
-      </div>,
-      this.renderSummaryModal()
-    ];
+    return (
+      <ContextualInfo
+        key="context-info"
+        contextualInfo={contextualInfo}
+        isError={isError}
+        modalClass="pool__summary-modal"
+        renderTransactionDetails={this.renderTransactionDetails}
+      />
+    );
   }
 
-  renderSummaryModal() {
+  renderTransactionDetails = () => {
     const { selectors, exchangeAddresses: { fromToken }, account } = this.props;
     const {
       inputValue,
       outputValue,
       outputCurrency,
-      showSummaryModal,
       totalSupply,
     } = this.state;
-    if (!showSummaryModal) {
-      return null;
-    }
 
     ReactGA.event({
       category: 'TransactionDetail',
@@ -489,33 +449,12 @@ class AddLiquidity extends Component {
     const adjTotalSupply = totalSupply.dividedBy(10 ** poolTokenDecimals);
 
     return (
-      <Modal key="modal" onClose={() => this.setState({ showSummaryModal: false })}>
-        <CSSTransitionGroup
-          transitionName="summary-modal"
-          transitionAppear={true}
-          transitionLeave={true}
-          transitionAppearTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionEnterTimeout={200}
-        >
-          <div className="pool__summary-modal">
-            <div
-              key="open-details"
-              className="swap__open-details-container"
-              onClick={() => this.setState({showSummaryModal: false})}
-            >
-              <span>Transaction Details</span>
-              <img src={DropupBlue} />
-            </div>
-            <div>
-              <div className="pool__summary-modal__item">You are adding between {b(`${+BN(inputValue).toFixed(7)} ETH`)} and {b(`${+minOutput.toFixed(7)} - ${+maxOutput.toFixed(7)} ${label}`)} into the liquidity pool.</div>
-              <div className="pool__summary-modal__item">You will mint {b(+liquidityMinted.toFixed(7))} liquidity tokens.</div>
-              <div className="pool__summary-modal__item">Current total supply of liquidity tokens is {b(+adjTotalSupply.toFixed(7))}</div>
-              <div className="pool__summary-modal__item">At current exchange rate, each pool token is worth {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH and {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
-            </div>
-          </div>
-        </CSSTransitionGroup>
-      </Modal>
+      <div>
+        <div className="pool__summary-modal__item">You are adding between {b(`${+BN(inputValue).toFixed(7)} ETH`)} and {b(`${+minOutput.toFixed(7)} - ${+maxOutput.toFixed(7)} ${label}`)} into the liquidity pool.</div>
+        <div className="pool__summary-modal__item">You will mint {b(+liquidityMinted.toFixed(7))} liquidity tokens.</div>
+        <div className="pool__summary-modal__item">Current total supply of liquidity tokens is {b(+adjTotalSupply.toFixed(7))}</div>
+        <div className="pool__summary-modal__item">At current exchange rate, each pool token is worth {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH and {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
+      </div>
     );
   }
 
@@ -608,7 +547,7 @@ class AddLiquidity extends Component {
           </button>
         </div>
       </div>,
-      this.renderSummary()
+      this.renderSummary(inputError, outputError)
     ];
   }
 }
