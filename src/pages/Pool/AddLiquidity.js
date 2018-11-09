@@ -350,7 +350,7 @@ class AddLiquidity extends Component {
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="pool__exchange-rate">Inverted Rate</span>
-            <span>{`1 ${label} =  ETH`}</span>
+            <span>{`1 ${label} = ${rateInvText} ETH`}</span>
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">Current Pool Size</span>

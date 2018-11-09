@@ -647,6 +647,7 @@ class Send extends Component {
       );
     }
   }
+    
 
   renderExchangeRate() {
     const { account, selectors } = this.props;
@@ -654,11 +655,16 @@ class Send extends Component {
     const { label: inputLabel } = selectors().getBalance(account, inputCurrency);
     const { label: outputLabel } = selectors().getBalance(account, outputCurrency);
 
+
     if (!exchangeRate || exchangeRate.isNaN() || !inputCurrency || !outputCurrency) {
       return (
         <OversizedPanel hideBottom>
           <div className="swap__exchange-rate-wrapper">
             <span className="swap__exchange-rate">Exchange Rate</span>
+            <span> - </span>
+          </div>
+          <div className="swap__exchange-rate-wrapper">
+            <span className="swap__exchange-rate">Inverted Rate</span>
             <span> - </span>
           </div>
         </OversizedPanel>
@@ -669,9 +675,11 @@ class Send extends Component {
       <OversizedPanel hideBottom>
         <div className="swap__exchange-rate-wrapper">
           <span className="swap__exchange-rate">Exchange Rate</span>
-          <span>
-            {`1 ${inputLabel} = ${exchangeRate.toFixed(7)} ${outputLabel}`}
-          </span>
+          <span>{`1 ${inputLabel} = ${exchangeRate.toFixed(7)} ${outputLabel}`}</span>
+	</div>
+        <div className="swap__exchange-rate-wrapper">
+          <span className="swap__exchange-rate">Inverted Rate</span>
+          <span>{`1 ${outputLabel} = ${BN(1 / exchangeRate).toFixed(7)} ${inputLabel}`}</span>
         </div>
       </OversizedPanel>
     );

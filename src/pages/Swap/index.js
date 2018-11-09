@@ -650,8 +650,6 @@ class Swap extends Component {
     }
 
     return (
-      const exchangeRateInv = 1 / exchangeRate;
-
       <OversizedPanel hideBottom>
         <div className="swap__exchange-rate-wrapper">
           <span className="swap__exchange-rate">Exchange Rate</span>
@@ -659,7 +657,7 @@ class Swap extends Component {
         </div>
         <div className="swap__exchange-rate-wrapper">
           <span className="swap__exchange-rate">Inverted Rate</span>
-          <span>{`1 ${inputLabel} = ${exchangeRateInv.toFixed(7)} ${outputLabel}`}</span>
+          <span>{`1 ${outputLabel} = ${BN(1 / exchangeRate).toFixed(7)} ${inputLabel}`}</span>
         </div>
       </OversizedPanel>
     );
