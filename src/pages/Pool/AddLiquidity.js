@@ -8,7 +8,8 @@ import OversizedPanel from '../../components/OversizedPanel';
 import NavigationTabs from '../../components/NavigationTabs';
 import Modal from '../../components/Modal';
 import { selectors, addPendingTx } from '../../ducks/web3connect';
-import ArrowDown from '../../assets/images/plus-blue.svg';
+import PlusBlue from '../../assets/images/plus-blue.svg';
+import PlusGrey from '../../assets/images/plus-grey.svg';
 import DropdownBlue from "../../assets/images/dropdown-blue.svg";
 import DropupBlue from "../../assets/images/dropup-blue.svg";
 import ModeSelector from './ModeSelector';
@@ -573,7 +574,7 @@ class AddLiquidity extends Component {
         />
         <OversizedPanel>
           <div className="swap__down-arrow-background">
-            <img className="swap__down-arrow" src={ArrowDown} />
+            <img className="swap__down-arrow" src={isValid ? PlusBlue : PlusGrey} />
           </div>
         </OversizedPanel>
         <CurrencyInputPanel
