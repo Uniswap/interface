@@ -444,6 +444,17 @@ class AddLiquidity extends Component {
     const { value: ethReserve } = selectors().getBalance(fromToken[outputCurrency]);
     const { decimals: poolTokenDecimals } = selectors().getBalance(account, fromToken[outputCurrency]);
 
+    if (this.isNewExchange()) {
+      return (
+        <div>
+          <div className="pool__summary-modal__item">You are adding {b(`${inputValue} ETH`)} and {b(`${outputValue} ${label}`)} to the liquidity pool.</div>
+          <div className="pool__summary-modal__item">You are setting the initial exchange rate to {b(`1 ETH = ${BN(outputValue).dividedBy(inputValue).toFixed(4)} ${label}`)}.</div>
+          <div className="pool__summary-modal__item">You will mint {b(`${inputValue} liquidity tokens`)}.</div>
+          <div className="pool__summary-modal__item">Current total supply of liquidity tokens is 0.</div>
+        </div>
+      );
+    }
+
     const SLIPPAGE = 0.025;
     const minOutput = BN(outputValue).multipliedBy(1 - SLIPPAGE);
     const maxOutput = BN(outputValue).multipliedBy(1 + SLIPPAGE);
@@ -522,7 +533,7 @@ class AddLiquidity extends Component {
         </OversizedPanel>
         <CurrencyInputPanel
           title="Deposit"
-          description="(estimated)"
+          description={this.isNewExchange() ? '(estimated)' : ''}
           extraText={this.getBalance(outputCurrency)}
           selectedTokenAddress={outputCurrency}
           onCurrencySelected={currency => {
