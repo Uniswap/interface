@@ -9,8 +9,9 @@ import Modal from '../Modal';
 import TokenLogo from '../TokenLogo';
 import SearchIcon from '../../assets/images/magnifying-glass.svg';
 import { selectors, addPendingTx } from "../../ducks/web3connect";
+import { waitForValue } from "../../helpers/promise-utils";
 import { addApprovalTx } from "../../ducks/pending";
-import { addExchange } from "../../ducks/addresses";
+import { addExchange, getExchange } from "../../ducks/addresses";
 import { BigNumber as BN } from 'bignumber.js';
 
 import './currency-panel.scss';
@@ -92,13 +93,21 @@ class CurrencyInputPanel extends Component {
     return tokenList.filter(({ address }) => !filteredTokens.includes(address));
   };
 
-  onTokenSelect = (address) => {
+  onTokenSelect = (tokenAddress) => {
+    const { selectors, getExchange, account, web3 } = this.props;
     this.setState({
       searchQuery: '',
       isShowingModal: false,
+      loadingExchange: true
     });
 
-    this.props.onCurrencySelected(address);
+    waitForValue(() => selectors().getBalance(account, tokenAddress).label)
+      .then((label) => {
+        getExchange({web3, tokenAddress, label}).then(() => {
+          this.setState({loadingExchange: false});
+          this.props.onCurrencySelected(tokenAddress);
+        });
+      });
   };
 
   renderTokenList() {
@@ -113,6 +122,7 @@ class CurrencyInputPanel extends Component {
       factoryAddress,
       exchangeAddresses: { fromToken },
       addExchange,
+      getExchange,
       history,
     } = this.props;
 
@@ -127,16 +137,12 @@ class CurrencyInputPanel extends Component {
 
     if (web3 && web3.utils && web3.utils.isAddress(searchQuery)) {
       const tokenAddress = searchQuery;
-      const { label } = selectors().getBalance(account, tokenAddress);
-      const factory = new web3.eth.Contract(FACTORY_ABI, factoryAddress);
-      const exchangeAddress = fromToken[tokenAddress];
-
-      if (!exchangeAddress) {
+      if (!fromToken[tokenAddress]) {
+        const { label } = selectors().getBalance(account, tokenAddress);
         this.setState({loadingExchange: true});
-        factory.methods.getExchange(tokenAddress).call((err, data) => {
-          if (!err && data !== '0x0000000000000000000000000000000000000000') {
-            addExchange({ label, tokenAddress, exchangeAddress: data });
-          }
+        getExchange({web3, tokenAddress, label}).then(() => {
+          this.setState({loadingExchange: false});
+        }, () => {
           this.setState({loadingExchange: false});
         });
         return;
@@ -301,6 +307,49 @@ class CurrencyInputPanel extends Component {
     );
   }
 
+  renderTokenButton() {
+    const {
+      selectedTokenAddress,
+      disableTokenSelect,
+    } = this.props;
+    if (this.state.loadingExchange) {
+      return (
+        <button
+          className="currency-input-panel__currency-select currency-input-panel__currency-select--loading"
+        >
+          <div className="loader" />
+        </button>
+      );
+    }
+
+    return (
+      <button
+        className={classnames("currency-input-panel__currency-select", {
+          'currency-input-panel__currency-select--selected': selectedTokenAddress,
+          'currency-input-panel__currency-select--disabled': disableTokenSelect,
+        })}
+        onClick={() => {
+          if (!disableTokenSelect) {
+            this.setState({ isShowingModal: true });
+          }
+        }}
+      >
+        {
+          selectedTokenAddress
+            ? (
+              <TokenLogo
+                className="currency-input-panel__selected-token-logo"
+                address={selectedTokenAddress}
+              />
+            )
+            : null
+        }
+        { TOKEN_ADDRESS_TO_LABEL[selectedTokenAddress] || 'Select a token' }
+        <span className="currency-input-panel__dropdown-icon" />
+      </button>
+    );
+  }
+
   renderInput() {
     const {
       errorMessage,
@@ -337,30 +386,7 @@ class CurrencyInputPanel extends Component {
           value={value}
         />
         { this.renderUnlockButton() }
-        <button
-          className={classnames("currency-input-panel__currency-select", {
-            'currency-input-panel__currency-select--selected': selectedTokenAddress,
-            'currency-input-panel__currency-select--disabled': disableTokenSelect,
-          })}
-          onClick={() => {
-            if (!disableTokenSelect) {
-              this.setState({ isShowingModal: true });
-            }
-          }}
-        >
-          {
-            selectedTokenAddress
-              ? (
-                <TokenLogo
-                  className="currency-input-panel__selected-token-logo"
-                  address={selectedTokenAddress}
-                />
-              )
-              : null
-          }
-          { TOKEN_ADDRESS_TO_LABEL[selectedTokenAddress] || 'Select a token' }
-          <span className="currency-input-panel__dropdown-icon" />
-        </button>
+        { this.renderTokenButton() }
       </div>
     );
   }
@@ -413,6 +439,7 @@ export default withRouter(
     dispatch => ({
       selectors: () => dispatch(selectors()),
       addExchange: opts => dispatch(addExchange(opts)),
+      getExchange: opts => dispatch(getExchange(opts)),
       addPendingTx: opts => dispatch(addPendingTx(opts)),
       addApprovalTx: opts => dispatch(addApprovalTx(opts)),
     }),
