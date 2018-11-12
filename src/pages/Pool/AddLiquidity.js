@@ -333,6 +333,10 @@ class AddLiquidity extends Component {
     const ownedEth = ethPer.multipliedBy(liquidityBalance).dividedBy(10 ** 18);
     const ownedToken = tokenPer.multipliedBy(liquidityBalance).dividedBy(10 ** decimals);
 
+    if (!label) {
+      return blank;
+    }
+
     if (this.isNewExchange()) {
       const rate = BN(outputValue).dividedBy(inputValue);
       const rateText = rate.isNaN() ? '---' : rate.toFixed(4);
