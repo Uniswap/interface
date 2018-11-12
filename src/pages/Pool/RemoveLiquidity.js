@@ -197,7 +197,7 @@ class RemoveLiquidity extends Component {
 
     const ownership = liquidityBalance.dividedBy(totalSupply);
     const ethPer = ethReserve.dividedBy(totalSupply);
-    const tokenPer = tokenReserve.dividedBy(totalSupply);
+    const tokenPer = tokenReserve.multipliedBy(10 ** (18 - tokenDecimals)).dividedBy(totalSupply);
     const exchangeRate = tokenReserve.multipliedBy(10 ** (18 - tokenDecimals)).div(ethReserve);
 
     const ownedEth = ethPer.multipliedBy(liquidityBalance).dividedBy(10 ** 18);
