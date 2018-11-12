@@ -1,3 +1,5 @@
+import FACTORY_ABI from '../abi/factory';
+
 const RINKEBY = {
   factoryAddress: '0xf5D915570BC477f9B8D6C0E980aA81757A3AaC36',
   exchangeAddresses: {
@@ -97,18 +99,34 @@ const ADD_EXCHANGE = 'app/addresses/addExchange';
 
 const initialState = RINKEBY;
 
+export const getExchange = ({web3, tokenAddress, label}) => (dispatch, getState) => {
+  const { factoryAddress, exchangeAddresses: { fromToken } } = getState().addresses;
+  const factory = new web3.eth.Contract(FACTORY_ABI, factoryAddress);
+  const exchangeAddress = fromToken[tokenAddress];
+
+  return new Promise((resolve, reject) => {
+    if (!exchangeAddress) {
+      factory.methods.getExchange(tokenAddress).call((err, data) => {
+        if (!err && data !== '0x0000000000000000000000000000000000000000') {
+          resolve(data);
+          return dispatch(addExchange({ label, tokenAddress, exchangeAddress: data }));
+        }
+
+        reject(err);
+      });
+    } else {
+      resolve(exchangeAddress);
+    }
+  });
+};
+
 export const addExchange = ({label, exchangeAddress, tokenAddress}) => (dispatch, getState) => {
   const { addresses: { tokenAddresses, exchangeAddresses } } = getState();
 
-  if (tokenAddresses.addresses.filter(([ symbol ]) => symbol === label).length) {
-    return;
-  }
-
-  if (tokenAddresses.addresses.filter(([ symbol ]) => symbol === label).length) {
-    return;
-  }
-
-  if (exchangeAddresses.fromToken[tokenAddresses]) {
+  if (
+    tokenAddresses.addresses.filter(([ symbol ]) => symbol === label).length &&
+    exchangeAddresses.fromToken[tokenAddresses]
+  ) {
     return;
   }
 
@@ -155,9 +173,16 @@ export default (state = initialState, { type, payload }) => {
 
 function handleAddExchange(state, { payload }) {
   const { label, tokenAddress, exchangeAddress } = payload;
-
   if (!label || !tokenAddress || !exchangeAddress) {
     return state;
+  }
+
+  let newTokenAddresses = state.tokenAddresses.addresses;
+  if (!newTokenAddresses.filter(([ symbol ]) => symbol === label).length) {
+    newTokenAddresses = [
+      ...newTokenAddresses,
+      [label, tokenAddress],
+    ];
   }
 
   return {
@@ -175,10 +200,7 @@ function handleAddExchange(state, { payload }) {
     },
     tokenAddresses: {
       ...state.tokenAddresses,
-      addresses: [
-        ...state.tokenAddresses.addresses,
-        [label, tokenAddress]
-      ],
+      addresses: newTokenAddresses,
     },
   };
 }
