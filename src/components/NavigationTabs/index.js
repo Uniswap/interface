@@ -49,7 +49,7 @@ class NavigationTabs extends Component {
         {
           showBetaMessage && (
             <div className="beta-message" onClick={dismissBetaMessage}>
-              💀 This project is in beta. Use at your own risk.
+              💀 This is an experimental fork of uniswap.exchange. Use at your own risk.
             </div>
           )
         }

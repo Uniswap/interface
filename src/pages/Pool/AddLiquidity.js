@@ -307,6 +307,10 @@ class AddLiquidity extends Component {
           <span> - </span>
         </div>
         <div className="pool__exchange-rate-wrapper">
+          <span className="pool__exchange-rate">Inverted Rate</span>
+          <span> - </span>
+        </div>
+        <div className="pool__exchange-rate-wrapper">
           <span className="swap__exchange-rate">Current Pool Size</span>
           <span> - </span>
         </div>
@@ -340,11 +344,17 @@ class AddLiquidity extends Component {
     if (this.isNewExchange()) {
       const rate = BN(outputValue).dividedBy(inputValue);
       const rateText = rate.isNaN() ? '---' : rate.toFixed(4);
+      const rateInv = BN(inputValue).dividedBy(outputValue);
+      const rateInvText = rate.isNaN() ? '---' : rateInv.toFixed(8);
       return (
         <div className="pool__summary-panel">
           <div className="pool__exchange-rate-wrapper">
             <span className="pool__exchange-rate">Exchange Rate</span>
             <span>{`1 ETH = ${rateText} ${label}`}</span>
+          </div>
+          <div className="pool__exchange-rate-wrapper">
+            <span className="pool__exchange-rate">Inverted Rate</span>
+            <span>{`1 ${label} = ${rateInvText} ETH`}</span>
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">Current Pool Size</span>
@@ -369,6 +379,10 @@ class AddLiquidity extends Component {
         <div className="pool__exchange-rate-wrapper">
           <span className="pool__exchange-rate">Exchange Rate</span>
           <span>{`1 ETH = ${tokenValue.multipliedBy(10 ** (18 - decimals)).dividedBy(ethValue).toFixed(4)} ${label}`}</span>
+        </div>
+        <div className="pool__exchange-rate-wrapper">
+          <span className="pool__exchange-rate">Exchange Rate</span>
+          <span>{`1 ${label} = ${tokenValue.multipliedBy(10 ** (18 - decimals)).dividedBy(ethValue).pow(-1).toFixed(8)} ETH`}</span>
         </div>
         <div className="pool__exchange-rate-wrapper">
           <span className="swap__exchange-rate">Current Pool Size</span>

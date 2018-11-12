@@ -104,7 +104,7 @@ class BlockingWarning extends Component {
           {
             isMobile()
               ? 'Please visit us from a web3-enabled mobile browser such as Trust Wallet or Coinbase Wallet.'
-              : 'Please visit us after installing Metamask on Chrome or Brave.'
+              : 'Please visit us after installing Metamask or Brave.'
           }
         </div>,
         <div key="warning-logos" className="header__download">
@@ -150,7 +150,7 @@ function Header (props) {
       >
         <Logo />
         <div className="header__center-group">
-          <span className="header__title">Uniswap</span>
+          <span className="header__title">Uniswap.ch</span>
         </div>
         <Web3Status isConnected />
       </div>
