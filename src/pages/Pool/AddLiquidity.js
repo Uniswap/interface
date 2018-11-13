@@ -11,11 +11,12 @@ import PlusBlue from '../../assets/images/plus-blue.svg';
 import PlusGrey from '../../assets/images/plus-grey.svg';
 import DropdownBlue from "../../assets/images/dropdown-blue.svg";
 import DropupBlue from "../../assets/images/dropup-blue.svg";
+import { getBlockDeadline } from '../../helpers/web3-utils';
+import { retry } from '../../helpers/promise-utils';
 import ModeSelector from './ModeSelector';
 import {BigNumber as BN} from 'bignumber.js';
 import EXCHANGE_ABI from '../../abi/exchange';
 import "./pool.scss";
-import promisify from "../../helpers/web3-promisfy";
 import ReactGA from "react-ga";
 
 const INPUT = 0;
@@ -152,9 +153,14 @@ class AddLiquidity extends Component {
     const { value: ethReserve } = selectors().getBalance(fromToken[outputCurrency]);
     const totalLiquidity = await exchange.methods.totalSupply().call();
     const liquidityMinted = BN(totalLiquidity).multipliedBy(ethAmount.dividedBy(ethReserve));
-    const blockNumber = await promisify(web3, 'getBlockNumber');
-    const block = await promisify(web3, 'getBlock', blockNumber);
-    const deadline = block.timestamp + 300;
+    let deadline;
+    try {
+      deadline = await retry(() => getBlockDeadline(web3, 300));
+    } catch(e) {
+      // TODO: Handle error.
+      return;
+    }
+
     const MAX_LIQUIDITY_SLIPPAGE = 0.025;
     const minLiquidity = this.isNewExchange() ? BN(0) : liquidityMinted.multipliedBy(1 - MAX_LIQUIDITY_SLIPPAGE);
     const maxTokens = this.isNewExchange() ? tokenAmount : tokenAmount.multipliedBy(1 + MAX_LIQUIDITY_SLIPPAGE);
