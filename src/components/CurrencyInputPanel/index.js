@@ -74,6 +74,7 @@ class CurrencyInputPanel extends Component {
     isShowingModal: false,
     searchQuery: '',
     loadingExchange: false,
+    failedGetExchange: {},
   };
 
   createTokenList = () => {
@@ -112,7 +113,7 @@ class CurrencyInputPanel extends Component {
 
   renderTokenList() {
     const tokens = this.createTokenList();
-    const { loadingExchange, searchQuery } = this.state;
+    const { loadingExchange, searchQuery, failedGetExchange } = this.state;
     const {
       selectedTokens,
       disableTokenSelect,
@@ -137,13 +138,19 @@ class CurrencyInputPanel extends Component {
 
     if (web3 && web3.utils && web3.utils.isAddress(searchQuery)) {
       const tokenAddress = searchQuery;
-      if (!fromToken[tokenAddress]) {
+      if (!fromToken[tokenAddress] && !failedGetExchange[tokenAddress] && !loadingExchange) {
         const { label } = selectors().getBalance(account, tokenAddress);
         this.setState({loadingExchange: true});
         getExchange({web3, tokenAddress, label}).then(() => {
           this.setState({loadingExchange: false});
         }, () => {
-          this.setState({loadingExchange: false});
+          this.setState({
+            loadingExchange: false,
+            failedGetExchange: {
+              ...failedGetExchange,
+              [tokenAddress]: true
+            }
+          });
         });
         return;
       }
@@ -163,7 +170,9 @@ class CurrencyInputPanel extends Component {
     }
 
     if (!results.length && web3 && web3.utils && web3.utils.isAddress(searchQuery)) {
-      const { label } = selectors().getBalance(account, searchQuery);
+      let { label } = selectors().getBalance(account, searchQuery);
+      label = label || 'this token.';
+
       return [
         <div key="token-modal-no-exchange" className="token-modal__token-row token-modal__token-row--no-exchange">
           <div>No Exchange Found</div>
