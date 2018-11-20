@@ -1,5 +1,5 @@
 # Uniswap Frontend
-This an an open source interface for Uniswap - an open source exchange protocol for Ethereum tokens. 
+This an an open source interface for Uniswap - a protocol for decentralized exchange of Ethereum tokens.
 
 * Website: [uniswap.io/](https://uniswap.io/)
 * Docs: [docs.uniswap.io/](https://docs.uniswap.io/)
