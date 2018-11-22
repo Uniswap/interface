@@ -345,6 +345,11 @@ export const sync = () => async (dispatch, getState) => {
     try {
       const data = await web3.eth.getTransactionReceipt(txId) || {};
 
+      // If data is an empty obj, then it's still pending.
+      if (!('status' in data)) {
+        return;
+      }
+
       dispatch({
         type: REMOVE_PENDING_TX,
         payload: txId,

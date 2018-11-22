@@ -8,7 +8,8 @@ import Fuse from '../../helpers/fuse';
 import Modal from '../Modal';
 import TokenLogo from '../TokenLogo';
 import SearchIcon from '../../assets/images/magnifying-glass.svg';
-import { selectors } from "../../ducks/web3connect";
+import { selectors, addPendingTx } from "../../ducks/web3connect";
+import { addApprovalTx } from "../../ducks/pending";
 import { addExchange } from "../../ducks/addresses";
 import { BigNumber as BN } from 'bignumber.js';
 
@@ -71,6 +72,7 @@ class CurrencyInputPanel extends Component {
   state = {
     isShowingModal: false,
     searchQuery: '',
+    loadingExchange: false,
   };
 
   createTokenList = () => {
@@ -101,7 +103,7 @@ class CurrencyInputPanel extends Component {
 
   renderTokenList() {
     const tokens = this.createTokenList();
-    const { searchQuery } = this.state;
+    const { loadingExchange, searchQuery } = this.state;
     const {
       selectedTokens,
       disableTokenSelect,
@@ -114,6 +116,15 @@ class CurrencyInputPanel extends Component {
       history,
     } = this.props;
 
+    if (loadingExchange) {
+      return (
+        <div className="token-modal__token-row token-modal__token-row--searching">
+          <div className="loader" />
+          <div>Searching for Exchange...</div>
+        </div>
+      );
+    }
+
     if (web3 && web3.utils && web3.utils.isAddress(searchQuery)) {
       const tokenAddress = searchQuery;
       const { label } = selectors().getBalance(account, tokenAddress);
@@ -121,11 +132,14 @@ class CurrencyInputPanel extends Component {
       const exchangeAddress = fromToken[tokenAddress];
 
       if (!exchangeAddress) {
+        this.setState({loadingExchange: true});
         factory.methods.getExchange(tokenAddress).call((err, data) => {
           if (!err && data !== '0x0000000000000000000000000000000000000000') {
             addExchange({ label, tokenAddress, exchangeAddress: data });
           }
+          this.setState({loadingExchange: false});
         });
+        return;
       }
     }
 
@@ -233,7 +247,11 @@ class CurrencyInputPanel extends Component {
       exchangeAddresses: { fromToken },
       web3,
       disableUnlock,
+      transactions,
+      pendingApprovals,
       value,
+      addApprovalTx,
+      addPendingTx,
     } = this.props;
 
     if (disableUnlock || !selectedTokenAddress || selectedTokenAddress === 'ETH') {
@@ -251,6 +269,17 @@ class CurrencyInputPanel extends Component {
     )  {
       return;
     }
+    const approvalTxId = pendingApprovals[selectedTokenAddress];
+    if (approvalTxId && transactions.pending.includes(approvalTxId)) {
+      return (
+        <button
+          className='currency-input-panel__sub-currency-select currency-input-panel__sub-currency-select--pending'
+        >
+          <div className="loader" />
+          Pending
+        </button>
+      );
+    }
 
     return (
       <button
@@ -260,8 +289,9 @@ class CurrencyInputPanel extends Component {
           const amount = BN(10 ** decimals).multipliedBy(10 ** 8).toFixed(0);
           contract.methods.approve(fromToken[selectedTokenAddress], amount)
             .send({ from: account }, (err, data) => {
-              if (data) {
-                // TODO: Handle Pending in Redux
+              if (!err && data) {
+                addPendingTx(data);
+                addApprovalTx({ tokenAddress: selectedTokenAddress, txId: data});
               }
             });
         }}
@@ -376,11 +406,15 @@ export default withRouter(
       contracts: state.contracts,
       account: state.web3connect.account,
       approvals: state.web3connect.approvals,
+      transactions: state.web3connect.transactions,
       web3: state.web3connect.web3,
+      pendingApprovals: state.pending.approvals,
     }),
     dispatch => ({
       selectors: () => dispatch(selectors()),
       addExchange: opts => dispatch(addExchange(opts)),
+      addPendingTx: opts => dispatch(addPendingTx(opts)),
+      addApprovalTx: opts => dispatch(addApprovalTx(opts)),
     }),
   )(CurrencyInputPanel)
 );
