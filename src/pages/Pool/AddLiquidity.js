@@ -344,7 +344,7 @@ class AddLiquidity extends Component {
     if (this.isNewExchange()) {
       const rate = BN(outputValue).dividedBy(inputValue);
       const rateText = rate.isNaN() ? '---' : rate.toFixed(4);
-      const rateInv = BN(inputValue).dividedBy(outputValue);
+      const rateInv = rate.pow(-1);
       const rateInvText = rate.isNaN() ? '---' : rateInv.toFixed(8);
       return (
         <div className="pool__summary-panel">
@@ -382,7 +382,7 @@ class AddLiquidity extends Component {
         </div>
         <div className="pool__exchange-rate-wrapper">
           <span className="pool__exchange-rate">Inverted Rate</span>
-          <span>{`1 ${label} = ${ethValue.dividedBy(tokenValue).toFixed(8)} ETH`}</span>
+          <span>{`1 ${label} = ${tokenValue.multipliedBy(10 ** (18 - decimals)).dividedBy(ethValue).pow(-1).toFixed(7)} ETH`}</span>
         </div>
         <div className="pool__exchange-rate-wrapper">
           <span className="swap__exchange-rate">Current Pool Size</span>
