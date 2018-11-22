@@ -676,10 +676,10 @@ class Send extends Component {
         <div className="swap__exchange-rate-wrapper">
           <span className="swap__exchange-rate">Exchange Rate</span>
           <span>{`1 ${inputLabel} = ${exchangeRate.toFixed(7)} ${outputLabel}`}</span>
-	</div>
+        </div>
         <div className="swap__exchange-rate-wrapper">
           <span className="swap__exchange-rate">Inverted Rate</span>
-          <span>{`1 ${outputLabel} = ${BN(1 / exchangeRate).toFixed(7)} ${inputLabel}`}</span>
+          <span>{`1 ${outputLabel} = ${exchangeRate.pow(-1).toFixed(7)} ${inputLabel}`}</span>
         </div>
       </OversizedPanel>
     );
