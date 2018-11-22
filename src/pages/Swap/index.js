@@ -659,10 +659,6 @@ class Swap extends Component {
           <span className="swap__exchange-rate">Inverted Rate</span>
           <span>{`1 ${outputLabel} = ${BN(1 / exchangeRate).toFixed(7)} ${inputLabel}`}</span>
         </div>
-        <div className="swap__exchange-rate-wrapper">
-          <span className="swap__exchange-rate">Inverted Rate</span>
-          <span>{`1 ${outputLabel} = ${BN(1 / exchangeRate).toFixed(7)} ${inputLabel}`}</span>
-        </div>
       </OversizedPanel>
     );
   }
