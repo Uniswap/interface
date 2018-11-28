@@ -13,6 +13,7 @@ import ArrowDownBlue from "../../assets/images/arrow-down-blue.svg";
 import ArrowDownGrey from "../../assets/images/arrow-down-grey.svg";
 import EXCHANGE_ABI from "../../abi/exchange";
 import promisify from "../../helpers/web3-promisfy";
+import { getEstimatedGas } from "../../helpers/web3-utils";
 import ReactGA from "react-ga";
 
 class RemoveLiquidity extends Component {
@@ -108,13 +109,14 @@ class RemoveLiquidity extends Component {
     const blockNumber = await promisify(web3, 'getBlockNumber');
     const block = await promisify(web3, 'getBlock', blockNumber);
     const deadline =  block.timestamp + 300;
+    const gas = await getEstimatedGas(web3) || null;
 
     exchange.methods.removeLiquidity(
       amount.toFixed(0),
       ethWithdrawn.multipliedBy(1 - SLIPPAGE).toFixed(0),
       tokenWithdrawn.multipliedBy(1 - SLIPPAGE).toFixed(0),
       deadline,
-    ).send({ from: account }, (err, data) => {
+    ).send({ from: account, gas }, (err, data) => {
       if (data) {
         this.reset();
 

@@ -16,6 +16,7 @@ import {BigNumber as BN} from 'bignumber.js';
 import EXCHANGE_ABI from '../../abi/exchange';
 import "./pool.scss";
 import promisify from "../../helpers/web3-promisfy";
+import { getEstimatedGas } from "../../helpers/web3-utils";
 import ReactGA from "react-ga";
 
 const INPUT = 0;
@@ -158,11 +159,13 @@ class AddLiquidity extends Component {
     const MAX_LIQUIDITY_SLIPPAGE = 0.025;
     const minLiquidity = this.isNewExchange() ? BN(0) : liquidityMinted.multipliedBy(1 - MAX_LIQUIDITY_SLIPPAGE);
     const maxTokens = this.isNewExchange() ? tokenAmount : tokenAmount.multipliedBy(1 + MAX_LIQUIDITY_SLIPPAGE);
+    const gas = await getEstimatedGas(web3) || null;
 
     try {
       exchange.methods.addLiquidity(minLiquidity.toFixed(0), maxTokens.toFixed(0), deadline).send({
         from: account,
-        value: ethAmount.toFixed(0)
+        value: ethAmount.toFixed(0),
+        gas
       }, (err, data) => {
         this.reset();
         this.props.addPendingTx(data);

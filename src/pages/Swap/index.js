@@ -19,6 +19,7 @@ import EXCHANGE_ABI from '../../abi/exchange';
 
 import "./swap.scss";
 import promisify from "../../helpers/web3-promisfy";
+import { getEstimatedGas } from "../../helpers/web3-utils";
 
 const INPUT = 0;
 const OUTPUT = 1;
@@ -373,6 +374,7 @@ class Swap extends Component {
     const blockNumber = await promisify(web3, 'getBlockNumber');
     const block = await promisify(web3, 'getBlock', blockNumber);
     const deadline =  block.timestamp + 300;
+    const gas = await getEstimatedGas(web3) || null;
 
     if (lastEditedField === INPUT) {
       // swap input
@@ -380,6 +382,7 @@ class Swap extends Component {
         category: type,
         action: 'SwapInput',
       });
+
       switch(type) {
         case 'ETH_TO_TOKEN':
           // let exchange = new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]);
@@ -392,6 +395,7 @@ class Swap extends Component {
             .send({
               from: account,
               value: BN(inputValue).multipliedBy(10 ** 18).toFixed(0),
+              gas,
             }, (err, data) => {
               if (!err) {
                 addPendingTx(data);
@@ -407,7 +411,7 @@ class Swap extends Component {
               BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(0),
               deadline,
             )
-            .send({ from: account }, (err, data) => {
+            .send({ from: account, gas }, (err, data) => {
               if (!err) {
                 addPendingTx(data);
                 this.reset();
@@ -424,7 +428,7 @@ class Swap extends Component {
               deadline,
               outputCurrency,
             )
-            .send({ from: account }, (err, data) => {
+            .send({ from: account, gas }, (err, data) => {
               if (!err) {
                 addPendingTx(data);
                 this.reset();
@@ -453,6 +457,7 @@ class Swap extends Component {
             .send({
               from: account,
               value: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
+              gas
             }, (err, data) => {
               if (!err) {
                 addPendingTx(data);
@@ -468,7 +473,7 @@ class Swap extends Component {
               BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
               deadline,
             )
-            .send({ from: account }, (err, data) => {
+            .send({ from: account, gas }, (err, data) => {
               if (!err) {
                 addPendingTx(data);
                 this.reset();
@@ -489,7 +494,7 @@ class Swap extends Component {
               deadline,
               outputCurrency,
             )
-            .send({ from: account }, (err, data) => {
+            .send({ from: account, gas }, (err, data) => {
               if (!err) {
                 addPendingTx(data);
                 this.reset();

@@ -18,6 +18,7 @@ import EXCHANGE_ABI from '../../abi/exchange';
 
 import "./send.scss";
 import promisify from "../../helpers/web3-promisfy";
+import { getEstimatedGas } from "../../helpers/web3-utils";
 import MediaQuery from "react-responsive";
 import ReactGA from "react-ga";
 
@@ -377,6 +378,7 @@ class Send extends Component {
     const blockNumber = await promisify(web3, 'getBlockNumber');
     const block = await promisify(web3, 'getBlock', blockNumber);
     const deadline =  block.timestamp + 300;
+    const gas = await getEstimatedGas(web3) || null;
 
     if (lastEditedField === INPUT) {
       ReactGA.event({
@@ -396,6 +398,7 @@ class Send extends Component {
             .send({
               from: account,
               value: BN(inputValue).multipliedBy(10 ** 18).toFixed(0),
+              gas
             }, (err, data) => {
               if (!err) {
                 addPendingTx(data);
@@ -412,7 +415,7 @@ class Send extends Component {
               deadline,
               recipient,
             )
-            .send({ from: account }, (err, data) => {
+            .send({ from: account, gas }, (err, data) => {
               if (!err) {
                 addPendingTx(data);
                 this.reset();
@@ -430,7 +433,7 @@ class Send extends Component {
               recipient,
               outputCurrency,
             )
-            .send({ from: account }, (err, data) => {
+            .send({ from: account, gas }, (err, data) => {
               if (!err) {
                 addPendingTx(data);
                 this.reset();
@@ -460,6 +463,7 @@ class Send extends Component {
             .send({
               from: account,
               value: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
+              gas
             }, (err, data) => {
               if (!err) {
                 addPendingTx(data);
@@ -476,7 +480,7 @@ class Send extends Component {
               deadline,
               recipient,
             )
-            .send({ from: account }, (err, data) => {
+            .send({ from: account, gas }, (err, data) => {
               if (!err) {
                 addPendingTx(data);
                 this.reset();
@@ -498,7 +502,7 @@ class Send extends Component {
               recipient,
               outputCurrency,
             )
-            .send({ from: account }, (err, data) => {
+            .send({ from: account, gas }, (err, data) => {
               if (!err) {
                 addPendingTx(data);
                 this.reset();
