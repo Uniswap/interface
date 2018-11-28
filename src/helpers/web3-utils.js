@@ -22,8 +22,8 @@ async function calculateEstimatedGas(web3) {
     return null;
   }
 
-  const gasUsed = blocks.map(block => block.gasUsed);
-  gasUsed.sort((x, y) => x - y);
+  const gasUsed = blocks.map(block => block ? block.gasUsed : false);
+  gasUsed.filter(gas => typeof gas === 'number').sort((x, y) => x - y);
 
   const bottomThreeAverage = gasUsed.slice(0, 3).reduce((total, x) => total + x) / 3;
   return Math.floor(bottomThreeAverage);
