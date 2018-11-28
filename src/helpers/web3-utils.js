@@ -8,7 +8,7 @@ function getBlock(web3, blockNumber) {
   return promisify(web3, 'getBlock', blockNumber);
 }
 
-export async function getEstimatedGas(web3) {
+async function calculateEstimatedGas(web3) {
   const lastBlockNumber = await getBlockNumber(web3);
   const getBlockPromises = [];
   for (var i = 0; i < 40; i++) {
@@ -23,9 +23,25 @@ export async function getEstimatedGas(web3) {
   }
 
   const gasUsed = blocks.map(block => block.gasUsed);
-
-  // Sort then get the 32nd number (the number that covers 80% of cases)
-  // and multiply by 1.25 for a margin of safety.
   gasUsed.sort((x, y) => x - y);
-  return Math.floor(gasUsed[31] * 1.25);
+
+  const bottomThreeAverage = gasUsed.slice(0, 3).reduce((total, x) => total + x) / 3;
+  return Math.floor(bottomThreeAverage);
+}
+
+let estimatedGas = null;
+let estimatedGasPoll;
+
+export async function startPollingEstimatedGas(web3) {
+  if (estimatedGasPoll) {
+    return;
+  }
+  estimatedGas = await calculateEstimatedGas(web3);
+  estimatedGasPoll = setInterval(async () => {
+    estimatedGas = await calculateEstimatedGas(web3) || estimatedGas;
+  }, 30000);
+}
+
+export function getEstimatedGas() {
+  return estimatedGas;
 }

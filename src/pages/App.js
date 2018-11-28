@@ -4,6 +4,7 @@ import { BrowserRouter, Redirect, Route } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
 import { AnimatedSwitch } from 'react-router-transition';
 import { Web3Connect, startWatching, initialize } from '../ducks/web3connect';
+import { startPollingEstimatedGas } from '../helpers/web3-utils';
 import { setAddresses } from '../ducks/addresses';
 import Header from '../components/Header';
 import Swap from './Swap';
@@ -23,6 +24,10 @@ class App extends Component {
 
     if (this.hasSetNetworkId || !web3 || !web3.eth || !web3.eth.net || !web3.eth.net.getId) {
       return;
+    }
+
+    if (this.props.initialized) {
+      startPollingEstimatedGas(web3);
     }
 
     web3.eth.net.getId((err, networkId) => {
