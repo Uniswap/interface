@@ -1,0 +1,31 @@
+@import "../../variables.scss";
+
+.copy {
+  cursor: pointer;
+
+  &__container {
+    position: relative;
+  }
+
+  &__tooltip {
+    position: absolute;
+    font-size: .75rem;
+    box-sizing: border-box;
+    padding: .5rem;
+    width: 56px;
+    left: 50%;
+    margin-left: -28px;
+    background: red;
+    border-radius: 10px;
+    top: -35px;
+    z-index: 999999;
+    color: $royal-blue;
+    border: 1px solid $royal-blue;
+    background-color: $zumthor-blue;
+  }
+
+  &__outside {
+    position: absolute;
+    top: -100000px;
+  }
+}

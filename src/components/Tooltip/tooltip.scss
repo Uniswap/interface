@@ -1,0 +1,46 @@
+@import '../../variables.scss';
+
+.tooltip {
+  position: relative;
+  width: fit-content;
+
+  &:hover {
+    .tooltip__tooltip {
+      display: block;
+      opacity: 1;
+    }
+  }
+}
+
+.tooltip__tooltip {
+  display: none;
+  opacity: 0;
+  position: absolute;
+  background-color: rgba($black, 0.8);
+  padding: .3rem .8rem;
+  border-radius: .3rem;
+  color: white;
+  top: -3rem;
+  left: -100%;
+  font-size: 0.7rem;
+  font-weight: 200;
+  text-transform: none;
+  z-index: 1;
+  line-height: 1rem;
+  max-width: 10rem;
+
+  &:before {
+    display: block;
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid rgba($black, 0.8);
+    margin: 0 auto;
+    bottom: -8px;
+    left: 0;
+    right: 0;
+  }
+}

@@ -7,9 +7,15 @@ import Jazzicon from 'jazzicon';
 import { CSSTransitionGroup } from "react-transition-group";
 import './web3-status.scss';
 import Modal from '../Modal';
+import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg';
+import Copy from '../Copy';
 
 function getEtherscanLink(tx) {
   return `https://etherscan.io/tx/${tx}`;
+}
+
+function getEtherscanAccountLink(address) {
+  return `https://etherscan.io/address/${address}`;
 }
 
 class Web3Status extends Component {
@@ -18,28 +24,84 @@ class Web3Status extends Component {
   };
 
   handleClick = () => {
-    if (this.props.pending.length && !this.state.isShowingModal) {
+    if (
+      !this.state.isShowingModal &&
+      (this.props.pending.length || this.props.address)
+    ) {
       this.setState({isShowingModal: true});
     }
   };
 
   renderPendingTransactions() {
-    return this.props.pending.map((transaction) => {
+    if (!this.props.pending || !this.props.pending.length) {
+      return null;
+    }
+
+    const transactions = this.props.pending.map((transaction) => {
       return (
         <div
           key={transaction}
           className={classnames('pending-modal__transaction-row')}
-          onClick={() => window.open(getEtherscanLink(transaction), '_blank')}
         >
-          <div className="pending-modal__transaction-label">
-            {transaction}
+          <div
+            className="pending-modal__label-container"
+            onClick={() => window.open(getEtherscanLink(transaction), '_blank')}
+          >
+            <div className="pending-modal__transaction-label">
+              {transaction}
+            </div>
+            <img className="pending-modal__open-new rotate-225" src={ArrowDownBlue} />
           </div>
-          <div className="pending-modal__pending-indicator">
-            <div className="loader" /> Pending
+          <div className="pending-modal__transaction-item">
+            <Copy value={transaction}>
+              <button className="pending-modal__copy">Copy</button>
+            </Copy>
+            <div className="pending-modal__pending-indicator">
+              <div className="loader" /> Pending
+            </div>
           </div>
         </div>
       );
     });
+
+    return (
+      <div>
+        <div className="pending-modal__header">Transactions</div>
+        {transactions}
+      </div>
+    );
+  }
+
+  renderAccount() {
+    const { address } = this.props;
+    if (!address) {
+      return null;
+    }
+
+    return (
+      <div>
+        <div className="pending-modal__header">Wallet Address</div>
+        <div
+          key={address}
+          className={classnames('pending-modal__transaction-row')}
+        >
+          <div
+            className="pending-modal__label-container"
+            onClick={() => window.open(getEtherscanAccountLink(address), '_blank')}
+          >
+            <div className="pending-modal__transaction-label">
+              {address}
+            </div>
+            <img className="pending-modal__open-new rotate-225" src={ArrowDownBlue} />
+          </div>
+          <div className="pending-modal__transaction-item">
+            <Copy value={address}>
+              <button className="pending-modal__copy">Copy</button>
+            </Copy>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   renderModal() {
@@ -59,8 +121,8 @@ class Web3Status extends Component {
         >
           <div className="pending-modal">
             <div className="pending-modal__transaction-list">
-              <div className="pending-modal__header">Transactions</div>
               {this.renderPendingTransactions()}
+              {this.renderAccount()}
             </div>
           </div>
         </CSSTransitionGroup>

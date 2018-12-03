@@ -11,6 +11,7 @@
   color: $dove-gray;
   font-weight: 400;
   box-sizing: border-box;
+  cursor: pointer;
 
   &__identicon {
     height: 1rem;
@@ -53,7 +54,6 @@
 
   &__transaction-list {
     height: 12rem;
-    overflow-y: auto;
   }
 
   &__transaction-row {
@@ -62,17 +62,26 @@
     align-items: center;
     padding: 0.25rem 1.5rem;
     justify-content: space-between;
-    cursor: pointer;
     width: 100%;
     user-select: none;
   }
 
+  &__transaction-item {
+    display: flex;
+  }
+
   &__transaction-label {
     color: $royal-blue;
-    width: 60%;
     overflow: hidden;
     text-overflow: ellipsis;
     font-weight: 200;
+    position: relative;
+  }
+
+  &__label-container {
+    display: flex;
+    cursor: pointer;
+    width: 60%;
   }
 
   &__pending-indicator {
@@ -83,6 +92,7 @@
     padding: .5rem .75rem;;
     border-radius: 100px;
     font-size: .75rem;
+    margin-left: 5px;
 
     & > .loading {
       margin-right: .5rem;
@@ -93,6 +103,19 @@
     font-size: 1rem;
     color: $dove-gray;
     padding: 1rem 1.5rem 0.25rem 1.5rem;
+  }
+
+  &__open-new {
+    margin-left: 10px;
+  }
+
+  &__copy {
+    background-color: $concrete-gray;
+    border: 1px solid $mercury-gray;
+    color: $black;
+    padding: .5rem;
+    border-radius: 100px;
+    cursor: pointer;
   }
 }
 
