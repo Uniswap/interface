@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import EthereumLogo from '../../assets/images/ethereum-logo.png';
+import EthereumLogo from '../../assets/images/cybermiles-logo.png';
 import GenericTokenLogo from '../../assets/images/generic-token-logo.png';
 
 const RINKEBY_TOKEN_MAP = {
@@ -36,11 +36,11 @@ export default class TokenLogo extends Component {
     let path = '';
     const mainAddress = RINKEBY_TOKEN_MAP[address] ? RINKEBY_TOKEN_MAP[address] : address;
 
-    if (mainAddress === 'ETH') {
+    if (mainAddress === 'CMT') {
       path = EthereumLogo;
     }
 
-    if (!this.state.error && !BAD_IMAGES[mainAddress] && mainAddress !== 'ETH') {
+    if (!this.state.error && !BAD_IMAGES[mainAddress] && mainAddress !== 'CMT') {
       path = `${TOKEN_ICON_API}/${mainAddress.toLowerCase()}.png`;
     }
 
