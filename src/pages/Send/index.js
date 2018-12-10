@@ -35,7 +35,7 @@ class Send extends Component {
   state = {
     inputValue: '',
     outputValue: '',
-    inputCurrency: 'ETH',
+    inputCurrency: 'CMT',
     outputCurrency: '',
     inputAmountB: '',
     lastEditedField: '',
@@ -104,7 +104,7 @@ class Send extends Component {
     const { account, exchangeAddresses, selectors } = this.props;
     const { inputCurrency, inputValue } = this.state;
 
-    if (!inputCurrency || inputCurrency === 'ETH') {
+    if (!inputCurrency || inputCurrency === 'CMT') {
       return false;
     }
 
@@ -142,7 +142,7 @@ class Send extends Component {
       return;
     }
 
-    if (inputCurrency !== 'ETH' && outputCurrency !== 'ETH') {
+    if (inputCurrency !== 'CMT' && outputCurrency !== 'CMT') {
       this.recalcTokenTokenForm();
       return;
     }
@@ -170,8 +170,8 @@ class Send extends Component {
     const exchangeAddressB = fromToken[outputCurrency];
 
     const { value: inputReserveA, decimals: inputDecimalsA } = selectors().getBalance(exchangeAddressA, inputCurrency);
-    const { value: outputReserveA }= selectors().getBalance(exchangeAddressA, 'ETH');
-    const { value: inputReserveB } = selectors().getBalance(exchangeAddressB, 'ETH');
+    const { value: outputReserveA }= selectors().getBalance(exchangeAddressA, 'CMT');
+    const { value: inputReserveB } = selectors().getBalance(exchangeAddressB, 'CMT');
     const { value: outputReserveB, decimals: outputDecimalsB }= selectors().getBalance(exchangeAddressB, outputCurrency);
 
     if (lastEditedField === INPUT) {
@@ -276,7 +276,7 @@ class Send extends Component {
       exchangeRate: oldExchangeRate,
     } = this.state;
 
-    const tokenAddress = [inputCurrency, outputCurrency].filter(currency => currency !== 'ETH')[0];
+    const tokenAddress = [inputCurrency, outputCurrency].filter(currency => currency !== 'CMT')[0];
     const exchangeAddress = fromToken[tokenAddress];
     if (!exchangeAddress) {
       return;
@@ -824,15 +824,15 @@ function getSendType(inputCurrency, outputCurrency) {
     return;
   }
 
-  if (inputCurrency !== 'ETH' && outputCurrency !== 'ETH') {
+  if (inputCurrency !== 'CMT' && outputCurrency !== 'CMT') {
     return 'TOKEN_TO_TOKEN'
   }
 
-  if (inputCurrency === 'ETH') {
+  if (inputCurrency === 'CMT') {
     return 'ETH_TO_TOKEN';
   }
 
-  if (outputCurrency === 'ETH') {
+  if (outputCurrency === 'CMT') {
     return 'TOKEN_TO_ETH';
   }
 
