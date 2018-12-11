@@ -11,8 +11,9 @@ import ContextualInfo from "../../components/ContextualInfo";
 import OversizedPanel from "../../components/OversizedPanel";
 import ArrowDownBlue from "../../assets/images/arrow-down-blue.svg";
 import ArrowDownGrey from "../../assets/images/arrow-down-grey.svg";
+import { getBlockDeadline } from '../../helpers/web3-utils';
+import { retry } from '../../helpers/promise-utils';
 import EXCHANGE_ABI from "../../abi/exchange";
-import promisify from "../../helpers/web3-promisfy";
 import ReactGA from "react-ga";
 
 class RemoveLiquidity extends Component {
@@ -105,9 +106,13 @@ class RemoveLiquidity extends Component {
     const ownership = amount.dividedBy(totalSupply);
     const ethWithdrawn = ethReserve.multipliedBy(ownership);
     const tokenWithdrawn = tokenReserve.multipliedBy(ownership);
-    const blockNumber = await promisify(web3, 'getBlockNumber');
-    const block = await promisify(web3, 'getBlock', blockNumber);
-    const deadline =  block.timestamp + 300;
+    let deadline;
+    try {
+      deadline = await retry(() => getBlockDeadline(web3, 300));
+    } catch(e) {
+      // TODO: Handle error.
+      return;
+    }
 
     exchange.methods.removeLiquidity(
       amount.toFixed(0),

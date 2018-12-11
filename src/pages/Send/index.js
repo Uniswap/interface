@@ -14,10 +14,11 @@ import DropdownBlue from "../../assets/images/dropdown-blue.svg";
 import DropupBlue from "../../assets/images/dropup-blue.svg";
 import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg';
 import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg';
+import { getBlockDeadline } from '../../helpers/web3-utils';
+import { retry } from '../../helpers/promise-utils';
 import EXCHANGE_ABI from '../../abi/exchange';
 
 import "./send.scss";
-import promisify from "../../helpers/web3-promisfy";
 import MediaQuery from "react-responsive";
 import ReactGA from "react-ga";
 
@@ -374,9 +375,13 @@ class Send extends Component {
     const type = getSendType(inputCurrency, outputCurrency);
     const { decimals: inputDecimals } = selectors().getBalance(account, inputCurrency);
     const { decimals: outputDecimals } = selectors().getBalance(account, outputCurrency);
-    const blockNumber = await promisify(web3, 'getBlockNumber');
-    const block = await promisify(web3, 'getBlock', blockNumber);
-    const deadline =  block.timestamp + 300;
+    let deadline;
+    try {
+      deadline = await retry(() => getBlockDeadline(web3, 300));
+    } catch(e) {
+      // TODO: Handle error.
+      return;
+    }
 
     if (lastEditedField === INPUT) {
       ReactGA.event({
