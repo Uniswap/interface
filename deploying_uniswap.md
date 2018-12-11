@@ -398,7 +398,7 @@ https://github.com/nodesource/distributions/blob/master/README.md#debinstall
 Check out the Uniswap frontend source code 
 
 ```javascript
-https://github.com/CyberMiles/uniswap-frontend.git
+git clone https://github.com/CyberMiles/uniswap-frontend.git
 ```
 
 Update the contract addresses (using the values from the smart contract work which we did above) in the following file.
