@@ -445,7 +445,7 @@ npm install
 yarn start:travis --loglevel verbose
 ```
 
-![Uniswap Screenshot](./https://github.com/CyberMiles/uniswap-frontend/blob/master/uniswap_cmt_screenshot.png)
+![Uniswap Screenshot](./uniswap_cmt_screenshot.png)
 
 ## Uniswap frontend operation
 
