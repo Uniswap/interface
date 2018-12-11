@@ -98,6 +98,17 @@ class Swap extends Component {
     };
   }
 
+  flipInputOutput = () => {
+    const { state } = this;
+    this.setState({
+      inputValue: state.outputValue,
+      outputValue: state.inputValue,
+      inputCurrency: state.outputCurrency,
+      outputCurrency: state.inputCurrency,
+      lastEditedField: state.lastEditedField === INPUT ? OUTPUT : INPUT
+    }, () => this.recalcForm());
+  }
+
   isUnapproved() {
     const { account, exchangeAddresses, selectors } = this.props;
     const { inputCurrency, inputValue } = this.state;
@@ -716,7 +727,7 @@ class Swap extends Component {
           />
           <OversizedPanel>
             <div className="swap__down-arrow-background">
-              <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} />
+              <img onClick={this.flipInputOutput} className="swap__down-arrow swap__down-arrow--clickable" src={isValid ? ArrowDownBlue : ArrowDownGrey} />
             </div>
           </OversizedPanel>
           <CurrencyInputPanel
