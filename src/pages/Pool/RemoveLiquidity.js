@@ -354,7 +354,7 @@ class RemoveLiquidity extends Component {
           errorMessage={errorMessage}
           selectedTokenAddress={tokenAddress}
           onCurrencySelected={this.onTokenSelect}
-          filteredTokens={['ETH']}
+          filteredTokens={['CMT']}
         />
         <OversizedPanel>
           <div className="swap__down-arrow-background">
