@@ -49,7 +49,11 @@ var factoryEstimate = web3.cmt.estimateGas({data: factoryContractData})
 Please note that if the function calls ever fail from insufficient gas you can just bump it up a bit like this ... 
 
 ```javascript
-{from:factoryOwner, data: uniswapFactoryBytecode, gas: factoryEstimate * 10}
+//Multiplication
+{from:factoryOwner, data: uniswapFactoryBytecode, gas: factoryEstimate * x}
+//Addition
+{from:factoryOwner, data: uniswapFactoryBytecode, gas: factoryEstimate + x}
+//Where x is a number you have chosen to multiply or add by
 ```
 This is better than just guessing.
 
