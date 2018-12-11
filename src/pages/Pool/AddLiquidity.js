@@ -35,7 +35,7 @@ class AddLiquidity extends Component {
   state = {
     inputValue: '',
     outputValue: '',
-    inputCurrency: 'ETH',
+    inputCurrency: 'CMT',
     outputCurrency: '',
     lastEditedField: '',
     totalSupply: BN(0),
@@ -183,11 +183,11 @@ class AddLiquidity extends Component {
     const exchangeRate = this.getExchangeRate();
     let outputValue;
 
-    if (inputCurrency === 'ETH' && outputCurrency && outputCurrency !== 'ETH') {
+    if (inputCurrency === 'CMT' && outputCurrency && outputCurrency !== 'CMT') {
       outputValue = exchangeRate.multipliedBy(value).toFixed(7);
     }
 
-    if (outputCurrency === 'ETH' && inputCurrency && inputCurrency !== 'ETH') {
+    if (outputCurrency === 'CMT' && inputCurrency && inputCurrency !== 'CMT') {
       outputValue = BN(value).dividedBy(exchangeRate).toFixed(7);
     }
 
@@ -208,11 +208,11 @@ class AddLiquidity extends Component {
     const exchangeRate = this.getExchangeRate();
     let inputValue;
 
-    if (inputCurrency === 'ETH' && outputCurrency && outputCurrency !== 'ETH') {
+    if (inputCurrency === 'CMT' && outputCurrency && outputCurrency !== 'CMT') {
       inputValue = BN(value).dividedBy(exchangeRate).toFixed(7);
     }
 
-    if (outputCurrency === 'ETH' && inputCurrency && inputCurrency !== 'ETH') {
+    if (outputCurrency === 'CMT' && inputCurrency && inputCurrency !== 'CMT') {
       inputValue = exchangeRate.multipliedBy(value).toFixed(7);
     }
 
@@ -231,8 +231,8 @@ class AddLiquidity extends Component {
   isNewExchange() {
     const { selectors, exchangeAddresses: { fromToken } } = this.props;
     const { inputCurrency, outputCurrency } = this.state;
-    const eth = [inputCurrency, outputCurrency].filter(currency => currency === 'ETH')[0];
-    const token = [inputCurrency, outputCurrency].filter(currency => currency !== 'ETH')[0];
+    const eth = [inputCurrency, outputCurrency].filter(currency => currency === 'CMT')[0];
+    const token = [inputCurrency, outputCurrency].filter(currency => currency !== 'CMT')[0];
 
     if (!eth || !token) {
       return false;
@@ -247,8 +247,8 @@ class AddLiquidity extends Component {
   getExchangeRate() {
     const { selectors, exchangeAddresses: { fromToken } } = this.props;
     const { inputCurrency, outputCurrency } = this.state;
-    const eth = [inputCurrency, outputCurrency].filter(currency => currency === 'ETH')[0];
-    const token = [inputCurrency, outputCurrency].filter(currency => currency !== 'ETH')[0];
+    const eth = [inputCurrency, outputCurrency].filter(currency => currency === 'CMT')[0];
+    const token = [inputCurrency, outputCurrency].filter(currency => currency !== 'CMT')[0];
 
     if (!eth || !token) {
       return;
@@ -316,8 +316,8 @@ class AddLiquidity extends Component {
     const { selectors, exchangeAddresses: { fromToken }, account } = this.props;
     const { getBalance } = selectors();
     const { inputCurrency, outputCurrency, inputValue, outputValue, totalSupply } = this.state;
-    const eth = [inputCurrency, outputCurrency].filter(currency => currency === 'ETH')[0];
-    const token = [inputCurrency, outputCurrency].filter(currency => currency !== 'ETH')[0];
+    const eth = [inputCurrency, outputCurrency].filter(currency => currency === 'CMT')[0];
+    const token = [inputCurrency, outputCurrency].filter(currency => currency !== 'CMT')[0];
     const exchangeAddress = fromToken[token];
 
     if (!eth || !token || !exchangeAddress) {
@@ -405,7 +405,7 @@ class AddLiquidity extends Component {
       contextualInfo = 'Select a token to continue.';
     } else if (inputCurrency === outputCurrency) {
       contextualInfo = 'Must be different token.';
-    } else if (![inputCurrency, outputCurrency].includes('ETH')) {
+    } else if (![inputCurrency, outputCurrency].includes('CMT')) {
       contextualInfo = 'One of the input must be ETH.';
     } else if (inputIsZero || outputIsZero) {
       contextualInfo = 'Amount cannot be zero.';
@@ -510,7 +510,7 @@ class AddLiquidity extends Component {
           title="Deposit"
           extraText={this.getBalance(inputCurrency)}
           onValueChange={this.onInputChange}
-          selectedTokenAddress="ETH"
+          selectedTokenAddress="CMT"
           value={inputValue}
           errorMessage={inputError}
           disableTokenSelect
@@ -533,7 +533,7 @@ class AddLiquidity extends Component {
           onValueChange={this.onOutputChange}
           value={outputValue}
           errorMessage={outputError}
-          filteredTokens={[ 'ETH' ]}
+          filteredTokens={[ 'CMT' ]}
         />
         <OversizedPanel hideBottom>
           { this.renderInfo() }
