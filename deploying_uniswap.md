@@ -450,3 +450,6 @@ yarn start:travis --loglevel verbose
 ## Uniswap frontend operation
 
 The Uniswap frontend operation is demonstrated in [this YouTube video](https://www.youtube.com/watch?v=Pe0kz3a2p6s). At present the "unlock" feature and any other feature which uses web3js 1.0.0 syntax will not work on the CyberMiles testnet. Changes are underway to make the Uniswap frontend compatible with web3js prior to the "1.0.0/pre-release"/"beta" software.
+
+## 
+You can use Uniswap as demonstrated in the above video via your Chrome web browser the CyberMiles [MetaMask extension](https://www.cybermiles.io/metamask/). 
