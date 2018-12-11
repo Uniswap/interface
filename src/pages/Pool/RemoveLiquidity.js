@@ -151,6 +151,10 @@ class RemoveLiquidity extends Component {
       return '';
     }
     const { value, decimals } = selectors().getBalance(account, exchangeAddress);
+    if (!decimals) {
+      return '';
+    }
+
     return `Balance: ${value.dividedBy(10 ** decimals).toFixed(7)}`;
   };
 
@@ -244,41 +248,47 @@ class RemoveLiquidity extends Component {
 
     const { tokenAddress, totalSupply, value: input } = this.state;
 
+    const blank = [
+      <CurrencyInputPanel
+        key="remove-liquidity-input"
+        title="Output"
+        description="(estimated)"
+        renderInput={() => (
+          <div className="remove-liquidity__output"></div>
+        )}
+        disableTokenSelect
+        disableUnlock
+      />,
+      <OversizedPanel key="remove-liquidity-input-under" hideBottom>
+        <div className="pool__summary-panel">
+          <div className="pool__exchange-rate-wrapper">
+            <span className="pool__exchange-rate">Exchange Rate</span>
+            <span> - </span>
+          </div>
+          <div className="pool__exchange-rate-wrapper">
+            <span className="swap__exchange-rate">Current Pool Size</span>
+            <span> - </span>
+          </div>
+          <div className="pool__exchange-rate-wrapper">
+            <span className="swap__exchange-rate">Your Pool Share</span>
+            <span> - </span>
+          </div>
+        </div>
+      </OversizedPanel>
+    ];
 
     const exchangeAddress = fromToken[tokenAddress];
     if (!exchangeAddress || !web3) {
-      return [
-        <CurrencyInputPanel
-          key="remove-liquidity-input"
-          title="Output"
-          description="(estimated)"
-          renderInput={() => (
-            <div className="remove-liquidity__output"></div>
-          )}
-          disableTokenSelect
-          disableUnlock
-        />,
-        <OversizedPanel key="remove-liquidity-input-under" hideBottom>
-          <div className="pool__summary-panel">
-            <div className="pool__exchange-rate-wrapper">
-              <span className="pool__exchange-rate">Exchange Rate</span>
-              <span> - </span>
-            </div>
-            <div className="pool__exchange-rate-wrapper">
-              <span className="swap__exchange-rate">Current Pool Size</span>
-              <span> - </span>
-            </div>
-            <div className="pool__exchange-rate-wrapper">
-              <span className="swap__exchange-rate">Your Pool Share</span>
-              <span> - </span>
-            </div>
-          </div>
-        </OversizedPanel>
-      ];
+      return blank;
     }
+
     const { value: liquidityBalance } = getBalance(account, exchangeAddress);
     const { value: ethReserve } = getBalance(exchangeAddress);
     const { value: tokenReserve, decimals: tokenDecimals, label } = getBalance(exchangeAddress, tokenAddress);
+
+    if (!tokenDecimals) {
+      return blank;
+    }
 
     const ownership = liquidityBalance.dividedBy(totalSupply);
     const ethPer = ethReserve.dividedBy(totalSupply);

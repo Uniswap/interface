@@ -118,6 +118,10 @@ class AddLiquidity extends Component {
     }
 
     const { value, decimals } = selectors().getBalance(account, currency);
+    if (!decimals) {
+      return '';
+    }
+
     return `Balance: ${value.dividedBy(10 ** decimals).toFixed(4)}`;
   }
 
@@ -339,7 +343,7 @@ class AddLiquidity extends Component {
     const ownedEth = ethPer.multipliedBy(liquidityBalance).dividedBy(10 ** 18);
     const ownedToken = tokenPer.multipliedBy(liquidityBalance).dividedBy(10 ** decimals);
 
-    if (!label) {
+    if (!label || !decimals) {
       return blank;
     }
 
