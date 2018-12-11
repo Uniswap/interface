@@ -46,6 +46,12 @@ var factoryContractData = uniswapFactoryContract.new.getData({from:factoryOwner,
 var factoryEstimate = web3.cmt.estimateGas({data: factoryContractData})
 //313076 
 ```
+Please note that if the function calls ever fail from insufficient gas you can just bump it up a bit like this ... 
+
+```javascript
+{from:factoryOwner, data: uniswapFactoryBytecode, gas: factoryEstimate * 10}
+```
+This is better than just guessing.
 
 Then lastly deploy the Uniswap Factory Contract on the blockchain
 
