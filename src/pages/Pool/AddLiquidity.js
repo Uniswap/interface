@@ -248,10 +248,10 @@ class AddLiquidity extends Component {
       return false;
     }
 
-    const { value: tokenValue } = selectors().getBalance(fromToken[token], token);
+    const { value: tokenValue, decimals } = selectors().getBalance(fromToken[token], token);
     const { value: ethValue } = selectors().getBalance(fromToken[token], eth);
 
-    return tokenValue.isZero() && ethValue.isZero();
+    return tokenValue.isZero() && ethValue.isZero() && decimals !== 0;
   }
 
   getExchangeRate() {
