@@ -32,7 +32,7 @@ const FUSE_OPTIONS = {
   ]
 };
 
-const TOKEN_ADDRESS_TO_LABEL = { ETH: 'ETH' };
+const TOKEN_ADDRESS_TO_LABEL = { ETH: 'CMT' };
 
 class CurrencyInputPanel extends Component {
   static propTypes = {
@@ -78,7 +78,7 @@ class CurrencyInputPanel extends Component {
   createTokenList = () => {
     const { filteredTokens } = this.props;
     let tokens = this.props.tokenAddresses.addresses;
-    let tokenList = [ { value: 'ETH', label: 'ETH', address: 'ETH' } ];
+    let tokenList = [ { value: 'CMT', label: 'CMT', address: 'CMT' } ];
 
     for (let i = 0; i < tokens.length; i++) {
         let entry = { value: '', label: '' };
@@ -254,7 +254,7 @@ class CurrencyInputPanel extends Component {
       addPendingTx,
     } = this.props;
 
-    if (disableUnlock || !selectedTokenAddress || selectedTokenAddress === 'ETH') {
+    if (disableUnlock || !selectedTokenAddress || selectedTokenAddress === 'CMT') {
       return;
     }
 
