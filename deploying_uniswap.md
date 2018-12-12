@@ -181,11 +181,28 @@ var deployedYuanToken = newCRC20SmartTokenContract.new("The YUAN Token","YUAN","
 ```
 ```javascript
 var yuanVar = web3.cmt.contract(crc20Abi,function(error, result){if(!error){console.log(result)}else{console.log(error)}});
-undefined
+
 var deployedYuanToken = yuanVar.at("0xc4c97929301eb30ff5c9c3150bbbe553768ffbbe")
-undefined
-> deployedYuanToken.totalSupply()
+
+deployedYuanToken.totalSupply()
 1e+24
+```
+
+Let's also create a TIM contract
+
+```javascript
+var deployedTimToken = newCRC20SmartTokenContract.new("The TIM Token","TIM","18", "1000000000000000000000000", "0", "0", {from:tokenOwner, data: crc20Bytecode, gas: crc20Estimate}, function(error, result){if(!error){console.log(result)}else{console.log(error)}});
+
+deployedTimToken.address
+//"0x0aafb9299daafc32a051086e92847fab1ef85b50"
+
+var timVar = web3.cmt.contract(crc20Abi,function(error, result){if(!error){console.log(result)}else{console.log(error)}});
+
+var deployedTimToken = timVar.at("0x0aafb9299daafc32a051086e92847fab1ef85b50")
+
+web3.fromWei(deployedTimToken.totalSupply(), 'cmt')
+1000000
+
 ```
 
 Let's go ahead and create one of these Exchange instances and then demonstrate how to call its factoryAddress().
@@ -219,10 +236,16 @@ var factory_createExchangeEstimate = deployedUniswapFactoryContract.createExchan
 // 250727
 ```
 
-Running the createExchange function
+Running the createExchange function for the Yuan token
 
 ```javascript
 deployedUniswapFactoryContract.createExchange("0xc4c97929301eb30ff5c9c3150bbbe553768ffbbe", {from:factoryOwner, gas: factory_createExchangeEstimate})
+```
+
+Running the createExchange function for the Tim token
+
+```javascript
+deployedUniswapFactoryContract.createExchange(deployedTimToken.address, {from:factoryOwner, gas: factory_createExchangeEstimate})
 ```
 
 We promised a little while back that when an exchange instance (for a specific token) was created we would be able to query its Factory and many other details. Let's go ahead and run some commands to ensure that the Factory, Exchange Template and the new Exchange instance are all wired together as intended.
@@ -349,7 +372,11 @@ var uniswapExchangeTemplate = web3.cmt.contract(uniswapExchangeAbi,function(erro
 var yuanExchangeInstance = uniswapExchangeTemplate.at("0xaf1a51fdca46190e7703b6cf97470efc92ec6498")
 ```
 
-Token
+```javascript
+var timExchangeInstance = uniswapExchangeTemplate.at(deployedUniswapFactoryContract.getExchange("0x0aafb9299daafc32a051086e92847fab1ef85b50"))
+```
+
+Tokens
 ```javascript
 crc20Abi = [ { "constant": false, "inputs": [ { "name": "_spender", "type": "address" }, { "name": "_value", "type": "uint256" } ], "name": "approve", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "_spender", "type": "address" }, { "name": "_subtractedValue", "type": "uint256" } ], "name": "decreaseApproval", "outputs": [ { "name": "success", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "_spender", "type": "address" }, { "name": "_addedValue", "type": "uint256" } ], "name": "increaseApproval", "outputs": [ { "name": "success", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [], "name": "pause", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [], "name": "renounceOwnership", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "_contractAddress", "type": "address" }, { "name": "_tokenAmount", "type": "uint256" } ], "name": "setCrowdFunding", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "_document", "type": "string" } ], "name": "setDocument", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "_logo", "type": "string" } ], "name": "setLogo", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "_property", "type": "string" } ], "name": "setProperty", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "_webSite", "type": "string" } ], "name": "setWebsite", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" } ], "name": "transfer", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "_from", "type": "address" }, { "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" } ], "name": "transferFrom", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "_newOwner", "type": "address" } ], "name": "transferOwnership", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [], "name": "unpause", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "_logo", "type": "string" }, { "name": "_webSite", "type": "string" }, { "name": "_links", "type": "string" }, { "name": "_rights", "type": "string" }, { "name": "_description", "type": "string" } ], "name": "updateProfile", "outputs": [], "payable": true, "stateMutability": "payable", "type": "function" }, { "inputs": [ { "name": "_name", "type": "string" }, { "name": "_symbol", "type": "string" }, { "name": "_decimals", "type": "uint8" }, { "name": "_supply", "type": "uint256" }, { "name": "_freezenAmount", "type": "uint256" }, { "name": "_freezenTime", "type": "uint256" } ], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "anonymous": false, "inputs": [ { "indexed": false, "name": "tokenName", "type": "string" }, { "indexed": false, "name": "logo", "type": "string" }, { "indexed": false, "name": "webSite", "type": "string" }, { "indexed": false, "name": "links", "type": "string" }, { "indexed": false, "name": "rights", "type": "string" }, { "indexed": false, "name": "description", "type": "string" } ], "name": "ProfileHistory", "type": "event" }, { "anonymous": false, "inputs": [], "name": "Pause", "type": "event" }, { "anonymous": false, "inputs": [], "name": "Unpause", "type": "event" }, { "anonymous": false, "inputs": [ { "indexed": true, "name": "previousOwner", "type": "address" } ], "name": "OwnershipRenounced", "type": "event" }, { "anonymous": false, "inputs": [ { "indexed": true, "name": "previousOwner", "type": "address" }, { "indexed": true, "name": "newOwner", "type": "address" } ], "name": "OwnershipTransferred", "type": "event" }, { "anonymous": false, "inputs": [ { "indexed": true, "name": "owner", "type": "address" }, { "indexed": true, "name": "spender", "type": "address" }, { "indexed": false, "name": "value", "type": "uint256" } ], "name": "Approval", "type": "event" }, { "anonymous": false, "inputs": [ { "indexed": true, "name": "from", "type": "address" }, { "indexed": true, "name": "to", "type": "address" }, { "indexed": false, "name": "value", "type": "uint256" } ], "name": "Transfer", "type": "event" }, { "constant": true, "inputs": [ { "name": "_owner", "type": "address" }, { "name": "_spender", "type": "address" } ], "name": "allowance", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "_owner", "type": "address" } ], "name": "balanceOf", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "crowdFunding", "outputs": [ { "name": "", "type": "address" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "decimals", "outputs": [ { "name": "", "type": "uint8" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "description", "outputs": [ { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "document", "outputs": [ { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "founder", "outputs": [ { "name": "", "type": "address" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "freezenAmount", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "freezenTime", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "INITIAL_SUPPLY", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "_founder", "type": "address" }, { "name": "_amount", "type": "uint256" } ], "name": "isFounderFreezen", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "issueDate", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "links", "outputs": [ { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "logo", "outputs": [ { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "name", "outputs": [ { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "owner", "outputs": [ { "name": "", "type": "address" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "paused", "outputs": [ { "name": "", "type": "bool" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "property", "outputs": [ { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "rights", "outputs": [ { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "symbol", "outputs": [ { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "totalSupply", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "version", "outputs": [ { "name": "", "type": "uint8" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "website", "outputs": [ { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }]
 
@@ -364,7 +391,15 @@ var deployedYuanToken = newCRC20SmartTokenContract.at("0xc4c97929301eb30ff5c9c31
 
 ```
 
-Testing of these variables can be as follows
+```javascript
+var timVar = web3.cmt.contract(crc20Abi,function(error, result){if(!error){console.log(result)}else{console.log(error)}});
+```
+
+```javascript
+var deployedTIMToken = timVar.at("0x0aafb9299daafc32a051086e92847fab1ef85b50")
+```
+
+Testing of these variables for the YUAN token can be done as follows
 
 ```javascript
 deployedUniswapFactoryContract.getToken(yuanExchangeInstance.address)
@@ -383,6 +418,26 @@ deployedYuanToken.address
 //"0xc4c97929301eb30ff5c9c3150bbbe553768ffbbe"
 deployedUniswapFactoryContract.getToken(yuanExchangeInstance.address)
 //"0xc4c97929301eb30ff5c9c3150bbbe553768ffbbe"
+```
+
+Testing of these variables for the TIM token can also be done as follows
+```javascript
+deployedUniswapFactoryContract.getToken(timExchangeInstance.address)
+//"0x0aafb9299daafc32a051086e92847fab1ef85b50"
+deployedUniswapFactoryContract.getExchange(deployedTimToken.address)
+//"0x33eda5a874732ee81a0364611d81fd34faf6eccf"
+deployedUniswapFactoryContract.exchangeTemplate()
+//"0xf02ce53600badb397215b3ab799c76f5626994cf"
+deployedUniswapFactoryContract.address
+//"0x7753d7fb5d93ff9af0cffcd578f7c3bbc3d303ba"
+timExchangeInstance.factoryAddress()
+//"0x7753d7fb5d93ff9af0cffcd578f7c3bbc3d303ba"
+timExchangeInstance.tokenAddress()
+//"0x0aafb9299daafc32a051086e92847fab1ef85b50"
+deployedTimToken.address
+//"0x0aafb9299daafc32a051086e92847fab1ef85b50"
+deployedUniswapFactoryContract.getToken(timExchangeInstance.address)
+"0x0aafb9299daafc32a051086e92847fab1ef85b50"
 ```
 
 ## Frontend (deploying the Uniswap UI)
