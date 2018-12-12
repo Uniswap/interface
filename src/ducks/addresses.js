@@ -4,6 +4,10 @@ const TRAVIS = {
             [
                 "YUAN",
                 "0xc4c97929301eb30ff5c9c3150bbbe553768ffbbe"
+            ],
+            [
+                "TIM",
+                "0x0aafb9299daafc32a051086e92847fab1ef85b50"
             ]
         ]
     },
@@ -12,14 +16,20 @@ const TRAVIS = {
             [
                 "YUAN",
                 "0xaf1a51fdca46190e7703b6cf97470efc92ec6498"
+            ],
+            [
+                "TIM",
+                "0x33eda5a874732ee81a0364611d81fd34faf6eccf"
             ]
         ],
         "fromToken": {
-            "0xc4c97929301eb30ff5c9c3150bbbe553768ffbbe": "0xaf1a51fdca46190e7703b6cf97470efc92ec6498"
+            "0xc4c97929301eb30ff5c9c3150bbbe553768ffbbe": "0xaf1a51fdca46190e7703b6cf97470efc92ec6498",
+            "0x0aafb9299daafc32a051086e92847fab1ef85b50": "0x33eda5a874732ee81a0364611d81fd34faf6eccf"
         }
     },
     "factoryAddress": "0x7753d7fb5d93ff9af0cffcd578f7c3bbc3d303ba"
 };
+
 const RINKEBY = {
   factoryAddress: '0xf5D915570BC477f9B8D6C0E980aA81757A3AaC36',
   exchangeAddresses: {
