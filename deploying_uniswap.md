@@ -396,7 +396,7 @@ var timVar = web3.cmt.contract(crc20Abi,function(error, result){if(!error){conso
 ```
 
 ```javascript
-var deployedTIMToken = timVar.at("0x0aafb9299daafc32a051086e92847fab1ef85b50")
+var deployedTimToken = timVar.at("0x0aafb9299daafc32a051086e92847fab1ef85b50")
 ```
 
 Testing of these variables for the YUAN token can be done as follows
