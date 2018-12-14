@@ -516,5 +516,38 @@ yarn start:travis --loglevel verbose
 
 The Uniswap frontend operation is demonstrated in [this YouTube video](https://www.youtube.com/watch?v=Pe0kz3a2p6s). At present the "unlock" feature and any other feature which uses web3js 1.0.0 syntax will not work on the CyberMiles testnet. Changes are underway to make the Uniswap frontend compatible with web3js prior to the "1.0.0/pre-release"/"beta" software.
 
-## 
-You can use Uniswap as demonstrated in the above video via your Chrome web browser the CyberMiles [MetaMask extension](https://www.cybermiles.io/metamask/). 
+## Managing your identity and signing transactions
+You can use Uniswap as demonstrated in the above video via your Chrome web browser by utilizing the CyberMiles [MetaMask extension](https://www.cybermiles.io/metamask/).
+
+# Uniswap Testing Tutorial
+
+## Unlock
+
+Uniswap performs transactions on behalf of a token contract. The ERC20 standard provides a standard mechanism for this sort of behaviour; namely the approve and allowance functions. Let's take a look at how Uniswap utilizes these standard ERC20 functions both in its smart contracts and in its frontend.
+
+### Vyper contracts
+
+The Vyper contracts can execute the approve and allowance functions via the console.
+
+#### Approve
+
+```javascript
+// Approve 
+deployedYuanToken.approve(deployedUniswapFactoryContract.getExchange(deployedYuanToken.address), aLargeAmount, {from: tokenOwner})
+```
+
+The above command calls the approve function of the deployedYuanToken and passes in the yuanExchangeInstance's address as well as a large number i.e. 1 million. When this transaction succeeds, the tokenHolder will have provided the yuanExchangeInstance with the ability to spend YUAN tokens on the tokenOwner's behalf. This does not spend tokens it just provides approval in principle. A tokenOwner still can not spend tokens if they don't have any i.e. whilst the yuanExchangeInstance has the approval to spend some deployedYuanToken's on behalf of the tokenHolder, MetaMask will never actually allow that transaction to proceed if the tokenOwner does not actually hold any deployedYuanToken's in its account.
+
+#### Allowance
+
+```javascript
+// Allowance
+web3.fromWei(deployedYuanToken.allowance("0x05849FFc9b899CaFbCda3BBcC22ED93270dCec7c", yuanExchangeInstance.address), 'cmt')
+0
+```
+
+The above command is an example of an instance where yuanExchangeInstance does not have pre-approval to spend deployedYuanToken's on behalf of the account address called "0x05...3c7c". Notice how the command returns zero (0).
+
+### Frontend
+
+
