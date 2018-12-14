@@ -521,6 +521,8 @@ You can use Uniswap as demonstrated in the above video via your Chrome web brows
 
 # Uniswap Testing Tutorial
 
+The following section makes suggestions on how Uniswap can be tested.
+
 ## Unlock
 
 Uniswap performs transactions on behalf of a token contract. The ERC20 standard provides a standard mechanism for this sort of behaviour; namely the approve and allowance functions. Let's take a look at how Uniswap utilizes these standard ERC20 functions both in its smart contracts and in its frontend.
