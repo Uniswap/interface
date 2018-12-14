@@ -1,6 +1,6 @@
 # Uniswap Frontend
 
-Please see the [Deploying Uniswap](https://github.com/CyberMiles/uniswap-frontend/blob/master/deploying_uniswap.md) instructions which demonstrate how to deploy Uniswap on the CyberMiles testnet.
+Please see the [Deploying Uniswap](https://github.com/CyberMiles/uniswap-frontend/blob/master/documentation/deploying_uniswap.md) instructions which demonstrate how to deploy Uniswap on the CyberMiles testnet.
 
 
 # The Uniswap Exchange Protocol
