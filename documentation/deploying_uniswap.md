@@ -510,7 +510,7 @@ npm install
 yarn start:travis --loglevel verbose
 ```
 
-![Uniswap Screenshot](./uniswap_cmt_screenshot.png)
+![Uniswap Screenshot](./images/uniswap_cmt_screenshot.png)
 
 ## Uniswap frontend operation
 
@@ -550,4 +550,6 @@ The above command is an example of an instance where yuanExchangeInstance does n
 
 ### Frontend
 
+The Unlock button in the Uniswap frontend UI performs the approve task (which we just covered above).
+![Uniswap Screenshot](./images/uniswap_unlock_ui.png)
 
