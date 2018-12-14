@@ -555,3 +555,38 @@ The above command is an example of an instance where yuanExchangeInstance does n
 The Unlock button in the Uniswap frontend UI performs the approve task (which we just covered above).
 ![Uniswap Screenshot](./images/uniswap_unlock_ui.png)
 
+If we go ahead and click Unlock (and approve the transaction in MetaMask using account address "0x05...3c7c") the Uniswap frontend will instantiate a web3 contract object
+
+```javascript
+const contract = new web3.eth.Contract(ERC20_ABI, selectedTokenAddress);
+```
+As well as, call the approve function of the token contract instance.
+
+```javascript
+contract.methods.approve
+```
+The entire code snippet for the Unlock button in the frontend is as follows.
+
+```javascript
+<button
+        className='currency-input-panel__sub-currency-select'
+        onClick={() => {
+          const contract = new web3.eth.Contract(ERC20_ABI, selectedTokenAddress);
+          const amount = BN(10 ** decimals).multipliedBy(10 ** 8).toFixed(0);
+          contract.methods.approve(fromToken[selectedTokenAddress], amount).send({ from: account }, (err, data) => {
+              if (!err && data) {
+                addPendingTx(data);
+                addApprovalTx({ tokenAddress: selectedTokenAddress, txId: data});
+              }
+            });
+        }}
+      >Unlock</button>
+```
+If we now return to the console and run the allowance command once more, we will see that the yuanExchangeInstance now has the approval to spend 100000000 deployedYuanToken's on behalf of the account address "0x05...3c7c".
+
+```javascript
+web3.fromWei(deployedYuanToken.allowance("0x05849FFc9b899CaFbCda3BBcC22ED93270dCec7c", yuanExchangeInstance.address), 'cmt')
+//100000000
+```
+
+
