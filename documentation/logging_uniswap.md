@@ -162,3 +162,5 @@ Obviously the log events are not 1:1 with functions, functions can call any of t
 
 The following diagram illustrates which functions call which logging events in the Uniswap Exchange contract.
 
+![Factory logging events](./images/uniswap_exchange_events.png)
+
