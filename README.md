@@ -25,4 +25,4 @@ REACT_APP_NETWORK_ID=2 REACT_APP_NETWORK='Ropsten Test Network' react-scripts st
 ```
 
 ### Contributions
-Please open all pull requests against `dev` branch. 
+Please open all pull requests against `dev` branch.
