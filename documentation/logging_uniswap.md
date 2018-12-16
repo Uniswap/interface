@@ -132,7 +132,7 @@ aYuanApproval.watch(function(error, result){ console.log("\nApproval\n_owner: " 
 
 ```
 
-The above will produce output like the following. Obviously the log events are not 1:1 with functions, functions can call any of the appropriate log events which are meaningful to them.
+The above will produce output like the following. 
 
 ```javascript
 TokenPurchase
@@ -155,4 +155,10 @@ provider: 0x05849ffc9b899cafbcda3bbcc22ed93270dcec7c
 eth_amount: 0.656989352927631886
 token_amount: 13.72858737116498485
 ```
+
+Obviously the log events are not 1:1 with functions, functions can call any of the appropriate log events which are meaningful to them. The following diagram illustrates which functions call which logging events in the Uniswap Factory contract.
+
+![Factory logging events](./images/uniswap_factory_events.png)
+
+The following diagram illustrates which functions call which logging events in the Uniswap Exchange contract.
 
