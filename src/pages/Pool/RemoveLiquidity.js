@@ -220,10 +220,10 @@ class RemoveLiquidity extends Component {
 
     return (
       <div>
-        <div className="pool__summary-modal__item">You are removing between {b(`${+BN(ethWithdrawn).toFixed(7)} ETH`)} and {b(`${+minTokenWithdrawn} - ${+maxTokenWithdrawn} ${label}`)} into the liquidity pool.</div>
+        <div className="pool__summary-modal__item">You are removing between {b(`${+BN(ethWithdrawn).toFixed(7)} CMT`)} and {b(`${+minTokenWithdrawn} - ${+maxTokenWithdrawn} ${label}`)} into the liquidity pool.</div>
         <div className="pool__summary-modal__item">You will remove {b(+input)} liquidity tokens.</div>
         <div className="pool__summary-modal__item">Current total supply of liquidity tokens is {b(+adjTotalSupply.toFixed(7))}</div>
-        <div className="pool__summary-modal__item">At current exchange rate, each pool token is worth {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH and {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
+        <div className="pool__summary-modal__item">At current exchange rate, each pool token is worth {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} CMT and {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
       </div>
     );
   }
@@ -292,7 +292,7 @@ class RemoveLiquidity extends Component {
           ? (
             <div className="remove-liquidity__output">
               <div className="remove-liquidity__output-text">
-                {`${ethPer.multipliedBy(input).toFixed(3)} ETH`}
+                {`${ethPer.multipliedBy(input).toFixed(3)} CMT`}
               </div>
               <div className="remove-liquidity__output-plus"> + </div>
               <div className="remove-liquidity__output-text">
@@ -310,18 +310,18 @@ class RemoveLiquidity extends Component {
           <div className="pool__exchange-rate-wrapper">
             <span className="pool__exchange-rate">Exchange Rate</span>
             <span>
-              {`1 ETH = ${exchangeRate.toFixed(4)} ${label}`}
+              {`1 CMT = ${exchangeRate.toFixed(4)} ${label}`}
             </span>
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">Current Pool Size</span>
-            <span>{`${ethReserve.dividedBy(10 ** 18).toFixed(2)} ETH + ${tokenReserve.dividedBy(10 ** tokenDecimals).toFixed(2)} ${label}`}</span>
+            <span>{`${ethReserve.dividedBy(10 ** 18).toFixed(2)} CMT + ${tokenReserve.dividedBy(10 ** tokenDecimals).toFixed(2)} ${label}`}</span>
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">
               Your Pool Share ({ownership.multipliedBy(100).toFixed(2)}%)
             </span>
-            <span>{`${ownedEth.toFixed(2)} ETH + ${ownedToken.toFixed(2)} ${label}`}</span>
+            <span>{`${ownedEth.toFixed(2)} CMT + ${ownedToken.toFixed(2)} ${label}`}</span>
           </div>
         </div>
       </OversizedPanel>

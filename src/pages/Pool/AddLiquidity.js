@@ -344,7 +344,7 @@ class AddLiquidity extends Component {
         <div className="pool__summary-panel">
           <div className="pool__exchange-rate-wrapper">
             <span className="pool__exchange-rate">Exchange Rate</span>
-            <span>{`1 ETH = ${rateText} ${label}`}</span>
+            <span>{`1 CMT = ${rateText} ${label}`}</span>
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">Current Pool Size</span>
@@ -354,7 +354,7 @@ class AddLiquidity extends Component {
             <span className="swap__exchange-rate">
               Your Pool Share ({ownership.multipliedBy(100).toFixed(2)}%)
             </span>
-            <span>{`${ownedEth.toFixed(2)} ETH + ${ownedToken.toFixed(2)} ${label}`}</span>
+            <span>{`${ownedEth.toFixed(2)} CMT + ${ownedToken.toFixed(2)} ${label}`}</span>
           </div>
         </div>
       )
@@ -368,7 +368,7 @@ class AddLiquidity extends Component {
       <div className="pool__summary-panel">
         <div className="pool__exchange-rate-wrapper">
           <span className="pool__exchange-rate">Exchange Rate</span>
-          <span>{`1 ETH = ${tokenValue.multipliedBy(10 ** (18 - decimals)).dividedBy(ethValue).toFixed(4)} ${label}`}</span>
+          <span>{`1 CMT = ${tokenValue.multipliedBy(10 ** (18 - decimals)).dividedBy(ethValue).toFixed(4)} ${label}`}</span>
         </div>
         <div className="pool__exchange-rate-wrapper">
           <span className="swap__exchange-rate">Current Pool Size</span>
@@ -378,7 +378,7 @@ class AddLiquidity extends Component {
             <span className="swap__exchange-rate">
               Your Pool Share ({ownership.multipliedBy(100).toFixed(2)}%)
             </span>
-          <span>{`${ownedEth.toFixed(2)} ETH + ${ownedToken.toFixed(2)} ${label}`}</span>
+          <span>{`${ownedEth.toFixed(2)} CMT + ${ownedToken.toFixed(2)} ${label}`}</span>
         </div>
       </div>
     )
@@ -406,7 +406,7 @@ class AddLiquidity extends Component {
     } else if (inputCurrency === outputCurrency) {
       contextualInfo = 'Must be different token.';
     } else if (![inputCurrency, outputCurrency].includes('CMT')) {
-      contextualInfo = 'One of the input must be ETH.';
+      contextualInfo = 'One of the input must be CMT.';
     } else if (inputIsZero || outputIsZero) {
       contextualInfo = 'Amount cannot be zero.';
     } else if (this.isUnapproved()) {
@@ -454,10 +454,10 @@ class AddLiquidity extends Component {
 
     return (
       <div>
-        <div className="pool__summary-modal__item">You are adding between {b(`${+BN(inputValue).toFixed(7)} ETH`)} and {b(`${+minOutput.toFixed(7)} - ${+maxOutput.toFixed(7)} ${label}`)} into the liquidity pool.</div>
+        <div className="pool__summary-modal__item">You are adding between {b(`${+BN(inputValue).toFixed(7)} CMT`)} and {b(`${+minOutput.toFixed(7)} - ${+maxOutput.toFixed(7)} ${label}`)} into the liquidity pool.</div>
         <div className="pool__summary-modal__item">You will mint {b(+liquidityMinted.toFixed(7))} liquidity tokens.</div>
         <div className="pool__summary-modal__item">Current total supply of liquidity tokens is {b(+adjTotalSupply.toFixed(7))}</div>
-        <div className="pool__summary-modal__item">At current exchange rate, each pool token is worth {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH and {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
+        <div className="pool__summary-modal__item">At current exchange rate, each pool token is worth {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} CMT and {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
       </div>
     );
   }
@@ -499,7 +499,7 @@ class AddLiquidity extends Component {
                   🚰 You are the first person to add liquidity!
                 </div>
                 <div className="pool__new-exchange-warning-text">
-                  {`The initial exchange rate will be set based on your deposits. Please make sure that your ETH and ${label} deposits have the same fiat value.`}
+                  {`The initial exchange rate will be set based on your deposits. Please make sure that your CMT and ${label} deposits have the same fiat value.`}
                 </div>
               </div>
             )
