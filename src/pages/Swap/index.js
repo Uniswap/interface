@@ -673,6 +673,8 @@ class Swap extends Component {
 
     const { inputError, outputError, isValid } = this.validate();
 
+    const InputBalance = inputBalance.dividedBy(BN(10 ** inputDecimals));
+
     return (
       <div className="swap">
         <MediaQuery query="(max-device-width: 767px)">
@@ -692,9 +694,10 @@ class Swap extends Component {
             title="Input"
             description={lastEditedField === OUTPUT ? estimatedText : ''}
             extraText={inputCurrency
-              ? `Balance: ${inputBalance.dividedBy(BN(10 ** inputDecimals)).toFixed(4)}`
+              ? `Balance: ${InputBalance.toFixed(4)}`
               : ''
             }
+            onClickExtraText={() => this.updateInput(InputBalance)}
             onCurrencySelected={inputCurrency => this.setState({ inputCurrency }, this.recalcForm)}
             onValueChange={this.updateInput}
             selectedTokens={[inputCurrency, outputCurrency]}

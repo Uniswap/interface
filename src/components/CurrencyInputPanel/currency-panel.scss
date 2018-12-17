@@ -33,6 +33,9 @@
     font-size: .75rem;
     line-height: 1rem;
     padding: .75rem 1rem;
+    &--clickable-extra-text {
+      padding: .375rem .625rem .375rem 1rem;
+    }
   }
 
   &__label-container {
@@ -72,6 +75,18 @@
   }
 
   &__extra-text {
+    &--clickable {
+      border-radius: 0.5rem;
+      cursor: pointer;
+      padding: .1875rem 0.375rem;
+
+      &:hover {
+        background-color: $concrete-gray;
+      }
+      &:active {
+        background-color: rgba($zumthor-blue, .8);
+      }
+    }
     &--error {
       color: $salmon-red;
     }

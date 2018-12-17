@@ -59,6 +59,7 @@ class CurrencyInputPanel extends Component {
     filteredTokens: PropTypes.arrayOf(PropTypes.string),
     disableUnlock: PropTypes.bool,
     renderInput: PropTypes.func,
+    onClickExtraText: PropTypes.func,
   };
 
   static defaultProps = {
@@ -367,10 +368,11 @@ class CurrencyInputPanel extends Component {
 
   render() {
     const {
-      title,
       description,
-      extraText,
       errorMessage,
+      extraText,
+      onClickExtraText,
+      title,
     } = this.props;
 
     return (
@@ -378,14 +380,21 @@ class CurrencyInputPanel extends Component {
         <div className={classnames('currency-input-panel__container', {
           'currency-input-panel__container--error': errorMessage,
         })}>
-          <div className="currency-input-panel__label-row">
+          <div className={classnames('currency-input-panel__label-row', {
+            'currency-input-panel__label-row--clickable-extra-text': !!onClickExtraText,
+          })}>
             <div className="currency-input-panel__label-container">
               <span className="currency-input-panel__label">{title}</span>
               <span className="currency-input-panel__label-description">{description}</span>
             </div>
-            <span className={classnames('currency-input-panel__extra-text', {
-              'currency-input-panel__extra-text--error': errorMessage,
-            })}>
+            <span
+              className={classnames('currency-input-panel__extra-text', {
+                'currency-input-panel__extra-text--clickable': !!onClickExtraText,
+                'currency-input-panel__extra-text--error': errorMessage,
+              })}
+              onClick={onClickExtraText}
+              title={!!onClickExtraText ? 'Set max' : null}
+            >
               {extraText}
             </span>
           </div>
