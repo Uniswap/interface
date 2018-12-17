@@ -505,7 +505,7 @@ const TRAVIS = {
 
 To run Uniswap, type the following commands
 ```javascript
-cd /home/ubuntu/uniswap-frontend-master
+cd /home/ubuntu/uniswap-frontend
 npm install
 yarn start:travis --loglevel verbose
 ```
