@@ -283,18 +283,24 @@ class CurrencyInputPanel extends Component {
 
     return (
       <button
-        className='currency-input-panel__sub-currency-select'
-        onClick={() => {
-          const contract = new web3.eth.Contract(ERC20_ABI, selectedTokenAddress);
-          const amount = BN(10 ** decimals).multipliedBy(10 ** 8).toFixed(0);
-          contract.methods.approve(fromToken[selectedTokenAddress], amount)
-            .send({ from: account }, (err, data) => {
-              if (!err && data) {
-                addPendingTx(data);
-                addApprovalTx({ tokenAddress: selectedTokenAddress, txId: data});
-              }
-            });
-        }}
+        className = 'currency-input-panel__sub-currency-select'
+        onClick = {
+                () => {
+                    const contract = new web3.eth.Contract(ERC20_ABI, selectedTokenAddress);
+                    const amount = BN(10 ** decimals).multipliedBy(10 ** 8).toFixed(0);
+                    contract.methods.approve.sendTransaction(fromToken[selectedTokenAddress], amount, {
+                            from: account
+                        }, function(err, data) {
+                            if (!err && data) {
+                                addPendingTx(data);
+                                addApprovalTx({
+                                    tokenAddress: selectedTokenAddress,
+                                    txId: data
+                                });
+                            }
+                        }
+                    }
+                }
       >
         Unlock
       </button>
