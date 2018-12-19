@@ -112,3 +112,11 @@ The deployedTestToken's address can now be used as the input to create the excha
 
 ![Uniswap Create Exchange](./images/uniswap_create_exchange.png)
 
+You should not be able to add this contract address, to the system, a second time. If you try to repeat this step a second time, the "Create Exchange" button should be greyed out and there should be a message at the very bottom of the web page which says "TEST Exchange already exists!" This is normal operation.
+
+At this stage, the TEST token will show up in the Uniswap frontend
+
+![New TEST token](./images/uniswap_test_token.png)
+
+
+
