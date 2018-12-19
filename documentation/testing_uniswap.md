@@ -110,5 +110,5 @@ web3.fromWei(deployedTestToken.totalSupply(), 'cmt')
 ```
 The deployedTestToken's address can now be used as the input to create the exchange in the frontend.
 
-![Uniswap Create Exchange](./uniswap_create_exchange.png)
+![Uniswap Create Exchange](./images/uniswap_create_exchange.png)
 
