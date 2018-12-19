@@ -123,7 +123,7 @@ The above TEST token exchange now exists on the blockchain. However there is cur
 
 ![No liquidity](./images/uniswap_no_liquidity.png)
 
-https://github.com/CyberMiles/uniswap-frontend/blob/master/documentation/deploying_uniswap.md#adding-liquidity-to-an-exchange[Adding liquidity to an exchange can be done using the Travis console], however we are going to perform this task using the frontend only for demonstration/testing purposes.
+[Adding liquidity to an exchange can be done using the Travis console](https://github.com/CyberMiles/uniswap-frontend/blob/master/documentation/deploying_uniswap.md#adding-liquidity-to-an-exchange), however we are going to perform this task using the frontend only for demonstration/testing purposes.
 
 
 
