@@ -118,5 +118,12 @@ At this stage, the TEST token will show up in the Uniswap frontend
 
 ![New TEST token](./images/uniswap_test_token.png)
 
+### Add Liquidity
+The above TEST token exchange now exists on the blockchain. However there is currently no liquidity provided. You will notice the exchange rate is zero in the frontend at present.
+
+![No liquidity](./images/uniswap_no_liquidity.png)
+
+https://github.com/CyberMiles/uniswap-frontend/blob/master/documentation/deploying_uniswap.md#adding-liquidity-to-an-exchange[Adding liquidity to an exchange can be done using the Travis console], however we are going to perform this task using the frontend only for demonstration/testing purposes.
+
 
 
