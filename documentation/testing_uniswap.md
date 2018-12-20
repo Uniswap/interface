@@ -148,6 +148,8 @@ Will now succeed, as reflected by the balances below
 
 ### How Uniswap uses the approve and allowance functionality
 
+A specific exchange contract instance can only transfer tokens on an end-user's behalf when they are a)selling tokens or b) depositing liquidity. In addition the specific exchange contract instance can only transfer tokens on an end-user's behalf if a) that same end-user has signed the specific transfer transactions and b) if that same end-user has already pre-approved the spending via the Unlock feature i.e. if the account triggering the transfer transaction is the same as the one that approved the allowance.
+
 Let's now take a look at how Uniswap utilizes these standard ERC20 functions both in its smart contracts and in its frontend.
 
 #### Unlock - Vyper contracts
@@ -213,7 +215,7 @@ web3.fromWei(deployedYuanToken.allowance("0x05849FFc9b899CaFbCda3BBcC22ED93270dC
 ```
 
 ### Insufficient Balance
-An important thing to be aware of is that the Uniswap frontend will not allow tokens to be spent if the active MetaMask account does not hold any of the tokens in question. In the context of the frontend, the "approve" function is just an abstract allowance for the Uniswap exchange contract to pass through value on behalf of the active MetaMask account. Again, in the context of the frontend, the active MetaMask account has to actually have the tokens to spend. If not, then the frontend will grey-out buttons and display an error of "Insufficient Balance" at the very bottom of the Uniswap frontend web page.
+An important thing to be aware of is that the Uniswap frontend will not allow tokens to be spent if the active MetaMask account does not hold any of the tokens in question. At present the frontend will give the end-user an opportunity to perform the "unlock" function even if their account does not hold any of those tokens i.e. the unlock succeeds and then the next progression is that the end-user gets an insufficient balance message.[An issue](https://github.com/Uniswap/uniswap-frontend/issues/171) has been opened on the Uniswap source code in order to investigate and resolve this.
 
 
 
