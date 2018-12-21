@@ -118,13 +118,13 @@ var aYuanRemoveLiquidity = uniswapExchangeContractForYuanToken.RemoveLiquidity({
 var aYuanTransfer = uniswapExchangeContractForYuanToken.Transfer({fromBlock: 1, toBlock: 'latest'});
 var aYuanApproval = uniswapExchangeContractForYuanToken.Approval({fromBlock: 1, toBlock: 'latest'});
 
-aYuanTokenPurchase.watch(function(error, result){ console.log("\nTokenPurchase\nBuyer: " + result.args.buyer + "\neth_sold: " + web3.fromWei(result.args.eth_sold, 'cmt') + "\ntokens_bought: " + web3.fromWei(result.args.tokens_bought, 'cmt'))});
+aYuanTokenPurchase.watch(function(error, result){ console.log("\nTokenPurchase\nBuyer: " + result.args.buyer + "\ncmt_sold: " + web3.fromWei(result.args.eth_sold, 'cmt') + "\ntokens_bought: " + web3.fromWei(result.args.tokens_bought, 'cmt'))});
 
-aYuanEthPurchase.watch(function(error, result){ console.log("\nEthPurchase\nBuyer: " + result.args.buyer + "\ntokens_sold: " + web3.fromWei(result.args.tokens_sold, 'cmt') + "\neth_bought: " + web3.fromWei(result.args.eth_bought, 'cmt'))});
+aYuanEthPurchase.watch(function(error, result){ console.log("\nCmtPurchase\nBuyer: " + result.args.buyer + "\ntokens_sold: " + web3.fromWei(result.args.tokens_sold, 'cmt') + "\ncmt_bought: " + web3.fromWei(result.args.eth_bought, 'cmt'))});
 
-aYuanAddLiquidity.watch(function(error, result){ console.log("\nAddLiquidity\nprovider: " + result.args.provider + "\neth_amount: " + web3.fromWei(result.args.eth_amount, 'cmt') + "\ntoken_amount: " + web3.fromWei(result.args.token_amount, 'cmt'))});
+aYuanAddLiquidity.watch(function(error, result){ console.log("\nAddLiquidity\nprovider: " + result.args.provider + "\ncmt_amount: " + web3.fromWei(result.args.eth_amount, 'cmt') + "\ntoken_amount: " + web3.fromWei(result.args.token_amount, 'cmt'))});
 
-aYuanRemoveLiquidity.watch(function(error, result){ console.log("\nRemoveLiquidity\nprovider: " + result.args.provider + "\neth_amount: " + web3.fromWei(result.args.eth_amount, 'cmt') + "\ntoken_amount: " + web3.fromWei(result.args.token_amount, 'cmt'))});
+aYuanRemoveLiquidity.watch(function(error, result){ console.log("\nRemoveLiquidity\nprovider: " + result.args.provider + "\ncmt_amount: " + web3.fromWei(result.args.eth_amount, 'cmt') + "\ntoken_amount: " + web3.fromWei(result.args.token_amount, 'cmt'))});
 
 aYuanTransfer.watch(function(error, result){ console.log("\nTransfer\n_from: " + result.args._from + "\n_to: " + result.args._to + "\n_value: " + web3.fromWei(result.args._value, 'cmt'))});
 
