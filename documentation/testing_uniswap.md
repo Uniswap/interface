@@ -246,7 +246,7 @@ var crc20Estimate = web3.cmt.estimateGas({data: crc20Bytecode})
 Then finally we can go ahead and deploy the contract
 
 ```javascript
-var deployedYuanToken = newCRC20SmartTokenContract.new("The TTT Token","TTT","18", "1000000000000000000000000", "0", "0", {from:tokenOwner, data: crc20Bytecode, gas: crc20Estimate}, function(error, result){if(!error){console.log(result)}else{console.log(error)}});
+var deployedTTTToken = newCRC20SmartTokenContract.new("The TTT Token","TTT","18", "1000000000000000000000000", "0", "0", {from:tokenOwner, data: crc20Bytecode, gas: crc20Estimate}, function(error, result){if(!error){console.log(result)}else{console.log(error)}});
 ```
 
 
