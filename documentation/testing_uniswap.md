@@ -249,5 +249,12 @@ Then finally we can go ahead and deploy the contract
 var deployedTTTToken = newCRC20SmartTokenContract.new("The TTT Token","TTT","18", "1000000000000000000000000", "0", "0", {from:tokenOwner, data: crc20Bytecode, gas: crc20Estimate}, function(error, result){if(!error){console.log(result)}else{console.log(error)}});
 ```
 
+```javascript
+deployedTTTToken.address
+//"0x2d142291dc8dedb08dbc9f918fb2fc57b09bc60d"
+```
+
+
+
 
 
