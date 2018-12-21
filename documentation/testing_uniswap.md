@@ -254,7 +254,41 @@ deployedTTTToken.address
 //"0x2d142291dc8dedb08dbc9f918fb2fc57b09bc60d"
 ```
 
+Now that the new token has been created the new exchange contract can be created.
 
+![New exchange](./images/omg_test_create_exchange.png)
+
+From there liquidity is added in accordance with the ETH/OMG example in the White Paper i.e. 10 ETH and 500 OMG (or in this case 10 CMT and 500 TTT)
+
+![New exchange](./images/omg_test_add_liquidity.png)
+
+Next, again as per the example in the White Paper, a buyer of the TTT tokens sends one CMT in order to purchase their TTT tokens.
+
+![New exchange](./images/omg_test_after_first_transaction.png)
+
+Now that these transactions have been performed in the frontend, the underlying data (in relation to the TTT exchange contract) can be accessed via the web3 console.
+
+```javascript
+var uniswapExchangeTemplate = web3.cmt.contract(uniswapExchangeAbi,function(error, result){if(!error){console.log(result)}else{console.log(error)}});
+```
+```javascript
+tttExchangeInstance = uniswapExchangeTemplate.at("0x192b316f0df3244710ccf1ef53be309aa6f98c58")
+```
+
+Once the tttExchangeInstance variable is available the following getter methods of the Vyper contract can be queried.
+
+```javascript
+tttExchangeInstance.getEthToTokenInputPrice
+```
+```javascript
+tttExchangeInstance.getEthToTokenOutputPrice 
+```
+```javascript
+tttExchangeInstance.getTokenToEthInputPrice
+```
+```javascript
+tttExchangeInstance.getTokenToEthOutputPrice
+```
 
 
 
