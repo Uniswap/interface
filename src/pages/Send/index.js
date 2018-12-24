@@ -830,7 +830,7 @@ function calculateEtherTokenInput({ outputAmount: rawOutput, inputReserve: rawRe
 
   const numerator = outputAmount.multipliedBy(inputReserve).multipliedBy(1000);
   const denominator = outputReserve.minus(outputAmount).multipliedBy(997);
-  return numerator.dividedBy(denominator.plus(1));
+  return (numerator.dividedBy(denominator)).plus(1);
 }
 
 function getSendType(inputCurrency, outputCurrency) {
