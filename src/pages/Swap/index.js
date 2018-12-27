@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import {BigNumber as BN} from "bignumber.js";
+import { BigNumber as BN } from "bignumber.js";
 import MediaQuery from 'react-responsive';
 import ReactGA from 'react-ga';
 import { selectors, addPendingTx } from '../../ducks/web3connect';
@@ -147,7 +147,7 @@ class Swap extends Component {
     this.recalcEthTokenForm();
   }
 
-  recalcTokenTokenForm = () => {
+  recalcTokenTokenForm = async () => {
     const {
       exchangeAddresses: { fromToken },
       selectors,
@@ -167,9 +167,9 @@ class Swap extends Component {
     const exchangeAddressB = fromToken[outputCurrency];
 
     const { value: inputReserveA, decimals: inputDecimalsA } = selectors().getBalance(exchangeAddressA, inputCurrency);
-    const { value: outputReserveA }= selectors().getBalance(exchangeAddressA, 'ETH');
+    const { value: outputReserveA } = selectors().getBalance(exchangeAddressA, 'ETH');
     const { value: inputReserveB } = selectors().getBalance(exchangeAddressB, 'ETH');
-    const { value: outputReserveB, decimals: outputDecimalsB }= selectors().getBalance(exchangeAddressB, outputCurrency);
+    const { value: outputReserveB, decimals: outputDecimalsB } = selectors().getBalance(exchangeAddressB, outputCurrency);
 
     if (lastEditedField === INPUT) {
       if (!oldInputValue) {
@@ -279,7 +279,7 @@ class Swap extends Component {
       return;
     }
     const { value: inputReserve, decimals: inputDecimals } = selectors().getBalance(exchangeAddress, inputCurrency);
-    const { value: outputReserve, decimals: outputDecimals }= selectors().getBalance(exchangeAddress, outputCurrency);
+    const { value: outputReserve, decimals: outputDecimals } = selectors().getBalance(exchangeAddress, outputCurrency);
 
     if (lastEditedField === INPUT) {
       if (!oldInputValue) {
@@ -372,7 +372,7 @@ class Swap extends Component {
     const { decimals: outputDecimals } = selectors().getBalance(account, outputCurrency);
     const blockNumber = await promisify(web3, 'getBlockNumber');
     const block = await promisify(web3, 'getBlock', blockNumber);
-    const deadline =  block.timestamp + 300;
+    const deadline = block.timestamp + 300;
 
     if (lastEditedField === INPUT) {
       // swap input
@@ -380,7 +380,7 @@ class Swap extends Component {
         category: type,
         action: 'SwapInput',
       });
-      switch(type) {
+      switch (type) {
         case 'ETH_TO_TOKEN':
           // let exchange = new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]);
           new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency])
@@ -552,8 +552,9 @@ class Swap extends Component {
       outputValue,
       outputCurrency,
       lastEditedField,
+      exchangeRate
     } = this.state;
-    const { selectors, account } = this.props;
+    const { selectors, account, exchangeAddresses } = this.props;
 
     ReactGA.event({
       category: 'TransactionDetail',
@@ -571,8 +572,25 @@ class Swap extends Component {
     let minOutput;
     let maxInput;
 
+    const tokenAddress = [inputCurrency, outputCurrency].filter(currency => currency !== 'ETH')[0];
+    const exchangeAddress = exchangeAddresses.fromToken[tokenAddress];
+    let slippage = 0;
+    if (exchangeAddress) {
+      const { value: inputReserve, decimals: inputDecimals } = selectors().getBalance(exchangeAddress, inputCurrency);
+      const { value: outputReserve, decimals: outputDecimals } = selectors().getBalance(exchangeAddress, outputCurrency);
+
+      const microInputValue = 0.000001
+      const inputAmount2 = BN(microInputValue).multipliedBy(10 ** inputDecimals);
+
+      const outputAmount2 = calculateEtherTokenOutput({ inputAmount: inputAmount2, inputReserve, outputReserve });
+      const outputValue2 = outputAmount2.dividedBy(BN(10 ** outputDecimals)).toFixed(7);
+      const exchangeRate2 = BN(outputValue2).dividedBy(BN(microInputValue));
+
+      slippage = BN(exchangeRate2).dividedBy(BN(exchangeRate)).multipliedBy(100).minus(100);
+    }
+
     if (lastEditedField === INPUT) {
-      switch(type) {
+      switch (type) {
         case 'ETH_TO_TOKEN':
           minOutput = BN(outputValue).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(7).trim();
           break;
@@ -610,7 +628,7 @@ class Swap extends Component {
             You are selling {b(`${+inputValue} ${inputLabel}`)}.
           </div>
           <div className="send__last-summary-text">
-            You will receive at least {b(`${+minOutput} ${outputLabel}`)} or the transaction will fail.
+            You will receive at least {b(`${+minOutput} ${outputLabel}`)} or the transaction will fail. You will pay {slippage.toFixed(2)}% in slippage fees.
           </div>
         </div>
       );
@@ -621,7 +639,7 @@ class Swap extends Component {
             You are buying {b(`${+outputValue} ${outputLabel}`)}.
           </div>
           <div className="send__last-summary-text">
-            It will cost at most {b(`${+maxInput} ${inputLabel}`)} or the transaction will fail.
+            It will cost at most {b(`${+maxInput} ${inputLabel}`)} or the transaction will fail. You will pay {slippage.toFixed(2)}% in slippage fees.
           </div>
         </div>
       );
@@ -722,7 +740,7 @@ class Swap extends Component {
             errorMessage={outputError}
             disableUnlock
           />
-          { this.renderExchangeRate() }
+          {this.renderExchangeRate()}
           <div className="swap__cta-container">
             <button
               className={classnames('swap__cta-btn', {
@@ -735,7 +753,7 @@ class Swap extends Component {
             </button>
           </div>
         </div>
-        { this.renderSummary(inputError, outputError) }
+        {this.renderSummary(inputError, outputError)}
       </div>
     );
   }
@@ -744,7 +762,7 @@ class Swap extends Component {
 export default connect(
   state => ({
     balances: state.web3connect.balances,
-    isConnected: !!state.web3connect.account && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||1),
+    isConnected: !!state.web3connect.account && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID || 1),
     account: state.web3connect.account,
     web3: state.web3connect.web3,
     exchangeAddresses: state.addresses.exchangeAddresses,
