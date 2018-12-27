@@ -580,13 +580,13 @@ class Swap extends Component {
       const { value: outputReserve, decimals: outputDecimals } = selectors().getBalance(exchangeAddress, outputCurrency);
 
       const microInputValue = 0.000001
-      const inputAmount2 = BN(microInputValue).multipliedBy(10 ** inputDecimals);
+      const microInputAmount = BN(microInputValue).multipliedBy(10 ** inputDecimals);
 
-      const outputAmount2 = calculateEtherTokenOutput({ inputAmount: inputAmount2, inputReserve, outputReserve });
-      const outputValue2 = outputAmount2.dividedBy(BN(10 ** outputDecimals)).toFixed(7);
-      const exchangeRate2 = BN(outputValue2).dividedBy(BN(microInputValue));
+      const microOutputAmount = calculateEtherTokenOutput({ inputAmount: microInputAmount, inputReserve, outputReserve });
+      const micoOutputValue = microOutputAmount.dividedBy(BN(10 ** outputDecimals)).toFixed(7);
+      const microExchangeRate = BN(micoOutputValue).dividedBy(BN(microInputValue));
 
-      slippage = BN(exchangeRate2).dividedBy(BN(exchangeRate)).multipliedBy(100).minus(100);
+      slippage = BN(microExchangeRate).dividedBy(BN(exchangeRate)).multipliedBy(100).minus(100);
     }
 
     if (lastEditedField === INPUT) {
