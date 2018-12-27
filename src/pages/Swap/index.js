@@ -147,7 +147,7 @@ class Swap extends Component {
     this.recalcEthTokenForm();
   }
 
-  recalcTokenTokenForm = async () => {
+  recalcTokenTokenForm = () => {
     const {
       exchangeAddresses: { fromToken },
       selectors,
