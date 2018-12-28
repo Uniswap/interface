@@ -22,6 +22,10 @@
     position: relative;
     z-index: 200;
     padding: .875rem;
+
+    &--clickable {
+      cursor: pointer;
+    }
   }
 
   &__down-arrow-background {

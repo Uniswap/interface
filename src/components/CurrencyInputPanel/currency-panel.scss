@@ -180,6 +180,7 @@
   }
 
   &__token-list {
+    -webkit-overflow-scrolling: touch;
     height: 17.5rem;
     overflow-y: auto;
   }

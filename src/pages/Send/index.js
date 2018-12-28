@@ -14,10 +14,11 @@ import DropdownBlue from "../../assets/images/dropdown-blue.svg";
 import DropupBlue from "../../assets/images/dropup-blue.svg";
 import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg';
 import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg';
+import { getBlockDeadline } from '../../helpers/web3-utils';
+import { retry } from '../../helpers/promise-utils';
 import EXCHANGE_ABI from '../../abi/exchange';
 
 import "./send.scss";
-import promisify from "../../helpers/web3-promisfy";
 import MediaQuery from "react-responsive";
 import ReactGA from "react-ga";
 
@@ -98,6 +99,17 @@ class Send extends Component {
       outputError,
       isValid: isValid && !inputError && !outputError,
     };
+  }
+
+  flipInputOutput = () => {
+    const { state } = this;
+    this.setState({
+      inputValue: state.outputValue,
+      outputValue: state.inputValue,
+      inputCurrency: state.outputCurrency,
+      outputCurrency: state.inputCurrency,
+      lastEditedField: state.lastEditedField === INPUT ? OUTPUT : INPUT
+    }, () => this.recalcForm());
   }
 
   isUnapproved() {
@@ -374,9 +386,13 @@ class Send extends Component {
     const type = getSendType(inputCurrency, outputCurrency);
     const { decimals: inputDecimals } = selectors().getBalance(account, inputCurrency);
     const { decimals: outputDecimals } = selectors().getBalance(account, outputCurrency);
-    const blockNumber = await promisify(web3, 'getBlockNumber');
-    const block = await promisify(web3, 'getBlock', blockNumber);
-    const deadline =  block.timestamp + 300;
+    let deadline;
+    try {
+      deadline = await retry(() => getBlockDeadline(web3, 300));
+    } catch(e) {
+      // TODO: Handle error.
+      return;
+    }
 
     if (lastEditedField === INPUT) {
       ReactGA.event({
@@ -677,6 +693,14 @@ class Send extends Component {
     );
   }
 
+  renderBalance(currency, balance, decimals) {
+    if (!currency || decimals === 0) {
+      return '';
+    }
+
+    return `Balance: ${balance.dividedBy(BN(10 ** decimals)).toFixed(4)}`
+  }
+
   render() {
     const { selectors, account } = this.props;
     const {
@@ -711,10 +735,7 @@ class Send extends Component {
           <CurrencyInputPanel
             title="Input"
             description={lastEditedField === OUTPUT ? estimatedText : ''}
-            extraText={inputCurrency
-              ? `Balance: ${inputBalance.dividedBy(BN(10 ** inputDecimals)).toFixed(4)}`
-              : ''
-            }
+            extraText={this.renderBalance(inputCurrency, inputBalance, inputDecimals)}
             onCurrencySelected={inputCurrency => this.setState({ inputCurrency }, this.recalcForm)}
             onValueChange={this.updateInput}
             selectedTokens={[inputCurrency, outputCurrency]}
@@ -724,16 +745,13 @@ class Send extends Component {
           />
           <OversizedPanel>
             <div className="swap__down-arrow-background">
-              <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} />
+              <img onClick={this.flipInputOutput} className="swap__down-arrow swap__down-arrow--clickable" src={isValid ? ArrowDownBlue : ArrowDownGrey} />
             </div>
           </OversizedPanel>
           <CurrencyInputPanel
             title="Output"
             description={lastEditedField === INPUT ? estimatedText : ''}
-            extraText={outputCurrency
-              ? `Balance: ${outputBalance.dividedBy(BN(10 ** outputDecimals)).toFixed(4)}`
-              : ''
-            }
+            extraText={this.renderBalance(outputCurrency, outputBalance, outputDecimals)}
             onCurrencySelected={outputCurrency => this.setState({ outputCurrency }, this.recalcForm)}
             onValueChange={this.updateOutput}
             selectedTokens={[inputCurrency, outputCurrency]}
@@ -812,7 +830,7 @@ function calculateEtherTokenInput({ outputAmount: rawOutput, inputReserve: rawRe
 
   const numerator = outputAmount.multipliedBy(inputReserve).multipliedBy(1000);
   const denominator = outputReserve.minus(outputAmount).multipliedBy(997);
-  return numerator.dividedBy(denominator.plus(1));
+  return (numerator.dividedBy(denominator)).plus(1);
 }
 
 function getSendType(inputCurrency, outputCurrency) {
