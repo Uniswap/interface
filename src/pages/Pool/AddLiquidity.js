@@ -11,11 +11,12 @@ import PlusBlue from '../../assets/images/plus-blue.svg';
 import PlusGrey from '../../assets/images/plus-grey.svg';
 import DropdownBlue from "../../assets/images/dropdown-blue.svg";
 import DropupBlue from "../../assets/images/dropup-blue.svg";
+import { getBlockDeadline } from '../../helpers/web3-utils';
+import { retry } from '../../helpers/promise-utils';
 import ModeSelector from './ModeSelector';
 import {BigNumber as BN} from 'bignumber.js';
 import EXCHANGE_ABI from '../../abi/exchange';
 import "./pool.scss";
-import promisify from "../../helpers/web3-promisfy";
 import ReactGA from "react-ga";
 
 const INPUT = 0;
@@ -117,6 +118,10 @@ class AddLiquidity extends Component {
     }
 
     const { value, decimals } = selectors().getBalance(account, currency);
+    if (!decimals) {
+      return '';
+    }
+
     return `Balance: ${value.dividedBy(10 ** decimals).toFixed(4)}`;
   }
 
@@ -152,9 +157,14 @@ class AddLiquidity extends Component {
     const { value: ethReserve } = selectors().getBalance(fromToken[outputCurrency]);
     const totalLiquidity = await exchange.methods.totalSupply().call();
     const liquidityMinted = BN(totalLiquidity).multipliedBy(ethAmount.dividedBy(ethReserve));
-    const blockNumber = await promisify(web3, 'getBlockNumber');
-    const block = await promisify(web3, 'getBlock', blockNumber);
-    const deadline = block.timestamp + 300;
+    let deadline;
+    try {
+      deadline = await retry(() => getBlockDeadline(web3, 300));
+    } catch(e) {
+      // TODO: Handle error.
+      return;
+    }
+
     const MAX_LIQUIDITY_SLIPPAGE = 0.025;
     const minLiquidity = this.isNewExchange() ? BN(0) : liquidityMinted.multipliedBy(1 - MAX_LIQUIDITY_SLIPPAGE);
     const maxTokens = this.isNewExchange() ? tokenAmount : tokenAmount.multipliedBy(1 + MAX_LIQUIDITY_SLIPPAGE);
@@ -238,10 +248,10 @@ class AddLiquidity extends Component {
       return false;
     }
 
-    const { value: tokenValue } = selectors().getBalance(fromToken[token], token);
+    const { value: tokenValue, decimals } = selectors().getBalance(fromToken[token], token);
     const { value: ethValue } = selectors().getBalance(fromToken[token], eth);
 
-    return tokenValue.isZero() && ethValue.isZero();
+    return tokenValue.isZero() && ethValue.isZero() && decimals !== 0;
   }
 
   getExchangeRate() {
@@ -333,7 +343,7 @@ class AddLiquidity extends Component {
     const ownedEth = ethPer.multipliedBy(liquidityBalance).dividedBy(10 ** 18);
     const ownedToken = tokenPer.multipliedBy(liquidityBalance).dividedBy(10 ** decimals);
 
-    if (!label) {
+    if (!label || !decimals) {
       return blank;
     }
 
@@ -444,6 +454,17 @@ class AddLiquidity extends Component {
     const { value: ethReserve } = selectors().getBalance(fromToken[outputCurrency]);
     const { decimals: poolTokenDecimals } = selectors().getBalance(account, fromToken[outputCurrency]);
 
+    if (this.isNewExchange()) {
+      return (
+        <div>
+          <div className="pool__summary-modal__item">You are adding {b(`${inputValue} ETH`)} and {b(`${outputValue} ${label}`)} to the liquidity pool.</div>
+          <div className="pool__summary-modal__item">You are setting the initial exchange rate to {b(`1 ETH = ${BN(outputValue).dividedBy(inputValue).toFixed(4)} ${label}`)}.</div>
+          <div className="pool__summary-modal__item">You will mint {b(`${inputValue} liquidity tokens`)}.</div>
+          <div className="pool__summary-modal__item">Current total supply of liquidity tokens is 0.</div>
+        </div>
+      );
+    }
+
     const SLIPPAGE = 0.025;
     const minOutput = BN(outputValue).multipliedBy(1 - SLIPPAGE);
     const maxOutput = BN(outputValue).multipliedBy(1 + SLIPPAGE);
@@ -522,7 +543,7 @@ class AddLiquidity extends Component {
         </OversizedPanel>
         <CurrencyInputPanel
           title="Deposit"
-          description="(estimated)"
+          description={this.isNewExchange() ? '(estimated)' : ''}
           extraText={this.getBalance(outputCurrency)}
           selectedTokenAddress={outputCurrency}
           onCurrencySelected={currency => {
