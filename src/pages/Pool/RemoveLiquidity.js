@@ -106,19 +106,13 @@ class RemoveLiquidity extends Component {
     const ownership = amount.dividedBy(totalSupply);
     const ethWithdrawn = ethReserve.multipliedBy(ownership);
     const tokenWithdrawn = tokenReserve.multipliedBy(ownership);
-<<<<<<< HEAD
-    const blockNumber = await promisify(web3, 'getBlockNumber');
-    const block = await promisify(web3, 'getBlock', blockNumber);
-    const deadline = block.timestamp + 300;
-=======
     let deadline;
     try {
       deadline = await retry(() => getBlockDeadline(web3, 300));
-    } catch(e) {
+    } catch (e) {
       // TODO: Handle error.
       return;
     }
->>>>>>> cfdc0f7d0856a4c072b19f6aba1c52a26564619c
 
     exchange.methods.removeLiquidity(
       amount.toFixed(0),

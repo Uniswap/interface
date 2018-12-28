@@ -119,13 +119,6 @@ export const addExchange = ({ label, exchangeAddress, tokenAddress }) => (dispat
     return;
   }
 
-<<<<<<< HEAD
-  if (tokenAddresses.addresses.filter(([symbol]) => symbol === label).length) {
-    return;
-  }
-
-=======
->>>>>>> cfdc0f7d0856a4c072b19f6aba1c52a26564619c
   if (exchangeAddresses.fromToken[tokenAddresses]) {
     return;
   }
