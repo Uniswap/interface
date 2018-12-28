@@ -572,22 +572,21 @@ class Swap extends Component {
     let minOutput;
     let maxInput;
 
-    const tokenAddress = [inputCurrency, outputCurrency].filter(currency => currency !== 'ETH')[0];
-    const exchangeAddress = exchangeAddresses.fromToken[tokenAddress];
     let slippage = 0;
-    if (exchangeAddress) {
-      const { value: inputReserve, decimals: inputDecimals } = selectors().getBalance(exchangeAddress, inputCurrency);
-      const { value: outputReserve, decimals: outputDecimals } = selectors().getBalance(exchangeAddress, outputCurrency);
+    let rate = BN(10 ** 9);
 
-      const microInputValue = 0.000001
-      const microInputAmount = BN(microInputValue).multipliedBy(10 ** inputDecimals);
-
-      const microOutputAmount = calculateEtherTokenOutput({ inputAmount: microInputAmount, inputReserve, outputReserve });
-      const micoOutputValue = microOutputAmount.dividedBy(BN(10 ** outputDecimals)).toFixed(7);
-      const microExchangeRate = BN(micoOutputValue).dividedBy(BN(microInputValue));
-
-      slippage = BN(microExchangeRate).dividedBy(BN(exchangeRate)).multipliedBy(100).minus(100);
+    if (inputCurrency !== 'ETH') {
+      const { value: inputReserveA } = selectors().getBalance(exchangeAddresses.fromToken[inputCurrency], inputCurrency);
+      const { value: outputReserveA } = selectors().getBalance(exchangeAddresses.fromToken[inputCurrency], 'ETH');
+      rate = BN(rate).multipliedBy(BN(outputReserveA).dividedBy(BN(inputReserveA)));
     }
+
+    if (outputCurrency !== 'ETH') {
+      const { value: inputReserveB } = selectors().getBalance(exchangeAddresses.fromToken[outputCurrency], 'ETH');
+      const { value: outputReserveB } = selectors().getBalance(exchangeAddresses.fromToken[outputCurrency], outputCurrency);
+      rate = BN(rate).multipliedBy(BN(outputReserveB).dividedBy(BN(inputReserveB)));
+    }
+    slippage = BN(rate).dividedBy(BN(exchangeRate)).dividedBy(BN(10 ** 9)).multipliedBy(100).minus(100);
 
     if (lastEditedField === INPUT) {
       switch (type) {
@@ -628,7 +627,7 @@ class Swap extends Component {
             You are selling {b(`${+inputValue} ${inputLabel}`)}.
           </div>
           <div className="send__last-summary-text">
-            You will receive at least {b(`${+minOutput} ${outputLabel}`)} or the transaction will fail. You will pay {slippage.toFixed(2)}% in slippage fees.
+            You will receive at least {b(`${+minOutput} ${outputLabel}`)} and pay around {slippage.toFixed(2)}% in slippage fees or the transaction will fail.
           </div>
         </div>
       );
@@ -639,7 +638,7 @@ class Swap extends Component {
             You are buying {b(`${+outputValue} ${outputLabel}`)}.
           </div>
           <div className="send__last-summary-text">
-            It will cost at most {b(`${+maxInput} ${inputLabel}`)} or the transaction will fail. You will pay {slippage.toFixed(2)}% in slippage fees.
+            It will cost at most {b(`${+maxInput} ${inputLabel}`)} and pay around {slippage.toFixed(2)}% in slippage fees or the transaction will fail.
           </div>
         </div>
       );
