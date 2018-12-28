@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import {selectors, addPendingTx} from "../../ducks/web3connect";
+import { selectors, addPendingTx } from "../../ducks/web3connect";
 import classnames from "classnames";
 import NavigationTabs from "../../components/NavigationTabs";
 import ModeSelector from "./ModeSelector";
 import AddressInputPanel from "../../components/AddressInputPanel";
 import OversizedPanel from "../../components/OversizedPanel";
 import FACTORY_ABI from "../../abi/factory";
-import {addExchange} from "../../ducks/addresses";
+import { addExchange } from "../../ducks/addresses";
 import ReactGA from "react-ga";
 
 class CreateExchange extends Component {
@@ -211,7 +211,7 @@ class CreateExchange extends Component {
             Create Exchange
           </button>
         </div>
-        { this.renderSummary() }
+        {this.renderSummary()}
       </div>
     );
   }
@@ -220,7 +220,7 @@ class CreateExchange extends Component {
 export default withRouter(
   connect(
     state => ({
-      isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||1),
+      isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID || 1),
       account: state.web3connect.account,
       balances: state.web3connect.balances,
       web3: state.web3connect.web3,

@@ -7,7 +7,7 @@ import './tab.scss';
 export const Tabs = props => {
   return (
     <div className={classnames("tabs", props.className)}>
-      { props.children }
+      {props.children}
     </div>
   );
 };
@@ -20,7 +20,7 @@ export const Tab = props => {
       })}
       onClick={props.onClick}
     >
-      { props.text ? <span>{props.text}</span> : null }
+      {props.text ? <span>{props.text}</span> : null}
     </div>
   );
 };

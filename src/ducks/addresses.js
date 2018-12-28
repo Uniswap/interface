@@ -2,10 +2,10 @@ const RINKEBY = {
   factoryAddress: '0xf5D915570BC477f9B8D6C0E980aA81757A3AaC36',
   exchangeAddresses: {
     addresses: [
-      ['BAT','0x9B913956036a3462330B0642B20D3879ce68b450'],
-      ['DAI','0x77dB9C915809e7BE439D2AB21032B1b8B58F6891'],
-      ['MKR','0x93bB63aFe1E0180d0eF100D774B473034fd60C36'],
-      ['OMG','0x26C226EBb6104676E593F8A070aD6f25cDa60F8D'],
+      ['BAT', '0x9B913956036a3462330B0642B20D3879ce68b450'],
+      ['DAI', '0x77dB9C915809e7BE439D2AB21032B1b8B58F6891'],
+      ['MKR', '0x93bB63aFe1E0180d0eF100D774B473034fd60C36'],
+      ['OMG', '0x26C226EBb6104676E593F8A070aD6f25cDa60F8D'],
       // ['ZRX','0xaBD44a1D1b9Fb0F39fE1D1ee6b1e2a14916D067D'],
     ],
     fromToken: {
@@ -18,10 +18,10 @@ const RINKEBY = {
   },
   tokenAddresses: {
     addresses: [
-      ['BAT','0xDA5B056Cfb861282B4b59d29c9B395bcC238D29B'],
-      ['DAI','0x2448eE2641d78CC42D7AD76498917359D961A783'],
-      ['MKR','0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85'],
-      ['OMG','0x879884c3C46A24f56089f3bBbe4d5e38dB5788C0'],
+      ['BAT', '0xDA5B056Cfb861282B4b59d29c9B395bcC238D29B'],
+      ['DAI', '0x2448eE2641d78CC42D7AD76498917359D961A783'],
+      ['MKR', '0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85'],
+      ['OMG', '0x879884c3C46A24f56089f3bBbe4d5e38dB5788C0'],
       // ['ZRX','0xF22e3F33768354c9805d046af3C0926f27741B43'],
     ],
   },
@@ -97,14 +97,14 @@ const ADD_EXCHANGE = 'app/addresses/addExchange';
 
 const initialState = RINKEBY;
 
-export const addExchange = ({label, exchangeAddress, tokenAddress}) => (dispatch, getState) => {
+export const addExchange = ({ label, exchangeAddress, tokenAddress }) => (dispatch, getState) => {
   const { addresses: { tokenAddresses, exchangeAddresses } } = getState();
 
-  if (tokenAddresses.addresses.filter(([ symbol ]) => symbol === label).length) {
+  if (tokenAddresses.addresses.filter(([symbol]) => symbol === label).length) {
     return;
   }
 
-  if (tokenAddresses.addresses.filter(([ symbol ]) => symbol === label).length) {
+  if (tokenAddresses.addresses.filter(([symbol]) => symbol === label).length) {
     return;
   }
 
@@ -114,16 +114,16 @@ export const addExchange = ({label, exchangeAddress, tokenAddress}) => (dispatch
 
   dispatch({
     type: ADD_EXCHANGE,
-      payload: {
+    payload: {
       label,
-        exchangeAddress,
-        tokenAddress,
+      exchangeAddress,
+      tokenAddress,
     },
   });
 };
 
 export const setAddresses = networkId => {
-  switch(networkId) {
+  switch (networkId) {
     // Main Net
     case 1:
     case '1':

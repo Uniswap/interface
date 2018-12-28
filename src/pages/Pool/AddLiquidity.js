@@ -12,7 +12,7 @@ import PlusGrey from '../../assets/images/plus-grey.svg';
 import DropdownBlue from "../../assets/images/dropdown-blue.svg";
 import DropupBlue from "../../assets/images/dropup-blue.svg";
 import ModeSelector from './ModeSelector';
-import {BigNumber as BN} from 'bignumber.js';
+import { BigNumber as BN } from 'bignumber.js';
 import EXCHANGE_ABI from '../../abi/exchange';
 import "./pool.scss";
 import promisify from "../../helpers/web3-promisfy";
@@ -375,8 +375,8 @@ class AddLiquidity extends Component {
           <span>{` ${ethValue.dividedBy(10 ** 18).toFixed(2)} ${eth} + ${tokenValue.dividedBy(10 ** decimals).toFixed(2)} ${label}`}</span>
         </div>
         <div className="pool__exchange-rate-wrapper">
-            <span className="swap__exchange-rate">
-              Your Pool Share ({ownership.multipliedBy(100).toFixed(2)}%)
+          <span className="swap__exchange-rate">
+            Your Pool Share ({ownership.multipliedBy(100).toFixed(2)}%)
             </span>
           <span>{`${ownedEth.toFixed(2)} ETH + ${ownedToken.toFixed(2)} ${label}`}</span>
         </div>
@@ -533,10 +533,10 @@ class AddLiquidity extends Component {
           onValueChange={this.onOutputChange}
           value={outputValue}
           errorMessage={outputError}
-          filteredTokens={[ 'ETH' ]}
+          filteredTokens={['ETH']}
         />
         <OversizedPanel hideBottom>
-          { this.renderInfo() }
+          {this.renderInfo()}
         </OversizedPanel>
         <div className="pool__cta-container">
           <button
@@ -558,7 +558,7 @@ class AddLiquidity extends Component {
 
 export default connect(
   state => ({
-    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||1),
+    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID || 1),
     account: state.web3connect.account,
     balances: state.web3connect.balances,
     web3: state.web3connect.web3,

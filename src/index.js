@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 ReactGA.pageview(window.location.pathname + window.location.search);
 
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
   ReactDOM.render(
     <Provider store={store}>
       <App />

@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import OversizedPanel from "../../components/OversizedPanel";
 import Dropdown from "../../assets/images/dropdown-blue.svg";
 import Modal from "../../components/Modal";
-import {CSSTransitionGroup} from "react-transition-group";
+import { CSSTransitionGroup } from "react-transition-group";
 
 const ADD = 'Add Liquidity';
 const REMOVE = 'Remove Liquidity';

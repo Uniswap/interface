@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { dismissBetaMessage } from '../../ducks/app';
-import {Tab, Tabs} from "../Tab";
+import { Tab, Tabs } from "../Tab";
 
 import './beta-message.scss';
 
@@ -42,9 +42,9 @@ class NavigationTabs extends Component {
     return (
       <div>
         <Tabs className={className}>
-          { this.renderTab('Swap', '/swap', /swap/) }
-          { this.renderTab('Send', '/send', /send/) }
-          { this.renderTab('Pool', '/add-liquidity', /add-liquidity|remove-liquidity|create-exchange/) }
+          {this.renderTab('Swap', '/swap', /swap/)}
+          {this.renderTab('Send', '/send', /send/)}
+          {this.renderTab('Pool', '/add-liquidity', /add-liquidity|remove-liquidity|create-exchange/)}
         </Tabs>
         {
           showBetaMessage && (

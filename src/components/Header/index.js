@@ -75,7 +75,7 @@ function isMobile() {
 }
 
 class BlockingWarning extends Component {
-  render () {
+  render() {
     const {
       isConnected,
       initialized,
@@ -139,7 +139,7 @@ class BlockingWarning extends Component {
   }
 }
 
-function Header (props) {
+function Header(props) {
   return (
     <div className="header">
       <BlockingWarning {...props} />

@@ -21,14 +21,14 @@ import FACTORY_ABI from '../../abi/factory';
 const FUSE_OPTIONS = {
   includeMatches: false,
   threshold: 0.0,
-  tokenize:true,
+  tokenize: true,
   location: 0,
   distance: 100,
   maxPatternLength: 45,
   minMatchCharLength: 1,
   keys: [
-    {name:"address",weight:0.8},
-    {name:"label",weight:0.5},
+    { name: "address", weight: 0.8 },
+    { name: "label", weight: 0.5 },
   ]
 };
 
@@ -64,8 +64,8 @@ class CurrencyInputPanel extends Component {
   static defaultProps = {
     selectedTokens: [],
     filteredTokens: [],
-    onCurrencySelected() {},
-    onValueChange() {},
+    onCurrencySelected() { },
+    onValueChange() { },
     selectedTokenAddress: '',
   };
 
@@ -78,15 +78,15 @@ class CurrencyInputPanel extends Component {
   createTokenList = () => {
     const { filteredTokens } = this.props;
     let tokens = this.props.tokenAddresses.addresses;
-    let tokenList = [ { value: 'ETH', label: 'ETH', address: 'ETH' } ];
+    let tokenList = [{ value: 'ETH', label: 'ETH', address: 'ETH' }];
 
     for (let i = 0; i < tokens.length; i++) {
-        let entry = { value: '', label: '' };
-        entry.value = tokens[i][0];
-        entry.label = tokens[i][0];
-        entry.address = tokens[i][1];
-        tokenList.push(entry);
-        TOKEN_ADDRESS_TO_LABEL[tokens[i][1]] = tokens[i][0];
+      let entry = { value: '', label: '' };
+      entry.value = tokens[i][0];
+      entry.label = tokens[i][0];
+      entry.address = tokens[i][1];
+      tokenList.push(entry);
+      TOKEN_ADDRESS_TO_LABEL[tokens[i][1]] = tokens[i][0];
     }
 
     return tokenList.filter(({ address }) => !filteredTokens.includes(address));
@@ -132,12 +132,12 @@ class CurrencyInputPanel extends Component {
       const exchangeAddress = fromToken[tokenAddress];
 
       if (!exchangeAddress) {
-        this.setState({loadingExchange: true});
+        this.setState({ loadingExchange: true });
         factory.methods.getExchange(tokenAddress).call((err, data) => {
           if (!err && data !== '0x0000000000000000000000000000000000000000') {
             addExchange({ label, tokenAddress, exchangeAddress: data });
           }
-          this.setState({loadingExchange: false});
+          this.setState({ loadingExchange: false });
         });
         return;
       }
@@ -266,7 +266,7 @@ class CurrencyInputPanel extends Component {
         allowance.isGreaterThanOrEqualTo(BN((value || 0) * 10 ** decimals)) &&
         !BN(allowance).isZero()
       )
-    )  {
+    ) {
       return;
     }
     const approvalTxId = pendingApprovals[selectedTokenAddress];
@@ -291,7 +291,7 @@ class CurrencyInputPanel extends Component {
             .send({ from: account }, (err, data) => {
               if (!err && data) {
                 addPendingTx(data);
-                addApprovalTx({ tokenAddress: selectedTokenAddress, txId: data});
+                addApprovalTx({ tokenAddress: selectedTokenAddress, txId: data });
               }
             });
         }}
@@ -320,7 +320,7 @@ class CurrencyInputPanel extends Component {
         <input
           type="number"
           min="0"
-          className={classnames('currency-input-panel__input',{
+          className={classnames('currency-input-panel__input', {
             'currency-input-panel__input--error': errorMessage,
           })}
           placeholder="0.0"
@@ -336,7 +336,7 @@ class CurrencyInputPanel extends Component {
           }}
           value={value}
         />
-        { this.renderUnlockButton() }
+        {this.renderUnlockButton()}
         <button
           className={classnames("currency-input-panel__currency-select", {
             'currency-input-panel__currency-select--selected': selectedTokenAddress,
@@ -358,7 +358,7 @@ class CurrencyInputPanel extends Component {
               )
               : null
           }
-          { TOKEN_ADDRESS_TO_LABEL[selectedTokenAddress] || 'Select a token' }
+          {TOKEN_ADDRESS_TO_LABEL[selectedTokenAddress] || 'Select a token'}
           <span className="currency-input-panel__dropdown-icon" />
         </button>
       </div>

@@ -19,7 +19,7 @@ class ContextualInfo extends Component {
 
   static defaultProps = {
     openModalText: 'Transaction Details',
-    renderTransactionDetails() {},
+    renderTransactionDetails() { },
     contextualInfo: '',
     modalClass: '',
     isError: false,
@@ -50,7 +50,7 @@ class ContextualInfo extends Component {
             <div
               key="open-details"
               className="contextual-info__open-details-container contextual-info__modal-button"
-              onClick={() => this.setState({showDetailModal: false})}
+              onClick={() => this.setState({ showDetailModal: false })}
             >
               <span>Transaction Details</span>
               <img src={DropupBlue} />
@@ -81,7 +81,7 @@ class ContextualInfo extends Component {
       <div
         key="open-details"
         className="contextual-info__summary-wrapper contextual-info__open-details-container"
-        onClick={() => this.setState({showDetailModal: true})}
+        onClick={() => this.setState({ showDetailModal: true })}
       >
         <span>{openModalText}</span>
         <img src={DropdownBlue} />

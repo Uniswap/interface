@@ -14,7 +14,7 @@ import './App.scss';
 
 class App extends Component {
   componentWillMount() {
-    const { initialize, startWatching} = this.props;
+    const { initialize, startWatching } = this.props;
     initialize().then(startWatching);
   };
 

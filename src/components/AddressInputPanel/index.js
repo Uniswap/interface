@@ -14,7 +14,7 @@ class AddressInputPanel extends Component {
   };
 
   static defaultProps = {
-    onChange() {},
+    onChange() { },
     value: '',
   };
 
@@ -40,7 +40,7 @@ class AddressInputPanel extends Component {
             <div className="currency-input-panel__input-row">
               <input
                 type="text"
-                className={c('address-input-panel__input',{
+                className={c('address-input-panel__input', {
                   'address-input-panel__input--error': errorMessage,
                 })}
                 placeholder="0x1234..."

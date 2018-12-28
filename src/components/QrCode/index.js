@@ -13,7 +13,7 @@ class QrCode extends Component {
   };
 
   static defaultProps = {
-    onValueReceived() {},
+    onValueReceived() { },
   };
 
   state = {
@@ -31,13 +31,13 @@ class QrCode extends Component {
     if (videoOpen && !stream && this.videoRef) {
       this.startStreamingVideo(this.videoRef)
     } else if (!videoOpen && stream) {
-      this.setState({stream: null});
+      this.setState({ stream: null });
     }
   }
 
   startStreamingVideo(videoRef) {
     if (navigator && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia({video: { facingMode: 'user'}, audio: false})
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false })
         .then((stream) => {
           videoRef.srcObject = stream;
           new QrScanner(videoRef, (val) => {
@@ -56,14 +56,14 @@ class QrCode extends Component {
   }
 
   openVideo = () => {
-    this.setState({videoOpen: true});
+    this.setState({ videoOpen: true });
   }
 
   closeVideo = () => {
     if (this.state.stream) {
       this.state.stream.stop();
     }
-    this.setState({videoOpen: false, stream: null});
+    this.setState({ videoOpen: false, stream: null });
     this.videoRef = null;
   };
 

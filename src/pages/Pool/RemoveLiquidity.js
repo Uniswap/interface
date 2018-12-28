@@ -107,7 +107,7 @@ class RemoveLiquidity extends Component {
     const tokenWithdrawn = tokenReserve.multipliedBy(ownership);
     const blockNumber = await promisify(web3, 'getBlockNumber');
     const block = await promisify(web3, 'getBlock', blockNumber);
-    const deadline =  block.timestamp + 300;
+    const deadline = block.timestamp + 300;
 
     exchange.methods.removeLiquidity(
       amount.toFixed(0),
@@ -361,7 +361,7 @@ class RemoveLiquidity extends Component {
             <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} />
           </div>
         </OversizedPanel>
-        { this.renderOutput() }
+        {this.renderOutput()}
         <div className="pool__cta-container">
           <button
             className={classnames('pool__cta-btn', {
@@ -382,7 +382,7 @@ class RemoveLiquidity extends Component {
 
 export default connect(
   state => ({
-    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||1),
+    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID || 1),
     web3: state.web3connect.web3,
     balances: state.web3connect.balances,
     account: state.web3connect.account,
