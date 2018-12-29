@@ -52,7 +52,7 @@ class ContextualInfo extends Component {
               className="contextual-info__open-details-container contextual-info__modal-button"
               onClick={() => this.setState({showDetailModal: false})}
             >
-              <span>Transaction Details</span>
+              <span>{this.props.openModalText}</span>
               <img src={DropupBlue} />
             </div>
             {this.props.renderTransactionDetails()}

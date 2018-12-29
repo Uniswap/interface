@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import UAParser from 'ua-parser-js';
+import { withNamespaces } from 'react-i18next';
 import Logo from '../Logo';
 import CoinbaseWalletLogo from '../../assets/images/coinbase-wallet-logo.png';
 import TrustLogo from '../../assets/images/trust-wallet-logo.svg';
@@ -77,6 +78,7 @@ function isMobile() {
 class BlockingWarning extends Component {
   render () {
     const {
+      t,
       isConnected,
       initialized,
       networkId,
@@ -90,21 +92,21 @@ class BlockingWarning extends Component {
 
     if (wrongNetwork && initialized) {
       content = [
-        <div key="warning-title">You are on the wrong network</div>,
+        <div key="warning-title">{t("wrongNetwork")}</div>,
         <div key="warning-desc" className="header__dialog__description">
-          {`Please switch to ${correctNetwork}`}
+          {t("switchNetwork", {correctNetwork})}
         </div>,
       ];
     }
 
     if (!isConnected && initialized) {
       content = [
-        <div key="warning-title">No Ethereum wallet found</div>,
+        <div key="warning-title">{t("noWallet")}</div>,
         <div key="warning-desc" className="header__dialog__description">
           {
             isMobile()
-              ? 'Please visit us from a web3-enabled mobile browser such as Trust Wallet or Coinbase Wallet.'
-              : 'Please visit us after installing Metamask on Chrome or Brave.'
+              ? t("installWeb3MobileBrowser")
+              : t("installMetamask")
           }
         </div>,
         <div key="warning-logos" className="header__download">
@@ -171,4 +173,4 @@ export default connect(
     web3: state.web3connect.web3,
     networkId: state.web3connect.networkId,
   }),
-)(Header);
+)(withNamespaces()(Header));
