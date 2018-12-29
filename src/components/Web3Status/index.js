@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import Web3 from 'web3';
 import Jazzicon from 'jazzicon';
 import { CSSTransitionGroup } from "react-transition-group";
+import { withNamespaces } from 'react-i18next';
 import './web3-status.scss';
 import Modal from '../Modal';
 
@@ -35,7 +36,7 @@ class Web3Status extends Component {
             {transaction}
           </div>
           <div className="pending-modal__pending-indicator">
-            <div className="loader" /> Pending
+            <div className="loader" /> {this.props.t("pending")}
           </div>
         </div>
       );
@@ -69,7 +70,7 @@ class Web3Status extends Component {
   }
 
   render() {
-    const { address, pending, confirmed } = this.props;
+    const { t, address, pending, confirmed } = this.props;
     const hasPendingTransactions = !!pending.length;
     const hasConfirmedTransactions = !!confirmed.length;
 
@@ -83,7 +84,7 @@ class Web3Status extends Component {
         onClick={this.handleClick}
       >
         <div className="web3-status__text">
-          { hasPendingTransactions ? getPendingText(pending) : getText(address) }
+          {hasPendingTransactions ? getPendingText(pending, t("pending")) : getText(address, t("disconnected")) }
         </div>
         <div
           className="web3-status__identicon"
@@ -108,18 +109,18 @@ class Web3Status extends Component {
 
 
 
-function getPendingText(pendingTransactions) {
+function getPendingText(pendingTransactions, pendingLabel) {
   return (
     <div className="web3-status__pending-container">
       <div className="loader" />
-      <span key="text">{pendingTransactions.length} Pending</span>
+      <span key="text">{pendingTransactions.length} {pendingLabel}</span>
     </div>
   );
 }
 
-function getText(text) {
+function getText(text, disconnectedText) {
   if (!text || text.length < 42 || !Web3.utils.isHexStrict(text)) {
-    return 'Disconnected';
+    return disconnectedText;
   }
 
   const address = Web3.utils.toChecksumAddress(text);
@@ -145,4 +146,4 @@ export default connect(
       confirmed: state.web3connect.transactions.confirmed,
     };
   }
-)(Web3Status);
+)(withNamespaces()(Web3Status));
