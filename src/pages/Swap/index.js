@@ -701,7 +701,7 @@ class Swap extends Component {
 
     return (
       <div className="swap">
-        <MediaQuery query="(max-device-width: 767px)">
+        <MediaQuery query="(max-width: 767px)">
           <Header />
         </MediaQuery>
         <div
