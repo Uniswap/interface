@@ -5,9 +5,10 @@
     height: 100%;
     position: relative;
 
-    @media only screen and (min-device-width : 768px) {
+    @media only screen and (min-width : 768px) {
       margin: auto;
-      width: 560px;
+      max-width: 560px;
+      width: 100%;
     }
 
     & > div {
@@ -25,7 +26,7 @@
   height: 100vh;
   @extend %col-nowrap;
 
-  @media only screen and (min-device-width : 768px) {
+  @media only screen and (min-width : 768px) {
     //max-width: 560px;
   }
 }
