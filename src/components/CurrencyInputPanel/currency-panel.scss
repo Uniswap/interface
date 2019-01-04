@@ -254,7 +254,7 @@
     font-weight: 200;
   }
 
-  @media only screen and (min-device-width : 768px) {
+  @media only screen and (min-width : 768px) {
     max-width: 560px;
     max-height: 768px;
     position: absolute;
