@@ -719,7 +719,7 @@ class Send extends Component {
 
     return (
       <div className="send">
-        <MediaQuery query="(max-device-width: 767px)">
+        <MediaQuery query="(max-width: 767px)">
           <Header />
         </MediaQuery>
         <div
