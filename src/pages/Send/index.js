@@ -770,6 +770,7 @@ class Send extends Component {
             onChange={address => this.setState({recipient: address})}
           />
           { this.renderExchangeRate() }
+          { this.renderSummary(inputError, outputError) }
           <div className="swap__cta-container">
             <button
               className={classnames('swap__cta-btn', {
@@ -782,7 +783,6 @@ class Send extends Component {
             </button>
           </div>
         </div>
-        { this.renderSummary(inputError, outputError) }
       </div>
     );
   }

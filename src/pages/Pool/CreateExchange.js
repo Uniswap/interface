@@ -149,7 +149,7 @@ class CreateExchange extends Component {
     if (errorMessage) {
       return (
         <div className="create-exchange__summary-panel">
-          <div className="create-exchange__summary-text">{errorMessage}</div>
+          <div className="create-exchange__summary-text create-exchange--error">{errorMessage}</div>
         </div>
       )
     }
@@ -200,6 +200,7 @@ class CreateExchange extends Component {
             </div>
           </div>
         </OversizedPanel>
+        { this.renderSummary() }
         <div className="pool__cta-container">
           <button
             className={classnames('pool__cta-btn', {
@@ -211,7 +212,6 @@ class CreateExchange extends Component {
             Create Exchange
           </button>
         </div>
-        { this.renderSummary() }
       </div>
     );
   }
