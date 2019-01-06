@@ -377,6 +377,7 @@ class RemoveLiquidity extends Component {
           </div>
         </OversizedPanel>
         { this.renderOutput() }
+        { this.renderSummary(errorMessage) }
         <div className="pool__cta-container">
           <button
             className={classnames('pool__cta-btn', {
@@ -389,8 +390,7 @@ class RemoveLiquidity extends Component {
             Remove Liquidity
           </button>
         </div>
-      </div>,
-      this.renderSummary(errorMessage)
+      </div>
     ];
   }
 }
