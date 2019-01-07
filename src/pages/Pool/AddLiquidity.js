@@ -430,7 +430,6 @@ class AddLiquidity extends Component {
         key="context-info"
         contextualInfo={contextualInfo}
         isError={isError}
-        modalClass="pool__summary-modal"
         renderTransactionDetails={this.renderTransactionDetails}
       />
     );
@@ -457,10 +456,10 @@ class AddLiquidity extends Component {
     if (this.isNewExchange()) {
       return (
         <div>
-          <div className="pool__summary-modal__item">You are adding {b(`${inputValue} ETH`)} and {b(`${outputValue} ${label}`)} to the liquidity pool.</div>
-          <div className="pool__summary-modal__item">You are setting the initial exchange rate to {b(`1 ETH = ${BN(outputValue).dividedBy(inputValue).toFixed(4)} ${label}`)}.</div>
-          <div className="pool__summary-modal__item">You will mint {b(`${inputValue} liquidity tokens`)}.</div>
-          <div className="pool__summary-modal__item">Current total supply of liquidity tokens is 0.</div>
+          <div className="pool__summary-item">You are adding {b(`${inputValue} ETH`)} and {b(`${outputValue} ${label}`)} to the liquidity pool.</div>
+          <div className="pool__summary-item">You are setting the initial exchange rate to {b(`1 ETH = ${BN(outputValue).dividedBy(inputValue).toFixed(4)} ${label}`)}.</div>
+          <div className="pool__summary-item">You will mint {b(`${inputValue} liquidity tokens`)}.</div>
+          <div className="pool__summary-item">Current total supply of liquidity tokens is 0.</div>
         </div>
       );
     }
@@ -475,10 +474,10 @@ class AddLiquidity extends Component {
 
     return (
       <div>
-        <div className="pool__summary-modal__item">You are adding between {b(`${+BN(inputValue).toFixed(7)} ETH`)} and {b(`${+minOutput.toFixed(7)} - ${+maxOutput.toFixed(7)} ${label}`)} into the liquidity pool.</div>
-        <div className="pool__summary-modal__item">You will mint {b(+liquidityMinted.toFixed(7))} liquidity tokens.</div>
-        <div className="pool__summary-modal__item">Current total supply of liquidity tokens is {b(+adjTotalSupply.toFixed(7))}</div>
-        <div className="pool__summary-modal__item">At current exchange rate, each pool token is worth {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH and {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
+        <div className="pool__summary-item">You are adding between {b(`${+BN(inputValue).toFixed(7)} ETH`)} and {b(`${+minOutput.toFixed(7)} - ${+maxOutput.toFixed(7)} ${label}`)} into the liquidity pool.</div>
+        <div className="pool__summary-item">You will mint {b(+liquidityMinted.toFixed(7))} liquidity tokens.</div>
+        <div className="pool__summary-item">Current total supply of liquidity tokens is {b(+adjTotalSupply.toFixed(7))}</div>
+        <div className="pool__summary-item">At current exchange rate, each pool token is worth {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH and {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
       </div>
     );
   }
@@ -559,6 +558,7 @@ class AddLiquidity extends Component {
         <OversizedPanel hideBottom>
           { this.renderInfo() }
         </OversizedPanel>
+        { this.renderSummary(inputError, outputError) }
         <div className="pool__cta-container">
           <button
             className={classnames('pool__cta-btn', {
@@ -571,8 +571,7 @@ class AddLiquidity extends Component {
             Add Liquidity
           </button>
         </div>
-      </div>,
-      this.renderSummary(inputError, outputError)
+      </div>
     ];
   }
 }

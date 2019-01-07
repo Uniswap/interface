@@ -743,6 +743,7 @@ class Swap extends Component {
             disableUnlock
           />
           { this.renderExchangeRate() }
+          { this.renderSummary(inputError, outputError) }
           <div className="swap__cta-container">
             <button
               className={classnames('swap__cta-btn', {
@@ -755,7 +756,6 @@ class Swap extends Component {
             </button>
           </div>
         </div>
-        { this.renderSummary(inputError, outputError) }
       </div>
     );
   }

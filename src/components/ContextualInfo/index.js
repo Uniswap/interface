@@ -1,70 +1,47 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import c from 'classnames';
-import { CSSTransitionGroup } from "react-transition-group";
 
-import Modal from '../Modal';
 import DropdownBlue from "../../assets/images/dropdown-blue.svg";
 import DropupBlue from "../../assets/images/dropup-blue.svg";
 import './contextual-info.scss';
 
 class ContextualInfo extends Component {
   static propTypes = {
-    openModalText: PropTypes.string,
+    openDetailsText: PropTypes.string,
     renderTransactionDetails: PropTypes.func,
     contextualInfo: PropTypes.string,
-    modalClass: PropTypes.string,
     isError: PropTypes.bool,
   };
 
   static defaultProps = {
-    openModalText: 'Transaction Details',
+    openDetailsText: 'Transaction Details',
+    closeDetailsText: 'Hide Details',
     renderTransactionDetails() {},
     contextualInfo: '',
-    modalClass: '',
     isError: false,
   };
 
   state = {
-    showDetailModal: false,
+    showDetails: false,
   };
 
-  renderModal() {
-    if (!this.state.showDetailModal) {
+  renderDetails() {
+    if (!this.state.showDetails) {
       return null;
     }
 
-    const { modalClass } = this.props;
-
     return (
-      <Modal key="modal" onClose={() => this.setState({ showDetailModal: false })}>
-        <CSSTransitionGroup
-          transitionName="summary-modal"
-          transitionAppear={true}
-          transitionLeave={true}
-          transitionAppearTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionEnterTimeout={200}
-        >
-          <div className={c('contextual-info__summary-modal', modalClass)}>
-            <div
-              key="open-details"
-              className="contextual-info__open-details-container contextual-info__modal-button"
-              onClick={() => this.setState({showDetailModal: false})}
-            >
-              <span>Transaction Details</span>
-              <img src={DropupBlue} />
-            </div>
-            {this.props.renderTransactionDetails()}
-          </div>
-        </CSSTransitionGroup>
-      </Modal>
-    );
+      <div className="contextual-info__details">
+        {this.props.renderTransactionDetails()}
+      </div>
+    )
   }
 
   render() {
     const {
-      openModalText,
+      openDetailsText,
+      closeDetailsText,
       contextualInfo,
       isError,
     } = this.props;
@@ -81,12 +58,23 @@ class ContextualInfo extends Component {
       <div
         key="open-details"
         className="contextual-info__summary-wrapper contextual-info__open-details-container"
-        onClick={() => this.setState({showDetailModal: true})}
+        onClick={() => this.setState((prevState) => {
+          return { showDetails: !prevState.showDetails }
+        })}
       >
-        <span>{openModalText}</span>
-        <img src={DropdownBlue} />
+        {!this.state.showDetails ? (
+          <>
+            <span>{openDetailsText}</span>
+            <img src={DropdownBlue} />
+          </>
+        ) : (
+          <>
+            <span>{closeDetailsText}</span>
+            <img src={DropupBlue} />
+          </>
+        )}
       </div>,
-      this.renderModal()
+      this.renderDetails()
     ]
   }
 }
