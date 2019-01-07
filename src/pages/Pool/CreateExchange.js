@@ -181,36 +181,39 @@ class CreateExchange extends Component {
             'header--inactive': !isConnected,
           })}
         />
-        <ModeSelector title="Create Exchange" />
-        <AddressInputPanel
-          title="Token Address"
-          value={tokenAddress}
-          onChange={this.onChange}
-          errorMessage={errorMessage}
-        />
-        <OversizedPanel hideBottom>
-          <div className="pool__summary-panel">
-            <div className="pool__exchange-rate-wrapper">
-              <span className="pool__exchange-rate">Label</span>
-              <span>{label || ' - '}</span>
+
+        <div className='ani_title_fade_in'>
+          <ModeSelector title="Create Exchange" />
+          <AddressInputPanel
+            title="Token Address"
+            value={tokenAddress}
+            onChange={this.onChange}
+            errorMessage={errorMessage}
+          />
+          <OversizedPanel hideBottom>
+            <div className="pool__summary-panel">
+              <div className="pool__exchange-rate-wrapper">
+                <span className="pool__exchange-rate">Label</span>
+                <span>{label || ' - '}</span>
+              </div>
+              <div className="pool__exchange-rate-wrapper">
+                <span className="swap__exchange-rate">Decimals</span>
+                <span>{decimals || ' - '}</span>
+              </div>
             </div>
-            <div className="pool__exchange-rate-wrapper">
-              <span className="swap__exchange-rate">Decimals</span>
-              <span>{decimals || ' - '}</span>
-            </div>
+          </OversizedPanel>
+          { this.renderSummary() }
+          <div className="pool__cta-container">
+            <button
+              className={classnames('pool__cta-btn', {
+                'swap--inactive': !isConnected,
+              })}
+              disabled={!isValid}
+              onClick={this.onCreateExchange}
+            >
+              Create Exchange
+            </button>
           </div>
-        </OversizedPanel>
-        { this.renderSummary() }
-        <div className="pool__cta-container">
-          <button
-            className={classnames('pool__cta-btn', {
-              'swap--inactive': !isConnected,
-            })}
-            disabled={!isValid}
-            onClick={this.onCreateExchange}
-          >
-            Create Exchange
-          </button>
         </div>
       </div>
     );
