@@ -185,7 +185,6 @@ class RemoveLiquidity extends Component {
         key="context-info"
         contextualInfo={contextualInfo}
         isError={isError}
-        modalClass="pool__summary-modal"
         renderTransactionDetails={this.renderTransactionDetails}
       />
     );
@@ -229,10 +228,10 @@ class RemoveLiquidity extends Component {
 
     return (
       <div>
-        <div className="pool__summary-modal__item">You are removing between {b(`${+BN(ethWithdrawn).toFixed(7)} ETH`)} and {b(`${+minTokenWithdrawn} - ${+maxTokenWithdrawn} ${label}`)} into the liquidity pool.</div>
-        <div className="pool__summary-modal__item">You will remove {b(+input)} liquidity tokens.</div>
-        <div className="pool__summary-modal__item">Current total supply of liquidity tokens is {b(+adjTotalSupply.toFixed(7))}</div>
-        <div className="pool__summary-modal__item">At current exchange rate, each pool token is worth {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH and {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
+        <div className="pool__summary-item">You are removing between {b(`${+BN(ethWithdrawn).toFixed(7)} ETH`)} and {b(`${+minTokenWithdrawn} - ${+maxTokenWithdrawn} ${label}`)} into the liquidity pool.</div>
+        <div className="pool__summary-item">You will remove {b(+input)} liquidity tokens.</div>
+        <div className="pool__summary-item">Current total supply of liquidity tokens is {b(+adjTotalSupply.toFixed(7))}</div>
+        <div className="pool__summary-item">At current exchange rate, each pool token is worth {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH and {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
       </div>
     );
   }
@@ -377,6 +376,7 @@ class RemoveLiquidity extends Component {
           </div>
         </OversizedPanel>
         { this.renderOutput() }
+        { this.renderSummary(errorMessage) }
         <div className="pool__cta-container">
           <button
             className={classnames('pool__cta-btn', {
@@ -389,8 +389,7 @@ class RemoveLiquidity extends Component {
             Remove Liquidity
           </button>
         </div>
-      </div>,
-      this.renderSummary(errorMessage)
+      </div>
     ];
   }
 }
