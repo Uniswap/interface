@@ -46,7 +46,7 @@ class App extends Component {
         <Web3Connect />
         <BrowserRouter>
           <Switch>
-            <div className="app__switch-wrapper">
+            <div className="app__wrapper">
               <Route exact path="/swap" component={Swap} />
               <Route exact path="/send" component={Send} />
               <Route exact path="/add-liquidity" component={Pool} />
