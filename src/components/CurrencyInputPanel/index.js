@@ -219,21 +219,24 @@ class CurrencyInputPanel extends Component {
           transitionEnterTimeout={200}
         >
           <div className="token-modal">
-            <div className="token-modal__search-container">
-              <input
-                type="text"
-                placeholder="Search Token or Paste Address"
-                className="token-modal__search-input"
-                onChange={e => {
-                  this.setState({ searchQuery: e.target.value });
-                }}
-              />
-              <img src={SearchIcon} className="token-modal__search-icon" />
-            </div>
-            <div className="token-modal__token-list">
-              {this.renderTokenList()}
+            <div className="token-modal-hold">
+              <div className="token-modal__search-container">
+                <input
+                  type="text"
+                  placeholder="Search Token or Paste Address"
+                  className="token-modal__search-input"
+                  onChange={e => {
+                    this.setState({ searchQuery: e.target.value });
+                  }}
+                />
+                <img src={SearchIcon} className="token-modal__search-icon" />
+              </div>
+              <div className="token-modal__token-list">
+                {this.renderTokenList()}
+              </div>
             </div>
           </div>
+
         </CSSTransitionGroup>
       </Modal>
     );

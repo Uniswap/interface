@@ -153,17 +153,13 @@
   }
 }
 
-
 .token-modal {
-  background-color: $white;
   position: relative;
   bottom: 21rem;
   width: 100%;
-  height: 21rem;
   z-index: 2000;
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
-  transition: 250ms ease-in-out;
+  height: 21rem;
+  transition: all 250ms ease-in-out;  
 
   &__search-container {
     @extend %row-nowrap;
@@ -214,6 +210,7 @@
 
     &:hover {
       background-color: $concrete-gray;
+      border-radius: 0.25rem;
 
       .token-modal__token-label {
         color: $black;
@@ -254,21 +251,44 @@
   }
 
   @media only screen and (min-width : 768px) {
+    box-sizing: border-box;
     max-width: 560px;
-    max-height: 768px;
+    height: 100vh;
     position: absolute;
     margin-left: auto;
     margin-right: auto;
-    border-radius: 1rem;
     padding-bottom: 1rem;
-    left: 0;
-    right: 0;
     bottom: 0;
     top: 0;
-    margin-top: 4rem;
+    left: 0px;
+    right: 0px;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+
+    &__token-list {
+      width: 100%;
+      flex: 1;
+    }
   }
 }
 
+.token-modal-hold {
+  background-color: $white;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  display: flex;
+  flex-flow: column wrap;
+  min-height: 195px;
+  overflow: hidden;
+
+  @media only screen and (min-width : 768px) {
+    height: 100%;
+    position: relative;
+    border: 2px solid #f00;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  }
+}
 
 .token-modal-appear {
   bottom: 0;
