@@ -6,8 +6,8 @@ import UAParser from 'ua-parser-js';
 import Logo from '../Logo';
 import CoinbaseWalletLogo from '../../assets/images/coinbase-wallet-logo.png';
 import TrustLogo from '../../assets/images/trust-wallet-logo.svg';
-import BraveLogo from '../../assets/images/brave-logo.png';
-import MetamaskLogo from '../../assets/images/metamask-logo.png';
+import BraveLogo from '../../assets/images/brave-logo.svg';
+import MetamaskLogo from '../../assets/images/metamask-logo.svg';
 import Web3Status from '../Web3Status';
 
 import "./header.scss";
