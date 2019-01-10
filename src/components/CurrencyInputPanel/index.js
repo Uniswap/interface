@@ -7,7 +7,6 @@ import { withRouter } from 'react-router-dom';
 import Fuse from '../../helpers/fuse';
 import Modal from '../Modal';
 import TokenLogo from '../TokenLogo';
-import SearchIcon from '../../assets/images/magnifying-glass.svg';
 import { selectors, addPendingTx } from "../../ducks/web3connect";
 import { addApprovalTx } from "../../ducks/pending";
 import { addExchange } from "../../ducks/addresses";
@@ -73,6 +72,7 @@ class CurrencyInputPanel extends Component {
     isShowingModal: false,
     searchQuery: '',
     loadingExchange: false,
+    searchCancel: false
   };
 
   createTokenList = () => {
@@ -96,9 +96,21 @@ class CurrencyInputPanel extends Component {
     this.setState({
       searchQuery: '',
       isShowingModal: false,
+      searchCancel: false
     });
 
     this.props.onCurrencySelected(address);
+  };
+
+
+  onSearchCancel = () => {
+
+    if((!this.state.searchCancel) === false) {
+      this.setState({
+        searchCancel: !this.state.searchCancel,
+        searchQuery: ''
+      });
+    }
   };
 
   renderTokenList() {
@@ -224,11 +236,18 @@ class CurrencyInputPanel extends Component {
                 type="text"
                 placeholder="Search Token or Paste Address"
                 className="token-modal__search-input"
+                value={this.state.searchQuery}
                 onChange={e => {
-                  this.setState({ searchQuery: e.target.value });
+
+                  this.setState({ searchQuery: e.target.value, searchCancel: (e.target.value !== '') });
                 }}
               />
-              <img src={SearchIcon} className="token-modal__search-icon" />
+
+              <span class={`search-icon ${(this.state.searchCancel === true) && `open`}`}>
+                <div className='clickable' onClick={() => {this.onSearchCancel()}}></div>
+                <span class="circle"></span>
+                <span class="handle"></span>
+              </span>
             </div>
             <div className="token-modal__token-list">
               {this.renderTokenList()}

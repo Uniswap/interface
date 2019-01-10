@@ -253,6 +253,89 @@
     color: $dove-gray;
   }
 
+  .search-icon {
+    height: 1px;
+    width: 1px;
+    display: inline-block;
+    padding: 0.5em;
+    margin: 0px;
+    position: relative;
+    transform: scale(-0.5, 0.5);
+    top: -4px;
+    opacity: 0.75;
+    transition: opacity 0.2s;
+
+    .clickable {
+      width: 45px;
+      height: 45px;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      z-index: 2;
+      display: inline-block;
+
+      &:active {
+        border: none;
+      }
+    }
+    .circle {
+      position: relative;
+      display: block;
+      height: 24px;
+      width: 24px;
+      background-color: white;
+      border-radius: 70px;
+      z-index:0;
+      border: 5px solid $dove-gray;
+      transition: all 0.6s cubic-bezier(.25,1.7,.35,.8);
+      z-index: 1;
+      top: -9px;
+      left: -9px;
+    }
+    .handle {
+      position: absolute;
+      background-color: $dove-gray;
+      top: 22px;
+      left: 2px;
+      width: 45px;
+      height: 5px;
+      display: block;
+      transform: rotate(45deg);
+      float: right;
+      border-radius: 0px;
+      &:after {
+        content:"";
+        background-color: $dove-gray;
+        width: 45px;
+        height: 5px;
+        display: block;
+        float: right;
+        border-radius: 2px;
+        transition: all 0.6s cubic-bezier(.25,1.7,.35,.8);
+        z-index: -1;
+      }
+    }
+    &.open {
+
+      &:hover {
+        opacity: 1;
+      }
+      .clickable {
+        cursor: pointer;
+      }
+      .circle {
+        transform: scale(.0);
+        transform-origin: 30% 40%;
+        background: white;
+        border-color:white;
+      }
+      .handle:after {
+        transform-origin: center center;
+        transform: rotate(90deg);
+      }
+    }
+  }
+
   @media only screen and (min-width : 768px) {
     max-width: 560px;
     max-height: 768px;
