@@ -155,11 +155,13 @@
 
 .token-modal {
   position: relative;
-  bottom: 21rem;
+  bottom: 23rem;
   width: 100%;
+  max-width: 560px;
   z-index: 2000;
-  height: 21rem;
+  height: 23rem;
   transition: all 250ms ease-in-out;  
+  margin: 0px auto;
 
   &__search-container {
     @extend %row-nowrap;
@@ -177,7 +179,7 @@
 
   &__token-list {
     -webkit-overflow-scrolling: touch;
-    height: 17.5rem;
+    height: 19.5rem;
     overflow-y: auto;
   }
 
@@ -249,13 +251,28 @@
     color: $dove-gray;
   }
 
+  .token-modal-hold {
+    background-color: $white;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    display: flex;
+    flex-flow: column wrap;
+    min-height: 195px;
+    overflow: hidden;
+    height: inherit;
+
+    @media only screen and (min-width : 768px) {
+      height: 100%;
+      position: relative;
+      border-bottom-left-radius: 1rem;
+      border-bottom-right-radius: 1rem;
+    }
+  }
+
   @media only screen and (min-width : 768px) {
     box-sizing: border-box;
-    max-width: 560px;
     height: 100vh;
     position: absolute;
-    margin-left: auto;
-    margin-right: auto;
     padding-bottom: 1rem;
     bottom: 0;
     top: 0;
@@ -268,24 +285,6 @@
       width: 100%;
       flex: 1;
     }
-  }
-}
-
-.token-modal-hold {
-  background-color: $white;
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
-  display: flex;
-  flex-flow: column wrap;
-  min-height: 195px;
-  overflow: hidden;
-
-  @media only screen and (min-width : 768px) {
-    height: 100%;
-    position: relative;
-    border: 2px solid #f00;
-    border-bottom-left-radius: 1rem;
-    border-bottom-right-radius: 1rem;
   }
 }
 
