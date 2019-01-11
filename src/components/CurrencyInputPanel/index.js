@@ -244,7 +244,7 @@ class CurrencyInputPanel extends Component {
               />
 
               <span class={`search-icon ${(this.state.searchCancel === true) && `open`}`}>
-                <div className='clickable' onClick={() => {this.onSearchCancel()}}></div>
+                <span className='clickable' onClick={() => {this.onSearchCancel()}}></span>
                 <span class="circle"></span>
                 <span class="handle"></span>
               </span>
