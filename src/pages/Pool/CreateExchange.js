@@ -182,7 +182,7 @@ class CreateExchange extends Component {
           })}
         />
 
-        <ModeSelector title="Create Exchange" />
+        <ModeSelector title={t("createExchange")} />
         <AddressInputPanel
           title="Token Address"
           value={tokenAddress}
