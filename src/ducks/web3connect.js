@@ -24,6 +24,7 @@ const initialState = {
   web3: null,
   networkId: 0,
   initialized: false,
+  networkIdSet: 0,
   account: '',
   balances: {
     ethereum: {},
@@ -121,29 +122,30 @@ export const initialize = () => (dispatch, getState) => {
         await window.ethereum.enable();
         dispatch({
           type: INITIALIZE,
-          payload: web3,
+          payload: {web3: web3, networkIdSet: 2}
         });
         resolve(web3);
         return;
       } catch (error) {
         console.error('User denied access.');
-        dispatch({ type: INITIALIZE });
+        dispatch({ type: INITIALIZE, payload: {networkIdSet: 0}});
         reject();
         return;
       }
     }
 
     if (typeof window.web3 !== 'undefined') {
+
       const web3 = new Web3(window.web3.currentProvider);
       dispatch({
         type: INITIALIZE,
-        payload: web3,
+        payload: {web3: web3, networkIdSet: 2},
       });
       resolve(web3);
       return;
     }
 
-    dispatch({ type: INITIALIZE });
+    dispatch({ type: INITIALIZE, payload: { networkIdSet: 0}});
     reject();
   })
 };
@@ -385,13 +387,24 @@ export const startWatching = () => async (dispatch, getState) => {
 };
 
 export default function web3connectReducer(state = initialState, { type, payload }) {
+
   switch (type) {
     case INITIALIZE:
-      return {
+      let web3, networkIdSet, nState;
+
+      if(payload !== undefined) {
+        payload.web3 ? web3 = payload.web3 : web3 = null;
+        payload.networkIdSet ? networkIdSet = payload.networkIdSet : networkIdSet = null;
+      }
+      nState = {
         ...state,
-        web3: payload,
+        networkIdSet: networkIdSet,
         initialized: true,
       };
+      if(web3 !== null) {
+        nState['web3'] = web3;
+      }
+      return nState;
     case UPDATE_ACCOUNT:
       return {
         ...state,
@@ -489,7 +502,7 @@ export default function web3connectReducer(state = initialState, { type, payload
         },
       };
     case UPDATE_NETWORK_ID:
-      return { ...state, networkId: payload };
+      return { ...state, networkId: payload, networkIdSet: 1 };
     case ADD_PENDING_TX:
       return {
         ...state,

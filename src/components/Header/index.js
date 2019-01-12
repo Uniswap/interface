@@ -81,6 +81,7 @@ class BlockingWarning extends Component {
       t,
       isConnected,
       initialized,
+      networkIdSet,
       networkId,
     } = this.props;
     let content = [];
@@ -88,18 +89,10 @@ class BlockingWarning extends Component {
     const correctNetworkId = process.env.REACT_APP_NETWORK_ID || 1;
     const correctNetwork = process.env.REACT_APP_NETWORK || 'Main Ethereum Network';
 
-    const wrongNetwork = networkId != correctNetworkId;
+    const wrongNetwork = networkId != correctNetworkId && networkId !== 0;
 
-    if (wrongNetwork && initialized) {
-      content = [
-        <div key="warning-title">{t("wrongNetwork")}</div>,
-        <div key="warning-desc" className="header__dialog__description">
-          {t("switchNetwork", {correctNetwork})}
-        </div>,
-      ];
-    }
-
-    if (!isConnected && initialized) {
+    if (!isConnected && initialized && networkIdSet !== 2) {
+    
       content = [
         <div key="warning-title">{t("noWallet")}</div>,
         <div key="warning-desc" className="header__dialog__description">
@@ -125,8 +118,20 @@ class BlockingWarning extends Component {
                 ]
               )
           }
-        </div>,
+        </div>
       ];
+   
+    } else if (wrongNetwork && initialized) {
+        content = [
+          <div key="warning-title">{t("wrongNetwork")}</div>,
+          <div key="warning-desc" className="header__dialog__description">
+            {t("switchNetwork", {correctNetwork})}
+          </div>,
+        ];
+    }
+
+    if(content.length === 0) {
+      return false;
     }
 
     return (
@@ -142,6 +147,7 @@ class BlockingWarning extends Component {
 }
 
 function Header (props) {
+
   return (
     <div className="header">
       <BlockingWarning {...props} />
@@ -169,6 +175,7 @@ export default connect(
   state => ({
     currentAddress: state.web3connect.account,
     initialized: state.web3connect.initialized,
+    networkIdSet: state.web3connect.networkIdSet,
     isConnected: !!state.web3connect.account,
     web3: state.web3connect.web3,
     networkId: state.web3connect.networkId,
