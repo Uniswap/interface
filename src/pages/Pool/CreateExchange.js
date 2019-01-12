@@ -181,7 +181,6 @@ class CreateExchange extends Component {
             'header--inactive': !isConnected,
           })}
         />
-
         <ModeSelector title={t("createExchange")} />
         <AddressInputPanel
           title="Token Address"
