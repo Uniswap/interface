@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { withNamespaces } from 'react-i18next';
 import OversizedPanel from "../../components/OversizedPanel";
 import Dropdown from "../../assets/images/dropdown-blue.svg";
 import Modal from "../../components/Modal";
@@ -55,19 +56,19 @@ class ModeSelector extends Component {
               className="pool-modal__item"
               onClick={() => this.changeView(ADD)}
             >
-              {ADD}
+              {this.props.t("addLiquidity")}
             </div>
             <div
               className="pool-modal__item"
               onClick={() => this.changeView(REMOVE)}
             >
-              {REMOVE}
+              {this.props.t("removeLiquidity")}
             </div>
             <div
               className="pool-modal__item"
               onClick={() => this.changeView(CREATE)}
             >
-              {CREATE}
+              {this.props.t("createExchange")}
             </div>
           </div>
         </CSSTransitionGroup>
@@ -93,4 +94,4 @@ class ModeSelector extends Component {
   }
 }
 
-export default withRouter(ModeSelector);
+export default withRouter(withNamespaces()(ModeSelector));
