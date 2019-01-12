@@ -32,28 +32,9 @@ class ContextualInfo extends Component {
     }
 
     return (
-      <Modal key="modal" onClose={() => this.setState({ showDetailModal: false })}>
-        <CSSTransitionGroup
-          transitionName="summary-modal"
-          transitionAppear={true}
-          transitionLeave={true}
-          transitionAppearTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionEnterTimeout={200}
-        >
-          <div className={c('contextual-info__summary-modal', modalClass)}>
-            <div
-              key="open-details"
-              className="contextual-info__open-details-container contextual-info__modal-button"
-              onClick={() => this.setState({showDetailModal: false})}
-            >
-              <span>{this.props.openModalText}</span>
-              <img src={DropupBlue} />
-            </div>
-            {this.props.renderTransactionDetails()}
-          </div>
-        </CSSTransitionGroup>
-      </Modal>
+      <div className="contextual-info__details">
+        {this.props.renderTransactionDetails()}
+      </div>
     );
   }
 
