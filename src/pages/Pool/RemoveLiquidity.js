@@ -359,39 +359,35 @@ class RemoveLiquidity extends Component {
             'header--inactive': !isConnected,
           })}
         />
-
-        <div className='ani_title_fade_in'>
-
-          <ModeSelector title="Remove Liquidity" />
-          <CurrencyInputPanel
-            title="Pool Tokens"
-            extraText={this.getBalance(tokenAddress)}
-            onValueChange={this.onInputChange}
-            value={value}
-            errorMessage={errorMessage}
-            selectedTokenAddress={tokenAddress}
-            onCurrencySelected={this.onTokenSelect}
-            filteredTokens={['ETH']}
-          />
-          <OversizedPanel>
-            <div className="swap__down-arrow-background">
-              <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} />
-            </div>
-          </OversizedPanel>
-          { this.renderOutput() }
-          { this.renderSummary(errorMessage) }
-          <div className="pool__cta-container">
-            <button
-              className={classnames('pool__cta-btn', {
-                'swap--inactive': !isConnected,
-                'pool__cta-btn--inactive': !isValid,
-              })}
-              disabled={!isValid}
-              onClick={this.onRemoveLiquidity}
-            >
-              Remove Liquidity
-            </button>
+        <ModeSelector title="Remove Liquidity" />
+        <CurrencyInputPanel
+          title="Pool Tokens"
+          extraText={this.getBalance(tokenAddress)}
+          onValueChange={this.onInputChange}
+          value={value}
+          errorMessage={errorMessage}
+          selectedTokenAddress={tokenAddress}
+          onCurrencySelected={this.onTokenSelect}
+          filteredTokens={['ETH']}
+        />
+        <OversizedPanel>
+          <div className="swap__down-arrow-background">
+            <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} />
           </div>
+        </OversizedPanel>
+        { this.renderOutput() }
+        { this.renderSummary(errorMessage) }
+        <div className="pool__cta-container">
+          <button
+            className={classnames('pool__cta-btn', {
+              'swap--inactive': !isConnected,
+              'pool__cta-btn--inactive': !isValid,
+            })}
+            disabled={!isValid}
+            onClick={this.onRemoveLiquidity}
+          >
+            Remove Liquidity
+          </button>
         </div>
       </div>
     ];

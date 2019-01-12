@@ -714,48 +714,46 @@ class Swap extends Component {
             })}
           />
 
-          <div className='ani_title_fade_in'>
-            <CurrencyInputPanel
-              title="Input"
-              description={lastEditedField === OUTPUT ? estimatedText : ''}
-              extraText={this.renderBalance(inputCurrency, inputBalance, inputDecimals)}
-              onCurrencySelected={inputCurrency => this.setState({ inputCurrency }, this.recalcForm)}
-              onValueChange={this.updateInput}
-              selectedTokens={[inputCurrency, outputCurrency]}
-              selectedTokenAddress={inputCurrency}
-              value={inputValue}
-              errorMessage={inputError}
-            />
-            <OversizedPanel>
-              <div className="swap__down-arrow-background">
-                <img onClick={this.flipInputOutput} className="swap__down-arrow swap__down-arrow--clickable" src={isValid ? ArrowDownBlue : ArrowDownGrey} />
-              </div>
-            </OversizedPanel>
-            <CurrencyInputPanel
-              title="Output"
-              description={lastEditedField === INPUT ? estimatedText : ''}
-              extraText={this.renderBalance(outputCurrency, outputBalance, outputDecimals)}
-              onCurrencySelected={outputCurrency => this.setState({ outputCurrency }, this.recalcForm)}
-              onValueChange={this.updateOutput}
-              selectedTokens={[inputCurrency, outputCurrency]}
-              value={outputValue}
-              selectedTokenAddress={outputCurrency}
-              errorMessage={outputError}
-              disableUnlock
-            />
-            { this.renderExchangeRate() }
-            { this.renderSummary(inputError, outputError) }
-            <div className="swap__cta-container">
-              <button
-                className={classnames('swap__cta-btn', {
-                  'swap--inactive': !this.props.isConnected,
-                })}
-                disabled={!isValid}
-                onClick={this.onSwap}
-              >
-                Swap
-              </button>
+          <CurrencyInputPanel
+            title="Input"
+            description={lastEditedField === OUTPUT ? estimatedText : ''}
+            extraText={this.renderBalance(inputCurrency, inputBalance, inputDecimals)}
+            onCurrencySelected={inputCurrency => this.setState({ inputCurrency }, this.recalcForm)}
+            onValueChange={this.updateInput}
+            selectedTokens={[inputCurrency, outputCurrency]}
+            selectedTokenAddress={inputCurrency}
+            value={inputValue}
+            errorMessage={inputError}
+          />
+          <OversizedPanel>
+            <div className="swap__down-arrow-background">
+              <img onClick={this.flipInputOutput} className="swap__down-arrow swap__down-arrow--clickable" src={isValid ? ArrowDownBlue : ArrowDownGrey} />
             </div>
+          </OversizedPanel>
+          <CurrencyInputPanel
+            title="Output"
+            description={lastEditedField === INPUT ? estimatedText : ''}
+            extraText={this.renderBalance(outputCurrency, outputBalance, outputDecimals)}
+            onCurrencySelected={outputCurrency => this.setState({ outputCurrency }, this.recalcForm)}
+            onValueChange={this.updateOutput}
+            selectedTokens={[inputCurrency, outputCurrency]}
+            value={outputValue}
+            selectedTokenAddress={outputCurrency}
+            errorMessage={outputError}
+            disableUnlock
+          />
+          { this.renderExchangeRate() }
+          { this.renderSummary(inputError, outputError) }
+          <div className="swap__cta-container">
+            <button
+              className={classnames('swap__cta-btn', {
+                'swap--inactive': !this.props.isConnected,
+              })}
+              disabled={!isValid}
+              onClick={this.onSwap}
+            >
+              Swap
+            </button>
           </div>
         </div>
       </div>
