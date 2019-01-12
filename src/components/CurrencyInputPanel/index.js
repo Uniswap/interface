@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { CSSTransitionGroup } from "react-transition-group";
 import classnames from 'classnames';
 import { withRouter } from 'react-router-dom';
+import { withNamespaces } from 'react-i18next';
 import Fuse from '../../helpers/fuse';
 import Modal from '../Modal';
 import TokenLogo from '../TokenLogo';
@@ -105,6 +106,7 @@ class CurrencyInputPanel extends Component {
     const tokens = this.createTokenList();
     const { loadingExchange, searchQuery } = this.state;
     const {
+      t,
       selectedTokens,
       disableTokenSelect,
       web3,
@@ -160,7 +162,7 @@ class CurrencyInputPanel extends Component {
       const { label } = selectors().getBalance(account, searchQuery);
       return [
         <div key="token-modal-no-exchange" className="token-modal__token-row token-modal__token-row--no-exchange">
-          <div>No Exchange Found</div>
+          <div>{t("noExchange")}</div>
         </div>,
         <div
           key="token-modal-create-exchange"
@@ -178,7 +180,7 @@ class CurrencyInputPanel extends Component {
     if (!results.length) {
       return (
         <div className="token-modal__token-row token-modal__token-row--no-exchange">
-          <div>No Exchange Found</div>
+          <div>{t("noExchange")}</div>
         </div>
       )
     }
@@ -222,7 +224,7 @@ class CurrencyInputPanel extends Component {
             <div className="token-modal__search-container">
               <input
                 type="text"
-                placeholder="Search Token or Paste Address"
+                placeholder={this.props.t("searchOrPaste")}
                 className="token-modal__search-input"
                 onChange={e => {
                   this.setState({ searchQuery: e.target.value });
@@ -241,6 +243,7 @@ class CurrencyInputPanel extends Component {
 
   renderUnlockButton() {
     const {
+      t,
       selectors,
       selectedTokenAddress,
       account,
@@ -276,7 +279,7 @@ class CurrencyInputPanel extends Component {
           className='currency-input-panel__sub-currency-select currency-input-panel__sub-currency-select--pending'
         >
           <div className="loader" />
-          Pending
+          {t("pending")}
         </button>
       );
     }
@@ -296,13 +299,14 @@ class CurrencyInputPanel extends Component {
             });
         }}
       >
-        Unlock
+        {t("unlock")}
       </button>
     );
   }
 
   renderInput() {
     const {
+      t,
       errorMessage,
       value,
       onValueChange,
@@ -358,7 +362,7 @@ class CurrencyInputPanel extends Component {
               )
               : null
           }
-          { TOKEN_ADDRESS_TO_LABEL[selectedTokenAddress] || 'Select a token' }
+          { TOKEN_ADDRESS_TO_LABEL[selectedTokenAddress] || t("selectToken") }
           <span className="currency-input-panel__dropdown-icon" />
         </button>
       </div>
@@ -416,5 +420,5 @@ export default withRouter(
       addPendingTx: opts => dispatch(addPendingTx(opts)),
       addApprovalTx: opts => dispatch(addApprovalTx(opts)),
     }),
-  )(CurrencyInputPanel)
+  )(withNamespaces()(CurrencyInputPanel))
 );

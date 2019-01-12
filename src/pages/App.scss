@@ -4,12 +4,9 @@
   &__switch-wrapper {
     height: 100%;
     position: relative;
-
-    @media only screen and (min-width : 768px) {
-      margin: auto;
-      max-width: 560px;
-      width: 100%;
-    }
+    margin: auto;
+    max-width: 560px;
+    width: 100%;
 
     & > div {
       position: absolute;
@@ -24,9 +21,6 @@
 #app-container {
   width: 100vw;
   height: 100vh;
-  @extend %col-nowrap;
 
-  @media only screen and (min-width : 768px) {
-    //max-width: 560px;
-  }
+  @extend %col-nowrap;
 }
