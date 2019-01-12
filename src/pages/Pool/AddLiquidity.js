@@ -512,67 +512,65 @@ class AddLiquidity extends Component {
           })}
         />
 
-        <div className='ani_title_fade_in'>
-          {
-            this.isNewExchange()
-              ? (
-                <div className="pool__new-exchange-warning">
-                  <div className="pool__new-exchange-warning-text">
-                    🚰 You are the first person to add liquidity!
-                  </div>
-                  <div className="pool__new-exchange-warning-text">
-                    {`The initial exchange rate will be set based on your deposits. Please make sure that your ETH and ${label} deposits have the same fiat value.`}
-                  </div>
+        {
+          this.isNewExchange()
+            ? (
+              <div className="pool__new-exchange-warning">
+                <div className="pool__new-exchange-warning-text">
+                  🚰 You are the first person to add liquidity!
                 </div>
-              )
-              : null
-          }
-          <ModeSelector title="Add Liquidity" />
-          <CurrencyInputPanel
-            title="Deposit"
-            extraText={this.getBalance(inputCurrency)}
-            onValueChange={this.onInputChange}
-            selectedTokenAddress="ETH"
-            value={inputValue}
-            errorMessage={inputError}
-            disableTokenSelect
-          />
-          <OversizedPanel>
-            <div className="swap__down-arrow-background">
-              <img className="swap__down-arrow" src={isValid ? PlusBlue : PlusGrey} />
-            </div>
-          </OversizedPanel>
-          <CurrencyInputPanel
-            title="Deposit"
-            description={this.isNewExchange() ? '(estimated)' : ''}
-            extraText={this.getBalance(outputCurrency)}
-            selectedTokenAddress={outputCurrency}
-            onCurrencySelected={currency => {
-              this.setState({
-                outputCurrency: currency,
-              }, this.recalcForm);
-            }}
-            onValueChange={this.onOutputChange}
-            value={outputValue}
-            errorMessage={outputError}
-            filteredTokens={[ 'ETH' ]}
-          />
-          <OversizedPanel hideBottom>
-            { this.renderInfo() }
-          </OversizedPanel>
-          { this.renderSummary(inputError, outputError) }
-          <div className="pool__cta-container">
-            <button
-              className={classnames('pool__cta-btn', {
-                'swap--inactive': !this.props.isConnected,
-                'pool__cta-btn--inactive': !isValid,
-              })}
-              disabled={!isValid}
-              onClick={this.onAddLiquidity}
-            >
-              Add Liquidity
-            </button>
+                <div className="pool__new-exchange-warning-text">
+                  {`The initial exchange rate will be set based on your deposits. Please make sure that your ETH and ${label} deposits have the same fiat value.`}
+                </div>
+              </div>
+            )
+            : null
+        }
+        <ModeSelector title="Add Liquidity" />
+        <CurrencyInputPanel
+          title="Deposit"
+          extraText={this.getBalance(inputCurrency)}
+          onValueChange={this.onInputChange}
+          selectedTokenAddress="ETH"
+          value={inputValue}
+          errorMessage={inputError}
+          disableTokenSelect
+        />
+        <OversizedPanel>
+          <div className="swap__down-arrow-background">
+            <img className="swap__down-arrow" src={isValid ? PlusBlue : PlusGrey} />
           </div>
+        </OversizedPanel>
+        <CurrencyInputPanel
+          title="Deposit"
+          description={this.isNewExchange() ? '(estimated)' : ''}
+          extraText={this.getBalance(outputCurrency)}
+          selectedTokenAddress={outputCurrency}
+          onCurrencySelected={currency => {
+            this.setState({
+              outputCurrency: currency,
+            }, this.recalcForm);
+          }}
+          onValueChange={this.onOutputChange}
+          value={outputValue}
+          errorMessage={outputError}
+          filteredTokens={[ 'ETH' ]}
+        />
+        <OversizedPanel hideBottom>
+          { this.renderInfo() }
+        </OversizedPanel>
+        { this.renderSummary(inputError, outputError) }
+        <div className="pool__cta-container">
+          <button
+            className={classnames('pool__cta-btn', {
+              'swap--inactive': !this.props.isConnected,
+              'pool__cta-btn--inactive': !isValid,
+            })}
+            disabled={!isValid}
+            onClick={this.onAddLiquidity}
+          >
+            Add Liquidity
+          </button>
         </div>
       </div>
     ];
