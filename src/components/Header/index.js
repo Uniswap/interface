@@ -5,7 +5,6 @@ import classnames from 'classnames';
 import UAParser from 'ua-parser-js';
 import { withNamespaces } from 'react-i18next';
 import Logo from '../Logo';
-import CipherLogo from '../../assets/images/cipher-logo.svg';
 import CoinbaseWalletLogo from '../../assets/images/coinbase-wallet-logo.svg';
 import TrustLogo from '../../assets/images/trust-wallet-logo.svg';
 import BraveLogo from '../../assets/images/brave-logo.svg';
@@ -15,10 +14,6 @@ import Web3Status from '../Web3Status';
 import "./header.scss";
 
 const links = {
-  cipher: {
-    android: 'https://play.google.com/store/apps/details?id=com.cipherbrowser.cipher',
-    ios: 'https://itunes.apple.com/us/app/cipher-browser-ethereum/id1294572970'
-  },
   coinbaseWallet: {
     android: 'https://play.google.com/store/apps/details?id=org.toshi',
     ios: 'https://itunes.apple.com/us/app/coinbase-wallet/id1278383455'
@@ -47,18 +42,6 @@ function getTrustLink() {
 
   if (os.name === 'iOS') {
     return links.trust.ios;
-  }
-}
-
-function getCipherLink() {
-  const os = ua.getOS();
-
-  if (os.name === 'Android') {
-    return links.cipher.android;
-  }
-
-  if (os.name === 'iOS') {
-    return links.cipher.ios;
   }
 }
 
@@ -131,7 +114,6 @@ class BlockingWarning extends Component {
             isMobile()
               ? (
                 [
-                  <img src={CipherLogo} key="cipher" onClick={() => window.open(getCipherLink(), '_blank')} />,
                   <img src={CoinbaseWalletLogo} key="coinbase-wallet" onClick={() => window.open(getCoinbaseWalletLink(), '_blank')} />,
                   <img src={TrustLogo} key="trust" onClick={() => window.open(getTrustLink(), '_blank')} />
                 ]
