@@ -35,7 +35,7 @@ class ContextualInfo extends Component {
       <div className="contextual-info__details">
         {this.props.renderTransactionDetails()}
       </div>
-    )
+    );
   }
 
   render() {

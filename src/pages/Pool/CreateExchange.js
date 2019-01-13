@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import { withNamespaces } from 'react-i18next';
 import {selectors, addPendingTx} from "../../ducks/web3connect";
 import classnames from "classnames";
 import NavigationTabs from "../../components/NavigationTabs";
@@ -39,6 +40,7 @@ class CreateExchange extends Component {
   validate() {
     const { tokenAddress } = this.state;
     const {
+      t,
       web3,
       account,
       selectors,
@@ -59,7 +61,7 @@ class CreateExchange extends Component {
     if (web3 && web3.utils && !web3.utils.isAddress(tokenAddress)) {
       return {
         isValid: false,
-        errorMessage: 'Not a valid token address',
+        errorMessage: t("invalidTokenAddress"),
       };
     }
 
@@ -74,15 +76,15 @@ class CreateExchange extends Component {
         }
       });
     } else {
-      errorMessage = `${label} Exchange already exists!`;
+      errorMessage = t("exchangeExists", { label });
     }
 
     if (!label) {
-      errorMessage = 'Invalid symbol';
+      errorMessage = t("invalidSymbol");
     }
 
     if (!decimals) {
-      errorMessage = 'Invalid decimals';
+      errorMessage = t("invalidDecimals");
     }
 
     return {
@@ -141,7 +143,7 @@ class CreateExchange extends Component {
     if (!tokenAddress) {
       return (
         <div className="create-exchange__summary-panel">
-          <div className="create-exchange__summary-text">Enter a token address to continue</div>
+          <div className="create-exchange__summary-text">{this.props.t("enterTokenCont")}</div>
         </div>
       )
     }
@@ -159,7 +161,7 @@ class CreateExchange extends Component {
 
   render() {
     const { tokenAddress } = this.state;
-    const { isConnected, account, selectors, web3 } = this.props;
+    const { t, isConnected, account, selectors, web3 } = this.props;
     const { isValid, errorMessage } = this.validate();
     let label, decimals;
 
@@ -181,9 +183,9 @@ class CreateExchange extends Component {
             'header--inactive': !isConnected,
           })}
         />
-        <ModeSelector title="Create Exchange" />
+        <ModeSelector title={t("createExchange")} />
         <AddressInputPanel
-          title="Token Address"
+          title={t("tokenAddress")}
           value={tokenAddress}
           onChange={this.onChange}
           errorMessage={errorMessage}
@@ -191,11 +193,11 @@ class CreateExchange extends Component {
         <OversizedPanel hideBottom>
           <div className="pool__summary-panel">
             <div className="pool__exchange-rate-wrapper">
-              <span className="pool__exchange-rate">Label</span>
+              <span className="pool__exchange-rate">{t("label")}</span>
               <span>{label || ' - '}</span>
             </div>
             <div className="pool__exchange-rate-wrapper">
-              <span className="swap__exchange-rate">Decimals</span>
+              <span className="swap__exchange-rate">{t("decimals")}</span>
               <span>{decimals || ' - '}</span>
             </div>
           </div>
@@ -209,7 +211,7 @@ class CreateExchange extends Component {
             disabled={!isValid}
             onClick={this.onCreateExchange}
           >
-            Create Exchange
+            {t("createExchange")}
           </button>
         </div>
       </div>
@@ -232,5 +234,5 @@ export default withRouter(
       addExchange: opts => dispatch(addExchange(opts)),
       addPendingTx: id => dispatch(addPendingTx(id)),
     })
-  )(CreateExchange)
+  )(withNamespaces()(CreateExchange))
 );
