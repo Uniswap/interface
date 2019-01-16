@@ -1,0 +1,11 @@
+@import "../../variables.scss";
+
+.wrapper {
+  align-items: center;
+  display: flex;
+  height: 100%;
+
+  a {
+    color: $royal-blue;
+  }
+}
