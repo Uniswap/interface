@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 84 66">
+  <defs>
+    <linearGradient id="arkane-gradient"
+     x1="0%" y1="0%" x2="100%" y2="0%" gradientTransform="rotate(-8)">
+      <stop offset="0" stop-color="#dd49f8" stop-opacity="1"/>
+      <stop offset=".4" stop-color="#f74989" stop-opacity="1"/>
+      <stop offset=".4001" stop-color="#f74989" stop-opacity="1"/>
+      <stop offset="1" stop-color="#f74989" stop-opacity="1"/>
+    </linearGradient>
+    <style>
+      .text {
+        font-size: 29px;
+        stroke: #000;
+        stroke-miterlimit: 10;
+        stroke-width: 0.25px;
+        font-family: HelveticaNeue-Thin, Helvetica Neue;
+        letter-spacing: 0.04em;
+      }
+
+      .text-small {
+        font-size: 25px;
+        letter-spacing: 0.04em;
+      }
+
+      .path-a {
+        clip-path: url(#clip-path-a);
+      }
+
+      .path-dash {
+        clip-path: url(#clip-path-dash);
+      }
+    </style>
+    <clipPath id="clip-path-a" transform="translate(-1 0)">
+      <path fill="none" d="M63.91,31.68C55.09,17.07,46.59,2.93,45.62,1.62A3.86,3.86,0,0,0,43.38,0S43.16,0,43,0H43c-.12,0-.34,0-.34,0a3.86,3.86,0,0,0-2.24,1.59c-1,1.31-9.47,15.45-18.29,30.06C12,48.46,1,66,1,66H12L39.41,21.05s1.88-3.17,3.58-3.12h0c1.69-.05,3.58,3.12,3.58,3.12L74,66H85S74.05,48.46,63.91,31.68Z"/>
+    </clipPath>
+    <clipPath id="clip-path-dash" transform="translate(-1 0)">
+      <path fill="none" d="M47,30H39a3,3,0,0,0,0,6h8a3,3,0,0,0,0-6Z"/>
+    </clipPath>
+  </defs>
+  <title>Arkane logo</title>
+
+  <g id="logos">
+    <g id="color">
+      <g>
+        <g class="path-a">
+          <polygon fill="url(#arkane-gradient)" points="0,0 0,66 84,66 84,0"/>
+        </g>
+        <g class="path-dash">
+          <polygon fill="url(#arkane-gradient)" points="0,0 0,66 84,66 84,0"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

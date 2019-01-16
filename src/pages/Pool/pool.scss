@@ -66,7 +66,7 @@
     margin-bottom: 2rem;
     border: 1px solid rgba($pizazz-orange, .4);
     background-color: rgba($pizazz-orange, .1);
-    border-radius: 1rem;
+    border-radius: 3px;
   }
 
   &__new-exchange-warning-text {
@@ -104,7 +104,7 @@
     position: absolute;
     margin-left: auto;
     margin-right: auto;
-    border-radius: 1rem;
+    border-radius: 3px;
     padding-bottom: 1rem;
     left: 0;
     right: 0;

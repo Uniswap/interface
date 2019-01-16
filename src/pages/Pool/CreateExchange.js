@@ -11,7 +11,6 @@ import AddressInputPanel from "../../components/AddressInputPanel";
 import OversizedPanel from "../../components/OversizedPanel";
 import FACTORY_ABI from "../../abi/factory";
 import {addExchange} from "../../ducks/addresses";
-import ReactGA from "react-ga";
 
 class CreateExchange extends Component {
   static propTypes = {
@@ -111,16 +110,48 @@ class CreateExchange extends Component {
     }
   };
 
-  onCreateExchange = () => {
+  onCreateExchange = async () => {
     const { tokenAddress } = this.state;
-    const { account, web3, factoryAddress } = this.props;
+    const { account, web3, factoryAddress, wallet, arkaneConnect } = this.props;
 
     if (web3 && web3.utils && !web3.utils.isAddress(tokenAddress)) {
       return;
     }
 
     const factory = new web3.eth.Contract(FACTORY_ABI, factoryAddress);
-    factory.methods.createExchange(tokenAddress).send({ from: account }, (err, data) => {
+    const fn = factory.methods.createExchange(tokenAddress);
+
+    if (arkaneConnect) {
+      const signer = arkaneConnect.createSigner();
+
+      signer.executeNativeTransaction({
+        type: 'VET_TRANSACTION',
+        walletId: wallet,
+        clauses: [{
+          amount: 0,
+          to: factoryAddress,
+          data: fn.encodeABI(),
+        }]
+      }).then(({ result }) => {
+        this.setState({
+          label: '',
+          decimals: 0,
+          tokenAddress: '',
+        });
+        this.props.addPendingTx(result.transactionHash);
+      }).catch(reason => {
+        console.log(reason);
+      })
+
+      return;
+    }
+
+    fn.send({
+      from: account,
+      gas: await fn.estimateGas({
+        from: account,
+      })
+    }, (err, data) => {
       if (!err) {
         this.setState({
           label: '',
@@ -128,10 +159,6 @@ class CreateExchange extends Component {
           tokenAddress: '',
         });
         this.props.addPendingTx(data);
-        ReactGA.event({
-          category: 'Pool',
-          action: 'CreateExchange',
-        });
       }
     })
   };
@@ -222,12 +249,14 @@ class CreateExchange extends Component {
 export default withRouter(
   connect(
     state => ({
-      isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||1),
+      isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID|| 74),
       account: state.web3connect.account,
       balances: state.web3connect.balances,
       web3: state.web3connect.web3,
       exchangeAddresses: state.addresses.exchangeAddresses,
       factoryAddress: state.addresses.factoryAddress,
+      arkaneConnect: state.web3connect.arkaneConnect,
+      wallet: state.web3connect.wallet,
     }),
     dispatch => ({
       selectors: () => dispatch(selectors()),

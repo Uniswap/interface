@@ -4,11 +4,11 @@
   @extend %col-nowrap;
   box-shadow: 0 4px 8px 0 rgba($royal-blue, 0.1);
   position: relative;
-  border-radius: 1.25rem;
+  border-radius: 3px;
   z-index: 200;
 
   &__container {
-    border-radius: 1.25rem;
+    border-radius: 3px;
     box-shadow: 0 0 0 .5px $mercury-gray;
     background-color: $white;
     transition: box-shadow 200ms ease-in-out;
@@ -80,12 +80,13 @@
   &__currency-select {
     @extend %row-nowrap;
     align-items: center;
+    font-family: 'Karla', sans-serif;
     font-size: 1rem;
     color: $royal-blue;
     height: 2rem;
     padding: 0 1rem;
     border: 1px solid $royal-blue;
-    border-radius: 2.5rem;
+    border-radius: 3px;
     background-color: $zumthor-blue;
     outline: none;
     cursor: pointer;
@@ -122,7 +123,7 @@
     height: 2rem;
     padding: 10px 50px 10px 10px;
     margin-right: -40px;
-    border-radius: 2.5rem;
+    border-radius: 3px;
     outline: none;
     cursor: pointer;
     user-select: none;
@@ -246,7 +247,7 @@
 
   &__token-logo {
     object-fit: contain;
-    border-radius: 1rem;
+    border-radius: 3px;
   }
 
   &__token-label {
@@ -259,7 +260,7 @@
     position: absolute;
     margin-left: auto;
     margin-right: auto;
-    border-radius: 1rem;
+    border-radius: 3px;
     padding-bottom: 1rem;
     left: 0;
     right: 0;

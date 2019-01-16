@@ -5,7 +5,7 @@
   align-items: center;
   height: 2.5rem;
   background-color: $concrete-gray;
-  border-radius: 3rem;
+  border-radius: 3px;
   box-shadow: 0 0 0 .5px darken($concrete-gray, 5);
 
   .tab:first-child {
@@ -23,7 +23,7 @@
   justify-content: center;
   height: 2.5rem;
   flex: 1 0 auto;
-  border-radius: 3rem;
+  border-radius: 3px;
   transition: 300ms ease-in-out;
   cursor: pointer;
 
@@ -34,7 +34,7 @@
 
   &--selected {
     background-color: $white;
-    border-radius: 3rem;
+    border-radius: 3px;
     box-shadow: 0 0 .5px .5px $mercury-gray;
     font-weight: 500;
 

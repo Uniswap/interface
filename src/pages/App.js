@@ -9,14 +9,20 @@ import Header from '../components/Header';
 import Swap from './Swap';
 import Send from './Send';
 import Pool from './Pool';
+import Tos from './Tos';
 
 import './App.scss';
 
 class App extends Component {
-  componentWillMount() {
-    const { initialize, startWatching} = this.props;
-    initialize().then(startWatching);
-  };
+  componentDidMount() {
+    const { initialize, startWatching } = this.props;
+
+    if (typeof window.thor !== 'undefined') {
+      initialize().then(startWatching);
+    } else {
+      initialize(true).then(startWatching);
+    }
+  }
 
   componentWillUpdate() {
     const { web3, setAddresses } = this.props;
@@ -25,12 +31,12 @@ class App extends Component {
       return;
     }
 
-    web3.eth.net.getId((err, networkId) => {
-      if (!err && !this.hasSetNetworkId) {
-        setAddresses(networkId);
+    web3.eth.getChainTag()
+      .then(chainTagHex => {
+        const chainTag = parseInt(chainTagHex, 16)
+        setAddresses(chainTag);
         this.hasSetNetworkId = true;
-      }
-    });
+      });
   }
 
   render() {
@@ -41,7 +47,7 @@ class App extends Component {
     return (
       <div id="app-container">
         <MediaQuery query="(min-width: 768px)">
-          <Header />
+          <Header connectArkane={this.connectArkane} />
         </MediaQuery>
         <Web3Connect />
         <BrowserRouter>
@@ -56,6 +62,7 @@ class App extends Component {
             <Route exact path="/add-liquidity" component={Pool} />
             <Route exact path="/remove-liquidity" component={Pool} />
             <Route exact path="/create-exchange/:tokenAddress?" component={Pool} />
+            <Route exact path="/terms-of-service" component={Tos} />
             <Redirect exact from="/" to="/swap" />
           </AnimatedSwitch>
         </BrowserRouter>
@@ -72,7 +79,7 @@ export default connect(
   }),
   dispatch => ({
     setAddresses: networkId => dispatch(setAddresses(networkId)),
-    initialize: () => dispatch(initialize()),
+    initialize: (initializeArkane) => dispatch(initialize(initializeArkane)),
     startWatching: () => dispatch(startWatching()),
   }),
 )(App);

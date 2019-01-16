@@ -10,12 +10,26 @@
     border-bottom: 1px solid $concrete-gray;
   }
 
+  &__footer {
+    margin-top: 20px;
+  }
+
+  &__authenticate {
+    border: 1px solid $mercury-gray;
+    color: #000;
+    cursor: pointer;
+    display: inline-block;
+    padding: .2rem .5rem;
+  }
+
   &__title {
     font-size: 1rem;
-    font-weight: 500;
+    font-family: 'Rubik';
+    font-weight: 900;
     margin-left: 1rem;
+    letter-spacing: 1px;
     line-height: 1.5rem;
-    color: $wisteria-purple;
+    color: $royal-blue;
   }
 
   &__center-group {
@@ -33,7 +47,7 @@
 
   &__dialog {
     @extend %col-nowrap;
-    border-radius: .875rem;
+    border-radius: 3px;
     border: 1px solid $mercury-gray;
     margin: 1rem .75rem 0 .75rem;
     padding: 1.5rem 1rem;
@@ -59,7 +73,6 @@
     img {
       height: 3.5rem;
       width: 3.5rem;
-      border-radius: 50%;
       cursor: pointer;
     }
 

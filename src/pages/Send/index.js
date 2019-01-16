@@ -21,7 +21,6 @@ import EXCHANGE_ABI from '../../abi/exchange';
 
 import "./send.scss";
 import MediaQuery from "react-responsive";
-import ReactGA from "react-ga";
 
 const INPUT = 0;
 const OUTPUT = 1;
@@ -37,16 +36,12 @@ class Send extends Component {
   state = {
     inputValue: '',
     outputValue: '',
-    inputCurrency: 'ETH',
+    inputCurrency: 'VET',
     outputCurrency: '',
     inputAmountB: '',
     lastEditedField: '',
     recipient: '',
   };
-
-  componentWillMount() {
-    ReactGA.pageview(window.location.pathname + window.location.search);
-  }
 
   shouldComponentUpdate(nextProps, nextState) {
     return true;
@@ -117,7 +112,7 @@ class Send extends Component {
     const { account, exchangeAddresses, selectors } = this.props;
     const { inputCurrency, inputValue } = this.state;
 
-    if (!inputCurrency || inputCurrency === 'ETH') {
+    if (!inputCurrency || inputCurrency === 'VET') {
       return false;
     }
 
@@ -155,7 +150,7 @@ class Send extends Component {
       return;
     }
 
-    if (inputCurrency !== 'ETH' && outputCurrency !== 'ETH') {
+    if (inputCurrency !== 'VET' && outputCurrency !== 'VET') {
       this.recalcTokenTokenForm();
       return;
     }
@@ -183,8 +178,8 @@ class Send extends Component {
     const exchangeAddressB = fromToken[outputCurrency];
 
     const { value: inputReserveA, decimals: inputDecimalsA } = selectors().getBalance(exchangeAddressA, inputCurrency);
-    const { value: outputReserveA }= selectors().getBalance(exchangeAddressA, 'ETH');
-    const { value: inputReserveB } = selectors().getBalance(exchangeAddressB, 'ETH');
+    const { value: outputReserveA }= selectors().getBalance(exchangeAddressA, 'VET');
+    const { value: inputReserveB } = selectors().getBalance(exchangeAddressB, 'VET');
     const { value: outputReserveB, decimals: outputDecimalsB }= selectors().getBalance(exchangeAddressB, outputCurrency);
 
     if (lastEditedField === INPUT) {
@@ -289,7 +284,7 @@ class Send extends Component {
       exchangeRate: oldExchangeRate,
     } = this.state;
 
-    const tokenAddress = [inputCurrency, outputCurrency].filter(currency => currency !== 'ETH')[0];
+    const tokenAddress = [inputCurrency, outputCurrency].filter(currency => currency !== 'VET')[0];
     const exchangeAddress = fromToken[tokenAddress];
     if (!exchangeAddress) {
       return;
@@ -371,6 +366,8 @@ class Send extends Component {
       web3,
       selectors,
       addPendingTx,
+      wallet,
+      arkaneConnect,
     } = this.props;
     const {
       inputValue,
@@ -396,64 +393,136 @@ class Send extends Component {
     }
 
     if (lastEditedField === INPUT) {
-      ReactGA.event({
-        category: type,
-        action: 'TransferInput',
-      });
       // send input
       switch(type) {
         case 'ETH_TO_TOKEN':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency])
-            .methods
-            .ethToTokenTransferInput(
-              BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(0),
-              deadline,
-              recipient,
-            )
-            .send({
+          const { ethToTokenTransferInput} = new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]).methods;
+
+          const ethToToken = ethToTokenTransferInput(
+            BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(0),
+            deadline,
+            recipient,
+          );
+
+          if (arkaneConnect) {
+            const signer = arkaneConnect.createSigner();
+
+            signer.executeNativeTransaction({
+              type: 'VET_TRANSACTION',
+              walletId: wallet,
+              clauses: [{
+                to: fromToken[outputCurrency],
+                amount: BN(inputValue).multipliedBy(10 ** 18).toFixed(0),
+                data: ethToToken.encodeABI(),
+              }]
+            }).then(result => {
+              console.log(result);
+            }).catch(reason => {
+              console.log(reason);
+            })
+
+            return;
+          }
+
+          ethToToken.send({
+            gas: await ethToToken.estimateGas({
               from: account,
               value: BN(inputValue).multipliedBy(10 ** 18).toFixed(0),
-            }, (err, data) => {
-              if (!err) {
-                addPendingTx(data);
-                this.reset();
-              }
-            });
-          break;
+            }),
+            from: account,
+            value: BN(inputValue).multipliedBy(10 ** 18).toFixed(0),
+          }, (err, data) => {
+            if (!err) {
+              addPendingTx(data);
+              this.reset();
+            }
+          });
+        break;
         case 'TOKEN_TO_ETH':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
-            .methods
-            .tokenToEthTransferInput(
-              BN(inputValue).multipliedBy(10 ** inputDecimals).toFixed(0),
-              BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(0),
-              deadline,
-              recipient,
-            )
-            .send({ from: account }, (err, data) => {
-              if (!err) {
-                addPendingTx(data);
-                this.reset();
-              }
-            });
-          break;
+          const { tokenToEthTransferInput } = new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods;
+
+          const tokenToEth = tokenToEthTransferInput(
+            BN(inputValue).multipliedBy(10 ** inputDecimals).toFixed(0),
+            BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(0),
+            deadline,
+            recipient,
+          );
+
+          if (arkaneConnect) {
+            const signer = arkaneConnect.createSigner();
+
+            signer.executeNativeTransaction({
+              type: 'VET_TRANSACTION',
+              walletId: wallet,
+              clauses: [{
+                amount: 0,
+                to: fromToken[outputCurrency],
+                data: tokenToEth.encodeABI(),
+              }]
+            }).then(result => {
+              console.log(result);
+            }).catch(reason => {
+              console.log(reason);
+            })
+
+            return;
+          }
+
+          tokenToEth.send({
+            from: account,
+            gas: await tokenToEth.estimateGas({
+              from: account,
+            }),
+          }, (err, data) => {
+            if (!err) {
+              addPendingTx(data);
+              this.reset();
+            }
+          });
+        break;
         case 'TOKEN_TO_TOKEN':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
-            .methods
-            .tokenToTokenTransferInput(
-              BN(inputValue).multipliedBy(10 ** inputDecimals).toFixed(0),
-              BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - TOKEN_ALLOWED_SLIPPAGE).toFixed(0),
-              '1',
-              deadline,
-              recipient,
-              outputCurrency,
-            )
-            .send({ from: account }, (err, data) => {
-              if (!err) {
-                addPendingTx(data);
-                this.reset();
-              }
-            });
-          break;
+          const { tokenToTokenTransferInput } = new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods;
+
+          const tokenToToken = tokenToTokenTransferInput(
+            BN(inputValue).multipliedBy(10 ** inputDecimals).toFixed(0),
+            BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - TOKEN_ALLOWED_SLIPPAGE).toFixed(0),
+            '1',
+            deadline,
+            recipient,
+            outputCurrency,
+          );
+
+          if (arkaneConnect) {
+            const signer = arkaneConnect.createSigner();
+
+            signer.executeNativeTransaction({
+              type: 'VET_TRANSACTION',
+              walletId: wallet,
+              clauses: [{
+                amount: 0,
+                to: fromToken[outputCurrency],
+                data: tokenToToken.encodeABI(),
+              }]
+            }).then(result => {
+              console.log(result);
+            }).catch(reason => {
+              console.log(reason);
+            })
+
+            return;
+          }
+
+          tokenToToken.send({
+            gas: await tokenToToken.estimateGas({
+              from: account,
+            }),
+          }, (err, data) => {
+            if (!err) {
+              addPendingTx(data);
+              this.reset();
+            }
+          });
+        break;
         default:
           break;
       }
@@ -461,67 +530,92 @@ class Send extends Component {
 
     if (lastEditedField === OUTPUT) {
       // send output
-      ReactGA.event({
-        category: type,
-        action: 'TransferOutput',
-      });
       switch (type) {
         case 'ETH_TO_TOKEN':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency])
-            .methods
-            .ethToTokenTransferOutput(
-              BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
-              deadline,
-              recipient,
-            )
-            .send({
-              from: account,
-              value: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
-            }, (err, data) => {
-              if (!err) {
-                addPendingTx(data);
-                this.reset();
-              }
-            });
-          break;
-        case 'TOKEN_TO_ETH':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
-            .methods
-            .tokenToEthTransferOutput(
-              BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
-              BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
-              deadline,
-              recipient,
-            )
-            .send({ from: account }, (err, data) => {
-              if (!err) {
-                addPendingTx(data);
-                this.reset();
-              }
-            });
-          break;
-        case 'TOKEN_TO_TOKEN':
-          if (!inputAmountB) {
+          const { ethToTokenTransferOutput } = new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]).methods;
+
+          const ethToToken2 = ethToTokenTransferOutput(
+            BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
+            deadline,
+            recipient,
+          );
+
+          if (arkaneConnect) {
+            const signer = arkaneConnect.createSigner();
+
+            signer.executeNativeTransaction({
+              type: 'VET_TRANSACTION',
+              walletId: wallet,
+              clauses: [{
+                to: fromToken[outputCurrency],
+                amount: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
+                data: ethToToken2.encodeABI(),
+              }]
+            }).then(result => {
+              console.log(result);
+            }).catch(reason => {
+              console.log(reason);
+            })
+
             return;
           }
 
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
-            .methods
-            .tokenToTokenTransferOutput(
-              BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
-              BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE).toFixed(0),
-              inputAmountB.multipliedBy(1.2).toFixed(0),
-              deadline,
-              recipient,
-              outputCurrency,
-            )
-            .send({ from: account }, (err, data) => {
-              if (!err) {
-                addPendingTx(data);
-                this.reset();
-              }
-            });
-          break;
+          ethToToken2.send({
+            from: account,
+            value: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
+            gas: await ethToToken2.estimateGas({
+              from: account,
+              value: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
+            }),
+          }, (err, data) => {
+            if (!err) {
+              addPendingTx(data);
+              this.reset();
+            }
+          });
+        break;
+        case 'TOKEN_TO_ETH':
+          const { tokenToEthTransferOutput } = new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods;
+
+          const tokenToEth2 = tokenToEthTransferOutput(
+            BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
+            BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
+            deadline,
+            recipient,
+          );
+
+          if (arkaneConnect) {
+            const signer = arkaneConnect.createSigner();
+
+            signer.executeNativeTransaction({
+              type: 'VET_TRANSACTION',
+              walletId: wallet,
+              clauses: [{
+                amount: 0,
+                to: fromToken[outputCurrency],
+                data: tokenToEth2.encodeABI(),
+              }]
+            }).then(result => {
+              console.log(result);
+            }).catch(reason => {
+              console.log(reason);
+            })
+
+            return;
+          }
+
+          tokenToEth2.send({
+            from: account,
+            gas: await tokenToEth2.estimateGas({
+              from: account,
+            }),
+          }, (err, data) => {
+            if (!err) {
+              addPendingTx(data);
+              this.reset();
+            }
+          });
+        break;
         default:
           break;
       }
@@ -589,11 +683,6 @@ class Send extends Component {
       lastEditedField,
     } = this.state;
     const { t, selectors, account } = this.props;
-
-    ReactGA.event({
-      category: 'TransactionDetail',
-      action: 'Open',
-    });
 
     const ALLOWED_SLIPPAGE = 0.025;
     const TOKEN_ALLOWED_SLIPPAGE = 0.04;
@@ -794,10 +883,12 @@ class Send extends Component {
 export default connect(
   state => ({
     balances: state.web3connect.balances,
-    isConnected: !!state.web3connect.account && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||1),
+    isConnected: !!state.web3connect.account && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID || 74),
     account: state.web3connect.account,
     web3: state.web3connect.web3,
     exchangeAddresses: state.addresses.exchangeAddresses,
+    arkaneConnect: state.web3connect.arkaneConnect,
+    web3: state.web3connect.web3,
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),
@@ -845,15 +936,15 @@ function getSendType(inputCurrency, outputCurrency) {
     return;
   }
 
-  if (inputCurrency !== 'ETH' && outputCurrency !== 'ETH') {
+  if (inputCurrency !== 'VET' && outputCurrency !== 'VET') {
     return 'TOKEN_TO_TOKEN'
   }
 
-  if (inputCurrency === 'ETH') {
+  if (inputCurrency === 'VET') {
     return 'ETH_TO_TOKEN';
   }
 
-  if (outputCurrency === 'ETH') {
+  if (outputCurrency === 'VET') {
     return 'TOKEN_TO_ETH';
   }
 
