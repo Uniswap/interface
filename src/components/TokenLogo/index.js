@@ -11,7 +11,7 @@ const RINKEBY_TOKEN_MAP = {
   '0xF22e3F33768354c9805d046af3C0926f27741B43': '0xe41d2489571d322189246dafa5ebde1f4699f498',
 };
 
-const TOKEN_ICON_API = 'https://raw.githubusercontent.com/TrustWallet/tokens/master/images';
+const TOKEN_ICON_API = 'https://raw.githubusercontent.com/TrustWallet/tokens/master/tokens';
 const BAD_IMAGES = {};
 export default class TokenLogo extends Component {
   static propTypes = {
