@@ -1,8 +1,8 @@
 # Vexchange Frontend
 This is the open source front-end for Vexchange, forked from Uniswap. This is Monti's first project exploring the blockchain space.
 
-* Vexchange Telegram [https://t.me/montichat](https://t.me/montichat)
-* Monti Telegram [https://t.me/vexchange](https://t.me/vexchange)
+* Vexchange Telegram [https://t.me/vexchange](https://t.me/vexchange)
+* Monti Telegram [https://t.me/montichat](https://t.me/montichat)
 * Contracts [https://github.com/Monti/vexchange-contracts](https://github.com/Monti/vexchange-contracts)
 * Website: [vexchange.io/](https://vexchange.io/)
 * Email: [contact@monti.finance](mailto:contact@monti.finance)
