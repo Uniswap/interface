@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import {BigNumber as BN} from "bignumber.js";
+import { withNamespaces } from 'react-i18next';
 import { selectors, addPendingTx } from '../../ducks/web3connect';
 import Header from '../../components/Header';
 import NavigationTabs from '../../components/NavigationTabs';
@@ -14,10 +15,11 @@ import DropdownBlue from "../../assets/images/dropdown-blue.svg";
 import DropupBlue from "../../assets/images/dropup-blue.svg";
 import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg';
 import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg';
+import { getBlockDeadline } from '../../helpers/web3-utils';
+import { retry } from '../../helpers/promise-utils';
 import EXCHANGE_ABI from '../../abi/exchange';
 
 import "./send.scss";
-import promisify from "../../helpers/web3-promisfy";
 import MediaQuery from "react-responsive";
 import ReactGA from "react-ga";
 
@@ -86,11 +88,11 @@ class Send extends Component {
     const { value: inputBalance, decimals: inputDecimals } = selectors().getBalance(account, inputCurrency);
 
     if (inputBalance.isLessThan(BN(inputValue * 10 ** inputDecimals))) {
-      inputError = 'Insufficient Balance';
+      inputError = this.props.t("insufficientBalance");
     }
 
     if (inputValue === 'N/A') {
-      inputError = 'Not a valid input value';
+      inputError = this.props.t("inputNotValid");
     }
 
     return {
@@ -98,6 +100,17 @@ class Send extends Component {
       outputError,
       isValid: isValid && !inputError && !outputError,
     };
+  }
+
+  flipInputOutput = () => {
+    const { state } = this;
+    this.setState({
+      inputValue: state.outputValue,
+      outputValue: state.inputValue,
+      inputCurrency: state.outputCurrency,
+      outputCurrency: state.inputCurrency,
+      lastEditedField: state.lastEditedField === INPUT ? OUTPUT : INPUT
+    }, () => this.recalcForm());
   }
 
   isUnapproved() {
@@ -374,9 +387,13 @@ class Send extends Component {
     const type = getSendType(inputCurrency, outputCurrency);
     const { decimals: inputDecimals } = selectors().getBalance(account, inputCurrency);
     const { decimals: outputDecimals } = selectors().getBalance(account, outputCurrency);
-    const blockNumber = await promisify(web3, 'getBlockNumber');
-    const block = await promisify(web3, 'getBlock', blockNumber);
-    const deadline =  block.timestamp + 300;
+    let deadline;
+    try {
+      deadline = await retry(() => getBlockDeadline(web3, 300));
+    } catch(e) {
+      // TODO: Handle error.
+      return;
+    }
 
     if (lastEditedField === INPUT) {
       ReactGA.event({
@@ -519,7 +536,7 @@ class Send extends Component {
       outputCurrency,
       recipient,
     } = this.state;
-    const { web3 } = this.props;
+    const { t, web3 } = this.props;
 
     const { selectors, account } = this.props;
     const { label: inputLabel } = selectors().getBalance(account, inputCurrency);
@@ -535,24 +552,25 @@ class Send extends Component {
       contextualInfo = inputError || outputError;
       isError = true;
     } else if (!inputCurrency || !outputCurrency) {
-      contextualInfo = 'Select a token to continue.';
+      contextualInfo = t("selectTokenCont");
     } else if (inputCurrency === outputCurrency) {
-      contextualInfo = 'Must be different token.';
+      contextualInfo = t("differentToken");
     } else if (!inputValue || !outputValue) {
       const missingCurrencyValue = !inputValue ? inputLabel : outputLabel;
-      contextualInfo = `Enter a ${missingCurrencyValue} value to continue.`;
+      contextualInfo = t("enterValueCont", {missingCurrencyValue});
     } else if (inputIsZero || outputIsZero) {
-      contextualInfo = 'No liquidity.';
+      contextualInfo = t("noLiquidity");
     } else if (this.isUnapproved()) {
-      contextualInfo = 'Please unlock token to continue.';
+      contextualInfo = t("unlockTokenCont");
     } else if (!recipient) {
-      contextualInfo = 'Enter a wallet address to send to.';
+      contextualInfo = t("noRecipient");
     } else if (!validRecipientAddress) {
-      contextualInfo = 'Please enter a valid wallet address recipient.';
+      contextualInfo = t("invalidRecipient");
     }
 
     return (
       <ContextualInfo
+        openModalText={t("transactionDetails")}
         contextualInfo={contextualInfo}
         isError={isError}
         renderTransactionDetails={this.renderTransactionDetails}
@@ -570,7 +588,7 @@ class Send extends Component {
       inputAmountB,
       lastEditedField,
     } = this.state;
-    const { selectors, account } = this.props;
+    const { t, selectors, account } = this.props;
 
     ReactGA.event({
       category: 'TransactionDetail',
@@ -625,10 +643,10 @@ class Send extends Component {
       return (
         <div>
           <div>
-            You are selling {b(`${+inputValue} ${inputLabel}`)}.
+            {t("youAreSending")} {b(`${+inputValue} ${inputLabel}`)}.
           </div>
           <div className="send__last-summary-text">
-            {recipientText} will receive at least {b(`${+minOutput} ${outputLabel}`)} or the transaction will fail.
+            {recipientText} {t("willReceive")} {b(`${+minOutput} ${outputLabel}`)} {t("orTransFail")}
           </div>
         </div>
       );
@@ -636,12 +654,12 @@ class Send extends Component {
       return (
         <div>
           <div>
-            You are sending {b(`${+outputValue} ${outputLabel}`)} to {recipientText}.
+            {t("youAreSending")} {b(`${+outputValue} ${outputLabel}`)} {t("to")} {recipientText}.
             {/*You are selling between {b(`${+inputValue} ${inputLabel}`)} to {b(`${+maxInput} ${inputLabel}`)}.*/}
           </div>
           <div className="send__last-summary-text">
             {/*{b(`${recipient.slice(0, 6)}...${recipient.slice(-4)}`)} will receive {b(`${+outputValue} ${outputLabel}`)}.*/}
-            It will cost at most {b(`${+maxInput} ${inputLabel}`)} or the transaction will fail.
+            {t("itWillCost")} {b(`${+maxInput} ${inputLabel}`)} {t("orTransFail")}
           </div>
         </div>
       );
@@ -650,7 +668,7 @@ class Send extends Component {
     
 
   renderExchangeRate() {
-    const { account, selectors } = this.props;
+    const { t, account, selectors } = this.props;
     const { exchangeRate, inputCurrency, outputCurrency } = this.state;
     const { label: inputLabel } = selectors().getBalance(account, inputCurrency);
     const { label: outputLabel } = selectors().getBalance(account, outputCurrency);
@@ -660,7 +678,7 @@ class Send extends Component {
       return (
         <OversizedPanel hideBottom>
           <div className="swap__exchange-rate-wrapper">
-            <span className="swap__exchange-rate">Exchange Rate</span>
+            <span className="swap__exchange-rate">{t("exchangeRate")}</span>
             <span> - </span>
           </div>
           <div className="swap__exchange-rate-wrapper">
@@ -674,19 +692,27 @@ class Send extends Component {
     return (
       <OversizedPanel hideBottom>
         <div className="swap__exchange-rate-wrapper">
-          <span className="swap__exchange-rate">Exchange Rate</span>
+          <span className="swap__exchange-rate">{t("exchangeRate")}</span>
           <span>{`1 ${inputLabel} = ${exchangeRate.toFixed(7)} ${outputLabel}`}</span>
         </div>
         <div className="swap__exchange-rate-wrapper">
-          <span className="swap__exchange-rate">Inverted Rate</span>
+          <span className="swap__exchange-rate">{t("invertedRate")}</span>
           <span>{`1 ${outputLabel} = ${exchangeRate.pow(-1).toFixed(7)} ${inputLabel}`}</span>
         </div>
       </OversizedPanel>
     );
   }
 
+  renderBalance(currency, balance, decimals) {
+    if (!currency || decimals === 0) {
+      return '';
+    }
+    const balanceInput = balance.dividedBy(BN(10 ** decimals)).toFixed(4)
+    return this.props.t("balance", { balanceInput })
+  }
+
   render() {
-    const { selectors, account } = this.props;
+    const { t, selectors, account } = this.props;
     const {
       lastEditedField,
       inputCurrency,
@@ -695,7 +721,7 @@ class Send extends Component {
       outputValue,
       recipient,
     } = this.state;
-    const estimatedText = '(estimated)';
+    const estimatedText = `(${t("estimated")})`;
 
     const { value: inputBalance, decimals: inputDecimals } = selectors().getBalance(account, inputCurrency);
     const { value: outputBalance, decimals: outputDecimals } = selectors().getBalance(account, outputCurrency);
@@ -703,7 +729,7 @@ class Send extends Component {
 
     return (
       <div className="send">
-        <MediaQuery query="(max-device-width: 767px)">
+        <MediaQuery query="(max-width: 767px)">
           <Header />
         </MediaQuery>
         <div
@@ -717,12 +743,9 @@ class Send extends Component {
             })}
           />
           <CurrencyInputPanel
-            title="Input"
+            title={t("input")}
             description={lastEditedField === OUTPUT ? estimatedText : ''}
-            extraText={inputCurrency
-              ? `Balance: ${inputBalance.dividedBy(BN(10 ** inputDecimals)).toFixed(4)}`
-              : ''
-            }
+            extraText={this.renderBalance(inputCurrency, inputBalance, inputDecimals)}
             onCurrencySelected={inputCurrency => this.setState({ inputCurrency }, this.recalcForm)}
             onValueChange={this.updateInput}
             selectedTokens={[inputCurrency, outputCurrency]}
@@ -732,16 +755,13 @@ class Send extends Component {
           />
           <OversizedPanel>
             <div className="swap__down-arrow-background">
-              <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} />
+              <img onClick={this.flipInputOutput} className="swap__down-arrow swap__down-arrow--clickable" src={isValid ? ArrowDownBlue : ArrowDownGrey} />
             </div>
           </OversizedPanel>
           <CurrencyInputPanel
-            title="Output"
+            title={t("output")}
             description={lastEditedField === INPUT ? estimatedText : ''}
-            extraText={outputCurrency
-              ? `Balance: ${outputBalance.dividedBy(BN(10 ** outputDecimals)).toFixed(4)}`
-              : ''
-            }
+            extraText={this.renderBalance(outputCurrency, outputBalance, outputDecimals)}
             onCurrencySelected={outputCurrency => this.setState({ outputCurrency }, this.recalcForm)}
             onValueChange={this.updateOutput}
             selectedTokens={[inputCurrency, outputCurrency]}
@@ -756,10 +776,12 @@ class Send extends Component {
             </div>
           </OversizedPanel>
           <AddressInputPanel
+            t={this.props.t}
             value={recipient}
             onChange={address => this.setState({recipient: address})}
           />
           { this.renderExchangeRate() }
+          { this.renderSummary(inputError, outputError) }
           <div className="swap__cta-container">
             <button
               className={classnames('swap__cta-btn', {
@@ -768,11 +790,10 @@ class Send extends Component {
               disabled={!isValid}
               onClick={this.onSend}
             >
-              Send
+              {t("send")}
             </button>
           </div>
         </div>
-        { this.renderSummary(inputError, outputError) }
       </div>
     );
   }
@@ -790,7 +811,7 @@ export default connect(
     selectors: () => dispatch(selectors()),
     addPendingTx: id => dispatch(addPendingTx(id)),
   }),
-)(Send);
+)(withNamespaces()(Send));
 
 const b = text => <span className="swap__highlight-text">{text}</span>;
 
@@ -820,7 +841,7 @@ function calculateEtherTokenInput({ outputAmount: rawOutput, inputReserve: rawRe
 
   const numerator = outputAmount.multipliedBy(inputReserve).multipliedBy(1000);
   const denominator = outputReserve.minus(outputAmount).multipliedBy(997);
-  return numerator.dividedBy(denominator.plus(1));
+  return (numerator.dividedBy(denominator)).plus(1);
 }
 
 function getSendType(inputCurrency, outputCurrency) {

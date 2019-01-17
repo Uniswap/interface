@@ -16,7 +16,7 @@ class Pool extends Component {
   render() {
     return (
       <div className="pool">
-        <MediaQuery query="(max-device-width: 768px)">
+        <MediaQuery query="(max-width: 768px)">
           <Header />
         </MediaQuery>
         <Switch>

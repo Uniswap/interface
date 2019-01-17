@@ -40,7 +40,7 @@ class App extends Component {
 
     return (
       <div id="app-container">
-        <MediaQuery query="(min-device-width: 768px)">
+        <MediaQuery query="(min-width: 768px)">
           <Header />
         </MediaQuery>
         <Web3Connect />
