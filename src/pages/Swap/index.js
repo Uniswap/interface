@@ -428,7 +428,6 @@ class Swap extends Component {
             from: account,
             value: BN(inputValue).multipliedBy(10 ** 18).toFixed(0)
           }, (err, data) => {
-            console.log(err, data)
             if (!err) {
               addPendingTx(data);
               this.reset();
