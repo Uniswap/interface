@@ -19,6 +19,7 @@
   "searchOrPaste": "搜索代币或粘贴地址",
   "noExchange": "未找到交易所",
   "exchangeRate": "兑换率",
+  "invertedRate": "兑换率",
   "enterValueCont": "输入{{ missingCurrencyValue }}值继续。",
   "selectTokenCont": "选取代币继续。",
   "noLiquidity": "没有流动金。",

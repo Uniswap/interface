@@ -682,7 +682,7 @@ class Send extends Component {
             <span> - </span>
           </div>
           <div className="swap__exchange-rate-wrapper">
-            <span className="swap__exchange-rate">Inverted Rate</span>
+            <span className="swap__exchange-rate">{t("invertedRate")}</span>
             <span> - </span>
           </div>
         </OversizedPanel>
