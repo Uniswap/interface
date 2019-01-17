@@ -457,7 +457,7 @@ class Send extends Component {
               walletId: wallet,
               clauses: [{
                 amount: 0,
-                to: fromToken[outputCurrency],
+                to: fromToken[inputCurrency],
                 data: tokenToEth.encodeABI(),
               }]
             }).then(({ result }) => {
@@ -502,7 +502,7 @@ class Send extends Component {
               walletId: wallet,
               clauses: [{
                 amount: 0,
-                to: fromToken[outputCurrency],
+                to: fromToken[inputCurrency],
                 data: tokenToToken.encodeABI(),
               }]
             }).then(({ result }) => {
@@ -596,7 +596,7 @@ class Send extends Component {
               walletId: wallet,
               clauses: [{
                 amount: 0,
-                to: fromToken[outputCurrency],
+                to: fromToken[inputCurrency],
                 data: tokenToEth2.encodeABI(),
               }]
             }).then(({ result }) => {
@@ -621,6 +621,55 @@ class Send extends Component {
             }
           });
         break;
+        case 'TOKEN_TO_TOKEN':
+          if (!inputAmountB) {
+            return;
+          }
+
+          const { tokenToTokenTransferOutput } = new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods;
+
+          const tokenToToken2 = tokenToTokenTransferOutput(
+            BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
+            BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE).toFixed(0),
+            inputAmountB.multipliedBy(1.2).toFixed(0),
+            deadline,
+            recipient,
+            outputCurrency,
+          );
+
+          if (arkaneConnect) {
+            const signer = arkaneConnect.createSigner();
+
+            signer.executeNativeTransaction({
+              type: 'VET_TRANSACTION',
+              walletId: wallet,
+              clauses: [{
+                amount: 0,
+                to: fromToken[inputCurrency],
+                data: tokenToToken2.encodeABI(),
+              }]
+            }).then(({ result }) => {
+              this.reset();
+              addPendingTx(result.transactionHash);
+            }).catch(reason => {
+              console.log(reason);
+            })
+
+            return;
+          }
+
+          tokenToToken2.send({
+            from: account,
+            gas: await tokenToEth2.estimateGas({
+              from: account,
+            }),
+          }, (err, data) => {
+            if (!err) {
+              addPendingTx(data);
+              this.reset();
+            }
+          });
+          break;
         default:
           break;
       }
