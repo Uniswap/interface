@@ -23,7 +23,7 @@ const arkane = async (dispatch, getState) => {
     }
 
     window.arkaneConnect = new Arkane.ArkaneConnect('Arketype', { environment: 'staging' });
-    const web3 = thorify(new Web3(), "https://vechain-api.monti.finance");
+    const web3 = thorify(new Web3(), "www.vechain-api.monti.finance");
 
     extend(web3);
 
