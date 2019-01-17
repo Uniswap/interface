@@ -37,7 +37,7 @@ const thor = (dispatch, getState) => {
         return;
       }
     } else {
-      const web3 = thorify(new Web3(), "https://vechain-api.monti.finance:8669");
+      const web3 = thorify(new Web3(), "https://vechain-api.monti.finance");
       dispatch({
         type: INITIALIZE,
         payload: web3,
