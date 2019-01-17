@@ -27,6 +27,35 @@ const RINKEBY = {
   },
 };
 
+const ROPSTEN = {
+  factoryAddress: '0xf5D915570BC477f9B8D6C0E980aA81757A3AaC36',
+  exchangeAddresses: {
+    addresses: [
+      ['BAT',''],
+      ['DAI',''],
+      ['MKR',''],
+      ['OMG',''],
+      // ['ZRX',''],
+    ],
+    fromToken: {
+      '': '',
+      '': '',
+      '': '',
+      '': '',
+      // '': '',
+    },
+  },
+  tokenAddresses: {
+    addresses: [
+      ['BAT','0x60B10C134088ebD63f80766874e2Cade05fc987B'],
+      ['DAI','0x7d5E6A841Ec195F30911074d920EEc665A973A2D'],
+      ['MKR','0x4A47be893dDeF62696800ffCDDb8476C92Ab4221'],
+      ['OMG','0x9820b36a37af9389a23acfb7988c0ee6837763b6'],
+      // ['ZRX',''],
+    ],
+  },
+};
+
 const MAIN = {
   factoryAddress: '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95',
   exchangeAddresses: {
