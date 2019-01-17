@@ -33,7 +33,7 @@ const FUSE_OPTIONS = {
   ]
 };
 
-const TOKEN_ADDRESS_TO_LABEL = { ETH: 'ETH' };
+const TOKEN_ADDRESS_TO_LABEL = { VET: 'VET' };
 
 class CurrencyInputPanel extends Component {
   static propTypes = {
@@ -79,7 +79,7 @@ class CurrencyInputPanel extends Component {
   createTokenList = () => {
     const { filteredTokens } = this.props;
     let tokens = this.props.tokenAddresses.addresses;
-    let tokenList = [ { value: 'ETH', label: 'ETH', address: 'ETH' } ];
+    let tokenList = [ { value: 'VET', label: 'VET', address: 'VET' } ];
 
     for (let i = 0; i < tokens.length; i++) {
         let entry = { value: '', label: '' };
@@ -255,9 +255,11 @@ class CurrencyInputPanel extends Component {
       value,
       addApprovalTx,
       addPendingTx,
+      wallet,
+      arkaneConnect,
     } = this.props;
 
-    if (disableUnlock || !selectedTokenAddress || selectedTokenAddress === 'ETH') {
+    if (disableUnlock || !selectedTokenAddress || selectedTokenAddress === 'VET') {
       return;
     }
 
@@ -287,16 +289,45 @@ class CurrencyInputPanel extends Component {
     return (
       <button
         className='currency-input-panel__sub-currency-select'
-        onClick={() => {
+        onClick={async () => {
           const contract = new web3.eth.Contract(ERC20_ABI, selectedTokenAddress);
           const amount = BN(10 ** decimals).multipliedBy(10 ** 8).toFixed(0);
-          contract.methods.approve(fromToken[selectedTokenAddress], amount)
-            .send({ from: account }, (err, data) => {
-              if (!err && data) {
-                addPendingTx(data);
-                addApprovalTx({ tokenAddress: selectedTokenAddress, txId: data});
-              }
+          const { approve } = contract.methods;
+          const fn = approve(fromToken[selectedTokenAddress], amount);
+
+          if (arkaneConnect) {
+            const signer = arkaneConnect.createSigner();
+      
+            signer.executeNativeTransaction({
+              type: 'VET_TRANSACTION',
+              walletId: wallet,
+              clauses: [{
+                to: selectedTokenAddress,
+                amount: 0, 
+                data: fn.encodeABI(),
+              }]
+            }).then(({ result }) => {
+              addPendingTx(result.transactionHash);
+              addApprovalTx({ tokenAddress: selectedTokenAddress, txId: result.transactionHash });
+            }).catch(reason => {
+              console.log(reason);
             });
+      
+            return;
+          }
+
+          fn.send({
+            from: account,
+            gas: await fn.estimateGas({
+              from: account,
+            }),
+          }, (err, data) => {
+            if (!err && data) {
+              addPendingTx(data);
+              addApprovalTx({ tokenAddress: selectedTokenAddress, txId: data});
+            }
+          });
+
         }}
       >
         {t("unlock")}
@@ -413,6 +444,8 @@ export default withRouter(
       transactions: state.web3connect.transactions,
       web3: state.web3connect.web3,
       pendingApprovals: state.pending.approvals,
+      wallet: state.web3connect.wallet,
+      arkaneConnect: state.web3connect.arkaneConnect,
     }),
     dispatch => ({
       selectors: () => dispatch(selectors()),

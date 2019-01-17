@@ -1,51 +1,36 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {BigNumber as BN} from 'bignumber.js';
-import Web3 from 'web3';
+import { BigNumber as BN } from 'bignumber.js';
+import initialState from './initialState';
 import ERC20_ABI from "../abi/erc20";
 import ERC20_WITH_BYTES_ABI from "../abi/erc20_symbol_bytes32";
 
-export const INITIALIZE = 'we3connect/initialize';
-export const UPDATE_ACCOUNT = 'we3connect/updateAccount';
-export const WATCH_ETH_BALANCE = 'web3connect/watchEthBalance';
-export const WATCH_TOKEN_BALANCE = 'web3connect/watchTokenBalance';
-export const UPDATE_ETH_BALANCE = 'web3connect/updateEthBalance';
-export const UPDATE_TOKEN_BALANCE = 'web3connect/updateTokenBalance';
-export const WATCH_APPROVALS = 'web3connect/watchApprovals';
-export const UPDATE_APPROVALS = 'web3connect/updateApprovals';
-export const ADD_CONTRACT = 'web3connect/addContract';
-export const UPDATE_NETWORK_ID = 'web3connect/updateNetworkId';
-export const ADD_PENDING_TX = 'web3connect/addPendingTx';
-export const REMOVE_PENDING_TX = 'web3connect/removePendingTx';
-export const ADD_CONFIRMED_TX = 'web3connect/addConfirmedTx';
+import {
+  INITIALIZE,
+  UPDATE_ACCOUNT,
+  WATCH_ETH_BALANCE,
+  WATCH_TOKEN_BALANCE,
+  UPDATE_ETH_BALANCE,
+  UPDATE_TOKEN_BALANCE,
+  WATCH_APPROVALS,
+  UPDATE_APPROVALS,
+  ADD_CONTRACT,
+  UPDATE_NETWORK_ID,
+  ADD_PENDING_TX,
+  REMOVE_PENDING_TX,
+  ADD_CONFIRMED_TX,
+  UPDATE_WALLET,
+} from './creators';
 
-const initialState = {
-  web3: null,
-  networkId: 0,
-  initialized: false,
-  account: '',
-  balances: {
-    ethereum: {},
-  },
-  approvals: {
-    '0x0': {
-      TOKEN_OWNER: {
-        SPENDER: {},
-      },
-    },
-  },
-  transactions: {
-    pending: [],
-    confirmed: [],
-  },
-  watched: {
-    balances: {
-      ethereum: [],
-    },
-    approvals: {},
-  },
-  contracts: {},
+import thor from './thor';
+import arkane from './arkane';
+
+const convertArrayToMap = (array, key) => {
+  return array.reduce((obj, item) => {
+    obj[item[key]] = item;
+    return obj;
+  }, {});
 };
 
 // selectors
@@ -64,14 +49,14 @@ export const selectors = () => (dispatch, getState) => {
 
   const getBalance = (address, tokenAddress) => {
     if (process.env.NODE_ENV !== 'production' && !tokenAddress) {
-      console.warn('No token address found - return ETH balance');
+      console.warn('No token address found - return VET balance');
     }
 
-    if (!tokenAddress || tokenAddress === 'ETH') {
-      const balance = state.balances.ethereum[address];
+    if (!tokenAddress || tokenAddress === 'VET') {
+      const balance = state.balances.vechain[address];
       if (!balance) {
         dispatch(watchBalance({ balanceOf: address }));
-        return Balance(0, 'ETH');
+        return Balance(0, 'VET');
       }
       return balance;
     } else if (tokenAddress) {
@@ -106,46 +91,14 @@ const Balance = (value, label = '', decimals = 0) => ({
   decimals: +decimals,
 });
 
-export const initialize = () => (dispatch, getState) => {
-  const { web3connect } = getState();
+export const initialize = (initializeArkane = false) => async (dispatch, getState) => {
+  const { provider } = getState().web3connect;
 
-  return new Promise(async (resolve, reject) => {
-    if (web3connect.web3) {
-      resolve(web3connect.web3);
-      return;
-    }
+  if (initializeArkane || provider === 'arkane') {
+    return arkane(dispatch, getState)
+  }
 
-    if (typeof window.ethereum !== 'undefined') {
-      try {
-        const web3 = new Web3(window.ethereum);
-        await window.ethereum.enable();
-        dispatch({
-          type: INITIALIZE,
-          payload: web3,
-        });
-        resolve(web3);
-        return;
-      } catch (error) {
-        console.error('User denied access.');
-        dispatch({ type: INITIALIZE });
-        reject();
-        return;
-      }
-    }
-
-    if (typeof window.web3 !== 'undefined') {
-      const web3 = new Web3(window.web3.currentProvider);
-      dispatch({
-        type: INITIALIZE,
-        payload: web3,
-      });
-      resolve(web3);
-      return;
-    }
-
-    dispatch({ type: INITIALIZE });
-    reject();
-  })
+  return thor(dispatch, getState);
 };
 
 export const watchBalance = ({ balanceOf, tokenAddress }) => (dispatch, getState) => {
@@ -157,7 +110,7 @@ export const watchBalance = ({ balanceOf, tokenAddress }) => (dispatch, getState
   const { watched } = web3connect;
 
   if (!tokenAddress) {
-    if (watched.balances.ethereum.includes(balanceOf)) {
+    if (watched.balances.vechain.includes(balanceOf)) {
       return;
     }
     dispatch({
@@ -190,7 +143,7 @@ export const watchApprovals = ({ tokenAddress, tokenOwner, spender }) => (dispat
   return dispatch({
     type: WATCH_APPROVALS,
     payload: {
-      tokenAddress,
+     tokenAddress,
       tokenOwner,
       spender,
     },
@@ -220,25 +173,46 @@ export const sync = () => async (dispatch, getState) => {
     watched,
     contracts,
     networkId,
+    arkaneConnect,
     transactions: { pending, confirmed },
   } = getState().web3connect;
 
   // Sync Account
-  const accounts = await web3.eth.getAccounts();
-  if (account !== accounts[0]) {
-    dispatch({ type: UPDATE_ACCOUNT, payload: accounts[0] });
-    dispatch(watchBalance({ balanceOf: accounts[0] }));
+  try {
+    if (arkaneConnect) {
+      const wallets = await arkaneConnect.api.getWallets();
+      const walletsMap = convertArrayToMap(wallets, 'id'); 
+      localStorage.setItem('wallets', JSON.stringify(walletsMap));
+
+      if (account !== wallets[0].address) {
+        dispatch({ type: UPDATE_ACCOUNT, payload: wallets[0].address });
+        dispatch({ type: UPDATE_WALLET, payload: wallets[0].id });
+        dispatch(watchBalance({ balanceOf: wallets[0].address }));
+      }
+
+    } else {
+      const accounts = await web3.eth.getAccounts();
+      if (account !== accounts[0]) {
+        dispatch({ type: UPDATE_ACCOUNT, payload: accounts[0] });
+        dispatch(watchBalance({ balanceOf: accounts[0] }));
+      }
+    }
+
+  } catch(error) {
+    return;
   }
 
   if (!networkId) {
+    const chainTagHex = await web3.eth.getChainTag();
+
     dispatch({
       type: UPDATE_NETWORK_ID,
-      payload: await web3.eth.net.getId(),
+      payload: parseInt(chainTagHex, 16),
     });
   }
 
-  // Sync Ethereum Balances
-  watched.balances.ethereum.forEach(async address => {
+  // Sync VeChain Balances
+  watched.balances.vechain.forEach(async address => {
     const balance = await web3.eth.getBalance(address);
     const { value } = getBalance(address);
 
@@ -249,7 +223,7 @@ export const sync = () => async (dispatch, getState) => {
     dispatch({
       type: UPDATE_ETH_BALANCE,
       payload: {
-        balance: Balance(balance, 'ETH', 18),
+        balance: Balance(balance, 'VET', 18),
         balanceOf: address,
       },
     })
@@ -258,7 +232,8 @@ export const sync = () => async (dispatch, getState) => {
   // Sync Token Balances
   Object.keys(watched.balances)
     .forEach(tokenAddress => {
-      if (tokenAddress === 'ethereum') {
+
+      if (tokenAddress === 'vechain') {
         return;
       }
 
@@ -384,14 +359,21 @@ export const startWatching = () => async (dispatch, getState) => {
   setTimeout(() => dispatch(startWatching()), timeout);
 };
 
-export default function web3connectReducer(state = initialState, { type, payload }) {
+export default function web3connectReducer(state = initialState, { type, payload, meta }) {
   switch (type) {
     case INITIALIZE:
       return {
         ...state,
         web3: payload,
+        arkaneConnect: (meta || {}).arkaneConnect,
+        provider: (meta || {}).provider,
         initialized: true,
       };
+    case UPDATE_WALLET:
+      return {
+        ...state,
+        wallet: payload,
+      }
     case UPDATE_ACCOUNT:
       return {
         ...state,
@@ -404,7 +386,7 @@ export default function web3connectReducer(state = initialState, { type, payload
           ...state.watched,
           balances: {
             ...state.watched.balances,
-            ethereum: [ ...state.watched.balances.ethereum, payload ],
+            vechain: [ ...state.watched.balances.vechain, payload ],
           },
         },
       };
@@ -428,8 +410,8 @@ export default function web3connectReducer(state = initialState, { type, payload
         ...state,
         balances: {
           ...state.balances,
-          ethereum: {
-            ...state.balances.ethereum,
+          vechain: {
+            ...state.balances.vechain,
             [payload.balanceOf]: payload.balance,
           },
         },
@@ -533,9 +515,9 @@ export class _Web3Connect extends Component {
     initialize() {}
   };
 
-  componentWillMount() {
-    this.props.initialize()
-      .then(this.props.startWatching());
+  componentDidMount() {
+    const { initialize, startWatching } = this.props;
+    initialize().then(startWatching());
   }
 
   render() {

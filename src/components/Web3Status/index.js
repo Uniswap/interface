@@ -9,8 +9,8 @@ import { withNamespaces } from 'react-i18next';
 import './web3-status.scss';
 import Modal from '../Modal';
 
-function getEtherscanLink(tx) {
-  return `https://etherscan.io/tx/${tx}`;
+function getVeforgeLink(tx) {
+  return `https://veforge.com/transactions/${tx}`;
 }
 
 class Web3Status extends Component {
@@ -30,7 +30,7 @@ class Web3Status extends Component {
         <div
           key={transaction}
           className={classnames('pending-modal__transaction-row')}
-          onClick={() => window.open(getEtherscanLink(transaction), '_blank')}
+          onClick={() => window.open(getVeforgeLink(transaction), '_blank')}
         >
           <div className="pending-modal__transaction-label">
             {transaction}

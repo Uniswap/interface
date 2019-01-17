@@ -2,129 +2,75 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
-import UAParser from 'ua-parser-js';
-import { withNamespaces } from 'react-i18next';
-import Logo from '../Logo';
-import CoinbaseWalletLogo from '../../assets/images/coinbase-wallet-logo.png';
-import TrustLogo from '../../assets/images/trust-wallet-logo.svg';
-import BraveLogo from '../../assets/images/brave-logo.svg';
-import MetamaskLogo from '../../assets/images/metamask-logo.svg';
+import CometLogo from '../../assets/images/comet.png';
+import AkraneLogo from '../../assets/images/arkane.svg';
 import Web3Status from '../Web3Status';
 
 import "./header.scss";
 
 const links = {
-  coinbaseWallet: {
-    android: 'https://play.google.com/store/apps/details?id=org.toshi',
-    ios: 'https://itunes.apple.com/us/app/coinbase-wallet/id1278383455'
+  comet: {
+    chrome: 'https://www.cometpowered.com/',
   },
-  trust: {
-    android: 'https://links.trustwalletapp.com/a/key_live_lfvIpVeI9TFWxPCqwU8rZnogFqhnzs4D?&event=openURL&url=https://uniswap.exchange/swap',
-    ios: 'https://links.trustwalletapp.com/a/key_live_lfvIpVeI9TFWxPCqwU8rZnogFqhnzs4D?&event=openURL&url=https://uniswap.exchange/swap',
-  },
-  metamask: {
-    chrome: 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
-  },
-  brave: {
-    android: 'https://play.google.com/store/apps/details?id=com.brave.browser',
-    ios: 'https://itunes.apple.com/us/app/brave-browser-fast-adblocker/id1052879175',
+  arkane: {
+    chrome: 'https://www.arkane.network',
   },
 };
 
-const ua = new UAParser(window.navigator.userAgent);
-
-function getTrustLink() {
-  const os = ua.getOS();
-
-  if (os.name === 'Android') {
-    return links.trust.android;
-  }
-
-  if (os.name === 'iOS') {
-    return links.trust.ios;
-  }
+function getArkaneLinks() {
+  return links.arkane.chrome;
 }
 
-function getCoinbaseWalletLink() {
-  const os = ua.getOS();
-
-  if (os.name === 'Android') {
-    return links.coinbaseWallet.android;
-  }
-
-  if (os.name === 'iOS') {
-    return links.coinbaseWallet.ios;
-  }
-}
-
-function getBraveLink() {
-  const os = ua.getOS();
-
-  if (os.name === 'Mac OS') {
-    return links.brave.ios;
-  }
-
-  return links.brave.android;
-}
-
-function getMetamaskLink() {
-  return links.metamask.chrome;
-}
-
-function isMobile() {
-  return ua.getDevice().type === 'mobile';
+function getCometLinks() {
+  return links.comet.chrome;
 }
 
 class BlockingWarning extends Component {
+  constructor() {
+    super();
+
+    this.connectArkane = this.connectArkane.bind(this);
+  }
+
+  connectArkane() {
+    window.arkaneConnect.authenticate();
+  }
+
   render () {
     const {
-      t,
       isConnected,
       initialized,
       networkId,
     } = this.props;
     let content = [];
 
-    const correctNetworkId = process.env.REACT_APP_NETWORK_ID || 1;
-    const correctNetwork = process.env.REACT_APP_NETWORK || 'Main Ethereum Network';
+    const correctNetworkId = process.env.REACT_APP_NETWORK_ID || 74;
+    const correctNetwork = process.env.REACT_APP_NETWORK || 'Main VeChain Network';
 
-    const wrongNetwork = networkId != correctNetworkId;
+    const wrongNetwork = +networkId !== +correctNetworkId;
 
     if (wrongNetwork && initialized) {
       content = [
-        <div key="warning-title">{t("wrongNetwork")}</div>,
+        <div key="warning-title">You are on the wrong network</div>,
         <div key="warning-desc" className="header__dialog__description">
-          {t("switchNetwork", {correctNetwork})}
+          {`Please switch to ${correctNetwork}`}
         </div>,
       ];
     }
 
     if (!isConnected && initialized) {
       content = [
-        <div key="warning-title">{t("noWallet")}</div>,
+        <div key="warning-title">No Vechain wallet found</div>,
         <div key="warning-desc" className="header__dialog__description">
-          {
-            isMobile()
-              ? t("installWeb3MobileBrowser")
-              : t("installMetamask")
-          }
+          Please visit us after installing Comet or Arkane Network
         </div>,
         <div key="warning-logos" className="header__download">
-          {
-            isMobile()
-              ? (
-                [
-                  <img src={CoinbaseWalletLogo} key="coinbase-wallet" onClick={() => window.open(getCoinbaseWalletLink(), '_blank')} />,
-                  <img src={TrustLogo} key="trust" onClick={() => window.open(getTrustLink(), '_blank')} />
-                ]
-              )
-              : (
-                [
-                  <img src={MetamaskLogo} key="metamask" onClick={() => window.open(getMetamaskLink(), '_blank')} />,
-                  <img src={BraveLogo} key="brave" onClick={() => window.open(getBraveLink(), '_blank')} />
-                ]
-              )
-          }
+          {(
+            [
+              <img src={CometLogo} key="comet" onClick={() => window.open(getCometLinks(), '_blank')} />,
+              <img src={AkraneLogo} key="arkane" onClick={() => window.open(getArkaneLinks(), '_blank')} />
+            ]
+          )}
         </div>,
       ];
     }
@@ -136,6 +82,10 @@ class BlockingWarning extends Component {
         })}
       >
         {content}
+
+        <div className="header__footer">
+          <button className="header__authenticate" onClick={this.connectArkane}>Connect Arkane Account</button>
+        </div>
       </div>
     );
   }
@@ -150,9 +100,8 @@ function Header (props) {
           'header--inactive': !props.isConnected,
         })}
       >
-        <Logo />
         <div className="header__center-group">
-          <span className="header__title">Uniswap</span>
+          <span className="header__title">VEXCHANGE</span>
         </div>
         <Web3Status isConnected />
       </div>
@@ -161,6 +110,7 @@ function Header (props) {
 }
 
 Header.propTypes = {
+  connectArkane: PropTypes.shape(),
   currentAddress: PropTypes.string,
   isConnected: PropTypes.bool.isRequired,
 };
@@ -173,4 +123,4 @@ export default connect(
     web3: state.web3connect.web3,
     networkId: state.web3connect.networkId,
   }),
-)(withNamespaces()(Header));
+)(Header);

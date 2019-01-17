@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withNamespaces } from 'react-i18next';
@@ -51,6 +51,10 @@ class NavigationTabs extends Component {
           showBetaMessage && (
             <div className="beta-message" onClick={dismissBetaMessage}>
               💀 {t("betaWarning")}
+              &nbsp;
+              <Link to="/terms-of-service">
+                Terms of Service
+              </Link>
             </div>
           )
         }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import EthereumLogo from '../../assets/images/ethereum-logo.svg';
+import VeChainLogo from '../../assets/images/vechain-logo.png';
 import GenericTokenLogo from '../../assets/images/generic-token-logo.png';
 
 const RINKEBY_TOKEN_MAP = {
@@ -11,7 +11,7 @@ const RINKEBY_TOKEN_MAP = {
   '0xF22e3F33768354c9805d046af3C0926f27741B43': '0xe41d2489571d322189246dafa5ebde1f4699f498',
 };
 
-const TOKEN_ICON_API = 'https://raw.githubusercontent.com/TrustWallet/tokens/master/images';
+const TOKEN_ICON_API = 'https://raw.githubusercontent.com/ValhallaVET/tokens/master/images';
 const BAD_IMAGES = {};
 export default class TokenLogo extends Component {
   static propTypes = {
@@ -36,12 +36,12 @@ export default class TokenLogo extends Component {
     let path = '';
     const mainAddress = RINKEBY_TOKEN_MAP[address] ? RINKEBY_TOKEN_MAP[address] : address;
 
-    if (mainAddress === 'ETH') {
-      path = EthereumLogo;
+    if (mainAddress === 'VET') {
+      path = VeChainLogo;
     }
 
-    if (!this.state.error && !BAD_IMAGES[mainAddress] && mainAddress !== 'ETH') {
-      path = `${TOKEN_ICON_API}/${mainAddress.toLowerCase()}.png`;
+    if (!this.state.error && !BAD_IMAGES[mainAddress] && mainAddress !== 'VET') {
+      path = `${TOKEN_ICON_API}/${mainAddress}.png`;
     }
 
     if (!path) {

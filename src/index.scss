@@ -4,7 +4,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  font-family: "Inter UI", sans-serif;
+  font-family: 'Karla', sans-serif;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -22,7 +22,7 @@ html, body {
   background-color: $white;
   z-index: 100;
   -webkit-tap-highlight-color:  rgba(255, 255, 255, 0);
-  @media only screen and (min-width : 768px) {
+  @media only screen and (min-device-width : 768px) {
     justify-content: center;
     align-items: center;
   }

@@ -15,7 +15,6 @@ import ArrowDownGrey from "../../assets/images/arrow-down-grey.svg";
 import { getBlockDeadline } from '../../helpers/web3-utils';
 import { retry } from '../../helpers/promise-utils';
 import EXCHANGE_ABI from "../../abi/exchange";
-import ReactGA from "react-ga";
 
 class RemoveLiquidity extends Component {
   static propTypes = {
@@ -91,6 +90,8 @@ class RemoveLiquidity extends Component {
       web3,
       selectors,
       account,
+      wallet,
+      arkaneConnect,
     } = this.props;
     const exchangeAddress = fromToken[tokenAddress];
     const { getBalance } = selectors();
@@ -115,20 +116,43 @@ class RemoveLiquidity extends Component {
       return;
     }
 
-    exchange.methods.removeLiquidity(
+    const fn = exchange.methods.removeLiquidity(
       amount.toFixed(0),
       ethWithdrawn.multipliedBy(1 - SLIPPAGE).toFixed(0),
       tokenWithdrawn.multipliedBy(1 - SLIPPAGE).toFixed(0),
       deadline,
-    ).send({ from: account }, (err, data) => {
+    );
+
+    if (arkaneConnect) {
+      const signer = arkaneConnect.createSigner();
+
+      signer.executeNativeTransaction({
+        type: 'VET_TRANSACTION',
+        walletId: wallet,
+        clauses: [{
+          amount: 0,
+          to: exchangeAddress,
+          data: fn.encodeABI(),
+        }]
+      }).then(({ result }) => {
+        this.reset();
+        this.props.addPendingTx(result.transactionHash);
+      }).catch(reason => {
+        console.log(reason);
+      })
+
+      return;
+    }
+
+    fn.send({
+      from: account,
+      gas: await fn.estimateGas({
+        from: account,
+      })
+    }, (err, data) => {
       if (data) {
         this.reset();
-
         this.props.addPendingTx(data);
-        ReactGA.event({
-          category: 'Pool',
-          action: 'RemoveLiquidity',
-        });
       }
     });
   };
@@ -208,11 +232,6 @@ class RemoveLiquidity extends Component {
       return null;
     }
 
-    ReactGA.event({
-      category: 'TransactionDetail',
-      action: 'Open',
-    });
-
     const SLIPPAGE = 0.025;
     const { value: liquidityBalance, decimals } = getBalance(account, exchangeAddress);
     const { value: ethReserve } = getBalance(exchangeAddress);
@@ -231,10 +250,10 @@ class RemoveLiquidity extends Component {
 
     return (
       <div>
-        <div className="pool__summary-modal__item">{t("youAreRemoving")} {b(`${+BN(ethWithdrawn).toFixed(7)} ETH`)} {t("and")} {b(`${+minTokenWithdrawn} - ${+maxTokenWithdrawn} ${label}`)} {t("outPool")}</div>
+        <div className="pool__summary-modal__item">{t("youAreRemoving")} {b(`${+BN(ethWithdrawn).toFixed(7)} VET`)} {t("and")} {b(`${+minTokenWithdrawn} - ${+maxTokenWithdrawn} ${label}`)} {t("outPool")}</div>
         <div className="pool__summary-modal__item">{t("youWillRemove")} {b(+input)} {t("liquidityTokens")}</div>
         <div className="pool__summary-modal__item">{t("totalSupplyIs")} {b(+adjTotalSupply.toFixed(7))}</div>
-        <div className="pool__summary-modal__item">{t("tokenWorth")} {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH {t("and")} {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
+        <div className="pool__summary-modal__item">{t("tokenWorth")} {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} VET {t("and")} {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
       </div>
     );
   }
@@ -310,7 +329,7 @@ class RemoveLiquidity extends Component {
           ? (
             <div className="remove-liquidity__output">
               <div className="remove-liquidity__output-text">
-                {`${ethPer.multipliedBy(input).toFixed(3)} ETH`}
+                {`${ethPer.multipliedBy(input).toFixed(3)} VET`}
               </div>
               <div className="remove-liquidity__output-plus"> + </div>
               <div className="remove-liquidity__output-text">
@@ -328,18 +347,18 @@ class RemoveLiquidity extends Component {
           <div className="pool__exchange-rate-wrapper">
             <span className="pool__exchange-rate">{t("exchangeRate")}</span>
             <span>
-              {`1 ETH = ${exchangeRate.toFixed(4)} ${label}`}
+              {`1 VET = ${exchangeRate.toFixed(4)} ${label}`}
             </span>
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">{t("currentPoolSize")}</span>
-            <span>{`${ethReserve.dividedBy(10 ** 18).toFixed(2)} ETH + ${tokenReserve.dividedBy(10 ** tokenDecimals).toFixed(2)} ${label}`}</span>
+            <span>{`${ethReserve.dividedBy(10 ** 18).toFixed(2)} VET + ${tokenReserve.dividedBy(10 ** tokenDecimals).toFixed(2)} ${label}`}</span>
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">
               {t("yourPoolShare")} ({ownership.multipliedBy(100).toFixed(2)}%)
             </span>
-            <span>{`${ownedEth.toFixed(2)} ETH + ${ownedToken.toFixed(2)} ${label}`}</span>
+            <span>{`${ownedEth.toFixed(2)} VET + ${ownedToken.toFixed(2)} ${label}`}</span>
           </div>
         </div>
       </OversizedPanel>
@@ -372,7 +391,7 @@ class RemoveLiquidity extends Component {
           errorMessage={errorMessage}
           selectedTokenAddress={tokenAddress}
           onCurrencySelected={this.onTokenSelect}
-          filteredTokens={['ETH']}
+          filteredTokens={['VET']}
         />
         <OversizedPanel>
           <div className="swap__down-arrow-background">
@@ -400,11 +419,13 @@ class RemoveLiquidity extends Component {
 
 export default connect(
   state => ({
-    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||1),
+    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID || 74),
     web3: state.web3connect.web3,
     balances: state.web3connect.balances,
     account: state.web3connect.account,
     exchangeAddresses: state.addresses.exchangeAddresses,
+    wallet: state.web3connect.wallet,
+    arkaneConnect: state.web3connect.arkaneConnect,
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),

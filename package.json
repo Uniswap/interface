@@ -34,19 +34,22 @@
     "redux": "^3.7.2",
     "redux-subscriber": "^1.1.0",
     "redux-thunk": "^2.2.0",
+    "thorify": "^1.0.4",
     "ua-parser-js": "^0.7.18",
-    "web3": "^1.0.0-beta.36"
+    "web3": "^1.0.0-beta.36",
+    "webfontloader": "^1.6.28"
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:rinkeby": "REACT_APP_NETWORK_ID=4 REACT_APP_NETWORK='Rinkeby Test Network' react-scripts start",
+    "start:testnet": "REACT_APP_NETWORK_ID=39 REACT_APP_NETWORK='testnet' react-scripts start",
     "build": "react-scripts build && cp build/index.html build/404.html",
-    "build:rinkeby": "REACT_APP_NETWORK_ID=4 REACT_APP_NETWORK='Rinkeby Test Network' react-scripts build && cp build/index.html build/404.html",
+    "build:testnet": "REACT_APP_NETWORK_ID=39 REACT_APP_NETWORK='testnet' react-scripts build && cp build/index.html build/404.html",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "deploy": "npm run build&&gh-pages -d build"
   },
   "devDependencies": {
+    "@arkane-network/arkane-connect": "^1.1.2",
     "gh-pages": "^1.1.0"
   },
   "browserslist": [

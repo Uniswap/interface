@@ -18,7 +18,6 @@ import ModeSelector from './ModeSelector';
 import {BigNumber as BN} from 'bignumber.js';
 import EXCHANGE_ABI from '../../abi/exchange';
 import "./pool.scss";
-import ReactGA from "react-ga";
 
 const INPUT = 0;
 const OUTPUT = 1;
@@ -37,7 +36,7 @@ class AddLiquidity extends Component {
   state = {
     inputValue: '',
     outputValue: '',
-    inputCurrency: 'ETH',
+    inputCurrency: 'VET',
     outputCurrency: '',
     lastEditedField: '',
     totalSupply: BN(0),
@@ -150,7 +149,14 @@ class AddLiquidity extends Component {
   }
 
   onAddLiquidity = async () => {
-    const { account, web3, exchangeAddresses: { fromToken }, selectors } = this.props;
+    const {
+      account,
+      web3,
+      exchangeAddresses: { fromToken },
+      selectors,
+      arkaneConnect,
+      wallet,
+    } = this.props;
     const { inputValue, outputValue, outputCurrency } = this.state;
     const exchange = new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]);
 
@@ -172,19 +178,41 @@ class AddLiquidity extends Component {
     const minLiquidity = this.isNewExchange() ? BN(0) : liquidityMinted.multipliedBy(1 - MAX_LIQUIDITY_SLIPPAGE);
     const maxTokens = this.isNewExchange() ? tokenAmount : tokenAmount.multipliedBy(1 + MAX_LIQUIDITY_SLIPPAGE);
 
+    const { addLiquidity } = exchange.methods;
+    const fn = addLiquidity(minLiquidity.toFixed(0), maxTokens.toFixed(0), deadline);
+
+    if (arkaneConnect) {
+      const signer = arkaneConnect.createSigner();
+
+      signer.executeNativeTransaction({
+        type: 'VET_TRANSACTION',
+        walletId: wallet,
+        clauses: [{
+          to: fromToken[outputCurrency],
+          amount: ethAmount.toFixed(0),
+          data: fn.encodeABI(),
+        }]
+      }).then(({ result }) => {
+        this.reset();
+        this.props.addPendingTx(result.transactionHash);
+      }).catch(reason => {
+        console.log(reason);
+      })
+
+      return;
+    }
+
     try {
-      exchange.methods.addLiquidity(minLiquidity.toFixed(0), maxTokens.toFixed(0), deadline).send({
+      fn.send({
         from: account,
-        value: ethAmount.toFixed(0)
+        value: ethAmount.toFixed(0),
+        gas: await fn.estimateGas({
+          from: account,
+          value: ethAmount.toFixed(0),
+        }),
       }, (err, data) => {
         this.reset();
         this.props.addPendingTx(data);
-        if (data) {
-          ReactGA.event({
-            category: 'Pool',
-            action: 'AddLiquidity',
-          });
-        }
       });
     } catch (err) {
       console.error(err);
@@ -196,11 +224,11 @@ class AddLiquidity extends Component {
     const exchangeRate = this.getExchangeRate();
     let outputValue;
 
-    if (inputCurrency === 'ETH' && outputCurrency && outputCurrency !== 'ETH') {
+    if (inputCurrency === 'VET' && outputCurrency && outputCurrency !== 'VET') {
       outputValue = exchangeRate.multipliedBy(value).toFixed(7);
     }
 
-    if (outputCurrency === 'ETH' && inputCurrency && inputCurrency !== 'ETH') {
+    if (outputCurrency === 'VET' && inputCurrency && inputCurrency !== 'VET') {
       outputValue = BN(value).dividedBy(exchangeRate).toFixed(7);
     }
 
@@ -221,11 +249,11 @@ class AddLiquidity extends Component {
     const exchangeRate = this.getExchangeRate();
     let inputValue;
 
-    if (inputCurrency === 'ETH' && outputCurrency && outputCurrency !== 'ETH') {
+    if (inputCurrency === 'VET' && outputCurrency && outputCurrency !== 'VET') {
       inputValue = BN(value).dividedBy(exchangeRate).toFixed(7);
     }
 
-    if (outputCurrency === 'ETH' && inputCurrency && inputCurrency !== 'ETH') {
+    if (outputCurrency === 'VET' && inputCurrency && inputCurrency !== 'VET') {
       inputValue = exchangeRate.multipliedBy(value).toFixed(7);
     }
 
@@ -244,8 +272,8 @@ class AddLiquidity extends Component {
   isNewExchange() {
     const { selectors, exchangeAddresses: { fromToken } } = this.props;
     const { inputCurrency, outputCurrency } = this.state;
-    const eth = [inputCurrency, outputCurrency].filter(currency => currency === 'ETH')[0];
-    const token = [inputCurrency, outputCurrency].filter(currency => currency !== 'ETH')[0];
+    const eth = [inputCurrency, outputCurrency].filter(currency => currency === 'VET')[0];
+    const token = [inputCurrency, outputCurrency].filter(currency => currency !== 'VET')[0];
 
     if (!eth || !token) {
       return false;
@@ -260,8 +288,8 @@ class AddLiquidity extends Component {
   getExchangeRate() {
     const { selectors, exchangeAddresses: { fromToken } } = this.props;
     const { inputCurrency, outputCurrency } = this.state;
-    const eth = [inputCurrency, outputCurrency].filter(currency => currency === 'ETH')[0];
-    const token = [inputCurrency, outputCurrency].filter(currency => currency !== 'ETH')[0];
+    const eth = [inputCurrency, outputCurrency].filter(currency => currency === 'VET')[0];
+    const token = [inputCurrency, outputCurrency].filter(currency => currency !== 'VET')[0];
 
     if (!eth || !token) {
       return;
@@ -330,8 +358,8 @@ class AddLiquidity extends Component {
     const { selectors, exchangeAddresses: { fromToken }, account } = this.props;
     const { getBalance } = selectors();
     const { inputCurrency, outputCurrency, inputValue, outputValue, totalSupply } = this.state;
-    const eth = [inputCurrency, outputCurrency].filter(currency => currency === 'ETH')[0];
-    const token = [inputCurrency, outputCurrency].filter(currency => currency !== 'ETH')[0];
+    const eth = [inputCurrency, outputCurrency].filter(currency => currency === 'VET')[0];
+    const token = [inputCurrency, outputCurrency].filter(currency => currency !== 'VET')[0];
     const exchangeAddress = fromToken[token];
 
     if (!eth || !token || !exchangeAddress) {
@@ -358,7 +386,7 @@ class AddLiquidity extends Component {
         <div className="pool__summary-panel">
           <div className="pool__exchange-rate-wrapper">
             <span className="pool__exchange-rate">{t("exchangeRate")}</span>
-            <span>{`1 ETH = ${rateText} ${label}`}</span>
+            <span>{`1 VET = ${rateText} ${label}`}</span>
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">{t("currentPoolSize")}</span>
@@ -368,7 +396,7 @@ class AddLiquidity extends Component {
             <span className="swap__exchange-rate">
               {t("yourPoolShare")} ({ownership.multipliedBy(100).toFixed(2)}%)
             </span>
-            <span>{`${ownedEth.toFixed(2)} ETH + ${ownedToken.toFixed(2)} ${label}`}</span>
+            <span>{`${ownedEth.toFixed(2)} VET + ${ownedToken.toFixed(2)} ${label}`}</span>
           </div>
         </div>
       )
@@ -382,7 +410,7 @@ class AddLiquidity extends Component {
       <div className="pool__summary-panel">
         <div className="pool__exchange-rate-wrapper">
           <span className="pool__exchange-rate">{t("exchangeRate")}</span>
-          <span>{`1 ETH = ${tokenValue.multipliedBy(10 ** (18 - decimals)).dividedBy(ethValue).toFixed(4)} ${label}`}</span>
+          <span>{`1 VET = ${tokenValue.multipliedBy(10 ** (18 - decimals)).dividedBy(ethValue).toFixed(4)} ${label}`}</span>
         </div>
         <div className="pool__exchange-rate-wrapper">
           <span className="swap__exchange-rate">{t("currentPoolSize")}</span>
@@ -392,7 +420,7 @@ class AddLiquidity extends Component {
             <span className="swap__exchange-rate">
             {t("yourPoolShare")} ({ownership.multipliedBy(100).toFixed(2)}%)
             </span>
-          <span>{`${ownedEth.toFixed(2)} ETH + ${ownedToken.toFixed(2)} ${label}`}</span>
+          <span>{`${ownedEth.toFixed(2)} VET + ${ownedToken.toFixed(2)} ${label}`}</span>
         </div>
       </div>
     )
@@ -419,8 +447,8 @@ class AddLiquidity extends Component {
       contextualInfo = t("selectTokenCont");
     } else if (inputCurrency === outputCurrency) {
       contextualInfo = t("differentToken");
-    } else if (![inputCurrency, outputCurrency].includes('ETH')) {
-      contextualInfo = t("mustBeETH");
+    } else if (![inputCurrency, outputCurrency].includes('VET')) {
+      contextualInfo = t("mustBeVET");
     } else if (inputIsZero || outputIsZero) {
       contextualInfo = t("noZero");
     } else if (this.isUnapproved()) {
@@ -449,11 +477,6 @@ class AddLiquidity extends Component {
       totalSupply,
     } = this.state;
 
-    ReactGA.event({
-      category: 'TransactionDetail',
-      action: 'Open',
-    });
-
     const { value: tokenReserve, decimals, label } = selectors().getTokenBalance(outputCurrency, fromToken[outputCurrency]);
     const { value: ethReserve } = selectors().getBalance(fromToken[outputCurrency]);
     const { decimals: poolTokenDecimals } = selectors().getBalance(account, fromToken[outputCurrency]);
@@ -461,8 +484,8 @@ class AddLiquidity extends Component {
     if (this.isNewExchange()) {
       return (
         <div>
-          <div className="pool__summary-item">You are adding {b(`${inputValue} ETH`)} and {b(`${outputValue} ${label}`)} to the liquidity pool.</div>
-          <div className="pool__summary-item">You are setting the initial exchange rate to {b(`1 ETH = ${BN(outputValue).dividedBy(inputValue).toFixed(4)} ${label}`)}.</div>
+          <div className="pool__summary-item">You are adding {b(`${inputValue} VET`)} and {b(`${outputValue} ${label}`)} to the liquidity pool.</div>
+          <div className="pool__summary-item">You are setting the initial exchange rate to {b(`1 VET = ${BN(outputValue).dividedBy(inputValue).toFixed(4)} ${label}`)}.</div>
           <div className="pool__summary-item">You will mint {b(`${inputValue} liquidity tokens`)}.</div>
           <div className="pool__summary-item">Current total supply of liquidity tokens is 0.</div>
         </div>
@@ -479,10 +502,10 @@ class AddLiquidity extends Component {
 
     return (
       <div>
-        <div className="pool__summary-modal__item">{t("youAreAdding")} {b(`${+BN(inputValue).toFixed(7)} ETH`)} {t("and")} {b(`${+minOutput.toFixed(7)} - ${+maxOutput.toFixed(7)} ${label}`)} {t("intoPool")}</div>
+        <div className="pool__summary-modal__item">{t("youAreAdding")} {b(`${+BN(inputValue).toFixed(7)} VET`)} {t("and")} {b(`${+minOutput.toFixed(7)} - ${+maxOutput.toFixed(7)} ${label}`)} {t("intoPool")}</div>
         <div className="pool__summary-modal__item">{t("youWillMint")} {b(+liquidityMinted.toFixed(7))} {t("liquidityTokens")}</div>
         <div className="pool__summary-modal__item">{t("totalSupplyIs")} {b(+adjTotalSupply.toFixed(7))}</div>
-        <div className="pool__summary-modal__item">{t("tokenWorth")} {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH {t("and")} {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
+        <div className="pool__summary-modal__item">{t("tokenWorth")} {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} VET {t("and")} {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
       </div>
     );
   }
@@ -536,7 +559,7 @@ class AddLiquidity extends Component {
           title={t("deposit")}
           extraText={this.getBalance(inputCurrency)}
           onValueChange={this.onInputChange}
-          selectedTokenAddress="ETH"
+          selectedTokenAddress="VET"
           value={inputValue}
           errorMessage={inputError}
           disableTokenSelect
@@ -559,7 +582,7 @@ class AddLiquidity extends Component {
           onValueChange={this.onOutputChange}
           value={outputValue}
           errorMessage={outputError}
-          filteredTokens={[ 'ETH' ]}
+          filteredTokens={[ 'VET' ]}
         />
         <OversizedPanel hideBottom>
           { this.renderInfo() }
@@ -584,11 +607,13 @@ class AddLiquidity extends Component {
 
 export default connect(
   state => ({
-    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||1),
+    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID || 74),
     account: state.web3connect.account,
     balances: state.web3connect.balances,
     web3: state.web3connect.web3,
     exchangeAddresses: state.addresses.exchangeAddresses,
+    arkaneConnect: state.web3connect.arkaneConnect,
+    wallet: state.web3connect.wallet,
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),
