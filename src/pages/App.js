@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter, Redirect, Route } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
@@ -6,6 +6,7 @@ import { AnimatedSwitch } from 'react-router-transition';
 import { Web3Connect, startWatching, initialize } from '../ducks/web3connect';
 import { setAddresses } from '../ducks/addresses';
 import Header from '../components/Header';
+import Footer from '../components/Footer';
 import Swap from './Swap';
 import Send from './Send';
 import Pool from './Pool';
@@ -47,24 +48,31 @@ class App extends Component {
     return (
       <div id="app-container">
         <MediaQuery query="(min-width: 768px)">
-          <Header connectArkane={this.connectArkane} />
+          <Header />
         </MediaQuery>
+
         <Web3Connect />
+
         <BrowserRouter>
-          <AnimatedSwitch
-            atEnter={{ opacity: 0 }}
-            atLeave={{ opacity: 0 }}
-            atActive={{ opacity: 1 }}
-            className="app__switch-wrapper"
-          >
-            <Route exact path="/swap" component={Swap} />
-            <Route exact path="/send" component={Send} />
-            <Route exact path="/add-liquidity" component={Pool} />
-            <Route exact path="/remove-liquidity" component={Pool} />
-            <Route exact path="/create-exchange/:tokenAddress?" component={Pool} />
-            <Route exact path="/terms-of-service" component={Tos} />
-            <Redirect exact from="/" to="/swap" />
-          </AnimatedSwitch>
+          <Fragment>
+            <AnimatedSwitch
+              atEnter={{ opacity: 0 }}
+              atLeave={{ opacity: 0 }}
+              atActive={{ opacity: 1 }}
+              className="app__switch-wrapper"
+            >
+              <Route exact path="/swap" component={Swap} />
+              <Route exact path="/send" component={Send} />
+              <Route exact path="/add-liquidity" component={Pool} />
+              <Route exact path="/remove-liquidity" component={Pool} />
+              <Route exact path="/create-exchange/:tokenAddress?" component={Pool} />
+              <Route exact path="/terms-of-service" component={Tos} />
+              <Redirect exact from="/" to="/swap" />
+
+            </AnimatedSwitch>
+
+            {/* <Footer /> */}
+          </Fragment>
         </BrowserRouter>
       </div>
     );

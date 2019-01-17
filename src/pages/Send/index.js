@@ -30,7 +30,7 @@ class Send extends Component {
     account: PropTypes.string,
     isConnected: PropTypes.bool.isRequired,
     selectors: PropTypes.func.isRequired,
-    web3: PropTypes.object.isRequired,
+    web3: PropTypes.object,
   };
 
   state = {
@@ -415,8 +415,9 @@ class Send extends Component {
                 amount: BN(inputValue).multipliedBy(10 ** 18).toFixed(0),
                 data: ethToToken.encodeABI(),
               }]
-            }).then(result => {
-              console.log(result);
+            }).then(({ result }) => {
+              addPendingTx(result.transactionHash);
+              this.reset();
             }).catch(reason => {
               console.log(reason);
             })
@@ -459,8 +460,9 @@ class Send extends Component {
                 to: fromToken[outputCurrency],
                 data: tokenToEth.encodeABI(),
               }]
-            }).then(result => {
-              console.log(result);
+            }).then(({ result }) => {
+              addPendingTx(result.transactionHash);
+              this.reset();
             }).catch(reason => {
               console.log(reason);
             })
@@ -503,8 +505,9 @@ class Send extends Component {
                 to: fromToken[outputCurrency],
                 data: tokenToToken.encodeABI(),
               }]
-            }).then(result => {
-              console.log(result);
+            }).then(({ result }) => {
+              addPendingTx(result.transactionHash);
+              this.reset();
             }).catch(reason => {
               console.log(reason);
             })
@@ -551,8 +554,9 @@ class Send extends Component {
                 amount: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
                 data: ethToToken2.encodeABI(),
               }]
-            }).then(result => {
-              console.log(result);
+            }).then(({ result }) => {
+              this.reset();
+              addPendingTx(result.transactionHash);
             }).catch(reason => {
               console.log(reason);
             })
@@ -595,8 +599,9 @@ class Send extends Component {
                 to: fromToken[outputCurrency],
                 data: tokenToEth2.encodeABI(),
               }]
-            }).then(result => {
-              console.log(result);
+            }).then(({ result }) => {
+              this.reset();
+              addPendingTx(result.transactionHash);
             }).catch(reason => {
               console.log(reason);
             })
@@ -889,6 +894,7 @@ export default connect(
     exchangeAddresses: state.addresses.exchangeAddresses,
     arkaneConnect: state.web3connect.arkaneConnect,
     web3: state.web3connect.web3,
+    wallet: state.web3connect.wallet,
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),

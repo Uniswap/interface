@@ -162,8 +162,8 @@
   width: 100%;
   height: 21rem;
   z-index: 2000;
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
   transition: 250ms ease-in-out;
 
   &__search-container {
@@ -199,7 +199,7 @@
       background-color: $concrete-gray;
       box-sizing: border-box;
       border: 1px solid $mercury-gray;
-      border-radius: 2.5rem;
+      border-radius: 3px;
 
       .token-modal__token-label {
         color: $black;

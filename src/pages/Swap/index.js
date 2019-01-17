@@ -410,8 +410,9 @@ class Swap extends Component {
                 amount: BN(inputValue).multipliedBy(10 ** 18).toFixed(0),
                 data: ethToToken.encodeABI(),
               }]
-            }).then(result => {
-              console.log(result);
+            }).then(({ result }) => {
+              this.reset();
+              addPendingTx(result.transactionHash);
             }).catch(reason => {
               console.log(reason);
             })
@@ -427,6 +428,7 @@ class Swap extends Component {
             from: account,
             value: BN(inputValue).multipliedBy(10 ** 18).toFixed(0)
           }, (err, data) => {
+            console.log(err, data)
             if (!err) {
               addPendingTx(data);
               this.reset();
@@ -449,11 +451,13 @@ class Swap extends Component {
               type: 'VET_TRANSACTION',
               walletId: wallet,
               clauses: [{
+                amount: 0,
                 to: fromToken[outputCurrency],
                 data: tokenToEth.encodeABI(),
               }]
-            }).then(result => {
-              console.log(result);
+            }).then(({ result }) => {
+              this.reset();
+              addPendingTx(result.transactionHash);
             }).catch(reason => {
               console.log(reason);
             })
@@ -495,8 +499,9 @@ class Swap extends Component {
                 to: fromToken[inputCurrency],
                 data: tokenToToken.encodeABI(),
               }]
-            }).then(result => {
-              console.log(result);
+            }).then(({ result }) => {
+              this.reset();
+              addPendingTx(result.transactionHash);
             }).catch(reason => {
               console.log(reason);
             })
@@ -541,8 +546,9 @@ class Swap extends Component {
                 amount: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
                 data: ethToToken2.encodeABI(),
               }]
-            }).then(result => {
-              console.log(result);
+            }).then(({ result }) => {
+              this.reset();
+              addPendingTx(result.transactionHash);
             }).catch(reason => {
               console.log(reason);
             })
@@ -584,8 +590,9 @@ class Swap extends Component {
                 to: fromToken[outputCurrency],
                 data: tokenToEth.encodeABI(),
               }]
-            }).then(result => {
-              console.log(result);
+            }).then(({ result }) => {
+              this.reset();
+              addPendingTx(result.transactionHash);
             }).catch(reason => {
               console.log(reason);
             })
@@ -856,8 +863,10 @@ export default connect(
     balances: state.web3connect.balances,
     isConnected: !!state.web3connect.account && state.web3connect.networkId == (process.env. REACT_APP_NETWORK_ID || 74),
     account: state.web3connect.account,
-    web3: state.web3connect.web3,
     exchangeAddresses: state.addresses.exchangeAddresses,
+    web3: state.web3connect.web3,
+    arkaneConnect: state.web3connect.arkaneConnect,
+    wallet: state.web3connect.wallet,
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),

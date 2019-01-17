@@ -192,7 +192,7 @@ class AddLiquidity extends Component {
           amount: ethAmount.toFixed(0),
           data: fn.encodeABI(),
         }]
-      }).then(({ status, result }) => {
+      }).then(({ result }) => {
         this.reset();
         this.props.addPendingTx(result.transactionHash);
       }).catch(reason => {

@@ -27,29 +27,35 @@ const arkane = async (dispatch, getState) => {
 
     extend(web3);
 
+    window.arkaneConnect.checkAuthenticated()
+      .then(result => {
+        result.authenticated(auth => {
+          dispatch({
+            type: INITIALIZE,
+            payload: web3,
+            meta: {
+              arkaneConnect: window.arkaneConnect,
+              provider: 'arkane'
+            },
+          });
 
-    const result = await window.arkaneConnect.checkAuthenticated();
+          resolve(web3);
+          return;
 
-    result
-      .authenticated((auth) => {
-        window.arkaneConnect.addOnTokenRefreshCallback(auth.updateToken);
-
-        dispatch({
-          type: INITIALIZE,
-          payload: web3,
-          meta: {
-            arkaneConnect: window.arkaneConnect,
-            provider: 'arkane'
-          },
+        }).notAuthenticated(auth => {
+          dispatch({ type: INITIALIZE});
+          reject();
+          return;
         });
-
-        resolve(web3);
-        return;
       })
-      .notAuthenticated((auth) => {
-        reject(auth);
-        console.log("This user is not authenticated", auth); 
+      .catch(reason => {
+        dispatch({ type: INITIALIZE });
+        reject();
+        return;
       });
+
+    dispatch({ type: INITIALIZE });
+    reject();
   });
 };
 

@@ -311,7 +311,7 @@ class CurrencyInputPanel extends Component {
               addApprovalTx({ tokenAddress: selectedTokenAddress, txId: result.transactionHash });
             }).catch(reason => {
               console.log(reason);
-            })
+            });
       
             return;
           }

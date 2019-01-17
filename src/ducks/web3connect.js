@@ -95,7 +95,7 @@ export const initialize = (initializeArkane = false) => async (dispatch, getStat
   const { provider } = getState().web3connect;
 
   if (initializeArkane || provider === 'arkane') {
-    return arkane(dispatch, getState);
+    return arkane(dispatch, getState)
   }
 
   return thor(dispatch, getState);

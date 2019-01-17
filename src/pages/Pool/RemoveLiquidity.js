@@ -134,8 +134,9 @@ class RemoveLiquidity extends Component {
           to: exchangeAddress,
           data: fn.encodeABI(),
         }]
-      }).then(result => {
-        console.log(result);
+      }).then(({ result }) => {
+        this.reset();
+        this.props.addPendingTx(result.transactionHash);
       }).catch(reason => {
         console.log(reason);
       })
