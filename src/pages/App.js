@@ -18,6 +18,7 @@ class App extends Component {
   componentDidMount() {
     const { initialize, startWatching } = this.props;
 
+    console.log(this.props);
     if (typeof window.thor !== 'undefined') {
       initialize().then(startWatching);
     } else {
