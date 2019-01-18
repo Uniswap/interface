@@ -43,12 +43,14 @@ const arkane = async (dispatch, getState) => {
           return;
 
         }).notAuthenticated(auth => {
-          dispatch({ type: INITIALIZE});
+          console.log('not auth')
+          dispatch({ type: INITIALIZE });
           reject();
           return;
         });
       })
       .catch(reason => {
+        console.log(reason)
         dispatch({ type: INITIALIZE });
         reject();
         return;

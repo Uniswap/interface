@@ -170,6 +170,7 @@ class AddLiquidity extends Component {
     try {
       deadline = await retry(() => getBlockDeadline(web3, 300));
     } catch(e) {
+      console.log(e)
       // TODO: Handle error.
       return;
     }

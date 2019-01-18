@@ -199,6 +199,7 @@ export const sync = () => async (dispatch, getState) => {
     }
 
   } catch(error) {
+    console.log(error);
     return;
   }
 
@@ -262,6 +263,7 @@ export const sync = () => async (dispatch, getState) => {
           try {
             symbol = symbol || web3.utils.hexToString(await contractBytes32.methods.symbol().call().catch());
           } catch (err) {
+            console.log(err)
           }
         }
 
@@ -299,6 +301,7 @@ export const sync = () => async (dispatch, getState) => {
               try {
                 symbol = symbol || web3.utils.hexToString(await contractBytes32.methods.symbol().call());
               } catch (err) {
+                console.log(err)
               }
             }
 
@@ -339,6 +342,7 @@ export const sync = () => async (dispatch, getState) => {
         // TODO: dispatch ADD_REJECTED_TX
       }
     } catch (err) {
+      console.log(err)
       dispatch({
         type: REMOVE_PENDING_TX,
         payload: txId,
