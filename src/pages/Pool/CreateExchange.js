@@ -121,8 +121,8 @@ class CreateExchange extends Component {
     const factory = new web3.eth.Contract(FACTORY_ABI, factoryAddress);
     const fn = factory.methods.createExchange(tokenAddress);
 
-    if (arkaneConnect) {
-      const signer = arkaneConnect.createSigner();
+    if (window.arkaneConnect) {
+      const signer = window.arkaneConnect.createSigner();
 
       signer.executeNativeTransaction({
         type: 'VET_TRANSACTION',

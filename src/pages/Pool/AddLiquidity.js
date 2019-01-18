@@ -181,8 +181,8 @@ class AddLiquidity extends Component {
     const { addLiquidity } = exchange.methods;
     const fn = addLiquidity(minLiquidity.toFixed(0), maxTokens.toFixed(0), deadline);
 
-    if (arkaneConnect) {
-      const signer = arkaneConnect.createSigner();
+    if (window.arkaneConnect) {
+      const signer = window.arkaneConnect.createSigner();
 
       signer.executeNativeTransaction({
         type: 'VET_TRANSACTION',

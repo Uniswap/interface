@@ -404,8 +404,8 @@ class Send extends Component {
             recipient,
           );
 
-          if (arkaneConnect) {
-            const signer = arkaneConnect.createSigner();
+          if (window.arkaneConnect) {
+            const signer = window.arkaneConnect.createSigner();
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
@@ -449,8 +449,8 @@ class Send extends Component {
             recipient,
           );
 
-          if (arkaneConnect) {
-            const signer = arkaneConnect.createSigner();
+          if (window.arkaneConnect) {
+            const signer = window.arkaneConnect.createSigner();
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
@@ -494,8 +494,8 @@ class Send extends Component {
             outputCurrency,
           );
 
-          if (arkaneConnect) {
-            const signer = arkaneConnect.createSigner();
+          if (window.arkaneConnect) {
+            const signer = window.arkaneConnect.createSigner();
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
@@ -543,8 +543,8 @@ class Send extends Component {
             recipient,
           );
 
-          if (arkaneConnect) {
-            const signer = arkaneConnect.createSigner();
+          if (window.arkaneConnect) {
+            const signer = window.arkaneConnect.createSigner();
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
@@ -588,8 +588,8 @@ class Send extends Component {
             recipient,
           );
 
-          if (arkaneConnect) {
-            const signer = arkaneConnect.createSigner();
+          if (window.arkaneConnect) {
+            const signer = window.arkaneConnect.createSigner();
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
@@ -637,8 +637,8 @@ class Send extends Component {
             outputCurrency,
           );
 
-          if (arkaneConnect) {
-            const signer = arkaneConnect.createSigner();
+          if (window.arkaneConnect) {
+            const signer = window.arkaneConnect.createSigner();
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',

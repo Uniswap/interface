@@ -179,8 +179,8 @@ export const sync = () => async (dispatch, getState) => {
 
   // Sync Account
   try {
-    if (arkaneConnect) {
-      const wallets = await arkaneConnect.api.getWallets();
+    if (window.arkaneConnect) {
+      const wallets = await window.arkaneConnect.api.getWallets();
       const walletsMap = convertArrayToMap(wallets, 'id'); 
       localStorage.setItem('wallets', JSON.stringify(walletsMap));
 

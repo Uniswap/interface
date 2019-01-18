@@ -123,8 +123,8 @@ class RemoveLiquidity extends Component {
       deadline,
     );
 
-    if (arkaneConnect) {
-      const signer = arkaneConnect.createSigner();
+    if (window.arkaneConnect) {
+      const signer = window.arkaneConnect.createSigner();
 
       signer.executeNativeTransaction({
         type: 'VET_TRANSACTION',

@@ -52,7 +52,7 @@ class Swap extends Component {
   }
 
   componentWillReceiveProps() {
-    // this.recalcForm();
+    this.recalcForm();
   }
 
   validate() {
@@ -395,8 +395,8 @@ class Swap extends Component {
             deadline,
           );
 
-          if (arkaneConnect) {
-            const signer = arkaneConnect.createSigner();
+          if (window.arkaneConnect) {
+            const signer = window.arkaneConnect.createSigner();
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
@@ -439,8 +439,8 @@ class Swap extends Component {
             deadline,
           );
 
-          if (arkaneConnect) {
-            const signer = arkaneConnect.createSigner();
+          if (window.arkaneConnect) {
+            const signer = window.arkaneConnect.createSigner();
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
@@ -483,8 +483,8 @@ class Swap extends Component {
             outputCurrency,
           );
 
-          if (arkaneConnect) {
-            const signer = arkaneConnect.createSigner();
+          if (window.arkaneConnect) {
+            const signer = window.arkaneConnect.createSigner();
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
@@ -530,8 +530,8 @@ class Swap extends Component {
             deadline,
           );
 
-          if (arkaneConnect) {
-            const signer = arkaneConnect.createSigner();
+          if (window.arkaneConnect) {
+            const signer = window.arkaneConnect.createSigner();
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
@@ -574,8 +574,8 @@ class Swap extends Component {
             deadline,
           );
 
-          if (arkaneConnect) {
-            const signer = arkaneConnect.createSigner();
+          if (window.arkaneConnect) {
+            const signer = window.arkaneConnect.createSigner();
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
@@ -622,8 +622,8 @@ class Swap extends Component {
             outputCurrency,
           );
 
-          if (arkaneConnect) {
-            const signer = arkaneConnect.createSigner();
+          if (window.arkaneConnect) {
+            const signer = window.arkaneConnect.createSigner();
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
