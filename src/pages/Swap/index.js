@@ -27,10 +27,10 @@ const OUTPUT = 1;
 class Swap extends Component {
   static propTypes = {
     account: PropTypes.string,
+    web3: PropTypes.object,
     isConnected: PropTypes.bool.isRequired,
     selectors: PropTypes.func.isRequired,
     addPendingTx: PropTypes.func.isRequired,
-    web3: PropTypes.object.isRequired,
   };
 
   state = {
@@ -42,10 +42,6 @@ class Swap extends Component {
     lastEditedField: '',
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return true;
-  }
-
   reset() {
     this.setState({
       inputValue: '',
@@ -55,9 +51,8 @@ class Swap extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    this.recalcForm();
+  componentWillReceiveProps() {
+    // this.recalcForm();
   }
 
   validate() {

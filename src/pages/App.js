@@ -26,22 +26,20 @@ class App extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps)
-  }
+    const { web3, setAddresses } = nextProps;
 
-  componentWillUpdate() {
-    const { web3, setAddresses } = this.props;
-
-    if (this.hasSetNetworkId || !web3 || !web3.eth || !web3.eth.net || !web3.eth.net.getId) {
+    if (this.hasSetNetworkId || !web3 || !web3.eth || !web3.eth.getChainTag) {
       return;
     }
 
-    web3.eth.getChainTag()
-      .then(chainTagHex => {
-        const chainTag = parseInt(chainTagHex, 16)
-        setAddresses(chainTag);
-        this.hasSetNetworkId = true;
-      });
+    if (this.props.web3 !== nextProps.web3) {
+      web3.eth.getChainTag()
+        .then(chainTagHex => {
+          const chainTag = parseInt(chainTagHex, 16)
+          setAddresses(chainTag);
+          this.hasSetNetworkId = true;
+        });
+      }
   }
 
   render() {
