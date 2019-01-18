@@ -521,7 +521,7 @@ export class _Web3Connect extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps;)
+    console.log(nextProps)
   }
 
   render() {
