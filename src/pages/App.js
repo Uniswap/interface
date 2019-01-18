@@ -25,6 +25,10 @@ class App extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps)
+  }
+
   componentWillUpdate() {
     const { web3, setAddresses } = this.props;
 
