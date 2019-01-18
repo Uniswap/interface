@@ -87,13 +87,13 @@
     padding: 0 1rem;
     border: 1px solid $royal-blue;
     border-radius: 3px;
-    background-color: $zumthor-blue;
+    // background-color: $zumthor-blue;
     outline: none;
     cursor: pointer;
     user-select: none;
 
     &:active {
-      background-color: rgba($zumthor-blue, .8);
+      background-color: rgba($royal-blue, .1);
     }
 
     &--selected {

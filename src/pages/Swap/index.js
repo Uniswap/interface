@@ -435,7 +435,7 @@ class Swap extends Component {
           });
         break;
         case 'TOKEN_TO_ETH':
-          const { tokenToEthSwapInput } = new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]).methods;
+          const { tokenToEthSwapInput } = new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods;
 
           const tokenToEth = tokenToEthSwapInput(
             BN(inputValue).multipliedBy(10 ** inputDecimals).toFixed(0),
@@ -451,7 +451,7 @@ class Swap extends Component {
               walletId: wallet,
               clauses: [{
                 amount: 0,
-                to: fromToken[outputCurrency],
+                to: fromToken[inputCurrency],
                 data: tokenToEth.encodeABI(),
               }]
             }).then(({ result }) => {
@@ -570,7 +570,7 @@ class Swap extends Component {
           });
           break;
         case 'TOKEN_TO_ETH':
-          const { tokenToEthSwapOutput } = new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]).methods;
+          const { tokenToEthSwapOutput } = new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods;
 
           const tokenToEth = tokenToEthSwapOutput(
             BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
@@ -586,7 +586,7 @@ class Swap extends Component {
               walletId: wallet,
               clauses: [{
                 amount: 0,
-                to: fromToken[outputCurrency],
+                to: fromToken[inputCurrency],
                 data: tokenToEth.encodeABI(),
               }]
             }).then(({ result }) => {
@@ -610,6 +610,55 @@ class Swap extends Component {
               this.reset();
             }
           });
+          break;
+        case 'TOKEN_TO_TOKEN':
+          if (!inputAmountB) {
+            return;
+          }
+
+          const { tokenToTokenSwapOutput } = new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods;
+
+          const tokenToToken2 = tokenToTokenSwapOutput(
+            BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
+            BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE).toFixed(0),
+            inputAmountB.multipliedBy(1.2).toFixed(0),
+            deadline,
+            outputCurrency,
+          );
+
+          if (arkaneConnect) {
+            const signer = arkaneConnect.createSigner();
+
+            signer.executeNativeTransaction({
+              type: 'VET_TRANSACTION',
+              walletId: wallet,
+              clauses: [{
+                amount: 0,
+                to: fromToken[inputCurrency],
+                data: tokenToToken2.encodeABI(),
+              }]
+            }).then(({ result }) => {
+              this.reset();
+              addPendingTx(result.transactionHash);
+            }).catch(reason => {
+              console.log(reason);
+            })
+
+            return;
+          }
+
+          tokenToToken2.send({
+            gas: await tokenToEth.estimateGas({
+              from: account,
+            }),
+            from: account,
+          }, (err, data) => {
+            if (!err) {
+              addPendingTx(data);
+              this.reset();
+            }
+          });
+
           break;
         default:
           break;
