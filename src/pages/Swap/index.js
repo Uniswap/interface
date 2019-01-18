@@ -55,7 +55,8 @@ class Swap extends Component {
     });
   }
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
     this.recalcForm();
   }
 
