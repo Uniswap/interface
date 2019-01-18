@@ -22,14 +22,12 @@ const arkane = async (dispatch, getState) => {
       return;
     }
 
-    window.arkaneConnect = new Arkane.ArkaneConnect('Arketype', { environment: 'staging' });
+    window.arkaneConnect = new Arkane.ArkaneConnect('Vexchange');
     const web3 = thorify(new Web3(), "https://vechain-api.monti.finance");
 
     extend(web3);
 
-    window.arkaneConnect.checkAuthenticated({
-      redirectUri: 'https://vexchange.io'
-    })
+    window.arkaneConnect.checkAuthenticated()
       .then(result => {
         result.authenticated(auth => {
           dispatch({
