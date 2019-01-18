@@ -521,7 +521,13 @@ export class _Web3Connect extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps)
+    const { initialize, startWatching } = this.props;
+
+    if (typeof window.thor !== 'undefined') {
+      initialize().then(startWatching);
+    } else {
+      initialize(true).then(startWatching);
+    }
   }
 
   render() {

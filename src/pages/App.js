@@ -18,7 +18,6 @@ class App extends Component {
   componentDidMount() {
     const { initialize, startWatching } = this.props;
 
-    console.log(this.props);
     if (typeof window.thor !== 'undefined') {
       initialize().then(startWatching);
     } else {
@@ -26,21 +25,19 @@ class App extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { web3, setAddresses } = nextProps;
+  componentWillUpdate() {
+    const { web3, setAddresses } = this.props;
 
     if (this.hasSetNetworkId || !web3 || !web3.eth || !web3.eth.getChainTag) {
       return;
     }
 
-    if (this.props.web3 !== nextProps.web3) {
-      web3.eth.getChainTag()
-        .then(chainTagHex => {
-          const chainTag = parseInt(chainTagHex, 16)
-          setAddresses(chainTag);
-          this.hasSetNetworkId = true;
-        });
-      }
+    web3.eth.getChainTag()
+      .then(chainTagHex => {
+        const chainTag = parseInt(chainTagHex, 16)
+        setAddresses(chainTag);
+        this.hasSetNetworkId = true;
+      });
   }
 
   render() {
