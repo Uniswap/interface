@@ -51,9 +51,7 @@ class BlockingWarning extends Component {
   }
 
   connectArkane() {
-    window.arkaneConnect.authenticate().then(() =>{
-      window.arkaneConnect.manageWallets('VECHAIN');
-    })
+    window.arkaneConnect.authenticate();
   }
 
   manageWallets() {
