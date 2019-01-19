@@ -184,7 +184,8 @@ export const sync = () => async (dispatch, getState) => {
       const walletsMap = convertArrayToMap(wallets, 'id'); 
       localStorage.setItem('wallets', JSON.stringify(walletsMap));
 
-      if (account !== wallets[0].address) {
+      console.log('wallets', wallets)
+      if (account !== (wallets[0] || {}).address) {
         dispatch({ type: UPDATE_ACCOUNT, payload: wallets[0].address });
         dispatch({ type: UPDATE_WALLET, payload: wallets[0].id });
         dispatch(watchBalance({ balanceOf: wallets[0].address }));
