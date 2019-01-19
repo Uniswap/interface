@@ -29,11 +29,26 @@ class BlockingWarning extends Component {
   constructor() {
     super();
 
+    this.state = {
+      wallets
+    };
+
     this.connectArkane = this.connectArkane.bind(this);
+    this.manageWallets = this.manageWallets.bind(this);
+  }
+
+  componentDidMount() {
+    window.arkaneConnect.api.getWallets().then(wallets => {
+      this.setState({ wallets });
+    });
   }
 
   connectArkane() {
     window.arkaneConnect.authenticate();
+  }
+
+  manageWallets() {
+    window.arkaneConnect.manageWallets('VECHAIN');
   }
 
   render () {
@@ -42,6 +57,11 @@ class BlockingWarning extends Component {
       initialized,
       networkId,
     } = this.props;
+
+    const {
+      wallets
+    } = this.state;
+
     let content = [];
 
     const correctNetworkId = process.env.REACT_APP_NETWORK_ID || 74;
@@ -85,6 +105,12 @@ class BlockingWarning extends Component {
 
         <div className="header__footer">
           <button className="header__authenticate" onClick={this.connectArkane}>Connect Arkane Account</button>
+          { (wallets.length === 0) &&
+            <Fragment>
+              <p>You have no linked Arkane wallet</p>
+              <button className="header__authenticate" onClick={this.manageWallets}>Link Arkane Wallet</button>
+            </Fragment>
+          }
         </div>
       </div>
     );
