@@ -31,10 +31,10 @@ const ROPSTEN = {
   factoryAddress: '0x9c83dCE8CA20E9aAF9D3efc003b2ea62aBC08351',
   exchangeAddresses: {
     addresses: [
-      ['BAT',''],
-      ['DAI',''],
-      ['MKR',''],
-      ['OMG',''],
+      ['BAT','0x074A5A449B611A446CAb65F37cc9A674061e0Ad1'],
+      ['DAI','0x31324D9d38bd9226D2b632C53E5117E711B24bE8'],
+      ['MKR','0x0eBfaa62E5E5ba101B694C789Eb99B840724D328'],
+      ['OMG','0x5e198F5F89C62F7E685788434e16Aa7320C093fF'],
       // ['ZRX',''],
     ],
     fromToken: {
