@@ -14,12 +14,19 @@
     margin-top: 20px;
   }
 
+  &__authenticate-buttons {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+
   &__authenticate {
     border: 1px solid $mercury-gray;
     color: #000;
     cursor: pointer;
     display: inline-block;
     padding: .2rem .5rem;
+    margin: 10px;
   }
 
   &__title {

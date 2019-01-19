@@ -104,12 +104,14 @@ class BlockingWarning extends Component {
         {content}
 
         <div className="header__footer">
-          <button className="header__authenticate" onClick={this.connectArkane}>Connect Arkane Account</button>
+          <div className="header__dialog__description">
+            You have no linked Arkane wallet
+          </div>
           { (wallets.length === 0) &&
-            <Fragment>
-              <p>You have no linked Arkane wallet</p>
+            <div className="header__authenticate-buttons">
+              <button className="header__authenticate" onClick={this.connectArkane}>Connect Arkane Account</button>
               <button className="header__authenticate" onClick={this.manageWallets}>Link Arkane Wallet</button>
-            </Fragment>
+            </div>
           }
         </div>
       </div>
