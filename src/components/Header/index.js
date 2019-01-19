@@ -30,7 +30,7 @@ class BlockingWarning extends Component {
     super();
 
     this.state = {
-      wallets
+      wallets: [],
     };
 
     this.connectArkane = this.connectArkane.bind(this);
