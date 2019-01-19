@@ -28,7 +28,7 @@ const RINKEBY = {
 };
 
 const ROPSTEN = {
-  factoryAddress: '0xf5D915570BC477f9B8D6C0E980aA81757A3AaC36',
+  factoryAddress: '0x9c83dCE8CA20E9aAF9D3efc003b2ea62aBC08351',
   exchangeAddresses: {
     addresses: [
       ['BAT',''],
