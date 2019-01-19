@@ -63,7 +63,6 @@ class BlockingWarning extends Component {
     const {
       isConnected,
       initialized,
-      arkaneConnect,
       networkId,
     } = this.props;
 
@@ -113,18 +112,16 @@ class BlockingWarning extends Component {
         {content}
 
 
-        { arkaneConnect &&
-          <div className="header__footer">
-            <div className="header__dialog__description">
-              You have no linked Arkane wallet
-            </div>
-            { (wallets.length === 0) &&
-              <div className="header__authenticate-buttons">
-                <button className="header__authenticate" onClick={this.connectArkane}>Connect Arkane Account</button>
-              </div>
-            }
+        <div className="header__footer">
+          <div className="header__dialog__description">
+            You have no linked Arkane wallet
           </div>
-        }
+          { (wallets.length === 0) &&
+            <div className="header__authenticate-buttons">
+              <button className="header__authenticate" onClick={this.connectArkane}>Connect Arkane Account</button>
+            </div>
+          }
+        </div>
       </div>
     );
   }
