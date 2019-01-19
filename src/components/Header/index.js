@@ -31,6 +31,7 @@ class BlockingWarning extends Component {
 
     this.state = {
       wallets: [],
+      arkaneConnect: {},
     };
 
     this.connectArkane = this.connectArkane.bind(this);
@@ -38,26 +39,31 @@ class BlockingWarning extends Component {
   }
 
   componentDidMount() {
-    window.arkaneConnect.api.getWallets()
-      .then(wallets => {
-        this.setState({ wallets });
-      }).catch(err => {
-        console.log('no wallet')
-      })
+    const { arkaneConnect } = this.props;
+    if (arkaneConnect) {
+      arkaneConnect.api.getWallets()
+        .then(wallets => {
+          this.setState({ wallets });
+        }).catch(err => {
+          console.log('no wallet')
+        });
+    }
   }
 
   connectArkane() {
-    window.arkaneConnect.authenticate();
+    window.arkaneConnect.authenticate().then(() =>{
+      window.arkaneConnect.manageWallets('VECHAIN');
+    })
   }
 
   manageWallets() {
-    window.arkaneConnect.manageWallets('VECHAIN');
   }
 
   render () {
     const {
       isConnected,
       initialized,
+      arkaneConnect,
       networkId,
     } = this.props;
 
@@ -106,17 +112,19 @@ class BlockingWarning extends Component {
       >
         {content}
 
-        <div className="header__footer">
-          <div className="header__dialog__description">
-            You have no linked Arkane wallet
-          </div>
-          { (wallets.length === 0) &&
-            <div className="header__authenticate-buttons">
-              <button className="header__authenticate" onClick={this.connectArkane}>Connect Arkane Account</button>
-              <button className="header__authenticate" onClick={this.manageWallets}>Link Arkane Wallet</button>
+
+        { arkaneConnect &&
+          <div className="header__footer">
+            <div className="header__dialog__description">
+              You have no linked Arkane wallet
             </div>
-          }
-        </div>
+            { (wallets.length === 0) &&
+              <div className="header__authenticate-buttons">
+                <button className="header__authenticate" onClick={this.connectArkane}>Connect Arkane Account</button>
+              </div>
+            }
+          </div>
+        }
       </div>
     );
   }
@@ -152,6 +160,7 @@ export default connect(
     initialized: state.web3connect.initialized,
     isConnected: !!state.web3connect.account,
     web3: state.web3connect.web3,
+    arkaneConnect: state.web3connect.arkaneConnect,
     networkId: state.web3connect.networkId,
   }),
 )(Header);
