@@ -62,7 +62,6 @@ class BlockingWarning extends Component {
     const {
       isConnected,
       initialized,
-      arkaneConnect,
       networkId,
     } = this.props;
 
@@ -112,7 +111,7 @@ class BlockingWarning extends Component {
         {content}
 
 
-        { arkaneConnect &&
+        { window.arkaneConnect &&
           <div className="header__footer">
             <div className="header__dialog__description">
               You have no linked Arkane wallet
