@@ -15,7 +15,7 @@ import Tos from './Tos';
 import './App.scss';
 
 class App extends Component {
-  componentDidMount() {
+  componentWillMount() {
     const { initialize, startWatching } = this.props;
 
     if (typeof window.thor !== 'undefined') {

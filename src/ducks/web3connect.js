@@ -179,10 +179,9 @@ export const sync = () => async (dispatch, getState) => {
 
   // Sync Account
   try {
-    if (window.arkaneConnect) {
-      const wallets = await window.arkaneConnect.api.getWallets();
+    if (arkaneConnect) {
+      const wallets = await arkaneConnect.api.getWallets();
       const walletsMap = convertArrayToMap(wallets, 'id'); 
-      localStorage.setItem('wallets', JSON.stringify(walletsMap));
 
       if (account !== (wallets[0] || {}).address) {
         dispatch({ type: UPDATE_ACCOUNT, payload: wallets[0].address });
@@ -517,7 +516,7 @@ export class _Web3Connect extends Component {
     initialize() {}
   };
 
-  componentDidMount() {
+  componentWillMount() {
     const { initialize, startWatching } = this.props;
     initialize().then(startWatching());
   }
