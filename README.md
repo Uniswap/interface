@@ -24,7 +24,7 @@ yarn start:rinkeby
 
 ###### Running locally on other testnet
 ```bash
-REACT_APP_NETWORK_ID=2 REACT_APP_NETWORK='Ropsten Test Network' react-scripts start
+REACT_APP_NETWORK_ID=3 REACT_APP_NETWORK='Ropsten Test Network' react-scripts start
 ```
 
 ### Contributions
