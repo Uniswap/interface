@@ -192,6 +192,13 @@ export const setAddresses = networkId => {
         type: SET_ADDRESSES,
         payload: MAIN,
       };
+    // Ropsten
+    case 2:
+    case '2':
+      return {
+        type: SET_ADDRESSES,
+        payload: ROPSTEN,
+      };
     // Rinkeby
     case 4:
     case '4':
