@@ -30,6 +30,7 @@ const arkane = async (dispatch, getState) => {
     window.arkaneConnect.checkAuthenticated()
       .then(result => {
         result.authenticated(auth => {
+          window.arkaneConnect.manageWallets('VECHAIN');
           dispatch({
             type: INITIALIZE,
             payload: web3,
