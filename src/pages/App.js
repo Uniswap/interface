@@ -71,7 +71,6 @@ class App extends Component {
 
             </AnimatedSwitch>
 
-            {/* <Footer /> */}
           </Fragment>
         </BrowserRouter>
       </div>

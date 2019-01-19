@@ -38,9 +38,12 @@ class BlockingWarning extends Component {
   }
 
   componentDidMount() {
-    window.arkaneConnect.api.getWallets().then(wallets => {
-      this.setState({ wallets });
-    });
+    window.arkaneConnect.api.getWallets()
+      .then(wallets => {
+        this.setState({ wallets });
+      }).catch(err => {
+        console.log('no wallet')
+      })
   }
 
   connectArkane() {

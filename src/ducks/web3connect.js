@@ -341,7 +341,6 @@ export const sync = () => async (dispatch, getState) => {
         // TODO: dispatch ADD_REJECTED_TX
       }
     } catch (err) {
-      console.log(err)
       dispatch({
         type: REMOVE_PENDING_TX,
         payload: txId,
