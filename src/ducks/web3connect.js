@@ -199,7 +199,6 @@ export const sync = () => async (dispatch, getState) => {
     }
 
   } catch(error) {
-    console.log(error);
     return;
   }
 
