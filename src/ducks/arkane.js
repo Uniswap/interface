@@ -40,9 +40,9 @@ const arkane = async (dispatch, getState) => {
           });
 
 
-            arkaneConnect.api.getWallets(wallets => {
+            window.arkaneConnect.api.getWallets(wallets => {
               if (wallets.length === 0) {
-                arkaneConnect.manageWallets('VECHAIN');
+                window.arkaneConnect.manageWallets('VECHAIN');
               }
             }).catch((error => {
               console.log(error);
