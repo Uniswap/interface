@@ -39,7 +39,11 @@ const arkane = async (dispatch, getState) => {
             },
           });
 
-          window.arkaneConnect.manageWallets('VECHAIN');
+          window.arkaneConnect.api.getWallets(wallets => {
+            if (!wallets.length) {
+              window.arkaneConnect.manageWallets('VECHAIN');
+            }
+          });
 
           resolve(web3);
           return;
