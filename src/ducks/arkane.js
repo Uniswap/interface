@@ -39,11 +39,13 @@ const arkane = async (dispatch, getState) => {
             },
           });
 
+          console.log('auth');
           resolve(web3);
           return;
 
         }).notAuthenticated(auth => {
           dispatch({ type: INITIALIZE });
+          console.log('not auth');
           reject();
           return;
         });
