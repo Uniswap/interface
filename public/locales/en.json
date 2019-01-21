@@ -19,6 +19,7 @@
   "searchOrPaste": "Search Token or Paste Address",
   "noExchange": "No Exchange Found",
   "exchangeRate": "Exchange Rate",
+  "invertedRate": "Inverted Rate",
   "enterValueCont": "Enter a {{ missingCurrencyValue }} value to continue.",
   "selectTokenCont": "Select a token to continue.",
   "noLiquidity": "No liquidity.",

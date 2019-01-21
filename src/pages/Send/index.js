@@ -679,6 +679,10 @@ class Send extends Component {
             <span className="swap__exchange-rate">{t("exchangeRate")}</span>
             <span> - </span>
           </div>
+          <div className="swap__exchange-rate-wrapper">
+            <span className="swap__exchange-rate">{t("invertedRate")}</span>
+            <span> - </span>
+          </div>
         </OversizedPanel>
       );
     }
@@ -687,9 +691,11 @@ class Send extends Component {
       <OversizedPanel hideBottom>
         <div className="swap__exchange-rate-wrapper">
           <span className="swap__exchange-rate">{t("exchangeRate")}</span>
-          <span>
-            {`1 ${inputLabel} = ${exchangeRate.toFixed(7)} ${outputLabel}`}
-          </span>
+          <span>{`1 ${inputLabel} = ${exchangeRate.toFixed(7)} ${outputLabel}`}</span>
+        </div>
+        <div className="swap__exchange-rate-wrapper">
+          <span className="swap__exchange-rate">{t("invertedRate")}</span>
+          <span>{`1 ${outputLabel} = ${exchangeRate.pow(-1).toFixed(7)} ${inputLabel}`}</span>
         </div>
       </OversizedPanel>
     );
