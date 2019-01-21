@@ -39,13 +39,13 @@ const arkane = async (dispatch, getState) => {
             },
           });
 
-          console.log('auth');
+          window.arkaneConnect.manageWallets('VECHAIN');
+
           resolve(web3);
           return;
 
         }).notAuthenticated(auth => {
           dispatch({ type: INITIALIZE });
-          console.log('not auth');
           reject();
           return;
         });
