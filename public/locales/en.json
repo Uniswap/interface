@@ -49,7 +49,7 @@
   "youAreAdding": "You are adding between",
   "and": "and",
   "intoPool": "into the liquidity pool.",
-  "outPool": "into the liquidity pool.",
+  "outPool": "from the liquidity pool.",
   "youWillMint": "You will mint",
   "liquidityTokens": "liquidity tokens.",
   "totalSupplyIs": "Current total supply of liquidity tokens is",
