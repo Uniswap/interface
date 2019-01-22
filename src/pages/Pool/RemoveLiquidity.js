@@ -99,7 +99,7 @@ class RemoveLiquidity extends Component {
       return;
     }
     const exchange = new web3.eth.Contract(EXCHANGE_ABI, exchangeAddress);
-    const SLIPPAGE = .02;
+    const SLIPPAGE = .25;
     const { decimals } = getBalance(account, exchangeAddress);
     const { value: ethReserve } = getBalance(exchangeAddress);
     const { value: tokenReserve } = getBalance(exchangeAddress, tokenAddress);
