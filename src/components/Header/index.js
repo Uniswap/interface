@@ -35,7 +35,6 @@ class BlockingWarning extends Component {
     };
 
     this.connectArkane = this.connectArkane.bind(this);
-    this.manageWallets = this.manageWallets.bind(this);
   }
 
   componentDidMount() {
@@ -52,10 +51,6 @@ class BlockingWarning extends Component {
 
   connectArkane() {
     window.arkaneConnect.authenticate();
-  }
-
-  manageWallets() {
-    window.arkaneConnect.manageWallets('VECHAIN');
   }
 
   render () {
@@ -119,7 +114,6 @@ class BlockingWarning extends Component {
             { (wallets.length === 0) &&
               <div className="header__authenticate-buttons">
                 <button className="header__authenticate" onClick={this.connectArkane}>Connect Arkane Account</button>
-                <button className="header__authenticate" onClick={this.manageWallets}>Link Arkane Wallet</button>
               </div>
             }
           </div>

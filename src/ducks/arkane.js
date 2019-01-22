@@ -41,7 +41,6 @@ const arkane = async (dispatch, getState) => {
 
           window.arkaneConnect.api.getWallets()
             .then(wallets => {
-              console.log(wallets)
               if (!wallets.length) {
                 window.arkaneConnect.manageWallets('VECHAIN');
               }
