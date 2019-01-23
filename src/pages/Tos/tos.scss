@@ -3,9 +3,22 @@
 .wrapper {
   align-items: center;
   display: flex;
+  flex-direction: column;
   height: 100%;
+  justify-content: center;
 
   a {
     color: $royal-blue;
   }
+
+  p {
+    font-size: 0.75rem;
+    line-height: 1.4rem;
+  }
 }
+
+.tos__cta-btn {
+  @extend %primary-button;
+  margin: 1rem auto;
+}
+
