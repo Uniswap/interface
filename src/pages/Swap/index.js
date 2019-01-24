@@ -64,6 +64,15 @@ class Swap extends Component {
     this.recalcForm();
   }
 
+  componentDidMount() {
+    this.setState({
+      outputCurrency: '0xe477292f1b3268687a29376116b0ed27a9c76170',
+      outputValue: 'PLAY',
+
+    });
+    this.recalcForm()
+  }
+
   validate() {
     const { selectors, account } = this.props;
     const {
