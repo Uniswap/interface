@@ -12,3 +12,4 @@ export const ADD_PENDING_TX = 'web3connect/addPendingTx';
 export const REMOVE_PENDING_TX = 'web3connect/removePendingTx';
 export const ADD_CONFIRMED_TX = 'web3connect/addConfirmedTx';
 export const UPDATE_WALLET = 'web3connect/updateWallet';
+export const UPDATE_WALLETS = 'web3connect/updateWallets';

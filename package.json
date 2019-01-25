@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "antd": "^3.12.4",
     "axios": "^0.18.0",
     "bignumber.js": "^7.2.1",
     "classnames": "^2.2.6",

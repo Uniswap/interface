@@ -22,8 +22,9 @@ const arkane = async (dispatch, getState) => {
       return;
     }
 
-    window.arkaneConnect = new Arkane.ArkaneConnect('Vexchange');
-    const web3 = thorify(new Web3(), "https://vechain-api.monti.finance");
+    window.arkaneConnect = new Arkane.ArkaneConnect('Arketype', { environment: 'staging'});
+    //const web3 = thorify(new Web3(), "https://vechain-api.monti.finance");
+    const web3 = thorify(new Web3(), "http://127.0.0.1:8669/")
 
     extend(web3);
 

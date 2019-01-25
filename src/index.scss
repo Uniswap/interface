@@ -50,3 +50,30 @@ html, body {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.ant-btn {
+  border-radius: 3px; 
+  
+  &:hover {
+    color: #58A8A6;
+    border-color: #58A8A6;
+  }
+}
+
+.ant-btn-primary,
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  background-color: #58A8A6;
+}
+
+a {
+  color: #58A8A6;
+}
+
+.ant-modal-header {
+  border-radius: 3px 3px 0 0;
+}
+
+.ant-modal-footer {
+  border-radius: 0 0 4px 4px;
+}

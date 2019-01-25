@@ -51,10 +51,6 @@ class NavigationTabs extends Component {
           showBetaMessage && (
             <div className="beta-message" onClick={dismissBetaMessage}>
               💀 {t("betaWarning")}
-              &nbsp;
-              <Link to="/terms-of-service">
-                Terms of Service
-              </Link>
             </div>
           )
         }
