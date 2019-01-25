@@ -5,6 +5,7 @@ import { BigNumber as BN } from 'bignumber.js';
 import initialState from './initialState';
 import ERC20_ABI from "../abi/erc20";
 import ERC20_WITH_BYTES_ABI from "../abi/erc20_symbol_bytes32";
+import { isEmpty } from 'lodash';
 
 import {
   INITIALIZE,
@@ -21,6 +22,7 @@ import {
   REMOVE_PENDING_TX,
   ADD_CONFIRMED_TX,
   UPDATE_WALLET,
+  UPDATE_WALLETS,
 } from './creators';
 
 import thor from './thor';
@@ -155,6 +157,12 @@ export const addPendingTx = txId => ({
   payload: txId,
 });
 
+export const updateWallet = wallet => async (dispatch) => {
+  dispatch({ type: UPDATE_WALLET, payload: wallet });
+  dispatch({ type: UPDATE_ACCOUNT, payload: wallet.address });
+  dispatch(watchBalance({ balanceOf: wallet.address }));
+};
+
 export const updateApprovals = ({ tokenAddress, tokenOwner, spender, balance }) => ({
   type: UPDATE_APPROVALS,
   payload: {
@@ -174,18 +182,23 @@ export const sync = () => async (dispatch, getState) => {
     contracts,
     networkId,
     arkaneConnect,
+    wallet,
     transactions: { pending, confirmed },
   } = getState().web3connect;
 
   // Sync Account
   try {
     if (arkaneConnect) {
-      const wallets = await arkaneConnect.api.getWallets();
+      const wallets = isEmpty(wallet) ?
+        await arkaneConnect.api.getWallets() :
+        [wallet];
+
       const walletsMap = convertArrayToMap(wallets, 'id'); 
 
       if (account !== (wallets[0] || {}).address) {
         dispatch({ type: UPDATE_ACCOUNT, payload: wallets[0].address });
-        dispatch({ type: UPDATE_WALLET, payload: wallets[0].id });
+        dispatch({ type: UPDATE_WALLET, payload: wallets[0] });
+        dispatch({ type: UPDATE_WALLETS, payload: wallets });
         dispatch(watchBalance({ balanceOf: wallets[0].address }));
       }
 
@@ -374,6 +387,11 @@ export default function web3connectReducer(state = initialState, { type, payload
       return {
         ...state,
         wallet: payload,
+      }
+    case UPDATE_WALLETS:
+      return {
+        ...state,
+        wallets: payload
       }
     case UPDATE_ACCOUNT:
       return {

@@ -1,9 +1,0 @@
-@import "../../variables.scss";
-
-.footer {
-  @extend %col-nowrap;
-
-  &__wrapper {
-    padding: 1.25rem;
-  }
-}

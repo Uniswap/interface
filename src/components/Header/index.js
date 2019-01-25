@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import { Button } from 'antd';
 import CometLogo from '../../assets/images/comet.png';
 import AkraneLogo from '../../assets/images/arkane.svg';
 import Web3Status from '../Web3Status';
@@ -29,24 +30,7 @@ class BlockingWarning extends Component {
   constructor() {
     super();
 
-    this.state = {
-      wallets: [],
-      arkaneConnect: {},
-    };
-
     this.connectArkane = this.connectArkane.bind(this);
-  }
-
-  componentDidMount() {
-    const { arkaneConnect } = this.props;
-    if (arkaneConnect) {
-      arkaneConnect.api.getWallets()
-        .then(wallets => {
-          this.setState({ wallets });
-        }).catch(err => {
-          console.log('no wallet')
-        });
-    }
   }
 
   connectArkane() {
@@ -58,11 +42,8 @@ class BlockingWarning extends Component {
       isConnected,
       initialized,
       networkId,
+      wallets = [],
     } = this.props;
-
-    const {
-      wallets
-    } = this.state;
 
     let content = [];
 
@@ -113,7 +94,7 @@ class BlockingWarning extends Component {
             </div>
             { (wallets.length === 0) &&
               <div className="header__authenticate-buttons">
-                <button className="header__authenticate" onClick={this.connectArkane}>Connect Arkane Account</button>
+                <Button size="small" onClick={this.connectArkane}>Connect Arkane Account</Button>
               </div>
             }
           </div>
@@ -123,26 +104,39 @@ class BlockingWarning extends Component {
   }
 }
 
-function Header (props) {
-  return (
-    <div className="header">
-      <BlockingWarning {...props} />
-      <div
-        className={classnames('header__top', {
-          'header--inactive': !props.isConnected,
-        })}
-      >
-        <div className="header__center-group">
-          <span className="header__title">VEXCHANGE</span>
+class Header extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      wallets: [],
+      arkaneConnect: {},
+    };
+  }
+
+  render() {
+    const { wallets } = this.props;
+
+    return (
+      <div className="header">
+        <BlockingWarning {...this.props} />
+        <div
+          className={classnames('header__top', {
+            'header--inactive': !this.props.isConnected,
+          })}
+        >
+          <div className="header__center-group">
+            <span className="header__title">VEXCHANGE</span>
+          </div>
+          <Web3Status isConnected />
         </div>
-        <Web3Status isConnected />
       </div>
-    </div>
-  )
+    );
+  }
 }
 
 Header.propTypes = {
-  connectArkane: PropTypes.shape(),
+  provider: PropTypes.string,
   currentAddress: PropTypes.string,
   isConnected: PropTypes.bool.isRequired,
 };
@@ -153,7 +147,8 @@ export default connect(
     initialized: state.web3connect.initialized,
     isConnected: !!state.web3connect.account,
     web3: state.web3connect.web3,
-    arkaneConnect: state.web3connect.arkaneConnect,
+    provider: state.web3connect.provider,
     networkId: state.web3connect.networkId,
+    wallets: state.web3connect.wallets,
   }),
 )(Header);
