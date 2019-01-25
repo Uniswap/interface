@@ -922,7 +922,8 @@ class Send extends Component {
               className={classnames('swap__cta-btn', {
                 'swap--inactive': !this.props.isConnected,
               })}
-              disabled={!isValid}
+              // disabled={!isValid}
+              disabled
               onClick={this.onSend}
             >
               {t("send")}

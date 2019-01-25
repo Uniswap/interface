@@ -890,7 +890,8 @@ class Swap extends Component {
               className={classnames('swap__cta-btn', {
                 'swap--inactive': !this.props.isConnected,
               })}
-              disabled={!isValid}
+              // disabled={!isValid}
+              disabled
               onClick={this.onSwap}
             >
               {t("swap")}
