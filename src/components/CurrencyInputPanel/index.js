@@ -63,7 +63,7 @@ class CurrencyInputPanel extends Component {
   };
 
   static defaultProps = {
-    selectedTokens: [{value: 'PLAY', label: 'PLAY', address: '0xe477292f1b3268687a29376116b0ed27a9c76170'}],
+    selectedTokens: [{value: 0, label: 'PLAY', address: '0xe477292f1b3268687a29376116b0ed27a9c76170'}],
     filteredTokens: [],
     onCurrencySelected() {},
     onValueChange() {},

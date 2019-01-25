@@ -11,7 +11,7 @@ import './index.scss';
 if (process.env.NODE_ENV === 'development') {
   // ReactGA.initialize('UA-128182339-02');
 } else {
-  ReactGA.initialize('UA-128182339-1');
+   ReactGA.initialize('UA-133175044-1');
 }
 ReactGA.pageview(window.location.pathname + window.location.search);
 

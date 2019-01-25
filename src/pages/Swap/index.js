@@ -21,6 +21,7 @@ import { retry } from '../../helpers/promise-utils';
 import EXCHANGE_ABI from '../../abi/exchange';
 
 import "./swap.scss";
+const axios = require('axios');
 
 const INPUT = 0;
 const OUTPUT = 1;
@@ -61,16 +62,17 @@ class Swap extends Component {
   }
 
   componentWillReceiveProps() {
+    const {web3} = this.props;
+    let params = new URLSearchParams(this.props.location.search);
+    let output = params.get('output');
+
+    if (output && web3.utils.isAddress(output)) {
+      this.setState({
+        outputCurrency: output ? output : '',
+      });
+    }
+
     this.recalcForm();
-  }
-
-  componentDidMount() {
-    this.setState({
-      outputCurrency: '0xe477292f1b3268687a29376116b0ed27a9c76170',
-      outputValue: 'PLAY',
-
-    });
-    this.recalcForm()
   }
 
   validate() {
