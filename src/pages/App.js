@@ -10,6 +10,7 @@ import Header from '../components/Header';
 import Swap from './Swap';
 import Send from './Send';
 import Pool from './Pool';
+import Tos from './Tos';
 
 import './App.scss';
 
@@ -90,6 +91,7 @@ class App extends Component {
               <Route exact path="/add-liquidity" component={Pool} />
               <Route exact path="/remove-liquidity" component={Pool} />
               <Route exact path="/create-exchange/:tokenAddress?" component={Pool} />
+              <Route exact path="/terms-of-service" component={Tos} />
               <Redirect exact from="/" to="/swap" />
 
             </AnimatedSwitch>

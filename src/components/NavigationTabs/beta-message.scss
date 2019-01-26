@@ -25,5 +25,11 @@
 
   a {
     color: $salmon-red;
+    text-decoration: underline;
+
+    &:hover {
+      color: #58A8A6;
+      text-decoration: underline;
+    }
   }
 }
