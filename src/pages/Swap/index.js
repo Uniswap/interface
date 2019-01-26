@@ -400,7 +400,7 @@ class Swap extends Component {
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
-              walletId: wallet,
+               walletId: wallet.id,
               clauses: [{
                 to: fromToken[outputCurrency],
                 amount: BN(inputValue).multipliedBy(10 ** 18).toFixed(0),
@@ -444,7 +444,7 @@ class Swap extends Component {
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
-              walletId: wallet,
+               walletId: wallet.id,
               clauses: [{
                 amount: 0,
                 to: fromToken[inputCurrency],
@@ -488,7 +488,7 @@ class Swap extends Component {
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
-              walletId: wallet,
+               walletId: wallet.id,
               clauses: [{
                 amount: 0,
                 to: fromToken[inputCurrency],
@@ -535,7 +535,7 @@ class Swap extends Component {
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
-              walletId: wallet,
+               walletId: wallet.id,
               clauses: [{
                 to: fromToken[outputCurrency],
                 amount: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
@@ -579,7 +579,7 @@ class Swap extends Component {
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
-              walletId: wallet,
+               walletId: wallet.id,
               clauses: [{
                 amount: 0,
                 to: fromToken[inputCurrency],
@@ -627,7 +627,7 @@ class Swap extends Component {
 
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
-              walletId: wallet,
+               walletId: wallet.id,
               clauses: [{
                 amount: 0,
                 to: fromToken[inputCurrency],

@@ -300,7 +300,7 @@ class CurrencyInputPanel extends Component {
       
             signer.executeNativeTransaction({
               type: 'VET_TRANSACTION',
-              walletId: wallet,
+              walletId: wallet.id,
               clauses: [{
                 to: selectedTokenAddress,
                 amount: 0, 

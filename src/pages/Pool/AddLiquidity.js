@@ -187,7 +187,7 @@ class AddLiquidity extends Component {
 
       signer.executeNativeTransaction({
         type: 'VET_TRANSACTION',
-        walletId: wallet,
+         walletId: wallet.id,
         clauses: [{
           to: fromToken[outputCurrency],
           amount: ethAmount.toFixed(0),

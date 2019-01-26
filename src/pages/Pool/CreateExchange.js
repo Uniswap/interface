@@ -126,7 +126,7 @@ class CreateExchange extends Component {
 
       signer.executeNativeTransaction({
         type: 'VET_TRANSACTION',
-        walletId: wallet,
+         walletId: wallet.id,
         clauses: [{
           amount: 0,
           to: factoryAddress,
