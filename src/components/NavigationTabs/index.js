@@ -3,7 +3,10 @@ import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withNamespaces } from 'react-i18next';
-import { dismissBetaMessage } from '../../ducks/app';
+import { 
+  dismissBetaMessage,
+  dismissDisabledMessage
+ } from '../../ducks/app';
 import {Tab, Tabs} from "../Tab";
 import { Alert } from 'antd';
 
@@ -16,6 +19,7 @@ class NavigationTabs extends Component {
     }),
     className: PropTypes.string,
     dismissBetaMessage: PropTypes.func.isRequired,
+    dismissDisabledMessage: PropTypes.func.isRequired,
     showBetaMessage: PropTypes.bool.isRequired,
   };
 
@@ -40,7 +44,14 @@ class NavigationTabs extends Component {
   }
 
   render() {
-    const { t, showBetaMessage, className, dismissBetaMessage } = this.props;
+    const {
+      t,
+      showBetaMessage,
+      showDisabledMessage,
+      className,
+      dismissBetaMessage,
+      dismissDisabledMessage
+    } = this.props;
     return (
       <div>
         <Tabs className={className}>
@@ -48,24 +59,31 @@ class NavigationTabs extends Component {
           { this.renderTab(t("send"), '/send', /send/) }
           { this.renderTab(t("pool"), '/add-liquidity', /add-liquidity|remove-liquidity|create-exchange/) }
         </Tabs>
-        <Alert
-          message={(
-            <div>
-              💀 {t("betaWarning")}
-              &nbsp;
-              <Link to="/terms-of-service">
-                Terms of Service
-              </Link>
-            </div>
-          )}
-          type="warning"
-          closable
-        />
-        <Alert
-          message="Currently, swaps and sends are disabled while we allow users to add liquidity and get familiar with the site."
-          type="warning"
-          closable
-        />
+        { showBetaMessage &&
+          <Alert
+            message={(
+              <div>
+                💀 {t("betaWarning")}
+                &nbsp;
+                <Link to="/terms-of-service">
+                  Terms of Service
+                </Link>
+              </div>
+            )}
+            onClose={dismissBetaMessage}
+            type="error"
+            closable
+          />
+        }
+        {
+          showDisabledMessage &&
+          <Alert
+            message="Currently, swaps and sends are disabled while we allow users to add liquidity and get familiar with the site."
+            type="error"
+            onClose={dismissDisabledMessage}
+            closable
+          />
+        }
       </div>
     );
   }
@@ -75,9 +93,11 @@ export default withRouter(
   connect(
     state => ({
       showBetaMessage: state.app.showBetaMessage,
+      showDisabledMessage: state.app.showDisabledMessage,
     }),
     dispatch => ({
       dismissBetaMessage: () => dispatch(dismissBetaMessage()),
+      dismissDisabledMessage: () => dispatch(dismissDisabledMessage()),
     }),
   )(withNamespaces()(NavigationTabs))
 );
