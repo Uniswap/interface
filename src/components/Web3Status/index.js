@@ -9,6 +9,7 @@ import { updateWallet } from '../../ducks/web3connect';
 import { CSSTransitionGroup } from "react-transition-group";
 import { withNamespaces } from 'react-i18next';
 import { isEqual } from 'lodash';
+import { picasso } from '@vechain/picasso'
 import './web3-status.scss';
 
 import Modal from '../Modal';
@@ -126,14 +127,15 @@ class Web3Status extends Component {
     const hasPendingTransactions = !!pending.length;
     const hasConfirmedTransactions = !!confirmed.length;
 
+    const svg = picasso(address);
+
     return (
       <Dropdown
         placement="bottomLeft"
         overlay={(wallets.length > 0) ? this.renderMenu : <div></div>}>
-        <Button>
+        <Button type={ hasPendingTransactions ? 'primary' : ''}>
           <div className={classnames("web3-status", {
             'web3-status__connected': this.props.isConnected,
-            'web3-status--pending': hasPendingTransactions,
             'web3-status--confirmed': hasConfirmedTransactions,
           })}
           onClick={this.handleClick}
@@ -147,18 +149,7 @@ class Web3Status extends Component {
             </div>
             <div
               className="web3-status__identicon"
-              ref={el => {
-                if (!el) {
-                  return;
-                }
-
-                if (!address|| address.length < 42 || !Web3.utils.isHexStrict(address)) {
-                  return;
-                }
-
-                el.innerHTML = '';
-                el.appendChild(Jazzicon(16, parseInt(address.slice(2), 16)));
-              }}
+              style={{ background: `no-repeat url('data:image/svg+xml;utf8,${svg}')` }}
             />
             {this.renderModal()}
           </div>

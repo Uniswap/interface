@@ -50,6 +50,14 @@ html, body {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+.ant-btn-primary .web3-status {
+  color: #fff;
+}
+
+.ant-alert {
+  font-size: .75rem;
+  margin-bottom: 1rem;
+}
 
 .ant-btn {
   border-radius: 3px; 

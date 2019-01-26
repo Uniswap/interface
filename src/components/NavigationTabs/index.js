@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withNamespaces } from 'react-i18next';
 import { dismissBetaMessage } from '../../ducks/app';
 import {Tab, Tabs} from "../Tab";
+import { Alert } from 'antd';
 
 import './beta-message.scss';
 
@@ -47,17 +48,23 @@ class NavigationTabs extends Component {
           { this.renderTab(t("send"), '/send', /send/) }
           { this.renderTab(t("pool"), '/add-liquidity', /add-liquidity|remove-liquidity|create-exchange/) }
         </Tabs>
-        {
-          showBetaMessage && (
-            <div className="beta-message" onClick={dismissBetaMessage}>
+        <Alert
+          message={(
+            <div>
               💀 {t("betaWarning")}
-              &nbsp;
               <Link to="/terms-of-service">
                 Terms of Service
               </Link>
             </div>
-          )
-        }
+          )}
+          type="warning"
+          closable
+        />
+        <Alert
+          message="Currently, swaps and sends are disabled while we allow users to add liquidity and get familiar with the site."
+          type="warning"
+          closable
+        />
       </div>
     );
   }

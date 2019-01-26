@@ -6,6 +6,7 @@
   font-size: .9rem;
   align-items: center;
   padding: .5rem;
+  display: flex;
   border-radius: 3px;
   color: $dove-gray;
   font-weight: 400;
@@ -14,7 +15,7 @@
   &__identicon {
     height: 1rem;
     width: 1rem;
-    border-radius: 1.125rem;
+    border-radius: 3px;
     background-color: $silver-gray;
   }
 
@@ -32,9 +33,11 @@
   }
 
   &--pending {
-    background-color: $zumthor-blue;
     color: $royal-blue;
-    border: 1px solid $royal-blue;
+  }
+
+  .loader {
+    border-top: 1px solid #fff;
   }
 }
 
