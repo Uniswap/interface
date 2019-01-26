@@ -52,6 +52,7 @@ class NavigationTabs extends Component {
           message={(
             <div>
               💀 {t("betaWarning")}
+              &nbsp;
               <Link to="/terms-of-service">
                 Terms of Service
               </Link>
