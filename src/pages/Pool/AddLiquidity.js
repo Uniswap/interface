@@ -432,7 +432,8 @@ class AddLiquidity extends Component {
     return (
       <ContextualInfo
         key="context-info"
-        openModalText={t("transactionDetails")}
+        openDetailsText={t("transactionDetails")}
+        closeDetailsText={t("hideDetails")}
         contextualInfo={contextualInfo}
         isError={isError}
         renderTransactionDetails={this.renderTransactionDetails}
@@ -461,10 +462,10 @@ class AddLiquidity extends Component {
     if (this.isNewExchange()) {
       return (
         <div>
-          <div className="pool__summary-item">You are adding {b(`${inputValue} ETH`)} and {b(`${outputValue} ${label}`)} to the liquidity pool.</div>
-          <div className="pool__summary-item">You are setting the initial exchange rate to {b(`1 ETH = ${BN(outputValue).dividedBy(inputValue).toFixed(4)} ${label}`)}.</div>
-          <div className="pool__summary-item">You will mint {b(`${inputValue} liquidity tokens`)}.</div>
-          <div className="pool__summary-item">Current total supply of liquidity tokens is 0.</div>
+          <div className="pool__summary-item">{t("youAreAdding")} {b(`${inputValue} ETH`)} {t("and")} {b(`${outputValue} ${label}`)} {t("intoPool")}</div>
+          <div className="pool__summary-item">{t("youAreSettingExRate")} {b(`1 ETH = ${BN(outputValue).dividedBy(inputValue).toFixed(4)} ${label}`)}.</div>
+          <div className="pool__summary-item">{t("youWillMint")} {b(`${inputValue}`)} {t("liquidityTokens")}</div>
+          <div className="pool__summary-item">{t("totalSupplyIs0")}</div>
         </div>
       );
     }
