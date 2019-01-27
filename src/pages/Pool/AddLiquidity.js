@@ -95,14 +95,14 @@ class AddLiquidity extends Component {
     }
 
     if (lastEditedField === INPUT) {
-      const newOutputValue = exchangeRate.multipliedBy(inputValue).toFixed(7, 1); // 1 = Round Downwards
+      const newOutputValue = exchangeRate.multipliedBy(inputValue).toFixed(7, 0); // Round Ouput Up
       if (newOutputValue !== outputValue) {
         append.outputValue = newOutputValue;
       }
     }
 
     if (lastEditedField === OUTPUT) {
-      const newInputValue = BN(outputValue).dividedBy(exchangeRate).toFixed(7, 0); // 0 = Round Upwards
+      const newInputValue = BN(outputValue).dividedBy(exchangeRate).toFixed(7, 1); // Round Input Down
       if (newInputValue !== inputValue) {
         append.inputValue = newInputValue;
       }
@@ -226,11 +226,11 @@ class AddLiquidity extends Component {
     let outputValue;
 
     if (inputCurrency === 'VET' && outputCurrency && outputCurrency !== 'VET') {
-      outputValue = exchangeRate.multipliedBy(value).toFixed(7);
+      outputValue = exchangeRate.multipliedBy(value).toFixed(7, 1); // Round Input Down
     }
 
     if (outputCurrency === 'VET' && inputCurrency && inputCurrency !== 'VET') {
-      outputValue = BN(value).dividedBy(exchangeRate).toFixed(7);
+      outputValue = BN(value).dividedBy(exchangeRate).toFixed(7, 0); // Round Output Up
     }
 
     const append = {
@@ -251,11 +251,11 @@ class AddLiquidity extends Component {
     let inputValue;
 
     if (inputCurrency === 'VET' && outputCurrency && outputCurrency !== 'VET') {
-      inputValue = BN(value).dividedBy(exchangeRate).toFixed(7);
+      inputValue = BN(value).dividedBy(exchangeRate).toFixed(7, 1); // Round Input Down
     }
 
     if (outputCurrency === 'VET' && inputCurrency && inputCurrency !== 'VET') {
-      inputValue = exchangeRate.multipliedBy(value).toFixed(7);
+      inputValue = exchangeRate.multipliedBy(value).toFixed(7, 0); // Round Output Up
     }
 
     const append = {
