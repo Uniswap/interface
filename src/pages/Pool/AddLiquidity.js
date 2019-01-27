@@ -95,14 +95,14 @@ class AddLiquidity extends Component {
     }
 
     if (lastEditedField === INPUT) {
-      const newOutputValue = exchangeRate.multipliedBy(inputValue).toFixed(7);
+      const newOutputValue = exchangeRate.multipliedBy(inputValue).toFixed(7, 1); // 1 = Round Downwards
       if (newOutputValue !== outputValue) {
         append.outputValue = newOutputValue;
       }
     }
 
     if (lastEditedField === OUTPUT) {
-      const newInputValue = BN(outputValue).dividedBy(exchangeRate).toFixed(7);
+      const newInputValue = BN(outputValue).dividedBy(exchangeRate).toFixed(7, 0); // 0 = Round Upwards
       if (newInputValue !== inputValue) {
         append.inputValue = newInputValue;
       }
