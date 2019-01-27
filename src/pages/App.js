@@ -110,19 +110,27 @@ class App extends Component {
             </p>
             <div>
               <a
+                href="https://github.com/Monti/vexchange-contracts"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Vexchange Contracts Github Repo
+              </a>
+              <br />
+              <a
                 href="https://github.com/Monti/vexchange"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Vexchange Github Repo
+                Vexchange Front-End Github Repo
               </a>
               <br />
               <a
-                href="https://github.com/Uniswap/uniswap-frontend"
+                href="https://github.com/Monti/vexchange/blob/master/FEES.md"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Uniswap Github Repo
+                Vexchange Fees
               </a>
             </div>
           </Modal>
