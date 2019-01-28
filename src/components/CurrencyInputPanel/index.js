@@ -33,7 +33,7 @@ const FUSE_OPTIONS = {
   ]
 };
 
-const TOKEN_ADDRESS_TO_LABEL = { ETH: 'ETH', '0xe477292f1b3268687a29376116b0ed27a9c76170': 'PLAY'};
+const TOKEN_ADDRESS_TO_LABEL = { ETH: 'ETH' };
 
 class CurrencyInputPanel extends Component {
   static propTypes = {
@@ -63,11 +63,11 @@ class CurrencyInputPanel extends Component {
   };
 
   static defaultProps = {
-    selectedTokens: [{value: 0, label: 'PLAY', address: '0xe477292f1b3268687a29376116b0ed27a9c76170'}],
+    selectedTokens: [],
     filteredTokens: [],
     onCurrencySelected() {},
     onValueChange() {},
-    selectedTokenAddress: '0xe477292f1b3268687a29376116b0ed27a9c76170',
+    selectedTokenAddress: '',
   };
 
   state = {
@@ -79,7 +79,7 @@ class CurrencyInputPanel extends Component {
   createTokenList = () => {
     const { filteredTokens } = this.props;
     let tokens = this.props.tokenAddresses.addresses;
-    let tokenList = [ { value: 'ETH', label: 'ETH', address: 'ETH' }];
+    let tokenList = [ { value: 'ETH', label: 'ETH', address: 'ETH' } ];
 
     for (let i = 0; i < tokens.length; i++) {
         let entry = { value: '', label: '' };

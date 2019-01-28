@@ -48,7 +48,7 @@ class NavigationTabs extends Component {
           { this.renderTab(t("pool"), '/add-liquidity', /add-liquidity|remove-liquidity|create-exchange/) }
         </Tabs>
         {
-          false && (
+          showBetaMessage && (
             <div className="beta-message" onClick={dismissBetaMessage}>
               💀 {t("betaWarning")}
             </div>
