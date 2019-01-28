@@ -68,11 +68,11 @@ class Swap extends Component {
     let params = new URLSearchParams(this.props.location.search);
     let input = params.get('input');
     let output = params.get('output');
-    let volume = params.get('volume');
+    let amount = params.get('amount');
 
-    if (volume) {
+    if (amount) {
       this.setState({
-        inputValue: volume ? volume : '',
+        inputValue: amount,
         lastEditedField: INPUT
       });
     }
