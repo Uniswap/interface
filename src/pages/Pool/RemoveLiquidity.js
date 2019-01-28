@@ -214,7 +214,8 @@ class RemoveLiquidity extends Component {
     return (
       <ContextualInfo
         key="context-info"
-        openModalText={t("transactionDetails")}
+        openDetailsText={t("transactionDetails")}
+        closeDetailsText={t("hideDetails")}
         contextualInfo={contextualInfo}
         isError={isError}
         renderTransactionDetails={this.renderTransactionDetails}
