@@ -38,7 +38,6 @@ class RemoveLiquidity extends Component {
     let params = new URLSearchParams(this.props.location.search);
     let token = params.get('token');
     let amount = params.get('amount');
-    let to = params.get('to');
 
     if (amount) {
       this.setState({

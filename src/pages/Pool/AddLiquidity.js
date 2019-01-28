@@ -73,7 +73,6 @@ class AddLiquidity extends Component {
     let params = new URLSearchParams(this.props.location.search);
     let token = params.get('token');
     let amount = params.get('amount');
-    let to = params.get('to');
 
     if (amount) {
       this.setState({
@@ -98,12 +97,6 @@ class AddLiquidity extends Component {
       this.setState({
         outputCurrency: token,
       });
-    }
-
-    if (to && web3.utils.isAddress(to)) {
-      this.setState({
-        recipient: to
-      })
     }
 
     this.recalcForm();
