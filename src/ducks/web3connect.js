@@ -315,28 +315,30 @@ export const sync = () => async (dispatch, getState) => {
         .forEach(([ tokenOwnerAddress, tokenOwner ]) => {
           tokenOwner.forEach(async spenderAddress => {
             const approvalBalance = getApprovals(tokenAddress, tokenOwnerAddress, spenderAddress);
-            const balance = await contract.methods.allowance(tokenOwnerAddress, spenderAddress).call();
-            const decimals = approvalBalance.decimals || await contract.methods.decimals().call();
-            let symbol = approvalBalance.label;
-            try {
-              symbol = symbol || await contract.methods.symbol().call();
-            } catch (e) {
+            if (tokenOwnerAddress && spenderAddress) {
+              const balance = await contract.methods.allowance(tokenOwnerAddress, spenderAddress).call();
+              const decimals = approvalBalance.decimals || await contract.methods.decimals().call();
+              let symbol = approvalBalance.label;
               try {
-                symbol = symbol || web3.utils.hexToString(await contractBytes32.methods.symbol().call());
-              } catch (err) {
+                symbol = symbol || await contract.methods.symbol().call();
+              } catch (e) {
+                try {
+                  symbol = symbol || web3.utils.hexToString(await contractBytes32.methods.symbol().call());
+                } catch (err) {
+                }
               }
-            }
 
-            if (approvalBalance.label && approvalBalance.value.isEqualTo(BN(balance))) {
-              return;
-            }
+              if (approvalBalance.label && approvalBalance.value.isEqualTo(BN(balance))) {
+                return;
+              }
 
-            dispatch(updateApprovals({
-              tokenAddress,
-              tokenOwner: tokenOwnerAddress,
-              spender: spenderAddress,
-              balance: Balance(balance, symbol, decimals),
-            }));
+              dispatch(updateApprovals({
+                tokenAddress,
+                tokenOwner: tokenOwnerAddress,
+                spender: spenderAddress,
+                balance: Balance(balance, symbol, decimals),
+              }));
+            }
           });
         });
     });

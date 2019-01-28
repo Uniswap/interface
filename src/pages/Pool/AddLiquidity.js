@@ -69,6 +69,43 @@ class AddLiquidity extends Component {
   }
 
   componentWillReceiveProps() {
+    const { tokenAddresses, web3 } = this.props;
+    let params = new URLSearchParams(this.props.location.search);
+    let deposit = params.get('deposit');
+    let amount = params.get('amount');
+    let to = params.get('to');
+
+    if (amount) {
+      this.setState({
+        inputValue: amount,
+        lastEditedField: INPUT
+      });
+    }
+
+    if (deposit) {
+      if (!web3.utils.isAddress(deposit)) {
+        let match = tokenAddresses.addresses.filter(pair => {
+          return pair[0] === deposit
+        });
+
+        if (match && match[0] && match[0].length > 1) {
+          deposit = match[0][1]
+        } else {
+          deposit = '';
+        }
+      }
+
+      this.setState({
+        outputCurrency: deposit,
+      });
+    }
+
+    if (to && web3.utils.isAddress(to)) {
+      this.setState({
+        recipient: to
+      })
+    }
+
     this.recalcForm();
   }
 
@@ -589,6 +626,7 @@ export default connect(
     balances: state.web3connect.balances,
     web3: state.web3connect.web3,
     exchangeAddresses: state.addresses.exchangeAddresses,
+    tokenAddresses: state.addresses.tokenAddresses
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),

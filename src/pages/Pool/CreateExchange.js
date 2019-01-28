@@ -37,6 +37,20 @@ class CreateExchange extends Component {
     };
   }
 
+  componentWillReceiveProps() {
+    const { web3 } = this.props;
+    let params = new URLSearchParams(this.props.location.search);
+    let token = params.get('token');
+
+    if (token) {
+      if (web3.utils.isAddress(token)) {
+        this.setState({
+          tokenAddress: token,
+        });
+      }
+    }
+  }
+
   validate() {
     const { tokenAddress } = this.state;
     const {

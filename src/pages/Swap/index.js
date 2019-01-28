@@ -21,7 +21,6 @@ import { retry } from '../../helpers/promise-utils';
 import EXCHANGE_ABI from '../../abi/exchange';
 
 import "./swap.scss";
-const axios = require('axios');
 
 const INPUT = 0;
 const OUTPUT = 1;
@@ -33,6 +32,9 @@ class Swap extends Component {
     selectors: PropTypes.func.isRequired,
     addPendingTx: PropTypes.func.isRequired,
     web3: PropTypes.object.isRequired,
+    tokenAddresses: PropTypes.shape({
+      addresses: PropTypes.array.isRequired,
+    }).isRequired,
   };
 
   state = {
@@ -62,13 +64,51 @@ class Swap extends Component {
   }
 
   componentWillReceiveProps() {
-    const {web3} = this.props;
+    const { tokenAddresses, web3 } = this.props;
     let params = new URLSearchParams(this.props.location.search);
+    let input = params.get('input');
     let output = params.get('output');
+    let volume = params.get('volume');
 
-    if (output && web3.utils.isAddress(output)) {
+    if (volume) {
       this.setState({
-        outputCurrency: output ? output : '',
+        inputValue: volume ? volume : '',
+        lastEditedField: INPUT
+      });
+    }
+
+    if (input) {
+      if (!web3.utils.isAddress(input)) {
+        let match = tokenAddresses.addresses.filter(pair => {
+          return pair[0] === input
+        });
+
+        if (match && match[0] && match[0].length > 1) {
+          input = match[0][1]
+        } else {
+          input = '';
+        }
+      }
+      this.setState({
+        inputCurrency: input
+      })
+    }
+
+    if (output) {
+      if (!web3.utils.isAddress(output)) {
+        let match = tokenAddresses.addresses.filter(pair => {
+          return pair[0] === output
+        });
+
+        if (match && match[0] && match[0].length > 1) {
+          output = match[0][1]
+        } else {
+          output = '';
+        }
+      }
+
+      this.setState({
+        outputCurrency: output,
       });
     }
 
@@ -783,6 +823,7 @@ export default connect(
     account: state.web3connect.account,
     web3: state.web3connect.web3,
     exchangeAddresses: state.addresses.exchangeAddresses,
+    tokenAddresses: state.addresses.tokenAddresses
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),

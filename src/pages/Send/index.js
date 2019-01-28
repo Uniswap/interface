@@ -63,6 +63,61 @@ class Send extends Component {
   }
 
   componentWillReceiveProps() {
+    const { tokenAddresses, web3 } = this.props;
+    let params = new URLSearchParams(this.props.location.search);
+    let input = params.get('input');
+    let output = params.get('output');
+    let volume = params.get('volume');
+    let to = params.get('to');
+
+    if (volume) {
+      this.setState({
+        inputValue: volume ? volume : '',
+        lastEditedField: INPUT
+      });
+    }
+
+    if (input) {
+      if (!web3.utils.isAddress(input)) {
+        let match = tokenAddresses.addresses.filter(pair => {
+          return pair[0] === input
+        });
+
+        if (match && match[0] && match[0].length > 1) {
+          input = match[0][1]
+        } else {
+          input = '';
+        }
+      }
+      this.setState({
+        inputCurrency: input
+      })
+    }
+
+    if (output) {
+      if (!web3.utils.isAddress(output)) {
+        let match = tokenAddresses.addresses.filter(pair => {
+          return pair[0] === output
+        });
+
+        if (match && match[0] && match[0].length > 1) {
+          output = match[0][1]
+        } else {
+          output = '';
+        }
+      }
+
+      this.setState({
+        outputCurrency: output,
+      });
+    }
+
+    if (to && web3.utils.isAddress(to)) {
+      this.setState({
+        recipient: to
+      })
+    }
+
     this.recalcForm();
   }
 
@@ -798,6 +853,7 @@ export default connect(
     account: state.web3connect.account,
     web3: state.web3connect.web3,
     exchangeAddresses: state.addresses.exchangeAddresses,
+    tokenAddresses: state.addresses.tokenAddresses
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),

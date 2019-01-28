@@ -33,6 +33,36 @@ class RemoveLiquidity extends Component {
     totalSupply: BN(0),
   };
 
+  componentWillReceiveProps() {
+    const { tokenAddresses, web3 } = this.props;
+    let params = new URLSearchParams(this.props.location.search);
+    let token = params.get('token');
+    let amount = params.get('amount');
+    let to = params.get('to');
+
+    if (amount) {
+      this.setState({
+        value: amount,
+      });
+    }
+
+    if (token) {
+      if (!web3.utils.isAddress(token)) {
+        let match = tokenAddresses.addresses.filter(pair => {
+          return pair[0] === token
+        });
+
+        if (match && match[0] && match[0].length > 1) {
+          token = match[0][1]
+        } else {
+          token = '';
+        }
+      }
+
+      this.onTokenSelect(token);
+    }
+  }
+
   reset() {
     this.setState({
       value: '',
@@ -405,6 +435,7 @@ export default connect(
     balances: state.web3connect.balances,
     account: state.web3connect.account,
     exchangeAddresses: state.addresses.exchangeAddresses,
+    tokenAddresses: state.addresses.tokenAddresses
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),
