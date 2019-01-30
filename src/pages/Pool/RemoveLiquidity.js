@@ -16,6 +16,8 @@ import { getBlockDeadline } from '../../helpers/web3-utils';
 import { retry } from '../../helpers/promise-utils';
 import EXCHANGE_ABI from "../../abi/exchange";
 import ReactGA from "react-ga";
+import FACTORY_ABI from "../../abi/factory";
+import {addExchange} from "../../ducks/addresses";
 
 class RemoveLiquidity extends Component {
   static propTypes = {
@@ -33,11 +35,40 @@ class RemoveLiquidity extends Component {
     totalSupply: BN(0),
   };
 
+  lookForExchange(searchQuery) {
+    const {
+      web3,
+      account,
+      selectors,
+      exchangeAddresses: {fromToken},
+      factoryAddress,
+      addExchange
+    } = this.props;
+    if (web3 && web3.utils && web3.utils.isAddress(searchQuery)) {
+      const tokenAddress = searchQuery;
+      const { label } = selectors().getBalance(account, tokenAddress);
+      const factory = new web3.eth.Contract(FACTORY_ABI, factoryAddress);
+      const exchangeAddress = fromToken[tokenAddress];
+
+      if (!exchangeAddress) {
+        this.setState({loadingExchange: true});
+        factory.methods.getExchange(tokenAddress).call((err, data) => {
+          if (!err && data !== '0x0000000000000000000000000000000000000000') {
+            addExchange({ label, tokenAddress, exchangeAddress: data });
+          }
+          this.setState({loadingExchange: false});
+        });
+      }
+    }
+  }
+
   componentWillReceiveProps() {
     const { tokenAddresses, web3 } = this.props;
     let params = new URLSearchParams(this.props.location.search);
     let token = params.get('token');
     let amount = params.get('amount');
+
+    this.lookForExchange(token)
 
     if (amount) {
       this.setState({
@@ -435,11 +466,13 @@ export default connect(
     balances: state.web3connect.balances,
     account: state.web3connect.account,
     exchangeAddresses: state.addresses.exchangeAddresses,
-    tokenAddresses: state.addresses.tokenAddresses
+    tokenAddresses: state.addresses.tokenAddresses,
+    factoryAddress: state.addresses.factoryAddress
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),
     addPendingTx: id => dispatch(addPendingTx(id)),
+    addExchange: opts => dispatch(addExchange(opts))
   })
 )(withNamespaces()(RemoveLiquidity));
 

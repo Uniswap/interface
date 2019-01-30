@@ -76,6 +76,12 @@ class CurrencyInputPanel extends Component {
     loadingExchange: false,
   };
 
+  componentWillReceiveProps(nextProps) {
+    if (this.state.selectedTokenAddress !== nextProps.selectedTokenAddress) {
+      this.createTokenList();
+    }
+  }
+
   createTokenList = () => {
     const { filteredTokens } = this.props;
     let tokens = this.props.tokenAddresses.addresses;
@@ -362,7 +368,7 @@ class CurrencyInputPanel extends Component {
               )
               : null
           }
-          { TOKEN_ADDRESS_TO_LABEL[selectedTokenAddress] || t("selectToken") }
+          { selectedTokenAddress ? TOKEN_ADDRESS_TO_LABEL[selectedTokenAddress] : t("selectToken") }
           <span className="currency-input-panel__dropdown-icon" />
         </button>
       </div>

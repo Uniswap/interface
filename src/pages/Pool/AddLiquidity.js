@@ -19,6 +19,8 @@ import {BigNumber as BN} from 'bignumber.js';
 import EXCHANGE_ABI from '../../abi/exchange';
 import "./pool.scss";
 import ReactGA from "react-ga";
+import {addExchange} from "../../ducks/addresses";
+import FACTORY_ABI from "../../abi/factory";
 
 const INPUT = 0;
 const OUTPUT = 1;
@@ -51,6 +53,33 @@ class AddLiquidity extends Component {
     });
   };
 
+  lookForExchange(searchQuery) {
+    const {
+      web3,
+      account,
+      selectors,
+      exchangeAddresses: {fromToken},
+      factoryAddress,
+      addExchange
+    } = this.props;
+    if (web3 && web3.utils && web3.utils.isAddress(searchQuery)) {
+      const tokenAddress = searchQuery;
+      const { label } = selectors().getBalance(account, tokenAddress);
+      const factory = new web3.eth.Contract(FACTORY_ABI, factoryAddress);
+      const exchangeAddress = fromToken[tokenAddress];
+
+      if (!exchangeAddress) {
+        this.setState({loadingExchange: true});
+        factory.methods.getExchange(tokenAddress).call((err, data) => {
+          if (!err && data !== '0x0000000000000000000000000000000000000000') {
+            addExchange({ label, tokenAddress, exchangeAddress: data });
+          }
+          this.setState({loadingExchange: false});
+        });
+      }
+    }
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     const { t, isConnected, account, exchangeAddresses, balances, web3 } = this.props;
     const { inputValue, outputValue, inputCurrency, outputCurrency, lastEditedField } = this.state;
@@ -73,6 +102,8 @@ class AddLiquidity extends Component {
     let params = new URLSearchParams(this.props.location.search);
     let token = params.get('token');
     let amount = params.get('amount');
+
+    this.lookForExchange(token);
 
     if (amount) {
       this.setState({
@@ -98,8 +129,6 @@ class AddLiquidity extends Component {
         outputCurrency: token,
       });
     }
-
-    this.recalcForm();
   }
 
   recalcForm = async () => {
@@ -620,11 +649,13 @@ export default connect(
     balances: state.web3connect.balances,
     web3: state.web3connect.web3,
     exchangeAddresses: state.addresses.exchangeAddresses,
-    tokenAddresses: state.addresses.tokenAddresses
+    tokenAddresses: state.addresses.tokenAddresses,
+    factoryAddress: state.addresses.factoryAddress
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),
     addPendingTx: id => dispatch(addPendingTx(id)),
+    addExchange: opts => dispatch(addExchange(opts))
   })
 )(withNamespaces()(AddLiquidity));
 

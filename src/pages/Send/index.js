@@ -18,10 +18,12 @@ import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg';
 import { getBlockDeadline } from '../../helpers/web3-utils';
 import { retry } from '../../helpers/promise-utils';
 import EXCHANGE_ABI from '../../abi/exchange';
+import FACTORY_ABI from '../../abi/factory';
 
 import "./send.scss";
 import MediaQuery from "react-responsive";
 import ReactGA from "react-ga";
+import {addExchange} from "../../ducks/addresses";
 
 const INPUT = 0;
 const OUTPUT = 1;
@@ -62,6 +64,33 @@ class Send extends Component {
     });
   }
 
+  lookForExchange(searchQuery) {
+    const {
+      web3,
+      account,
+      selectors,
+      exchangeAddresses: {fromToken},
+      factoryAddress,
+      addExchange
+    } = this.props;
+    if (web3 && web3.utils && web3.utils.isAddress(searchQuery)) {
+      const tokenAddress = searchQuery;
+      const { label } = selectors().getBalance(account, tokenAddress);
+      const factory = new web3.eth.Contract(FACTORY_ABI, factoryAddress);
+      const exchangeAddress = fromToken[tokenAddress];
+
+      if (!exchangeAddress) {
+        this.setState({loadingExchange: true});
+        factory.methods.getExchange(tokenAddress).call((err, data) => {
+          if (!err && data !== '0x0000000000000000000000000000000000000000') {
+            addExchange({ label, tokenAddress, exchangeAddress: data });
+          }
+          this.setState({loadingExchange: false});
+        });
+      }
+    }
+  }
+
   componentWillReceiveProps() {
     const { tokenAddresses, web3 } = this.props;
     let params = new URLSearchParams(this.props.location.search);
@@ -69,6 +98,9 @@ class Send extends Component {
     let output = params.get('output');
     let amount = params.get('amount');
     let to = params.get('to');
+
+    this.lookForExchange(input);
+    this.lookForExchange(output);
 
     if (amount) {
       this.setState({
@@ -117,6 +149,8 @@ class Send extends Component {
         recipient: to
       })
     }
+
+
 
     this.recalcForm();
   }
@@ -849,6 +883,7 @@ class Send extends Component {
 
 export default connect(
   state => ({
+    factoryAddress: state.addresses.factoryAddress,
     balances: state.web3connect.balances,
     isConnected: !!state.web3connect.account && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||1),
     account: state.web3connect.account,
@@ -859,6 +894,7 @@ export default connect(
   dispatch => ({
     selectors: () => dispatch(selectors()),
     addPendingTx: id => dispatch(addPendingTx(id)),
+    addExchange: opts => dispatch(addExchange(opts))
   }),
 )(withNamespaces()(Send));
 

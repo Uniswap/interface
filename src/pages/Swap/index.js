@@ -21,6 +21,8 @@ import { retry } from '../../helpers/promise-utils';
 import EXCHANGE_ABI from '../../abi/exchange';
 
 import "./swap.scss";
+import {addExchange} from "../../ducks/addresses";
+import FACTORY_ABI from "../../abi/factory";
 
 const INPUT = 0;
 const OUTPUT = 1;
@@ -63,12 +65,42 @@ class Swap extends Component {
     });
   }
 
+  lookForExchange(searchQuery) {
+    const {
+      web3,
+      account,
+      selectors,
+      exchangeAddresses: {fromToken},
+      factoryAddress,
+      addExchange
+    } = this.props;
+    if (web3 && web3.utils && web3.utils.isAddress(searchQuery)) {
+      const tokenAddress = searchQuery;
+      const { label } = selectors().getBalance(account, tokenAddress);
+      const factory = new web3.eth.Contract(FACTORY_ABI, factoryAddress);
+      const exchangeAddress = fromToken[tokenAddress];
+
+      if (!exchangeAddress) {
+        this.setState({loadingExchange: true});
+        factory.methods.getExchange(tokenAddress).call((err, data) => {
+          if (!err && data !== '0x0000000000000000000000000000000000000000') {
+            addExchange({ label, tokenAddress, exchangeAddress: data });
+          }
+          this.setState({loadingExchange: false});
+        });
+      }
+    }
+  }
+
   componentWillReceiveProps() {
     const { tokenAddresses, web3 } = this.props;
     let params = new URLSearchParams(this.props.location.search);
     let input = params.get('input');
     let output = params.get('output');
     let amount = params.get('amount');
+
+    this.lookForExchange(input);
+    this.lookForExchange(output);
 
     if (amount) {
       this.setState({
@@ -819,6 +851,7 @@ class Swap extends Component {
 
 export default connect(
   state => ({
+    factoryAddress: state.addresses.factoryAddress,
     balances: state.web3connect.balances,
     isConnected: !!state.web3connect.account && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||1),
     account: state.web3connect.account,
@@ -829,6 +862,7 @@ export default connect(
   dispatch => ({
     selectors: () => dispatch(selectors()),
     addPendingTx: id => dispatch(addPendingTx(id)),
+    addExchange: opts => dispatch(addExchange(opts)),
   }),
 )(withNamespaces()(Swap));
 
