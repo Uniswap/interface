@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import UAParser from 'ua-parser-js';
+import { withNamespaces } from 'react-i18next';
 import Logo from '../Logo';
 import CoinbaseWalletLogo from '../../assets/images/coinbase-wallet-logo.png';
 import TrustLogo from '../../assets/images/trust-wallet-logo.svg';
-import BraveLogo from '../../assets/images/brave-logo.png';
-import MetamaskLogo from '../../assets/images/metamask-logo.png';
+import BraveLogo from '../../assets/images/brave-logo.svg';
+import MetamaskLogo from '../../assets/images/metamask-logo.svg';
 import Web3Status from '../Web3Status';
 
 import "./header.scss";
@@ -18,8 +19,8 @@ const links = {
     ios: 'https://itunes.apple.com/us/app/coinbase-wallet/id1278383455'
   },
   trust: {
-    android: 'https://play.google.com/store/apps/details?id=com.wallet.crypto.trustapp&hl=en_US',
-    ios: 'https://itunes.apple.com/us/app/trust-ethereum-wallet/id1288339409?mt=8',
+    android: 'https://links.trustwalletapp.com/a/key_live_lfvIpVeI9TFWxPCqwU8rZnogFqhnzs4D?&event=openURL&url=https://uniswap.exchange/swap',
+    ios: 'https://links.trustwalletapp.com/a/key_live_lfvIpVeI9TFWxPCqwU8rZnogFqhnzs4D?&event=openURL&url=https://uniswap.exchange/swap',
   },
   metamask: {
     chrome: 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
@@ -77,34 +78,35 @@ function isMobile() {
 class BlockingWarning extends Component {
   render () {
     const {
+      t,
       isConnected,
       initialized,
       networkId,
     } = this.props;
     let content = [];
 
-    const correctNetworkId = process.env.REACT_APP_NETWORK_ID || 1;
-    const correctNetwork = process.env.REACT_APP_NETWORK || 'Main Ethereum Network';
+    const correctNetworkId = process.env.REACT_APP_NETWORK_ID || 18;
+    const correctNetwork = process.env.REACT_APP_NETWORK || 'Main CyberMiles Network';
 
     const wrongNetwork = networkId != correctNetworkId;
 
     if (wrongNetwork && initialized) {
       content = [
-        <div key="warning-title">You are on the wrong network</div>,
+        <div key="warning-title">{t("wrongNetwork")}</div>,
         <div key="warning-desc" className="header__dialog__description">
-          {`Please switch to ${correctNetwork}`}
+          {t("switchNetwork", {correctNetwork})}
         </div>,
       ];
     }
 
     if (!isConnected && initialized) {
       content = [
-        <div key="warning-title">No Ethereum wallet found</div>,
+        <div key="warning-title">{t("noWallet")}</div>,
         <div key="warning-desc" className="header__dialog__description">
           {
             isMobile()
-              ? 'Please visit us from a web3-enabled mobile browser such as Trust Wallet or Coinbase Wallet.'
-              : 'Please visit us after installing Metamask on Chrome or Brave.'
+              ? t("installWeb3MobileBrowser")
+              : t("installMetamask")
           }
         </div>,
         <div key="warning-logos" className="header__download">
@@ -150,7 +152,7 @@ function Header (props) {
       >
         <Logo />
         <div className="header__center-group">
-          <span className="header__title">CyberMiles Testnet Exchange</span>
+          <span className="header__title">CyberMiles Exchange</span>
         </div>
         <Web3Status isConnected />
       </div>
@@ -171,4 +173,4 @@ export default connect(
     web3: state.web3connect.web3,
     networkId: state.web3connect.networkId,
   }),
-)(Header);
+)(withNamespaces()(Header));

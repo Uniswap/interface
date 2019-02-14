@@ -20,6 +20,7 @@ class AddressInputPanel extends Component {
 
   render() {
     const {
+      t,
       title,
       onChange,
       value,
@@ -34,7 +35,7 @@ class AddressInputPanel extends Component {
           <div className="address-input-panel__input-container">
             <div className="currency-input-panel__label-row">
               <div className="currency-input-panel__label-container">
-                <span className="currency-input-panel__label">{title || 'Recipient Address'}</span>
+                <span className="currency-input-panel__label">{title || t("recipientAddress")}</span>
               </div>
             </div>
             <div className="currency-input-panel__input-row">
