@@ -721,7 +721,7 @@ class Send extends Component {
     const { inputError, outputError, isValid } = this.validate();
 
     return (
-      <div className="send ">
+      <div className="send">
         <MediaQuery query="(max-width: 767px)">
           <Header />
         </MediaQuery>
