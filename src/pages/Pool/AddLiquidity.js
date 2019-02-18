@@ -518,6 +518,7 @@ class AddLiquidity extends Component {
             'header--inactive': !isConnected,
           })}
         />
+
         {
           this.isNewExchange()
             ? (
