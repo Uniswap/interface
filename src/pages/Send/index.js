@@ -735,6 +735,7 @@ class Send extends Component {
               'header--inactive': !this.props.isConnected,
             })}
           />
+
           <CurrencyInputPanel
             title={t("input")}
             description={lastEditedField === OUTPUT ? estimatedText : ''}

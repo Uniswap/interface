@@ -703,7 +703,6 @@ class Swap extends Component {
     const { inputError, outputError, isValid } = this.validate();
 
 
-
     return (
       <div className="swap">
         <MediaQuery query="(max-width: 767px)">
@@ -719,6 +718,7 @@ class Swap extends Component {
               'header--inactive': !this.props.isConnected,
             })}
           />
+
           <CurrencyInputPanel
             title={t("input")}
             description={lastEditedField === OUTPUT ? estimatedText : ''}
