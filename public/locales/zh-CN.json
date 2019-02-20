@@ -1,9 +1,9 @@
 {
-  "noWallet": "未发现以太钱包",
+  "noWallet": "未发现CyberMiles钱包",
   "wrongNetwork": "网络错误",
   "switchNetwork": "请切换到 {{ correctNetwork }}",
-  "installWeb3MobileBrowser": "请从支持web3的移动端浏览器，如 Trust Wallet 或 Coinbase Wallet 访问。",
-  "installMetamask": "请从安装了 Metamask 插件的 Chrome 或 Brave 访问。",
+  "installWeb3MobileBrowser": "请从支持web3的移动端浏览器，如 CMT Wallet 访问。",
+  "installMetamask": "请从安装了 Metamask for CMT 插件的 Chrome 或 Brave 访问。",
   "disconnected": "未连接",
   "swap": "兑换",
   "send": "发送",

@@ -1,9 +1,9 @@
 {
-  "noWallet": "Niciun portofel Ethereum găsit",
+  "noWallet": "Niciun portofel CyberMiles găsit",
   "wrongNetwork": "Nu ești conectat la rețeaua corectă",
   "switchNetwork": "Conectează-te te rog la {{ correctNetwork }}",
-  "installWeb3MobileBrowser": "Incearcă să vizitezi această pagina folosind un browser precum Trust Wallet sau Coinbase Wallet.",
-  "installMetamask": "Vizitează această pagină din nou după ce instalezi MetaMask în Chrome sau Brave",
+  "installWeb3MobileBrowser": "Incearcă să vizitezi această pagina folosind un browser precum CMT Wallet.",
+  "installMetamask": "Vizitează această pagină din nou după ce instalezi MetaMask for CMT în Chrome sau Brave",
   "disconnected": "Deconectat",
   "swap": "Schimba",
   "send": "Trimite",

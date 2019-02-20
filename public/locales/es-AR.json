@@ -1,9 +1,9 @@
 {
-	"noWallet": "No se encontró billetera de Ethereum",
+	"noWallet": "No se encontró billetera de CyberMiles",
 	"wrongNetwork": "Te encontrás en la red equivocada",
 	"switchNetwork": "Por favor cambia a {{ correctNetwork }}",
-	"installWeb3MobileBrowser": "Por favor ingresá desde un navegador móvil con web3 habilitado como Trust Wallet o Coinbase Wallet.",
-	"installMetamask": "Por favor visítanos nuevamente luego de instalar Metamask en Chrome o Brave.",
+	"installWeb3MobileBrowser": "Por favor ingresá desde un navegador móvil con web3 habilitado como CMT Wallet.",
+	"installMetamask": "Por favor visítanos nuevamente luego de instalar Metamask for CMT en Chrome o Brave.",
 	"disconnected": "Desconectado",
 	"swap": "Intercambiar",
 	"send": "Enviar",

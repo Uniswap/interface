@@ -1,9 +1,9 @@
 {
-  "noWallet": "No Ethereum wallet found",
+  "noWallet": "No CyberMiles wallet found",
   "wrongNetwork": "You are on the wrong network",
   "switchNetwork": "Please switch to {{ correctNetwork }}",
-  "installWeb3MobileBrowser": "Please visit us from a web3-enabled mobile browser such as Trust Wallet or Coinbase Wallet.",
-  "installMetamask": "Please visit us after installing Metamask on Chrome or Brave.",
+  "installWeb3MobileBrowser": "Please visit us from a web3-enabled mobile browser such as CMT Wallet.",
+  "installMetamask": "Please visit us after installing Metamask for CMT on Chrome or Brave.",
   "disconnected": "Disconnected",
   "swap": "Swap",
   "send": "Send",
