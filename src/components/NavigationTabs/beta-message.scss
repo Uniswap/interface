@@ -7,19 +7,19 @@
   position: relative;
   padding: .5rem 1rem;
   margin-bottom: 1rem;
-  border: 1px solid rgba($salmon-red, .4);
-  background-color: rgba($salmon-red, .1);
+  border: 1px solid rgba($wisteria-purple, .4);
+  background-color: rgba($wisteria-purple, .1);
   border-radius: 2rem;
   font-size: .75rem;
   line-height: 1rem;
   text-align: center;
-  color: $salmon-red;
+  color: $wisteria-purple;
 
   &:after {
     content: '✕';
     top: .5rem;
     right: 1rem;
     position: absolute;
-    color: $salmon-red;
+    color: $wisteria-purple;
   }
 }
