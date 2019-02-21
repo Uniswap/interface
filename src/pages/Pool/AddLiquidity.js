@@ -162,7 +162,7 @@ class AddLiquidity extends Component {
     const liquidityMinted = BN(totalLiquidity).multipliedBy(ethAmount.dividedBy(ethReserve));
     let deadline;
     try {
-      deadline = await retry(() => getBlockDeadline(web3, 300));
+      deadline = await retry(() => getBlockDeadline(web3, 600));
     } catch(e) {
       // TODO: Handle error.
       return;

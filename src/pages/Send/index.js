@@ -389,7 +389,7 @@ class Send extends Component {
     const { decimals: outputDecimals } = selectors().getBalance(account, outputCurrency);
     let deadline;
     try {
-      deadline = await retry(() => getBlockDeadline(web3, 300));
+      deadline = await retry(() => getBlockDeadline(web3, 600));
     } catch(e) {
       // TODO: Handle error.
       return;
