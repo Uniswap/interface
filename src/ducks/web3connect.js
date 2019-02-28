@@ -64,7 +64,7 @@ export const selectors = () => (dispatch, getState) => {
 
   const getBalance = (address, tokenAddress) => {
     if (process.env.NODE_ENV !== 'production' && !tokenAddress) {
-      console.warn('No token address found - return ETH balance');
+      console.warn('No token address found - return CMT balance');
     }
 
     if (!tokenAddress || tokenAddress === 'CMT') {

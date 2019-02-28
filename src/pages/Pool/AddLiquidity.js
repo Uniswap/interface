@@ -358,7 +358,7 @@ class AddLiquidity extends Component {
         <div className="pool__summary-panel">
           <div className="pool__exchange-rate-wrapper">
             <span className="pool__exchange-rate">{t("exchangeRate")}</span>
-            <span>{`1 ETH = ${rateText} ${label}`}</span>
+            <span>{`1 CMT = ${rateText} ${label}`}</span>
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">{t("currentPoolSize")}</span>
@@ -382,7 +382,7 @@ class AddLiquidity extends Component {
       <div className="pool__summary-panel">
         <div className="pool__exchange-rate-wrapper">
           <span className="pool__exchange-rate">{t("exchangeRate")}</span>
-          <span>{`1 ETH = ${tokenValue.multipliedBy(10 ** (18 - decimals)).dividedBy(ethValue).toFixed(4)} ${label}`}</span>
+          <span>{`1 CMT = ${tokenValue.multipliedBy(10 ** (18 - decimals)).dividedBy(ethValue).toFixed(4)} ${label}`}</span>
         </div>
         <div className="pool__exchange-rate-wrapper">
           <span className="swap__exchange-rate">{t("currentPoolSize")}</span>
@@ -462,8 +462,8 @@ class AddLiquidity extends Component {
     if (this.isNewExchange()) {
       return (
         <div>
-          <div className="pool__summary-item">{t("youAreAdding")} {b(`${inputValue} ETH`)} {t("and")} {b(`${outputValue} ${label}`)} {t("intoPool")}</div>
-          <div className="pool__summary-item">{t("youAreSettingExRate")} {b(`1 ETH = ${BN(outputValue).dividedBy(inputValue).toFixed(4)} ${label}`)}.</div>
+          <div className="pool__summary-item">{t("youAreAdding")} {b(`${inputValue} CMT`)} {t("and")} {b(`${outputValue} ${label}`)} {t("intoPool")}</div>
+          <div className="pool__summary-item">{t("youAreSettingExRate")} {b(`1 CMT = ${BN(outputValue).dividedBy(inputValue).toFixed(4)} ${label}`)}.</div>
           <div className="pool__summary-item">{t("youWillMint")} {b(`${inputValue}`)} {t("liquidityTokens")}</div>
           <div className="pool__summary-item">{t("totalSupplyIs0")}</div>
         </div>
@@ -480,10 +480,10 @@ class AddLiquidity extends Component {
 
     return (
       <div>
-        <div className="pool__summary-modal__item">{t("youAreAdding")} {b(`${+BN(inputValue).toFixed(7)} ETH`)} {t("and")} {b(`${+minOutput.toFixed(7)} - ${+maxOutput.toFixed(7)} ${label}`)} {t("intoPool")}</div>
+        <div className="pool__summary-modal__item">{t("youAreAdding")} {b(`${+BN(inputValue).toFixed(7)} CMT`)} {t("and")} {b(`${+minOutput.toFixed(7)} - ${+maxOutput.toFixed(7)} ${label}`)} {t("intoPool")}</div>
         <div className="pool__summary-modal__item">{t("youWillMint")} {b(+liquidityMinted.toFixed(7))} {t("liquidityTokens")}</div>
         <div className="pool__summary-modal__item">{t("totalSupplyIs")} {b(+adjTotalSupply.toFixed(7))}</div>
-        <div className="pool__summary-modal__item">{t("tokenWorth")} {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH {t("and")} {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
+        <div className="pool__summary-modal__item">{t("tokenWorth")} {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} CMT {t("and")} {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
       </div>
     );
   }
