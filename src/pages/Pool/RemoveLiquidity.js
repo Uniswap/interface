@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from "classnames";
 import { connect } from 'react-redux';
 import { BigNumber as BN } from 'bignumber.js';
+import { withNamespaces } from 'react-i18next';
 import NavigationTabs from "../../components/NavigationTabs";
 import ModeSelector from "./ModeSelector";
 import CurrencyInputPanel from "../../components/CurrencyInputPanel";
@@ -11,8 +12,9 @@ import ContextualInfo from "../../components/ContextualInfo";
 import OversizedPanel from "../../components/OversizedPanel";
 import ArrowDownBlue from "../../assets/images/arrow-down-blue.svg";
 import ArrowDownGrey from "../../assets/images/arrow-down-grey.svg";
+import { getBlockDeadline } from '../../helpers/web3-utils';
+import { retry } from '../../helpers/promise-utils';
 import EXCHANGE_ABI from "../../abi/exchange";
-import promisify from "../../helpers/web3-promisfy";
 import ReactGA from "react-ga";
 
 class RemoveLiquidity extends Component {
@@ -39,7 +41,7 @@ class RemoveLiquidity extends Component {
 
   validate() {
     const { tokenAddress, value } = this.state;
-    const { account, selectors, exchangeAddresses: { fromToken }, web3 } = this.props;
+    const { t, account, selectors, exchangeAddresses: { fromToken }, web3 } = this.props;
     const exchangeAddress = fromToken[tokenAddress];
 
     if (!web3 || !exchangeAddress || !account || !value) {
@@ -53,7 +55,7 @@ class RemoveLiquidity extends Component {
     const { value: liquidityBalance, decimals: liquidityDecimals } = getBalance(account, exchangeAddress);
 
     if (liquidityBalance.isLessThan(BN(value).multipliedBy(10 ** liquidityDecimals))) {
-      return { isValid: false, errorMessage: 'Insufficient balance' };
+      return { isValid: false, errorMessage: t("insufficientBalance") };
     }
 
     return {
@@ -105,9 +107,13 @@ class RemoveLiquidity extends Component {
     const ownership = amount.dividedBy(totalSupply);
     const ethWithdrawn = ethReserve.multipliedBy(ownership);
     const tokenWithdrawn = tokenReserve.multipliedBy(ownership);
-    const blockNumber = await promisify(web3, 'getBlockNumber');
-    const block = await promisify(web3, 'getBlock', blockNumber);
-    const deadline =  block.timestamp + 300;
+    let deadline;
+    try {
+      deadline = await retry(() => getBlockDeadline(web3, 300));
+    } catch(e) {
+      // TODO: Handle error.
+      return;
+    }
 
     exchange.methods.removeLiquidity(
       amount.toFixed(0),
@@ -146,11 +152,15 @@ class RemoveLiquidity extends Component {
       return '';
     }
     const { value, decimals } = selectors().getBalance(account, exchangeAddress);
+    if (!decimals) {
+      return '';
+    }
+
     return `Balance: ${value.dividedBy(10 ** decimals).toFixed(7)}`;
   };
 
   renderSummary(errorMessage) {
-    const { selectors, exchangeAddresses: { fromToken } } = this.props;
+    const { t, selectors, exchangeAddresses: { fromToken } } = this.props;
     const {
       value: input,
       tokenAddress,
@@ -163,20 +173,21 @@ class RemoveLiquidity extends Component {
       contextualInfo = errorMessage;
       isError = true;
     } else if (!tokenAddress) {
-      contextualInfo = 'Select a token to continue.';
+      contextualInfo = t("selectTokenCont");
     } else if (inputIsZero) {
-      contextualInfo = 'Amount cannot be zero.';
+      contextualInfo = t("noZero");
     } else if (!input) {
       const { label } = selectors().getTokenBalance(tokenAddress, fromToken[tokenAddress]);
-      contextualInfo = `Enter a ${label} value to continue.`;
+      contextualInfo = t("enterLabelCont", { label });
     }
 
     return (
       <ContextualInfo
         key="context-info"
+        openDetailsText={t("transactionDetails")}
+        closeDetailsText={t("hideDetails")}
         contextualInfo={contextualInfo}
         isError={isError}
-        modalClass="pool__summary-modal"
         renderTransactionDetails={this.renderTransactionDetails}
       />
     );
@@ -185,6 +196,7 @@ class RemoveLiquidity extends Component {
   renderTransactionDetails = () => {
     const { tokenAddress, value: input, totalSupply } = this.state;
     const {
+      t,
       exchangeAddresses: { fromToken },
       web3,
       selectors,
@@ -220,16 +232,17 @@ class RemoveLiquidity extends Component {
 
     return (
       <div>
-        <div className="pool__summary-modal__item">You are removing between {b(`${+BN(ethWithdrawn).toFixed(7)} CMT`)} and {b(`${+minTokenWithdrawn} - ${+maxTokenWithdrawn} ${label}`)} into the liquidity pool.</div>
-        <div className="pool__summary-modal__item">You will remove {b(+input)} liquidity tokens.</div>
-        <div className="pool__summary-modal__item">Current total supply of liquidity tokens is {b(+adjTotalSupply.toFixed(7))}</div>
-        <div className="pool__summary-modal__item">At current exchange rate, each pool token is worth {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} CMT and {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
+        <div className="pool__summary-modal__item">{t("youAreRemoving")} {b(`${+BN(ethWithdrawn).toFixed(7)} CMT`)} {t("and")} {b(`${+minTokenWithdrawn} - ${+maxTokenWithdrawn} ${label}`)} {t("outPool")}</div>
+        <div className="pool__summary-modal__item">{t("youWillRemove")} {b(+input)} {t("liquidityTokens")}</div>
+        <div className="pool__summary-modal__item">{t("totalSupplyIs")} {b(+adjTotalSupply.toFixed(7))}</div>
+        <div className="pool__summary-modal__item">{t("tokenWorth")} {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} CMT {t("and")} {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
       </div>
     );
   }
 
   renderOutput() {
     const {
+      t,
       exchangeAddresses: { fromToken },
       account,
       web3,
@@ -239,41 +252,47 @@ class RemoveLiquidity extends Component {
 
     const { tokenAddress, totalSupply, value: input } = this.state;
 
+    const blank = [
+      <CurrencyInputPanel
+        key="remove-liquidity-input"
+        title={t("output")}
+        description={`(${t("estimated")})`}
+        renderInput={() => (
+          <div className="remove-liquidity__output"></div>
+        )}
+        disableTokenSelect
+        disableUnlock
+      />,
+      <OversizedPanel key="remove-liquidity-input-under" hideBottom>
+        <div className="pool__summary-panel">
+          <div className="pool__exchange-rate-wrapper">
+            <span className="pool__exchange-rate">{t("exchangeRate")}</span>
+            <span> - </span>
+          </div>
+          <div className="pool__exchange-rate-wrapper">
+            <span className="swap__exchange-rate">{t("currentPoolSize")}</span>
+            <span> - </span>
+          </div>
+          <div className="pool__exchange-rate-wrapper">
+            <span className="swap__exchange-rate">{t("yourPoolShare")}</span>
+            <span> - </span>
+          </div>
+        </div>
+      </OversizedPanel>
+    ];
 
     const exchangeAddress = fromToken[tokenAddress];
     if (!exchangeAddress || !web3) {
-      return [
-        <CurrencyInputPanel
-          key="remove-liquidity-input"
-          title="Output"
-          description="(estimated)"
-          renderInput={() => (
-            <div className="remove-liquidity__output"></div>
-          )}
-          disableTokenSelect
-          disableUnlock
-        />,
-        <OversizedPanel key="remove-liquidity-input-under" hideBottom>
-          <div className="pool__summary-panel">
-            <div className="pool__exchange-rate-wrapper">
-              <span className="pool__exchange-rate">Exchange Rate</span>
-              <span> - </span>
-            </div>
-            <div className="pool__exchange-rate-wrapper">
-              <span className="swap__exchange-rate">Current Pool Size</span>
-              <span> - </span>
-            </div>
-            <div className="pool__exchange-rate-wrapper">
-              <span className="swap__exchange-rate">Your Pool Share</span>
-              <span> - </span>
-            </div>
-          </div>
-        </OversizedPanel>
-      ];
+      return blank;
     }
+
     const { value: liquidityBalance } = getBalance(account, exchangeAddress);
     const { value: ethReserve } = getBalance(exchangeAddress);
     const { value: tokenReserve, decimals: tokenDecimals, label } = getBalance(exchangeAddress, tokenAddress);
+
+    if (!tokenDecimals) {
+      return blank;
+    }
 
     const ownership = liquidityBalance.dividedBy(totalSupply);
     const ethPer = ethReserve.dividedBy(totalSupply);
@@ -285,8 +304,8 @@ class RemoveLiquidity extends Component {
 
     return [
       <CurrencyInputPanel
-        title="Output"
-        description="(estimated)"
+        title={t("output")}
+        description={`(${t("estimated")})`}
         key="remove-liquidity-input"
         renderInput={() => input
           ? (
@@ -308,18 +327,18 @@ class RemoveLiquidity extends Component {
       <OversizedPanel key="remove-liquidity-input-under" hideBottom>
         <div className="pool__summary-panel">
           <div className="pool__exchange-rate-wrapper">
-            <span className="pool__exchange-rate">Exchange Rate</span>
+            <span className="pool__exchange-rate">{t("exchangeRate")}</span>
             <span>
               {`1 CMT = ${exchangeRate.toFixed(4)} ${label}`}
             </span>
           </div>
           <div className="pool__exchange-rate-wrapper">
-            <span className="swap__exchange-rate">Current Pool Size</span>
+            <span className="swap__exchange-rate">{t("currentPoolSize")}</span>
             <span>{`${ethReserve.dividedBy(10 ** 18).toFixed(2)} CMT + ${tokenReserve.dividedBy(10 ** tokenDecimals).toFixed(2)} ${label}`}</span>
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">
-              Your Pool Share ({ownership.multipliedBy(100).toFixed(2)}%)
+              {t("yourPoolShare")} ({ownership.multipliedBy(100).toFixed(2)}%)
             </span>
             <span>{`${ownedEth.toFixed(2)} CMT + ${ownedToken.toFixed(2)} ${label}`}</span>
           </div>
@@ -329,7 +348,7 @@ class RemoveLiquidity extends Component {
   }
 
   render() {
-    const { isConnected } = this.props;
+    const { t, isConnected } = this.props;
     const { tokenAddress, value } = this.state;
     const { isValid, errorMessage } = this.validate();
 
@@ -345,9 +364,9 @@ class RemoveLiquidity extends Component {
             'header--inactive': !isConnected,
           })}
         />
-        <ModeSelector title="Remove Liquidity" />
+        <ModeSelector title={t("removeLiquidity")} />
         <CurrencyInputPanel
-          title="Pool Tokens"
+          title={t("poolTokens")}
           extraText={this.getBalance(tokenAddress)}
           onValueChange={this.onInputChange}
           value={value}
@@ -362,6 +381,7 @@ class RemoveLiquidity extends Component {
           </div>
         </OversizedPanel>
         { this.renderOutput() }
+        { this.renderSummary(errorMessage) }
         <div className="pool__cta-container">
           <button
             className={classnames('pool__cta-btn', {
@@ -371,18 +391,17 @@ class RemoveLiquidity extends Component {
             disabled={!isValid}
             onClick={this.onRemoveLiquidity}
           >
-            Remove Liquidity
+            {t("removeLiquidity")}
           </button>
         </div>
-      </div>,
-      this.renderSummary(errorMessage)
+      </div>
     ];
   }
 }
 
 export default connect(
   state => ({
-    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||1),
+    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||18),
     web3: state.web3connect.web3,
     balances: state.web3connect.balances,
     account: state.web3connect.account,
@@ -392,7 +411,7 @@ export default connect(
     selectors: () => dispatch(selectors()),
     addPendingTx: id => dispatch(addPendingTx(id)),
   })
-)(RemoveLiquidity);
+)(withNamespaces()(RemoveLiquidity));
 
 function b(text) {
   return <span className="swap__highlight-text">{text}</span>

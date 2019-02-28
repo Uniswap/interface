@@ -22,6 +22,10 @@
     position: relative;
     z-index: 200;
     padding: .875rem;
+
+    &--clickable {
+      cursor: pointer;
+    }
   }
 
   &__down-arrow-background {
@@ -50,7 +54,7 @@
 
   &__cta-container {
     display: flex;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
   }
 
   &__cta-btn {
