@@ -38,7 +38,7 @@ class Swap extends Component {
     inputValue: '',
     outputValue: '',
     inputCurrency: 'ETH',
-    outputCurrency: '',
+    outputCurrency: '0x07d9e49ea402194bf48a8276dafb16e4ed633317',
     inputAmountB: '',
     lastEditedField: '',
   };
