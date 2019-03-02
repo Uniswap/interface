@@ -11,11 +11,11 @@
   }
 
   &__title {
-    font-size: 1rem;
+    font-size: 2rem;
     font-weight: 500;
     margin-left: 1rem;
     line-height: 1.5rem;
-    color: $wisteria-purple;
+    color: $royal-blue;
   }
 
   &__center-group {
@@ -77,6 +77,18 @@
     &__top {
       border: none;
       padding: 1.25rem;
+    }
+  }
+
+  @media only screen and (max-width : 770px) {
+    &__title {
+      font-size: 1.5rem;
+    }
+  }
+
+  @media only screen and (max-width : 500px) {
+    &__title {
+      font-size: 1rem;
     }
   }
 }

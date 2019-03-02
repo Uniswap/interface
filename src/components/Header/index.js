@@ -152,7 +152,7 @@ function Header (props) {
       >
         <Logo />
         <div className="header__center-group">
-          <span className="header__title">Uniswap</span>
+          <span className="header__title">Dalecoin Liquidity Dex</span>
         </div>
         <Web3Status isConnected />
       </div>

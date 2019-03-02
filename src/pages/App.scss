@@ -24,3 +24,14 @@
 
   @extend %col-nowrap;
 }
+
+footer {
+  text-align: center;
+  padding-bottom: 20px;
+  color: $malibu-blue;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+}

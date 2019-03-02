@@ -55,6 +55,7 @@ class App extends Component {
             </div>
           </Switch>
         </BrowserRouter>
+        <footer>Powered by <a href="https://uniswap.io" target="_blank">uniswap</a></footer>
       </div>
     );
   }
