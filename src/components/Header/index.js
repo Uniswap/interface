@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import UAParser from 'ua-parser-js';
-import Logo from '../../assets/images/logo.png';
+import Logo from '../../assets/images/unicorn.svg';
 import { withNamespaces } from 'react-i18next';
 import CoinbaseWalletLogo from '../../assets/images/coinbase-wallet-logo.png';
 import TrustLogo from '../../assets/images/trust-wallet-logo.svg';
@@ -150,7 +150,7 @@ function Header (props) {
           'header--inactive': !props.isConnected,
         })}
       >
-        <img src={Logo} key="logo" height="50" i/>,
+        <img src={Logo} key="logo" height="70" i/>
         <div className="header__center-group">
           <span className="header__title">Uniswap.ch</span>
         </div>
