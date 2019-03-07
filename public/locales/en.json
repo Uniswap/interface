@@ -71,5 +71,6 @@
   "tokenAddress": "Token Address",
   "label": "Label",
   "decimals": "Decimals",
-  "enterTokenCont": "Enter a token address to continue"
+  "enterTokenCont": "Enter a token address to continue",
+  "deadlineSetTo": "Deadline set to"
 }

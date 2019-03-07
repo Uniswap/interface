@@ -41,6 +41,9 @@ class Swap extends Component {
     outputCurrency: '',
     inputAmountB: '',
     lastEditedField: '',
+    deadlineDelta: '600',
+    allowedSlippage:'0.015',
+    tokenAllowedSlippage: '0.025',
   };
 
   componentWillMount() {
@@ -57,6 +60,9 @@ class Swap extends Component {
       outputValue: '',
       inputAmountB: '',
       lastEditedField: '',
+      deadlineDelta: '300',
+      allowedSlippage:'0.025',
+      tokenAllowedSlippage: '0.04',
     });
   }
 
@@ -376,16 +382,17 @@ class Swap extends Component {
       outputCurrency,
       inputAmountB,
       lastEditedField,
+      deadlineDelta,
+      allowedSlippage,
+      tokenAllowedSlippage,
     } = this.state;
-    const ALLOWED_SLIPPAGE = 0.025;
-    const TOKEN_ALLOWED_SLIPPAGE = 0.04;
 
     const type = getSwapType(inputCurrency, outputCurrency);
     const { decimals: inputDecimals } = selectors().getBalance(account, inputCurrency);
     const { decimals: outputDecimals } = selectors().getBalance(account, outputCurrency);
     let deadline;
     try {
-      deadline = await retry(() => getBlockDeadline(web3, 300));
+      deadline = await retry(() => getBlockDeadline(web3, deadlineDelta));
     } catch(e) {
       // TODO: Handle error.
       return;
@@ -403,7 +410,7 @@ class Swap extends Component {
           new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency])
             .methods
             .ethToTokenSwapInput(
-              BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(0),
+              BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - allowedSlippage).toFixed(0),
               deadline,
             )
             .send({
@@ -421,7 +428,7 @@ class Swap extends Component {
             .methods
             .tokenToEthSwapInput(
               BN(inputValue).multipliedBy(10 ** inputDecimals).toFixed(0),
-              BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(0),
+              BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - allowedSlippage).toFixed(0),
               deadline,
             )
             .send({ from: account }, (err, data) => {
@@ -436,7 +443,7 @@ class Swap extends Component {
             .methods
             .tokenToTokenSwapInput(
               BN(inputValue).multipliedBy(10 ** inputDecimals).toFixed(0),
-              BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - TOKEN_ALLOWED_SLIPPAGE).toFixed(0),
+              BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - tokenAllowedSlippage).toFixed(0),
               '1',
               deadline,
               outputCurrency,
@@ -469,7 +476,7 @@ class Swap extends Component {
             )
             .send({
               from: account,
-              value: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
+              value: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + allowedSlippage).toFixed(0),
             }, (err, data) => {
               if (!err) {
                 addPendingTx(data);
@@ -482,7 +489,7 @@ class Swap extends Component {
             .methods
             .tokenToEthSwapOutput(
               BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
-              BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
+              BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + allowedSlippage).toFixed(0),
               deadline,
             )
             .send({ from: account }, (err, data) => {
@@ -501,7 +508,7 @@ class Swap extends Component {
             .methods
             .tokenToTokenSwapOutput(
               BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
-              BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE).toFixed(0),
+              BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + tokenAllowedSlippage).toFixed(0),
               inputAmountB.multipliedBy(1.2).toFixed(0),
               deadline,
               outputCurrency,
@@ -572,6 +579,9 @@ class Swap extends Component {
       outputValue,
       outputCurrency,
       lastEditedField,
+      deadlineDelta,
+      allowedSlippage,
+      tokenAllowedSlippage,
     } = this.state;
     const { t, selectors, account } = this.props;
 
@@ -579,9 +589,6 @@ class Swap extends Component {
       category: 'TransactionDetail',
       action: 'Open',
     });
-
-    const ALLOWED_SLIPPAGE = 0.025;
-    const TOKEN_ALLOWED_SLIPPAGE = 0.04;
 
     const type = getSwapType(inputCurrency, outputCurrency);
     const { label: inputLabel, decimals: inputDecimals } = selectors().getBalance(account, inputCurrency);
@@ -594,13 +601,13 @@ class Swap extends Component {
     if (lastEditedField === INPUT) {
       switch(type) {
         case 'ETH_TO_TOKEN':
-          minOutput = BN(outputValue).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(7).trim();
+          minOutput = BN(outputValue).multipliedBy(1 - allowedSlippage).toFixed(7).trim();
           break;
         case 'TOKEN_TO_ETH':
-          minOutput = BN(outputValue).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(7);
+          minOutput = BN(outputValue).multipliedBy(1 - allowedSlippage).toFixed(7);
           break;
         case 'TOKEN_TO_TOKEN':
-          minOutput = BN(outputValue).multipliedBy(1 - TOKEN_ALLOWED_SLIPPAGE).toFixed(7);
+          minOutput = BN(outputValue).multipliedBy(1 - tokenAllowedSlippage).toFixed(7);
           break;
         default:
           break;
@@ -610,13 +617,13 @@ class Swap extends Component {
     if (lastEditedField === OUTPUT) {
       switch (type) {
         case 'ETH_TO_TOKEN':
-          maxInput = BN(inputValue).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(7).trim();
+          maxInput = BN(inputValue).multipliedBy(1 + allowedSlippage).toFixed(7).trim();
           break;
         case 'TOKEN_TO_ETH':
-          maxInput = BN(inputValue).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(7);
+          maxInput = BN(inputValue).multipliedBy(1 + allowedSlippage).toFixed(7);
           break;
         case 'TOKEN_TO_TOKEN':
-          maxInput = BN(inputValue).multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE).toFixed(7);
+          maxInput = BN(inputValue).multipliedBy(1 + tokenAllowedSlippage).toFixed(7);
           break;
         default:
           break;
@@ -630,7 +637,7 @@ class Swap extends Component {
             {t("youAreSelling")} {b(`${+inputValue} ${inputLabel}`)} {t("orTransFail")}
           </div>
           <div className="send__last-summary-text">
-            {t("youWillReceive")} {b(`${+minOutput} ${outputLabel}`)} {t("orTransFail")}
+            {t("youWillReceive")} {b(`${+minOutput} ${outputLabel}`)} {t("orTransFail")} {t("deadlineSetTo")} {b(`${deadlineDelta}`)}s.
           </div>
         </div>
       );
@@ -641,7 +648,7 @@ class Swap extends Component {
             {t("youAreBuying")} {b(`${+outputValue} ${outputLabel}`)}.
           </div>
           <div className="send__last-summary-text">
-            {t("itWillCost")} {b(`${+maxInput} ${inputLabel}`)} {t("orTransFail")}
+            {t("itWillCost")} {b(`${+maxInput} ${inputLabel}`)} {t("orTransFail")} {t("deadlineSetTo")} {b(`${deadlineDelta}`)}s.
           </div>
         </div>
       );

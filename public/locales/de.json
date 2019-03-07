@@ -14,9 +14,9 @@
   "estimated": "geschätzt",
   "balance": "Guthaben: {{ balanceInput }}",
   "unlock": "Freischalten",
-  "pending": "hängige",
+  "pending": "hängige Transaktion",
   "selectToken": "Token auswählen",
-  "searchOrPaste": "Token suchen oder Token Adresse einfügen",
+  "searchOrPaste": "Token suchen oder Tokenadresse einfügen",
   "noExchange": "Exchange nicht gefunden",
   "exchangeRate": "Wechselkurs",
   "invertedRate": "Invertierter Wechselkurs",
@@ -72,5 +72,6 @@
   "tokenAddress": "Tokenadresse",
   "label": "Label",
   "decimals": "Dezimalstellen",
-  "enterTokenCont": "Tokenadresse eingeben um fortzufahren"
+  "enterTokenCont": "Tokenadresse eingeben um fortzufahren",
+  "deadlineSetTo": "Deadline (timeout) gesetzt auf"
 }
