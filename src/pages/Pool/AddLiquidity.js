@@ -96,14 +96,14 @@ class AddLiquidity extends Component {
     }
 
     if (lastEditedField === INPUT) {
-      const newOutputValue = exchangeRate.multipliedBy(inputValue).toFixed(7);
+      const newOutputValue = exchangeRate.multipliedBy(inputValue).toFixed(7, 0);
       if (newOutputValue !== outputValue) {
         append.outputValue = newOutputValue;
       }
     }
 
     if (lastEditedField === OUTPUT) {
-      const newInputValue = BN(outputValue).dividedBy(exchangeRate).toFixed(7);
+      const newInputValue = BN(outputValue).dividedBy(exchangeRate).toFixed(7, 1);
       if (newInputValue !== inputValue) {
         append.inputValue = newInputValue;
       }
@@ -197,11 +197,11 @@ class AddLiquidity extends Component {
     let outputValue;
 
     if (inputCurrency === 'ETH' && outputCurrency && outputCurrency !== 'ETH') {
-      outputValue = exchangeRate.multipliedBy(value).toFixed(7);
+      outputValue = exchangeRate.multipliedBy(value).toFixed(7, 1);
     }
 
     if (outputCurrency === 'ETH' && inputCurrency && inputCurrency !== 'ETH') {
-      outputValue = BN(value).dividedBy(exchangeRate).toFixed(7);
+      outputValue = BN(value).dividedBy(exchangeRate).toFixed(7, 0);
     }
 
     const append = {
@@ -222,11 +222,11 @@ class AddLiquidity extends Component {
     let inputValue;
 
     if (inputCurrency === 'ETH' && outputCurrency && outputCurrency !== 'ETH') {
-      inputValue = BN(value).dividedBy(exchangeRate).toFixed(7);
+      inputValue = BN(value).dividedBy(exchangeRate).toFixed(7, 1);
     }
 
     if (outputCurrency === 'ETH' && inputCurrency && inputCurrency !== 'ETH') {
-      inputValue = exchangeRate.multipliedBy(value).toFixed(7);
+      inputValue = exchangeRate.multipliedBy(value).toFixed(7, 0);
     }
 
     const append = {
