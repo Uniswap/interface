@@ -26,7 +26,6 @@
     "react-redux": "^5.0.7",
     "react-responsive": "^5.0.0",
     "react-router-dom": "^4.3.1",
-    "react-router-transition": "^1.2.1",
     "react-scripts": "2.0.4",
     "react-scroll-to-component": "^1.0.2",
     "react-select": "^1.2.1",

@@ -570,7 +570,8 @@ class Send extends Component {
 
     return (
       <ContextualInfo
-        openModalText={t("transactionDetails")}
+        openDetailsText={t("transactionDetails")}
+        closeDetailsText={t("hideDetails")}
         contextualInfo={contextualInfo}
         isError={isError}
         renderTransactionDetails={this.renderTransactionDetails}
@@ -740,6 +741,7 @@ class Send extends Component {
               'header--inactive': !this.props.isConnected,
             })}
           />
+
           <CurrencyInputPanel
             title={t("input")}
             description={lastEditedField === OUTPUT ? estimatedText : ''}

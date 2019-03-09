@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter, Redirect, Route } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import MediaQuery from 'react-responsive';
-import { AnimatedSwitch } from 'react-router-transition';
 import { Web3Connect, startWatching, initialize } from '../ducks/web3connect';
 import { setAddresses } from '../ducks/addresses';
 import Header from '../components/Header';
@@ -45,19 +44,16 @@ class App extends Component {
         </MediaQuery>
         <Web3Connect />
         <BrowserRouter>
-          <AnimatedSwitch
-            atEnter={{ opacity: 0 }}
-            atLeave={{ opacity: 0 }}
-            atActive={{ opacity: 1 }}
-            className="app__switch-wrapper"
-          >
-            <Route exact path="/swap" component={Swap} />
-            <Route exact path="/send" component={Send} />
-            <Route exact path="/add-liquidity" component={Pool} />
-            <Route exact path="/remove-liquidity" component={Pool} />
-            <Route exact path="/create-exchange/:tokenAddress?" component={Pool} />
-            <Redirect exact from="/" to="/swap" />
-          </AnimatedSwitch>
+          <Switch>
+            <div className="app__wrapper">
+              <Route exact path="/swap" component={Swap} />
+              <Route exact path="/send" component={Send} />
+              <Route exact path="/add-liquidity" component={Pool} />
+              <Route exact path="/remove-liquidity" component={Pool} />
+              <Route exact path="/create-exchange/:tokenAddress?" component={Pool} />
+              <Redirect exact from="/" to="/swap" />
+            </div>
+          </Switch>
         </BrowserRouter>
       </div>
     );

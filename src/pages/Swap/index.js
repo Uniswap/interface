@@ -556,7 +556,8 @@ class Swap extends Component {
 
     return (
       <ContextualInfo
-        openModalText={t("transactionDetails")}
+        openDetailsText={t("transactionDetails")}
+        closeDetailsText={t("hideDetails")}
         contextualInfo={contextualInfo}
         isError={isError}
         renderTransactionDetails={this.renderTransactionDetails}
@@ -708,7 +709,6 @@ class Swap extends Component {
     const { inputError, outputError, isValid } = this.validate();
 
 
-
     return (
       <div className="swap">
         <MediaQuery query="(max-width: 767px)">
@@ -724,6 +724,7 @@ class Swap extends Component {
               'header--inactive': !this.props.isConnected,
             })}
           />
+
           <CurrencyInputPanel
             title={t("input")}
             description={lastEditedField === OUTPUT ? estimatedText : ''}
