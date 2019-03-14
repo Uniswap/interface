@@ -1,38 +1,37 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import {BigNumber as BN} from "bignumber.js";
-import { withNamespaces } from 'react-i18next';
-import { selectors, addPendingTx } from '../../ducks/web3connect';
-import Header from '../../components/Header';
-import NavigationTabs from '../../components/NavigationTabs';
-import AddressInputPanel from '../../components/AddressInputPanel';
-import CurrencyInputPanel from '../../components/CurrencyInputPanel';
-import ContextualInfo from '../../components/ContextualInfo';
-import OversizedPanel from '../../components/OversizedPanel';
-import DropdownBlue from "../../assets/images/dropdown-blue.svg";
-import DropupBlue from "../../assets/images/dropup-blue.svg";
-import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg';
-import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg';
-import { getBlockDeadline } from '../../helpers/web3-utils';
-import { retry } from '../../helpers/promise-utils';
-import EXCHANGE_ABI from '../../abi/exchange';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import classnames from 'classnames'
+import { BigNumber as BN } from 'bignumber.js'
+import { withNamespaces } from 'react-i18next'
+import { selectors, addPendingTx } from '../../ducks/web3connect'
+import Header from '../../components/Header'
+import NavigationTabs from '../../components/NavigationTabs'
+import AddressInputPanel from '../../components/AddressInputPanel'
+import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import ContextualInfo from '../../components/ContextualInfo'
+import OversizedPanel from '../../components/OversizedPanel'
+import DropdownBlue from '../../assets/images/dropdown-blue.svg'
+import DropupBlue from '../../assets/images/dropup-blue.svg'
+import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
+import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
+import { getBlockDeadline } from '../../helpers/web3-utils'
+import { retry } from '../../helpers/promise-utils'
+import EXCHANGE_ABI from '../../abi/exchange'
 
-import "./send.scss";
-import MediaQuery from "react-responsive";
-import ReactGA from "react-ga";
+import './send.scss'
+import MediaQuery from 'react-responsive'
 
-const INPUT = 0;
-const OUTPUT = 1;
+const INPUT = 0
+const OUTPUT = 1
 
 class Send extends Component {
   static propTypes = {
     account: PropTypes.string,
     isConnected: PropTypes.bool.isRequired,
     selectors: PropTypes.func.isRequired,
-    web3: PropTypes.object.isRequired,
-  };
+    web3: PropTypes.object.isRequired
+  }
 
   state = {
     inputValue: '',
@@ -41,15 +40,11 @@ class Send extends Component {
     outputCurrency: '',
     inputAmountB: '',
     lastEditedField: '',
-    recipient: '',
-  };
-
-  componentWillMount() {
-    ReactGA.pageview(window.location.pathname + window.location.search);
+    recipient: ''
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return true;
+    return true
   }
 
   reset() {
@@ -58,116 +53,135 @@ class Send extends Component {
       outputValue: '',
       inputAmountB: '',
       lastEditedField: '',
-      recipient: '',
-    });
+      recipient: ''
+    })
   }
 
   componentWillReceiveProps() {
-    this.recalcForm();
+    this.recalcForm()
   }
 
   validate() {
-    const { selectors, account, web3 } = this.props;
+    const { selectors, account, web3 } = this.props
     const {
-      inputValue, outputValue,
-      inputCurrency, outputCurrency,
-      recipient,
-    } = this.state;
+      inputValue,
+      outputValue,
+      inputCurrency,
+      outputCurrency,
+      recipient
+    } = this.state
 
-    let inputError = '';
-    let outputError = '';
-    let isValid = true;
-    const validRecipientAddress = web3 && web3.utils.isAddress(recipient);
-    const inputIsZero = BN(inputValue).isZero();
-    const outputIsZero = BN(outputValue).isZero();
+    let inputError = ''
+    let outputError = ''
+    let isValid = true
+    const validRecipientAddress = web3 && web3.utils.isAddress(recipient)
+    const inputIsZero = BN(inputValue).isZero()
+    const outputIsZero = BN(outputValue).isZero()
 
-    if (!inputValue || inputIsZero || !outputValue || outputIsZero || !inputCurrency || !outputCurrency || !recipient || this.isUnapproved() || !validRecipientAddress) {
-      isValid = false;
+    if (
+      !inputValue ||
+      inputIsZero ||
+      !outputValue ||
+      outputIsZero ||
+      !inputCurrency ||
+      !outputCurrency ||
+      !recipient ||
+      this.isUnapproved() ||
+      !validRecipientAddress
+    ) {
+      isValid = false
     }
 
-    const { value: inputBalance, decimals: inputDecimals } = selectors().getBalance(account, inputCurrency);
+    const {
+      value: inputBalance,
+      decimals: inputDecimals
+    } = selectors().getBalance(account, inputCurrency)
 
     if (inputBalance.isLessThan(BN(inputValue * 10 ** inputDecimals))) {
-      inputError = this.props.t("insufficientBalance");
+      inputError = this.props.t('insufficientBalance')
     }
 
     if (inputValue === 'N/A') {
-      inputError = this.props.t("inputNotValid");
+      inputError = this.props.t('inputNotValid')
     }
 
     return {
       inputError,
       outputError,
-      isValid: isValid && !inputError && !outputError,
-    };
+      isValid: isValid && !inputError && !outputError
+    }
   }
 
   flipInputOutput = () => {
-    const { state } = this;
-    this.setState({
-      inputValue: state.outputValue,
-      outputValue: state.inputValue,
-      inputCurrency: state.outputCurrency,
-      outputCurrency: state.inputCurrency,
-      lastEditedField: state.lastEditedField === INPUT ? OUTPUT : INPUT
-    }, () => this.recalcForm());
+    const { state } = this
+    this.setState(
+      {
+        inputValue: state.outputValue,
+        outputValue: state.inputValue,
+        inputCurrency: state.outputCurrency,
+        outputCurrency: state.inputCurrency,
+        lastEditedField: state.lastEditedField === INPUT ? OUTPUT : INPUT
+      },
+      () => this.recalcForm()
+    )
   }
 
   isUnapproved() {
-    const { account, exchangeAddresses, selectors } = this.props;
-    const { inputCurrency, inputValue } = this.state;
+    const { account, exchangeAddresses, selectors } = this.props
+    const { inputCurrency, inputValue } = this.state
 
     if (!inputCurrency || inputCurrency === 'ETH') {
-      return false;
+      return false
     }
 
     const { value: allowance, label, decimals } = selectors().getApprovals(
       inputCurrency,
       account,
       exchangeAddresses.fromToken[inputCurrency]
-    );
+    )
 
     if (label && allowance.isLessThan(BN(inputValue * 10 ** decimals || 0))) {
-      return true;
+      return true
     }
 
-    return false;
+    return false
   }
 
   recalcForm() {
-    const { inputCurrency, outputCurrency, lastEditedField } = this.state;
+    const { inputCurrency, outputCurrency, lastEditedField } = this.state
 
     if (!inputCurrency || !outputCurrency) {
-      return;
+      return
     }
 
-    const editedValue = lastEditedField === INPUT ? this.state.inputValue : this.state.outputValue;
+    const editedValue =
+      lastEditedField === INPUT ? this.state.inputValue : this.state.outputValue
 
     if (BN(editedValue).isZero()) {
-      return;
+      return
     }
 
     if (inputCurrency === outputCurrency) {
       this.setState({
         inputValue: '',
-        outputValue: '',
-      });
-      return;
+        outputValue: ''
+      })
+      return
     }
 
     if (inputCurrency !== 'ETH' && outputCurrency !== 'ETH') {
-      this.recalcTokenTokenForm();
-      return;
+      this.recalcTokenTokenForm()
+      return
     }
 
-    this.recalcEthTokenForm();
+    this.recalcEthTokenForm()
   }
 
   recalcTokenTokenForm = () => {
     const {
       exchangeAddresses: { fromToken },
-      selectors,
-    } = this.props;
+      selectors
+    } = this.props
 
     const {
       inputValue: oldInputValue,
@@ -176,109 +190,124 @@ class Send extends Component {
       outputCurrency,
       lastEditedField,
       exchangeRate: oldExchangeRate,
-      inputAmountB: oldInputAmountB,
-    } = this.state;
+      inputAmountB: oldInputAmountB
+    } = this.state
 
-    const exchangeAddressA = fromToken[inputCurrency];
-    const exchangeAddressB = fromToken[outputCurrency];
+    const exchangeAddressA = fromToken[inputCurrency]
+    const exchangeAddressB = fromToken[outputCurrency]
 
-    const { value: inputReserveA, decimals: inputDecimalsA } = selectors().getBalance(exchangeAddressA, inputCurrency);
-    const { value: outputReserveA }= selectors().getBalance(exchangeAddressA, 'ETH');
-    const { value: inputReserveB } = selectors().getBalance(exchangeAddressB, 'ETH');
-    const { value: outputReserveB, decimals: outputDecimalsB }= selectors().getBalance(exchangeAddressB, outputCurrency);
+    const {
+      value: inputReserveA,
+      decimals: inputDecimalsA
+    } = selectors().getBalance(exchangeAddressA, inputCurrency)
+    const { value: outputReserveA } = selectors().getBalance(
+      exchangeAddressA,
+      'ETH'
+    )
+    const { value: inputReserveB } = selectors().getBalance(
+      exchangeAddressB,
+      'ETH'
+    )
+    const {
+      value: outputReserveB,
+      decimals: outputDecimalsB
+    } = selectors().getBalance(exchangeAddressB, outputCurrency)
 
     if (lastEditedField === INPUT) {
       if (!oldInputValue) {
         return this.setState({
           outputValue: '',
-          exchangeRate: BN(0),
-        });
+          exchangeRate: BN(0)
+        })
       }
 
-      const inputAmountA = BN(oldInputValue).multipliedBy(10 ** inputDecimalsA);
+      const inputAmountA = BN(oldInputValue).multipliedBy(10 ** inputDecimalsA)
       const outputAmountA = calculateEtherTokenOutput({
         inputAmount: inputAmountA,
         inputReserve: inputReserveA,
-        outputReserve: outputReserveA,
-      });
+        outputReserve: outputReserveA
+      })
       // Redundant Variable for readability of the formala
       // OutputAmount from the first send becomes InputAmount of the second send
-      const inputAmountB = outputAmountA;
+      const inputAmountB = outputAmountA
       const outputAmountB = calculateEtherTokenOutput({
         inputAmount: inputAmountB,
         inputReserve: inputReserveB,
-        outputReserve: outputReserveB,
-      });
+        outputReserve: outputReserveB
+      })
 
-      const outputValue = outputAmountB.dividedBy(BN(10 ** outputDecimalsB)).toFixed(7);
-      const exchangeRate = BN(outputValue).dividedBy(BN(oldInputValue));
+      const outputValue = outputAmountB
+        .dividedBy(BN(10 ** outputDecimalsB))
+        .toFixed(7)
+      const exchangeRate = BN(outputValue).dividedBy(BN(oldInputValue))
 
-      const appendState = {};
+      const appendState = {}
 
       if (!exchangeRate.isEqualTo(BN(oldExchangeRate))) {
-        appendState.exchangeRate = exchangeRate;
+        appendState.exchangeRate = exchangeRate
       }
 
       if (outputValue !== oldOutputValue) {
-        appendState.outputValue = outputValue;
+        appendState.outputValue = outputValue
       }
 
-      this.setState(appendState);
+      this.setState(appendState)
     }
 
     if (lastEditedField === OUTPUT) {
       if (!oldOutputValue) {
         return this.setState({
           inputValue: '',
-          exchangeRate: BN(0),
-        });
+          exchangeRate: BN(0)
+        })
       }
 
-      const outputAmountB = BN(oldOutputValue).multipliedBy(10 ** outputDecimalsB);
+      const outputAmountB = BN(oldOutputValue).multipliedBy(
+        10 ** outputDecimalsB
+      )
       const inputAmountB = calculateEtherTokenInput({
         outputAmount: outputAmountB,
         inputReserve: inputReserveB,
-        outputReserve: outputReserveB,
-      });
+        outputReserve: outputReserveB
+      })
 
       // Redundant Variable for readability of the formala
       // InputAmount from the first send becomes OutputAmount of the second send
-      const outputAmountA = inputAmountB;
+      const outputAmountA = inputAmountB
       const inputAmountA = calculateEtherTokenInput({
         outputAmount: outputAmountA,
         inputReserve: inputReserveA,
-        outputReserve: outputReserveA,
-      });
+        outputReserve: outputReserveA
+      })
 
       const inputValue = inputAmountA.isNegative()
         ? 'N/A'
-        : inputAmountA.dividedBy(BN(10 ** inputDecimalsA)).toFixed(7);
-      const exchangeRate = BN(oldOutputValue).dividedBy(BN(inputValue));
+        : inputAmountA.dividedBy(BN(10 ** inputDecimalsA)).toFixed(7)
+      const exchangeRate = BN(oldOutputValue).dividedBy(BN(inputValue))
 
-      const appendState = {};
+      const appendState = {}
 
       if (!exchangeRate.isEqualTo(BN(oldExchangeRate))) {
-        appendState.exchangeRate = exchangeRate;
+        appendState.exchangeRate = exchangeRate
       }
 
       if (inputValue !== oldInputValue) {
-        appendState.inputValue = inputValue;
+        appendState.inputValue = inputValue
       }
 
       if (!inputAmountB.isEqualTo(BN(oldInputAmountB))) {
-        appendState.inputAmountB = inputAmountB;
+        appendState.inputAmountB = inputAmountB
       }
 
-      this.setState(appendState);
+      this.setState(appendState)
     }
-
-  };
+  }
 
   recalcEthTokenForm = () => {
     const {
       exchangeAddresses: { fromToken },
-      selectors,
-    } = this.props;
+      selectors
+    } = this.props
 
     const {
       inputValue: oldInputValue,
@@ -286,83 +315,107 @@ class Send extends Component {
       inputCurrency,
       outputCurrency,
       lastEditedField,
-      exchangeRate: oldExchangeRate,
-    } = this.state;
+      exchangeRate: oldExchangeRate
+    } = this.state
 
-    const tokenAddress = [inputCurrency, outputCurrency].filter(currency => currency !== 'ETH')[0];
-    const exchangeAddress = fromToken[tokenAddress];
+    const tokenAddress = [inputCurrency, outputCurrency].filter(
+      currency => currency !== 'ETH'
+    )[0]
+    const exchangeAddress = fromToken[tokenAddress]
     if (!exchangeAddress) {
-      return;
+      return
     }
-    const { value: inputReserve, decimals: inputDecimals } = selectors().getBalance(exchangeAddress, inputCurrency);
-    const { value: outputReserve, decimals: outputDecimals }= selectors().getBalance(exchangeAddress, outputCurrency);
+    const {
+      value: inputReserve,
+      decimals: inputDecimals
+    } = selectors().getBalance(exchangeAddress, inputCurrency)
+    const {
+      value: outputReserve,
+      decimals: outputDecimals
+    } = selectors().getBalance(exchangeAddress, outputCurrency)
 
     if (lastEditedField === INPUT) {
       if (!oldInputValue) {
         return this.setState({
           outputValue: '',
-          exchangeRate: BN(0),
-        });
+          exchangeRate: BN(0)
+        })
       }
 
-      const inputAmount = BN(oldInputValue).multipliedBy(10 ** inputDecimals);
-      const outputAmount = calculateEtherTokenOutput({ inputAmount, inputReserve, outputReserve });
-      const outputValue = outputAmount.dividedBy(BN(10 ** outputDecimals)).toFixed(7);
-      const exchangeRate = BN(outputValue).dividedBy(BN(oldInputValue));
+      const inputAmount = BN(oldInputValue).multipliedBy(10 ** inputDecimals)
+      const outputAmount = calculateEtherTokenOutput({
+        inputAmount,
+        inputReserve,
+        outputReserve
+      })
+      const outputValue = outputAmount
+        .dividedBy(BN(10 ** outputDecimals))
+        .toFixed(7)
+      const exchangeRate = BN(outputValue).dividedBy(BN(oldInputValue))
 
-      const appendState = {};
+      const appendState = {}
 
       if (!exchangeRate.isEqualTo(BN(oldExchangeRate))) {
-        appendState.exchangeRate = exchangeRate;
+        appendState.exchangeRate = exchangeRate
       }
 
       if (outputValue !== oldOutputValue) {
-        appendState.outputValue = outputValue;
+        appendState.outputValue = outputValue
       }
 
-      this.setState(appendState);
+      this.setState(appendState)
     } else if (lastEditedField === OUTPUT) {
       if (!oldOutputValue) {
         return this.setState({
           inputValue: '',
-          exchangeRate: BN(0),
-        });
+          exchangeRate: BN(0)
+        })
       }
 
-      const outputAmount = BN(oldOutputValue).multipliedBy(10 ** outputDecimals);
-      const inputAmount = calculateEtherTokenInput({ outputAmount, inputReserve, outputReserve });
+      const outputAmount = BN(oldOutputValue).multipliedBy(10 ** outputDecimals)
+      const inputAmount = calculateEtherTokenInput({
+        outputAmount,
+        inputReserve,
+        outputReserve
+      })
       const inputValue = inputAmount.isNegative()
         ? 'N/A'
-        : inputAmount.dividedBy(BN(10 ** inputDecimals)).toFixed(7);
-      const exchangeRate = BN(oldOutputValue).dividedBy(BN(inputValue));
+        : inputAmount.dividedBy(BN(10 ** inputDecimals)).toFixed(7)
+      const exchangeRate = BN(oldOutputValue).dividedBy(BN(inputValue))
 
-      const appendState = {};
+      const appendState = {}
 
       if (!exchangeRate.isEqualTo(BN(oldExchangeRate))) {
-        appendState.exchangeRate = exchangeRate;
+        appendState.exchangeRate = exchangeRate
       }
 
       if (inputValue !== oldInputValue) {
-        appendState.inputValue = inputValue;
+        appendState.inputValue = inputValue
       }
 
-      this.setState(appendState);
+      this.setState(appendState)
     }
-  };
+  }
 
   updateInput = amount => {
-    this.setState({
-      inputValue: amount,
-      lastEditedField: INPUT,
-    }, this.recalcForm);
-  };
+    this.setState(
+      {
+        inputValue: amount,
+        lastEditedField: INPUT
+      },
+      this.recalcForm
+    )
+  }
 
   updateOutput = amount => {
-    this.setState({
-      outputValue: amount,
-      lastEditedField: OUTPUT,
-    }, this.recalcForm);
-  };
+    this.setState(
+      {
+        outputValue: amount,
+        lastEditedField: OUTPUT
+      },
+      this.recalcForm
+    )
+  }
 
   onSend = async () => {
     const {
@@ -370,8 +423,8 @@ class Send extends Component {
       account,
       web3,
       selectors,
-      addPendingTx,
-    } = this.props;
+      addPendingTx
+    } = this.props
     const {
       inputValue,
       outputValue,
@@ -379,154 +432,181 @@ class Send extends Component {
       outputCurrency,
       inputAmountB,
       lastEditedField,
-      recipient,
-    } = this.state;
-    const ALLOWED_SLIPPAGE = 0.025;
-    const TOKEN_ALLOWED_SLIPPAGE = 0.04;
+      recipient
+    } = this.state
+    const ALLOWED_SLIPPAGE = 0.025
+    const TOKEN_ALLOWED_SLIPPAGE = 0.04
 
-    const type = getSendType(inputCurrency, outputCurrency);
-    const { decimals: inputDecimals } = selectors().getBalance(account, inputCurrency);
-    const { decimals: outputDecimals } = selectors().getBalance(account, outputCurrency);
-    let deadline;
+    const type = getSendType(inputCurrency, outputCurrency)
+    const { decimals: inputDecimals } = selectors().getBalance(
+      account,
+      inputCurrency
+    )
+    const { decimals: outputDecimals } = selectors().getBalance(
+      account,
+      outputCurrency
+    )
+    let deadline
     try {
-      deadline = await retry(() => getBlockDeadline(web3, 600));
-    } catch(e) {
+      deadline = await retry(() => getBlockDeadline(web3, 600))
+    } catch (e) {
       // TODO: Handle error.
-      return;
+      return
     }
 
     if (lastEditedField === INPUT) {
-      ReactGA.event({
-        category: type,
-        action: 'TransferInput',
-      });
       // send input
-      switch(type) {
+      switch (type) {
         case 'ETH_TO_TOKEN':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency])
-            .methods
+          new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]).methods
             .ethToTokenTransferInput(
-              BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(0),
+              BN(outputValue)
+                .multipliedBy(10 ** outputDecimals)
+                .multipliedBy(1 - ALLOWED_SLIPPAGE)
+                .toFixed(0),
               deadline,
-              recipient,
+              recipient
             )
-            .send({
-              from: account,
-              value: BN(inputValue).multipliedBy(10 ** 18).toFixed(0),
-            }, (err, data) => {
-              if (!err) {
-                addPendingTx(data);
-                this.reset();
+            .send(
+              {
+                from: account,
+                value: BN(inputValue)
+                  .multipliedBy(10 ** 18)
+                  .toFixed(0)
+              },
+              (err, data) => {
+                if (!err) {
+                  addPendingTx(data)
+                  this.reset()
+                }
               }
-            });
-          break;
+            )
+          break
         case 'TOKEN_TO_ETH':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
-            .methods
+          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods
             .tokenToEthTransferInput(
-              BN(inputValue).multipliedBy(10 ** inputDecimals).toFixed(0),
-              BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(0),
+              BN(inputValue)
+                .multipliedBy(10 ** inputDecimals)
+                .toFixed(0),
+              BN(outputValue)
+                .multipliedBy(10 ** outputDecimals)
+                .multipliedBy(1 - ALLOWED_SLIPPAGE)
+                .toFixed(0),
               deadline,
-              recipient,
+              recipient
             )
             .send({ from: account }, (err, data) => {
               if (!err) {
-                addPendingTx(data);
-                this.reset();
+                addPendingTx(data)
+                this.reset()
               }
-            });
-          break;
+            })
+          break
         case 'TOKEN_TO_TOKEN':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
-            .methods
+          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods
             .tokenToTokenTransferInput(
-              BN(inputValue).multipliedBy(10 ** inputDecimals).toFixed(0),
-              BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - TOKEN_ALLOWED_SLIPPAGE).toFixed(0),
+              BN(inputValue)
+                .multipliedBy(10 ** inputDecimals)
+                .toFixed(0),
+              BN(outputValue)
+                .multipliedBy(10 ** outputDecimals)
+                .multipliedBy(1 - TOKEN_ALLOWED_SLIPPAGE)
+                .toFixed(0),
               '1',
               deadline,
               recipient,
-              outputCurrency,
+              outputCurrency
             )
             .send({ from: account }, (err, data) => {
               if (!err) {
-                addPendingTx(data);
-                this.reset();
+                addPendingTx(data)
+                this.reset()
               }
-            });
-          break;
+            })
+          break
         default:
-          break;
+          break
       }
     }
 
     if (lastEditedField === OUTPUT) {
-      // send output
-      ReactGA.event({
-        category: type,
-        action: 'TransferOutput',
-      });
       switch (type) {
         case 'ETH_TO_TOKEN':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency])
-            .methods
+          new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]).methods
             .ethToTokenTransferOutput(
-              BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
+              BN(outputValue)
+                .multipliedBy(10 ** outputDecimals)
+                .toFixed(0),
               deadline,
-              recipient,
+              recipient
             )
-            .send({
-              from: account,
-              value: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
-            }, (err, data) => {
-              if (!err) {
-                addPendingTx(data);
-                this.reset();
+            .send(
+              {
+                from: account,
+                value: BN(inputValue)
+                  .multipliedBy(10 ** inputDecimals)
+                  .multipliedBy(1 + ALLOWED_SLIPPAGE)
+                  .toFixed(0)
+              },
+              (err, data) => {
+                if (!err) {
+                  addPendingTx(data)
+                  this.reset()
+                }
               }
-            });
-          break;
+            )
+          break
         case 'TOKEN_TO_ETH':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
-            .methods
+          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods
             .tokenToEthTransferOutput(
-              BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
-              BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
+              BN(outputValue)
+                .multipliedBy(10 ** outputDecimals)
+                .toFixed(0),
+              BN(inputValue)
+                .multipliedBy(10 ** inputDecimals)
+                .multipliedBy(1 + ALLOWED_SLIPPAGE)
+                .toFixed(0),
               deadline,
-              recipient,
+              recipient
             )
             .send({ from: account }, (err, data) => {
               if (!err) {
-                addPendingTx(data);
-                this.reset();
+                addPendingTx(data)
+                this.reset()
               }
-            });
-          break;
+            })
+          break
         case 'TOKEN_TO_TOKEN':
           if (!inputAmountB) {
-            return;
+            return
           }
 
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
-            .methods
+          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods
             .tokenToTokenTransferOutput(
-              BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
-              BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE).toFixed(0),
+              BN(outputValue)
+                .multipliedBy(10 ** outputDecimals)
+                .toFixed(0),
+              BN(inputValue)
+                .multipliedBy(10 ** inputDecimals)
+                .multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE)
+                .toFixed(0),
               inputAmountB.multipliedBy(1.2).toFixed(0),
               deadline,
               recipient,
-              outputCurrency,
+              outputCurrency
             )
             .send({ from: account }, (err, data) => {
               if (!err) {
-                addPendingTx(data);
-                this.reset();
+                addPendingTx(data)
+                this.reset()
               }
-            });
-          break;
+            })
+          break
         default:
-          break;
+          break
       }
     }
-  };
+  }
 
   renderSummary(inputError, outputError) {
     const {
@@ -534,49 +614,52 @@ class Send extends Component {
       inputCurrency,
       outputValue,
       outputCurrency,
-      recipient,
-    } = this.state;
-    const { t, web3 } = this.props;
+      recipient
+    } = this.state
+    const { t, web3 } = this.props
 
-    const { selectors, account } = this.props;
-    const { label: inputLabel } = selectors().getBalance(account, inputCurrency);
-    const { label: outputLabel } = selectors().getBalance(account, outputCurrency);
-    const validRecipientAddress = web3 && web3.utils.isAddress(recipient);
-    const inputIsZero = BN(inputValue).isZero();
-    const outputIsZero = BN(outputValue).isZero();
+    const { selectors, account } = this.props
+    const { label: inputLabel } = selectors().getBalance(account, inputCurrency)
+    const { label: outputLabel } = selectors().getBalance(
+      account,
+      outputCurrency
+    )
+    const validRecipientAddress = web3 && web3.utils.isAddress(recipient)
+    const inputIsZero = BN(inputValue).isZero()
+    const outputIsZero = BN(outputValue).isZero()
 
-    let contextualInfo = '';
-    let isError = false;
+    let contextualInfo = ''
+    let isError = false
 
     if (inputError || outputError) {
-      contextualInfo = inputError || outputError;
-      isError = true;
+      contextualInfo = inputError || outputError
+      isError = true
     } else if (!inputCurrency || !outputCurrency) {
-      contextualInfo = t("selectTokenCont");
+      contextualInfo = t('selectTokenCont')
     } else if (inputCurrency === outputCurrency) {
-      contextualInfo = t("differentToken");
+      contextualInfo = t('differentToken')
     } else if (!inputValue || !outputValue) {
-      const missingCurrencyValue = !inputValue ? inputLabel : outputLabel;
-      contextualInfo = t("enterValueCont", {missingCurrencyValue});
+      const missingCurrencyValue = !inputValue ? inputLabel : outputLabel
+      contextualInfo = t('enterValueCont', { missingCurrencyValue })
     } else if (inputIsZero || outputIsZero) {
-      contextualInfo = t("noLiquidity");
+      contextualInfo = t('noLiquidity')
     } else if (this.isUnapproved()) {
-      contextualInfo = t("unlockTokenCont");
+      contextualInfo = t('unlockTokenCont')
     } else if (!recipient) {
-      contextualInfo = t("noRecipient");
+      contextualInfo = t('noRecipient')
     } else if (!validRecipientAddress) {
-      contextualInfo = t("invalidRecipient");
+      contextualInfo = t('invalidRecipient')
     }
 
     return (
       <ContextualInfo
-        openDetailsText={t("transactionDetails")}
-        closeDetailsText={t("hideDetails")}
+        openDetailsText={t('transactionDetails')}
+        closeDetailsText={t('hideDetails')}
         contextualInfo={contextualInfo}
         isError={isError}
         renderTransactionDetails={this.renderTransactionDetails}
       />
-    );
+    )
   }
 
   renderTransactionDetails = () => {
@@ -587,138 +670,168 @@ class Send extends Component {
       outputCurrency,
       recipient,
       inputAmountB,
-      lastEditedField,
-    } = this.state;
-    const { t, selectors, account } = this.props;
+      lastEditedField
+    } = this.state
+    const { t, selectors, account } = this.props
 
-    ReactGA.event({
-      category: 'TransactionDetail',
-      action: 'Open',
-    });
+    const ALLOWED_SLIPPAGE = 0.025
+    const TOKEN_ALLOWED_SLIPPAGE = 0.04
 
-    const ALLOWED_SLIPPAGE = 0.025;
-    const TOKEN_ALLOWED_SLIPPAGE = 0.04;
+    const type = getSendType(inputCurrency, outputCurrency)
+    const {
+      label: inputLabel,
+      decimals: inputDecimals
+    } = selectors().getBalance(account, inputCurrency)
+    const {
+      label: outputLabel,
+      decimals: outputDecimals
+    } = selectors().getBalance(account, outputCurrency)
 
-    const type = getSendType(inputCurrency, outputCurrency);
-    const { label: inputLabel, decimals: inputDecimals } = selectors().getBalance(account, inputCurrency);
-    const { label: outputLabel, decimals: outputDecimals } = selectors().getBalance(account, outputCurrency);
-
-    const label = lastEditedField === INPUT ? outputLabel : inputLabel;
-    let minOutput;
-    let maxInput;
+    const label = lastEditedField === INPUT ? outputLabel : inputLabel
+    let minOutput
+    let maxInput
 
     if (lastEditedField === INPUT) {
-      switch(type) {
+      switch (type) {
         case 'ETH_TO_TOKEN':
-          minOutput = BN(outputValue).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(7);
-          break;
+          minOutput = BN(outputValue)
+            .multipliedBy(1 - ALLOWED_SLIPPAGE)
+            .toFixed(7)
+          break
         case 'TOKEN_TO_ETH':
-          minOutput = BN(outputValue).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(7);
-          break;
+          minOutput = BN(outputValue)
+            .multipliedBy(1 - ALLOWED_SLIPPAGE)
+            .toFixed(7)
+          break
         case 'TOKEN_TO_TOKEN':
-          minOutput = BN(outputValue).multipliedBy(1 - TOKEN_ALLOWED_SLIPPAGE).toFixed(7);
-          break;
+          minOutput = BN(outputValue)
+            .multipliedBy(1 - TOKEN_ALLOWED_SLIPPAGE)
+            .toFixed(7)
+          break
         default:
-          break;
+          break
       }
     }
 
     if (lastEditedField === OUTPUT) {
       switch (type) {
         case 'ETH_TO_TOKEN':
-          maxInput = BN(inputValue).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(7);
-          break;
+          maxInput = BN(inputValue)
+            .multipliedBy(1 + ALLOWED_SLIPPAGE)
+            .toFixed(7)
+          break
         case 'TOKEN_TO_ETH':
-          maxInput = BN(inputValue).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(7);
-          break;
+          maxInput = BN(inputValue)
+            .multipliedBy(1 + ALLOWED_SLIPPAGE)
+            .toFixed(7)
+          break
         case 'TOKEN_TO_TOKEN':
-          maxInput = BN(inputValue).multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE).toFixed(7);
-          break;
+          maxInput = BN(inputValue)
+            .multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE)
+            .toFixed(7)
+          break
         default:
-          break;
+          break
       }
     }
 
-    const recipientText = b(`${recipient.slice(0, 6)}...${recipient.slice(-4)}`);
+    const recipientText = b(`${recipient.slice(0, 6)}...${recipient.slice(-4)}`)
     if (lastEditedField === INPUT) {
       return (
         <div>
           <div>
-            {t("youAreSending")} {b(`${+inputValue} ${inputLabel}`)}.
+            {t('youAreSending')} {b(`${+inputValue} ${inputLabel}`)}.
           </div>
           <div className="send__last-summary-text">
-            {recipientText} {t("willReceive")} {b(`${+minOutput} ${outputLabel}`)} {t("orTransFail")}
+            {recipientText} {t('willReceive')}{' '}
+            {b(`${+minOutput} ${outputLabel}`)} {t('orTransFail')}
           </div>
         </div>
-      );
+      )
     } else {
       return (
         <div>
           <div>
-            {t("youAreSending")} {b(`${+outputValue} ${outputLabel}`)} {t("to")} {recipientText}.
+            {t('youAreSending')} {b(`${+outputValue} ${outputLabel}`)} {t('to')}{' '}
+            {recipientText}.
             {/*You are selling between {b(`${+inputValue} ${inputLabel}`)} to {b(`${+maxInput} ${inputLabel}`)}.*/}
           </div>
           <div className="send__last-summary-text">
             {/*{b(`${recipient.slice(0, 6)}...${recipient.slice(-4)}`)} will receive {b(`${+outputValue} ${outputLabel}`)}.*/}
-            {t("itWillCost")} {b(`${+maxInput} ${inputLabel}`)} {t("orTransFail")}
+            {t('itWillCost')} {b(`${+maxInput} ${inputLabel}`)}{' '}
+            {t('orTransFail')}
           </div>
         </div>
-      );
+      )
     }
   }
 
   renderExchangeRate() {
-    const { t, account, selectors } = this.props;
-    const { exchangeRate, inputCurrency, outputCurrency } = this.state;
-    const { label: inputLabel } = selectors().getBalance(account, inputCurrency);
-    const { label: outputLabel } = selectors().getBalance(account, outputCurrency);
+    const { t, account, selectors } = this.props
+    const { exchangeRate, inputCurrency, outputCurrency } = this.state
+    const { label: inputLabel } = selectors().getBalance(account, inputCurrency)
+    const { label: outputLabel } = selectors().getBalance(
+      account,
+      outputCurrency
+    )
 
-    if (!exchangeRate || exchangeRate.isNaN() || !inputCurrency || !outputCurrency) {
+    if (
+      !exchangeRate ||
+      exchangeRate.isNaN() ||
+      !inputCurrency ||
+      !outputCurrency
+    ) {
       return (
         <OversizedPanel hideBottom>
           <div className="swap__exchange-rate-wrapper">
-            <span className="swap__exchange-rate">{t("exchangeRate")}</span>
+            <span className="swap__exchange-rate">{t('exchangeRate')}</span>
             <span> - </span>
           </div>
         </OversizedPanel>
-      );
+      )
     }
 
     return (
       <OversizedPanel hideBottom>
         <div className="swap__exchange-rate-wrapper">
-          <span className="swap__exchange-rate">{t("exchangeRate")}</span>
+          <span className="swap__exchange-rate">{t('exchangeRate')}</span>
           <span>
             {`1 ${inputLabel} = ${exchangeRate.toFixed(7)} ${outputLabel}`}
           </span>
         </div>
       </OversizedPanel>
-    );
+    )
   }
 
   renderBalance(currency, balance, decimals) {
     if (!currency || decimals === 0) {
-      return '';
+      return ''
     }
     const balanceInput = balance.dividedBy(BN(10 ** decimals)).toFixed(4)
-    return this.props.t("balance", { balanceInput })
+    return this.props.t('balance', { balanceInput })
   }
 
   render() {
-    const { t, selectors, account } = this.props;
+    const { t, selectors, account } = this.props
     const {
       lastEditedField,
       inputCurrency,
       outputCurrency,
       inputValue,
       outputValue,
-      recipient,
-    } = this.state;
-    const estimatedText = `(${t("estimated")})`;
+      recipient
+    } = this.state
+    const estimatedText = `(${t('estimated')})`
 
-    const { value: inputBalance, decimals: inputDecimals } = selectors().getBalance(account, inputCurrency);
-    const { value: outputBalance, decimals: outputDecimals } = selectors().getBalance(account, outputCurrency);
-    const { inputError, outputError, isValid } = this.validate();
+    const {
+      value: inputBalance,
+      decimals: inputDecimals
+    } = selectors().getBalance(account, inputCurrency)
+    const {
+      value: outputBalance,
+      decimals: outputDecimals
+    } = selectors().getBalance(account, outputCurrency)
+    const { inputError, outputError, isValid } = this.validate()
 
     return (
       <div className="send">
@@ -727,20 +840,26 @@ class Send extends Component {
         </MediaQuery>
         <div
           className={classnames('swap__content', {
-            'swap--inactive': !this.props.isConnected,
+            'swap--inactive': !this.props.isConnected
           })}
         >
           <NavigationTabs
             className={classnames('header__navigation', {
-              'header--inactive': !this.props.isConnected,
+              'header--inactive': !this.props.isConnected
             })}
           />
 
           <CurrencyInputPanel
-            title={t("input")}
+            title={t('input')}
             description={lastEditedField === OUTPUT ? estimatedText : ''}
-            extraText={this.renderBalance(inputCurrency, inputBalance, inputDecimals)}
-            onCurrencySelected={inputCurrency => this.setState({ inputCurrency }, this.recalcForm)}
+            extraText={this.renderBalance(
+              inputCurrency,
+              inputBalance,
+              inputDecimals
+            )}
+            onCurrencySelected={inputCurrency =>
+              this.setState({ inputCurrency }, this.recalcForm)
+            }
             onValueChange={this.updateInput}
             selectedTokens={[inputCurrency, outputCurrency]}
             selectedTokenAddress={inputCurrency}
@@ -749,14 +868,24 @@ class Send extends Component {
           />
           <OversizedPanel>
             <div className="swap__down-arrow-background">
-              <img onClick={this.flipInputOutput} className="swap__down-arrow swap__down-arrow--clickable" src={isValid ? ArrowDownBlue : ArrowDownGrey} />
+              <img
+                onClick={this.flipInputOutput}
+                className="swap__down-arrow swap__down-arrow--clickable"
+                src={isValid ? ArrowDownBlue : ArrowDownGrey}
+              />
             </div>
           </OversizedPanel>
           <CurrencyInputPanel
-            title={t("output")}
+            title={t('output')}
             description={lastEditedField === INPUT ? estimatedText : ''}
-            extraText={this.renderBalance(outputCurrency, outputBalance, outputDecimals)}
-            onCurrencySelected={outputCurrency => this.setState({ outputCurrency }, this.recalcForm)}
+            extraText={this.renderBalance(
+              outputCurrency,
+              outputBalance,
+              outputDecimals
+            )}
+            onCurrencySelected={outputCurrency =>
+              this.setState({ outputCurrency }, this.recalcForm)
+            }
             onValueChange={this.updateOutput}
             selectedTokens={[inputCurrency, outputCurrency]}
             value={outputValue}
@@ -766,85 +895,108 @@ class Send extends Component {
           />
           <OversizedPanel>
             <div className="swap__down-arrow-background">
-              <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} />
+              <img
+                className="swap__down-arrow"
+                src={isValid ? ArrowDownBlue : ArrowDownGrey}
+              />
             </div>
           </OversizedPanel>
           <AddressInputPanel
             t={this.props.t}
             value={recipient}
-            onChange={address => this.setState({recipient: address})}
+            onChange={address => this.setState({ recipient: address })}
           />
-          { this.renderExchangeRate() }
-          { this.renderSummary(inputError, outputError) }
+          {this.renderExchangeRate()}
+          {this.renderSummary(inputError, outputError)}
           <div className="swap__cta-container">
             <button
               className={classnames('swap__cta-btn', {
-                'swap--inactive': !this.props.isConnected,
+                'swap--inactive': !this.props.isConnected
               })}
               disabled={!isValid}
               onClick={this.onSend}
             >
-              {t("send")}
+              {t('send')}
             </button>
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
 export default connect(
   state => ({
     balances: state.web3connect.balances,
-    isConnected: !!state.web3connect.account && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||1),
+    isConnected:
+      !!state.web3connect.account &&
+      state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID || 1),
     account: state.web3connect.account,
     web3: state.web3connect.web3,
-    exchangeAddresses: state.addresses.exchangeAddresses,
+    exchangeAddresses: state.addresses.exchangeAddresses
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),
-    addPendingTx: id => dispatch(addPendingTx(id)),
-  }),
-)(withNamespaces()(Send));
+    addPendingTx: id => dispatch(addPendingTx(id))
+  })
+)(withNamespaces()(Send))
 
-const b = text => <span className="swap__highlight-text">{text}</span>;
+const b = text => <span className="swap__highlight-text">{text}</span>
 
-function calculateEtherTokenOutput({ inputAmount: rawInput, inputReserve: rawReserveIn, outputReserve: rawReserveOut }) {
-  const inputAmount = BN(rawInput);
-  const inputReserve = BN(rawReserveIn);
-  const outputReserve = BN(rawReserveOut);
+function calculateEtherTokenOutput({
+  inputAmount: rawInput,
+  inputReserve: rawReserveIn,
+  outputReserve: rawReserveOut
+}) {
+  const inputAmount = BN(rawInput)
+  const inputReserve = BN(rawReserveIn)
+  const outputReserve = BN(rawReserveOut)
 
   if (inputAmount.isLessThan(BN(10 ** 9))) {
-    console.warn(`inputAmount is only ${inputAmount.toFixed(0)}. Did you forget to multiply by 10 ** decimals?`);
+    console.warn(
+      `inputAmount is only ${inputAmount.toFixed(
+        0
+      )}. Did you forget to multiply by 10 ** decimals?`
+    )
   }
 
-  const numerator = inputAmount.multipliedBy(outputReserve).multipliedBy(997);
-  const denominator = inputReserve.multipliedBy(1000).plus(inputAmount.multipliedBy(997));
+  const numerator = inputAmount.multipliedBy(outputReserve).multipliedBy(997)
+  const denominator = inputReserve
+    .multipliedBy(1000)
+    .plus(inputAmount.multipliedBy(997))
 
-  return numerator.dividedBy(denominator);
+  return numerator.dividedBy(denominator)
 }
 
-function calculateEtherTokenInput({ outputAmount: rawOutput, inputReserve: rawReserveIn, outputReserve: rawReserveOut }) {
-  const outputAmount = BN(rawOutput);
-  const inputReserve = BN(rawReserveIn);
-  const outputReserve = BN(rawReserveOut);
+function calculateEtherTokenInput({
+  outputAmount: rawOutput,
+  inputReserve: rawReserveIn,
+  outputReserve: rawReserveOut
+}) {
+  const outputAmount = BN(rawOutput)
+  const inputReserve = BN(rawReserveIn)
+  const outputReserve = BN(rawReserveOut)
 
   if (outputAmount.isLessThan(BN(10 ** 9))) {
-    console.warn(`inputAmount is only ${outputAmount.toFixed(0)}. Did you forget to multiply by 10 ** decimals?`);
+    console.warn(
+      `inputAmount is only ${outputAmount.toFixed(
+        0
+      )}. Did you forget to multiply by 10 ** decimals?`
+    )
   }
 
-  const numerator = outputAmount.multipliedBy(inputReserve).multipliedBy(1000);
-  const denominator = outputReserve.minus(outputAmount).multipliedBy(997);
-  return (numerator.dividedBy(denominator)).plus(1);
+  const numerator = outputAmount.multipliedBy(inputReserve).multipliedBy(1000)
+  const denominator = outputReserve.minus(outputAmount).multipliedBy(997)
+  return numerator.dividedBy(denominator).plus(1)
 }
 
 function getSendType(inputCurrency, outputCurrency) {
   if (!inputCurrency || !outputCurrency) {
-    return;
+    return
   }
 
   if (inputCurrency === outputCurrency) {
-    return;
+    return
   }
 
   if (inputCurrency !== 'ETH' && outputCurrency !== 'ETH') {
@@ -852,12 +1004,12 @@ function getSendType(inputCurrency, outputCurrency) {
   }
 
   if (inputCurrency === 'ETH') {
-    return 'ETH_TO_TOKEN';
+    return 'ETH_TO_TOKEN'
   }
 
   if (outputCurrency === 'ETH') {
-    return 'TOKEN_TO_ETH';
+    return 'TOKEN_TO_ETH'
   }
 
-  return;
+  return
 }

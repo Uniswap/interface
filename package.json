@@ -35,7 +35,7 @@
     "redux-subscriber": "^1.1.0",
     "redux-thunk": "^2.2.0",
     "ua-parser-js": "^0.7.18",
-    "web3": "1.0.0-beta.36"
+    "web3": "1.0.0-beta.34"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -49,10 +49,5 @@
   "devDependencies": {
     "gh-pages": "^1.1.0"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"]
 }
