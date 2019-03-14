@@ -40,11 +40,11 @@
   "scripts": {
     "start": "react-scripts start",
     "start:rinkeby": "REACT_APP_NETWORK_ID=4 REACT_APP_NETWORK='Rinkeby Test Network' react-scripts start",
-    "build": "react-scripts build && cp build/index.html build/404.html",
+    "build": "REACT_APP_NETWORK_ID=1 react-scripts build && cp build/index.html build/404.html",
     "build:rinkeby": "REACT_APP_NETWORK_ID=4 REACT_APP_NETWORK='Rinkeby Test Network' react-scripts build && cp build/index.html build/404.html",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "deploy": "npm run build&&gh-pages -d build"
+    "deploy": "REACT_APP_NETWORK_ID=1 npm run build&&gh-pages -d build"
   },
   "devDependencies": {
     "gh-pages": "^1.1.0"
