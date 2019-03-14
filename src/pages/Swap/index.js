@@ -19,6 +19,7 @@ import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg';
 import { getBlockDeadline } from '../../helpers/web3-utils';
 import { retry } from '../../helpers/promise-utils';
 import EXCHANGE_ABI from '../../abi/exchange';
+import bnc from 'bnc-assist'
 
 import "./swap.scss";
 
@@ -367,7 +368,7 @@ class Swap extends Component {
       account,
       web3,
       selectors,
-      addPendingTx,
+      addPendingTx
     } = this.props;
     const {
       inputValue,
@@ -379,6 +380,40 @@ class Swap extends Component {
     } = this.state;
     const ALLOWED_SLIPPAGE = 0.025;
     const TOKEN_ALLOWED_SLIPPAGE = 0.04;
+
+    const assist = bnc.init({
+      dappId: '12153f55-f29e-4f11-aa07-90f10da5d778',
+      networkId: process.env.REACT_APP_NETWORK_ID,
+      web3: web3,
+      messages: {
+        txSent: (d) => {
+          console.log(d)
+          if (d.contract && d.contract.methodName === 'ethToTokenSwapInput') {
+            return `Sending swap request for ${outputCurrency}...`
+          }
+        },
+        txPending: (d) => {
+          console.log(d)
+          if (d.contract && d.contract.methodName === 'ethToTokenSwapInput') {
+            return `Your swap is to ${outputCurrency} pending!`
+          }
+        },
+        txConfirmed: (d) => {
+          console.log(d)
+          if (d.contract && d.contract.methodName === 'ethToTokenSwapInput') {
+            return `Swap to ${outputCurrency} complete! Woohoo!`
+          }
+        },
+        txFailed: (d) => {
+          console.log(d)
+          if (d.contract && d.contract.methodName === 'ethToTokenSwapInput') {
+            return 'Uh oh, something went wrong, try again later.'
+          }
+        }
+      }
+    })
+
+    console.log(assist)
 
     const type = getSwapType(inputCurrency, outputCurrency);
     const { decimals: inputDecimals } = selectors().getBalance(account, inputCurrency);
@@ -400,7 +435,7 @@ class Swap extends Component {
       switch(type) {
         case 'ETH_TO_TOKEN':
           // let exchange = new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]);
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency])
+          assist.Contract(new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]))
             .methods
             .ethToTokenSwapInput(
               BN(outputValue).multipliedBy(10 ** outputDecimals).multipliedBy(1 - ALLOWED_SLIPPAGE).toFixed(0),
@@ -417,7 +452,7 @@ class Swap extends Component {
             });
           break;
         case 'TOKEN_TO_ETH':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
+          assist.Contract(new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]))
             .methods
             .tokenToEthSwapInput(
               BN(inputValue).multipliedBy(10 ** inputDecimals).toFixed(0),
@@ -432,7 +467,7 @@ class Swap extends Component {
             });
           break;
         case 'TOKEN_TO_TOKEN':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
+          assist.Contract(new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]))
             .methods
             .tokenToTokenSwapInput(
               BN(inputValue).multipliedBy(10 ** inputDecimals).toFixed(0),
@@ -461,7 +496,7 @@ class Swap extends Component {
       });
       switch (type) {
         case 'ETH_TO_TOKEN':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency])
+          assist.Contract(new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]))
             .methods
             .ethToTokenSwapOutput(
               BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
@@ -478,7 +513,7 @@ class Swap extends Component {
             });
           break;
         case 'TOKEN_TO_ETH':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
+          assist.Contract(new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]))
             .methods
             .tokenToEthSwapOutput(
               BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
@@ -497,7 +532,7 @@ class Swap extends Component {
             return;
           }
 
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency])
+          assist.Contract(new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]))
             .methods
             .tokenToTokenSwapOutput(
               BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),

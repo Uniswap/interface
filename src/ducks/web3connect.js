@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {BigNumber as BN} from 'bignumber.js';
 import Web3 from 'web3';
+import bnc from 'bnc-assist';
 import ERC20_ABI from "../abi/erc20";
 import ERC20_WITH_BYTES_ABI from "../abi/erc20_symbol_bytes32";
 
@@ -22,6 +23,7 @@ export const ADD_CONFIRMED_TX = 'web3connect/addConfirmedTx';
 
 const initialState = {
   web3: null,
+  assist: null,
   networkId: 0,
   initialized: false,
   account: '',
@@ -47,7 +49,6 @@ const initialState = {
   },
   contracts: {},
 };
-
 // selectors
 export const selectors = () => (dispatch, getState) => {
   const state = getState().web3connect;
@@ -110,6 +111,40 @@ export const initialize = () => (dispatch, getState) => {
   const { web3connect } = getState();
 
   return new Promise(async (resolve, reject) => {
+
+    let assist = bnc.init({
+      dappId: '12153f55-f29e-4f11-aa07-90f10da5d778',
+      networkId: process.env.REACT_APP_NETWORK_ID,
+      messages: {
+        txSent: (d) => {
+          console.log(d)
+          if (d.contract && d.contract.methodName === 'ethToTokenSwapInput') {
+            return 'Sending...'
+          }
+        },
+        txPending: (d) => {
+          console.log(d)
+          if (d.contract && d.contract.methodName === 'ethToTokenSwapInput') {
+            return 'Your swap is pending!'
+          }
+        },
+        txConfirmed: (d) => {
+          console.log(d)
+          if (d.contract && d.contract.methodName === 'ethToTokenSwapInput') {
+            return 'Swap complete! Woohoo!'
+          }
+        },
+        txFailed: (d) => {
+          console.log(d)
+          if (d.contract && d.contract.methodName === 'ethToTokenSwapInput') {
+            return 'Uh oh, something went wrong, try again later.'
+          }
+        }
+      }
+    })
+    assist.onboard()
+
+
     if (web3connect.web3) {
       resolve(web3connect.web3);
       return;
@@ -118,6 +153,38 @@ export const initialize = () => (dispatch, getState) => {
     if (typeof window.ethereum !== 'undefined') {
       try {
         const web3 = new Web3(window.ethereum);
+        assist = bnc.init({
+          dappId: '12153f55-f29e-4f11-aa07-90f10da5d778',
+          networkId: process.env.REACT_APP_NETWORK_ID,
+          web3: web3,
+          messages: {
+            txSent: (d) => {
+              console.log(d)
+              if (d.contract && d.contract.methodName === 'ethToTokenSwapInput') {
+                return 'Sending...'
+              }
+            },
+            txPending: (d) => {
+              console.log(d)
+              if (d.contract && d.contract.methodName === 'ethToTokenSwapInput') {
+                return 'Your swap is pending!'
+              }
+            },
+            txConfirmed: (d) => {
+              console.log(d)
+              if (d.contract && d.contract.methodName === 'ethToTokenSwapInput') {
+                return 'Swap complete! Woohoo!'
+              }
+            },
+            txFailed: (d) => {
+              console.log(d)
+              if (d.contract && d.contract.methodName === 'ethToTokenSwapInput') {
+                return 'Uh oh, something went wrong, try again later.'
+              }
+            }
+          }
+        })
+        assist.onboard()
         await window.ethereum.enable();
         dispatch({
           type: INITIALIZE,
@@ -126,6 +193,7 @@ export const initialize = () => (dispatch, getState) => {
         resolve(web3);
         return;
       } catch (error) {
+        console.log(error)
         console.error('User denied access.');
         dispatch({ type: INITIALIZE });
         reject();
@@ -262,8 +330,8 @@ export const sync = () => async (dispatch, getState) => {
         return;
       }
 
-      const contract = contracts[tokenAddress] || new web3.eth.Contract(ERC20_ABI, tokenAddress);
-      const contractBytes32 = contracts[tokenAddress] || new web3.eth.Contract(ERC20_WITH_BYTES_ABI, tokenAddress);
+      let contract = contracts[tokenAddress] || new web3.eth.Contract(ERC20_ABI, tokenAddress);
+      let contractBytes32 = contracts[tokenAddress] || new web3.eth.Contract(ERC20_WITH_BYTES_ABI, tokenAddress);
 
       if (!contracts[tokenAddress]) {
         dispatch({
