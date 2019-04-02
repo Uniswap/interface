@@ -1,4 +1,14 @@
 .logo {
   font-size: 1.5rem;
-  line-height: 1.75rem;
+  line-height: 1.45rem;
+
+  img {
+    width: 30px;
+  }
+
+  @media only screen and (min-width : 768px) {
+    img {
+      width: 70px;
+    }
+  }
 }

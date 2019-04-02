@@ -5,12 +5,13 @@
   height: 2rem;
   font-size: .9rem;
   align-items: center;
-  border: 1px solid $mercury-gray;
+  background: $white;
   padding: .5rem;
   border-radius: 2rem;
   color: $dove-gray;
   font-weight: 400;
   box-sizing: border-box;
+  box-shadow: 0 4px 10px $dark-gray;
 
   &__identicon {
     height: 1rem;
@@ -22,9 +23,9 @@
   &__text {
     flex: 1 1 auto;
     overflow: hidden;
-    margin-right: .75rem;
+    // margin-right: .75rem;
     margin-left: .25rem;
-    font-size: .75rem;
+    font-size: .55rem;
   }
 
   &__pending-container {
@@ -36,6 +37,16 @@
     background-color: $zumthor-blue;
     color: $royal-blue;
     border: 1px solid $royal-blue;
+  }
+
+
+  @media only screen and (min-width : 768px) {
+
+    padding: 1.25rem 2rem;
+
+    &__text {
+      font-size: .75rem;
+    }
   }
 }
 

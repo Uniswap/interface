@@ -83,9 +83,6 @@ class Web3Status extends Component {
         })}
         onClick={this.handleClick}
       >
-        <div className="web3-status__text">
-          {hasPendingTransactions ? getPendingText(pending, t("pending")) : getText(address, t("disconnected")) }
-        </div>
         <div
           className="web3-status__identicon"
           ref={el => {
@@ -101,6 +98,9 @@ class Web3Status extends Component {
             el.appendChild(Jazzicon(16, parseInt(address.slice(2), 16)));
           }}
         />
+        <div className="web3-status__text">
+          {hasPendingTransactions ? getPendingText(pending, t("pending")) : getText(address, t("disconnected")) }
+        </div>
         {this.renderModal()}
       </div>
     );

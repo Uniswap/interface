@@ -5,17 +5,23 @@
 
   &__top {
     @extend %row-nowrap;
+    margin-bottom: 50px;
     padding: 1.25rem .75rem;
     align-items: center;
-    border-bottom: 1px solid $concrete-gray;
+    // border-bottom: 1px solid $concrete-gray;
   }
 
   &__title {
     font-size: 2rem;
     font-weight: 500;
-    margin-left: 0.5rem;
+    margin-left: 0.1rem;
     line-height: 1.5rem;
-    color: $royal-blue;
+    color: $dark-gray;
+    font-family: 'PT Sans', sans-serif;
+      &_gold {
+        color: #FFBB00;
+        text-shadow: 0 1px 5px $dark-gray;
+      }
   }
 
   &__center-group {
