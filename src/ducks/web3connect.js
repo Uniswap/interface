@@ -313,6 +313,9 @@ export const sync = () => async (dispatch, getState) => {
 
       Object.entries(token)
         .forEach(([ tokenOwnerAddress, tokenOwner ]) => {
+          if (!tokenOwnerAddress) {
+              return;
+          }
           tokenOwner.forEach(async spenderAddress => {
             const approvalBalance = getApprovals(tokenAddress, tokenOwnerAddress, spenderAddress);
             const balance = await contract.methods.allowance(tokenOwnerAddress, spenderAddress).call();
