@@ -83,7 +83,7 @@ class CreateExchange extends Component {
       errorMessage = t("invalidSymbol");
     }
 
-    if (!decimals) {
+    if (!decimals && decimals !== 0) {
       errorMessage = t("invalidDecimals");
     }
 
