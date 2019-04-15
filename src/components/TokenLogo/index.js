@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import EthereumLogo from '../../assets/images/ethereum-logo.svg';
-import GenericTokenLogo from '../../assets/images/generic-token-logo.png';
 
 const RINKEBY_TOKEN_MAP = {
   '0xDA5B056Cfb861282B4b59d29c9B395bcC238D29B': '0x0d8775f648430679a709e98d2b0cb6250d2887ef',
@@ -45,11 +44,12 @@ export default class TokenLogo extends Component {
     }
 
     if (!path) {
-      return <div className={className} style={{ width: size, fontSize: size }}>🤔</div>
+      return <div className={className} style={{ width: size, fontSize: size }}><span role='img' aria-label='thinking'>🤔</span></div>
     }
 
     return (
       <img
+        alt='images'
         src={path}
         className={className}
         style={{

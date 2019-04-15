@@ -10,8 +10,6 @@ import NavigationTabs from '../../components/NavigationTabs';
 import { selectors, addPendingTx } from '../../ducks/web3connect';
 import PlusBlue from '../../assets/images/plus-blue.svg';
 import PlusGrey from '../../assets/images/plus-grey.svg';
-import DropdownBlue from "../../assets/images/dropdown-blue.svg";
-import DropupBlue from "../../assets/images/dropup-blue.svg";
 import { getBlockDeadline } from '../../helpers/web3-utils';
 import { retry } from '../../helpers/promise-utils';
 import ModeSelector from './ModeSelector';
@@ -56,7 +54,7 @@ class AddLiquidity extends Component {
     const { inputValue, outputValue, inputCurrency, outputCurrency, lastEditedField } = this.state;
 
     return isConnected !== nextProps.isConnected ||
-      t != nextProps.t ||
+      t !== nextProps.t ||
       account !== nextProps.account ||
       exchangeAddresses !== nextProps.exchangeAddresses ||
       web3 !== nextProps.web3 ||
@@ -455,7 +453,7 @@ class AddLiquidity extends Component {
       action: 'Open',
     });
 
-    const { value: tokenReserve, decimals, label } = selectors().getTokenBalance(outputCurrency, fromToken[outputCurrency]);
+    const { value: tokenReserve, label } = selectors().getTokenBalance(outputCurrency, fromToken[outputCurrency]);
     const { value: ethReserve } = selectors().getBalance(fromToken[outputCurrency]);
     const { decimals: poolTokenDecimals } = selectors().getBalance(account, fromToken[outputCurrency]);
 
@@ -473,8 +471,8 @@ class AddLiquidity extends Component {
     const SLIPPAGE = 0.025;
     const minOutput = BN(outputValue).multipliedBy(1 - SLIPPAGE);
     const maxOutput = BN(outputValue).multipliedBy(1 + SLIPPAGE);
-    const minPercentage = minOutput.dividedBy(minOutput.plus(tokenReserve)).multipliedBy(100);
-    const maxPercentage = maxOutput.dividedBy(maxOutput.plus(tokenReserve)).multipliedBy(100);
+    // const minPercentage = minOutput.dividedBy(minOutput.plus(tokenReserve)).multipliedBy(100);
+    // const maxPercentage = maxOutput.dividedBy(maxOutput.plus(tokenReserve)).multipliedBy(100);
     const liquidityMinted = BN(inputValue).multipliedBy(totalSupply.dividedBy(ethReserve));
     const adjTotalSupply = totalSupply.dividedBy(10 ** poolTokenDecimals);
 
@@ -524,7 +522,7 @@ class AddLiquidity extends Component {
             ? (
               <div className="pool__new-exchange-warning">
                 <div className="pool__new-exchange-warning-text">
-                  🚰 {t("firstLiquidity")}
+                  <span role='img' aria-label='liquidity'>🚰</span> {t("firstLiquidity")}
                 </div>
                 <div className="pool__new-exchange-warning-text">
                   { t("initialExchangeRate", { label }) }
@@ -545,7 +543,7 @@ class AddLiquidity extends Component {
         />
         <OversizedPanel>
           <div className="swap__down-arrow-background">
-            <img className="swap__down-arrow" src={isValid ? PlusBlue : PlusGrey} />
+            <img className="swap__down-arrow" src={isValid ? PlusBlue : PlusGrey} alt='plus' />
           </div>
         </OversizedPanel>
         <CurrencyInputPanel
@@ -586,7 +584,7 @@ class AddLiquidity extends Component {
 
 export default connect(
   state => ({
-    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||1),
+    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId === (process.env.REACT_APP_NETWORK_ID||1),
     account: state.web3connect.account,
     balances: state.web3connect.balances,
     web3: state.web3connect.web3,

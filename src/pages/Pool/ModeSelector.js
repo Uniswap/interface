@@ -86,7 +86,7 @@ class ModeSelector extends Component {
           <span className="pool__liquidity-label">
             {this.props.title}
           </span>
-          <img src={Dropdown} />
+          <img src={Dropdown} alt='dropdown' />
         </div>
         {this.renderModal()}
       </OversizedPanel>

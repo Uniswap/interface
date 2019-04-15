@@ -230,7 +230,7 @@ class CurrencyInputPanel extends Component {
                   this.setState({ searchQuery: e.target.value });
                 }}
               />
-              <img src={SearchIcon} className="token-modal__search-icon" />
+              <img src={SearchIcon} className="token-modal__search-icon" alt='search' />
             </div>
             <div className="token-modal__token-list">
               {this.renderTokenList()}
