@@ -2,16 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
-import Web3 from 'web3';
 import Jazzicon from 'jazzicon';
 import { CSSTransitionGroup } from "react-transition-group";
 import { withNamespaces } from 'react-i18next';
+import { ethers } from 'ethers'
 import './web3-status.scss';
 import Modal from '../Modal';
 
 function getEtherscanLink(tx) {
   return `https://etherscan.io/tx/${tx}`;
 }
+
+console.log(ethers)
 
 class Web3Status extends Component {
   state = {
@@ -93,7 +95,7 @@ class Web3Status extends Component {
               return;
             }
 
-            if (!address|| address.length < 42 || !Web3.utils.isHexStrict(address)) {
+            if (!address || address.length < 42 || !ethers.utils.isHexString(address)) {
               return;
             }
 
@@ -119,11 +121,11 @@ function getPendingText(pendingTransactions, pendingLabel) {
 }
 
 function getText(text, disconnectedText) {
-  if (!text || text.length < 42 || !Web3.utils.isHexStrict(text)) {
+  if (!text || text.length < 42 || !ethers.utils.isHexString(text)) {
     return disconnectedText;
   }
 
-  const address = Web3.utils.toChecksumAddress(text);
+  const address = ethers.utils.getAddress(text);
   return `${address.substring(0, 6)}...${address.substring(38)}`;
 }
 

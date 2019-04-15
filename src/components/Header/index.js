@@ -88,7 +88,7 @@ class BlockingWarning extends Component {
     const correctNetworkId = process.env.REACT_APP_NETWORK_ID || 1;
     const correctNetwork = process.env.REACT_APP_NETWORK || 'Main Ethereum Network';
 
-    const wrongNetwork = networkId != correctNetworkId;
+    const wrongNetwork = networkId !== correctNetworkId;
 
     if (wrongNetwork && initialized) {
       content = [
@@ -114,14 +114,14 @@ class BlockingWarning extends Component {
             isMobile()
               ? (
                 [
-                  <img src={CoinbaseWalletLogo} key="coinbase-wallet" onClick={() => window.open(getCoinbaseWalletLink(), '_blank')} />,
-                  <img src={TrustLogo} key="trust" onClick={() => window.open(getTrustLink(), '_blank')} />
+                  <img alt='coinbase' src={CoinbaseWalletLogo} key="coinbase-wallet" onClick={() => window.open(getCoinbaseWalletLink(), '_blank')} />,
+                  <img alt='trust' src={TrustLogo} key="trust" onClick={() => window.open(getTrustLink(), '_blank')} />
                 ]
               )
               : (
                 [
-                  <img src={MetamaskLogo} key="metamask" onClick={() => window.open(getMetamaskLink(), '_blank')} />,
-                  <img src={BraveLogo} key="brave" onClick={() => window.open(getBraveLink(), '_blank')} />
+                  <img alt='metamask' src={MetamaskLogo} key="metamask" onClick={() => window.open(getMetamaskLink(), '_blank')} />,
+                  <img alt='brave' src={BraveLogo} key="brave" onClick={() => window.open(getBraveLink(), '_blank')} />
                 ]
               )
           }

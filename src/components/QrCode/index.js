@@ -21,10 +21,6 @@ class QrCode extends Component {
     stream: null,
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   componentDidUpdate() {
     const { videoOpen, stream } = this.state;
 
@@ -102,12 +98,8 @@ class QrCode extends Component {
   }
 
   render() {
-    const {
-      onValueReceived,
-    } = this.props;
-
     return [
-      <img key="icon" src={QrCodeSVG} onClick={() => {
+      <img key="icon" src={QrCodeSVG} alt='code' onClick={() => {
         this.state.videoOpen ? this.closeVideo() : this.openVideo();
       }} />,
       this.renderQrReader()
