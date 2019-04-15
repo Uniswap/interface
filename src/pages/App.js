@@ -44,16 +44,16 @@ class App extends Component {
         </MediaQuery>
         <Web3Connect />
         <BrowserRouter>
-          <Switch>
-            <div className="app__wrapper">
+          <div className="app__wrapper">
+            <Switch>
               <Route exact path="/swap" component={Swap} />
               <Route exact path="/send" component={Send} />
               <Route exact path="/add-liquidity" component={Pool} />
               <Route exact path="/remove-liquidity" component={Pool} />
               <Route exact path="/create-exchange/:tokenAddress?" component={Pool} />
               <Redirect exact from="/" to="/swap" />
-            </div>
-          </Switch>
+            </Switch>
+          </div>
         </BrowserRouter>
       </div>
     )
