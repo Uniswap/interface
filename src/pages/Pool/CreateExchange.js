@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
-import { withNamespaces } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { selectors, addPendingTx } from '../../ducks/web3connect'
 import classnames from 'classnames'
 import NavigationTabs from '../../components/NavigationTabs'
@@ -239,5 +239,5 @@ export default withRouter(
       addExchange: opts => dispatch(addExchange(opts)),
       addPendingTx: id => dispatch(addPendingTx(id))
     })
-  )(withNamespaces()(CreateExchange))
+  )(withTranslation()(CreateExchange))
 )

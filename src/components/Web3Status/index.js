@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import classnames from 'classnames'
 import Jazzicon from 'jazzicon'
 import { CSSTransitionGroup } from 'react-transition-group'
-import { withNamespaces } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
 import './web3-status.scss'
 import Modal from '../Modal'
@@ -142,4 +142,4 @@ export default connect(state => {
     pending: state.web3connect.transactions.pending,
     confirmed: state.web3connect.transactions.confirmed
   }
-})(withNamespaces()(Web3Status))
+})(withTranslation()(Web3Status))

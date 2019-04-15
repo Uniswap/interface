@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { BigNumber as BN } from 'bignumber.js'
-import { withNamespaces } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { selectors, addPendingTx } from '../../ducks/web3connect'
 import Header from '../../components/Header'
 import NavigationTabs from '../../components/NavigationTabs'
@@ -840,7 +840,7 @@ export default connect(
     selectors: () => dispatch(selectors()),
     addPendingTx: id => dispatch(addPendingTx(id))
   })
-)(withNamespaces()(Send))
+)(withTranslation()(Send))
 
 const b = text => <span className="swap__highlight-text">{text}</span>
 
