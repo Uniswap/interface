@@ -6,7 +6,7 @@
   height: 2.5rem;
   background-color: $concrete-gray;
   border-radius: 3rem;
-  box-shadow: 0 0 0 .5px darken($concrete-gray, 5);
+  box-shadow: 0 0 0 0.5px darken($concrete-gray, 5);
 
   .tab:first-child {
     //margin-left: -1px;
@@ -35,7 +35,7 @@
   &--selected {
     background-color: $white;
     border-radius: 3rem;
-    box-shadow: 0 0 .5px .5px $mercury-gray;
+    box-shadow: 0 0 0.5px 0.5px $mercury-gray;
     font-weight: 500;
 
     span {

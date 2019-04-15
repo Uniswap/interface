@@ -1,1 +1,1 @@
-export const INSUFFICIENT_BALANCE = 'Insufficient balance';
+export const INSUFFICIENT_BALANCE = 'Insufficient balance'

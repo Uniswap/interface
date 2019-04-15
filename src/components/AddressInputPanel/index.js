@@ -1,48 +1,44 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import c from 'classnames';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import c from 'classnames'
 
-import QrCode from '../QrCode';
-import './address-input-panel.scss';
+import QrCode from '../QrCode'
+import './address-input-panel.scss'
 
 class AddressInputPanel extends Component {
   static propTypes = {
     title: PropTypes.string,
     onChange: PropTypes.func,
     value: PropTypes.string,
-    errorMessage: PropTypes.string,
-  };
+    errorMessage: PropTypes.string
+  }
 
   static defaultProps = {
     onChange() {},
-    value: '',
-  };
+    value: ''
+  }
 
   render() {
-    const {
-      t,
-      title,
-      onChange,
-      value,
-      errorMessage,
-    } = this.props;
+    const { t, title, onChange, value, errorMessage } = this.props
 
     return (
       <div className="currency-input-panel">
-        <div className={c('currency-input-panel__container address-input-panel__recipient-row', {
-          'currency-input-panel__container--error': errorMessage,
-        })}>
+        <div
+          className={c('currency-input-panel__container address-input-panel__recipient-row', {
+            'currency-input-panel__container--error': errorMessage
+          })}
+        >
           <div className="address-input-panel__input-container">
             <div className="currency-input-panel__label-row">
               <div className="currency-input-panel__label-container">
-                <span className="currency-input-panel__label">{title || t("recipientAddress")}</span>
+                <span className="currency-input-panel__label">{title || t('recipientAddress')}</span>
               </div>
             </div>
             <div className="currency-input-panel__input-row">
               <input
                 type="text"
-                className={c('address-input-panel__input',{
-                  'address-input-panel__input--error': errorMessage,
+                className={c('address-input-panel__input', {
+                  'address-input-panel__input--error': errorMessage
                 })}
                 placeholder="0x1234..."
                 onChange={e => onChange(e.target.value)}
@@ -59,4 +55,4 @@ class AddressInputPanel extends Component {
   }
 }
 
-export default AddressInputPanel;
+export default AddressInputPanel

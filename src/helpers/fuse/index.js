@@ -1,57 +1,60 @@
-import Bitap from'./bitap';
+import Bitap from './bitap'
 const deepValue = require('./helpers/deep_value')
 const isArray = require('./helpers/is_array')
 
 class Fuse {
-  constructor (list, {
-    // Approximately where in the text is the pattern expected to be found?
-    location = 0,
-    // Determines how close the match must be to the fuzzy location (specified above).
-    // An exact letter match which is 'distance' characters away from the fuzzy location
-    // would score as a complete mismatch. A distance of '0' requires the match be at
-    // the exact location specified, a threshold of '1000' would require a perfect match
-    // to be within 800 characters of the fuzzy location to be found using a 0.8 threshold.
-    distance = 100,
-    // At what point does the match algorithm give up. A threshold of '0.0' requires a perfect match
-    // (of both letters and location), a threshold of '1.0' would match anything.
-    threshold = 0.6,
-    // Machine word size
-    maxPatternLength = 32,
-    // Indicates whether comparisons should be case sensitive.
-    caseSensitive = false,
-    // Regex used to separate words when searching. Only applicable when `tokenize` is `true`.
-    tokenSeparator = / +/g,
-    // When true, the algorithm continues searching to the end of the input even if a perfect
-    // match is found before the end of the same input.
-    findAllMatches = false,
-    // Minimum number of characters that must be matched before a result is considered a match
-    minMatchCharLength = 1,
-    // The name of the identifier property. If specified, the returned result will be a list
-    // of the items' dentifiers, otherwise it will be a list of the items.
-    id = null,
-    // List of properties that will be searched. This also supports nested properties.
-    keys = [],
-    // Whether to sort the result list, by score
-    shouldSort = true,
-    // The get function to use when fetching an object's properties.
-    // The default will search nested paths *ie foo.bar.baz*
-    getFn = deepValue,
-    // Default sort function
-    sortFn = (a, b) => (a.score - b.score),
-    // When true, the search algorithm will search individual words **and** the full string,
-    // computing the final score as a function of both. Note that when `tokenize` is `true`,
-    // the `threshold`, `distance`, and `location` are inconsequential for individual tokens.
-    tokenize = false,
-    // When true, the result set will only include records that match all tokens. Will only work
-    // if `tokenize` is also true.
-    matchAllTokens = false,
+  constructor(
+    list,
+    {
+      // Approximately where in the text is the pattern expected to be found?
+      location = 0,
+      // Determines how close the match must be to the fuzzy location (specified above).
+      // An exact letter match which is 'distance' characters away from the fuzzy location
+      // would score as a complete mismatch. A distance of '0' requires the match be at
+      // the exact location specified, a threshold of '1000' would require a perfect match
+      // to be within 800 characters of the fuzzy location to be found using a 0.8 threshold.
+      distance = 100,
+      // At what point does the match algorithm give up. A threshold of '0.0' requires a perfect match
+      // (of both letters and location), a threshold of '1.0' would match anything.
+      threshold = 0.6,
+      // Machine word size
+      maxPatternLength = 32,
+      // Indicates whether comparisons should be case sensitive.
+      caseSensitive = false,
+      // Regex used to separate words when searching. Only applicable when `tokenize` is `true`.
+      tokenSeparator = / +/g,
+      // When true, the algorithm continues searching to the end of the input even if a perfect
+      // match is found before the end of the same input.
+      findAllMatches = false,
+      // Minimum number of characters that must be matched before a result is considered a match
+      minMatchCharLength = 1,
+      // The name of the identifier property. If specified, the returned result will be a list
+      // of the items' dentifiers, otherwise it will be a list of the items.
+      id = null,
+      // List of properties that will be searched. This also supports nested properties.
+      keys = [],
+      // Whether to sort the result list, by score
+      shouldSort = true,
+      // The get function to use when fetching an object's properties.
+      // The default will search nested paths *ie foo.bar.baz*
+      getFn = deepValue,
+      // Default sort function
+      sortFn = (a, b) => a.score - b.score,
+      // When true, the search algorithm will search individual words **and** the full string,
+      // computing the final score as a function of both. Note that when `tokenize` is `true`,
+      // the `threshold`, `distance`, and `location` are inconsequential for individual tokens.
+      tokenize = false,
+      // When true, the result set will only include records that match all tokens. Will only work
+      // if `tokenize` is also true.
+      matchAllTokens = false,
 
-    includeMatches = false,
-    includeScore = false,
+      includeMatches = false,
+      includeScore = false,
 
-    // Will print to the console. Useful for debugging.
-    verbose = false
-  }) {
+      // Will print to the console. Useful for debugging.
+      verbose = false
+    }
+  ) {
     this.options = {
       location,
       distance,
@@ -76,18 +79,15 @@ class Fuse {
     this.setCollection(list)
   }
 
-  setCollection (list) {
+  setCollection(list) {
     this.list = list
     return list
   }
 
-  search (pattern) {
+  search(pattern) {
     this._log(`---------\nSearch pattern: "${pattern}"`)
 
-    const {
-      tokenSearchers,
-      fullSearcher
-    } = this._prepareSearchers(pattern)
+    const { tokenSearchers, fullSearcher } = this._prepareSearchers(pattern)
 
     let { weights, results } = this._search(tokenSearchers, fullSearcher)
 
@@ -100,7 +100,7 @@ class Fuse {
     return this._format(results)
   }
 
-  _prepareSearchers (pattern = '') {
+  _prepareSearchers(pattern = '') {
     const tokenSearchers = []
 
     if (this.options.tokenize) {
@@ -116,7 +116,7 @@ class Fuse {
     return { tokenSearchers, fullSearcher }
   }
 
-  _search (tokenSearchers = [], fullSearcher) {
+  _search(tokenSearchers = [], fullSearcher) {
     const list = this.list
     const resultMap = {}
     const results = []
@@ -126,17 +126,20 @@ class Fuse {
     if (typeof list[0] === 'string') {
       // Iterate over every item
       for (let i = 0, len = list.length; i < len; i += 1) {
-        this._analyze({
-          key: '',
-          value: list[i],
-          record: i,
-          index: i
-        }, {
-          resultMap,
-          results,
-          tokenSearchers,
-          fullSearcher
-        })
+        this._analyze(
+          {
+            key: '',
+            value: list[i],
+            record: i,
+            index: i
+          },
+          {
+            resultMap,
+            results,
+            tokenSearchers,
+            fullSearcher
+          }
+        )
       }
 
       return { weights: null, results }
@@ -152,7 +155,7 @@ class Fuse {
         let key = this.options.keys[j]
         if (typeof key !== 'string') {
           weights[key.name] = {
-            weight: (1 - key.weight) || 1
+            weight: 1 - key.weight || 1
           }
           if (key.weight <= 0 || key.weight > 1) {
             throw new Error('Key weight has to be > 0 and <= 1')
@@ -164,24 +167,30 @@ class Fuse {
           }
         }
 
-        this._analyze({
-          key,
-          value: this.options.getFn(item, key),
-          record: item,
-          index: i
-        }, {
-          resultMap,
-          results,
-          tokenSearchers,
-          fullSearcher
-        })
+        this._analyze(
+          {
+            key,
+            value: this.options.getFn(item, key),
+            record: item,
+            index: i
+          },
+          {
+            resultMap,
+            results,
+            tokenSearchers,
+            fullSearcher
+          }
+        )
       }
     }
 
     return { weights, results }
   }
 
-  _analyze ({ key, arrayIndex = -1, value, record, index }, { tokenSearchers = [], fullSearcher = [], resultMap = {}, results = [] }) {
+  _analyze(
+    { key, arrayIndex = -1, value, record, index },
+    { tokenSearchers = [], fullSearcher = [], resultMap = {}, results = [] }
+  ) {
     // Check if the texvaluet can be searched
     if (value === undefined || value === null) {
       return
@@ -250,7 +259,8 @@ class Fuse {
 
       this._log('Score average:', finalScore)
 
-      let checkTextMatches = (this.options.tokenize && this.options.matchAllTokens) ? numTextMatches >= tokenSearchers.length : true
+      let checkTextMatches =
+        this.options.tokenize && this.options.matchAllTokens ? numTextMatches >= tokenSearchers.length : true
 
       this._log(`\nCheck Matches: ${checkTextMatches}`)
 
@@ -272,13 +282,15 @@ class Fuse {
           // Add it to the raw result list
           resultMap[index] = {
             item: record,
-            output: [{
-              key,
-              arrayIndex,
-              value,
-              score: finalScore,
-              matchedIndices: mainSearchResult.matchedIndices
-            }]
+            output: [
+              {
+                key,
+                arrayIndex,
+                value,
+                score: finalScore,
+                matchedIndices: mainSearchResult.matchedIndices
+              }
+            ]
           }
 
           results.push(resultMap[index])
@@ -286,23 +298,26 @@ class Fuse {
       }
     } else if (isArray(value)) {
       for (let i = 0, len = value.length; i < len; i += 1) {
-        this._analyze({
-          key,
-          arrayIndex: i,
-          value: value[i],
-          record,
-          index
-        }, {
-          resultMap,
-          results,
-          tokenSearchers,
-          fullSearcher
-        })
+        this._analyze(
+          {
+            key,
+            arrayIndex: i,
+            value: value[i],
+            record,
+            index
+          },
+          {
+            resultMap,
+            results,
+            tokenSearchers,
+            fullSearcher
+          }
+        )
       }
     }
   }
 
-  _computeScore (weights, results) {
+  _computeScore(weights, results) {
     this._log('\n\nComputing score:\n')
 
     for (let i = 0, len = results.length; i < len; i += 1) {
@@ -314,7 +329,7 @@ class Fuse {
 
       for (let j = 0; j < scoreLen; j += 1) {
         let weight = weights ? weights[output[j].key].weight : 1
-        let score = weight === 1 ? output[j].score : (output[j].score || 0.001)
+        let score = weight === 1 ? output[j].score : output[j].score || 0.001
         let nScore = score * weight
 
         if (weight !== 1) {
@@ -331,12 +346,12 @@ class Fuse {
     }
   }
 
-  _sort (results) {
+  _sort(results) {
     this._log('\n\nSorting....')
     results.sort(this.options.sortFn)
   }
 
-  _format (results) {
+  _format(results) {
     const finalOutput = []
 
     if (this.options.verbose) {
@@ -404,7 +419,7 @@ class Fuse {
     return finalOutput
   }
 
-  _log () {
+  _log() {
     if (this.options.verbose) {
       console.log(...arguments)
     }
