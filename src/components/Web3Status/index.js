@@ -13,8 +13,6 @@ function getEtherscanLink(tx) {
   return `https://etherscan.io/tx/${tx}`
 }
 
-console.log(ethers)
-
 class Web3Status extends Component {
   state = {
     isShowingModal: false
