@@ -9,7 +9,7 @@ import store from './store'
 import './index.scss'
 
 if (process.env.NODE_ENV === 'development') {
-  // ReactGA.initialize('UA-128182339-02');
+  ReactGA.initialize('test', { testMode: true })
 } else {
   ReactGA.initialize('UA-128182339-1')
 }
