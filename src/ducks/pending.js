@@ -1,15 +1,15 @@
-const ADD_APPROVAL_TX = 'app/send/addApprovalTx';
+const ADD_APPROVAL_TX = 'app/send/addApprovalTx'
 
 const getInitialState = () => {
   return {
-    approvals: {},
-  };
-};
+    approvals: {}
+  }
+}
 
 export const addApprovalTx = ({ tokenAddress, txId }) => ({
   type: ADD_APPROVAL_TX,
-  payload: { tokenAddress, txId },
-});
+  payload: { tokenAddress, txId }
+})
 
 export default function sendReducer(state = getInitialState(), { type, payload }) {
   switch (type) {
@@ -17,10 +17,10 @@ export default function sendReducer(state = getInitialState(), { type, payload }
       return {
         approvals: {
           ...state.approvals,
-          [payload.tokenAddress]: payload.txId,
+          [payload.tokenAddress]: payload.txId
         }
-      };
+      }
     default:
-      return state;
+      return state
   }
 }

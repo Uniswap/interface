@@ -1,11 +1,11 @@
-@import "../../variables.scss";
+@import '../../variables.scss';
 
 .header {
   @extend %col-nowrap;
 
   &__top {
     @extend %row-nowrap;
-    padding: 1.25rem .75rem;
+    padding: 1.25rem 0.75rem;
     align-items: center;
     border-bottom: 1px solid $concrete-gray;
   }
@@ -28,22 +28,22 @@
   }
 
   &--inactive {
-    opacity: .5;
+    opacity: 0.5;
   }
 
   &__dialog {
     @extend %col-nowrap;
-    border-radius: .875rem;
+    border-radius: 0.875rem;
     border: 1px solid $mercury-gray;
-    margin: 1rem .75rem 0 .75rem;
+    margin: 1rem 0.75rem 0 0.75rem;
     padding: 1.5rem 1rem;
     text-align: center;
     display: none;
 
     &__description {
-      font-size: .75rem;
+      font-size: 0.75rem;
       color: $dove-gray;
-      margin-top: .4rem;
+      margin-top: 0.4rem;
     }
 
     &--disconnected {
@@ -68,7 +68,7 @@
     }
   }
 
-  @media only screen and (min-width : 768px) {
+  @media only screen and (min-width: 768px) {
     //position: fixed;
     top: 0px;
     left: 0px;

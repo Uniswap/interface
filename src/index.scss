@@ -1,10 +1,11 @@
 @import url('https://rsms.me/inter/inter-ui.css');
-@import "./variables.scss";
+@import './variables.scss';
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
-  font-family: "Inter UI", sans-serif;
+  font-family: 'Inter UI', sans-serif;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -21,8 +22,8 @@ html, body {
   overflow-y: auto;
   background-color: $white;
   z-index: 100;
-  -webkit-tap-highlight-color:  rgba(255, 255, 255, 0);
-  @media only screen and (min-width : 768px) {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  @media only screen and (min-width: 768px) {
     justify-content: center;
     align-items: center;
   }
@@ -40,13 +41,17 @@ html, body {
   border: 1px solid transparent; /* Light grey */
   border-top: 1px solid $royal-blue; /* Blue */
   border-radius: 50%;
-  width: .75rem;
-  height: .75rem;
-  margin-right: .25rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-right: 0.25rem;
   animation: spin 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

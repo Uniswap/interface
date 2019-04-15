@@ -1,4 +1,4 @@
-export default function (pattern) {
+export default function(pattern) {
   let mask = {}
   let len = pattern.length
 
