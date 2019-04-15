@@ -198,7 +198,6 @@ class RemoveLiquidity extends Component {
     const {
       t,
       exchangeAddresses: { fromToken },
-      web3,
       selectors,
       account,
     } = this.props;
@@ -215,9 +214,9 @@ class RemoveLiquidity extends Component {
     });
 
     const SLIPPAGE = 0.025;
-    const { value: liquidityBalance, decimals } = getBalance(account, exchangeAddress);
+    const { decimals } = getBalance(account, exchangeAddress);
     const { value: ethReserve } = getBalance(exchangeAddress);
-    const { value: tokenReserve, label, decimals: reserveDecimals } = getBalance(exchangeAddress, tokenAddress);
+    const { value: tokenReserve, label } = getBalance(exchangeAddress, tokenAddress);
 
     const ethPer = ethReserve.dividedBy(totalSupply);
     const tokenPer = tokenReserve.dividedBy(totalSupply);
@@ -377,7 +376,7 @@ class RemoveLiquidity extends Component {
         />
         <OversizedPanel>
           <div className="swap__down-arrow-background">
-            <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} />
+            <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} alt='arrow' />
           </div>
         </OversizedPanel>
         { this.renderOutput() }
@@ -401,7 +400,7 @@ class RemoveLiquidity extends Component {
 
 export default connect(
   state => ({
-    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||1),
+    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId === (process.env.REACT_APP_NETWORK_ID||1),
     web3: state.web3connect.web3,
     balances: state.web3connect.balances,
     account: state.web3connect.account,

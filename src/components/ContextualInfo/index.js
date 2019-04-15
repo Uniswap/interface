@@ -65,12 +65,12 @@ class ContextualInfo extends Component {
         {!this.state.showDetails ? (
           <>
             <span>{openDetailsText}</span>
-            <img src={DropdownBlue} />
+            <img src={DropdownBlue} alt='dropdown' />
           </>
         ) : (
           <>
             <span>{closeDetailsText}</span>
-            <img src={DropupBlue} />
+            <img src={DropupBlue} alt='dropup' />
           </>
         )}
       </div>,
