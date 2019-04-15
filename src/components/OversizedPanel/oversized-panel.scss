@@ -5,12 +5,12 @@
   background-color: $concrete-gray;
   width: calc(100% - 1rem);
   margin: 0 auto;
-  border-radius: .625rem;
+  border-radius: 0.625rem;
 
   &__top {
-    content: "";
+    content: '';
     position: absolute;
-    top: -.5rem;
+    top: -0.5rem;
     left: 0;
     height: 1rem;
     width: 100%;

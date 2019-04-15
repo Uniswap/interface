@@ -1,12 +1,12 @@
-@import "../../variables.scss";
+@import '../../variables.scss';
 
 .web3-status {
   @extend %row-nowrap;
   height: 2rem;
-  font-size: .9rem;
+  font-size: 0.9rem;
   align-items: center;
   border: 1px solid $mercury-gray;
-  padding: .5rem;
+  padding: 0.5rem;
   border-radius: 2rem;
   color: $dove-gray;
   font-weight: 400;
@@ -22,9 +22,9 @@
   &__text {
     flex: 1 1 auto;
     overflow: hidden;
-    margin-right: .75rem;
-    margin-left: .25rem;
-    font-size: .75rem;
+    margin-right: 0.75rem;
+    margin-left: 0.25rem;
+    font-size: 0.75rem;
   }
 
   &__pending-container {
@@ -38,7 +38,6 @@
     border: 1px solid $royal-blue;
   }
 }
-
 
 .pending-modal {
   background-color: $white;
@@ -80,12 +79,12 @@
     color: $royal-blue;
     border: 1px solid $royal-blue;
     background-color: $zumthor-blue;
-    padding: .5rem .75rem;;
+    padding: 0.5rem 0.75rem;
     border-radius: 100px;
-    font-size: .75rem;
+    font-size: 0.75rem;
 
     & > .loading {
-      margin-right: .5rem;
+      margin-right: 0.5rem;
     }
   }
 
@@ -95,7 +94,6 @@
     padding: 1rem 1.5rem 0.25rem 1.5rem;
   }
 }
-
 
 .pending-modal-appear {
   bottom: 0;

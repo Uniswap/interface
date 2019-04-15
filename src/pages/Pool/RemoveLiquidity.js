@@ -1,21 +1,21 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import classnames from "classnames";
-import { connect } from 'react-redux';
-import { BigNumber as BN } from 'bignumber.js';
-import { withNamespaces } from 'react-i18next';
-import NavigationTabs from "../../components/NavigationTabs";
-import ModeSelector from "./ModeSelector";
-import CurrencyInputPanel from "../../components/CurrencyInputPanel";
-import { selectors, addPendingTx } from '../../ducks/web3connect';
-import ContextualInfo from "../../components/ContextualInfo";
-import OversizedPanel from "../../components/OversizedPanel";
-import ArrowDownBlue from "../../assets/images/arrow-down-blue.svg";
-import ArrowDownGrey from "../../assets/images/arrow-down-grey.svg";
-import { getBlockDeadline } from '../../helpers/web3-utils';
-import { retry } from '../../helpers/promise-utils';
-import EXCHANGE_ABI from "../../abi/exchange";
-import ReactGA from "react-ga";
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import classnames from 'classnames'
+import { connect } from 'react-redux'
+import { BigNumber as BN } from 'bignumber.js'
+import { withNamespaces } from 'react-i18next'
+import NavigationTabs from '../../components/NavigationTabs'
+import ModeSelector from './ModeSelector'
+import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import { selectors, addPendingTx } from '../../ducks/web3connect'
+import ContextualInfo from '../../components/ContextualInfo'
+import OversizedPanel from '../../components/OversizedPanel'
+import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
+import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
+import { getBlockDeadline } from '../../helpers/web3-utils'
+import { retry } from '../../helpers/promise-utils'
+import EXCHANGE_ABI from '../../abi/exchange'
+import ReactGA from 'react-ga'
 
 class RemoveLiquidity extends Component {
   static propTypes = {
@@ -23,220 +23,242 @@ class RemoveLiquidity extends Component {
     balances: PropTypes.object,
     web3: PropTypes.object,
     exchangeAddresses: PropTypes.shape({
-      fromToken: PropTypes.object.isRequired,
-    }).isRequired,
-  };
+      fromToken: PropTypes.object.isRequired
+    }).isRequired
+  }
 
   state = {
     tokenAddress: '',
     value: '',
-    totalSupply: BN(0),
-  };
+    totalSupply: BN(0)
+  }
 
   reset() {
     this.setState({
-      value: '',
-    });
+      value: ''
+    })
   }
 
   validate() {
-    const { tokenAddress, value } = this.state;
-    const { t, account, selectors, exchangeAddresses: { fromToken }, web3 } = this.props;
-    const exchangeAddress = fromToken[tokenAddress];
+    const { tokenAddress, value } = this.state
+    const {
+      t,
+      account,
+      selectors,
+      exchangeAddresses: { fromToken },
+      web3
+    } = this.props
+    const exchangeAddress = fromToken[tokenAddress]
 
     if (!web3 || !exchangeAddress || !account || !value) {
       return {
-        isValid: false,
-      };
+        isValid: false
+      }
     }
 
-    const { getBalance } = selectors();
+    const { getBalance } = selectors()
 
-    const { value: liquidityBalance, decimals: liquidityDecimals } = getBalance(account, exchangeAddress);
+    const { value: liquidityBalance, decimals: liquidityDecimals } = getBalance(account, exchangeAddress)
 
     if (liquidityBalance.isLessThan(BN(value).multipliedBy(10 ** liquidityDecimals))) {
-      return { isValid: false, errorMessage: t("insufficientBalance") };
+      return { isValid: false, errorMessage: t('insufficientBalance') }
     }
 
     return {
-      isValid: true,
-    };
+      isValid: true
+    }
   }
 
   onTokenSelect = async tokenAddress => {
-    const { exchangeAddresses: { fromToken }, web3 } = this.props;
-    const exchangeAddress = fromToken[tokenAddress];
-    this.setState({ tokenAddress });
+    const {
+      exchangeAddresses: { fromToken },
+      web3
+    } = this.props
+    const exchangeAddress = fromToken[tokenAddress]
+    this.setState({ tokenAddress })
 
     if (!web3 || !exchangeAddress) {
-      return;
+      return
     }
 
-    const exchange = new web3.eth.Contract(EXCHANGE_ABI, exchangeAddress);
+    const exchange = new web3.eth.Contract(EXCHANGE_ABI, exchangeAddress)
 
-    const totalSupply = await exchange.methods.totalSupply().call();
+    const totalSupply = await exchange.methods.totalSupply().call()
     this.setState({
-      totalSupply: BN(totalSupply),
-    });
-  };
+      totalSupply: BN(totalSupply)
+    })
+  }
 
   onInputChange = value => {
-    this.setState({ value });
-  };
+    this.setState({ value })
+  }
 
   onRemoveLiquidity = async () => {
-    const { tokenAddress, value: input, totalSupply } = this.state;
+    const { tokenAddress, value: input, totalSupply } = this.state
     const {
       exchangeAddresses: { fromToken },
       web3,
       selectors,
-      account,
-    } = this.props;
-    const exchangeAddress = fromToken[tokenAddress];
-    const { getBalance } = selectors();
+      account
+    } = this.props
+    const exchangeAddress = fromToken[tokenAddress]
+    const { getBalance } = selectors()
     if (!web3 || !exchangeAddress) {
-      return;
+      return
     }
-    const exchange = new web3.eth.Contract(EXCHANGE_ABI, exchangeAddress);
-    const SLIPPAGE = .02;
-    const { decimals } = getBalance(account, exchangeAddress);
-    const { value: ethReserve } = getBalance(exchangeAddress);
-    const { value: tokenReserve } = getBalance(exchangeAddress, tokenAddress);
-    const amount = BN(input).multipliedBy(10 ** decimals);
+    const exchange = new web3.eth.Contract(EXCHANGE_ABI, exchangeAddress)
+    const SLIPPAGE = 0.02
+    const { decimals } = getBalance(account, exchangeAddress)
+    const { value: ethReserve } = getBalance(exchangeAddress)
+    const { value: tokenReserve } = getBalance(exchangeAddress, tokenAddress)
+    const amount = BN(input).multipliedBy(10 ** decimals)
 
-    const ownership = amount.dividedBy(totalSupply);
-    const ethWithdrawn = ethReserve.multipliedBy(ownership);
-    const tokenWithdrawn = tokenReserve.multipliedBy(ownership);
-    let deadline;
+    const ownership = amount.dividedBy(totalSupply)
+    const ethWithdrawn = ethReserve.multipliedBy(ownership)
+    const tokenWithdrawn = tokenReserve.multipliedBy(ownership)
+    let deadline
     try {
-      deadline = await retry(() => getBlockDeadline(web3, 600));
-    } catch(e) {
+      deadline = await retry(() => getBlockDeadline(web3, 600))
+    } catch (e) {
       // TODO: Handle error.
-      return;
+      return
     }
 
-    exchange.methods.removeLiquidity(
-      amount.toFixed(0),
-      ethWithdrawn.multipliedBy(1 - SLIPPAGE).toFixed(0),
-      tokenWithdrawn.multipliedBy(1 - SLIPPAGE).toFixed(0),
-      deadline,
-    ).send({ from: account }, (err, data) => {
-      if (data) {
-        this.reset();
+    exchange.methods
+      .removeLiquidity(
+        amount.toFixed(0),
+        ethWithdrawn.multipliedBy(1 - SLIPPAGE).toFixed(0),
+        tokenWithdrawn.multipliedBy(1 - SLIPPAGE).toFixed(0),
+        deadline
+      )
+      .send({ from: account }, (err, data) => {
+        if (data) {
+          this.reset()
 
-        this.props.addPendingTx(data);
-        ReactGA.event({
-          category: 'Pool',
-          action: 'RemoveLiquidity',
-        });
-      }
-    });
-  };
+          this.props.addPendingTx(data)
+          ReactGA.event({
+            category: 'Pool',
+            action: 'RemoveLiquidity'
+          })
+        }
+      })
+  }
 
   getBalance = () => {
     const {
       exchangeAddresses: { fromToken },
       account,
       web3,
-      selectors,
-    } = this.props;
+      selectors
+    } = this.props
 
-    const { tokenAddress } = this.state;
+    const { tokenAddress } = this.state
 
     if (!web3) {
-      return '';
+      return ''
     }
 
-    const exchangeAddress = fromToken[tokenAddress];
+    const exchangeAddress = fromToken[tokenAddress]
     if (!exchangeAddress) {
-      return '';
+      return ''
     }
-    const { value, decimals } = selectors().getBalance(account, exchangeAddress);
+    const { value, decimals } = selectors().getBalance(account, exchangeAddress)
     if (!decimals) {
-      return '';
+      return ''
     }
 
-    return `Balance: ${value.dividedBy(10 ** decimals).toFixed(7)}`;
-  };
+    return `Balance: ${value.dividedBy(10 ** decimals).toFixed(7)}`
+  }
 
   renderSummary(errorMessage) {
-    const { t, selectors, exchangeAddresses: { fromToken } } = this.props;
     const {
-      value: input,
-      tokenAddress,
-    } = this.state;
-    const inputIsZero = BN(input).isZero();
-    let contextualInfo = '';
-    let isError = false;
+      t,
+      selectors,
+      exchangeAddresses: { fromToken }
+    } = this.props
+    const { value: input, tokenAddress } = this.state
+    const inputIsZero = BN(input).isZero()
+    let contextualInfo = ''
+    let isError = false
 
     if (errorMessage) {
-      contextualInfo = errorMessage;
-      isError = true;
+      contextualInfo = errorMessage
+      isError = true
     } else if (!tokenAddress) {
-      contextualInfo = t("selectTokenCont");
+      contextualInfo = t('selectTokenCont')
     } else if (inputIsZero) {
-      contextualInfo = t("noZero");
+      contextualInfo = t('noZero')
     } else if (!input) {
-      const { label } = selectors().getTokenBalance(tokenAddress, fromToken[tokenAddress]);
-      contextualInfo = t("enterLabelCont", { label });
+      const { label } = selectors().getTokenBalance(tokenAddress, fromToken[tokenAddress])
+      contextualInfo = t('enterLabelCont', { label })
     }
 
     return (
       <ContextualInfo
         key="context-info"
-        openDetailsText={t("transactionDetails")}
-        closeDetailsText={t("hideDetails")}
+        openDetailsText={t('transactionDetails')}
+        closeDetailsText={t('hideDetails')}
         contextualInfo={contextualInfo}
         isError={isError}
         renderTransactionDetails={this.renderTransactionDetails}
       />
-    );
+    )
   }
 
   renderTransactionDetails = () => {
-    const { tokenAddress, value: input, totalSupply } = this.state;
+    const { tokenAddress, value: input, totalSupply } = this.state
     const {
       t,
       exchangeAddresses: { fromToken },
       selectors,
-      account,
-    } = this.props;
-    const exchangeAddress = fromToken[tokenAddress];
-    const { getBalance } = selectors();
+      account
+    } = this.props
+    const exchangeAddress = fromToken[tokenAddress]
+    const { getBalance } = selectors()
 
     if (!exchangeAddress) {
-      return null;
+      return null
     }
 
     ReactGA.event({
       category: 'TransactionDetail',
-      action: 'Open',
-    });
+      action: 'Open'
+    })
 
-    const SLIPPAGE = 0.025;
-    const { decimals } = getBalance(account, exchangeAddress);
-    const { value: ethReserve } = getBalance(exchangeAddress);
-    const { value: tokenReserve, label } = getBalance(exchangeAddress, tokenAddress);
+    const SLIPPAGE = 0.025
+    const { decimals } = getBalance(account, exchangeAddress)
+    const { value: ethReserve } = getBalance(exchangeAddress)
+    const { value: tokenReserve, label } = getBalance(exchangeAddress, tokenAddress)
 
-    const ethPer = ethReserve.dividedBy(totalSupply);
-    const tokenPer = tokenReserve.dividedBy(totalSupply);
+    const ethPer = ethReserve.dividedBy(totalSupply)
+    const tokenPer = tokenReserve.dividedBy(totalSupply)
 
-    const ethWithdrawn = ethPer.multipliedBy(input);
+    const ethWithdrawn = ethPer.multipliedBy(input)
 
-    const tokenWithdrawn = tokenPer.multipliedBy(input);
-    const minTokenWithdrawn = tokenWithdrawn.multipliedBy(1 - SLIPPAGE).toFixed(7);
-    const maxTokenWithdrawn = tokenWithdrawn.multipliedBy(1 + SLIPPAGE).toFixed(7);
+    const tokenWithdrawn = tokenPer.multipliedBy(input)
+    const minTokenWithdrawn = tokenWithdrawn.multipliedBy(1 - SLIPPAGE).toFixed(7)
+    const maxTokenWithdrawn = tokenWithdrawn.multipliedBy(1 + SLIPPAGE).toFixed(7)
 
-    const adjTotalSupply = totalSupply.dividedBy(10 ** decimals).minus(input);
+    const adjTotalSupply = totalSupply.dividedBy(10 ** decimals).minus(input)
 
     return (
       <div>
-        <div className="pool__summary-modal__item">{t("youAreRemoving")} {b(`${+BN(ethWithdrawn).toFixed(7)} ETH`)} {t("and")} {b(`${+minTokenWithdrawn} - ${+maxTokenWithdrawn} ${label}`)} {t("outPool")}</div>
-        <div className="pool__summary-modal__item">{t("youWillRemove")} {b(+input)} {t("liquidityTokens")}</div>
-        <div className="pool__summary-modal__item">{t("totalSupplyIs")} {b(+adjTotalSupply.toFixed(7))}</div>
-        <div className="pool__summary-modal__item">{t("tokenWorth")} {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH {t("and")} {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
+        <div className="pool__summary-modal__item">
+          {t('youAreRemoving')} {b(`${+BN(ethWithdrawn).toFixed(7)} ETH`)} {t('and')}{' '}
+          {b(`${+minTokenWithdrawn} - ${+maxTokenWithdrawn} ${label}`)} {t('outPool')}
+        </div>
+        <div className="pool__summary-modal__item">
+          {t('youWillRemove')} {b(+input)} {t('liquidityTokens')}
+        </div>
+        <div className="pool__summary-modal__item">
+          {t('totalSupplyIs')} {b(+adjTotalSupply.toFixed(7))}
+        </div>
+        <div className="pool__summary-modal__item">
+          {t('tokenWorth')} {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH {t('and')}{' '}
+          {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}
+        </div>
       </div>
-    );
+    )
   }
 
   renderOutput() {
@@ -245,80 +267,77 @@ class RemoveLiquidity extends Component {
       exchangeAddresses: { fromToken },
       account,
       web3,
-      selectors,
-    } = this.props;
-    const { getBalance } = selectors();
+      selectors
+    } = this.props
+    const { getBalance } = selectors()
 
-    const { tokenAddress, totalSupply, value: input } = this.state;
+    const { tokenAddress, totalSupply, value: input } = this.state
 
     const blank = [
       <CurrencyInputPanel
         key="remove-liquidity-input"
-        title={t("output")}
-        description={`(${t("estimated")})`}
-        renderInput={() => (
-          <div className="remove-liquidity__output"></div>
-        )}
+        title={t('output')}
+        description={`(${t('estimated')})`}
+        renderInput={() => <div className="remove-liquidity__output" />}
         disableTokenSelect
         disableUnlock
       />,
       <OversizedPanel key="remove-liquidity-input-under" hideBottom>
         <div className="pool__summary-panel">
           <div className="pool__exchange-rate-wrapper">
-            <span className="pool__exchange-rate">{t("exchangeRate")}</span>
+            <span className="pool__exchange-rate">{t('exchangeRate')}</span>
             <span> - </span>
           </div>
           <div className="pool__exchange-rate-wrapper">
-            <span className="swap__exchange-rate">{t("currentPoolSize")}</span>
+            <span className="swap__exchange-rate">{t('currentPoolSize')}</span>
             <span> - </span>
           </div>
           <div className="pool__exchange-rate-wrapper">
-            <span className="swap__exchange-rate">{t("yourPoolShare")}</span>
+            <span className="swap__exchange-rate">{t('yourPoolShare')}</span>
             <span> - </span>
           </div>
         </div>
       </OversizedPanel>
-    ];
+    ]
 
-    const exchangeAddress = fromToken[tokenAddress];
+    const exchangeAddress = fromToken[tokenAddress]
     if (!exchangeAddress || !web3) {
-      return blank;
+      return blank
     }
 
-    const { value: liquidityBalance } = getBalance(account, exchangeAddress);
-    const { value: ethReserve } = getBalance(exchangeAddress);
-    const { value: tokenReserve, decimals: tokenDecimals, label } = getBalance(exchangeAddress, tokenAddress);
+    const { value: liquidityBalance } = getBalance(account, exchangeAddress)
+    const { value: ethReserve } = getBalance(exchangeAddress)
+    const { value: tokenReserve, decimals: tokenDecimals, label } = getBalance(exchangeAddress, tokenAddress)
 
     if (!tokenDecimals) {
-      return blank;
+      return blank
     }
 
-    const ownership = liquidityBalance.dividedBy(totalSupply);
-    const ethPer = ethReserve.dividedBy(totalSupply);
-    const tokenPer = tokenReserve.multipliedBy(10 ** (18 - tokenDecimals)).dividedBy(totalSupply);
-    const exchangeRate = tokenReserve.multipliedBy(10 ** (18 - tokenDecimals)).div(ethReserve);
+    const ownership = liquidityBalance.dividedBy(totalSupply)
+    const ethPer = ethReserve.dividedBy(totalSupply)
+    const tokenPer = tokenReserve.multipliedBy(10 ** (18 - tokenDecimals)).dividedBy(totalSupply)
+    const exchangeRate = tokenReserve.multipliedBy(10 ** (18 - tokenDecimals)).div(ethReserve)
 
-    const ownedEth = ethPer.multipliedBy(liquidityBalance).dividedBy(10 ** 18);
-    const ownedToken = tokenPer.multipliedBy(liquidityBalance).dividedBy(10 ** tokenDecimals);
+    const ownedEth = ethPer.multipliedBy(liquidityBalance).dividedBy(10 ** 18)
+    const ownedToken = tokenPer.multipliedBy(liquidityBalance).dividedBy(10 ** tokenDecimals)
 
     return [
       <CurrencyInputPanel
-        title={t("output")}
-        description={`(${t("estimated")})`}
+        title={t('output')}
+        description={`(${t('estimated')})`}
         key="remove-liquidity-input"
-        renderInput={() => input
-          ? (
+        renderInput={() =>
+          input ? (
             <div className="remove-liquidity__output">
-              <div className="remove-liquidity__output-text">
-                {`${ethPer.multipliedBy(input).toFixed(3)} ETH`}
-              </div>
+              <div className="remove-liquidity__output-text">{`${ethPer.multipliedBy(input).toFixed(3)} ETH`}</div>
               <div className="remove-liquidity__output-plus"> + </div>
               <div className="remove-liquidity__output-text">
                 {`${tokenPer.multipliedBy(input).toFixed(3)} ${label}`}
               </div>
             </div>
+          ) : (
+            <div className="remove-liquidity__output" />
           )
-          : <div className="remove-liquidity__output" />
         }
         disableTokenSelect
         disableUnlock
@@ -326,46 +345,46 @@ class RemoveLiquidity extends Component {
       <OversizedPanel key="remove-liquidity-input-under" hideBottom>
         <div className="pool__summary-panel">
           <div className="pool__exchange-rate-wrapper">
-            <span className="pool__exchange-rate">{t("exchangeRate")}</span>
-            <span>
-              {`1 ETH = ${exchangeRate.toFixed(4)} ${label}`}
-            </span>
+            <span className="pool__exchange-rate">{t('exchangeRate')}</span>
+            <span>{`1 ETH = ${exchangeRate.toFixed(4)} ${label}`}</span>
           </div>
           <div className="pool__exchange-rate-wrapper">
-            <span className="swap__exchange-rate">{t("currentPoolSize")}</span>
-            <span>{`${ethReserve.dividedBy(10 ** 18).toFixed(2)} ETH + ${tokenReserve.dividedBy(10 ** tokenDecimals).toFixed(2)} ${label}`}</span>
+            <span className="swap__exchange-rate">{t('currentPoolSize')}</span>
+            <span>{`${ethReserve.dividedBy(10 ** 18).toFixed(2)} ETH + ${tokenReserve
+              .dividedBy(10 ** tokenDecimals)
+              .toFixed(2)} ${label}`}</span>
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">
-              {t("yourPoolShare")} ({ownership.multipliedBy(100).toFixed(2)}%)
+              {t('yourPoolShare')} ({ownership.multipliedBy(100).toFixed(2)}%)
             </span>
             <span>{`${ownedEth.toFixed(2)} ETH + ${ownedToken.toFixed(2)} ${label}`}</span>
           </div>
         </div>
       </OversizedPanel>
-    ];
+    ]
   }
 
   render() {
-    const { t, isConnected } = this.props;
-    const { tokenAddress, value } = this.state;
-    const { isValid, errorMessage } = this.validate();
+    const { t, isConnected } = this.props
+    const { tokenAddress, value } = this.state
+    const { isValid, errorMessage } = this.validate()
 
     return [
       <div
         key="content"
         className={classnames('swap__content', {
-          'swap--inactive': !isConnected,
+          'swap--inactive': !isConnected
         })}
       >
         <NavigationTabs
           className={classnames('header__navigation', {
-            'header--inactive': !isConnected,
+            'header--inactive': !isConnected
           })}
         />
-        <ModeSelector title={t("removeLiquidity")} />
+        <ModeSelector title={t('removeLiquidity')} />
         <CurrencyInputPanel
-          title={t("poolTokens")}
+          title={t('poolTokens')}
           extraText={this.getBalance(tokenAddress)}
           onValueChange={this.onInputChange}
           value={value}
@@ -376,41 +395,42 @@ class RemoveLiquidity extends Component {
         />
         <OversizedPanel>
           <div className="swap__down-arrow-background">
-            <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} alt='arrow' />
+            <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} alt="arrow" />
           </div>
         </OversizedPanel>
-        { this.renderOutput() }
-        { this.renderSummary(errorMessage) }
+        {this.renderOutput()}
+        {this.renderSummary(errorMessage)}
         <div className="pool__cta-container">
           <button
             className={classnames('pool__cta-btn', {
               'swap--inactive': !isConnected,
-              'pool__cta-btn--inactive': !isValid,
+              'pool__cta-btn--inactive': !isValid
             })}
             disabled={!isValid}
             onClick={this.onRemoveLiquidity}
           >
-            {t("removeLiquidity")}
+            {t('removeLiquidity')}
           </button>
         </div>
       </div>
-    ];
+    ]
   }
 }
 
 export default connect(
   state => ({
-    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId === (process.env.REACT_APP_NETWORK_ID||1),
+    isConnected:
+      Boolean(state.web3connect.account) && state.web3connect.networkId === (process.env.REACT_APP_NETWORK_ID || 1),
     web3: state.web3connect.web3,
     balances: state.web3connect.balances,
     account: state.web3connect.account,
-    exchangeAddresses: state.addresses.exchangeAddresses,
+    exchangeAddresses: state.addresses.exchangeAddresses
   }),
   dispatch => ({
     selectors: () => dispatch(selectors()),
-    addPendingTx: id => dispatch(addPendingTx(id)),
+    addPendingTx: id => dispatch(addPendingTx(id))
   })
-)(withNamespaces()(RemoveLiquidity));
+)(withNamespaces()(RemoveLiquidity))
 
 function b(text) {
   return <span className="swap__highlight-text">{text}</span>

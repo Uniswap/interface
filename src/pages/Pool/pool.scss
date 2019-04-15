@@ -1,4 +1,4 @@
-@import "../../variables.scss";
+@import '../../variables.scss';
 
 .pool {
   @extend %col-nowrap;
@@ -8,16 +8,16 @@
   &__liquidity-container {
     @extend %row-nowrap;
     align-items: center;
-    font-size: .75rem;
-    padding: .625rem 1rem;
-    font-size: .75rem;
+    font-size: 0.75rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.75rem;
     color: $royal-blue;
     font-weight: 500;
     cursor: pointer;
 
     img {
-      height: .75rem;
-      width: .75rem;
+      height: 0.75rem;
+      width: 0.75rem;
     }
   }
 
@@ -38,8 +38,8 @@
     @extend %row-nowrap;
     align-items: center;
     color: $dove-gray;
-    font-size: .75rem;
-    padding: .25rem 1rem 0;
+    font-size: 0.75rem;
+    padding: 0.25rem 1rem 0;
   }
 
   &__exchange-rate {
@@ -64,25 +64,25 @@
   &__new-exchange-warning {
     padding: 1rem;
     margin-bottom: 2rem;
-    border: 1px solid rgba($pizazz-orange, .4);
-    background-color: rgba($pizazz-orange, .1);
+    border: 1px solid rgba($pizazz-orange, 0.4);
+    background-color: rgba($pizazz-orange, 0.1);
     border-radius: 1rem;
   }
 
   &__new-exchange-warning-text {
-    font-size: .75rem;
+    font-size: 0.75rem;
     line-height: 1rem;
     text-align: center;
 
     &:first-child {
-      padding-bottom: .3rem;
+      padding-bottom: 0.3rem;
       font-weight: 500;
     }
   }
 
   &__summary-item {
     &:not(:last-child) {
-      margin-bottom: .5rem;
+      margin-bottom: 0.5rem;
     }
   }
 }
@@ -97,9 +97,9 @@
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
   transition: 250ms ease-in-out;
-  padding: 1rem 0 .5rem;
+  padding: 1rem 0 0.5rem;
 
-  @media only screen and (min-width : 768px) {
+  @media only screen and (min-width: 768px) {
     max-width: 560px;
     position: absolute;
     margin-left: auto;
@@ -149,9 +149,9 @@
   }
 
   &__summary-text {
-    font-size: .75rem;
+    font-size: 0.75rem;
   }
-  
+
   &--error {
     color: $salmon-red;
   }
@@ -166,7 +166,7 @@
   &__output-text {
     font-size: 1.25rem;
     line-height: 1.5rem;
-    padding: 1rem .75rem;
+    padding: 1rem 0.75rem;
   }
 
   &__output-plus {
