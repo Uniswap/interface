@@ -2,26 +2,26 @@ $white: #fff;
 $black: #000;
 
 // Gray
-$concrete-gray: #FAFAFA;
-$mercury-gray: #E1E1E1;
-$silver-gray: #C4C4C4;
-$chalice-gray: #AEAEAE;
+$concrete-gray: #fafafa;
+$mercury-gray: #e1e1e1;
+$silver-gray: #c4c4c4;
+$chalice-gray: #aeaeae;
 $dove-gray: #737373;
-$mine-shaft-gray: #2B2B2B;
+$mine-shaft-gray: #2b2b2b;
 
 // Blue
-$zumthor-blue: #EBF4FF;
-$malibu-blue: #5CA2FF;
-$royal-blue: #2F80ED;
+$zumthor-blue: #ebf4ff;
+$malibu-blue: #5ca2ff;
+$royal-blue: #2f80ed;
 
 // Purple
-$wisteria-purple: #DC6BE5;
+$wisteria-purple: #dc6be5;
 
 // Red
-$salmon-red: #FF6871;
+$salmon-red: #ff6871;
 
 // Orange
-$pizazz-orange: #FF8F05;
+$pizazz-orange: #ff8f05;
 
 %col-nowrap {
   display: flex;
@@ -57,7 +57,6 @@ $pizazz-orange: #FF8F05;
   &:disabled {
     background-color: $mercury-gray;
   }
-
 }
 
 %borderless-input {
@@ -67,7 +66,6 @@ $pizazz-orange: #FF8F05;
   border: none;
   flex: 1 1 auto;
   width: 0;
-
 
   &::placeholder {
     color: $mercury-gray;

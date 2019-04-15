@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-import { CSSTransitionGroup } from 'react-transition-group';
-import './modal.scss';
+import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
+import { CSSTransitionGroup } from 'react-transition-group'
+import './modal.scss'
 
-const modalRoot = document.querySelector('#modal-root');
+const modalRoot = document.querySelector('#modal-root')
 
 export default class Modal extends Component {
   static propTypes = {
-    onClose: PropTypes.func.isRequired,
-  };
+    onClose: PropTypes.func.isRequired
+  }
 
   componentDidMount() {
     // The portal element is inserted in the DOM tree after
@@ -28,7 +28,7 @@ export default class Modal extends Component {
     setTimeout(() => {
       // modalRoot.style.display = 'none';
       // modalRoot.removeChild(this.el);
-    }, 500);
+    }, 500)
   }
 
   render() {
@@ -46,7 +46,7 @@ export default class Modal extends Component {
         </CSSTransitionGroup>
         {this.props.children}
       </div>,
-      modalRoot,
-    );
+      modalRoot
+    )
   }
 }

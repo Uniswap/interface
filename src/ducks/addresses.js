@@ -2,30 +2,30 @@ const RINKEBY = {
   factoryAddress: '0xf5D915570BC477f9B8D6C0E980aA81757A3AaC36',
   exchangeAddresses: {
     addresses: [
-      ['BAT','0x9B913956036a3462330B0642B20D3879ce68b450'],
-      ['DAI','0x77dB9C915809e7BE439D2AB21032B1b8B58F6891'],
-      ['MKR','0x93bB63aFe1E0180d0eF100D774B473034fd60C36'],
-      ['OMG','0x26C226EBb6104676E593F8A070aD6f25cDa60F8D'],
+      ['BAT', '0x9B913956036a3462330B0642B20D3879ce68b450'],
+      ['DAI', '0x77dB9C915809e7BE439D2AB21032B1b8B58F6891'],
+      ['MKR', '0x93bB63aFe1E0180d0eF100D774B473034fd60C36'],
+      ['OMG', '0x26C226EBb6104676E593F8A070aD6f25cDa60F8D']
       // ['ZRX','0xaBD44a1D1b9Fb0F39fE1D1ee6b1e2a14916D067D'],
     ],
     fromToken: {
       '0xDA5B056Cfb861282B4b59d29c9B395bcC238D29B': '0x9B913956036a3462330B0642B20D3879ce68b450',
       '0x2448eE2641d78CC42D7AD76498917359D961A783': '0x77dB9C915809e7BE439D2AB21032B1b8B58F6891',
       '0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85': '0x93bB63aFe1E0180d0eF100D774B473034fd60C36',
-      '0x879884c3C46A24f56089f3bBbe4d5e38dB5788C0': '0x26C226EBb6104676E593F8A070aD6f25cDa60F8D',
+      '0x879884c3C46A24f56089f3bBbe4d5e38dB5788C0': '0x26C226EBb6104676E593F8A070aD6f25cDa60F8D'
       // '0xF22e3F33768354c9805d046af3C0926f27741B43': '0xaBD44a1D1b9Fb0F39fE1D1ee6b1e2a14916D067D',
-    },
+    }
   },
   tokenAddresses: {
     addresses: [
-      ['BAT','0xDA5B056Cfb861282B4b59d29c9B395bcC238D29B'],
-      ['DAI','0x2448eE2641d78CC42D7AD76498917359D961A783'],
-      ['MKR','0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85'],
-      ['OMG','0x879884c3C46A24f56089f3bBbe4d5e38dB5788C0'],
+      ['BAT', '0xDA5B056Cfb861282B4b59d29c9B395bcC238D29B'],
+      ['DAI', '0x2448eE2641d78CC42D7AD76498917359D961A783'],
+      ['MKR', '0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85'],
+      ['OMG', '0x879884c3C46A24f56089f3bBbe4d5e38dB5788C0']
       // ['ZRX','0xF22e3F33768354c9805d046af3C0926f27741B43'],
-    ],
-  },
-};
+    ]
+  }
+}
 
 const MAIN = {
   factoryAddress: '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95',
@@ -73,7 +73,7 @@ const MAIN = {
       ['WETH', '0xA2881A90Bf33F03E7a3f803765Cd2ED5c8928dFb'],
       ['XCHF', '0x8dE0d002DC83478f479dC31F76cB0a8aa7CcEa17'],
       ['ZIL', '0x7dc095A5CF7D6208CC680fA9866F80a53911041a'],
-      ['ZRX', '0xaE76c84C9262Cdb9abc0C2c8888e62Db8E22A0bF'],
+      ['ZRX', '0xaE76c84C9262Cdb9abc0C2c8888e62Db8E22A0bF']
     ],
     fromToken: {
       '0x960b236A07cf122663c4303350609A66A7B288C0': '0x077d52B047735976dfdA76feF74d4d988AC25196',
@@ -118,8 +118,8 @@ const MAIN = {
       '0x05f4a42e251f2d52b8ed15E9FEdAacFcEF1FAD27': '0x7dc095A5CF7D6208CC680fA9866F80a53911041a',
       '0xE41d2489571d322189246DaFA5ebDe1F4699F498': '0xaE76c84C9262Cdb9abc0C2c8888e62Db8E22A0bF',
       '0x3772f9716Cf6D7a09edE3587738AA2af5577483a': '0x5d8888a212d033cff5f2e0ac24ad91a5495bad62',
-      '0x0cbe2df57ca9191b64a7af3baa3f946fa7df2f25': '0xa1ecdcca26150cf69090280ee2ee32347c238c7b',
-    },
+      '0x0cbe2df57ca9191b64a7af3baa3f946fa7df2f25': '0xa1ecdcca26150cf69090280ee2ee32347c238c7b'
+    }
   },
   tokenAddresses: {
     addresses: [
@@ -165,94 +165,90 @@ const MAIN = {
       ['WETH', '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'],
       ['XCHF', '0xB4272071eCAdd69d933AdcD19cA99fe80664fc08'],
       ['ZIL', '0x05f4a42e251f2d52b8ed15E9FEdAacFcEF1FAD27'],
-      ['ZRX', '0xE41d2489571d322189246DaFA5ebDe1F4699F498'],
-    ],
-  },
-};
+      ['ZRX', '0xE41d2489571d322189246DaFA5ebDe1F4699F498']
+    ]
+  }
+}
 
-const SET_ADDRESSES = 'app/addresses/setAddresses';
-const ADD_EXCHANGE = 'app/addresses/addExchange';
+const SET_ADDRESSES = 'app/addresses/setAddresses'
+const ADD_EXCHANGE = 'app/addresses/addExchange'
 
-const initialState = RINKEBY;
+const initialState = RINKEBY
 
-export const addExchange = ({label, exchangeAddress, tokenAddress}) => (dispatch, getState) => {
-  const { addresses: { tokenAddresses, exchangeAddresses } } = getState();
+export const addExchange = ({ label, exchangeAddress, tokenAddress }) => (dispatch, getState) => {
+  const {
+    addresses: { tokenAddresses, exchangeAddresses }
+  } = getState()
 
-  if (tokenAddresses.addresses.filter(([ symbol ]) => symbol === label).length) {
-    return;
+  if (tokenAddresses.addresses.filter(([symbol]) => symbol === label).length) {
+    return
   }
 
   if (exchangeAddresses.fromToken[tokenAddresses]) {
-    return;
+    return
   }
 
   dispatch({
     type: ADD_EXCHANGE,
-      payload: {
+    payload: {
       label,
-        exchangeAddress,
-        tokenAddress,
-    },
-  });
-};
+      exchangeAddress,
+      tokenAddress
+    }
+  })
+}
 
 export const setAddresses = networkId => {
-  switch(networkId) {
+  switch (networkId) {
     // Main Net
     case 1:
     case '1':
       return {
         type: SET_ADDRESSES,
-        payload: MAIN,
-      };
+        payload: MAIN
+      }
     // Rinkeby
     case 4:
     case '4':
     default:
       return {
         type: SET_ADDRESSES,
-        payload: RINKEBY,
-      };
+        payload: RINKEBY
+      }
   }
-};
+}
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
     case SET_ADDRESSES:
-      return payload;
+      return payload
     case ADD_EXCHANGE:
-      return handleAddExchange(state, { payload });
+      return handleAddExchange(state, { payload })
     default:
-      return state;
+      return state
   }
 }
 
 function handleAddExchange(state, { payload }) {
-  const { label, tokenAddress, exchangeAddress } = payload;
+  const { label, tokenAddress, exchangeAddress } = payload
 
   if (!label || !tokenAddress || !exchangeAddress) {
-    return state;
+    return state
   }
 
   return {
     ...state,
     exchangeAddresses: {
       ...state.exchangeAddresses,
-      addresses: [
-        ...state.exchangeAddresses.addresses,
-        [label, exchangeAddress]
-      ],
+      addresses: [...state.exchangeAddresses.addresses, [label, exchangeAddress]],
       fromToken: {
         ...state.exchangeAddresses.fromToken,
-        [tokenAddress]: exchangeAddress,
-      },
+        [tokenAddress]: exchangeAddress
+      }
     },
     tokenAddresses: {
       ...state.tokenAddresses,
-      addresses: [
-        ...state.tokenAddresses.addresses,
-        [label, tokenAddress]
-      ],
-    },
-  };
+      addresses: [...state.tokenAddresses.addresses, [label, tokenAddress]]
+    }
+  }
 }

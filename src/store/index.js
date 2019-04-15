@@ -1,3 +1,3 @@
-import store from './store.dev';
+import store from './store.dev'
 
-export default store;
+export default store

@@ -1,4 +1,4 @@
-@import "../../variables.scss";
+@import '../../variables.scss';
 
 .swap {
   @extend %col-nowrap;
@@ -6,22 +6,22 @@
   background-color: $white;
 
   &--inactive {
-    opacity: .5;
+    opacity: 0.5;
   }
 
   &__content {
-    padding: 1rem .75rem;
+    padding: 1rem 0.75rem;
     flex: 1 1 auto;
     height: 0;
     overflow-y: auto;
   }
 
   &__down-arrow {
-    width: .625rem;
-    height: .625rem;
+    width: 0.625rem;
+    height: 0.625rem;
     position: relative;
     z-index: 200;
-    padding: .875rem;
+    padding: 0.875rem;
 
     &--clickable {
       cursor: pointer;
@@ -38,8 +38,8 @@
     @extend %row-nowrap;
     align-items: center;
     color: $dove-gray;
-    font-size: .75rem;
-    padding: .5rem 1rem;
+    font-size: 0.75rem;
+    padding: 0.5rem 1rem;
   }
 
   &__exchange-rate {

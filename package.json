@@ -42,9 +42,18 @@
     "build": "react-scripts build",
     "build:rinkeby": "REACT_APP_NETWORK_ID=4 REACT_APP_NETWORK='Rinkeby Test Network' yarn build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint:base": "yarn eslint './src/**/*.{js,jsx}'",
+    "format:base": "yarn prettier './src/**/*.{js,jsx,scss}'",
+    "lint": "yarn lint:base --fix",
+    "format": "yarn format:base --write",
+    "check:lint": "yarn lint:base",
+    "check:format": "yarn format:base --check",
+    "check:all": "yarn check:lint && yarn check:format"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "prettier": "^1.17.0"
+  },
   "browserslist": [
     ">0.2%",
     "not dead",
