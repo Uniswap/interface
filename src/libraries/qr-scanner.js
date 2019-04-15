@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /*
  @asset(/libraries/qr-scanner/qr-scanner-worker.min.js) */
 'use strict';export default class QrScanner{constructor(video,onDecode,canvasSize=QrScanner.DEFAULT_CANVAS_SIZE){this.$video=video;this.$canvas=document.createElement("canvas");this._onDecode=onDecode;this._active=false;this.$canvas.width=canvasSize;this.$canvas.height=canvasSize;this._sourceRect={x:0,y:0,width:canvasSize,height:canvasSize};this.$video.addEventListener("canplay",()=>this._updateSourceRect());this.$video.addEventListener("play",()=>{this._updateSourceRect();this._scanFrame()},false);

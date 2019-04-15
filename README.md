@@ -1,4 +1,7 @@
 # Uniswap Frontend
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/fa110555-b3c7-4eeb-b840-88a835009c62/deploy-status)](https://app.netlify.com/sites/uniswap/deploys)
+
 This an an open source interface for Uniswap - a protocol for decentralized exchange of Ethereum tokens.
 
 * Website: [uniswap.io/](https://uniswap.io/)

@@ -220,7 +220,7 @@ export const sync = () => async (dispatch, getState) => {
     watched,
     contracts,
     networkId,
-    transactions: { pending, confirmed },
+    transactions: { pending },
   } = getState().web3connect;
 
   // Sync Account
