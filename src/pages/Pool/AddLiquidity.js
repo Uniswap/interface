@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { withNamespaces } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import OversizedPanel from '../../components/OversizedPanel'
 import ContextualInfo from '../../components/ContextualInfo'
@@ -644,7 +644,7 @@ export default connect(
     selectors: () => dispatch(selectors()),
     addPendingTx: id => dispatch(addPendingTx(id))
   })
-)(withNamespaces()(AddLiquidity))
+)(withTranslation()(AddLiquidity))
 
 function b(text) {
   return <span className="swap__highlight-text">{text}</span>

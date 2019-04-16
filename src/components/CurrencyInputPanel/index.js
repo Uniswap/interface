@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { CSSTransitionGroup } from 'react-transition-group'
 import classnames from 'classnames'
 import { withRouter } from 'react-router-dom'
-import { withNamespaces } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import Fuse from '../../helpers/fuse'
 import Modal from '../Modal'
 import TokenLogo from '../TokenLogo'
@@ -394,5 +394,5 @@ export default withRouter(
       addPendingTx: opts => dispatch(addPendingTx(opts)),
       addApprovalTx: opts => dispatch(addApprovalTx(opts))
     })
-  )(withNamespaces()(CurrencyInputPanel))
+  )(withTranslation()(CurrencyInputPanel))
 )
