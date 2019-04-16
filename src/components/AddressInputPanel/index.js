@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import c from 'classnames'
 
-import QrCode from '../QrCode'
+// import QrCode from '../QrCode' // commented out pending further review
 import './address-input-panel.scss'
 
 class AddressInputPanel extends Component {
@@ -46,9 +46,11 @@ class AddressInputPanel extends Component {
               />
             </div>
           </div>
+          {/* commented out pending further review
           <div className="address-input-panel__qr-container">
             <QrCode onValueReceived={value => onChange(value)} />
           </div>
+          */}
         </div>
       </div>
     )
