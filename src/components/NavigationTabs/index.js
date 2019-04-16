@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { withNamespaces } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { dismissBetaMessage } from '../../ducks/app'
 import { Tab, Tabs } from '../Tab'
 
@@ -62,5 +62,5 @@ export default withRouter(
     dispatch => ({
       dismissBetaMessage: () => dispatch(dismissBetaMessage())
     })
-  )(withNamespaces()(NavigationTabs))
+  )(withTranslation()(NavigationTabs))
 )

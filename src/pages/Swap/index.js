@@ -5,7 +5,7 @@ import classnames from 'classnames'
 import { BigNumber as BN } from 'bignumber.js'
 import MediaQuery from 'react-responsive'
 import ReactGA from 'react-ga'
-import { withNamespaces } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { selectors, addPendingTx } from '../../ducks/web3connect'
 import Header from '../../components/Header'
 import NavigationTabs from '../../components/NavigationTabs'
@@ -810,7 +810,7 @@ export default connect(
     selectors: () => dispatch(selectors()),
     addPendingTx: id => dispatch(addPendingTx(id))
   })
-)(withNamespaces()(Swap))
+)(withTranslation()(Swap))
 
 const b = text => <span className="swap__highlight-text">{text}</span>
 

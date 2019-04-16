@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
 import { BigNumber as BN } from 'bignumber.js'
-import { withNamespaces } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import NavigationTabs from '../../components/NavigationTabs'
 import ModeSelector from './ModeSelector'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -430,7 +430,7 @@ export default connect(
     selectors: () => dispatch(selectors()),
     addPendingTx: id => dispatch(addPendingTx(id))
   })
-)(withNamespaces()(RemoveLiquidity))
+)(withTranslation()(RemoveLiquidity))
 
 function b(text) {
   return <span className="swap__highlight-text">{text}</span>

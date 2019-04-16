@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import classnames from 'classnames'
 import UAParser from 'ua-parser-js'
-import { withNamespaces } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import Logo from '../Logo'
 import CoinbaseWalletLogo from '../../assets/images/coinbase-wallet-logo.png'
 import TrustLogo from '../../assets/images/trust-wallet-logo.svg'
@@ -168,4 +168,4 @@ export default connect(state => ({
   isConnected: !!state.web3connect.account,
   web3: state.web3connect.web3,
   networkId: state.web3connect.networkId
-}))(withNamespaces()(Header))
+}))(withTranslation()(Header))

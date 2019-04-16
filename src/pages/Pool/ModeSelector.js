@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
-import { withNamespaces } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import OversizedPanel from '../../components/OversizedPanel'
 import Dropdown from '../../assets/images/dropdown-blue.svg'
 import Modal from '../../components/Modal'
@@ -80,4 +80,4 @@ class ModeSelector extends Component {
   }
 }
 
-export default withRouter(withNamespaces()(ModeSelector))
+export default withRouter(withTranslation()(ModeSelector))
