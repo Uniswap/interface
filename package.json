@@ -20,7 +20,6 @@
     "react-ga": "^2.5.7",
     "react-i18next": "^10.7.0",
     "react-redux": "^5.0.7",
-    "react-responsive": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "react-scripts": "^2.1.8",
     "react-transition-group": "1.x",

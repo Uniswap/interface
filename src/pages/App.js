@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
-import MediaQuery from 'react-responsive'
+
 import { startWatching, initialize } from '../ducks/web3connect'
 import { setAddresses } from '../ducks/addresses'
 import Header from '../components/Header'
@@ -39,9 +39,7 @@ class App extends Component {
 
     return (
       <div id="app-container">
-        <MediaQuery query="(min-width: 768px)">
-          <Header />
-        </MediaQuery>
+        <Header />
         <BrowserRouter>
           <div className="app__wrapper">
             <Switch>
@@ -50,7 +48,7 @@ class App extends Component {
               <Route exact path="/add-liquidity" component={Pool} />
               <Route exact path="/remove-liquidity" component={Pool} />
               <Route exact path="/create-exchange/:tokenAddress?" component={Pool} />
-              <Redirect exact from="/" to="/swap" />
+              <Redirect to="/swap" />
             </Switch>
           </div>
         </BrowserRouter>

@@ -4,8 +4,9 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { BigNumber as BN } from 'bignumber.js'
 import { withTranslation } from 'react-i18next'
+import ReactGA from 'react-ga'
+
 import { selectors, addPendingTx } from '../../ducks/web3connect'
-import Header from '../../components/Header'
 import NavigationTabs from '../../components/NavigationTabs'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -18,8 +19,6 @@ import { retry } from '../../helpers/promise-utils'
 import EXCHANGE_ABI from '../../abi/exchange'
 
 import './send.scss'
-import MediaQuery from 'react-responsive'
-import ReactGA from 'react-ga'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -752,9 +751,6 @@ class Send extends Component {
 
     return (
       <div className="send">
-        <MediaQuery query="(max-width: 767px)">
-          <Header />
-        </MediaQuery>
         <div
           className={classnames('swap__content', {
             'swap--inactive': !this.props.isConnected
