@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 import MediaQuery from 'react-responsive'
-import { Web3Connect, startWatching, initialize } from '../ducks/web3connect'
+import { startWatching, initialize } from '../ducks/web3connect'
 import { setAddresses } from '../ducks/addresses'
 import Header from '../components/Header'
 import Swap from './Swap'
@@ -42,7 +42,6 @@ class App extends Component {
         <MediaQuery query="(min-width: 768px)">
           <Header />
         </MediaQuery>
-        <Web3Connect />
         <BrowserRouter>
           <div className="app__wrapper">
             <Switch>

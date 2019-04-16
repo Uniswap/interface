@@ -1,6 +1,3 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import { BigNumber as BN } from 'bignumber.js'
 import Web3 from 'web3'
 import ERC20_ABI from '../abi/erc20'
@@ -530,32 +527,3 @@ export default function web3connectReducer(state = initialState, { type, payload
       return state
   }
 }
-
-// Connect Component
-export class _Web3Connect extends Component {
-  static propTypes = {
-    initialize: PropTypes.func.isRequired
-  }
-
-  static defaultProps = {
-    initialize() {}
-  }
-
-  componentWillMount() {
-    this.props.initialize().then(this.props.startWatching())
-  }
-
-  render() {
-    return <noscript />
-  }
-}
-
-export const Web3Connect = connect(
-  ({ web3connect }) => ({
-    web3: web3connect.web3
-  }),
-  dispatch => ({
-    initialize: () => dispatch(initialize()),
-    startWatching: () => dispatch(startWatching())
-  })
-)(_Web3Connect)
