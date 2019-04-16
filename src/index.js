@@ -18,10 +18,10 @@ ReactGA.pageview(window.location.pathname + window.location.search)
 
 ReactDOM.render(
   // catch the suspense in case translations are not yet loaded
-  <Suspense fallback={null}>
-    <Provider store={store}>
+  <Provider store={store}>
+    <Suspense fallback={null}>
       <App />
-    </Provider>
-  </Suspense>,
+    </Suspense>
+  </Provider>,
   document.getElementById('root')
 )
