@@ -634,7 +634,8 @@ class AddLiquidity extends Component {
 export default connect(
   state => ({
     isConnected:
-      Boolean(state.web3connect.account) && state.web3connect.networkId === (process.env.REACT_APP_NETWORK_ID || 1),
+      Boolean(state.web3connect.account) &&
+      state.web3connect.networkId === (Number(process.env.REACT_APP_NETWORK_ID) || 1),
     account: state.web3connect.account,
     balances: state.web3connect.balances,
     web3: state.web3connect.web3,

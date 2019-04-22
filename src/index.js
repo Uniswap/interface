@@ -17,9 +17,9 @@ if (process.env.NODE_ENV === 'production') {
 ReactGA.pageview(window.location.pathname + window.location.search)
 
 const { InjectedConnector, NetworkOnlyConnector } = Connectors
-const Injected = new InjectedConnector({ supportedNetworks: [1] })
+const Injected = new InjectedConnector({ supportedNetworks: [Number(process.env.REACT_APP_NETWORK_ID) || 1] })
 const Infura = new NetworkOnlyConnector({
-  providerURL: 'https://mainnet.infura.io/v3/60ab76e16df54c808e50a79975b4779f'
+  providerURL: process.env.REACT_APP_NETWORK_URL || ''
 })
 const connectors = { Injected, Infura }
 

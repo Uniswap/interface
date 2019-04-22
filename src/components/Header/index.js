@@ -97,7 +97,7 @@ function BaseBlockingWarning({ title, description, children }) {
 function BlockingWarning() {
   const { t } = useTranslation()
 
-  const correctNetwork = 'Main Ethereum Network'
+  const correctNetwork = process.env.REACT_APP_NETWORK_NAME || 'Main Ethereum Network'
   const context = useWeb3Context()
 
   if (context.error && context.error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {

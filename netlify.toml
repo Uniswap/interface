@@ -1,3 +1,12 @@
+# set environment variables
+[build]
+  environment = {
+    REACT_APP_NETWORK_ID: "1"
+    REACT_APP_NETWORK_URL: "https://mainnet.infura.io/v3/60ab76e16df54c808e50a79975b4779f"
+    REACT_APP_NETWORK_NAME: "Main Ethereum Network"
+  }
+
+# support SPA setup
 [[redirects]]
   from = "/*"
   to = "/index.html"

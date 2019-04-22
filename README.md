@@ -16,23 +16,21 @@ This an an open source interface for Uniswap - a protocol for decentralized exch
 
 ## To Start Development
 
-###### Installing dependencies
+### Install dependencies
 
 ```bash
 yarn
 ```
 
-###### Running locally on Rinkeby
+### Run
 
 ```bash
+yarn start
+# or
 yarn start:rinkeby
 ```
 
-###### Running locally on other testnet
-
-```bash
-REACT_APP_NETWORK_ID=2 REACT_APP_NETWORK='Ropsten Test Network' yarn start
-```
+More robust support for other testnets is in the works!
 
 ## Contributions
 
