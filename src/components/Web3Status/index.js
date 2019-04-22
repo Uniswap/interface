@@ -138,7 +138,6 @@ Web3Status.defaultProps = {
 export default connect(state => {
   return {
     address: state.web3connect.account,
-    isConnected: !!(state.web3connect.web3 && state.web3connect.account),
     pending: state.web3connect.transactions.pending,
     confirmed: state.web3connect.transactions.confirmed
   }

@@ -3,8 +3,9 @@ import Web3 from 'web3'
 import ERC20_ABI from '../abi/erc20'
 import ERC20_WITH_BYTES_ABI from '../abi/erc20_symbol_bytes32'
 
-export const INITIALIZE = 'we3connect/initialize'
-export const UPDATE_ACCOUNT = 'we3connect/updateAccount'
+export const INITIALIZE = 'web3connect/initialize'
+export const INITIALIZE_WEB3 = 'web3connect/initializeWeb3'
+export const UPDATE_ACCOUNT = 'web3connect/updateAccount'
 export const WATCH_ETH_BALANCE = 'web3connect/watchEthBalance'
 export const WATCH_TOKEN_BALANCE = 'web3connect/watchTokenBalance'
 export const UPDATE_ETH_BALANCE = 'web3connect/updateEthBalance'
@@ -60,10 +61,6 @@ export const selectors = () => (dispatch, getState) => {
   }
 
   const getBalance = (address, tokenAddress) => {
-    if (process.env.NODE_ENV !== 'production' && !tokenAddress) {
-      console.warn('No token address found - return ETH balance')
-    }
-
     if (!tokenAddress || tokenAddress === 'ETH') {
       const balance = state.balances.ethereum[address]
       if (!balance) {
@@ -103,46 +100,29 @@ const Balance = (value, label = '', decimals = 0) => ({
   decimals: +decimals
 })
 
-export const initialize = () => (dispatch, getState) => {
-  const { web3connect } = getState()
+export const initialize = () => async dispatch => {
+  await dispatch({ type: INITIALIZE })
+}
 
-  return new Promise(async (resolve, reject) => {
-    if (web3connect.web3) {
-      resolve(web3connect.web3)
-      return
-    }
+export const updateNetwork = (passedProvider, networkId) => async dispatch => {
+  const web3 = new Web3(passedProvider)
 
-    if (typeof window.ethereum !== 'undefined') {
-      try {
-        const web3 = new Web3(window.ethereum)
-        await window.ethereum.enable()
-        dispatch({
-          type: INITIALIZE,
-          payload: web3
-        })
-        resolve(web3)
-        return
-      } catch (error) {
-        console.error('User denied access.')
-        dispatch({ type: INITIALIZE })
-        reject()
-        return
-      }
-    }
+  const dispatches = [
+    dispatch({ type: INITIALIZE_WEB3, payload: web3 }),
+    dispatch({ type: UPDATE_NETWORK_ID, payload: networkId })
+  ]
 
-    if (typeof window.web3 !== 'undefined') {
-      const web3 = new Web3(window.web3.currentProvider)
-      dispatch({
-        type: INITIALIZE,
-        payload: web3
-      })
-      resolve(web3)
-      return
-    }
+  await Promise.all(dispatches)
+}
 
-    dispatch({ type: INITIALIZE })
-    reject()
-  })
+export const updateAccount = account => async dispatch => {
+  const dispatches = [dispatch({ type: UPDATE_ACCOUNT, payload: account })]
+
+  if (account !== null) {
+    dispatches.push(dispatch(watchBalance({ balanceOf: account })))
+  }
+
+  await Promise.all(dispatches)
 }
 
 export const watchBalance = ({ balanceOf, tokenAddress }) => (dispatch, getState) => {
@@ -213,28 +193,13 @@ export const updateApprovals = ({ tokenAddress, tokenOwner, spender, balance }) 
 
 export const sync = () => async (dispatch, getState) => {
   const { getBalance, getApprovals } = dispatch(selectors())
-  const web3 = await dispatch(initialize())
+
   const {
-    account,
+    web3,
     watched,
     contracts,
-    networkId,
     transactions: { pending }
   } = getState().web3connect
-
-  // Sync Account
-  const accounts = await web3.eth.getAccounts()
-  if (account !== accounts[0]) {
-    dispatch({ type: UPDATE_ACCOUNT, payload: accounts[0] })
-    dispatch(watchBalance({ balanceOf: accounts[0] }))
-  }
-
-  if (!networkId) {
-    dispatch({
-      type: UPDATE_NETWORK_ID,
-      payload: await web3.eth.net.getId()
-    })
-  }
 
   // Sync Ethereum Balances
   watched.balances.ethereum.forEach(async address => {
@@ -261,7 +226,6 @@ export const sync = () => async (dispatch, getState) => {
     }
 
     const contract = contracts[tokenAddress] || new web3.eth.Contract(ERC20_ABI, tokenAddress)
-    const contractBytes32 = contracts[tokenAddress] || new web3.eth.Contract(ERC20_WITH_BYTES_ABI, tokenAddress)
 
     if (!contracts[tokenAddress]) {
       dispatch({
@@ -288,6 +252,7 @@ export const sync = () => async (dispatch, getState) => {
             .catch())
       } catch (e) {
         try {
+          const contractBytes32 = new web3.eth.Contract(ERC20_WITH_BYTES_ABI, tokenAddress)
           symbol =
             symbol ||
             web3.utils.hexToString(
@@ -317,7 +282,6 @@ export const sync = () => async (dispatch, getState) => {
   // Update Approvals
   Object.entries(watched.approvals).forEach(([tokenAddress, token]) => {
     const contract = contracts[tokenAddress] || new web3.eth.Contract(ERC20_ABI, tokenAddress)
-    const contractBytes32 = contracts[tokenAddress] || new web3.eth.Contract(ERC20_WITH_BYTES_ABI, tokenAddress)
 
     Object.entries(token).forEach(([tokenOwnerAddress, tokenOwner]) => {
       tokenOwner.forEach(async spenderAddress => {
@@ -329,6 +293,7 @@ export const sync = () => async (dispatch, getState) => {
           symbol = symbol || (await contract.methods.symbol().call())
         } catch (e) {
           try {
+            const contractBytes32 = new web3.eth.Contract(ERC20_WITH_BYTES_ABI, tokenAddress)
             symbol = symbol || web3.utils.hexToString(await contractBytes32.methods.symbol().call())
           } catch (err) {}
         }
@@ -381,22 +346,25 @@ export const sync = () => async (dispatch, getState) => {
   })
 }
 
-export const startWatching = () => async (dispatch, getState) => {
-  const { account } = getState().web3connect
-  const timeout = !account ? 1000 : 5000
-
-  dispatch(sync())
-  setTimeout(() => dispatch(startWatching()), timeout)
+export const startWatching = () => async dispatch => {
+  await dispatch(sync())
+  setTimeout(() => dispatch(startWatching()), 5000)
 }
 
 export default function web3connectReducer(state = initialState, { type, payload }) {
   switch (type) {
+    case INITIALIZE_WEB3:
+      return {
+        ...state,
+        web3: payload
+      }
     case INITIALIZE:
       return {
         ...state,
-        web3: payload,
         initialized: true
       }
+    case UPDATE_NETWORK_ID:
+      return { ...state, networkId: payload }
     case UPDATE_ACCOUNT:
       return {
         ...state,
@@ -493,8 +461,6 @@ export default function web3connectReducer(state = initialState, { type, payload
           }
         }
       }
-    case UPDATE_NETWORK_ID:
-      return { ...state, networkId: payload }
     case ADD_PENDING_TX:
       return {
         ...state,

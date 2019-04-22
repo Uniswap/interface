@@ -16,6 +16,9 @@ i18next
     backend: {
       loadPath: './locales/{{lng}}.json'
     },
+    react: {
+      useSuspense: false
+    },
     fallbackLng: 'en',
     keySeparator: false,
     interpolation: {

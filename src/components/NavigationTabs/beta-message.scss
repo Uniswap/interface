@@ -2,6 +2,7 @@
 
 .beta-message {
   @extend %row-nowrap;
+  cursor: pointer;
   flex: 1 0 auto;
   align-items: center;
   position: relative;
