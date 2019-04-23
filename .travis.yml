@@ -11,5 +11,5 @@ cache:
 install: yarn
 script:
   - yarn check:all
-  - CI=false yarn build
+  - yarn build
   - yarn test
