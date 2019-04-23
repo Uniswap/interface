@@ -16,20 +16,18 @@ export default function Pool() {
   return (
     <div className="pool">
       <Switch>
-        <Route exact strict path="/pool/add-liquidity" component={AddLiquidity} />
-        <Route exact strict path="/pool/remove-liquidity" component={RemoveLiquidity} />
-        <Route exact strict path="/pool/create-exchange" component={CreateExchange} />
+        <Route exact strict path="/add-liquidity" component={AddLiquidity} />
+        <Route exact strict path="/remove-liquidity" component={RemoveLiquidity} />
+        <Route exact strict path="/create-exchange" component={CreateExchange} />
         <Route
-          path="/pool/create-exchange/:tokenAddress"
+          path="/create-exchange/:tokenAddress"
           render={({ match }) => {
             return (
-              <Redirect
-                to={{ pathname: '/pool/create-exchange', state: { tokenAddress: match.params.tokenAddress } }}
-              />
+              <Redirect to={{ pathname: '/create-exchange', state: { tokenAddress: match.params.tokenAddress } }} />
             )
           }}
         />
-        <Redirect to="/pool/add-liquidity" />
+        <Redirect to="/add-liquidity" />
       </Switch>
     </div>
   )

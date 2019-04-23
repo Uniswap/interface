@@ -76,7 +76,10 @@ function App({ initialized, setAddresses, updateNetwork, updateAccount, initiali
               <Switch>
                 <Route exact strict path="/swap" component={Swap} />
                 <Route exact strict path="/send" component={Send} />
-                <Route path="/pool(.*)?" component={Pool} />
+                <Route
+                  path={['/add-liquidity', '/remove-liquidity', '/create-exchange', '/create-exchange/:tokenAddress?']}
+                  component={Pool}
+                />
                 <Redirect to="/swap" />
               </Switch>
             </BrowserRouter>
