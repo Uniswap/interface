@@ -39,7 +39,7 @@ class NavigationTabs extends Component {
         <Tabs className={className}>
           {this.renderTab(t('swap'), '/swap', /swap/)}
           {this.renderTab(t('send'), '/send', /send/)}
-          {this.renderTab(t('pool'), '/add-liquidity', /add-liquidity|remove-liquidity|create-exchange/)}
+          {this.renderTab(t('pool'), '/pool/add-liquidity', /.*(add-liquidity|remove-liquidity|create-exchange)/)}
         </Tabs>
         {showBetaMessage && (
           <div className="beta-message" onClick={dismissBetaMessage}>

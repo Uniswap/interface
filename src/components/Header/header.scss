@@ -3,6 +3,10 @@
 .header {
   @extend %col-nowrap;
 
+  &__no-decoration {
+    text-decoration: none;
+  }
+
   &__top {
     @extend %row-nowrap;
     padding: 1.25rem 0.75rem;
@@ -25,10 +29,6 @@
 
   &__navigation {
     margin-bottom: 1rem;
-  }
-
-  &--inactive {
-    opacity: 0.5;
   }
 
   &__dialog {

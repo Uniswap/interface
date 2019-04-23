@@ -26,11 +26,11 @@ class ModeSelector extends Component {
 
     switch (view) {
       case ADD:
-        return history.push('/add-liquidity')
+        return history.push('/pool/add-liquidity')
       case REMOVE:
-        return history.push('/remove-liquidity')
+        return history.push('/pool/remove-liquidity')
       case CREATE:
-        return history.push('/create-exchange')
+        return history.push('/pool/create-exchange')
       default:
         return
     }

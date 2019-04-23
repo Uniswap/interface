@@ -13584,10 +13584,10 @@ web3-providers@1.0.0-beta.52:
     websocket "^1.0.28"
     xhr2-cookies "1.1.0"
 
-web3-react@^5.0.2:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/web3-react/-/web3-react-5.0.2.tgz#68355c9c780d846481560019a2b911332093c45a"
-  integrity sha512-KAATYBDRFmIEjrPmqdfsxGAcXf/VkjFuN1EBXcAXNx8GyBbRJA08wM+6QEgsUP7cN3trkTDr5QARpTnsUuUEYA==
+web3-react@^5.0.4:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/web3-react/-/web3-react-5.0.4.tgz#6006ee51c17255707f73d927f16eb48857957034"
+  integrity sha512-K9Bz+CojWOt3Fiya9SRkYmDsTPjT4vuEs5JQCfEyWH9wWVrXJgGMQxglq5RNfRWBhqgN0PmDMLeYiERQcNt/6g==
   dependencies:
     "@0x/subproviders" "^4.0.5"
 

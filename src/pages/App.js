@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 import { useWeb3Context, Connectors } from 'web3-react'
@@ -6,12 +6,11 @@ import { useWeb3Context, Connectors } from 'web3-react'
 import { updateNetwork, updateAccount, initialize, startWatching } from '../ducks/web3connect'
 import { setAddresses } from '../ducks/addresses'
 import Header from '../components/Header'
+import Swap from './Swap'
+import Send from './Send'
+import Pool from './Pool'
 
 import './App.scss'
-
-const Swap = lazy(() => import('./Swap'))
-const Send = lazy(() => import('./Send'))
-const Pool = lazy(() => import('./Pool'))
 
 const { Connector, InjectedConnector } = Connectors
 
@@ -32,9 +31,13 @@ function App({ initialized, setAddresses, updateNetwork, updateAccount, initiali
   // if the metamask user logs out, set the infura provider
   useEffect(() => {
     if (context.error && context.error.code === InjectedConnector.errorCodes.UNLOCK_REQUIRED) {
-      context.setConnector('Infura')
+      if (context.connectorName) {
+        context.unsetConnector()
+      } else {
+        context.setConnector('Infura')
+      }
     }
-  }, [context.connectorName, context.error])
+  }, [context.error, context.connectorName])
 
   // initialize redux network
   const [reduxNetworkInitialized, setReduxNetworkInitialized] = useState(false)
@@ -67,19 +70,15 @@ function App({ initialized, setAddresses, updateNetwork, updateAccount, initiali
     return (
       <div id="app-container">
         <Header />
-        {!!(initialized && context.active && context.account) && (
+        {!!(initialized && context.active) && (
           <div className="app__wrapper">
             <BrowserRouter>
-              <Suspense fallback={null}>
-                <Switch>
-                  <Route exact strict path="/swap" component={Swap} />
-                  <Route exact strict path="/send" component={Send} />
-                  <Route exact strict path="/add-liquidity" component={Pool} />
-                  <Route exact strict path="/remove-liquidity" component={Pool} />
-                  <Route exact strict path="/create-exchange/:tokenAddress?" component={Pool} />
-                  <Redirect to="/swap" />
-                </Switch>
-              </Suspense>
+              <Switch>
+                <Route exact strict path="/swap" component={Swap} />
+                <Route exact strict path="/send" component={Send} />
+                <Route path="/pool(.*)?" component={Pool} />
+                <Redirect to="/swap" />
+              </Switch>
             </BrowserRouter>
           </div>
         )}

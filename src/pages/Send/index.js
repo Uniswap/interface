@@ -3,12 +3,13 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { BigNumber as BN } from 'bignumber.js'
-import { withTranslation } from 'react-i18next'
+import { withTranslation, useTranslation } from 'react-i18next'
 import ReactGA from 'react-ga'
+import { useWeb3Context } from 'web3-react'
 
 import { selectors, addPendingTx } from '../../ducks/web3connect'
-import NavigationTabs from '../../components/NavigationTabs'
 import AddressInputPanel from '../../components/AddressInputPanel'
+import NavigationTabs from '../../components/NavigationTabs'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import ContextualInfo from '../../components/ContextualInfo'
 import OversizedPanel from '../../components/OversizedPanel'
@@ -26,7 +27,6 @@ const OUTPUT = 1
 class Send extends Component {
   static propTypes = {
     account: PropTypes.string,
-    isConnected: PropTypes.bool.isRequired,
     selectors: PropTypes.func.isRequired,
     web3: PropTypes.object.isRequired
   }
@@ -582,7 +582,10 @@ class Send extends Component {
     let contextualInfo = ''
     let isError = false
 
-    if (inputError || outputError) {
+    if (!account) {
+      contextualInfo = t('noWallet')
+      isError = true
+    } else if (inputError || outputError) {
       contextualInfo = inputError || outputError
       isError = true
     } else if (!inputCurrency || !outputCurrency) {
@@ -751,16 +754,8 @@ class Send extends Component {
 
     return (
       <div className="send">
-        <div
-          className={classnames('swap__content', {
-            'swap--inactive': !this.props.isConnected
-          })}
-        >
-          <NavigationTabs
-            className={classnames('header__navigation', {
-              'header--inactive': !this.props.isConnected
-            })}
-          />
+        <div className="swap__content">
+          <NavigationTabs className="header__navigation" />
 
           <CurrencyInputPanel
             title={t('input')}
@@ -808,15 +803,7 @@ class Send extends Component {
           {this.renderExchangeRate()}
           {this.renderSummary(inputError, outputError)}
           <div className="swap__cta-container">
-            <button
-              className={classnames('swap__cta-btn', {
-                'swap--inactive': !this.props.isConnected
-              })}
-              disabled={!isValid}
-              onClick={this.onSend}
-            >
-              {t('send')}
-            </button>
+            <SendButton callOnClick={this.onSend} />
           </div>
         </div>
       </div>
@@ -824,11 +811,27 @@ class Send extends Component {
   }
 }
 
+function SendButton({ callOnClick }) {
+  const { t } = useTranslation()
+  const context = useWeb3Context()
+
+  const isActive = context.active && context.account
+  return (
+    <button
+      className={classnames('swap__cta-btn', {
+        'swap--inactive': !isActive
+      })}
+      disabled={!isActive}
+      onClick={callOnClick}
+    >
+      {t('send')}
+    </button>
+  )
+}
+
 export default connect(
   state => ({
     balances: state.web3connect.balances,
-    isConnected:
-      !!state.web3connect.account && state.web3connect.networkId === (Number(process.env.REACT_APP_NETWORK_ID) || 1),
     account: state.web3connect.account,
     web3: state.web3connect.web3,
     exchangeAddresses: state.addresses.exchangeAddresses

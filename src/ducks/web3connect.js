@@ -22,7 +22,7 @@ const initialState = {
   web3: null,
   networkId: 0,
   initialized: false,
-  account: '',
+  account: null,
   balances: {
     ethereum: {}
   },
@@ -116,13 +116,14 @@ export const updateNetwork = (passedProvider, networkId) => async dispatch => {
 }
 
 export const updateAccount = account => async dispatch => {
-  const dispatches = [dispatch({ type: UPDATE_ACCOUNT, payload: account })]
-
   if (account !== null) {
-    dispatches.push(dispatch(watchBalance({ balanceOf: account })))
-  }
+    const dispatches = [
+      dispatch({ type: UPDATE_ACCOUNT, payload: account }),
+      dispatch(watchBalance({ balanceOf: account }))
+    ]
 
-  await Promise.all(dispatches)
+    await Promise.all(dispatches)
+  }
 }
 
 export const watchBalance = ({ balanceOf, tokenAddress }) => (dispatch, getState) => {
@@ -285,31 +286,31 @@ export const sync = () => async (dispatch, getState) => {
 
     Object.entries(token).forEach(([tokenOwnerAddress, tokenOwner]) => {
       tokenOwner.forEach(async spenderAddress => {
-        const approvalBalance = getApprovals(tokenAddress, tokenOwnerAddress, spenderAddress)
-        const balance = await contract.methods.allowance(tokenOwnerAddress, spenderAddress).call()
-        const decimals = approvalBalance.decimals || (await contract.methods.decimals().call())
-        let symbol = approvalBalance.label
-        try {
-          symbol = symbol || (await contract.methods.symbol().call())
-        } catch (e) {
+        if (tokenOwnerAddress !== null && tokenOwnerAddress !== 'null') {
+          const approvalBalance = getApprovals(tokenAddress, tokenOwnerAddress, spenderAddress)
+          const balance = await contract.methods.allowance(tokenOwnerAddress, spenderAddress).call()
+          const decimals = approvalBalance.decimals || (await contract.methods.decimals().call())
+          let symbol = approvalBalance.label
           try {
-            const contractBytes32 = new web3.eth.Contract(ERC20_WITH_BYTES_ABI, tokenAddress)
-            symbol = symbol || web3.utils.hexToString(await contractBytes32.methods.symbol().call())
-          } catch (err) {}
+            symbol = symbol || (await contract.methods.symbol().call())
+          } catch (e) {
+            try {
+              const contractBytes32 = new web3.eth.Contract(ERC20_WITH_BYTES_ABI, tokenAddress)
+              symbol = symbol || web3.utils.hexToString(await contractBytes32.methods.symbol().call())
+            } catch (err) {}
+          }
+          if (approvalBalance.label && approvalBalance.value.isEqualTo(BN(balance))) {
+            return
+          }
+          dispatch(
+            updateApprovals({
+              tokenAddress,
+              tokenOwner: tokenOwnerAddress,
+              spender: spenderAddress,
+              balance: Balance(balance, symbol, decimals)
+            })
+          )
         }
-
-        if (approvalBalance.label && approvalBalance.value.isEqualTo(BN(balance))) {
-          return
-        }
-
-        dispatch(
-          updateApprovals({
-            tokenAddress,
-            tokenOwner: tokenOwnerAddress,
-            spender: spenderAddress,
-            balance: Balance(balance, symbol, decimals)
-          })
-        )
       })
     })
   })

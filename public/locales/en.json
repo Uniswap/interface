@@ -70,6 +70,7 @@
   "invalidDecimals": "Invalid decimals",
   "tokenAddress": "Token Address",
   "label": "Label",
+  "symbol": "Symbol",
   "decimals": "Decimals",
   "enterTokenCont": "Enter a token address to continue"
 }

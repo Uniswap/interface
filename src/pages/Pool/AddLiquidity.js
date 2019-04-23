@@ -2,7 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { withTranslation } from 'react-i18next'
+import { withTranslation, useTranslation } from 'react-i18next'
+import { useWeb3Context } from 'web3-react'
+import ReactGA from 'react-ga'
+
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import OversizedPanel from '../../components/OversizedPanel'
 import ContextualInfo from '../../components/ContextualInfo'
@@ -15,16 +18,15 @@ import { retry } from '../../helpers/promise-utils'
 import ModeSelector from './ModeSelector'
 import { BigNumber as BN } from 'bignumber.js'
 import EXCHANGE_ABI from '../../abi/exchange'
+
 import './pool.scss'
-import ReactGA from 'react-ga'
 
 const INPUT = 0
 const OUTPUT = 1
 
 class AddLiquidity extends Component {
   static propTypes = {
-    isConnected: PropTypes.bool.isRequired,
-    account: PropTypes.string.isRequired,
+    account: PropTypes.string,
     selectors: PropTypes.func.isRequired,
     balances: PropTypes.object.isRequired,
     exchangeAddresses: PropTypes.shape({
@@ -50,11 +52,10 @@ class AddLiquidity extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const { t, isConnected, account, exchangeAddresses, balances, web3 } = this.props
+    const { t, account, exchangeAddresses, balances, web3 } = this.props
     const { inputValue, outputValue, inputCurrency, outputCurrency, lastEditedField } = this.state
 
     return (
-      isConnected !== nextProps.isConnected ||
       t !== nextProps.t ||
       account !== nextProps.account ||
       exchangeAddresses !== nextProps.exchangeAddresses ||
@@ -434,6 +435,7 @@ class AddLiquidity extends Component {
   renderSummary(inputError, outputError) {
     const {
       t,
+      account,
       selectors,
       exchangeAddresses: { fromToken }
     } = this.props
@@ -444,7 +446,11 @@ class AddLiquidity extends Component {
     let contextualInfo = ''
     let isError = false
     const { label } = selectors().getTokenBalance(outputCurrency, fromToken[outputCurrency])
-    if (inputError || outputError) {
+
+    if (!account) {
+      contextualInfo = t('noWallet')
+      isError = true
+    } else if (inputError || outputError) {
       contextualInfo = inputError || outputError
       isError = true
     } else if (!inputCurrency || !outputCurrency) {
@@ -545,7 +551,6 @@ class AddLiquidity extends Component {
   render() {
     const {
       t,
-      isConnected,
       exchangeAddresses: { fromToken },
       selectors
     } = this.props
@@ -556,17 +561,8 @@ class AddLiquidity extends Component {
     const { label } = selectors().getTokenBalance(outputCurrency, fromToken[outputCurrency])
 
     return [
-      <div
-        key="content"
-        className={classnames('swap__content', {
-          'swap--inactive': !isConnected
-        })}
-      >
-        <NavigationTabs
-          className={classnames('header__navigation', {
-            'header--inactive': !isConnected
-          })}
-        />
+      <div key="content" className={classnames('swap__content')}>
+        <NavigationTabs className={classnames('header__navigation')} />
 
         {this.isNewExchange() ? (
           <div className="pool__new-exchange-warning">
@@ -615,27 +611,33 @@ class AddLiquidity extends Component {
         <OversizedPanel hideBottom>{this.renderInfo()}</OversizedPanel>
         {this.renderSummary(inputError, outputError)}
         <div className="pool__cta-container">
-          <button
-            className={classnames('pool__cta-btn', {
-              'swap--inactive': !this.props.isConnected,
-              'pool__cta-btn--inactive': !isValid
-            })}
-            disabled={!isValid}
-            onClick={this.onAddLiquidity}
-          >
-            {t('addLiquidity')}
-          </button>
+          <AddLiquidityButton callOnClick={this.onAddLiquidity} />
         </div>
       </div>
     ]
   }
 }
 
+function AddLiquidityButton({ callOnClick }) {
+  const { t } = useTranslation()
+  const context = useWeb3Context()
+
+  const isActive = context.active && context.account
+  return (
+    <button
+      className={classnames('pool__cta-btn', {
+        'pool__cta-btn--inactive': !isActive
+      })}
+      disabled={!isActive}
+      onClick={callOnClick}
+    >
+      {t('addLiquidity')}
+    </button>
+  )
+}
+
 export default connect(
   state => ({
-    isConnected:
-      Boolean(state.web3connect.account) &&
-      state.web3connect.networkId === (Number(process.env.REACT_APP_NETWORK_ID) || 1),
     account: state.web3connect.account,
     balances: state.web3connect.balances,
     web3: state.web3connect.web3,

@@ -3,9 +3,12 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
 import { BigNumber as BN } from 'bignumber.js'
-import { withTranslation } from 'react-i18next'
-import NavigationTabs from '../../components/NavigationTabs'
+import { withTranslation, useTranslation } from 'react-i18next'
+import ReactGA from 'react-ga'
+import { useWeb3Context } from 'web3-react'
+
 import ModeSelector from './ModeSelector'
+import NavigationTabs from '../../components/NavigationTabs'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { selectors, addPendingTx } from '../../ducks/web3connect'
 import ContextualInfo from '../../components/ContextualInfo'
@@ -15,7 +18,6 @@ import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
 import { getBlockDeadline } from '../../helpers/web3-utils'
 import { retry } from '../../helpers/promise-utils'
 import EXCHANGE_ABI from '../../abi/exchange'
-import ReactGA from 'react-ga'
 
 class RemoveLiquidity extends Component {
   static propTypes = {
@@ -173,6 +175,7 @@ class RemoveLiquidity extends Component {
   renderSummary(errorMessage) {
     const {
       t,
+      account,
       selectors,
       exchangeAddresses: { fromToken }
     } = this.props
@@ -181,7 +184,10 @@ class RemoveLiquidity extends Component {
     let contextualInfo = ''
     let isError = false
 
-    if (errorMessage) {
+    if (!account) {
+      contextualInfo = t('noWallet')
+      isError = true
+    } else if (errorMessage) {
       contextualInfo = errorMessage
       isError = true
     } else if (!tokenAddress) {
@@ -366,22 +372,13 @@ class RemoveLiquidity extends Component {
   }
 
   render() {
-    const { t, isConnected } = this.props
+    const { t } = this.props
     const { tokenAddress, value } = this.state
     const { isValid, errorMessage } = this.validate()
 
     return [
-      <div
-        key="content"
-        className={classnames('swap__content', {
-          'swap--inactive': !isConnected
-        })}
-      >
-        <NavigationTabs
-          className={classnames('header__navigation', {
-            'header--inactive': !isConnected
-          })}
-        />
+      <div key="content" className="swap__content">
+        <NavigationTabs className="header__navigation" />
         <ModeSelector title={t('removeLiquidity')} />
         <CurrencyInputPanel
           title={t('poolTokens')}
@@ -401,27 +398,33 @@ class RemoveLiquidity extends Component {
         {this.renderOutput()}
         {this.renderSummary(errorMessage)}
         <div className="pool__cta-container">
-          <button
-            className={classnames('pool__cta-btn', {
-              'swap--inactive': !isConnected,
-              'pool__cta-btn--inactive': !isValid
-            })}
-            disabled={!isValid}
-            onClick={this.onRemoveLiquidity}
-          >
-            {t('removeLiquidity')}
-          </button>
+          <RemoveLiquidityButton callOnClick={this.onRemoveLiquidity} />
         </div>
       </div>
     ]
   }
 }
 
+function RemoveLiquidityButton({ callOnClick }) {
+  const { t } = useTranslation()
+  const context = useWeb3Context()
+
+  const isActive = context.active && context.account
+  return (
+    <button
+      className={classnames('pool__cta-btn', {
+        'pool__cta-btn--inactive': !isActive
+      })}
+      disabled={!isActive}
+      onClick={callOnClick}
+    >
+      {t('removeLiquidity')}
+    </button>
+  )
+}
+
 export default connect(
   state => ({
-    isConnected:
-      Boolean(state.web3connect.account) &&
-      state.web3connect.networkId === (Number(process.env.REACT_APP_NETWORK_ID) || 1),
     web3: state.web3connect.web3,
     balances: state.web3connect.balances,
     account: state.web3connect.account,

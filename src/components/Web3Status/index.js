@@ -6,8 +6,10 @@ import Jazzicon from 'jazzicon'
 import { CSSTransitionGroup } from 'react-transition-group'
 import { withTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
-import './web3-status.scss'
+
 import Modal from '../Modal'
+
+import './web3-status.scss'
 
 function getEtherscanLink(tx) {
   return `https://etherscan.io/tx/${tx}`

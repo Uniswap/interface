@@ -151,15 +151,17 @@ export default function Header() {
   return (
     <div className="header">
       <BlockingWarning />
-      <div
-        className={classnames('header__top', {
-          'header--inactive': !(context.active && context.account)
-        })}
-      >
-        <Logo />
+      <div className={classnames('header__top')}>
+        <a className="header__no-decoration" href="https://uniswap.io" target="_blank" rel="noopener noreferrer">
+          <Logo />
+        </a>
+
         <div className="header__center-group">
-          <span className="header__title">Uniswap</span>
+          <a className="header__no-decoration" href="https://uniswap.io" target="_blank" rel="noopener noreferrer">
+            <span className="header__title">Uniswap</span>
+          </a>
         </div>
+
         <Web3Status isConnected={!!(context.active && context.account)} />
       </div>
     </div>
