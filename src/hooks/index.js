@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
 import { useWeb3Context } from 'web3-react'
 
 import FACTORY_ABI from '../abi/factory'
@@ -32,4 +32,20 @@ export function useFactoryContract() {
   const { networkId } = useWeb3Context()
 
   return useContract(factoryAddresses[networkId], FACTORY_ABI)
+}
+
+// modified from https://usehooks.com/useKeyPress/
+export function useBodyKeyDown(targetKey, onKeyDown, suppressOnKeyDown = false) {
+  function downHandler({ target: { tagName }, key }) {
+    if (key === targetKey && tagName === 'BODY' && !suppressOnKeyDown) {
+      onKeyDown()
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('keydown', downHandler)
+    return () => {
+      window.removeEventListener('keydown', downHandler)
+    }
+  }, [targetKey, onKeyDown, suppressOnKeyDown])
 }

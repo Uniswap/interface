@@ -7,8 +7,6 @@ import { withTranslation, useTranslation } from 'react-i18next'
 import ReactGA from 'react-ga'
 import { useWeb3Context } from 'web3-react'
 
-import ModeSelector from './ModeSelector'
-import NavigationTabs from '../../components/NavigationTabs'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { selectors, addPendingTx } from '../../ducks/web3connect'
 import ContextualInfo from '../../components/ContextualInfo'
@@ -376,10 +374,8 @@ class RemoveLiquidity extends Component {
     const { tokenAddress, value } = this.state
     const { isValid, errorMessage } = this.validate()
 
-    return [
-      <div key="content" className="swap__content">
-        <NavigationTabs className="header__navigation" />
-        <ModeSelector title={t('removeLiquidity')} />
+    return (
+      <>
         <CurrencyInputPanel
           title={t('poolTokens')}
           extraText={this.getBalance(tokenAddress)}
@@ -400,8 +396,8 @@ class RemoveLiquidity extends Component {
         <div className="pool__cta-container">
           <RemoveLiquidityButton callOnClick={this.onRemoveLiquidity} isValid={isValid} />
         </div>
-      </div>
-    ]
+      </>
+    )
   }
 }
 

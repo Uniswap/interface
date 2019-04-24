@@ -13,7 +13,7 @@ import Web3Status from '../Web3Status'
 
 import './header.scss'
 
-const { Connector } = Connectors
+const { Connector, InjectedConnector } = Connectors
 
 const links = {
   coinbaseWallet: {
@@ -102,6 +102,11 @@ function BlockingWarning() {
 
   if (context.error && context.error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
     return <BaseBlockingWarning title={t('wrongNetwork')} description={t('switchNetwork', { correctNetwork })} />
+  }
+
+  // this is an intermediate state before infura is set
+  if (context.error && context.error.code === InjectedConnector.errorCodes.UNLOCK_REQUIRED) {
+    return null
   }
 
   if (context.error) {

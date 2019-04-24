@@ -1,83 +1,103 @@
-import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
-import { withTranslation } from 'react-i18next'
+import React, { useState, useCallback } from 'react'
+import { withRouter, NavLink } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { CSSTransitionGroup } from 'react-transition-group'
+
 import OversizedPanel from '../../components/OversizedPanel'
 import Dropdown from '../../assets/images/dropdown-blue.svg'
 import Modal from '../../components/Modal'
-import { CSSTransitionGroup } from 'react-transition-group'
+import { useBodyKeyDown } from '../../hooks'
 
-const ADD = 'Add Liquidity'
-const REMOVE = 'Remove Liquidity'
-const CREATE = 'Create Exchange'
+import './pool.scss'
 
-class ModeSelector extends Component {
-  state = {
-    isShowingModal: false,
-    selected: ADD
+const poolTabOrder = [
+  {
+    path: '/add-liquidity',
+    textKey: 'addLiquidity',
+    regex: /\/add-liquidity/
+  },
+  {
+    path: '/remove-liquidity',
+    textKey: 'removeLiquidity',
+    regex: /\/remove-liquidity/
+  },
+  {
+    path: '/create-exchange',
+    textKey: 'createExchange',
+    regex: /\/create-exchange.*/
   }
+]
 
-  changeView(view) {
-    const { history } = this.props
+function ModeSelector({ location: { pathname }, history }) {
+  const { t } = useTranslation()
 
-    this.setState({
-      isShowingModal: false,
-      selected: view
-    })
+  const [isShowingModal, setIsShowingModal] = useState(false)
 
-    switch (view) {
-      case ADD:
-        return history.push('/add-liquidity')
-      case REMOVE:
-        return history.push('/remove-liquidity')
-      case CREATE:
-        return history.push('/create-exchange')
-      default:
-        return
-    }
-  }
+  const activeTabKey = poolTabOrder[poolTabOrder.findIndex(({ regex }) => pathname.match(regex))].textKey
 
-  renderModal() {
-    if (!this.state.isShowingModal) {
-      return
-    }
+  const navigate = useCallback(
+    direction => {
+      const tabIndex = poolTabOrder.findIndex(({ regex }) => pathname.match(regex))
+      history.push(poolTabOrder[(tabIndex + poolTabOrder.length + direction) % poolTabOrder.length].path)
+    },
+    [pathname, history]
+  )
+  const navigateRight = useCallback(() => {
+    navigate(1)
+  }, [navigate])
+  const navigateLeft = useCallback(() => {
+    navigate(-1)
+  }, [navigate])
 
-    return (
-      <Modal onClose={() => this.setState({ isShowingModal: false })}>
-        <CSSTransitionGroup
-          transitionName="pool-modal"
-          transitionAppear={true}
-          transitionLeave={true}
-          transitionAppearTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionEnterTimeout={200}
+  useBodyKeyDown('ArrowDown', navigateRight, isShowingModal)
+  useBodyKeyDown('ArrowUp', navigateLeft, isShowingModal)
+
+  return (
+    <OversizedPanel hideTop>
+      <div
+        className="pool__liquidity-container"
+        onClick={() => {
+          setIsShowingModal(true)
+        }}
+      >
+        <span className="pool__liquidity-label">{t(activeTabKey)}</span>
+        <img src={Dropdown} alt="dropdown" />
+      </div>
+      {isShowingModal && (
+        <Modal
+          onClose={() => {
+            setIsShowingModal(false)
+          }}
         >
-          <div className="pool-modal">
-            <div className="pool-modal__item" onClick={() => this.changeView(ADD)}>
-              {this.props.t('addLiquidity')}
+          <CSSTransitionGroup
+            transitionName="pool-modal"
+            transitionAppear={true}
+            transitionLeave={true}
+            transitionAppearTimeout={200}
+            transitionLeaveTimeout={200}
+            transitionEnterTimeout={200}
+          >
+            <div className="pool-modal">
+              {poolTabOrder.map(({ path, textKey, regex }) => (
+                <NavLink
+                  key={path}
+                  to={path}
+                  className="pool-modal__item"
+                  activeClassName="pool-modal__item--selected"
+                  isActive={(_, { pathname }) => pathname.match(regex)}
+                  onClick={() => {
+                    setIsShowingModal(false)
+                  }}
+                >
+                  {t(textKey)}
+                </NavLink>
+              ))}
             </div>
-            <div className="pool-modal__item" onClick={() => this.changeView(REMOVE)}>
-              {this.props.t('removeLiquidity')}
-            </div>
-            <div className="pool-modal__item" onClick={() => this.changeView(CREATE)}>
-              {this.props.t('createExchange')}
-            </div>
-          </div>
-        </CSSTransitionGroup>
-      </Modal>
-    )
-  }
-
-  render() {
-    return (
-      <OversizedPanel hideTop>
-        <div className="pool__liquidity-container" onClick={() => this.setState({ isShowingModal: true })}>
-          <span className="pool__liquidity-label">{this.props.title}</span>
-          <img src={Dropdown} alt="dropdown" />
-        </div>
-        {this.renderModal()}
-      </OversizedPanel>
-    )
-  }
+          </CSSTransitionGroup>
+        </Modal>
+      )}
+    </OversizedPanel>
+  )
 }
 
-export default withRouter(withTranslation()(ModeSelector))
+export default withRouter(ModeSelector)

@@ -9,13 +9,11 @@ import ReactGA from 'react-ga'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import OversizedPanel from '../../components/OversizedPanel'
 import ContextualInfo from '../../components/ContextualInfo'
-import NavigationTabs from '../../components/NavigationTabs'
 import { selectors, addPendingTx } from '../../ducks/web3connect'
 import PlusBlue from '../../assets/images/plus-blue.svg'
 import PlusGrey from '../../assets/images/plus-grey.svg'
 import { getBlockDeadline } from '../../helpers/web3-utils'
 import { retry } from '../../helpers/promise-utils'
-import ModeSelector from './ModeSelector'
 import { BigNumber as BN } from 'bignumber.js'
 import EXCHANGE_ABI from '../../abi/exchange'
 
@@ -499,7 +497,7 @@ class AddLiquidity extends Component {
 
     if (this.isNewExchange()) {
       return (
-        <div>
+        <>
           <div className="pool__summary-item">
             {t('youAreAdding')} {b(`${inputValue} ETH`)} {t('and')} {b(`${outputValue} ${label}`)} {t('intoPool')}
           </div>
@@ -516,7 +514,7 @@ class AddLiquidity extends Component {
             {t('youWillMint')} {b(`${inputValue}`)} {t('liquidityTokens')}
           </div>
           <div className="pool__summary-item">{t('totalSupplyIs0')}</div>
-        </div>
+        </>
       )
     }
 
@@ -529,7 +527,7 @@ class AddLiquidity extends Component {
     const adjTotalSupply = totalSupply.dividedBy(10 ** poolTokenDecimals)
 
     return (
-      <div>
+      <>
         <div className="pool__summary-modal__item">
           {t('youAreAdding')} {b(`${+BN(inputValue).toFixed(7)} ETH`)} {t('and')}{' '}
           {b(`${+minOutput.toFixed(7)} - ${+maxOutput.toFixed(7)} ${label}`)} {t('intoPool')}
@@ -544,7 +542,7 @@ class AddLiquidity extends Component {
           {t('tokenWorth')} {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH {t('and')}{' '}
           {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}
         </div>
-      </div>
+      </>
     )
   }
 
@@ -560,10 +558,8 @@ class AddLiquidity extends Component {
     const { inputError, outputError, isValid } = this.validate()
     const { label } = selectors().getTokenBalance(outputCurrency, fromToken[outputCurrency])
 
-    return [
-      <div key="content" className={classnames('swap__content')}>
-        <NavigationTabs className={classnames('header__navigation')} />
-
+    return (
+      <>
         {this.isNewExchange() ? (
           <div className="pool__new-exchange-warning">
             <div className="pool__new-exchange-warning-text">
@@ -575,7 +571,7 @@ class AddLiquidity extends Component {
             <div className="pool__new-exchange-warning-text">{t('initialExchangeRate', { label })}</div>
           </div>
         ) : null}
-        <ModeSelector title={t('addLiquidity')} />
+
         <CurrencyInputPanel
           title={t('deposit')}
           extraText={this.getBalance(inputCurrency)}
@@ -613,8 +609,8 @@ class AddLiquidity extends Component {
         <div className="pool__cta-container">
           <AddLiquidityButton callOnClick={this.onAddLiquidity} isValid={isValid} />
         </div>
-      </div>
-    ]
+      </>
+    )
   }
 }
 

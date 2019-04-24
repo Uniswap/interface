@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 import { useWeb3Context, Connectors } from 'web3-react'
 
+import NavigationTabs from '../components/NavigationTabs'
 import { updateNetwork, updateAccount, initialize, startWatching } from '../ducks/web3connect'
 import { setAddresses } from '../ducks/addresses'
 import Header from '../components/Header'
@@ -31,11 +32,7 @@ function App({ initialized, setAddresses, updateNetwork, updateAccount, initiali
   // if the metamask user logs out, set the infura provider
   useEffect(() => {
     if (context.error && context.error.code === InjectedConnector.errorCodes.UNLOCK_REQUIRED) {
-      if (context.connectorName) {
-        context.unsetConnector()
-      } else {
-        context.setConnector('Infura')
-      }
+      context.setConnector('Infura')
     }
   }, [context.error, context.connectorName])
 
@@ -70,19 +67,30 @@ function App({ initialized, setAddresses, updateNetwork, updateAccount, initiali
     return (
       <div id="app-container">
         <Header />
-        {!!(initialized && context.active) && (
+        {/* this is an intermediate state before infura is set */}
+        {initialized && (!context.error || context.error.code === InjectedConnector.errorCodes.UNLOCK_REQUIRED) && (
           <div className="app__wrapper">
-            <BrowserRouter>
-              <Switch>
-                <Route exact strict path="/swap" component={Swap} />
-                <Route exact strict path="/send" component={Send} />
-                <Route
-                  path={['/add-liquidity', '/remove-liquidity', '/create-exchange', '/create-exchange/:tokenAddress?']}
-                  component={Pool}
-                />
-                <Redirect to="/swap" />
-              </Switch>
-            </BrowserRouter>
+            <div className="body">
+              <div className="body__content">
+                <BrowserRouter>
+                  <NavigationTabs />
+                  <Switch>
+                    <Route exact strict path="/swap" component={Swap} />
+                    <Route exact strict path="/send" component={Send} />
+                    <Route
+                      path={[
+                        '/add-liquidity',
+                        '/remove-liquidity',
+                        '/create-exchange',
+                        '/create-exchange/:tokenAddress?'
+                      ]}
+                      component={Pool}
+                    />
+                    <Redirect to="/swap" />
+                  </Switch>
+                </BrowserRouter>
+              </div>
+            </div>
           </div>
         )}
       </div>

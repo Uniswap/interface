@@ -3,14 +3,11 @@ import { connect } from 'react-redux'
 import { ethers } from 'ethers'
 import classnames from 'classnames'
 import { withRouter } from 'react-router'
-// import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import ReactGA from 'react-ga'
 import { useWeb3Context } from 'web3-react'
 
 import { addPendingTx } from '../../ducks/web3connect'
-import NavigationTabs from '../../components/NavigationTabs'
-import ModeSelector from './ModeSelector'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import OversizedPanel from '../../components/OversizedPanel'
 import { addExchange } from '../../ducks/addresses'
@@ -113,9 +110,7 @@ function CreateExchange({ history, location, addExchange, addPendingTx }) {
   const isValid = isAddress(tokenAddress) && !errorMessage && tokenDetails && tokenDetails.tokenAddress === tokenAddress
 
   return (
-    <div key="content" className="swap__content">
-      <NavigationTabs className="header__navigation" />
-      <ModeSelector title={t('createExchange')} />
+    <>
       <AddressInputPanel
         title={t('tokenAddress')}
         value={tokenAddress}
@@ -148,7 +143,7 @@ function CreateExchange({ history, location, addExchange, addPendingTx }) {
           {t('createExchange')}
         </button>
       </div>
-    </div>
+    </>
   )
 }
 

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import ReactGA from 'react-ga'
 import { Switch, Route, Redirect } from 'react-router-dom'
 
+import ModeSelector from './ModeSelector'
 import AddLiquidity from './AddLiquidity'
 import CreateExchange from './CreateExchange'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -14,7 +15,8 @@ export default function Pool() {
   }, [])
 
   return (
-    <div className="pool">
+    <>
+      <ModeSelector />
       <Switch>
         <Route exact strict path="/add-liquidity" component={AddLiquidity} />
         <Route exact strict path="/remove-liquidity" component={RemoveLiquidity} />
@@ -29,6 +31,6 @@ export default function Pool() {
         />
         <Redirect to="/add-liquidity" />
       </Switch>
-    </div>
+    </>
   )
 }
