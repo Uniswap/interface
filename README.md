@@ -16,11 +16,15 @@ This an an open source interface for Uniswap - a protocol for decentralized exch
 
 ## To Start Development
 
-### Install dependencies
+### Install Dependencies
 
 ```bash
 yarn
 ```
+
+### Configure Environment
+
+Rename `.env.example` to `.env` and fill in the appropriate variables.
 
 ### Run
 
