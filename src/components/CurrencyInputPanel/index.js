@@ -1,10 +1,15 @@
-import React, { Component } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 import { CSSTransitionGroup } from 'react-transition-group'
 import classnames from 'classnames'
 import { withRouter } from 'react-router-dom'
-import { withTranslation } from 'react-i18next'
+import { withTranslation, useTranslation } from 'react-i18next'
+import { BigNumber as BN } from 'bignumber.js'
+import { useWeb3Context } from 'web3-react'
+import { ethers } from 'ethers'
+
+import { useSignerOrProvider } from '../../hooks'
+import { getExchangeDetails, getTokenDetails, isAddress } from '../../utils'
 import Fuse from '../../helpers/fuse'
 import Modal from '../Modal'
 import TokenLogo from '../TokenLogo'
@@ -12,12 +17,9 @@ import SearchIcon from '../../assets/images/magnifying-glass.svg'
 import { selectors, addPendingTx } from '../../ducks/web3connect'
 import { addApprovalTx } from '../../ducks/pending'
 import { addExchange } from '../../ducks/addresses'
-import { BigNumber as BN } from 'bignumber.js'
+import ERC20_ABI from '../../abi/erc20'
 
 import './currency-panel.scss'
-
-import ERC20_ABI from '../../abi/erc20'
-import FACTORY_ABI from '../../abi/factory'
 
 const FUSE_OPTIONS = {
   includeMatches: false,
@@ -32,50 +34,51 @@ const FUSE_OPTIONS = {
 
 const TOKEN_ADDRESS_TO_LABEL = { ETH: 'ETH' }
 
-class CurrencyInputPanel extends Component {
-  static propTypes = {
-    title: PropTypes.string,
-    description: PropTypes.string,
-    extraText: PropTypes.string,
-    value: PropTypes.string,
-    onCurrencySelected: PropTypes.func,
-    onValueChange: PropTypes.func,
-    tokenAddresses: PropTypes.shape({
-      addresses: PropTypes.array.isRequired
-    }).isRequired,
-    exchangeAddresses: PropTypes.shape({
-      fromToken: PropTypes.object.isRequired
-    }).isRequired,
-    factoryAddress: PropTypes.string,
-    selectedTokens: PropTypes.array.isRequired,
-    errorMessage: PropTypes.string,
-    account: PropTypes.string,
-    selectedTokenAddress: PropTypes.string,
-    disableTokenSelect: PropTypes.bool,
-    selectors: PropTypes.func.isRequired,
-    addExchange: PropTypes.func.isRequired,
-    filteredTokens: PropTypes.arrayOf(PropTypes.string),
-    disableUnlock: PropTypes.bool,
-    renderInput: PropTypes.func
-  }
+function CurrencyInputPanel({
+  tokenAddresses,
+  filteredTokens = [],
+  onValueChange = () => {},
+  renderInput,
+  onCurrencySelected = () => {},
+  title,
+  description,
+  extraText,
+  errorMessage,
+  selectedTokens = [],
+  disableUnlock,
+  disableTokenSelect,
+  selectors,
+  account,
+  factoryAddress,
+  selectedTokenAddress = '',
+  exchangeAddresses: { fromToken },
+  addExchange,
+  history,
+  web3,
+  transactions,
+  pendingApprovals,
+  value,
+  addApprovalTx,
+  addPendingTx
+}) {
+  const { t } = useTranslation()
+  const context = useWeb3Context()
+  const signerOrProvider = useSignerOrProvider()
 
-  static defaultProps = {
-    selectedTokens: [],
-    filteredTokens: [],
-    onCurrencySelected() {},
-    onValueChange() {},
-    selectedTokenAddress: ''
-  }
+  const inputRef = useRef()
 
-  state = {
-    isShowingModal: false,
-    searchQuery: '',
-    loadingExchange: false
-  }
+  const [isShowingModal, setIsShowingModal] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [loadingExchange, setLoadingExchange] = useState(false)
 
-  createTokenList = () => {
-    const { filteredTokens } = this.props
-    let tokens = this.props.tokenAddresses.addresses
+  useEffect(() => {
+    if (inputRef.current && isShowingModal) {
+      inputRef.current.focus()
+    }
+  }, [inputRef.current, isShowingModal])
+
+  function createTokenList() {
+    let tokens = tokenAddresses.addresses
     let tokenList = [{ value: 'ETH', label: 'ETH', address: 'ETH' }]
 
     for (let i = 0; i < tokens.length; i++) {
@@ -90,30 +93,15 @@ class CurrencyInputPanel extends Component {
     return tokenList.filter(({ address }) => !filteredTokens.includes(address))
   }
 
-  onTokenSelect = address => {
-    this.setState({
-      searchQuery: '',
-      isShowingModal: false
-    })
+  function onTokenSelect(address) {
+    setSearchQuery('')
+    setIsShowingModal(false)
 
-    this.props.onCurrencySelected(address)
+    onCurrencySelected(address)
   }
 
-  renderTokenList() {
-    const tokens = this.createTokenList()
-    const { loadingExchange, searchQuery } = this.state
-    const {
-      t,
-      selectedTokens,
-      disableTokenSelect,
-      web3,
-      selectors,
-      account,
-      factoryAddress,
-      exchangeAddresses: { fromToken },
-      addExchange,
-      history
-    } = this.props
+  function renderTokenList() {
+    const tokens = createTokenList()
 
     if (loadingExchange) {
       return (
@@ -124,21 +112,24 @@ class CurrencyInputPanel extends Component {
       )
     }
 
-    if (web3 && web3.utils && web3.utils.isAddress(searchQuery)) {
+    if (isAddress(searchQuery)) {
       const tokenAddress = searchQuery
-      const { label } = selectors().getBalance(account, tokenAddress)
-      const factory = new web3.eth.Contract(FACTORY_ABI, factoryAddress)
       const exchangeAddress = fromToken[tokenAddress]
 
       if (!exchangeAddress) {
-        this.setState({ loadingExchange: true })
-        factory.methods.getExchange(tokenAddress).call((err, data) => {
-          if (!err && data !== '0x0000000000000000000000000000000000000000') {
-            addExchange({ label, tokenAddress, exchangeAddress: data })
+        setLoadingExchange(true)
+
+        getExchangeDetails(context.networkId, tokenAddress, signerOrProvider).then(async ({ exchangeAddress }) => {
+          if (exchangeAddress !== ethers.constants.AddressZero) {
+            const { symbol } = await getTokenDetails(tokenAddress, signerOrProvider)
+            addExchange({
+              tokenAddress,
+              label: symbol,
+              exchangeAddress
+            })
           }
-          this.setState({ loadingExchange: false })
+          setLoadingExchange(false)
         })
-        return
       }
     }
 
@@ -152,10 +143,10 @@ class CurrencyInputPanel extends Component {
       results = tokens
     } else {
       const fuse = new Fuse(tokens, FUSE_OPTIONS)
-      results = fuse.search(this.state.searchQuery)
+      results = fuse.search(searchQuery)
     }
 
-    if (!results.length && web3 && web3.utils && web3.utils.isAddress(searchQuery)) {
+    if (!results.length && web3 && web3.utils && isAddress(searchQuery)) {
       const { label } = selectors().getBalance(account, searchQuery)
       return [
         <div key="token-modal-no-exchange" className="token-modal__token-row token-modal__token-row--no-exchange">
@@ -165,7 +156,7 @@ class CurrencyInputPanel extends Component {
           key="token-modal-create-exchange"
           className="token-modal__token-row token-modal__token-row--create-exchange"
           onClick={() => {
-            this.setState({ isShowingModal: false })
+            setIsShowingModal(false)
             history.push(`/create-exchange/${searchQuery}`)
           }}
         >
@@ -191,7 +182,7 @@ class CurrencyInputPanel extends Component {
           className={classnames('token-modal__token-row', {
             'token-modal__token-row--selected': isSelected
           })}
-          onClick={() => this.onTokenSelect(address)}
+          onClick={() => onTokenSelect(address)}
         >
           <TokenLogo className="token-modal__token-logo" address={address} />
           <div className="token-modal__token-label">{label}</div>
@@ -200,13 +191,18 @@ class CurrencyInputPanel extends Component {
     })
   }
 
-  renderModal() {
-    if (!this.state.isShowingModal) {
+  function renderModal() {
+    if (!isShowingModal) {
       return null
     }
 
     return (
-      <Modal onClose={() => this.setState({ isShowingModal: false, searchQuery: '' })}>
+      <Modal
+        onClose={() => {
+          setIsShowingModal(false)
+          setSearchQuery('')
+        }}
+      >
         <CSSTransitionGroup
           transitionName="token-modal"
           transitionAppear={true}
@@ -218,38 +214,24 @@ class CurrencyInputPanel extends Component {
           <div className="token-modal">
             <div className="token-modal__search-container">
               <input
+                ref={inputRef}
                 type="text"
-                placeholder={this.props.t('searchOrPaste')}
+                placeholder={t('searchOrPaste')}
                 className="token-modal__search-input"
                 onChange={e => {
-                  this.setState({ searchQuery: e.target.value })
+                  setSearchQuery(e.target.value)
                 }}
               />
               <img src={SearchIcon} className="token-modal__search-icon" alt="search" />
             </div>
-            <div className="token-modal__token-list">{this.renderTokenList()}</div>
+            <div className="token-modal__token-list">{renderTokenList()}</div>
           </div>
         </CSSTransitionGroup>
       </Modal>
     )
   }
 
-  renderUnlockButton() {
-    const {
-      t,
-      selectors,
-      selectedTokenAddress,
-      account,
-      exchangeAddresses: { fromToken },
-      web3,
-      disableUnlock,
-      transactions,
-      pendingApprovals,
-      value,
-      addApprovalTx,
-      addPendingTx
-    } = this.props
-
+  function renderUnlockButton() {
     if (disableUnlock || !selectedTokenAddress || selectedTokenAddress === 'ETH') {
       return
     }
@@ -294,9 +276,7 @@ class CurrencyInputPanel extends Component {
     )
   }
 
-  renderInput() {
-    const { t, errorMessage, value, onValueChange, selectedTokenAddress, disableTokenSelect, renderInput } = this.props
-
+  function _renderInput() {
     if (typeof renderInput === 'function') {
       return renderInput()
     }
@@ -322,7 +302,7 @@ class CurrencyInputPanel extends Component {
           }}
           value={value}
         />
-        {this.renderUnlockButton()}
+        {renderUnlockButton()}
         <button
           className={classnames('currency-input-panel__currency-select', {
             'currency-input-panel__currency-select--selected': selectedTokenAddress,
@@ -330,7 +310,7 @@ class CurrencyInputPanel extends Component {
           })}
           onClick={() => {
             if (!disableTokenSelect) {
-              this.setState({ isShowingModal: true })
+              setIsShowingModal(true)
             }
           }}
         >
@@ -344,35 +324,31 @@ class CurrencyInputPanel extends Component {
     )
   }
 
-  render() {
-    const { title, description, extraText, errorMessage } = this.props
-
-    return (
-      <div className="currency-input-panel">
-        <div
-          className={classnames('currency-input-panel__container', {
-            'currency-input-panel__container--error': errorMessage
-          })}
-        >
-          <div className="currency-input-panel__label-row">
-            <div className="currency-input-panel__label-container">
-              <span className="currency-input-panel__label">{title}</span>
-              <span className="currency-input-panel__label-description">{description}</span>
-            </div>
-            <span
-              className={classnames('currency-input-panel__extra-text', {
-                'currency-input-panel__extra-text--error': errorMessage
-              })}
-            >
-              {extraText}
-            </span>
+  return (
+    <div className="currency-input-panel">
+      <div
+        className={classnames('currency-input-panel__container', {
+          'currency-input-panel__container--error': errorMessage
+        })}
+      >
+        <div className="currency-input-panel__label-row">
+          <div className="currency-input-panel__label-container">
+            <span className="currency-input-panel__label">{title}</span>
+            <span className="currency-input-panel__label-description">{description}</span>
           </div>
-          {this.renderInput()}
+          <span
+            className={classnames('currency-input-panel__extra-text', {
+              'currency-input-panel__extra-text--error': errorMessage
+            })}
+          >
+            {extraText}
+          </span>
         </div>
-        {this.renderModal()}
+        {_renderInput()}
       </div>
-    )
-  }
+      {renderModal()}
+    </div>
+  )
 }
 
 export default withRouter(

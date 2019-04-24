@@ -398,14 +398,14 @@ class RemoveLiquidity extends Component {
         {this.renderOutput()}
         {this.renderSummary(errorMessage)}
         <div className="pool__cta-container">
-          <RemoveLiquidityButton callOnClick={this.onRemoveLiquidity} />
+          <RemoveLiquidityButton callOnClick={this.onRemoveLiquidity} isValid={isValid} />
         </div>
       </div>
     ]
   }
 }
 
-function RemoveLiquidityButton({ callOnClick }) {
+function RemoveLiquidityButton({ callOnClick, isValid }) {
   const { t } = useTranslation()
   const context = useWeb3Context()
 
@@ -415,7 +415,7 @@ function RemoveLiquidityButton({ callOnClick }) {
       className={classnames('pool__cta-btn', {
         'pool__cta-btn--inactive': !isActive
       })}
-      disabled={!isActive}
+      disabled={!isValid}
       onClick={callOnClick}
     >
       {t('removeLiquidity')}

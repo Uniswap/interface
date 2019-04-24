@@ -775,7 +775,7 @@ class Swap extends Component {
           {this.renderExchangeRate()}
           {this.renderSummary(inputError, outputError)}
           <div className="swap__cta-container">
-            <SwapButton callOnClick={this.onSwap} />
+            <SwapButton callOnClick={this.onSwap} isValid={isValid} />
           </div>
         </div>
       </div>
@@ -783,15 +783,16 @@ class Swap extends Component {
   }
 }
 
-function SwapButton({ callOnClick }) {
+function SwapButton({ callOnClick, isValid }) {
   const { t } = useTranslation()
   const context = useWeb3Context()
 
   const isActive = context.active && context.account
+
   return (
     <button
       className={classnames('swap__cta-btn', { 'swap--inactive': !isActive })}
-      disabled={!isActive}
+      disabled={!isValid}
       onClick={callOnClick}
     >
       {t('swap')}

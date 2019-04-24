@@ -611,14 +611,14 @@ class AddLiquidity extends Component {
         <OversizedPanel hideBottom>{this.renderInfo()}</OversizedPanel>
         {this.renderSummary(inputError, outputError)}
         <div className="pool__cta-container">
-          <AddLiquidityButton callOnClick={this.onAddLiquidity} />
+          <AddLiquidityButton callOnClick={this.onAddLiquidity} isValid={isValid} />
         </div>
       </div>
     ]
   }
 }
 
-function AddLiquidityButton({ callOnClick }) {
+function AddLiquidityButton({ callOnClick, isValid }) {
   const { t } = useTranslation()
   const context = useWeb3Context()
 
@@ -628,7 +628,7 @@ function AddLiquidityButton({ callOnClick }) {
       className={classnames('pool__cta-btn', {
         'pool__cta-btn--inactive': !isActive
       })}
-      disabled={!isActive}
+      disabled={!isValid}
       onClick={callOnClick}
     >
       {t('addLiquidity')}

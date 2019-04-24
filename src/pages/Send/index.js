@@ -803,7 +803,7 @@ class Send extends Component {
           {this.renderExchangeRate()}
           {this.renderSummary(inputError, outputError)}
           <div className="swap__cta-container">
-            <SendButton callOnClick={this.onSend} />
+            <SendButton callOnClick={this.onSend} isValid={isValid} />
           </div>
         </div>
       </div>
@@ -811,7 +811,7 @@ class Send extends Component {
   }
 }
 
-function SendButton({ callOnClick }) {
+function SendButton({ callOnClick, isValid }) {
   const { t } = useTranslation()
   const context = useWeb3Context()
 
@@ -821,7 +821,7 @@ function SendButton({ callOnClick }) {
       className={classnames('swap__cta-btn', {
         'swap--inactive': !isActive
       })}
-      disabled={!isActive}
+      disabled={!isValid}
       onClick={callOnClick}
     >
       {t('send')}
