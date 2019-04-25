@@ -14,13 +14,15 @@ i18next
   // https://www.i18next.com/overview/configuration-options
   .init({
     backend: {
-      loadPath: './locales/{{lng}}.json'
+      loadPath: '/locales/{{lng}}.json'
     },
+    react: {
+      useSuspense: false
+    },
+    lng: 'en',
     fallbackLng: 'en',
     keySeparator: false,
-    interpolation: {
-      escapeValue: false // not needed for react as it escapes by default
-    }
+    interpolation: { escapeValue: false }
   })
 
 export default i18next

@@ -1,3 +1,4 @@
+# support SPA setup
 [[redirects]]
   from = "/*"
   to = "/index.html"

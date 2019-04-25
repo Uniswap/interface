@@ -3,12 +3,11 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { BigNumber as BN } from 'bignumber.js'
-import MediaQuery from 'react-responsive'
 import ReactGA from 'react-ga'
-import { withTranslation } from 'react-i18next'
+import { withTranslation, useTranslation } from 'react-i18next'
+import { useWeb3Context } from 'web3-react'
+
 import { selectors, addPendingTx } from '../../ducks/web3connect'
-import Header from '../../components/Header'
-import NavigationTabs from '../../components/NavigationTabs'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import ContextualInfo from '../../components/ContextualInfo'
 import OversizedPanel from '../../components/OversizedPanel'
@@ -26,7 +25,6 @@ const OUTPUT = 1
 class Swap extends Component {
   static propTypes = {
     account: PropTypes.string,
-    isConnected: PropTypes.bool.isRequired,
     selectors: PropTypes.func.isRequired,
     addPendingTx: PropTypes.func.isRequired,
     web3: PropTypes.object.isRequired
@@ -554,7 +552,7 @@ class Swap extends Component {
 
   renderSummary(inputError, outputError) {
     const { inputValue, inputCurrency, outputValue, outputCurrency } = this.state
-    const t = this.props.t
+    const { t, account } = this.props
 
     const inputIsZero = BN(inputValue).isZero()
     const outputIsZero = BN(outputValue).isZero()
@@ -580,6 +578,11 @@ class Swap extends Component {
 
     if (this.isUnapproved()) {
       contextualInfo = t('unlockTokenCont')
+    }
+
+    if (!account) {
+      contextualInfo = t('noWallet')
+      isError = true
     }
 
     return (
@@ -731,77 +734,70 @@ class Swap extends Component {
     const { inputError, outputError, isValid } = this.validate()
 
     return (
-      <div className="swap">
-        <MediaQuery query="(max-width: 767px)">
-          <Header />
-        </MediaQuery>
-        <div
-          className={classnames('swap__content', {
-            'swap--inactive': !this.props.isConnected
-          })}
-        >
-          <NavigationTabs
-            className={classnames('header__navigation', {
-              'header--inactive': !this.props.isConnected
-            })}
-          />
-
-          <CurrencyInputPanel
-            title={t('input')}
-            description={lastEditedField === OUTPUT ? estimatedText : ''}
-            extraText={this.renderBalance(inputCurrency, inputBalance, inputDecimals)}
-            onCurrencySelected={inputCurrency => this.setState({ inputCurrency }, this.recalcForm)}
-            onValueChange={this.updateInput}
-            selectedTokens={[inputCurrency, outputCurrency]}
-            selectedTokenAddress={inputCurrency}
-            value={inputValue}
-            errorMessage={inputError}
-          />
-          <OversizedPanel>
-            <div className="swap__down-arrow-background">
-              <img
-                onClick={this.flipInputOutput}
-                className="swap__down-arrow swap__down-arrow--clickable"
-                alt="swap"
-                src={isValid ? ArrowDownBlue : ArrowDownGrey}
-              />
-            </div>
-          </OversizedPanel>
-          <CurrencyInputPanel
-            title={t('output')}
-            description={lastEditedField === INPUT ? estimatedText : ''}
-            extraText={this.renderBalance(outputCurrency, outputBalance, outputDecimals)}
-            onCurrencySelected={outputCurrency => this.setState({ outputCurrency }, this.recalcForm)}
-            onValueChange={this.updateOutput}
-            selectedTokens={[inputCurrency, outputCurrency]}
-            value={outputValue}
-            selectedTokenAddress={outputCurrency}
-            errorMessage={outputError}
-            disableUnlock
-          />
-          {this.renderExchangeRate()}
-          {this.renderSummary(inputError, outputError)}
-          <div className="swap__cta-container">
-            <button
-              className={classnames('swap__cta-btn', {
-                'swap--inactive': !this.props.isConnected
-              })}
-              disabled={!isValid}
-              onClick={this.onSwap}
-            >
-              {t('swap')}
-            </button>
+      <>
+        <CurrencyInputPanel
+          title={t('input')}
+          description={lastEditedField === OUTPUT ? estimatedText : ''}
+          extraText={this.renderBalance(inputCurrency, inputBalance, inputDecimals)}
+          onCurrencySelected={inputCurrency => this.setState({ inputCurrency }, this.recalcForm)}
+          onValueChange={this.updateInput}
+          selectedTokens={[inputCurrency, outputCurrency]}
+          selectedTokenAddress={inputCurrency}
+          value={inputValue}
+          errorMessage={inputError}
+        />
+        <OversizedPanel>
+          <div className="swap__down-arrow-background">
+            <img
+              onClick={this.flipInputOutput}
+              className="swap__down-arrow swap__down-arrow--clickable"
+              alt="swap"
+              src={isValid ? ArrowDownBlue : ArrowDownGrey}
+            />
           </div>
+        </OversizedPanel>
+        <CurrencyInputPanel
+          title={t('output')}
+          description={lastEditedField === INPUT ? estimatedText : ''}
+          extraText={this.renderBalance(outputCurrency, outputBalance, outputDecimals)}
+          onCurrencySelected={outputCurrency => this.setState({ outputCurrency }, this.recalcForm)}
+          onValueChange={this.updateOutput}
+          selectedTokens={[inputCurrency, outputCurrency]}
+          value={outputValue}
+          selectedTokenAddress={outputCurrency}
+          errorMessage={outputError}
+          disableUnlock
+        />
+        {this.renderExchangeRate()}
+        {this.renderSummary(inputError, outputError)}
+        <div className="swap__cta-container">
+          <SwapButton callOnClick={this.onSwap} isValid={isValid} />
         </div>
-      </div>
+      </>
     )
   }
+}
+
+function SwapButton({ callOnClick, isValid }) {
+  const { t } = useTranslation()
+  const context = useWeb3Context()
+
+  const isActive = context.active && context.account
+
+  return (
+    <button
+      className={classnames('swap__cta-btn', { 'swap--inactive': !isActive })}
+      disabled={!isValid}
+      onClick={callOnClick}
+    >
+      {t('swap')}
+    </button>
+  )
 }
 
 export default connect(
   state => ({
     balances: state.web3connect.balances,
-    isConnected: !!state.web3connect.account && state.web3connect.networkId === (process.env.REACT_APP_NETWORK_ID || 1),
     account: state.web3connect.account,
     web3: state.web3connect.web3,
     exchangeAddresses: state.addresses.exchangeAddresses
