@@ -2,6 +2,7 @@
 
 .header {
   @extend %col-nowrap;
+  display: block;
 
   &__no-decoration {
     text-decoration: none;
@@ -47,7 +48,7 @@
     }
 
     &--disconnected {
-      display: inherit;
+      display: block;
     }
   }
 
