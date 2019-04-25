@@ -7,6 +7,7 @@
     margin: auto;
     max-width: 560px;
     width: 100%;
+    overflow-y: auto;
 
     & > div {
       position: absolute;
@@ -23,4 +24,17 @@
   height: 100vh;
 
   @extend %col-nowrap;
+}
+
+.body {
+  @extend %col-nowrap;
+  height: 100%;
+  background-color: $white;
+
+  &__content {
+    padding: 1rem 0.75rem;
+    flex: 1 1 auto;
+    height: 0;
+    overflow-y: auto;
+  }
 }

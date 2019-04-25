@@ -5,6 +5,13 @@
   height: 100%;
   background-color: $white;
 
+  &__content {
+    padding: 1rem 0.75rem;
+    flex: 1 1 auto;
+    height: 0;
+    overflow-y: auto;
+  }
+
   &__liquidity-container {
     @extend %row-nowrap;
     align-items: center;
@@ -114,20 +121,22 @@
   }
 
   &__item {
+    @extend %row-nowrap;
     padding: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
     font-size: 1rem;
     cursor: pointer;
+    text-decoration: none;
+    color: $dove-gray;
+    font-size: 1rem;
 
-    &:hover {
-      background-color: $concrete-gray;
-
-      .token-modal__token-label {
-        color: $black;
-      }
-    }
-
-    &:active {
-      background-color: darken($concrete-gray, 1);
+    &--selected {
+      background-color: $white;
+      border-radius: 3rem;
+      box-shadow: 0 0 0.5px 0.5px $mercury-gray;
+      font-weight: 500;
+      color: $royal-blue;
     }
   }
 }

@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 import classnames from 'classnames'
+import { useWeb3Context, Connectors } from 'web3-react'
 import UAParser from 'ua-parser-js'
-import { withTranslation } from 'react-i18next'
+
 import Logo from '../Logo'
 import CoinbaseWalletLogo from '../../assets/images/coinbase-wallet-logo.png'
 import TrustLogo from '../../assets/images/trust-wallet-logo.svg'
@@ -12,6 +12,8 @@ import MetamaskLogo from '../../assets/images/metamask-logo.svg'
 import Web3Status from '../Web3Status'
 
 import './header.scss'
+
+const { Connector, InjectedConnector } = Connectors
 
 const links = {
   coinbaseWallet: {
@@ -32,8 +34,6 @@ const links = {
     ios: 'https://itunes.apple.com/us/app/brave-browser-fast-adblocker/id1052879175'
   }
 }
-
-const ua = new UAParser(window.navigator.userAgent)
 
 function getTrustLink() {
   const os = ua.getOS()
@@ -73,99 +73,102 @@ function getMetamaskLink() {
   return links.metamask.chrome
 }
 
+const ua = new UAParser(window.navigator.userAgent)
 function isMobile() {
   return ua.getDevice().type === 'mobile'
 }
 
-class BlockingWarning extends Component {
-  render() {
-    const { t, isConnected, initialized, networkId } = this.props
-    let content = []
-
-    const correctNetworkId = process.env.REACT_APP_NETWORK_ID || 1
-    const correctNetwork = process.env.REACT_APP_NETWORK || 'Main Ethereum Network'
-
-    const wrongNetwork = networkId !== correctNetworkId
-
-    if (wrongNetwork && initialized) {
-      content = [
-        <div key="warning-title">{t('wrongNetwork')}</div>,
-        <div key="warning-desc" className="header__dialog__description">
-          {t('switchNetwork', { correctNetwork })}
-        </div>
-      ]
-    }
-
-    if (!isConnected && initialized) {
-      content = [
-        <div key="warning-title">{t('noWallet')}</div>,
-        <div key="warning-desc" className="header__dialog__description">
-          {isMobile() ? t('installWeb3MobileBrowser') : t('installMetamask')}
-        </div>,
-        <div key="warning-logos" className="header__download">
-          {isMobile()
-            ? [
-                <img
-                  alt="coinbase"
-                  src={CoinbaseWalletLogo}
-                  key="coinbase-wallet"
-                  onClick={() => window.open(getCoinbaseWalletLink(), '_blank')}
-                />,
-                <img alt="trust" src={TrustLogo} key="trust" onClick={() => window.open(getTrustLink(), '_blank')} />
-              ]
-            : [
-                <img
-                  alt="metamask"
-                  src={MetamaskLogo}
-                  key="metamask"
-                  onClick={() => window.open(getMetamaskLink(), '_blank')}
-                />,
-                <img alt="brave" src={BraveLogo} key="brave" onClick={() => window.open(getBraveLink(), '_blank')} />
-              ]}
-        </div>
-      ]
-    }
-
-    return (
-      <div
-        className={classnames('header__dialog', {
-          'header__dialog--disconnected': (!isConnected || wrongNetwork) && initialized
-        })}
-      >
-        {content}
-      </div>
-    )
-  }
-}
-
-function Header(props) {
+function BaseBlockingWarning({ title, description, children }) {
   return (
-    <div className="header">
-      <BlockingWarning {...props} />
-      <div
-        className={classnames('header__top', {
-          'header--inactive': !props.isConnected
-        })}
-      >
-        <Logo />
-        <div className="header__center-group">
-          <span className="header__title">Uniswap</span>
-        </div>
-        <Web3Status isConnected />
+    <div
+      className={classnames('header__dialog', {
+        'header__dialog--disconnected': true
+      })}
+    >
+      <div key="warning-title">{title}</div>
+      <div key="warning-desc" className="header__dialog__description">
+        {description}
       </div>
+      {children}
     </div>
   )
 }
 
-Header.propTypes = {
-  currentAddress: PropTypes.string,
-  isConnected: PropTypes.bool.isRequired
+function BlockingWarning() {
+  const { t } = useTranslation()
+
+  const correctNetwork = process.env.REACT_APP_NETWORK_NAME || 'Main Ethereum Network'
+  const context = useWeb3Context()
+
+  if (context.error && context.error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
+    return <BaseBlockingWarning title={t('wrongNetwork')} description={t('switchNetwork', { correctNetwork })} />
+  }
+
+  // this is an intermediate state before infura is set
+  if (context.error && context.error.code === InjectedConnector.errorCodes.UNLOCK_REQUIRED) {
+    return null
+  }
+
+  if (context.error) {
+    console.error(context.error)
+    return <BaseBlockingWarning title={t('disconnected')} />
+  }
+
+  if (!context.account) {
+    return (
+      <BaseBlockingWarning
+        title={t('noWallet')}
+        description={isMobile() ? t('installWeb3MobileBrowser') : t('installMetamask')}
+      >
+        <div key="warning-logos" className="header__download">
+          {isMobile() ? (
+            <>
+              <img
+                alt="coinbase"
+                src={CoinbaseWalletLogo}
+                key="coinbase-wallet"
+                onClick={() => window.open(getCoinbaseWalletLink(), '_blank')}
+              />
+              <img alt="trust" src={TrustLogo} key="trust" onClick={() => window.open(getTrustLink(), '_blank')} />
+            </>
+          ) : (
+            <>
+              <img
+                alt="metamask"
+                src={MetamaskLogo}
+                key="metamask"
+                onClick={() => window.open(getMetamaskLink(), '_blank')}
+              />
+              <img alt="brave" src={BraveLogo} key="brave" onClick={() => window.open(getBraveLink(), '_blank')} />
+            </>
+          )}
+        </div>
+      </BaseBlockingWarning>
+    )
+  }
+
+  return null
 }
 
-export default connect(state => ({
-  currentAddress: state.web3connect.account,
-  initialized: state.web3connect.initialized,
-  isConnected: !!state.web3connect.account,
-  web3: state.web3connect.web3,
-  networkId: state.web3connect.networkId
-}))(withTranslation()(Header))
+export default function Header() {
+  const context = useWeb3Context()
+
+  return (
+    <div className="header">
+      <BlockingWarning />
+      <div className={classnames('header__top')}>
+        <a className="header__no-decoration" href="https://uniswap.io" target="_blank" rel="noopener noreferrer">
+          <Logo />
+        </a>
+
+        <div className="header__center-group">
+          <a className="header__no-decoration" href="https://uniswap.io" target="_blank" rel="noopener noreferrer">
+            <span className="header__title">Uniswap</span>
+          </a>
+        </div>
+
+        <Web3Status isConnected={!!(context.active && context.account)} />
+      </div>
+    </div>
+  )
+}

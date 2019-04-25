@@ -2,29 +2,29 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { withTranslation } from 'react-i18next'
+import { withTranslation, useTranslation } from 'react-i18next'
+import { useWeb3Context } from 'web3-react'
+import ReactGA from 'react-ga'
+
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import OversizedPanel from '../../components/OversizedPanel'
 import ContextualInfo from '../../components/ContextualInfo'
-import NavigationTabs from '../../components/NavigationTabs'
 import { selectors, addPendingTx } from '../../ducks/web3connect'
 import PlusBlue from '../../assets/images/plus-blue.svg'
 import PlusGrey from '../../assets/images/plus-grey.svg'
 import { getBlockDeadline } from '../../helpers/web3-utils'
 import { retry } from '../../helpers/promise-utils'
-import ModeSelector from './ModeSelector'
 import { BigNumber as BN } from 'bignumber.js'
 import EXCHANGE_ABI from '../../abi/exchange'
+
 import './pool.scss'
-import ReactGA from 'react-ga'
 
 const INPUT = 0
 const OUTPUT = 1
 
 class AddLiquidity extends Component {
   static propTypes = {
-    isConnected: PropTypes.bool.isRequired,
-    account: PropTypes.string.isRequired,
+    account: PropTypes.string,
     selectors: PropTypes.func.isRequired,
     balances: PropTypes.object.isRequired,
     exchangeAddresses: PropTypes.shape({
@@ -50,11 +50,10 @@ class AddLiquidity extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const { t, isConnected, account, exchangeAddresses, balances, web3 } = this.props
+    const { t, account, exchangeAddresses, balances, web3 } = this.props
     const { inputValue, outputValue, inputCurrency, outputCurrency, lastEditedField } = this.state
 
     return (
-      isConnected !== nextProps.isConnected ||
       t !== nextProps.t ||
       account !== nextProps.account ||
       exchangeAddresses !== nextProps.exchangeAddresses ||
@@ -434,6 +433,7 @@ class AddLiquidity extends Component {
   renderSummary(inputError, outputError) {
     const {
       t,
+      account,
       selectors,
       exchangeAddresses: { fromToken }
     } = this.props
@@ -444,7 +444,11 @@ class AddLiquidity extends Component {
     let contextualInfo = ''
     let isError = false
     const { label } = selectors().getTokenBalance(outputCurrency, fromToken[outputCurrency])
-    if (inputError || outputError) {
+
+    if (!account) {
+      contextualInfo = t('noWallet')
+      isError = true
+    } else if (inputError || outputError) {
       contextualInfo = inputError || outputError
       isError = true
     } else if (!inputCurrency || !outputCurrency) {
@@ -493,7 +497,7 @@ class AddLiquidity extends Component {
 
     if (this.isNewExchange()) {
       return (
-        <div>
+        <>
           <div className="pool__summary-item">
             {t('youAreAdding')} {b(`${inputValue} ETH`)} {t('and')} {b(`${outputValue} ${label}`)} {t('intoPool')}
           </div>
@@ -510,7 +514,7 @@ class AddLiquidity extends Component {
             {t('youWillMint')} {b(`${inputValue}`)} {t('liquidityTokens')}
           </div>
           <div className="pool__summary-item">{t('totalSupplyIs0')}</div>
-        </div>
+        </>
       )
     }
 
@@ -523,7 +527,7 @@ class AddLiquidity extends Component {
     const adjTotalSupply = totalSupply.dividedBy(10 ** poolTokenDecimals)
 
     return (
-      <div>
+      <>
         <div className="pool__summary-modal__item">
           {t('youAreAdding')} {b(`${+BN(inputValue).toFixed(7)} ETH`)} {t('and')}{' '}
           {b(`${+minOutput.toFixed(7)} - ${+maxOutput.toFixed(7)} ${label}`)} {t('intoPool')}
@@ -538,14 +542,13 @@ class AddLiquidity extends Component {
           {t('tokenWorth')} {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH {t('and')}{' '}
           {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}
         </div>
-      </div>
+      </>
     )
   }
 
   render() {
     const {
       t,
-      isConnected,
       exchangeAddresses: { fromToken },
       selectors
     } = this.props
@@ -555,19 +558,8 @@ class AddLiquidity extends Component {
     const { inputError, outputError, isValid } = this.validate()
     const { label } = selectors().getTokenBalance(outputCurrency, fromToken[outputCurrency])
 
-    return [
-      <div
-        key="content"
-        className={classnames('swap__content', {
-          'swap--inactive': !isConnected
-        })}
-      >
-        <NavigationTabs
-          className={classnames('header__navigation', {
-            'header--inactive': !isConnected
-          })}
-        />
-
+    return (
+      <>
         {this.isNewExchange() ? (
           <div className="pool__new-exchange-warning">
             <div className="pool__new-exchange-warning-text">
@@ -579,7 +571,7 @@ class AddLiquidity extends Component {
             <div className="pool__new-exchange-warning-text">{t('initialExchangeRate', { label })}</div>
           </div>
         ) : null}
-        <ModeSelector title={t('addLiquidity')} />
+
         <CurrencyInputPanel
           title={t('deposit')}
           extraText={this.getBalance(inputCurrency)}
@@ -615,26 +607,33 @@ class AddLiquidity extends Component {
         <OversizedPanel hideBottom>{this.renderInfo()}</OversizedPanel>
         {this.renderSummary(inputError, outputError)}
         <div className="pool__cta-container">
-          <button
-            className={classnames('pool__cta-btn', {
-              'swap--inactive': !this.props.isConnected,
-              'pool__cta-btn--inactive': !isValid
-            })}
-            disabled={!isValid}
-            onClick={this.onAddLiquidity}
-          >
-            {t('addLiquidity')}
-          </button>
+          <AddLiquidityButton callOnClick={this.onAddLiquidity} isValid={isValid} />
         </div>
-      </div>
-    ]
+      </>
+    )
   }
+}
+
+function AddLiquidityButton({ callOnClick, isValid }) {
+  const { t } = useTranslation()
+  const context = useWeb3Context()
+
+  const isActive = context.active && context.account
+  return (
+    <button
+      className={classnames('pool__cta-btn', {
+        'pool__cta-btn--inactive': !isActive
+      })}
+      disabled={!isValid}
+      onClick={callOnClick}
+    >
+      {t('addLiquidity')}
+    </button>
+  )
 }
 
 export default connect(
   state => ({
-    isConnected:
-      Boolean(state.web3connect.account) && state.web3connect.networkId === (process.env.REACT_APP_NETWORK_ID || 1),
     account: state.web3connect.account,
     balances: state.web3connect.balances,
     web3: state.web3connect.web3,

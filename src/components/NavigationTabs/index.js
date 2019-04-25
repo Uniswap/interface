@@ -1,57 +1,76 @@
-import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import React, { useCallback } from 'react'
+import { withRouter, NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
-import { withTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+
 import { dismissBetaMessage } from '../../ducks/app'
-import { Tab, Tabs } from '../Tab'
+import { useBodyKeyDown } from '../../hooks'
 
-import './beta-message.scss'
+import './navigation-tabs.scss'
 
-class NavigationTabs extends Component {
-  static propTypes = {
-    history: PropTypes.shape({
-      push: PropTypes.func.isRequired
-    }),
-    className: PropTypes.string,
-    dismissBetaMessage: PropTypes.func.isRequired,
-    showBetaMessage: PropTypes.bool.isRequired
+const tabOrder = [
+  {
+    path: '/swap',
+    textKey: 'swap',
+    regex: /\/swap/
+  },
+  {
+    path: '/send',
+    textKey: 'send',
+    regex: /\/send/
+  },
+  {
+    path: 'add-liquidity',
+    textKey: 'pool',
+    regex: /\/add-liquidity|\/remove-liquidity|\/create-exchange.*/
   }
+]
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      selectedPath: this.props.location.pathname,
-      className: '',
-      showWarning: true
-    }
-  }
+function NavigationTabs({ location: { pathname }, history, dismissBetaMessage, showBetaMessage }) {
+  const { t } = useTranslation()
 
-  renderTab(name, path, regex) {
-    const { push } = this.props.history
-    return <Tab text={name} onClick={() => push(path)} isSelected={regex.test(this.props.location.pathname)} />
-  }
+  const navigate = useCallback(
+    direction => {
+      const tabIndex = tabOrder.findIndex(({ regex }) => pathname.match(regex))
+      history.push(tabOrder[(tabIndex + tabOrder.length + direction) % tabOrder.length].path)
+    },
+    [pathname, history]
+  )
+  const navigateRight = useCallback(() => {
+    navigate(1)
+  }, [navigate])
+  const navigateLeft = useCallback(() => {
+    navigate(-1)
+  }, [navigate])
 
-  render() {
-    const { t, showBetaMessage, className, dismissBetaMessage } = this.props
-    return (
-      <div>
-        <Tabs className={className}>
-          {this.renderTab(t('swap'), '/swap', /swap/)}
-          {this.renderTab(t('send'), '/send', /send/)}
-          {this.renderTab(t('pool'), '/add-liquidity', /add-liquidity|remove-liquidity|create-exchange/)}
-        </Tabs>
-        {showBetaMessage && (
-          <div className="beta-message" onClick={dismissBetaMessage}>
-            <span role="img" aria-label="warning">
-              💀
-            </span>{' '}
-            {t('betaWarning')}
-          </div>
-        )}
+  useBodyKeyDown('ArrowRight', navigateRight)
+  useBodyKeyDown('ArrowLeft', navigateLeft)
+
+  return (
+    <>
+      <div className="tabs">
+        {tabOrder.map(({ path, textKey, regex }) => (
+          <NavLink
+            key={path}
+            to={path}
+            className="tab"
+            activeClassName="tab--selected"
+            isActive={(_, { pathname }) => pathname.match(regex)}
+          >
+            {t(textKey)}
+          </NavLink>
+        ))}
       </div>
-    )
-  }
+      {showBetaMessage && (
+        <div className="beta-message" onClick={dismissBetaMessage}>
+          <span role="img" aria-label="warning">
+            💀
+          </span>{' '}
+          {t('betaWarning')}
+        </div>
+      )}
+    </>
+  )
 }
 
 export default withRouter(
@@ -62,5 +81,5 @@ export default withRouter(
     dispatch => ({
       dismissBetaMessage: () => dispatch(dismissBetaMessage())
     })
-  )(withTranslation()(NavigationTabs))
+  )(NavigationTabs)
 )

@@ -2,6 +2,11 @@
 
 .header {
   @extend %col-nowrap;
+  display: block;
+
+  &__no-decoration {
+    text-decoration: none;
+  }
 
   &__top {
     @extend %row-nowrap;
@@ -27,10 +32,6 @@
     margin-bottom: 1rem;
   }
 
-  &--inactive {
-    opacity: 0.5;
-  }
-
   &__dialog {
     @extend %col-nowrap;
     border-radius: 0.875rem;
@@ -47,7 +48,7 @@
     }
 
     &--disconnected {
-      display: inherit;
+      display: block;
     }
   }
 

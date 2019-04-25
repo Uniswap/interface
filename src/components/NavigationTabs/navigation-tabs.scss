@@ -1,0 +1,58 @@
+@import '../../variables';
+
+.beta-message {
+  @extend %row-nowrap;
+  cursor: pointer;
+  flex: 1 0 auto;
+  align-items: center;
+  position: relative;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba($wisteria-purple, 0.4);
+  background-color: rgba($wisteria-purple, 0.1);
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  text-align: center;
+  color: $wisteria-purple;
+
+  &:after {
+    content: '✕';
+    top: 0.5rem;
+    right: 1rem;
+    position: absolute;
+    color: $wisteria-purple;
+  }
+}
+
+.tabs {
+  @extend %row-nowrap;
+  align-items: center;
+  height: 2.5rem;
+  background-color: $concrete-gray;
+  border-radius: 3rem;
+  box-shadow: 0 0 0 0.5px darken($concrete-gray, 5);
+  margin-bottom: 1rem;
+}
+
+.tab {
+  @extend %row-nowrap;
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem;
+  flex: 1 0 auto;
+  border-radius: 3rem;
+
+  cursor: pointer;
+  text-decoration: none;
+  color: $dove-gray;
+  font-size: 1rem;
+
+  &--selected {
+    background-color: $white;
+    border-radius: 3rem;
+    box-shadow: 0 0 0.5px 0.5px $mercury-gray;
+    font-weight: 500;
+    color: $royal-blue;
+  }
+}

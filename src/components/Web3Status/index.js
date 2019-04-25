@@ -6,8 +6,10 @@ import Jazzicon from 'jazzicon'
 import { CSSTransitionGroup } from 'react-transition-group'
 import { withTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
-import './web3-status.scss'
+
 import Modal from '../Modal'
+
+import './web3-status.scss'
 
 function getEtherscanLink(tx) {
   return `https://etherscan.io/tx/${tx}`
@@ -138,7 +140,6 @@ Web3Status.defaultProps = {
 export default connect(state => {
   return {
     address: state.web3connect.account,
-    isConnected: !!(state.web3connect.web3 && state.web3connect.account),
     pending: state.web3connect.transactions.pending,
     confirmed: state.web3connect.transactions.confirmed
   }
