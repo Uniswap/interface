@@ -75,7 +75,7 @@ function CurrencyInputPanel({
     if (inputRef.current && isShowingModal) {
       inputRef.current.focus()
     }
-  }, [inputRef.current, isShowingModal])
+  }, [isShowingModal])
 
   function createTokenList() {
     let tokens = tokenAddresses.addresses

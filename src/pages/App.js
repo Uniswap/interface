@@ -20,7 +20,7 @@ function App({ initialized, setAddresses, updateNetwork, updateAccount, initiali
   // start web3-react on page-load
   useEffect(() => {
     context.setConnector('WalletConnect')
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (context.active && context.connectorName === 'WalletConnect') {
     if (!context.account) {
@@ -40,7 +40,7 @@ function App({ initialized, setAddresses, updateNetwork, updateAccount, initiali
       updateNetwork(context.library._web3Provider, context.networkId)
       setReduxNetworkInitialized(true)
     }
-  }, [context.active, context.networkId])
+  }, [context.active, context.networkId, context.library]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // initialize redux account
   const [reduxAccountInitialized, setReduxAccountInitialized] = useState(false)
@@ -49,14 +49,14 @@ function App({ initialized, setAddresses, updateNetwork, updateAccount, initiali
       updateAccount(context.account)
       setReduxAccountInitialized(true)
     }
-  }, [context.active, context.account])
+  }, [context.active, context.account]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // initialize redux
   useEffect(() => {
     if (reduxNetworkInitialized && reduxAccountInitialized) {
       initialize().then(startWatching)
     }
-  }, [reduxNetworkInitialized, reduxAccountInitialized])
+  }, [reduxNetworkInitialized, reduxAccountInitialized]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // active state
   if (initialized || context.error) {

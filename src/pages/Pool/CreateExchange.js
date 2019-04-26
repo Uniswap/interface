@@ -40,7 +40,7 @@ function CreateExchange({ history, location, addExchange, addPendingTx }) {
     if (location.state) {
       history.replace(location.pathname)
     }
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // handle changes to tokenAddress
   useEffect(() => {
@@ -91,7 +91,7 @@ function CreateExchange({ history, location, addExchange, addPendingTx }) {
       setErrorMessage()
       setTokenDetails()
     }
-  }, [tokenAddress, signerOrProvider, context.networkId])
+  }, [tokenAddress, signerOrProvider, context.networkId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   async function createExchange() {
     const estimatedGasLimit = await factory.estimate.createExchange(tokenAddress)
