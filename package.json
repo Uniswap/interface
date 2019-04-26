@@ -5,8 +5,8 @@
   "homepage": ".",
   "private": true,
   "dependencies": {
-    "@walletconnect/qrcode-modal": "1.0.0-beta.12",
-    "@walletconnect/web3-subprovider": "1.0.0-beta.12",
+    "@walletconnect/qrcode-modal": "^1.0.0-beta.18",
+    "@walletconnect/web3-subprovider": "^1.0.0-beta.18",
     "bignumber.js": "^7.2.1",
     "classnames": "^2.2.6",
     "ethers": "^4.0.27",
@@ -50,6 +50,7 @@
   },
   "license": "GPL-3.0-or-later",
   "devDependencies": {
+    "@babel/plugin-syntax-jsx": "^7.2.0",
     "prettier": "^1.17.0"
   },
   "browserslist": [
