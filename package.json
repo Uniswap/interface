@@ -5,8 +5,8 @@
   "homepage": ".",
   "private": true,
   "dependencies": {
-    "@walletconnect/qrcode-modal": "^1.0.0-beta.18",
-    "@walletconnect/web3-subprovider": "^1.0.0-beta.18",
+    "@walletconnect/qrcode-modal": "1.0.0-beta.12",
+    "@walletconnect/web3-subprovider": "1.0.0-beta.12",
     "bignumber.js": "^7.2.1",
     "classnames": "^2.2.6",
     "ethers": "^4.0.27",

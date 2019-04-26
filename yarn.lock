@@ -1253,7 +1253,7 @@
   dependencies:
     "@types/ethereum-protocol" "*"
 
-"@walletconnect/browser@^1.0.0-beta.18":
+"@walletconnect/browser@^1.0.0-beta.12":
   version "1.0.0-beta.18"
   resolved "https://registry.yarnpkg.com/@walletconnect/browser/-/browser-1.0.0-beta.18.tgz#97af55422c3d0943ba512c91d2cb541bd8403bc2"
   integrity sha512-2dXIGQxUL0LCAIwIOIpZ8Hemkx4V6qdmRrgtDuaaAgmbMoh45N90e+38jH4wY5T0psITT7BP9Y5ceGLgAz8c+Q==
@@ -1270,7 +1270,15 @@
     "@walletconnect/types" "^1.0.0-beta.17"
     "@walletconnect/utils" "^1.0.0-beta.18"
 
-"@walletconnect/qrcode-modal@^1.0.0-beta.18":
+"@walletconnect/qrcode-modal@1.0.0-beta.12":
+  version "1.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@walletconnect/qrcode-modal/-/qrcode-modal-1.0.0-beta.12.tgz#4761208af360d7d1f79bd89fb6db14b3007b9cd5"
+  integrity sha512-C7rwkRt2A7crnsPxUOCW67tvW0l7yJl7wcEH0hhBDCHD7gSt+uXrBRwb47Qq3ku5rpYvM9TbxRmTiqWHefEj9A==
+  dependencies:
+    "@walletconnect/types" "^1.0.0-beta.12"
+    qr-image "^3.2.0"
+
+"@walletconnect/qrcode-modal@^1.0.0-beta.12":
   version "1.0.0-beta.18"
   resolved "https://registry.yarnpkg.com/@walletconnect/qrcode-modal/-/qrcode-modal-1.0.0-beta.18.tgz#69da4665b0ac3a2b4c171f2adf72005295739bf6"
   integrity sha512-IBQZf4jo3Iw7bmcTzfpv1eq70+c+rgjxVecg8KzkExf7ivfDcrykkKh0NTWXpHbbWLc2f6YSlC9yePqKydwAFA==
@@ -1278,12 +1286,12 @@
     "@walletconnect/types" "^1.0.0-beta.17"
     qr-image "^3.2.0"
 
-"@walletconnect/types@^1.0.0-beta.17":
+"@walletconnect/types@^1.0.0-beta.12", "@walletconnect/types@^1.0.0-beta.17":
   version "1.0.0-beta.18"
   resolved "https://registry.yarnpkg.com/@walletconnect/types/-/types-1.0.0-beta.18.tgz#c258413d41e4c557b68cef5d22ff463c3b1cd0d6"
   integrity sha512-cqhVcyNdXEDvnUUD8r7cWI6ZHeIsIOriJMIkOuxslWbaHadnJ0SGStJ9sSINibAMD/ZUEabQZRWA18BxL4jRvQ==
 
-"@walletconnect/utils@^1.0.0-beta.18":
+"@walletconnect/utils@^1.0.0-beta.12", "@walletconnect/utils@^1.0.0-beta.18":
   version "1.0.0-beta.18"
   resolved "https://registry.yarnpkg.com/@walletconnect/utils/-/utils-1.0.0-beta.18.tgz#077569c9c7e525ec8a50f4014eb662ca33694cec"
   integrity sha512-IgpJyHmtgRmset5gZZ9gTGziZQ5fKWtTud41vosKtQhgvh8+HQkPVWPqj/KxQupLFWK3/ACo1CqlxoKAjctpOQ==
@@ -1292,15 +1300,15 @@
     js-sha3 "^0.8.0"
     lodash.isnumber "^3.0.3"
 
-"@walletconnect/web3-subprovider@^1.0.0-beta.18":
-  version "1.0.0-beta.18"
-  resolved "https://registry.yarnpkg.com/@walletconnect/web3-subprovider/-/web3-subprovider-1.0.0-beta.18.tgz#98f8754f6c0792b326fa8f5f77f3c4a4a3085ad1"
-  integrity sha512-kG2Xn9EGQlF/zAYCUnd37SERwqI//sCRY26bIqydHJAgPS9PfOHMIsO5sqrFFWI3ec+LRZ9MsIk423i4s9YNog==
+"@walletconnect/web3-subprovider@1.0.0-beta.12":
+  version "1.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@walletconnect/web3-subprovider/-/web3-subprovider-1.0.0-beta.12.tgz#48af9db686227b952f3eb0190418f0cec6f82df4"
+  integrity sha512-ztKF56fDlqnwooLt7fEoT1qkEy06cBs1BiQhSW1tGO42WGiwZHUY9WTgsB5XOsYEqmvEiF6fwKzPkibxhaTDdg==
   dependencies:
-    "@walletconnect/browser" "^1.0.0-beta.18"
-    "@walletconnect/qrcode-modal" "^1.0.0-beta.18"
-    "@walletconnect/types" "^1.0.0-beta.17"
-    "@walletconnect/utils" "^1.0.0-beta.18"
+    "@walletconnect/browser" "^1.0.0-beta.12"
+    "@walletconnect/qrcode-modal" "^1.0.0-beta.12"
+    "@walletconnect/types" "^1.0.0-beta.12"
+    "@walletconnect/utils" "^1.0.0-beta.12"
     web3-provider-engine "github:walletconnect/web3-provider-engine"
 
 "@webassemblyjs/ast@1.7.11":
