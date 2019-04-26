@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import ReactGA from 'react-ga'
 import Web3Provider, { Connectors } from 'web3-react'
+import WalletConnectApi from '@walletconnect/web3-subprovider'
 
 import './i18n'
 import App from './pages/App'
@@ -16,12 +17,16 @@ if (process.env.NODE_ENV === 'production') {
 }
 ReactGA.pageview(window.location.pathname + window.location.search)
 
-const { InjectedConnector, NetworkOnlyConnector } = Connectors
-const Injected = new InjectedConnector({ supportedNetworks: [Number(process.env.REACT_APP_NETWORK_ID) || 1] })
-const Infura = new NetworkOnlyConnector({
-  providerURL: process.env.REACT_APP_NETWORK_URL || ''
+const { WalletConnectConnector } = Connectors
+const WalletConnect = new WalletConnectConnector({
+  api: WalletConnectApi,
+  bridge: 'https://bridge.walletconnect.org',
+  supportedNetworkURLs: {
+    1: process.env.REACT_APP_NETWORK_URL
+  },
+  defaultNetwork: 1
 })
-const connectors = { Injected, Infura }
+const connectors = { WalletConnect }
 
 ReactDOM.render(
   <Provider store={store}>

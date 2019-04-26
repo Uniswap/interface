@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
-import { useWeb3Context, Connectors } from 'web3-react'
+import { useWeb3Context } from 'web3-react'
+import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal'
 
 import NavigationTabs from '../components/NavigationTabs'
 import { updateNetwork, updateAccount, initialize, startWatching } from '../ducks/web3connect'
@@ -13,28 +14,23 @@ import Pool from './Pool'
 
 import './App.scss'
 
-const { Connector, InjectedConnector } = Connectors
-
 function App({ initialized, setAddresses, updateNetwork, updateAccount, initialize, startWatching }) {
   const context = useWeb3Context()
 
   // start web3-react on page-load
   useEffect(() => {
-    context.setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
-      if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-        context.setError(error, { connectorName: 'Injected' })
-      } else {
-        context.setConnector('Infura')
-      }
-    })
+    context.setConnector('WalletConnect')
   }, [])
 
-  // if the metamask user logs out, set the infura provider
-  useEffect(() => {
-    if (context.error && context.error.code === InjectedConnector.errorCodes.UNLOCK_REQUIRED) {
-      context.setConnector('Infura')
+  if (context.active && context.connectorName === 'WalletConnect') {
+    if (!context.account) {
+      WalletConnectQRCodeModal.open(context.connector.walletConnector.uri, () => {})
+    } else {
+      try {
+        WalletConnectQRCodeModal.close()
+      } catch {}
     }
-  }, [context.error, context.connectorName])
+  }
 
   // initialize redux network
   const [reduxNetworkInitialized, setReduxNetworkInitialized] = useState(false)
@@ -68,7 +64,7 @@ function App({ initialized, setAddresses, updateNetwork, updateAccount, initiali
       <div id="app-container">
         <Header />
         {/* this is an intermediate state before infura is set */}
-        {initialized && (!context.error || context.error.code === InjectedConnector.errorCodes.UNLOCK_REQUIRED) && (
+        {initialized && !context.error && (
           <div className="app__wrapper">
             <div className="body">
               <div className="body__content">
