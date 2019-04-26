@@ -67,9 +67,9 @@ function CreateExchange({ history, location, addExchange, addPendingTx }) {
         })
         .catch(error => {
           if (!stale) {
-            if (error.code === errorCodes.TOKEN_DETAILS_DECIMALS) {
+            if (error.code === errorCodes.TOKEN_DECIMALS) {
               setErrorMessage(t('invalidDecimals'))
-            } else if (error.code === errorCodes.TOKEN_DETAILS_SYMBOL) {
+            } else if (error.code === errorCodes.TOKEN_SYMBOL) {
               setErrorMessage(t('invalidSymbol'))
             } else {
               setErrorMessage(t('invalidTokenAddress'))
