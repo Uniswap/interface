@@ -141,7 +141,7 @@ export function Updater() {
   useEffect(() => {
     clearValuesBalance()
     clearValuesAllowance()
-  }, [networkId])
+  }, [clearValuesBalance, clearValuesAllowance, networkId])
 
   return null
 }
@@ -177,7 +177,7 @@ export function useAddressBalance(address, tokenAddress, includeBlockNumber = fa
         }
       }
     },
-    [address, tokenAddress, library, globalBlockNumber]
+    [address, tokenAddress, library, updateValue, clearValue, globalBlockNumber]
   )
 
   useEffect(fetchAndUpdateAddressBalance, [address, tokenAddress])
@@ -216,7 +216,7 @@ export function useAddressAllowance(address, tokenAddress, spenderAddress) {
         }
       }
     },
-    [address, tokenAddress, spenderAddress, library, globalBlockNumber]
+    [address, tokenAddress, spenderAddress, library, updateValue, clearValue, globalBlockNumber]
   )
 
   useEffect(fetchAndUpdateAddressAllowance, [address, tokenAddress, spenderAddress])
@@ -235,13 +235,13 @@ export function useExchangeReserves(tokenAddress) {
     true
   )
 
-  function getSyncedReserves() {
+  const getSyncedReserves = useCallback(() => {
     if (reserveETH && reserveToken && reserveETHBlockNumber === reserveTokenBlockNumber) {
       return { reserveETH, reserveToken, blockNumber: reserveETHBlockNumber }
     } else {
       return { reserveETH: undefined, reserveToken: undefined }
     }
-  }
+  }, [reserveETH, reserveETHBlockNumber, reserveToken, reserveTokenBlockNumber])
 
   const [syncedReserves, setSyncedReserves] = useState(getSyncedReserves())
 
@@ -254,7 +254,15 @@ export function useExchangeReserves(tokenAddress) {
     ) {
       setSyncedReserves(getSyncedReserves())
     }
-  })
+  }, [
+    reserveETH,
+    reserveToken,
+    reserveETHBlockNumber,
+    reserveTokenBlockNumber,
+    setSyncedReserves,
+    getSyncedReserves,
+    syncedReserves.blockNumber
+  ])
 
   return { reserveETH: syncedReserves.reserveETH, reserveToken: syncedReserves.reserveToken }
 }

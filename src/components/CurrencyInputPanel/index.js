@@ -12,7 +12,7 @@ import Modal from '../Modal'
 import TokenLogo from '../TokenLogo'
 import SearchIcon from '../../assets/images/magnifying-glass.svg'
 import { useTokenDetails, useAllTokenDetails, useTokenDetailsContext } from '../../contexts/Static'
-import { useTransactionContext, getPendingApproval } from '../../contexts/Transaction'
+import { useTransactionContext, usePendingApproval } from '../../contexts/Transaction'
 
 import './currency-panel.scss'
 import { useWeb3Context } from 'web3-react'
@@ -55,7 +55,7 @@ export default function CurrencyInputPanel({
 
   const { forceUpdateValue } = useTokenDetailsContext()
 
-  const pendingApproval = getPendingApproval(selectedTokenAddress)
+  const pendingApproval = usePendingApproval(selectedTokenAddress)
 
   const { addTransaction } = useTransactionContext()
   const inputRef = useRef()
@@ -71,7 +71,7 @@ export default function CurrencyInputPanel({
     if (inputRef.current && isShowingModal) {
       inputRef.current.focus()
     }
-  }, [inputRef.current, isShowingModal])
+  }, [isShowingModal])
 
   function createTokenList() {
     return Object.keys(allTokens)

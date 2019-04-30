@@ -49,7 +49,7 @@ export function useContract(address, ABI, withSignerIfPossible = true) {
     } catch {
       return null
     }
-  }, [address, ABI, withSignerIfPossible, account])
+  }, [address, ABI, library, withSignerIfPossible, account])
 }
 
 // returns null on errors
@@ -62,7 +62,7 @@ export function useTokenContract(tokenAddress, withSignerIfPossible = true) {
     } catch {
       return null
     }
-  }, [tokenAddress, withSignerIfPossible, account])
+  }, [tokenAddress, library, withSignerIfPossible, account])
 }
 
 // returns null on errors

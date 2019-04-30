@@ -266,7 +266,7 @@ export default function Swap() {
         setIndependentError()
       }
     }
-  }, [independentValue, independentDecimals])
+  }, [independentValue, independentDecimals, t])
 
   // calculate slippage from target rate
   const { minimum: dependentValueMinumum, maximum: dependentValueMaximum } = calculateSlippageBounds(
@@ -296,7 +296,7 @@ export default function Swap() {
         setShowUnlock(false)
       }
     }
-  }, [independentField, independentValueParsed, dependentValueMaximum, inputBalance, inputCurrency, inputAllowance])
+  }, [independentField, independentValueParsed, dependentValueMaximum, inputBalance, inputCurrency, inputAllowance, t])
 
   // calculate dependent value
   useEffect(() => {
@@ -390,7 +390,8 @@ export default function Swap() {
     outputReserveToken,
     inputReserveETH,
     inputReserveToken,
-    independentField
+    independentField,
+    t
   ])
 
   const [inverted, setInverted] = useState(false)

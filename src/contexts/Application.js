@@ -65,7 +65,7 @@ export function Updater() {
         stale = true
       }
     }
-  }, [library])
+  }, [library, updateBlockNumber, clearBlockNumber])
 
   // ...and every block...
   useBlockEffect(updateBlockNumber)
@@ -73,7 +73,7 @@ export function Updater() {
   // ...and clear it on network changes
   useEffect(() => {
     clearBlockNumber()
-  }, [networkId])
+  }, [clearBlockNumber, networkId])
 
   return null
 }

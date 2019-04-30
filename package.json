@@ -22,7 +22,7 @@
     "react-i18next": "^10.7.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "^2.1.8",
+    "react-scripts": "^3.0.0",
     "react-transition-group": "1.x",
     "redux": "^3.7.2",
     "redux-subscriber": "^1.1.0",

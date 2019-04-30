@@ -372,7 +372,7 @@ export function Updater() {
 
   useEffect(() => {
     initializeValues(networkId)
-  }, [networkId])
+  }, [initializeValues, networkId])
 
   return null
 }
@@ -399,11 +399,11 @@ export function useTokenDetails(tokenAddress) {
         stale = true
       }
     }
-  }, [tokenAddress, networkId, library])
+  }, [tokenAddress, networkId, library, updateValue])
 
   useEffect(() => {
     fetchAndUpdateTokenDetails()
-  }, [tokenAddress])
+  }, [fetchAndUpdateTokenDetails])
 
   return { name, symbol, decimals, exchangeAddress }
 }

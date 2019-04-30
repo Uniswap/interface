@@ -98,12 +98,12 @@ export function Updater() {
 
   useEffect(() => {
     clearTransactions()
-  }, [networkId])
+  }, [clearTransactions, networkId])
 
   return null
 }
 
-export function getPendingApproval(tokenAddress) {
+export function usePendingApproval(tokenAddress) {
   const { getTransactions } = useTransactionContext()
 
   const allTransactions = getTransactions()
@@ -124,7 +124,7 @@ export function getPendingApproval(tokenAddress) {
   )
 }
 
-export function getAllTransactions() {
+export function useAllTransactions() {
   const { getTransactions } = useTransactionContext()
 
   return getTransactions()

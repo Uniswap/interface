@@ -27,7 +27,7 @@ function CreateExchange({ history, location }) {
     if (location.state) {
       history.replace(location.pathname)
     }
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // validate everything
   const [errorMessage, setErrorMessage] = useState(!account && t('noWallet'))
@@ -51,7 +51,7 @@ function CreateExchange({ history, location }) {
     return () => {
       setErrorMessage()
     }
-  }, [tokenAddress, symbol, decimals, exchangeAddress])
+  }, [tokenAddress, symbol, decimals, exchangeAddress, account, t])
 
   async function createExchange() {
     const estimatedGasLimit = await factory.estimate.createExchange(tokenAddress)

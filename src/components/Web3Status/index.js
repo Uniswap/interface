@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
 
 import Modal from '../Modal'
-import { getAllTransactions } from '../../contexts/Transaction'
+import { useAllTransactions } from '../../contexts/Transaction'
 
 import './web3-status.scss'
 
@@ -39,7 +39,7 @@ export default function Web3Status() {
   const { t } = useTranslation()
   const { active, account } = useWeb3Context()
 
-  const allTransactions = getAllTransactions()
+  const allTransactions = useAllTransactions()
   const pending = Object.keys(allTransactions).filter(t => allTransactions[t].completed === false)
   const confirmed = Object.keys(allTransactions).filter(t => allTransactions[t].completed === true)
 

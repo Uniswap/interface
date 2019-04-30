@@ -27,14 +27,14 @@ function App({ initialized, setAddresses, updateNetwork, updateAccount, initiali
         context.setConnector('Infura')
       }
     })
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // if the metamask user logs out, set the infura provider
   useEffect(() => {
     if (context.error && context.error.code === InjectedConnector.errorCodes.UNLOCK_REQUIRED) {
       context.setConnector('Infura')
     }
-  }, [context.error, context.connectorName])
+  }, [context, context.error, context.connectorName])
 
   // initialize redux network
   const [reduxNetworkInitialized, setReduxNetworkInitialized] = useState(false)
@@ -44,7 +44,7 @@ function App({ initialized, setAddresses, updateNetwork, updateAccount, initiali
       updateNetwork(context.library._web3Provider, context.networkId)
       setReduxNetworkInitialized(true)
     }
-  }, [context.active, context.networkId])
+  }, [context.active, context.networkId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // initialize redux account
   const [reduxAccountInitialized, setReduxAccountInitialized] = useState(false)
@@ -53,14 +53,14 @@ function App({ initialized, setAddresses, updateNetwork, updateAccount, initiali
       updateAccount(context.account)
       setReduxAccountInitialized(true)
     }
-  }, [context.active, context.account])
+  }, [context.active, context.account]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // initialize redux
   useEffect(() => {
     if (reduxNetworkInitialized && reduxAccountInitialized) {
       initialize().then(startWatching)
     }
-  }, [reduxNetworkInitialized, reduxAccountInitialized])
+  }, [reduxNetworkInitialized, reduxAccountInitialized]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // active state
   if (initialized || context.error) {
