@@ -1,229 +1,91 @@
-import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useMemo, useCallback, useEffect } from 'react'
 import { useWeb3Context } from 'web3-react'
-import { ethers } from 'ethers'
 
-import FACTORY_ABI from '../abi/factory'
-import {
-  getSignerOrProvider,
-  getContract,
-  getEtherBalance,
-  getTokenBalance,
-  getExchangeDetails,
-  getTokenAllowance,
-  getExchangeReserves,
-  getTokenDecimals
-} from '../utils'
+import ERC20_ABI from '../abi/erc20'
+import { getContract, getFactoryContract, getExchangeContract } from '../utils'
 
-const FACTORY_ADDRESSES = {
-  1: '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95',
-  4: '0xf5D915570BC477f9B8D6C0E980aA81757A3AaC36'
-}
-
-// generic hooks
 // modified from https://usehooks.com/useKeyPress/
 export function useBodyKeyDown(targetKey, onKeyDown, suppressOnKeyDown = false) {
-  function downHandler({ target: { tagName }, key }) {
-    if (key === targetKey && tagName === 'BODY' && !suppressOnKeyDown) {
-      onKeyDown()
-    }
-  }
+  const downHandler = useCallback(
+    ({ target: { tagName }, key }) => {
+      if (key === targetKey && tagName === 'BODY' && !suppressOnKeyDown) {
+        onKeyDown()
+      }
+    },
+    [targetKey, onKeyDown, suppressOnKeyDown]
+  )
 
   useEffect(() => {
     window.addEventListener('keydown', downHandler)
     return () => {
       window.removeEventListener('keydown', downHandler)
     }
-  }, [targetKey, onKeyDown, suppressOnKeyDown])
+  }, [downHandler])
 }
 
-// slightly less generic hooks
-export function useSignerOrProvider() {
-  const { library, account } = useWeb3Context()
-
-  return useMemo(() => getSignerOrProvider(library, account), [library, account])
-}
-
-function useBlockEffect(effect) {
+export function useBlockEffect(effect) {
   const { library } = useWeb3Context()
 
-  // run every block
   useEffect(() => {
-    library.on('block', effect)
-    return () => {
-      library.removeListener('block', effect)
+    if (library) {
+      function wrappedEffect(blockNumber) {
+        effect(blockNumber)
+      }
+      library.on('block', wrappedEffect)
+      return () => {
+        library.removeListener('block', wrappedEffect)
+      }
     }
   }, [library, effect])
 }
 
-// returns null if the contract cannot be created for any reason
-function useContract(contractAddress, ABI) {
-  const signerOrProvider = useSignerOrProvider()
+// returns null on errors
+export function useContract(address, ABI, withSignerIfPossible = true) {
+  const { library, account } = useWeb3Context()
 
   return useMemo(() => {
     try {
-      return getContract(contractAddress, ABI, signerOrProvider)
+      return getContract(address, ABI, library, withSignerIfPossible ? account : undefined)
     } catch {
       return null
     }
-  }, [contractAddress, ABI, signerOrProvider])
+  }, [address, ABI, withSignerIfPossible, account])
 }
 
-// more specific hooks
-export function useFactoryContract() {
-  const { networkId } = useWeb3Context()
-
-  return useContract(FACTORY_ADDRESSES[networkId], FACTORY_ABI)
-}
-
-// returns the exchange address for a token, from the uniswap factory
-export function useExchangeDetails(tokenAddress) {
-  const { networkId } = useWeb3Context()
-  const signerOrProvider = useSignerOrProvider()
-
-  const [exchangeDetails, setExchangeDetails] = useState()
-
-  useEffect(() => {
-    let stale = false
-
-    getExchangeDetails(networkId, tokenAddress, signerOrProvider)
-      .then(({ exchangeAddress }) => {
-        if (!stale) {
-          setExchangeDetails(exchangeAddress)
-        }
-      })
-      .catch(() => {})
-
-    return () => {
-      stale = true
-      setExchangeDetails()
-    }
-  }, [networkId, tokenAddress, signerOrProvider])
-
-  return exchangeDetails
-}
-
-// returns the allowance
-export function useAllowance(tokenAddress, spenderAddress) {
-  const { account } = useWeb3Context()
-  const signerOrProvider = useSignerOrProvider()
-
-  const [allowance, setAllowance] = useState(tokenAddress === 'ETH' ? ethers.constants.MaxUint256 : undefined)
-
-  const updateAllowance = useCallback(() => {
-    if (tokenAddress === 'ETH') {
-      setAllowance(ethers.constants.MaxUint256)
-    } else {
-      let stale = false
-
-      getTokenAllowance(tokenAddress, account, spenderAddress, signerOrProvider)
-        .then(allowance => {
-          if (!stale) {
-            setAllowance(allowance)
-          }
-        })
-        .catch(() => {})
-
-      return () => {
-        stale = true
-        setAllowance()
-      }
-    }
-  }, [tokenAddress, account, spenderAddress, signerOrProvider])
-
-  useEffect(updateAllowance, [updateAllowance])
-  useBlockEffect(updateAllowance)
-
-  return allowance
-}
-
-export function useBalance(tokenAddress) {
+// returns null on errors
+export function useTokenContract(tokenAddress, withSignerIfPossible = true) {
   const { library, account } = useWeb3Context()
-  const signerOrProvider = useSignerOrProvider()
 
-  const [balance, setBalance] = useState()
-
-  const updateBalance = useCallback(() => {
-    let stale = false
-    const balancePromise =
-      tokenAddress === 'ETH'
-        ? getEtherBalance(library, account)
-        : getTokenBalance(tokenAddress, account, signerOrProvider)
-
-    balancePromise
-      .then(balance => {
-        if (!stale) {
-          setBalance(balance)
-        }
-      })
-      .catch(() => {})
-
-    return () => {
-      stale = true
-      setBalance()
+  return useMemo(() => {
+    try {
+      return getContract(tokenAddress, ERC20_ABI, library, withSignerIfPossible ? account : undefined)
+    } catch {
+      return null
     }
-  }, [tokenAddress, library, account, signerOrProvider])
-
-  useEffect(updateBalance, [updateBalance])
-  useBlockEffect(updateBalance)
-
-  return balance
+  }, [tokenAddress, withSignerIfPossible, account])
 }
 
-export function useTokenDecimals(tokenAddress) {
-  const signerOrProvider = useSignerOrProvider()
+// returns null on errors
+export function useFactoryContract(withSignerIfPossible = true) {
+  const { networkId, library, account } = useWeb3Context()
 
-  const [decimals, setDecimals] = useState(tokenAddress === 'ETH' ? 18 : undefined)
-
-  useEffect(() => {
-    if (tokenAddress === 'ETH') {
-      setDecimals(18)
-    } else {
-      let stale = false
-
-      getTokenDecimals(tokenAddress, signerOrProvider)
-        .then(decimals => {
-          if (!stale) {
-            setDecimals(decimals)
-          }
-        })
-        .catch(() => {})
-
-      return () => {
-        stale = true
-        setDecimals()
-      }
+  return useMemo(() => {
+    try {
+      return getFactoryContract(networkId, library, withSignerIfPossible ? account : undefined)
+    } catch {
+      return null
     }
-  }, [tokenAddress, signerOrProvider])
-
-  return decimals
+  }, [networkId, library, withSignerIfPossible, account])
 }
 
-const initialReserves = { reserveETH: undefined, reserveToken: undefined }
-export function useExchangeReserves(exchangeAddress, tokenAddress) {
-  const { library } = useWeb3Context()
-  const signerOrProvider = useSignerOrProvider()
+export function useExchangeContract(exchangeAddress, withSignerIfPossible = true) {
+  const { library, account } = useWeb3Context()
 
-  const [reserves, setReserves] = useState(initialReserves)
-
-  const updateReserves = useCallback(() => {
-    let stale = false
-
-    getExchangeReserves(library, exchangeAddress, tokenAddress, signerOrProvider)
-      .then(({ reserveETH, reserveToken }) => {
-        if (!stale) {
-          setReserves({ reserveETH, reserveToken })
-        }
-      })
-      .catch(() => {})
-
-    return () => {
-      stale = true
-      setReserves(initialReserves)
+  return useMemo(() => {
+    try {
+      return getExchangeContract(exchangeAddress, library, withSignerIfPossible ? account : undefined)
+    } catch {
+      return null
     }
-  }, [library, exchangeAddress, tokenAddress, signerOrProvider])
-
-  useEffect(updateReserves, [updateReserves])
-  useBlockEffect(updateReserves)
-
-  return reserves
+  }, [exchangeAddress, library, withSignerIfPossible, account])
 }

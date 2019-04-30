@@ -1,7 +1,7 @@
 import { BigNumber as BN } from 'bignumber.js'
 import Web3 from 'web3'
 import ERC20_ABI from '../abi/erc20'
-import ERC20_WITH_BYTES_ABI from '../abi/erc20_symbol_bytes32'
+import ERC20_WITH_BYTES_ABI from '../abi/erc20_bytes32'
 
 export const INITIALIZE = 'web3connect/initialize'
 export const INITIALIZE_WEB3 = 'web3connect/initializeWeb3'

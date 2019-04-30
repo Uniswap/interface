@@ -1,22 +1,18 @@
 import { ethers } from 'ethers'
 
 import FACTORY_ABI from '../abi/factory'
+import EXCHANGE_ABI from '../abi/exchange'
 import ERC20_ABI from '../abi/erc20'
-import ERC20_WITH_BYTES_ABI from '../abi/erc20_symbol_bytes32'
+import ERC20_WITH_BYTES_ABI from '../abi/erc20_bytes32'
+import { FACTORY_ADDRESSES } from '../constants'
 
-const factoryAddresses = {
-  1: '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95',
-  4: '0xf5D915570BC477f9B8D6C0E980aA81757A3AaC36'
-}
-
-export const errorCodes = ['TOKEN_DECIMALS', 'TOKEN_SYMBOL'].reduce((accumulator, currentValue, currentIndex) => {
-  accumulator[currentValue] = currentIndex
-  return accumulator
-}, {})
-
-function getFactoryContract(networkId, signerOrProvider) {
-  return getContract(factoryAddresses[networkId], FACTORY_ABI, signerOrProvider)
-}
+export const ERROR_CODES = ['TOKEN_NAME', 'TOKEN_SYMBOL', 'TOKEN_DECIMALS'].reduce(
+  (accumulator, currentValue, currentIndex) => {
+    accumulator[currentValue] = currentIndex
+    return accumulator
+  },
+  {}
+)
 
 export function isAddress(value) {
   try {
@@ -27,108 +23,123 @@ export function isAddress(value) {
   }
 }
 
-export function getSignerOrProvider(library, account) {
+export function calculateGasMargin(value, margin) {
+  const offset = value.mul(margin).div(ethers.utils.bigNumberify(10000))
+  return value.add(offset)
+}
+
+// account is optional
+export function getProviderOrSigner(library, account) {
   return account ? library.getSigner(account) : library
 }
 
-export function getContract(contractAddress, ABI, signerOrProvider) {
-  return new ethers.Contract(contractAddress, ABI, signerOrProvider)
-}
-
-export async function getTokenDecimals(tokenAddress, signerOrProvider) {
-  if (!isAddress(tokenAddress)) {
-    throw Error(`Invalid tokenAddress '${tokenAddress}'.`)
+// account is optional
+export function getContract(address, ABI, library, account) {
+  if (!isAddress(address) || address === ethers.constants.AddressZero) {
+    throw Error(`Invalid 'address' parameter '${address}'.`)
   }
 
-  const contract = getContract(tokenAddress, ERC20_ABI, signerOrProvider)
-
-  return contract.decimals().catch(error => {
-    error.code = errorCodes.TOKEN_DECIMALS
-    throw error
-  })
+  return new ethers.Contract(address, ABI, getProviderOrSigner(library, account))
 }
 
-// returns decimals and symbol of a token address
-export async function getTokenDetails(tokenAddress, signerOrProvider) {
+// account is optional
+export function getFactoryContract(networkId, library, account) {
+  return getContract(FACTORY_ADDRESSES[networkId], FACTORY_ABI, getProviderOrSigner(library, account))
+}
+
+// account is optional
+export function getExchangeContract(exchangeAddress, library, account) {
+  return getContract(exchangeAddress, EXCHANGE_ABI, getProviderOrSigner(library, account))
+}
+
+// get token name
+export async function getTokenName(tokenAddress, library) {
   if (!isAddress(tokenAddress)) {
-    throw Error(`Invalid tokenAddress '${tokenAddress}'.`)
+    throw Error(`Invalid 'tokenAddress' parameter '${tokenAddress}'.`)
   }
 
-  const contract = getContract(tokenAddress, ERC20_ABI, signerOrProvider)
+  return getContract(tokenAddress, ERC20_ABI, library)
+    .name()
+    .catch(() =>
+      getContract(tokenAddress, ERC20_WITH_BYTES_ABI, library)
+        .name()
+        .then(bytes32 => ethers.utils.parseBytes32String(bytes32))
+    )
+    .catch(error => {
+      error.code = ERROR_CODES.TOKEN_SYMBOL
+      throw error
+    })
+}
 
-  const decimalsPromise = getTokenDecimals()
-  const symbolPromise = contract
+// get token symbol
+export async function getTokenSymbol(tokenAddress, library) {
+  if (!isAddress(tokenAddress)) {
+    throw Error(`Invalid 'tokenAddress' parameter '${tokenAddress}'.`)
+  }
+
+  return getContract(tokenAddress, ERC20_ABI, library)
     .symbol()
     .catch(() => {
-      const contractBytes32 = getContract(tokenAddress, ERC20_WITH_BYTES_ABI, signerOrProvider)
+      const contractBytes32 = getContract(tokenAddress, ERC20_WITH_BYTES_ABI, library)
       return contractBytes32.symbol().then(bytes32 => ethers.utils.parseBytes32String(bytes32))
     })
     .catch(error => {
-      error.code = errorCodes.TOKEN_SYMBOL
+      error.code = ERROR_CODES.TOKEN_SYMBOL
       throw error
     })
-
-  return Promise.all([decimalsPromise, symbolPromise]).then(([decimals, symbol]) => ({
-    decimals,
-    symbol,
-    tokenAddress
-  }))
 }
 
-export async function getExchangeDetails(networkId, tokenAddress, signerOrProvider) {
+// get token decimals
+export async function getTokenDecimals(tokenAddress, library) {
   if (!isAddress(tokenAddress)) {
-    throw Error(`Invalid tokenAddress '${tokenAddress}'.`)
+    throw Error(`Invalid 'tokenAddress' parameter '${tokenAddress}'.`)
   }
 
-  const factoryContract = getFactoryContract(networkId, signerOrProvider)
-
-  return factoryContract.getExchange(tokenAddress).then(exchangeAddress => ({ exchangeAddress, tokenAddress }))
+  return getContract(tokenAddress, ERC20_ABI, library)
+    .decimals()
+    .catch(error => {
+      error.code = ERROR_CODES.TOKEN_DECIMALS
+      throw error
+    })
 }
 
-export async function getEtherBalance(library, address) {
+// get the exchange address for a token from the factory
+export async function getTokenExchangeAddressFromFactory(tokenAddress, networkId, library) {
+  return getFactoryContract(networkId, library).getExchange(tokenAddress)
+}
+
+// get the ether balance of an address
+export async function getEtherBalance(address, library) {
   if (!isAddress(address)) {
-    throw Error(`Invalid address '${address}'`)
+    throw Error(`Invalid 'address' parameter '${address}'`)
   }
 
   return library.getBalance(address)
 }
 
-export async function getTokenBalance(tokenAddress, address, signerOrProvider) {
+// get the token balance of an address
+export async function getTokenBalance(tokenAddress, address, library) {
   if (!isAddress(tokenAddress) || !isAddress(address)) {
-    throw Error(`Invalid tokenAddress '${tokenAddress}', or address '${address}'.`)
+    throw Error(`Invalid 'tokenAddress' or 'address' parameter '${tokenAddress}' or '${address}'.`)
   }
 
-  const contract = getContract(tokenAddress, ERC20_ABI, signerOrProvider)
-
-  return contract.balanceOf(address)
+  return getContract(tokenAddress, ERC20_ABI, library).balanceOf(address)
 }
 
-export async function getTokenAllowance(tokenAddress, address, spenderAccount, signerOrProvider) {
-  if (!isAddress(tokenAddress) || !isAddress(address) || !isAddress(spenderAccount)) {
-    throw Error(`Invalid tokenAddress '${tokenAddress}', address '${address}', or spenderAccount '${spenderAccount}.`)
+// get the token allowance
+export async function getTokenAllowance(address, tokenAddress, spenderAddress, library) {
+  if (!isAddress(address) || !isAddress(tokenAddress) || !isAddress(spenderAddress)) {
+    throw Error(
+      "Invalid 'address' or 'tokenAddress' or 'spenderAddress' parameter" +
+        `'${address}' or '${tokenAddress}' or '${spenderAddress}'.`
+    )
   }
 
-  const contract = getContract(tokenAddress, ERC20_ABI, signerOrProvider)
-
-  return contract.allowance(address, spenderAccount)
-}
-
-export async function getExchangeReserves(library, exchangeAddress, tokenAddress, signerOrProvider) {
-  if (!isAddress(exchangeAddress) || !isAddress(tokenAddress)) {
-    throw Error(`Invalid exchangeAddress '${exchangeAddress}', or tokenAddress '${tokenAddress}.`)
-  }
-
-  const reserveETHPromise = getEtherBalance(library, exchangeAddress)
-  const reserveTokenPromise = getTokenBalance(tokenAddress, exchangeAddress, signerOrProvider)
-
-  return Promise.all([reserveETHPromise, reserveTokenPromise]).then(([reserveETH, reserveToken]) => ({
-    reserveETH,
-    reserveToken
-  }))
+  return getContract(tokenAddress, ERC20_ABI, library).allowance(address, spenderAddress)
 }
 
 // amount must be a BigNumber, {base,display}Decimals must be Numbers
-export function amountFormatter(amount, baseDecimals = 18, displayDecimals = 3) {
+export function amountFormatter(amount, baseDecimals = 18, displayDecimals = 3, useLessThan = true) {
   if (baseDecimals > 18 || displayDecimals > 18 || displayDecimals > baseDecimals) {
     throw Error(`Invalid combination of baseDecimals '${baseDecimals}' and displayDecimals '${displayDecimals}.`)
   }
@@ -152,7 +163,9 @@ export function amountFormatter(amount, baseDecimals = 18, displayDecimals = 3) 
 
     // if balance is less than the minimum display amount
     if (amount.lt(minimumDisplayAmount)) {
-      return `<${ethers.utils.formatUnits(minimumDisplayAmount, baseDecimals)}`
+      return useLessThan
+        ? `<${ethers.utils.formatUnits(minimumDisplayAmount, baseDecimals)}`
+        : `${ethers.utils.formatUnits(amount, baseDecimals)}`
     }
     // if the balance is greater than the minimum display amount
     else {
@@ -179,7 +192,7 @@ export function amountFormatter(amount, baseDecimals = 18, displayDecimals = 3) 
         }
         // decimals are not too small to show
         else {
-          return `${wholeComponent}.${roundedDecimalComponent.toString()}`
+          return `${wholeComponent}.${roundedDecimalComponent.toString().replace(/0*$/, '')}`
         }
       }
     }

@@ -1,25 +1,23 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { connect } from 'react-redux'
 import { CSSTransitionGroup } from 'react-transition-group'
 import classnames from 'classnames'
-import { withRouter } from 'react-router-dom'
-import { withTranslation, useTranslation } from 'react-i18next'
-import { BigNumber as BN } from 'bignumber.js'
-import { useWeb3Context } from 'web3-react'
+import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
 
-import { useSignerOrProvider } from '../../hooks'
-import { getExchangeDetails, getTokenDetails, isAddress } from '../../utils'
+import { useTokenContract } from '../../hooks'
+import { isAddress, calculateGasMargin } from '../../utils'
 import Fuse from '../../helpers/fuse'
 import Modal from '../Modal'
 import TokenLogo from '../TokenLogo'
 import SearchIcon from '../../assets/images/magnifying-glass.svg'
-import { selectors, addPendingTx } from '../../ducks/web3connect'
-import { addApprovalTx } from '../../ducks/pending'
-import { addExchange } from '../../ducks/addresses'
-import ERC20_ABI from '../../abi/erc20'
+import { useTokenDetails, useAllTokenDetails, useTokenDetailsContext } from '../../contexts/Static'
+import { useTransactionContext, getPendingApproval } from '../../contexts/Transaction'
 
 import './currency-panel.scss'
+import { useWeb3Context } from 'web3-react'
+
+const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
 const FUSE_OPTIONS = {
   includeMatches: false,
@@ -32,10 +30,7 @@ const FUSE_OPTIONS = {
   keys: [{ name: 'address', weight: 0.8 }, { name: 'label', weight: 0.5 }]
 }
 
-const TOKEN_ADDRESS_TO_LABEL = { ETH: 'ETH' }
-
-function CurrencyInputPanel({
-  tokenAddresses,
+export default function CurrencyInputPanel({
   filteredTokens = [],
   onValueChange = () => {},
   renderInput,
@@ -43,34 +38,35 @@ function CurrencyInputPanel({
   title,
   description,
   extraText,
+  extraTextClickHander,
   errorMessage,
   selectedTokens = [],
   disableUnlock,
   disableTokenSelect,
-  selectors,
-  account,
-  factoryAddress,
   selectedTokenAddress = '',
-  exchangeAddresses: { fromToken },
-  addExchange,
-  history,
-  web3,
-  transactions,
-  pendingApprovals,
-  value,
-  addApprovalTx,
-  addPendingTx
+  showUnlock,
+  value
 }) {
   const { t } = useTranslation()
-  const context = useWeb3Context()
-  const signerOrProvider = useSignerOrProvider()
+  const { networkId, library } = useWeb3Context()
 
+  const tokenContract = useTokenContract(selectedTokenAddress)
+  const { exchangeAddress: selectedTokenExchangeAddress } = useTokenDetails(selectedTokenAddress)
+
+  const { forceUpdateValue } = useTokenDetailsContext()
+
+  const pendingApproval = getPendingApproval(selectedTokenAddress)
+
+  const { addTransaction } = useTransactionContext()
   const inputRef = useRef()
 
   const [isShowingModal, setIsShowingModal] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [loadingExchange, setLoadingExchange] = useState(false)
+  const { exchangeAddress: searchQueryExchangeAddress } = useTokenDetails(searchQuery)
 
+  const allTokens = useAllTokenDetails()
+
+  // manage focus on modal show
   useEffect(() => {
     if (inputRef.current && isShowingModal) {
       inputRef.current.focus()
@@ -78,19 +74,25 @@ function CurrencyInputPanel({
   }, [inputRef.current, isShowingModal])
 
   function createTokenList() {
-    let tokens = tokenAddresses.addresses
-    let tokenList = [{ value: 'ETH', label: 'ETH', address: 'ETH' }]
-
-    for (let i = 0; i < tokens.length; i++) {
-      let entry = { value: '', label: '' }
-      entry.value = tokens[i][0]
-      entry.label = tokens[i][0]
-      entry.address = tokens[i][1]
-      tokenList.push(entry)
-      TOKEN_ADDRESS_TO_LABEL[tokens[i][1]] = tokens[i][0]
-    }
-
-    return tokenList.filter(({ address }) => !filteredTokens.includes(address))
+    return Object.keys(allTokens)
+      .slice()
+      .sort((a, b) => {
+        const aSymbol = allTokens[a].symbol
+        const bSymbol = allTokens[b].symbol
+        if (aSymbol === 'ETH' || bSymbol === 'ETH') {
+          return aSymbol === 'ETH' ? -1 : 1
+        } else {
+          return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
+        }
+      })
+      .map(k => {
+        return {
+          value: allTokens[k].symbol,
+          label: allTokens[k].symbol,
+          address: k
+        }
+      })
+      .filter(({ address }) => !filteredTokens.includes(address))
   }
 
   function onTokenSelect(address) {
@@ -103,7 +105,11 @@ function CurrencyInputPanel({
   function renderTokenList() {
     const tokens = createTokenList()
 
-    if (loadingExchange) {
+    if (disableTokenSelect) {
+      return
+    }
+
+    if (isAddress(searchQuery) && searchQueryExchangeAddress === undefined) {
       return (
         <div className="token-modal__token-row token-modal__token-row--searching">
           <div className="loader" />
@@ -112,33 +118,7 @@ function CurrencyInputPanel({
       )
     }
 
-    if (isAddress(searchQuery)) {
-      const tokenAddress = searchQuery
-      const exchangeAddress = fromToken[tokenAddress]
-
-      if (!exchangeAddress) {
-        setLoadingExchange(true)
-
-        getExchangeDetails(context.networkId, tokenAddress, signerOrProvider).then(async ({ exchangeAddress }) => {
-          if (exchangeAddress !== ethers.constants.AddressZero) {
-            const { symbol } = await getTokenDetails(tokenAddress, signerOrProvider)
-            addExchange({
-              tokenAddress,
-              label: symbol,
-              exchangeAddress
-            })
-          }
-          setLoadingExchange(false)
-        })
-      }
-    }
-
-    if (disableTokenSelect) {
-      return
-    }
-
     let results
-
     if (!searchQuery) {
       results = tokens
     } else {
@@ -146,31 +126,33 @@ function CurrencyInputPanel({
       results = fuse.search(searchQuery)
     }
 
-    if (!results.length && web3 && web3.utils && isAddress(searchQuery)) {
-      const { label } = selectors().getBalance(account, searchQuery)
-      return [
-        <div key="token-modal-no-exchange" className="token-modal__token-row token-modal__token-row--no-exchange">
-          <div>{t('noExchange')}</div>
-        </div>,
-        <div
-          key="token-modal-create-exchange"
-          className="token-modal__token-row token-modal__token-row--create-exchange"
-          onClick={() => {
-            setIsShowingModal(false)
-            history.push(`/create-exchange/${searchQuery}`)
-          }}
-        >
-          <div>{`Create exchange for ${label}`}</div>
-        </div>
-      ]
-    }
-
     if (!results.length) {
-      return (
-        <div className="token-modal__token-row token-modal__token-row--no-exchange">
-          <div>{t('noExchange')}</div>
-        </div>
-      )
+      if (isAddress(searchQuery) && searchQueryExchangeAddress === ethers.constants.AddressZero) {
+        forceUpdateValue(searchQuery, networkId, library)
+
+        return (
+          <>
+            <div className="token-modal__token-row token-modal__token-row--no-exchange">
+              <div>{t('noExchange')}</div>
+            </div>
+            <Link
+              to={`/create-exchange/${searchQuery}`}
+              className="token-modal__token-row token-modal__token-row--create-exchange"
+              onClick={() => {
+                setIsShowingModal(false)
+              }}
+            >
+              <div>{t('createExchange')}</div>
+            </Link>
+          </>
+        )
+      } else {
+        return (
+          <div className="token-modal__token-row token-modal__token-row--no-exchange">
+            <div>{t('noExchange')}</div>
+          </div>
+        )
+      }
     }
 
     return results.map(({ label, address }) => {
@@ -232,48 +214,40 @@ function CurrencyInputPanel({
   }
 
   function renderUnlockButton() {
-    if (disableUnlock || !selectedTokenAddress || selectedTokenAddress === 'ETH') {
-      return
-    }
+    if (disableUnlock || !showUnlock || selectedTokenAddress === 'ETH' || !selectedTokenAddress) {
+      return null
+    } else {
+      if (!pendingApproval) {
+        return (
+          <button
+            className="currency-input-panel__sub-currency-select"
+            onClick={async () => {
+              const estimatedGas = await tokenContract.estimate.approve(
+                selectedTokenExchangeAddress,
+                ethers.constants.MaxUint256
+              )
 
-    const { value: allowance, decimals, label } = selectors().getApprovals(
-      selectedTokenAddress,
-      account,
-      fromToken[selectedTokenAddress]
-    )
-
-    if (!label || (allowance.isGreaterThanOrEqualTo(BN((value || 0) * 10 ** decimals)) && !BN(allowance).isZero())) {
-      return
+              tokenContract
+                .approve(selectedTokenExchangeAddress, ethers.constants.MaxUint256, {
+                  gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
+                })
+                .then(response => {
+                  addTransaction(response.hash, response)
+                })
+            }}
+          >
+            {t('unlock')}
+          </button>
+        )
+      } else {
+        return (
+          <button className="currency-input-panel__sub-currency-select currency-input-panel__sub-currency-select--pending">
+            <div className="loader" />
+            {t('pending')}
+          </button>
+        )
+      }
     }
-    const approvalTxId = pendingApprovals[selectedTokenAddress]
-    if (approvalTxId && transactions.pending.includes(approvalTxId)) {
-      return (
-        <button className="currency-input-panel__sub-currency-select currency-input-panel__sub-currency-select--pending">
-          <div className="loader" />
-          {t('pending')}
-        </button>
-      )
-    }
-
-    return (
-      <button
-        className="currency-input-panel__sub-currency-select"
-        onClick={() => {
-          const contract = new web3.eth.Contract(ERC20_ABI, selectedTokenAddress)
-          const amount = BN(10 ** decimals)
-            .multipliedBy(10 ** 8)
-            .toFixed(0)
-          contract.methods.approve(fromToken[selectedTokenAddress], amount).send({ from: account }, (err, data) => {
-            if (!err && data) {
-              addPendingTx(data)
-              addApprovalTx({ tokenAddress: selectedTokenAddress, txId: data })
-            }
-          })
-        }}
-      >
-        {t('unlock')}
-      </button>
-    )
   }
 
   function _renderInput() {
@@ -317,7 +291,7 @@ function CurrencyInputPanel({
           {selectedTokenAddress ? (
             <TokenLogo className="currency-input-panel__selected-token-logo" address={selectedTokenAddress} />
           ) : null}
-          {TOKEN_ADDRESS_TO_LABEL[selectedTokenAddress] || t('selectToken')}
+          {(allTokens[selectedTokenAddress] && allTokens[selectedTokenAddress].symbol) || t('selectToken')}
           <span className="currency-input-panel__dropdown-icon" />
         </button>
       </div>
@@ -340,6 +314,9 @@ function CurrencyInputPanel({
             className={classnames('currency-input-panel__extra-text', {
               'currency-input-panel__extra-text--error': errorMessage
             })}
+            onClick={() => {
+              extraTextClickHander()
+            }}
           >
             {extraText}
           </span>
@@ -350,25 +327,3 @@ function CurrencyInputPanel({
     </div>
   )
 }
-
-export default withRouter(
-  connect(
-    state => ({
-      factoryAddress: state.addresses.factoryAddress,
-      exchangeAddresses: state.addresses.exchangeAddresses,
-      tokenAddresses: state.addresses.tokenAddresses,
-      contracts: state.contracts,
-      account: state.web3connect.account,
-      approvals: state.web3connect.approvals,
-      transactions: state.web3connect.transactions,
-      web3: state.web3connect.web3,
-      pendingApprovals: state.pending.approvals
-    }),
-    dispatch => ({
-      selectors: () => dispatch(selectors()),
-      addExchange: opts => dispatch(addExchange(opts)),
-      addPendingTx: opts => dispatch(addPendingTx(opts)),
-      addApprovalTx: opts => dispatch(addApprovalTx(opts))
-    })
-  )(withTranslation()(CurrencyInputPanel))
-)

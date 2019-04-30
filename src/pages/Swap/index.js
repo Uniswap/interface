@@ -1,21 +1,19 @@
 import React, { useState, useReducer, useEffect } from 'react'
-import { connect } from 'react-redux'
-import classnames from 'classnames'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
 import { ethers } from 'ethers'
 
-import { addPendingTx } from '../../ducks/web3connect'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-// import ContextualInfo from '../../components/ContextualInfo'
+import ContextualInfo from '../../components/ContextualInfo'
 import OversizedPanel from '../../components/OversizedPanel'
 import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
 import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
-// import { getBlockDeadline } from '../../helpers/web3-utils'
-// import { retry } from '../../helpers/promise-utils'
-import { useBalance, useExchangeDetails, useAllowance, useTokenDecimals, useExchangeReserves } from '../../hooks'
-import { amountFormatter } from '../../utils'
+import { useAddressBalance, useAddressAllowance, useExchangeReserves } from '../../contexts/Block'
+import { useTokenDetails } from '../../contexts/Static'
+import { useTransactionContext } from '../../contexts/Transaction'
+import { amountFormatter, calculateGasMargin } from '../../utils'
+import { useExchangeContract } from '../../hooks'
 
 import './swap.scss'
 
@@ -29,6 +27,12 @@ const TOKEN_TO_TOKEN = 2
 // denominated in bips
 const ALLOWED_SLIPPAGE = ethers.utils.bigNumberify(200)
 const TOKEN_ALLOWED_SLIPPAGE = ethers.utils.bigNumberify(400)
+
+// denominated in seconds
+const DEADLINE_FROM_NOW = 60 * 15
+
+// denominated in bips
+const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
 function calculateSlippageBounds(value, token = false) {
   if (value) {
@@ -133,9 +137,57 @@ function swapStateReducer(state, action) {
   }
 }
 
-export function Swap({ addPendingTx }) {
+function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals, invert = false) {
+  try {
+    if (inputValue && inputDecimals && outputValue && outputDecimals) {
+      const factor = ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))
+
+      if (invert) {
+        return inputValue
+          .mul(factor)
+          .div(outputValue)
+          .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
+          .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
+      } else {
+        return outputValue
+          .mul(factor)
+          .div(inputValue)
+          .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
+          .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
+      }
+    }
+  } catch {}
+}
+
+// function getMarketRate(
+//   swapType,
+//   inputReserveETH,
+//   inputReserveToken,
+//   inputDecimals,
+//   outputReserveETH,
+//   outputReserveToken,
+//   outputDecimals,
+//   invert = false
+// ) {
+//   if (swapType === ETH_TO_TOKEN) {
+//     return getExchangeRate(outputReserveETH, inputDecimals, outputReserveToken, outputDecimals, invert)
+//   } else if (swapType === TOKEN_TO_ETH) {
+//     return getExchangeRate(inputReserveToken, inputDecimals, inputReserveETH, outputDecimals, invert)
+//   } else if (swapType === TOKEN_TO_TOKEN) {
+//     const factor = ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))
+//     const firstRate = getExchangeRate(inputReserveToken, inputDecimals, inputReserveETH, outputDecimals)
+//     const secondRate = getExchangeRate(outputReserveETH, inputDecimals, outputReserveToken, outputDecimals)
+//     try {
+//       return !!(firstRate && secondRate) ? firstRate.mul(secondRate).div(factor) : undefined
+//     } catch {}
+//   }
+// }
+
+export default function Swap() {
   const { t } = useTranslation()
-  const context = useWeb3Context()
+  const { account } = useWeb3Context()
+
+  const { addTransaction } = useTransactionContext()
 
   // analytics
   useEffect(() => {
@@ -148,67 +200,51 @@ export function Swap({ addPendingTx }) {
 
   // get swap type from the currency types
   const swapType = getSwapType(inputCurrency, outputCurrency)
-  // get exchange address for each of the currency types
-  const inputExchangeAddress = useExchangeDetails(inputCurrency)
-  const outputExchangeAddress = useExchangeDetails(outputCurrency)
-  // get input allowance
-  const inputAllowance = useAllowance(inputCurrency, inputExchangeAddress)
-  // fetch reserves for each of the currency types
-  const { reserveETH: inputReserveETH, reserveToken: inputReserveToken } = useExchangeReserves(
-    inputExchangeAddress,
+
+  // get decimals and exchange addressfor each of the currency types
+  const { symbol: inputSymbol, decimals: inputDecimals, exchangeAddress: inputExchangeAddress } = useTokenDetails(
     inputCurrency
   )
-  const { reserveETH: outputReserveETH, reserveToken: outputReserveToken } = useExchangeReserves(
-    outputExchangeAddress,
+  const { symbol: outputSymbol, decimals: outputDecimals, exchangeAddress: outputExchangeAddress } = useTokenDetails(
     outputCurrency
   )
-  // get decimals for each of the currency types
-  const inputDecimals = useTokenDecimals(inputCurrency)
-  const outputDecimals = useTokenDecimals(outputCurrency)
+
+  const inputExchangeContract = useExchangeContract(inputExchangeAddress)
+  const outputExchangeContract = useExchangeContract(outputExchangeAddress)
+  const contract = swapType === ETH_TO_TOKEN ? outputExchangeContract : inputExchangeContract
+
+  // get input allowance
+  const inputAllowance = useAddressAllowance(account, inputCurrency, inputExchangeAddress)
+
+  // fetch reserves for each of the currency types
+  const { reserveETH: inputReserveETH, reserveToken: inputReserveToken } = useExchangeReserves(inputCurrency)
+  const { reserveETH: outputReserveETH, reserveToken: outputReserveToken } = useExchangeReserves(outputCurrency)
+
+  // get balances for each of the currency types
+  const inputBalance = useAddressBalance(account, inputCurrency)
+  const outputBalance = useAddressBalance(account, outputCurrency)
+  const inputBalanceFormatted = !!(inputBalance && Number.isInteger(inputDecimals))
+    ? amountFormatter(inputBalance, inputDecimals, Math.min(4, inputDecimals))
+    : ''
+  const outputBalanceFormatted = !!(outputBalance && Number.isInteger(outputDecimals))
+    ? amountFormatter(outputBalance, outputDecimals, Math.min(4, outputDecimals))
+    : ''
+
+  // compute useful transforms of the data above
   const independentDecimals = independentField === INPUT ? inputDecimals : outputDecimals
   const dependentDecimals = independentField === OUTPUT ? inputDecimals : outputDecimals
-  // get balances for each of the currency types
-  const inputBalance = useBalance(inputCurrency)
-  const outputBalance = useBalance(outputCurrency)
-  const inputBalanceFormatted = !!(inputBalance && inputDecimals) ? amountFormatter(inputBalance, inputDecimals, 4) : ''
-  const outputBalanceFormatted = !!(outputBalance && outputDecimals)
-    ? amountFormatter(outputBalance, outputDecimals, 4)
-    : ''
 
   // declare/get parsed and formatted versions of input/output values
   const [independentValueParsed, setIndependentValueParsed] = useState()
   const dependentValueFormatted = !!(dependentValue && dependentDecimals)
-    ? amountFormatter(dependentValue, dependentDecimals, 4)
+    ? amountFormatter(dependentValue, dependentDecimals, Math.min(4, dependentDecimals), false)
     : ''
   const inputValueParsed = independentField === INPUT ? independentValueParsed : dependentValue
   const inputValueFormatted = independentField === INPUT ? independentValue : dependentValueFormatted
   const outputValueParsed = independentField === OUTPUT ? independentValueParsed : dependentValue
   const outputValueFormatted = independentField === OUTPUT ? independentValue : dependentValueFormatted
 
-  // calculate slippage
-  const { maximum: dependentValueMaximum } = calculateSlippageBounds(dependentValue, swapType === TOKEN_TO_TOKEN)
-
-  // validate input allowance + balance
-  const [inputError, setInputError] = useState()
-  useEffect(() => {
-    const inputValueCalculation = independentField === INPUT ? independentValueParsed : dependentValueMaximum
-
-    if (inputBalance && inputAllowance && inputValueCalculation) {
-      if (inputBalance.lt(inputValueCalculation)) {
-        setInputError(t('insufficientBalance'))
-      } else if (inputAllowance.lt(inputValueCalculation)) {
-        setInputError(t('unlockTokenCont'))
-      } else {
-        setInputError(null)
-      }
-
-      return () => {
-        setInputError()
-      }
-    }
-  }, [independentField, independentValueParsed, dependentValueMaximum, inputBalance, inputAllowance])
-
-  // validated + parse independent value
+  // validate + parse independent value
   const [independentError, setIndependentError] = useState()
   useEffect(() => {
     if (independentValue && independentDecimals) {
@@ -232,6 +268,36 @@ export function Swap({ addPendingTx }) {
     }
   }, [independentValue, independentDecimals])
 
+  // calculate slippage from target rate
+  const { minimum: dependentValueMinumum, maximum: dependentValueMaximum } = calculateSlippageBounds(
+    dependentValue,
+    swapType === TOKEN_TO_TOKEN
+  )
+
+  // validate input allowance + balance
+  const [inputError, setInputError] = useState()
+  const [showUnlock, setShowUnlock] = useState(false)
+  useEffect(() => {
+    const inputValueCalculation = independentField === INPUT ? independentValueParsed : dependentValueMaximum
+
+    if (inputBalance && (inputAllowance || inputCurrency === 'ETH') && inputValueCalculation) {
+      if (inputBalance.lt(inputValueCalculation)) {
+        setInputError(t('insufficientBalance'))
+      } else if (inputCurrency !== 'ETH' && inputAllowance.lt(inputValueCalculation)) {
+        setInputError(t('unlockTokenCont'))
+        setShowUnlock(true)
+      } else {
+        setInputError(null)
+        setShowUnlock(false)
+      }
+
+      return () => {
+        setInputError()
+        setShowUnlock(false)
+      }
+    }
+  }, [independentField, independentValueParsed, dependentValueMaximum, inputBalance, inputCurrency, inputAllowance])
+
   // calculate dependent value
   useEffect(() => {
     const amount = independentValueParsed
@@ -241,35 +307,81 @@ export function Swap({ addPendingTx }) {
       const reserveToken = outputReserveToken
 
       if (amount && reserveETH && reserveToken) {
-        const calculatedDependentValue =
-          independentField === INPUT
-            ? calculateEtherTokenOutputFromInput(amount, reserveETH, reserveToken)
-            : calculateEtherTokenInputFromOutput(amount, reserveETH, reserveToken)
+        try {
+          const calculatedDependentValue =
+            independentField === INPUT
+              ? calculateEtherTokenOutputFromInput(amount, reserveETH, reserveToken)
+              : calculateEtherTokenInputFromOutput(amount, reserveETH, reserveToken)
 
-        dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
-      }
+          if (calculatedDependentValue.lte(ethers.constants.Zero)) {
+            throw Error()
+          }
 
-      return () => {
-        dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: '' })
+          dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
+        } catch {
+          setIndependentError(t('noLiquidity'))
+        }
+        return () => {
+          dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: '' })
+        }
       }
     } else if (swapType === TOKEN_TO_ETH) {
       const reserveETH = inputReserveETH
       const reserveToken = inputReserveToken
 
       if (amount && reserveETH && reserveToken) {
-        const calculatedDependentValue =
-          independentField === INPUT
-            ? calculateEtherTokenOutputFromInput(amount, reserveToken, reserveETH)
-            : calculateEtherTokenInputFromOutput(amount, reserveToken, reserveETH)
+        try {
+          const calculatedDependentValue =
+            independentField === INPUT
+              ? calculateEtherTokenOutputFromInput(amount, reserveToken, reserveETH)
+              : calculateEtherTokenInputFromOutput(amount, reserveToken, reserveETH)
 
-        dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
+          if (calculatedDependentValue.lte(ethers.constants.Zero)) {
+            throw Error()
+          }
 
+          dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
+        } catch {
+          setIndependentError(t('noLiquidity'))
+        }
         return () => {
           dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: '' })
         }
       }
     } else if (swapType === TOKEN_TO_TOKEN) {
-      console.log(':p')
+      const reserveETHFirst = inputReserveETH
+      const reserveTokenFirst = inputReserveToken
+
+      const reserveETHSecond = outputReserveETH
+      const reserveTokenSecond = outputReserveToken
+
+      if (amount && reserveETHFirst && reserveTokenFirst && reserveETHSecond && reserveTokenSecond) {
+        try {
+          const intermediateValue =
+            independentField === INPUT
+              ? calculateEtherTokenOutputFromInput(amount, reserveTokenFirst, reserveETHFirst)
+              : calculateEtherTokenInputFromOutput(amount, reserveTokenFirst, reserveETHFirst)
+
+          if (intermediateValue.lte(ethers.constants.Zero)) {
+            throw Error()
+          }
+
+          const calculatedDependentValue =
+            independentField === INPUT
+              ? calculateEtherTokenOutputFromInput(intermediateValue, reserveETHSecond, reserveTokenSecond)
+              : calculateEtherTokenInputFromOutput(intermediateValue, reserveETHSecond, reserveTokenSecond)
+
+          if (calculatedDependentValue.lte(ethers.constants.Zero)) {
+            throw Error()
+          }
+          dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
+        } catch {
+          setIndependentError(t('noLiquidity'))
+        }
+        return () => {
+          dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: '' })
+        }
+      }
     }
   }, [
     independentValueParsed,
@@ -281,142 +393,209 @@ export function Swap({ addPendingTx }) {
     independentField
   ])
 
-  // function recalcTokenTokenForm() {
-  //   const {
-  //     exchangeAddresses: { fromToken },
-  //     selectors
-  //   } = this.props
+  const [inverted, setInverted] = useState(false)
+  const exchangeRate = getExchangeRate(inputValueParsed, inputDecimals, outputValueParsed, outputDecimals)
+  const exchangeRateInverted = getExchangeRate(inputValueParsed, inputDecimals, outputValueParsed, outputDecimals, true)
 
-  //   const {
-  //     inputValue: oldInputValue,
-  //     outputValue: oldOutputValue,
-  //     inputCurrency,
-  //     outputCurrency,
-  //     lastEditedField,
-  //     exchangeRate: oldExchangeRate,
-  //     inputAmountB: oldInputAmountB
-  //   } = this.state
+  // const marketRate = getMarketRate(
+  //   swapType,
+  //   inputReserveETH,
+  //   inputReserveToken,
+  //   inputDecimals,
+  //   outputReserveETH,
+  //   outputReserveToken,
+  //   outputDecimals
+  // )
+  // const marketRateInverted = getMarketRate(
+  //   swapType,
+  //   inputReserveETH,
+  //   inputReserveToken,
+  //   inputDecimals,
+  //   outputReserveETH,
+  //   outputReserveToken,
+  //   outputDecimals,
+  //   true
+  // )
 
-  //   const exchangeAddressA = fromToken[inputCurrency]
-  //   const exchangeAddressB = fromToken[outputCurrency]
-
-  //   const { value: inputReserveA, decimals: inputDecimalsA } = selectors().getBalance(exchangeAddressA, inputCurrency)
-  //   const { value: outputReserveA } = selectors().getBalance(exchangeAddressA, 'ETH')
-  //   const { value: inputReserveB } = selectors().getBalance(exchangeAddressB, 'ETH')
-  //   const { value: outputReserveB, decimals: outputDecimalsB } = selectors().getBalance(
-  //     exchangeAddressB,
-  //     outputCurrency
-  //   )
-
-  //   if (lastEditedField === INPUT) {
-  //     if (!oldInputValue) {
-  //       return this.setState({
-  //         outputValue: '',
-  //         exchangeRate: BN(0)
-  //       })
-  //     }
-
-  //     const inputAmountA = BN(oldInputValue).multipliedBy(10 ** inputDecimalsA)
-  //     const outputAmountA = calculateEtherTokenOutputFromInput({
-  //       inputAmount: inputAmountA,
-  //       inputReserve: inputReserveA,
-  //       outputReserve: outputReserveA
-  //     })
-  //     // Redundant Variable for readability of the formala
-  //     // OutputAmount from the first swap becomes InputAmount of the second swap
-  //     const inputAmountB = outputAmountA
-  //     const outputAmountB = calculateEtherTokenOutputFromInput({
-  //       inputAmount: inputAmountB,
-  //       inputReserve: inputReserveB,
-  //       outputReserve: outputReserveB
-  //     })
-
-  //     const outputValue = outputAmountB.dividedBy(BN(10 ** outputDecimalsB)).toFixed(7)
-  //     const exchangeRate = BN(outputValue).dividedBy(BN(oldInputValue))
-
-  //     const appendState = {}
-
-  //     if (!exchangeRate.isEqualTo(BN(oldExchangeRate))) {
-  //       appendState.exchangeRate = exchangeRate
-  //     }
-
-  //     if (outputValue !== oldOutputValue) {
-  //       appendState.outputValue = outputValue
-  //     }
-
-  //     this.setState(appendState)
-  //   }
-
-  //   if (lastEditedField === OUTPUT) {
-  //     if (!oldOutputValue) {
-  //       return this.setState({
-  //         inputValue: '',
-  //         exchangeRate: BN(0)
-  //       })
-  //     }
-
-  //     const outputAmountB = BN(oldOutputValue).multipliedBy(10 ** outputDecimalsB)
-  //     const inputAmountB = calculateEtherTokenInputFromOutput({
-  //       outputAmount: outputAmountB,
-  //       inputReserve: inputReserveB,
-  //       outputReserve: outputReserveB
-  //     })
-
-  //     // Redundant Variable for readability of the formala
-  //     // InputAmount from the first swap becomes OutputAmount of the second swap
-  //     const outputAmountA = inputAmountB
-  //     const inputAmountA = calculateEtherTokenInputFromOutput({
-  //       outputAmount: outputAmountA,
-  //       inputReserve: inputReserveA,
-  //       outputReserve: outputReserveA
-  //     })
-
-  //     const inputValue = inputAmountA.isNegative() ? 'N/A' : inputAmountA.dividedBy(BN(10 ** inputDecimalsA)).toFixed(7)
-  //     const exchangeRate = BN(oldOutputValue).dividedBy(BN(inputValue))
-
-  //     const appendState = {}
-
-  //     if (!exchangeRate.isEqualTo(BN(oldExchangeRate))) {
-  //       appendState.exchangeRate = exchangeRate
-  //     }
-
-  //     if (inputValue !== oldInputValue) {
-  //       appendState.inputValue = inputValue
-  //     }
-
-  //     if (!inputAmountB.isEqualTo(BN(oldInputAmountB))) {
-  //       appendState.inputAmountB = inputAmountB
-  //     }
-
-  //     this.setState(appendState)
-  //   }
-  // }
-
-  function onSwap() {
-    console.log('swap!')
-  }
-
-  const exchangeRate = !!(outputValueParsed && inputValueParsed) ? outputValueParsed.div(inputValueParsed) : undefined
-
-  const isActive = context.active && context.account
   const isValid = exchangeRate && inputError === null && independentError === null
 
   const estimatedText = `(${t('estimated')})`
   function formatBalance(value) {
     return `Balance: ${value}`
   }
+
+  function renderTransactionDetails() {
+    ReactGA.event({
+      category: 'TransactionDetail',
+      action: 'Open'
+    })
+
+    const b = text => <span className="swap__highlight-text">{text}</span>
+
+    if (independentField === INPUT) {
+      return (
+        <div>
+          <div>
+            {t('youAreSelling')}{' '}
+            {b(
+              `${amountFormatter(
+                independentValueParsed,
+                independentDecimals,
+                Math.min(4, independentDecimals)
+              )} ${inputSymbol}`
+            )}{' '}
+            {t('orTransFail')}
+          </div>
+          <div className="send__last-summary-text">
+            {t('youWillReceive')}{' '}
+            {b(
+              `${amountFormatter(
+                dependentValueMinumum,
+                dependentDecimals,
+                Math.min(4, dependentDecimals)
+              )} ${outputSymbol}`
+            )}{' '}
+            {t('orTransFail')}
+          </div>
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          <div>
+            {t('youAreBuying')}{' '}
+            {b(
+              `${amountFormatter(
+                independentValueParsed,
+                independentDecimals,
+                Math.min(4, independentDecimals)
+              )} ${outputSymbol}`
+            )}
+            .
+          </div>
+          <div className="send__last-summary-text">
+            {t('itWillCost')}{' '}
+            {b(
+              `${amountFormatter(
+                dependentValueMaximum,
+                dependentDecimals,
+                Math.min(4, dependentDecimals)
+              )} ${inputSymbol}`
+            )}{' '}
+            {t('orTransFail')}
+          </div>
+        </div>
+      )
+    }
+  }
+
+  function renderSummary() {
+    let contextualInfo = ''
+    let isError = false
+
+    if (inputError || independentError) {
+      contextualInfo = inputError || independentError
+      isError = true
+    } else if (!inputCurrency || !outputCurrency) {
+      contextualInfo = t('selectTokenCont')
+    } else if (!independentValue) {
+      contextualInfo = t('enterValueCont')
+    } else if (!account) {
+      contextualInfo = t('noWallet')
+      isError = true
+    }
+
+    return (
+      <ContextualInfo
+        openDetailsText={t('transactionDetails')}
+        closeDetailsText={t('hideDetails')}
+        contextualInfo={contextualInfo}
+        isError={isError}
+        renderTransactionDetails={renderTransactionDetails}
+      />
+    )
+  }
+
+  async function onSwap() {
+    const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
+
+    let estimate, method, args, value
+    if (independentField === INPUT) {
+      ReactGA.event({
+        category: `${swapType}`,
+        action: 'SwapInput'
+      })
+
+      if (swapType === ETH_TO_TOKEN) {
+        estimate = contract.estimate.ethToTokenSwapInput
+        method = contract.ethToTokenSwapInput
+        args = [dependentValueMinumum, deadline]
+        value = independentValueParsed
+      } else if (swapType === TOKEN_TO_ETH) {
+        estimate = contract.estimate.tokenToEthSwapInput
+        method = contract.tokenToEthSwapInput
+        args = [independentValueParsed, dependentValueMinumum, deadline]
+        value = ethers.constants.Zero
+      } else if (swapType === TOKEN_TO_TOKEN) {
+        estimate = contract.estimate.tokenToTokenSwapInput
+        method = contract.tokenToTokenSwapInput
+        args = [independentValueParsed, dependentValueMinumum, ethers.constants.One, deadline, outputCurrency]
+        value = ethers.constants.Zero
+      }
+    } else if (independentField === OUTPUT) {
+      ReactGA.event({
+        category: `${swapType}`,
+        action: 'SwapOutput'
+      })
+
+      if (swapType === ETH_TO_TOKEN) {
+        estimate = contract.estimate.ethToTokenSwapOutput
+        method = contract.ethToTokenSwapOutput
+        args = [independentValueParsed, deadline]
+        value = dependentValueMaximum
+      } else if (swapType === TOKEN_TO_ETH) {
+        estimate = contract.estimate.tokenToEthSwapOutput
+        method = contract.tokenToEthSwapOutput
+        args = [independentValueParsed, dependentValueMaximum, deadline]
+        value = ethers.constants.Zero
+      } else if (swapType === TOKEN_TO_TOKEN) {
+        estimate = contract.estimate.tokenToTokenSwapOutput
+        method = contract.tokenToTokenSwapOutput
+        args = [independentValueParsed, dependentValueMaximum, ethers.constants.MaxUint256, deadline, outputCurrency]
+        value = ethers.constants.Zero
+      }
+    }
+
+    const estimatedGasLimit = await estimate(...args, { value })
+    method(...args, { value, gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN) }).then(response => {
+      addTransaction(response.hash, response)
+    })
+  }
+
   return (
     <>
       <CurrencyInputPanel
         title={t('input')}
         description={inputValueFormatted && independentField === OUTPUT ? estimatedText : ''}
         extraText={inputBalanceFormatted && formatBalance(inputBalanceFormatted)}
+        extraTextClickHander={() => {
+          if (inputBalance && inputDecimals) {
+            const valueToSet = inputCurrency === 'ETH' ? inputBalance.sub(ethers.utils.parseEther('.1')) : inputBalance
+            if (valueToSet.gt(ethers.constants.Zero)) {
+              dispatchSwapState({
+                type: 'UPDATE_INDEPENDENT',
+                payload: { value: amountFormatter(valueToSet, inputDecimals, inputDecimals, false), field: INPUT }
+              })
+            }
+          }
+        }}
         onCurrencySelected={inputCurrency => {
           dispatchSwapState({ type: 'SELECT_CURRENCY', payload: { currency: inputCurrency, field: INPUT } })
         }}
         onValueChange={inputValue => {
           dispatchSwapState({ type: 'UPDATE_INDEPENDENT', payload: { value: inputValue, field: INPUT } })
         }}
+        showUnlock={showUnlock}
         selectedTokens={[inputCurrency, outputCurrency]}
         selectedTokenAddress={inputCurrency}
         value={inputValueFormatted}
@@ -450,369 +629,35 @@ export function Swap({ addPendingTx }) {
         errorMessage={independentField === OUTPUT ? independentError : ''}
         disableUnlock
       />
-      {/* {this.renderExchangeRate()}
-      {this.renderSummary(inputError, outputError)} */}
-      <div className="swap__cta-container">
-        <button
-          className={classnames('swap__cta-btn', { 'swap--inactive': !isActive })}
-          disabled={!isValid}
-          onClick={onSwap}
+      <OversizedPanel hideBottom>
+        <div
+          className="swap__exchange-rate-wrapper"
+          onClick={() => {
+            setInverted(inverted => !inverted)
+          }}
         >
+          <span className="swap__exchange-rate">{t('exchangeRate')}</span>
+          {inverted ? (
+            <span>
+              {exchangeRate
+                ? `1 ${outputSymbol} = ${amountFormatter(exchangeRateInverted, 18, 4, false)} ${inputSymbol}`
+                : ' - '}
+            </span>
+          ) : (
+            <span>
+              {exchangeRate
+                ? `1 ${inputSymbol} = ${amountFormatter(exchangeRate, 18, 4, false)} ${outputSymbol}`
+                : ' - '}
+            </span>
+          )}
+        </div>
+      </OversizedPanel>
+      {renderSummary()}
+      <div className="swap__cta-container">
+        <button className="swap__cta-btn" disabled={!isValid} onClick={onSwap}>
           {t('swap')}
         </button>
       </div>
     </>
   )
 }
-
-// onSwap = async () => {
-//   const {
-//     exchangeAddresses: { fromToken },
-//     account,
-//     web3,
-//     selectors,
-//     addPendingTx
-//   } = this.props
-//   const { inputValue, outputValue, inputCurrency, outputCurrency, inputAmountB, lastEditedField } = this.state
-//   const ALLOWED_SLIPPAGE = 0.025
-//   const TOKEN_ALLOWED_SLIPPAGE = 0.04
-
-//   const type = getSwapType(inputCurrency, outputCurrency)
-//   const { decimals: inputDecimals } = selectors().getBalance(account, inputCurrency)
-//   const { decimals: outputDecimals } = selectors().getBalance(account, outputCurrency)
-//   let deadline
-//   try {
-//     deadline = await retry(() => getBlockDeadline(web3, 600))
-//   } catch (e) {
-//     // TODO: Handle error.
-//     return
-//   }
-
-//   if (lastEditedField === INPUT) {
-//     // swap input
-//     ReactGA.event({
-//       category: type,
-//       action: 'SwapInput'
-//     })
-//     switch (type) {
-//       case 'ETH_TO_TOKEN':
-//         // let exchange = new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]);
-//         new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]).methods
-//           .ethToTokenSwapInput(
-//             BN(outputValue)
-//               .multipliedBy(10 ** outputDecimals)
-//               .multipliedBy(1 - ALLOWED_SLIPPAGE)
-//               .toFixed(0),
-//             deadline
-//           )
-//           .send(
-//             {
-//               from: account,
-//               value: BN(inputValue)
-//                 .multipliedBy(10 ** 18)
-//                 .toFixed(0)
-//             },
-//             (err, data) => {
-//               if (!err) {
-//                 addPendingTx(data)
-//                 this.reset()
-//               }
-//             }
-//           )
-//         break
-//       case 'TOKEN_TO_ETH':
-//         new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods
-//           .tokenToEthSwapInput(
-//             BN(inputValue)
-//               .multipliedBy(10 ** inputDecimals)
-//               .toFixed(0),
-//             BN(outputValue)
-//               .multipliedBy(10 ** outputDecimals)
-//               .multipliedBy(1 - ALLOWED_SLIPPAGE)
-//               .toFixed(0),
-//             deadline
-//           )
-//           .send({ from: account }, (err, data) => {
-//             if (!err) {
-//               addPendingTx(data)
-//               this.reset()
-//             }
-//           })
-//         break
-//       case 'TOKEN_TO_TOKEN':
-//         new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods
-//           .tokenToTokenSwapInput(
-//             BN(inputValue)
-//               .multipliedBy(10 ** inputDecimals)
-//               .toFixed(0),
-//             BN(outputValue)
-//               .multipliedBy(10 ** outputDecimals)
-//               .multipliedBy(1 - TOKEN_ALLOWED_SLIPPAGE)
-//               .toFixed(0),
-//             '1',
-//             deadline,
-//             outputCurrency
-//           )
-//           .send({ from: account }, (err, data) => {
-//             if (!err) {
-//               addPendingTx(data)
-//               this.reset()
-//             }
-//           })
-//         break
-//       default:
-//         break
-//     }
-//   }
-
-//   if (lastEditedField === OUTPUT) {
-//     // swap output
-//     ReactGA.event({
-//       category: type,
-//       action: 'SwapOutput'
-//     })
-//     switch (type) {
-//       case 'ETH_TO_TOKEN':
-//         new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]).methods
-//           .ethToTokenSwapOutput(
-//             BN(outputValue)
-//               .multipliedBy(10 ** outputDecimals)
-//               .toFixed(0),
-//             deadline
-//           )
-//           .send(
-//             {
-//               from: account,
-//               value: BN(inputValue)
-//                 .multipliedBy(10 ** inputDecimals)
-//                 .multipliedBy(1 + ALLOWED_SLIPPAGE)
-//                 .toFixed(0)
-//             },
-//             (err, data) => {
-//               if (!err) {
-//                 addPendingTx(data)
-//                 this.reset()
-//               }
-//             }
-//           )
-//         break
-//       case 'TOKEN_TO_ETH':
-//         new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods
-//           .tokenToEthSwapOutput(
-//             BN(outputValue)
-//               .multipliedBy(10 ** outputDecimals)
-//               .toFixed(0),
-//             BN(inputValue)
-//               .multipliedBy(10 ** inputDecimals)
-//               .multipliedBy(1 + ALLOWED_SLIPPAGE)
-//               .toFixed(0),
-//             deadline
-//           )
-//           .send({ from: account }, (err, data) => {
-//             if (!err) {
-//               addPendingTx(data)
-//               this.reset()
-//             }
-//           })
-//         break
-//       case 'TOKEN_TO_TOKEN':
-//         if (!inputAmountB) {
-//           return
-//         }
-
-//         new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods
-//           .tokenToTokenSwapOutput(
-//             BN(outputValue)
-//               .multipliedBy(10 ** outputDecimals)
-//               .toFixed(0),
-//             BN(inputValue)
-//               .multipliedBy(10 ** inputDecimals)
-//               .multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE)
-//               .toFixed(0),
-//             inputAmountB.multipliedBy(1.2).toFixed(0),
-//             deadline,
-//             outputCurrency
-//           )
-//           .send({ from: account }, (err, data) => {
-//             if (!err) {
-//               addPendingTx(data)
-//               this.reset()
-//             }
-//           })
-//         break
-//       default:
-//         break
-//     }
-//   }
-// }
-
-// renderSummary(inputError, outputError) {
-//   const { inputValue, inputCurrency, outputValue, outputCurrency } = this.state
-//   const { t, account } = this.props
-
-//   const inputIsZero = BN(inputValue).isZero()
-//   const outputIsZero = BN(outputValue).isZero()
-//   let contextualInfo = ''
-//   let isError = false
-
-//   if (!inputCurrency || !outputCurrency) {
-//     contextualInfo = t('selectTokenCont')
-//   }
-
-//   if (!inputValue || !outputValue) {
-//     contextualInfo = t('enterValueCont')
-//   }
-
-//   if (inputError || outputError) {
-//     contextualInfo = inputError || outputError
-//     isError = true
-//   }
-
-//   if (inputIsZero || outputIsZero) {
-//     contextualInfo = t('noLiquidity')
-//   }
-
-//   if (this.isUnapproved()) {
-//     contextualInfo = t('unlockTokenCont')
-//   }
-
-//   if (!account) {
-//     contextualInfo = t('noWallet')
-//     isError = true
-//   }
-
-//   return (
-//     <ContextualInfo
-//       openDetailsText={t('transactionDetails')}
-//       closeDetailsText={t('hideDetails')}
-//       contextualInfo={contextualInfo}
-//       isError={isError}
-//       renderTransactionDetails={this.renderTransactionDetails}
-//     />
-//   )
-// }
-
-// renderTransactionDetails = () => {
-//   const { inputValue, inputCurrency, outputValue, outputCurrency, lastEditedField } = this.state
-//   const { t, selectors, account } = this.props
-
-//   ReactGA.event({
-//     category: 'TransactionDetail',
-//     action: 'Open'
-//   })
-
-//   const ALLOWED_SLIPPAGE = 0.025
-//   const TOKEN_ALLOWED_SLIPPAGE = 0.04
-
-//   const type = getSwapType(inputCurrency, outputCurrency)
-//   const { label: inputLabel } = selectors().getBalance(account, inputCurrency)
-//   const { label: outputLabel } = selectors().getBalance(account, outputCurrency)
-
-//   // const label = lastEditedField === INPUT ? outputLabel : inputLabel;
-//   let minOutput
-//   let maxInput
-
-//   if (lastEditedField === INPUT) {
-//     switch (type) {
-//       case 'ETH_TO_TOKEN':
-//         minOutput = BN(outputValue)
-//           .multipliedBy(1 - ALLOWED_SLIPPAGE)
-//           .toFixed(7)
-//           .trim()
-//         break
-//       case 'TOKEN_TO_ETH':
-//         minOutput = BN(outputValue)
-//           .multipliedBy(1 - ALLOWED_SLIPPAGE)
-//           .toFixed(7)
-//         break
-//       case 'TOKEN_TO_TOKEN':
-//         minOutput = BN(outputValue)
-//           .multipliedBy(1 - TOKEN_ALLOWED_SLIPPAGE)
-//           .toFixed(7)
-//         break
-//       default:
-//         break
-//     }
-//   }
-
-//   if (lastEditedField === OUTPUT) {
-//     switch (type) {
-//       case 'ETH_TO_TOKEN':
-//         maxInput = BN(inputValue)
-//           .multipliedBy(1 + ALLOWED_SLIPPAGE)
-//           .toFixed(7)
-//           .trim()
-//         break
-//       case 'TOKEN_TO_ETH':
-//         maxInput = BN(inputValue)
-//           .multipliedBy(1 + ALLOWED_SLIPPAGE)
-//           .toFixed(7)
-//         break
-//       case 'TOKEN_TO_TOKEN':
-//         maxInput = BN(inputValue)
-//           .multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE)
-//           .toFixed(7)
-//         break
-//       default:
-//         break
-//     }
-//   }
-
-//   if (lastEditedField === INPUT) {
-//     return (
-//       <div>
-//         <div>
-//           {t('youAreSelling')} {b(`${+inputValue} ${inputLabel}`)} {t('orTransFail')}
-//         </div>
-//         <div className="send__last-summary-text">
-//           {t('youWillReceive')} {b(`${+minOutput} ${outputLabel}`)} {t('orTransFail')}
-//         </div>
-//       </div>
-//     )
-//   } else {
-//     return (
-//       <div>
-//         <div>
-//           {t('youAreBuying')} {b(`${+outputValue} ${outputLabel}`)}.
-//         </div>
-//         <div className="send__last-summary-text">
-//           {t('itWillCost')} {b(`${+maxInput} ${inputLabel}`)} {t('orTransFail')}
-//         </div>
-//       </div>
-//     )
-//   }
-// }
-
-// renderExchangeRate() {
-//   const { t, account, selectors } = this.props
-//   const { exchangeRate, inputCurrency, outputCurrency } = this.state
-//   const { label: inputLabel } = selectors().getBalance(account, inputCurrency)
-//   const { label: outputLabel } = selectors().getBalance(account, outputCurrency)
-
-//   if (!exchangeRate || exchangeRate.isNaN() || !inputCurrency || !outputCurrency) {
-//     return (
-//       <OversizedPanel hideBottom>
-//         <div className="swap__exchange-rate-wrapper">
-//           <span className="swap__exchange-rate">{t('exchangeRate')}</span>
-//           <span> - </span>
-//         </div>
-//       </OversizedPanel>
-//     )
-//   }
-
-//   return (
-//     <OversizedPanel hideBottom>
-//       <div className="swap__exchange-rate-wrapper">
-//         <span className="swap__exchange-rate">{t('exchangeRate')}</span>
-//         <span>{`1 ${inputLabel} = ${exchangeRate.toFixed(7)} ${outputLabel}`}</span>
-//       </div>
-//     </OversizedPanel>
-//   )
-// }
-
-export default connect(
-  undefined,
-  dispatch => ({
-    addPendingTx: id => dispatch(addPendingTx(id))
-  })
-)(Swap)
