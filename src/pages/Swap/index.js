@@ -422,10 +422,6 @@ export default function Swap() {
       2
     )
 
-  console.log('market rate', amountFormatter(marketRate, 18, 4))
-  console.log('exchange rate', amountFormatter(exchangeRate, 18, 4))
-  console.log('percentSlippage', percentSlippage)
-
   const isValid = exchangeRate && inputError === null && independentError === null
 
   const estimatedText = `(${t('estimated')})`
