@@ -40,7 +40,7 @@ export function useApplicationContext() {
 }
 
 export function Updater() {
-  const { library, networkId } = useWeb3Context()
+  const { library } = useWeb3Context()
   const { updateBlockNumber, clearBlockNumber } = useApplicationContext()
 
   // fetch the block number once on load...
@@ -63,17 +63,13 @@ export function Updater() {
 
       return () => {
         stale = true
+        clearBlockNumber()
       }
     }
-  }, [library, updateBlockNumber, clearBlockNumber])
+  }, [library, updateBlockNumber, clearBlockNumber]) // this triggers rerender on network change because library changes
 
   // ...and every block...
   useBlockEffect(updateBlockNumber)
-
-  // ...and clear it on network changes
-  useEffect(() => {
-    clearBlockNumber()
-  }, [clearBlockNumber, networkId])
 
   return null
 }

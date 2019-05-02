@@ -7,6 +7,7 @@
   "dependencies": {
     "bignumber.js": "^7.2.1",
     "classnames": "^2.2.6",
+    "escape-string-regexp": "^2.0.0",
     "ethers": "^4.0.27",
     "fuse": "^0.4.0",
     "i18next": "^15.0.9",

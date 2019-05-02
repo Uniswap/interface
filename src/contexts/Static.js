@@ -371,7 +371,13 @@ export function Updater() {
   const { initializeValues } = useTokenDetailsContext()
 
   useEffect(() => {
-    initializeValues(networkId)
+    if (networkId) {
+      initializeValues(networkId)
+    }
+
+    return () => {
+      initializeValues()
+    }
   }, [initializeValues, networkId])
 
   return null

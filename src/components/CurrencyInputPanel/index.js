@@ -1,34 +1,22 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { CSSTransitionGroup } from 'react-transition-group'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
+import escapeStringRegex from 'escape-string-regexp'
 
 import { useTokenContract } from '../../hooks'
 import { isAddress, calculateGasMargin } from '../../utils'
-import Fuse from '../../helpers/fuse'
 import Modal from '../Modal'
 import TokenLogo from '../TokenLogo'
 import SearchIcon from '../../assets/images/magnifying-glass.svg'
-import { useTokenDetails, useAllTokenDetails, useTokenDetailsContext } from '../../contexts/Static'
+import { useTokenDetails, useAllTokenDetails } from '../../contexts/Static'
 import { useTransactionContext, usePendingApproval } from '../../contexts/Transaction'
 
 import './currency-panel.scss'
-import { useWeb3Context } from 'web3-react'
 
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
-
-const FUSE_OPTIONS = {
-  includeMatches: false,
-  threshold: 0.0,
-  tokenize: true,
-  location: 0,
-  distance: 100,
-  maxPatternLength: 45,
-  minMatchCharLength: 1,
-  keys: [{ name: 'address', weight: 0.8 }, { name: 'label', weight: 0.5 }]
-}
 
 export default function CurrencyInputPanel({
   filteredTokens = [],
@@ -40,7 +28,6 @@ export default function CurrencyInputPanel({
   extraText,
   extraTextClickHander,
   errorMessage,
-  selectedTokens = [],
   disableUnlock,
   disableTokenSelect,
   selectedTokenAddress = '',
@@ -48,21 +35,16 @@ export default function CurrencyInputPanel({
   value
 }) {
   const { t } = useTranslation()
-  const { networkId, library } = useWeb3Context()
+
+  const [isShowingModal, setIsShowingModal] = useState(false)
 
   const tokenContract = useTokenContract(selectedTokenAddress)
   const { exchangeAddress: selectedTokenExchangeAddress } = useTokenDetails(selectedTokenAddress)
-
-  const { forceUpdateValue } = useTokenDetailsContext()
 
   const pendingApproval = usePendingApproval(selectedTokenAddress)
 
   const { addTransaction } = useTransactionContext()
   const inputRef = useRef()
-
-  const [isShowingModal, setIsShowingModal] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const { exchangeAddress: searchQueryExchangeAddress } = useTokenDetails(searchQuery)
 
   const allTokens = useAllTokenDetails()
 
@@ -72,146 +54,6 @@ export default function CurrencyInputPanel({
       inputRef.current.focus()
     }
   }, [isShowingModal])
-
-  function createTokenList() {
-    return Object.keys(allTokens)
-      .slice()
-      .sort((a, b) => {
-        const aSymbol = allTokens[a].symbol
-        const bSymbol = allTokens[b].symbol
-        if (aSymbol === 'ETH' || bSymbol === 'ETH') {
-          return aSymbol === 'ETH' ? -1 : 1
-        } else {
-          return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
-        }
-      })
-      .map(k => {
-        return {
-          value: allTokens[k].symbol,
-          label: allTokens[k].symbol,
-          address: k
-        }
-      })
-      .filter(({ address }) => !filteredTokens.includes(address))
-  }
-
-  function onTokenSelect(address) {
-    setSearchQuery('')
-    setIsShowingModal(false)
-
-    onCurrencySelected(address)
-  }
-
-  function renderTokenList() {
-    const tokens = createTokenList()
-
-    if (disableTokenSelect) {
-      return
-    }
-
-    if (isAddress(searchQuery) && searchQueryExchangeAddress === undefined) {
-      return (
-        <div className="token-modal__token-row token-modal__token-row--searching">
-          <div className="loader" />
-          <div>Searching for Exchange...</div>
-        </div>
-      )
-    }
-
-    let results
-    if (!searchQuery) {
-      results = tokens
-    } else {
-      const fuse = new Fuse(tokens, FUSE_OPTIONS)
-      results = fuse.search(searchQuery)
-    }
-
-    if (!results.length) {
-      if (isAddress(searchQuery) && searchQueryExchangeAddress === ethers.constants.AddressZero) {
-        forceUpdateValue(searchQuery, networkId, library)
-
-        return (
-          <>
-            <div className="token-modal__token-row token-modal__token-row--no-exchange">
-              <div>{t('noExchange')}</div>
-            </div>
-            <Link
-              to={`/create-exchange/${searchQuery}`}
-              className="token-modal__token-row token-modal__token-row--create-exchange"
-              onClick={() => {
-                setIsShowingModal(false)
-              }}
-            >
-              <div>{t('createExchange')}</div>
-            </Link>
-          </>
-        )
-      } else {
-        return (
-          <div className="token-modal__token-row token-modal__token-row--no-exchange">
-            <div>{t('noExchange')}</div>
-          </div>
-        )
-      }
-    }
-
-    return results.map(({ label, address }) => {
-      const isSelected = selectedTokens.indexOf(address) > -1
-
-      return (
-        <div
-          key={label}
-          className={classnames('token-modal__token-row', {
-            'token-modal__token-row--selected': isSelected
-          })}
-          onClick={() => onTokenSelect(address)}
-        >
-          <TokenLogo className="token-modal__token-logo" address={address} />
-          <div className="token-modal__token-label">{label}</div>
-        </div>
-      )
-    })
-  }
-
-  function renderModal() {
-    if (!isShowingModal) {
-      return null
-    }
-
-    return (
-      <Modal
-        onClose={() => {
-          setIsShowingModal(false)
-          setSearchQuery('')
-        }}
-      >
-        <CSSTransitionGroup
-          transitionName="token-modal"
-          transitionAppear={true}
-          transitionLeave={true}
-          transitionAppearTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionEnterTimeout={200}
-        >
-          <div className="token-modal">
-            <div className="token-modal__search-container">
-              <input
-                ref={inputRef}
-                type="text"
-                placeholder={t('searchOrPaste')}
-                className="token-modal__search-input"
-                onChange={e => {
-                  setSearchQuery(e.target.value)
-                }}
-              />
-              <img src={SearchIcon} className="token-modal__search-icon" alt="search" />
-            </div>
-            <div className="token-modal__token-list">{renderTokenList()}</div>
-          </div>
-        </CSSTransitionGroup>
-      </Modal>
-    )
-  }
 
   function renderUnlockButton() {
     if (disableUnlock || !showUnlock || selectedTokenAddress === 'ETH' || !selectedTokenAddress) {
@@ -323,7 +165,145 @@ export default function CurrencyInputPanel({
         </div>
         {_renderInput()}
       </div>
-      {renderModal()}
+      {!disableTokenSelect && isShowingModal && (
+        <CurrencySelectModal
+          onTokenSelect={onCurrencySelected}
+          onClose={() => {
+            setIsShowingModal(false)
+          }}
+        />
+      )}
     </div>
+  )
+}
+
+function CurrencySelectModal({ onClose, onTokenSelect }) {
+  const { t } = useTranslation()
+
+  const [searchQuery, setSearchQuery] = useState('')
+  const { exchangeAddress } = useTokenDetails(searchQuery)
+
+  const allTokens = useAllTokenDetails()
+  const tokenList = useMemo(() => {
+    return Object.keys(allTokens)
+      .sort((a, b) => {
+        const aSymbol = allTokens[a].symbol
+        const bSymbol = allTokens[b].symbol
+        if (aSymbol === 'ETH' || bSymbol === 'ETH') {
+          return aSymbol === bSymbol ? 0 : aSymbol === 'ETH' ? -1 : 1
+        } else {
+          return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
+        }
+      })
+      .map(k => {
+        return {
+          name: allTokens[k].name,
+          symbol: allTokens[k].symbol,
+          address: k
+        }
+      })
+  }, [allTokens])
+  const filteredTokenList = useMemo(() => {
+    return tokenList.filter(tokenEntry => {
+      // check the regex for each field
+      const regexMatches = Object.keys(tokenEntry).map(tokenEntryKey => {
+        return !!tokenEntry[tokenEntryKey].match(new RegExp(escapeStringRegex(searchQuery), 'i'))
+      })
+
+      return regexMatches.some(m => m)
+    })
+  }, [tokenList, searchQuery])
+
+  function _onTokenSelect(address) {
+    setSearchQuery('')
+    onTokenSelect(address)
+    onClose()
+  }
+
+  function _onClose(address) {
+    setSearchQuery('')
+    onClose()
+  }
+
+  function renderTokenList() {
+    if (isAddress(searchQuery) && exchangeAddress === undefined) {
+      return (
+        <div className="token-modal__token-row token-modal__token-row--searching">
+          <div className="loader" />
+          <div>Searching for Exchange...</div>
+        </div>
+      )
+    }
+
+    if (isAddress(searchQuery) && exchangeAddress === ethers.constants.AddressZero) {
+      return (
+        <>
+          <div className="token-modal__token-row token-modal__token-row--no-exchange">
+            <div>{t('noExchange')}</div>
+          </div>
+          <Link
+            to={`/create-exchange/${searchQuery}`}
+            className="token-modal__token-row token-modal__token-row--create-exchange"
+            onClick={onClose}
+          >
+            <div>{t('createExchange')}</div>
+          </Link>
+        </>
+      )
+    }
+
+    if (!filteredTokenList.length) {
+      return (
+        <div className="token-modal__token-row token-modal__token-row--no-exchange">
+          <div>{t('noExchange')}</div>
+        </div>
+      )
+    }
+
+    return filteredTokenList.map(({ address, symbol }) => {
+      return (
+        <div key={address} className="token-modal__token-row" onClick={() => _onTokenSelect(address)}>
+          <TokenLogo className="token-modal__token-logo" address={address} />
+          <div className="token-modal__token-label">{symbol}</div>
+        </div>
+      )
+    })
+  }
+
+  // manage focus on modal show
+  const inputRef = useRef()
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [])
+
+  return (
+    <Modal onClose={_onClose}>
+      <CSSTransitionGroup
+        transitionName="token-modal"
+        transitionAppear={true}
+        transitionLeave={true}
+        transitionAppearTimeout={200}
+        transitionLeaveTimeout={200}
+        transitionEnterTimeout={200}
+      >
+        <div className="token-modal">
+          <div className="token-modal__search-container">
+            <input
+              ref={inputRef}
+              type="text"
+              placeholder={t('searchOrPaste')}
+              className="token-modal__search-input"
+              onChange={e => {
+                setSearchQuery(e.target.value)
+              }}
+            />
+            <img src={SearchIcon} className="token-modal__search-icon" alt="search" />
+          </div>
+          <div className="token-modal__token-list">{renderTokenList()}</div>
+        </div>
+      </CSSTransitionGroup>
+    </Modal>
   )
 }

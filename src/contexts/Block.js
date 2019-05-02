@@ -1,4 +1,4 @@
-import React, { Component, createContext, useState, useContext, useCallback, useEffect } from 'react'
+import React, { Component, createContext, useContext, useCallback, useEffect, useRef } from 'react'
 import { useWeb3Context } from 'web3-react'
 import merge from 'lodash.merge'
 
@@ -139,21 +139,27 @@ export function Updater() {
   const { clearValues: clearValuesAllowance } = useAddressAllowanceContext()
 
   useEffect(() => {
-    clearValuesBalance()
-    clearValuesAllowance()
+    return () => {
+      clearValuesBalance()
+      clearValuesAllowance()
+    }
   }, [clearValuesBalance, clearValuesAllowance, networkId])
 
   return null
 }
 
 // define custom hooks
-export function useAddressBalance(address, tokenAddress, includeBlockNumber = false) {
+export function useAddressBalance(address, tokenAddress) {
   const { library } = useWeb3Context()
 
   const globalBlockNumber = useBlockNumber()
+  const globalBlockNumberRef = useRef(globalBlockNumber)
+  useEffect(() => {
+    globalBlockNumberRef.current = globalBlockNumber
+  }, [globalBlockNumber])
 
   const { getValue, updateValue, clearValue } = useAddressBalanceContext()
-  const { [BALANCE]: balance, blockNumber: balanceBlockNumber } = getValue(address, tokenAddress)
+  const { [BALANCE]: balance } = getValue(address, tokenAddress)
 
   const fetchAndUpdateAddressBalance = useCallback(
     blockNumber => {
@@ -163,10 +169,10 @@ export function useAddressBalance(address, tokenAddress, includeBlockNumber = fa
         ;(tokenAddress === 'ETH' ? getEtherBalance(address, library) : getTokenBalance(tokenAddress, address, library))
           .then(value => {
             if (!stale) {
-              updateValue(address, tokenAddress, value, blockNumber || globalBlockNumber)
+              updateValue(address, tokenAddress, value, blockNumber)
             }
           })
-          .catch(error => {
+          .catch(() => {
             if (!stale) {
               clearValue(address, tokenAddress)
             }
@@ -177,19 +183,27 @@ export function useAddressBalance(address, tokenAddress, includeBlockNumber = fa
         }
       }
     },
-    [address, tokenAddress, library, updateValue, clearValue, globalBlockNumber]
+    [address, tokenAddress, library, clearValue, updateValue]
   )
 
-  useEffect(fetchAndUpdateAddressBalance, [address, tokenAddress])
+  // run every time the inputs have changed
+  useEffect(() => {
+    return fetchAndUpdateAddressBalance(globalBlockNumberRef.current)
+  }, [fetchAndUpdateAddressBalance])
+  // and every block
   useBlockEffect(fetchAndUpdateAddressBalance)
 
-  return includeBlockNumber ? { balance, blockNumber: balanceBlockNumber } : balance
+  return balance
 }
 
 export function useAddressAllowance(address, tokenAddress, spenderAddress) {
   const { library } = useWeb3Context()
 
   const globalBlockNumber = useBlockNumber()
+  const globalBlockNumberRef = useRef(globalBlockNumber)
+  useEffect(() => {
+    globalBlockNumberRef.current = globalBlockNumber
+  }, [globalBlockNumber])
 
   const { getValue, updateValue, clearValue } = useAddressAllowanceContext()
   const { [ALLOWANCE]: allowance } = getValue(address, tokenAddress, spenderAddress)
@@ -202,7 +216,7 @@ export function useAddressAllowance(address, tokenAddress, spenderAddress) {
         getTokenAllowance(address, tokenAddress, spenderAddress, library)
           .then(value => {
             if (!stale) {
-              updateValue(address, tokenAddress, spenderAddress, value, blockNumber || globalBlockNumber)
+              updateValue(address, tokenAddress, spenderAddress, value, blockNumber)
             }
           })
           .catch(() => {
@@ -216,10 +230,14 @@ export function useAddressAllowance(address, tokenAddress, spenderAddress) {
         }
       }
     },
-    [address, tokenAddress, spenderAddress, library, updateValue, clearValue, globalBlockNumber]
+    [address, tokenAddress, spenderAddress, library, updateValue, clearValue]
   )
 
-  useEffect(fetchAndUpdateAddressAllowance, [address, tokenAddress, spenderAddress])
+  // run every time the inputs have changed
+  useEffect(() => {
+    return fetchAndUpdateAddressAllowance(globalBlockNumberRef.current)
+  }, [fetchAndUpdateAddressAllowance])
+  // and every block
   useBlockEffect(fetchAndUpdateAddressAllowance)
 
   return allowance
@@ -228,41 +246,8 @@ export function useAddressAllowance(address, tokenAddress, spenderAddress) {
 export function useExchangeReserves(tokenAddress) {
   const { exchangeAddress } = useTokenDetails(tokenAddress)
 
-  const { balance: reserveETH, blockNumber: reserveETHBlockNumber } = useAddressBalance(exchangeAddress, 'ETH', true)
-  const { balance: reserveToken, blockNumber: reserveTokenBlockNumber } = useAddressBalance(
-    exchangeAddress,
-    tokenAddress,
-    true
-  )
+  const reserveETH = useAddressBalance(exchangeAddress, 'ETH')
+  const reserveToken = useAddressBalance(exchangeAddress, tokenAddress)
 
-  const getSyncedReserves = useCallback(() => {
-    if (reserveETH && reserveToken && reserveETHBlockNumber === reserveTokenBlockNumber) {
-      return { reserveETH, reserveToken, blockNumber: reserveETHBlockNumber }
-    } else {
-      return { reserveETH: undefined, reserveToken: undefined }
-    }
-  }, [reserveETH, reserveETHBlockNumber, reserveToken, reserveTokenBlockNumber])
-
-  const [syncedReserves, setSyncedReserves] = useState(getSyncedReserves())
-
-  useEffect(() => {
-    if (
-      reserveETH &&
-      reserveToken &&
-      reserveETHBlockNumber === reserveTokenBlockNumber &&
-      reserveETHBlockNumber !== syncedReserves.blockNumber
-    ) {
-      setSyncedReserves(getSyncedReserves())
-    }
-  }, [
-    reserveETH,
-    reserveToken,
-    reserveETHBlockNumber,
-    reserveTokenBlockNumber,
-    setSyncedReserves,
-    getSyncedReserves,
-    syncedReserves.blockNumber
-  ])
-
-  return { reserveETH: syncedReserves.reserveETH, reserveToken: syncedReserves.reserveToken }
+  return { reserveETH, reserveToken }
 }

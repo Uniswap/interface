@@ -159,29 +159,29 @@ function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals,
   } catch {}
 }
 
-// function getMarketRate(
-//   swapType,
-//   inputReserveETH,
-//   inputReserveToken,
-//   inputDecimals,
-//   outputReserveETH,
-//   outputReserveToken,
-//   outputDecimals,
-//   invert = false
-// ) {
-//   if (swapType === ETH_TO_TOKEN) {
-//     return getExchangeRate(outputReserveETH, inputDecimals, outputReserveToken, outputDecimals, invert)
-//   } else if (swapType === TOKEN_TO_ETH) {
-//     return getExchangeRate(inputReserveToken, inputDecimals, inputReserveETH, outputDecimals, invert)
-//   } else if (swapType === TOKEN_TO_TOKEN) {
-//     const factor = ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))
-//     const firstRate = getExchangeRate(inputReserveToken, inputDecimals, inputReserveETH, outputDecimals)
-//     const secondRate = getExchangeRate(outputReserveETH, inputDecimals, outputReserveToken, outputDecimals)
-//     try {
-//       return !!(firstRate && secondRate) ? firstRate.mul(secondRate).div(factor) : undefined
-//     } catch {}
-//   }
-// }
+function getMarketRate(
+  swapType,
+  inputReserveETH,
+  inputReserveToken,
+  inputDecimals,
+  outputReserveETH,
+  outputReserveToken,
+  outputDecimals,
+  invert = false
+) {
+  if (swapType === ETH_TO_TOKEN) {
+    return getExchangeRate(outputReserveETH, inputDecimals, outputReserveToken, outputDecimals, invert)
+  } else if (swapType === TOKEN_TO_ETH) {
+    return getExchangeRate(inputReserveToken, inputDecimals, inputReserveETH, outputDecimals, invert)
+  } else if (swapType === TOKEN_TO_TOKEN) {
+    const factor = ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))
+    const firstRate = getExchangeRate(inputReserveToken, inputDecimals, inputReserveETH, outputDecimals)
+    const secondRate = getExchangeRate(outputReserveETH, inputDecimals, outputReserveToken, outputDecimals)
+    try {
+      return !!(firstRate && secondRate) ? firstRate.mul(secondRate).div(factor) : undefined
+    } catch {}
+  }
+}
 
 export default function Swap() {
   const { t } = useTranslation()
@@ -319,7 +319,7 @@ export default function Swap() {
 
           dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
         } catch {
-          setIndependentError(t('noLiquidity'))
+          setIndependentError(t('insufficientLiquidity'))
         }
         return () => {
           dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: '' })
@@ -342,7 +342,7 @@ export default function Swap() {
 
           dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
         } catch {
-          setIndependentError(t('noLiquidity'))
+          setIndependentError(t('insufficientLiquidity'))
         }
         return () => {
           dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: '' })
@@ -376,7 +376,7 @@ export default function Swap() {
           }
           dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
         } catch {
-          setIndependentError(t('noLiquidity'))
+          setIndependentError(t('insufficientLiquidity'))
         }
         return () => {
           dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: '' })
@@ -398,25 +398,33 @@ export default function Swap() {
   const exchangeRate = getExchangeRate(inputValueParsed, inputDecimals, outputValueParsed, outputDecimals)
   const exchangeRateInverted = getExchangeRate(inputValueParsed, inputDecimals, outputValueParsed, outputDecimals, true)
 
-  // const marketRate = getMarketRate(
-  //   swapType,
-  //   inputReserveETH,
-  //   inputReserveToken,
-  //   inputDecimals,
-  //   outputReserveETH,
-  //   outputReserveToken,
-  //   outputDecimals
-  // )
-  // const marketRateInverted = getMarketRate(
-  //   swapType,
-  //   inputReserveETH,
-  //   inputReserveToken,
-  //   inputDecimals,
-  //   outputReserveETH,
-  //   outputReserveToken,
-  //   outputDecimals,
-  //   true
-  // )
+  const marketRate = getMarketRate(
+    swapType,
+    inputReserveETH,
+    inputReserveToken,
+    inputDecimals,
+    outputReserveETH,
+    outputReserveToken,
+    outputDecimals
+  )
+
+  const percentSlippage =
+    exchangeRate &&
+    marketRate &&
+    amountFormatter(
+      exchangeRate
+        .sub(marketRate)
+        .abs()
+        .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+        .div(marketRate)
+        .sub(ethers.utils.bigNumberify(3).mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(15)))),
+      16,
+      2
+    )
+
+  console.log('market rate', amountFormatter(marketRate, 18, 4))
+  console.log('exchange rate', amountFormatter(exchangeRate, 18, 4))
+  console.log('percentSlippage', percentSlippage)
 
   const isValid = exchangeRate && inputError === null && independentError === null
 
@@ -444,8 +452,8 @@ export default function Swap() {
                 independentDecimals,
                 Math.min(4, independentDecimals)
               )} ${inputSymbol}`
-            )}{' '}
-            {t('orTransFail')}
+            )}
+            .
           </div>
           <div className="send__last-summary-text">
             {t('youWillReceive')}{' '}
@@ -457,6 +465,9 @@ export default function Swap() {
               )} ${outputSymbol}`
             )}{' '}
             {t('orTransFail')}
+          </div>
+          <div className="send__last-summary-text">
+            {t('priceChange')} {b(`${percentSlippage}%`)}.
           </div>
         </div>
       )
@@ -484,6 +495,9 @@ export default function Swap() {
               )} ${inputSymbol}`
             )}{' '}
             {t('orTransFail')}
+          </div>
+          <div className="send__last-summary-text">
+            {t('priceChange')} {b(`${percentSlippage}%`)}.
           </div>
         </div>
       )

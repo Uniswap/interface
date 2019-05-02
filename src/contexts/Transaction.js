@@ -1,4 +1,4 @@
-import React, { Component, createContext, useContext, useCallback, useEffect } from 'react'
+import React, { Component, createContext, useContext, useCallback } from 'react'
 import { useWeb3Context } from 'web3-react'
 import { ethers } from 'ethers'
 import merge from 'lodash.merge'
@@ -75,7 +75,7 @@ export function useTransactionContext() {
 }
 
 export function Updater() {
-  const { networkId, library } = useWeb3Context()
+  const { library } = useWeb3Context()
 
   const { getTransactions, updateTransaction, clearTransactions } = useTransactionContext()
 
@@ -92,13 +92,13 @@ export function Updater() {
           })
         })
     }
-  }, [library, getTransactions, updateTransaction])
+
+    return () => {
+      clearTransactions()
+    }
+  }, [library, getTransactions, updateTransaction, clearTransactions])
 
   useBlockEffect(updateTransactionHashes)
-
-  useEffect(() => {
-    clearTransactions()
-  }, [clearTransactions, networkId])
 
   return null
 }
