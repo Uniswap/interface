@@ -1,4 +1,4 @@
-import React, { Component, createContext, useContext, useCallback } from 'react'
+import React, { Component, createContext, useContext, useCallback, useEffect } from 'react'
 import { useWeb3Context } from 'web3-react'
 import { ethers } from 'ethers'
 import merge from 'lodash.merge'
@@ -75,9 +75,15 @@ export function useTransactionContext() {
 }
 
 export function Updater() {
-  const { library } = useWeb3Context()
+  const { library, networkId } = useWeb3Context()
 
   const { getTransactions, updateTransaction, clearTransactions } = useTransactionContext()
+
+  useEffect(() => {
+    return () => {
+      clearTransactions()
+    }
+  }, [clearTransactions, networkId])
 
   const updateTransactionHashes = useCallback(() => {
     if (library) {
@@ -92,21 +98,21 @@ export function Updater() {
           })
         })
     }
-
-    return () => {
-      clearTransactions()
-    }
-  }, [library, getTransactions, updateTransaction, clearTransactions])
+  }, [library, getTransactions, updateTransaction])
 
   useBlockEffect(updateTransactionHashes)
 
   return null
 }
 
-export function usePendingApproval(tokenAddress) {
+export function useAllTransactions() {
   const { getTransactions } = useTransactionContext()
 
-  const allTransactions = getTransactions()
+  return getTransactions()
+}
+
+export function usePendingApproval(tokenAddress) {
+  const allTransactions = useAllTransactions()
 
   return (
     Object.keys(allTransactions).filter(hash => {
@@ -122,10 +128,4 @@ export function usePendingApproval(tokenAddress) {
       }
     }).length >= 1
   )
-}
-
-export function useAllTransactions() {
-  const { getTransactions } = useTransactionContext()
-
-  return getTransactions()
 }

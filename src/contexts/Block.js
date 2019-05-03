@@ -1,9 +1,8 @@
-import React, { Component, createContext, useContext, useCallback, useEffect, useRef } from 'react'
+import React, { Component, createContext, useContext, useEffect } from 'react'
 import { useWeb3Context } from 'web3-react'
 import merge from 'lodash.merge'
 
 import { getEtherBalance, getTokenBalance, getTokenAllowance, isAddress } from '../utils'
-import { useBlockEffect } from '../hooks'
 import { useBlockNumber } from './Application'
 import { useTokenDetails } from './Static'
 
@@ -50,10 +49,6 @@ class AddressBalanceContextProvider extends Component {
       }))
     }
 
-    this.clearValue = (address, tokenAddress) => {
-      this.updateValue(address, tokenAddress)
-    }
-
     this.clearValues = () => {
       this.setState({ [BALANCE]: {} })
     }
@@ -62,7 +57,6 @@ class AddressBalanceContextProvider extends Component {
       [BALANCE]: {},
       getValue: this.getValue,
       updateValue: this.updateValue,
-      clearValue: this.clearValue,
       clearValues: this.clearValues
     }
   }
@@ -93,10 +87,6 @@ class AddressAllowanceContextProvider extends Component {
       }))
     }
 
-    this.clearValue = (address, tokenAddress, spenderAddress) => {
-      this.updateValue(address, tokenAddress, spenderAddress)
-    }
-
     this.clearValues = () => {
       this.setState({ [ALLOWANCE]: {} })
     }
@@ -105,7 +95,6 @@ class AddressAllowanceContextProvider extends Component {
       [ALLOWANCE]: {},
       getValue: this.getValue,
       updateValue: this.updateValue,
-      clearValue: this.clearValue,
       clearValues: this.clearValues
     }
   }
@@ -153,45 +142,33 @@ export function useAddressBalance(address, tokenAddress) {
   const { library } = useWeb3Context()
 
   const globalBlockNumber = useBlockNumber()
-  const globalBlockNumberRef = useRef(globalBlockNumber)
+
+  const { getValue, updateValue } = useAddressBalanceContext()
+  const { [BALANCE]: balance, blockNumber: balanceUpdatedBlockNumber } = getValue(address, tokenAddress)
+
   useEffect(() => {
-    globalBlockNumberRef.current = globalBlockNumber
-  }, [globalBlockNumber])
-
-  const { getValue, updateValue, clearValue } = useAddressBalanceContext()
-  const { [BALANCE]: balance } = getValue(address, tokenAddress)
-
-  const fetchAndUpdateAddressBalance = useCallback(
-    blockNumber => {
-      if (isAddress(address) && (tokenAddress === 'ETH' || isAddress(tokenAddress))) {
+    // gate this entire effect by checking that the inputs are valid
+    if (isAddress(address) && (tokenAddress === 'ETH' || isAddress(tokenAddress))) {
+      // if they are, and the balance is undefined or stale, fetch it
+      if (balance === undefined || balanceUpdatedBlockNumber !== globalBlockNumber) {
         let stale = false
-
         ;(tokenAddress === 'ETH' ? getEtherBalance(address, library) : getTokenBalance(tokenAddress, address, library))
           .then(value => {
             if (!stale) {
-              updateValue(address, tokenAddress, value, blockNumber)
+              updateValue(address, tokenAddress, value, globalBlockNumber)
             }
           })
           .catch(() => {
             if (!stale) {
-              clearValue(address, tokenAddress)
+              updateValue(address, tokenAddress, null, globalBlockNumber)
             }
           })
-
         return () => {
           stale = true
         }
       }
-    },
-    [address, tokenAddress, library, clearValue, updateValue]
-  )
-
-  // run every time the inputs have changed
-  useEffect(() => {
-    return fetchAndUpdateAddressBalance(globalBlockNumberRef.current)
-  }, [fetchAndUpdateAddressBalance])
-  // and every block
-  useBlockEffect(fetchAndUpdateAddressBalance)
+    }
+  }, [address, tokenAddress, balance, balanceUpdatedBlockNumber, globalBlockNumber, library, updateValue])
 
   return balance
 }
@@ -200,45 +177,46 @@ export function useAddressAllowance(address, tokenAddress, spenderAddress) {
   const { library } = useWeb3Context()
 
   const globalBlockNumber = useBlockNumber()
-  const globalBlockNumberRef = useRef(globalBlockNumber)
+
+  const { getValue, updateValue } = useAddressAllowanceContext()
+  const { [ALLOWANCE]: allowance, blockNumber: allowanceUpdatedBlockNumber } = getValue(
+    address,
+    tokenAddress,
+    spenderAddress
+  )
+
   useEffect(() => {
-    globalBlockNumberRef.current = globalBlockNumber
-  }, [globalBlockNumber])
-
-  const { getValue, updateValue, clearValue } = useAddressAllowanceContext()
-  const { [ALLOWANCE]: allowance } = getValue(address, tokenAddress, spenderAddress)
-
-  const fetchAndUpdateAddressAllowance = useCallback(
-    blockNumber => {
-      if (isAddress(address) && isAddress(tokenAddress) && isAddress(spenderAddress)) {
+    // gate this entire effect by checking that the inputs are valid
+    if (isAddress(address) && isAddress(tokenAddress) && isAddress(spenderAddress)) {
+      // if they are, and the balance is undefined or stale, fetch it
+      if (allowance === undefined || allowanceUpdatedBlockNumber !== globalBlockNumber) {
         let stale = false
-
         getTokenAllowance(address, tokenAddress, spenderAddress, library)
           .then(value => {
             if (!stale) {
-              updateValue(address, tokenAddress, spenderAddress, value, blockNumber)
+              updateValue(address, tokenAddress, spenderAddress, value, globalBlockNumber)
             }
           })
           .catch(() => {
             if (!stale) {
-              clearValue(address, tokenAddress, spenderAddress)
+              updateValue(address, tokenAddress, spenderAddress, null, globalBlockNumber)
             }
           })
-
         return () => {
           stale = true
         }
       }
-    },
-    [address, tokenAddress, spenderAddress, library, updateValue, clearValue]
-  )
-
-  // run every time the inputs have changed
-  useEffect(() => {
-    return fetchAndUpdateAddressAllowance(globalBlockNumberRef.current)
-  }, [fetchAndUpdateAddressAllowance])
-  // and every block
-  useBlockEffect(fetchAndUpdateAddressAllowance)
+    }
+  }, [
+    address,
+    tokenAddress,
+    spenderAddress,
+    allowance,
+    allowanceUpdatedBlockNumber,
+    globalBlockNumber,
+    library,
+    updateValue
+  ])
 
   return allowance
 }

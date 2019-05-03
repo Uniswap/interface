@@ -17,16 +17,11 @@ export default class Provider extends Component {
       this.setState({ blockNumber })
     }
 
-    this.clearBlockNumber = () => {
-      this.setState({ blockNumber: undefined })
-    }
-
     this.state = {
       showBetaMessage: true,
       dismissBetaMessage: this.dismissBetaMessage,
       blockNumber: undefined,
-      updateBlockNumber: this.updateBlockNumber,
-      clearBlockNumber: this.clearBlockNumber
+      updateBlockNumber: this.updateBlockNumber
     }
   }
 
@@ -41,7 +36,7 @@ export function useApplicationContext() {
 
 export function Updater() {
   const { library } = useWeb3Context()
-  const { updateBlockNumber, clearBlockNumber } = useApplicationContext()
+  const { updateBlockNumber } = useApplicationContext()
 
   // fetch the block number once on load...
   useEffect(() => {
@@ -57,16 +52,17 @@ export function Updater() {
         })
         .catch(() => {
           if (!stale) {
-            clearBlockNumber()
+            updateBlockNumber(null)
           }
         })
 
       return () => {
         stale = true
-        clearBlockNumber()
+        // this clears block number on network change because the library has changed
+        updateBlockNumber(undefined)
       }
     }
-  }, [library, updateBlockNumber, clearBlockNumber]) // this triggers rerender on network change because library changes
+  }, [library, updateBlockNumber])
 
   // ...and every block...
   useBlockEffect(updateBlockNumber)

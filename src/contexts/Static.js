@@ -1,4 +1,4 @@
-import React, { Component, createContext, useContext, useCallback, useEffect } from 'react'
+import React, { Component, createContext, useContext, useEffect } from 'react'
 import { useWeb3Context } from 'web3-react'
 import { ethers } from 'ethers'
 import merge from 'lodash.merge'
@@ -391,25 +391,13 @@ export function useTokenDetails(tokenAddress) {
     tokenAddress
   )
 
-  const fetchAndUpdateTokenDetails = useCallback(() => {
+  useEffect(() => {
     if (isAddress(tokenAddress)) {
-      let stale = false
-
       getTokenDetails(tokenAddress, networkId, library).then(([name, symbol, decimals, exchangeAddress]) => {
-        if (!stale) {
-          updateValue(tokenAddress, name, symbol, decimals, exchangeAddress)
-        }
+        updateValue(tokenAddress, name, symbol, decimals, exchangeAddress)
       })
-
-      return () => {
-        stale = true
-      }
     }
   }, [tokenAddress, networkId, library, updateValue])
-
-  useEffect(() => {
-    fetchAndUpdateTokenDetails()
-  }, [fetchAndUpdateTokenDetails])
 
   return { name, symbol, decimals, exchangeAddress }
 }
