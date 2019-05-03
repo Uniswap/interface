@@ -45,30 +45,32 @@ class ContextualInfo extends Component {
       )
     }
 
-    return [
-      <div
-        key="open-details"
-        className="contextual-info__summary-wrapper contextual-info__open-details-container"
-        onClick={() =>
-          this.setState(prevState => {
-            return { showDetails: !prevState.showDetails }
-          })
-        }
-      >
-        {!this.state.showDetails ? (
-          <>
-            <span>{openDetailsText}</span>
-            <img src={DropdownBlue} alt="dropdown" />
-          </>
-        ) : (
-          <>
-            <span>{closeDetailsText}</span>
-            <img src={DropupBlue} alt="dropup" />
-          </>
-        )}
-      </div>,
-      this.renderDetails()
-    ]
+    return (
+      <>
+        <div
+          key="open-details"
+          className="contextual-info__summary-wrapper contextual-info__open-details-container"
+          onClick={() =>
+            this.setState(prevState => {
+              return { showDetails: !prevState.showDetails }
+            })
+          }
+        >
+          {!this.state.showDetails ? (
+            <>
+              <span>{openDetailsText}</span>
+              <img src={DropdownBlue} alt="dropdown" />
+            </>
+          ) : (
+            <>
+              <span>{closeDetailsText}</span>
+              <img src={DropupBlue} alt="dropup" />
+            </>
+          )}
+        </div>
+        {this.renderDetails()}
+      </>
+    )
   }
 }
 

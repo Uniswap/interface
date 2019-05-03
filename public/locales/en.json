@@ -22,6 +22,7 @@
   "enterValueCont": "Enter a {{ missingCurrencyValue }} value to continue.",
   "selectTokenCont": "Select a token to continue.",
   "noLiquidity": "No liquidity.",
+  "insufficientLiquidity": "Insufficient liquidity.",
   "unlockTokenCont": "Please unlock token to continue.",
   "transactionDetails": "Transaction Details",
   "hideDetails": "Hide Details",
@@ -70,7 +71,9 @@
   "invalidDecimals": "Invalid decimals",
   "tokenAddress": "Token Address",
   "label": "Label",
+  "name": "Name",
   "symbol": "Symbol",
   "decimals": "Decimals",
-  "enterTokenCont": "Enter a token address to continue"
+  "enterTokenCont": "Enter a token address to continue",
+  "priceChange": "This trade will cause the price to change by"
 }
