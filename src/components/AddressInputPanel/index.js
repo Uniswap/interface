@@ -14,7 +14,6 @@ export default function AddressInputPanel({ title, onChange = () => {}, errorMes
   const { library } = useWeb3Context()
 
   const [input, setInput] = useState('')
-  const [display, setDisplay] = useState('')
 
   useEffect(() => {
     let stale = false
@@ -68,7 +67,7 @@ export default function AddressInputPanel({ title, onChange = () => {}, errorMes
               })}
               placeholder="0x1234... or ENS name"
               onChange={e => setInput(e.target.value)}
-              value={display || input}
+              value={input}
             />
           </div>
         </div>
