@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect, useCallback } from 'react'
+import React, { useState, useReducer, useEffect } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
@@ -201,6 +201,7 @@ export default function Swap() {
   const { independentValue, dependentValue, independentField, inputCurrency, outputCurrency } = swapState
 
   const [recipient, setRecipient] = useState({ address: '', name: '' })
+  const [recipientError, setRecipientError] = useState()
 
   // get swap type from the currency types
   const swapType = getSwapType(inputCurrency, outputCurrency)
@@ -426,7 +427,7 @@ export default function Swap() {
       2
     )
 
-  const isValid = exchangeRate && inputError === null && independentError === null && isAddress(recipient.address)
+  const isValid = exchangeRate && inputError === null && independentError === null && recipientError === null
 
   const estimatedText = `(${t('estimated')})`
   function formatBalance(value) {
@@ -456,7 +457,7 @@ export default function Swap() {
             .
           </div>
           <div className="send__last-summary-text">
-            {b(recipient.name || recipient.address)} {t('willReceive')}{' '}
+            {b(recipient.address)} {t('willReceive')}{' '}
             {b(
               `${amountFormatter(
                 dependentValueMinumum,
@@ -605,10 +606,6 @@ export default function Swap() {
     })
   }
 
-  const setAddress = useCallback((address, name) => {
-    setRecipient({ address, name })
-  }, [])
-
   return (
     <>
       <CurrencyInputPanel
@@ -671,10 +668,7 @@ export default function Swap() {
           <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} alt="arrow" />
         </div>
       </OversizedPanel>
-      <AddressInputPanel
-        onChange={setAddress}
-        errorMessage={recipient.address !== '' && !isAddress(recipient.address)}
-      />
+      <AddressInputPanel onChange={setRecipient} onError={setRecipientError} />
       <OversizedPanel hideBottom>
         <div
           className="swap__exchange-rate-wrapper"
