@@ -3,10 +3,10 @@ import classnames from 'classnames'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
 
+import { isAddress } from '../../utils'
 // import QrCode from '../QrCode' // commented out pending further review
 
 import './address-input-panel.scss'
-import { isAddress } from '../../utils'
 
 export default function AddressInputPanel({ title, onChange = () => {}, onError = () => {} }) {
   const { t } = useTranslation()
@@ -41,20 +41,22 @@ export default function AddressInputPanel({ title, onChange = () => {}, onError 
         }
       })
     } else {
-      try {
-        library.resolveName(input).then(address => {
-          if (!stale) {
-            // if the input name resolves to an address
-            if (address) {
-              setData({ address: address, name: input })
-              setError(null)
-            } else {
-              setError(true)
+      if (input !== '') {
+        try {
+          library.resolveName(input).then(address => {
+            if (!stale) {
+              // if the input name resolves to an address
+              if (address) {
+                setData({ address: address, name: input })
+                setError(null)
+              } else {
+                setError(true)
+              }
             }
-          }
-        })
-      } catch {
-        setError(true)
+          })
+        } catch {
+          setError(true)
+        }
       }
     }
 

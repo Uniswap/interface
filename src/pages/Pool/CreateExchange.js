@@ -11,15 +11,19 @@ import OversizedPanel from '../../components/OversizedPanel'
 import { useTokenDetails } from '../../contexts/Static'
 import { useTransactionContext } from '../../contexts/Transaction'
 import { useFactoryContract } from '../../hooks'
-import { isAddress } from '../../utils'
 
 function CreateExchange({ history, location }) {
   const { t } = useTranslation()
   const { account } = useWeb3Context()
   const factory = useFactoryContract()
 
-  const [tokenAddress, setTokenAddress] = useState((location.state && location.state.tokenAddress) || '')
-  const { name, symbol, decimals, exchangeAddress } = useTokenDetails(tokenAddress)
+  const [tokenAddress, setTokenAddress] = useState({
+    address: (location.state && location.state.tokenAddress) || '',
+    name: ''
+  })
+  const [tokenAddressError, setTokenAddressError] = useState()
+
+  const { name, symbol, decimals, exchangeAddress } = useTokenDetails(tokenAddress.address)
   const { addTransaction } = useTransactionContext()
 
   // clear location state, if it exists
@@ -32,9 +36,9 @@ function CreateExchange({ history, location }) {
   // validate everything
   const [errorMessage, setErrorMessage] = useState(!account && t('noWallet'))
   useEffect(() => {
-    if (tokenAddress && !isAddress(tokenAddress)) {
+    if (tokenAddressError) {
       setErrorMessage(t('invalidTokenAddress'))
-    } else if (!tokenAddress || symbol === undefined || decimals === undefined || exchangeAddress === undefined) {
+    } else if (symbol === undefined || decimals === undefined || exchangeAddress === undefined) {
       setErrorMessage()
     } else if (symbol === null) {
       setErrorMessage(t('invalidSymbol'))
@@ -51,12 +55,12 @@ function CreateExchange({ history, location }) {
     return () => {
       setErrorMessage()
     }
-  }, [tokenAddress, symbol, decimals, exchangeAddress, account, t])
+  }, [tokenAddress.address, symbol, decimals, exchangeAddress, account, t, tokenAddressError])
 
   async function createExchange() {
-    const estimatedGasLimit = await factory.estimate.createExchange(tokenAddress)
+    const estimatedGasLimit = await factory.estimate.createExchange(tokenAddress.address)
 
-    factory.createExchange(tokenAddress, { gasLimit: estimatedGasLimit }).then(response => {
+    factory.createExchange(tokenAddress.address, { gasLimit: estimatedGasLimit }).then(response => {
       addTransaction(response.hash, response)
       ReactGA.event({
         category: 'Pool',
@@ -69,14 +73,7 @@ function CreateExchange({ history, location }) {
 
   return (
     <>
-      <AddressInputPanel
-        title={t('tokenAddress')}
-        value={tokenAddress}
-        onChange={input => {
-          setTokenAddress(input)
-        }}
-        errorMessage={errorMessage === t('noWallet') ? '' : errorMessage}
-      />
+      <AddressInputPanel title={t('tokenAddress')} onChange={setTokenAddress} onError={setTokenAddressError} />
       <OversizedPanel hideBottom>
         <div className="pool__summary-panel">
           <div className="pool__exchange-rate-wrapper">
