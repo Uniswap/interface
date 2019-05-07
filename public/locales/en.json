@@ -47,7 +47,7 @@
   "noZero": "Amount cannot be zero.",
   "mustBeETH": "One of the input must be ETH.",
   "enterCurrencyOrLabelCont": "Enter a {{ inputCurrency }} or {{ label }} value to continue.",
-  "youAreAdding": "You are adding between",
+  "youAreAdding": "You are adding",
   "and": "and",
   "intoPool": "into the liquidity pool.",
   "outPool": "from the liquidity pool.",
