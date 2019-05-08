@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useCallback, useEffect } from 'react'
+import React, { useReducer, useState, useCallback, useEffect, useMemo } from 'react'
 import classnames from 'classnames'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
@@ -144,14 +144,13 @@ export default function AddLiquidity() {
   const exchangeTokenBalance = useAddressBalance(exchangeAddress, outputCurrency)
 
   const { reserveETH, reserveToken } = useExchangeReserves(outputCurrency)
-  const isNewExchange = reserveETH && reserveToken && reserveETH.isZero() && reserveToken.isZero()
+  const isNewExchange = !!(reserveETH && reserveToken && reserveETH.isZero() && reserveToken.isZero())
 
   // 18 decimals
   const poolTokenPercentage =
-    totalPoolTokens && poolTokenBalance && isNewExchange === false
+    poolTokenBalance && totalPoolTokens && isNewExchange === false && !totalPoolTokens.isZero()
       ? poolTokenBalance.mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))).div(totalPoolTokens)
       : undefined
-  // TODO check these 2
   const ethShare =
     exchangeETHBalance && poolTokenPercentage
       ? exchangeETHBalance
@@ -166,9 +165,9 @@ export default function AddLiquidity() {
       : undefined
 
   const liquidityMinted = isNewExchange
-    ? undefined
+    ? inputValueParsed
     : totalPoolTokens && inputValueParsed && exchangeETHBalance
-    ? totalPoolTokens.mul(inputValueParsed).div(exchangeETHBalance)
+    ? exchangeETHBalance.isZero() && totalPoolTokens.mul(inputValueParsed).div(exchangeETHBalance)
     : undefined
 
   // user balances
@@ -176,32 +175,23 @@ export default function AddLiquidity() {
   const outputBalance = useAddressBalance(account, outputCurrency)
 
   const ethPerLiquidityToken =
-    exchangeETHBalance && totalPoolTokens && isNewExchange === false
+    exchangeETHBalance && totalPoolTokens && isNewExchange === false && !totalPoolTokens.isZero()
       ? exchangeETHBalance.mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))).div(totalPoolTokens)
       : undefined
   const tokenPerLiquidityToken =
-    exchangeTokenBalance && totalPoolTokens && isNewExchange === false
+    exchangeTokenBalance && totalPoolTokens && isNewExchange === false && !totalPoolTokens.isZero()
       ? exchangeTokenBalance.mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))).div(totalPoolTokens)
       : undefined
 
-  const outputValueMax =
-    outputValueParsed && decimals
-      ? isNewExchange
-        ? outputValue
-        : calculateSlippageBounds(outputValueParsed).maximum
-      : undefined
-  const liquidityTokensMin = liquidityMinted
-    ? isNewExchange
-      ? liquidityMinted
-      : calculateSlippageBounds(liquidityMinted).minimum
-    : undefined
+  const outputValueMax = outputValueParsed && calculateSlippageBounds(outputValueParsed).maximum
+  const liquidityTokensMin = liquidityMinted && calculateSlippageBounds(liquidityMinted).minimum
 
-  const marketRate = isNewExchange
-    ? getMarketRate(inputValueParsed, outputValueParsed, decimals)
-    : getMarketRate(reserveETH, reserveToken, decimals)
-  const marketRateInverted = isNewExchange
-    ? getMarketRate(inputValue, outputValue, decimals, true)
-    : getMarketRate(reserveETH, reserveToken, decimals, true)
+  const marketRate = useMemo(() => {
+    return getMarketRate(reserveETH, reserveToken, decimals)
+  }, [reserveETH, reserveToken, decimals])
+  const marketRateInverted = useMemo(() => {
+    return getMarketRate(reserveETH, reserveToken, decimals, true)
+  }, [reserveETH, reserveToken, decimals])
 
   function renderTransactionDetails() {
     ReactGA.event({
@@ -218,7 +208,16 @@ export default function AddLiquidity() {
             {t('youAreAdding')} {b(`${inputValue} ETH`)} {t('and')} {b(`${outputValue} ${symbol}`)} {t('intoPool')}
           </div>
           <div className="pool__summary-item">
-            {t('youAreSettingExRate')} {b(`1 ETH = ${amountFormatter(marketRate, 18, 4, false)} ${symbol}`)}.
+            {t('youAreSettingExRate')}{' '}
+            {b(
+              `1 ETH = ${amountFormatter(
+                getMarketRate(inputValueParsed, outputValueParsed, decimals),
+                18,
+                4,
+                false
+              )} ${symbol}`
+            )}
+            .
           </div>
           <div className="pool__summary-item">
             {t('youWillMint')} {b(`${inputValue}`)} {t('liquidityTokens')}
@@ -289,7 +288,7 @@ export default function AddLiquidity() {
     const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
     const estimatedGasLimit = await exchangeContract.estimate.addLiquidity(
       isNewExchange ? inputValueParsed : liquidityTokensMin,
-      isNewExchange ? outputValue : outputValueMax,
+      isNewExchange ? outputValueParsed : outputValueMax,
       deadline,
       {
         value: inputValueParsed
@@ -299,7 +298,7 @@ export default function AddLiquidity() {
     exchangeContract
       .addLiquidity(
         isNewExchange ? inputValueParsed : liquidityTokensMin,
-        isNewExchange ? outputValue : outputValueMax,
+        isNewExchange ? outputValueParsed : outputValueMax,
         deadline,
         {
           value: inputValueParsed,
@@ -329,7 +328,8 @@ export default function AddLiquidity() {
     }
   }, [decimals, inputValue, isNewExchange, outputValue])
 
-  // parse value
+  console.log('rendering')
+  // parse input value
   useEffect(() => {
     if (isNewExchange === false && inputValue && marketRate && lastEditedField === INPUT) {
       try {
@@ -337,62 +337,69 @@ export default function AddLiquidity() {
 
         if (parsedValue.lte(ethers.constants.Zero) || parsedValue.gte(ethers.constants.MaxUint256)) {
           throw Error()
-        } else {
-          setInputError(null)
-          setInputValueParsed(parsedValue)
+        }
 
-          const currencyAmount = marketRate
-            .mul(parsedValue)
-            .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
-          setOutputValueParsed(currencyAmount)
+        setInputValueParsed(parsedValue)
+
+        const currencyAmount = marketRate
+          .mul(parsedValue)
+          .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+        setOutputValueParsed(currencyAmount)
+        dispatchAddLiquidityState({
+          type: 'UPDATE_DEPENDENT_VALUE',
+          payload: { field: OUTPUT, value: amountFormatter(currencyAmount, 18, 4, false) }
+        })
+
+        return () => {
+          setOutputError()
+          setInputValueParsed()
+          setOutputValueParsed()
           dispatchAddLiquidityState({
             type: 'UPDATE_DEPENDENT_VALUE',
-            payload: { field: OUTPUT, value: amountFormatter(currencyAmount, decimals, 4, false) }
+            payload: { field: OUTPUT, value: '' }
           })
         }
       } catch {
-        setInputError(t('inputNotValid'))
-        setInputValueParsed()
-      }
-
-      return () => {
-        setInputError()
-        setInputValueParsed()
+        setOutputError(t('inputNotValid'))
       }
     }
-  }, [isNewExchange, inputValue, marketRate, lastEditedField, decimals, t])
+  }, [inputValue, isNewExchange, lastEditedField, marketRate, t])
 
+  // parse output value
   useEffect(() => {
-    if (isNewExchange === false && outputValue && marketRate && lastEditedField === OUTPUT) {
+    if (isNewExchange === false && outputValue && marketRateInverted && lastEditedField === OUTPUT) {
       try {
         const parsedValue = ethers.utils.parseUnits(outputValue, 18)
 
         if (parsedValue.lte(ethers.constants.Zero) || parsedValue.gte(ethers.constants.MaxUint256)) {
           throw Error()
-        } else {
-          setOutputError(null)
-          setOutputValueParsed(parsedValue)
+        }
 
-          const currencyAmount = marketRateInverted
-            .mul(parsedValue)
-            .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
-          setInputValueParsed(currencyAmount)
+        setOutputValueParsed(parsedValue)
+
+        const currencyAmount = marketRateInverted
+          .mul(parsedValue)
+          .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+        setInputValueParsed(currencyAmount)
+        dispatchAddLiquidityState({
+          type: 'UPDATE_DEPENDENT_VALUE',
+          payload: { field: INPUT, value: amountFormatter(currencyAmount, 18, 4, false) }
+        })
+
+        return () => {
+          setInputError()
+          setOutputValueParsed()
+          setInputValueParsed()
           dispatchAddLiquidityState({
             type: 'UPDATE_DEPENDENT_VALUE',
-            payload: { field: INPUT, value: amountFormatter(currencyAmount, 18, 4, false) }
+            payload: { field: INPUT, value: '' }
           })
         }
       } catch {
-        setOutputError(t('inputNotValid'))
-        setInputValueParsed()
-      }
-
-      return () => {
-        setOutputError()
-        setInputValueParsed()
+        setInputError(t('inputNotValid'))
       }
     }
-  }, [isNewExchange, outputValue, marketRate, lastEditedField, marketRateInverted, t])
+  }, [outputValue, isNewExchange, lastEditedField, marketRateInverted, t])
 
   // input validation
   useEffect(() => {
@@ -404,8 +411,12 @@ export default function AddLiquidity() {
       }
     }
 
-    if (outputValueParsed && outputBalance && outputValueParsed.gt(outputBalance)) {
-      setOutputError(t('insufficientBalance'))
+    if (outputValueParsed && outputBalance) {
+      if (outputValueParsed.gt(outputBalance)) {
+        setOutputError(t('insufficientBalance'))
+      } else {
+        setOutputError(null)
+      }
     }
   }, [inputValueParsed, inputBalance, outputValueParsed, outputBalance, t])
 
