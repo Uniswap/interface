@@ -362,24 +362,36 @@ export default function Swap() {
 
       if (amount && reserveETHFirst && reserveTokenFirst && reserveETHSecond && reserveTokenSecond) {
         try {
-          const intermediateValue =
-            independentField === INPUT
-              ? calculateEtherTokenOutputFromInput(amount, reserveTokenFirst, reserveETHFirst)
-              : calculateEtherTokenInputFromOutput(amount, reserveTokenFirst, reserveETHFirst)
-
-          if (intermediateValue.lte(ethers.constants.Zero)) {
-            throw Error()
+          if (independentField === INPUT) {
+            const intermediateValue = calculateEtherTokenOutputFromInput(amount, reserveTokenFirst, reserveETHFirst)
+            if (intermediateValue.lte(ethers.constants.Zero)) {
+              throw Error()
+            }
+            const calculatedDependentValue = calculateEtherTokenOutputFromInput(
+              intermediateValue,
+              reserveETHSecond,
+              reserveTokenSecond
+            )
+            if (calculatedDependentValue.lte(ethers.constants.Zero)) {
+              throw Error()
+            }
+            dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
+          } else {
+            const intermediateValue = calculateEtherTokenInputFromOutput(amount, reserveETHSecond, reserveTokenSecond)
+            if (intermediateValue.lte(ethers.constants.Zero)) {
+              throw Error()
+            }
+            // console.log('hi!', amountFormatter(intermediateValue, ))
+            const calculatedDependentValue = calculateEtherTokenInputFromOutput(
+              intermediateValue,
+              reserveTokenFirst,
+              reserveETHFirst
+            )
+            if (calculatedDependentValue.lte(ethers.constants.Zero)) {
+              throw Error()
+            }
+            dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
           }
-
-          const calculatedDependentValue =
-            independentField === INPUT
-              ? calculateEtherTokenOutputFromInput(intermediateValue, reserveETHSecond, reserveTokenSecond)
-              : calculateEtherTokenInputFromOutput(intermediateValue, reserveETHSecond, reserveTokenSecond)
-
-          if (calculatedDependentValue.lte(ethers.constants.Zero)) {
-            throw Error()
-          }
-          dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
         } catch {
           setIndependentError(t('insufficientLiquidity'))
         }

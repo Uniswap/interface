@@ -44,12 +44,12 @@ export function getContract(address, ABI, library, account) {
 
 // account is optional
 export function getFactoryContract(networkId, library, account) {
-  return getContract(FACTORY_ADDRESSES[networkId], FACTORY_ABI, getProviderOrSigner(library, account))
+  return getContract(FACTORY_ADDRESSES[networkId], FACTORY_ABI, library, account)
 }
 
 // account is optional
 export function getExchangeContract(exchangeAddress, library, account) {
-  return getContract(exchangeAddress, EXCHANGE_ABI, getProviderOrSigner(library, account))
+  return getContract(exchangeAddress, EXCHANGE_ABI, library, account)
 }
 
 // get token name

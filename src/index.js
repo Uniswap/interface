@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
 import ReactGA from 'react-ga'
 import Web3Provider, { Connectors } from 'web3-react'
 import ApplicationContextProvider, { Updater as ApplicationContextUpdater } from './contexts/Application'
@@ -9,7 +8,6 @@ import StaticContextProvider, { Updater as StaticContextUpdater } from './contex
 import BlockContextProvider, { Updater as BlockContextUpdater } from './contexts/Block'
 
 import App from './pages/App'
-import store from './store'
 
 import './index.scss'
 import './i18n'
@@ -52,13 +50,11 @@ function Updaters() {
 }
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Web3Provider connectors={connectors} libraryName="ethers.js">
-      <ContextProviders>
-        <Updaters />
-        <App />
-      </ContextProviders>
-    </Web3Provider>
-  </Provider>,
+  <Web3Provider connectors={connectors} libraryName="ethers.js">
+    <ContextProviders>
+      <Updaters />
+      <App />
+    </ContextProviders>
+  </Web3Provider>,
   document.getElementById('root')
 )

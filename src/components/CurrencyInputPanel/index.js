@@ -26,7 +26,7 @@ export default function CurrencyInputPanel({
   title,
   description,
   extraText,
-  extraTextClickHander,
+  extraTextClickHander = () => {},
   errorMessage,
   disableUnlock,
   disableTokenSelect,
