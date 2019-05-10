@@ -139,7 +139,12 @@ function swapStateReducer(state, action) {
 
 function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals, invert = false) {
   try {
-    if (inputValue && inputDecimals && outputValue && outputDecimals) {
+    if (
+      inputValue &&
+      (inputDecimals || inputDecimals === 0) &&
+      outputValue &&
+      (outputDecimals || outputDecimals === 0)
+    ) {
       const factor = ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))
 
       if (invert) {
