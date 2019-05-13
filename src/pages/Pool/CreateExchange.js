@@ -8,9 +8,9 @@ import ReactGA from 'react-ga'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import OversizedPanel from '../../components/OversizedPanel'
-import { useTokenDetails } from '../../contexts/Static'
-import { useTransactionContext } from '../../contexts/Transaction'
 import { useFactoryContract } from '../../hooks'
+import { useTokenDetails } from '../../contexts/Tokens'
+import { useTransactionAdder } from '../../contexts/Transactions'
 
 function CreateExchange({ history, location }) {
   const { t } = useTranslation()
@@ -24,7 +24,7 @@ function CreateExchange({ history, location }) {
   const [tokenAddressError, setTokenAddressError] = useState()
 
   const { name, symbol, decimals, exchangeAddress } = useTokenDetails(tokenAddress.address)
-  const { addTransaction } = useTransactionContext()
+  const addTransaction = useTransactionAdder()
 
   // clear location state, if it exists
   useEffect(() => {
@@ -61,11 +61,12 @@ function CreateExchange({ history, location }) {
     const estimatedGasLimit = await factory.estimate.createExchange(tokenAddress.address)
 
     factory.createExchange(tokenAddress.address, { gasLimit: estimatedGasLimit }).then(response => {
-      addTransaction(response.hash, response)
       ReactGA.event({
         category: 'Pool',
         action: 'CreateExchange'
       })
+
+      addTransaction(response)
     })
   }
 

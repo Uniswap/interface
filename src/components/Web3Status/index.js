@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
 
 import Modal from '../Modal'
-import { useAllTransactions } from '../../contexts/Transaction'
+import { useAllTransactions } from '../../contexts/Transactions'
 
 import './web3-status.scss'
 

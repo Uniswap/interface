@@ -23,22 +23,6 @@ export function useBodyKeyDown(targetKey, onKeyDown, suppressOnKeyDown = false) 
   }, [downHandler])
 }
 
-export function useBlockEffect(functionToRun) {
-  const { library } = useWeb3Context()
-
-  useEffect(() => {
-    if (library) {
-      function wrappedEffect(blockNumber) {
-        functionToRun(blockNumber)
-      }
-      library.on('block', wrappedEffect)
-      return () => {
-        library.removeListener('block', wrappedEffect)
-      }
-    }
-  }, [library, functionToRun])
-}
-
 // returns null on errors
 export function useContract(address, ABI, withSignerIfPossible = true) {
   const { library, account } = useWeb3Context()

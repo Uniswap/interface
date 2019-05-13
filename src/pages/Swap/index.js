@@ -9,11 +9,12 @@ import ContextualInfo from '../../components/ContextualInfo'
 import OversizedPanel from '../../components/OversizedPanel'
 import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
 import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
-import { useAddressBalance, useAddressAllowance, useExchangeReserves } from '../../contexts/Block'
-import { useTokenDetails } from '../../contexts/Static'
-import { useTransactionContext } from '../../contexts/Transaction'
 import { amountFormatter, calculateGasMargin } from '../../utils'
 import { useExchangeContract } from '../../hooks'
+import { useTokenDetails } from '../../contexts/Tokens'
+import { useTransactionAdder } from '../../contexts/Transactions'
+import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
+import { useAddressAllowance } from '../../contexts/Allowances'
 
 import './swap.scss'
 
@@ -187,7 +188,7 @@ export default function Swap() {
   const { t } = useTranslation()
   const { account } = useWeb3Context()
 
-  const { addTransaction } = useTransactionContext()
+  const addTransaction = useTransactionAdder()
 
   // analytics
   useEffect(() => {
@@ -279,7 +280,6 @@ export default function Swap() {
   const [showUnlock, setShowUnlock] = useState(false)
   useEffect(() => {
     const inputValueCalculation = independentField === INPUT ? independentValueParsed : dependentValueMaximum
-
     if (inputBalance && (inputAllowance || inputCurrency === 'ETH') && inputValueCalculation) {
       if (inputBalance.lt(inputValueCalculation)) {
         setInputError(t('insufficientBalance'))
@@ -376,7 +376,6 @@ export default function Swap() {
             if (intermediateValue.lte(ethers.constants.Zero)) {
               throw Error()
             }
-            // console.log('hi!', amountFormatter(intermediateValue, ))
             const calculatedDependentValue = calculateEtherTokenInputFromOutput(
               intermediateValue,
               reserveTokenFirst,
@@ -591,7 +590,7 @@ export default function Swap() {
 
     const estimatedGasLimit = await estimate(...args, { value })
     method(...args, { value, gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN) }).then(response => {
-      addTransaction(response.hash, response)
+      addTransaction(response)
     })
   }
 
