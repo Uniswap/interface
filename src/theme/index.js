@@ -20,6 +20,7 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
     margin: 0;
     font-family: Inter, sans-serif;
+    font-variant: none;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
