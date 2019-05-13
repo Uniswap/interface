@@ -5,6 +5,7 @@
   "homepage": ".",
   "private": true,
   "dependencies": {
+    "@reach/tooltip": "^0.2.0",
     "classnames": "^2.2.6",
     "escape-string-regexp": "^2.0.0",
     "ethers": "^4.0.27",
@@ -14,6 +15,7 @@
     "jazzicon": "^1.5.0",
     "node-sass": "^4.11.0",
     "react": "^16.8.6",
+    "react-aria-modal": "^4.0.0",
     "react-dom": "^16.8.6",
     "react-ga": "^2.5.7",
     "react-i18next": "^10.7.0",
