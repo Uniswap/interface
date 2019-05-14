@@ -10,11 +10,11 @@ import ContextualInfo from '../../components/ContextualInfo'
 import OversizedPanel from '../../components/OversizedPanel'
 import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
 import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
-import { useExchangeContract, useBlockEffect } from '../../hooks'
-import { useAddressBalance } from '../../contexts/Block'
-import { useTokenDetails } from '../../contexts/Static'
+import { useExchangeContract } from '../../hooks'
+import { useTransactionAdder } from '../../contexts/Transactions'
+import { useTokenDetails } from '../../contexts/Tokens'
+import { useAddressBalance } from '../../contexts/Balances'
 import { calculateGasMargin, amountFormatter } from '../../utils'
-import { useTransactionContext } from '../../contexts/Transaction'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = ethers.utils.bigNumberify(200)
@@ -71,10 +71,10 @@ function calculateSlippageBounds(value) {
 }
 
 export default function RemoveLiquidity() {
-  const { account, active } = useWeb3Context()
+  const { library, account, active } = useWeb3Context()
   const { t } = useTranslation()
 
-  const { addTransaction } = useTransactionContext()
+  const addTransaction = useTransactionAdder()
 
   const [outputCurrency, setOutputCurrency] = useState('')
   const [value, setValue] = useState('')
@@ -162,8 +162,12 @@ export default function RemoveLiquidity() {
   }, [exchange])
   useEffect(() => {
     fetchPoolTokens()
-  }, [fetchPoolTokens])
-  useBlockEffect(fetchPoolTokens)
+    library.on('block', fetchPoolTokens)
+
+    return () => {
+      library.removeListener('block', fetchPoolTokens)
+    }
+  }, [fetchPoolTokens, library])
 
   async function onRemoveLiquidity() {
     ReactGA.event({
@@ -185,7 +189,7 @@ export default function RemoveLiquidity() {
         gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
       })
       .then(response => {
-        addTransaction(response.hash, response)
+        addTransaction(response)
       })
   }
 

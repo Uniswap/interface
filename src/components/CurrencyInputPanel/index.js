@@ -11,8 +11,8 @@ import { isAddress, calculateGasMargin } from '../../utils'
 import Modal from '../Modal'
 import TokenLogo from '../TokenLogo'
 import SearchIcon from '../../assets/images/magnifying-glass.svg'
-import { useTokenDetails, useAllTokenDetails } from '../../contexts/Static'
-import { useTransactionContext, usePendingApproval } from '../../contexts/Transaction'
+import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
+import { useTokenDetails, useAllTokenDetails } from '../../contexts/Tokens'
 
 import './currency-panel.scss'
 
@@ -43,7 +43,7 @@ export default function CurrencyInputPanel({
 
   const pendingApproval = usePendingApproval(selectedTokenAddress)
 
-  const { addTransaction } = useTransactionContext()
+  const addTransaction = useTransactionAdder()
   const inputRef = useRef()
 
   const allTokens = useAllTokenDetails()
@@ -74,7 +74,7 @@ export default function CurrencyInputPanel({
                   gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
                 })
                 .then(response => {
-                  addTransaction(response.hash, response)
+                  addTransaction(response)
                 })
             }}
           >

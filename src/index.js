@@ -2,14 +2,16 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
 import Web3Provider, { Connectors } from 'web3-react'
+
+import ThemeProvider, { GlobalStyle } from './theme'
 import ApplicationContextProvider, { Updater as ApplicationContextUpdater } from './contexts/Application'
-import TransactionContextProvider, { Updater as TransactionUpdater } from './contexts/Transaction'
-import StaticContextProvider, { Updater as StaticContextUpdater } from './contexts/Static'
-import BlockContextProvider, { Updater as BlockContextUpdater } from './contexts/Block'
+import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
+import TokensContextProvider from './contexts/Tokens'
+import BalancesContextProvider from './contexts/Balances'
+import AllowancesContextProvider from './contexts/Allowances'
 
 import App from './pages/App'
 
-import './index.scss'
 import './i18n'
 
 if (process.env.NODE_ENV === 'production') {
@@ -30,9 +32,11 @@ function ContextProviders({ children }) {
   return (
     <ApplicationContextProvider>
       <TransactionContextProvider>
-        <StaticContextProvider>
-          <BlockContextProvider>{children}</BlockContextProvider>
-        </StaticContextProvider>
+        <TokensContextProvider>
+          <BalancesContextProvider>
+            <AllowancesContextProvider>{children}</AllowancesContextProvider>
+          </BalancesContextProvider>
+        </TokensContextProvider>
       </TransactionContextProvider>
     </ApplicationContextProvider>
   )
@@ -42,19 +46,22 @@ function Updaters() {
   return (
     <>
       <ApplicationContextUpdater />
-      <TransactionUpdater />
-      <StaticContextUpdater />
-      <BlockContextUpdater />
+      <TransactionContextUpdater />
     </>
   )
 }
 
 ReactDOM.render(
-  <Web3Provider connectors={connectors} libraryName="ethers.js">
-    <ContextProviders>
-      <Updaters />
-      <App />
-    </ContextProviders>
-  </Web3Provider>,
+  <ThemeProvider>
+    <>
+      <GlobalStyle />
+      <Web3Provider connectors={connectors} libraryName="ethers.js">
+        <ContextProviders>
+          <Updaters />
+          <App />
+        </ContextProviders>
+      </Web3Provider>
+    </>
+  </ThemeProvider>,
   document.getElementById('root')
 )

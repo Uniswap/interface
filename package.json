@@ -5,6 +5,7 @@
   "homepage": ".",
   "private": true,
   "dependencies": {
+    "@reach/tooltip": "^0.2.0",
     "classnames": "^2.2.6",
     "escape-string-regexp": "^2.0.0",
     "ethers": "^4.0.27",
@@ -12,15 +13,16 @@
     "i18next-browser-languagedetector": "^3.0.1",
     "i18next-xhr-backend": "^2.0.1",
     "jazzicon": "^1.5.0",
-    "lodash.merge": "^4.6.1",
     "node-sass": "^4.11.0",
     "react": "^16.8.6",
+    "react-aria-modal": "^4.0.0",
     "react-dom": "^16.8.6",
     "react-ga": "^2.5.7",
     "react-i18next": "^10.7.0",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "^3.0.0",
+    "react-scripts": "^3.0.1",
     "react-transition-group": "1.x",
+    "styled-components": "^4.2.0",
     "ua-parser-js": "^0.7.18",
     "web3-react": "^5.0.4"
   },
@@ -40,14 +42,23 @@
     "check:format": "yarn format:base --check",
     "check:all": "yarn check:lint && yarn check:format"
   },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "license": "GPL-3.0-or-later",
   "devDependencies": {
     "prettier": "^1.17.0"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  }
 }
