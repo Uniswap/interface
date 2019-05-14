@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
 
 import Modal from '../Modal'
-import { useAllTransactions } from '../../contexts/Transaction'
+import { useAllTransactions } from '../../contexts/Transactions'
 
 import './web3-status.scss'
 
@@ -116,7 +116,15 @@ export default function Web3Status() {
             return
           } else {
             el.innerHTML = ''
-            el.appendChild(Jazzicon(16, parseInt(account.slice(2), 16)))
+            el.appendChild(
+              Jazzicon(
+                16,
+                ethers.utils
+                  .bigNumberify(account)
+                  .mod(Number.MAX_SAFE_INTEGER)
+                  .toNumber()
+              )
+            )
           }
         }}
       />

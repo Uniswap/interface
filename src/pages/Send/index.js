@@ -10,14 +10,14 @@ import OversizedPanel from '../../components/OversizedPanel'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
 import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
-import { useAddressBalance, useAddressAllowance, useExchangeReserves } from '../../contexts/Block'
-import { useTokenDetails } from '../../contexts/Static'
-import { useTransactionContext } from '../../contexts/Transaction'
-import { amountFormatter, calculateGasMargin } from '../../utils'
+import { isAddress, amountFormatter, calculateGasMargin } from '../../utils'
 import { useExchangeContract } from '../../hooks'
+import { useTokenDetails } from '../../contexts/Tokens'
+import { useTransactionAdder } from '../../contexts/Transactions'
+import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
+import { useAddressAllowance } from '../../contexts/Allowances'
 
 import './send.scss'
-import { isAddress } from 'web3-utils'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -194,7 +194,7 @@ export default function Swap() {
   const { t } = useTranslation()
   const { account } = useWeb3Context()
 
-  const { addTransaction } = useTransactionContext()
+  const addTransaction = useTransactionAdder()
 
   // analytics
   useEffect(() => {
@@ -619,7 +619,7 @@ export default function Swap() {
 
     const estimatedGasLimit = await estimate(...args, { value })
     method(...args, { value, gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN) }).then(response => {
-      addTransaction(response.hash, response)
+      addTransaction(response)
     })
   }
 

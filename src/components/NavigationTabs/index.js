@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useBodyKeyDown } from '../../hooks'
 
 import './navigation-tabs.scss'
-import { useApplicationContext } from '../../contexts/Application'
+import { useBetaMessageManager } from '../../contexts/Application'
 
 const tabOrder = [
   {
@@ -28,7 +28,7 @@ const tabOrder = [
 function NavigationTabs({ location: { pathname }, history }) {
   const { t } = useTranslation()
 
-  const { showBetaMessage, dismissBetaMessage } = useApplicationContext()
+  const [showBetaMessage, dismissBetaMessage] = useBetaMessageManager()
 
   const navigate = useCallback(
     direction => {

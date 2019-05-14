@@ -10,13 +10,14 @@ import OversizedPanel from '../../components/OversizedPanel'
 import ContextualInfo from '../../components/ContextualInfo'
 import PlusBlue from '../../assets/images/plus-blue.svg'
 import PlusGrey from '../../assets/images/plus-grey.svg'
-import { useBlockEffect, useExchangeContract } from '../../hooks'
+import { useExchangeContract } from '../../hooks'
 import { amountFormatter, calculateGasMargin } from '../../utils'
-import { useTokenDetails } from '../../contexts/Static'
-import { useAddressBalance, useExchangeReserves, useAddressAllowance } from '../../contexts/Block'
+import { useTransactionAdder } from '../../contexts/Transactions'
+import { useTokenDetails } from '../../contexts/Tokens'
+import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
+import { useAddressAllowance } from '../../contexts/Allowances'
 
 import './pool.scss'
-import { useTransactionContext } from '../../contexts/Transaction'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -117,7 +118,7 @@ function getMarketRate(reserveETH, reserveToken, decimals, invert = false) {
 
 export default function AddLiquidity() {
   const { t } = useTranslation()
-  const { active, account } = useWeb3Context()
+  const { library, active, account } = useWeb3Context()
 
   const [addLiquidityState, dispatchAddLiquidityState] = useReducer(addLiquidityStateReducer, initialAddLiquidityState)
   const { inputValue, outputValue, lastEditedField, outputCurrency } = addLiquidityState
@@ -141,8 +142,12 @@ export default function AddLiquidity() {
   }, [exchangeContract])
   useEffect(() => {
     fetchPoolTokens()
-  }, [fetchPoolTokens])
-  useBlockEffect(fetchPoolTokens)
+    library.on('block', fetchPoolTokens)
+
+    return () => {
+      library.removeListener('block', fetchPoolTokens)
+    }
+  }, [fetchPoolTokens, library])
 
   const poolTokenBalance = useAddressBalance(account, exchangeAddress)
   const exchangeETHBalance = useAddressBalance(exchangeAddress, 'ETH')
@@ -279,7 +284,7 @@ export default function AddLiquidity() {
     )
   }
 
-  const { addTransaction } = useTransactionContext()
+  const addTransaction = useTransactionAdder()
 
   const isActive = active && account
   const isValid = inputError === null || outputError === null
@@ -311,7 +316,7 @@ export default function AddLiquidity() {
         }
       )
       .then(response => {
-        addTransaction(response.hash, response)
+        addTransaction(response)
       })
   }
 
@@ -333,7 +338,6 @@ export default function AddLiquidity() {
     }
   }, [decimals, inputValue, isNewExchange, outputValue])
 
-  console.log('rendering')
   // parse input value
   useEffect(() => {
     if (isNewExchange === false && inputValue && marketRate && lastEditedField === INPUT) {

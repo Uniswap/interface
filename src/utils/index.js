@@ -14,6 +14,13 @@ export const ERROR_CODES = ['TOKEN_NAME', 'TOKEN_SYMBOL', 'TOKEN_DECIMALS'].redu
   {}
 )
 
+export function safeAccess(object, path) {
+  return path.reduce(
+    (accumulator, currentValue) => (accumulator && accumulator[currentValue] ? accumulator[currentValue] : null),
+    object
+  )
+}
+
 export function isAddress(value) {
   try {
     ethers.utils.getAddress(value)
