@@ -207,7 +207,10 @@ function CurrencySelectModal({ onClose, onTokenSelect }) {
     return tokenList.filter(tokenEntry => {
       // check the regex for each field
       const regexMatches = Object.keys(tokenEntry).map(tokenEntryKey => {
-        return !!tokenEntry[tokenEntryKey].match(new RegExp(escapeStringRegex(searchQuery), 'i'))
+        return (
+          tokenEntry[tokenEntryKey] &&
+          !!tokenEntry[tokenEntryKey].match(new RegExp(escapeStringRegex(searchQuery), 'i'))
+        )
       })
 
       return regexMatches.some(m => m)
