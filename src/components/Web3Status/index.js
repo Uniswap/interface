@@ -116,15 +116,7 @@ export default function Web3Status() {
             return
           } else {
             el.innerHTML = ''
-            el.appendChild(
-              Jazzicon(
-                16,
-                ethers.utils
-                  .bigNumberify(account)
-                  .mod(Number.MAX_SAFE_INTEGER)
-                  .toNumber()
-              )
-            )
+            el.appendChild(Jazzicon(16, parseInt(account.slice(2, 10), 16)))
           }
         }}
       />
