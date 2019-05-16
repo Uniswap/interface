@@ -22,9 +22,11 @@
   "enterValueCont": "Enter a {{ missingCurrencyValue }} value to continue.",
   "selectTokenCont": "Select a token to continue.",
   "noLiquidity": "No liquidity.",
+  "insufficientLiquidity": "Insufficient liquidity.",
   "unlockTokenCont": "Please unlock token to continue.",
   "transactionDetails": "Transaction Details",
   "hideDetails": "Hide Details",
+  "slippageWarning": "Slippage Warning",
   "youAreSelling": "You are selling",
   "orTransFail": "or the transaction will fail.",
   "youWillReceive": "You will receive at least",
@@ -46,7 +48,7 @@
   "noZero": "Amount cannot be zero.",
   "mustBeETH": "One of the input must be ETH.",
   "enterCurrencyOrLabelCont": "Enter a {{ inputCurrency }} or {{ label }} value to continue.",
-  "youAreAdding": "You are adding between",
+  "youAreAdding": "You are adding",
   "and": "and",
   "intoPool": "into the liquidity pool.",
   "outPool": "from the liquidity pool.",
@@ -70,7 +72,9 @@
   "invalidDecimals": "Invalid decimals",
   "tokenAddress": "Token Address",
   "label": "Label",
+  "name": "Name",
   "symbol": "Symbol",
   "decimals": "Decimals",
-  "enterTokenCont": "Enter a token address to continue"
+  "enterTokenCont": "Enter a token address to continue",
+  "priceChange": "This trade will cause the price to change by"
 }

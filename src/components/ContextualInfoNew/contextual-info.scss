@@ -1,0 +1,42 @@
+@import '../../variables.scss';
+
+.contextual-info {
+  &__summary-wrapper {
+    color: $dove-gray;
+    font-size: 0.75rem;
+    text-align: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+
+  &--error {
+    color: $salmon-red;
+  }
+
+  &__details {
+    background-color: $concrete-gray;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  &__open-details-container {
+    cursor: pointer;
+
+    @extend %row-nowrap;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: $royal-blue;
+
+    span {
+      margin-right: 12px;
+    }
+
+    img {
+      height: 0.75rem;
+      width: 0.75rem;
+    }
+  }
+}

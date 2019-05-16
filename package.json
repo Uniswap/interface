@@ -5,29 +5,25 @@
   "homepage": ".",
   "private": true,
   "dependencies": {
-    "bignumber.js": "^7.2.1",
+    "@reach/tooltip": "^0.2.0",
     "classnames": "^2.2.6",
+    "escape-string-regexp": "^2.0.0",
     "ethers": "^4.0.27",
-    "fuse": "^0.4.0",
     "i18next": "^15.0.9",
     "i18next-browser-languagedetector": "^3.0.1",
     "i18next-xhr-backend": "^2.0.1",
     "jazzicon": "^1.5.0",
     "node-sass": "^4.11.0",
-    "prop-types": "^15.7.2",
     "react": "^16.8.6",
+    "react-aria-modal": "^4.0.0",
     "react-dom": "^16.8.6",
     "react-ga": "^2.5.7",
     "react-i18next": "^10.7.0",
-    "react-redux": "^5.0.7",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "^2.1.8",
+    "react-scripts": "^3.0.1",
     "react-transition-group": "1.x",
-    "redux": "^3.7.2",
-    "redux-subscriber": "^1.1.0",
-    "redux-thunk": "^2.2.0",
+    "styled-components": "^4.2.0",
     "ua-parser-js": "^0.7.18",
-    "web3": "1.0.0-beta.52",
     "web3-react": "^5.0.4"
   },
   "scripts": {
@@ -46,14 +42,23 @@
     "check:format": "yarn format:base --check",
     "check:all": "yarn check:lint && yarn check:format"
   },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "license": "GPL-3.0-or-later",
   "devDependencies": {
     "prettier": "^1.17.0"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  }
 }

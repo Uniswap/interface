@@ -95,6 +95,10 @@
       background-color: rgba($zumthor-blue, 0.8);
     }
 
+    &:focus {
+      box-shadow: 0 0 0.5px 0.5px $malibu-blue;
+    }
+
     &--selected {
       background-color: $concrete-gray;
       border-color: $mercury-gray;
@@ -233,6 +237,8 @@
       color: $white;
       justify-content: center;
       background-color: $malibu-blue;
+      text-decoration: none;
+
       &:hover {
         background-color: lighten($malibu-blue, 1);
       }

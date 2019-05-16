@@ -1,7 +1,6 @@
 branches:
-  only:
-    - production
-    - beta
+  except:
+    - master
 language: node_js
 node_js:
   - '10'

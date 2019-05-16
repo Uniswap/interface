@@ -1,200 +1,240 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React, { useState, useEffect, useCallback } from 'react'
 import classnames from 'classnames'
-import { connect } from 'react-redux'
-import { BigNumber as BN } from 'bignumber.js'
-import { withTranslation, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import ReactGA from 'react-ga'
 import { useWeb3Context } from 'web3-react'
+import { ethers } from 'ethers'
 
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { selectors, addPendingTx } from '../../ducks/web3connect'
 import ContextualInfo from '../../components/ContextualInfo'
 import OversizedPanel from '../../components/OversizedPanel'
 import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
 import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
-import { getBlockDeadline } from '../../helpers/web3-utils'
-import { retry } from '../../helpers/promise-utils'
-import EXCHANGE_ABI from '../../abi/exchange'
+import { useExchangeContract } from '../../hooks'
+import { useTransactionAdder } from '../../contexts/Transactions'
+import { useTokenDetails } from '../../contexts/Tokens'
+import { useAddressBalance } from '../../contexts/Balances'
+import { calculateGasMargin, amountFormatter } from '../../utils'
 
-class RemoveLiquidity extends Component {
-  static propTypes = {
-    account: PropTypes.string,
-    balances: PropTypes.object,
-    web3: PropTypes.object,
-    exchangeAddresses: PropTypes.shape({
-      fromToken: PropTypes.object.isRequired
-    }).isRequired
+// denominated in bips
+const ALLOWED_SLIPPAGE = ethers.utils.bigNumberify(200)
+
+// denominated in seconds
+const DEADLINE_FROM_NOW = 60 * 15
+
+// denominated in bips
+const GAS_MARGIN = ethers.utils.bigNumberify(1000)
+
+function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals, invert = false) {
+  try {
+    if (
+      inputValue &&
+      (inputDecimals || inputDecimals === 0) &&
+      outputValue &&
+      (outputDecimals || outputDecimals === 0)
+    ) {
+      const factor = ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))
+
+      if (invert) {
+        return inputValue
+          .mul(factor)
+          .div(outputValue)
+          .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
+          .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
+      } else {
+        return outputValue
+          .mul(factor)
+          .div(inputValue)
+          .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
+          .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
+      }
+    }
+  } catch {}
+}
+
+function getMarketRate(reserveETH, reserveToken, decimals, invert = false) {
+  return getExchangeRate(reserveETH, 18, reserveToken, decimals, invert)
+}
+
+function calculateSlippageBounds(value) {
+  if (value) {
+    const offset = value.mul(ALLOWED_SLIPPAGE).div(ethers.utils.bigNumberify(10000))
+    const minimum = value.sub(offset)
+    const maximum = value.add(offset)
+    return {
+      minimum: minimum.lt(ethers.constants.Zero) ? ethers.constants.Zero : minimum,
+      maximum: maximum.gt(ethers.constants.MaxUint256) ? ethers.constants.MaxUint256 : maximum
+    }
+  } else {
+    return {}
   }
+}
 
-  state = {
-    tokenAddress: '',
-    value: '',
-    totalSupply: BN(0)
-  }
+export default function RemoveLiquidity() {
+  const { library, account, active } = useWeb3Context()
+  const { t } = useTranslation()
 
-  reset() {
-    this.setState({
-      value: ''
-    })
-  }
+  const addTransaction = useTransactionAdder()
 
-  validate() {
-    const { tokenAddress, value } = this.state
-    const {
-      t,
-      account,
-      selectors,
-      exchangeAddresses: { fromToken },
-      web3
-    } = this.props
-    const exchangeAddress = fromToken[tokenAddress]
-
-    if (!web3 || !exchangeAddress || !account || !value) {
-      return {
-        isValid: false
+  const [outputCurrency, setOutputCurrency] = useState('')
+  const [value, setValue] = useState('')
+  const [inputError, setInputError] = useState()
+  const [valueParsed, setValueParsed] = useState()
+  // parse value
+  useEffect(() => {
+    try {
+      const parsedValue = ethers.utils.parseUnits(value, 18)
+      setValueParsed(parsedValue)
+    } catch {
+      if (value !== '') {
+        setInputError(t('inputNotValid'))
       }
     }
 
-    const { getBalance } = selectors()
-
-    const { value: liquidityBalance, decimals: liquidityDecimals } = getBalance(account, exchangeAddress)
-
-    if (liquidityBalance.isLessThan(BN(value).multipliedBy(10 ** liquidityDecimals))) {
-      return { isValid: false, errorMessage: t('insufficientBalance') }
+    return () => {
+      setInputError()
+      setValueParsed()
     }
+  }, [t, value])
 
-    return {
-      isValid: true
+  const { symbol, decimals, exchangeAddress } = useTokenDetails(outputCurrency)
+
+  const [totalPoolTokens, setTotalPoolTokens] = useState()
+  const poolTokenBalance = useAddressBalance(account, exchangeAddress)
+  const exchangeETHBalance = useAddressBalance(exchangeAddress, 'ETH')
+  const exchangeTokenBalance = useAddressBalance(exchangeAddress, outputCurrency)
+
+  // input validation
+  useEffect(() => {
+    if (valueParsed && poolTokenBalance) {
+      if (valueParsed.gt(poolTokenBalance)) {
+        setInputError(t('insufficientBalance'))
+      } else {
+        setInputError(null)
+      }
     }
-  }
+  }, [poolTokenBalance, t, valueParsed])
 
-  onTokenSelect = async tokenAddress => {
-    const {
-      exchangeAddresses: { fromToken },
-      web3
-    } = this.props
-    const exchangeAddress = fromToken[tokenAddress]
-    this.setState({ tokenAddress })
+  const exchange = useExchangeContract(exchangeAddress)
 
-    if (!web3 || !exchangeAddress) {
-      return
+  const ownershipPercentage =
+    poolTokenBalance && totalPoolTokens && !totalPoolTokens.isZero()
+      ? poolTokenBalance.mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))).div(totalPoolTokens)
+      : undefined
+  const ownershipPercentageFormatted = ownershipPercentage && amountFormatter(ownershipPercentage, 16, 4)
+
+  const ETHOwnShare =
+    exchangeETHBalance &&
+    ownershipPercentage &&
+    exchangeETHBalance.mul(ownershipPercentage).div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+  const TokenOwnShare =
+    exchangeTokenBalance &&
+    ownershipPercentage &&
+    exchangeTokenBalance.mul(ownershipPercentage).div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+
+  const ETHPer =
+    exchangeETHBalance && totalPoolTokens && !totalPoolTokens.isZero()
+      ? exchangeETHBalance.mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))).div(totalPoolTokens)
+      : undefined
+  const tokenPer =
+    exchangeTokenBalance && totalPoolTokens && !totalPoolTokens.isZero()
+      ? exchangeTokenBalance.mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))).div(totalPoolTokens)
+      : undefined
+
+  const ethWithdrawn =
+    ETHPer &&
+    valueParsed &&
+    ETHPer.mul(valueParsed).div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+  const tokenWithdrawn =
+    tokenPer &&
+    valueParsed &&
+    tokenPer.mul(valueParsed).div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+
+  const ethWithdrawnMin = ethWithdrawn ? calculateSlippageBounds(ethWithdrawn).minimum : undefined
+  const tokenWithdrawnMin = tokenWithdrawn ? calculateSlippageBounds(tokenWithdrawn).minimum : undefined
+
+  const fetchPoolTokens = useCallback(() => {
+    if (exchange) {
+      exchange.totalSupply().then(totalSupply => {
+        setTotalPoolTokens(totalSupply)
+      })
     }
+  }, [exchange])
+  useEffect(() => {
+    fetchPoolTokens()
+    library.on('block', fetchPoolTokens)
 
-    const exchange = new web3.eth.Contract(EXCHANGE_ABI, exchangeAddress)
+    return () => {
+      library.removeListener('block', fetchPoolTokens)
+    }
+  }, [fetchPoolTokens, library])
 
-    const totalSupply = await exchange.methods.totalSupply().call()
-    this.setState({
-      totalSupply: BN(totalSupply)
+  async function onRemoveLiquidity() {
+    ReactGA.event({
+      category: 'Pool',
+      action: 'RemoveLiquidity'
     })
-  }
 
-  onInputChange = value => {
-    this.setState({ value })
-  }
+    const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
 
-  onRemoveLiquidity = async () => {
-    const { tokenAddress, value: input, totalSupply } = this.state
-    const {
-      exchangeAddresses: { fromToken },
-      web3,
-      selectors,
-      account
-    } = this.props
-    const exchangeAddress = fromToken[tokenAddress]
-    const { getBalance } = selectors()
-    if (!web3 || !exchangeAddress) {
-      return
-    }
-    const exchange = new web3.eth.Contract(EXCHANGE_ABI, exchangeAddress)
-    const SLIPPAGE = 0.02
-    const { decimals } = getBalance(account, exchangeAddress)
-    const { value: ethReserve } = getBalance(exchangeAddress)
-    const { value: tokenReserve } = getBalance(exchangeAddress, tokenAddress)
-    const amount = BN(input).multipliedBy(10 ** decimals)
+    const estimatedGasLimit = await exchange.estimate.removeLiquidity(
+      valueParsed,
+      ethWithdrawnMin,
+      tokenWithdrawnMin,
+      deadline
+    )
 
-    const ownership = amount.dividedBy(totalSupply)
-    const ethWithdrawn = ethReserve.multipliedBy(ownership)
-    const tokenWithdrawn = tokenReserve.multipliedBy(ownership)
-    let deadline
-    try {
-      deadline = await retry(() => getBlockDeadline(web3, 600))
-    } catch (e) {
-      // TODO: Handle error.
-      return
-    }
-
-    exchange.methods
-      .removeLiquidity(
-        amount.toFixed(0),
-        ethWithdrawn.multipliedBy(1 - SLIPPAGE).toFixed(0),
-        tokenWithdrawn.multipliedBy(1 - SLIPPAGE).toFixed(0),
-        deadline
-      )
-      .send({ from: account }, (err, data) => {
-        if (data) {
-          this.reset()
-
-          this.props.addPendingTx(data)
-          ReactGA.event({
-            category: 'Pool',
-            action: 'RemoveLiquidity'
-          })
-        }
+    exchange
+      .removeLiquidity(valueParsed, ethWithdrawnMin, tokenWithdrawnMin, deadline, {
+        gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
+      })
+      .then(response => {
+        addTransaction(response)
       })
   }
 
-  getBalance = () => {
-    const {
-      exchangeAddresses: { fromToken },
-      account,
-      web3,
-      selectors
-    } = this.props
+  const b = text => <span className="swap__highlight-text">{text}</span>
 
-    const { tokenAddress } = this.state
+  function renderTransactionDetails() {
+    ReactGA.event({
+      category: 'TransactionDetail',
+      action: 'Open'
+    })
 
-    if (!web3) {
-      return ''
-    }
-
-    const exchangeAddress = fromToken[tokenAddress]
-    if (!exchangeAddress) {
-      return ''
-    }
-    const { value, decimals } = selectors().getBalance(account, exchangeAddress)
-    if (!decimals) {
-      return ''
-    }
-
-    return `Balance: ${value.dividedBy(10 ** decimals).toFixed(7)}`
+    return (
+      <div>
+        <div className="pool__summary-modal__item">
+          {t('youAreRemoving')} {b(`${amountFormatter(ethWithdrawnMin, 18, 4)} ETH`)} {t('and')}{' '}
+          {b(`${amountFormatter(tokenWithdrawnMin, decimals, Math.min(decimals, 4))} ${symbol}`)} {t('outPool')}
+        </div>
+        <div className="pool__summary-modal__item">
+          {t('youWillRemove')} {b(amountFormatter(valueParsed, 18, 4))} {t('liquidityTokens')}
+        </div>
+        <div className="pool__summary-modal__item">
+          {t('totalSupplyIs')} {b(amountFormatter(totalPoolTokens, 18, 4))}
+        </div>
+        <div className="pool__summary-modal__item">
+          {t('tokenWorth')} {b(amountFormatter(ETHPer, 18, 4))} ETH {t('and')}{' '}
+          {b(amountFormatter(tokenPer, decimals, Math.min(4, decimals)))} {symbol}
+        </div>
+      </div>
+    )
   }
 
-  renderSummary(errorMessage) {
-    const {
-      t,
-      account,
-      selectors,
-      exchangeAddresses: { fromToken }
-    } = this.props
-    const { value: input, tokenAddress } = this.state
-    const inputIsZero = BN(input).isZero()
+  function renderSummary() {
     let contextualInfo = ''
     let isError = false
 
-    if (!account) {
+    if (inputError) {
+      contextualInfo = inputError
+      isError = true
+    } else if (!outputCurrency || outputCurrency === 'ETH') {
+      contextualInfo = t('selectTokenCont')
+    } else if (!valueParsed) {
+      contextualInfo = t('enterValueCont')
+    } else if (!account) {
       contextualInfo = t('noWallet')
       isError = true
-    } else if (errorMessage) {
-      contextualInfo = errorMessage
-      isError = true
-    } else if (!tokenAddress) {
-      contextualInfo = t('selectTokenCont')
-    } else if (inputIsZero) {
-      contextualInfo = t('noZero')
-    } else if (!input) {
-      const { label } = selectors().getTokenBalance(tokenAddress, fromToken[tokenAddress])
-      contextualInfo = t('enterLabelCont', { label })
     }
 
     return (
@@ -204,140 +244,63 @@ class RemoveLiquidity extends Component {
         closeDetailsText={t('hideDetails')}
         contextualInfo={contextualInfo}
         isError={isError}
-        renderTransactionDetails={this.renderTransactionDetails}
+        renderTransactionDetails={renderTransactionDetails}
       />
     )
   }
 
-  renderTransactionDetails = () => {
-    const { tokenAddress, value: input, totalSupply } = this.state
-    const {
-      t,
-      exchangeAddresses: { fromToken },
-      selectors,
-      account
-    } = this.props
-    const exchangeAddress = fromToken[tokenAddress]
-    const { getBalance } = selectors()
-
-    if (!exchangeAddress) {
-      return null
-    }
-
-    ReactGA.event({
-      category: 'TransactionDetail',
-      action: 'Open'
-    })
-
-    const SLIPPAGE = 0.025
-    const { decimals } = getBalance(account, exchangeAddress)
-    const { value: ethReserve } = getBalance(exchangeAddress)
-    const { value: tokenReserve, label } = getBalance(exchangeAddress, tokenAddress)
-
-    const ethPer = ethReserve.dividedBy(totalSupply)
-    const tokenPer = tokenReserve.dividedBy(totalSupply)
-
-    const ethWithdrawn = ethPer.multipliedBy(input)
-
-    const tokenWithdrawn = tokenPer.multipliedBy(input)
-    const minTokenWithdrawn = tokenWithdrawn.multipliedBy(1 - SLIPPAGE).toFixed(7)
-    const maxTokenWithdrawn = tokenWithdrawn.multipliedBy(1 + SLIPPAGE).toFixed(7)
-
-    const adjTotalSupply = totalSupply.dividedBy(10 ** decimals).minus(input)
-
-    return (
-      <div>
-        <div className="pool__summary-modal__item">
-          {t('youAreRemoving')} {b(`${+BN(ethWithdrawn).toFixed(7)} ETH`)} {t('and')}{' '}
-          {b(`${+minTokenWithdrawn} - ${+maxTokenWithdrawn} ${label}`)} {t('outPool')}
-        </div>
-        <div className="pool__summary-modal__item">
-          {t('youWillRemove')} {b(+input)} {t('liquidityTokens')}
-        </div>
-        <div className="pool__summary-modal__item">
-          {t('totalSupplyIs')} {b(+adjTotalSupply.toFixed(7))}
-        </div>
-        <div className="pool__summary-modal__item">
-          {t('tokenWorth')} {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} ETH {t('and')}{' '}
-          {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}
-        </div>
-      </div>
-    )
+  function formatBalance(value) {
+    return `Balance: ${value}`
   }
 
-  renderOutput() {
-    const {
-      t,
-      exchangeAddresses: { fromToken },
-      account,
-      web3,
-      selectors
-    } = this.props
-    const { getBalance } = selectors()
+  const isActive = active && account
+  const isValid = inputError === null
 
-    const { tokenAddress, totalSupply, value: input } = this.state
+  const marketRate = getMarketRate(exchangeETHBalance, exchangeTokenBalance, decimals)
 
-    const blank = [
+  return (
+    <>
       <CurrencyInputPanel
-        key="remove-liquidity-input"
-        title={t('output')}
-        description={`(${t('estimated')})`}
-        renderInput={() => <div className="remove-liquidity__output" />}
-        disableTokenSelect
-        disableUnlock
-      />,
-      <OversizedPanel key="remove-liquidity-input-under" hideBottom>
-        <div className="pool__summary-panel">
-          <div className="pool__exchange-rate-wrapper">
-            <span className="pool__exchange-rate">{t('exchangeRate')}</span>
-            <span> - </span>
-          </div>
-          <div className="pool__exchange-rate-wrapper">
-            <span className="swap__exchange-rate">{t('currentPoolSize')}</span>
-            <span> - </span>
-          </div>
-          <div className="pool__exchange-rate-wrapper">
-            <span className="swap__exchange-rate">{t('yourPoolShare')}</span>
-            <span> - </span>
-          </div>
+        title={t('poolTokens')}
+        extraText={poolTokenBalance && formatBalance(amountFormatter(poolTokenBalance, 18, 4))}
+        extraTextClickHander={() => {
+          if (poolTokenBalance) {
+            const valueToSet = poolTokenBalance
+            if (valueToSet.gt(ethers.constants.Zero)) {
+              setValue(amountFormatter(valueToSet, 18, 18, false))
+            }
+          }
+        }}
+        onCurrencySelected={setOutputCurrency}
+        onValueChange={setValue}
+        value={value}
+        errorMessage={inputError}
+        selectedTokenAddress={outputCurrency}
+      />
+      <OversizedPanel>
+        <div className="swap__down-arrow-background">
+          <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} alt="arrow" />
         </div>
       </OversizedPanel>
-    ]
-
-    const exchangeAddress = fromToken[tokenAddress]
-    if (!exchangeAddress || !web3) {
-      return blank
-    }
-
-    const { value: liquidityBalance } = getBalance(account, exchangeAddress)
-    const { value: ethReserve } = getBalance(exchangeAddress)
-    const { value: tokenReserve, decimals: tokenDecimals, label } = getBalance(exchangeAddress, tokenAddress)
-
-    if (!tokenDecimals) {
-      return blank
-    }
-
-    const ownership = liquidityBalance.dividedBy(totalSupply)
-    const ethPer = ethReserve.dividedBy(totalSupply)
-    const tokenPer = tokenReserve.multipliedBy(10 ** (18 - tokenDecimals)).dividedBy(totalSupply)
-    const exchangeRate = tokenReserve.multipliedBy(10 ** (18 - tokenDecimals)).div(ethReserve)
-
-    const ownedEth = ethPer.multipliedBy(liquidityBalance).dividedBy(10 ** 18)
-    const ownedToken = tokenPer.multipliedBy(liquidityBalance).dividedBy(10 ** tokenDecimals)
-
-    return [
       <CurrencyInputPanel
         title={t('output')}
-        description={`(${t('estimated')})`}
+        description={ethWithdrawn && tokenWithdrawn ? `(${t('estimated')})` : ''}
         key="remove-liquidity-input"
         renderInput={() =>
-          input ? (
+          ethWithdrawn && tokenWithdrawn ? (
             <div className="remove-liquidity__output">
-              <div className="remove-liquidity__output-text">{`${ethPer.multipliedBy(input).toFixed(3)} ETH`}</div>
+              <div className="remove-liquidity__output-text">{`${amountFormatter(
+                ethWithdrawn,
+                18,
+                4,
+                false
+              )} ETH`}</div>
               <div className="remove-liquidity__output-plus"> + </div>
-              <div className="remove-liquidity__output-text">
-                {`${tokenPer.multipliedBy(input).toFixed(3)} ${label}`}
-              </div>
+              <div className="remove-liquidity__output-text">{`${amountFormatter(
+                tokenWithdrawn,
+                decimals,
+                Math.min(4, decimals)
+              )} ${symbol}`}</div>
             </div>
           ) : (
             <div className="remove-liquidity__output" />
@@ -345,93 +308,55 @@ class RemoveLiquidity extends Component {
         }
         disableTokenSelect
         disableUnlock
-      />,
+      />
       <OversizedPanel key="remove-liquidity-input-under" hideBottom>
         <div className="pool__summary-panel">
           <div className="pool__exchange-rate-wrapper">
             <span className="pool__exchange-rate">{t('exchangeRate')}</span>
-            <span>{`1 ETH = ${exchangeRate.toFixed(4)} ${label}`}</span>
+            {marketRate ? <span>{`1 ETH = ${amountFormatter(marketRate, 18, 4)} ${symbol}`}</span> : ' - '}
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">{t('currentPoolSize')}</span>
-            <span>{`${ethReserve.dividedBy(10 ** 18).toFixed(2)} ETH + ${tokenReserve
-              .dividedBy(10 ** tokenDecimals)
-              .toFixed(2)} ${label}`}</span>
+            {exchangeETHBalance && exchangeTokenBalance && decimals ? (
+              <span>{`${amountFormatter(exchangeETHBalance, 18, 4)} ETH + ${amountFormatter(
+                exchangeTokenBalance,
+                decimals,
+                Math.min(decimals, 4)
+              )} ${symbol}`}</span>
+            ) : (
+              ' - '
+            )}
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">
-              {t('yourPoolShare')} ({ownership.multipliedBy(100).toFixed(2)}%)
+              {t('yourPoolShare')} ({ownershipPercentageFormatted && ownershipPercentageFormatted}%)
             </span>
-            <span>{`${ownedEth.toFixed(2)} ETH + ${ownedToken.toFixed(2)} ${label}`}</span>
+            {ETHOwnShare && TokenOwnShare ? (
+              <span>
+                {`${amountFormatter(ETHOwnShare, 18, 4)} ETH + ${amountFormatter(
+                  TokenOwnShare,
+                  decimals,
+                  Math.min(decimals, 4)
+                )} ${symbol}`}
+              </span>
+            ) : (
+              ' - '
+            )}
           </div>
         </div>
       </OversizedPanel>
-    ]
-  }
-
-  render() {
-    const { t } = this.props
-    const { tokenAddress, value } = this.state
-    const { isValid, errorMessage } = this.validate()
-
-    return (
-      <>
-        <CurrencyInputPanel
-          title={t('poolTokens')}
-          extraText={this.getBalance(tokenAddress)}
-          onValueChange={this.onInputChange}
-          value={value}
-          errorMessage={errorMessage}
-          selectedTokenAddress={tokenAddress}
-          onCurrencySelected={this.onTokenSelect}
-          filteredTokens={['ETH']}
-        />
-        <OversizedPanel>
-          <div className="swap__down-arrow-background">
-            <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} alt="arrow" />
-          </div>
-        </OversizedPanel>
-        {this.renderOutput()}
-        {this.renderSummary(errorMessage)}
-        <div className="pool__cta-container">
-          <RemoveLiquidityButton callOnClick={this.onRemoveLiquidity} isValid={isValid} />
-        </div>
-      </>
-    )
-  }
-}
-
-function RemoveLiquidityButton({ callOnClick, isValid }) {
-  const { t } = useTranslation()
-  const context = useWeb3Context()
-
-  const isActive = context.active && context.account
-  return (
-    <button
-      className={classnames('pool__cta-btn', {
-        'pool__cta-btn--inactive': !isActive
-      })}
-      disabled={!isValid}
-      onClick={callOnClick}
-    >
-      {t('removeLiquidity')}
-    </button>
+      {renderSummary()}
+      <div className="pool__cta-container">
+        <button
+          className={classnames('pool__cta-btn', {
+            'pool__cta-btn--inactive': !isActive
+          })}
+          disabled={!isValid}
+          onClick={onRemoveLiquidity}
+        >
+          {t('removeLiquidity')}
+        </button>
+      </div>
+    </>
   )
-}
-
-export default connect(
-  state => ({
-    web3: state.web3connect.web3,
-    balances: state.web3connect.balances,
-    account: state.web3connect.account,
-    exchangeAddresses: state.addresses.exchangeAddresses
-  }),
-  dispatch => ({
-    selectors: () => dispatch(selectors()),
-    addPendingTx: id => dispatch(addPendingTx(id))
-  })
-)(withTranslation()(RemoveLiquidity))
-
-function b(text) {
-  return <span className="swap__highlight-text">{text}</span>
 }
