@@ -68,6 +68,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x09cabEC1eAd1c0Ba254B09efb3EE13841712bE14'
     },
+    '0x98626E2C9231f03504273d55f397409deFD4a093': {
+      [NAME]: 'Dev Token',
+      [SYMBOL]: 'DEV',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x48b109a5981573d03e5becec76aa805b7640cd58'
+    },
     '0x4f3AfEC4E5a3F2A6a1A411DEF7D7dFe50eE057bF': {
       [NAME]: 'Digix Gold Token',
       [SYMBOL]: 'DGX',
