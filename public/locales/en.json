@@ -26,6 +26,7 @@
   "unlockTokenCont": "Please unlock token to continue.",
   "transactionDetails": "Transaction Details",
   "hideDetails": "Hide Details",
+  "slippageWarning": "Slippage Warning",
   "youAreSelling": "You are selling",
   "orTransFail": "or the transaction will fail.",
   "youWillReceive": "You will receive at least",

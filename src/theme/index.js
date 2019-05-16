@@ -4,6 +4,7 @@ import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle } fro
 const theme = {
   uniswapPink: '#DC6BE5',
   royalBlue: '#2f80ed',
+  salmonRed: '#ff6871',
   white: '#FFF',
   black: '#000'
 }
