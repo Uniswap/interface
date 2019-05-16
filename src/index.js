@@ -1,13 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
 import ReactGA from 'react-ga'
 import Web3Provider, { Connectors } from 'web3-react'
 
-import './i18n'
+import ThemeProvider, { GlobalStyle } from './theme'
+import ApplicationContextProvider, { Updater as ApplicationContextUpdater } from './contexts/Application'
+import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
+import TokensContextProvider from './contexts/Tokens'
+import BalancesContextProvider from './contexts/Balances'
+import AllowancesContextProvider from './contexts/Allowances'
+
 import App from './pages/App'
-import store from './store'
-import './index.scss'
+
+import './i18n'
 
 if (process.env.NODE_ENV === 'production') {
   ReactGA.initialize('UA-128182339-1')
@@ -23,11 +28,40 @@ const Infura = new NetworkOnlyConnector({
 })
 const connectors = { Injected, Infura }
 
+function ContextProviders({ children }) {
+  return (
+    <ApplicationContextProvider>
+      <TransactionContextProvider>
+        <TokensContextProvider>
+          <BalancesContextProvider>
+            <AllowancesContextProvider>{children}</AllowancesContextProvider>
+          </BalancesContextProvider>
+        </TokensContextProvider>
+      </TransactionContextProvider>
+    </ApplicationContextProvider>
+  )
+}
+
+function Updaters() {
+  return (
+    <>
+      <ApplicationContextUpdater />
+      <TransactionContextUpdater />
+    </>
+  )
+}
+
 ReactDOM.render(
-  <Provider store={store}>
-    <Web3Provider connectors={connectors} libraryName="ethers.js">
-      <App />
-    </Web3Provider>
-  </Provider>,
+  <ThemeProvider>
+    <>
+      <GlobalStyle />
+      <Web3Provider connectors={connectors} libraryName="ethers.js">
+        <ContextProviders>
+          <Updaters />
+          <App />
+        </ContextProviders>
+      </Web3Provider>
+    </>
+  </ThemeProvider>,
   document.getElementById('root')
 )

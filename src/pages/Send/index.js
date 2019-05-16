@@ -1,693 +1,489 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
-import classnames from 'classnames'
-import { BigNumber as BN } from 'bignumber.js'
-import { withTranslation, useTranslation } from 'react-i18next'
+import React, { useState, useReducer, useEffect } from 'react'
 import ReactGA from 'react-ga'
+import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
+import { ethers } from 'ethers'
 
-import { selectors, addPendingTx } from '../../ducks/web3connect'
-import AddressInputPanel from '../../components/AddressInputPanel'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import ContextualInfo from '../../components/ContextualInfo'
+import NewContextualInfo from '../../components/ContextualInfoNew'
 import OversizedPanel from '../../components/OversizedPanel'
+import AddressInputPanel from '../../components/AddressInputPanel'
 import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
 import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
-import { getBlockDeadline } from '../../helpers/web3-utils'
-import { retry } from '../../helpers/promise-utils'
-import EXCHANGE_ABI from '../../abi/exchange'
+import { isAddress, amountFormatter, calculateGasMargin } from '../../utils'
+import { useExchangeContract } from '../../hooks'
+import { useTokenDetails } from '../../contexts/Tokens'
+import { useTransactionAdder } from '../../contexts/Transactions'
+import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
+import { useAddressAllowance } from '../../contexts/Allowances'
 
 import './send.scss'
 
 const INPUT = 0
 const OUTPUT = 1
 
-class Send extends Component {
-  static propTypes = {
-    account: PropTypes.string,
-    selectors: PropTypes.func.isRequired,
-    web3: PropTypes.object.isRequired
-  }
+const ETH_TO_TOKEN = 0
+const TOKEN_TO_ETH = 1
+const TOKEN_TO_TOKEN = 2
 
-  state = {
-    inputValue: '',
-    outputValue: '',
-    inputCurrency: 'ETH',
-    outputCurrency: '',
-    inputAmountB: '',
-    lastEditedField: '',
-    recipient: ''
-  }
+// denominated in bips
+const ALLOWED_SLIPPAGE = ethers.utils.bigNumberify(200)
+const TOKEN_ALLOWED_SLIPPAGE = ethers.utils.bigNumberify(400)
 
-  componentWillMount() {
-    ReactGA.pageview(window.location.pathname + window.location.search)
-  }
+// denominated in seconds
+const DEADLINE_FROM_NOW = 60 * 15
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return true
-  }
+// denominated in bips
+const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
-  reset() {
-    this.setState({
-      inputValue: '',
-      outputValue: '',
-      inputAmountB: '',
-      lastEditedField: '',
-      recipient: ''
-    })
-  }
-
-  componentWillReceiveProps() {
-    this.recalcForm()
-  }
-
-  validate() {
-    const { selectors, account, web3 } = this.props
-    const { inputValue, outputValue, inputCurrency, outputCurrency, recipient } = this.state
-
-    let inputError = ''
-    let outputError = ''
-    let isValid = true
-    const validRecipientAddress = web3 && web3.utils.isAddress(recipient)
-    const inputIsZero = BN(inputValue).isZero()
-    const outputIsZero = BN(outputValue).isZero()
-
-    if (
-      !inputValue ||
-      inputIsZero ||
-      !outputValue ||
-      outputIsZero ||
-      !inputCurrency ||
-      !outputCurrency ||
-      !recipient ||
-      this.isUnapproved() ||
-      !validRecipientAddress
-    ) {
-      isValid = false
-    }
-
-    const { value: inputBalance, decimals: inputDecimals } = selectors().getBalance(account, inputCurrency)
-
-    if (inputBalance.isLessThan(BN(inputValue * 10 ** inputDecimals))) {
-      inputError = this.props.t('insufficientBalance')
-    }
-
-    if (inputValue === 'N/A') {
-      inputError = this.props.t('inputNotValid')
-    }
-
+function calculateSlippageBounds(value, token = false) {
+  if (value) {
+    const offset = value.mul(token ? TOKEN_ALLOWED_SLIPPAGE : ALLOWED_SLIPPAGE).div(ethers.utils.bigNumberify(10000))
+    const minimum = value.sub(offset)
+    const maximum = value.add(offset)
     return {
-      inputError,
-      outputError,
-      isValid: isValid && !inputError && !outputError
+      minimum: minimum.lt(ethers.constants.Zero) ? ethers.constants.Zero : minimum,
+      maximum: maximum.gt(ethers.constants.MaxUint256) ? ethers.constants.MaxUint256 : maximum
+    }
+  } else {
+    return {}
+  }
+}
+
+function getSwapType(inputCurrency, outputCurrency) {
+  if (!inputCurrency || !outputCurrency) {
+    return null
+  } else if (inputCurrency === 'ETH') {
+    return ETH_TO_TOKEN
+  } else if (outputCurrency === 'ETH') {
+    return TOKEN_TO_ETH
+  } else {
+    return TOKEN_TO_TOKEN
+  }
+}
+
+// this mocks the getInputPrice function, and calculates the required output
+function calculateEtherTokenOutputFromInput(inputAmount, inputReserve, outputReserve) {
+  const inputAmountWithFee = inputAmount.mul(ethers.utils.bigNumberify(997))
+  const numerator = inputAmountWithFee.mul(outputReserve)
+  const denominator = inputReserve.mul(ethers.utils.bigNumberify(1000)).add(inputAmountWithFee)
+  return numerator.div(denominator)
+}
+
+// this mocks the getOutputPrice function, and calculates the required input
+function calculateEtherTokenInputFromOutput(outputAmount, inputReserve, outputReserve) {
+  const numerator = inputReserve.mul(outputAmount).mul(ethers.utils.bigNumberify(1000))
+  const denominator = outputReserve.sub(outputAmount).mul(ethers.utils.bigNumberify(997))
+  return numerator.div(denominator).add(ethers.constants.One)
+}
+
+const initialSwapState = {
+  independentValue: '', // this is a user input
+  dependentValue: '', // this is a calculated number
+  independentField: INPUT,
+  inputCurrency: 'ETH',
+  outputCurrency: ''
+}
+
+function swapStateReducer(state, action) {
+  switch (action.type) {
+    case 'FLIP_INDEPENDENT': {
+      const { independentField, inputCurrency, outputCurrency } = state
+      return {
+        ...state,
+        dependentValue: '',
+        independentField: independentField === INPUT ? OUTPUT : INPUT,
+        inputCurrency: outputCurrency,
+        outputCurrency: inputCurrency
+      }
+    }
+    case 'SELECT_CURRENCY': {
+      const { inputCurrency, outputCurrency } = state
+      const { field, currency } = action.payload
+
+      const newInputCurrency = field === INPUT ? currency : inputCurrency
+      const newOutputCurrency = field === OUTPUT ? currency : outputCurrency
+
+      if (newInputCurrency === newOutputCurrency) {
+        return {
+          ...state,
+          inputCurrency: field === INPUT ? currency : '',
+          outputCurrency: field === OUTPUT ? currency : ''
+        }
+      } else {
+        return {
+          ...state,
+          inputCurrency: newInputCurrency,
+          outputCurrency: newOutputCurrency
+        }
+      }
+    }
+    case 'UPDATE_INDEPENDENT': {
+      const { field, value } = action.payload
+      return {
+        ...state,
+        independentValue: value,
+        dependentValue: '',
+        independentField: field
+      }
+    }
+    case 'UPDATE_DEPENDENT': {
+      return {
+        ...state,
+        dependentValue: action.payload
+      }
+    }
+    default: {
+      return initialSwapState
     }
   }
+}
 
-  flipInputOutput = () => {
-    const { state } = this
-    this.setState(
-      {
-        inputValue: state.outputValue,
-        outputValue: state.inputValue,
-        inputCurrency: state.outputCurrency,
-        outputCurrency: state.inputCurrency,
-        lastEditedField: state.lastEditedField === INPUT ? OUTPUT : INPUT
-      },
-      () => this.recalcForm()
-    )
-  }
+function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals, invert = false) {
+  try {
+    if (
+      inputValue &&
+      (inputDecimals || inputDecimals === 0) &&
+      outputValue &&
+      (outputDecimals || outputDecimals === 0)
+    ) {
+      const factor = ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))
 
-  isUnapproved() {
-    const { account, exchangeAddresses, selectors } = this.props
-    const { inputCurrency, inputValue } = this.state
-
-    if (!inputCurrency || inputCurrency === 'ETH') {
-      return false
+      if (invert) {
+        return inputValue
+          .mul(factor)
+          .div(outputValue)
+          .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
+          .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
+      } else {
+        return outputValue
+          .mul(factor)
+          .div(inputValue)
+          .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
+          .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
+      }
     }
+  } catch {}
+}
 
-    const { value: allowance, label, decimals } = selectors().getApprovals(
-      inputCurrency,
-      account,
-      exchangeAddresses.fromToken[inputCurrency]
-    )
-
-    if (label && allowance.isLessThan(BN(inputValue * 10 ** decimals || 0))) {
-      return true
-    }
-
-    return false
-  }
-
-  recalcForm() {
-    const { inputCurrency, outputCurrency, lastEditedField } = this.state
-
-    if (!inputCurrency || !outputCurrency) {
-      return
-    }
-
-    const editedValue = lastEditedField === INPUT ? this.state.inputValue : this.state.outputValue
-
-    if (BN(editedValue).isZero()) {
-      return
-    }
-
-    if (inputCurrency === outputCurrency) {
-      this.setState({
-        inputValue: '',
-        outputValue: ''
-      })
-      return
-    }
-
-    if (inputCurrency !== 'ETH' && outputCurrency !== 'ETH') {
-      this.recalcTokenTokenForm()
-      return
-    }
-
-    this.recalcEthTokenForm()
-  }
-
-  recalcTokenTokenForm = () => {
-    const {
-      exchangeAddresses: { fromToken },
-      selectors
-    } = this.props
-
-    const {
-      inputValue: oldInputValue,
-      outputValue: oldOutputValue,
-      inputCurrency,
-      outputCurrency,
-      lastEditedField,
-      exchangeRate: oldExchangeRate,
-      inputAmountB: oldInputAmountB
-    } = this.state
-
-    const exchangeAddressA = fromToken[inputCurrency]
-    const exchangeAddressB = fromToken[outputCurrency]
-
-    const { value: inputReserveA, decimals: inputDecimalsA } = selectors().getBalance(exchangeAddressA, inputCurrency)
-    const { value: outputReserveA } = selectors().getBalance(exchangeAddressA, 'ETH')
-    const { value: inputReserveB } = selectors().getBalance(exchangeAddressB, 'ETH')
-    const { value: outputReserveB, decimals: outputDecimalsB } = selectors().getBalance(
-      exchangeAddressB,
-      outputCurrency
-    )
-
-    if (lastEditedField === INPUT) {
-      if (!oldInputValue) {
-        return this.setState({
-          outputValue: '',
-          exchangeRate: BN(0)
-        })
-      }
-
-      const inputAmountA = BN(oldInputValue).multipliedBy(10 ** inputDecimalsA)
-      const outputAmountA = calculateEtherTokenOutput({
-        inputAmount: inputAmountA,
-        inputReserve: inputReserveA,
-        outputReserve: outputReserveA
-      })
-      // Redundant Variable for readability of the formala
-      // OutputAmount from the first send becomes InputAmount of the second send
-      const inputAmountB = outputAmountA
-      const outputAmountB = calculateEtherTokenOutput({
-        inputAmount: inputAmountB,
-        inputReserve: inputReserveB,
-        outputReserve: outputReserveB
-      })
-
-      const outputValue = outputAmountB.dividedBy(BN(10 ** outputDecimalsB)).toFixed(7)
-      const exchangeRate = BN(outputValue).dividedBy(BN(oldInputValue))
-
-      const appendState = {}
-
-      if (!exchangeRate.isEqualTo(BN(oldExchangeRate))) {
-        appendState.exchangeRate = exchangeRate
-      }
-
-      if (outputValue !== oldOutputValue) {
-        appendState.outputValue = outputValue
-      }
-
-      this.setState(appendState)
-    }
-
-    if (lastEditedField === OUTPUT) {
-      if (!oldOutputValue) {
-        return this.setState({
-          inputValue: '',
-          exchangeRate: BN(0)
-        })
-      }
-
-      const outputAmountB = BN(oldOutputValue).multipliedBy(10 ** outputDecimalsB)
-      const inputAmountB = calculateEtherTokenInput({
-        outputAmount: outputAmountB,
-        inputReserve: inputReserveB,
-        outputReserve: outputReserveB
-      })
-
-      // Redundant Variable for readability of the formala
-      // InputAmount from the first send becomes OutputAmount of the second send
-      const outputAmountA = inputAmountB
-      const inputAmountA = calculateEtherTokenInput({
-        outputAmount: outputAmountA,
-        inputReserve: inputReserveA,
-        outputReserve: outputReserveA
-      })
-
-      const inputValue = inputAmountA.isNegative() ? 'N/A' : inputAmountA.dividedBy(BN(10 ** inputDecimalsA)).toFixed(7)
-      const exchangeRate = BN(oldOutputValue).dividedBy(BN(inputValue))
-
-      const appendState = {}
-
-      if (!exchangeRate.isEqualTo(BN(oldExchangeRate))) {
-        appendState.exchangeRate = exchangeRate
-      }
-
-      if (inputValue !== oldInputValue) {
-        appendState.inputValue = inputValue
-      }
-
-      if (!inputAmountB.isEqualTo(BN(oldInputAmountB))) {
-        appendState.inputAmountB = inputAmountB
-      }
-
-      this.setState(appendState)
-    }
-  }
-
-  recalcEthTokenForm = () => {
-    const {
-      exchangeAddresses: { fromToken },
-      selectors
-    } = this.props
-
-    const {
-      inputValue: oldInputValue,
-      outputValue: oldOutputValue,
-      inputCurrency,
-      outputCurrency,
-      lastEditedField,
-      exchangeRate: oldExchangeRate
-    } = this.state
-
-    const tokenAddress = [inputCurrency, outputCurrency].filter(currency => currency !== 'ETH')[0]
-    const exchangeAddress = fromToken[tokenAddress]
-    if (!exchangeAddress) {
-      return
-    }
-    const { value: inputReserve, decimals: inputDecimals } = selectors().getBalance(exchangeAddress, inputCurrency)
-    const { value: outputReserve, decimals: outputDecimals } = selectors().getBalance(exchangeAddress, outputCurrency)
-
-    if (lastEditedField === INPUT) {
-      if (!oldInputValue) {
-        return this.setState({
-          outputValue: '',
-          exchangeRate: BN(0)
-        })
-      }
-
-      const inputAmount = BN(oldInputValue).multipliedBy(10 ** inputDecimals)
-      const outputAmount = calculateEtherTokenOutput({ inputAmount, inputReserve, outputReserve })
-      const outputValue = outputAmount.dividedBy(BN(10 ** outputDecimals)).toFixed(7)
-      const exchangeRate = BN(outputValue).dividedBy(BN(oldInputValue))
-
-      const appendState = {}
-
-      if (!exchangeRate.isEqualTo(BN(oldExchangeRate))) {
-        appendState.exchangeRate = exchangeRate
-      }
-
-      if (outputValue !== oldOutputValue) {
-        appendState.outputValue = outputValue
-      }
-
-      this.setState(appendState)
-    } else if (lastEditedField === OUTPUT) {
-      if (!oldOutputValue) {
-        return this.setState({
-          inputValue: '',
-          exchangeRate: BN(0)
-        })
-      }
-
-      const outputAmount = BN(oldOutputValue).multipliedBy(10 ** outputDecimals)
-      const inputAmount = calculateEtherTokenInput({ outputAmount, inputReserve, outputReserve })
-      const inputValue = inputAmount.isNegative() ? 'N/A' : inputAmount.dividedBy(BN(10 ** inputDecimals)).toFixed(7)
-      const exchangeRate = BN(oldOutputValue).dividedBy(BN(inputValue))
-
-      const appendState = {}
-
-      if (!exchangeRate.isEqualTo(BN(oldExchangeRate))) {
-        appendState.exchangeRate = exchangeRate
-      }
-
-      if (inputValue !== oldInputValue) {
-        appendState.inputValue = inputValue
-      }
-
-      this.setState(appendState)
-    }
-  }
-
-  updateInput = amount => {
-    this.setState(
-      {
-        inputValue: amount,
-        lastEditedField: INPUT
-      },
-      this.recalcForm
-    )
-  }
-
-  updateOutput = amount => {
-    this.setState(
-      {
-        outputValue: amount,
-        lastEditedField: OUTPUT
-      },
-      this.recalcForm
-    )
-  }
-
-  onSend = async () => {
-    const {
-      exchangeAddresses: { fromToken },
-      account,
-      web3,
-      selectors,
-      addPendingTx
-    } = this.props
-    const {
-      inputValue,
-      outputValue,
-      inputCurrency,
-      outputCurrency,
-      inputAmountB,
-      lastEditedField,
-      recipient
-    } = this.state
-    const ALLOWED_SLIPPAGE = 0.025
-    const TOKEN_ALLOWED_SLIPPAGE = 0.04
-
-    const type = getSendType(inputCurrency, outputCurrency)
-    const { decimals: inputDecimals } = selectors().getBalance(account, inputCurrency)
-    const { decimals: outputDecimals } = selectors().getBalance(account, outputCurrency)
-    let deadline
+function getMarketRate(
+  swapType,
+  inputReserveETH,
+  inputReserveToken,
+  inputDecimals,
+  outputReserveETH,
+  outputReserveToken,
+  outputDecimals,
+  invert = false
+) {
+  if (swapType === ETH_TO_TOKEN) {
+    return getExchangeRate(outputReserveETH, 18, outputReserveToken, outputDecimals, invert)
+  } else if (swapType === TOKEN_TO_ETH) {
+    return getExchangeRate(inputReserveToken, inputDecimals, inputReserveETH, 18, invert)
+  } else if (swapType === TOKEN_TO_TOKEN) {
+    const factor = ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))
+    const firstRate = getExchangeRate(inputReserveToken, inputDecimals, inputReserveETH, 18)
+    const secondRate = getExchangeRate(outputReserveETH, 18, outputReserveToken, outputDecimals)
     try {
-      deadline = await retry(() => getBlockDeadline(web3, 600))
-    } catch (e) {
-      // TODO: Handle error.
-      return
-    }
+      return !!(firstRate && secondRate) ? firstRate.mul(secondRate).div(factor) : undefined
+    } catch {}
+  }
+}
 
-    if (lastEditedField === INPUT) {
-      ReactGA.event({
-        category: type,
-        action: 'TransferInput'
-      })
-      // send input
-      switch (type) {
-        case 'ETH_TO_TOKEN':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]).methods
-            .ethToTokenTransferInput(
-              BN(outputValue)
-                .multipliedBy(10 ** outputDecimals)
-                .multipliedBy(1 - ALLOWED_SLIPPAGE)
-                .toFixed(0),
-              deadline,
-              recipient
-            )
-            .send(
-              {
-                from: account,
-                value: BN(inputValue)
-                  .multipliedBy(10 ** 18)
-                  .toFixed(0)
-              },
-              (err, data) => {
-                if (!err) {
-                  addPendingTx(data)
-                  this.reset()
-                }
-              }
-            )
-          break
-        case 'TOKEN_TO_ETH':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods
-            .tokenToEthTransferInput(
-              BN(inputValue)
-                .multipliedBy(10 ** inputDecimals)
-                .toFixed(0),
-              BN(outputValue)
-                .multipliedBy(10 ** outputDecimals)
-                .multipliedBy(1 - ALLOWED_SLIPPAGE)
-                .toFixed(0),
-              deadline,
-              recipient
-            )
-            .send({ from: account }, (err, data) => {
-              if (!err) {
-                addPendingTx(data)
-                this.reset()
-              }
-            })
-          break
-        case 'TOKEN_TO_TOKEN':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods
-            .tokenToTokenTransferInput(
-              BN(inputValue)
-                .multipliedBy(10 ** inputDecimals)
-                .toFixed(0),
-              BN(outputValue)
-                .multipliedBy(10 ** outputDecimals)
-                .multipliedBy(1 - TOKEN_ALLOWED_SLIPPAGE)
-                .toFixed(0),
-              '1',
-              deadline,
-              recipient,
-              outputCurrency
-            )
-            .send({ from: account }, (err, data) => {
-              if (!err) {
-                addPendingTx(data)
-                this.reset()
-              }
-            })
-          break
-        default:
-          break
+export default function Swap() {
+  const { t } = useTranslation()
+  const { account } = useWeb3Context()
+
+  const addTransaction = useTransactionAdder()
+
+  // analytics
+  useEffect(() => {
+    ReactGA.pageview(window.location.pathname + window.location.search)
+  }, [])
+
+  // core swap state
+  const [swapState, dispatchSwapState] = useReducer(swapStateReducer, initialSwapState)
+  const { independentValue, dependentValue, independentField, inputCurrency, outputCurrency } = swapState
+
+  const [recipient, setRecipient] = useState({ address: '', name: '' })
+  const [recipientError, setRecipientError] = useState()
+
+  // get swap type from the currency types
+  const swapType = getSwapType(inputCurrency, outputCurrency)
+
+  // get decimals and exchange addressfor each of the currency types
+  const { symbol: inputSymbol, decimals: inputDecimals, exchangeAddress: inputExchangeAddress } = useTokenDetails(
+    inputCurrency
+  )
+  const { symbol: outputSymbol, decimals: outputDecimals, exchangeAddress: outputExchangeAddress } = useTokenDetails(
+    outputCurrency
+  )
+
+  const inputExchangeContract = useExchangeContract(inputExchangeAddress)
+  const outputExchangeContract = useExchangeContract(outputExchangeAddress)
+  const contract = swapType === ETH_TO_TOKEN ? outputExchangeContract : inputExchangeContract
+
+  // get input allowance
+  const inputAllowance = useAddressAllowance(account, inputCurrency, inputExchangeAddress)
+
+  // fetch reserves for each of the currency types
+  const { reserveETH: inputReserveETH, reserveToken: inputReserveToken } = useExchangeReserves(inputCurrency)
+  const { reserveETH: outputReserveETH, reserveToken: outputReserveToken } = useExchangeReserves(outputCurrency)
+
+  // get balances for each of the currency types
+  const inputBalance = useAddressBalance(account, inputCurrency)
+  const outputBalance = useAddressBalance(account, outputCurrency)
+  const inputBalanceFormatted = !!(inputBalance && Number.isInteger(inputDecimals))
+    ? amountFormatter(inputBalance, inputDecimals, Math.min(4, inputDecimals))
+    : ''
+  const outputBalanceFormatted = !!(outputBalance && Number.isInteger(outputDecimals))
+    ? amountFormatter(outputBalance, outputDecimals, Math.min(4, outputDecimals))
+    : ''
+
+  // compute useful transforms of the data above
+  const independentDecimals = independentField === INPUT ? inputDecimals : outputDecimals
+  const dependentDecimals = independentField === OUTPUT ? inputDecimals : outputDecimals
+
+  // declare/get parsed and formatted versions of input/output values
+  const [independentValueParsed, setIndependentValueParsed] = useState()
+  const dependentValueFormatted = !!(dependentValue && dependentDecimals)
+    ? amountFormatter(dependentValue, dependentDecimals, Math.min(4, dependentDecimals), false)
+    : ''
+  const inputValueParsed = independentField === INPUT ? independentValueParsed : dependentValue
+  const inputValueFormatted = independentField === INPUT ? independentValue : dependentValueFormatted
+  const outputValueParsed = independentField === OUTPUT ? independentValueParsed : dependentValue
+  const outputValueFormatted = independentField === OUTPUT ? independentValue : dependentValueFormatted
+
+  // validate + parse independent value
+  const [independentError, setIndependentError] = useState()
+  useEffect(() => {
+    if (independentValue && independentDecimals) {
+      try {
+        const parsedValue = ethers.utils.parseUnits(independentValue, independentDecimals)
+
+        if (parsedValue.lte(ethers.constants.Zero) || parsedValue.gte(ethers.constants.MaxUint256)) {
+          throw Error()
+        } else {
+          setIndependentValueParsed(parsedValue)
+          setIndependentError(null)
+        }
+      } catch {
+        setIndependentError(t('inputNotValid'))
+      }
+
+      return () => {
+        setIndependentValueParsed()
+        setIndependentError()
       }
     }
+  }, [independentValue, independentDecimals, t])
 
-    if (lastEditedField === OUTPUT) {
-      // send output
-      ReactGA.event({
-        category: type,
-        action: 'TransferOutput'
-      })
-      switch (type) {
-        case 'ETH_TO_TOKEN':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[outputCurrency]).methods
-            .ethToTokenTransferOutput(
-              BN(outputValue)
-                .multipliedBy(10 ** outputDecimals)
-                .toFixed(0),
-              deadline,
-              recipient
-            )
-            .send(
-              {
-                from: account,
-                value: BN(inputValue)
-                  .multipliedBy(10 ** inputDecimals)
-                  .multipliedBy(1 + ALLOWED_SLIPPAGE)
-                  .toFixed(0)
-              },
-              (err, data) => {
-                if (!err) {
-                  addPendingTx(data)
-                  this.reset()
-                }
-              }
-            )
-          break
-        case 'TOKEN_TO_ETH':
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods
-            .tokenToEthTransferOutput(
-              BN(outputValue)
-                .multipliedBy(10 ** outputDecimals)
-                .toFixed(0),
-              BN(inputValue)
-                .multipliedBy(10 ** inputDecimals)
-                .multipliedBy(1 + ALLOWED_SLIPPAGE)
-                .toFixed(0),
-              deadline,
-              recipient
-            )
-            .send({ from: account }, (err, data) => {
-              if (!err) {
-                addPendingTx(data)
-                this.reset()
-              }
-            })
-          break
-        case 'TOKEN_TO_TOKEN':
-          if (!inputAmountB) {
-            return
+  // calculate slippage from target rate
+  const { minimum: dependentValueMinumum, maximum: dependentValueMaximum } = calculateSlippageBounds(
+    dependentValue,
+    swapType === TOKEN_TO_TOKEN
+  )
+
+  // validate input allowance + balance
+  const [inputError, setInputError] = useState()
+  const [showUnlock, setShowUnlock] = useState(false)
+  useEffect(() => {
+    const inputValueCalculation = independentField === INPUT ? independentValueParsed : dependentValueMaximum
+
+    if (inputBalance && (inputAllowance || inputCurrency === 'ETH') && inputValueCalculation) {
+      if (inputBalance.lt(inputValueCalculation)) {
+        setInputError(t('insufficientBalance'))
+      } else if (inputCurrency !== 'ETH' && inputAllowance.lt(inputValueCalculation)) {
+        setInputError(t('unlockTokenCont'))
+        setShowUnlock(true)
+      } else {
+        setInputError(null)
+        setShowUnlock(false)
+      }
+
+      return () => {
+        setInputError()
+        setShowUnlock(false)
+      }
+    }
+  }, [independentField, independentValueParsed, dependentValueMaximum, inputBalance, inputCurrency, inputAllowance, t])
+
+  // calculate dependent value
+  useEffect(() => {
+    const amount = independentValueParsed
+
+    if (swapType === ETH_TO_TOKEN) {
+      const reserveETH = outputReserveETH
+      const reserveToken = outputReserveToken
+
+      if (amount && reserveETH && reserveToken) {
+        try {
+          const calculatedDependentValue =
+            independentField === INPUT
+              ? calculateEtherTokenOutputFromInput(amount, reserveETH, reserveToken)
+              : calculateEtherTokenInputFromOutput(amount, reserveETH, reserveToken)
+
+          if (calculatedDependentValue.lte(ethers.constants.Zero)) {
+            throw Error()
           }
 
-          new web3.eth.Contract(EXCHANGE_ABI, fromToken[inputCurrency]).methods
-            .tokenToTokenTransferOutput(
-              BN(outputValue)
-                .multipliedBy(10 ** outputDecimals)
-                .toFixed(0),
-              BN(inputValue)
-                .multipliedBy(10 ** inputDecimals)
-                .multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE)
-                .toFixed(0),
-              inputAmountB.multipliedBy(1.2).toFixed(0),
-              deadline,
-              recipient,
-              outputCurrency
+          dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
+        } catch {
+          setIndependentError(t('insufficientLiquidity'))
+        }
+        return () => {
+          dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: '' })
+        }
+      }
+    } else if (swapType === TOKEN_TO_ETH) {
+      const reserveETH = inputReserveETH
+      const reserveToken = inputReserveToken
+
+      if (amount && reserveETH && reserveToken) {
+        try {
+          const calculatedDependentValue =
+            independentField === INPUT
+              ? calculateEtherTokenOutputFromInput(amount, reserveToken, reserveETH)
+              : calculateEtherTokenInputFromOutput(amount, reserveToken, reserveETH)
+
+          if (calculatedDependentValue.lte(ethers.constants.Zero)) {
+            throw Error()
+          }
+
+          dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
+        } catch {
+          setIndependentError(t('insufficientLiquidity'))
+        }
+        return () => {
+          dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: '' })
+        }
+      }
+    } else if (swapType === TOKEN_TO_TOKEN) {
+      const reserveETHFirst = inputReserveETH
+      const reserveTokenFirst = inputReserveToken
+
+      const reserveETHSecond = outputReserveETH
+      const reserveTokenSecond = outputReserveToken
+
+      if (amount && reserveETHFirst && reserveTokenFirst && reserveETHSecond && reserveTokenSecond) {
+        try {
+          if (independentField === INPUT) {
+            const intermediateValue = calculateEtherTokenOutputFromInput(amount, reserveTokenFirst, reserveETHFirst)
+            if (intermediateValue.lte(ethers.constants.Zero)) {
+              throw Error()
+            }
+            const calculatedDependentValue = calculateEtherTokenOutputFromInput(
+              intermediateValue,
+              reserveETHSecond,
+              reserveTokenSecond
             )
-            .send({ from: account }, (err, data) => {
-              if (!err) {
-                addPendingTx(data)
-                this.reset()
-              }
-            })
-          break
-        default:
-          break
+            if (calculatedDependentValue.lte(ethers.constants.Zero)) {
+              throw Error()
+            }
+            dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
+          } else {
+            const intermediateValue = calculateEtherTokenInputFromOutput(amount, reserveETHSecond, reserveTokenSecond)
+            if (intermediateValue.lte(ethers.constants.Zero)) {
+              throw Error()
+            }
+            // console.log('hi!', amountFormatter(intermediateValue, ))
+            const calculatedDependentValue = calculateEtherTokenInputFromOutput(
+              intermediateValue,
+              reserveTokenFirst,
+              reserveETHFirst
+            )
+            if (calculatedDependentValue.lte(ethers.constants.Zero)) {
+              throw Error()
+            }
+            dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
+          }
+        } catch {
+          setIndependentError(t('insufficientLiquidity'))
+        }
+        return () => {
+          dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: '' })
+        }
       }
     }
+  }, [
+    independentValueParsed,
+    swapType,
+    outputReserveETH,
+    outputReserveToken,
+    inputReserveETH,
+    inputReserveToken,
+    independentField,
+    t
+  ])
+
+  const [inverted, setInverted] = useState(false)
+  const exchangeRate = getExchangeRate(inputValueParsed, inputDecimals, outputValueParsed, outputDecimals)
+  const exchangeRateInverted = getExchangeRate(inputValueParsed, inputDecimals, outputValueParsed, outputDecimals, true)
+
+  const marketRate = getMarketRate(
+    swapType,
+    inputReserveETH,
+    inputReserveToken,
+    inputDecimals,
+    outputReserveETH,
+    outputReserveToken,
+    outputDecimals
+  )
+
+  const percentSlippage =
+    exchangeRate && marketRate
+      ? exchangeRate
+          .sub(marketRate)
+          .abs()
+          .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+          .div(marketRate)
+          .sub(ethers.utils.bigNumberify(3).mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(15))))
+      : undefined
+  const percentSlippageFormatted = percentSlippage && amountFormatter(percentSlippage, 16, 2)
+  const slippageWarning = percentSlippage && percentSlippage.gte(ethers.utils.parseEther('.1')) // 10%
+
+  const isValid = exchangeRate && inputError === null && independentError === null && recipientError === null
+
+  const estimatedText = `(${t('estimated')})`
+  function formatBalance(value) {
+    return `Balance: ${value}`
   }
 
-  renderSummary(inputError, outputError) {
-    const { inputValue, inputCurrency, outputValue, outputCurrency, recipient } = this.state
-    const { t, web3 } = this.props
-
-    const { selectors, account } = this.props
-    const { label: inputLabel } = selectors().getBalance(account, inputCurrency)
-    const { label: outputLabel } = selectors().getBalance(account, outputCurrency)
-    const validRecipientAddress = web3 && web3.utils.isAddress(recipient)
-    const inputIsZero = BN(inputValue).isZero()
-    const outputIsZero = BN(outputValue).isZero()
-
-    let contextualInfo = ''
-    let isError = false
-
-    if (!account) {
-      contextualInfo = t('noWallet')
-      isError = true
-    } else if (inputError || outputError) {
-      contextualInfo = inputError || outputError
-      isError = true
-    } else if (!inputCurrency || !outputCurrency) {
-      contextualInfo = t('selectTokenCont')
-    } else if (inputCurrency === outputCurrency) {
-      contextualInfo = t('differentToken')
-    } else if (!inputValue || !outputValue) {
-      const missingCurrencyValue = !inputValue ? inputLabel : outputLabel
-      contextualInfo = t('enterValueCont', { missingCurrencyValue })
-    } else if (inputIsZero || outputIsZero) {
-      contextualInfo = t('noLiquidity')
-    } else if (this.isUnapproved()) {
-      contextualInfo = t('unlockTokenCont')
-    } else if (!recipient) {
-      contextualInfo = t('noRecipient')
-    } else if (!validRecipientAddress) {
-      contextualInfo = t('invalidRecipient')
-    }
-
-    return (
-      <ContextualInfo
-        openDetailsText={t('transactionDetails')}
-        closeDetailsText={t('hideDetails')}
-        contextualInfo={contextualInfo}
-        isError={isError}
-        renderTransactionDetails={this.renderTransactionDetails}
-      />
-    )
-  }
-
-  renderTransactionDetails = () => {
-    const { inputValue, inputCurrency, outputValue, outputCurrency, recipient, lastEditedField } = this.state
-    const { t, selectors, account } = this.props
-
+  function renderTransactionDetails() {
     ReactGA.event({
       category: 'TransactionDetail',
       action: 'Open'
     })
 
-    const ALLOWED_SLIPPAGE = 0.025
-    const TOKEN_ALLOWED_SLIPPAGE = 0.04
+    const b = text => <span className="swap__highlight-text">{text}</span>
 
-    const type = getSendType(inputCurrency, outputCurrency)
-    const { label: inputLabel } = selectors().getBalance(account, inputCurrency)
-    const { label: outputLabel } = selectors().getBalance(account, outputCurrency)
-
-    // const label = lastEditedField === INPUT ? outputLabel : inputLabel;
-    let minOutput
-    let maxInput
-
-    if (lastEditedField === INPUT) {
-      switch (type) {
-        case 'ETH_TO_TOKEN':
-          minOutput = BN(outputValue)
-            .multipliedBy(1 - ALLOWED_SLIPPAGE)
-            .toFixed(7)
-          break
-        case 'TOKEN_TO_ETH':
-          minOutput = BN(outputValue)
-            .multipliedBy(1 - ALLOWED_SLIPPAGE)
-            .toFixed(7)
-          break
-        case 'TOKEN_TO_TOKEN':
-          minOutput = BN(outputValue)
-            .multipliedBy(1 - TOKEN_ALLOWED_SLIPPAGE)
-            .toFixed(7)
-          break
-        default:
-          break
-      }
-    }
-
-    if (lastEditedField === OUTPUT) {
-      switch (type) {
-        case 'ETH_TO_TOKEN':
-          maxInput = BN(inputValue)
-            .multipliedBy(1 + ALLOWED_SLIPPAGE)
-            .toFixed(7)
-          break
-        case 'TOKEN_TO_ETH':
-          maxInput = BN(inputValue)
-            .multipliedBy(1 + ALLOWED_SLIPPAGE)
-            .toFixed(7)
-          break
-        case 'TOKEN_TO_TOKEN':
-          maxInput = BN(inputValue)
-            .multipliedBy(1 + TOKEN_ALLOWED_SLIPPAGE)
-            .toFixed(7)
-          break
-        default:
-          break
-      }
-    }
-
-    const recipientText = b(`${recipient.slice(0, 6)}...${recipient.slice(-4)}`)
-    if (lastEditedField === INPUT) {
+    if (independentField === INPUT) {
       return (
         <div>
           <div>
-            {t('youAreSending')} {b(`${+inputValue} ${inputLabel}`)}.
+            {t('youAreSelling')}{' '}
+            {b(
+              `${amountFormatter(
+                independentValueParsed,
+                independentDecimals,
+                Math.min(4, independentDecimals)
+              )} ${inputSymbol}`
+            )}
+            .
           </div>
           <div className="send__last-summary-text">
-            {recipientText} {t('willReceive')} {b(`${+minOutput} ${outputLabel}`)} {t('orTransFail')}
+            {b(recipient.address)} {t('willReceive')}{' '}
+            {b(
+              `${amountFormatter(
+                dependentValueMinumum,
+                dependentDecimals,
+                Math.min(4, dependentDecimals)
+              )} ${outputSymbol}`
+            )}{' '}
+            {t('orTransFail')}
+          </div>
+          <div className="send__last-summary-text">
+            {t('priceChange')} {b(`${percentSlippageFormatted}%`)}.
           </div>
         </div>
       )
@@ -695,207 +491,229 @@ class Send extends Component {
       return (
         <div>
           <div>
-            {t('youAreSending')} {b(`${+outputValue} ${outputLabel}`)} {t('to')} {recipientText}.
-            {/*You are selling between {b(`${+inputValue} ${inputLabel}`)} to {b(`${+maxInput} ${inputLabel}`)}.*/}
+            {t('youAreSending')}{' '}
+            {b(
+              `${amountFormatter(
+                independentValueParsed,
+                independentDecimals,
+                Math.min(4, independentDecimals)
+              )} ${outputSymbol}`
+            )}{' '}
+            {t('to')} {b(recipient.address)}.
           </div>
           <div className="send__last-summary-text">
-            {/*{b(`${recipient.slice(0, 6)}...${recipient.slice(-4)}`)} will receive {b(`${+outputValue} ${outputLabel}`)}.*/}
-            {t('itWillCost')} {b(`${+maxInput} ${inputLabel}`)} {t('orTransFail')}
+            {t('itWillCost')}{' '}
+            {b(
+              `${amountFormatter(
+                dependentValueMaximum,
+                dependentDecimals,
+                Math.min(4, dependentDecimals)
+              )} ${inputSymbol}`
+            )}{' '}
+            {t('orTransFail')}
+          </div>
+          <div className="send__last-summary-text">
+            {t('priceChange')} {b(`${percentSlippageFormatted}%`)}.
           </div>
         </div>
       )
     }
   }
 
-  renderExchangeRate() {
-    const { t, account, selectors } = this.props
-    const { exchangeRate, inputCurrency, outputCurrency } = this.state
-    const { label: inputLabel } = selectors().getBalance(account, inputCurrency)
-    const { label: outputLabel } = selectors().getBalance(account, outputCurrency)
+  function renderSummary() {
+    let contextualInfo = ''
+    let isError = false
 
-    if (!exchangeRate || exchangeRate.isNaN() || !inputCurrency || !outputCurrency) {
-      return (
-        <OversizedPanel hideBottom>
-          <div className="swap__exchange-rate-wrapper">
-            <span className="swap__exchange-rate">{t('exchangeRate')}</span>
-            <span> - </span>
-          </div>
-        </OversizedPanel>
-      )
+    if (inputError || independentError) {
+      contextualInfo = inputError || independentError
+      isError = true
+    } else if (!inputCurrency || !outputCurrency) {
+      contextualInfo = t('selectTokenCont')
+    } else if (!independentValue) {
+      contextualInfo = t('enterValueCont')
+    } else if (!recipient.address) {
+      contextualInfo = t('noRecipient')
+    } else if (!isAddress(recipient.address)) {
+      contextualInfo = t('invalidRecipient')
+    } else if (!account) {
+      contextualInfo = t('noWallet')
+      isError = true
     }
 
     return (
-      <OversizedPanel hideBottom>
-        <div className="swap__exchange-rate-wrapper">
-          <span className="swap__exchange-rate">{t('exchangeRate')}</span>
-          <span>{`1 ${inputLabel} = ${exchangeRate.toFixed(7)} ${outputLabel}`}</span>
+      <NewContextualInfo
+        openDetailsText={t('transactionDetails')}
+        closeDetailsText={t('hideDetails')}
+        contextualInfo={contextualInfo ? contextualInfo : slippageWarning ? t('slippageWarning') : ''}
+        allowExpand={!!(inputCurrency && outputCurrency && inputValueParsed && outputValueParsed && recipient.address)}
+        isError={isError}
+        renderTransactionDetails={renderTransactionDetails}
+      />
+    )
+  }
+
+  async function onSwap() {
+    const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
+
+    let estimate, method, args, value
+    if (independentField === INPUT) {
+      ReactGA.event({
+        category: `${swapType}`,
+        action: 'TransferInput'
+      })
+
+      if (swapType === ETH_TO_TOKEN) {
+        estimate = contract.estimate.ethToTokenTransferInput
+        method = contract.ethToTokenTransferInput
+        args = [dependentValueMinumum, deadline, recipient.address]
+        value = independentValueParsed
+      } else if (swapType === TOKEN_TO_ETH) {
+        estimate = contract.estimate.tokenToEthTransferInput
+        method = contract.tokenToEthTransferInput
+        args = [independentValueParsed, dependentValueMinumum, deadline, recipient.address]
+        value = ethers.constants.Zero
+      } else if (swapType === TOKEN_TO_TOKEN) {
+        estimate = contract.estimate.tokenToTokenTransferInput
+        method = contract.tokenToTokenTransferInput
+        args = [
+          independentValueParsed,
+          dependentValueMinumum,
+          ethers.constants.One,
+          deadline,
+          recipient.address,
+          outputCurrency
+        ]
+        value = ethers.constants.Zero
+      }
+    } else if (independentField === OUTPUT) {
+      ReactGA.event({
+        category: `${swapType}`,
+        action: 'TransferOutput'
+      })
+
+      if (swapType === ETH_TO_TOKEN) {
+        estimate = contract.estimate.ethToTokenTransferOutput
+        method = contract.ethToTokenTransferOutput
+        args = [independentValueParsed, deadline, recipient.address]
+        value = dependentValueMaximum
+      } else if (swapType === TOKEN_TO_ETH) {
+        estimate = contract.estimate.tokenToEthTransferOutput
+        method = contract.tokenToEthTransferOutput
+        args = [independentValueParsed, dependentValueMaximum, deadline, recipient.address]
+        value = ethers.constants.Zero
+      } else if (swapType === TOKEN_TO_TOKEN) {
+        estimate = contract.estimate.tokenToTokenTransferOutput
+        method = contract.tokenToTokenTransferOutput
+        args = [
+          independentValueParsed,
+          dependentValueMaximum,
+          ethers.constants.MaxUint256,
+          deadline,
+          recipient.address,
+          outputCurrency
+        ]
+        value = ethers.constants.Zero
+      }
+    }
+
+    const estimatedGasLimit = await estimate(...args, { value })
+    method(...args, { value, gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN) }).then(response => {
+      addTransaction(response)
+    })
+  }
+
+  return (
+    <>
+      <CurrencyInputPanel
+        title={t('input')}
+        description={inputValueFormatted && independentField === OUTPUT ? estimatedText : ''}
+        extraText={inputBalanceFormatted && formatBalance(inputBalanceFormatted)}
+        extraTextClickHander={() => {
+          if (inputBalance && inputDecimals) {
+            const valueToSet = inputCurrency === 'ETH' ? inputBalance.sub(ethers.utils.parseEther('.1')) : inputBalance
+            if (valueToSet.gt(ethers.constants.Zero)) {
+              dispatchSwapState({
+                type: 'UPDATE_INDEPENDENT',
+                payload: { value: amountFormatter(valueToSet, inputDecimals, inputDecimals, false), field: INPUT }
+              })
+            }
+          }
+        }}
+        onCurrencySelected={inputCurrency => {
+          dispatchSwapState({ type: 'SELECT_CURRENCY', payload: { currency: inputCurrency, field: INPUT } })
+        }}
+        onValueChange={inputValue => {
+          dispatchSwapState({ type: 'UPDATE_INDEPENDENT', payload: { value: inputValue, field: INPUT } })
+        }}
+        showUnlock={showUnlock}
+        selectedTokens={[inputCurrency, outputCurrency]}
+        selectedTokenAddress={inputCurrency}
+        value={inputValueFormatted}
+        errorMessage={inputError ? inputError : independentField === INPUT ? independentError : ''}
+      />
+      <OversizedPanel>
+        <div className="swap__down-arrow-background">
+          <img
+            onClick={() => {
+              dispatchSwapState({ type: 'FLIP_INDEPENDENT' })
+            }}
+            className="swap__down-arrow swap__down-arrow--clickable"
+            alt="swap"
+            src={isValid ? ArrowDownBlue : ArrowDownGrey}
+          />
         </div>
       </OversizedPanel>
-    )
-  }
-
-  renderBalance(currency, balance, decimals) {
-    if (!currency || decimals === 0) {
-      return ''
-    }
-    const balanceInput = balance.dividedBy(BN(10 ** decimals)).toFixed(4)
-    return this.props.t('balance', { balanceInput })
-  }
-
-  render() {
-    const { t, selectors, account } = this.props
-    const { lastEditedField, inputCurrency, outputCurrency, inputValue, outputValue, recipient } = this.state
-    const estimatedText = `(${t('estimated')})`
-
-    const { value: inputBalance, decimals: inputDecimals } = selectors().getBalance(account, inputCurrency)
-    const { value: outputBalance, decimals: outputDecimals } = selectors().getBalance(account, outputCurrency)
-    const { inputError, outputError, isValid } = this.validate()
-
-    return (
-      <>
-        <CurrencyInputPanel
-          title={t('input')}
-          description={lastEditedField === OUTPUT ? estimatedText : ''}
-          extraText={this.renderBalance(inputCurrency, inputBalance, inputDecimals)}
-          onCurrencySelected={inputCurrency => this.setState({ inputCurrency }, this.recalcForm)}
-          onValueChange={this.updateInput}
-          selectedTokens={[inputCurrency, outputCurrency]}
-          selectedTokenAddress={inputCurrency}
-          value={inputValue}
-          errorMessage={inputError}
-        />
-        <OversizedPanel>
-          <div className="swap__down-arrow-background">
-            <img
-              onClick={this.flipInputOutput}
-              className="swap__down-arrow swap__down-arrow--clickable"
-              alt="arrow"
-              src={isValid ? ArrowDownBlue : ArrowDownGrey}
-            />
-          </div>
-        </OversizedPanel>
-        <CurrencyInputPanel
-          title={t('output')}
-          description={lastEditedField === INPUT ? estimatedText : ''}
-          extraText={this.renderBalance(outputCurrency, outputBalance, outputDecimals)}
-          onCurrencySelected={outputCurrency => this.setState({ outputCurrency }, this.recalcForm)}
-          onValueChange={this.updateOutput}
-          selectedTokens={[inputCurrency, outputCurrency]}
-          value={outputValue}
-          selectedTokenAddress={outputCurrency}
-          errorMessage={outputError}
-          disableUnlock
-        />
-        <OversizedPanel>
-          <div className="swap__down-arrow-background">
-            <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} alt="arrow" />
-          </div>
-        </OversizedPanel>
-        <AddressInputPanel
-          t={this.props.t}
-          value={recipient}
-          onChange={address => this.setState({ recipient: address })}
-        />
-        {this.renderExchangeRate()}
-        {this.renderSummary(inputError, outputError)}
-        <div className="swap__cta-container">
-          <SendButton callOnClick={this.onSend} isValid={isValid} />
+      <CurrencyInputPanel
+        title={t('output')}
+        description={outputValueFormatted && independentField === INPUT ? estimatedText : ''}
+        extraText={outputBalanceFormatted && formatBalance(outputBalanceFormatted)}
+        onCurrencySelected={outputCurrency => {
+          dispatchSwapState({ type: 'SELECT_CURRENCY', payload: { currency: outputCurrency, field: OUTPUT } })
+        }}
+        onValueChange={outputValue => {
+          dispatchSwapState({ type: 'UPDATE_INDEPENDENT', payload: { value: outputValue, field: OUTPUT } })
+        }}
+        selectedTokens={[inputCurrency, outputCurrency]}
+        selectedTokenAddress={outputCurrency}
+        value={outputValueFormatted}
+        errorMessage={independentField === OUTPUT ? independentError : ''}
+        disableUnlock
+      />
+      <OversizedPanel>
+        <div className="swap__down-arrow-background">
+          <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} alt="arrow" />
         </div>
-      </>
-    )
-  }
-}
-
-function SendButton({ callOnClick, isValid }) {
-  const { t } = useTranslation()
-  const context = useWeb3Context()
-
-  const isActive = context.active && context.account
-  return (
-    <button
-      className={classnames('swap__cta-btn', {
-        'swap--inactive': !isActive
-      })}
-      disabled={!isValid}
-      onClick={callOnClick}
-    >
-      {t('send')}
-    </button>
+      </OversizedPanel>
+      <AddressInputPanel onChange={setRecipient} onError={setRecipientError} />
+      <OversizedPanel hideBottom>
+        <div
+          className="swap__exchange-rate-wrapper"
+          onClick={() => {
+            setInverted(inverted => !inverted)
+          }}
+        >
+          <span className="swap__exchange-rate">{t('exchangeRate')}</span>
+          {inverted ? (
+            <span>
+              {exchangeRate
+                ? `1 ${outputSymbol} = ${amountFormatter(exchangeRateInverted, 18, 4, false)} ${inputSymbol}`
+                : ' - '}
+            </span>
+          ) : (
+            <span>
+              {exchangeRate
+                ? `1 ${inputSymbol} = ${amountFormatter(exchangeRate, 18, 4, false)} ${outputSymbol}`
+                : ' - '}
+            </span>
+          )}
+        </div>
+      </OversizedPanel>
+      {renderSummary()}
+      <div className="swap__cta-container">
+        <button className="swap__cta-btn" disabled={!isValid} onClick={onSwap}>
+          {t('swap')}
+        </button>
+      </div>
+    </>
   )
-}
-
-export default connect(
-  state => ({
-    balances: state.web3connect.balances,
-    account: state.web3connect.account,
-    web3: state.web3connect.web3,
-    exchangeAddresses: state.addresses.exchangeAddresses
-  }),
-  dispatch => ({
-    selectors: () => dispatch(selectors()),
-    addPendingTx: id => dispatch(addPendingTx(id))
-  })
-)(withTranslation()(Send))
-
-const b = text => <span className="swap__highlight-text">{text}</span>
-
-function calculateEtherTokenOutput({
-  inputAmount: rawInput,
-  inputReserve: rawReserveIn,
-  outputReserve: rawReserveOut
-}) {
-  const inputAmount = BN(rawInput)
-  const inputReserve = BN(rawReserveIn)
-  const outputReserve = BN(rawReserveOut)
-
-  if (inputAmount.isLessThan(BN(10 ** 9))) {
-    console.warn(`inputAmount is only ${inputAmount.toFixed(0)}. Did you forget to multiply by 10 ** decimals?`)
-  }
-
-  const numerator = inputAmount.multipliedBy(outputReserve).multipliedBy(997)
-  const denominator = inputReserve.multipliedBy(1000).plus(inputAmount.multipliedBy(997))
-
-  return numerator.dividedBy(denominator)
-}
-
-function calculateEtherTokenInput({
-  outputAmount: rawOutput,
-  inputReserve: rawReserveIn,
-  outputReserve: rawReserveOut
-}) {
-  const outputAmount = BN(rawOutput)
-  const inputReserve = BN(rawReserveIn)
-  const outputReserve = BN(rawReserveOut)
-
-  if (outputAmount.isLessThan(BN(10 ** 9))) {
-    console.warn(`inputAmount is only ${outputAmount.toFixed(0)}. Did you forget to multiply by 10 ** decimals?`)
-  }
-
-  const numerator = outputAmount.multipliedBy(inputReserve).multipliedBy(1000)
-  const denominator = outputReserve.minus(outputAmount).multipliedBy(997)
-  return numerator.dividedBy(denominator).plus(1)
-}
-
-function getSendType(inputCurrency, outputCurrency) {
-  if (!inputCurrency || !outputCurrency) {
-    return
-  }
-
-  if (inputCurrency === outputCurrency) {
-    return
-  }
-
-  if (inputCurrency !== 'ETH' && outputCurrency !== 'ETH') {
-    return 'TOKEN_TO_TOKEN'
-  }
-
-  if (inputCurrency === 'ETH') {
-    return 'ETH_TO_TOKEN'
-  }
-
-  if (outputCurrency === 'ETH') {
-    return 'TOKEN_TO_ETH'
-  }
-
-  return
 }

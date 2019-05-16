@@ -1,12 +1,11 @@
 import React, { useCallback } from 'react'
 import { withRouter, NavLink } from 'react-router-dom'
-import { connect } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
-import { dismissBetaMessage } from '../../ducks/app'
 import { useBodyKeyDown } from '../../hooks'
 
 import './navigation-tabs.scss'
+import { useBetaMessageManager } from '../../contexts/Application'
 
 const tabOrder = [
   {
@@ -26,8 +25,10 @@ const tabOrder = [
   }
 ]
 
-function NavigationTabs({ location: { pathname }, history, dismissBetaMessage, showBetaMessage }) {
+function NavigationTabs({ location: { pathname }, history }) {
   const { t } = useTranslation()
+
+  const [showBetaMessage, dismissBetaMessage] = useBetaMessageManager()
 
   const navigate = useCallback(
     direction => {
@@ -73,13 +74,4 @@ function NavigationTabs({ location: { pathname }, history, dismissBetaMessage, s
   )
 }
 
-export default withRouter(
-  connect(
-    state => ({
-      showBetaMessage: state.app.showBetaMessage
-    }),
-    dispatch => ({
-      dismissBetaMessage: () => dispatch(dismissBetaMessage())
-    })
-  )(NavigationTabs)
-)
+export default withRouter(NavigationTabs)

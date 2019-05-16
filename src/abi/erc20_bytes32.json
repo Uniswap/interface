@@ -3,7 +3,7 @@
     "constant": true,
     "inputs": [],
     "name": "name",
-    "outputs": [{ "name": "", "type": "string" }],
+    "outputs": [{ "name": "", "type": "bytes32" }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
