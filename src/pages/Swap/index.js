@@ -119,10 +119,11 @@ function swapStateReducer(state, action) {
     }
     case 'UPDATE_INDEPENDENT': {
       const { field, value } = action.payload
+      const { dependentValue, independentValue } = state
       return {
         ...state,
         independentValue: value,
-        dependentValue: '',
+        dependentValue: value === independentValue ? dependentValue : '',
         independentField: field
       }
     }
@@ -176,13 +177,13 @@ function getMarketRate(
   invert = false
 ) {
   if (swapType === ETH_TO_TOKEN) {
-    return getExchangeRate(outputReserveETH, inputDecimals, outputReserveToken, outputDecimals, invert)
+    return getExchangeRate(outputReserveETH, 18, outputReserveToken, outputDecimals, invert)
   } else if (swapType === TOKEN_TO_ETH) {
-    return getExchangeRate(inputReserveToken, inputDecimals, inputReserveETH, outputDecimals, invert)
+    return getExchangeRate(inputReserveToken, inputDecimals, inputReserveETH, 18, invert)
   } else if (swapType === TOKEN_TO_TOKEN) {
     const factor = ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))
-    const firstRate = getExchangeRate(inputReserveToken, inputDecimals, inputReserveETH, outputDecimals)
-    const secondRate = getExchangeRate(outputReserveETH, inputDecimals, outputReserveToken, outputDecimals)
+    const firstRate = getExchangeRate(inputReserveToken, inputDecimals, inputReserveETH, 18)
+    const secondRate = getExchangeRate(outputReserveETH, 18, outputReserveToken, outputDecimals)
     try {
       return !!(firstRate && secondRate) ? firstRate.mul(secondRate).div(factor) : undefined
     } catch {}

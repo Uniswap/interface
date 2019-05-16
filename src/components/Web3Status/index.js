@@ -40,8 +40,8 @@ export default function Web3Status() {
   const { active, account } = useWeb3Context()
 
   const allTransactions = useAllTransactions()
-  const pending = Object.keys(allTransactions).filter(t => allTransactions[t].completed === false)
-  const confirmed = Object.keys(allTransactions).filter(t => allTransactions[t].completed === true)
+  const pending = Object.keys(allTransactions).filter(hash => !allTransactions[hash].receipt)
+  const confirmed = Object.keys(allTransactions).filter(hash => allTransactions[hash].receipt)
 
   const hasPendingTransactions = !!pending.length
   const hasConfirmedTransactions = !!confirmed.length
@@ -116,15 +116,7 @@ export default function Web3Status() {
             return
           } else {
             el.innerHTML = ''
-            el.appendChild(
-              Jazzicon(
-                16,
-                ethers.utils
-                  .bigNumberify(account)
-                  .mod(Number.MAX_SAFE_INTEGER)
-                  .toNumber()
-              )
-            )
+            el.appendChild(Jazzicon(16, parseInt(account.slice(2, 10), 16)))
           }
         }}
       />
