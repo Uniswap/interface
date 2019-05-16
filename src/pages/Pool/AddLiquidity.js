@@ -176,8 +176,8 @@ export default function AddLiquidity() {
 
   const liquidityMinted = isNewExchange
     ? inputValueParsed
-    : totalPoolTokens && inputValueParsed && exchangeETHBalance
-    ? exchangeETHBalance.isZero() && totalPoolTokens.mul(inputValueParsed).div(exchangeETHBalance)
+    : totalPoolTokens && inputValueParsed && exchangeETHBalance && !exchangeETHBalance.isZero()
+    ? totalPoolTokens.mul(inputValueParsed).div(exchangeETHBalance)
     : undefined
 
   // user balances
