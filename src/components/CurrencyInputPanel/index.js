@@ -281,6 +281,12 @@ function CurrencySelectModal({ onClose, onTokenSelect }) {
     }
   }, [])
 
+  function onInput(event) {
+    const input = event.target.value
+    const checksummedInput = isAddress(input)
+    setSearchQuery(checksummedInput || input)
+  }
+
   return (
     <Modal onClose={_onClose}>
       <CSSTransitionGroup
@@ -298,9 +304,7 @@ function CurrencySelectModal({ onClose, onTokenSelect }) {
               type="text"
               placeholder={t('searchOrPaste')}
               className="token-modal__search-input"
-              onChange={e => {
-                setSearchQuery(e.target.value)
-              }}
+              onChange={onInput}
             />
             <img src={SearchIcon} className="token-modal__search-icon" alt="search" />
           </div>

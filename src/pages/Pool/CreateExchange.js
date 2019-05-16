@@ -18,7 +18,7 @@ function CreateExchange({ history, location }) {
   const factory = useFactoryContract()
 
   const [tokenAddress, setTokenAddress] = useState({
-    address: (location.state && location.state.tokenAddress) || '',
+    address: '',
     name: ''
   })
   const [tokenAddressError, setTokenAddressError] = useState()
@@ -74,7 +74,12 @@ function CreateExchange({ history, location }) {
 
   return (
     <>
-      <AddressInputPanel title={t('tokenAddress')} onChange={setTokenAddress} onError={setTokenAddressError} />
+      <AddressInputPanel
+        title={t('tokenAddress')}
+        initialInput={(location.state && location.state.tokenAddress) || ''}
+        onChange={setTokenAddress}
+        onError={setTokenAddressError}
+      />
       <OversizedPanel hideBottom>
         <div className="pool__summary-panel">
           <div className="pool__exchange-rate-wrapper">

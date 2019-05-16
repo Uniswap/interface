@@ -297,7 +297,7 @@ export default function AddLiquidity() {
 
     const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
     const estimatedGasLimit = await exchangeContract.estimate.addLiquidity(
-      isNewExchange ? inputValueParsed : liquidityTokensMin,
+      isNewExchange ? ethers.constants.Zero : liquidityTokensMin,
       isNewExchange ? outputValueParsed : outputValueMax,
       deadline,
       {
@@ -307,7 +307,7 @@ export default function AddLiquidity() {
 
     exchangeContract
       .addLiquidity(
-        isNewExchange ? inputValueParsed : liquidityTokensMin,
+        isNewExchange ? ethers.constants.Zero : liquidityTokensMin,
         isNewExchange ? outputValueParsed : outputValueMax,
         deadline,
         {
@@ -476,7 +476,7 @@ export default function AddLiquidity() {
       </OversizedPanel>
       <CurrencyInputPanel
         title={t('deposit')}
-        description={isNewExchange ? `(${t('estimated')})` : ''}
+        description={isNewExchange ? '' : outputValue ? `(${t('estimated')})` : ''}
         extraText={outputBalance && formatBalance(amountFormatter(outputBalance, decimals, Math.min(decimals, 4)))}
         selectedTokenAddress={outputCurrency}
         onCurrencySelected={outputCurrency => {
