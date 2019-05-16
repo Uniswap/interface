@@ -87,7 +87,7 @@ export default function Provider({ children }) {
     dispatch({ type: ADD, payload: { networkId, hash, response } })
   }, [])
   const check = useCallback((networkId, hash, blockNumber) => {
-    dispatch({ type: ADD, payload: { networkId, hash, blockNumber } })
+    dispatch({ type: CHECK, payload: { networkId, hash, blockNumber } })
   }, [])
   const finalize = useCallback((networkId, hash, receipt) => {
     dispatch({ type: FINALIZE, payload: { networkId, hash, receipt } })
@@ -104,37 +104,37 @@ export function Updater() {
   const globalBlockNumber = useBlockNumber()
 
   const [state, { check, finalize }] = useTransactionsContext()
+  const allTransactions = safeAccess(state, [networkId]) || {}
 
   useEffect(() => {
     if ((networkId || networkId === 0) && library) {
-      const allTransactions = safeAccess(state, [networkId]) || {}
-      const allUncheckedTransactions = Object.keys(allTransactions).filter(
-        hash => !allTransactions[hash][RECEIPT] && allTransactions[hash][BLOCK_NUMBER_CHECKED] !== globalBlockNumber
-      )
-
       let stale = false
-      Object.keys(allUncheckedTransactions).forEach(hash => {
-        library
-          .getTransactionReceipt(hash)
-          .then(receipt => {
-            if (!stale) {
-              if (!receipt) {
-                check(networkId, hash, globalBlockNumber)
-              } else {
-                finalize(networkId, hash, receipt)
+      Object.keys(allTransactions)
+        .filter(
+          hash => !allTransactions[hash][RECEIPT] && allTransactions[hash][BLOCK_NUMBER_CHECKED] !== globalBlockNumber
+        )
+        .forEach(hash => {
+          library
+            .getTransactionReceipt(hash)
+            .then(receipt => {
+              if (!stale) {
+                if (!receipt) {
+                  check(networkId, hash, globalBlockNumber)
+                } else {
+                  finalize(networkId, hash, receipt)
+                }
               }
-            }
-          })
-          .catch(() => {
-            check(networkId, hash, globalBlockNumber)
-          })
-      })
+            })
+            .catch(() => {
+              check(networkId, hash, globalBlockNumber)
+            })
+        })
 
       return () => {
         stale = true
       }
     }
-  }, [networkId, library, state, globalBlockNumber, check, finalize])
+  }, [networkId, library, allTransactions, globalBlockNumber, check, finalize])
 
   return null
 }
@@ -155,7 +155,6 @@ export function useTransactionAdder() {
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-
       add(networkId, hash, response)
     },
     [networkId, add]
@@ -175,11 +174,15 @@ export function usePendingApproval(tokenAddress) {
 
   return (
     Object.keys(allTransactions).filter(hash => {
-      if (
-        allTransactions[hash][RECEIPT] ||
-        allTransactions[hash][RESPONSE].to !== tokenAddress ||
+      if (allTransactions[hash][RECEIPT]) {
+        return false
+      } else if (!allTransactions[hash][RESPONSE]) {
+        return false
+      } else if (allTransactions[hash][RESPONSE].to !== tokenAddress) {
+        return false
+      } else if (
         allTransactions[hash][RESPONSE].data.substring(0, 10) !==
-          ethers.utils.id('approve(address,uint256)').substring(0, 10)
+        ethers.utils.id('approve(address,uint256)').substring(0, 10)
       ) {
         return false
       } else {
