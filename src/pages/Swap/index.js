@@ -5,7 +5,7 @@ import { useWeb3Context } from 'web3-react'
 import { ethers } from 'ethers'
 
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import ContextualInfo from '../../components/ContextualInfo'
+import NewContextualInfo from '../../components/ContextualInfoNew'
 import OversizedPanel from '../../components/OversizedPanel'
 import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
 import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
@@ -425,18 +425,16 @@ export default function Swap() {
   )
 
   const percentSlippage =
-    exchangeRate &&
-    marketRate &&
-    amountFormatter(
-      exchangeRate
-        .sub(marketRate)
-        .abs()
-        .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
-        .div(marketRate)
-        .sub(ethers.utils.bigNumberify(3).mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(15)))),
-      16,
-      2
-    )
+    exchangeRate && marketRate
+      ? exchangeRate
+          .sub(marketRate)
+          .abs()
+          .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+          .div(marketRate)
+          .sub(ethers.utils.bigNumberify(3).mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(15))))
+      : undefined
+  const percentSlippageFormatted = percentSlippage && amountFormatter(percentSlippage, 16, 2)
+  const slippageWarning = percentSlippage && percentSlippage.gte(ethers.utils.parseEther('.1')) // 10%
 
   const isValid = exchangeRate && inputError === null && independentError === null
 
@@ -479,7 +477,7 @@ export default function Swap() {
             {t('orTransFail')}
           </div>
           <div className="send__last-summary-text">
-            {t('priceChange')} {b(`${percentSlippage}%`)}.
+            {t('priceChange')} {b(`${percentSlippageFormatted}%`)}.
           </div>
         </div>
       )
@@ -509,7 +507,7 @@ export default function Swap() {
             {t('orTransFail')}
           </div>
           <div className="send__last-summary-text">
-            {t('priceChange')} {b(`${percentSlippage}%`)}.
+            {t('priceChange')} {b(`${percentSlippageFormatted}%`)}.
           </div>
         </div>
       )
@@ -533,10 +531,11 @@ export default function Swap() {
     }
 
     return (
-      <ContextualInfo
+      <NewContextualInfo
         openDetailsText={t('transactionDetails')}
         closeDetailsText={t('hideDetails')}
-        contextualInfo={contextualInfo}
+        contextualInfo={contextualInfo ? contextualInfo : slippageWarning ? t('slippageWarning') : ''}
+        allowExpand={!!(inputCurrency && outputCurrency && inputValueParsed && outputValueParsed)}
         isError={isError}
         renderTransactionDetails={renderTransactionDetails}
       />

@@ -4,20 +4,23 @@ import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
 
 import { isAddress } from '../../utils'
+import { useDebounce } from '../../hooks'
 // import QrCode from '../QrCode' // commented out pending further review
 
 import './address-input-panel.scss'
 
-export default function AddressInputPanel({ title, onChange = () => {}, onError = () => {} }) {
+export default function AddressInputPanel({ title, initialInput = '', onChange = () => {}, onError = () => {} }) {
   const { t } = useTranslation()
 
   const { library } = useWeb3Context()
 
-  const [input, setInput] = useState('')
+  const [input, setInput] = useState(initialInput)
+  const debouncedInput = useDebounce(input, 150)
+
   const [data, setData] = useState({ address: undefined, name: undefined })
   const [error, setError] = useState(false)
 
-  // keep stuff in sync
+  // keep data and errors in sync
   useEffect(() => {
     onChange({ address: data.address, name: data.name })
   }, [onChange, data.address, data.name])
@@ -25,29 +28,30 @@ export default function AddressInputPanel({ title, onChange = () => {}, onError 
     onError(error)
   }, [onError, error])
 
+  // run parser on debounced input
   useEffect(() => {
     let stale = false
 
-    if (isAddress(input)) {
-      library.lookupAddress(input).then(name => {
+    if (isAddress(debouncedInput)) {
+      library.lookupAddress(debouncedInput).then(name => {
         if (!stale) {
           // if an ENS name exists, set it as the destination
           if (name) {
             setInput(name)
           } else {
-            setData({ address: input, name: '' })
+            setData({ address: debouncedInput, name: '' })
             setError(null)
           }
         }
       })
     } else {
-      if (input !== '') {
+      if (debouncedInput !== '') {
         try {
-          library.resolveName(input).then(address => {
+          library.resolveName(debouncedInput).then(address => {
             if (!stale) {
-              // if the input name resolves to an address
+              // if the debounced input name resolves to an address
               if (address) {
-                setData({ address: address, name: input })
+                setData({ address: address, name: debouncedInput })
                 setError(null)
               } else {
                 setError(true)
@@ -62,10 +66,20 @@ export default function AddressInputPanel({ title, onChange = () => {}, onError 
 
     return () => {
       stale = true
+    }
+  }, [debouncedInput, library, onChange, onError])
+
+  function onInput(event) {
+    if (data.address !== undefined || data.name !== undefined) {
       setData({ address: undefined, name: undefined })
+    }
+    if (error !== undefined) {
       setError()
     }
-  }, [input, library, onChange, onError])
+    const input = event.target.value
+    const checksummedInput = isAddress(input)
+    setInput(checksummedInput || input)
+  }
 
   return (
     <div className="currency-input-panel">
@@ -83,11 +97,15 @@ export default function AddressInputPanel({ title, onChange = () => {}, onError 
           <div className="currency-input-panel__input-row">
             <input
               type="text"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck="false"
               className={classnames('address-input-panel__input', {
                 'address-input-panel__input--error': input !== '' && error
               })}
               placeholder="0x1234..."
-              onChange={e => setInput(e.target.value)}
+              onChange={onInput}
               value={input}
             />
           </div>

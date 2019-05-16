@@ -284,7 +284,7 @@ export default function RemoveLiquidity() {
       </OversizedPanel>
       <CurrencyInputPanel
         title={t('output')}
-        description={`(${t('estimated')})`}
+        description={ethWithdrawn && tokenWithdrawn ? `(${t('estimated')})` : ''}
         key="remove-liquidity-input"
         renderInput={() =>
           ethWithdrawn && tokenWithdrawn ? (
