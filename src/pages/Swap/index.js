@@ -119,10 +119,11 @@ function swapStateReducer(state, action) {
     }
     case 'UPDATE_INDEPENDENT': {
       const { field, value } = action.payload
+      const { dependentValue, independentValue } = state
       return {
         ...state,
         independentValue: value,
-        dependentValue: '',
+        dependentValue: value === independentValue ? dependentValue : '',
         independentField: field
       }
     }
