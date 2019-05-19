@@ -7,6 +7,7 @@ import UAParser from 'ua-parser-js'
 import Logo from '../Logo'
 import CoinbaseWalletLogo from '../../assets/images/coinbase-wallet-logo.png'
 import TrustLogo from '../../assets/images/trust-wallet-logo.svg'
+import AlphaWalletLogo from '../../assets/images/alpha-wallet-logo.svg'
 import BraveLogo from '../../assets/images/brave-logo.svg'
 import MetamaskLogo from '../../assets/images/metamask-logo.svg'
 import Web3Status from '../Web3Status'
@@ -16,6 +17,10 @@ import './header.scss'
 const { Connector, InjectedConnector } = Connectors
 
 const links = {
+  AlphaWallet: {
+    android: 'https://play.google.com/store/apps/details?id=io.stormbird.wallet&hl=en_SG',
+    ios: 'https://itunes.apple.com/us/app/alphawallet/id1358230430?mt=8'
+  },
   coinbaseWallet: {
     android: 'https://play.google.com/store/apps/details?id=org.toshi',
     ios: 'https://itunes.apple.com/us/app/coinbase-wallet/id1278383455'
@@ -44,6 +49,18 @@ function getTrustLink() {
 
   if (os.name === 'iOS') {
     return links.trust.ios
+  }
+}
+
+function getAlphaWalletLink() {
+  const os = ua.getOS()
+
+  if (os.name === 'Android') {
+    return links.AlphaWallet.android
+  }
+
+  if (os.name === 'iOS') {
+    return links.AlphaWallet.ios
   }
 }
 
@@ -130,6 +147,7 @@ function BlockingWarning() {
                 onClick={() => window.open(getCoinbaseWalletLink(), '_blank')}
               />
               <img alt="trust" src={TrustLogo} key="trust" onClick={() => window.open(getTrustLink(), '_blank')} />
+              <img alt="AlphaWallet" src={AlphaWalletLogo} key="AlphaWallet" onClick={() => window.open(getAlphaWalletLink(), '_blank')} />
             </>
           ) : (
             <>
