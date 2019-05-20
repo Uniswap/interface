@@ -176,8 +176,8 @@ export default function AddLiquidity() {
 
   const liquidityMinted = isNewExchange
     ? inputValueParsed
-    : totalPoolTokens && inputValueParsed && exchangeETHBalance
-    ? exchangeETHBalance.isZero() && totalPoolTokens.mul(inputValueParsed).div(exchangeETHBalance)
+    : totalPoolTokens && inputValueParsed && exchangeETHBalance && !exchangeETHBalance.isZero()
+    ? totalPoolTokens.mul(inputValueParsed).div(exchangeETHBalance)
     : undefined
 
   // user balances
@@ -413,7 +413,7 @@ export default function AddLiquidity() {
   // input validation
   useEffect(() => {
     if (inputValueParsed && inputBalance) {
-      if (inputValueParsed.gt(inputBalance.sub(ethers.utils.parseEther('.1')))) {
+      if (inputValueParsed.gt(inputBalance)) {
         setInputError(t('insufficientBalance'))
       } else {
         setInputError(null)

@@ -47,8 +47,9 @@ export default function Web3Status() {
   const { account } = useWeb3Context()
 
   const allTransactions = useAllTransactions()
-  const pending = Object.keys(allTransactions).filter(t => allTransactions[t].completed === false)
-  const confirmed = Object.keys(allTransactions).filter(t => allTransactions[t].completed === true)
+  const pending = Object.keys(allTransactions).filter(hash => !allTransactions[hash].receipt)
+  const confirmed = Object.keys(allTransactions).filter(hash => allTransactions[hash].receipt)
+
   const hasPendingTransactions = !!pending.length
 
   const [walletModalIsOpen, setWalletModalIsOpen] = useState(true)
