@@ -158,6 +158,18 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x2C4Bd064b998838076fa341A83d007FC2FA50957'
     },
+    '0xF3981E5ff82CAAA5d4cb4fbA540b06c20c3d3dbE': {
+      [NAME]: 'Meritum',
+      [SYMBOL]: 'MER',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x2E9e106EF10613025A43c6afdcf68D6dd9F5d701'
+    },
+    '0x10709ca9adcaa1728ad530be1ed39c0286124883': {
+      [NAME]: 'Meritum Cash',
+      [SYMBOL]: 'MCH',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0xBb6E36aA6121246C056d04F16757933A1052e64c'
+    },
     '0xB62132e35a6c13ee1EE0f84dC5d40bad8d815206': {
       [NAME]: 'Nexo',
       [SYMBOL]: 'NEXO',
