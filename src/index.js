@@ -23,10 +23,10 @@ ReactGA.pageview(window.location.pathname + window.location.search)
 
 const { InjectedConnector, NetworkOnlyConnector } = Connectors
 const Injected = new InjectedConnector({ supportedNetworks: [Number(process.env.REACT_APP_NETWORK_ID) || 1] })
-const Infura = new NetworkOnlyConnector({
+const Network = new NetworkOnlyConnector({
   providerURL: process.env.REACT_APP_NETWORK_URL || ''
 })
-const connectors = { Injected, Infura }
+const connectors = { Injected, Network }
 
 function ContextProviders({ children }) {
   return (

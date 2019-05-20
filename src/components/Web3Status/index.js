@@ -1,134 +1,87 @@
-import React, { useState } from 'react'
-import { useWeb3Context } from 'web3-react'
-import classnames from 'classnames'
-import Jazzicon from 'jazzicon'
-import { CSSTransitionGroup } from 'react-transition-group'
+import React, { useState, useEffect, useRef } from 'react'
+import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
-import { ethers } from 'ethers'
+import { useWeb3Context } from 'web3-react'
+import Jazzicon from 'jazzicon'
 
-import Modal from '../Modal'
+import WalletModal from '../WalletModal'
 import { useAllTransactions } from '../../contexts/Transactions'
+import { shortenAddress } from '../../utils'
 
-import './web3-status.scss'
+const Web3StatusWrapper = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  height: 2rem;
+  font-size: 0.9rem;
+  align-items: center;
+  border: 1px solid ${({ theme }) => theme.mercuryGray};
+  padding: 0.5rem;
+  border-radius: 2rem;
+  color: ${({ theme }) => theme.doveGray};
+  font-weight: 400;
+  box-sizing: border-box;
+  cursor: pointer;
+  user-select: none;
+`
 
-function getEtherscanLink(tx) {
-  return `https://etherscan.io/tx/${tx}`
-}
+const Text = styled.p`
+  flex: 1 1 auto;
+  overflow: hidden;
+  margin-right: 0.75rem;
+  margin-left: 0.25rem;
+  font-size: 0.75rem;
+`
 
-function getPendingText(pendingTransactions, pendingLabel) {
-  return (
-    <div className="web3-status__pending-container">
-      <div className="loader" />
-      <span key="text">
-        {pendingTransactions.length} {pendingLabel}
-      </span>
-    </div>
-  )
-}
+const Identicon = styled.div`
+  height: 1rem;
+  width: 1rem;
+  border-radius: 1.125rem;
+  background-color: ${({ theme }) => theme.silverGray};
+`
 
-function getText(text, disconnectedText) {
-  if (!text || text.length < 42 || !ethers.utils.isHexString(text)) {
-    return disconnectedText
-  }
-
-  const address = ethers.utils.getAddress(text)
-  return `${address.substring(0, 6)}...${address.substring(38)}`
-}
-
+// const dummyTransactions = [
+//   { response: { hash: '0x1daed2776e0a914a77fcc5f3d2d4c7f3b988c076c3e72ed7f0e860660d850612' } },
+//   { response: { hash: '0xffd047112ba2c58e663874931bc9084fafa1a316e0bd96cb8f5c61074acc86e1' } }
+// ]
 export default function Web3Status() {
   const { t } = useTranslation()
-  const { active, account } = useWeb3Context()
+  const { account } = useWeb3Context()
 
   const allTransactions = useAllTransactions()
   const pending = Object.keys(allTransactions).filter(t => allTransactions[t].completed === false)
   const confirmed = Object.keys(allTransactions).filter(t => allTransactions[t].completed === true)
-
   const hasPendingTransactions = !!pending.length
-  const hasConfirmedTransactions = !!confirmed.length
 
-  const [isShowingModal, setIsShowingModal] = useState(false)
+  const [walletModalIsOpen, setWalletModalIsOpen] = useState(true)
+  function closeWalletModal() {
+    setWalletModalIsOpen(false)
+  }
+  function openWalletModal() {
+    setWalletModalIsOpen(true)
+  }
 
-  function handleClick() {
-    if (pending.length && !isShowingModal) {
-      setIsShowingModal(true)
+  const ref = useRef()
+  useEffect(() => {
+    if (account) {
+      const currentRef = ref.current
+      currentRef.appendChild(Jazzicon(16, parseInt(account.slice(2, 10), 16)))
+      return () => {
+        currentRef.innerHTML = ''
+      }
     }
-  }
-
-  function renderPendingTransactions() {
-    return pending.map(transaction => {
-      return (
-        <div
-          key={transaction}
-          className={classnames('pending-modal__transaction-row')}
-          onClick={() => window.open(getEtherscanLink(transaction), '_blank')}
-        >
-          <div className="pending-modal__transaction-label">{transaction}</div>
-          <div className="pending-modal__pending-indicator">
-            <div className="loader" /> {t('pending')}
-          </div>
-        </div>
-      )
-    })
-  }
-
-  function renderModal() {
-    if (!isShowingModal) {
-      return null
-    }
-
-    return (
-      <Modal onClose={() => setIsShowingModal(false)}>
-        <CSSTransitionGroup
-          transitionName="token-modal"
-          transitionAppear={true}
-          transitionLeave={true}
-          transitionAppearTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionEnterTimeout={200}
-        >
-          <div className="pending-modal">
-            <div className="pending-modal__transaction-list">
-              <div className="pending-modal__header">Transactions</div>
-              {renderPendingTransactions()}
-            </div>
-          </div>
-        </CSSTransitionGroup>
-      </Modal>
-    )
-  }
+  }, [account])
 
   return (
-    <div
-      className={classnames('web3-status', {
-        'web3-status__connected': active,
-        'web3-status--pending': hasPendingTransactions,
-        'web3-status--confirmed': hasConfirmedTransactions
-      })}
-      onClick={handleClick}
-    >
-      <div className="web3-status__text">
-        {hasPendingTransactions ? getPendingText(pending, t('pending')) : getText(account, t('disconnected'))}
-      </div>
-      <div
-        className="web3-status__identicon"
-        ref={el => {
-          if (!el || !account) {
-            return
-          } else {
-            el.innerHTML = ''
-            el.appendChild(
-              Jazzicon(
-                16,
-                ethers.utils
-                  .bigNumberify(account)
-                  .mod(Number.MAX_SAFE_INTEGER)
-                  .toNumber()
-              )
-            )
-          }
-        }}
+    <>
+      <Web3StatusWrapper onClick={openWalletModal}>
+        <Text>{hasPendingTransactions ? t('pending') : account ? shortenAddress(account) : t('disconnected')}</Text>
+        <Identicon ref={ref} />
+      </Web3StatusWrapper>
+      <WalletModal
+        isOpen={walletModalIsOpen}
+        onDismiss={closeWalletModal}
+        pendingTransactions={pending}
+        confirmedTransactions={confirmed}
       />
-      {renderModal()}
-    </div>
+    </>
   )
 }

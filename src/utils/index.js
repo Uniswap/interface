@@ -23,6 +23,39 @@ export function safeAccess(object, path) {
     : null
 }
 
+const ETHERSCAN_PREFIXES = {
+  1: '',
+  3: 'ropsten.',
+  4: 'rinkeby.',
+  5: 'goerli.',
+  42: 'kovan.'
+}
+export function getEtherscanLink(networkId, data, type) {
+  const prefix = `https://${ETHERSCAN_PREFIXES[networkId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
+
+  switch (type) {
+    case 'transaction': {
+      return `${prefix}/tx/${data}`
+    }
+    default: {
+      return `${prefix}/address/${data}`
+    }
+  }
+}
+
+export function shortenAddress(address) {
+  if (!isAddress(address)) {
+    throw Error(`Invalid 'address' parameter '${address}'.`)
+  }
+  const digits = 4
+  return `${address.substring(0, digits + 2)}...${address.substring(42 - digits)}`
+}
+
+export function shortenTransactionHash(hash) {
+  const digits = 4
+  return `${hash.substring(0, digits + 2)}...${hash.substring(66 - digits)}`
+}
+
 export function isAddress(value) {
   try {
     return ethers.utils.getAddress(value.toLowerCase())

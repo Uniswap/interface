@@ -19,6 +19,7 @@
   "searchOrPaste": "Search Token or Paste Address",
   "noExchange": "No Exchange Found",
   "exchangeRate": "Exchange Rate",
+  "unknownError": "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device.",
   "enterValueCont": "Enter a {{ missingCurrencyValue }} value to continue.",
   "selectTokenCont": "Select a token to continue.",
   "noLiquidity": "No liquidity.",
