@@ -3,6 +3,7 @@ import { useWeb3Context, Connectors } from 'web3-react'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
 import { useTranslation } from 'react-i18next'
+import { isMobile } from 'react-device-detect'
 
 import { ReactComponent as Spinner } from '../../assets/images/spinner.svg'
 
@@ -13,7 +14,7 @@ const Message = styled.h2`
   align-items: center;
   height: 100%;
   margin: -1rem 0 0 0;
-  color: ${props => props.theme.uniswapPink};
+  color: ${({ theme }) => theme.uniswapPink};
   text-align: center;
 `
 
@@ -24,7 +25,7 @@ const PinkSpinner = styled(Spinner)`
   height: 100%;
   width: 5rem;
   margin: -1rem auto 0 auto;
-  stroke: ${props => props.theme.uniswapPink};
+  stroke: ${({ theme }) => theme.uniswapPink};
 `
 
 export default function Web3ReactManager({ children }) {

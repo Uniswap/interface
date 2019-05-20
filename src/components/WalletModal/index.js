@@ -5,7 +5,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 import Modal from '../NewModal'
 import { getEtherscanLink, shortenAddress, shortenTransactionHash } from '../../utils'
-import { Button } from '../../theme'
+import { Button, Link } from '../../theme'
 
 const { InjectedConnector } = Connectors
 
@@ -63,6 +63,10 @@ const TransactionWrapper = styled.div`
   }
 `
 
+const CopyButton = styled(Button)`
+  margin-left: 0.5rem;
+`
+
 function getErrorMessage(event) {
   switch (event.code) {
     case InjectedConnector.errorCodes.ETHEREUM_ACCESS_DENIED: {
@@ -95,12 +99,12 @@ export default function WalletModal({ isOpen, onDismiss, pendingTransactions, co
   function renderTransactions(transactions, pending) {
     return (
       <TransactionWrapper>
-        {pendingTransactions.map(transaction => {
+        {transactions.map(transaction => {
           return (
             <p key={transaction.response.hash}>
-              <a href={getEtherscanLink(networkId, account, 'address')} target="_blank" rel="noopener noreferrer">
+              <Link href={getEtherscanLink(networkId, transaction.response.hash, 'transaction')}>
                 {shortenTransactionHash(transaction.response.hash)} ↗ {pending ? 'pending' : 'confirmed'}
-              </a>
+              </Link>
             </p>
           )
         })}
@@ -117,11 +121,9 @@ export default function WalletModal({ isOpen, onDismiss, pendingTransactions, co
               <YourAccount>
                 <h5>Your Account</h5>
                 <h4>
-                  <a href={getEtherscanLink(networkId, account, 'address')} target="_blank" rel="noopener noreferrer">
-                    {shortenAddress(account)} ↗{' '}
-                  </a>
+                  <Link href={getEtherscanLink(networkId, account, 'address')}>{shortenAddress(account)} ↗ </Link>
                   <CopyToClipboard text={account}>
-                    <Button>Copy</Button>
+                    <CopyButton>Copy</CopyButton>
                   </CopyToClipboard>
                 </h4>
               </YourAccount>

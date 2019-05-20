@@ -37,6 +37,7 @@ export function getEtherscanLink(networkId, data, type) {
     case 'transaction': {
       return `${prefix}/tx/${data}`
     }
+    case 'address':
     default: {
       return `${prefix}/address/${data}`
     }
