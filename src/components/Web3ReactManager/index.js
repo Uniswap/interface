@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { isMobile } from 'react-device-detect'
 
 import { ReactComponent as Spinner } from '../../assets/images/spinner.svg'
+import { getNetworkName } from '../../utils'
 
 const { Connector } = Connectors
 
@@ -28,54 +29,40 @@ const PinkSpinner = styled(Spinner)`
   stroke: ${({ theme }) => theme.uniswapPink};
 `
 
+function tryToSetConnector(setConnector, setError) {
+  setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
+    if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
+      setError(error, { connectorName: 'Injected' })
+    } else {
+      setConnector('Network')
+    }
+  })
+}
+
 export default function Web3ReactManager({ children }) {
   const { t } = useTranslation()
   const { active, error, setConnector, setError } = useWeb3Context()
 
-  // start web3-react on page-load
-  // useEffect(() => {
-  //   setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
-  //     if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-  //       setError(error, { connectorName: 'Injected' })
-  //     } else {
-  //       setConnector('Infura')
-  //     }
-  //   })
-  // }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  // // if the metamask user logs out, set the infura provider
-  // useEffect(() => {
-  //   if (error && error.code === InjectedConnector.errorCodes.UNLOCK_REQUIRED) {
-  //     setConnector('Infura')
-  //   }
-  // }, [error, connectorName, setConnector])
-
   useEffect(() => {
-    if (!active) {
+    if (!active && !error) {
       if (window.ethereum || window.web3) {
-        try {
+        if (isMobile) {
+          tryToSetConnector(setConnector, setError)
+        } else {
           const library = new ethers.providers.Web3Provider(window.ethereum || window.web3)
           library.listAccounts().then(accounts => {
             if (accounts.length >= 1) {
-              setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
-                if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-                  setError(error)
-                } else {
-                  setConnector('Network')
-                }
-              })
+              tryToSetConnector(setConnector, setError)
             } else {
               setConnector('Network')
             }
           })
-        } catch {
-          setConnector('Network')
         }
       } else {
         setConnector('Network')
       }
     }
-  }, [active, setConnector, setError])
+  }, [active, error, setConnector, setError])
 
   const [showLoader, setShowLoader] = useState(false)
   useEffect(() => {
@@ -89,11 +76,9 @@ export default function Web3ReactManager({ children }) {
 
   if (error) {
     if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-      const correctNetwork = process.env.REACT_APP_NETWORK_NAME || 'Main Ethereum Network'
-
+      const correctNetwork = getNetworkName(Number(process.env.REACT_APP_NETWORK_ID))
       return <Message>{`${t('wrongNetwork')}. ${t('switchNetwork', { correctNetwork })}`}</Message>
     } else {
-      console.error(error)
       return <Message>{t('unknownError')}</Message>
     }
   } else if (!active) {

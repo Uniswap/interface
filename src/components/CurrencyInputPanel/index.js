@@ -187,10 +187,10 @@ function CurrencySelectModal({ onClose, onTokenSelect }) {
   const tokenList = useMemo(() => {
     return Object.keys(allTokens)
       .sort((a, b) => {
-        const aSymbol = allTokens[a].symbol
-        const bSymbol = allTokens[b].symbol
-        if (aSymbol === 'ETH' || bSymbol === 'ETH') {
-          return aSymbol === bSymbol ? 0 : aSymbol === 'ETH' ? -1 : 1
+        const aSymbol = allTokens[a].symbol.toLowerCase()
+        const bSymbol = allTokens[b].symbol.toLowerCase()
+        if (aSymbol === 'ETH'.toLowerCase() || bSymbol === 'ETH'.toLowerCase()) {
+          return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
         } else {
           return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
         }

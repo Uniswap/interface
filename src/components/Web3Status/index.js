@@ -44,27 +44,27 @@ const Identicon = styled.div`
   background-color: ${({ theme }) => theme.silverGray};
 `
 
-const dummyTransactions = [
-  { response: { hash: '0x1daed2776e0a914a77fcc5f3d2d4c7f3b988c076c3e72ed7f0e860660d850612' } },
-  { response: { hash: '0xffd047112ba2c58e663874931bc9084fafa1a316e0bd96cb8f5c61074acc86e1' } }
-]
 export default function Web3Status() {
   const { t } = useTranslation()
-  const { account } = useWeb3Context()
+  const { account, connectorName, setConnector } = useWeb3Context()
 
   const allTransactions = useAllTransactions()
-  // const pending = Object.keys(allTransactions).filter(hash => !allTransactions[hash].receipt)
-  // const confirmed = Object.keys(allTransactions).filter(hash => allTransactions[hash].receipt)
-  const pending = dummyTransactions
-  const confirmed = dummyTransactions
+  const pending = Object.keys(allTransactions).filter(hash => !allTransactions[hash].receipt)
+  const confirmed = Object.keys(allTransactions).filter(hash => allTransactions[hash].receipt)
   const hasPendingTransactions = !!pending.length
 
-  const [walletModalIsOpen, setWalletModalIsOpen] = useState(true)
+  const [walletModalIsOpen, setWalletModalIsOpen] = useState(false)
   function closeWalletModal() {
     setWalletModalIsOpen(false)
   }
-  function openWalletModal() {
-    setWalletModalIsOpen(true)
+  function onClick() {
+    if (connectorName === 'Network' && (window.ethereum || window.web3)) {
+      setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
+        setWalletModalIsOpen(true)
+      })
+    } else {
+      setWalletModalIsOpen(true)
+    }
   }
 
   const ref = useRef()
@@ -80,7 +80,7 @@ export default function Web3Status() {
 
   return (
     <>
-      <Web3StatusWrapper onClick={openWalletModal} pending={hasPendingTransactions}>
+      <Web3StatusWrapper onClick={onClick} pending={hasPendingTransactions}>
         {hasPendingTransactions ? (
           <>
             <Spinner />

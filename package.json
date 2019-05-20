@@ -33,8 +33,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "start:rinkeby": "REACT_APP_NETWORK_ID=4 REACT_APP_NETWORK_NAME='Rinkeby Test Network' yarn start",
-    "build:rinkeby": "REACT_APP_NETWORK_ID=4 REACT_APP_NETWORK_NAME='Rinkeby Test Network' yarn build",
+    "start:rinkeby": "REACT_APP_NETWORK_ID=4 yarn start",
+    "build:rinkeby": "REACT_APP_NETWORK_ID=4 yarn build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint:base": "yarn eslint './src/**/*.{js,jsx}'",

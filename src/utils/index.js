@@ -44,6 +44,29 @@ export function getEtherscanLink(networkId, data, type) {
   }
 }
 
+export function getNetworkName(networkId) {
+  switch (networkId) {
+    case 1: {
+      return 'the Main Ethereum Network'
+    }
+    case 3: {
+      return 'the Ropsten Test Network'
+    }
+    case 4: {
+      return 'the Rinkeby Test Network'
+    }
+    case 5: {
+      return 'the Görli Test Network'
+    }
+    case 42: {
+      return 'the Kovan Test Network'
+    }
+    default: {
+      return 'the correct network'
+    }
+  }
+}
+
 export function shortenAddress(address) {
   if (!isAddress(address)) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
