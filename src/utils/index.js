@@ -67,16 +67,14 @@ export function getNetworkName(networkId) {
   }
 }
 
-export function shortenAddress(address) {
+export function shortenAddress(address, digits = 4) {
   if (!isAddress(address)) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
-  const digits = 4
   return `${address.substring(0, digits + 2)}...${address.substring(42 - digits)}`
 }
 
-export function shortenTransactionHash(hash) {
-  const digits = 4
+export function shortenTransactionHash(hash, digits = 4) {
   return `${hash.substring(0, digits + 2)}...${hash.substring(66 - digits)}`
 }
 

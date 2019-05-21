@@ -59,6 +59,7 @@ const theme = {
   pizazzOrange: '#FF8F05',
   // pink
   uniswapPink: '#DC6BE5',
+  connectedGreen: '#27AE60',
   // media queries
   mediaWidth: mediaWidthTemplates,
   mediaHeight: mediaHeightTemplates,

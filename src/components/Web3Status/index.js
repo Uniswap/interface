@@ -54,7 +54,7 @@ export default function Web3Status() {
 
   const hasPendingTransactions = !!pending.length
 
-  const [walletModalIsOpen, setWalletModalIsOpen] = useState(false)
+  const [walletModalIsOpen, setWalletModalIsOpen] = useState(true)
   function closeWalletModal() {
     setWalletModalIsOpen(false)
   }
