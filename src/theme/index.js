@@ -80,56 +80,21 @@ export const GlobalStyle = createGlobalStyle`
   
   html,
   body {
-    padding: 0;
     margin: 0;
-    font-variant: none;
+    padding: 0;
     font-size: 16px;
+    font-variant: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
   }
 
   #root {
-    position: relative;
-    display: flex;
-    flex-flow: column nowrap;
-    height: 100vh;
+    ${({ theme }) => theme.flexColumnNoWrap}
+    justify-content: center;
+    align-items: center;
     width: 100vw;
+    height: 100vh;
     overflow-x: hidden;
     overflow-y: auto;
-    background-color: ${({ theme }) => theme.white};
-    z-index: 100;
-    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-    @media only screen and (min-width: 768px) {
-      justify-content: center;
-      align-items: center;
-    }
-  }
-
-  #modal-root {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 200;
-  }
-
-  .loader {
-    border: 1px solid transparent;
-    border-top: 1px solid ${props => props.theme.royalBlue};
-    border-radius: 50%;
-    width: 0.75rem;
-    height: 0.75rem;
-    margin-right: 0.25rem;
-    animation: spin 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
-  }
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
   }
 `

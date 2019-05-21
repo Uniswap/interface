@@ -38,4 +38,8 @@ export const Link = styled.a.attrs({
     outline: none;
     text-decoration: underline;
   }
+
+  :active {
+    text-decoration: none;
+  }
 `

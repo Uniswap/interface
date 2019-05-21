@@ -28,8 +28,13 @@ export function useDebounce(value, delay) {
 // modified from https://usehooks.com/useKeyPress/
 export function useBodyKeyDown(targetKey, onKeyDown, suppressOnKeyDown = false) {
   const downHandler = useCallback(
-    ({ target: { tagName }, key }) => {
+    event => {
+      const {
+        target: { tagName },
+        key
+      } = event
       if (key === targetKey && tagName === 'BODY' && !suppressOnKeyDown) {
+        event.preventDefault()
         onKeyDown()
       }
     },

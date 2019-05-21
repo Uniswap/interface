@@ -99,11 +99,11 @@ export default function WalletModal({ isOpen, onDismiss, pendingTransactions, co
   function renderTransactions(transactions, pending) {
     return (
       <TransactionWrapper>
-        {transactions.map(transaction => {
+        {transactions.map(hash => {
           return (
-            <p key={transaction.response.hash}>
-              <Link href={getEtherscanLink(networkId, transaction.response.hash, 'transaction')}>
-                {shortenTransactionHash(transaction.response.hash)} ↗ {pending ? 'pending' : 'confirmed'}
+            <p key={hash}>
+              <Link href={getEtherscanLink(networkId, hash, 'transaction')}>
+                {shortenTransactionHash(hash)} ↗ {pending ? 'pending' : 'confirmed'}
               </Link>
             </p>
           )

@@ -46,11 +46,12 @@ const Identicon = styled.div`
 
 export default function Web3Status() {
   const { t } = useTranslation()
-  const { account, connectorName, setConnector } = useWeb3Context()
+  const { active, account, connectorName, setConnector } = useWeb3Context()
 
   const allTransactions = useAllTransactions()
   const pending = Object.keys(allTransactions).filter(hash => !allTransactions[hash].receipt)
   const confirmed = Object.keys(allTransactions).filter(hash => allTransactions[hash].receipt)
+
   const hasPendingTransactions = !!pending.length
 
   const [walletModalIsOpen, setWalletModalIsOpen] = useState(false)
@@ -69,34 +70,35 @@ export default function Web3Status() {
 
   const ref = useRef()
   useEffect(() => {
-    if (account) {
-      const currentRef = ref.current
-      currentRef.appendChild(Jazzicon(16, parseInt(account.slice(2, 10), 16)))
-      return () => {
-        currentRef.innerHTML = ''
+    if (ref.current) {
+      ref.current.innerHTML = ''
+      if (account) {
+        ref.current.appendChild(Jazzicon(16, parseInt(account.slice(2, 10), 16)))
       }
     }
   }, [account])
 
   return (
-    <>
-      <Web3StatusWrapper onClick={onClick} pending={hasPendingTransactions}>
-        {hasPendingTransactions ? (
-          <>
-            <Spinner />
-            <Text>{t('pending')}</Text>
-          </>
-        ) : (
-          <Text>{account ? shortenAddress(account) : t('disconnected')}</Text>
-        )}
-        <Identicon ref={ref} />
-      </Web3StatusWrapper>
-      <WalletModal
-        isOpen={walletModalIsOpen}
-        onDismiss={closeWalletModal}
-        pendingTransactions={pending}
-        confirmedTransactions={confirmed}
-      />
-    </>
+    active && (
+      <>
+        <Web3StatusWrapper onClick={onClick} pending={hasPendingTransactions}>
+          {hasPendingTransactions ? (
+            <>
+              <Spinner />
+              <Text>{t('pending')}</Text>
+            </>
+          ) : (
+            <Text>{account ? shortenAddress(account) : t('disconnected')}</Text>
+          )}
+          <Identicon ref={ref} />
+        </Web3StatusWrapper>
+        <WalletModal
+          isOpen={walletModalIsOpen}
+          onDismiss={closeWalletModal}
+          pendingTransactions={pending}
+          confirmedTransactions={confirmed}
+        />
+      </>
+    )
   )
 }

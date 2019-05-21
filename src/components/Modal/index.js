@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import styled, { css } from 'styled-components'
 import { animated, useTransition } from 'react-spring'
 import { DialogOverlay, DialogContent } from '@reach/dialog'
@@ -39,18 +39,15 @@ const StyledDialogContent = styled(FilteredDialogContent)`
   }
 `
 
-const Wrapper = styled.div`
-  display: flex;
-  width: 100%;
-
-  :focus {
-    outline: none;
-  }
+const HiddenCloseButton = styled.button`
+  margin: 0;
+  padding: 0;
+  width: 0;
+  height: 0;
+  border: none;
 `
 
-export default function Modal({ isOpen, onDismiss, minHeight = 50, initialFocusRef = undefined, children }) {
-  const ref = useRef()
-
+export default function Modal({ isOpen, onDismiss, minHeight = 50, initialFocusRef, children }) {
   const transitions = useTransition(isOpen, null, {
     config: { duration: 125 },
     from: { opacity: 0 },
@@ -61,11 +58,10 @@ export default function Modal({ isOpen, onDismiss, minHeight = 50, initialFocusR
   return transitions.map(
     ({ item, key, props }) =>
       item && (
-        <StyledDialogOverlay key={key} style={props} onDismiss={onDismiss} initialFocusRef={initialFocusRef || ref}>
-          <StyledDialogContent minHeight={minHeight}>
-            <Wrapper tabIndex="0" ref={ref}>
-              {children}
-            </Wrapper>
+        <StyledDialogOverlay key={key} style={props} onDismiss={onDismiss} initialFocusRef={initialFocusRef}>
+          <StyledDialogContent hidden={true} minHeight={minHeight}>
+            <HiddenCloseButton onClick={onDismiss} />
+            {children}
           </StyledDialogContent>
         </StyledDialogOverlay>
       )

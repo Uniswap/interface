@@ -1,30 +1,52 @@
 import React from 'react'
-import classnames from 'classnames'
-import { useWeb3Context } from 'web3-react'
+import styled from 'styled-components'
 
-import Logo from '../Logo'
+import { Link } from '../../theme'
 import Web3Status from '../Web3Status'
 
-import './header.scss'
+const HeaderElement = styled.div`
+  margin: 1.25rem;
+`
+
+const Title = styled.div`
+  display: flex;
+  align-items: center;
+
+  #image {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+  }
+
+  #link {
+    text-decoration-color: ${({ theme }) => theme.wisteriaPurple};
+  }
+
+  #title {
+    display: inline;
+    font-size: 1rem;
+    font-weight: 500;
+    color: ${({ theme }) => theme.wisteriaPurple};
+  }
+`
 
 export default function Header() {
-  const context = useWeb3Context()
-
   return (
-    <div className="header">
-      <div className={classnames('header__top')}>
-        <a className="header__no-decoration" href="https://uniswap.io" target="_blank" rel="noopener noreferrer">
-          <Logo />
-        </a>
+    <>
+      <HeaderElement>
+        <Title>
+          <span id="image" role="img" aria-label="Unicorn Emoji">
+            🦄
+          </span>
 
-        <div className="header__center-group">
-          <a className="header__no-decoration" href="https://uniswap.io" target="_blank" rel="noopener noreferrer">
-            <span className="header__title">Uniswap</span>
-          </a>
-        </div>
+          <Link id="link" href="https://uniswap.io">
+            <h1 id="title">Uniswap</h1>
+          </Link>
+        </Title>
+      </HeaderElement>
 
-        {context.active && <Web3Status isConnected={!!context.account} />}
-      </div>
-    </div>
+      <HeaderElement>
+        <Web3Status />
+      </HeaderElement>
+    </>
   )
 }

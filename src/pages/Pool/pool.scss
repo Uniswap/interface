@@ -61,7 +61,7 @@
 
   &__cta-btn {
     @extend %primary-button;
-    margin: 2rem auto 0;
+    margin: 2rem auto 2rem auto;
 
     &--inactive {
       background: $mercury-gray;
