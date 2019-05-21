@@ -63,7 +63,7 @@ const ExchangeRateWrapper = styled.div`
   align-items: center;
   color: ${({ theme }) => theme.doveGray};
   font-size: 0.75rem;
-  padding: 0.25rem 1rem 0;
+  padding: 0.5rem 1rem;
 `
 
 const ExchangeRate = styled.span`
@@ -751,7 +751,7 @@ export default function Swap() {
       </OversizedPanel>
       {renderSummary()}
       <Flex>
-        <Button disabled={!isValid} onClick={onSwap}>
+        <Button disabled={!isValid} onClick={onSwap} fullWidth>
           {t('swap')}
         </Button>
       </Flex>

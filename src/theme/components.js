@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { lighten, darken } from 'polished'
 
 export const Button = styled.button`
@@ -12,6 +12,10 @@ export const Button = styled.button`
   background-color: ${({ theme }) => theme.royalBlue};
   color: ${({ theme }) => theme.white};
   transition: background-color 125ms ease-in-out;
+  ${({ fullWidth }) =>
+    css`
+      width: 100%;
+    `}
 
   :hover,
   :focus {

@@ -72,7 +72,7 @@ const Aligner = styled.span`
 `
 
 const StyledDropDown = styled(DropDown)`
-  margin-left: 0.5rem;
+  margin: 0 0.5rem 0 0.5rem;
   height: 35%;
 
   path {
