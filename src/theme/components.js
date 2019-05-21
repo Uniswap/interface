@@ -33,6 +33,8 @@ export const Link = styled.a.attrs({
   rel: 'noopener noreferrer'
 })`
   text-decoration: none;
+  cursor: pointer;
+  color: ${({ theme }) => theme.royalBlue};
 
   :focus {
     outline: none;
