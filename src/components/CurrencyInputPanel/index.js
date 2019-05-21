@@ -1,21 +1,179 @@
 import React, { useState, useRef, useMemo } from 'react'
-import classnames from 'classnames'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
+import styled from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
+import { lighten } from 'polished'
 
+import { BorderlessInput } from '../../theme'
 import { useTokenContract } from '../../hooks'
 import { isAddress, calculateGasMargin } from '../../utils'
+import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import Modal from '../Modal'
 import TokenLogo from '../TokenLogo'
 import SearchIcon from '../../assets/images/magnifying-glass.svg'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 import { useTokenDetails, useAllTokenDetails } from '../../contexts/Tokens'
 
-import './currency-panel.scss'
-
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
+
+const SubCurrencySelect = styled.button`
+  ${({ theme }) => theme.flexRowNoWrap}
+  background: ${({ theme }) => theme.zumthorBlue};
+  border: 1px solid ${({ theme }) => theme.royalBlue};
+  color: ${({ theme }) => theme.royalBlue};
+  line-height: 0;
+  height: 2rem;
+  padding: 10px 50px 10px 15px;
+  margin-right: -40px;
+  border-radius: 2.5rem;
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+`
+
+const InputRow = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: center;
+  padding: 0.25rem 0.85rem 0.75rem;
+`
+
+const Input = styled(BorderlessInput)`
+  font-size: 1.5rem;
+  color: ${({ error, theme }) => error && theme.salmonRed};
+`
+
+const CurrencySelect = styled.button`
+  align-items: center;
+  font-size: 1rem;
+  color: ${({ selected, theme }) => (selected ? theme.black : theme.royalBlue)};
+  height: 2rem;
+  border: 1px solid ${({ selected, theme }) => (selected ? theme.mercuryGray : theme.royalBlue)};
+  border-radius: 2.5rem;
+  background-color: ${({ selected, theme }) => (selected ? theme.concreteGray : theme.zumthorBlue)};
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+
+  :focus {
+    box-shadow: 0 0 0.5px 0.5px ${({ theme }) => theme.malibuBlue};
+  }
+
+  :active {
+    background-color: ${({ theme }) => theme.zumthorBlue};
+  }
+`
+
+const Aligner = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+
+const StyledDropDown = styled(DropDown)`
+  margin-left: 0.5rem;
+  height: 35%;
+
+  path {
+    stroke: ${({ selected, theme }) => (selected ? theme.black : theme.royalBlue)};
+  }
+`
+
+const InputPanel = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap}
+  box-shadow: 0 4px 8px 0 ${({ theme }) => lighten(0.9, theme.royalBlue)};
+  position: relative;
+  border-radius: 1.25rem;
+  background-color: ${({ theme }) => theme.white};
+  z-index: 1;
+`
+
+const Container = styled.div`
+  border-radius: 1.25rem;
+  box-shadow: 0 0 0 0.5px ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
+  background-color: ${({ theme }) => theme.white};
+  transition: box-shadow 200ms ease-in-out;
+
+  :focus-within {
+    box-shadow: 0 0 0.5px 0.5px ${({ theme }) => theme.malibuBlue};
+  }
+`
+
+const LabelRow = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: center;
+  color: ${({ theme }) => theme.doveGray};
+  font-size: 0.75rem;
+  line-height: 1rem;
+  padding: 0.75rem 1rem;
+`
+
+const LabelContainer = styled.div`
+  flex: 1 1 auto;
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`
+
+const ErrorSpan = styled.span`
+  color: ${({ error, theme }) => error && theme.salmonRed};
+`
+
+const TokenModal = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap}
+  background-color: ${({ theme }) => theme.white};
+  width: 100%;
+`
+
+const SearchContainer = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  padding: 1rem;
+  border-bottom: 1px solid ${({ theme }) => theme.mercuryGray};
+`
+
+const TokenModalInfo = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: center;
+  padding: 1rem 1.5rem;
+  margin: 0.25rem 0.5rem;
+  justify-content: center;
+  user-select: none;
+`
+
+const TokenList = styled.div`
+  flex-grow: 1;
+  height: 100%;
+  overflow-y: auto;
+`
+
+const TokenModalRow = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: center;
+  padding: 1rem 1.5rem;
+  margin: 0.25rem 0.5rem;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+
+  #symbol {
+    color: ${({ theme }) => theme.doveGrey};
+  }
+
+  :hover {
+    background-color: ${({ theme }) => theme.concreteGray};
+  }
+`
+
+const StyledTokenName = styled.span`
+  margin: 0 0.25rem 0 0.25rem;
+`
+
+const StyledTokenLogo = styled(TokenLogo)`
+  object-fit: contain;
+  border-radius: 1rem;
+`
 
 export default function CurrencyInputPanel({
   onValueChange = () => {},
@@ -51,8 +209,7 @@ export default function CurrencyInputPanel({
     } else {
       if (!pendingApproval) {
         return (
-          <button
-            className="currency-input-panel__sub-currency-select"
+          <SubCurrencySelect
             onClick={async () => {
               const estimatedGas = await tokenContract.estimate.approve(
                 selectedTokenExchangeAddress,
@@ -69,15 +226,10 @@ export default function CurrencyInputPanel({
             }}
           >
             {t('unlock')}
-          </button>
+          </SubCurrencySelect>
         )
       } else {
-        return (
-          <button className="currency-input-panel__sub-currency-select currency-input-panel__sub-currency-select--pending">
-            <div className="loader" />
-            {t('pending')}
-          </button>
-        )
+        return <SubCurrencySelect>{t('pending')}</SubCurrencySelect>
       }
     }
   }
@@ -88,13 +240,11 @@ export default function CurrencyInputPanel({
     }
 
     return (
-      <div className="currency-input-panel__input-row">
-        <input
+      <InputRow>
+        <Input
           type="number"
           min="0"
-          className={classnames('currency-input-panel__input', {
-            'currency-input-panel__input--error': errorMessage
-          })}
+          error={!!errorMessage}
           placeholder="0.0"
           onChange={e => onValueChange(e.target.value)}
           onKeyPress={e => {
@@ -109,52 +259,47 @@ export default function CurrencyInputPanel({
           value={value}
         />
         {renderUnlockButton()}
-        <button
-          className={classnames('currency-input-panel__currency-select', {
-            'currency-input-panel__currency-select--selected': selectedTokenAddress,
-            'currency-input-panel__currency-select--disabled': disableTokenSelect
-          })}
+        <CurrencySelect
+          selected={!!selectedTokenAddress}
           onClick={() => {
             if (!disableTokenSelect) {
               setModalIsOpen(true)
             }
           }}
         >
-          {selectedTokenAddress ? (
-            <TokenLogo className="currency-input-panel__selected-token-logo" address={selectedTokenAddress} />
-          ) : null}
-          {(allTokens[selectedTokenAddress] && allTokens[selectedTokenAddress].symbol) || t('selectToken')}
-          <span className="currency-input-panel__dropdown-icon" />
-        </button>
-      </div>
+          <Aligner>
+            {selectedTokenAddress ? <StyledTokenLogo address={selectedTokenAddress} /> : null}
+            {
+              <StyledTokenName>
+                {(allTokens[selectedTokenAddress] && allTokens[selectedTokenAddress].symbol) || t('selectToken')}
+              </StyledTokenName>
+            }
+            {!disableTokenSelect && <StyledDropDown selected={!!selectedTokenAddress} />}
+          </Aligner>
+        </CurrencySelect>
+      </InputRow>
     )
   }
 
   return (
-    <div className="currency-input-panel">
-      <div
-        className={classnames('currency-input-panel__container', {
-          'currency-input-panel__container--error': errorMessage
-        })}
-      >
-        <div className="currency-input-panel__label-row">
-          <div className="currency-input-panel__label-container">
-            <span className="currency-input-panel__label">{title}</span>
-            <span className="currency-input-panel__label-description">{description}</span>
-          </div>
-          <span
-            className={classnames('currency-input-panel__extra-text', {
-              'currency-input-panel__extra-text--error': errorMessage
-            })}
+    <InputPanel>
+      <Container error={!!errorMessage}>
+        <LabelRow>
+          <LabelContainer>
+            <span>{title}</span> <span>{description}</span>
+          </LabelContainer>
+
+          <ErrorSpan
+            error={!!errorMessage}
             onClick={() => {
               extraTextClickHander()
             }}
           >
             {extraText}
-          </span>
-        </div>
+          </ErrorSpan>
+        </LabelRow>
         {_renderInput()}
-      </div>
+      </Container>
       {!disableTokenSelect && (
         <CurrencySelectModal
           isOpen={modalIsOpen}
@@ -164,7 +309,7 @@ export default function CurrencyInputPanel({
           onTokenSelect={onCurrencySelected}
         />
       )}
-    </div>
+    </InputPanel>
   )
 }
 
@@ -216,45 +361,30 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
 
   function renderTokenList() {
     if (isAddress(searchQuery) && exchangeAddress === undefined) {
-      return (
-        <div className="token-modal__token-row token-modal__token-row--searching">
-          <div className="loader" />
-          <div>Searching for Exchange...</div>
-        </div>
-      )
+      return <TokenModalInfo>Searching for Exchange...</TokenModalInfo>
     }
 
     if (isAddress(searchQuery) && exchangeAddress === ethers.constants.AddressZero) {
       return (
         <>
-          <div className="token-modal__token-row token-modal__token-row--no-exchange">
-            <div>{t('noExchange')}</div>
-          </div>
-          <Link
-            to={`/create-exchange/${searchQuery}`}
-            className="token-modal__token-row token-modal__token-row--create-exchange"
-            onClick={onDismiss}
-          >
-            <div>{t('createExchange')}</div>
-          </Link>
+          <TokenModalInfo>{t('noExchange')}</TokenModalInfo>
+          <TokenModalInfo>
+            <Link to={`/create-exchange/${searchQuery}`}>{t('createExchange')}</Link>
+          </TokenModalInfo>
         </>
       )
     }
 
     if (!filteredTokenList.length) {
-      return (
-        <div className="token-modal__token-row token-modal__token-row--no-exchange">
-          <div>{t('noExchange')}</div>
-        </div>
-      )
+      return <TokenModalInfo>{t('noExchange')}</TokenModalInfo>
     }
 
     return filteredTokenList.map(({ address, symbol }) => {
       return (
-        <div key={address} className="token-modal__token-row" onClick={() => _onTokenSelect(address)}>
-          <TokenLogo className="token-modal__token-logo" address={address} />
-          <div className="token-modal__token-label">{symbol}</div>
-        </div>
+        <TokenModalRow key={address} onClick={() => _onTokenSelect(address)}>
+          <StyledTokenLogo address={address} />
+          <span id="symbol">{symbol}</span>
+        </TokenModalRow>
       )
     })
   }
@@ -270,19 +400,13 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
 
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} initialFocusRef={inputRef}>
-      <div className="token-modal">
-        <div className="token-modal__search-container">
-          <input
-            ref={inputRef}
-            type="text"
-            placeholder={t('searchOrPaste')}
-            className="token-modal__search-input"
-            onChange={onInput}
-          />
-          <img src={SearchIcon} className="token-modal__search-icon" alt="search" />
-        </div>
-        <div className="token-modal__token-list">{renderTokenList()}</div>
-      </div>
+      <TokenModal>
+        <SearchContainer>
+          <BorderlessInput ref={inputRef} type="text" placeholder={t('searchOrPaste')} onChange={onInput} />
+          <img src={SearchIcon} alt="search" />
+        </SearchContainer>
+        <TokenList>{renderTokenList()}</TokenList>
+      </TokenModal>
     </Modal>
   )
 }

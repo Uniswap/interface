@@ -7,8 +7,6 @@ import AddLiquidity from './AddLiquidity'
 import CreateExchange from './CreateExchange'
 import RemoveLiquidity from './RemoveLiquidity'
 
-import './pool.scss'
-
 export default function Pool() {
   useEffect(() => {
     ReactGA.pageview(window.location.pathname + window.location.search)

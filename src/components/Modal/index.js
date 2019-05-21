@@ -9,7 +9,7 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay).attrs({
   suppressClassNameWarning: true
 })`
   &[data-reach-dialog-overlay] {
-    z-index: 1050;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -43,3 +43,16 @@ export const Link = styled.a.attrs({
     text-decoration: none;
   }
 `
+
+export const BorderlessInput = styled.input`
+  color: ${({ theme }) => theme.mineshaftGray};
+  font-size: 1rem;
+  outline: none;
+  border: none;
+  flex: 1 1 auto;
+  width: 0;
+
+  ::placeholder {
+    color: ${({ theme }) => theme.mercuryGray};
+  }
+`
