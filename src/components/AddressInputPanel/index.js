@@ -5,7 +5,6 @@ import { useWeb3Context } from 'web3-react'
 
 import { isAddress } from '../../utils'
 import { useDebounce } from '../../hooks'
-// import QrCode from '../QrCode' // commented out pending further review
 
 import './address-input-panel.scss'
 
@@ -110,11 +109,6 @@ export default function AddressInputPanel({ title, initialInput = '', onChange =
             />
           </div>
         </div>
-        {/* commented out pending further review
-        <div className="address-input-panel__qr-container">
-          <QrCode onValueReceived={value => onChange(value)} />
-        </div>
-        */}
       </div>
     </div>
   )

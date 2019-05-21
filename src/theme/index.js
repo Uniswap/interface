@@ -97,7 +97,7 @@ export const GlobalStyle = createGlobalStyle`
     width: 100vw;
     overflow-x: hidden;
     overflow-y: auto;
-    background-color: ${props => props.theme.white};
+    background-color: ${({ theme }) => theme.white};
     z-index: 100;
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
     @media only screen and (min-width: 768px) {

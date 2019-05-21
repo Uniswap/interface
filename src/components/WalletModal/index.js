@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useWeb3Context, Connectors } from 'web3-react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 
-import Modal from '../NewModal'
+import Modal from '../Modal'
 import { getEtherscanLink, shortenAddress, shortenTransactionHash } from '../../utils'
 import { Button, Link } from '../../theme'
 

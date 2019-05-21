@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react'
-import { CSSTransitionGroup } from 'react-transition-group'
+import React, { useState, useRef, useMemo } from 'react'
 import classnames from 'classnames'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -19,7 +18,6 @@ import './currency-panel.scss'
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
 export default function CurrencyInputPanel({
-  filteredTokens = [],
   onValueChange = () => {},
   renderInput,
   onCurrencySelected = () => {},
@@ -36,7 +34,7 @@ export default function CurrencyInputPanel({
 }) {
   const { t } = useTranslation()
 
-  const [isShowingModal, setIsShowingModal] = useState(false)
+  const [modalIsOpen, setModalIsOpen] = useState(false)
 
   const tokenContract = useTokenContract(selectedTokenAddress)
   const { exchangeAddress: selectedTokenExchangeAddress } = useTokenDetails(selectedTokenAddress)
@@ -44,16 +42,8 @@ export default function CurrencyInputPanel({
   const pendingApproval = usePendingApproval(selectedTokenAddress)
 
   const addTransaction = useTransactionAdder()
-  const inputRef = useRef()
 
   const allTokens = useAllTokenDetails()
-
-  // manage focus on modal show
-  useEffect(() => {
-    if (inputRef.current && isShowingModal) {
-      inputRef.current.focus()
-    }
-  }, [isShowingModal])
 
   function renderUnlockButton() {
     if (disableUnlock || !showUnlock || selectedTokenAddress === 'ETH' || !selectedTokenAddress) {
@@ -126,7 +116,7 @@ export default function CurrencyInputPanel({
           })}
           onClick={() => {
             if (!disableTokenSelect) {
-              setIsShowingModal(true)
+              setModalIsOpen(true)
             }
           }}
         >
@@ -165,19 +155,20 @@ export default function CurrencyInputPanel({
         </div>
         {_renderInput()}
       </div>
-      {!disableTokenSelect && isShowingModal && (
+      {!disableTokenSelect && (
         <CurrencySelectModal
-          onTokenSelect={onCurrencySelected}
-          onClose={() => {
-            setIsShowingModal(false)
+          isOpen={modalIsOpen}
+          onDismiss={() => {
+            setModalIsOpen(false)
           }}
+          onTokenSelect={onCurrencySelected}
         />
       )}
     </div>
   )
 }
 
-function CurrencySelectModal({ onClose, onTokenSelect }) {
+function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
   const { t } = useTranslation()
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -220,12 +211,7 @@ function CurrencySelectModal({ onClose, onTokenSelect }) {
   function _onTokenSelect(address) {
     setSearchQuery('')
     onTokenSelect(address)
-    onClose()
-  }
-
-  function _onClose(address) {
-    setSearchQuery('')
-    onClose()
+    onDismiss()
   }
 
   function renderTokenList() {
@@ -247,7 +233,7 @@ function CurrencySelectModal({ onClose, onTokenSelect }) {
           <Link
             to={`/create-exchange/${searchQuery}`}
             className="token-modal__token-row token-modal__token-row--create-exchange"
-            onClick={onClose}
+            onClick={onDismiss}
           >
             <div>{t('createExchange')}</div>
           </Link>
@@ -275,11 +261,6 @@ function CurrencySelectModal({ onClose, onTokenSelect }) {
 
   // manage focus on modal show
   const inputRef = useRef()
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [])
 
   function onInput(event) {
     const input = event.target.value
@@ -288,29 +269,20 @@ function CurrencySelectModal({ onClose, onTokenSelect }) {
   }
 
   return (
-    <Modal onClose={_onClose}>
-      <CSSTransitionGroup
-        transitionName="token-modal"
-        transitionAppear={true}
-        transitionLeave={true}
-        transitionAppearTimeout={200}
-        transitionLeaveTimeout={200}
-        transitionEnterTimeout={200}
-      >
-        <div className="token-modal">
-          <div className="token-modal__search-container">
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder={t('searchOrPaste')}
-              className="token-modal__search-input"
-              onChange={onInput}
-            />
-            <img src={SearchIcon} className="token-modal__search-icon" alt="search" />
-          </div>
-          <div className="token-modal__token-list">{renderTokenList()}</div>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} initialFocusRef={inputRef}>
+      <div className="token-modal">
+        <div className="token-modal__search-container">
+          <input
+            ref={inputRef}
+            type="text"
+            placeholder={t('searchOrPaste')}
+            className="token-modal__search-input"
+            onChange={onInput}
+          />
+          <img src={SearchIcon} className="token-modal__search-icon" alt="search" />
         </div>
-      </CSSTransitionGroup>
+        <div className="token-modal__token-list">{renderTokenList()}</div>
+      </div>
     </Modal>
   )
 }
