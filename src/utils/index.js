@@ -1,9 +1,9 @@
 import { ethers } from 'ethers'
 
-import FACTORY_ABI from '../abi/factory'
-import EXCHANGE_ABI from '../abi/exchange'
-import ERC20_ABI from '../abi/erc20'
-import ERC20_WITH_BYTES_ABI from '../abi/erc20_bytes32'
+import FACTORY_ABI from '../constants/abis/factory'
+import EXCHANGE_ABI from '../constants/abis/exchange'
+import ERC20_ABI from '../constants/abis/erc20'
+import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32'
 import { FACTORY_ADDRESSES } from '../constants'
 
 export const ERROR_CODES = ['TOKEN_NAME', 'TOKEN_SYMBOL', 'TOKEN_DECIMALS'].reduce(
@@ -124,7 +124,7 @@ export async function getTokenName(tokenAddress, library) {
   return getContract(tokenAddress, ERC20_ABI, library)
     .name()
     .catch(() =>
-      getContract(tokenAddress, ERC20_WITH_BYTES_ABI, library)
+      getContract(tokenAddress, ERC20_BYTES32_ABI, library)
         .name()
         .then(bytes32 => ethers.utils.parseBytes32String(bytes32))
     )
@@ -143,7 +143,7 @@ export async function getTokenSymbol(tokenAddress, library) {
   return getContract(tokenAddress, ERC20_ABI, library)
     .symbol()
     .catch(() => {
-      const contractBytes32 = getContract(tokenAddress, ERC20_WITH_BYTES_ABI, library)
+      const contractBytes32 = getContract(tokenAddress, ERC20_BYTES32_ABI, library)
       return contractBytes32.symbol().then(bytes32 => ethers.utils.parseBytes32String(bytes32))
     })
     .catch(error => {
