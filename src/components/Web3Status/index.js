@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
 import Jazzicon from 'jazzicon'
+import { darken } from 'polished'
 
 import WalletModal from '../WalletModal'
 import { ReactComponent as _Spinner } from '../../assets/images/spinner.svg'
@@ -23,6 +24,13 @@ const Web3StatusWrapper = styled.button`
   box-sizing: border-box;
   cursor: pointer;
   user-select: none;
+  :focus {
+    outline: none;
+  }
+  :hover {
+    border: 1px solid
+      ${({ pending, theme }) => (pending ? darken(0.1, theme.royalBlue) : darken(0.1, theme.mercuryGray))};
+  }
 `
 
 const Spinner = styled(_Spinner)`
@@ -45,12 +53,12 @@ const Identicon = styled.div`
   background-color: ${({ theme }) => theme.silverGray};
 `
 
-const dummyTransactions = [
-  '0x7e2135f689969c0dad026a71e52715bcd915cd9c2542f4cd54bb4530d29850a5',
-  '0x7e2135f689969c0dad026a71e52715bcd915cd9c2542f4cd54bb4530d29850a5',
-  '0x7e2135f689969c0dad026a71e52715bcd915cd9c2542f4cd54bb4530d29850a5',
-  '0x7e2135f689969c0dad026a71e52715bcd915cd9c2542f4cd54bb4530d29850a5'
-]
+// const dummyTransactions = [
+//   '0x7e2135f689969c0dad026a71e52715bcd915cd9c2542f4cd54bb4530d29850a5',
+//   '0x7e2135f689969c0dad026a71e52715bcd915cd9c2542f4cd54bb4530d29850a5',
+//   '0x7e2135f689969c0dad026a71e52715bcd915cd9c2542f4cd54bb4530d29850a5',
+//   '0x7e2135f689969c0dad026a71e52715bcd915cd9c2542f4cd54bb4530d29850a5'
+// ]
 
 export default function Web3Status() {
   const { t } = useTranslation()
@@ -59,16 +67,12 @@ export default function Web3Status() {
   const ENSName = useENSName(account)
 
   const allTransactions = useAllTransactions()
-  // const pending = Object.keys(allTransactions).filter(hash => !allTransactions[hash].receipt)
-  // const confirmed = Object.keys(allTransactions).filter(hash => allTransactions[hash].receipt)
-
-  const pending = dummyTransactions
-  const confirmed = dummyTransactions
+  const pending = Object.keys(allTransactions).filter(hash => !allTransactions[hash].receipt)
+  const confirmed = Object.keys(allTransactions).filter(hash => allTransactions[hash].receipt)
 
   const hasPendingTransactions = !!pending.length
 
-  // const [walletModalIsOpen, setWalletModalIsOpen] = useState(false)
-  const [walletModalIsOpen, setWalletModalIsOpen] = useState(true)
+  const [walletModalIsOpen, setWalletModalIsOpen] = useState(false)
   function closeWalletModal() {
     setWalletModalIsOpen(false)
   }

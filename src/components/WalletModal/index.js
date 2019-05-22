@@ -4,7 +4,7 @@ import { useWeb3Context, Connectors } from 'web3-react'
 import { useCopyClipboard } from '../../hooks'
 
 import Modal from '../Modal'
-import { getEtherscanLink, shortenAddress, shortenTransactionHash } from '../../utils'
+import { getEtherscanLink } from '../../utils'
 import { Button, Link } from '../../theme'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
