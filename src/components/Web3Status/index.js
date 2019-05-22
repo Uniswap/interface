@@ -5,9 +5,9 @@ import { useWeb3Context } from 'web3-react'
 import Jazzicon from 'jazzicon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons'
+import { darken } from 'polished'
 
 import WalletModal from '../WalletModal'
-import { ReactComponent as _Spinner } from '../../assets/images/spinner.svg'
 import { useAllTransactions } from '../../contexts/Transactions'
 import { shortenAddress } from '../../utils'
 import { useENSName } from '../../hooks'
@@ -25,6 +25,13 @@ const Web3StatusWrapper = styled.button`
   box-sizing: border-box;
   cursor: pointer;
   user-select: none;
+  :focus {
+    outline: none;
+  }
+  :hover {
+    border: 1px solid
+      ${({ pending, theme }) => (pending ? darken(0.1, theme.royalBlue) : darken(0.1, theme.mercuryGray))};
+  }
 `
 
 const rotate = keyframes`

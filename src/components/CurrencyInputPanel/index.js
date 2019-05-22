@@ -4,7 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
 import styled from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
-import { lighten } from 'polished'
+import { lighten, darken } from 'polished'
+import Tooltip from '@reach/tooltip'
+import '@reach/tooltip/styles.css'
 
 import { BorderlessInput } from '../../theme'
 import { useTokenContract } from '../../hooks'
@@ -55,6 +57,11 @@ const CurrencySelect = styled.button`
   outline: none;
   cursor: pointer;
   user-select: none;
+
+  :hover {
+    border: 1px solid
+      ${({ selected, theme }) => (selected ? darken(0.1, theme.mercuryGray) : darken(0.1, theme.royalBlue))};
+  }
 
   :focus {
     box-shadow: 0 0 0.5px 0.5px ${({ theme }) => theme.malibuBlue};
@@ -107,6 +114,10 @@ const LabelRow = styled.div`
   font-size: 0.75rem;
   line-height: 1rem;
   padding: 0.75rem 1rem;
+  span:hover {
+    cursor: pointer;
+    color: ${({ theme }) => darken(0.2, theme.doveGray)};
+  }
 `
 
 const LabelContainer = styled.div`
@@ -119,6 +130,10 @@ const LabelContainer = styled.div`
 
 const ErrorSpan = styled.span`
   color: ${({ error, theme }) => error && theme.salmonRed};
+  :hover {
+    cursor: pointer;
+    color: ${({ error, theme }) => error && darken(0.1, theme.salmonRed)};
+  }
 `
 
 const TokenModal = styled.div`
@@ -290,12 +305,25 @@ export default function CurrencyInputPanel({
           </LabelContainer>
 
           <ErrorSpan
+            data-tip={'Enter max'}
             error={!!errorMessage}
             onClick={() => {
               extraTextClickHander()
             }}
           >
-            {extraText}
+            <Tooltip
+              label="Enter Max"
+              style={{
+                background: 'hsla(0, 0%, 0%, 0.75)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '24px',
+                padding: '0.5em 1em',
+                marginTop: '-64px'
+              }}
+            >
+              <span>{extraText}</span>
+            </Tooltip>
           </ErrorSpan>
         </LabelRow>
         {_renderInput()}

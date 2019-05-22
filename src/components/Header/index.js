@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import { Link } from '../../theme'
 import Web3Status from '../Web3Status'
+import { darken } from 'polished'
 
 const HeaderElement = styled.div`
   margin: 1.25rem;
@@ -26,6 +27,9 @@ const Title = styled.div`
     font-size: 1rem;
     font-weight: 500;
     color: ${({ theme }) => theme.wisteriaPurple};
+    :hover {
+      color: ${({ theme }) => darken(0.2, theme.wisteriaPurple)};
+    }
   }
 `
 

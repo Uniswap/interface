@@ -83,6 +83,14 @@ const StyledNavLink = styled(NavLink).attrs({
     box-shadow: 0 0 0.5px 0.5px ${({ theme }) => theme.mercuryGray};
     font-weight: 500;
     color: ${({ theme }) => theme.royalBlue};
+    :hover {
+    box-shadow: 0 0 0.5px 0.5px ${({ theme }) => darken(0.1, theme.mercuryGray)};
+  }
+  }
+
+  :hover {
+    color: ${({ theme }) => darken(0.1, theme.royalBlue)};
+    /* box-shadow: 0 0 0.5px 0.5px ${({ theme }) => darken(0.2, theme.mercuryGray)}; */
   }
 `
 
