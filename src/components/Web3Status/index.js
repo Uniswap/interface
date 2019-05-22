@@ -8,6 +8,7 @@ import WalletModal from '../WalletModal'
 import { ReactComponent as _Spinner } from '../../assets/images/spinner.svg'
 import { useAllTransactions } from '../../contexts/Transactions'
 import { shortenAddress } from '../../utils'
+import { useENSName } from '../../hooks'
 
 const Web3StatusWrapper = styled.button`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -47,6 +48,8 @@ const Identicon = styled.div`
 export default function Web3Status() {
   const { t } = useTranslation()
   const { active, account, connectorName, setConnector } = useWeb3Context()
+
+  const ENSName = useENSName(account)
 
   const allTransactions = useAllTransactions()
   const pending = Object.keys(allTransactions).filter(hash => !allTransactions[hash].receipt)
@@ -88,13 +91,14 @@ export default function Web3Status() {
               <Text>{t('pending')}</Text>
             </>
           ) : (
-            <Text>{account ? shortenAddress(account) : t('disconnected')}</Text>
+            <Text>{account ? ENSName || shortenAddress(account) : t('disconnected')}</Text>
           )}
           <Identicon ref={ref} />
         </Web3StatusWrapper>
         <WalletModal
           isOpen={walletModalIsOpen}
           onDismiss={closeWalletModal}
+          ENSName={ENSName}
           pendingTransactions={pending}
           confirmedTransactions={confirmed}
         />

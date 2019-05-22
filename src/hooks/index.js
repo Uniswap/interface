@@ -1,8 +1,8 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useWeb3Context } from 'web3-react'
 
-import ERC20_ABI from '../abi/erc20'
-import { getContract, getFactoryContract, getExchangeContract } from '../utils'
+import ERC20_ABI from '../constants/abis/erc20'
+import { getContract, getFactoryContract, getExchangeContract, isAddress } from '../utils'
 import copy from 'copy-to-clipboard'
 
 // modified from https://usehooks.com/useDebounce/
@@ -48,6 +48,35 @@ export function useBodyKeyDown(targetKey, onKeyDown, suppressOnKeyDown = false) 
       window.removeEventListener('keydown', downHandler)
     }
   }, [downHandler])
+}
+
+export function useENSName(address) {
+  const { library } = useWeb3Context()
+
+  const [ENSName, setENSNname] = useState()
+
+  useEffect(() => {
+    if (isAddress(address)) {
+      let stale = false
+
+      library.lookupAddress(address).then(name => {
+        if (!stale) {
+          if (name) {
+            setENSNname(name)
+          } else {
+            setENSNname(null)
+          }
+        }
+      })
+
+      return () => {
+        stale = true
+        setENSNname()
+      }
+    }
+  }, [library, address])
+
+  return ENSName
 }
 
 // returns null on errors
