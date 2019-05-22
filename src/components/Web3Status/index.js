@@ -44,17 +44,28 @@ const Identicon = styled.div`
   background-color: ${({ theme }) => theme.silverGray};
 `
 
+const dummyTransactions = [
+  '0x7e2135f689969c0dad026a71e52715bcd915cd9c2542f4cd54bb4530d29850a5',
+  '0x7e2135f689969c0dad026a71e52715bcd915cd9c2542f4cd54bb4530d29850a5',
+  '0x7e2135f689969c0dad026a71e52715bcd915cd9c2542f4cd54bb4530d29850a5',
+  '0x7e2135f689969c0dad026a71e52715bcd915cd9c2542f4cd54bb4530d29850a5'
+]
+
 export default function Web3Status() {
   const { t } = useTranslation()
   const { active, account, connectorName, setConnector } = useWeb3Context()
 
   const allTransactions = useAllTransactions()
-  const pending = Object.keys(allTransactions).filter(hash => !allTransactions[hash].receipt)
-  const confirmed = Object.keys(allTransactions).filter(hash => allTransactions[hash].receipt)
+  // const pending = Object.keys(allTransactions).filter(hash => !allTransactions[hash].receipt)
+  // const confirmed = Object.keys(allTransactions).filter(hash => allTransactions[hash].receipt)
+
+  const pending = dummyTransactions
+  const confirmed = dummyTransactions
 
   const hasPendingTransactions = !!pending.length
 
-  const [walletModalIsOpen, setWalletModalIsOpen] = useState(false)
+  // const [walletModalIsOpen, setWalletModalIsOpen] = useState(false)
+  const [walletModalIsOpen, setWalletModalIsOpen] = useState(true)
   function closeWalletModal() {
     setWalletModalIsOpen(false)
   }

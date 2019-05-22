@@ -31,6 +31,7 @@ const YourAccount = styled.div`
   h5 {
     margin: 0 0 1rem 0;
     font-weight: 400;
+    color: ${props => props.theme.doveGray};
   }
 
   h4 {
@@ -52,6 +53,8 @@ const LowerSection = styled.div`
 
   h5 {
     margin: 0 0 1rem 0;
+    font-weight: 400;
+    color: ${props => props.theme.doveGray};
   }
 
   div {
@@ -65,8 +68,18 @@ const LowerSection = styled.div`
 
 const AccountControl = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
+  min-width: 0;
+  a:hover {
+    text-decoration: underline;
+  }
+  a {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 `
 
 const TransactionWrapper = styled.div`
@@ -74,6 +87,34 @@ const TransactionWrapper = styled.div`
   justify-content: space-between;
   width: 100%;
   margin: 0 0 1rem 0;
+  a {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    max-width: 250px;
+  }
+`
+
+const CopyIcon = styled(Link)`
+  color: ${props => props.theme.silverGray};
+  flex-shrink: 0;
+  margin-right: 1rem;
+  margin-left: 0.5rem;
+  text-decoration: none;
+  :hover {
+    text-decoration: none;
+    color: ${props => props.theme.doveGray};
+  }
+  :active {
+    text-decoration: underline;
+    color: ${props => props.theme.doveGray};
+  }
+  :focus {
+    text-decoration: underline;
+    color: ${props => props.theme.doveGray};
+  }
 `
 
 const TransactionListWrapper = styled.div`
@@ -82,8 +123,17 @@ const TransactionListWrapper = styled.div`
 `
 
 const TransactionStatusWrapper = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap} /* width: 100%; */
+  display: flex;
   align-items: center;
+  min-width: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+const TransactionStatusText = styled.span`
+  margin-left: 0.25rem;
 `
 
 const fadeIn = keyframes`
@@ -96,17 +146,26 @@ const fadeIn = keyframes`
 `
 
 const TransactionState = styled.div`
-  color: ${props => (props.pending ? props.theme.royalBlue : props.theme.connectedGreen)};
   background-color: ${props =>
     props.pending ? transparentize(0.95, props.theme.royalBlue) : transparentize(0.95, props.theme.connectedGreen)};
   border-radius: 1.5rem;
   padding: 0.5rem 0.75rem;
+  font-weight: 500;
+  font-size: 0.75rem;
   border: 1px solid;
   border-color: ${props =>
     props.pending ? transparentize(0.75, props.theme.royalBlue) : transparentize(0.75, props.theme.connectedGreen)};
 
+  a {
+    color: ${props => (props.pending ? props.theme.royalBlue : props.theme.connectedGreen)};
+  }
+
   #pending {
     animation: 2s ${fadeIn} linear infinite;
+  }
+  :hover {
+    border-color: ${props =>
+      props.pending ? transparentize(0, props.theme.royalBlue) : transparentize(0, props.theme.connectedGreen)};
   }
 `
 
@@ -134,35 +193,36 @@ export function Transaction({ hash, pending }) {
   return (
     <TransactionWrapper key={hash}>
       <TransactionStatusWrapper>
-        <Link href={getEtherscanLink(networkId, hash, 'transaction')}>{shortenTransactionHash(hash)} ↗ </Link>
-        <Link onClick={() => copy(hash)}>
+        {/* <Link href={getEtherscanLink(networkId, hash, 'transaction')}>{shortenTransactionHash(hash)} ↗ </Link> */}
+        <Link href={getEtherscanLink(networkId, hash, 'transaction')}>{hash} ↗ </Link>
+
+        <CopyIcon onClick={() => copy(hash)}>
           {isCopied ? (
-            <span>
-              &nbsp;&nbsp;
+            <TransactionStatusText>
               <FontAwesomeIcon icon={faCheckCircle} />
-              &nbsp;Copied
-            </span>
+              <TransactionStatusText>Copied</TransactionStatusText>
+            </TransactionStatusText>
           ) : (
-            <span>
-              &nbsp;&nbsp;
+            <TransactionStatusText>
               <FontAwesomeIcon icon={faCopy} />
-            </span>
+            </TransactionStatusText>
           )}
-        </Link>
+        </CopyIcon>
       </TransactionStatusWrapper>
       {pending ? (
-        <Link href={getEtherscanLink(networkId, hash, 'transaction')}>
-          <TransactionState pending={pending}>
+        <TransactionState pending={pending}>
+          <Link href={getEtherscanLink(networkId, hash, 'transaction')}>
             <FontAwesomeIcon id="pending" icon={faCircleNotch} />
-            &nbsp;&nbsp;Pending
-          </TransactionState>
-        </Link>
+            <TransactionStatusText>Pending</TransactionStatusText>
+          </Link>
+        </TransactionState>
       ) : (
-        <Link href={getEtherscanLink(networkId, hash, 'transaction')}>
-          <TransactionState pending={pending}>
-            <FontAwesomeIcon icon={faCheck} /> &nbsp;Confirmed
-          </TransactionState>
-        </Link>
+        <TransactionState pending={pending}>
+          <Link href={getEtherscanLink(networkId, hash, 'transaction')}>
+            <FontAwesomeIcon icon={faCheck} />
+            <TransactionStatusText>Confirmed</TransactionStatusText>
+          </Link>
+        </TransactionState>
       )}
     </TransactionWrapper>
   )
@@ -183,8 +243,8 @@ export default function WalletModal({ isOpen, onDismiss, pendingTransactions, co
   function renderTransactions(transactions, pending) {
     return (
       <TransactionListWrapper>
-        {transactions.map(hash => {
-          return <Transaction hash={hash} pending={pending} />
+        {transactions.map((hash, i) => {
+          return <Transaction key={i} hash={hash} pending={pending} />
         })}
       </TransactionListWrapper>
     )
@@ -199,23 +259,27 @@ export default function WalletModal({ isOpen, onDismiss, pendingTransactions, co
               <YourAccount>
                 <h5>Your Account</h5>
                 <AccountControl>
-                  <Link href={getEtherscanLink(networkId, account, 'address')}>{shortenAddress(account)} ↗ </Link>
-                  <Link onClick={() => copy(account)}>
+                  {/* <Link href={getEtherscanLink(networkId, account, 'address')}>{shortenAddress(account)} ↗ </Link> */}
+                  <Link href={getEtherscanLink(networkId, account, 'address')}>{account} ↗ </Link>
+
+                  <CopyIcon onClick={() => copy(account)}>
                     {isCopied ? (
-                      <span>
+                      <TransactionStatusText>
                         <FontAwesomeIcon icon={faCheckCircle} />
-                        &nbsp;Copied
-                      </span>
+                        <TransactionStatusText>Copied</TransactionStatusText>
+                      </TransactionStatusText>
                     ) : (
-                      <FontAwesomeIcon icon={faCopy} />
+                      <TransactionStatusText>
+                        <FontAwesomeIcon icon={faCopy} />
+                      </TransactionStatusText>
                     )}
-                  </Link>
+                  </CopyIcon>
                 </AccountControl>
               </YourAccount>
             </UpperSection>
             {(!!pendingTransactions.length || !!confirmedTransactions.length) && (
               <LowerSection>
-                <h5>Transactions</h5>
+                <h5>Recent Transactions</h5>
                 {renderTransactions(pendingTransactions, true)}
                 {renderTransactions(confirmedTransactions, false)}
               </LowerSection>
