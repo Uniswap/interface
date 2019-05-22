@@ -83,6 +83,10 @@ const Flex = styled.div`
   display: flex;
   justify-content: center;
   padding: 2rem;
+
+  button {
+    max-width: 20rem;
+  }
 `
 
 function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals, invert = false) {

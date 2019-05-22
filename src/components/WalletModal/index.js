@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import styled, { keyframes } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 import { useWeb3Context, Connectors } from 'web3-react'
 import { useCopyClipboard } from '../../hooks'
 
 import Modal from '../Modal'
-import { getEtherscanLink, shortenAddress, shortenTransactionHash } from '../../utils'
+import { getEtherscanLink } from '../../utils'
 import { Button, Link } from '../../theme'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -24,24 +24,19 @@ const Wrapper = styled.div`
 
 const UpperSection = styled.div`
   padding: 2rem;
-  background-color: ${props => props.theme.concreteGray};
+  background-color: ${({ theme }) => theme.concreteGray};
 `
 
 const YourAccount = styled.div`
   h5 {
     margin: 0 0 1rem 0;
     font-weight: 400;
-    color: ${props => props.theme.doveGray};
+    color: ${({ theme }) => theme.doveGray};
   }
 
   h4 {
     margin: 0;
     font-weight: 500;
-  }
-
-  h4 a {
-    color: blue;
-    text-decoration: none;
   }
 `
 
@@ -54,11 +49,7 @@ const LowerSection = styled.div`
   h5 {
     margin: 0 0 1rem 0;
     font-weight: 400;
-    color: ${props => props.theme.doveGray};
-  }
-
-  div {
-    /* margin: 0 0 1rem 0; */
+    color: ${({ theme }) => theme.doveGray};
   }
 
   div:last-child {
@@ -68,12 +59,22 @@ const LowerSection = styled.div`
 
 const AccountControl = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
-  /* justify-content: space-between; */
   align-items: center;
   min-width: 0;
+  
+  ${({ hasENS, isENS }) =>
+    hasENS &&
+    isENS &&
+    css`
+      margin-bottom: 0.75rem;
+    `}
+  font-weight: ${({ hasENS, isENS }) => (hasENS ? (isENS ? css`500` : css`400`) : css`500`)};
+  font-size: ${({ hasENS, isENS }) => (hasENS ? (isENS ? css`1rem` : css`0.8rem`) : css`1rem`)};
+
   a:hover {
     text-decoration: underline;
   }
+
   a {
     min-width: 0;
     overflow: hidden;
@@ -98,22 +99,16 @@ const TransactionWrapper = styled.div`
 `
 
 const CopyIcon = styled(Link)`
-  color: ${props => props.theme.silverGray};
+  color: ${({ theme }) => theme.silverGray};
   flex-shrink: 0;
   margin-right: 1rem;
   margin-left: 0.5rem;
   text-decoration: none;
-  :hover {
-    text-decoration: none;
-    color: ${props => props.theme.doveGray};
-  }
-  :active {
-    text-decoration: underline;
-    color: ${props => props.theme.doveGray};
-  }
+  :hover,
+  :active,
   :focus {
-    text-decoration: underline;
-    color: ${props => props.theme.doveGray};
+    text-decoration: none;
+    color: ${({ theme }) => theme.doveGray};
   }
 `
 
@@ -136,37 +131,37 @@ const TransactionStatusText = styled.span`
   margin-left: 0.25rem;
 `
 
-const fadeIn = keyframes`
-  from{
-        transform: rotate(0deg);
-    }
-    to{
-        transform: rotate(360deg);
-    }
+const rotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 `
 
 const TransactionState = styled.div`
-  background-color: ${props =>
-    props.pending ? transparentize(0.95, props.theme.royalBlue) : transparentize(0.95, props.theme.connectedGreen)};
+  background-color: ${({ pending, theme }) =>
+    pending ? transparentize(0.95, theme.royalBlue) : transparentize(0.95, theme.connectedGreen)};
   border-radius: 1.5rem;
   padding: 0.5rem 0.75rem;
   font-weight: 500;
   font-size: 0.75rem;
   border: 1px solid;
-  border-color: ${props =>
-    props.pending ? transparentize(0.75, props.theme.royalBlue) : transparentize(0.75, props.theme.connectedGreen)};
-
-  a {
-    color: ${props => (props.pending ? props.theme.royalBlue : props.theme.connectedGreen)};
-  }
+  border-color: ${({ pending, theme }) =>
+    pending ? transparentize(0.75, theme.royalBlue) : transparentize(0.75, theme.connectedGreen)};
 
   #pending {
-    animation: 2s ${fadeIn} linear infinite;
+    animation: 2s ${rotate} linear infinite;
   }
   :hover {
-    border-color: ${props =>
-      props.pending ? transparentize(0, props.theme.royalBlue) : transparentize(0, props.theme.connectedGreen)};
+    border-color: ${({ pending, theme }) =>
+      pending ? transparentize(0, theme.royalBlue) : transparentize(0, theme.connectedGreen)};
   }
+`
+
+const StyledLink = styled(Link)`
+  color: ${({ hasENS, isENS, theme }) => (hasENS ? (isENS ? theme.royalBlue : theme.doveGray) : theme.royalBlue)};
 `
 
 function getErrorMessage(event) {
@@ -186,6 +181,12 @@ function getErrorMessage(event) {
   }
 }
 
+const ButtonWrapper = styled.div`
+  a {
+    color: ${({ pending, theme }) => (pending ? theme.royalBlue : theme.connectedGreen)};
+  }
+`
+
 export function Transaction({ hash, pending }) {
   const { networkId } = useWeb3Context()
   const [isCopied, copy] = useCopyClipboard()
@@ -193,7 +194,6 @@ export function Transaction({ hash, pending }) {
   return (
     <TransactionWrapper key={hash}>
       <TransactionStatusWrapper>
-        {/* <Link href={getEtherscanLink(networkId, hash, 'transaction')}>{shortenTransactionHash(hash)} ↗ </Link> */}
         <Link href={getEtherscanLink(networkId, hash, 'transaction')}>{hash} ↗ </Link>
 
         <CopyIcon onClick={() => copy(hash)}>
@@ -210,28 +210,33 @@ export function Transaction({ hash, pending }) {
         </CopyIcon>
       </TransactionStatusWrapper>
       {pending ? (
-        <TransactionState pending={pending}>
+        <ButtonWrapper pending={pending}>
           <Link href={getEtherscanLink(networkId, hash, 'transaction')}>
-            <FontAwesomeIcon id="pending" icon={faCircleNotch} />
-            <TransactionStatusText>Pending</TransactionStatusText>
+            <TransactionState pending={pending}>
+              <FontAwesomeIcon id="pending" icon={faCircleNotch} />
+              <TransactionStatusText>Pending</TransactionStatusText>
+            </TransactionState>
           </Link>
-        </TransactionState>
+        </ButtonWrapper>
       ) : (
-        <TransactionState pending={pending}>
+        <ButtonWrapper pending={pending}>
           <Link href={getEtherscanLink(networkId, hash, 'transaction')}>
-            <FontAwesomeIcon icon={faCheck} />
-            <TransactionStatusText>Confirmed</TransactionStatusText>
+            <TransactionState pending={pending}>
+              <FontAwesomeIcon icon={faCheck} />
+              <TransactionStatusText>Confirmed</TransactionStatusText>
+            </TransactionState>
           </Link>
-        </TransactionState>
+        </ButtonWrapper>
       )}
     </TransactionWrapper>
   )
 }
 
-export default function WalletModal({ isOpen, onDismiss, pendingTransactions, confirmedTransactions }) {
+export default function WalletModal({ isOpen, onDismiss, pendingTransactions, confirmedTransactions, ENSName }) {
   const { account, networkId, setConnector } = useWeb3Context()
   const [activationError, setActivationError] = useState()
-  const [isCopied, copy] = useCopyClipboard()
+  const [isENSNameCopied, copyENSName] = useCopyClipboard()
+  const [isAddressCopied, copyAddress] = useCopyClipboard()
 
   function activateInjected() {
     setActivationError()
@@ -258,12 +263,34 @@ export default function WalletModal({ isOpen, onDismiss, pendingTransactions, co
             <UpperSection>
               <YourAccount>
                 <h5>Your Account</h5>
-                <AccountControl>
-                  {/* <Link href={getEtherscanLink(networkId, account, 'address')}>{shortenAddress(account)} ↗ </Link> */}
-                  <Link href={getEtherscanLink(networkId, account, 'address')}>{account} ↗ </Link>
+                {ENSName && (
+                  <AccountControl hasENS={!!ENSName} isENS={true}>
+                    <StyledLink hasENS={!!ENSName} isENS={true} href={getEtherscanLink(networkId, ENSName, 'address')}>
+                      {ENSName} ↗{' '}
+                    </StyledLink>
 
-                  <CopyIcon onClick={() => copy(account)}>
-                    {isCopied ? (
+                    <CopyIcon onClick={() => copyENSName(ENSName)}>
+                      {isENSNameCopied ? (
+                        <TransactionStatusText>
+                          <FontAwesomeIcon icon={faCheckCircle} />
+                          <TransactionStatusText>Copied</TransactionStatusText>
+                        </TransactionStatusText>
+                      ) : (
+                        <TransactionStatusText>
+                          <FontAwesomeIcon icon={faCopy} />
+                        </TransactionStatusText>
+                      )}
+                    </CopyIcon>
+                  </AccountControl>
+                )}
+
+                <AccountControl hasENS={!!ENSName} isENS={false}>
+                  <StyledLink hasENS={!!ENSName} isENS={false} href={getEtherscanLink(networkId, account, 'address')}>
+                    {account} ↗{' '}
+                  </StyledLink>
+
+                  <CopyIcon onClick={() => copyAddress(account)}>
+                    {isAddressCopied ? (
                       <TransactionStatusText>
                         <FontAwesomeIcon icon={faCheckCircle} />
                         <TransactionStatusText>Copied</TransactionStatusText>

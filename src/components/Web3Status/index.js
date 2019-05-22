@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
 import Jazzicon from 'jazzicon'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons'
 
 import WalletModal from '../WalletModal'
 import { ReactComponent as _Spinner } from '../../assets/images/spinner.svg'
@@ -25,10 +27,22 @@ const Web3StatusWrapper = styled.button`
   user-select: none;
 `
 
-const Spinner = styled(_Spinner)`
-  height: 100%;
-  width: 1rem;
-  stroke: ${({ theme }) => theme.royalBlue};
+const rotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`
+const Spinner = styled.div`
+  svg {
+    animation: 2s ${rotate} linear infinite;
+
+    path {
+      color: ${({ theme }) => theme.royalBlue};
+    }
+  }
 `
 
 const Text = styled.p`
@@ -45,13 +59,6 @@ const Identicon = styled.div`
   background-color: ${({ theme }) => theme.silverGray};
 `
 
-const dummyTransactions = [
-  '0x7e2135f689969c0dad026a71e52715bcd915cd9c2542f4cd54bb4530d29850a5',
-  '0x7e2135f689969c0dad026a71e52715bcd915cd9c2542f4cd54bb4530d29850a5',
-  '0x7e2135f689969c0dad026a71e52715bcd915cd9c2542f4cd54bb4530d29850a5',
-  '0x7e2135f689969c0dad026a71e52715bcd915cd9c2542f4cd54bb4530d29850a5'
-]
-
 export default function Web3Status() {
   const { t } = useTranslation()
   const { active, account, connectorName, setConnector } = useWeb3Context()
@@ -59,16 +66,12 @@ export default function Web3Status() {
   const ENSName = useENSName(account)
 
   const allTransactions = useAllTransactions()
-  // const pending = Object.keys(allTransactions).filter(hash => !allTransactions[hash].receipt)
-  // const confirmed = Object.keys(allTransactions).filter(hash => allTransactions[hash].receipt)
-
-  const pending = dummyTransactions
-  const confirmed = dummyTransactions
+  const pending = Object.keys(allTransactions).filter(hash => !allTransactions[hash].receipt)
+  const confirmed = Object.keys(allTransactions).filter(hash => allTransactions[hash].receipt)
 
   const hasPendingTransactions = !!pending.length
 
-  // const [walletModalIsOpen, setWalletModalIsOpen] = useState(false)
-  const [walletModalIsOpen, setWalletModalIsOpen] = useState(true)
+  const [walletModalIsOpen, setWalletModalIsOpen] = useState(false)
   function closeWalletModal() {
     setWalletModalIsOpen(false)
   }
@@ -96,14 +99,14 @@ export default function Web3Status() {
     active && (
       <>
         <Web3StatusWrapper onClick={onClick} pending={hasPendingTransactions}>
-          {hasPendingTransactions ? (
-            <>
-              <Spinner />
-              <Text>{t('pending')}</Text>
-            </>
-          ) : (
+          <>
+            {hasPendingTransactions && (
+              <Spinner>
+                <FontAwesomeIcon icon={faCircleNotch} />
+              </Spinner>
+            )}
             <Text>{account ? ENSName || shortenAddress(account) : t('disconnected')}</Text>
-          )}
+          </>
           <Identicon ref={ref} />
         </Web3StatusWrapper>
         <WalletModal

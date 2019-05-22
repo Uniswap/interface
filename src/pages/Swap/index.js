@@ -75,6 +75,10 @@ const Flex = styled.div`
   display: flex;
   justify-content: center;
   padding: 2rem;
+
+  button {
+    max-width: 20rem;
+  }
 `
 
 function calculateSlippageBounds(value, token = false) {
@@ -722,7 +726,7 @@ export default function Swap() {
       </OversizedPanel>
       {renderSummary()}
       <Flex>
-        <Button disabled={!isValid} onClick={onSwap} fullWidth>
+        <Button disabled={!isValid} onClick={onSwap}>
           {t('swap')}
         </Button>
       </Flex>
