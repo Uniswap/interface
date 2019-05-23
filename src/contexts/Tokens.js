@@ -206,6 +206,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x48B04d2A05B6B604d8d5223Fd1984f191DED51af'
     },
+    '0xf970b8e36e23f7fc3fd752eea86f8be8d83375a6': {
+      [NAME]: 'Ripio Credit Network',
+      [SYMBOL]: 'RCN',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0xf970b8e36e23f7fc3fd752eea86f8be8d83375a6'
+    },
     '0x168296bb09e24A88805CB9c33356536B980D3fC5': {
       [NAME]: 'RHOC',
       [SYMBOL]: 'RHOC',
