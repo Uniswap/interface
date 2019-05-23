@@ -21,6 +21,7 @@ const BodyWrapper = styled.div`
   width: 100%;
   justify-content: center;
   flex-grow: 1;
+  flex-basis: 0;
   overflow: auto;
 `
 

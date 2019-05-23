@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { lighten, darken, transparentize } from 'polished'
+import { lighten, darken } from 'polished'
 
 export const Button = styled.button`
   padding: 1rem 2rem 1rem 2rem;
@@ -63,8 +63,6 @@ export const BorderlessInput = styled.input`
   ::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
-
-  -webkit-tap-highlight-color: ${({ theme }) => transparentize(1, theme.white)};
 
   ::placeholder {
     color: ${({ theme }) => theme.mercuryGray};
