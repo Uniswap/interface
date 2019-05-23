@@ -47,13 +47,13 @@ const LowerSection = styled.div`
   overflow: auto;
 
   h5 {
-    margin: 0 0 1rem 0;
+    margin: 0;
     font-weight: 400;
     color: ${({ theme }) => theme.doveGray};
   }
 
   div:last-child {
-    margin: 0;
+    /* margin-bottom: 0; */
   }
 `
 
@@ -83,21 +83,6 @@ const AccountControl = styled.div`
   }
 `
 
-const TransactionWrapper = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  justify-content: space-between;
-  width: 100%;
-  margin: 0 0 1rem 0;
-  a {
-    flex: 1 1 auto;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    min-width: 0;
-    max-width: 250px;
-  }
-`
-
 const CopyIcon = styled(Link)`
   color: ${({ theme }) => theme.silverGray};
   flex-shrink: 0;
@@ -113,8 +98,7 @@ const CopyIcon = styled(Link)`
 `
 
 const TransactionListWrapper = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap}
-  margin: 0 0 1rem 0;
+  ${({ theme }) => theme.flexColumnNoWrap} /* margin: 0 0 1rem 0; */
 `
 
 const TransactionStatusWrapper = styled.div`
@@ -125,6 +109,21 @@ const TransactionStatusWrapper = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+`
+
+const TransactionWrapper = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 0.75rem;
+  a {
+    /* flex: 1 1 auto; */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    max-width: 250px;
+  }
 `
 
 const TransactionStatusText = styled.span`
@@ -309,11 +308,15 @@ export default function WalletModal({ isOpen, onDismiss, pendingTransactions, co
                 </AccountControl>
               </YourAccount>
             </UpperSection>
-            {(!!pendingTransactions.length || !!confirmedTransactions.length) && (
+            {!!pendingTransactions.length || !!confirmedTransactions.length ? (
               <LowerSection>
                 <h5>Recent Transactions</h5>
                 {renderTransactions(pendingTransactions, true)}
                 {renderTransactions(confirmedTransactions, false)}
+              </LowerSection>
+            ) : (
+              <LowerSection>
+                <h5>Your transactions will appear herechrome...</h5>
               </LowerSection>
             )}
           </>
