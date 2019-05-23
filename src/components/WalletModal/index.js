@@ -7,8 +7,7 @@ import Copy from './Copy'
 import Modal from '../Modal'
 
 import { getEtherscanLink } from '../../utils'
-import { Button, Link } from '../../theme'
-
+import { Link } from '../../theme'
 const { InjectedConnector } = Connectors
 
 const Wrapper = styled.div`
@@ -21,6 +20,22 @@ const Wrapper = styled.div`
 const UpperSection = styled.div`
   padding: 2rem;
   background-color: ${({ theme }) => theme.concreteGray};
+
+  h5 {
+    margin: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  h5:last-child {
+    margin-bottom: 0px;
+  }
+
+  h4 {
+    margin-top: 0;
+    font-weight: 500;
+  }
 `
 
 const YourAccount = styled.div`
@@ -108,12 +123,12 @@ export default function WalletModal({ isOpen, onDismiss, pendingTransactions, co
   const { account, networkId, setConnector } = useWeb3Context()
   const [activationError, setActivationError] = useState()
 
-  function activateInjected() {
-    setActivationError()
-    setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
-      setActivationError(error)
-    })
-  }
+  // function activateInjected() {
+  //   setActivationError()
+  //   setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
+  //     setActivationError(error)
+  //   })
+  // }
 
   function renderTransactions(transactions, pending) {
     return (
@@ -172,14 +187,21 @@ export default function WalletModal({ isOpen, onDismiss, pendingTransactions, co
         ) : (
           <>
             <UpperSection>
-              <h5>No Ethereum wallet found</h5>
-              <h5>Please enable MetaMask or visit this page in a Web3 browser to interact with Uniswap.</h5>
+              <h4>No Ethereum account found</h4>
+              <h5>Please visit this page in a Web3 enabled browser.</h5>
               <h5>
-                <Link>Learn more</Link>
+                <Link href={'https://ethereum.org/use/#_3-what-is-a-wallet-and-which-one-should-i-use'}>
+                  Learn more ↗
+                </Link>
               </h5>
-              {activationError ? <p>{getErrorMessage(activationError)}</p> : ''}
             </UpperSection>
-            <LowerSection>{activationError ? <p>{getErrorMessage(activationError)}</p> : ''}</LowerSection>
+            {activationError ? (
+              <LowerSection>
+                <p>{getErrorMessage(activationError)}</p>
+              </LowerSection>
+            ) : (
+              ''
+            )}
           </>
         )}
       </Wrapper>

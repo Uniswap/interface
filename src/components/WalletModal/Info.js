@@ -90,7 +90,7 @@ const ButtonWrapper = styled.div`
   }
 `
 
-export default function Transaction({ hash, pending }) {
+export default function Info({ hash, pending }) {
   const { networkId } = useWeb3Context()
   const [isCopied, copy] = useCopyClipboard()
 

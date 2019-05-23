@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
-import styled, { keyframes } from 'styled-components'
+import styled, { keyframes, css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
 import Jazzicon from 'jazzicon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleNotch } from '@fortawesome/free-solid-svg-icons'
+import { faCircleNotch, faWallet } from '@fortawesome/free-solid-svg-icons'
+
 import { darken } from 'polished'
 
 import WalletModal from '../WalletModal'
@@ -18,19 +19,41 @@ const Web3StatusWrapper = styled.button`
   align-items: center;
   padding: 0.5rem;
   border-radius: 2rem;
-  background-color: ${({ pending, theme }) => (pending ? theme.zumthorBlue : theme.white)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.royalBlue : theme.mercuryGray)};
-  color: ${({ pending, theme }) => (pending ? theme.royalBlue : theme.doveGray)};
-  font-weight: 400;
+  ${({ hasENS, isENS }) =>
+    hasENS &&
+    isENS &&
+    css`
+      margin-bottom: 0.75rem;
+    `}
+
+  ${({ account }) =>
+    account
+      ? css`
+          background-color: ${({ pending, theme }) => (pending ? theme.zumthorBlue : theme.white)};
+          color: ${({ pending, theme }) => (pending ? theme.royalBlue : theme.doveGray)};
+          border: 1px solid ${({ pending, theme }) => (pending ? theme.royalBlue : theme.mercuryGray)};
+          font-weight: 400;
+          :hover {
+            border: 1px solid
+              ${({ pending, theme }) => (pending ? darken(0.1, theme.royalBlue) : darken(0.1, theme.mercuryGray))};
+          }
+        `
+      : css`
+          background-color: ${({ theme }) => theme.royalBlue};
+          color: ${({ theme }) => theme.white};
+          border: 1px solid ${({ theme }) => theme.royalBlue};
+          font-weight: 500;
+          font-size: 1rem;
+          :hover {
+            background-color: ${({ theme }) => darken(0.1, theme.royalBlue)};
+          }
+        `}
+
   box-sizing: border-box;
   cursor: pointer;
   user-select: none;
   :focus {
     outline: none;
-  }
-  :hover {
-    border: 1px solid
-      ${({ pending, theme }) => (pending ? darken(0.1, theme.royalBlue) : darken(0.1, theme.mercuryGray))};
   }
 `
 
@@ -56,7 +79,7 @@ const Text = styled.p`
   flex: 1 1 auto;
   overflow: hidden;
   margin: 0 0.5rem 0 0.25rem;
-  font-size: 0.75rem;
+  font-size: 0.83rem;
 `
 
 const Identicon = styled.div`
@@ -64,6 +87,11 @@ const Identicon = styled.div`
   width: 1rem;
   border-radius: 1.125rem;
   background-color: ${({ theme }) => theme.silverGray};
+`
+
+const WalletIcon = styled(FontAwesomeIcon)`
+  margin-left: 0.25rem;
+  margin-right: 0.5rem;
 `
 
 export default function Web3Status() {
@@ -112,16 +140,16 @@ export default function Web3Status() {
   return (
     active && (
       <>
-        <Web3StatusWrapper onClick={onClick} pending={hasPendingTransactions}>
+        <Web3StatusWrapper onClick={onClick} pending={hasPendingTransactions} account={account}>
           <>
             {hasPendingTransactions && (
               <Spinner>
                 <FontAwesomeIcon icon={faCircleNotch} />
               </Spinner>
             )}
-            <Text>{account ? ENSName || shortenAddress(account) : t('disconnected')}</Text>
+            <Text>{account ? ENSName || shortenAddress(account) : t('Connect')}</Text>
+            {account ? <Identicon ref={ref} /> : <WalletIcon icon={faWallet} size={'sm'} />}
           </>
-          <Identicon ref={ref} />
         </Web3StatusWrapper>
         <WalletModal
           isOpen={walletModalIsOpen}

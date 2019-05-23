@@ -1,30 +1,15 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
 import { useWeb3Context } from 'web3-react'
-import { useCopyClipboard } from '../../hooks'
+import Copy from './Copy'
 
 import { getEtherscanLink } from '../../utils'
 import { Link } from '../../theme'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCopy, faCheckCircle } from '@fortawesome/free-regular-svg-icons'
 import { faCircleNotch, faCheck } from '@fortawesome/free-solid-svg-icons'
 
 import { transparentize } from 'polished'
-
-const CopyIcon = styled(Link)`
-  color: ${({ theme }) => theme.silverGray};
-  flex-shrink: 0;
-  margin-right: 1rem;
-  margin-left: 0.5rem;
-  text-decoration: none;
-  :hover,
-  :active,
-  :focus {
-    text-decoration: none;
-    color: ${({ theme }) => theme.doveGray};
-  }
-`
 
 const TransactionStatusWrapper = styled.div`
   display: flex;
@@ -92,25 +77,13 @@ const ButtonWrapper = styled.div`
 
 export default function Transaction({ hash, pending }) {
   const { networkId } = useWeb3Context()
-  const [isCopied, copy] = useCopyClipboard()
 
   return (
     <TransactionWrapper key={hash}>
       <TransactionStatusWrapper>
         <Link href={getEtherscanLink(networkId, hash, 'transaction')}>{hash} ↗ </Link>
 
-        <CopyIcon onClick={() => copy(hash)}>
-          {isCopied ? (
-            <TransactionStatusText>
-              <FontAwesomeIcon icon={faCheckCircle} />
-              <TransactionStatusText>Copied</TransactionStatusText>
-            </TransactionStatusText>
-          ) : (
-            <TransactionStatusText>
-              <FontAwesomeIcon icon={faCopy} />
-            </TransactionStatusText>
-          )}
-        </CopyIcon>
+        <Copy toCopy={hash} />
       </TransactionStatusWrapper>
       {pending ? (
         <ButtonWrapper pending={pending}>
