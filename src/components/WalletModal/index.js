@@ -1,18 +1,13 @@
 import React, { useState } from 'react'
-import styled, { css, keyframes } from 'styled-components'
+import styled, { css } from 'styled-components'
 import { useWeb3Context, Connectors } from 'web3-react'
-import { useCopyClipboard } from '../../hooks'
 
+import Transaction from './Transaction'
+import Copy from './Copy'
 import Modal from '../Modal'
+
 import { getEtherscanLink } from '../../utils'
-import { Button, Link } from '../../theme'
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCopy, faCheckCircle } from '@fortawesome/free-regular-svg-icons'
-import { faCircleNotch, faCheck } from '@fortawesome/free-solid-svg-icons'
-
-import { transparentize } from 'polished'
-
+import { Link } from '../../theme'
 const { InjectedConnector } = Connectors
 
 const Wrapper = styled.div`
@@ -25,6 +20,22 @@ const Wrapper = styled.div`
 const UpperSection = styled.div`
   padding: 2rem;
   background-color: ${({ theme }) => theme.concreteGray};
+
+  h5 {
+    margin: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  h5:last-child {
+    margin-bottom: 0px;
+  }
+
+  h4 {
+    margin-top: 0;
+    font-weight: 500;
+  }
 `
 
 const YourAccount = styled.div`
@@ -83,80 +94,8 @@ const AccountControl = styled.div`
   }
 `
 
-const CopyIcon = styled(Link)`
-  color: ${({ theme }) => theme.silverGray};
-  flex-shrink: 0;
-  margin-right: 1rem;
-  margin-left: 0.5rem;
-  text-decoration: none;
-  :hover,
-  :active,
-  :focus {
-    text-decoration: none;
-    color: ${({ theme }) => theme.doveGray};
-  }
-`
-
 const TransactionListWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap} /* margin: 0 0 1rem 0; */
-`
-
-const TransactionStatusWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  min-width: 12px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-`
-
-const TransactionWrapper = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  justify-content: space-between;
-  width: 100%;
-  margin-top: 0.75rem;
-  a {
-    /* flex: 1 1 auto; */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    min-width: 0;
-    max-width: 250px;
-  }
-`
-
-const TransactionStatusText = styled.span`
-  margin-left: 0.25rem;
-`
-
-const rotate = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-`
-
-const TransactionState = styled.div`
-  background-color: ${({ pending, theme }) =>
-    pending ? transparentize(0.95, theme.royalBlue) : transparentize(0.95, theme.connectedGreen)};
-  border-radius: 1.5rem;
-  padding: 0.5rem 0.75rem;
-  font-weight: 500;
-  font-size: 0.75rem;
-  border: 1px solid;
-  border-color: ${({ pending, theme }) =>
-    pending ? transparentize(0.75, theme.royalBlue) : transparentize(0.75, theme.connectedGreen)};
-
-  #pending {
-    animation: 2s ${rotate} linear infinite;
-  }
-  :hover {
-    border-color: ${({ pending, theme }) =>
-      pending ? transparentize(0, theme.royalBlue) : transparentize(0, theme.connectedGreen)};
-  }
 `
 
 const StyledLink = styled(Link)`
@@ -180,69 +119,16 @@ function getErrorMessage(event) {
   }
 }
 
-const ButtonWrapper = styled.div`
-  a {
-    color: ${({ pending, theme }) => (pending ? theme.royalBlue : theme.connectedGreen)};
-  }
-`
-
-export function Transaction({ hash, pending }) {
-  const { networkId } = useWeb3Context()
-  const [isCopied, copy] = useCopyClipboard()
-
-  return (
-    <TransactionWrapper key={hash}>
-      <TransactionStatusWrapper>
-        <Link href={getEtherscanLink(networkId, hash, 'transaction')}>{hash} ↗ </Link>
-
-        <CopyIcon onClick={() => copy(hash)}>
-          {isCopied ? (
-            <TransactionStatusText>
-              <FontAwesomeIcon icon={faCheckCircle} />
-              <TransactionStatusText>Copied</TransactionStatusText>
-            </TransactionStatusText>
-          ) : (
-            <TransactionStatusText>
-              <FontAwesomeIcon icon={faCopy} />
-            </TransactionStatusText>
-          )}
-        </CopyIcon>
-      </TransactionStatusWrapper>
-      {pending ? (
-        <ButtonWrapper pending={pending}>
-          <Link href={getEtherscanLink(networkId, hash, 'transaction')}>
-            <TransactionState pending={pending}>
-              <FontAwesomeIcon id="pending" icon={faCircleNotch} />
-              <TransactionStatusText>Pending</TransactionStatusText>
-            </TransactionState>
-          </Link>
-        </ButtonWrapper>
-      ) : (
-        <ButtonWrapper pending={pending}>
-          <Link href={getEtherscanLink(networkId, hash, 'transaction')}>
-            <TransactionState pending={pending}>
-              <FontAwesomeIcon icon={faCheck} />
-              <TransactionStatusText>Confirmed</TransactionStatusText>
-            </TransactionState>
-          </Link>
-        </ButtonWrapper>
-      )}
-    </TransactionWrapper>
-  )
-}
-
 export default function WalletModal({ isOpen, onDismiss, pendingTransactions, confirmedTransactions, ENSName }) {
   const { account, networkId, setConnector } = useWeb3Context()
   const [activationError, setActivationError] = useState()
-  const [isENSNameCopied, copyENSName] = useCopyClipboard()
-  const [isAddressCopied, copyAddress] = useCopyClipboard()
 
-  function activateInjected() {
-    setActivationError()
-    setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
-      setActivationError(error)
-    })
-  }
+  // function activateInjected() {
+  //   setActivationError()
+  //   setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
+  //     setActivationError(error)
+  //   })
+  // }
 
   function renderTransactions(transactions, pending) {
     return (
@@ -273,18 +159,7 @@ export default function WalletModal({ isOpen, onDismiss, pendingTransactions, co
                       {ENSName} ↗{' '}
                     </StyledLink>
 
-                    <CopyIcon onClick={() => copyENSName(ENSName)}>
-                      {isENSNameCopied ? (
-                        <TransactionStatusText>
-                          <FontAwesomeIcon icon={faCheckCircle} />
-                          <TransactionStatusText>Copied</TransactionStatusText>
-                        </TransactionStatusText>
-                      ) : (
-                        <TransactionStatusText>
-                          <FontAwesomeIcon icon={faCopy} />
-                        </TransactionStatusText>
-                      )}
-                    </CopyIcon>
+                    <Copy toCopy={ENSName} />
                   </AccountControl>
                 )}
 
@@ -293,18 +168,7 @@ export default function WalletModal({ isOpen, onDismiss, pendingTransactions, co
                     {account} ↗{' '}
                   </StyledLink>
 
-                  <CopyIcon onClick={() => copyAddress(account)}>
-                    {isAddressCopied ? (
-                      <TransactionStatusText>
-                        <FontAwesomeIcon icon={faCheckCircle} />
-                        <TransactionStatusText>Copied</TransactionStatusText>
-                      </TransactionStatusText>
-                    ) : (
-                      <TransactionStatusText>
-                        <FontAwesomeIcon icon={faCopy} />
-                      </TransactionStatusText>
-                    )}
-                  </CopyIcon>
+                  <Copy toCopy={account} />
                 </AccountControl>
               </YourAccount>
             </UpperSection>
@@ -316,15 +180,29 @@ export default function WalletModal({ isOpen, onDismiss, pendingTransactions, co
               </LowerSection>
             ) : (
               <LowerSection>
-                <h5>Your transactions will appear herechrome...</h5>
+                <h5>Your transactions will appear here...</h5>
               </LowerSection>
             )}
           </>
         ) : (
-          <UpperSection>
-            <Button onClick={activateInjected}>Activate Browser Wallet</Button>
-            {activationError ? <p>{getErrorMessage(activationError)}</p> : ''}
-          </UpperSection>
+          <>
+            <UpperSection>
+              <h4>No Ethereum account found</h4>
+              <h5>Please visit this page in a Web3 enabled browser.</h5>
+              <h5>
+                <Link href={'https://ethereum.org/use/#_3-what-is-a-wallet-and-which-one-should-i-use'}>
+                  Learn more ↗
+                </Link>
+              </h5>
+            </UpperSection>
+            {activationError ? (
+              <LowerSection>
+                <p>{getErrorMessage(activationError)}</p>
+              </LowerSection>
+            ) : (
+              ''
+            )}
+          </>
         )}
       </Wrapper>
     </Modal>
