@@ -46,6 +46,11 @@ const Input = styled(BorderlessInput)`
   color: ${({ error, theme }) => error && theme.salmonRed};
 `
 
+const StyledBorderlessInput = styled(BorderlessInput)`
+  min-height: 1.75rem;
+  flex-shrink: 0;
+`
+
 const CurrencySelect = styled.button`
   align-items: center;
   font-size: 1rem;
@@ -186,7 +191,6 @@ const StyledTokenName = styled.span`
 `
 
 const StyledTokenLogo = styled(TokenLogo)`
-  object-fit: contain;
   border-radius: 1rem;
 `
 
@@ -430,7 +434,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
     <Modal isOpen={isOpen} onDismiss={onDismiss} initialFocusRef={inputRef}>
       <TokenModal>
         <SearchContainer>
-          <BorderlessInput ref={inputRef} type="text" placeholder={t('searchOrPaste')} onChange={onInput} />
+          <StyledBorderlessInput ref={inputRef} type="text" placeholder={t('searchOrPaste')} onChange={onInput} />
           <img src={SearchIcon} alt="search" />
         </SearchContainer>
         <TokenList>{renderTokenList()}</TokenList>
