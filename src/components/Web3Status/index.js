@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
 import Jazzicon from 'jazzicon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleNotch, faWallet } from '@fortawesome/free-solid-svg-icons'
+import { faCircleNotch, faArrowRight, faChevronRight, faPlusCircle, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 
 import { darken } from 'polished'
 
@@ -15,6 +16,7 @@ import { useENSName } from '../../hooks'
 
 const Web3StatusWrapper = styled.button`
   ${({ theme }) => theme.flexRowNoWrap}
+  width: 100%;
   font-size: 0.9rem;
   align-items: center;
   padding: 0.5rem;
@@ -78,6 +80,9 @@ const Spinner = styled.div`
 const Text = styled.p`
   flex: 1 1 auto;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
   margin: 0 0.5rem 0 0.25rem;
   font-size: 0.83rem;
 `
@@ -148,7 +153,7 @@ export default function Web3Status() {
               </Spinner>
             )}
             <Text>{account ? ENSName || shortenAddress(account) : t('Connect')}</Text>
-            {account ? <Identicon ref={ref} /> : <WalletIcon icon={faWallet} size={'sm'} />}
+            {account ? <Identicon ref={ref} /> : <WalletIcon icon={faEthereum} size={'sm'} />}
           </>
         </Web3StatusWrapper>
         <WalletModal

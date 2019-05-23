@@ -7,6 +7,8 @@ import { darken } from 'polished'
 
 const HeaderElement = styled.div`
   margin: 1.25rem;
+  display: flex;
+  min-width: 0;
 `
 
 const Title = styled.div`
