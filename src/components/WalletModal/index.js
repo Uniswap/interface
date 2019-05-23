@@ -255,8 +255,13 @@ export default function WalletModal({ isOpen, onDismiss, pendingTransactions, co
     )
   }
 
+  function wrappedOnDismiss() {
+    setActivationError()
+    onDismiss()
+  }
+
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} minHeight={null}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} minHeight={null}>
       <Wrapper>
         {account ? (
           <>

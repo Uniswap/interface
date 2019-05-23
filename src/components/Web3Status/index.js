@@ -92,6 +92,13 @@ export default function Web3Status() {
     }
   }
 
+  // if the injected connector is set without an account, unset it
+  useEffect(() => {
+    if (connectorName === 'Injected' && !account) {
+      setConnector('Network')
+    }
+  }, [connectorName, account, setConnector])
+
   const ref = useRef()
   useEffect(() => {
     if (ref.current) {

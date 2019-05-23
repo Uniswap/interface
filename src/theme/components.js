@@ -1,5 +1,5 @@
-import styled, { css } from 'styled-components'
-import { lighten, darken } from 'polished'
+import styled from 'styled-components'
+import { lighten, darken, transparentize } from 'polished'
 
 export const Button = styled.button`
   padding: 1rem 2rem 1rem 2rem;
@@ -12,10 +12,7 @@ export const Button = styled.button`
   background-color: ${({ theme }) => theme.royalBlue};
   color: ${({ theme }) => theme.white};
   transition: background-color 125ms ease-in-out;
-  ${({ fullWidth }) =>
-    css`
-      width: 100%;
-    `}
+  width: 100%;
 
   :hover,
   :focus {
@@ -57,6 +54,17 @@ export const BorderlessInput = styled.input`
   border: none;
   flex: 1 1 auto;
   width: 0;
+
+  [type='number'] {
+    -moz-appearance: textfield;
+  }
+
+  ::-webkit-outer-spin-button,
+  ::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+
+  -webkit-tap-highlight-color: ${({ theme }) => transparentize(1, theme.white)};
 
   ::placeholder {
     color: ${({ theme }) => theme.mercuryGray};

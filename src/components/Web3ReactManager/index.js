@@ -1,32 +1,45 @@
 import React, { useState, useEffect } from 'react'
 import { useWeb3Context, Connectors } from 'web3-react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { ethers } from 'ethers'
 import { useTranslation } from 'react-i18next'
 import { isMobile } from 'react-device-detect'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons'
 
-import { ReactComponent as Spinner } from '../../assets/images/spinner.svg'
 import { getNetworkName } from '../../utils'
 
 const { Connector } = Connectors
 
-const Message = styled.h2`
-  display: flex;
-  align-items: center;
-  height: 100%;
-  margin: -1rem 0 0 0;
-  color: ${({ theme }) => theme.uniswapPink};
-  text-align: center;
-`
-
-const PinkSpinner = styled(Spinner)`
+const MessageWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  width: 5rem;
-  margin: -1rem auto 0 auto;
-  stroke: ${({ theme }) => theme.uniswapPink};
+  height: 20rem;
+`
+
+const Message = styled.h2`
+  color: ${({ theme }) => theme.uniswapPink};
+`
+
+const rotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`
+const Spinner = styled.div`
+  font-size: 4rem;
+
+  svg {
+    animation: 2s ${rotate} linear infinite;
+
+    path {
+      color: ${({ theme }) => theme.uniswapPink};
+    }
+  }
 `
 
 function tryToSetConnector(setConnector, setError) {
@@ -77,12 +90,26 @@ export default function Web3ReactManager({ children }) {
   if (error) {
     if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
       const correctNetwork = getNetworkName(Number(process.env.REACT_APP_NETWORK_ID))
-      return <Message>{`${t('wrongNetwork')}. ${t('switchNetwork', { correctNetwork })}`}</Message>
+      return (
+        <MessageWrapper>
+          <Message>{`${t('wrongNetwork')}. ${t('switchNetwork', { correctNetwork })}.`}</Message>
+        </MessageWrapper>
+      )
     } else {
-      return <Message>{t('unknownError')}</Message>
+      return (
+        <MessageWrapper>
+          <Message>{t('unknownError')}</Message>
+        </MessageWrapper>
+      )
     }
   } else if (!active) {
-    return showLoader ? <PinkSpinner /> : null
+    return showLoader ? (
+      <MessageWrapper>
+        <Spinner>
+          <FontAwesomeIcon icon={faCircleNotch} />
+        </Spinner>
+      </MessageWrapper>
+    ) : null
   } else {
     return children
   }
