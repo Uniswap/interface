@@ -15,7 +15,6 @@ const TransactionStatusWrapper = styled.div`
   display: flex;
   align-items: center;
   min-width: 12px;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

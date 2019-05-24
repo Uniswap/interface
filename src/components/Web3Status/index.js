@@ -1,11 +1,12 @@
 import React, { useReducer, useEffect, useRef } from 'react'
-import styled, { keyframes, css } from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context, Connectors } from 'web3-react'
 import Jazzicon from 'jazzicon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleNotch, faWallet, faPlug } from '@fortawesome/free-solid-svg-icons'
 import { ethers } from 'ethers'
+import { faCircleNotch, faPlug } from '@fortawesome/free-solid-svg-icons'
+import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { darken } from 'polished'
 
 import WalletModal from '../WalletModal'
@@ -17,6 +18,7 @@ const { Connector } = Connectors
 
 const Web3StatusGeneric = styled.button`
   ${({ theme }) => theme.flexRowNoWrap}
+  width: 100%;
   font-size: 0.9rem;
   align-items: center;
   padding: 0.5rem;
@@ -74,6 +76,9 @@ const rotate = keyframes`
 const Text = styled.p`
   flex: 1 1 auto;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
   margin: 0 0.5rem 0 0.25rem;
   font-size: 0.83rem;
 `
@@ -165,6 +170,7 @@ export default function Web3Status() {
     if (connectorName !== 'Injected') {
       if (connectorName === 'Network' && ethereum && ethereum.on && ethereum.removeListener) {
         function tryToActivateInjected() {
+          console.log('event detected!')
           const library = new ethers.providers.Web3Provider(window.ethereum)
           // if calling enable won't pop an approve modal, then try to activate injected...
           library.listAccounts().then(accounts => {
@@ -251,7 +257,7 @@ export default function Web3Status() {
       return (
         <Web3StatusConnect onClick={onClick}>
           <Text>{t('Connect')}</Text>
-          <RightIcon icon={faWallet} size={'sm'} />
+          <RightIcon icon={faEthereum} size={'sm'} />
         </Web3StatusConnect>
       )
     } else {

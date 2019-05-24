@@ -933,6 +933,12 @@
   dependencies:
     "@fortawesome/fontawesome-common-types" "^0.2.18"
 
+"@fortawesome/free-brands-svg-icons@^5.8.2":
+  version "5.8.2"
+  resolved "https://registry.yarnpkg.com/@fortawesome/free-brands-svg-icons/-/free-brands-svg-icons-5.8.2.tgz#e68a509c986d5d197cc5bd9ae8d966eff513468d"
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "^0.2.18"
+
 "@fortawesome/free-regular-svg-icons@^5.8.2":
   version "5.8.2"
   resolved "https://registry.yarnpkg.com/@fortawesome/free-regular-svg-icons/-/free-regular-svg-icons-5.8.2.tgz#f61c603c73695a41bcee9d6f9d44e2ca4829f151"

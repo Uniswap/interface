@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled, { css } from 'styled-components'
-import { useWeb3Context, Connectors } from 'web3-react'
+import { useWeb3Context } from 'web3-react'
 
 import Transaction from './Transaction'
 import Copy from './Copy'
@@ -8,7 +8,6 @@ import Modal from '../Modal'
 
 import { getEtherscanLink } from '../../utils'
 import { Link } from '../../theme'
-const { InjectedConnector } = Connectors
 
 const Wrapper = styled.div`
   margin: 0;
@@ -102,22 +101,22 @@ const StyledLink = styled(Link)`
   color: ${({ hasENS, isENS, theme }) => (hasENS ? (isENS ? theme.royalBlue : theme.doveGray) : theme.royalBlue)};
 `
 
-function getErrorMessage(event) {
-  switch (event.code) {
-    case InjectedConnector.errorCodes.ETHEREUM_ACCESS_DENIED: {
-      return 'Permission Required'
-    }
-    case InjectedConnector.errorCodes.UNLOCK_REQUIRED: {
-      return 'Account Unlock Required'
-    }
-    case InjectedConnector.errorCodes.NO_WEB3: {
-      return 'Not a Web3 Browser'
-    }
-    default: {
-      return 'Connection Error'
-    }
-  }
-}
+// function getErrorMessage(event) {
+//   switch (event.code) {
+//     case InjectedConnector.errorCodes.ETHEREUM_ACCESS_DENIED: {
+//       return 'Permission Required'
+//     }
+//     case InjectedConnector.errorCodes.UNLOCK_REQUIRED: {
+//       return 'Account Unlock Required'
+//     }
+//     case InjectedConnector.errorCodes.NO_WEB3: {
+//       return 'Not a Web3 Browser'
+//     }
+//     default: {
+//       return 'Connection Error'
+//     }
+//   }
+// }
 
 export default function WalletModal({ isOpen, error, onDismiss, pendingTransactions, confirmedTransactions, ENSName }) {
   const { account, networkId } = useWeb3Context()

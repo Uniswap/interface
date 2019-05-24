@@ -190,10 +190,6 @@ const StyledTokenName = styled.span`
   margin: 0 0.25rem 0 0.25rem;
 `
 
-const StyledTokenLogo = styled(TokenLogo)`
-  border-radius: 1rem;
-`
-
 export default function CurrencyInputPanel({
   onValueChange = () => {},
   renderInput,
@@ -287,7 +283,7 @@ export default function CurrencyInputPanel({
           }}
         >
           <Aligner>
-            {selectedTokenAddress ? <StyledTokenLogo address={selectedTokenAddress} /> : null}
+            {selectedTokenAddress ? <TokenLogo address={selectedTokenAddress} /> : null}
             {
               <StyledTokenName>
                 {(allTokens[selectedTokenAddress] && allTokens[selectedTokenAddress].symbol) || t('selectToken')}
@@ -414,7 +410,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
     return filteredTokenList.map(({ address, symbol }) => {
       return (
         <TokenModalRow key={address} onClick={() => _onTokenSelect(address)}>
-          <StyledTokenLogo address={address} />
+          <TokenLogo address={address} />
           <span id="symbol">{symbol}</span>
         </TokenModalRow>
       )

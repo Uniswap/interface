@@ -32,13 +32,17 @@ const BetaMessage = styled.div`
   align-items: center;
   position: relative;
   padding: 0.5rem 1rem;
+  padding-right: 2rem;
   margin-bottom: 1rem;
   border: 1px solid ${({ theme }) => transparentize(0.6, theme.wisteriaPurple)};
   background-color: ${({ theme }) => transparentize(0.9, theme.wisteriaPurple)};
   border-radius: 2rem;
   font-size: 0.75rem;
   line-height: 1rem;
-  text-align: center;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: ${({ theme }) => theme.wisteriaPurple};
 
   &:after {
@@ -56,7 +60,7 @@ const Tabs = styled.div`
   height: 2.5rem;
   background-color: ${({ theme }) => theme.concreteGray};
   border-radius: 3rem;
-  box-shadow: 0 0 0 0.5px ${({ theme }) => darken(0.05, theme.concreteGray)};
+  box-shadow: 0 0 0 1px ${({ theme }) => darken(0.05, theme.concreteGray)};
   margin-bottom: 1rem;
 `
 
@@ -80,11 +84,11 @@ const StyledNavLink = styled(NavLink).attrs({
   &.${activeClassName} {
     background-color: ${({ theme }) => theme.white};
     border-radius: 3rem;
-    box-shadow: 0 0 0.5px 0.5px ${({ theme }) => theme.mercuryGray};
+    box-shadow: 0 0 0.5px 1px ${({ theme }) => theme.mercuryGray};
     font-weight: 500;
     color: ${({ theme }) => theme.royalBlue};
     :hover {
-    box-shadow: 0 0 0.5px 0.5px ${({ theme }) => darken(0.1, theme.mercuryGray)};
+    box-shadow: 0 0 0.5px 1px ${({ theme }) => darken(0.1, theme.mercuryGray)};
   }
   }
 
