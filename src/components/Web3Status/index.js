@@ -5,8 +5,7 @@ import { useWeb3Context, Connectors } from 'web3-react'
 import Jazzicon from 'jazzicon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ethers } from 'ethers'
-import { faCircleNotch, faPlug } from '@fortawesome/free-solid-svg-icons'
-import { faEthereum } from '@fortawesome/free-brands-svg-icons'
+import { faCircleNotch, faPlug, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { darken } from 'polished'
 
 import WalletModal from '../WalletModal'
@@ -256,7 +255,7 @@ export default function Web3Status() {
       return (
         <Web3StatusConnect onClick={onClick}>
           <Text>{t('Connect')}</Text>
-          <RightIcon icon={faEthereum} size={'sm'} />
+          <RightIcon icon={faArrowRight} size={'sm'} />
         </Web3StatusConnect>
       )
     } else {

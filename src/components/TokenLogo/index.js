@@ -9,6 +9,7 @@ const BAD_IMAGES = {}
 const Image = styled.img`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
+  border-radius: 1rem;
 `
 
 const Emoji = styled.span`
