@@ -9,6 +9,11 @@ export default class InjectedConnector extends ErrorCodeMixin(Connector, Injecte
 
     this.networkChangedHandler = this.networkChangedHandler.bind(this)
     this.accountsChangedHandler = this.accountsChangedHandler.bind(this)
+
+    const { ethereum } = window
+    if (ethereum && ethereum.isMetaMask) {
+      ethereum.autoRefreshOnNetworkChange = false
+    }
   }
 
   async onActivation() {
@@ -33,10 +38,6 @@ export default class InjectedConnector extends ErrorCodeMixin(Connector, Injecte
           }
         })
       }
-
-      if (ethereum.isMetaMask) {
-        ethereum.autoRefreshOnNetworkChange = false
-      }
     } else if (web3) {
       console.warn('Your web3 provider is outdated, please upgrade to a modern provider.')
     } else {
@@ -52,7 +53,7 @@ export default class InjectedConnector extends ErrorCodeMixin(Connector, Injecte
   }
 
   async getAccount(provider) {
-    const account = super.getAccount(provider)
+    const account = await super.getAccount(provider)
 
     if (account === null) {
       const unlockRequiredError = Error('Ethereum account locked.')

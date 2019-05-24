@@ -7,8 +7,6 @@ import { isMobile } from 'react-device-detect'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons'
 
-import { getNetworkName } from '../../utils'
-
 const { Connector } = Connectors
 
 const MessageWrapper = styled.div`
@@ -44,17 +42,15 @@ const Spinner = styled.div`
 
 function tryToSetConnector(setConnector, setError) {
   setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
-    if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-      setError(error, { connectorName: 'Injected' })
-    } else {
-      setConnector('Network')
-    }
+    setConnector('Network')
   })
 }
 
 export default function Web3ReactManager({ children }) {
   const { t } = useTranslation()
   const { active, error, setConnector, setError } = useWeb3Context()
+  // control whether or not we render the error, after parsing
+  const blockRender = error && error.code && error.code === Connector.errorCodes.UNSUPPORTED_NETWORK
 
   useEffect(() => {
     if (!active && !error) {
@@ -77,31 +73,34 @@ export default function Web3ReactManager({ children }) {
     }
   }, [active, error, setConnector, setError])
 
+  // parse the error
+  useEffect(() => {
+    if (error) {
+      // if the user changes to the wrong network, unset the connector
+      if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
+        setConnector('Network')
+      }
+    }
+  }, [error, setConnector])
+
   const [showLoader, setShowLoader] = useState(false)
   useEffect(() => {
     const timeout = setTimeout(() => {
       setShowLoader(true)
-    }, 750)
+    }, 600)
     return () => {
       clearTimeout(timeout)
     }
   }, [])
 
-  if (error) {
-    if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-      const correctNetwork = getNetworkName(Number(process.env.REACT_APP_NETWORK_ID))
-      return (
-        <MessageWrapper>
-          <Message>{`${t('wrongNetwork')}. ${t('switchNetwork', { correctNetwork })}.`}</Message>
-        </MessageWrapper>
-      )
-    } else {
-      return (
-        <MessageWrapper>
-          <Message>{t('unknownError')}</Message>
-        </MessageWrapper>
-      )
-    }
+  if (blockRender) {
+    return null
+  } else if (error) {
+    return (
+      <MessageWrapper>
+        <Message>{t('unknownError')}</Message>
+      </MessageWrapper>
+    )
   } else if (!active) {
     return showLoader ? (
       <MessageWrapper>

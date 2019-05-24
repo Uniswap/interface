@@ -119,16 +119,8 @@ function getErrorMessage(event) {
   }
 }
 
-export default function WalletModal({ isOpen, onDismiss, pendingTransactions, confirmedTransactions, ENSName }) {
-  const { account, networkId, setConnector } = useWeb3Context()
-  const [activationError, setActivationError] = useState()
-
-  // function activateInjected() {
-  //   setActivationError()
-  //   setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
-  //     setActivationError(error)
-  //   })
-  // }
+export default function WalletModal({ isOpen, error, onDismiss, pendingTransactions, confirmedTransactions, ENSName }) {
+  const { account, networkId } = useWeb3Context()
 
   function renderTransactions(transactions, pending) {
     return (
@@ -141,70 +133,76 @@ export default function WalletModal({ isOpen, onDismiss, pendingTransactions, co
   }
 
   function wrappedOnDismiss() {
-    setActivationError()
     onDismiss()
+  }
+
+  function getWalletDisplay() {
+    if (error) {
+      return (
+        <>
+          <UpperSection>
+            <h4>Wrong Network</h4>
+          </UpperSection>
+        </>
+      )
+    } else if (account) {
+      return (
+        <>
+          <UpperSection>
+            <YourAccount>
+              <h5>Your Account</h5>
+              {ENSName && (
+                <AccountControl hasENS={!!ENSName} isENS={true}>
+                  <StyledLink hasENS={!!ENSName} isENS={true} href={getEtherscanLink(networkId, ENSName, 'address')}>
+                    {ENSName} ↗{' '}
+                  </StyledLink>
+
+                  <Copy toCopy={ENSName} />
+                </AccountControl>
+              )}
+
+              <AccountControl hasENS={!!ENSName} isENS={false}>
+                <StyledLink hasENS={!!ENSName} isENS={false} href={getEtherscanLink(networkId, account, 'address')}>
+                  {account} ↗{' '}
+                </StyledLink>
+
+                <Copy toCopy={account} />
+              </AccountControl>
+            </YourAccount>
+          </UpperSection>
+          {!!pendingTransactions.length || !!confirmedTransactions.length ? (
+            <LowerSection>
+              <h5>Recent Transactions</h5>
+              {renderTransactions(pendingTransactions, true)}
+              {renderTransactions(confirmedTransactions, false)}
+            </LowerSection>
+          ) : (
+            <LowerSection>
+              <h5>Your transactions will appear here...</h5>
+            </LowerSection>
+          )}
+        </>
+      )
+    } else {
+      return (
+        <>
+          <UpperSection>
+            <h4>No Ethereum account found</h4>
+            <h5>Please visit this page in a Web3 enabled browser.</h5>
+            <h5>
+              <Link href={'https://ethereum.org/use/#_3-what-is-a-wallet-and-which-one-should-i-use'}>
+                Learn more ↗
+              </Link>
+            </h5>
+          </UpperSection>
+        </>
+      )
+    }
   }
 
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} minHeight={null}>
-      <Wrapper>
-        {account ? (
-          <>
-            <UpperSection>
-              <YourAccount>
-                <h5>Your Account</h5>
-                {ENSName && (
-                  <AccountControl hasENS={!!ENSName} isENS={true}>
-                    <StyledLink hasENS={!!ENSName} isENS={true} href={getEtherscanLink(networkId, ENSName, 'address')}>
-                      {ENSName} ↗{' '}
-                    </StyledLink>
-
-                    <Copy toCopy={ENSName} />
-                  </AccountControl>
-                )}
-
-                <AccountControl hasENS={!!ENSName} isENS={false}>
-                  <StyledLink hasENS={!!ENSName} isENS={false} href={getEtherscanLink(networkId, account, 'address')}>
-                    {account} ↗{' '}
-                  </StyledLink>
-
-                  <Copy toCopy={account} />
-                </AccountControl>
-              </YourAccount>
-            </UpperSection>
-            {!!pendingTransactions.length || !!confirmedTransactions.length ? (
-              <LowerSection>
-                <h5>Recent Transactions</h5>
-                {renderTransactions(pendingTransactions, true)}
-                {renderTransactions(confirmedTransactions, false)}
-              </LowerSection>
-            ) : (
-              <LowerSection>
-                <h5>Your transactions will appear here...</h5>
-              </LowerSection>
-            )}
-          </>
-        ) : (
-          <>
-            <UpperSection>
-              <h4>No Ethereum account found</h4>
-              <h5>Please visit this page in a Web3 enabled browser.</h5>
-              <h5>
-                <Link href={'https://ethereum.org/use/#_3-what-is-a-wallet-and-which-one-should-i-use'}>
-                  Learn more ↗
-                </Link>
-              </h5>
-            </UpperSection>
-            {activationError ? (
-              <LowerSection>
-                <p>{getErrorMessage(activationError)}</p>
-              </LowerSection>
-            ) : (
-              ''
-            )}
-          </>
-        )}
-      </Wrapper>
+      <Wrapper>{getWalletDisplay()}</Wrapper>
     </Modal>
   )
 }

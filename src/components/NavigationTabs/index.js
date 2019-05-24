@@ -71,7 +71,7 @@ const StyledNavLink = styled(NavLink).attrs({
   height: 2.5rem;
   flex: 1 0 auto;
   border-radius: 3rem;
-
+  outline: none;
   cursor: pointer;
   text-decoration: none;
   color: ${({ theme }) => theme.doveGray};
@@ -88,9 +88,14 @@ const StyledNavLink = styled(NavLink).attrs({
   }
   }
 
-  :hover {
+  :hover,
+  :focus {
     color: ${({ theme }) => darken(0.1, theme.royalBlue)};
     /* box-shadow: 0 0 0.5px 0.5px ${({ theme }) => darken(0.2, theme.mercuryGray)}; */
+  }
+
+  :focus {
+    text-decoration: underline;
   }
 `
 
