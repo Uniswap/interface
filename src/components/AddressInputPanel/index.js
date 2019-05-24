@@ -1,13 +1,73 @@
 import React, { useState, useEffect } from 'react'
-import classnames from 'classnames'
+import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
+import { lighten } from 'polished'
 
 import { isAddress } from '../../utils'
 import { useDebounce } from '../../hooks'
-// import QrCode from '../QrCode' // commented out pending further review
 
-import './address-input-panel.scss'
+const InputPanel = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap}
+  box-shadow: 0 4px 8px 0 ${({ theme }) => lighten(0.9, theme.royalBlue)};
+  position: relative;
+  border-radius: 1.25rem;
+  background-color: ${({ theme }) => theme.white};
+  z-index: 1;
+`
+
+const ContainerRow = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1.25rem;
+  box-shadow: 0 0 0 0.5px ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
+  background-color: ${({ theme }) => theme.white};
+  transition: box-shadow 200ms ease-in-out;
+`
+
+const InputContainer = styled.div`
+  flex: 1;
+`
+
+const LabelRow = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: center;
+  color: ${({ theme }) => theme.doveGray};
+  font-size: 0.75rem;
+  line-height: 1rem;
+  padding: 0.75rem 1rem;
+`
+
+const LabelContainer = styled.div`
+  flex: 1 1 auto;
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`
+
+const InputRow = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: center;
+  padding: 0.25rem 0.85rem 0.75rem;
+`
+
+const Input = styled.input`
+  font-size: 1rem;
+  outline: none;
+  border: none;
+  flex: 1 1 auto;
+  width: 0;
+  color: ${({ error, theme }) => (error ? theme.salmonRed : theme.royalBlue)};
+  transition: color 200ms ease-in-out;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  ::placeholder {
+    color: ${({ theme }) => theme.chaliceGray};
+  }
+`
 
 export default function AddressInputPanel({ title, initialInput = '', onChange = () => {}, onError = () => {} }) {
   const { t } = useTranslation()
@@ -82,40 +142,29 @@ export default function AddressInputPanel({ title, initialInput = '', onChange =
   }
 
   return (
-    <div className="currency-input-panel">
-      <div
-        className={classnames('currency-input-panel__container address-input-panel__recipient-row', {
-          'currency-input-panel__container--error': input !== '' && error
-        })}
-      >
-        <div className="address-input-panel__input-container">
-          <div className="currency-input-panel__label-row">
-            <div className="currency-input-panel__label-container">
-              <span className="currency-input-panel__label">{title || t('recipientAddress')}</span>
-            </div>
-          </div>
-          <div className="currency-input-panel__input-row">
-            <input
+    <InputPanel>
+      <ContainerRow error={input !== '' && error}>
+        <InputContainer>
+          <LabelRow>
+            <LabelContainer>
+              <span>{title || t('recipientAddress')}</span>
+            </LabelContainer>
+          </LabelRow>
+          <InputRow>
+            <Input
               type="text"
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              className={classnames('address-input-panel__input', {
-                'address-input-panel__input--error': input !== '' && error
-              })}
               placeholder="0x1234..."
+              error={input !== '' && error}
               onChange={onInput}
               value={input}
             />
-          </div>
-        </div>
-        {/* commented out pending further review
-        <div className="address-input-panel__qr-container">
-          <QrCode onValueReceived={value => onChange(value)} />
-        </div>
-        */}
-      </div>
-    </div>
+          </InputRow>
+        </InputContainer>
+      </ContainerRow>
+    </InputPanel>
   )
 }

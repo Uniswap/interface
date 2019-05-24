@@ -1,10 +1,38 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import c from 'classnames'
+import styled from 'styled-components'
 
 import DropdownBlue from '../../assets/images/dropdown-blue.svg'
 import DropupBlue from '../../assets/images/dropup-blue.svg'
-import './contextual-info.scss'
+
+const SummaryWrapper = styled.div`
+  color: ${({ error, theme }) => (error ? theme.salmonRed : theme.doveGray)};
+  font-size: 0.75rem;
+  text-align: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+`
+
+const SummaryWrapperContainer = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap};
+  color: ${({ theme }) => theme.royalBlue};
+  text-align: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+
+  span {
+    margin-right: 12px;
+  }
+
+  img {
+    height: 0.75rem;
+    width: 0.75rem;
+  }
+`
 
 class ContextualInfo extends Component {
   static propTypes = {
@@ -38,18 +66,12 @@ class ContextualInfo extends Component {
     const { openDetailsText, closeDetailsText, contextualInfo, isError } = this.props
 
     if (contextualInfo) {
-      return (
-        <div className={c({ 'contextual-info--error': isError }, 'contextual-info__summary-wrapper')}>
-          <div>{contextualInfo}</div>
-        </div>
-      )
+      return <SummaryWrapper error={isError}>{contextualInfo}</SummaryWrapper>
     }
 
     return (
       <>
-        <div
-          key="open-details"
-          className="contextual-info__summary-wrapper contextual-info__open-details-container"
+        <SummaryWrapperContainer
           onClick={() =>
             this.setState(prevState => {
               return { showDetails: !prevState.showDetails }
@@ -67,7 +89,7 @@ class ContextualInfo extends Component {
               <img src={DropupBlue} alt="dropup" />
             </>
           )}
-        </div>
+        </SummaryWrapperContainer>
         {this.renderDetails()}
       </>
     )

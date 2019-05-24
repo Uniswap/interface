@@ -3,7 +3,9 @@ import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
 import { ethers } from 'ethers'
+import styled from 'styled-components'
 
+import { Button } from '../../theme'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import NewContextualInfo from '../../components/ContextualInfoNew'
 import OversizedPanel from '../../components/OversizedPanel'
@@ -15,8 +17,6 @@ import { useTokenDetails } from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
-
-import './swap.scss'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -34,6 +34,52 @@ const DEADLINE_FROM_NOW = 60 * 15
 
 // denominated in bips
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
+
+const BlueSpan = styled.span`
+  color: ${({ theme }) => theme.royalBlue};
+`
+
+const LastSummaryText = styled.div`
+  margin-top: 1rem;
+`
+
+const DownArrowBackground = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  justify-content: center;
+  align-items: center;
+`
+
+const DownArrow = styled.img`
+  width: 0.625rem;
+  height: 0.625rem;
+  position: relative;
+  padding: 0.875rem;
+  cursor: ${({ clickable }) => clickable && 'pointer'};
+`
+
+const ExchangeRateWrapper = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap};
+  align-items: center;
+  color: ${({ theme }) => theme.doveGray};
+  font-size: 0.75rem;
+  padding: 0.5rem 1rem;
+`
+
+const ExchangeRate = styled.span`
+  flex: 1 1 auto;
+  width: 0;
+  color: ${({ theme }) => theme.chaliceGray};
+`
+
+const Flex = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+
+  button {
+    max-width: 20rem;
+  }
+`
 
 function calculateSlippageBounds(value, token = false) {
   if (value) {
@@ -450,7 +496,7 @@ export default function Swap() {
       action: 'Open'
     })
 
-    const b = text => <span className="swap__highlight-text">{text}</span>
+    const b = text => <BlueSpan>{text}</BlueSpan>
 
     if (independentField === INPUT) {
       return (
@@ -466,7 +512,7 @@ export default function Swap() {
             )}
             .
           </div>
-          <div className="send__last-summary-text">
+          <LastSummaryText>
             {t('youWillReceive')}{' '}
             {b(
               `${amountFormatter(
@@ -476,10 +522,10 @@ export default function Swap() {
               )} ${outputSymbol}`
             )}{' '}
             {t('orTransFail')}
-          </div>
-          <div className="send__last-summary-text">
+          </LastSummaryText>
+          <LastSummaryText>
             {t('priceChange')} {b(`${percentSlippageFormatted}%`)}.
-          </div>
+          </LastSummaryText>
         </div>
       )
     } else {
@@ -496,7 +542,7 @@ export default function Swap() {
             )}
             .
           </div>
-          <div className="send__last-summary-text">
+          <LastSummaryText>
             {t('itWillCost')}{' '}
             {b(
               `${amountFormatter(
@@ -506,10 +552,10 @@ export default function Swap() {
               )} ${inputSymbol}`
             )}{' '}
             {t('orTransFail')}
-          </div>
-          <div className="send__last-summary-text">
+          </LastSummaryText>
+          <LastSummaryText>
             {t('priceChange')} {b(`${percentSlippageFormatted}%`)}.
-          </div>
+          </LastSummaryText>
         </div>
       )
     }
@@ -629,16 +675,16 @@ export default function Swap() {
         errorMessage={inputError ? inputError : independentField === INPUT ? independentError : ''}
       />
       <OversizedPanel>
-        <div className="swap__down-arrow-background">
-          <img
+        <DownArrowBackground>
+          <DownArrow
             onClick={() => {
               dispatchSwapState({ type: 'FLIP_INDEPENDENT' })
             }}
-            className="swap__down-arrow swap__down-arrow--clickable"
+            clickable
             alt="swap"
             src={isValid ? ArrowDownBlue : ArrowDownGrey}
           />
-        </div>
+        </DownArrowBackground>
       </OversizedPanel>
       <CurrencyInputPanel
         title={t('output')}
@@ -657,13 +703,12 @@ export default function Swap() {
         disableUnlock
       />
       <OversizedPanel hideBottom>
-        <div
-          className="swap__exchange-rate-wrapper"
+        <ExchangeRateWrapper
           onClick={() => {
             setInverted(inverted => !inverted)
           }}
         >
-          <span className="swap__exchange-rate">{t('exchangeRate')}</span>
+          <ExchangeRate>{t('exchangeRate')}</ExchangeRate>
           {inverted ? (
             <span>
               {exchangeRate
@@ -677,14 +722,14 @@ export default function Swap() {
                 : ' - '}
             </span>
           )}
-        </div>
+        </ExchangeRateWrapper>
       </OversizedPanel>
       {renderSummary()}
-      <div className="swap__cta-container">
-        <button className="swap__cta-btn" disabled={!isValid} onClick={onSwap}>
+      <Flex>
+        <Button disabled={!isValid} onClick={onSwap}>
           {t('swap')}
-        </button>
-      </div>
+        </Button>
+      </Flex>
     </>
   )
 }
