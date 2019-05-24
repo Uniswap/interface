@@ -170,7 +170,6 @@ export default function Web3Status() {
     if (connectorName !== 'Injected') {
       if (connectorName === 'Network' && ethereum && ethereum.on && ethereum.removeListener) {
         function tryToActivateInjected() {
-          console.log('event detected!')
           const library = new ethers.providers.Web3Provider(window.ethereum)
           // if calling enable won't pop an approve modal, then try to activate injected...
           library.listAccounts().then(accounts => {
