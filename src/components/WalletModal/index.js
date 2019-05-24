@@ -141,6 +141,7 @@ export default function WalletModal({ isOpen, error, onDismiss, pendingTransacti
         <>
           <UpperSection>
             <h4>Wrong Network</h4>
+            <h5>Please connect to the main Ethereum network.</h5>
           </UpperSection>
         </>
       )
