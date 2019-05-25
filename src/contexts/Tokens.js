@@ -307,7 +307,7 @@ const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'AMN',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xE6C198d27a5B71144B40cFa2362ae3166728e0C8'
-    },
+    }
   }
 }
 
