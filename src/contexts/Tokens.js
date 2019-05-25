@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useCallback, useMemo, useEffect } from 'react'
+import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react'
 import { useWeb3Context } from 'web3-react'
 import { ethers } from 'ethers'
 
@@ -18,14 +18,17 @@ const EXCHANGE_ADDRESS = 'exchangeAddress'
 
 const UPDATE = 'UPDATE'
 
+const ETH = {
+  ETH: {
+    [NAME]: 'Ethereum',
+    [SYMBOL]: 'ETH',
+    [DECIMALS]: 18,
+    [EXCHANGE_ADDRESS]: null
+  }
+}
+
 const INITIAL_TOKENS_CONTEXT = {
   1: {
-    ETH: {
-      [NAME]: 'Ethereum',
-      [SYMBOL]: 'ETH',
-      [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: null
-    },
     '0x737f98ac8ca59f2c68ad658e3c3d8c8963e40a4c': {
       [NAME]: 'Amon',
       [SYMBOL]: 'AMN',
@@ -236,11 +239,11 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x1aEC8F11A7E78dC22477e91Ed924Fab46e3A88Fd'
     },
-    '0x3772f9716Cf6D7a09edE3587738AA2af5577483a': {
+    '0xEf8a2c1BC94e630463293F71bF5414d13e80F62D': {
       [NAME]: 'Synthetix Network Token',
       [SYMBOL]: 'SNX',
       [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: '0x5d8888a212d033cff5F2e0AC24ad91A5495bAD62'
+      [EXCHANGE_ADDRESS]: '0xd9025Ed64BAA7B9046E37fe94670C79fcCB2b5C8'
     },
     '0x42d6622deCe394b54999Fbd73D108123806f6a18': {
       [NAME]: 'SPANK',
@@ -347,17 +350,16 @@ export default function Provider({ children }) {
     dispatch({ type: UPDATE, payload: { networkId, tokenAddress, name, symbol, decimals, exchangeAddress } })
   }, [])
 
-  const contextValue = useMemo(() => [state, { update }], [state, update])
-
-  return <TokensContext.Provider value={contextValue}>{children}</TokensContext.Provider>
+  return <TokensContext.Provider value={[state, { update }]}>{children}</TokensContext.Provider>
 }
 
 export function useTokenDetails(tokenAddress) {
   const { networkId, library } = useWeb3Context()
 
   const [state, { update }] = useTokensContext()
+  const allTokensInNetwork = { ...ETH, ...(safeAccess(state, [networkId]) || {}) }
   const { [NAME]: name, [SYMBOL]: symbol, [DECIMALS]: decimals, [EXCHANGE_ADDRESS]: exchangeAddress } =
-    safeAccess(state, [networkId, tokenAddress]) || {}
+    safeAccess(allTokensInNetwork, [tokenAddress]) || {}
 
   useEffect(() => {
     if (
@@ -396,7 +398,7 @@ export function useAllTokenDetails(requireExchange = true) {
   const { networkId } = useWeb3Context()
 
   const [state] = useTokensContext()
-  const tokenDetails = safeAccess(state, [networkId]) || {}
+  const tokenDetails = { ...ETH, ...(safeAccess(state, [networkId]) || {}) }
 
   return requireExchange
     ? Object.keys(tokenDetails)
