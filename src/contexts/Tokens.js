@@ -26,6 +26,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: null
     },
+    '0x737f98ac8ca59f2c68ad658e3c3d8c8963e40a4c': {
+      [NAME]: 'Amon',
+      [SYMBOL]: 'AMN',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0xE6C198d27a5B71144B40cFa2362ae3166728e0C8'
+    },
     '0x960b236A07cf122663c4303350609A66A7B288C0': {
       [NAME]: 'Aragon Network Token',
       [SYMBOL]: 'ANT',
@@ -301,12 +307,6 @@ const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'ZRX',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xaE76c84C9262Cdb9abc0C2c8888e62Db8E22A0bF'
-    },
-    '0x737f98ac8ca59f2c68ad658e3c3d8c8963e40a4c': {
-      [NAME]: 'Amon',
-      [SYMBOL]: 'AMN',
-      [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: '0xE6C198d27a5B71144B40cFa2362ae3166728e0C8'
     }
   }
 }
