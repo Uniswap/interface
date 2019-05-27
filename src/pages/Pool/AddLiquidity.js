@@ -240,7 +240,7 @@ export default function AddLiquidity() {
         <>
           <div className="pool__summary-modal__item">
             {t('youAreAdding')} {b(`${amountFormatter(inputValueParsed, 18, 4)} ETH`)} {t('and')} {'at most'}{' '}
-            {b(`${amountFormatter(outputValueMax, 18, 4)} ${symbol}`)} {t('intoPool')}
+            {b(`${amountFormatter(outputValueMax, decimals, 4)} ${symbol}`)} {t('intoPool')}
           </div>
           <div className="pool__summary-modal__item">
             {t('youWillMint')} {b(amountFormatter(liquidityMinted, 18, 4))} {t('liquidityTokens')}
