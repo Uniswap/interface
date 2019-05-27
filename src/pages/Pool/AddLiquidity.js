@@ -340,7 +340,7 @@ export default function AddLiquidity() {
 
   // parse input value
   useEffect(() => {
-    if (isNewExchange === false && inputValue && marketRate && lastEditedField === INPUT) {
+    if (isNewExchange === false && inputValue && marketRate && lastEditedField === INPUT && decimals) {
       try {
         const parsedValue = ethers.utils.parseUnits(inputValue, 18)
 
@@ -353,10 +353,12 @@ export default function AddLiquidity() {
         const currencyAmount = marketRate
           .mul(parsedValue)
           .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+          .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18 - decimals)))
+
         setOutputValueParsed(currencyAmount)
         dispatchAddLiquidityState({
           type: 'UPDATE_DEPENDENT_VALUE',
-          payload: { field: OUTPUT, value: amountFormatter(currencyAmount, 18, 4, false) }
+          payload: { field: OUTPUT, value: amountFormatter(currencyAmount, decimals, 4, false) }
         })
 
         return () => {
@@ -372,13 +374,13 @@ export default function AddLiquidity() {
         setOutputError(t('inputNotValid'))
       }
     }
-  }, [inputValue, isNewExchange, lastEditedField, marketRate, t])
+  }, [inputValue, isNewExchange, lastEditedField, marketRate, decimals, t])
 
   // parse output value
   useEffect(() => {
-    if (isNewExchange === false && outputValue && marketRateInverted && lastEditedField === OUTPUT) {
+    if (isNewExchange === false && outputValue && marketRateInverted && lastEditedField === OUTPUT && decimals) {
       try {
-        const parsedValue = ethers.utils.parseUnits(outputValue, 18)
+        const parsedValue = ethers.utils.parseUnits(outputValue, decimals)
 
         if (parsedValue.lte(ethers.constants.Zero) || parsedValue.gte(ethers.constants.MaxUint256)) {
           throw Error()
@@ -388,7 +390,8 @@ export default function AddLiquidity() {
 
         const currencyAmount = marketRateInverted
           .mul(parsedValue)
-          .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+          .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(decimals)))
+
         setInputValueParsed(currencyAmount)
         dispatchAddLiquidityState({
           type: 'UPDATE_DEPENDENT_VALUE',
@@ -408,7 +411,7 @@ export default function AddLiquidity() {
         setInputError(t('inputNotValid'))
       }
     }
-  }, [outputValue, isNewExchange, lastEditedField, marketRateInverted, t])
+  }, [outputValue, isNewExchange, lastEditedField, marketRateInverted, decimals, t])
 
   // input validation
   useEffect(() => {
@@ -420,14 +423,14 @@ export default function AddLiquidity() {
       }
     }
 
-    if (outputValueParsed && outputBalance) {
-      if (outputValueParsed.gt(outputBalance)) {
+    if (outputValueMax && outputBalance) {
+      if (outputValueMax.gt(outputBalance)) {
         setOutputError(t('insufficientBalance'))
       } else {
         setOutputError(null)
       }
     }
-  }, [inputValueParsed, inputBalance, outputValueParsed, outputBalance, t])
+  }, [inputValueParsed, inputBalance, outputValueMax, outputBalance, t])
 
   const allowance = useAddressAllowance(account, outputCurrency, exchangeAddress)
   const [showUnlock, setShowUnlock] = useState(false)
