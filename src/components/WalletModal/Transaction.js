@@ -4,10 +4,9 @@ import { useWeb3Context } from 'web3-react'
 import Copy from './Copy'
 
 import { getEtherscanLink } from '../../utils'
-import { Link } from '../../theme'
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleNotch, faCheck } from '@fortawesome/free-solid-svg-icons'
+import { Link, Spinner } from '../../theme'
+import Circle from '../../assets/images/circle.svg'
+import { Check } from 'react-feather'
 
 import { transparentize } from 'polished'
 
@@ -36,7 +35,7 @@ const TransactionWrapper = styled.div`
 `
 
 const TransactionStatusText = styled.span`
-  margin-left: 0.25rem;
+  margin-left: 0.5rem;
 `
 
 const rotate = keyframes`
@@ -49,6 +48,7 @@ const rotate = keyframes`
 `
 
 const TransactionState = styled.div`
+  display: flex;
   background-color: ${({ pending, theme }) =>
     pending ? transparentize(0.95, theme.royalBlue) : transparentize(0.95, theme.connectedGreen)};
   border-radius: 1.5rem;
@@ -62,12 +62,12 @@ const TransactionState = styled.div`
   #pending {
     animation: 2s ${rotate} linear infinite;
   }
+
   :hover {
     border-color: ${({ pending, theme }) =>
       pending ? transparentize(0, theme.royalBlue) : transparentize(0, theme.connectedGreen)};
   }
 `
-
 const ButtonWrapper = styled.div`
   a {
     color: ${({ pending, theme }) => (pending ? theme.royalBlue : theme.connectedGreen)};
@@ -81,14 +81,13 @@ export default function Transaction({ hash, pending }) {
     <TransactionWrapper key={hash}>
       <TransactionStatusWrapper>
         <Link href={getEtherscanLink(networkId, hash, 'transaction')}>{hash} ↗ </Link>
-
         <Copy toCopy={hash} />
       </TransactionStatusWrapper>
       {pending ? (
         <ButtonWrapper pending={pending}>
           <Link href={getEtherscanLink(networkId, hash, 'transaction')}>
             <TransactionState pending={pending}>
-              <FontAwesomeIcon id="pending" icon={faCircleNotch} />
+              <Spinner src={Circle} id="pending" />
               <TransactionStatusText>Pending</TransactionStatusText>
             </TransactionState>
           </Link>
@@ -97,7 +96,7 @@ export default function Transaction({ hash, pending }) {
         <ButtonWrapper pending={pending}>
           <Link href={getEtherscanLink(networkId, hash, 'transaction')}>
             <TransactionState pending={pending}>
-              <FontAwesomeIcon icon={faCheck} />
+              <Check size="16" />
               <TransactionStatusText>Confirmed</TransactionStatusText>
             </TransactionState>
           </Link>

@@ -3,9 +3,7 @@ import styled from 'styled-components'
 import { useCopyClipboard } from '../../hooks'
 
 import { Link } from '../../theme'
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCopy, faCheckCircle } from '@fortawesome/free-regular-svg-icons'
+import { CheckCircle, Copy } from 'react-feather'
 
 const CopyIcon = styled(Link)`
   color: ${({ theme }) => theme.silverGray};
@@ -22,21 +20,23 @@ const CopyIcon = styled(Link)`
 `
 const TransactionStatusText = styled.span`
   margin-left: 0.25rem;
+  ${({ theme }) => theme.flexRowNoWrap};
+  align-items: center;
 `
 
-export default function Copy({ toCopy }) {
+export default function CopyHelper({ toCopy }) {
   const [isCopied, setCopied] = useCopyClipboard()
 
   return (
     <CopyIcon onClick={() => setCopied(toCopy)}>
       {isCopied ? (
         <TransactionStatusText>
-          <FontAwesomeIcon icon={faCheckCircle} />
+          <CheckCircle size={'16'} />
           <TransactionStatusText>Copied</TransactionStatusText>
         </TransactionStatusText>
       ) : (
         <TransactionStatusText>
-          <FontAwesomeIcon icon={faCopy} />
+          <Copy size={'16'} />
         </TransactionStatusText>
       )}
     </CopyIcon>
