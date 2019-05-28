@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react'
+import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
 import { useWeb3Context } from 'web3-react'
 
 import { safeAccess } from '../utils'
@@ -94,7 +94,11 @@ export default function Provider({ children }) {
   }, [])
 
   return (
-    <TransactionsContext.Provider value={[state, { add, check, finalize }]}>{children}</TransactionsContext.Provider>
+    <TransactionsContext.Provider
+      value={useMemo(() => [state, { add, check, finalize }], [state, add, check, finalize])}
+    >
+      {children}
+    </TransactionsContext.Provider>
   )
 }
 

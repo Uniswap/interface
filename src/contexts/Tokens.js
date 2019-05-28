@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react'
+import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
 import { useWeb3Context } from 'web3-react'
 import { ethers } from 'ethers'
 
@@ -338,7 +338,11 @@ export default function Provider({ children }) {
     dispatch({ type: UPDATE, payload: { networkId, tokenAddress, name, symbol, decimals, exchangeAddress } })
   }, [])
 
-  return <TokensContext.Provider value={[state, { update }]}>{children}</TokensContext.Provider>
+  return (
+    <TokensContext.Provider value={useMemo(() => [state, { update }], [state, update])}>
+      {children}
+    </TokensContext.Provider>
+  )
 }
 
 export function useTokenDetails(tokenAddress) {
