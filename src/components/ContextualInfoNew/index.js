@@ -40,6 +40,8 @@ const Details = styled.div`
 
 const ErrorSpan = styled.span`
   margin-right: 12px;
+  font-size: 0.75rem;
+  line-height: 0.75rem;
 
   color: ${({ isError, theme }) => isError && theme.salmonRed};
   ${({ slippageWarning, highSlippageWarning, theme }) =>
@@ -56,7 +58,7 @@ const ErrorSpan = styled.span`
         `}
 `
 
-const WrappedDropup = ({ isError, ...rest }) => <Dropup {...rest} />
+const WrappedDropup = ({ isError, highSlippageWarning, ...rest }) => <Dropup {...rest} />
 const ColoredDropup = styled(WrappedDropup)`
   path {
     stroke: ${({ isError, theme }) => isError && theme.salmonRed};
@@ -69,7 +71,7 @@ const ColoredDropup = styled(WrappedDropup)`
   }
 `
 
-const WrappedDropdown = ({ isError, ...rest }) => <Dropdown {...rest} />
+const WrappedDropdown = ({ isError, highSlippageWarning, ...rest }) => <Dropdown {...rest} />
 const ColoredDropdown = styled(WrappedDropdown)`
   path {
     stroke: ${({ isError, theme }) => isError && theme.salmonRed};

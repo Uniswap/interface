@@ -212,12 +212,6 @@ export default function Web3Status() {
     }
   }, [connectorName, setConnector])
 
-  useEffect(() => {
-    if (account) {
-      setError()
-    }
-  })
-
   function onClick() {
     if (walletModalError) {
       openWalletModal()

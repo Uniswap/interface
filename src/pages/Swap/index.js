@@ -599,8 +599,8 @@ export default function Swap() {
         contextualInfo={contextualInfo ? contextualInfo : slippageWarningText}
         allowExpand={!!(inputCurrency && outputCurrency && inputValueParsed && outputValueParsed)}
         isError={isError}
-        slippageWarning={slippageWarning && slippageWarningText}
-        highSlippageWarning={highSlippageWarning && slippageWarningText}
+        slippageWarning={slippageWarning && !contextualInfo}
+        highSlippageWarning={highSlippageWarning && !contextualInfo}
         renderTransactionDetails={renderTransactionDetails}
       />
     )

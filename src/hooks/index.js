@@ -58,16 +58,22 @@ export function useENSName(address) {
   useEffect(() => {
     if (isAddress(address)) {
       let stale = false
-
-      library.lookupAddress(address).then(name => {
-        if (!stale) {
-          if (name) {
-            setENSNname(name)
-          } else {
+      library
+        .lookupAddress(address)
+        .then(name => {
+          if (!stale) {
+            if (name) {
+              setENSNname(name)
+            } else {
+              setENSNname(null)
+            }
+          }
+        })
+        .catch(() => {
+          if (!stale) {
             setENSNname(null)
           }
-        }
-      })
+        })
 
       return () => {
         stale = true
