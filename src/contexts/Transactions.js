@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react'
 import { useWeb3Context } from 'web3-react'
-import { ethers } from 'ethers'
 
 import { safeAccess } from '../utils'
 import { useBlockNumber } from './Application'
 
 const RESPONSE = 'response'
+const CUSTOM_DATA = 'CUSTOM_DATA'
 const BLOCK_NUMBER_CHECKED = 'BLOCK_NUMBER_CHECKED'
 const RECEIPT = 'receipt'
 
@@ -145,7 +145,7 @@ export function useTransactionAdder() {
   const [, { add }] = useTransactionsContext()
 
   return useCallback(
-    response => {
+    (response, customData = {}) => {
       if (!(networkId || networkId === 0)) {
         throw Error(`Invalid networkId '${networkId}`)
       }
@@ -155,7 +155,7 @@ export function useTransactionAdder() {
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      add(networkId, hash, response)
+      add(networkId, hash, { ...response, [CUSTOM_DATA]: customData })
     },
     [networkId, add]
   )
@@ -178,12 +178,7 @@ export function usePendingApproval(tokenAddress) {
         return false
       } else if (!allTransactions[hash][RESPONSE]) {
         return false
-      } else if (allTransactions[hash][RESPONSE].to !== tokenAddress) {
-        return false
-      } else if (
-        allTransactions[hash][RESPONSE].data.substring(0, 10) !==
-        ethers.utils.id('approve(address,uint256)').substring(0, 10)
-      ) {
+      } else if (allTransactions[hash][RESPONSE][CUSTOM_DATA].approval !== tokenAddress) {
         return false
       } else {
         return true
