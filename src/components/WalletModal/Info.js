@@ -1,30 +1,15 @@
 import React from 'react'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import { useWeb3Context } from 'web3-react'
-import { useCopyClipboard } from '../../hooks'
 
 import { getEtherscanLink } from '../../utils'
-import { Link } from '../../theme'
+import { Link, Spinner } from '../../theme'
+import Copy from './Copy'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCopy, faCheckCircle } from '@fortawesome/free-regular-svg-icons'
-import { faCircleNotch, faCheck } from '@fortawesome/free-solid-svg-icons'
+import { Check } from 'react-feather'
+import Circle from '../../assets/images/circle.svg'
 
 import { transparentize } from 'polished'
-
-const CopyIcon = styled(Link)`
-  color: ${({ theme }) => theme.silverGray};
-  flex-shrink: 0;
-  margin-right: 1rem;
-  margin-left: 0.5rem;
-  text-decoration: none;
-  :hover,
-  :active,
-  :focus {
-    text-decoration: none;
-    color: ${({ theme }) => theme.doveGray};
-  }
-`
 
 const TransactionStatusWrapper = styled.div`
   display: flex;
@@ -55,15 +40,6 @@ const TransactionStatusText = styled.span`
   margin-left: 0.25rem;
 `
 
-const rotate = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-`
-
 const TransactionState = styled.div`
   background-color: ${({ pending, theme }) =>
     pending ? transparentize(0.95, theme.royalBlue) : transparentize(0.95, theme.connectedGreen)};
@@ -75,9 +51,6 @@ const TransactionState = styled.div`
   border-color: ${({ pending, theme }) =>
     pending ? transparentize(0.75, theme.royalBlue) : transparentize(0.75, theme.connectedGreen)};
 
-  #pending {
-    animation: 2s ${rotate} linear infinite;
-  }
   :hover {
     border-color: ${({ pending, theme }) =>
       pending ? transparentize(0, theme.royalBlue) : transparentize(0, theme.connectedGreen)};
@@ -92,31 +65,18 @@ const ButtonWrapper = styled.div`
 
 export default function Info({ hash, pending }) {
   const { networkId } = useWeb3Context()
-  const [isCopied, copy] = useCopyClipboard()
 
   return (
     <TransactionWrapper key={hash}>
       <TransactionStatusWrapper>
         <Link href={getEtherscanLink(networkId, hash, 'transaction')}>{hash} ↗ </Link>
-
-        <CopyIcon onClick={() => copy(hash)}>
-          {isCopied ? (
-            <TransactionStatusText>
-              <FontAwesomeIcon icon={faCheckCircle} />
-              <TransactionStatusText>Copied</TransactionStatusText>
-            </TransactionStatusText>
-          ) : (
-            <TransactionStatusText>
-              <FontAwesomeIcon icon={faCopy} />
-            </TransactionStatusText>
-          )}
-        </CopyIcon>
+        <Copy />
       </TransactionStatusWrapper>
       {pending ? (
         <ButtonWrapper pending={pending}>
           <Link href={getEtherscanLink(networkId, hash, 'transaction')}>
             <TransactionState pending={pending}>
-              <FontAwesomeIcon id="pending" icon={faCircleNotch} />
+              <Spinner src={Circle} alt="loader" />
               <TransactionStatusText>Pending</TransactionStatusText>
             </TransactionState>
           </Link>
@@ -125,7 +85,7 @@ export default function Info({ hash, pending }) {
         <ButtonWrapper pending={pending}>
           <Link href={getEtherscanLink(networkId, hash, 'transaction')}>
             <TransactionState pending={pending}>
-              <FontAwesomeIcon icon={faCheck} />
+              <Check size="16" />
               <TransactionStatusText>Confirmed</TransactionStatusText>
             </TransactionState>
           </Link>

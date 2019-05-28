@@ -1,17 +1,18 @@
 import React, { useReducer, useEffect, useRef } from 'react'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context, Connectors } from 'web3-react'
+import { darken, transparentize } from 'polished'
 import Jazzicon from 'jazzicon'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ethers } from 'ethers'
-import { faCircleNotch, faPlug, faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import { darken } from 'polished'
+import { Activity, ArrowRight } from 'react-feather'
 
-import WalletModal from '../WalletModal'
-import { useAllTransactions } from '../../contexts/Transactions'
 import { shortenAddress } from '../../utils'
 import { useENSName } from '../../hooks'
+import WalletModal from '../WalletModal'
+import { useAllTransactions } from '../../contexts/Transactions'
+import { Spinner } from '../../theme'
+import Circle from '../../assets/images/circle.svg'
 
 const { Connector } = Connectors
 
@@ -56,19 +57,13 @@ const Web3StatusConnected = styled(Web3StatusGeneric)`
   color: ${({ pending, theme }) => (pending ? theme.royalBlue : theme.doveGray)};
   border: 1px solid ${({ pending, theme }) => (pending ? theme.royalBlue : theme.mercuryGray)};
   font-weight: 400;
-  :hover,
+  :hover {
+    background-color: ${({ pending, theme }) =>
+      pending ? transparentize(0.9, theme.royalBlue) : transparentize(0.9, theme.mercuryGray)};
+  }
   :focus {
     border: 1px solid
       ${({ pending, theme }) => (pending ? darken(0.1, theme.royalBlue) : darken(0.1, theme.mercuryGray))};
-  }
-`
-
-const rotate = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
   }
 `
 
@@ -89,19 +84,22 @@ const Identicon = styled.div`
   background-color: ${({ theme }) => theme.silverGray};
 `
 
-const SpinningIcon = styled(FontAwesomeIcon)`
-  animation: 2s ${rotate} linear infinite;
-  color: ${({ theme }) => theme.royalBlue};
-`
-
-const RightIcon = styled(FontAwesomeIcon)`
+const NetworkIcon = styled(Activity)`
   margin-left: 0.25rem;
   margin-right: 0.5rem;
+  width: 16px;
+  height: 16px;
 `
 
-const LeftIcon = styled(FontAwesomeIcon)`
-  margin-right: 0.25rem;
-  margin-left: 0.5rem;
+const ArrowIcon = styled(ArrowRight)`
+  margin-left: 0.25rem;
+  margin-right: 0.5rem;
+  width: 16px;
+  height: 16px;
+`
+
+const SpinnerWrapper = styled(Spinner)`
+  margin: 0 0.25rem 0 0.25rem;
 `
 
 const walletModalInitialState = {
@@ -245,21 +243,21 @@ export default function Web3Status() {
       // this is ok because we're guaranteed that the error is a wrong network error
       return (
         <Web3StatusError onClick={onClick}>
+          <NetworkIcon />
           <Text>Wrong Network</Text>
-          <RightIcon icon={faPlug} size={'sm'} />
         </Web3StatusError>
       )
     } else if (!account) {
       return (
         <Web3StatusConnect onClick={onClick}>
           <Text>{t('Connect')}</Text>
-          <RightIcon icon={faArrowRight} size={'sm'} />
+          <ArrowIcon />
         </Web3StatusConnect>
       )
     } else {
       return (
         <Web3StatusConnected onClick={onClick} pending={hasPendingTransactions}>
-          {hasPendingTransactions && <SpinningIcon as={LeftIcon} icon={faCircleNotch} size={'sm'} />}
+          {hasPendingTransactions && <SpinnerWrapper src={Circle} alt="loader" />}
           <Text>{ENSName || shortenAddress(account)}</Text>
           <Identicon ref={ref} />
         </Web3StatusConnected>
