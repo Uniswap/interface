@@ -173,12 +173,16 @@ export default function Web3Status() {
           // if calling enable won't pop an approve modal, then try to activate injected...
           library.listAccounts().then(accounts => {
             if (accounts.length >= 1) {
-              setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
-                // ...and if the error is that they're on the wrong network, display it, otherwise eat it
-                if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-                  setError(error)
-                }
-              })
+              setConnector('Injected', { suppressAndThrowErrors: true })
+                .then(() => {
+                  setError()
+                })
+                .catch(error => {
+                  // ...and if the error is that they're on the wrong network, display it, otherwise eat it
+                  if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
+                    setError(error)
+                  }
+                })
             }
           })
         }
