@@ -486,7 +486,11 @@ export default function Swap() {
           .sub(ethers.utils.bigNumberify(3).mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(15))))
       : undefined
   const percentSlippageFormatted = percentSlippage && amountFormatter(percentSlippage, 16, 2)
-  const slippageWarning = percentSlippage && percentSlippage.gte(ethers.utils.parseEther('.1')) // 10%
+  const slippageWarning =
+    percentSlippage &&
+    percentSlippage.gte(ethers.utils.parseEther('.05')) &&
+    percentSlippage.lt(ethers.utils.parseEther('.2')) // [5% - 20%)
+  const highSlippageWarning = percentSlippage && percentSlippage.gte(ethers.utils.parseEther('.2')) // [20+%
 
   const isValid = exchangeRate && inputError === null && independentError === null && recipientError === null
 
@@ -586,13 +590,21 @@ export default function Swap() {
       isError = true
     }
 
+    const slippageWarningText = highSlippageWarning
+      ? t('highSlippageWarning')
+      : slippageWarning
+      ? t('slippageWarning')
+      : ''
+
     return (
       <NewContextualInfo
         openDetailsText={t('transactionDetails')}
         closeDetailsText={t('hideDetails')}
-        contextualInfo={contextualInfo ? contextualInfo : slippageWarning ? t('slippageWarning') : ''}
+        contextualInfo={contextualInfo ? contextualInfo : slippageWarningText}
         allowExpand={!!(inputCurrency && outputCurrency && inputValueParsed && outputValueParsed && recipient.address)}
         isError={isError}
+        slippageWarning={slippageWarning}
+        highSlippageWarning={highSlippageWarning}
         renderTransactionDetails={renderTransactionDetails}
       />
     )
@@ -755,8 +767,8 @@ export default function Swap() {
       </OversizedPanel>
       {renderSummary()}
       <Flex>
-        <Button disabled={!isValid} onClick={onSwap} fullWidth>
-          {t('swap')}
+        <Button disabled={!isValid} onClick={onSwap} warning={highSlippageWarning}>
+          {highSlippageWarning ? t('sendAnyway') : t('send')}
         </Button>
       </Flex>
     </>

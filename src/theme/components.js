@@ -1,7 +1,9 @@
 import styled from 'styled-components'
 import { lighten, darken } from 'polished'
 
-export const Button = styled.button`
+export const Button = styled.button.attrs({
+  backgroundColor: ({ warning, theme }) => (warning ? theme.salmonRed : theme.royalBlue)
+})`
   padding: 1rem 2rem 1rem 2rem;
   border-radius: 3rem;
   cursor: pointer;
@@ -9,18 +11,18 @@ export const Button = styled.button`
   font-size: 1rem;
   border: none;
   outline: none;
-  background-color: ${({ theme }) => theme.royalBlue};
+  background-color: ${({ backgroundColor }) => backgroundColor};
   color: ${({ theme }) => theme.white};
   transition: background-color 125ms ease-in-out;
   width: 100%;
 
   :hover,
   :focus {
-    background-color: ${({ theme }) => lighten(0.05, theme.royalBlue)};
+    background-color: ${({ backgroundColor }) => lighten(0.05, backgroundColor)};
   }
 
   :active {
-    background-color: ${({ theme }) => darken(0.05, theme.royalBlue)};
+    background-color: ${({ backgroundColor }) => darken(0.05, backgroundColor)};
   }
 
   :disabled {

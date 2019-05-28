@@ -206,13 +206,13 @@ export default function RemoveLiquidity() {
       : undefined
 
   const ethWithdrawn =
-    ETHPer &&
-    valueParsed &&
-    ETHPer.mul(valueParsed).div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+    ETHPer && valueParsed
+      ? ETHPer.mul(valueParsed).div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+      : undefined
   const tokenWithdrawn =
-    tokenPer &&
-    valueParsed &&
-    tokenPer.mul(valueParsed).div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+    tokenPer && valueParsed
+      ? tokenPer.mul(valueParsed).div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+      : undefined
 
   const ethWithdrawnMin = ethWithdrawn ? calculateSlippageBounds(ethWithdrawn).minimum : undefined
   const tokenWithdrawnMin = tokenWithdrawn ? calculateSlippageBounds(tokenWithdrawn).minimum : undefined
@@ -348,17 +348,17 @@ export default function RemoveLiquidity() {
       </OversizedPanel>
       <CurrencyInputPanel
         title={t('output')}
-        description={ethWithdrawn && tokenWithdrawn ? `(${t('estimated')})` : ''}
+        description={ethWithdrawnMin && tokenWithdrawnMin ? `(${t('estimated')})` : ''}
         key="remove-liquidity-input"
         renderInput={() =>
-          ethWithdrawn && tokenWithdrawn ? (
+          ethWithdrawnMin && tokenWithdrawnMin ? (
             <RemoveLiquidityOutput>
               <RemoveLiquidityOutputText>
-                {`${amountFormatter(ethWithdrawn, 18, 4, false)} ETH`}
+                {`${amountFormatter(ethWithdrawnMin, 18, 4, false)} ETH`}
               </RemoveLiquidityOutputText>
               <RemoveLiquidityOutputPlus> + </RemoveLiquidityOutputPlus>
               <RemoveLiquidityOutputText>
-                {`${amountFormatter(tokenWithdrawn, decimals, Math.min(4, decimals))} ${symbol}`}
+                {`${amountFormatter(tokenWithdrawnMin, decimals, Math.min(4, decimals))} ${symbol}`}
               </RemoveLiquidityOutputText>
             </RemoveLiquidityOutput>
           ) : (
@@ -406,7 +406,7 @@ export default function RemoveLiquidity() {
       </OversizedPanel>
       {renderSummary()}
       <Flex>
-        <Button disabled={!isValid} onClick={onRemoveLiquidity} fullWidth>
+        <Button disabled={!isValid} onClick={onRemoveLiquidity}>
           {t('removeLiquidity')}
         </Button>
       </Flex>
