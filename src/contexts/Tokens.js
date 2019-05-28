@@ -344,8 +344,6 @@ export default function Provider({ children }) {
     dispatch({ type: UPDATE, payload: { networkId, tokenAddress, name, symbol, decimals, exchangeAddress } })
   }, [])
 
-  console.log(state)
-
   return <TokensContext.Provider value={[state, { update }]}>{children}</TokensContext.Provider>
 }
 
