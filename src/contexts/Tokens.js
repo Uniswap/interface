@@ -59,6 +59,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xF7B5A4b934658025390ff69dB302BC7F2AC4a542'
     },
+    '0xF5DCe57282A584D2746FaF1593d3121Fcac444dC': {
+      [NAME]: 'Compound Dai',
+      [SYMBOL]: 'cDAI',
+      [DECIMALS]: 8,
+      [EXCHANGE_ADDRESS]: '0x45A2FDfED7F7a2c791fb1bdF6075b83faD821ddE'
+    },
     '0x41e5560054824eA6B0732E656E3Ad64E20e94E45': {
       [NAME]: 'Civic',
       [SYMBOL]: 'CVC',
@@ -101,12 +107,6 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 12,
       [EXCHANGE_ADDRESS]: '0x4B17685b330307C751B47f33890c8398dF4Fe407'
     },
-    '0x056Fd409E1d7A124BD7017459dFEa2F387b6d5Cd': {
-      [NAME]: 'Gemini dollar',
-      [SYMBOL]: 'GUSD',
-      [DECIMALS]: 2,
-      [EXCHANGE_ADDRESS]: '0xD883264737Ed969d2696eE4B4cAF529c2Fc2A141'
-    },
     '0x818Fc6C2Ec5986bc6E2CBf00939d90556aB12ce5': {
       [NAME]: 'Kin',
       [SYMBOL]: 'KIN',
@@ -124,6 +124,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'LINK',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xF173214C720f58E03e194085B1DB28B50aCDeeaD'
+    },
+    '0xBBbbCA6A901c926F240b89EacB641d8Aec7AEafD': {
+      [NAME]: 'LoopringCoin V2',
+      [SYMBOL]: 'LRC',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0xA539BAaa3aCA455c986bB1E25301CEF936CE1B65'
     },
     '0x6c6EE5e31d828De241282B9606C8e98Ea48526E2': {
       [NAME]: 'HoloToken',
@@ -293,12 +299,6 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x8dE0d002DC83478f479dC31F76cB0a8aa7CcEa17'
     },
-    '0x05f4a42e251f2d52b8ed15E9FEdAacFcEF1FAD27': {
-      [NAME]: 'Zilliqa',
-      [SYMBOL]: 'ZIL',
-      [DECIMALS]: 12,
-      [EXCHANGE_ADDRESS]: '0x7dc095A5CF7D6208CC680fA9866F80a53911041a'
-    },
     '0xE41d2489571d322189246DaFA5ebDe1F4699F498': {
       [NAME]: '0x Protocol Token',
       [SYMBOL]: 'ZRX',
@@ -343,6 +343,8 @@ export default function Provider({ children }) {
   const update = useCallback((networkId, tokenAddress, name, symbol, decimals, exchangeAddress) => {
     dispatch({ type: UPDATE, payload: { networkId, tokenAddress, name, symbol, decimals, exchangeAddress } })
   }, [])
+
+  console.log(state)
 
   return <TokensContext.Provider value={[state, { update }]}>{children}</TokensContext.Provider>
 }
