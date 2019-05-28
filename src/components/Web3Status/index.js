@@ -3,16 +3,15 @@ import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context, Connectors } from 'web3-react'
 import { darken, transparentize } from 'polished'
-
-import WalletModal from '../WalletModal'
-import { useAllTransactions } from '../../contexts/Transactions'
-import { shortenAddress } from '../../utils'
-import { useENSName } from '../../hooks'
-import { Spinner } from '../../theme'
-
 import Jazzicon from 'jazzicon'
 import { ethers } from 'ethers'
 import { Activity, ArrowRight } from 'react-feather'
+
+import { shortenAddress } from '../../utils'
+import { useENSName } from '../../hooks'
+import WalletModal from '../WalletModal'
+import { useAllTransactions } from '../../contexts/Transactions'
+import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle.svg'
 
 const { Connector } = Connectors
