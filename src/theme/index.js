@@ -57,6 +57,8 @@ const theme = {
   salmonRed: '#FF6871',
   // orange
   pizazzOrange: '#FF8F05',
+  // yellows
+  warningYellow: '#FFE270',
   // pink
   uniswapPink: '#DC6BE5',
   connectedGreen: '#27AE60',

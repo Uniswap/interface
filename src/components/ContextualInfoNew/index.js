@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
+import { transparentize } from 'polished'
 
 import { ReactComponent as Dropup } from '../../assets/images/dropup-blue.svg'
 import { ReactComponent as Dropdown } from '../../assets/images/dropdown-blue.svg'
@@ -43,6 +44,18 @@ const Details = styled.div`
 
 const ErrorSpan = styled.span`
   color: ${({ isError, theme }) => isError && theme.salmonRed};
+  ${({ slippageWarning, highSlippageWarning, theme }) =>
+    highSlippageWarning
+      ? css`
+          color: ${theme.salmonRed};
+          font-weight: 600;
+        `
+      : slippageWarning &&
+        css`
+          background-color: ${transparentize(0.6, theme.warningYellow)};
+          font-weight: 600;
+          padding: 0.25rem;
+        `}
 `
 
 const WrappedDropup = ({ isError, ...rest }) => <Dropup {...rest} />
@@ -65,7 +78,9 @@ export default function ContextualInfo({
   contextualInfo = '',
   allowExpand = false,
   renderTransactionDetails = () => {},
-  isError = false
+  isError = false,
+  slippageWarning,
+  highSlippageWarning
 }) {
   const [showDetails, setShowDetails] = useState(false)
 
@@ -75,7 +90,12 @@ export default function ContextualInfo({
     <>
       <SummaryWrapperContainer onClick={() => setShowDetails(s => !s)}>
         <>
-          <ErrorSpan isError={isError}>
+          <ErrorSpan isError={isError} slippageWarning={slippageWarning} highSlippageWarning={highSlippageWarning}>
+            {slippageWarning && (
+              <span role="img" aria-label="warning">
+                ⚠️
+              </span>
+            )}
             {contextualInfo ? contextualInfo : showDetails ? closeDetailsText : openDetailsText}
           </ErrorSpan>
           {showDetails ? <ColoredDropup isError={isError} /> : <ColoredDropdown isError={isError} />}

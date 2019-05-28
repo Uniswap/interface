@@ -406,7 +406,7 @@ export default function RemoveLiquidity() {
       </OversizedPanel>
       {renderSummary()}
       <Flex>
-        <Button disabled={!isValid} onClick={onRemoveLiquidity} fullWidth>
+        <Button disabled={!isValid} onClick={onRemoveLiquidity}>
           {t('removeLiquidity')}
         </Button>
       </Flex>

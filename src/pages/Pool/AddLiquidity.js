@@ -593,7 +593,7 @@ export default function AddLiquidity() {
       </OversizedPanel>
       {renderSummary()}
       <Flex>
-        <Button disabled={!isValid} onClick={onAddLiquidity} fullWidth>
+        <Button disabled={!isValid} onClick={onAddLiquidity}>
           {t('addLiquidity')}
         </Button>
       </Flex>
