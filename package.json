@@ -14,7 +14,7 @@
     "@reach/tooltip": "^0.2.0",
     "copy-to-clipboard": "^3.2.0",
     "escape-string-regexp": "^2.0.0",
-    "ethers": "^4.0.27",
+    "ethers": "^4.0.28",
     "i18next": "^15.0.9",
     "i18next-browser-languagedetector": "^3.0.1",
     "i18next-xhr-backend": "^2.0.1",

@@ -6,6 +6,8 @@ import ERC20_ABI from '../constants/abis/erc20'
 import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32'
 import { FACTORY_ADDRESSES } from '../constants'
 
+import UncheckedJsonRpcSigner from './signer'
+
 export const ERROR_CODES = ['TOKEN_NAME', 'TOKEN_SYMBOL', 'TOKEN_DECIMALS'].reduce(
   (accumulator, currentValue, currentIndex) => {
     accumulator[currentValue] = currentIndex
@@ -93,7 +95,7 @@ export function calculateGasMargin(value, margin) {
 
 // account is optional
 export function getProviderOrSigner(library, account) {
-  return account ? library.getSigner(account) : library
+  return account ? new UncheckedJsonRpcSigner(library.getSigner(account)) : library
 }
 
 // account is optional
