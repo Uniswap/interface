@@ -533,6 +533,11 @@ export default function Swap() {
             {t('orTransFail')}
           </LastSummaryText>
           <LastSummaryText>
+            {(slippageWarning || highSlippageWarning) && (
+              <span role="img" aria-label="warning">
+                ⚠️
+              </span>
+            )}
             {t('priceChange')} {b(`${percentSlippageFormatted}%`)}.
           </LastSummaryText>
         </div>
@@ -603,8 +608,8 @@ export default function Swap() {
         contextualInfo={contextualInfo ? contextualInfo : slippageWarningText}
         allowExpand={!!(inputCurrency && outputCurrency && inputValueParsed && outputValueParsed && recipient.address)}
         isError={isError}
-        slippageWarning={slippageWarning}
-        highSlippageWarning={highSlippageWarning}
+        slippageWarning={slippageWarning && slippageWarningText}
+        highSlippageWarning={highSlippageWarning && slippageWarningText}
         renderTransactionDetails={renderTransactionDetails}
       />
     )

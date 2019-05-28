@@ -24,10 +24,6 @@ const SummaryWrapperContainer = styled.div`
   justify-content: center;
   font-size: 0.75rem;
 
-  span {
-    margin-right: 12px;
-  }
-
   img {
     height: 0.75rem;
     width: 0.75rem;
@@ -43,6 +39,8 @@ const Details = styled.div`
 `
 
 const ErrorSpan = styled.span`
+  margin-right: 12px;
+
   color: ${({ isError, theme }) => isError && theme.salmonRed};
   ${({ slippageWarning, highSlippageWarning, theme }) =>
     highSlippageWarning
@@ -62,6 +60,12 @@ const WrappedDropup = ({ isError, ...rest }) => <Dropup {...rest} />
 const ColoredDropup = styled(WrappedDropup)`
   path {
     stroke: ${({ isError, theme }) => isError && theme.salmonRed};
+
+    ${({ highSlippageWarning, theme }) =>
+      highSlippageWarning &&
+      css`
+        stroke: ${theme.salmonRed};
+      `}
   }
 `
 
@@ -69,6 +73,12 @@ const WrappedDropdown = ({ isError, ...rest }) => <Dropdown {...rest} />
 const ColoredDropdown = styled(WrappedDropdown)`
   path {
     stroke: ${({ isError, theme }) => isError && theme.salmonRed};
+
+    ${({ highSlippageWarning, theme }) =>
+      highSlippageWarning &&
+      css`
+        stroke: ${theme.salmonRed};
+      `}
   }
 `
 
@@ -91,14 +101,18 @@ export default function ContextualInfo({
       <SummaryWrapperContainer onClick={() => setShowDetails(s => !s)}>
         <>
           <ErrorSpan isError={isError} slippageWarning={slippageWarning} highSlippageWarning={highSlippageWarning}>
-            {slippageWarning && (
+            {(slippageWarning || highSlippageWarning) && (
               <span role="img" aria-label="warning">
                 ⚠️
               </span>
             )}
             {contextualInfo ? contextualInfo : showDetails ? closeDetailsText : openDetailsText}
           </ErrorSpan>
-          {showDetails ? <ColoredDropup isError={isError} /> : <ColoredDropdown isError={isError} />}
+          {showDetails ? (
+            <ColoredDropup isError={isError} highSlippageWarning={highSlippageWarning} />
+          ) : (
+            <ColoredDropdown isError={isError} highSlippageWarning={highSlippageWarning} />
+          )}
         </>
       </SummaryWrapperContainer>
       {showDetails && <Details>{renderTransactionDetails()}</Details>}
