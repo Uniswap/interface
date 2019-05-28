@@ -236,7 +236,7 @@ export default function CurrencyInputPanel({
                   gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
                 })
                 .then(response => {
-                  addTransaction(response)
+                  addTransaction(response, { approval: selectedTokenAddress })
                 })
             }}
           >
