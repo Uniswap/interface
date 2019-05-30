@@ -244,7 +244,7 @@ const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'SNX',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x8da198a049426bfcf1522b0dc52f84beda6e38ff'
-    },    
+    },
     '0x42d6622deCe394b54999Fbd73D108123806f6a18': {
       [NAME]: 'SPANK',
       [SYMBOL]: 'SPANK',
