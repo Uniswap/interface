@@ -1,52 +1,70 @@
-import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
-import PropTypes from 'prop-types'
-import { CSSTransitionGroup } from 'react-transition-group'
-import './modal.scss'
+import React from 'react'
+import styled, { css } from 'styled-components'
+import { animated, useTransition } from 'react-spring'
+import { DialogOverlay, DialogContent } from '@reach/dialog'
+import '@reach/dialog/styles.css'
 
-const modalRoot = document.querySelector('#modal-root')
-
-export default class Modal extends Component {
-  static propTypes = {
-    onClose: PropTypes.func.isRequired
+const AnimatedDialogOverlay = animated(DialogOverlay)
+const StyledDialogOverlay = styled(AnimatedDialogOverlay).attrs({
+  suppressClassNameWarning: true
+})`
+  &[data-reach-dialog-overlay] {
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
+`
 
-  componentDidMount() {
-    // The portal element is inserted in the DOM tree after
-    // the Modal's children are mounted, meaning that children
-    // will be mounted on a detached DOM node. If a child
-    // component requires to be attached to the DOM tree
-    // immediately when mounted, for example to measure a
-    // DOM node, or uses 'autoFocus' in a descendant, add
-    // state to Modal and only render the children when Modal
-    // is inserted in the DOM tree.
-    // modalRoot.style.display = 'block';
-    // modalRoot.appendChild(this.el);
+const FilteredDialogContent = ({ minHeight, ...rest }) => <DialogContent {...rest} />
+const StyledDialogContent = styled(FilteredDialogContent)`
+  &[data-reach-dialog-content] {
+    margin: 0 0 2rem 0;
+    ${({ theme }) => theme.mediaWidth.upToMedium`margin: 0;`}
+    padding: 0;
+    width: 50vw;
+    max-width: 650px;
+    ${({ theme }) => theme.mediaWidth.upToMedium`width: 75vw;`}
+    ${({ theme }) => theme.mediaWidth.upToSmall`width: 90vw;`}
+    ${({ minHeight }) =>
+      minHeight &&
+      css`
+        min-height: ${minHeight}vh;
+      `}
+    max-height: 50vh;
+    ${({ theme }) => theme.mediaHeight.upToMedium`max-height: 75vh;`}
+    ${({ theme }) => theme.mediaHeight.upToSmall`max-height: 90vh;`}
+    display: flex;
+    overflow: hidden;
+    border-radius: 1.5rem;
   }
+`
 
-  componentWillUnmount() {
-    setTimeout(() => {
-      // modalRoot.style.display = 'none';
-      // modalRoot.removeChild(this.el);
-    }, 500)
-  }
+const HiddenCloseButton = styled.button`
+  margin: 0;
+  padding: 0;
+  width: 0;
+  height: 0;
+  border: none;
+`
 
-  render() {
-    return ReactDOM.createPortal(
-      <div>
-        <CSSTransitionGroup
-          transitionName="modal-container"
-          transitionAppear={true}
-          transitionLeave={true}
-          transitionAppearTimeout={200}
-          transitionLeaveTimeout={200}
-          transitionEnterTimeout={200}
-        >
-          <div className="modal-container" onClick={this.props.onClose} key="modal" />
-        </CSSTransitionGroup>
-        {this.props.children}
-      </div>,
-      modalRoot
-    )
-  }
+export default function Modal({ isOpen, onDismiss, minHeight = 50, initialFocusRef, children }) {
+  const transitions = useTransition(isOpen, null, {
+    config: { duration: 125 },
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 }
+  })
+
+  return transitions.map(
+    ({ item, key, props }) =>
+      item && (
+        <StyledDialogOverlay key={key} style={props} onDismiss={onDismiss} initialFocusRef={initialFocusRef}>
+          <StyledDialogContent hidden={true} minHeight={minHeight}>
+            <HiddenCloseButton onClick={onDismiss} />
+            {children}
+          </StyledDialogContent>
+        </StyledDialogOverlay>
+      )
+  )
 }

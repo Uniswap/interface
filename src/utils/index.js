@@ -1,10 +1,12 @@
 import { ethers } from 'ethers'
 
-import FACTORY_ABI from '../abi/factory'
-import EXCHANGE_ABI from '../abi/exchange'
-import ERC20_ABI from '../abi/erc20'
-import ERC20_WITH_BYTES_ABI from '../abi/erc20_bytes32'
+import FACTORY_ABI from '../constants/abis/factory'
+import EXCHANGE_ABI from '../constants/abis/exchange'
+import ERC20_ABI from '../constants/abis/erc20'
+import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32'
 import { FACTORY_ADDRESSES } from '../constants'
+
+import UncheckedJsonRpcSigner from './signer'
 
 export const ERROR_CODES = ['TOKEN_NAME', 'TOKEN_SYMBOL', 'TOKEN_DECIMALS'].reduce(
   (accumulator, currentValue, currentIndex) => {
@@ -23,6 +25,61 @@ export function safeAccess(object, path) {
     : null
 }
 
+const ETHERSCAN_PREFIXES = {
+  1: '',
+  3: 'ropsten.',
+  4: 'rinkeby.',
+  5: 'goerli.',
+  42: 'kovan.'
+}
+export function getEtherscanLink(networkId, data, type) {
+  const prefix = `https://${ETHERSCAN_PREFIXES[networkId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
+
+  switch (type) {
+    case 'transaction': {
+      return `${prefix}/tx/${data}`
+    }
+    case 'address':
+    default: {
+      return `${prefix}/address/${data}`
+    }
+  }
+}
+
+export function getNetworkName(networkId) {
+  switch (networkId) {
+    case 1: {
+      return 'the Main Ethereum Network'
+    }
+    case 3: {
+      return 'the Ropsten Test Network'
+    }
+    case 4: {
+      return 'the Rinkeby Test Network'
+    }
+    case 5: {
+      return 'the Görli Test Network'
+    }
+    case 42: {
+      return 'the Kovan Test Network'
+    }
+    default: {
+      return 'the correct network'
+    }
+  }
+}
+
+export function shortenAddress(address, digits = 4) {
+  if (!isAddress(address)) {
+    throw Error(`Invalid 'address' parameter '${address}'.`)
+  }
+  return `${address.substring(0, digits + 2)}...${address.substring(42 - digits)}`
+}
+
+export function shortenTransactionHash(hash, digits = 4) {
+  return `${hash.substring(0, digits + 2)}...${hash.substring(66 - digits)}`
+}
+
 export function isAddress(value) {
   try {
     return ethers.utils.getAddress(value.toLowerCase())
@@ -38,7 +95,7 @@ export function calculateGasMargin(value, margin) {
 
 // account is optional
 export function getProviderOrSigner(library, account) {
-  return account ? library.getSigner(account) : library
+  return account ? new UncheckedJsonRpcSigner(library.getSigner(account)) : library
 }
 
 // account is optional
@@ -69,7 +126,7 @@ export async function getTokenName(tokenAddress, library) {
   return getContract(tokenAddress, ERC20_ABI, library)
     .name()
     .catch(() =>
-      getContract(tokenAddress, ERC20_WITH_BYTES_ABI, library)
+      getContract(tokenAddress, ERC20_BYTES32_ABI, library)
         .name()
         .then(bytes32 => ethers.utils.parseBytes32String(bytes32))
     )
@@ -88,7 +145,7 @@ export async function getTokenSymbol(tokenAddress, library) {
   return getContract(tokenAddress, ERC20_ABI, library)
     .symbol()
     .catch(() => {
-      const contractBytes32 = getContract(tokenAddress, ERC20_WITH_BYTES_ABI, library)
+      const contractBytes32 = getContract(tokenAddress, ERC20_BYTES32_ABI, library)
       return contractBytes32.symbol().then(bytes32 => ethers.utils.parseBytes32String(bytes32))
     })
     .catch(error => {
