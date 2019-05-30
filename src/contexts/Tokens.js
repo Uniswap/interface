@@ -243,7 +243,7 @@ const INITIAL_TOKENS_CONTEXT = {
       [NAME]: 'Synthetix Network Token',
       [SYMBOL]: 'SNX',
       [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: '0x8da198a049426bfcf1522b0dc52f84beda6e38ff'
+      [EXCHANGE_ADDRESS]: '0x8Da198A049426bFCf1522B0Dc52f84beDa6e38FF'
     },
     '0x42d6622deCe394b54999Fbd73D108123806f6a18': {
       [NAME]: 'SPANK',
