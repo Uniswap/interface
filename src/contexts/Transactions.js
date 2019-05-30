@@ -1,11 +1,11 @@
-import React, { createContext, useContext, useReducer, useCallback, useMemo, useEffect } from 'react'
+import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
 import { useWeb3Context } from 'web3-react'
-import { ethers } from 'ethers'
 
 import { safeAccess } from '../utils'
 import { useBlockNumber } from './Application'
 
 const RESPONSE = 'response'
+const CUSTOM_DATA = 'CUSTOM_DATA'
 const BLOCK_NUMBER_CHECKED = 'BLOCK_NUMBER_CHECKED'
 const RECEIPT = 'receipt'
 
@@ -93,9 +93,13 @@ export default function Provider({ children }) {
     dispatch({ type: FINALIZE, payload: { networkId, hash, receipt } })
   }, [])
 
-  const contextValue = useMemo(() => [state, { add, check, finalize }], [state, add, check, finalize])
-
-  return <TransactionsContext.Provider value={contextValue}>{children}</TransactionsContext.Provider>
+  return (
+    <TransactionsContext.Provider
+      value={useMemo(() => [state, { add, check, finalize }], [state, add, check, finalize])}
+    >
+      {children}
+    </TransactionsContext.Provider>
+  )
 }
 
 export function Updater() {
@@ -145,7 +149,7 @@ export function useTransactionAdder() {
   const [, { add }] = useTransactionsContext()
 
   return useCallback(
-    response => {
+    (response, customData = {}) => {
       if (!(networkId || networkId === 0)) {
         throw Error(`Invalid networkId '${networkId}`)
       }
@@ -155,7 +159,7 @@ export function useTransactionAdder() {
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      add(networkId, hash, response)
+      add(networkId, hash, { ...response, [CUSTOM_DATA]: customData })
     },
     [networkId, add]
   )
@@ -178,12 +182,7 @@ export function usePendingApproval(tokenAddress) {
         return false
       } else if (!allTransactions[hash][RESPONSE]) {
         return false
-      } else if (allTransactions[hash][RESPONSE].to !== tokenAddress) {
-        return false
-      } else if (
-        allTransactions[hash][RESPONSE].data.substring(0, 10) !==
-        ethers.utils.id('approve(address,uint256)').substring(0, 10)
-      ) {
+      } else if (allTransactions[hash][RESPONSE][CUSTOM_DATA].approval !== tokenAddress) {
         return false
       } else {
         return true

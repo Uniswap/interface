@@ -11,4 +11,3 @@ install: yarn
 script:
   - yarn check:all
   - yarn build
-  - yarn test

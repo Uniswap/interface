@@ -24,17 +24,15 @@ yarn
 
 ### Configure Environment
 
-Rename `.env.example` to `.env` and fill in the appropriate variables.
+Rename `.env.local.example` to `.env.local` and fill in the appropriate variables.
 
 ### Run
 
 ```bash
 yarn start
-# or
-yarn start:rinkeby
 ```
 
-More robust support for other testnets is in the works!
+To run on a testnet, simply update the `.env.local` file appropriately.
 
 ## Contributions
 

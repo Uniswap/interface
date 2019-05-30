@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import classnames from 'classnames'
 import { useTranslation } from 'react-i18next'
 import ReactGA from 'react-ga'
 import { useWeb3Context } from 'web3-react'
 import { ethers } from 'ethers'
+import styled from 'styled-components'
 
+import { Button } from '../../theme'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import ContextualInfo from '../../components/ContextualInfo'
 import OversizedPanel from '../../components/OversizedPanel'
@@ -24,6 +25,69 @@ const DEADLINE_FROM_NOW = 60 * 15
 
 // denominated in bips
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
+
+const BlueSpan = styled.span`
+  color: ${({ theme }) => theme.royalBlue};
+`
+
+const DownArrowBackground = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  justify-content: center;
+  align-items: center;
+`
+
+const DownArrow = styled.img`
+  width: 0.625rem;
+  height: 0.625rem;
+  position: relative;
+  padding: 0.875rem;
+`
+
+const RemoveLiquidityOutput = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  min-height: 3.5rem;
+`
+
+const RemoveLiquidityOutputText = styled.div`
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  padding: 1rem 0.75rem;
+`
+
+const RemoveLiquidityOutputPlus = styled.div`
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  padding: 1rem 0;
+`
+
+const SummaryPanel = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap}
+  padding: 1rem 0;
+`
+
+const ExchangeRateWrapper = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap};
+  align-items: center;
+  color: ${({ theme }) => theme.doveGray};
+  font-size: 0.75rem;
+  padding: 0.25rem 1rem 0;
+`
+
+const ExchangeRate = styled.span`
+  flex: 1 1 auto;
+  width: 0;
+  color: ${({ theme }) => theme.chaliceGray};
+`
+
+const Flex = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+
+  button {
+    max-width: 20rem;
+  }
+`
 
 function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals, invert = false) {
   try {
@@ -193,7 +257,7 @@ export default function RemoveLiquidity() {
       })
   }
 
-  const b = text => <span className="swap__highlight-text">{text}</span>
+  const b = text => <BlueSpan>{text}</BlueSpan>
 
   function renderTransactionDetails() {
     ReactGA.event({
@@ -203,17 +267,17 @@ export default function RemoveLiquidity() {
 
     return (
       <div>
-        <div className="pool__summary-modal__item">
+        <div>
           {t('youAreRemoving')} {b(`${amountFormatter(ethWithdrawnMin, 18, 4)} ETH`)} {t('and')}{' '}
           {b(`${amountFormatter(tokenWithdrawnMin, decimals, Math.min(decimals, 4))} ${symbol}`)} {t('outPool')}
         </div>
-        <div className="pool__summary-modal__item">
+        <div>
           {t('youWillRemove')} {b(amountFormatter(valueParsed, 18, 4))} {t('liquidityTokens')}
         </div>
-        <div className="pool__summary-modal__item">
+        <div>
           {t('totalSupplyIs')} {b(amountFormatter(totalPoolTokens, 18, 4))}
         </div>
-        <div className="pool__summary-modal__item">
+        <div>
           {t('tokenWorth')} {b(amountFormatter(ETHPer, 18, 4))} ETH {t('and')}{' '}
           {b(amountFormatter(tokenPer, decimals, Math.min(4, decimals)))} {symbol}
         </div>
@@ -278,9 +342,9 @@ export default function RemoveLiquidity() {
         selectedTokenAddress={outputCurrency}
       />
       <OversizedPanel>
-        <div className="swap__down-arrow-background">
-          <img className="swap__down-arrow" src={isValid ? ArrowDownBlue : ArrowDownGrey} alt="arrow" />
-        </div>
+        <DownArrowBackground>
+          <DownArrow src={isActive ? ArrowDownBlue : ArrowDownGrey} alt="arrow" />
+        </DownArrowBackground>
       </OversizedPanel>
       <CurrencyInputPanel
         title={t('output')}
@@ -288,35 +352,30 @@ export default function RemoveLiquidity() {
         key="remove-liquidity-input"
         renderInput={() =>
           ethWithdrawnMin && tokenWithdrawnMin ? (
-            <div className="remove-liquidity__output">
-              <div className="remove-liquidity__output-text">{`${amountFormatter(
-                ethWithdrawnMin,
-                18,
-                4,
-                false
-              )} ETH`}</div>
-              <div className="remove-liquidity__output-plus"> + </div>
-              <div className="remove-liquidity__output-text">{`${amountFormatter(
-                tokenWithdrawnMin,
-                decimals,
-                Math.min(4, decimals)
-              )} ${symbol}`}</div>
-            </div>
+            <RemoveLiquidityOutput>
+              <RemoveLiquidityOutputText>
+                {`${amountFormatter(ethWithdrawnMin, 18, 4, false)} ETH`}
+              </RemoveLiquidityOutputText>
+              <RemoveLiquidityOutputPlus> + </RemoveLiquidityOutputPlus>
+              <RemoveLiquidityOutputText>
+                {`${amountFormatter(tokenWithdrawnMin, decimals, Math.min(4, decimals))} ${symbol}`}
+              </RemoveLiquidityOutputText>
+            </RemoveLiquidityOutput>
           ) : (
-            <div className="remove-liquidity__output" />
+            <RemoveLiquidityOutput />
           )
         }
         disableTokenSelect
         disableUnlock
       />
       <OversizedPanel key="remove-liquidity-input-under" hideBottom>
-        <div className="pool__summary-panel">
-          <div className="pool__exchange-rate-wrapper">
-            <span className="pool__exchange-rate">{t('exchangeRate')}</span>
+        <SummaryPanel>
+          <ExchangeRateWrapper>
+            <ExchangeRate>{t('exchangeRate')}</ExchangeRate>
             {marketRate ? <span>{`1 ETH = ${amountFormatter(marketRate, 18, 4)} ${symbol}`}</span> : ' - '}
-          </div>
-          <div className="pool__exchange-rate-wrapper">
-            <span className="swap__exchange-rate">{t('currentPoolSize')}</span>
+          </ExchangeRateWrapper>
+          <ExchangeRateWrapper>
+            <ExchangeRate>{t('currentPoolSize')}</ExchangeRate>
             {exchangeETHBalance && exchangeTokenBalance && decimals ? (
               <span>{`${amountFormatter(exchangeETHBalance, 18, 4)} ETH + ${amountFormatter(
                 exchangeTokenBalance,
@@ -326,11 +385,11 @@ export default function RemoveLiquidity() {
             ) : (
               ' - '
             )}
-          </div>
-          <div className="pool__exchange-rate-wrapper">
-            <span className="swap__exchange-rate">
+          </ExchangeRateWrapper>
+          <ExchangeRateWrapper>
+            <ExchangeRate>
               {t('yourPoolShare')} ({ownershipPercentageFormatted && ownershipPercentageFormatted}%)
-            </span>
+            </ExchangeRate>
             {ETHOwnShare && TokenOwnShare ? (
               <span>
                 {`${amountFormatter(ETHOwnShare, 18, 4)} ETH + ${amountFormatter(
@@ -342,21 +401,15 @@ export default function RemoveLiquidity() {
             ) : (
               ' - '
             )}
-          </div>
-        </div>
+          </ExchangeRateWrapper>
+        </SummaryPanel>
       </OversizedPanel>
       {renderSummary()}
-      <div className="pool__cta-container">
-        <button
-          className={classnames('pool__cta-btn', {
-            'pool__cta-btn--inactive': !isActive
-          })}
-          disabled={!isValid}
-          onClick={onRemoveLiquidity}
-        >
+      <Flex>
+        <Button disabled={!isValid} onClick={onRemoveLiquidity}>
           {t('removeLiquidity')}
-        </button>
-      </div>
+        </Button>
+      </Flex>
     </>
   )
 }

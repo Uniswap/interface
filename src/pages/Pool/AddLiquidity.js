@@ -1,10 +1,11 @@
 import React, { useReducer, useState, useCallback, useEffect, useMemo } from 'react'
-import classnames from 'classnames'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
 import { ethers } from 'ethers'
 import ReactGA from 'react-ga'
+import styled from 'styled-components'
 
+import { Button } from '../../theme'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import OversizedPanel from '../../components/OversizedPanel'
 import ContextualInfo from '../../components/ContextualInfo'
@@ -17,8 +18,6 @@ import { useTokenDetails } from '../../contexts/Tokens'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 
-import './pool.scss'
-
 const INPUT = 0
 const OUTPUT = 1
 
@@ -30,6 +29,72 @@ const DEADLINE_FROM_NOW = 60 * 15
 
 // denominated in bips
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
+
+const BlueSpan = styled.span`
+  color: ${({ theme }) => theme.royalBlue};
+`
+
+const NewExchangeWarning = styled.div`
+  margin-top: 1rem;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba($pizazz-orange, 0.4);
+  background-color: rgba($pizazz-orange, 0.1);
+  border-radius: 1rem;
+`
+
+const NewExchangeWarningText = styled.div`
+  font-size: 0.75rem;
+  line-height: 1rem;
+  text-align: center;
+
+  :first-child {
+    padding-bottom: 0.3rem;
+    font-weight: 500;
+  }
+`
+
+const DownArrowBackground = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  justify-content: center;
+  align-items: center;
+`
+
+const DownArrow = styled.img`
+  width: 0.625rem;
+  height: 0.625rem;
+  position: relative;
+  padding: 0.875rem;
+`
+
+const SummaryPanel = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap}
+  padding: 1rem 0;
+`
+
+const ExchangeRateWrapper = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap};
+  align-items: center;
+  color: ${({ theme }) => theme.doveGray};
+  font-size: 0.75rem;
+  padding: 0.25rem 1rem 0;
+`
+
+const ExchangeRate = styled.span`
+  flex: 1 1 auto;
+  width: 0;
+  color: ${({ theme }) => theme.chaliceGray};
+`
+
+const Flex = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+
+  button {
+    max-width: 20rem;
+  }
+`
 
 function calculateSlippageBounds(value) {
   if (value) {
@@ -209,15 +274,15 @@ export default function AddLiquidity() {
       action: 'Open'
     })
 
-    const b = text => <span className="swap__highlight-text">{text}</span>
+    const b = text => <BlueSpan>{text}</BlueSpan>
 
     if (isNewExchange) {
       return (
         <div>
-          <div className="pool__summary-item">
+          <div>
             {t('youAreAdding')} {b(`${inputValue} ETH`)} {t('and')} {b(`${outputValue} ${symbol}`)} {t('intoPool')}
           </div>
-          <div className="pool__summary-item">
+          <div>
             {t('youAreSettingExRate')}{' '}
             {b(
               `1 ETH = ${amountFormatter(
@@ -229,26 +294,26 @@ export default function AddLiquidity() {
             )}
             .
           </div>
-          <div className="pool__summary-item">
+          <div>
             {t('youWillMint')} {b(`${inputValue}`)} {t('liquidityTokens')}
           </div>
-          <div className="pool__summary-item">{t('totalSupplyIs0')}</div>
+          <div>{t('totalSupplyIs0')}</div>
         </div>
       )
     } else {
       return (
         <>
-          <div className="pool__summary-modal__item">
+          <div>
             {t('youAreAdding')} {b(`${amountFormatter(inputValueParsed, 18, 4)} ETH`)} {t('and')} {'at most'}{' '}
             {b(`${amountFormatter(outputValueMax, decimals, 4)} ${symbol}`)} {t('intoPool')}
           </div>
-          <div className="pool__summary-modal__item">
+          <div>
             {t('youWillMint')} {b(amountFormatter(liquidityMinted, 18, 4))} {t('liquidityTokens')}
           </div>
-          <div className="pool__summary-modal__item">
+          <div>
             {t('totalSupplyIs')} {b(amountFormatter(totalPoolTokens, 18, 4))}
           </div>
-          <div className="pool__summary-modal__item">
+          <div>
             {t('tokenWorth')} {b(amountFormatter(ethPerLiquidityToken, 18, 4))} ETH {t('and')}{' '}
             {b(amountFormatter(tokenPerLiquidityToken, decimals, Math.min(decimals, 4)))} {symbol}
           </div>
@@ -450,15 +515,15 @@ export default function AddLiquidity() {
   return (
     <>
       {isNewExchange ? (
-        <div className="pool__new-exchange-warning">
-          <div className="pool__new-exchange-warning-text">
+        <NewExchangeWarning>
+          <NewExchangeWarningText>
             <span role="img" aria-label="first-liquidity">
               🚰
             </span>{' '}
             {t('firstLiquidity')}
-          </div>
-          <div className="pool__new-exchange-warning-text">{t('initialExchangeRate', { symbol })}</div>
-        </div>
+          </NewExchangeWarningText>
+          <NewExchangeWarningText>{t('initialExchangeRate', { symbol })}</NewExchangeWarningText>
+        </NewExchangeWarning>
       ) : null}
 
       <CurrencyInputPanel
@@ -473,9 +538,9 @@ export default function AddLiquidity() {
         disableTokenSelect
       />
       <OversizedPanel>
-        <div className="swap__down-arrow-background">
-          <img className="swap__down-arrow" src={isActive ? PlusBlue : PlusGrey} alt="plus" />
-        </div>
+        <DownArrowBackground>
+          <DownArrow src={isActive ? PlusBlue : PlusGrey} alt="plus" />
+        </DownArrowBackground>
       </OversizedPanel>
       <CurrencyInputPanel
         title={t('deposit')}
@@ -493,13 +558,13 @@ export default function AddLiquidity() {
         errorMessage={outputError}
       />
       <OversizedPanel hideBottom>
-        <div className="pool__summary-panel">
-          <div className="pool__exchange-rate-wrapper">
-            <span className="pool__exchange-rate">{t('exchangeRate')}</span>
+        <SummaryPanel>
+          <ExchangeRateWrapper>
+            <ExchangeRate>{t('exchangeRate')}</ExchangeRate>
             <span>{marketRate ? `1 ETH = ${amountFormatter(marketRate, 18, 4)} ${symbol}` : ' - '}</span>
-          </div>
-          <div className="pool__exchange-rate-wrapper">
-            <span className="swap__exchange-rate">{t('currentPoolSize')}</span>
+          </ExchangeRateWrapper>
+          <ExchangeRateWrapper>
+            <ExchangeRate>{t('currentPoolSize')}</ExchangeRate>
             <span>
               {exchangeETHBalance && exchangeTokenBalance
                 ? `${amountFormatter(exchangeETHBalance, 18, 4)} ETH + ${amountFormatter(
@@ -509,11 +574,11 @@ export default function AddLiquidity() {
                   )} ${symbol}`
                 : ' - '}
             </span>
-          </div>
-          <div className="pool__exchange-rate-wrapper">
-            <span className="swap__exchange-rate">
+          </ExchangeRateWrapper>
+          <ExchangeRateWrapper>
+            <ExchangeRate>
               {t('yourPoolShare')} ({exchangeETHBalance && amountFormatter(poolTokenPercentage, 16, 2)}%)
-            </span>
+            </ExchangeRate>
             <span>
               {ethShare && tokenShare
                 ? `${amountFormatter(ethShare, 18, 4)} ETH + ${amountFormatter(
@@ -523,21 +588,15 @@ export default function AddLiquidity() {
                   )} ${symbol}`
                 : ' - '}
             </span>
-          </div>
-        </div>
+          </ExchangeRateWrapper>
+        </SummaryPanel>
       </OversizedPanel>
       {renderSummary()}
-      <div className="pool__cta-container">
-        <button
-          className={classnames('pool__cta-btn', {
-            'pool__cta-btn--inactive': !isActive
-          })}
-          disabled={!isValid}
-          onClick={onAddLiquidity}
-        >
+      <Flex>
+        <Button disabled={!isValid} onClick={onAddLiquidity}>
           {t('addLiquidity')}
-        </button>
-      </div>
+        </Button>
+      </Flex>
     </>
   )
 }

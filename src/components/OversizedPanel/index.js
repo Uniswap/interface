@@ -1,13 +1,39 @@
 import React from 'react'
+import styled from 'styled-components'
 
-import './oversized-panel.scss'
+const Panel = styled.div`
+  position: relative;
+  background-color: ${({ theme }) => theme.concreteGray};
+  width: calc(100% - 1rem);
+  margin: 0 auto;
+  border-radius: 0.625rem;
+`
 
-export default function OversizedPanel(props) {
+const PanelTop = styled.div`
+  content: '';
+  position: absolute;
+  top: -0.5rem;
+  left: 0;
+  height: 1rem;
+  width: 100%;
+  background-color: ${({ theme }) => theme.concreteGray};
+`
+
+const PanelBottom = styled.div`
+  position: absolute;
+  top: 80%;
+  left: 0;
+  height: 1rem;
+  width: 100%;
+  background-color: ${({ theme }) => theme.concreteGray};
+`
+
+export default function OversizedPanel({ hideTop, hideBottom, children }) {
   return (
-    <div className="oversized-panel">
-      {props.hideTop || <div className="oversized-panel__top" />}
-      {props.children}
-      {props.hideBottom || <div className="oversized-panel__bottom" />}
-    </div>
+    <Panel>
+      {hideTop || <PanelTop />}
+      {children}
+      {hideBottom || <PanelBottom />}
+    </Panel>
   )
 }
