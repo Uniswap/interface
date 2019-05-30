@@ -11,6 +11,7 @@ import BalancesContextProvider from './contexts/Balances'
 import AllowancesContextProvider from './contexts/Allowances'
 
 import App from './pages/App'
+import InjectedConnector from './InjectedConnector'
 
 import './i18n'
 
@@ -21,12 +22,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 ReactGA.pageview(window.location.pathname + window.location.search)
 
-const { InjectedConnector, NetworkOnlyConnector } = Connectors
-const Injected = new InjectedConnector({ supportedNetworks: [Number(process.env.REACT_APP_NETWORK_ID) || 1] })
-const Infura = new NetworkOnlyConnector({
-  providerURL: process.env.REACT_APP_NETWORK_URL || ''
-})
-const connectors = { Injected, Infura }
+const { NetworkOnlyConnector } = Connectors
+const Injected = new InjectedConnector({ supportedNetworks: [Number(process.env.REACT_APP_NETWORK_ID || '1')] })
+const Network = new NetworkOnlyConnector({ providerURL: process.env.REACT_APP_NETWORK_URL || '' })
+const connectors = { Injected, Network }
 
 function ContextProviders({ children }) {
   return (

@@ -2,15 +2,57 @@ import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router'
 import { useWeb3Context } from 'web3-react'
 import { ethers } from 'ethers'
-import classnames from 'classnames'
+import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import ReactGA from 'react-ga'
 
+import { Button } from '../../theme'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import OversizedPanel from '../../components/OversizedPanel'
 import { useFactoryContract } from '../../hooks'
 import { useTokenDetails } from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
+
+const SummaryPanel = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap};
+  padding: 1rem 0;
+`
+
+const ExchangeRateWrapper = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap};
+  align-items: center;
+  color: ${({ theme }) => theme.doveGray};
+  font-size: 0.75rem;
+  padding: 0.25rem 1rem 0;
+`
+
+const ExchangeRate = styled.span`
+  flex: 1 1 auto;
+  width: 0;
+  color: ${({ theme }) => theme.chaliceGray};
+`
+
+const CreateExchangeWrapper = styled.div`
+  color: ${({ theme }) => theme.doveGray};
+  text-align: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+`
+
+const SummaryText = styled.div`
+  font-size: 0.75rem;
+  color: ${({ error, theme }) => error && theme.salmonRed};
+`
+
+const Flex = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+
+  button {
+    max-width: 20rem;
+  }
+`
 
 function CreateExchange({ history, location }) {
   const { t } = useTranslation()
@@ -81,35 +123,29 @@ function CreateExchange({ history, location }) {
         onError={setTokenAddressError}
       />
       <OversizedPanel hideBottom>
-        <div className="pool__summary-panel">
-          <div className="pool__exchange-rate-wrapper">
-            <span className="pool__exchange-rate">{t('name')}</span>
+        <SummaryPanel>
+          <ExchangeRateWrapper>
+            <ExchangeRate>{t('name')}</ExchangeRate>
             <span>{name ? name : ' - '}</span>
-          </div>
-          <div className="pool__exchange-rate-wrapper">
-            <span className="pool__exchange-rate">{t('symbol')}</span>
+          </ExchangeRateWrapper>
+          <ExchangeRateWrapper>
+            <ExchangeRate>{t('symbol')}</ExchangeRate>
             <span>{symbol ? symbol : ' - '}</span>
-          </div>
-          <div className="pool__exchange-rate-wrapper">
-            <span className="swap__exchange-rate">{t('decimals')}</span>
+          </ExchangeRateWrapper>
+          <ExchangeRateWrapper>
+            <ExchangeRate>{t('decimals')}</ExchangeRate>
             <span>{decimals || decimals === 0 ? decimals : ' - '}</span>
-          </div>
-        </div>
+          </ExchangeRateWrapper>
+        </SummaryPanel>
       </OversizedPanel>
-      <div className="create-exchange__summary-panel">
-        <div
-          className={classnames('create-exchange__summary-text', {
-            'create-exchange--error': !!errorMessage
-          })}
-        >
-          {errorMessage ? errorMessage : t('enterTokenCont')}
-        </div>
-      </div>
-      <div className="pool__cta-container">
-        <button className="pool__cta-btn" disabled={!isValid} onClick={createExchange}>
+      <CreateExchangeWrapper>
+        <SummaryText>{errorMessage ? errorMessage : t('enterTokenCont')}</SummaryText>
+      </CreateExchangeWrapper>
+      <Flex>
+        <Button disabled={!isValid} onClick={createExchange}>
           {t('createExchange')}
-        </button>
-      </div>
+        </Button>
+      </Flex>
     </>
   )
 }
