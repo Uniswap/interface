@@ -65,6 +65,10 @@ const SummaryPanel = styled.div`
   padding: 1rem 0;
 `
 
+const LastSummaryText = styled.div`
+  margin-top: 1rem;
+`
+
 const ExchangeRateWrapper = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
@@ -268,19 +272,19 @@ export default function RemoveLiquidity() {
     return (
       <div>
         <div>
-          {t('youAreRemoving')} {b(`${amountFormatter(ethWithdrawnMin, 18, 4)} ETH`)} {t('and')}{' '}
-          {b(`${amountFormatter(tokenWithdrawnMin, decimals, Math.min(decimals, 4))} ${symbol}`)} {t('outPool')}
+          {t('youAreRemoving')} {b(`${amountFormatter(ethWithdrawn, 18, 4)} ETH`)} {t('and')}{' '}
+          {b(`${amountFormatter(tokenWithdrawn, decimals, Math.min(decimals, 4))} ${symbol}`)} {t('outPool')}
         </div>
-        <div>
+        <LastSummaryText>
           {t('youWillRemove')} {b(amountFormatter(valueParsed, 18, 4))} {t('liquidityTokens')}
-        </div>
-        <div>
+        </LastSummaryText>
+        <LastSummaryText>
           {t('totalSupplyIs')} {b(amountFormatter(totalPoolTokens, 18, 4))}
-        </div>
-        <div>
+        </LastSummaryText>
+        <LastSummaryText>
           {t('tokenWorth')} {b(amountFormatter(ETHPer, 18, 4))} ETH {t('and')}{' '}
           {b(amountFormatter(tokenPer, decimals, Math.min(4, decimals)))} {symbol}
-        </div>
+        </LastSummaryText>
       </div>
     )
   }
@@ -348,17 +352,17 @@ export default function RemoveLiquidity() {
       </OversizedPanel>
       <CurrencyInputPanel
         title={t('output')}
-        description={ethWithdrawnMin && tokenWithdrawnMin ? `(${t('estimated')})` : ''}
+        description={!!(ethWithdrawn && tokenWithdrawn) ? `(${t('estimated')})` : ''}
         key="remove-liquidity-input"
         renderInput={() =>
-          ethWithdrawnMin && tokenWithdrawnMin ? (
+          !!(ethWithdrawn && tokenWithdrawn) ? (
             <RemoveLiquidityOutput>
               <RemoveLiquidityOutputText>
-                {`${amountFormatter(ethWithdrawnMin, 18, 4, false)} ETH`}
+                {`${amountFormatter(ethWithdrawn, 18, 4, false)} ETH`}
               </RemoveLiquidityOutputText>
               <RemoveLiquidityOutputPlus> + </RemoveLiquidityOutputPlus>
               <RemoveLiquidityOutputText>
-                {`${amountFormatter(tokenWithdrawnMin, decimals, Math.min(4, decimals))} ${symbol}`}
+                {`${amountFormatter(tokenWithdrawn, decimals, Math.min(4, decimals))} ${symbol}`}
               </RemoveLiquidityOutputText>
             </RemoveLiquidityOutput>
           ) : (
