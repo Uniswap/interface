@@ -65,6 +65,8 @@ function CreateExchange({ history, location }) {
   })
   const [tokenAddressError, setTokenAddressError] = useState()
 
+  console.log(tokenAddress)
+
   const { name, symbol, decimals, exchangeAddress } = useTokenDetails(tokenAddress.address)
   const addTransaction = useTransactionAdder()
 
