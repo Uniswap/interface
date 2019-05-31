@@ -13,6 +13,14 @@ const SummaryWrapper = styled.div`
   padding-top: 1rem;
 `
 
+const Details = styled.div`
+  background-color: ${({ theme }) => theme.concreteGray};
+  padding: 1.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  margin-top: 1rem;
+`
+
 const SummaryWrapperContainer = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   color: ${({ theme }) => theme.royalBlue};
@@ -59,7 +67,7 @@ class ContextualInfo extends Component {
       return null
     }
 
-    return <div className="contextual-info__details">{this.props.renderTransactionDetails()}</div>
+    return <Details>{this.props.renderTransactionDetails()}</Details>
   }
 
   render() {

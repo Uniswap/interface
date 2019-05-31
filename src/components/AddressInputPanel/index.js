@@ -93,21 +93,28 @@ export default function AddressInputPanel({ title, initialInput = '', onChange =
     let stale = false
 
     if (isAddress(debouncedInput)) {
-      library.lookupAddress(debouncedInput).then(name => {
-        if (!stale) {
-          // if an ENS name exists, set it as the destination
-          if (name) {
-            setInput(name)
-          } else {
-            setData({ address: debouncedInput, name: '' })
-            setError(null)
+      library
+        .lookupAddress(debouncedInput)
+        .then(name => {
+          if (!stale) {
+            // if an ENS name exists, set it as the destination
+            if (name) {
+              setInput(name)
+            } else {
+              setData({ address: debouncedInput, name: '' })
+              setError(null)
+            }
           }
-        }
-      })
+        })
+        .catch(() => {
+          setData({ address: debouncedInput, name: '' })
+          setError(null)
+        })
     } else {
       if (debouncedInput !== '') {
-        try {
-          library.resolveName(debouncedInput).then(address => {
+        library
+          .resolveName(debouncedInput)
+          .then(address => {
             if (!stale) {
               // if the debounced input name resolves to an address
               if (address) {
@@ -118,9 +125,9 @@ export default function AddressInputPanel({ title, initialInput = '', onChange =
               }
             }
           })
-        } catch {
-          setError(true)
-        }
+          .catch(() => {
+            setError(true)
+          })
       }
     }
 
