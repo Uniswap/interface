@@ -54,6 +54,10 @@ const NewExchangeWarningText = styled.div`
   }
 `
 
+const LastSummaryText = styled.div`
+  margin-top: 1rem;
+`
+
 const DownArrowBackground = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   justify-content: center;
@@ -282,7 +286,7 @@ export default function AddLiquidity() {
           <div>
             {t('youAreAdding')} {b(`${inputValue} ETH`)} {t('and')} {b(`${outputValue} ${symbol}`)} {t('intoPool')}
           </div>
-          <div>
+          <LastSummaryText>
             {t('youAreSettingExRate')}{' '}
             {b(
               `1 ETH = ${amountFormatter(
@@ -293,11 +297,11 @@ export default function AddLiquidity() {
               )} ${symbol}`
             )}
             .
-          </div>
-          <div>
+          </LastSummaryText>
+          <LastSummaryText>
             {t('youWillMint')} {b(`${inputValue}`)} {t('liquidityTokens')}
-          </div>
-          <div>{t('totalSupplyIs0')}</div>
+          </LastSummaryText>
+          <LastSummaryText>{t('totalSupplyIs0')}</LastSummaryText>
         </div>
       )
     } else {
@@ -307,16 +311,16 @@ export default function AddLiquidity() {
             {t('youAreAdding')} {b(`${amountFormatter(inputValueParsed, 18, 4)} ETH`)} {t('and')} {'at most'}{' '}
             {b(`${amountFormatter(outputValueMax, decimals, 4)} ${symbol}`)} {t('intoPool')}
           </div>
-          <div>
+          <LastSummaryText>
             {t('youWillMint')} {b(amountFormatter(liquidityMinted, 18, 4))} {t('liquidityTokens')}
-          </div>
-          <div>
+          </LastSummaryText>
+          <LastSummaryText>
             {t('totalSupplyIs')} {b(amountFormatter(totalPoolTokens, 18, 4))}
-          </div>
-          <div>
+          </LastSummaryText>
+          <LastSummaryText>
             {t('tokenWorth')} {b(amountFormatter(ethPerLiquidityToken, 18, 4))} ETH {t('and')}{' '}
             {b(amountFormatter(tokenPerLiquidityToken, decimals, Math.min(decimals, 4)))} {symbol}
-          </div>
+          </LastSummaryText>
         </>
       )
     }
