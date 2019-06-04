@@ -173,7 +173,7 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x2C4Bd064b998838076fa341A83d007FC2FA50957'
     },
-    '0x957c30ab0426e0c93cd8241e2c60392d08c6ac8e': {
+    '0x957c30aB0426e0C93CD8241E2c60392d08c6aC8e': {
       [NAME]: 'Modum Token',
       [SYMBOL]: 'MOD',
       [DECIMALS]: 0,
@@ -197,7 +197,7 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xC040d51b07Aea5d94a89Bc21E8078B77366Fc6C7'
     },
-    '0x93ed3fbe21207ec2e8f2d3c3de6e058cb73bc04d': {
+    '0x93ED3FBe21207Ec2E8f2d3c3de6e058Cb73Bc04d': {
       [NAME]: 'Pinakion',
       [SYMBOL]: 'PNK',
       [DECIMALS]: 18,
