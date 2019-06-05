@@ -310,6 +310,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'ZRX',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xaE76c84C9262Cdb9abc0C2c8888e62Db8E22A0bF'
+    },
+    '0x24dcc881e7dd730546834452f21872d5cb4b5293': {
+      [NAME]: 'Data Transaction Token',
+      [SYMBOL]: 'XD',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0xb7cf1e1ea55572713feeec025d7cf56b3c6c6b6d'
     }
   }
 }
