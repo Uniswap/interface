@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { animated, useTransition } from 'react-spring'
 import { DialogOverlay, DialogContent } from '@reach/dialog'
 import '@reach/dialog/styles.css'
@@ -16,7 +16,8 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay).attrs({
   }
 `
 
-const StyledDialogContent = styled(DialogContent)`
+const FilteredDialogContent = ({ minHeight, ...rest }) => <DialogContent {...rest} />
+const StyledDialogContent = styled(FilteredDialogContent)`
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
     ${({ theme }) => theme.mediaWidth.upToMedium`margin: 0;`}
@@ -26,6 +27,11 @@ const StyledDialogContent = styled(DialogContent)`
     ${({ theme }) => theme.mediaWidth.upToMedium`width: 65vw;`}
     ${({ theme }) => theme.mediaWidth.upToSmall`width: 80vw;`}
     max-height: 50vh;
+    ${({ minHeight }) =>
+      minHeight &&
+      css`
+        min-height: ${minHeight}vh;
+      `}
     ${({ theme }) => theme.mediaWidth.upToMedium`max-height: 65vh;`}
     ${({ theme }) => theme.mediaWidth.upToSmall`max-height: 80vh;`}
     display: flex;
@@ -42,7 +48,7 @@ const HiddenCloseButton = styled.button`
   border: none;
 `
 
-export default function Modal({ isOpen, onDismiss, initialFocusRef, children }) {
+export default function Modal({ isOpen, onDismiss, minHeight = false, initialFocusRef, children }) {
   const transitions = useTransition(isOpen, null, {
     config: { duration: 125 },
     from: { opacity: 0 },
@@ -54,7 +60,7 @@ export default function Modal({ isOpen, onDismiss, initialFocusRef, children }) 
     ({ item, key, props }) =>
       item && (
         <StyledDialogOverlay key={key} style={props} onDismiss={onDismiss} initialFocusRef={initialFocusRef}>
-          <StyledDialogContent hidden={true}>
+          <StyledDialogContent hidden={true} minHeight={minHeight}>
             <HiddenCloseButton onClick={onDismiss} />
             {children}
           </StyledDialogContent>

@@ -429,7 +429,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} initialFocusRef={isMobile ? undefined : inputRef}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} minHeight={50} initialFocusRef={isMobile ? undefined : inputRef}>
       <TokenModal>
         <SearchContainer>
           <StyledBorderlessInput ref={inputRef} type="text" placeholder={t('searchOrPaste')} onChange={onInput} />
