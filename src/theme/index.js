@@ -18,15 +18,6 @@ const mediaWidthTemplates = Object.keys(MEDIA_WIDTHS).reduce((accumulator, size)
   return accumulator
 }, {})
 
-const mediaHeightTemplates = Object.keys(MEDIA_WIDTHS).reduce((accumulator, size) => {
-  accumulator[size] = (...args) => css`
-    @media (max-height: ${MEDIA_WIDTHS[size] / (16 / 9)}px) {
-      ${css(...args)}
-    }
-  `
-  return accumulator
-}, {})
-
 const flexColumnNoWrap = css`
   display: flex;
   flex-flow: column nowrap;
@@ -64,7 +55,6 @@ const theme = {
   connectedGreen: '#27AE60',
   // media queries
   mediaWidth: mediaWidthTemplates,
-  mediaHeight: mediaHeightTemplates,
   // css snippets
   flexColumnNoWrap,
   flexRowNoWrap

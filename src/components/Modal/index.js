@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { animated, useTransition } from 'react-spring'
 import { DialogOverlay, DialogContent } from '@reach/dialog'
 import '@reach/dialog/styles.css'
@@ -16,24 +16,18 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay).attrs({
   }
 `
 
-const FilteredDialogContent = ({ minHeight, ...rest }) => <DialogContent {...rest} />
-const StyledDialogContent = styled(FilteredDialogContent)`
+const StyledDialogContent = styled(DialogContent)`
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
     ${({ theme }) => theme.mediaWidth.upToMedium`margin: 0;`}
     padding: 0;
     width: 50vw;
     max-width: 650px;
-    ${({ theme }) => theme.mediaWidth.upToMedium`width: 75vw;`}
-    ${({ theme }) => theme.mediaWidth.upToSmall`width: 90vw;`}
-    ${({ minHeight }) =>
-      minHeight &&
-      css`
-        min-height: ${minHeight}vh;
-      `}
+    ${({ theme }) => theme.mediaWidth.upToMedium`width: 65vw;`}
+    ${({ theme }) => theme.mediaWidth.upToSmall`width: 80vw;`}
     max-height: 50vh;
-    ${({ theme }) => theme.mediaHeight.upToMedium`max-height: 75vh;`}
-    ${({ theme }) => theme.mediaHeight.upToSmall`max-height: 90vh;`}
+    ${({ theme }) => theme.mediaWidth.upToMedium`max-height: 65vh;`}
+    ${({ theme }) => theme.mediaWidth.upToSmall`max-height: 80vh;`}
     display: flex;
     overflow: hidden;
     border-radius: 1.5rem;
@@ -48,7 +42,7 @@ const HiddenCloseButton = styled.button`
   border: none;
 `
 
-export default function Modal({ isOpen, onDismiss, minHeight = 50, initialFocusRef, children }) {
+export default function Modal({ isOpen, onDismiss, initialFocusRef, children }) {
   const transitions = useTransition(isOpen, null, {
     config: { duration: 125 },
     from: { opacity: 0 },
@@ -60,7 +54,7 @@ export default function Modal({ isOpen, onDismiss, minHeight = 50, initialFocusR
     ({ item, key, props }) =>
       item && (
         <StyledDialogOverlay key={key} style={props} onDismiss={onDismiss} initialFocusRef={initialFocusRef}>
-          <StyledDialogContent hidden={true} minHeight={minHeight}>
+          <StyledDialogContent hidden={true}>
             <HiddenCloseButton onClick={onDismiss} />
             {children}
           </StyledDialogContent>
