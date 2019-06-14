@@ -116,7 +116,6 @@ function ModeSelector({ location: { pathname }, history }) {
         onDismiss={() => {
           setModalIsOpen(false)
         }}
-        minHeight={null}
       >
         <PoolModal>
           {poolTabOrder.map(({ path, textKey, regex }) => (

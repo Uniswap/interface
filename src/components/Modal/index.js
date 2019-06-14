@@ -24,16 +24,16 @@ const StyledDialogContent = styled(FilteredDialogContent)`
     padding: 0;
     width: 50vw;
     max-width: 650px;
-    ${({ theme }) => theme.mediaWidth.upToMedium`width: 75vw;`}
-    ${({ theme }) => theme.mediaWidth.upToSmall`width: 90vw;`}
+    ${({ theme }) => theme.mediaWidth.upToMedium`width: 65vw;`}
+    ${({ theme }) => theme.mediaWidth.upToSmall`width: 80vw;`}
+    max-height: 50vh;
     ${({ minHeight }) =>
       minHeight &&
       css`
         min-height: ${minHeight}vh;
       `}
-    max-height: 50vh;
-    ${({ theme }) => theme.mediaHeight.upToMedium`max-height: 75vh;`}
-    ${({ theme }) => theme.mediaHeight.upToSmall`max-height: 90vh;`}
+    ${({ theme }) => theme.mediaWidth.upToMedium`max-height: 65vh;`}
+    ${({ theme }) => theme.mediaWidth.upToSmall`max-height: 80vh;`}
     display: flex;
     overflow: hidden;
     border-radius: 1.5rem;
@@ -48,7 +48,7 @@ const HiddenCloseButton = styled.button`
   border: none;
 `
 
-export default function Modal({ isOpen, onDismiss, minHeight = 50, initialFocusRef, children }) {
+export default function Modal({ isOpen, onDismiss, minHeight = false, initialFocusRef, children }) {
   const transitions = useTransition(isOpen, null, {
     config: { duration: 125 },
     from: { opacity: 0 },

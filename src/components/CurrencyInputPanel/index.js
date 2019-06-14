@@ -7,6 +7,7 @@ import escapeStringRegex from 'escape-string-regexp'
 import { lighten, darken } from 'polished'
 import Tooltip from '@reach/tooltip'
 import '@reach/tooltip/styles.css'
+import { isMobile } from 'react-device-detect'
 
 import { BorderlessInput } from '../../theme'
 import { useTokenContract } from '../../hooks'
@@ -166,6 +167,7 @@ const TokenList = styled.div`
   flex-grow: 1;
   height: 100%;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 `
 
 const TokenModalRow = styled.div`
@@ -427,7 +429,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} initialFocusRef={inputRef}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} minHeight={50} initialFocusRef={isMobile ? undefined : inputRef}>
       <TokenModal>
         <SearchContainer>
           <StyledBorderlessInput ref={inputRef} type="text" placeholder={t('searchOrPaste')} onChange={onInput} />
