@@ -173,6 +173,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x9a7A75E66B325a3BD46973B2b57c9b8d9D26a621'
     },
+    '0x80f222a749a2e18eb7f676d371f19ad7efeee3b7': {
+      [NAME]: 'Magnolia Token',
+      [SYMBOL]: 'MGN',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0xdd80ca8062c7ef90fca2547e6a2a126c596e611f'
+    },
     '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2': {
       [NAME]: 'Maker',
       [SYMBOL]: 'MKR',
@@ -424,15 +430,15 @@ export function useAllTokenDetails(requireExchange = true) {
 
   return requireExchange
     ? Object.keys(tokenDetails)
-        .filter(
-          tokenAddress =>
-            tokenAddress === 'ETH' ||
-            (safeAccess(tokenDetails, [tokenAddress, EXCHANGE_ADDRESS]) &&
-              safeAccess(tokenDetails, [tokenAddress, EXCHANGE_ADDRESS]) !== ethers.constants.AddressZero)
-        )
-        .reduce((accumulator, tokenAddress) => {
-          accumulator[tokenAddress] = tokenDetails[tokenAddress]
-          return accumulator
-        }, {})
+      .filter(
+        tokenAddress =>
+          tokenAddress === 'ETH' ||
+          (safeAccess(tokenDetails, [tokenAddress, EXCHANGE_ADDRESS]) &&
+            safeAccess(tokenDetails, [tokenAddress, EXCHANGE_ADDRESS]) !== ethers.constants.AddressZero)
+      )
+      .reduce((accumulator, tokenAddress) => {
+        accumulator[tokenAddress] = tokenDetails[tokenAddress]
+        return accumulator
+      }, {})
     : tokenDetails
 }
