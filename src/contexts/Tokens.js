@@ -83,6 +83,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 9,
       [EXCHANGE_ADDRESS]: '0xb92dE8B30584392Af27726D5ce04Ef3c4e5c9924'
     },
+    '0x08711d3b02c8758f2fb3ab4e80228418a7f8e39c': {
+      [NAME]: 'Edgeless',
+      [SYMBOL]: 'EDG',
+      [DECIMALS]: 0,
+      [EXCHANGE_ADDRESS]: '0x4ac2ccebac7b96f1e66fbb7049c740a8ca8ef78d'
+    },
     '0x4946Fcea7C692606e8908002e55A582af44AC121': {
       [NAME]: 'FOAM Token',
       [SYMBOL]: 'FOAM',
