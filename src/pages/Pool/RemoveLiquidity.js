@@ -380,7 +380,7 @@ export default function RemoveLiquidity() {
           </ExchangeRateWrapper>
           <ExchangeRateWrapper>
             <ExchangeRate>{t('currentPoolSize')}</ExchangeRate>
-            {exchangeETHBalance && exchangeTokenBalance && decimals ? (
+            {exchangeETHBalance && exchangeTokenBalance && (decimals || decimals === 0) ? (
               <span>{`${amountFormatter(exchangeETHBalance, 18, 4)} ETH + ${amountFormatter(
                 exchangeTokenBalance,
                 decimals,

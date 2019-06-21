@@ -309,7 +309,7 @@ export default function AddLiquidity() {
         <>
           <div>
             {t('youAreAdding')} {b(`${amountFormatter(inputValueParsed, 18, 4)} ETH`)} {t('and')} {'at most'}{' '}
-            {b(`${amountFormatter(outputValueMax, decimals, 4)} ${symbol}`)} {t('intoPool')}
+            {b(`${amountFormatter(outputValueMax, decimals, Math.min(decimals, 4))} ${symbol}`)} {t('intoPool')}
           </div>
           <LastSummaryText>
             {t('youWillMint')} {b(amountFormatter(liquidityMinted, 18, 4))} {t('liquidityTokens')}
@@ -354,9 +354,6 @@ export default function AddLiquidity() {
   }
 
   const addTransaction = useTransactionAdder()
-
-  const isActive = active && account
-  const isValid = inputError === null || outputError === null
 
   async function onAddLiquidity() {
     ReactGA.event({
@@ -409,7 +406,13 @@ export default function AddLiquidity() {
 
   // parse input value
   useEffect(() => {
-    if (isNewExchange === false && inputValue && marketRate && lastEditedField === INPUT && decimals) {
+    if (
+      isNewExchange === false &&
+      inputValue &&
+      marketRate &&
+      lastEditedField === INPUT &&
+      (decimals || decimals === 0)
+    ) {
       try {
         const parsedValue = ethers.utils.parseUnits(inputValue, 18)
 
@@ -427,7 +430,7 @@ export default function AddLiquidity() {
         setOutputValueParsed(currencyAmount)
         dispatchAddLiquidityState({
           type: 'UPDATE_DEPENDENT_VALUE',
-          payload: { field: OUTPUT, value: amountFormatter(currencyAmount, decimals, 4, false) }
+          payload: { field: OUTPUT, value: amountFormatter(currencyAmount, decimals, Math.min(decimals, 4), false) }
         })
 
         return () => {
@@ -447,7 +450,13 @@ export default function AddLiquidity() {
 
   // parse output value
   useEffect(() => {
-    if (isNewExchange === false && outputValue && marketRateInverted && lastEditedField === OUTPUT && decimals) {
+    if (
+      isNewExchange === false &&
+      outputValue &&
+      marketRateInverted &&
+      lastEditedField === OUTPUT &&
+      (decimals || decimals === 0)
+    ) {
       try {
         const parsedValue = ethers.utils.parseUnits(outputValue, decimals)
 
@@ -515,6 +524,9 @@ export default function AddLiquidity() {
       }
     }
   }, [outputValueParsed, allowance, t])
+
+  const isActive = active && account
+  const isValid = (inputError === null || outputError === null) && !showUnlock
 
   return (
     <>
