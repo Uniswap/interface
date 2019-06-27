@@ -263,3 +263,38 @@ export function amountFormatter(amount, baseDecimals = 18, displayDecimals = 3, 
     }
   }
 }
+
+export function getAppNetworkId() {
+  return Number(process.env.REACT_APP_NETWORK_ID || '1')
+}
+
+export function getAppNetworkString() {
+  return getNetworkString(getAppNetworkId())
+}
+
+export function getAppNetworkUrl() {
+  return process.env.REACT_APP_NETWORK_URL || ''
+}
+
+export function getNetworkString(networkId) {
+  switch (networkId) {
+    case 1: {
+      return 'mainnet'
+    }
+    case 3: {
+      return 'ropsten'
+    }
+    case 4: {
+      return 'rinkeby'
+    }
+    case 5: {
+      return 'goerli'
+    }
+    case 42: {
+      return 'kovan'
+    }
+    default: {
+      return 'unknown'
+    }
+  }
+}

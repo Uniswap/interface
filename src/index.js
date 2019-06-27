@@ -14,6 +14,7 @@ import App from './pages/App'
 import InjectedConnector from './InjectedConnector'
 
 import './i18n'
+import { getAppNetworkId, getAppNetworkUrl } from './utils'
 
 if (process.env.NODE_ENV === 'production') {
   ReactGA.initialize('UA-128182339-1')
@@ -23,8 +24,8 @@ if (process.env.NODE_ENV === 'production') {
 ReactGA.pageview(window.location.pathname + window.location.search)
 
 const { NetworkOnlyConnector } = Connectors
-const Injected = new InjectedConnector({ supportedNetworks: [Number(process.env.REACT_APP_NETWORK_ID || '1')] })
-const Network = new NetworkOnlyConnector({ providerURL: process.env.REACT_APP_NETWORK_URL || '' })
+const Injected = new InjectedConnector({ supportedNetworks: [getAppNetworkId()] })
+const Network = new NetworkOnlyConnector({ providerURL: getAppNetworkUrl() })
 const connectors = { Injected, Network }
 
 function ContextProviders({ children }) {

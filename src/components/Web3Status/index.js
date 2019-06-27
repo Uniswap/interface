@@ -1,13 +1,14 @@
 import React, { useReducer, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
+import Web3Connect from 'web3connect'
 import { useWeb3Context, Connectors } from 'web3-react'
 import { darken, transparentize } from 'polished'
 import Jazzicon from 'jazzicon'
 import { ethers } from 'ethers'
 import { Activity, ArrowRight } from 'react-feather'
 
-import { shortenAddress } from '../../utils'
+import { shortenAddress, getAppNetworkString } from '../../utils'
 import { useENSName } from '../../hooks'
 import WalletModal from '../WalletModal'
 import { useAllTransactions } from '../../contexts/Transactions'
@@ -135,6 +136,24 @@ function walletModalReducer(state, { type, payload }) {
 }
 
 export default function Web3Status() {
+  const web3Connect = new Web3Connect.Core({
+    providerOptions: {
+      portis: {
+        id: process.env.REACT_APP_PORTIS_ID,
+        network: getAppNetworkString()
+      },
+      fortmatic: {
+        key: process.env.REACT_APP_FORTMATIC_KEY
+      }
+    }
+  })
+
+  let ethereum = null
+
+  web3Connect.on('connect', provider => {
+    ethereum = provider
+  })
+
   const { t } = useTranslation()
   const { active, account, connectorName, setConnector } = useWeb3Context()
 
@@ -163,11 +182,10 @@ export default function Web3Status() {
   // janky logic to detect log{ins,outs}...
   useEffect(() => {
     // if the injected connector is not active...
-    const { ethereum } = window
     if (connectorName !== 'Injected') {
       if (connectorName === 'Network' && ethereum && ethereum.on && ethereum.removeListener) {
         function tryToActivateInjected() {
-          const library = new ethers.providers.Web3Provider(window.ethereum)
+          const library = new ethers.providers.Web3Provider(ethereum)
           // if calling enable won't pop an approve modal, then try to activate injected...
           library.listAccounts().then(accounts => {
             if (accounts.length >= 1) {
@@ -212,19 +230,13 @@ export default function Web3Status() {
         }
       }
     }
-  }, [connectorName, setConnector])
+  }, [connectorName, ethereum, setConnector])
 
   function onClick() {
     if (walletModalError) {
       openWalletModal()
-    } else if (connectorName === 'Network' && (window.ethereum || window.web3)) {
-      setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
-        if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-          setError(error)
-        }
-      })
     } else {
-      openWalletModal()
+      web3Connect.toggleModal() // open modal on button click
     }
   }
 
