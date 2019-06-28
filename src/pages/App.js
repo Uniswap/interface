@@ -32,6 +32,10 @@ const Body = styled.div`
 `
 
 export default function App() {
+  // Bust out of a frame if in one
+  if (window.top !== window.self) {
+    window.top.location.href = window.self.location.href
+  }
   return (
     <>
       <Suspense fallback={null}>
