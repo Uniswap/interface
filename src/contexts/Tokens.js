@@ -268,7 +268,7 @@ const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'sETH',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x4740C758859D4651061CC9CDEFdBa92BDc3a845d'
-    },  
+    },
     '0x744d70FDBE2Ba4CF95131626614a1763DF805B9E': {
       [NAME]: 'Status Network Token',
       [SYMBOL]: 'SNT',
