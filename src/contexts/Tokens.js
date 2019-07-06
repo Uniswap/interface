@@ -167,6 +167,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xC6581Ce3A005e2801c1e0903281BBd318eC5B5C2'
     },
+    '0xba23485a04b897c957918fde2dabd4867838140b': {
+      [NAME]: 'Market Protocol Token',
+      [SYMBOL]: 'MKT',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x7D6fa7B0a7deC3C0758f0B57Bb446f4Cee70D330'
+    },
     '0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0': {
       [NAME]: 'Matic Token',
       [SYMBOL]: 'MATIC',
