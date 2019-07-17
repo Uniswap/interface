@@ -83,6 +83,7 @@ export default function App() {
                     />
                     <Redirect to="/swap" />
                   </Switch>
+                  
                 </Suspense>
               </BrowserRouter>
             </Web3ReactManager>
