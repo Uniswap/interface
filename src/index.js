@@ -10,6 +10,7 @@ import TokensContextProvider from './contexts/Tokens'
 import BalancesContextProvider from './contexts/Balances'
 import AllowancesContextProvider from './contexts/Allowances'
 
+
 import App from './pages/App'
 import InjectedConnector from './InjectedConnector'
 
@@ -33,7 +34,9 @@ function ContextProviders({ children }) {
       <TransactionContextProvider>
         <TokensContextProvider>
           <BalancesContextProvider>
-            <AllowancesContextProvider>{children}</AllowancesContextProvider>
+            <AllowancesContextProvider>
+              {children}
+            </AllowancesContextProvider>
           </BalancesContextProvider>
         </TokensContextProvider>
       </TransactionContextProvider>
@@ -57,7 +60,7 @@ ReactDOM.render(
       <Web3Provider connectors={connectors} libraryName="ethers.js">
         <ContextProviders>
           <Updaters />
-          <App />
+              <App />
         </ContextProviders>
       </Web3Provider>
     </>
