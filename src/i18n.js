@@ -13,7 +13,7 @@ i18next
     },
     react: {
       useSuspense: true
-    },    
+    },
     fallbackLng: 'en',
     preload: ['en'],
     keySeparator: false,
