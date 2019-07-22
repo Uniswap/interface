@@ -14,7 +14,6 @@ i18next
     react: {
       useSuspense: true
     },
-    lng: 'en',
     fallbackLng: 'en',
     preload: ['en'],
     keySeparator: false,
