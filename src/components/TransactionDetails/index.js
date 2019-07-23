@@ -2,31 +2,62 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { amountFormatter } from '../../utils'
+import questionMark from '../../assets/images/question-mark.svg'
 
 import NewContextualInfo from '../../components/ContextualInfoNew'
 
 const Flex = styled.div`
   display: flex;
   justify-content: center;
-  padding: 14px 0;
   button {
     max-width: 20rem;
   }
 `
 
 const SlippageRow = styled(Flex)`
-  flex-direction: row;
+  position: relative;
   width: 100%;
+  flex-direction: row;
   justify-content: flex-start;
+  align-items: center;
   font-size: 0.8rem;
   padding: 0;
   height: 24px;
   margin-bottom: 14px;
 `
 
+const QuestionWrapper = styled.div`
+  margin-left: 0.4rem;
+  margin-top: 0.2rem;
+
+  &:hover {
+    cursor: pointer;
+  }
+`
+
+const Popup = styled(Flex)`
+  position: absolute;
+  width: 228px;
+  left: -78px;
+  top: -124px;
+
+  flex-direction: column;
+  aligm-items: center;
+
+  padding: 1rem;
+
+  line-height: 183.52%;
+  background: #404040;
+  border-radius: 8px;
+
+  color: white;
+  font-style: italic;
+`
+
 const Option = styled(Flex)`
   align-items: center;
   min-width: 55px;
+  height: 24px;
   margin-right: 4px;
   border-radius: 36px;
   border: 1px solid #f2f2f2;
@@ -77,7 +108,7 @@ const Input = styled.input`
   `}
 
   ${({ warning }) =>
-    warning &&
+    warning === 'red' &&
     `
     color : #FF6871;
     border: 1px solid #FF6871;
@@ -88,11 +119,17 @@ const BottomError = styled.div`
   margin-top: 1rem;
   color: #aeaeae;
 
-  ${({ warning }) =>
-    warning &&
+  ${({ color }) =>
+    color === 'red' &&
     `
-  color : #FF6871;
-`}
+    color : #FF6871;
+  `}
+`
+
+const Break = styled.div`
+  border: 1px solid #f2f2f2;
+  width: 100%;
+  margin-top: 1rem;
 `
 
 const OptionLarge = styled(Option)`
@@ -108,7 +145,7 @@ const LastSummaryText = styled.div`
 `
 
 const SlippageSelector = styled.div`
-  margin-top: 28px;
+  margin-top: 1rem;
 `
 
 const InputGroup = styled.div`
@@ -117,7 +154,7 @@ const InputGroup = styled.div`
 
 const Percent = styled.div`
   right: 14px;
-  top: 8px;
+  top: 9px;
   position: absolute;
   color: inherit;
   font-size: 0, 8rem;
@@ -191,12 +228,35 @@ export default function TransactionDetails(props) {
 
   const [warningType, setWarningType] = useState('none')
 
+  const [showPopup, setPopup] = useState(false)
+
   const dropDownContent = () => {
     return (
       <>
         {renderTransactionDetails()}
+        <Break />
         <SlippageSelector>
-          <SlippageRow>Limit addtional price slippage</SlippageRow>
+          <SlippageRow>
+            Limit addtional price slippage
+            <QuestionWrapper
+              onMouseEnter={() => {
+                setPopup(true)
+              }}
+              onMouseLeave={() => {
+                setPopup(false)
+              }}
+            >
+              <img src={questionMark} alt="question mark" />
+            </QuestionWrapper>
+            {showPopup ? (
+              <Popup>
+                Lowering this limit decreases your risk of frontrunning. This makes it more likely that your transaction
+                will fail due to normal price movements.
+              </Popup>
+            ) : (
+              ''
+            )}
+          </SlippageRow>
           <SlippageRow>
             <Option
               onClick={() => {
@@ -241,16 +301,23 @@ export default function TransactionDetails(props) {
                   parseInput(e)
                 }}
                 active={activeIndex === 4 ? true : false}
-                warning={warningType !== 'none'}
+                warning={warningType !== 'none' && warningType !== 'riskyEntryLow' ? 'red' : ''}
               />
-              <Percent color={warningType !== 'none' ? 'red' : activeIndex !== 4 ? 'faded' : ''}>%</Percent>
+              <Percent
+                color={
+                  warningType !== 'none' && warningType !== 'riskyEntryLow' ? 'red' : activeIndex !== 4 ? 'faded' : ''
+                }
+              >
+                %
+              </Percent>
             </InputGroup>
           </SlippageRow>
           <SlippageRow>
-            <BottomError warning={warningType !== 'none'}>
-              {warningType === 'invalidEntry' ? 'Please input a valid percentage' : ''}
-              {warningType === 'invalidEntryBound' ? 'Only choose between 0% and 50%' : ''}
-              {warningType === 'riskyEntry' ? 'Youre at risk of being front-run ' : ''}
+            <BottomError color={warningType !== 'none' && warningType !== 'riskyEntryLow' ? 'red' : ''}>
+              {warningType === 'invalidEntry' ? 'Please input a valid percentage.' : ''}
+              {warningType === 'invalidEntryBound' ? 'Pleae select value less than 50%' : ''}
+              {warningType === 'riskyEntryHigh' ? 'Youre at risk of being front-run.' : ''}
+              {warningType === 'riskyEntryLow' ? 'Youre transaction may fail.' : ''}
             </BottomError>
           </SlippageRow>
         </SlippageSelector>
@@ -278,16 +345,22 @@ export default function TransactionDetails(props) {
   }
 
   const checkAcceptablePercentValue = input => {
-    setWarningType('none')
-    if (input < 0 || input > 50) {
-      return setWarningType('invalidEntryBound')
-    }
-    if (input >= 0 && input < 0.1) {
-      setWarningType('riskyEntry')
-    }
-    let num = parseFloat((input * 100).toFixed(2))
-    props.setRawSlippage(num)
-    props.setRawTokenSlippage(num)
+    setTimeout(function() {
+      setWarningType('none')
+      if (input < 0 || input > 50) {
+        return setWarningType('invalidEntryBound')
+      }
+      if (input >= 0 && input < 0.1) {
+        setWarningType('riskyEntryLow')
+      }
+
+      if (input >= 5) {
+        setWarningType('riskyEntryHigh')
+      }
+      let num = parseFloat((input * 100).toFixed(2))
+      props.setRawSlippage(num)
+      props.setRawTokenSlippage(num)
+    }, 300)
   }
 
   const b = text => <Bold>{text}</Bold>
@@ -352,6 +425,5 @@ export default function TransactionDetails(props) {
       )
     }
   }
-
   return <>{renderSummary()}</>
 }
