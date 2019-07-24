@@ -370,9 +370,9 @@ export default function AddLiquidity() {
       {
         value: inputValueParsed
       }
-    );
+    )
 
-    const gasLimit = calculateGasMargin(estimatedGasLimit, GAS_MARGIN);
+    const gasLimit = calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
 
     exchangeContract
       .addLiquidity(
@@ -381,7 +381,7 @@ export default function AddLiquidity() {
         deadline,
         {
           value: inputValueParsed,
-          gasLimit,
+          gasLimit
         }
       )
       .then(response => {
