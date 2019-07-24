@@ -389,7 +389,6 @@ export default function TransactionDetails(props) {
         setWarningType('riskyEntryLow')
       }
       if (input >= 5) {
-        console.log('doing it')
         props.setcustomSlippageError('warning')
         setWarningType('riskyEntryHigh')
       }
