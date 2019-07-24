@@ -379,6 +379,7 @@ export default function TransactionDetails(props) {
   const checkAcceptablePercentValue = input => {
     setTimeout(function() {
       setWarningType('none')
+      props.setcustomSlippageError('valid')
       if (input < 0 || input > 50) {
         props.setcustomSlippageError('invalid')
         return setWarningType('invalidEntryBound')
