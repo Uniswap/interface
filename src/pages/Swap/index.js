@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { Button } from '../../theme'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import NewContextualInfo from '../../components/ContextualInfoNew'
+import AddressInputPanel from '../../components/AddressInputPanel'
 import OversizedPanel from '../../components/OversizedPanel'
 import TransactionDetails from '../../components/TransactionDetails'
 import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
@@ -239,7 +240,7 @@ function getMarketRate(
   }
 }
 
-export default function Swap({ initialCurrency }) {
+export default function Swap({ initialCurrency, sending }) {
   const { t } = useTranslation()
   const { account } = useWeb3Context()
 
@@ -259,6 +260,9 @@ export default function Swap({ initialCurrency }) {
   // core swap state-
   const [swapState, dispatchSwapState] = useReducer(swapStateReducer, initialCurrency, getInitialSwapState)
   const { independentValue, dependentValue, independentField, inputCurrency, outputCurrency } = swapState
+
+  const [recipient, setRecipient] = useState({ address: '', name: '' })
+  const [recipientError, setRecipientError] = useState()
 
   // get swap type from the currency types
   const swapType = getSwapType(inputCurrency, outputCurrency)
@@ -498,7 +502,9 @@ export default function Swap({ initialCurrency }) {
     percentSlippage.lt(ethers.utils.parseEther('.2')) // [5% - 20%)
   const highSlippageWarning = percentSlippage && percentSlippage.gte(ethers.utils.parseEther('.2')) // [20+%
 
-  const isValid = exchangeRate && inputError === null && independentError === null
+  const isValid = sending
+    ? exchangeRate && inputError === null && independentError === null && recipientError === null
+    : exchangeRate && inputError === null && independentError === null
 
   const estimatedText = `(${t('estimated')})`
   function formatBalance(value) {
@@ -620,6 +626,18 @@ export default function Swap({ initialCurrency }) {
         errorMessage={independentField === OUTPUT ? independentError : ''}
         disableUnlock
       />
+      {sending ? (
+        <>
+          <OversizedPanel>
+            <DownArrowBackground>
+              <DownArrow src={isValid ? ArrowDownBlue : ArrowDownGrey} alt="arrow" />
+            </DownArrowBackground>
+          </OversizedPanel>
+          <AddressInputPanel onChange={setRecipient} onError={setRecipientError} />
+        </>
+      ) : (
+        ''
+      )}
       <OversizedPanel hideBottom>
         <ExchangeRateWrapper
           onClick={() => {
