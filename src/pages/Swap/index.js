@@ -561,6 +561,8 @@ export default function Swap({ initialCurrency }) {
     })
   }
 
+  const [customSlippageError, setcustomSlippageError] = useState('')
+
   return (
     <>
       <CurrencyInputPanel
@@ -664,10 +666,15 @@ export default function Swap({ initialCurrency }) {
         dependentDecimals={dependentDecimals}
         independentDecimals={independentDecimals}
         percentSlippageFormatted={percentSlippageFormatted}
+        setcustomSlippageError={setcustomSlippageError}
       />
       <Flex>
-        <Button disabled={!isValid} onClick={onSwap} warning={highSlippageWarning}>
-          {highSlippageWarning ? t('swapAnyway') : t('swap')}
+        <Button
+          disabled={!isValid || customSlippageError === 'invalid'}
+          onClick={onSwap}
+          warning={highSlippageWarning || customSlippageError === 'warning'}
+        >
+          {highSlippageWarning || customSlippageError === 'warning' ? t('swapAnyway') : t('swap')}
         </Button>
       </Flex>
     </>

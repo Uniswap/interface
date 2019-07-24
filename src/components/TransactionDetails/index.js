@@ -260,8 +260,10 @@ export default function TransactionDetails(props) {
           <SlippageRow>
             <Option
               onClick={() => {
-                checkAcceptablePercentValue(0.1)
+                updateSlippage(0.1)
+                setWarningType('none')
                 setActiveIndex(1)
+                props.setcustomSlippageError('valid')
                 setplaceHolder('Custom')
               }}
               active={activeIndex === 1 ? true : false}
@@ -270,8 +272,10 @@ export default function TransactionDetails(props) {
             </Option>
             <Option
               onClick={() => {
-                checkAcceptablePercentValue(1)
+                updateSlippage(1)
+                setWarningType('none')
                 setActiveIndex(2)
+                props.setcustomSlippageError('valid')
                 setplaceHolder('Custom')
               }}
               active={activeIndex === 2 ? true : false}
@@ -280,8 +284,10 @@ export default function TransactionDetails(props) {
             </Option>
             <OptionLarge
               onClick={() => {
-                checkAcceptablePercentValue(2)
+                updateSlippage(2)
+                setWarningType('none')
                 setActiveIndex(3)
+                props.setcustomSlippageError('valid')
                 setplaceHolder('Custom')
               }}
               active={activeIndex === 3 ? true : false}
@@ -301,11 +307,23 @@ export default function TransactionDetails(props) {
                   parseInput(e)
                 }}
                 active={activeIndex === 4 ? true : false}
-                warning={warningType !== 'none' && warningType !== 'riskyEntryLow' ? 'red' : ''}
+                warning={
+                  warningType === 'emptyInput'
+                    ? ''
+                    : warningType !== 'none' && warningType !== 'riskyEntryLow'
+                    ? 'red'
+                    : ''
+                }
               />
               <Percent
                 color={
-                  warningType !== 'none' && warningType !== 'riskyEntryLow' ? 'red' : activeIndex !== 4 ? 'faded' : ''
+                  warningType === 'emptyInput'
+                    ? 'faded'
+                    : warningType !== 'none' && warningType !== 'riskyEntryLow'
+                    ? 'red'
+                    : activeIndex !== 4
+                    ? 'faded'
+                    : ''
                 }
               >
                 %
@@ -313,11 +331,20 @@ export default function TransactionDetails(props) {
             </InputGroup>
           </SlippageRow>
           <SlippageRow>
-            <BottomError color={warningType !== 'none' && warningType !== 'riskyEntryLow' ? 'red' : ''}>
+            <BottomError
+              color={
+                warningType === 'emptyInput'
+                  ? ''
+                  : warningType !== 'none' && warningType !== 'riskyEntryLow'
+                  ? 'red'
+                  : ''
+              }
+            >
+              {warningType === 'emptyInput' ? 'Enter a slippage percentage.' : ''}
               {warningType === 'invalidEntry' ? 'Please input a valid percentage.' : ''}
               {warningType === 'invalidEntryBound' ? 'Pleae select value less than 50%' : ''}
-              {warningType === 'riskyEntryHigh' ? 'Youre at risk of being front-run.' : ''}
-              {warningType === 'riskyEntryLow' ? 'Youre transaction may fail.' : ''}
+              {warningType === 'riskyEntryHigh' ? 'Your transaction may be frontrun.' : ''}
+              {warningType === 'riskyEntryLow' ? 'Your transaction may fail.' : ''}
             </BottomError>
           </SlippageRow>
         </SlippageSelector>
@@ -329,9 +356,14 @@ export default function TransactionDetails(props) {
 
   const parseInput = e => {
     let input = e.target.value
+    if (input === '') {
+      setUserInput(input)
+      props.setcustomSlippageError('invalid')
+      return setWarningType('emptyInput')
+    }
     //check for decimal
-    var isValid = /^[+]?\d*\.?\d{1,2}$/.test(input) || /^[+]?\d*\.$/.test(input)
-    var decimalLimit = /^\d+\.?\d{0,2}$/.test(input) || input === ''
+    let isValid = /^[+]?\d*\.?\d{1,2}$/.test(input) || /^[+]?\d*\.$/.test(input)
+    let decimalLimit = /^\d+\.?\d{0,2}$/.test(input) || input === ''
     if (decimalLimit) {
       setUserInput(input)
     } else {
@@ -348,19 +380,26 @@ export default function TransactionDetails(props) {
     setTimeout(function() {
       setWarningType('none')
       if (input < 0 || input > 50) {
+        props.setcustomSlippageError('invalid')
         return setWarningType('invalidEntryBound')
       }
       if (input >= 0 && input < 0.1) {
+        props.setcustomSlippageError('valid')
         setWarningType('riskyEntryLow')
       }
-
       if (input >= 5) {
+        console.log('doing it')
+        props.setcustomSlippageError('warning')
         setWarningType('riskyEntryHigh')
       }
-      let num = parseFloat((input * 100).toFixed(2))
-      props.setRawSlippage(num)
-      props.setRawTokenSlippage(num)
+      updateSlippage(input)
     }, 300)
+  }
+
+  const updateSlippage = newSlippage => {
+    let numParsed = parseFloat((newSlippage * 100).toFixed(2))
+    props.setRawSlippage(numParsed)
+    props.setRawTokenSlippage(numParsed)
   }
 
   const b = text => <Bold>{text}</Bold>
