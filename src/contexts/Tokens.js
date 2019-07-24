@@ -28,20 +28,6 @@ const ETH = {
 }
 
 const INITIAL_TOKENS_CONTEXT = {
-  3: {
-    '0xaD6D458402F60fD3Bd25163575031ACDce07538D': {
-      [NAME]: 'Dai Stablecoin v1.0',
-      [SYMBOL]: 'DAI',
-      [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: '0xc0fc958f7108be4060f33a699a92d3ea49b0b5f0'
-    },
-    '0xDb0040451F373949A4Be60dcd7b6B8D6E42658B6': {
-      [NAME]: 'BAT',
-      [SYMBOL]: 'BAT',
-      [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: '0x8bcd6f821012989b8d32ef002667a6524296a279'
-    }
-  },
   1: {
     '0x960b236A07cf122663c4303350609A66A7B288C0': {
       [NAME]: 'Aragon Network Token',
