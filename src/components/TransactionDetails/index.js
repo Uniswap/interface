@@ -371,30 +371,29 @@ export default function TransactionDetails(props) {
     }
     if (isValid) {
       checkAcceptablePercentValue(input)
+      // }, 300)
     } else {
       setWarningType('invalidEntry')
     }
   }
 
   const checkAcceptablePercentValue = input => {
-    setTimeout(function() {
-      setWarningType('none')
+    setWarningType('none')
+    props.setcustomSlippageError('valid')
+    if (input < 0 || input > 50) {
+      props.setcustomSlippageError('invalid')
+      return setWarningType('invalidEntryBound')
+    }
+    if (input >= 0 && input < 0.1) {
       props.setcustomSlippageError('valid')
-      if (input < 0 || input > 50) {
-        props.setcustomSlippageError('invalid')
-        return setWarningType('invalidEntryBound')
-      }
-      if (input >= 0 && input < 0.1) {
-        props.setcustomSlippageError('valid')
-        setWarningType('riskyEntryLow')
-      }
-      if (input >= 5) {
-        console.log('doing it')
-        props.setcustomSlippageError('warning')
-        setWarningType('riskyEntryHigh')
-      }
-      updateSlippage(input)
-    }, 300)
+      setWarningType('riskyEntryLow')
+    }
+    if (input >= 5) {
+      console.log('doing it')
+      props.setcustomSlippageError('warning')
+      setWarningType('riskyEntryHigh')
+    }
+    updateSlippage(input)
   }
 
   const updateSlippage = newSlippage => {
