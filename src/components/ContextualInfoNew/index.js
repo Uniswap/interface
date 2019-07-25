@@ -96,8 +96,8 @@ export default function ContextualInfo({
   highSlippageWarning,
   dropDownContent
 }) {
-  const [showDetails, setShowDetails] = useState(true)
-  return allowExpand ? (
+  const [showDetails, setShowDetails] = useState(false)
+  return !allowExpand ? (
     <SummaryWrapper>{contextualInfo}</SummaryWrapper>
   ) : (
     <>

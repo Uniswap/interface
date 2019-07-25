@@ -280,11 +280,7 @@ export default function TransactionDetails(props) {
           <SlippageRow>
             <Option
               onClick={() => {
-                updateSlippage(0.1)
-                setWarningType('none')
-                setActiveIndex(1)
-                props.setcustomSlippageError('valid')
-                setplaceHolder('Custom')
+                setFromFixed(1, 0.1)
               }}
               active={activeIndex === 1}
             >
@@ -292,11 +288,7 @@ export default function TransactionDetails(props) {
             </Option>
             <Option
               onClick={() => {
-                updateSlippage(1)
-                setWarningType('none')
-                setActiveIndex(2)
-                props.setcustomSlippageError('valid')
-                setplaceHolder('Custom')
+                setFromFixed(2, 1)
               }}
               active={activeIndex === 2}
             >
@@ -304,11 +296,7 @@ export default function TransactionDetails(props) {
             </Option>
             <OptionLarge
               onClick={() => {
-                updateSlippage(2)
-                setWarningType('none')
-                setActiveIndex(3)
-                props.setcustomSlippageError('valid')
-                setplaceHolder('Custom')
+                setFromFixed(3, 2)
               }}
               active={activeIndex === 3}
             >
@@ -372,21 +360,52 @@ export default function TransactionDetails(props) {
     )
   }
 
+  // used for slippage presets
+  const setFromFixed = (index, slippage) => {
+    // update slippage in parent, reset errors and input state
+    updateSlippage(slippage)
+    setWarningType('none')
+    setActiveIndex(index)
+    props.setcustomSlippageError('valid')
+    setplaceHolder('Custom')
+  }
+
   const [userInput, setUserInput] = useState()
   const debouncedInput = useDebounce(userInput, 150)
 
+  /**
+   * proposed debounce flow
+   *
+   * 1. onChange, check if theyve entered valid number
+   *
+   * 2. if valid, update the userInput state
+   *
+   * 3. trigger a side effect that montors debouncedInput
+   *
+   * 4. in that side effect, check if input is within bounds
+   *
+   * 5. if not, set errors - if so, update the parent slippage
+   *
+   */
+
+  // check that the theyve entered number and correct decimal
   const parseInput = e => {
     let input = e.target.value
+
+    //if blank, update warnings
     if (input === '') {
       setUserInput(input)
       props.setcustomSlippageError('invalid')
       return setWarningType('emptyInput')
     }
+
     //check for valid key entry
     let isValid = /^[+]?\d*\.?\d{1,2}$/.test(input) || /^[+]?\d*\.$/.test(input)
 
     // restrict to 2 decimal places
     let decimalLimit = /^\d+\.?\d{0,2}$/.test(input) || input === ''
+
+    // if its within accepted decimal limit, update the input state
     if (decimalLimit) {
       setUserInput(input)
     } else {
