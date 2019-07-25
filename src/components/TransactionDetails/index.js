@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled, { css, keyframes } from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { amountFormatter } from '../../utils'
 import { useDebounce } from '../../hooks'
 import { HelpCircle } from 'react-feather'
@@ -312,7 +312,7 @@ export default function TransactionDetails(props) {
                 onClick={e => {
                   setActiveIndex(4)
                   setplaceHolder('')
-                  parseInput(e)
+                  checkBounds(e.target.value)
                 }}
                 active={activeIndex === 4}
                 warning={
@@ -370,77 +370,50 @@ export default function TransactionDetails(props) {
     setplaceHolder('Custom')
   }
 
-  const [userInput, setUserInput] = useState()
+  const [userInput, setUserInput] = useState(1)
   const debouncedInput = useDebounce(userInput, 150)
 
-  /**
-   * proposed debounce flow
-   *
-   * 1. onChange, check if theyve entered valid number
-   *
-   * 2. if valid, update the userInput state
-   *
-   * 3. trigger a side effect that montors debouncedInput
-   *
-   * 4. in that side effect, check if input is within bounds
-   *
-   * 5. if not, set errors - if so, update the parent slippage
-   *
-   */
+  useEffect(() => {
+    checkBounds(debouncedInput)
+  }, [debouncedInput])
+
+  const checkBounds = slippageValue => {
+    setWarningType('none')
+    props.setcustomSlippageError('valid')
+
+    if (slippageValue === '') {
+      setUserInput(slippageValue)
+      props.setcustomSlippageError('invalid')
+      return setWarningType('emptyInput')
+    }
+
+    // check bounds and set errors
+    if (slippageValue < 0 || slippageValue > 50) {
+      props.setcustomSlippageError('invalid')
+      return setWarningType('invalidEntryBound')
+    }
+    if (slippageValue >= 0 && slippageValue < 0.1) {
+      props.setcustomSlippageError('valid')
+      setWarningType('riskyEntryLow')
+    }
+    if (slippageValue >= 5) {
+      props.setcustomSlippageError('warning')
+      setWarningType('riskyEntryHigh')
+    }
+    //update the actual slippage value in parent
+    updateSlippage(slippageValue)
+  }
 
   // check that the theyve entered number and correct decimal
   const parseInput = e => {
     let input = e.target.value
 
-    //if blank, update warnings
-    if (input === '') {
-      setUserInput(input)
-      props.setcustomSlippageError('invalid')
-      return setWarningType('emptyInput')
-    }
-
-    //check for valid key entry
-    let isValid = /^[+]?\d*\.?\d{1,2}$/.test(input) || /^[+]?\d*\.$/.test(input)
-
     // restrict to 2 decimal places
     let decimalLimit = /^\d+\.?\d{0,2}$/.test(input) || input === ''
-
     // if its within accepted decimal limit, update the input state
     if (decimalLimit) {
       setUserInput(input)
-    } else {
-      return
     }
-
-    // now check within acceptable bounds
-    if (isValid) {
-      checkAcceptablePercentValue(input)
-    } else {
-      setWarningType('invalidEntry')
-    }
-  }
-
-  const checkAcceptablePercentValue = input => {
-    //reset errors (here in in parent)
-    setWarningType('none')
-    props.setcustomSlippageError('valid')
-
-    // check bounds and set errors
-    if (input < 0 || input > 50) {
-      props.setcustomSlippageError('invalid')
-      return setWarningType('invalidEntryBound')
-    }
-    if (input >= 0 && input < 0.1) {
-      props.setcustomSlippageError('valid')
-      setWarningType('riskyEntryLow')
-    }
-    if (input >= 5) {
-      props.setcustomSlippageError('warning')
-      setWarningType('riskyEntryHigh')
-    }
-
-    //update the actual slippage value in parent
-    updateSlippage(input)
   }
 
   const updateSlippage = newSlippage => {
