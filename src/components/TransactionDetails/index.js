@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 import { amountFormatter } from '../../utils'
-import questionMark from '../../assets/images/question-mark.svg'
+import { useDebounce } from '../../hooks'
+import { HelpCircle } from 'react-feather'
 
 import NewContextualInfo from '../../components/ContextualInfoNew'
 
@@ -27,11 +28,27 @@ const SlippageRow = styled(Flex)`
 `
 
 const QuestionWrapper = styled.div`
-  margin-left: 0.4rem;
-  margin-top: 0.2rem;
+  margin-left: 0.2rem;
+  margin-top: 0.6rem;
+  height: 25px;
 
   &:hover {
     cursor: pointer;
+    opacity: 0.7;
+  }
+`
+
+const HelpCircleStyled = styled(HelpCircle)`
+  height: 18px;
+`
+
+const fadeIn = keyframes`
+  from {
+    opacity : 0;
+  }
+
+  to {
+    opacity : 1;
   }
 `
 
@@ -40,18 +57,21 @@ const Popup = styled(Flex)`
   width: 228px;
   left: -78px;
   top: -124px;
-
   flex-direction: column;
   aligm-items: center;
-
   padding: 1rem;
-
   line-height: 183.52%;
   background: #404040;
   border-radius: 8px;
 
+  animation: ${fadeIn} 0.15s linear;
+
   color: white;
   font-style: italic;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    left: -20px;
+  `}
 `
 
 const Option = styled(Flex)`
@@ -237,7 +257,7 @@ export default function TransactionDetails(props) {
         <Break />
         <SlippageSelector>
           <SlippageRow>
-            Limit addtional price slippage
+            Limit additional price slippage
             <QuestionWrapper
               onMouseEnter={() => {
                 setPopup(true)
@@ -246,7 +266,7 @@ export default function TransactionDetails(props) {
                 setPopup(false)
               }}
             >
-              <img src={questionMark} alt="question mark" />
+              <HelpCircleStyled />
             </QuestionWrapper>
             {showPopup ? (
               <Popup>
@@ -266,7 +286,7 @@ export default function TransactionDetails(props) {
                 props.setcustomSlippageError('valid')
                 setplaceHolder('Custom')
               }}
-              active={activeIndex === 1 ? true : false}
+              active={activeIndex === 1}
             >
               0.1%
             </Option>
@@ -278,7 +298,7 @@ export default function TransactionDetails(props) {
                 props.setcustomSlippageError('valid')
                 setplaceHolder('Custom')
               }}
-              active={activeIndex === 2 ? true : false}
+              active={activeIndex === 2}
             >
               1%
             </Option>
@@ -290,7 +310,7 @@ export default function TransactionDetails(props) {
                 props.setcustomSlippageError('valid')
                 setplaceHolder('Custom')
               }}
-              active={activeIndex === 3 ? true : false}
+              active={activeIndex === 3}
             >
               2%
               <Faded>(suggested)</Faded>
@@ -306,7 +326,7 @@ export default function TransactionDetails(props) {
                   setplaceHolder('')
                   parseInput(e)
                 }}
-                active={activeIndex === 4 ? true : false}
+                active={activeIndex === 4}
                 warning={
                   warningType === 'emptyInput'
                     ? ''
@@ -353,6 +373,7 @@ export default function TransactionDetails(props) {
   }
 
   const [userInput, setUserInput] = useState()
+  const debouncedInput = useDebounce(userInput, 150)
 
   const parseInput = e => {
     let input = e.target.value
@@ -361,25 +382,31 @@ export default function TransactionDetails(props) {
       props.setcustomSlippageError('invalid')
       return setWarningType('emptyInput')
     }
-    //check for decimal
+    //check for valid key entry
     let isValid = /^[+]?\d*\.?\d{1,2}$/.test(input) || /^[+]?\d*\.$/.test(input)
+
+    // restrict to 2 decimal places
     let decimalLimit = /^\d+\.?\d{0,2}$/.test(input) || input === ''
     if (decimalLimit) {
       setUserInput(input)
     } else {
       return
     }
+
+    // now check within acceptable bounds
     if (isValid) {
       checkAcceptablePercentValue(input)
-      // }, 300)
     } else {
       setWarningType('invalidEntry')
     }
   }
 
   const checkAcceptablePercentValue = input => {
+    //reset errors (here in in parent)
     setWarningType('none')
     props.setcustomSlippageError('valid')
+
+    // check bounds and set errors
     if (input < 0 || input > 50) {
       props.setcustomSlippageError('invalid')
       return setWarningType('invalidEntryBound')
@@ -389,15 +416,19 @@ export default function TransactionDetails(props) {
       setWarningType('riskyEntryLow')
     }
     if (input >= 5) {
-      console.log('doing it')
       props.setcustomSlippageError('warning')
       setWarningType('riskyEntryHigh')
     }
+
+    //update the actual slippage value in parent
     updateSlippage(input)
   }
 
   const updateSlippage = newSlippage => {
+    // round to 2 decimals to prevent ethers error
     let numParsed = parseFloat((newSlippage * 100).toFixed(2))
+
+    // set both slippage values in parents
     props.setRawSlippage(numParsed)
     props.setRawTokenSlippage(numParsed)
   }
