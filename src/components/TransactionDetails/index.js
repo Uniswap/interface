@@ -259,6 +259,9 @@ export default function TransactionDetails(props) {
           <SlippageRow>
             Limit additional price slippage
             <QuestionWrapper
+              onClick={() => {
+                setPopup(!showPopup)
+              }}
               onMouseEnter={() => {
                 setPopup(true)
               }}
