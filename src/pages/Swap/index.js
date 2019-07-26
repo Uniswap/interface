@@ -26,8 +26,8 @@ const TOKEN_TO_ETH = 1
 const TOKEN_TO_TOKEN = 2
 
 // denominated in bips
-const ALLOWED_SLIPPAGE_DEFAULT = 150
-const TOKEN_ALLOWED_SLIPPAGE_DEFAULT = 200
+const ALLOWED_SLIPPAGE_DEFAULT = 100
+const TOKEN_ALLOWED_SLIPPAGE_DEFAULT = 100
 
 // denominated in seconds
 const DEADLINE_FROM_NOW = 60 * 15

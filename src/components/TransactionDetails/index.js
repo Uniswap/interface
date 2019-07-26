@@ -34,30 +34,29 @@ const FlexBetween = styled.div`
 `
 
 const SlippageRow = styled(Flex)`
-  flex-wrap: ${({ wrap }) => wrap && 'wrap'};
   position: relative;
-  width: 100%;
+  flex-wrap: ${({ wrap }) => wrap && 'wrap'};
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  font-size: 0.8rem;
+  width: 100%;
   padding: 0;
   padding-top: ${({ wrap }) => wrap && '0.25rem'};
 `
 
 const QuestionWrapper = styled.button`
-  border: none;
-  background: none;
-  margin: 0;
-  padding: 0;
-  outline: none;
-  cursor: default;
-  border-radius: 36px;
-  margin-left: 0.4rem;
-  padding: 0.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0;
+  padding: 0;
+  margin-left: 0.4rem;
+  padding: 0.2rem;
+  border: none;
+  background: none;
+  outline: none;
+  cursor: default;
+  border-radius: 36px;
 
   :hover,
   :focus {
@@ -89,7 +88,7 @@ const Popup = styled(Flex)`
   align-items: center;
   padding: 1rem;
   line-height: 150%;
-  background: #404040;
+  background: ${({ theme }) => theme.charcoalBlack};
   border-radius: 8px;
 
   animation: ${fadeIn} 0.15s linear;
@@ -109,10 +108,12 @@ const FancyButton = styled.button`
   border-radius: 36px;
   border: 1px solid ${({ theme }) => theme.mercuryGray};
   outline: none;
-  background: white;
+  background: ${({ theme }) => theme.white};
 
   :hover {
     cursor: inherit;
+    border: 1px solid ${({ theme }) => theme.royalBlue};
+
     box-shadow: ${({ theme }) => transparentize(0.6, theme.royalBlue)} 0px 0px 0px 3px;
   }
   :focus {
@@ -121,19 +122,24 @@ const FancyButton = styled.button`
 `
 
 const Option = styled(FancyButton)`
-  margin-right: 6px;
+  margin-right: 8px;
   margin-top: 6px;
 
   ${({ active, theme }) =>
     active &&
     css`
-      background-color: ${theme.royalBlue};
-      color: white;
+      background-color: ${({ theme }) => theme.royalBlue};
+      color: ${({ theme }) => theme.white};
+      border: none;
     `}
 `
 
+const OptionLarge = styled(Option)`
+  width: 120px;
+`
+
 const Input = styled.input`
-  background: #ffffff;
+  background: ${({ theme }) => theme.white};
   flex-grow: 1;
 
   outline: none;
@@ -156,31 +162,31 @@ const Input = styled.input`
       text-align: right;
     `}
 
-  ${({ warning, theme }) =>
-    warning === 'red' &&
+  ${({ placeholder }) =>
+    placeholder !== 'Custom' &&
     css`
-      color: ${theme.salmonRed};
+      text-align: right;
+    `}
+
+  ${({ color }) =>
+    color === 'red' &&
+    css`
+      color: ${({ theme }) => theme.salmonRed};
     `}
 `
 
 const BottomError = styled.div`
-  ${({ warningType }) =>
-    warningType !== 'none' &&
+  ${({ show }) =>
+    show &&
     css`
       padding-top: 12px;
     `}
-
   color: ${({ theme }) => theme.doveGray};
-  ${({ color, theme }) =>
+  ${({ color }) =>
     color === 'red' &&
     css`
-      color: ${theme.salmonRed};
+      color: ${({ theme }) => theme.salmonRed};
     `}
-`
-
-const OptionLarge = styled(Option)`
-  width: 120px;
-  padding: 0 0.75rem 0 0.75rem;
 `
 
 const OptionCustom = styled(FancyButton)`
@@ -188,20 +194,25 @@ const OptionCustom = styled(FancyButton)`
   position: relative;
   width: 120px;
   margin-top: 6px;
-  padding: 0 0.75rem 0 0.75rem;
+  padding: 0 0.75rem;
 
-  ${({ active, theme }) =>
+  ${({ active }) =>
     active &&
     css`
-      border: 1px solid ${theme.royalBlue};
+      border: 1px solid ${({ theme }) => theme.royalBlue};
+    `}
+
+  ${({ color }) =>
+    color === 'red' &&
+    css`
+      border: 1px solid ${({ theme }) => theme.salmonRed};
     `}
 
   input {
     width: 100%;
     height: 100%;
     border: 0px;
-    border-radius: 32px;
-    background: none;
+    border-radius: 2rem;
   }
 `
 
@@ -255,7 +266,7 @@ export default function TransactionDetails(props) {
   const [showPopup, setPopup] = useState(false)
 
   const [userInput, setUserInput] = useState('')
-  const debouncedInput = useDebounce(userInput, 50)
+  const debouncedInput = useDebounce(userInput, 150)
 
   useEffect(() => {
     if (activeIndex === 4) {
@@ -345,22 +356,29 @@ export default function TransactionDetails(props) {
             </Option>
             <Option
               onClick={() => {
-                setFromFixed(2, 1)
+                setFromFixed(2, 0.5)
               }}
               active={activeIndex === 2}
             >
-              1%
+              0.5%
             </Option>
             <OptionLarge
               onClick={() => {
-                setFromFixed(3, 2)
+                setFromFixed(3, 1)
               }}
               active={activeIndex === 3}
             >
-              2% <Faded>(suggested)</Faded>
+              1% <Faded>(suggested)</Faded>
             </OptionLarge>
             <OptionCustom
               active={activeIndex === 4}
+              color={
+                warningType === WARNING_TYPE.emptyInput
+                  ? ''
+                  : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
+                  ? 'red'
+                  : ''
+              }
               onClick={() => {
                 setFromCustom()
               }}
@@ -375,10 +393,18 @@ export default function TransactionDetails(props) {
                   tabIndex={-1}
                   ref={inputRef}
                   active={activeIndex === 4}
-                  placeholder={activeIndex === 4 ? (!!userInput ? '' : '0') : 'Custom'}
+                  placeholder={
+                    activeIndex === 4
+                      ? !!userInput
+                        ? ''
+                        : '0'
+                      : activeIndex !== 4 && userInput !== ''
+                      ? userInput
+                      : 'Custom'
+                  }
                   value={activeIndex === 4 ? userInput : ''}
                   onChange={parseInput}
-                  warning={
+                  color={
                     warningType === WARNING_TYPE.emptyInput
                       ? ''
                       : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
@@ -386,17 +412,7 @@ export default function TransactionDetails(props) {
                       : ''
                   }
                 />
-                <Percent
-                  color={
-                    warningType === WARNING_TYPE.emptyInput
-                      ? 'faded'
-                      : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
-                      ? 'red'
-                      : activeIndex !== 4
-                      ? 'faded'
-                      : ''
-                  }
-                >
+                <Percent color={activeIndex !== 4 ? 'faded' : warningType === WARNING_TYPE.riskyEntryHigh ? 'red' : ''}>
                   %
                 </Percent>
               </FlexBetween>
@@ -404,7 +420,7 @@ export default function TransactionDetails(props) {
           </SlippageRow>
           <SlippageRow>
             <BottomError
-              warningType={warningType.toString()}
+              show={activeIndex === 4}
               color={
                 warningType === WARNING_TYPE.emptyInput
                   ? ''
@@ -413,7 +429,7 @@ export default function TransactionDetails(props) {
                   : ''
               }
             >
-              {activeIndex === 4 && 'Custom splippage'}
+              {activeIndex === 4 && warningType.toString() === 'none' && 'Custom slippage value entered'}
               {warningType === WARNING_TYPE.emptyInput && 'Enter a slippage percentage.'}
               {warningType === WARNING_TYPE.invalidEntry && 'Please input a valid percentage.'}
               {warningType === WARNING_TYPE.invalidEntryBound && 'Pleae select value less than 50%'}
