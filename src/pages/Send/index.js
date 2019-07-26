@@ -612,7 +612,7 @@ export default function Swap({ initialCurrency }) {
         isError={isError}
         slippageWarning={slippageWarning && slippageWarningText}
         highSlippageWarning={highSlippageWarning && slippageWarningText}
-        renderTransactionDetails={renderTransactionDetails}
+        dropDownContent={renderTransactionDetails}
       />
     )
   }

@@ -32,30 +32,30 @@ const FlexBetween = styled.div`
 `
 
 const SlippageRow = styled(Flex)`
-  flex-wrap: ${({ wrap }) => wrap && 'wrap'};
   position: relative;
-  width: 100%;
+  flex-wrap: ${({ wrap }) => wrap && 'wrap'};
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  font-size: 0.8rem;
+  width: 100%;
   padding: 0;
   margin-bottom: 14px;
+  font-size: 0.8rem;
 `
 
 const QuestionWrapper = styled.button`
-  border: none;
-  background: none;
-  margin: 0;
-  padding: 0;
-  outline: none;
-  cursor: default;
-  border-radius: 36px;
-  margin-left: 0.4rem;
-  padding: 0.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0;
+  padding: 0;
+  margin-left: 0.4rem;
+  padding: 0.2rem;
+  border: none;
+  background: none;
+  outline: none;
+  cursor: default;
+  border-radius: 36px;
 
   :hover,
   :focus {
@@ -87,7 +87,7 @@ const Popup = styled(Flex)`
   align-items: center;
   padding: 1rem;
   line-height: 150%;
-  background: #404040;
+  background: ${({ theme }) => theme.charcoalBlack};
   border-radius: 8px;
 
   animation: ${fadeIn} 0.15s linear;
@@ -105,13 +105,13 @@ const FancyButton = styled.button`
   min-width: 55px;
   height: 24px;
   border-radius: 36px;
-  border: 1px solid #f2f2f2;
+  border: 1px solid ${({ theme }) => theme.buttonOutlineGrey};
   outline: none;
-  background: white;
+  background: ${({ theme }) => theme.white};
 
   :hover,
   :focus {
-    box-shadow: ${transparentize(0.6, '#2f80ed')} 0px 0px 0px 3px;
+    box-shadow: ${({ theme }) => transparentize(0.6, theme.royalBlue)} 0px 0px 0px 3px;
   }
 `
 
@@ -122,57 +122,10 @@ const Option = styled(FancyButton)`
   ${({ active }) =>
     active &&
     css`
-      background-color: #2f80ed;
-      color: white;
-      border: 1px solid #2f80ed;
+      background-color: ${({ theme }) => theme.royalBlue};
+      color: ${({ theme }) => theme.white};
+      border: 1px solid ${({ theme }) => theme.royalBlue};
     `}
-`
-
-const Input = styled.input`
-  background: #ffffff;
-  flex-grow: 1;
-
-  outline: none;
-  box-sizing: border-box;
-
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-  }
-
-  cursor: inherit;
-
-  color: #aeaeae;
-  text-align: left;
-  ${({ active }) =>
-    active &&
-    css`
-      color: initial;
-      cursor: initial;
-      text-align: right;
-    `}
-
-  ${({ warning }) =>
-    warning === 'red' &&
-    css`
-      color: #ff6871;
-    `}
-`
-
-const BottomError = styled.div`
-  margin-top: 1rem;
-  color: #aeaeae;
-  ${({ color }) =>
-    color === 'red' &&
-    css`
-      color: #ff6871;
-    `}
-`
-
-const Break = styled.div`
-  border: 1px solid #f2f2f2;
-  width: 100%;
-  margin-top: 1rem;
 `
 
 const OptionLarge = styled(Option)`
@@ -188,15 +141,74 @@ const OptionCustom = styled(FancyButton)`
   ${({ active }) =>
     active &&
     css`
-      border: 1px solid #2f80ed;
+      border: 1px solid ${({ theme }) => theme.royalBlue};
+    `}
+
+  ${({ color }) =>
+    color === 'red' &&
+    css`
+      border: 1px solid ${({ theme }) => theme.salmonRed};
     `}
 
   input {
     width: 100%;
     height: 100%;
     border: 0px;
-    border-radius: 32px;
+    border-radius: 2rem;
   }
+`
+
+const Input = styled.input`
+  background: ${({ theme }) => theme.white};
+  flex-grow: 1;
+
+  outline: none;
+  box-sizing: border-box;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+
+  cursor: inherit;
+
+  color: ${({ theme }) => theme.chaliceGray};
+  text-align: left;
+  ${({ active }) =>
+    active &&
+    css`
+      color: initial;
+      cursor: initial;
+      text-align: right;
+    `}
+
+  ${({ placeholder }) =>
+    placeholder !== 'Custom' &&
+    css`
+      text-align: right;
+    `}
+
+  ${({ color }) =>
+    color === 'red' &&
+    css`
+      color: ${({ theme }) => theme.salmonRed};
+    `}
+`
+
+const BottomError = styled.div`
+  margin-top: 1rem;
+  color: ${({ theme }) => theme.chaliceGray};
+  ${({ color }) =>
+    color === 'red' &&
+    css`
+      color: ${({ theme }) => theme.salmonRed};
+    `}
+`
+
+const Break = styled.div`
+  border: 1px solid ${({ theme }) => theme.buttonOutlineGrey};
+  width: 100%;
+  margin-top: 1rem;
 `
 
 const Bold = styled.span`
@@ -219,11 +231,11 @@ const Percent = styled.div`
   ${({ color }) =>
     (color === 'faded' &&
       css`
-        color: #aeaeae;
+        color: ${({ theme }) => theme.chaliceGray};
       `) ||
     (color === 'red' &&
       css`
-        color: #ff6871;
+        color: ${({ theme }) => theme.salmonRed};
       `)}
 `
 
@@ -331,22 +343,29 @@ export default function TransactionDetails(props) {
             </Option>
             <Option
               onClick={() => {
-                setFromFixed(2, 1)
+                setFromFixed(2, 0.5)
               }}
               active={activeIndex === 2}
             >
-              1%
+              0.5%
             </Option>
             <OptionLarge
               onClick={() => {
-                setFromFixed(3, 2)
+                setFromFixed(3, 1)
               }}
               active={activeIndex === 3}
             >
-              2% <Faded>(suggested)</Faded>
+              1% <Faded>(suggested)</Faded>
             </OptionLarge>
             <OptionCustom
               active={activeIndex === 4}
+              color={
+                warningType === WARNING_TYPE.emptyInput
+                  ? ''
+                  : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
+                  ? 'red'
+                  : ''
+              }
               onClick={() => {
                 setFromCustom()
               }}
@@ -361,10 +380,18 @@ export default function TransactionDetails(props) {
                   tabIndex={-1}
                   ref={inputRef}
                   active={activeIndex === 4}
-                  placeholder={activeIndex === 4 ? (!!userInput ? '' : '0') : 'Custom'}
+                  placeholder={
+                    activeIndex === 4
+                      ? !!userInput
+                        ? ''
+                        : '0'
+                      : activeIndex !== 4 && userInput !== ''
+                      ? userInput
+                      : 'Custom'
+                  }
                   value={activeIndex === 4 ? userInput : ''}
                   onChange={parseInput}
-                  warning={
+                  color={
                     warningType === WARNING_TYPE.emptyInput
                       ? ''
                       : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
