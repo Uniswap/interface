@@ -157,6 +157,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xd4777E164c6C683E10593E08760B803D58529a8E'
     },
+    '0x6fb3e0a217407efff7ca062d46c26e5d60a14d69': {
+      [NAME]: 'IoTeX Network',
+      [SYMBOL]: 'IOTX',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x084f002671a5f03d5498b1e5fb15fc0cfee9a470'
+    },
     '0xD29F0b5b3F50b07Fe9a9511F7d86F4f4bAc3f8c4': {
       [NAME]: 'Liquidity.Network Token',
       [SYMBOL]: 'LQD',
