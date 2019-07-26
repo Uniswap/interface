@@ -138,7 +138,6 @@ const Input = styled.input`
 const BottomError = styled.div`
   margin-top: 1rem;
   color: #aeaeae;
-
   ${({ color }) =>
     color === 'red' &&
     `
@@ -201,6 +200,23 @@ const ErrorEmoji = styled.span`
 `
 
 export default function TransactionDetails(props) {
+  const [activeIndex, setActiveIndex] = useState(3)
+
+  const [placeHolder, setplaceHolder] = useState('Custom')
+
+  const [warningType, setWarningType] = useState('none')
+
+  const [showPopup, setPopup] = useState(false)
+
+  const [userInput, setUserInput] = useState('')
+  const debouncedInput = useDebounce(userInput, 150)
+
+  useEffect(() => {
+    checkBounds(debouncedInput)
+  }, [debouncedInput])
+
+  const b = text => <Bold>{text}</Bold>
+
   const { t } = useTranslation()
 
   function renderSummary() {
@@ -241,14 +257,6 @@ export default function TransactionDetails(props) {
       />
     )
   }
-
-  const [activeIndex, setActiveIndex] = useState(3)
-
-  const [placeHolder, setplaceHolder] = useState('Custom')
-
-  const [warningType, setWarningType] = useState('none')
-
-  const [showPopup, setPopup] = useState(false)
 
   const dropDownContent = () => {
     return (
@@ -307,7 +315,7 @@ export default function TransactionDetails(props) {
               <Faded>(suggested)</Faded>
             </OptionLarge>
             <InputGroup>
-              {warningType !== 'none' ? <ErrorEmoji>⚠️</ErrorEmoji> : ''}
+              {warningType !== 'none' && activeIndex === 4 ? <ErrorEmoji>⚠️</ErrorEmoji> : ''}
               <Input
                 placeholder={placeHolder}
                 value={userInput || ''}
@@ -351,11 +359,11 @@ export default function TransactionDetails(props) {
                   : ''
               }
             >
-              {warningType === 'emptyInput' ? 'Enter a slippage percentage.' : ''}
-              {warningType === 'invalidEntry' ? 'Please input a valid percentage.' : ''}
-              {warningType === 'invalidEntryBound' ? 'Pleae select value less than 50%' : ''}
-              {warningType === 'riskyEntryHigh' ? 'Your transaction may be frontrun.' : ''}
-              {warningType === 'riskyEntryLow' ? 'Your transaction may fail.' : ''}
+              {warningType === 'emptyInput' && 'Enter a slippage percentage.'}
+              {warningType === 'invalidEntry' && 'Please input a valid percentage.'}
+              {warningType === 'invalidEntryBound' && 'Pleae select value less than 50%'}
+              {warningType === 'riskyEntryHigh' && 'Your transaction may be frontrun.'}
+              {warningType === 'riskyEntryLow' && 'Your transaction may fail.'}
             </BottomError>
           </SlippageRow>
         </SlippageSelector>
@@ -372,13 +380,6 @@ export default function TransactionDetails(props) {
     props.setcustomSlippageError('valid')
     setplaceHolder('Custom')
   }
-
-  const [userInput, setUserInput] = useState(1)
-  const debouncedInput = useDebounce(userInput, 150)
-
-  useEffect(() => {
-    checkBounds(debouncedInput)
-  }, [debouncedInput])
 
   const checkBounds = slippageValue => {
     setWarningType('none')
@@ -427,8 +428,6 @@ export default function TransactionDetails(props) {
     props.setRawSlippage(numParsed)
     props.setRawTokenSlippage(numParsed)
   }
-
-  const b = text => <Bold>{text}</Bold>
 
   const renderTransactionDetails = () => {
     if (props.independentField === props.INPUT) {
