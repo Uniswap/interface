@@ -1,0 +1,537 @@
+import React, { useState, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import styled, { css, keyframes } from 'styled-components'
+import { transparentize } from 'polished'
+import { amountFormatter } from '../../utils'
+import { useDebounce } from '../../hooks'
+import { HelpCircle } from 'react-feather'
+
+import NewContextualInfo from '../../components/ContextualInfoNew'
+
+const WARNING_TYPE = Object.freeze({
+  none: 'none',
+  emptyInput: 'emptyInput',
+  invalidEntry: 'invalidEntry',
+  invalidEntryBound: 'invalidEntryBound',
+  riskyEntryHigh: 'riskyEntryHigh',
+  riskyEntryLow: 'riskyEntryLow'
+})
+
+const b = text => <Bold>{text}</Bold>
+
+const Flex = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
+const FlexBetween = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  height: 100%;
+`
+
+const SlippageRow = styled(Flex)`
+  flex-wrap: ${({ wrap }) => wrap && 'wrap'};
+  position: relative;
+  width: 100%;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 0.8rem;
+  padding: 0;
+  margin-bottom: 14px;
+`
+
+const QuestionWrapper = styled.button`
+  border: none;
+  background: none;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  cursor: default;
+  border-radius: 36px;
+  margin-left: 0.4rem;
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  :hover,
+  :focus {
+    opacity: 0.7;
+  }
+`
+
+const HelpCircleStyled = styled(HelpCircle)`
+  height: 18px;
+  width: 18px;
+`
+
+const fadeIn = keyframes`
+  from {
+    opacity : 0;
+  }
+
+  to {
+    opacity : 1;
+  }
+`
+
+const Popup = styled(Flex)`
+  position: absolute;
+  width: 228px;
+  left: -78px;
+  top: -124px;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  line-height: 150%;
+  background: #404040;
+  border-radius: 8px;
+
+  animation: ${fadeIn} 0.15s linear;
+
+  color: white;
+  font-style: italic;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    left: -20px;
+  `}
+`
+
+const FancyButton = styled.button`
+  align-items: center;
+  min-width: 55px;
+  height: 24px;
+  border-radius: 36px;
+  border: 1px solid #f2f2f2;
+  outline: none;
+  background: white;
+
+  :hover,
+  :focus {
+    box-shadow: ${transparentize(0.6, '#2f80ed')} 0px 0px 0px 3px;
+  }
+`
+
+const Option = styled(FancyButton)`
+  margin-right: 6px;
+  margin-top: 6px;
+
+  ${({ active }) =>
+    active &&
+    css`
+      background-color: #2f80ed;
+      color: white;
+      border: 1px solid #2f80ed;
+    `}
+`
+
+const Input = styled.input`
+  background: #ffffff;
+  flex-grow: 1;
+
+  outline: none;
+  box-sizing: border-box;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+
+  cursor: inherit;
+
+  color: #aeaeae;
+  text-align: left;
+  ${({ active }) =>
+    active &&
+    css`
+      color: initial;
+      cursor: initial;
+      text-align: right;
+    `}
+
+  ${({ warning }) =>
+    warning === 'red' &&
+    css`
+      color: #ff6871;
+    `}
+`
+
+const BottomError = styled.div`
+  margin-top: 1rem;
+  color: #aeaeae;
+  ${({ color }) =>
+    color === 'red' &&
+    css`
+      color: #ff6871;
+    `}
+`
+
+const Break = styled.div`
+  border: 1px solid #f2f2f2;
+  width: 100%;
+  margin-top: 1rem;
+`
+
+const OptionLarge = styled(Option)`
+  width: 120px;
+`
+
+const OptionCustom = styled(FancyButton)`
+  height: 2rem;
+  position: relative;
+  width: 120px;
+  margin-top: 6px;
+
+  ${({ active }) =>
+    active &&
+    css`
+      border: 1px solid #2f80ed;
+    `}
+
+  input {
+    width: 100%;
+    height: 100%;
+    border: 0px;
+    border-radius: 32px;
+  }
+`
+
+const Bold = styled.span`
+  font-weight: 500;
+`
+
+const LastSummaryText = styled.div`
+  margin-top: 0.6rem;
+`
+
+const SlippageSelector = styled.div`
+  margin-top: 1rem;
+`
+
+const Percent = styled.div`
+  color: inherit;
+  font-size: 0, 8rem;
+  flex-grow: 0;
+
+  ${({ color }) =>
+    (color === 'faded' &&
+      css`
+        color: #aeaeae;
+      `) ||
+    (color === 'red' &&
+      css`
+        color: #ff6871;
+      `)}
+`
+
+const Faded = styled.span`
+  opacity: 0.7;
+`
+
+export default function TransactionDetails(props) {
+  const { t } = useTranslation()
+
+  const [activeIndex, setActiveIndex] = useState(3)
+
+  const [warningType, setWarningType] = useState(WARNING_TYPE.none)
+
+  const inputRef = useRef()
+
+  const [showPopup, setPopup] = useState(false)
+
+  const [userInput, setUserInput] = useState('')
+  const debouncedInput = useDebounce(userInput, 150)
+
+  useEffect(() => {
+    if (activeIndex === 4) {
+      checkBounds(debouncedInput)
+    }
+  })
+
+  function renderSummary() {
+    let contextualInfo = ''
+    let isError = false
+
+    if (props.inputError || props.independentError) {
+      contextualInfo = props.inputError || props.independentError
+      isError = true
+    } else if (!props.inputCurrency || !props.outputCurrency) {
+      contextualInfo = t('selectTokenCont')
+    } else if (!props.independentValue) {
+      contextualInfo = t('enterValueCont')
+    } else if (!props.account) {
+      contextualInfo = t('noWallet')
+      isError = true
+    }
+
+    const slippageWarningText = props.highSlippageWarning
+      ? t('highSlippageWarning')
+      : props.slippageWarning
+      ? t('slippageWarning')
+      : ''
+
+    return (
+      <NewContextualInfo
+        openDetailsText={t('transactionDetails')}
+        closeDetailsText={t('hideDetails')}
+        contextualInfo={contextualInfo ? contextualInfo : slippageWarningText}
+        allowExpand={
+          !!(props.inputCurrency && props.outputCurrency && props.inputValueParsed && props.outputValueParsed)
+        }
+        isError={isError}
+        slippageWarning={props.slippageWarning && !contextualInfo}
+        highSlippageWarning={props.highSlippageWarning && !contextualInfo}
+        renderTransactionDetails={renderTransactionDetails}
+        dropDownContent={dropDownContent}
+      />
+    )
+  }
+
+  const dropDownContent = () => {
+    return (
+      <>
+        {renderTransactionDetails()}
+        <Break />
+        <SlippageSelector>
+          <SlippageRow>
+            Limit additional price slippage
+            <QuestionWrapper
+              onClick={() => {
+                setPopup(!showPopup)
+              }}
+              onMouseEnter={() => {
+                setPopup(true)
+              }}
+              onMouseLeave={() => {
+                setPopup(false)
+              }}
+            >
+              <HelpCircleStyled />
+            </QuestionWrapper>
+            {showPopup ? (
+              <Popup>
+                Lowering this limit decreases your risk of frontrunning. However, this makes it more likely that your
+                transaction will fail due to normal price movements.
+              </Popup>
+            ) : (
+              ''
+            )}
+          </SlippageRow>
+          <SlippageRow wrap>
+            <Option
+              onClick={() => {
+                setFromFixed(1, 0.1)
+              }}
+              active={activeIndex === 1}
+            >
+              0.1%
+            </Option>
+            <Option
+              onClick={() => {
+                setFromFixed(2, 1)
+              }}
+              active={activeIndex === 2}
+            >
+              1%
+            </Option>
+            <OptionLarge
+              onClick={() => {
+                setFromFixed(3, 2)
+              }}
+              active={activeIndex === 3}
+            >
+              2% <Faded>(suggested)</Faded>
+            </OptionLarge>
+            <OptionCustom
+              active={activeIndex === 4}
+              onClick={() => {
+                setFromCustom()
+              }}
+            >
+              <FlexBetween>
+                {!(warningType === WARNING_TYPE.none || warningType === WARNING_TYPE.emptyInput) && (
+                  <span role="img" aria-label="warning">
+                    ⚠️
+                  </span>
+                )}
+                <Input
+                  tabIndex={-1}
+                  ref={inputRef}
+                  active={activeIndex === 4}
+                  placeholder={activeIndex === 4 ? (!!userInput ? '' : '0') : 'Custom'}
+                  value={activeIndex === 4 ? userInput : ''}
+                  onChange={parseInput}
+                  warning={
+                    warningType === WARNING_TYPE.emptyInput
+                      ? ''
+                      : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
+                      ? 'red'
+                      : ''
+                  }
+                />
+                <Percent
+                  color={
+                    warningType === WARNING_TYPE.emptyInput
+                      ? 'faded'
+                      : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
+                      ? 'red'
+                      : activeIndex !== 4
+                      ? 'faded'
+                      : ''
+                  }
+                >
+                  %
+                </Percent>
+              </FlexBetween>
+            </OptionCustom>
+          </SlippageRow>
+          <SlippageRow>
+            <BottomError
+              color={
+                warningType === WARNING_TYPE.emptyInput
+                  ? ''
+                  : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
+                  ? 'red'
+                  : ''
+              }
+            >
+              {warningType === WARNING_TYPE.emptyInput && 'Enter a slippage percentage.'}
+              {warningType === WARNING_TYPE.invalidEntry && 'Please input a valid percentage.'}
+              {warningType === WARNING_TYPE.invalidEntryBound && 'Pleae select value less than 50%'}
+              {warningType === WARNING_TYPE.riskyEntryHigh && 'Your transaction may be frontrun.'}
+              {warningType === WARNING_TYPE.riskyEntryLow && 'Your transaction may fail.'}
+            </BottomError>
+          </SlippageRow>
+        </SlippageSelector>
+      </>
+    )
+  }
+
+  const setFromCustom = () => {
+    setActiveIndex(4)
+    inputRef.current.focus()
+    // if there's a value, evaluate the bounds
+    checkBounds(userInput)
+  }
+
+  // used for slippage presets
+  const setFromFixed = (index, slippage) => {
+    // update slippage in parent, reset errors and input state
+    updateSlippage(slippage)
+    setWarningType(WARNING_TYPE.none)
+    setActiveIndex(index)
+    props.setcustomSlippageError('valid`')
+  }
+
+  const checkBounds = slippageValue => {
+    setWarningType(WARNING_TYPE.none)
+    props.setcustomSlippageError('valid')
+
+    if (slippageValue === '') {
+      props.setcustomSlippageError('invalid')
+      return setWarningType(WARNING_TYPE.emptyInput)
+    }
+
+    // check bounds and set errors
+    if (slippageValue < 0 || slippageValue > 50) {
+      props.setcustomSlippageError('invalid')
+      return setWarningType(WARNING_TYPE.invalidEntryBound)
+    }
+    if (slippageValue >= 0 && slippageValue < 0.1) {
+      props.setcustomSlippageError('valid')
+      setWarningType(WARNING_TYPE.riskyEntryLow)
+    }
+    if (slippageValue >= 5) {
+      props.setcustomSlippageError('warning')
+      setWarningType(WARNING_TYPE.riskyEntryHigh)
+    }
+    //update the actual slippage value in parent
+    updateSlippage(slippageValue)
+  }
+
+  // check that the theyve entered number and correct decimal
+  const parseInput = e => {
+    let input = e.target.value
+
+    // restrict to 2 decimal places
+    let acceptableValues = [/^$/, /^\d{1,2}$/, /^\d{0,2}\.\d{0,2}$/]
+    // if its within accepted decimal limit, update the input state
+    if (acceptableValues.some(a => a.test(input))) {
+      setUserInput(input)
+    }
+  }
+
+  const updateSlippage = newSlippage => {
+    // round to 2 decimals to prevent ethers error
+    let numParsed = parseFloat((newSlippage * 100).toFixed(2))
+
+    // set both slippage values in parents
+    props.setRawSlippage(numParsed)
+    props.setRawTokenSlippage(numParsed)
+  }
+
+  const renderTransactionDetails = () => {
+    if (props.independentField === props.INPUT) {
+      return (
+        <div>
+          <div>
+            {t('youAreSelling')}{' '}
+            {b(
+              `${amountFormatter(
+                props.independentValueParsed,
+                props.independentDecimals,
+                Math.min(4, props.independentDecimals)
+              )} ${props.inputSymbol}`
+            )}{' '}
+            {t('forAtLeast')}
+            {b(
+              `${amountFormatter(
+                props.dependentValueMinumum,
+                props.dependentDecimals,
+                Math.min(4, props.dependentDecimals)
+              )} ${props.outputSymbol}`
+            )}
+            .
+          </div>
+          <LastSummaryText>
+            {t('priceChange')} {b(`${props.percentSlippageFormatted}%`)}.
+          </LastSummaryText>
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          <div>
+            {t('youAreBuying')}{' '}
+            {b(
+              `${amountFormatter(
+                props.independentValueParsed,
+                props.independentDecimals,
+                Math.min(4, props.independentDecimals)
+              )} ${props.outputSymbol}`
+            )}
+            .
+          </div>
+          <LastSummaryText>
+            {t('itWillCost')}{' '}
+            {b(
+              `${amountFormatter(
+                props.dependentValueMaximum,
+                props.dependentDecimals,
+                Math.min(4, props.dependentDecimals)
+              )} ${props.inputSymbol}`
+            )}{' '}
+            {t('orTransFail')}
+          </LastSummaryText>
+          <LastSummaryText>
+            {t('priceChange')} {b(`${props.percentSlippageFormatted}%`)}.
+          </LastSummaryText>
+        </div>
+      )
+    }
+  }
+  return <>{renderSummary()}</>
+}

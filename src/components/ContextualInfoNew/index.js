@@ -33,6 +33,7 @@ const SummaryWrapperContainer = styled.div`
 const Details = styled.div`
   background-color: ${({ theme }) => theme.concreteGray};
   padding: 1.5rem;
+  padding-bottom: 1rem;
   border-radius: 1rem;
   font-size: 0.75rem;
   margin-top: 1rem;
@@ -89,13 +90,12 @@ export default function ContextualInfo({
   closeDetailsText = 'Hide Details',
   contextualInfo = '',
   allowExpand = false,
-  renderTransactionDetails = () => {},
   isError = false,
   slippageWarning,
-  highSlippageWarning
+  highSlippageWarning,
+  dropDownContent
 }) {
   const [showDetails, setShowDetails] = useState(false)
-
   return !allowExpand ? (
     <SummaryWrapper>{contextualInfo}</SummaryWrapper>
   ) : (
@@ -117,7 +117,7 @@ export default function ContextualInfo({
           )}
         </>
       </SummaryWrapperContainer>
-      {showDetails && <Details>{renderTransactionDetails()}</Details>}
+      {showDetails && <Details>{dropDownContent()}</Details>}
     </>
   )
 }
