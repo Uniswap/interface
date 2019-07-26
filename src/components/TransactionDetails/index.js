@@ -31,7 +31,8 @@ const FlexBetween = styled.div`
   height: 100%;
 `
 
-const SlippageRow = styled(Flex)`
+const WrappedSlippageRow = ({ wrap, ...rest }) => <Flex {...rest} />
+const SlippageRow = styled(WrappedSlippageRow)`
   position: relative;
   flex-wrap: ${({ wrap }) => wrap && 'wrap'};
   flex-direction: row;
@@ -406,7 +407,15 @@ export default function TransactionDetails(props) {
                       : ''
                   }
                 />
-                <Percent color={activeIndex !== 4 ? 'faded' : (warningType === WARNING_TYPE.riskyEntryHigh || warningType === WARNING_TYPE.invalidEntryBound) ? 'red' : ''}>
+                <Percent
+                  color={
+                    activeIndex !== 4
+                      ? 'faded'
+                      : warningType === WARNING_TYPE.riskyEntryHigh || warningType === WARNING_TYPE.invalidEntryBound
+                      ? 'red'
+                      : ''
+                  }
+                >
                   %
                 </Percent>
               </FlexBetween>
