@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { transparentize, darken } from 'polished'
 
 import { useBodyKeyDown } from '../../hooks'
-import { useBetaMessageManager } from '../../contexts/Application'
+import { useBetaMessageManager } from '../../contexts/LocalStorage'
 
 const tabOrder = [
   {
