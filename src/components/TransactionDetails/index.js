@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled, { css, keyframes } from 'styled-components'
-import { transparentize } from 'polished'
+import { transparentize, darken } from 'polished'
 import { amountFormatter } from '../../utils'
 import { useDebounce } from '../../hooks'
-import { HelpCircle } from 'react-feather'
+
+import question from '../../assets/images/question.svg'
+// import { HelpCircle } from 'react-feather'
 
 import NewContextualInfo from '../../components/ContextualInfoNew'
 
@@ -27,7 +29,7 @@ const Flex = styled.div`
 const FlexBetween = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   height: 100%;
 `
 
@@ -40,7 +42,7 @@ const SlippageRow = styled(Flex)`
   align-items: center;
   font-size: 0.8rem;
   padding: 0;
-  margin-bottom: 14px;
+  padding-top: ${({ wrap }) => wrap && '0.25rem'};
 `
 
 const QuestionWrapper = styled.button`
@@ -63,7 +65,7 @@ const QuestionWrapper = styled.button`
   }
 `
 
-const HelpCircleStyled = styled(HelpCircle)`
+const HelpCircleStyled = styled.img`
   height: 18px;
   width: 18px;
 `
@@ -103,15 +105,18 @@ const Popup = styled(Flex)`
 const FancyButton = styled.button`
   align-items: center;
   min-width: 55px;
-  height: 24px;
+  height: 2rem;
   border-radius: 36px;
-  border: 1px solid #f2f2f2;
+  border: 1px solid ${({ theme }) => theme.mercuryGray};
   outline: none;
   background: white;
 
-  :hover,
+  :hover {
+    cursor: inherit;
+    box-shadow: ${({ theme }) => transparentize(0.6, theme.royalBlue)} 0px 0px 0px 3px;
+  }
   :focus {
-    box-shadow: ${transparentize(0.6, '#2f80ed')} 0px 0px 0px 3px;
+    box-shadow: ${({ theme }) => transparentize(0.6, theme.royalBlue)} 0px 0px 0px 3px;
   }
 `
 
@@ -119,12 +124,11 @@ const Option = styled(FancyButton)`
   margin-right: 6px;
   margin-top: 6px;
 
-  ${({ active }) =>
+  ${({ active, theme }) =>
     active &&
     css`
-      background-color: #2f80ed;
+      background-color: ${theme.royalBlue};
       color: white;
-      border: 1px solid #2f80ed;
     `}
 `
 
@@ -142,7 +146,7 @@ const Input = styled.input`
 
   cursor: inherit;
 
-  color: #aeaeae;
+  color: ${({ theme }) => theme.doveGray};
   text-align: left;
   ${({ active }) =>
     active &&
@@ -152,31 +156,31 @@ const Input = styled.input`
       text-align: right;
     `}
 
-  ${({ warning }) =>
+  ${({ warning, theme }) =>
     warning === 'red' &&
     css`
-      color: #ff6871;
+      color: ${theme.salmonRed};
     `}
 `
 
 const BottomError = styled.div`
-  margin-top: 1rem;
-  color: #aeaeae;
-  ${({ color }) =>
+  ${({ warningType }) =>
+    warningType !== 'none' &&
+    css`
+      padding-top: 12px;
+    `}
+
+  color: ${({ theme }) => theme.doveGray};
+  ${({ color, theme }) =>
     color === 'red' &&
     css`
-      color: #ff6871;
+      color: ${theme.salmonRed};
     `}
-`
-
-const Break = styled.div`
-  border: 1px solid #f2f2f2;
-  width: 100%;
-  margin-top: 1rem;
 `
 
 const OptionLarge = styled(Option)`
   width: 120px;
+  padding: 0 0.75rem 0 0.75rem;
 `
 
 const OptionCustom = styled(FancyButton)`
@@ -184,11 +188,12 @@ const OptionCustom = styled(FancyButton)`
   position: relative;
   width: 120px;
   margin-top: 6px;
+  padding: 0 0.75rem 0 0.75rem;
 
-  ${({ active }) =>
+  ${({ active, theme }) =>
     active &&
     css`
-      border: 1px solid #2f80ed;
+      border: 1px solid ${theme.royalBlue};
     `}
 
   input {
@@ -196,6 +201,7 @@ const OptionCustom = styled(FancyButton)`
     height: 100%;
     border: 0px;
     border-radius: 32px;
+    background: none;
   }
 `
 
@@ -208,7 +214,9 @@ const LastSummaryText = styled.div`
 `
 
 const SlippageSelector = styled.div`
-  margin-top: 1rem;
+  background-color: ${({ theme }) => darken(0.04, theme.concreteGray)};
+  padding: 1rem 1.25rem 1rem 1.25rem;
+  border-radius: 12px;
 `
 
 const Percent = styled.div`
@@ -216,19 +224,23 @@ const Percent = styled.div`
   font-size: 0, 8rem;
   flex-grow: 0;
 
-  ${({ color }) =>
+  ${({ color, theme }) =>
     (color === 'faded' &&
       css`
-        color: #aeaeae;
+        color: ${theme.doveGray};
       `) ||
     (color === 'red' &&
       css`
-        color: #ff6871;
-      `)}
+        color: ${theme.salmonRed};
+      `)};
 `
 
 const Faded = styled.span`
   opacity: 0.7;
+`
+
+const TransactionInfo = styled.div`
+  padding: 1.25rem 1.25rem 1rem 1.25rem;
 `
 
 export default function TransactionDetails(props) {
@@ -243,13 +255,15 @@ export default function TransactionDetails(props) {
   const [showPopup, setPopup] = useState(false)
 
   const [userInput, setUserInput] = useState('')
-  const debouncedInput = useDebounce(userInput, 150)
+  const debouncedInput = useDebounce(userInput, 50)
 
   useEffect(() => {
     if (activeIndex === 4) {
       checkBounds(debouncedInput)
     }
   })
+
+  console.log(warningType)
 
   function renderSummary() {
     let contextualInfo = ''
@@ -294,7 +308,7 @@ export default function TransactionDetails(props) {
     return (
       <>
         {renderTransactionDetails()}
-        <Break />
+        {/* <Break /> */}
         <SlippageSelector>
           <SlippageRow>
             Limit additional price slippage
@@ -309,7 +323,7 @@ export default function TransactionDetails(props) {
                 setPopup(false)
               }}
             >
-              <HelpCircleStyled />
+              <HelpCircleStyled src={question} alt="popup" />
             </QuestionWrapper>
             {showPopup ? (
               <Popup>
@@ -390,6 +404,7 @@ export default function TransactionDetails(props) {
           </SlippageRow>
           <SlippageRow>
             <BottomError
+              warningType={warningType.toString()}
               color={
                 warningType === WARNING_TYPE.emptyInput
                   ? ''
@@ -398,6 +413,7 @@ export default function TransactionDetails(props) {
                   : ''
               }
             >
+              {activeIndex === 4 && 'Custom splippage'}
               {warningType === WARNING_TYPE.emptyInput && 'Enter a slippage percentage.'}
               {warningType === WARNING_TYPE.invalidEntry && 'Please input a valid percentage.'}
               {warningType === WARNING_TYPE.invalidEntryBound && 'Pleae select value less than 50%'}
@@ -476,7 +492,7 @@ export default function TransactionDetails(props) {
   const renderTransactionDetails = () => {
     if (props.independentField === props.INPUT) {
       return (
-        <div>
+        <TransactionInfo>
           <div>
             {t('youAreSelling')}{' '}
             {b(
@@ -499,11 +515,11 @@ export default function TransactionDetails(props) {
           <LastSummaryText>
             {t('priceChange')} {b(`${props.percentSlippageFormatted}%`)}.
           </LastSummaryText>
-        </div>
+        </TransactionInfo>
       )
     } else {
       return (
-        <div>
+        <TransactionInfo>
           <div>
             {t('youAreBuying')}{' '}
             {b(
@@ -529,7 +545,7 @@ export default function TransactionDetails(props) {
           <LastSummaryText>
             {t('priceChange')} {b(`${props.percentSlippageFormatted}%`)}.
           </LastSummaryText>
-        </div>
+        </TransactionInfo>
       )
     }
   }
