@@ -86,7 +86,7 @@ const Popup = styled(Flex)`
   top: -124px;
   flex-direction: column;
   align-items: center;
-  padding: 1rem;
+  padding: 0.6rem 1rem;
   line-height: 150%;
   background: ${({ theme }) => theme.charcoalBlack};
   border-radius: 8px;
