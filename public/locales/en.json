@@ -80,5 +80,6 @@
   "symbol": "Symbol",
   "decimals": "Decimals",
   "enterTokenCont": "Enter a token address to continue",
-  "priceChange": "This trade will cause the price to change by"
+  "priceChange": "Expected price slippage",
+  "forAtLeast" : "for at least "
 }

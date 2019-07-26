@@ -7,8 +7,8 @@ import styled from 'styled-components'
 
 import { Button } from '../../theme'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import NewContextualInfo from '../../components/ContextualInfoNew'
 import OversizedPanel from '../../components/OversizedPanel'
+import TransactionDetails from '../../components/TransactionDetails'
 import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
 import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
 import { amountFormatter, calculateGasMargin } from '../../utils'
@@ -26,22 +26,14 @@ const TOKEN_TO_ETH = 1
 const TOKEN_TO_TOKEN = 2
 
 // denominated in bips
-const ALLOWED_SLIPPAGE = ethers.utils.bigNumberify(200)
-const TOKEN_ALLOWED_SLIPPAGE = ethers.utils.bigNumberify(400)
+const ALLOWED_SLIPPAGE_DEFAULT = 100
+const TOKEN_ALLOWED_SLIPPAGE_DEFAULT = 100
 
 // denominated in seconds
 const DEADLINE_FROM_NOW = 60 * 15
 
 // denominated in bips
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
-
-const BlueSpan = styled.span`
-  color: ${({ theme }) => theme.royalBlue};
-`
-
-const LastSummaryText = styled.div`
-  margin-top: 1rem;
-`
 
 const DownArrowBackground = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -81,9 +73,9 @@ const Flex = styled.div`
   }
 `
 
-function calculateSlippageBounds(value, token = false) {
+function calculateSlippageBounds(value, token = false, tokenAllowedSlippage, allowedSlippage) {
   if (value) {
-    const offset = value.mul(token ? TOKEN_ALLOWED_SLIPPAGE : ALLOWED_SLIPPAGE).div(ethers.utils.bigNumberify(10000))
+    const offset = value.mul(token ? tokenAllowedSlippage : allowedSlippage).div(ethers.utils.bigNumberify(10000))
     const minimum = value.sub(offset)
     const maximum = value.add(offset)
     return {
@@ -244,12 +236,18 @@ export default function Swap({ initialCurrency }) {
 
   const addTransaction = useTransactionAdder()
 
+  const [rawSlippage, setRawSlippage] = useState(ALLOWED_SLIPPAGE_DEFAULT)
+  const [rawTokenSlippage, setRawTokenSlippage] = useState(TOKEN_ALLOWED_SLIPPAGE_DEFAULT)
+
+  let allowedSlippageBig = ethers.utils.bigNumberify(rawSlippage)
+  let tokenAllowedSlippageBig = ethers.utils.bigNumberify(rawTokenSlippage)
+
   // analytics
   useEffect(() => {
     ReactGA.pageview(window.location.pathname + window.location.search)
   }, [])
 
-  // core swap state
+  // core swap state-
   const [swapState, dispatchSwapState] = useReducer(swapStateReducer, initialCurrency, getInitialSwapState)
   const { independentValue, dependentValue, independentField, inputCurrency, outputCurrency } = swapState
 
@@ -326,7 +324,9 @@ export default function Swap({ initialCurrency }) {
   // calculate slippage from target rate
   const { minimum: dependentValueMinumum, maximum: dependentValueMaximum } = calculateSlippageBounds(
     dependentValue,
-    swapType === TOKEN_TO_TOKEN
+    swapType === TOKEN_TO_TOKEN,
+    tokenAllowedSlippageBig,
+    allowedSlippageBig
   )
 
   // validate input allowance + balance
@@ -496,118 +496,6 @@ export default function Swap({ initialCurrency }) {
     return `Balance: ${value}`
   }
 
-  function renderTransactionDetails() {
-    ReactGA.event({
-      category: 'TransactionDetail',
-      action: 'Open'
-    })
-
-    const b = text => <BlueSpan>{text}</BlueSpan>
-
-    if (independentField === INPUT) {
-      return (
-        <div>
-          <div>
-            {t('youAreSelling')}{' '}
-            {b(
-              `${amountFormatter(
-                independentValueParsed,
-                independentDecimals,
-                Math.min(4, independentDecimals)
-              )} ${inputSymbol}`
-            )}
-            .
-          </div>
-          <LastSummaryText>
-            {t('youWillReceive')}{' '}
-            {b(
-              `${amountFormatter(
-                dependentValueMinumum,
-                dependentDecimals,
-                Math.min(4, dependentDecimals)
-              )} ${outputSymbol}`
-            )}{' '}
-            {t('orTransFail')}
-          </LastSummaryText>
-          <LastSummaryText>
-            {(slippageWarning || highSlippageWarning) && (
-              <span role="img" aria-label="warning">
-                ⚠️
-              </span>
-            )}
-            {t('priceChange')} {b(`${percentSlippageFormatted}%`)}.
-          </LastSummaryText>
-        </div>
-      )
-    } else {
-      return (
-        <div>
-          <div>
-            {t('youAreBuying')}{' '}
-            {b(
-              `${amountFormatter(
-                independentValueParsed,
-                independentDecimals,
-                Math.min(4, independentDecimals)
-              )} ${outputSymbol}`
-            )}
-            .
-          </div>
-          <LastSummaryText>
-            {t('itWillCost')}{' '}
-            {b(
-              `${amountFormatter(
-                dependentValueMaximum,
-                dependentDecimals,
-                Math.min(4, dependentDecimals)
-              )} ${inputSymbol}`
-            )}{' '}
-            {t('orTransFail')}
-          </LastSummaryText>
-          <LastSummaryText>
-            {t('priceChange')} {b(`${percentSlippageFormatted}%`)}.
-          </LastSummaryText>
-        </div>
-      )
-    }
-  }
-
-  function renderSummary() {
-    let contextualInfo = ''
-    let isError = false
-
-    if (inputError || independentError) {
-      contextualInfo = inputError || independentError
-      isError = true
-    } else if (!inputCurrency || !outputCurrency) {
-      contextualInfo = t('selectTokenCont')
-    } else if (!independentValue) {
-      contextualInfo = t('enterValueCont')
-    } else if (!account) {
-      contextualInfo = t('noWallet')
-      isError = true
-    }
-
-    const slippageWarningText = highSlippageWarning
-      ? t('highSlippageWarning')
-      : slippageWarning
-      ? t('slippageWarning')
-      : ''
-
-    return (
-      <NewContextualInfo
-        openDetailsText={t('transactionDetails')}
-        closeDetailsText={t('hideDetails')}
-        contextualInfo={contextualInfo ? contextualInfo : slippageWarningText}
-        allowExpand={!!(inputCurrency && outputCurrency && inputValueParsed && outputValueParsed)}
-        isError={isError}
-        slippageWarning={slippageWarning && !contextualInfo}
-        highSlippageWarning={highSlippageWarning && !contextualInfo}
-        renderTransactionDetails={renderTransactionDetails}
-      />
-    )
-  }
-
   async function onSwap() {
     const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
 
@@ -663,6 +551,8 @@ export default function Swap({ initialCurrency }) {
       addTransaction(response)
     })
   }
+
+  const [customSlippageError, setcustomSlippageError] = useState('')
 
   return (
     <>
@@ -743,10 +633,39 @@ export default function Swap({ initialCurrency }) {
           )}
         </ExchangeRateWrapper>
       </OversizedPanel>
-      {renderSummary()}
+      <TransactionDetails
+        account={account}
+        setRawSlippage={setRawSlippage}
+        setRawTokenSlippage={setRawTokenSlippage}
+        rawSlippage={rawSlippage}
+        slippageWarning={slippageWarning}
+        highSlippageWarning={highSlippageWarning}
+        inputError={inputError}
+        independentError={independentError}
+        inputCurrency={inputCurrency}
+        outputCurrency={outputCurrency}
+        independentValue={independentValue}
+        independentValueParsed={independentValueParsed}
+        independentField={independentField}
+        INPUT={INPUT}
+        inputValueParsed={inputValueParsed}
+        outputValueParsed={outputValueParsed}
+        inputSymbol={inputSymbol}
+        outputSymbol={outputSymbol}
+        dependentValueMinumum={dependentValueMinumum}
+        dependentValueMaximum={dependentValueMaximum}
+        dependentDecimals={dependentDecimals}
+        independentDecimals={independentDecimals}
+        percentSlippageFormatted={percentSlippageFormatted}
+        setcustomSlippageError={setcustomSlippageError}
+      />
       <Flex>
-        <Button disabled={!isValid} onClick={onSwap} warning={highSlippageWarning}>
-          {highSlippageWarning ? t('swapAnyway') : t('swap')}
+        <Button
+          disabled={!isValid || customSlippageError === 'invalid'}
+          onClick={onSwap}
+          warning={highSlippageWarning || customSlippageError === 'warning'}
+        >
+          {highSlippageWarning || customSlippageError === 'warning' ? t('swapAnyway') : t('swap')}
         </Button>
       </Flex>
     </>

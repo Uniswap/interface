@@ -21,7 +21,7 @@ const ContainerRow = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 1.25rem;
-  box-shadow: 0 0 0 0.5px ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
+  box-shadow: 0 0 0 1px ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
   background-color: ${({ theme }) => theme.white};
   transition: box-shadow 200ms ease-in-out;
 `
