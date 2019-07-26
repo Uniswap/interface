@@ -6,14 +6,12 @@ import { amountFormatter } from '../../utils'
 import { useDebounce } from '../../hooks'
 
 import question from '../../assets/images/question.svg'
-// import { HelpCircle } from 'react-feather'
 
 import NewContextualInfo from '../../components/ContextualInfoNew'
 
 const WARNING_TYPE = Object.freeze({
   none: 'none',
   emptyInput: 'emptyInput',
-  invalidEntry: 'invalidEntry',
   invalidEntryBound: 'invalidEntryBound',
   riskyEntryHigh: 'riskyEntryHigh',
   riskyEntryLow: 'riskyEntryLow'
@@ -113,11 +111,10 @@ const FancyButton = styled.button`
   :hover {
     cursor: inherit;
     border: 1px solid ${({ theme }) => theme.royalBlue};
-
-    box-shadow: ${({ theme }) => transparentize(0.6, theme.royalBlue)} 0px 0px 0px 3px;
+    box-shadow: ${({ theme }) => transparentize(0.6, theme.royalBlue)} 0px 0px 0px 2px;
   }
   :focus {
-    box-shadow: ${({ theme }) => transparentize(0.6, theme.royalBlue)} 0px 0px 0px 3px;
+    box-shadow: ${({ theme }) => transparentize(0.6, theme.royalBlue)} 0px 0px 0px 2px;
   }
 `
 
@@ -274,8 +271,6 @@ export default function TransactionDetails(props) {
     }
   })
 
-  console.log(warningType)
-
   function renderSummary() {
     let contextualInfo = ''
     let isError = false
@@ -319,7 +314,6 @@ export default function TransactionDetails(props) {
     return (
       <>
         {renderTransactionDetails()}
-        {/* <Break /> */}
         <SlippageSelector>
           <SlippageRow>
             Limit additional price slippage
@@ -412,7 +406,7 @@ export default function TransactionDetails(props) {
                       : ''
                   }
                 />
-                <Percent color={activeIndex !== 4 ? 'faded' : warningType === WARNING_TYPE.riskyEntryHigh ? 'red' : ''}>
+                <Percent color={activeIndex !== 4 ? 'faded' : (warningType === WARNING_TYPE.riskyEntryHigh || warningType === WARNING_TYPE.invalidEntryBound) ? 'red' : ''}>
                   %
                 </Percent>
               </FlexBetween>
@@ -431,8 +425,7 @@ export default function TransactionDetails(props) {
             >
               {activeIndex === 4 && warningType.toString() === 'none' && 'Custom slippage value entered'}
               {warningType === WARNING_TYPE.emptyInput && 'Enter a slippage percentage.'}
-              {warningType === WARNING_TYPE.invalidEntry && 'Please input a valid percentage.'}
-              {warningType === WARNING_TYPE.invalidEntryBound && 'Pleae select value less than 50%'}
+              {warningType === WARNING_TYPE.invalidEntryBound && 'Please select value less than 50%'}
               {warningType === WARNING_TYPE.riskyEntryHigh && 'Your transaction may be frontrun.'}
               {warningType === WARNING_TYPE.riskyEntryLow && 'Your transaction may fail.'}
             </BottomError>
@@ -476,7 +469,7 @@ export default function TransactionDetails(props) {
       props.setcustomSlippageError('valid')
       setWarningType(WARNING_TYPE.riskyEntryLow)
     }
-    if (slippageValue >= 5) {
+    if (slippageValue > 5) {
       props.setcustomSlippageError('warning')
       setWarningType(WARNING_TYPE.riskyEntryHigh)
     }
