@@ -70,7 +70,7 @@ const CurrencySelect = styled.button`
   }
 
   :focus {
-    box-shadow: 0 0 0.5px 0.5px ${({ theme }) => theme.malibuBlue};
+    box-shadow: 0 0 1px 1px ${({ theme }) => theme.malibuBlue};
   }
 
   :active {
@@ -104,12 +104,12 @@ const InputPanel = styled.div`
 
 const Container = styled.div`
   border-radius: 1.25rem;
-  box-shadow: 0 0 0 0.5px ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
+  box-shadow: 0 0 0 1px ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
   background-color: ${({ theme }) => theme.white};
   transition: box-shadow 200ms ease-in-out;
 
   :focus-within {
-    box-shadow: 0 0 0.5px 0.5px ${({ theme }) => theme.malibuBlue};
+    box-shadow: 0 0 1px 1px ${({ theme }) => theme.malibuBlue};
   }
 `
 
