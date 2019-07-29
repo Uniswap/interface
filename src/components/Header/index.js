@@ -53,8 +53,8 @@ export default function Header() {
   return (
     <>
       <HeaderElement>
-        <Title onClick={() => themeState.toggle()}>
-          <span id="image" role="img" aria-label="Unicorn Emoji">
+        <Title>
+          <span onClick={() => themeState.toggle()} id="image" role="img" aria-label="Unicorn Emoji">
             🦄
           </span>
 

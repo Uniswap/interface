@@ -521,8 +521,7 @@ export default function Swap({ initialCurrency }) {
                 independentDecimals,
                 Math.min(4, independentDecimals)
               )} ${inputSymbol}`
-            )}
-            .
+            )}{' '}
           </div>
           <LastSummaryText>
             {b(recipient.address)} {t('willReceive')}{' '}

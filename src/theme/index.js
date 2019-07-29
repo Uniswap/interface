@@ -69,11 +69,6 @@ const themeLight = {
 }
 
 const themeDark = {
-  // white: '#000',
-  // black: '#FFF',
-  // inputBG: '#292C2F',
-  // darkBG: '#202124',
-  // concreteGray: '#000',
   white: '#000',
   black: '#FFF',
   darkBG: '#333639',
