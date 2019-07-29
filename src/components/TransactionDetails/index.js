@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled, { css, keyframes } from 'styled-components'
-import {darken, lighten } from 'polished'
+import { darken, lighten } from 'polished'
 import { amountFormatter } from '../../utils'
 import { useDebounce } from '../../hooks'
 
@@ -570,7 +570,7 @@ export default function TransactionDetails(props) {
             .
           </div>
           <LastSummaryText>
-            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>.
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>
           </LastSummaryText>
         </TransactionInfo>
       )
@@ -604,7 +604,7 @@ export default function TransactionDetails(props) {
             {t('orTransFail')}
           </LastSummaryText>
           <LastSummaryText>
-            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>.
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>
           </LastSummaryText>
         </TransactionInfo>
       )
