@@ -5,9 +5,8 @@ import { DialogOverlay, DialogContent } from '@reach/dialog'
 import '@reach/dialog/styles.css'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
-const WrappedDialogOverlay = ({ suppressClassNameWarning, ...rest }) => <AnimatedDialogOverlay {...rest} />
-const StyledDialogOverlay = styled(WrappedDialogOverlay).attrs({
-  suppressClassNameWarning: true
+const StyledDialogOverlay = styled(AnimatedDialogOverlay).attrs({
+  suppressclassnamewarning: 'true'
 })`
   &[data-reach-dialog-overlay] {
     z-index: 2;
