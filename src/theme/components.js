@@ -18,11 +18,11 @@ export const Button = styled.button.attrs(({ warning, theme }) => ({
 
   :hover,
   :focus {
-    background-color: ${({ backgroundColor }) => lighten(0.05, backgroundColor)};
+    background-color: ${({ backgroundColor }) => darken(0.05, backgroundColor)};
   }
 
   :active {
-    background-color: ${({ backgroundColor }) => darken(0.05, backgroundColor)};
+    background-color: ${({ backgroundColor }) => darken(0.1, backgroundColor)};
   }
 
   :disabled {

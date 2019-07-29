@@ -51,8 +51,8 @@ class ContextualInfo extends Component {
   }
 
   static defaultProps = {
-    openDetailsText: 'Transaction Details',
-    closeDetailsText: 'Hide Details',
+    openDetailsText: 'Advanced Details',
+    closeDetailsText: 'Hide Advanced',
     renderTransactionDetails() {},
     contextualInfo: '',
     isError: false
