@@ -1,5 +1,4 @@
-import React from 'react'
-import { ThemeProvider as StyledComponentsThemeProvider, css } from 'styled-components'
+import { css } from 'styled-components'
 
 export * from './components'
 

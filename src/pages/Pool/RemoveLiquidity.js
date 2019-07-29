@@ -11,8 +11,6 @@ import ContextualInfo from '../../components/ContextualInfo'
 import OversizedPanel from '../../components/OversizedPanel'
 import ArrowDown from '../../assets/svg/SVGArrowDown'
 
-import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
-import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
 import { useExchangeContract } from '../../hooks'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useTokenDetails } from '../../contexts/Tokens'

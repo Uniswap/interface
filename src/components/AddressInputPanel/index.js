@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
-import { lighten } from 'polished'
 
 import { isAddress } from '../../utils'
 import { useDebounce } from '../../hooks'
