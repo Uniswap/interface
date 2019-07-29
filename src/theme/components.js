@@ -12,7 +12,7 @@ export const Button = styled.button.attrs(({ warning, theme }) => ({
   border: none;
   outline: none;
   background-color: ${({ backgroundColor }) => backgroundColor};
-  color: ${({ theme }) => theme.inputBG};
+  color: ${({ theme }) => theme.white};
   transition: background-color 125ms ease-in-out;
   width: 100%;
 
