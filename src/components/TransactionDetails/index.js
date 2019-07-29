@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
-import { isAddress, amountFormatter } from '../../utils'
-import questionMark from '../../assets/images/question-mark.svg'
+import styled, { css, keyframes } from 'styled-components'
+import { darken, lighten } from 'polished'
+import { amountFormatter } from '../../utils'
+import { useDebounce } from '../../hooks'
+
+import question from '../../assets/images/question.svg'
 
 import NewContextualInfo from '../../components/ContextualInfoNew'
 
@@ -55,26 +58,46 @@ const Popup = styled(Flex)`
   font-style: italic;
 `
 
-const Option = styled(Flex)`
-  align-items: center;
-  min-width: 55px;
-  height: 24px;
-  margin-right: 4px;
-  border-radius: 36px;
-  border: 1px solid #f2f2f2;
+const Option = styled(FancyButton)`
+  margin-right: 8px;
+  margin-top: 6px;
 
-  ${({ active }) =>
-    active &&
-    `
-    background-color: #2f80ed;
-    color: white;
-    border: 1px solid #2f80ed;
-  `}
-
-  &:hover {
+  :hover {
     cursor: pointer;
   }
+
+  ${({ active, theme }) =>
+    active &&
+    css`
+      background-color: ${({ theme }) => theme.royalBlue};
+      color: ${({ theme }) => theme.white};
+      border: none;
+
+      :hover {
+        border: none;
+        box-shadow: none;
+        background-color: ${({ theme }) => darken(0.05, theme.royalBlue)};
+      }
+
+      :focus {
+        border: none;
+        box-shadow: none;
+        background-color: ${({ theme }) => lighten(0.05, theme.royalBlue)};
+      }
+
+      :active {
+        background-color: ${({ theme }) => darken(0.05, theme.royalBlue)};
+      }
+
+      :hover:focus {
+        background-color: ${({ theme }) => theme.royalBlue};
+      }
+      :hover:focus:active {
+        background-color: ${({ theme }) => darken(0.05, theme.royalBlue)};
+      }
+    `}
 `
+    
 
 const Input = styled.input`
   width: 123.27px;
@@ -127,11 +150,21 @@ const BottomError = styled.div`
   `}
 `
 
-const Break = styled.div`
-  border: 1px solid #f2f2f2;
-  width: 100%;
-  margin-top: 1rem;
-`
+const OptionCustom = styled(FancyButton)`
+  height: 2rem;
+  position: relative;
+  width: 120px;
+  margin-top: 6px;
+  padding: 0 0.75rem;
+
+  ${({ active }) =>
+    active &&
+    css`
+      border: 1px solid ${({ theme }) => theme.royalBlue};
+      :hover {
+        border: 1px solid ${({ theme }) => darken(0.1, theme.royalBlue)};
+      }
+    `}
 
 const OptionLarge = styled(Option)`
   width: 120px;
@@ -142,7 +175,7 @@ const Bold = styled.span`
 `
 
 const LastSummaryText = styled.div`
-  margin-top: 0.6rem;
+  padding-top: 0.5rem;
 `
 
 const SlippageSelector = styled.div`
@@ -179,6 +212,14 @@ const ErrorEmoji = styled.span`
   left: 30px;
   top: 4px;
   position: absolute;
+`
+
+const ValueWrapper = styled.span`
+  padding: 0.125rem 0.3rem 0.1rem 0.3rem;
+  background-color: ${({ theme }) => darken(0.04, theme.concreteGray)};
+  border-radius: 12px;
+  font-variant: tabular-nums;
+  vertical
 `
 
 export default function TransactionDetails(props) {
@@ -453,25 +494,29 @@ export default function TransactionDetails(props) {
         <div>
           <div>
             {t('youAreSelling')}{' '}
-            {b(
-              `${amountFormatter(
-                props.independentValueParsed,
-                props.independentDecimals,
-                Math.min(4, props.independentDecimals)
-              )} ${props.inputSymbol}`
-            )}{' '}
-            {t('forAtLeast')}
-            {b(
-              `${amountFormatter(
-                props.dependentValueMinumum,
-                props.dependentDecimals,
-                Math.min(4, props.dependentDecimals)
-              )} ${props.outputSymbol}`
-            )}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.independentValueParsed,
+                  props.independentDecimals,
+                  Math.min(4, props.independentDecimals)
+                )} ${props.inputSymbol}`
+              )}
+            </ValueWrapper>{' '}
+            {t('forAtLeast')}{' '}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.dependentValueMinumum,
+                  props.dependentDecimals,
+                  Math.min(4, props.dependentDecimals)
+                )} ${props.outputSymbol}`
+              )}
+            </ValueWrapper>
             .
           </div>
           <LastSummaryText>
-            {t('priceChange')} {b(`${props.percentSlippageFormatted}%`)}.
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>
           </LastSummaryText>
         </div>
       )
@@ -507,13 +552,15 @@ export default function TransactionDetails(props) {
         <div>
           <div>
             {t('youAreBuying')}{' '}
-            {b(
-              `${amountFormatter(
-                props.independentValueParsed,
-                props.independentDecimals,
-                Math.min(4, props.independentDecimals)
-              )} ${props.outputSymbol}`
-            )}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.independentValueParsed,
+                  props.independentDecimals,
+                  Math.min(4, props.independentDecimals)
+                )} ${props.outputSymbol}`
+              )}
+            </ValueWrapper>
             .
           </div>
           <LastSummaryText>
@@ -527,7 +574,7 @@ export default function TransactionDetails(props) {
             )}{' '}
           </LastSummaryText>
           <LastSummaryText>
-            {t('priceChange')} {b(`${props.percentSlippageFormatted}%`)}.
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>
           </LastSummaryText>
         </div>
       )
