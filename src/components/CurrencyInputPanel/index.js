@@ -34,6 +34,7 @@ const SubCurrencySelect = styled.button`
   outline: none;
   cursor: pointer;
   user-select: none;
+
 `
 
 const InputRow = styled.div`
@@ -70,7 +71,7 @@ const CurrencySelect = styled.button`
   }
 
   :focus {
-    box-shadow: 0 0 1px 1px ${({ theme }) => theme.malibuBlue};
+    border: 1px solid ${({ theme }) => darken(0.1, theme.royalBlue)};
   }
 
   :active {
