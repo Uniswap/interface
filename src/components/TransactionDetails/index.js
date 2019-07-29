@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
+import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import { amountFormatter } from '../../utils'
+import { isAddress, amountFormatter } from '../../utils'
 import questionMark from '../../assets/images/question-mark.svg'
 
 import NewContextualInfo from '../../components/ContextualInfoNew'
@@ -194,6 +195,10 @@ export default function TransactionDetails(props) {
       contextualInfo = t('selectTokenCont')
     } else if (!props.independentValue) {
       contextualInfo = t('enterValueCont')
+    } else if (props.sending && !props.recipientAddress) {
+      contextualInfo = t('noRecipient')
+    } else if (props.sending && !isAddress(props.recipientAddress)) {
+      contextualInfo = t('invalidRecipient')
     } else if (!props.account) {
       contextualInfo = t('noWallet')
       isError = true
@@ -211,7 +216,13 @@ export default function TransactionDetails(props) {
         closeDetailsText={t('hideDetails')}
         contextualInfo={contextualInfo ? contextualInfo : slippageWarningText}
         allowExpand={
-          !!(props.inputCurrency && props.outputCurrency && props.inputValueParsed && props.outputValueParsed)
+          !!(
+            props.inputCurrency &&
+            props.outputCurrency &&
+            props.inputValueParsed &&
+            props.outputValueParsed &&
+            (props.sending ? props.recipientAddress : true)
+          )
         }
         isError={isError}
         slippageWarning={props.slippageWarning && !contextualInfo}
@@ -405,8 +416,40 @@ export default function TransactionDetails(props) {
   const b = text => <Bold>{text}</Bold>
 
   const renderTransactionDetails = () => {
+    ReactGA.event({
+      category: 'TransactionDetail',
+      action: 'Open'
+    })
+
     if (props.independentField === props.INPUT) {
-      return (
+      return props.sending ? (
+        <div>
+          <div>
+            {t('youAreSelling')}{' '}
+            {b(
+              `${amountFormatter(
+                props.independentValueParsed,
+                props.independentDecimals,
+                Math.min(4, props.independentDecimals)
+              )} ${props.inputSymbol}`
+            )}
+            .
+          </div>
+          <LastSummaryText>
+            {b(props.recipientAddress)} {t('willReceive')}{' '}
+            {b(
+              `${amountFormatter(
+                props.dependentValueMinumum,
+                props.dependentDecimals,
+                Math.min(4, props.dependentDecimals)
+              )} ${props.outputSymbol}`
+            )}{' '}
+          </LastSummaryText>
+          <LastSummaryText>
+            {t('priceChange')} {b(`${props.percentSlippageFormatted}%`)}.
+          </LastSummaryText>
+        </div>
+      ) : (
         <div>
           <div>
             {t('youAreSelling')}{' '}
@@ -433,7 +476,34 @@ export default function TransactionDetails(props) {
         </div>
       )
     } else {
-      return (
+      return props.sending ? (
+        <div>
+          <div>
+            {t('youAreSending')}{' '}
+            {b(
+              `${amountFormatter(
+                props.independentValueParsed,
+                props.independentDecimals,
+                Math.min(4, props.independentDecimals)
+              )} ${props.outputSymbol}`
+            )}{' '}
+            {t('to')} {b(props.recipientAddress)}.
+          </div>
+          <LastSummaryText>
+            {t('itWillCost')}{' '}
+            {b(
+              `${amountFormatter(
+                props.dependentValueMaximum,
+                props.dependentDecimals,
+                Math.min(4, props.dependentDecimals)
+              )} ${props.inputSymbol}`
+            )}{' '}
+          </LastSummaryText>
+          <LastSummaryText>
+            {t('priceChange')} {b(`${props.percentSlippageFormatted}%`)}.
+          </LastSummaryText>
+        </div>
+      ) : (
         <div>
           <div>
             {t('youAreBuying')}{' '}
@@ -455,7 +525,6 @@ export default function TransactionDetails(props) {
                 Math.min(4, props.dependentDecimals)
               )} ${props.inputSymbol}`
             )}{' '}
-            {t('orTransFail')}
           </LastSummaryText>
           <LastSummaryText>
             {t('priceChange')} {b(`${props.percentSlippageFormatted}%`)}.
