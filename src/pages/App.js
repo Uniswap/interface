@@ -46,7 +46,7 @@ export default function App() {
                 {/* this Suspense is for route code-splitting */}
                 <Suspense fallback={null}>
                   <Switch>
-                    <Route exact strict path="/swap" component={<Swap />} />
+                    <Route exact strict path="/swap" component={Swap} />
                     <Route
                       exact
                       strict
@@ -59,7 +59,7 @@ export default function App() {
                         }
                       }}
                     />
-                    <Route exact strict path="/send" component={<Send />} />
+                    <Route exact strict path="/send" component={Send} />
                     <Route
                       exact
                       strict
