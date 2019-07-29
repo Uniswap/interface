@@ -4,6 +4,7 @@ import ReactGA from 'react-ga'
 import Web3Provider, { Connectors } from 'web3-react'
 
 import ThemeProvider, { GlobalStyle } from './theme'
+import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage'
 import ApplicationContextProvider, { Updater as ApplicationContextUpdater } from './contexts/Application'
 import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
 import TokensContextProvider from './contexts/Tokens'
@@ -29,21 +30,24 @@ const connectors = { Injected, Network }
 
 function ContextProviders({ children }) {
   return (
-    <ApplicationContextProvider>
-      <TransactionContextProvider>
-        <TokensContextProvider>
-          <BalancesContextProvider>
-            <AllowancesContextProvider>{children}</AllowancesContextProvider>
-          </BalancesContextProvider>
-        </TokensContextProvider>
-      </TransactionContextProvider>
-    </ApplicationContextProvider>
+    <LocalStorageContextProvider>
+      <ApplicationContextProvider>
+        <TransactionContextProvider>
+          <TokensContextProvider>
+            <BalancesContextProvider>
+              <AllowancesContextProvider>{children}</AllowancesContextProvider>
+            </BalancesContextProvider>
+          </TokensContextProvider>
+        </TransactionContextProvider>
+      </ApplicationContextProvider>
+    </LocalStorageContextProvider>
   )
 }
 
 function Updaters() {
   return (
     <>
+      <LocalStorageContextUpdater />
       <ApplicationContextUpdater />
       <TransactionContextUpdater />
     </>
