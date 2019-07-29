@@ -9,7 +9,7 @@ import { useDebounce } from '../../hooks'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
-  box-shadow: 0 4px 8px 0 ${({ theme }) => lighten(0.9, theme.royalBlue)};
+  box-shadow: 0 4px 8px 0 ${({ theme }) => theme.concreteGray};
   position: relative;
   border-radius: 1.25rem;
   background-color: ${({ theme }) => theme.white};
@@ -59,6 +59,8 @@ const Input = styled.input`
   border: none;
   flex: 1 1 auto;
   width: 0;
+  background-color: ${({ theme }) => theme.white};
+
   color: ${({ error, theme }) => (error ? theme.salmonRed : theme.royalBlue)};
   transition: color 200ms ease-in-out;
   overflow: hidden;

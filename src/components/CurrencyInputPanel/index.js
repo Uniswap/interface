@@ -40,12 +40,14 @@ const SubCurrencySelect = styled.button`
 const InputRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
+
   padding: 0.25rem 0.85rem 0.75rem;
 `
 
 const Input = styled(BorderlessInput)`
   font-size: 1.5rem;
   color: ${({ error, theme }) => error && theme.salmonRed};
+  background-color: ${({ theme }) => theme.white};
 `
 
 const StyledBorderlessInput = styled(BorderlessInput)`
@@ -96,7 +98,7 @@ const StyledDropDown = styled(DropDown)`
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
-  box-shadow: 0 4px 8px 0 ${({ theme }) => lighten(0.9, theme.royalBlue)};
+  box-shadow: 0 4px 8px 0 ${({ theme }) => theme.concreteGray};
   position: relative;
   border-radius: 1.25rem;
   background-color: ${({ theme }) => theme.white};
@@ -145,7 +147,7 @@ const ErrorSpan = styled.span`
 
 const TokenModal = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
-  background-color: ${({ theme }) => theme.white};
+  /* background-color: ${({ theme }) => theme.white}; */
   width: 100%;
 `
 

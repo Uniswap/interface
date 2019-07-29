@@ -101,6 +101,7 @@ const Popup = styled(Flex)`
 `
 
 const FancyButton = styled.button`
+  color: ${({ theme }) => theme.black};
   align-items: center;
   min-width: 55px;
   height: 2rem;
@@ -192,6 +193,7 @@ const Input = styled.input`
     placeholder !== 'Custom' &&
     css`
       text-align: right;
+      color: ${({ theme }) => theme.black};
     `}
 
   ${({ color }) =>

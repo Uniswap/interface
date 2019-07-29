@@ -28,7 +28,7 @@ const flexRowNoWrap = css`
   flex-flow: row nowrap;
 `
 
-const theme = {
+const light = {
   white: '#FFFFFF',
   black: '#000000',
   // grays
@@ -64,8 +64,48 @@ const theme = {
   flexRowNoWrap
 }
 
+const dark = {
+  white: '#1b1b1b',
+  black: '#FFF',
+  // grays
+
+  // darkBG: '#1a1a1a',
+  darkBG: '#0c0c0c',
+
+  concreteGray: '#121212',
+  mercuryGray: '#2B2B2B',
+  silverGray: '#737373',
+  chaliceGray: '#AEAEAE',
+  doveGray: '#C4C4C4',
+  mineshaftGray: '#E1E1E1',
+  buttonOutlineGrey: '#FAFAFA',
+  //blacks
+  charcoalBlack: '#f2f2f2',
+  // blues
+  zumthorBlue: '#121319',
+  malibuBlue: '#5CA2FF',
+  royalBlue: '#2F80ED',
+  // purples
+  wisteriaPurple: '#DC6BE5',
+  // reds
+  salmonRed: '#FF6871',
+  // orange
+  pizazzOrange: '#FF8F05',
+  // yellows
+  warningYellow: '#FFE270',
+  // pink
+  uniswapPink: '#DC6BE5',
+  connectedGreen: '#27AE60',
+
+  // media queries
+  mediaWidth: mediaWidthTemplates,
+  // css snippets
+  flexColumnNoWrap,
+  flexRowNoWrap
+}
+
 export default function ThemeProvider({ children }) {
-  return <StyledComponentsThemeProvider theme={theme}>{children}</StyledComponentsThemeProvider>
+  return <StyledComponentsThemeProvider theme={dark}>{children}</StyledComponentsThemeProvider>
 }
 
 export const GlobalStyle = createGlobalStyle`
@@ -84,6 +124,8 @@ export const GlobalStyle = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    background-color:${({ theme }) => theme.darkBG};
+    color:${({ theme }) => theme.black};
   }
 
   #root {

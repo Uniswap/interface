@@ -21,6 +21,8 @@ const FilteredDialogContent = ({ minHeight, ...rest }) => <DialogContent {...res
 const StyledDialogContent = styled(FilteredDialogContent)`
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
+    border: 1px solid ${({ theme }) => theme.concreteGray};
+    background-color: ${({ theme }) => theme.white}
     ${({ theme }) => theme.mediaWidth.upToMedium`margin: 0;`}
     padding: 0;
     width: 50vw;

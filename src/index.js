@@ -55,16 +55,16 @@ function Updaters() {
 }
 
 ReactDOM.render(
-  <ThemeProvider>
-    <>
-      <GlobalStyle />
-      <Web3Provider connectors={connectors} libraryName="ethers.js">
-        <ContextProviders>
-          <Updaters />
+  <Web3Provider connectors={connectors} libraryName="ethers.js">
+    <ContextProviders>
+      <Updaters />
+      <ThemeProvider>
+        <>
+          <GlobalStyle />
           <App />
-        </ContextProviders>
-      </Web3Provider>
-    </>
-  </ThemeProvider>,
+        </>
+      </ThemeProvider>
+    </ContextProviders>
+  </Web3Provider>,
   document.getElementById('root')
 )
