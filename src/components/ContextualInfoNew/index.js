@@ -32,11 +32,10 @@ const SummaryWrapperContainer = styled.div`
 
 const Details = styled.div`
   background-color: ${({ theme }) => theme.concreteGray};
-  padding: 1.5rem;
-  padding-bottom: 1rem;
+  /* padding: 1.25rem 1.25rem 1rem 1.25rem; */
   border-radius: 1rem;
   font-size: 0.75rem;
-  margin-top: 1rem;
+  margin: 1rem 0.5rem 0 0.5rem;
 `
 
 const ErrorSpan = styled.span`
@@ -86,11 +85,10 @@ const ColoredDropdown = styled(WrappedDropdown)`
 `
 
 export default function ContextualInfo({
-  openDetailsText = 'Transaction Details',
-  closeDetailsText = 'Hide Details',
+  openDetailsText = 'Advanced Details',
+  closeDetailsText = 'Hide Advanced',
   contextualInfo = '',
   allowExpand = false,
-  renderTransactionDetails = () => {},
   isError = false,
   slippageWarning,
   highSlippageWarning,

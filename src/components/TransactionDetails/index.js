@@ -1,38 +1,81 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
+import { darken, lighten } from 'polished'
 import { isAddress, amountFormatter } from '../../utils'
-import questionMark from '../../assets/images/question-mark.svg'
+import { useDebounce } from '../../hooks'
+
+import question from '../../assets/images/question.svg'
 
 import NewContextualInfo from '../../components/ContextualInfoNew'
+
+const WARNING_TYPE = Object.freeze({
+  none: 'none',
+  emptyInput: 'emptyInput',
+  invalidEntryBound: 'invalidEntryBound',
+  riskyEntryHigh: 'riskyEntryHigh',
+  riskyEntryLow: 'riskyEntryLow'
+})
+
+const b = text => <Bold>{text}</Bold>
 
 const Flex = styled.div`
   display: flex;
   justify-content: center;
-  button {
-    max-width: 20rem;
-  }
 `
 
-const SlippageRow = styled(Flex)`
+const FlexBetween = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+`
+
+const WrappedSlippageRow = ({ wrap, ...rest }) => <Flex {...rest} />
+const SlippageRow = styled(WrappedSlippageRow)`
   position: relative;
-  width: 100%;
+  flex-wrap: ${({ wrap }) => wrap && 'wrap'};
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  font-size: 0.8rem;
+  width: 100%;
   padding: 0;
-  height: 24px;
-  margin-bottom: 14px;
+  padding-top: ${({ wrap }) => wrap && '0.25rem'};
 `
 
-const QuestionWrapper = styled.div`
+const QuestionWrapper = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
   margin-left: 0.4rem;
-  margin-top: 0.2rem;
+  padding: 0.2rem;
+  border: none;
+  background: none;
+  outline: none;
+  cursor: default;
+  border-radius: 36px;
 
-  &:hover {
-    cursor: pointer;
+  :hover,
+  :focus {
+    opacity: 0.7;
+  }
+`
+
+const HelpCircleStyled = styled.img`
+  height: 18px;
+  width: 18px;
+`
+
+const fadeIn = keyframes`
+  from {
+    opacity : 0;
+  }
+
+  to {
+    opacity : 1;
   }
 `
 
@@ -41,100 +84,166 @@ const Popup = styled(Flex)`
   width: 228px;
   left: -78px;
   top: -124px;
-
   flex-direction: column;
-  aligm-items: center;
-
-  padding: 1rem;
-
-  line-height: 183.52%;
-  background: #404040;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  line-height: 150%;
+  background: ${({ theme }) => theme.charcoalBlack};
   border-radius: 8px;
+
+  animation: ${fadeIn} 0.15s linear;
 
   color: white;
   font-style: italic;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    left: -20px;
+  `}
 `
 
-const Option = styled(Flex)`
+const FancyButton = styled.button`
   align-items: center;
   min-width: 55px;
-  height: 24px;
-  margin-right: 4px;
+  height: 2rem;
   border-radius: 36px;
-  border: 1px solid #f2f2f2;
+  font-size: 12px;
+  border: 1px solid ${({ theme }) => theme.mercuryGray};
+  outline: none;
+  background: ${({ theme }) => theme.white};
 
-  ${({ active }) =>
-    active &&
-    `
-    background-color: #2f80ed;
-    color: white;
-    border: 1px solid #2f80ed;
-  `}
+  :hover {
+    cursor: inherit;
+    border: 1px solid ${({ theme }) => theme.chaliceGray};
+  }
+  :focus {
+    border: 1px solid ${({ theme }) => theme.royalBlue};
+    /* box-shadow: 0 0 1px 1px #5CA2FF; */
+  }
+`
 
-  &:hover {
+const Option = styled(FancyButton)`
+  margin-right: 8px;
+  margin-top: 6px;
+
+  :hover {
     cursor: pointer;
   }
+
+  ${({ active, theme }) =>
+    active &&
+    css`
+      background-color: ${({ theme }) => theme.royalBlue};
+      color: ${({ theme }) => theme.white};
+      border: none;
+
+      :hover {
+        border: none;
+        box-shadow: none;
+        background-color: ${({ theme }) => darken(0.05, theme.royalBlue)};
+      }
+
+      :focus {
+        border: none;
+        box-shadow: none;
+        background-color: ${({ theme }) => lighten(0.05, theme.royalBlue)};
+      }
+
+      :active {
+        background-color: ${({ theme }) => darken(0.05, theme.royalBlue)};
+      }
+
+      :hover:focus {
+        background-color: ${({ theme }) => theme.royalBlue};
+      }
+      :hover:focus:active {
+        background-color: ${({ theme }) => darken(0.05, theme.royalBlue)};
+      }
+    `}
+`
+
+const OptionLarge = styled(Option)`
+  width: 120px;
 `
 
 const Input = styled.input`
-  width: 123.27px;
-  background: #ffffff;
-  height: 2rem;
+  background: ${({ theme }) => theme.white};
+  flex-grow: 1;
+
   outline: none;
-  margin-left: 20px;
-  border: 1px solid #f2f2f2;
   box-sizing: border-box;
-  border-radius: 36px;
-  color: #aeaeae;
-
-  &:focus {
-  }
-
-  text-align: left;
-  padding-left: 0.9rem;
 
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
 
+  cursor: inherit;
+
+  color: ${({ theme }) => theme.doveGray};
+  text-align: left;
   ${({ active }) =>
     active &&
-    `
-    border: 1px solid #2f80ed;
-    text-align: right;
-    padding-right 1.5rem;
-    padding-left 0rem;
-    color : inherit;
-  `}
+    css`
+      color: initial;
+      cursor: initial;
+      text-align: right;
+    `}
 
-  ${({ warning }) =>
-    warning === 'red' &&
-    `
-    color : #FF6871;
-    border: 1px solid #FF6871;
-  `}
-`
-
-const BottomError = styled.div`
-  margin-top: 1rem;
-  color: #aeaeae;
+  ${({ placeholder }) =>
+    placeholder !== 'Custom' &&
+    css`
+      text-align: right;
+    `}
 
   ${({ color }) =>
     color === 'red' &&
-    `
-    color : #FF6871;
-  `}
+    css`
+      color: ${({ theme }) => theme.salmonRed};
+    `}
 `
 
-const Break = styled.div`
-  border: 1px solid #f2f2f2;
-  width: 100%;
-  margin-top: 1rem;
+const BottomError = styled.div`
+  ${({ show }) =>
+    show &&
+    css`
+      padding-top: 12px;
+    `}
+  color: ${({ theme }) => theme.doveGray};
+  ${({ color }) =>
+    color === 'red' &&
+    css`
+      color: ${({ theme }) => theme.salmonRed};
+    `}
 `
 
-const OptionLarge = styled(Option)`
+const OptionCustom = styled(FancyButton)`
+  height: 2rem;
+  position: relative;
   width: 120px;
+  margin-top: 6px;
+  padding: 0 0.75rem;
+
+  ${({ active }) =>
+    active &&
+    css`
+      border: 1px solid ${({ theme }) => theme.royalBlue};
+      :hover {
+        border: 1px solid ${({ theme }) => darken(0.1, theme.royalBlue)};
+      }
+    `}
+
+  ${({ color }) =>
+    color === 'red' &&
+    css`
+      border: 1px solid ${({ theme }) => theme.salmonRed};
+    `}
+
+  input {
+    width: 100%;
+    height: 100%;
+    border: 0px;
+    border-radius: 2rem;
+  }
 `
 
 const Bold = styled.span`
@@ -142,47 +251,66 @@ const Bold = styled.span`
 `
 
 const LastSummaryText = styled.div`
-  margin-top: 0.6rem;
+  padding-top: 0.5rem;
 `
 
 const SlippageSelector = styled.div`
-  margin-top: 1rem;
-`
-
-const InputGroup = styled.div`
-  position: relative;
+  background-color: ${({ theme }) => darken(0.04, theme.concreteGray)};
+  padding: 1rem 1.25rem 1rem 1.25rem;
+  border-radius: 12px;
 `
 
 const Percent = styled.div`
-  right: 14px;
-  top: 9px;
-  position: absolute;
   color: inherit;
   font-size: 0, 8rem;
+  flex-grow: 0;
 
-  ${({ color }) =>
+  ${({ color, theme }) =>
     (color === 'faded' &&
-      `
-    color : #AEAEAE
-    `) ||
+      css`
+        color: ${theme.doveGray};
+      `) ||
     (color === 'red' &&
-      `
-    color : #FF6871
-    `)}
+      css`
+        color: ${theme.salmonRed};
+      `)};
 `
 
 const Faded = styled.span`
   opacity: 0.7;
 `
 
-const ErrorEmoji = styled.span`
-  left: 30px;
-  top: 4px;
-  position: absolute;
+const TransactionInfo = styled.div`
+  padding: 1.25rem 1.25rem 1rem 1.25rem;
+`
+
+const ValueWrapper = styled.span`
+  padding: 0.125rem 0.3rem 0.1rem 0.3rem;
+  background-color: ${({ theme }) => darken(0.04, theme.concreteGray)};
+  border-radius: 12px;
+  font-variant: tabular-nums;
+  vertical
 `
 
 export default function TransactionDetails(props) {
   const { t } = useTranslation()
+
+  const [activeIndex, setActiveIndex] = useState(3)
+
+  const [warningType, setWarningType] = useState(WARNING_TYPE.none)
+
+  const inputRef = useRef()
+
+  const [showPopup, setPopup] = useState(false)
+
+  const [userInput, setUserInput] = useState('')
+  const debouncedInput = useDebounce(userInput, 150)
+
+  useEffect(() => {
+    if (activeIndex === 4) {
+      checkBounds(debouncedInput)
+    }
+  })
 
   function renderSummary() {
     let contextualInfo = ''
@@ -233,23 +361,17 @@ export default function TransactionDetails(props) {
     )
   }
 
-  const [activeIndex, setActiveIndex] = useState(3)
-
-  const [placeHolder, setplaceHolder] = useState('Custom')
-
-  const [warningType, setWarningType] = useState('none')
-
-  const [showPopup, setPopup] = useState(false)
-
   const dropDownContent = () => {
     return (
       <>
         {renderTransactionDetails()}
-        <Break />
         <SlippageSelector>
           <SlippageRow>
-            Limit addtional price slippage
+            Limit additional price slippage
             <QuestionWrapper
+              onClick={() => {
+                setPopup(!showPopup)
+              }}
               onMouseEnter={() => {
                 setPopup(true)
               }}
@@ -257,105 +379,114 @@ export default function TransactionDetails(props) {
                 setPopup(false)
               }}
             >
-              <img src={questionMark} alt="question mark" />
+              <HelpCircleStyled src={question} alt="popup" />
             </QuestionWrapper>
             {showPopup ? (
               <Popup>
-                Lowering this limit decreases your risk of frontrunning. This makes it more likely that your transaction
-                will fail due to normal price movements.
+                Lowering this limit decreases your risk of frontrunning. However, this makes it more likely that your
+                transaction will fail due to normal price movements.
               </Popup>
             ) : (
               ''
             )}
           </SlippageRow>
-          <SlippageRow>
+          <SlippageRow wrap>
             <Option
               onClick={() => {
-                updateSlippage(0.1)
-                setWarningType('none')
-                setActiveIndex(1)
-                props.setcustomSlippageError('valid')
-                setplaceHolder('Custom')
+                setFromFixed(1, 0.1)
               }}
-              active={activeIndex === 1 ? true : false}
+              active={activeIndex === 1}
             >
               0.1%
             </Option>
             <Option
               onClick={() => {
-                updateSlippage(1)
-                setWarningType('none')
-                setActiveIndex(2)
-                props.setcustomSlippageError('valid')
-                setplaceHolder('Custom')
+                setFromFixed(2, 0.5)
               }}
-              active={activeIndex === 2 ? true : false}
+              active={activeIndex === 2}
             >
-              1%
+              0.5%
             </Option>
             <OptionLarge
               onClick={() => {
-                updateSlippage(2)
-                setWarningType('none')
-                setActiveIndex(3)
-                props.setcustomSlippageError('valid')
-                setplaceHolder('Custom')
+                setFromFixed(3, 1)
               }}
-              active={activeIndex === 3 ? true : false}
+              active={activeIndex === 3}
             >
-              2%
-              <Faded>(suggested)</Faded>
+              1% <Faded>(suggested)</Faded>
             </OptionLarge>
-            <InputGroup>
-              {warningType !== 'none' ? <ErrorEmoji>⚠️</ErrorEmoji> : ''}
-              <Input
-                placeholder={placeHolder}
-                value={userInput || ''}
-                onChange={parseInput}
-                onClick={e => {
-                  setActiveIndex(4)
-                  setplaceHolder('')
-                  parseInput(e)
-                }}
-                active={activeIndex === 4 ? true : false}
-                warning={
-                  warningType === 'emptyInput'
-                    ? ''
-                    : warningType !== 'none' && warningType !== 'riskyEntryLow'
-                    ? 'red'
-                    : ''
-                }
-              />
-              <Percent
-                color={
-                  warningType === 'emptyInput'
-                    ? 'faded'
-                    : warningType !== 'none' && warningType !== 'riskyEntryLow'
-                    ? 'red'
-                    : activeIndex !== 4
-                    ? 'faded'
-                    : ''
-                }
-              >
-                %
-              </Percent>
-            </InputGroup>
+            <OptionCustom
+              active={activeIndex === 4}
+              color={
+                warningType === WARNING_TYPE.emptyInput
+                  ? ''
+                  : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
+                  ? 'red'
+                  : ''
+              }
+              onClick={() => {
+                setFromCustom()
+              }}
+            >
+              <FlexBetween>
+                {!(warningType === WARNING_TYPE.none || warningType === WARNING_TYPE.emptyInput) && (
+                  <span role="img" aria-label="warning">
+                    ⚠️
+                  </span>
+                )}
+                <Input
+                  tabIndex={-1}
+                  ref={inputRef}
+                  active={activeIndex === 4}
+                  placeholder={
+                    activeIndex === 4
+                      ? !!userInput
+                        ? ''
+                        : '0'
+                      : activeIndex !== 4 && userInput !== ''
+                      ? userInput
+                      : 'Custom'
+                  }
+                  value={activeIndex === 4 ? userInput : ''}
+                  onChange={parseInput}
+                  color={
+                    warningType === WARNING_TYPE.emptyInput
+                      ? ''
+                      : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
+                      ? 'red'
+                      : ''
+                  }
+                />
+                <Percent
+                  color={
+                    activeIndex !== 4
+                      ? 'faded'
+                      : warningType === WARNING_TYPE.riskyEntryHigh || warningType === WARNING_TYPE.invalidEntryBound
+                      ? 'red'
+                      : ''
+                  }
+                >
+                  %
+                </Percent>
+              </FlexBetween>
+            </OptionCustom>
           </SlippageRow>
           <SlippageRow>
             <BottomError
+              show={activeIndex === 4}
               color={
-                warningType === 'emptyInput'
+                warningType === WARNING_TYPE.emptyInput
                   ? ''
-                  : warningType !== 'none' && warningType !== 'riskyEntryLow'
+                  : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
                   ? 'red'
                   : ''
               }
             >
-              {warningType === 'emptyInput' ? 'Enter a slippage percentage.' : ''}
-              {warningType === 'invalidEntry' ? 'Please input a valid percentage.' : ''}
-              {warningType === 'invalidEntryBound' ? 'Pleae select value less than 50%' : ''}
-              {warningType === 'riskyEntryHigh' ? 'Your transaction may be frontrun.' : ''}
-              {warningType === 'riskyEntryLow' ? 'Your transaction may fail.' : ''}
+              {activeIndex === 4 && warningType.toString() === 'none' && 'Custom slippage value entered'}
+              {warningType === WARNING_TYPE.emptyInput && 'Enter a slippage percentage.'}
+              {warningType === WARNING_TYPE.invalidEntryBound && 'Please select value less than 50%'}
+              {warningType === WARNING_TYPE.riskyEntryHigh && 'Your transaction may be frontrun.'}
+              {warningType === WARNING_TYPE.riskyEntryLow && 'Your transaction may fail.'}
             </BottomError>
           </SlippageRow>
         </SlippageSelector>
@@ -363,52 +494,65 @@ export default function TransactionDetails(props) {
     )
   }
 
-  const [userInput, setUserInput] = useState()
-
-  const parseInput = e => {
-    let input = e.target.value
-    if (input === '') {
-      setUserInput(input)
-      props.setcustomSlippageError('invalid')
-      return setWarningType('emptyInput')
-    }
-    //check for decimal
-    let isValid = /^[+]?\d*\.?\d{1,2}$/.test(input) || /^[+]?\d*\.$/.test(input)
-    let decimalLimit = /^\d+\.?\d{0,2}$/.test(input) || input === ''
-    if (decimalLimit) {
-      setUserInput(input)
-    } else {
-      return
-    }
-    if (isValid) {
-      checkAcceptablePercentValue(input)
-    } else {
-      setWarningType('invalidEntry')
-    }
+  const setFromCustom = () => {
+    setActiveIndex(4)
+    inputRef.current.focus()
+    // if there's a value, evaluate the bounds
+    checkBounds(userInput)
   }
 
-  const checkAcceptablePercentValue = input => {
-    setTimeout(function() {
-      setWarningType('none')
+  // used for slippage presets
+  const setFromFixed = (index, slippage) => {
+    // update slippage in parent, reset errors and input state
+    updateSlippage(slippage)
+    setWarningType(WARNING_TYPE.none)
+    setActiveIndex(index)
+    props.setcustomSlippageError('valid`')
+  }
+
+  const checkBounds = slippageValue => {
+    setWarningType(WARNING_TYPE.none)
+    props.setcustomSlippageError('valid')
+
+    if (slippageValue === '') {
+      props.setcustomSlippageError('invalid')
+      return setWarningType(WARNING_TYPE.emptyInput)
+    }
+
+    // check bounds and set errors
+    if (slippageValue < 0 || slippageValue > 50) {
+      props.setcustomSlippageError('invalid')
+      return setWarningType(WARNING_TYPE.invalidEntryBound)
+    }
+    if (slippageValue >= 0 && slippageValue < 0.1) {
       props.setcustomSlippageError('valid')
-      if (input < 0 || input > 50) {
-        props.setcustomSlippageError('invalid')
-        return setWarningType('invalidEntryBound')
-      }
-      if (input >= 0 && input < 0.1) {
-        props.setcustomSlippageError('valid')
-        setWarningType('riskyEntryLow')
-      }
-      if (input >= 5) {
-        props.setcustomSlippageError('warning')
-        setWarningType('riskyEntryHigh')
-      }
-      updateSlippage(input)
-    }, 300)
+      setWarningType(WARNING_TYPE.riskyEntryLow)
+    }
+    if (slippageValue > 5) {
+      props.setcustomSlippageError('warning')
+      setWarningType(WARNING_TYPE.riskyEntryHigh)
+    }
+    //update the actual slippage value in parent
+    updateSlippage(slippageValue)
+  }
+
+  // check that the theyve entered number and correct decimal
+  const parseInput = e => {
+    let input = e.target.value
+
+    // restrict to 2 decimal places
+    let acceptableValues = [/^$/, /^\d{1,2}$/, /^\d{0,2}\.\d{0,2}$/]
+    // if its within accepted decimal limit, update the input state
+    if (acceptableValues.some(a => a.test(input))) {
+      setUserInput(input)
+    }
   }
 
   const updateSlippage = newSlippage => {
+    // round to 2 decimals to prevent ethers error
     let numParsed = parseFloat((newSlippage * 100).toFixed(2))
+
+    // set both slippage values in parents
     props.setRawSlippage(numParsed)
     props.setRawTokenSlippage(numParsed)
   }
@@ -423,113 +567,129 @@ export default function TransactionDetails(props) {
 
     if (props.independentField === props.INPUT) {
       return props.sending ? (
-        <div>
+        <TransactionInfo>
           <div>
             {t('youAreSelling')}{' '}
-            {b(
-              `${amountFormatter(
-                props.independentValueParsed,
-                props.independentDecimals,
-                Math.min(4, props.independentDecimals)
-              )} ${props.inputSymbol}`
-            )}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.independentValueParsed,
+                  props.independentDecimals,
+                  Math.min(4, props.independentDecimals)
+                )} ${props.inputSymbol}`
+              )}
+            </ValueWrapper>
             .
           </div>
           <LastSummaryText>
             {b(props.recipientAddress)} {t('willReceive')}{' '}
-            {b(
-              `${amountFormatter(
-                props.dependentValueMinumum,
-                props.dependentDecimals,
-                Math.min(4, props.dependentDecimals)
-              )} ${props.outputSymbol}`
-            )}{' '}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.dependentValueMinumum,
+                  props.dependentDecimals,
+                  Math.min(4, props.dependentDecimals)
+                )} ${props.outputSymbol}`
+              )}
+            </ValueWrapper>{' '}
           </LastSummaryText>
           <LastSummaryText>
-            {t('priceChange')} {b(`${props.percentSlippageFormatted}%`)}.
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>.
           </LastSummaryText>
-        </div>
+        </TransactionInfo>
       ) : (
-        <div>
+        <TransactionInfo>
           <div>
             {t('youAreSelling')}{' '}
-            {b(
-              `${amountFormatter(
-                props.independentValueParsed,
-                props.independentDecimals,
-                Math.min(4, props.independentDecimals)
-              )} ${props.inputSymbol}`
-            )}{' '}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.independentValueParsed,
+                  props.independentDecimals,
+                  Math.min(4, props.independentDecimals)
+                )} ${props.inputSymbol}`
+              )}
+            </ValueWrapper>{' '}
             {t('forAtLeast')}
-            {b(
-              `${amountFormatter(
-                props.dependentValueMinumum,
-                props.dependentDecimals,
-                Math.min(4, props.dependentDecimals)
-              )} ${props.outputSymbol}`
-            )}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.dependentValueMinumum,
+                  props.dependentDecimals,
+                  Math.min(4, props.dependentDecimals)
+                )} ${props.outputSymbol}`
+              )}
+            </ValueWrapper>
             .
           </div>
           <LastSummaryText>
-            {t('priceChange')} {b(`${props.percentSlippageFormatted}%`)}.
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>.
           </LastSummaryText>
-        </div>
+        </TransactionInfo>
       )
     } else {
       return props.sending ? (
-        <div>
+        <TransactionInfo>
           <div>
             {t('youAreSending')}{' '}
-            {b(
-              `${amountFormatter(
-                props.independentValueParsed,
-                props.independentDecimals,
-                Math.min(4, props.independentDecimals)
-              )} ${props.outputSymbol}`
-            )}{' '}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.independentValueParsed,
+                  props.independentDecimals,
+                  Math.min(4, props.independentDecimals)
+                )} ${props.outputSymbol}`
+              )}
+            </ValueWrapper>{' '}
             {t('to')} {b(props.recipientAddress)}.
           </div>
           <LastSummaryText>
             {t('itWillCost')}{' '}
-            {b(
-              `${amountFormatter(
-                props.dependentValueMaximum,
-                props.dependentDecimals,
-                Math.min(4, props.dependentDecimals)
-              )} ${props.inputSymbol}`
-            )}{' '}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.dependentValueMaximum,
+                  props.dependentDecimals,
+                  Math.min(4, props.dependentDecimals)
+                )} ${props.inputSymbol}`
+              )}
+            </ValueWrapper>{' '}
           </LastSummaryText>
           <LastSummaryText>
-            {t('priceChange')} {b(`${props.percentSlippageFormatted}%`)}.
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>.
           </LastSummaryText>
-        </div>
+        </TransactionInfo>
       ) : (
-        <div>
+        <TransactionInfo>
           <div>
             {t('youAreBuying')}{' '}
-            {b(
-              `${amountFormatter(
-                props.independentValueParsed,
-                props.independentDecimals,
-                Math.min(4, props.independentDecimals)
-              )} ${props.outputSymbol}`
-            )}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.independentValueParsed,
+                  props.independentDecimals,
+                  Math.min(4, props.independentDecimals)
+                )} ${props.outputSymbol}`
+              )}
+            </ValueWrapper>
             .
           </div>
           <LastSummaryText>
             {t('itWillCost')}{' '}
-            {b(
-              `${amountFormatter(
-                props.dependentValueMaximum,
-                props.dependentDecimals,
-                Math.min(4, props.dependentDecimals)
-              )} ${props.inputSymbol}`
-            )}{' '}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.dependentValueMaximum,
+                  props.dependentDecimals,
+                  Math.min(4, props.dependentDecimals)
+                )} ${props.inputSymbol}`
+              )}
+            </ValueWrapper>{' '}
           </LastSummaryText>
           <LastSummaryText>
-            {t('priceChange')} {b(`${props.percentSlippageFormatted}%`)}.
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>.
           </LastSummaryText>
-        </div>
+        </TransactionInfo>
       )
     }
   }
