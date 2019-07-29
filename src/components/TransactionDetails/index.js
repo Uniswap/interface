@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled, { css, keyframes } from 'styled-components'
-import { transparentize, darken } from 'polished'
+import { darken, lighten } from 'polished'
 import { amountFormatter } from '../../utils'
 import { useDebounce } from '../../hooks'
 
@@ -105,17 +105,18 @@ const FancyButton = styled.button`
   min-width: 55px;
   height: 2rem;
   border-radius: 36px;
+  font-size: 12px;
   border: 1px solid ${({ theme }) => theme.mercuryGray};
   outline: none;
   background: ${({ theme }) => theme.white};
 
   :hover {
     cursor: inherit;
-    border: 1px solid ${({ theme }) => theme.royalBlue};
-    box-shadow: ${({ theme }) => transparentize(0.6, theme.royalBlue)} 0px 0px 0px 2px;
+    border: 1px solid ${({ theme }) => theme.chaliceGray};
   }
   :focus {
-    box-shadow: ${({ theme }) => transparentize(0.6, theme.royalBlue)} 0px 0px 0px 2px;
+    border: 1px solid ${({ theme }) => theme.royalBlue};
+    /* box-shadow: 0 0 1px 1px #5CA2FF; */
   }
 `
 
@@ -123,12 +124,39 @@ const Option = styled(FancyButton)`
   margin-right: 8px;
   margin-top: 6px;
 
+  :hover {
+    cursor: pointer;
+  }
+
   ${({ active, theme }) =>
     active &&
     css`
       background-color: ${({ theme }) => theme.royalBlue};
       color: ${({ theme }) => theme.white};
       border: none;
+
+      :hover {
+        border: none;
+        box-shadow: none;
+        background-color: ${({ theme }) => darken(0.05, theme.royalBlue)};
+      }
+
+      :focus {
+        border: none;
+        box-shadow: none;
+        background-color: ${({ theme }) => lighten(0.05, theme.royalBlue)};
+      }
+
+      :active {
+        background-color: ${({ theme }) => darken(0.05, theme.royalBlue)};
+      }
+
+      :hover:focus {
+        background-color: ${({ theme }) => theme.royalBlue};
+      }
+      :hover:focus:active {
+        background-color: ${({ theme }) => darken(0.05, theme.royalBlue)};
+      }
     `}
 `
 
@@ -198,6 +226,9 @@ const OptionCustom = styled(FancyButton)`
     active &&
     css`
       border: 1px solid ${({ theme }) => theme.royalBlue};
+      :hover {
+        border: 1px solid ${({ theme }) => darken(0.1, theme.royalBlue)};
+      }
     `}
 
   ${({ color }) =>
@@ -219,7 +250,7 @@ const Bold = styled.span`
 `
 
 const LastSummaryText = styled.div`
-  margin-top: 0.6rem;
+  padding-top: 0.5rem;
 `
 
 const SlippageSelector = styled.div`
@@ -250,6 +281,14 @@ const Faded = styled.span`
 
 const TransactionInfo = styled.div`
   padding: 1.25rem 1.25rem 1rem 1.25rem;
+`
+
+const ValueWrapper = styled.span`
+  padding: 0.125rem 0.3rem 0.1rem 0.3rem;
+  background-color: ${({ theme }) => darken(0.04, theme.concreteGray)};
+  border-radius: 12px;
+  font-variant: tabular-nums;
+  vertical
 `
 
 export default function TransactionDetails(props) {
@@ -513,25 +552,29 @@ export default function TransactionDetails(props) {
         <TransactionInfo>
           <div>
             {t('youAreSelling')}{' '}
-            {b(
-              `${amountFormatter(
-                props.independentValueParsed,
-                props.independentDecimals,
-                Math.min(4, props.independentDecimals)
-              )} ${props.inputSymbol}`
-            )}{' '}
-            {t('forAtLeast')}
-            {b(
-              `${amountFormatter(
-                props.dependentValueMinumum,
-                props.dependentDecimals,
-                Math.min(4, props.dependentDecimals)
-              )} ${props.outputSymbol}`
-            )}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.independentValueParsed,
+                  props.independentDecimals,
+                  Math.min(4, props.independentDecimals)
+                )} ${props.inputSymbol}`
+              )}
+            </ValueWrapper>{' '}
+            {t('forAtLeast')}{' '}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.dependentValueMinumum,
+                  props.dependentDecimals,
+                  Math.min(4, props.dependentDecimals)
+                )} ${props.outputSymbol}`
+              )}
+            </ValueWrapper>
             .
           </div>
           <LastSummaryText>
-            {t('priceChange')} {b(`${props.percentSlippageFormatted}%`)}.
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>
           </LastSummaryText>
         </TransactionInfo>
       )
@@ -540,28 +583,32 @@ export default function TransactionDetails(props) {
         <TransactionInfo>
           <div>
             {t('youAreBuying')}{' '}
-            {b(
-              `${amountFormatter(
-                props.independentValueParsed,
-                props.independentDecimals,
-                Math.min(4, props.independentDecimals)
-              )} ${props.outputSymbol}`
-            )}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.independentValueParsed,
+                  props.independentDecimals,
+                  Math.min(4, props.independentDecimals)
+                )} ${props.outputSymbol}`
+              )}
+            </ValueWrapper>
             .
           </div>
           <LastSummaryText>
             {t('itWillCost')}{' '}
-            {b(
-              `${amountFormatter(
-                props.dependentValueMaximum,
-                props.dependentDecimals,
-                Math.min(4, props.dependentDecimals)
-              )} ${props.inputSymbol}`
-            )}{' '}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.dependentValueMaximum,
+                  props.dependentDecimals,
+                  Math.min(4, props.dependentDecimals)
+                )} ${props.inputSymbol}`
+              )}
+            </ValueWrapper>{' '}
             {t('orTransFail')}
           </LastSummaryText>
           <LastSummaryText>
-            {t('priceChange')} {b(`${props.percentSlippageFormatted}%`)}.
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>
           </LastSummaryText>
         </TransactionInfo>
       )

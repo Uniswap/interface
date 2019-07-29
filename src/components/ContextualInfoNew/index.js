@@ -85,8 +85,8 @@ const ColoredDropdown = styled(WrappedDropdown)`
 `
 
 export default function ContextualInfo({
-  openDetailsText = 'Transaction Details',
-  closeDetailsText = 'Hide Details',
+  openDetailsText = 'Advanced Details',
+  closeDetailsText = 'Hide Advanced',
   contextualInfo = '',
   allowExpand = false,
   isError = false,
