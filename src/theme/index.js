@@ -83,8 +83,8 @@ const dark = {
   charcoalBlack: '#f2f2f2',
   // blues
   zumthorBlue: '#121319',
-  malibuBlue: '#5CA2FF',
-  royalBlue: '#2F80ED',
+  malibuBlue: '#e67aef',
+  royalBlue: '#DC6BE5',
   // purples
   wisteriaPurple: '#DC6BE5',
   // reds
