@@ -226,6 +226,9 @@ const OptionCustom = styled(FancyButton)`
     active &&
     css`
       border: 1px solid ${({ theme }) => theme.royalBlue};
+      :hover {
+        border: 1px solid ${({ theme }) => darken(0.1, theme.royalBlue)};
+      }
     `}
 
   ${({ color }) =>
