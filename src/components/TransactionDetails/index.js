@@ -284,10 +284,11 @@ const TransactionInfo = styled.div`
 `
 
 const ValueWrapper = styled.span`
-  padding: 0.125rem 0.3rem;
+  padding: 0.125rem 0.3rem 0.1rem 0.3rem;
   background-color: ${({ theme }) => darken(0.04, theme.concreteGray)};
   border-radius: 12px;
   font-variant: tabular-nums;
+  vertical
 `
 
 export default function TransactionDetails(props) {

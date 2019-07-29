@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components'
-import { lighten, darken } from 'polished'
+import { darken } from 'polished'
 
 export const Button = styled.button.attrs(({ warning, theme }) => ({
   backgroundColor: warning ? theme.salmonRed : theme.royalBlue
