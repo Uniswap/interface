@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
 import styled from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
-import { lighten, darken } from 'polished'
+import { darken } from 'polished'
 import Tooltip from '@reach/tooltip'
 import '@reach/tooltip/styles.css'
 import { isMobile } from 'react-device-detect'
@@ -47,7 +47,7 @@ const InputRow = styled.div`
 const Input = styled(BorderlessInput)`
   font-size: 1.5rem;
   color: ${({ error, theme }) => error && theme.salmonRed};
-  background-color: ${({ theme }) => theme.white};
+  background-color: ${({ theme }) => theme.inputBG};
 `
 
 const StyledBorderlessInput = styled(BorderlessInput)`
@@ -101,14 +101,14 @@ const InputPanel = styled.div`
   box-shadow: 0 4px 8px 0 ${({ theme }) => theme.concreteGray};
   position: relative;
   border-radius: 1.25rem;
-  background-color: ${({ theme }) => theme.white};
+  background-color: ${({ theme }) => theme.inputBG};
   z-index: 1;
 `
 
 const Container = styled.div`
   border-radius: 1.25rem;
   box-shadow: 0 0 0 1px ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
-  background-color: ${({ theme }) => theme.white};
+  background-color: ${({ theme }) => theme.inputBG};
   transition: box-shadow 200ms ease-in-out;
 
   :focus-within {

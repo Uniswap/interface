@@ -10,8 +10,7 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import NewContextualInfo from '../../components/ContextualInfoNew'
 import OversizedPanel from '../../components/OversizedPanel'
 import AddressInputPanel from '../../components/AddressInputPanel'
-import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
-import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
+import SVGArrowDown from '../../assets/svg/SVGArrowDown'
 import { isAddress, amountFormatter, calculateGasMargin } from '../../utils'
 import { useExchangeContract } from '../../hooks'
 import { useTokenDetails } from '../../contexts/Tokens'
@@ -46,11 +45,13 @@ const DownArrowBackground = styled.div`
   align-items: center;
 `
 
-const DownArrow = styled.img`
+const DownArrow = styled(SVGArrowDown)`
   width: 0.625rem;
   height: 0.625rem;
   position: relative;
   padding: 0.875rem;
+  color: ${({ theme, active }) => (active ? theme.royalBlue : theme.chaliceGray)};
+
   cursor: ${({ clickable }) => clickable && 'pointer'};
 `
 
@@ -724,7 +725,7 @@ export default function Swap({ initialCurrency }) {
             }}
             clickable
             alt="swap"
-            src={isValid ? ArrowDownBlue : ArrowDownGrey}
+            active={isValid}
           />
         </DownArrowBackground>
       </OversizedPanel>
@@ -746,7 +747,7 @@ export default function Swap({ initialCurrency }) {
       />
       <OversizedPanel>
         <DownArrowBackground>
-          <DownArrow src={isValid ? ArrowDownBlue : ArrowDownGrey} alt="arrow" />
+          <DownArrow active={isValid} alt="arrow" />
         </DownArrowBackground>
       </OversizedPanel>
       <AddressInputPanel onChange={setRecipient} onError={setRecipientError} />

@@ -12,7 +12,7 @@ const InputPanel = styled.div`
   box-shadow: 0 4px 8px 0 ${({ theme }) => theme.concreteGray};
   position: relative;
   border-radius: 1.25rem;
-  background-color: ${({ theme }) => theme.white};
+  background-color: ${({ theme }) => theme.inputBG};
   z-index: 1;
 `
 
@@ -22,8 +22,8 @@ const ContainerRow = styled.div`
   align-items: center;
   border-radius: 1.25rem;
   box-shadow: 0 0 0 1px ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
-  background-color: ${({ theme }) => theme.white};
-  transition: box-shadow 200ms ease-in-out;
+  background-color: ${({ theme }) => theme.inputBG};
+  transition: box-shadow 125ms ease-in-out;
 `
 
 const InputContainer = styled.div`
@@ -59,15 +59,15 @@ const Input = styled.input`
   border: none;
   flex: 1 1 auto;
   width: 0;
-  background-color: ${({ theme }) => theme.white};
+  background-color: ${({ theme }) => theme.inputBG};
 
   color: ${({ error, theme }) => (error ? theme.salmonRed : theme.royalBlue)};
-  transition: color 200ms ease-in-out;
+  transition: color 125ms ease-in-out;
   overflow: hidden;
   text-overflow: ellipsis;
 
   ::placeholder {
-    color: ${({ theme }) => theme.chaliceGray};
+    color: ${({ theme }) => theme.placeholderGray};
   }
 `
 

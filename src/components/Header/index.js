@@ -25,7 +25,7 @@ const Title = styled.div`
     font-size: 1.5rem;
     margin-right: 1rem;
     transform: rotate(0deg);
-    transition: transform 0.3s ease;
+    transition: transform 125ms ease;
 
     :hover {
       transform: rotate(-10deg);

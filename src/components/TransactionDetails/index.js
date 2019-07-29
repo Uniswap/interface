@@ -109,7 +109,7 @@ const FancyButton = styled.button`
   font-size: 12px;
   border: 1px solid ${({ theme }) => theme.mercuryGray};
   outline: none;
-  background: ${({ theme }) => theme.white};
+  background: ${({ theme }) => theme.inputBG};
 
   :hover {
     cursor: inherit;
@@ -166,7 +166,7 @@ const OptionLarge = styled(Option)`
 `
 
 const Input = styled.input`
-  background: ${({ theme }) => theme.white};
+  background: ${({ theme }) => theme.inputBG};
   flex-grow: 1;
 
   outline: none;

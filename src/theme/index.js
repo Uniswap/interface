@@ -31,6 +31,10 @@ const flexRowNoWrap = css`
 const themeLight = {
   white: '#FFFFFF',
   black: '#000000',
+
+  inputBG: '#FFFFFF',
+  placeholderGray: '#E1E1E1',
+
   // grays
   concreteGray: '#FAFAFA',
   mercuryGray: '#E1E1E1',
@@ -65,24 +69,27 @@ const themeLight = {
 }
 
 const themeDark = {
-  white: '#1b1b1b',
+  // white: '#000',
+  // black: '#FFF',
+  // inputBG: '#292C2F',
+  // darkBG: '#202124',
+  // concreteGray: '#000',
+  white: '#000',
   black: '#FFF',
-  // grays
-
-  // darkBG: '#1a1a1a',
-  darkBG: '#0c0c0c',
-
-  concreteGray: '#121212',
-  mercuryGray: '#2B2B2B',
+  darkBG: '#333639',
+  inputBG: '#202124',
+  placeholderGray: '#5f5f5f',
+  concreteGray: '#292C2F',
+  mercuryGray: 'rgba(0,0,0,0.3)',
   silverGray: '#737373',
-  chaliceGray: '#AEAEAE',
+  chaliceGray: '#7B7B7B',
   doveGray: '#C4C4C4',
   mineshaftGray: '#E1E1E1',
   buttonOutlineGrey: '#FAFAFA',
   //blacks
   charcoalBlack: '#f2f2f2',
   // blues
-  zumthorBlue: '#121319',
+  zumthorBlue: '#212529',
   malibuBlue: '#e67aef',
   royalBlue: '#DC6BE5',
   // purples

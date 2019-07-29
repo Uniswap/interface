@@ -22,9 +22,9 @@ const StyledDialogContent = styled(FilteredDialogContent)`
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
     border: 1px solid ${({ theme }) => theme.concreteGray};
-    background-color: ${({ theme }) => theme.white}
-    ${({ theme }) => theme.mediaWidth.upToMedium`margin: 0;`}
-    padding: 0;
+    background-color: ${({ theme }) => theme.inputBG};
+    ${({ theme }) => theme.mediaWidth.upToMedium`margin: 0;`};
+    padding: 0px;
     width: 50vw;
     max-width: 650px;
     ${({ theme }) => theme.mediaWidth.upToMedium`width: 65vw;`}

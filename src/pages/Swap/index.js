@@ -9,8 +9,8 @@ import { Button } from '../../theme'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import OversizedPanel from '../../components/OversizedPanel'
 import TransactionDetails from '../../components/TransactionDetails'
-import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
-import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
+import SVGArrowDown from '../../assets/svg/SVGArrowDown'
+
 import { amountFormatter, calculateGasMargin } from '../../utils'
 import { useExchangeContract } from '../../hooks'
 import { useTokenDetails } from '../../contexts/Tokens'
@@ -41,12 +41,13 @@ const DownArrowBackground = styled.div`
   align-items: center;
 `
 
-const DownArrow = styled.img`
+const DownArrow = styled(SVGArrowDown)`
   width: 0.625rem;
   height: 0.625rem;
   position: relative;
   padding: 0.875rem;
   cursor: ${({ clickable }) => clickable && 'pointer'};
+  color: ${({ theme, active }) => (active ? theme.royalBlue : theme.chaliceGray)};
 `
 
 const ExchangeRateWrapper = styled.div`
@@ -591,7 +592,7 @@ export default function Swap({ initialCurrency }) {
             }}
             clickable
             alt="swap"
-            src={isValid ? ArrowDownBlue : ArrowDownGrey}
+            active={isValid}
           />
         </DownArrowBackground>
       </OversizedPanel>

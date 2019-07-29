@@ -12,7 +12,7 @@ export const Button = styled.button.attrs(({ warning, theme }) => ({
   border: none;
   outline: none;
   background-color: ${({ backgroundColor }) => backgroundColor};
-  color: ${({ theme }) => theme.white};
+  color: ${({ theme }) => theme.inputBG};
   transition: background-color 125ms ease-in-out;
   width: 100%;
 
@@ -56,7 +56,7 @@ export const BorderlessInput = styled.input`
   border: none;
   flex: 1 1 auto;
   width: 0;
-  background-color: ${({ theme }) => theme.white};
+  background-color: ${({ theme }) => theme.inputBG};
 
   [type='number'] {
     -moz-appearance: textfield;
@@ -68,7 +68,7 @@ export const BorderlessInput = styled.input`
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.mercuryGray};
+    color: ${({ theme }) => theme.placeholderGray};
   }
 `
 
