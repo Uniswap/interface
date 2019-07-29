@@ -612,7 +612,7 @@ export default function Swap({ initialCurrency }) {
         isError={isError}
         slippageWarning={slippageWarning && slippageWarningText}
         highSlippageWarning={highSlippageWarning && slippageWarningText}
-        renderTransactionDetails={renderTransactionDetails}
+        dropDownContent={renderTransactionDetails}
       />
     )
   }
@@ -760,13 +760,13 @@ export default function Swap({ initialCurrency }) {
           {inverted ? (
             <span>
               {exchangeRate
-                ? `1 ${outputSymbol} = ${amountFormatter(exchangeRateInverted, 18, 4, false)} ${inputSymbol}`
+                ? `1 ${inputSymbol} = ${amountFormatter(exchangeRate, 18, 4, false)} ${outputSymbol}`
                 : ' - '}
             </span>
           ) : (
             <span>
               {exchangeRate
-                ? `1 ${inputSymbol} = ${amountFormatter(exchangeRate, 18, 4, false)} ${outputSymbol}`
+                ? `1 ${outputSymbol} = ${amountFormatter(exchangeRateInverted, 18, 4, false)} ${inputSymbol}`
                 : ' - '}
             </span>
           )}

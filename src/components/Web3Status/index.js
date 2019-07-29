@@ -5,7 +5,7 @@ import { useWeb3Context, Connectors } from 'web3-react'
 import { darken, transparentize } from 'polished'
 import Jazzicon from 'jazzicon'
 import { ethers } from 'ethers'
-import { Activity, ArrowRight } from 'react-feather'
+import { Activity } from 'react-feather'
 
 import { shortenAddress } from '../../utils'
 import { useENSName } from '../../hooks'
@@ -85,13 +85,6 @@ const Identicon = styled.div`
 `
 
 const NetworkIcon = styled(Activity)`
-  margin-left: 0.25rem;
-  margin-right: 0.5rem;
-  width: 16px;
-  height: 16px;
-`
-
-const ArrowIcon = styled(ArrowRight)`
   margin-left: 0.25rem;
   margin-right: 0.5rem;
   width: 16px;
@@ -251,7 +244,6 @@ export default function Web3Status() {
       return (
         <Web3StatusConnect onClick={onClick}>
           <Text>{t('Connect')}</Text>
-          <ArrowIcon />
         </Web3StatusConnect>
       )
     } else {

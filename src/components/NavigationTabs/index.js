@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { transparentize, darken } from 'polished'
 
 import { useBodyKeyDown } from '../../hooks'
-import { useBetaMessageManager } from '../../contexts/Application'
+import { useBetaMessageManager } from '../../contexts/LocalStorage'
 
 const tabOrder = [
   {
@@ -84,11 +84,11 @@ const StyledNavLink = styled(NavLink).attrs({
   &.${activeClassName} {
     background-color: ${({ theme }) => theme.white};
     border-radius: 3rem;
-    box-shadow: 0 0 0.5px 1px ${({ theme }) => theme.mercuryGray};
+    box-shadow: 0 0 1px 1px ${({ theme }) => theme.mercuryGray};
     font-weight: 500;
     color: ${({ theme }) => theme.royalBlue};
     :hover {
-      box-shadow: 0 0 0.5px 1px ${({ theme }) => darken(0.1, theme.mercuryGray)};
+      box-shadow: 0 0 1px 1px ${({ theme }) => darken(0.1, theme.mercuryGray)};
     }
   }
 
