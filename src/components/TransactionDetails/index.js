@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled, { css, keyframes } from 'styled-components'
-import { transparentize, darken, lighten } from 'polished'
+import {darken, lighten } from 'polished'
 import { amountFormatter } from '../../utils'
 import { useDebounce } from '../../hooks'
 
