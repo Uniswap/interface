@@ -1,5 +1,5 @@
 import React from 'react'
-import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'styled-components'
+import { ThemeProvider as StyledComponentsThemeProvider, css } from 'styled-components'
 
 export * from './components'
 
@@ -28,7 +28,7 @@ const flexRowNoWrap = css`
   flex-flow: row nowrap;
 `
 
-const light = {
+const themeLight = {
   white: '#FFFFFF',
   black: '#000000',
   // grays
@@ -64,7 +64,7 @@ const light = {
   flexRowNoWrap
 }
 
-const dark = {
+const themeDark = {
   white: '#1b1b1b',
   black: '#FFF',
   // grays
@@ -104,37 +104,6 @@ const dark = {
   flexRowNoWrap
 }
 
-export default function ThemeProvider({ children }) {
-  return <StyledComponentsThemeProvider theme={dark}>{children}</StyledComponentsThemeProvider>
-}
+const theme = mode => (mode === 'dark' ? themeDark : themeLight)
 
-export const GlobalStyle = createGlobalStyle`
-  @import url('https://rsms.me/inter/inter.css');
-  html { font-family: 'Inter', sans-serif; }
-  @supports (font-variation-settings: normal) {
-    html { font-family: 'Inter var', sans-serif; }
-  }
-  
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    font-size: 16px;
-    font-variant: none;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    background-color:${({ theme }) => theme.darkBG};
-    color:${({ theme }) => theme.black};
-  }
-
-  #root {
-    ${({ theme }) => theme.flexColumnNoWrap}
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: 100vh;
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-`
+export default theme

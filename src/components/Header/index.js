@@ -5,6 +5,8 @@ import { Link } from '../../theme'
 import Web3Status from '../Web3Status'
 import { darken } from 'polished'
 
+import { useTheme } from '../../theme/ThemeContext'
+
 const HeaderElement = styled.div`
   margin: 1.25rem;
   display: flex;
@@ -15,9 +17,19 @@ const Title = styled.div`
   display: flex;
   align-items: center;
 
+  :hover {
+    cursor: pointer;
+  }
+
   #image {
     font-size: 1.5rem;
     margin-right: 1rem;
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
+
+    :hover {
+      transform: rotate(-10deg);
+    }
   }
 
   #link {
@@ -36,10 +48,12 @@ const Title = styled.div`
 `
 
 export default function Header() {
+  const themeState = useTheme()
+
   return (
     <>
       <HeaderElement>
-        <Title>
+        <Title onClick={() => themeState.toggle()}>
           <span id="image" role="img" aria-label="Unicorn Emoji">
             🦄
           </span>
@@ -47,6 +61,9 @@ export default function Header() {
           <Link id="link" href="https://uniswap.io">
             <h1 id="title">Uniswap</h1>
           </Link>
+          {/* <button >
+            {themeState.dark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          </button> */}
         </Title>
       </HeaderElement>
 

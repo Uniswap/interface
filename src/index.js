@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
 import Web3Provider, { Connectors } from 'web3-react'
 
-import ThemeProvider, { GlobalStyle } from './theme'
+import { ThemeProvider, GlobalStyle } from './theme/ThemeContext'
 import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage'
 import ApplicationContextProvider, { Updater as ApplicationContextUpdater } from './contexts/Application'
 import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
