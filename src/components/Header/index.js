@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { Link } from '../../theme'
 import Web3Status from '../Web3Status'
 import { darken } from 'polished'
+import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 const HeaderElement = styled.div`
   margin: 1.25rem;
@@ -36,11 +37,13 @@ const Title = styled.div`
 `
 
 export default function Header() {
+  const [, toggleDarkMode] = useDarkModeManager()
+
   return (
     <>
       <HeaderElement>
         <Title>
-          <span id="image" role="img" aria-label="Unicorn Emoji">
+          <span onClick={toggleDarkMode} id="image" role="img" aria-label="Unicorn Emoji">
             🦄
           </span>
 
