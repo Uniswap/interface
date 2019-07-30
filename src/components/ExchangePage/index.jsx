@@ -36,7 +36,6 @@ const DEADLINE_FROM_NOW = 60 * 15
 // denominated in bips
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
-
 const DownArrowBackground = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   justify-content: center;
