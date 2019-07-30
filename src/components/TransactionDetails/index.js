@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
+import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import styled, { css, keyframes } from 'styled-components'
 import { darken, lighten } from 'polished'
-import { amountFormatter } from '../../utils'
+import { isAddress, amountFormatter } from '../../utils'
 import { useDebounce } from '../../hooks'
 
 import question from '../../assets/images/question.svg'
@@ -16,8 +17,6 @@ const WARNING_TYPE = Object.freeze({
   riskyEntryHigh: 'riskyEntryHigh',
   riskyEntryLow: 'riskyEntryLow'
 })
-
-const b = text => <Bold>{text}</Bold>
 
 const Flex = styled.div`
   display: flex;
@@ -321,6 +320,10 @@ export default function TransactionDetails(props) {
       contextualInfo = t('selectTokenCont')
     } else if (!props.independentValue) {
       contextualInfo = t('enterValueCont')
+    } else if (props.sending && !props.recipientAddress) {
+      contextualInfo = t('noRecipient')
+    } else if (props.sending && !isAddress(props.recipientAddress)) {
+      contextualInfo = t('invalidRecipient')
     } else if (!props.account) {
       contextualInfo = t('noWallet')
       isError = true
@@ -338,7 +341,13 @@ export default function TransactionDetails(props) {
         closeDetailsText={t('hideDetails')}
         contextualInfo={contextualInfo ? contextualInfo : slippageWarningText}
         allowExpand={
-          !!(props.inputCurrency && props.outputCurrency && props.inputValueParsed && props.outputValueParsed)
+          !!(
+            props.inputCurrency &&
+            props.outputCurrency &&
+            props.inputValueParsed &&
+            props.outputValueParsed &&
+            (props.sending ? props.recipientAddress : true)
+          )
         }
         isError={isError}
         slippageWarning={props.slippageWarning && !contextualInfo}
@@ -545,9 +554,47 @@ export default function TransactionDetails(props) {
     props.setRawTokenSlippage(numParsed)
   }
 
+  const b = text => <Bold>{text}</Bold>
+
   const renderTransactionDetails = () => {
+    ReactGA.event({
+      category: 'TransactionDetail',
+      action: 'Open'
+    })
+
     if (props.independentField === props.INPUT) {
-      return (
+      return props.sending ? (
+        <TransactionInfo>
+          <div>
+            {t('youAreSelling')}{' '}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.independentValueParsed,
+                  props.independentDecimals,
+                  Math.min(4, props.independentDecimals)
+                )} ${props.inputSymbol}`
+              )}
+            </ValueWrapper>
+            .
+          </div>
+          <LastSummaryText>
+            {b(props.recipientAddress)} {t('willReceive')}{' '}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.dependentValueMinumum,
+                  props.dependentDecimals,
+                  Math.min(4, props.dependentDecimals)
+                )} ${props.outputSymbol}`
+              )}
+            </ValueWrapper>{' '}
+          </LastSummaryText>
+          <LastSummaryText>
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>.
+          </LastSummaryText>
+        </TransactionInfo>
+      ) : (
         <TransactionInfo>
           <div>
             {t('youAreSelling')}{' '}
@@ -560,7 +607,7 @@ export default function TransactionDetails(props) {
                 )} ${props.inputSymbol}`
               )}
             </ValueWrapper>{' '}
-            {t('forAtLeast')}{' '}
+            {t('forAtLeast')}
             <ValueWrapper>
               {b(
                 `${amountFormatter(
@@ -573,12 +620,43 @@ export default function TransactionDetails(props) {
             .
           </div>
           <LastSummaryText>
-            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>.
           </LastSummaryText>
         </TransactionInfo>
       )
     } else {
-      return (
+      return props.sending ? (
+        <TransactionInfo>
+          <div>
+            {t('youAreSending')}{' '}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.independentValueParsed,
+                  props.independentDecimals,
+                  Math.min(4, props.independentDecimals)
+                )} ${props.outputSymbol}`
+              )}
+            </ValueWrapper>{' '}
+            {t('to')} {b(props.recipientAddress)}.
+          </div>
+          <LastSummaryText>
+            {t('itWillCost')}{' '}
+            <ValueWrapper>
+              {b(
+                `${amountFormatter(
+                  props.dependentValueMaximum,
+                  props.dependentDecimals,
+                  Math.min(4, props.dependentDecimals)
+                )} ${props.inputSymbol}`
+              )}
+            </ValueWrapper>{' '}
+          </LastSummaryText>
+          <LastSummaryText>
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>.
+          </LastSummaryText>
+        </TransactionInfo>
+      ) : (
         <TransactionInfo>
           <div>
             {t('youAreBuying')}{' '}
@@ -604,10 +682,9 @@ export default function TransactionDetails(props) {
                 )} ${props.inputSymbol}`
               )}
             </ValueWrapper>{' '}
-            {t('orTransFail')}
           </LastSummaryText>
           <LastSummaryText>
-            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>.
           </LastSummaryText>
         </TransactionInfo>
       )
