@@ -18,8 +18,6 @@ const WARNING_TYPE = Object.freeze({
   riskyEntryLow: 'riskyEntryLow'
 })
 
-const b = text => <Bold>{text}</Bold>
-
 const Flex = styled.div`
   display: flex;
   justify-content: center;
