@@ -288,7 +288,6 @@ const ValueWrapper = styled.span`
   background-color: ${({ theme }) => darken(0.04, theme.concreteGray)};
   border-radius: 12px;
   font-variant: tabular-nums;
-  vertical
 `
 
 export default function TransactionDetails(props) {
@@ -503,7 +502,7 @@ export default function TransactionDetails(props) {
     setWarningType(WARNING_TYPE.none)
     props.setcustomSlippageError('valid')
 
-    if (slippageValue === '') {
+    if (slippageValue === '' || slippageValue === '.') {
       props.setcustomSlippageError('invalid')
       return setWarningType(WARNING_TYPE.emptyInput)
     }
