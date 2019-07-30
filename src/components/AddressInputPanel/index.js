@@ -2,17 +2,16 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
-import { lighten } from 'polished'
 
 import { isAddress } from '../../utils'
 import { useDebounce } from '../../hooks'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
-  box-shadow: 0 4px 8px 0 ${({ theme }) => lighten(0.9, theme.royalBlue)};
+  box-shadow: 0 4px 8px 0 ${({ theme }) => theme.concreteGray};
   position: relative;
   border-radius: 1.25rem;
-  background-color: ${({ theme }) => theme.white};
+  background-color: ${({ theme }) => theme.inputBackground};
   z-index: 1;
 `
 
@@ -22,8 +21,8 @@ const ContainerRow = styled.div`
   align-items: center;
   border-radius: 1.25rem;
   box-shadow: 0 0 0 1px ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
-  background-color: ${({ theme }) => theme.white};
-  transition: box-shadow 200ms ease-in-out;
+  background-color: ${({ theme }) => theme.inputBackground};
+  transition: box-shadow 150ms ease-out;
 `
 
 const InputContainer = styled.div`
@@ -59,13 +58,15 @@ const Input = styled.input`
   border: none;
   flex: 1 1 auto;
   width: 0;
+  background-color: ${({ theme }) => theme.inputBackground};
+
   color: ${({ error, theme }) => (error ? theme.salmonRed : theme.royalBlue)};
-  transition: color 200ms ease-in-out;
+  transition: color 150ms ease-out;
   overflow: hidden;
   text-overflow: ellipsis;
 
   ::placeholder {
-    color: ${({ theme }) => theme.chaliceGray};
+    color: ${({ theme }) => theme.placeholderGray};
   }
 `
 

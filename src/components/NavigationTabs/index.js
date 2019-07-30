@@ -60,7 +60,7 @@ const Tabs = styled.div`
   height: 2.5rem;
   background-color: ${({ theme }) => theme.concreteGray};
   border-radius: 3rem;
-  box-shadow: 0 0 0 1px ${({ theme }) => darken(0.05, theme.concreteGray)};
+  box-shadow: 0 0 0 1px ${({ theme }) => theme.mercuryGray};
   margin-bottom: 1rem;
 `
 
@@ -82,7 +82,7 @@ const StyledNavLink = styled(NavLink).attrs({
   font-size: 1rem;
 
   &.${activeClassName} {
-    background-color: ${({ theme }) => theme.white};
+    background-color: ${({ theme }) => theme.inputBackground};
     border-radius: 3rem;
     box-shadow: 0 0 1px 1px ${({ theme }) => theme.mercuryGray};
     font-weight: 500;

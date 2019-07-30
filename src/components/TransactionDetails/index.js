@@ -86,7 +86,7 @@ const Popup = styled(Flex)`
   align-items: center;
   padding: 0.6rem 1rem;
   line-height: 150%;
-  background: ${({ theme }) => theme.charcoalBlack};
+  background: ${({ theme }) => theme.inputBG};
   border-radius: 8px;
 
   animation: ${fadeIn} 0.15s linear;
@@ -100,6 +100,7 @@ const Popup = styled(Flex)`
 `
 
 const FancyButton = styled.button`
+  color: ${({ theme }) => theme.black};
   align-items: center;
   min-width: 55px;
   height: 2rem;
@@ -107,7 +108,7 @@ const FancyButton = styled.button`
   font-size: 12px;
   border: 1px solid ${({ theme }) => theme.mercuryGray};
   outline: none;
-  background: ${({ theme }) => theme.white};
+  background: ${({ theme }) => theme.inputBG};
 
   :hover {
     cursor: inherit;
@@ -164,7 +165,7 @@ const OptionLarge = styled(Option)`
 `
 
 const Input = styled.input`
-  background: ${({ theme }) => theme.white};
+  background: ${({ theme }) => theme.inputBG};
   flex-grow: 1;
 
   outline: none;
@@ -191,6 +192,7 @@ const Input = styled.input`
     placeholder !== 'Custom' &&
     css`
       text-align: right;
+      color: ${({ theme }) => theme.black};
     `}
 
   ${({ color }) =>
@@ -479,7 +481,7 @@ export default function TransactionDetails(props) {
                   : ''
               }
             >
-              {activeIndex === 4 && warningType.toString() === 'none' && 'Custom slippage value entered'}
+              {activeIndex === 4 && warningType.toString() === 'none' && 'Custom slippage value'}
               {warningType === WARNING_TYPE.emptyInput && 'Enter a slippage percentage'}
               {warningType === WARNING_TYPE.invalidEntryBound && 'Please select a value no greater than 50%'}
               {warningType === WARNING_TYPE.riskyEntryHigh && 'Your transaction may be frontrun'}
@@ -617,7 +619,6 @@ export default function TransactionDetails(props) {
                 )} ${props.outputSymbol}`
               )}
             </ValueWrapper>
-            .
           </div>
           <LastSummaryText>
             {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>.
@@ -669,7 +670,6 @@ export default function TransactionDetails(props) {
                 )} ${props.outputSymbol}`
               )}
             </ValueWrapper>
-            .
           </div>
           <LastSummaryText>
             {t('itWillCost')}{' '}

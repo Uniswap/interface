@@ -16,9 +16,19 @@ const Title = styled.div`
   display: flex;
   align-items: center;
 
+  :hover {
+    cursor: pointer;
+  }
+
   #image {
     font-size: 1.5rem;
     margin-right: 1rem;
+    transform: rotate(0deg);
+    transition: transform 150ms ease-out;
+
+    :hover {
+      transform: rotate(-10deg);
+    }
   }
 
   #link {

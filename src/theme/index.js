@@ -100,19 +100,9 @@ export const GlobalStyle = createGlobalStyle`
     font-variant: none;
     color: ${({ theme }) => theme.textColor};
     background-color: ${({ theme }) => theme.backgroundColor};
-    transition: color 150ms ease, background-color 150ms ease;
+    transition: color 150ms ease-out, background-color 150ms ease-out;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  }
-
-  #root {
-    ${({ theme }) => theme.flexColumnNoWrap}
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: 100vh;
-    overflow-x: hidden;
-    overflow-y: auto;
   }
 `

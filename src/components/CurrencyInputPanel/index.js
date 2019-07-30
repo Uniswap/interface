@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
 import styled from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
-import { lighten, darken } from 'polished'
+import { darken } from 'polished'
 import Tooltip from '@reach/tooltip'
 import '@reach/tooltip/styles.css'
 import { isMobile } from 'react-device-detect'
@@ -40,12 +40,14 @@ const SubCurrencySelect = styled.button`
 const InputRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
+
   padding: 0.25rem 0.85rem 0.75rem;
 `
 
 const Input = styled(BorderlessInput)`
   font-size: 1.5rem;
   color: ${({ error, theme }) => error && theme.salmonRed};
+  background-color: ${({ theme }) => theme.inputBackground};
 `
 
 const StyledBorderlessInput = styled(BorderlessInput)`
@@ -96,18 +98,18 @@ const StyledDropDown = styled(DropDown)`
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
-  box-shadow: 0 4px 8px 0 ${({ theme }) => lighten(0.9, theme.royalBlue)};
+  box-shadow: 0 4px 8px 0 ${({ theme }) => theme.concreteGray};
   position: relative;
   border-radius: 1.25rem;
-  background-color: ${({ theme }) => theme.white};
+  background-color: ${({ theme }) => theme.inputBackground};
   z-index: 1;
 `
 
 const Container = styled.div`
   border-radius: 1.25rem;
   box-shadow: 0 0 0 1px ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
-  background-color: ${({ theme }) => theme.white};
-  transition: box-shadow 200ms ease-in-out;
+  background-color: ${({ theme }) => theme.inputBackground};
+  transition: box-shadow 150ms ease-out;
 
   :focus-within {
     box-shadow: 0 0 1px 1px ${({ theme }) => theme.malibuBlue};
@@ -145,7 +147,6 @@ const ErrorSpan = styled.span`
 
 const TokenModal = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
-  background-color: ${({ theme }) => theme.white};
   width: 100%;
 `
 
@@ -190,6 +191,7 @@ const TokenModalRow = styled.div`
 `
 
 const StyledTokenName = styled.span`
+  color: ${({ theme }) => theme.textColor};
   margin: 0 0.25rem 0 0.25rem;
 `
 

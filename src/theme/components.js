@@ -12,8 +12,8 @@ export const Button = styled.button.attrs(({ warning, theme }) => ({
   border: none;
   outline: none;
   background-color: ${({ backgroundColor }) => backgroundColor};
+  transition: background-color 150ms ease-out;
   color: ${({ theme }) => theme.white};
-  transition: background-color 125ms ease-in-out;
   width: 100%;
 
   :hover,
@@ -56,6 +56,7 @@ export const BorderlessInput = styled.input`
   border: none;
   flex: 1 1 auto;
   width: 0;
+  background-color: ${({ theme }) => theme.inputBackground};
 
   [type='number'] {
     -moz-appearance: textfield;
@@ -67,7 +68,7 @@ export const BorderlessInput = styled.input`
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.mercuryGray};
+    color: ${({ theme }) => theme.placeholderGray};
   }
 `
 
