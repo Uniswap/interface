@@ -33,6 +33,7 @@ const theme = {
   black: '#000000',
   // grays
   concreteGray: '#FAFAFA',
+  listItemGray: '#FBFBFB',
   mercuryGray: '#E1E1E1',
   silverGray: '#C4C4C4',
   chaliceGray: '#AEAEAE',

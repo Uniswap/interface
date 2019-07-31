@@ -37,7 +37,7 @@ const StyledDialogContent = styled(FilteredDialogContent)`
     ${({ theme }) => theme.mediaWidth.upToSmall`max-height: 80vh;`}
     display: flex;
     overflow: hidden;
-    border-radius: 1.5rem;
+    border-radius: 10px;
   }
 `
 

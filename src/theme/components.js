@@ -67,7 +67,7 @@ export const BorderlessInput = styled.input`
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.mercuryGray};
+    color: ${({ theme }) => theme.chaliceGray};
   }
 `
 

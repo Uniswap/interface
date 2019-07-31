@@ -49,8 +49,9 @@ const Input = styled(BorderlessInput)`
 `
 
 const StyledBorderlessInput = styled(BorderlessInput)`
-  min-height: 1.75rem;
+  min-height: 2.5rem;
   flex-shrink: 0;
+  text-align: right;
 `
 
 const CurrencySelect = styled.button`
@@ -151,8 +152,8 @@ const TokenModal = styled.div`
 
 const SearchContainer = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
-  padding: 1rem;
-  border-bottom: 1px solid ${({ theme }) => theme.mercuryGray};
+  padding: 1rem 1.5rem;
+  margin: 0.25rem 0.5rem;
 `
 
 const TokenModalInfo = styled.div`
@@ -174,19 +175,31 @@ const TokenList = styled.div`
 const TokenModalRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  padding: 1rem 1.5rem;
-  margin: 0.25rem 0.5rem;
   justify-content: space-between;
+  padding: 1.25rem 2rem;
   cursor: pointer;
   user-select: none;
+  background-color: ${({ theme }) => theme.listItemGray};
 
   #symbol {
     color: ${({ theme }) => theme.doveGrey};
   }
 
   :hover {
-    background-color: ${({ theme }) => theme.concreteGray};
+    background-color: ${({ theme }) => theme.buttonOutlineGrey};
   }
+`
+
+const TokenRowLeft = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items : center;
+`
+
+const TokenRowBalance = styled.div`
+  font-size: 16px;
+  line-height: 19px;
+  color: ${({ theme }) => theme.chaliceGray};
+  margin-left: 1.1rem;
 `
 
 const StyledTokenName = styled.span`
@@ -351,6 +364,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
   const { exchangeAddress } = useTokenDetails(searchQuery)
 
   const allTokens = useAllTokenDetails()
+
   const tokenList = useMemo(() => {
     return Object.keys(allTokens)
       .sort((a, b) => {
@@ -413,7 +427,10 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
     return filteredTokenList.map(({ address, symbol }) => {
       return (
         <TokenModalRow key={address} onClick={() => _onTokenSelect(address)}>
-          <TokenLogo address={address} />
+          <TokenRowLeft>
+            <TokenLogo address={address} size={'1.5rem'} />
+            <TokenRowBalance>0.01</TokenRowBalance>
+          </TokenRowLeft>
           <span id="symbol">{symbol}</span>
         </TokenModalRow>
       )
@@ -433,8 +450,8 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
     <Modal isOpen={isOpen} onDismiss={onDismiss} minHeight={50} initialFocusRef={isMobile ? undefined : inputRef}>
       <TokenModal>
         <SearchContainer>
-          <StyledBorderlessInput ref={inputRef} type="text" placeholder={t('searchOrPaste')} onChange={onInput} />
           <img src={SearchIcon} alt="search" />
+          <StyledBorderlessInput ref={inputRef} type="text" placeholder={t('searchOrPaste')} onChange={onInput} />
         </SearchContainer>
         <TokenList>{renderTokenList()}</TokenList>
       </TokenModal>

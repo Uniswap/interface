@@ -434,7 +434,6 @@ export default function Swap({ initialCurrency }) {
             if (intermediateValue.lte(ethers.constants.Zero)) {
               throw Error()
             }
-            // console.log('hi!', amountFormatter(intermediateValue, ))
             const calculatedDependentValue = calculateEtherTokenInputFromOutput(
               intermediateValue,
               reserveTokenFirst,
