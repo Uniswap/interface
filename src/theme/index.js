@@ -57,10 +57,6 @@ const theme = darkMode => ({
   zumthorBlue: darkMode ? '#212529' : '#EBF4FF',
   malibuBlue: darkMode ? '#E67AEF' : '#5CA2FF',
   royalBlue: darkMode ? '#DC6BE5' : '#2F80ED',
-
-  // zumthorBlue: darkMode ? '#1a1a1a' : '#EBF4FF',
-  // malibuBlue: '#5CA2FF',
-  // royalBlue: '#2F80ED',
   // purples
   wisteriaPurple: '#DC6BE5',
   // reds
