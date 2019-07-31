@@ -61,7 +61,7 @@ const ErrorSpan = styled.span`
 const WrappedDropup = ({ isError, highSlippageWarning, ...rest }) => <Dropup {...rest} />
 const ColoredDropup = styled(WrappedDropup)`
   path {
-    stroke: ${({ isError, theme }) => isError && theme.salmonRed};
+    stroke: ${({ isError, theme }) => (isError ? theme.salmonRed : theme.royalBlue)};
 
     ${({ highSlippageWarning, theme }) =>
       highSlippageWarning &&
@@ -74,7 +74,7 @@ const ColoredDropup = styled(WrappedDropup)`
 const WrappedDropdown = ({ isError, highSlippageWarning, ...rest }) => <Dropdown {...rest} />
 const ColoredDropdown = styled(WrappedDropdown)`
   path {
-    stroke: ${({ isError, theme }) => isError && theme.salmonRed};
+    stroke: ${({ isError, theme }) => (isError ? theme.salmonRed : theme.royalBlue)};
 
     ${({ highSlippageWarning, theme }) =>
       highSlippageWarning &&

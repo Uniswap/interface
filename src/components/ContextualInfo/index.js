@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
-import DropdownBlue from '../../assets/images/dropdown-blue.svg'
-import DropupBlue from '../../assets/images/dropup-blue.svg'
+import { ReactComponent as Dropup } from '../../assets/images/dropup-blue.svg'
+import { ReactComponent as Dropdown } from '../../assets/images/dropdown-blue.svg'
 
 const SummaryWrapper = styled.div`
   color: ${({ error, theme }) => (error ? theme.salmonRed : theme.doveGray)};
@@ -14,7 +14,7 @@ const SummaryWrapper = styled.div`
 `
 
 const Details = styled.div`
-  background-color: ${({ theme }) => theme.concreteGray};
+  background-color: ${({ theme }) => theme.doveGray};
   padding: 1.5rem;
   border-radius: 1rem;
   font-size: 0.75rem;
@@ -39,6 +39,20 @@ const SummaryWrapperContainer = styled.div`
   img {
     height: 0.75rem;
     width: 0.75rem;
+  }
+`
+
+const WrappedDropup = ({ isError, highSlippageWarning, ...rest }) => <Dropup {...rest} />
+const ColoredDropup = styled(WrappedDropup)`
+  path {
+    stroke: ${({ theme }) => theme.royalBlue};
+  }
+`
+
+const WrappedDropdown = ({ isError, highSlippageWarning, ...rest }) => <Dropdown {...rest} />
+const ColoredDropdown = styled(WrappedDropdown)`
+  path {
+    stroke: ${({ theme }) => theme.royalBlue};
   }
 `
 
@@ -89,12 +103,12 @@ class ContextualInfo extends Component {
           {!this.state.showDetails ? (
             <>
               <span>{openDetailsText}</span>
-              <img src={DropdownBlue} alt="dropdown" />
+              <ColoredDropup />
             </>
           ) : (
             <>
               <span>{closeDetailsText}</span>
-              <img src={DropupBlue} alt="dropup" />
+              <ColoredDropdown />
             </>
           )}
         </SummaryWrapperContainer>

@@ -32,8 +32,8 @@ const Web3StatusGeneric = styled.button`
 `
 const Web3StatusError = styled(Web3StatusGeneric)`
   background-color: ${({ theme }) => theme.salmonRed};
-  color: ${({ theme }) => theme.white};
   border: 1px solid ${({ theme }) => theme.salmonRed};
+  color: ${({ theme }) => theme.white};
   font-weight: 500;
   :hover,
   :focus {
@@ -43,9 +43,10 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 
 const Web3StatusConnect = styled(Web3StatusGeneric)`
   background-color: ${({ theme }) => theme.royalBlue};
-  color: ${({ theme }) => theme.white};
   border: 1px solid ${({ theme }) => theme.royalBlue};
+  color: ${({ theme }) => theme.white};
   font-weight: 500;
+
   :hover,
   :focus {
     background-color: ${({ theme }) => darken(0.1, theme.royalBlue)};
@@ -53,9 +54,9 @@ const Web3StatusConnect = styled(Web3StatusGeneric)`
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)`
-  background-color: ${({ pending, theme }) => (pending ? theme.zumthorBlue : theme.white)};
-  color: ${({ pending, theme }) => (pending ? theme.royalBlue : theme.doveGray)};
+  background-color: ${({ pending, theme }) => (pending ? theme.zumthorBlue : theme.inputBackground)};
   border: 1px solid ${({ pending, theme }) => (pending ? theme.royalBlue : theme.mercuryGray)};
+  color: ${({ pending, theme }) => (pending ? theme.royalBlue : theme.doveGray)};
   font-weight: 400;
   :hover {
     background-color: ${({ pending, theme }) =>
@@ -72,7 +73,6 @@ const Text = styled.p`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-
   margin: 0 0.5rem 0 0.25rem;
   font-size: 0.83rem;
 `
