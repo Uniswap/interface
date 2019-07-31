@@ -1,5 +1,6 @@
 import React from 'react'
 import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'styled-components'
+import { useDarkModeManager } from '../contexts/LocalStorage'
 
 export * from './components'
 
@@ -28,23 +29,34 @@ const flexRowNoWrap = css`
   flex-flow: row nowrap;
 `
 
-const theme = {
-  white: '#FFFFFF',
-  black: '#000000',
+const white = '#FFFFFF'
+const black = '#000000'
+
+const theme = darkMode => ({
+  white,
+  black,
+  textColor: darkMode ? white : '#010101',
+
+  // for setting css on <html>
+  backgroundColor: darkMode ? '#333639' : white,
+
+  inputBackground: darkMode ? '#202124' : white,
+  placeholderGray: darkMode ? '#5F5F5F' : '#E1E1E1',
+
   // grays
-  concreteGray: '#FAFAFA',
-  mercuryGray: '#E1E1E1',
-  silverGray: '#C4C4C4',
-  chaliceGray: '#AEAEAE',
-  doveGray: '#737373',
-  mineshaftGray: '#2B2B2B',
-  buttonOutlineGrey: '#f2f2f2',
+  concreteGray: darkMode ? '#292C2F' : '#FAFAFA',
+  mercuryGray: darkMode ? '#333333' : '#E1E1E1',
+  silverGray: darkMode ? '#737373' : '#C4C4C4',
+  chaliceGray: darkMode ? '#7B7B7B' : '#AEAEAE',
+  doveGray: darkMode ? '#C4C4C4' : '#737373',
+  mineshaftGray: darkMode ? '#E1E1E1' : '#2B2B2B',
+  buttonOutlineGrey: darkMode ? '#FAFAFA' : '#F2F2F2',
   //blacks
-  charcoalBlack: '#404040',
+  charcoalBlack: darkMode ? '#F2F2F2' : '#404040',
   // blues
-  zumthorBlue: '#EBF4FF',
-  malibuBlue: '#5CA2FF',
-  royalBlue: '#2F80ED',
+  zumthorBlue: darkMode ? '#212529' : '#EBF4FF',
+  malibuBlue: darkMode ? '#E67AEF' : '#5CA2FF',
+  royalBlue: darkMode ? '#DC6BE5' : '#2F80ED',
   // purples
   wisteriaPurple: '#DC6BE5',
   // reds
@@ -62,10 +74,12 @@ const theme = {
   // css snippets
   flexColumnNoWrap,
   flexRowNoWrap
-}
+})
 
 export default function ThemeProvider({ children }) {
-  return <StyledComponentsThemeProvider theme={theme}>{children}</StyledComponentsThemeProvider>
+  const [darkMode] = useDarkModeManager()
+
+  return <StyledComponentsThemeProvider theme={theme(darkMode)}>{children}</StyledComponentsThemeProvider>
 }
 
 export const GlobalStyle = createGlobalStyle`
@@ -79,20 +93,16 @@ export const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
     padding: 0;
+  }
+
+  html {
     font-size: 16px;
     font-variant: none;
+    color: ${({ theme }) => theme.textColor};
+    background-color: ${({ theme }) => theme.backgroundColor};
+    transition: color 150ms ease-out, background-color 150ms ease-out;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  }
-
-  #root {
-    ${({ theme }) => theme.flexColumnNoWrap}
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: 100vh;
-    overflow-x: hidden;
-    overflow-y: auto;
   }
 `
