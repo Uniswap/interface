@@ -35,7 +35,7 @@ const black = '#000000'
 const theme = darkMode => ({
   white,
   black,
-  textColor: darkMode ? white : black,
+  textColor: darkMode ? white : '#010101',
 
   // for setting css on <html>
   backgroundColor: darkMode ? '#333639' : white,
