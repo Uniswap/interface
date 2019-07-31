@@ -38,7 +38,7 @@ const DownArrowBackground = styled.div`
 
 const DownArrow = styled(ArrowDown)`
   ${({ theme }) => theme.flexRowNoWrap}
-  color: ${({ theme, active }) => (active ? theme.royalBlue : theme.mercuryGray)};
+  color: ${({ theme, active }) => (active ? theme.royalBlue : theme.doveGray)};
   width: 0.625rem;
   height: 0.625rem;
   position: relative;
@@ -82,7 +82,7 @@ const ExchangeRateWrapper = styled.div`
 const ExchangeRate = styled.span`
   flex: 1 1 auto;
   width: 0;
-  color: ${({ theme }) => theme.chaliceGray};
+  color: ${({ theme }) => theme.doveGray};
 `
 
 const Flex = styled.div`

@@ -32,7 +32,7 @@ const Web3StatusGeneric = styled.button`
 `
 const Web3StatusError = styled(Web3StatusGeneric)`
   background-color: ${({ theme }) => theme.salmonRed};
-  color: ${({ theme }) => theme.white};
+  color: ${({ theme }) => theme.textColor};
   border: 1px solid ${({ theme }) => theme.salmonRed};
   font-weight: 500;
   :hover,
@@ -43,7 +43,7 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 
 const Web3StatusConnect = styled(Web3StatusGeneric)`
   background-color: ${({ theme }) => theme.royalBlue};
-  color: ${({ theme }) => theme.white};
+  color: ${({ theme }) => theme.textColor};
   border: 1px solid ${({ theme }) => theme.royalBlue};
   font-weight: 500;
   :hover,

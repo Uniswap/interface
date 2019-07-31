@@ -18,6 +18,7 @@ import TokenLogo from '../TokenLogo'
 import SearchIcon from '../../assets/images/magnifying-glass.svg'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 import { useTokenDetails, useAllTokenDetails } from '../../contexts/Tokens'
+import { transparentize } from 'polished'
 
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
@@ -58,7 +59,7 @@ const StyledBorderlessInput = styled(BorderlessInput)`
 const CurrencySelect = styled.button`
   align-items: center;
   font-size: 1rem;
-  color: ${({ selected, theme }) => (selected ? theme.black : theme.royalBlue)};
+  color: ${({ selected, theme }) => (selected ? theme.textColor : theme.royalBlue)};
   height: 2rem;
   border: 1px solid ${({ selected, theme }) => (selected ? theme.mercuryGray : theme.royalBlue)};
   border-radius: 2.5rem;
@@ -92,13 +93,13 @@ const StyledDropDown = styled(DropDown)`
   height: 35%;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.black : theme.royalBlue)};
+    stroke: ${({ selected, theme }) => (selected ? theme.textColor : theme.royalBlue)};
   }
 `
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
-  box-shadow: 0 4px 8px 0 ${({ theme }) => theme.concreteGray};
+  box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.royalBlue)};
   position: relative;
   border-radius: 1.25rem;
   background-color: ${({ theme }) => theme.inputBackground};
@@ -107,12 +108,13 @@ const InputPanel = styled.div`
 
 const Container = styled.div`
   border-radius: 1.25rem;
-  box-shadow: 0 0 0 1px ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
+  border: 1px solid ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
+
   background-color: ${({ theme }) => theme.inputBackground};
   transition: box-shadow 150ms ease-out;
 
   :focus-within {
-    box-shadow: 0 0 1px 1px ${({ theme }) => theme.malibuBlue};
+    border: 1px solid ${({ theme }) => theme.malibuBlue};
   }
 `
 
@@ -191,7 +193,6 @@ const TokenModalRow = styled.div`
 `
 
 const StyledTokenName = styled.span`
-  color: ${({ theme }) => theme.textColor};
   margin: 0 0.25rem 0 0.25rem;
 `
 

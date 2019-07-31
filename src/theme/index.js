@@ -45,7 +45,7 @@ const theme = darkMode => ({
 
   // grays
   concreteGray: darkMode ? '#292C2F' : '#FAFAFA',
-  mercuryGray: darkMode ? '#202023' : '#E1E1E1',
+  mercuryGray: darkMode ? '#333333' : '#E1E1E1',
   silverGray: darkMode ? '#737373' : '#C4C4C4',
   chaliceGray: darkMode ? '#7B7B7B' : '#AEAEAE',
   doveGray: darkMode ? '#C4C4C4' : '#737373',
@@ -57,6 +57,10 @@ const theme = darkMode => ({
   zumthorBlue: darkMode ? '#212529' : '#EBF4FF',
   malibuBlue: darkMode ? '#E67AEF' : '#5CA2FF',
   royalBlue: darkMode ? '#DC6BE5' : '#2F80ED',
+
+  // zumthorBlue: darkMode ? '#1a1a1a' : '#EBF4FF',
+  // malibuBlue: '#5CA2FF',
+  // royalBlue: '#2F80ED',
   // purples
   wisteriaPurple: '#DC6BE5',
   // reds

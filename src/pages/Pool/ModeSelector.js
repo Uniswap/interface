@@ -9,6 +9,8 @@ import { ReactComponent as Dropdown } from '../../assets/images/dropdown-blue.sv
 import Modal from '../../components/Modal'
 import { useBodyKeyDown } from '../../hooks'
 
+import { lighten } from 'polished'
+
 const poolTabOrder = [
   {
     path: '/add-liquidity',
@@ -30,12 +32,15 @@ const poolTabOrder = [
 const LiquidityContainer = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
-  font-size: 0.75rem;
-  padding: 0.625rem 1rem;
-  font-size: 0.75rem;
+  padding: 1rem 1rem;
+  font-size: 1rem;
   color: ${({ theme }) => theme.royalBlue};
   font-weight: 500;
   cursor: pointer;
+
+  :hover {
+    color: ${({ theme }) => lighten(0.1, theme.royalBlue)};
+  }
 
   img {
     height: 0.75rem;
@@ -65,7 +70,7 @@ const StyledNavLink = styled(NavLink).attrs({
   &.${activeClassName} {
     background-color: ${({ theme }) => theme.inputBackground};
     border-radius: 3rem;
-    box-shadow: 0 0 1px 1px ${({ theme }) => theme.mercuryGray};
+    border: 1px solid ${({ theme }) => theme.mercuryGray};
     font-weight: 500;
     color: ${({ theme }) => theme.royalBlue};
   }

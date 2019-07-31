@@ -79,7 +79,7 @@ const ExchangeRateWrapper = styled.div`
 const ExchangeRate = styled.span`
   flex: 1 1 auto;
   width: 0;
-  color: ${({ theme }) => theme.chaliceGray};
+  color: ${({ theme }) => theme.doveGray};
 `
 
 const Flex = styled.div`

@@ -26,7 +26,8 @@ export const Button = styled.button.attrs(({ warning, theme }) => ({
   }
 
   :disabled {
-    background-color: ${({ theme }) => theme.mercuryGray};
+    background-color: ${({ theme }) => theme.concreteGray};
+    color: ${({ theme }) => theme.silverGray};
     cursor: auto;
   }
 `
@@ -50,7 +51,7 @@ export const Link = styled.a.attrs({
 `
 
 export const BorderlessInput = styled.input`
-  color: ${({ theme }) => theme.mineshaftGray};
+  color: ${({ theme }) => theme.textColor};
   font-size: 1rem;
   outline: none;
   border: none;

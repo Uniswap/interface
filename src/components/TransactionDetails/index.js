@@ -86,12 +86,12 @@ const Popup = styled(Flex)`
   align-items: center;
   padding: 0.6rem 1rem;
   line-height: 150%;
-  background: ${({ theme }) => theme.inputBG};
+  background: ${({ theme }) => theme.inputBackground};
   border-radius: 8px;
 
   animation: ${fadeIn} 0.15s linear;
 
-  color: white;
+  color: ${({ theme }) => theme.textColor};
   font-style: italic;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -100,7 +100,7 @@ const Popup = styled(Flex)`
 `
 
 const FancyButton = styled.button`
-  color: ${({ theme }) => theme.black};
+  color: ${({ theme }) => theme.textColor};
   align-items: center;
   min-width: 55px;
   height: 2rem;
@@ -108,7 +108,7 @@ const FancyButton = styled.button`
   font-size: 12px;
   border: 1px solid ${({ theme }) => theme.mercuryGray};
   outline: none;
-  background: ${({ theme }) => theme.inputBG};
+  background: ${({ theme }) => theme.inputBackground};
 
   :hover {
     cursor: inherit;
@@ -116,7 +116,6 @@ const FancyButton = styled.button`
   }
   :focus {
     border: 1px solid ${({ theme }) => theme.royalBlue};
-    /* box-shadow: 0 0 1px 1px #5CA2FF; */
   }
 `
 
@@ -165,8 +164,9 @@ const OptionLarge = styled(Option)`
 `
 
 const Input = styled.input`
-  background: ${({ theme }) => theme.inputBG};
+  background: ${({ theme }) => theme.inputBackground};
   flex-grow: 1;
+  font-size: 12px;
 
   outline: none;
   box-sizing: border-box;
@@ -192,7 +192,7 @@ const Input = styled.input`
     placeholder !== 'Custom' &&
     css`
       text-align: right;
-      color: ${({ theme }) => theme.black};
+      color: ${({ theme }) => theme.textColor};
     `}
 
   ${({ color }) =>
@@ -639,7 +639,7 @@ export default function TransactionDetails(props) {
                 )} ${props.outputSymbol}`
               )}
             </ValueWrapper>{' '}
-            {t('to')} {b(props.recipientAddress)}.
+            {t('to')} {b(props.recipientAddress)}
           </div>
           <LastSummaryText>
             {t('itWillCost')}{' '}
