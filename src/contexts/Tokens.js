@@ -29,6 +29,12 @@ const ETH = {
 
 const INITIAL_TOKENS_CONTEXT = {
   1: {
+    '0x949bEd886c739f1A3273629b3320db0C5024c719': {
+      [NAME]: 'AMIS',
+      [SYMBOL]: 'AMIS',
+      [DECIMALS]: 9,
+      [EXCHANGE_ADDRESS]: '0x164C93580839f40609CE0250Dd4C98a25DA175de'
+    },
     '0x960b236A07cf122663c4303350609A66A7B288C0': {
       [NAME]: 'Aragon Network Token',
       [SYMBOL]: 'ANT',
