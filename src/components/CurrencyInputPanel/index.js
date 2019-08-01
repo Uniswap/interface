@@ -375,6 +375,10 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
         if (aSymbol === 'ETH'.toLowerCase() || bSymbol === 'ETH'.toLowerCase()) {
           return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
         } else {
+          //check for balance 
+          if(allBalances){
+           return  allBalances[a] < allBalances[b] ? 1 : allBalances[a] > allBalances[b] ? -1 : 0
+          }
           return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
         }
       })
@@ -385,7 +389,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
           address: k
         }
       })
-  }, [allTokens])
+  }, [allBalances, allTokens])
   const filteredTokenList = useMemo(() => {
     return tokenList.filter(tokenEntry => {
       // check the regex for each field
@@ -427,12 +431,13 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
     }
 
     return filteredTokenList.map(({ address, symbol }) => {
+      // {console.log(allBalances)}
       return (
         <TokenModalRow key={address} onClick={() => _onTokenSelect(address)}>
           <TokenRowLeft>
             <TokenLogo address={address} size={'1.5rem'} />
             {allBalances ? 
-            <TokenRowBalance>{address === 'ETH' ? 0 : allBalances[address] }</TokenRowBalance>
+            <TokenRowBalance>{address === 'ETH' ? allBalances['ETH'] : allBalances[address] }</TokenRowBalance>
             : ''}
           </TokenRowLeft>
           <span id="symbol">{symbol}</span>

@@ -12,11 +12,12 @@ import OversizedPanel from '../OversizedPanel'
 import TransactionDetails from '../TransactionDetails'
 import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
 import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
-import { isAddress, calculateGasMargin, amountFormatter, getTokenBalance, getTokenDecimals } from '../../utils'
+import { calculateGasMargin, amountFormatter } from '../../utils'
 import { useExchangeContract } from '../../hooks'
-import { useTokenDetails, useAllTokenDetails } from '../../contexts/Tokens'
+import { useTokenDetails } from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
+import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 
 const INPUT = 0
@@ -582,44 +583,7 @@ export default function ExchangePage({ initialCurrency, sending }) {
 
   const [customSlippageError, setcustomSlippageError] = useState('')
 
-  const allTokens = useAllTokenDetails()
-
-  const { library } = useWeb3Context()
-
-  const useFetch = url => {
-    const [allBalanceData, updateAllBalanceData] = useState({})
-    useEffect(() => {
-      let mounted = true
-      ;(async () => {
-        const newBalances = {}
-        await Promise.all(
-          Object.keys(allTokens).map(async k => {
-            let balanceFormatted = 0
-            if (isAddress(k) || k === 'ETH') {
-              let balance = 0
-              if (k === 'ETH') {
-              } else {
-                balance = await getTokenBalance(k, account, library)
-                let decimal = await getTokenDecimals(k, library).catch(() => null)
-                balanceFormatted = !!(balance && Number.isInteger(decimal))
-                  ? amountFormatter(balance, decimal, Math.min(4, decimal))
-                  : 0
-                return (newBalances[k] = balanceFormatted)
-              }
-            }
-          })
-        )
-        if (mounted) updateAllBalanceData(newBalances)
-      })()
-      const cleanup = () => {
-        mounted = false
-      }
-      return cleanup
-    }, [])
-    return allBalanceData
-  }
-
-  const allBalances = useFetch()
+  const allBalances = useFetchAllBalances(account)
 
   return (
     <>
