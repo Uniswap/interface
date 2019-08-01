@@ -208,6 +208,7 @@ const StyledTokenName = styled.span`
 
 export default function CurrencyInputPanel({
   onValueChange = () => {},
+  allBalances,
   renderInput,
   onCurrencySelected = () => {},
   title,
@@ -351,13 +352,14 @@ export default function CurrencyInputPanel({
             setModalIsOpen(false)
           }}
           onTokenSelect={onCurrencySelected}
+          allBalances={allBalances}
         />
       )}
     </InputPanel>
   )
 }
 
-function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
+function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) {
   const { t } = useTranslation()
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -429,7 +431,9 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
         <TokenModalRow key={address} onClick={() => _onTokenSelect(address)}>
           <TokenRowLeft>
             <TokenLogo address={address} size={'1.5rem'} />
-            <TokenRowBalance>0.01</TokenRowBalance>
+            {allBalances ? 
+            <TokenRowBalance>{address === 'ETH' ? 0 : allBalances[address] }</TokenRowBalance>
+            : ''}
           </TokenRowLeft>
           <span id="symbol">{symbol}</span>
         </TokenModalRow>
