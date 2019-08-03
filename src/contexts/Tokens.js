@@ -53,6 +53,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x87d80DBD37E551F58680B4217b23aF6a752DA83F'
     },
+    '0xaaaebe6fe48e54f431b0c390cfaf0b017d09d42d': {
+      [NAME]: 'Celsius',
+      [SYMBOL]: 'CEL',
+      [DECIMALS]: 4,
+      [EXCHANGE_ADDRESS]: '0x91debb54de02872a259c17699d9b794bc949fed2'
+    },
     '0x26E75307Fc0C021472fEb8F727839531F112f317': {
       [NAME]: 'Crypto20',
       [SYMBOL]: 'C20',
