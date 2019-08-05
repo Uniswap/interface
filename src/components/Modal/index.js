@@ -23,8 +23,8 @@ const StyledDialogContent = styled(FilteredDialogContent)`
     margin: 0 0 2rem 0;
     ${({ theme }) => theme.mediaWidth.upToMedium`margin: 0;`}
     padding: 0;
-    width: 50vw;
-    max-width: 650px;
+    width: 45vw;
+    max-width: 600px;
     ${({ theme }) => theme.mediaWidth.upToMedium`width: 65vw;`}
     ${({ theme }) => theme.mediaWidth.upToSmall`width: 80vw;`}
     max-height: 50vh;

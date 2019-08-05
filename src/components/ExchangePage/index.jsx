@@ -1,7 +1,9 @@
 import React, { useState, useReducer, useEffect } from 'react'
 import ReactGA from 'react-ga'
+
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
+
 import { ethers } from 'ethers'
 import styled from 'styled-components'
 

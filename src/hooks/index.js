@@ -157,3 +157,5 @@ export function useCopyClipboard(timeout = 500) {
 
   return [isCopied, staticCopy]
 }
+
+export function useUsdPrice() {}

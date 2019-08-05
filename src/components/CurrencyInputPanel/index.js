@@ -34,7 +34,6 @@ const SubCurrencySelect = styled.button`
   outline: none;
   cursor: pointer;
   user-select: none;
-
 `
 
 const InputRow = styled.div`
@@ -44,14 +43,16 @@ const InputRow = styled.div`
 `
 
 const Input = styled(BorderlessInput)`
-  font-size: 1.5rem;
+  font-size: 1rem;
   color: ${({ error, theme }) => error && theme.salmonRed};
 `
 
 const StyledBorderlessInput = styled(BorderlessInput)`
   min-height: 2.5rem;
   flex-shrink: 0;
-  text-align: right;
+  text-align: left;
+  padding-left: 1.6rem;
+  background-color: ${({ theme }) => theme.listItemGray};
 `
 
 const CurrencySelect = styled.button`
@@ -150,10 +151,18 @@ const TokenModal = styled.div`
   width: 100%;
 `
 
+const ModalHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 2rem;
+  height: 60px;
+`
+
 const SearchContainer = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
-  padding: 1rem 1.5rem;
-  margin: 0.25rem 0.5rem;
+  padding: 0.5rem 2rem;
+  background-color: ${({ theme }) => theme.listItemGray};
 `
 
 const TokenModalInfo = styled.div`
@@ -176,10 +185,9 @@ const TokenModalRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   justify-content: space-between;
-  padding: 1.25rem 2rem;
+  padding: 0.8rem 2rem;
   cursor: pointer;
   user-select: none;
-  background-color: ${({ theme }) => theme.listItemGray};
 
   #symbol {
     color: ${({ theme }) => theme.doveGrey};
@@ -195,11 +203,29 @@ const TokenRowLeft = styled.div`
   align-items : center;
 `
 
-const TokenRowBalance = styled.div`
-  font-size: 16px;
-  line-height: 19px;
+const TokenSymbolGroup = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap};
+  margin-left: 1rem;
+`
+
+const TokenFullName = styled.div`
   color: ${({ theme }) => theme.chaliceGray};
-  margin-left: 1.1rem;
+`
+
+const TokenRowBalance = styled.div`
+  font-size: 1rem;
+  line-height: 20px;
+`
+
+const TokenRowUsd = styled.div`
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: ${({ theme }) => theme.chaliceGray};
+`
+
+const TokenRowRight = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap};
+  align-items: flex-end;
 `
 
 const StyledTokenName = styled.span`
@@ -375,9 +401,13 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
         if (aSymbol === 'ETH'.toLowerCase() || bSymbol === 'ETH'.toLowerCase()) {
           return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
         } else {
-          //check for balance 
-          if(allBalances){
-           return  allBalances[a] < allBalances[b] ? 1 : allBalances[a] > allBalances[b] ? -1 : 0
+          //check for balance
+          if (allBalances && allBalances[a] && allBalances[b]) {
+            return allBalances[a].balance < allBalances[b].balance
+              ? 1
+              : allBalances[a].balance > allBalances[b].balance
+              ? -1
+              : 0
           }
           return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
         }
@@ -430,17 +460,28 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
       return <TokenModalInfo>{t('noExchange')}</TokenModalInfo>
     }
 
-    return filteredTokenList.map(({ address, symbol }) => {
-      // {console.log(allBalances)}
+    return filteredTokenList.map(({ address, symbol, name }) => {
       return (
         <TokenModalRow key={address} onClick={() => _onTokenSelect(address)}>
           <TokenRowLeft>
-            <TokenLogo address={address} size={'1.5rem'} />
-            {allBalances ? 
-            <TokenRowBalance>{address === 'ETH' ? allBalances['ETH'] : allBalances[address] }</TokenRowBalance>
-            : ''}
+            <TokenLogo address={address} size={'2rem'} />
+            <TokenSymbolGroup>
+              <span id="symbol">{symbol}</span>
+              <TokenFullName>{name}</TokenFullName>
+            </TokenSymbolGroup>
           </TokenRowLeft>
-          <span id="symbol">{symbol}</span>
+          <TokenRowRight>
+            {allBalances && allBalances[address] ? (
+              <TokenRowBalance>{allBalances[address].balance > 0 ? allBalances[address].balance : '-'}</TokenRowBalance>
+            ) : (
+              '-'
+            )}
+            <TokenRowUsd>
+              {allBalances && allBalances[address] && allBalances[address].balance > 0
+                ? '$' + allBalances[address].usd * allBalances[address].balance
+                : ''}
+            </TokenRowUsd>
+          </TokenRowRight>
         </TokenModalRow>
       )
     })
@@ -456,8 +497,11 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} minHeight={50} initialFocusRef={isMobile ? undefined : inputRef}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} minHeight={60} initialFocusRef={isMobile ? undefined : inputRef}>
       <TokenModal>
+        <ModalHeader>
+          <p>Select Token</p>
+        </ModalHeader>
         <SearchContainer>
           <img src={SearchIcon} alt="search" />
           <StyledBorderlessInput ref={inputRef} type="text" placeholder={t('searchOrPaste')} onChange={onInput} />
