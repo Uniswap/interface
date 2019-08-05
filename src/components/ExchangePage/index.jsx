@@ -11,7 +11,7 @@ import AddressInputPanel from '../AddressInputPanel'
 import OversizedPanel from '../OversizedPanel'
 import TransactionDetails from '../TransactionDetails'
 import ArrowDown from '../../assets/svg/SVGArrowDown'
-import { amountFormatter, calculateGasMargin } from '../../utils'
+import { amountFormatter, calculateGasMargin, isAddress } from '../../utils'
 import { useExchangeContract } from '../../hooks'
 import { useTokenDetails } from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
@@ -116,13 +116,17 @@ function calculateEtherTokenInputFromOutput(outputAmount, inputReserve, outputRe
   return numerator.div(denominator).add(ethers.constants.One)
 }
 
-function getInitialSwapState(outputCurrency) {
+function getInitialSwapState(state) {
   return {
     independentValue: '', // this is a user input
     dependentValue: '', // this is a calculated number
     independentField: INPUT,
-    inputCurrency: 'ETH',
-    outputCurrency: outputCurrency ? outputCurrency : ''
+    inputCurrency: isAddress(state.inputCurrencyURL) ? state.inputCurrencyURL : 'ETH',
+    outputCurrency: state.outputCurrencyURL
+      ? state.outputCurrencyURL
+      : state.initialCurrency
+      ? state.initialCurrency
+      : ''
   }
 }
 
@@ -232,7 +236,7 @@ function getMarketRate(
   }
 }
 
-export default function ExchangePage({ initialCurrency, sending }) {
+export default function ExchangePage({ initialCurrency, sending, inputCurrencyURL, outputCurrencyURL }) {
   const { t } = useTranslation()
   const { account } = useWeb3Context()
 
@@ -250,7 +254,15 @@ export default function ExchangePage({ initialCurrency, sending }) {
   }, [])
 
   // core swap state
-  const [swapState, dispatchSwapState] = useReducer(swapStateReducer, initialCurrency, getInitialSwapState)
+  const [swapState, dispatchSwapState] = useReducer(
+    swapStateReducer,
+    {
+      initialCurrency: initialCurrency,
+      inputCurrencyURL: inputCurrencyURL,
+      outputCurrencyURL: outputCurrencyURL
+    },
+    getInitialSwapState
+  )
   const { independentValue, dependentValue, independentField, inputCurrency, outputCurrency } = swapState
 
   const [recipient, setRecipient] = useState({ address: '', name: '' })

@@ -51,9 +51,9 @@ export default function App() {
                       exact
                       strict
                       path="/swap/:tokenAddress?"
-                      render={({ match }) => {
+                      render={({ match, location }) => {
                         if (isAddress(match.params.tokenAddress)) {
-                          return <Swap initialCurrency={isAddress(match.params.tokenAddress)} />
+                          return <Swap initialCurrency={isAddress(match.params.tokenAddress)} location={location} />
                         } else {
                           return <Redirect to={{ pathname: '/swap' }} />
                         }

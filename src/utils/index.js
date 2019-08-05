@@ -46,6 +46,11 @@ export function getEtherscanLink(networkId, data, type) {
   }
 }
 
+export function getQueryParam(windowLocation, name) {
+  var q = windowLocation.search.match(new RegExp('[?&]' + name + '=([^&#]*)'))
+  return q && q[1]
+}
+
 export function getNetworkName(networkId) {
   switch (networkId) {
     case 1: {
