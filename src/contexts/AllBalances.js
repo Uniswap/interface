@@ -1,9 +1,7 @@
-import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
-import { ethers } from 'ethers'
+import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect, useState } from 'react'
 import { getTokenReserves, getMarketDetails, formatFixed } from '@uniswap/sdk'
 import { useWeb3Context } from 'web3-react'
 
-import { useUSDPrice } from '../hooks/price'
 import { safeAccess, isAddress, getEtherBalance, getTokenBalance, amountFormatter, getTokenDecimals } from '../utils'
 import { useAllTokenDetails } from './Tokens'
 
@@ -20,14 +18,15 @@ function useAllBalancesContext() {
 function reducer(state, { type, payload }) {
   switch (type) {
     case UPDATE: {
-      const { allBalanceData, networkId, address } = payload
+      const { allBalanceData, networkId, address, ethPrice } = payload
       return {
         ...state,
         [networkId]: {
           ...(safeAccess(state, [networkId]) || {}),
           [address]: {
             ...(safeAccess(state, [networkId, address]) || {}),
-            allBalanceData
+            allBalanceData,
+            ethPrice
           }
         }
       }
@@ -41,8 +40,8 @@ function reducer(state, { type, payload }) {
 export default function Provider({ children }) {
   const [state, dispatch] = useReducer(reducer, {})
 
-  const update = useCallback((allBalanceData, networkId, address) => {
-    dispatch({ type: UPDATE, payload: { allBalanceData, networkId, address } })
+  const update = useCallback((allBalanceData, networkId, address, ethPrice) => {
+    dispatch({ type: UPDATE, payload: { allBalanceData, networkId, address, ethPrice } })
   }, [])
 
   return (
@@ -52,7 +51,7 @@ export default function Provider({ children }) {
   )
 }
 
-export function useFetchAllBalances(account) {
+export function useFetchAllBalances(account, ethPrice, provider) {
   const allTokens = useAllTokenDetails()
 
   const { library, networkId } = useWeb3Context()
@@ -61,73 +60,68 @@ export function useFetchAllBalances(account) {
 
   const { allBalanceData } = safeAccess(state, [networkId, account]) || {}
 
-  const provider = ethers.getDefaultProvider()
-
-  const [ethPrice] = useUSDPrice(provider)
-
-  const getData = () => {}
-
-  useMemo(() => {
+  const getA = async () => {
+    // console.log(ethPrice)
     if (account !== undefined && ethPrice !== undefined) {
       console.log('updating')
       let mounted = true
-      ;(async () => {
-        const newBalances = {}
-        await Promise.all(
-          Object.keys(allTokens).map(async k => {
-            let balanceFormatted = 0
-            let usdPriceOfToken = 0
-            if (isAddress(k) || k === 'ETH') {
-              let balance = 0
-              if (k === 'ETH') {
-                balance = await getEtherBalance(account, library)
-                balanceFormatted = amountFormatter(balance)
-                usdPriceOfToken =
-                  ethPrice &&
-                  formatFixed(ethPrice, {
-                    decimalPlaces: 2,
-                    dropTrailingZeros: false,
-                    format
-                  })
-              } else {
-                balance = await getTokenBalance(k, account, library).catch(() => null)
-                let decimal = await getTokenDecimals(k, library).catch(() => null)
-                balanceFormatted = !!(balance && Number.isInteger(decimal))
-                  ? amountFormatter(balance, decimal, Math.min(4, decimal))
-                  : 0
-                if (provider && balanceFormatted > 0) {
-                  let tokenReserves = await getTokenReserves(k, provider).catch(() => undefined)
-                  if (tokenReserves) {
-                    let marketDetails = await getMarketDetails(tokenReserves)
-                    if (marketDetails && ethPrice) {
-                      try {
-                        usdPriceOfToken = formatFixed(marketDetails.marketRate.rate.multipliedBy(ethPrice), {
-                          decimalPlaces: 2,
-                          dropTrailingZeros: false,
-                          format
-                        })
-                      } catch (error) {}
-                    }
+      const newBalances = {}
+      await Promise.all(
+        Object.keys(allTokens).map(async k => {
+          let balanceFormatted = 0
+          let usdPriceOfToken = 0
+          if (isAddress(k) || k === 'ETH') {
+            let balance = 0
+            if (k === 'ETH') {
+              balance = await getEtherBalance(account, library)
+              balanceFormatted = amountFormatter(balance)
+              usdPriceOfToken =
+                ethPrice &&
+                formatFixed(ethPrice, {
+                  decimalPlaces: 2,
+                  dropTrailingZeros: false,
+                  format
+                })
+            } else {
+              balance = await getTokenBalance(k, account, library).catch(() => null)
+              let decimal = await getTokenDecimals(k, library).catch(() => null)
+              balanceFormatted = !!(balance && Number.isInteger(decimal))
+                ? amountFormatter(balance, decimal, Math.min(4, decimal))
+                : 0
+              if (provider && balanceFormatted > 0) {
+                let tokenReserves = await getTokenReserves(k, provider).catch(() => undefined)
+                if (tokenReserves) {
+                  let marketDetails = await getMarketDetails(tokenReserves)
+                  if (marketDetails && ethPrice) {
+                    try {
+                      usdPriceOfToken = formatFixed(marketDetails.marketRate.rate.multipliedBy(ethPrice), {
+                        decimalPlaces: 2,
+                        dropTrailingZeros: false,
+                        format
+                      })
+                    } catch (error) {}
                   }
                 }
               }
-              return (newBalances[k] = {
-                balance: balanceFormatted,
-                usd: usdPriceOfToken
-              })
             }
-          })
-        )
-        if (mounted) {
-          update(newBalances, networkId, account)
-        }
-      })()
+            return (newBalances[k] = {
+              balance: balanceFormatted,
+              usd: usdPriceOfToken
+            })
+          }
+        })
+      )
+      if (mounted) {
+        update(newBalances, networkId, account, ethPrice)
+      }
       const cleanup = () => {
         mounted = false
       }
       return cleanup
     }
-  }, [account, allTokens, ethPrice, library, networkId, provider, update])
+  }
+
+  useMemo(getA, [ethPrice])
 
   return allBalanceData
 }

@@ -4,6 +4,8 @@ import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
 
+import { useUSDPrice } from '../../hooks/price'
+
 import { ethers } from 'ethers'
 import styled from 'styled-components'
 
@@ -118,13 +120,13 @@ function calculateEtherTokenInputFromOutput(outputAmount, inputReserve, outputRe
   return numerator.div(denominator).add(ethers.constants.One)
 }
 
-function getInitialSwapState(outputCurrency) {
+function getInitialSwapState(state) {
   return {
     independentValue: '', // this is a user input
     dependentValue: '', // this is a calculated number
     independentField: INPUT,
-    inputCurrency: 'ETH',
-    outputCurrency: outputCurrency ? outputCurrency : ''
+    inputCurrency: state.inputCurrencyURL ? state.inputCurrencyURL : 'ETH',
+    outputCurrency: state.outputCurrency ? state.outputCurrency : ''
   }
 }
 
@@ -234,7 +236,7 @@ function getMarketRate(
   }
 }
 
-export default function ExchangePage({ initialCurrency, sending }) {
+export default function ExchangePage({ initialCurrency, sending, inputCurrencyURL }) {
   const { t } = useTranslation()
   const { account } = useWeb3Context()
 
@@ -252,7 +254,15 @@ export default function ExchangePage({ initialCurrency, sending }) {
   }, [])
 
   // core swap state
-  const [swapState, dispatchSwapState] = useReducer(swapStateReducer, initialCurrency, getInitialSwapState)
+  const [swapState, dispatchSwapState] = useReducer(
+    swapStateReducer,
+    {
+      initialCurrency: initialCurrency,
+      inputCurrencyURL: inputCurrencyURL
+    },
+    getInitialSwapState
+  )
+
   const { independentValue, dependentValue, independentField, inputCurrency, outputCurrency } = swapState
 
   const [recipient, setRecipient] = useState({ address: '', name: '' })
@@ -585,7 +595,11 @@ export default function ExchangePage({ initialCurrency, sending }) {
 
   const [customSlippageError, setcustomSlippageError] = useState('')
 
-  const allBalances = useFetchAllBalances(account)
+  const provider = ethers.getDefaultProvider()
+
+  const [ethPrice] = useUSDPrice(provider)
+
+  const allBalances = useFetchAllBalances(account, ethPrice, provider)
 
   return (
     <>
