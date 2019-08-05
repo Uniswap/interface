@@ -157,6 +157,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xd4777E164c6C683E10593E08760B803D58529a8E'
     },
+    '0x998FFE1E43fAcffb941dc337dD0468d52bA5b48A': {
+      [NAME]: 'Rupiah Token',
+      [SYMBOL]: 'IDRT',
+      [DECIMALS]: 2,
+      [EXCHANGE_ADDRESS]: '0x632E120ebeb7869fe0e1ad5dBc5aB3B90A82a827'
+    },
     '0xD29F0b5b3F50b07Fe9a9511F7d86F4f4bAc3f8c4': {
       [NAME]: 'Liquidity.Network Token',
       [SYMBOL]: 'LQD',
