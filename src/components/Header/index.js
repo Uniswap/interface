@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { Link } from '../../theme'
 import Web3Status from '../Web3Status'
 import { darken } from 'polished'
+import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 const HeaderElement = styled.div`
   margin: 1.25rem;
@@ -15,9 +16,19 @@ const Title = styled.div`
   display: flex;
   align-items: center;
 
+  :hover {
+    cursor: pointer;
+  }
+
   #image {
     font-size: 1.5rem;
     margin-right: 1rem;
+    transform: rotate(0deg);
+    transition: transform 150ms ease-out;
+
+    :hover {
+      transform: rotate(-10deg);
+    }
   }
 
   #link {
@@ -36,11 +47,13 @@ const Title = styled.div`
 `
 
 export default function Header() {
+  const [, toggleDarkMode] = useDarkModeManager()
+
   return (
     <>
       <HeaderElement>
         <Title>
-          <span id="image" role="img" aria-label="Unicorn Emoji">
+          <span onClick={toggleDarkMode} id="image" role="img" aria-label="Unicorn Emoji">
             🦄
           </span>
 

@@ -21,10 +21,12 @@ const FilteredDialogContent = ({ minHeight, ...rest }) => <DialogContent {...res
 const StyledDialogContent = styled(FilteredDialogContent)`
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
-    ${({ theme }) => theme.mediaWidth.upToMedium`margin: 0;`}
-    padding: 0;
-    width: 45vw;
-    max-width: 600px;
+    border: 1px solid ${({ theme }) => theme.concreteGray};
+    background-color: ${({ theme }) => theme.inputBackground};
+    ${({ theme }) => theme.mediaWidth.upToMedium`margin: 0;`};
+    padding: 0px;
+    width: 50vw;
+    max-width: 650px;
     ${({ theme }) => theme.mediaWidth.upToMedium`width: 65vw;`}
     ${({ theme }) => theme.mediaWidth.upToSmall`width: 85vw;`}
     max-height: 50vh;
@@ -51,7 +53,7 @@ const HiddenCloseButton = styled.button`
 
 export default function Modal({ isOpen, onDismiss, minHeight = false, initialFocusRef, children }) {
   const transitions = useTransition(isOpen, null, {
-    config: { duration: 125 },
+    config: { duration: 150 },
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 }

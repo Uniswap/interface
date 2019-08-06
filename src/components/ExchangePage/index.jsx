@@ -12,9 +12,8 @@ import CurrencyInputPanel from '../CurrencyInputPanel'
 import AddressInputPanel from '../AddressInputPanel'
 import OversizedPanel from '../OversizedPanel'
 import TransactionDetails from '../TransactionDetails'
-import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
-import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
-import { calculateGasMargin, amountFormatter } from '../../utils'
+import ArrowDown from '../../assets/svg/SVGArrowDown'
+import { amountFormatter, calculateGasMargin } from '../../utils'
 import { useExchangeContract } from '../../hooks'
 import { useTokenDetails } from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
@@ -45,7 +44,9 @@ const DownArrowBackground = styled.div`
   align-items: center;
 `
 
-const DownArrow = styled.img`
+const WrappedArrowDown = ({ clickable, active, ...rest }) => <ArrowDown {...rest} />
+const DownArrow = styled(WrappedArrowDown)`
+  color: ${({ theme, active }) => (active ? theme.royalBlue : theme.chaliceGray)};
   width: 0.625rem;
   height: 0.625rem;
   position: relative;
@@ -64,7 +65,7 @@ const ExchangeRateWrapper = styled.div`
 const ExchangeRate = styled.span`
   flex: 1 1 auto;
   width: 0;
-  color: ${({ theme }) => theme.chaliceGray};
+  color: ${({ theme }) => theme.doveGray};
 `
 
 const Flex = styled.div`
@@ -633,7 +634,7 @@ export default function ExchangePage({ initialCurrency, sending, inputCurrencyUR
             }}
             clickable
             alt="swap"
-            src={isValid ? ArrowDownBlue : ArrowDownGrey}
+            active={isValid}
           />
         </DownArrowBackground>
       </OversizedPanel>
@@ -658,7 +659,7 @@ export default function ExchangePage({ initialCurrency, sending, inputCurrencyUR
         <>
           <OversizedPanel>
             <DownArrowBackground>
-              <DownArrow src={isValid ? ArrowDownBlue : ArrowDownGrey} alt="arrow" />
+              <DownArrow active={isValid} alt="arrow" />
             </DownArrowBackground>
           </OversizedPanel>
           <AddressInputPanel onChange={setRecipient} onError={setRecipientError} />

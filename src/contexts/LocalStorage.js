@@ -7,7 +7,8 @@ const CURRENT_VERSION = 0
 const LAST_SAVED = 'LAST_SAVED'
 
 const BETA_MESSAGE_DISMISSED = 'BETA_MESSAGE_DISMISSED'
-const UPDATABLE_KEYS = [BETA_MESSAGE_DISMISSED]
+const DARK_MODE = 'DARK_MODE'
+const UPDATABLE_KEYS = [BETA_MESSAGE_DISMISSED, DARK_MODE]
 
 const UPDATE_KEY = 'UPDATE_KEY'
 
@@ -39,7 +40,8 @@ function reducer(state, { type, payload }) {
 function init() {
   const defaultLocalStorage = {
     [VERSION]: CURRENT_VERSION,
-    [BETA_MESSAGE_DISMISSED]: false
+    [BETA_MESSAGE_DISMISSED]: false,
+    [DARK_MODE]: false
   }
 
   try {
@@ -48,7 +50,7 @@ function init() {
       // this is where we could run migration logic
       return defaultLocalStorage
     } else {
-      return parsed
+      return { ...defaultLocalStorage, ...parsed }
     }
   } catch {
     return defaultLocalStorage
@@ -87,4 +89,16 @@ export function useBetaMessageManager() {
   }, [updateKey])
 
   return [!state[BETA_MESSAGE_DISMISSED], dismissBetaMessage]
+}
+
+export function useDarkModeManager() {
+  const [state, { updateKey }] = useLocalStorageContext()
+
+  const isDarkMode = state[DARK_MODE]
+
+  const toggleDarkMode = useCallback(() => {
+    updateKey(DARK_MODE, !isDarkMode)
+  }, [updateKey, isDarkMode])
+
+  return [state[DARK_MODE], toggleDarkMode]
 }
