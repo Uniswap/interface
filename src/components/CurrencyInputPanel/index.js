@@ -12,13 +12,14 @@ import { isMobile } from 'react-device-detect'
 
 import { BorderlessInput } from '../../theme'
 import { useTokenContract } from '../../hooks'
-import { isAddress, calculateGasMargin, amountFormatter } from '../../utils'
+import { isAddress, calculateGasMargin, formatToUsd, formatTokenBalance, formatEthBalance } from '../../utils'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import Modal from '../Modal'
 import TokenLogo from '../TokenLogo'
 import SearchIcon from '../../assets/images/magnifying-glass.svg'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 import { useTokenDetails, useAllTokenDetails } from '../../contexts/Tokens'
+import { nullLiteralTypeAnnotation } from '@babel/types'
 
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
@@ -395,30 +396,44 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
   const allTokens = useAllTokenDetails()
 
   const tokenList = useMemo(() => {
+    console.log('updating token list ')
     return Object.keys(allTokens)
       .sort((a, b) => {
         const aSymbol = allTokens[a].symbol.toLowerCase()
         const bSymbol = allTokens[b].symbol.toLowerCase()
+
         if (aSymbol === 'ETH'.toLowerCase() || bSymbol === 'ETH'.toLowerCase()) {
           return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
         } else {
           //check for balance
-
           if (allBalances && allBalances[a] && allBalances[b]) {
-            return allBalances[a].balance < allBalances[b].balance
-              ? 1
-              : allBalances[a].balance > allBalances[b].balance
-              ? -1
-              : 0
+            const aBalance = formatTokenBalance(allBalances[a].balance, allBalances[a].decimal)
+            const bBalance = formatTokenBalance(allBalances[b].balance, allBalances[b].decimal)
+            return aBalance < bBalance ? 1 : aBalance > bBalance ? -1 : 0
           }
           return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
         }
       })
       .map(k => {
+        let balance = 0
+        let usdPrice = 0
+        if (k === 'ETH' && allBalances) {
+          balance = formatEthBalance(allBalances[k].balance)
+          try {
+            usdPrice = formatToUsd(allBalances[k].usdPrice)
+          } catch (e) {
+            console.log(e)
+          }
+        } else if (allBalances) {
+          balance = formatTokenBalance(allBalances[k].balance, allBalances[k].decimal)
+          usdPrice = allBalances[k].usdPrice
+        }
         return {
           name: allTokens[k].name,
           symbol: allTokens[k].symbol,
-          address: k
+          address: k,
+          balance: balance,
+          usdPrice: usdPrice
         }
       })
   }, [allBalances, allTokens])
@@ -446,7 +461,6 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
     if (isAddress(searchQuery) && exchangeAddress === undefined) {
       return <TokenModalInfo>Searching for Exchange...</TokenModalInfo>
     }
-
     if (isAddress(searchQuery) && exchangeAddress === ethers.constants.AddressZero) {
       return (
         <>
@@ -457,12 +471,11 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
         </>
       )
     }
-
     if (!filteredTokenList.length) {
       return <TokenModalInfo>{t('noExchange')}</TokenModalInfo>
     }
 
-    return filteredTokenList.map(({ address, symbol, name }) => {
+    return filteredTokenList.map(({ address, symbol, name, balance, usdPrice }) => {
       return (
         <TokenModalRow key={address} onClick={() => _onTokenSelect(address)}>
           <TokenRowLeft>
@@ -474,15 +487,11 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
           </TokenRowLeft>
           <TokenRowRight>
             {allBalances && allBalances[address] ? (
-              <TokenRowBalance>{allBalances[address].balance > 0 ? allBalances[address].balance : '-'}</TokenRowBalance>
+              <TokenRowBalance>{balance > 0 ? balance : '-'}</TokenRowBalance>
             ) : (
               '-'
             )}
-            <TokenRowUsd>
-              {allBalances && allBalances[address] && allBalances[address].balance > 0
-                ? '$' + allBalances[address].usd * allBalances[address].balance
-                : ''}
-            </TokenRowUsd>
+            <TokenRowUsd>{allBalances && allBalances[address] && balance > 0 ? '$' + usdPrice : ''}</TokenRowUsd>
           </TokenRowRight>
         </TokenModalRow>
       )

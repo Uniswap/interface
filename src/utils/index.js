@@ -5,6 +5,7 @@ import EXCHANGE_ABI from '../constants/abis/exchange'
 import ERC20_ABI from '../constants/abis/erc20'
 import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32'
 import { FACTORY_ADDRESSES } from '../constants'
+import { getTokenReserves, getMarketDetails, formatFixed, FIXED_UNDERFLOW_BEHAVIOR } from '@uniswap/sdk'
 
 import UncheckedJsonRpcSigner from './signer'
 
@@ -180,6 +181,24 @@ export async function getEtherBalance(address, library) {
   }
 
   return library.getBalance(address)
+}
+
+export function formatEthBalance(balance) {
+  return amountFormatter(balance)
+}
+
+export function formatTokenBalance(balance, decimal) {
+  return !!(balance && Number.isInteger(decimal)) ? amountFormatter(balance, decimal, Math.min(4, decimal)) : 0
+}
+
+export function formatToUsd(price) {
+  const format = { decimalSeparator: '.', groupSeparator: ',', groupSize: 3 }
+  const usdPrice = formatFixed(price, {
+    decimalPlaces: 2,
+    dropTrailingZeros: false,
+    format
+  })
+  return usdPrice
 }
 
 // get the token balance of an address
