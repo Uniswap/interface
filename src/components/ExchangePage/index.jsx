@@ -597,7 +597,9 @@ export default function ExchangePage({ initialCurrency, sending, inputCurrencyUR
 
   const provider = ethers.getDefaultProvider()
 
-  const [ethPrice] = useUSDPrice(provider)
+  // const [ethPrice] = useUSDPrice(provider)
+
+  const ethPrice = 300
 
   const allBalances = useFetchAllBalances(account, ethPrice, provider)
 

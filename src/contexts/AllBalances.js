@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect, useState } from 'react'
+import React, { createContext, useContext, useReducer, useMemo, useCallback } from 'react'
 import { getTokenReserves, getMarketDetails, formatFixed } from '@uniswap/sdk'
 import { useWeb3Context } from 'web3-react'
 
@@ -60,8 +60,7 @@ export function useFetchAllBalances(account, ethPrice, provider) {
 
   const { allBalanceData } = safeAccess(state, [networkId, account]) || {}
 
-  const getA = async () => {
-    // console.log(ethPrice)
+  const getData = async () => {
     if (account !== undefined && ethPrice !== undefined) {
       console.log('updating')
       let mounted = true
@@ -75,13 +74,11 @@ export function useFetchAllBalances(account, ethPrice, provider) {
             if (k === 'ETH') {
               balance = await getEtherBalance(account, library)
               balanceFormatted = amountFormatter(balance)
-              usdPriceOfToken =
-                ethPrice &&
-                formatFixed(ethPrice, {
-                  decimalPlaces: 2,
-                  dropTrailingZeros: false,
-                  format
-                })
+              usdPriceOfToken = formatFixed(ethPrice, {
+                decimalPlaces: 2,
+                dropTrailingZeros: false,
+                format
+              })
             } else {
               balance = await getTokenBalance(k, account, library).catch(() => null)
               let decimal = await getTokenDecimals(k, library).catch(() => null)
@@ -92,7 +89,7 @@ export function useFetchAllBalances(account, ethPrice, provider) {
                 let tokenReserves = await getTokenReserves(k, provider).catch(() => undefined)
                 if (tokenReserves) {
                   let marketDetails = await getMarketDetails(tokenReserves)
-                  if (marketDetails && ethPrice) {
+                  if (marketDetails) {
                     try {
                       usdPriceOfToken = formatFixed(marketDetails.marketRate.rate.multipliedBy(ethPrice), {
                         decimalPlaces: 2,
@@ -121,7 +118,7 @@ export function useFetchAllBalances(account, ethPrice, provider) {
     }
   }
 
-  useMemo(getA, [ethPrice])
+  useMemo(getData, [ethPrice])
 
   return allBalanceData
 }

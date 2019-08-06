@@ -1,6 +1,7 @@
 import React, { useState, useRef, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { getTokenReserves, getMarketDetails, formatFixed } from '@uniswap/sdk'
 import { ethers } from 'ethers'
 import styled from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
@@ -11,7 +12,7 @@ import { isMobile } from 'react-device-detect'
 
 import { BorderlessInput } from '../../theme'
 import { useTokenContract } from '../../hooks'
-import { isAddress, calculateGasMargin } from '../../utils'
+import { isAddress, calculateGasMargin, amountFormatter } from '../../utils'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import Modal from '../Modal'
 import TokenLogo from '../TokenLogo'
@@ -402,6 +403,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
           return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
         } else {
           //check for balance
+
           if (allBalances && allBalances[a] && allBalances[b]) {
             return allBalances[a].balance < allBalances[b].balance
               ? 1

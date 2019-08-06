@@ -51,12 +51,6 @@ export function Updater() {
 
   const [, { updateBlockNumber }] = useApplicationContext()
 
-  const globalBlockNumber = useBlockNumber()
-
-  // useEffect(() => {
-  //   // fetch USD price
-  // }, [provider, globalBlockNumber])
-
   useEffect(() => {
     if ((networkId || networkId === 0) && library) {
       let stale = false
