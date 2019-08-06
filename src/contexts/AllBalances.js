@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback } from 'react'
-import { getTokenReserves, getMarketDetails, formatFixed } from '@uniswap/sdk'
+import { getTokenReserves, getMarketDetails, formatFixed, FIXED_UNDERFLOW_BEHAVIOR } from '@uniswap/sdk'
 import { useWeb3Context } from 'web3-react'
 
 import { safeAccess, isAddress, getEtherBalance, getTokenBalance, amountFormatter, getTokenDecimals } from '../utils'
 import { useAllTokenDetails } from './Tokens'
+import { useUSDPrice } from './Application'
 
 const UPDATE = 'UPDATE'
 
@@ -51,17 +52,20 @@ export default function Provider({ children }) {
   )
 }
 
-export function useFetchAllBalances(account, ethPrice, provider) {
-  const allTokens = useAllTokenDetails()
+export function useFetchAllBalances() {
+  const { account, networkId, library } = useWeb3Context()
 
-  const { library, networkId } = useWeb3Context()
+  const _ethPrice = useUSDPrice()
+  const ethPrice = _ethPrice && _ethPrice.toString()
+
+  const allTokens = useAllTokenDetails()
 
   const [state, { update }] = useAllBalancesContext()
 
   const { allBalanceData } = safeAccess(state, [networkId, account]) || {}
 
   const getData = async () => {
-    if (account !== undefined && ethPrice !== undefined) {
+    if (account !== undefined && !!ethPrice) {
       console.log('updating')
       let mounted = true
       const newBalances = {}
@@ -85,8 +89,8 @@ export function useFetchAllBalances(account, ethPrice, provider) {
               balanceFormatted = !!(balance && Number.isInteger(decimal))
                 ? amountFormatter(balance, decimal, Math.min(4, decimal))
                 : 0
-              if (provider && balanceFormatted > 0) {
-                let tokenReserves = await getTokenReserves(k, provider).catch(() => undefined)
+              if (library && balanceFormatted > 0) {
+                let tokenReserves = await getTokenReserves(k).catch(() => undefined)
                 if (tokenReserves) {
                   let marketDetails = await getMarketDetails(tokenReserves)
                   if (marketDetails) {
@@ -94,6 +98,7 @@ export function useFetchAllBalances(account, ethPrice, provider) {
                       usdPriceOfToken = formatFixed(marketDetails.marketRate.rate.multipliedBy(ethPrice), {
                         decimalPlaces: 2,
                         dropTrailingZeros: false,
+                        underflowBehavior: FIXED_UNDERFLOW_BEHAVIOR.LESS_THAN,
                         format
                       })
                     } catch (error) {}

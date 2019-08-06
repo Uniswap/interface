@@ -4,8 +4,6 @@ import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
 
-import { useUSDPrice } from '../../hooks/price'
-
 import { ethers } from 'ethers'
 import styled from 'styled-components'
 
@@ -595,13 +593,7 @@ export default function ExchangePage({ initialCurrency, sending, inputCurrencyUR
 
   const [customSlippageError, setcustomSlippageError] = useState('')
 
-  const provider = ethers.getDefaultProvider()
-
-  // const [ethPrice] = useUSDPrice(provider)
-
-  const ethPrice = 300
-
-  const allBalances = useFetchAllBalances(account, ethPrice, provider)
+  const allBalances = useFetchAllBalances()
 
   return (
     <>
