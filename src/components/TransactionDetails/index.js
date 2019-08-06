@@ -638,8 +638,7 @@ export default function TransactionDetails(props) {
                 )} ${props.outputSymbol}`
               )}
             </ValueWrapper>{' '}
-            {t('to')} {b(props.recipientAddress)}
-            {t('forAtMost')}{' '}
+            {t('to')} {b(props.recipientAddress)} {t('forAtMost')}{' '}
             <ValueWrapper>
               {b(
                 `${amountFormatter(
