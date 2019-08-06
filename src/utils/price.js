@@ -1,5 +1,5 @@
 import { getTokenReserves, getMarketDetails } from '@uniswap/sdk'
-import { getMedian, getMean } from '../utils/math'
+import { getMedian, getMean } from './math'
 
 const DAI = 'DAI'
 const USDC = 'USDC'

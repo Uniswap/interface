@@ -26,7 +26,7 @@ const StyledDialogContent = styled(FilteredDialogContent)`
     width: 45vw;
     max-width: 600px;
     ${({ theme }) => theme.mediaWidth.upToMedium`width: 65vw;`}
-    ${({ theme }) => theme.mediaWidth.upToSmall`width: 80vw;`}
+    ${({ theme }) => theme.mediaWidth.upToSmall`width: 85vw;`}
     max-height: 50vh;
     ${({ minHeight }) =>
       minHeight &&

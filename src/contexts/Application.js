@@ -2,7 +2,7 @@ import React, { createContext, useContext, useReducer, useMemo, useCallback, use
 import { useWeb3Context } from 'web3-react'
 
 import { safeAccess } from '../utils'
-import { getUSDPrice } from '../hooks/price'
+import { getUSDPrice } from '../utils/price'
 
 const BLOCK_NUMBERS = 'BLOCK_NUMBERS'
 const USD_PRICE = 'USD_PRICE'

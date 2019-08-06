@@ -1,17 +1,8 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback } from 'react'
-import { getTokenReserves, getMarketDetails, formatFixed, FIXED_UNDERFLOW_BEHAVIOR } from '@uniswap/sdk'
-import { formatEthBalance } from '../utils'
+import { getTokenReserves, getMarketDetails } from '@uniswap/sdk'
 import { useWeb3Context } from 'web3-react'
 
-import {
-  safeAccess,
-  isAddress,
-  getEtherBalance,
-  getTokenBalance,
-  amountFormatter,
-  getTokenDecimals,
-  getUsdTokenBal
-} from '../utils'
+import { safeAccess, isAddress, getEtherBalance, getTokenBalance, getTokenDecimals } from '../utils'
 import { useAllTokenDetails } from './Tokens'
 import { useUSDPrice } from './Application'
 
@@ -70,7 +61,7 @@ export function useFetchAllBalances() {
   const { allBalanceData } = safeAccess(state, [networkId, account]) || {}
 
   const getData = async () => {
-    if (account !== undefined && !!ethPrice && library && ethPrice !== undefined) {
+    if (!!account && !!ethPrice && library) {
       let mounted = true
       const newBalances = {}
       await Promise.all(
@@ -85,19 +76,17 @@ export function useFetchAllBalances() {
             } else {
               balance = await getTokenBalance(k, account, library).catch(() => null)
               decimal = await getTokenDecimals(k, library).catch(() => null)
+              //only get usd values for tokens with positive balances
               if (balance !== '0x00') {
                 let tokenReserves = await getTokenReserves(k).catch(() => undefined)
                 if (tokenReserves) {
                   let marketDetails = await getMarketDetails(tokenReserves)
                   if (marketDetails) {
-                    try {
-                      let format = { decimalSeparator: '.', groupSeparator: ',', groupSize: 3 }
-                      usdPrice = formatFixed(marketDetails.marketRate.rate.multipliedBy(ethPrice), {
-                        decimalPlaces: 2,
-                        dropTrailingZeros: false,
-                        format
-                      })
-                    } catch (error) {}
+                    //check for rate because some return invalid
+                    let rate = marketDetails.marketRate.rate
+                    if (!isNaN(rate)) {
+                      usdPrice = rate.multipliedBy(ethPrice)
+                    }
                   }
                 }
               }

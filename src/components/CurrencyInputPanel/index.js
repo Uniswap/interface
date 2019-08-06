@@ -1,7 +1,6 @@
 import React, { useState, useRef, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { getTokenReserves, getMarketDetails, formatFixed } from '@uniswap/sdk'
 import { ethers } from 'ethers'
 import styled from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
@@ -9,7 +8,6 @@ import { lighten, darken } from 'polished'
 import Tooltip from '@reach/tooltip'
 import '@reach/tooltip/styles.css'
 import { isMobile } from 'react-device-detect'
-
 import { BorderlessInput } from '../../theme'
 import { useTokenContract } from '../../hooks'
 import { isAddress, calculateGasMargin, formatToUsd, formatTokenBalance, formatEthBalance } from '../../utils'
@@ -19,7 +17,7 @@ import TokenLogo from '../TokenLogo'
 import SearchIcon from '../../assets/images/magnifying-glass.svg'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 import { useTokenDetails, useAllTokenDetails } from '../../contexts/Tokens'
-import { nullLiteralTypeAnnotation } from '@babel/types'
+import close from '../../assets/images/close.png'
 
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
@@ -154,11 +152,20 @@ const TokenModal = styled.div`
 `
 
 const ModalHeader = styled.div`
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 0 2rem;
   height: 60px;
+`
+
+const CloseIcon = styled.div`
+  position: absolute;
+  right: 1.4rem;
+  &:hover {
+    cursor: pointer;
+  }
 `
 
 const SearchContainer = styled.div`
@@ -198,6 +205,8 @@ const TokenModalRow = styled.div`
   :hover {
     background-color: ${({ theme }) => theme.buttonOutlineGrey};
   }
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0.8rem 1rem;`}
 `
 
 const TokenRowLeft = styled.div`
@@ -396,19 +405,19 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
   const allTokens = useAllTokenDetails()
 
   const tokenList = useMemo(() => {
-    console.log('updating token list ')
     return Object.keys(allTokens)
       .sort((a, b) => {
         const aSymbol = allTokens[a].symbol.toLowerCase()
         const bSymbol = allTokens[b].symbol.toLowerCase()
-
         if (aSymbol === 'ETH'.toLowerCase() || bSymbol === 'ETH'.toLowerCase()) {
           return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
         } else {
-          //check for balance
+          //check for balance - sort by eth usd value
           if (allBalances && allBalances[a] && allBalances[b]) {
-            const aBalance = formatTokenBalance(allBalances[a].balance, allBalances[a].decimal)
-            const bBalance = formatTokenBalance(allBalances[b].balance, allBalances[b].decimal)
+            const aBalance =
+              formatToUsd(allBalances[a].usdPrice) * formatTokenBalance(allBalances[a].balance, allBalances[a].decimal)
+            const bBalance =
+              formatToUsd(allBalances[b].usdPrice) * formatTokenBalance(allBalances[b].balance, allBalances[b].decimal)
             return aBalance < bBalance ? 1 : aBalance > bBalance ? -1 : 0
           }
           return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
@@ -417,16 +426,12 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
       .map(k => {
         let balance = 0
         let usdPrice = 0
-        if (k === 'ETH' && allBalances) {
+        if (k === 'ETH' && allBalances && allBalances[k]) {
           balance = formatEthBalance(allBalances[k].balance)
-          try {
-            usdPrice = formatToUsd(allBalances[k].usdPrice)
-          } catch (e) {
-            console.log(e)
-          }
-        } else if (allBalances) {
+          usdPrice = formatToUsd(allBalances[k].usdPrice)
+        } else if (allBalances && allBalances[k]) {
           balance = formatTokenBalance(allBalances[k].balance, allBalances[k].decimal)
-          usdPrice = allBalances[k].usdPrice
+          usdPrice = formatToUsd(allBalances[k].usdPrice)
         }
         return {
           name: allTokens[k].name,
@@ -491,7 +496,9 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
             ) : (
               '-'
             )}
-            <TokenRowUsd>{allBalances && allBalances[address] && balance > 0 ? '$' + usdPrice : ''}</TokenRowUsd>
+            <TokenRowUsd>
+              {allBalances && allBalances[address] && balance > 0 ? '$' + formatToUsd(usdPrice * balance) : ''}
+            </TokenRowUsd>
           </TokenRowRight>
         </TokenModalRow>
       )
@@ -512,10 +519,18 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
       <TokenModal>
         <ModalHeader>
           <p>Select Token</p>
+          <CloseIcon onClick={onDismiss}>
+            <img src={close} alt={'close icon'} />
+          </CloseIcon>
         </ModalHeader>
         <SearchContainer>
           <img src={SearchIcon} alt="search" />
-          <StyledBorderlessInput ref={inputRef} type="text" placeholder={t('searchOrPaste')} onChange={onInput} />
+          <StyledBorderlessInput
+            ref={inputRef}
+            type="text"
+            placeholder={isMobile ? t('searchOrPasteMobile') : t('searchOrPaste')}
+            onChange={onInput}
+          />
         </SearchContainer>
         <TokenList>{renderTokenList()}</TokenList>
       </TokenModal>
