@@ -17,7 +17,7 @@ import TokenLogo from '../TokenLogo'
 import SearchIcon from '../../assets/images/magnifying-glass.svg'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 import { useTokenDetails, useAllTokenDetails } from '../../contexts/Tokens'
-import close from '../../assets/images/close.png'
+import close from '../../assets/images/x.svg'
 import { transparentize } from 'polished'
 
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
@@ -45,7 +45,7 @@ const InputRow = styled.div`
 `
 
 const Input = styled(BorderlessInput)`
-  font-size: 1rem;
+  font-size: 1.5rem;
   color: ${({ error, theme }) => error && theme.salmonRed};
   background-color: ${({ theme }) => theme.inputBackground};
 `

@@ -119,13 +119,13 @@ function calculateEtherTokenInputFromOutput(outputAmount, inputReserve, outputRe
   return numerator.div(denominator).add(ethers.constants.One)
 }
 
-function getInitialSwapState(state) {
+function getInitialSwapState(outputCurrency) {
   return {
     independentValue: '', // this is a user input
     dependentValue: '', // this is a calculated number
     independentField: INPUT,
-    inputCurrency: state.inputCurrencyURL ? state.inputCurrencyURL : 'ETH',
-    outputCurrency: state.outputCurrency ? state.outputCurrency : ''
+    inputCurrency: 'ETH',
+    outputCurrency: outputCurrency ? outputCurrency : ''
   }
 }
 
@@ -235,7 +235,7 @@ function getMarketRate(
   }
 }
 
-export default function ExchangePage({ initialCurrency, sending, inputCurrencyURL }) {
+export default function ExchangePage({ initialCurrency, sending }) {
   const { t } = useTranslation()
   const { account } = useWeb3Context()
 
@@ -253,14 +253,7 @@ export default function ExchangePage({ initialCurrency, sending, inputCurrencyUR
   }, [])
 
   // core swap state
-  const [swapState, dispatchSwapState] = useReducer(
-    swapStateReducer,
-    {
-      initialCurrency: initialCurrency,
-      inputCurrencyURL: inputCurrencyURL
-    },
-    getInitialSwapState
-  )
+  const [swapState, dispatchSwapState] = useReducer(swapStateReducer, initialCurrency, getInitialSwapState)
 
   const { independentValue, dependentValue, independentField, inputCurrency, outputCurrency } = swapState
 
