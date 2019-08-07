@@ -206,7 +206,7 @@ const TokenModalRow = styled.div`
   }
 
   :hover {
-    background-color: ${({ theme }) => theme.buttonOutlineGrey};
+    background-color: ${({ theme }) => theme.tokenRowHover};
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0.8rem 1rem;`}
@@ -287,7 +287,6 @@ export default function CurrencyInputPanel({
                 selectedTokenExchangeAddress,
                 ethers.constants.MaxUint256
               )
-
               tokenContract
                 .approve(selectedTokenExchangeAddress, ethers.constants.MaxUint256, {
                   gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
@@ -415,7 +414,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
         if (aSymbol === 'ETH'.toLowerCase() || bSymbol === 'ETH'.toLowerCase()) {
           return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
         } else {
-          //check for balance - sort by eth usd value
+          //check for balance - sort by eth value
           if (allBalances && allBalances[a] && allBalances[b]) {
             const aBalance =
               formatToUsd(allBalances[a].usdPrice) * formatTokenBalance(allBalances[a].balance, allBalances[a].decimal)
@@ -517,12 +516,22 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
     setSearchQuery(checksummedInput || input)
   }
 
+  function clearInputAndDismiss() {
+    setSearchQuery('')
+    onDismiss()
+  }
+
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} minHeight={60} initialFocusRef={isMobile ? undefined : inputRef}>
+    <Modal
+      isOpen={isOpen}
+      onDismiss={clearInputAndDismiss}
+      minHeight={60}
+      initialFocusRef={isMobile ? undefined : inputRef}
+    >
       <TokenModal>
         <ModalHeader>
           <p>Select Token</p>
-          <CloseIcon onClick={onDismiss}>
+          <CloseIcon onClick={clearInputAndDismiss}>
             <img src={close} alt={'close icon'} />
           </CloseIcon>
         </ModalHeader>
