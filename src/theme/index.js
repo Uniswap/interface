@@ -51,7 +51,7 @@ const theme = darkMode => ({
   doveGray: darkMode ? '#C4C4C4' : '#737373',
   mineshaftGray: darkMode ? '#E1E1E1' : '#2B2B2B',
   buttonOutlineGrey: darkMode ? '#FAFAFA' : '#F2F2F2',
-  tokenRowHover: darkMode ? '#DC6BE5' : '#F2F2F2',
+  tokenRowHover: darkMode ? '#404040' : '#F2F2F2',
   //blacks
   charcoalBlack: darkMode ? '#F2F2F2' : '#404040',
   // blues
