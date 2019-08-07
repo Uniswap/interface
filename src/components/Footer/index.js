@@ -56,18 +56,18 @@ const EmojiToggle = styled.span`
 
 const ToggleComponent = styled(Toggle)`
   margin-right: 24px;
-  &&& .react-toggle-track {
+  .react-toggle-track {
     background-color: ${({ theme }) => theme.inputBackground} !important;
     border: 1px solid ${({ theme }) => theme.concreteGray};
   }
 
-  &&& .react-toggle-track-x {
+  .react-toggle-track-x {
     line-height: unset;
     bottom: auto;
     right: 14px;
   }
 
-  &&& .react-toggle-track-check {
+  .react-toggle-track-check {
     line-height: unset;
     bottom: auto;
     left: 7px;
@@ -80,11 +80,7 @@ const ToggleComponent = styled(Toggle)`
     border-color: ${({ theme }) => theme.mercuryGray} !important;
     /* border: none; */
     top: 2px;
-    left: 2px;
-  }
-
-  &&& .react-toggle--checked .react-toggle-thumb {
-    left: 28px !important;
+    left: ${({ defaultChecked }) => (defaultChecked ? '28px' : '2px')};
   }
 `
 
@@ -116,7 +112,7 @@ export default function Footer() {
       </FooterElement>
       <ToggleComponent
         defaultChecked={!isDark}
-        icons={{ checked: <ToggleIcon content="🌙️" />, unchecked: <ToggleIcon content="☀️" /> }}
+        icons={{ checked: <ToggleIcon content="☀️" />, unchecked: <ToggleIcon content="🌙️" /> }}
         onChange={toggleDarkMode}
       />
     </FooterFrame>
