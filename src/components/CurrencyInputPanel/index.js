@@ -414,8 +414,8 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
         if (aSymbol === 'ETH'.toLowerCase() || bSymbol === 'ETH'.toLowerCase()) {
           return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
         } else {
-          //check for balance - sort by eth value
-          if (allBalances && allBalances[a] && allBalances[b]) {
+          //check for balance - sort by value
+          if (!!allBalances && allBalances[a] && allBalances[b]) {
             const aBalance =
               formatToUsd(allBalances[a].usdPrice) * formatTokenBalance(allBalances[a].balance, allBalances[a].decimal)
             const bBalance =
@@ -426,8 +426,9 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
         }
       })
       .map(k => {
-        let balance = 0
-        let usdPrice = 0
+        let balance = undefined
+        let usdPrice = undefined
+        // only update if we have data
         if (k === 'ETH' && allBalances && allBalances[k]) {
           balance = formatEthBalance(allBalances[k].balance)
           usdPrice = formatToUsd(allBalances[k].usdPrice)
@@ -493,14 +494,8 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
             </TokenSymbolGroup>
           </TokenRowLeft>
           <TokenRowRight>
-            {allBalances && allBalances[address] ? (
-              <TokenRowBalance>{balance > 0 ? balance : '-'}</TokenRowBalance>
-            ) : (
-              '-'
-            )}
-            <TokenRowUsd>
-              {allBalances && allBalances[address] && balance > 0 ? '$' + formatToUsd(usdPrice * balance) : ''}
-            </TokenRowUsd>
+            {!!balance ? <TokenRowBalance>{balance > 0 ? balance : '-'}</TokenRowBalance> : '-'}
+            <TokenRowUsd>{!!balance && balance > 0 ? '$' + formatToUsd(usdPrice * balance) : ''}</TokenRowUsd>
           </TokenRowRight>
         </TokenModalRow>
       )

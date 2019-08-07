@@ -69,15 +69,16 @@ export function useFetchAllBalances() {
           if (isAddress(k) || k === 'ETH') {
             let balance = 0
             let usdPrice = 0
-            let decimal = 2
+            let decimal = 2 // default for ETH
             if (k === 'ETH') {
               balance = await getEtherBalance(account, library)
               usdPrice = ethPrice
             } else {
-              balance = await getTokenBalance(k, account, library).catch(() => null)
-              decimal = await getTokenDecimals(k, library).catch(() => null)
-              //only get usd values for tokens with positive balances
-              if (balance !== '0x00') {
+              balance = await getTokenBalance(k, account, library).catch(() => undefined)
+              //get decimal now so we don't have to again for every format
+              decimal = await getTokenDecimals(k, library).catch(() => undefined)
+              //only get values for tokens with positive balances
+              if (balance !== '0x00' && !!balance) {
                 let tokenReserves = await getTokenReserves(k).catch(() => undefined)
                 if (tokenReserves) {
                   let marketDetails = await getMarketDetails(tokenReserves)
@@ -109,7 +110,7 @@ export function useFetchAllBalances() {
     }
   }
 
-  useMemo(getData, [ethPrice])
+  useMemo(getData, [ethPrice, account])
 
   return allBalanceData
 }
