@@ -55,7 +55,7 @@ const StyledBorderlessInput = styled(BorderlessInput)`
   flex-shrink: 0;
   text-align: left;
   padding-left: 1.6rem;
-  background-color: ${({ theme }) => theme.listItemGray};
+  background-color: ${({ theme }) => theme.concreteGray};
 `
 
 const CurrencySelect = styled.button`
@@ -174,7 +174,7 @@ const CloseIcon = styled.div`
 const SearchContainer = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   padding: 0.5rem 2rem;
-  background-color: ${({ theme }) => theme.listItemGray};
+  background-color: ${({ theme }) => theme.concreteGray};
 `
 
 const TokenModalInfo = styled.div`
