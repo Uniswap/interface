@@ -17,6 +17,7 @@ import { useTokenDetails } from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
+import { isNumber } from 'is-what'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -236,14 +237,28 @@ function getMarketRate(
   }
 }
 
-export default function ExchangePage({ initialCurrency, sending, inputCurrencyURL, outputCurrencyURL }) {
+export default function ExchangePage({
+  initialCurrency,
+  sending = false,
+  inputCurrencyURL,
+  outputCurrencyURL,
+  slippageURL
+}) {
   const { t } = useTranslation()
   const { account } = useWeb3Context()
 
   const addTransaction = useTransactionAdder()
 
-  const [rawSlippage, setRawSlippage] = useState(ALLOWED_SLIPPAGE_DEFAULT)
-  const [rawTokenSlippage, setRawTokenSlippage] = useState(TOKEN_ALLOWED_SLIPPAGE_DEFAULT)
+  const initialSlippage = () => {
+    let slippage = parseFloat(slippageURL)
+    if (isNumber(slippage) && Number(slippage) >= 0 && Number(slippage) < 50) {
+      return slippage * 100
+    }
+    return ALLOWED_SLIPPAGE_DEFAULT
+  }
+
+  const [rawSlippage, setRawSlippage] = useState(initialSlippage())
+  const [rawTokenSlippage, setRawTokenSlippage] = useState(initialSlippage())
 
   const allowedSlippageBig = ethers.utils.bigNumberify(rawSlippage)
   const tokenAllowedSlippageBig = ethers.utils.bigNumberify(rawTokenSlippage)

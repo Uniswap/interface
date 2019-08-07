@@ -306,6 +306,12 @@ export default function TransactionDetails(props) {
   const debouncedInput = useDebounce(userInput, 150)
 
   useEffect(() => {
+    if (props.rawSlippage !== 10 || props.rawSlippage !== 50 || props.rawSlippage !== 100) {
+      console.log('not a preset slippage')
+    }
+  }, [props.rawSlippage])
+
+  useEffect(() => {
     if (activeIndex === 4) {
       checkBounds(debouncedInput)
     }
