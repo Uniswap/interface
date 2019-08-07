@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import styled, { css, keyframes } from 'styled-components'
@@ -306,12 +306,6 @@ export default function TransactionDetails(props) {
   const debouncedInput = useDebounce(userInput, 150)
 
   useEffect(() => {
-    if (props.rawSlippage !== 10 || props.rawSlippage !== 50 || props.rawSlippage !== 100) {
-      console.log('not a preset slippage')
-    }
-  }, [props.rawSlippage])
-
-  useEffect(() => {
     if (activeIndex === 4) {
       checkBounds(debouncedInput)
     }
@@ -499,12 +493,12 @@ export default function TransactionDetails(props) {
     )
   }
 
-  const setFromCustom = () => {
+  const setFromCustom = useCallback(() => {
     setActiveIndex(4)
     inputRef.current.focus()
     // if there's a value, evaluate the bounds
     checkBounds(debouncedInput)
-  }
+  })
 
   // used for slippage presets
   const setFromFixed = (index, slippage) => {
@@ -515,7 +509,23 @@ export default function TransactionDetails(props) {
     props.setcustomSlippageError('valid`')
   }
 
-  const checkBounds = slippageValue => {
+  const [initialSlippage] = useState(props.rawSlippage)
+
+  useEffect(() => {
+    if (initialSlippage !== 10 && initialSlippage !== 50 && initialSlippage !== 100) {
+      // restrict to 2 decimal places
+      let acceptableValues = [/^$/, /^\d{1,2}$/, /^\d{0,2}\.\d{0,2}$/]
+      // if its within accepted decimal limit, update the input state
+      if (acceptableValues.some(a => a.test(initialSlippage / 100))) {
+        console.log(initialSlippage)
+        console.log('were setting it')
+        setUserInput(initialSlippage / 100)
+        setActiveIndex(4)
+      }
+    }
+  }, [initialSlippage])
+
+  const checkBounds = useCallback(slippageValue => {
     setWarningType(WARNING_TYPE.none)
     props.setcustomSlippageError('valid')
 
@@ -539,7 +549,7 @@ export default function TransactionDetails(props) {
     }
     //update the actual slippage value in parent
     updateSlippage(Number(slippageValue))
-  }
+  })
 
   // check that the theyve entered number and correct decimal
   const parseInput = e => {
