@@ -114,8 +114,8 @@ export default function Footer() {
         </Title>
       </FooterElement>
       <ToggleComponent
-        defaultChecked={!isDark}
-        icons={{ checked: <ToggleIcon content="☀️" />, unchecked: <ToggleIcon content="🌙️" /> }}
+        defaultChecked={isDark}
+        icons={{ checked: <ToggleIcon content="🌙️" />, unchecked: <ToggleIcon content="☀️" /> }}
         onChange={toggleDarkMode}
       />
     </FooterFrame>
