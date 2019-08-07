@@ -87,6 +87,8 @@ const Popup = styled(Flex)`
   padding: 0.6rem 1rem;
   line-height: 150%;
   background: ${({ theme }) => theme.inputBackground};
+  border: 1px solid ${({ theme }) => theme.mercuryGray};
+
   border-radius: 8px;
 
   animation: ${fadeIn} 0.15s linear;
