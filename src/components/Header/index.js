@@ -38,7 +38,7 @@ const Title = styled.div`
   }
 
   #link {
-    text-decoration-color: ${({ theme }) => theme.wisteriaPurple};
+    text-decoration-color: ${({ theme }) => theme.UniswapPink};
   }
 
   #title {
