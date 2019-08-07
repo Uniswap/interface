@@ -5,8 +5,9 @@ import { Link } from '../../theme'
 import { darken } from 'polished'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
 import Toggle from 'react-toggle'
-import 'react-toggle/style.css'
 import { transparentize } from 'polished'
+
+import 'react-toggle/style.css'
 
 const FooterFrame = styled.div`
   display: flex;
@@ -83,7 +84,7 @@ const ToggleComponent = styled(Toggle)`
   }
 
   .react-toggle--checked .react-toggle-thumb {
-    left: 28px;
+    left: 28px !important;
   }
 `
 
@@ -114,7 +115,7 @@ export default function Footer() {
         </Title>
       </FooterElement>
       <ToggleComponent
-        defaultChecked={isDark}
+        defaultChecked={!isDark}
         icons={{ checked: <ToggleIcon content="🌙️" />, unchecked: <ToggleIcon content="☀️" /> }}
         onChange={toggleDarkMode}
       />
