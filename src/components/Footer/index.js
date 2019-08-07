@@ -56,24 +56,24 @@ const EmojiToggle = styled.span`
 
 const ToggleComponent = styled(Toggle)`
   margin-right: 24px;
-  .react-toggle-track {
+  &&& .react-toggle-track {
     background-color: ${({ theme }) => theme.inputBackground} !important;
     border: 1px solid ${({ theme }) => theme.concreteGray};
   }
 
-  .react-toggle-track-x {
+  &&& .react-toggle-track-x {
     line-height: unset;
     bottom: auto;
     right: 14px;
   }
 
-  .react-toggle-track-check {
+  &&& .react-toggle-track-check {
     line-height: unset;
     bottom: auto;
     left: 7px;
   }
 
-  .react-toggle-thumb {
+  &&& .react-toggle-thumb {
     background-color: ${({ theme }) => theme.inputBackground};
     box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.93, theme.royalBlue)};
     border: 1px solid ${({ theme }) => theme.mercuryGray};
@@ -83,7 +83,7 @@ const ToggleComponent = styled(Toggle)`
     left: 2px;
   }
 
-  .react-toggle--checked .react-toggle-thumb {
+  &&& .react-toggle--checked .react-toggle-thumb {
     left: 28px !important;
   }
 `
