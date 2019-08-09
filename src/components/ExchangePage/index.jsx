@@ -123,7 +123,7 @@ function getInitialSwapState(state) {
     dependentValue: '', // this is a calculated number
     independentField: INPUT,
     inputCurrency: isAddress(state.inputCurrencyURL) ? state.inputCurrencyURL : 'ETH',
-    outputCurrency: state.outputCurrencyURL
+    outputCurrency: isAddress(state.outputCurrencyURL)
       ? state.outputCurrencyURL
       : state.initialCurrency
       ? state.initialCurrency
@@ -242,19 +242,27 @@ export default function ExchangePage({
   sending = false,
   inputCurrencyURL,
   outputCurrencyURL,
-  slippageURL
+  slippageURL,
+  recipientURL
 }) {
   const { t } = useTranslation()
   const { account } = useWeb3Context()
 
   const addTransaction = useTransactionAdder()
 
-  const initialSlippage = () => {
+  const initialSlippage = (token = false) => {
     let slippage = parseFloat(slippageURL)
     if (isNumber(slippage) && Number(slippage) >= 0 && Number(slippage) < 50) {
       return slippage * 100
     }
-    return ALLOWED_SLIPPAGE_DEFAULT
+    return token ? TOKEN_ALLOWED_SLIPPAGE_DEFAULT : ALLOWED_SLIPPAGE_DEFAULT
+  }
+
+  const initialRecipient = () => {
+    if (sending && recipientURL) {
+      return recipientURL
+    }
+    return ''
   }
 
   const [rawSlippage, setRawSlippage] = useState(initialSlippage())
@@ -280,7 +288,7 @@ export default function ExchangePage({
   )
   const { independentValue, dependentValue, independentField, inputCurrency, outputCurrency } = swapState
 
-  const [recipient, setRecipient] = useState({ address: '', name: '' })
+  const [recipient, setRecipient] = useState({ address: initialRecipient(), name: '' })
   const [recipientError, setRecipientError] = useState()
 
   // get swap type from the currency types
@@ -674,7 +682,7 @@ export default function ExchangePage({
               <DownArrow active={isValid} alt="arrow" />
             </DownArrowBackground>
           </OversizedPanel>
-          <AddressInputPanel onChange={setRecipient} onError={setRecipientError} />
+          <AddressInputPanel onChange={setRecipient} onError={setRecipientError} initialInput={recipient} />
         </>
       ) : (
         ''

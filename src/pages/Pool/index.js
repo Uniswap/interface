@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, useEffect } from 'react'
 import ReactGA from 'react-ga'
 import { Switch, Route, Redirect } from 'react-router-dom'
-
+import { getQueryParam } from '../../utils'
 import ModeSelector from './ModeSelector'
 
 const AddLiquidity = lazy(() => import('./AddLiquidity'))
