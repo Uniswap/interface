@@ -79,7 +79,6 @@ export function useAddressBalance(address, tokenAddress) {
             update(networkId, address, tokenAddress, null, globalBlockNumber)
           }
         })
-
       return () => {
         stale = true
       }
