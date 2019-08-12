@@ -24,7 +24,6 @@ import { transparentize } from 'polished'
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle-grey.svg'
 import { useUSDPrice } from '../../contexts/Application'
-import { Zero } from 'ethers/constants'
 
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
