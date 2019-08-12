@@ -462,7 +462,6 @@ export function useTokenDetails(tokenAddress) {
           }
         }
       )
-
       return () => {
         stale = true
       }
