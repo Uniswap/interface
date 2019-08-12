@@ -24,6 +24,7 @@ import { transparentize } from 'polished'
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle-grey.svg'
 import { useUSDPrice } from '../../contexts/Application'
+import { Zero } from 'ethers/constants'
 
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
@@ -539,7 +540,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
             ) : (
               <SpinnerWrapper src={Circle} alt="loader" />
             )}
-            <TokenRowUsd>{usdBalance === 0 ? '' : '$' + usdBalance}</TokenRowUsd>
+            <TokenRowUsd>{usdBalance === '0' || usdBalance === 0 ? '' : '$' + usdBalance}</TokenRowUsd>
           </TokenRowRight>
         </TokenModalRow>
       )
