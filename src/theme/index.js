@@ -71,6 +71,9 @@ const theme = darkMode => ({
   uniswapPink: '#DC6BE5',
   connectedGreen: '#27AE60',
 
+  //specific
+  textHover: darkMode ? theme.uniswapPink : theme.doveGray,
+
   // media queries
   mediaWidth: mediaWidthTemplates,
   // css snippets

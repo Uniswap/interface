@@ -67,7 +67,6 @@ export function useFetchAllBalances() {
       await Promise.all(
         Object.keys(allTokens).map(async k => {
           let balance = null
-          let decimal = null
           let ethRate = null
 
           if (isAddress(k) || k === 'ETH') {
@@ -86,7 +85,7 @@ export function useFetchAllBalances() {
               }
             }
 
-            return (newBalances[k] = { balance, decimal, ethRate })
+            return (newBalances[k] = { balance, ethRate })
           }
         })
       )

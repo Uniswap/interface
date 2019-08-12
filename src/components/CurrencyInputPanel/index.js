@@ -425,9 +425,9 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
   const _usdAmounts = Object.keys(allTokens).map(k => {
     if (ethPrice && allBalances && allBalances[k].ethRate && allBalances[k].balance) {
       const USDRate = ethPrice.times(allBalances[k].ethRate)
-      const formattedBalance = ethers.utils.formatUnits(allBalances[k].balance, allTokens[k].decimals)
-      const formattedBalanceUSD = formatToUsd(new BigNumber(formattedBalance).times(USDRate))
-      return formattedBalanceUSD
+      const balanceBigNumber = new BigNumber(allBalances[k].balance.toString())
+      const balanceUSD = balanceBigNumber.times(USDRate).div(new BigNumber(10).pow(allTokens[k].decimals))
+      return balanceUSD
     } else {
       return null
     }
@@ -457,24 +457,24 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
 
         // check for balance - sort by value
         if (usdAmounts[a] && usdAmounts[b]) {
-          const aUSD = Number(usdAmounts[a])
-          const bUSD = Number(usdAmounts[b])
+          const aUSD = usdAmounts[a]
+          const bUSD = usdAmounts[b]
 
-          return aUSD > bUSD ? -1 : aUSD < bUSD ? 1 : 0
+          return aUSD.gt(bUSD) ? -1 : aUSD.lt(bUSD) ? 1 : 0
         }
 
         return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
       })
       .map(k => {
-        let balance = 0
-        let usdBalance = 0
+        let balance
+        let usdBalance
         // only update if we have data
         if (k === 'ETH' && allBalances && allBalances[k]) {
           balance = formatEthBalance(allBalances[k].balance)
-          usdBalance = usdAmounts[k] || '0'
+          usdBalance = usdAmounts[k]
         } else if (allBalances && allBalances[k]) {
           balance = formatTokenBalance(allBalances[k].balance, allTokens[k].decimals)
-          usdBalance = usdAmounts[k] || '0'
+          usdBalance = usdAmounts[k]
         }
         return {
           name: allTokens[k].name,
@@ -491,7 +491,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
       // check the regex for each field
       const regexMatches = Object.keys(tokenEntry).map(tokenEntryKey => {
         return (
-          tokenEntry[tokenEntryKey] &&
+          typeof tokenEntry[tokenEntryKey] === 'string' &&
           !!tokenEntry[tokenEntryKey].match(new RegExp(escapeStringRegex(searchQuery), 'i'))
         )
       })
@@ -540,7 +540,9 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
             ) : (
               <SpinnerWrapper src={Circle} alt="loader" />
             )}
-            <TokenRowUsd>{usdBalance === '0' || usdBalance === 0 ? '' : '$' + usdBalance}</TokenRowUsd>
+            <TokenRowUsd>
+              {usdBalance ? (usdBalance < 0.01 ? '<$0.01' : '$' + formatToUsd(usdBalance)) : ''}
+            </TokenRowUsd>
           </TokenRowRight>
         </TokenModalRow>
       )
