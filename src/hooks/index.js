@@ -69,9 +69,7 @@ export function useENSName(address) {
           }
         })
       } catch {
-        if (!stale) {
-          setENSNname(null)
-        }
+        setENSNname(null)
       }
 
       return () => {
