@@ -17,11 +17,11 @@ function forEachStablecoin(runner) {
   return USD_STABLECOINS.map((stablecoin, index) => runner(index, stablecoin))
 }
 
-export async function getUSDPrice() {
-  return Promise.all(forEachStablecoin(i => getTokenReserves(USD_STABLECOIN_ADDRESSES[i]))).then(reserves => {
+export async function getUSDPrice(library) {
+  return Promise.all(forEachStablecoin(i => getTokenReserves(USD_STABLECOIN_ADDRESSES[i], library))).then(reserves => {
     const ethReserves = forEachStablecoin(i => reserves[i].ethReserve.amount)
-
     const marketDetails = forEachStablecoin(i => getMarketDetails(reserves[i], undefined))
+
     const ethPrices = forEachStablecoin(i => marketDetails[i].marketRate.rateInverted)
 
     const [median, medianWeights] = getMedian(ethPrices)

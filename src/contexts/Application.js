@@ -4,7 +4,7 @@ import { useWeb3Context } from 'web3-react'
 import { safeAccess } from '../utils'
 import { getUSDPrice } from '../utils/price'
 
-const BLOCK_NUMBERS = 'BLOCK_NUMBERS'
+const BLOCK_NUMBER = 'BLOCK_NUMBER'
 const USD_PRICE = 'USD_PRICE'
 
 const UPDATE_BLOCK_NUMBER = 'UPDATE_BLOCK_NUMBER'
@@ -22,8 +22,8 @@ function reducer(state, { type, payload }) {
       const { networkId, blockNumber } = payload
       return {
         ...state,
-        [BLOCK_NUMBERS]: {
-          ...(safeAccess(state, [BLOCK_NUMBERS]) || {}),
+        [BLOCK_NUMBER]: {
+          ...(safeAccess(state, [BLOCK_NUMBER]) || {}),
           [networkId]: blockNumber
         }
       }
@@ -46,7 +46,7 @@ function reducer(state, { type, payload }) {
 
 export default function Provider({ children }) {
   const [state, dispatch] = useReducer(reducer, {
-    [BLOCK_NUMBERS]: {},
+    [BLOCK_NUMBER]: {},
     [USD_PRICE]: {}
   })
 
@@ -126,7 +126,7 @@ export function useBlockNumber() {
 
   const [state] = useApplicationContext()
 
-  return safeAccess(state, [BLOCK_NUMBERS, networkId])
+  return safeAccess(state, [BLOCK_NUMBER, networkId])
 }
 
 export function useUSDPrice() {

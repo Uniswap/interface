@@ -79,7 +79,7 @@ export function useFetchAllBalances() {
               decimal = await getTokenDecimals(k, library).catch(() => undefined)
               //only get values for tokens with positive balances
               if (balance !== '0x00' && !!balance) {
-                let tokenReserves = await getTokenReserves(k).catch(() => undefined)
+                let tokenReserves = await getTokenReserves(k, library).catch(() => undefined)
                 if (tokenReserves) {
                   let marketDetails = await getMarketDetails(tokenReserves)
                   if (marketDetails) {
