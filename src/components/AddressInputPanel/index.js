@@ -96,41 +96,54 @@ export default function AddressInputPanel({ title, initialInput = '', onChange =
     let stale = false
 
     if (isAddress(debouncedInput)) {
-      library
-        .lookupAddress(debouncedInput)
-        .then(name => {
-          if (!stale) {
-            // if an ENS name exists, set it as the destination
-            if (name) {
-              setInput(name)
-            } else {
-              setData({ address: debouncedInput, name: '' })
-              setError(null)
-            }
-          }
-        })
-        .catch(() => {
-          setData({ address: debouncedInput, name: '' })
-          setError(null)
-        })
-    } else {
-      if (debouncedInput !== '') {
+      try {
         library
-          .resolveName(debouncedInput)
-          .then(address => {
+          .lookupAddress(debouncedInput)
+          .then(name => {
             if (!stale) {
-              // if the debounced input name resolves to an address
-              if (address) {
-                setData({ address: address, name: debouncedInput })
-                setError(null)
+              // if an ENS name exists, set it as the destination
+              if (name) {
+                setInput(name)
               } else {
-                setError(true)
+                setData({ address: debouncedInput, name: '' })
+                setError(null)
               }
             }
           })
           .catch(() => {
-            setError(true)
+            if (!stale) {
+              setData({ address: debouncedInput, name: '' })
+              setError(null)
+            }
           })
+      } catch {
+        setData({ address: debouncedInput, name: '' })
+        setError(null)
+      }
+    } else {
+      if (debouncedInput !== '') {
+        try {
+          library
+            .resolveName(debouncedInput)
+            .then(address => {
+              if (!stale) {
+                // if the debounced input name resolves to an address
+                if (address) {
+                  setData({ address: address, name: debouncedInput })
+                  setError(null)
+                } else {
+                  setError(true)
+                }
+              }
+            })
+            .catch(() => {
+              if (!stale) {
+                setError(true)
+              }
+            })
+        } catch {
+          setError(true)
+        }
       }
     }
 
