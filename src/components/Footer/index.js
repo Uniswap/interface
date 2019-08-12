@@ -1,13 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
+import { darken, transparentize } from 'polished'
+import Toggle from 'react-switch'
 
 import { Link } from '../../theme'
-import { darken } from 'polished'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
-import Toggle from 'react-toggle'
-import { transparentize } from 'polished'
-
-import 'react-toggle/style.css'
 
 const FooterFrame = styled.div`
   display: flex;
@@ -48,49 +45,29 @@ const Title = styled.div`
   }
 `
 
-const EmojiToggle = styled.span`
-  position: relative;
-  font-size: 15px;
-  font-family: 'Arial sans-serif';
-`
-
-const ToggleComponent = styled(Toggle)`
+const StyledToggle = styled(Toggle)`
   margin-right: 24px;
-  .react-toggle-track {
+
+  .react-switch-bg[style] {
     background-color: ${({ theme }) => theme.inputBackground} !important;
-    border: 1px solid ${({ theme }) => theme.concreteGray};
+    border: 1px solid ${({ theme }) => theme.concreteGray} !important;
   }
 
-  .react-toggle-track-x {
-    line-height: unset;
-    bottom: auto;
-    right: 14px;
-  }
-
-  .react-toggle-track-check {
-    line-height: unset;
-    bottom: auto;
-    left: 7px;
-  }
-
-  &&& .react-toggle-thumb {
+  .react-switch-handle[style] {
     background-color: ${({ theme }) => theme.inputBackground};
     box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.93, theme.royalBlue)};
     border: 1px solid ${({ theme }) => theme.mercuryGray};
     border-color: ${({ theme }) => theme.mercuryGray} !important;
-    /* border: none; */
-    top: 2px;
-    left: ${({ defaultChecked }) => (defaultChecked ? '28px' : '2px')};
   }
 `
 
-function ToggleIcon(props) {
-  return (
-    <EmojiToggle role="img" aria-label="sun">
-      {props.content}
-    </EmojiToggle>
-  )
-}
+const EmojiToggle = styled.span`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-family: Arial sans-serif;
+`
 
 export default function Footer() {
   const [isDark, toggleDarkMode] = useDarkModeManager()
@@ -110,10 +87,22 @@ export default function Footer() {
           </Link>
         </Title>
       </FooterElement>
-      <ToggleComponent
-        defaultChecked={!isDark}
-        icons={{ checked: <ToggleIcon content="☀️" />, unchecked: <ToggleIcon content="🌙️" /> }}
-        onChange={toggleDarkMode}
+
+      <StyledToggle
+        checked={!isDark}
+        uncheckedIcon={
+          <EmojiToggle role="img" aria-label="moon">
+            {/* eslint-disable-line jsx-a11y/accessible-emoji */}
+            🌙️
+          </EmojiToggle>
+        }
+        checkedIcon={
+          <EmojiToggle role="img" aria-label="sun">
+            {/* eslint-disable-line jsx-a11y/accessible-emoji */}
+            {'☀️'}
+          </EmojiToggle>
+        }
+        onChange={() => toggleDarkMode()}
       />
     </FooterFrame>
   )
