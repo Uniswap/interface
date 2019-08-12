@@ -1,10 +1,13 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback } from 'react'
-import { getTokenReserves, getMarketDetails } from '@uniswap/sdk'
+import { ethers } from 'ethers'
+import { getTokenReserves, getMarketDetails, BigNumber } from '@uniswap/sdk'
 import { useWeb3Context } from 'web3-react'
 
-import { safeAccess, isAddress, getEtherBalance, getTokenBalance, getTokenDecimals } from '../utils'
+import { safeAccess, isAddress, getEtherBalance, getTokenBalance } from '../utils'
 import { useAllTokenDetails } from './Tokens'
-import { useUSDPrice } from './Application'
+
+const ZERO = ethers.utils.bigNumberify(0)
+const ONE = new BigNumber(1)
 
 const UPDATE = 'UPDATE'
 
@@ -30,7 +33,7 @@ function reducer(state, { type, payload }) {
       }
     }
     default: {
-      throw Error(`Unexpected action type in BalancesContext reducer: '${type}'.`)
+      throw Error(`Unexpected action type in AllBalancesContext reducer: '${type}'.`)
     }
   }
 }
@@ -52,8 +55,6 @@ export default function Provider({ children }) {
 export function useFetchAllBalances() {
   const { account, networkId, library } = useWeb3Context()
 
-  const ethPrice = useUSDPrice()
-
   const allTokens = useAllTokenDetails()
 
   const [state, { update }] = useAllBalancesContext()
@@ -61,56 +62,39 @@ export function useFetchAllBalances() {
   const { allBalanceData } = safeAccess(state, [networkId, account]) || {}
 
   const getData = async () => {
-    if (!!account && !!ethPrice && library) {
-      let mounted = true
+    if (!!library && !!account) {
       const newBalances = {}
       await Promise.all(
         Object.keys(allTokens).map(async k => {
+          let balance = null
+          let decimal = null
+          let ethRate = null
+
           if (isAddress(k) || k === 'ETH') {
-            let balance = 0
-            let usdPrice = 0
-            let decimal = 2 // default for ETH
             if (k === 'ETH') {
-              balance = await getEtherBalance(account, library)
-              usdPrice = ethPrice
+              balance = await getEtherBalance(account, library).catch(() => null)
+              ethRate = ONE
             } else {
-              balance = await getTokenBalance(k, account, library).catch(() => undefined)
-              //get decimal now so we don't have to again for every format
-              decimal = await getTokenDecimals(k, library).catch(() => undefined)
-              //only get values for tokens with positive balances
-              if (balance !== '0x00' && !!balance) {
-                let tokenReserves = await getTokenReserves(k, library).catch(() => undefined)
-                if (tokenReserves) {
-                  let marketDetails = await getMarketDetails(tokenReserves)
-                  if (marketDetails) {
-                    //check for rate because some return invalid
-                    let rate = marketDetails.marketRate.rate
-                    if (!isNaN(rate)) {
-                      usdPrice = rate.multipliedBy(ethPrice)
-                    }
-                  }
+              balance = await getTokenBalance(k, account, library).catch(() => null)
+              // only get values for tokens with positive balances
+              if (!!balance && balance.gt(ZERO)) {
+                const tokenReserves = await getTokenReserves(k, library).catch(() => null)
+                if (!!tokenReserves) {
+                  const marketDetails = getMarketDetails(tokenReserves)
+                  ethRate = marketDetails.marketRate.rate
                 }
               }
             }
-            return (newBalances[k] = {
-              balance: balance,
-              decimal: decimal,
-              usdPrice: usdPrice
-            })
+
+            return (newBalances[k] = { balance, decimal, ethRate })
           }
         })
       )
-      if (mounted) {
-        update(newBalances, networkId, account)
-      }
-      const cleanup = () => {
-        mounted = false
-      }
-      return cleanup
+      update(newBalances, networkId, account)
     }
   }
 
-  useMemo(getData, [ethPrice, account])
+  useMemo(getData, [account])
 
   return allBalanceData
 }
