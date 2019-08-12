@@ -19,6 +19,8 @@ import { useTransactionAdder, usePendingApproval } from '../../contexts/Transact
 import { useTokenDetails, useAllTokenDetails } from '../../contexts/Tokens'
 import close from '../../assets/images/x.svg'
 import { transparentize } from 'polished'
+import { Spinner } from '../../theme'
+import Circle from '../../assets/images/circle-grey.svg'
 
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
@@ -246,6 +248,12 @@ const StyledTokenName = styled.span`
   margin: 0 0.25rem 0 0.25rem;
 `
 
+const SpinnerWrapper = styled(Spinner)`
+  margin: 0 0.25rem 0 0.25rem;
+  fill-color: ${({ theme }) => theme.chaliceGray};
+  opacity: 0.6;
+`
+
 export default function CurrencyInputPanel({
   onValueChange = () => {},
   allBalances,
@@ -387,6 +395,7 @@ export default function CurrencyInputPanel({
       {!disableTokenSelect && (
         <CurrencySelectModal
           isOpen={modalIsOpen}
+          // isOpen={true}
           onDismiss={() => {
             setModalIsOpen(false)
           }}
@@ -415,19 +424,28 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
           return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
         } else {
           //check for balance - sort by value
-          if (!!allBalances && allBalances[a] && allBalances[b]) {
-            const aBalance =
-              formatToUsd(allBalances[a].usdPrice) * formatTokenBalance(allBalances[a].balance, allBalances[a].decimal)
-            const bBalance =
-              formatToUsd(allBalances[b].usdPrice) * formatTokenBalance(allBalances[b].balance, allBalances[b].decimal)
+          if (allBalances && allBalances[a] && allBalances[b]) {
+            const tokenBalA = formatTokenBalance(allBalances[a].balance, allBalances[a].decimal)
+            const tokenBalB = formatTokenBalance(allBalances[b].balance, allBalances[b].decimal)
+            if (tokenBalA === '<0.0001' && tokenBalB <= 0) {
+              return -1
+            }
+            if (tokenBalB === '<0.0001' && tokenBalA <= 0) {
+              return 1
+            }
+            if (tokenBalB === '<0.0001' && tokenBalA === '<0.0001') {
+              return 0
+            }
+            const aBalance = formatToUsd(allBalances[a].usdPrice) * (tokenBalA === '<0.0001' ? 0 : tokenBalA)
+            const bBalance = formatToUsd(allBalances[b].usdPrice) * (tokenBalB === '<0.0001' ? 0 : tokenBalB)
             return aBalance < bBalance ? 1 : aBalance > bBalance ? -1 : 0
           }
           return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
         }
       })
       .map(k => {
-        let balance = undefined
-        let usdPrice = undefined
+        let balance = 0
+        let usdPrice = 0
         // only update if we have data
         if (k === 'ETH' && allBalances && allBalances[k]) {
           balance = formatEthBalance(allBalances[k].balance)
@@ -465,6 +483,17 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
     onDismiss()
   }
 
+  function getUsd(balance, usdPrice) {
+    if (balance === '<0.0001') {
+      balance = 0
+    }
+    if (isNaN(usdPrice)) {
+      usdPrice = 0
+    }
+    let x = formatToUsd(balance * usdPrice)
+    return x
+  }
+
   function renderTokenList() {
     if (isAddress(searchQuery) && exchangeAddress === undefined) {
       return <TokenModalInfo>Searching for Exchange...</TokenModalInfo>
@@ -494,8 +523,14 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
             </TokenSymbolGroup>
           </TokenRowLeft>
           <TokenRowRight>
-            {!!balance ? <TokenRowBalance>{balance > 0 ? balance : '-'}</TokenRowBalance> : '-'}
-            <TokenRowUsd>{!!balance && balance > 0 ? '$' + formatToUsd(usdPrice * balance) : ''}</TokenRowUsd>
+            {balance ? (
+              <TokenRowBalance>{balance && (balance > 0 || balance === '<0.0001') ? balance : '-'}</TokenRowBalance>
+            ) : (
+              <SpinnerWrapper src={Circle} alt="loader" />
+            )}
+            <TokenRowUsd>
+              {getUsd(balance, usdPrice) > 0 || balance === '<0.0001' ? '$' + getUsd(balance, usdPrice) : ''}
+            </TokenRowUsd>
           </TokenRowRight>
         </TokenModalRow>
       )
