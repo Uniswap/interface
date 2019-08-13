@@ -19,7 +19,7 @@ import TokenLogo from '../TokenLogo'
 import SearchIcon from '../../assets/images/magnifying-glass.svg'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 import { useTokenDetails, useAllTokenDetails } from '../../contexts/Tokens'
-import close from '../../assets/images/x.svg'
+import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { transparentize } from 'polished'
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle-grey.svg'
@@ -30,6 +30,7 @@ const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 const SubCurrencySelect = styled.button`
   ${({ theme }) => theme.flexRowNoWrap}
   background: ${({ theme }) => theme.zumthorBlue};
+
   border: 1px solid ${({ theme }) => theme.royalBlue};
   color: ${({ theme }) => theme.royalBlue};
   line-height: 0;
@@ -106,7 +107,7 @@ const StyledDropDown = styled(DropDown)`
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
-  box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.royalBlue)};
+  box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
   position: relative;
   border-radius: 1.25rem;
   background-color: ${({ theme }) => theme.inputBackground};
@@ -118,8 +119,6 @@ const Container = styled.div`
   border: 1px solid ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
 
   background-color: ${({ theme }) => theme.inputBackground};
-  transition: box-shadow 150ms ease-out;
-
   :focus-within {
     border: 1px solid ${({ theme }) => theme.malibuBlue};
   }
@@ -164,21 +163,30 @@ const ModalHeader = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0 2rem;
+  padding: 0px 0px 0px 1rem;
   height: 60px;
+`
+
+const CloseColor = styled(Close)`
+  path {
+    stroke: ${({ theme }) => theme.textColor};
+  }
 `
 
 const CloseIcon = styled.div`
   position: absolute;
-  right: 1.4rem;
+  right: 1rem;
+  top: 14px;
   &:hover {
     cursor: pointer;
+    opacity: 0.6;
   }
 `
 
 const SearchContainer = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
-  padding: 0.5rem 2rem;
+  justify-content: flex-start;
+  padding: 0.5rem 1.5rem;
   background-color: ${({ theme }) => theme.concreteGray};
 `
 
@@ -202,7 +210,7 @@ const TokenModalRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   justify-content: space-between;
-  padding: 0.8rem 2rem;
+  padding: 1rem;
   cursor: pointer;
   user-select: none;
 
@@ -580,7 +588,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
         <ModalHeader>
           <p>Select Token</p>
           <CloseIcon onClick={clearInputAndDismiss}>
-            <img src={close} alt={'close icon'} />
+            <CloseColor alt={'close icon'} />
           </CloseIcon>
         </ModalHeader>
         <SearchContainer>
