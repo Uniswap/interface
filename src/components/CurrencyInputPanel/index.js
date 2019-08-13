@@ -422,7 +422,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
   const ethPrice = useUSDPrice()
 
   const _usdAmounts = Object.keys(allTokens).map(k => {
-    if (ethPrice && allBalances && allBalances[k].ethRate && allBalances[k].balance) {
+    if (ethPrice && allBalances && allBalances[k] && allBalances[k].ethRate && !allBalances[k].ethRate.isNaN() && allBalances[k].balance) {
       const USDRate = ethPrice.times(allBalances[k].ethRate)
       const balanceBigNumber = new BigNumber(allBalances[k].balance.toString())
       const usdBalance = balanceBigNumber.times(USDRate).div(new BigNumber(10).pow(allTokens[k].decimals))

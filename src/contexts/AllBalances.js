@@ -75,12 +75,15 @@ export function useFetchAllBalances() {
               ethRate = ONE
             } else {
               balance = await getTokenBalance(k, account, library).catch(() => null)
+
               // only get values for tokens with positive balances
               if (!!balance && balance.gt(ZERO)) {
                 const tokenReserves = await getTokenReserves(k, library).catch(() => null)
                 if (!!tokenReserves) {
                   const marketDetails = getMarketDetails(tokenReserves)
-                  ethRate = marketDetails.marketRate.rate
+                  if (marketDetails.marketRate && marketDetails.marketRate.rate) {
+                    ethRate = marketDetails.marketRate.rate
+                  }
                 }
               }
             }
@@ -93,7 +96,7 @@ export function useFetchAllBalances() {
     }
   }
 
-  useMemo(getData, [account])
+  useMemo(getData, [account, state])
 
   return allBalanceData
 }
