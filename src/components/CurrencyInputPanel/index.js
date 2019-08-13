@@ -425,8 +425,8 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
     if (ethPrice && allBalances && allBalances[k].ethRate && allBalances[k].balance) {
       const USDRate = ethPrice.times(allBalances[k].ethRate)
       const balanceBigNumber = new BigNumber(allBalances[k].balance.toString())
-      const balanceUSD = balanceBigNumber.times(USDRate).div(new BigNumber(10).pow(allTokens[k].decimals))
-      return balanceUSD
+      const usdBalance = balanceBigNumber.times(USDRate).div(new BigNumber(10).pow(allTokens[k].decimals))
+      return usdBalance
     } else {
       return null
     }
@@ -540,7 +540,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
               <SpinnerWrapper src={Circle} alt="loader" />
             )}
             <TokenRowUsd>
-              {usdBalance ? (usdBalance < 0.01 ? '<$0.01' : '$' + formatToUsd(usdBalance)) : ''}
+              {usdBalance ? (usdBalance.lt(0.01) ? '<$0.01' : '$' + formatToUsd(usdBalance)) : ''}
             </TokenRowUsd>
           </TokenRowRight>
         </TokenModalRow>
