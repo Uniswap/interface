@@ -20,7 +20,7 @@ export default function Pool({ location }) {
   const exactField = getQueryParam(location, 'exactField')
   const exactAmount = getQueryParam(location, 'exactAmount')
 
-  const AddLiquidityParams = (
+  const AddLiquidityParams = () => (
     <AddLiquidity
       outputCurrencyURL={outputCurrency}
       inputCurrencyURL={inputCurrency}

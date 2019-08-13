@@ -75,7 +75,6 @@ export function useFetchAllBalances() {
               ethRate = ONE
             } else {
               balance = await getTokenBalance(k, account, library).catch(() => null)
-
               // only get values for tokens with positive balances
               if (!!balance && balance.gt(ZERO)) {
                 const tokenReserves = await getTokenReserves(k, library).catch(() => null)
