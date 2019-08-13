@@ -2,7 +2,7 @@ import React, { useReducer, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context, Connectors } from 'web3-react'
-import { darken, transparentize } from 'polished'
+import { darken, lighten, transparentize } from 'polished'
 import Jazzicon from 'jazzicon'
 import { ethers } from 'ethers'
 import { Activity } from 'react-feather'
@@ -60,11 +60,11 @@ const Web3StatusConnected = styled(Web3StatusGeneric)`
   font-weight: 400;
   :hover {
 
-    > P {
+    /* > P {
       color: ${({ theme }) => theme.uniswapPink};
-    }
+    } */
     background-color: ${({ pending, theme }) =>
-      pending ? transparentize(0.9, theme.royalBlue) : transparentize(0.9, theme.mercuryGray)};
+      pending ? transparentize(0.9, theme.royalBlue) : darken(0.05, theme.inputBackground)};
     
   :focus {
     border: 1px solid

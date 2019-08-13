@@ -49,15 +49,16 @@ const StyledToggle = styled(Toggle)`
   margin-right: 24px;
 
   .react-switch-bg[style] {
-    background-color: ${({ theme }) => theme.inputBackground} !important;
+    background-color: ${({ theme }) => darken(0.05, theme.inputBackground)} !important;
     border: 1px solid ${({ theme }) => theme.concreteGray} !important;
   }
 
   .react-switch-handle[style] {
     background-color: ${({ theme }) => theme.inputBackground};
-    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.93, theme.royalBlue)};
+    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.93, theme.shadowColor)};
     border: 1px solid ${({ theme }) => theme.mercuryGray};
     border-color: ${({ theme }) => theme.mercuryGray} !important;
+    top: 2px !important;
   }
 `
 
