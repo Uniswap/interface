@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 import { animated, useTransition } from 'react-spring'
 import { DialogOverlay, DialogContent } from '@reach/dialog'
 import '@reach/dialog/styles.css'
-import { darken, transparentize } from 'polished'
+import { transparentize } from 'polished'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 const WrappedDialogOverlay = ({ suppressClassNameWarning, ...rest }) => <AnimatedDialogOverlay {...rest} />
