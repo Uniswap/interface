@@ -580,7 +580,6 @@ export default function TransactionDetails(props) {
                 )} ${props.inputSymbol}`
               )}
             </ValueWrapper>
-            .
           </div>
           <LastSummaryText>
             {b(props.recipientAddress)} {t('willReceive')}{' '}
@@ -595,7 +594,7 @@ export default function TransactionDetails(props) {
             </ValueWrapper>{' '}
           </LastSummaryText>
           <LastSummaryText>
-            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>.
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>
           </LastSummaryText>
         </TransactionInfo>
       ) : (
@@ -623,7 +622,7 @@ export default function TransactionDetails(props) {
             </ValueWrapper>
           </div>
           <LastSummaryText>
-            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>.
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>
           </LastSummaryText>
         </TransactionInfo>
       )
@@ -641,10 +640,7 @@ export default function TransactionDetails(props) {
                 )} ${props.outputSymbol}`
               )}
             </ValueWrapper>{' '}
-            {t('to')} {b(props.recipientAddress)}
-          </div>
-          <LastSummaryText>
-            {t('itWillCost')}{' '}
+            {t('to')} {b(props.recipientAddress)} {t('forAtMost')}{' '}
             <ValueWrapper>
               {b(
                 `${amountFormatter(
@@ -654,39 +650,35 @@ export default function TransactionDetails(props) {
                 )} ${props.inputSymbol}`
               )}
             </ValueWrapper>{' '}
-          </LastSummaryText>
+          </div>
           <LastSummaryText>
-            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>.
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>
           </LastSummaryText>
         </TransactionInfo>
       ) : (
         <TransactionInfo>
-          <div>
-            {t('youAreBuying')}{' '}
-            <ValueWrapper>
-              {b(
-                `${amountFormatter(
-                  props.independentValueParsed,
-                  props.independentDecimals,
-                  Math.min(4, props.independentDecimals)
-                )} ${props.outputSymbol}`
-              )}
-            </ValueWrapper>
-          </div>
+          {t('youAreBuying')}{' '}
+          <ValueWrapper>
+            {b(
+              `${amountFormatter(
+                props.independentValueParsed,
+                props.independentDecimals,
+                Math.min(4, props.independentDecimals)
+              )} ${props.outputSymbol}`
+            )}
+          </ValueWrapper>{' '}
+          {t('forAtMost')}{' '}
+          <ValueWrapper>
+            {b(
+              `${amountFormatter(
+                props.dependentValueMaximum,
+                props.dependentDecimals,
+                Math.min(4, props.dependentDecimals)
+              )} ${props.inputSymbol}`
+            )}
+          </ValueWrapper>{' '}
           <LastSummaryText>
-            {t('itWillCost')}{' '}
-            <ValueWrapper>
-              {b(
-                `${amountFormatter(
-                  props.dependentValueMaximum,
-                  props.dependentDecimals,
-                  Math.min(4, props.dependentDecimals)
-                )} ${props.inputSymbol}`
-              )}
-            </ValueWrapper>{' '}
-          </LastSummaryText>
-          <LastSummaryText>
-            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>.
+            {t('priceChange')} <ValueWrapper>{b(`${props.percentSlippageFormatted}%`)}</ValueWrapper>
           </LastSummaryText>
         </TransactionInfo>
       )

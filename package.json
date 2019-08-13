@@ -7,9 +7,10 @@
   "dependencies": {
     "@reach/dialog": "^0.2.8",
     "@reach/tooltip": "^0.2.0",
+    "@uniswap/sdk": "^1.0.0-beta.4",
     "copy-to-clipboard": "^3.2.0",
     "escape-string-regexp": "^2.0.0",
-    "ethers": "^4.0.28",
+    "ethers": "^4.0.33",
     "i18next": "^15.0.9",
     "i18next-browser-languagedetector": "^3.0.1",
     "i18next-xhr-backend": "^2.0.1",

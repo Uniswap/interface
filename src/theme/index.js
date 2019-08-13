@@ -51,12 +51,14 @@ const theme = darkMode => ({
   doveGray: darkMode ? '#C4C4C4' : '#737373',
   mineshaftGray: darkMode ? '#E1E1E1' : '#2B2B2B',
   buttonOutlineGrey: darkMode ? '#FAFAFA' : '#F2F2F2',
+  tokenRowHover: darkMode ? '#404040' : '#F2F2F2',
   //blacks
   charcoalBlack: darkMode ? '#F2F2F2' : '#404040',
   // blues
   zumthorBlue: darkMode ? '#212529' : '#EBF4FF',
   malibuBlue: darkMode ? '#E67AEF' : '#5CA2FF',
   royalBlue: darkMode ? '#DC6BE5' : '#2F80ED',
+  loadingBlue: darkMode ? '#e4f0ff' : '#e4f0ff',
   // purples
   wisteriaPurple: '#DC6BE5',
   // reds
@@ -68,6 +70,9 @@ const theme = darkMode => ({
   // pink
   uniswapPink: '#DC6BE5',
   connectedGreen: '#27AE60',
+
+  //specific
+  textHover: darkMode ? theme.uniswapPink : theme.doveGray,
 
   // media queries
   mediaWidth: mediaWidthTemplates,

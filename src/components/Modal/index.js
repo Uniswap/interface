@@ -28,7 +28,7 @@ const StyledDialogContent = styled(FilteredDialogContent)`
     width: 50vw;
     max-width: 650px;
     ${({ theme }) => theme.mediaWidth.upToMedium`width: 65vw;`}
-    ${({ theme }) => theme.mediaWidth.upToSmall`width: 80vw;`}
+    ${({ theme }) => theme.mediaWidth.upToSmall`width: 85vw;`}
     max-height: 50vh;
     ${({ minHeight }) =>
       minHeight &&
@@ -39,7 +39,7 @@ const StyledDialogContent = styled(FilteredDialogContent)`
     ${({ theme }) => theme.mediaWidth.upToSmall`max-height: 80vh;`}
     display: flex;
     overflow: hidden;
-    border-radius: 1.5rem;
+    border-radius: 10px;
   }
 `
 

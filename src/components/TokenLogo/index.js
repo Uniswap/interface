@@ -10,12 +10,13 @@ const BAD_IMAGES = {}
 const Image = styled.img`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
+  background-color: white;
   border-radius: 1rem;
 `
 
 const Emoji = styled.span`
   width: ${({ size }) => size};
-  font-size: ${({ size }) => size};
+  height: ${({ size }) => size};
 `
 
 const StyledEthereumLogo = styled(EthereumLogo)`
@@ -33,7 +34,7 @@ export default function TokenLogo({ address, size = '1rem', ...rest }) {
     path = TOKEN_ICON_API(address.toLowerCase())
   } else {
     return (
-      <Emoji {...rest}>
+      <Emoji {...rest} size={size}>
         <span role="img" aria-label="Thinking">
           🤔
         </span>
