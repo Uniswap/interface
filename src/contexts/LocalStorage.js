@@ -42,7 +42,7 @@ function init() {
   const defaultLocalStorage = {
     [VERSION]: CURRENT_VERSION,
     [BETA_MESSAGE_DISMISSED]: false,
-    [DARK_MODE]: false
+    [DARK_MODE]: true
   }
 
   try {

@@ -9,7 +9,7 @@ import { useDebounce } from '../../hooks'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
-  box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.royalBlue)};
+  box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
   position: relative;
   border-radius: 1.25rem;
   background-color: ${({ theme }) => theme.inputBackground};
@@ -24,7 +24,6 @@ const ContainerRow = styled.div`
   border: 1px solid ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
 
   background-color: ${({ theme }) => theme.inputBackground};
-  transition: box-shadow 125ms ease-in-out;
 `
 
 const InputContainer = styled.div`
@@ -63,7 +62,6 @@ const Input = styled.input`
   background-color: ${({ theme }) => theme.inputBackground};
 
   color: ${({ error, theme }) => (error ? theme.salmonRed : theme.royalBlue)};
-  transition: color 125ms ease-in-out;
   overflow: hidden;
   text-overflow: ellipsis;
 
