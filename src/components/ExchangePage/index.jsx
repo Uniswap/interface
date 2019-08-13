@@ -1,7 +1,9 @@
 import React, { useState, useReducer, useEffect } from 'react'
 import ReactGA from 'react-ga'
+
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
+
 import { ethers } from 'ethers'
 import styled from 'styled-components'
 
@@ -16,6 +18,7 @@ import { useExchangeContract } from '../../hooks'
 import { useTokenDetails } from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
+import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { isNumber } from 'is-what'
 
@@ -618,10 +621,13 @@ export default function ExchangePage({
 
   const [customSlippageError, setcustomSlippageError] = useState('')
 
+  const allBalances = useFetchAllBalances()
+
   return (
     <>
       <CurrencyInputPanel
         title={t('input')}
+        allBalances={allBalances}
         description={inputValueFormatted && independentField === OUTPUT ? estimatedText : ''}
         extraText={inputBalanceFormatted && formatBalance(inputBalanceFormatted)}
         extraTextClickHander={() => {
@@ -661,6 +667,7 @@ export default function ExchangePage({
       </OversizedPanel>
       <CurrencyInputPanel
         title={t('output')}
+        allBalances={allBalances}
         description={outputValueFormatted && independentField === INPUT ? estimatedText : ''}
         extraText={outputBalanceFormatted && formatBalance(outputBalanceFormatted)}
         onCurrencySelected={outputCurrency => {

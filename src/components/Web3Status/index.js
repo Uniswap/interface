@@ -59,9 +59,13 @@ const Web3StatusConnected = styled(Web3StatusGeneric)`
   color: ${({ pending, theme }) => (pending ? theme.royalBlue : theme.doveGray)};
   font-weight: 400;
   :hover {
+
+    > P {
+      color: ${({ theme }) => theme.uniswapPink};
+    }
     background-color: ${({ pending, theme }) =>
       pending ? transparentize(0.9, theme.royalBlue) : transparentize(0.9, theme.mercuryGray)};
-  }
+    
   :focus {
     border: 1px solid
       ${({ pending, theme }) => (pending ? darken(0.1, theme.royalBlue) : darken(0.1, theme.mercuryGray))};

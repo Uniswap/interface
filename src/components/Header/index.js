@@ -4,12 +4,29 @@ import styled from 'styled-components'
 import { Link } from '../../theme'
 import Web3Status from '../Web3Status'
 import { darken } from 'polished'
-import { useDarkModeManager } from '../../contexts/LocalStorage'
+
+const HeaderFrame = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`
 
 const HeaderElement = styled.div`
   margin: 1.25rem;
   display: flex;
   min-width: 0;
+  display: flex;
+  align-items: center;
+`
+
+const Nod = styled.span`
+  transform: rotate(0deg);
+  transition: transform 150ms ease-out;
+
+  :hover {
+    transform: rotate(-10deg);
+  }
 `
 
 const Title = styled.div`
@@ -20,19 +37,8 @@ const Title = styled.div`
     cursor: pointer;
   }
 
-  #image {
-    font-size: 1.5rem;
-    margin-right: 1rem;
-    transform: rotate(0deg);
-    transition: transform 150ms ease-out;
-
-    :hover {
-      transform: rotate(-10deg);
-    }
-  }
-
   #link {
-    text-decoration-color: ${({ theme }) => theme.wisteriaPurple};
+    text-decoration-color: ${({ theme }) => theme.UniswapPink};
   }
 
   #title {
@@ -47,25 +53,25 @@ const Title = styled.div`
 `
 
 export default function Header() {
-  const [, toggleDarkMode] = useDarkModeManager()
-
   return (
-    <>
+    <HeaderFrame>
       <HeaderElement>
         <Title>
-          <span onClick={toggleDarkMode} id="image" role="img" aria-label="Unicorn Emoji">
-            🦄
-          </span>
-
+          <Nod>
+            <Link id="link" href="https://uniswap.io">
+              <span role="img" aria-label="unicorn">
+                🦄{'  '}
+              </span>
+            </Link>
+          </Nod>
           <Link id="link" href="https://uniswap.io">
             <h1 id="title">Uniswap</h1>
           </Link>
         </Title>
       </HeaderElement>
-
       <HeaderElement>
         <Web3Status />
       </HeaderElement>
-    </>
+    </HeaderFrame>
   )
 }

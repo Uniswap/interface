@@ -10,6 +10,7 @@ import TransactionContextProvider, { Updater as TransactionContextUpdater } from
 import TokensContextProvider from './contexts/Tokens'
 import BalancesContextProvider from './contexts/Balances'
 import AllowancesContextProvider from './contexts/Allowances'
+import AllBalancesContextProvider from './contexts/AllBalances'
 
 import App from './pages/App'
 import InjectedConnector from './InjectedConnector'
@@ -35,7 +36,9 @@ function ContextProviders({ children }) {
         <TransactionContextProvider>
           <TokensContextProvider>
             <BalancesContextProvider>
-              <AllowancesContextProvider>{children}</AllowancesContextProvider>
+              <AllBalancesContextProvider>
+                <AllowancesContextProvider>{children}</AllowancesContextProvider>
+              </AllBalancesContextProvider>
             </BalancesContextProvider>
           </TokensContextProvider>
         </TransactionContextProvider>

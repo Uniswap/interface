@@ -4,6 +4,8 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
 import Web3ReactManager from '../components/Web3ReactManager'
 import Header from '../components/Header'
+import Footer from '../components/Footer'
+
 import NavigationTabs from '../components/NavigationTabs'
 import { isAddress } from '../utils'
 
@@ -11,24 +13,38 @@ const Swap = lazy(() => import('./Swap'))
 const Send = lazy(() => import('./Send'))
 const Pool = lazy(() => import('./Pool'))
 
+const AppWrapper = styled.div`
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+  height: 100vh;
+`
+
 const HeaderWrapper = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
   justify-content: space-between;
 `
+const FooterWrapper = styled.div`
+  width: 100%;
+  min-height: 30px;
+  align-self: flex-end;
+`
 
 const BodyWrapper = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  justify-content: center;
-  flex-grow: 1;
-  flex-basis: 0;
+  justify-content: flex-start;
+  align-items: center;
+  flex: 1;
   overflow: auto;
 `
 
 const Body = styled.div`
-  width: 35rem;
-  margin: 1.25rem;
+  max-width: 35rem;
+  width: 90%;
+  /* margin: 0 1.25rem 1.25rem 1.25rem; */
 `
 
 export default function App() {
