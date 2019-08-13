@@ -155,6 +155,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xd4777E164c6C683E10593E08760B803D58529a8E'
     },
+    '0x2d184014b5658c453443aa87c8e9c4d57285620b': {
+      [NAME]: 'JSE Token',
+      [SYMBOL]: 'JSE',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x2d184014b5658c453443aa87c8e9c4d57285620b'
+    },
     '0xD29F0b5b3F50b07Fe9a9511F7d86F4f4bAc3f8c4': {
       [NAME]: 'Liquidity.Network Token',
       [SYMBOL]: 'LQD',
