@@ -96,7 +96,7 @@ export function useFetchAllBalances() {
     }
   }
 
-  useMemo(getData, [account, state])
+  useMemo(getData, [account])
 
   return allBalanceData
 }
