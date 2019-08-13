@@ -519,8 +519,6 @@ export default function TransactionDetails(props) {
       let acceptableValues = [/^$/, /^\d{1,2}$/, /^\d{0,2}\.\d{0,2}$/]
       // if its within accepted decimal limit, update the input state
       if (acceptableValues.some(a => a.test(initialSlippage / 100))) {
-        console.log(initialSlippage)
-        console.log('were setting it')
         setUserInput(initialSlippage / 100)
         setActiveIndex(4)
       }

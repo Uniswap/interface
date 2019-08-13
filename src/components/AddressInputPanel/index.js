@@ -72,18 +72,12 @@ const Input = styled.input`
   }
 `
 
-export default function AddressInputPanel({
-  title,
-  initialRecipient = '',
-  initialInput = '',
-  onChange = () => {},
-  onError = () => {}
-}) {
+export default function AddressInputPanel({ title, initialInput = '', onChange = () => {}, onError = () => {} }) {
   const { t } = useTranslation()
 
   const { library } = useWeb3Context()
 
-  const [input, setInput] = useState(initialRecipient.address ? initialRecipient.address : '')
+  const [input, setInput] = useState(initialInput.address ? initialInput.address : '')
 
   const debouncedInput = useDebounce(input, 150)
 

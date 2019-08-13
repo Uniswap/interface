@@ -7,6 +7,9 @@ export default function Send({ initialCurrency, location }) {
   const inputCurrency = getQueryParam(location, 'inputCurrency')
   const outputCurrency = getQueryParam(location, 'outputCurrency')
   const slippage = getQueryParam(location, 'slippage')
+  const exactField = getQueryParam(location, 'exactField')
+  const exactAmount = getQueryParam(location, 'exactAmount')
+
   return (
     <ExchangePage
       initialCurrency={initialCurrency}
@@ -15,6 +18,8 @@ export default function Send({ initialCurrency, location }) {
       slippageURL={slippage}
       recipientURL={recipient}
       sending={true}
+      exactFieldURL={exactField}
+      exactAmountURL={exactAmount}
     />
   )
 }

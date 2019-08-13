@@ -1,5 +1,6 @@
 import React, { useState, useReducer, useEffect } from 'react'
 import ReactGA from 'react-ga'
+import { createBrowserHistory } from 'history'
 
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
@@ -122,9 +123,9 @@ function calculateEtherTokenInputFromOutput(outputAmount, inputReserve, outputRe
 
 function getInitialSwapState(state) {
   return {
-    independentValue: '', // this is a user input
+    independentValue: state.exactFieldURL && state.exactAmountURL ? state.exactAmountURL : '', // this is a user input
     dependentValue: '', // this is a calculated number
-    independentField: INPUT,
+    independentField: state.exactFieldURL === 'output' ? OUTPUT : INPUT,
     inputCurrency: isAddress(state.inputCurrencyURL) ? state.inputCurrencyURL : 'ETH',
     outputCurrency: isAddress(state.outputCurrencyURL)
       ? state.outputCurrencyURL
@@ -246,10 +247,14 @@ export default function ExchangePage({
   inputCurrencyURL,
   outputCurrencyURL,
   slippageURL,
-  recipientURL
+  recipientURL,
+  exactFieldURL,
+  exactAmountURL
 }) {
   const { t } = useTranslation()
   const { account } = useWeb3Context()
+
+  const history = createBrowserHistory()
 
   const addTransaction = useTransactionAdder()
 
@@ -285,10 +290,13 @@ export default function ExchangePage({
     {
       initialCurrency: initialCurrency,
       inputCurrencyURL: inputCurrencyURL,
-      outputCurrencyURL: outputCurrencyURL
+      outputCurrencyURL: outputCurrencyURL,
+      exactFieldURL: exactFieldURL,
+      exactAmountURL: exactAmountURL
     },
     getInitialSwapState
   )
+
   const { independentValue, dependentValue, independentField, inputCurrency, outputCurrency } = swapState
 
   const [recipient, setRecipient] = useState({ address: initialRecipient(), name: '' })
@@ -501,6 +509,10 @@ export default function ExchangePage({
     independentField,
     t
   ])
+
+  useEffect(() => {
+    // history.push(window.location + '/')
+  }, [history])
 
   const [inverted, setInverted] = useState(false)
   const exchangeRate = getExchangeRate(inputValueParsed, inputDecimals, outputValueParsed, outputDecimals)
