@@ -87,12 +87,12 @@ const StyledNavLink = styled(NavLink).attrs({
     background-color: ${({ theme }) => theme.inputBackground};
     border-radius: 3rem;
     border: 1px solid ${({ theme }) => theme.mercuryGray};
-    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.royalBlue)};
+    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
     box-sizing: border-box;
     font-weight: 500;
     color: ${({ theme }) => theme.royalBlue};
     :hover {
-      border: 1px solid ${({ theme }) => darken(0.1, theme.mercuryGray)};
+      /* border: 1px solid ${({ theme }) => darken(0.1, theme.mercuryGray)}; */
       background-color: ${({ theme }) => darken(0.01, theme.inputBackground)};
     }
   }
