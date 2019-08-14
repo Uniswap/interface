@@ -10,6 +10,7 @@ import TransactionContextProvider, { Updater as TransactionContextUpdater } from
 import TokensContextProvider from './contexts/Tokens'
 import BalancesContextProvider from './contexts/Balances'
 import AllowancesContextProvider from './contexts/Allowances'
+import AllBalancesContextProvider from './contexts/AllBalances'
 
 import App from './pages/App'
 import InjectedConnector from './InjectedConnector'
@@ -35,7 +36,9 @@ function ContextProviders({ children }) {
         <TransactionContextProvider>
           <TokensContextProvider>
             <BalancesContextProvider>
-              <AllowancesContextProvider>{children}</AllowancesContextProvider>
+              <AllBalancesContextProvider>
+                <AllowancesContextProvider>{children}</AllowancesContextProvider>
+              </AllBalancesContextProvider>
             </BalancesContextProvider>
           </TokensContextProvider>
         </TransactionContextProvider>
@@ -55,16 +58,16 @@ function Updaters() {
 }
 
 ReactDOM.render(
-  <ThemeProvider>
-    <>
-      <GlobalStyle />
-      <Web3Provider connectors={connectors} libraryName="ethers.js">
-        <ContextProviders>
-          <Updaters />
+  <Web3Provider connectors={connectors} libraryName="ethers.js">
+    <ContextProviders>
+      <Updaters />
+      <ThemeProvider>
+        <>
+          <GlobalStyle />
           <App />
-        </ContextProviders>
-      </Web3Provider>
-    </>
-  </ThemeProvider>,
+        </>
+      </ThemeProvider>
+    </ContextProviders>
+  </Web3Provider>,
   document.getElementById('root')
 )

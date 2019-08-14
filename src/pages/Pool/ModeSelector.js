@@ -4,9 +4,12 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import OversizedPanel from '../../components/OversizedPanel'
-import Dropdown from '../../assets/images/dropdown-blue.svg'
+import { ReactComponent as Dropdown } from '../../assets/images/dropdown-blue.svg'
+
 import Modal from '../../components/Modal'
 import { useBodyKeyDown } from '../../hooks'
+
+import { lighten } from 'polished'
 
 const poolTabOrder = [
   {
@@ -29,12 +32,15 @@ const poolTabOrder = [
 const LiquidityContainer = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
-  font-size: 0.75rem;
-  padding: 0.625rem 1rem;
-  font-size: 0.75rem;
+  padding: 1rem 1rem;
+  font-size: 1rem;
   color: ${({ theme }) => theme.royalBlue};
   font-weight: 500;
   cursor: pointer;
+
+  :hover {
+    color: ${({ theme }) => lighten(0.1, theme.royalBlue)};
+  }
 
   img {
     height: 0.75rem;
@@ -62,19 +68,26 @@ const StyledNavLink = styled(NavLink).attrs({
   font-size: 1rem;
 
   &.${activeClassName} {
-    background-color: ${({ theme }) => theme.white};
+    background-color: ${({ theme }) => theme.inputBackground};
     border-radius: 3rem;
-    box-shadow: 0 0 1px 1px ${({ theme }) => theme.mercuryGray};
+    border: 1px solid ${({ theme }) => theme.mercuryGray};
     font-weight: 500;
     color: ${({ theme }) => theme.royalBlue};
   }
 `
 
 const PoolModal = styled.div`
-  background-color: ${({ theme }) => theme.white};
+  background-color: ${({ theme }) => theme.inputBackground};
   width: 100%;
   height: 100%;
   padding: 2rem 0 2rem 0;
+`
+
+const WrappedDropdown = ({ isError, highSlippageWarning, ...rest }) => <Dropdown {...rest} />
+const ColoredDropdown = styled(WrappedDropdown)`
+  path {
+    stroke: ${({ theme }) => theme.royalBlue};
+  }
 `
 
 function ModeSelector({ location: { pathname }, history }) {
@@ -109,7 +122,7 @@ function ModeSelector({ location: { pathname }, history }) {
         }}
       >
         <LiquidityLabel>{t(activeTabKey)}</LiquidityLabel>
-        <img src={Dropdown} alt="dropdown" />
+        <ColoredDropdown alt="arrow down" />
       </LiquidityContainer>
       <Modal
         isOpen={modalIsOpen}

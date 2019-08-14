@@ -25,3 +25,5 @@ yarn-error.log*
 
 notes.txt
 .idea/
+
+.vscode/

@@ -1,7 +1,9 @@
 import React, { useState, useReducer, useEffect } from 'react'
 import ReactGA from 'react-ga'
+
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
+
 import { ethers } from 'ethers'
 import styled from 'styled-components'
 
@@ -10,13 +12,13 @@ import CurrencyInputPanel from '../CurrencyInputPanel'
 import AddressInputPanel from '../AddressInputPanel'
 import OversizedPanel from '../OversizedPanel'
 import TransactionDetails from '../TransactionDetails'
-import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
-import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
+import ArrowDown from '../../assets/svg/SVGArrowDown'
 import { amountFormatter, calculateGasMargin } from '../../utils'
 import { useExchangeContract } from '../../hooks'
 import { useTokenDetails } from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
+import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 
 const INPUT = 0
@@ -27,15 +29,14 @@ const TOKEN_TO_ETH = 1
 const TOKEN_TO_TOKEN = 2
 
 // denominated in bips
-const ALLOWED_SLIPPAGE_DEFAULT = 150
-const TOKEN_ALLOWED_SLIPPAGE_DEFAULT = 200
+const ALLOWED_SLIPPAGE_DEFAULT = 100
+const TOKEN_ALLOWED_SLIPPAGE_DEFAULT = 100
 
-// denominated in seconds
+// 15 minutes, denominated in seconds
 const DEADLINE_FROM_NOW = 60 * 15
 
-// denominated in bips
+// % above the calculated gas cost that we actually send, denominated in bips
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
-
 
 const DownArrowBackground = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -43,7 +44,9 @@ const DownArrowBackground = styled.div`
   align-items: center;
 `
 
-const DownArrow = styled.img`
+const WrappedArrowDown = ({ clickable, active, ...rest }) => <ArrowDown {...rest} />
+const DownArrow = styled(WrappedArrowDown)`
+  color: ${({ theme, active }) => (active ? theme.royalBlue : theme.chaliceGray)};
   width: 0.625rem;
   height: 0.625rem;
   position: relative;
@@ -62,7 +65,7 @@ const ExchangeRateWrapper = styled.div`
 const ExchangeRate = styled.span`
   flex: 1 1 auto;
   width: 0;
-  color: ${({ theme }) => theme.chaliceGray};
+  color: ${({ theme }) => theme.doveGray};
 `
 
 const Flex = styled.div`
@@ -241,16 +244,17 @@ export default function ExchangePage({ initialCurrency, sending }) {
   const [rawSlippage, setRawSlippage] = useState(ALLOWED_SLIPPAGE_DEFAULT)
   const [rawTokenSlippage, setRawTokenSlippage] = useState(TOKEN_ALLOWED_SLIPPAGE_DEFAULT)
 
-  let allowedSlippageBig = ethers.utils.bigNumberify(rawSlippage)
-  let tokenAllowedSlippageBig = ethers.utils.bigNumberify(rawTokenSlippage)
+  const allowedSlippageBig = ethers.utils.bigNumberify(rawSlippage)
+  const tokenAllowedSlippageBig = ethers.utils.bigNumberify(rawTokenSlippage)
 
   // analytics
   useEffect(() => {
     ReactGA.pageview(window.location.pathname + window.location.search)
   }, [])
 
-  // core swap state-
+  // core swap state
   const [swapState, dispatchSwapState] = useReducer(swapStateReducer, initialCurrency, getInitialSwapState)
+
   const { independentValue, dependentValue, independentField, inputCurrency, outputCurrency } = swapState
 
   const [recipient, setRecipient] = useState({ address: '', name: '' })
@@ -259,7 +263,7 @@ export default function ExchangePage({ initialCurrency, sending }) {
   // get swap type from the currency types
   const swapType = getSwapType(inputCurrency, outputCurrency)
 
-  // get decimals and exchange addressfor each of the currency types
+  // get decimals and exchange address for each of the currency types
   const { symbol: inputSymbol, decimals: inputDecimals, exchangeAddress: inputExchangeAddress } = useTokenDetails(
     inputCurrency
   )
@@ -583,10 +587,13 @@ export default function ExchangePage({ initialCurrency, sending }) {
 
   const [customSlippageError, setcustomSlippageError] = useState('')
 
+  const allBalances = useFetchAllBalances()
+
   return (
     <>
       <CurrencyInputPanel
         title={t('input')}
+        allBalances={allBalances}
         description={inputValueFormatted && independentField === OUTPUT ? estimatedText : ''}
         extraText={inputBalanceFormatted && formatBalance(inputBalanceFormatted)}
         extraTextClickHander={() => {
@@ -620,12 +627,13 @@ export default function ExchangePage({ initialCurrency, sending }) {
             }}
             clickable
             alt="swap"
-            src={isValid ? ArrowDownBlue : ArrowDownGrey}
+            active={isValid}
           />
         </DownArrowBackground>
       </OversizedPanel>
       <CurrencyInputPanel
         title={t('output')}
+        allBalances={allBalances}
         description={outputValueFormatted && independentField === INPUT ? estimatedText : ''}
         extraText={outputBalanceFormatted && formatBalance(outputBalanceFormatted)}
         onCurrencySelected={outputCurrency => {
@@ -644,7 +652,7 @@ export default function ExchangePage({ initialCurrency, sending }) {
         <>
           <OversizedPanel>
             <DownArrowBackground>
-              <DownArrow src={isValid ? ArrowDownBlue : ArrowDownGrey} alt="arrow" />
+              <DownArrow active={isValid} alt="arrow" />
             </DownArrowBackground>
           </OversizedPanel>
           <AddressInputPanel onChange={setRecipient} onError={setRecipientError} />
@@ -662,13 +670,13 @@ export default function ExchangePage({ initialCurrency, sending }) {
           {inverted ? (
             <span>
               {exchangeRate
-                ? `1 ${outputSymbol} = ${amountFormatter(exchangeRateInverted, 18, 4, false)} ${inputSymbol}`
+                ? `1 ${inputSymbol} = ${amountFormatter(exchangeRate, 18, 4, false)} ${outputSymbol}`
                 : ' - '}
             </span>
           ) : (
             <span>
               {exchangeRate
-                ? `1 ${inputSymbol} = ${amountFormatter(exchangeRate, 18, 4, false)} ${outputSymbol}`
+                ? `1 ${outputSymbol} = ${amountFormatter(exchangeRateInverted, 18, 4, false)} ${inputSymbol}`
                 : ' - '}
             </span>
           )}

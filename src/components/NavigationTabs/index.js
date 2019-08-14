@@ -60,7 +60,7 @@ const Tabs = styled.div`
   height: 2.5rem;
   background-color: ${({ theme }) => theme.concreteGray};
   border-radius: 3rem;
-  box-shadow: 0 0 0 1px ${({ theme }) => darken(0.05, theme.concreteGray)};
+  /* border: 1px solid ${({ theme }) => theme.mercuryGray}; */
   margin-bottom: 1rem;
 `
 
@@ -73,6 +73,7 @@ const StyledNavLink = styled(NavLink).attrs({
   align-items: center;
   justify-content: center;
   height: 2.5rem;
+  border: 1px solid ${({ theme }) => transparentize(1, theme.mercuryGray)};
   flex: 1 0 auto;
   border-radius: 3rem;
   outline: none;
@@ -80,21 +81,24 @@ const StyledNavLink = styled(NavLink).attrs({
   text-decoration: none;
   color: ${({ theme }) => theme.doveGray};
   font-size: 1rem;
+  box-sizing: border-box;
 
   &.${activeClassName} {
-    background-color: ${({ theme }) => theme.white};
+    background-color: ${({ theme }) => theme.inputBackground};
     border-radius: 3rem;
-    box-shadow: 0 0 1px 1px ${({ theme }) => theme.mercuryGray};
+    border: 1px solid ${({ theme }) => theme.mercuryGray};
+    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.royalBlue)};
+    box-sizing: border-box;
     font-weight: 500;
     color: ${({ theme }) => theme.royalBlue};
     :hover {
-      box-shadow: 0 0 1px 1px ${({ theme }) => darken(0.1, theme.mercuryGray)};
+      border: 1px solid ${({ theme }) => darken(0.1, theme.mercuryGray)};
+      background-color: ${({ theme }) => darken(0.01, theme.inputBackground)};
     }
   }
 
   :hover,
   :focus {
-    font-weight: 500;
     color: ${({ theme }) => darken(0.1, theme.royalBlue)};
   }
 `

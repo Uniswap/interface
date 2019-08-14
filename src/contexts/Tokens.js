@@ -89,14 +89,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 9,
       [EXCHANGE_ADDRESS]: '0xb92dE8B30584392Af27726D5ce04Ef3c4e5c9924'
     },
-
     '0xc719d010B63E5bbF2C0551872CD5316ED26AcD83': {
       [NAME]: 'Decentralized Insurance Protocol',
       [SYMBOL]: 'DIP',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x61792F290e5100FBBcBb2309F03A1Bab869fb850'
     },
-
     '0x4946Fcea7C692606e8908002e55A582af44AC121': {
       [NAME]: 'FOAM Token',
       [SYMBOL]: 'FOAM',
@@ -247,6 +245,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x755899F0540c3548b99E68C59AdB0f15d2695188'
     },
+    '0xF970b8E36e23F7fC3FD752EeA86f8Be8D83375A6': {
+      [NAME]: 'Ripio Credit Network Token',
+      [SYMBOL]: 'RCN',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0xD91FF16Ef92568fC27F466C3c5613e43313Ab1dc'
+    },
     '0x255Aa6DF07540Cb5d3d297f0D0D4D84cb52bc8e6': {
       [NAME]: 'Raiden Token',
       [SYMBOL]: 'RDN',
@@ -301,11 +305,11 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x1aEC8F11A7E78dC22477e91Ed924Fab46e3A88Fd'
     },
-    '0x2Dea20405c52Fb477ecCa8Fe622661d316Ac5400': {
+    '0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F': {
       [NAME]: 'Synthetix Network Token',
       [SYMBOL]: 'SNX',
       [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: '0x9fAA0Cb10912DE7Ad1D86705C65de291a9088A61'
+      [EXCHANGE_ADDRESS]: '0x3958B4eC427F8fa24eB60F42821760e88d485f7F'
     },
     '0x42d6622deCe394b54999Fbd73D108123806f6a18': {
       [NAME]: 'SPANK',
@@ -462,7 +466,6 @@ export function useTokenDetails(tokenAddress) {
           }
         }
       )
-
       return () => {
         stale = true
       }
