@@ -9,12 +9,13 @@ import { Button } from '../../theme'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import OversizedPanel from '../../components/OversizedPanel'
 import ContextualInfo from '../../components/ContextualInfo'
-import PlusBlue from '../../assets/images/plus-blue.svg'
-import PlusGrey from '../../assets/images/plus-grey.svg'
+import { ReactComponent as Plus } from '../../assets/images/plus-blue.svg'
+
 import { useExchangeContract } from '../../hooks'
 import { amountFormatter, calculateGasMargin } from '../../utils'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useTokenDetails } from '../../contexts/Tokens'
+import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 
@@ -63,14 +64,6 @@ const DownArrowBackground = styled.div`
   justify-content: center;
   align-items: center;
 `
-
-const DownArrow = styled.img`
-  width: 0.625rem;
-  height: 0.625rem;
-  position: relative;
-  padding: 0.875rem;
-`
-
 const SummaryPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
   padding: 1rem 0;
@@ -87,7 +80,7 @@ const ExchangeRateWrapper = styled.div`
 const ExchangeRate = styled.span`
   flex: 1 1 auto;
   width: 0;
-  color: ${({ theme }) => theme.chaliceGray};
+  color: ${({ theme }) => theme.doveGray};
 `
 
 const Flex = styled.div`
@@ -97,6 +90,17 @@ const Flex = styled.div`
 
   button {
     max-width: 20rem;
+  }
+`
+
+const WrappedPlus = ({ isError, highSlippageWarning, ...rest }) => <Plus {...rest} />
+const ColoredWrappedPlus = styled(WrappedPlus)`
+  width: 0.625rem;
+  height: 0.625rem;
+  position: relative;
+  padding: 0.875rem;
+  path {
+    stroke: ${({ active, theme }) => (active ? theme.royalBlue : theme.chaliceGray)};
   }
 `
 
@@ -531,6 +535,8 @@ export default function AddLiquidity() {
   const isActive = active && account
   const isValid = (inputError === null || outputError === null) && !showUnlock
 
+  const allBalances = useFetchAllBalances()
+
   return (
     <>
       {isNewExchange ? (
@@ -547,6 +553,7 @@ export default function AddLiquidity() {
 
       <CurrencyInputPanel
         title={t('deposit')}
+        allBalances={allBalances}
         extraText={inputBalance && formatBalance(amountFormatter(inputBalance, 18, 4))}
         onValueChange={inputValue => {
           dispatchAddLiquidityState({ type: 'UPDATE_VALUE', payload: { value: inputValue, field: INPUT } })
@@ -558,11 +565,12 @@ export default function AddLiquidity() {
       />
       <OversizedPanel>
         <DownArrowBackground>
-          <DownArrow src={isActive ? PlusBlue : PlusGrey} alt="plus" />
+          <ColoredWrappedPlus active={isActive} alt="plus" />
         </DownArrowBackground>
       </OversizedPanel>
       <CurrencyInputPanel
         title={t('deposit')}
+        allBalances={allBalances}
         description={isNewExchange ? '' : outputValue ? `(${t('estimated')})` : ''}
         extraText={outputBalance && formatBalance(amountFormatter(outputBalance, decimals, Math.min(decimals, 4)))}
         selectedTokenAddress={outputCurrency}

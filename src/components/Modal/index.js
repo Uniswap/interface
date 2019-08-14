@@ -5,8 +5,9 @@ import { DialogOverlay, DialogContent } from '@reach/dialog'
 import '@reach/dialog/styles.css'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
-const StyledDialogOverlay = styled(AnimatedDialogOverlay).attrs({
-  suppressclassnamewarning: 'true'
+const WrappedDialogOverlay = ({ suppressClassNameWarning, ...rest }) => <AnimatedDialogOverlay {...rest} />
+const StyledDialogOverlay = styled(WrappedDialogOverlay).attrs({
+  suppressClassNameWarning: true
 })`
   &[data-reach-dialog-overlay] {
     z-index: 2;
@@ -20,12 +21,14 @@ const FilteredDialogContent = ({ minHeight, ...rest }) => <DialogContent {...res
 const StyledDialogContent = styled(FilteredDialogContent)`
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
-    ${({ theme }) => theme.mediaWidth.upToMedium`margin: 0;`}
-    padding: 0;
+    border: 1px solid ${({ theme }) => theme.concreteGray};
+    background-color: ${({ theme }) => theme.inputBackground};
+    ${({ theme }) => theme.mediaWidth.upToMedium`margin: 0;`};
+    padding: 0px;
     width: 50vw;
     max-width: 650px;
     ${({ theme }) => theme.mediaWidth.upToMedium`width: 65vw;`}
-    ${({ theme }) => theme.mediaWidth.upToSmall`width: 80vw;`}
+    ${({ theme }) => theme.mediaWidth.upToSmall`width: 85vw;`}
     max-height: 50vh;
     ${({ minHeight }) =>
       minHeight &&
@@ -36,7 +39,7 @@ const StyledDialogContent = styled(FilteredDialogContent)`
     ${({ theme }) => theme.mediaWidth.upToSmall`max-height: 80vh;`}
     display: flex;
     overflow: hidden;
-    border-radius: 1.5rem;
+    border-radius: 10px;
   }
 `
 
@@ -50,7 +53,7 @@ const HiddenCloseButton = styled.button`
 
 export default function Modal({ isOpen, onDismiss, minHeight = false, initialFocusRef, children }) {
   const transitions = useTransition(isOpen, null, {
-    config: { duration: 125 },
+    config: { duration: 150 },
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 }

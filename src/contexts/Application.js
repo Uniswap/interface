@@ -1,10 +1,14 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
 import { useWeb3Context } from 'web3-react'
-import { safeAccess } from '../utils'
 
-const BLOCK_NUMBERS = 'BLOCK_NUMBERS'
+import { safeAccess } from '../utils'
+import { getUSDPrice } from '../utils/price'
+
+const BLOCK_NUMBER = 'BLOCK_NUMBER'
+const USD_PRICE = 'USD_PRICE'
 
 const UPDATE_BLOCK_NUMBER = 'UPDATE_BLOCK_NUMBER'
+const UPDATE_USD_PRICE = 'UPDATE_USD_PRICE'
 
 const ApplicationContext = createContext()
 
@@ -18,9 +22,19 @@ function reducer(state, { type, payload }) {
       const { networkId, blockNumber } = payload
       return {
         ...state,
-        [BLOCK_NUMBERS]: {
-          ...(safeAccess(state, [BLOCK_NUMBERS]) || {}),
+        [BLOCK_NUMBER]: {
+          ...(safeAccess(state, [BLOCK_NUMBER]) || {}),
           [networkId]: blockNumber
+        }
+      }
+    }
+    case UPDATE_USD_PRICE: {
+      const { networkId, USDPrice } = payload
+      return {
+        ...state,
+        [USD_PRICE]: {
+          ...(safeAccess(state, [USD_PRICE]) || {}),
+          [networkId]: USDPrice
         }
       }
     }
@@ -32,15 +46,22 @@ function reducer(state, { type, payload }) {
 
 export default function Provider({ children }) {
   const [state, dispatch] = useReducer(reducer, {
-    [BLOCK_NUMBERS]: {}
+    [BLOCK_NUMBER]: {},
+    [USD_PRICE]: {}
   })
 
   const updateBlockNumber = useCallback((networkId, blockNumber) => {
     dispatch({ type: UPDATE_BLOCK_NUMBER, payload: { networkId, blockNumber } })
   }, [])
 
+  const updateUSDPrice = useCallback((networkId, USDPrice) => {
+    dispatch({ type: UPDATE_USD_PRICE, payload: { networkId, USDPrice } })
+  }, [])
+
   return (
-    <ApplicationContext.Provider value={useMemo(() => [state, { updateBlockNumber }], [state, updateBlockNumber])}>
+    <ApplicationContext.Provider
+      value={useMemo(() => [state, { updateBlockNumber, updateUSDPrice }], [state, updateBlockNumber, updateUSDPrice])}
+    >
       {children}
     </ApplicationContext.Provider>
   )
@@ -49,7 +70,24 @@ export default function Provider({ children }) {
 export function Updater() {
   const { networkId, library } = useWeb3Context()
 
-  const [, { updateBlockNumber }] = useApplicationContext()
+  const globalBlockNumber = useBlockNumber()
+  const [, { updateBlockNumber, updateUSDPrice }] = useApplicationContext()
+
+  useEffect(() => {
+    let stale = false
+
+    getUSDPrice(library)
+      .then(([price]) => {
+        if (!stale) {
+          updateUSDPrice(networkId, price)
+        }
+      })
+      .catch(() => {
+        if (!stale) {
+          updateUSDPrice(networkId, null)
+        }
+      })
+  }, [globalBlockNumber, library, networkId, updateUSDPrice])
 
   useEffect(() => {
     if ((networkId || networkId === 0) && library) {
@@ -88,5 +126,13 @@ export function useBlockNumber() {
 
   const [state] = useApplicationContext()
 
-  return safeAccess(state, [BLOCK_NUMBERS, networkId])
+  return safeAccess(state, [BLOCK_NUMBER, networkId])
+}
+
+export function useUSDPrice() {
+  const { networkId } = useWeb3Context()
+
+  const [state] = useApplicationContext()
+
+  return safeAccess(state, [USD_PRICE, networkId])
 }

@@ -9,12 +9,13 @@ import { Button } from '../../theme'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import ContextualInfo from '../../components/ContextualInfo'
 import OversizedPanel from '../../components/OversizedPanel'
-import ArrowDownBlue from '../../assets/images/arrow-down-blue.svg'
-import ArrowDownGrey from '../../assets/images/arrow-down-grey.svg'
+import ArrowDown from '../../assets/svg/SVGArrowDown'
+
 import { useExchangeContract } from '../../hooks'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useTokenDetails } from '../../contexts/Tokens'
 import { useAddressBalance } from '../../contexts/Balances'
+import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { calculateGasMargin, amountFormatter } from '../../utils'
 
 // denominated in bips
@@ -36,7 +37,9 @@ const DownArrowBackground = styled.div`
   align-items: center;
 `
 
-const DownArrow = styled.img`
+const DownArrow = styled(ArrowDown)`
+  ${({ theme }) => theme.flexRowNoWrap}
+  color: ${({ theme, active }) => (active ? theme.royalBlue : theme.doveGray)};
   width: 0.625rem;
   height: 0.625rem;
   position: relative;
@@ -80,7 +83,7 @@ const ExchangeRateWrapper = styled.div`
 const ExchangeRate = styled.span`
   flex: 1 1 auto;
   width: 0;
-  color: ${({ theme }) => theme.chaliceGray};
+  color: ${({ theme }) => theme.doveGray};
 `
 
 const Flex = styled.div`
@@ -326,10 +329,13 @@ export default function RemoveLiquidity() {
 
   const marketRate = getMarketRate(exchangeETHBalance, exchangeTokenBalance, decimals)
 
+  const allBalances = useFetchAllBalances()
+
   return (
     <>
       <CurrencyInputPanel
         title={t('poolTokens')}
+        allBalances={allBalances}
         extraText={poolTokenBalance && formatBalance(amountFormatter(poolTokenBalance, 18, 4))}
         extraTextClickHander={() => {
           if (poolTokenBalance) {
@@ -347,11 +353,12 @@ export default function RemoveLiquidity() {
       />
       <OversizedPanel>
         <DownArrowBackground>
-          <DownArrow src={isActive ? ArrowDownBlue : ArrowDownGrey} alt="arrow" />
+          <DownArrow active={isActive} alt="arrow" />
         </DownArrowBackground>
       </OversizedPanel>
       <CurrencyInputPanel
         title={t('output')}
+        allBalances={allBalances}
         description={!!(ethWithdrawn && tokenWithdrawn) ? `(${t('estimated')})` : ''}
         key="remove-liquidity-input"
         renderInput={() =>
