@@ -40,8 +40,10 @@ const theme = darkMode => ({
   // for setting css on <html>
   backgroundColor: darkMode ? '#333639' : white,
 
+  modalBackground: darkMode ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.3)',
   inputBackground: darkMode ? '#202124' : white,
   placeholderGray: darkMode ? '#5F5F5F' : '#E1E1E1',
+  shadowColor: darkMode ? '#000' : '#2F80ED',
 
   // grays
   concreteGray: darkMode ? '#292C2F' : '#FAFAFA',
@@ -59,6 +61,7 @@ const theme = darkMode => ({
   malibuBlue: darkMode ? '#E67AEF' : '#5CA2FF',
   royalBlue: darkMode ? '#DC6BE5' : '#2F80ED',
   loadingBlue: darkMode ? '#e4f0ff' : '#e4f0ff',
+
   // purples
   wisteriaPurple: '#DC6BE5',
   // reds
@@ -114,7 +117,6 @@ export const GlobalStyle = createGlobalStyle`
     font-variant: none;
     color: ${({ theme }) => theme.textColor};
     background-color: ${({ theme }) => theme.backgroundColor};
-    transition: color 150ms ease-out, background-color 150ms ease-out;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);

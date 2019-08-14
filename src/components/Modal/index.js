@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 import { animated, useTransition } from 'react-spring'
 import { DialogOverlay, DialogContent } from '@reach/dialog'
 import '@reach/dialog/styles.css'
+import { transparentize } from 'polished'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 const WrappedDialogOverlay = ({ suppressClassNameWarning, ...rest }) => <AnimatedDialogOverlay {...rest} />
@@ -14,6 +15,7 @@ const StyledDialogOverlay = styled(WrappedDialogOverlay).attrs({
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: ${({ theme }) => theme.modalBackground};
   }
 `
 
@@ -23,6 +25,7 @@ const StyledDialogContent = styled(FilteredDialogContent)`
     margin: 0 0 2rem 0;
     border: 1px solid ${({ theme }) => theme.concreteGray};
     background-color: ${({ theme }) => theme.inputBackground};
+    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
     ${({ theme }) => theme.mediaWidth.upToMedium`margin: 0;`};
     padding: 0px;
     width: 50vw;
