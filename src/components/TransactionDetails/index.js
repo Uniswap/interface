@@ -91,9 +91,7 @@ const Popup = styled(Flex)`
 
   border-radius: 8px;
 
-  line-height: 183.52%;
-  background: #404040;
-  border-radius: 8px;
+  animation: ${fadeIn} 0.15s linear;
 
   color: ${({ theme }) => theme.textColor};
   font-style: italic;
@@ -646,10 +644,10 @@ export default function TransactionDetails(props) {
             <ValueWrapper>
               {b(
                 `${amountFormatter(
-                  props.independentValueParsed,
-                  props.independentDecimals,
-                  Math.min(4, props.independentDecimals)
-                )} ${props.outputSymbol}`
+                  props.dependentValueMaximum,
+                  props.dependentDecimals,
+                  Math.min(4, props.dependentDecimals)
+                )} ${props.inputSymbol}`
               )}
             </ValueWrapper>{' '}
           </div>
