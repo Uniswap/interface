@@ -64,12 +64,10 @@ export function useFetchAllBalances() {
   const getData = async () => {
     if (!!library && !!account) {
       const newBalances = {}
-      console.log('fetching')
       await Promise.all(
         Object.keys(allTokens).map(async k => {
           let balance = null
           let ethRate = null
-          console.log('getting token')
           if (isAddress(k) || k === 'ETH') {
             if (k === 'ETH') {
               balance = await getEtherBalance(account, library).catch(() => null)
