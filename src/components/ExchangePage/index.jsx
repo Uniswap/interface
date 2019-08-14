@@ -249,12 +249,11 @@ export default function ExchangePage({
   slippageURL,
   recipientURL,
   exactFieldURL,
-  exactAmountURL
+  exactAmountURL,
+  location
 }) {
   const { t } = useTranslation()
   const { account } = useWeb3Context()
-
-  const history = createBrowserHistory()
 
   const addTransaction = useTransactionAdder()
 
@@ -499,20 +498,12 @@ export default function ExchangePage({
         }
       }
     }
-  }, [
-    independentValueParsed,
-    swapType,
-    outputReserveETH,
-    outputReserveToken,
-    inputReserveETH,
-    inputReserveToken,
-    independentField,
-    t
-  ])
+  }, [independentValueParsed, swapType, outputReserveETH, outputReserveToken, inputReserveETH, inputReserveToken, independentField, t])
 
   useEffect(() => {
-    // history.push(window.location + '/')
-  }, [history])
+    const history = createBrowserHistory()
+    history.push(location.pathname + '')
+  }, [location])
 
   const [inverted, setInverted] = useState(false)
   const exchangeRate = getExchangeRate(inputValueParsed, inputDecimals, outputValueParsed, outputDecimals)

@@ -118,11 +118,13 @@ function calculateSlippageBounds(value) {
   }
 }
 
-const initialAddLiquidityState = {
-  inputValue: '',
-  outputValue: '',
-  lastEditedField: INPUT,
-  outputCurrency: ''
+function initialAddLiquidityState(state) {
+  return {
+    inputValue: state.ethAmountURL ? state.ethAmountURL : '',
+    outputValue: state.tokenAmountURL && !state.ethAmountURL ? state.tokenAmountURL : '',
+    lastEditedField: state.tokenAmountURL && state.ethAmountURL === '' ? OUTPUT : INPUT,
+    outputCurrency: state.tokenURL ? state.tokenURL : ''
+  }
 }
 
 function addLiquidityStateReducer(state, action) {
@@ -153,7 +155,7 @@ function addLiquidityStateReducer(state, action) {
       }
     }
     default: {
-      return initialAddLiquidityState
+      return initialAddLiquidityState()
     }
   }
 }
@@ -189,11 +191,15 @@ function getMarketRate(reserveETH, reserveToken, decimals, invert = false) {
   return getExchangeRate(reserveETH, 18, reserveToken, decimals, invert)
 }
 
-export default function AddLiquidity() {
+export default function AddLiquidity({ ethAmountURL, tokenAmountURL, tokenURL }) {
   const { t } = useTranslation()
   const { library, active, account } = useWeb3Context()
 
-  const [addLiquidityState, dispatchAddLiquidityState] = useReducer(addLiquidityStateReducer, initialAddLiquidityState)
+  const [addLiquidityState, dispatchAddLiquidityState] = useReducer(
+    addLiquidityStateReducer,
+    { ethAmountURL: ethAmountURL, tokenAmountURL: tokenAmountURL, tokenURL: tokenURL },
+    initialAddLiquidityState
+  )
   const { inputValue, outputValue, lastEditedField, outputCurrency } = addLiquidityState
   const inputCurrency = 'ETH'
 

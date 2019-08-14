@@ -141,14 +141,14 @@ function calculateSlippageBounds(value) {
   }
 }
 
-export default function RemoveLiquidity() {
+export default function RemoveLiquidity({ poolTokenAddressURL, poolTokenAmountURL }) {
   const { library, account, active } = useWeb3Context()
   const { t } = useTranslation()
 
   const addTransaction = useTransactionAdder()
 
-  const [outputCurrency, setOutputCurrency] = useState('')
-  const [value, setValue] = useState('')
+  const [outputCurrency, setOutputCurrency] = useState(poolTokenAddressURL)
+  const [value, setValue] = useState(poolTokenAmountURL ? poolTokenAmountURL : '')
   const [inputError, setInputError] = useState()
   const [valueParsed, setValueParsed] = useState()
   // parse value

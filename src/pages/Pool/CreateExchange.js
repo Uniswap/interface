@@ -54,13 +54,13 @@ const Flex = styled.div`
   }
 `
 
-function CreateExchange({ history, location }) {
+function CreateExchange({ history, location, tokenAddressURL }) {
   const { t } = useTranslation()
   const { account } = useWeb3Context()
   const factory = useFactoryContract()
 
   const [tokenAddress, setTokenAddress] = useState({
-    address: '',
+    address: tokenAddressURL ? tokenAddressURL : '',
     name: ''
   })
   const [tokenAddressError, setTokenAddressError] = useState()
@@ -118,7 +118,9 @@ function CreateExchange({ history, location }) {
     <>
       <AddressInputPanel
         title={t('tokenAddress')}
-        initialInput={(location.state && location.state.tokenAddress) || ''}
+        initialInput={
+          tokenAddressURL ? { address: tokenAddressURL } : (location.state && location.state.tokenAddress) || ''
+        }
         onChange={setTokenAddress}
         onError={setTokenAddressError}
       />

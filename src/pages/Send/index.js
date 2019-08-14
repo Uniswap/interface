@@ -20,6 +20,7 @@ export default function Send({ initialCurrency, location }) {
       sending={true}
       exactFieldURL={exactField}
       exactAmountURL={exactAmount}
+      location={location}
     />
   )
 }

@@ -16,6 +16,7 @@ export default function Swap({ initialCurrency, location }) {
       slippageURL={slippage}
       exactFieldURL={exactField}
       exactAmountURL={exactAmount}
+      location={location}
     />
   )
 }

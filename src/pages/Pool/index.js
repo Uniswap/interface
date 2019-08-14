@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, useEffect } from 'react'
 import ReactGA from 'react-ga'
 import { Switch, Route, Redirect } from 'react-router-dom'
-import { getQueryParam } from '../../utils'
+import { getQueryParam, isAddress } from '../../utils'
 import ModeSelector from './ModeSelector'
 
 const AddLiquidity = lazy(() => import('./AddLiquidity'))
@@ -13,23 +13,30 @@ export default function Pool({ location }) {
     ReactGA.pageview(window.location.pathname + window.location.search)
   }, [])
 
-  const recipient = getQueryParam(location, 'recipient')
-  const inputCurrency = getQueryParam(location, 'inputCurrency')
-  const outputCurrency = getQueryParam(location, 'outputCurrency')
-  const slippage = getQueryParam(location, 'slippage')
-  const exactField = getQueryParam(location, 'exactField')
-  const exactAmount = getQueryParam(location, 'exactAmount')
-
+  // Add liquidity params
+  const ethAmount = !isNaN(getQueryParam(location, 'ethAmount')) ? getQueryParam(location, 'ethAmount') : ''
+  const tokenAmount = !isNaN(getQueryParam(location, 'tokenAmount')) ? getQueryParam(location, 'tokenAmount') : ''
+  const token = isAddress(getQueryParam(location, 'token')) ? isAddress(getQueryParam(location, 'token')) : ''
   const AddLiquidityParams = () => (
-    <AddLiquidity
-      outputCurrencyURL={outputCurrency}
-      inputCurrencyURL={inputCurrency}
-      slippageURL={slippage}
-      recipientURL={recipient}
-      exactFieldURL={exactField}
-      exactAmountURL={exactAmount}
-    />
+    <AddLiquidity ethAmountURL={ethAmount} tokenAmountURL={tokenAmount} tokenURL={token} />
   )
+
+  // Remove liquidity params
+  const poolTokenAmount = !isNaN(getQueryParam(location, 'poolTokenAmount'))
+    ? getQueryParam(location, 'poolTokenAmount')
+    : ''
+  const poolTokenAddress = isAddress(getQueryParam(location, 'poolTokenAddress'))
+    ? isAddress(getQueryParam(location, 'poolTokenAddress'))
+    : ''
+  const RemoveLiquidityParams = () => (
+    <RemoveLiquidity poolTokenAddressURL={poolTokenAddress} poolTokenAmountURL={poolTokenAmount} />
+  )
+
+  // Create Exchange params
+  const tokenAddress = isAddress(getQueryParam(location, 'tokenAddress'))
+    ? isAddress(getQueryParam(location, 'tokenAddress'))
+    : ''
+  const CreateExchangeParams = () => <CreateExchange tokenAddressURL={tokenAddress} />
 
   return (
     <>
@@ -38,8 +45,8 @@ export default function Pool({ location }) {
       <Suspense fallback={null}>
         <Switch>
           <Route exact strict path="/add-liquidity" component={AddLiquidityParams} />
-          <Route exact strict path="/remove-liquidity" component={RemoveLiquidity} />
-          <Route exact strict path="/create-exchange" component={CreateExchange} />
+          <Route exact strict path="/remove-liquidity" component={RemoveLiquidityParams} />
+          <Route exact strict path="/create-exchange" component={CreateExchangeParams} />
           <Route
             path="/create-exchange/:tokenAddress"
             render={({ match }) => {
