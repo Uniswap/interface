@@ -51,59 +51,64 @@ export default function App() {
   return (
     <>
       <Suspense fallback={null}>
-        <HeaderWrapper>
-          <Header />
-        </HeaderWrapper>
-        <BodyWrapper>
-          <Body>
-            <Web3ReactManager>
-              <BrowserRouter>
-                <NavigationTabs />
-                {/* this Suspense is for route code-splitting */}
-                <Suspense fallback={null}>
-                  <Switch>
-                    <Route exact strict path="/swap" component={Swap} />
-                    <Route
-                      exact
-                      strict
-                      path="/swap/:tokenAddress?"
-                      render={({ match }) => {
-                        if (isAddress(match.params.tokenAddress)) {
-                          return <Swap initialCurrency={isAddress(match.params.tokenAddress)} />
-                        } else {
-                          return <Redirect to={{ pathname: '/swap' }} />
-                        }
-                      }}
-                    />
-                    <Route exact strict path="/send" component={Send} />
-                    <Route
-                      exact
-                      strict
-                      path="/send/:tokenAddress?"
-                      render={({ match }) => {
-                        if (isAddress(match.params.tokenAddress)) {
-                          return <Send initialCurrency={isAddress(match.params.tokenAddress)} />
-                        } else {
-                          return <Redirect to={{ pathname: '/send' }} />
-                        }
-                      }}
-                    />
-                    <Route
-                      path={[
-                        '/add-liquidity',
-                        '/remove-liquidity',
-                        '/create-exchange',
-                        '/create-exchange/:tokenAddress?'
-                      ]}
-                      component={Pool}
-                    />
-                    <Redirect to="/swap" />
-                  </Switch>
-                </Suspense>
-              </BrowserRouter>
-            </Web3ReactManager>
-          </Body>
-        </BodyWrapper>
+        <AppWrapper>
+          <HeaderWrapper>
+            <Header />
+          </HeaderWrapper>
+          <BodyWrapper>
+            <Body>
+              <Web3ReactManager>
+                <BrowserRouter>
+                  <NavigationTabs />
+                  {/* this Suspense is for route code-splitting */}
+                  <Suspense fallback={null}>
+                    <Switch>
+                      <Route exact strict path="/swap" component={Swap} />
+                      <Route
+                        exact
+                        strict
+                        path="/swap/:tokenAddress?"
+                        render={({ match }) => {
+                          if (isAddress(match.params.tokenAddress)) {
+                            return <Swap initialCurrency={isAddress(match.params.tokenAddress)} />
+                          } else {
+                            return <Redirect to={{ pathname: '/swap' }} />
+                          }
+                        }}
+                      />
+                      <Route exact strict path="/send" component={Send} />
+                      <Route
+                        exact
+                        strict
+                        path="/send/:tokenAddress?"
+                        render={({ match }) => {
+                          if (isAddress(match.params.tokenAddress)) {
+                            return <Send initialCurrency={isAddress(match.params.tokenAddress)} />
+                          } else {
+                            return <Redirect to={{ pathname: '/send' }} />
+                          }
+                        }}
+                      />
+                      <Route
+                        path={[
+                          '/add-liquidity',
+                          '/remove-liquidity',
+                          '/create-exchange',
+                          '/create-exchange/:tokenAddress?'
+                        ]}
+                        component={Pool}
+                      />
+                      <Redirect to="/swap" />
+                    </Switch>
+                  </Suspense>
+                </BrowserRouter>
+              </Web3ReactManager>
+            </Body>
+          </BodyWrapper>
+          <FooterWrapper>
+            <Footer />
+          </FooterWrapper>
+        </AppWrapper>
       </Suspense>
     </>
   )
