@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router'
 import { useWeb3Context } from 'web3-react'
+import { useDarkModeManager } from '../../contexts/LocalStorage'
 import { ethers } from 'ethers'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
@@ -54,7 +55,7 @@ const Flex = styled.div`
   }
 `
 
-function CreateExchange({ history, location, tokenAddressURL }) {
+function CreateExchange({ history, location, tokenAddressURL, darkModeURL }) {
   const { t } = useTranslation()
   const { account } = useWeb3Context()
   const factory = useFactoryContract()
@@ -68,12 +69,20 @@ function CreateExchange({ history, location, tokenAddressURL }) {
   const { name, symbol, decimals, exchangeAddress } = useTokenDetails(tokenAddress.address)
   const addTransaction = useTransactionAdder()
 
-  // clear location state, if it exists
+  const [, toggleDarkMode] = useDarkModeManager()
+
   useEffect(() => {
-    if (location.state) {
-      history.replace(location.pathname)
+    if (darkModeURL !== '') {
+      toggleDarkMode(darkModeURL)
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // clear location state, if it exists
+  // useEffect(() => {
+  //   if (location.state) {
+  //     history.replace(location.pathname)
+  //   }
+  // }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // validate everything
   const [errorMessage, setErrorMessage] = useState(!account && t('noWallet'))
@@ -119,7 +128,9 @@ function CreateExchange({ history, location, tokenAddressURL }) {
       <AddressInputPanel
         title={t('tokenAddress')}
         initialInput={
-          tokenAddressURL ? { address: tokenAddressURL } : (location.state && location.state.tokenAddress) || ''
+          tokenAddressURL
+            ? { address: tokenAddressURL }
+            : { address: (location.state && location.state.tokenAddress) || '' }
         }
         onChange={setTokenAddress}
         onError={setTokenAddressError}

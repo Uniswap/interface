@@ -1,14 +1,19 @@
 import React from 'react'
 import ExchangePage from '../../components/ExchangePage'
-import { getQueryParam } from '../../utils'
+import { getQueryParam, isAddress } from '../../utils'
 
 export default function Send({ initialCurrency, location }) {
-  const recipient = getQueryParam(location, 'recipient')
-  const inputCurrency = getQueryParam(location, 'inputCurrency')
-  const outputCurrency = getQueryParam(location, 'outputCurrency')
-  const slippage = getQueryParam(location, 'slippage')
+  const recipient = isAddress(getQueryParam(location, 'recipient')) ? getQueryParam(location, 'recipient') : ''
+  const inputCurrency = isAddress(getQueryParam(location, 'inputCurrency'))
+    ? getQueryParam(location, 'inputCurrency')
+    : ''
+  const outputCurrency = isAddress(getQueryParam(location, 'outputCurrency'))
+    ? getQueryParam(location, 'outputCurrency')
+    : ''
+  const slippage = !isNaN(getQueryParam(location, 'slippage')) ? getQueryParam(location, 'slippage') : ''
   const exactField = getQueryParam(location, 'exactField')
-  const exactAmount = getQueryParam(location, 'exactAmount')
+  const exactAmount = !isNaN(getQueryParam(location, 'exactAmount')) ? getQueryParam(location, 'exactAmount') : ''
+  const darkMode = getQueryParam(location, 'darkMode')
 
   return (
     <ExchangePage
@@ -20,6 +25,7 @@ export default function Send({ initialCurrency, location }) {
       sending={true}
       exactFieldURL={exactField}
       exactAmountURL={exactAmount}
+      darkModeURL={darkMode === 'true' || darkMode === 'false' ? darkMode : ''}
       location={location}
     />
   )

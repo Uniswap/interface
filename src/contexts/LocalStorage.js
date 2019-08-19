@@ -97,9 +97,12 @@ export function useDarkModeManager() {
 
   const isDarkMode = state[DARK_MODE]
 
-  const toggleDarkMode = useCallback(() => {
-    updateKey(DARK_MODE, !isDarkMode)
-  }, [updateKey, isDarkMode])
+  const toggleDarkMode = useCallback(
+    value => {
+      updateKey(DARK_MODE, value === false || value === true ? value : !isDarkMode)
+    },
+    [updateKey, isDarkMode]
+  )
 
   return [state[DARK_MODE], toggleDarkMode]
 }

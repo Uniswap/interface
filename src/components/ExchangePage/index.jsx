@@ -22,6 +22,7 @@ import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { isNumber } from 'is-what'
+import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -126,8 +127,8 @@ function getInitialSwapState(state) {
     independentValue: state.exactFieldURL && state.exactAmountURL ? state.exactAmountURL : '', // this is a user input
     dependentValue: '', // this is a calculated number
     independentField: state.exactFieldURL === 'output' ? OUTPUT : INPUT,
-    inputCurrency: isAddress(state.inputCurrencyURL) ? state.inputCurrencyURL : 'ETH',
-    outputCurrency: isAddress(state.outputCurrencyURL)
+    inputCurrency: state.inputCurrencyURL ? state.inputCurrencyURL : 'ETH',
+    outputCurrency: state.outputCurrencyURL
       ? state.outputCurrencyURL
       : state.initialCurrency
       ? state.initialCurrency
@@ -250,21 +251,33 @@ export default function ExchangePage({
   recipientURL,
   exactFieldURL,
   exactAmountURL,
+  darkModeURL,
   location
 }) {
   const { t } = useTranslation()
   const { account } = useWeb3Context()
 
+  const [, toggleDarkMode] = useDarkModeManager()
+
+  useEffect(() => {
+    if (darkModeURL !== '') {
+      toggleDarkMode(darkModeURL)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   const addTransaction = useTransactionAdder()
 
+  // check if URL specifies slipppage
   const initialSlippage = (token = false) => {
     let slippage = parseFloat(slippageURL)
-    if (isNumber(slippage) && Number(slippage) >= 0 && Number(slippage) < 50) {
+    if (Number(slippage) >= 0 && Number(slippage) < 50) {
       return slippage * 100
     }
+    // check for token <-> token slippage option
     return token ? TOKEN_ALLOWED_SLIPPAGE_DEFAULT : ALLOWED_SLIPPAGE_DEFAULT
   }
 
+  // check URL params for recipient, only on send page
   const initialRecipient = () => {
     if (sending && recipientURL) {
       return recipientURL
@@ -273,7 +286,7 @@ export default function ExchangePage({
   }
 
   const [rawSlippage, setRawSlippage] = useState(initialSlippage())
-  const [rawTokenSlippage, setRawTokenSlippage] = useState(initialSlippage())
+  const [rawTokenSlippage, setRawTokenSlippage] = useState(initialSlippage(true))
 
   const allowedSlippageBig = ethers.utils.bigNumberify(rawSlippage)
   const tokenAllowedSlippageBig = ethers.utils.bigNumberify(rawTokenSlippage)
@@ -498,7 +511,16 @@ export default function ExchangePage({
         }
       }
     }
-  }, [independentValueParsed, swapType, outputReserveETH, outputReserveToken, inputReserveETH, inputReserveToken, independentField, t])
+  }, [
+    independentValueParsed,
+    swapType,
+    outputReserveETH,
+    outputReserveToken,
+    inputReserveETH,
+    inputReserveToken,
+    independentField,
+    t
+  ])
 
   useEffect(() => {
     const history = createBrowserHistory()

@@ -1,13 +1,19 @@
 import React from 'react'
 import ExchangePage from '../../components/ExchangePage'
-import { getQueryParam } from '../../utils'
+import { getQueryParam, isAddress } from '../../utils'
 
 export default function Swap({ initialCurrency, location }) {
-  const inputCurrency = getQueryParam(location, 'inputCurrency')
-  const outputCurrency = getQueryParam(location, 'outputCurrency')
-  const slippage = getQueryParam(location, 'slippage')
+  const inputCurrency = isAddress(getQueryParam(location, 'inputCurrency'))
+    ? getQueryParam(location, 'inputCurrency')
+    : ''
+  const outputCurrency = isAddress(getQueryParam(location, 'outputCurrency'))
+    ? getQueryParam(location, 'outputCurrency')
+    : ''
+  const slippage = !isNaN(getQueryParam(location, 'slippage')) ? getQueryParam(location, 'slippage') : ''
   const exactField = getQueryParam(location, 'exactField')
-  const exactAmount = getQueryParam(location, 'exactAmount')
+  const exactAmount = !isNaN(getQueryParam(location, 'exactAmount')) ? getQueryParam(location, 'exactAmount') : ''
+  const darkMode = getQueryParam(location, 'darkMode')
+
   return (
     <ExchangePage
       initialCurrency={initialCurrency}
@@ -16,6 +22,7 @@ export default function Swap({ initialCurrency, location }) {
       slippageURL={slippage}
       exactFieldURL={exactField}
       exactAmountURL={exactAmount}
+      darkModeURL={darkMode === 'true' || darkMode === 'false' ? darkMode : ''}
       location={location}
     />
   )

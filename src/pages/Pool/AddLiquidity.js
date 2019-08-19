@@ -1,6 +1,7 @@
 import React, { useReducer, useState, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
+import { useDarkModeManager } from '../../contexts/LocalStorage'
 import { ethers } from 'ethers'
 import ReactGA from 'react-ga'
 import styled from 'styled-components'
@@ -191,9 +192,17 @@ function getMarketRate(reserveETH, reserveToken, decimals, invert = false) {
   return getExchangeRate(reserveETH, 18, reserveToken, decimals, invert)
 }
 
-export default function AddLiquidity({ ethAmountURL, tokenAmountURL, tokenURL }) {
+export default function AddLiquidity({ ethAmountURL, tokenAmountURL, tokenURL, darkModeURL }) {
   const { t } = useTranslation()
   const { library, active, account } = useWeb3Context()
+
+  const [, toggleDarkMode] = useDarkModeManager()
+
+  useEffect(() => {
+    if (darkModeURL !== '') {
+      toggleDarkMode(darkModeURL)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const [addLiquidityState, dispatchAddLiquidityState] = useReducer(
     addLiquidityStateReducer,
