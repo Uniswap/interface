@@ -77,7 +77,7 @@ export function Updater() {
   useEffect(() => {
     if (library) {
       if (connectorName === 'Network') {
-        library.pollingInterval = 15
+        library.polling = false
       } else {
         library.pollingInterval = 5
       }
@@ -86,24 +86,26 @@ export function Updater() {
 
   // update usd price
   useEffect(() => {
-    let stale = false
+    if (library) {
+      let stale = false
 
-    getUSDPrice(library)
-      .then(([price]) => {
-        if (!stale) {
-          updateUSDPrice(networkId, price)
-        }
-      })
-      .catch(() => {
-        if (!stale) {
-          updateUSDPrice(networkId, null)
-        }
-      })
+      getUSDPrice(library)
+        .then(([price]) => {
+          if (!stale) {
+            updateUSDPrice(networkId, price)
+          }
+        })
+        .catch(() => {
+          if (!stale) {
+            updateUSDPrice(networkId, null)
+          }
+        })
+    }
   }, [globalBlockNumber, library, networkId, updateUSDPrice])
 
   // update block number
   useEffect(() => {
-    if ((networkId || networkId === 0) && library) {
+    if (library) {
       let stale = false
 
       function update() {
