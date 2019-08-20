@@ -500,7 +500,7 @@ export default function TransactionDetails(props) {
     inputRef.current.focus()
     // if there's a value, evaluate the bounds
     checkBounds(debouncedInput)
-  })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // used for slippage presets
   const setFromFixed = (index, slippage) => {
@@ -549,7 +549,7 @@ export default function TransactionDetails(props) {
     }
     //update the actual slippage value in parent
     updateSlippage(Number(slippageValue))
-  })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // check that the theyve entered number and correct decimal
   const parseInput = e => {
