@@ -32,8 +32,10 @@ const SpinnerWrapper = styled(Spinner)`
 `
 
 function tryToSetConnector(setConnector, setError) {
-  setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
-    setConnector('Network')
+  setConnector('Injected', { suppressAndThrowErrors: true }).catch(() => {
+    setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
+      setError(error)
+    })
   })
 }
 
@@ -54,25 +56,31 @@ export default function Web3ReactManager({ children }) {
             if (accounts.length >= 1) {
               tryToSetConnector(setConnector, setError)
             } else {
-              setConnector('Network')
+              setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
+                setError(error)
+              })
             }
           })
         }
       } else {
-        setConnector('Network')
+        setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
+          setError(error)
+        })
       }
     }
-  }, [active, error, setConnector, setError])
+  })
 
   // parse the error
   useEffect(() => {
     if (error) {
       // if the user changes to the wrong network, unset the connector
       if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-        setConnector('Network')
+        setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
+          setError(error)
+        })
       }
     }
-  }, [error, setConnector])
+  })
 
   const [showLoader, setShowLoader] = useState(false)
   useEffect(() => {
