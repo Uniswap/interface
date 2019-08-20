@@ -21,7 +21,6 @@ import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { useAddressAllowance } from '../../contexts/Allowances'
-import { isNumber } from 'is-what'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 const INPUT = 0
