@@ -54,6 +54,7 @@ const Input = styled(BorderlessInput)`
   font-size: 1.5rem;
   color: ${({ error, theme }) => error && theme.salmonRed};
   background-color: ${({ theme }) => theme.inputBackground};
+  -moz-appearance: textfield;
 `
 
 const StyledBorderlessInput = styled(BorderlessInput)`
@@ -334,6 +335,7 @@ export default function CurrencyInputPanel({
         <Input
           type="number"
           min="0"
+          step="0.000000000000000001"
           error={!!errorMessage}
           placeholder="0.0"
           onChange={e => onValueChange(e.target.value)}
