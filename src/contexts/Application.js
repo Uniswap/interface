@@ -73,7 +73,7 @@ export function Updater() {
   const globalBlockNumber = useBlockNumber()
   const [, { updateBlockNumber, updateUSDPrice }] = useApplicationContext()
 
-    // slow down polling interval
+  // slow down polling interval
   if (library && connectorName === 'Network' && library.polling !== false) {
     library.polling = false
   } else if (library && library.pollingInterval !== 5) {
