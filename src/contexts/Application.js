@@ -74,15 +74,11 @@ export function Updater() {
   const [, { updateBlockNumber, updateUSDPrice }] = useApplicationContext()
 
   // slow down polling interval
-  useEffect(() => {
-    if (library) {
-      if (connectorName === 'Network') {
-        library.polling = false
-      } else {
-        library.pollingInterval = 5
-      }
-    }
-  }, [library, connectorName])
+  if (library && connectorName === 'Network' && library.polling !== false) {
+    library.polling = false
+  } else if (library && library.pollingInterval !== 5) {
+    library.pollingInterval = 5
+  }
 
   // update usd price
   useEffect(() => {
