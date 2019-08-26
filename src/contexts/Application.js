@@ -73,16 +73,12 @@ export function Updater() {
   const globalBlockNumber = useBlockNumber()
   const [, { updateBlockNumber, updateUSDPrice }] = useApplicationContext()
 
-  // slow down polling interval
-  useEffect(() => {
-    if (library) {
-      if (connectorName === 'Network') {
-        library.polling = false
-      } else {
-        library.pollingInterval = 5
-      }
-    }
-  }, [library, connectorName])
+    // slow down polling interval
+  if (library && connectorName === 'Network' && library.polling !== false) {
+    library.polling = false
+  } else if (library && library.pollingInterval !== 5) {
+    library.pollingInterval = 5
+  }
 
   // update usd price
   useEffect(() => {
@@ -109,7 +105,7 @@ export function Updater() {
       let stale = false
 
       function update() {
-        library
+          library
           .getBlockNumber()
           .then(blockNumber => {
             if (!stale) {
