@@ -29,18 +29,18 @@ const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
 const SubCurrencySelect = styled.button`
   ${({ theme }) => theme.flexRowNoWrap}
-  background: ${({ theme }) => theme.zumthorBlue};
-
-  border: 1px solid ${({ theme }) => theme.royalBlue};
-  color: ${({ theme }) => theme.royalBlue};
+  padding: 4px 50px 4px 15px;
+  margin-right: -40px;
   line-height: 0;
   height: 2rem;
-  padding: 10px 50px 10px 15px;
-  margin-right: -40px;
+  align-items: center;
   border-radius: 2.5rem;
   outline: none;
   cursor: pointer;
   user-select: none;
+  background: ${({ theme }) => theme.zumthorBlue};
+  border: 1px solid ${({ theme }) => theme.royalBlue};
+  color: ${({ theme }) => theme.royalBlue};
 `
 
 const InputRow = styled.div`
@@ -54,6 +54,7 @@ const Input = styled(BorderlessInput)`
   font-size: 1.5rem;
   color: ${({ error, theme }) => error && theme.salmonRed};
   background-color: ${({ theme }) => theme.inputBackground};
+  -moz-appearance: textfield;
 `
 
 const StyledBorderlessInput = styled(BorderlessInput)`
@@ -336,6 +337,7 @@ export default function CurrencyInputPanel({
           min="0"
           error={!!errorMessage}
           placeholder="0.0"
+          step="0.000000000000000001"
           onChange={e => onValueChange(e.target.value)}
           onKeyPress={e => {
             const charCode = e.which ? e.which : e.keyCode
