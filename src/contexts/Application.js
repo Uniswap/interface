@@ -68,7 +68,7 @@ export default function Provider({ children }) {
 }
 
 export function Updater() {
-  const { networkId, library, connectorName } = useWeb3Context()
+  const { networkId, library } = useWeb3Context()
 
   const globalBlockNumber = useBlockNumber()
   const [, { updateBlockNumber, updateUSDPrice }] = useApplicationContext()
