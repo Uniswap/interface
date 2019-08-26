@@ -105,7 +105,7 @@ export function Updater() {
       let stale = false
 
       function update() {
-          library
+        library
           .getBlockNumber()
           .then(blockNumber => {
             if (!stale) {
