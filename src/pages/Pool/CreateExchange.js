@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router'
 import { useWeb3Context } from 'web3-react'
+import { createBrowserHistory } from 'history'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
 import { ethers } from 'ethers'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import ReactGA from 'react-ga'
-
 import { Button } from '../../theme'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import OversizedPanel from '../../components/OversizedPanel'
 import { useFactoryContract } from '../../hooks'
 import { useTokenDetails } from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
+import { SUPPORTED_THEMES } from '../../constants'
 
 const SummaryPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -55,13 +56,13 @@ const Flex = styled.div`
   }
 `
 
-function CreateExchange({ history, location, tokenAddressURL, darkModeURL }) {
+function CreateExchange({ location, params }) {
   const { t } = useTranslation()
   const { account } = useWeb3Context()
   const factory = useFactoryContract()
 
   const [tokenAddress, setTokenAddress] = useState({
-    address: tokenAddressURL ? tokenAddressURL : '',
+    address: params.tokenAddress ? params.tokenAddress : '',
     name: ''
   })
   const [tokenAddressError, setTokenAddressError] = useState()
@@ -72,17 +73,18 @@ function CreateExchange({ history, location, tokenAddressURL, darkModeURL }) {
   const [, toggleDarkMode] = useDarkModeManager()
 
   useEffect(() => {
-    if (darkModeURL !== '') {
-      toggleDarkMode(darkModeURL)
+    if (params.theme) {
+      toggleDarkMode(
+        params.theme === SUPPORTED_THEMES.DARK ? true : params.theme === SUPPORTED_THEMES.LIGHT ? false : ''
+      )
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // clear location state, if it exists
-  // useEffect(() => {
-  //   if (location.state) {
-  //     history.replace(location.pathname)
-  //   }
-  // }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  // clear url of query
+  useEffect(() => {
+    const history = createBrowserHistory()
+    history.push(window.location.pathname + '')
+  }, [])
 
   // validate everything
   const [errorMessage, setErrorMessage] = useState(!account && t('noWallet'))
@@ -128,8 +130,8 @@ function CreateExchange({ history, location, tokenAddressURL, darkModeURL }) {
       <AddressInputPanel
         title={t('tokenAddress')}
         initialInput={
-          tokenAddressURL
-            ? { address: tokenAddressURL }
+          params.tokenAddress
+            ? { address: params.tokenAddress }
             : { address: (location.state && location.state.tokenAddress) || '' }
         }
         onChange={setTokenAddress}

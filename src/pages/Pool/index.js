@@ -1,58 +1,22 @@
 import React, { Suspense, lazy, useEffect } from 'react'
 import ReactGA from 'react-ga'
 import { Switch, Route, Redirect } from 'react-router-dom'
-import { getQueryParam, isAddress } from '../../utils'
 import ModeSelector from './ModeSelector'
 
 const AddLiquidity = lazy(() => import('./AddLiquidity'))
 const RemoveLiquidity = lazy(() => import('./RemoveLiquidity'))
 const CreateExchange = lazy(() => import('./CreateExchange'))
 
-export default function Pool({ location }) {
+export default function Pool({ params }) {
   useEffect(() => {
     ReactGA.pageview(window.location.pathname + window.location.search)
   }, [])
 
-  // general params
-  const darkMode = getQueryParam(location, 'darkMode')
+  const AddLiquidityParams = () => <AddLiquidity params={params} />
 
-  // Add liquidity params
-  const ethAmount = !isNaN(getQueryParam(location, 'ethAmount')) ? getQueryParam(location, 'ethAmount') : ''
-  const tokenAmount = !isNaN(getQueryParam(location, 'tokenAmount')) ? getQueryParam(location, 'tokenAmount') : ''
-  const token = isAddress(getQueryParam(location, 'token')) ? getQueryParam(location, 'token') : ''
+  const RemoveLiquidityParams = () => <RemoveLiquidity params={params} />
 
-  const AddLiquidityParams = () => (
-    <AddLiquidity
-      ethAmountURL={ethAmount}
-      tokenAmountURL={tokenAmount}
-      tokenURL={token}
-      darkModeURL={darkMode === 'true' || darkMode === 'false' ? darkMode : ''}
-    />
-  )
-
-  // Remove liquidity params
-  const poolTokenAmount = !isNaN(getQueryParam(location, 'poolTokenAmount'))
-    ? getQueryParam(location, 'poolTokenAmount')
-    : ''
-  const poolTokenAddress = isAddress(getQueryParam(location, 'poolTokenAddress'))
-    ? getQueryParam(location, 'poolTokenAddress')
-    : ''
-  const RemoveLiquidityParams = () => (
-    <RemoveLiquidity
-      poolTokenAddressURL={poolTokenAddress}
-      poolTokenAmountURL={poolTokenAmount}
-      darkModeURL={darkMode === 'true' || darkMode === 'false' ? darkMode : ''}
-    />
-  )
-
-  // Create Exchange params
-  const tokenAddress = isAddress(getQueryParam(location, 'tokenAddress')) ? getQueryParam(location, 'tokenAddress') : ''
-  const CreateExchangeParams = () => (
-    <CreateExchange
-      tokenAddressURL={tokenAddress}
-      darkModeURL={darkMode === 'true' || darkMode === 'false' ? darkMode : ''}
-    />
-  )
+  const CreateExchangeParams = () => <CreateExchange params={params} />
 
   return (
     <>

@@ -1,5 +1,7 @@
 import React from 'react'
 import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'styled-components'
+import { getQueryParam, checkSupportedTheme } from '../utils'
+import { SUPPORTED_THEMES } from '../constants' 
 import { useDarkModeManager } from '../contexts/LocalStorage'
 
 export * from './components'
@@ -31,6 +33,13 @@ const flexRowNoWrap = css`
 
 const white = '#FFFFFF'
 const black = '#000000'
+
+export default function ThemeProvider({ children }) {
+  const [darkMode] = useDarkModeManager()
+  const themeURL = checkSupportedTheme(getQueryParam(window.location, 'theme'))
+  const themeToRender = themeURL ? (themeURL.toUpperCase() === SUPPORTED_THEMES.DARK ? true : themeURL.toUpperCase() === SUPPORTED_THEMES.LIGHT ? false : darkMode) : darkMode
+  return <StyledComponentsThemeProvider theme={theme(themeToRender)}>{children}</StyledComponentsThemeProvider>
+}
 
 const theme = darkMode => ({
   white,
@@ -84,11 +93,7 @@ const theme = darkMode => ({
   flexRowNoWrap
 })
 
-export default function ThemeProvider({ children }) {
-  const [darkMode] = useDarkModeManager()
 
-  return <StyledComponentsThemeProvider theme={theme(darkMode)}>{children}</StyledComponentsThemeProvider>
-}
 
 export const GlobalStyle = createGlobalStyle`
   @import url('https://rsms.me/inter/inter.css');

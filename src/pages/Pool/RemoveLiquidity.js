@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import ReactGA from 'react-ga'
+import { createBrowserHistory } from 'history'
 import { useWeb3Context } from 'web3-react'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
 import { ethers } from 'ethers'
@@ -18,6 +19,7 @@ import { useTokenDetails } from '../../contexts/Tokens'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { calculateGasMargin, amountFormatter } from '../../utils'
+import { SUPPORTED_THEMES } from '../../constants'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = ethers.utils.bigNumberify(200)
@@ -142,7 +144,7 @@ function calculateSlippageBounds(value) {
   }
 }
 
-export default function RemoveLiquidity({ poolTokenAddressURL, poolTokenAmountURL, darkModeURL }) {
+export default function RemoveLiquidity({ params }) {
   const { library, account, active } = useWeb3Context()
   const { t } = useTranslation()
 
@@ -151,13 +153,21 @@ export default function RemoveLiquidity({ poolTokenAddressURL, poolTokenAmountUR
   const [, toggleDarkMode] = useDarkModeManager()
 
   useEffect(() => {
-    if (darkModeURL !== '') {
-      toggleDarkMode(darkModeURL)
+    if (params.theme) {
+      toggleDarkMode(
+        params.theme === SUPPORTED_THEMES.DARK ? true : params.theme === SUPPORTED_THEMES.LIGHT ? false : ''
+      )
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const [outputCurrency, setOutputCurrency] = useState(poolTokenAddressURL)
-  const [value, setValue] = useState(poolTokenAmountURL ? poolTokenAmountURL : '')
+  // clear url of query
+  useEffect(() => {
+    const history = createBrowserHistory()
+    history.push(window.location.pathname + '')
+  }, [])
+
+  const [outputCurrency, setOutputCurrency] = useState(params.poolTokenAddress)
+  const [value, setValue] = useState(params.poolTokenAmount ? params.poolTokenAmount : '')
   const [inputError, setInputError] = useState()
   const [valueParsed, setValueParsed] = useState()
   // parse value

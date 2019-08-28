@@ -22,6 +22,7 @@ import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
+import { SUPPORTED_THEMES } from '../../constants'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -241,36 +242,27 @@ function getMarketRate(
   }
 }
 
-export default function ExchangePage({
-  initialCurrency,
-  sending = false,
-  inputCurrencyURL,
-  outputCurrencyURL,
-  slippageURL,
-  recipientURL,
-  exactFieldURL,
-  exactAmountURL,
-  darkModeURL,
-  location
-}) {
+export default function ExchangePage({ initialCurrency, sending = false, params }) {
   const { t } = useTranslation()
   const { account } = useWeb3Context()
 
   const [, toggleDarkMode] = useDarkModeManager()
 
   useEffect(() => {
-    if (darkModeURL !== '') {
-      toggleDarkMode(darkModeURL)
+    if (params.theme) {
+      toggleDarkMode(
+        params.theme === SUPPORTED_THEMES.DARK ? true : params.theme === SUPPORTED_THEMES.LIGHT ? false : ''
+      )
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const addTransaction = useTransactionAdder()
 
-  // check if URL specifies slipppage
+  // check if URL specifies valid slippage, if so use as default
   const initialSlippage = (token = false) => {
-    let slippage = parseFloat(slippageURL)
-    if (Number(slippage) >= 0 && Number(slippage) < 50) {
-      return slippage * 100
+    let slippage = parseFloat(params.slippage)
+    if (Number(slippage) === 0 || Number(slippage) >= 1) {
+      return Math.round(slippage) // round to match custom input availability
     }
     // check for token <-> token slippage option
     return token ? TOKEN_ALLOWED_SLIPPAGE_DEFAULT : ALLOWED_SLIPPAGE_DEFAULT
@@ -278,8 +270,8 @@ export default function ExchangePage({
 
   // check URL params for recipient, only on send page
   const initialRecipient = () => {
-    if (sending && recipientURL) {
-      return recipientURL
+    if (sending && params.recipient) {
+      return params.recipient
     }
     return ''
   }
@@ -300,10 +292,10 @@ export default function ExchangePage({
     swapStateReducer,
     {
       initialCurrency: initialCurrency,
-      inputCurrencyURL: inputCurrencyURL,
-      outputCurrencyURL: outputCurrencyURL,
-      exactFieldURL: exactFieldURL,
-      exactAmountURL: exactAmountURL
+      inputCurrencyURL: params.inputCurrency,
+      outputCurrencyURL: params.outputCurrency,
+      exactFieldURL: params.exactField,
+      exactAmountURL: params.exactAmount
     },
     getInitialSwapState
   )
@@ -523,8 +515,8 @@ export default function ExchangePage({
 
   useEffect(() => {
     const history = createBrowserHistory()
-    history.push(location.pathname + '')
-  }, [location])
+    history.push(window.location.pathname + '')
+  }, [])
 
   const [inverted, setInverted] = useState(false)
   const exchangeRate = getExchangeRate(inputValueParsed, inputDecimals, outputValueParsed, outputDecimals)

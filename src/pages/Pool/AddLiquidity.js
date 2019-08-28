@@ -2,6 +2,7 @@ import React, { useReducer, useState, useCallback, useEffect, useMemo } from 're
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
+import { createBrowserHistory } from 'history'
 import { ethers } from 'ethers'
 import ReactGA from 'react-ga'
 import styled from 'styled-components'
@@ -19,6 +20,7 @@ import { useTokenDetails } from '../../contexts/Tokens'
 import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
+import { SUPPORTED_THEMES } from '../../constants'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -192,21 +194,29 @@ function getMarketRate(reserveETH, reserveToken, decimals, invert = false) {
   return getExchangeRate(reserveETH, 18, reserveToken, decimals, invert)
 }
 
-export default function AddLiquidity({ ethAmountURL, tokenAmountURL, tokenURL, darkModeURL }) {
+export default function AddLiquidity({ params }) {
   const { t } = useTranslation()
   const { library, active, account } = useWeb3Context()
 
   const [, toggleDarkMode] = useDarkModeManager()
 
   useEffect(() => {
-    if (darkModeURL !== '') {
-      toggleDarkMode(darkModeURL)
+    if (params.theme) {
+      toggleDarkMode(
+        params.theme === SUPPORTED_THEMES.DARK ? true : params.theme === SUPPORTED_THEMES.LIGHT ? false : ''
+      )
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // clear url of query
+  useEffect(() => {
+    const history = createBrowserHistory()
+    history.push(window.location.pathname + '')
+  }, [])
+
   const [addLiquidityState, dispatchAddLiquidityState] = useReducer(
     addLiquidityStateReducer,
-    { ethAmountURL: ethAmountURL, tokenAmountURL: tokenAmountURL, tokenURL: tokenURL },
+    { ethAmountURL: params.ethAmount, tokenAmountURL: params.tokenAmount, tokenURL: params.token },
     initialAddLiquidityState
   )
   const { inputValue, outputValue, lastEditedField, outputCurrency } = addLiquidityState

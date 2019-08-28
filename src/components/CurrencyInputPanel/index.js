@@ -338,7 +338,6 @@ export default function CurrencyInputPanel({
           step="0.000000000000000001"
           error={!!errorMessage}
           placeholder="0.0"
-          step="0.000000000000000001"
           onChange={e => onValueChange(e.target.value)}
           onKeyPress={e => {
             const charCode = e.which ? e.which : e.keyCode
