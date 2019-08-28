@@ -73,24 +73,35 @@ export function Updater() {
   const globalBlockNumber = useBlockNumber()
   const [, { updateBlockNumber, updateUSDPrice }] = useApplicationContext()
 
-  useEffect(() => {
-    let stale = false
+  // slow down polling interval
+  // if (library && connectorName === 'Network' && library.pollingInterval !== 15) {
+  //   library.pollingInterval = 15
+  // } else if (library && library.pollingInterval !== 5) {
+  //   library.pollingInterval = 5
+  // }
 
-    getUSDPrice(library)
-      .then(([price]) => {
-        if (!stale) {
-          updateUSDPrice(networkId, price)
-        }
-      })
-      .catch(() => {
-        if (!stale) {
-          updateUSDPrice(networkId, null)
-        }
-      })
+  // update usd price
+  useEffect(() => {
+    if (library) {
+      let stale = false
+
+      getUSDPrice(library)
+        .then(([price]) => {
+          if (!stale) {
+            updateUSDPrice(networkId, price)
+          }
+        })
+        .catch(() => {
+          if (!stale) {
+            updateUSDPrice(networkId, null)
+          }
+        })
+    }
   }, [globalBlockNumber, library, networkId, updateUSDPrice])
 
+  // update block number
   useEffect(() => {
-    if ((networkId || networkId === 0) && library) {
+    if (library) {
       let stale = false
 
       function update() {
