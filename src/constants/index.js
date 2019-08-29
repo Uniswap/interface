@@ -5,7 +5,7 @@ export const FACTORY_ADDRESSES = {
   42: '0xD3E51Ef092B2845f10401a0159B2B96e8B6c3D30'
 }
 
-export const SUPPORTED_THEMES = { 
-  DARK : "DARK",
-  LIGHT : "LIGHT"
+export const SUPPORTED_THEMES = {
+  DARK: 'DARK',
+  LIGHT: 'LIGHT'
 }
