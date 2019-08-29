@@ -285,6 +285,8 @@ export default function CurrencyInputPanel({
 }) {
   const { t } = useTranslation()
 
+  console.log('testing git')
+
   const [modalIsOpen, setModalIsOpen] = useState(false)
 
   const tokenContract = useTokenContract(selectedTokenAddress)
