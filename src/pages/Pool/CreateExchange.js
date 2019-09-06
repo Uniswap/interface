@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router'
 import { useWeb3Context } from 'web3-react'
 import { createBrowserHistory } from 'history'
-import { useDarkModeManager } from '../../contexts/LocalStorage'
 import { ethers } from 'ethers'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
@@ -13,7 +12,6 @@ import OversizedPanel from '../../components/OversizedPanel'
 import { useFactoryContract } from '../../hooks'
 import { useTokenDetails } from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
-import { SUPPORTED_THEMES } from '../../constants'
 
 const SummaryPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -69,16 +67,6 @@ function CreateExchange({ location, params }) {
 
   const { name, symbol, decimals, exchangeAddress } = useTokenDetails(tokenAddress.address)
   const addTransaction = useTransactionAdder()
-
-  const [, toggleDarkMode] = useDarkModeManager()
-
-  useEffect(() => {
-    if (params.theme) {
-      toggleDarkMode(
-        params.theme === SUPPORTED_THEMES.DARK ? true : params.theme === SUPPORTED_THEMES.LIGHT ? false : ''
-      )
-    }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // clear url of query
   useEffect(() => {

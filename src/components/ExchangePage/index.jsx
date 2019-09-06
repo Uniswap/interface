@@ -21,8 +21,6 @@ import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { useAddressAllowance } from '../../contexts/Allowances'
-import { useDarkModeManager } from '../../contexts/LocalStorage'
-import { SUPPORTED_THEMES } from '../../constants'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -246,23 +244,13 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const { t } = useTranslation()
   const { account } = useWeb3Context()
 
-  const [, toggleDarkMode] = useDarkModeManager()
-
-  useEffect(() => {
-    if (params.theme) {
-      toggleDarkMode(
-        params.theme === SUPPORTED_THEMES.DARK ? true : params.theme === SUPPORTED_THEMES.LIGHT ? false : ''
-      )
-    }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
   const addTransaction = useTransactionAdder()
 
   // check if URL specifies valid slippage, if so use as default
   const initialSlippage = (token = false) => {
-    let slippage = parseFloat(params.slippage)
-    if (Number(slippage) === 0 || Number(slippage) >= 1) {
-      return Math.round(slippage) // round to match custom input availability
+    let slippage = Number.parseInt(params.slippage)
+    if (!isNaN(slippage) && (slippage === 0 || slippage >= 1)) {
+      return slippage // round to match custom input availability
     }
     // check for token <-> token slippage option
     return token ? TOKEN_ALLOWED_SLIPPAGE_DEFAULT : ALLOWED_SLIPPAGE_DEFAULT
@@ -276,8 +264,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     return ''
   }
 
-  const [rawSlippage, setRawSlippage] = useState(initialSlippage())
-  const [rawTokenSlippage, setRawTokenSlippage] = useState(initialSlippage(true))
+  const [rawSlippage, setRawSlippage] = useState(() => initialSlippage())
+  const [rawTokenSlippage, setRawTokenSlippage] = useState(() => initialSlippage(true))
 
   const allowedSlippageBig = ethers.utils.bigNumberify(rawSlippage)
   const tokenAllowedSlippageBig = ethers.utils.bigNumberify(rawTokenSlippage)

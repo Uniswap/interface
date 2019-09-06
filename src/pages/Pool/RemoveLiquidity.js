@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import ReactGA from 'react-ga'
 import { createBrowserHistory } from 'history'
 import { useWeb3Context } from 'web3-react'
-import { useDarkModeManager } from '../../contexts/LocalStorage'
 import { ethers } from 'ethers'
 import styled from 'styled-components'
 
@@ -19,7 +18,6 @@ import { useTokenDetails } from '../../contexts/Tokens'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { calculateGasMargin, amountFormatter } from '../../utils'
-import { SUPPORTED_THEMES } from '../../constants'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = ethers.utils.bigNumberify(200)
@@ -149,16 +147,6 @@ export default function RemoveLiquidity({ params }) {
   const { t } = useTranslation()
 
   const addTransaction = useTransactionAdder()
-
-  const [, toggleDarkMode] = useDarkModeManager()
-
-  useEffect(() => {
-    if (params.theme) {
-      toggleDarkMode(
-        params.theme === SUPPORTED_THEMES.DARK ? true : params.theme === SUPPORTED_THEMES.LIGHT ? false : ''
-      )
-    }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // clear url of query
   useEffect(() => {

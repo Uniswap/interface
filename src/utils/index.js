@@ -55,6 +55,8 @@ export function getQueryParam(windowLocation, name) {
 
 export function getAllQueryParams() {
   let params = {}
+  params.theme = checkSupportedTheme(getQueryParam(window.location, 'theme'))
+
   params.inputCurrency = isAddress(getQueryParam(window.location, 'inputCurrency'))
     ? getQueryParam(window.location, 'inputCurrency')
     : ''

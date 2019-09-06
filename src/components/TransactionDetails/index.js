@@ -502,6 +502,15 @@ export default function TransactionDetails(props) {
     checkBounds(debouncedInput)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const updateSlippage = newSlippage => {
+    // round to 2 decimals to prevent ethers error
+    let numParsed = parseInt(newSlippage * 100)
+
+    // set both slippage values in parents
+    props.setRawSlippage(numParsed)
+    props.setRawTokenSlippage(numParsed)
+  }
+
   // used for slippage presets
   const setFromFixed = (index, slippage) => {
     // update slippage in parent, reset errors and input state
@@ -514,16 +523,26 @@ export default function TransactionDetails(props) {
   const [initialSlippage] = useState(props.rawSlippage)
 
   useEffect(() => {
-    if (initialSlippage !== 10 && initialSlippage !== 50 && initialSlippage !== 100) {
-      // restrict to 2 decimal places
-      let acceptableValues = [/^$/, /^\d{1,2}$/, /^\d{0,2}\.\d{0,2}$/]
-      // if its within accepted decimal limit, update the input state
-      if (acceptableValues.some(a => a.test(initialSlippage / 100))) {
-        setUserInput(initialSlippage / 100)
-        setActiveIndex(4)
-      }
+    switch (Number.parseInt(initialSlippage)) {
+      case 10:
+        setFromFixed(1, 0.1)
+        break
+      case 50:
+        setFromFixed(2, 0.5)
+        break
+      case 100:
+        setFromFixed(3, 1)
+        break
+      default:
+        // restrict to 2 decimal places
+        let acceptableValues = [/^$/, /^\d{1,2}$/, /^\d{0,2}\.\d{0,2}$/]
+        // if its within accepted decimal limit, update the input state
+        if (acceptableValues.some(val => val.test(initialSlippage / 100))) {
+          setUserInput(initialSlippage / 100)
+          setActiveIndex(4)
+        }
     }
-  }, [initialSlippage])
+  }, [initialSlippage]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const checkBounds = useCallback(slippageValue => {
     setWarningType(WARNING_TYPE.none)
@@ -561,15 +580,6 @@ export default function TransactionDetails(props) {
     if (acceptableValues.some(a => a.test(input))) {
       setUserInput(input)
     }
-  }
-
-  const updateSlippage = newSlippage => {
-    // round to 2 decimals to prevent ethers error
-    let numParsed = parseInt(newSlippage * 100)
-
-    // set both slippage values in parents
-    props.setRawSlippage(numParsed)
-    props.setRawTokenSlippage(numParsed)
   }
 
   const b = text => <Bold>{text}</Bold>

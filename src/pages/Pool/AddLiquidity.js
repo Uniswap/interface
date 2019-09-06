@@ -1,7 +1,6 @@
 import React, { useReducer, useState, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context } from 'web3-react'
-import { useDarkModeManager } from '../../contexts/LocalStorage'
 import { createBrowserHistory } from 'history'
 import { ethers } from 'ethers'
 import ReactGA from 'react-ga'
@@ -20,7 +19,6 @@ import { useTokenDetails } from '../../contexts/Tokens'
 import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
-import { SUPPORTED_THEMES } from '../../constants'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -197,16 +195,6 @@ function getMarketRate(reserveETH, reserveToken, decimals, invert = false) {
 export default function AddLiquidity({ params }) {
   const { t } = useTranslation()
   const { library, active, account } = useWeb3Context()
-
-  const [, toggleDarkMode] = useDarkModeManager()
-
-  useEffect(() => {
-    if (params.theme) {
-      toggleDarkMode(
-        params.theme === SUPPORTED_THEMES.DARK ? true : params.theme === SUPPORTED_THEMES.LIGHT ? false : ''
-      )
-    }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // clear url of query
   useEffect(() => {
