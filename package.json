@@ -10,7 +10,7 @@
     "@uniswap/sdk": "^1.0.0-beta.4",
     "copy-to-clipboard": "^3.2.0",
     "escape-string-regexp": "^2.0.0",
-    "ethers": "^4.0.33",
+    "ethers": "^4.0.36",
     "i18next": "^15.0.9",
     "i18next-browser-languagedetector": "^3.0.1",
     "i18next-xhr-backend": "^2.0.1",
@@ -27,7 +27,7 @@
     "react-spring": "^8.0.20",
     "react-switch": "^5.0.1",
     "styled-components": "^4.2.0",
-    "web3-react": "^5.0.4"
+    "web3-react": "5.0.5"
   },
   "scripts": {
     "start": "react-scripts start",
