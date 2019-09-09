@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
 import { BigNumber } from '@uniswap/sdk'
+import { useWeb3Context } from 'web3-react'
 import styled from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
 import { darken } from 'polished'
@@ -428,6 +429,8 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
 
   const allTokens = useAllTokenDetails()
 
+  const { account } = useWeb3Context()
+
   // BigNumber.js instance
   const ethPrice = useUSDPrice()
 
@@ -553,8 +556,10 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
           <TokenRowRight>
             {balance ? (
               <TokenRowBalance>{balance && (balance > 0 || balance === '<0.0001') ? balance : '-'}</TokenRowBalance>
-            ) : (
+            ) : account ? (
               <SpinnerWrapper src={Circle} alt="loader" />
+            ) : (
+              '-'
             )}
             <TokenRowUsd>
               {usdBalance ? (usdBalance.lt(0.01) ? '<$0.01' : '$' + formatToUsd(usdBalance)) : ''}
