@@ -495,34 +495,53 @@ export default function TransactionDetails(props) {
     )
   }
 
-  const setFromCustom = useCallback(() => {
+  const setFromCustom = () => {
     setActiveIndex(4)
     inputRef.current.focus()
     // if there's a value, evaluate the bounds
     checkBounds(debouncedInput)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const updateSlippage = newSlippage => {
-    // round to 2 decimals to prevent ethers error
-    let numParsed = parseInt(newSlippage * 100)
-
-    // set both slippage values in parents
-    props.setRawSlippage(numParsed)
-    props.setRawTokenSlippage(numParsed)
   }
+
+  // destructure props for to limit effect callbacks
+  const setRawSlippage = props.setRawSlippage
+  const setRawTokenSlippage = props.setRawTokenSlippage
+  const setcustomSlippageError = props.setcustomSlippageError
+
+  const updateSlippage = useCallback(
+    newSlippage => {
+      // round to 2 decimals to prevent ethers error
+      let numParsed = parseInt(newSlippage * 100)
+
+      // set both slippage values in parents
+      setRawSlippage(numParsed)
+      setRawTokenSlippage(numParsed)
+    },
+    [setRawSlippage, setRawTokenSlippage]
+  )
 
   // used for slippage presets
-  const setFromFixed = (index, slippage) => {
-    // update slippage in parent, reset errors and input state
-    updateSlippage(slippage)
-    setWarningType(WARNING_TYPE.none)
-    setActiveIndex(index)
-    props.setcustomSlippageError('valid`')
-  }
+  const setFromFixed = useCallback(
+    (index, slippage) => {
+      // update slippage in parent, reset errors and input state
+      updateSlippage(slippage)
+      setWarningType(WARNING_TYPE.none)
+      setActiveIndex(index)
+      setcustomSlippageError('valid`')
+    },
+    [setcustomSlippageError, updateSlippage]
+  )
+
+  /**
+   * @todo
+   * Breaks without useState here, able to
+   * break input parsing if typing is faster than
+   * debounce time
+   */
 
   const [initialSlippage] = useState(props.rawSlippage)
 
   useEffect(() => {
+    console.log(initialSlippage + ' is the slippage')
     switch (Number.parseInt(initialSlippage)) {
       case 10:
         setFromFixed(1, 0.1)
@@ -542,33 +561,36 @@ export default function TransactionDetails(props) {
           setActiveIndex(4)
         }
     }
-  }, [initialSlippage]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [initialSlippage, setFromFixed])
 
-  const checkBounds = useCallback(slippageValue => {
-    setWarningType(WARNING_TYPE.none)
-    props.setcustomSlippageError('valid')
+  const checkBounds = useCallback(
+    slippageValue => {
+      setWarningType(WARNING_TYPE.none)
+      setcustomSlippageError('valid')
 
-    if (slippageValue === '' || slippageValue === '.') {
-      props.setcustomSlippageError('invalid')
-      return setWarningType(WARNING_TYPE.emptyInput)
-    }
+      if (slippageValue === '' || slippageValue === '.') {
+        setcustomSlippageError('invalid')
+        return setWarningType(WARNING_TYPE.emptyInput)
+      }
 
-    // check bounds and set errors
-    if (Number(slippageValue) < 0 || Number(slippageValue) > 50) {
-      props.setcustomSlippageError('invalid')
-      return setWarningType(WARNING_TYPE.invalidEntryBound)
-    }
-    if (Number(slippageValue) >= 0 && Number(slippageValue) < 0.1) {
-      props.setcustomSlippageError('valid')
-      setWarningType(WARNING_TYPE.riskyEntryLow)
-    }
-    if (Number(slippageValue) > 5) {
-      props.setcustomSlippageError('warning')
-      setWarningType(WARNING_TYPE.riskyEntryHigh)
-    }
-    //update the actual slippage value in parent
-    updateSlippage(Number(slippageValue))
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+      // check bounds and set errors
+      if (Number(slippageValue) < 0 || Number(slippageValue) > 50) {
+        setcustomSlippageError('invalid')
+        return setWarningType(WARNING_TYPE.invalidEntryBound)
+      }
+      if (Number(slippageValue) >= 0 && Number(slippageValue) < 0.1) {
+        setcustomSlippageError('valid')
+        setWarningType(WARNING_TYPE.riskyEntryLow)
+      }
+      if (Number(slippageValue) > 5) {
+        setcustomSlippageError('warning')
+        setWarningType(WARNING_TYPE.riskyEntryHigh)
+      }
+      //update the actual slippage value in parent
+      updateSlippage(Number(slippageValue))
+    },
+    [setcustomSlippageError, updateSlippage]
+  )
 
   // check that the theyve entered number and correct decimal
   const parseInput = e => {
