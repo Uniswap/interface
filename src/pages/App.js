@@ -7,7 +7,7 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 
 import NavigationTabs from '../components/NavigationTabs'
-import { isAddress } from '../utils'
+import { isAddress, getAllQueryParams } from '../utils'
 
 const Swap = lazy(() => import('./Swap'))
 const Send = lazy(() => import('./Send'))
@@ -48,6 +48,7 @@ const Body = styled.div`
 `
 
 export default function App() {
+  const params = getAllQueryParams()
   return (
     <>
       <Suspense fallback={null}>
@@ -63,27 +64,33 @@ export default function App() {
                   {/* this Suspense is for route code-splitting */}
                   <Suspense fallback={null}>
                     <Switch>
-                      <Route exact strict path="/swap" component={Swap} />
+                      <Route exact strict path="/swap" component={() => <Swap params={params} />} />
                       <Route
                         exact
                         strict
                         path="/swap/:tokenAddress?"
-                        render={({ match }) => {
+                        render={({ match, location }) => {
                           if (isAddress(match.params.tokenAddress)) {
-                            return <Swap initialCurrency={isAddress(match.params.tokenAddress)} />
+                            return (
+                              <Swap
+                                location={location}
+                                initialCurrency={isAddress(match.params.tokenAddress)}
+                                params={params}
+                              />
+                            )
                           } else {
                             return <Redirect to={{ pathname: '/swap' }} />
                           }
                         }}
                       />
-                      <Route exact strict path="/send" component={Send} />
+                      <Route exact strict path="/send" component={() => <Send params={params} />} />
                       <Route
                         exact
                         strict
                         path="/send/:tokenAddress?"
-                        render={({ match }) => {
+                        render={({ match, location }) => {
                           if (isAddress(match.params.tokenAddress)) {
-                            return <Send initialCurrency={isAddress(match.params.tokenAddress)} />
+                            return <Send initialCurrency={isAddress(match.params.tokenAddress)} params={params} />
                           } else {
                             return <Redirect to={{ pathname: '/send' }} />
                           }
@@ -96,7 +103,7 @@ export default function App() {
                           '/create-exchange',
                           '/create-exchange/:tokenAddress?'
                         ]}
-                        component={Pool}
+                        component={() => <Pool params={params} />}
                       />
                       <Redirect to="/swap" />
                     </Switch>
