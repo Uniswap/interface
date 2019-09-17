@@ -27,3 +27,5 @@ notes.txt
 .idea/
 
 .vscode/
+
+package-lock.json

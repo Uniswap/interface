@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router'
 import { useWeb3Context } from 'web3-react'
+import { createBrowserHistory } from 'history'
 import { ethers } from 'ethers'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import ReactGA from 'react-ga'
-
 import { Button } from '../../theme'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import OversizedPanel from '../../components/OversizedPanel'
@@ -54,13 +54,13 @@ const Flex = styled.div`
   }
 `
 
-function CreateExchange({ history, location }) {
+function CreateExchange({ location, params }) {
   const { t } = useTranslation()
   const { account } = useWeb3Context()
   const factory = useFactoryContract()
 
   const [tokenAddress, setTokenAddress] = useState({
-    address: '',
+    address: params.tokenAddress ? params.tokenAddress : '',
     name: ''
   })
   const [tokenAddressError, setTokenAddressError] = useState()
@@ -68,12 +68,11 @@ function CreateExchange({ history, location }) {
   const { name, symbol, decimals, exchangeAddress } = useTokenDetails(tokenAddress.address)
   const addTransaction = useTransactionAdder()
 
-  // clear location state, if it exists
+  // clear url of query
   useEffect(() => {
-    if (location.state) {
-      history.replace(location.pathname)
-    }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    const history = createBrowserHistory()
+    history.push(window.location.pathname + '')
+  }, [])
 
   // validate everything
   const [errorMessage, setErrorMessage] = useState(!account && t('noWallet'))
@@ -118,7 +117,11 @@ function CreateExchange({ history, location }) {
     <>
       <AddressInputPanel
         title={t('tokenAddress')}
-        initialInput={(location.state && location.state.tokenAddress) || ''}
+        initialInput={
+          params.tokenAddress
+            ? { address: params.tokenAddress }
+            : { address: (location.state && location.state.tokenAddress) || '' }
+        }
         onChange={setTokenAddress}
         onError={setTokenAddressError}
       />

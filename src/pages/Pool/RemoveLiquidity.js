@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import ReactGA from 'react-ga'
+import { createBrowserHistory } from 'history'
 import { useWeb3Context } from 'web3-react'
 import { ethers } from 'ethers'
 import styled from 'styled-components'
@@ -141,14 +142,20 @@ function calculateSlippageBounds(value) {
   }
 }
 
-export default function RemoveLiquidity() {
+export default function RemoveLiquidity({ params }) {
   const { library, account, active } = useWeb3Context()
   const { t } = useTranslation()
 
   const addTransaction = useTransactionAdder()
 
-  const [outputCurrency, setOutputCurrency] = useState('')
-  const [value, setValue] = useState('')
+  // clear url of query
+  useEffect(() => {
+    const history = createBrowserHistory()
+    history.push(window.location.pathname + '')
+  }, [])
+
+  const [outputCurrency, setOutputCurrency] = useState(params.poolTokenAddress)
+  const [value, setValue] = useState(params.poolTokenAmount ? params.poolTokenAmount : '')
   const [inputError, setInputError] = useState()
   const [valueParsed, setValueParsed] = useState()
   // parse value

@@ -95,11 +95,14 @@ export function useBetaMessageManager() {
 export function useDarkModeManager() {
   const [state, { updateKey }] = useLocalStorageContext()
 
-  const isDarkMode = state[DARK_MODE]
+  let isDarkMode = state[DARK_MODE]
 
-  const toggleDarkMode = useCallback(() => {
-    updateKey(DARK_MODE, !isDarkMode)
-  }, [updateKey, isDarkMode])
+  const toggleDarkMode = useCallback(
+    value => {
+      updateKey(DARK_MODE, value === false || value === true ? value : !isDarkMode)
+    },
+    [updateKey, isDarkMode]
+  )
 
   return [state[DARK_MODE], toggleDarkMode]
 }

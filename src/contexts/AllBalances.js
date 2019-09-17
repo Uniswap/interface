@@ -68,14 +68,12 @@ export function useFetchAllBalances() {
         Object.keys(allTokens).map(async k => {
           let balance = null
           let ethRate = null
-
           if (isAddress(k) || k === 'ETH') {
             if (k === 'ETH') {
               balance = await getEtherBalance(account, library).catch(() => null)
               ethRate = ONE
             } else {
               balance = await getTokenBalance(k, account, library).catch(() => null)
-
               // only get values for tokens with positive balances
               if (!!balance && balance.gt(ZERO)) {
                 const tokenReserves = await getTokenReserves(k, library).catch(() => null)

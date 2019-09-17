@@ -75,7 +75,8 @@ export default function AddressInputPanel({ title, initialInput = '', onChange =
 
   const { library } = useWeb3Context()
 
-  const [input, setInput] = useState(initialInput)
+  const [input, setInput] = useState(initialInput.address ? initialInput.address : '')
+
   const debouncedInput = useDebounce(input, 150)
 
   const [data, setData] = useState({ address: undefined, name: undefined })
