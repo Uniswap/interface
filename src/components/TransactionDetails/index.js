@@ -541,7 +541,6 @@ export default function TransactionDetails(props) {
   const [initialSlippage] = useState(props.rawSlippage)
 
   useEffect(() => {
-    console.log(initialSlippage + ' is the slippage')
     switch (Number.parseInt(initialSlippage)) {
       case 10:
         setFromFixed(1, 0.1)
