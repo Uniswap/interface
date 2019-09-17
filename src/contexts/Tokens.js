@@ -294,10 +294,16 @@ const INITIAL_TOKENS_CONTEXT = {
       [EXCHANGE_ADDRESS]: '0xC0C59cDe851bfcbdddD3377EC10ea54A18Efb937'
     },
     '0x42456D7084eacF4083f1140d3229471bbA2949A8': {
-      [NAME]: 'Synth sETH',
-      [SYMBOL]: 'sETH',
+      [NAME]: 'Synth sETH (old)',
+      [SYMBOL]: 'sETH (old)',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x4740C758859D4651061CC9CDEFdBa92BDc3a845d'
+    },
+    '0x5e74C9036fb86BD7eCdcb084a0673EFc32eA31cb': {
+      [NAME]: 'Synth sETH (new)',
+      [SYMBOL]: 'sETH (new)',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0xe9Cf7887b93150D4F2Da7dFc6D502B216438F244'
     },
     '0x744d70FDBE2Ba4CF95131626614a1763DF805B9E': {
       [NAME]: 'Status Network Token',
