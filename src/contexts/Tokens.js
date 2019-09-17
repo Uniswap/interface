@@ -395,6 +395,14 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xaE76c84C9262Cdb9abc0C2c8888e62Db8E22A0bF'
     }
+  },
+  4: {
+    '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa': {
+      [NAME]: 'Dai',
+      [SYMBOL]: 'DAI',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0xaF51BaAA766b65E8B3Ee0C2c33186325ED01eBD5'
+    }
   }
 }
 
