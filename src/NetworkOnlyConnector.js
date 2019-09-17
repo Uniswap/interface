@@ -4,12 +4,20 @@ import { Connectors } from 'web3-react'
 const { Connector } = Connectors
 
 function getFallbackProvider(providerURL) {
-  const etherscan = new ethers.providers.EtherscanProvider()
-  const infura = new ethers.providers.JsonRpcProvider(providerURL)
+  if (Number(process.env.REACT_APP_NETWORK_ID) === 1) {
+    const etherscan = new ethers.providers.EtherscanProvider()
+    const infura = new ethers.providers.JsonRpcProvider(providerURL)
 
-  const providers = [infura, etherscan]
+    const providers = [infura, etherscan]
 
-  return new ethers.providers.FallbackProvider(providers)
+    return new ethers.providers.FallbackProvider(providers)
+  } else {
+    const infura = new ethers.providers.JsonRpcProvider(providerURL)
+
+    const providers = [infura]
+
+    return new ethers.providers.FallbackProvider(providers)
+  }
 }
 
 export default class NetworkOnlyConnector extends Connector {

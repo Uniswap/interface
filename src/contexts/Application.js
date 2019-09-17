@@ -82,7 +82,7 @@ export function Updater() {
 
   // update usd price
   useEffect(() => {
-    if (library) {
+    if (library && networkId === 1) {
       let stale = false
 
       getUSDPrice(library)

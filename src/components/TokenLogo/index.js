@@ -15,6 +15,9 @@ const Image = styled.img`
 `
 
 const Emoji = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: ${({ size }) => size};
   height: ${({ size }) => size};
 `
