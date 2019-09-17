@@ -221,6 +221,7 @@ export async function getTokenAllowance(address, tokenAddress, spenderAddress, l
   return getContract(tokenAddress, ERC20_ABI, library).allowance(address, spenderAddress)
 }
 
+//
 // amount must be a BigNumber, {base,display}Decimals must be Numbers
 export function amountFormatter(amount, baseDecimals = 18, displayDecimals = 3, useLessThan = true) {
   if (baseDecimals > 18 || displayDecimals > 18 || displayDecimals > baseDecimals) {
@@ -261,10 +262,8 @@ export function amountFormatter(amount, baseDecimals = 18, displayDecimals = 3, 
       // if there is a decimal portion
       else {
         const [wholeComponent, decimalComponent] = stringAmount.split('.')
-        const roundUpAmount = minimumDisplayAmount.div(ethers.constants.Two)
         const roundedDecimalComponent = ethers.utils
           .bigNumberify(decimalComponent.padEnd(baseDecimals, '0'))
-          .add(roundUpAmount)
           .toString()
           .padStart(baseDecimals, '0')
           .substring(0, displayDecimals)
