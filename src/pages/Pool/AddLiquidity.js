@@ -571,6 +571,12 @@ export default function AddLiquidity({ params }) {
         onValueChange={inputValue => {
           dispatchAddLiquidityState({ type: 'UPDATE_VALUE', payload: { value: inputValue, field: INPUT } })
         }}
+        extraTextClickHander={() => {
+          dispatchAddLiquidityState({
+            type: 'UPDATE_VALUE',
+            payload: { value: amountFormatter(inputBalance, 18, 4), field: INPUT }
+          })
+        }}
         selectedTokenAddress="ETH"
         value={inputValue}
         errorMessage={inputError}
@@ -592,6 +598,12 @@ export default function AddLiquidity({ params }) {
         }}
         onValueChange={outputValue => {
           dispatchAddLiquidityState({ type: 'UPDATE_VALUE', payload: { value: outputValue, field: OUTPUT } })
+        }}
+        extraTextClickHander={() => {
+          dispatchAddLiquidityState({
+            type: 'UPDATE_VALUE',
+            payload: { value: amountFormatter(outputBalance, decimals, Math.min(decimals, 4)), field: OUTPUT }
+          })
         }}
         value={outputValue}
         showUnlock={showUnlock}
