@@ -29,6 +29,12 @@ const ETH = {
 
 const INITIAL_TOKENS_CONTEXT = {
   1: {
+    '0xD46bA6D942050d489DBd938a2C909A5d5039A161': {
+      [NAME]: 'Ampleforth',
+      [SYMBOL]: 'AMPL',
+      [DECIMALS]: 9,
+      [EXCHANGE_ADDRESS]: '0x042dBBDc27F75d277C3D99efE327DB21Bc4fde75'
+    },
     '0x960b236A07cf122663c4303350609A66A7B288C0': {
       [NAME]: 'Aragon Network Token',
       [SYMBOL]: 'ANT',
