@@ -119,6 +119,12 @@ function calculateSlippageBounds(value) {
   }
 }
 
+function calculateMaxOutputVal(value) {
+  if (value) {
+    return value.mul(ethers.utils.bigNumberify(10000)).div(ALLOWED_SLIPPAGE.add(ethers.utils.bigNumberify(10000)))
+  }
+}
+
 function initialAddLiquidityState(state) {
   return {
     inputValue: state.ethAmountURL ? state.ethAmountURL : '',
@@ -571,6 +577,17 @@ export default function AddLiquidity({ params }) {
         onValueChange={inputValue => {
           dispatchAddLiquidityState({ type: 'UPDATE_VALUE', payload: { value: inputValue, field: INPUT } })
         }}
+        extraTextClickHander={() => {
+          if (inputBalance) {
+            const valueToSet = inputBalance.sub(ethers.utils.parseEther('.1'))
+            if (valueToSet.gt(ethers.constants.Zero)) {
+              dispatchAddLiquidityState({
+                type: 'UPDATE_VALUE',
+                payload: { value: amountFormatter(valueToSet, 18, 18, false), field: INPUT }
+              })
+            }
+          }
+        }}
         selectedTokenAddress="ETH"
         value={inputValue}
         errorMessage={inputError}
@@ -592,6 +609,17 @@ export default function AddLiquidity({ params }) {
         }}
         onValueChange={outputValue => {
           dispatchAddLiquidityState({ type: 'UPDATE_VALUE', payload: { value: outputValue, field: OUTPUT } })
+        }}
+        extraTextClickHander={() => {
+          if (outputBalance) {
+            dispatchAddLiquidityState({
+              type: 'UPDATE_VALUE',
+              payload: {
+                value: amountFormatter(calculateMaxOutputVal(outputBalance), decimals, decimals, false),
+                field: OUTPUT
+              }
+            })
+          }
         }}
         value={outputValue}
         showUnlock={showUnlock}
