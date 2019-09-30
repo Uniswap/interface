@@ -572,10 +572,15 @@ export default function AddLiquidity({ params }) {
           dispatchAddLiquidityState({ type: 'UPDATE_VALUE', payload: { value: inputValue, field: INPUT } })
         }}
         extraTextClickHander={() => {
-          dispatchAddLiquidityState({
-            type: 'UPDATE_VALUE',
-            payload: { value: amountFormatter(inputBalance, 18, 4), field: INPUT }
-          })
+          if (inputBalance) {
+            const valueToSet = inputBalance.sub(ethers.utils.parseEther('.1'))
+            if (valueToSet.gt(ethers.constants.Zero)) {
+              dispatchAddLiquidityState({
+                type: 'UPDATE_VALUE',
+                payload: { value: amountFormatter(valueToSet, 18, 18, false), field: INPUT }
+              })
+            }
+          }
         }}
         selectedTokenAddress="ETH"
         value={inputValue}
@@ -600,10 +605,12 @@ export default function AddLiquidity({ params }) {
           dispatchAddLiquidityState({ type: 'UPDATE_VALUE', payload: { value: outputValue, field: OUTPUT } })
         }}
         extraTextClickHander={() => {
-          dispatchAddLiquidityState({
-            type: 'UPDATE_VALUE',
-            payload: { value: amountFormatter(outputBalance, decimals, Math.min(decimals, 4)), field: OUTPUT }
-          })
+          if (outputBalance) {
+            dispatchAddLiquidityState({
+              type: 'UPDATE_VALUE',
+              payload: { value: amountFormatter(outputBalance, decimals, decimals, false), field: OUTPUT }
+            })
+          }
         }}
         value={outputValue}
         showUnlock={showUnlock}
