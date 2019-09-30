@@ -119,6 +119,12 @@ function calculateSlippageBounds(value) {
   }
 }
 
+function calculateMaxOutputVal(value) {
+  if (value) {
+    return value.mul(ethers.utils.bigNumberify(10000)).div(ALLOWED_SLIPPAGE.add(ethers.utils.bigNumberify(10000)))
+  }
+}
+
 function initialAddLiquidityState(state) {
   return {
     inputValue: state.ethAmountURL ? state.ethAmountURL : '',
@@ -608,7 +614,10 @@ export default function AddLiquidity({ params }) {
           if (outputBalance) {
             dispatchAddLiquidityState({
               type: 'UPDATE_VALUE',
-              payload: { value: amountFormatter(outputBalance, decimals, decimals, false), field: OUTPUT }
+              payload: {
+                value: amountFormatter(calculateMaxOutputVal(outputBalance), decimals, decimals, false),
+                field: OUTPUT
+              }
             })
           }
         }}
