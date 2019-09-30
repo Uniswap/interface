@@ -386,7 +386,6 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         setInputError(null)
         setShowUnlock(false)
       }
-
       return () => {
         setInputError()
         setShowUnlock(false)
