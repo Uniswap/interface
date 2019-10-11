@@ -436,7 +436,13 @@ const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'ZRX',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xaE76c84C9262Cdb9abc0C2c8888e62Db8E22A0bF'
-    }
+    },
+    '0x2e84df8ba0c87670a7073689aa94e7f1d2d85970': {
+      [NAME]: 'EXNCE',
+      [SYMBOL]: 'XNC',
+      [DECIMALS]: 6,
+      [EXCHANGE_ADDRESS]: '0x6c3E5177bcA97b30F257421F9F9495A0D06aA5EE'
+    }    
   },
   4: {
     '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa': {
