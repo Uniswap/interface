@@ -62,6 +62,8 @@ export function getAllQueryParams() {
     : ''
   params.outputCurrency = isAddress(getQueryParam(window.location, 'outputCurrency'))
     ? getQueryParam(window.location, 'outputCurrency')
+    : getQueryParam(window.location, 'outputCurrency') === 'ETH'
+    ? 'ETH'
     : ''
   params.slippage = !isNaN(getQueryParam(window.location, 'slippage')) ? getQueryParam(window.location, 'slippage') : ''
   params.exactField = getQueryParam(window.location, 'exactField')
