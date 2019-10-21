@@ -74,7 +74,7 @@ export function useENSName(address) {
 
       return () => {
         stale = true
-        setENSNname()
+        setENSNname(null)
       }
     }
   }, [library, address])
