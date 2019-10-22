@@ -55,19 +55,18 @@ export function useENSName(address) {
 
   const [ENSName, setENSName] = useState()
 
-  useEffect(() => {
+  async function lookupAddress() {
     if (isAddress(address)) {
       let stale = false
       try {
-        library.lookupAddress(address).then(name => {
-          if (!stale) {
-            if (name) {
-              setENSName(name)
-            } else {
-              setENSName(null)
-            }
+        const name = await library.lookupAddress(address)
+        if (!stale) {
+          if (name) {
+            setENSName(name)
+          } else {
+            setENSName(null)
           }
-        })
+        }
       } catch {
         setENSName(null)
       }
@@ -77,6 +76,10 @@ export function useENSName(address) {
         setENSName()
       }
     }
+  }
+
+  useEffect(() => {
+    lookupAddress()
   }, [library, address])
 
   return ENSName
