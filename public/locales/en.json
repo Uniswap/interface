@@ -83,5 +83,6 @@
   "decimals": "Decimals",
   "enterTokenCont": "Enter a token address to continue",
   "priceChange": "Expected price slippage",
-  "forAtLeast": "for at least "
+  "forAtLeast": "for at least ",
+  "brokenToken": "The selected token is not compatible with Uniswap V1. Adding liquidity will result in locked funds."
 }
