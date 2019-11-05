@@ -29,6 +29,12 @@ const ETH = {
 
 const INITIAL_TOKENS_CONTEXT = {
   1: {
+    '0x737F98AC8cA59f2C68aD658E3C3d8C8963E40a4c': {
+      [NAME]: 'Amon',
+      [SYMBOL]: 'AMN',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0xE6C198d27a5B71144B40cFa2362ae3166728e0C8'
+    },
     '0xD46bA6D942050d489DBd938a2C909A5d5039A161': {
       [NAME]: 'Ampleforth',
       [SYMBOL]: 'AMPL',
