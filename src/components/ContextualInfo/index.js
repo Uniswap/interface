@@ -1,10 +1,60 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import c from 'classnames'
+import styled from 'styled-components'
 
-import DropdownBlue from '../../assets/images/dropdown-blue.svg'
-import DropupBlue from '../../assets/images/dropup-blue.svg'
-import './contextual-info.scss'
+import { ReactComponent as Dropup } from '../../assets/images/dropup-blue.svg'
+import { ReactComponent as Dropdown } from '../../assets/images/dropdown-blue.svg'
+
+const SummaryWrapper = styled.div`
+  color: ${({ error, theme }) => (error ? theme.salmonRed : theme.doveGray)};
+  font-size: 0.75rem;
+  text-align: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+`
+
+const Details = styled.div`
+  background-color: ${({ theme }) => theme.concreteGray};
+  padding: 1.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  margin-top: 1rem;
+`
+
+const SummaryWrapperContainer = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap};
+  color: ${({ theme }) => theme.royalBlue};
+  text-align: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+
+  span {
+    margin-right: 12px;
+  }
+
+  img {
+    height: 0.75rem;
+    width: 0.75rem;
+  }
+`
+
+const WrappedDropup = ({ isError, highSlippageWarning, ...rest }) => <Dropup {...rest} />
+const ColoredDropup = styled(WrappedDropup)`
+  path {
+    stroke: ${({ theme }) => theme.royalBlue};
+  }
+`
+
+const WrappedDropdown = ({ isError, highSlippageWarning, ...rest }) => <Dropdown {...rest} />
+const ColoredDropdown = styled(WrappedDropdown)`
+  path {
+    stroke: ${({ theme }) => theme.royalBlue};
+  }
+`
 
 class ContextualInfo extends Component {
   static propTypes = {
@@ -15,8 +65,8 @@ class ContextualInfo extends Component {
   }
 
   static defaultProps = {
-    openDetailsText: 'Transaction Details',
-    closeDetailsText: 'Hide Details',
+    openDetailsText: 'Advanced Details',
+    closeDetailsText: 'Hide Advanced',
     renderTransactionDetails() {},
     contextualInfo: '',
     isError: false
@@ -31,25 +81,19 @@ class ContextualInfo extends Component {
       return null
     }
 
-    return <div className="contextual-info__details">{this.props.renderTransactionDetails()}</div>
+    return <Details>{this.props.renderTransactionDetails()}</Details>
   }
 
   render() {
     const { openDetailsText, closeDetailsText, contextualInfo, isError } = this.props
 
     if (contextualInfo) {
-      return (
-        <div className={c({ 'contextual-info--error': isError }, 'contextual-info__summary-wrapper')}>
-          <div>{contextualInfo}</div>
-        </div>
-      )
+      return <SummaryWrapper error={isError}>{contextualInfo}</SummaryWrapper>
     }
 
     return (
       <>
-        <div
-          key="open-details"
-          className="contextual-info__summary-wrapper contextual-info__open-details-container"
+        <SummaryWrapperContainer
           onClick={() =>
             this.setState(prevState => {
               return { showDetails: !prevState.showDetails }
@@ -59,15 +103,15 @@ class ContextualInfo extends Component {
           {!this.state.showDetails ? (
             <>
               <span>{openDetailsText}</span>
-              <img src={DropdownBlue} alt="dropdown" />
+              <ColoredDropup />
             </>
           ) : (
             <>
               <span>{closeDetailsText}</span>
-              <img src={DropupBlue} alt="dropup" />
+              <ColoredDropdown />
             </>
           )}
-        </div>
+        </SummaryWrapperContainer>
         {this.renderDetails()}
       </>
     )

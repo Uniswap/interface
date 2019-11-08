@@ -1,74 +1,136 @@
-import React from 'react'
-import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle } from 'styled-components'
+import React, { useEffect } from 'react'
+import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'styled-components'
+import { getQueryParam, checkSupportedTheme } from '../utils'
+import { SUPPORTED_THEMES } from '../constants'
+import { useDarkModeManager } from '../contexts/LocalStorage'
 
-const theme = {
-  uniswapPink: '#DC6BE5',
-  royalBlue: '#2f80ed',
-  salmonRed: '#ff6871',
-  white: '#FFF',
-  black: '#000'
+export * from './components'
+
+const MEDIA_WIDTHS = {
+  upToSmall: 600,
+  upToMedium: 960,
+  upToLarge: 1280
 }
+
+const mediaWidthTemplates = Object.keys(MEDIA_WIDTHS).reduce((accumulator, size) => {
+  accumulator[size] = (...args) => css`
+    @media (max-width: ${MEDIA_WIDTHS[size]}px) {
+      ${css(...args)}
+    }
+  `
+  return accumulator
+}, {})
+
+const flexColumnNoWrap = css`
+  display: flex;
+  flex-flow: column nowrap;
+`
+
+const flexRowNoWrap = css`
+  display: flex;
+  flex-flow: row nowrap;
+`
+
+const white = '#FFFFFF'
+const black = '#000000'
 
 export default function ThemeProvider({ children }) {
-  return <StyledComponentsThemeProvider theme={theme}>{children}</StyledComponentsThemeProvider>
+  const [darkMode, toggleDarkMode] = useDarkModeManager()
+  const themeURL = checkSupportedTheme(getQueryParam(window.location, 'theme'))
+  const themeToRender = themeURL
+    ? themeURL.toUpperCase() === SUPPORTED_THEMES.DARK
+      ? true
+      : themeURL.toUpperCase() === SUPPORTED_THEMES.LIGHT
+      ? false
+      : darkMode
+    : darkMode
+  useEffect(() => {
+    toggleDarkMode(themeToRender)
+  }, [toggleDarkMode, themeToRender])
+  return <StyledComponentsThemeProvider theme={theme(themeToRender)}>{children}</StyledComponentsThemeProvider>
 }
+
+const theme = darkMode => ({
+  white,
+  black,
+  textColor: darkMode ? white : '#010101',
+
+  // for setting css on <html>
+  backgroundColor: darkMode ? '#333639' : white,
+
+  modalBackground: darkMode ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.3)',
+  inputBackground: darkMode ? '#202124' : white,
+  placeholderGray: darkMode ? '#5F5F5F' : '#E1E1E1',
+  shadowColor: darkMode ? '#000' : '#2F80ED',
+
+  // grays
+  concreteGray: darkMode ? '#292C2F' : '#FAFAFA',
+  mercuryGray: darkMode ? '#333333' : '#E1E1E1',
+  silverGray: darkMode ? '#737373' : '#C4C4C4',
+  chaliceGray: darkMode ? '#7B7B7B' : '#AEAEAE',
+  doveGray: darkMode ? '#C4C4C4' : '#737373',
+  mineshaftGray: darkMode ? '#E1E1E1' : '#2B2B2B',
+  buttonOutlineGrey: darkMode ? '#FAFAFA' : '#F2F2F2',
+  tokenRowHover: darkMode ? '#404040' : '#F2F2F2',
+  //blacks
+  charcoalBlack: darkMode ? '#F2F2F2' : '#404040',
+  // blues
+  zumthorBlue: darkMode ? '#212529' : '#EBF4FF',
+  malibuBlue: darkMode ? '#E67AEF' : '#5CA2FF',
+  royalBlue: darkMode ? '#DC6BE5' : '#2F80ED',
+  loadingBlue: darkMode ? '#e4f0ff' : '#e4f0ff',
+
+  // purples
+  wisteriaPurple: '#DC6BE5',
+  // reds
+  salmonRed: '#FF6871',
+  // orange
+  pizazzOrange: '#FF8F05',
+  // yellows
+  warningYellow: '#FFE270',
+  // pink
+  uniswapPink: '#DC6BE5',
+  connectedGreen: '#27AE60',
+
+  //specific
+  textHover: darkMode ? theme.uniswapPink : theme.doveGray,
+
+  // media queries
+  mediaWidth: mediaWidthTemplates,
+  // css snippets
+  flexColumnNoWrap,
+  flexRowNoWrap
+})
 
 export const GlobalStyle = createGlobalStyle`
   @import url('https://rsms.me/inter/inter.css');
+  html { font-family: 'Inter', sans-serif; }
+  @supports (font-variation-settings: normal) {
+    html { font-family: 'Inter var', sans-serif; }
+  }
   
   html,
   body {
-    padding: 0;
     margin: 0;
-    font-family: Inter, sans-serif;
-    font-variant: none;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;    
+  }
+
+  body > div {
+    height: 100%;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+  html {
     font-size: 16px;
+    font-variant: none;
+    color: ${({ theme }) => theme.textColor};
+    background-color: ${({ theme }) => theme.backgroundColor};
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
-  }
-
-  #root {
-    position: relative;
-    display: flex;
-    flex-flow: column nowrap;
-    height: 100vh;
-    width: 100vw;
-    overflow-x: hidden;
-    overflow-y: auto;
-    background-color: ${props => props.theme.white};
-    z-index: 100;
-    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-    @media only screen and (min-width: 768px) {
-      justify-content: center;
-      align-items: center;
-    }
-  }
-
-  #modal-root {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 200;
-  }
-
-  .loader {
-    border: 1px solid transparent;
-    border-top: 1px solid ${props => props.theme.royalBlue};
-    border-radius: 50%;
-    width: 0.75rem;
-    height: 0.75rem;
-    margin-right: 0.25rem;
-    animation: spin 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
-  }
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
 `

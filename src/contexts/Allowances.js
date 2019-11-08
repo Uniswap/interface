@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useCallback, useMemo, useEffect } from 'react'
+import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
 import { useWeb3Context } from 'web3-react'
 
 import { safeAccess, isAddress, getTokenAllowance } from '../utils'
@@ -46,9 +46,11 @@ export default function Provider({ children }) {
     dispatch({ type: UPDATE, payload: { networkId, address, tokenAddress, spenderAddress, value, blockNumber } })
   }, [])
 
-  const contextValue = useMemo(() => [state, { update }], [state, update])
-
-  return <AllowancesContext.Provider value={contextValue}>{children}</AllowancesContext.Provider>
+  return (
+    <AllowancesContext.Provider value={useMemo(() => [state, { update }], [state, update])}>
+      {children}
+    </AllowancesContext.Provider>
+  )
 }
 
 export function useAddressAllowance(address, tokenAddress, spenderAddress) {

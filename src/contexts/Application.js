@@ -1,12 +1,14 @@
-import React, { createContext, useContext, useReducer, useCallback, useMemo, useEffect } from 'react'
+import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
 import { useWeb3Context } from 'web3-react'
+
 import { safeAccess } from '../utils'
+import { getUSDPrice } from '../utils/price'
 
-const SHOW_BETA_MESSAGE = 'SHOW_BETA_MESSAGE'
-const BLOCK_NUMBERS = 'BLOCK_NUMBERS'
+const BLOCK_NUMBER = 'BLOCK_NUMBER'
+const USD_PRICE = 'USD_PRICE'
 
-const DISMISS_BETA_MESSAGE = 'DISMISS_BETA_MESSAGE'
 const UPDATE_BLOCK_NUMBER = 'UPDATE_BLOCK_NUMBER'
+const UPDATE_USD_PRICE = 'UPDATE_USD_PRICE'
 
 const ApplicationContext = createContext()
 
@@ -16,19 +18,23 @@ function useApplicationContext() {
 
 function reducer(state, { type, payload }) {
   switch (type) {
-    case DISMISS_BETA_MESSAGE: {
-      return {
-        ...state,
-        [SHOW_BETA_MESSAGE]: false
-      }
-    }
     case UPDATE_BLOCK_NUMBER: {
       const { networkId, blockNumber } = payload
       return {
         ...state,
-        [BLOCK_NUMBERS]: {
-          ...(safeAccess(state, [BLOCK_NUMBERS]) || {}),
+        [BLOCK_NUMBER]: {
+          ...(safeAccess(state, [BLOCK_NUMBER]) || {}),
           [networkId]: blockNumber
+        }
+      }
+    }
+    case UPDATE_USD_PRICE: {
+      const { networkId, USDPrice } = payload
+      return {
+        ...state,
+        [USD_PRICE]: {
+          ...(safeAccess(state, [USD_PRICE]) || {}),
+          [networkId]: USDPrice
         }
       }
     }
@@ -40,33 +46,62 @@ function reducer(state, { type, payload }) {
 
 export default function Provider({ children }) {
   const [state, dispatch] = useReducer(reducer, {
-    [SHOW_BETA_MESSAGE]: true,
-    [BLOCK_NUMBERS]: {}
+    [BLOCK_NUMBER]: {},
+    [USD_PRICE]: {}
   })
 
-  const dismissBetaMessage = useCallback(() => {
-    dispatch({ type: DISMISS_BETA_MESSAGE })
-  }, [])
   const updateBlockNumber = useCallback((networkId, blockNumber) => {
     dispatch({ type: UPDATE_BLOCK_NUMBER, payload: { networkId, blockNumber } })
   }, [])
 
-  const contextValue = useMemo(() => [state, { dismissBetaMessage, updateBlockNumber }], [
-    state,
-    dismissBetaMessage,
-    updateBlockNumber
-  ])
+  const updateUSDPrice = useCallback((networkId, USDPrice) => {
+    dispatch({ type: UPDATE_USD_PRICE, payload: { networkId, USDPrice } })
+  }, [])
 
-  return <ApplicationContext.Provider value={contextValue}>{children}</ApplicationContext.Provider>
+  return (
+    <ApplicationContext.Provider
+      value={useMemo(() => [state, { updateBlockNumber, updateUSDPrice }], [state, updateBlockNumber, updateUSDPrice])}
+    >
+      {children}
+    </ApplicationContext.Provider>
+  )
 }
 
 export function Updater() {
   const { networkId, library } = useWeb3Context()
 
-  const [, { updateBlockNumber }] = useApplicationContext()
+  const globalBlockNumber = useBlockNumber()
+  const [, { updateBlockNumber, updateUSDPrice }] = useApplicationContext()
 
+  // slow down polling interval
+  // if (library && connectorName === 'Network' && library.pollingInterval !== 15) {
+  //   library.pollingInterval = 15
+  // } else if (library && library.pollingInterval !== 5) {
+  //   library.pollingInterval = 5
+  // }
+
+  // update usd price
   useEffect(() => {
-    if ((networkId || networkId === 0) && library) {
+    if (library && networkId === 1) {
+      let stale = false
+
+      getUSDPrice(library)
+        .then(([price]) => {
+          if (!stale) {
+            updateUSDPrice(networkId, price)
+          }
+        })
+        .catch(() => {
+          if (!stale) {
+            updateUSDPrice(networkId, null)
+          }
+        })
+    }
+  }, [globalBlockNumber, library, networkId, updateUSDPrice])
+
+  // update block number
+  useEffect(() => {
+    if (library) {
       let stale = false
 
       function update() {
@@ -97,16 +132,18 @@ export function Updater() {
   return null
 }
 
-export function useBetaMessageManager() {
-  const [state, { dismissBetaMessage }] = useApplicationContext()
-
-  return [safeAccess(state, [SHOW_BETA_MESSAGE]), dismissBetaMessage]
-}
-
 export function useBlockNumber() {
   const { networkId } = useWeb3Context()
 
   const [state] = useApplicationContext()
 
-  return safeAccess(state, [BLOCK_NUMBERS, networkId])
+  return safeAccess(state, [BLOCK_NUMBER, networkId])
+}
+
+export function useUSDPrice() {
+  const { networkId } = useWeb3Context()
+
+  const [state] = useApplicationContext()
+
+  return safeAccess(state, [USD_PRICE, networkId])
 }

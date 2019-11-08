@@ -1,73 +1,122 @@
-import React, { useEffect } from 'react'
+import React, { Suspense, lazy } from 'react'
+import styled from 'styled-components'
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
-import { useWeb3Context, Connectors } from 'web3-react'
+
+import Web3ReactManager from '../components/Web3ReactManager'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 
 import NavigationTabs from '../components/NavigationTabs'
-import Header from '../components/Header'
-import Swap from './Swap'
-import Send from './Send'
-import Pool from './Pool'
+import { isAddress, getAllQueryParams } from '../utils'
 
-import './App.scss'
+const Swap = lazy(() => import('./Swap'))
+const Send = lazy(() => import('./Send'))
+const Pool = lazy(() => import('./Pool'))
 
-const { Connector, InjectedConnector } = Connectors
+const AppWrapper = styled.div`
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+  height: 100vh;
+`
+
+const HeaderWrapper = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  width: 100%;
+  justify-content: space-between;
+`
+const FooterWrapper = styled.div`
+  width: 100%;
+  min-height: 30px;
+  align-self: flex-end;
+`
+
+const BodyWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  flex: 1;
+  overflow: auto;
+`
+
+const Body = styled.div`
+  max-width: 35rem;
+  width: 90%;
+  /* margin: 0 1.25rem 1.25rem 1.25rem; */
+`
 
 export default function App() {
-  const { setConnector, setError, error, active, connectorName } = useWeb3Context()
-
-  // start web3-react on page-load
-  useEffect(() => {
-    setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
-      if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-        setError(error, { connectorName: 'Injected' })
-      } else {
-        setConnector('Infura')
-      }
-    })
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  // if the metamask user logs out, set the infura provider
-  useEffect(() => {
-    if (error && error.code === InjectedConnector.errorCodes.UNLOCK_REQUIRED) {
-      setConnector('Infura')
-    }
-  }, [error, connectorName, setConnector])
-
-  // active state
-  if (active || error) {
-    return (
-      <div id="app-container">
-        <Header />
-        {/* this is an intermediate state before infura is set */}
-        {(!error || error.code === InjectedConnector.errorCodes.UNLOCK_REQUIRED) && (
-          <div className="app__wrapper">
-            <div className="body">
-              <div className="body__content">
+  const params = getAllQueryParams()
+  return (
+    <>
+      <Suspense fallback={null}>
+        <AppWrapper>
+          <HeaderWrapper>
+            <Header />
+          </HeaderWrapper>
+          <BodyWrapper>
+            <Body>
+              <Web3ReactManager>
                 <BrowserRouter>
                   <NavigationTabs />
-                  <Switch>
-                    <Route exact strict path="/swap" component={Swap} />
-                    <Route exact strict path="/send" component={Send} />
-                    <Route
-                      path={[
-                        '/add-liquidity',
-                        '/remove-liquidity',
-                        '/create-exchange',
-                        '/create-exchange/:tokenAddress?'
-                      ]}
-                      component={Pool}
-                    />
-                    <Redirect to="/swap" />
-                  </Switch>
+                  {/* this Suspense is for route code-splitting */}
+                  <Suspense fallback={null}>
+                    <Switch>
+                      <Route exact strict path="/swap" component={() => <Swap params={params} />} />
+                      <Route
+                        exact
+                        strict
+                        path="/swap/:tokenAddress?"
+                        render={({ match, location }) => {
+                          if (isAddress(match.params.tokenAddress)) {
+                            return (
+                              <Swap
+                                location={location}
+                                initialCurrency={isAddress(match.params.tokenAddress)}
+                                params={params}
+                              />
+                            )
+                          } else {
+                            return <Redirect to={{ pathname: '/swap' }} />
+                          }
+                        }}
+                      />
+                      <Route exact strict path="/send" component={() => <Send params={params} />} />
+                      <Route
+                        exact
+                        strict
+                        path="/send/:tokenAddress?"
+                        render={({ match, location }) => {
+                          if (isAddress(match.params.tokenAddress)) {
+                            return <Send initialCurrency={isAddress(match.params.tokenAddress)} params={params} />
+                          } else {
+                            return <Redirect to={{ pathname: '/send' }} />
+                          }
+                        }}
+                      />
+                      <Route
+                        path={[
+                          '/add-liquidity',
+                          '/remove-liquidity',
+                          '/create-exchange',
+                          '/create-exchange/:tokenAddress?'
+                        ]}
+                        component={() => <Pool params={params} />}
+                      />
+                      <Redirect to="/swap" />
+                    </Switch>
+                  </Suspense>
                 </BrowserRouter>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    )
-  }
-
-  // loading state
-  return null
+              </Web3ReactManager>
+            </Body>
+          </BodyWrapper>
+          <FooterWrapper>
+            <Footer />
+          </FooterWrapper>
+        </AppWrapper>
+      </Suspense>
+    </>
+  )
 }

@@ -1,10 +1,13 @@
 import { ethers } from 'ethers'
 
-import FACTORY_ABI from '../abi/factory'
-import EXCHANGE_ABI from '../abi/exchange'
-import ERC20_ABI from '../abi/erc20'
-import ERC20_WITH_BYTES_ABI from '../abi/erc20_bytes32'
-import { FACTORY_ADDRESSES } from '../constants'
+import FACTORY_ABI from '../constants/abis/factory'
+import EXCHANGE_ABI from '../constants/abis/exchange'
+import ERC20_ABI from '../constants/abis/erc20'
+import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32'
+import { FACTORY_ADDRESSES, SUPPORTED_THEMES } from '../constants'
+import { formatFixed } from '@uniswap/sdk'
+
+import UncheckedJsonRpcSigner from './signer'
 
 export const ERROR_CODES = ['TOKEN_NAME', 'TOKEN_SYMBOL', 'TOKEN_DECIMALS'].reduce(
   (accumulator, currentValue, currentIndex) => {
@@ -23,6 +26,121 @@ export function safeAccess(object, path) {
     : null
 }
 
+const ETHERSCAN_PREFIXES = {
+  1: '',
+  3: 'ropsten.',
+  4: 'rinkeby.',
+  5: 'goerli.',
+  42: 'kovan.'
+}
+
+export function getEtherscanLink(networkId, data, type) {
+  const prefix = `https://${ETHERSCAN_PREFIXES[networkId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
+
+  switch (type) {
+    case 'transaction': {
+      return `${prefix}/tx/${data}`
+    }
+    case 'address':
+    default: {
+      return `${prefix}/address/${data}`
+    }
+  }
+}
+
+export function getQueryParam(windowLocation, name) {
+  var q = windowLocation.search.match(new RegExp('[?&]' + name + '=([^&#?]*)'))
+  return q && q[1]
+}
+
+export function getAllQueryParams() {
+  let params = {}
+  params.theme = checkSupportedTheme(getQueryParam(window.location, 'theme'))
+
+  params.inputCurrency = isAddress(getQueryParam(window.location, 'inputCurrency'))
+    ? getQueryParam(window.location, 'inputCurrency')
+    : ''
+  params.outputCurrency = isAddress(getQueryParam(window.location, 'outputCurrency'))
+    ? getQueryParam(window.location, 'outputCurrency')
+    : getQueryParam(window.location, 'outputCurrency') === 'ETH'
+    ? 'ETH'
+    : ''
+  params.slippage = !isNaN(getQueryParam(window.location, 'slippage')) ? getQueryParam(window.location, 'slippage') : ''
+  params.exactField = getQueryParam(window.location, 'exactField')
+  params.exactAmount = !isNaN(getQueryParam(window.location, 'exactAmount'))
+    ? getQueryParam(window.location, 'exactAmount')
+    : ''
+  params.theme = checkSupportedTheme(getQueryParam(window.location, 'theme'))
+  params.recipient = isAddress(getQueryParam(window.location, 'recipient'))
+    ? getQueryParam(window.location, 'recipient')
+    : ''
+
+  // Add Liquidity params
+  params.ethAmount = !isNaN(getQueryParam(window.location, 'ethAmount'))
+    ? getQueryParam(window.location, 'ethAmount')
+    : ''
+  params.tokenAmount = !isNaN(getQueryParam(window.location, 'tokenAmount'))
+    ? getQueryParam(window.location, 'tokenAmount')
+    : ''
+  params.token = isAddress(getQueryParam(window.location, 'token')) ? getQueryParam(window.location, 'token') : ''
+
+  // Remove liquidity params
+  params.poolTokenAmount = !isNaN(getQueryParam(window.location, 'poolTokenAmount'))
+    ? getQueryParam(window.location, 'poolTokenAmount')
+    : ''
+  params.poolTokenAddress = isAddress(getQueryParam(window.location, 'poolTokenAddress'))
+    ? getQueryParam(window.location, 'poolTokenAddress')
+    : ''
+
+  // Create Exchange params
+  params.tokenAddress = isAddress(getQueryParam(window.location, 'tokenAddress'))
+    ? getQueryParam(window.location, 'tokenAddress')
+    : ''
+
+  return params
+}
+
+export function checkSupportedTheme(themeName) {
+  if (themeName && themeName.toUpperCase() in SUPPORTED_THEMES) {
+    return themeName.toUpperCase()
+  }
+  return null
+}
+
+export function getNetworkName(networkId) {
+  switch (networkId) {
+    case 1: {
+      return 'the Main Ethereum Network'
+    }
+    case 3: {
+      return 'the Ropsten Test Network'
+    }
+    case 4: {
+      return 'the Rinkeby Test Network'
+    }
+    case 5: {
+      return 'the Görli Test Network'
+    }
+    case 42: {
+      return 'the Kovan Test Network'
+    }
+    default: {
+      return 'the correct network'
+    }
+  }
+}
+
+export function shortenAddress(address, digits = 4) {
+  if (!isAddress(address)) {
+    throw Error(`Invalid 'address' parameter '${address}'.`)
+  }
+  return `${address.substring(0, digits + 2)}...${address.substring(42 - digits)}`
+}
+
+export function shortenTransactionHash(hash, digits = 4) {
+  return `${hash.substring(0, digits + 2)}...${hash.substring(66 - digits)}`
+}
+
 export function isAddress(value) {
   try {
     return ethers.utils.getAddress(value.toLowerCase())
@@ -38,7 +156,7 @@ export function calculateGasMargin(value, margin) {
 
 // account is optional
 export function getProviderOrSigner(library, account) {
-  return account ? library.getSigner(account) : library
+  return account ? new UncheckedJsonRpcSigner(library.getSigner(account)) : library
 }
 
 // account is optional
@@ -69,7 +187,7 @@ export async function getTokenName(tokenAddress, library) {
   return getContract(tokenAddress, ERC20_ABI, library)
     .name()
     .catch(() =>
-      getContract(tokenAddress, ERC20_WITH_BYTES_ABI, library)
+      getContract(tokenAddress, ERC20_BYTES32_ABI, library)
         .name()
         .then(bytes32 => ethers.utils.parseBytes32String(bytes32))
     )
@@ -88,7 +206,7 @@ export async function getTokenSymbol(tokenAddress, library) {
   return getContract(tokenAddress, ERC20_ABI, library)
     .symbol()
     .catch(() => {
-      const contractBytes32 = getContract(tokenAddress, ERC20_WITH_BYTES_ABI, library)
+      const contractBytes32 = getContract(tokenAddress, ERC20_BYTES32_ABI, library)
       return contractBytes32.symbol().then(bytes32 => ethers.utils.parseBytes32String(bytes32))
     })
     .catch(error => {
@@ -121,8 +239,25 @@ export async function getEtherBalance(address, library) {
   if (!isAddress(address)) {
     throw Error(`Invalid 'address' parameter '${address}'`)
   }
-
   return library.getBalance(address)
+}
+
+export function formatEthBalance(balance) {
+  return amountFormatter(balance, 18, 6)
+}
+
+export function formatTokenBalance(balance, decimal) {
+  return !!(balance && Number.isInteger(decimal)) ? amountFormatter(balance, decimal, Math.min(4, decimal)) : 0
+}
+
+export function formatToUsd(price) {
+  const format = { decimalSeparator: '.', groupSeparator: ',', groupSize: 3 }
+  const usdPrice = formatFixed(price, {
+    decimalPlaces: 2,
+    dropTrailingZeros: false,
+    format
+  })
+  return usdPrice
 }
 
 // get the token balance of an address
@@ -186,10 +321,8 @@ export function amountFormatter(amount, baseDecimals = 18, displayDecimals = 3, 
       // if there is a decimal portion
       else {
         const [wholeComponent, decimalComponent] = stringAmount.split('.')
-        const roundUpAmount = minimumDisplayAmount.div(ethers.constants.Two)
         const roundedDecimalComponent = ethers.utils
           .bigNumberify(decimalComponent.padEnd(baseDecimals, '0'))
-          .add(roundUpAmount)
           .toString()
           .padStart(baseDecimals, '0')
           .substring(0, displayDecimals)
