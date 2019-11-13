@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { useWeb3Context, Connectors } from 'web3-react'
 import { darken, transparentize } from 'polished'
 import Jazzicon from 'jazzicon'
+import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
+import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import { ethers } from 'ethers'
 import { Activity } from 'react-feather'
 
@@ -99,6 +101,16 @@ const SpinnerWrapper = styled(Spinner)`
   margin: 0 0.25rem 0 0.25rem;
 `
 
+const IconWrapper = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap};
+  align-items: center;
+  justify-content: center;
+  & > * {
+    height: ${({ size }) => (size ? size + 'px' : '32px')};
+    width: ${({ size }) => (size ? size + 'px' : '32px')};
+  }
+`
+
 const walletModalInitialState = {
   open: false,
   error: undefined
@@ -133,6 +145,7 @@ function walletModalReducer(state, { type, payload }) {
 
 export default function Web3Status() {
   const { t } = useTranslation()
+
   const { active, account, connectorName, setConnector } = useWeb3Context()
 
   const ENSName = useENSName(account)
@@ -181,10 +194,8 @@ export default function Web3Status() {
             }
           })
         }
-
         ethereum.on('networkChanged', tryToActivateInjected)
         ethereum.on('accountsChanged', tryToActivateInjected)
-
         return () => {
           if (ethereum.removeListener) {
             ethereum.removeListener('networkChanged', tryToActivateInjected)
@@ -203,7 +214,6 @@ export default function Web3Status() {
             }
           })
         }, 750)
-
         return () => {
           clearInterval(accountPoll)
         }
@@ -212,9 +222,19 @@ export default function Web3Status() {
   }, [connectorName, setConnector])
 
   function onClick() {
+    // openWalletModal()
     if (walletModalError) {
       openWalletModal()
-    } else if (connectorName === 'Network' && (window.ethereum || window.web3)) {
+    }
+    // // if they tried wallet connect but didnt scan and have web3, kick them into web3
+    // else if (connectorName === 'WalletConnect' && !account && (window.ethereum || window.web3)) {
+    //   setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
+    //     if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
+    //       setError(error)
+    //     }
+    //   })
+    // } else
+    else if (connectorName === 'Network' && (window.ethereum || window.web3)) {
       setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
         if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
           setError(error)
@@ -225,15 +245,35 @@ export default function Web3Status() {
     }
   }
 
+  function getStatusIcon() {
+    if (connectorName === 'Network' || connectorName === 'Injected') {
+      return <Identicon ref={ref} />
+    } else if (connectorName === 'WalletConnect') {
+      return (
+        <IconWrapper size={16}>
+          <img src={WalletConnectIcon} alt={''} />
+        </IconWrapper>
+      )
+    } else if (connectorName === 'WalletLink') {
+      return (
+        <IconWrapper size={16}>
+          <img src={CoinbaseWalletIcon} alt={''} />
+        </IconWrapper>
+      )
+    }
+  }
+
   const ref = useRef()
   useEffect(() => {
-    if (ref.current) {
-      ref.current.innerHTML = ''
-      if (account) {
-        ref.current.appendChild(Jazzicon(16, parseInt(account.slice(2, 10), 16)))
+    if (connectorName === 'Injected') {
+      if (ref.current) {
+        ref.current.innerHTML = ''
+        if (account) {
+          ref.current.appendChild(Jazzicon(16, parseInt(account.slice(2, 10), 16)))
+        }
       }
     }
-  }, [account, walletModalError])
+  }, [account, walletModalError, connectorName])
 
   function getWeb3Status() {
     if (walletModalError) {
@@ -247,7 +287,7 @@ export default function Web3Status() {
     } else if (!account) {
       return (
         <Web3StatusConnect onClick={onClick}>
-          <Text>{t('Connect')}</Text>
+          <Text>{t('Connect to a Wallet')}</Text>
         </Web3StatusConnect>
       )
     } else {
@@ -255,7 +295,7 @@ export default function Web3Status() {
         <Web3StatusConnected onClick={onClick} pending={hasPendingTransactions}>
           {hasPendingTransactions && <SpinnerWrapper src={Circle} alt="loader" />}
           <Text>{ENSName || shortenAddress(account)}</Text>
-          <Identicon ref={ref} />
+          {getStatusIcon()}
         </Web3StatusConnected>
       )
     }

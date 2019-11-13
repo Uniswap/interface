@@ -92,6 +92,9 @@ const theme = darkMode => ({
   uniswapPink: '#DC6BE5',
   connectedGreen: '#27AE60',
 
+  //branded
+  metaMaskOrange: '#E8831D',
+
   //specific
   textHover: darkMode ? theme.uniswapPink : theme.doveGray,
 

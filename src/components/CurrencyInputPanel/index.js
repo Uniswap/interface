@@ -409,7 +409,6 @@ export default function CurrencyInputPanel({
       {!disableTokenSelect && (
         <CurrencySelectModal
           isOpen={modalIsOpen}
-          // isOpen={true}
           onDismiss={() => {
             setModalIsOpen(false)
           }}
@@ -589,6 +588,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
       isOpen={isOpen}
       onDismiss={clearInputAndDismiss}
       minHeight={60}
+      maxHeight={50}
       initialFocusRef={isMobile ? undefined : inputRef}
     >
       <TokenModal>

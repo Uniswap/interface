@@ -42,6 +42,7 @@ function tryToSetConnector(setConnector, setError) {
 export default function Web3ReactManager({ children }) {
   const { t } = useTranslation()
   const { active, error, setConnector, setError } = useWeb3Context()
+
   // control whether or not we render the error, after parsing
   const blockRender = error && error.code && error.code === Connector.errorCodes.UNSUPPORTED_NETWORK
 
@@ -73,7 +74,7 @@ export default function Web3ReactManager({ children }) {
   // parse the error
   useEffect(() => {
     if (error) {
-      // if the user changes to the wrong network, unset the connector
+      // if the user changes to the wrong network or denies access, unset the connector
       if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
         setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
           setError(error)

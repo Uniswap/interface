@@ -19,7 +19,7 @@ const StyledDialogOverlay = styled(WrappedDialogOverlay).attrs({
   }
 `
 
-const FilteredDialogContent = ({ minHeight, ...rest }) => <DialogContent {...rest} />
+const FilteredDialogContent = ({ minHeight, maxHeight, ...rest }) => <DialogContent {...rest} />
 const StyledDialogContent = styled(FilteredDialogContent)`
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
@@ -32,7 +32,11 @@ const StyledDialogContent = styled(FilteredDialogContent)`
     max-width: 650px;
     ${({ theme }) => theme.mediaWidth.upToMedium`width: 65vw;`}
     ${({ theme }) => theme.mediaWidth.upToSmall`width: 85vw;`}
-    max-height: 50vh;
+    ${({ maxHeight }) =>
+      maxHeight &&
+      css`
+        max-height: ${maxHeight}vh;
+      `}
     ${({ minHeight }) =>
       minHeight &&
       css`
@@ -54,7 +58,7 @@ const HiddenCloseButton = styled.button`
   border: none;
 `
 
-export default function Modal({ isOpen, onDismiss, minHeight = false, initialFocusRef, children }) {
+export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight = 50, initialFocusRef, children }) {
   const transitions = useTransition(isOpen, null, {
     config: { duration: 150 },
     from: { opacity: 0 },
@@ -66,7 +70,7 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, initialFoc
     ({ item, key, props }) =>
       item && (
         <StyledDialogOverlay key={key} style={props} onDismiss={onDismiss} initialFocusRef={initialFocusRef}>
-          <StyledDialogContent hidden={true} minHeight={minHeight}>
+          <StyledDialogContent hidden={true} minHeight={minHeight} maxHeight={maxHeight}>
             <HiddenCloseButton onClick={onDismiss} />
             {children}
           </StyledDialogContent>
