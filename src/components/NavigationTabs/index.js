@@ -222,7 +222,7 @@ function NavigationTabs({ location: { pathname }, history }) {
         </DaiMessage>
       )}
       {showGeneralDaiMessage && daiBalanceFormatted > 0 && (
-        <DaiMessage onClick={dismissGeneralDaiMessage}>
+        <DaiMessage>
           <CloseIcon onClick={dismissSaiHolderMessage}>✕</CloseIcon>
           <WarningHeader>DAI has upgraded!</WarningHeader>
           <div>
