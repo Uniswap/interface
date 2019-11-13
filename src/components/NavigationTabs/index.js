@@ -200,7 +200,7 @@ function NavigationTabs({ location: { pathname }, history }) {
           </StyledNavLink>
         ))}
       </Tabs>
-      {showSaiHolderMessage && (daiBalanceFormatted > 0 || daiPoolTokenBalanceFormatted > 0) && onLiquidityPage && (
+      {showSaiHolderMessage && daiPoolTokenBalanceFormatted > 0 && onLiquidityPage && (
         <DaiMessage>
           <CloseIcon onClick={dismissSaiHolderMessage}>✕</CloseIcon>
           <WarningHeader>Missing your DAI?</WarningHeader>
@@ -221,7 +221,7 @@ function NavigationTabs({ location: { pathname }, history }) {
           </WarningFooter>
         </DaiMessage>
       )}
-      {showGeneralDaiMessage && (
+      {showGeneralDaiMessage && daiBalanceFormatted > 0 && (
         <DaiMessage onClick={dismissGeneralDaiMessage}>
           <CloseIcon onClick={dismissSaiHolderMessage}>✕</CloseIcon>
           <WarningHeader>DAI has upgraded!</WarningHeader>
