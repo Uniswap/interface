@@ -4,8 +4,17 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { transparentize, darken } from 'polished'
 
+import { Link } from '../../theme/components'
+
 import { useBodyKeyDown } from '../../hooks'
-import { useBetaMessageManager } from '../../contexts/LocalStorage'
+import { useAddressBalance } from '../../contexts/Balances'
+import { amountFormatter } from '../../utils'
+import {
+  useBetaMessageManager,
+  useSaiHolderMessageManager,
+  useGeneralDaiMessageManager
+} from '../../contexts/LocalStorage'
+import { useWeb3Context } from 'web3-react'
 
 const tabOrder = [
   {
@@ -36,7 +45,7 @@ const BetaMessage = styled.div`
   margin-bottom: 1rem;
   border: 1px solid ${({ theme }) => transparentize(0.6, theme.wisteriaPurple)};
   background-color: ${({ theme }) => transparentize(0.9, theme.wisteriaPurple)};
-  border-radius: 2rem;
+  border-radius: 1rem;
   font-size: 0.75rem;
   line-height: 1rem;
   text-align: left;
@@ -52,6 +61,49 @@ const BetaMessage = styled.div`
     position: absolute;
     color: ${({ theme }) => theme.wisteriaPurple};
   }
+`
+
+const DaiMessage = styled(BetaMessage)`
+  ${({ theme }) => theme.flexColumnNoWrap}
+  position: relative;
+  word-wrap: wrap;
+  overflow: visible;
+  white-space: normal;
+  padding: 1rem 1rem;
+  padding-right: 2rem;
+  line-height: 1.2rem;
+  cursor: default;
+  color: ${({ theme }) => theme.textColor};
+  div {
+    width: 100%;
+  }
+  &:after {
+    content: '';
+  }
+`
+
+const CloseIcon = styled.div`
+  width: 10px !important;
+  top: 0.5rem;
+  right: 1rem;
+  position: absolute;
+  color: ${({ theme }) => theme.wisteriaPurple};
+  :hover {
+    cursor: pointer;
+  }
+`
+
+const WarningHeader = styled.div`
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.uniswapPink};
+`
+
+const WarningFooter = styled.div`
+  margin-top: 10px;
+  font-size: 10px;
+  textdecoration: italic;
+  color: ${({ theme }) => theme.greyText};
 `
 
 const Tabs = styled.div`
@@ -108,6 +160,20 @@ function NavigationTabs({ location: { pathname }, history }) {
 
   const [showBetaMessage, dismissBetaMessage] = useBetaMessageManager()
 
+  const [showGeneralDaiMessage, dismissGeneralDaiMessage] = useGeneralDaiMessageManager()
+
+  const [showSaiHolderMessage, dismissSaiHolderMessage] = useSaiHolderMessageManager()
+
+  const { account } = useWeb3Context()
+
+  const daiBalance = useAddressBalance(account, '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359')
+  const daiBalanceFormatted = !!daiBalance ? amountFormatter(daiBalance, 18) : ''
+
+  const daiPoolTokenBalance = useAddressBalance(account, '0x09cabec1ead1c0ba254b09efb3ee13841712be14')
+  const daiPoolTokenBalanceFormatted = !!daiPoolTokenBalance ? amountFormatter(daiPoolTokenBalance, 18) : ''
+
+  const onLiquidityPage = pathname === '/pool' || pathname === '/add-liquidity' || pathname === '/remove-liquidity'
+
   const navigate = useCallback(
     direction => {
       const tabIndex = tabOrder.findIndex(({ regex }) => pathname.match(regex))
@@ -134,6 +200,36 @@ function NavigationTabs({ location: { pathname }, history }) {
           </StyledNavLink>
         ))}
       </Tabs>
+      {showSaiHolderMessage && (daiBalanceFormatted > 0 || daiPoolTokenBalanceFormatted > 0) && onLiquidityPage && (
+        <DaiMessage>
+          <CloseIcon onClick={dismissSaiHolderMessage}>✕</CloseIcon>
+          <WarningHeader>Missing your DAI?</WarningHeader>
+          <div>
+            Don’t worry, check the{' '}
+            <Link href={'/remove-liquidity?poolTokenAddress=0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'}>
+              SAI liquidity pool.
+            </Link>{' '}
+            Your old DAI is now SAI. If you want to migrate,{' '}
+            <Link href="/remove-liquidity?poolTokenAddress=0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359">
+              remove your SAI liquidity,
+            </Link>{' '}
+            migrate using the <Link href="">migration tool</Link> then add your migrated DAI to the{' '}
+            <Link href="">new DAI liquidity pool.</Link>
+          </div>
+          <WarningFooter>
+            <Link href="">Read more</Link> about this change on the official Maker blog.
+          </WarningFooter>
+        </DaiMessage>
+      )}
+      {showGeneralDaiMessage && (
+        <DaiMessage onClick={dismissGeneralDaiMessage}>
+          <CloseIcon onClick={dismissSaiHolderMessage}>✕</CloseIcon>
+          <WarningHeader>DAI has upgraded!</WarningHeader>
+          <div>
+            Your old DAI is now SAI. To upgrade use the <Link href="">migration tool.</Link>
+          </div>
+        </DaiMessage>
+      )}
       {showBetaMessage && (
         <BetaMessage onClick={dismissBetaMessage}>
           <span role="img" aria-label="warning">

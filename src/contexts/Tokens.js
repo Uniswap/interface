@@ -84,8 +84,8 @@ const INITIAL_TOKENS_CONTEXT = {
       [EXCHANGE_ADDRESS]: '0x1C6c712b1F4a7c263B1DBd8F97fb447c945d3b9a'
     },
     '0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359': {
-      [NAME]: 'Dai Stablecoin v1.0',
-      [SYMBOL]: 'DAI',
+      [NAME]: 'Dai Stablecoin v1.0 (SAI)',
+      [SYMBOL]: 'SAI',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x09cabEC1eAd1c0Ba254B09efb3EE13841712bE14'
     },
