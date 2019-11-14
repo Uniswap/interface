@@ -191,6 +191,9 @@ function NavigationTabs({ location: { pathname }, history }) {
   useBodyKeyDown('ArrowRight', navigateRight)
   useBodyKeyDown('ArrowLeft', navigateLeft)
 
+  const providerMessage = showSaiHolderMessage && daiPoolTokenBalanceFormatted > 0 && onLiquidityPage
+  const generalMessage = showGeneralDaiMessage && daiBalanceFormatted > 0
+
   return (
     <>
       <Tabs>
@@ -200,7 +203,7 @@ function NavigationTabs({ location: { pathname }, history }) {
           </StyledNavLink>
         ))}
       </Tabs>
-      {showSaiHolderMessage && daiPoolTokenBalanceFormatted > 0 && onLiquidityPage && (
+      {providerMessage && (
         <DaiMessage>
           <CloseIcon onClick={dismissSaiHolderMessage}>✕</CloseIcon>
           <WarningHeader>Missing your DAI?</WarningHeader>
@@ -221,9 +224,9 @@ function NavigationTabs({ location: { pathname }, history }) {
           </WarningFooter>
         </DaiMessage>
       )}
-      {showGeneralDaiMessage && daiBalanceFormatted > 0 && (
+      {generalMessage && !providerMessage && (
         <DaiMessage>
-          <CloseIcon onClick={dismissSaiHolderMessage}>✕</CloseIcon>
+          <CloseIcon onClick={dismissGeneralDaiMessage}>✕</CloseIcon>
           <WarningHeader>DAI has upgraded!</WarningHeader>
           <div>
             Your old DAI is now SAI. To upgrade use the <Link href="">migration tool.</Link>
