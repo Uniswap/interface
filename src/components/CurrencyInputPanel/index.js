@@ -224,7 +224,10 @@ const TokenModalRow = styled.div`
     background-color: ${({ theme }) => theme.tokenRowHover};
   }
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0.8rem 1rem;`}
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 0.8rem 1rem;
+    padding-right: 2rem;
+  `}
 `
 
 const TokenRowLeft = styled.div`

@@ -508,7 +508,6 @@ export default function WalletModal({ isOpen, error, onDismiss, pendingTransacti
       </UpperSection>
     )
   }
-
   function getWalletDisplay() {
     if (isMobile && (!web3 && !ethereum)) {
       return (
