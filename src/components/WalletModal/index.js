@@ -11,10 +11,9 @@ import Modal from '../Modal'
 
 import { getEtherscanLink } from '../../utils'
 import { Link } from '../../theme'
-import { SUPPORTED_WALLETS } from '../../constants'
+import { SUPPORTED_WALLETS, MOBILE_DEEP_LINKS } from '../../constants'
 
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
-import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 
@@ -35,11 +34,11 @@ const CloseColor = styled(Close)`
 `
 
 const Wrapper = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap}
   margin: 0;
   padding: 0;
   width: 100%;
   background-color: ${({ theme }) => theme.backgroundColor};
-  ${({ theme }) => theme.flexColumnNoWrap}
 `
 
 const OptionButton = styled.div`
@@ -132,7 +131,7 @@ const QRSection = styled.div`
   }
 `
 
-const CodeWrapper = styled.div`
+const QRCodeWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: center;
@@ -192,6 +191,12 @@ const OptionCard = styled(InfoCard)`
   `};
 `
 
+const OptionCardLeft = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap};
+  height: 100%;
+  justify-content: space-between;
+`
+
 const OptionCardClickable = styled(OptionCard)`
   margin-top: 0;
   margin-bottom: 1rem;
@@ -216,12 +221,6 @@ const SubHeader = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     font-size: 10px;
   `};
-`
-
-const OptionCardLeft = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap};
-  height: 100%;
-  justify-content: space-between;
 `
 
 const IconWrapper = styled.div`
@@ -280,13 +279,7 @@ const AccountControl = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   min-width: 0;
-  
-  ${({ hasENS, isENS }) =>
-    hasENS &&
-    isENS &&
-    css`
-      margin-bottom: 0.75rem;
-    `}
+
   font-weight: ${({ hasENS, isENS }) => (hasENS ? (isENS ? css`500` : css`400`) : css`500`)};
   font-size: ${({ hasENS, isENS }) => (hasENS ? (isENS ? css`1rem` : css`0.8rem`) : css`1rem`)};
 
@@ -307,11 +300,6 @@ const ConnectButtonRow = styled.div`
   align-items: center;
   justify-content: center;
   margin: 30px;
-
-  &:hover {
-    cursor: pointer;
-    color: purple;
-  }
 `
 
 const Blurb = styled.div`
@@ -339,15 +327,7 @@ const WALLET_VIEWS = {
   WALLET_CONNECT: 'walletConnect'
 }
 
-export default function WalletModal({
-  isOpen,
-  error,
-  onDismiss,
-  openWalletModal,
-  pendingTransactions,
-  confirmedTransactions,
-  ENSName
-}) {
+export default function WalletModal({ isOpen, error, onDismiss, pendingTransactions, confirmedTransactions, ENSName }) {
   const { account, networkId, setConnector, setError, connectorName, connector } = useWeb3Context()
 
   const { web3, ethereum } = window
@@ -366,26 +346,22 @@ export default function WalletModal({
     )
   }
 
+  function wrappedOnDismiss() {
+    onDismiss()
+  }
+
   function formatConnectorName() {
     let name = ''
     Object.keys(SUPPORTED_WALLETS).map(key => {
       if (SUPPORTED_WALLETS[key].id === connectorName) {
-        if (SUPPORTED_WALLETS[key].name === 'Injected' && ethereum.isMetaMask) {
-          name = 'Metamask'
-        } else {
-          name = SUPPORTED_WALLETS[key].name
-        }
+        name = SUPPORTED_WALLETS[key].name
       }
       return true
     })
     return name
   }
 
-  function wrappedOnDismiss() {
-    onDismiss()
-  }
-
-  //overwrite with Metamask styles
+  //overwrite default with Metamask styles
   useEffect(() => {
     if (ethereum && ethereum.isMetaMask) {
       SUPPORTED_WALLETS.INJECTED.name = 'MetaMask'
@@ -397,10 +373,12 @@ export default function WalletModal({
 
   // always reset to account view
   useEffect(() => {
-    setWalletView(WALLET_VIEWS.ACCOUNT)
+    if (isOpen) {
+      setWalletView(WALLET_VIEWS.ACCOUNT)
+    }
   }, [isOpen])
 
-  // after setting new connector, updates views
+  // when new connector, check for logins or scanning
   useEffect(() => {
     if (connectorName === 'WalletConnect') {
       setUri(connector.walletConnector.uri)
@@ -409,22 +387,20 @@ export default function WalletModal({
         connector.walletConnector.on('connect', error => {
           if (error) {
             setError(error)
-          } else {
-            setWalletView(WALLET_VIEWS.ACCOUNT)
           }
         })
-      } else {
-        setWalletView(WALLET_VIEWS.ACCOUNT)
       }
-    } else {
+    }
+    if (account) {
       setWalletView(WALLET_VIEWS.ACCOUNT)
     }
   }, [connector, connectorName, setError, account])
 
+  // set new connector or open scanner again
   function tryConnection(newWalletName) {
     if (connectorName !== newWalletName) {
       setConnector(newWalletName, { suppressAndThrowErrors: true }).catch(error => {
-        wrappedOnDismiss()
+        wrappedOnDismiss() // leave unset
       })
     } else {
       // tried wallet connect before but didn't scan yet
@@ -434,24 +410,25 @@ export default function WalletModal({
     }
   }
 
-  function getWalletOptions() {
+  // get wallets user can switch too, depending on device/browser
+  function getAdditionalOptions() {
     return Object.keys(SUPPORTED_WALLETS).map(key => {
       const option = SUPPORTED_WALLETS[key]
       return (
         connectorName !== option.id &&
-        !option.mobileOnly &&
         (option.id !== 'Injected' || (option.id === 'Injected' && (web3 || ethereum))) && (
           <WalletOption
             key={key}
             color={option.color}
             onClick={() => {
               if (option.id !== 'WalletConnect') {
+                // for anything going to a logic/scan screen
                 setWalletView(WALLET_VIEWS.ACCOUNT)
               }
               tryConnection(option.id)
             }}
           >
-            {option.name === 'Injected' && ethereum && ethereum.isMetaMask ? 'MetaMask' : option.name}
+            {option.name}
             <IconWrapper size={24}>
               <img src={require('../../assets/images/' + option.iconName)} alt={'Icon'} />
             </IconWrapper>
@@ -461,10 +438,11 @@ export default function WalletModal({
     })
   }
 
+  // only deep links (until other types are supported)
   function getMobileWalletOptions() {
-    return Object.keys(SUPPORTED_WALLETS).map(key => {
-      const option = SUPPORTED_WALLETS[key]
-      return isMobile && !web3 && !ethereum && option.mobileOnly ? (
+    return Object.keys(MOBILE_DEEP_LINKS).map(key => {
+      const option = MOBILE_DEEP_LINKS[key]
+      return (
         <Link href={option.href}>
           <OptionCardClickable>
             <OptionCardLeft>
@@ -476,9 +454,47 @@ export default function WalletModal({
             </IconWrapper>
           </OptionCardClickable>
         </Link>
-      ) : (
-        ''
       )
+    })
+  }
+
+  // get options when user is logged out
+  function getLoggedOutOptions() {
+    return Object.keys(SUPPORTED_WALLETS).map(key => {
+      const option = SUPPORTED_WALLETS[key]
+      if (key === 'INJECTED' && !web3 && !ethereum) {
+        return (
+          <OptionCardClickable key={key}>
+            <OptionCardLeft>
+              <HeaderText color={'#E8831D'}>Install Metamask</HeaderText>
+              <SubHeader>
+                Easy to use browser extension.
+                <Link href={'https://metamask.io/'}> Download.</Link>
+              </SubHeader>
+            </OptionCardLeft>
+            <IconWrapper>
+              <img src={MetamaskIcon} alt={'Icon'} />
+            </IconWrapper>
+          </OptionCardClickable>
+        )
+      } else {
+        return (
+          <OptionCardClickable
+            onClick={() => {
+              tryConnection(option.id)
+            }}
+            key={key}
+          >
+            <OptionCardLeft>
+              <HeaderText color={option.color}>{option.name}</HeaderText>
+              <SubHeader>{option.description}</SubHeader>
+            </OptionCardLeft>
+            <IconWrapper>
+              <img src={require('../../assets/images/' + option.iconName)} alt={'Icon'} />
+            </IconWrapper>
+          </OptionCardClickable>
+        )
+      }
     })
   }
 
@@ -501,21 +517,22 @@ export default function WalletModal({
           <OptionsSection>
             {getMobileWalletOptions()}
             <Blurb>
-              <span>New to Ethereum? &nbsp;</span> <Link>Learn more about wallets</Link>
+              <span>New to Ethereum? &nbsp;</span>{' '}
+              <Link href="https://ethereum.org/use/#3-what-is-a-wallet-and-which-one-should-i-use">
+                Learn more about wallets
+              </Link>
             </Blurb>
           </OptionsSection>
         </UpperSectionCloseable>
       )
     } else if (error) {
       return (
-        <>
-          <UpperSectionCloseable>
-            <HeaderRow>Wrong Network</HeaderRow>
-            <OptionsSection>
-              <h5>Please connect to the main Ethereum network.</h5>
-            </OptionsSection>
-          </UpperSectionCloseable>
-        </>
+        <UpperSectionCloseable>
+          <HeaderRow>Wrong Network</HeaderRow>
+          <OptionsSection>
+            <h5>Please connect to the main Ethereum network.</h5>
+          </OptionsSection>
+        </UpperSectionCloseable>
       )
     } else if (walletView === WALLET_VIEWS.WALLET_CONNECT) {
       return (
@@ -531,7 +548,7 @@ export default function WalletModal({
           <OptionsSection>
             <QRSection>
               <h5>Scan QR code with a compatible wallet</h5>
-              <CodeWrapper>{uri && <QRCode size={220} value={uri} />}</CodeWrapper>
+              <QRCodeWrapper>{uri && <QRCode size={220} value={uri} />}</QRCodeWrapper>
               <OptionCard>
                 <OptionCardLeft>
                   <HeaderText color="4196FC">Connect with Wallet Connect</HeaderText>
@@ -553,19 +570,6 @@ export default function WalletModal({
             <AccountSection>
               <YourAccount>
                 <InfoCard>
-                  {ENSName && (
-                    <AccountControl hasENS={!!ENSName} isENS={true}>
-                      <StyledLink
-                        hasENS={!!ENSName}
-                        isENS={true}
-                        href={getEtherscanLink(networkId, ENSName, 'address')}
-                      >
-                        {ENSName} ↗{' '}
-                      </StyledLink>
-
-                      <Copy toCopy={ENSName} />
-                    </AccountControl>
-                  )}
                   <AccountGroupingRow>
                     {formatConnectorName()}
                     <div>
@@ -576,22 +580,33 @@ export default function WalletModal({
                     </div>
                   </AccountGroupingRow>
                   <AccountGroupingRow>
-                    <AccountControl hasENS={!!ENSName} isENS={false}>
-                      <StyledLink
-                        hasENS={!!ENSName}
-                        isENS={false}
-                        href={getEtherscanLink(networkId, account, 'address')}
-                      >
-                        {account} ↗{' '}
-                      </StyledLink>
-                      <Copy toCopy={account} />
-                    </AccountControl>
+                    {ENSName ? (
+                      <AccountControl hasENS={!!ENSName} isENS={true}>
+                        <StyledLink
+                          hasENS={!!ENSName}
+                          isENS={true}
+                          href={getEtherscanLink(networkId, ENSName, 'address')}
+                        >
+                          {ENSName} ↗{' '}
+                        </StyledLink>
+                        <Copy toCopy={ENSName} />
+                      </AccountControl>
+                    ) : (
+                      <AccountControl hasENS={!!ENSName} isENS={false}>
+                        <StyledLink
+                          hasENS={!!ENSName}
+                          isENS={false}
+                          href={getEtherscanLink(networkId, account, 'address')}
+                        >
+                          {account} ↗{' '}
+                        </StyledLink>
+                        <Copy toCopy={account} />
+                      </AccountControl>
+                    )}
                   </AccountGroupingRow>
                 </InfoCard>
               </YourAccount>
-              {isMobile ? (
-                ''
-              ) : (
+              {!isMobile && (
                 <ConnectButtonRow>
                   <OptionButton
                     onClick={() => {
@@ -622,9 +637,12 @@ export default function WalletModal({
         <UpperSectionCloseable>
           <HeaderRow>Connect A Wallet</HeaderRow>
           <OptionsSection>
-            <WalletGrid>{getWalletOptions()}</WalletGrid>
+            <WalletGrid>{getAdditionalOptions()}</WalletGrid>
             <Blurb>
-              <span>New to Ethereum? &nbsp;</span> <Link>Learn more about wallets</Link>
+              <span>New to Ethereum? &nbsp;</span>{' '}
+              <Link href="https://ethereum.org/use/#3-what-is-a-wallet-and-which-one-should-i-use">
+                Learn more about wallets
+              </Link>
             </Blurb>
           </OptionsSection>
         </UpperSectionCloseable>
@@ -634,58 +652,12 @@ export default function WalletModal({
         <UpperSectionCloseable>
           <HeaderRow>Connect To A Wallet</HeaderRow>
           <OptionsSection>
-            {web3 || ethereum ? (
-              <OptionCardClickable onClick={() => tryConnection('Injected')}>
-                <OptionCardLeft>
-                  <HeaderText color={SUPPORTED_WALLETS.INJECTED.color}>{SUPPORTED_WALLETS.INJECTED.name}</HeaderText>
-                  <SubHeader>{SUPPORTED_WALLETS.INJECTED.description}</SubHeader>
-                </OptionCardLeft>
-                <IconWrapper>
-                  {<img src={require('../../assets/images/' + SUPPORTED_WALLETS.INJECTED.iconName)} alt={'Icon'} />}
-                </IconWrapper>
-              </OptionCardClickable>
-            ) : (
-              <OptionCardClickable>
-                <OptionCardLeft>
-                  <HeaderText color={'#E8831D'}>Install Metamask</HeaderText>
-                  <SubHeader>
-                    Easy to use browser extension.
-                    <Link href={'https://metamask.io/'}> Download.</Link>
-                  </SubHeader>
-                </OptionCardLeft>
-                <IconWrapper>
-                  <img src={MetamaskIcon} alt={'Icon'} />
-                </IconWrapper>
-              </OptionCardClickable>
-            )}
-            <OptionCardClickable
-              onClick={() => {
-                tryConnection('WalletConnect')
-              }}
-            >
-              <OptionCardLeft>
-                <HeaderText color="blue">Connect Using WalletConnect</HeaderText>
-                <SubHeader>Connect to Trust Wallet, Rainbow Wallet and more...</SubHeader>
-              </OptionCardLeft>
-              <IconWrapper>
-                <img src={WalletConnectIcon} alt={'Icon'} />
-              </IconWrapper>
-            </OptionCardClickable>
-            <OptionCardClickable
-              onClick={() => {
-                tryConnection('WalletLink')
-              }}
-            >
-              <OptionCardLeft>
-                <HeaderText color="blue">Connect Using Coinbase Wallet</HeaderText>
-                <SubHeader>Use Coinbase Wallet app on mobile device</SubHeader>
-              </OptionCardLeft>
-              <IconWrapper>
-                <img src={CoinbaseWalletIcon} alt={'Icon'} />
-              </IconWrapper>
-            </OptionCardClickable>
+            {getLoggedOutOptions()}
             <Blurb>
-              <span>New to Ethereum? &nbsp;</span> <Link>Learn more about wallets</Link>
+              <span>New to Ethereum? &nbsp;</span>{' '}
+              <Link href="https://ethereum.org/use/#3-what-is-a-wallet-and-which-one-should-i-use">
+                Learn more about wallets
+              </Link>
             </Blurb>
           </OptionsSection>
         </UpperSectionCloseable>

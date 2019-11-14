@@ -28,23 +28,18 @@ if (process.env.NODE_ENV === 'production') {
 }
 ReactGA.pageview(window.location.pathname + window.location.search)
 
-const Network = new NetworkOnlyConnector({ providerURL: process.env.REACT_APP_NETWORK_URL || '' })
-const Injected = new InjectedConnector({ supportedNetworks: [Number(process.env.REACT_APP_NETWORK_ID || '1')] })
-
 const supportedNetworkURLs = {
   1: 'https://mainnet.infura.io/v3/60ab76e16df54c808e50a79975b4779f',
   4: 'https://rinkeby.infura.io/v3/60ab76e16df54c808e50a79975b4779f'
 }
-
 const WALLET_CONNECT_BRIDGE = 'https://bridge.walletconnect.org'
+
+const Network = new NetworkOnlyConnector({ providerURL: process.env.REACT_APP_NETWORK_URL || '' })
+const Injected = new InjectedConnector({ supportedNetworks: [Number(process.env.REACT_APP_NETWORK_ID || '1')] })
+const WalletLink = new WalletLinkConnector()
 const WalletConnect = new WalletConnectConnector({
   api: WalletConnectApi,
   bridge: WALLET_CONNECT_BRIDGE,
-  supportedNetworkURLs: supportedNetworkURLs,
-  defaultNetwork: 1
-})
-
-const WalletLink = new WalletLinkConnector({
   supportedNetworkURLs: supportedNetworkURLs,
   defaultNetwork: 1
 })

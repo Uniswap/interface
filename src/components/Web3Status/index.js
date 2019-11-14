@@ -175,7 +175,7 @@ export default function Web3Status() {
     // if the injected connector is not active...
     const { ethereum } = window
     if (connectorName !== 'Injected') {
-      if (connectorName === 'Network' && ethereum && ethereum.on && ethereum.removeListener) {
+      if (ethereum && ethereum.on && ethereum.removeListener) {
         function tryToActivateInjected() {
           const library = new ethers.providers.Web3Provider(window.ethereum)
           // if calling enable won't pop an approve modal, then try to activate injected...
@@ -222,19 +222,9 @@ export default function Web3Status() {
   }, [connectorName, setConnector])
 
   function onClick() {
-    // openWalletModal()
     if (walletModalError) {
       openWalletModal()
-    }
-    // // if they tried wallet connect but didnt scan and have web3, kick them into web3
-    // else if (connectorName === 'WalletConnect' && !account && (window.ethereum || window.web3)) {
-    //   setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
-    //     if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-    //       setError(error)
-    //     }
-    //   })
-    // } else
-    else if (connectorName === 'Network' && (window.ethereum || window.web3)) {
+    } else if (connectorName === 'Network' && (window.ethereum || window.web3)) {
       setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
         if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
           setError(error)

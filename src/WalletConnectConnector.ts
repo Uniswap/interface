@@ -72,8 +72,11 @@ export default class WalletConnectConnector extends ErrorCodeMixin(Connector, In
     this.engine = engine
     engine.addProvider(this.walletConnectSubprovider)
     engine.addProvider(new RPCSubprovider(this.supportedNetworkURLs[networkIdToUse]))
+    /**
+     * @TODO - determine if this if we need/can turn this off
+     *  - keeping this file for easy updates
+     */
     engine.start()
-
     return engine
   }
 
@@ -86,7 +89,9 @@ export default class WalletConnectConnector extends ErrorCodeMixin(Connector, In
   }
 
   public onDeactivation(): void {
-    // TODO remove listeners here once exposed in walletconnect
+    /**
+     *  @TODO - remove listeners here once exposed in walletconnect
+     */
     if (this.engine) {
       this.engine.stop()
     }
