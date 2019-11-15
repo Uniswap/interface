@@ -8,7 +8,7 @@ import { Link } from '../../theme/components'
 
 import { useBodyKeyDown } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
-import { amountFormatter, isAddress } from '../../utils'
+import { isAddress } from '../../utils'
 import {
   useBetaMessageManager,
   useSaiHolderMessageManager,
