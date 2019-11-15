@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 import { animated, useTransition } from 'react-spring'
 import { DialogOverlay, DialogContent } from '@reach/dialog'
 import { isMobile } from 'react-device-detect'
 import '@reach/dialog/styles.css'
 import { transparentize } from 'polished'
+import posed from 'react-pose'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 const WrappedDialogOverlay = ({ suppressClassNameWarning, mobile, ...rest }) => <AnimatedDialogOverlay {...rest} />
@@ -39,20 +40,15 @@ const StyledDialogOverlay = styled(WrappedDialogOverlay).attrs({
 `
 const topToBottom = keyframes`
   0% {
-    transform: translateY(200px);
+    transform: translateY(0px);
   }
   100% {
-    transform: translateY(0px);
+    transform: translateY(200px);
   }
 `
 
 const bottomToTop = keyframes`
-  0% {
-    transform: translateY(0px);
-  }
-  100% {
-    transform: translateY(200px);
-  }
+
 `
 
 const FilteredDialogContent = ({ minHeight, maxHeight, isOpen, slideInAnimation, mobile, ...rest }) => (
@@ -102,6 +98,8 @@ const StyledDialogContent = styled(FilteredDialogContent)`
           `}
         `}
     `}
+
+    padding-bottom: 400px;
   }
 `
 
@@ -113,6 +111,22 @@ const HiddenCloseButton = styled.button`
   border: none;
 `
 
+const Box = posed.div({
+  draggable: 'y',
+  init: { scale: 1 },
+  drag: { scale: 1 },
+  dragBounds: { top: 0 },
+  dragEnd: {
+    x: 0,
+    y: 0,
+    transition: { type: 'spring' }
+  }
+})
+
+const StyledBox = styled(Box)`
+  // height: 500px;
+`
+
 export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight = 50, initialFocusRef, children }) {
   const transitions = useTransition(isOpen, null, {
     config: { duration: 150 },
@@ -120,6 +134,12 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight 
     enter: { opacity: 1 },
     leave: { opacity: 0 }
   })
+
+  function print(y) {
+    if (y > 400) {
+      onDismiss()
+    }
+  }
 
   return transitions.map(
     ({ item, key, props }) =>
@@ -131,16 +151,18 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight 
           initialFocusRef={initialFocusRef}
           mobile={isMobile}
         >
-          <StyledDialogContent
-            hidden={true}
-            minHeight={minHeight}
-            maxHeight={maxHeight}
-            isOpen={isOpen}
-            mobile={isMobile}
-          >
-            <HiddenCloseButton onClick={onDismiss} />
-            {children}
-          </StyledDialogContent>
+          <StyledBox onValueChange={{ y: y => print(y) }}>
+            <StyledDialogContent
+              hidden={true}
+              minHeight={minHeight}
+              maxHeight={maxHeight}
+              isOpen={isOpen}
+              mobile={isMobile}
+            >
+              <HiddenCloseButton onClick={onDismiss} />
+              {children}
+            </StyledDialogContent>
+          </StyledBox>
         </StyledDialogOverlay>
       )
   )

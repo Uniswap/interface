@@ -28,6 +28,7 @@
     "react-feather": "^1.1.6",
     "react-ga": "^2.5.7",
     "react-i18next": "^10.7.0",
+    "react-pose": "^4.0.10",
     "react-router-dom": "^5.0.0",
     "react-scripts": "^3.0.1",
     "react-spring": "^8.0.20",
