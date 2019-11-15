@@ -8,7 +8,7 @@ import { Link } from '../../theme/components'
 
 import { useBodyKeyDown } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
-import { amountFormatter } from '../../utils'
+import { amountFormatter, isAddress } from '../../utils'
 import {
   useBetaMessageManager,
   useSaiHolderMessageManager,
@@ -166,11 +166,9 @@ function NavigationTabs({ location: { pathname }, history }) {
 
   const { account } = useWeb3Context()
 
-  const daiBalance = useAddressBalance(account, '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359')
-  const daiBalanceFormatted = !!daiBalance ? amountFormatter(daiBalance, 18) : ''
+  const daiBalance = useAddressBalance(account, isAddress('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'))
 
-  const daiPoolTokenBalance = useAddressBalance(account, '0x09cabec1ead1c0ba254b09efb3ee13841712be14')
-  const daiPoolTokenBalanceFormatted = !!daiPoolTokenBalance ? amountFormatter(daiPoolTokenBalance, 18) : ''
+  const daiPoolTokenBalance = useAddressBalance(account, isAddress('0x09cabec1ead1c0ba254b09efb3ee13841712be14'))
 
   const onLiquidityPage = pathname === '/pool' || pathname === '/add-liquidity' || pathname === '/remove-liquidity'
 
@@ -191,8 +189,9 @@ function NavigationTabs({ location: { pathname }, history }) {
   useBodyKeyDown('ArrowRight', navigateRight)
   useBodyKeyDown('ArrowLeft', navigateLeft)
 
-  const providerMessage = showSaiHolderMessage && daiPoolTokenBalanceFormatted > 0 && onLiquidityPage
-  const generalMessage = showGeneralDaiMessage && daiBalanceFormatted > 0
+  const providerMessage =
+    showSaiHolderMessage && daiPoolTokenBalance && !daiPoolTokenBalance.isZero() && onLiquidityPage
+  const generalMessage = showGeneralDaiMessage && daiBalance && !daiBalance.isZero()
 
   return (
     <>
@@ -218,7 +217,7 @@ function NavigationTabs({ location: { pathname }, history }) {
             </Link>{' '}
             migrate using the <Link href="https://docs.mkr-js-prod.now.sh/">migration tool</Link> then add your migrated
             DAI to the{' '}
-            <Link href="add-liquidity?token=0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359">new DAI liquidity pool.</Link>
+            <Link href="add-liquidity?token=0x6b175474e89094c44da98b954eedeac495271d0f">new DAI liquidity pool.</Link>
           </div>
           <WarningFooter>
             <Link href="https://blog.makerdao.com/looking-ahead-how-to-upgrade-to-multi-collateral-dai/">
