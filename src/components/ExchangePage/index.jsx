@@ -21,6 +21,7 @@ import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { useAddressAllowance } from '../../contexts/Allowances'
+import { useWalletModalContext } from '../../contexts/Wallet'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -246,7 +247,8 @@ function getMarketRate(
 
 export default function ExchangePage({ initialCurrency, sending = false, params }) {
   const { t } = useTranslation()
-  const { account } = useWeb3Context()
+
+  const { account, setError, setConnector } = useWeb3Context()
 
   const addTransaction = useTransactionAdder()
 
@@ -630,6 +632,21 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
   const allBalances = useFetchAllBalances()
 
+  const [{ openWalletModal }] = useWalletModalContext()
+
+  // if they have web3 kick them into it, if not pop modal
+  function tryToSetConnector() {
+    if (window.web3 || window.ethereum) {
+      setConnector('Injected', { suppressAndThrowErrors: true }).catch(() => {
+        setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
+          setError(error)
+        })
+      })
+    } else {
+      openWalletModal()
+    }
+  }
+
   return (
     <>
       <CurrencyInputPanel
@@ -753,11 +770,14 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       />
       <Flex>
         <Button
-          disabled={!isValid || customSlippageError === 'invalid'}
-          onClick={onSwap}
+          disabled={account && (!isValid || customSlippageError === 'invalid')}
+          onClick={account ? onSwap : tryToSetConnector}
           warning={highSlippageWarning || customSlippageError === 'warning'}
+          loggedOut={!account}
         >
-          {sending
+          {!account
+            ? 'Connect to a Wallet'
+            : sending
             ? highSlippageWarning || customSlippageError === 'warning'
               ? t('sendAnyway')
               : t('send')

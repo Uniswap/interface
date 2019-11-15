@@ -90,6 +90,7 @@ const theme = darkMode => ({
   warningYellow: '#FFE270',
   // pink
   uniswapPink: '#DC6BE5',
+  //green
   connectedGreen: '#27AE60',
 
   //branded
@@ -97,6 +98,9 @@ const theme = darkMode => ({
 
   //specific
   textHover: darkMode ? theme.uniswapPink : theme.doveGray,
+
+  // connect button when loggedout
+  buttonFaded: darkMode ? '#DC6BE5' : '#737373',
 
   // media queries
   mediaWidth: mediaWidthTemplates,

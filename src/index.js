@@ -12,6 +12,7 @@ import TokensContextProvider from './contexts/Tokens'
 import BalancesContextProvider from './contexts/Balances'
 import AllowancesContextProvider from './contexts/Allowances'
 import AllBalancesContextProvider from './contexts/AllBalances'
+import WalletModalContextProvider from './contexts/Wallet'
 
 import App from './pages/App'
 import NetworkOnlyConnector from './NetworkOnlyConnector'
@@ -52,11 +53,13 @@ function ContextProviders({ children }) {
       <ApplicationContextProvider>
         <TransactionContextProvider>
           <TokensContextProvider>
-            <BalancesContextProvider>
-              <AllBalancesContextProvider>
-                <AllowancesContextProvider>{children}</AllowancesContextProvider>
-              </AllBalancesContextProvider>
-            </BalancesContextProvider>
+            <WalletModalContextProvider>
+              <BalancesContextProvider>
+                <AllBalancesContextProvider>
+                  <AllowancesContextProvider>{children}</AllowancesContextProvider>
+                </AllBalancesContextProvider>
+              </BalancesContextProvider>
+            </WalletModalContextProvider>
           </TokensContextProvider>
         </TransactionContextProvider>
       </ApplicationContextProvider>

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { useWeb3Context } from 'web3-react'
 
 import { isMobile } from 'react-device-detect'
 import QRCode from 'qrcode.react'
+import { transparentize } from 'polished'
 
 import Transaction from './Transaction'
 import Copy from './Copy'
@@ -16,6 +17,7 @@ import { SUPPORTED_WALLETS, MOBILE_DEEP_LINKS } from '../../constants'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
+import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -149,10 +151,10 @@ const AccountSection = styled.div`
 
 const InfoCard = styled.div`
   background-color: ${({ theme }) => theme.backgroundColor};
-  padding: 1.5rem;
+  padding: 1rem;
   border: 1px solid ${({ theme }) => theme.placeholderGray};
   border-radius: 20px;
-  box-shadow: 0px 2px 10px rgba(47, 128, 237, 0.1);
+  box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
 `
 
 const AccountGroupingRow = styled.div`
@@ -257,9 +259,13 @@ const GreenCircle = styled.div`
     height: 8px;
     width: 8px;
     margin-left: 12px;
-    background-color: green;
+    background-color: ${({ theme }) => theme.connectedGreen};
     border-radius: 50%;
   }
+`
+
+const GreenText = styled.div`
+  color: ${({ theme }) => theme.connectedGreen};
 `
 
 const LowerSection = styled.div`
@@ -313,6 +319,12 @@ const Blurb = styled.div`
   `};
 `
 
+const HoverText = styled.div`
+  :hover {
+    cursor: pointer;
+  }
+`
+
 const TransactionListWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap} /* margin: 0 0 1rem 0; */
 `
@@ -327,7 +339,16 @@ const WALLET_VIEWS = {
   WALLET_CONNECT: 'walletConnect'
 }
 
-export default function WalletModal({ isOpen, error, onDismiss, pendingTransactions, confirmedTransactions, ENSName }) {
+export default function WalletModal({
+  isOpen,
+  dispatch,
+  closeType,
+  error,
+  onDismiss,
+  pendingTransactions,
+  confirmedTransactions,
+  ENSName
+}) {
   const { account, networkId, setConnector, setError, connectorName, connector } = useWeb3Context()
 
   const { web3, ethereum } = window
@@ -335,6 +356,8 @@ export default function WalletModal({ isOpen, error, onDismiss, pendingTransacti
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
   const [uri, setUri] = useState()
+
+  const [isDark] = useDarkModeManager()
 
   function renderTransactions(transactions, pending) {
     return (
@@ -344,10 +367,6 @@ export default function WalletModal({ isOpen, error, onDismiss, pendingTransacti
         })}
       </TransactionListWrapper>
     )
-  }
-
-  function wrappedOnDismiss() {
-    onDismiss()
   }
 
   function formatConnectorName() {
@@ -360,6 +379,10 @@ export default function WalletModal({ isOpen, error, onDismiss, pendingTransacti
     })
     return name
   }
+
+  const wrappedOnDismiss = useCallback(() => {
+    onDismiss()
+  }, [onDismiss])
 
   //overwrite default with Metamask styles
   useEffect(() => {
@@ -378,27 +401,36 @@ export default function WalletModal({ isOpen, error, onDismiss, pendingTransacti
     }
   }, [isOpen])
 
-  // when new connector, check for logins or scanning
+  // when new connector, check for logins or scanning screens
   useEffect(() => {
     if (connectorName === 'WalletConnect') {
       setUri(connector.walletConnector.uri)
       if (!account) {
         setWalletView(WALLET_VIEWS.WALLET_CONNECT)
-        connector.walletConnector.on('connect', error => {
-          if (error) {
-            setError(error)
-          }
-        })
+      } else {
+        wrappedOnDismiss()
       }
     }
-    if (account) {
-      setWalletView(WALLET_VIEWS.ACCOUNT)
+  }, [connector, connectorName, account, wrappedOnDismiss])
+
+  useEffect(() => {
+    if (connector.walletConnector) {
+      connector.walletConnector.on('connect', error => {
+        if (error) {
+          setError(error)
+        } else {
+          wrappedOnDismiss()
+        }
+      })
     }
-  }, [connector, connectorName, setError, account])
+  }, [connectorName, connector, wrappedOnDismiss, setError])
 
   // set new connector or open scanner again
   function tryConnection(newWalletName) {
     if (connectorName !== newWalletName) {
+      if (newWalletName !== 'WalletConnect') {
+        wrappedOnDismiss()
+      }
       setConnector(newWalletName, { suppressAndThrowErrors: true }).catch(error => {
         wrappedOnDismiss() // leave unset
       })
@@ -542,12 +574,21 @@ export default function WalletModal({ isOpen, error, onDismiss, pendingTransacti
               setWalletView(WALLET_VIEWS.ACCOUNT)
             }}
           >
-            Back
+            <HoverText>Back</HoverText>
           </HeaderRow>
           <OptionsSection>
             <QRSection>
               <h5>Scan QR code with a compatible wallet</h5>
-              <QRCodeWrapper>{uri && <QRCode size={220} value={uri} />}</QRCodeWrapper>
+              <QRCodeWrapper>
+                {uri && (
+                  <QRCode
+                    size={220}
+                    value={uri}
+                    bgColor={isDark ? '#333639' : 'white'}
+                    fgColor={isDark ? 'white' : 'black'}
+                  />
+                )}
+              </QRCodeWrapper>
               <OptionCard>
                 <OptionCardLeft>
                   <HeaderText color="4196FC">Connect with Wallet Connect</HeaderText>
@@ -571,12 +612,12 @@ export default function WalletModal({ isOpen, error, onDismiss, pendingTransacti
                 <InfoCard>
                   <AccountGroupingRow>
                     {formatConnectorName()}
-                    <div>
+                    <GreenText>
                       Connected
                       <GreenCircle>
                         <div />
                       </GreenCircle>
-                    </div>
+                    </GreenText>
                   </AccountGroupingRow>
                   <AccountGroupingRow>
                     {ENSName ? (

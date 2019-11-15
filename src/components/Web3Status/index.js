@@ -1,5 +1,5 @@
-import React, { useReducer, useEffect, useRef } from 'react'
-import styled from 'styled-components'
+import React, { useEffect, useRef } from 'react'
+import styled, { css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3Context, Connectors } from 'web3-react'
 import { darken, transparentize } from 'polished'
@@ -13,6 +13,7 @@ import { shortenAddress } from '../../utils'
 import { useENSName } from '../../hooks'
 import WalletModal from '../WalletModal'
 import { useAllTransactions } from '../../contexts/Transactions'
+import { useWalletModalContext } from '../../contexts/Wallet'
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle.svg'
 
@@ -52,6 +53,20 @@ const Web3StatusConnect = styled(Web3StatusGeneric)`
   :hover,
   :focus {
     background-color: ${({ theme }) => darken(0.1, theme.royalBlue)};
+  }
+
+  ${({ faded }) =>
+    faded &&
+    css`
+      background-color: ${({ theme }) => theme.buttonFaded};
+      border: 1px solid transparent;
+
+      :hover,
+      :focus {
+        background-color: ${({ theme }) => darken(0.1, theme.buttonFaded)};
+      }
+    `}
+
   }
 `
 
@@ -111,38 +126,6 @@ const IconWrapper = styled.div`
   }
 `
 
-const walletModalInitialState = {
-  open: false,
-  error: undefined
-}
-
-const WALLET_MODAL_ERROR = 'WALLET_MODAL_ERROR'
-const WALLET_MODAL_OPEN = 'WALLET_MODAL_OPEN'
-const WALLET_MODAL_OPEN_ERROR = 'WALLET_MODAL_OPEN_ERROR'
-const WALLET_MODAL_CLOSE = 'WALLET_MODAL_CLOSE'
-
-function walletModalReducer(state, { type, payload }) {
-  switch (type) {
-    case WALLET_MODAL_ERROR: {
-      const { error } = payload
-      return { ...state, error }
-    }
-    case WALLET_MODAL_OPEN: {
-      return { ...state, open: true }
-    }
-    case WALLET_MODAL_OPEN_ERROR: {
-      const { error } = payload || {}
-      return { open: true, error }
-    }
-    case WALLET_MODAL_CLOSE: {
-      return { ...state, open: false }
-    }
-    default: {
-      throw Error(`Unexpected action type in walletModalReducer reducer: '${type}'.`)
-    }
-  }
-}
-
 export default function Web3Status() {
   const { t } = useTranslation()
 
@@ -156,19 +139,9 @@ export default function Web3Status() {
 
   const hasPendingTransactions = !!pending.length
 
-  const [{ open: walletModalIsOpen, error: walletModalError }, dispatch] = useReducer(
-    walletModalReducer,
-    walletModalInitialState
-  )
-  function setError(error) {
-    dispatch({ type: WALLET_MODAL_ERROR, payload: { error } })
-  }
-  function openWalletModal(error) {
-    dispatch({ type: WALLET_MODAL_OPEN, ...(error ? { payload: { error } } : {}) })
-  }
-  function closeWalletModal() {
-    dispatch({ type: WALLET_MODAL_CLOSE })
-  }
+  const [{ open, error, setError, openWalletModal, closeWalletModal }] = useWalletModalContext()
+  const walletModalIsOpen = open
+  const walletModalError = error
 
   // janky logic to detect log{ins,outs}...
   useEffect(() => {
@@ -219,7 +192,7 @@ export default function Web3Status() {
         }
       }
     }
-  }, [connectorName, setConnector])
+  }, [connectorName, setConnector, setError])
 
   function onClick() {
     if (walletModalError) {
@@ -276,7 +249,7 @@ export default function Web3Status() {
       )
     } else if (!account) {
       return (
-        <Web3StatusConnect onClick={onClick}>
+        <Web3StatusConnect onClick={onClick} faded={!account}>
           <Text>{t('Connect to a Wallet')}</Text>
         </Web3StatusConnect>
       )
