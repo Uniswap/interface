@@ -58,10 +58,10 @@ export function getAllQueryParams() {
   params.theme = checkSupportedTheme(getQueryParam(window.location, 'theme'))
 
   params.inputCurrency = isAddress(getQueryParam(window.location, 'inputCurrency'))
-    ? getQueryParam(window.location, 'inputCurrency')
+    ? isAddress(getQueryParam(window.location, 'inputCurrency'))
     : ''
   params.outputCurrency = isAddress(getQueryParam(window.location, 'outputCurrency'))
-    ? getQueryParam(window.location, 'outputCurrency')
+    ? isAddress(getQueryParam(window.location, 'outputCurrency'))
     : getQueryParam(window.location, 'outputCurrency') === 'ETH'
     ? 'ETH'
     : ''
@@ -82,19 +82,23 @@ export function getAllQueryParams() {
   params.tokenAmount = !isNaN(getQueryParam(window.location, 'tokenAmount'))
     ? getQueryParam(window.location, 'tokenAmount')
     : ''
-  params.token = isAddress(getQueryParam(window.location, 'token')) ? getQueryParam(window.location, 'token') : ''
+  params.token = isAddress(getQueryParam(window.location, 'token'))
+    ? isAddress(getQueryParam(window.location, 'token'))
+    : ''
 
   // Remove liquidity params
   params.poolTokenAmount = !isNaN(getQueryParam(window.location, 'poolTokenAmount'))
     ? getQueryParam(window.location, 'poolTokenAmount')
     : ''
   params.poolTokenAddress = isAddress(getQueryParam(window.location, 'poolTokenAddress'))
-    ? getQueryParam(window.location, 'poolTokenAddress')
+    ? isAddress(getQueryParam(window.location, 'poolTokenAddress'))
+      ? isAddress(getQueryParam(window.location, 'poolTokenAddress'))
+      : ''
     : ''
 
   // Create Exchange params
   params.tokenAddress = isAddress(getQueryParam(window.location, 'tokenAddress'))
-    ? getQueryParam(window.location, 'tokenAddress')
+    ? isAddress(getQueryParam(window.location, 'tokenAddress'))
     : ''
 
   return params

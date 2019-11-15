@@ -216,11 +216,15 @@ function NavigationTabs({ location: { pathname }, history }) {
             <Link href="/remove-liquidity?poolTokenAddress=0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359">
               remove your SAI liquidity,
             </Link>{' '}
-            migrate using the <Link href="">migration tool</Link> then add your migrated DAI to the{' '}
-            <Link href="">new DAI liquidity pool.</Link>
+            migrate using the <Link href="https://docs.mkr-js-prod.now.sh/">migration tool</Link> then add your migrated
+            DAI to the{' '}
+            <Link href="add-liquidity?token=0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359">new DAI liquidity pool.</Link>
           </div>
           <WarningFooter>
-            <Link href="">Read more</Link> about this change on the official Maker blog.
+            <Link href="https://blog.makerdao.com/looking-ahead-how-to-upgrade-to-multi-collateral-dai/">
+              Read more
+            </Link>{' '}
+            about this change on the official Maker blog.
           </WarningFooter>
         </DaiMessage>
       )}
@@ -229,7 +233,8 @@ function NavigationTabs({ location: { pathname }, history }) {
           <CloseIcon onClick={dismissGeneralDaiMessage}>✕</CloseIcon>
           <WarningHeader>DAI has upgraded!</WarningHeader>
           <div>
-            Your old DAI is now SAI. To upgrade use the <Link href="">migration tool.</Link>
+            Your old DAI is now SAI. To upgrade use the{' '}
+            <Link href="https://docs.mkr-js-prod.now.sh/">migration tool.</Link>
           </div>
         </DaiMessage>
       )}
