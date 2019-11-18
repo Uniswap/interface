@@ -166,9 +166,9 @@ function NavigationTabs({ location: { pathname }, history }) {
 
   const { account } = useWeb3Context()
 
-  const daiBalance = useAddressBalance(account, isAddress('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'))
+  const daiBalance = useAddressBalance(account, isAddress('0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359'))
 
-  const daiPoolTokenBalance = useAddressBalance(account, isAddress('0x09cabec1ead1c0ba254b09efb3ee13841712be14'))
+  const daiPoolTokenBalance = useAddressBalance(account, isAddress('0x09cabEC1eAd1c0Ba254B09efb3EE13841712bE14'))
 
   const onLiquidityPage = pathname === '/pool' || pathname === '/add-liquidity' || pathname === '/remove-liquidity'
 
@@ -208,16 +208,16 @@ function NavigationTabs({ location: { pathname }, history }) {
           <WarningHeader>Missing your DAI?</WarningHeader>
           <div>
             Don’t worry, check the{' '}
-            <Link href={'/remove-liquidity?poolTokenAddress=0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'}>
+            <Link href={'/remove-liquidity?poolTokenAddress=0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359'}>
               SAI liquidity pool.
             </Link>{' '}
             Your old DAI is now SAI. If you want to migrate,{' '}
-            <Link href="/remove-liquidity?poolTokenAddress=0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359">
+            <Link href="/remove-liquidity?poolTokenAddress=0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359">
               remove your SAI liquidity,
             </Link>{' '}
-            migrate using the <Link href="https://docs.mkr-js-prod.now.sh/">migration tool</Link> then add your migrated
+            migrate using the <Link href="https://migrate.makerdao.com/">migration tool</Link> then add your migrated
             DAI to the{' '}
-            <Link href="add-liquidity?token=0x6b175474e89094c44da98b954eedeac495271d0f">new DAI liquidity pool.</Link>
+            <Link href="add-liquidity?token=0x6B175474E89094C44Da98b954EedeAC495271d0F">new DAI liquidity pool.</Link>
           </div>
           <WarningFooter>
             <Link href="https://blog.makerdao.com/looking-ahead-how-to-upgrade-to-multi-collateral-dai/">
@@ -233,7 +233,7 @@ function NavigationTabs({ location: { pathname }, history }) {
           <WarningHeader>DAI has upgraded!</WarningHeader>
           <div>
             Your old DAI is now SAI. To upgrade use the{' '}
-            <Link href="https://docs.mkr-js-prod.now.sh/">migration tool.</Link>
+            <Link href="https://migrate.makerdao.com/">migration tool.</Link>
           </div>
         </DaiMessage>
       )}

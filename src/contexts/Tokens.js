@@ -421,7 +421,7 @@ const INITIAL_TOKENS_CONTEXT = {
     },
     '0x09cabEC1eAd1c0Ba254B09efb3EE13841712bE14': {
       [NAME]: 'Uniswap V1',
-      [SYMBOL]: 'UNI-V1:DAI',
+      [SYMBOL]: 'UNI-V1:SAI',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x601c32E0580D3aef9437dB52D09f5a5D7E60eC22'
     },
