@@ -84,8 +84,8 @@ const INITIAL_TOKENS_CONTEXT = {
       [EXCHANGE_ADDRESS]: '0x1C6c712b1F4a7c263B1DBd8F97fb447c945d3b9a'
     },
     '0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359': {
-      [NAME]: 'Dai Stablecoin v1.0',
-      [SYMBOL]: 'DAI',
+      [NAME]: 'Dai Stablecoin v1.0 (SAI)',
+      [SYMBOL]: 'SAI',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x09cabEC1eAd1c0Ba254B09efb3EE13841712bE14'
     },
@@ -421,7 +421,7 @@ const INITIAL_TOKENS_CONTEXT = {
     },
     '0x09cabEC1eAd1c0Ba254B09efb3EE13841712bE14': {
       [NAME]: 'Uniswap V1',
-      [SYMBOL]: 'UNI-V1:DAI',
+      [SYMBOL]: 'UNI-V1:SAI',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x601c32E0580D3aef9437dB52D09f5a5D7E60eC22'
     },
@@ -466,6 +466,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'ZRX',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xaE76c84C9262Cdb9abc0C2c8888e62Db8E22A0bF'
+    },
+    '0x6B175474E89094C44Da98b954EedeAC495271d0F': {
+      [NAME]: 'Dai Stablecoin',
+      [SYMBOL]: 'DAI',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x2a1530C4C41db0B0b2bB646CB5Eb1A67b7158667'
     }
   },
   4: {
