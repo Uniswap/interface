@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
 import { BigNumber } from '@uniswap/sdk'
-import { useWeb3Context } from 'web3-react'
+import { useWeb3React } from '@web3-react/core'
 import styled from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
 import { darken } from 'polished'
@@ -429,7 +429,8 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
 
   const allTokens = useAllTokenDetails()
 
-  const { account } = useWeb3Context()
+  const context = useWeb3React()
+  const { account } = context
 
   // BigNumber.js instance
   const ethPrice = useUSDPrice()

@@ -3,7 +3,7 @@ import ReactGA from 'react-ga'
 import { createBrowserHistory } from 'history'
 
 import { useTranslation } from 'react-i18next'
-import { useWeb3Context } from 'web3-react'
+import { useWeb3React } from '@web3-react/core'
 
 import { ethers } from 'ethers'
 import styled from 'styled-components'
@@ -246,7 +246,8 @@ function getMarketRate(
 
 export default function ExchangePage({ initialCurrency, sending = false, params }) {
   const { t } = useTranslation()
-  const { account } = useWeb3Context()
+  const context = useWeb3React()
+  const { account } = context
 
   const addTransaction = useTransactionAdder()
 

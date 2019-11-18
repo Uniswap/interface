@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { useWeb3Context } from 'web3-react'
+import { useWeb3React } from '@web3-react/core'
 
 import Transaction from './Transaction'
 import Copy from './Copy'
@@ -101,25 +101,9 @@ const StyledLink = styled(Link)`
   color: ${({ hasENS, isENS, theme }) => (hasENS ? (isENS ? theme.royalBlue : theme.doveGray) : theme.royalBlue)};
 `
 
-// function getErrorMessage(event) {
-//   switch (event.code) {
-//     case InjectedConnector.errorCodes.ETHEREUM_ACCESS_DENIED: {
-//       return 'Permission Required'
-//     }
-//     case InjectedConnector.errorCodes.UNLOCK_REQUIRED: {
-//       return 'Account Unlock Required'
-//     }
-//     case InjectedConnector.errorCodes.NO_WEB3: {
-//       return 'Not a Web3 Browser'
-//     }
-//     default: {
-//       return 'Connection Error'
-//     }
-//   }
-// }
-
 export default function WalletModal({ isOpen, error, onDismiss, pendingTransactions, confirmedTransactions, ENSName }) {
-  const { account, networkId } = useWeb3Context()
+  const context = useWeb3React()
+  const { chainId, account } = context
 
   function renderTransactions(transactions, pending) {
     return (
@@ -153,7 +137,7 @@ export default function WalletModal({ isOpen, error, onDismiss, pendingTransacti
               <h5>Your Account</h5>
               {ENSName && (
                 <AccountControl hasENS={!!ENSName} isENS={true}>
-                  <StyledLink hasENS={!!ENSName} isENS={true} href={getEtherscanLink(networkId, ENSName, 'address')}>
+                  <StyledLink hasENS={!!ENSName} isENS={true} href={getEtherscanLink(chainId, ENSName, 'address')}>
                     {ENSName} ↗{' '}
                   </StyledLink>
 
@@ -162,7 +146,7 @@ export default function WalletModal({ isOpen, error, onDismiss, pendingTransacti
               )}
 
               <AccountControl hasENS={!!ENSName} isENS={false}>
-                <StyledLink hasENS={!!ENSName} isENS={false} href={getEtherscanLink(networkId, account, 'address')}>
+                <StyledLink hasENS={!!ENSName} isENS={false} href={getEtherscanLink(chainId, account, 'address')}>
                   {account} ↗{' '}
                 </StyledLink>
 

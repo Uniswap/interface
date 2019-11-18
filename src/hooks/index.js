@@ -1,9 +1,68 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
-import { useWeb3Context } from 'web3-react'
+import { useWeb3React } from '@web3-react/core'
+
+import { injected } from '../connectors'
 
 import ERC20_ABI from '../constants/abis/erc20'
 import { getContract, getFactoryContract, getExchangeContract, isAddress } from '../utils'
 import copy from 'copy-to-clipboard'
+
+export function useEagerConnect() {
+  const { activate, active } = useWeb3React()
+
+  const [tried, setTried] = useState(false)
+
+  useEffect(() => {
+    injected.isAuthorized().then(isAuthorized => {
+      if (isAuthorized) {
+        activate(injected, undefined, true).catch(() => {
+          setTried(true)
+        })
+      } else {
+        setTried(true)
+      }
+    })
+  }, [activate]) // intentionally only running on mount (make sure it's only mounted once :))
+
+  // if the connection worked, wait until we get confirmation of that to flip the flag
+  useEffect(() => {
+    if (!tried && active) {
+      setTried(true)
+    }
+  }, [tried, active])
+
+  return tried
+}
+
+export function useInactiveListener(suppress = false) {
+  const { active, error, activate } = useWeb3React()
+
+  useEffect(() => {
+    const { ethereum } = window
+    if (ethereum && !active && !error && !suppress) {
+      const handleNetworkChanged = networkId => {
+        console.log('networkChanged', networkId)
+        activate(injected)
+      }
+      const handleAccountsChanged = accounts => {
+        console.log('accountsChanged', accounts)
+        if (accounts.length > 0) {
+          activate(injected)
+        }
+      }
+
+      ethereum.on('networkChanged', handleNetworkChanged)
+      ethereum.on('accountsChanged', handleAccountsChanged)
+
+      return () => {
+        ethereum.removeListener('networkChanged', handleNetworkChanged)
+        ethereum.removeListener('accountsChanged', handleAccountsChanged)
+      }
+    }
+
+    return () => {}
+  }, [active, error, suppress, activate])
+}
 
 // modified from https://usehooks.com/useDebounce/
 export function useDebounce(value, delay) {
@@ -51,7 +110,7 @@ export function useBodyKeyDown(targetKey, onKeyDown, suppressOnKeyDown = false) 
 }
 
 export function useENSName(address) {
-  const { library } = useWeb3Context()
+  const { library } = useWeb3React()
 
   const [ENSName, setENSName] = useState()
 
@@ -84,7 +143,7 @@ export function useENSName(address) {
 
 // returns null on errors
 export function useContract(address, ABI, withSignerIfPossible = true) {
-  const { library, account } = useWeb3Context()
+  const { library, account } = useWeb3React()
 
   return useMemo(() => {
     try {
@@ -97,7 +156,7 @@ export function useContract(address, ABI, withSignerIfPossible = true) {
 
 // returns null on errors
 export function useTokenContract(tokenAddress, withSignerIfPossible = true) {
-  const { library, account } = useWeb3Context()
+  const { library, account } = useWeb3React()
 
   return useMemo(() => {
     try {
@@ -110,7 +169,7 @@ export function useTokenContract(tokenAddress, withSignerIfPossible = true) {
 
 // returns null on errors
 export function useFactoryContract(withSignerIfPossible = true) {
-  const { networkId, library, account } = useWeb3Context()
+  const { networkId, library, account } = useWeb3React()
 
   return useMemo(() => {
     try {
@@ -122,7 +181,7 @@ export function useFactoryContract(withSignerIfPossible = true) {
 }
 
 export function useExchangeContract(exchangeAddress, withSignerIfPossible = true) {
-  const { library, account } = useWeb3Context()
+  const { library, account } = useWeb3React()
 
   return useMemo(() => {
     try {

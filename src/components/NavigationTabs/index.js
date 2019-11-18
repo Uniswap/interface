@@ -14,7 +14,7 @@ import {
   useSaiHolderMessageManager,
   useGeneralDaiMessageManager
 } from '../../contexts/LocalStorage'
-import { useWeb3Context } from 'web3-react'
+import { useWeb3React } from '@web3-react/core'
 
 const tabOrder = [
   {
@@ -164,7 +164,8 @@ function NavigationTabs({ location: { pathname }, history }) {
 
   const [showSaiHolderMessage, dismissSaiHolderMessage] = useSaiHolderMessageManager()
 
-  const { account } = useWeb3Context()
+  const context = useWeb3React()
+  const { account } = context
 
   const daiBalance = useAddressBalance(account, isAddress('0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359'))
 

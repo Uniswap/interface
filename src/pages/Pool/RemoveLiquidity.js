@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import ReactGA from 'react-ga'
 import { createBrowserHistory } from 'history'
-import { useWeb3Context } from 'web3-react'
+import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 import styled from 'styled-components'
 
@@ -143,7 +143,9 @@ function calculateSlippageBounds(value) {
 }
 
 export default function RemoveLiquidity({ params }) {
-  const { library, account, active } = useWeb3Context()
+  const context = useWeb3React()
+  const { library, account, active } = context
+
   const { t } = useTranslation()
 
   const addTransaction = useTransactionAdder()

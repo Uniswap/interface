@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useWeb3Context, Connectors } from 'web3-react'
+import { Connectors } from 'web3-react'
+import { useWeb3React } from '@web3-react/core'
 import styled from 'styled-components'
-import { ethers } from 'ethers'
 import { useTranslation } from 'react-i18next'
-import { isMobile } from 'react-device-detect'
+import { useEagerConnect, useInactiveListener } from '../../hooks'
 
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle.svg'
@@ -31,52 +31,36 @@ const SpinnerWrapper = styled(Spinner)`
   }
 `
 
-function tryToSetConnector(setConnector, setError) {
-  setConnector('Injected', { suppressAndThrowErrors: true }).catch(() => {
-    setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
-      setError(error)
-    })
-  })
-}
-
 export default function Web3ReactManager({ children }) {
   const { t } = useTranslation()
-  const { active, error, setConnector, setError } = useWeb3Context()
+  const context = useWeb3React()
+  const { connector, activate, active, error } = context
+
+  // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
+  const triedEager = useEagerConnect()
+
+  // handle logic to recognize the connector currently being activated
+  const [activatingConnector, setActivatingConnector] = useState()
+
+  // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
+  useInactiveListener(!triedEager || !!activatingConnector)
+
   // control whether or not we render the error, after parsing
   const blockRender = error && error.code && error.code === Connector.errorCodes.UNSUPPORTED_NETWORK
 
+  // reset the
   useEffect(() => {
-    if (!active && !error) {
-      if (window.ethereum || window.web3) {
-        if (isMobile) {
-          tryToSetConnector(setConnector, setError)
-        } else {
-          const library = new ethers.providers.Web3Provider(window.ethereum || window.web3)
-          library.listAccounts().then(accounts => {
-            if (accounts.length >= 1) {
-              tryToSetConnector(setConnector, setError)
-            } else {
-              setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
-                setError(error)
-              })
-            }
-          })
-        }
-      } else {
-        setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
-          setError(error)
-        })
-      }
+    if (activatingConnector && activatingConnector === connector) {
+      setActivatingConnector(undefined)
     }
-  })
+  }, [activatingConnector, connector])
 
-  // parse the error
   useEffect(() => {
     if (error) {
       // if the user changes to the wrong network, unset the connector
       if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-        setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
-          setError(error)
+        activate('Network', { suppressAndThrowErrors: true }).catch(error => {
+          error(error)
         })
       }
     }

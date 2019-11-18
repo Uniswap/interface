@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
-import { useWeb3Context } from 'web3-react'
+import { useWeb3React } from '@web3-react/core'
 
 import { safeAccess } from '../utils'
 import { getUSDPrice } from '../utils/price'
@@ -68,7 +68,8 @@ export default function Provider({ children }) {
 }
 
 export function Updater() {
-  const { networkId, library } = useWeb3Context()
+  const context = useWeb3React()
+  const { library, chainId } = context
 
   const globalBlockNumber = useBlockNumber()
   const [, { updateBlockNumber, updateUSDPrice }] = useApplicationContext()
@@ -82,22 +83,22 @@ export function Updater() {
 
   // update usd price
   useEffect(() => {
-    if (library && networkId === 1) {
+    if (library && chainId === 1) {
       let stale = false
 
       getUSDPrice(library)
         .then(([price]) => {
           if (!stale) {
-            updateUSDPrice(networkId, price)
+            updateUSDPrice(chainId, price)
           }
         })
         .catch(() => {
           if (!stale) {
-            updateUSDPrice(networkId, null)
+            updateUSDPrice(chainId, null)
           }
         })
     }
-  }, [globalBlockNumber, library, networkId, updateUSDPrice])
+  }, [globalBlockNumber, library, chainId, updateUSDPrice])
 
   // update block number
   useEffect(() => {
@@ -109,12 +110,12 @@ export function Updater() {
           .getBlockNumber()
           .then(blockNumber => {
             if (!stale) {
-              updateBlockNumber(networkId, blockNumber)
+              updateBlockNumber(chainId, blockNumber)
             }
           })
           .catch(() => {
             if (!stale) {
-              updateBlockNumber(networkId, null)
+              updateBlockNumber(chainId, null)
             }
           })
       }
@@ -127,23 +128,25 @@ export function Updater() {
         library.removeListener('block', update)
       }
     }
-  }, [networkId, library, updateBlockNumber])
+  }, [chainId, library, updateBlockNumber])
 
   return null
 }
 
 export function useBlockNumber() {
-  const { networkId } = useWeb3Context()
+  const context = useWeb3React()
+  const { chainId } = context
 
   const [state] = useApplicationContext()
 
-  return safeAccess(state, [BLOCK_NUMBER, networkId])
+  return safeAccess(state, [BLOCK_NUMBER, chainId])
 }
 
 export function useUSDPrice() {
-  const { networkId } = useWeb3Context()
+  const context = useWeb3React()
+  const { chainId } = context
 
   const [state] = useApplicationContext()
 
-  return safeAccess(state, [USD_PRICE, networkId])
+  return safeAccess(state, [USD_PRICE, chainId])
 }

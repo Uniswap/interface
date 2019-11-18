@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router'
-import { useWeb3Context } from 'web3-react'
+import { useWeb3React } from '@web3-react/core'
 import { createBrowserHistory } from 'history'
 import { ethers } from 'ethers'
 import styled from 'styled-components'
@@ -56,7 +56,9 @@ const Flex = styled.div`
 
 function CreateExchange({ location, params }) {
   const { t } = useTranslation()
-  const { account } = useWeb3Context()
+  const context = useWeb3React()
+  const { account } = context
+
   const factory = useFactoryContract()
 
   const [tokenAddress, setTokenAddress] = useState({
