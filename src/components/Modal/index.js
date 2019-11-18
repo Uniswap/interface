@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled, { css, keyframes } from 'styled-components'
 import { animated, useTransition } from 'react-spring'
 import { DialogOverlay, DialogContent } from '@reach/dialog'
@@ -6,6 +6,8 @@ import { isMobile } from 'react-device-detect'
 import '@reach/dialog/styles.css'
 import { transparentize } from 'polished'
 import posed from 'react-pose'
+import { useSpring, interpolate } from 'react-spring'
+import { useGesture } from 'react-with-gesture'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 const WrappedDialogOverlay = ({ suppressClassNameWarning, mobile, ...rest }) => <AnimatedDialogOverlay {...rest} />
@@ -122,9 +124,17 @@ const Box = posed.div({
   dragEnd: {
     x: 0,
     y: 0,
-    transition: { type: 'spring', stiffness: 200, damping: 20 }
+    transition: { type: 'spring', stiffness: 200, damping: 34 }
   }
 })
+
+const StyledBox = styled(Box)`
+  overflow: scroll;
+  z-index: 0;
+  overflow-scrolling: touch;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+`
 
 export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight = 50, initialFocusRef, children }) {
   const transitions = useTransition(isOpen, null, {
@@ -134,11 +144,16 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight 
     leave: { opacity: 0 }
   })
 
-  function print(y) {
+  function checkForClose(y) {
     if (y > 240) {
       onDismiss()
     }
   }
+
+  const [bind, { delta, down }] = useGesture()
+  const { y } = useSpring({
+    y: down ? delta[1] : -50
+  })
 
   return transitions.map(
     ({ item, key, props }) =>
@@ -150,18 +165,22 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight 
           initialFocusRef={initialFocusRef}
           mobile={isMobile}
         >
-          <Box onValueChange={{ y: y => print(y) }}>
-            <StyledDialogContent
-              hidden={true}
-              minHeight={minHeight}
-              maxHeight={maxHeight}
-              isOpen={isOpen}
-              mobile={isMobile}
-            >
-              <HiddenCloseButton onClick={onDismiss} />
-              {children}
-            </StyledDialogContent>
-          </Box>
+          {/* <StyledBox onValueChange={{ y: y => checkForClose(y) }}> */}
+          <StyledDialogContent
+            hidden={true}
+            minHeight={minHeight}
+            maxHeight={maxHeight}
+            isOpen={isOpen}
+            mobile={isMobile}
+            {...bind()}
+            style={{
+              height: interpolate([y], y => `${-y}px`)
+            }}
+          >
+            <HiddenCloseButton onClick={onDismiss} />
+            {children}
+          </StyledDialogContent>
+          {/* </StyledBox> */}
         </StyledDialogOverlay>
       )
   )
