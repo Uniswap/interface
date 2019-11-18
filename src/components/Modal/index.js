@@ -39,16 +39,21 @@ const StyledDialogOverlay = styled(WrappedDialogOverlay).attrs({
   }
 `
 const topToBottom = keyframes`
-  0% {
-    transform: translateY(0px);
-  }
-  100% {
-    transform: translateY(200px);
-  }
+0% {
+  transform: translateY(200px);
+}
+100% {
+  transform: translateY(0px);
+}
 `
 
 const bottomToTop = keyframes`
-
+0% {
+  transform: translateY(0px);
+}
+100% {
+  transform: translateY(200px);
+}
 `
 
 const FilteredDialogContent = ({ minHeight, maxHeight, isOpen, slideInAnimation, mobile, ...rest }) => (
@@ -98,8 +103,6 @@ const StyledDialogContent = styled(FilteredDialogContent)`
           `}
         `}
     `}
-
-    padding-bottom: 400px;
   }
 `
 
@@ -119,13 +122,9 @@ const Box = posed.div({
   dragEnd: {
     x: 0,
     y: 0,
-    transition: { type: 'spring' }
+    transition: { type: 'spring', stiffness: 200, damping: 20 }
   }
 })
-
-const StyledBox = styled(Box)`
-  // height: 500px;
-`
 
 export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight = 50, initialFocusRef, children }) {
   const transitions = useTransition(isOpen, null, {
@@ -136,7 +135,7 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight 
   })
 
   function print(y) {
-    if (y > 400) {
+    if (y > 240) {
       onDismiss()
     }
   }
@@ -151,7 +150,7 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight 
           initialFocusRef={initialFocusRef}
           mobile={isMobile}
         >
-          <StyledBox onValueChange={{ y: y => print(y) }}>
+          <Box onValueChange={{ y: y => print(y) }}>
             <StyledDialogContent
               hidden={true}
               minHeight={minHeight}
@@ -162,7 +161,7 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight 
               <HiddenCloseButton onClick={onDismiss} />
               {children}
             </StyledDialogContent>
-          </StyledBox>
+          </Box>
         </StyledDialogOverlay>
       )
   )
