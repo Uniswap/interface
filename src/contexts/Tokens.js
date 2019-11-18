@@ -335,6 +335,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 8,
       [EXCHANGE_ADDRESS]: '0x394e524b47A3AB3D3327f7fF6629dC378c1494a3'
     },
+    '0x9469D013805bFfB7D3DEBe5E7839237e535ec483': {
+      [NAME]: 'Darwinia Network Native Token',
+      [SYMBOL]: 'RING',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0xeBD8AA50b26bFa63007d61eBa777A9DdE7e43c64'
+    },
     '0x607F4C5BB672230e8672085532f7e901544a7375': {
       [NAME]: 'iEx.ec Network Token',
       [SYMBOL]: 'RLC',
