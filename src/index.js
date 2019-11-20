@@ -12,12 +12,13 @@ import TokensContextProvider from './contexts/Tokens'
 import BalancesContextProvider from './contexts/Balances'
 import AllowancesContextProvider from './contexts/Allowances'
 import AllBalancesContextProvider from './contexts/AllBalances'
+import WalletModalContextProvider from './contexts/Wallet'
 
 import { Web3ReactProvider } from '@web3-react/core'
 import { ethers } from 'ethers'
 
 function getLibrary(provider) {
-  const library = ethers.getDefaultProvider('homestead')
+  const library = new ethers.providers.Web3Provider(provider)
   library.pollingInterval = 10000
   return library
 }
@@ -35,11 +36,13 @@ function ContextProviders({ children }) {
       <ApplicationContextProvider>
         <TransactionContextProvider>
           <TokensContextProvider>
-            <BalancesContextProvider>
-              <AllBalancesContextProvider>
-                <AllowancesContextProvider>{children}</AllowancesContextProvider>
-              </AllBalancesContextProvider>
-            </BalancesContextProvider>
+            <WalletModalContextProvider>
+              <BalancesContextProvider>
+                <AllBalancesContextProvider>
+                  <AllowancesContextProvider>{children}</AllowancesContextProvider>
+                </AllBalancesContextProvider>
+              </BalancesContextProvider>
+            </WalletModalContextProvider>
           </TokensContextProvider>
         </TransactionContextProvider>
       </ApplicationContextProvider>

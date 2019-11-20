@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Connectors } from 'web3-react'
-import { useWeb3React } from '@web3-react/core'
+import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+import { network } from '../../connectors'
+import { useWalletModalContext } from '../../contexts/Wallet'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useEagerConnect, useInactiveListener } from '../../hooks'
-
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle.svg'
-
-const { Connector } = Connectors
 
 const MessageWrapper = styled.div`
   display: flex;
@@ -36,37 +34,45 @@ export default function Web3ReactManager({ children }) {
   const context = useWeb3React()
   const { connector, activate, active, error } = context
 
-  // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
-  const triedEager = useEagerConnect()
+  const [showLoader, setShowLoader] = useState(false)
 
   // handle logic to recognize the connector currently being activated
   const [activatingConnector, setActivatingConnector] = useState()
 
-  // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
-  useInactiveListener(!triedEager || !!activatingConnector)
+  // used for setting error state in wallet modal (unsupported networks)
+  const [{ setWalletError }] = useWalletModalContext()
 
-  // control whether or not we render the error, after parsing
-  const blockRender = error && error.code && error.code === Connector.errorCodes.UNSUPPORTED_NETWORK
-
-  // reset the
   useEffect(() => {
     if (activatingConnector && activatingConnector === connector) {
       setActivatingConnector(undefined)
     }
-  }, [activatingConnector, connector])
+  }, [activatingConnector, connector, setWalletError])
 
+  // eagerly connect to the injected provider, if it exists and has granted access already
+  const triedEager = useEagerConnect()
+
+  // react to certain events on the ethereum provider, if it exists
+  useInactiveListener(!triedEager || !!activatingConnector)
+
+  // if error, reset to network connector
   useEffect(() => {
     if (error) {
-      // if the user changes to the wrong network, unset the connector
-      if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-        activate('Network', { suppressAndThrowErrors: true }).catch(error => {
-          error(error)
-        })
+      if (error instanceof UnsupportedChainIdError) {
+        setWalletError(error)
       }
+      setActivatingConnector(network)
+      activate(network)
     }
-  })
+  }, [setActivatingConnector, error, activate, setWalletError])
 
-  const [showLoader, setShowLoader] = useState(false)
+  // for resetting on logout after already trying eager on first load
+  useEffect(() => {
+    if (!active && !error && triedEager) {
+      setActivatingConnector(network)
+      activate(network)
+    }
+  }, [active, error, activate, triedEager])
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setShowLoader(true)
@@ -76,9 +82,7 @@ export default function Web3ReactManager({ children }) {
     }
   }, [])
 
-  if (blockRender) {
-    return null
-  } else if (error) {
+  if (error) {
     return (
       <MessageWrapper>
         <Message>{t('unknownError')}</Message>

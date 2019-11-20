@@ -1,18 +1,21 @@
-import React, { useReducer, useEffect, useRef } from 'react'
-import styled from 'styled-components'
+import React, { useEffect, useRef } from 'react'
+import styled, { css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { darken, transparentize } from 'polished'
 import Jazzicon from 'jazzicon'
-import { ethers } from 'ethers'
+import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
+import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import { Activity } from 'react-feather'
 
 import { shortenAddress } from '../../utils'
 import { useENSName } from '../../hooks'
 import WalletModal from '../WalletModal'
 import { useAllTransactions } from '../../contexts/Transactions'
+import { useWalletModalContext } from '../../contexts/Wallet'
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle.svg'
+import { injected, network, walletconnect, walletlink } from '../../connectors'
 
 const Web3StatusGeneric = styled.button`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -48,6 +51,20 @@ const Web3StatusConnect = styled(Web3StatusGeneric)`
   :hover,
   :focus {
     background-color: ${({ theme }) => darken(0.1, theme.royalBlue)};
+  }
+
+  ${({ faded }) =>
+    faded &&
+    css`
+      background-color: ${({ theme }) => theme.buttonFaded};
+      border: 1px solid transparent;
+
+      :hover,
+      :focus {
+        background-color: ${({ theme }) => darken(0.1, theme.buttonFaded)};
+      }
+    `}
+
   }
 `
 
@@ -97,37 +114,15 @@ const SpinnerWrapper = styled(Spinner)`
   margin: 0 0.25rem 0 0.25rem;
 `
 
-const walletModalInitialState = {
-  open: false,
-  error: undefined
-}
-
-const WALLET_MODAL_ERROR = 'WALLET_MODAL_ERROR'
-const WALLET_MODAL_OPEN = 'WALLET_MODAL_OPEN'
-const WALLET_MODAL_OPEN_ERROR = 'WALLET_MODAL_OPEN_ERROR'
-const WALLET_MODAL_CLOSE = 'WALLET_MODAL_CLOSE'
-
-function walletModalReducer(state, { type, payload }) {
-  switch (type) {
-    case WALLET_MODAL_ERROR: {
-      const { error } = payload
-      return { ...state, error }
-    }
-    case WALLET_MODAL_OPEN: {
-      return { ...state, open: true }
-    }
-    case WALLET_MODAL_OPEN_ERROR: {
-      const { error } = payload || {}
-      return { open: true, error }
-    }
-    case WALLET_MODAL_CLOSE: {
-      return { ...state, open: false }
-    }
-    default: {
-      throw Error(`Unexpected action type in walletModalReducer reducer: '${type}'.`)
-    }
+const IconWrapper = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap};
+  align-items: center;
+  justify-content: center;
+  & > * {
+    height: ${({ size }) => (size ? size + 'px' : '32px')};
+    width: ${({ size }) => (size ? size + 'px' : '32px')};
   }
-}
+`
 
 export default function Web3Status() {
   const { t } = useTranslation()
@@ -142,43 +137,51 @@ export default function Web3Status() {
 
   const hasPendingTransactions = !!pending.length
 
-  const [{ open: walletModalIsOpen, error: walletModalError }, dispatch] = useReducer(
-    walletModalReducer,
-    walletModalInitialState
-  )
-  function setError(error) {
-    dispatch({ type: WALLET_MODAL_ERROR, payload: { error } })
-  }
-  function openWalletModal(error) {
-    dispatch({ type: WALLET_MODAL_OPEN, ...(error ? { payload: { error } } : {}) })
-  }
-  function closeWalletModal() {
-    dispatch({ type: WALLET_MODAL_CLOSE })
-  }
+  const [{ open, setWalletError, walletError, openWalletModal, closeWalletModal }] = useWalletModalContext()
+  const walletModalIsOpen = open
+  const walletModalError = walletError
 
   function onClick() {
     if (walletModalError) {
       openWalletModal()
-    } else if (connector === 'Network' && (window.ethereum || window.web3)) {
-      activate('Injected', { suppressAndThrowErrors: true }).catch(error => {
-        // if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-        //   setError(error)
-        // }
+    } else if (connector === network && (window.ethereum || window.web3)) {
+      activate(injected, undefined, true).catch(() => {
+        setWalletError(true)
       })
     } else {
       openWalletModal()
     }
   }
 
+  function getStatusIcon() {
+    if (connector === network || connector === injected) {
+      return <Identicon ref={ref} />
+    } else if (connector === walletconnect) {
+      return (
+        <IconWrapper size={16}>
+          <img src={WalletConnectIcon} alt={''} />
+        </IconWrapper>
+      )
+    } else if (connector === walletlink) {
+      return (
+        <IconWrapper size={16}>
+          <img src={CoinbaseWalletIcon} alt={''} />
+        </IconWrapper>
+      )
+    }
+  }
+
   const ref = useRef()
   useEffect(() => {
-    if (ref.current) {
-      ref.current.innerHTML = ''
-      if (account) {
-        ref.current.appendChild(Jazzicon(16, parseInt(account.slice(2, 10), 16)))
+    if (connector === injected) {
+      if (ref.current) {
+        ref.current.innerHTML = ''
+        if (account) {
+          ref.current.appendChild(Jazzicon(16, parseInt(account.slice(2, 10), 16)))
+        }
       }
     }
-  }, [account, walletModalError])
+  }, [account, walletModalError, connector])
 
   function getWeb3Status() {
     if (walletModalError) {
@@ -191,8 +194,8 @@ export default function Web3Status() {
       )
     } else if (!account) {
       return (
-        <Web3StatusConnect onClick={onClick}>
-          <Text>{t('Connect')}</Text>
+        <Web3StatusConnect onClick={onClick} faded={!account}>
+          <Text>{t('Connect to a Wallet')}</Text>
         </Web3StatusConnect>
       )
     } else {
@@ -200,7 +203,7 @@ export default function Web3Status() {
         <Web3StatusConnected onClick={onClick} pending={hasPendingTransactions}>
           {hasPendingTransactions && <SpinnerWrapper src={Circle} alt="loader" />}
           <Text>{ENSName || shortenAddress(account)}</Text>
-          <Identicon ref={ref} />
+          {getStatusIcon()}
         </Web3StatusConnected>
       )
     }
@@ -212,7 +215,7 @@ export default function Web3Status() {
         {getWeb3Status()}
         <WalletModal
           isOpen={walletModalIsOpen}
-          error={walletModalError}
+          walletError={walletModalError}
           onDismiss={closeWalletModal}
           ENSName={ENSName}
           pendingTransactions={pending}

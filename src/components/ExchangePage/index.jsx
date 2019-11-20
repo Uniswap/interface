@@ -16,11 +16,13 @@ import TransactionDetails from '../TransactionDetails'
 import ArrowDown from '../../assets/svg/SVGArrowDown'
 import { amountFormatter, calculateGasMargin } from '../../utils'
 import { useExchangeContract } from '../../hooks'
+import { injected, network } from '../../connectors'
 import { useTokenDetails } from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { useAddressAllowance } from '../../contexts/Allowances'
+import { useWalletModalContext } from '../../contexts/Wallet'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -247,7 +249,7 @@ function getMarketRate(
 export default function ExchangePage({ initialCurrency, sending = false, params }) {
   const { t } = useTranslation()
   const context = useWeb3React()
-  const { account } = context
+  const { account, activate } = context
 
   const addTransaction = useTransactionAdder()
 
@@ -295,7 +297,10 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
   const { independentValue, dependentValue, independentField, inputCurrency, outputCurrency } = swapState
 
-  const [recipient, setRecipient] = useState({ address: initialRecipient(), name: '' })
+  const [recipient, setRecipient] = useState({
+    address: initialRecipient(),
+    name: ''
+  })
   const [recipientError, setRecipientError] = useState()
 
   // get swap type from the currency types
@@ -417,7 +422,10 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
             throw Error()
           }
 
-          dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
+          dispatchSwapState({
+            type: 'UPDATE_DEPENDENT',
+            payload: calculatedDependentValue
+          })
         } catch {
           setIndependentError(t('insufficientLiquidity'))
         }
@@ -440,7 +448,10 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
             throw Error()
           }
 
-          dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
+          dispatchSwapState({
+            type: 'UPDATE_DEPENDENT',
+            payload: calculatedDependentValue
+          })
         } catch {
           setIndependentError(t('insufficientLiquidity'))
         }
@@ -470,7 +481,10 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
             if (calculatedDependentValue.lte(ethers.constants.Zero)) {
               throw Error()
             }
-            dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
+            dispatchSwapState({
+              type: 'UPDATE_DEPENDENT',
+              payload: calculatedDependentValue
+            })
           } else {
             const intermediateValue = calculateEtherTokenInputFromOutput(amount, reserveETHSecond, reserveTokenSecond)
             if (intermediateValue.lte(ethers.constants.Zero)) {
@@ -484,7 +498,10 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
             if (calculatedDependentValue.lte(ethers.constants.Zero)) {
               throw Error()
             }
-            dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: calculatedDependentValue })
+            dispatchSwapState({
+              type: 'UPDATE_DEPENDENT',
+              payload: calculatedDependentValue
+            })
           }
         } catch {
           setIndependentError(t('insufficientLiquidity'))
@@ -622,7 +639,10 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     }
 
     const estimatedGasLimit = await estimate(...args, { value })
-    method(...args, { value, gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN) }).then(response => {
+    method(...args, {
+      value,
+      gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
+    }).then(response => {
       addTransaction(response)
     })
   }
@@ -630,6 +650,19 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const [customSlippageError, setcustomSlippageError] = useState('')
 
   const allBalances = useFetchAllBalances()
+
+  const [{ openWalletModal, walletError }] = useWalletModalContext()
+
+  // if they have web3 kick them into it, if not pop modal
+  function tryToSetConnector() {
+    if (window.web3 || window.ethereum) {
+      activate(injected).catch(() => {
+        activate(network)
+      })
+    } else {
+      openWalletModal()
+    }
+  }
 
   return (
     <>
@@ -644,16 +677,25 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
             if (valueToSet.gt(ethers.constants.Zero)) {
               dispatchSwapState({
                 type: 'UPDATE_INDEPENDENT',
-                payload: { value: amountFormatter(valueToSet, inputDecimals, inputDecimals, false), field: INPUT }
+                payload: {
+                  value: amountFormatter(valueToSet, inputDecimals, inputDecimals, false),
+                  field: INPUT
+                }
               })
             }
           }
         }}
         onCurrencySelected={inputCurrency => {
-          dispatchSwapState({ type: 'SELECT_CURRENCY', payload: { currency: inputCurrency, field: INPUT } })
+          dispatchSwapState({
+            type: 'SELECT_CURRENCY',
+            payload: { currency: inputCurrency, field: INPUT }
+          })
         }}
         onValueChange={inputValue => {
-          dispatchSwapState({ type: 'UPDATE_INDEPENDENT', payload: { value: inputValue, field: INPUT } })
+          dispatchSwapState({
+            type: 'UPDATE_INDEPENDENT',
+            payload: { value: inputValue, field: INPUT }
+          })
         }}
         showUnlock={showUnlock}
         selectedTokens={[inputCurrency, outputCurrency]}
@@ -679,10 +721,16 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         description={outputValueFormatted && independentField === INPUT ? estimatedText : ''}
         extraText={outputBalanceFormatted && formatBalance(outputBalanceFormatted)}
         onCurrencySelected={outputCurrency => {
-          dispatchSwapState({ type: 'SELECT_CURRENCY', payload: { currency: outputCurrency, field: OUTPUT } })
+          dispatchSwapState({
+            type: 'SELECT_CURRENCY',
+            payload: { currency: outputCurrency, field: OUTPUT }
+          })
         }}
         onValueChange={outputValue => {
-          dispatchSwapState({ type: 'UPDATE_INDEPENDENT', payload: { value: outputValue, field: OUTPUT } })
+          dispatchSwapState({
+            type: 'UPDATE_INDEPENDENT',
+            payload: { value: outputValue, field: OUTPUT }
+          })
         }}
         selectedTokens={[inputCurrency, outputCurrency]}
         selectedTokenAddress={outputCurrency}
@@ -754,11 +802,14 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       />
       <Flex>
         <Button
-          disabled={!isValid || customSlippageError === 'invalid'}
-          onClick={onSwap}
+          disabled={!account && walletError && (!isValid || customSlippageError === 'invalid')}
+          onClick={account && walletError ? onSwap : tryToSetConnector}
           warning={highSlippageWarning || customSlippageError === 'warning'}
+          loggedOut={!account}
         >
-          {sending
+          {!account
+            ? 'Connect to a Wallet'
+            : sending
             ? highSlippageWarning || customSlippageError === 'warning'
               ? t('sendAnyway')
               : t('send')
