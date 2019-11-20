@@ -1,8 +1,7 @@
-import { AbstractConnectorArguments, ConnectorUpdate } from '@web3-react/types'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
 export class NoEthereumProviderError extends Error {
-  public constructor() {
+  constructor() {
     super()
     this.name = this.constructor.name
     this.message = 'No Ethereum provider was found on window.ethereum.'
@@ -10,18 +9,15 @@ export class NoEthereumProviderError extends Error {
 }
 
 export class UserRejectedRequestError extends Error {
-  public constructor() {
+  constructor() {
     super()
     this.name = this.constructor.name
     this.message = 'The user rejected the request.'
   }
 }
 
-const __DEV__ = true
-declare const window: any
-
 export class InjectedConnector extends AbstractConnector {
-  constructor(kwargs: AbstractConnectorArguments = {}) {
+  constructor(kwargs) {
     super(kwargs)
 
     this.handleConnect = this.handleConnect.bind(this)
@@ -31,27 +27,27 @@ export class InjectedConnector extends AbstractConnector {
     this.handleClose = this.handleClose.bind(this)
   }
 
-  private handleConnect(): void {
+  handleConnect() {
     if (__DEV__) {
       console.log("Logging 'connect' event")
     }
   }
 
-  private handleNetworkChanged(networkId: string | number): void {
+  handleNetworkChanged(networkId) {
     if (__DEV__) {
       console.log("Handling 'networkChanged' event with payload", networkId)
     }
     this.emitUpdate({ chainId: networkId })
   }
 
-  private handleChainChanged(chainId: string | number): void {
+  handleChainChanged(chainId) {
     if (__DEV__) {
       console.log("Handling 'chainChanged' event with payload", chainId)
     }
     this.emitUpdate({ chainId })
   }
 
-  private handleAccountsChanged(accounts: string[]): void {
+  handleAccountsChanged(accounts) {
     if (__DEV__) {
       console.log("Handling 'accountsChanged' event with payload", accounts)
     }
@@ -62,14 +58,14 @@ export class InjectedConnector extends AbstractConnector {
     }
   }
 
-  private handleClose(code: number, reason: string): void {
+  handleClose(code, reason) {
     if (__DEV__) {
       console.log("Handling 'close' event with payload", code, reason)
     }
     this.emitDeactivate()
   }
 
-  public async activate(): Promise<ConnectorUpdate> {
+  async activate() {
     if (!window.ethereum) {
       throw new NoEthereumProviderError()
     }
@@ -90,9 +86,9 @@ export class InjectedConnector extends AbstractConnector {
     if (window.ethereum.isMetaMask) {
       account = await window.ethereum
         .send('eth_requestAccounts')
-        .then(({ result: accounts }: any): string => accounts[0])
-        .catch((error: Error) => {
-          if (error && (error as any).code === 4001) {
+        .then(({ result: accounts }) => accounts[0])
+        .catch(error => {
+          if (error && error.code === 4001) {
             throw new UserRejectedRequestError()
           } else {
             throw error
@@ -101,9 +97,9 @@ export class InjectedConnector extends AbstractConnector {
     } else {
       account = await window.ethereum
         .enable()
-        .then((accounts: any) => accounts[0])
-        .catch((error: any) => {
-          if (error && (error as any).code === 4001) {
+        .then(accounts => accounts[0])
+        .catch(error => {
+          if (error && error.code === 4001) {
             throw new UserRejectedRequestError()
           } else {
             throw error
@@ -114,33 +110,33 @@ export class InjectedConnector extends AbstractConnector {
     return { provider: window.ethereum, account }
   }
 
-  public async getProvider(): Promise<any> {
+  async getProvider() {
     return window.ethereum
   }
 
-  public async getChainId(): Promise<number | string> {
+  async getChainId() {
     if (!window.ethereum) {
       throw new NoEthereumProviderError()
     }
     if (window.ethereum.isMetaMask) {
-      return window.ethereum.send('eth_chainId').then(({ result: chainId }: any): number | string => chainId)
+      return window.ethereum.send('eth_chainId').then(({ result: chainId }) => chainId)
     } else {
       return window.ethereum.networkVersion ? window.ethereum.networkVersion : 1
     }
   }
 
-  public async getAccount(): Promise<null | string> {
+  async getAccount() {
     if (!window.ethereum) {
       throw new NoEthereumProviderError()
     }
     if (window.ethereum.isMetaMask) {
-      return window.ethereum.send('eth_accounts').then(({ result: accounts }: any): string => accounts[0])
+      return window.ethereum.send('eth_accounts').then(({ result: accounts }) => accounts[0])
     } else {
-      return window.ethereum.enable().then((accounts: any) => accounts[0])
+      return window.ethereum.enable().then(accounts => accounts[0])
     }
   }
 
-  public deactivate() {
+  deactivate() {
     if (window.ethereum.removeListener) {
       window.ethereum.removeListener('connect', this.handleConnect)
       window.ethereum.removeListener('chainChanged', this.handleChainChanged)
@@ -150,12 +146,12 @@ export class InjectedConnector extends AbstractConnector {
     }
   }
 
-  public async isAuthorized(): Promise<boolean> {
+  async isAuthorized() {
     if (window.ethereum) {
       if (!window.ethereum.isMetaMask) {
         return window.ethereum
           .enable()
-          .then((accounts: any) => {
+          .then(accounts => {
             if (accounts.length > 0) {
               return true
             }
@@ -167,7 +163,7 @@ export class InjectedConnector extends AbstractConnector {
       } else {
         return window.ethereum
           .send('eth_accounts')
-          .then(({ result: accounts }: any) => {
+          .then(({ result: accounts }) => {
             if (accounts.length > 0) {
               return true
             }
