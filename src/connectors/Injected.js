@@ -28,29 +28,29 @@ export class InjectedConnector extends AbstractConnector {
   }
 
   handleConnect() {
-    if (__DEV__) {
-      console.log("Logging 'connect' event")
-    }
+    // if (__DEV__) {
+    console.log("Logging 'connect' event")
+    // }
   }
 
   handleNetworkChanged(networkId) {
-    if (__DEV__) {
-      console.log("Handling 'networkChanged' event with payload", networkId)
-    }
+    // if (__DEV__) {
+    console.log("Handling 'networkChanged' event with payload", networkId)
+    // }
     this.emitUpdate({ chainId: networkId })
   }
 
   handleChainChanged(chainId) {
-    if (__DEV__) {
-      console.log("Handling 'chainChanged' event with payload", chainId)
-    }
+    // if (__DEV__) {
+    console.log("Handling 'chainChanged' event with payload", chainId)
+    // }
     this.emitUpdate({ chainId })
   }
 
   handleAccountsChanged(accounts) {
-    if (__DEV__) {
-      console.log("Handling 'accountsChanged' event with payload", accounts)
-    }
+    // if (__DEV__) {
+    console.log("Handling 'accountsChanged' event with payload", accounts)
+    // }
     if (accounts.length === 0) {
       this.emitDeactivate()
     } else {
@@ -59,9 +59,9 @@ export class InjectedConnector extends AbstractConnector {
   }
 
   handleClose(code, reason) {
-    if (__DEV__) {
-      console.log("Handling 'close' event with payload", code, reason)
-    }
+    // if (__DEV__) {
+    console.log("Handling 'close' event with payload", code, reason)
+    // }
     this.emitDeactivate()
   }
 
