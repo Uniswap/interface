@@ -551,6 +551,7 @@ export default function AddLiquidity({ params }) {
   }, [inputValueParsed, inputBalance, outputValueMax, outputBalance, t])
 
   const allowance = useAddressAllowance(account, outputCurrency, exchangeAddress)
+
   const [showUnlock, setShowUnlock] = useState(false)
   useEffect(() => {
     if (outputValueParsed && allowance) {
