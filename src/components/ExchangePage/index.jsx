@@ -802,7 +802,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       />
       <Flex>
         <Button
-          disabled={!account || !isValid || customSlippageError === 'invalid' || walletError}
+          disabled={!account && !walletError ? false : !isValid || customSlippageError === 'invalid'}
           onClick={account && !walletError ? onSwap : tryToSetConnector}
           warning={highSlippageWarning || customSlippageError === 'warning'}
           loggedOut={!account}
