@@ -1,12 +1,11 @@
 import React, { useEffect, useRef } from 'react'
 import styled, { css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
-import { useWeb3Context, Connectors } from 'web3-react'
+import { useWeb3React } from '@web3-react/core'
 import { darken, transparentize } from 'polished'
 import Jazzicon from 'jazzicon'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
-import { ethers } from 'ethers'
 import { Activity } from 'react-feather'
 
 import { shortenAddress } from '../../utils'
@@ -16,8 +15,7 @@ import { useAllTransactions } from '../../contexts/Transactions'
 import { useWalletModalContext } from '../../contexts/Wallet'
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle.svg'
-
-const { Connector } = Connectors
+import { injected, network, walletconnect, walletlink } from '../../connectors'
 
 const Web3StatusGeneric = styled.button`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -128,8 +126,8 @@ const IconWrapper = styled.div`
 
 export default function Web3Status() {
   const { t } = useTranslation()
-
-  const { active, account, connectorName, setConnector } = useWeb3Context()
+  const context = useWeb3React()
+  const { connector, account, active, activate } = context
 
   const ENSName = useENSName(account)
 
@@ -139,69 +137,16 @@ export default function Web3Status() {
 
   const hasPendingTransactions = !!pending.length
 
-  const [{ open, error, setError, openWalletModal, closeWalletModal }] = useWalletModalContext()
+  const [{ open, setWalletError, walletError, openWalletModal, closeWalletModal }] = useWalletModalContext()
   const walletModalIsOpen = open
-  const walletModalError = error
-
-  // janky logic to detect log{ins,outs}...
-  useEffect(() => {
-    // if the injected connector is not active...
-    const { ethereum } = window
-    if (connectorName !== 'Injected') {
-      if (ethereum && ethereum.on && ethereum.removeListener) {
-        function tryToActivateInjected() {
-          const library = new ethers.providers.Web3Provider(window.ethereum)
-          // if calling enable won't pop an approve modal, then try to activate injected...
-          library.listAccounts().then(accounts => {
-            if (accounts.length >= 1) {
-              setConnector('Injected', { suppressAndThrowErrors: true })
-                .then(() => {
-                  setError()
-                })
-                .catch(error => {
-                  // ...and if the error is that they're on the wrong network, display it, otherwise eat it
-                  if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-                    setError(error)
-                  }
-                })
-            }
-          })
-        }
-        ethereum.on('networkChanged', tryToActivateInjected)
-        ethereum.on('accountsChanged', tryToActivateInjected)
-        return () => {
-          if (ethereum.removeListener) {
-            ethereum.removeListener('networkChanged', tryToActivateInjected)
-            ethereum.removeListener('accountsChanged', tryToActivateInjected)
-          }
-        }
-      }
-    } else {
-      // ...poll to check the accounts array, and if it's ever 0 i.e. the user logged out, update the connector
-      if (ethereum) {
-        const accountPoll = setInterval(() => {
-          const library = new ethers.providers.Web3Provider(ethereum)
-          library.listAccounts().then(accounts => {
-            if (accounts.length === 0) {
-              setConnector('Network')
-            }
-          })
-        }, 750)
-        return () => {
-          clearInterval(accountPoll)
-        }
-      }
-    }
-  }, [connectorName, setConnector, setError])
+  const walletModalError = walletError
 
   function onClick() {
     if (walletModalError) {
       openWalletModal()
-    } else if (connectorName === 'Network' && (window.ethereum || window.web3)) {
-      setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
-        if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-          setError(error)
-        }
+    } else if (connector === network && (window.ethereum || window.web3)) {
+      activate(injected, undefined, true).catch(() => {
+        setWalletError(true)
       })
     } else {
       openWalletModal()
@@ -209,15 +154,15 @@ export default function Web3Status() {
   }
 
   function getStatusIcon() {
-    if (connectorName === 'Network' || connectorName === 'Injected') {
+    if (connector === network || connector === injected) {
       return <Identicon ref={ref} />
-    } else if (connectorName === 'WalletConnect') {
+    } else if (connector === walletconnect) {
       return (
         <IconWrapper size={16}>
           <img src={WalletConnectIcon} alt={''} />
         </IconWrapper>
       )
-    } else if (connectorName === 'WalletLink') {
+    } else if (connector === walletlink) {
       return (
         <IconWrapper size={16}>
           <img src={CoinbaseWalletIcon} alt={''} />
@@ -228,7 +173,7 @@ export default function Web3Status() {
 
   const ref = useRef()
   useEffect(() => {
-    if (connectorName === 'Injected') {
+    if (connector === injected) {
       if (ref.current) {
         ref.current.innerHTML = ''
         if (account) {
@@ -236,7 +181,7 @@ export default function Web3Status() {
         }
       }
     }
-  }, [account, walletModalError, connectorName])
+  }, [account, walletModalError, connector])
 
   function getWeb3Status() {
     if (walletModalError) {
@@ -270,7 +215,7 @@ export default function Web3Status() {
         {getWeb3Status()}
         <WalletModal
           isOpen={walletModalIsOpen}
-          error={walletModalError}
+          walletError={walletModalError}
           onDismiss={closeWalletModal}
           ENSName={ENSName}
           pendingTransactions={pending}

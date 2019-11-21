@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import styled, { css } from 'styled-components'
-import { useWeb3Context } from 'web3-react'
+import { useWeb3React } from '@web3-react/core'
 
 import { isMobile } from 'react-device-detect'
 import QRCode from 'qrcode.react'
@@ -18,6 +18,8 @@ import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
+import { injected, walletconnect } from '../../connectors'
+import { URI_AVAILABLE } from '@web3-react/walletconnect-connector'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -326,30 +328,29 @@ const HoverText = styled.div`
 `
 
 const TransactionListWrapper = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap} /* margin: 0 0 1rem 0; */
+  ${({ theme }) => theme.flexColumnNoWrap}
 `
 
 const StyledLink = styled(Link)`
   color: ${({ hasENS, isENS, theme }) => (hasENS ? (isENS ? theme.royalBlue : theme.doveGray) : theme.royalBlue)};
 `
 
-const WALLET_VIEWS = {
-  OPTIONS: 'options',
-  ACCOUNT: 'account',
-  WALLET_CONNECT: 'walletConnect'
-}
-
 export default function WalletModal({
   isOpen,
-  dispatch,
-  closeType,
-  error,
+  walletError,
   onDismiss,
   pendingTransactions,
   confirmedTransactions,
   ENSName
 }) {
-  const { account, networkId, setConnector, setError, connectorName, connector } = useWeb3Context()
+  const context = useWeb3React()
+  const { chainId, account, connector, activate } = context
+
+  const WALLET_VIEWS = {
+    OPTIONS: 'options',
+    ACCOUNT: 'account',
+    WALLET_CONNECT: 'walletConnect'
+  }
 
   const { web3, ethereum } = window
 
@@ -358,6 +359,55 @@ export default function WalletModal({
   const [uri, setUri] = useState()
 
   const [isDark] = useDarkModeManager()
+
+  // handle logic to recognize the connector currently being activated
+  const [activatingConnector, setActivatingConnector] = useState()
+
+  //overwrite default with Metamask styles
+  useEffect(() => {
+    if (ethereum && ethereum.isMetaMask) {
+      SUPPORTED_WALLETS.INJECTED.name = 'MetaMask'
+      SUPPORTED_WALLETS.INJECTED.iconName = 'metamask.png'
+      SUPPORTED_WALLETS.INJECTED.description = 'Easy to use browser extension.'
+      SUPPORTED_WALLETS.INJECTED.color = '#E8831D'
+    }
+  }, [ethereum])
+
+  const wrappedOnDismiss = useCallback(() => {
+    onDismiss()
+  }, [onDismiss])
+
+  // reset the activation status
+  useEffect(() => {
+    if (activatingConnector && activatingConnector === connector) {
+      wrappedOnDismiss()
+      setActivatingConnector(undefined)
+    }
+  }, [activatingConnector, connector, wrappedOnDismiss])
+
+  // always reset to account view
+  useEffect(() => {
+    if (isOpen) {
+      setWalletView(WALLET_VIEWS.ACCOUNT)
+    }
+  }, [isOpen, WALLET_VIEWS.ACCOUNT])
+
+  // setup qrcode when trying to use walletconnect
+  useEffect(() => {
+    const logURI = uri => {
+      setWalletView(WALLET_VIEWS.WALLET_CONNECT)
+      setUri(uri)
+    }
+    walletconnect.on(URI_AVAILABLE, logURI)
+    return () => {
+      walletconnect.off(URI_AVAILABLE, logURI)
+    }
+  }, [WALLET_VIEWS.WALLET_CONNECT])
+
+  function tryConnection(newConnector) {
+    setActivatingConnector(newConnector)
+    activate(newConnector)
+  }
 
   function renderTransactions(transactions, pending) {
     return (
@@ -372,7 +422,7 @@ export default function WalletModal({
   function formatConnectorName() {
     let name = ''
     Object.keys(SUPPORTED_WALLETS).map(key => {
-      if (SUPPORTED_WALLETS[key].id === connectorName) {
+      if (SUPPORTED_WALLETS[key].connector === connector) {
         name = SUPPORTED_WALLETS[key].name
       }
       return true
@@ -380,84 +430,18 @@ export default function WalletModal({
     return name
   }
 
-  const wrappedOnDismiss = useCallback(() => {
-    onDismiss()
-  }, [onDismiss])
-
-  //overwrite default with Metamask styles
-  useEffect(() => {
-    if (ethereum && ethereum.isMetaMask) {
-      SUPPORTED_WALLETS.INJECTED.name = 'MetaMask'
-      SUPPORTED_WALLETS.INJECTED.iconName = 'metamask.png'
-      SUPPORTED_WALLETS.INJECTED.description = 'Easy to use browser extension.'
-      SUPPORTED_WALLETS.INJECTED.color = '#E8831D'
-    }
-  }, [ethereum])
-
-  // always reset to account view
-  useEffect(() => {
-    if (isOpen) {
-      setWalletView(WALLET_VIEWS.ACCOUNT)
-    }
-  }, [isOpen])
-
-  // when new connector, check for logins or scanning screens
-  useEffect(() => {
-    if (connectorName === 'WalletConnect') {
-      setUri(connector.walletConnector.uri)
-      if (!account) {
-        setWalletView(WALLET_VIEWS.WALLET_CONNECT)
-      } else {
-        wrappedOnDismiss()
-      }
-    }
-  }, [connector, connectorName, account, wrappedOnDismiss])
-
-  useEffect(() => {
-    if (connector.walletConnector) {
-      connector.walletConnector.on('connect', error => {
-        if (error) {
-          setError(error)
-        } else {
-          wrappedOnDismiss()
-        }
-      })
-    }
-  }, [connectorName, connector, wrappedOnDismiss, setError])
-
-  // set new connector or open scanner again
-  function tryConnection(newWalletName) {
-    if (connectorName !== newWalletName) {
-      if (newWalletName !== 'WalletConnect') {
-        wrappedOnDismiss()
-      }
-      setConnector(newWalletName, { suppressAndThrowErrors: true }).catch(error => {
-        wrappedOnDismiss() // leave unset
-      })
-    } else {
-      // tried wallet connect before but didn't scan yet
-      if (connectorName === 'WalletConnect' && !account) {
-        setWalletView(WALLET_VIEWS.WALLET_CONNECT)
-      }
-    }
-  }
-
   // get wallets user can switch too, depending on device/browser
   function getAdditionalOptions() {
     return Object.keys(SUPPORTED_WALLETS).map(key => {
       const option = SUPPORTED_WALLETS[key]
       return (
-        connectorName !== option.id &&
-        (option.id !== 'Injected' || (option.id === 'Injected' && (web3 || ethereum))) && (
+        connector !== option.connector &&
+        (option.connector !== injected || (option.connector === injected && (web3 || ethereum))) && (
           <WalletOption
-            key={key}
+            key={option.name}
             color={option.color}
             onClick={() => {
-              if (option.id !== 'WalletConnect') {
-                // for anything going to a logic/scan screen
-                setWalletView(WALLET_VIEWS.ACCOUNT)
-              }
-              tryConnection(option.id)
+              tryConnection(option.connector)
             }}
           >
             {option.name}
@@ -494,6 +478,7 @@ export default function WalletModal({
   function getLoggedOutOptions() {
     return Object.keys(SUPPORTED_WALLETS).map(key => {
       const option = SUPPORTED_WALLETS[key]
+      // show install if no metamask
       if (key === 'INJECTED' && !web3 && !ethereum) {
         return (
           <OptionCardClickable key={key}>
@@ -513,7 +498,7 @@ export default function WalletModal({
         return (
           <OptionCardClickable
             onClick={() => {
-              tryConnection(option.id)
+              tryConnection(option.connector)
             }}
             key={key}
           >
@@ -540,6 +525,7 @@ export default function WalletModal({
       </UpperSection>
     )
   }
+
   function getWalletDisplay() {
     if (isMobile && (!web3 && !ethereum)) {
       return (
@@ -556,7 +542,7 @@ export default function WalletModal({
           </OptionsSection>
         </UpperSectionCloseable>
       )
-    } else if (error) {
+    } else if (walletError) {
       return (
         <UpperSectionCloseable>
           <HeaderRow>Wrong Network</HeaderRow>
@@ -625,7 +611,7 @@ export default function WalletModal({
                         <StyledLink
                           hasENS={!!ENSName}
                           isENS={true}
-                          href={getEtherscanLink(networkId, ENSName, 'address')}
+                          href={getEtherscanLink(chainId, ENSName, 'address')}
                         >
                           {ENSName} ↗{' '}
                         </StyledLink>
@@ -636,7 +622,7 @@ export default function WalletModal({
                         <StyledLink
                           hasENS={!!ENSName}
                           isENS={false}
-                          href={getEtherscanLink(networkId, account, 'address')}
+                          href={getEtherscanLink(chainId, account, 'address')}
                         >
                           {account} ↗{' '}
                         </StyledLink>

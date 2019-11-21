@@ -54,6 +54,7 @@ const theme = darkMode => ({
   white,
   black,
   textColor: darkMode ? white : '#010101',
+  greyText: darkMode ? white : '#6C7284',
 
   // for setting css on <html>
   backgroundColor: darkMode ? '#333639' : white,
@@ -72,6 +73,7 @@ const theme = darkMode => ({
   mineshaftGray: darkMode ? '#E1E1E1' : '#2B2B2B',
   buttonOutlineGrey: darkMode ? '#FAFAFA' : '#F2F2F2',
   tokenRowHover: darkMode ? '#404040' : '#F2F2F2',
+
   //blacks
   charcoalBlack: darkMode ? '#F2F2F2' : '#404040',
   // blues

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
-import { useWeb3Context } from 'web3-react'
+import { useWeb3React } from '@web3-react/core'
 import { transparentize } from 'polished'
-
 import { isAddress } from '../../utils'
 import { useDebounce } from '../../hooks'
 
@@ -73,7 +72,8 @@ const Input = styled.input`
 export default function AddressInputPanel({ title, initialInput = '', onChange = () => {}, onError = () => {} }) {
   const { t } = useTranslation()
 
-  const { library } = useWeb3Context()
+  const context = useWeb3React()
+  const { library } = context
 
   const [input, setInput] = useState(initialInput.address ? initialInput.address : '')
 

@@ -1,3 +1,5 @@
+import { injected, walletconnect, walletlink } from '../connectors'
+
 export const FACTORY_ADDRESSES = {
   1: '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95',
   3: '0x9c83dCE8CA20E9aAF9D3efc003b2ea62aBC08351',
@@ -12,6 +14,7 @@ export const SUPPORTED_THEMES = {
 
 export const SUPPORTED_WALLETS = {
   INJECTED: {
+    connector: injected,
     id: 'Injected',
     name: 'Injected',
     iconName: 'arrow-right.svg',
@@ -19,6 +22,7 @@ export const SUPPORTED_WALLETS = {
     color: '#010101'
   },
   WALLET_CONNECT: {
+    connector: walletconnect,
     id: 'WalletConnect',
     name: 'Wallet Connect',
     iconName: 'walletConnectIcon.svg',
@@ -26,6 +30,7 @@ export const SUPPORTED_WALLETS = {
     color: '#4196FC'
   },
   WALLET_LINK: {
+    connector: walletlink,
     id: 'WalletLink',
     name: 'Coinbase Wallet',
     iconName: 'coinbaseWalletIcon.svg',

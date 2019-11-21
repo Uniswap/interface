@@ -1,9 +1,78 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
-import { useWeb3Context } from 'web3-react'
+import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+import { useWalletModalContext } from '../contexts/Wallet'
+import { injected, network } from '../connectors'
 
 import ERC20_ABI from '../constants/abis/erc20'
 import { getContract, getFactoryContract, getExchangeContract, isAddress } from '../utils'
 import copy from 'copy-to-clipboard'
+
+export function useEagerConnect() {
+  const { activate, setError, active } = useWeb3React()
+
+  const [tried, setTried] = useState(false)
+
+  useEffect(() => {
+    injected.isAuthorized().then(isAuthorized => {
+      if (isAuthorized) {
+        activate(injected, undefined, true).catch(error => {
+          setTried(true)
+        })
+      } else {
+        activate(network)
+        setTried(true)
+      }
+    })
+  }, [activate, setError]) // intentionally only running on mount (make sure it's only mounted once :))
+
+  // if the connection worked, wait until we get confirmation of that to flip the flag
+  useEffect(() => {
+    if (!tried && active) {
+      setTried(true)
+    }
+  }, [tried, active])
+
+  return tried
+}
+
+/**
+ * Use for network and injected - logs user in
+ * and out after checking what network theyre on
+ */
+export function useInactiveListener(suppress = false) {
+  const { error, connector, activate } = useWeb3React()
+  const [{ setWalletError }] = useWalletModalContext()
+
+  useEffect(() => {
+    const { ethereum } = window
+    // need to watch for switching to bad network, or switching to back to good network
+    if (ethereum && !error && !suppress && ethereum.on) {
+      const handleNetworkChanged = () => {
+        activate(injected, undefined, true).catch(error => {
+          activate(network)
+          if (error instanceof UnsupportedChainIdError) {
+            setWalletError(error)
+          }
+        })
+        setWalletError() // reset error on modal
+      }
+      const handleAccountsChanged = accounts => {
+        if (accounts.length > 0) {
+          activate(injected)
+          setWalletError() // reset error on modal
+        }
+      }
+      ethereum.on('networkChanged', handleNetworkChanged)
+      ethereum.on('accountsChanged', handleAccountsChanged)
+      return () => {
+        ethereum.removeListener('networkChanged', handleNetworkChanged)
+        ethereum.removeListener('accountsChanged', handleAccountsChanged)
+      }
+    }
+
+    return () => {}
+  }, [error, suppress, activate, connector, setWalletError])
+}
 
 // modified from https://usehooks.com/useDebounce/
 export function useDebounce(value, delay) {
@@ -51,7 +120,7 @@ export function useBodyKeyDown(targetKey, onKeyDown, suppressOnKeyDown = false) 
 }
 
 export function useENSName(address) {
-  const { library } = useWeb3Context()
+  const { library } = useWeb3React()
 
   const [ENSName, setENSName] = useState()
 
@@ -84,7 +153,7 @@ export function useENSName(address) {
 
 // returns null on errors
 export function useContract(address, ABI, withSignerIfPossible = true) {
-  const { library, account } = useWeb3Context()
+  const { library, account } = useWeb3React()
 
   return useMemo(() => {
     try {
@@ -97,7 +166,7 @@ export function useContract(address, ABI, withSignerIfPossible = true) {
 
 // returns null on errors
 export function useTokenContract(tokenAddress, withSignerIfPossible = true) {
-  const { library, account } = useWeb3Context()
+  const { library, account } = useWeb3React()
 
   return useMemo(() => {
     try {
@@ -110,7 +179,7 @@ export function useTokenContract(tokenAddress, withSignerIfPossible = true) {
 
 // returns null on errors
 export function useFactoryContract(withSignerIfPossible = true) {
-  const { networkId, library, account } = useWeb3Context()
+  const { networkId, library, account } = useWeb3React()
 
   return useMemo(() => {
     try {
@@ -122,7 +191,7 @@ export function useFactoryContract(withSignerIfPossible = true) {
 }
 
 export function useExchangeContract(exchangeAddress, withSignerIfPossible = true) {
-  const { library, account } = useWeb3Context()
+  const { library, account } = useWeb3React()
 
   return useMemo(() => {
     try {

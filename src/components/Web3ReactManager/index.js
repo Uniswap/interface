@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { useWeb3Context, Connectors } from 'web3-react'
+import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+import { network } from '../../connectors'
+import { useWalletModalContext } from '../../contexts/Wallet'
 import styled from 'styled-components'
-import { ethers } from 'ethers'
 import { useTranslation } from 'react-i18next'
-import { isMobile } from 'react-device-detect'
-
+import { useEagerConnect, useInactiveListener } from '../../hooks'
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle.svg'
-
-const { Connector } = Connectors
 
 const MessageWrapper = styled.div`
   display: flex;
@@ -31,59 +29,50 @@ const SpinnerWrapper = styled(Spinner)`
   }
 `
 
-function tryToSetConnector(setConnector, setError) {
-  setConnector('Injected', { suppressAndThrowErrors: true }).catch(() => {
-    setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
-      setError(error)
-    })
-  })
-}
-
 export default function Web3ReactManager({ children }) {
   const { t } = useTranslation()
-  const { active, error, setConnector, setError } = useWeb3Context()
-
-  // control whether or not we render the error, after parsing
-  const blockRender = error && error.code && error.code === Connector.errorCodes.UNSUPPORTED_NETWORK
-
-  useEffect(() => {
-    if (!active && !error) {
-      if (window.ethereum || window.web3) {
-        if (isMobile) {
-          tryToSetConnector(setConnector, setError)
-        } else {
-          const library = new ethers.providers.Web3Provider(window.ethereum || window.web3)
-          library.listAccounts().then(accounts => {
-            if (accounts.length >= 1) {
-              tryToSetConnector(setConnector, setError)
-            } else {
-              setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
-                setError(error)
-              })
-            }
-          })
-        }
-      } else {
-        setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
-          setError(error)
-        })
-      }
-    }
-  })
-
-  // parse the error
-  useEffect(() => {
-    if (error) {
-      // if wrong network, try with network or set error
-      if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-        setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
-          setError(error)
-        })
-      }
-    }
-  })
+  const context = useWeb3React()
+  const { connector, activate, active, error } = context
 
   const [showLoader, setShowLoader] = useState(false)
+
+  // handle logic to recognize the connector currently being activated
+  const [activatingConnector, setActivatingConnector] = useState()
+
+  // used for setting error state in wallet modal (unsupported networks)
+  const [{ setWalletError }] = useWalletModalContext()
+
+  useEffect(() => {
+    if (activatingConnector && activatingConnector === connector) {
+      setActivatingConnector(undefined)
+    }
+  }, [activatingConnector, connector, setWalletError])
+
+  // eagerly connect to the injected provider, if it exists and has granted access already
+  const triedEager = useEagerConnect()
+
+  // react to certain events on the ethereum provider, if it exists
+  useInactiveListener(!triedEager || !!activatingConnector)
+
+  // if error, reset to network connector
+  useEffect(() => {
+    if (error) {
+      if (error instanceof UnsupportedChainIdError) {
+        setWalletError(error)
+      }
+      setActivatingConnector(network)
+      activate(network)
+    }
+  }, [setActivatingConnector, error, activate, setWalletError])
+
+  // for resetting on logout after already trying eager on first load
+  useEffect(() => {
+    if (!active && !error && triedEager) {
+      setActivatingConnector(network)
+      activate(network)
+    }
+  }, [active, error, activate, triedEager])
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setShowLoader(true)
@@ -93,9 +82,7 @@ export default function Web3ReactManager({ children }) {
     }
   }, [])
 
-  if (blockRender) {
-    return null
-  } else if (error) {
+  if (error) {
     return (
       <MessageWrapper>
         <Message>{t('unknownError')}</Message>

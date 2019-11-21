@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled, { css, keyframes } from 'styled-components'
-import { animated, useTransition } from 'react-spring'
+import { animated, useTransition, useSpring, interpolate } from 'react-spring'
+import { Transition } from 'react-spring/renderprops'
+
 import { DialogOverlay, DialogContent } from '@reach/dialog'
 import { isMobile } from 'react-device-detect'
 import '@reach/dialog/styles.css'
 import { transparentize } from 'polished'
 import posed from 'react-pose'
-import { useSpring, interpolate } from 'react-spring'
 import { useGesture } from 'react-with-gesture'
+
+import clamp from 'lodash-es/clamp'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 const WrappedDialogOverlay = ({ suppressClassNameWarning, mobile, ...rest }) => <AnimatedDialogOverlay {...rest} />
@@ -98,7 +101,7 @@ const StyledDialogContent = styled(FilteredDialogContent)`
           border-radius: 20px;
           border-bottom-left-radius: 0;
           border-bottom-right-radius: 0;
-          animation: ${topToBottom} 0.6s cubic-bezier(0, 1, 0.5, 1); 0s;
+          //animation: ${topToBottom} 0.6s cubic-bezier(0, 1, 0.5, 1); 0s;
           ${!isOpen &&
             css`
             animation: ${bottomToTop} 0.8s cubic-bezier(0, 1, 0.5, 1); 0s;
@@ -137,6 +140,13 @@ const StyledBox = styled(Box)`
 `
 
 export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight = 50, initialFocusRef, children }) {
+  const mobileTransitions = useTransition(isOpen, null, {
+    config: { duration: 450 },
+    from: { opacity: 1, transform: 'translateY(200px)' },
+    enter: { opacity: 1, transform: 'translateY(0px)' },
+    leave: { opacity: 1, transform: 'translateY(200px)' }
+  })
+
   const transitions = useTransition(isOpen, null, {
     config: { duration: 150 },
     from: { opacity: 0 },
@@ -150,10 +160,26 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight 
     }
   }
 
-  const [bind, { delta, down }] = useGesture()
-  const { y } = useSpring({
-    y: down ? delta[1] : -50
-  })
+  function Pull({ children }) {
+    const [{ xy }, set] = useSpring(() => ({ xy: [0, 0] }))
+    const bind = useGesture(({ down, delta, velocity }) => {
+      velocity = clamp(velocity, 1, 8)
+      set({ xy: down ? delta : [0, 0], config: { mass: velocity, tension: 500 * velocity, friction: 50 } })
+    })
+    return (
+      <animated.div
+        {...bind()}
+        style={{ transform: xy.interpolate((x, y) => `translate3d(${0}px,${y > 0 ? y : 0}px,0)`) }}
+      >
+        {children}
+      </animated.div>
+    )
+  }
+
+  // const [bind, { delta, down }] = useGesture()
+  // const { y } = useSpring({
+  //   y: down ? delta[1] : -50
+  // })
 
   return transitions.map(
     ({ item, key, props }) =>
@@ -165,22 +191,18 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight 
           initialFocusRef={initialFocusRef}
           mobile={isMobile}
         >
-          {/* <StyledBox onValueChange={{ y: y => checkForClose(y) }}> */}
-          <StyledDialogContent
-            hidden={true}
-            minHeight={minHeight}
-            maxHeight={maxHeight}
-            isOpen={isOpen}
-            mobile={isMobile}
-            {...bind()}
-            style={{
-              height: interpolate([y], y => `${-y}px`)
-            }}
-          >
-            <HiddenCloseButton onClick={onDismiss} />
-            {children}
-          </StyledDialogContent>
-          {/* </StyledBox> */}
+          <Pull>
+            <StyledDialogContent
+              hidden={true}
+              minHeight={minHeight}
+              maxHeight={maxHeight}
+              isOpen={isOpen}
+              mobile={isMobile}
+            >
+              <HiddenCloseButton onClick={onDismiss} />
+              {children}
+            </StyledDialogContent>
+          </Pull>
         </StyledDialogOverlay>
       )
   )

@@ -15,14 +15,14 @@ function reducer(state, { type, payload }) {
   switch (type) {
     case WALLET_MODAL_ERROR: {
       const { error } = payload
-      return { ...state, error }
+      return { ...state, walletError: error }
     }
     case WALLET_MODAL_OPEN: {
       return { ...state, open: true }
     }
     case WALLET_MODAL_OPEN_ERROR: {
       const { error } = payload || {}
-      return { open: true, error }
+      return { open: true, walletError: error }
     }
     case WALLET_MODAL_CLOSE: {
       return { ...state, open: false }
@@ -35,13 +35,16 @@ function reducer(state, { type, payload }) {
 
 const walletModalInitialState = {
   open: false,
-  error: undefined
+  walletError: undefined
 }
 
 export default function Provider({ children }) {
-  const [{ open: walletModalIsOpen, error: walletModalError }, dispatch] = useReducer(reducer, walletModalInitialState)
+  const [{ open: walletModalIsOpen, walletError: walletModalError }, dispatch] = useReducer(
+    reducer,
+    walletModalInitialState
+  )
 
-  const setError = useCallback(error => {
+  const setWalletError = useCallback(error => {
     dispatch({ type: WALLET_MODAL_ERROR, payload: { error } })
   }, [])
 
@@ -56,8 +59,10 @@ export default function Provider({ children }) {
   return (
     <WalletModalContext.Provider
       value={useMemo(
-        () => [{ open: walletModalIsOpen, error: walletModalError, setError, openWalletModal, closeWalletModal }],
-        [walletModalIsOpen, walletModalError, setError, openWalletModal, closeWalletModal]
+        () => [
+          { open: walletModalIsOpen, walletError: walletModalError, setWalletError, openWalletModal, closeWalletModal }
+        ],
+        [walletModalIsOpen, walletModalError, setWalletError, openWalletModal, closeWalletModal]
       )}
     >
       {children}

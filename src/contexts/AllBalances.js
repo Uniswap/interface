@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback } from 'react'
 import { ethers } from 'ethers'
 import { getTokenReserves, getMarketDetails, BigNumber } from '@uniswap/sdk'
-import { useWeb3Context } from 'web3-react'
+import { useWeb3React } from '@web3-react/core'
 
 import { safeAccess, isAddress, getEtherBalance, getTokenBalance } from '../utils'
 import { useAllTokenDetails } from './Tokens'
@@ -53,13 +53,14 @@ export default function Provider({ children }) {
 }
 
 export function useFetchAllBalances() {
-  const { account, networkId, library } = useWeb3Context()
+  const context = useWeb3React()
+  const { library, chainId, account } = context
 
   const allTokens = useAllTokenDetails()
 
   const [state, { update }] = useAllBalancesContext()
 
-  const { allBalanceData } = safeAccess(state, [networkId, account]) || {}
+  const { allBalanceData } = safeAccess(state, [chainId, account]) || {}
 
   const getData = async () => {
     if (!!library && !!account) {
@@ -90,7 +91,7 @@ export function useFetchAllBalances() {
           }
         })
       )
-      update(newBalances, networkId, account)
+      update(newBalances, chainId, account)
     }
   }
 

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
-import { useWeb3Context } from 'web3-react'
+import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 
 import {
@@ -84,8 +84,8 @@ const INITIAL_TOKENS_CONTEXT = {
       [EXCHANGE_ADDRESS]: '0x1C6c712b1F4a7c263B1DBd8F97fb447c945d3b9a'
     },
     '0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359': {
-      [NAME]: 'Dai Stablecoin v1.0',
-      [SYMBOL]: 'DAI',
+      [NAME]: 'Dai Stablecoin v1.0 (SAI)',
+      [SYMBOL]: 'SAI',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x09cabEC1eAd1c0Ba254B09efb3EE13841712bE14'
     },
@@ -155,6 +155,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x81eeD7F1EcbD7FA9978fcc7584296Fb0C215Dc5C'
     },
+    '0x6fB3e0A217407EFFf7Ca062D46c26E5d60a14d69': {
+      [NAME]: 'IoTeX Network',
+      [SYMBOL]: 'IOTX',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x084f002671a5f03D5498B1e5fb15fc0cfee9a470'
+    },
     '0x818Fc6C2Ec5986bc6E2CBf00939d90556aB12ce5': {
       [NAME]: 'Kin',
       [SYMBOL]: 'KIN',
@@ -173,17 +179,17 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xF173214C720f58E03e194085B1DB28B50aCDeeaD'
     },
-    '0xBBbbCA6A901c926F240b89EacB641d8Aec7AEafD': {
-      [NAME]: 'LoopringCoin V2',
-      [SYMBOL]: 'LRC',
-      [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: '0xA539BAaa3aCA455c986bB1E25301CEF936CE1B65'
-    },
     '0x6c6EE5e31d828De241282B9606C8e98Ea48526E2': {
       [NAME]: 'HoloToken',
       [SYMBOL]: 'HOT',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xd4777E164c6C683E10593E08760B803D58529a8E'
+    },
+    '0xBBbbCA6A901c926F240b89EacB641d8Aec7AEafD': {
+      [NAME]: 'LoopringCoin V2',
+      [SYMBOL]: 'LRC',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0xA539BAaa3aCA455c986bB1E25301CEF936CE1B65'
     },
     '0x80fB784B7eD66730e8b1DBd9820aFD29931aab03': {
       [NAME]: 'EthLend Token',
@@ -293,6 +299,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x755899F0540c3548b99E68C59AdB0f15d2695188'
     },
+    '0x99ea4dB9EE77ACD40B119BD1dC4E33e1C070b80d': {
+      [NAME]: 'Quantstamp Token',
+      [SYMBOL]: 'QSP',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x82Db9FC4956Fa40efe1e35d881004612B5CB2cc2'
+    },
     '0xF970b8E36e23F7fC3FD752EeA86f8Be8D83375A6': {
       [NAME]: 'Ripio Credit Network Token',
       [SYMBOL]: 'RCN',
@@ -323,6 +335,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 8,
       [EXCHANGE_ADDRESS]: '0x394e524b47A3AB3D3327f7fF6629dC378c1494a3'
     },
+    '0x9469D013805bFfB7D3DEBe5E7839237e535ec483': {
+      [NAME]: 'Darwinia Network Native Token',
+      [SYMBOL]: 'RING',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0xeBD8AA50b26bFa63007d61eBa777A9DdE7e43c64'
+    },
     '0x607F4C5BB672230e8672085532f7e901544a7375': {
       [NAME]: 'iEx.ec Network Token',
       [SYMBOL]: 'RLC',
@@ -341,11 +359,23 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 8,
       [EXCHANGE_ADDRESS]: '0xC0C59cDe851bfcbdddD3377EC10ea54A18Efb937'
     },
+    '0x7C5A0CE9267ED19B22F8cae653F198e3E8daf098': {
+      [NAME]: 'SANtiment network token',
+      [SYMBOL]: 'SAN',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x8a8D7aD4b89D91983cd069C58C4AA9F2f4166298'
+    },
     '0x5e74C9036fb86BD7eCdcb084a0673EFc32eA31cb': {
       [NAME]: 'Synth sETH',
       [SYMBOL]: 'sETH',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xe9Cf7887b93150D4F2Da7dFc6D502B216438F244'
+    },
+    '0x3A9FfF453d50D4Ac52A6890647b823379ba36B9E': {
+      [NAME]: 'Shuffle.Monster V3',
+      [SYMBOL]: 'SHUF',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x536956Fab86774fb55CfaAcF496BC25E4d2B435C'
     },
     '0x744d70FDBE2Ba4CF95131626614a1763DF805B9E': {
       [NAME]: 'Status Network Token',
@@ -421,7 +451,7 @@ const INITIAL_TOKENS_CONTEXT = {
     },
     '0x09cabEC1eAd1c0Ba254B09efb3EE13841712bE14': {
       [NAME]: 'Uniswap V1',
-      [SYMBOL]: 'UNI-V1:DAI',
+      [SYMBOL]: 'UNI-V1:SAI',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x601c32E0580D3aef9437dB52D09f5a5D7E60eC22'
     },
@@ -466,6 +496,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'ZRX',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xaE76c84C9262Cdb9abc0C2c8888e62Db8E22A0bF'
+    },
+    '0x6B175474E89094C44Da98b954EedeAC495271d0F': {
+      [NAME]: 'Dai Stablecoin',
+      [SYMBOL]: 'DAI',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x2a1530C4C41db0B0b2bB646CB5Eb1A67b7158667'
     }
   },
   4: {
@@ -522,10 +558,11 @@ export default function Provider({ children }) {
 }
 
 export function useTokenDetails(tokenAddress) {
-  const { networkId, library } = useWeb3Context()
+  const context = useWeb3React()
+  const { library, chainId } = context
 
   const [state, { update }] = useTokensContext()
-  const allTokensInNetwork = { ...ETH, ...(safeAccess(state, [networkId]) || {}) }
+  const allTokensInNetwork = { ...ETH, ...(safeAccess(state, [chainId]) || {}) }
   const { [NAME]: name, [SYMBOL]: symbol, [DECIMALS]: decimals, [EXCHANGE_ADDRESS]: exchangeAddress } =
     safeAccess(allTokensInNetwork, [tokenAddress]) || {}
 
@@ -533,7 +570,7 @@ export function useTokenDetails(tokenAddress) {
     if (
       isAddress(tokenAddress) &&
       (name === undefined || symbol === undefined || decimals === undefined || exchangeAddress === undefined) &&
-      (networkId || networkId === 0) &&
+      (chainId || chainId === 0) &&
       library
     ) {
       let stale = false
@@ -541,14 +578,14 @@ export function useTokenDetails(tokenAddress) {
       const namePromise = getTokenName(tokenAddress, library).catch(() => null)
       const symbolPromise = getTokenSymbol(tokenAddress, library).catch(() => null)
       const decimalsPromise = getTokenDecimals(tokenAddress, library).catch(() => null)
-      const exchangeAddressPromise = getTokenExchangeAddressFromFactory(tokenAddress, networkId, library).catch(
+      const exchangeAddressPromise = getTokenExchangeAddressFromFactory(tokenAddress, chainId, library).catch(
         () => null
       )
 
       Promise.all([namePromise, symbolPromise, decimalsPromise, exchangeAddressPromise]).then(
         ([resolvedName, resolvedSymbol, resolvedDecimals, resolvedExchangeAddress]) => {
           if (!stale) {
-            update(networkId, tokenAddress, resolvedName, resolvedSymbol, resolvedDecimals, resolvedExchangeAddress)
+            update(chainId, tokenAddress, resolvedName, resolvedSymbol, resolvedDecimals, resolvedExchangeAddress)
           }
         }
       )
@@ -556,16 +593,17 @@ export function useTokenDetails(tokenAddress) {
         stale = true
       }
     }
-  }, [tokenAddress, name, symbol, decimals, exchangeAddress, networkId, library, update])
+  }, [tokenAddress, name, symbol, decimals, exchangeAddress, chainId, library, update])
 
   return { name, symbol, decimals, exchangeAddress }
 }
 
 export function useAllTokenDetails(requireExchange = true) {
-  const { networkId } = useWeb3Context()
+  const context = useWeb3React()
+  const { chainId } = context
 
   const [state] = useTokensContext()
-  const tokenDetails = { ...ETH, ...(safeAccess(state, [networkId]) || {}) }
+  const tokenDetails = { ...ETH, ...(safeAccess(state, [chainId]) || {}) }
 
   return requireExchange
     ? Object.keys(tokenDetails)

@@ -1,6 +1,7 @@
 import React, { useReducer, useState, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useWeb3Context } from 'web3-react'
+import { useWeb3React } from '@web3-react/core'
+
 import { createBrowserHistory } from 'history'
 import { ethers } from 'ethers'
 import ReactGA from 'react-ga'
@@ -201,7 +202,8 @@ function getMarketRate(reserveETH, reserveToken, decimals, invert = false) {
 
 export default function AddLiquidity({ params }) {
   const { t } = useTranslation()
-  const { library, active, account } = useWeb3Context()
+  const context = useWeb3React()
+  const { library, account, active } = context
 
   // clear url of query
   useEffect(() => {
@@ -616,7 +618,9 @@ export default function AddLiquidity({ params }) {
         title={t('deposit')}
         allBalances={allBalances}
         description={isNewExchange ? '' : outputValue ? `(${t('estimated')})` : ''}
-        extraText={outputBalance && formatBalance(amountFormatter(outputBalance, decimals, Math.min(decimals, 4)))}
+        extraText={
+          outputBalance && decimals && formatBalance(amountFormatter(outputBalance, decimals, Math.min(decimals, 4)))
+        }
         selectedTokenAddress={outputCurrency}
         onCurrencySelected={outputCurrency => {
           dispatchAddLiquidityState({ type: 'SELECT_CURRENCY', payload: outputCurrency })
