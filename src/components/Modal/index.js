@@ -100,24 +100,20 @@ const HiddenCloseButton = styled.button`
 
 export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight = 50, initialFocusRef, children }) {
   const transitions = useTransition(isOpen, null, {
-    config: { duration: 300 },
+    config: { duration: 200 },
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 }
   })
 
-  function checkForClose(velocity) {
-    if (velocity > 3) {
-      onDismiss()
-    }
-  }
-
   function Pull({ children }) {
     const [{ xy }, set] = useSpring(() => ({ xy: [0, 0] }))
-    const bind = useGesture(({ down, delta, velocity }) => {
+    const bind = useGesture(({ down, delta, velocity, direction }) => {
       velocity = clamp(velocity, 1, 8)
-      checkForClose(velocity)
       set({ xy: down ? delta : [0, 0], config: { mass: velocity, tension: 500 * velocity, friction: 50 } })
+      if (velocity > 3 && direction[1] > 0) {
+        onDismiss()
+      }
     })
     return (
       <animated.div
@@ -136,14 +132,13 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight 
           <StyledDialogOverlay
             key={key}
             style={props}
-            isOpen={isOpen}
             onDismiss={onDismiss}
             initialFocusRef={initialFocusRef}
             mobile={isMobile}
           >
-            <Spring
+            <Spring // animation specific to modal contents
               from={{
-                transform: isOpen ? 'translateY(200px)' : 'translateY(0px)'
+                transform: isOpen ? 'translateY(200px)' : 'translateY(100px)'
               }}
               to={{
                 transform: isOpen ? 'translateY(0px)' : 'translateY(200px)'
