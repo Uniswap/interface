@@ -692,7 +692,7 @@ export default function WalletModal({
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} minHeight={null} maxHeight={90}>
+    <Modal style={{ userSelect: 'none' }} isOpen={isOpen} onDismiss={wrappedOnDismiss} minHeight={null} maxHeight={90}>
       <Wrapper>{getWalletDisplay()}</Wrapper>
     </Modal>
   )

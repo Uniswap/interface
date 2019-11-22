@@ -1,10 +1,15 @@
 import React from 'react'
-import styled, { css, keyframes } from 'styled-components'
-import { animated, useTransition } from 'react-spring'
+import styled, { css } from 'styled-components'
+import { animated, useTransition, useSpring } from 'react-spring'
+import { Spring } from 'react-spring/renderprops'
+
 import { DialogOverlay, DialogContent } from '@reach/dialog'
 import { isMobile } from 'react-device-detect'
 import '@reach/dialog/styles.css'
 import { transparentize } from 'polished'
+import { useGesture } from 'react-with-gesture'
+
+import clamp from 'lodash-es/clamp'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 const WrappedDialogOverlay = ({ suppressClassNameWarning, mobile, ...rest }) => <AnimatedDialogOverlay {...rest} />
@@ -32,26 +37,10 @@ const StyledDialogOverlay = styled(WrappedDialogOverlay).attrs({
       left: 0;
       bottom: 0;
       right: 0;
-      position: absolute;
+      /* position: absolute; */
+      position: fixed;
       z-index: -1;
     }
-  }
-`
-const topToBottom = keyframes`
-  0% {
-    transform: translateY(200px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
-`
-
-const bottomToTop = keyframes`
-  0% {
-    transform: translateY(0px);
-  }
-  100% {
-    transform: translateY(200px);
   }
 `
 
@@ -66,6 +55,7 @@ const StyledDialogContent = styled(FilteredDialogContent)`
     box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
     padding: 0px;
     width: 50vw;
+
     max-width: 650px;
     ${({ maxHeight }) =>
       maxHeight &&
@@ -94,11 +84,6 @@ const StyledDialogContent = styled(FilteredDialogContent)`
           border-radius: 20px;
           border-bottom-left-radius: 0;
           border-bottom-right-radius: 0;
-          animation: ${topToBottom} 0.6s cubic-bezier(0, 1, 0.5, 1); 0s;
-          ${!isOpen &&
-            css`
-            animation: ${bottomToTop} 0.8s cubic-bezier(0, 1, 0.5, 1); 0s;
-          `}
         `}
     `}
   }
@@ -114,33 +99,91 @@ const HiddenCloseButton = styled.button`
 
 export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight = 50, initialFocusRef, children }) {
   const transitions = useTransition(isOpen, null, {
-    config: { duration: 150 },
+    config: { duration: 200 },
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 }
   })
 
-  return transitions.map(
-    ({ item, key, props }) =>
-      item && (
-        <StyledDialogOverlay
-          key={key}
-          style={props}
-          onDismiss={onDismiss}
-          initialFocusRef={initialFocusRef}
-          mobile={isMobile}
-        >
-          <StyledDialogContent
-            hidden={true}
-            minHeight={minHeight}
-            maxHeight={maxHeight}
-            isOpen={isOpen}
+  function Pull({ children }) {
+    const [{ xy }, set] = useSpring(() => ({ xy: [0, 0] }))
+    const bind = useGesture(({ down, delta, velocity, direction }) => {
+      velocity = clamp(velocity, 1, 8)
+      set({ xy: down ? delta : [0, 0], config: { mass: velocity, tension: 500 * velocity, friction: 50 } })
+      if (velocity > 3 && direction[1] > 0) {
+        onDismiss()
+      }
+    })
+    return (
+      <animated.div
+        {...bind()}
+        style={{ transform: xy.interpolate((x, y) => `translate3d(${0}px,${y > 0 ? y : 0}px,0)`) }}
+      >
+        {children}
+      </animated.div>
+    )
+  }
+
+  if (isMobile) {
+    return transitions.map(
+      ({ item, key, props }) =>
+        item && (
+          <StyledDialogOverlay
+            key={key}
+            style={props}
+            onDismiss={onDismiss}
+            initialFocusRef={initialFocusRef}
             mobile={isMobile}
           >
-            <HiddenCloseButton onClick={onDismiss} />
-            {children}
-          </StyledDialogContent>
-        </StyledDialogOverlay>
-      )
-  )
+            <Spring // animation specific to modal contents
+              from={{
+                transform: isOpen ? 'translateY(200px)' : 'translateY(100px)'
+              }}
+              to={{
+                transform: isOpen ? 'translateY(0px)' : 'translateY(200px)'
+              }}
+            >
+              {props => (
+                <Pull>
+                  <StyledDialogContent
+                    style={props}
+                    hidden={true}
+                    minHeight={minHeight}
+                    maxHeight={maxHeight}
+                    mobile={isMobile}
+                  >
+                    <HiddenCloseButton onClick={onDismiss} />
+                    {children}
+                  </StyledDialogContent>
+                </Pull>
+              )}
+            </Spring>
+          </StyledDialogOverlay>
+        )
+    )
+  } else {
+    return transitions.map(
+      ({ item, key, props }) =>
+        item && (
+          <StyledDialogOverlay
+            key={key}
+            style={props}
+            onDismiss={onDismiss}
+            initialFocusRef={initialFocusRef}
+            mobile={isMobile}
+          >
+            <StyledDialogContent
+              hidden={true}
+              minHeight={minHeight}
+              maxHeight={maxHeight}
+              isOpen={isOpen}
+              mobile={isMobile}
+            >
+              <HiddenCloseButton onClick={onDismiss} />
+              {children}
+            </StyledDialogContent>
+          </StyledDialogOverlay>
+        )
+    )
+  }
 }
