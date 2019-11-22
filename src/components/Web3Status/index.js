@@ -13,6 +13,7 @@ import { useENSName } from '../../hooks'
 import WalletModal from '../WalletModal'
 import { useAllTransactions } from '../../contexts/Transactions'
 import { useWalletModalContext } from '../../contexts/Wallet'
+import { useWalletOpen, useApplicationContext } from '../../contexts/Application'
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle.svg'
 import { injected, network, walletconnect, walletlink } from '../../connectors'
@@ -74,16 +75,13 @@ const Web3StatusConnected = styled(Web3StatusGeneric)`
   color: ${({ pending, theme }) => (pending ? theme.royalBlue : theme.doveGray)};
   font-weight: 400;
   :hover {
-
-    /* > P {
-      color: ${({ theme }) => theme.uniswapPink};
-    } */
     background-color: ${({ pending, theme }) =>
       pending ? transparentize(0.9, theme.royalBlue) : darken(0.05, theme.inputBackground)};
-    
-  :focus {
-    border: 1px solid
-      ${({ pending, theme }) => (pending ? darken(0.1, theme.royalBlue) : darken(0.1, theme.mercuryGray))};
+
+    :focus {
+      border: 1px solid
+        ${({ pending, theme }) => (pending ? darken(0.1, theme.royalBlue) : darken(0.1, theme.mercuryGray))};
+    }
   }
 `
 
@@ -127,7 +125,7 @@ const IconWrapper = styled.div`
 export default function Web3Status() {
   const { t } = useTranslation()
   const context = useWeb3React()
-  const { connector, account, active, activate } = context
+  const { connector, account, active } = context
 
   const ENSName = useENSName(account)
 
@@ -137,20 +135,15 @@ export default function Web3Status() {
 
   const hasPendingTransactions = !!pending.length
 
-  const [{ open, setWalletError, walletError, openWalletModal, closeWalletModal }] = useWalletModalContext()
-  const walletModalIsOpen = open
+  // getting rid of this with new route
+  const [{ walletError }] = useWalletModalContext()
+  const walletModalIsOpen = useWalletOpen()
   const walletModalError = walletError
 
+  const [, { toggleWalletModal }] = useApplicationContext()
+
   function onClick() {
-    if (walletModalError) {
-      openWalletModal()
-    } else if (connector === network && (window.ethereum || window.web3)) {
-      activate(injected, undefined, true).catch(() => {
-        setWalletError(true)
-      })
-    } else {
-      openWalletModal()
-    }
+    toggleWalletModal(true)
   }
 
   function getStatusIcon() {
@@ -216,7 +209,9 @@ export default function Web3Status() {
         <WalletModal
           isOpen={walletModalIsOpen}
           walletError={walletModalError}
-          onDismiss={closeWalletModal}
+          onDismiss={() => {
+            toggleWalletModal(false)
+          }}
           ENSName={ENSName}
           pendingTransactions={pending}
           confirmedTransactions={confirmed}

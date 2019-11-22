@@ -64,7 +64,6 @@ const StyledDialogContent = styled(FilteredDialogContent)`
     border: 1px solid ${({ theme }) => theme.concreteGray};
     background-color: ${({ theme }) => theme.inputBackground};
     box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
-    ${({ theme }) => theme.mediaWidth.upToMedium`margin: 0;`};
     padding: 0px;
     width: 50vw;
     max-width: 650px;
@@ -81,10 +80,10 @@ const StyledDialogContent = styled(FilteredDialogContent)`
     display: flex;
     overflow: hidden;
     border-radius: 10px;
-
     ${({ theme }) => theme.mediaWidth.upToMedium`
       width: 65vw;
       max-height: 65vh;
+      margin: 0;
     `}
     ${({ theme, mobile, isOpen }) => theme.mediaWidth.upToSmall`
       width:  85vw;

@@ -6,13 +6,16 @@ import { getUSDPrice } from '../utils/price'
 
 const BLOCK_NUMBER = 'BLOCK_NUMBER'
 const USD_PRICE = 'USD_PRICE'
+const WALLET_MODAL_OPEN = 'WALLET_MODAL_OPEN'
 
 const UPDATE_BLOCK_NUMBER = 'UPDATE_BLOCK_NUMBER'
 const UPDATE_USD_PRICE = 'UPDATE_USD_PRICE'
 
+const TOGGLE_WALLET_MODAL = 'TOGGLE_WALLET_MODAL'
+
 const ApplicationContext = createContext()
 
-function useApplicationContext() {
+export function useApplicationContext() {
   return useContext(ApplicationContext)
 }
 
@@ -38,6 +41,11 @@ function reducer(state, { type, payload }) {
         }
       }
     }
+    case TOGGLE_WALLET_MODAL: {
+      const { open } = payload
+      return { ...state, [WALLET_MODAL_OPEN]: open }
+    }
+
     default: {
       throw Error(`Unexpected action type in ApplicationContext reducer: '${type}'.`)
     }
@@ -47,7 +55,8 @@ function reducer(state, { type, payload }) {
 export default function Provider({ children }) {
   const [state, dispatch] = useReducer(reducer, {
     [BLOCK_NUMBER]: {},
-    [USD_PRICE]: {}
+    [USD_PRICE]: {},
+    [WALLET_MODAL_OPEN]: false
   })
 
   const updateBlockNumber = useCallback((networkId, blockNumber) => {
@@ -58,9 +67,18 @@ export default function Provider({ children }) {
     dispatch({ type: UPDATE_USD_PRICE, payload: { networkId, USDPrice } })
   }, [])
 
+  const toggleWalletModal = useCallback(open => {
+    dispatch({ type: TOGGLE_WALLET_MODAL, payload: { open } })
+  }, [])
+
   return (
     <ApplicationContext.Provider
-      value={useMemo(() => [state, { updateBlockNumber, updateUSDPrice }], [state, updateBlockNumber, updateUSDPrice])}
+      value={useMemo(() => [state, { updateBlockNumber, updateUSDPrice, toggleWalletModal }], [
+        state,
+        updateBlockNumber,
+        updateUSDPrice,
+        toggleWalletModal
+      ])}
     >
       {children}
     </ApplicationContext.Provider>
@@ -131,6 +149,11 @@ export function Updater() {
   }, [chainId, library, updateBlockNumber])
 
   return null
+}
+
+export function useWalletOpen() {
+  const [state] = useApplicationContext()
+  return safeAccess(state, [WALLET_MODAL_OPEN])
 }
 
 export function useBlockNumber() {

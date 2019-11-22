@@ -58,7 +58,7 @@ export default function Web3ReactManager({ children }) {
   useEffect(() => {
     if (error) {
       if (error instanceof UnsupportedChainIdError) {
-        setWalletError(error)
+        setWalletError(error) // can get rid of this with different route
       }
       setActivatingConnector(network)
       activate(network)

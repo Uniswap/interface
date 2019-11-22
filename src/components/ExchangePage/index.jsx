@@ -16,12 +16,12 @@ import TransactionDetails from '../TransactionDetails'
 import ArrowDown from '../../assets/svg/SVGArrowDown'
 import { amountFormatter, calculateGasMargin } from '../../utils'
 import { useExchangeContract } from '../../hooks'
-import { injected, network } from '../../connectors'
 import { useTokenDetails } from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { useAddressAllowance } from '../../contexts/Allowances'
+import { useApplicationContext } from '../../contexts/Application'
 import { useWalletModalContext } from '../../contexts/Wallet'
 
 const INPUT = 0
@@ -249,7 +249,7 @@ function getMarketRate(
 export default function ExchangePage({ initialCurrency, sending = false, params }) {
   const { t } = useTranslation()
   const context = useWeb3React()
-  const { account, activate } = context
+  const { account } = context
 
   const addTransaction = useTransactionAdder()
 
@@ -651,17 +651,14 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
   const allBalances = useFetchAllBalances()
 
-  const [{ openWalletModal, walletError }] = useWalletModalContext()
+  // removing this with new error route
+  const [{ walletError }] = useWalletModalContext()
+
+  const [, { toggleWalletModal }] = useApplicationContext()
 
   // if they have web3 kick them into it, if not pop modal
   function tryToSetConnector() {
-    if (window.web3 || window.ethereum) {
-      activate(injected).catch(() => {
-        activate(network)
-      })
-    } else {
-      openWalletModal()
-    }
+    toggleWalletModal(true)
   }
 
   return (
