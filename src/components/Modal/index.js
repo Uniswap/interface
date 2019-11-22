@@ -9,8 +9,6 @@ import '@reach/dialog/styles.css'
 import { transparentize } from 'polished'
 import { useGesture } from 'react-with-gesture'
 
-import clamp from 'lodash-es/clamp'
-
 const AnimatedDialogOverlay = animated(DialogOverlay)
 const WrappedDialogOverlay = ({ suppressClassNameWarning, mobile, ...rest }) => <AnimatedDialogOverlay {...rest} />
 const StyledDialogOverlay = styled(WrappedDialogOverlay).attrs({
@@ -108,7 +106,12 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight 
   function Pull({ children }) {
     const [{ xy }, set] = useSpring(() => ({ xy: [0, 0] }))
     const bind = useGesture(({ down, delta, velocity, direction }) => {
-      velocity = clamp(velocity, 1, 8)
+      if (velocity < 1) {
+        velocity = 1
+      }
+      if (velocity > 8) {
+        velocity = 8
+      }
       set({ xy: down ? delta : [0, 0], config: { mass: velocity, tension: 500 * velocity, friction: 50 } })
       if (velocity > 3 && direction[1] > 0) {
         onDismiss()
