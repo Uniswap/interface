@@ -47,7 +47,7 @@ const Body = styled.div`
   /* margin: 0 1.25rem 1.25rem 1.25rem; */
 `
 
-export default function App() {
+export default function App({ portisInstance }) {
   const params = getAllQueryParams()
   return (
     <>
@@ -58,7 +58,7 @@ export default function App() {
           </HeaderWrapper>
           <BodyWrapper>
             <Body>
-              <Web3ReactManager>
+              <Web3ReactManager portisInstance={portisInstance}>
                 <BrowserRouter>
                   <NavigationTabs />
                   {/* this Suspense is for route code-splitting */}

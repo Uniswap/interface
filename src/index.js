@@ -1,7 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
-import Web3Provider from 'web3-react'
+import Portis from '@portis/web3'
+import Web3Provider, { Connectors } from 'web3-react'
 
 import ThemeProvider, { GlobalStyle } from './theme'
 import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage'
@@ -18,6 +19,9 @@ import InjectedConnector from './InjectedConnector'
 
 import './i18n'
 
+const PORTIS_DAPP_ID = 'becb953f-eb1e-47e8-b3b8-a1822d7236a6'
+const NETWORK_ID = Number(process.env.REACT_APP_NETWORK_ID || '1')
+
 if (process.env.NODE_ENV === 'production') {
   ReactGA.initialize('UA-128182339-1')
 } else {
@@ -26,8 +30,14 @@ if (process.env.NODE_ENV === 'production') {
 ReactGA.pageview(window.location.pathname + window.location.search)
 
 const Network = new NetworkOnlyConnector({ providerURL: process.env.REACT_APP_NETWORK_URL || '' })
-const Injected = new InjectedConnector({ supportedNetworks: [Number(process.env.REACT_APP_NETWORK_ID || '1')] })
-const connectors = { Injected, Network }
+const Injected = new InjectedConnector({ supportedNetworks: [NETWORK_ID] })
+const portis = new Connectors.PortisConnector({
+  api: Portis,
+  dAppId: PORTIS_DAPP_ID,
+  network: { nodeUrl: process.env.REACT_APP_NETWORK_URL, chainId: NETWORK_ID }
+})
+portis.onActivation()
+const connectors = { Injected, Network, Portis: portis }
 
 function ContextProviders({ children }) {
   return (
@@ -64,7 +74,7 @@ ReactDOM.render(
       <ThemeProvider>
         <>
           <GlobalStyle />
-          <App />
+          <App portisInstance={portis} />
         </>
       </ThemeProvider>
     </ContextProviders>

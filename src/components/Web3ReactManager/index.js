@@ -32,42 +32,51 @@ const SpinnerWrapper = styled(Spinner)`
 `
 
 function tryToSetConnector(setConnector, setError) {
-  setConnector('Injected', { suppressAndThrowErrors: true }).catch(() => {
-    setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
-      setError(error)
+  setConnector('Portis', { suppressAndThrowErrors: true }).catch(() => {
+    setConnector('Injected', { suppressAndThrowErrors: true }).catch(() => {
+      setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
+        setError(error)
+      })
     })
   })
 }
 
-export default function Web3ReactManager({ children }) {
+export default function Web3ReactManager({ children, portisInstance }) {
   const { t } = useTranslation()
   const { active, error, setConnector, setError } = useWeb3Context()
   // control whether or not we render the error, after parsing
   const blockRender = error && error.code && error.code === Connector.errorCodes.UNSUPPORTED_NETWORK
 
   useEffect(() => {
-    if (!active && !error) {
-      if (window.ethereum || window.web3) {
-        if (isMobile) {
-          tryToSetConnector(setConnector, setError)
+    const setConnectorOnLogin = async () => {
+      const { result: isPortisLoggedIn } = await portisInstance.portis.isLoggedIn()
+
+      if (!active && !error) {
+        if (isPortisLoggedIn || window.ethereum || window.web3) {
+          if (isMobile) {
+            tryToSetConnector(setConnector, setError)
+          } else {
+            const provider = isPortisLoggedIn ? portisInstance.portis.provider : window.ethereum || window.web3
+            const library = new ethers.providers.Web3Provider(provider)
+            library.listAccounts().then(accounts => {
+              if (accounts.length >= 1) {
+                tryToSetConnector(setConnector, setError)
+              } else {
+                setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
+                  setError(error)
+                })
+              }
+            })
+          }
         } else {
-          const library = new ethers.providers.Web3Provider(window.ethereum || window.web3)
-          library.listAccounts().then(accounts => {
-            if (accounts.length >= 1) {
-              tryToSetConnector(setConnector, setError)
-            } else {
-              setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
-                setError(error)
-              })
-            }
+          setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
+            setError(error)
           })
         }
-      } else {
-        setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
-          setError(error)
-        })
       }
     }
+
+    setConnectorOnLogin()
   })
 
   // parse the error

@@ -16,6 +16,14 @@ import Circle from '../../assets/images/circle.svg'
 
 const { Connector } = Connectors
 
+const TEXT_STYLE = `
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0 0.5rem;
+  font-size: 0.83rem;
+`
+
 const Web3StatusGeneric = styled.button`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
@@ -38,6 +46,18 @@ const Web3StatusError = styled(Web3StatusGeneric)`
   :hover,
   :focus {
     background-color: ${({ theme }) => darken(0.1, theme.salmonRed)};
+  }
+`
+
+const ButtonsList = styled.div`
+  display: flex;
+
+  & > * {
+    margin-right: 5px;
+
+    :last-child {
+      margin-right: 0;
+    }
   }
 `
 
@@ -73,12 +93,13 @@ const Web3StatusConnected = styled(Web3StatusGeneric)`
 `
 
 const Text = styled.p`
+  ${TEXT_STYLE}
   flex: 1 1 auto;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin: 0 0.5rem 0 0.25rem;
-  font-size: 0.83rem;
+`
+
+const TextGrow = styled.p`
+  ${TEXT_STYLE}
+  flex: 1 0 auto;
 `
 
 const Identicon = styled.div`
@@ -133,7 +154,7 @@ function walletModalReducer(state, { type, payload }) {
 
 export default function Web3Status() {
   const { t } = useTranslation()
-  const { active, account, connectorName, setConnector } = useWeb3Context()
+  const { active, account, connectorName, setConnector, connector } = useWeb3Context()
 
   const ENSName = useENSName(account)
 
@@ -150,8 +171,12 @@ export default function Web3Status() {
   function setError(error) {
     dispatch({ type: WALLET_MODAL_ERROR, payload: { error } })
   }
-  function openWalletModal(error) {
-    dispatch({ type: WALLET_MODAL_OPEN, ...(error ? { payload: { error } } : {}) })
+  function openWalletModal(connectorName, error) {
+    if (!error && connectorName === 'Portis') {
+      connector.portis.showPortis()
+    } else {
+      dispatch({ type: WALLET_MODAL_OPEN, ...(error ? { payload: { error } } : {}) })
+    }
   }
   function closeWalletModal() {
     dispatch({ type: WALLET_MODAL_CLOSE })
@@ -161,27 +186,28 @@ export default function Web3Status() {
   useEffect(() => {
     // if the injected connector is not active...
     const { ethereum } = window
+
+    const tryToActivateInjected = () => {
+      const library = new ethers.providers.Web3Provider(window.ethereum)
+      // if calling enable won't pop an approve modal, then try to activate injected...
+      library.listAccounts().then(accounts => {
+        if (accounts.length >= 1) {
+          setConnector('Injected', { suppressAndThrowErrors: true })
+            .then(() => {
+              setError()
+            })
+            .catch(error => {
+              // ...and if the error is that they're on the wrong network, display it, otherwise eat it
+              if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
+                setError(error)
+              }
+            })
+        }
+      })
+    }
+
     if (connectorName !== 'Injected') {
       if (connectorName === 'Network' && ethereum && ethereum.on && ethereum.removeListener) {
-        function tryToActivateInjected() {
-          const library = new ethers.providers.Web3Provider(window.ethereum)
-          // if calling enable won't pop an approve modal, then try to activate injected...
-          library.listAccounts().then(accounts => {
-            if (accounts.length >= 1) {
-              setConnector('Injected', { suppressAndThrowErrors: true })
-                .then(() => {
-                  setError()
-                })
-                .catch(error => {
-                  // ...and if the error is that they're on the wrong network, display it, otherwise eat it
-                  if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-                    setError(error)
-                  }
-                })
-            }
-          })
-        }
-
         ethereum.on('networkChanged', tryToActivateInjected)
         ethereum.on('accountsChanged', tryToActivateInjected)
 
@@ -212,16 +238,22 @@ export default function Web3Status() {
   }, [connectorName, setConnector])
 
   function onClick() {
-    if (walletModalError) {
-      openWalletModal()
-    } else if (connectorName === 'Network' && (window.ethereum || window.web3)) {
+    if (!walletModalError && connectorName === 'Network' && (window.ethereum || window.web3)) {
       setConnector('Injected', { suppressAndThrowErrors: true }).catch(error => {
         if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
           setError(error)
         }
       })
     } else {
-      openWalletModal()
+      openWalletModal(connectorName)
+    }
+  }
+
+  function showPortis() {
+    if (!walletModalError) {
+      setConnector('Portis')
+    } else {
+      openWalletModal(connectorName)
     }
   }
 
@@ -246,9 +278,17 @@ export default function Web3Status() {
       )
     } else if (!account) {
       return (
-        <Web3StatusConnect onClick={onClick}>
-          <Text>{t('Connect')}</Text>
-        </Web3StatusConnect>
+        <>
+          <TextGrow>{t('Connect')}: </TextGrow>
+          <ButtonsList>
+            <Web3StatusConnect onClick={onClick}>
+              <Text>{t('Metamask')}</Text>
+            </Web3StatusConnect>
+            <Web3StatusConnect onClick={showPortis}>
+              <Text>{t('Portis')}</Text>
+            </Web3StatusConnect>
+          </ButtonsList>
+        </>
       )
     } else {
       return (
