@@ -7,7 +7,7 @@ import { DialogOverlay, DialogContent } from '@reach/dialog'
 import { isMobile } from 'react-device-detect'
 import '@reach/dialog/styles.css'
 import { transparentize } from 'polished'
-import { useGesture } from 'react-with-gesture'
+import { useGesture } from 'react-use-gesture'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 const WrappedDialogOverlay = ({ suppressClassNameWarning, mobile, ...rest }) => <AnimatedDialogOverlay {...rest} />
@@ -103,29 +103,25 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight 
     leave: { opacity: 0 }
   })
 
-  function Pull({ children }) {
-    const [{ xy }, set] = useSpring(() => ({ xy: [0, 0] }))
-    const bind = useGesture(({ down, delta, velocity, direction }) => {
+  const [{ xy }, set] = useSpring(() => ({ xy: [0, 0] }))
+  const bind = useGesture({
+    onDrag: state => {
+      let velocity = state.velocity
       if (velocity < 1) {
         velocity = 1
       }
       if (velocity > 8) {
         velocity = 8
       }
-      set({ xy: down ? delta : [0, 0], config: { mass: velocity, tension: 500 * velocity, friction: 50 } })
-      if (velocity > 3 && direction[1] > 0) {
+      set({
+        xy: state.down ? state.movement : [0, 0],
+        config: { mass: 1, tension: 210, friction: 20 }
+      })
+      if (velocity > 3) {
         onDismiss()
       }
-    })
-    return (
-      <animated.div
-        {...bind()}
-        style={{ transform: xy.interpolate((x, y) => `translate3d(${0}px,${y > 0 ? y : 0}px,0)`) }}
-      >
-        {children}
-      </animated.div>
-    )
-  }
+    }
+  })
 
   if (isMobile) {
     return transitions.map(
@@ -134,11 +130,12 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight 
           <StyledDialogOverlay
             key={key}
             style={props}
+            // isOpen={isOpen}
             onDismiss={onDismiss}
             initialFocusRef={initialFocusRef}
             mobile={isMobile}
           >
-            <Spring // animation specific to modal contents
+            <Spring // animation for entrance and exit
               from={{
                 transform: isOpen ? 'translateY(200px)' : 'translateY(100px)'
               }}
@@ -147,7 +144,10 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight 
               }}
             >
               {props => (
-                <Pull>
+                <animated.div
+                  {...bind()}
+                  style={{ transform: xy.interpolate((x, y) => `translate3d(${0}px,${y > 0 ? y : 0}px,0)`) }}
+                >
                   <StyledDialogContent
                     style={props}
                     hidden={true}
@@ -158,7 +158,7 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight 
                     <HiddenCloseButton onClick={onDismiss} />
                     {children}
                   </StyledDialogContent>
-                </Pull>
+                </animated.div>
               )}
             </Spring>
           </StyledDialogOverlay>
