@@ -1,9 +1,8 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import styled, { css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import { darken, transparentize } from 'polished'
-import Jazzicon from 'jazzicon'
 import { Activity } from 'react-feather'
 
 import { shortenAddress } from '../../utils'
