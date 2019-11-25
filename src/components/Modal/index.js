@@ -130,7 +130,6 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight 
           <StyledDialogOverlay
             key={key}
             style={props}
-            // isOpen={isOpen}
             onDismiss={onDismiss}
             initialFocusRef={initialFocusRef}
             mobile={isMobile}

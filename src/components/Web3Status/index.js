@@ -166,9 +166,7 @@ export default function Web3Status() {
   })
 
   function getWeb3Status() {
-    if (!contextNetwork.active && !active) {
-      return null
-    } else if (account) {
+    if (account) {
       return (
         <Web3StatusConnected onClick={toggleWalletModal} pending={hasPendingTransactions}>
           {hasPendingTransactions && <SpinnerWrapper src={Circle} alt="loader" />}
@@ -190,6 +188,10 @@ export default function Web3Status() {
         </Web3StatusConnect>
       )
     }
+  }
+
+  if (!contextNetwork.active && !active) {
+    return null
   }
 
   return (
