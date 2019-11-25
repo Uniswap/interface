@@ -228,13 +228,14 @@ export default function AccountDetails({
   const { chainId, account, connector } = useWeb3React()
 
   function formatConnectorName() {
-    let name = ''
-    Object.keys(SUPPORTED_WALLETS).map(key => {
-      if (SUPPORTED_WALLETS[key].connector === connector) {
-        name = SUPPORTED_WALLETS[key].name
-      }
-      return true
-    })
+    const isMetaMask = window.ethereum && window.ethereum.isMetaMask
+    const name = Object.keys(SUPPORTED_WALLETS)
+      .filter(
+        k =>
+          SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
+      )
+      .map(k => SUPPORTED_WALLETS[k].name)[0]
+
     return <WalletName>{name}</WalletName>
   }
 
@@ -273,7 +274,6 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {getStatusIcon()}
                 <GreenText>
-                  Connected
                   <GreenCircle>
                     <div />
                   </GreenCircle>
