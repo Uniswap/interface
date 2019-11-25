@@ -1,23 +1,64 @@
-import React from 'react'
-import styled, { css } from 'styled-components'
-import { useWeb3Context } from 'web3-react'
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import { isMobile } from 'react-device-detect'
+import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+import { URI_AVAILABLE } from '@web3-react/walletconnect-connector'
 
-import Transaction from './Transaction'
-import Copy from './Copy'
 import Modal from '../Modal'
-
-import { getEtherscanLink } from '../../utils'
+import AccountDetails from '../AccountDetails'
+import QrCode from './QrCode'
+import Option from './Option'
+import { SUPPORTED_WALLETS, MOBILE_DEEP_LINKS } from '../../constants'
+import { usePrevious } from '../../hooks'
 import { Link } from '../../theme'
+import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
+import MetamaskIcon from '../../assets/images/metamask.png'
+import { ReactComponent as Close } from '../../assets/images/x.svg'
+import { injected, walletconnect } from '../../connectors'
+import { useWalletModalToggle, useWalletModalOpen } from '../../contexts/Application'
+
+const CloseIcon = styled.div`
+  position: absolute;
+  right: 1rem;
+  top: 14px;
+  &:hover {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+`
+
+const CloseColor = styled(Close)`
+  path {
+    stroke: ${({ theme }) => theme.chaliceGray};
+  }
+`
 
 const Wrapper = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap}
   margin: 0;
   padding: 0;
   width: 100%;
-  ${({ theme }) => theme.flexColumnNoWrap}
+  background-color: ${({ theme }) => theme.backgroundColor};
+`
+
+const HeaderRow = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap};
+  padding: 1.5rem 1.5rem;
+  font-weight: 500;
+  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.royalBlue : 'inherit')};
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 1rem;
+  `};
+`
+
+const ContentWrapper = styled.div`
+  background-color: ${({ theme }) => theme.backgroundColor};
+  padding: 2rem;
+  ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
 `
 
 const UpperSection = styled.div`
-  padding: 2rem;
+  position: relative;
   background-color: ${({ theme }) => theme.concreteGray};
 
   h5 {
@@ -37,172 +78,229 @@ const UpperSection = styled.div`
   }
 `
 
-const YourAccount = styled.div`
-  h5 {
-    margin: 0 0 1rem 0;
-    font-weight: 400;
-    color: ${({ theme }) => theme.doveGray};
-  }
-
-  h4 {
-    margin: 0;
-    font-weight: 500;
-  }
-`
-
-const LowerSection = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap}
-  padding: 2rem;
-  flex-grow: 1;
-  overflow: auto;
-
-  h5 {
-    margin: 0;
-    font-weight: 400;
-    color: ${({ theme }) => theme.doveGray};
-  }
-
-  div:last-child {
-    /* margin-bottom: 0; */
-  }
-`
-
-const AccountControl = styled.div`
+const Blurb = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  min-width: 0;
-  
-  ${({ hasENS, isENS }) =>
-    hasENS &&
-    isENS &&
-    css`
-      margin-bottom: 0.75rem;
-    `}
-  font-weight: ${({ hasENS, isENS }) => (hasENS ? (isENS ? css`500` : css`400`) : css`500`)};
-  font-size: ${({ hasENS, isENS }) => (hasENS ? (isENS ? css`1rem` : css`0.8rem`) : css`1rem`)};
+  justify-content: center;
+  margin-top: 2rem;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin: 1rem;
+    font-size: 12px;
+  `};
+`
 
-  a:hover {
-    text-decoration: underline;
-  }
+const OptionGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+  `};
+`
 
-  a {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+const HoverText = styled.div`
+  :hover {
+    cursor: pointer;
   }
 `
 
-const TransactionListWrapper = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap} /* margin: 0 0 1rem 0; */
-`
+const WALLET_VIEWS = {
+  OPTIONS: 'options',
+  ACCOUNT: 'account',
+  WALLET_CONNECT: 'walletConnect'
+}
 
-const StyledLink = styled(Link)`
-  color: ${({ hasENS, isENS, theme }) => (hasENS ? (isENS ? theme.royalBlue : theme.doveGray) : theme.royalBlue)};
-`
+export default function WalletModal({ pendingTransactions, confirmedTransactions, ENSName }) {
+  const { active, account, connector, activate, error } = useWeb3React()
 
-// function getErrorMessage(event) {
-//   switch (event.code) {
-//     case InjectedConnector.errorCodes.ETHEREUM_ACCESS_DENIED: {
-//       return 'Permission Required'
-//     }
-//     case InjectedConnector.errorCodes.UNLOCK_REQUIRED: {
-//       return 'Account Unlock Required'
-//     }
-//     case InjectedConnector.errorCodes.NO_WEB3: {
-//       return 'Not a Web3 Browser'
-//     }
-//     default: {
-//       return 'Connection Error'
-//     }
-//   }
-// }
+  const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
-export default function WalletModal({ isOpen, error, onDismiss, pendingTransactions, confirmedTransactions, ENSName }) {
-  const { account, networkId } = useWeb3Context()
+  const walletModalOpen = useWalletModalOpen()
+  const toggleWalletModal = useWalletModalToggle()
 
-  function renderTransactions(transactions, pending) {
-    return (
-      <TransactionListWrapper>
-        {transactions.map((hash, i) => {
-          return <Transaction key={i} hash={hash} pending={pending} />
-        })}
-      </TransactionListWrapper>
-    )
-  }
+  // always reset to account view
+  useEffect(() => {
+    if (walletModalOpen) {
+      setWalletView(WALLET_VIEWS.ACCOUNT)
+    }
+  }, [walletModalOpen])
 
-  function wrappedOnDismiss() {
-    onDismiss()
-  }
+  // set up uri listener for walletconnect
+  const [uri, setUri] = useState()
+  useEffect(() => {
+    const activateWC = uri => {
+      setUri(uri)
+      setWalletView(WALLET_VIEWS.WALLET_CONNECT)
+    }
+    walletconnect.on(URI_AVAILABLE, activateWC)
+    return () => {
+      walletconnect.off(URI_AVAILABLE, activateWC)
+    }
+  }, [])
 
-  function getWalletDisplay() {
-    if (error) {
-      return (
-        <>
-          <UpperSection>
-            <h4>Wrong Network</h4>
-            <h5>Please connect to the main Ethereum network.</h5>
-          </UpperSection>
-        </>
-      )
-    } else if (account) {
-      return (
-        <>
-          <UpperSection>
-            <YourAccount>
-              <h5>Your Account</h5>
-              {ENSName && (
-                <AccountControl hasENS={!!ENSName} isENS={true}>
-                  <StyledLink hasENS={!!ENSName} isENS={true} href={getEtherscanLink(networkId, ENSName, 'address')}>
-                    {ENSName} ↗{' '}
-                  </StyledLink>
+  // close modal when a connection is successful
+  const activePrevious = usePrevious(active)
+  const connectorPrevious = usePrevious(connector)
+  useEffect(() => {
+    if (walletModalOpen && ((active && !activePrevious) || (connector && connector !== connectorPrevious && !error))) {
+      setWalletView(WALLET_VIEWS.ACCOUNT)
+    }
+  }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
 
-                  <Copy toCopy={ENSName} />
-                </AccountControl>
-              )}
+  // get wallets user can switch too, depending on device/browser
+  function getOptions() {
+    const isMetamask = window.ethereum && window.ethereum.isMetaMask
 
-              <AccountControl hasENS={!!ENSName} isENS={false}>
-                <StyledLink hasENS={!!ENSName} isENS={false} href={getEtherscanLink(networkId, account, 'address')}>
-                  {account} ↗{' '}
-                </StyledLink>
-
-                <Copy toCopy={account} />
-              </AccountControl>
-            </YourAccount>
-          </UpperSection>
-          {!!pendingTransactions.length || !!confirmedTransactions.length ? (
-            <LowerSection>
-              <h5>Recent Transactions</h5>
-              {renderTransactions(pendingTransactions, true)}
-              {renderTransactions(confirmedTransactions, false)}
-            </LowerSection>
-          ) : (
-            <LowerSection>
-              <h5>Your transactions will appear here...</h5>
-            </LowerSection>
-          )}
-        </>
-      )
+    if (isMobile && !window.web3 && !window.ethereum) {
+      return Object.keys(MOBILE_DEEP_LINKS).map(key => {
+        const option = MOBILE_DEEP_LINKS[key]
+        return (
+          <Option
+            key={key}
+            color={option.color}
+            header={option.name}
+            link={option.href}
+            subheader={option.description}
+            icon={require('../../assets/images/' + option.iconName)}
+          />
+        )
+      })
     } else {
-      return (
-        <>
-          <UpperSection>
-            <h4>No Ethereum account found</h4>
-            <h5>Please visit this page in a Web3 enabled browser.</h5>
-            <h5>
-              <Link href={'https://ethereum.org/use/#_3-what-is-a-wallet-and-which-one-should-i-use'}>
-                Learn more ↗
-              </Link>
-            </h5>
-          </UpperSection>
-        </>
-      )
+      return Object.keys(SUPPORTED_WALLETS).map(key => {
+        const option = SUPPORTED_WALLETS[key]
+
+        // don't show the option we're currently connected to
+        if (option.connector === connector) {
+          return null
+        }
+
+        if (option.connector === injected) {
+          // don't show injected if there's no injected provider
+          if (!(window.web3 || window.ethereum)) {
+            if (option.name === 'MetaMask') {
+              return (
+                <Option
+                  key={key}
+                  color={'#E8831D'}
+                  header={'Install Metamask'}
+                  subheader={'Easy to use browser extension.'}
+                  link={'https://metamask.io/'}
+                  icon={MetamaskIcon}
+                />
+              )
+            } else {
+              return null //dont want to return install twice
+            }
+          }
+          // don't return metamask if injected provider isn't metamask
+          else if (option.name === 'MetaMask' && !isMetamask) {
+            return null
+          }
+          // likewise for generic
+          else if (option.name === 'Injected' && isMetamask) {
+            return null
+          }
+        }
+
+        return (
+          <Option
+            onClick={() => {
+              activate(option.connector)
+            }}
+            key={key}
+            color={option.color}
+            header={option.name}
+            subheader={walletView === WALLET_VIEWS.OPTIONS ? null : option.description}
+            icon={require('../../assets/images/' + option.iconName)}
+          />
+        )
+      })
     }
   }
 
+  function getModalContent() {
+    if (error) {
+      return (
+        <UpperSection>
+          <CloseIcon onClick={toggleWalletModal}>
+            <CloseColor alt={'close icon'} />
+          </CloseIcon>
+          <HeaderRow>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}</HeaderRow>
+          <ContentWrapper>
+            {error instanceof UnsupportedChainIdError ? (
+              <h5>Please connect to the main Ethereum network.</h5>
+            ) : (
+              'Error connecting. Try refreshing the page.'
+            )}
+          </ContentWrapper>
+        </UpperSection>
+      )
+    }
+    if (account && walletView === WALLET_VIEWS.ACCOUNT) {
+      return (
+        <AccountDetails
+          toggleWalletModal={toggleWalletModal}
+          pendingTransactions={pendingTransactions}
+          confirmedTransactions={confirmedTransactions}
+          ENSName={ENSName}
+          openOptions={() => setWalletView(WALLET_VIEWS.OPTIONS)}
+        />
+      )
+    }
+    return (
+      <UpperSection>
+        <CloseIcon onClick={toggleWalletModal}>
+          <CloseColor alt={'close icon'} />
+        </CloseIcon>
+        {walletView !== WALLET_VIEWS.ACCOUNT ? (
+          <HeaderRow
+            color="blue"
+            onClick={() => {
+              setWalletView(WALLET_VIEWS.ACCOUNT)
+            }}
+          >
+            <HoverText>Back</HoverText>
+          </HeaderRow>
+        ) : (
+          <HeaderRow>
+            <HoverText>Connect To A Wallet</HoverText>
+          </HeaderRow>
+        )}
+        <ContentWrapper>
+          {walletView === WALLET_VIEWS.WALLET_CONNECT ? (
+            <QrCode
+              uri={uri}
+              header={'Connect with Wallet Connect'}
+              subheader={'Open protocol supported by major mobile wallets'}
+              size={220}
+              icon={WalletConnectIcon}
+            />
+          ) : !account ? (
+            getOptions()
+          ) : (
+            <OptionGrid>{getOptions()}</OptionGrid>
+          )}
+          <Blurb>
+            <span>New to Ethereum? &nbsp;</span>{' '}
+            <Link href="https://ethereum.org/use/#3-what-is-a-wallet-and-which-one-should-i-use">
+              Learn more about wallets
+            </Link>
+          </Blurb>
+        </ContentWrapper>
+      </UpperSection>
+    )
+  }
+
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} minHeight={null}>
-      <Wrapper>{getWalletDisplay()}</Wrapper>
+    <Modal
+      style={{ userSelect: 'none' }}
+      isOpen={walletModalOpen}
+      onDismiss={toggleWalletModal}
+      minHeight={null}
+      maxHeight={90}
+    >
+      <Wrapper>{getModalContent()}</Wrapper>
     </Modal>
   )
 }
