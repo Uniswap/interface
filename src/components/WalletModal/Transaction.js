@@ -1,13 +1,12 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
-import { useWeb3React } from '@web3-react/core'
+import { Check } from 'react-feather'
 
-import Copy from './Copy'
-
+import { useWeb3React } from '../../hooks'
 import { getEtherscanLink } from '../../utils'
 import { Link, Spinner } from '../../theme'
+import Copy from './Copy'
 import Circle from '../../assets/images/circle.svg'
-import { Check } from 'react-feather'
 
 import { transparentize } from 'polished'
 
@@ -76,8 +75,7 @@ const ButtonWrapper = styled.div`
 `
 
 export default function Transaction({ hash, pending }) {
-  const context = useWeb3React()
-  const { chainId } = context
+  const { chainId } = useWeb3React()
 
   return (
     <TransactionWrapper key={hash}>

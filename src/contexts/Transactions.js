@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
-import { useWeb3React } from '@web3-react/core'
 
+import { useWeb3React } from '../hooks'
 import { safeAccess } from '../utils'
 import { useBlockNumber } from './Application'
 
@@ -103,8 +103,7 @@ export default function Provider({ children }) {
 }
 
 export function Updater() {
-  const context = useWeb3React()
-  const { chainId, library } = context
+  const { chainId, library } = useWeb3React()
 
   const globalBlockNumber = useBlockNumber()
 
@@ -145,8 +144,7 @@ export function Updater() {
 }
 
 export function useTransactionAdder() {
-  const context = useWeb3React()
-  const { chainId } = context
+  const { chainId } = useWeb3React()
 
   const [, { add }] = useTransactionsContext()
 
@@ -168,8 +166,7 @@ export function useTransactionAdder() {
 }
 
 export function useAllTransactions() {
-  const context = useWeb3React()
-  const { chainId } = context
+  const { chainId } = useWeb3React()
 
   const [state] = useTransactionsContext()
 

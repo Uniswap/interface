@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
 import { BigNumber } from '@uniswap/sdk'
-import { useWeb3React } from '@web3-react/core'
 import styled from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
 import { darken } from 'polished'
@@ -12,7 +11,7 @@ import '@reach/tooltip/styles.css'
 import { isMobile } from 'react-device-detect'
 
 import { BorderlessInput } from '../../theme'
-import { useTokenContract } from '../../hooks'
+import { useWeb3React, useTokenContract } from '../../hooks'
 import { isAddress, calculateGasMargin, formatToUsd, formatTokenBalance, formatEthBalance } from '../../utils'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import Modal from '../Modal'
@@ -300,8 +299,7 @@ export default function CurrencyInputPanel({
 
   const allTokens = useAllTokenDetails()
 
-  const context = useWeb3React()
-  const { account } = context
+  const { account } = useWeb3React()
 
   const userTokenBalance = useAddressBalance(account, selectedTokenAddress)
 
@@ -449,8 +447,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
 
   const allTokens = useAllTokenDetails()
 
-  const context = useWeb3React()
-  const { account } = context
+  const { account } = useWeb3React()
 
   // BigNumber.js instance
   const ethPrice = useUSDPrice()

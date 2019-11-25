@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
-import { useWeb3React } from '@web3-react/core'
 
+import { useWeb3React } from '../hooks'
 import { safeAccess } from '../utils'
 import { getUSDPrice } from '../utils/price'
 
@@ -10,12 +10,11 @@ const WALLET_MODAL_OPEN = 'WALLET_MODAL_OPEN'
 
 const UPDATE_BLOCK_NUMBER = 'UPDATE_BLOCK_NUMBER'
 const UPDATE_USD_PRICE = 'UPDATE_USD_PRICE'
-
 const TOGGLE_WALLET_MODAL = 'TOGGLE_WALLET_MODAL'
 
 const ApplicationContext = createContext()
 
-export function useApplicationContext() {
+function useApplicationContext() {
   return useContext(ApplicationContext)
 }
 
@@ -42,8 +41,7 @@ function reducer(state, { type, payload }) {
       }
     }
     case TOGGLE_WALLET_MODAL: {
-      const { open } = payload
-      return { ...state, [WALLET_MODAL_OPEN]: open }
+      return { ...state, [WALLET_MODAL_OPEN]: !state[WALLET_MODAL_OPEN] }
     }
 
     default: {
@@ -67,8 +65,8 @@ export default function Provider({ children }) {
     dispatch({ type: UPDATE_USD_PRICE, payload: { networkId, USDPrice } })
   }, [])
 
-  const toggleWalletModal = useCallback(open => {
-    dispatch({ type: TOGGLE_WALLET_MODAL, payload: { open } })
+  const toggleWalletModal = useCallback(() => {
+    dispatch({ type: TOGGLE_WALLET_MODAL })
   }, [])
 
   return (
@@ -86,18 +84,10 @@ export default function Provider({ children }) {
 }
 
 export function Updater() {
-  const context = useWeb3React()
-  const { library, chainId } = context
+  const { library, chainId } = useWeb3React()
 
   const globalBlockNumber = useBlockNumber()
   const [, { updateBlockNumber, updateUSDPrice }] = useApplicationContext()
-
-  // slow down polling interval
-  // if (library && connectorName === 'Network' && library.pollingInterval !== 15) {
-  //   library.pollingInterval = 15
-  // } else if (library && library.pollingInterval !== 5) {
-  //   library.pollingInterval = 5
-  // }
 
   // update usd price
   useEffect(() => {
@@ -151,14 +141,8 @@ export function Updater() {
   return null
 }
 
-export function useWalletOpen() {
-  const [state] = useApplicationContext()
-  return safeAccess(state, [WALLET_MODAL_OPEN])
-}
-
 export function useBlockNumber() {
-  const context = useWeb3React()
-  const { chainId } = context
+  const { chainId } = useWeb3React()
 
   const [state] = useApplicationContext()
 
@@ -166,10 +150,21 @@ export function useBlockNumber() {
 }
 
 export function useUSDPrice() {
-  const context = useWeb3React()
-  const { chainId } = context
+  const { chainId } = useWeb3React()
 
   const [state] = useApplicationContext()
 
   return safeAccess(state, [USD_PRICE, chainId])
+}
+
+export function useWalletModalOpen() {
+  const [state] = useApplicationContext()
+
+  return state[WALLET_MODAL_OPEN]
+}
+
+export function useWalletModalToggle() {
+  const [, { toggleWalletModal }] = useApplicationContext()
+
+  return toggleWalletModal
 }

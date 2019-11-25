@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
-import { network } from '../../connectors'
-import { useWalletModalContext } from '../../contexts/Wallet'
+import { useWeb3React } from '@web3-react/core'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
+
+import { network } from '../../connectors'
 import { useEagerConnect, useInactiveListener } from '../../hooks'
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle.svg'
+import { NetworkContextName } from '../../constants'
 
 const MessageWrapper = styled.div`
   display: flex;
@@ -31,70 +32,70 @@ const SpinnerWrapper = styled(Spinner)`
 
 export default function Web3ReactManager({ children }) {
   const { t } = useTranslation()
-  const context = useWeb3React()
-  const { connector, activate, active, error } = context
+  const { active } = useWeb3React()
+  const { active: networkActive, error: networkError, activate: activateNetwork } = useWeb3React(NetworkContextName)
 
-  const [showLoader, setShowLoader] = useState(false)
-
-  // handle logic to recognize the connector currently being activated
-  const [activatingConnector, setActivatingConnector] = useState()
-
-  // used for setting error state in wallet modal (unsupported networks)
-  const [{ setWalletError }] = useWalletModalContext()
-
-  useEffect(() => {
-    if (activatingConnector && activatingConnector === connector) {
-      setActivatingConnector(undefined)
-    }
-  }, [activatingConnector, connector, setWalletError])
-
-  // eagerly connect to the injected provider, if it exists and has granted access already
+  // try to eagerly connect to an injected provider, if it exists and has granted access already
   const triedEager = useEagerConnect()
 
-  // react to certain events on the ethereum provider, if it exists
-  useInactiveListener(!triedEager || !!activatingConnector)
-
-  // if error, reset to network connector
+  // after eagerly trying injected, if the network connect ever isn't active or in an error state, activate itd
   useEffect(() => {
-    if (error) {
-      if (error instanceof UnsupportedChainIdError) {
-        setWalletError(error) // can get rid of this with different route
-      }
-      setActivatingConnector(network)
-      activate(network)
+    if (triedEager && !networkActive && !networkError) {
+      activateNetwork(network)
     }
-  }, [setActivatingConnector, error, activate, setWalletError])
+  }, [triedEager, networkActive, networkError, activateNetwork])
 
-  // for resetting on logout after already trying eager on first load
+  // 'pause' the network connector if we're ever connected to an account and it's active
   useEffect(() => {
-    if (!active && !error && triedEager) {
-      setActivatingConnector(network)
-      activate(network)
+    if (active && networkActive) {
+      network.pause()
     }
-  }, [active, error, activate, triedEager])
+  }, [active, networkActive])
 
+  // 'resume' the network connector if we're ever not connected to an account and it's active
+  useEffect(() => {
+    if (!active && networkActive) {
+      network.resume()
+    }
+  }, [active, networkActive])
+
+  // when there's no account connected, react to logins (broadly speaking) on the injected provider, if it exists
+  useInactiveListener(!triedEager)
+
+  // handle delayed loader state
+  const [showLoader, setShowLoader] = useState(false)
   useEffect(() => {
     const timeout = setTimeout(() => {
       setShowLoader(true)
     }, 600)
+
     return () => {
       clearTimeout(timeout)
     }
   }, [])
 
-  if (error) {
+  // on page load, do nothing until we've tried to connect to the injected connector
+  if (!triedEager) {
+    return null
+  }
+
+  // if the account context isn't active, and there's an error on the network context, it's an irrecoverable error
+  if (!active && networkError) {
     return (
       <MessageWrapper>
         <Message>{t('unknownError')}</Message>
       </MessageWrapper>
     )
-  } else if (!active) {
+  }
+
+  // if neither context is active, spin
+  if (!active && !networkActive) {
     return showLoader ? (
       <MessageWrapper>
         <SpinnerWrapper src={Circle} />
       </MessageWrapper>
     ) : null
-  } else {
-    return children
   }
+
+  return children
 }

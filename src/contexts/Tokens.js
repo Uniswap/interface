@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 
+import { useWeb3React } from '../hooks'
 import {
   isAddress,
   getTokenName,
@@ -558,8 +558,7 @@ export default function Provider({ children }) {
 }
 
 export function useTokenDetails(tokenAddress) {
-  const context = useWeb3React()
-  const { library, chainId } = context
+  const { library, chainId } = useWeb3React()
 
   const [state, { update }] = useTokensContext()
   const allTokensInNetwork = { ...ETH, ...(safeAccess(state, [chainId]) || {}) }
@@ -599,8 +598,7 @@ export function useTokenDetails(tokenAddress) {
 }
 
 export function useAllTokenDetails(requireExchange = true) {
-  const context = useWeb3React()
-  const { chainId } = context
+  const { chainId } = useWeb3React()
 
   const [state] = useTokensContext()
   const tokenDetails = { ...ETH, ...(safeAccess(state, [chainId]) || {}) }

@@ -1,14 +1,12 @@
 import React, { useState, useReducer, useEffect } from 'react'
 import ReactGA from 'react-ga'
 import { createBrowserHistory } from 'history'
-
-import { useTranslation } from 'react-i18next'
-import { useWeb3React } from '@web3-react/core'
-
 import { ethers } from 'ethers'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '../../theme'
+import { useWeb3React } from '../../hooks'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import AddressInputPanel from '../AddressInputPanel'
 import OversizedPanel from '../OversizedPanel'
@@ -21,8 +19,7 @@ import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { useAddressAllowance } from '../../contexts/Allowances'
-import { useApplicationContext } from '../../contexts/Application'
-import { useWalletModalContext } from '../../contexts/Wallet'
+import { useWalletModalToggle } from '../../contexts/Application'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -248,8 +245,7 @@ function getMarketRate(
 
 export default function ExchangePage({ initialCurrency, sending = false, params }) {
   const { t } = useTranslation()
-  const context = useWeb3React()
-  const { account } = context
+  const { account, error } = useWeb3React()
 
   const addTransaction = useTransactionAdder()
 
@@ -651,15 +647,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
   const allBalances = useFetchAllBalances()
 
-  // removing this with new error route
-  const [{ walletError }] = useWalletModalContext()
-
-  const [, { toggleWalletModal }] = useApplicationContext()
-
-  // if they have web3 kick them into it, if not pop modal
-  function tryToSetConnector() {
-    toggleWalletModal(true)
-  }
+  const toggleWalletModal = useWalletModalToggle()
 
   return (
     <>
@@ -799,8 +787,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       />
       <Flex>
         <Button
-          disabled={!account && !walletError ? false : !isValid || customSlippageError === 'invalid'}
-          onClick={account && !walletError ? onSwap : tryToSetConnector}
+          disabled={!account && !error ? false : !isValid || customSlippageError === 'invalid'}
+          onClick={account && !error ? onSwap : toggleWalletModal}
           warning={highSlippageWarning || customSlippageError === 'warning'}
           loggedOut={!account}
         >

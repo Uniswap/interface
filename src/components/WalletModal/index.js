@@ -1,25 +1,25 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import styled, { css } from 'styled-components'
-import { useWeb3React } from '@web3-react/core'
-
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
 import { isMobile } from 'react-device-detect'
 import QRCode from 'qrcode.react'
 import { transparentize } from 'polished'
+import { useWeb3React } from '@web3-react/core'
+import { URI_AVAILABLE } from '@web3-react/walletconnect-connector'
 
 import Transaction from './Transaction'
 import Copy from './Copy'
 import Modal from '../Modal'
 
-import { getEtherscanLink } from '../../utils'
-import { Link } from '../../theme'
 import { SUPPORTED_WALLETS, MOBILE_DEEP_LINKS } from '../../constants'
-
+import { getEtherscanLink } from '../../utils'
+import { usePrevious } from '../../hooks'
+import { Link } from '../../theme'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
 import { injected, walletconnect } from '../../connectors'
-import { URI_AVAILABLE } from '@web3-react/walletconnect-connector'
+import { useWalletModalToggle, useWalletModalOpen } from '../../contexts/Application'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -146,7 +146,7 @@ const QRCodeWrapper = styled.div`
 `
 
 const AccountSection = styled.div`
-  background-color: ${({ theme }) => theme.concreteGray}
+  background-color: ${({ theme }) => theme.concreteGray};
   padding: 0rem 2rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1rem 1rem;`};
 `
@@ -177,7 +177,7 @@ const AccountGroupingRow = styled.div`
 `
 
 const OptionsSection = styled.div`
-  background-color: ${({ theme }) => theme.backgroundColor}
+  background-color: ${({ theme }) => theme.backgroundColor};
   padding: 2rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
 `
@@ -220,7 +220,7 @@ const HeaderText = styled.div`
 `
 
 const SubHeader = styled.div`
-  color: ${({ theme }) => theme.textColor}
+  color: ${({ theme }) => theme.textColor};
   font-size: 12px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     font-size: 10px;
@@ -284,12 +284,12 @@ const LowerSection = styled.div`
 `
 
 const AccountControl = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
+  ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
   min-width: 0;
 
-  font-weight: ${({ hasENS, isENS }) => (hasENS ? (isENS ? css`500` : css`400`) : css`500`)};
-  font-size: ${({ hasENS, isENS }) => (hasENS ? (isENS ? css`1rem` : css`0.8rem`) : css`1rem`)};
+  font-weight: ${({ hasENS, isENS }) => (hasENS ? (isENS ? 500 : 400) : 500)};
+  font-size: ${({ hasENS, isENS }) => (hasENS ? (isENS ? '1rem' : '0.8rem') : '1rem')};
 
   a:hover {
     text-decoration: underline;
@@ -328,86 +328,56 @@ const HoverText = styled.div`
 `
 
 const TransactionListWrapper = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap}
+  ${({ theme }) => theme.flexColumnNoWrap};
 `
 
 const StyledLink = styled(Link)`
   color: ${({ hasENS, isENS, theme }) => (hasENS ? (isENS ? theme.royalBlue : theme.doveGray) : theme.royalBlue)};
 `
 
-export default function WalletModal({
-  isOpen,
-  walletError,
-  onDismiss,
-  pendingTransactions,
-  confirmedTransactions,
-  ENSName
-}) {
-  const context = useWeb3React()
-  const { chainId, account, connector, activate } = context
+const WALLET_VIEWS = {
+  OPTIONS: 'options',
+  ACCOUNT: 'account',
+  WALLET_CONNECT: 'walletConnect'
+}
 
-  const WALLET_VIEWS = {
-    OPTIONS: 'options',
-    ACCOUNT: 'account',
-    WALLET_CONNECT: 'walletConnect'
-  }
-
-  const { web3, ethereum } = window
+export default function WalletModal({ pendingTransactions, confirmedTransactions, ENSName }) {
+  const [isDark] = useDarkModeManager()
+  const { active, chainId, account, connector, activate, error } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
-  const [uri, setUri] = useState()
-
-  const [isDark] = useDarkModeManager()
-
-  // handle logic to recognize the connector currently being activated
-  const [activatingConnector, setActivatingConnector] = useState()
-
-  //overwrite default with Metamask styles
-  useEffect(() => {
-    if (ethereum && ethereum.isMetaMask) {
-      SUPPORTED_WALLETS.INJECTED.name = 'MetaMask'
-      SUPPORTED_WALLETS.INJECTED.iconName = 'metamask.png'
-      SUPPORTED_WALLETS.INJECTED.description = 'Easy to use browser extension.'
-      SUPPORTED_WALLETS.INJECTED.color = '#E8831D'
-    }
-  }, [ethereum])
-
-  const wrappedOnDismiss = useCallback(() => {
-    onDismiss()
-  }, [onDismiss])
-
-  // reset the activation status
-  useEffect(() => {
-    if (activatingConnector && activatingConnector === connector) {
-      wrappedOnDismiss()
-      setActivatingConnector(undefined)
-    }
-  }, [activatingConnector, connector, wrappedOnDismiss])
+  const walletModalOpen = useWalletModalOpen()
+  const toggleWalletModal = useWalletModalToggle()
 
   // always reset to account view
   useEffect(() => {
-    if (isOpen) {
+    if (walletModalOpen) {
       setWalletView(WALLET_VIEWS.ACCOUNT)
     }
-  }, [isOpen, WALLET_VIEWS.ACCOUNT])
+  }, [walletModalOpen])
 
-  // setup qrcode when trying to use walletconnect
+  // set up uri listener for walletconnect
+  const [uri, setUri] = useState()
   useEffect(() => {
-    const logURI = uri => {
-      setWalletView(WALLET_VIEWS.WALLET_CONNECT)
+    const activateWC = uri => {
       setUri(uri)
+      setWalletView(WALLET_VIEWS.WALLET_CONNECT)
     }
-    walletconnect.on(URI_AVAILABLE, logURI)
+    walletconnect.on(URI_AVAILABLE, activateWC)
     return () => {
-      walletconnect.off(URI_AVAILABLE, logURI)
+      walletconnect.off(URI_AVAILABLE, activateWC)
     }
-  }, [WALLET_VIEWS.WALLET_CONNECT])
+  }, [])
 
-  function tryConnection(newConnector) {
-    setActivatingConnector(newConnector)
-    activate(newConnector)
-  }
+  // close modal when a connection is successful
+  const activePrevious = usePrevious(active)
+  const connectorPrevious = usePrevious(connector)
+  useEffect(() => {
+    if (walletModalOpen && ((active && !activePrevious) || (connector && connector !== connectorPrevious))) {
+      toggleWalletModal()
+    }
+  })
 
   function renderTransactions(transactions, pending) {
     return (
@@ -432,24 +402,44 @@ export default function WalletModal({
 
   // get wallets user can switch too, depending on device/browser
   function getAdditionalOptions() {
+    const isMetamask = window.ethereum && window.ethereum.isMetaMask
+
     return Object.keys(SUPPORTED_WALLETS).map(key => {
       const option = SUPPORTED_WALLETS[key]
+
+      // don't show the option we're currently connected to
+      if (option.connector === connector) {
+        return null
+      }
+
+      if (option.connector === injected) {
+        // don't show injected if there's no injected provider
+        if (!(window.web3 || window.ethereum)) {
+          return null
+        }
+        // don't return metamask if injected provider isn't metamask
+        else if (option.name === 'MetaMask' && !isMetamask) {
+          return null
+        }
+        // likewise for generic
+        else if (option.name === 'Injected' && isMetamask) {
+          return null
+        }
+      }
+
       return (
-        connector !== option.connector &&
-        (option.connector !== injected || (option.connector === injected && (web3 || ethereum))) && (
-          <WalletOption
-            key={option.name}
-            color={option.color}
-            onClick={() => {
-              tryConnection(option.connector)
-            }}
-          >
-            {option.name}
-            <IconWrapper size={24}>
-              <img src={require('../../assets/images/' + option.iconName)} alt={'Icon'} />
-            </IconWrapper>
-          </WalletOption>
-        )
+        <WalletOption
+          key={option.name}
+          color={option.color}
+          onClick={() => {
+            activate(option.connector)
+          }}
+        >
+          {option.name}
+          <IconWrapper size={24}>
+            <img src={require('../../assets/images/' + option.iconName)} alt={'Icon'} />
+          </IconWrapper>
+        </WalletOption>
       )
     })
   }
@@ -476,49 +466,62 @@ export default function WalletModal({
 
   // get options when user is logged out
   function getLoggedOutOptions() {
+    const isMetamask = window.ethereum && window.ethereum.isMetaMask
+
     return Object.keys(SUPPORTED_WALLETS).map(key => {
       const option = SUPPORTED_WALLETS[key]
-      // show install if no metamask
-      if (key === 'INJECTED' && !web3 && !ethereum) {
-        return (
-          <OptionCardClickable key={key}>
-            <OptionCardLeft>
-              <HeaderText color={'#E8831D'}>Install Metamask</HeaderText>
-              <SubHeader>
-                Easy to use browser extension.
-                <Link href={'https://metamask.io/'}> Download.</Link>
-              </SubHeader>
-            </OptionCardLeft>
-            <IconWrapper>
-              <img src={MetamaskIcon} alt={'Icon'} />
-            </IconWrapper>
-          </OptionCardClickable>
-        )
-      } else {
-        return (
-          <OptionCardClickable
-            onClick={() => {
-              tryConnection(option.connector)
-            }}
-            key={key}
-          >
-            <OptionCardLeft>
-              <HeaderText color={option.color}>{option.name}</HeaderText>
-              <SubHeader>{option.description}</SubHeader>
-            </OptionCardLeft>
-            <IconWrapper>
-              <img src={require('../../assets/images/' + option.iconName)} alt={'Icon'} />
-            </IconWrapper>
-          </OptionCardClickable>
-        )
+
+      if (option.connector === injected) {
+        // show install if no metamask
+        if (!(window.web3 || window.ethereum)) {
+          return (
+            <OptionCardClickable key={key}>
+              <OptionCardLeft>
+                <HeaderText color={'#E8831D'}>Install Metamask</HeaderText>
+                <SubHeader>
+                  Easy to use browser extension.
+                  <Link href={'https://metamask.io/'}> Download.</Link>
+                </SubHeader>
+              </OptionCardLeft>
+              <IconWrapper>
+                <img src={MetamaskIcon} alt={'Icon'} />
+              </IconWrapper>
+            </OptionCardClickable>
+          )
+        }
+        // don't return metamask if injected provider isn't metamask
+        else if (option.name === 'MetaMask' && !isMetamask) {
+          return null
+        }
+        // likewise for generic
+        else if (option.name === 'Injected' && isMetamask) {
+          return null
+        }
       }
+
+      return (
+        <OptionCardClickable
+          onClick={() => {
+            activate(option.connector)
+          }}
+          key={key}
+        >
+          <OptionCardLeft>
+            <HeaderText color={option.color}>{option.name}</HeaderText>
+            <SubHeader>{option.description}</SubHeader>
+          </OptionCardLeft>
+          <IconWrapper>
+            <img src={require('../../assets/images/' + option.iconName)} alt={'Icon'} />
+          </IconWrapper>
+        </OptionCardClickable>
+      )
     })
   }
 
   const UpperSectionCloseable = props => {
     return (
       <UpperSection>
-        <CloseIcon onClick={() => wrappedOnDismiss()}>
+        <CloseIcon onClick={toggleWalletModal}>
           <CloseColor alt={'close icon'} />
         </CloseIcon>
         {props.children}
@@ -527,7 +530,7 @@ export default function WalletModal({
   }
 
   function getWalletDisplay() {
-    if (isMobile && (!web3 && !ethereum)) {
+    if (isMobile && !window.web3 && !window.ethereum) {
       return (
         <UpperSectionCloseable>
           <HeaderRow>Connect To A Wallet</HeaderRow>
@@ -542,7 +545,7 @@ export default function WalletModal({
           </OptionsSection>
         </UpperSectionCloseable>
       )
-    } else if (walletError) {
+    } else if (error) {
       return (
         <UpperSectionCloseable>
           <HeaderRow>Wrong Network</HeaderRow>
@@ -692,7 +695,13 @@ export default function WalletModal({
   }
 
   return (
-    <Modal style={{ userSelect: 'none' }} isOpen={isOpen} onDismiss={wrappedOnDismiss} minHeight={null} maxHeight={90}>
+    <Modal
+      style={{ userSelect: 'none' }}
+      isOpen={walletModalOpen}
+      onDismiss={toggleWalletModal}
+      minHeight={null}
+      maxHeight={90}
+    >
       <Wrapper>{getWalletDisplay()}</Wrapper>
     </Modal>
   )

@@ -21,16 +21,6 @@ const mediaWidthTemplates = Object.keys(MEDIA_WIDTHS).reduce((accumulator, size)
   return accumulator
 }, {})
 
-const flexColumnNoWrap = css`
-  display: flex;
-  flex-flow: column nowrap;
-`
-
-const flexRowNoWrap = css`
-  display: flex;
-  flex-flow: row nowrap;
-`
-
 const white = '#FFFFFF'
 const black = '#000000'
 
@@ -107,8 +97,14 @@ const theme = darkMode => ({
   // media queries
   mediaWidth: mediaWidthTemplates,
   // css snippets
-  flexColumnNoWrap,
-  flexRowNoWrap
+  flexColumnNoWrap: css`
+    display: flex;
+    flex-flow: column nowrap;
+  `,
+  flexRowNoWrap: css`
+    display: flex;
+    flex-flow: row nowrap;
+  `
 })
 
 export const GlobalStyle = createGlobalStyle`

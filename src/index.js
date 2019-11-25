@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
-import App from './pages/App'
-import './i18n'
+import { Web3ReactProvider, createWeb3ReactRoot } from '@web3-react/core'
+import { ethers } from 'ethers'
 
-import ThemeProvider, { GlobalStyle } from './theme'
+import { NetworkContextName } from './constants'
 import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage'
 import ApplicationContextProvider, { Updater as ApplicationContextUpdater } from './contexts/Application'
 import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
@@ -12,10 +12,11 @@ import TokensContextProvider from './contexts/Tokens'
 import BalancesContextProvider from './contexts/Balances'
 import AllowancesContextProvider from './contexts/Allowances'
 import AllBalancesContextProvider from './contexts/AllBalances'
-import WalletModalContextProvider from './contexts/Wallet'
+import App from './pages/App'
+import ThemeProvider, { GlobalStyle } from './theme'
+import './i18n'
 
-import { Web3ReactProvider } from '@web3-react/core'
-import { ethers } from 'ethers'
+const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
 function getLibrary(provider) {
   const library = new ethers.providers.Web3Provider(provider)
@@ -36,13 +37,11 @@ function ContextProviders({ children }) {
       <ApplicationContextProvider>
         <TransactionContextProvider>
           <TokensContextProvider>
-            <WalletModalContextProvider>
-              <BalancesContextProvider>
-                <AllBalancesContextProvider>
-                  <AllowancesContextProvider>{children}</AllowancesContextProvider>
-                </AllBalancesContextProvider>
-              </BalancesContextProvider>
-            </WalletModalContextProvider>
+            <BalancesContextProvider>
+              <AllBalancesContextProvider>
+                <AllowancesContextProvider>{children}</AllowancesContextProvider>
+              </AllBalancesContextProvider>
+            </BalancesContextProvider>
           </TokensContextProvider>
         </TransactionContextProvider>
       </ApplicationContextProvider>
@@ -62,15 +61,17 @@ function Updaters() {
 
 ReactDOM.render(
   <Web3ReactProvider getLibrary={getLibrary}>
-    <ContextProviders>
-      <Updaters />
-      <ThemeProvider>
-        <>
-          <GlobalStyle />
-          <App />
-        </>
-      </ThemeProvider>
-    </ContextProviders>
+    <Web3ProviderNetwork getLibrary={getLibrary}>
+      <ContextProviders>
+        <Updaters />
+        <ThemeProvider>
+          <>
+            <GlobalStyle />
+            <App />
+          </>
+        </ThemeProvider>
+      </ContextProviders>
+    </Web3ProviderNetwork>
   </Web3ReactProvider>,
   document.getElementById('root')
 )
