@@ -122,7 +122,7 @@ const IconWrapper = styled.div`
 
 export default function Web3Status() {
   const { t } = useTranslation()
-  const { account, connector, error } = useWeb3React()
+  const { active, account, connector, error } = useWeb3React()
   const contextNetwork = useWeb3React(NetworkContextName)
 
   const ENSName = useENSName(account)
@@ -166,7 +166,7 @@ export default function Web3Status() {
   })
 
   function getWeb3Status() {
-    if (!contextNetwork.active) {
+    if (!contextNetwork.active && !active) {
       return null
     } else if (account) {
       return (

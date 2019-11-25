@@ -43,7 +43,6 @@ function reducer(state, { type, payload }) {
     case TOGGLE_WALLET_MODAL: {
       return { ...state, [WALLET_MODAL_OPEN]: !state[WALLET_MODAL_OPEN] }
     }
-
     default: {
       throw Error(`Unexpected action type in ApplicationContext reducer: '${type}'.`)
     }
