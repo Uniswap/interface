@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
-import { useWeb3Context } from 'web3-react'
 import { transparentize } from 'polished'
 
 import { isAddress } from '../../utils'
-import { useDebounce } from '../../hooks'
+import { useWeb3React, useDebounce } from '../../hooks'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -73,7 +72,7 @@ const Input = styled.input`
 export default function AddressInputPanel({ title, initialInput = '', onChange = () => {}, onError = () => {} }) {
   const { t } = useTranslation()
 
-  const { library } = useWeb3Context()
+  const { library } = useWeb3React()
 
   const [input, setInput] = useState(initialInput.address ? initialInput.address : '')
 

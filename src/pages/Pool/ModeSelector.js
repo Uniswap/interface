@@ -126,6 +126,7 @@ function ModeSelector({ location: { pathname }, history }) {
       </LiquidityContainer>
       <Modal
         isOpen={modalIsOpen}
+        maxHeight={50}
         onDismiss={() => {
           setModalIsOpen(false)
         }}

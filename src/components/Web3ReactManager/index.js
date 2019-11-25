@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { useWeb3Context, Connectors } from 'web3-react'
+import { useWeb3React } from '@web3-react/core'
 import styled from 'styled-components'
-import { ethers } from 'ethers'
 import { useTranslation } from 'react-i18next'
-import { isMobile } from 'react-device-detect'
 
+import { network } from '../../connectors'
+import { useEagerConnect, useInactiveListener } from '../../hooks'
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle.svg'
-
-const { Connector } = Connectors
+import { NetworkContextName } from '../../constants'
 
 const MessageWrapper = styled.div`
   display: flex;
@@ -31,82 +30,73 @@ const SpinnerWrapper = styled(Spinner)`
   }
 `
 
-function tryToSetConnector(setConnector, setError) {
-  setConnector('Injected', { suppressAndThrowErrors: true }).catch(() => {
-    setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
-      setError(error)
-    })
-  })
-}
-
 export default function Web3ReactManager({ children }) {
   const { t } = useTranslation()
-  const { active, error, setConnector, setError } = useWeb3Context()
-  // control whether or not we render the error, after parsing
-  const blockRender = error && error.code && error.code === Connector.errorCodes.UNSUPPORTED_NETWORK
+  const { active } = useWeb3React()
+  const { active: networkActive, error: networkError, activate: activateNetwork } = useWeb3React(NetworkContextName)
 
+  // try to eagerly connect to an injected provider, if it exists and has granted access already
+  const triedEager = useEagerConnect()
+
+  // after eagerly trying injected, if the network connect ever isn't active or in an error state, activate itd
+  // TODO think about not doing this at all
   useEffect(() => {
-    if (!active && !error) {
-      if (window.ethereum || window.web3) {
-        if (isMobile) {
-          tryToSetConnector(setConnector, setError)
-        } else {
-          const library = new ethers.providers.Web3Provider(window.ethereum || window.web3)
-          library.listAccounts().then(accounts => {
-            if (accounts.length >= 1) {
-              tryToSetConnector(setConnector, setError)
-            } else {
-              setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
-                setError(error)
-              })
-            }
-          })
-        }
-      } else {
-        setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
-          setError(error)
-        })
-      }
+    if (triedEager && !networkActive && !networkError && !active) {
+      activateNetwork(network)
     }
-  })
+  }, [triedEager, networkActive, networkError, activateNetwork, active])
 
-  // parse the error
+  // 'pause' the network connector if we're ever connected to an account and it's active
   useEffect(() => {
-    if (error) {
-      // if the user changes to the wrong network, unset the connector
-      if (error.code === Connector.errorCodes.UNSUPPORTED_NETWORK) {
-        setConnector('Network', { suppressAndThrowErrors: true }).catch(error => {
-          setError(error)
-        })
-      }
+    if (active && networkActive) {
+      network.pause()
     }
-  })
+  }, [active, networkActive])
 
+  // 'resume' the network connector if we're ever not connected to an account and it's active
+  useEffect(() => {
+    if (!active && networkActive) {
+      network.resume()
+    }
+  }, [active, networkActive])
+
+  // when there's no account connected, react to logins (broadly speaking) on the injected provider, if it exists
+  useInactiveListener(!triedEager)
+
+  // handle delayed loader state
   const [showLoader, setShowLoader] = useState(false)
   useEffect(() => {
     const timeout = setTimeout(() => {
       setShowLoader(true)
     }, 600)
+
     return () => {
       clearTimeout(timeout)
     }
   }, [])
 
-  if (blockRender) {
+  // on page load, do nothing until we've tried to connect to the injected connector
+  if (!triedEager) {
     return null
-  } else if (error) {
+  }
+
+  // if the account context isn't active, and there's an error on the network context, it's an irrecoverable error
+  if (!active && networkError) {
     return (
       <MessageWrapper>
         <Message>{t('unknownError')}</Message>
       </MessageWrapper>
     )
-  } else if (!active) {
+  }
+
+  // if neither context is active, spin
+  if (!active && !networkActive) {
     return showLoader ? (
       <MessageWrapper>
         <SpinnerWrapper src={Circle} />
       </MessageWrapper>
     ) : null
-  } else {
-    return children
   }
+
+  return children
 }

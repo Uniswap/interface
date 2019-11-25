@@ -1,12 +1,12 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
-import { useWeb3Context } from 'web3-react'
-import Copy from './Copy'
+import { Check } from 'react-feather'
 
+import { useWeb3React } from '../../hooks'
 import { getEtherscanLink } from '../../utils'
 import { Link, Spinner } from '../../theme'
+import Copy from './Copy'
 import Circle from '../../assets/images/circle.svg'
-import { Check } from 'react-feather'
 
 import { transparentize } from 'polished'
 
@@ -75,17 +75,17 @@ const ButtonWrapper = styled.div`
 `
 
 export default function Transaction({ hash, pending }) {
-  const { networkId } = useWeb3Context()
+  const { chainId } = useWeb3React()
 
   return (
     <TransactionWrapper key={hash}>
       <TransactionStatusWrapper>
-        <Link href={getEtherscanLink(networkId, hash, 'transaction')}>{hash} ↗ </Link>
+        <Link href={getEtherscanLink(chainId, hash, 'transaction')}>{hash} ↗ </Link>
         <Copy toCopy={hash} />
       </TransactionStatusWrapper>
       {pending ? (
         <ButtonWrapper pending={pending}>
-          <Link href={getEtherscanLink(networkId, hash, 'transaction')}>
+          <Link href={getEtherscanLink(chainId, hash, 'transaction')}>
             <TransactionState pending={pending}>
               <Spinner src={Circle} id="pending" />
               <TransactionStatusText>Pending</TransactionStatusText>
@@ -94,7 +94,7 @@ export default function Transaction({ hash, pending }) {
         </ButtonWrapper>
       ) : (
         <ButtonWrapper pending={pending}>
-          <Link href={getEtherscanLink(networkId, hash, 'transaction')}>
+          <Link href={getEtherscanLink(chainId, hash, 'transaction')}>
             <TransactionState pending={pending}>
               <Check size="16" />
               <TransactionStatusText>Confirmed</TransactionStatusText>

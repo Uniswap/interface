@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
-import { useWeb3Context } from 'web3-react'
+import {} from '@web3-react/core'
 
+import { useWeb3React } from '../hooks'
 import { safeAccess, isAddress, getTokenAllowance } from '../utils'
 import { useBlockNumber } from './Application'
 
@@ -54,12 +55,12 @@ export default function Provider({ children }) {
 }
 
 export function useAddressAllowance(address, tokenAddress, spenderAddress) {
-  const { networkId, library } = useWeb3Context()
+  const { library, chainId } = useWeb3React()
 
   const globalBlockNumber = useBlockNumber()
 
   const [state, { update }] = useAllowancesContext()
-  const { value, blockNumber } = safeAccess(state, [networkId, address, tokenAddress, spenderAddress]) || {}
+  const { value, blockNumber } = safeAccess(state, [chainId, address, tokenAddress, spenderAddress]) || {}
 
   useEffect(() => {
     if (
@@ -67,7 +68,7 @@ export function useAddressAllowance(address, tokenAddress, spenderAddress) {
       isAddress(tokenAddress) &&
       isAddress(spenderAddress) &&
       (value === undefined || blockNumber !== globalBlockNumber) &&
-      (networkId || networkId === 0) &&
+      (chainId || chainId === 0) &&
       library
     ) {
       let stale = false
@@ -75,12 +76,12 @@ export function useAddressAllowance(address, tokenAddress, spenderAddress) {
       getTokenAllowance(address, tokenAddress, spenderAddress, library)
         .then(value => {
           if (!stale) {
-            update(networkId, address, tokenAddress, spenderAddress, value, globalBlockNumber)
+            update(chainId, address, tokenAddress, spenderAddress, value, globalBlockNumber)
           }
         })
         .catch(() => {
           if (!stale) {
-            update(networkId, address, tokenAddress, spenderAddress, null, globalBlockNumber)
+            update(chainId, address, tokenAddress, spenderAddress, null, globalBlockNumber)
           }
         })
 
@@ -88,7 +89,7 @@ export function useAddressAllowance(address, tokenAddress, spenderAddress) {
         stale = true
       }
     }
-  }, [address, tokenAddress, spenderAddress, value, blockNumber, globalBlockNumber, networkId, library, update])
+  }, [address, tokenAddress, spenderAddress, value, blockNumber, globalBlockNumber, chainId, library, update])
 
   return value
 }
