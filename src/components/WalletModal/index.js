@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { isMobile } from 'react-device-detect'
 import QRCode from 'qrcode.react'
@@ -16,10 +16,13 @@ import { usePrevious } from '../../hooks'
 import { Link } from '../../theme'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import MetamaskIcon from '../../assets/images/metamask.png'
+import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
+
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
-import { injected, walletconnect } from '../../connectors'
+import { injected, walletconnect, walletlink } from '../../connectors'
 import { useWalletModalToggle, useWalletModalOpen } from '../../contexts/Application'
+import Identicon from '../Identicon'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -66,7 +69,7 @@ const OptionButton = styled.div`
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  padding: 1.5rem 2rem;
+  padding: 1.5rem 1.5rem;
   font-weight: 500;
   color: ${props => (props.color === 'blue' ? ({ theme }) => theme.royalBlue : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -126,6 +129,11 @@ const WalletOption = styled.div`
   }
 `
 
+const WalletName = styled.div`
+  padding-left: 0.5rem;
+  width: initial;
+`
+
 const QRSection = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
@@ -147,16 +155,14 @@ const QRCodeWrapper = styled.div`
 
 const AccountSection = styled.div`
   background-color: ${({ theme }) => theme.concreteGray};
-  padding: 0rem 2rem;
+  padding: 0rem 1.5rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1rem 1rem;`};
 `
 
 const InfoCard = styled.div`
-  background-color: ${({ theme }) => theme.backgroundColor};
   padding: 1rem;
   border: 1px solid ${({ theme }) => theme.placeholderGray};
   border-radius: 20px;
-  box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
 `
 
 const AccountGroupingRow = styled.div`
@@ -164,7 +170,7 @@ const AccountGroupingRow = styled.div`
   justify-content: space-between;
   align-items: center;
   font-weight: 500;
-  color: ${({ theme }) => theme.royalBlue};
+  color: ${({ theme }) => theme.textColor};
 
   div {
     ${({ theme }) => theme.flexRowNoWrap}
@@ -184,7 +190,7 @@ const OptionsSection = styled.div`
 
 const OptionCard = styled(InfoCard)`
   display: grid;
-  grid-template-columns: 1fr 80px;
+  grid-template-columns: 1fr 48px;
   height: 50px;
   margin-top: 2rem;
   padding: 1rem;
@@ -231,7 +237,8 @@ const IconWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: center;
-  & > * {
+  & > img,
+  span {
     height: ${({ size }) => (size ? size + 'px' : '32px')};
     width: ${({ size }) => (size ? size + 'px' : '32px')};
   }
@@ -261,6 +268,8 @@ const GreenCircle = styled.div`
     height: 8px;
     width: 8px;
     margin-left: 12px;
+    margin-right: 2px;
+    margin-top: -6px;
     background-color: ${({ theme }) => theme.connectedGreen};
     border-radius: 50%;
   }
@@ -379,6 +388,28 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
     }
   })
 
+  function getStatusIcon() {
+    if (connector === injected) {
+      return (
+        <IconWrapper size={16}>
+          <Identicon /> {formatConnectorName()}
+        </IconWrapper>
+      )
+    } else if (connector === walletconnect) {
+      return (
+        <IconWrapper size={16}>
+          <img src={WalletConnectIcon} alt={''} /> {formatConnectorName()}
+        </IconWrapper>
+      )
+    } else if (connector === walletlink) {
+      return (
+        <IconWrapper size={16}>
+          <img src={CoinbaseWalletIcon} alt={''} /> {formatConnectorName()}
+        </IconWrapper>
+      )
+    }
+  }
+
   function renderTransactions(transactions, pending) {
     return (
       <TransactionListWrapper>
@@ -397,7 +428,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
       }
       return true
     })
-    return name
+    return <WalletName>{name}</WalletName>
   }
 
   // get wallets user can switch too, depending on device/browser
@@ -600,9 +631,8 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
               <YourAccount>
                 <InfoCard>
                   <AccountGroupingRow>
-                    {formatConnectorName()}
+                    {getStatusIcon()}
                     <GreenText>
-                      Connected
                       <GreenCircle>
                         <div />
                       </GreenCircle>
