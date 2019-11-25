@@ -117,7 +117,7 @@ export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight 
         xy: state.down ? state.movement : [0, 0],
         config: { mass: 1, tension: 210, friction: 20 }
       })
-      if (velocity > 3) {
+      if (velocity > 3 && state.direction[1] > 0) {
         onDismiss()
       }
     }

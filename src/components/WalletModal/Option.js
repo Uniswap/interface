@@ -13,7 +13,7 @@ const InfoCard = styled.div`
 
 const OptionCard = styled(InfoCard)`
   display: grid;
-  grid-template-columns: 1fr 32px;
+  grid-template-columns: 1fr 48px;
   margin-top: 2rem;
   padding: 1rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -60,7 +60,8 @@ const IconWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: center;
-  & > * {
+  & > img,
+  span {
     height: ${({ size }) => (size ? size + 'px' : '32px')};
     width: ${({ size }) => (size ? size + 'px' : '32px')};
   }

@@ -1,9 +1,8 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import styled, { css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import { darken, transparentize } from 'polished'
-import Jazzicon from 'jazzicon'
 import { Activity } from 'react-feather'
 
 import { shortenAddress } from '../../utils'
@@ -17,6 +16,7 @@ import { injected, walletconnect, walletlink } from '../../connectors'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import { NetworkContextName } from '../../constants'
+import Identicon from '../Identicon'
 
 const Web3StatusGeneric = styled.button`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -44,25 +44,28 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 `
 
 const Web3StatusConnect = styled(Web3StatusGeneric)`
-  background-color: ${({ theme }) => theme.royalBlue};
+  background-color: transparent;
   border: 1px solid ${({ theme }) => theme.royalBlue};
-  color: ${({ theme }) => theme.white};
+  color: ${({ theme }) => theme.royalBlue};
   font-weight: 500;
 
   :hover,
   :focus {
-    background-color: ${({ theme }) => darken(0.1, theme.royalBlue)};
+    border: 1px solid ${({ theme }) => darken(0.1, theme.royalBlue)};
+    color: ${({ theme }) => darken(0.1, theme.royalBlue)};
   }
 
   ${({ faded }) =>
     faded &&
     css`
-      background-color: ${({ theme }) => theme.buttonFaded};
-      border: 1px solid transparent;
+      background-color: transparent;
+      border: 1px solid ${({ theme }) => theme.royalBlue};
+      color: ${({ theme }) => theme.royalBlue};
 
       :hover,
       :focus {
-        background-color: ${({ theme }) => darken(0.1, theme.buttonFaded)};
+        border: 1px solid ${({ theme }) => darken(0.1, theme.royalBlue)};
+        color: ${({ theme }) => darken(0.1, theme.royalBlue)};
       }
     `}
 `
@@ -90,13 +93,6 @@ const Text = styled.p`
   white-space: nowrap;
   margin: 0 0.5rem 0 0.25rem;
   font-size: 0.83rem;
-`
-
-const Identicon = styled.div`
-  height: 1rem;
-  width: 1rem;
-  border-radius: 1.125rem;
-  background-color: ${({ theme }) => theme.silverGray};
 `
 
 const NetworkIcon = styled(Activity)`
@@ -136,10 +132,9 @@ export default function Web3Status() {
   const toggleWalletModal = useWalletModalToggle()
 
   // handle the logo we want to show with the account
-  const ref = useRef()
   function getStatusIcon() {
     if (connector === injected) {
-      return <Identicon ref={ref} />
+      return <Identicon />
     } else if (connector === walletconnect) {
       return (
         <IconWrapper size={16}>
@@ -154,16 +149,6 @@ export default function Web3Status() {
       )
     }
   }
-
-  // handle hydrating the identicon with the proper acount
-  useEffect(() => {
-    if (connector === injected && account) {
-      if (ref.current) {
-        ref.current.innerHTML = ''
-        ref.current.appendChild(Jazzicon(16, parseInt(account.slice(2, 10), 16)))
-      }
-    }
-  })
 
   function getWeb3Status() {
     if (account) {

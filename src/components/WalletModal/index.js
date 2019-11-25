@@ -43,12 +43,18 @@ const Wrapper = styled.div`
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  padding: 1.5rem 2rem;
+  padding: 1.5rem 1.5rem;
   font-weight: 500;
   color: ${props => (props.color === 'blue' ? ({ theme }) => theme.royalBlue : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
+`
+
+const ContentWrapper = styled.div`
+  background-color: ${({ theme }) => theme.backgroundColor};
+  padding: 2rem;
+  ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
 `
 
 const UpperSection = styled.div`
@@ -70,12 +76,6 @@ const UpperSection = styled.div`
     margin-top: 0;
     font-weight: 500;
   }
-`
-
-const ContentWrapper = styled.div`
-  background-color: ${({ theme }) => theme.backgroundColor};
-  padding: 2rem;
-  ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
 `
 
 const Blurb = styled.div`
@@ -148,7 +148,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
     }
   }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
 
-  // get available wallet options
+  // get wallets user can switch too, depending on device/browser
   function getOptions() {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
 
@@ -157,9 +157,6 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
         const option = MOBILE_DEEP_LINKS[key]
         return (
           <Option
-            onClick={() => {
-              activate(option.connector)
-            }}
             key={key}
             color={option.color}
             header={option.name}
@@ -279,6 +276,8 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
               size={220}
               icon={WalletConnectIcon}
             />
+          ) : !account ? (
+            getOptions()
           ) : (
             <OptionGrid>{getOptions()}</OptionGrid>
           )}

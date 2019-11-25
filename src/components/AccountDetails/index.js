@@ -2,12 +2,16 @@ import React from 'react'
 import styled from 'styled-components'
 import { useWeb3React } from '@web3-react/core'
 import { isMobile } from 'react-device-detect'
-import { transparentize } from 'polished'
 import Copy from './Copy'
 import Transaction from './Transaction'
 import { SUPPORTED_WALLETS } from '../../constants'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getEtherscanLink } from '../../utils'
+import { injected, walletconnect, walletlink } from '../../connectors'
+import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
+import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
+import Identicon from '../Identicon'
+
 import { Link } from '../../theme'
 
 const OptionButton = styled.div`
@@ -31,7 +35,7 @@ const OptionButton = styled.div`
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  padding: 1.5rem 2rem;
+  padding: 1.5rem 1.5rem;
   font-weight: 500;
   color: ${props => (props.color === 'blue' ? ({ theme }) => theme.royalBlue : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -61,11 +65,9 @@ const UpperSection = styled.div`
 `
 
 const InfoCard = styled.div`
-  background-color: ${({ theme }) => theme.backgroundColor};
   padding: 1rem;
   border: 1px solid ${({ theme }) => theme.placeholderGray};
   border-radius: 20px;
-  box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
 `
 
 const AccountGroupingRow = styled.div`
@@ -73,7 +75,7 @@ const AccountGroupingRow = styled.div`
   justify-content: space-between;
   align-items: center;
   font-weight: 500;
-  color: ${({ theme }) => theme.royalBlue};
+  color: ${({ theme }) => theme.textColor};
 
   div {
     ${({ theme }) => theme.flexRowNoWrap}
@@ -87,7 +89,7 @@ const AccountGroupingRow = styled.div`
 
 const AccountSection = styled.div`
   background-color: ${({ theme }) => theme.concreteGray};
-  padding: 0rem 2rem;
+  padding: 0rem 1.5rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1rem 1rem;`};
 `
 
@@ -112,6 +114,8 @@ const GreenCircle = styled.div`
     height: 8px;
     width: 8px;
     margin-left: 12px;
+    margin-right: 2px;
+    margin-top: -6px;
     background-color: ${({ theme }) => theme.connectedGreen};
     border-radius: 50%;
   }
@@ -181,6 +185,25 @@ const CloseColor = styled(Close)`
   }
 `
 
+const WalletName = styled.div`
+  padding-left: 0.5rem;
+  width: initial;
+`
+
+const IconWrapper = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap};
+  align-items: center;
+  justify-content: center;
+  & > img,
+  span {
+    height: ${({ size }) => (size ? size + 'px' : '32px')};
+    width: ${({ size }) => (size ? size + 'px' : '32px')};
+  }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    align-items: flex-end;
+  `};
+`
+
 const TransactionListWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
 `
@@ -212,29 +235,43 @@ export default function AccountDetails({
       }
       return true
     })
-    return name
+    return <WalletName>{name}</WalletName>
   }
 
-  const UpperSectionCloseable = props => {
-    return (
-      <UpperSection>
-        <CloseIcon onClick={toggleWalletModal}>
-          <CloseColor alt={'close icon'} />
-        </CloseIcon>
-        {props.children}
-      </UpperSection>
-    )
+  function getStatusIcon() {
+    if (connector === injected) {
+      return (
+        <IconWrapper size={16}>
+          <Identicon /> {formatConnectorName()}
+        </IconWrapper>
+      )
+    } else if (connector === walletconnect) {
+      return (
+        <IconWrapper size={16}>
+          <img src={WalletConnectIcon} alt={''} /> {formatConnectorName()}
+        </IconWrapper>
+      )
+    } else if (connector === walletlink) {
+      return (
+        <IconWrapper size={16}>
+          <img src={CoinbaseWalletIcon} alt={''} /> {formatConnectorName()}
+        </IconWrapper>
+      )
+    }
   }
 
   return (
     <>
-      <UpperSectionCloseable>
+      <UpperSection>
+        <CloseIcon onClick={toggleWalletModal}>
+          <CloseColor alt={'close icon'} />
+        </CloseIcon>
         <HeaderRow>Account</HeaderRow>
         <AccountSection>
           <YourAccount>
             <InfoCard>
               <AccountGroupingRow>
-                {formatConnectorName()}
+                {getStatusIcon()}
                 <GreenText>
                   Connected
                   <GreenCircle>
@@ -273,7 +310,7 @@ export default function AccountDetails({
             </ConnectButtonRow>
           )}
         </AccountSection>
-      </UpperSectionCloseable>
+      </UpperSection>
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
         <LowerSection>
           <h5>Recent Transactions</h5>
