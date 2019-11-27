@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '../../hooks'
 import { isMobile } from 'react-device-detect'
 import Copy from './Copy'
 import Transaction from './Transaction'
