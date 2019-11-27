@@ -182,15 +182,15 @@ export function useTokenContract(tokenAddress, withSignerIfPossible = true) {
 
 // returns null on errors
 export function useFactoryContract(withSignerIfPossible = true) {
-  const { networkId, library, account } = useWeb3React()
+  const { chainId, library, account } = useWeb3React()
 
   return useMemo(() => {
     try {
-      return getFactoryContract(networkId, library, withSignerIfPossible ? account : undefined)
+      return getFactoryContract(chainId, library, withSignerIfPossible ? account : undefined)
     } catch {
       return null
     }
-  }, [networkId, library, withSignerIfPossible, account])
+  }, [chainId, library, withSignerIfPossible, account])
 }
 
 export function useExchangeContract(exchangeAddress, withSignerIfPossible = true) {
