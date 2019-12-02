@@ -7,8 +7,8 @@ const InfoCard = styled.div`
   background-color: ${({ theme }) => theme.backgroundColor};
   padding: 1rem;
   border: 1px solid ${({ theme }) => theme.placeholderGray};
-  border-radius: 20px;
-  box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
+  border-radius: 12px;
+  box-shadow: 0 4px 8px 0 ${({ theme, clickable }) => (clickable ? transparentize(0.95, theme.shadowColor) : 'none')};
 `
 
 const OptionCard = styled(InfoCard)`
@@ -33,8 +33,8 @@ const OptionCardClickable = styled(OptionCard)`
   margin-top: 0;
   margin-bottom: 1rem;
   &:hover {
-    cursor: pointer;
-    border: 1px solid ${({ theme }) => theme.malibuBlue};
+    cursor: ${({ clickable }) => (clickable ? 'pointer' : '')};
+    border: ${({ clickable, theme }) => (clickable ? `1px solid ${theme.malibuBlue}` : ``)};
   }
 `
 
@@ -70,9 +70,18 @@ const IconWrapper = styled.div`
   `};
 `
 
-export default function Option({ link = null, size = null, onClick = null, color, header, subheader = null, icon }) {
+export default function Option({
+  link = null,
+  clickable = true,
+  size = null,
+  onClick = null,
+  color,
+  header,
+  subheader = null,
+  icon
+}) {
   const content = (
-    <OptionCardClickable onClick={onClick}>
+    <OptionCardClickable onClick={onClick} clickable={clickable}>
       <OptionCardLeft>
         <HeaderText color={color}>{header}</HeaderText>
         {subheader && <SubHeader>{subheader}</SubHeader>}

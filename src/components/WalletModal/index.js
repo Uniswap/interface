@@ -6,15 +6,14 @@ import { URI_AVAILABLE } from '@web3-react/walletconnect-connector'
 
 import Modal from '../Modal'
 import AccountDetails from '../AccountDetails'
-import QrCode from './QrCode'
+import PendingView from './PendingView'
 import Option from './Option'
 import { SUPPORTED_WALLETS, MOBILE_DEEP_LINKS } from '../../constants'
 import { usePrevious } from '../../hooks'
 import { Link } from '../../theme'
-import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injected, walletconnect } from '../../connectors'
+import { injected, walletconnect, fortmatic } from '../../connectors'
 import { useWalletModalToggle, useWalletModalOpen } from '../../contexts/Application'
 
 const CloseIcon = styled.div`
@@ -108,7 +107,7 @@ const HoverText = styled.div`
 const WALLET_VIEWS = {
   OPTIONS: 'options',
   ACCOUNT: 'account',
-  WALLET_CONNECT: 'walletConnect'
+  PENDING: 'pending'
 }
 
 export default function WalletModal({ pendingTransactions, confirmedTransactions, ENSName }) {
@@ -116,12 +115,17 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
+  const [pendingWallet, setPendingWallet] = useState()
+
+  const [pendingError, setPendingError] = useState()
+
   const walletModalOpen = useWalletModalOpen()
   const toggleWalletModal = useWalletModalToggle()
 
   // always reset to account view
   useEffect(() => {
     if (walletModalOpen) {
+      setPendingError(false)
       setWalletView(WALLET_VIEWS.ACCOUNT)
     }
   }, [walletModalOpen])
@@ -131,7 +135,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
   useEffect(() => {
     const activateWC = uri => {
       setUri(uri)
-      setWalletView(WALLET_VIEWS.WALLET_CONNECT)
+      // setWalletView(WALLET_VIEWS.PENDING)
     }
     walletconnect.on(URI_AVAILABLE, activateWC)
     return () => {
@@ -147,6 +151,18 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
       setWalletView(WALLET_VIEWS.ACCOUNT)
     }
   }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
+
+  const tryActivation = connector => {
+    setPendingWallet(connector)
+    setWalletView(WALLET_VIEWS.PENDING)
+    if (active) {
+      activate(connector, undefined, true).catch(e => {
+        setPendingError(true)
+      })
+    } else {
+      activate(connector)
+    }
+  }
 
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
@@ -206,7 +222,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
         return (
           <Option
             onClick={() => {
-              activate(option.connector)
+              tryActivation(option.connector)
             }}
             key={key}
             color={option.color}
@@ -257,6 +273,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
           <HeaderRow
             color="blue"
             onClick={() => {
+              setPendingError(false)
               setWalletView(WALLET_VIEWS.ACCOUNT)
             }}
           >
@@ -268,25 +285,21 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
           </HeaderRow>
         )}
         <ContentWrapper>
-          {walletView === WALLET_VIEWS.WALLET_CONNECT ? (
-            <QrCode
-              uri={uri}
-              header={'Connect with Wallet Connect'}
-              subheader={'Open protocol supported by major mobile wallets'}
-              size={220}
-              icon={WalletConnectIcon}
-            />
+          {walletView === WALLET_VIEWS.PENDING ? (
+            <PendingView uri={uri} size={220} connector={pendingWallet} error={pendingError} />
           ) : !account ? (
             getOptions()
           ) : (
             <OptionGrid>{getOptions()}</OptionGrid>
           )}
-          <Blurb>
-            <span>New to Ethereum? &nbsp;</span>{' '}
-            <Link href="https://ethereum.org/use/#3-what-is-a-wallet-and-which-one-should-i-use">
-              Learn more about wallets
-            </Link>
-          </Blurb>
+          {walletView !== WALLET_VIEWS.PENDING && (
+            <Blurb>
+              <span>New to Ethereum? &nbsp;</span>{' '}
+              <Link href="https://ethereum.org/use/#3-what-is-a-wallet-and-which-one-should-i-use">
+                Learn more about wallets
+              </Link>
+            </Blurb>
+          )}
         </ContentWrapper>
       </UpperSection>
     )

@@ -32,7 +32,7 @@ const SpinnerWrapper = styled(Spinner)`
 
 export default function Web3ReactManager({ children }) {
   const { t } = useTranslation()
-  const { active } = useWeb3React()
+  const { active, error, setError } = useWeb3React()
   const { active: networkActive, error: networkError, activate: activateNetwork } = useWeb3React(NetworkContextName)
 
   // try to eagerly connect to an injected provider, if it exists and has granted access already

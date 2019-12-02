@@ -7,9 +7,10 @@ import Transaction from './Transaction'
 import { SUPPORTED_WALLETS } from '../../constants'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getEtherscanLink } from '../../utils'
-import { injected, walletconnect, walletlink } from '../../connectors'
+import { injected, walletconnect, walletlink, fortmatic } from '../../connectors'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
+import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import Identicon from '../Identicon'
 
 import { Link } from '../../theme'
@@ -235,7 +236,6 @@ export default function AccountDetails({
           SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
       )
       .map(k => SUPPORTED_WALLETS[k].name)[0]
-
     return <WalletName>{name}</WalletName>
   }
 
@@ -256,6 +256,12 @@ export default function AccountDetails({
       return (
         <IconWrapper size={16}>
           <img src={CoinbaseWalletIcon} alt={''} /> {formatConnectorName()}
+        </IconWrapper>
+      )
+    } else if (connector === fortmatic) {
+      return (
+        <IconWrapper size={16}>
+          <img src={FortmaticIcon} alt={''} /> {formatConnectorName()}
         </IconWrapper>
       )
     }

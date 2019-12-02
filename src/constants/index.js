@@ -1,4 +1,4 @@
-import { injected, walletconnect, walletlink } from '../connectors'
+import { injected, walletconnect, walletlink, fortmatic } from '../connectors'
 
 export const FACTORY_ADDRESSES = {
   1: '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95',
@@ -44,6 +44,14 @@ export const SUPPORTED_WALLETS = {
     iconName: 'coinbaseWalletIcon.svg',
     description: 'Use Coinbase Wallet app on mobile device',
     color: '#315CF5'
+  },
+  FORTMATIC: {
+    connector: fortmatic,
+    id: 'Fortmatic',
+    name: 'Fortmatic',
+    iconName: 'fortmaticIcon.png',
+    description: 'Login using Fortmatic hosted wallet',
+    color: '#6748FF'
   }
 }
 
