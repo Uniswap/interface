@@ -8,13 +8,14 @@ import Modal from '../Modal'
 import AccountDetails from '../AccountDetails'
 import PendingView from './PendingView'
 import Option from './Option'
-import { SUPPORTED_WALLETS, MOBILE_DEEP_LINKS } from '../../constants'
+import { SUPPORTED_WALLETS } from '../../constants'
 import { usePrevious } from '../../hooks'
 import { Link } from '../../theme'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected, walletconnect, fortmatic } from '../../connectors'
 import { useWalletModalToggle, useWalletModalOpen } from '../../contexts/Application'
+import { OVERLAY_READY } from '../../connectors/Fortmatic'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -152,11 +153,12 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
     }
   }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
 
-  const tryActivation = connector => {
-    setPendingWallet(connector)
+  const tryActivation = async connector => {
+    setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
-    if (active) {
+    if (active || isMobile) {
       activate(connector, undefined, true).catch(e => {
+        console.error(e)
         setPendingError(true)
       })
     } else {
@@ -164,75 +166,86 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
     }
   }
 
+  useEffect(() => {
+    fortmatic.on(OVERLAY_READY, () => {
+      toggleWalletModal()
+    })
+  }, [toggleWalletModal])
+
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
+    return Object.keys(SUPPORTED_WALLETS).map(key => {
+      const option = SUPPORTED_WALLETS[key]
 
-    if (isMobile && !window.web3 && !window.ethereum) {
-      return Object.keys(MOBILE_DEEP_LINKS).map(key => {
-        const option = MOBILE_DEEP_LINKS[key]
-        return (
-          <Option
-            key={key}
-            color={option.color}
-            header={option.name}
-            link={option.href}
-            subheader={option.description}
-            icon={require('../../assets/images/' + option.iconName)}
-          />
-        )
-      })
-    } else {
-      return Object.keys(SUPPORTED_WALLETS).map(key => {
-        const option = SUPPORTED_WALLETS[key]
+      // check for mobile options
+      if (isMobile) {
+        if (!window.web3 && !window.ethereum && option.mobile) {
+          return (
+            <Option
+              key={key}
+              color={option.color}
+              onClick={() => {
+                !option.href && tryActivation(option.connector)
+              }}
+              header={option.name}
+              link={option.href}
+              subheader={option.description}
+              icon={require('../../assets/images/' + option.iconName)}
+            />
+          )
+        }
+        return null
+      }
 
-        // don't show the option we're currently connected to
-        if (option.connector === connector) {
+      // overwrite injected when needed
+      if (option.connector === injected) {
+        // don't show injected if there's no injected provider
+        if (!(window.web3 || window.ethereum)) {
+          if (option.name === 'MetaMask') {
+            return (
+              <Option
+                key={key}
+                color={'#E8831D'}
+                header={'Install Metamask'}
+                subheader={'Easy to use browser extension.'}
+                link={'https://metamask.io/'}
+                icon={MetamaskIcon}
+              />
+            )
+          } else {
+            return null //dont want to return install twice
+          }
+        }
+        // don't return metamask if injected provider isn't metamask
+        else if (option.name === 'MetaMask' && !isMetamask) {
           return null
         }
-
-        if (option.connector === injected) {
-          // don't show injected if there's no injected provider
-          if (!(window.web3 || window.ethereum)) {
-            if (option.name === 'MetaMask') {
-              return (
-                <Option
-                  key={key}
-                  color={'#E8831D'}
-                  header={'Install Metamask'}
-                  subheader={'Easy to use browser extension.'}
-                  link={'https://metamask.io/'}
-                  icon={MetamaskIcon}
-                />
-              )
-            } else {
-              return null //dont want to return install twice
-            }
-          }
-          // don't return metamask if injected provider isn't metamask
-          else if (option.name === 'MetaMask' && !isMetamask) {
-            return null
-          }
-          // likewise for generic
-          else if (option.name === 'Injected' && isMetamask) {
-            return null
-          }
+        // likewise for generic
+        else if (option.name === 'Injected' && isMetamask) {
+          return null
         }
+      }
 
-        return (
+      // return rest of options
+      return (
+        !isMobile &&
+        !option.mobileOnly && (
           <Option
             onClick={() => {
-              tryActivation(option.connector)
+              option.connector !== connector && !option.href && tryActivation(option.connector)
             }}
             key={key}
+            disabled={option.connector === connector}
             color={option.color}
+            link={option.href}
             header={option.name}
             subheader={walletView === WALLET_VIEWS.OPTIONS ? null : option.description}
             icon={require('../../assets/images/' + option.iconName)}
           />
         )
-      })
-    }
+      )
+    })
   }
 
   function getModalContent() {
@@ -270,14 +283,15 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
           <CloseColor alt={'close icon'} />
         </CloseIcon>
         {walletView !== WALLET_VIEWS.ACCOUNT ? (
-          <HeaderRow
-            color="blue"
-            onClick={() => {
-              setPendingError(false)
-              setWalletView(WALLET_VIEWS.ACCOUNT)
-            }}
-          >
-            <HoverText>Back</HoverText>
+          <HeaderRow color="blue">
+            <HoverText
+              onClick={() => {
+                setPendingError(false)
+                setWalletView(WALLET_VIEWS.ACCOUNT)
+              }}
+            >
+              Back
+            </HoverText>
           </HeaderRow>
         ) : (
           <HeaderRow>

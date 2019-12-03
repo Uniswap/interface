@@ -7,10 +7,11 @@ import Transaction from './Transaction'
 import { SUPPORTED_WALLETS } from '../../constants'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getEtherscanLink } from '../../utils'
-import { injected, walletconnect, walletlink, fortmatic } from '../../connectors'
+import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
+import PortisIcon from '../../assets/images/portisIcon.png'
 import Identicon from '../Identicon'
 
 import { Link } from '../../theme'
@@ -203,10 +204,23 @@ const IconWrapper = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     align-items: flex-end;
   `};
+
+  & > div {
+    color: 'blue';
+  }
 `
 
 const TransactionListWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
+`
+
+const WalletAction = styled.div`
+  color: ${({ theme }) => theme.chaliceGray};
+  margin-left: 16px;
+  font-weight: 400;
+  :hover {
+    cursor: pointer;
+  }
 `
 
 function renderTransactions(transactions, pending) {
@@ -229,7 +243,7 @@ export default function AccountDetails({
   const { chainId, account, connector } = useWeb3React()
 
   function formatConnectorName() {
-    const isMetaMask = window.ethereum && window.ethereum.isMetaMask
+    const isMetaMask = window.ethereum && window.ethereum.isMetaMask ? true : false
     const name = Object.keys(SUPPORTED_WALLETS)
       .filter(
         k =>
@@ -264,6 +278,14 @@ export default function AccountDetails({
           <img src={FortmaticIcon} alt={''} /> {formatConnectorName()}
         </IconWrapper>
       )
+    } else if (connector === portis) {
+      return (
+        <>
+          <IconWrapper size={16}>
+            <img src={PortisIcon} alt={''} /> {formatConnectorName()}
+          </IconWrapper>
+        </>
+      )
     }
   }
 
@@ -279,11 +301,24 @@ export default function AccountDetails({
             <InfoCard>
               <AccountGroupingRow>
                 {getStatusIcon()}
-                <GreenText>
-                  <GreenCircle>
-                    <div />
-                  </GreenCircle>
-                </GreenText>
+                <div>
+                  {connector !== injected && connector !== walletlink ? (
+                    <WalletAction
+                      onClick={() => {
+                        connector.close()
+                      }}
+                    >
+                      Disconenct
+                    </WalletAction>
+                  ) : (
+                    ''
+                  )}
+                  <GreenText>
+                    <GreenCircle>
+                      <div />
+                    </GreenCircle>
+                  </GreenText>
+                </div>
               </AccountGroupingRow>
               <AccountGroupingRow>
                 {ENSName ? (

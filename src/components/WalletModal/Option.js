@@ -36,6 +36,7 @@ const OptionCardClickable = styled(OptionCard)`
     cursor: ${({ clickable }) => (clickable ? 'pointer' : '')};
     border: ${({ clickable, theme }) => (clickable ? `1px solid ${theme.malibuBlue}` : ``)};
   }
+  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
 `
 
 const HeaderText = styled.div`
@@ -78,15 +79,16 @@ export default function Option({
   color,
   header,
   subheader = null,
-  icon
+  icon,
+  disabled = false
 }) {
   const content = (
-    <OptionCardClickable onClick={onClick} clickable={clickable}>
+    <OptionCardClickable onClick={onClick} clickable={clickable && !disabled} disabled={disabled}>
       <OptionCardLeft>
         <HeaderText color={color}>{header}</HeaderText>
         {subheader && <SubHeader>{subheader}</SubHeader>}
       </OptionCardLeft>
-      <IconWrapper size={size}>
+      <IconWrapper size={size} disabled={disabled}>
         <img src={icon} alt={'Icon'} />
       </IconWrapper>
     </OptionCardClickable>

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Option from './Option'
 import { SUPPORTED_WALLETS } from '../../constants'
 import WalletConnectData from './WalletConnectData'
-import { walletconnect } from '../../connectors'
+import { walletconnect, injected } from '../../connectors'
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle.svg'
 
@@ -12,6 +12,9 @@ const PendingSection = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  & > * {
+    width: 90%;
+  }
 `
 
 const SpinnerWrapper = styled(Spinner)`
@@ -37,34 +40,40 @@ const LoadingMessage = styled.div`
 `
 
 export default function PendingView({ uri = '', size, connector, error = false }) {
+  const isMetamask = window.ethereum && window.ethereum.isMetaMask
+
   return (
     <PendingSection>
       <LoadingMessage error={error}>
         {!error && <SpinnerWrapper src={Circle} />}
         <h5>
           {error
-            ? 'Error connecting...'
+            ? 'Error connecting... please try again'
             : connector === walletconnect
             ? 'Scan QR code with a compatible wallet...'
-            : 'Follow prompt on mobile device...'}
+            : 'Waiting for connection...'}
         </h5>
       </LoadingMessage>
       {!error ? connector === walletconnect ? <WalletConnectData size={size} uri={uri} /> : '' : ''}
       {Object.keys(SUPPORTED_WALLETS).map(key => {
         const option = SUPPORTED_WALLETS[key]
         if (option.connector === connector) {
-          return (
-            <Option
-              key={key}
-              clickable={false}
-              color={option.color}
-              header={option.name}
-              link={option.href}
-              subheader={option.description}
-              icon={require('../../assets/images/' + option.iconName)}
-            />
-          )
+          if (option.connector === injected && isMetamask && option.name !== 'MetaMask') {
+            return null
+          } else {
+            return (
+              <Option
+                key={key}
+                clickable={false}
+                color={option.color}
+                header={option.name}
+                subheader={option.description}
+                icon={require('../../assets/images/' + option.iconName)}
+              />
+            )
+          }
         }
+        return true
       })}
     </PendingSection>
   )
