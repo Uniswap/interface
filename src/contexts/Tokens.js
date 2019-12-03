@@ -73,9 +73,15 @@ const INITIAL_TOKENS_CONTEXT = {
     },
     '0xF5DCe57282A584D2746FaF1593d3121Fcac444dC': {
       [NAME]: 'Compound Dai',
-      [SYMBOL]: 'cDAI',
+      [SYMBOL]: 'cSAI',
       [DECIMALS]: 8,
       [EXCHANGE_ADDRESS]: '0x45A2FDfED7F7a2c791fb1bdF6075b83faD821ddE'
+    },
+    '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643': {
+      [NAME]: 'Compound Dai',
+      [SYMBOL]: 'cDAI',
+      [DECIMALS]: 8,
+      [EXCHANGE_ADDRESS]: '0x34E89740adF97C3A9D3f63Cc2cE4a914382c230b'
     },
     '0x06AF07097C9Eeb7fD685c692751D5C66dB49c215': {
       [NAME]: 'Chai',
