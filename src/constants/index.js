@@ -28,8 +28,7 @@ export const SUPPORTED_WALLETS = {
     iconName: 'metamask.png',
     description: 'Easy-to-use browser extension.',
     href: null,
-    color: '#E8831D',
-    primary: true
+    color: '#E8831D'
   },
   WALLET_CONNECT: {
     connector: walletconnect,
@@ -37,8 +36,7 @@ export const SUPPORTED_WALLETS = {
     iconName: 'walletConnectIcon.svg',
     description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
     href: null,
-    color: '#4196FC',
-    primary: true
+    color: '#4196FC'
   },
   WALLET_LINK: {
     connector: walletlink,

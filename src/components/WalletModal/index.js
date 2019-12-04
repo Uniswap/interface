@@ -16,7 +16,6 @@ import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected, walletconnect, fortmatic } from '../../connectors'
 import { useWalletModalToggle, useWalletModalOpen } from '../../contexts/Application'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
-import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -125,8 +124,6 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
   const walletModalOpen = useWalletModalOpen()
   const toggleWalletModal = useWalletModalToggle()
 
-  const [isDark] = useDarkModeManager()
-
   // always reset to account view
   useEffect(() => {
     if (walletModalOpen) {
@@ -162,6 +159,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
     setWalletView(WALLET_VIEWS.PENDING)
     if (active || isMobile) {
       activate(connector, undefined, true).catch(e => {
+        console.log(e)
         setPendingError(true)
       })
     } else {
@@ -177,21 +175,10 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
   }, [toggleWalletModal])
 
   // get wallets user can switch too, depending on device/browser
-  function getOptions(primaryOnly) {
+  function getOptions() {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
     return Object.keys(SUPPORTED_WALLETS).map(key => {
       const option = SUPPORTED_WALLETS[key]
-
-      // if main page only show primary options (for desktop)
-      if (primaryOnly && !option.primary && !isMobile) {
-        return null
-      }
-
-      // if secondary page only show non-primary (for desktop)
-      if (walletView === WALLET_VIEWS.OPTIONS_SECONDARY && option.primary && !isMobile) {
-        return null
-      }
-
       // check for mobile options
       if (isMobile) {
         if (!window.web3 && !window.ethereum && option.mobile) {
@@ -201,11 +188,11 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
                 option.connector !== connector && !option.href && tryActivation(option.connector)
               }}
               key={key}
-              disabled={option.connector && option.connector === connector}
+              active={option.connector && option.connector === connector}
               color={option.color}
               link={option.href}
               header={option.name}
-              subheader={walletView === WALLET_VIEWS.OPTIONS ? null : option.description}
+              subheader={null}
               icon={require('../../assets/images/' + option.iconName)}
             />
           )
@@ -223,7 +210,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
                 key={key}
                 color={'#E8831D'}
                 header={'Install Metamask'}
-                subheader={'Easy to use browser extension.'}
+                subheader={null}
                 link={'https://metamask.io/'}
                 icon={MetamaskIcon}
               />
@@ -251,11 +238,11 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
               option.connector !== connector && !option.href && tryActivation(option.connector)
             }}
             key={key}
-            disabled={option.connector === connector}
+            active={option.connector === connector}
             color={option.color}
             link={option.href}
             header={option.name}
-            subheader={walletView === WALLET_VIEWS.OPTIONS ? null : option.description}
+            subheader={null} //use option.descriptio to bring back multi-line
             icon={require('../../assets/images/' + option.iconName)}
           />
         )
@@ -316,24 +303,6 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
         <ContentWrapper>
           {walletView === WALLET_VIEWS.PENDING ? (
             <PendingView uri={uri} size={220} connector={pendingWallet} error={pendingError} />
-          ) : !account ? (
-            <div>
-              {getOptions(walletView !== WALLET_VIEWS.OPTIONS_SECONDARY)}
-              {walletView !== WALLET_VIEWS.OPTIONS_SECONDARY && !isMobile && (
-                <Option
-                  onClick={() => {
-                    setWalletView(WALLET_VIEWS.OPTIONS_SECONDARY)
-                  }}
-                  header={'Looking for other options?'}
-                  subheader={'Connect with other major wallet providers'}
-                  icon={
-                    isDark
-                      ? require('../../assets/images/arrow-right-white.png')
-                      : require('../../assets/images/arrow-right.svg')
-                  }
-                />
-              )}
-            </div>
           ) : (
             <OptionGrid>{getOptions()}</OptionGrid>
           )}
