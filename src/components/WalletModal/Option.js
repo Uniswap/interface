@@ -25,7 +25,6 @@ const OptionCard = styled(InfoCard)`
 
 const OptionCardLeft = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
-  height: 100%;
   justify-content: center;
 `
 

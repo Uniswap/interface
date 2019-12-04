@@ -344,11 +344,7 @@ export default function AccountDetails({
               </AccountGroupingRow>
             </InfoCard>
           </YourAccount>
-          {isMobile && !account & !(window.web3 || window.ethereum) ? (
-            <div>Error connecting. Try a different browser or contact us.</div>
-          ) : (
-            ''
-          )}
+
           {!(isMobile && (window.web3 || window.ethereum)) && (
             <ConnectButtonRow>
               <OptionButton
