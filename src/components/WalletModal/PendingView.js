@@ -13,7 +13,7 @@ const PendingSection = styled.div`
   justify-content: center;
   width: 100%;
   & > * {
-    width: 90%;
+    width: 100%;
   }
 `
 
@@ -31,12 +31,14 @@ const LoadingMessage = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
   justify-content: flex-start;
-  width: 90%;
-  padding: 1rem;
   border-radius: 12px;
   margin-bottom: 20px;
   color: ${({ theme, error }) => (error ? theme.salmonRed : 'inherit')};
   border: 1px solid ${({ theme, error }) => (error ? theme.salmonRed : theme.placeholderGray)};
+
+  & > * {
+    padding: 1rem;
+  }
 `
 
 export default function PendingView({ uri = '', size, connector, error = false }) {
@@ -45,14 +47,14 @@ export default function PendingView({ uri = '', size, connector, error = false }
   return (
     <PendingSection>
       <LoadingMessage error={error}>
-        {!error && <SpinnerWrapper src={Circle} />}
-        <h5>
+        <div>
+          {!error && <SpinnerWrapper src={Circle} />}
           {error
             ? 'Error connecting... please try again'
             : connector === walletconnect
             ? 'Scan QR code with a compatible wallet...'
             : 'Waiting for connection...'}
-        </h5>
+        </div>
       </LoadingMessage>
       {!error && connector === walletconnect && <WalletConnectData size={size} uri={uri} />}
       {Object.keys(SUPPORTED_WALLETS).map(key => {

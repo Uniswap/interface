@@ -10,9 +10,9 @@ const InfoCard = styled.button`
   border: 1px solid;
   border-radius: 12px;
   width: 100% !important;
-  box-shadow: 0 4px 8px 0 ${({ theme, clickable }) => (clickable ? transparentize(0.95, theme.shadowColor) : 'none')};
+  : 0 4px 8px 0 ${({ theme, clickable }) => (clickable ? transparentize(0.95, theme.shadowColor) : 'none')};
   &:focus {
-    outline: 1px solid ${({ theme }) => theme.royalBlue};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.royalBlue};
   }
   border-color: ${({ theme, active }) => (active ? 'transparent' : theme.placeholderGray)};
 `

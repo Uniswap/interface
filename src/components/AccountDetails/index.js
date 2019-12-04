@@ -213,10 +213,15 @@ const TransactionListWrapper = styled.div`
 const WalletAction = styled.div`
   color: ${({ theme }) => theme.chaliceGray};
   margin-left: 16px;
+  text-decoration: underline;
   font-weight: 400;
   :hover {
     cursor: pointer;
   }
+`
+
+const MainWalletAction = styled(WalletAction)`
+  color: ${({ theme }) => theme.royalBlue};
 `
 
 function renderTransactions(transactions, pending) {
@@ -279,13 +284,13 @@ export default function AccountDetails({
         <>
           <IconWrapper size={16}>
             <img src={PortisIcon} alt={''} /> {formatConnectorName()}
-            <WalletAction
+            <MainWalletAction
               onClick={() => {
                 portis.getPortis().showPortis()
               }}
             >
               Show Portis
-            </WalletAction>
+            </MainWalletAction>
           </IconWrapper>
         </>
       )
