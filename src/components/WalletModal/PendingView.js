@@ -64,7 +64,7 @@ const ErrorButton = styled.div`
   }
 `
 
-export default function PendingView({ uri = '', size, connector, error = false, tryActivation }) {
+export default function PendingView({ uri = '', size, connector, error = false, setPendingError, tryActivation }) {
   const isMetamask = window.ethereum && window.ethereum.isMetaMask
 
   return (
@@ -77,6 +77,7 @@ export default function PendingView({ uri = '', size, connector, error = false, 
               <div>Error connecting.</div>
               <ErrorButton
                 onClick={() => {
+                  setPendingError(false)
                   tryActivation(connector)
                 }}
               >
@@ -86,7 +87,7 @@ export default function PendingView({ uri = '', size, connector, error = false, 
           ) : connector === walletconnect ? (
             'Scan QR code with a compatible wallet...'
           ) : (
-            'Waiting for connection...'
+            'Initializing...'
           )}
         </div>
       </LoadingMessage>

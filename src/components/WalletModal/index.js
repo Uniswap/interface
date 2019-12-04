@@ -13,7 +13,7 @@ import { usePrevious } from '../../hooks'
 import { Link } from '../../theme'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injected, walletconnect, fortmatic } from '../../connectors'
+import { injected, walletconnect, fortmatic, portis } from '../../connectors'
 import { useWalletModalToggle, useWalletModalOpen } from '../../contexts/Application'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
 
@@ -176,6 +176,11 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
       const option = SUPPORTED_WALLETS[key]
       // check for mobile options
       if (isMobile) {
+        //disable portis on mobile for now
+        if (option.connector === portis) {
+          return null
+        }
+
         if (!window.web3 && !window.ethereum && option.mobile) {
           return (
             <Option
@@ -230,7 +235,9 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
         !option.mobileOnly && (
           <Option
             onClick={() => {
-              option.connector !== connector && !option.href && tryActivation(option.connector)
+              option.connector === connector
+                ? setWalletView(WALLET_VIEWS.ACCOUNT)
+                : !option.href && tryActivation(option.connector)
             }}
             key={key}
             active={option.connector === connector}
@@ -302,6 +309,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
               size={220}
               connector={pendingWallet}
               error={pendingError}
+              setPendingError={setPendingError}
               tryActivation={tryActivation}
             />
           ) : (
