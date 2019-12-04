@@ -16,6 +16,7 @@ import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected, walletconnect, fortmatic } from '../../connectors'
 import { useWalletModalToggle, useWalletModalOpen } from '../../contexts/Application'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
+import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -123,6 +124,8 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
 
   const walletModalOpen = useWalletModalOpen()
   const toggleWalletModal = useWalletModalToggle()
+
+  const [isDark] = useDarkModeManager()
 
   // always reset to account view
   useEffect(() => {
@@ -323,7 +326,11 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
                   }}
                   header={'Looking for other options?'}
                   subheader={'Connect with other major wallet providers'}
-                  icon={require('../../assets/images/arrow-right.svg')}
+                  icon={
+                    isDark
+                      ? require('../../assets/images/arrow-right-white.png')
+                      : require('../../assets/images/arrow-right.svg')
+                  }
                 />
               )}
             </div>
