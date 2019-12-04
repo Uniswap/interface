@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
 import { BigNumber } from '@uniswap/sdk'
-import { useWeb3Context } from 'web3-react'
 import styled from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
 import { darken } from 'polished'
@@ -12,7 +11,7 @@ import '@reach/tooltip/styles.css'
 import { isMobile } from 'react-device-detect'
 
 import { BorderlessInput } from '../../theme'
-import { useTokenContract } from '../../hooks'
+import { useWeb3React, useTokenContract } from '../../hooks'
 import { isAddress, calculateGasMargin, formatToUsd, formatTokenBalance, formatEthBalance } from '../../utils'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import Modal from '../Modal'
@@ -225,7 +224,10 @@ const TokenModalRow = styled.div`
     background-color: ${({ theme }) => theme.tokenRowHover};
   }
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0.8rem 1rem;`}
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 0.8rem 1rem;
+    padding-right: 2rem;
+  `}
 `
 
 const TokenRowLeft = styled.div`
@@ -297,7 +299,7 @@ export default function CurrencyInputPanel({
 
   const allTokens = useAllTokenDetails()
 
-  const { account } = useWeb3Context()
+  const { account } = useWeb3React()
 
   const userTokenBalance = useAddressBalance(account, selectedTokenAddress)
 
@@ -426,7 +428,6 @@ export default function CurrencyInputPanel({
       {!disableTokenSelect && (
         <CurrencySelectModal
           isOpen={modalIsOpen}
-          // isOpen={true}
           onDismiss={() => {
             setModalIsOpen(false)
           }}
@@ -446,7 +447,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
 
   const allTokens = useAllTokenDetails()
 
-  const { account } = useWeb3Context()
+  const { account } = useWeb3React()
 
   // BigNumber.js instance
   const ethPrice = useUSDPrice()
@@ -606,6 +607,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
       isOpen={isOpen}
       onDismiss={clearInputAndDismiss}
       minHeight={60}
+      maxHeight={50}
       initialFocusRef={isMobile ? undefined : inputRef}
     >
       <TokenModal>

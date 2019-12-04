@@ -1,6 +1,5 @@
 import React, { useReducer, useState, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useWeb3Context } from 'web3-react'
 import { createBrowserHistory } from 'history'
 import { ethers } from 'ethers'
 import ReactGA from 'react-ga'
@@ -11,8 +10,7 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import OversizedPanel from '../../components/OversizedPanel'
 import ContextualInfo from '../../components/ContextualInfo'
 import { ReactComponent as Plus } from '../../assets/images/plus-blue.svg'
-
-import { useExchangeContract } from '../../hooks'
+import { useWeb3React, useExchangeContract } from '../../hooks'
 import { brokenTokens } from '../../constants'
 import { amountFormatter, calculateGasMargin } from '../../utils'
 import { useTransactionAdder } from '../../contexts/Transactions'
@@ -201,7 +199,7 @@ function getMarketRate(reserveETH, reserveToken, decimals, invert = false) {
 
 export default function AddLiquidity({ params }) {
   const { t } = useTranslation()
-  const { library, active, account } = useWeb3Context()
+  const { library, account, active } = useWeb3React()
 
   // clear url of query
   useEffect(() => {

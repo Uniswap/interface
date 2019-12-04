@@ -4,9 +4,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { transparentize, darken } from 'polished'
 
-import { Link } from '../../theme/components'
-
-import { useBodyKeyDown } from '../../hooks'
+import { useWeb3React, useBodyKeyDown } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import { isAddress } from '../../utils'
 import {
@@ -14,7 +12,7 @@ import {
   useSaiHolderMessageManager,
   useGeneralDaiMessageManager
 } from '../../contexts/LocalStorage'
-import { useWeb3Context } from 'web3-react'
+import { Link } from '../../theme/components'
 
 const tabOrder = [
   {
@@ -102,7 +100,7 @@ const WarningHeader = styled.div`
 const WarningFooter = styled.div`
   margin-top: 10px;
   font-size: 10px;
-  textdecoration: italic;
+  text-decoration: italic;
   color: ${({ theme }) => theme.greyText};
 `
 
@@ -164,7 +162,7 @@ function NavigationTabs({ location: { pathname }, history }) {
 
   const [showSaiHolderMessage, dismissSaiHolderMessage] = useSaiHolderMessageManager()
 
-  const { account } = useWeb3Context()
+  const { account } = useWeb3React()
 
   const daiBalance = useAddressBalance(account, isAddress('0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359'))
 
