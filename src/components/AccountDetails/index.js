@@ -117,14 +117,16 @@ const GreenCircle = styled.div`
     width: 8px;
     margin-left: 12px;
     margin-right: 2px;
-    margin-top: -6px;
     background-color: ${({ theme }) => theme.connectedGreen};
     border-radius: 50%;
   }
 `
 
-const GreenText = styled.div`
+const CircleWrapper = styled.div`
   color: ${({ theme }) => theme.connectedGreen};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 const LowerSection = styled.div`
@@ -213,10 +215,10 @@ const TransactionListWrapper = styled.div`
 const WalletAction = styled.div`
   color: ${({ theme }) => theme.chaliceGray};
   margin-left: 16px;
-  text-decoration: underline;
   font-weight: 400;
   :hover {
     cursor: pointer;
+    text-decoration: underline;
   }
 `
 
@@ -286,7 +288,7 @@ export default function AccountDetails({
             <img src={PortisIcon} alt={''} /> {formatConnectorName()}
             <MainWalletAction
               onClick={() => {
-                portis.getPortis().showPortis()
+                portis.portis.showPortis()
               }}
             >
               Show Portis
@@ -319,11 +321,11 @@ export default function AccountDetails({
                       Disconnect
                     </WalletAction>
                   )}
-                  <GreenText>
+                  <CircleWrapper>
                     <GreenCircle>
                       <div />
                     </GreenCircle>
-                  </GreenText>
+                  </CircleWrapper>
                 </div>
               </AccountGroupingRow>
               <AccountGroupingRow>

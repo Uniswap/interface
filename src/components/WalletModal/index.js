@@ -157,13 +157,9 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
   const tryActivation = async connector => {
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
-    if (active || isMobile) {
-      activate(connector, undefined, true).catch(e => {
-        setPendingError(true)
-      })
-    } else {
-      activate(connector)
-    }
+    activate(connector, undefined, true).catch(e => {
+      setPendingError(true)
+    })
   }
 
   // close wallet modal if fortmatic modal is active
@@ -301,7 +297,13 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
         )}
         <ContentWrapper>
           {walletView === WALLET_VIEWS.PENDING ? (
-            <PendingView uri={uri} size={220} connector={pendingWallet} error={pendingError} />
+            <PendingView
+              uri={uri}
+              size={220}
+              connector={pendingWallet}
+              error={pendingError}
+              tryActivation={tryActivation}
+            />
           ) : (
             <OptionGrid>{getOptions()}</OptionGrid>
           )}
