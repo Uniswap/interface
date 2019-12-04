@@ -281,9 +281,7 @@ export default function AccountDetails({
             <img src={PortisIcon} alt={''} /> {formatConnectorName()}
             <WalletAction
               onClick={() => {
-                if (connector === portis) {
-                  portis.getPortis().showPortis()
-                }
+                portis.getPortis().showPortis()
               }}
             >
               Show Portis
@@ -307,7 +305,7 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {getStatusIcon()}
                 <div>
-                  {connector !== injected && connector !== walletlink ? (
+                  {connector !== injected && connector !== walletlink && (
                     <WalletAction
                       onClick={() => {
                         connector.close()
@@ -315,8 +313,6 @@ export default function AccountDetails({
                     >
                       Disconnect
                     </WalletAction>
-                  ) : (
-                    ''
                   )}
                   <GreenText>
                     <GreenCircle>

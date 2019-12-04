@@ -174,7 +174,6 @@ export default function Web3Status() {
         </Web3StatusConnected>
       )
     } else if (error) {
-      console.log(error)
       return (
         <Web3StatusError onClick={toggleWalletModal}>
           <NetworkIcon />

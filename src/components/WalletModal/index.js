@@ -166,6 +166,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
     }
   }
 
+  // close wallet modal if fortmatic modal is active
   useEffect(() => {
     fortmatic.on(OVERLAY_READY, () => {
       toggleWalletModal()
@@ -183,7 +184,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
         return null
       }
 
-      // if we're on secondary page only show non-primary (for desktop)
+      // if secondary page only show non-primary (for desktop)
       if (walletView === WALLET_VIEWS.OPTIONS_SECONDARY && option.primary && !isMobile) {
         return null
       }
@@ -314,7 +315,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
             <PendingView uri={uri} size={220} connector={pendingWallet} error={pendingError} />
           ) : !account ? (
             <div>
-              {getOptions(true && walletView !== WALLET_VIEWS.OPTIONS_SECONDARY)}
+              {getOptions(walletView !== WALLET_VIEWS.OPTIONS_SECONDARY)}
               {walletView !== WALLET_VIEWS.OPTIONS_SECONDARY && !isMobile && (
                 <Option
                   onClick={() => {

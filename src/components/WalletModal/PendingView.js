@@ -54,7 +54,7 @@ export default function PendingView({ uri = '', size, connector, error = false }
             : 'Waiting for connection...'}
         </h5>
       </LoadingMessage>
-      {!error ? connector === walletconnect ? <WalletConnectData size={size} uri={uri} /> : '' : ''}
+      {!error && connector === walletconnect && <WalletConnectData size={size} uri={uri} />}
       {Object.keys(SUPPORTED_WALLETS).map(key => {
         const option = SUPPORTED_WALLETS[key]
         if (option.connector === connector) {
