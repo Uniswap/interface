@@ -1,20 +1,20 @@
+import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
-import { PortisConnector } from '@web3-react/portis-connector'
 
-import { InjectedConnector } from './Injected'
+import { PortisConnector } from './Portis'
 import { NetworkConnector } from './Network'
 import { FortmaticConnector } from './Fortmatic'
 
 const POLLING_INTERVAL = 10000
 
-export const injected = new InjectedConnector({
-  supportedChainIds: [1]
-})
-
 export const network = new NetworkConnector({
   urls: { 1: process.env.REACT_APP_NETWORK_URL },
   pollingInterval: POLLING_INTERVAL
+})
+
+export const injected = new InjectedConnector({
+  supportedChainIds: [1]
 })
 
 export const walletconnect = new WalletConnectConnector({
@@ -25,12 +25,12 @@ export const walletconnect = new WalletConnectConnector({
 })
 
 export const fortmatic = new FortmaticConnector({
-  apiKey: 'pk_live_F937DF033A1666BF',
+  apiKey: process.env.REACT_APP_FORTMATIC_KEY,
   chainId: 1
 })
 
 export const portis = new PortisConnector({
-  dAppId: 'c0e2bf01-4b08-4fd5-ac7b-8e26b58cd236',
+  dAppId: process.env.REACT_APP_PORTIS_ID,
   networks: [1]
 })
 

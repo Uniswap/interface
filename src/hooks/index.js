@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import copy from 'copy-to-clipboard'
+import { isMobile } from 'react-device-detect'
 
 import { NetworkContextName } from '../constants'
 import ERC20_ABI from '../constants/abis/erc20'
@@ -26,7 +27,13 @@ export function useEagerConnect() {
           setTried(true)
         })
       } else {
-        setTried(true)
+        if (isMobile && window.ethereum) {
+          activate(injected, undefined, true).catch(() => {
+            setTried(true)
+          })
+        } else {
+          setTried(true)
+        }
       }
     })
   }, [activate]) // intentionally only running on mount (make sure it's only mounted once :))
@@ -52,7 +59,7 @@ export function useInactiveListener(suppress = false) {
     const { ethereum } = window
 
     if (ethereum && ethereum.on && !active && !error && !suppress) {
-      const handleNetworkChanged = () => {
+      const handleChainChanged = () => {
         // eat errors
         activate(injected, undefined, true).catch(() => {})
       }
@@ -64,12 +71,21 @@ export function useInactiveListener(suppress = false) {
         }
       }
 
+      const handleNetworkChanged = () => {
+        // eat errors
+        activate(injected, undefined, true).catch(() => {})
+      }
+
+      ethereum.on('chainChanged', handleChainChanged)
       ethereum.on('networkChanged', handleNetworkChanged)
       ethereum.on('accountsChanged', handleAccountsChanged)
 
       return () => {
-        ethereum.removeListener('networkChanged', handleNetworkChanged)
-        ethereum.removeListener('accountsChanged', handleAccountsChanged)
+        if (ethereum.removeListener) {
+          ethereum.removeListener('chainChanged', handleChainChanged)
+          ethereum.removeListener('networkChanged', handleNetworkChanged)
+          ethereum.removeListener('accountsChanged', handleAccountsChanged)
+        }
       }
     }
 

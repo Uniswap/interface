@@ -19,7 +19,8 @@ export const SUPPORTED_WALLETS = {
     iconName: 'arrow-right.svg',
     description: 'Injected web3 provider.',
     href: null,
-    color: '#010101'
+    color: '#010101',
+    primary: true
   },
   METAMASK: {
     connector: injected,
@@ -27,7 +28,8 @@ export const SUPPORTED_WALLETS = {
     iconName: 'metamask.png',
     description: 'Easy-to-use browser extension.',
     href: null,
-    color: '#E8831D'
+    color: '#E8831D',
+    primary: true
   },
   WALLET_CONNECT: {
     connector: walletconnect,
@@ -35,7 +37,8 @@ export const SUPPORTED_WALLETS = {
     iconName: 'walletConnectIcon.svg',
     description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
     href: null,
-    color: '#4196FC'
+    color: '#4196FC',
+    primary: true
   },
   WALLET_LINK: {
     connector: walletlink,
@@ -44,24 +47,6 @@ export const SUPPORTED_WALLETS = {
     description: 'Use Coinbase Wallet app on mobile device',
     href: null,
     color: '#315CF5'
-  },
-  FORTMATIC: {
-    connector: fortmatic,
-    name: 'Fortmatic',
-    iconName: 'fortmaticIcon.png',
-    description: 'Login using Fortmatic hosted wallet',
-    href: null,
-    color: '#6748FF',
-    mobile: true
-  },
-  Portis: {
-    connector: portis,
-    name: 'Portis',
-    iconName: 'portisIcon.png',
-    description: 'Login using Portis hosted wallet',
-    href: null,
-    color: '#4A6C9B',
-    mobile: true
   },
   COINBASE_LINK: {
     name: 'Open in Coinbase Wallet',
@@ -80,6 +65,24 @@ export const SUPPORTED_WALLETS = {
     color: '#1C74CC',
     mobile: true,
     mobileOnly: true
+  },
+  FORTMATIC: {
+    connector: fortmatic,
+    name: 'Fortmatic',
+    iconName: 'fortmaticIcon.png',
+    description: 'Login using Fortmatic hosted wallet',
+    href: null,
+    color: '#6748FF',
+    mobile: true
+  },
+  Portis: {
+    connector: portis,
+    name: 'Portis',
+    iconName: 'portisIcon.png',
+    description: 'Login using Portis hosted wallet',
+    href: null,
+    color: '#4A6C9B',
+    mobile: true
   }
 }
 

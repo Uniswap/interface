@@ -204,10 +204,6 @@ const IconWrapper = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     align-items: flex-end;
   `};
-
-  & > div {
-    color: 'blue';
-  }
 `
 
 const TransactionListWrapper = styled.div`
@@ -283,6 +279,15 @@ export default function AccountDetails({
         <>
           <IconWrapper size={16}>
             <img src={PortisIcon} alt={''} /> {formatConnectorName()}
+            <WalletAction
+              onClick={() => {
+                if (connector === portis) {
+                  portis.getPortis().showPortis()
+                }
+              }}
+            >
+              Show Portis
+            </WalletAction>
           </IconWrapper>
         </>
       )
@@ -308,7 +313,7 @@ export default function AccountDetails({
                         connector.close()
                       }}
                     >
-                      Disconenct
+                      Disconnect
                     </WalletAction>
                   ) : (
                     ''
@@ -339,7 +344,12 @@ export default function AccountDetails({
               </AccountGroupingRow>
             </InfoCard>
           </YourAccount>
-          {!isMobile && (
+          {isMobile && !account & !(window.web3 || window.ethereum) ? (
+            <div>Error connecting. Try a different browser or contact us.</div>
+          ) : (
+            ''
+          )}
+          {!(isMobile && (window.web3 || window.ethereum)) && (
             <ConnectButtonRow>
               <OptionButton
                 onClick={() => {
