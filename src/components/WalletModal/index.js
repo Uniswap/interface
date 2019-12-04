@@ -159,7 +159,6 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
     setWalletView(WALLET_VIEWS.PENDING)
     if (active || isMobile) {
       activate(connector, undefined, true).catch(e => {
-        console.log(e)
         setPendingError(true)
       })
     } else {
