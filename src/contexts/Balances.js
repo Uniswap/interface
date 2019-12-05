@@ -72,7 +72,7 @@ export function Updater() {
       const { value, blockNumber } = safeAccess(state, [chainId, account, tokenAddress]) || {}
       console.log(value + '---' + allTokens[tokenAddress].name)
     })
-  }, [allTokens])
+  }, [allTokens, account, chainId, state])
 
   return null
 }
