@@ -64,13 +64,20 @@ const ErrorButton = styled.div`
   }
 `
 
+const LoadingWrapper = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap};
+  align-items: center;
+  justify-content: center;
+`
+
 export default function PendingView({ uri = '', size, connector, error = false, setPendingError, tryActivation }) {
   const isMetamask = window.ethereum && window.ethereum.isMetaMask
 
   return (
     <PendingSection>
+      {!error && connector === walletconnect && <WalletConnectData size={size} uri={uri} />}
       <LoadingMessage error={error}>
-        <div>
+        <LoadingWrapper>
           {!error && <SpinnerWrapper src={Circle} />}
           {error ? (
             <ErrorGroup>
@@ -89,28 +96,31 @@ export default function PendingView({ uri = '', size, connector, error = false, 
           ) : (
             'Initializing...'
           )}
-        </div>
+        </LoadingWrapper>
       </LoadingMessage>
-      {!error && connector === walletconnect && <WalletConnectData size={size} uri={uri} />}
       {Object.keys(SUPPORTED_WALLETS).map(key => {
         const option = SUPPORTED_WALLETS[key]
         if (option.connector === connector) {
-          if (option.connector === injected && isMetamask && option.name !== 'MetaMask') {
-            return null
-          } else {
-            return (
-              <Option
-                key={key}
-                clickable={false}
-                color={option.color}
-                header={option.name}
-                subheader={option.description}
-                icon={require('../../assets/images/' + option.iconName)}
-              />
-            )
+          if (option.connector === injected) {
+            if (isMetamask && option.name !== 'MetaMask') {
+              return null
+            }
+            if (!isMetamask && option.name === 'MetaMask') {
+              return null
+            }
           }
+          return (
+            <Option
+              key={key}
+              clickable={false}
+              color={option.color}
+              header={option.name}
+              subheader={option.description}
+              icon={require('../../assets/images/' + option.iconName)}
+            />
+          )
         }
-        return true
+        return null
       })}
     </PendingSection>
   )
