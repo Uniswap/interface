@@ -64,21 +64,15 @@ const CircleWrapper = styled.div`
 
 const HeaderText = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.royalBlue : props.color)};
+  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.royalBlue : ({ theme }) => theme.textColor)};
   font-size: 1rem;
   font-weight: 500;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    font-size: 12px;
-  `};
 `
 
 const SubHeader = styled.div`
   color: ${({ theme }) => theme.textColor};
   margin-top: 10px;
   font-size: 12px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    font-size: 10px;
-  `};
 `
 
 const IconWrapper = styled.div`

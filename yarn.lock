@@ -1922,10 +1922,10 @@
     fortmatic "^1.0.0"
     tiny-invariant "^1.0.6"
 
-"@web3-react/injected-connector@6.0.0-beta.20":
-  version "6.0.0-beta.20"
-  resolved "https://registry.yarnpkg.com/@web3-react/injected-connector/-/injected-connector-6.0.0-beta.20.tgz#b04787a4f036eaa6eb4c5ea327bc941a9383303e"
-  integrity sha512-uXVgSn8qUUEFd0figiaxHY9yF5RenpHx4sUDxTjAZrSUwkg2jPBoV7BjPcXPP2LGwqVzFDL4059usNXSV1FVqg==
+"@web3-react/injected-connector@^6.0.0-beta.21":
+  version "6.0.0-beta.21"
+  resolved "https://registry.yarnpkg.com/@web3-react/injected-connector/-/injected-connector-6.0.0-beta.21.tgz#6f200dbfe2fb212b79027b48c510246c6eba8bfd"
+  integrity sha512-B83mz+8uCSyjqndA+E72FffXj29VlBMNey4aNjMsXkcgjgOOhcYQ8e0LZjZo48fdetYuXD4ZimqnGicb3jtbXg==
   dependencies:
     "@web3-react/abstract-connector" "^6.0.0-beta.19"
     "@web3-react/types" "^6.0.0-beta.19"
