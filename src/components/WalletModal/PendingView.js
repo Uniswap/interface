@@ -69,6 +69,7 @@ export default function PendingView({ uri = '', size, connector, error = false, 
 
   return (
     <PendingSection>
+      {!error && connector === walletconnect && <WalletConnectData size={size} uri={uri} />}
       <LoadingMessage error={error}>
         <div>
           {!error && <SpinnerWrapper src={Circle} />}
@@ -91,7 +92,6 @@ export default function PendingView({ uri = '', size, connector, error = false, 
           )}
         </div>
       </LoadingMessage>
-      {!error && connector === walletconnect && <WalletConnectData size={size} uri={uri} />}
       {Object.keys(SUPPORTED_WALLETS).map(key => {
         const option = SUPPORTED_WALLETS[key]
         if (option.connector === connector) {
