@@ -4,6 +4,7 @@ import { useWeb3React } from '../hooks'
 import { safeAccess, isAddress, getEtherBalance, getTokenBalance } from '../utils'
 import { useBlockNumber } from './Application'
 import { useTokenDetails, useAllTokenDetails } from './Tokens'
+import { stat } from 'fs'
 
 const UPDATE = 'UPDATE'
 
@@ -63,16 +64,41 @@ export function Updater() {
 
   const allTokens = useAllTokenDetails()
 
-  const globalBlockNumber = useBlockNumber()
-
   const [state, { update }] = useBalancesContext()
 
   useEffect(() => {
+    console.log('running')
     Object.keys(allTokens).map(tokenAddress => {
       const { value, blockNumber } = safeAccess(state, [chainId, account, tokenAddress]) || {}
-      console.log(value + '---' + allTokens[tokenAddress].name)
+      if (!value) {
+        if (
+          isAddress(account) &&
+          (tokenAddress === 'ETH' || isAddress(tokenAddress)) &&
+          (chainId || chainId === 0) &&
+          library
+        ) {
+          let stale = false
+          ;(tokenAddress === 'ETH'
+            ? getEtherBalance(account, library)
+            : getTokenBalance(tokenAddress, account, library)
+          )
+            .then(value => {
+              if (!stale) {
+                update(chainId, account, tokenAddress, value, blockNumber)
+              }
+            })
+            .catch(() => {
+              if (!stale) {
+                update(chainId, account, tokenAddress, null, blockNumber)
+              }
+            })
+          return () => {
+            stale = true
+          }
+        }
+      }
     })
-  }, [allTokens, account, chainId, state])
+  }, [account])
 
   return null
 }

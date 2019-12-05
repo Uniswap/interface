@@ -453,6 +453,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
   const ethPrice = useUSDPrice()
 
   const _usdAmounts = Object.keys(allTokens).map(k => {
+    let x = useAddressBalance(account, k)
     if (
       ethPrice &&
       allBalances &&
