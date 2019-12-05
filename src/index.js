@@ -8,8 +8,8 @@ import { NetworkContextName } from './constants'
 import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage'
 import ApplicationContextProvider, { Updater as ApplicationContextUpdater } from './contexts/Application'
 import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
+import BalancesContextProvider, { Updater as BalancesContextUpdater } from './contexts/Balances'
 import TokensContextProvider from './contexts/Tokens'
-import BalancesContextProvider from './contexts/Balances'
 import AllowancesContextProvider from './contexts/Allowances'
 import AllBalancesContextProvider from './contexts/AllBalances'
 import App from './pages/App'
@@ -55,6 +55,7 @@ function Updaters() {
       <LocalStorageContextUpdater />
       <ApplicationContextUpdater />
       <TransactionContextUpdater />
+      <BalancesContextUpdater />
     </>
   )
 }

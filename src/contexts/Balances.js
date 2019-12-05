@@ -3,7 +3,7 @@ import React, { createContext, useContext, useReducer, useMemo, useCallback, use
 import { useWeb3React } from '../hooks'
 import { safeAccess, isAddress, getEtherBalance, getTokenBalance } from '../utils'
 import { useBlockNumber } from './Application'
-import { useTokenDetails } from './Tokens'
+import { useTokenDetails, useAllTokenDetails } from './Tokens'
 
 const UPDATE = 'UPDATE'
 
@@ -49,6 +49,32 @@ export default function Provider({ children }) {
       {children}
     </BalancesContext.Provider>
   )
+}
+
+export function Updater() {
+  /**
+   * - get all tokens
+   * - for each one, if balance is null, get it
+   * - one gotten balance, updat state
+   * - stagger them in 1-4s random intervals
+   */
+
+  const { library, chainId, account } = useWeb3React()
+
+  const allTokens = useAllTokenDetails()
+
+  const globalBlockNumber = useBlockNumber()
+
+  const [state, { update }] = useBalancesContext()
+
+  useEffect(() => {
+    Object.keys(allTokens).map(tokenAddress => {
+      const { value, blockNumber } = safeAccess(state, [chainId, account, tokenAddress]) || {}
+      console.log(value + '---' + allTokens[tokenAddress].name)
+    })
+  }, [allTokens])
+
+  return null
 }
 
 export function useAddressBalance(address, tokenAddress) {
