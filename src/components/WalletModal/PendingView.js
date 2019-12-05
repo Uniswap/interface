@@ -64,6 +64,12 @@ const ErrorButton = styled.div`
   }
 `
 
+const LoadingWrapper = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap};
+  align-items: center;
+  justify-content: center;
+`
+
 export default function PendingView({ uri = '', size, connector, error = false, setPendingError, tryActivation }) {
   const isMetamask = window.ethereum && window.ethereum.isMetaMask
 
@@ -71,7 +77,7 @@ export default function PendingView({ uri = '', size, connector, error = false, 
     <PendingSection>
       {!error && connector === walletconnect && <WalletConnectData size={size} uri={uri} />}
       <LoadingMessage error={error}>
-        <div>
+        <LoadingWrapper>
           {!error && <SpinnerWrapper src={Circle} />}
           {error ? (
             <ErrorGroup>
@@ -90,7 +96,7 @@ export default function PendingView({ uri = '', size, connector, error = false, 
           ) : (
             'Initializing...'
           )}
-        </div>
+        </LoadingWrapper>
       </LoadingMessage>
       {Object.keys(SUPPORTED_WALLETS).map(key => {
         const option = SUPPORTED_WALLETS[key]
