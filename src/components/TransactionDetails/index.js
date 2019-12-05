@@ -169,6 +169,7 @@ const Input = styled.input`
   background: ${({ theme }) => theme.inputBackground};
   flex-grow: 1;
   font-size: 12px;
+  min-width: 20px;
 
   outline: none;
   box-sizing: border-box;
