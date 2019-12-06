@@ -10,7 +10,7 @@
     "@uniswap/sdk": "^1.0.0-beta.4",
     "@web3-react/core": "6.0.0-beta.19",
     "@web3-react/fortmatic-connector": "6.0.0-beta.19",
-    "@web3-react/injected-connector": "^6.0.0-beta.22",
+    "@web3-react/injected-connector": "^6.0.0-beta.24",
     "@web3-react/network-connector": "6.0.0-beta.19",
     "@web3-react/portis-connector": "6.0.0-beta.19",
     "@web3-react/walletconnect-connector": "6.0.0-beta.19",
