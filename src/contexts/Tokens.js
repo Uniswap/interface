@@ -26,7 +26,7 @@ const ETH = {
   }
 }
 
-export const INITIAL_TOKENS_CONTEXT = {
+const INITIAL_TOKENS_CONTEXT = {
   1: {
     '0x737F98AC8cA59f2C68aD658E3C3d8C8963E40a4c': {
       [NAME]: 'Amon',
