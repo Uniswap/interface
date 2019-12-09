@@ -1,17 +1,15 @@
-import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect, useRef } from 'react'
+import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect, useRef, useState } from 'react'
+import { BigNumber } from '@uniswap/sdk'
 
 import { useWeb3React } from '../hooks'
 import { safeAccess, isAddress, getEtherBalance, getTokenBalance } from '../utils'
 import { useBlockNumber } from './Application'
 import { useTokenDetails, useAllTokenDetails } from './Tokens'
 import { getUSDPrice } from '../utils/price'
-import { BigNumber } from '@uniswap/sdk'
 
 const UPDATE = 'UPDATE'
 const UPDATE_ALL_FOR_ACCOUNT = 'UPDATE_ALL_FOR_ACCOUNT'
 const UPDATE_ALL_FOR_EXCHANGES = 'UPDATE_ALL_FOR_EXCHANGES'
-const UPDATE_USD_PRICE = 'UPDATE_USD_PRICE'
-const USD_PRICE = 'USD_PRICE'
 
 const BalancesContext = createContext()
 
@@ -71,16 +69,6 @@ function reducer(state, { type, payload }) {
         }
       }
     }
-    case UPDATE_USD_PRICE: {
-      const { networkId, USDPrice } = payload
-      return {
-        ...state,
-        [USD_PRICE]: {
-          ...(safeAccess(state, [USD_PRICE]) || {}),
-          [networkId]: USDPrice
-        }
-      }
-    }
     default: {
       throw Error(`Unexpected action type in BalancesContext reducer: '${type}'.`)
     }
@@ -102,18 +90,13 @@ export default function Provider({ children }) {
     dispatch({ type: UPDATE_ALL_FOR_EXCHANGES, payload: { networkId, exchangeAddresses, tokenAddresses, values } })
   }, [])
 
-  const updateUSDPrice = useCallback((networkId, USDPrice) => {
-    dispatch({ type: UPDATE_USD_PRICE, payload: { networkId, USDPrice } })
-  }, [])
-
   return (
     <BalancesContext.Provider
-      value={useMemo(() => [state, { update, updateAllForAccount, updateAllForExchanges, updateUSDPrice }], [
+      value={useMemo(() => [state, { update, updateAllForAccount, updateAllForExchanges }], [
         state,
         update,
         updateAllForAccount,
-        updateAllForExchanges,
-        updateUSDPrice
+        updateAllForExchanges
       ])}
     >
       {children}
@@ -121,6 +104,7 @@ export default function Provider({ children }) {
   )
 }
 
+const STAGGER_TIME = 2500
 export function Updater() {
   const { library, chainId, account } = useWeb3React()
 
@@ -136,16 +120,15 @@ export function Updater() {
         // get 1 eth + all token balances for the account
         Promise.all(
           Object.keys(allTokens).map(async tokenAddress => {
-            await new Promise(resolve => {
-              setTimeout(resolve, 5000 * Math.random())
-            })
+            await new Promise(resolve => setTimeout(resolve, STAGGER_TIME * Math.random()))
 
             const { value: existingValue } = safeAccess(stateRef.current, [chainId, account, tokenAddress]) || {}
-
-            return await (existingValue ||
-              (tokenAddress === 'ETH'
+            return (
+              existingValue ||
+              (await (tokenAddress === 'ETH'
                 ? getEtherBalance(account, library).catch(() => null)
                 : getTokenBalance(tokenAddress, account, library).catch(() => null)))
+            )
           })
         ).then(balances => {
           updateAllForAccount(chainId, account, Object.keys(allTokens), balances)
@@ -155,13 +138,11 @@ export function Updater() {
         // get all eth balances for all exchanges
         Promise.all(
           allTokensWithAnExchange.map(async tokenAddress => {
-            const exchangeAddress = allTokens[tokenAddress].exchangeAddress
-            await new Promise(resolve => {
-              setTimeout(resolve, 5000 * Math.random())
-            })
+            await new Promise(resolve => setTimeout(resolve, STAGGER_TIME * Math.random()))
 
+            const exchangeAddress = allTokens[tokenAddress].exchangeAddress
             const { value: existingValue } = safeAccess(stateRef.current, [chainId, exchangeAddress, 'ETH']) || {}
-            return await (existingValue || getEtherBalance(exchangeAddress, library).catch(() => null))
+            return existingValue || (await getEtherBalance(exchangeAddress, library).catch(() => null))
           })
         ).then(ethBalances => {
           updateAllForExchanges(
@@ -175,14 +156,12 @@ export function Updater() {
         // get all token balances for all exchanges
         Promise.all(
           allTokensWithAnExchange.map(async tokenAddress => {
-            const exchangeAddress = allTokens[tokenAddress].exchangeAddress
-            await new Promise(resolve => {
-              setTimeout(resolve, 5000 * Math.random())
-            })
+            await new Promise(resolve => setTimeout(resolve, STAGGER_TIME * Math.random()))
 
+            const exchangeAddress = allTokens[tokenAddress].exchangeAddress
             const { value: existingValue } =
               safeAccess(stateRef.current, [chainId, exchangeAddress, tokenAddress]) || {}
-            return await (existingValue || getTokenBalance(tokenAddress, exchangeAddress, library).catch(() => null))
+            return existingValue || (await getTokenBalance(tokenAddress, exchangeAddress, library).catch(() => null))
           })
         ).then(tokenBalances => {
           updateAllForExchanges(
@@ -194,6 +173,7 @@ export function Updater() {
         })
       }
     }
+
     getData()
   }, [chainId, library, account, allTokens, updateAllForAccount, updateAllForExchanges])
 
@@ -253,116 +233,78 @@ export function useExchangeReserves(tokenAddress) {
   return { reserveETH, reserveToken }
 }
 
-const buildReserveObject = (chainId, tokenAddress, exchangeAddress, ethReserveAmount, tokenReserveAmount, decimals) => {
-  return {
+const buildReserveObject = (chainId, tokenAddress, ethReserveAmount, tokenReserveAmount, decimals) => ({
+  token: {
+    chainId,
+    address: tokenAddress,
+    decimals
+  },
+  ethReserve: {
     token: {
-      chainId: chainId,
+      chainId,
+      decimals: 18
+    },
+    amount: ethReserveAmount
+  },
+  tokenReserve: {
+    token: {
+      chainId,
       address: tokenAddress,
-      decimals: decimals
+      decimals
     },
-    exchange: {
-      chainId: chainId,
-      address: exchangeAddress,
-      decimals: decimals
-    },
-    ethReserve: {
-      token: {
-        chainId: chainId,
-        address: 'ETH',
-        decimals: 18
-      },
-      amount: ethReserveAmount
-    },
-    tokenReserve: {
-      token: {
-        chainId: chainId,
-        address: tokenAddress,
-        decimals: decimals
-      },
-      amount: tokenReserveAmount
-    }
+    amount: tokenReserveAmount
   }
-}
-
+})
+const daiTokenAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
+const daiExchangeAddress = '0x2a1530C4C41db0B0b2bB646CB5Eb1A67b7158667'
+const usdcTokenAddress = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
+const usdcExchangeAddress = '0x97deC872013f6B5fB443861090ad931542878126'
+const tusdTokenAddress = '0x0000000000085d4780B73119b644AE5ecd22b376'
+const tusdExchangeAddress = '0x5048b9d01097498Fd72F3F14bC9Bc74A5aAc8fA7'
 export function useETHPriceInUSD() {
   const { chainId } = useWeb3React()
 
-  const [, { updateUSDPrice }] = useBalancesContext()
-
-  const daiTokenAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
-  const daiExchangeAddress = '0x2a1530C4C41db0B0b2bB646CB5Eb1A67b7158667'
   let daiReserveETH = useAddressBalance(daiExchangeAddress, 'ETH')
   let daiReserveToken = useAddressBalance(daiExchangeAddress, daiTokenAddress)
-
-  const usdcTokenAddress = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
-  const usdcExchangeAddress = '0x97deC872013f6B5fB443861090ad931542878126'
   let usdcReserveETH = useAddressBalance(usdcExchangeAddress, 'ETH')
   let usdcReserveToken = useAddressBalance(usdcExchangeAddress, usdcTokenAddress)
-
-  const tusdTokenAddress = '0x0000000000085d4780B73119b644AE5ecd22b376'
-  const tusdExchangeAddress = '0x5048b9d01097498Fd72F3F14bC9Bc74A5aAc8fA7'
   let tusdReserveETH = useAddressBalance(tusdExchangeAddress, 'ETH')
   let tusdReserveToken = useAddressBalance(tusdExchangeAddress, tusdTokenAddress)
 
+  const [price, setPrice] = useState()
   useEffect(() => {
-    if (daiReserveToken && daiReserveETH && usdcReserveToken && usdcReserveETH && tusdReserveToken && tusdReserveETH) {
-      // // convert to js BigNumber
-      let daiReserveETHFormatted = new BigNumber(daiReserveETH)
-      let daiReserveTokenFormatted = new BigNumber(daiReserveToken)
-
+    if (daiReserveETH && daiReserveToken && usdcReserveETH && usdcReserveToken && tusdReserveETH && tusdReserveToken) {
       const daiReservesObject = buildReserveObject(
         chainId,
         daiTokenAddress,
-        daiExchangeAddress,
-        daiReserveETHFormatted,
-        daiReserveTokenFormatted,
+        new BigNumber(daiReserveETH.toString()),
+        new BigNumber(daiReserveToken.toString()),
         18
       )
-
-      // convert to js BigNumber
-      let tusdReserveETHFormatted = new BigNumber(tusdReserveETH)
-      let tusdReserveTokenFormatted = new BigNumber(tusdReserveToken)
-
       const tusdReservesObject = buildReserveObject(
         chainId,
         tusdTokenAddress,
-        tusdExchangeAddress,
-        tusdReserveETHFormatted,
-        tusdReserveTokenFormatted,
+        new BigNumber(tusdReserveETH.toString()),
+        new BigNumber(tusdReserveToken.toString()),
         18
       )
-
-      // convert to js BigNumber
-      let usdcReserveETHFormatted = new BigNumber(usdcReserveETH)
-      let usdcReserveTokenFormatted = new BigNumber(usdcReserveToken)
-
       const usdcReservesObject = buildReserveObject(
         chainId,
         usdcTokenAddress,
-        usdcExchangeAddress,
-        usdcReserveETHFormatted,
-        usdcReserveTokenFormatted,
+        new BigNumber(usdcReserveETH.toString()),
+        new BigNumber(usdcReserveToken.toString()),
         6
       )
 
       const stablecoinReserves = [daiReservesObject, usdcReservesObject, tusdReservesObject]
 
-      getUSDPrice(stablecoinReserves).then(([price]) => {
-        updateUSDPrice(chainId, price[0])
-      })
+      try {
+        setPrice(getUSDPrice(stablecoinReserves))
+      } catch {
+        setPrice(null)
+      }
     }
-  }, [
-    daiReserveToken,
-    daiReserveETH,
-    usdcReserveToken,
-    usdcReserveETH,
-    tusdReserveToken,
-    tusdReserveETH,
-    updateUSDPrice,
-    chainId
-  ])
+  }, [daiReserveETH, daiReserveToken, usdcReserveETH, usdcReserveToken, tusdReserveETH, tusdReserveToken, chainId])
 
-  const [state] = useBalancesContext()
-
-  return safeAccess(state, [USD_PRICE, chainId])
+  return price
 }
