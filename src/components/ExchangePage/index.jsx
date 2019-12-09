@@ -33,7 +33,7 @@ const ALLOWED_SLIPPAGE_DEFAULT = 100
 const TOKEN_ALLOWED_SLIPPAGE_DEFAULT = 100
 
 // 15 minutes, denominated in seconds
-const DEADLINE_FROM_NOW = 60 * 15
+const DEFAULT_DEADLINE_FROM_NOW = 60 * 15
 
 // % above the calculated gas cost that we actually send, denominated in bips
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
@@ -266,6 +266,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     }
     return ''
   }
+
+  const [deadlineFromNow, setDeadlineFromNow] = useState(DEFAULT_DEADLINE_FROM_NOW)
 
   const [rawSlippage, setRawSlippage] = useState(() => initialSlippage())
   const [rawTokenSlippage, setRawTokenSlippage] = useState(() => initialSlippage(true))
@@ -554,8 +556,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const highSlippageWarning = percentSlippage && percentSlippage.gte(ethers.utils.parseEther('.2')) // [20+%
 
   const isValid = sending
-    ? exchangeRate && inputError === null && independentError === null && recipientError === null
-    : exchangeRate && inputError === null && independentError === null
+    ? exchangeRate && inputError === null && independentError === null && recipientError === null && deadlineFromNow
+    : exchangeRate && inputError === null && independentError === null && deadlineFromNow
 
   const estimatedText = `(${t('estimated')})`
   function formatBalance(value) {
@@ -563,7 +565,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   }
 
   async function onSwap() {
-    const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
+    const deadline = Math.ceil(Date.now() / 1000) + deadlineFromNow
 
     let estimate, method, args, value
     if (independentField === INPUT) {
@@ -764,6 +766,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         rawSlippage={rawSlippage}
         slippageWarning={slippageWarning}
         highSlippageWarning={highSlippageWarning}
+        setDeadline={setDeadlineFromNow}
+        deadline={deadlineFromNow}
         inputError={inputError}
         independentError={independentError}
         inputCurrency={inputCurrency}
