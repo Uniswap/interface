@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
-import { ethers } from 'ethers'
 
 import { useWeb3React } from '../hooks'
 import {
@@ -27,7 +26,7 @@ const ETH = {
   }
 }
 
-const INITIAL_TOKENS_CONTEXT = {
+export const INITIAL_TOKENS_CONTEXT = {
   1: {
     '0x737F98AC8cA59f2C68aD658E3C3d8C8963E40a4c': {
       [NAME]: 'Amon',
@@ -602,6 +601,7 @@ export function useTokenDetails(tokenAddress) {
       Promise.all([namePromise, symbolPromise, decimalsPromise, exchangeAddressPromise]).then(
         ([resolvedName, resolvedSymbol, resolvedDecimals, resolvedExchangeAddress]) => {
           if (!stale) {
+            console.log('THIS SHOULD NOT HAPPEN')
             update(chainId, tokenAddress, resolvedName, resolvedSymbol, resolvedDecimals, resolvedExchangeAddress)
           }
         }
@@ -615,23 +615,10 @@ export function useTokenDetails(tokenAddress) {
   return { name, symbol, decimals, exchangeAddress }
 }
 
-export function useAllTokenDetails(requireExchange = true) {
+export function useAllTokenDetails() {
   const { chainId } = useWeb3React()
 
   const [state] = useTokensContext()
-  const tokenDetails = { ...ETH, ...(safeAccess(state, [chainId]) || {}) }
 
-  return requireExchange
-    ? Object.keys(tokenDetails)
-        .filter(
-          tokenAddress =>
-            tokenAddress === 'ETH' ||
-            (safeAccess(tokenDetails, [tokenAddress, EXCHANGE_ADDRESS]) &&
-              safeAccess(tokenDetails, [tokenAddress, EXCHANGE_ADDRESS]) !== ethers.constants.AddressZero)
-        )
-        .reduce((accumulator, tokenAddress) => {
-          accumulator[tokenAddress] = tokenDetails[tokenAddress]
-          return accumulator
-        }, {})
-    : tokenDetails
+  return useMemo(() => ({ ...ETH, ...(safeAccess(state, [chainId]) || {}) }), [state, chainId])
 }

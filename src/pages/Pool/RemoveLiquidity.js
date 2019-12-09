@@ -14,7 +14,6 @@ import ArrowDown from '../../assets/svg/SVGArrowDown'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useTokenDetails } from '../../contexts/Tokens'
 import { useAddressBalance } from '../../contexts/Balances'
-import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { calculateGasMargin, amountFormatter } from '../../utils'
 
 // denominated in bips
@@ -334,13 +333,10 @@ export default function RemoveLiquidity({ params }) {
 
   const marketRate = getMarketRate(exchangeETHBalance, exchangeTokenBalance, decimals)
 
-  const allBalances = useFetchAllBalances()
-
   return (
     <>
       <CurrencyInputPanel
         title={t('poolTokens')}
-        allBalances={allBalances}
         extraText={poolTokenBalance && formatBalance(amountFormatter(poolTokenBalance, 18, 4))}
         extraTextClickHander={() => {
           if (poolTokenBalance) {
@@ -363,7 +359,6 @@ export default function RemoveLiquidity({ params }) {
       </OversizedPanel>
       <CurrencyInputPanel
         title={t('output')}
-        allBalances={allBalances}
         description={!!(ethWithdrawn && tokenWithdrawn) ? `(${t('estimated')})` : ''}
         key="remove-liquidity-input"
         renderInput={() =>
