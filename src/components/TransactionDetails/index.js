@@ -260,7 +260,7 @@ const LastSummaryText = styled.div`
 const SlippageSelector = styled.div`
   background-color: ${({ theme }) => darken(0.04, theme.concreteGray)};
   padding: 1rem 1.25rem 1rem 1.25rem;
-  border-radius: 12px;
+  border-radius: 12px 12px 0 0;
 `
 
 const Percent = styled.div`
@@ -294,6 +294,14 @@ const ValueWrapper = styled.span`
   font-variant: tabular-nums;
 `
 
+const DeadlineSelector = styled.div`
+  background-color: ${({ theme }) => darken(0.04, theme.concreteGray)};
+  padding: 1rem 1.25rem 1rem 1.25rem;
+  border-radius: 0 0 12px 12px;
+`
+const DeadlineRow = SlippageRow
+const DeadlineInput = OptionCustom
+
 export default function TransactionDetails(props) {
   const { t } = useTranslation()
 
@@ -313,6 +321,8 @@ export default function TransactionDetails(props) {
       checkBounds(debouncedInput)
     }
   })
+
+  const [deadlineInput, setDeadlineInput] = useState('')
 
   function renderSummary() {
     let contextualInfo = ''
@@ -492,6 +502,14 @@ export default function TransactionDetails(props) {
             </BottomError>
           </SlippageRow>
         </SlippageSelector>
+        <DeadlineSelector>
+          Set swap deadline (minutes from now)
+          <DeadlineRow wrap>
+            <DeadlineInput>
+              <Input placeholder={'Deadline'} value={deadlineInput} onChange={parseDeadlineInput} />
+            </DeadlineInput>
+          </DeadlineRow>
+        </DeadlineSelector>
       </>
     )
   }
@@ -507,6 +525,7 @@ export default function TransactionDetails(props) {
   const setRawSlippage = props.setRawSlippage
   const setRawTokenSlippage = props.setRawTokenSlippage
   const setcustomSlippageError = props.setcustomSlippageError
+  const setDeadline = props.setDeadline
 
   const updateSlippage = useCallback(
     newSlippage => {
@@ -601,6 +620,22 @@ export default function TransactionDetails(props) {
     // if its within accepted decimal limit, update the input state
     if (acceptableValues.some(a => a.test(input))) {
       setUserInput(input)
+    }
+  }
+
+  const [initialDeadline] = useState(props.deadline)
+
+  useEffect(() => {
+    setDeadlineInput(initialDeadline / 60)
+  }, [initialDeadline])
+
+  const parseDeadlineInput = e => {
+    const input = e.target.value
+
+    const acceptableValues = [/^$/, /^\d+$/]
+    if (acceptableValues.some(re => re.test(input))) {
+      setDeadlineInput(input)
+      setDeadline(parseInt(input) * 60)
     }
   }
 
