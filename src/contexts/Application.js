@@ -2,14 +2,11 @@ import React, { createContext, useContext, useReducer, useMemo, useCallback, use
 
 import { useWeb3React } from '../hooks'
 import { safeAccess } from '../utils'
-import { getUSDPrice } from '../utils/price'
 
 const BLOCK_NUMBER = 'BLOCK_NUMBER'
-const USD_PRICE = 'USD_PRICE'
 const WALLET_MODAL_OPEN = 'WALLET_MODAL_OPEN'
 
 const UPDATE_BLOCK_NUMBER = 'UPDATE_BLOCK_NUMBER'
-const UPDATE_USD_PRICE = 'UPDATE_USD_PRICE'
 const TOGGLE_WALLET_MODAL = 'TOGGLE_WALLET_MODAL'
 
 const ApplicationContext = createContext()
@@ -30,16 +27,6 @@ function reducer(state, { type, payload }) {
         }
       }
     }
-    case UPDATE_USD_PRICE: {
-      const { networkId, USDPrice } = payload
-      return {
-        ...state,
-        [USD_PRICE]: {
-          ...(safeAccess(state, [USD_PRICE]) || {}),
-          [networkId]: USDPrice
-        }
-      }
-    }
     case TOGGLE_WALLET_MODAL: {
       return { ...state, [WALLET_MODAL_OPEN]: !state[WALLET_MODAL_OPEN] }
     }
@@ -52,16 +39,11 @@ function reducer(state, { type, payload }) {
 export default function Provider({ children }) {
   const [state, dispatch] = useReducer(reducer, {
     [BLOCK_NUMBER]: {},
-    [USD_PRICE]: {},
     [WALLET_MODAL_OPEN]: false
   })
 
   const updateBlockNumber = useCallback((networkId, blockNumber) => {
     dispatch({ type: UPDATE_BLOCK_NUMBER, payload: { networkId, blockNumber } })
-  }, [])
-
-  const updateUSDPrice = useCallback((networkId, USDPrice) => {
-    dispatch({ type: UPDATE_USD_PRICE, payload: { networkId, USDPrice } })
   }, [])
 
   const toggleWalletModal = useCallback(() => {
@@ -70,10 +52,9 @@ export default function Provider({ children }) {
 
   return (
     <ApplicationContext.Provider
-      value={useMemo(() => [state, { updateBlockNumber, updateUSDPrice, toggleWalletModal }], [
+      value={useMemo(() => [state, { updateBlockNumber, toggleWalletModal }], [
         state,
         updateBlockNumber,
-        updateUSDPrice,
         toggleWalletModal
       ])}
     >
@@ -85,27 +66,7 @@ export default function Provider({ children }) {
 export function Updater() {
   const { library, chainId } = useWeb3React()
 
-  const globalBlockNumber = useBlockNumber()
-  const [, { updateBlockNumber, updateUSDPrice }] = useApplicationContext()
-
-  // update usd price
-  useEffect(() => {
-    if (library && chainId === 1) {
-      let stale = false
-
-      getUSDPrice(library)
-        .then(([price]) => {
-          if (!stale) {
-            updateUSDPrice(chainId, price)
-          }
-        })
-        .catch(() => {
-          if (!stale) {
-            updateUSDPrice(chainId, null)
-          }
-        })
-    }
-  }, [globalBlockNumber, library, chainId, updateUSDPrice])
+  const [, { updateBlockNumber }] = useApplicationContext()
 
   // update block number
   useEffect(() => {
@@ -146,14 +107,6 @@ export function useBlockNumber() {
   const [state] = useApplicationContext()
 
   return safeAccess(state, [BLOCK_NUMBER, chainId])
-}
-
-export function useUSDPrice() {
-  const { chainId } = useWeb3React()
-
-  const [state] = useApplicationContext()
-
-  return safeAccess(state, [USD_PRICE, chainId])
 }
 
 export function useWalletModalOpen() {

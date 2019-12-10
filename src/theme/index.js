@@ -54,6 +54,10 @@ const theme = darkMode => ({
   placeholderGray: darkMode ? '#5F5F5F' : '#E1E1E1',
   shadowColor: darkMode ? '#000' : '#2F80ED',
 
+  //button
+  disabledButton: darkMode ? '#CED0D9' : '#CED0D9',
+  disabledText: darkMode ? '#888D9B' : '#888D9B',
+
   // grays
   concreteGray: darkMode ? '#292C2F' : '#FAFAFA',
   mercuryGray: darkMode ? '#333333' : '#E1E1E1',
