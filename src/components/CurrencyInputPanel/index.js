@@ -455,25 +455,28 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
   // all balances for both account and exchanges
   let allBalances = useAllBalances()
 
-  const _usdAmounts = Object.keys(allTokens).map(k => {
-    if (ethPrice && allBalances[account] && allBalances[account][k]) {
-      let ethRate = 1 // default for ETH
-      let exchangeDetails = allBalances[allTokens[k].exchangeAddress]
-      if (exchangeDetails && exchangeDetails[k] && exchangeDetails['ETH']) {
-        const tokenBalance = new BigNumber(exchangeDetails[k].value.toString())
-        const ethBalance = new BigNumber(exchangeDetails['ETH'].value.toString())
-        ethRate = ethBalance.div(tokenBalance)
+  const _usdAmounts = useMemo(() => {
+    return Object.keys(allTokens).map(k => {
+      if (ethPrice && allBalances[account] && allBalances[account][k]) {
+        let ethRate = 1 // default for ETH
+        let exchangeDetails = allBalances[allTokens[k].exchangeAddress]
+        if (exchangeDetails && exchangeDetails[k] && exchangeDetails['ETH']) {
+          const tokenBalance = new BigNumber(exchangeDetails[k].value.toString())
+          const ethBalance = new BigNumber(exchangeDetails['ETH'].value.toString())
+          ethRate = ethBalance.div(tokenBalance)
+        }
+        const USDRate = ethPrice
+          .times(ethRate)
+          .times(new BigNumber(10).pow(allTokens[k].decimals).div(new BigNumber(10).pow(18)))
+        const balanceBigNumber = new BigNumber(allBalances[account][k].value.toString())
+        const usdBalance = balanceBigNumber.times(USDRate).div(new BigNumber(10).pow(allTokens[k].decimals))
+        return usdBalance
+      } else {
+        return null
       }
-      const USDRate = ethPrice
-        .times(ethRate)
-        .times(new BigNumber(10).pow(allTokens[k].decimals).div(new BigNumber(10).pow(18)))
-      const balanceBigNumber = new BigNumber(allBalances[account][k].value.toString())
-      const usdBalance = balanceBigNumber.times(USDRate).div(new BigNumber(10).pow(allTokens[k].decimals))
-      return usdBalance
-    } else {
-      return null
-    }
-  })
+    })
+  }, [allTokens, account, allBalances, ethPrice])
+
   const usdAmounts =
     _usdAmounts &&
     Object.keys(allTokens).reduce(
