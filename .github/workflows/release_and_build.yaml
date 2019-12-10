@@ -1,0 +1,20 @@
+name: Build and upload as release
+on:
+  push:
+    branches:
+      - test-git
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        run: |
+          yarn install
+          yarn build
+      - name: GH Release
+        uses: softprops/action-gh-release@v0.1.0
+        with:
+          # Gives the release a custom name
+          name: current_release
+          # Comma-delimited list of path globs for asset files to upload
+          files: ./build
