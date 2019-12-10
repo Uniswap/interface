@@ -9,5 +9,5 @@ jobs:
     steps:
       - name: Build
         run: |
-          yarn install
-          yarn build
+          npm install
+          npm run-script build
