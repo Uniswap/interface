@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
-import { ethers } from 'ethers'
 
 import { useWeb3React } from '../hooks'
 import {
@@ -615,23 +614,10 @@ export function useTokenDetails(tokenAddress) {
   return { name, symbol, decimals, exchangeAddress }
 }
 
-export function useAllTokenDetails(requireExchange = true) {
+export function useAllTokenDetails() {
   const { chainId } = useWeb3React()
 
   const [state] = useTokensContext()
-  const tokenDetails = { ...ETH, ...(safeAccess(state, [chainId]) || {}) }
 
-  return requireExchange
-    ? Object.keys(tokenDetails)
-        .filter(
-          tokenAddress =>
-            tokenAddress === 'ETH' ||
-            (safeAccess(tokenDetails, [tokenAddress, EXCHANGE_ADDRESS]) &&
-              safeAccess(tokenDetails, [tokenAddress, EXCHANGE_ADDRESS]) !== ethers.constants.AddressZero)
-        )
-        .reduce((accumulator, tokenAddress) => {
-          accumulator[tokenAddress] = tokenDetails[tokenAddress]
-          return accumulator
-        }, {})
-    : tokenDetails
+  return useMemo(() => ({ ...ETH, ...(safeAccess(state, [chainId]) || {}) }), [state, chainId])
 }

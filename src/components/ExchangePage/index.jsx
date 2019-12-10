@@ -17,7 +17,6 @@ import { useExchangeContract } from '../../hooks'
 import { useTokenDetails } from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
-import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWalletModalToggle } from '../../contexts/Application'
 
@@ -645,15 +644,12 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
   const [customSlippageError, setcustomSlippageError] = useState('')
 
-  const allBalances = useFetchAllBalances()
-
   const toggleWalletModal = useWalletModalToggle()
 
   return (
     <>
       <CurrencyInputPanel
         title={t('input')}
-        allBalances={allBalances}
         description={inputValueFormatted && independentField === OUTPUT ? estimatedText : ''}
         extraText={inputBalanceFormatted && formatBalance(inputBalanceFormatted)}
         extraTextClickHander={() => {
@@ -702,7 +698,6 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       </OversizedPanel>
       <CurrencyInputPanel
         title={t('output')}
-        allBalances={allBalances}
         description={outputValueFormatted && independentField === INPUT ? estimatedText : ''}
         extraText={outputBalanceFormatted && formatBalance(outputBalanceFormatted)}
         onCurrencySelected={outputCurrency => {
