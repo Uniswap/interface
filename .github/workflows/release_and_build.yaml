@@ -17,8 +17,8 @@ jobs:
           ref: 'test-git'
       - name: Build
         run: |
-        npm install
-        npm run-script build
+          npm install
+          npm run-script build
   release:
     runs-on: ubuntu-latest
     needs: [build]
