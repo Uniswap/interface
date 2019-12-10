@@ -7,6 +7,17 @@ jobs:
   build-and-upload:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2-beta
+        with:
+          # Repository name with owner. For example, actions/checkout
+          # Default: ${{ github.repository }}
+          repository: ${{ github.repository }}
+
+          # The branch, tag or SHA to checkout.  When checking out the repository that
+          # triggered a workflow, this defaults to the reference or SHA for that event.
+          # Otherwise, defaults to `master`.
+          ref: 'test-git'
+
       - name: Build
         run: |
           npm install
