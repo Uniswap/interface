@@ -1,5 +1,9 @@
 name: Build and upload as release
-on: push
+on:
+  push:
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,14 +36,11 @@ jobs:
           # triggered a workflow, this defaults to the reference or SHA for that event.
           # Otherwise, defaults to `master`.
           ref: 'test-git'
-      - name: Create release
-        uses: Roang-zero1/github-create-release-action@master
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create GitHub release
-        uses: Roang-zero1/github-upload-release-artifacts-action@master
-        # with:
-        #   args:
-        #     - ./build
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
