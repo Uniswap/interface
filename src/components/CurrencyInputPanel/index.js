@@ -24,7 +24,7 @@ import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { transparentize } from 'polished'
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle-grey.svg'
-import { useUSDPrice } from '../../contexts/Application'
+import { useETHPriceInUSD, useAllBalances } from '../../contexts/Balances'
 
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
@@ -439,7 +439,7 @@ export default function CurrencyInputPanel({
   )
 }
 
-function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) {
+function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
   const { t } = useTranslation()
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -450,19 +450,24 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
   const { account } = useWeb3React()
 
   // BigNumber.js instance
-  const ethPrice = useUSDPrice()
+  const ethPrice = useETHPriceInUSD()
+
+  // all balances for both account and exchanges
+  let allBalances = useAllBalances()
 
   const _usdAmounts = Object.keys(allTokens).map(k => {
-    if (
-      ethPrice &&
-      allBalances &&
-      allBalances[k] &&
-      allBalances[k].ethRate &&
-      !allBalances[k].ethRate.isNaN() &&
-      allBalances[k].balance
-    ) {
-      const USDRate = ethPrice.times(allBalances[k].ethRate)
-      const balanceBigNumber = new BigNumber(allBalances[k].balance.toString())
+    if (ethPrice && allBalances[account] && allBalances[account][k]) {
+      let ethRate = 1 // default for ETH
+      let exchangeDetails = allBalances[allTokens[k].exchangeAddress]
+      if (exchangeDetails && exchangeDetails[k] && exchangeDetails['ETH']) {
+        const tokenBalance = new BigNumber(exchangeDetails[k].value.toString())
+        const ethBalance = new BigNumber(exchangeDetails['ETH'].value.toString())
+        ethRate = ethBalance.div(tokenBalance)
+      }
+      const USDRate = ethPrice
+        .times(ethRate)
+        .times(new BigNumber(10).pow(allTokens[k].decimals).div(new BigNumber(10).pow(18)))
+      const balanceBigNumber = new BigNumber(allBalances[account][k].value.toString())
       const usdBalance = balanceBigNumber.times(USDRate).div(new BigNumber(10).pow(allTokens[k].decimals))
       return usdBalance
     } else {
@@ -506,11 +511,11 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
         let balance
         let usdBalance
         // only update if we have data
-        if (k === 'ETH' && allBalances && allBalances[k]) {
-          balance = formatEthBalance(allBalances[k].balance)
+        if (k === 'ETH' && allBalances[account] && allBalances[account][k]) {
+          balance = formatEthBalance(allBalances[account][k].value)
           usdBalance = usdAmounts[k]
-        } else if (allBalances && allBalances[k]) {
-          balance = formatTokenBalance(allBalances[k].balance, allTokens[k].decimals)
+        } else if (allBalances[account] && allBalances[account][k]) {
+          balance = formatTokenBalance(allBalances[account][k].value, allTokens[k].decimals)
           usdBalance = usdAmounts[k]
         }
         return {
@@ -521,7 +526,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
           usdBalance: usdBalance
         }
       })
-  }, [allBalances, allTokens, usdAmounts])
+  }, [allBalances, allTokens, usdAmounts, account])
 
   const filteredTokenList = useMemo(() => {
     return tokenList.filter(tokenEntry => {
@@ -580,7 +585,13 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, allBalances }) 
               '-'
             )}
             <TokenRowUsd>
-              {usdBalance ? (usdBalance.lt(0.01) ? '<$0.01' : '$' + formatToUsd(usdBalance)) : ''}
+              {usdBalance
+                ? usdBalance.isZero()
+                  ? ''
+                  : usdBalance.lt(0.01)
+                  ? '<$0.01'
+                  : '$' + formatToUsd(usdBalance)
+                : ''}
             </TokenRowUsd>
           </TokenRowRight>
         </TokenModalRow>
