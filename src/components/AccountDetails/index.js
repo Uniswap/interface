@@ -339,7 +339,9 @@ export default function AccountDetails({
                 ) : (
                   <AccountControl hasENS={!!ENSName} isENS={false}>
                     <StyledLink hasENS={!!ENSName} isENS={false} href={getEtherscanLink(chainId, account, 'address')}>
-                      {account} ↗{' '}
+                      {account} ↗ <pre>{JSON.stringify(process.env, undefined, 2)}</pre>
+                      {process.env.REACT_APP_COMMIT_REF}
+                      {process.env.COMMIT_REF}
                     </StyledLink>
                     <Copy toCopy={account} />
                   </AccountControl>
