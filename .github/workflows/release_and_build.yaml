@@ -11,10 +11,3 @@ jobs:
         run: |
           yarn install
           yarn build
-      - name: GH Release
-        uses: softprops/action-gh-release@v0.1.0
-        with:
-          # Gives the release a custom name
-          name: current_release
-          # Comma-delimited list of path globs for asset files to upload
-          files: ./build
