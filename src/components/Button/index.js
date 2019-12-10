@@ -1,21 +1,16 @@
 import React from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
+import PropTypes from 'prop-types'
 
-const ButtonStyled = styled.button.attrs(({ small, success, disabled, theme }) => ({
-  backgroundColor: disabled
-    ? theme.disabledButton
-    : success && !small
-    ? `rgba(39, 174, 96, 0.1)`
-    : success && small
-    ? theme.connectedGreen
-    : theme.royalBlue,
+const ButtonStyled = styled.button.attrs(({ size, success, disabled, theme }) => ({
+  backgroundColor: disabled ? theme.disabledButton : success ? `rgba(39, 174, 96, 0.1)` : theme.royalBlue,
   border: success && !disabled ? `1px solid ${theme.connectedGreen};` : `none`,
-  color: disabled ? theme.disabledText : success && !small ? theme.connectedGreen : theme.white,
-  borderRadius: small ? `12px` : `20px`,
+  color: disabled ? theme.disabledText : success ? theme.connectedGreen : theme.white,
+  borderRadius: size === 'small' ? `12px` : `20px`,
   cursor: disabled || success ? `auto` : `pointer`,
-  padding: small ? `8px 0` : `18px 0`,
-  width: '100%'
+  padding: size === 'small' ? `8px 0` : `18px 0`,
+  width: size === 'small' ? '90px' : size === 'large' ? '256px' : '100%'
 }))`
   user-select: none;
   font-size: 1rem;
@@ -44,10 +39,20 @@ const ButtonStyled = styled.button.attrs(({ small, success, disabled, theme }) =
   }
 `
 
-export default function Button({ children, small, disabled, success, loading, loadingText, confirmationText }) {
+export default function Button({ children, size, disabled, success }) {
   return (
-    <ButtonStyled small={small} disabled={disabled} success={success}>
-      {success && confirmationText ? confirmationText : loading ? loadingText : children}
+    <ButtonStyled size={size} disabled={disabled} success={success}>
+      {children}
     </ButtonStyled>
   )
+}
+
+Button.propTypes = {
+  size: PropTypes.oneOf(['small', 'large', 'full'])
+}
+
+Button.defaultProps = {
+  size: 'full',
+  disabled: false,
+  success: false
 }

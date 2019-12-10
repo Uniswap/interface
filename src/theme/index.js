@@ -68,6 +68,10 @@ const theme = darkMode => ({
   buttonOutlineGrey: darkMode ? '#FAFAFA' : '#F2F2F2',
   tokenRowHover: darkMode ? '#404040' : '#F2F2F2',
 
+  // card colors
+  cardBackground: darkMode ? '#F7F8FA' : '#F7F8FA',
+  cardBorder: darkMode ? '#C4D9F8' : '#C4D9F8',
+
   //blacks
   charcoalBlack: darkMode ? '#F2F2F2' : '#404040',
   // blues
