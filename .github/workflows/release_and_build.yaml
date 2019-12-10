@@ -1,6 +1,8 @@
 name: Build and upload as release
 on:
   push:
+    branches:
+      - test-git
     tags:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
