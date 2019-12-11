@@ -281,6 +281,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x2Bf5A5bA29E60682fC56B2Fcf9cE07Bef4F6196f'
     },
+    '0x4575f41308EC1483f3d399aa9a2826d74Da13Deb': {
+      [NAME]: 'Orchid',
+      [SYMBOL]: 'OXT',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0xe9a5bbe41dc63D555E06746b047d624E3343EA52'
+    },
     '0xD56daC73A4d6766464b38ec6D91eB45Ce7457c44': {
       [NAME]: 'Panvala pan',
       [SYMBOL]: 'PAN',
