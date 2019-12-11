@@ -8,7 +8,7 @@ name: Build and Release
 
 jobs:
   build:
-    name: Gloabl Job
+    name: Global Job
     strategy:
       matrix:
         node: ['10.x']
@@ -17,13 +17,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@master
-      - name: Create production build
-        uses: actions/setup-node@master
+      - uses: actions/setup-node@master
         with:
           node-version: ${{ matrix.node }}
       - run: npm install -g yarn
       - run: yarn
       - run: yarn build
+        env:
+          REACT_APP_FORTMATIC_KEY: ${{ secrets.REACT_APP_FORTMATIC_KEY }}
+          REACT_APP_NETWORK_ID: ${{ secrets.REACT_APP_NETWORK_ID }}
+          REACT_APP_NETWORK_URL: ${{ secrets.REACT_APP_NETWORK_URL }}
+          REACT_APP_PORTIS_ID: ${{ secrets.REACT_APP_PORTIS_ID }}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1.0.0
@@ -43,7 +47,7 @@ jobs:
       - uses: 'finnp/create-file-action@master'
         env:
           FILE_NAME: 'README.md'
-          FILE_DATA: "#How To Run Uniswap\n1. Download build.zip and unzip\n2. In terminal navigate to that directory\n3. Run these two commands \n- yarn global add serve \n- serve -s build"
+          FILE_DATA: "# How to Run Uniswap Locally\n1. Download build.zip and unzip\n2. Serve this folder locally (instructions [here](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/set_up_a_local_testing_server))"
       - name: Upload Build
         id: build-asset
         uses: actions/upload-release-asset@v1.0.1
