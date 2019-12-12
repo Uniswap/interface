@@ -13,7 +13,19 @@ This an an open source interface for Uniswap - a protocol for decentralized exch
 - Email: [contact@uniswap.io](mailto:contact@uniswap.io)
 - Slack: [uni-swap.slack.com/](https://join.slack.com/t/uni-swap/shared_invite/enQtNDYwMjg1ODc5ODA4LWEyYmU0OGU1ZGQ3NjE4YzhmNzcxMDAyM2ExNzNkZjZjZjcxYTkwNzU0MGE3M2JkNzMxOTA2MzE2ZWM0YWQwNjU)
 - Whitepaper: [Link](https://hackmd.io/C-DvwDSfSxuh-Gd4WKE_ig)
+  
+## Run Uniswap Locally
+ 
+1. Download and unzip a build.zip file from a release found in the "releases" tab. 
 
+2. Serve build files and access the application in a browser. 
+
+For more information on running a server locally see [https://developer.mozilla.org/en-US/docs/Learn/Common_questions/set_up_a_local_testing_server](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/set_up_a_local_testing_server)
+
+To ensure linking functions properly make sure to serve files statically. See [https://github.com/zeit/serve](https://github.com/zeit/serve).
+
+
+  
 ## To Start Development
 
 ### Install Dependencies
