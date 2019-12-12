@@ -22,7 +22,7 @@ This an an open source interface for Uniswap - a protocol for decentralized exch
 
 For more information on running a local server see [https://developer.mozilla.org/en-US/docs/Learn/Common_questions/set_up_a_local_testing_server](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/set_up_a_local_testing_server). This simple approach has one downside: refreshing the page will give a `404` because of how React handles client-side routing. To fix this issue, consider running `serve -s` courtesy of the [serve](https://github.com/zeit/serve) package.
   
-## Development Uniswap Locally
+## Develop Uniswap Locally
 
 ### Install Dependencies
 
