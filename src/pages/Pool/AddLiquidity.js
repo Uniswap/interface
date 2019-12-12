@@ -15,7 +15,6 @@ import { brokenTokens } from '../../constants'
 import { amountFormatter, calculateGasMargin } from '../../utils'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useTokenDetails } from '../../contexts/Tokens'
-import { useFetchAllBalances } from '../../contexts/AllBalances'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 
@@ -567,8 +566,6 @@ export default function AddLiquidity({ params }) {
   const isActive = active && account
   const isValid = (inputError === null || outputError === null) && !showUnlock && !brokenTokenWarning
 
-  const allBalances = useFetchAllBalances()
-
   return (
     <>
       {isNewExchange ? (
@@ -585,7 +582,6 @@ export default function AddLiquidity({ params }) {
 
       <CurrencyInputPanel
         title={t('deposit')}
-        allBalances={allBalances}
         extraText={inputBalance && formatBalance(amountFormatter(inputBalance, 18, 4))}
         onValueChange={inputValue => {
           dispatchAddLiquidityState({ type: 'UPDATE_VALUE', payload: { value: inputValue, field: INPUT } })
@@ -613,7 +609,6 @@ export default function AddLiquidity({ params }) {
       </OversizedPanel>
       <CurrencyInputPanel
         title={t('deposit')}
-        allBalances={allBalances}
         description={isNewExchange ? '' : outputValue ? `(${t('estimated')})` : ''}
         extraText={
           outputBalance && decimals && formatBalance(amountFormatter(outputBalance, decimals, Math.min(decimals, 4)))

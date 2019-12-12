@@ -11,10 +11,18 @@ This an an open source interface for Uniswap - a protocol for decentralized exch
 - Twitter: [@UniswapExchange](https://twitter.com/UniswapExchange)
 - Reddit: [/r/Uniswap](https://www.reddit.com/r/UniSwap/)
 - Email: [contact@uniswap.io](mailto:contact@uniswap.io)
-- Slack: [uni-swap.slack.com/](https://join.slack.com/t/uni-swap/shared_invite/enQtNDYwMjg1ODc5ODA4LWEyYmU0OGU1ZGQ3NjE4YzhmNzcxMDAyM2ExNzNkZjZjZjcxYTkwNzU0MGE3M2JkNzMxOTA2MzE2ZWM0YWQwNjU)
+- Discord: [Uniswap](https://discord.gg/Y7TF6QA)
 - Whitepaper: [Link](https://hackmd.io/C-DvwDSfSxuh-Gd4WKE_ig)
+  
+## Run Uniswap Locally
+ 
+1. Download and unzip the `build.zip` file from the latest release in the [Releases tab](https://github.com/Uniswap/uniswap-frontend/releases/latest).
 
-## To Start Development
+2. Serve the `build/` folder locally, and access the application via a browser.
+
+For more information on running a local server see [https://developer.mozilla.org/en-US/docs/Learn/Common_questions/set_up_a_local_testing_server](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/set_up_a_local_testing_server). This simple approach has one downside: refreshing the page will give a `404` because of how React handles client-side routing. To fix this issue, consider running `serve -s` courtesy of the [serve](https://github.com/zeit/serve) package.
+  
+## Development Uniswap Locally
 
 ### Install Dependencies
 
