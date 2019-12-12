@@ -12,11 +12,12 @@ import { useAllTransactions } from '../../contexts/Transactions'
 import { useWalletModalToggle } from '../../contexts/Application'
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle.svg'
-import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
+import { injected, walletconnect, walletlink, fortmatic, portis, torus } from '../../connectors'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
+import TorusIcon from '../../assets/images/torus.png'
 import { NetworkContextName } from '../../constants'
 import Identicon from '../Identicon'
 
@@ -159,6 +160,12 @@ export default function Web3Status() {
       return (
         <IconWrapper size={16}>
           <img src={PortisIcon} alt={''} />
+        </IconWrapper>
+      )
+    } else if (connector === torus) {
+      return (
+        <IconWrapper size={16}>
+          <img src={TorusIcon} alt={''} />
         </IconWrapper>
       )
     }
