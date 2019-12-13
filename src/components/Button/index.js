@@ -3,21 +3,25 @@ import styled from 'styled-components'
 import { darken } from 'polished'
 import PropTypes from 'prop-types'
 
-const ButtonStyled = styled.button.attrs(({ size, success, disabled, theme }) => ({
+const ButtonStyled = styled.button.attrs(({ size, success, width, disabled, theme }) => ({
   backgroundColor: disabled ? theme.disabledButton : success ? `rgba(39, 174, 96, 0.1)` : theme.royalBlue,
-  border: success && !disabled ? `1px solid ${theme.connectedGreen};` : `none`,
+  border: success
+    ? `1px solid ${theme.connectedGreen};`
+    : disabled
+    ? `1px solid ${theme.disabledButton};`
+    : `1px solid ${theme.royalBlue};`,
   color: disabled ? theme.disabledText : success ? theme.connectedGreen : theme.white,
-  borderRadius: size === 'small' ? `12px` : `20px`,
+  borderRadius: size === 'large' ? `20px` : `12px`,
   cursor: disabled || success ? `auto` : `pointer`,
-  padding: size === 'small' ? `8px 0` : `18px 0`,
-  width: size === 'small' ? '90px' : size === 'large' ? '256px' : '100%'
+  height: size === 'small' ? `32px` : `58px`,
+  width: width === 'fit' ? 'fit-content' : '100%'
 }))`
   user-select: none;
-  font-size: 1rem;
+  font-size: 16px;
   outline: none;
   font-weight: 600;
-  width: ${({ width }) => width};
-  padding: ${({ padding }) => padding};
+  /* width: ${({ width }) => width}; */
+  height: ${({ height }) => height};
   border: ${({ border }) => border};
   border-radius: ${({ borderRadius }) => borderRadius};
   background-color: ${({ backgroundColor }) => backgroundColor};
@@ -30,7 +34,8 @@ const ButtonStyled = styled.button.attrs(({ size, success, disabled, theme }) =>
   }
 
   &:focus {
-    box-shadow: 0 0 0 1pt #165bbb;
+    box-shadow: 0 0 0 1pt ${({ backgroundColor }) => darken(0.3, backgroundColor)};
+  }
   }
 
   :active {
@@ -39,20 +44,22 @@ const ButtonStyled = styled.button.attrs(({ size, success, disabled, theme }) =>
   }
 `
 
-export default function Button({ children, size, disabled, success }) {
+export default function Button({ children, size, width, disabled, success, ...rest }) {
   return (
-    <ButtonStyled size={size} disabled={disabled} success={success}>
+    <ButtonStyled size={size} width={width} disabled={disabled} success={success} {...rest}>
       {children}
     </ButtonStyled>
   )
 }
 
 Button.propTypes = {
-  size: PropTypes.oneOf(['small', 'large', 'full'])
+  size: PropTypes.oneOf(['small', 'large']),
+  width: PropTypes.oneOf(['fit', 'full'])
 }
 
 Button.defaultProps = {
-  size: 'full',
+  size: 'small',
+  width: 'fit',
   disabled: false,
   success: false
 }

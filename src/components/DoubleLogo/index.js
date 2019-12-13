@@ -13,8 +13,7 @@ export default function DoubleTokenLogo({ addressOne, addressTwo, size = '1rem' 
   `
 
   const CoveredLogo = styled(TokenLogo)`
-    margin-left: -24px;
-    z-index: 1;
+    margin-left: -12px;
   `
 
   return (

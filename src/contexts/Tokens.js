@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
-import { ethers } from 'ethers'
 
 import { useWeb3React } from '../hooks'
 import {
@@ -73,9 +72,21 @@ const INITIAL_TOKENS_CONTEXT = {
     },
     '0xF5DCe57282A584D2746FaF1593d3121Fcac444dC': {
       [NAME]: 'Compound Dai',
-      [SYMBOL]: 'cDAI',
+      [SYMBOL]: 'cSAI',
       [DECIMALS]: 8,
       [EXCHANGE_ADDRESS]: '0x45A2FDfED7F7a2c791fb1bdF6075b83faD821ddE'
+    },
+    '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643': {
+      [NAME]: 'Compound Dai',
+      [SYMBOL]: 'cDAI',
+      [DECIMALS]: 8,
+      [EXCHANGE_ADDRESS]: '0x34E89740adF97C3A9D3f63Cc2cE4a914382c230b'
+    },
+    '0x06AF07097C9Eeb7fD685c692751D5C66dB49c215': {
+      [NAME]: 'Chai',
+      [SYMBOL]: 'CHAI',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x6C3942B383bc3d0efd3F36eFa1CBE7C8E12C8A2B'
     },
     '0x41e5560054824eA6B0732E656E3Ad64E20e94E45': {
       [NAME]: 'Civic',
@@ -269,6 +280,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x2Bf5A5bA29E60682fC56B2Fcf9cE07Bef4F6196f'
     },
+    '0x4575f41308EC1483f3d399aa9a2826d74Da13Deb': {
+      [NAME]: 'Orchid',
+      [SYMBOL]: 'OXT',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0xe9a5bbe41dc63D555E06746b047d624E3343EA52'
+    },
     '0xD56daC73A4d6766464b38ec6D91eB45Ce7457c44': {
       [NAME]: 'Panvala pan',
       [SYMBOL]: 'PAN',
@@ -328,12 +345,6 @@ const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'REP',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x48B04d2A05B6B604d8d5223Fd1984f191DED51af'
-    },
-    '0x168296bb09e24A88805CB9c33356536B980D3fC5': {
-      [NAME]: 'RHOC',
-      [SYMBOL]: 'RHOC',
-      [DECIMALS]: 8,
-      [EXCHANGE_ADDRESS]: '0x394e524b47A3AB3D3327f7fF6629dC378c1494a3'
     },
     '0x9469D013805bFfB7D3DEBe5E7839237e535ec483': {
       [NAME]: 'Darwinia Network Native Token',
@@ -442,6 +453,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'TKN',
       [DECIMALS]: 8,
       [EXCHANGE_ADDRESS]: '0xb6cFBf322db47D39331E306005DC7E5e6549942B'
+    },
+    '0x2C537E5624e4af88A7ae4060C022609376C8D0EB': {
+      [NAME]: 'BiLira',
+      [SYMBOL]: 'TRYB',
+      [DECIMALS]: 6,
+      [EXCHANGE_ADDRESS]: '0x122327Fd43B2C66DD9e4B6c91c8f071E217558eF'
     },
     '0x0000000000085d4780B73119b644AE5ecd22b376': {
       [NAME]: 'TrueUSD',
@@ -597,23 +614,10 @@ export function useTokenDetails(tokenAddress) {
   return { name, symbol, decimals, exchangeAddress }
 }
 
-export function useAllTokenDetails(requireExchange = true) {
+export function useAllTokenDetails() {
   const { chainId } = useWeb3React()
 
   const [state] = useTokensContext()
-  const tokenDetails = { ...ETH, ...(safeAccess(state, [chainId]) || {}) }
 
-  return requireExchange
-    ? Object.keys(tokenDetails)
-        .filter(
-          tokenAddress =>
-            tokenAddress === 'ETH' ||
-            (safeAccess(tokenDetails, [tokenAddress, EXCHANGE_ADDRESS]) &&
-              safeAccess(tokenDetails, [tokenAddress, EXCHANGE_ADDRESS]) !== ethers.constants.AddressZero)
-        )
-        .reduce((accumulator, tokenAddress) => {
-          accumulator[tokenAddress] = tokenDetails[tokenAddress]
-          return accumulator
-        }, {})
-    : tokenDetails
+  return useMemo(() => ({ ...ETH, ...(safeAccess(state, [chainId]) || {}) }), [state, chainId])
 }

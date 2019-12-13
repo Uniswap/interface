@@ -7,6 +7,7 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 
 const Migrate = lazy(() => import('./Migrate'))
+const Demo = lazy(() => import('./Demo'))
 
 const AppWrapper = styled.div`
   display: flex;
@@ -57,6 +58,7 @@ export default function App() {
                   {/* this Suspense is for route code-splitting */}
                   <Suspense fallback={null}>
                     <Switch>
+                      <Route exact strict path="/demo" component={() => <Demo />} />
                       <Route exact strict path="/" component={() => <Migrate />} />
                       <Redirect to="/" />
                     </Switch>
