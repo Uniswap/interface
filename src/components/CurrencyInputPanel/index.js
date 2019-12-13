@@ -585,7 +585,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
               '-'
             )}
             <TokenRowUsd>
-              {usdBalance
+              {usdBalance && !usdBalance.isNaN()
                 ? usdBalance.isZero()
                   ? ''
                   : usdBalance.lt(0.01)
