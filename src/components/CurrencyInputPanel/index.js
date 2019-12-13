@@ -577,7 +577,6 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
             </TokenSymbolGroup>
           </TokenRowLeft>
           <TokenRowRight>
-            {address === '0xD24d520Eb55ea010998303110fA188673122416a' && console.log(usdBalance)}
             {balance ? (
               <TokenRowBalance>{balance && (balance > 0 || balance === '<0.0001') ? balance : '-'}</TokenRowBalance>
             ) : account ? (
