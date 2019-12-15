@@ -71,11 +71,6 @@ export function useInactiveListener(suppress = false) {
         }
       }
 
-      const handleNetworkChanged = () => {
-        // eat errors
-        activate(injected, undefined, true).catch(() => {})
-      }
-
       ethereum.on('chainChanged', handleChainChanged)
       ethereum.on('networkChanged', handleNetworkChanged)
       ethereum.on('accountsChanged', handleAccountsChanged)
