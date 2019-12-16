@@ -21,7 +21,6 @@ const Wrapper = styled.div`
 const FormattedCard = styled(Card)`
   display: grid;
   row-gap: 30px;
-  color: ${({ theme }) => theme.uniswapPink};
 `
 
 const HeaderText = styled.div`
@@ -105,7 +104,7 @@ function Migrate() {
 
   return (
     <Wrapper>
-      <FormattedCard pink={true} padding="large" variant="outlined">
+      <FormattedCard variant="pinkOutlined">
         <HeaderText>Migrate To Uniswap V2</HeaderText>
         <div>
           <Bold>Uniswap contracts have been upgraded. </Bold>

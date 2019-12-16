@@ -1,38 +1,30 @@
 import React from 'react'
-import styled from 'styled-components'
-import PropTypes from 'prop-types'
+import { Box } from 'rebass/styled-components'
 
-const Wrapper = styled.div.attrs(({ theme, variant, fillColor }) => ({
-  backgroundColor:
-    variant === 'filled' ? (fillColor === 'green' ? theme.connectedGreen : theme.mineshaftGray) : 'transparent'
-}))`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  height: ${({ size }) => (size ? size : '32px')};
-  width: ${({ size }) => (size ? size : '32px')};
-  background-color: ${({ backgroundColor }) => backgroundColor};
-  border-radius: 12px;
-`
 
-export const IconStyled = styled.img.attrs(({ theme, variant }) => ({}))``
+function Icon({ children, variant, icon, fillColor, size = '32px', ...rest }) {
 
-function Icon({ children, variant, fillColor, icon, size, ...rest }) {
+  let variants = {}
+  variants.primary = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white',
+    height: size,
+    width: size,
+    borderRadius: '12px'
+  }
+
+  variants.filled = {
+    ...variants.primary,
+    backgroundColor: fillColor
+  }
+
   return (
-    <Wrapper size={size} variant={variant} fillColor={fillColor}>
-      {children ? children : <IconStyled src={icon} alt="Icon" />}
-    </Wrapper>
+    <Box  sx={variants[variant] || variants.primary} {...rest}>
+      {children ? children : <img src={icon} alt="Icon" />}
+    </Box>
   )
-}
-
-Icon.propTypes = {
-  variant: PropTypes.oneOf(['default', 'filled']),
-  fillColor: PropTypes.oneOf(['default', 'green'])
-}
-
-Icon.defaultProps = {
-  variant: 'default'
 }
 
 export default Icon

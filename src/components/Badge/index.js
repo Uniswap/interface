@@ -1,17 +1,29 @@
 import React from 'react'
-import styled from 'styled-components'
-import { lighten } from 'polished'
+import { Box } from 'rebass/styled-components'
 
-export const BadgeStyled = styled.div`
-  padding: 4px 12px;
-  border-radius: 12px;
-  width: fit-content;
-  background-color: ${({ color, theme }) => lighten(0.4, color ? color : theme.cardBackground)};
-  color: ${({ color }) => color};
-`
+function Badge({ children, variant, ...rest }) {
 
-function Badge({ children, color }) {
-  return <BadgeStyled color={color}>{children}</BadgeStyled>
+  let variants = {}
+
+  variants.primary = {
+    padding: '4px 12px',
+    borderRadius: '12px',
+    width: 'fit-content',
+  }
+
+  variants.green = {
+    ...variants.primary,
+    backgroundColor: 'green1',
+    color: 'green2'
+  }
+
+  variants.yellow = {
+    ...variants.primary,
+    backgroundColor: 'yellow2',
+    color: 'yellow1'
+  }
+  
+  return <Box sx={variants[variant] || variants.primary} {...rest}>{children}</Box>
 }
 
 export default Badge

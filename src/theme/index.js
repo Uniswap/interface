@@ -3,6 +3,7 @@ import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css 
 import { getQueryParam, checkSupportedTheme } from '../utils'
 import { SUPPORTED_THEMES } from '../constants'
 import { useDarkModeManager } from '../contexts/LocalStorage'
+import { lighten, darken } from 'polished'
 
 export * from './components'
 
@@ -40,6 +41,7 @@ export default function ThemeProvider({ children }) {
   return <StyledComponentsThemeProvider theme={theme(themeToRender)}>{children}</StyledComponentsThemeProvider>
 }
 
+
 const theme = darkMode => ({
   white,
   black,
@@ -54,9 +56,7 @@ const theme = darkMode => ({
   placeholderGray: darkMode ? '#5F5F5F' : '#E1E1E1',
   shadowColor: darkMode ? '#000' : '#2F80ED',
 
-  //button
-  disabledButton: darkMode ? '#CED0D9' : '#CED0D9',
-  disabledText: darkMode ? '#888D9B' : '#888D9B',
+
 
   // grays
   concreteGray: darkMode ? '#292C2F' : '#FAFAFA',
@@ -67,10 +67,6 @@ const theme = darkMode => ({
   mineshaftGray: darkMode ? '#E1E1E1' : '#2B2B2B',
   buttonOutlineGrey: darkMode ? '#FAFAFA' : '#F2F2F2',
   tokenRowHover: darkMode ? '#404040' : '#F2F2F2',
-
-  // card colors
-  cardBackground: darkMode ? '#F7F8FA' : '#F7F8FA',
-  cardBorder: darkMode ? '#C4D9F8' : '#C4D9F8',
 
   //blacks
   charcoalBlack: darkMode ? '#F2F2F2' : '#404040',
@@ -96,6 +92,11 @@ const theme = darkMode => ({
   //branded
   metaMaskOrange: '#E8831D',
 
+  //button
+  disabledButton: darkMode ? '#CED0D9' : '#CED0D9',
+  disabledText: darkMode ? '#888D9B' : '#888D9B',
+
+
   //specific
   textHover: darkMode ? theme.uniswapPink : theme.doveGray,
 
@@ -112,7 +113,33 @@ const theme = darkMode => ({
   flexRowNoWrap: css`
     display: flex;
     flex-flow: row nowrap;
-  `
+  `,
+
+  colors: {
+    blue1: darkMode ? '#DC6BE5' : '#2F80ED',
+    blue2: darkMode ? '#1966D2' : '#1966D2',
+    blue3: darkMode ? '#165BBB' : '#165BBB',
+    blue4: '#2D47A6',
+    blue5: '#C4D9F8',
+
+    grey1: darkMode ? '#292C2F' : '#FAFAFA',
+    grey2: darkMode ? '#CED0D9' : '#CED0D9',
+    grey3: darkMode ? '#888D9B' : '#888D9B',
+    grey4: '#F7F8FA',
+
+    green1: '#E6F3EC',
+    green2: '#27AE60',
+
+
+    pink1: '#DC6BE5',
+    pink2 : '#FFF8FD',
+
+    yellow1: '#F3BE1E',
+    yellow2: '#F7F2E3'
+
+    
+  }
+
 })
 
 export const GlobalStyle = createGlobalStyle`
