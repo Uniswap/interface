@@ -411,22 +411,22 @@ export default function TransactionDetails(props) {
             >
               0.1%
             </Option>
-            <Option
+            <OptionLarge
               onClick={() => {
                 setFromFixed(2, 0.5)
               }}
               active={activeIndex === 2}
             >
-              0.5%
-            </Option>
-            <OptionLarge
+              0.5% <Faded>(suggested)</Faded>
+            </OptionLarge>
+            <Option
               onClick={() => {
                 setFromFixed(3, 1)
               }}
               active={activeIndex === 3}
             >
-              1% <Faded>(suggested)</Faded>
-            </OptionLarge>
+              1%
+            </Option>
             <OptionCustom
               active={activeIndex === 4}
               color={
