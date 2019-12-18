@@ -456,10 +456,16 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
   let allBalances = useAllBalances()
 
   const _usdAmounts = Object.keys(allTokens).map(k => {
-    if (ethPrice && allBalances[account] && allBalances[account][k]) {
+    if (ethPrice && allBalances[account] && allBalances[account][k] && allBalances[account][k].value) {
       let ethRate = 1 // default for ETH
       let exchangeDetails = allBalances[allTokens[k].exchangeAddress]
-      if (exchangeDetails && exchangeDetails[k] && exchangeDetails['ETH']) {
+      if (
+        exchangeDetails &&
+        exchangeDetails[k] &&
+        exchangeDetails[k].value &&
+        exchangeDetails['ETH'] &&
+        exchangeDetails['ETH'].value
+      ) {
         const tokenBalance = new BigNumber(exchangeDetails[k].value.toString())
         const ethBalance = new BigNumber(exchangeDetails['ETH'].value.toString())
         ethRate = ethBalance.div(tokenBalance)
@@ -511,10 +517,10 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
         let balance
         let usdBalance
         // only update if we have data
-        if (k === 'ETH' && allBalances[account] && allBalances[account][k]) {
+        if (k === 'ETH' && allBalances[account] && allBalances[account][k] && allBalances[account][k].value) {
           balance = formatEthBalance(allBalances[account][k].value)
           usdBalance = usdAmounts[k]
-        } else if (allBalances[account] && allBalances[account][k]) {
+        } else if (allBalances[account] && allBalances[account][k] && allBalances[account][k].value) {
           balance = formatTokenBalance(allBalances[account][k].value, allTokens[k].decimals)
           usdBalance = usdAmounts[k]
         }
