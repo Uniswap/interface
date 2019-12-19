@@ -21,12 +21,12 @@ const OptionButton = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.royalBlue};
-  color: ${({ theme }) => theme.royalBlue};
+  border: 1px solid ${({ theme }) => theme.colors.blue5};
+  color: ${({ theme }) => theme.colors.blue5};
   padding: 8px 24px;
 
   &:hover {
-    border: 1px solid ${({ theme }) => theme.malibuBlue};
+    border: 1px solid ${({ theme }) => theme.colors.blue5};
     cursor: pointer;
   }
 
@@ -39,7 +39,7 @@ const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 1.5rem 1.5rem;
   font-weight: 500;
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.royalBlue : 'inherit')};
+  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.colors.blue5 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
@@ -117,13 +117,13 @@ const GreenCircle = styled.div`
     width: 8px;
     margin-left: 12px;
     margin-right: 2px;
-    background-color: ${({ theme }) => theme.connectedGreen};
+    background-color: ${({ theme }) => theme.colors.green2};
     border-radius: 50%;
   }
 `
 
 const CircleWrapper = styled.div`
-  color: ${({ theme }) => theme.connectedGreen};
+  color: ${({ theme }) => theme.colors.green2};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -170,7 +170,7 @@ const ConnectButtonRow = styled.div`
 `
 
 const StyledLink = styled(Link)`
-  color: ${({ hasENS, isENS, theme }) => (hasENS ? (isENS ? theme.royalBlue : theme.doveGray) : theme.royalBlue)};
+  color: ${({ hasENS, isENS, theme }) => (hasENS ? (isENS ? theme.colors.blue5 : theme.doveGray) : theme.colors.blue5)};
 `
 
 const CloseIcon = styled.div`
@@ -223,7 +223,7 @@ const WalletAction = styled.div`
 `
 
 const MainWalletAction = styled(WalletAction)`
-  color: ${({ theme }) => theme.royalBlue};
+  color: ${({ theme }) => theme.colors.blue5};
 `
 
 function renderTransactions(transactions, pending) {

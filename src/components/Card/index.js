@@ -1,41 +1,54 @@
 import React from 'react'
 import { Box } from 'rebass/styled-components'
 
-
-function Card({ children, variant, ...rest }) {
-  const variants = {}
-
-  variants.primary = {
+const variants = {
+  primary: {
     padding: '1rem',
     borderRadius: '20px',
-    backgroundColor: 'grey4',
-  }
-
-  variants.outlined = {
-    ...variants.primary,
+    backgroundColor: 'grey1',
     border: '1px solid',
-    borderColor: 'blue5'
-  }
-
-  variants.pink = {
-    ...variants.primary,
+    borderColor: 'grey1'
+  },
+  pink: {
     backgroundColor: 'pink2',
-    color: 'pink1',
+    color: 'pink1'
   }
+}
 
-  variants.pinkOutlined = {
-    ...variants.primary,
-    ...variants.outlined,
-    ...variants.pink,
+const outlinedStyles = {
+  primary: {
+    border: '1px solid',
+    borderColor: 'blue2'
+  },
+
+  pink: {
+    border: '1px solid',
     borderColor: 'pink1'
   }
-  
+}
 
+const shadowStyles = {
+  small: {
+    boxShadow: 'small'
+  },
+  large: {
+    boxShadow: 'large'
+  }
+}
+
+function Card({ children, variant, outlined, shadow, ...rest }) {
   return (
-    <Box sx={variants[variant] || variants.primary} {...rest}>
+    <Box
+      sx={{
+        ...variants.primary,
+        ...variants[variant],
+        ...(shadow && shadowStyles[shadow]),
+        ...(outlined && (outlinedStyles[outlined] || outlinedStyles[variant] || outlinedStyles.primary))
+      }}
+      {...rest}
+    >
       {children}
     </Box>
   )
 }
-
 export default Card

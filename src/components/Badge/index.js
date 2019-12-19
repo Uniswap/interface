@@ -1,14 +1,13 @@
 import React from 'react'
 import { Box } from 'rebass/styled-components'
 
-function Badge({ children, variant, ...rest }) {
-
+export default function Badge({ children, variant, ...rest }) {
   let variants = {}
 
   variants.primary = {
     padding: '4px 12px',
     borderRadius: '12px',
-    width: 'fit-content',
+    width: 'fit-content'
   }
 
   variants.green = {
@@ -22,8 +21,10 @@ function Badge({ children, variant, ...rest }) {
     backgroundColor: 'yellow2',
     color: 'yellow1'
   }
-  
-  return <Box sx={variants[variant] || variants.primary} {...rest}>{children}</Box>
-}
 
-export default Badge
+  return (
+    <Box sx={variants[variant] || variants.primary} {...rest}>
+      {children}
+    </Box>
+  )
+}

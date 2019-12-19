@@ -3,7 +3,6 @@ import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css 
 import { getQueryParam, checkSupportedTheme } from '../utils'
 import { SUPPORTED_THEMES } from '../constants'
 import { useDarkModeManager } from '../contexts/LocalStorage'
-import { lighten, darken } from 'polished'
 
 export * from './components'
 
@@ -41,7 +40,6 @@ export default function ThemeProvider({ children }) {
   return <StyledComponentsThemeProvider theme={theme(themeToRender)}>{children}</StyledComponentsThemeProvider>
 }
 
-
 const theme = darkMode => ({
   white,
   black,
@@ -56,52 +54,56 @@ const theme = darkMode => ({
   placeholderGray: darkMode ? '#5F5F5F' : '#E1E1E1',
   shadowColor: darkMode ? '#000' : '#2F80ED',
 
-
-
   // grays
   concreteGray: darkMode ? '#292C2F' : '#FAFAFA',
   mercuryGray: darkMode ? '#333333' : '#E1E1E1',
   silverGray: darkMode ? '#737373' : '#C4C4C4',
   chaliceGray: darkMode ? '#7B7B7B' : '#AEAEAE',
   doveGray: darkMode ? '#C4C4C4' : '#737373',
-  mineshaftGray: darkMode ? '#E1E1E1' : '#2B2B2B',
-  buttonOutlineGrey: darkMode ? '#FAFAFA' : '#F2F2F2',
-  tokenRowHover: darkMode ? '#404040' : '#F2F2F2',
 
-  //blacks
-  charcoalBlack: darkMode ? '#F2F2F2' : '#404040',
-  // blues
-  zumthorBlue: darkMode ? '#212529' : '#EBF4FF',
-  malibuBlue: darkMode ? '#E67AEF' : '#5CA2FF',
-  royalBlue: darkMode ? '#DC6BE5' : '#2F80ED',
-  loadingBlue: darkMode ? '#e4f0ff' : '#e4f0ff',
+  colors: {
+    blue1: darkMode ? '#DC6BE5' : '#D4E4FA',
+    blue2: darkMode ? '#1966D2' : '#A9C8F5',
+    blue3: darkMode ? '#165BBB' : '#7DACF0',
+    blue4: darkMode ? '#2D47A6' : '#5190EB',
+    blue5: darkMode ? '#C4D9F8' : '#2172E5',
+    blue6: darkMode ? '#C4D9F8' : '#1A5BB6',
+    blue7: darkMode ? '#C4D9F8' : '#144489',
+    blue8: darkMode ? '#C4D9F8' : '#0E2F5E',
+    blue9: darkMode ? '#C4D9F8' : '#191B1F',
 
-  // purples
-  wisteriaPurple: '#DC6BE5',
-  // reds
-  salmonRed: '#FF6871',
-  // orange
-  pizazzOrange: '#FF8F05',
-  // yellows
-  warningYellow: '#FFE270',
-  // pink
-  uniswapPink: '#DC6BE5',
-  //green
-  connectedGreen: '#27AE60',
+    grey1: darkMode ? '#292C2F' : '#F7F8FA',
+    grey2: darkMode ? '#F7F8FA' : '#EDEEF2',
+    grey3: darkMode ? '#CED0D9' : '#CED0D9',
+    grey4: darkMode ? '#888D9B' : '#888D9B',
+    grey5: darkMode ? '#888D9B' : '#6C7284',
+    grey6: darkMode ? '#565A69' : '#565A69',
+    grey7: darkMode ? '#40444F' : '#40444F',
+    grey8: darkMode ? '#2C2F36' : '#2C2F36',
+    grey9: darkMode ? '#191B1F' : '#191B1F',
 
-  //branded
-  metaMaskOrange: '#E8831D',
+    white: '#FFFFFF',
 
-  //button
-  disabledButton: darkMode ? '#CED0D9' : '#CED0D9',
-  disabledText: darkMode ? '#888D9B' : '#888D9B',
+    green1: '#E6F3EC',
+    green2: '#27AE60',
+
+    pink1: '#DC6BE5',
 
 
-  //specific
-  textHover: darkMode ? theme.uniswapPink : theme.doveGray,
+     
 
-  // connect button when loggedout
-  buttonFaded: darkMode ? '#DC6BE5' : '#737373',
+    pink2: '#FFF8FD',
+
+    yellow1: '#F3BE1E',
+    yellow2: '#F7F2E3',
+
+    red1: '#FF6871'
+  },
+
+  shadows: {
+    small: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+    large: '0px 6px 10px rgba(0, 0, 0, 0.15)'
+  },
 
   // media queries
   mediaWidth: mediaWidthTemplates,
@@ -113,33 +115,7 @@ const theme = darkMode => ({
   flexRowNoWrap: css`
     display: flex;
     flex-flow: row nowrap;
-  `,
-
-  colors: {
-    blue1: darkMode ? '#DC6BE5' : '#2F80ED',
-    blue2: darkMode ? '#1966D2' : '#1966D2',
-    blue3: darkMode ? '#165BBB' : '#165BBB',
-    blue4: '#2D47A6',
-    blue5: '#C4D9F8',
-
-    grey1: darkMode ? '#292C2F' : '#FAFAFA',
-    grey2: darkMode ? '#CED0D9' : '#CED0D9',
-    grey3: darkMode ? '#888D9B' : '#888D9B',
-    grey4: '#F7F8FA',
-
-    green1: '#E6F3EC',
-    green2: '#27AE60',
-
-
-    pink1: '#DC6BE5',
-    pink2 : '#FFF8FD',
-
-    yellow1: '#F3BE1E',
-    yellow2: '#F7F2E3'
-
-    
-  }
-
+  `
 })
 
 export const GlobalStyle = createGlobalStyle`

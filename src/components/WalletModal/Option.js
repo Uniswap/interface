@@ -12,7 +12,7 @@ const InfoCard = styled.button`
   width: 100% !important;
   : 0 4px 8px 0 ${({ theme, clickable }) => (clickable ? transparentize(0.95, theme.shadowColor) : 'none')};
   &:focus {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.royalBlue};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.blue5};
   }
   border-color: ${({ theme, active }) => (active ? 'transparent' : theme.placeholderGray)};
 `
@@ -36,7 +36,7 @@ const OptionCardClickable = styled(OptionCard)`
   margin-top: 0;
   &:hover {
     cursor: ${({ clickable }) => (clickable ? 'pointer' : '')};
-    border: ${({ clickable, theme }) => (clickable ? `1px solid ${theme.malibuBlue}` : ``)};
+    border: ${({ clickable, theme }) => (clickable ? `1px solid ${theme.colors.blue5}` : ``)};
   }
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
 `
@@ -50,13 +50,13 @@ const GreenCircle = styled.div`
     height: 8px;
     width: 8px;
     margin-right: 8px;
-    background-color: ${({ theme }) => theme.connectedGreen};
+    background-color: ${({ theme }) => theme.colors.green2};
     border-radius: 50%;
   }
 `
 
 const CircleWrapper = styled.div`
-  color: ${({ theme }) => theme.connectedGreen};
+  color: ${({ theme }) => theme.colors.green2};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,7 +64,7 @@ const CircleWrapper = styled.div`
 
 const HeaderText = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.royalBlue : ({ theme }) => theme.textColor)};
+  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.colors.blue5 : ({ theme }) => theme.textColor)};
   font-size: 1rem;
   font-weight: 500;
 `

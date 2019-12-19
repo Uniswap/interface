@@ -11,7 +11,6 @@ import Loader from '../Loader'
 import Icon from '../Icon'
 import { Link } from '../Link'
 import { useAllTokenDetails } from '../../contexts/Tokens'
-import { useWeb3React } from '../../hooks'
 
 import Lock from '../../assets/images/lock.png'
 
@@ -48,7 +47,7 @@ const BottomWrapper = styled.div`
 
 const SubText = styled.div`
   font-size: 1rem;
-  color: ${({ theme }) => theme.disabledText};
+  color: ${({ theme }) => theme.colors.grey5};
 `
 
 const FormattedCard = styled(Card)`
@@ -66,7 +65,7 @@ const Row = styled.div`
 `
 
 const GreenText = styled.span`
-  color: ${({ theme }) => theme.connectedGreen};
+  color: ${({ theme }) => theme.colors.green2};
   font-size: 24px;
 `
 
@@ -75,7 +74,6 @@ const InlineSubText = styled.span`
 `
 
 function Migrate({ userPool }) {
-
   const [open, toggleOpen] = useState(false)
 
   const [approveDone, setApproveDone] = useState(false)
@@ -95,7 +93,7 @@ function Migrate({ userPool }) {
     setTimeout(() => {
       setApproveDone(true)
       setGettingApproval(false)
-    }, 100)
+    }, 600)
   }
 
   const tryMigration = () => {
@@ -103,12 +101,12 @@ function Migrate({ userPool }) {
     setTimeout(() => {
       setMigrateDone(true)
       setGettingMigration(false)
-    }, 100)
+    }, 600)
   }
 
   return (
     <Wrapper>
-      <Card variant={open && 'outlined'} style={complete && !open ? { opacity: '0.5' } : {}}>
+      <Card outlined={open && 'outlined'} style={complete && !open ? { opacity: '0.5' } : {}}>
         <Grouping>
           {complete ? (
             <DoubleLogo
@@ -165,13 +163,13 @@ function Migrate({ userPool }) {
         ''
       ) : (
         <BottomWrapper>
-          <FormattedCard variant={!approveDone && 'outlined' }>
+          <FormattedCard outlined={!approveDone && 'outlined'}>
             <Row>
               <BodyText>Step 1</BodyText>
               {gettingApproval ? <Loader /> : approveDone ? <GreenText>✓</GreenText> : ''}
             </Row>
             <Button
-              variant={approveDone &&'success' }
+              variant={approveDone && 'success'}
               py={18}
               onClick={() => {
                 !approveDone && tryApproval()
@@ -181,7 +179,7 @@ function Migrate({ userPool }) {
             </Button>
             <SubText>The upgrade helper needs your permssion to upgrade on your behalf</SubText>
           </FormattedCard>
-          <FormattedCard variant={approveDone && 'outlined' }>
+          <FormattedCard outlined={approveDone && 'outlined'}>
             <Row>
               <BodyText>Step 2</BodyText>
               {gettingMigration ? (
@@ -189,13 +187,14 @@ function Migrate({ userPool }) {
               ) : migrateDone ? (
                 <GreenText>✓</GreenText>
               ) : approveDone ? (
-                '' 
+                ''
               ) : (
                 <Icon icon={Lock} />
               )}
             </Row>
             <Button
-              variant={migrateDone ? 'success' : !approveDone && 'disabled'}
+              variant={migrateDone && 'success'}
+              disabled={!approveDone}
               py={18}
               onClick={() => {
                 !migrateDone && tryMigration()

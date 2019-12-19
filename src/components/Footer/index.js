@@ -24,13 +24,13 @@ const FooterElement = styled.div`
 const Title = styled.div`
   display: flex;
   align-items: center;
-  color: ${({ theme }) => theme.uniswapPink};
+  color: ${({ theme }) => theme.colors.pink1};
 
   :hover {
     cursor: pointer;
   }
   #link {
-    text-decoration-color: ${({ theme }) => theme.uniswapPink};
+    text-decoration-color: ${({ theme }) => theme.colors.pink1};
   }
 
   #title {
@@ -38,9 +38,9 @@ const Title = styled.div`
     font-size: 0.825rem;
     margin-right: 12px;
     font-weight: 400;
-    color: ${({ theme }) => theme.uniswapPink};
+    color: ${({ theme }) => theme.colors.pink1};
     :hover {
-      color: ${({ theme }) => darken(0.2, theme.uniswapPink)};
+      color: ${({ theme }) => darken(0.2, theme.colors.pink1)};
     }
   }
 `

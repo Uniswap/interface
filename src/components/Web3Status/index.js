@@ -35,55 +35,55 @@ const Web3StatusGeneric = styled.button`
   }
 `
 const Web3StatusError = styled(Web3StatusGeneric)`
-  background-color: ${({ theme }) => theme.salmonRed};
-  border: 1px solid ${({ theme }) => theme.salmonRed};
+  background-color: ${({ theme }) => theme.colors.red1};
+  border: 1px solid ${({ theme }) => theme.colors.red1};
   color: ${({ theme }) => theme.white};
   font-weight: 500;
   :hover,
   :focus {
-    background-color: ${({ theme }) => darken(0.1, theme.salmonRed)};
+    background-color: ${({ theme }) => darken(0.1, theme.colors.red1)};
   }
 `
 
 const Web3StatusConnect = styled(Web3StatusGeneric)`
   background-color: transparent;
-  border: 1px solid ${({ theme }) => theme.royalBlue};
-  color: ${({ theme }) => theme.royalBlue};
+  border: 1px solid ${({ theme }) => theme.colors.blue5};
+  color: ${({ theme }) => theme.colors.blue5};
   font-weight: 500;
 
   :hover,
   :focus {
-    border: 1px solid ${({ theme }) => darken(0.1, theme.royalBlue)};
-    color: ${({ theme }) => darken(0.1, theme.royalBlue)};
+    border: 1px solid ${({ theme }) => darken(0.1, theme.colors.blue5)};
+    color: ${({ theme }) => darken(0.1, theme.colors.blue5)};
   }
 
   ${({ faded }) =>
     faded &&
     css`
       background-color: transparent;
-      border: 1px solid ${({ theme }) => theme.royalBlue};
-      color: ${({ theme }) => theme.royalBlue};
+      border: 1px solid ${({ theme }) => theme.colors.blue5};
+      color: ${({ theme }) => theme.colors.blue5};
 
       :hover,
       :focus {
-        border: 1px solid ${({ theme }) => darken(0.1, theme.royalBlue)};
-        color: ${({ theme }) => darken(0.1, theme.royalBlue)};
+        border: 1px solid ${({ theme }) => darken(0.1, theme.colors.blue5)};
+        color: ${({ theme }) => darken(0.1, theme.colors.blue5)};
       }
     `}
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)`
-  background-color: ${({ pending, theme }) => (pending ? theme.zumthorBlue : theme.inputBackground)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.royalBlue : theme.mercuryGray)};
-  color: ${({ pending, theme }) => (pending ? theme.royalBlue : theme.doveGray)};
+  background-color: ${({ pending, theme }) => (pending ? theme.colors.grey1 : theme.inputBackground)};
+  border: 1px solid ${({ pending, theme }) => (pending ? theme.colors.blue5 : theme.mercuryGray)};
+  color: ${({ pending, theme }) => (pending ? theme.colors.blue5 : theme.doveGray)};
   font-weight: 400;
   :hover {
     background-color: ${({ pending, theme }) =>
-      pending ? transparentize(0.9, theme.royalBlue) : darken(0.05, theme.inputBackground)};
+      pending ? transparentize(0.9, theme.colors.blue5) : darken(0.05, theme.inputBackground)};
 
     :focus {
       border: 1px solid
-        ${({ pending, theme }) => (pending ? darken(0.1, theme.royalBlue) : darken(0.1, theme.mercuryGray))};
+        ${({ pending, theme }) => (pending ? darken(0.1, theme.colors.blue5) : darken(0.1, theme.mercuryGray))};
     }
   }
 `

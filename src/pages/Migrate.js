@@ -30,7 +30,7 @@ const HeaderText = styled.div`
 
 const SubText = styled.div`
   font-size: 1rem;
-  color: ${({ theme }) => theme.disabledText};
+  color: ${({ theme }) => theme.colors.grey3};
 `
 
 const Bold = styled.span`
@@ -104,7 +104,7 @@ function Migrate() {
 
   return (
     <Wrapper>
-      <FormattedCard variant="pinkOutlined">
+      <FormattedCard variant="pink" p="2rem" outlined={true}>
         <HeaderText>Migrate To Uniswap V2</HeaderText>
         <div>
           <Bold>Uniswap contracts have been upgraded. </Bold>
