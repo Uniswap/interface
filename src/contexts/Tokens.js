@@ -142,6 +142,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xf79cb3BEA83BD502737586A6E8B133c378FD1fF2'
     },
+    '0xd559f20296ff4895da39b5bd9add54b442596a61': {
+      [NAME]: 'FintruX Network',
+      [SYMBOL]: 'FTX',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x80f0f3e1482bab7fb6ed70185476f2fcdb596fa9'
+    },
     '0x419D0d8BdD9aF5e606Ae2232ed285Aff190E711b': {
       [NAME]: 'FunFair',
       [SYMBOL]: 'FUN',
