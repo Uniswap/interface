@@ -82,7 +82,7 @@
   "name": "Name",
   "symbol": "Symbol",
   "decimals": "Dezimalstellen",
-  "enterTokenCont": "Tokenadresse eingeben um fortzufahren"
+  "enterTokenCont": "Tokenadresse eingeben um fortzufahren",
   "priceChange": "Geschätzter Wechselkursrutsch",
   "forAtLeast": "für mindestens ",
   "brokenToken": "Der ausgewählte Token ist nicht kompatibel mit Uniswap V1. Liquidität hinzufügen wird zu nicht mehr zugänglichen Token führen!"
