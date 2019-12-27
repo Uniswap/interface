@@ -104,8 +104,8 @@ function CreateExchange({ location, params }) {
 
     factory.createExchange(tokenAddress.address, { gasLimit: estimatedGasLimit }).then(response => {
       ReactGA.event({
-        category: 'Pool',
-        action: 'CreateExchange'
+        category: 'Transaction',
+        action: 'Create Exchange'
       })
 
       addTransaction(response)

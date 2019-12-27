@@ -15,7 +15,7 @@ import { brokenTokens } from '../../constants'
 import { amountFormatter, calculateGasMargin } from '../../utils'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useTokenDetails } from '../../contexts/Tokens'
-import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
+import { useAddressBalance, useExchangeReserves, useETHPriceInUSD } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 
 const INPUT = 0
@@ -200,6 +200,9 @@ export default function AddLiquidity({ params }) {
   const { t } = useTranslation()
   const { library, account, active } = useWeb3React()
 
+  // BigNumber.js instance
+  const ethPrice = useETHPriceInUSD()
+
   // clear url of query
   useEffect(() => {
     const history = createBrowserHistory()
@@ -296,11 +299,6 @@ export default function AddLiquidity({ params }) {
   }, [reserveETH, reserveToken, decimals])
 
   function renderTransactionDetails() {
-    ReactGA.event({
-      category: 'TransactionDetail',
-      action: 'Open'
-    })
-
     const b = text => <BlueSpan>{text}</BlueSpan>
 
     if (isNewExchange) {
@@ -381,9 +379,15 @@ export default function AddLiquidity({ params }) {
   const addTransaction = useTransactionAdder()
 
   async function onAddLiquidity() {
+    // take ETH amount, multiplied by ETH rate and 2 for total tx size
+    let usdTransactionSize = ethPrice * (inputValueParsed / 1e18) * 2
+
+    // log pool added to and total usd amount
     ReactGA.event({
-      category: 'Pool',
-      action: 'AddLiquidity'
+      category: 'Transaction',
+      action: 'Add Liquidity',
+      label: outputCurrency,
+      value: usdTransactionSize
     })
 
     const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW

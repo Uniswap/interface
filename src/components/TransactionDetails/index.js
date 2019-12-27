@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import styled, { css, keyframes } from 'styled-components'
 import { darken, lighten } from 'polished'
@@ -642,11 +641,6 @@ export default function TransactionDetails(props) {
   const b = text => <Bold>{text}</Bold>
 
   const renderTransactionDetails = () => {
-    ReactGA.event({
-      category: 'TransactionDetail',
-      action: 'Open'
-    })
-
     if (props.independentField === props.INPUT) {
       return props.sending ? (
         <TransactionInfo>

@@ -13,7 +13,7 @@ import OversizedPanel from '../../components/OversizedPanel'
 import ArrowDown from '../../assets/svg/SVGArrowDown'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useTokenDetails } from '../../contexts/Tokens'
-import { useAddressBalance } from '../../contexts/Balances'
+import { useAddressBalance, useETHPriceInUSD } from '../../contexts/Balances'
 import { calculateGasMargin, amountFormatter } from '../../utils'
 
 // denominated in bips
@@ -244,10 +244,17 @@ export default function RemoveLiquidity({ params }) {
     }
   }, [fetchPoolTokens, library])
 
+  // BigNumber.js instance
+  const ethPrice = useETHPriceInUSD()
+
   async function onRemoveLiquidity() {
+    // take ETH amount, multiplied by ETH rate and 2 for total tx size
+    let usdTransactionSize = ethPrice * (ethWithdrawn / 1e18) * 2
     ReactGA.event({
-      category: 'Pool',
-      action: 'RemoveLiquidity'
+      category: 'Transaction',
+      action: 'Remove Liquidity',
+      label: outputCurrency,
+      value: usdTransactionSize
     })
 
     const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
@@ -271,11 +278,6 @@ export default function RemoveLiquidity({ params }) {
   const b = text => <BlueSpan>{text}</BlueSpan>
 
   function renderTransactionDetails() {
-    ReactGA.event({
-      category: 'TransactionDetail',
-      action: 'Open'
-    })
-
     return (
       <div>
         <div>
