@@ -610,15 +610,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       // general details about transaction
       ReactGA.event({
         category: 'Transaction',
-        action: sending ? 'Send' : 'Swap',
-        label: sending ? 'Send, selected input' : 'Swap, selected input',
-        value: usdTransactionSize
-      })
-
-      // specifc details for tokens being bought
-      ReactGA.event({
-        category: 'Token Specifc Details',
-        action: 'Buy Token',
+        action: sending ? 'SendInput' : 'SwapInput',
         label: outputCurrency,
         value: usdTransactionSize
       })
@@ -654,15 +646,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       // general details about transaction
       ReactGA.event({
         category: 'Transaction',
-        action: sending ? 'Send' : 'Swap',
-        label: sending ? 'Send, selected output' : 'Swap, selected output',
-        value: usdTransactionSize
-      })
-
-      // specifc details for tokens being bought
-      ReactGA.event({
-        category: 'Token Specifc Details',
-        action: 'Buy Token',
+        action: sending ? 'SendOutput' : 'SwapOutput',
         label: outputCurrency,
         value: usdTransactionSize
       })
