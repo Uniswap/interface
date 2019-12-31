@@ -158,7 +158,9 @@ export function useENSName(address) {
           }
         })
         .catch(() => {
-          setENSName(null)
+          if (!stale) {
+            setENSName(null)
+          }
         })
 
       return () => {
