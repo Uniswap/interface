@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import ReactGA from 'react-ga'
 import styled from 'styled-components'
 import { isMobile } from 'react-device-detect'
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
@@ -155,6 +156,19 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
   }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
 
   const tryActivation = async connector => {
+    let name = ''
+    Object.keys(SUPPORTED_WALLETS).map(key => {
+      if (connector === SUPPORTED_WALLETS[key].connector) {
+        return (name = SUPPORTED_WALLETS[key].name)
+      }
+      return true
+    })
+    // log selected wallet
+    ReactGA.event({
+      category: 'Wallet',
+      action: 'Change Wallet',
+      label: name
+    })
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
     activate(connector, undefined, true).catch(e => {
