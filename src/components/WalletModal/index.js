@@ -171,8 +171,12 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
     })
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
-    activate(connector, undefined, true).catch(e => {
-      setPendingError(true)
+    activate(connector, undefined, true).catch(error => {
+      if (error instanceof UnsupportedChainIdError) {
+        activate(connector) // a little janky...can't use setError because the connector isn't set
+      } else {
+        setPendingError(true)
+      }
     })
   }
 
