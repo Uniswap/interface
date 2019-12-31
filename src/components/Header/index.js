@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import ReactGA from 'react-ga'
 import { Link } from '../../theme'
 import Web3Status from '../Web3Status'
 import { darken } from 'polished'

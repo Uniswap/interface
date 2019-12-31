@@ -80,7 +80,7 @@ const Popup = styled(Flex)`
   position: absolute;
   width: 228px;
   left: -78px;
-  top: -124px;
+  top: -94px;
   flex-direction: column;
   align-items: center;
   padding: 0.6rem 1rem;
