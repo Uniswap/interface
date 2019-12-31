@@ -19,6 +19,7 @@ import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWalletModalToggle } from '../../contexts/Application'
+import { useETHPriceInUSD } from '../../contexts/Balances'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -245,6 +246,9 @@ function getMarketRate(
 export default function ExchangePage({ initialCurrency, sending = false, params }) {
   const { t } = useTranslation()
   const { account, error } = useWeb3React()
+
+  // BigNumber.js instance
+  const ethPrice = useETHPriceInUSD()
 
   const addTransaction = useTransactionAdder()
 
@@ -564,13 +568,51 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   }
 
   async function onSwap() {
+    //if user changed deadline, log new one in minutes
+    if (deadlineFromNow !== DEFAULT_DEADLINE_FROM_NOW) {
+      ReactGA.event({
+        category: 'Advanced Interaction',
+        action: 'Set Custom Deadline',
+        value: deadlineFromNow / 60
+      })
+    }
+
     const deadline = Math.ceil(Date.now() / 1000) + deadlineFromNow
 
+    // if user has changed slippage, log
+    if (swapType === TOKEN_TO_TOKEN) {
+      if (parseInt(tokenAllowedSlippageBig.toString()) !== TOKEN_ALLOWED_SLIPPAGE_DEFAULT) {
+        ReactGA.event({
+          category: 'Advanced Interaction',
+          action: 'Set Custom Slippage',
+          value: parseInt(tokenAllowedSlippageBig.toString())
+        })
+      }
+    } else {
+      if (parseInt(allowedSlippageBig.toString()) !== ALLOWED_SLIPPAGE_DEFAULT) {
+        ReactGA.event({
+          category: 'Advanced Interaction',
+          action: 'Set Custom Slippage',
+          value: parseInt(allowedSlippageBig.toString())
+        })
+      }
+    }
+
     let estimate, method, args, value
+
+    let inputEthPerToken = 1
+    if (inputCurrency !== 'ETH') {
+      inputEthPerToken = inputReserveToken && inputReserveETH ? inputReserveETH / inputReserveToken : null
+    }
+    let usdTransactionSize = ethPrice * inputEthPerToken * inputValueFormatted
+
     if (independentField === INPUT) {
+      // general details about transaction
       ReactGA.event({
-        category: `${swapType}`,
-        action: sending ? 'TransferInput' : 'SwapInput'
+        category: 'Transaction',
+        action: sending ? 'SendInput' : 'SwapInput',
+        label: outputCurrency,
+        value: usdTransactionSize
       })
 
       if (swapType === ETH_TO_TOKEN) {
@@ -601,9 +643,12 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         value = ethers.constants.Zero
       }
     } else if (independentField === OUTPUT) {
+      // general details about transaction
       ReactGA.event({
-        category: `${swapType}`,
-        action: sending ? 'TransferOutput' : 'SwapOutput'
+        category: 'Transaction',
+        action: sending ? 'SendOutput' : 'SwapOutput',
+        label: outputCurrency,
+        value: usdTransactionSize
       })
 
       if (swapType === ETH_TO_TOKEN) {

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
+import ReactGA from 'react-ga'
 import { ReactComponent as Dropup } from '../../assets/images/dropup-blue.svg'
 import { ReactComponent as Dropdown } from '../../assets/images/dropdown-blue.svg'
 
@@ -94,11 +95,17 @@ class ContextualInfo extends Component {
     return (
       <>
         <SummaryWrapperContainer
-          onClick={() =>
+          onClick={() => {
+            !this.state.showDetails &&
+              ReactGA.event({
+                category: 'Advanced Interaction',
+                action: 'Open Advanced Details',
+                label: 'Pool Page Details'
+              })
             this.setState(prevState => {
               return { showDetails: !prevState.showDetails }
             })
-          }
+          }}
         >
           {!this.state.showDetails ? (
             <>

@@ -5,6 +5,7 @@ import { Web3ReactProvider, createWeb3ReactRoot } from '@web3-react/core'
 import { ethers } from 'ethers'
 
 import { NetworkContextName } from './constants'
+import { isMobile } from 'react-device-detect'
 import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage'
 import ApplicationContextProvider, { Updater as ApplicationContextUpdater } from './contexts/Application'
 import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
@@ -25,9 +26,13 @@ function getLibrary(provider) {
 
 if (process.env.NODE_ENV === 'production') {
   ReactGA.initialize('UA-128182339-1')
+  ReactGA.set({
+    customBrowserType: !isMobile ? 'desktop' : window.web3 || window.ethereum ? 'mobileWeb3' : 'mobileRegular'
+  })
 } else {
   ReactGA.initialize('test', { testMode: true })
 }
+
 ReactGA.pageview(window.location.pathname + window.location.search)
 
 function ContextProviders({ children }) {
