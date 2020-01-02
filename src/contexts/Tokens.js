@@ -28,6 +28,12 @@ const ETH = {
 
 const INITIAL_TOKENS_CONTEXT = {
   1: {
+    '0xB6eD7644C69416d67B522e20bC294A9a9B405B31': {
+      [NAME]: '0xBitcoin Token',
+      [SYMBOL]: '0xBTC',
+      [DECIMALS]: 8,
+      [EXCHANGE_ADDRESS]: '0x701564Aa6E26816147D4fa211a0779F1B774Bb9B'
+    },
     '0x737F98AC8cA59f2C68aD658E3C3d8C8963E40a4c': {
       [NAME]: 'Amon',
       [SYMBOL]: 'AMN',
