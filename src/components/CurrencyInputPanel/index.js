@@ -508,34 +508,43 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
   const tokenList = useMemo(() => {
     return Object.keys(allTokens)
       .sort((a, b) => {
-        const aSymbol = allTokens[a].symbol.toLowerCase()
-        const bSymbol = allTokens[b].symbol.toLowerCase()
+        if (allTokens[a].symbol && allTokens[b].symbol) {
+          const aSymbol = allTokens[a].symbol.toLowerCase()
+          const bSymbol = allTokens[b].symbol.toLowerCase()
 
-        const aAddress = isAddress(a)
-        const bAddress = isAddress(b)
+          const aAddress = isAddress(a)
+          const bAddress = isAddress(b)
 
-        // if on remove page, filter by LP balance
-        if (removePage && poolTokenBalances) {
-          if (poolTokenBalances[aAddress] && !poolTokenBalances[bAddress]) {
+          // if on remove page, filter by LP balance
+          if (removePage && poolTokenBalances) {
+            if (poolTokenBalances[aAddress] && !poolTokenBalances[bAddress]) {
+              return -1
+            } else if (!poolTokenBalances[aAddress] && poolTokenBalances[bAddress]) {
+              return 1
+            }
+            if (poolTokenBalances[aAddress] && poolTokenBalances[bAddress]) {
+              const bnA = poolTokenBalances[aAddress]
+              const bnB = poolTokenBalances[bAddress]
+              return bnA > bnB ? -1 : bnA < bnB ? 1 : 0
+            }
+          }
+
+          if (aSymbol === 'ETH'.toLowerCase() || bSymbol === 'ETH'.toLowerCase()) {
+            return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
+          }
+
+          if (usdAmounts[a] && !usdAmounts[b]) {
             return -1
-          } else if (!poolTokenBalances[aAddress] && poolTokenBalances[bAddress]) {
+          } else if (usdAmounts[b] && !usdAmounts[a]) {
             return 1
           }
-          if (poolTokenBalances[aAddress] && poolTokenBalances[bAddress]) {
-            const bnA = poolTokenBalances[aAddress]
-            const bnB = poolTokenBalances[bAddress]
-            return bnA > bnB ? -1 : bnA < bnB ? 1 : 0
+
+          // sort by balance
+          if (usdAmounts[a] && usdAmounts[b]) {
+            const aUSD = usdAmounts[a]
+            const bUSD = usdAmounts[b]
+            return aUSD.gt(bUSD) ? -1 : aUSD.lt(bUSD) ? 1 : 0
           }
-        }
-
-        if (aSymbol === 'ETH'.toLowerCase() || bSymbol === 'ETH'.toLowerCase()) {
-          return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
-        }
-
-        if (usdAmounts[a] && !usdAmounts[b]) {
-          return -1
-        } else if (usdAmounts[b] && !usdAmounts[a]) {
-          return 1
         } else {
           return 0
         }
