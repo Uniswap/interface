@@ -26,7 +26,7 @@ const tabOrder = [
     regex: /\/send/
   },
   {
-    path: 'add-liquidity',
+    path: '/add-liquidity',
     textKey: 'pool',
     regex: /\/add-liquidity|\/remove-liquidity|\/create-exchange.*/
   }

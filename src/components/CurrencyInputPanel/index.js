@@ -536,17 +536,9 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
           return -1
         } else if (usdAmounts[b] && !usdAmounts[a]) {
           return 1
+        } else {
+          return 0
         }
-
-        // check for balance - sort by value
-        if (usdAmounts[a] && usdAmounts[b]) {
-          const aUSD = usdAmounts[a]
-          const bUSD = usdAmounts[b]
-
-          return aUSD.gt(bUSD) ? -1 : aUSD.lt(bUSD) ? 1 : 0
-        }
-
-        return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
       })
       .map(k => {
         let balance

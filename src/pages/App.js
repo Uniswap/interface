@@ -88,7 +88,7 @@ export default function App() {
                         exact
                         strict
                         path="/send/:tokenAddress?"
-                        render={({ match, location }) => {
+                        render={({ match }) => {
                           if (isAddress(match.params.tokenAddress)) {
                             return <Send initialCurrency={isAddress(match.params.tokenAddress)} params={params} />
                           } else {
