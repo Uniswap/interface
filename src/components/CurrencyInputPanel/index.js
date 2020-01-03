@@ -284,8 +284,7 @@ export default function CurrencyInputPanel({
   disableTokenSelect,
   selectedTokenAddress = '',
   showUnlock,
-  value,
-  lpBalances
+  value
 }) {
   const { t } = useTranslation()
 
@@ -434,7 +433,6 @@ export default function CurrencyInputPanel({
           }}
           onTokenSelect={onCurrencySelected}
           allBalances={allBalances}
-          lpBalances={lpBalances}
         />
       )}
     </InputPanel>
