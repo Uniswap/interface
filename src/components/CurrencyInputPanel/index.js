@@ -488,7 +488,6 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
     )
 
   const tokenList = useMemo(() => {
-    // console.log(allTokens)
     return Object.keys(allTokens)
       .sort((a, b) => {
         if (allTokens[a].symbol && allTokens[b].symbol) {
