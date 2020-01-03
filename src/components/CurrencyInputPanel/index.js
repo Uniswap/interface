@@ -490,28 +490,35 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
   const tokenList = useMemo(() => {
     return Object.keys(allTokens)
       .sort((a, b) => {
-        const aSymbol = allTokens[a].symbol.toLowerCase()
-        const bSymbol = allTokens[b].symbol.toLowerCase()
+        if (allTokens[a].symbol && allTokens[b].symbol) {
+          const aSymbol = allTokens[a].symbol.toLowerCase()
+          const bSymbol = allTokens[b].symbol.toLowerCase()
 
-        if (aSymbol === 'ETH'.toLowerCase() || bSymbol === 'ETH'.toLowerCase()) {
-          return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
+          // pin ETH to top
+          if (aSymbol === 'ETH'.toLowerCase() || bSymbol === 'ETH'.toLowerCase()) {
+            return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
+          }
+
+          // then tokens with balance
+          if (usdAmounts[a] && !usdAmounts[b]) {
+            return -1
+          } else if (usdAmounts[b] && !usdAmounts[a]) {
+            return 1
+          }
+
+          // sort by balance
+          if (usdAmounts[a] && usdAmounts[b]) {
+            const aUSD = usdAmounts[a]
+            const bUSD = usdAmounts[b]
+
+            return aUSD.gt(bUSD) ? -1 : aUSD.lt(bUSD) ? 1 : 0
+          }
+
+          // sort alphabetically
+          return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
+        } else {
+          return 0
         }
-
-        if (usdAmounts[a] && !usdAmounts[b]) {
-          return -1
-        } else if (usdAmounts[b] && !usdAmounts[a]) {
-          return 1
-        }
-
-        // check for balance - sort by value
-        if (usdAmounts[a] && usdAmounts[b]) {
-          const aUSD = usdAmounts[a]
-          const bUSD = usdAmounts[b]
-
-          return aUSD.gt(bUSD) ? -1 : aUSD.lt(bUSD) ? 1 : 0
-        }
-
-        return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
       })
       .map(k => {
         let balance
