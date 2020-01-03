@@ -135,6 +135,29 @@ export function Updater() {
         })
 
         const allTokensWithAnExchange = Object.keys(allTokens).filter(tokenAddress => tokenAddress !== 'ETH')
+
+        Promise.all(
+          Object.keys(allTokensWithAnExchange).map(async tokenAddress => {
+            await new Promise(resolve => setTimeout(resolve, STAGGER_TIME * Math.random()))
+            const exchangeAddress = allTokensWithAnExchange[tokenAddress].exchangeAddress
+
+            const { value: existingValue } = safeAccess(stateRef.current, [chainId, account, tokenAddress]) || {}
+            return (
+              existingValue ||
+              (await (tokenAddress === 'ETH'
+                ? getEtherBalance(account, library).catch(() => null)
+                : getTokenBalance(exchangeAddress, account, library).catch(() => null)))
+            )
+          })
+        ).then(balances => {
+          updateAllForAccount(
+            chainId,
+            account,
+            allTokensWithAnExchange.map(tokenAddress => allTokens[tokenAddress].exchangeAddress),
+            balances
+          )
+        })
+
         // get all eth balances for all exchanges
         Promise.all(
           allTokensWithAnExchange.map(async tokenAddress => {

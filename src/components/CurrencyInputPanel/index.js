@@ -284,7 +284,8 @@ export default function CurrencyInputPanel({
   disableTokenSelect,
   selectedTokenAddress = '',
   showUnlock,
-  value
+  value,
+  lpBalances
 }) {
   const { t } = useTranslation()
 
@@ -433,6 +434,7 @@ export default function CurrencyInputPanel({
           }}
           onTokenSelect={onCurrencySelected}
           allBalances={allBalances}
+          lpBalances={lpBalances}
         />
       )}
     </InputPanel>
@@ -440,6 +442,8 @@ export default function CurrencyInputPanel({
 }
 
 function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
+  const removePage = window.location.pathname === '/remove-liquidity'
+
   const { t } = useTranslation()
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -454,6 +458,8 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
 
   // all balances for both account and exchanges
   let allBalances = useAllBalances()
+
+  // console.log(allBalances)
 
   const _usdAmounts = Object.keys(allTokens).map(k => {
     if (ethPrice && allBalances[account] && allBalances[account][k] && allBalances[account][k].value) {
@@ -487,11 +493,47 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
       {}
     )
 
+  const _poolTokenBalances = Object.keys(allTokens).map(tokenAddress => {
+    let exchangeAddress = allTokens[tokenAddress].exchangeAddress
+    if (allBalances[account] && allBalances[account][exchangeAddress]) {
+      return allBalances[account][exchangeAddress]
+    } else {
+      return null
+    }
+  })
+
+  const poolTokenBalances =
+    _poolTokenBalances &&
+    Object.keys(allTokens).reduce(
+      (accumulator, currentValue, i) => Object.assign({ [currentValue]: _poolTokenBalances[i] }, accumulator),
+      {}
+    )
+  //
+  // console.log(allBalances)
+
   const tokenList = useMemo(() => {
     return Object.keys(allTokens)
       .sort((a, b) => {
         const aSymbol = allTokens[a].symbol.toLowerCase()
         const bSymbol = allTokens[b].symbol.toLowerCase()
+
+        const aAddress = isAddress(a)
+        const bAddress = isAddress(b)
+
+        // if (removePage && lpBalances) {
+        //   if (lpBalances[aAddress] && !lpBalances[bAddress]) {
+        //     return -1
+        //   } else if (!lpBalances[aAddress] && lpBalances[bAddress]) {
+        //     return 1
+        //   }
+        //   if (lpBalances[aAddress] && lpBalances[bAddress]) {
+        //     return lpBalances[aAddress] > lpBalances[bAddress]
+        //       ? -1
+        //       : lpBalances[aAddress] < lpBalances[bAddress]
+        //       ? 1
+        //       : 0
+        //   }
+        // }
 
         if (aSymbol === 'ETH'.toLowerCase() || bSymbol === 'ETH'.toLowerCase()) {
           return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
@@ -583,7 +625,14 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
             </TokenSymbolGroup>
           </TokenRowLeft>
           <TokenRowRight>
-            {balance ? (
+            {removePage && allBalances ? (
+              allBalances[address] ? (
+                // parseFloat(lpBalances[address]).toFixed(4)
+                'share'
+              ) : (
+                '-'
+              )
+            ) : balance ? (
               <TokenRowBalance>{balance && (balance > 0 || balance === '<0.0001') ? balance : '-'}</TokenRowBalance>
             ) : account ? (
               <SpinnerWrapper src={Circle} alt="loader" />
@@ -591,7 +640,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
               '-'
             )}
             <TokenRowUsd>
-              {usdBalance && !usdBalance.isNaN()
+              {!removePage && usdBalance && !usdBalance.isNaN()
                 ? usdBalance.isZero()
                   ? ''
                   : usdBalance.lt(0.01)
@@ -619,6 +668,15 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
     onDismiss()
   }
 
+  const GroupHeading = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 1rem;
+    justify-content: space-between;
+    font-weight: 500;
+  `
+
   return (
     <Modal
       isOpen={isOpen}
@@ -643,6 +701,12 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
             onChange={onInput}
           />
         </SearchContainer>
+
+        <GroupHeading>
+          <div>Token Name</div>
+          <div> {removePage ? 'Pool Share' : 'Your Balance'}</div>
+        </GroupHeading>
+
         <TokenList>{renderTokenList()}</TokenList>
       </TokenModal>
     </Modal>
