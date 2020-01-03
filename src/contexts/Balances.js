@@ -172,21 +172,27 @@ export function Updater() {
           )
         })
 
-        // get all pool share balances
+        // get all balances for any LP shares
         Promise.all(
-          allTokensWithAnExchange.map(async tokenAddress => {
+          Object.keys(allTokensWithAnExchange).map(async index => {
             await new Promise(resolve => setTimeout(resolve, STAGGER_TIME * Math.random()))
-
+            const tokenAddress = allTokensWithAnExchange[index]
             const exchangeAddress = allTokens[tokenAddress].exchangeAddress
-            const { value: existingValue } = safeAccess(stateRef.current, [chainId, exchangeAddress, account]) || {}
-            return existingValue || (await getTokenBalance(exchangeAddress, account, library).catch(() => null))
+
+            const { value: existingValue } = safeAccess(stateRef.current, [chainId, account, exchangeAddress]) || {}
+            return (
+              existingValue ||
+              (await (tokenAddress === 'ETH'
+                ? getEtherBalance(account, library).catch(() => null)
+                : getTokenBalance(exchangeAddress, account, library).catch(() => null)))
+            )
           })
-        ).then(tokenBalances => {
-          updateAllForExchanges(
+        ).then(balances => {
+          updateAllForAccount(
             chainId,
-            allTokensWithAnExchange.map(tokenAddress => allTokens[tokenAddress].exchangeAddress),
-            Array(allTokensWithAnExchange.length).fill(account),
-            tokenBalances
+            account,
+            allTokensWithAnExchange.map(item => allTokens[item].exchangeAddress),
+            balances
           )
         })
       }

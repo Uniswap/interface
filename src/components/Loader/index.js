@@ -1,6 +1,5 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
-import PropTypes from 'prop-types'
 import Circle from '../../assets/images/circle-grey.svg'
 
 const rotate = keyframes`
@@ -19,22 +18,13 @@ export const Spinner = styled.img`
 `
 
 const SpinnerWrapper = styled(Spinner)`
-  margin: 0 0.25rem 0 0.25rem;
-  color: ${({ theme }) => theme.chaliceGray};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: ${({ theme }) => theme.colors.grey2};
 `
 
-export const LoaderStyled = styled.div.attrs(({ theme, variant }) => ({}))``
-
-function Loader({ children, variant, pink, ...rest }) {
+export default function Loader() {
   return <SpinnerWrapper src={Circle} alt="loader" />
 }
-
-Loader.propTypes = {
-  variant: PropTypes.oneOf(['default', 'blue'])
-}
-
-Loader.defaultProps = {
-  variant: 'default'
-}
-
-export default Loader

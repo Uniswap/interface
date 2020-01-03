@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router'
 import styled from 'styled-components'
-import Card from '../Card'
+// import Card from '../Card'
+import Card, { CardOutlined } from '../CardStyled'
 import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
 import Badge from '../Badge'
@@ -62,6 +63,7 @@ const Row = styled.div`
   width: 100%;
   height: 32px;
   justify-content: space-between;
+  align-items: center;
 `
 
 const GreenText = styled.span`
@@ -104,27 +106,40 @@ function Migrate({ userPool }) {
     }, 600)
   }
 
+  function VariableCard({ children }) {
+    return open ? (
+      <CardOutlined style={complete && !open ? { opacity: '0.5' } : {}}>{children}</CardOutlined>
+    ) : (
+      <Card style={complete && !open ? { opacity: '0.5' } : {}}>{children}</Card>
+    )
+  }
+
   return (
     <Wrapper>
-      <Card outlined={open && 'outlined'} style={complete && !open ? { opacity: '0.5' } : {}}>
+      <VariableCard>
         <Grouping>
           {complete ? (
             <DoubleLogo
               size={'24px'}
-              addressTwo={'0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'}
-              addressOne={'0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'}
+              addressTwo={'0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'} //weth has better logo than eth
+              addressOne={userPool.token}
             />
           ) : (
             <TokenLogo size="24px" address={userPool.token} />
           )}
           {complete ? (
             <BodyText>
-              {userPool.balance.toString() + ' ' + allTokenDetails[userPool.token].symbol}
+              {userPool.balance.lt(0.00001)
+                ? '<0.00001'
+                : userPool.balance.toFixed(5).toString() + ' ' + allTokenDetails[userPool.token].symbol}
               <InlineSubText>/ETH</InlineSubText> Pool Tokens
             </BodyText>
           ) : (
             <BodyText>
-              {userPool.balance.toString() + ' ' + allTokenDetails[userPool.token].symbol} Pool Tokens
+              {userPool.balance.lt(0.00001)
+                ? '<0.00001 ' + allTokenDetails[userPool.token].symbol
+                : userPool.balance.toFixed(5).toString() + ' ' + allTokenDetails[userPool.token].symbol}{' '}
+              Pool Tokens
             </BodyText>
           )}
           {complete ? <Badge variant="green">V2</Badge> : <Badge variant="yellow">V1</Badge>}
@@ -158,10 +173,8 @@ function Migrate({ userPool }) {
             />
           )}
         </Grouping>
-      </Card>
-      {!open ? (
-        ''
-      ) : (
+      </VariableCard>
+      {open && (
         <BottomWrapper>
           <FormattedCard outlined={!approveDone && 'outlined'}>
             <Row>

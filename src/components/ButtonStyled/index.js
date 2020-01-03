@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button as RebassButton } from 'rebass/styled-components'
 import styled from 'styled-components'
+import { ChevronDown } from 'react-feather'
 
 const Base = styled(RebassButton)`
   padding: 8px 12px;
@@ -51,10 +52,74 @@ const Secondary = styled(Base)`
   }
 `
 
+const Dull = styled(Base)`
+  background-color: ${({ theme }) => theme.colors.grey2};
+  border-color: ${({ theme }) => theme.colors.grey2};
+  color: black;
+  &:hover,
+  :focus {
+    background-color: ${({ theme }) => theme.colors.grey3};
+    border-color: ${({ theme }) => theme.colors.grey3};
+  }
+  &:focus {
+    box-shadow: 0 0 0 1pt ${({ theme }) => theme.colors.grey4};
+  }
+  &:active {
+    background-color: ${({ theme }) => theme.colors.grey3};
+    border-color: ${({ theme }) => theme.colors.grey3};
+  }
+  &:disabled {
+    background-color: ${({ theme }) => theme.colors.grey2};
+    color: ${({ theme }) => theme.colors.grey3};
+    cursor: auto;
+    border-color: ${({ theme }) => theme.colors.grey2};
+  }
+`
+
 export default function ButtonStyled({ children, ...rest }) {
   return <Base {...rest}>{children}</Base>
 }
 
 export function ButtonStyledSecondary({ children, ...rest }) {
   return <Secondary {...rest}>{children}</Secondary>
+}
+
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`
+
+export function ButtonDropwdown({ disabled, children, ...rest }) {
+  return (
+    <Base {...rest}>
+      <ContentWrapper>
+        <div style={{ display: 'flex', alignItems: 'center' }}>{children}</div>
+        <ChevronDown size={24} />
+      </ContentWrapper>
+    </Base>
+  )
+}
+
+export function ButtonDropwdownSecondary({ disabled, children, ...rest }) {
+  return (
+    <Secondary {...rest}>
+      <ContentWrapper>
+        <div style={{ display: 'flex', alignItems: 'center' }}>{children}</div>
+        <ChevronDown size={24} />
+      </ContentWrapper>
+    </Secondary>
+  )
+}
+
+export function ButtonDropwdownDull({ disabled, children, ...rest }) {
+  return (
+    <Dull {...rest}>
+      <ContentWrapper>
+        <div style={{ display: 'flex', alignItems: 'center' }}>{children}</div>
+        <ChevronDown size={24} />
+      </ContentWrapper>
+    </Dull>
+  )
 }

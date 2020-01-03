@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button as RebassButton } from 'rebass/styled-components'
-import { CheckCircle, ChevronDown } from 'react-feather'
+import { ChevronDown } from 'react-feather'
 import styled from 'styled-components'
 
 const variants = {

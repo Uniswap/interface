@@ -607,8 +607,8 @@ export default function TransactionDetails(props) {
 
   const renderTransactionDetails = () => {
     ReactGA.event({
-      category: 'TransactionDetail',
-      action: 'Open'
+      category: 'Advanced Interaction',
+      action: 'Open Advanced Details'
     })
 
     if (props.independentField === props.INPUT) {
