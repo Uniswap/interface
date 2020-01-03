@@ -459,8 +459,6 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
   // all balances for both account and exchanges
   let allBalances = useAllBalances()
 
-  // console.log(allBalances)
-
   const _usdAmounts = Object.keys(allTokens).map(k => {
     if (ethPrice && allBalances[account] && allBalances[account][k] && allBalances[account][k].value) {
       let ethRate = 1 // default for ETH
@@ -495,21 +493,19 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
 
   const _poolTokenBalances = Object.keys(allTokens).map(tokenAddress => {
     let exchangeAddress = allTokens[tokenAddress].exchangeAddress
-    if (allBalances[account] && allBalances[account][exchangeAddress]) {
-      return allBalances[account][exchangeAddress]
+    if (allBalances[account] && allBalances[account][exchangeAddress] && allBalances[account][exchangeAddress].value) {
+      return new BigNumber(allBalances[account][exchangeAddress].value.toString()) / 1e18
     } else {
       return null
     }
   })
 
+  // map from {tokenAddress: LP balance for that token's exchange}
   const poolTokenBalances =
     _poolTokenBalances &&
-    Object.keys(allTokens).reduce(
-      (accumulator, currentValue, i) => Object.assign({ [currentValue]: _poolTokenBalances[i] }, accumulator),
-      {}
-    )
-  //
-  // console.log(allBalances)
+    Object.keys(allTokens).reduce((accumulator, currentValue, i) => {
+      return Object.assign({ [currentValue]: _poolTokenBalances[i] }, accumulator)
+    }, {})
 
   const tokenList = useMemo(() => {
     return Object.keys(allTokens)
@@ -520,20 +516,19 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
         const aAddress = isAddress(a)
         const bAddress = isAddress(b)
 
-        // if (removePage && lpBalances) {
-        //   if (lpBalances[aAddress] && !lpBalances[bAddress]) {
-        //     return -1
-        //   } else if (!lpBalances[aAddress] && lpBalances[bAddress]) {
-        //     return 1
-        //   }
-        //   if (lpBalances[aAddress] && lpBalances[bAddress]) {
-        //     return lpBalances[aAddress] > lpBalances[bAddress]
-        //       ? -1
-        //       : lpBalances[aAddress] < lpBalances[bAddress]
-        //       ? 1
-        //       : 0
-        //   }
-        // }
+        // if on remove page, filter by LP balance
+        if (removePage && poolTokenBalances) {
+          if (poolTokenBalances[aAddress] && !poolTokenBalances[bAddress]) {
+            return -1
+          } else if (!poolTokenBalances[aAddress] && poolTokenBalances[bAddress]) {
+            return 1
+          }
+          if (poolTokenBalances[aAddress] && poolTokenBalances[bAddress]) {
+            const bnA = poolTokenBalances[aAddress]
+            const bnB = poolTokenBalances[bAddress]
+            return bnA > bnB ? -1 : bnA < bnB ? 1 : 0
+          }
+        }
 
         if (aSymbol === 'ETH'.toLowerCase() || bSymbol === 'ETH'.toLowerCase()) {
           return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
@@ -574,7 +569,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
           usdBalance: usdBalance
         }
       })
-  }, [allBalances, allTokens, usdAmounts, account])
+  }, [allBalances, allTokens, usdAmounts, account, poolTokenBalances, removePage])
 
   const filteredTokenList = useMemo(() => {
     return tokenList.filter(tokenEntry => {
@@ -625,10 +620,13 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
             </TokenSymbolGroup>
           </TokenRowLeft>
           <TokenRowRight>
-            {removePage && allBalances ? (
-              allBalances[address] ? (
-                // parseFloat(lpBalances[address]).toFixed(4)
-                'share'
+            {removePage && poolTokenBalances ? (
+              poolTokenBalances[address] ? (
+                poolTokenBalances[address] < 0.00001 ? (
+                  '< 0.00001'
+                ) : (
+                  poolTokenBalances[address].toFixed(5)
+                )
               ) : (
                 '-'
               )
@@ -704,7 +702,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
 
         <GroupHeading>
           <div>Token Name</div>
-          <div> {removePage ? 'Pool Share' : 'Your Balance'}</div>
+          <div> {removePage ? 'Your Pool Share' : 'Your Balance'}</div>
         </GroupHeading>
 
         <TokenList>{renderTokenList()}</TokenList>

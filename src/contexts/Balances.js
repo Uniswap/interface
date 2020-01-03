@@ -136,12 +136,14 @@ export function Updater() {
 
         const allTokensWithAnExchange = Object.keys(allTokens).filter(tokenAddress => tokenAddress !== 'ETH')
 
+        // get all balances for any LP shares
         Promise.all(
-          Object.keys(allTokensWithAnExchange).map(async tokenAddress => {
+          Object.keys(allTokensWithAnExchange).map(async index => {
             await new Promise(resolve => setTimeout(resolve, STAGGER_TIME * Math.random()))
-            const exchangeAddress = allTokensWithAnExchange[tokenAddress].exchangeAddress
+            const tokenAddress = allTokensWithAnExchange[index]
+            const exchangeAddress = allTokens[tokenAddress].exchangeAddress
 
-            const { value: existingValue } = safeAccess(stateRef.current, [chainId, account, tokenAddress]) || {}
+            const { value: existingValue } = safeAccess(stateRef.current, [chainId, account, exchangeAddress]) || {}
             return (
               existingValue ||
               (await (tokenAddress === 'ETH'
@@ -153,7 +155,7 @@ export function Updater() {
           updateAllForAccount(
             chainId,
             account,
-            allTokensWithAnExchange.map(tokenAddress => allTokens[tokenAddress].exchangeAddress),
+            allTokensWithAnExchange.map(item => allTokens[item].exchangeAddress),
             balances
           )
         })
