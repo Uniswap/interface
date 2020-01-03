@@ -703,7 +703,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
 
         <GroupHeading>
           <div>Token Name</div>
-          <div> {removePage ? 'Your Pool Share' : 'Your Balance'}</div>
+          <div> {removePage ? 'Your Pool Tokens' : 'Your Balance'}</div>
         </GroupHeading>
 
         <TokenList>{renderTokenList()}</TokenList>
