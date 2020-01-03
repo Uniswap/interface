@@ -545,6 +545,8 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
             const bUSD = usdAmounts[b]
             return aUSD.gt(bUSD) ? -1 : aUSD.lt(bUSD) ? 1 : 0
           }
+
+          return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
         } else {
           return 0
         }
