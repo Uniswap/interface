@@ -326,8 +326,10 @@ export default function TransactionDetails(props) {
   function renderSummary() {
     let contextualInfo = ''
     let isError = false
-
-    if (props.inputError || props.independentError) {
+    if (props.brokenTokenWarning) {
+      contextualInfo = t('brokenToken')
+      isError = true
+    } else if (props.inputError || props.independentError) {
       contextualInfo = props.inputError || props.independentError
       isError = true
     } else if (!props.inputCurrency || !props.outputCurrency) {
@@ -356,6 +358,7 @@ export default function TransactionDetails(props) {
         contextualInfo={contextualInfo ? contextualInfo : slippageWarningText}
         allowExpand={
           !!(
+            !props.brokenTokenWarning &&
             props.inputCurrency &&
             props.outputCurrency &&
             props.inputValueParsed &&
@@ -366,6 +369,7 @@ export default function TransactionDetails(props) {
         isError={isError}
         slippageWarning={props.slippageWarning && !contextualInfo}
         highSlippageWarning={props.highSlippageWarning && !contextualInfo}
+        brokenTokenWarning={props.brokenTokenWarning}
         renderTransactionDetails={renderTransactionDetails}
         dropDownContent={dropDownContent}
       />
