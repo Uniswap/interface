@@ -10,7 +10,7 @@ const POLLING_INTERVAL = 10000
 
 export const network = new NetworkConnector({
   urls: { 1: process.env.REACT_APP_NETWORK_URL },
-  pollingInterval: POLLING_INTERVAL
+  pollingInterval: POLLING_INTERVAL * 3
 })
 
 export const injected = new InjectedConnector({
