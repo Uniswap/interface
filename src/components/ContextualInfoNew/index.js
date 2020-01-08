@@ -6,7 +6,7 @@ import { ReactComponent as Dropup } from '../../assets/images/dropup-blue.svg'
 import { ReactComponent as Dropdown } from '../../assets/images/dropdown-blue.svg'
 
 const SummaryWrapper = styled.div`
-  color: ${({ error, theme }) => (error ? theme.salmonRed : theme.doveGray)};
+  color: ${({ error, brokenTokenWarning, theme }) => (error || brokenTokenWarning ? theme.salmonRed : theme.doveGray)};
   font-size: 0.75rem;
   text-align: center;
   margin-top: 1rem;
@@ -92,11 +92,12 @@ export default function ContextualInfo({
   isError = false,
   slippageWarning,
   highSlippageWarning,
+  brokenTokenWarning,
   dropDownContent
 }) {
   const [showDetails, setShowDetails] = useState(false)
   return !allowExpand ? (
-    <SummaryWrapper>{contextualInfo}</SummaryWrapper>
+    <SummaryWrapper brokenTokenWarning={brokenTokenWarning}>{contextualInfo}</SummaryWrapper>
   ) : (
     <>
       <SummaryWrapperContainer

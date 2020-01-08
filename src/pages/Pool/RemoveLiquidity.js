@@ -6,15 +6,18 @@ import { ethers } from 'ethers'
 import styled from 'styled-components'
 
 import { useWeb3React, useExchangeContract } from '../../hooks'
+import { useTransactionAdder } from '../../contexts/Transactions'
+import { useTokenDetails } from '../../contexts/Tokens'
+import { useAddressBalance, useETHPriceInUSD } from '../../contexts/Balances'
+
+import { calculateGasMargin, amountFormatter } from '../../utils'
+import { brokenTokens } from '../../constants'
+
 import { Button } from '../../theme'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import ContextualInfo from '../../components/ContextualInfo'
 import OversizedPanel from '../../components/OversizedPanel'
 import ArrowDown from '../../assets/svg/SVGArrowDown'
-import { useTransactionAdder } from '../../contexts/Transactions'
-import { useTokenDetails } from '../../contexts/Tokens'
-import { useAddressBalance, useETHPriceInUSD } from '../../contexts/Balances'
-import { calculateGasMargin, amountFormatter } from '../../utils'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = ethers.utils.bigNumberify(200)
@@ -145,6 +148,8 @@ export default function RemoveLiquidity({ params }) {
 
   const addTransaction = useTransactionAdder()
 
+  const [brokenTokenWarning, setBrokenTokenWarning] = useState()
+
   // clear url of query
   useEffect(() => {
     const history = createBrowserHistory()
@@ -155,6 +160,16 @@ export default function RemoveLiquidity({ params }) {
   const [value, setValue] = useState(params.poolTokenAmount ? params.poolTokenAmount : '')
   const [inputError, setInputError] = useState()
   const [valueParsed, setValueParsed] = useState()
+
+  useEffect(() => {
+    setBrokenTokenWarning(false)
+    for (let i = 0; i < brokenTokens.length; i++) {
+      if (brokenTokens[i].toLowerCase() === outputCurrency.toLowerCase()) {
+        setBrokenTokenWarning(true)
+      }
+    }
+  }, [outputCurrency])
+
   // parse value
   useEffect(() => {
     try {
@@ -301,8 +316,10 @@ export default function RemoveLiquidity({ params }) {
   function renderSummary() {
     let contextualInfo = ''
     let isError = false
-
-    if (inputError) {
+    if (brokenTokenWarning) {
+      contextualInfo = t('brokenToken')
+      isError = true
+    } else if (inputError) {
       contextualInfo = inputError
       isError = true
     } else if (!outputCurrency || outputCurrency === 'ETH') {
