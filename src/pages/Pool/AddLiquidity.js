@@ -420,7 +420,7 @@ export default function AddLiquidity({ params }) {
 
   function formatBalance(value) {
     return `Balance: ${value}`
-  } // check for broken tokens
+  }
 
   useEffect(() => {
     setBrokenTokenWarning(false)

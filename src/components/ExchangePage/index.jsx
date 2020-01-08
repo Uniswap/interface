@@ -5,14 +5,10 @@ import { ethers } from 'ethers'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '../../theme'
 import { useWeb3React } from '../../hooks'
-import CurrencyInputPanel from '../CurrencyInputPanel'
-import AddressInputPanel from '../AddressInputPanel'
-import OversizedPanel from '../OversizedPanel'
-import TransactionDetails from '../TransactionDetails'
-import ArrowDown from '../../assets/svg/SVGArrowDown'
+import { brokenTokens } from '../../constants'
 import { amountFormatter, calculateGasMargin } from '../../utils'
+
 import { useExchangeContract } from '../../hooks'
 import { useTokenDetails } from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
@@ -20,6 +16,13 @@ import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWalletModalToggle } from '../../contexts/Application'
 import { useETHPriceInUSD } from '../../contexts/Balances'
+
+import { Button } from '../../theme'
+import CurrencyInputPanel from '../CurrencyInputPanel'
+import AddressInputPanel from '../AddressInputPanel'
+import OversizedPanel from '../OversizedPanel'
+import TransactionDetails from '../TransactionDetails'
+import ArrowDown from '../../assets/svg/SVGArrowDown'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -270,6 +273,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     return ''
   }
 
+  const [brokenTokenWarning, setBrokenTokenWarning] = useState()
+
   const [deadlineFromNow, setDeadlineFromNow] = useState(DEFAULT_DEADLINE_FROM_NOW)
 
   const [rawSlippage, setRawSlippage] = useState(() => initialSlippage())
@@ -297,6 +302,18 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   )
 
   const { independentValue, dependentValue, independentField, inputCurrency, outputCurrency } = swapState
+
+  useEffect(() => {
+    setBrokenTokenWarning(false)
+    for (let i = 0; i < brokenTokens.length; i++) {
+      if (
+        brokenTokens[i].toLowerCase() === outputCurrency.toLowerCase() ||
+        brokenTokens[i].toLowerCase() === inputCurrency.toLowerCase()
+      ) {
+        setBrokenTokenWarning(true)
+      }
+    }
+  }, [outputCurrency, inputCurrency])
 
   const [recipient, setRecipient] = useState({
     address: initialRecipient(),
@@ -806,6 +823,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         rawSlippage={rawSlippage}
         slippageWarning={slippageWarning}
         highSlippageWarning={highSlippageWarning}
+        brokenTokenWarning={brokenTokenWarning}
         setDeadline={setDeadlineFromNow}
         deadline={deadlineFromNow}
         inputError={inputError}
@@ -831,12 +849,16 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       />
       <Flex>
         <Button
-          disabled={!account && !error ? false : !isValid || customSlippageError === 'invalid'}
+          disabled={
+            brokenTokenWarning ? true : !account && !error ? false : !isValid || customSlippageError === 'invalid'
+          }
           onClick={account && !error ? onSwap : toggleWalletModal}
           warning={highSlippageWarning || customSlippageError === 'warning'}
           loggedOut={!account}
         >
-          {!account
+          {brokenTokenWarning
+            ? 'Swap'
+            : !account
             ? 'Connect to a Wallet'
             : sending
             ? highSlippageWarning || customSlippageError === 'warning'
