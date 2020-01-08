@@ -32,7 +32,7 @@ export const SUPPORTED_WALLETS = {
   },
   WALLET_CONNECT: {
     connector: walletconnect,
-    name: 'Wallet Connect',
+    name: 'WalletConnect',
     iconName: 'walletConnectIcon.svg',
     description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
     href: null,
