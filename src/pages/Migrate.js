@@ -1,29 +1,19 @@
 import React, { useEffect, useState } from 'react'
+import { ethers } from 'ethers'
 import { withRouter } from 'react-router'
 import styled, { keyframes } from 'styled-components'
-
-import { BigNumber } from '@uniswap/sdk'
 
 import { useAllBalances } from '../contexts/Balances'
 import { useAllTokenDetails } from '../contexts/Tokens'
 import { useWeb3React } from '../hooks'
 
-import Card, { CardPinkOutlined } from '../components/CardStyled'
-import Loader from '../components/Loader'
+import Card from '../components/CardStyled'
+import LoaderLight from '../components/Loader'
 import PoolUnit from '../components/PoolUnit'
-import { Link } from '../components/Link'
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  & > div {
-    margin-top: 3rem;
-  }
-`
-
-const FormattedCard = styled(CardPinkOutlined)`
-  display: grid;
-  row-gap: 30px;
 `
 
 const HeaderText = styled.div`
@@ -36,21 +26,18 @@ const SubText = styled.div`
   color: ${({ theme }) => theme.colors.grey3};
 `
 
-const Bold = styled.span`
-  font-weight: 500;
-`
-
 const Row = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 1rem;
+  align-items: center;
+  height: 60px;
+  padding: 1rem 0;
 `
 
-const PoolGrid = styled.div`
+const Column = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
   & > div {
     margin-top: 1rem;
   }
@@ -67,6 +54,18 @@ const LoadingCard = styled(Card)`
   animation: ${shine} 0.8s infinite linear;
 `
 
+const bounceIn = keyframes`
+  from {
+    transform: translateZ(0) scale(0);
+  }
+  to{
+    transform: translateZ(0) scale(1);
+  }
+`
+const AnimatedUnit = styled.div`
+  animation: ${bounceIn} 0.4s 0s cubic-bezier(0.175, 0.885, 0.32, 1.075) forwards;
+`
+
 function Migrate() {
   const { account } = useWeb3React()
 
@@ -74,76 +73,81 @@ function Migrate() {
 
   const allTokenDetails = useAllTokenDetails()
 
-  const [userPools, setUserPools] = useState([
-    // {
-    //   token: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-    //   balance: 2,
-    //   exchangeAddress: '0x4FF7Fa493559c40aBd6D157a0bfC35Df68d8D0aC'
-    // },
-    // {
-    //   token: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-    //   balance: 2,
-    //   exchangeAddress: '0x4FF7Fa493559c40aBd6D157a0bfC35Df68d8D0aC'
-    // }
-  ])
+  const [userLPTokens, setUserLPTokens] = useState()
 
-  // get LP balances
+  // get V1 LP balances
   useEffect(() => {
-    if (Object.keys(allBalances).length > 0) {
-      let newUserPools = []
+    if (Object.keys(allTokenDetails).length > 0 && allBalances && Object.keys(allBalances).length > 0) {
+      let newUserLPTokens = []
       Object.keys(allTokenDetails).map(tokenAddress => {
+        let hasPooltokens = false
         let exchangeAddress = allTokenDetails[tokenAddress].exchangeAddress
-        if (allBalances && allBalances[account] && allBalances[account][exchangeAddress]) {
-          const balanceBigNumber = new BigNumber(allBalances[account][exchangeAddress].value.toString()).div(
-            new BigNumber(10).pow(allTokenDetails[tokenAddress].decimals)
-          )
+        let exchangeAddressV2 = allTokenDetails[tokenAddress].exchangeAddressV2
+        // get v1 LP shares
+        if (
+          allBalances &&
+          allBalances[account] &&
+          allBalances[account][exchangeAddress] &&
+          allBalances[account][exchangeAddress].value
+        ) {
+          const balanceBigNumber = ethers.utils.bigNumberify(allBalances[account][exchangeAddress].value)
           if (!balanceBigNumber.isZero()) {
-            let userPool = {
-              token: tokenAddress,
-              exchangeAddress: exchangeAddress,
-              balance: balanceBigNumber
-            }
-            newUserPools.push(userPool)
+            hasPooltokens = true
           }
         }
+        // get v2 LP shares
+        if (
+          allBalances &&
+          allBalances[account] &&
+          allBalances[account][exchangeAddressV2] &&
+          allBalances[account][exchangeAddressV2].value
+        ) {
+          const balanceBigNumber = ethers.utils.bigNumberify(allBalances[account][exchangeAddressV2].value)
+          if (!balanceBigNumber.isZero()) {
+            hasPooltokens = true
+          }
+        }
+        if (hasPooltokens) {
+          newUserLPTokens.push(tokenAddress)
+        }
+        return true
       })
-      setUserPools(newUserPools)
+      setUserLPTokens(newUserLPTokens)
     }
-  }, [allBalances, account, allTokenDetails])
+  }, [account, allBalances, allTokenDetails])
+
+  const fetching = !(allBalances && allBalances[account])
 
   return (
     <Wrapper>
-      <FormattedCard>
-        <HeaderText>Migrate To Uniswap V2</HeaderText>
-        <div>
-          <Bold>Uniswap contracts have been upgraded. </Bold>
-          Your liquidity will need to be migrated to participate in the V2 liquidity pools.
-        </div>
-        <Link href="">Read more about this upgrade and what it means for Uniswap.</Link>
-      </FormattedCard>
-      <div>
-        <Row>
-          <HeaderText>Your Liquidity</HeaderText>
-          <SubText>{userPools && userPools.length ? userPools.length + ' pools found' : ''}</SubText>
-        </Row>
-        {userPools ? (
-          <PoolGrid>
-            {userPools.length > 0 ? (
-              userPools.map((userPool, i) => <PoolUnit userPool={userPool} key={i} />)
-            ) : (
-              <>
-                <LoadingCard height={80} />
-                <LoadingCard height={80} />
-                <LoadingCard height={80} />
-              </>
-            )}
-          </PoolGrid>
-        ) : (
-          <Row>
-            <Loader />
-          </Row>
-        )}
-      </div>
+      <Row>
+        <HeaderText>Your Liquidity</HeaderText>
+        <SubText>
+          {fetching ? (
+            <Row>
+              Fetching balances <LoaderLight style={{ marginLeft: '10px' }} />
+            </Row>
+          ) : (
+            userLPTokens && userLPTokens.length + ' pools found'
+          )}
+        </SubText>
+      </Row>
+      {fetching ? (
+        <Column>
+          <LoadingCard height={80} />
+          <LoadingCard height={80} />
+          <LoadingCard height={80} />
+        </Column>
+      ) : (
+        <Column>
+          {userLPTokens &&
+            userLPTokens.map(token => (
+              <AnimatedUnit key={token}>
+                <PoolUnit token={token} />
+              </AnimatedUnit>
+            ))}
+        </Column>
+      )}
     </Wrapper>
   )
 }

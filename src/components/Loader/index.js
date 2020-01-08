@@ -25,6 +25,14 @@ const SpinnerWrapper = styled(Spinner)`
   color: ${({ theme }) => theme.colors.grey2};
 `
 
-export default function Loader() {
-  return <SpinnerWrapper src={Circle} alt="loader" />
+const SpinnerWrapperLight = styled(SpinnerWrapper)`
+  color: ${({ theme }) => theme.colors.grey1};
+`
+
+export default function Loader({ ...rest }) {
+  return <SpinnerWrapper src={Circle} alt="loader" {...rest} />
+}
+
+export function LoaderLight({ ...rest }) {
+  return <SpinnerWrapperLight src={Circle} alt="loader" {...rest} />
 }

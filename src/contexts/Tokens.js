@@ -14,6 +14,7 @@ const NAME = 'name'
 const SYMBOL = 'symbol'
 const DECIMALS = 'decimals'
 const EXCHANGE_ADDRESS = 'exchangeAddress'
+const EXCHANGE_ADDRESS_V2 = 'exchangeAddressV2'
 
 const UPDATE = 'UPDATE'
 
@@ -22,7 +23,8 @@ const ETH = {
     [NAME]: 'Ethereum',
     [SYMBOL]: 'ETH',
     [DECIMALS]: 18,
-    [EXCHANGE_ADDRESS]: null
+    [EXCHANGE_ADDRESS]: null,
+    [EXCHANGE_ADDRESS_V2]: null
   }
 }
 
@@ -33,6 +35,12 @@ const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'AMN',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xE6C198d27a5B71144B40cFa2362ae3166728e0C8'
+    },
+    '0xc7ad46e0b8a400bb3c915120d284aafba8fc4735': {
+      [NAME]: 'Fake DAI',
+      [SYMBOL]: 'FDAI',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x9c92A4582Ad8e3D731a73B47B2C6e32Cc0fE9CD9'
     },
     '0xD46bA6D942050d489DBd938a2C909A5d5039A161': {
       [NAME]: 'Ampleforth',
@@ -522,12 +530,27 @@ const INITIAL_TOKENS_CONTEXT = {
     }
   },
   4: {
-    '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa': {
-      [NAME]: 'Dai',
-      [SYMBOL]: 'DAI',
+    '0xc7ad46e0b8a400bb3c915120d284aafba8fc4735': {
+      [NAME]: 'Rinkeby DAI',
+      [SYMBOL]: 'RDAI',
       [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: '0xaF51BaAA766b65E8B3Ee0C2c33186325ED01eBD5'
+      [EXCHANGE_ADDRESS]: '0x9c92A4582Ad8e3D731a73B47B2C6e32Cc0fE9CD9',
+      [EXCHANGE_ADDRESS_V2]: '0xa9dCEFFf40dA7329562E7FA4CE7bD52bf4beA453'
+    },
+    '0x0a2C9aEb943D4Be25c586CA1A3cC60Df908Db531': {
+      [NAME]: 'IanCoin',
+      [SYMBOL]: 'IAN',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x70b4aa67Ffa8501105a85547a3074307762907eC',
+      [EXCHANGE_ADDRESS_V2]: '0xce59dfa1B417cdeF866A2932769F80F30F47587f'
     }
+    // '0x6c133FF761464ff65cAeF95B0D0779652cc81DcD': {
+    //   [NAME]: 'Migrate Coin',
+    //   [SYMBOL]: 'MIG',
+    //   [DECIMALS]: 18,
+    //   [EXCHANGE_ADDRESS]: '0x9c92a4582ad8e3d731a73b47b2c6e32cc0fe9cd9'
+    //   // [EXCHANGE_ADDRESS_V2]: '0xce59dfa1B417cdeF866A2932769F80F30F47587f'
+    // }
   }
 }
 

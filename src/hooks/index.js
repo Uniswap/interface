@@ -202,6 +202,7 @@ export function useFactoryContract(withSignerIfPossible = true) {
 
   return useMemo(() => {
     try {
+      console.log(chainId)
       return getFactoryContract(chainId, library, withSignerIfPossible ? account : undefined)
     } catch {
       return null

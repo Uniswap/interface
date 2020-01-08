@@ -190,3 +190,34 @@ export function usePendingApproval(tokenAddress) {
     }).length >= 1
   )
 }
+
+export function usePendingMigrate(tokenAddress) {
+  const allTransactions = useAllTransactions()
+
+  return (
+    Object.keys(allTransactions).filter(hash => {
+      if (allTransactions[hash][RECEIPT]) {
+        return false
+      } else if (!allTransactions[hash][RESPONSE]) {
+        return false
+      } else if (allTransactions[hash][RESPONSE][CUSTOM_DATA].migrate !== tokenAddress) {
+        return false
+      } else {
+        return true
+      }
+    }).length >= 1
+  )
+}
+
+export function useDoneMigrate(tokenAddress) {
+  const allTransactions = useAllTransactions()
+  return (
+    Object.keys(allTransactions).filter(hash => {
+      if (allTransactions[hash][RECEIPT] && allTransactions[hash][RESPONSE][CUSTOM_DATA].migrate === tokenAddress) {
+        return true
+      } else {
+        return false
+      }
+    }).length >= 1
+  )
+}
