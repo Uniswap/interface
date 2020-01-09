@@ -144,11 +144,6 @@ function Migrate({ token }) {
   // const migrationDone = useDoneMigrate(exchangeAddressV1)
   const [migrationDone, setMigrationDone] = useState(false)
 
-  // const [showCard1, setShowCard1] = useState()
-  // const [showCard2, setShowCard2] = useState()
-  const showCard1 = v1BalanceFormatted && !v1BalanceFormatted.isZero()
-  const showCard2 = v2BalanceFormatted && !v2BalanceFormatted.isZero()
-
   useEffect(() => {
     if (migrationDone) {
       if (!exchangeAddressV2) {
@@ -222,6 +217,11 @@ function Migrate({ token }) {
     }, 1000)
   }
 
+  const showCard1 =
+    (v1BalanceFormatted && !v1BalanceFormatted.isZero()) || (v2BalanceFormatted && !v2BalanceFormatted.isZero())
+  const showCard2 =
+    v2BalanceFormatted && !v2BalanceFormatted.isZero() && v1BalanceFormatted && !v1BalanceFormatted.isZero()
+
   const transitionsCard1 = useTransition(showCard1, null, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
@@ -247,61 +247,63 @@ function Migrate({ token }) {
 
   return (
     <div>
-      {transitionsCard2.map(
-        ({ item, key, props }) =>
-          item && (
-            <animated.div key={key} style={props}>
-              <AnimnatedCard style={{ opacity: '0.7' }} mt={'1rem'} active={triggerFlash}>
-                <Grouping>
-                  <DoubleLogo
-                    size="24px"
-                    addressTwo={'0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'} //weth has better logo than eth
-                    addressOne={token}
-                  />
-                  <BodyText>
-                    {amountFormatter(v2BalanceFormatted, 18, 6) < 0.00001 ? (
-                      <>
-                        {'< 0.00001 '}
-                        {allTokenDetails[token].symbol}
-                      </>
-                    ) : (
-                      <>
-                        {amountFormatter(v2BalanceFormatted, 18, 5)}
-                        {' ' + allTokenDetails[token].symbol}
-                      </>
-                    )}
-                    <InlineSubText>/ETH</InlineSubText> Pool Tokens
-                  </BodyText>
-                  <Badge variant="green">V2</Badge>
-                  <Icon variant="filled" fillColor="green2">
-                    ✓
-                  </Icon>
-                </Grouping>
-              </AnimnatedCard>
-            </animated.div>
-          )
-      )}
       {transitionsCard1.map(
         ({ item, key, props }) =>
           item && (
             <animated.div key={key} style={props}>
-              <Card outlined={open} mt={'1rem'}>
+              <AnimnatedCard
+                outlined={open}
+                mt={'1rem'}
+                style={migrationDone && !open ? { opacity: '0.9' } : {}}
+                active={triggerFlash}
+              >
                 <Grouping>
-                  <TokenLogo size="24px" address={token} />
-                  <BodyText>
-                    {amountFormatter(v1BalanceFormatted, 18, 5) < 0.00001
-                      ? '<0.00001 ' + allTokenDetails[token].symbol
-                      : amountFormatter(v1BalanceFormatted, 18, 6) + ' ' + allTokenDetails[token].symbol}{' '}
-                    Pool Tokens
-                  </BodyText>
-                  <Badge variant="yellow">V1</Badge>
+                  {migrationDone ? (
+                    <DoubleLogo
+                      size="24px"
+                      addressTwo={'0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'} //weth has better logo than eth
+                      addressOne={token}
+                    />
+                  ) : (
+                    <TokenLogo size="24px" address={token} />
+                  )}
+                  {migrationDone ? (
+                    <BodyText>
+                      {amountFormatter(v2BalanceFormatted, 18, 6) < 0.00001
+                        ? '<0.00001 ' + allTokenDetails[token].symbol
+                        : amountFormatter(v2BalanceFormatted, 18, 5) + ' ' + allTokenDetails[token].symbol}
+                      <InlineSubText>/ETH</InlineSubText> Pool Tokens
+                    </BodyText>
+                  ) : (
+                    <BodyText>
+                      {amountFormatter(v1BalanceFormatted, 18, 5) < 0.00001
+                        ? '<0.00001 ' + allTokenDetails[token].symbol
+                        : amountFormatter(v1BalanceFormatted, 18, 6) + ' ' + allTokenDetails[token].symbol}{' '}
+                      Pool Tokens
+                    </BodyText>
+                  )}
+                  {migrationDone ? <Badge variant="green">V2</Badge> : <Badge variant="yellow">V1</Badge>}
                   {!open ? (
+                    migrationDone && !open ? (
+                      <Icon variant="filled" fillColor="green2">
+                        ✓
+                      </Icon>
+                    ) : (
+                      <Button
+                        onClick={() => {
+                          toggleOpen(true)
+                        }}
+                      >
+                        Upgrade
+                      </Button>
+                    )
+                  ) : migrationDone ? (
                     <Button
                       onClick={() => {
-                        toggleOpen(true)
+                        toggleOpen(false)
                       }}
                     >
-                      Upgrade
+                      Done
                     </Button>
                   ) : (
                     <CloseIcon
@@ -311,7 +313,7 @@ function Migrate({ token }) {
                     />
                   )}
                 </Grouping>
-              </Card>
+              </AnimnatedCard>
               {open && (
                 <BottomWrapper>
                   <FormattedCard outlined={!approvalDone && 'outlined'}>
@@ -337,7 +339,15 @@ function Migrate({ token }) {
                   <FormattedCard outlined={approvalDone && 'outlined'}>
                     <Row>
                       <BodyText>Step 2</BodyText>
-                      {pendingMigration || confirmingMigration ? <Loader /> : approvalDone ? '' : <Icon icon={Lock} />}
+                      {pendingMigration || confirmingMigration ? (
+                        <Loader />
+                      ) : migrationDone ? (
+                        <GreenText>✓</GreenText>
+                      ) : approvalDone ? (
+                        ''
+                      ) : (
+                        <Icon icon={Lock} />
+                      )}
                     </Row>
                     <Button
                       variant={migrationDone && 'success'}
@@ -359,6 +369,40 @@ function Migrate({ token }) {
                   </FormattedCard>
                 </BottomWrapper>
               )}
+            </animated.div>
+          )
+      )}
+      {transitionsCard2.map(
+        ({ item, key, props }) =>
+          item && (
+            <animated.div key={key} style={props}>
+              <AnimnatedCard style={{ opacity: '0.7' }} mt={'1rem'} active={triggerFlash}>
+                <Grouping>
+                  <DoubleLogo
+                    size="24px"
+                    addressTwo={'0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'} //weth has better logo than eth
+                    addressOne={token}
+                  />
+                  <BodyText>
+                    {amountFormatter(v1BalanceFormatted, 18, 6) < 0.00001 ? (
+                      <>
+                        {'< 0.00001 '}
+                        {allTokenDetails[token].symbol}
+                      </>
+                    ) : (
+                      <>
+                        {amountFormatter(v1BalanceFormatted, 18, 5)}
+                        {' ' + allTokenDetails[token].symbol}
+                      </>
+                    )}
+                    <InlineSubText>/ETH</InlineSubText> Pool Tokens
+                  </BodyText>
+                  <Badge variant="green">V2</Badge>
+                  <Icon variant="filled" fillColor="green2">
+                    ✓
+                  </Icon>
+                </Grouping>
+              </AnimnatedCard>
             </animated.div>
           )
       )}

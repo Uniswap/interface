@@ -9,7 +9,7 @@ import { useWeb3React } from '../hooks'
 
 import Card from '../components/CardStyled'
 import LoaderLight from '../components/Loader'
-import PoolUnit from '../components/PoolUnit'
+import PoolUnit from '../components/PoolUnit3'
 
 const Wrapper = styled.div`
   display: flex;
@@ -75,12 +75,14 @@ function Migrate() {
 
   const [userLPTokens, setUserLPTokens] = useState()
 
+  const [poolAmount, setPoolAmount] = useState()
+
   // get V1 LP balances
   useEffect(() => {
     if (Object.keys(allTokenDetails).length > 0 && allBalances && Object.keys(allBalances).length > 0) {
       let newUserLPTokens = []
+      let poolsFound = 0
       Object.keys(allTokenDetails).map(tokenAddress => {
-        let hasPooltokens = false
         let exchangeAddress = allTokenDetails[tokenAddress].exchangeAddress
         let exchangeAddressV2 = allTokenDetails[tokenAddress].exchangeAddressV2
         // get v1 LP shares
@@ -92,7 +94,7 @@ function Migrate() {
         ) {
           const balanceBigNumber = ethers.utils.bigNumberify(allBalances[account][exchangeAddress].value)
           if (!balanceBigNumber.isZero()) {
-            hasPooltokens = true
+            poolsFound++
           }
         }
         // get v2 LP shares
@@ -104,15 +106,16 @@ function Migrate() {
         ) {
           const balanceBigNumber = ethers.utils.bigNumberify(allBalances[account][exchangeAddressV2].value)
           if (!balanceBigNumber.isZero()) {
-            hasPooltokens = true
+            poolsFound++
           }
         }
-        if (hasPooltokens) {
+        if (poolsFound > 0) {
           newUserLPTokens.push(tokenAddress)
         }
         return true
       })
       setUserLPTokens(newUserLPTokens)
+      setPoolAmount(poolsFound)
     }
   }, [account, allBalances, allTokenDetails])
 
@@ -128,7 +131,7 @@ function Migrate() {
               Fetching balances <LoaderLight style={{ marginLeft: '10px' }} />
             </Row>
           ) : (
-            userLPTokens && userLPTokens.length + ' pools found'
+            poolAmount + ' pools found'
           )}
         </SubText>
       </Row>
