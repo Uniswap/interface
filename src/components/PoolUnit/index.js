@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 import { withRouter } from 'react-router'
 import styled from 'styled-components'
+import { animated, useTransition, useSpring } from 'react-spring'
 
 import { useWeb3React, useContract, useExchangeContract } from '../../hooks'
 import { useAllTokenDetails } from '../../contexts/Tokens'
@@ -9,7 +10,7 @@ import { useTransactionAdder, usePendingMigrate, useDoneMigrate } from '../../co
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useAddressBalance } from '../../contexts/Balances'
 
-import { calculateGasMargin, amountFormatter } from '../../utils'
+import { calculateGasMargin, amountFormatter, getV2FactoryContract } from '../../utils'
 
 import Card from '../Card'
 import TokenLogo from '../TokenLogo'
@@ -25,6 +26,7 @@ import { TextBlock } from '../Text'
 import Lock from '../../assets/images/lock.png'
 import MIGRATOR_ABI from '../../constants/abis/migrator'
 import { MIGRATOR_ADDRESS } from '../../constants'
+import { BigNumber } from 'ethers/utils'
 
 const Wrapper = styled.div``
 
@@ -87,33 +89,55 @@ const InlineSubText = styled.span`
 
 const DEFAULT_DEADLINE_FROM_NOW = 60 * 15
 
-function Migrate({ token, done = false }) {
+function Migrate({ token }) {
   const [open, toggleOpen] = useState(false)
 
-  const { account } = useWeb3React()
+  const { account, chainId, library } = useWeb3React()
   const allTokenDetails = useAllTokenDetails()
   const addTransaction = useTransactionAdder()
 
   const symbol = allTokenDetails[token].symbol
   const exchangeAddressV1 = allTokenDetails[token].exchangeAddress
-  const exchangeAddressV2 = allTokenDetails[token].exchangeAddressV2
+  let exchangeAddressV2 = allTokenDetails[token].exchangeAddressV2
 
   const exchangeContractV1 = useExchangeContract(exchangeAddressV1)
   const migratorContract = useContract(MIGRATOR_ADDRESS, MIGRATOR_ABI)
 
-  const poolTokenBalanceV1 = useAddressBalance(account, exchangeAddressV1)
-  const poolTokenBalanceV2 = useAddressBalance(account, exchangeAddressV2)
-  const tokenAllowance = useAddressAllowance(account, exchangeAddressV2, MIGRATOR_ADDRESS)
+  // const v1Balance = useAddressBalance(account, exchangeAddressV1)
+  // const v1BalanceFormatted = v1Balance && ethers.utils.bigNumberify(v1Balance)
+  // const v2Balance = useAddressBalance(account, exchangeAddressV2)
+  // const v2BalanceFormatted = v2Balance && ethers.utils.bigNumberify(v2Balance)
+
+  const [v1BalanceFormatted, setV1Balance] = useState(ethers.utils.bigNumberify(4000000000000000))
+  const [v2BalanceFormatted, setV2Balance] = useState(ethers.utils.bigNumberify(2000000000000000))
+
+  useEffect(() => {})
+
+  const tokenAllowance = useAddressAllowance(account, exchangeAddressV1, MIGRATOR_ADDRESS)
 
   const [pendingApproval, setPendingApproval] = useState(false)
-  const pendingMigration = usePendingMigrate(token)
+  // const pendingMigration = usePendingMigrate(exchangeAddressV1)
+  const [pendingMigration, setPendingMigration] = useState(false)
   const [confirmingMigration, setConfirmingMigration] = useState(false)
 
-  const approvalDone =
-    tokenAllowance && token && poolTokenBalanceV1 && tokenAllowance.gte(poolTokenBalanceV1.toString())
-  const migrationDone = useDoneMigrate(token)
+  // const approvalDone = tokenAllowance && token && v1BalanceFormatted && tokenAllowance.gte(v1BalanceFormatted)
+  const [approvalDone, setApprovalDone] = useState(false)
+  // const migrationDone = useDoneMigrate(exchangeAddressV1)
+  const [migrationDone, setMigrationDone] = useState(false)
 
-  const migrated = done || migrationDone
+  useEffect(() => {
+    if (migrationDone) {
+      if (!exchangeAddressV2) {
+      }
+    }
+  }, [migrationDone, exchangeAddressV2])
+
+  // if (token && chainId && library && account) {
+  //   const newE = getV2FactoryContract(chainId, library, account)
+  //   let newExchange = newE.getExchange(token, '0xc778417E063141139Fce010982780140Aa0cD5Ab').then(res => {
+  //     // console.log(res)
+  //   })
+  // }
 
   useEffect(() => {
     if (approvalDone) {
@@ -123,17 +147,21 @@ function Migrate({ token, done = false }) {
 
   const tryApproval = () => {
     setPendingApproval(true)
-    exchangeContractV1 &&
-      token &&
-      poolTokenBalanceV1 &&
-      exchangeContractV1
-        .approve(MIGRATOR_ADDRESS, poolTokenBalanceV1)
-        .then(response => {
-          addTransaction(response, { approval: token })
-        })
-        .catch(() => {
-          setPendingApproval(false)
-        })
+    setTimeout(function() {
+      setPendingApproval(false)
+      setApprovalDone(true)
+    }, 1000)
+    // exchangeContractV1 &&
+    //   token &&
+    //   v1BalanceFormatted &&
+    //   exchangeContractV1
+    //     .approve(MIGRATOR_ADDRESS, v1BalanceFormatted)
+    //     .then(response => {
+    //       addTransaction(response, { approval: token })
+    //     })
+    //     .catch(() => {
+    //       setPendingApproval(false)
+    //     })
   }
 
   // % above the calculated gas cost that we actually send, denominated in bips
@@ -141,134 +169,163 @@ function Migrate({ token, done = false }) {
 
   const tryMigration = async () => {
     setConfirmingMigration(true)
-    const now = Math.ceil(Date.now() / 1000)
-    const estimatedGasLimit = await migratorContract.estimate.migrate(
-      token,
-      0,
-      0,
-      account,
-      now + DEFAULT_DEADLINE_FROM_NOW
-    )
-    migratorContract
-      .migrate(token, 0, 0, account, now + DEFAULT_DEADLINE_FROM_NOW, {
-        gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
-      })
-      .then(response => {
-        setConfirmingMigration(false)
-        addTransaction(response, { migrate: token })
-      })
-      .catch(() => {
-        setConfirmingMigration(false)
-      })
+    // const now = Math.ceil(Date.now() / 1000)
+    // const estimatedGasLimit = await migratorContract.estimate.migrate(
+    //   token,
+    //   0,
+    //   0,
+    //   account,
+    //   now + DEFAULT_DEADLINE_FROM_NOW
+    // )
+    // migratorContract
+    //   .migrate(token, 0, 0, account, now + DEFAULT_DEADLINE_FROM_NOW, {
+    //     gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
+    //   })
+    //   .then(response => {
+    //     setConfirmingMigration(false)
+    //     addTransaction(response, { migrate: exchangeAddressV1 })
+    //   })
+    //   .catch(() => {
+    //     setConfirmingMigration(false)
+    //   })
+    setTimeout(function() {
+      setConfirmingMigration(false)
+      // setApprovalDone(true)
+      setPendingMigration(false)
+      setMigrationDone(true)
+      setV1Balance(ethers.utils.bigNumberify(0))
+      setV2Balance(ethers.utils.bigNumberify(4000000000000000))
+    }, 1000)
   }
+
+  const showCard1 = v1BalanceFormatted && !v1BalanceFormatted.isZero()
+
+  const transitions = useTransition(showCard1, null, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 }
+  })
 
   return (
     <div>
-      <Wrapper>
-        <Card outlined={open} style={migrated && !open ? { opacity: '0.9' } : {}}>
-          <Grouping>
-            {migrated ? (
-              <DoubleLogo
-                size="24px"
-                addressTwo={'0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'} //weth has better logo than eth
-                addressOne={token}
-              />
-            ) : (
-              <TokenLogo size="24px" address={token} />
-            )}
-            {migrated ? (
-              <BodyText>
-                {amountFormatter(poolTokenBalanceV1, 18, 6) < 0.00001
-                  ? '<0.00001 ' + allTokenDetails[token].symbol
-                  : amountFormatter(poolTokenBalanceV1, 18, 5) + ' ' + allTokenDetails[token].symbol}
-                <InlineSubText>/ETH</InlineSubText> Pool Tokens
-              </BodyText>
-            ) : (
-              <BodyText>
-                {amountFormatter(poolTokenBalanceV1, 18, 5) < 0.00001
-                  ? '<0.00001 ' + allTokenDetails[token].symbol
-                  : amountFormatter(poolTokenBalanceV1, 18, 6) + ' ' + allTokenDetails[token].symbol}{' '}
-                Pool Tokens
-              </BodyText>
-            )}
-            {migrated ? <Badge variant="green">V2</Badge> : <Badge variant="yellow">V1</Badge>}
-            {!open ? (
-              migrated ? (
-                <Icon variant="filled" fillColor="green2">
-                  ✓
-                </Icon>
-              ) : (
-                <Button
-                  onClick={() => {
-                    toggleOpen(true)
-                  }}
-                >
-                  Upgrade
-                </Button>
+      {
+        <Wrapper>
+          {transitions.map(
+            ({ item, key, props }) =>
+              item && (
+                <animated.div key={key} style={props}>
+                  <Card outlined={open} mt={'1rem'} style={migrationDone && !open ? { opacity: '0.9' } : {}}>
+                    <Grouping>
+                      {migrationDone ? (
+                        <DoubleLogo
+                          size="24px"
+                          addressTwo={'0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'} //weth has better logo than eth
+                          addressOne={token}
+                        />
+                      ) : (
+                        <TokenLogo size="24px" address={token} />
+                      )}
+                      {migrationDone ? (
+                        <BodyText>
+                          {amountFormatter(v1BalanceFormatted, 18, 6) < 0.00001
+                            ? '<0.00001 ' + allTokenDetails[token].symbol
+                            : amountFormatter(v1BalanceFormatted, 18, 5) + ' ' + allTokenDetails[token].symbol}
+                          <InlineSubText>/ETH</InlineSubText> Pool Tokens
+                        </BodyText>
+                      ) : (
+                        <BodyText>
+                          {amountFormatter(v1BalanceFormatted, 18, 5) < 0.00001
+                            ? '<0.00001 ' + allTokenDetails[token].symbol
+                            : amountFormatter(v1BalanceFormatted, 18, 6) + ' ' + allTokenDetails[token].symbol}{' '}
+                          Pool Tokens
+                        </BodyText>
+                      )}
+                      {migrationDone ? <Badge variant="green">V2</Badge> : <Badge variant="yellow">V1</Badge>}
+                      {!open ? (
+                        migrationDone ? (
+                          <Icon variant="filled" fillColor="green2">
+                            ✓
+                          </Icon>
+                        ) : (
+                          <Button
+                            onClick={() => {
+                              toggleOpen(true)
+                            }}
+                          >
+                            Upgrade
+                          </Button>
+                        )
+                      ) : (
+                        <CloseIcon
+                          onClick={() => {
+                            toggleOpen(false)
+                          }}
+                        />
+                      )}
+                    </Grouping>
+                  </Card>
+                  {open && (
+                    <BottomWrapper>
+                      <FormattedCard outlined={!approvalDone && 'outlined'}>
+                        <Row>
+                          <BodyText>Step 1</BodyText>
+                          {approvalDone ? <GreenText>✓</GreenText> : pendingApproval ? <Loader /> : ''}
+                        </Row>
+                        <Button
+                          variant={approvalDone && 'success'}
+                          py={18}
+                          onClick={() => {
+                            !approvalDone && tryApproval()
+                          }}
+                        >
+                          {approvalDone
+                            ? 'Confirmed'
+                            : pendingApproval
+                            ? 'Waiting For Confirmation...'
+                            : 'Approve for upgrade'}
+                        </Button>
+                        <SubText>The upgrade helper needs your permssion to upgrade on your behalf</SubText>
+                      </FormattedCard>
+                      <FormattedCard outlined={approvalDone && 'outlined'}>
+                        <Row>
+                          <BodyText>Step 2</BodyText>
+                          {pendingMigration || confirmingMigration ? (
+                            <Loader />
+                          ) : migrationDone ? (
+                            <GreenText>✓</GreenText>
+                          ) : approvalDone ? (
+                            ''
+                          ) : (
+                            <Icon icon={Lock} />
+                          )}
+                        </Row>
+                        <Button
+                          variant={migrationDone && 'success'}
+                          disabled={!approvalDone}
+                          py={18}
+                          onClick={() => {
+                            !migrationDone && tryMigration()
+                          }}
+                        >
+                          {pendingMigration || confirmingMigration
+                            ? 'Waiting For Confirmation...'
+                            : migrationDone
+                            ? 'Confirmed'
+                            : 'Migrate Liquidity'}
+                        </Button>
+                        <SubText>
+                          Your {symbol} Liquidity will appear as {symbol}/ETH wth a new icon. <Link>Read more.</Link>
+                        </SubText>
+                      </FormattedCard>
+                    </BottomWrapper>
+                  )}
+                </animated.div>
               )
-            ) : (
-              <CloseIcon
-                onClick={() => {
-                  toggleOpen(false)
-                }}
-              />
-            )}
-          </Grouping>
-        </Card>
-        {open && (
-          <BottomWrapper>
-            <FormattedCard outlined={!approvalDone && 'outlined'}>
-              <Row>
-                <BodyText>Step 1</BodyText>
-                {approvalDone ? <GreenText>✓</GreenText> : pendingApproval ? <Loader /> : ''}
-              </Row>
-              <Button
-                variant={approvalDone && 'success'}
-                py={18}
-                onClick={() => {
-                  !approvalDone && tryApproval()
-                }}
-              >
-                {approvalDone ? 'Confirmed' : pendingApproval ? 'Waiting For Confirmation...' : 'Approve for upgrade'}
-              </Button>
-              <SubText>The upgrade helper needs your permssion to upgrade on your behalf</SubText>
-            </FormattedCard>
-            <FormattedCard outlined={approvalDone && 'outlined'}>
-              <Row>
-                <BodyText>Step 2</BodyText>
-                {pendingMigration || confirmingMigration ? (
-                  <Loader />
-                ) : migrationDone ? (
-                  <GreenText>✓</GreenText>
-                ) : approvalDone ? (
-                  ''
-                ) : (
-                  <Icon icon={Lock} />
-                )}
-              </Row>
-              <Button
-                variant={migrationDone && 'success'}
-                disabled={!approvalDone}
-                py={18}
-                onClick={() => {
-                  !migrationDone && tryMigration()
-                }}
-              >
-                {pendingMigration || confirmingMigration
-                  ? 'Waiting For Confirmation...'
-                  : migrationDone
-                  ? 'Confirmed'
-                  : 'Migrate Liquidity'}
-              </Button>
-              <SubText>
-                Your {symbol} Liquidity will appear as {symbol}/ETH wth a new icon. <Link>Read more.</Link>
-              </SubText>
-            </FormattedCard>
-          </BottomWrapper>
-        )}
-      </Wrapper>
-      {poolTokenBalanceV2 && (
-        <Card style={{ opacity: '0.7', marginTop: '1rem' }}>
+          )}
+        </Wrapper>
+      }
+      {v2BalanceFormatted && (
+        <Card style={{ opacity: '0.7' }} mt={'1rem'}>
           <Grouping>
             <DoubleLogo
               size="24px"
@@ -276,9 +333,9 @@ function Migrate({ token, done = false }) {
               addressOne={token}
             />
             <BodyText>
-              {amountFormatter(poolTokenBalanceV2, 18, 6) < 0.00001
+              {amountFormatter(v2BalanceFormatted, 18, 6) < 0.00001
                 ? '<0.00001 ' + allTokenDetails[token].symbol
-                : amountFormatter(poolTokenBalanceV2, 18, 5) + ' ' + allTokenDetails[token].symbol}
+                : amountFormatter(v2BalanceFormatted, 18, 5) + ' ' + allTokenDetails[token].symbol}
               <InlineSubText>/ETH</InlineSubText> Pool Tokens
             </BodyText>
             <Badge variant="green">V2</Badge>

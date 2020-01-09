@@ -191,7 +191,7 @@ export function usePendingApproval(tokenAddress) {
   )
 }
 
-export function usePendingMigrate(tokenAddress) {
+export function usePendingMigrate(exchangeAddress) {
   const allTransactions = useAllTransactions()
 
   return (
@@ -200,7 +200,7 @@ export function usePendingMigrate(tokenAddress) {
         return false
       } else if (!allTransactions[hash][RESPONSE]) {
         return false
-      } else if (allTransactions[hash][RESPONSE][CUSTOM_DATA].migrate !== tokenAddress) {
+      } else if (allTransactions[hash][RESPONSE][CUSTOM_DATA].migrate !== exchangeAddress) {
         return false
       } else {
         return true
@@ -209,11 +209,11 @@ export function usePendingMigrate(tokenAddress) {
   )
 }
 
-export function useDoneMigrate(tokenAddress) {
+export function useDoneMigrate(exchangeAddress) {
   const allTransactions = useAllTransactions()
   return (
     Object.keys(allTransactions).filter(hash => {
-      if (allTransactions[hash][RECEIPT] && allTransactions[hash][RESPONSE][CUSTOM_DATA].migrate === tokenAddress) {
+      if (allTransactions[hash][RECEIPT] && allTransactions[hash][RESPONSE][CUSTOM_DATA].migrate === exchangeAddress) {
         return true
       } else {
         return false

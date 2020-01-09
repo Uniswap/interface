@@ -63,7 +63,7 @@ const bounceIn = keyframes`
   }
 `
 const AnimatedUnit = styled.div`
-  animation: ${bounceIn} 0.4s 0s cubic-bezier(0.175, 0.885, 0.32, 1.075) forwards;
+  /* animation: ${bounceIn} 0.4s 0s cubic-bezier(0.175, 0.885, 0.32, 1.075) forwards; */
 `
 
 function Migrate() {
