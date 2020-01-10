@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 import { withRouter } from 'react-router'
 import styled, { keyframes } from 'styled-components'
-import { animated, useTransition, useSpring } from 'react-spring'
+import { animated, useTransition } from 'react-spring'
 
 import { useWeb3React, useContract, useExchangeContract, usePrevious } from '../../hooks'
 import { useAllTokenDetails } from '../../contexts/Tokens'
@@ -10,7 +10,7 @@ import { useTransactionAdder, usePendingMigrate, useDoneMigrate } from '../../co
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useAddressBalance } from '../../contexts/Balances'
 
-import { calculateGasMargin, amountFormatter, getV2FactoryContract } from '../../utils'
+import { calculateGasMargin, amountFormatter } from '../../utils'
 
 import Card from '../Card'
 import TokenLogo from '../TokenLogo'
@@ -26,7 +26,6 @@ import { TextBlock } from '../Text'
 import Lock from '../../assets/images/lock.png'
 import MIGRATOR_ABI from '../../constants/abis/migrator'
 import { MIGRATOR_ADDRESS } from '../../constants'
-import { BigNumber } from 'ethers/utils'
 
 const BodyText = styled(TextBlock)`
   font-size: 20px;
@@ -103,124 +102,47 @@ const AnimnatedCard = styled(Card)`
   animation-iteration-count: infinite;
 `
 
+// % above the calculated gas cost that we actually send, denominated in bips
+const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 const DEFAULT_DEADLINE_FROM_NOW = 60 * 15
 
 function Migrate({ token }) {
   const [open, toggleOpen] = useState(false)
 
-  const { account, chainId, library } = useWeb3React()
+  const { account } = useWeb3React()
   const allTokenDetails = useAllTokenDetails()
   const addTransaction = useTransactionAdder()
 
   const symbol = allTokenDetails[token].symbol
   const exchangeAddressV1 = allTokenDetails[token].exchangeAddress
-  let exchangeAddressV2 = allTokenDetails[token].exchangeAddressV2
+  const exchangeAddressV2 = allTokenDetails[token].exchangeAddressV2
 
   const exchangeContractV1 = useExchangeContract(exchangeAddressV1)
   const migratorContract = useContract(MIGRATOR_ADDRESS, MIGRATOR_ABI)
 
-  // const v1Balance = useAddressBalance(account, exchangeAddressV1)
-  // const v1BalanceFormatted = v1Balance && ethers.utils.bigNumberify(v1Balance)
-  // const v2Balance = useAddressBalance(account, exchangeAddressV2)
-  // const v2BalanceFormatted = v2Balance && ethers.utils.bigNumberify(v2Balance)
+  const v1Balance = useAddressBalance(account, exchangeAddressV1)
+  const v1BalanceFormatted = v1Balance && ethers.utils.bigNumberify(v1Balance)
 
-  const [v1BalanceFormatted, setV1Balance] = useState(ethers.utils.bigNumberify(2000000000000000))
-  const [v2BalanceFormatted, setV2Balance] = useState(ethers.utils.bigNumberify(0))
-  const v2Previous = usePrevious(v2BalanceFormatted)
-
-  const [triggerFlash, setTriggerFlash] = useState(false)
-
-  useEffect(() => {})
+  const v2Balance = useAddressBalance(account, exchangeAddressV2)
+  const v2BalanceFormatted = v2Balance && ethers.utils.bigNumberify(v2Balance)
+  const v2BalancePrevious = usePrevious(v2BalanceFormatted) // used to see if balance increases
 
   const tokenAllowance = useAddressAllowance(account, exchangeAddressV1, MIGRATOR_ADDRESS)
 
   const [pendingApproval, setPendingApproval] = useState(false)
-  // const pendingMigration = usePendingMigrate(exchangeAddressV1)
+  const approvalDone = tokenAllowance && token && v1BalanceFormatted && tokenAllowance.gte(v1BalanceFormatted)
+
   const [pendingMigration, setPendingMigration] = useState(false)
-  const [confirmingMigration, setConfirmingMigration] = useState(false)
+  const migrationDone = useDoneMigrate(exchangeAddressV1)
 
-  // const approvalDone = tokenAllowance && token && v1BalanceFormatted && tokenAllowance.gte(v1BalanceFormatted)
-  const [approvalDone, setApprovalDone] = useState(false)
-  // const migrationDone = useDoneMigrate(exchangeAddressV1)
-  const [migrationDone, setMigrationDone] = useState(false)
-
-  useEffect(() => {
-    if (migrationDone) {
-      if (!exchangeAddressV2) {
-      }
-    }
-  }, [migrationDone, exchangeAddressV2])
-
-  // if (token && chainId && library && account) {
-  //   const newE = getV2FactoryContract(chainId, library, account)
-  //   let newExchange = newE.getExchange(token, '0xc778417E063141139Fce010982780140Aa0cD5Ab').then(res => {
-  //     // console.log(res)
-  //   })
-  // }
-
-  useEffect(() => {
-    if (approvalDone) {
-      setPendingApproval(false)
-    }
-  }, [approvalDone])
-
-  const tryApproval = () => {
-    setPendingApproval(true)
-    setTimeout(function() {
-      setPendingApproval(false)
-      setApprovalDone(true)
-    }, 1000)
-    // exchangeContractV1 &&
-    //   token &&
-    //   v1BalanceFormatted &&
-    //   exchangeContractV1
-    //     .approve(MIGRATOR_ADDRESS, v1BalanceFormatted)
-    //     .then(response => {
-    //       addTransaction(response, { approval: token })
-    //     })
-    //     .catch(() => {
-    //       setPendingApproval(false)
-    //     })
-  }
-
-  // % above the calculated gas cost that we actually send, denominated in bips
-  const GAS_MARGIN = ethers.utils.bigNumberify(1000)
-
-  const tryMigration = async () => {
-    setConfirmingMigration(true)
-    // const now = Math.ceil(Date.now() / 1000)
-    // const estimatedGasLimit = await migratorContract.estimate.migrate(
-    //   token,
-    //   0,
-    //   0,
-    //   account,
-    //   now + DEFAULT_DEADLINE_FROM_NOW
-    // )
-    // migratorContract
-    //   .migrate(token, 0, 0, account, now + DEFAULT_DEADLINE_FROM_NOW, {
-    //     gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
-    //   })
-    //   .then(response => {
-    //     setConfirmingMigration(false)
-    //     addTransaction(response, { migrate: exchangeAddressV1 })
-    //   })
-    //   .catch(() => {
-    //     setConfirmingMigration(false)
-    //   })
-    setTimeout(function() {
-      setConfirmingMigration(false)
-      // setApprovalDone(true)
-      setPendingMigration(false)
-      setMigrationDone(true)
-      setV1Balance(ethers.utils.bigNumberify(0))
-      setV2Balance(ethers.utils.bigNumberify(4000000000000000))
-    }, 1000)
-  }
-
-  const showCard1 =
-    v1BalanceFormatted && !v1BalanceFormatted.isZero() && v2BalanceFormatted && !v2BalanceFormatted.isZero()
-
+  const hasV1 = v1BalanceFormatted && !v1BalanceFormatted.isZero()
   const hasV2 = v2BalanceFormatted && !v2BalanceFormatted.isZero()
+  const showCard1 = hasV1 && hasV2
+  const showCard2 = hasV1 || hasV2
+
+  if (token === '0x0a2C9aEb943D4Be25c586CA1A3cC60Df908Db531') {
+    // console.log(showCard2)
+  }
 
   const transitionsCard1 = useTransition(showCard1, null, {
     from: { opacity: 0 },
@@ -228,22 +150,82 @@ function Migrate({ token }) {
     leave: { opacity: 0 }
   })
 
-  const transitionsCard2 = useTransition(true, null, {
+  const transitionsCard2 = useTransition(showCard2, null, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 }
   })
 
+  const [triggerFlash, setTriggerFlash] = useState(false)
+
+  // reset pending state when on-chain data updates
   useEffect(() => {
-    if (v2BalanceFormatted > v2Previous) {
+    if (approvalDone) {
+      setPendingApproval(false)
+    }
+  }, [approvalDone])
+
+  useEffect(() => {
+    if (migrationDone) {
+      setPendingMigration(false)
+    }
+  }, [migrationDone])
+
+  // close card on balance change
+  useEffect(() => {
+    if (!hasV1) {
+      toggleOpen(false)
+    }
+  }, [hasV1])
+
+  // trigger flash if new v2 liquidity detected
+  useEffect(() => {
+    if (v2BalanceFormatted > v2BalancePrevious) {
       setTimeout(() => {
         setTriggerFlash(true)
       }, 1000)
       setTimeout(() => {
         setTriggerFlash(false)
-      }, 3000)
+      }, 4000)
     }
-  }, [v2BalanceFormatted, v2Previous])
+  }, [v2BalanceFormatted, v2BalancePrevious])
+
+  const tryApproval = () => {
+    setPendingApproval(true)
+    exchangeContractV1 &&
+      token &&
+      v1BalanceFormatted &&
+      exchangeContractV1
+        .approve(MIGRATOR_ADDRESS, v1BalanceFormatted)
+        .then(response => {
+          addTransaction(response, { approval: token })
+        })
+        .catch(() => {
+          setPendingApproval(false)
+        })
+  }
+
+  const tryMigration = async () => {
+    setPendingMigration(true)
+    const now = Math.ceil(Date.now() / 1000)
+    const estimatedGasLimit = await migratorContract.estimate.migrate(
+      token,
+      0,
+      0,
+      account,
+      now + DEFAULT_DEADLINE_FROM_NOW
+    )
+    migratorContract
+      .migrate(token, 0, 0, account, now + DEFAULT_DEADLINE_FROM_NOW, {
+        gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
+      })
+      .then(response => {
+        addTransaction(response, { migrate: exchangeAddressV1 })
+      })
+      .catch(() => {
+        setPendingMigration(false)
+      })
+  }
 
   return (
     <div>
@@ -253,7 +235,7 @@ function Migrate({ token }) {
             <animated.div key={key} style={props}>
               <AnimnatedCard
                 outlined={open}
-                mt={'1rem'}
+                mt={20}
                 style={migrationDone && !open ? { opacity: '0.9' } : {}}
                 active={triggerFlash}
               >
@@ -308,7 +290,7 @@ function Migrate({ token }) {
                   <FormattedCard outlined={approvalDone && 'outlined'}>
                     <Row>
                       <BodyText>Step 2</BodyText>
-                      {pendingMigration || confirmingMigration ? <Loader /> : approvalDone ? '' : <Icon icon={Lock} />}
+                      {pendingMigration ? <Loader /> : approvalDone ? '' : <Icon icon={Lock} />}
                     </Row>
                     <Button
                       variant={migrationDone && 'success'}
@@ -318,7 +300,7 @@ function Migrate({ token }) {
                         !migrationDone && tryMigration()
                       }}
                     >
-                      {pendingMigration || confirmingMigration
+                      {pendingMigration
                         ? 'Waiting For Confirmation...'
                         : migrationDone
                         ? 'Confirmed'
@@ -338,9 +320,9 @@ function Migrate({ token }) {
           item && (
             <animated.div key={key} style={props}>
               <AnimnatedCard
-                outlined={open}
-                mt={'1rem'}
-                style={hasV2 || (!hasV2 && migrationDone && !open) ? { opacity: '0.6' } : {}}
+                outlined={!hasV2 && open}
+                mt={20}
+                style={hasV2 || (!hasV2 && migrationDone && !open) ? { opacity: '0.9' } : {}}
                 active={triggerFlash}
               >
                 <Grouping>
@@ -361,12 +343,14 @@ function Migrate({ token }) {
                       <InlineSubText>/ETH</InlineSubText> Pool Tokens
                     </BodyText>
                   ) : (
-                    <BodyText>
-                      {amountFormatter(v1BalanceFormatted, 18, 5) < 0.00001
-                        ? '<0.00001 ' + allTokenDetails[token].symbol
-                        : amountFormatter(v1BalanceFormatted, 18, 6) + ' ' + allTokenDetails[token].symbol}{' '}
-                      Pool Tokens
-                    </BodyText>
+                    hasV1 && (
+                      <BodyText>
+                        {amountFormatter(v1BalanceFormatted, 18, 5) < 0.00001
+                          ? '<0.00001 ' + allTokenDetails[token].symbol
+                          : amountFormatter(v1BalanceFormatted, 18, 6) + ' ' + allTokenDetails[token].symbol}{' '}
+                        Pool Tokens
+                      </BodyText>
+                    )
                   )}
                   {hasV2 ? <Badge variant="green">V2</Badge> : <Badge variant="yellow">V1</Badge>}
                   {hasV2 || (!hasV2 && !open) ? (
@@ -417,7 +401,7 @@ function Migrate({ token }) {
                   <FormattedCard outlined={approvalDone && 'outlined'}>
                     <Row>
                       <BodyText>Step 2</BodyText>
-                      {!hasV2 && (pendingMigration || confirmingMigration) ? (
+                      {!hasV2 && pendingMigration ? (
                         <Loader />
                       ) : hasV2 ? (
                         <GreenText>✓</GreenText>
@@ -435,7 +419,7 @@ function Migrate({ token }) {
                         !migrationDone && tryMigration()
                       }}
                     >
-                      {pendingMigration || confirmingMigration
+                      {pendingMigration
                         ? 'Waiting For Confirmation...'
                         : migrationDone
                         ? 'Confirmed'

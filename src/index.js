@@ -9,7 +9,7 @@ import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } fr
 import ApplicationContextProvider, { Updater as ApplicationContextUpdater } from './contexts/Application'
 import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
 import BalancesContextProvider, { Updater as BalancesContextUpdater } from './contexts/Balances'
-import TokensContextProvider from './contexts/Tokens'
+import TokensContextProvider, { Updater as TokensContextUpdater } from './contexts/Tokens'
 import AllowancesContextProvider from './contexts/Allowances'
 import App from './pages/App'
 import ThemeProvider, { GlobalStyle } from './theme'
@@ -53,6 +53,7 @@ function Updaters() {
       <ApplicationContextUpdater />
       <TransactionContextUpdater />
       <BalancesContextUpdater />
+      <TokensContextUpdater />
     </>
   )
 }

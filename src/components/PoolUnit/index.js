@@ -125,7 +125,7 @@ function Migrate({ token }) {
   // const v2BalanceFormatted = v2Balance && ethers.utils.bigNumberify(v2Balance)
 
   const [v1BalanceFormatted, setV1Balance] = useState(ethers.utils.bigNumberify(2000000000000000))
-  const [v2BalanceFormatted, setV2Balance] = useState(ethers.utils.bigNumberify(2000000000000000))
+  const [v2BalanceFormatted, setV2Balance] = useState(ethers.utils.bigNumberify(0))
   const v2Previous = usePrevious(v2BalanceFormatted)
 
   const [triggerFlash, setTriggerFlash] = useState(false)

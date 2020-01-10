@@ -4,12 +4,13 @@ import { withRouter } from 'react-router'
 import styled, { keyframes } from 'styled-components'
 
 import { useAllBalances } from '../contexts/Balances'
-import { useAllTokenDetails } from '../contexts/Tokens'
+import { useAllTokenDetails, useTokenDetails } from '../contexts/Tokens'
 import { useWeb3React } from '../hooks'
 
 import Card from '../components/CardStyled'
 import LoaderLight from '../components/Loader'
 import PoolUnit from '../components/PoolUnit3'
+import { isAddress } from '../utils'
 
 const Wrapper = styled.div`
   display: flex;
@@ -39,7 +40,7 @@ const Column = styled.div`
   display: flex;
   flex-direction: column;
   & > div {
-    margin-top: 1rem;
+    /* margin-top: 20px; */
   }
 `
 
@@ -52,18 +53,23 @@ const LoadingCard = styled(Card)`
   background-image: linear-gradient(90deg, #f2f2f2 0px, #f8f8f8 20%, #f2f2f2 50%);
   background-size: 200%;
   animation: ${shine} 0.8s infinite linear;
+  margin-top: 20px;
 `
 
-const bounceIn = keyframes`
-  from {
-    transform: translateZ(0) scale(0);
-  }
-  to{
-    transform: translateZ(0) scale(1);
-  }
+const InputHeader = styled.span`
+  font-weight: 500;
+  padding: 1rem 0;
 `
-const AnimatedUnit = styled.div`
-  /* animation: ${bounceIn} 0.4s 0s cubic-bezier(0.175, 0.885, 0.32, 1.075) forwards; */
+
+const Input = styled.input`
+  border-radius: 10px;
+  font-size: 16px;
+  border: 1px solid ${({ theme }) => theme.colors.grey3};
+  color: ${({ theme }) => theme.colors.grey5};
+  padding: 8px 10px;
+  outline: none;
+  -webkit-appearance: none;
+  margin-bottom: 20px;
 `
 
 function Migrate() {
@@ -76,6 +82,10 @@ function Migrate() {
   const [userLPTokens, setUserLPTokens] = useState()
 
   const [poolAmount, setPoolAmount] = useState()
+
+  const [userInput, setUserInput] = useState()
+
+  useTokenDetails(userInput)
 
   // get V1 LP balances
   useEffect(() => {
@@ -119,7 +129,11 @@ function Migrate() {
     }
   }, [account, allBalances, allTokenDetails])
 
-  const fetching = !(allBalances && allBalances[account])
+  const [fetching, setFetching] = useState()
+
+  useEffect(() => {
+    setFetching(!(allBalances && allBalances[account]))
+  }, [allBalances, account, allTokenDetails])
 
   return (
     <Wrapper>
@@ -135,6 +149,14 @@ function Migrate() {
           )}
         </SubText>
       </Row>
+      <InputHeader>Dont see your liquidity ? Enter a token address here.</InputHeader>
+      <Input
+        onChange={e => {
+          setUserInput(e.target.value)
+        }}
+        placeholder={'Search token address'}
+        value={userInput}
+      />
       {fetching ? (
         <Column>
           <LoadingCard height={80} />
@@ -142,14 +164,7 @@ function Migrate() {
           <LoadingCard height={80} />
         </Column>
       ) : (
-        <Column>
-          {userLPTokens &&
-            userLPTokens.map(token => (
-              <AnimatedUnit key={token}>
-                <PoolUnit token={token} />
-              </AnimatedUnit>
-            ))}
-        </Column>
+        <Column>{userLPTokens && userLPTokens.map(token => <PoolUnit token={token} key={token} />)}</Column>
       )}
     </Wrapper>
   )

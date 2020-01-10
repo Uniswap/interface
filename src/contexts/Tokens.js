@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
+import { useBlockNumber } from './Application'
 
 import { useWeb3React } from '../hooks'
 import {
@@ -7,7 +8,8 @@ import {
   getTokenSymbol,
   getTokenDecimals,
   getTokenExchangeAddressFromFactory,
-  safeAccess
+  safeAccess,
+  getV2FactoryContract
 } from '../utils'
 
 const NAME = 'name'
@@ -536,14 +538,14 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x9c92A4582Ad8e3D731a73B47B2C6e32Cc0fE9CD9',
       [EXCHANGE_ADDRESS_V2]: '0xa9dCEFFf40dA7329562E7FA4CE7bD52bf4beA453'
-    }
-    // '0x0a2C9aEb943D4Be25c586CA1A3cC60Df908Db531': {
-    //   [NAME]: 'IanCoin',
-    //   [SYMBOL]: 'IAN',
-    //   [DECIMALS]: 18,
-    //   [EXCHANGE_ADDRESS]: '0x70b4aa67Ffa8501105a85547a3074307762907eC',
-    //   [EXCHANGE_ADDRESS_V2]: '0xce59dfa1B417cdeF866A2932769F80F30F47587f'
-    // },
+    },
+    '0x0a2C9aEb943D4Be25c586CA1A3cC60Df908Db531': {
+      [NAME]: 'IanCoin',
+      [SYMBOL]: 'IAN',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x70b4aa67Ffa8501105a85547a3074307762907eC'
+      // [EXCHANGE_ADDRESS_V2]: '0xce59dfa1B417cdeF866A2932769F80F30F47587f'
+    },
     // '0xc300A55543AEfB4da5a47e4525E287b3902aFfB5': {
     //   [NAME]: 'Other Coin',
     //   [SYMBOL]: 'OTHER',
@@ -551,6 +553,13 @@ const INITIAL_TOKENS_CONTEXT = {
     //   [EXCHANGE_ADDRESS]: '0x9a3a26155add0bb4e8b961537cb9f1ed051927cf',
     //   [EXCHANGE_ADDRESS_V2]: '0x3f6a1c056354af7e55f8486766fda345a32f463e'
     // }
+    '0xa663442cCe1d5764c27b0D624931b114998Ef1bD': {
+      [NAME]: 'Tester Coin',
+      [SYMBOL]: 'TESTER',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x19236145906bbf467683cb824b51a7fce541a9b1'
+      // [EXCHANGE_ADDRESS_V2]: '0xa9dCEFFf40dA7329562E7FA4CE7bD52bf4beA453'
+    }
   }
 }
 
@@ -563,7 +572,7 @@ function useTokensContext() {
 function reducer(state, { type, payload }) {
   switch (type) {
     case UPDATE: {
-      const { networkId, tokenAddress, name, symbol, decimals, exchangeAddress } = payload
+      const { networkId, tokenAddress, name, symbol, decimals, exchangeAddress, exchangeAddressV2 } = payload
       return {
         ...state,
         [networkId]: {
@@ -572,7 +581,8 @@ function reducer(state, { type, payload }) {
             [NAME]: name,
             [SYMBOL]: symbol,
             [DECIMALS]: decimals,
-            [EXCHANGE_ADDRESS]: exchangeAddress
+            [EXCHANGE_ADDRESS]: exchangeAddress,
+            [EXCHANGE_ADDRESS_V2]: exchangeAddressV2
           }
         }
       }
@@ -586,8 +596,11 @@ function reducer(state, { type, payload }) {
 export default function Provider({ children }) {
   const [state, dispatch] = useReducer(reducer, INITIAL_TOKENS_CONTEXT)
 
-  const update = useCallback((networkId, tokenAddress, name, symbol, decimals, exchangeAddress) => {
-    dispatch({ type: UPDATE, payload: { networkId, tokenAddress, name, symbol, decimals, exchangeAddress } })
+  const update = useCallback((networkId, tokenAddress, name, symbol, decimals, exchangeAddress, exchangeAddressV2) => {
+    dispatch({
+      type: UPDATE,
+      payload: { networkId, tokenAddress, name, symbol, decimals, exchangeAddress, exchangeAddressV2 }
+    })
   }, [])
 
   return (
@@ -595,6 +608,43 @@ export default function Provider({ children }) {
       {children}
     </TokensContext.Provider>
   )
+}
+
+export function Updater() {
+  const { library, chainId, account } = useWeb3React()
+  const [, { update }] = useTokensContext()
+
+  const allTokens = useAllTokenDetails()
+
+  const globalBlockNumber = useBlockNumber()
+
+  useEffect(() => {
+    Object.keys(allTokens)
+      .filter(tokenAddress => tokenAddress !== 'ETH')
+      .map(token => {
+        if (!allTokens[token].exchangeAddressV2) {
+          const v2Factory = getV2FactoryContract(chainId, library, account)
+          if (v2Factory) {
+            v2Factory.getExchange(token, '0xc778417E063141139Fce010982780140Aa0cD5Ab').then(res => {
+              if (isAddress(res)) {
+                update(
+                  chainId,
+                  token,
+                  allTokens[token].name,
+                  allTokens[token].symbol,
+                  allTokens[token].decimals,
+                  allTokens[token].exchangeAddress,
+                  res
+                )
+              }
+            })
+          }
+        }
+        return true
+      })
+  }, [globalBlockNumber, allTokens, chainId, account, library, update])
+
+  return true
 }
 
 export function useTokenDetails(tokenAddress) {
