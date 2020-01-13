@@ -6,7 +6,7 @@ import { animated, useTransition } from 'react-spring'
 
 import { useWeb3React, useContract, useExchangeContract, usePrevious } from '../../hooks'
 import { useAllTokenDetails } from '../../contexts/Tokens'
-import { useTransactionAdder, usePendingMigrate, useDoneMigrate } from '../../contexts/Transactions'
+import { useTransactionAdder, useDoneMigrate } from '../../contexts/Transactions'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useAddressBalance } from '../../contexts/Balances'
 
@@ -92,7 +92,6 @@ const flash = keyframes`
     border: 1px solid #27AE60;
   }
   100% {
-   
   }
 `
 
@@ -137,24 +136,6 @@ function Migrate({ token }) {
 
   const hasV1 = v1BalanceFormatted && !v1BalanceFormatted.isZero()
   const hasV2 = v2BalanceFormatted && !v2BalanceFormatted.isZero()
-  const showCard1 = hasV1 && hasV2
-  const showCard2 = hasV1 || hasV2
-
-  if (token === '0x0a2C9aEb943D4Be25c586CA1A3cC60Df908Db531') {
-    // console.log(showCard2)
-  }
-
-  const transitionsCard1 = useTransition(showCard1, null, {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 }
-  })
-
-  const transitionsCard2 = useTransition(showCard2, null, {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 }
-  })
 
   const [triggerFlash, setTriggerFlash] = useState(false)
 
@@ -227,91 +208,130 @@ function Migrate({ token }) {
       })
   }
 
+  function V1Card() {
+    return (
+      <>
+        <AnimnatedCard outlined={open} mt={20}>
+          <Grouping>
+            <TokenLogo size="24px" address={token} />
+            <BodyText>
+              {amountFormatter(v1BalanceFormatted, 18, 5) < 0.00001
+                ? '<0.00001 ' + allTokenDetails[token].symbol
+                : amountFormatter(v1BalanceFormatted, 18, 6) + ' ' + allTokenDetails[token].symbol}{' '}
+              Pool Tokens
+            </BodyText>
+            <Badge variant="yellow">V1</Badge>
+            {!open ? (
+              <Button
+                onClick={() => {
+                  toggleOpen(true)
+                }}
+              >
+                Upgrade
+              </Button>
+            ) : (
+              <CloseIcon
+                onClick={() => {
+                  toggleOpen(false)
+                }}
+              />
+            )}
+          </Grouping>
+        </AnimnatedCard>
+        {open && (
+          <BottomWrapper>
+            <FormattedCard outlined={!approvalDone && 'outlined'}>
+              <Row>
+                <BodyText>Step 1</BodyText>
+                {approvalDone ? <GreenText>✓</GreenText> : pendingApproval ? <Loader /> : ''}
+              </Row>
+              <Button
+                variant={approvalDone && 'success'}
+                py={18}
+                onClick={() => {
+                  !approvalDone && tryApproval()
+                }}
+              >
+                {approvalDone ? 'Confirmed' : pendingApproval ? 'Waiting For Confirmation...' : 'Approve for upgrade'}
+              </Button>
+              <SubText>The upgrade helper needs your permssion to upgrade on your behalf</SubText>
+            </FormattedCard>
+            <FormattedCard outlined={approvalDone && 'outlined'}>
+              <Row>
+                <BodyText>Step 2</BodyText>
+                {pendingMigration ? <Loader /> : approvalDone ? '' : <Icon icon={Lock} />}
+              </Row>
+              <Button
+                variant={migrationDone && 'success'}
+                disabled={!approvalDone}
+                py={18}
+                onClick={() => {
+                  !migrationDone && tryMigration()
+                }}
+              >
+                {pendingMigration ? 'Waiting For Confirmation...' : migrationDone ? 'Confirmed' : 'Migrate Liquidity'}
+              </Button>
+              <SubText>
+                Your {symbol} Liquidity will appear as {symbol}/ETH wth a new icon. <Link>Read more.</Link>
+              </SubText>
+            </FormattedCard>
+          </BottomWrapper>
+        )}
+      </>
+    )
+  }
+
+  function V2Card() {
+    return (
+      <AnimnatedCard mt={20} style={{ opacity: '0.9' }} active={triggerFlash}>
+        <Grouping>
+          <DoubleLogo
+            size="24px"
+            addressTwo={'0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'} //weth has better logo than eth
+            addressOne={token}
+          />
+          <BodyText>
+            {amountFormatter(v2BalanceFormatted, 18, 6) < 0.00001
+              ? '<0.00001 ' + allTokenDetails[token].symbol
+              : amountFormatter(v2BalanceFormatted, 18, 5) + ' ' + allTokenDetails[token].symbol}
+            <InlineSubText>/ETH</InlineSubText> Pool Tokens
+          </BodyText>
+          <Badge variant="green">V2</Badge>
+          <Icon variant="filled" fillColor="green2">
+            ✓
+          </Icon>
+        </Grouping>
+      </AnimnatedCard>
+    )
+  }
+
+  /**
+   * Cases (there must be some balance)
+   *
+   * Only v1 balance -> second card shows v1 info and then updated v2
+   * Ony v2 -> second card shows v2 info
+   * Both -> first card shows v1 info until its migrated away, second card always shows v2 info
+   */
+
+  const transitionsCard1 = useTransition(hasV1 && hasV2, null, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 }
+  })
+
+  const transitionsCard2 = useTransition(hasV1 || hasV2, null, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 }
+  })
+
   return (
     <div>
       {transitionsCard1.map(
         ({ item, key, props }) =>
           item && (
             <animated.div key={key} style={props}>
-              <AnimnatedCard
-                outlined={open}
-                mt={20}
-                style={migrationDone && !open ? { opacity: '0.9' } : {}}
-                active={triggerFlash}
-              >
-                <Grouping>
-                  <TokenLogo size="24px" address={token} />
-                  <BodyText>
-                    {amountFormatter(v1BalanceFormatted, 18, 5) < 0.00001
-                      ? '<0.00001 ' + allTokenDetails[token].symbol
-                      : amountFormatter(v1BalanceFormatted, 18, 6) + ' ' + allTokenDetails[token].symbol}{' '}
-                    Pool Tokens
-                  </BodyText>
-                  <Badge variant="yellow">V1</Badge>
-                  {!open ? (
-                    <Button
-                      onClick={() => {
-                        toggleOpen(true)
-                      }}
-                    >
-                      Upgrade
-                    </Button>
-                  ) : (
-                    <CloseIcon
-                      onClick={() => {
-                        toggleOpen(false)
-                      }}
-                    />
-                  )}
-                </Grouping>
-              </AnimnatedCard>
-              {open && (
-                <BottomWrapper>
-                  <FormattedCard outlined={!approvalDone && 'outlined'}>
-                    <Row>
-                      <BodyText>Step 1</BodyText>
-                      {approvalDone ? <GreenText>✓</GreenText> : pendingApproval ? <Loader /> : ''}
-                    </Row>
-                    <Button
-                      variant={approvalDone && 'success'}
-                      py={18}
-                      onClick={() => {
-                        !approvalDone && tryApproval()
-                      }}
-                    >
-                      {approvalDone
-                        ? 'Confirmed'
-                        : pendingApproval
-                        ? 'Waiting For Confirmation...'
-                        : 'Approve for upgrade'}
-                    </Button>
-                    <SubText>The upgrade helper needs your permssion to upgrade on your behalf</SubText>
-                  </FormattedCard>
-                  <FormattedCard outlined={approvalDone && 'outlined'}>
-                    <Row>
-                      <BodyText>Step 2</BodyText>
-                      {pendingMigration ? <Loader /> : approvalDone ? '' : <Icon icon={Lock} />}
-                    </Row>
-                    <Button
-                      variant={migrationDone && 'success'}
-                      disabled={!approvalDone}
-                      py={18}
-                      onClick={() => {
-                        !migrationDone && tryMigration()
-                      }}
-                    >
-                      {pendingMigration
-                        ? 'Waiting For Confirmation...'
-                        : migrationDone
-                        ? 'Confirmed'
-                        : 'Migrate Liquidity'}
-                    </Button>
-                    <SubText>
-                      Your {symbol} Liquidity will appear as {symbol}/ETH wth a new icon. <Link>Read more.</Link>
-                    </SubText>
-                  </FormattedCard>
-                </BottomWrapper>
-              )}
+              {V1Card()}
             </animated.div>
           )
       )}
@@ -319,118 +339,7 @@ function Migrate({ token }) {
         ({ item, key, props }) =>
           item && (
             <animated.div key={key} style={props}>
-              <AnimnatedCard
-                outlined={!hasV2 && open}
-                mt={20}
-                style={hasV2 || (!hasV2 && migrationDone && !open) ? { opacity: '0.9' } : {}}
-                active={triggerFlash}
-              >
-                <Grouping>
-                  {hasV2 ? (
-                    <DoubleLogo
-                      size="24px"
-                      addressTwo={'0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'} //weth has better logo than eth
-                      addressOne={token}
-                    />
-                  ) : (
-                    <TokenLogo size="24px" address={token} />
-                  )}
-                  {hasV2 ? (
-                    <BodyText>
-                      {amountFormatter(v2BalanceFormatted, 18, 6) < 0.00001
-                        ? '<0.00001 ' + allTokenDetails[token].symbol
-                        : amountFormatter(v2BalanceFormatted, 18, 5) + ' ' + allTokenDetails[token].symbol}
-                      <InlineSubText>/ETH</InlineSubText> Pool Tokens
-                    </BodyText>
-                  ) : (
-                    hasV1 && (
-                      <BodyText>
-                        {amountFormatter(v1BalanceFormatted, 18, 5) < 0.00001
-                          ? '<0.00001 ' + allTokenDetails[token].symbol
-                          : amountFormatter(v1BalanceFormatted, 18, 6) + ' ' + allTokenDetails[token].symbol}{' '}
-                        Pool Tokens
-                      </BodyText>
-                    )
-                  )}
-                  {hasV2 ? <Badge variant="green">V2</Badge> : <Badge variant="yellow">V1</Badge>}
-                  {hasV2 || (!hasV2 && !open) ? (
-                    hasV2 ? (
-                      <Icon variant="filled" fillColor="green2">
-                        ✓
-                      </Icon>
-                    ) : (
-                      <Button
-                        onClick={() => {
-                          toggleOpen(true)
-                        }}
-                      >
-                        Upgrade
-                      </Button>
-                    )
-                  ) : (
-                    <CloseIcon
-                      onClick={() => {
-                        toggleOpen(false)
-                      }}
-                    />
-                  )}
-                </Grouping>
-              </AnimnatedCard>
-              {!hasV2 && open && (
-                <BottomWrapper>
-                  <FormattedCard outlined={!approvalDone && 'outlined'}>
-                    <Row>
-                      <BodyText>Step 1</BodyText>
-                      {approvalDone ? <GreenText>✓</GreenText> : pendingApproval ? <Loader /> : ''}
-                    </Row>
-                    <Button
-                      variant={approvalDone && 'success'}
-                      py={18}
-                      onClick={() => {
-                        !approvalDone && tryApproval()
-                      }}
-                    >
-                      {approvalDone
-                        ? 'Confirmed'
-                        : pendingApproval
-                        ? 'Waiting For Confirmation...'
-                        : 'Approve for upgrade'}
-                    </Button>
-                    <SubText>The upgrade helper needs your permssion to upgrade on your behalf</SubText>
-                  </FormattedCard>
-                  <FormattedCard outlined={approvalDone && 'outlined'}>
-                    <Row>
-                      <BodyText>Step 2</BodyText>
-                      {!hasV2 && pendingMigration ? (
-                        <Loader />
-                      ) : hasV2 ? (
-                        <GreenText>✓</GreenText>
-                      ) : approvalDone ? (
-                        ''
-                      ) : (
-                        <Icon icon={Lock} />
-                      )}
-                    </Row>
-                    <Button
-                      variant={hasV2 && 'success'}
-                      disabled={!approvalDone}
-                      py={18}
-                      onClick={() => {
-                        !migrationDone && tryMigration()
-                      }}
-                    >
-                      {pendingMigration
-                        ? 'Waiting For Confirmation...'
-                        : migrationDone
-                        ? 'Confirmed'
-                        : 'Migrate Liquidity'}
-                    </Button>
-                    <SubText>
-                      Your {symbol} Liquidity will appear as {symbol}/ETH wth a new icon. <Link>Read more.</Link>
-                    </SubText>
-                  </FormattedCard>
-                </BottomWrapper>
-              )}
+              {hasV2 ? V2Card() : V1Card()}
             </animated.div>
           )
       )}

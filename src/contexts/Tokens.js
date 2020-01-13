@@ -545,7 +545,7 @@ const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x70b4aa67Ffa8501105a85547a3074307762907eC'
       // [EXCHANGE_ADDRESS_V2]: '0xce59dfa1B417cdeF866A2932769F80F30F47587f'
-    },
+    }
     // '0xc300A55543AEfB4da5a47e4525E287b3902aFfB5': {
     //   [NAME]: 'Other Coin',
     //   [SYMBOL]: 'OTHER',
@@ -553,13 +553,13 @@ const INITIAL_TOKENS_CONTEXT = {
     //   [EXCHANGE_ADDRESS]: '0x9a3a26155add0bb4e8b961537cb9f1ed051927cf',
     //   [EXCHANGE_ADDRESS_V2]: '0x3f6a1c056354af7e55f8486766fda345a32f463e'
     // }
-    '0xa663442cCe1d5764c27b0D624931b114998Ef1bD': {
-      [NAME]: 'Tester Coin',
-      [SYMBOL]: 'TESTER',
-      [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: '0x19236145906bbf467683cb824b51a7fce541a9b1'
-      // [EXCHANGE_ADDRESS_V2]: '0xa9dCEFFf40dA7329562E7FA4CE7bD52bf4beA453'
-    }
+    // '0xa663442cCe1d5764c27b0D624931b114998Ef1bD': {
+    //   [NAME]: 'Tester Coin',
+    //   [SYMBOL]: 'TESTER',
+    //   [DECIMALS]: 18,
+    //   [EXCHANGE_ADDRESS]: '0x19236145906bbf467683cb824b51a7fce541a9b1'
+    //   // [EXCHANGE_ADDRESS_V2]: '0xa9dCEFFf40dA7329562E7FA4CE7bD52bf4beA453'
+    // }
   }
 }
 
@@ -626,7 +626,7 @@ export function Updater() {
           const v2Factory = getV2FactoryContract(chainId, library, account)
           if (v2Factory) {
             v2Factory.getExchange(token, '0xc778417E063141139Fce010982780140Aa0cD5Ab').then(res => {
-              if (isAddress(res)) {
+              if (isAddress(res) && res !== '0x0000000000000000000000000000000000000000') {
                 update(
                   chainId,
                   token,
@@ -674,7 +674,7 @@ export function useTokenDetails(tokenAddress) {
       Promise.all([namePromise, symbolPromise, decimalsPromise, exchangeAddressPromise]).then(
         ([resolvedName, resolvedSymbol, resolvedDecimals, resolvedExchangeAddress]) => {
           if (!stale) {
-            update(chainId, tokenAddress, resolvedName, resolvedSymbol, resolvedDecimals, resolvedExchangeAddress)
+            update(chainId, tokenAddress, resolvedName, resolvedSymbol, resolvedDecimals, resolvedExchangeAddress, null)
           }
         }
       )

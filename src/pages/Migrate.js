@@ -10,7 +10,6 @@ import { useWeb3React } from '../hooks'
 import Card from '../components/CardStyled'
 import LoaderLight from '../components/Loader'
 import PoolUnit from '../components/PoolUnit3'
-import { isAddress } from '../utils'
 
 const Wrapper = styled.div`
   display: flex;
@@ -66,7 +65,7 @@ const Input = styled.input`
   font-size: 16px;
   border: 1px solid ${({ theme }) => theme.colors.grey3};
   color: ${({ theme }) => theme.colors.grey5};
-  padding: 8px 10px;
+  padding: 20px 10px;
   outline: none;
   -webkit-appearance: none;
   margin-bottom: 20px;
