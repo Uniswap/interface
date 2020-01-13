@@ -543,14 +543,23 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
 
   const filteredTokenList = useMemo(() => {
     return tokenList.filter(tokenEntry => {
+      const inputIsAddress = searchQuery.slice(0, 2) === '0x'
+
       // check the regex for each field
       const regexMatches = Object.keys(tokenEntry).map(tokenEntryKey => {
+        // if address field only search if input starts with 0x
+        if (tokenEntryKey === 'address') {
+          return (
+            inputIsAddress &&
+            typeof tokenEntry[tokenEntryKey] === 'string' &&
+            !!tokenEntry[tokenEntryKey].match(new RegExp(escapeStringRegex(searchQuery), 'i'))
+          )
+        }
         return (
           typeof tokenEntry[tokenEntryKey] === 'string' &&
           !!tokenEntry[tokenEntryKey].match(new RegExp(escapeStringRegex(searchQuery), 'i'))
         )
       })
-
       return regexMatches.some(m => m)
     })
   }, [tokenList, searchQuery])
