@@ -9,22 +9,8 @@ import { useWeb3React } from '../hooks'
 
 import Card from '../components/CardStyled'
 import LoaderLight from '../components/Loader'
-import PoolUnit from '../components/PoolUnit3'
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
-const HeaderText = styled.div`
-  font-size: 24px;
-  font-weight: 500;
-`
-
-const SubText = styled.div`
-  font-size: 1rem;
-  color: ${({ theme }) => theme.colors.grey3};
-`
+import TextBlock from '../components/Text'
+import PoolUnit from '../components/PoolUnit'
 
 const Row = styled.div`
   display: flex;
@@ -38,9 +24,6 @@ const Row = styled.div`
 const Column = styled.div`
   display: flex;
   flex-direction: column;
-  & > div {
-    /* margin-top: 20px; */
-  }
 `
 
 const shine = keyframes`
@@ -55,13 +38,8 @@ const LoadingCard = styled(Card)`
   margin-top: 20px;
 `
 
-const InputHeader = styled.span`
-  font-weight: 500;
-  padding: 1rem 0;
-`
-
 const Input = styled.input`
-  border-radius: 10px;
+  border-radius: 20px;
   font-size: 16px;
   border: 1px solid ${({ theme }) => theme.colors.grey3};
   color: ${({ theme }) => theme.colors.grey5};
@@ -75,70 +53,59 @@ function Migrate() {
   const { account } = useWeb3React()
 
   const allBalances = useAllBalances()
-
   const allTokenDetails = useAllTokenDetails()
 
-  const [userLPTokens, setUserLPTokens] = useState()
-
-  const [poolAmount, setPoolAmount] = useState()
+  const [v1Shares, setV1Shares] = useState(new Set())
+  const [v2Shares, setV2Shares] = useState(new Set())
 
   const [userInput, setUserInput] = useState()
-
   useTokenDetails(userInput)
 
-  // get V1 LP balances
+  const poolAmount = Array.from(v1Shares).length + Array.from(v2Shares).length
+  const fetching = !(allBalances && allBalances[account])
+
   useEffect(() => {
-    if (Object.keys(allTokenDetails).length > 0 && allBalances && Object.keys(allBalances).length > 0) {
-      let newUserLPTokens = []
-      let poolsFound = 0
-      Object.keys(allTokenDetails).map(tokenAddress => {
+    if (allTokenDetails && allBalances) {
+      let newV1Shares = v1Shares
+      let newV2Shares = v2Shares
+      Object.keys(allTokenDetails).forEach(tokenAddress => {
         let exchangeAddress = allTokenDetails[tokenAddress].exchangeAddress
         let exchangeAddressV2 = allTokenDetails[tokenAddress].exchangeAddressV2
         // get v1 LP shares
         if (
-          allBalances &&
           allBalances[account] &&
           allBalances[account][exchangeAddress] &&
           allBalances[account][exchangeAddress].value
         ) {
           const balanceBigNumber = ethers.utils.bigNumberify(allBalances[account][exchangeAddress].value)
           if (!balanceBigNumber.isZero()) {
-            poolsFound++
+            newV1Shares.add(tokenAddress)
           }
         }
         // get v2 LP shares
         if (
-          allBalances &&
           allBalances[account] &&
           allBalances[account][exchangeAddressV2] &&
           allBalances[account][exchangeAddressV2].value
         ) {
           const balanceBigNumber = ethers.utils.bigNumberify(allBalances[account][exchangeAddressV2].value)
           if (!balanceBigNumber.isZero()) {
-            poolsFound++
+            newV2Shares.add(tokenAddress)
           }
         }
-        if (poolsFound > 0) {
-          newUserLPTokens.push(tokenAddress)
-        }
-        return true
       })
-      setUserLPTokens(newUserLPTokens)
-      setPoolAmount(poolsFound)
+      setV1Shares(newV1Shares)
+      setV2Shares(newV2Shares)
     }
-  }, [account, allBalances, allTokenDetails])
-
-  const [fetching, setFetching] = useState()
-
-  useEffect(() => {
-    setFetching(!(allBalances && allBalances[account]))
-  }, [allBalances, account, allTokenDetails])
+  }, [account, allBalances, allTokenDetails, v1Shares, v2Shares])
 
   return (
-    <Wrapper>
+    <Column>
       <Row>
-        <HeaderText>Your Liquidity</HeaderText>
-        <SubText>
+        <TextBlock fontSize={24} fontWeight={500}>
+          Your Liquidity
+        </TextBlock>
+        <TextBlock fontSize={16} color={'grey3'}>
           {fetching ? (
             <Row>
               Fetching balances <LoaderLight style={{ marginLeft: '10px' }} />
@@ -146,15 +113,14 @@ function Migrate() {
           ) : (
             poolAmount + ' pools found'
           )}
-        </SubText>
+        </TextBlock>
       </Row>
-      <InputHeader>Dont see your liquidity ? Enter a token address here.</InputHeader>
+      <TextBlock padding={'1rem 0'}>Dont see your liquidity? Enter a token address here.</TextBlock>
       <Input
         onChange={e => {
           setUserInput(e.target.value)
         }}
         placeholder={'Search token address'}
-        value={userInput}
       />
       {fetching ? (
         <Column>
@@ -163,9 +129,18 @@ function Migrate() {
           <LoadingCard height={80} />
         </Column>
       ) : (
-        <Column>{userLPTokens && userLPTokens.map(token => <PoolUnit token={token} key={token} />)}</Column>
+        <Column>
+          {v1Shares &&
+            Array.from(v1Shares).map(tokenAddress => {
+              return <PoolUnit token={tokenAddress} key={tokenAddress} />
+            })}
+          {v2Shares &&
+            Array.from(v2Shares).map(tokenAddress => {
+              return <PoolUnit token={tokenAddress} key={tokenAddress} alreadyMigrated={true} />
+            })}
+        </Column>
       )}
-    </Wrapper>
+    </Column>
   )
 }
 

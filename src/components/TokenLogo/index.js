@@ -51,7 +51,7 @@ export default function TokenLogo({ address, size = '1rem', ...rest }) {
   return (
     <Image
       {...rest}
-      alt={address}
+      alt={''}
       src={path}
       size={size}
       onError={() => {
