@@ -561,7 +561,6 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
         )
       })
       return regexMatches.some(m => m)
-      // return tokenEntry
     })
   }, [tokenList, searchQuery])
 
