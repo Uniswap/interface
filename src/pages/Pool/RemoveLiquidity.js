@@ -110,15 +110,15 @@ function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals,
       if (invert) {
         return inputValue
           .mul(factor)
-          .div(outputValue)
           .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
           .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
+          .div(outputValue)
       } else {
         return outputValue
           .mul(factor)
-          .div(inputValue)
           .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
           .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
+          .div(inputValue)
       }
     }
   } catch {}
@@ -222,22 +222,25 @@ export default function RemoveLiquidity({ params }) {
     ownershipPercentage &&
     exchangeTokenBalance.mul(ownershipPercentage).div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
 
-  const ETHPer =
-    exchangeETHBalance && totalPoolTokens && !totalPoolTokens.isZero()
-      ? exchangeETHBalance.mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))).div(totalPoolTokens)
-      : undefined
-  const tokenPer =
-    exchangeTokenBalance && totalPoolTokens && !totalPoolTokens.isZero()
-      ? exchangeTokenBalance.mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))).div(totalPoolTokens)
-      : undefined
+  const ETHPer = exchangeETHBalance
+    ? exchangeETHBalance.mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+    : undefined
+  const tokenPer = exchangeTokenBalance
+    ? exchangeTokenBalance.mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+    : undefined
 
   const ethWithdrawn =
-    ETHPer && valueParsed
-      ? ETHPer.mul(valueParsed).div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+    ETHPer && valueParsed && totalPoolTokens && !totalPoolTokens.isZero()
+      ? ETHPer.mul(valueParsed)
+          .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+          .div(totalPoolTokens)
       : undefined
   const tokenWithdrawn =
-    tokenPer && valueParsed
-      ? tokenPer.mul(valueParsed).div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+    tokenPer && valueParsed && totalPoolTokens && !totalPoolTokens.isZero()
+      ? tokenPer
+          .mul(valueParsed)
+          .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+          .div(totalPoolTokens)
       : undefined
 
   const ethWithdrawnMin = ethWithdrawn ? calculateSlippageBounds(ethWithdrawn).minimum : undefined

@@ -570,11 +570,11 @@ const INITIAL_TOKENS_CONTEXT = {
     }
   },
   4: {
-    '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa': {
-      [NAME]: 'Dai',
-      [SYMBOL]: 'DAI',
+    '0xc7ad46e0b8a400bb3c915120d284aafba8fc4735': {
+      [NAME]: 'Rinkeby DAI',
+      [SYMBOL]: 'RDAI',
       [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: '0xaF51BaAA766b65E8B3Ee0C2c33186325ED01eBD5'
+      [EXCHANGE_ADDRESS]: '0x9c92A4582Ad8e3D731a73B47B2C6e32Cc0fE9CD9'
     }
   }
 }
