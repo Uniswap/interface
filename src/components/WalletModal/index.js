@@ -9,7 +9,7 @@ import Modal from '../Modal'
 import AccountDetails from '../AccountDetails'
 import PendingView from './PendingView'
 import Option from './Option'
-import { SUPPORTED_WALLETS } from '../../constants'
+import { SUPPORTED_WALLETS, WALLET_PREFERENCE_KEY } from '../../constants'
 import { usePrevious } from '../../hooks'
 import { Link } from '../../theme'
 import MetamaskIcon from '../../assets/images/metamask.png'
@@ -171,6 +171,8 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
     })
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
+    // Save users wallet preference in local storage if possible to reconnect
+    localStorage.setItem(WALLET_PREFERENCE_KEY, name)
     activate(connector, undefined, true).catch(error => {
       if (error instanceof UnsupportedChainIdError) {
         activate(connector) // a little janky...can't use setError because the connector isn't set

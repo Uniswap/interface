@@ -4,7 +4,7 @@ import { useWeb3React } from '../../hooks'
 import { isMobile } from 'react-device-detect'
 import Copy from './Copy'
 import Transaction from './Transaction'
-import { SUPPORTED_WALLETS } from '../../constants'
+import { SUPPORTED_WALLETS, WALLET_PREFERENCE_KEY } from '../../constants'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getEtherscanLink } from '../../utils'
 import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
@@ -315,6 +315,7 @@ export default function AccountDetails({
                   {connector !== injected && connector !== walletlink && (
                     <WalletAction
                       onClick={() => {
+                        localStorage.setItem(WALLET_PREFERENCE_KEY, '')
                         connector.close()
                       }}
                     >

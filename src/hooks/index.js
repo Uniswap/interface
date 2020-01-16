@@ -7,6 +7,7 @@ import { NetworkContextName } from '../constants'
 import ERC20_ABI from '../constants/abis/erc20'
 import { getContract, getFactoryContract, getExchangeContract, isAddress } from '../utils'
 import { injected } from '../connectors'
+import { SUPPORTED_WALLETS, WALLET_PREFERENCE_KEY } from '../constants'
 
 export function useWeb3React() {
   const context = useWeb3ReactCore()
@@ -21,6 +22,26 @@ export function useEagerConnect() {
   const [tried, setTried] = useState(false)
 
   useEffect(() => {
+    const walletPreferenceName = localStorage.getItem(WALLET_PREFERENCE_KEY)
+    // If the user has a wallet preference, use that. Otherwise, check if injected is authorized.
+    if (walletPreferenceName) {
+      // Activate the users preferred wallet
+      let wallet
+      Object.keys(SUPPORTED_WALLETS).map(key => {
+        if (walletPreferenceName === SUPPORTED_WALLETS[key].name) {
+          return (wallet = SUPPORTED_WALLETS[key])
+        }
+        return true
+      })
+      if (wallet.shouldReconnect) {
+        activate(wallet.connector, undefined, true).catch(() => {
+          setTried(true)
+        })
+        return
+      }
+    }
+    
+    // Use the injected wallet if it is authorized
     injected.isAuthorized().then(isAuthorized => {
       if (isAuthorized) {
         activate(injected, undefined, true).catch(() => {

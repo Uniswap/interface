@@ -20,7 +20,8 @@ export const SUPPORTED_WALLETS = {
     description: 'Injected web3 provider.',
     href: null,
     color: '#010101',
-    primary: true
+    primary: true,
+    shouldReconnect: true
   },
   METAMASK: {
     connector: injected,
@@ -28,7 +29,8 @@ export const SUPPORTED_WALLETS = {
     iconName: 'metamask.png',
     description: 'Easy-to-use browser extension.',
     href: null,
-    color: '#E8831D'
+    color: '#E8831D',
+    shouldReconnect: true
   },
   WALLET_CONNECT: {
     connector: walletconnect,
@@ -36,7 +38,8 @@ export const SUPPORTED_WALLETS = {
     iconName: 'walletConnectIcon.svg',
     description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
     href: null,
-    color: '#4196FC'
+    color: '#4196FC',
+    shouldReconnect: false
   },
   WALLET_LINK: {
     connector: walletlink,
@@ -44,7 +47,8 @@ export const SUPPORTED_WALLETS = {
     iconName: 'coinbaseWalletIcon.svg',
     description: 'Use Coinbase Wallet app on mobile device',
     href: null,
-    color: '#315CF5'
+    color: '#315CF5',
+    shouldReconnect: false
   },
   COINBASE_LINK: {
     name: 'Open in Coinbase Wallet',
@@ -53,7 +57,8 @@ export const SUPPORTED_WALLETS = {
     href: 'https://go.cb-w.com/mtUDhEZPy1',
     color: '#315CF5',
     mobile: true,
-    mobileOnly: true
+    mobileOnly: true,
+    shouldReconnect: false
   },
   TRUST_WALLET_LINK: {
     name: 'Open in Trust Wallet',
@@ -62,7 +67,8 @@ export const SUPPORTED_WALLETS = {
     href: 'https://link.trustwallet.com/open_url?coin_id=60&url=https://uniswap.exchange/swap',
     color: '#1C74CC',
     mobile: true,
-    mobileOnly: true
+    mobileOnly: true,
+    shouldReconnect: false
   },
   FORTMATIC: {
     connector: fortmatic,
@@ -71,7 +77,8 @@ export const SUPPORTED_WALLETS = {
     description: 'Login using Fortmatic hosted wallet',
     href: null,
     color: '#6748FF',
-    mobile: true
+    mobile: true,
+    shouldReconnect: false // Currently, Fortmatic shows a rate limit error when this is enabled but it should be possible
   },
   Portis: {
     connector: portis,
@@ -80,7 +87,8 @@ export const SUPPORTED_WALLETS = {
     description: 'Login using Portis hosted wallet',
     href: null,
     color: '#4A6C9B',
-    mobile: true
+    mobile: true,
+    shouldReconnect: true
   }
 }
 
@@ -92,3 +100,5 @@ export const brokenTokens = [
 ]
 
 export const NetworkContextName = 'NETWORK'
+
+export const WALLET_PREFERENCE_KEY = 'wallet_preference'
