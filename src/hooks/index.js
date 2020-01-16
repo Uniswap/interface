@@ -40,7 +40,7 @@ export function useEagerConnect() {
         return
       }
     }
-    
+
     // Use the injected wallet if it is authorized
     injected.isAuthorized().then(isAuthorized => {
       if (isAuthorized) {
