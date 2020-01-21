@@ -36,7 +36,7 @@
     "react-spring": "^8.0.27",
     "react-switch": "^5.0.1",
     "react-use-gesture": "^6.0.14",
-    "styled-components": "^5.0.0"
+    "styled-components": "^4.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
