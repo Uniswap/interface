@@ -178,15 +178,15 @@ function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals,
       if (invert) {
         return inputValue
           .mul(factor)
-          .div(outputValue)
           .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
           .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
+          .div(outputValue)
       } else {
         return outputValue
           .mul(factor)
-          .div(inputValue)
           .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
           .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
+          .div(inputValue)
       }
     }
   } catch {}
@@ -221,6 +221,7 @@ export default function AddLiquidity({ params }) {
   const [outputValueParsed, setOutputValueParsed] = useState()
   const [inputError, setInputError] = useState()
   const [outputError, setOutputError] = useState()
+  const [zeroDecimalError, setZeroDecimalError] = useState()
 
   const [brokenTokenWarning, setBrokenTokenWarning] = useState()
 
@@ -353,6 +354,8 @@ export default function AddLiquidity({ params }) {
     if (brokenTokenWarning) {
       contextualInfo = t('brokenToken')
       isError = true
+    } else if (zeroDecimalError) {
+      contextualInfo = zeroDecimalError
     } else if (inputError || outputError) {
       contextualInfo = inputError || outputError
       isError = true
@@ -433,14 +436,18 @@ export default function AddLiquidity({ params }) {
 
   useEffect(() => {
     if (isNewExchange) {
+      setZeroDecimalError()
       if (inputValue) {
         const parsedInputValue = ethers.utils.parseUnits(inputValue, 18)
         setInputValueParsed(parsedInputValue)
       }
-
       if (outputValue) {
-        const parsedOutputValue = ethers.utils.parseUnits(outputValue, decimals)
-        setOutputValueParsed(parsedOutputValue)
+        try {
+          const parsedOutputValue = ethers.utils.parseUnits(outputValue, decimals)
+          setOutputValueParsed(parsedOutputValue)
+        } catch {
+          setZeroDecimalError('Invalid input. For 0 decimal tokens only supply whole number token amounts.')
+        }
       }
     }
   }, [decimals, inputValue, isNewExchange, outputValue])
@@ -568,7 +575,8 @@ export default function AddLiquidity({ params }) {
   }, [outputValueParsed, allowance, t])
 
   const isActive = active && account
-  const isValid = (inputError === null || outputError === null) && !showUnlock && !brokenTokenWarning
+  const isValid =
+    (inputError === null || outputError === null) && !zeroDecimalError && !showUnlock && !brokenTokenWarning
 
   return (
     <>
