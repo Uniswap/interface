@@ -208,15 +208,15 @@ function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals,
       if (invert) {
         return inputValue
           .mul(factor)
-          .div(outputValue)
           .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
           .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
+          .div(outputValue)
       } else {
         return outputValue
           .mul(factor)
-          .div(inputValue)
           .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
           .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
+          .div(inputValue)
       }
     }
   } catch {}
@@ -560,7 +560,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   )
 
   const percentSlippage =
-    exchangeRate && marketRate
+    exchangeRate && marketRate && !marketRate.isZero()
       ? exchangeRate
           .sub(marketRate)
           .abs()
