@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { useWeb3React, useExchangeContract } from '../../hooks'
 import { useTransactionAdder } from '../../contexts/Transactions'
-import { useTokenDetails } from '../../contexts/Tokens'
+import { useTokenDetails, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
 import { useAddressBalance, useETHPriceInUSD } from '../../contexts/Balances'
 
 import { calculateGasMargin, amountFormatter } from '../../utils'
@@ -18,6 +18,7 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import ContextualInfo from '../../components/ContextualInfo'
 import OversizedPanel from '../../components/OversizedPanel'
 import ArrowDown from '../../assets/svg/SVGArrowDown'
+import WarningCard from '../../components/WarningCard'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = ethers.utils.bigNumberify(200)
@@ -144,7 +145,7 @@ function calculateSlippageBounds(value) {
 
 export default function RemoveLiquidity({ params }) {
   const { t } = useTranslation()
-  const { library, account, active } = useWeb3React()
+  const { library, account, active, chainId } = useWeb3React()
 
   const addTransaction = useTransactionAdder()
 
@@ -193,6 +194,11 @@ export default function RemoveLiquidity({ params }) {
   const poolTokenBalance = useAddressBalance(account, exchangeAddress)
   const exchangeETHBalance = useAddressBalance(exchangeAddress, 'ETH')
   const exchangeTokenBalance = useAddressBalance(exchangeAddress, outputCurrency)
+
+  const urlAddedTokens = {}
+  if (params.poolTokenAddress) {
+    urlAddedTokens[params.poolTokenAddress] = true
+  }
 
   // input validation
   useEffect(() => {
@@ -355,8 +361,30 @@ export default function RemoveLiquidity({ params }) {
 
   const marketRate = getMarketRate(exchangeETHBalance, exchangeTokenBalance, decimals)
 
+  const newOutputDetected =
+    outputCurrency !== 'ETH' && outputCurrency && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(outputCurrency)
+
+  const [showCustomTokenWarning, setShowCustomTokenWarning] = useState(false)
+
+  useEffect(() => {
+    if (newOutputDetected) {
+      setShowCustomTokenWarning(true)
+    } else {
+      setShowCustomTokenWarning(false)
+    }
+  }, [newOutputDetected])
+
   return (
     <>
+      {showCustomTokenWarning && (
+        <WarningCard
+          onDismiss={() => {
+            setShowCustomTokenWarning(false)
+          }}
+          urlAddedTokens={urlAddedTokens}
+          currency={outputCurrency}
+        />
+      )}
       <CurrencyInputPanel
         title={t('poolTokens')}
         extraText={poolTokenBalance && formatBalance(amountFormatter(poolTokenBalance, 18, 4))}
@@ -368,6 +396,7 @@ export default function RemoveLiquidity({ params }) {
             }
           }
         }}
+        urlAddedTokens={urlAddedTokens}
         onCurrencySelected={setOutputCurrency}
         onValueChange={setValue}
         value={value}
