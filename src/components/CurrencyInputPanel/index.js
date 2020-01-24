@@ -593,18 +593,22 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
     return filteredTokenList.map(({ address, symbol, name, balance, usdBalance }) => {
       const urlAdded = urlAddedTokens && urlAddedTokens.hasOwnProperty(address)
       const customAdded =
-        INITIAL_TOKENS_CONTEXT[chainId] && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(address) && !urlAdded
+        address !== 'ETH' &&
+        INITIAL_TOKENS_CONTEXT[chainId] &&
+        !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(address) &&
+        !urlAdded
       return (
         <TokenModalRow key={address} onClick={() => _onTokenSelect(address)}>
           <TokenRowLeft>
             <TokenLogo address={address} size={'2rem'} />
             <TokenSymbolGroup>
               <span id="symbol">{symbol}</span>
-              <TokenFullName>
-                {name} {urlAdded && ' - added through URL'} {customAdded && ' - added by user'}
-              </TokenFullName>
+              <TokenFullName> {name}</TokenFullName>
             </TokenSymbolGroup>
           </TokenRowLeft>
+          <div>
+            {urlAdded && 'added through URL'} {customAdded && 'added by user'}
+          </div>
           <TokenRowRight>
             {balance ? (
               <TokenRowBalance>{balance && (balance > 0 || balance === '<0.0001') ? balance : '-'}</TokenRowBalance>
