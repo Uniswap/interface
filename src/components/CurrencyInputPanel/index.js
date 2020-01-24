@@ -18,7 +18,7 @@ import Modal from '../Modal'
 import TokenLogo from '../TokenLogo'
 import SearchIcon from '../../assets/images/magnifying-glass.svg'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
-import { useTokenDetails, useAllTokenDetails } from '../../contexts/Tokens'
+import { useTokenDetails, useAllTokenDetails, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
 import { useAddressBalance } from '../../contexts/Balances'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { transparentize } from 'polished'
@@ -284,7 +284,8 @@ export default function CurrencyInputPanel({
   disableTokenSelect,
   selectedTokenAddress = '',
   showUnlock,
-  value
+  value,
+  urlAddedTokens
 }) {
   const { t } = useTranslation()
 
@@ -431,6 +432,7 @@ export default function CurrencyInputPanel({
           onDismiss={() => {
             setModalIsOpen(false)
           }}
+          urlAddedTokens={urlAddedTokens}
           onTokenSelect={onCurrencySelected}
           allBalances={allBalances}
         />
@@ -439,7 +441,7 @@ export default function CurrencyInputPanel({
   )
 }
 
-function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
+function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens }) {
   const { t } = useTranslation()
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -447,7 +449,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
 
   const allTokens = useAllTokenDetails()
 
-  const { account } = useWeb3React()
+  const { account, chainId } = useWeb3React()
 
   // BigNumber.js instance
   const ethPrice = useETHPriceInUSD()
@@ -589,13 +591,18 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect }) {
     }
 
     return filteredTokenList.map(({ address, symbol, name, balance, usdBalance }) => {
+      const urlAdded = urlAddedTokens && urlAddedTokens.hasOwnProperty(address)
+      const customAdded =
+        INITIAL_TOKENS_CONTEXT[chainId] && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(address) && !urlAdded
       return (
         <TokenModalRow key={address} onClick={() => _onTokenSelect(address)}>
           <TokenRowLeft>
             <TokenLogo address={address} size={'2rem'} />
             <TokenSymbolGroup>
               <span id="symbol">{symbol}</span>
-              <TokenFullName>{name}</TokenFullName>
+              <TokenFullName>
+                {name} {urlAdded && ' - added through URL'} {customAdded && ' - added by user'}
+              </TokenFullName>
             </TokenSymbolGroup>
           </TokenRowLeft>
           <TokenRowRight>

@@ -10,7 +10,7 @@ import { brokenTokens } from '../../constants'
 import { amountFormatter, calculateGasMargin } from '../../utils'
 
 import { useExchangeContract } from '../../hooks'
-import { useTokenDetails } from '../../contexts/Tokens'
+import { useTokenDetails, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
@@ -23,6 +23,7 @@ import AddressInputPanel from '../AddressInputPanel'
 import OversizedPanel from '../OversizedPanel'
 import TransactionDetails from '../TransactionDetails'
 import ArrowDown from '../../assets/svg/SVGArrowDown'
+import WarningCard from '../WarningCard'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -248,7 +249,15 @@ function getMarketRate(
 
 export default function ExchangePage({ initialCurrency, sending = false, params }) {
   const { t } = useTranslation()
-  const { account, error } = useWeb3React()
+  const { account, chainId, error } = useWeb3React()
+
+  const urlAddedTokens = {}
+  if (params.inputCurrency) {
+    urlAddedTokens[params.inputCurrency] = true
+  }
+  if (params.outputCurrency) {
+    urlAddedTokens[params.outputCurrency] = true
+  }
 
   // BigNumber.js instance
   const ethPrice = useETHPriceInUSD()
@@ -710,10 +719,38 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
   const toggleWalletModal = useWalletModalToggle()
 
+  const newInputDetected =
+    inputCurrency !== 'ETH' && inputCurrency && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(inputCurrency)
+
+  const newOutputDetected =
+    outputCurrency !== 'ETH' && outputCurrency && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(outputCurrency)
+
+  const [showCustomTokenWarning, setShowCustomTokenWarning] = useState(false)
+
+  useEffect(() => {
+    if (newInputDetected || newOutputDetected) {
+      setShowCustomTokenWarning(true)
+    } else {
+      setShowCustomTokenWarning(false)
+    }
+  }, [newInputDetected, newOutputDetected])
+
   return (
     <>
+      {showCustomTokenWarning && (
+        <WarningCard
+          onDismiss={() => {
+            setShowCustomTokenWarning(false)
+          }}
+          inputCurrency={inputCurrency}
+          outputCurrency={outputCurrency}
+          newInputDetected={newInputDetected}
+          newOutputDetected={newOutputDetected}
+        />
+      )}
       <CurrencyInputPanel
         title={t('input')}
+        urlAddedTokens={urlAddedTokens}
         description={inputValueFormatted && independentField === OUTPUT ? estimatedText : ''}
         extraText={inputBalanceFormatted && formatBalance(inputBalanceFormatted)}
         extraTextClickHander={() => {
@@ -764,6 +801,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         title={t('output')}
         description={outputValueFormatted && independentField === INPUT ? estimatedText : ''}
         extraText={outputBalanceFormatted && formatBalance(outputBalanceFormatted)}
+        urlAddedTokens={urlAddedTokens}
         onCurrencySelected={outputCurrency => {
           dispatchSwapState({
             type: 'SELECT_CURRENCY',

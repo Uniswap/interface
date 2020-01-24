@@ -26,7 +26,7 @@ const ETH = {
   }
 }
 
-const INITIAL_TOKENS_CONTEXT = {
+export const INITIAL_TOKENS_CONTEXT = {
   1: {
     '0xB6eD7644C69416d67B522e20bC294A9a9B405B31': {
       [NAME]: '0xBitcoin Token',
@@ -662,7 +662,6 @@ export function useTokenDetails(tokenAddress) {
       library
     ) {
       let stale = false
-
       const namePromise = getTokenName(tokenAddress, library).catch(() => null)
       const symbolPromise = getTokenSymbol(tokenAddress, library).catch(() => null)
       const decimalsPromise = getTokenDecimals(tokenAddress, library).catch(() => null)

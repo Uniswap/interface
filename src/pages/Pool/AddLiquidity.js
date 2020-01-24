@@ -10,11 +10,13 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import OversizedPanel from '../../components/OversizedPanel'
 import ContextualInfo from '../../components/ContextualInfo'
 import { ReactComponent as Plus } from '../../assets/images/plus-blue.svg'
+import WarningCard from '../../components/WarningCard'
+
 import { useWeb3React, useExchangeContract } from '../../hooks'
 import { brokenTokens } from '../../constants'
 import { amountFormatter, calculateGasMargin } from '../../utils'
 import { useTransactionAdder } from '../../contexts/Transactions'
-import { useTokenDetails } from '../../contexts/Tokens'
+import { useTokenDetails, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
 import { useAddressBalance, useExchangeReserves, useETHPriceInUSD } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 
@@ -198,10 +200,15 @@ function getMarketRate(reserveETH, reserveToken, decimals, invert = false) {
 
 export default function AddLiquidity({ params }) {
   const { t } = useTranslation()
-  const { library, account, active } = useWeb3React()
+  const { library, account, active, chainId } = useWeb3React()
 
   // BigNumber.js instance
   const ethPrice = useETHPriceInUSD()
+
+  const urlAddedTokens = {}
+  if (params.token) {
+    urlAddedTokens[params.token] = true
+  }
 
   // clear url of query
   useEffect(() => {
@@ -578,6 +585,22 @@ export default function AddLiquidity({ params }) {
   const isValid =
     (inputError === null || outputError === null) && !zeroDecimalError && !showUnlock && !brokenTokenWarning
 
+  const newInputDetected =
+    inputCurrency !== 'ETH' && inputCurrency && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(inputCurrency)
+
+  const newOutputDetected =
+    outputCurrency !== 'ETH' && outputCurrency && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(outputCurrency)
+
+  const [showCustomTokenWarning, setShowCustomTokenWarning] = useState(false)
+
+  useEffect(() => {
+    if (newInputDetected || newOutputDetected) {
+      setShowCustomTokenWarning(true)
+    } else {
+      setShowCustomTokenWarning(false)
+    }
+  }, [newInputDetected, newOutputDetected])
+
   return (
     <>
       {isNewExchange ? (
@@ -591,7 +614,17 @@ export default function AddLiquidity({ params }) {
           <NewExchangeWarningText>{t('initialExchangeRate', { symbol })}</NewExchangeWarningText>
         </NewExchangeWarning>
       ) : null}
-
+      {showCustomTokenWarning && (
+        <WarningCard
+          onDismiss={() => {
+            setShowCustomTokenWarning(false)
+          }}
+          inputCurrency={inputCurrency}
+          outputCurrency={outputCurrency}
+          newInputDetected={newInputDetected}
+          newOutputDetected={newOutputDetected}
+        />
+      )}
       <CurrencyInputPanel
         title={t('deposit')}
         extraText={inputBalance && formatBalance(amountFormatter(inputBalance, 18, 4))}
@@ -625,6 +658,7 @@ export default function AddLiquidity({ params }) {
         extraText={
           outputBalance && decimals && formatBalance(amountFormatter(outputBalance, decimals, Math.min(decimals, 4)))
         }
+        urlAddedTokens={urlAddedTokens}
         selectedTokenAddress={outputCurrency}
         onCurrencySelected={outputCurrency => {
           dispatchAddLiquidityState({ type: 'SELECT_CURRENCY', payload: outputCurrency })
