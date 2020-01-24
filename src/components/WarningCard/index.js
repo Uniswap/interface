@@ -104,7 +104,7 @@ const Popup = styled(Flex)`
   align-items: center;
   padding: 0.6rem 1rem;
   line-height: 150%;
-  background: #f7f8fa;
+  background: ${({ theme }) => theme.backgroundColor};
   border: 1px solid ${({ theme }) => theme.mercuryGray};
   border-radius: 8px;
   animation: ${fadeIn} 0.15s linear;
@@ -120,6 +120,10 @@ const Popup = styled(Flex)`
   `}
 `
 
+const Text = styled.div`
+  color: ${({ theme }) => theme.textColor};
+`
+
 function WarningCard({ onDismiss, inputCurrency, outputCurrency, newInputDetected, newOutputDetected }) {
   const [showPopup, setPopup] = useState(false)
   const { chainId } = useWeb3React()
@@ -133,7 +137,7 @@ function WarningCard({ onDismiss, inputCurrency, outputCurrency, newInputDetecte
         <CloseColor alt={'close icon'} />
       </CloseIcon>
       <Row style={{ fontSize: '12px' }}>
-        Unverified Token{' '}
+        <Text>Unverified Token</Text>
         <QuestionWrapper
           onClick={() => {
             setPopup(!showPopup)
@@ -149,9 +153,11 @@ function WarningCard({ onDismiss, inputCurrency, outputCurrency, newInputDetecte
         </QuestionWrapper>
         {showPopup ? (
           <Popup>
-            Exchanges can be created by anyone using the factory contract and loaded into this interface by a URL. If
-            you are loading this site from a referral link, check the source and verify the token on etherscan before
-            making any transactions.
+            <Text>
+              Exchanges can be created by anyone using the factory contract and loaded into this interface by a URL. If
+              you are loading this site from a referral link, check the source and verify the token on etherscan before
+              making any transactions.
+            </Text>
           </Popup>
         ) : (
           ''
@@ -180,8 +186,10 @@ function WarningCard({ onDismiss, inputCurrency, outputCurrency, newInputDetecte
         </Row>
       )}
       <Row style={{ fontSize: '12px', fontStyle: 'italic', color: '#2B2B2B' }}>
-        Anyone can create an exchange for any token. Please verify the legitimacy of these tokens before making any
-        transactions.
+        <Text>
+          Anyone can create an exchange for any token. Please verify the legitimacy of these tokens before making any
+          transactions.
+        </Text>
       </Row>
     </Wrapper>
   )
