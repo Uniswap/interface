@@ -244,6 +244,10 @@ const TokenFullName = styled.div`
   color: ${({ theme }) => theme.chaliceGray};
 `
 
+const FadedSpan = styled.span`
+  color: ${({ theme }) => theme.chaliceGray};
+`
+
 const TokenRowBalance = styled.div`
   font-size: 1rem;
   line-height: 20px;
@@ -602,13 +606,15 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
           <TokenRowLeft>
             <TokenLogo address={address} size={'2rem'} />
             <TokenSymbolGroup>
-              <span id="symbol">{symbol}</span>
+              <div>
+                <span id="symbol">{symbol}</span>{' '}
+                <FadedSpan>
+                  {urlAdded && '(Added by URL)'} {customAdded && '(Added by address)'}
+                </FadedSpan>
+              </div>
               <TokenFullName> {name}</TokenFullName>
             </TokenSymbolGroup>
           </TokenRowLeft>
-          <div>
-            {urlAdded && 'added through URL'} {customAdded && 'added by user'}
-          </div>
           <TokenRowRight>
             {balance ? (
               <TokenRowBalance>{balance && (balance > 0 || balance === '<0.0001') ? balance : '-'}</TokenRowBalance>

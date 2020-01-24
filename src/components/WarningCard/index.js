@@ -166,9 +166,7 @@ function WarningCard({ onDismiss, inputCurrency, outputCurrency, newInputDetecte
       {newInputDetected && (
         <Row>
           <TokenLogo address={inputCurrency} />
-          <div style={{ fontWeight: 500 }}>
-            {inputName} ({inputSymbol})
-          </div>
+          <div style={{ fontWeight: 500 }}>{inputName && inputSymbol ? inputName + '(' + inputSymbol + ')' : ''}</div>
           <Link style={{ fontWeight: 400 }} href={getEtherscanLink(chainId, inputCurrency, 'address')}>
             (View on Etherscan)
           </Link>
