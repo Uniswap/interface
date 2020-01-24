@@ -98,8 +98,9 @@ const fadeIn = keyframes`
 const Popup = styled(Flex)`
   position: absolute;
   width: 228px;
-  right: 140px;
+  right: 110px;
   top: 4px;
+  z-index: 10;
   flex-direction: column;
   align-items: center;
   padding: 0.6rem 1rem;
@@ -124,21 +125,19 @@ const Text = styled.div`
   color: ${({ theme }) => theme.textColor};
 `
 
-function WarningCard({ onDismiss, inputCurrency, outputCurrency, newInputDetected, newOutputDetected }) {
-  const [showPopup, setPopup] = useState(false)
+function WarningCard({ onDismiss, urlAddedTokens, currency }) {
+  const [showPopup, setPopup] = useState()
   const { chainId } = useWeb3React()
-  // get decimals and exchange address for each of the currency types
-  const { symbol: inputSymbol, name: inputName } = useTokenDetails(inputCurrency)
-  const { symbol: outputSymbol, name: outputName } = useTokenDetails(outputCurrency)
+  const { symbol: inputSymbol, name: inputName } = useTokenDetails(currency)
+  const fromURL = urlAddedTokens.hasOwnProperty(currency)
 
-  const plural = newInputDetected && newOutputDetected
   return (
     <Wrapper>
       <CloseIcon onClick={() => onDismiss()}>
         <CloseColor alt={'close icon'} />
       </CloseIcon>
       <Row style={{ fontSize: '12px' }}>
-        <Text>Unverified {plural ? 'Tokens ' : 'Token'}</Text>
+        <Text>{fromURL ? 'Token imported by URL ' : 'Token imported by user'}</Text>
         <QuestionWrapper
           onClick={() => {
             setPopup(!showPopup)
@@ -155,40 +154,24 @@ function WarningCard({ onDismiss, inputCurrency, outputCurrency, newInputDetecte
         {showPopup ? (
           <Popup>
             <Text>
-              Exchanges can be created by anyone using the factory contract and loaded into this interface by a URL. If
-              you are loading this site from a referral link, check the source and verify{' '}
-              {plural ? 'these tokens ' : 'this token '} on etherscan before making any transactions.
+              The Uniswap smart contracts are designed to support any ERC20 token on Ethereum. Any token can be loaded
+              into the interface by entering its Ethereum address into the search field or passing it as a URL
+              parameter. Be careful when interacting with imported tokens as they have not been verified.
             </Text>
           </Popup>
         ) : (
           ''
         )}
       </Row>
-      {newInputDetected && (
-        <Row>
-          <TokenLogo address={inputCurrency} />
-          <div style={{ fontWeight: 500 }}>{inputName && inputSymbol ? inputName + '(' + inputSymbol + ')' : ''}</div>
-          <Link style={{ fontWeight: 400 }} href={getEtherscanLink(chainId, inputCurrency, 'address')}>
-            (View on Etherscan)
-          </Link>
-        </Row>
-      )}
-      {newOutputDetected && (
-        <Row>
-          <TokenLogo address={outputCurrency} />
-          <div style={{ fontWeight: 500 }}>
-            {outputName} ({outputSymbol})
-          </div>
-          <Link style={{ fontWeight: 400 }} href={getEtherscanLink(chainId, outputCurrency, 'address')}>
-            (View on Etherscan)
-          </Link>
-        </Row>
-      )}
-      <Row style={{ fontSize: '12px', fontStyle: 'italic', color: '#2B2B2B' }}>
-        <Text>
-          Anyone can create an exchange for any token. Please verify the legitimacy of{' '}
-          {plural ? 'these tokens ' : 'this token '} before making any transactions.
-        </Text>
+      <Row>
+        <TokenLogo address={currency} />
+        <div style={{ fontWeight: 500 }}>{inputName && inputSymbol ? inputName + ' (' + inputSymbol + ')' : ''}</div>
+        <Link style={{ fontWeight: 400 }} href={getEtherscanLink(chainId, currency, 'address')}>
+          (View on Etherscan)
+        </Link>
+      </Row>
+      <Row style={{ fontSize: '12px', fontStyle: 'italic' }}>
+        <Text>Please verify the legitimacy of this token before making any transactions.</Text>
       </Row>
     </Wrapper>
   )

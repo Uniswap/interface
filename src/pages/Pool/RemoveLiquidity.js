@@ -381,9 +381,8 @@ export default function RemoveLiquidity({ params }) {
           onDismiss={() => {
             setShowCustomTokenWarning(false)
           }}
-          outputCurrency={outputCurrency}
-          newInputDetected={false}
-          newOutputDetected={newOutputDetected}
+          urlAddedTokens={urlAddedTokens}
+          currency={outputCurrency}
         />
       )}
       <CurrencyInputPanel

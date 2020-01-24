@@ -585,22 +585,18 @@ export default function AddLiquidity({ params }) {
   const isValid =
     (inputError === null || outputError === null) && !zeroDecimalError && !showUnlock && !brokenTokenWarning
 
-  const newInputDetected =
-    inputCurrency !== 'ETH' && inputCurrency && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(inputCurrency)
-
   const newOutputDetected =
     outputCurrency !== 'ETH' && outputCurrency && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(outputCurrency)
 
-  const [showCustomTokenWarning, setShowCustomTokenWarning] = useState(false)
+  const [showOutputWarning, setShowOutputWarning] = useState(false)
 
   useEffect(() => {
-    if (newInputDetected || newOutputDetected) {
-      setShowCustomTokenWarning(true)
+    if (newOutputDetected) {
+      setShowOutputWarning(true)
     } else {
-      setShowCustomTokenWarning(false)
+      setShowOutputWarning(false)
     }
-  }, [newInputDetected, newOutputDetected])
-
+  }, [newOutputDetected, setShowOutputWarning])
   return (
     <>
       {isNewExchange ? (
@@ -614,15 +610,13 @@ export default function AddLiquidity({ params }) {
           <NewExchangeWarningText>{t('initialExchangeRate', { symbol })}</NewExchangeWarningText>
         </NewExchangeWarning>
       ) : null}
-      {showCustomTokenWarning && (
+      {showOutputWarning && (
         <WarningCard
           onDismiss={() => {
-            setShowCustomTokenWarning(false)
+            setShowOutputWarning(false)
           }}
-          inputCurrency={inputCurrency}
-          outputCurrency={outputCurrency}
-          newInputDetected={newInputDetected}
-          newOutputDetected={newOutputDetected}
+          urlAddedTokens={urlAddedTokens}
+          currency={outputCurrency}
         />
       )}
       <CurrencyInputPanel

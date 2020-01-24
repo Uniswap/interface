@@ -725,27 +725,43 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const newOutputDetected =
     outputCurrency !== 'ETH' && outputCurrency && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(outputCurrency)
 
-  const [showCustomTokenWarning, setShowCustomTokenWarning] = useState(false)
+  const [showInputWarning, setShowInputWarning] = useState(false)
+  const [showOutputWarning, setShowOutputWarning] = useState(false)
 
   useEffect(() => {
-    if (newInputDetected || newOutputDetected) {
-      setShowCustomTokenWarning(true)
+    if (newInputDetected) {
+      setShowInputWarning(true)
     } else {
-      setShowCustomTokenWarning(false)
+      setShowInputWarning(false)
     }
-  }, [newInputDetected, newOutputDetected])
+  }, [newInputDetected, setShowInputWarning])
+
+  useEffect(() => {
+    if (newOutputDetected) {
+      setShowOutputWarning(true)
+    } else {
+      setShowOutputWarning(false)
+    }
+  }, [newOutputDetected, setShowOutputWarning])
 
   return (
     <>
-      {showCustomTokenWarning && (
+      {showInputWarning && (
         <WarningCard
           onDismiss={() => {
-            setShowCustomTokenWarning(false)
+            setShowInputWarning(false)
           }}
-          inputCurrency={inputCurrency}
-          outputCurrency={outputCurrency}
-          newInputDetected={newInputDetected}
-          newOutputDetected={newOutputDetected}
+          urlAddedTokens={urlAddedTokens}
+          currency={inputCurrency}
+        />
+      )}
+      {showOutputWarning && (
+        <WarningCard
+          onDismiss={() => {
+            setShowOutputWarning(false)
+          }}
+          urlAddedTokens={urlAddedTokens}
+          currency={outputCurrency}
         />
       )}
       <CurrencyInputPanel
