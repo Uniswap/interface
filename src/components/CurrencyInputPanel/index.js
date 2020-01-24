@@ -607,9 +607,9 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
             <TokenLogo address={address} size={'2rem'} />
             <TokenSymbolGroup>
               <div>
-                <span id="symbol">{symbol}</span>{' '}
+                <span id="symbol">{symbol}</span>
                 <FadedSpan>
-                  {urlAdded && '(Added by URL)'} {customAdded && '(Added by address)'}
+                  {urlAdded && '(Added by URL)'} {customAdded && '(Added by user)'}
                 </FadedSpan>
               </div>
               <TokenFullName> {name}</TokenFullName>
