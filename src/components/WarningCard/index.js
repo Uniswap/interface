@@ -131,13 +131,14 @@ function WarningCard({ onDismiss, inputCurrency, outputCurrency, newInputDetecte
   const { symbol: inputSymbol, name: inputName } = useTokenDetails(inputCurrency)
   const { symbol: outputSymbol, name: outputName } = useTokenDetails(outputCurrency)
 
+  const plural = newInputDetected && newOutputDetected
   return (
     <Wrapper>
       <CloseIcon onClick={() => onDismiss()}>
         <CloseColor alt={'close icon'} />
       </CloseIcon>
       <Row style={{ fontSize: '12px' }}>
-        <Text>Unverified Token</Text>
+        <Text>Unverified {plural ? 'Tokens ' : 'Token'}</Text>
         <QuestionWrapper
           onClick={() => {
             setPopup(!showPopup)
@@ -155,8 +156,8 @@ function WarningCard({ onDismiss, inputCurrency, outputCurrency, newInputDetecte
           <Popup>
             <Text>
               Exchanges can be created by anyone using the factory contract and loaded into this interface by a URL. If
-              you are loading this site from a referral link, check the source and verify the token on etherscan before
-              making any transactions.
+              you are loading this site from a referral link, check the source and verify{' '}
+              {plural ? 'these tokens ' : 'this token '} on etherscan before making any transactions.
             </Text>
           </Popup>
         ) : (
@@ -185,8 +186,8 @@ function WarningCard({ onDismiss, inputCurrency, outputCurrency, newInputDetecte
       )}
       <Row style={{ fontSize: '12px', fontStyle: 'italic', color: '#2B2B2B' }}>
         <Text>
-          Anyone can create an exchange for any token. Please verify the legitimacy of these tokens before making any
-          transactions.
+          Anyone can create an exchange for any token. Please verify the legitimacy of{' '}
+          {plural ? 'these tokens ' : 'this token '} before making any transactions.
         </Text>
       </Row>
     </Wrapper>

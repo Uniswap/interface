@@ -245,7 +245,7 @@ const TokenFullName = styled.div`
 `
 
 const FadedSpan = styled.span`
-  color: ${({ theme }) => theme.chaliceGray};
+  color: ${({ theme }) => theme.royalBlue};
 `
 
 const TokenRowBalance = styled.div`
@@ -601,6 +601,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
         INITIAL_TOKENS_CONTEXT[chainId] &&
         !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(address) &&
         !urlAdded
+
       return (
         <TokenModalRow key={address} onClick={() => _onTokenSelect(address)}>
           <TokenRowLeft>
