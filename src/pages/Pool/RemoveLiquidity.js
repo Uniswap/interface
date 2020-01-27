@@ -315,8 +315,8 @@ export default function RemoveLiquidity({ params }) {
           {t('totalSupplyIs')} {b(amountFormatter(totalPoolTokens, 18, 4))}
         </LastSummaryText>
         <LastSummaryText>
-          {t('tokenWorth')} {b(amountFormatter(ETHPer, 18, 4))} ETH {t('and')}{' '}
-          {b(amountFormatter(tokenPer, decimals, Math.min(4, decimals)))} {symbol}
+          {t('tokenWorth')} {b(amountFormatter(ETHPer.div(totalPoolTokens), 18, 4))} ETH {t('and')}{' '}
+          {b(amountFormatter(tokenPer.div(totalPoolTokens), decimals, Math.min(4, decimals)))} {symbol}
         </LastSummaryText>
       </div>
     )
