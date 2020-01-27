@@ -258,6 +258,9 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   if (params.outputCurrency) {
     urlAddedTokens[params.outputCurrency] = true
   }
+  if (isAddress(initialCurrency)) {
+    urlAddedTokens[initialCurrency] = true
+  }
 
   // BigNumber.js instance
   const ethPrice = useETHPriceInUSD()
