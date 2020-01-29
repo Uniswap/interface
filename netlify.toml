@@ -13,11 +13,8 @@
   to = "/index.html"
   status = 200
 
+[context.environment]
+  REACT_APP_IS_PRODUCTION_DEPLOY = "false"
+
 [context.production.environment]
   REACT_APP_IS_PRODUCTION_DEPLOY = "true"
-
-[context.deploy-preview.environment]
-  REACT_APP_IS_PRODUCTION_DEPLOY = "false"
-
-[context.branch-deploy.environment]
-  REACT_APP_IS_PRODUCTION_DEPLOY = "false"
