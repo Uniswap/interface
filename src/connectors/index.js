@@ -8,8 +8,13 @@ import { FortmaticConnector } from './Fortmatic'
 
 const POLLING_INTERVAL = 10000
 
+const NETWORK_URL =
+  process.env.REACT_APP_IS_PRODUCTION_DEPLOY === 'true'
+    ? process.env.REACT_APP_NETWORK_URL_PRODUCTION
+    : process.env.REACT_APP_NETWORK_URL
+
 export const network = new NetworkConnector({
-  urls: { [Number(process.env.REACT_APP_CHAIN_ID)]: process.env.REACT_APP_NETWORK_URL },
+  urls: { [Number(process.env.REACT_APP_CHAIN_ID)]: NETWORK_URL },
   pollingInterval: POLLING_INTERVAL * 3
 })
 
@@ -19,7 +24,7 @@ export const injected = new InjectedConnector({
 
 // mainnet only
 export const walletconnect = new WalletConnectConnector({
-  rpc: { 1: process.env.REACT_APP_NETWORK_URL },
+  rpc: { 1: NETWORK_URL },
   bridge: 'https://bridge.walletconnect.org',
   qrcode: false,
   pollingInterval: POLLING_INTERVAL

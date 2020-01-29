@@ -14,7 +14,7 @@
   status = 200
 
 [environment]
-  REACT_APP_NETWORK_URL = ${env:NETWORK_URL}
+  REACT_APP_IS_PRODUCTION_DEPLOY = "false"
 
 [context.production.environment]
-  REACT_APP_NETWORK_URL = ${env:NETWORK_URL_PRODUCTION}
+  REACT_APP_IS_PRODUCTION_DEPLOY = "true"
