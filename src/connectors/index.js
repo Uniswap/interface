@@ -9,14 +9,15 @@ import { FortmaticConnector } from './Fortmatic'
 const POLLING_INTERVAL = 10000
 
 export const network = new NetworkConnector({
-  urls: { 1: process.env.REACT_APP_NETWORK_URL },
+  urls: { [Number(process.env.REACT_APP_CHAIN_ID)]: process.env.REACT_APP_NETWORK_URL },
   pollingInterval: POLLING_INTERVAL * 3
 })
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1]
+  supportedChainIds: [Number(process.env.REACT_APP_CHAIN_ID)]
 })
 
+// mainnet only
 export const walletconnect = new WalletConnectConnector({
   rpc: { 1: process.env.REACT_APP_NETWORK_URL },
   bridge: 'https://bridge.walletconnect.org',
@@ -24,16 +25,19 @@ export const walletconnect = new WalletConnectConnector({
   pollingInterval: POLLING_INTERVAL
 })
 
+// mainnet only
 export const fortmatic = new FortmaticConnector({
   apiKey: process.env.REACT_APP_FORTMATIC_KEY,
   chainId: 1
 })
 
+// mainnet only
 export const portis = new PortisConnector({
   dAppId: process.env.REACT_APP_PORTIS_ID,
   networks: [1]
 })
 
+// mainnet only
 export const walletlink = new WalletLinkConnector({
   url: process.env.REACT_APP_NETWORK_URL,
   appName: 'Uniswap',
