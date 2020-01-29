@@ -5,7 +5,7 @@
   status = 451
   force = true
   conditions = {Country=["BY","CU","IR","IQ","CI","LR","KP","SD","SY","ZW"]}
-  headers = {Link = "<https://uniswap.exchange>"}
+  headers = {Link="<https://uniswap.exchange>"}
 
 # support SPA setup
 [[redirects]]
