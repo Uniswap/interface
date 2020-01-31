@@ -1983,14 +1983,14 @@
   dependencies:
     "@web3-react/types" "^6.0.2"
 
-"@web3-react/authereum-connector@^6.0.5":
-  version "6.0.5"
-  resolved "https://registry.yarnpkg.com/@web3-react/authereum-connector/-/authereum-connector-6.0.5.tgz#22d59695ed2b1d396943f0ba7fa788069ebebe93"
-  integrity sha512-b+6EWb962rzqMTQk8PzIQDVdd8jUjPh4Jfg68xxDW7TaP0QXX8vl0K5FXEUkDKYQfkwZDDJ7sHu3o7e8M/6c/g==
+"@web3-react/authereum-connector@^6.0.6":
+  version "6.0.6"
+  resolved "https://registry.yarnpkg.com/@web3-react/authereum-connector/-/authereum-connector-6.0.6.tgz#1d4f116a9de93e781f505b0fc06467535cb94532"
+  integrity sha512-2dEpsrH6rlCI/GcEQKXaXiJtwGusXvcp3mukpahGnLGgMc8mC9hhWRGaUBT1OXQ+gQvAA0fenM3+1dfpqpPs0w==
   dependencies:
     "@web3-react/abstract-connector" "^6.0.2"
     "@web3-react/types" "^6.0.2"
-    authereum "^0.0.4-beta.41"
+    authereum "^0.0.4-beta.83"
 
 "@web3-react/core@^6.0.2":
   version "6.0.2"
@@ -2738,7 +2738,7 @@ atob@^2.1.2:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-authereum@^0.0.4-beta.41:
+authereum@^0.0.4-beta.83:
   version "0.0.4-beta.83"
   resolved "https://registry.yarnpkg.com/authereum/-/authereum-0.0.4-beta.83.tgz#25de4efec029c6e417687c37caa93d1201ab1962"
   integrity sha512-qhQczUY8M0h4KUnBv+pn5M1/d3nwH486sjrFsDIcc1fl9npGLFQjFSI2yeNicf3xuR3q+5THraPihouH66IUsA==
