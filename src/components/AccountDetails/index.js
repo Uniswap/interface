@@ -7,11 +7,12 @@ import Transaction from './Transaction'
 import { SUPPORTED_WALLETS } from '../../constants'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getEtherscanLink } from '../../utils'
-import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
+import { injected, walletconnect, walletlink, fortmatic, portis, authereum } from '../../connectors'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
+import AuthereumIcon from '../../assets/images/authereum-logo.svg'
 import Identicon from '../Identicon'
 
 import { Link } from '../../theme'
@@ -292,6 +293,21 @@ export default function AccountDetails({
               }}
             >
               Show Portis
+            </MainWalletAction>
+          </IconWrapper>
+        </>
+      )
+    } else if (connector === authereum) {
+      return (
+        <>
+          <IconWrapper size={16}>
+            <img src={AuthereumIcon} alt={''} /> {formatConnectorName()}
+            <MainWalletAction
+              onClick={() => {
+                window.open('https://authereum.com/account')
+              }}
+            >
+              show Authereum
             </MainWalletAction>
           </IconWrapper>
         </>

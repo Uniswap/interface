@@ -2,6 +2,7 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { PortisConnector } from '@web3-react/portis-connector'
+import { AuthereumConnector } from '@web3-react/authereum-connector'
 
 import { NetworkConnector } from './Network'
 import { FortmaticConnector } from './Fortmatic'
@@ -47,4 +48,8 @@ export const walletlink = new WalletLinkConnector({
   appName: 'Uniswap',
   appLogoUrl:
     'https://mpng.pngfly.com/20181202/bex/kisspng-emoji-domain-unicorn-pin-badges-sticker-unicorn-tumblr-emoji-unicorn-iphoneemoji-5c046729264a77.5671679315437924251569.jpg'
+})
+
+export const authereum = new AuthereumConnector({
+  chainId: 1
 })

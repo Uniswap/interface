@@ -1,4 +1,4 @@
-import { injected, walletconnect, walletlink, fortmatic, portis } from '../connectors'
+import { injected, walletconnect, walletlink, fortmatic, portis, authereum } from '../connectors'
 
 export const FACTORY_ADDRESSES = {
   1: '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95',
@@ -88,6 +88,15 @@ export const SUPPORTED_WALLETS =
             description: 'Login using Portis hosted wallet',
             href: null,
             color: '#4A6C9B',
+            mobile: true
+          },
+          Authereum: {
+            connector: authereum,
+            name: 'Authereum',
+            iconName: 'authereum-logo.svg',
+            description: 'Login using Authereum hosted wallet',
+            href: null,
+            color: '#ff4c2e',
             mobile: true
           }
         }
