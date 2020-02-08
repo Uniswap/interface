@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import styled, { css, keyframes } from 'styled-components'
 import { darken, lighten } from 'polished'
@@ -81,7 +80,7 @@ const Popup = styled(Flex)`
   position: absolute;
   width: 228px;
   left: -78px;
-  top: -124px;
+  top: -94px;
   flex-direction: column;
   align-items: center;
   padding: 0.6rem 1rem;
@@ -327,8 +326,10 @@ export default function TransactionDetails(props) {
   function renderSummary() {
     let contextualInfo = ''
     let isError = false
-
-    if (props.inputError || props.independentError) {
+    if (props.brokenTokenWarning) {
+      contextualInfo = t('brokenToken')
+      isError = true
+    } else if (props.inputError || props.independentError) {
       contextualInfo = props.inputError || props.independentError
       isError = true
     } else if (!props.inputCurrency || !props.outputCurrency) {
@@ -357,6 +358,7 @@ export default function TransactionDetails(props) {
         contextualInfo={contextualInfo ? contextualInfo : slippageWarningText}
         allowExpand={
           !!(
+            !props.brokenTokenWarning &&
             props.inputCurrency &&
             props.outputCurrency &&
             props.inputValueParsed &&
@@ -367,6 +369,7 @@ export default function TransactionDetails(props) {
         isError={isError}
         slippageWarning={props.slippageWarning && !contextualInfo}
         highSlippageWarning={props.highSlippageWarning && !contextualInfo}
+        brokenTokenWarning={props.brokenTokenWarning}
         renderTransactionDetails={renderTransactionDetails}
         dropDownContent={dropDownContent}
       />
@@ -411,22 +414,22 @@ export default function TransactionDetails(props) {
             >
               0.1%
             </Option>
-            <Option
+            <OptionLarge
               onClick={() => {
                 setFromFixed(2, 0.5)
               }}
               active={activeIndex === 2}
             >
-              0.5%
-            </Option>
-            <OptionLarge
+              0.5% <Faded>(suggested)</Faded>
+            </OptionLarge>
+            <Option
               onClick={() => {
                 setFromFixed(3, 1)
               }}
               active={activeIndex === 3}
             >
-              1% <Faded>(suggested)</Faded>
-            </OptionLarge>
+              1%
+            </Option>
             <OptionCustom
               active={activeIndex === 4}
               color={
@@ -642,11 +645,6 @@ export default function TransactionDetails(props) {
   const b = text => <Bold>{text}</Bold>
 
   const renderTransactionDetails = () => {
-    ReactGA.event({
-      category: 'TransactionDetail',
-      action: 'Open'
-    })
-
     if (props.independentField === props.INPUT) {
       return props.sending ? (
         <TransactionInfo>

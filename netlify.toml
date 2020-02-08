@@ -5,10 +5,16 @@
   status = 451
   force = true
   conditions = {Country=["BY","CU","IR","IQ","CI","LR","KP","SD","SY","ZW"]}
-  headers = {Link = "<https://uniswap.exchange>"}
+  headers = {Link="<https://uniswap.exchange>"}
 
 # support SPA setup
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+[build.environment]
+  REACT_APP_IS_PRODUCTION_DEPLOY = "false"
+
+[context.production.environment]
+  REACT_APP_IS_PRODUCTION_DEPLOY = "true"

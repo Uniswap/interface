@@ -5,20 +5,25 @@ import { ethers } from 'ethers'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '../../theme'
 import { useWeb3React } from '../../hooks'
+import { brokenTokens } from '../../constants'
+import { amountFormatter, calculateGasMargin, isAddress } from '../../utils'
+
+import { useExchangeContract } from '../../hooks'
+import { useTokenDetails, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
+import { useTransactionAdder } from '../../contexts/Transactions'
+import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
+import { useAddressAllowance } from '../../contexts/Allowances'
+import { useWalletModalToggle } from '../../contexts/Application'
+import { useETHPriceInUSD } from '../../contexts/Balances'
+
+import { Button } from '../../theme'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import AddressInputPanel from '../AddressInputPanel'
 import OversizedPanel from '../OversizedPanel'
 import TransactionDetails from '../TransactionDetails'
 import ArrowDown from '../../assets/svg/SVGArrowDown'
-import { amountFormatter, calculateGasMargin } from '../../utils'
-import { useExchangeContract } from '../../hooks'
-import { useTokenDetails } from '../../contexts/Tokens'
-import { useTransactionAdder } from '../../contexts/Transactions'
-import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
-import { useAddressAllowance } from '../../contexts/Allowances'
-import { useWalletModalToggle } from '../../contexts/Application'
+import WarningCard from '../WarningCard'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -28,8 +33,8 @@ const TOKEN_TO_ETH = 1
 const TOKEN_TO_TOKEN = 2
 
 // denominated in bips
-const ALLOWED_SLIPPAGE_DEFAULT = 100
-const TOKEN_ALLOWED_SLIPPAGE_DEFAULT = 100
+const ALLOWED_SLIPPAGE_DEFAULT = 50
+const TOKEN_ALLOWED_SLIPPAGE_DEFAULT = 50
 
 // 15 minutes, denominated in seconds
 const DEFAULT_DEADLINE_FROM_NOW = 60 * 15
@@ -204,15 +209,15 @@ function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals,
       if (invert) {
         return inputValue
           .mul(factor)
-          .div(outputValue)
           .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
           .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
+          .div(outputValue)
       } else {
         return outputValue
           .mul(factor)
-          .div(inputValue)
           .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
           .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
+          .div(inputValue)
       }
     }
   } catch {}
@@ -244,7 +249,21 @@ function getMarketRate(
 
 export default function ExchangePage({ initialCurrency, sending = false, params }) {
   const { t } = useTranslation()
-  const { account, error } = useWeb3React()
+  const { account, chainId, error } = useWeb3React()
+
+  const urlAddedTokens = {}
+  if (params.inputCurrency) {
+    urlAddedTokens[params.inputCurrency] = true
+  }
+  if (params.outputCurrency) {
+    urlAddedTokens[params.outputCurrency] = true
+  }
+  if (isAddress(initialCurrency)) {
+    urlAddedTokens[initialCurrency] = true
+  }
+
+  // BigNumber.js instance
+  const ethPrice = useETHPriceInUSD()
 
   const addTransaction = useTransactionAdder()
 
@@ -265,6 +284,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     }
     return ''
   }
+
+  const [brokenTokenWarning, setBrokenTokenWarning] = useState()
 
   const [deadlineFromNow, setDeadlineFromNow] = useState(DEFAULT_DEADLINE_FROM_NOW)
 
@@ -293,6 +314,18 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   )
 
   const { independentValue, dependentValue, independentField, inputCurrency, outputCurrency } = swapState
+
+  useEffect(() => {
+    setBrokenTokenWarning(false)
+    for (let i = 0; i < brokenTokens.length; i++) {
+      if (
+        brokenTokens[i].toLowerCase() === outputCurrency.toLowerCase() ||
+        brokenTokens[i].toLowerCase() === inputCurrency.toLowerCase()
+      ) {
+        setBrokenTokenWarning(true)
+      }
+    }
+  }, [outputCurrency, inputCurrency])
 
   const [recipient, setRecipient] = useState({
     address: initialRecipient(),
@@ -539,7 +572,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   )
 
   const percentSlippage =
-    exchangeRate && marketRate
+    exchangeRate && marketRate && !marketRate.isZero()
       ? exchangeRate
           .sub(marketRate)
           .abs()
@@ -564,13 +597,51 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   }
 
   async function onSwap() {
+    //if user changed deadline, log new one in minutes
+    if (deadlineFromNow !== DEFAULT_DEADLINE_FROM_NOW) {
+      ReactGA.event({
+        category: 'Advanced Interaction',
+        action: 'Set Custom Deadline',
+        value: deadlineFromNow / 60
+      })
+    }
+
     const deadline = Math.ceil(Date.now() / 1000) + deadlineFromNow
 
+    // if user has changed slippage, log
+    if (swapType === TOKEN_TO_TOKEN) {
+      if (parseInt(tokenAllowedSlippageBig.toString()) !== TOKEN_ALLOWED_SLIPPAGE_DEFAULT) {
+        ReactGA.event({
+          category: 'Advanced Interaction',
+          action: 'Set Custom Slippage',
+          value: parseInt(tokenAllowedSlippageBig.toString())
+        })
+      }
+    } else {
+      if (parseInt(allowedSlippageBig.toString()) !== ALLOWED_SLIPPAGE_DEFAULT) {
+        ReactGA.event({
+          category: 'Advanced Interaction',
+          action: 'Set Custom Slippage',
+          value: parseInt(allowedSlippageBig.toString())
+        })
+      }
+    }
+
     let estimate, method, args, value
+
+    let inputEthPerToken = 1
+    if (inputCurrency !== 'ETH') {
+      inputEthPerToken = inputReserveToken && inputReserveETH ? inputReserveETH / inputReserveToken : null
+    }
+    let usdTransactionSize = ethPrice * inputEthPerToken * inputValueFormatted
+
     if (independentField === INPUT) {
+      // general details about transaction
       ReactGA.event({
-        category: `${swapType}`,
-        action: sending ? 'TransferInput' : 'SwapInput'
+        category: 'Transaction',
+        action: sending ? 'SendInput' : 'SwapInput',
+        label: outputCurrency,
+        value: usdTransactionSize
       })
 
       if (swapType === ETH_TO_TOKEN) {
@@ -601,9 +672,12 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         value = ethers.constants.Zero
       }
     } else if (independentField === OUTPUT) {
+      // general details about transaction
       ReactGA.event({
-        category: `${swapType}`,
-        action: sending ? 'TransferOutput' : 'SwapOutput'
+        category: 'Transaction',
+        action: sending ? 'SendOutput' : 'SwapOutput',
+        label: outputCurrency,
+        value: usdTransactionSize
       })
 
       if (swapType === ETH_TO_TOKEN) {
@@ -648,10 +722,54 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
   const toggleWalletModal = useWalletModalToggle()
 
+  const newInputDetected =
+    inputCurrency !== 'ETH' && inputCurrency && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(inputCurrency)
+
+  const newOutputDetected =
+    outputCurrency !== 'ETH' && outputCurrency && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(outputCurrency)
+
+  const [showInputWarning, setShowInputWarning] = useState(false)
+  const [showOutputWarning, setShowOutputWarning] = useState(false)
+
+  useEffect(() => {
+    if (newInputDetected) {
+      setShowInputWarning(true)
+    } else {
+      setShowInputWarning(false)
+    }
+  }, [newInputDetected, setShowInputWarning])
+
+  useEffect(() => {
+    if (newOutputDetected) {
+      setShowOutputWarning(true)
+    } else {
+      setShowOutputWarning(false)
+    }
+  }, [newOutputDetected, setShowOutputWarning])
+
   return (
     <>
+      {showInputWarning && (
+        <WarningCard
+          onDismiss={() => {
+            setShowInputWarning(false)
+          }}
+          urlAddedTokens={urlAddedTokens}
+          currency={inputCurrency}
+        />
+      )}
+      {showOutputWarning && (
+        <WarningCard
+          onDismiss={() => {
+            setShowOutputWarning(false)
+          }}
+          urlAddedTokens={urlAddedTokens}
+          currency={outputCurrency}
+        />
+      )}
       <CurrencyInputPanel
         title={t('input')}
+        urlAddedTokens={urlAddedTokens}
         description={inputValueFormatted && independentField === OUTPUT ? estimatedText : ''}
         extraText={inputBalanceFormatted && formatBalance(inputBalanceFormatted)}
         extraTextClickHander={() => {
@@ -702,6 +820,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         title={t('output')}
         description={outputValueFormatted && independentField === INPUT ? estimatedText : ''}
         extraText={outputBalanceFormatted && formatBalance(outputBalanceFormatted)}
+        urlAddedTokens={urlAddedTokens}
         onCurrencySelected={outputCurrency => {
           dispatchSwapState({
             type: 'SELECT_CURRENCY',
@@ -761,6 +880,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         rawSlippage={rawSlippage}
         slippageWarning={slippageWarning}
         highSlippageWarning={highSlippageWarning}
+        brokenTokenWarning={brokenTokenWarning}
         setDeadline={setDeadlineFromNow}
         deadline={deadlineFromNow}
         inputError={inputError}
@@ -786,12 +906,16 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       />
       <Flex>
         <Button
-          disabled={!account && !error ? false : !isValid || customSlippageError === 'invalid'}
+          disabled={
+            brokenTokenWarning ? true : !account && !error ? false : !isValid || customSlippageError === 'invalid'
+          }
           onClick={account && !error ? onSwap : toggleWalletModal}
           warning={highSlippageWarning || customSlippageError === 'warning'}
           loggedOut={!account}
         >
-          {!account
+          {brokenTokenWarning
+            ? 'Swap'
+            : !account
             ? 'Connect to a Wallet'
             : sending
             ? highSlippageWarning || customSlippageError === 'warning'

@@ -12,7 +12,7 @@ export const SUPPORTED_THEMES = {
   LIGHT: 'LIGHT'
 }
 
-export const SUPPORTED_WALLETS = {
+const MAINNET_WALLETS = {
   INJECTED: {
     connector: injected,
     name: 'Injected',
@@ -29,75 +29,85 @@ export const SUPPORTED_WALLETS = {
     description: 'Easy-to-use browser extension.',
     href: null,
     color: '#E8831D'
-  },
-  WALLET_CONNECT: {
-    connector: walletconnect,
-    name: 'Wallet Connect',
-    iconName: 'walletConnectIcon.svg',
-    description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
-    href: null,
-    color: '#4196FC'
-  },
-  WALLET_LINK: {
-    connector: walletlink,
-    name: 'Coinbase Wallet',
-    iconName: 'coinbaseWalletIcon.svg',
-    description: 'Use Coinbase Wallet app on mobile device',
-    href: null,
-    color: '#315CF5'
-  },
-  COINBASE_LINK: {
-    name: 'Open in Coinbase Wallet',
-    iconName: 'coinbaseWalletIcon.svg',
-    description: 'Open in Coinbase Wallet app.',
-    href: 'https://go.cb-w.com/mtUDhEZPy1',
-    color: '#315CF5',
-    mobile: true,
-    mobileOnly: true
-  },
-  TRUST_WALLET_LINK: {
-    name: 'Open in Trust Wallet',
-    iconName: 'trustWallet.png',
-    description: 'iOS and Android app.',
-    href: 'https://link.trustwallet.com/open_url?coin_id=60&url=https://uniswap.exchange/swap',
-    color: '#1C74CC',
-    mobile: true,
-    mobileOnly: true
-  },
-  FORTMATIC: {
-    connector: fortmatic,
-    name: 'Fortmatic',
-    iconName: 'fortmaticIcon.png',
-    description: 'Login using Fortmatic hosted wallet',
-    href: null,
-    color: '#6748FF',
-    mobile: true
-  },
-  Portis: {
-    connector: portis,
-    name: 'Portis',
-    iconName: 'portisIcon.png',
-    description: 'Login using Portis hosted wallet',
-    href: null,
-    color: '#4A6C9B',
-    mobile: true
-  },
-  Torus: {
-    connector: torus,
-    name: 'Torus',
-    iconName: 'torus.png',
-    description: 'Login via Google, Facebook and others',
-    href: null,
-    color: '#5495F7',
-    mobile: true
   }
 }
+
+export const SUPPORTED_WALLETS =
+  process.env.REACT_APP_CHAIN_ID !== '1'
+    ? MAINNET_WALLETS
+    : {
+        ...MAINNET_WALLETS,
+        ...{
+          WALLET_CONNECT: {
+            connector: walletconnect,
+            name: 'WalletConnect',
+            iconName: 'walletConnectIcon.svg',
+            description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
+            href: null,
+            color: '#4196FC'
+          },
+          WALLET_LINK: {
+            connector: walletlink,
+            name: 'Coinbase Wallet',
+            iconName: 'coinbaseWalletIcon.svg',
+            description: 'Use Coinbase Wallet app on mobile device',
+            href: null,
+            color: '#315CF5'
+          },
+          COINBASE_LINK: {
+            name: 'Open in Coinbase Wallet',
+            iconName: 'coinbaseWalletIcon.svg',
+            description: 'Open in Coinbase Wallet app.',
+            href: 'https://go.cb-w.com/mtUDhEZPy1',
+            color: '#315CF5',
+            mobile: true,
+            mobileOnly: true
+          },
+          TRUST_WALLET_LINK: {
+            name: 'Open in Trust Wallet',
+            iconName: 'trustWallet.png',
+            description: 'iOS and Android app.',
+            href: 'https://link.trustwallet.com/open_url?coin_id=60&url=https://uniswap.exchange/swap',
+            color: '#1C74CC',
+            mobile: true,
+            mobileOnly: true
+          },
+          FORTMATIC: {
+            connector: fortmatic,
+            name: 'Fortmatic',
+            iconName: 'fortmaticIcon.png',
+            description: 'Login using Fortmatic hosted wallet',
+            href: null,
+            color: '#6748FF',
+            mobile: true
+          },
+          Portis: {
+            connector: portis,
+            name: 'Portis',
+            iconName: 'portisIcon.png',
+            description: 'Login using Portis hosted wallet',
+            href: null,
+            color: '#4A6C9B',
+            mobile: true
+          },
+          Torus: {
+            connector: torus,
+            name: 'Torus',
+            iconName: 'torus.png',
+            description: 'Login via Google, Facebook and others',
+            href: null,
+            color: '#5495F7',
+            mobile: true
+          }
+        }
+      }
 
 // list of tokens that lock fund on adding liquidity - used to disable button
 export const brokenTokens = [
   '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
   '0x95dAaaB98046846bF4B2853e23cba236fa394A31',
-  '0x55296f69f40Ea6d20E478533C15A6B08B654E758'
+  '0x55296f69f40Ea6d20E478533C15A6B08B654E758',
+  '0xc3761EB917CD790B30dAD99f6Cc5b4Ff93C4F9eA'
 ]
 
 export const NetworkContextName = 'NETWORK'

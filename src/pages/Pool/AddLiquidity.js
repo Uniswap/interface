@@ -10,12 +10,14 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import OversizedPanel from '../../components/OversizedPanel'
 import ContextualInfo from '../../components/ContextualInfo'
 import { ReactComponent as Plus } from '../../assets/images/plus-blue.svg'
+import WarningCard from '../../components/WarningCard'
+
 import { useWeb3React, useExchangeContract } from '../../hooks'
 import { brokenTokens } from '../../constants'
 import { amountFormatter, calculateGasMargin } from '../../utils'
 import { useTransactionAdder } from '../../contexts/Transactions'
-import { useTokenDetails } from '../../contexts/Tokens'
-import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
+import { useTokenDetails, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
+import { useAddressBalance, useExchangeReserves, useETHPriceInUSD } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 
 const INPUT = 0
@@ -178,15 +180,15 @@ function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals,
       if (invert) {
         return inputValue
           .mul(factor)
-          .div(outputValue)
           .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
           .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
+          .div(outputValue)
       } else {
         return outputValue
           .mul(factor)
-          .div(inputValue)
           .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
           .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
+          .div(inputValue)
       }
     }
   } catch {}
@@ -198,7 +200,15 @@ function getMarketRate(reserveETH, reserveToken, decimals, invert = false) {
 
 export default function AddLiquidity({ params }) {
   const { t } = useTranslation()
-  const { library, account, active } = useWeb3React()
+  const { library, account, active, chainId } = useWeb3React()
+
+  // BigNumber.js instance
+  const ethPrice = useETHPriceInUSD()
+
+  const urlAddedTokens = {}
+  if (params.token) {
+    urlAddedTokens[params.token] = true
+  }
 
   // clear url of query
   useEffect(() => {
@@ -218,6 +228,7 @@ export default function AddLiquidity({ params }) {
   const [outputValueParsed, setOutputValueParsed] = useState()
   const [inputError, setInputError] = useState()
   const [outputError, setOutputError] = useState()
+  const [zeroDecimalError, setZeroDecimalError] = useState()
 
   const [brokenTokenWarning, setBrokenTokenWarning] = useState()
 
@@ -296,11 +307,6 @@ export default function AddLiquidity({ params }) {
   }, [reserveETH, reserveToken, decimals])
 
   function renderTransactionDetails() {
-    ReactGA.event({
-      category: 'TransactionDetail',
-      action: 'Open'
-    })
-
     const b = text => <BlueSpan>{text}</BlueSpan>
 
     if (isNewExchange) {
@@ -355,6 +361,8 @@ export default function AddLiquidity({ params }) {
     if (brokenTokenWarning) {
       contextualInfo = t('brokenToken')
       isError = true
+    } else if (zeroDecimalError) {
+      contextualInfo = zeroDecimalError
     } else if (inputError || outputError) {
       contextualInfo = inputError || outputError
       isError = true
@@ -381,9 +389,15 @@ export default function AddLiquidity({ params }) {
   const addTransaction = useTransactionAdder()
 
   async function onAddLiquidity() {
+    // take ETH amount, multiplied by ETH rate and 2 for total tx size
+    let usdTransactionSize = ethPrice * (inputValueParsed / 1e18) * 2
+
+    // log pool added to and total usd amount
     ReactGA.event({
-      category: 'Pool',
-      action: 'AddLiquidity'
+      category: 'Transaction',
+      action: 'Add Liquidity',
+      label: outputCurrency,
+      value: usdTransactionSize
     })
 
     const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
@@ -416,7 +430,7 @@ export default function AddLiquidity({ params }) {
 
   function formatBalance(value) {
     return `Balance: ${value}`
-  } // check for broken tokens
+  }
 
   useEffect(() => {
     setBrokenTokenWarning(false)
@@ -429,14 +443,18 @@ export default function AddLiquidity({ params }) {
 
   useEffect(() => {
     if (isNewExchange) {
+      setZeroDecimalError()
       if (inputValue) {
         const parsedInputValue = ethers.utils.parseUnits(inputValue, 18)
         setInputValueParsed(parsedInputValue)
       }
-
       if (outputValue) {
-        const parsedOutputValue = ethers.utils.parseUnits(outputValue, decimals)
-        setOutputValueParsed(parsedOutputValue)
+        try {
+          const parsedOutputValue = ethers.utils.parseUnits(outputValue, decimals)
+          setOutputValueParsed(parsedOutputValue)
+        } catch {
+          setZeroDecimalError('Invalid input. For 0 decimal tokens only supply whole number token amounts.')
+        }
       }
     }
   }, [decimals, inputValue, isNewExchange, outputValue])
@@ -564,8 +582,21 @@ export default function AddLiquidity({ params }) {
   }, [outputValueParsed, allowance, t])
 
   const isActive = active && account
-  const isValid = (inputError === null || outputError === null) && !showUnlock && !brokenTokenWarning
+  const isValid =
+    (inputError === null || outputError === null) && !zeroDecimalError && !showUnlock && !brokenTokenWarning
 
+  const newOutputDetected =
+    outputCurrency !== 'ETH' && outputCurrency && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(outputCurrency)
+
+  const [showOutputWarning, setShowOutputWarning] = useState(false)
+
+  useEffect(() => {
+    if (newOutputDetected) {
+      setShowOutputWarning(true)
+    } else {
+      setShowOutputWarning(false)
+    }
+  }, [newOutputDetected, setShowOutputWarning])
   return (
     <>
       {isNewExchange ? (
@@ -579,7 +610,15 @@ export default function AddLiquidity({ params }) {
           <NewExchangeWarningText>{t('initialExchangeRate', { symbol })}</NewExchangeWarningText>
         </NewExchangeWarning>
       ) : null}
-
+      {showOutputWarning && (
+        <WarningCard
+          onDismiss={() => {
+            setShowOutputWarning(false)
+          }}
+          urlAddedTokens={urlAddedTokens}
+          currency={outputCurrency}
+        />
+      )}
       <CurrencyInputPanel
         title={t('deposit')}
         extraText={inputBalance && formatBalance(amountFormatter(inputBalance, 18, 4))}
@@ -613,6 +652,7 @@ export default function AddLiquidity({ params }) {
         extraText={
           outputBalance && decimals && formatBalance(amountFormatter(outputBalance, decimals, Math.min(decimals, 4)))
         }
+        urlAddedTokens={urlAddedTokens}
         selectedTokenAddress={outputCurrency}
         onCurrencySelected={outputCurrency => {
           dispatchAddLiquidityState({ type: 'SELECT_CURRENCY', payload: outputCurrency })

@@ -6,15 +6,19 @@ import { ethers } from 'ethers'
 import styled from 'styled-components'
 
 import { useWeb3React, useExchangeContract } from '../../hooks'
+import { useTransactionAdder } from '../../contexts/Transactions'
+import { useTokenDetails, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
+import { useAddressBalance, useETHPriceInUSD } from '../../contexts/Balances'
+
+import { calculateGasMargin, amountFormatter } from '../../utils'
+import { brokenTokens } from '../../constants'
+
 import { Button } from '../../theme'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import ContextualInfo from '../../components/ContextualInfo'
 import OversizedPanel from '../../components/OversizedPanel'
 import ArrowDown from '../../assets/svg/SVGArrowDown'
-import { useTransactionAdder } from '../../contexts/Transactions'
-import { useTokenDetails } from '../../contexts/Tokens'
-import { useAddressBalance } from '../../contexts/Balances'
-import { calculateGasMargin, amountFormatter } from '../../utils'
+import WarningCard from '../../components/WarningCard'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = ethers.utils.bigNumberify(200)
@@ -107,15 +111,15 @@ function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals,
       if (invert) {
         return inputValue
           .mul(factor)
-          .div(outputValue)
           .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
           .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
+          .div(outputValue)
       } else {
         return outputValue
           .mul(factor)
-          .div(inputValue)
           .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
           .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
+          .div(inputValue)
       }
     }
   } catch {}
@@ -141,9 +145,11 @@ function calculateSlippageBounds(value) {
 
 export default function RemoveLiquidity({ params }) {
   const { t } = useTranslation()
-  const { library, account, active } = useWeb3React()
+  const { library, account, active, chainId } = useWeb3React()
 
   const addTransaction = useTransactionAdder()
+
+  const [brokenTokenWarning, setBrokenTokenWarning] = useState()
 
   // clear url of query
   useEffect(() => {
@@ -155,6 +161,16 @@ export default function RemoveLiquidity({ params }) {
   const [value, setValue] = useState(params.poolTokenAmount ? params.poolTokenAmount : '')
   const [inputError, setInputError] = useState()
   const [valueParsed, setValueParsed] = useState()
+
+  useEffect(() => {
+    setBrokenTokenWarning(false)
+    for (let i = 0; i < brokenTokens.length; i++) {
+      if (brokenTokens[i].toLowerCase() === outputCurrency.toLowerCase()) {
+        setBrokenTokenWarning(true)
+      }
+    }
+  }, [outputCurrency])
+
   // parse value
   useEffect(() => {
     try {
@@ -178,6 +194,11 @@ export default function RemoveLiquidity({ params }) {
   const poolTokenBalance = useAddressBalance(account, exchangeAddress)
   const exchangeETHBalance = useAddressBalance(exchangeAddress, 'ETH')
   const exchangeTokenBalance = useAddressBalance(exchangeAddress, outputCurrency)
+
+  const urlAddedTokens = {}
+  if (params.poolTokenAddress) {
+    urlAddedTokens[params.poolTokenAddress] = true
+  }
 
   // input validation
   useEffect(() => {
@@ -207,22 +228,25 @@ export default function RemoveLiquidity({ params }) {
     ownershipPercentage &&
     exchangeTokenBalance.mul(ownershipPercentage).div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
 
-  const ETHPer =
-    exchangeETHBalance && totalPoolTokens && !totalPoolTokens.isZero()
-      ? exchangeETHBalance.mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))).div(totalPoolTokens)
-      : undefined
-  const tokenPer =
-    exchangeTokenBalance && totalPoolTokens && !totalPoolTokens.isZero()
-      ? exchangeTokenBalance.mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))).div(totalPoolTokens)
-      : undefined
+  const ETHPer = exchangeETHBalance
+    ? exchangeETHBalance.mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+    : undefined
+  const tokenPer = exchangeTokenBalance
+    ? exchangeTokenBalance.mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+    : undefined
 
   const ethWithdrawn =
-    ETHPer && valueParsed
-      ? ETHPer.mul(valueParsed).div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+    ETHPer && valueParsed && totalPoolTokens && !totalPoolTokens.isZero()
+      ? ETHPer.mul(valueParsed)
+          .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+          .div(totalPoolTokens)
       : undefined
   const tokenWithdrawn =
-    tokenPer && valueParsed
-      ? tokenPer.mul(valueParsed).div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+    tokenPer && valueParsed && totalPoolTokens && !totalPoolTokens.isZero()
+      ? tokenPer
+          .mul(valueParsed)
+          .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
+          .div(totalPoolTokens)
       : undefined
 
   const ethWithdrawnMin = ethWithdrawn ? calculateSlippageBounds(ethWithdrawn).minimum : undefined
@@ -244,10 +268,17 @@ export default function RemoveLiquidity({ params }) {
     }
   }, [fetchPoolTokens, library])
 
+  // BigNumber.js instance
+  const ethPrice = useETHPriceInUSD()
+
   async function onRemoveLiquidity() {
+    // take ETH amount, multiplied by ETH rate and 2 for total tx size
+    let usdTransactionSize = ethPrice * (ethWithdrawn / 1e18) * 2
     ReactGA.event({
-      category: 'Pool',
-      action: 'RemoveLiquidity'
+      category: 'Transaction',
+      action: 'Remove Liquidity',
+      label: outputCurrency,
+      value: usdTransactionSize
     })
 
     const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
@@ -271,11 +302,6 @@ export default function RemoveLiquidity({ params }) {
   const b = text => <BlueSpan>{text}</BlueSpan>
 
   function renderTransactionDetails() {
-    ReactGA.event({
-      category: 'TransactionDetail',
-      action: 'Open'
-    })
-
     return (
       <div>
         <div>
@@ -289,8 +315,8 @@ export default function RemoveLiquidity({ params }) {
           {t('totalSupplyIs')} {b(amountFormatter(totalPoolTokens, 18, 4))}
         </LastSummaryText>
         <LastSummaryText>
-          {t('tokenWorth')} {b(amountFormatter(ETHPer, 18, 4))} ETH {t('and')}{' '}
-          {b(amountFormatter(tokenPer, decimals, Math.min(4, decimals)))} {symbol}
+          {t('tokenWorth')} {b(amountFormatter(ETHPer.div(totalPoolTokens), 18, 4))} ETH {t('and')}{' '}
+          {b(amountFormatter(tokenPer.div(totalPoolTokens), decimals, Math.min(4, decimals)))} {symbol}
         </LastSummaryText>
       </div>
     )
@@ -299,8 +325,10 @@ export default function RemoveLiquidity({ params }) {
   function renderSummary() {
     let contextualInfo = ''
     let isError = false
-
-    if (inputError) {
+    if (brokenTokenWarning) {
+      contextualInfo = t('brokenToken')
+      isError = true
+    } else if (inputError) {
       contextualInfo = inputError
       isError = true
     } else if (!outputCurrency || outputCurrency === 'ETH') {
@@ -333,8 +361,30 @@ export default function RemoveLiquidity({ params }) {
 
   const marketRate = getMarketRate(exchangeETHBalance, exchangeTokenBalance, decimals)
 
+  const newOutputDetected =
+    outputCurrency !== 'ETH' && outputCurrency && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(outputCurrency)
+
+  const [showCustomTokenWarning, setShowCustomTokenWarning] = useState(false)
+
+  useEffect(() => {
+    if (newOutputDetected) {
+      setShowCustomTokenWarning(true)
+    } else {
+      setShowCustomTokenWarning(false)
+    }
+  }, [newOutputDetected])
+
   return (
     <>
+      {showCustomTokenWarning && (
+        <WarningCard
+          onDismiss={() => {
+            setShowCustomTokenWarning(false)
+          }}
+          urlAddedTokens={urlAddedTokens}
+          currency={outputCurrency}
+        />
+      )}
       <CurrencyInputPanel
         title={t('poolTokens')}
         extraText={poolTokenBalance && formatBalance(amountFormatter(poolTokenBalance, 18, 4))}
@@ -346,6 +396,7 @@ export default function RemoveLiquidity({ params }) {
             }
           }
         }}
+        urlAddedTokens={urlAddedTokens}
         onCurrencySelected={setOutputCurrency}
         onValueChange={setValue}
         value={value}

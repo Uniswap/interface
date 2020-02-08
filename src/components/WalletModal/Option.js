@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { transparentize } from 'polished'
 import { Link } from '../../theme'
 
 const InfoCard = styled.button`
@@ -10,7 +9,6 @@ const InfoCard = styled.button`
   border: 1px solid;
   border-radius: 12px;
   width: 100% !important;
-  : 0 4px 8px 0 ${({ theme, clickable }) => (clickable ? transparentize(0.95, theme.shadowColor) : 'none')};
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.royalBlue};
   }
