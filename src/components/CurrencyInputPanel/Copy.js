@@ -25,14 +25,14 @@ const TransactionStatusText = styled.span`
 
 export default function CopyHelper({ toCopy }) {
   const [isCopied, setCopied] = useCopyClipboard()
-  
+
   function handleClick(e) {
-    setCopied(toCopy);
-    e.stopPropagation();
+    setCopied(toCopy)
+    e.stopPropagation()
   }
 
   return (
-    <CopyIcon onClick={(e) => handleClick(e)}>
+    <CopyIcon onClick={e => handleClick(e)}>
       {isCopied ? (
         <TransactionStatusText>
           <CheckCircle size={'16'} />
