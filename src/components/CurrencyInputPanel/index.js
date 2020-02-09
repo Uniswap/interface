@@ -25,6 +25,7 @@ import { transparentize } from 'polished'
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle-grey.svg'
 import { useETHPriceInUSD, useAllBalances } from '../../contexts/Balances'
+import Copy from './Copy'
 
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
@@ -262,6 +263,7 @@ const TokenRowUsd = styled.div`
 const TokenRowRight = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: flex-end;
+  width: 100%;
 `
 
 const StyledTokenName = styled.span`
@@ -634,6 +636,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
                 : ''}
             </TokenRowUsd>
           </TokenRowRight>
+          <Copy toCopy={address} />
         </TokenModalRow>
       )
     })
