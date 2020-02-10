@@ -243,6 +243,7 @@ const TokenSymbolGroup = styled.div`
 
 const TokenFullName = styled.div`
   color: ${({ theme }) => theme.chaliceGray};
+  display: flex
 `
 
 const FadedSpan = styled.span`
@@ -263,7 +264,6 @@ const TokenRowUsd = styled.div`
 const TokenRowRight = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: flex-end;
-  width: 100%;
 `
 
 const StyledTokenName = styled.span`
@@ -615,7 +615,10 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
                   {urlAdded && '(Added by URL)'} {customAdded && '(Added by user)'}
                 </FadedSpan>
               </div>
-              <TokenFullName> {name}</TokenFullName>
+              <TokenFullName>
+                {name}
+                <Copy toCopy={address} />
+              </TokenFullName>
             </TokenSymbolGroup>
           </TokenRowLeft>
           <TokenRowRight>
@@ -636,7 +639,6 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
                 : ''}
             </TokenRowUsd>
           </TokenRowRight>
-          <Copy toCopy={address} />
         </TokenModalRow>
       )
     })

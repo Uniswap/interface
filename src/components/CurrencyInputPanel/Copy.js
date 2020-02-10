@@ -8,7 +8,7 @@ import { CheckCircle, Copy } from 'react-feather'
 const CopyIcon = styled(Link)`
   color: ${({ theme }) => theme.silverGray};
   flex-shrink: 0;
-  margin-left: 0.5rem;
+  margin-left: 0.25rem;
   text-decoration: none;
   :hover,
   :active,
@@ -26,6 +26,10 @@ const TransactionStatusText = styled.span`
 export default function CopyHelper({ toCopy }) {
   const [isCopied, setCopied] = useCopyClipboard()
 
+  if(toCopy.toString() === 'ETH') {
+    return null;
+  }
+
   function handleClick(e) {
     setCopied(toCopy)
     e.stopPropagation()
@@ -36,7 +40,7 @@ export default function CopyHelper({ toCopy }) {
       {isCopied ? (
         <TransactionStatusText>
           <CheckCircle size={'16'} />
-          <TransactionStatusText>Copied</TransactionStatusText>
+          <TransactionStatusText>Token Address Copied</TransactionStatusText>
         </TransactionStatusText>
       ) : (
         <TransactionStatusText>
