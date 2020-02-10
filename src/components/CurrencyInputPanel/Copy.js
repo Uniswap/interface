@@ -26,8 +26,8 @@ const TransactionStatusText = styled.span`
 export default function CopyHelper({ toCopy }) {
   const [isCopied, setCopied] = useCopyClipboard()
 
-  if(toCopy.toString() === 'ETH') {
-    return null;
+  if (toCopy.toString() === 'ETH') {
+    return null
   }
 
   function handleClick(e) {

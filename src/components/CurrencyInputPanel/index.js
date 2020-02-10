@@ -243,7 +243,7 @@ const TokenSymbolGroup = styled.div`
 
 const TokenFullName = styled.div`
   color: ${({ theme }) => theme.chaliceGray};
-  display: flex
+  display: flex;
 `
 
 const FadedSpan = styled.span`
