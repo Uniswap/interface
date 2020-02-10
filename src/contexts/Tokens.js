@@ -52,6 +52,12 @@ export const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 9,
       [EXCHANGE_ADDRESS]: '0x042dBBDc27F75d277C3D99efE327DB21Bc4fde75'
     },
+    '0xcD62b1C403fa761BAadFC74C525ce2B51780b184': {
+      [NAME]: 'Aragon Network Juror',
+      [SYMBOL]: 'ANJ',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x64A9edD3f5fce0252Cd708E26c8dd11205742826'
+    },
     '0x960b236A07cf122663c4303350609A66A7B288C0': {
       [NAME]: 'Aragon Network Token',
       [SYMBOL]: 'ANT',
