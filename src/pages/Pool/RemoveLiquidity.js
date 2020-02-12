@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import { useWeb3React, useExchangeContract } from '../../hooks'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useTokenDetails, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
-import { useAddressBalance, useETHPriceInUSD } from '../../contexts/Balances'
+import { useAddressBalance } from '../../contexts/Balances'
 
 import { calculateGasMargin, amountFormatter } from '../../utils'
 import { brokenTokens } from '../../constants'
@@ -268,18 +268,9 @@ export default function RemoveLiquidity({ params }) {
     }
   }, [fetchPoolTokens, library])
 
-  // BigNumber.js instance
-  const ethPrice = useETHPriceInUSD()
-
   async function onRemoveLiquidity() {
     // take ETH amount, multiplied by ETH rate and 2 for total tx size
-    let usdTransactionSize = ethPrice * (ethWithdrawn / 1e18) * 2
-    ReactGA.event({
-      category: 'Transaction',
-      action: 'Remove Liquidity',
-      label: outputCurrency,
-      value: usdTransactionSize
-    })
+    let ethTransactionSize = (ethWithdrawn / 1e18) * 2
 
     const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
 
@@ -295,6 +286,19 @@ export default function RemoveLiquidity({ params }) {
         gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
       })
       .then(response => {
+        ReactGA.event({
+          category: 'Transaction',
+          action: 'Remove Liquidity',
+          label: outputCurrency,
+          value: ethTransactionSize,
+          dimension1: response.hash
+        })
+        ReactGA.event({
+          category: 'Hash',
+          action: response.hash,
+          label: ethTransactionSize.toString(),
+          value: ethTransactionSize
+        })
         addTransaction(response)
       })
   }
