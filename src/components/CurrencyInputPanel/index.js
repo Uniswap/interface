@@ -594,6 +594,12 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
       return <TokenModalInfo>{t('noExchange')}</TokenModalInfo>
     }
 
+    if (searchQuery === "DAI") {
+        filteredTokenList.sort((a, b) => {
+            console.log(a.symbol === "DAI")
+            return a.symbol === "DAI" ? -1 : 1;
+        })
+    }
     return filteredTokenList.map(({ address, symbol, name, balance, usdBalance }) => {
       const urlAdded = urlAddedTokens && urlAddedTokens.hasOwnProperty(address)
       const customAdded =
