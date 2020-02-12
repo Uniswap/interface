@@ -548,7 +548,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
   }, [allBalances, allTokens, usdAmounts, account])
 
   const filteredTokenList = useMemo(() => {
-    return tokenList.filter(tokenEntry => {
+    const list = tokenList.filter(tokenEntry => {
       const inputIsAddress = searchQuery.slice(0, 2) === '0x'
 
       // check the regex for each field
@@ -568,6 +568,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
       })
       return regexMatches.some(m => m)
     })
+    return searchQuery.toUpperCase() === 'DAI' && list.sort((a, b) => { return a.symbol === 'DAI' ? -1 : 1 })
   }, [tokenList, searchQuery])
 
   function _onTokenSelect(address) {
@@ -592,12 +593,6 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
     }
     if (!filteredTokenList.length) {
       return <TokenModalInfo>{t('noExchange')}</TokenModalInfo>
-    }
-
-    if (searchQuery === 'DAI') {
-      filteredTokenList.sort((a, b) => {
-        return a.symbol === 'DAI' ? -1 : 1
-      })
     }
 
     return filteredTokenList.map(({ address, symbol, name, balance, usdBalance }) => {
