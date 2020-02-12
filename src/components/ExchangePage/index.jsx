@@ -15,7 +15,6 @@ import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWalletModalToggle } from '../../contexts/Application'
-import { useETHPriceInUSD } from '../../contexts/Balances'
 
 import { Button } from '../../theme'
 import CurrencyInputPanel from '../CurrencyInputPanel'
@@ -261,9 +260,6 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   if (isAddress(initialCurrency)) {
     urlAddedTokens[initialCurrency] = true
   }
-
-  // BigNumber.js instance
-  const ethPrice = useETHPriceInUSD()
 
   const addTransaction = useTransactionAdder()
 
@@ -633,16 +629,16 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     if (inputCurrency !== 'ETH') {
       inputEthPerToken = inputReserveToken && inputReserveETH ? inputReserveETH / inputReserveToken : null
     }
-    let usdTransactionSize = ethPrice * inputEthPerToken * inputValueFormatted
+    let ethTransactionSize = inputEthPerToken * inputValueFormatted
+
+    // params for GA event
+    let action = ''
+    let label = ''
 
     if (independentField === INPUT) {
-      // general details about transaction
-      ReactGA.event({
-        category: 'Transaction',
-        action: sending ? 'SendInput' : 'SwapInput',
-        label: outputCurrency,
-        value: usdTransactionSize
-      })
+      // set GA params
+      action = sending ? 'SendInput' : 'SwapInput'
+      label = outputCurrency
 
       if (swapType === ETH_TO_TOKEN) {
         estimate = sending ? contract.estimate.ethToTokenTransferInput : contract.estimate.ethToTokenSwapInput
@@ -672,13 +668,9 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         value = ethers.constants.Zero
       }
     } else if (independentField === OUTPUT) {
-      // general details about transaction
-      ReactGA.event({
-        category: 'Transaction',
-        action: sending ? 'SendOutput' : 'SwapOutput',
-        label: outputCurrency,
-        value: usdTransactionSize
-      })
+      // set GA params
+      action = sending ? 'SendOutput' : 'SwapOutput'
+      label = outputCurrency
 
       if (swapType === ETH_TO_TOKEN) {
         estimate = sending ? contract.estimate.ethToTokenTransferOutput : contract.estimate.ethToTokenSwapOutput
@@ -715,6 +707,18 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
     }).then(response => {
       addTransaction(response)
+      ReactGA.event({
+        category: 'Transaction',
+        action: action,
+        label: label,
+        value: ethTransactionSize,
+        dimension1: response.hash
+      })
+      ReactGA.event({
+        category: 'Hash',
+        action: response.hash,
+        label: ethTransactionSize.toString()
+      })
     })
   }
 

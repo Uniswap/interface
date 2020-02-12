@@ -17,7 +17,7 @@ import { brokenTokens } from '../../constants'
 import { amountFormatter, calculateGasMargin } from '../../utils'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useTokenDetails, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
-import { useAddressBalance, useExchangeReserves, useETHPriceInUSD } from '../../contexts/Balances'
+import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 
 const INPUT = 0
@@ -201,9 +201,6 @@ function getMarketRate(reserveETH, reserveToken, decimals, invert = false) {
 export default function AddLiquidity({ params }) {
   const { t } = useTranslation()
   const { library, account, active, chainId } = useWeb3React()
-
-  // BigNumber.js instance
-  const ethPrice = useETHPriceInUSD()
 
   const urlAddedTokens = {}
   if (params.token) {
@@ -390,15 +387,7 @@ export default function AddLiquidity({ params }) {
 
   async function onAddLiquidity() {
     // take ETH amount, multiplied by ETH rate and 2 for total tx size
-    let usdTransactionSize = ethPrice * (inputValueParsed / 1e18) * 2
-
-    // log pool added to and total usd amount
-    ReactGA.event({
-      category: 'Transaction',
-      action: 'Add Liquidity',
-      label: outputCurrency,
-      value: usdTransactionSize
-    })
+    let ethTransactionSize = (inputValueParsed / 1e18) * 2
 
     const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
 
@@ -424,6 +413,19 @@ export default function AddLiquidity({ params }) {
         }
       )
       .then(response => {
+        // log pool added to and total usd amount
+        ReactGA.event({
+          category: 'Transaction',
+          action: 'Add Liquidity',
+          label: outputCurrency,
+          value: ethTransactionSize,
+          dimension1: response.hash
+        })
+        ReactGA.event({
+          category: 'Hash',
+          action: response.hash,
+          label: ethTransactionSize.toString()
+        })
         addTransaction(response)
       })
   }
