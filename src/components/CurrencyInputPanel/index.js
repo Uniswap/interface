@@ -594,9 +594,9 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
       return <TokenModalInfo>{t('noExchange')}</TokenModalInfo>
     }
 
-    if (searchQuery === "DAI") {
+    if (searchQuery === 'DAI') {
       filteredTokenList.sort((a, b) => {
-        return a.symbol === "DAI" ? -1 : 1;
+        return a.symbol === 'DAI' ? -1 : 1
       })
     }
 
