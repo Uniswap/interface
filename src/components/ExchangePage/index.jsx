@@ -629,12 +629,11 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     if (inputCurrency === 'ETH') {
       ethTransactionSize = inputValueFormatted
     } else if (outputCurrency === 'ETH') {
-      // we want input value * exchangeRate
       ethTransactionSize = inputValueFormatted * amountFormatter(exchangeRate, 18, 6, false)
     } else {
-      const tokenBalance = inputReserveETH && new BigNumber(inputReserveToken.toString())
+      const tokenBalance = inputReserveToken && new BigNumber(inputReserveToken.toString())
       const ethBalance = inputReserveETH && new BigNumber(inputReserveETH.toString())
-      let ethRate = ethBalance && ethBalance.div(tokenBalance)
+      let ethRate = ethBalance && tokenBalance && ethBalance.div(tokenBalance)
       ethTransactionSize = inputValueFormatted * ethRate
     }
 
