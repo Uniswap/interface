@@ -568,12 +568,11 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
       })
       return regexMatches.some(m => m)
     })
-    return (
-      searchQuery.toUpperCase() === 'DAI' &&
-      list.sort((a, b) => {
-        return a.symbol === 'DAI' ? -1 : 1
-      })
-    )
+    // If the user has not inputted anything, preserve previous sort
+    if (searchQuery === '') return list
+    return list.sort((a, b) => {
+      return a.symbol.toLowerCase() === searchQuery.toLowerCase() ? -1 : 1
+    })
   }, [tokenList, searchQuery])
 
   function _onTokenSelect(address) {
