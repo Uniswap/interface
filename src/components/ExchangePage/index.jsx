@@ -916,7 +916,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           {brokenTokenWarning
             ? 'Swap'
             : !account
-            ? 'Connect to a Wallet'
+            ? t('connectToWallet')
             : sending
             ? highSlippageWarning || customSlippageError === 'warning'
               ? t('sendAnyway')

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import ReactGA from 'react-ga'
 import styled from 'styled-components'
 import { isMobile } from 'react-device-detect'
+import { useTranslation } from 'react-i18next'
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import { URI_AVAILABLE } from '@web3-react/walletconnect-connector'
 
@@ -125,6 +126,8 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
   const walletModalOpen = useWalletModalOpen()
   const toggleWalletModal = useWalletModalToggle()
 
+  const { t } = useTranslation()
+  
   // always reset to account view
   useEffect(() => {
     if (walletModalOpen) {
@@ -317,7 +320,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
           </HeaderRow>
         ) : (
           <HeaderRow>
-            <HoverText>Connect To A Wallet</HoverText>
+            <HoverText>{t('connectToWallet')}</HoverText>
           </HeaderRow>
         )}
         <ContentWrapper>

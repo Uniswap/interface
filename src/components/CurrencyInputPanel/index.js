@@ -663,7 +663,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
     >
       <TokenModal>
         <ModalHeader>
-          <p>Select Token</p>
+          <p>{t('selectToken')}</p>
           <CloseIcon onClick={clearInputAndDismiss}>
             <CloseColor alt={'close icon'} />
           </CloseIcon>
