@@ -114,7 +114,7 @@ const WALLET_VIEWS = {
   PENDING: 'pending'
 }
 
-export default function WalletModal({ pendingTransactions, confirmedTransactions, ENSName }) {
+export default function WalletModal ({ pendingTransactions, confirmedTransactions, ENSName }) {
   const { active, account, connector, activate, error } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
@@ -127,7 +127,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
   const toggleWalletModal = useWalletModalToggle()
 
   const { t } = useTranslation()
-  
+
   // always reset to account view
   useEffect(() => {
     if (walletModalOpen) {
@@ -191,13 +191,13 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
   }, [toggleWalletModal])
 
   // get wallets user can switch too, depending on device/browser
-  function getOptions() {
+  function getOptions () {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
     return Object.keys(SUPPORTED_WALLETS).map(key => {
       const option = SUPPORTED_WALLETS[key]
       // check for mobile options
       if (isMobile) {
-        //disable portis on mobile for now
+        // disable portis on mobile for now
         if (option.connector === portis) {
           return null
         }
@@ -237,7 +237,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
               />
             )
           } else {
-            return null //dont want to return install twice
+            return null // dont want to return install twice
           }
         }
         // don't return metamask if injected provider isn't metamask
@@ -265,7 +265,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
             color={option.color}
             link={option.href}
             header={option.name}
-            subheader={null} //use option.descriptio to bring back multi-line
+            subheader={null} // use option.descriptio to bring back multi-line
             icon={require('../../assets/images/' + option.iconName)}
           />
         )
@@ -273,7 +273,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
     })
   }
 
-  function getModalContent() {
+  function getModalContent () {
     if (error) {
       return (
         <UpperSection>
