@@ -548,7 +548,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
   }, [allBalances, allTokens, usdAmounts, account])
 
   const filteredTokenList = useMemo(() => {
-    return tokenList.filter(tokenEntry => {
+    const list = tokenList.filter(tokenEntry => {
       const inputIsAddress = searchQuery.slice(0, 2) === '0x'
 
       // check the regex for each field
@@ -567,6 +567,11 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
         )
       })
       return regexMatches.some(m => m)
+    })
+    // If the user has not inputted anything, preserve previous sort
+    if (searchQuery === '') return list
+    return list.sort((a, b) => {
+      return a.symbol.toLowerCase() === searchQuery.toLowerCase() ? -1 : 1
     })
   }, [tokenList, searchQuery])
 
