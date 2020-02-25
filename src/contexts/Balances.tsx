@@ -19,6 +19,10 @@ import { useTokenDetails, useAllTokenDetails } from './Tokens'
 import { getUSDPrice } from '../utils/price'
 
 const LOCAL_STORAGE_KEY = 'BALANCES'
+const SHORT_BLOCK_TIMEOUT = (60 * 2) / 15 // in seconds, represented as a block number delta
+const LONG_BLOCK_TIMEOUT = (60 * 15) / 15 // in seconds, represented as a block number delta
+
+const EXCHANGES_BLOCK_TIMEOUT = (60 * 5) / 15 // in seconds, represented as a block number delta
 
 interface BalancesState {
   [chainId: number]: {
@@ -115,9 +119,9 @@ function reducer(state: BalancesState, { type, payload }: { type: Action; payloa
             ...tokenAddresses.reduce((accumulator: any, tokenAddress: string, i: number) => {
               const value = values[i]
               accumulator[tokenAddress] = {
+                ...state?.[chainId]?.[address]?.[tokenAddress],
                 value,
-                blockNumber,
-                ...state?.[chainId]?.[address]?.[tokenAddress]
+                blockNumber
               }
               return accumulator
             }, {})
@@ -136,12 +140,12 @@ function reducer(state: BalancesState, { type, payload }: { type: Action; payloa
             const tokenAddress = tokenAddresses[i]
             const value = values[i]
             accumulator[exchangeAddress] = {
-              ...accumulator?.[exchangeAddress],
               ...state?.[chainId]?.[exchangeAddress],
+              ...accumulator?.[exchangeAddress],
               [tokenAddress]: {
+                ...state?.[chainId]?.[exchangeAddress]?.[tokenAddress],
                 value,
-                blockNumber,
-                ...state?.[chainId]?.[exchangeAddress]?.[tokenAddress]
+                blockNumber
               }
             }
             return accumulator
@@ -281,8 +285,23 @@ export function Updater() {
           .filter(tokenAddress => {
             const hasValue = !!stateRef.current?.[chainId]?.[account]?.[tokenAddress]?.value
             const cachedFetchedAsOf = fetchedAsOfCache.current?.[chainId]?.[account]?.[tokenAddress]
-            // there are other conditions we could check here! e.g. staleness
-            return !hasValue && typeof cachedFetchedAsOf !== 'number'
+            const fetchedAsOf = stateRef.current?.[chainId]?.[account][tokenAddress]?.blockNumber ?? cachedFetchedAsOf
+
+            // if there's no value, and it's not being fetched, we need to fetch!
+            if (!hasValue && typeof cachedFetchedAsOf !== 'number') {
+              return true
+              // else, if there's a value, check if it's stale
+            } else if (hasValue) {
+              const blocksElapsedSinceLastCheck = blockNumber - fetchedAsOf
+              const stale =
+                blocksElapsedSinceLastCheck >=
+                (stateRef.current[chainId][account][tokenAddress].value === '0'
+                  ? LONG_BLOCK_TIMEOUT
+                  : SHORT_BLOCK_TIMEOUT)
+              return stale
+            } else {
+              return false
+            }
           })
           .map(async tokenAddress => {
             fetchedAsOfCache.current = {
@@ -327,13 +346,34 @@ export function Updater() {
           .filter(({ exchangeAddress, tokenAddress }) => {
             const hasValueToken = !!stateRef.current?.[chainId]?.[exchangeAddress]?.[tokenAddress]?.value
             const hasValueETH = !!stateRef.current?.[chainId]?.[exchangeAddress]?.['ETH']?.value
+
             const cachedFetchedAsOfToken = fetchedAsOfCache.current?.[chainId]?.[exchangeAddress]?.[tokenAddress]
             const cachedFetchedAsOfETH = fetchedAsOfCache.current?.[chainId]?.[exchangeAddress]?.['ETH']
-            // there are other conditions we could check here! e.g. staleness or if the block numbers are in sync
-            return (
+
+            const fetchedAsOfToken =
+              stateRef.current?.[chainId]?.[exchangeAddress][tokenAddress]?.blockNumber ?? cachedFetchedAsOfToken
+            const fetchedAsOfETH =
+              stateRef.current?.[chainId]?.[exchangeAddress]['ETH']?.blockNumber ?? cachedFetchedAsOfETH
+
+            // if there's no values, and they're not being fetched, we need to fetch!
+            if (
               (!hasValueToken || !hasValueETH) &&
               (typeof cachedFetchedAsOfToken !== 'number' || typeof cachedFetchedAsOfETH !== 'number')
-            )
+            ) {
+              return true
+              // else, if there are values, check if they's stale
+            } else if (hasValueToken && hasValueETH) {
+              const blocksElapsedSinceLastCheckToken = blockNumber - fetchedAsOfToken
+              const blocksElapsedSinceLastCheckETH = blockNumber - fetchedAsOfETH
+
+              const stale =
+                fetchedAsOfToken !== fetchedAsOfETH ||
+                blocksElapsedSinceLastCheckToken >= EXCHANGES_BLOCK_TIMEOUT ||
+                blocksElapsedSinceLastCheckETH >= EXCHANGES_BLOCK_TIMEOUT
+              return stale
+            } else {
+              return false
+            }
           })
           .map(async ({ exchangeAddress, tokenAddress }) => {
             fetchedAsOfCache.current = {
