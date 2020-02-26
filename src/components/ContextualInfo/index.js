@@ -81,7 +81,6 @@ class ContextualInfo extends Component {
     if (!this.state.showDetails) {
       return null
     }
-
     return <Details>{this.props.renderTransactionDetails()}</Details>
   }
 

@@ -1,5 +1,6 @@
 import styled, { keyframes } from 'styled-components'
 import { darken } from 'polished'
+import { X } from 'react-feather'
 
 export const Button = styled.button.attrs(({ warning, theme }) => ({
   backgroundColor: warning ? theme.salmonRed : theme.royalBlue
@@ -28,6 +29,12 @@ export const Button = styled.button.attrs(({ warning, theme }) => ({
     background-color: ${({ theme }) => theme.concreteGray};
     color: ${({ theme }) => theme.silverGray};
     cursor: auto;
+  }
+`
+
+export const CloseIcon = styled(X)`
+  :hover {
+    cursor: pointer;
   }
 `
 

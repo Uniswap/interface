@@ -11,6 +11,7 @@ import ApplicationContextProvider, { Updater as ApplicationContextUpdater } from
 import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
 import BalancesContextProvider, { Updater as BalancesContextUpdater } from './contexts/Balances'
 import TokensContextProvider from './contexts/Tokens'
+import ExchangesContextProvider from './contexts/Exchanges'
 import AllowancesContextProvider from './contexts/Allowances'
 import App from './pages/App'
 import ThemeProvider, { GlobalStyle } from './theme'
@@ -40,11 +41,13 @@ function ContextProviders({ children }) {
     <LocalStorageContextProvider>
       <ApplicationContextProvider>
         <TransactionContextProvider>
-          <TokensContextProvider>
-            <BalancesContextProvider>
-              <AllowancesContextProvider>{children}</AllowancesContextProvider>
-            </BalancesContextProvider>
-          </TokensContextProvider>
+          <ExchangesContextProvider>
+            <TokensContextProvider>
+              <BalancesContextProvider>
+                <AllowancesContextProvider>{children}</AllowancesContextProvider>
+              </BalancesContextProvider>
+            </TokensContextProvider>
+          </ExchangesContextProvider>
         </TransactionContextProvider>
       </ApplicationContextProvider>
     </LocalStorageContextProvider>

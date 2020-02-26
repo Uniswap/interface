@@ -18,7 +18,7 @@ export const network = new NetworkConnector({
 })
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [Number(process.env.REACT_APP_CHAIN_ID)]
+  supportedChainIds: [Number(process.env.REACT_APP_CHAIN_ID), 4]
 })
 
 // mainnet only
