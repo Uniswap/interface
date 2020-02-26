@@ -4,14 +4,13 @@ import { createBrowserHistory } from 'history'
 import { ethers } from 'ethers'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
-import { BigNumber } from '@uniswap/sdk'
 
 import { useWeb3React } from '../../hooks'
 import { brokenTokens } from '../../constants'
 import { amountFormatter, calculateGasMargin, isAddress } from '../../utils'
 
 import { useExchangeContract } from '../../hooks'
-import { useTokenDetails, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
+import { useToken, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
@@ -205,7 +204,6 @@ function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals,
       (outputDecimals || outputDecimals === 0)
     ) {
       const factor = ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))
-
       if (invert) {
         return inputValue
           .mul(factor)
@@ -334,10 +332,10 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const swapType = getSwapType(inputCurrency, outputCurrency)
 
   // get decimals and exchange address for each of the currency types
-  const { symbol: inputSymbol, decimals: inputDecimals, exchangeAddress: inputExchangeAddress } = useTokenDetails(
+  const { symbol: inputSymbol, decimals: inputDecimals, exchangeAddress: inputExchangeAddress } = useToken(
     inputCurrency
   )
-  const { symbol: outputSymbol, decimals: outputDecimals, exchangeAddress: outputExchangeAddress } = useTokenDetails(
+  const { symbol: outputSymbol, decimals: outputDecimals, exchangeAddress: outputExchangeAddress } = useToken(
     outputCurrency
   )
 
@@ -353,8 +351,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const { reserveETH: outputReserveETH, reserveToken: outputReserveToken } = useExchangeReserves(outputCurrency)
 
   // get balances for each of the currency types
-  const inputBalance = useAddressBalance(account, inputCurrency)
-  const outputBalance = useAddressBalance(account, outputCurrency)
+  const inputBalance = 0
+  const outputBalance = 0
   const inputBalanceFormatted = !!(inputBalance && Number.isInteger(inputDecimals))
     ? amountFormatter(inputBalance, inputDecimals, Math.min(4, inputDecimals))
     : ''
@@ -631,8 +629,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     } else if (outputCurrency === 'ETH') {
       ethTransactionSize = inputValueFormatted * amountFormatter(exchangeRate, 18, 6, false)
     } else {
-      const tokenBalance = inputReserveToken && new BigNumber(inputReserveToken.toString())
-      const ethBalance = inputReserveETH && new BigNumber(inputReserveETH.toString())
+      const tokenBalance = 1
+      const ethBalance = 1
       let ethRate = ethBalance && tokenBalance && ethBalance.div(tokenBalance)
       ethTransactionSize = inputValueFormatted * ethRate
     }

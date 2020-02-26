@@ -35,7 +35,7 @@ export default function TokenLogo({ address, size = '1rem', ...rest }) {
 
   let path = ''
   if (address === 'ETH') {
-    return <StyledEthereumLogo size={size} />
+    return <StyledEthereumLogo size={size} {...rest} />
   } else if (!error && !BAD_IMAGES[address]) {
     path = TOKEN_ICON_API(address.toLowerCase())
   } else {
@@ -51,7 +51,7 @@ export default function TokenLogo({ address, size = '1rem', ...rest }) {
   return (
     <Image
       {...rest}
-      alt={address}
+      // alt={address}
       src={path}
       size={size}
       onError={() => {

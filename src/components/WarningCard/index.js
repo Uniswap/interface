@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 
 import { useWeb3React } from '../../hooks'
-import { useTokenDetails } from '../../contexts/Tokens'
+import { useToken } from '../../contexts/Tokens'
 import { getEtherscanLink } from '../../utils'
 
 import { Link } from '../../theme'
@@ -128,7 +128,7 @@ const Text = styled.div`
 function WarningCard({ onDismiss, urlAddedTokens, currency }) {
   const [showPopup, setPopup] = useState()
   const { chainId } = useWeb3React()
-  const { symbol: inputSymbol, name: inputName } = useTokenDetails(currency)
+  const { symbol: inputSymbol, name: inputName } = useToken(currency)
   const fromURL = urlAddedTokens.hasOwnProperty(currency)
 
   return (

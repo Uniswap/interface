@@ -54,7 +54,7 @@ const StyledDialogContent = styled(FilteredDialogContent)`
     padding: 0px;
     width: 50vw;
 
-    max-width: 650px;
+    max-width: 500px;
     ${({ maxHeight }) =>
       maxHeight &&
       css`

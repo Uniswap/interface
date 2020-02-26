@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { useWeb3React, useExchangeContract } from '../../hooks'
 import { useTransactionAdder } from '../../contexts/Transactions'
-import { useTokenDetails, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
+import { useToken, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
 import { useAddressBalance } from '../../contexts/Balances'
 
 import { calculateGasMargin, amountFormatter } from '../../utils'
@@ -188,7 +188,7 @@ export default function RemoveLiquidity({ params }) {
     }
   }, [t, value])
 
-  const { symbol, decimals, exchangeAddress } = useTokenDetails(outputCurrency)
+  const { symbol, decimals, exchangeAddress } = useToken(outputCurrency)
 
   const [totalPoolTokens, setTotalPoolTokens] = useState()
   const poolTokenBalance = useAddressBalance(account, exchangeAddress)

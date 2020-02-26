@@ -21,15 +21,5 @@ export function getUSDPrice(reserves) {
     ethPrices,
     forEachStablecoin(i => reserves[i].ethReserve.amount)
   )
-
-  // const _stablecoinWeights = [
-  //   getMean([medianWeights[0], meanWeights[0], weightedMeanWeights[0]])[0],
-  //   getMean([medianWeights[1], meanWeights[1], weightedMeanWeights[1]])[0],
-  //   getMean([medianWeights[2], meanWeights[2], weightedMeanWeights[2]])[0]
-  // ]
-  // const stablecoinWeights = forEachStablecoin((i, stablecoin) => ({
-  //   [stablecoin]: _stablecoinWeights[i]
-  // })).reduce((accumulator, currentValue) => ({ ...accumulator, ...currentValue }), {})
-
   return getMean([median, mean, weightedMean])[0]
 }

@@ -45,14 +45,19 @@ const theme = darkMode => ({
   black,
   textColor: darkMode ? white : '#010101',
   greyText: darkMode ? white : '#6C7284',
+  fadedText: darkMode ? white : '#C3C5CB',
+
+  panelBackground: darkMode ? '#292C2F' : '#FFFFFF',
 
   // for setting css on <html>
-  backgroundColor: darkMode ? '#333639' : white,
-
+  backgroundColor: darkMode ? '#333639' : '#F7F8FA',
   modalBackground: darkMode ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.5)',
   inputBackground: darkMode ? '#202124' : white,
   placeholderGray: darkMode ? '#5F5F5F' : '#E1E1E1',
   shadowColor: darkMode ? '#000' : '#2F80ED',
+
+  buttonBackgroundPlain: darkMode ? '#333639' : white,
+  buttonOutlinePlain: darkMode ? '#292C2F' : white,
 
   // grays
   concreteGray: darkMode ? '#292C2F' : '#FAFAFA',
@@ -65,12 +70,15 @@ const theme = darkMode => ({
   buttonOutlineGrey: darkMode ? '#FAFAFA' : '#F2F2F2',
   tokenRowHover: darkMode ? '#404040' : '#F2F2F2',
 
+  outlineGrey: darkMode ? '#292C2F' : '#EDEEF2',
+
   //blacks
   charcoalBlack: darkMode ? '#F2F2F2' : '#404040',
   // blues
   zumthorBlue: darkMode ? '#212529' : '#EBF4FF',
   malibuBlue: darkMode ? '#E67AEF' : '#5CA2FF',
   royalBlue: darkMode ? '#DC6BE5' : '#2F80ED',
+  disabledBlue: darkMode ? '#2172E5' : '#2172E5',
   loadingBlue: darkMode ? '#e4f0ff' : '#e4f0ff',
 
   // purples

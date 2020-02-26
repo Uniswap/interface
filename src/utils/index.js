@@ -5,7 +5,6 @@ import EXCHANGE_ABI from '../constants/abis/exchange'
 import ERC20_ABI from '../constants/abis/erc20'
 import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32'
 import { FACTORY_ADDRESSES, SUPPORTED_THEMES } from '../constants'
-import { formatFixed } from '@uniswap/sdk'
 
 import UncheckedJsonRpcSigner from './signer'
 
@@ -256,11 +255,7 @@ export function formatTokenBalance(balance, decimal) {
 
 export function formatToUsd(price) {
   const format = { decimalSeparator: '.', groupSeparator: ',', groupSize: 3 }
-  const usdPrice = formatFixed(price, {
-    decimalPlaces: 2,
-    dropTrailingZeros: false,
-    format
-  })
+  const usdPrice = 1
   return usdPrice
 }
 
