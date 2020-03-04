@@ -2,9 +2,19 @@ import { ethers } from 'ethers'
 
 import FACTORY_ABI from '../constants/abis/factory'
 import EXCHANGE_ABI from '../constants/abis/exchange'
+import ROUTER_ABI from '../constants/abis/router'
 import ERC20_ABI from '../constants/abis/erc20'
 import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32'
 import { FACTORY_ADDRESSES, SUPPORTED_THEMES } from '../constants'
+import {
+  BigNumber,
+  bigNumberify,
+  getAddress,
+  keccak256,
+  defaultAbiCoder,
+  toUtf8Bytes,
+  solidityPack
+} from 'ethers/utils'
 
 import UncheckedJsonRpcSigner from './signer'
 
@@ -54,52 +64,6 @@ export function getQueryParam(windowLocation, name) {
 
 export function getAllQueryParams() {
   let params = {}
-  params.theme = checkSupportedTheme(getQueryParam(window.location, 'theme'))
-
-  params.inputCurrency = isAddress(getQueryParam(window.location, 'inputCurrency'))
-    ? isAddress(getQueryParam(window.location, 'inputCurrency'))
-    : ''
-  params.outputCurrency = isAddress(getQueryParam(window.location, 'outputCurrency'))
-    ? isAddress(getQueryParam(window.location, 'outputCurrency'))
-    : getQueryParam(window.location, 'outputCurrency') === 'ETH'
-    ? 'ETH'
-    : ''
-  params.slippage = !isNaN(getQueryParam(window.location, 'slippage')) ? getQueryParam(window.location, 'slippage') : ''
-  params.exactField = getQueryParam(window.location, 'exactField')
-  params.exactAmount = !isNaN(getQueryParam(window.location, 'exactAmount'))
-    ? getQueryParam(window.location, 'exactAmount')
-    : ''
-  params.theme = checkSupportedTheme(getQueryParam(window.location, 'theme'))
-  params.recipient = isAddress(getQueryParam(window.location, 'recipient'))
-    ? getQueryParam(window.location, 'recipient')
-    : ''
-
-  // Add Liquidity params
-  params.ethAmount = !isNaN(getQueryParam(window.location, 'ethAmount'))
-    ? getQueryParam(window.location, 'ethAmount')
-    : ''
-  params.tokenAmount = !isNaN(getQueryParam(window.location, 'tokenAmount'))
-    ? getQueryParam(window.location, 'tokenAmount')
-    : ''
-  params.token = isAddress(getQueryParam(window.location, 'token'))
-    ? isAddress(getQueryParam(window.location, 'token'))
-    : ''
-
-  // Remove liquidity params
-  params.poolTokenAmount = !isNaN(getQueryParam(window.location, 'poolTokenAmount'))
-    ? getQueryParam(window.location, 'poolTokenAmount')
-    : ''
-  params.poolTokenAddress = isAddress(getQueryParam(window.location, 'poolTokenAddress'))
-    ? isAddress(getQueryParam(window.location, 'poolTokenAddress'))
-      ? isAddress(getQueryParam(window.location, 'poolTokenAddress'))
-      : ''
-    : ''
-
-  // Create Exchange params
-  params.tokenAddress = isAddress(getQueryParam(window.location, 'tokenAddress'))
-    ? isAddress(getQueryParam(window.location, 'tokenAddress'))
-    : ''
-
   return params
 }
 
@@ -153,8 +117,11 @@ export function isAddress(value) {
 }
 
 export function calculateGasMargin(value, margin) {
-  const offset = value.mul(margin).div(ethers.utils.bigNumberify(10000))
-  return value.add(offset)
+  if (value) {
+    const offset = value.mul(margin).div(ethers.utils.bigNumberify(10000))
+    return value.add(offset)
+  }
+  return null
 }
 
 // account is optional
@@ -169,6 +136,12 @@ export function getContract(address, ABI, library, account) {
   }
 
   return new ethers.Contract(address, ABI, getProviderOrSigner(library, account))
+}
+
+// account is optional
+export function getRouterContract(networkId, library, account) {
+  const router = getContract('0xd9210Ff5A0780E083BB40e30d005d93a2DcFA4EF', ROUTER_ABI, library, account)
+  return router
 }
 
 // account is optional
@@ -245,20 +218,6 @@ export async function getEtherBalance(address, library) {
   return library.getBalance(address)
 }
 
-export function formatEthBalance(balance) {
-  return amountFormatter(balance, 18, 6)
-}
-
-export function formatTokenBalance(balance, decimal) {
-  return !!(balance && Number.isInteger(decimal)) ? amountFormatter(balance, decimal, Math.min(4, decimal)) : 0
-}
-
-export function formatToUsd(price) {
-  const format = { decimalSeparator: '.', groupSeparator: ',', groupSize: 3 }
-  const usdPrice = 1
-  return usdPrice
-}
-
 // get the token balance of an address
 export async function getTokenBalance(tokenAddress, address, library) {
   if (!isAddress(tokenAddress) || !isAddress(address)) {
@@ -280,61 +239,46 @@ export async function getTokenAllowance(address, tokenAddress, spenderAddress, l
   return getContract(tokenAddress, ERC20_ABI, library).allowance(address, spenderAddress)
 }
 
-// amount must be a BigNumber, {base,display}Decimals must be Numbers
-export function amountFormatter(amount, baseDecimals = 18, displayDecimals = 3, useLessThan = true) {
-  if (baseDecimals > 18 || displayDecimals > 18 || displayDecimals > baseDecimals) {
-    throw Error(`Invalid combination of baseDecimals '${baseDecimals}' and displayDecimals '${displayDecimals}.`)
-  }
+const PERMIT_TYPEHASH = keccak256(
+  toUtf8Bytes('Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)')
+)
 
-  // if balance is falsy, return undefined
-  if (!amount) {
-    return undefined
-  }
-  // if amount is 0, return
-  else if (amount.isZero()) {
-    return '0'
-  }
-  // amount > 0
-  else {
-    // amount of 'wei' in 1 'ether'
-    const baseAmount = ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(baseDecimals))
+export function expandTo18Decimals(n) {
+  return bigNumberify(n).mul(bigNumberify(10).pow(18))
+}
 
-    const minimumDisplayAmount = baseAmount.div(
-      ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(displayDecimals))
+function getDomainSeparator(name, tokenAddress) {
+  return keccak256(
+    defaultAbiCoder.encode(
+      ['bytes32', 'bytes32', 'bytes32', 'uint256', 'address'],
+      [
+        keccak256(toUtf8Bytes('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)')),
+        keccak256(toUtf8Bytes(name)),
+        keccak256(toUtf8Bytes('1')),
+        1,
+        tokenAddress
+      ]
     )
+  )
+}
 
-    // if balance is less than the minimum display amount
-    if (amount.lt(minimumDisplayAmount)) {
-      return useLessThan
-        ? `<${ethers.utils.formatUnits(minimumDisplayAmount, baseDecimals)}`
-        : `${ethers.utils.formatUnits(amount, baseDecimals)}`
-    }
-    // if the balance is greater than the minimum display amount
-    else {
-      const stringAmount = ethers.utils.formatUnits(amount, baseDecimals)
-
-      // if there isn't a decimal portion
-      if (!stringAmount.match(/\./)) {
-        return stringAmount
-      }
-      // if there is a decimal portion
-      else {
-        const [wholeComponent, decimalComponent] = stringAmount.split('.')
-        const roundedDecimalComponent = ethers.utils
-          .bigNumberify(decimalComponent.padEnd(baseDecimals, '0'))
-          .toString()
-          .padStart(baseDecimals, '0')
-          .substring(0, displayDecimals)
-
-        // decimals are too small to show
-        if (roundedDecimalComponent === '0'.repeat(displayDecimals)) {
-          return wholeComponent
-        }
-        // decimals are not too small to show
-        else {
-          return `${wholeComponent}.${roundedDecimalComponent.toString().replace(/0*$/, '')}`
-        }
-      }
-    }
-  }
+export async function getApprovalDigest(token, approve, nonce, deadline) {
+  const name = await token.name()
+  const DOMAIN_SEPARATOR = getDomainSeparator(name, token.address)
+  return keccak256(
+    solidityPack(
+      ['bytes1', 'bytes1', 'bytes32', 'bytes32'],
+      [
+        '0x19',
+        '0x01',
+        DOMAIN_SEPARATOR,
+        keccak256(
+          defaultAbiCoder.encode(
+            ['bytes32', 'address', 'address', 'uint256', 'uint256', 'uint256'],
+            [PERMIT_TYPEHASH, approve.owner, approve.spender, approve.value, nonce, deadline]
+          )
+        )
+      ]
+    )
+  )
 }

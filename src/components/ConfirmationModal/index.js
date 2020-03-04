@@ -1,16 +1,24 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import { ButtonPrimary } from '../../components/Button'
+import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Row, { RowBetween, RowFlat, RowFixed } from '../Row'
+import { ArrowDown } from 'react-feather'
+
 import { Text } from 'rebass'
+import { LightCard } from '../Card'
 import Modal from '../Modal'
 import { CheckCircle } from 'react-feather'
 import DoubleTokenLogo from '../DoubleLogo'
 import TokenLogo from '../TokenLogo'
 import { CloseIcon } from '../../theme/components'
 import Loader from '../Loader'
+import { Link } from '../../theme'
+
+import { useWeb3React } from '../../hooks'
+import { getEtherscanLink } from '../../utils'
+import { TRANSACTION_TYPE } from '../../constants'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -30,141 +38,200 @@ const ConfirmedIcon = styled(ColumnCenter)`
 export default function ConfirmationModal({
   isOpen,
   onDismiss,
-  liquidityMinted,
+  liquidityAmount = undefined,
+  poolTokenPercentage = undefined,
   amount0,
   amount1,
-  poolTokenPercentage,
-  price
+  price,
+  transactionType,
+  pendingConfirmation,
+  hash,
+  contractCall
 }) {
   const { address: address0, symbol: symbol0 } = amount0?.token || {}
   const { address: address1, symbol: symbol1 } = amount1?.token || {}
 
-  const [confirmed, SetConfirmed] = useState(false)
-  const [waitingForConfirmation, setWaitingForConfirmation] = useState(false)
+  const { chainId } = useWeb3React()
+
+  const [confirmed, setConfirmed] = useState(false)
 
   function WrappedOnDismissed() {
     onDismiss()
-    SetConfirmed(false)
-  }
-
-  function fakeCall() {
-    setTimeout(() => {
-      setWaitingForConfirmation(false)
-    }, 2000)
+    setConfirmed(false)
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={100}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss}>
       {!confirmed ? (
         <Wrapper>
           <Section gap="40px">
             <RowBetween>
               <Text fontWeight={500} fontSize={'20px'}>
-                You will receive
+                {transactionType === TRANSACTION_TYPE.SWAP ? 'Confirm Swap' : 'You will receive'}
               </Text>
               <CloseIcon onClick={WrappedOnDismissed} />
             </RowBetween>
-            <AutoColumn gap="16px">
-              <RowFlat>
-                <Text fontSize="48px" fontWeight={500} lineHeight="32px" marginRight={10}>
-                  {liquidityMinted?.toFixed(6)}
-                </Text>
-                <DoubleTokenLogo a0={address0 || ''} a1={address1 || ''} size={20} />
-              </RowFlat>
-              <Row>
-                <Text fontSize="24px">{symbol0 + ':' + symbol1 + ' Pool Tokens'}</Text>
-              </Row>
-            </AutoColumn>
+            {transactionType === TRANSACTION_TYPE.SWAP && (
+              <AutoColumn gap={'20px'}>
+                <LightCard>
+                  <RowBetween>
+                    <Text fontSize={24} fontWeight={500}>
+                      {amount0?.toSignificant(6)}
+                    </Text>
+                    <RowFixed gap="10px">
+                      <TokenLogo address={amount0?.token?.address} size={'24px'} />
+                      <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
+                        {symbol0}
+                      </Text>
+                    </RowFixed>
+                  </RowBetween>
+                </LightCard>
+                <ColumnCenter>
+                  <ArrowDown size="16" color="#888D9B" />
+                </ColumnCenter>
+                <LightCard>
+                  <RowBetween>
+                    <Text fontSize={24} fontWeight={500}>
+                      {amount1?.toSignificant(6)}
+                    </Text>
+                    <RowFixed gap="10px">
+                      <TokenLogo address={amount1?.token?.address} size={'24px'} />
+                      <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
+                        {symbol1}
+                      </Text>
+                    </RowFixed>
+                  </RowBetween>
+                </LightCard>
+              </AutoColumn>
+            )}
+            {transactionType === TRANSACTION_TYPE.ADD && (
+              <AutoColumn gap="16px">
+                <RowFlat>
+                  <Text fontSize="48px" fontWeight={500} lineHeight="32px" marginRight={10}>
+                    {liquidityAmount?.toFixed(6)}
+                  </Text>
+                  <DoubleTokenLogo a0={address0 || ''} a1={address1 || ''} size={20} />
+                </RowFlat>
+                <Row>
+                  <Text fontSize="24px">{symbol0 + ':' + symbol1 + ' Pool Tokens'}</Text>
+                </Row>
+              </AutoColumn>
+            )}
+            {transactionType === TRANSACTION_TYPE.REMOVE && (
+              <AutoColumn gap="16px">
+                <Row>
+                  <TokenLogo address={address0} size={'30px'} />
+                  <Text fontSize="24px" marginLeft={10}>
+                    {symbol0} {amount0?.toSignificant(8)}
+                  </Text>
+                </Row>
+                <Row>
+                  <TokenLogo address={address1} size={'30px'} />
+                  <Text fontSize="24px" marginLeft={10}>
+                    {symbol1} {amount1?.toSignificant(8)}
+                  </Text>
+                </Row>
+              </AutoColumn>
+            )}
           </Section>
           <BottomSection gap="12px">
-            {/* <Text fontWeight={500} fontSize={16}>
-            Deposited Tokens
-          </Text> */}
-            {/* <LightCard>
-            <RowBetween>
-              <Text fontWeight={500} fontSize={20}>
-                {amountFormatter(amount0, decimals0, 4)}
-              </Text>
-              <RowFixed>
-                <TokenLogo address={token0 || ''} size={'24px'} />
-                <Text fontWeight={500} fontSize={20} marginLeft="12px">
-                  {symbol0}
-                </Text>
-              </RowFixed>
-            </RowBetween>
-          </LightCard>
-          <ColumnCenter>
-            <Plus size="16" color="#888D9B" />
-          </ColumnCenter>
-          <LightCard>
-            <RowBetween>
-              <Text fontWeight={500} fontSize={20}>
-                {amountFormatter(amount1, decimals1, 4)}
-              </Text>
-              <RowFixed>
-                <TokenLogo address={token1 || ''} size={'24px'} />
-                <Text fontWeight={500} fontSize={16} marginLeft="12px">
-                  {symbol1}
-                </Text>
-              </RowFixed>
-            </RowBetween>
-          </LightCard> */}
             <AutoColumn gap="12px">
-              <RowBetween>
-                <Text color="#565A69" fontWeight={500} fontSize={16}>
-                  {symbol0} Deposited
-                </Text>
-                <RowFixed>
-                  <TokenLogo address={address0 || ''} style={{ marginRight: '8px' }} />
-                  <Text fontWeight={500} fontSize={16}>
-                    {amount0?.toSignificant(6)}
+              {transactionType === TRANSACTION_TYPE.ADD && (
+                <>
+                  <RowBetween>
+                    <Text color="#565A69" fontWeight={500} fontSize={16}>
+                      {symbol0} Deposited
+                    </Text>
+                    <RowFixed>
+                      <TokenLogo address={address0 || ''} style={{ marginRight: '8px' }} />
+                      <Text fontWeight={500} fontSize={16}>
+                        {amount0?.toSignificant(6)}
+                      </Text>
+                    </RowFixed>
+                  </RowBetween>
+                  <RowBetween>
+                    <Text color="#565A69" fontWeight={500} fontSize={16}>
+                      {symbol1} Deposited
+                    </Text>
+                    <RowFixed>
+                      <TokenLogo address={address1 || ''} style={{ marginRight: '8px' }} />
+                      <Text fontWeight={500} fontSize={16}>
+                        {amount1?.toSignificant(6)}
+                      </Text>
+                    </RowFixed>
+                  </RowBetween>
+                </>
+              )}
+              {transactionType === TRANSACTION_TYPE.REMOVE && (
+                <RowBetween>
+                  <Text color="#565A69" fontWeight={500} fontSize={16}>
+                    {'UNI ' + symbol0 + ':' + symbol1} Burned
                   </Text>
-                </RowFixed>
-              </RowBetween>
-              <RowBetween>
-                <Text color="#565A69" fontWeight={500} fontSize={16}>
-                  {symbol1} Deposited
-                </Text>
-                <RowFixed>
-                  <TokenLogo address={address1 || ''} style={{ marginRight: '8px' }} />
-                  <Text fontWeight={500} fontSize={16}>
-                    {amount1?.toSignificant(6)}
+                  <RowFixed>
+                    <DoubleTokenLogo a0={address0 || ''} a1={address1 || ''} margin={true} />
+                    <Text fontWeight={500} fontSize={16}>
+                      {liquidityAmount?.toSignificant(6)}
+                    </Text>
+                  </RowFixed>
+                </RowBetween>
+              )}
+              {price && price?.adjusted && (
+                <RowBetween>
+                  <Text color="#565A69" fontWeight={500} fontSize={16}>
+                    Rate
                   </Text>
-                </RowFixed>
-              </RowBetween>
-              <RowBetween>
-                <Text color="#565A69" fontWeight={500} fontSize={16}>
-                  Rate
-                </Text>
-                <Text fontWeight={500} fontSize={16}>
-                  {price && `1 ${symbol0} = ${price?.adjusted.toFixed(8)} ${symbol1}`}
-                </Text>
-              </RowBetween>
-              <RowBetween>
-                <Text color="#565A69" fontWeight={500} fontSize={16}>
-                  Minted Pool Share:
-                </Text>
-                <Text fontWeight={500} fontSize={16}>
-                  {poolTokenPercentage?.toFixed(6) + '%'}
-                </Text>
-              </RowBetween>
+                  <Text fontWeight={500} fontSize={16}>
+                    {`1 ${symbol0} = ${price.adjusted.toFixed(8)} ${symbol1}`}
+                  </Text>
+                </RowBetween>
+              )}
+              {transactionType === TRANSACTION_TYPE.ADD && poolTokenPercentage && (
+                <RowBetween>
+                  <Text color="#565A69" fontWeight={500} fontSize={16}>
+                    Minted Pool Share:
+                  </Text>
+                  <Text fontWeight={500} fontSize={16}>
+                    {poolTokenPercentage?.toFixed(6) + '%'}
+                  </Text>
+                </RowBetween>
+              )}
               <ButtonPrimary
                 style={{ margin: '20px 0' }}
                 onClick={() => {
-                  setWaitingForConfirmation(true)
-                  SetConfirmed(true)
-                  fakeCall()
+                  setConfirmed(true)
+                  contractCall()
                 }}
               >
                 <Text fontWeight={500} fontSize={20}>
-                  Confirm Supply
+                  Confirm{' '}
+                  {transactionType === TRANSACTION_TYPE.ADD
+                    ? 'Supply'
+                    : transactionType === TRANSACTION_TYPE.REMOVE
+                    ? 'Remove'
+                    : 'Swap'}
                 </Text>
               </ButtonPrimary>
-              <Text fontSize={12} color="#565A69" textAlign="center">
-                {`Output is estimated. You will receive at least ${liquidityMinted?.toFixed(
-                  6
-                )} UNI ${symbol0}/${symbol1} or the transaction will revert.`}
-              </Text>
+              {transactionType === TRANSACTION_TYPE.ADD && (
+                <Text fontSize={12} color="#565A69" textAlign="center">
+                  {`Output is estimated. You will receive at least ${liquidityAmount?.toFixed(
+                    6
+                  )} UNI ${symbol0}/${symbol1} or the transaction will revert.`}
+                </Text>
+              )}
+              {transactionType === TRANSACTION_TYPE.REMOVE && (
+                <Text fontSize={12} color="#565A69" textAlign="center">
+                  {`Output is estimated. You will receive at least ${amount0?.toSignificant(
+                    6
+                  )} ${symbol0} at least ${amount1?.toSignificant(6)} ${symbol1} or the transaction will revert.`}
+                </Text>
+              )}
+              {transactionType === TRANSACTION_TYPE.SWAP && (
+                <Text fontSize={12} color="#565A69" textAlign="center">
+                  {`Output is estimated. You will receive at least ${amount1?.toSignificant(
+                    6
+                  )} ${symbol1}  or the transaction will revert.`}
+                </Text>
+              )}
             </AutoColumn>
           </BottomSection>
         </Wrapper>
@@ -176,25 +243,33 @@ export default function ConfirmationModal({
               <CloseIcon onClick={WrappedOnDismissed} />
             </RowBetween>
             <ConfirmedIcon>
-              {waitingForConfirmation ? <Loader size="90px" /> : <CheckCircle size={90} color="#27AE60" />}
+              {pendingConfirmation ? <Loader size="90px" /> : <CheckCircle size={90} color="#27AE60" />}
             </ConfirmedIcon>
             <AutoColumn gap="24px" justify={'center'}>
               <Text fontWeight={500} fontSize={20}>
-                {!waitingForConfirmation ? 'Transaction Submitted' : 'Waiting For Confirmation'}
+                {!pendingConfirmation ? 'Transaction Submitted' : 'Waiting For Confirmation'}
               </Text>
               <AutoColumn gap="12px" justify={'center'}>
                 <Text fontWeight={500} fontSize={16} color="#2172E5">
-                  Supplied
+                  {transactionType === TRANSACTION_TYPE.ADD
+                    ? 'Supplied'
+                    : transactionType === TRANSACTION_TYPE.REMOVE
+                    ? 'Removed'
+                    : 'Swapped'}
                 </Text>
                 <Text fontWeight={600} fontSize={16} color="#2172E5">
-                  {`${amount0?.toSignificant(6)} ${symbol0} and ${amount1?.toSignificant(6)} ${symbol1}`}
+                  {`${amount0?.toSignificant(6)} ${symbol0} ${
+                    transactionType === TRANSACTION_TYPE.SWAP ? 'for' : 'and'
+                  } ${amount1?.toSignificant(6)} ${symbol1}`}
                 </Text>
               </AutoColumn>
-              {!waitingForConfirmation && (
+              {!pendingConfirmation && (
                 <>
-                  <Text fontWeight={500} fontSize={14} color="#2172E5">
-                    View on Etherscan
-                  </Text>
+                  <Link href={getEtherscanLink(chainId, hash, 'transaction')}>
+                    <Text fontWeight={500} fontSize={14} color="#2172E5">
+                      View on Etherscan
+                    </Text>
+                  </Link>
                   <ButtonPrimary onClick={WrappedOnDismissed} style={{ margin: '20px 0' }}>
                     <Text fontWeight={500} fontSize={20}>
                       Close
@@ -202,9 +277,9 @@ export default function ConfirmationModal({
                   </ButtonPrimary>
                 </>
               )}
-              {waitingForConfirmation && <div style={{ height: '138px' }} />}
+              {pendingConfirmation && <div style={{ height: '138px' }} />}
               <Text fontSize={12} color="#565A69">
-                {waitingForConfirmation
+                {pendingConfirmation
                   ? 'Confirm this transaction in your wallet'
                   : `Estimated time until confirmation: 3 min`}
               </Text>

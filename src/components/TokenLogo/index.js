@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { isAddress } from '../../utils'
+import { useWeb3React } from '../../hooks'
+import { WETH } from '@uniswap/sdk'
 
 import { ReactComponent as EthereumLogo } from '../../assets/images/ethereum-logo.svg'
 
@@ -21,8 +23,11 @@ const Emoji = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: ${({ size }) => size};
   width: ${({ size }) => size};
   height: ${({ size }) => size};
+  margin-bottom: -2px;
+  margin-right: ${({ sizeraw, margin }) => margin && (sizeraw / 2 + 10).toString() + 'px'};
 `
 
 const StyledEthereumLogo = styled(EthereumLogo)`
@@ -32,6 +37,17 @@ const StyledEthereumLogo = styled(EthereumLogo)`
 
 export default function TokenLogo({ address, size = '1rem', ...rest }) {
   const [error, setError] = useState(false)
+  const { chainId } = useWeb3React()
+
+  // hard code change to show ETH instead of WETH in UI
+  if (address === WETH[chainId].address) {
+    address = 'ETH'
+  }
+
+  // remove this just for testing
+  if (address === isAddress('0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735')) {
+    address = '0x6b175474e89094c44da98b954eedeac495271d0f'
+  }
 
   let path = ''
   if (address === 'ETH') {

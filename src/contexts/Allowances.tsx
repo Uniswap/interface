@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
-import { Token, TokenAmount } from '@uniswap/sdk'
+import { Token, TokenAmount, WETH } from '@uniswap/sdk'
 
 import { useWeb3React } from '../hooks'
 import { safeAccess, isAddress, getTokenAllowance } from '../utils'
@@ -60,12 +60,13 @@ export function useAddressAllowance(address: string, token: Token, spenderAddres
   const globalBlockNumber = useBlockNumber()
 
   const [state, { update }] = useAllowancesContext()
-  const { value, blockNumber } = safeAccess(state, [chainId, address, token.address, spenderAddress]) || {}
+  const { value, blockNumber } = safeAccess(state, [chainId, address, token?.address, spenderAddress]) || {}
 
   useEffect(() => {
     if (
       isAddress(address) &&
-      isAddress(token.address) &&
+      isAddress(token?.address) &&
+      isAddress(token?.address) !== WETH[chainId].address &&
       isAddress(spenderAddress) &&
       (value === undefined || blockNumber !== globalBlockNumber) &&
       (chainId || chainId === 0) &&
@@ -73,15 +74,15 @@ export function useAddressAllowance(address: string, token: Token, spenderAddres
     ) {
       let stale = false
 
-      getTokenAllowance(address, token.address, spenderAddress, library)
+      getTokenAllowance(address, token?.address, spenderAddress, library)
         .then(value => {
           if (!stale) {
-            update(chainId, address, token.address, spenderAddress, value, globalBlockNumber)
+            update(chainId, address, token?.address, spenderAddress, value, globalBlockNumber)
           }
         })
         .catch(() => {
           if (!stale) {
-            update(chainId, address, token.address, spenderAddress, null, globalBlockNumber)
+            update(chainId, address, token?.address, spenderAddress, null, globalBlockNumber)
           }
         })
 
@@ -89,7 +90,7 @@ export function useAddressAllowance(address: string, token: Token, spenderAddres
         stale = true
       }
     }
-  }, [address, token.address, spenderAddress, value, blockNumber, globalBlockNumber, chainId, library, update])
+  }, [address, token, spenderAddress, value, blockNumber, globalBlockNumber, chainId, library, update])
 
   const newTokenAmount: TokenAmount = value ? new TokenAmount(token, value) : null
   return newTokenAmount

@@ -15,7 +15,7 @@ import SearchModal from '../../components/SearchModal'
 import { ArrowRight } from 'react-feather'
 
 import { useAllExchanges } from '../../contexts/Exchanges'
-import { useAllBalances } from '../../contexts/Balances'
+import { useAllBalances, useAccountLPBalances } from '../../contexts/Balances'
 import { useWeb3React } from '@web3-react/core'
 import { useAllTokens } from '../../contexts/Tokens'
 import { useExchangeContract } from '../../hooks'
@@ -65,7 +65,7 @@ function ExchangeCard({ exchangeAddress, token0, token1, history, allBalances })
       <AutoColumn gap="20px">
         <RowBetween>
           <RowFixed>
-            <DoubleLogo a0={token0?.address || ''} a1={token1?.address || ''} margin={true} />
+            <DoubleLogo a0={token0?.address || ''} a1={token1?.address || ''} margin={true} size={24} />
             <Text fontWeight={500} fontSize={20}>
               {token0?.symbol}:{token1?.symbol}
             </Text>
@@ -126,7 +126,7 @@ function ExchangeCard({ exchangeAddress, token0, token1, history, allBalances })
           <ButtonSecondary
             width="48%"
             onClick={() => {
-              history.push('/remove')
+              history.push('/remove/' + token0?.address + '-' + token1?.address)
             }}
           >
             Remove
@@ -152,38 +152,28 @@ function Supply({ history }) {
 
   const allBalances = useAllBalances()
 
-  const filteredPairList = Object.keys(exchanges).map((token0Address, i) => {
-    return Object.keys(exchanges[token0Address]).map(token1Address => {
-      const exchangeAddress = exchanges[token0Address][token1Address]
+  // initiate listener for LP balances
+  useAccountLPBalances(account)
 
-      /**
-       *  we need the users exchnage balance over all exchanges
-       *
-       * right now we dont
-       *
-       *  if they go to supplu page, flip switch to look for balances
-       *
-       *
-       *
-       */
-
-      // gate on positive address
-      if (allBalances?.[account]?.[exchangeAddress]) {
-        const token0 = allTokens[token0Address]
-        const token1 = allTokens[token1Address]
-        return (
-          <ExchangeCard
-            history={history}
-            key={i}
-            exchangeAddress={exchangeAddress}
-            token0={token0}
-            token1={token1}
-            allBalances={allBalances}
-          />
-        )
-      }
+  const filteredPairList = Object.keys(exchanges).map((exchangeAddress, i) => {
+    const exchange = exchanges[exchangeAddress]
+    // gate on positive address
+    if (allBalances?.[account]?.[exchangeAddress]) {
+      const token0 = allTokens[exchange.token0]
+      const token1 = allTokens[exchange.token1]
+      return (
+        <ExchangeCard
+          history={history}
+          key={i}
+          exchangeAddress={exchangeAddress}
+          token0={token0}
+          token1={token1}
+          allBalances={allBalances}
+        />
+      )
+    } else {
       return ''
-    })
+    }
   })
 
   return (

@@ -95,7 +95,14 @@ const HiddenCloseButton = styled.button`
   border: none;
 `
 
-export default function Modal({ isOpen, onDismiss, minHeight = false, maxHeight = 50, initialFocusRef, children }) {
+export default function Modal({
+  isOpen,
+  onDismiss,
+  minHeight = false,
+  maxHeight = 50,
+  initialFocusRef = null,
+  children
+}) {
   const transitions = useTransition(isOpen, null, {
     config: { duration: 200 },
     from: { opacity: 0 },

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useRef, useMemo, useCallback, useEffect, ReactNode } from 'react'
-import { TokenAmount, Token, JSBI } from '@uniswap/sdk'
+import { TokenAmount, Token, JSBI, WETH } from '@uniswap/sdk'
 
 import { useWeb3React, useDebounce } from '../hooks'
 import { getEtherBalance, getTokenBalance, isAddress } from '../utils'
@@ -12,10 +12,6 @@ const SHORT_BLOCK_TIMEOUT = (60 * 2) / 15 // in seconds, represented as a block 
 const LONG_BLOCK_TIMEOUT = (60 * 15) / 15 // in seconds, represented as a block number delta
 
 const EXCHANGES_BLOCK_TIMEOUT = (60 * 5) / 15 // in seconds, represented as a block number delta
-
-const TRACK_LP_BLANCES = 'TRACK_LP_BLANCES'
-
-const UPDATABLE_KEYS = [TRACK_LP_BLANCES]
 
 interface BalancesState {
   [chainId: number]: {
@@ -42,8 +38,7 @@ enum Action {
   STOP_LISTENING,
   UPDATE,
   BATCH_UPDATE_ACCOUNT,
-  BATCH_UPDATE_EXCHANGES,
-  UPDATE_KEY
+  BATCH_UPDATE_EXCHANGES
 }
 
 function reducer(state: BalancesState, { type, payload }: { type: Action; payload: any }) {
@@ -147,17 +142,6 @@ function reducer(state: BalancesState, { type, payload }: { type: Action; payloa
         }
       }
     }
-    case Action.UPDATE_KEY: {
-      const { key, value } = payload
-      if (!UPDATABLE_KEYS.some(k => k === key)) {
-        throw Error(`Unexpected key in LocalStorageContext reducer: '${key}'.`)
-      } else {
-        return {
-          ...state,
-          [key]: value
-        }
-      }
-    }
     default: {
       throw Error(`Unexpected action type in BalancesContext reducer: '${type}'.`)
     }
@@ -196,15 +180,11 @@ export default function Provider({ children }: { children: ReactNode }) {
     })
   }, [])
 
-  const updateKey = useCallback((key, value) => {
-    dispatch({ type: Action.UPDATE_KEY, payload: { key, value } })
-  }, [])
-
   return (
     <BalancesContext.Provider
       value={useMemo(
-        () => [state, { startListening, stopListening, update, batchUpdateAccount, batchUpdateExchanges, updateKey }],
-        [state, startListening, stopListening, update, batchUpdateAccount, batchUpdateExchanges, updateKey]
+        () => [state, { startListening, stopListening, update, batchUpdateAccount, batchUpdateExchanges }],
+        [state, startListening, stopListening, update, batchUpdateAccount, batchUpdateExchanges]
       )}
     >
       {children}
@@ -235,15 +215,21 @@ export function Updater() {
 
   // generic balances fetcher abstracting away difference between fetching ETH + token balances
   const fetchBalance = useCallback(
-    (address: string, tokenAddress: string) =>
-      (tokenAddress === 'ETH' ? getEtherBalance(address, library) : getTokenBalance(tokenAddress, address, library))
+    (address: string, tokenAddress: string) => {
+      return (tokenAddress === 'ETH'
+        ? getEtherBalance(address, library)
+        : address === account && tokenAddress === WETH[chainId].address
+        ? getEtherBalance(address, library)
+        : getTokenBalance(tokenAddress, address, library)
+      )
         .then(value => {
           return value.toString()
         })
         .catch(() => {
           return null
-        }),
-    [library]
+        })
+    },
+    [account, chainId, library]
   )
 
   // ensure that all balances with >=1 listeners are updated every block
@@ -338,22 +324,7 @@ export function Updater() {
   }, [chainId, account, blockNumber, allTokens, fetchBalance, batchUpdateAccount])
 
   // ensure  token balances for all exchanges
-  const allExchangeDetails = useAllExchanges()
-
-  // format so we can index by exchange and only update specifc values
-  const allExchanges = useMemo(() => {
-    const formattedExchanges = {}
-    Object.keys(allExchangeDetails).map(token0Address => {
-      return Object.keys(allExchangeDetails[token0Address]).map(token1Address => {
-        const exchangeAddress = allExchangeDetails[token0Address][token1Address]
-        return (formattedExchanges[exchangeAddress] = {
-          token0: token0Address,
-          token1: token1Address
-        })
-      })
-    })
-    return formattedExchanges
-  }, [allExchangeDetails])
+  const allExchanges = useAllExchanges()
 
   useEffect(() => {
     if (typeof chainId === 'number' && typeof blockNumber === 'number') {
@@ -443,23 +414,25 @@ export function useAllBalances(): Array<TokenAmount> {
       let newBalances = {}
       Object.keys(state[chainId]).map(address => {
         return Object.keys(state[chainId][address]).map(tokenAddress => {
-          return (newBalances[chainId] = {
-            ...newBalances[chainId],
-            [address]: {
-              ...newBalances[chainId]?.[address],
-              [tokenAddress]: new TokenAmount(
-                // if token not in token list, must be an exchange -
-                /**
-                 *  @TODO
-                 *
-                 * should we live fetch data here if token not in list
-                 *
-                 */
-                allTokens && allTokens[tokenAddress] ? allTokens[tokenAddress] : new Token(chainId, tokenAddress, 18),
-                JSBI.BigInt(state?.[chainId][address][tokenAddress].value)
-              )
-            }
-          })
+          if (state?.[chainId][address][tokenAddress].value) {
+            return (newBalances[chainId] = {
+              ...newBalances[chainId],
+              [address]: {
+                ...newBalances[chainId]?.[address],
+                [tokenAddress]: new TokenAmount(
+                  // if token not in token list, must be an exchange -
+                  /**
+                   *  @TODO
+                   *
+                   * should we live fetch data here if token not in list
+                   *
+                   */
+                  allTokens && allTokens[tokenAddress] ? allTokens[tokenAddress] : new Token(chainId, tokenAddress, 18),
+                  JSBI.BigInt(state?.[chainId][address][tokenAddress].value)
+                )
+              }
+            })
+          }
         })
       })
       return newBalances
@@ -476,22 +449,41 @@ export function useAddressBalance(address: string, token: Token): TokenAmount | 
   const { chainId } = useWeb3React()
   const [state, { startListening, stopListening }] = useBalancesContext()
 
-  const allTokens = useAllTokens()
-
+  /**
+   * @todo
+   * when catching for token, causes infinite rerender
+   * when the token is an exchange liquidity token
+   */
   useEffect(() => {
-    if (typeof chainId === 'number' && isAddress(address) && isAddress(token.address)) {
+    if (typeof chainId === 'number' && isAddress(address) && token && token.address && isAddress(token.address)) {
       startListening(chainId, address, token.address)
       return () => {
         stopListening(chainId, address, token.address)
       }
     }
-  }, [chainId, address, token, startListening, stopListening])
+  }, [chainId, address, startListening, stopListening])
 
-  const value = typeof chainId === 'number' ? state?.[chainId]?.[address]?.[token.address]?.value : undefined
-
-  const formattedValue = value && new TokenAmount(allTokens?.[token.address], value)
+  const value = typeof chainId === 'number' ? state?.[chainId]?.[address]?.[token?.address]?.value : undefined
+  const formattedValue = value && token && new TokenAmount(token, value)
 
   return useMemo(() => formattedValue, [formattedValue])
+}
+
+export function useAccountLPBalances(account: string) {
+  const { chainId } = useWeb3React()
+  const [, { startListening, stopListening }] = useBalancesContext()
+  const allExchanges = useAllExchanges()
+
+  useEffect(() => {
+    Object.keys(allExchanges).map(exchangeAddress => {
+      if (typeof chainId === 'number' && isAddress(account)) {
+        startListening(chainId, account, exchangeAddress)
+        return () => {
+          stopListening(chainId, account, exchangeAddress)
+        }
+      }
+    })
+  }, [account, allExchanges, chainId, startListening, stopListening])
 }
 
 export function useExchangeReserves(tokenAddress: string) {
