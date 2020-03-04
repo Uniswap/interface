@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
 import { ChainId, WETH, Token, Exchange } from '@uniswap/sdk'
-import { INITIAL_TOKENS_CONTEXT, useToken } from './Tokens'
+import { INITIAL_TOKENS_CONTEXT } from './Tokens'
 import { useAddressBalance } from './Balances'
 
 import { useWeb3React } from '../hooks'
@@ -11,6 +11,10 @@ const ALL_EXCHANGES: [Token, Token][] = [
   [
     INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY][WETH[ChainId.RINKEBY].address],
     INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735']
+  ],
+  [
+    INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735'],
+    INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0x8ab15C890E5C03B5F240f2D146e3DF54bEf3Df44']
   ]
 ]
 
@@ -82,9 +86,9 @@ export function useExchangeAddress(tokenA?: Token, tokenB?: Token): string | und
   const { chainId } = useWeb3React()
   const [state, { update }] = useExchangesContext()
 
-  const tokens: [Token, Token] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
+  const tokens: [Token, Token] = tokenA && tokenB && tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
 
-  const address = state?.[chainId]?.[tokens[0].address]?.[tokens[1].address]
+  const address = state?.[chainId]?.[tokens[0]?.address]?.[tokens[1]?.address]
 
   useEffect(() => {
     if (address === undefined && tokenA && tokenB) {
@@ -111,7 +115,26 @@ export function useAllExchanges() {
   const { chainId } = useWeb3React()
   const [state] = useExchangesContext()
 
+  const allExchangeDetails = state?.[chainId]
+
+  const allExchanges = useMemo(() => {
+    if (!allExchangeDetails) {
+      return {}
+    }
+    const formattedExchanges = {}
+    Object.keys(allExchangeDetails).map(token0Address => {
+      return Object.keys(allExchangeDetails[token0Address]).map(token1Address => {
+        const exchangeAddress = allExchangeDetails[token0Address][token1Address]
+        return (formattedExchanges[exchangeAddress] = {
+          token0: token0Address,
+          token1: token1Address
+        })
+      })
+    })
+    return formattedExchanges
+  }, [allExchangeDetails])
+
   return useMemo(() => {
-    return state?.[chainId] || {}
-  }, [state, chainId])
+    return allExchanges || {}
+  }, [allExchanges])
 }

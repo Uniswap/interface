@@ -122,6 +122,25 @@ export default function App() {
                           }
                         }}
                       />
+                      <Route
+                        exact
+                        strict
+                        path={'/remove/:tokens'}
+                        component={({ match }) => {
+                          const tokens = match.params.tokens.split('-')
+                          let t0
+                          let t1
+                          if (tokens) {
+                            t0 = tokens[0] === 'ETH' ? 'ETH' : isAddress(tokens[0])
+                            t1 = tokens[1] === 'ETH' ? 'ETH' : isAddress(tokens[1])
+                          }
+                          if (t0 && t1) {
+                            return <Remove params={params} token0={t0} token1={t1} />
+                          } else {
+                            return <Redirect to={{ pathname: '/supply' }} />
+                          }
+                        }}
+                      />
                       <Route exaxct path={'/remove'} component={() => <Remove params={params} />} />
                     </Switch>
                   </Suspense>

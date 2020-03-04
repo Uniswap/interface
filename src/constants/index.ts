@@ -7,9 +7,23 @@ export const FACTORY_ADDRESSES = {
   42: '0xD3E51Ef092B2845f10401a0159B2B96e8B6c3D30'
 }
 
+export const ROUTER_ADDRESSES = {
+  1: '',
+  3: '',
+  4: '0xd9210Ff5A0780E083BB40e30d005d93a2DcFA4EF',
+  42: ''
+}
+
 export const SUPPORTED_THEMES = {
   DARK: 'DARK',
   LIGHT: 'LIGHT'
+}
+
+export enum TRANSACTION_TYPE {
+  SWAP,
+  SEND,
+  ADD,
+  REMOVE
 }
 
 const MAINNET_WALLETS = {

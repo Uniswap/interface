@@ -130,16 +130,17 @@ function NavigationTabs({ location: { pathname }, history }) {
   useBodyKeyDown('ArrowLeft', navigateLeft)
 
   const adding = pathname.match('/add')
+  const removing = pathname.match('/remove')
 
   return (
     <>
-      {adding ? (
+      {adding || removing ? (
         <Tabs>
           <RowBetween style={{ padding: '1rem' }}>
             <HistoryLink to="/supply">
               <ArrowLink />
             </HistoryLink>
-            <ActiveText>Add Liquidity</ActiveText>
+            <ActiveText>{adding ? 'Add' : 'Remove'} Liquidity</ActiveText>
             <QuestionHelper text={'helper text'} />
           </RowBetween>
         </Tabs>
@@ -152,7 +153,6 @@ function NavigationTabs({ location: { pathname }, history }) {
           ))}
         </Tabs>
       )}
-
       {showBetaMessage && (
         <BetaMessage onClick={dismissBetaMessage}>
           <span role="img" aria-label="warning">

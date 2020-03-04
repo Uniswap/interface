@@ -94,10 +94,13 @@ const PaddedColumn = styled(AutoColumn)`
   padding-bottom: 12px;
 `
 
-const MenuItem = styled(RowBetween)`
+const PaddedItem = styled(RowBetween)`
   padding: 4px 24px;
   width: calc(100% - 48px);
   height: 56px;
+`
+
+const MenuItem = styled(PaddedItem)`
   cursor: pointer;
 
   :hover {
@@ -107,12 +110,18 @@ const MenuItem = styled(RowBetween)`
 function SearchModal({ history, isOpen, onDismiss, onTokenSelect, field, urlAddedTokens, filterType }) {
   const { t } = useTranslation()
 
-  const [searchQuery, setSearchQuery] = useState('')
-  const { exchangeAddress } = useToken(searchQuery)
-
-  const allTokens = useAllTokens()
-
   const { account, chainId } = useWeb3React()
+
+  const [searchQuery, setSearchQuery] = useState('')
+
+  // get all exchanges
+  const allExchanges = useAllExchanges()
+  const exchange = useToken(searchQuery)
+
+  const exchangeAddress = exchange && exchange.exchangeAddress
+
+  // get all tokens
+  const allTokens = useAllTokens()
 
   // all balances for both account and exchanges
   let allBalances = useAllBalances()
@@ -138,11 +147,7 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, field, urlAdde
       .map(k => {
         let balance
         // only update if we have data
-        if (k === 'ETH' && allBalances[account] && allBalances[account][k] && allBalances[account][k].value) {
-          balance = allBalances[account][k].value
-        } else if (allBalances[account] && allBalances[account][k] && allBalances[account][k].value) {
-          balance = (allBalances[account][k].value, allTokens[k].decimals)
-        }
+        balance = allBalances?.[account]?.[k]
         return {
           name: allTokens[k].name,
           symbol: allTokens[k].symbol,
@@ -195,9 +200,6 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, field, urlAdde
     onDismiss()
   }
 
-  // get all exchanges
-  const allExchanges = useAllExchanges()
-
   // amount of tokens to display at once
   const [tokensShown, setTokensShown] = useState(0)
   const [pairsShown, setPairsShown] = useState(0)
@@ -218,32 +220,30 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, field, urlAdde
   const filteredPairList = useMemo(() => {
     // check if the search is an address
     const isAddress = searchQuery.slice(0, 2) === '0x'
+    return Object.keys(allExchanges).filter(exchangeAddress => {
+      const exchange = allExchanges[exchangeAddress]
 
-    return Object.keys(allExchanges).filter(token0Address => {
-      return Object.keys(allExchanges[token0Address]).map(token1Address => {
-        if (searchQuery === '') {
-          return true
+      if (searchQuery === '') {
+        return true
+      }
+      const token0 = allTokens[exchange.token0]
+      const token1 = allTokens[exchange.token1]
+
+      const regexMatches = Object.keys(token0).map(field => {
+        if (
+          (field === 'address' && isAddress) ||
+          (field === 'name' && !isAddress) ||
+          (field === 'symbol' && !isAddress)
+        ) {
+          return (
+            token0[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i')) ||
+            token1[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i'))
+          )
         }
-
-        const token0 = allTokens[token0Address]
-        const token1 = allTokens[token1Address]
-
-        const regexMatches = Object.keys(token0).map(field => {
-          if (
-            (field === 'address' && isAddress) ||
-            (field === 'name' && !isAddress) ||
-            (field === 'symbol' && !isAddress)
-          ) {
-            return (
-              token0[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i')) ||
-              token1[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i'))
-            )
-          }
-          return false
-        })
-
-        return regexMatches.some(m => m)
+        return false
       })
+
+      return regexMatches.some(m => m)
     })
   }, [allExchanges, allTokens, searchQuery])
 
@@ -256,34 +256,39 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, field, urlAdde
   }, [filteredPairList])
 
   function renderPairsList() {
+    if (filteredPairList?.length === 0) {
+      return (
+        <PaddedColumn justify="center">
+          <Text>No Pools Found</Text>
+        </PaddedColumn>
+      )
+    }
+
     return (
       filteredPairList &&
-      filteredPairList.map((token0Address, i) => {
-        return Object.keys(allExchanges[token0Address]).map(token1Address => {
-          const token0 = allTokens[token0Address]
-          const token1 = allTokens[token1Address]
+      filteredPairList.map((exchangeAddress, i) => {
+        const token0 = allTokens[allExchanges[exchangeAddress].token0]
+        const token1 = allTokens[allExchanges[exchangeAddress].token1]
 
-          const exchangeAddress = allExchanges[token0Address][token1Address]
-          const balance = allBalances?.[account]?.[exchangeAddress]?.toSignificant(6)
+        const balance = allBalances?.[account]?.[exchangeAddress]?.toSignificant(6)
 
-          return (
-            <MenuItem
-              key={i}
-              onClick={() => {
-                history.push('/add/' + token0.address + '-' + token1.address)
-                onDismiss()
-              }}
-            >
-              <RowFixed>
-                <DoubleTokenLogo a0={token0?.address || ''} a1={token1?.address || ''} size={24} margin={true} />
-                <Text fontWeight={500} fontSize={16}>{`${token0?.symbol}/${token1?.symbol}`}</Text>
-              </RowFixed>
-              <Text fontWeight={500} fontSize={16}>
-                {balance ? balance.toString() : '-'}
-              </Text>
-            </MenuItem>
-          )
-        })
+        return (
+          <MenuItem
+            key={i}
+            onClick={() => {
+              history.push('/add/' + token0.address + '-' + token1.address)
+              onDismiss()
+            }}
+          >
+            <RowFixed>
+              <DoubleTokenLogo a0={token0?.address || ''} a1={token1?.address || ''} size={24} margin={true} />
+              <Text fontWeight={500} fontSize={16}>{`${token0?.symbol}/${token1?.symbol}`}</Text>
+            </RowFixed>
+            <Text fontWeight={500} fontSize={16}>
+              {balance ? balance.toString() : '-'}
+            </Text>
+          </MenuItem>
+        )
       })
     )
   }
@@ -326,7 +331,7 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, field, urlAdde
           </RowFixed>
           <AutoColumn gap="4px" justify="end">
             {balance ? (
-              <Text>{balance && (balance > 0 || balance === '<0.0001') ? balance : '-'}</Text>
+              <Text>{balance ? balance.toSignificant(6) : '-'}</Text>
             ) : account ? (
               <SpinnerWrapper src={Circle} alt="loader" />
             ) : (
@@ -389,6 +394,7 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, field, urlAdde
           </RowBetween>
         </PaddedColumn>
         <div style={{ width: '100%', height: '1px', backgroundColor: '#E1E1E1' }} />
+
         <TokenList>{filterType === 'tokens' ? renderTokenList() : renderPairsList()}</TokenList>
       </TokenModal>
     </Modal>

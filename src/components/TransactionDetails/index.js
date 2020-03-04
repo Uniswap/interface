@@ -104,7 +104,6 @@ const FancyButton = styled.button`
   color: ${({ theme }) => theme.textColor};
   align-items: center;
   min-width: 55px;
-  height: 2rem;
   border-radius: 36px;
   font-size: 12px;
   border: 1px solid ${({ theme }) => theme.mercuryGray};
@@ -219,7 +218,6 @@ const BottomError = styled.div`
 `
 
 const OptionCustom = styled(FancyButton)`
-  height: 2rem;
   position: relative;
   width: 120px;
   margin-top: 6px;

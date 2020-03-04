@@ -7,7 +7,8 @@ const UPDATE = 'UPDATE'
 
 export const ALL_TOKENS = [
   WETH[ChainId.RINKEBY],
-  new Token(ChainId.RINKEBY, '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735', 18, 'DAI', 'Dai Stablecoin')
+  new Token(ChainId.RINKEBY, '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735', 18, 'DAI', 'Dai Stablecoin'),
+  new Token(ChainId.RINKEBY, '0x8ab15C890E5C03B5F240f2D146e3DF54bEf3Df44', 18, 'IANV2', 'IAn V2 Coin')
 ]
 
 // only meant to be used in exchanges.ts!
@@ -67,10 +68,11 @@ export function useToken(tokenAddress: string): Token {
   const [state, { update }] = useTokensContext()
   const allTokensInNetwork = state?.[chainId] || {}
 
-  const token = safeAccess(allTokensInNetwork, [tokenAddress]) || {}
+  const token = safeAccess(allTokensInNetwork, [tokenAddress])
 
   useEffect(() => {
     if (
+      token &&
       isAddress(tokenAddress) &&
       (token === undefined || token.name === undefined || token.symbol === undefined || token.decimals === undefined) &&
       (chainId || chainId === 0) &&
@@ -94,6 +96,14 @@ export function useToken(tokenAddress: string): Token {
       }
     }
   }, [tokenAddress, token, chainId, library, update])
+
+  // hard coded change in UI to display WETH as ETH
+  if (token && token.name === 'WETH') {
+    token.name = 'ETH'
+  }
+  if (token && token.symbol === 'WETH') {
+    token.symbol = 'ETH'
+  }
 
   return token
 }

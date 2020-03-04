@@ -1,23 +1,24 @@
 import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { ethers } from 'ethers'
 import styled from 'styled-components'
-import { darken } from 'polished'
 import '@reach/tooltip/styles.css'
+import { ethers } from 'ethers'
+import { darken } from 'polished'
+import { WETH } from '@uniswap/sdk'
 
-import { Text } from 'rebass'
-import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import TokenLogo from '../TokenLogo'
+import DoubleLogo from '../DoubleLogo'
 import SearchModal from '../SearchModal'
-import { Input as NumericalInput } from '../NumericalInput'
+import { Text } from 'rebass'
 import { RowBetween } from '../Row'
+import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
+import { Input as NumericalInput } from '../NumericalInput'
 
 import { useWeb3React } from '../../hooks'
-import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
-import { useToken, useAllTokens } from '../../contexts/Tokens'
+import { useTranslation } from 'react-i18next'
 import { useTokenContract } from '../../hooks'
 import { calculateGasMargin } from '../../utils'
 import { useAddressBalance } from '../../contexts/Balances'
+import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
@@ -26,9 +27,9 @@ const SubCurrencySelect = styled.button`
   padding: 4px 50px 4px 15px;
   margin-right: -40px;
   line-height: 0;
-  height: 2rem;
   align-items: center;
   border-radius: 2.5rem;
+  height: 2rem;
   outline: none;
   cursor: pointer;
   user-select: none;
@@ -41,15 +42,16 @@ const InputRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
 
-  padding: 0.25rem 0.85rem 0.75rem;
+  padding: 0.75rem 0.85rem 0.75rem;
 `
 
 const CurrencySelect = styled.button`
   align-items: center;
+  height: 2.2rem;
+
   font-size: 20px;
   background-color: ${({ selected, theme }) => (selected ? theme.buttonBackgroundPlain : theme.zumthorBlue)};
   color: ${({ selected, theme }) => (selected ? theme.textColor : theme.royalBlue)};
-  height: 2rem;
   border: 1px solid
     ${({ selected, theme, disableTokenSelect }) =>
       disableTokenSelect ? theme.buttonBackgroundPlain : selected ? theme.buttonOutlinePlain : theme.royalBlue};
@@ -111,7 +113,7 @@ const LabelRow = styled.div`
   color: ${({ theme }) => theme.doveGray};
   font-size: 0.75rem;
   line-height: 1rem;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1rem 0;
   span:hover {
     cursor: pointer;
     color: ${({ theme }) => darken(0.2, theme.doveGray)};
@@ -159,49 +161,44 @@ export default function CurrencyInputPanel({
   value,
   field,
   onUserInput,
-  selectedTokenAddress,
   onTokenSelection,
   title,
   onMax,
   atMax,
-  error
-
-  // disableUnlock,
-  // disableTokenSelect,
-  // urlAddedTokens
+  error,
+  urlAddedTokens = [], // used
+  token = null,
+  showUnlock = false, // used to show unlock if approval needed
+  disableUnlock = false,
+  disableTokenSelect = false,
+  hideBalance = false,
+  isExchange = false,
+  exchange = null, // used for double token logo
+  customBalance = null // used for LP balances instead of token balance
 }) {
-  const { account } = useWeb3React()
+  const { account, chainId } = useWeb3React()
   const { t } = useTranslation()
-
-  const disableUnlock = false
-
-  const disableTokenSelect = false
-
-  const urlAddedTokens = []
-
-  const errorMessage = error
-
-  const [modalIsOpen, setModalIsOpen] = useState(false)
-
-  const tokenContract = useTokenContract(selectedTokenAddress)
-  const { exchangeAddress: selectedTokenExchangeAddress } = useToken(selectedTokenAddress)
-
-  const pendingApproval = usePendingApproval(selectedTokenAddress)
-
   const addTransaction = useTransactionAdder()
 
-  const allTokens = useAllTokens()
-
-  const token = useToken(selectedTokenAddress)
-
-  const userTokenBalance = useAddressBalance(account, token)
-
-  const [showUnlock] = useState(false)
-
+  const [modalOpen, setModalOpen] = useState(false)
   const [showMax, setShowMax] = useState(false)
 
+  // this one causes the infinite loop
+  const userTokenBalance = useAddressBalance(account, token)
+
+  const tokenContract = useTokenContract(token?.address)
+  const pendingApproval = usePendingApproval(token?.address)
+
+  const routerAddress = '0xd9210Ff5A0780E083BB40e30d005d93a2DcFA4EF'
+
   function renderUnlockButton() {
-    if (disableUnlock || !showUnlock || selectedTokenAddress === 'ETH' || !selectedTokenAddress) {
+    if (
+      disableUnlock ||
+      !showUnlock ||
+      token?.address === 'ETH' ||
+      token?.address === WETH[chainId].address ||
+      !token?.address
+    ) {
       return null
     } else {
       if (!pendingApproval) {
@@ -211,25 +208,21 @@ export default function CurrencyInputPanel({
               let estimatedGas
               let useUserBalance = false
               estimatedGas = await tokenContract.estimate
-                .approve(selectedTokenExchangeAddress, ethers.constants.MaxUint256)
+                .approve(routerAddress, ethers.constants.MaxUint256)
                 .catch(e => {
                   console.log('Error setting max token approval.')
                 })
               if (!estimatedGas) {
                 // general fallback for tokens who restrict approval amounts
-                estimatedGas = await tokenContract.estimate.approve(selectedTokenExchangeAddress, userTokenBalance)
+                estimatedGas = await tokenContract.estimate.approve(routerAddress, userTokenBalance)
                 useUserBalance = true
               }
               tokenContract
-                .approve(
-                  selectedTokenExchangeAddress,
-                  useUserBalance ? userTokenBalance : ethers.constants.MaxUint256,
-                  {
-                    gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
-                  }
-                )
+                .approve(routerAddress, useUserBalance ? userTokenBalance : ethers.constants.MaxUint256, {
+                  gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
+                })
                 .then(response => {
-                  addTransaction(response, { approval: selectedTokenAddress })
+                  addTransaction(response, { approval: token?.address })
                 })
             }}
           >
@@ -244,16 +237,20 @@ export default function CurrencyInputPanel({
 
   return (
     <InputPanel>
-      <Container error={!!errorMessage}>
-        <LabelRow>
-          <RowBetween>
-            <Text>{title}</Text>
-            <ErrorSpan data-tip={'Enter max'} error={!!errorMessage} onClick={() => {}}></ErrorSpan>
-            <ClickableText onClick={onMax}>
-              <Text>Balance: {userTokenBalance?.toFixed(2)}</Text>
-            </ClickableText>
-          </RowBetween>
-        </LabelRow>
+      <Container error={!!error}>
+        {!hideBalance && (
+          <LabelRow>
+            <RowBetween>
+              <Text>{title}</Text>
+              <ErrorSpan data-tip={'Enter max'} error={!!error} onClick={() => {}}></ErrorSpan>
+              <ClickableText onClick={onMax}>
+                <Text>
+                  Balance: {customBalance ? customBalance.toSignificant(4) : userTokenBalance?.toSignificant(4)}
+                </Text>
+              </ClickableText>
+            </RowBetween>
+          </LabelRow>
+        )}
         <InputRow>
           <NumericalInput
             field={field}
@@ -263,34 +260,40 @@ export default function CurrencyInputPanel({
               setShowMax(true)
             }}
           />
-          {!!selectedTokenAddress && !atMax && showMax && <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>}
+          {!!token?.address && !atMax && showMax && <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>}
           {renderUnlockButton()}
           <CurrencySelect
-            selected={!!selectedTokenAddress}
+            selected={!!token?.address}
             onClick={() => {
               if (!disableTokenSelect) {
-                setModalIsOpen(true)
+                setModalOpen(true)
               }
             }}
             disableTokenSelect={disableTokenSelect}
           >
             <Aligner>
-              {selectedTokenAddress ? <TokenLogo address={selectedTokenAddress} size={'24px'} /> : null}
-              {
+              {isExchange ? (
+                <DoubleLogo a0={exchange?.token0.address} a1={exchange?.token1.address} margin={true} />
+              ) : token?.address ? (
+                <TokenLogo address={token?.address} size={'24px'} />
+              ) : null}
+              {isExchange ? (
                 <StyledTokenName>
-                  {(allTokens[selectedTokenAddress] && allTokens[selectedTokenAddress].symbol) || t('selectToken')}
+                  {exchange?.token0.symbol}:{exchange?.token1.symbol}
                 </StyledTokenName>
-              }
-              {!disableTokenSelect && <StyledDropDown selected={!!selectedTokenAddress} />}
+              ) : (
+                <StyledTokenName>{(token && token.symbol) || t('selectToken')}</StyledTokenName>
+              )}
+              {!disableTokenSelect && <StyledDropDown selected={!!token?.address} />}
             </Aligner>
           </CurrencySelect>
         </InputRow>
       </Container>
       {!disableTokenSelect && (
         <SearchModal
-          isOpen={modalIsOpen}
+          isOpen={modalOpen}
           onDismiss={() => {
-            setModalIsOpen(false)
+            setModalOpen(false)
           }}
           filterType="tokens"
           urlAddedTokens={urlAddedTokens}
