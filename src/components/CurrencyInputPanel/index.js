@@ -245,7 +245,7 @@ export default function CurrencyInputPanel({
               <ErrorSpan data-tip={'Enter max'} error={!!error} onClick={() => {}}></ErrorSpan>
               <ClickableText onClick={onMax}>
                 <Text>
-                  Balance: {customBalance ? customBalance.toSignificant(4) : userTokenBalance?.toSignificant(4)}
+                  Balance: {customBalance ? customBalance?.toSignificant(4) : userTokenBalance?.toSignificant(4)}
                 </Text>
               </ClickableText>
             </RowBetween>
@@ -273,7 +273,7 @@ export default function CurrencyInputPanel({
           >
             <Aligner>
               {isExchange ? (
-                <DoubleLogo a0={exchange?.token0.address} a1={exchange?.token1.address} margin={true} />
+                <DoubleLogo a0={exchange?.token0.address} a1={exchange?.token1.address} size={24} margin={true} />
               ) : token?.address ? (
                 <TokenLogo address={token?.address} size={'24px'} />
               ) : null}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 import { ButtonPrimary } from '../Button'
@@ -6,6 +6,7 @@ import { AutoColumn, ColumnCenter } from '../Column'
 import Row, { RowBetween, RowFlat, RowFixed } from '../Row'
 import { ArrowDown } from 'react-feather'
 
+import { ButtonConfirmed } from '../Button'
 import { Text } from 'rebass'
 import { LightCard } from '../Card'
 import Modal from '../Modal'
@@ -35,6 +36,10 @@ const ConfirmedIcon = styled(ColumnCenter)`
   padding: 60px 0;
 `
 
+const ConfirmedText = styled(Text)`
+  color: ${({ theme, confirmed }) => (confirmed ? theme.connectedGreen : theme.white)};
+`
+
 export default function ConfirmationModal({
   isOpen,
   onDismiss,
@@ -46,23 +51,23 @@ export default function ConfirmationModal({
   transactionType,
   pendingConfirmation,
   hash,
-  contractCall
+  signed = false,
+  contractCall,
+  attemptedRemoval = false,
+  extraCall = undefined
 }) {
   const { address: address0, symbol: symbol0 } = amount0?.token || {}
   const { address: address1, symbol: symbol1 } = amount1?.token || {}
 
   const { chainId } = useWeb3React()
 
-  const [confirmed, setConfirmed] = useState(false)
-
   function WrappedOnDismissed() {
     onDismiss()
-    setConfirmed(false)
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss}>
-      {!confirmed ? (
+    <Modal isOpen={isOpen} onDismiss={WrappedOnDismissed}>
+      {!attemptedRemoval ? (
         <Wrapper>
           <Section gap="40px">
             <RowBetween>
@@ -195,22 +200,51 @@ export default function ConfirmationModal({
                   </Text>
                 </RowBetween>
               )}
-              <ButtonPrimary
-                style={{ margin: '20px 0' }}
-                onClick={() => {
-                  setConfirmed(true)
-                  contractCall()
-                }}
-              >
-                <Text fontWeight={500} fontSize={20}>
-                  Confirm{' '}
-                  {transactionType === TRANSACTION_TYPE.ADD
-                    ? 'Supply'
-                    : transactionType === TRANSACTION_TYPE.REMOVE
-                    ? 'Remove'
-                    : 'Swap'}
-                </Text>
-              </ButtonPrimary>
+              {transactionType === TRANSACTION_TYPE.REMOVE ? (
+                <RowBetween gap="20px">
+                  <ButtonConfirmed
+                    style={{ margin: '20px 0' }}
+                    width="48%"
+                    onClick={() => {
+                      extraCall()
+                    }}
+                    confirmed={signed}
+                    disabled={signed}
+                  >
+                    <ConfirmedText fontWeight={500} fontSize={20} confirmed={signed}>
+                      {signed ? 'Signed' : 'Sign'}
+                    </ConfirmedText>
+                  </ButtonConfirmed>
+                  <ButtonPrimary
+                    width="48%"
+                    disabled={!signed}
+                    style={{ margin: '20px 0' }}
+                    onClick={() => {
+                      contractCall()
+                    }}
+                  >
+                    <Text fontWeight={500} fontSize={20}>
+                      Confirm Remove
+                    </Text>
+                  </ButtonPrimary>
+                </RowBetween>
+              ) : (
+                <ButtonPrimary
+                  style={{ margin: '20px 0' }}
+                  onClick={() => {
+                    contractCall()
+                  }}
+                >
+                  <Text fontWeight={500} fontSize={20}>
+                    Confirm{' '}
+                    {transactionType === TRANSACTION_TYPE.ADD
+                      ? 'Supply'
+                      : transactionType === TRANSACTION_TYPE.REMOVE
+                      ? 'Remove'
+                      : 'Swap'}
+                  </Text>
+                </ButtonPrimary>
+              )}
               {transactionType === TRANSACTION_TYPE.ADD && (
                 <Text fontSize={12} color="#565A69" textAlign="center">
                   {`Output is estimated. You will receive at least ${liquidityAmount?.toFixed(

@@ -1,9 +1,10 @@
-import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
-import { ChainId, WETH, Token, Exchange } from '@uniswap/sdk'
-import { INITIAL_TOKENS_CONTEXT } from './Tokens'
-import { useAddressBalance } from './Balances'
+import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect, useState } from 'react'
 
-import { useWeb3React } from '../hooks'
+import { useAddressBalance } from './Balances'
+import { useWeb3React, useExchangeContract } from '../hooks'
+
+import { INITIAL_TOKENS_CONTEXT } from './Tokens'
+import { ChainId, WETH, Token, TokenAmount, Exchange, JSBI } from '@uniswap/sdk'
 
 const UPDATE = 'UPDATE'
 
@@ -137,4 +138,47 @@ export function useAllExchanges() {
   return useMemo(() => {
     return allExchanges || {}
   }, [allExchanges])
+}
+
+export function useTotalSupply(exchange: Exchange) {
+  const { library } = useWeb3React()
+
+  const [totalPoolTokens, setTotalPoolTokens] = useState<TokenAmount>()
+
+  const exchangeContract = useExchangeContract(exchange?.liquidityToken.address)
+
+  const fetchPoolTokens = useCallback(async () => {
+    !!exchangeContract &&
+      exchangeContract
+        .deployed()
+        .then(() => {
+          if (exchangeContract) {
+            exchangeContract.totalSupply().then(totalSupply => {
+              if (totalSupply !== undefined && exchange?.liquidityToken?.decimals) {
+                const supplyFormatted = JSBI.BigInt(totalSupply)
+                const tokenSupplyFormatted = new TokenAmount(exchange?.liquidityToken, supplyFormatted)
+                setTotalPoolTokens(tokenSupplyFormatted)
+              }
+            })
+          }
+        })
+        .catch(e => {
+          console.log('error')
+        })
+    /**
+     * @todo
+     * fix this
+     */
+  }, [exchangeContract])
+
+  // on the block make sure we're updated
+  useEffect(() => {
+    fetchPoolTokens()
+    library.on('block', fetchPoolTokens)
+    return () => {
+      library.removeListener('block', fetchPoolTokens)
+    }
+  }, [fetchPoolTokens, library])
+
+  return totalPoolTokens
 }

@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useReducer, useRef, useMemo, useCallback, useEffect, ReactNode } from 'react'
 import { TokenAmount, Token, JSBI, WETH } from '@uniswap/sdk'
 
-import { useWeb3React, useDebounce } from '../hooks'
-import { getEtherBalance, getTokenBalance, isAddress } from '../utils'
-import { useBlockNumber } from './Application'
 import { useAllTokens } from './Tokens'
+import { useBlockNumber } from './Application'
 import { useAllExchanges } from './Exchanges'
+import { useWeb3React, useDebounce } from '../hooks'
+
+import { getEtherBalance, getTokenBalance, isAddress } from '../utils'
 
 const LOCAL_STORAGE_KEY = 'BALANCES'
 const SHORT_BLOCK_TIMEOUT = (60 * 2) / 15 // in seconds, represented as a block number delta
@@ -408,30 +409,23 @@ export function useAllBalances(): Array<TokenAmount> {
   const allTokens = useAllTokens()
 
   const formattedBalances = useMemo(() => {
-    if (!state?.[chainId]) {
+    if (!state || !state[chainId]) {
       return {}
     } else {
       let newBalances = {}
       Object.keys(state[chainId]).map(address => {
         return Object.keys(state[chainId][address]).map(tokenAddress => {
-          if (state?.[chainId][address][tokenAddress].value) {
-            return (newBalances[chainId] = {
+          if (state[chainId][address][tokenAddress].value) {
+            newBalances[chainId] = {
               ...newBalances[chainId],
               [address]: {
                 ...newBalances[chainId]?.[address],
                 [tokenAddress]: new TokenAmount(
-                  // if token not in token list, must be an exchange -
-                  /**
-                   *  @TODO
-                   *
-                   * should we live fetch data here if token not in list
-                   *
-                   */
-                  allTokens && allTokens[tokenAddress] ? allTokens[tokenAddress] : new Token(chainId, tokenAddress, 18),
+                  allTokens[tokenAddress] ? allTokens[tokenAddress] : new Token(chainId, tokenAddress, 18),
                   JSBI.BigInt(state?.[chainId][address][tokenAddress].value)
                 )
               }
-            })
+            }
           }
         })
       })
@@ -484,8 +478,4 @@ export function useAccountLPBalances(account: string) {
       }
     })
   }, [account, allExchanges, chainId, startListening, stopListening])
-}
-
-export function useExchangeReserves(tokenAddress: string) {
-  return []
 }

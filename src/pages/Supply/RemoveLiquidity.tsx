@@ -1,37 +1,79 @@
 import React, { useReducer, useState, useCallback, useEffect } from 'react'
-import { WETH, TokenAmount, JSBI, Route } from '@uniswap/sdk'
-import { ethers } from 'ethers'
-import { parseUnits, parseEther } from '@ethersproject/units'
 import styled from 'styled-components'
+import { ethers } from 'ethers'
+import { parseUnits } from '@ethersproject/units'
+import { TokenAmount, JSBI, Route, WETH } from '@uniswap/sdk'
 
-import { Text } from 'rebass'
-import { ChevronDown } from 'react-feather'
-import { ButtonPrimary, ButtonEmpty } from '../../components/Button'
-import ConfirmationModal from '../../components/ConfirmationModal'
-import { AutoColumn, ColumnCenter } from '../../components/Column'
-import { RowBetween } from '../../components/Row'
+import Slider from '../../components/Slider'
 import DoubleLogo from '../../components/DoubleLogo'
-import { ArrowDown, Plus } from 'react-feather'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { LightCard } from '../../components/Card'
 import SearchModal from '../../components/SearchModal'
+import PositionCard from '../../components/PositionCard'
+import ConfirmationModal from '../../components/ConfirmationModal'
+import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import { Text } from 'rebass'
+import { LightCard } from '../../components/Card'
+import { ChevronDown } from 'react-feather'
+import { ArrowDown, Plus } from 'react-feather'
+import Row, { RowBetween, RowFixed, RowFlat } from '../../components/Row'
+import { AutoColumn, ColumnCenter } from '../../components/Column'
+import { ButtonPrimary, ButtonEmpty } from '../../components/Button'
 
-import { useWeb3React } from '../../hooks'
 import { useToken } from '../../contexts/Tokens'
-import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
-import { useExchange } from '../../contexts/Exchanges'
-import { useExchangeContract } from '../../hooks'
+import { useWeb3React } from '../../hooks'
+import { useAllBalances } from '../../contexts/Balances'
 import { useTransactionAdder } from '../../contexts/Transactions'
+import { useExchangeContract } from '../../hooks'
+import { useExchange, useTotalSupply } from '../../contexts/Exchanges'
 
-import { TRANSACTION_TYPE } from '../../constants'
-import { getRouterContract, calculateGasMargin } from '../../utils'
+import { BigNumber } from 'ethers/utils'
 import { splitSignature } from '@ethersproject/bytes'
+import { TRANSACTION_TYPE } from '../../constants'
+import { ROUTER_ADDRESSES } from '../../constants'
+import { getRouterContract, calculateGasMargin } from '../../utils'
+import TokenLogo from '../../components/TokenLogo'
 
-const ErrorText = styled(Text)`
-  color: ${({ theme, error }) => (error ? theme.salmonRed : theme.chaliceGray)};
+// denominated in seconds
+const DEADLINE_FROM_NOW = 60 * 15
+
+const GAS_MARGIN: BigNumber = ethers.utils.bigNumberify(1000)
+
+const Wrapper = styled.div`
+  position: relative;
+`
+
+const FixedBottom = styled.div`
+  position: absolute;
+  bottom: -240px;
+  width: 100%;
+`
+
+const ClickableText = styled(Text)`
+  :hover {
+    cursor: pointer;
+  }
+`
+
+const MaxButton = styled.button`
+  padding: 0.5rem 1rem;
+  background-color: ${({ theme }) => theme.zumthorBlue};
+  border: 1px solid ${({ theme }) => theme.zumthorBlue};
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  color: ${({ theme }) => theme.royalBlue};
+  :hover {
+    border: 1px solid ${({ theme }) => theme.royalBlue};
+  }
+  :focus {
+    border: 1px solid ${({ theme }) => theme.royalBlue};
+    outline: none;
+  }
 `
 
 enum Field {
+  PERCENTAGE,
   POOL,
   INPUT,
   OUTPUT
@@ -53,7 +95,7 @@ interface RemoveState {
 
 function initializeRemoveState(inputAddress?: string, outputAddress?: string): RemoveState {
   return {
-    independentField: Field.INPUT,
+    independentField: Field.PERCENTAGE,
     typedValue: '',
     [Field.POOL]: {
       address: ''
@@ -110,12 +152,12 @@ function reducer(
 export default function RemoveLiquidity({ token0, token1 }) {
   // console.log('DEBUG: Rendering')
 
-  const { account, chainId, library, connector } = useWeb3React()
+  const { account, chainId, library } = useWeb3React()
+  const routerAddress = ROUTER_ADDRESSES[chainId]
 
   // modal state
   const [showSearch, toggleSearch] = useState(false)
-
-  const [pendingConfirmation, toggelPendingConfirmation] = useState(false)
+  const [pendingConfirmation, setPendingConfirmation] = useState(true)
 
   // input state
   const [state, dispatch] = useReducer(reducer, initializeRemoveState(token0, token1))
@@ -134,53 +176,13 @@ export default function RemoveLiquidity({ token0, token1 }) {
   const exchangeContract = useExchangeContract(exchange?.liquidityToken.address)
 
   // pool token data
-  const [totalPoolTokens, setTotalPoolTokens] = useState<TokenAmount>()
-
-  // get user- and token-specific lookup data
-  const userBalances = {
-    [Field.INPUT]: useAddressBalance(account, tokens[Field.INPUT]),
-    [Field.OUTPUT]: useAddressBalance(account, tokens[Field.OUTPUT])
-  }
+  const totalPoolTokens = useTotalSupply(exchange)
 
   const allBalances = useAllBalances()
-  const userLiquidity = allBalances?.[account]?.[exchange.liquidityToken.address]
+  const userLiquidity = allBalances?.[account]?.[exchange?.liquidityToken?.address]
 
   // state for confirmation popup
-  const [showConfirm, toggleConfirm] = useState(false)
-
-  // errors
-  const [inputError, setInputError] = useState()
-  const [outputError, setOutputError] = useState()
-  const [poolTokenError, setPoolTokenError] = useState()
-  const [errorText, setErrorText] = useState(' ')
-  const [isError, setIsError] = useState(false)
-
-  const fetchPoolTokens = useCallback(() => {
-    if (exchangeContract && exchange && exchange.liquidityToken) {
-      exchangeContract.totalSupply().then(totalSupply => {
-        if (totalSupply !== undefined) {
-          const supplyFormatted = JSBI.BigInt(totalSupply)
-          const tokenSupplyFormatted = new TokenAmount(exchange.liquidityToken, supplyFormatted)
-          setTotalPoolTokens(tokenSupplyFormatted)
-        }
-      })
-    }
-    /**
-     * @todo
-     *
-     * when exchange is used here enter infinite loop
-     *
-     */
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exchangeContract])
-  useEffect(() => {
-    fetchPoolTokens()
-    library.on('block', fetchPoolTokens)
-
-    return () => {
-      library.removeListener('block', fetchPoolTokens)
-    }
-  }, [fetchPoolTokens, library])
+  const [showConfirm, setShowConfirm] = useState(false)
 
   const TokensDeposited = {
     [Field.INPUT]:
@@ -196,23 +198,76 @@ export default function RemoveLiquidity({ token0, token1 }) {
   }
 
   const route = exchange
-    ? new Route([exchange], independentField === Field.POOL ? tokens[Field.INPUT] : tokens[independentField])
+    ? new Route(
+        [exchange],
+        independentField === Field.POOL || independentField === Field.PERCENTAGE
+          ? tokens[Field.OUTPUT]
+          : tokens[independentField]
+      )
     : undefined
+
+  const onTokenSelection = useCallback((field: Field, address: string) => {
+    dispatch({
+      type: RemoveAction.SELECT_TOKEN,
+      payload: { field, address }
+    })
+  }, [])
+
+  // update input value when user types
+  const onUserInput = useCallback((field: Field, typedValue: string) => {
+    dispatch({ type: RemoveAction.TYPE, payload: { field, typedValue } })
+  }, [])
+
+  // used for percentage based amount setting
+  const [percentageAmount, setPercentageAmount] = useState(100)
+  const handleSliderChange = (event, newValue) => {
+    setPercentageAmount(newValue)
+    onUserInput(Field.PERCENTAGE, undefined)
+  }
 
   // parse the amounts based on input
   const parsedAmounts: { [field: number]: TokenAmount } = {}
   // try to parse typed value
-  if (independentField === Field.INPUT) {
+  if (
+    independentField === Field.PERCENTAGE &&
+    userLiquidity &&
+    exchange &&
+    totalPoolTokens &&
+    tokens[Field.INPUT] &&
+    tokens[Field.OUTPUT]
+  ) {
+    const formattedPercentage = JSBI.BigInt(percentageAmount)
+    const liquidityAmount = JSBI.divide(JSBI.multiply(userLiquidity.raw, formattedPercentage), JSBI.BigInt(100))
+    parsedAmounts[Field.POOL] = new TokenAmount(exchange?.liquidityToken, liquidityAmount)
+    parsedAmounts[Field.INPUT] = exchange.getLiquidityValue(
+      tokens[Field.INPUT],
+      totalPoolTokens,
+      parsedAmounts[Field.POOL],
+      false
+    )
+    parsedAmounts[Field.OUTPUT] = exchange.getLiquidityValue(
+      tokens[Field.OUTPUT],
+      totalPoolTokens,
+      parsedAmounts[Field.POOL],
+      false
+    )
+  } else if (independentField === Field.INPUT) {
     if (typedValue !== '' && typedValue !== '.' && tokens[Field.INPUT] && exchange && userLiquidity) {
       try {
         const typedValueParsed = parseUnits(typedValue, tokens[Field.INPUT].decimals).toString()
         if (typedValueParsed !== '0') {
-          parsedAmounts[Field.INPUT] = new TokenAmount(tokens[Field.INPUT], typedValueParsed)
-          parsedAmounts[Field.OUTPUT] = route.midPrice.quote(parsedAmounts[Field.INPUT])
-          parsedAmounts[Field.POOL] = exchange.getLiquidityMinted(
+          // first get the exact percentage of tokens deposited
+          const inputTokenAmount = new TokenAmount(tokens[Field.INPUT], typedValueParsed)
+          const ratio = JSBI.divide(inputTokenAmount.raw, TokensDeposited[Field.INPUT].raw)
+
+          const partialLiquidity = JSBI.multiply(userLiquidity.raw, ratio)
+          const liquidityTokenAmount = new TokenAmount(exchange.liquidityToken, partialLiquidity)
+          parsedAmounts[Field.POOL] = liquidityTokenAmount
+          parsedAmounts[Field.OUTPUT] = exchange.getLiquidityValue(
+            tokens[Field.OUTPUT],
             totalPoolTokens,
-            parsedAmounts[Field.INPUT],
-            parsedAmounts[Field.OUTPUT]
+            parsedAmounts[Field.POOL],
+            false
           )
         }
       } catch (error) {
@@ -225,12 +280,16 @@ export default function RemoveLiquidity({ token0, token1 }) {
       try {
         const typedValueParsed = parseUnits(typedValue, tokens[Field.OUTPUT].decimals).toString()
         if (typedValueParsed !== '0') {
-          parsedAmounts[Field.OUTPUT] = new TokenAmount(tokens[Field.OUTPUT], typedValueParsed)
-          parsedAmounts[Field.INPUT] = route.midPrice.quote(parsedAmounts[Field.OUTPUT])
-          parsedAmounts[Field.POOL] = exchange.getLiquidityMinted(
+          const inputTokenAmount = new TokenAmount(tokens[Field.OUTPUT], typedValueParsed)
+          const ratio = JSBI.divide(inputTokenAmount.raw, TokensDeposited[Field.OUTPUT].raw)
+          const partialLiquidity = JSBI.multiply(userLiquidity.raw, ratio)
+          const liquidityTokenAmount = new TokenAmount(exchange.liquidityToken, partialLiquidity)
+          parsedAmounts[Field.POOL] = liquidityTokenAmount
+          parsedAmounts[Field.INPUT] = exchange.getLiquidityValue(
+            tokens[Field.INPUT],
             totalPoolTokens,
-            parsedAmounts[Field.INPUT],
-            parsedAmounts[Field.OUTPUT]
+            parsedAmounts[Field.POOL],
+            false
           )
         }
       } catch (error) {
@@ -238,16 +297,21 @@ export default function RemoveLiquidity({ token0, token1 }) {
         console.error(error)
       }
     }
-  } else {
+  } else if (independentField === Field.POOL) {
     if (typedValue !== '' && typedValue !== '.' && exchange) {
       try {
         const typedValueParsed = parseUnits(typedValue, exchange?.liquidityToken.decimals).toString()
         if (typedValueParsed !== '0') {
           parsedAmounts[Field.POOL] = new TokenAmount(exchange?.liquidityToken, typedValueParsed)
           if (
-            !JSBI.lessThanOrEqual(parsedAmounts[Field.POOL].raw, totalPoolTokens.raw) ||
+            (parsedAmounts[Field.POOL] &&
+              totalPoolTokens &&
+              !JSBI.lessThanOrEqual(parsedAmounts[Field.POOL].raw, totalPoolTokens.raw)) ||
             !JSBI.lessThanOrEqual(parsedAmounts[Field.POOL].raw, userLiquidity.raw)
           ) {
+            /**
+             * do some error catching on amount?
+             */
           } else {
             parsedAmounts[Field.INPUT] = exchange.getLiquidityValue(
               tokens[Field.INPUT],
@@ -292,97 +356,64 @@ export default function RemoveLiquidity({ token0, token1 }) {
         : ''
   }
 
-  const onTokenSelection = useCallback((field: Field, address: string) => {
-    dispatch({
-      type: RemoveAction.SELECT_TOKEN,
-      payload: { field, address }
-    })
-  }, [])
-
-  // update input value when user types
-  const onUserInput = useCallback((field: Field, typedValue: string) => {
-    dispatch({ type: RemoveAction.TYPE, payload: { field, typedValue } })
-  }, [])
-
-  const onMaxInput = useCallback((typedValue: string) => {
+  const onMax = useCallback((typedValue: string, field) => {
     dispatch({
       type: RemoveAction.TYPE,
       payload: {
-        field: Field.INPUT,
+        field: field,
         typedValue
       }
     })
   }, [])
 
-  const onMaxOutput = useCallback((typedValue: string) => {
-    dispatch({
-      type: RemoveAction.TYPE,
-      payload: {
-        field: Field.OUTPUT,
-        typedValue
-      }
-    })
-  }, [])
-
-  const onMaxPool = useCallback((typedValue: string) => {
-    dispatch({
-      type: RemoveAction.TYPE,
-      payload: {
-        field: Field.POOL,
-        typedValue
-      }
-    })
-  }, [])
-
-  const MIN_ETHER = new TokenAmount(WETH[chainId], JSBI.BigInt(parseEther('.01')))
-  const maxAmountInput =
-    TokensDeposited[Field.INPUT] &&
-    JSBI.greaterThan(
-      TokensDeposited[Field.INPUT].raw,
-      tokens[Field.INPUT].equals(WETH[chainId]) ? MIN_ETHER.raw : JSBI.BigInt(0)
-    )
-      ? tokens[Field.INPUT].equals(WETH[chainId])
-        ? TokensDeposited[Field.INPUT].subtract(MIN_ETHER)
-        : TokensDeposited[Field.INPUT]
-      : undefined
-
-  const atMaxAmountInput =
-    !!maxAmountInput && !!parsedAmounts[Field.INPUT]
-      ? JSBI.equal(maxAmountInput.raw, parsedAmounts[Field.INPUT].raw)
-      : undefined
-
-  const maxAmountOutput =
-    !!userBalances[Field.OUTPUT] &&
-    TokensDeposited[Field.OUTPUT] &&
-    JSBI.greaterThan(
-      TokensDeposited[Field.OUTPUT]?.raw,
-      tokens[Field.OUTPUT].equals(WETH[chainId]) ? MIN_ETHER.raw : JSBI.BigInt(0)
-    )
-      ? tokens[Field.OUTPUT].equals(WETH[chainId])
-        ? TokensDeposited[Field.OUTPUT].subtract(MIN_ETHER)
-        : TokensDeposited[Field.OUTPUT]
-      : undefined
-
-  const atMaxAmountOutput =
-    !!maxAmountOutput && !!parsedAmounts[Field.OUTPUT]
-      ? JSBI.equal(maxAmountOutput.raw, parsedAmounts[Field.OUTPUT].raw)
-      : undefined
-
+  // get the max amounts user can add
   const maxAmountPoolToken = userLiquidity
+  const [maxAmountInput, maxAmountOutput] = [Field.INPUT, Field.OUTPUT].map(index => {
+    const field = Field[index]
+    return !!TokensDeposited[Field[field]] && JSBI.greaterThan(TokensDeposited[Field[field]].raw, JSBI.BigInt(0))
+      ? TokensDeposited[Field[field]]
+      : undefined
+  })
+
+  const [atMaxAmountInput, atMaxAmountOutput] = [Field.INPUT, Field.OUTPUT].map(index => {
+    const field = Field[index]
+    const maxAmount = index === Field.INPUT ? maxAmountInput : maxAmountOutput
+    return !!maxAmount && !!parsedAmounts[Field[field]]
+      ? JSBI.lessThanOrEqual(maxAmount.raw, parsedAmounts[Field[field]].raw)
+      : undefined
+  })
 
   const atMaxAmountPoolToken =
     !!maxAmountOutput && !!parsedAmounts[Field.POOL]
-      ? JSBI.equal(maxAmountPoolToken.raw, parsedAmounts[Field.POOL].raw)
+      ? JSBI.lessThanOrEqual(maxAmountPoolToken.raw, parsedAmounts[Field.POOL].raw)
       : undefined
+
+  // errors
+  const [generalError, setGeneralError] = useState()
+  const [inputError, setInputError] = useState()
+  const [outputError, setOutputError] = useState()
+  const [poolTokenError, setPoolTokenError] = useState()
+  const [isError, setIsError] = useState(false)
+  const [isValid, setIsValid] = useState(false)
 
   // update errors live
   useEffect(() => {
     // reset errors
+    setGeneralError(false)
     setInputError(null)
     setOutputError(null)
     setPoolTokenError(null)
     setIsError(false)
+    setIsValid(true)
 
+    if (!parsedAmounts[Field.INPUT]) {
+      setGeneralError('Enter an amount to continue')
+      setIsValid(false)
+    }
+    if (!parsedAmounts[Field.OUTPUT]) {
+      setGeneralError('Enter an amount to continue')
+      setIsValid(false)
+    }
     if (
       totalPoolTokens &&
       userLiquidity &&
@@ -392,50 +423,44 @@ export default function RemoveLiquidity({ token0, token1 }) {
     ) {
       setPoolTokenError('Input a liquidity amount less than or equal to your balance.')
       setIsError(true)
+      setIsValid(false)
     }
 
-    if (parseFloat(parsedAmounts?.[Field.INPUT]?.toExact()) > parseFloat(userBalances?.[Field.INPUT]?.toExact())) {
-      setInputError('Insufficient balance.')
-      setIsError(true)
-    }
-    if (parseFloat(parsedAmounts?.[Field.OUTPUT]?.toExact()) > parseFloat(userBalances?.[Field.OUTPUT]?.toExact())) {
-      setOutputError('Insufficient balance.')
-      setIsError(true)
-    }
-  }, [parsedAmounts, totalPoolTokens, userBalances, userLiquidity])
-
-  // set error text based on all errors
-  useEffect(() => {
-    setErrorText(null)
-    if (poolTokenError) {
-      setErrorText(poolTokenError)
-    } else if (!parsedAmounts[Field.INPUT]) {
-      setErrorText('Enter an amount to continue')
-    } else if (outputError) {
-      setErrorText(outputError)
-    } else if (inputError) {
-      setErrorText(inputError)
-      return
-    }
-  }, [inputError, outputError, parsedAmounts, poolTokenError])
+    // if (
+    //   parsedAmounts?.[Field.INPUT] &&
+    //   userBalances?.[Field.INPUT] &&
+    //   JSBI.greaterThan(parsedAmounts?.[Field.INPUT]?.raw, userBalances?.[Field.INPUT]?.raw)
+    // ) {
+    //   setInputError('Insufficient balance.')
+    //   setIsError(true)
+    //   setIsValid(false)
+    // }
+    // if (
+    //   parsedAmounts?.[Field.OUTPUT] &&
+    //   userBalances?.[Field.OUTPUT] &&
+    //   parseFloat(parsedAmounts?.[Field.OUTPUT]?.toExact()) > parseFloat(userBalances?.[Field.OUTPUT]?.toExact())
+    // ) {
+    //   setOutputError('Insufficient balance.')
+    //   setIsError(true)
+    //   setIsValid(false)
+    // }
+  }, [parsedAmounts, totalPoolTokens, userLiquidity])
 
   // error state for button
-  const isValid = !errorText
 
   // state for txn
   const addTransaction = useTransactionAdder()
   const [txHash, setTxHash] = useState()
-
-  // mock to set initial values either from URL or route from supply page
-  const routerAddress = '0xd9210Ff5A0780E083BB40e30d005d93a2DcFA4EF'
-
-  const router = getRouterContract(chainId, library, account)
-
   const [sigInputs, setSigInputs] = useState([])
+  const [signed, setSigned] = useState(false)
+  const [attemptedRemoval, setAttemptedRemoval] = useState(false)
+  const [deadline, setDeadline] = useState()
 
   async function onSign() {
     const nonce = await exchangeContract.nonces(account)
-    const deadline = 1739591241
+
+    const newDeadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
+    setDeadline(newDeadline)
 
     const EIP712Domain = [
       { name: 'name', type: 'string' },
@@ -463,7 +488,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
       spender: routerAddress,
       value: parsedAmounts[Field.POOL].raw.toString(),
       nonce: nonce.toHexString(),
-      deadline: deadline
+      deadline: newDeadline
     }
     const data = JSON.stringify({
       types: {
@@ -478,58 +503,103 @@ export default function RemoveLiquidity({ token0, token1 }) {
     library.send('eth_signTypedData_v4', [account, data]).then(_signature => {
       const signature = splitSignature(_signature)
       setSigInputs([signature.v, signature.r, signature.s])
+      setSigned(true)
     })
   }
 
   async function onRemove() {
-    // now can structure txn
-    const args = [
-      tokens[Field.INPUT].address,
-      tokens[Field.OUTPUT].address,
-      parsedAmounts[Field.POOL].raw.toString(),
-      parsedAmounts[Field.INPUT].raw.toString(),
-      parsedAmounts[Field.OUTPUT].raw.toString(),
-      account,
-      1739591241,
-      sigInputs[0],
-      sigInputs[1],
-      sigInputs[2]
-    ]
+    setAttemptedRemoval(true)
+    const router = getRouterContract(chainId, library, account)
+    let method, args, estimate
 
-    const estimatedGasLimit = await router.estimate.removeLiquidityWithPermit(...args, {
+    // removal with ETH
+    if (tokens[Field.INPUT] === WETH[chainId] || tokens[Field.OUTPUT] === WETH[chainId]) {
+      method = router.removeLiquidityETHWithPermit
+      estimate = router.estimate.removeLiquidityETHWithPermit
+      args = [
+        tokens[Field.OUTPUT] === WETH[chainId] ? tokens[Field.INPUT].address : tokens[Field.OUTPUT].address,
+        parsedAmounts[Field.POOL].raw.toString(),
+        tokens[Field.OUTPUT] === WETH[chainId]
+          ? parsedAmounts[Field.INPUT].raw.toString()
+          : parsedAmounts[Field.OUTPUT].raw.toString(),
+        tokens[Field.OUTPUT] === WETH[chainId]
+          ? parsedAmounts[Field.OUTPUT].raw.toString()
+          : parsedAmounts[Field.INPUT].raw.toString(),
+        account,
+        deadline,
+        sigInputs[0],
+        sigInputs[1],
+        sigInputs[2]
+      ]
+    }
+    //removal without ETH
+    else {
+      method = router.removeLiquidityWithPermit
+      estimate = router.estimate.removeLiquidityWithPermit
+      args = [
+        tokens[Field.INPUT].address,
+        tokens[Field.OUTPUT].address,
+        parsedAmounts[Field.POOL].raw.toString(),
+        parsedAmounts[Field.INPUT].raw.toString(),
+        parsedAmounts[Field.OUTPUT].raw.toString(),
+        account,
+        deadline,
+        sigInputs[0],
+        sigInputs[1],
+        sigInputs[2]
+      ]
+    }
+
+    const estimatedGasLimit = await estimate(...args, {
       value: ethers.constants.Zero
+    }).catch(() => {
+      resetModalState()
+      setShowConfirm(false)
     })
 
-    const GAS_MARGIN = ethers.utils.bigNumberify(1000)
-    router
-      .removeLiquidityWithPermit(...args, {
-        gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
-      })
+    method(...args, {
+      gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
+    })
       .then(response => {
-        console.log('success')
+        setPendingConfirmation(false)
         setTxHash(response.hash)
-        addTransaction(response.hash)
+        addTransaction(response)
       })
-      .catch(e => {
-        console.log('error trying txn')
+      .catch(() => {
+        resetModalState()
+        setShowConfirm(false)
       })
   }
 
+  function resetModalState() {
+    setSigned(false)
+    setSigInputs(null)
+    setAttemptedRemoval(false)
+    setPendingConfirmation(true)
+  }
+
+  // show advanced mode or not
+  const [showAdvanced, setShowAdvanced] = useState(false)
+
   return (
-    <>
+    <Wrapper>
       <ConfirmationModal
         isOpen={showConfirm}
         onDismiss={() => {
-          toggleConfirm(false)
+          resetModalState()
+          setShowConfirm(false)
         }}
         amount0={parsedAmounts[Field.INPUT]}
         amount1={parsedAmounts[Field.OUTPUT]}
         price={route?.midPrice}
         liquidityAmount={parsedAmounts[Field.POOL]}
         transactionType={TRANSACTION_TYPE.REMOVE}
-        contractCall={() => {}}
+        contractCall={onRemove}
+        extraCall={onSign}
+        signed={signed}
+        attemptedRemoval={attemptedRemoval}
         pendingConfirmation={pendingConfirmation}
-        hash={''}
+        hash={txHash ? txHash : ''}
       />
       <SearchModal
         isOpen={showSearch}
@@ -554,119 +624,156 @@ export default function RemoveLiquidity({ token0, token1 }) {
             <ChevronDown size={24} />
           </RowBetween>
         </ButtonEmpty>
-        <CurrencyInputPanel
-          field={Field.POOL}
-          value={formattedAmounts[Field.POOL]}
-          onUserInput={onUserInput}
-          onMax={() => {
-            maxAmountPoolToken && onMaxPool(maxAmountPoolToken.toExact())
-          }}
-          atMax={atMaxAmountPoolToken}
-          onTokenSelection={onTokenSelection}
-          title={'Deposit'}
-          error={poolTokenError}
-          disableTokenSelect
-          token={exchange?.liquidityToken}
-          isExchange={true}
-          exchange={exchange}
-        />
-        <ColumnCenter>
-          <ArrowDown size="16" color="#888D9B" />
-        </ColumnCenter>
-        <CurrencyInputPanel
-          field={Field.INPUT}
-          value={formattedAmounts[Field.INPUT]}
-          onUserInput={onUserInput}
-          onMax={() => {
-            maxAmountInput && onMaxInput(maxAmountInput.toExact())
-          }}
-          atMax={atMaxAmountInput}
-          token={tokens[Field.INPUT]}
-          onTokenSelection={onTokenSelection}
-          title={'Deposit'}
-          error={inputError}
-          disableTokenSelect
-          customBalance={TokensDeposited[Field.INPUT]}
-        />
-        <ColumnCenter>
-          <Plus size="16" color="#888D9B" />
-        </ColumnCenter>
-        <CurrencyInputPanel
-          field={Field.OUTPUT}
-          value={formattedAmounts[Field.OUTPUT]}
-          onUserInput={onUserInput}
-          onMax={() => {
-            maxAmountOutput && onMaxOutput(maxAmountOutput.toExact())
-          }}
-          atMax={atMaxAmountOutput}
-          token={tokens[Field.OUTPUT]}
-          onTokenSelection={onTokenSelection}
-          title={'Deposit'}
-          error={outputError}
-          disableTokenSelect
-          customBalance={TokensDeposited[Field.OUTPUT]}
-        />
-        <ColumnCenter>
-          <ArrowDown size="16" color="#888D9B" />
-        </ColumnCenter>
+
         <LightCard>
-          <AutoColumn gap="10px">
+          <AutoColumn gap="20px">
             <RowBetween>
-              Pool Tokens Burned:
-              <div>{formattedAmounts[Field.POOL] ? formattedAmounts[Field.POOL] : '-'}</div>
+              <Text fontWeight={500}>Amount To Remove</Text>
+              <ClickableText
+                fontWeight={500}
+                onClick={() => {
+                  setShowAdvanced(!showAdvanced)
+                }}
+                color="#2172E5"
+              >
+                {showAdvanced ? 'Minimal' : 'Advanced'}
+              </ClickableText>
             </RowBetween>
-            <RowBetween>
-              {exchange?.token0.symbol} Removed:
-              <div>{formattedAmounts[Field.INPUT] ? formattedAmounts[Field.INPUT] : '-'}</div>
+
+            <RowBetween style={{ alignItems: 'flex-end' }}>
+              <Text fontSize={72} fontWeight={500}>
+                {percentageAmount}%
+              </Text>
+              <MaxButton
+                onClick={() => {
+                  setPercentageAmount(100)
+                }}
+              >
+                Max
+              </MaxButton>
             </RowBetween>
-            <RowBetween>
-              {exchange?.token1.symbol} Removed:
-              <div>{formattedAmounts[Field.OUTPUT] ? formattedAmounts[Field.OUTPUT] : '-'}</div>
-            </RowBetween>
-            <RowBetween>
-              Rate:
-              <div>
-                1 {exchange?.token0.symbol} ={' '}
-                {independentField === Field.INPUT || independentField === Field.POOL
-                  ? route?.midPrice.toSignificant(6)
-                  : route?.midPrice.invert().toSignificant(6)}{' '}
-                {exchange?.token1.symbol}
-              </div>
-            </RowBetween>
+            <Slider value={percentageAmount} onChange={handleSliderChange} />
           </AutoColumn>
         </LightCard>
-        <ColumnCenter style={{ height: '20px' }}>
-          <ErrorText fontSize={12} error={isError}>
-            {errorText && errorText}
-          </ErrorText>
-        </ColumnCenter>
+        {!showAdvanced && (
+          <>
+            <ColumnCenter>
+              <ArrowDown size="16" color="#888D9B" />
+            </ColumnCenter>{' '}
+            <LightCard>
+              <AutoColumn gap="10px">
+                <RowBetween>
+                  <Text fontSize={24} fontWeight={500}>
+                    {formattedAmounts[Field.INPUT]}
+                  </Text>
+                  <RowFixed>
+                    <TokenLogo address={tokens[Field.INPUT]?.address || ''} style={{ marginRight: '12px' }} />
+                    <Text fontSize={24} fontWeight={500}>
+                      {tokens[Field.INPUT]?.symbol}
+                    </Text>
+                  </RowFixed>
+                </RowBetween>
+                <RowBetween>
+                  <Text fontSize={24} fontWeight={500}>
+                    {formattedAmounts[Field.OUTPUT]}
+                  </Text>
+                  <RowFixed>
+                    <TokenLogo address={tokens[Field.OUTPUT]?.address || ''} style={{ marginRight: '12px' }} />
+                    <Text fontSize={24} fontWeight={500}>
+                      {tokens[Field.OUTPUT]?.symbol}
+                    </Text>
+                  </RowFixed>
+                </RowBetween>
+              </AutoColumn>
+            </LightCard>
+          </>
+        )}
+
+        {showAdvanced && (
+          <>
+            <CurrencyInputPanel
+              field={Field.POOL}
+              value={formattedAmounts[Field.POOL]}
+              onUserInput={onUserInput}
+              onMax={() => {
+                maxAmountPoolToken && onMax(maxAmountPoolToken.toExact(), Field.POOL)
+              }}
+              atMax={atMaxAmountPoolToken}
+              onTokenSelection={onTokenSelection}
+              title={'Deposit'}
+              error={poolTokenError}
+              disableTokenSelect
+              token={exchange?.liquidityToken}
+              isExchange={true}
+              exchange={exchange}
+            />
+            <ColumnCenter>
+              <ArrowDown size="16" color="#888D9B" />
+            </ColumnCenter>
+            <CurrencyInputPanel
+              field={Field.INPUT}
+              value={formattedAmounts[Field.INPUT]}
+              onUserInput={onUserInput}
+              onMax={() => {
+                maxAmountInput && onMax(maxAmountInput.toExact(), Field.INPUT)
+              }}
+              atMax={atMaxAmountInput}
+              token={tokens[Field.INPUT]}
+              onTokenSelection={onTokenSelection}
+              title={'Deposit'}
+              error={inputError}
+              disableTokenSelect
+              customBalance={TokensDeposited[Field.INPUT]}
+            />
+            <ColumnCenter>
+              <Plus size="16" color="#888D9B" />
+            </ColumnCenter>
+            <CurrencyInputPanel
+              field={Field.OUTPUT}
+              value={formattedAmounts[Field.OUTPUT]}
+              onUserInput={onUserInput}
+              onMax={() => {
+                maxAmountOutput && onMax(maxAmountOutput.toExact(), Field.OUTPUT)
+              }}
+              atMax={atMaxAmountOutput}
+              token={tokens[Field.OUTPUT]}
+              onTokenSelection={onTokenSelection}
+              title={'Deposit'}
+              error={outputError}
+              disableTokenSelect
+              customBalance={TokensDeposited[Field.OUTPUT]}
+            />
+          </>
+        )}
         <RowBetween>
-          <ButtonPrimary
-            onClick={() => {
-              // toggleConfirm(true)
-              onSign()
-            }}
-            width="48%"
-            disabled={!isValid}
-          >
-            <Text fontSize={20} fontWeight={500}>
-              Sign
-            </Text>
-          </ButtonPrimary>
-          <ButtonPrimary
-            onClick={() => {
-              // toggleConfirm(true)
-              onRemove()
-            }}
-            width="48%"
-            disabled={!isValid}
-          >
-            <Text fontSize={20} fontWeight={500}>
-              Remove
-            </Text>
-          </ButtonPrimary>
+          Rate:
+          <div>
+            1 {exchange?.token0.symbol} ={' '}
+            {independentField === Field.INPUT || independentField === Field.POOL
+              ? route?.midPrice.toSignificant(6)
+              : route?.midPrice.invert().toSignificant(6)}{' '}
+            {exchange?.token1.symbol}
+          </div>
         </RowBetween>
+        <ButtonPrimary
+          onClick={() => {
+            setShowConfirm(true)
+          }}
+          disabled={!isValid}
+        >
+          <Text fontSize={20} fontWeight={500}>
+            Remove
+          </Text>
+        </ButtonPrimary>
+        <FixedBottom>
+          <PositionCard
+            exchangeAddress={exchange.liquidityToken.address}
+            token0={exchange.token0}
+            token1={exchange.token1}
+            minimal={true}
+          />
+        </FixedBottom>
       </AutoColumn>
-    </>
+    </Wrapper>
   )
 }
