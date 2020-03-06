@@ -1,5 +1,5 @@
 import { ethers } from 'ethers'
-
+import i18n from 'i18next'
 import FACTORY_ABI from '../constants/abis/factory'
 import EXCHANGE_ABI from '../constants/abis/exchange'
 import ERC20_ABI from '../constants/abis/erc20'
@@ -148,6 +148,14 @@ export function shortenTransactionHash(hash, digits = 4) {
 export function isAddress(value) {
   try {
     return ethers.utils.getAddress(value.toLowerCase())
+  } catch {
+    return false
+  }
+}
+
+export function isLocalIcon() {
+  try {
+    return i18n.t('isLocalIcon')
   } catch {
     return false
   }
