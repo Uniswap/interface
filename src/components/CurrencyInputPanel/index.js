@@ -289,7 +289,8 @@ export default function CurrencyInputPanel({
   selectedTokenAddress = '',
   showUnlock,
   value,
-  urlAddedTokens
+  urlAddedTokens,
+  hideETH = false
 }) {
   const { t } = useTranslation()
 
@@ -439,13 +440,14 @@ export default function CurrencyInputPanel({
           urlAddedTokens={urlAddedTokens}
           onTokenSelect={onCurrencySelected}
           allBalances={allBalances}
+          hideETH={hideETH}
         />
       )}
     </InputPanel>
   )
 }
 
-function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens }) {
+function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens, hideETH }) {
   const { t } = useTranslation()
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -610,6 +612,10 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
         INITIAL_TOKENS_CONTEXT[chainId] &&
         !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(address) &&
         !urlAdded
+
+      if (hideETH && address === 'ETH') {
+        return null
+      }
 
       return (
         <TokenModalRow key={address} onClick={() => _onTokenSelect(address)}>
