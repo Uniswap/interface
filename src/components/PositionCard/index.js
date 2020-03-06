@@ -35,8 +35,16 @@ function PositionCard({ exchangeAddress, token0, token1, history, minimal = fals
   const poolTokenPercentage =
     !!userPoolBalance && !!totalPoolTokens ? new Percent(userPoolBalance.raw, totalPoolTokens.raw) : undefined
 
-  const token0Deposited = poolTokenPercentage?.multiply(allBalances[exchangeAddress][token0.address])
-  const token1Deposited = poolTokenPercentage?.multiply(allBalances[exchangeAddress][token1.address])
+  const token0Deposited =
+    token0 &&
+    totalPoolTokens &&
+    userPoolBalance &&
+    exchange.getLiquidityValue(token0, totalPoolTokens, userPoolBalance, false)
+  const token1Deposited =
+    token1 &&
+    totalPoolTokens &&
+    userPoolBalance &&
+    exchange.getLiquidityValue(token1, totalPoolTokens, userPoolBalance, false)
 
   function DynamicCard({ children, ...rest }) {
     if (!minimal) {

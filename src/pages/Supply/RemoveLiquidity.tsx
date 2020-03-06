@@ -2,7 +2,7 @@ import React, { useReducer, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
 import { parseUnits } from '@ethersproject/units'
-import { TokenAmount, JSBI, Route, WETH } from '@uniswap/sdk'
+import { TokenAmount, JSBI, Route, WETH, Percent } from '@uniswap/sdk'
 
 import Slider from '../../components/Slider'
 import DoubleLogo from '../../components/DoubleLogo'
@@ -14,7 +14,7 @@ import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
 import { ChevronDown } from 'react-feather'
 import { ArrowDown, Plus } from 'react-feather'
-import Row, { RowBetween, RowFixed, RowFlat } from '../../components/Row'
+import { RowBetween, RowFixed } from '../../components/Row'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { ButtonPrimary, ButtonEmpty } from '../../components/Button'
 
@@ -227,7 +227,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
 
   // parse the amounts based on input
   const parsedAmounts: { [field: number]: TokenAmount } = {}
-  // try to parse typed value
   if (
     independentField === Field.PERCENTAGE &&
     userLiquidity &&
@@ -258,9 +257,8 @@ export default function RemoveLiquidity({ token0, token1 }) {
         if (typedValueParsed !== '0') {
           // first get the exact percentage of tokens deposited
           const inputTokenAmount = new TokenAmount(tokens[Field.INPUT], typedValueParsed)
-          const ratio = JSBI.divide(inputTokenAmount.raw, TokensDeposited[Field.INPUT].raw)
-
-          const partialLiquidity = JSBI.multiply(userLiquidity.raw, ratio)
+          const ratio = new Percent(inputTokenAmount.raw, TokensDeposited[Field.INPUT].raw)
+          const partialLiquidity = ratio.multiply(userLiquidity)
           const liquidityTokenAmount = new TokenAmount(exchange.liquidityToken, partialLiquidity)
           parsedAmounts[Field.POOL] = liquidityTokenAmount
           parsedAmounts[Field.OUTPUT] = exchange.getLiquidityValue(
