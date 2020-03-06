@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button as RebassButton } from 'rebass/styled-components'
 import styled from 'styled-components'
-import { darken } from 'polished'
+import { darken, lighten } from 'polished'
 
 import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'
@@ -86,6 +86,24 @@ export const ButtonEmpty = styled(Base)`
     cursor: auto;
   }
 `
+
+const ButtonConfirmedStyle = styled(Base)`
+  background-color: ${({ theme }) => lighten(0.5, theme.connectedGreen)};
+  border: 1px solid ${({ theme }) => theme.connectedGreen};
+
+  &:disabled {
+    opacity: 50%;
+    cursor: auto;
+  }
+`
+
+export function ButtonConfirmed({ children, confirmed, ...rest }) {
+  if (confirmed) {
+    return <ButtonConfirmedStyle {...rest}>{children}</ButtonConfirmedStyle>
+  } else {
+    return <ButtonPrimary {...rest}>{children}</ButtonPrimary>
+  }
+}
 
 export function ButtonDropwdown({ disabled, children, ...rest }) {
   return (

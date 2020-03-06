@@ -8,9 +8,12 @@ const Card = styled(Box)`
   padding: ${({ padding }) => padding};
   border: ${({ border }) => border};
 `
-
 export default Card
 
 export const LightCard = styled(Card)`
   border: 1px solid ${({ theme }) => theme.outlineGrey};
+`
+
+export const GreyCard = styled(Card)`
+  background-color: rgba(255, 255, 255, 0.6);
 `

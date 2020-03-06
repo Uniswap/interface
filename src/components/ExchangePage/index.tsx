@@ -1,26 +1,26 @@
 import React, { useState, useReducer, useCallback, useEffect } from 'react'
-import { ethers } from 'ethers'
 import styled from 'styled-components'
+import { ethers } from 'ethers'
 import { parseUnits, parseEther } from '@ethersproject/units'
 import { WETH, TradeType, Route, Trade, TokenAmount, JSBI } from '@uniswap/sdk'
 
-import { useWeb3React } from '../../hooks'
 import { useToken } from '../../contexts/Tokens'
 import { useExchange } from '../../contexts/Exchanges'
-import { useTransactionAdder } from '../../contexts/Transactions'
+import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
+import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressAllowance } from '../../contexts/Allowances'
 
-import { Text } from 'rebass'
-import { ButtonPrimary } from '../Button'
-import { AutoColumn, ColumnCenter } from '../../components/Column'
-import { RowBetween } from '../../components/Row'
-import { ArrowDown, ArrowUp } from 'react-feather'
-import CurrencyInputPanel from '../CurrencyInputPanel'
 import ConfirmationModal from '../ConfirmationModal'
+import CurrencyInputPanel from '../CurrencyInputPanel'
+import { Text } from 'rebass'
+import { RowBetween } from '../../components/Row'
+import { ButtonPrimary } from '../Button'
+import { ArrowDown, ArrowUp } from 'react-feather'
+import { AutoColumn, ColumnCenter } from '../../components/Column'
 
+import { TRANSACTION_TYPE, ROUTER_ADDRESSES } from '../../constants'
 import { getRouterContract, calculateGasMargin } from '../../utils'
-import { TRANSACTION_TYPE } from '../../constants'
 
 const ArrowWrapper = styled.div`
   padding: 4px;
@@ -138,6 +138,7 @@ function reducer(
 
 export default function ExchangePage() {
   const { chainId, account, library } = useWeb3React()
+  const routerAddress = ROUTER_ADDRESSES[chainId]
 
   const [state, dispatch] = useReducer(reducer, WETH[chainId].address, initializeSwapState)
   const { independentField, typedValue, ...fieldData } = state
@@ -325,8 +326,6 @@ export default function ExchangePage() {
         ? parsedAmounts[Field.OUTPUT]?.raw
         : calculateSlippageAmount(parsedAmounts[Field.OUTPUT])?.[0]
   }
-
-  const routerAddress = '0xd9210Ff5A0780E083BB40e30d005d93a2DcFA4EF'
 
   const inputApproval = useAddressAllowance(account, tokens[Field.INPUT], routerAddress)
   const outputApproval = useAddressAllowance(account, tokens[Field.OUTPUT], routerAddress)

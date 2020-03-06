@@ -201,8 +201,8 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, field, urlAdde
   }
 
   // amount of tokens to display at once
-  const [tokensShown, setTokensShown] = useState(0)
-  const [pairsShown, setPairsShown] = useState(0)
+  const [, setTokensShown] = useState(0)
+  const [, setPairsShown] = useState(0)
 
   // filters on results
   const FILTERS = {

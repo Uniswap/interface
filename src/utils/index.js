@@ -6,15 +6,7 @@ import ROUTER_ABI from '../constants/abis/router'
 import ERC20_ABI from '../constants/abis/erc20'
 import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32'
 import { FACTORY_ADDRESSES, SUPPORTED_THEMES } from '../constants'
-import {
-  BigNumber,
-  bigNumberify,
-  getAddress,
-  keccak256,
-  defaultAbiCoder,
-  toUtf8Bytes,
-  solidityPack
-} from 'ethers/utils'
+import { bigNumberify, keccak256, defaultAbiCoder, toUtf8Bytes, solidityPack } from 'ethers/utils'
 
 import UncheckedJsonRpcSigner from './signer'
 

@@ -4,32 +4,49 @@ import { ethers } from 'ethers'
 import { parseUnits, parseEther } from '@ethersproject/units'
 import { WETH, TokenAmount, JSBI, Percent, Route } from '@uniswap/sdk'
 
-import SearchModal from '../../components/SearchModal'
 import DoubleLogo from '../../components/DoubleLogo'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import SearchModal from '../../components/SearchModal'
+import PositionCard from '../../components/PositionCard'
 import ConfirmationModal from '../../components/ConfirmationModal'
-
+import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { Text } from 'rebass'
+import { Plus } from 'react-feather'
 import { ChevronDown } from 'react-feather'
 import { RowBetween } from '../../components/Row'
-import { LightCard } from '../../components/Card'
-import { ArrowDown, Plus } from 'react-feather'
-import { ButtonPrimary, ButtonEmpty } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
+import { ButtonPrimary, ButtonEmpty } from '../../components/Button'
 
 import { useToken } from '../../contexts/Tokens'
-import { useExchange } from '../../contexts/Exchanges'
 import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
-import { useExchangeContract } from '../../hooks'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useTransactionAdder } from '../../contexts/Transactions'
+import { useExchange, useTotalSupply } from '../../contexts/Exchanges'
 
+import { BigNumber } from 'ethers/utils'
 import { TRANSACTION_TYPE, ROUTER_ADDRESSES } from '../../constants'
 import { getRouterContract, calculateGasMargin } from '../../utils'
 
+// denominated in bips
+const ALLOWED_SLIPPAGE = 200
+
+// denominated in seconds
+const DEADLINE_FROM_NOW = 60 * 15
+
+const GAS_MARGIN: BigNumber = ethers.utils.bigNumberify(1000)
+
+const Wrapper = styled.div`
+  position: relative;
+`
+
 const ErrorText = styled(Text)`
   color: ${({ theme, error }) => (error ? theme.salmonRed : theme.chaliceGray)};
+`
+
+const FixedBottom = styled.div`
+  position: absolute;
+  bottom: -240px;
+  width: 100%;
 `
 
 enum Field {
@@ -120,22 +137,23 @@ function reducer(
   }
 }
 
+/**
+ * @todo should we ever not have prepopulated tokens?
+ *
+ */
 export default function AddLiquidity({ token0, token1 }) {
   const { account, chainId, library } = useWeb3React()
 
-  const routerAddress = ROUTER_ADDRESSES[chainId]
+  const routerAddress: string = ROUTER_ADDRESSES[chainId]
 
-  // modal state
-  const [showSearch, toggleSearch] = useState(false)
-  // state for confirmation popup
-  const [showConfirm, toggleConfirm] = useState(false)
-  const [pendingConfirmation, toggelPendingConfirmation] = useState(true)
+  // modal states
+  const [showSearch, setShowSearch] = useState<boolean>(false)
+  const [showConfirm, setShowConfirm] = useState<boolean>(false)
+  const [pendingConfirmation, setPendingConfirmation] = useState<boolean>(true)
 
   // input state
   const [state, dispatch] = useReducer(reducer, initializeAddState(token0, token1))
   const { independentField, typedValue, ...fieldData } = state
-
-  // get derived state
   const dependentField = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   // get basic SDK entities
@@ -143,17 +161,26 @@ export default function AddLiquidity({ token0, token1 }) {
     [Field.INPUT]: useToken(fieldData[Field.INPUT].address),
     [Field.OUTPUT]: useToken(fieldData[Field.OUTPUT].address)
   }
+
+  // exhchange data
   const exchange = useExchange(tokens[Field.INPUT], tokens[Field.OUTPUT])
   const route = exchange ? new Route([exchange], tokens[independentField]) : undefined
+  const totalSupply = useTotalSupply(exchange)
+  const [noLiquidity, setNoLiquidity] = useState<boolean>(false)
 
-  // get user- and token-specific lookup data
+  // state for amount approvals
+  const inputApproval = useAddressAllowance(account, tokens[Field.INPUT], routerAddress)
+  const outputApproval = useAddressAllowance(account, tokens[Field.OUTPUT], routerAddress)
+  const [showInputUnlock, setShowInputUnlock] = useState<boolean>(false)
+  const [showOutputUnlock, setShowOutputUnlock] = useState<boolean>(false)
+
+  // get user-pecific and token-specific lookup data
   const userBalances = {
     [Field.INPUT]: useAddressBalance(account, tokens[Field.INPUT]),
     [Field.OUTPUT]: useAddressBalance(account, tokens[Field.OUTPUT])
   }
 
   // check if no exchange or no liquidity
-  const [noLiquidity, setNoLiquidity] = useState(false)
   useEffect(() => {
     if (
       exchange &&
@@ -182,8 +209,8 @@ export default function AddLiquidity({ token0, token1 }) {
     }
   }, [independentField, nonrelationalAmounts, tokens, typedValue, noLiquidity])
 
+  // caclulate the token amounts based on the input
   const parsedAmounts: { [field: number]: TokenAmount } = {}
-  //if no liquidity set parsed to non relational, else get dependent calculated amounts
   if (noLiquidity) {
     parsedAmounts[independentField] = nonrelationalAmounts[independentField]
     parsedAmounts[dependentField] = nonrelationalAmounts[dependentField]
@@ -199,7 +226,6 @@ export default function AddLiquidity({ token0, token1 }) {
     }
   }
 
-  // get the price data and update dependent field
   if (
     route &&
     !noLiquidity &&
@@ -215,47 +241,15 @@ export default function AddLiquidity({ token0, token1 }) {
     [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField]?.toSignificant(8) : ''
   }
 
-  // pool token data
-  const [totalPoolTokens, setTotalPoolTokens] = useState<TokenAmount>()
-
-  // move this to a hook
-  const exchangeContract = useExchangeContract(exchange?.liquidityToken.address)
-  const fetchPoolTokens = useCallback(async () => {
-    exchangeContract
-      .deployed()
-      .then(() => {
-        if (exchangeContract) {
-          exchangeContract.totalSupply().then(totalSupply => {
-            if (totalSupply !== undefined && exchange?.liquidityToken?.decimals) {
-              const supplyFormatted = JSBI.BigInt(totalSupply)
-              const tokenSupplyFormatted = new TokenAmount(exchange?.liquidityToken, supplyFormatted)
-              setTotalPoolTokens(tokenSupplyFormatted)
-            }
-          })
-        }
-      })
-      .catch(e => {
-        console.log('error')
-      })
-  }, [exchangeContract])
-  useEffect(() => {
-    fetchPoolTokens()
-    library.on('block', fetchPoolTokens)
-
-    return () => {
-      library.removeListener('block', fetchPoolTokens)
-    }
-  }, [fetchPoolTokens, library])
-
   // check for estimated liquidity minted
   const liquidityMinted =
-    !!exchange && !!parsedAmounts[Field.INPUT] && !!parsedAmounts[Field.OUTPUT] && !!totalPoolTokens && exchange
-      ? exchange.getLiquidityMinted(totalPoolTokens, parsedAmounts[Field.INPUT], parsedAmounts[Field.OUTPUT])
+    !!exchange && !!parsedAmounts[Field.INPUT] && !!parsedAmounts[Field.OUTPUT] && !!totalSupply
+      ? exchange.getLiquidityMinted(totalSupply, parsedAmounts[Field.INPUT], parsedAmounts[Field.OUTPUT])
       : undefined
 
   const poolTokenPercentage =
-    !!liquidityMinted && !!totalPoolTokens
-      ? new Percent(liquidityMinted.raw, totalPoolTokens.add(liquidityMinted).raw)
+    !!liquidityMinted && !!totalSupply
+      ? new Percent(liquidityMinted.raw, totalSupply.add(liquidityMinted).raw)
       : undefined
 
   const onTokenSelection = useCallback((field: Field, address: string) => {
@@ -269,215 +263,218 @@ export default function AddLiquidity({ token0, token1 }) {
     dispatch({ type: AddAction.TYPE, payload: { field, typedValue } })
   }, [])
 
-  const onMaxInput = useCallback((typedValue: string) => {
+  const onMax = useCallback((typedValue: string, field) => {
     dispatch({
       type: AddAction.TYPE,
       payload: {
-        field: Field.INPUT,
-        typedValue
-      }
-    })
-  }, [])
-
-  const onMaxOutput = useCallback((typedValue: string) => {
-    dispatch({
-      type: AddAction.TYPE,
-      payload: {
-        field: Field.OUTPUT,
+        field: field,
         typedValue
       }
     })
   }, [])
 
   const MIN_ETHER = new TokenAmount(WETH[chainId], JSBI.BigInt(parseEther('.01')))
-  const maxAmountInput =
-    !!userBalances[Field.INPUT] &&
-    JSBI.greaterThan(
-      userBalances[Field.INPUT].raw,
-      tokens[Field.INPUT].equals(WETH[chainId]) ? MIN_ETHER.raw : JSBI.BigInt(0)
-    )
-      ? tokens[Field.INPUT].equals(WETH[chainId])
-        ? userBalances[Field.INPUT].subtract(MIN_ETHER)
-        : userBalances[Field.INPUT]
-      : undefined
-  const atMaxAmountInput =
-    !!maxAmountInput && !!parsedAmounts[Field.INPUT]
-      ? JSBI.equal(maxAmountInput.raw, parsedAmounts[Field.INPUT].raw)
-      : undefined
 
-  const maxAmountOutput =
-    !!userBalances[Field.OUTPUT] &&
-    JSBI.greaterThan(
-      userBalances[Field.OUTPUT].raw,
-      tokens[Field.OUTPUT].equals(WETH[chainId]) ? MIN_ETHER.raw : JSBI.BigInt(0)
-    )
-      ? tokens[Field.OUTPUT].equals(WETH[chainId])
-        ? userBalances[Field.OUTPUT].subtract(MIN_ETHER)
-        : userBalances[Field.OUTPUT]
+  // get the max amounts user can add
+  const [maxAmountInput, maxAmountOutput] = [Field.INPUT, Field.OUTPUT].map(index => {
+    const field = Field[index]
+    return !!userBalances[Field[field]] &&
+      JSBI.greaterThan(
+        userBalances[Field[field]].raw,
+        tokens[Field[field]].equals(WETH[chainId]) ? MIN_ETHER.raw : JSBI.BigInt(0)
+      )
+      ? tokens[Field[field]].equals(WETH[chainId])
+        ? userBalances[Field[field]].subtract(MIN_ETHER)
+        : userBalances[Field[field]]
       : undefined
+  })
 
-  const atMaxAmountOutput =
-    !!maxAmountOutput && !!parsedAmounts[Field.OUTPUT]
-      ? JSBI.equal(maxAmountOutput.raw, parsedAmounts[Field.OUTPUT].raw)
+  const [atMaxAmountInput, atMaxAmountOutput] = [Field.INPUT, Field.OUTPUT].map(index => {
+    const field = Field[index]
+    const maxAmount = index === Field.INPUT ? maxAmountInput : maxAmountOutput
+    return !!maxAmount && !!parsedAmounts[Field[field]]
+      ? JSBI.lessThanOrEqual(maxAmount.raw, parsedAmounts[Field[field]].raw)
       : undefined
-
-  const inputApproval = useAddressAllowance(account, tokens[Field.INPUT], routerAddress)
-  const outputApproval = useAddressAllowance(account, tokens[Field.OUTPUT], routerAddress)
-
-  const [showInputUnlock, setShowInputUnlock] = useState(false)
-  const [showOutputUnlock, setShowOutputUnlock] = useState(false)
+  })
 
   // monitor parsed amounts and update unlocked buttons
   useEffect(() => {
-    if (
-      parsedAmounts[Field.INPUT] &&
-      inputApproval &&
-      JSBI.greaterThan(parsedAmounts[Field.INPUT].raw, inputApproval.raw)
-    ) {
-      setShowInputUnlock(true)
-    } else {
-      setShowInputUnlock(false)
-    }
-    if (
+    setShowInputUnlock(
+      parsedAmounts[Field.INPUT] && inputApproval && JSBI.greaterThan(parsedAmounts[Field.INPUT].raw, inputApproval.raw)
+    )
+    setShowOutputUnlock(
       parsedAmounts[Field.OUTPUT] &&
-      outputApproval &&
-      JSBI.greaterThan(parsedAmounts[Field.OUTPUT]?.raw, outputApproval?.raw)
-    ) {
-      setShowOutputUnlock(true)
-    } else {
-      setShowOutputUnlock(false)
-    }
+        outputApproval &&
+        JSBI.greaterThan(parsedAmounts[Field.OUTPUT].raw, outputApproval.raw)
+    )
   }, [inputApproval, outputApproval, parsedAmounts])
 
   // errors
+  const [generalError, setGeneralError] = useState()
   const [inputError, setInputError] = useState()
   const [outputError, setOutputError] = useState()
-  const [errorText, setErrorText] = useState(' ')
   const [isError, setIsError] = useState(false)
+  const [isValid, setIsValid] = useState(false)
 
   // update errors live
   useEffect(() => {
     // reset errors
+    setGeneralError(null)
     setInputError(null)
     setOutputError(null)
     setIsError(false)
+    setIsValid(true)
+
+    if (!parsedAmounts[Field.INPUT]) {
+      setGeneralError('Enter an amount to continue')
+      setIsValid(false)
+    }
+    if (!parsedAmounts[Field.OUTPUT]) {
+      setGeneralError('Enter an amount to continue')
+      setIsValid(false)
+    }
     if (showInputUnlock) {
       setInputError('Need to approve amount on input.')
+      setIsValid(false)
     }
     if (showOutputUnlock) {
       setOutputError('Need to approve amount on output.')
+      setIsValid(false)
     }
-    if (parseFloat(parsedAmounts?.[Field.INPUT]?.toExact()) > parseFloat(userBalances?.[Field.INPUT]?.toExact())) {
+    if (
+      parsedAmounts?.[Field.INPUT] &&
+      userBalances?.[Field.INPUT] &&
+      JSBI.greaterThan(parsedAmounts?.[Field.INPUT]?.raw, userBalances?.[Field.INPUT]?.raw)
+    ) {
       setInputError('Insufficient balance.')
       setIsError(true)
+      setIsValid(false)
     }
-    if (parseFloat(parsedAmounts?.[Field.OUTPUT]?.toExact()) > parseFloat(userBalances?.[Field.OUTPUT]?.toExact())) {
+    if (
+      parsedAmounts?.[Field.OUTPUT] &&
+      userBalances?.[Field.OUTPUT] &&
+      JSBI.greaterThan(parsedAmounts?.[Field.OUTPUT]?.raw, userBalances?.[Field.OUTPUT]?.raw)
+    ) {
       setOutputError('Insufficient balance.')
       setIsError(true)
+      setIsValid(false)
     }
   }, [parsedAmounts, showInputUnlock, showOutputUnlock, userBalances])
-
-  // set error text based on all errors
-  useEffect(() => {
-    setErrorText(null)
-    if (!parsedAmounts[Field.INPUT]) {
-      setErrorText('Enter an amount to continue')
-    } else if (outputError) {
-      setErrorText(outputError)
-    } else if (inputError) {
-      setErrorText(inputError)
-      return
-    }
-  }, [inputError, outputError, parsedAmounts])
-
-  // error state for button
-  const isValid = !errorText
 
   // state for txn
   const addTransaction = useTransactionAdder()
   const [txHash, setTxHash] = useState()
 
+  function hex(value: JSBI) {
+    return ethers.utils.bigNumberify(value.toString())
+  }
+
+  function calculateSlippageAmount(value: TokenAmount): JSBI[] {
+    if (value && value.raw) {
+      const offset = JSBI.divide(JSBI.multiply(JSBI.BigInt(ALLOWED_SLIPPAGE), value.raw), JSBI.BigInt(10000))
+      return [JSBI.subtract(value.raw, offset), JSBI.add(value.raw, offset)]
+    }
+    return null
+  }
+
   async function onAdd() {
     const router = getRouterContract(chainId, library, account)
-    const minTokenInput = JSBI.divide(JSBI.multiply(JSBI.BigInt(99), parsedAmounts[Field.INPUT].raw), JSBI.BigInt(100))
-    const minTokenOutput = JSBI.divide(
-      JSBI.multiply(JSBI.BigInt(99), parsedAmounts[Field.OUTPUT].raw),
-      JSBI.BigInt(100)
-    )
 
-    const args = [
-      tokens[Field.INPUT].address,
-      tokens[Field.OUTPUT].address,
-      parsedAmounts[Field.INPUT].raw.toString(),
-      parsedAmounts[Field.OUTPUT].raw.toString(),
-      noLiquidity ? parsedAmounts[Field.INPUT].raw.toString() : minTokenInput.toString(),
-      noLiquidity ? parsedAmounts[Field.OUTPUT].raw.toString() : minTokenOutput.toString(),
-      account.toString(),
-      1739591241
-    ]
+    const minTokenInput = calculateSlippageAmount(parsedAmounts[Field.INPUT])[0]
+    const minTokenOutput = calculateSlippageAmount(parsedAmounts[Field.OUTPUT])[0]
 
-    const estimatedGasLimit = await router.estimate.addLiquidity(...args, {
-      value: ethers.constants.Zero
+    const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
+
+    let method, estimate, args, value
+
+    if (tokens[Field.INPUT] === WETH[chainId] || tokens[Field.OUTPUT] === WETH[chainId]) {
+      method = router.addLiquidityETH
+      estimate = router.estimate.addLiquidityETH
+      args = [
+        tokens[Field.OUTPUT] === WETH[chainId] ? tokens[Field.INPUT].address : tokens[Field.OUTPUT].address, // token
+        tokens[Field.OUTPUT] === WETH[chainId] // token desired
+          ? parsedAmounts[Field.INPUT].raw.toString()
+          : parsedAmounts[Field.OUTPUT].raw.toString(),
+        tokens[Field.OUTPUT] === WETH[chainId] ? minTokenInput.toString() : minTokenOutput.toString(), // token min
+        tokens[Field.OUTPUT] === WETH[chainId] ? minTokenOutput.toString() : minTokenInput.toString(), // eth min
+        account,
+        deadline
+      ]
+      value = hex(
+        tokens[Field.OUTPUT] === WETH[chainId] // eth desired
+          ? parsedAmounts[Field.OUTPUT].raw
+          : parsedAmounts[Field.INPUT].raw
+      )
+    } else {
+      method = router.addLiquidity
+      estimate = router.estimate.addLiquidity
+      args = [
+        tokens[Field.INPUT].address,
+        tokens[Field.OUTPUT].address,
+        parsedAmounts[Field.INPUT].raw.toString(),
+        parsedAmounts[Field.OUTPUT].raw.toString(),
+        noLiquidity ? parsedAmounts[Field.INPUT].raw.toString() : minTokenInput.toString(),
+        noLiquidity ? parsedAmounts[Field.OUTPUT].raw.toString() : minTokenOutput.toString(),
+        account,
+        deadline
+      ]
+      value = ethers.constants.Zero
+    }
+
+    const estimatedGasLimit = await estimate(...args, {
+      value: value
     })
 
-    const GAS_MARGIN = ethers.utils.bigNumberify(1000)
-    router
-      .addLiquidity(...args, {
-        gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
-      })
+    method(...args, {
+      gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN),
+      value: value
+    })
       .then(response => {
-        setTxHash(response)
+        setTxHash(response.hash)
         addTransaction(response)
-        toggelPendingConfirmation(false)
+        setPendingConfirmation(false)
       })
-      .catch(e => {
-        toggleConfirm(false)
+      .catch((e: Error) => {
+        console.log(e)
+        setShowConfirm(false)
       })
   }
 
   return (
-    <>
+    <Wrapper>
       <ConfirmationModal
         isOpen={showConfirm}
         onDismiss={() => {
-          toggleConfirm(false)
+          setShowConfirm(false)
         }}
         liquidityAmount={liquidityMinted}
-        amount0={
-          parsedAmounts[independentField]?.token.equals(exchange?.token0)
-            ? parsedAmounts[independentField]
-            : parsedAmounts[dependentField]
-        }
-        amount1={
-          parsedAmounts[independentField]?.token.equals(exchange?.token0)
-            ? parsedAmounts[dependentField]
-            : parsedAmounts[independentField]
-        }
+        amount0={parsedAmounts[Field.INPUT]}
+        amount1={parsedAmounts[Field.OUTPUT]}
         poolTokenPercentage={poolTokenPercentage}
         price={route?.midPrice && route?.midPrice?.raw?.denominator}
         transactionType={TRANSACTION_TYPE.ADD}
         contractCall={onAdd}
         pendingConfirmation={pendingConfirmation}
-        hash={txHash ? txHash.hash : ''}
+        hash={txHash ? txHash : ''}
       />
       <SearchModal
         isOpen={showSearch}
         onDismiss={() => {
-          toggleSearch(false)
+          setShowSearch(false)
         }}
       />
       <AutoColumn gap="20px">
         <ButtonEmpty
           padding={'1rem'}
           onClick={() => {
-            toggleSearch(true)
+            setShowSearch(true)
           }}
         >
           <RowBetween>
             <DoubleLogo a0={exchange?.token0?.address || ''} a1={exchange?.token1?.address || ''} size={24} />
             <Text fontSize={20}>
-              {exchange?.token0?.symbol && exchange?.token1?.symbol
-                ? exchange?.token0?.symbol + ' / ' + exchange?.token1?.symbol + ' Pool'
+              {exchange?.token0 && exchange?.token1
+                ? exchange.token0.symbol + ' / ' + exchange.token1.symbol + ' Pool'
                 : ''}
             </Text>
             <ChevronDown size={24} />
@@ -498,7 +495,7 @@ export default function AddLiquidity({ token0, token1 }) {
           value={formattedAmounts[Field.INPUT]}
           onUserInput={onUserInput}
           onMax={() => {
-            maxAmountInput && onMaxInput(maxAmountInput.toExact())
+            maxAmountInput && onMax(maxAmountInput.toExact(), Field.INPUT)
           }}
           atMax={atMaxAmountInput}
           token={tokens[Field.INPUT]}
@@ -517,7 +514,7 @@ export default function AddLiquidity({ token0, token1 }) {
           value={formattedAmounts[Field.OUTPUT]}
           onUserInput={onUserInput}
           onMax={() => {
-            onMaxOutput(maxAmountOutput.toExact())
+            onMax(maxAmountOutput.toExact(), Field.OUTPUT)
           }}
           atMax={atMaxAmountOutput}
           token={tokens[Field.OUTPUT]}
@@ -528,39 +525,21 @@ export default function AddLiquidity({ token0, token1 }) {
           showUnlock={showOutputUnlock}
           disableTokenSelect
         />
-        <ColumnCenter>
-          <ArrowDown size="16" color="#888D9B" />
-        </ColumnCenter>
-        <LightCard>
-          <AutoColumn gap="10px">
-            <RowBetween>
-              Minted pool tokens:
-              <div>{liquidityMinted ? liquidityMinted.toExact() : '-'}</div>
-            </RowBetween>
-            <RowBetween>
-              Minted pool share:
-              <div>{poolTokenPercentage ? +poolTokenPercentage.toFixed(4) + '%' : '-'}</div>
-            </RowBetween>
-            <RowBetween>
-              Rate:
-              <div>
-                1 {exchange?.token0.symbol} ={' '}
-                {independentField === Field.OUTPUT
-                  ? route?.midPrice.invert().toSignificant(6)
-                  : route?.midPrice.toSignificant(6)}{' '}
-                {exchange?.token1.symbol}
-              </div>
-            </RowBetween>
-          </AutoColumn>
-        </LightCard>
+        <RowBetween>
+          Rate:
+          <div>
+            1 {tokens[independentField].symbol} = {route?.midPrice?.toSignificant(6)}
+            {tokens[dependentField].symbol}
+          </div>
+        </RowBetween>
         <ColumnCenter style={{ height: '20px' }}>
           <ErrorText fontSize={12} error={isError}>
-            {errorText && errorText}
+            {generalError ? generalError : inputError ? inputError : outputError ? outputError : ''}
           </ErrorText>
         </ColumnCenter>
         <ButtonPrimary
           onClick={() => {
-            toggleConfirm(true)
+            setShowConfirm(true)
           }}
           disabled={!isValid}
         >
@@ -568,7 +547,15 @@ export default function AddLiquidity({ token0, token1 }) {
             Supply
           </Text>
         </ButtonPrimary>
+        <FixedBottom>
+          <PositionCard
+            exchangeAddress={exchange?.liquidityToken?.address}
+            token0={tokens[Field.INPUT]}
+            token1={tokens[Field.OUTPUT]}
+            minimal={true}
+          />
+        </FixedBottom>
       </AutoColumn>
-    </>
+    </Wrapper>
   )
 }

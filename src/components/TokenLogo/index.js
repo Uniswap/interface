@@ -26,8 +26,7 @@ const Emoji = styled.span`
   font-size: ${({ size }) => size};
   width: ${({ size }) => size};
   height: ${({ size }) => size};
-  margin-bottom: -2px;
-  margin-right: ${({ sizeraw, margin }) => margin && (sizeraw / 2 + 10).toString() + 'px'};
+  margin-bottom: -4px;
 `
 
 const StyledEthereumLogo = styled(EthereumLogo)`
@@ -35,7 +34,7 @@ const StyledEthereumLogo = styled(EthereumLogo)`
   height: ${({ size }) => size};
 `
 
-export default function TokenLogo({ address, size = '1rem', ...rest }) {
+export default function TokenLogo({ address, size = '24px', ...rest }) {
   const [error, setError] = useState(false)
   const { chainId } = useWeb3React()
 

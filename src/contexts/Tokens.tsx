@@ -108,7 +108,7 @@ export function useToken(tokenAddress: string): Token {
   return token
 }
 
-export function useAllTokens() {
+export function useAllTokens(): string[] {
   const { chainId } = useWeb3React()
   const [state] = useTokensContext()
 
