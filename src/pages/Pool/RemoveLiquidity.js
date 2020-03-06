@@ -391,6 +391,7 @@ export default function RemoveLiquidity({ params }) {
       )}
       <CurrencyInputPanel
         title={t('poolTokens')}
+        hideEth={true}
         extraText={poolTokenBalance && formatBalance(amountFormatter(poolTokenBalance, 18, 4))}
         extraTextClickHander={() => {
           if (poolTokenBalance) {
