@@ -49,11 +49,11 @@ export default function ConfirmationModal({
   amount1,
   price,
   transactionType,
-  pendingConfirmation,
   hash,
   signed = false,
   contractCall,
   attemptedRemoval = false,
+  pendingConfirmation,
   extraCall = undefined
 }) {
   const { address: address0, symbol: symbol0 } = amount0?.token || {}

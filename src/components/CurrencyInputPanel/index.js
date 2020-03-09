@@ -161,7 +161,7 @@ export default function CurrencyInputPanel({
   value,
   field,
   onUserInput,
-  onTokenSelection,
+  onTokenSelection = null,
   title,
   onMax,
   atMax,
