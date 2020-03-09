@@ -7,6 +7,7 @@ const IOSSlider = withStyles({
     width: '95%',
     color: '#3880ff',
     height: 4,
+    marginLeft: '15px',
     padding: '15px 0'
   },
   thumb: {
