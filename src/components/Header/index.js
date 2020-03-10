@@ -1,9 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Link } from '../../theme'
 import Web3Status from '../Web3Status'
-import { darken } from 'polished'
+import { Link } from '../../theme'
+
+import Logo from '../../assets/svg/logo.svg'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -20,15 +21,6 @@ const HeaderElement = styled.div`
   align-items: center;
 `
 
-const Nod = styled.span`
-  transform: rotate(0deg);
-  transition: transform 150ms ease-out;
-
-  :hover {
-    transform: rotate(-10deg);
-  }
-`
-
 const Title = styled.div`
   display: flex;
   align-items: center;
@@ -36,20 +28,15 @@ const Title = styled.div`
   :hover {
     cursor: pointer;
   }
+`
 
-  #link {
-    text-decoration-color: ${({ theme }) => theme.UniswapPink};
-  }
-
-  #title {
-    display: inline;
-    font-size: 1rem;
-    font-weight: 500;
-    color: ${({ theme }) => theme.wisteriaPurple};
-    :hover {
-      color: ${({ theme }) => darken(0.1, theme.wisteriaPurple)};
-    }
-  }
+const TitleText = styled.div`
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(119.64deg, #fb1868 -5.55%, #ff00f3 154.46%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-left: 12px;
 `
 
 export default function Header() {
@@ -57,15 +44,11 @@ export default function Header() {
     <HeaderFrame>
       <HeaderElement>
         <Title>
-          <Nod>
-            <Link id="link" href="https://uniswap.io">
-              <span role="img" aria-label="unicorn">
-                🦄{'  '}
-              </span>
-            </Link>
-          </Nod>
           <Link id="link" href="https://uniswap.io">
-            <h1 id="title">Uniswap</h1>
+            <img src={Logo} />
+          </Link>
+          <Link id="link" href="https://uniswap.io">
+            <TitleText>Uniswap</TitleText>
           </Link>
         </Title>
       </HeaderElement>

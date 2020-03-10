@@ -107,7 +107,7 @@ const MenuItem = styled(PaddedItem)`
     background-color: ${({ theme }) => theme.tokenRowHover};
   }
 `
-function SearchModal({ history, isOpen, onDismiss, onTokenSelect, field, urlAddedTokens, filterType }) {
+function SearchModal({ history, isOpen, onDismiss, onTokenSelect, urlAddedTokens, filterType, hiddenToken }) {
   const { t } = useTranslation()
 
   const { account, chainId } = useWeb3React()
@@ -116,9 +116,9 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, field, urlAdde
 
   // get all exchanges
   const allExchanges = useAllExchanges()
-  const exchange = useToken(searchQuery)
+  const token = useToken(searchQuery)
 
-  const exchangeAddress = exchange && exchange.exchangeAddress
+  const tokenAddress = token && token.address
 
   // get all tokens
   const allTokens = useAllTokens()
@@ -145,6 +145,10 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, field, urlAdde
         }
       })
       .map(k => {
+        if (k === hiddenToken) {
+          return false
+        }
+
         let balance
         // only update if we have data
         balance = allBalances?.[account]?.[k]
@@ -155,7 +159,7 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, field, urlAdde
           balance: balance
         }
       })
-  }, [allBalances, allTokens, account])
+  }, [allTokens, hiddenToken, allBalances, account])
 
   const filteredTokenList = useMemo(() => {
     return tokenList.filter(tokenEntry => {
@@ -182,7 +186,7 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, field, urlAdde
 
   function _onTokenSelect(address) {
     setSearchQuery('')
-    onTokenSelect(field, address)
+    onTokenSelect(address)
     onDismiss()
   }
 
@@ -294,10 +298,10 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, field, urlAdde
   }
 
   function renderTokenList() {
-    if (isAddress(searchQuery) && exchangeAddress === undefined) {
+    if (isAddress(searchQuery) && tokenAddress === undefined) {
       return <Text>Searching for Exchange...</Text>
     }
-    if (isAddress(searchQuery) && exchangeAddress === ethers.constants.AddressZero) {
+    if (isAddress(searchQuery) && tokenAddress === ethers.constants.AddressZero) {
       return (
         <>
           <TokenModalInfo>{t('noExchange')}</TokenModalInfo>
@@ -394,7 +398,6 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, field, urlAdde
           </RowBetween>
         </PaddedColumn>
         <div style={{ width: '100%', height: '1px', backgroundColor: '#E1E1E1' }} />
-
         <TokenList>{filterType === 'tokens' ? renderTokenList() : renderPairsList()}</TokenList>
       </TokenModal>
     </Modal>

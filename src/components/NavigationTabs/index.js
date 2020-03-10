@@ -131,6 +131,7 @@ function NavigationTabs({ location: { pathname }, history }) {
 
   const adding = pathname.match('/add')
   const removing = pathname.match('/remove')
+  const finding = pathname.match('/find')
 
   return (
     <>
@@ -141,6 +142,16 @@ function NavigationTabs({ location: { pathname }, history }) {
               <ArrowLink />
             </HistoryLink>
             <ActiveText>{adding ? 'Add' : 'Remove'} Liquidity</ActiveText>
+            <QuestionHelper text={'helper text'} />
+          </RowBetween>
+        </Tabs>
+      ) : finding ? (
+        <Tabs>
+          <RowBetween style={{ padding: '1rem' }}>
+            <HistoryLink to="/supply">
+              <ArrowLink />
+            </HistoryLink>
+            <ActiveText>Find a Pool</ActiveText>
             <QuestionHelper text={'helper text'} />
           </RowBetween>
         </Tabs>

@@ -9,14 +9,14 @@ import { ChainId, WETH, Token, TokenAmount, Exchange, JSBI } from '@uniswap/sdk'
 const UPDATE = 'UPDATE'
 
 const ALL_EXCHANGES: [Token, Token][] = [
-  [
-    INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY][WETH[ChainId.RINKEBY].address],
-    INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735']
-  ],
-  [
-    INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735'],
-    INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0x8ab15C890E5C03B5F240f2D146e3DF54bEf3Df44']
-  ]
+  // [
+  //   INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY][WETH[ChainId.RINKEBY].address],
+  //   INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735']
+  // ],
+  // [
+  //   INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735'],
+  //   INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0x8ab15C890E5C03B5F240f2D146e3DF54bEf3Df44']
+  // ]
 ]
 
 const EXCHANGE_MAP: {
@@ -110,6 +110,15 @@ export function useExchange(tokenA?: Token, tokenB?: Token): Exchange | undefine
   const exchange = tokenAmountA && tokenAmountB && new Exchange(tokenAmountA, tokenAmountB)
 
   return exchange
+}
+
+export function useAllExchangesRaw() {
+  const { chainId } = useWeb3React()
+  const [state] = useExchangesContext()
+
+  const allExchangeDetails = state?.[chainId]
+
+  return allExchangeDetails
 }
 
 export function useAllExchanges() {

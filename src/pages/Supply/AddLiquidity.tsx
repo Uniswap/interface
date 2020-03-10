@@ -11,8 +11,8 @@ import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { Text } from 'rebass'
 import { Plus } from 'react-feather'
-import { ChevronDown } from 'react-feather'
 import { RowBetween } from '../../components/Row'
+import { ChevronDown } from 'react-feather'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { ButtonPrimary, ButtonEmpty } from '../../components/Button'
 
@@ -37,10 +37,6 @@ const GAS_MARGIN: BigNumber = ethers.utils.bigNumberify(1000)
 
 const Wrapper = styled.div`
   position: relative;
-`
-
-const ErrorText = styled(Text)`
-  color: ${({ theme, error }) => (error ? theme.salmonRed : theme.chaliceGray)};
 `
 
 const FixedBottom = styled.div`
@@ -293,7 +289,7 @@ export default function AddLiquidity({ token0, token1 }) {
     const field = Field[index]
     const maxAmount = index === Field.INPUT ? maxAmountInput : maxAmountOutput
     return !!maxAmount && !!parsedAmounts[Field[field]]
-      ? JSBI.lessThanOrEqual(maxAmount.raw, parsedAmounts[Field[field]].raw)
+      ? JSBI.equal(maxAmount.raw, parsedAmounts[Field[field]].raw)
       : undefined
   })
 
@@ -313,7 +309,6 @@ export default function AddLiquidity({ token0, token1 }) {
   const [generalError, setGeneralError] = useState()
   const [inputError, setInputError] = useState()
   const [outputError, setOutputError] = useState()
-  const [isError, setIsError] = useState(false)
   const [isValid, setIsValid] = useState(false)
 
   // update errors live
@@ -322,23 +317,22 @@ export default function AddLiquidity({ token0, token1 }) {
     setGeneralError(null)
     setInputError(null)
     setOutputError(null)
-    setIsError(false)
     setIsValid(true)
 
     if (!parsedAmounts[Field.INPUT]) {
-      setGeneralError('Enter an amount to continue')
+      setGeneralError('Enter an amount')
       setIsValid(false)
     }
     if (!parsedAmounts[Field.OUTPUT]) {
-      setGeneralError('Enter an amount to continue')
+      setGeneralError('Enter an amount')
       setIsValid(false)
     }
     if (showInputUnlock) {
-      setInputError('Need to approve amount on input.')
+      setInputError('Approve Amount')
       setIsValid(false)
     }
     if (showOutputUnlock) {
-      setOutputError('Need to approve amount on output.')
+      setOutputError('Approve Amount')
       setIsValid(false)
     }
     if (
@@ -347,7 +341,6 @@ export default function AddLiquidity({ token0, token1 }) {
       JSBI.greaterThan(parsedAmounts?.[Field.INPUT]?.raw, userBalances?.[Field.INPUT]?.raw)
     ) {
       setInputError('Insufficient balance.')
-      setIsError(true)
       setIsValid(false)
     }
     if (
@@ -356,7 +349,6 @@ export default function AddLiquidity({ token0, token1 }) {
       JSBI.greaterThan(parsedAmounts?.[Field.OUTPUT]?.raw, userBalances?.[Field.OUTPUT]?.raw)
     ) {
       setOutputError('Insufficient balance.')
-      setIsError(true)
       setIsValid(false)
     }
   }, [parsedAmounts, showInputUnlock, showOutputUnlock, userBalances])
@@ -514,7 +506,7 @@ export default function AddLiquidity({ token0, token1 }) {
           value={formattedAmounts[Field.OUTPUT]}
           onUserInput={onUserInput}
           onMax={() => {
-            onMax(maxAmountOutput.toExact(), Field.OUTPUT)
+            onMax(maxAmountOutput?.toExact(), Field.OUTPUT)
           }}
           atMax={atMaxAmountOutput}
           token={tokens[Field.OUTPUT]}
@@ -532,11 +524,6 @@ export default function AddLiquidity({ token0, token1 }) {
             {tokens[dependentField].symbol}
           </div>
         </RowBetween>
-        <ColumnCenter style={{ height: '20px' }}>
-          <ErrorText fontSize={12} error={isError}>
-            {generalError ? generalError : inputError ? inputError : outputError ? outputError : ''}
-          </ErrorText>
-        </ColumnCenter>
         <ButtonPrimary
           onClick={() => {
             setShowConfirm(true)
@@ -544,7 +531,7 @@ export default function AddLiquidity({ token0, token1 }) {
           disabled={!isValid}
         >
           <Text fontSize={20} fontWeight={500}>
-            Supply
+            {generalError ? generalError : inputError ? inputError : outputError ? outputError : 'Supply'}
           </Text>
         </ButtonPrimary>
         <FixedBottom>
