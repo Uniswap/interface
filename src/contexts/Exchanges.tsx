@@ -9,10 +9,10 @@ import { ChainId, WETH, Token, TokenAmount, Exchange, JSBI } from '@uniswap/sdk'
 const UPDATE = 'UPDATE'
 
 const ALL_EXCHANGES: [Token, Token][] = [
-  // [
-  //   INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY][WETH[ChainId.RINKEBY].address],
-  //   INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735']
-  // ],
+  [
+    INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY][WETH[ChainId.RINKEBY].address],
+    INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735']
+  ]
   // [
   //   INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735'],
   //   INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0x8ab15C890E5C03B5F240f2D146e3DF54bEf3Df44']
@@ -172,7 +172,7 @@ export function useTotalSupply(exchange: Exchange) {
           }
         })
         .catch(e => {
-          console.log('error')
+          console.log(e)
         })
     /**
      * @todo

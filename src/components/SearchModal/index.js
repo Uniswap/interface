@@ -1,6 +1,7 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import { Link as StyledLink } from '../../theme/components'
 import { useTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
 import styled from 'styled-components'
@@ -126,6 +127,8 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, urlAddedTokens
   // all balances for both account and exchanges
   let allBalances = useAllBalances()
 
+  const [sortDirection, setSortDirection] = useState(true)
+
   const tokenList = useMemo(() => {
     return Object.keys(allTokens)
       .sort((a, b) => {
@@ -136,6 +139,22 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, urlAddedTokens
           // pin ETH to top
           if (aSymbol === 'ETH'.toLowerCase() || bSymbol === 'ETH'.toLowerCase()) {
             return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
+          }
+
+          // sort by balance
+          const balanceA = allBalances?.[account]?.[a]
+          const balanceB = allBalances?.[account]?.[b]
+
+          if (balanceA && !balanceB) {
+            return sortDirection
+          }
+
+          if (!balanceA && balanceB) {
+            return sortDirection * -1
+          }
+
+          if (balanceA && balanceB) {
+            return sortDirection * parseFloat(balanceA.toExact()) > parseFloat(balanceB.toExact()) ? -1 : 1
           }
 
           // sort alphabetically
@@ -159,7 +178,7 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, urlAddedTokens
           balance: balance
         }
       })
-  }, [allTokens, hiddenToken, allBalances, account])
+  }, [allTokens, allBalances, account, sortDirection, hiddenToken])
 
   const filteredTokenList = useMemo(() => {
     return tokenList.filter(tokenEntry => {
@@ -215,7 +234,6 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, urlAddedTokens
     BALANCES: 'BALANCES'
   }
   const [activeFilter, setActiveFilter] = useState(FILTERS.BALANCES)
-  const [sortDirection, setSortDirection] = useState(true)
 
   // sort tokens
   const escapeStringRegexp = string => string
@@ -392,7 +410,18 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, urlAddedTokens
             onChange={onInput}
           />
           <RowBetween>
-            <div />
+            <div>
+              <Text>
+                Don't see a pool?{' '}
+                <StyledLink
+                  onClick={() => {
+                    history.push('/find')
+                  }}
+                >
+                  Import it.
+                </StyledLink>
+              </Text>
+            </div>
             <div />
             <Filter title="Your Balances" filter={FILTERS.BALANCES} />
           </RowBetween>
