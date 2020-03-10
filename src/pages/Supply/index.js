@@ -9,7 +9,6 @@ import { useAllExchanges } from '../../contexts/Exchanges'
 import { useAllBalances, useAccountLPBalances } from '../../contexts/Balances'
 
 import Question from '../../components/Question'
-import TokenFind from '../../components/TokenFind'
 import SearchModal from '../../components/SearchModal'
 import PositionCard from '../../components/PositionCard'
 import Row, { RowBetween } from '../../components/Row'
@@ -32,7 +31,6 @@ const FixedBottom = styled.div`
 
 function Supply({ history }) {
   const { account } = useWeb3React()
-  const [showPositionFind, setShowPositionFind] = useState(false)
   const [showPoolSearch, setShowPoolSearch] = useState(false)
 
   const allTokens = useAllTokens()
@@ -64,61 +62,56 @@ function Supply({ history }) {
 
   return (
     <>
-      {!showPositionFind && (
-        <>
-          <ButtonPrimary
-            onClick={() => {
-              setShowPoolSearch(true)
-            }}
-          >
-            <Text fontSize={20}>Join a pool</Text>
-          </ButtonPrimary>
-          <Positions>
-            <AutoColumn gap="20px">
-              <RowBetween>
-                <Text fontWeight={500}>Your Pooled Liquidity</Text>
-                <Question text="filler text" />
-              </RowBetween>
-              {filteredExchangeList}
-              {filteredExchangeList?.length === 0 && (
-                <LightCard bg="rgba(255, 255, 255, 0.6)" padding={'45px'}>
-                  <Text color="#C3C5CB">Add liquidity to see your positions</Text>
-                </LightCard>
-              )}
-              <AutoColumn justify="center">
-                <Text color="#AEAEAE">
-                  Already have liquidity?{' '}
-                  <Link
-                    onClick={() => {
-                      history.push('/find')
-                    }}
-                  >
-                    Find it now.
-                  </Link>
-                </Text>
-              </AutoColumn>
+      <ButtonPrimary
+        onClick={() => {
+          setShowPoolSearch(true)
+        }}
+      >
+        <Text fontSize={20}>Join a pool</Text>
+      </ButtonPrimary>
+      <Positions>
+        <AutoColumn gap="20px">
+          <RowBetween>
+            <Text fontWeight={500}>Your Pooled Liquidity</Text>
+            <Question text="filler text" />
+          </RowBetween>
+          {filteredExchangeList}
+          {filteredExchangeList?.length === 0 && (
+            <LightCard bg="rgba(255, 255, 255, 0.6)" padding={'45px'}>
+              <Text color="#C3C5CB">Add liquidity to see your positions</Text>
+            </LightCard>
+          )}
+          <AutoColumn justify="center">
+            <Text color="#AEAEAE">
+              Already have liquidity?{' '}
+              <Link
+                onClick={() => {
+                  history.push('/find')
+                }}
+              >
+                Find it now.
+              </Link>
+            </Text>
+          </AutoColumn>
+        </AutoColumn>
+        <FixedBottom>
+          <Card bg="rgba(255, 255, 255, 0.6)" padding={'24px'}>
+            <AutoColumn gap="30px">
+              <Text fontSize="20px" fontWeight={500}>
+                Earn fees with pooled market making.
+              </Text>
+              <Text fontSize="12px">
+                <Link>Provide liquidity </Link>to earn .03% spread fees for providing market depth.
+              </Text>
+              <Link>
+                <Row>
+                  Learn More <ArrowRight size="16" />
+                </Row>
+              </Link>
             </AutoColumn>
-            <FixedBottom>
-              <Card bg="rgba(255, 255, 255, 0.6)" padding={'24px'}>
-                <AutoColumn gap="30px">
-                  <Text fontSize="20px" fontWeight={500}>
-                    Earn fees with pooled market making.
-                  </Text>
-                  <Text fontSize="12px">
-                    <Link>Provide liquidity </Link>to earn .03% spread fees for providing market depth.
-                  </Text>
-                  <Link>
-                    <Row>
-                      Learn More <ArrowRight size="16" />
-                    </Row>
-                  </Link>
-                </AutoColumn>
-              </Card>
-            </FixedBottom>
-          </Positions>
-        </>
-      )}
-      {showPositionFind && <TokenFind />}
+          </Card>
+        </FixedBottom>
+      </Positions>
       <SearchModal isOpen={showPoolSearch} onDismiss={() => setShowPoolSearch(false)} />
     </>
   )

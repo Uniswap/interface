@@ -40,6 +40,9 @@ export const ButtonPrimary = styled(Base)`
     background-color: ${({ theme }) => theme.outlineGrey};
     color: ${({ theme }) => theme.darkGrey}
     cursor: auto;
+    outline: none;
+    border: none;
+    box-shadow: none;
   }
 `
 

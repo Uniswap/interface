@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 import { JSBI } from '@uniswap/sdk'
 
@@ -8,18 +7,18 @@ import { useToken } from '../../contexts/Tokens'
 import { useExchange } from '../../contexts/Exchanges'
 import { useAddressBalance } from '../../contexts/Balances'
 
-import { LightCard } from '../../components/Card'
-import PositionCard from '../../components/PositionCard'
-import SearchModal from '../../components/SearchModal'
-import Row from '../../components/Row'
+import { LightCard } from '../Card'
+import PositionCard from '../PositionCard'
+import SearchModal from '../SearchModal'
+import Row from '../Row'
 import { Link } from '../../theme'
 import { Text } from 'rebass'
-import { AutoColumn, ColumnCenter } from '../../components/Column'
+import { AutoColumn, ColumnCenter } from '../Column'
 import { Plus } from 'react-feather'
-import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../../components/Button'
+import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
 import TokenLogo from '../TokenLogo'
 
-function TokenFind({ history }) {
+function PoolFinder({ history }) {
   const Fields = {
     TOKEN0: 0,
     TOKEN1: 1
@@ -124,7 +123,13 @@ function TokenFind({ history }) {
           <LightCard padding="45px">
             <AutoColumn gap="8px" justify="center">
               <Text color="">No exchange found.</Text>
-              <Link>Create exchange instead.</Link>
+              <Link
+                onClick={() => {
+                  history.push('/add/' + token0Address + '-' + token1Address)
+                }}
+              >
+                Create exchange instead.
+              </Link>
             </AutoColumn>
           </LightCard>
         ) : (
@@ -160,4 +165,4 @@ function TokenFind({ history }) {
   )
 }
 
-export default withRouter(TokenFind)
+export default withRouter(PoolFinder)
