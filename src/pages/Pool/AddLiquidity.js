@@ -46,7 +46,7 @@ const NewExchangeWarning = styled.div`
 `
 
 const NewExchangeWarningText = styled.div`
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   line-height: 1rem;
   text-align: center;
 
@@ -609,9 +609,14 @@ export default function AddLiquidity({ params }) {
             </span>{' '}
             {t('firstLiquidity')}
           </NewExchangeWarningText>
-          <NewExchangeWarningText>
-            {t('initialExchangeRate', { symbol })} {t('initialWarning')}
+          <NewExchangeWarningText style={{ marginTop: '10px' }}>
+            {t('initialExchangeRate', { symbol })}
           </NewExchangeWarningText>
+          {isNewExchange && (
+            <NewExchangeWarningText style={{ textAlign: 'center', marginTop: '10px' }}>
+              {t('initialWarning')}
+            </NewExchangeWarningText>
+          )}
         </NewExchangeWarning>
       ) : null}
       {showOutputWarning && (
@@ -714,6 +719,7 @@ export default function AddLiquidity({ params }) {
         </SummaryPanel>
       </OversizedPanel>
       {renderSummary()}
+
       <Flex>
         <Button disabled={!isValid} onClick={onAddLiquidity}>
           {t('addLiquidity')}
