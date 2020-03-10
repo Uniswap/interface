@@ -609,7 +609,9 @@ export default function AddLiquidity({ params }) {
             </span>{' '}
             {t('firstLiquidity')}
           </NewExchangeWarningText>
-          <NewExchangeWarningText>{t('initialExchangeRate', { symbol })}</NewExchangeWarningText>
+          <NewExchangeWarningText>
+            {t('initialExchangeRate', { symbol })} {t('initialWarning')}
+          </NewExchangeWarningText>
         </NewExchangeWarning>
       ) : null}
       {showOutputWarning && (
