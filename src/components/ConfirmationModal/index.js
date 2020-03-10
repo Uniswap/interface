@@ -81,7 +81,7 @@ export default function ConfirmationModal({
                 <LightCard>
                   <RowBetween>
                     <Text fontSize={24} fontWeight={500}>
-                      {amount0?.toSignificant(6)}
+                      {!!amount0 && amount0?.toSignificant(6)}
                     </Text>
                     <RowFixed gap="10px">
                       <TokenLogo address={amount0?.token?.address} size={'24px'} />
@@ -97,7 +97,7 @@ export default function ConfirmationModal({
                 <LightCard>
                   <RowBetween>
                     <Text fontSize={24} fontWeight={500}>
-                      {amount1?.toSignificant(6)}
+                      {!!amount1 && amount1?.toSignificant(6)}
                     </Text>
                     <RowFixed gap="10px">
                       <TokenLogo address={amount1?.token?.address} size={'24px'} />
@@ -127,13 +127,13 @@ export default function ConfirmationModal({
                 <Row>
                   <TokenLogo address={address0} size={'30px'} />
                   <Text fontSize="24px" marginLeft={10}>
-                    {symbol0} {amount0?.toSignificant(8)}
+                    {symbol0} {!!amount0 && amount0?.toSignificant(8)}
                   </Text>
                 </Row>
                 <Row>
                   <TokenLogo address={address1} size={'30px'} />
                   <Text fontSize="24px" marginLeft={10}>
-                    {symbol1} {amount1?.toSignificant(8)}
+                    {symbol1} {!!amount1 && amount1?.toSignificant(8)}
                   </Text>
                 </Row>
               </AutoColumn>
@@ -150,7 +150,7 @@ export default function ConfirmationModal({
                     <RowFixed>
                       <TokenLogo address={address0 || ''} style={{ marginRight: '8px' }} />
                       <Text fontWeight={500} fontSize={16}>
-                        {amount0?.toSignificant(6)}
+                        {!!amount0 && amount0?.toSignificant(6)}
                       </Text>
                     </RowFixed>
                   </RowBetween>

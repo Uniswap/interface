@@ -14,6 +14,7 @@ const Send = lazy(() => import('./Send'))
 const Pool = lazy(() => import('./Supply'))
 const Add = lazy(() => import('./Supply/AddLiquidity'))
 const Remove = lazy(() => import('./Supply/RemoveLiquidity'))
+const Find = lazy(() => import('../components/TokenFind'))
 
 const AppWrapper = styled.div`
   display: flex;
@@ -44,13 +45,13 @@ const BodyWrapper = styled.div`
 `
 
 const Body = styled.div`
-  max-width: 28rem;
+  max-width: 355px;
   width: 90%;
   background: ${({ theme }) => theme.panelBackground};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 20px;
-  padding: 2rem 1rem;
+  padding: 2rem 2rem;
 `
 
 export default function App() {
@@ -70,6 +71,7 @@ export default function App() {
                   {/* this Suspense is for route code-splitting */}
                   <Suspense fallback={null}>
                     <Switch>
+                      <Route exact strict path="/find" component={() => <Find params={params} />} />
                       <Route exact strict path="/swap" component={() => <Swap params={params} />} />
                       <Route
                         exact

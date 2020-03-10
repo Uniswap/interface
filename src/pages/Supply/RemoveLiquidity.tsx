@@ -138,14 +138,6 @@ function reducer(
   }
 }
 
-// todo
-// add exchange address to initial state
-
-// remove stateful slider in advanced mode, just show a sig fig value based on pool tokens burned
-
-// try to fully derive percentageAmount from state
-// at the very least, move that state into the reducer
-
 export default function RemoveLiquidity({ token0, token1 }) {
   const { account, chainId, library } = useWeb3React()
   const routerAddress = ROUTER_ADDRESSES[chainId]
@@ -215,32 +207,37 @@ export default function RemoveLiquidity({ token0, token1 }) {
         const typedValueParsed = parseUnits(typedValue, tokens[Field.TOKEN0].decimals).toString()
         if (typedValueParsed !== '0') {
           const tokenAmount = new TokenAmount(tokens[Field.TOKEN0], typedValueParsed)
-          poolTokenAmount = JSBI.divide(
-            JSBI.multiply(tokenAmount.raw, userLiquidity.raw),
-            TokensDeposited[Field.TOKEN0].raw
-          )
+          if (
+            TokensDeposited[Field.TOKEN0] &&
+            JSBI.lessThanOrEqual(tokenAmount.raw, TokensDeposited[Field.TOKEN0].raw)
+          ) {
+            poolTokenAmount = JSBI.divide(
+              JSBI.multiply(tokenAmount.raw, userLiquidity.raw),
+              TokensDeposited[Field.TOKEN0].raw
+            )
+          }
         }
       }
       if (independentField === Field.TOKEN1) {
         const typedValueParsed = parseUnits(typedValue, tokens[Field.TOKEN1].decimals).toString()
         if (typedValueParsed !== '0') {
           const tokenAmount = new TokenAmount(tokens[Field.TOKEN1], typedValueParsed)
-          poolTokenAmount = JSBI.divide(
-            JSBI.multiply(tokenAmount.raw, userLiquidity.raw),
-            TokensDeposited[Field.TOKEN1].raw
-          )
+          if (
+            TokensDeposited[Field.TOKEN1] &&
+            JSBI.lessThanOrEqual(tokenAmount.raw, TokensDeposited[Field.TOKEN1].raw)
+          ) {
+            poolTokenAmount = JSBI.divide(
+              JSBI.multiply(tokenAmount.raw, userLiquidity.raw),
+              TokensDeposited[Field.TOKEN1].raw
+            )
+          }
         }
       }
       if (independentField === Field.LIQUIDITY) {
         const typedValueParsed = parseUnits(typedValue, exchange?.liquidityToken.decimals).toString()
         const formattedAmount = new TokenAmount(exchange?.liquidityToken, typedValueParsed)
         if (typedValueParsed !== '0') {
-          if (JSBI.greaterThan(formattedAmount.raw, userLiquidity?.raw)) {
-            /**
-             * error state for incorrect liquidity valye
-             *
-             */
-          } else {
+          if (JSBI.lessThanOrEqual(formattedAmount.raw, userLiquidity?.raw)) {
             poolTokenAmount = typedValueParsed
           }
         }
@@ -253,12 +250,14 @@ export default function RemoveLiquidity({ token0, token1 }) {
 
   // set parsed amounts based on live amount of liquidity
   parsedAmounts[Field.LIQUIDITY] =
-    exchange && poolTokenAmount && new TokenAmount(exchange.liquidityToken, poolTokenAmount)
+    exchange && poolTokenAmount && userLiquidity && new TokenAmount(exchange.liquidityToken, poolTokenAmount)
+
   parsedAmounts[Field.TOKEN0] =
     totalPoolTokens &&
     exchange &&
     parsedAmounts[Field.LIQUIDITY] &&
     exchange.getLiquidityValue(tokens[Field.TOKEN0], totalPoolTokens, parsedAmounts[Field.LIQUIDITY], false)
+
   parsedAmounts[Field.TOKEN1] =
     totalPoolTokens &&
     exchange &&
@@ -307,57 +306,41 @@ export default function RemoveLiquidity({ token0, token1 }) {
   const [inputError, setInputError] = useState()
   const [outputError, setOutputError] = useState()
   const [poolTokenError, setPoolTokenError] = useState()
-  const [isError, setIsError] = useState(false)
   const [isValid, setIsValid] = useState(false)
 
   // update errors live
   useEffect(() => {
     // reset errors
-    setGeneralError(false)
+    setGeneralError(null)
     setInputError(null)
     setOutputError(null)
     setPoolTokenError(null)
-    setIsError(false)
     setIsValid(true)
 
-    if (!parsedAmounts[Field.TOKEN0]) {
-      setGeneralError('Enter an amount to continue')
+    if (formattedAmounts[Field.TOKEN0] === '') {
+      setGeneralError('Enter an amount')
+      setIsValid(false)
+    } else if (!parsedAmounts[Field.TOKEN0]) {
+      setInputError('Invalid amount')
       setIsValid(false)
     }
-    if (!parsedAmounts[Field.TOKEN1]) {
-      setGeneralError('Enter an amount to continue')
+
+    if (formattedAmounts[Field.TOKEN1] === '') {
+      setGeneralError('Enter an amount')
+      setIsValid(false)
+    } else if (!parsedAmounts[Field.TOKEN1]) {
+      setOutputError('Invalid amount')
       setIsValid(false)
     }
-    if (
-      totalPoolTokens &&
-      userLiquidity &&
-      parsedAmounts[Field.LIQUIDITY] &&
-      (!JSBI.lessThanOrEqual(parsedAmounts[Field.LIQUIDITY].raw, totalPoolTokens.raw) ||
-        !JSBI.lessThanOrEqual(parsedAmounts[Field.LIQUIDITY].raw, userLiquidity.raw))
-    ) {
-      setPoolTokenError('Input a liquidity amount less than or equal to your balance.')
-      setIsError(true)
+
+    if (formattedAmounts[Field.LIQUIDITY] === '') {
+      setGeneralError('Enter an amount')
+      setIsValid(false)
+    } else if (!parsedAmounts[Field.LIQUIDITY]) {
+      setPoolTokenError('Invalid Amount')
       setIsValid(false)
     }
-    // if (
-    //   parsedAmounts?.[Field.TOKEN0] &&
-    //   userBalances?.[Field.TOKEN0] &&
-    //   JSBI.greaterThan(parsedAmounts?.[Field.TOKEN0]?.raw, userBalances?.[Field.TOKEN0]?.raw)
-    // ) {
-    //   setInputError('Insufficient balance.')
-    //   setIsError(true)
-    //   setIsValid(false)
-    // }
-    // if (
-    //   parsedAmounts?.[Field.TOKEN1] &&
-    //   userBalances?.[Field.TOKEN1] &&
-    //   parseFloat(parsedAmounts?.[Field.TOKEN1]?.toExact()) > parseFloat(userBalances?.[Field.TOKEN1]?.toExact())
-    // ) {
-    //   setOutputError('Insufficient balance.')
-    //   setIsError(true)
-    //   setIsValid(false)
-    // }
-  }, [parsedAmounts, totalPoolTokens, userLiquidity])
+  }, [formattedAmounts, parsedAmounts, totalPoolTokens, userLiquidity])
 
   // state for txn
   const addTransaction = useTransactionAdder()
@@ -498,24 +481,26 @@ export default function RemoveLiquidity({ token0, token1 }) {
 
   return (
     <Wrapper>
-      <ConfirmationModal
-        isOpen={showConfirm}
-        onDismiss={() => {
-          resetModalState()
-          setShowConfirm(false)
-        }}
-        amount0={parsedAmounts[Field.TOKEN0]}
-        amount1={parsedAmounts[Field.TOKEN1]}
-        price={route?.midPrice}
-        liquidityAmount={parsedAmounts[Field.LIQUIDITY]}
-        transactionType={TRANSACTION_TYPE.REMOVE}
-        contractCall={onRemove}
-        extraCall={onSign}
-        signed={signed}
-        attemptedRemoval={attemptedRemoval}
-        pendingConfirmation={pendingConfirmation}
-        hash={txHash ? txHash : ''}
-      />
+      {!!parsedAmounts[Field.TOKEN0] && !!parsedAmounts[Field.TOKEN1] && !!parsedAmounts[Field.LIQUIDITY] && (
+        <ConfirmationModal
+          isOpen={showConfirm}
+          onDismiss={() => {
+            resetModalState()
+            setShowConfirm(false)
+          }}
+          amount0={parsedAmounts[Field.TOKEN0]}
+          amount1={parsedAmounts[Field.TOKEN1]}
+          price={route?.midPrice}
+          liquidityAmount={parsedAmounts[Field.LIQUIDITY]}
+          transactionType={TRANSACTION_TYPE.REMOVE}
+          contractCall={onRemove}
+          extraCall={onSign}
+          signed={signed}
+          attemptedRemoval={attemptedRemoval}
+          pendingConfirmation={pendingConfirmation}
+          hash={txHash ? txHash : ''}
+        />
+      )}
       <AutoColumn gap="20px">
         <LightCard>
           <AutoColumn gap="20px">
@@ -533,7 +518,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
             </RowBetween>
             <RowBetween style={{ alignItems: 'flex-end' }}>
               <Text fontSize={72} fontWeight={500}>
-                {derivedPerecent ? derivedPerecent : '0'}%
+                {derivedPerecent ? (parseInt(derivedPerecent) < 1 ? '<1' : derivedPerecent) : '0'}%
               </Text>
               {!showAdvanced && <MaxButton onClick={e => handleSliderChange(e, 100)}>Max</MaxButton>}
             </RowBetween>
@@ -621,16 +606,18 @@ export default function RemoveLiquidity({ token0, token1 }) {
             />
           </>
         )}
-        <RowBetween>
-          Rate:
-          <div>
-            1 {exchange?.token0.symbol} ={' '}
-            {independentField === Field.TOKEN0 || independentField === Field.LIQUIDITY
-              ? route?.midPrice.toSignificant(6)
-              : route?.midPrice.invert().toSignificant(6)}{' '}
-            {exchange?.token1.symbol}
-          </div>
-        </RowBetween>
+        <div style={{ padding: '10px 20px' }}>
+          <RowBetween>
+            Price:
+            <div>
+              1 {exchange?.token0.symbol} ={' '}
+              {independentField === Field.TOKEN0 || independentField === Field.LIQUIDITY
+                ? route?.midPrice.toSignificant(6)
+                : route?.midPrice.invert().toSignificant(6)}{' '}
+              {exchange?.token1.symbol}
+            </div>
+          </RowBetween>
+        </div>
         <ButtonPrimary
           onClick={() => {
             setShowConfirm(true)
@@ -638,7 +625,15 @@ export default function RemoveLiquidity({ token0, token1 }) {
           disabled={!isValid}
         >
           <Text fontSize={20} fontWeight={500}>
-            Remove
+            {inputError
+              ? inputError
+              : outputError
+              ? outputError
+              : poolTokenError
+              ? poolTokenError
+              : generalError
+              ? generalError
+              : 'Remove'}
           </Text>
         </ButtonPrimary>
         <FixedBottom>

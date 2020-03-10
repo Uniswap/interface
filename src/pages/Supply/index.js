@@ -1,21 +1,24 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { JSBI } from '@uniswap/sdk'
+import { withRouter } from 'react-router-dom'
 
 import { useWeb3React } from '@web3-react/core'
 import { useAllTokens } from '../../contexts/Tokens'
 import { useAllExchanges } from '../../contexts/Exchanges'
 import { useAllBalances, useAccountLPBalances } from '../../contexts/Balances'
 
-import Card from '../../components/Card'
+import Question from '../../components/Question'
+import TokenFind from '../../components/TokenFind'
 import SearchModal from '../../components/SearchModal'
 import PositionCard from '../../components/PositionCard'
 import Row, { RowBetween } from '../../components/Row'
+import Card, { LightCard } from '../../components/Card'
 import { Link } from '../../theme'
 import { Text } from 'rebass'
 import { AutoColumn } from '../../components/Column'
 import { ArrowRight } from 'react-feather'
-import { ButtonDropwdown } from '../../components/Button'
+import { ButtonPrimary } from '../../components/Button'
 
 const Positions = styled.div`
   position: relative;
@@ -23,13 +26,14 @@ const Positions = styled.div`
 `
 const FixedBottom = styled.div`
   position: absolute;
-  bottom: -240px;
+  bottom: -260px;
   width: 100%;
 `
 
-export default function Supply() {
+function Supply({ history }) {
   const { account } = useWeb3React()
-  const [showSearch, setShowSearch] = useState(false)
+  const [showPositionFind, setShowPositionFind] = useState(false)
+  const [showPoolSearch, setShowPoolSearch] = useState(false)
 
   const allTokens = useAllTokens()
   const allBalances = useAllBalances()
@@ -38,11 +42,17 @@ export default function Supply() {
   // initiate listener for LP balances
   useAccountLPBalances(account)
 
-  const filteredExchangeList = Object.keys(allExchanges).map((exchangeAddress, i) => {
-    const balance = allBalances?.[account]?.[exchangeAddress]
-    return (
-      balance &&
-      JSBI.greaterThan(balance.raw, JSBI.BigInt(0)) && (
+  const filteredExchangeList = Object.keys(allExchanges)
+    .filter((exchangeAddress, i) => {
+      return (
+        allBalances &&
+        allBalances[account] &&
+        allBalances[account][exchangeAddress] &&
+        JSBI.greaterThan(allBalances[account][exchangeAddress].raw, JSBI.BigInt(0))
+      )
+    })
+    .map((exchangeAddress, i) => {
+      return (
         <PositionCard
           key={i}
           exchangeAddress={exchangeAddress}
@@ -50,52 +60,67 @@ export default function Supply() {
           token1={allTokens[allExchanges[exchangeAddress].token1]}
         />
       )
-    )
-  })
+    })
 
   return (
     <>
-      <ButtonDropwdown
-        onClick={() => {
-          setShowSearch(true)
-        }}
-      >
-        <Text fontSize={20}>Find a pool</Text>
-      </ButtonDropwdown>
-      <Positions>
-        <AutoColumn gap="20px">
-          <RowBetween>
-            <Text fontWeight={500}>Your positions</Text>
-            <Link>
-              <Text fontWeight={500}>View on Uniswap.info</Text>
-            </Link>
-          </RowBetween>
-          {filteredExchangeList}
-        </AutoColumn>
-        <FixedBottom>
-          <Card bg="rgba(255, 255, 255, 0.6)" padding={'24px'}>
-            <AutoColumn gap="30px">
-              <Text fontSize="20px" fontWeight={500}>
-                Earn fees with pooled market making.
-              </Text>
-              <Text fontSize="12px">
-                <Link>Provide liquidity </Link>to earn .03% spread fees for providing market depth.
-              </Text>
-              <Link>
-                <Row>
-                  Learn More <ArrowRight size="16" />
-                </Row>
-              </Link>
+      {!showPositionFind && (
+        <>
+          <ButtonPrimary
+            onClick={() => {
+              setShowPoolSearch(true)
+            }}
+          >
+            <Text fontSize={20}>Join a pool</Text>
+          </ButtonPrimary>
+          <Positions>
+            <AutoColumn gap="20px">
+              <RowBetween>
+                <Text fontWeight={500}>Your Pooled Liquidity</Text>
+                <Question text="filler text" />
+              </RowBetween>
+              {filteredExchangeList}
+              {filteredExchangeList?.length === 0 && (
+                <LightCard bg="rgba(255, 255, 255, 0.6)" padding={'45px'}>
+                  <Text color="#C3C5CB">Add liquidity to see your positions</Text>
+                </LightCard>
+              )}
+              <AutoColumn justify="center">
+                <Text color="#AEAEAE">
+                  Already have liquidity?{' '}
+                  <Link
+                    onClick={() => {
+                      history.push('/find')
+                    }}
+                  >
+                    Find it now.
+                  </Link>
+                </Text>
+              </AutoColumn>
             </AutoColumn>
-          </Card>
-        </FixedBottom>
-      </Positions>
-      <SearchModal
-        isOpen={showSearch}
-        onDismiss={() => {
-          setShowSearch(false)
-        }}
-      />
+            <FixedBottom>
+              <Card bg="rgba(255, 255, 255, 0.6)" padding={'24px'}>
+                <AutoColumn gap="30px">
+                  <Text fontSize="20px" fontWeight={500}>
+                    Earn fees with pooled market making.
+                  </Text>
+                  <Text fontSize="12px">
+                    <Link>Provide liquidity </Link>to earn .03% spread fees for providing market depth.
+                  </Text>
+                  <Link>
+                    <Row>
+                      Learn More <ArrowRight size="16" />
+                    </Row>
+                  </Link>
+                </AutoColumn>
+              </Card>
+            </FixedBottom>
+          </Positions>
+        </>
+      )}
+      {showPositionFind && <TokenFind />}
+      <SearchModal isOpen={showPoolSearch} onDismiss={() => setShowPoolSearch(false)} />
     </>
   )
 }
+export default withRouter(Supply)

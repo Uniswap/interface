@@ -2,7 +2,25 @@ import React from 'react'
 import Slider from '@material-ui/core/Slider'
 import { withStyles } from '@material-ui/core/styles'
 
-const IOSSlider = withStyles({
+const marks = [
+  {
+    value: 0
+  },
+  {
+    value: 25
+  },
+  {
+    value: 50
+  },
+  {
+    value: 75
+  },
+  {
+    value: 100
+  }
+]
+
+const StyledSlider = withStyles({
   root: {
     width: '95%',
     color: '#3880ff',
@@ -13,7 +31,7 @@ const IOSSlider = withStyles({
   thumb: {
     height: 28,
     width: 28,
-    backgroundColor: '##2172E5',
+    backgroundColor: '#2172E5',
     marginTop: -14,
     marginLeft: -14,
     '&:focus,&:hover,&$active': {
@@ -34,16 +52,26 @@ const IOSSlider = withStyles({
   },
   mark: {
     backgroundColor: '#bfbfbf',
-    height: 8,
-    width: 1,
-    marginTop: -3
+    height: 12,
+    width: 2,
+    marginTop: -4
   },
   markActive: {
     opacity: 1,
-    backgroundColor: 'currentColor'
+    backgroundColor: 'currentColor',
+    height: 12,
+    width: 2,
+    marginTop: -4
   }
 })(Slider)
 
 export default function InputSlider({ value, onChange }) {
-  return <IOSSlider value={typeof value === 'number' ? value : 0} onChange={onChange} aria-labelledby="input-slider" />
+  return (
+    <StyledSlider
+      value={typeof value === 'number' ? value : 0}
+      onChange={onChange}
+      aria-labelledby="input-slider"
+      marks={marks}
+    />
+  )
 }

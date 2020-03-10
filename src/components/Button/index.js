@@ -7,7 +7,7 @@ import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'
 
 const Base = styled(RebassButton)`
-  padding: ${({ padding }) => (padding ? padding : '16px')};
+  padding: ${({ padding }) => (padding ? padding : '18px')};
   width: ${({ width }) => (width ? width : '100%')};
   font-size: 1rem;
   font-weight: 500;
@@ -37,8 +37,8 @@ export const ButtonPrimary = styled(Base)`
     background-color: ${({ theme }) => darken(0.1, theme.royalBlue)};
   }
   &:disabled {
-    background-color: ${({ theme }) => theme.royalBlue};
-    opacity: 50%;
+    background-color: ${({ theme }) => theme.outlineGrey};
+    color: ${({ theme }) => theme.darkGrey}
     cursor: auto;
   }
 `
@@ -113,5 +113,16 @@ export function ButtonDropwdown({ disabled, children, ...rest }) {
         <ChevronDown size={24} />
       </RowBetween>
     </ButtonPrimary>
+  )
+}
+
+export function ButtonDropwdownLight({ disabled, children, ...rest }) {
+  return (
+    <ButtonEmpty {...rest}>
+      <RowBetween>
+        <div style={{ display: 'flex', alignItems: 'center' }}>{children}</div>
+        <ChevronDown size={24} />
+      </RowBetween>
+    </ButtonEmpty>
   )
 }

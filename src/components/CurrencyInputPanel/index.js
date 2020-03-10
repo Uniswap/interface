@@ -181,7 +181,6 @@ export default function CurrencyInputPanel({
   const addTransaction = useTransactionAdder()
 
   const [modalOpen, setModalOpen] = useState(false)
-  const [showMax, setShowMax] = useState(false)
 
   // this one causes the infinite loop
   const userTokenBalance = useAddressBalance(account, token)
@@ -252,15 +251,8 @@ export default function CurrencyInputPanel({
           </LabelRow>
         )}
         <InputRow>
-          <NumericalInput
-            field={field}
-            value={value}
-            onUserInput={onUserInput}
-            onFocus={() => {
-              setShowMax(true)
-            }}
-          />
-          {!!token?.address && !atMax && showMax && <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>}
+          <NumericalInput field={field} value={value} onUserInput={onUserInput} />
+          {!!token?.address && !atMax && <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>}
           {renderUnlockButton()}
           <CurrencySelect
             selected={!!token?.address}
