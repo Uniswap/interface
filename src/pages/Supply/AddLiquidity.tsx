@@ -306,9 +306,9 @@ export default function AddLiquidity({ token0, token1 }) {
   }, [inputApproval, outputApproval, parsedAmounts])
 
   // errors
-  const [generalError, setGeneralError] = useState()
-  const [inputError, setInputError] = useState()
-  const [outputError, setOutputError] = useState()
+  const [generalError, setGeneralError] = useState('')
+  const [inputError, setInputError] = useState('')
+  const [outputError, setOutputError] = useState('')
   const [isValid, setIsValid] = useState(false)
 
   // update errors live
