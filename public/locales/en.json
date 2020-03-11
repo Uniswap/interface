@@ -66,7 +66,7 @@
   "tokenWorth": "At current exchange rate, each pool token is worth",
   "firstLiquidity": "You are the first person to add liquidity!",
   "initialExchangeRate": "The initial exchange rate will be set based on your deposits. Please make sure that your ETH and {{ label }} deposits have the same fiat value. ",
-  "initialWarning": "A very small number of tokens with with improper ERC20 implementations have cause the Uniswap V1 remove liquidity function to break leading to locked funds. As the first liquidity provider we recommend testing both adding and removing with small amounts before adding a large amount.",
+  "initialWarning": "A few improperly implemented ERC20 tokens have caused the remove liquidity function to break, permanently locking funds. As the first liquidity provider we recommend testing both add and remove with small amounts before adding a large amounts.",
   "removeLiquidity": "Remove Liquidity",
   "poolTokens": "Pool Tokens",
   "enterLabelCont": "Enter a {{ label }} value to continue.",
