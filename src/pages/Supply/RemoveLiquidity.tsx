@@ -378,6 +378,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
       { name: 'nonce', type: 'uint256' },
       { name: 'deadline', type: 'uint256' }
     ]
+
     const message = {
       owner: account,
       spender: routerAddress,

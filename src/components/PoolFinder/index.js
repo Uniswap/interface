@@ -1,22 +1,24 @@
 import React, { useState } from 'react'
-import { withRouter } from 'react-router-dom'
 import { JSBI } from '@uniswap/sdk'
+import { withRouter } from 'react-router-dom'
 
-import { useWeb3React } from '@web3-react/core'
 import { useToken } from '../../contexts/Tokens'
 import { useExchange } from '../../contexts/Exchanges'
+import { useWeb3React } from '@web3-react/core'
 import { useAddressBalance } from '../../contexts/Balances'
+import { usePopups } from '../../contexts/Application'
 
-import { LightCard } from '../Card'
-import PositionCard from '../PositionCard'
-import SearchModal from '../SearchModal'
 import Row from '../Row'
+import TokenLogo from '../TokenLogo'
+import SearchModal from '../SearchModal'
+import PositionCard from '../PositionCard'
 import { Link } from '../../theme'
 import { Text } from 'rebass'
-import { AutoColumn, ColumnCenter } from '../Column'
 import { Plus } from 'react-feather'
+import { LightCard } from '../Card'
+import { AutoColumn, ColumnCenter } from '../Column'
 import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
-import TokenLogo from '../TokenLogo'
+import DoubleTokenLogo from '../DoubleLogo'
 
 function PoolFinder({ history }) {
   const Fields = {
@@ -27,6 +29,8 @@ function PoolFinder({ history }) {
   const { account } = useWeb3React()
   const [showSearch, setShowSearch] = useState(false)
   const [activeField, setActiveField] = useState(Fields.TOKEN0)
+
+  const [, addPopup] = usePopups()
 
   const [token0Address, setToken0Address] = useState()
   const [token1Address, setToken1Address] = useState()
@@ -41,6 +45,18 @@ function PoolFinder({ history }) {
   const newExchange = exchange && JSBI.equal(exchange.reserve0.raw, JSBI.BigInt(0))
 
   const allowImport = position && JSBI.greaterThan(position.raw, JSBI.BigInt(0))
+
+  function endSearch() {
+    history.goBack()
+    addPopup(
+      <Row>
+        <DoubleTokenLogo a0={token0Address || ''} a1={token1Address || ''} margin={true} />
+        <Text color="grey">
+          UNI {token0?.symbol} / {token1?.symbol} pool imported.
+        </Text>
+      </Row>
+    )
+  }
 
   return (
     <>
@@ -144,7 +160,7 @@ function PoolFinder({ history }) {
             Liquidity Found!
           </Text>
         )}
-        <ButtonPrimary disabled={!allowImport} onClick={() => history.goBack()}>
+        <ButtonPrimary disabled={!allowImport} onClick={endSearch}>
           <Text fontWeight={500} fontSize={20}>
             Import
           </Text>

@@ -398,7 +398,7 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, urlAddedTokens
         <PaddedColumn gap="20px">
           <RowBetween>
             <Text fontWeight={500} fontSize={16}>
-              {filterType === 'tokens' ? 'Find A Token' : 'Find A Pool'}
+              {filterType === 'tokens' ? 'Select A Token' : 'Select A Pool'}
             </Text>
             <CloseIcon onClick={onDismiss} />
           </RowBetween>

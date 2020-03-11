@@ -4,7 +4,6 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
 import Web3ReactManager from '../components/Web3ReactManager'
 import Header from '../components/Header'
-import Footer from '../components/Footer'
 
 import NavigationTabs from '../components/NavigationTabs'
 import { isAddress, getAllQueryParams } from '../utils'
@@ -14,7 +13,7 @@ const Send = lazy(() => import('./Send'))
 const Pool = lazy(() => import('./Supply'))
 const Add = lazy(() => import('./Supply/AddLiquidity'))
 const Remove = lazy(() => import('./Supply/RemoveLiquidity'))
-const Find = lazy(() => import('../components/TokenFind'))
+const Find = lazy(() => import('../components/PoolFinder'))
 
 const AppWrapper = styled.div`
   display: flex;
@@ -150,9 +149,6 @@ export default function App() {
               </Web3ReactManager>
             </Body>
           </BodyWrapper>
-          <FooterWrapper>
-            <Footer />
-          </FooterWrapper>
         </AppWrapper>
       </Suspense>
     </>
