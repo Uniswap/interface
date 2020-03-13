@@ -16,7 +16,7 @@ import { Link } from '../../theme'
 import { Text } from 'rebass'
 import { Plus } from 'react-feather'
 import { LightCard } from '../Card'
-import { AutoColumn, ColumnCenter } from '../Column'
+import Column, { AutoColumn, ColumnCenter } from '../Column'
 import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
 import DoubleTokenLogo from '../DoubleLogo'
 
@@ -112,6 +112,13 @@ function PoolFinder({ history }) {
             </Row>
           </ButtonDropwdownLight>
         )}
+        {allowImport && (
+          <ColumnCenter justify="center" style={{ backgroundColor: '#EBF4FF', padding: '8px', borderRadius: '12px' }}>
+            <Text textAlign="center" fontWeight={500} color="#2172E5">
+              Liquidity Found!
+            </Text>
+          </ColumnCenter>
+        )}
         {position ? (
           !JSBI.equal(position.raw, JSBI.BigInt(0)) ? (
             <PositionCard
@@ -155,11 +162,7 @@ function PoolFinder({ history }) {
             </Text>
           </LightCard>
         )}
-        {allowImport && (
-          <Text textAlign="center" fontWeight={500}>
-            Liquidity Found!
-          </Text>
-        )}
+
         <ButtonPrimary disabled={!allowImport} onClick={endSearch}>
           <Text fontWeight={500} fontSize={20}>
             Import

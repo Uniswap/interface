@@ -19,13 +19,6 @@ export const SUPPORTED_THEMES = {
   LIGHT: 'LIGHT'
 }
 
-export enum TRANSACTION_TYPE {
-  SWAP,
-  SEND,
-  ADD,
-  REMOVE
-}
-
 const MAINNET_WALLETS = {
   INJECTED: {
     connector: injected,

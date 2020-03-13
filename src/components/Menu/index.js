@@ -6,7 +6,6 @@ import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 
 import { Link } from '../../theme'
 import { darken, transparentize } from 'polished'
-import { useAdvancedManager } from '../../contexts/LocalStorage'
 
 import Toggle from 'react-switch'
 
@@ -140,7 +139,7 @@ const EmojiToggle = styled.span`
 
 export default function Menu() {
   const [isDark, toggleDarkMode] = useDarkModeManager()
-  const [isAdvanced, toggleAdvanced] = useState()
+  const [isAdvanced, toggleAdvanced] = useState(false)
 
   const node = useRef()
   const [open, toggle] = useToggle(false)

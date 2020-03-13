@@ -3,6 +3,7 @@ import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css 
 import { getQueryParam, checkSupportedTheme } from '../utils'
 import { SUPPORTED_THEMES } from '../constants'
 import { useDarkModeManager } from '../contexts/LocalStorage'
+import { Text } from 'rebass'
 
 export * from './components'
 
@@ -116,6 +117,19 @@ const theme = darkMode => ({
     flex-flow: row nowrap;
   `
 })
+
+export const TYPE = {
+  main: ({ children, ...rest }) => (
+    <Text fontWeight={500} color={theme().mineshaftGray} {...rest}>
+      {children}
+    </Text>
+  ),
+  blue: ({ children, ...rest }) => (
+    <Text fontWeight={500} color={theme().royalBlue} {...rest}>
+      {children}
+    </Text>
+  )
+}
 
 export const GlobalStyle = createGlobalStyle`
   @import url('https://rsms.me/inter/inter.css');

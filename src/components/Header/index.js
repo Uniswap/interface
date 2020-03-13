@@ -17,6 +17,7 @@ import { isMobile } from 'react-device-detect'
 import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useWalletModalToggle, usePopups } from '../../contexts/Application'
+import { AutoColumn } from '../Column'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -68,7 +69,7 @@ const AccountElement = styled.div`
   /* width: 100%; */
 `
 
-const FixedPopupColumn = styled.div`
+const FixedPopupColumn = styled(AutoColumn)`
   position: absolute;
   top: 80px;
   right: 20px
@@ -82,6 +83,15 @@ const StyledClose = styled(X)`
   :hover {
     cursor: pointer;
   }
+`
+
+const Popup = styled(Card)`
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+    0px 24px 32px rgba(0, 0, 0, 0.04);
+  z-index: 9999;
+  border-radius: 8px;
+  padding: 1rem;
+  background: ${theme => theme.white};
 `
 
 export default function Header() {
@@ -117,13 +127,13 @@ export default function Header() {
         </AccountElement>
         <Menu />
       </HeaderElement>
-      <FixedPopupColumn>
+      <FixedPopupColumn gap="20px">
         {activePopups.map(item => {
           return (
-            <Card bg="white" padding={'16px'} key={item.key} borderRadius={'8px'}>
+            <Popup key={item.key}>
               <StyledClose color="#888D9B" onClick={() => removePopup(item.key)} />
               {item.content}
-            </Card>
+            </Popup>
           )
         })}
       </FixedPopupColumn>

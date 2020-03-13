@@ -5,26 +5,27 @@ import { parseUnits, parseEther } from '@ethersproject/units'
 import { WETH, TokenAmount, JSBI, Percent, Route } from '@uniswap/sdk'
 
 import DoubleLogo from '../../components/DoubleLogo'
+import TokenLogo from '../../components/TokenLogo'
 import SearchModal from '../../components/SearchModal'
 import PositionCard from '../../components/PositionCard'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { Text } from 'rebass'
 import { Plus } from 'react-feather'
-import { RowBetween } from '../../components/Row'
-import { ChevronDown } from 'react-feather'
+import { ButtonPrimary } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import { ButtonPrimary, ButtonEmpty } from '../../components/Button'
+import Row, { RowBetween, RowFlat, RowFixed } from '../../components/Row'
 
 import { useToken } from '../../contexts/Tokens'
 import { useWeb3React } from '../../hooks'
+import { usePopups } from '../../contexts/Application'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useExchange, useTotalSupply } from '../../contexts/Exchanges'
 
 import { BigNumber } from 'ethers/utils'
-import { TRANSACTION_TYPE, ROUTER_ADDRESSES } from '../../constants'
+import { ROUTER_ADDRESSES } from '../../constants'
 import { getRouterContract, calculateGasMargin } from '../../utils'
 
 // denominated in bips
@@ -41,7 +42,7 @@ const Wrapper = styled.div`
 
 const FixedBottom = styled.div`
   position: absolute;
-  bottom: -240px;
+  bottom: -200px;
   width: 100%;
 `
 
@@ -145,6 +146,7 @@ export default function AddLiquidity({ token0, token1 }) {
   // modal states
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
+  const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicke confirm
   const [pendingConfirmation, setPendingConfirmation] = useState<boolean>(true)
 
   // input state
@@ -369,7 +371,10 @@ export default function AddLiquidity({ token0, token1 }) {
     return null
   }
 
+  const [, addPopup] = usePopups()
+
   async function onAdd() {
+    setAttemptingTxn(true)
     const router = getRouterContract(chainId, library, account)
 
     const minTokenInput = calculateSlippageAmount(parsedAmounts[Field.INPUT])[0]
@@ -428,26 +433,112 @@ export default function AddLiquidity({ token0, token1 }) {
       })
       .catch((e: Error) => {
         console.log(e)
+        addPopup(
+          <AutoColumn gap="10px">
+            <Text>Transaction Failed: try again.</Text>
+          </AutoColumn>
+        )
+        setPendingConfirmation(true)
+        setAttemptingTxn(false)
         setShowConfirm(false)
       })
   }
+
+  const modalHeader = () => {
+    return (
+      <AutoColumn gap="20px">
+        <RowFlat style={{ marginTop: '60px' }}>
+          <Text fontSize="48px" fontWeight={500} lineHeight="32px" marginRight={10}>
+            {liquidityMinted?.toFixed(6)}
+          </Text>
+          <DoubleLogo a0={tokens[Field.INPUT]?.symbol || ''} a1={tokens[Field.OUTPUT]?.symbol || ''} size={30} />
+        </RowFlat>
+        <Row>
+          <Text fontSize="24px">
+            {tokens[Field.INPUT]?.symbol + ':' + tokens[Field.OUTPUT]?.symbol + ' Pool Tokens'}
+          </Text>
+        </Row>
+      </AutoColumn>
+    )
+  }
+
+  const modalBottom = () => {
+    return (
+      <>
+        <RowBetween>
+          <Text color="#565A69" fontWeight={500} fontSize={16}>
+            {tokens[Field.INPUT]?.symbol} Deposited
+          </Text>
+          <RowFixed>
+            <TokenLogo address={tokens[Field.INPUT]?.address || ''} style={{ marginRight: '8px' }} />
+            <Text fontWeight={500} fontSize={16}>
+              {!!parsedAmounts[Field.INPUT] && parsedAmounts[Field.INPUT].toSignificant(6)}
+            </Text>
+          </RowFixed>
+        </RowBetween>
+        <RowBetween>
+          <Text color="#565A69" fontWeight={500} fontSize={16}>
+            {tokens[Field.OUTPUT]?.symbol} Deposited
+          </Text>
+          <RowFixed>
+            <TokenLogo address={tokens[Field.OUTPUT]?.address || ''} style={{ marginRight: '8px' }} />
+            <Text fontWeight={500} fontSize={16}>
+              {!!parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.OUTPUT].toSignificant(6)}
+            </Text>
+          </RowFixed>
+        </RowBetween>
+        <RowBetween>
+          <Text color="#565A69" fontWeight={500} fontSize={16}>
+            Rate
+          </Text>
+          <Text fontWeight={500} fontSize={16}>
+            {`1 ${tokens[Field.INPUT]?.symbol} = ${route?.midPrice &&
+              route?.midPrice?.raw?.denominator &&
+              route.midPrice.adjusted.toFixed(8)} ${tokens[Field.OUTPUT]?.symbol}`}
+          </Text>
+        </RowBetween>
+        <RowBetween>
+          <Text color="#565A69" fontWeight={500} fontSize={16}>
+            Minted Pool Share:
+          </Text>
+          <Text fontWeight={500} fontSize={16}>
+            {poolTokenPercentage?.toFixed(6) + '%'}
+          </Text>
+        </RowBetween>
+        <ButtonPrimary style={{ margin: '20px 0' }} onClick={onAdd}>
+          <Text fontWeight={500} fontSize={20}>
+            Confirm Supply
+          </Text>
+        </ButtonPrimary>
+        <Text fontSize={12} color="#565A69" textAlign="center">
+          {`Output is estimated. You will receive at least ${liquidityMinted?.toFixed(6)} UNI ${
+            tokens[Field.INPUT]?.symbol
+          }/${tokens[Field.OUTPUT]?.symbol} or the transaction will revert.`}
+        </Text>
+      </>
+    )
+  }
+
+  const pendingText = `Supplied ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${
+    tokens[Field.INPUT]?.symbol
+  } ${'and'} ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}`
 
   return (
     <Wrapper>
       <ConfirmationModal
         isOpen={showConfirm}
         onDismiss={() => {
+          setPendingConfirmation(true)
+          setAttemptingTxn(false)
           setShowConfirm(false)
         }}
-        liquidityAmount={liquidityMinted}
-        amount0={parsedAmounts[Field.INPUT]}
-        amount1={parsedAmounts[Field.OUTPUT]}
-        poolTokenPercentage={poolTokenPercentage}
-        price={route?.midPrice && route?.midPrice?.raw?.denominator}
-        transactionType={TRANSACTION_TYPE.ADD}
-        contractCall={onAdd}
+        attemptingTxn={attemptingTxn}
         pendingConfirmation={pendingConfirmation}
         hash={txHash ? txHash : ''}
+        topContent={() => modalHeader()}
+        bottomContent={modalBottom}
+        pendingText={pendingText}
+        title="You will receive"
       />
       <SearchModal
         isOpen={showSearch}
@@ -456,22 +547,6 @@ export default function AddLiquidity({ token0, token1 }) {
         }}
       />
       <AutoColumn gap="20px">
-        <ButtonEmpty
-          padding={'1rem'}
-          onClick={() => {
-            setShowSearch(true)
-          }}
-        >
-          <RowBetween>
-            <DoubleLogo a0={exchange?.token0?.address || ''} a1={exchange?.token1?.address || ''} size={24} />
-            <Text fontSize={20}>
-              {exchange?.token0 && exchange?.token1
-                ? exchange.token0.symbol + ' / ' + exchange.token1.symbol + ' Pool'
-                : ''}
-            </Text>
-            <ChevronDown size={24} />
-          </RowBetween>
-        </ButtonEmpty>
         {noLiquidity && (
           <ColumnCenter>
             <Text fontWeight={500} style={{ textAlign: 'center' }}>

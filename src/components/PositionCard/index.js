@@ -62,11 +62,6 @@ function PositionCard({ exchangeAddress, token0, token1, history, minimal = fals
     <DynamicCard {...rest}>
       <AutoColumn gap="20px">
         <FixedHeightRow>
-          <Text fontWeight={500} fontSize={16}>
-            Current Position
-          </Text>
-        </FixedHeightRow>
-        <FixedHeightRow>
           <RowFixed>
             <DoubleLogo a0={token0?.address || ''} a1={token1?.address || ''} margin={true} size={24} />
             <Text fontWeight={500} fontSize={20}>
