@@ -4,6 +4,7 @@ const Row = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
+  align-items: ${({ align }) => align && align};
 `
 
 export const RowBetween = styled(Row)`

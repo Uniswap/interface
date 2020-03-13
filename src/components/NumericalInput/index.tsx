@@ -11,6 +11,8 @@ const StyledInput = styled.input`
   flex: 1 1 auto;
   width: 0;
   background-color: ${({ theme }) => theme.inputBackground};
+  font-size: ${({ fontSize }) => fontSize && fontSize};
+  text-align: ${({ align }) => align && align};
 
   [type='number'] {
     -moz-appearance: textfield;
@@ -32,10 +34,10 @@ function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
 
-export const Input = React.memo(({ field, value, onUserInput, ...rest }: any) => {
+export const Input = React.memo(({ value, onUserInput, placeHolder = null, ...rest }: any) => {
   function enforcer(nextUserInput: string) {
     if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
-      onUserInput(field, nextUserInput)
+      onUserInput(nextUserInput)
     }
   }
 
@@ -53,7 +55,7 @@ export const Input = React.memo(({ field, value, onUserInput, ...rest }: any) =>
       autoCorrect="off"
       // text-specific options
       type="text"
-      placeholder="0.0"
+      placeholder={placeHolder || '0.0'}
       minLength={1}
       maxLength={79}
       spellCheck="false"

@@ -45,6 +45,7 @@ export const Link = styled.a.attrs({
   text-decoration: none;
   cursor: pointer;
   color: ${({ theme }) => theme.royalBlue};
+  font-weight: 500;
 
   :focus {
     outline: none;

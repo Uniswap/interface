@@ -3,21 +3,21 @@ import styled from 'styled-components'
 import { JSBI } from '@uniswap/sdk'
 import { withRouter } from 'react-router-dom'
 
-import { useWeb3React } from '@web3-react/core'
-import { useAllTokens } from '../../contexts/Tokens'
-import { useAllExchanges } from '../../contexts/Exchanges'
-import { useAllBalances, useAccountLPBalances } from '../../contexts/Balances'
-
+import Card from '../../components/Card'
 import Question from '../../components/Question'
 import SearchModal from '../../components/SearchModal'
 import PositionCard from '../../components/PositionCard'
 import Row, { RowBetween } from '../../components/Row'
-import Card, { LightCard } from '../../components/Card'
 import { Link } from '../../theme'
 import { Text } from 'rebass'
 import { AutoColumn } from '../../components/Column'
 import { ArrowRight } from 'react-feather'
 import { ButtonPrimary } from '../../components/Button'
+
+import { useWeb3React } from '@web3-react/core'
+import { useAllTokens } from '../../contexts/Tokens'
+import { useAllExchanges } from '../../contexts/Exchanges'
+import { useAllBalances, useAccountLPBalances } from '../../contexts/Balances'
 
 const Positions = styled.div`
   position: relative;
@@ -71,19 +71,16 @@ function Supply({ history }) {
       </ButtonPrimary>
       <Positions>
         <AutoColumn gap="20px">
-          <RowBetween>
-            <Text fontWeight={500}>Your Pooled Liquidity</Text>
-            <Question text="filler text" />
-          </RowBetween>
-          {filteredExchangeList}
-          {filteredExchangeList?.length === 0 && (
-            <LightCard bg="rgba(255, 255, 255, 0.6)" padding={'45px'}>
-              <Text color="#C3C5CB">Add liquidity to see your positions</Text>
-            </LightCard>
+          {filteredExchangeList?.length !== 0 && (
+            <RowBetween>
+              <Text fontWeight={500}>Your Pooled Liquidity</Text>
+              <Question text="filler text" />
+            </RowBetween>
           )}
+          {filteredExchangeList}
           <AutoColumn justify="center">
             <Text color="#AEAEAE">
-              Already have liquidity?{' '}
+              {filteredExchangeList?.length !== 0 ? `Don't see your ` : 'Already have '} liquidity?{' '}
               <Link
                 onClick={() => {
                   history.push('/find')

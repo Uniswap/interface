@@ -251,7 +251,12 @@ export default function CurrencyInputPanel({
           </LabelRow>
         )}
         <InputRow>
-          <NumericalInput field={field} value={value} onUserInput={onUserInput} />
+          <NumericalInput
+            value={value}
+            onUserInput={val => {
+              onUserInput(field, val)
+            }}
+          />
           {!!token?.address && !atMax && <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>}
           {renderUnlockButton()}
           <CurrencySelect

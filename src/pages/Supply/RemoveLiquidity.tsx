@@ -6,15 +6,17 @@ import { TokenAmount, JSBI, Route, WETH, Percent } from '@uniswap/sdk'
 
 import Slider from '../../components/Slider'
 import TokenLogo from '../../components/TokenLogo'
+import DoubleLogo from '../../components/DoubleLogo'
 import PositionCard from '../../components/PositionCard'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
 import { ButtonPrimary } from '../../components/Button'
+import { ButtonConfirmed } from '../../components/Button'
 import { ArrowDown, Plus } from 'react-feather'
-import { RowBetween, RowFixed } from '../../components/Row'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
+import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import { useToken } from '../../contexts/Tokens'
 import { useWeb3React } from '../../hooks'
@@ -25,7 +27,6 @@ import { useExchange, useTotalSupply } from '../../contexts/Exchanges'
 
 import { BigNumber } from 'ethers/utils'
 import { splitSignature } from '@ethersproject/bytes'
-import { TRANSACTION_TYPE } from '../../constants'
 import { ROUTER_ADDRESSES } from '../../constants'
 import { getRouterContract, calculateGasMargin } from '../../utils'
 
@@ -137,6 +138,10 @@ function reducer(
     }
   }
 }
+
+const ConfirmedText = styled(Text)`
+  color: ${({ theme, confirmed }) => (confirmed ? theme.connectedGreen : theme.white)};
+`
 
 export default function RemoveLiquidity({ token0, token1 }) {
   const { account, chainId, library } = useWeb3React()
@@ -302,19 +307,19 @@ export default function RemoveLiquidity({ token0, token1 }) {
       : false
 
   // errors
-  const [generalError, setGeneralError] = useState()
-  const [inputError, setInputError] = useState()
-  const [outputError, setOutputError] = useState()
-  const [poolTokenError, setPoolTokenError] = useState()
+  const [generalError, setGeneralError] = useState('')
+  const [inputError, setInputError] = useState('')
+  const [outputError, setOutputError] = useState('')
+  const [poolTokenError, setPoolTokenError] = useState('')
   const [isValid, setIsValid] = useState(false)
 
   // update errors live
   useEffect(() => {
     // reset errors
-    setGeneralError(null)
-    setInputError(null)
-    setOutputError(null)
-    setPoolTokenError(null)
+    setGeneralError('')
+    setInputError('')
+    setOutputError('')
+    setPoolTokenError('')
     setIsValid(true)
 
     if (formattedAmounts[Field.TOKEN0] === '') {
@@ -480,28 +485,103 @@ export default function RemoveLiquidity({ token0, token1 }) {
     setPendingConfirmation(true)
   }
 
+  function modalHeader() {
+    return (
+      <AutoColumn gap="16px">
+        <Row style={{ marginTop: '40px' }}>
+          <TokenLogo address={tokens[Field.TOKEN0]?.symbol} size={'30px'} />
+          <Text fontSize="24px" marginLeft={10}>
+            {tokens[Field.TOKEN0]?.symbol}{' '}
+            {!!parsedAmounts[Field.TOKEN0] && parsedAmounts[Field.TOKEN0].toSignificant(8)}
+          </Text>
+        </Row>
+        <Row>
+          <TokenLogo address={tokens[Field.TOKEN1]?.symbol} size={'30px'} />
+          <Text fontSize="24px" marginLeft={10}>
+            {tokens[Field.TOKEN1]?.symbol}{' '}
+            {!!parsedAmounts[Field.TOKEN1] && parsedAmounts[Field.TOKEN1].toSignificant(8)}
+          </Text>
+        </Row>
+      </AutoColumn>
+    )
+  }
+
+  function modalBottom() {
+    return (
+      <>
+        <RowBetween>
+          <Text color="#565A69" fontWeight={500} fontSize={16}>
+            {'UNI ' + tokens[Field.TOKEN0]?.symbol + ':' + tokens[Field.TOKEN1]?.symbol} Burned
+          </Text>
+          <RowFixed>
+            <DoubleLogo
+              a0={tokens[Field.TOKEN0]?.address || ''}
+              a1={tokens[Field.TOKEN1]?.address || ''}
+              margin={true}
+            />
+            <Text fontWeight={500} fontSize={16}>
+              {parsedAmounts[Field.LIQUIDITY]?.toSignificant(6)}
+            </Text>
+          </RowFixed>
+        </RowBetween>
+        <RowBetween>
+          <Text color="#565A69" fontWeight={500} fontSize={16}>
+            Rate
+          </Text>
+          <Text fontWeight={500} fontSize={16}>
+            {`1 ${tokens[Field.TOKEN0]?.symbol} = ${route?.midPrice && route.midPrice.adjusted.toFixed(8)} ${
+              tokens[Field.TOKEN1]?.symbol
+            }`}
+          </Text>
+        </RowBetween>
+        <RowBetween gap="20px">
+          <ButtonConfirmed
+            style={{ margin: '20px 0' }}
+            width="48%"
+            onClick={onSign}
+            confirmed={signed}
+            disabled={signed}
+          >
+            <ConfirmedText fontWeight={500} fontSize={20} confirmed={signed}>
+              {signed ? 'Signed' : 'Sign'}
+            </ConfirmedText>
+          </ButtonConfirmed>
+          <ButtonPrimary width="48%" disabled={!signed} style={{ margin: '20px 0' }} onClick={onRemove}>
+            <Text fontWeight={500} fontSize={20}>
+              Confirm Remove
+            </Text>
+          </ButtonPrimary>
+        </RowBetween>
+        <Text fontSize={12} color="#565A69" textAlign="center">
+          {`Output is estimated. You will receive at least ${parsedAmounts[Field.TOKEN0]?.toFixed(6)} ${
+            tokens[Field.TOKEN0]?.symbol
+          } and at least ${parsedAmounts[Field.TOKEN1]?.toFixed(6)} ${
+            tokens[Field.TOKEN1]?.symbol
+          } or the transaction will revert.`}
+        </Text>
+      </>
+    )
+  }
+  const pendingText = `Removed ${parsedAmounts[Field.TOKEN0]?.toSignificant(6)} ${
+    tokens[Field.TOKEN0]?.symbol
+  } and ${parsedAmounts[Field.TOKEN1]?.toSignificant(6)} ${tokens[Field.TOKEN1]?.symbol}`
+
   return (
     <Wrapper>
-      {!!parsedAmounts[Field.TOKEN0] && !!parsedAmounts[Field.TOKEN1] && !!parsedAmounts[Field.LIQUIDITY] && (
-        <ConfirmationModal
-          isOpen={showConfirm}
-          onDismiss={() => {
-            resetModalState()
-            setShowConfirm(false)
-          }}
-          amount0={parsedAmounts[Field.TOKEN0]}
-          amount1={parsedAmounts[Field.TOKEN1]}
-          price={route?.midPrice}
-          liquidityAmount={parsedAmounts[Field.LIQUIDITY]}
-          transactionType={TRANSACTION_TYPE.REMOVE}
-          contractCall={onRemove}
-          extraCall={onSign}
-          signed={signed}
-          attemptedRemoval={attemptedRemoval}
-          pendingConfirmation={pendingConfirmation}
-          hash={txHash ? txHash : ''}
-        />
-      )}
+      <ConfirmationModal
+        isOpen={showConfirm}
+        onDismiss={() => {
+          resetModalState()
+          setShowConfirm(false)
+        }}
+        attemptingTxn={attemptedRemoval}
+        pendingConfirmation={pendingConfirmation}
+        hash={txHash ? txHash : ''}
+        topContent={modalHeader}
+        bottomContent={modalBottom}
+        pendingText={pendingText}
+        title="You will remove"
+      />
       <AutoColumn gap="20px">
         <LightCard>
           <AutoColumn gap="20px">

@@ -13,6 +13,7 @@ const Base = styled(RebassButton)`
   font-weight: 500;
   text-align: center;
   border-radius: 20px;
+  border-radius: ${({ borderRadius }) => borderRadius && borderRadius};
   outline: none;
   border: 1px solid transparent;
   color: white;
@@ -40,8 +41,6 @@ export const ButtonPrimary = styled(Base)`
     background-color: ${({ theme }) => theme.outlineGrey};
     color: ${({ theme }) => theme.darkGrey}
     cursor: auto;
-    outline: none;
-    border: none;
     box-shadow: none;
   }
 `
@@ -100,9 +99,38 @@ const ButtonConfirmedStyle = styled(Base)`
   }
 `
 
+const ButtonErrorStyle = styled(Base)`
+  background-color: ${({ theme }) => theme.salmonRed};
+  border: 1px solid ${({ theme }) => theme.salmonRed};
+
+  &:focus {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.salmonRed)};
+    background-color: ${({ theme }) => darken(0.05, theme.salmonRed)};
+  }
+  &:hover {
+    background-color: ${({ theme }) => darken(0.05, theme.salmonRed)};
+  }
+  &:active {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.salmonRed)};
+    background-color: ${({ theme }) => darken(0.1, theme.salmonRed)};
+  }
+  &:disabled {
+    opacity: 50%;
+    cursor: auto;
+  }
+`
+
 export function ButtonConfirmed({ children, confirmed, ...rest }) {
   if (confirmed) {
     return <ButtonConfirmedStyle {...rest}>{children}</ButtonConfirmedStyle>
+  } else {
+    return <ButtonPrimary {...rest}>{children}</ButtonPrimary>
+  }
+}
+
+export function ButtonError({ children, error, ...rest }) {
+  if (error) {
+    return <ButtonErrorStyle {...rest}>{children}</ButtonErrorStyle>
   } else {
     return <ButtonPrimary {...rest}>{children}</ButtonPrimary>
   }
@@ -128,4 +156,12 @@ export function ButtonDropwdownLight({ disabled, children, ...rest }) {
       </RowBetween>
     </ButtonEmpty>
   )
+}
+
+export function ButtonRadio({ active, children, ...rest }) {
+  if (!active) {
+    return <ButtonEmpty {...rest}>{children}</ButtonEmpty>
+  } else {
+    return <ButtonPrimary {...rest}>{children}</ButtonPrimary>
+  }
 }

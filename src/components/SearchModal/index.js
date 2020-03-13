@@ -411,16 +411,18 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, urlAddedTokens
           />
           <RowBetween>
             <div>
-              <Text>
-                Don't see a pool?{' '}
-                <StyledLink
-                  onClick={() => {
-                    history.push('/find')
-                  }}
-                >
-                  Import it.
-                </StyledLink>
-              </Text>
+              {filterType !== 'tokens' && (
+                <Text>
+                  Don't see a pool?{' '}
+                  <StyledLink
+                    onClick={() => {
+                      history.push('/find')
+                    }}
+                  >
+                    Import it.
+                  </StyledLink>
+                </Text>
+              )}
             </div>
             <div />
             <Filter title="Your Balances" filter={FILTERS.BALANCES} />
