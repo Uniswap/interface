@@ -5,11 +5,11 @@ const StyledInput = styled.input`
   color: ${({ error, theme }) => error && theme.salmonRed};
   background-color: ${({ theme }) => theme.inputBackground};
   color: ${({ theme }) => theme.textColor};
+  width: 0;
   font-size: 20px;
   outline: none;
   border: none;
   flex: 1 1 auto;
-  width: 0;
   background-color: ${({ theme }) => theme.inputBackground};
   font-size: ${({ fontSize }) => fontSize && fontSize};
   text-align: ${({ align }) => align && align};

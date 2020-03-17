@@ -128,6 +128,21 @@ export const TYPE = {
     <Text fontWeight={500} color={theme().royalBlue} {...rest}>
       {children}
     </Text>
+  ),
+  gray: ({ children, ...rest }) => (
+    <Text fontWeight={500} color={theme().outlineGrey} {...rest}>
+      {children}
+    </Text>
+  ),
+  italic: ({ children, ...rest }) => (
+    <Text fontWeight={500} fontSize={12} fontStyle={'italic'} color={theme().mineshaftGray} {...rest}>
+      {children}
+    </Text>
+  ),
+  error: ({ children, error, ...rest }) => (
+    <Text fontWeight={500} color={error ? theme().salmonRed : theme().mineshaftGray} {...rest}>
+      {children}
+    </Text>
   )
 }
 

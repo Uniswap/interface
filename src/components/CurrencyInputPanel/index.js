@@ -48,10 +48,9 @@ const InputRow = styled.div`
 const CurrencySelect = styled.button`
   align-items: center;
   height: 2.2rem;
-
   font-size: 20px;
-  background-color: ${({ selected, theme }) => (selected ? theme.buttonBackgroundPlain : theme.zumthorBlue)};
-  color: ${({ selected, theme }) => (selected ? theme.textColor : theme.royalBlue)};
+  background-color: ${({ selected, theme }) => (selected ? theme.buttonBackgroundPlain : theme.royalBlue)};
+  color: ${({ selected, theme }) => (selected ? theme.textColor : theme.white)};
   border: 1px solid
     ${({ selected, theme, disableTokenSelect }) =>
       disableTokenSelect ? theme.buttonBackgroundPlain : selected ? theme.buttonOutlinePlain : theme.royalBlue};
@@ -70,7 +69,8 @@ const CurrencySelect = styled.button`
   }
 
   :active {
-    background-color: ${({ theme }) => theme.zumthorBlue};
+    background-color: ${({ selected, theme }) =>
+      selected ? darken(0.1, theme.zumthorBlue) : darken(0.1, theme.royalBlue)};
   }
 `
 
@@ -85,20 +85,20 @@ const StyledDropDown = styled(DropDown)`
   height: 35%;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.textColor : theme.royalBlue)};
+    stroke: ${({ selected, theme }) => (selected ? theme.textColor : theme.white)};
   }
 `
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
-  border-radius: 1.25rem;
+  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
   background-color: ${({ theme }) => theme.inputBackground};
   z-index: 1;
 `
 
 const Container = styled.div`
-  border-radius: 1.25rem;
+  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
   border: 1px solid ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
 
   background-color: ${({ theme }) => theme.inputBackground};
@@ -174,7 +174,10 @@ export default function CurrencyInputPanel({
   hideBalance = false,
   isExchange = false,
   exchange = null, // used for double token logo
-  customBalance = null // used for LP balances instead of token balance
+  customBalance = null, // used for LP balances instead of token balance
+  hideInput = false,
+  showSendWithSwap = false,
+  onTokenSelectSendWithSwap = null
 }) {
   const { account, chainId } = useWeb3React()
   const { t } = useTranslation()
@@ -236,7 +239,7 @@ export default function CurrencyInputPanel({
 
   return (
     <InputPanel>
-      <Container error={!!error}>
+      <Container error={!!error} hideInput={hideInput}>
         {!hideBalance && (
           <LabelRow>
             <RowBetween>
@@ -250,15 +253,19 @@ export default function CurrencyInputPanel({
             </RowBetween>
           </LabelRow>
         )}
-        <InputRow>
-          <NumericalInput
-            value={value}
-            onUserInput={val => {
-              onUserInput(field, val)
-            }}
-          />
-          {!!token?.address && !atMax && <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>}
-          {renderUnlockButton()}
+        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} hideInput={hideInput}>
+          {!hideInput && (
+            <>
+              <NumericalInput
+                value={value}
+                onUserInput={val => {
+                  onUserInput(field, val)
+                }}
+              />
+              {!!token?.address && !atMax && <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>}
+              {renderUnlockButton()}
+            </>
+          )}
           <CurrencySelect
             selected={!!token?.address}
             onClick={() => {
@@ -296,6 +303,8 @@ export default function CurrencyInputPanel({
           urlAddedTokens={urlAddedTokens}
           field={field}
           onTokenSelect={onTokenSelection}
+          showSendWithSwap={showSendWithSwap}
+          onTokenSelectSendWithSwap={onTokenSelectSendWithSwap}
         />
       )}
     </InputPanel>

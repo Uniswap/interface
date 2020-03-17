@@ -41,7 +41,7 @@ const Wrapper = styled.div`
 
 const FixedBottom = styled.div`
   position: absolute;
-  bottom: -240px;
+  bottom: -200px;
   width: 100%;
 `
 
