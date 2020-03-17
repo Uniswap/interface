@@ -1,28 +1,32 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
-import { Link } from 'react-router-dom'
-import { Link as StyledLink } from '../../theme/components'
-import { useTranslation } from 'react-i18next'
-import { ethers } from 'ethers'
+import '@reach/tooltip/styles.css'
 import styled from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
-import '@reach/tooltip/styles.css'
+import { Link } from 'react-router-dom'
+import { ethers } from 'ethers'
 import { isMobile } from 'react-device-detect'
+import { withRouter } from 'react-router-dom'
+import { JSBI } from '@uniswap/sdk'
 
-import { Text } from 'rebass'
-import Column, { AutoColumn } from '../Column'
-import { RowBetween, RowFixed } from '../Row'
-import TokenLogo from '../TokenLogo'
-import { CloseIcon } from '../../theme/components'
-import DoubleTokenLogo from '../DoubleLogo'
-import { useWeb3React } from '../../hooks'
-import { isAddress } from '../../utils'
+import { Link as StyledLink } from '../../theme/components'
+
 import Modal from '../Modal'
-import { useToken, useAllTokens, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
-import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle.svg'
+import TokenLogo from '../TokenLogo'
+import DoubleTokenLogo from '../DoubleLogo'
+import Column, { AutoColumn } from '../Column'
+import { Text } from 'rebass'
+import { Spinner } from '../../theme'
+import { CloseIcon } from '../../theme/components'
+import { ColumnCenter } from '../../components/Column'
+import { RowBetween, RowFixed } from '../Row'
+
+import { isAddress } from '../../utils'
+import { useWeb3React } from '../../hooks'
 import { useAllBalances } from '../../contexts/Balances'
+import { useTranslation } from 'react-i18next'
 import { useAllExchanges } from '../../contexts/Exchanges'
+import { useToken, useAllTokens, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
 
 const TokenModalInfo = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -108,7 +112,17 @@ const MenuItem = styled(PaddedItem)`
     background-color: ${({ theme }) => theme.tokenRowHover};
   }
 `
-function SearchModal({ history, isOpen, onDismiss, onTokenSelect, urlAddedTokens, filterType, hiddenToken }) {
+function SearchModal({
+  history,
+  isOpen,
+  onDismiss,
+  onTokenSelect,
+  urlAddedTokens,
+  filterType,
+  hiddenToken,
+  showSendWithSwap,
+  onTokenSelectSendWithSwap
+}) {
   const { t } = useTranslation()
 
   const { account, chainId } = useWeb3React()
@@ -171,6 +185,7 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, urlAddedTokens
         let balance
         // only update if we have data
         balance = allBalances?.[account]?.[k]
+
         return {
           name: allTokens[k].name,
           symbol: allTokens[k].symbol,
@@ -203,10 +218,16 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, urlAddedTokens
     })
   }, [tokenList, searchQuery])
 
-  function _onTokenSelect(address) {
-    setSearchQuery('')
-    onTokenSelect(address)
-    onDismiss()
+  function _onTokenSelect(address, sendWithSwap = false) {
+    if (sendWithSwap) {
+      setSearchQuery('')
+      onTokenSelectSendWithSwap(address)
+      onDismiss()
+    } else {
+      setSearchQuery('')
+      onTokenSelect(address)
+      onDismiss()
+    }
   }
 
   // manage focus on modal show
@@ -340,8 +361,11 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, urlAddedTokens
         INITIAL_TOKENS_CONTEXT[chainId] &&
         !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(address) &&
         !urlAdded
+
+      const zeroBalance = JSBI.equal(JSBI.BigInt(0), balance.raw)
+
       return (
-        <MenuItem key={address} onClick={() => _onTokenSelect(address)}>
+        <MenuItem key={address} onClick={() => (zeroBalance ? _onTokenSelect(address, true) : _onTokenSelect(address))}>
           <RowFixed>
             <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }} />
             <Column>
@@ -353,7 +377,22 @@ function SearchModal({ history, isOpen, onDismiss, onTokenSelect, urlAddedTokens
           </RowFixed>
           <AutoColumn gap="4px" justify="end">
             {balance ? (
-              <Text>{balance ? balance.toSignificant(6) : '-'}</Text>
+              <Text>
+                {zeroBalance && showSendWithSwap ? (
+                  <ColumnCenter
+                    justify="center"
+                    style={{ backgroundColor: '#EBF4FF', padding: '8px', borderRadius: '12px' }}
+                  >
+                    <Text textAlign="center" fontWeight={500} color="#2172E5">
+                      Send With Swap
+                    </Text>
+                  </ColumnCenter>
+                ) : balance ? (
+                  balance.toSignificant(6)
+                ) : (
+                  '-'
+                )}
+              </Text>
             ) : account ? (
               <SpinnerWrapper src={Circle} alt="loader" />
             ) : (

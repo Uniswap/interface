@@ -52,7 +52,7 @@ export default function TokenLogo({ address, size = '24px', ...rest }) {
   if (address === 'ETH') {
     return <StyledEthereumLogo size={size} {...rest} />
   } else if (!error && !BAD_IMAGES[address]) {
-    path = TOKEN_ICON_API(address.toLowerCase())
+    path = TOKEN_ICON_API(address?.toLowerCase())
   } else {
     return (
       <Emoji {...rest} size={size}>

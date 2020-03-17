@@ -71,7 +71,7 @@ export default function InputSlider({ value, onChange }) {
       value={typeof value === 'number' ? value : 0}
       onChange={onChange}
       aria-labelledby="input-slider"
-      marks={marks}
+      // marks={marks}
     />
   )
 }

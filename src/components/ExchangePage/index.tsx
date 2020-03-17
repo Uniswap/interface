@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 import { parseUnits, parseEther } from '@ethersproject/units'
 import { WETH, TradeType, Route, Trade, TokenAmount, JSBI } from '@uniswap/sdk'
 
+import QR from '../../assets/svg/QR.svg'
 import TokenLogo from '../TokenLogo'
 import QuestionHelper from '../Question'
 import NumericalInput from '../NumericalInput'
@@ -11,23 +12,23 @@ import ConfirmationModal from '../ConfirmationModal'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import { Link } from '../../theme/components'
 import { Text } from 'rebass'
-import ThemeProvider, { TYPE } from '../../theme'
-import { GreyCard } from '../../components/Card'
+import { TYPE } from '../../theme'
+import { GreyCard, LightCard } from '../../components/Card'
 import { ArrowDown, ArrowUp } from 'react-feather'
+import { ButtonPrimary, ButtonError, ButtonRadio } from '../Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import { ButtonError, ButtonRadio } from '../Button'
 import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import { usePopups } from '../../contexts/Application'
 import { useToken } from '../../contexts/Tokens'
 import { useExchange } from '../../contexts/Exchanges'
-import { useWeb3React } from '../../hooks'
+import { useWeb3React, useTokenContract } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressAllowance } from '../../contexts/Allowances'
 
 import { ROUTER_ADDRESSES } from '../../constants'
-import { getRouterContract, calculateGasMargin } from '../../utils'
+import { getRouterContract, calculateGasMargin, isAddress, getProviderOrSigner } from '../../utils'
 
 const Wrapper = styled.div`
   position: relative;
@@ -64,7 +65,66 @@ const InputWrapper = styled(RowBetween)`
   border-radius: 8px;
   padding: 4px 8px;
   border: 1px solid transparent;
-  border: ${({ active, theme }) => active && '1px solid ' + theme.royalBlue};
+  border: ${({ active, error, theme }) =>
+    error ? '1px solid ' + theme.salmonRed : active ? '1px solid ' + theme.royalBlue : ''};
+`
+
+const InputGroup = styled(AutoColumn)`
+  position: relative;
+  padding: 40px 0;
+`
+
+const QRWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid ${({ theme }) => theme.outlineGrey};
+  background: #fbfbfb;
+  padding: 4px;
+  border-radius: 8px;
+`
+
+const StyledInput = styled.input`
+  width: ${({ width }) => width};
+  border: none;
+  outline: none;
+  font-size: 20px;
+
+  ::placeholder {
+    color: #edeef2;
+  }
+`
+
+const StyledNumerical = styled(NumericalInput)`
+  text-align: center;
+  font-size: 48px;
+  font-weight: 500px;
+  width: 100%;
+
+  ::placeholder {
+    color: #edeef2;
+  }
+`
+
+const MaxButton = styled.button`
+  position: absolute;
+  right: 70px;
+  padding: 0.5rem 1rem;
+  background-color: ${({ theme }) => theme.zumthorBlue};
+  border: 1px solid ${({ theme }) => theme.zumthorBlue};
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  color: ${({ theme }) => theme.royalBlue};
+  :hover {
+    border: 1px solid ${({ theme }) => theme.royalBlue};
+  }
+  :focus {
+    border: 1px solid ${({ theme }) => theme.royalBlue};
+    outline: none;
+  }
 `
 
 enum Field {
@@ -91,7 +151,7 @@ function initializeSwapState(inputAddress?: string, outputAddress?: string): Swa
       address: inputAddress
     },
     [Field.OUTPUT]: {
-      address: '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735'
+      address: outputAddress
     }
   }
 }
@@ -192,22 +252,28 @@ const INITIAL_ALLOWED_SLIPPAGE = 200
 const DEFAULT_DEADLINE_FROM_NOW = 60 * 15
 
 // used for warning states based on slippage in bips
-const ALLOWED_IMPACT_MEDIUM = 100
-const ALLOWED_IMPACT_HIGH = 500
+const ALLOWED_SLIPPAGE_MEDIUM = 100
+const ALLOWED_SLIPPAGE_HIGH = 500
 
-export default function ExchangePage() {
+export default function ExchangePage({ sendingInput = false }) {
   const { chainId, account, library } = useWeb3React()
   const routerAddress = ROUTER_ADDRESSES[chainId]
 
   // adding notifications on txns
   const [, addPopup] = usePopups()
+  const addTransaction = useTransactionAdder()
+
+  // sending state
+  const [sending, setSending] = useState(sendingInput)
+  const [sendingWithSwap, setSendingWithSwap] = useState(false)
+  const [recipient, setRecipient] = useState('')
 
   // input details
   const [state, dispatch] = useReducer(reducer, WETH[chainId].address, initializeSwapState)
   const { independentField, typedValue, ...fieldData } = state
   const dependentField = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
   const tradeType = independentField === Field.INPUT ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT
-  const [tradeError, setTradeError] = useState('') // error for thinsg liek reserve sizes
+  const [tradeError, setTradeError] = useState('') // error for things like reserve size or route
 
   const tokens = {
     [Field.INPUT]: useToken(fieldData[Field.INPUT].address),
@@ -217,11 +283,17 @@ export default function ExchangePage() {
   const exchange = useExchange(tokens[Field.INPUT], tokens[Field.OUTPUT])
   const route = !!exchange ? new Route([exchange], tokens[Field.INPUT]) : undefined
 
-  // modal state
-  const addTransaction = useTransactionAdder()
-  const [showConfirm, setShowConfirm] = useState(true)
+  // modal and loading
+  const [showConfirm, setShowConfirm] = useState(false)
   const [pendingConfirmation, setPendingConfirmation] = useState(true) // waiting for user confirmation
   const [attemptingTxn, setAttemptingTxn] = useState(false) // clicked confirmed
+
+  // advanced settings
+  const [showAdvanced, setShowAdvanced] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(SLIPPAGE_INDEX[3])
+  const [customSlippage, setCustomSlippage] = useState()
+  const [customDeadline, setCustomDeadline] = useState(DEFAULT_DEADLINE_FROM_NOW / 60)
+  const [slippageInputError, setSlippageInputError] = useState(null)
 
   // txn values
   const [txHash, setTxHash] = useState()
@@ -240,10 +312,9 @@ export default function ExchangePage() {
 
   const parsedAmounts: { [field: number]: TokenAmount } = {}
   // try to parse typed value
-  // if (typedValue !== '' && typedValue !== '.' && tokens[independentField]) {
-  if (tokens[independentField]) {
+  if (typedValue !== '' && typedValue !== '.' && tokens[independentField]) {
     try {
-      const typedValueParsed = parseUnits('0.0001', tokens[independentField].decimals).toString()
+      const typedValueParsed = parseUnits(typedValue, tokens[independentField].decimals).toString()
       if (typedValueParsed !== '0')
         parsedAmounts[independentField] = new TokenAmount(tokens[independentField], typedValueParsed)
     } catch (error) {
@@ -313,7 +384,7 @@ export default function ExchangePage() {
     })
   }, [])
 
-  const MIN_ETHER = new TokenAmount(WETH[chainId], JSBI.BigInt(parseEther('.01')))
+  const MIN_ETHER = chainId && new TokenAmount(WETH[chainId], JSBI.BigInt(parseEther('.01')))
   const maxAmountInput =
     !!userBalances[Field.INPUT] &&
     JSBI.greaterThan(
@@ -388,16 +459,14 @@ export default function ExchangePage() {
     outputApproval &&
     JSBI.greaterThan(parsedAmounts[Field.OUTPUT].raw, outputApproval.raw)
 
-  // modal state
-  const [showAdvanced, setShowAdvanced] = useState(true)
-  const [activeIndex, setActiveIndex] = useState(SLIPPAGE_INDEX[3])
-  const [customSlippage, setCustomSlippage] = useState()
-  const [customDeadline, setCustomDeadline] = useState(DEFAULT_DEADLINE_FROM_NOW / 60)
-
-  const [slippageInputError, setSlippageInputError] = useState(null)
-
+  // parse the input for custom slippage
   function parseCustomInput(val) {
     const acceptableValues = [/^$/, /^\d{1,2}$/, /^\d{0,2}\.\d{0,2}$/]
+    if (val > 5) {
+      setSlippageInputError('Your transaction may be front-run.')
+    } else {
+      setSlippageInputError(null)
+    }
     if (acceptableValues.some(a => a.test(val))) {
       setCustomSlippage(val)
       setAllowedSlippage(val * 100)
@@ -409,6 +478,62 @@ export default function ExchangePage() {
     if (acceptableValues.some(re => re.test(val))) {
       setCustomDeadline(val)
       setDeadline(val * 60)
+    }
+  }
+
+  const tokenContract = useTokenContract(tokens[Field.INPUT]?.address)
+
+  // function for a pure send
+  async function onSend() {
+    setAttemptingTxn(true)
+
+    const signer = await getProviderOrSigner(library, account)
+    // get token contract if needed
+    let estimate: Function, method: Function, args, value
+    if (tokens[Field.INPUT] === WETH[chainId]) {
+      signer
+        .sendTransaction({ to: recipient.toString(), value: hex(parsedAmounts[Field.INPUT].raw) })
+        .then(response => {
+          console.log(response)
+          setTxHash(response.hash)
+          addTransaction(response)
+          setPendingConfirmation(false)
+        })
+        .catch(e => {
+          addPopup(
+            <AutoColumn gap="10px">
+              <Text>Transaction Failed: try again.</Text>
+            </AutoColumn>
+          )
+          resetModal()
+          setShowConfirm(false)
+        })
+    } else {
+      estimate = tokenContract.estimate.transfer
+      method = tokenContract.transfer
+      args = [recipient, parsedAmounts[Field.INPUT].raw.toString()]
+      value = ethers.constants.Zero
+      const estimatedGasLimit = await estimate(...args, { value }).catch(e => {
+        console.log('error getting gas limit')
+      })
+      method(...args, {
+        value,
+        gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
+      })
+        .then(response => {
+          setTxHash(response.hash)
+          addTransaction(response)
+          setPendingConfirmation(false)
+        })
+        .catch(e => {
+          addPopup(
+            <AutoColumn gap="10px">
+              <Text>Transaction Failed: try again.</Text>
+            </AutoColumn>
+          )
+          resetModal()
+          setShowConfirm(false)
+        })
     }
   }
 
@@ -497,7 +622,7 @@ export default function ExchangePage() {
       gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
     })
       .then(response => {
-        setTxHash(response)
+        setTxHash(response.hash)
         addTransaction(response)
         setPendingConfirmation(false)
       })
@@ -513,16 +638,37 @@ export default function ExchangePage() {
   }
 
   // errors
+  const [generalError, setGeneralError] = useState('')
   const [inputError, setInputError] = useState('')
   const [outputError, setOutputError] = useState('')
+  const [recipientError, setRecipientError] = useState('')
   const [isValid, setIsValid] = useState(false)
+
+  const ignoreOutput = sending ? !sendingWithSwap : false
 
   useEffect(() => {
     // reset errors
+    setGeneralError(null)
     setInputError(null)
     setOutputError(null)
     setTradeError(null)
+    setRecipientError(null)
     setIsValid(true)
+
+    if (!isAddress(recipient) && sending) {
+      setRecipientError('Invalid Recipient')
+      setIsValid(false)
+    }
+
+    if (!parsedAmounts[Field.INPUT]) {
+      setGeneralError('Enter an amount')
+      setIsValid(false)
+    }
+
+    if (!parsedAmounts[Field.OUTPUT] && !ignoreOutput) {
+      setGeneralError('Enter an amount')
+      setIsValid(false)
+    }
 
     if (
       parsedAmounts[Field.INPUT] &&
@@ -534,6 +680,7 @@ export default function ExchangePage() {
     }
 
     if (
+      !ignoreOutput &&
       parsedAmounts[Field.OUTPUT] &&
       exchange &&
       JSBI.greaterThan(parsedAmounts[Field.OUTPUT].raw, exchange.reserveOf(tokens[Field.OUTPUT]).raw)
@@ -542,12 +689,12 @@ export default function ExchangePage() {
       setIsValid(false)
     }
 
-    if (showInputUnlock) {
+    if (showInputUnlock && !(sending && !sendingWithSwap)) {
       setInputError('Approval Needed')
       setIsValid(false)
     }
 
-    if (showOutputUnlock) {
+    if (showOutputUnlock && !ignoreOutput) {
       setOutputError('Approval Needed')
       setIsValid(false)
     }
@@ -560,19 +707,22 @@ export default function ExchangePage() {
       setInputError('Insufficient balance.')
       setIsValid(false)
     }
+  }, [
+    exchange,
+    ignoreOutput,
+    parsedAmounts,
+    recipient,
+    sending,
+    sendingWithSwap,
+    showInputUnlock,
+    showOutputUnlock,
+    tokens,
+    userBalances
+  ])
 
-    if (
-      userBalances[Field.OUTPUT] &&
-      parsedAmounts[Field.OUTPUT] &&
-      JSBI.lessThan(userBalances[Field.OUTPUT].raw, parsedAmounts[Field.OUTPUT]?.raw)
-    ) {
-      setOutputError('Insufficient balance.')
-      setIsValid(false)
-    }
-  }, [exchange, parsedAmounts, showInputUnlock, showOutputUnlock, tokens, userBalances])
-
-  const warningMedium = slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_IMPACT_MEDIUM / 100
-  const warningHigh = slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_IMPACT_HIGH / 100
+  // warnings on slippage
+  const warningMedium = slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_MEDIUM / 100
+  const warningHigh = slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_HIGH / 100
 
   function resetModal() {
     setPendingConfirmation(true)
@@ -581,169 +731,221 @@ export default function ExchangePage() {
   }
 
   function modalHeader() {
-    return (
-      <AutoColumn gap={'20px'} style={{ marginTop: '40px' }}>
-        <RowBetween align="flex-end">
-          <Text fontSize={36} fontWeight={500}>
-            {!!slippageAdjustedAmounts[Field.INPUT] && slippageAdjustedAmounts[Field.INPUT].toSignificant(6)}
-          </Text>
-          <RowFixed gap="10px">
-            <TokenLogo address={tokens[Field.INPUT]?.address} size={'24px'} />
-            <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-              {tokens[Field.INPUT]?.symbol || ''}
+    if (sending && !sendingWithSwap) {
+      return (
+        <AutoColumn gap="30px" style={{ marginTop: '40px' }}>
+          <RowBetween>
+            <Text fontSize={36} fontWeight={500}>
+              {parsedAmounts[Field.INPUT]?.toFixed(8)}
             </Text>
-          </RowFixed>
-        </RowBetween>
-        <RowFixed>
-          <ArrowDown size="16" color="#888D9B" />
-        </RowFixed>
-        <RowBetween align="flex-end">
-          <Text fontSize={36} fontWeight={500} color={warningHigh ? '#FF6871' : '#2172E5'}>
-            {!!slippageAdjustedAmounts[Field.OUTPUT] && slippageAdjustedAmounts[Field.OUTPUT].toSignificant(6)}
-          </Text>
-          <RowFixed gap="10px">
-            <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'24px'} />
-            <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-              {tokens[Field.OUTPUT]?.symbol || ''}
+            <TokenLogo address={tokens[Field.INPUT]?.address} size={'30px'} />
+          </RowBetween>
+          <ArrowDown size={24} color="#888D9B" />
+          <TYPE.blue fontSize={36}>
+            {recipient?.slice(0, 6)}...{recipient?.slice(36, 42)}
+          </TYPE.blue>
+        </AutoColumn>
+      )
+    }
+
+    if (sending && sendingWithSwap) {
+    }
+
+    if (!sending) {
+      return (
+        <AutoColumn gap={'20px'} style={{ marginTop: '40px' }}>
+          <RowBetween align="flex-end">
+            <Text fontSize={36} fontWeight={500}>
+              {!!slippageAdjustedAmounts[Field.INPUT] && slippageAdjustedAmounts[Field.INPUT].toSignificant(6)}
             </Text>
+            <RowFixed gap="10px">
+              <TokenLogo address={tokens[Field.INPUT]?.address} size={'24px'} />
+              <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
+                {tokens[Field.INPUT]?.symbol || ''}
+              </Text>
+            </RowFixed>
+          </RowBetween>
+          <RowFixed>
+            <ArrowDown size="16" color="#888D9B" />
           </RowFixed>
-        </RowBetween>
-      </AutoColumn>
-    )
+          <RowBetween align="flex-end">
+            <Text fontSize={36} fontWeight={500} color={warningHigh ? '#FF6871' : '#2172E5'}>
+              {!!slippageAdjustedAmounts[Field.OUTPUT] && slippageAdjustedAmounts[Field.OUTPUT].toSignificant(6)}
+            </Text>
+            <RowFixed gap="10px">
+              <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'24px'} />
+              <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
+                {tokens[Field.OUTPUT]?.symbol || ''}
+              </Text>
+            </RowFixed>
+          </RowBetween>
+        </AutoColumn>
+      )
+    }
   }
 
   function modalBottom() {
-    return showAdvanced ? (
-      <AutoColumn gap="20px">
-        <Link
-          onClick={() => {
-            setShowAdvanced(false)
-          }}
-        >
-          back
-        </Link>
-        <RowBetween>
-          <TYPE.main>Limit additional price slippage</TYPE.main>
-          <QuestionHelper text="" />
-        </RowBetween>
-        <Row>
-          <ButtonRadio
-            active={SLIPPAGE_INDEX[1] === activeIndex}
-            padding="4px 6px"
-            borderRadius="8px"
-            style={{ marginRight: '16px' }}
-            width={'60px'}
-            onClick={() => {
-              setActiveIndex(SLIPPAGE_INDEX[1])
-              setAllowedSlippage(10)
-            }}
-          >
-            0.1%
-          </ButtonRadio>
-          <ButtonRadio
-            active={SLIPPAGE_INDEX[2] === activeIndex}
-            padding="4px 6px"
-            borderRadius="8px"
-            style={{ marginRight: '16px' }}
-            width={'60px'}
-            onClick={() => {
-              setActiveIndex(SLIPPAGE_INDEX[2])
-              setAllowedSlippage(100)
-            }}
-          >
-            1%
-          </ButtonRadio>
-          <ButtonRadio
-            active={SLIPPAGE_INDEX[3] === activeIndex}
-            padding="4px"
-            borderRadius="8px"
-            width={'140px'}
-            onClick={() => {
-              setActiveIndex(SLIPPAGE_INDEX[3])
-              setAllowedSlippage(200)
-            }}
-          >
-            2% (suggested)
-          </ButtonRadio>
-        </Row>
-        <RowFixed>
-          <InputWrapper active={SLIPPAGE_INDEX[4] === activeIndex}>
-            <NumericalInput
-              align={customSlippage ? 'right' : 'left'}
-              value={customSlippage || ''}
-              onUserInput={val => {
-                parseCustomInput(val)
-                setActiveIndex(SLIPPAGE_INDEX[4])
-              }}
-              placeHolder="Custom"
-              onClick={() => {
-                setActiveIndex(SLIPPAGE_INDEX[4])
-                if (customSlippage) {
-                  parseCustomInput(customSlippage)
-                }
-              }}
-            />
-            %
-          </InputWrapper>
-        </RowFixed>
-        <RowBetween>
-          <TYPE.main>Adjust deadline (minutes from now)</TYPE.main>
-        </RowBetween>
-        <RowFixed>
-          <NumericalInput
-            value={customDeadline}
-            onUserInput={val => {
-              parseCustomDeadline(val)
-            }}
-          />
-        </RowFixed>
-      </AutoColumn>
-    ) : (
-      <>
-        <RowBetween>
-          <Text color="#565A69" fontWeight={500} fontSize={16}>
-            Price
-          </Text>
-          <Text fontWeight={500} fontSize={16}>
-            {`1 ${tokens[Field.INPUT]?.symbol} = ${route && route.midPrice && route.midPrice.adjusted.toFixed(8)} ${
-              tokens[Field.OUTPUT]?.symbol
-            }`}
-          </Text>
-        </RowBetween>
-        <RowBetween>
-          <Text color="#565A69" fontWeight={500} fontSize={16}>
-            Slippage <Link onClick={() => setShowAdvanced(true)}>(edit limits)</Link>
-          </Text>
-          <ErrorText warningHigh={warningHigh} fontWeight={500}>
-            {slippageFromTrade && slippageFromTrade.toFixed(4)}%
-          </ErrorText>
-        </RowBetween>
-        <ButtonError onClick={onSwap} error={!!warningHigh} style={{ margin: '10px 0' }}>
-          <Text fontSize={20} fontWeight={500}>
-            {warningHigh ? 'Swap Anyway' : 'Swap'}
-          </Text>
-        </ButtonError>
-        <Text fontSize={12} color="#565A69" textAlign="center">
-          {`Output is estimated. You will receive at least ${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} ${
-            tokens[Field.OUTPUT]?.symbol
-          }  or the transaction will revert.`}
-        </Text>
-        <AutoColumn justify="center">
+    if (sending && !sendingWithSwap) {
+      return (
+        <AutoColumn>
+          <ButtonPrimary onClick={onSend}>
+            <Text color="white" fontSize={20}>
+              Confirm send
+            </Text>
+          </ButtonPrimary>
+        </AutoColumn>
+      )
+    }
+
+    if (sending && sendingWithSwap) {
+    }
+
+    if (showAdvanced) {
+      return (
+        <AutoColumn gap="20px">
           <Link
             onClick={() => {
-              setShowAdvanced(true)
+              setShowAdvanced(false)
             }}
           >
-            Advanced Options
+            back
           </Link>
+          <RowBetween>
+            <TYPE.main>Limit additional price impact</TYPE.main>
+            <QuestionHelper text="" />
+          </RowBetween>
+          <Row>
+            <ButtonRadio
+              active={SLIPPAGE_INDEX[1] === activeIndex}
+              padding="4px 6px"
+              borderRadius="8px"
+              style={{ marginRight: '16px' }}
+              width={'60px'}
+              onClick={() => {
+                setActiveIndex(SLIPPAGE_INDEX[1])
+                setAllowedSlippage(10)
+              }}
+            >
+              0.1%
+            </ButtonRadio>
+            <ButtonRadio
+              active={SLIPPAGE_INDEX[2] === activeIndex}
+              padding="4px 6px"
+              borderRadius="8px"
+              style={{ marginRight: '16px' }}
+              width={'60px'}
+              onClick={() => {
+                setActiveIndex(SLIPPAGE_INDEX[2])
+                setAllowedSlippage(100)
+              }}
+            >
+              1%
+            </ButtonRadio>
+            <ButtonRadio
+              active={SLIPPAGE_INDEX[3] === activeIndex}
+              padding="4px"
+              borderRadius="8px"
+              width={'140px'}
+              onClick={() => {
+                setActiveIndex(SLIPPAGE_INDEX[3])
+                setAllowedSlippage(200)
+              }}
+            >
+              2% (suggested)
+            </ButtonRadio>
+          </Row>
+          <RowFixed>
+            <InputWrapper active={SLIPPAGE_INDEX[4] === activeIndex} error={slippageInputError}>
+              <NumericalInput
+                align={customSlippage ? 'right' : 'left'}
+                value={customSlippage || ''}
+                onUserInput={val => {
+                  parseCustomInput(val)
+                  setActiveIndex(SLIPPAGE_INDEX[4])
+                }}
+                placeHolder="Custom"
+                onClick={() => {
+                  setActiveIndex(SLIPPAGE_INDEX[4])
+                  if (customSlippage) {
+                    parseCustomInput(customSlippage)
+                  }
+                }}
+              />
+              %
+            </InputWrapper>
+            {slippageInputError && (
+              <TYPE.error error={true} fontSize={12} style={{ marginLeft: '10px' }}>
+                Your transaction may be front-run
+              </TYPE.error>
+            )}
+          </RowFixed>
+          <RowBetween>
+            <TYPE.main>Adjust deadline (minutes from now)</TYPE.main>
+          </RowBetween>
+          <RowFixed>
+            <InputWrapper>
+              <NumericalInput
+                value={customDeadline}
+                onUserInput={val => {
+                  parseCustomDeadline(val)
+                }}
+              />
+            </InputWrapper>
+          </RowFixed>
         </AutoColumn>
-      </>
-    )
+      )
+    }
+
+    if (!sending) {
+      return (
+        <>
+          <RowBetween>
+            <Text color="#565A69" fontWeight={500} fontSize={16}>
+              Price
+            </Text>
+            <Text fontWeight={500} fontSize={16}>
+              {`1 ${tokens[Field.INPUT]?.symbol} = ${route && route.midPrice && route.midPrice.adjusted.toFixed(8)} ${
+                tokens[Field.OUTPUT]?.symbol
+              }`}
+            </Text>
+          </RowBetween>
+          <RowBetween>
+            <Text color="#565A69" fontWeight={500} fontSize={16}>
+              Slippage <Link onClick={() => setShowAdvanced(true)}>(edit limits)</Link>
+            </Text>
+            <ErrorText warningHigh={warningHigh} fontWeight={500}>
+              {slippageFromTrade && slippageFromTrade.toFixed(4)}%
+            </ErrorText>
+          </RowBetween>
+          <ButtonError onClick={onSwap} error={!!warningHigh} style={{ margin: '10px 0' }}>
+            <Text fontSize={20} fontWeight={500}>
+              {warningHigh ? 'Swap Anyway' : 'Swap'}
+            </Text>
+          </ButtonError>
+          <AutoColumn justify="center" gap="20px">
+            <TYPE.italic textAlign="center" style={{ width: '80%' }}>
+              {`Output is estimated. You will receive at least ${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(
+                6
+              )} ${tokens[Field.OUTPUT]?.symbol}  or the transaction will revert.`}
+            </TYPE.italic>
+            <Link
+              onClick={() => {
+                setShowAdvanced(true)
+              }}
+            >
+              Advanced Options
+            </Link>
+          </AutoColumn>
+        </>
+      )
+    }
   }
 
-  const pendingText = ` Swapped ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${
-    tokens[Field.INPUT]?.symbol
-  } for ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}`
+  const pendingText = sending
+    ? `Sending ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${tokens[Field.INPUT]?.symbol} to ${recipient}`
+    : ` Swapped ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${tokens[Field.INPUT]?.symbol} for ${parsedAmounts[
+        Field.OUTPUT
+      ]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}`
 
   return (
     <Wrapper>
@@ -756,69 +958,128 @@ export default function ExchangePage() {
         attemptingTxn={attemptingTxn}
         pendingConfirmation={pendingConfirmation}
         hash={txHash ? txHash : ''}
-        topContent={() => modalHeader()}
+        topContent={modalHeader}
         bottomContent={modalBottom}
         pendingText={pendingText}
-        title="Confirm Swap"
+        title={sendingWithSwap ? 'Confirm swap and send' : sending ? 'Confirm Send' : 'Confirm Swap'}
       />
+
+      {sending && !sendingWithSwap && (
+        <>
+          <InputGroup gap="24px" justify="center">
+            {!atMaxAmountInput && (
+              <MaxButton
+                onClick={() => {
+                  maxAmountInput && onMaxInput(maxAmountInput.toExact())
+                }}
+              >
+                Max
+              </MaxButton>
+            )}
+            <StyledNumerical value={formattedAmounts[Field.INPUT]} onUserInput={val => onUserInput(Field.INPUT, val)} />
+            {!parsedAmounts[Field.INPUT] && <TYPE.gray>Enter an amount.</TYPE.gray>}
+            <CurrencyInputPanel
+              field={Field.INPUT}
+              value={formattedAmounts[Field.INPUT]}
+              onUserInput={val => onUserInput(Field.INPUT, val)}
+              onMax={() => {
+                maxAmountInput && onMaxInput(maxAmountInput.toExact())
+              }}
+              atMax={atMaxAmountInput}
+              token={tokens[Field.INPUT]}
+              onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
+              onTokenSelectSendWithSwap={address => {
+                onTokenSelection(Field.OUTPUT, address)
+                setSendingWithSwap(true)
+              }}
+              title={'Input'}
+              error={inputError}
+              exchange={exchange}
+              showUnlock={showInputUnlock}
+              hideBalance={true}
+              hideInput={true}
+              showSendWithSwap={true}
+            />
+          </InputGroup>
+        </>
+      )}
+
       <AutoColumn gap={'20px'}>
-        <CurrencyInputPanel
-          field={Field.INPUT}
-          value={formattedAmounts[Field.INPUT]}
-          onUserInput={onUserInput}
-          onMax={() => {
-            maxAmountInput && onMaxInput(maxAmountInput.toExact())
-          }}
-          atMax={atMaxAmountInput}
-          token={tokens[Field.INPUT]}
-          onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
-          title={'Input'}
-          error={inputError}
-          exchange={exchange}
-          showUnlock={showInputUnlock}
-        />
-        <ColumnCenter>
-          <ArrowWrapper onClick={onSwapTokens}>
-            <ArrowDown size="16" color="#2F80ED" />
-            <ArrowUp size="16" color="#2F80ED" />
-          </ArrowWrapper>
-        </ColumnCenter>
-        <CurrencyInputPanel
-          field={Field.OUTPUT}
-          value={formattedAmounts[Field.OUTPUT]}
-          onUserInput={onUserInput}
-          onMax={() => {
-            maxAmountOutput && onMaxOutput(maxAmountOutput.toExact())
-          }}
-          atMax={atMaxAmountOutput}
-          token={tokens[Field.OUTPUT]}
-          onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
-          title={'Output'}
-          error={outputError}
-          exchange={exchange}
-          showUnlock={showOutputUnlock}
-        />
-        <RowBetween>
-          <Text fontWeight={500} color="#565A69">
-            Price
-          </Text>
-          <Text fontWeight={500} color="#565A69">
-            {exchange
-              ? `1 ${tokens[Field.INPUT].symbol} = ${route?.midPrice.toSignificant(6)} ${tokens[Field.OUTPUT].symbol}`
-              : '-'}
-          </Text>
-        </RowBetween>
-        {warningMedium && (
-          <RowBetween>
-            <Text fontWeight={500} color="#565A69">
-              Slippage
-            </Text>
-            <ErrorText fontWeight={500} warningMedium={warningMedium} warningHigh={warningHigh}>
-              {slippageFromTrade.toFixed(4)}%
-            </ErrorText>
-          </RowBetween>
+        {(!sending || sendingWithSwap) && (
+          <>
+            <CurrencyInputPanel
+              field={Field.INPUT}
+              value={formattedAmounts[Field.INPUT]}
+              onUserInput={onUserInput}
+              onMax={() => {
+                maxAmountInput && onMaxInput(maxAmountInput.toExact())
+              }}
+              atMax={atMaxAmountInput}
+              token={tokens[Field.INPUT]}
+              onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
+              title={'Input'}
+              error={inputError}
+              exchange={exchange}
+              showUnlock={showInputUnlock}
+            />
+            <ColumnCenter>
+              <ArrowWrapper onClick={onSwapTokens}>
+                <ArrowDown size="16" color="#2F80ED" />
+                <ArrowUp size="16" color="#2F80ED" />
+              </ArrowWrapper>
+            </ColumnCenter>
+            <CurrencyInputPanel
+              field={Field.OUTPUT}
+              value={formattedAmounts[Field.OUTPUT]}
+              onUserInput={onUserInput}
+              onMax={() => {
+                maxAmountOutput && onMaxOutput(maxAmountOutput.toExact())
+              }}
+              atMax={atMaxAmountOutput}
+              token={tokens[Field.OUTPUT]}
+              onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
+              title={'Output'}
+              error={outputError}
+              exchange={exchange}
+              showUnlock={showOutputUnlock}
+            />
+            <RowBetween>
+              <Text fontWeight={500} color="#565A69">
+                Price
+              </Text>
+              <Text fontWeight={500} color="#565A69">
+                {exchange
+                  ? `1 ${tokens[Field.INPUT].symbol} = ${route?.midPrice.toSignificant(6)} ${
+                      tokens[Field.OUTPUT].symbol
+                    }`
+                  : '-'}
+              </Text>
+            </RowBetween>
+            {warningMedium && (
+              <RowBetween>
+                <Text fontWeight={500} color="#565A69">
+                  Slippage
+                </Text>
+                <ErrorText fontWeight={500} warningMedium={warningMedium} warningHigh={warningHigh}>
+                  {slippageFromTrade.toFixed(4)}%
+                </ErrorText>
+              </RowBetween>
+            )}
+          </>
         )}
 
+        {sending && (
+          <AutoColumn gap="10px">
+            <LightCard borderRadius={'20px'}>
+              <RowBetween>
+                <StyledInput placeholder="Recipient Address" onChange={e => setRecipient(e.target.value)} />
+                <QRWrapper>
+                  <img src={QR} alt="" />
+                </QRWrapper>
+              </RowBetween>
+            </LightCard>
+          </AutoColumn>
+        )}
         <ButtonError
           onClick={() => {
             setShowConfirm(true)
@@ -827,10 +1088,14 @@ export default function ExchangePage() {
           error={!!warningHigh}
         >
           <Text fontSize={20} fontWeight={500}>
-            {inputError
+            {generalError
+              ? generalError
+              : inputError
               ? inputError
               : outputError
               ? outputError
+              : recipientError
+              ? recipientError
               : tradeError
               ? tradeError
               : warningHigh
@@ -839,6 +1104,7 @@ export default function ExchangePage() {
           </Text>
         </ButtonError>
       </AutoColumn>
+
       {warningHigh && (
         <FixedBottom>
           <GreyCard>
