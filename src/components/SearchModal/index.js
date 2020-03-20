@@ -2,12 +2,11 @@ import React, { useState, useRef, useMemo, useEffect } from 'react'
 import '@reach/tooltip/styles.css'
 import styled from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
+import { JSBI } from '@uniswap/sdk'
 import { Link } from 'react-router-dom'
 import { ethers } from 'ethers'
 import { isMobile } from 'react-device-detect'
 import { withRouter } from 'react-router-dom'
-import { JSBI } from '@uniswap/sdk'
-
 import { Link as StyledLink } from '../../theme/components'
 
 import Modal from '../Modal'
@@ -107,11 +106,17 @@ const PaddedItem = styled(RowBetween)`
 
 const MenuItem = styled(PaddedItem)`
   cursor: pointer;
-
   :hover {
     background-color: ${({ theme }) => theme.tokenRowHover};
   }
 `
+// filters on results
+const FILTERS = {
+  VOLUME: 'VOLUME',
+  LIQUIDITY: 'LIQUIDITY',
+  BALANCES: 'BALANCES'
+}
+
 function SearchModal({
   history,
   isOpen,
@@ -120,28 +125,26 @@ function SearchModal({
   urlAddedTokens,
   filterType,
   hiddenToken,
-  showSendWithSwap,
-  onTokenSelectSendWithSwap
+  showSendWithSwap
 }) {
   const { t } = useTranslation()
-
   const { account, chainId } = useWeb3React()
 
-  const [searchQuery, setSearchQuery] = useState('')
-
-  // get all exchanges
+  const allTokens = useAllTokens()
   const allExchanges = useAllExchanges()
-  const token = useToken(searchQuery)
+  const allBalances = useAllBalances()
 
+  const [searchQuery, setSearchQuery] = useState('')
+  const [sortDirection, setSortDirection] = useState(true)
+
+  const token = useToken(searchQuery)
   const tokenAddress = token && token.address
 
-  // get all tokens
-  const allTokens = useAllTokens()
+  // amount of tokens to display at once
+  const [, setTokensShown] = useState(0)
+  const [, setPairsShown] = useState(0)
 
-  // all balances for both account and exchanges
-  let allBalances = useAllBalances()
-
-  const [sortDirection, setSortDirection] = useState(true)
+  const [activeFilter, setActiveFilter] = useState(FILTERS.BALANCES)
 
   const tokenList = useMemo(() => {
     return Object.keys(allTokens)
@@ -149,12 +152,10 @@ function SearchModal({
         if (allTokens[a].symbol && allTokens[b].symbol) {
           const aSymbol = allTokens[a].symbol.toLowerCase()
           const bSymbol = allTokens[b].symbol.toLowerCase()
-
           // pin ETH to top
           if (aSymbol === 'ETH'.toLowerCase() || bSymbol === 'ETH'.toLowerCase()) {
             return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
           }
-
           // sort by balance
           const balanceA = allBalances?.[account]?.[a]
           const balanceB = allBalances?.[account]?.[b]
@@ -162,16 +163,12 @@ function SearchModal({
           if (balanceA && !balanceB) {
             return sortDirection
           }
-
           if (!balanceA && balanceB) {
             return sortDirection * -1
           }
-
           if (balanceA && balanceB) {
             return sortDirection * parseFloat(balanceA.toExact()) > parseFloat(balanceB.toExact()) ? -1 : 1
           }
-
-          // sort alphabetically
           return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
         } else {
           return 0
@@ -181,16 +178,11 @@ function SearchModal({
         if (k === hiddenToken) {
           return false
         }
-
-        let balance
-        // only update if we have data
-        balance = allBalances?.[account]?.[k]
-
         return {
           name: allTokens[k].name,
           symbol: allTokens[k].symbol,
           address: k,
-          balance: balance
+          balance: allBalances?.[account]?.[k]
         }
       })
   }, [allTokens, allBalances, account, sortDirection, hiddenToken])
@@ -198,10 +190,7 @@ function SearchModal({
   const filteredTokenList = useMemo(() => {
     return tokenList.filter(tokenEntry => {
       const inputIsAddress = searchQuery.slice(0, 2) === '0x'
-
-      // check the regex for each field
       const regexMatches = Object.keys(tokenEntry).map(tokenEntryKey => {
-        // if address field only search if input starts with 0x
         if (tokenEntryKey === 'address') {
           return (
             inputIsAddress &&
@@ -218,21 +207,14 @@ function SearchModal({
     })
   }, [tokenList, searchQuery])
 
-  function _onTokenSelect(address, sendWithSwap = false) {
-    if (sendWithSwap) {
-      setSearchQuery('')
-      onTokenSelectSendWithSwap(address)
-      onDismiss()
-    } else {
-      setSearchQuery('')
-      onTokenSelect(address)
-      onDismiss()
-    }
+  function _onTokenSelect(address) {
+    setSearchQuery('')
+    onTokenSelect(address)
+    onDismiss()
   }
 
   // manage focus on modal show
   const inputRef = useRef()
-
   function onInput(event) {
     const input = event.target.value
     const checksummedInput = isAddress(input)
@@ -244,34 +226,39 @@ function SearchModal({
     onDismiss()
   }
 
-  // amount of tokens to display at once
-  const [, setTokensShown] = useState(0)
-  const [, setPairsShown] = useState(0)
-
-  // filters on results
-  const FILTERS = {
-    VOLUME: 'VOLUME',
-    LIQUIDITY: 'LIQUIDITY',
-    BALANCES: 'BALANCES'
-  }
-  const [activeFilter, setActiveFilter] = useState(FILTERS.BALANCES)
-
   // sort tokens
   const escapeStringRegexp = string => string
 
-  // sort pairs
-  const filteredPairList = useMemo(() => {
-    // check if the search is an address
-    const isAddress = searchQuery.slice(0, 2) === '0x'
-    return Object.keys(allExchanges).filter(exchangeAddress => {
-      const exchange = allExchanges[exchangeAddress]
+  const sortedPairList = useMemo(() => {
+    return Object.keys(allExchanges).sort((a, b) => {
+      // sort by balance
+      const balanceA = allBalances?.[account]?.[a]
+      const balanceB = allBalances?.[account]?.[b]
 
+      if (balanceA && !balanceB) {
+        return sortDirection
+      }
+      if (!balanceA && balanceB) {
+        return sortDirection * -1
+      }
+      if (balanceA && balanceB) {
+        const order = sortDirection * (parseFloat(balanceA.toExact()) > parseFloat(balanceB.toExact()) ? -1 : 1)
+        return order ? 1 : -1
+      } else {
+        return 0
+      }
+    })
+  }, [account, allBalances, allExchanges, sortDirection])
+
+    const filteredPairList = useMemo(() => {
+    const isAddress = searchQuery.slice(0, 2) === '0x'
+    return sortedPairList.filter(exchangeAddress => {
+      const exchange = allExchanges[exchangeAddress]
       if (searchQuery === '') {
         return true
       }
       const token0 = allTokens[exchange.token0]
       const token1 = allTokens[exchange.token1]
-
       const regexMatches = Object.keys(token0).map(field => {
         if (
           (field === 'address' && isAddress) ||
@@ -288,7 +275,7 @@ function SearchModal({
 
       return regexMatches.some(m => m)
     })
-  }, [allExchanges, allTokens, searchQuery])
+  }, [account, allBalances, allExchanges, allTokens, searchQuery, sortDirection])
 
   // update the amount shown as filtered list changes
   useEffect(() => {
@@ -312,9 +299,7 @@ function SearchModal({
       filteredPairList.map((exchangeAddress, i) => {
         const token0 = allTokens[allExchanges[exchangeAddress].token0]
         const token1 = allTokens[allExchanges[exchangeAddress].token1]
-
         const balance = allBalances?.[account]?.[exchangeAddress]?.toSignificant(6)
-
         return (
           <MenuItem
             key={i}

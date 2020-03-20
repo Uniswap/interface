@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { transparentize } from 'polished'
 
+import QR from '../../assets/svg/QR.svg'
+
 import { isAddress } from '../../utils'
 import { useWeb3React, useDebounce } from '../../hooks'
 
@@ -13,6 +15,7 @@ const InputPanel = styled.div`
   border-radius: 1.25rem;
   background-color: ${({ theme }) => theme.inputBackground};
   z-index: 1;
+  width: 100%;
 `
 
 const ContainerRow = styled.div`
@@ -49,7 +52,7 @@ const LabelContainer = styled.div`
 const InputRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  padding: 0.25rem 0.85rem 0.75rem;
+  padding: 0.75rem;
 `
 
 const Input = styled.input`
@@ -69,7 +72,17 @@ const Input = styled.input`
   }
 `
 
-export default function AddressInputPanel({ title, initialInput = '', onChange = () => {}, onError = () => {} }) {
+const QRWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid ${({ theme }) => theme.outlineGrey};
+  background: #fbfbfb;
+  padding: 4px;
+  border-radius: 8px;
+`
+
+export default function AddressInputPanel({ title, initialInput = '', onChange, onError}) {
   const { t } = useTranslation()
 
   const { library } = useWeb3React()
@@ -166,11 +179,6 @@ export default function AddressInputPanel({ title, initialInput = '', onChange =
     <InputPanel>
       <ContainerRow error={input !== '' && error}>
         <InputContainer>
-          <LabelRow>
-            <LabelContainer>
-              <span>{title || t('recipientAddress')}</span>
-            </LabelContainer>
-          </LabelRow>
           <InputRow>
             <Input
               type="text"
@@ -183,6 +191,9 @@ export default function AddressInputPanel({ title, initialInput = '', onChange =
               onChange={onInput}
               value={input}
             />
+             <QRWrapper>
+               <img src={QR} alt="" />
+              </QRWrapper>
           </InputRow>
         </InputContainer>
       </ContainerRow>

@@ -2,10 +2,9 @@ import React, { Suspense, lazy } from 'react'
 import styled from 'styled-components'
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
-import Web3ReactManager from '../components/Web3ReactManager'
 import Header from '../components/Header'
-
 import NavigationTabs from '../components/NavigationTabs'
+import Web3ReactManager from '../components/Web3ReactManager'
 import { isAddress, getAllQueryParams } from '../utils'
 
 const Swap = lazy(() => import('./Swap'))
@@ -65,6 +64,7 @@ export default function App() {
                   {/* this Suspense is for route code-splitting */}
                   <Suspense fallback={null}>
                     <Switch>
+                      <Route exact strict path="/" render={() => <Redirect to={{ pathname: '/swap' }} />} />
                       <Route exact strict path="/find" component={() => <Find params={params} />} />
                       <Route exact strict path="/swap" component={() => <Swap params={params} />} />
                       <Route

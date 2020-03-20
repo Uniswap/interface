@@ -1,15 +1,14 @@
 import React from 'react'
-import { Button as RebassButton } from 'rebass/styled-components'
 import styled from 'styled-components'
 import { darken, lighten } from 'polished'
 
 import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'
+import { Button as RebassButton } from 'rebass/styled-components'
 
 const Base = styled(RebassButton)`
   padding: ${({ padding }) => (padding ? padding : '18px')};
   width: ${({ width }) => (width ? width : '100%')};
-  font-size: 1rem;
   font-weight: 500;
   text-align: center;
   border-radius: 20px;
@@ -39,7 +38,7 @@ export const ButtonPrimary = styled(Base)`
   }
   &:disabled {
     background-color: ${({ theme }) => theme.outlineGrey};
-    color: ${({ theme }) => theme.darkGrey}
+    color: ${({ theme }) => theme.darkGray}
     cursor: auto;
     box-shadow: none;
   }
@@ -48,6 +47,7 @@ export const ButtonPrimary = styled(Base)`
 export const ButtonSecondary = styled(Base)`
   background-color: #ebf4ff;
   color: #2172e5;
+  font-size: 16px;
   border-radius: 8px;
   padding: 10px;
 
@@ -64,6 +64,30 @@ export const ButtonSecondary = styled(Base)`
   }
   &:disabled {
     background-color: ${({ theme }) => '#ebf4ff'};
+    opacity: 50%;
+    cursor: auto;
+  }
+`
+
+export const ButtonPink = styled(Base)`
+  background-color: ${({ theme }) => theme.darkPink};
+  color: white;
+
+  padding: 10px;
+
+  &:focus {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.darkPink)};
+    background-color: ${({ theme }) => darken(0.05, theme.darkPink)};
+  }
+  &:hover {
+    background-color: ${({ theme }) => darken(0.05, theme.darkPink)};
+  }
+  &:active {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.darkPink)};
+    background-color: ${({ theme }) => darken(0.1, theme.darkPink)};
+  }
+  &:disabled {
+    background-color: ${({ theme }) => theme.darkPink};
     opacity: 50%;
     cursor: auto;
   }
@@ -157,7 +181,7 @@ export function ButtonError({ children, error, ...rest }) {
   }
 }
 
-export function ButtonDropwdown({ disabled, children, ...rest }) {
+export function ButtonDropwdown({ disabled = false, children, ...rest }) {
   return (
     <ButtonPrimary {...rest}>
       <RowBetween>
@@ -168,7 +192,7 @@ export function ButtonDropwdown({ disabled, children, ...rest }) {
   )
 }
 
-export function ButtonDropwdownLight({ disabled, children, ...rest }) {
+export function ButtonDropwdownLight({ disabled = false, children, ...rest }) {
   return (
     <ButtonEmpty {...rest}>
       <RowBetween>

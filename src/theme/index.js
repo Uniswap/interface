@@ -72,7 +72,7 @@ const theme = darkMode => ({
   tokenRowHover: darkMode ? '#404040' : '#F2F2F2',
 
   outlineGrey: darkMode ? '#292C2F' : '#EDEEF2',
-  darkGrey: darkMode ? '#888D9B' : '#888D9B',
+  darkGray: darkMode ? '#888D9B' : '#888D9B',
 
   //blacks
   charcoalBlack: darkMode ? '#F2F2F2' : '#404040',
@@ -85,6 +85,7 @@ const theme = darkMode => ({
 
   // purples
   wisteriaPurple: '#DC6BE5',
+
   // reds
   salmonRed: '#FF6871',
   // orange
@@ -93,6 +94,7 @@ const theme = darkMode => ({
   warningYellow: '#FFE270',
   // pink
   uniswapPink: '#DC6BE5',
+  darkPink: '#ff007a',
   //green
   connectedGreen: '#27AE60',
 
@@ -124,6 +126,16 @@ export const TYPE = {
       {children}
     </Text>
   ),
+  largeHeader: ({ children, ...rest }) => (
+    <Text fontWeight={600} fontSize={24} color={theme().black} {...rest}>
+      {children}
+    </Text>
+  ),
+  body: ({ children, ...rest }) => (
+    <Text fontWeight={500} fontSize={16} color={'#565A69'} {...rest}>
+      {children}
+    </Text>
+  ),
   blue: ({ children, ...rest }) => (
     <Text fontWeight={500} color={theme().royalBlue} {...rest}>
       {children}
@@ -131,6 +143,11 @@ export const TYPE = {
   ),
   gray: ({ children, ...rest }) => (
     <Text fontWeight={500} color={theme().outlineGrey} {...rest}>
+      {children}
+    </Text>
+  ),
+  darkGray: ({ children, ...rest }) => (
+    <Text fontWeight={500} color={theme().darkGray} {...rest}>
       {children}
     </Text>
   ),

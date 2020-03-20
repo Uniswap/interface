@@ -1,15 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import Row from '../Row'
 import Menu from '../Menu'
 import Logo from '../../assets/svg/logo.svg'
-import Row from '../Row'
+import Card from '../Card'
 import Web3Status from '../Web3Status'
-import { CloseIcon } from '../../theme/components'
+import { X } from 'react-feather'
 import { Link } from '../../theme'
 import { Text } from 'rebass'
-import Card from '../Card'
-import { X } from 'react-feather'
 
 import { WETH } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
@@ -46,9 +45,7 @@ const Title = styled.div`
 const TitleText = styled.div`
   font-size: 24px;
   font-weight: 700;
-  background: linear-gradient(119.64deg, #fb1868 -5.55%, #ff00f3 154.46%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: ${({ theme }) => theme.black};
   margin-left: 12px;
 `
 
@@ -58,22 +55,21 @@ const AccountElement = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme }) => theme.outlineGrey};
+  background-color: ${({ theme, active }) => (!active ? theme.white : theme.outlineGrey)};
   border: 1px solid ${({ theme }) => theme.outlineGrey};
   border-radius: 8px;
-  padding-left: 8px;
+  padding-left: ${({ active }) => (active ? '8px' : 0)};
 
   :focus {
     border: 1px solid blue;
   }
-  /* width: 100%; */
 `
 
 const FixedPopupColumn = styled(AutoColumn)`
   position: absolute;
   top: 80px;
   right: 20px
-  width: 340px;
+  width: 380px;
 `
 
 const StyledClose = styled(X)`
@@ -86,12 +82,10 @@ const StyledClose = styled(X)`
 `
 
 const Popup = styled(Card)`
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.04);
   z-index: 9999;
   border-radius: 8px;
   padding: 1rem;
-  background: ${theme => theme.white};
+  background-color: white;
 `
 
 export default function Header() {
@@ -115,8 +109,8 @@ export default function Header() {
         </Title>
       </HeaderElement>
       <HeaderElement>
-        <AccountElement>
-          {!isMobile ? (
+        <AccountElement active={!!account}>
+          {!isMobile && account ? (
             <Row style={{ marginRight: '-1.25rem', paddingRight: '1.75rem' }}>
               <Text fontWeight={500}> {userEthBalance && userEthBalance?.toFixed(4) + ' ETH'}</Text>
             </Row>

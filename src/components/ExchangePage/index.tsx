@@ -2,33 +2,34 @@ import React, { useState, useReducer, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
 import { parseUnits, parseEther } from '@ethersproject/units'
-import { WETH, TradeType, Route, Trade, TokenAmount, JSBI } from '@uniswap/sdk'
+import { WETH, TradeType, Route, Exchange, Trade, TokenAmount, JSBI, Percent } from '@uniswap/sdk'
 
-import QR from '../../assets/svg/QR.svg'
 import TokenLogo from '../TokenLogo'
+import AddressInputPanel from '../AddressInputPanel'
 import QuestionHelper from '../Question'
 import NumericalInput from '../NumericalInput'
+import AdvancedSettings from '../AdvancedSettings'
 import ConfirmationModal from '../ConfirmationModal'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import { Link } from '../../theme/components'
 import { Text } from 'rebass'
 import { TYPE } from '../../theme'
-import { GreyCard, LightCard } from '../../components/Card'
 import { ArrowDown, ArrowUp } from 'react-feather'
-import { ButtonPrimary, ButtonError, ButtonRadio } from '../Button'
+import { GreyCard, BlueCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import Row, { RowBetween, RowFixed } from '../../components/Row'
+import { ButtonPrimary, ButtonError } from '../Button'
+import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
 
-import { usePopups } from '../../contexts/Application'
 import { useToken } from '../../contexts/Tokens'
+import { usePopups } from '../../contexts/Application'
 import { useExchange } from '../../contexts/Exchanges'
-import { useWeb3React, useTokenContract } from '../../hooks'
-import { useAddressBalance } from '../../contexts/Balances'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressAllowance } from '../../contexts/Allowances'
+import { useWeb3React, useTokenContract } from '../../hooks'
+import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 
 import { ROUTER_ADDRESSES } from '../../constants'
-import { getRouterContract, calculateGasMargin, isAddress, getProviderOrSigner } from '../../utils'
+import { getRouterContract, calculateGasMargin, getProviderOrSigner } from '../../utils'
 
 const Wrapper = styled.div`
   position: relative;
@@ -59,40 +60,9 @@ const ErrorText = styled(Text)`
     warningHigh ? theme.salmonRed : warningMedium ? theme.warningYellow : theme.textColor};
 `
 
-const InputWrapper = styled(RowBetween)`
-  width: 200px;
-  background-color: ${({ theme }) => theme.inputBackground};
-  border-radius: 8px;
-  padding: 4px 8px;
-  border: 1px solid transparent;
-  border: ${({ active, error, theme }) =>
-    error ? '1px solid ' + theme.salmonRed : active ? '1px solid ' + theme.royalBlue : ''};
-`
-
 const InputGroup = styled(AutoColumn)`
   position: relative;
   padding: 40px 0;
-`
-
-const QRWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid ${({ theme }) => theme.outlineGrey};
-  background: #fbfbfb;
-  padding: 4px;
-  border-radius: 8px;
-`
-
-const StyledInput = styled.input`
-  width: ${({ width }) => width};
-  border: none;
-  outline: none;
-  font-size: 20px;
-
-  ::placeholder {
-    color: #edeef2;
-  }
 `
 
 const StyledNumerical = styled(NumericalInput)`
@@ -227,13 +197,6 @@ function hex(value: JSBI) {
   return ethers.utils.bigNumberify(value.toString())
 }
 
-const SLIPPAGE_INDEX = {
-  1: 1,
-  2: 2,
-  3: 3,
-  4: 4
-}
-
 const SWAP_TYPE = {
   EXACT_TOKENS_FOR_TOKENS: 'EXACT_TOKENS_FOR_TOKENS',
   EXACT_TOKENS_FOR_ETH: 'EXACT_TOKENS_FOR_ETH',
@@ -257,52 +220,50 @@ const ALLOWED_SLIPPAGE_HIGH = 500
 
 export default function ExchangePage({ sendingInput = false }) {
   const { chainId, account, library } = useWeb3React()
-  const routerAddress = ROUTER_ADDRESSES[chainId]
+  const routerAddress: string = ROUTER_ADDRESSES[chainId]
 
   // adding notifications on txns
   const [, addPopup] = usePopups()
   const addTransaction = useTransactionAdder()
 
   // sending state
-  const [sending, setSending] = useState(sendingInput)
-  const [sendingWithSwap, setSendingWithSwap] = useState(false)
-  const [recipient, setRecipient] = useState('')
+  const [sending] = useState<boolean>(sendingInput)
+  const [sendingWithSwap, setSendingWithSwap] = useState<boolean>(false)
+  const [recipient, setRecipient] = useState<string>('')
 
-  // input details
+  // trade details
   const [state, dispatch] = useReducer(reducer, WETH[chainId].address, initializeSwapState)
   const { independentField, typedValue, ...fieldData } = state
-  const dependentField = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
-  const tradeType = independentField === Field.INPUT ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT
-  const [tradeError, setTradeError] = useState('') // error for things like reserve size or route
+  const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
+  const tradeType: TradeType = independentField === Field.INPUT ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT
+  const [tradeError, setTradeError] = useState<string>('') // error for things like reserve size or route
 
   const tokens = {
     [Field.INPUT]: useToken(fieldData[Field.INPUT].address),
     [Field.OUTPUT]: useToken(fieldData[Field.OUTPUT].address)
   }
 
-  const exchange = useExchange(tokens[Field.INPUT], tokens[Field.OUTPUT])
-  const route = !!exchange ? new Route([exchange], tokens[Field.INPUT]) : undefined
+  const exchange: Exchange = useExchange(tokens[Field.INPUT], tokens[Field.OUTPUT])
+  const route: Route = !!exchange ? new Route([exchange], tokens[Field.INPUT]) : undefined
+  const emptyReserves: boolean = exchange && JSBI.equal(JSBI.BigInt(0), exchange.reserve0.raw)
 
   // modal and loading
-  const [showConfirm, setShowConfirm] = useState(false)
-  const [pendingConfirmation, setPendingConfirmation] = useState(true) // waiting for user confirmation
-  const [attemptingTxn, setAttemptingTxn] = useState(false) // clicked confirmed
-
-  // advanced settings
-  const [showAdvanced, setShowAdvanced] = useState(false)
-  const [activeIndex, setActiveIndex] = useState(SLIPPAGE_INDEX[3])
-  const [customSlippage, setCustomSlippage] = useState()
-  const [customDeadline, setCustomDeadline] = useState(DEFAULT_DEADLINE_FROM_NOW / 60)
-  const [slippageInputError, setSlippageInputError] = useState(null)
+  const [showConfirm, setShowConfirm] = useState<boolean>(false)
+  const [showAdvanced, setShowAdvanced] = useState<boolean>(false)
+  const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirmed
+  const [pendingConfirmation, setPendingConfirmation] = useState<boolean>(true) // waiting for user confirmation
 
   // txn values
-  const [txHash, setTxHash] = useState()
-  const [deadline, setDeadline] = useState(DEFAULT_DEADLINE_FROM_NOW)
-  const [allowedSlippage, setAllowedSlippage] = useState(INITIAL_ALLOWED_SLIPPAGE)
+  const [txHash, setTxHash] = useState<string>('')
+  const [deadline, setDeadline] = useState<number>(DEFAULT_DEADLINE_FROM_NOW)
+  const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
 
   // approvals
-  const inputApproval = useAddressAllowance(account, tokens[Field.INPUT], routerAddress)
-  const outputApproval = useAddressAllowance(account, tokens[Field.OUTPUT], routerAddress)
+  const inputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.INPUT], routerAddress)
+  const outputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.OUTPUT], routerAddress)
+
+  // all balances for detecting a swap with send
+  const allBalances: TokenAmount[] = useAllBalances()
 
   // get user- and token-specific lookup data
   const userBalances = {
@@ -311,18 +272,13 @@ export default function ExchangePage({ sendingInput = false }) {
   }
 
   const parsedAmounts: { [field: number]: TokenAmount } = {}
-  // try to parse typed value
   if (typedValue !== '' && typedValue !== '.' && tokens[independentField]) {
     try {
       const typedValueParsed = parseUnits(typedValue, tokens[independentField].decimals).toString()
       if (typedValueParsed !== '0')
         parsedAmounts[independentField] = new TokenAmount(tokens[independentField], typedValueParsed)
     } catch (error) {
-      // should only fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
-      /**
-       * @todo reserve limit error here
-       */
-      console.error('found error here ')
+      console.error(error)
     }
   }
 
@@ -335,12 +291,11 @@ export default function ExchangePage({ sendingInput = false }) {
         : undefined
   } catch (error) {}
 
-  const slippageFromTrade = trade && trade.slippage
+  const slippageFromTrade: Percent = trade && trade.slippage
 
   if (trade)
     parsedAmounts[dependentField] = tradeType === TradeType.EXACT_INPUT ? trade.outputAmount : trade.inputAmount
 
-  // get formatted amounts
   const formattedAmounts = {
     [independentField]: typedValue,
     [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(8) : ''
@@ -384,8 +339,8 @@ export default function ExchangePage({ sendingInput = false }) {
     })
   }, [])
 
-  const MIN_ETHER = chainId && new TokenAmount(WETH[chainId], JSBI.BigInt(parseEther('.01')))
-  const maxAmountInput =
+  const MIN_ETHER: TokenAmount = chainId && new TokenAmount(WETH[chainId], JSBI.BigInt(parseEther('.01')))
+  const maxAmountInput: TokenAmount =
     !!userBalances[Field.INPUT] &&
     JSBI.greaterThan(
       userBalances[Field.INPUT].raw,
@@ -395,22 +350,22 @@ export default function ExchangePage({ sendingInput = false }) {
         ? userBalances[Field.INPUT].subtract(MIN_ETHER)
         : userBalances[Field.INPUT]
       : undefined
-  const atMaxAmountInput =
+  const atMaxAmountInput: boolean =
     !!maxAmountInput && !!parsedAmounts[Field.INPUT]
       ? JSBI.equal(maxAmountInput.raw, parsedAmounts[Field.INPUT].raw)
       : undefined
 
-  const maxAmountOutput =
+  const maxAmountOutput: TokenAmount =
     !!userBalances[Field.OUTPUT] && JSBI.greaterThan(userBalances[Field.OUTPUT].raw, JSBI.BigInt(0))
       ? userBalances[Field.OUTPUT]
       : undefined
 
-  const atMaxAmountOutput =
+  const atMaxAmountOutput: boolean =
     !!maxAmountOutput && !!parsedAmounts[Field.OUTPUT]
       ? JSBI.equal(maxAmountOutput.raw, parsedAmounts[Field.OUTPUT].raw)
       : undefined
 
-  function getSwapType() {
+  function getSwapType(): string {
     if (tradeType === TradeType.EXACT_INPUT) {
       if (tokens[Field.INPUT] === WETH[chainId]) {
         return SWAP_TYPE.EXACT_ETH_FOR_TOKENS
@@ -438,7 +393,7 @@ export default function ExchangePage({ sendingInput = false }) {
     return null
   }
 
-  const slippageAdjustedAmounts = {
+  const slippageAdjustedAmounts: { [field: number]: TokenAmount } = {
     [Field.INPUT]:
       Field.INPUT === independentField
         ? parsedAmounts[Field.INPUT]
@@ -451,37 +406,15 @@ export default function ExchangePage({ sendingInput = false }) {
           new TokenAmount(tokens[Field.INPUT], calculateSlippageAmount(parsedAmounts[Field.OUTPUT])?.[0])
   }
 
-  const showInputUnlock =
+  const showInputUnlock: boolean =
     parsedAmounts[Field.INPUT] && inputApproval && JSBI.greaterThan(parsedAmounts[Field.INPUT].raw, inputApproval.raw)
 
-  const showOutputUnlock =
+  const showOutputUnlock: boolean =
     parsedAmounts[Field.OUTPUT] &&
     outputApproval &&
     JSBI.greaterThan(parsedAmounts[Field.OUTPUT].raw, outputApproval.raw)
 
-  // parse the input for custom slippage
-  function parseCustomInput(val) {
-    const acceptableValues = [/^$/, /^\d{1,2}$/, /^\d{0,2}\.\d{0,2}$/]
-    if (val > 5) {
-      setSlippageInputError('Your transaction may be front-run.')
-    } else {
-      setSlippageInputError(null)
-    }
-    if (acceptableValues.some(a => a.test(val))) {
-      setCustomSlippage(val)
-      setAllowedSlippage(val * 100)
-    }
-  }
-
-  function parseCustomDeadline(val) {
-    const acceptableValues = [/^$/, /^\d+$/]
-    if (acceptableValues.some(re => re.test(val))) {
-      setCustomDeadline(val)
-      setDeadline(val * 60)
-    }
-  }
-
-  const tokenContract = useTokenContract(tokens[Field.INPUT]?.address)
+  const tokenContract: ethers.Contract = useTokenContract(tokens[Field.INPUT]?.address)
 
   // function for a pure send
   async function onSend() {
@@ -494,7 +427,6 @@ export default function ExchangePage({ sendingInput = false }) {
       signer
         .sendTransaction({ to: recipient.toString(), value: hex(parsedAmounts[Field.INPUT].raw) })
         .then(response => {
-          console.log(response)
           setTxHash(response.hash)
           addTransaction(response)
           setPendingConfirmation(false)
@@ -537,17 +469,17 @@ export default function ExchangePage({ sendingInput = false }) {
     }
   }
 
+  // covers swap or swap with send
   async function onSwap() {
-    const routerContract = getRouterContract(chainId, library, account)
-    setAttemptingTxn(true)
+    const routerContract: ethers.Contract = getRouterContract(chainId, library, account)
+
+    setAttemptingTxn(true) // mark that user is attempting transaction
 
     const path = Object.keys(route.path).map(key => {
       return route.path[key].address
     })
-
-    let estimate: Function, method: Function, args, value
-
-    const deadlineFromNow = Math.ceil(Date.now() / 1000) + deadline
+    let estimate: Function, method: Function, args: any[], value: ethers.utils.BigNumber
+    const deadlineFromNow: number = Math.ceil(Date.now() / 1000) + deadline
 
     const swapType = getSwapType()
     switch (swapType) {
@@ -558,7 +490,7 @@ export default function ExchangePage({ sendingInput = false }) {
           slippageAdjustedAmounts[Field.INPUT].raw.toString(),
           slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
           path,
-          account,
+          sending ? recipient : account,
           deadlineFromNow
         ]
         value = ethers.constants.Zero
@@ -570,7 +502,7 @@ export default function ExchangePage({ sendingInput = false }) {
           slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
           slippageAdjustedAmounts[Field.INPUT].raw.toString(),
           path,
-          account,
+          sending ? recipient : account,
           deadlineFromNow
         ]
         value = ethers.constants.Zero
@@ -578,7 +510,12 @@ export default function ExchangePage({ sendingInput = false }) {
       case SWAP_TYPE.EXACT_ETH_FOR_TOKENS:
         estimate = routerContract.estimate.swapExactETHForTokens
         method = routerContract.swapExactETHForTokens
-        args = [slippageAdjustedAmounts[Field.OUTPUT].raw.toString(), path, account, deadlineFromNow]
+        args = [
+          slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
+          path,
+          sending ? recipient : account,
+          deadlineFromNow
+        ]
         value = hex(slippageAdjustedAmounts[Field.INPUT].raw)
         break
       case SWAP_TYPE.TOKENS_FOR_EXACT_ETH:
@@ -588,7 +525,7 @@ export default function ExchangePage({ sendingInput = false }) {
           slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
           slippageAdjustedAmounts[Field.INPUT].raw.toString(),
           path,
-          account,
+          sending ? recipient : account,
           deadlineFromNow
         ]
         value = ethers.constants.Zero
@@ -600,7 +537,7 @@ export default function ExchangePage({ sendingInput = false }) {
           slippageAdjustedAmounts[Field.INPUT].raw.toString(),
           slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
           path,
-          account,
+          sending ? recipient : account,
           deadlineFromNow
         ]
         value = ethers.constants.Zero
@@ -608,13 +545,18 @@ export default function ExchangePage({ sendingInput = false }) {
       case SWAP_TYPE.ETH_FOR_EXACT_TOKENS:
         estimate = routerContract.estimate.swapETHForExactTokens
         method = routerContract.swapETHForExactTokens
-        args = [slippageAdjustedAmounts[Field.OUTPUT].raw.toString(), path, account, deadlineFromNow]
+        args = [
+          slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
+          path,
+          sending ? recipient : account,
+          deadlineFromNow
+        ]
         value = hex(slippageAdjustedAmounts[Field.INPUT].raw)
         break
     }
 
     const estimatedGasLimit = await estimate(...args, { value }).catch(e => {
-      console.log('error getting gas limit')
+      console.log(e)
     })
 
     method(...args, {
@@ -626,7 +568,7 @@ export default function ExchangePage({ sendingInput = false }) {
         addTransaction(response)
         setPendingConfirmation(false)
       })
-      .catch(e => {
+      .catch(() => {
         addPopup(
           <AutoColumn gap="10px">
             <Text>Transaction Failed: try again.</Text>
@@ -638,13 +580,13 @@ export default function ExchangePage({ sendingInput = false }) {
   }
 
   // errors
-  const [generalError, setGeneralError] = useState('')
-  const [inputError, setInputError] = useState('')
-  const [outputError, setOutputError] = useState('')
-  const [recipientError, setRecipientError] = useState('')
-  const [isValid, setIsValid] = useState(false)
+  const [generalError, setGeneralError] = useState<string>('')
+  const [inputError, setInputError] = useState<string>('')
+  const [outputError, setOutputError] = useState<string>('')
+  const [recipientError, setRecipientError] = useState<string>('')
+  const [isValid, setIsValid] = useState<boolean>(false)
 
-  const ignoreOutput = sending ? !sendingWithSwap : false
+  const ignoreOutput: boolean = sending ? !sendingWithSwap : false
 
   useEffect(() => {
     // reset errors
@@ -652,11 +594,9 @@ export default function ExchangePage({ sendingInput = false }) {
     setInputError(null)
     setOutputError(null)
     setTradeError(null)
-    setRecipientError(null)
     setIsValid(true)
 
-    if (!isAddress(recipient) && sending) {
-      setRecipientError('Invalid Recipient')
+    if (recipientError) {
       setIsValid(false)
     }
 
@@ -675,7 +615,7 @@ export default function ExchangePage({ sendingInput = false }) {
       exchange &&
       JSBI.greaterThan(parsedAmounts[Field.INPUT].raw, exchange.reserveOf(tokens[Field.INPUT]).raw)
     ) {
-      setTradeError('Low Liquidity Error')
+      setTradeError('Insufficient Liquidity')
       setIsValid(false)
     }
 
@@ -685,7 +625,7 @@ export default function ExchangePage({ sendingInput = false }) {
       exchange &&
       JSBI.greaterThan(parsedAmounts[Field.OUTPUT].raw, exchange.reserveOf(tokens[Field.OUTPUT]).raw)
     ) {
-      setTradeError('Low Liquidity Error')
+      setTradeError('Insufficient Liquidity')
       setIsValid(false)
     }
 
@@ -712,6 +652,7 @@ export default function ExchangePage({ sendingInput = false }) {
     ignoreOutput,
     parsedAmounts,
     recipient,
+    recipientError,
     sending,
     sendingWithSwap,
     showInputUnlock,
@@ -721,9 +662,12 @@ export default function ExchangePage({ sendingInput = false }) {
   ])
 
   // warnings on slippage
-  const warningMedium = slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_MEDIUM / 100
-  const warningHigh = slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_HIGH / 100
+  const warningMedium: boolean =
+    slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_MEDIUM / 100
+  const warningHigh: boolean =
+    slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_HIGH / 100
 
+  // reset modal state when closed
   function resetModal() {
     setPendingConfirmation(true)
     setAttemptingTxn(false)
@@ -736,11 +680,11 @@ export default function ExchangePage({ sendingInput = false }) {
         <AutoColumn gap="30px" style={{ marginTop: '40px' }}>
           <RowBetween>
             <Text fontSize={36} fontWeight={500}>
-              {parsedAmounts[Field.INPUT]?.toFixed(8)}
+              {parsedAmounts[Field.INPUT]?.toFixed(8)} {tokens[Field.INPUT]?.symbol}
             </Text>
             <TokenLogo address={tokens[Field.INPUT]?.address} size={'30px'} />
           </RowBetween>
-          <ArrowDown size={24} color="#888D9B" />
+          <TYPE.darkGray fontSize={20}>To</TYPE.darkGray>
           <TYPE.blue fontSize={36}>
             {recipient?.slice(0, 6)}...{recipient?.slice(36, 42)}
           </TYPE.blue>
@@ -749,6 +693,27 @@ export default function ExchangePage({ sendingInput = false }) {
     }
 
     if (sending && sendingWithSwap) {
+      return (
+        <AutoColumn gap="30px" style={{ marginTop: '40px' }}>
+          <AutoColumn gap="10px">
+            <AutoRow gap="10px">
+              <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'30px'} />
+              <Text fontSize={36} fontWeight={500}>
+                {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} {tokens[Field.OUTPUT]?.symbol}
+              </Text>
+            </AutoRow>
+            <BlueCard>
+              Via {parsedAmounts[Field.INPUT]?.toSignificant(4)} {tokens[Field.INPUT]?.symbol} swap
+            </BlueCard>
+          </AutoColumn>
+          <AutoColumn gap="10px">
+            <TYPE.darkGray fontSize={20}>To</TYPE.darkGray>
+            <TYPE.blue fontSize={36}>
+              {recipient?.slice(0, 6)}...{recipient?.slice(36, 42)}
+            </TYPE.blue>
+          </AutoColumn>
+        </AutoColumn>
+      )
     }
 
     if (!sending) {
@@ -796,119 +761,29 @@ export default function ExchangePage({ sendingInput = false }) {
         </AutoColumn>
       )
     }
-
-    if (sending && sendingWithSwap) {
-    }
-
     if (showAdvanced) {
       return (
-        <AutoColumn gap="20px">
-          <Link
-            onClick={() => {
-              setShowAdvanced(false)
-            }}
-          >
-            back
-          </Link>
-          <RowBetween>
-            <TYPE.main>Limit additional price impact</TYPE.main>
-            <QuestionHelper text="" />
-          </RowBetween>
-          <Row>
-            <ButtonRadio
-              active={SLIPPAGE_INDEX[1] === activeIndex}
-              padding="4px 6px"
-              borderRadius="8px"
-              style={{ marginRight: '16px' }}
-              width={'60px'}
-              onClick={() => {
-                setActiveIndex(SLIPPAGE_INDEX[1])
-                setAllowedSlippage(10)
-              }}
-            >
-              0.1%
-            </ButtonRadio>
-            <ButtonRadio
-              active={SLIPPAGE_INDEX[2] === activeIndex}
-              padding="4px 6px"
-              borderRadius="8px"
-              style={{ marginRight: '16px' }}
-              width={'60px'}
-              onClick={() => {
-                setActiveIndex(SLIPPAGE_INDEX[2])
-                setAllowedSlippage(100)
-              }}
-            >
-              1%
-            </ButtonRadio>
-            <ButtonRadio
-              active={SLIPPAGE_INDEX[3] === activeIndex}
-              padding="4px"
-              borderRadius="8px"
-              width={'140px'}
-              onClick={() => {
-                setActiveIndex(SLIPPAGE_INDEX[3])
-                setAllowedSlippage(200)
-              }}
-            >
-              2% (suggested)
-            </ButtonRadio>
-          </Row>
-          <RowFixed>
-            <InputWrapper active={SLIPPAGE_INDEX[4] === activeIndex} error={slippageInputError}>
-              <NumericalInput
-                align={customSlippage ? 'right' : 'left'}
-                value={customSlippage || ''}
-                onUserInput={val => {
-                  parseCustomInput(val)
-                  setActiveIndex(SLIPPAGE_INDEX[4])
-                }}
-                placeHolder="Custom"
-                onClick={() => {
-                  setActiveIndex(SLIPPAGE_INDEX[4])
-                  if (customSlippage) {
-                    parseCustomInput(customSlippage)
-                  }
-                }}
-              />
-              %
-            </InputWrapper>
-            {slippageInputError && (
-              <TYPE.error error={true} fontSize={12} style={{ marginLeft: '10px' }}>
-                Your transaction may be front-run
-              </TYPE.error>
-            )}
-          </RowFixed>
-          <RowBetween>
-            <TYPE.main>Adjust deadline (minutes from now)</TYPE.main>
-          </RowBetween>
-          <RowFixed>
-            <InputWrapper>
-              <NumericalInput
-                value={customDeadline}
-                onUserInput={val => {
-                  parseCustomDeadline(val)
-                }}
-              />
-            </InputWrapper>
-          </RowFixed>
-        </AutoColumn>
+        <AdvancedSettings
+          setIsOpen={setShowAdvanced}
+          setDeadline={setDeadline}
+          setAllowedSlippage={setAllowedSlippage}
+        />
       )
     }
 
-    if (!sending) {
+    if (!sending || (sending && sendingWithSwap)) {
       return (
         <>
-          <RowBetween>
-            <Text color="#565A69" fontWeight={500} fontSize={16}>
-              Price
-            </Text>
-            <Text fontWeight={500} fontSize={16}>
-              {`1 ${tokens[Field.INPUT]?.symbol} = ${route && route.midPrice && route.midPrice.adjusted.toFixed(8)} ${
-                tokens[Field.OUTPUT]?.symbol
-              }`}
-            </Text>
-          </RowBetween>
+          {route && route.midPrice && !emptyReserves && (
+            <RowBetween>
+              <Text color="#565A69" fontWeight={500} fontSize={16}>
+                Price
+              </Text>
+              <Text fontWeight={500} fontSize={16}>
+                {`1 ${tokens[Field.INPUT]?.symbol} = ${route.midPrice.toFixed(6)} ${tokens[Field.OUTPUT]?.symbol}`}
+              </Text>
+            </RowBetween>
+          )}
           <RowBetween>
             <Text color="#565A69" fontWeight={500} fontSize={16}>
               Slippage <Link onClick={() => setShowAdvanced(true)}>(edit limits)</Link>
@@ -919,7 +794,7 @@ export default function ExchangePage({ sendingInput = false }) {
           </RowBetween>
           <ButtonError onClick={onSwap} error={!!warningHigh} style={{ margin: '10px 0' }}>
             <Text fontSize={20} fontWeight={500}>
-              {warningHigh ? 'Swap Anyway' : 'Swap'}
+              {warningHigh ? (sending ? 'Send Anyway' : 'Swap Anyway') : sending ? 'Confirm Send' : 'Confirm Swap'}
             </Text>
           </ButtonError>
           <AutoColumn justify="center" gap="20px">
@@ -933,7 +808,7 @@ export default function ExchangePage({ sendingInput = false }) {
                 setShowAdvanced(true)
               }}
             >
-              Advanced Options
+              Advanced
             </Link>
           </AutoColumn>
         </>
@@ -941,27 +816,48 @@ export default function ExchangePage({ sendingInput = false }) {
     }
   }
 
-  const pendingText = sending
-    ? `Sending ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${tokens[Field.INPUT]?.symbol} to ${recipient}`
+  // text to show while loading
+  const pendingText: string = sending
+    ? sendingWithSwap
+      ? `Sending ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol} to ${recipient}`
+      : `Sending ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${tokens[Field.INPUT]?.symbol} to ${recipient}`
     : ` Swapped ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${tokens[Field.INPUT]?.symbol} for ${parsedAmounts[
         Field.OUTPUT
       ]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}`
+
+  function _onTokenSelect(address: string) {
+    const balance = allBalances?.[account]?.[address]
+    // if no user balance - switch view to a send with swap
+    const hasBalance = balance && JSBI.greaterThan(JSBI.BigInt(0), balance.raw)
+    if (!hasBalance && sending) {
+      onTokenSelection(Field.OUTPUT, address)
+      setSendingWithSwap(true)
+    } else {
+      onTokenSelection(Field.INPUT, address)
+    }
+  }
+
+  function _onRecipient(result) {
+    if (result.address) {
+      setRecipient(result.address)
+    }
+  }
 
   return (
     <Wrapper>
       <ConfirmationModal
         isOpen={showConfirm}
+        title={sendingWithSwap ? 'Confirm swap and send' : sending ? 'Confirm Send' : 'Confirm Swap'}
         onDismiss={() => {
           resetModal()
           setShowConfirm(false)
         }}
         attemptingTxn={attemptingTxn}
         pendingConfirmation={pendingConfirmation}
-        hash={txHash ? txHash : ''}
+        hash={txHash}
         topContent={modalHeader}
         bottomContent={modalBottom}
         pendingText={pendingText}
-        title={sendingWithSwap ? 'Confirm swap and send' : sending ? 'Confirm Send' : 'Confirm Swap'}
       />
 
       {sending && !sendingWithSwap && (
@@ -987,11 +883,7 @@ export default function ExchangePage({ sendingInput = false }) {
               }}
               atMax={atMaxAmountInput}
               token={tokens[Field.INPUT]}
-              onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
-              onTokenSelectSendWithSwap={address => {
-                onTokenSelection(Field.OUTPUT, address)
-                setSendingWithSwap(true)
-              }}
+              onTokenSelection={address => _onTokenSelect(address)}
               title={'Input'}
               error={inputError}
               exchange={exchange}
@@ -1010,17 +902,17 @@ export default function ExchangePage({ sendingInput = false }) {
             <CurrencyInputPanel
               field={Field.INPUT}
               value={formattedAmounts[Field.INPUT]}
-              onUserInput={onUserInput}
-              onMax={() => {
-                maxAmountInput && onMaxInput(maxAmountInput.toExact())
-              }}
               atMax={atMaxAmountInput}
               token={tokens[Field.INPUT]}
-              onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
               title={'Input'}
               error={inputError}
               exchange={exchange}
               showUnlock={showInputUnlock}
+              onUserInput={onUserInput}
+              onMax={() => {
+                maxAmountInput && onMaxInput(maxAmountInput.toExact())
+              }}
+              onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
             />
             <ColumnCenter>
               <ArrowWrapper onClick={onSwapTokens}>
@@ -1043,18 +935,20 @@ export default function ExchangePage({ sendingInput = false }) {
               exchange={exchange}
               showUnlock={showOutputUnlock}
             />
-            <RowBetween>
-              <Text fontWeight={500} color="#565A69">
-                Price
-              </Text>
-              <Text fontWeight={500} color="#565A69">
-                {exchange
-                  ? `1 ${tokens[Field.INPUT].symbol} = ${route?.midPrice.toSignificant(6)} ${
-                      tokens[Field.OUTPUT].symbol
-                    }`
-                  : '-'}
-              </Text>
-            </RowBetween>
+            {!emptyReserves && ( // hide price if new exchange
+              <RowBetween>
+                <Text fontWeight={500} color="#565A69">
+                  Price
+                </Text>
+                <Text fontWeight={500} color="#565A69">
+                  {exchange
+                    ? `1 ${tokens[Field.INPUT].symbol} = ${route?.midPrice.toSignificant(6)} ${
+                        tokens[Field.OUTPUT].symbol
+                      }`
+                    : '-'}
+                </Text>
+              </RowBetween>
+            )}
             {warningMedium && (
               <RowBetween>
                 <Text fontWeight={500} color="#565A69">
@@ -1070,39 +964,54 @@ export default function ExchangePage({ sendingInput = false }) {
 
         {sending && (
           <AutoColumn gap="10px">
-            <LightCard borderRadius={'20px'}>
-              <RowBetween>
-                <StyledInput placeholder="Recipient Address" onChange={e => setRecipient(e.target.value)} />
-                <QRWrapper>
-                  <img src={QR} alt="" />
-                </QRWrapper>
-              </RowBetween>
-            </LightCard>
+            <AddressInputPanel
+              title={''}
+              onChange={_onRecipient}
+              onError={error => {
+                if (error) {
+                  setRecipientError('Inavlid Recipient')
+                } else {
+                  setRecipientError(null)
+                }
+              }}
+            />
           </AutoColumn>
         )}
-        <ButtonError
-          onClick={() => {
-            setShowConfirm(true)
-          }}
-          disabled={!isValid}
-          error={!!warningHigh}
-        >
-          <Text fontSize={20} fontWeight={500}>
-            {generalError
-              ? generalError
-              : inputError
-              ? inputError
-              : outputError
-              ? outputError
-              : recipientError
-              ? recipientError
-              : tradeError
-              ? tradeError
-              : warningHigh
-              ? 'Swap Anyway'
-              : 'Swap'}
-          </Text>
-        </ButtonError>
+
+        {emptyReserves ? (
+          <RowBetween style={{ margin: '10px 0' }}>
+            <TYPE.main>No exchange for this pair.</TYPE.main>
+            <TYPE.blue> Create one now</TYPE.blue>
+          </RowBetween>
+        ) : (
+          <ButtonError
+            onClick={() => {
+              setShowConfirm(true)
+            }}
+            disabled={!isValid}
+            error={!!warningHigh}
+          >
+            <Text fontSize={20} fontWeight={500}>
+              {generalError
+                ? generalError
+                : inputError
+                ? inputError
+                : outputError
+                ? outputError
+                : recipientError
+                ? recipientError
+                : tradeError
+                ? tradeError
+                : warningHigh
+                ? sendingWithSwap
+                  ? 'Send Anyway'
+                  : 'Swap Anyway'
+                : sending
+                ? 'Send'
+                : 'Swap'}
+            </Text>
+          </ButtonError>
+        )}
       </AutoColumn>
 
       {warningHigh && (

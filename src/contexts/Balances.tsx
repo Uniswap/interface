@@ -427,6 +427,7 @@ export function useAllBalances(): Array<TokenAmount> {
               }
             }
           }
+          return true
         })
       })
       return newBalances
@@ -443,6 +444,9 @@ export function useAddressBalance(address: string, token: Token): TokenAmount | 
   const { chainId } = useWeb3React()
   const [state, { startListening, stopListening }] = useBalancesContext()
 
+  const value = typeof chainId === 'number' ? state?.[chainId]?.[address]?.[token?.address]?.value : undefined
+  const formattedValue = value && token && new TokenAmount(token, value)
+
   /**
    * @todo
    * when catching for token, causes infinite rerender
@@ -456,9 +460,6 @@ export function useAddressBalance(address: string, token: Token): TokenAmount | 
       }
     }
   }, [chainId, address, startListening, stopListening])
-
-  const value = typeof chainId === 'number' ? state?.[chainId]?.[address]?.[token?.address]?.value : undefined
-  const formattedValue = value && token && new TokenAmount(token, value)
 
   return useMemo(() => formattedValue, [formattedValue])
 }
@@ -476,6 +477,7 @@ export function useAccountLPBalances(account: string) {
           stopListening(chainId, account, exchangeAddress)
         }
       }
+      return true
     })
   }, [account, allExchanges, chainId, startListening, stopListening])
 }

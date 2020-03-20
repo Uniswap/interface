@@ -1,16 +1,16 @@
 import { injected, walletconnect, walletlink, fortmatic, portis } from '../connectors'
 
 export const FACTORY_ADDRESSES = {
-  1: '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95',
-  3: '0x9c83dCE8CA20E9aAF9D3efc003b2ea62aBC08351',
-  4: '0xf5D915570BC477f9B8D6C0E980aA81757A3AaC36',
-  42: '0xD3E51Ef092B2845f10401a0159B2B96e8B6c3D30'
+  1: '',
+  3: '',
+  4: '0xe2f197885abe8ec7c866cFf76605FD06d4576218',
+  42: ''
 }
 
 export const ROUTER_ADDRESSES = {
   1: '',
   3: '',
-  4: '0xd9210Ff5A0780E083BB40e30d005d93a2DcFA4EF',
+  4: '0xcDbE04934d89e97a24BCc07c3562DC8CF17d8167',
   42: ''
 }
 
@@ -99,13 +99,5 @@ export const SUPPORTED_WALLETS =
           }
         }
       }
-
-// list of tokens that lock fund on adding liquidity - used to disable button
-export const brokenTokens = [
-  '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
-  '0x95dAaaB98046846bF4B2853e23cba236fa394A31',
-  '0x55296f69f40Ea6d20E478533C15A6B08B654E758',
-  '0xc3761EB917CD790B30dAD99f6Cc5b4Ff93C4F9eA'
-]
 
 export const NetworkContextName = 'NETWORK'

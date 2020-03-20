@@ -5,7 +5,7 @@ import EXCHANGE_ABI from '../constants/abis/exchange'
 import ROUTER_ABI from '../constants/abis/router'
 import ERC20_ABI from '../constants/abis/erc20'
 import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32'
-import { FACTORY_ADDRESSES, SUPPORTED_THEMES } from '../constants'
+import { FACTORY_ADDRESSES, SUPPORTED_THEMES, ROUTER_ADDRESSES } from '../constants'
 import { bigNumberify, keccak256, defaultAbiCoder, toUtf8Bytes, solidityPack } from 'ethers/utils'
 
 import UncheckedJsonRpcSigner from './signer'
@@ -131,8 +131,8 @@ export function getContract(address, ABI, library, account) {
 }
 
 // account is optional
-export function getRouterContract(networkId, library, account) {
-  const router = getContract('0xd9210Ff5A0780E083BB40e30d005d93a2DcFA4EF', ROUTER_ABI, library, account)
+export function getRouterContract(chainId, library, account) {
+  const router = getContract(ROUTER_ADDRESSES[chainId], ROUTER_ABI, library, account)
   return router
 }
 
