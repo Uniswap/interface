@@ -1319,7 +1319,7 @@
     "@ethersproject/logger" ">=5.0.0-beta.129"
     "@ethersproject/strings" ">=5.0.0-beta.130"
 
-"@ethersproject/keccak256@>=5.0.0-beta.127", "@ethersproject/keccak256@^5.0.0-beta.130", "@ethersproject/keccak256@^5.0.0-beta.131":
+"@ethersproject/keccak256@>=5.0.0-beta.127", "@ethersproject/keccak256@^5.0.0-beta.130":
   version "5.0.0-beta.131"
   resolved "https://registry.yarnpkg.com/@ethersproject/keccak256/-/keccak256-5.0.0-beta.131.tgz#b5778723ee75208065b9b9ad30c71d480f41bb31"
   integrity sha512-KQnqMwGV0IMOjAr/UTFO8DuLrmN1uaMvcV3zh9hiXhh3rCuY+WXdeUh49w1VQ94kBKmaP0qfGb7z4SdhUWUHjw==
@@ -1382,6 +1382,15 @@
   dependencies:
     "@ethersproject/bytes" ">=5.0.0-beta.129"
 
+"@ethersproject/sha2@>=5.0.0-beta.129":
+  version "5.0.0-beta.135"
+  resolved "https://registry.yarnpkg.com/@ethersproject/sha2/-/sha2-5.0.0-beta.135.tgz#e597572ba991fe044d50f8d75704bb4a2b2c64b4"
+  integrity sha512-DK/cUT5ilCVLtf1xk7XDPB9xGHsXiU3TsULKsEg823cTBIhFl2l0IiHAGqu9uiMlSJRpb2BwrWQuMgmFe/vMwQ==
+  dependencies:
+    "@ethersproject/bytes" ">=5.0.0-beta.129"
+    "@ethersproject/logger" ">=5.0.0-beta.129"
+    hash.js "1.1.3"
+
 "@ethersproject/signing-key@>=5.0.0-beta.129":
   version "5.0.0-beta.135"
   resolved "https://registry.yarnpkg.com/@ethersproject/signing-key/-/signing-key-5.0.0-beta.135.tgz#f739e800aad9e01b77a8ec2c353b9b66ce5738fa"
@@ -1391,6 +1400,17 @@
     "@ethersproject/logger" ">=5.0.0-beta.129"
     "@ethersproject/properties" ">=5.0.0-beta.131"
     elliptic "6.5.2"
+
+"@ethersproject/solidity@^5.0.0-beta.131":
+  version "5.0.0-beta.131"
+  resolved "https://registry.yarnpkg.com/@ethersproject/solidity/-/solidity-5.0.0-beta.131.tgz#7d826e98cc0a29e25f0ff52ae17c07483f5d93d4"
+  integrity sha512-i5vuj2CXGMkVPo08bmElC2cvhjRDNRZZ8nzvx2WCi75Zh42xD0XNV77E9ZLYgS0WoZSiAi/F71nXSBnM7FAqJg==
+  dependencies:
+    "@ethersproject/bignumber" ">=5.0.0-beta.130"
+    "@ethersproject/bytes" ">=5.0.0-beta.129"
+    "@ethersproject/keccak256" ">=5.0.0-beta.127"
+    "@ethersproject/sha2" ">=5.0.0-beta.129"
+    "@ethersproject/strings" ">=5.0.0-beta.130"
 
 "@ethersproject/strings@>=5.0.0-beta.130":
   version "5.0.0-beta.136"
@@ -2365,16 +2385,16 @@
     semver "^6.3.0"
     tsutils "^3.17.1"
 
-"@uniswap/sdk@@uniswap/sdk@2.0.0-beta.17":
-  version "2.0.0-beta.17"
-  resolved "https://registry.yarnpkg.com/@uniswap/sdk/-/sdk-2.0.0-beta.17.tgz#8f24be0375d5f8137eae75afe75b2356c75bb793"
-  integrity sha512-Nd3S/VE51z4jsNs9G9hkslUkS862dpslnU86lXEJi7mbbbPIagh31iR0s/uBPnrBFGiktucgvzRn6WJJIvojWA==
+"@uniswap/sdk@@uniswap/sdk@2.0.0-beta.19":
+  version "2.0.0-beta.19"
+  resolved "https://registry.yarnpkg.com/@uniswap/sdk/-/sdk-2.0.0-beta.19.tgz#1f0228a1d5451d62f209e09c48cd1d6bea5ffe01"
+  integrity sha512-mqDZkeX2TU7e3yOOKHSeUryv94//mJ6dsU6dCv6FExrfOY9yi6+O5ZWpe43rVi0XFVdQGRIRhJapdWKWaGsung==
   dependencies:
     "@ethersproject/address" "^5.0.0-beta.134"
     "@ethersproject/contracts" "^5.0.0-beta.143"
-    "@ethersproject/keccak256" "^5.0.0-beta.131"
     "@ethersproject/networks" "^5.0.0-beta.135"
     "@ethersproject/providers" "^5.0.0-beta.153"
+    "@ethersproject/solidity" "^5.0.0-beta.131"
     big.js "^5.2.2"
     decimal.js-light "^2.5.0"
     jsbi "^3.1.1"

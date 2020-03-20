@@ -2,23 +2,23 @@ import React from 'react'
 import Slider from '@material-ui/core/Slider'
 import { withStyles } from '@material-ui/core/styles'
 
-const marks = [
-  {
-    value: 0
-  },
-  {
-    value: 25
-  },
-  {
-    value: 50
-  },
-  {
-    value: 75
-  },
-  {
-    value: 100
-  }
-]
+// const marks = [
+//   {
+//     value: 0
+//   },
+//   {
+//     value: 25
+//   },
+//   {
+//     value: 50
+//   },
+//   {
+//     value: 75
+//   },
+//   {
+//     value: 100
+//   }
+// ]
 
 const StyledSlider = withStyles({
   root: {

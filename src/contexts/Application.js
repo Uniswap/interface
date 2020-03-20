@@ -162,6 +162,7 @@ export function usePopups() {
       if (key === item.key) {
         item.show = false
       }
+      return true
     })
     setPopups(currentPopups)
   }

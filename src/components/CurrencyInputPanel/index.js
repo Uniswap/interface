@@ -8,6 +8,7 @@ import { WETH } from '@uniswap/sdk'
 import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
 import SearchModal from '../SearchModal'
+import { TYPE } from '../../theme'
 import { Text } from 'rebass'
 import { RowBetween } from '../Row'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
@@ -19,6 +20,8 @@ import { useTokenContract } from '../../hooks'
 import { calculateGasMargin } from '../../utils'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
+
+import { ROUTER_ADDRESSES } from '../../constants'
 
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
@@ -51,26 +54,18 @@ const CurrencySelect = styled.button`
   font-size: 20px;
   background-color: ${({ selected, theme }) => (selected ? theme.buttonBackgroundPlain : theme.royalBlue)};
   color: ${({ selected, theme }) => (selected ? theme.textColor : theme.white)};
-  border: 1px solid
-    ${({ selected, theme, disableTokenSelect }) =>
-      disableTokenSelect ? theme.buttonBackgroundPlain : selected ? theme.buttonOutlinePlain : theme.royalBlue};
   border-radius: 8px;
   outline: none;
   cursor: pointer;
   user-select: none;
 
+  border: 1px solid
+    ${({ selected, theme }) => (selected ? darken(0.1, theme.outlineGrey) : darken(0.1, theme.royalBlue))};
+
+  :focus,
   :hover {
     border: 1px solid
-      ${({ selected, theme }) => (selected ? darken(0.1, theme.outlineGrey) : darken(0.1, theme.royalBlue))};
-  }
-
-  :focus {
-    border: 1px solid ${({ theme }) => darken(0.1, theme.royalBlue)};
-  }
-
-  :active {
-    background-color: ${({ selected, theme }) =>
-      selected ? darken(0.1, theme.zumthorBlue) : darken(0.1, theme.royalBlue)};
+      ${({ selected, theme }) => (selected ? darken(0.2, theme.outlineGrey) : darken(0.2, theme.royalBlue))};
   }
 `
 
@@ -99,12 +94,8 @@ const InputPanel = styled.div`
 
 const Container = styled.div`
   border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
-  border: 1px solid ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
-
+  border: 1px solid ${({ error, theme }) => (error ? theme.salmonRed : theme.backgroundColor)};
   background-color: ${({ theme }) => theme.inputBackground};
-  :focus-within {
-    border: 1px solid ${({ error, theme }) => (error ? theme.salmonRed : theme.malibuBlue)};
-  }
 `
 
 const LabelRow = styled.div`
@@ -113,7 +104,7 @@ const LabelRow = styled.div`
   color: ${({ theme }) => theme.doveGray};
   font-size: 0.75rem;
   line-height: 1rem;
-  padding: 0.75rem 1rem 0;
+  padding: 0.5rem 1rem 1rem 1rem;
   span:hover {
     cursor: pointer;
     color: ${({ theme }) => darken(0.2, theme.doveGray)};
@@ -161,12 +152,12 @@ export default function CurrencyInputPanel({
   value,
   field,
   onUserInput,
-  onTokenSelection = null,
   title,
   onMax,
   atMax,
   error,
   urlAddedTokens = [], // used
+  onTokenSelection = null,
   token = null,
   showUnlock = false, // used to show unlock if approval needed
   disableUnlock = false,
@@ -176,22 +167,18 @@ export default function CurrencyInputPanel({
   exchange = null, // used for double token logo
   customBalance = null, // used for LP balances instead of token balance
   hideInput = false,
-  showSendWithSwap = false,
-  onTokenSelectSendWithSwap = null
+  showSendWithSwap = false
 }) {
-  const { account, chainId } = useWeb3React()
   const { t } = useTranslation()
-  const addTransaction = useTransactionAdder()
+  const { account, chainId } = useWeb3React()
+  const routerAddress = ROUTER_ADDRESSES[chainId]
 
+  const addTransaction = useTransactionAdder()
   const [modalOpen, setModalOpen] = useState(false)
 
-  // this one causes the infinite loop
   const userTokenBalance = useAddressBalance(account, token)
-
   const tokenContract = useTokenContract(token?.address)
   const pendingApproval = usePendingApproval(token?.address)
-
-  const routerAddress = '0xd9210Ff5A0780E083BB40e30d005d93a2DcFA4EF'
 
   function renderUnlockButton() {
     if (
@@ -240,19 +227,6 @@ export default function CurrencyInputPanel({
   return (
     <InputPanel>
       <Container error={!!error} hideInput={hideInput}>
-        {!hideBalance && (
-          <LabelRow>
-            <RowBetween>
-              <Text>{title}</Text>
-              <ErrorSpan data-tip={'Enter max'} error={!!error} onClick={() => {}}></ErrorSpan>
-              <ClickableText onClick={onMax}>
-                <Text>
-                  Balance: {customBalance ? customBalance?.toSignificant(4) : userTokenBalance?.toSignificant(4)}
-                </Text>
-              </ClickableText>
-            </RowBetween>
-          </LabelRow>
-        )}
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} hideInput={hideInput}>
           {!hideInput && (
             <>
@@ -267,7 +241,7 @@ export default function CurrencyInputPanel({
             </>
           )}
           <CurrencySelect
-            selected={!!token?.address}
+            selected={!!token}
             onClick={() => {
               if (!disableTokenSelect) {
                 setModalOpen(true)
@@ -292,6 +266,19 @@ export default function CurrencyInputPanel({
             </Aligner>
           </CurrencySelect>
         </InputRow>
+        {!hideBalance && !!token && (
+          <LabelRow>
+            <RowBetween>
+              <Text>{'-'}</Text>
+              <ErrorSpan data-tip={'Enter max'} error={!!error} onClick={() => {}}></ErrorSpan>
+              <ClickableText onClick={onMax}>
+                <TYPE.body>
+                  Balance: {customBalance ? customBalance?.toSignificant(4) : userTokenBalance?.toSignificant(4)}
+                </TYPE.body>
+              </ClickableText>
+            </RowBetween>
+          </LabelRow>
+        )}
       </Container>
       {!disableTokenSelect && (
         <SearchModal
@@ -304,7 +291,6 @@ export default function CurrencyInputPanel({
           field={field}
           onTokenSelect={onTokenSelection}
           showSendWithSwap={showSendWithSwap}
-          onTokenSelectSendWithSwap={onTokenSelectSendWithSwap}
         />
       )}
     </InputPanel>

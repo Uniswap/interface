@@ -2,10 +2,10 @@ import React, { useReducer, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
 import { parseUnits, parseEther } from '@ethersproject/units'
-import { WETH, TokenAmount, JSBI, Percent, Route } from '@uniswap/sdk'
+import { WETH, TokenAmount, JSBI, Percent, Route, Token, Exchange } from '@uniswap/sdk'
 
-import DoubleLogo from '../../components/DoubleLogo'
 import TokenLogo from '../../components/TokenLogo'
+import DoubleLogo from '../../components/DoubleLogo'
 import SearchModal from '../../components/SearchModal'
 import PositionCard from '../../components/PositionCard'
 import ConfirmationModal from '../../components/ConfirmationModal'
@@ -17,8 +17,8 @@ import { AutoColumn, ColumnCenter } from '../../components/Column'
 import Row, { RowBetween, RowFlat, RowFixed } from '../../components/Row'
 
 import { useToken } from '../../contexts/Tokens'
-import { useWeb3React } from '../../hooks'
 import { usePopups } from '../../contexts/Application'
+import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useTransactionAdder } from '../../contexts/Transactions'
@@ -27,6 +27,7 @@ import { useExchange, useTotalSupply } from '../../contexts/Exchanges'
 import { BigNumber } from 'ethers/utils'
 import { ROUTER_ADDRESSES } from '../../constants'
 import { getRouterContract, calculateGasMargin } from '../../utils'
+import { TYPE } from '../../theme'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = 200
@@ -134,12 +135,9 @@ function reducer(
   }
 }
 
-/**
- * @todo should we ever not have prepopulated tokens?
- *
- */
 export default function AddLiquidity({ token0, token1 }) {
   const { account, chainId, library } = useWeb3React()
+  const [, addPopup] = usePopups()
 
   const routerAddress: string = ROUTER_ADDRESSES[chainId]
 
@@ -152,28 +150,28 @@ export default function AddLiquidity({ token0, token1 }) {
   // input state
   const [state, dispatch] = useReducer(reducer, initializeAddState(token0, token1))
   const { independentField, typedValue, ...fieldData } = state
-  const dependentField = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
+  const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   // get basic SDK entities
-  const tokens = {
+  const tokens: { [field: number]: Token } = {
     [Field.INPUT]: useToken(fieldData[Field.INPUT].address),
     [Field.OUTPUT]: useToken(fieldData[Field.OUTPUT].address)
   }
 
   // exhchange data
-  const exchange = useExchange(tokens[Field.INPUT], tokens[Field.OUTPUT])
-  const route = exchange ? new Route([exchange], tokens[independentField]) : undefined
-  const totalSupply = useTotalSupply(exchange)
-  const [noLiquidity, setNoLiquidity] = useState<boolean>(false)
+  const exchange: Exchange = useExchange(tokens[Field.INPUT], tokens[Field.OUTPUT])
+  const route: Route = exchange ? new Route([exchange], tokens[independentField]) : undefined
+  const totalSupply: TokenAmount = useTotalSupply(exchange)
+  const [noLiquidity, setNoLiquidity] = useState<boolean>(false) // used to detect new exchange
 
   // state for amount approvals
-  const inputApproval = useAddressAllowance(account, tokens[Field.INPUT], routerAddress)
-  const outputApproval = useAddressAllowance(account, tokens[Field.OUTPUT], routerAddress)
+  const inputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.INPUT], routerAddress)
+  const outputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.OUTPUT], routerAddress)
   const [showInputUnlock, setShowInputUnlock] = useState<boolean>(false)
   const [showOutputUnlock, setShowOutputUnlock] = useState<boolean>(false)
 
   // get user-pecific and token-specific lookup data
-  const userBalances = {
+  const userBalances: { [field: number]: TokenAmount } = {
     [Field.INPUT]: useAddressBalance(account, tokens[Field.INPUT]),
     [Field.OUTPUT]: useAddressBalance(account, tokens[Field.OUTPUT])
   }
@@ -219,7 +217,6 @@ export default function AddLiquidity({ token0, token1 }) {
       if (typedValueParsed !== '0')
         parsedAmounts[independentField] = new TokenAmount(tokens[independentField], typedValueParsed)
     } catch (error) {
-      // should only fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
       console.error(error)
     }
   }
@@ -240,12 +237,16 @@ export default function AddLiquidity({ token0, token1 }) {
   }
 
   // check for estimated liquidity minted
-  const liquidityMinted =
-    !!exchange && !!parsedAmounts[Field.INPUT] && !!parsedAmounts[Field.OUTPUT] && !!totalSupply
-      ? exchange.getLiquidityMinted(totalSupply, parsedAmounts[Field.INPUT], parsedAmounts[Field.OUTPUT])
+  const liquidityMinted: TokenAmount =
+    !!exchange && !!parsedAmounts[Field.INPUT] && !!parsedAmounts[Field.OUTPUT]
+      ? exchange.getLiquidityMinted(
+          totalSupply ? totalSupply : new TokenAmount(exchange?.liquidityToken, JSBI.BigInt(0)),
+          parsedAmounts[Field.INPUT],
+          parsedAmounts[Field.OUTPUT]
+        )
       : undefined
 
-  const poolTokenPercentage =
+  const poolTokenPercentage: Percent =
     !!liquidityMinted && !!totalSupply
       ? new Percent(liquidityMinted.raw, totalSupply.add(liquidityMinted).raw)
       : undefined
@@ -271,10 +272,10 @@ export default function AddLiquidity({ token0, token1 }) {
     })
   }, [])
 
-  const MIN_ETHER = new TokenAmount(WETH[chainId], JSBI.BigInt(parseEther('.01')))
+  const MIN_ETHER: TokenAmount = new TokenAmount(WETH[chainId], JSBI.BigInt(parseEther('.01')))
 
   // get the max amounts user can add
-  const [maxAmountInput, maxAmountOutput] = [Field.INPUT, Field.OUTPUT].map(index => {
+  const [maxAmountInput, maxAmountOutput]: TokenAmount[] = [Field.INPUT, Field.OUTPUT].map(index => {
     const field = Field[index]
     return !!userBalances[Field[field]] &&
       JSBI.greaterThan(
@@ -287,7 +288,7 @@ export default function AddLiquidity({ token0, token1 }) {
       : undefined
   })
 
-  const [atMaxAmountInput, atMaxAmountOutput] = [Field.INPUT, Field.OUTPUT].map(index => {
+  const [atMaxAmountInput, atMaxAmountOutput]: boolean[] = [Field.INPUT, Field.OUTPUT].map(index => {
     const field = Field[index]
     const maxAmount = index === Field.INPUT ? maxAmountInput : maxAmountOutput
     return !!maxAmount && !!parsedAmounts[Field[field]]
@@ -357,21 +358,22 @@ export default function AddLiquidity({ token0, token1 }) {
 
   // state for txn
   const addTransaction = useTransactionAdder()
-  const [txHash, setTxHash] = useState()
+  const [txHash, setTxHash] = useState<string>('')
 
+  // format ETH value for transaction
   function hex(value: JSBI) {
     return ethers.utils.bigNumberify(value.toString())
   }
 
+  // calculate slippage bounds based on current reserves
   function calculateSlippageAmount(value: TokenAmount): JSBI[] {
     if (value && value.raw) {
       const offset = JSBI.divide(JSBI.multiply(JSBI.BigInt(ALLOWED_SLIPPAGE), value.raw), JSBI.BigInt(10000))
       return [JSBI.subtract(value.raw, offset), JSBI.add(value.raw, offset)]
+    } else {
+      return null
     }
-    return null
   }
-
-  const [, addPopup] = usePopups()
 
   async function onAdd() {
     setAttemptingTxn(true)
@@ -387,6 +389,7 @@ export default function AddLiquidity({ token0, token1 }) {
     if (tokens[Field.INPUT] === WETH[chainId] || tokens[Field.OUTPUT] === WETH[chainId]) {
       method = router.addLiquidityETH
       estimate = router.estimate.addLiquidityETH
+
       args = [
         tokens[Field.OUTPUT] === WETH[chainId] ? tokens[Field.INPUT].address : tokens[Field.OUTPUT].address, // token
         tokens[Field.OUTPUT] === WETH[chainId] // token desired
@@ -466,60 +469,48 @@ export default function AddLiquidity({ token0, token1 }) {
     return (
       <>
         <RowBetween>
-          <Text color="#565A69" fontWeight={500} fontSize={16}>
-            {tokens[Field.INPUT]?.symbol} Deposited
-          </Text>
+          <TYPE.body>{tokens[Field.INPUT]?.symbol} Deposited</TYPE.body>
           <RowFixed>
             <TokenLogo address={tokens[Field.INPUT]?.address || ''} style={{ marginRight: '8px' }} />
-            <Text fontWeight={500} fontSize={16}>
-              {!!parsedAmounts[Field.INPUT] && parsedAmounts[Field.INPUT].toSignificant(6)}
-            </Text>
+            <TYPE.body>{!!parsedAmounts[Field.INPUT] && parsedAmounts[Field.INPUT].toSignificant(6)}</TYPE.body>
           </RowFixed>
         </RowBetween>
         <RowBetween>
-          <Text color="#565A69" fontWeight={500} fontSize={16}>
-            {tokens[Field.OUTPUT]?.symbol} Deposited
-          </Text>
+          <TYPE.body>{tokens[Field.OUTPUT]?.symbol} Deposited</TYPE.body>
           <RowFixed>
             <TokenLogo address={tokens[Field.OUTPUT]?.address || ''} style={{ marginRight: '8px' }} />
-            <Text fontWeight={500} fontSize={16}>
-              {!!parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.OUTPUT].toSignificant(6)}
-            </Text>
+            <TYPE.body>{!!parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.OUTPUT].toSignificant(6)}</TYPE.body>
           </RowFixed>
         </RowBetween>
+        {route && !JSBI.equal(route?.midPrice?.raw?.denominator, JSBI.BigInt(0)) && (
+          <RowBetween>
+            <TYPE.body>Rate</TYPE.body>
+            <TYPE.body>
+              {`1 ${tokens[Field.INPUT]?.symbol} = ${route?.midPrice &&
+                route?.midPrice?.raw?.denominator &&
+                route?.midPrice?.adjusted?.toFixed(8)} ${tokens[Field.OUTPUT]?.symbol}`}
+            </TYPE.body>
+          </RowBetween>
+        )}
         <RowBetween>
-          <Text color="#565A69" fontWeight={500} fontSize={16}>
-            Rate
-          </Text>
-          <Text fontWeight={500} fontSize={16}>
-            {`1 ${tokens[Field.INPUT]?.symbol} = ${route?.midPrice &&
-              route?.midPrice?.raw?.denominator &&
-              route.midPrice.adjusted.toFixed(8)} ${tokens[Field.OUTPUT]?.symbol}`}
-          </Text>
-        </RowBetween>
-        <RowBetween>
-          <Text color="#565A69" fontWeight={500} fontSize={16}>
-            Minted Pool Share:
-          </Text>
-          <Text fontWeight={500} fontSize={16}>
-            {poolTokenPercentage?.toFixed(6) + '%'}
-          </Text>
+          <TYPE.body>Minted Pool Share:</TYPE.body>
+          <TYPE.body>{noLiquidity ? '100%' : poolTokenPercentage?.toFixed(6) + '%'}</TYPE.body>
         </RowBetween>
         <ButtonPrimary style={{ margin: '20px 0' }} onClick={onAdd}>
           <Text fontWeight={500} fontSize={20}>
             Confirm Supply
           </Text>
         </ButtonPrimary>
-        <Text fontSize={12} color="#565A69" textAlign="center">
+        <TYPE.italic fontSize={12} color="#565A69" textAlign="center">
           {`Output is estimated. You will receive at least ${liquidityMinted?.toFixed(6)} UNI ${
             tokens[Field.INPUT]?.symbol
           }/${tokens[Field.OUTPUT]?.symbol} or the transaction will revert.`}
-        </Text>
+        </TYPE.italic>
       </>
     )
   }
 
-  const pendingText = `Supplied ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${
+  const pendingText: string = `Supplied ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${
     tokens[Field.INPUT]?.symbol
   } ${'and'} ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}`
 
@@ -549,12 +540,12 @@ export default function AddLiquidity({ token0, token1 }) {
       <AutoColumn gap="20px">
         {noLiquidity && (
           <ColumnCenter>
-            <Text fontWeight={500} style={{ textAlign: 'center' }}>
+            <TYPE.main textAlign="center">
               <span role="img" aria-label="Thinking">
                 🥇
               </span>{' '}
               You are the first to add liquidity. Make sure you're setting rates correctly.
-            </Text>
+            </TYPE.main>
           </ColumnCenter>
         )}
         <CurrencyInputPanel
@@ -592,13 +583,15 @@ export default function AddLiquidity({ token0, token1 }) {
           showUnlock={showOutputUnlock}
           disableTokenSelect
         />
-        <RowBetween>
-          Rate:
-          <div>
-            1 {tokens[independentField].symbol} = {route?.midPrice?.toSignificant(6)}
-            {tokens[dependentField].symbol}
-          </div>
-        </RowBetween>
+        {!noLiquidity && (
+          <RowBetween>
+            Rate:
+            <div>
+              1 {tokens[independentField].symbol} = {route?.midPrice?.toSignificant(6)}
+              {tokens[dependentField].symbol}
+            </div>
+          </RowBetween>
+        )}
         <ButtonPrimary
           onClick={() => {
             setShowConfirm(true)

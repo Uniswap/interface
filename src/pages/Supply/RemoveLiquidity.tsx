@@ -2,7 +2,7 @@ import React, { useReducer, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
 import { parseUnits } from '@ethersproject/units'
-import { TokenAmount, JSBI, Route, WETH, Percent } from '@uniswap/sdk'
+import { TokenAmount, JSBI, Route, WETH, Percent, Token, Exchange } from '@uniswap/sdk'
 
 import Slider from '../../components/Slider'
 import TokenLogo from '../../components/TokenLogo'
@@ -21,8 +21,8 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 import { useToken } from '../../contexts/Tokens'
 import { useWeb3React } from '../../hooks'
 import { useAllBalances } from '../../contexts/Balances'
-import { useTransactionAdder } from '../../contexts/Transactions'
 import { useExchangeContract } from '../../hooks'
+import { useTransactionAdder } from '../../contexts/Transactions'
 import { useExchange, useTotalSupply } from '../../contexts/Exchanges'
 
 import { BigNumber } from 'ethers/utils'
@@ -145,34 +145,34 @@ const ConfirmedText = styled(Text)`
 
 export default function RemoveLiquidity({ token0, token1 }) {
   const { account, chainId, library } = useWeb3React()
-  const routerAddress = ROUTER_ADDRESSES[chainId]
+  const routerAddress: string = ROUTER_ADDRESSES[chainId]
 
-  const [showConfirm, setShowConfirm] = useState(false)
-  const [showAdvanced, setShowAdvanced] = useState(false)
+  const [showConfirm, setShowConfirm] = useState<boolean>(false)
+  const [showAdvanced, setShowAdvanced] = useState<boolean>(false)
 
-  const inputToken = useToken(token0)
-  const outputToken = useToken(token1)
+  const inputToken: Token = useToken(token0)
+  const outputToken: Token = useToken(token1)
 
   // get basic SDK entities
-  const tokens = {
+  const tokens: { [field: number]: Token } = {
     [Field.TOKEN0]: inputToken,
     [Field.TOKEN1]: outputToken
   }
 
-  const exchange = useExchange(inputToken, outputToken)
-  const exchangeContract = useExchangeContract(exchange?.liquidityToken.address)
+  const exchange: Exchange = useExchange(inputToken, outputToken)
+  const exchangeContract: ethers.Contract = useExchangeContract(exchange?.liquidityToken.address)
 
   // pool token data
-  const totalPoolTokens = useTotalSupply(exchange)
+  const totalPoolTokens: TokenAmount = useTotalSupply(exchange)
 
-  const allBalances = useAllBalances()
-  const userLiquidity = allBalances?.[account]?.[exchange?.liquidityToken?.address]
+  const allBalances: TokenAmount[] = useAllBalances()
+  const userLiquidity: TokenAmount = allBalances?.[account]?.[exchange?.liquidityToken?.address]
 
   // input state
   const [state, dispatch] = useReducer(reducer, initializeRemoveState(userLiquidity?.toExact(), token0, token1))
   const { independentField, typedValue } = state
 
-  const TokensDeposited = {
+  const TokensDeposited: { [field: number]: TokenAmount } = {
     [Field.TOKEN0]:
       exchange &&
       totalPoolTokens &&
@@ -185,7 +185,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
       exchange.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, userLiquidity, false)
   }
 
-  const route = exchange
+  const route: Route = exchange
     ? new Route([exchange], independentField !== Field.LIQUIDITY ? tokens[independentField] : tokens[Field.TOKEN1])
     : undefined
 
@@ -307,11 +307,11 @@ export default function RemoveLiquidity({ token0, token1 }) {
       : false
 
   // errors
-  const [generalError, setGeneralError] = useState('')
-  const [inputError, setInputError] = useState('')
-  const [outputError, setOutputError] = useState('')
-  const [poolTokenError, setPoolTokenError] = useState('')
-  const [isValid, setIsValid] = useState(false)
+  const [generalError, setGeneralError] = useState<string>('')
+  const [inputError, setInputError] = useState<string>('')
+  const [outputError, setOutputError] = useState<string>('')
+  const [poolTokenError, setPoolTokenError] = useState<string>('')
+  const [isValid, setIsValid] = useState<boolean>(false)
 
   // update errors live
   useEffect(() => {
@@ -351,7 +351,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
   const addTransaction = useTransactionAdder()
   const [txHash, setTxHash] = useState()
   const [sigInputs, setSigInputs] = useState([])
-  const [deadline, setDeadline] = useState()
+  const [deadline, setDeadline] = useState(null)
   const [signed, setSigned] = useState(false) // waiting for signature sign
   const [attemptedRemoval, setAttemptedRemoval] = useState(false) // clicke confirm
   const [pendingConfirmation, setPendingConfirmation] = useState(true) // waiting for
@@ -359,7 +359,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
   async function onSign() {
     const nonce = await exchangeContract.nonces(account)
 
-    const newDeadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
+    const newDeadline: number = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
     setDeadline(newDeadline)
 
     const EIP712Domain = [
@@ -428,6 +428,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
           : parsedAmounts[Field.TOKEN0].raw.toString(),
         account,
         deadline,
+        false,
         sigInputs[0],
         sigInputs[1],
         sigInputs[2]
@@ -445,6 +446,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
         parsedAmounts[Field.TOKEN1].raw.toString(),
         account,
         deadline,
+        false,
         sigInputs[0],
         sigInputs[1],
         sigInputs[2]
@@ -466,18 +468,13 @@ export default function RemoveLiquidity({ token0, token1 }) {
         setTxHash(response.hash)
         addTransaction(response)
       })
-      .catch(() => {
+      .catch(e => {
+        console.log(e)
         resetModalState()
         setShowConfirm(false)
       })
   }
 
-  /**
-   * @todo
-   * if the input values stay the same,
-   * we should probably not reset the signature values,
-   * move to an effect
-   */
   function resetModalState() {
     setSigned(false)
     setSigInputs(null)
@@ -562,7 +559,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
       </>
     )
   }
-  const pendingText = `Removed ${parsedAmounts[Field.TOKEN0]?.toSignificant(6)} ${
+  const pendingText: string = `Removed ${parsedAmounts[Field.TOKEN0]?.toSignificant(6)} ${
     tokens[Field.TOKEN0]?.symbol
   } and ${parsedAmounts[Field.TOKEN1]?.toSignificant(6)} ${tokens[Field.TOKEN1]?.symbol}`
 

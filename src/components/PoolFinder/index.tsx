@@ -1,24 +1,24 @@
 import React, { useState } from 'react'
-import { JSBI } from '@uniswap/sdk'
 import { withRouter } from 'react-router-dom'
-
-import { useToken } from '../../contexts/Tokens'
-import { useExchange } from '../../contexts/Exchanges'
-import { useWeb3React } from '@web3-react/core'
-import { useAddressBalance } from '../../contexts/Balances'
-import { usePopups } from '../../contexts/Application'
+import { TokenAmount, JSBI, Token, Exchange } from '@uniswap/sdk'
 
 import Row from '../Row'
 import TokenLogo from '../TokenLogo'
 import SearchModal from '../SearchModal'
 import PositionCard from '../PositionCard'
+import DoubleTokenLogo from '../DoubleLogo'
 import { Link } from '../../theme'
 import { Text } from 'rebass'
 import { Plus } from 'react-feather'
 import { LightCard } from '../Card'
-import Column, { AutoColumn, ColumnCenter } from '../Column'
+import { AutoColumn, ColumnCenter } from '../Column'
 import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
-import DoubleTokenLogo from '../DoubleLogo'
+
+import { useToken } from '../../contexts/Tokens'
+import { usePopups } from '../../contexts/Application'
+import { useExchange } from '../../contexts/Exchanges'
+import { useWeb3React } from '@web3-react/core'
+import { useAddressBalance } from '../../contexts/Balances'
 
 function PoolFinder({ history }) {
   const Fields = {
@@ -27,27 +27,25 @@ function PoolFinder({ history }) {
   }
 
   const { account } = useWeb3React()
-  const [showSearch, setShowSearch] = useState(false)
-  const [activeField, setActiveField] = useState(Fields.TOKEN0)
+  const [showSearch, setShowSearch] = useState<boolean>(false)
+  const [activeField, setActiveField] = useState<number>(Fields.TOKEN0)
 
   const [, addPopup] = usePopups()
 
-  const [token0Address, setToken0Address] = useState()
-  const [token1Address, setToken1Address] = useState()
+  const [token0Address, setToken0Address] = useState<string>()
+  const [token1Address, setToken1Address] = useState<string>()
 
-  const token0 = useToken(token0Address)
-  const token1 = useToken(token1Address)
+  const token0: Token = useToken(token0Address)
+  const token1: Token = useToken(token1Address)
 
-  const exchange = useExchange(token0, token1)
+  const exchange: Exchange = useExchange(token0, token1)
+  const position: TokenAmount = useAddressBalance(account, exchange?.liquidityToken)
 
-  const position = useAddressBalance(account, exchange?.liquidityToken)
-
-  const newExchange = exchange && JSBI.equal(exchange.reserve0.raw, JSBI.BigInt(0))
-
-  const allowImport = position && JSBI.greaterThan(position.raw, JSBI.BigInt(0))
+  const newExchange: boolean = exchange && JSBI.equal(exchange.reserve0.raw, JSBI.BigInt(0))
+  const allowImport: boolean = position && JSBI.greaterThan(position.raw, JSBI.BigInt(0))
 
   function endSearch() {
-    history.goBack()
+    history.goBack() // return to previous page
     addPopup(
       <Row>
         <DoubleTokenLogo a0={token0Address || ''} a1={token1Address || ''} margin={true} />

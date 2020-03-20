@@ -39,7 +39,6 @@ export default function Web3ReactManager({ children }) {
   const triedEager = useEagerConnect()
 
   // after eagerly trying injected, if the network connect ever isn't active or in an error state, activate itd
-  // TODO think about not doing this at all
   useEffect(() => {
     if (triedEager && !networkActive && !networkError && !active) {
       activateNetwork(network)
