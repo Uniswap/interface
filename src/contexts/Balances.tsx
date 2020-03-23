@@ -281,7 +281,7 @@ export function Updater() {
           .filter(tokenAddress => {
             const hasValue = !!stateRef.current?.[chainId]?.[account]?.[tokenAddress]?.value
             const cachedFetchedAsOf = fetchedAsOfCache.current?.[chainId]?.[account]?.[tokenAddress]
-            const fetchedAsOf = stateRef.current?.[chainId]?.[account][tokenAddress]?.blockNumber ?? cachedFetchedAsOf
+            const fetchedAsOf = stateRef.current?.[chainId]?.[account]?.[tokenAddress]?.blockNumber ?? cachedFetchedAsOf
 
             // if there's no value, and it's not being fetched, we need to fetch!
             if (!hasValue && typeof cachedFetchedAsOf !== 'number') {

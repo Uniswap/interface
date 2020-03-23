@@ -113,7 +113,7 @@ export function useAllTokens(): string[] {
 
   return useMemo(() => {
     // hardcode overide weth as ETH
-    if (state && state[chainId]) {
+    if (state && state[chainId] && state[chainId][WETH[chainId].address]) {
       state[chainId][WETH[chainId].address].symbol = 'ETH'
       state[chainId][WETH[chainId].address].name = 'ETH'
     }
