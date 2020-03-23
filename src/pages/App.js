@@ -4,7 +4,6 @@ import { transparentize } from 'polished'
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
 import Header from '../components/Header'
-import { BlueCard } from '../components/Card'
 import NavigationTabs from '../components/NavigationTabs'
 import Web3ReactManager from '../components/Web3ReactManager'
 import { useWeb3React } from '../hooks'
