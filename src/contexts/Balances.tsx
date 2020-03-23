@@ -459,6 +459,7 @@ export function useAddressBalance(address: string, token: Token): TokenAmount | 
         stopListening(chainId, address, token.address)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId, address, startListening, stopListening])
 
   return useMemo(() => formattedValue, [formattedValue])

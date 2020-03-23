@@ -29,6 +29,7 @@ import { BigNumber } from 'ethers/utils'
 import { splitSignature } from '@ethersproject/bytes'
 import { ROUTER_ADDRESSES } from '../../constants'
 import { getRouterContract, calculateGasMargin } from '../../utils'
+import { TYPE } from '../../theme'
 
 // denominated in seconds
 const DEADLINE_FROM_NOW = 60 * 15
@@ -549,13 +550,13 @@ export default function RemoveLiquidity({ token0, token1 }) {
             </Text>
           </ButtonPrimary>
         </RowBetween>
-        <Text fontSize={12} color="#565A69" textAlign="center">
+        <TYPE.italic fontSize={12} color="#565A69" textAlign="center">
           {`Output is estimated. You will receive at least ${parsedAmounts[Field.TOKEN0]?.toFixed(6)} ${
             tokens[Field.TOKEN0]?.symbol
           } and at least ${parsedAmounts[Field.TOKEN1]?.toFixed(6)} ${
             tokens[Field.TOKEN1]?.symbol
           } or the transaction will revert.`}
-        </Text>
+        </TYPE.italic>
       </>
     )
   }

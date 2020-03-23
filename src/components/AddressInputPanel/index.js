@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { useTranslation } from 'react-i18next'
 import { transparentize } from 'polished'
 
 import QR from '../../assets/svg/QR.svg'
@@ -30,23 +29,6 @@ const ContainerRow = styled.div`
 
 const InputContainer = styled.div`
   flex: 1;
-`
-
-const LabelRow = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: center;
-  color: ${({ theme }) => theme.doveGray};
-  font-size: 0.75rem;
-  line-height: 1rem;
-  padding: 0.75rem 1rem;
-`
-
-const LabelContainer = styled.div`
-  flex: 1 1 auto;
-  width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 `
 
 const InputRow = styled.div`
@@ -82,9 +64,7 @@ const QRWrapper = styled.div`
   border-radius: 8px;
 `
 
-export default function AddressInputPanel({ title, initialInput = '', onChange, onError}) {
-  const { t } = useTranslation()
-
+export default function AddressInputPanel({ initialInput = '', onChange, onError }) {
   const { library } = useWeb3React()
 
   const [input, setInput] = useState(initialInput.address ? initialInput.address : '')
@@ -191,9 +171,9 @@ export default function AddressInputPanel({ title, initialInput = '', onChange, 
               onChange={onInput}
               value={input}
             />
-             <QRWrapper>
-               <img src={QR} alt="" />
-              </QRWrapper>
+            <QRWrapper>
+              <img src={QR} alt="" />
+            </QRWrapper>
           </InputRow>
         </InputContainer>
       </ContainerRow>

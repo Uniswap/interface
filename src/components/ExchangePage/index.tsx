@@ -828,8 +828,9 @@ export default function ExchangePage({ sendingInput = false }) {
   function _onTokenSelect(address: string) {
     const balance = allBalances?.[account]?.[address]
     // if no user balance - switch view to a send with swap
-    const hasBalance = balance && JSBI.greaterThan(JSBI.BigInt(0), balance.raw)
+    const hasBalance = balance && JSBI.greaterThan(balance.raw, JSBI.BigInt(0))
     if (!hasBalance && sending) {
+      onTokenSelection(Field.INPUT, null)
       onTokenSelection(Field.OUTPUT, address)
       setSendingWithSwap(true)
     } else {
@@ -965,7 +966,6 @@ export default function ExchangePage({ sendingInput = false }) {
         {sending && (
           <AutoColumn gap="10px">
             <AddressInputPanel
-              title={''}
               onChange={_onRecipient}
               onError={error => {
                 if (error) {

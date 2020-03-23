@@ -170,10 +170,10 @@ export default function Menu() {
       </StyledMenuButton>
       {open ? (
         <MenuFlyout>
-          <MenuItem id="link" href="https://uniswap.io/">
+          <MenuItem id="link" href="https://uniswap.org/">
             About
           </MenuItem>
-          <MenuItem id="link" href="https://docs.uniswap.io/">
+          <MenuItem id="link" href="https://uniswap.org/docs/v2">
             Docs
           </MenuItem>
           <MenuItem id="link" href="https://github.com/Uniswap">
@@ -182,35 +182,6 @@ export default function Menu() {
           <MenuItem id="link" href="https://uniswap.info/">
             Stats
           </MenuItem>
-          <Divider></Divider>
-          <ToggleItem>
-            <span>Theme</span>
-            <StyledToggleNoColor
-              checked={!isDark}
-              uncheckedIcon={
-                <EmojiToggle role="img" aria-label="moon">
-                  {/* eslint-disable-line jsx-a11y/accessible-emoji */}
-                  🌙️
-                </EmojiToggle>
-              }
-              checkedIcon={
-                <EmojiToggle role="img" aria-label="sun">
-                  {/* eslint-disable-line jsx-a11y/accessible-emoji */}
-                  {'☀️'}
-                </EmojiToggle>
-              }
-              onChange={() => toggleDarkMode()}
-            />
-          </ToggleItem>
-          <ToggleItem>
-            <span>Advanced</span>
-            <StyledToggle
-              checked={isAdvanced}
-              uncheckedIcon={false}
-              checkedIcon={false}
-              onChange={() => toggleAdvanced()}
-            />
-          </ToggleItem>
         </MenuFlyout>
       ) : (
         ''
