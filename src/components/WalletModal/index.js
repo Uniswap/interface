@@ -114,7 +114,7 @@ const WALLET_VIEWS = {
   PENDING: 'pending'
 }
 
-export default function WalletModal ({ pendingTransactions, confirmedTransactions, ENSName }) {
+export default function WalletModal({ pendingTransactions, confirmedTransactions, ENSName }) {
   const { active, account, connector, activate, error } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
@@ -191,7 +191,7 @@ export default function WalletModal ({ pendingTransactions, confirmedTransaction
   }, [toggleWalletModal])
 
   // get wallets user can switch too, depending on device/browser
-  function getOptions () {
+  function getOptions() {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
     return Object.keys(SUPPORTED_WALLETS).map(key => {
       const option = SUPPORTED_WALLETS[key]
@@ -273,7 +273,7 @@ export default function WalletModal ({ pendingTransactions, confirmedTransaction
     })
   }
 
-  function getModalContent () {
+  function getModalContent() {
     if (error) {
       return (
         <UpperSection>
