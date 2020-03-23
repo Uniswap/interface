@@ -1,10 +1,12 @@
 import React, { Suspense, lazy } from 'react'
 import styled from 'styled-components'
+import { transparentize } from 'polished'
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
 import Header from '../components/Header'
 import NavigationTabs from '../components/NavigationTabs'
 import Web3ReactManager from '../components/Web3ReactManager'
+import { useWeb3React } from '../hooks'
 import { isAddress, getAllQueryParams } from '../utils'
 
 const Swap = lazy(() => import('./Swap'))
@@ -25,6 +27,27 @@ const HeaderWrapper = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
   justify-content: space-between;
+`
+
+const BetaMessage = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  cursor: pointer;
+  max-height: 40px;
+  flex: 1 0 auto;
+  align-items: center;
+  position: relative;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid ${({ theme }) => transparentize(0.6, theme.wisteriaPurple)};
+  background-color: ${({ theme }) => transparentize(0.9, theme.wisteriaPurple)};
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: ${({ theme }) => theme.wisteriaPurple};
 `
 
 const BodyWrapper = styled.div`
@@ -49,6 +72,9 @@ const Body = styled.div`
 
 export default function App() {
   const params = getAllQueryParams()
+
+  const { chainId } = useWeb3React()
+
   return (
     <>
       <Suspense fallback={null}>
@@ -57,6 +83,10 @@ export default function App() {
             <Header />
           </HeaderWrapper>
           <BodyWrapper>
+            {chainId === 1 && (
+              <BetaMessage>Incorrect network. This site is intended to be used on Ethereum testnets only.</BetaMessage>
+            )}
+
             <Body>
               <Web3ReactManager>
                 <BrowserRouter>

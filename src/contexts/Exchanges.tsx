@@ -178,6 +178,7 @@ export function useTotalSupply(exchange: Exchange) {
      * @todo
      * fix this
      */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exchangeContract])
 
   // on the block make sure we're updated

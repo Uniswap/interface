@@ -250,7 +250,7 @@ function SearchModal({
     })
   }, [account, allBalances, allExchanges, sortDirection])
 
-    const filteredPairList = useMemo(() => {
+  const filteredPairList = useMemo(() => {
     const isAddress = searchQuery.slice(0, 2) === '0x'
     return sortedPairList.filter(exchangeAddress => {
       const exchange = allExchanges[exchangeAddress]
@@ -275,7 +275,7 @@ function SearchModal({
 
       return regexMatches.some(m => m)
     })
-  }, [account, allBalances, allExchanges, allTokens, searchQuery, sortDirection])
+  }, [allExchanges, allTokens, searchQuery, sortedPairList])
 
   // update the amount shown as filtered list changes
   useEffect(() => {
@@ -347,7 +347,7 @@ function SearchModal({
         !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(address) &&
         !urlAdded
 
-      const zeroBalance = JSBI.equal(JSBI.BigInt(0), balance.raw)
+      const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
 
       return (
         <MenuItem key={address} onClick={() => (zeroBalance ? _onTokenSelect(address, true) : _onTokenSelect(address))}>
