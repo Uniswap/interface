@@ -5,10 +5,10 @@ import { parseUnits, parseEther } from '@ethersproject/units'
 import { WETH, TradeType, Route, Exchange, Trade, TokenAmount, JSBI, Percent } from '@uniswap/sdk'
 
 import TokenLogo from '../TokenLogo'
-import AddressInputPanel from '../AddressInputPanel'
 import QuestionHelper from '../Question'
 import NumericalInput from '../NumericalInput'
 import AdvancedSettings from '../AdvancedSettings'
+import AddressInputPanel from '../AddressInputPanel'
 import ConfirmationModal from '../ConfirmationModal'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import { Link } from '../../theme/components'
@@ -340,16 +340,24 @@ export default function ExchangePage({ sendingInput = false }) {
   }, [])
 
   const MIN_ETHER: TokenAmount = chainId && new TokenAmount(WETH[chainId], JSBI.BigInt(parseEther('.01')))
-  const maxAmountInput: TokenAmount =
-    !!userBalances[Field.INPUT] &&
-    JSBI.greaterThan(
-      userBalances[Field.INPUT].raw,
-      tokens[Field.INPUT].equals(WETH[chainId]) ? MIN_ETHER.raw : JSBI.BigInt(0)
-    )
-      ? tokens[Field.INPUT].equals(WETH[chainId])
-        ? userBalances[Field.INPUT].subtract(MIN_ETHER)
-        : userBalances[Field.INPUT]
-      : undefined
+
+  let maxAmountInput: TokenAmount
+
+  try {
+    maxAmountInput =
+      !!userBalances[Field.INPUT] &&
+      !!tokens[Field.INPUT] &&
+      WETH[chainId] &&
+      JSBI.greaterThan(
+        userBalances[Field.INPUT].raw,
+        tokens[Field.INPUT].equals(WETH[chainId]) ? MIN_ETHER.raw : JSBI.BigInt(0)
+      )
+        ? tokens[Field.INPUT].equals(WETH[chainId])
+          ? userBalances[Field.INPUT].subtract(MIN_ETHER)
+          : userBalances[Field.INPUT]
+        : undefined
+  } catch {}
+
   const atMaxAmountInput: boolean =
     !!maxAmountInput && !!parsedAmounts[Field.INPUT]
       ? JSBI.equal(maxAmountInput.raw, parsedAmounts[Field.INPUT].raw)
