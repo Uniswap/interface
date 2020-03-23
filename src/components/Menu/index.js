@@ -1,13 +1,10 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect } from 'react'
 import styled from 'styled-components'
 
-import { useDarkModeManager } from '../../contexts/LocalStorage'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 
 import { Link } from '../../theme'
-import { darken, transparentize } from 'polished'
-
-import Toggle from 'react-switch'
+import { darken } from 'polished'
 
 import { useToggle } from '../../hooks'
 
@@ -80,67 +77,8 @@ const MenuItem = styled(Link)`
     cursor: pointer;
   }
 `
-const ToggleItem = styled.span`
-  color: ${({ theme }) => theme.doveGray};
-  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-`
-
-const Divider = styled.span`
-  width: 100%;
-  margin-bottom: 0.5rem;
-  padding-top: 0.5rem;
-  border-bottom: 1px solid ${({ theme }) => theme.mercuryGray};
-`
-
-const StyledToggle = styled(Toggle)`
-  margin-right: 0.75rem;
-  .react-switch-bg[style] {
-    background-color: ${({ theme, checked, showColor }) =>
-      checked ? theme.connectedGreen : darken(0.05, theme.inputBackground)} !important;
-    border: 1px solid ${({ theme }) => theme.concreteGray} !important;
-  }
-  .react-switch-handle[style] {
-    background-color: ${({ theme }) => theme.connectedGreen};
-    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.93, theme.shadowColor)};
-    border: 1px solid ${({ theme }) => theme.mercuryGray};
-    border-color: ${({ theme }) => theme.mercuryGray} !important;
-    top: 2px !important;
-    margin-left: 1px;
-  }
-`
-
-const StyledToggleNoColor = styled(Toggle)`
-  margin-right: 0.75rem;
-  .react-switch-bg[style] {
-    background-color: ${({ theme }) => darken(0.05, theme.inputBackground)} !important;
-    border: 1px solid ${({ theme }) => theme.concreteGray} !important;
-  }
-  .react-switch-handle[style] {
-    background-color: ${({ theme }) => theme.connectedGreen};
-    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.93, theme.shadowColor)};
-    border: 1px solid ${({ theme }) => theme.mercuryGray};
-    border-color: ${({ theme }) => theme.mercuryGray} !important;
-    top: 2px !important;
-    margin-left: 1px;
-  }
-`
-
-const EmojiToggle = styled.span`
-  font-family: Arial sans-serif;
-  vertical-align: middle;
-  text-align: center;
-  width: 100%;
-`
 
 export default function Menu() {
-  const [isDark, toggleDarkMode] = useDarkModeManager()
-  const [isAdvanced, toggleAdvanced] = useState(false)
-
   const node = useRef()
   const [open, toggle] = useToggle(false)
 
@@ -170,10 +108,10 @@ export default function Menu() {
       </StyledMenuButton>
       {open ? (
         <MenuFlyout>
-          <MenuItem id="link" href="https://uniswap.io/">
+          <MenuItem id="link" href="https://uniswap.org/">
             About
           </MenuItem>
-          <MenuItem id="link" href="https://docs.uniswap.io/">
+          <MenuItem id="link" href="https://uniswap.org/docs/v2">
             Docs
           </MenuItem>
           <MenuItem id="link" href="https://github.com/Uniswap">
@@ -182,35 +120,6 @@ export default function Menu() {
           <MenuItem id="link" href="https://uniswap.info/">
             Stats
           </MenuItem>
-          <Divider></Divider>
-          <ToggleItem>
-            <span>Theme</span>
-            <StyledToggleNoColor
-              checked={!isDark}
-              uncheckedIcon={
-                <EmojiToggle role="img" aria-label="moon">
-                  {/* eslint-disable-line jsx-a11y/accessible-emoji */}
-                  🌙️
-                </EmojiToggle>
-              }
-              checkedIcon={
-                <EmojiToggle role="img" aria-label="sun">
-                  {/* eslint-disable-line jsx-a11y/accessible-emoji */}
-                  {'☀️'}
-                </EmojiToggle>
-              }
-              onChange={() => toggleDarkMode()}
-            />
-          </ToggleItem>
-          <ToggleItem>
-            <span>Advanced</span>
-            <StyledToggle
-              checked={isAdvanced}
-              uncheckedIcon={false}
-              checkedIcon={false}
-              onChange={() => toggleAdvanced()}
-            />
-          </ToggleItem>
         </MenuFlyout>
       ) : (
         ''

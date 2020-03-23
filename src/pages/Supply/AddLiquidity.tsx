@@ -587,8 +587,8 @@ export default function AddLiquidity({ token0, token1 }) {
           <RowBetween>
             Rate:
             <div>
-              1 {tokens[independentField].symbol} = {route?.midPrice?.toSignificant(6)}
-              {tokens[dependentField].symbol}
+              1 {tokens[independentField]?.symbol} = {route?.midPrice?.toSignificant(6)}
+              {tokens[dependentField]?.symbol}
             </div>
           </RowBetween>
         )}
