@@ -11,7 +11,6 @@ import { getEtherBalance, getTokenBalance, isAddress } from '../utils'
 const LOCAL_STORAGE_KEY = 'BALANCES'
 const SHORT_BLOCK_TIMEOUT = (60 * 2) / 15 // in seconds, represented as a block number delta
 const LONG_BLOCK_TIMEOUT = (60 * 15) / 15 // in seconds, represented as a block number delta
-
 const EXCHANGES_BLOCK_TIMEOUT = (60 * 5) / 15 // in seconds, represented as a block number delta
 
 interface BalancesState {
@@ -416,6 +415,10 @@ export function useAllBalances(): Array<TokenAmount> {
       Object.keys(state[chainId]).map(address => {
         return Object.keys(state[chainId][address]).map(tokenAddress => {
           if (state[chainId][address][tokenAddress].value) {
+            // if ETH balance found (from local storage), hardcode at WETH for token amount entity
+            if (tokenAddress === 'ETH') {
+              tokenAddress = WETH[chainId]
+            }
             newBalances[chainId] = {
               ...newBalances[chainId],
               [address]: {
