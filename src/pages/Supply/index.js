@@ -98,7 +98,7 @@ function Supply({ history }) {
                 Earn fees with pooled market making.
               </Text>
               <Text fontSize="12px">
-                <Link>Provide liquidity </Link>to earn .03% spread fees for providing market depth.
+                <Link>Provide liquidity </Link>to earn .3% spread fees for providing market depth.
               </Text>
               <Link>
                 <Row>

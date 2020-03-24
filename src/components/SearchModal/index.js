@@ -328,7 +328,7 @@ function SearchModal({
     if (isAddress(searchQuery) && tokenAddress === ethers.constants.AddressZero) {
       return (
         <>
-          <TokenModalInfo>{t('noExchange')}</TokenModalInfo>
+          <TokenModalInfo>{t('noToken')}</TokenModalInfo>
           <TokenModalInfo>
             <Link to={`/create-exchange/${searchQuery}`}>{t('createExchange')}</Link>
           </TokenModalInfo>
@@ -336,7 +336,7 @@ function SearchModal({
       )
     }
     if (!filteredTokenList.length) {
-      return <TokenModalInfo>{t('noExchange')}</TokenModalInfo>
+      return <TokenModalInfo>{t('noToken')}</TokenModalInfo>
     }
 
     return filteredTokenList.map(({ address, symbol, balance }) => {

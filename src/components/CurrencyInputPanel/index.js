@@ -130,7 +130,7 @@ const ClickableText = styled.div`
 `
 
 const StyledBalanceMax = styled.button`
-  height: 30px;
+  height: 35px;
   background-color: ${({ theme }) => theme.zumthorBlue};
   border: 1px solid ${({ theme }) => theme.zumthorBlue};
   border-radius: 0.5rem;

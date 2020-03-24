@@ -238,7 +238,11 @@ export default function AddLiquidity({ token0, token1 }) {
 
   // check for estimated liquidity minted
   const liquidityMinted: TokenAmount =
-    !!exchange && !!parsedAmounts[Field.INPUT] && !!parsedAmounts[Field.OUTPUT]
+    !!exchange &&
+    !!parsedAmounts[Field.INPUT] &&
+    !!parsedAmounts[Field.OUTPUT] &&
+    !JSBI.equal(parsedAmounts[Field.INPUT].raw, JSBI.BigInt(0)) &&
+    !JSBI.equal(parsedAmounts[Field.OUTPUT].raw, JSBI.BigInt(0))
       ? exchange.getLiquidityMinted(
           totalSupply ? totalSupply : new TokenAmount(exchange?.liquidityToken, JSBI.BigInt(0)),
           parsedAmounts[Field.INPUT],
@@ -314,13 +318,22 @@ export default function AddLiquidity({ token0, token1 }) {
   const [outputError, setOutputError] = useState('')
   const [isValid, setIsValid] = useState(false)
 
-  // update errors live
   useEffect(() => {
     // reset errors
     setGeneralError(null)
     setInputError(null)
     setOutputError(null)
     setIsValid(true)
+
+    if (noLiquidity && parsedAmounts[Field.INPUT] && JSBI.equal(parsedAmounts[Field.INPUT].raw, JSBI.BigInt(0))) {
+      setGeneralError('Enter an amount')
+      setIsValid(false)
+    }
+
+    if (noLiquidity && parsedAmounts[Field.OUTPUT] && JSBI.equal(parsedAmounts[Field.OUTPUT].raw, JSBI.BigInt(0))) {
+      setGeneralError('Enter an amount')
+      setIsValid(false)
+    }
 
     if (!parsedAmounts[Field.INPUT]) {
       setGeneralError('Enter an amount')
@@ -354,7 +367,7 @@ export default function AddLiquidity({ token0, token1 }) {
       setOutputError('Insufficient balance.')
       setIsValid(false)
     }
-  }, [parsedAmounts, showInputUnlock, showOutputUnlock, userBalances])
+  }, [noLiquidity, parsedAmounts, showInputUnlock, showOutputUnlock, userBalances])
 
   // state for txn
   const addTransaction = useTransactionAdder()
@@ -602,14 +615,16 @@ export default function AddLiquidity({ token0, token1 }) {
             {generalError ? generalError : inputError ? inputError : outputError ? outputError : 'Supply'}
           </Text>
         </ButtonPrimary>
-        <FixedBottom>
-          <PositionCard
-            exchangeAddress={exchange?.liquidityToken?.address}
-            token0={tokens[Field.INPUT]}
-            token1={tokens[Field.OUTPUT]}
-            minimal={true}
-          />
-        </FixedBottom>
+        {!noLiquidity && (
+          <FixedBottom>
+            <PositionCard
+              exchangeAddress={exchange?.liquidityToken?.address}
+              token0={tokens[Field.INPUT]}
+              token1={tokens[Field.OUTPUT]}
+              minimal={true}
+            />
+          </FixedBottom>
+        )}
       </AutoColumn>
     </Wrapper>
   )
