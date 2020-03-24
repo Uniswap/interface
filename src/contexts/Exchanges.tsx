@@ -1,8 +1,6 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect, useState } from 'react'
-
 import { useAddressBalance } from './Balances'
 import { useWeb3React, useExchangeContract } from '../hooks'
-
 import { INITIAL_TOKENS_CONTEXT } from './Tokens'
 import { ChainId, WETH, Token, TokenAmount, Exchange, JSBI } from '@uniswap/sdk'
 
@@ -171,9 +169,7 @@ export function useTotalSupply(exchange: Exchange) {
             })
           }
         })
-        .catch(e => {
-          console.log(e)
-        })
+        .catch(() => {})
     /**
      * @todo
      * fix this

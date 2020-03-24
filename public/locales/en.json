@@ -21,6 +21,7 @@
   "searchOrPaste": "Search Token Name, Symbol, or Address",
   "searchOrPasteMobile": "Name, Symbol, or Address",
   "noExchange": "No Exchange Found",
+  "noToken": "No Token Found",
   "exchangeRate": "Exchange Rate",
   "unknownError": "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device.",
   "enterValueCont": "Enter a {{ missingCurrencyValue }} value to continue.",
