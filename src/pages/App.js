@@ -43,11 +43,13 @@ const BetaMessage = styled.div`
   border-radius: 1rem;
   font-size: 0.75rem;
   line-height: 1rem;
-  text-align: left;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: ${({ theme }) => theme.wisteriaPurple};
+  min-width: 380px;
+  text-align: center;
+  justify-content: center;
 `
 
 const BodyWrapper = styled.div`
@@ -58,6 +60,7 @@ const BodyWrapper = styled.div`
   align-items: center;
   flex: 1;
   overflow: auto;
+  padding-top: 40px;
 `
 
 const Body = styled.div`
@@ -85,6 +88,13 @@ export default function App() {
           <BodyWrapper>
             {chainId === 1 && (
               <BetaMessage>Incorrect network. This site is intended to be used on Ethereum testnets only.</BetaMessage>
+            )}
+
+            {(chainId === 3 || chainId === 4 || chainId === 5 || chainId === 42) && (
+              <BetaMessage>
+                Connected to{' '}
+                {chainId === 3 ? 'Ropsten ' : chainId === 4 ? 'Rinkeby' : chainId === 5 ? 'Goerli' : 'Kovan'} testnet.
+              </BetaMessage>
             )}
 
             <Body>

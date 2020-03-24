@@ -1,6 +1,7 @@
 import React, { useState, useReducer, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
+import { withRouter } from 'react-router-dom'
 import { parseUnits, parseEther } from '@ethersproject/units'
 import { WETH, TradeType, Route, Exchange, Trade, TokenAmount, JSBI, Percent } from '@uniswap/sdk'
 
@@ -218,7 +219,7 @@ const DEFAULT_DEADLINE_FROM_NOW = 60 * 15
 const ALLOWED_SLIPPAGE_MEDIUM = 100
 const ALLOWED_SLIPPAGE_HIGH = 500
 
-export default function ExchangePage({ sendingInput = false }) {
+function ExchangePage({ sendingInput = false, history }) {
   const { chainId, account, library } = useWeb3React()
   const routerAddress: string = ROUTER_ADDRESSES[chainId]
 
@@ -849,6 +850,8 @@ export default function ExchangePage({ sendingInput = false }) {
   function _onRecipient(result) {
     if (result.address) {
       setRecipient(result.address)
+    } else {
+      setRecipient('')
     }
   }
 
@@ -975,7 +978,7 @@ export default function ExchangePage({ sendingInput = false }) {
           <AutoColumn gap="10px">
             <AddressInputPanel
               onChange={_onRecipient}
-              onError={error => {
+              onError={(error: boolean) => {
                 if (error) {
                   setRecipientError('Inavlid Recipient')
                 } else {
@@ -989,7 +992,14 @@ export default function ExchangePage({ sendingInput = false }) {
         {emptyReserves ? (
           <RowBetween style={{ margin: '10px 0' }}>
             <TYPE.main>No exchange for this pair.</TYPE.main>
-            <TYPE.blue> Create one now</TYPE.blue>
+            <Link
+              onClick={() => {
+                history.push('/add/' + tokens[Field.INPUT]?.address + '-' + tokens[Field.OUTPUT]?.address)
+              }}
+            >
+              {' '}
+              Create one now
+            </Link>
           </RowBetween>
         ) : (
           <ButtonError
@@ -1041,3 +1051,5 @@ export default function ExchangePage({ sendingInput = false }) {
     </Wrapper>
   )
 }
+
+export default withRouter(ExchangePage)

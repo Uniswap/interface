@@ -2,16 +2,18 @@ import { injected, walletconnect, walletlink, fortmatic, portis } from '../conne
 
 export const FACTORY_ADDRESSES = {
   1: '',
-  3: '',
+  3: '0xe2f197885abe8ec7c866cFf76605FD06d4576218',
   4: '0xe2f197885abe8ec7c866cFf76605FD06d4576218',
-  42: ''
+  5: '0xe2f197885abe8ec7c866cFf76605FD06d4576218',
+  42: '0xe2f197885abe8ec7c866cFf76605FD06d4576218'
 }
 
 export const ROUTER_ADDRESSES = {
   1: '',
-  3: '',
+  3: '0xcDbE04934d89e97a24BCc07c3562DC8CF17d8167',
   4: '0xcDbE04934d89e97a24BCc07c3562DC8CF17d8167',
-  42: ''
+  5: '0xcDbE04934d89e97a24BCc07c3562DC8CF17d8167',
+  42: '0xcDbE04934d89e97a24BCc07c3562DC8CF17d8167'
 }
 
 export const SUPPORTED_THEMES = {

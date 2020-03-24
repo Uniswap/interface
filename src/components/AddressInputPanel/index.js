@@ -78,6 +78,7 @@ export default function AddressInputPanel({ initialInput = '', onChange, onError
   useEffect(() => {
     onChange({ address: data.address, name: data.name })
   }, [onChange, data.address, data.name])
+
   useEffect(() => {
     onError(error)
   }, [onError, error])
@@ -85,7 +86,6 @@ export default function AddressInputPanel({ initialInput = '', onChange, onError
   // run parser on debounced input
   useEffect(() => {
     let stale = false
-
     if (isAddress(debouncedInput)) {
       try {
         library
@@ -135,6 +135,8 @@ export default function AddressInputPanel({ initialInput = '', onChange, onError
         } catch {
           setError(true)
         }
+      } else if (debouncedInput === '') {
+        setError(true)
       }
     }
 
@@ -144,6 +146,10 @@ export default function AddressInputPanel({ initialInput = '', onChange, onError
   }, [debouncedInput, library, onChange, onError])
 
   function onInput(event) {
+    if (event.target.value === '') {
+      setData({ address: undefined, name: undefined })
+    }
+
     if (data.address !== undefined || data.name !== undefined) {
       setData({ address: undefined, name: undefined })
     }
@@ -152,6 +158,7 @@ export default function AddressInputPanel({ initialInput = '', onChange, onError
     }
     const input = event.target.value
     const checksummedInput = isAddress(input)
+
     setInput(checksummedInput || input)
   }
 
