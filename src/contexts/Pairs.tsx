@@ -26,7 +26,6 @@ const PAIR_MAP: {
   // ensure exchanges are unique
   if (pairMap?.[tokens[0].chainId]?.[tokens[0].address]?.[tokens[1].address] !== undefined)
     throw Error(`Duplicate exchange: ${tokenA} ${tokenB}`)
-
   return {
     ...pairMap,
     [tokens[0].chainId]: {
@@ -104,7 +103,12 @@ export function usePair(tokenA?: Token, tokenB?: Token): Pair | undefined {
   const tokenAmountA = useAddressBalance(address, tokenA)
   const tokenAmountB = useAddressBalance(address, tokenB)
   const pair = tokenAmountA && tokenAmountB && new Pair(tokenAmountA, tokenAmountB)
-  return pair
+
+  // return pair
+
+  return useMemo(() => {
+    return pair
+  }, [pair])
 }
 
 export function useAllPairsRaw() {

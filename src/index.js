@@ -13,6 +13,7 @@ import BalancesContextProvider, { Updater as BalancesContextUpdater } from './co
 import TokensContextProvider from './contexts/Tokens'
 import ExchangesContextProvider from './contexts/Pairs'
 import AllowancesContextProvider from './contexts/Allowances'
+import RoutesContextProvider from './contexts/Routes'
 import App from './pages/App'
 import ThemeProvider, { GlobalStyle } from './theme'
 import './i18n'
@@ -42,11 +43,13 @@ function ContextProviders({ children }) {
       <ApplicationContextProvider>
         <TransactionContextProvider>
           <ExchangesContextProvider>
-            <TokensContextProvider>
-              <BalancesContextProvider>
-                <AllowancesContextProvider>{children}</AllowancesContextProvider>
-              </BalancesContextProvider>
-            </TokensContextProvider>
+            <RoutesContextProvider>
+              <TokensContextProvider>
+                <BalancesContextProvider>
+                  <AllowancesContextProvider>{children}</AllowancesContextProvider>
+                </BalancesContextProvider>
+              </TokensContextProvider>
+            </RoutesContextProvider>
           </ExchangesContextProvider>
         </TransactionContextProvider>
       </ApplicationContextProvider>

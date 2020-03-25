@@ -326,7 +326,6 @@ export function Updater() {
 
   // ensure  token balances for all exchanges
   const allPairs = useAllPairs()
-
   useEffect(() => {
     if (typeof chainId === 'number' && typeof blockNumber === 'number') {
       Promise.all(
