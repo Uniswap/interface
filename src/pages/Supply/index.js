@@ -14,9 +14,9 @@ import { AutoColumn } from '../../components/Column'
 import { ArrowRight } from 'react-feather'
 import { ButtonPrimary } from '../../components/Button'
 
+import { useAllPairs } from '../../contexts/Pairs'
 import { useWeb3React } from '@web3-react/core'
 import { useAllTokens } from '../../contexts/Tokens'
-import { useAllExchanges } from '../../contexts/Exchanges'
 import { useAllBalances, useAccountLPBalances } from '../../contexts/Balances'
 
 const Positions = styled.div`
@@ -35,27 +35,27 @@ function Supply({ history }) {
 
   const allTokens = useAllTokens()
   const allBalances = useAllBalances()
-  const allExchanges = useAllExchanges()
+  const allPairs = useAllPairs()
 
   // initiate listener for LP balances
   useAccountLPBalances(account)
 
-  const filteredExchangeList = Object.keys(allExchanges)
-    .filter((exchangeAddress, i) => {
+  const filteredExchangeList = Object.keys(allPairs)
+    .filter((pairAddress, i) => {
       return (
         allBalances &&
         allBalances[account] &&
-        allBalances[account][exchangeAddress] &&
-        JSBI.greaterThan(allBalances[account][exchangeAddress].raw, JSBI.BigInt(0))
+        allBalances[account][pairAddress] &&
+        JSBI.greaterThan(allBalances[account][pairAddress].raw, JSBI.BigInt(0))
       )
     })
-    .map((exchangeAddress, i) => {
+    .map((pairAddress, i) => {
       return (
         <PositionCard
           key={i}
-          exchangeAddress={exchangeAddress}
-          token0={allTokens[allExchanges[exchangeAddress].token0]}
-          token1={allTokens[allExchanges[exchangeAddress].token1]}
+          pairAddress={pairAddress}
+          token0={allTokens[allPairs[pairAddress].token0]}
+          token1={allTokens[allPairs[pairAddress].token1]}
         />
       )
     })

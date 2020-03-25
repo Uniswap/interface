@@ -13,7 +13,7 @@
     "@types/node": "^13.7.4",
     "@types/react": "^16.9.21",
     "@types/react-dom": "^16.9.5",
-    "@uniswap/sdk": "@uniswap/sdk@2.0.0-beta.19",
+    "@uniswap/sdk": "@uniswap/sdk@2.0.0-beta.20",
     "@web3-react/core": "^6.0.2",
     "@web3-react/fortmatic-connector": "^6.0.2",
     "@web3-react/injected-connector": "^6.0.3",

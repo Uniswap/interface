@@ -152,7 +152,6 @@ export default function CurrencyInputPanel({
   value,
   field,
   onUserInput,
-  title,
   onMax,
   atMax,
   error,
@@ -164,7 +163,7 @@ export default function CurrencyInputPanel({
   disableTokenSelect = false,
   hideBalance = false,
   isExchange = false,
-  exchange = null, // used for double token logo
+  pair = null, // used for double token logo
   customBalance = null, // used for LP balances instead of token balance
   hideInput = false,
   showSendWithSwap = false
@@ -251,13 +250,13 @@ export default function CurrencyInputPanel({
           >
             <Aligner>
               {isExchange ? (
-                <DoubleLogo a0={exchange?.token0.address} a1={exchange?.token1.address} size={24} margin={true} />
+                <DoubleLogo a0={pair?.token0.address} a1={pair?.token1.address} size={24} margin={true} />
               ) : token?.address ? (
                 <TokenLogo address={token?.address} size={'24px'} />
               ) : null}
               {isExchange ? (
                 <StyledTokenName>
-                  {exchange?.token0.symbol}:{exchange?.token1.symbol}
+                  {pair?.token0.symbol}:{pair?.token1.symbol}
                 </StyledTokenName>
               ) : (
                 <StyledTokenName>{(token && token.symbol) || t('selectToken')}</StyledTokenName>
