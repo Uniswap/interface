@@ -234,22 +234,13 @@ export default function AddLiquidity({ token0, token1 }) {
 
   // check for estimated liquidity minted
   const liquidityMinted: TokenAmount =
-<<<<<<< HEAD
     !!pair &&
-=======
-    !!exchange &&
->>>>>>> 02dedcbc6e5b972ec3c28be588a2128bcf5c1247
     !!parsedAmounts[Field.INPUT] &&
     !!parsedAmounts[Field.OUTPUT] &&
     !JSBI.equal(parsedAmounts[Field.INPUT].raw, JSBI.BigInt(0)) &&
     !JSBI.equal(parsedAmounts[Field.OUTPUT].raw, JSBI.BigInt(0))
-<<<<<<< HEAD
       ? pair.getLiquidityMinted(
           totalSupply ? totalSupply : new TokenAmount(pair?.liquidityToken, JSBI.BigInt(0)),
-=======
-      ? exchange.getLiquidityMinted(
-          totalSupply ? totalSupply : new TokenAmount(exchange?.liquidityToken, JSBI.BigInt(0)),
->>>>>>> 02dedcbc6e5b972ec3c28be588a2128bcf5c1247
           parsedAmounts[Field.INPUT],
           parsedAmounts[Field.OUTPUT]
         )
@@ -621,11 +612,7 @@ export default function AddLiquidity({ token0, token1 }) {
         {!noLiquidity && (
           <FixedBottom>
             <PositionCard
-<<<<<<< HEAD
               pairAddress={pair?.liquidityToken?.address}
-=======
-              exchangeAddress={exchange?.liquidityToken?.address}
->>>>>>> 02dedcbc6e5b972ec3c28be588a2128bcf5c1247
               token0={tokens[Field.INPUT]}
               token1={tokens[Field.OUTPUT]}
               minimal={true}
