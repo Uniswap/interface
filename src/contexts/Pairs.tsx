@@ -100,9 +100,13 @@ export function usePair(tokenA?: Token, tokenB?: Token): Pair | undefined {
   const address = usePairAddress(tokenA, tokenB)
   const tokenAmountA = useAddressBalance(address, tokenA)
   const tokenAmountB = useAddressBalance(address, tokenB)
-  const pair = tokenAmountA && tokenAmountB && new Pair(tokenAmountA, tokenAmountB)
+  const [pair, setPair] = useState<Pair>()
 
-  // return pair
+  useEffect(() => {
+    if (!pair && tokenAmountA && tokenAmountB) {
+      setPair(new Pair(tokenAmountA, tokenAmountB))
+    }
+  }, [pair, tokenAmountA, tokenAmountB])
 
   return useMemo(() => {
     return pair
@@ -146,8 +150,10 @@ export function useAllPairs() {
   }, [allPairs])
 }
 
-export function useTotalSupply(pair: Pair) {
+export function useTotalSupply(tokenA?: Token, tokenB?: Token) {
   const { library } = useWeb3React()
+
+  const pair = usePair(tokenA, tokenB)
 
   const [totalPoolTokens, setTotalPoolTokens] = useState<TokenAmount>()
 
@@ -169,12 +175,7 @@ export function useTotalSupply(pair: Pair) {
           }
         })
         .catch(() => {})
-    /**
-     * @todo
-     * fix this
-     */
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pairContract])
+  }, [pairContract, pair])
 
   // on the block make sure we're updated
   useEffect(() => {

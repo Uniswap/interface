@@ -161,7 +161,7 @@ export default function AddLiquidity({ token0, token1 }) {
   // exhchange data
   const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
   const route: Route = pair ? new Route([pair], tokens[independentField]) : undefined
-  const totalSupply: TokenAmount = useTotalSupply(pair)
+  const totalSupply: TokenAmount = useTotalSupply(tokens[Field.INPUT], tokens[Field.OUTPUT])
   const [noLiquidity, setNoLiquidity] = useState<boolean>(false) // used to detect new exchange
 
   // state for amount approvals

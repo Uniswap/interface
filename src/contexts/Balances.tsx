@@ -450,11 +450,6 @@ export function useAddressBalance(address: string, token: Token): TokenAmount | 
   const value = typeof chainId === 'number' ? state?.[chainId]?.[address]?.[token?.address]?.value : undefined
   const formattedValue = value && token && new TokenAmount(token, value)
 
-  /**
-   * @todo
-   * when catching for token, causes infinite rerender
-   * when the token is an exchange liquidity token
-   */
   useEffect(() => {
     if (typeof chainId === 'number' && isAddress(address) && token && token.address && isAddress(token.address)) {
       startListening(chainId, address, token.address)
@@ -462,8 +457,7 @@ export function useAddressBalance(address: string, token: Token): TokenAmount | 
         stopListening(chainId, address, token.address)
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chainId, address, startListening, stopListening])
+  }, [chainId, address, startListening, stopListening, token])
 
   return useMemo(() => formattedValue, [formattedValue])
 }

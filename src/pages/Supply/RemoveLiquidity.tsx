@@ -164,7 +164,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
   const pairContract: ethers.Contract = usePairContract(pair?.liquidityToken.address)
 
   // pool token data
-  const totalPoolTokens: TokenAmount = useTotalSupply(pair)
+  const totalPoolTokens: TokenAmount = useTotalSupply(tokens[Field.TOKEN0], tokens[Field.TOKEN1])
 
   const allBalances: TokenAmount[] = useAllBalances()
   const userLiquidity: TokenAmount = allBalances?.[account]?.[pair?.liquidityToken?.address]
