@@ -210,16 +210,16 @@ export function useFactoryContract(withSignerIfPossible = true) {
   }, [chainId, library, withSignerIfPossible, account])
 }
 
-export function useExchangeContract(exchangeAddress, withSignerIfPossible = true) {
+export function usePairContract(pairAddress, withSignerIfPossible = true) {
   const { library, account } = useWeb3React()
 
   return useMemo(() => {
     try {
-      return getExchangeContract(exchangeAddress, library, withSignerIfPossible ? account : undefined)
+      return getExchangeContract(pairAddress, library, withSignerIfPossible ? account : undefined)
     } catch {
       return null
     }
-  }, [exchangeAddress, library, withSignerIfPossible, account])
+  }, [pairAddress, library, withSignerIfPossible, account])
 }
 
 export function useCopyClipboard(timeout = 500) {

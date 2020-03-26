@@ -2385,10 +2385,10 @@
     semver "^6.3.0"
     tsutils "^3.17.1"
 
-"@uniswap/sdk@@uniswap/sdk@2.0.0-beta.19":
-  version "2.0.0-beta.19"
-  resolved "https://registry.yarnpkg.com/@uniswap/sdk/-/sdk-2.0.0-beta.19.tgz#1f0228a1d5451d62f209e09c48cd1d6bea5ffe01"
-  integrity sha512-mqDZkeX2TU7e3yOOKHSeUryv94//mJ6dsU6dCv6FExrfOY9yi6+O5ZWpe43rVi0XFVdQGRIRhJapdWKWaGsung==
+"@uniswap/sdk@@uniswap/sdk@2.0.0-beta.20":
+  version "2.0.0-beta.20"
+  resolved "https://registry.yarnpkg.com/@uniswap/sdk/-/sdk-2.0.0-beta.20.tgz#f541909158d053d8bf9ae8af62b2b4f83cc7068c"
+  integrity sha512-PuXlwGKrEd3L+eIs4oQZQ3IFnVZe/JN9U2jyV6DPjO/dmBL8mzCaqMAiAmQSEAIrBSHFTpxYwklltbY/bU7+Dg==
   dependencies:
     "@ethersproject/address" "^5.0.0-beta.134"
     "@ethersproject/contracts" "^5.0.0-beta.143"

@@ -142,8 +142,8 @@ export function getFactoryContract(networkId, library, account) {
 }
 
 // account is optional
-export function getExchangeContract(exchangeAddress, library, account) {
-  return getContract(exchangeAddress, EXCHANGE_ABI, library, account)
+export function getExchangeContract(pairAddress, library, account) {
+  return getContract(pairAddress, EXCHANGE_ABI, library, account)
 }
 
 // get token name
@@ -198,7 +198,7 @@ export async function getTokenDecimals(tokenAddress, library) {
 }
 
 // get the exchange address for a token from the factory
-export async function getTokenExchangeAddressFromFactory(tokenAddress, networkId, library) {
+export async function getTokenpairAddressFromFactory(tokenAddress, networkId, library) {
   return getFactoryContract(networkId, library).getExchange(tokenAddress)
 }
 

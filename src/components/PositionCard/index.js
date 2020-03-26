@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
-import { Percent, Exchange } from '@uniswap/sdk'
+import { Percent, Pair } from '@uniswap/sdk'
 
 import { useWeb3React } from '@web3-react/core'
 import { useAllBalances } from '../../contexts/Balances'
-import { useTotalSupply } from '../../contexts/Exchanges'
+import { useTotalSupply } from '../../contexts/Pairs'
 
 import Card from '../Card'
 import TokenLogo from '../TokenLogo'
@@ -20,17 +20,17 @@ const FixedHeightRow = styled(RowBetween)`
   height: 24px;
 `
 
-function PositionCard({ exchangeAddress, token0, token1, history, minimal = false, ...rest }) {
+function PositionCard({ pairAddress, token0, token1, history, minimal = false, ...rest }) {
   const { account } = useWeb3React()
   const allBalances = useAllBalances()
 
-  const tokenAmount0 = allBalances?.[exchangeAddress]?.[token0.address]
-  const tokenAmount1 = allBalances?.[exchangeAddress]?.[token1.address]
+  const tokenAmount0 = allBalances?.[pairAddress]?.[token0.address]
+  const tokenAmount1 = allBalances?.[pairAddress]?.[token1.address]
 
-  const exchange = tokenAmount0 && tokenAmount1 && new Exchange(tokenAmount0, tokenAmount1)
+  const pair = tokenAmount0 && tokenAmount1 && new Pair(tokenAmount0, tokenAmount1)
 
-  const userPoolBalance = allBalances?.[account]?.[exchangeAddress]
-  const totalPoolTokens = useTotalSupply(exchange)
+  const userPoolBalance = allBalances?.[account]?.[pairAddress]
+  const totalPoolTokens = useTotalSupply(pair)
 
   const poolTokenPercentage =
     !!userPoolBalance && !!totalPoolTokens ? new Percent(userPoolBalance.raw, totalPoolTokens.raw) : undefined
@@ -39,12 +39,12 @@ function PositionCard({ exchangeAddress, token0, token1, history, minimal = fals
     token0 &&
     totalPoolTokens &&
     userPoolBalance &&
-    exchange.getLiquidityValue(token0, totalPoolTokens, userPoolBalance, false)
+    pair.getLiquidityValue(token0, totalPoolTokens, userPoolBalance, false)
   const token1Deposited =
     token1 &&
     totalPoolTokens &&
     userPoolBalance &&
-    exchange.getLiquidityValue(token1, totalPoolTokens, userPoolBalance, false)
+    pair.getLiquidityValue(token1, totalPoolTokens, userPoolBalance, false)
 
   function DynamicCard({ children, ...rest }) {
     if (!minimal) {
