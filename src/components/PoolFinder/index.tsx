@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
-import { TokenAmount, JSBI, Token, Exchange } from '@uniswap/sdk'
+import { TokenAmount, JSBI, Token, Pair } from '@uniswap/sdk'
 
 import Row from '../Row'
 import TokenLogo from '../TokenLogo'
@@ -14,9 +14,9 @@ import { LightCard } from '../Card'
 import { AutoColumn, ColumnCenter } from '../Column'
 import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
 
+import { usePair } from '../../contexts/Pairs'
 import { useToken } from '../../contexts/Tokens'
 import { usePopups } from '../../contexts/Application'
-import { useExchange } from '../../contexts/Exchanges'
 import { useWeb3React } from '@web3-react/core'
 import { useAddressBalance } from '../../contexts/Balances'
 
@@ -38,10 +38,10 @@ function PoolFinder({ history }) {
   const token0: Token = useToken(token0Address)
   const token1: Token = useToken(token1Address)
 
-  const exchange: Exchange = useExchange(token0, token1)
-  const position: TokenAmount = useAddressBalance(account, exchange?.liquidityToken)
+  const pair: Pair = usePair(token0, token1)
+  const position: TokenAmount = useAddressBalance(account, pair?.liquidityToken)
 
-  const newExchange: boolean = exchange && JSBI.equal(exchange.reserve0.raw, JSBI.BigInt(0))
+  const newPair: boolean = pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0))
   const allowImport: boolean = position && JSBI.greaterThan(position.raw, JSBI.BigInt(0))
 
   function endSearch() {
@@ -120,7 +120,7 @@ function PoolFinder({ history }) {
         {position ? (
           !JSBI.equal(position.raw, JSBI.BigInt(0)) ? (
             <PositionCard
-              exchangeAddress={exchange?.liquidityToken.address}
+              pairAddress={pair?.liquidityToken.address}
               token0={token0}
               token1={token1}
               minimal={true}
@@ -140,7 +140,7 @@ function PoolFinder({ history }) {
               </AutoColumn>
             </LightCard>
           )
-        ) : newExchange ? (
+        ) : newPair ? (
           <LightCard padding="45px">
             <AutoColumn gap="8px" justify="center">
               <Text color="">No exchange found.</Text>

@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useReducer, useRef, useMemo, useCallback, useEffect, ReactNode } from 'react'
 import { TokenAmount, Token, JSBI, WETH } from '@uniswap/sdk'
 
+import { useAllPairs } from './Pairs'
 import { useAllTokens } from './Tokens'
 import { useBlockNumber } from './Application'
-import { useAllExchanges } from './Exchanges'
 import { useWeb3React, useDebounce } from '../hooks'
 
 import { getEtherBalance, getTokenBalance, isAddress } from '../utils'
@@ -120,20 +120,20 @@ function reducer(state: BalancesState, { type, payload }: { type: Action; payloa
       }
     }
     case Action.BATCH_UPDATE_EXCHANGES: {
-      const { chainId, exchangeAddresses, tokenAddresses, values, blockNumber } = payload
+      const { chainId, pairAddresses, tokenAddresses, values, blockNumber } = payload
 
       return {
         ...state,
         [chainId]: {
           ...state?.[chainId],
-          ...exchangeAddresses.reduce((accumulator: any, exchangeAddress: string, i: number) => {
+          ...pairAddresses.reduce((accumulator: any, pairAddress: string, i: number) => {
             const tokenAddress = tokenAddresses[i]
             const value = values[i]
-            accumulator[exchangeAddress] = {
-              ...state?.[chainId]?.[exchangeAddress],
-              ...accumulator?.[exchangeAddress],
+            accumulator[pairAddress] = {
+              ...state?.[chainId]?.[pairAddress],
+              ...accumulator?.[pairAddress],
               [tokenAddress]: {
-                ...state?.[chainId]?.[exchangeAddress]?.[tokenAddress],
+                ...state?.[chainId]?.[pairAddress]?.[tokenAddress],
                 value,
                 blockNumber
               }
@@ -174,10 +174,10 @@ export default function Provider({ children }: { children: ReactNode }) {
     dispatch({ type: Action.BATCH_UPDATE_ACCOUNT, payload: { chainId, address, tokenAddresses, values, blockNumber } })
   }, [])
 
-  const batchUpdateExchanges = useCallback((chainId, exchangeAddresses, tokenAddresses, values, blockNumber) => {
+  const batchUpdateExchanges = useCallback((chainId, pairAddresses, tokenAddresses, values, blockNumber) => {
     dispatch({
       type: Action.BATCH_UPDATE_EXCHANGES,
-      payload: { chainId, exchangeAddresses, tokenAddresses, values, blockNumber }
+      payload: { chainId, pairAddresses, tokenAddresses, values, blockNumber }
     })
   }, [])
 
@@ -325,26 +325,25 @@ export function Updater() {
   }, [chainId, account, blockNumber, allTokens, fetchBalance, batchUpdateAccount])
 
   // ensure  token balances for all exchanges
-  const allExchanges = useAllExchanges()
-
+  const allPairs = useAllPairs()
   useEffect(() => {
     if (typeof chainId === 'number' && typeof blockNumber === 'number') {
       Promise.all(
-        Object.keys(allExchanges)
-          .filter(exchangeAddress => {
-            const token0 = allExchanges[exchangeAddress].token0
-            const token1 = allExchanges[exchangeAddress].token1
+        Object.keys(allPairs)
+          .filter(pairAddress => {
+            const token0 = allPairs[pairAddress].token0
+            const token1 = allPairs[pairAddress].token1
 
-            const hasValueToken0 = !!stateRef.current?.[chainId]?.[exchangeAddress]?.[token0]?.value
-            const hasValueToken1 = !!stateRef.current?.[chainId]?.[exchangeAddress]?.[token1]?.value
+            const hasValueToken0 = !!stateRef.current?.[chainId]?.[pairAddress]?.[token0]?.value
+            const hasValueToken1 = !!stateRef.current?.[chainId]?.[pairAddress]?.[token1]?.value
 
-            const cachedFetchedAsOfToken0 = fetchedAsOfCache.current?.[chainId]?.[exchangeAddress]?.token0
-            const cachedFetchedAsOfToken1 = fetchedAsOfCache.current?.[chainId]?.[exchangeAddress]?.token1
+            const cachedFetchedAsOfToken0 = fetchedAsOfCache.current?.[chainId]?.[pairAddress]?.token0
+            const cachedFetchedAsOfToken1 = fetchedAsOfCache.current?.[chainId]?.[pairAddress]?.token1
 
             const fetchedAsOfToken0 =
-              stateRef.current?.[chainId]?.[exchangeAddress]?.[token0]?.blockNumber ?? cachedFetchedAsOfToken0
+              stateRef.current?.[chainId]?.[pairAddress]?.[token0]?.blockNumber ?? cachedFetchedAsOfToken0
             const fetchedAsOfToken1 =
-              stateRef.current?.[chainId]?.[exchangeAddress]?.[token1]?.blockNumber ?? cachedFetchedAsOfToken1
+              stateRef.current?.[chainId]?.[pairAddress]?.[token1]?.blockNumber ?? cachedFetchedAsOfToken1
 
             // if there's no values, and they're not being fetched, we need to fetch!
             if (
@@ -367,37 +366,37 @@ export function Updater() {
               return false
             }
           })
-          .map(async exchangeAddress => {
-            const token0 = allExchanges[exchangeAddress].token0
-            const token1 = allExchanges[exchangeAddress].token1
+          .map(async pairAddress => {
+            const token0 = allPairs[pairAddress].token0
+            const token1 = allPairs[pairAddress].token1
 
             fetchedAsOfCache.current = {
               ...fetchedAsOfCache.current,
               [chainId]: {
                 ...fetchedAsOfCache.current?.[chainId],
-                [exchangeAddress]: {
-                  ...fetchedAsOfCache.current?.[chainId]?.[exchangeAddress],
+                [pairAddress]: {
+                  ...fetchedAsOfCache.current?.[chainId]?.[pairAddress],
                   [token0]: blockNumber,
                   [token1]: blockNumber
                 }
               }
             }
             return Promise.all([
-              fetchBalance(exchangeAddress, token0),
-              fetchBalance(exchangeAddress, token1)
-            ]).then(([valueToken0, valueToken1]) => ({ exchangeAddress, token0, token1, valueToken0, valueToken1 }))
+              fetchBalance(pairAddress, token0),
+              fetchBalance(pairAddress, token1)
+            ]).then(([valueToken0, valueToken1]) => ({ pairAddress, token0, token1, valueToken0, valueToken1 }))
           })
       ).then(results => {
         batchUpdateExchanges(
           chainId,
-          results.flatMap(result => [result.exchangeAddress, result.exchangeAddress]),
+          results.flatMap(result => [result.pairAddress, result.pairAddress]),
           results.flatMap(result => [result.token0, result.token1]),
           results.flatMap(result => [result.valueToken0, result.valueToken1]),
           blockNumber
         )
       })
     }
-  }, [chainId, account, blockNumber, allExchanges, fetchBalance, batchUpdateExchanges])
+  }, [chainId, account, blockNumber, allPairs, fetchBalance, batchUpdateExchanges])
 
   return null
 }
@@ -472,17 +471,17 @@ export function useAddressBalance(address: string, token: Token): TokenAmount | 
 export function useAccountLPBalances(account: string) {
   const { chainId } = useWeb3React()
   const [, { startListening, stopListening }] = useBalancesContext()
-  const allExchanges = useAllExchanges()
+  const allPairs = useAllPairs()
 
   useEffect(() => {
-    Object.keys(allExchanges).map(exchangeAddress => {
+    Object.keys(allPairs).map(pairAddress => {
       if (typeof chainId === 'number' && isAddress(account)) {
-        startListening(chainId, account, exchangeAddress)
+        startListening(chainId, account, pairAddress)
         return () => {
-          stopListening(chainId, account, exchangeAddress)
+          stopListening(chainId, account, pairAddress)
         }
       }
       return true
     })
-  }, [account, allExchanges, chainId, startListening, stopListening])
+  }, [account, allPairs, chainId, startListening, stopListening])
 }

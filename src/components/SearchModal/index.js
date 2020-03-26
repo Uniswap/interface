@@ -21,10 +21,10 @@ import { ColumnCenter } from '../../components/Column'
 import { RowBetween, RowFixed } from '../Row'
 
 import { isAddress } from '../../utils'
+import { useAllPairs } from '../../contexts/Pairs'
 import { useWeb3React } from '../../hooks'
 import { useAllBalances } from '../../contexts/Balances'
 import { useTranslation } from 'react-i18next'
-import { useAllExchanges } from '../../contexts/Exchanges'
 import { useToken, useAllTokens, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
 
 const TokenModalInfo = styled.div`
@@ -131,7 +131,7 @@ function SearchModal({
   const { account, chainId } = useWeb3React()
 
   const allTokens = useAllTokens()
-  const allExchanges = useAllExchanges()
+  const allPairs = useAllPairs()
   const allBalances = useAllBalances()
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -230,7 +230,7 @@ function SearchModal({
   const escapeStringRegexp = string => string
 
   const sortedPairList = useMemo(() => {
-    return Object.keys(allExchanges).sort((a, b) => {
+    return Object.keys(allPairs).sort((a, b) => {
       // sort by balance
       const balanceA = allBalances?.[account]?.[a]
       const balanceB = allBalances?.[account]?.[b]
@@ -248,17 +248,17 @@ function SearchModal({
         return 0
       }
     })
-  }, [account, allBalances, allExchanges, sortDirection])
+  }, [account, allBalances, allPairs, sortDirection])
 
   const filteredPairList = useMemo(() => {
     const isAddress = searchQuery.slice(0, 2) === '0x'
-    return sortedPairList.filter(exchangeAddress => {
-      const exchange = allExchanges[exchangeAddress]
+    return sortedPairList.filter(pairAddress => {
+      const pair = allPairs[pairAddress]
       if (searchQuery === '') {
         return true
       }
-      const token0 = allTokens[exchange.token0]
-      const token1 = allTokens[exchange.token1]
+      const token0 = allTokens[pair.token0]
+      const token1 = allTokens[pair.token1]
       const regexMatches = Object.keys(token0).map(field => {
         if (
           (field === 'address' && isAddress) ||
@@ -275,7 +275,7 @@ function SearchModal({
 
       return regexMatches.some(m => m)
     })
-  }, [allExchanges, allTokens, searchQuery, sortedPairList])
+  }, [allPairs, allTokens, searchQuery, sortedPairList])
 
   // update the amount shown as filtered list changes
   useEffect(() => {
@@ -296,10 +296,10 @@ function SearchModal({
 
     return (
       filteredPairList &&
-      filteredPairList.map((exchangeAddress, i) => {
-        const token0 = allTokens[allExchanges[exchangeAddress].token0]
-        const token1 = allTokens[allExchanges[exchangeAddress].token1]
-        const balance = allBalances?.[account]?.[exchangeAddress]?.toSignificant(6)
+      filteredPairList.map((pairAddress, i) => {
+        const token0 = allTokens[allPairs[pairAddress].token0]
+        const token1 = allTokens[allPairs[pairAddress].token1]
+        const balance = allBalances?.[account]?.[pairAddress]?.toSignificant(6)
         return (
           <MenuItem
             key={i}

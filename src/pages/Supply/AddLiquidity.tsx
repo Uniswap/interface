@@ -2,7 +2,7 @@ import React, { useReducer, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
 import { parseUnits, parseEther } from '@ethersproject/units'
-import { WETH, TokenAmount, JSBI, Percent, Route, Token, Exchange } from '@uniswap/sdk'
+import { WETH, TokenAmount, JSBI, Percent, Route, Token, Pair } from '@uniswap/sdk'
 
 import TokenLogo from '../../components/TokenLogo'
 import DoubleLogo from '../../components/DoubleLogo'
@@ -22,7 +22,7 @@ import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useTransactionAdder } from '../../contexts/Transactions'
-import { useExchange, useTotalSupply } from '../../contexts/Exchanges'
+import { usePair, useTotalSupply } from '../../contexts/Pairs'
 
 import { BigNumber } from 'ethers/utils'
 import { ROUTER_ADDRESSES } from '../../constants'
@@ -159,9 +159,9 @@ export default function AddLiquidity({ token0, token1 }) {
   }
 
   // exhchange data
-  const exchange: Exchange = useExchange(tokens[Field.INPUT], tokens[Field.OUTPUT])
-  const route: Route = exchange ? new Route([exchange], tokens[independentField]) : undefined
-  const totalSupply: TokenAmount = useTotalSupply(exchange)
+  const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
+  const route: Route = pair ? new Route([pair], tokens[independentField]) : undefined
+  const totalSupply: TokenAmount = useTotalSupply(pair)
   const [noLiquidity, setNoLiquidity] = useState<boolean>(false) // used to detect new exchange
 
   // state for amount approvals
@@ -178,14 +178,10 @@ export default function AddLiquidity({ token0, token1 }) {
 
   // check if no exchange or no liquidity
   useEffect(() => {
-    if (
-      exchange &&
-      JSBI.equal(exchange.reserve0.raw, JSBI.BigInt(0)) &&
-      JSBI.equal(exchange.reserve1.raw, JSBI.BigInt(0))
-    ) {
+    if (pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))) {
       setNoLiquidity(true)
     }
-  }, [exchange])
+  }, [pair])
 
   // track non relational amounts if first person to add liquidity
   const [nonrelationalAmounts, setNonrelationalAmounts] = useState({
@@ -238,13 +234,13 @@ export default function AddLiquidity({ token0, token1 }) {
 
   // check for estimated liquidity minted
   const liquidityMinted: TokenAmount =
-    !!exchange &&
+    !!pair &&
     !!parsedAmounts[Field.INPUT] &&
     !!parsedAmounts[Field.OUTPUT] &&
     !JSBI.equal(parsedAmounts[Field.INPUT].raw, JSBI.BigInt(0)) &&
     !JSBI.equal(parsedAmounts[Field.OUTPUT].raw, JSBI.BigInt(0))
-      ? exchange.getLiquidityMinted(
-          totalSupply ? totalSupply : new TokenAmount(exchange?.liquidityToken, JSBI.BigInt(0)),
+      ? pair.getLiquidityMinted(
+          totalSupply ? totalSupply : new TokenAmount(pair?.liquidityToken, JSBI.BigInt(0)),
           parsedAmounts[Field.INPUT],
           parsedAmounts[Field.OUTPUT]
         )
@@ -571,9 +567,8 @@ export default function AddLiquidity({ token0, token1 }) {
           atMax={atMaxAmountInput}
           token={tokens[Field.INPUT]}
           onTokenSelection={onTokenSelection}
-          title={'Deposit'}
           error={inputError}
-          exchange={exchange}
+          pair={pair}
           showUnlock={showInputUnlock}
           disableTokenSelect
         />
@@ -590,9 +585,8 @@ export default function AddLiquidity({ token0, token1 }) {
           atMax={atMaxAmountOutput}
           token={tokens[Field.OUTPUT]}
           onTokenSelection={onTokenSelection}
-          title={'Deposit'}
           error={outputError}
-          exchange={exchange}
+          pair={pair}
           showUnlock={showOutputUnlock}
           disableTokenSelect
         />
@@ -618,7 +612,7 @@ export default function AddLiquidity({ token0, token1 }) {
         {!noLiquidity && (
           <FixedBottom>
             <PositionCard
-              exchangeAddress={exchange?.liquidityToken?.address}
+              pairAddress={pair?.liquidityToken?.address}
               token0={tokens[Field.INPUT]}
               token1={tokens[Field.OUTPUT]}
               minimal={true}

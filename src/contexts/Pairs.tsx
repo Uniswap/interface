@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect, useState } from 'react'
 import { useAddressBalance } from './Balances'
-import { useWeb3React, useExchangeContract } from '../hooks'
+import { useWeb3React, usePairContract } from '../hooks'
 import { INITIAL_TOKENS_CONTEXT } from './Tokens'
-import { ChainId, WETH, Token, TokenAmount, Exchange, JSBI } from '@uniswap/sdk'
+import { ChainId, WETH, Token, TokenAmount, Pair, JSBI } from '@uniswap/sdk'
 
 const UPDATE = 'UPDATE'
 
-const ALL_EXCHANGES: [Token, Token][] = [
+const ALL_PAIRS: [Token, Token][] = [
   [
     INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY][WETH[ChainId.RINKEBY].address],
     INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735'] //dai
@@ -17,30 +17,29 @@ const ALL_EXCHANGES: [Token, Token][] = [
   ]
 ]
 
-const EXCHANGE_MAP: {
+const PAIR_MAP: {
   [chainId: number]: { [token0Address: string]: { [token1Address: string]: string } }
-} = ALL_EXCHANGES.reduce((exchangeMap, [tokenA, tokenB]) => {
+} = ALL_PAIRS.reduce((pairMap, [tokenA, tokenB]) => {
   const tokens: [Token, Token] = tokenA?.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
   // ensure exchanges are unique
-  if (exchangeMap?.[tokens[0].chainId]?.[tokens[0].address]?.[tokens[1].address] !== undefined)
+  if (pairMap?.[tokens[0].chainId]?.[tokens[0].address]?.[tokens[1].address] !== undefined)
     throw Error(`Duplicate exchange: ${tokenA} ${tokenB}`)
-
   return {
-    ...exchangeMap,
+    ...pairMap,
     [tokens[0].chainId]: {
-      ...exchangeMap?.[tokens[0].chainId],
+      ...pairMap?.[tokens[0].chainId],
       [tokens[0].address]: {
-        ...exchangeMap?.[tokens[0].chainId]?.[tokens[0].address],
-        [tokens[1].address]: Exchange.getAddress(...tokens)
+        ...pairMap?.[tokens[0].chainId]?.[tokens[0].address],
+        [tokens[1].address]: Pair.getAddress(...tokens)
       }
     }
   }
 }, {})
 
-const ExchangeContext = createContext([])
+const PairContext = createContext([])
 
-function useExchangesContext() {
-  return useContext(ExchangeContext)
+function usePairContext() {
+  return useContext(PairContext)
 }
 
 function reducer(state, { type, payload }) {
@@ -56,7 +55,7 @@ function reducer(state, { type, payload }) {
           ...state?.[tokensSorted[0].chainId],
           [tokensSorted[0].address]: {
             ...state?.[tokensSorted[0].chainId]?.[tokensSorted[0].address],
-            [tokensSorted[1].address]: Exchange.getAddress(tokensSorted[0], tokensSorted[1])
+            [tokensSorted[1].address]: Pair.getAddress(tokensSorted[0], tokensSorted[1])
           }
         }
       }
@@ -68,22 +67,20 @@ function reducer(state, { type, payload }) {
 }
 
 export default function Provider({ children }) {
-  const [state, dispatch] = useReducer(reducer, EXCHANGE_MAP)
+  const [state, dispatch] = useReducer(reducer, PAIR_MAP)
 
   const update = useCallback((chainId, tokens) => {
     dispatch({ type: UPDATE, payload: { chainId, tokens } })
   }, [])
 
   return (
-    <ExchangeContext.Provider value={useMemo(() => [state, { update }], [state, update])}>
-      {children}
-    </ExchangeContext.Provider>
+    <PairContext.Provider value={useMemo(() => [state, { update }], [state, update])}>{children}</PairContext.Provider>
   )
 }
 
-export function useExchangeAddress(tokenA?: Token, tokenB?: Token): string | undefined {
+export function usePairAddress(tokenA?: Token, tokenB?: Token): string | undefined {
   const { chainId } = useWeb3React()
-  const [state, { update }] = useExchangesContext()
+  const [state, { update }] = usePairContext()
 
   const tokens: [Token, Token] = tokenA && tokenB && tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
 
@@ -91,79 +88,81 @@ export function useExchangeAddress(tokenA?: Token, tokenB?: Token): string | und
 
   useEffect(() => {
     if (address === undefined && tokenA && tokenB) {
-      const exchangeAddress = Exchange.getAddress(...tokens)
-      exchangeAddress && update(chainId, tokens)
+      const pairAddress = Pair.getAddress(...tokens)
+      pairAddress && update(chainId, tokens)
     }
   }, [chainId, address, tokenA, tokenB, tokens, update])
 
   return address
 }
 
-export function useExchange(tokenA?: Token, tokenB?: Token): Exchange | undefined {
-  const address = useExchangeAddress(tokenA, tokenB)
-
+export function usePair(tokenA?: Token, tokenB?: Token): Pair | undefined {
+  const address = usePairAddress(tokenA, tokenB)
   const tokenAmountA = useAddressBalance(address, tokenA)
   const tokenAmountB = useAddressBalance(address, tokenB)
+  const pair = tokenAmountA && tokenAmountB && new Pair(tokenAmountA, tokenAmountB)
 
-  const exchange = tokenAmountA && tokenAmountB && new Exchange(tokenAmountA, tokenAmountB)
+  // return pair
 
-  return exchange
+  return useMemo(() => {
+    return pair
+  }, [pair])
 }
 
-export function useAllExchangesRaw() {
+export function useAllPairsRaw() {
   const { chainId } = useWeb3React()
-  const [state] = useExchangesContext()
+  const [state] = usePairContext()
 
   const allExchangeDetails = state?.[chainId]
 
   return allExchangeDetails
 }
 
-export function useAllExchanges() {
+export function useAllPairs() {
   const { chainId } = useWeb3React()
-  const [state] = useExchangesContext()
+  const [state] = usePairContext()
 
-  const allExchangeDetails = state?.[chainId]
+  const allPairDetails = state?.[chainId]
 
-  const allExchanges = useMemo(() => {
-    if (!allExchangeDetails) {
+  const allPairs = useMemo(() => {
+    if (!allPairDetails) {
       return {}
     }
     const formattedExchanges = {}
-    Object.keys(allExchangeDetails).map(token0Address => {
-      return Object.keys(allExchangeDetails[token0Address]).map(token1Address => {
-        const exchangeAddress = allExchangeDetails[token0Address][token1Address]
-        return (formattedExchanges[exchangeAddress] = {
+    Object.keys(allPairDetails).map(token0Address => {
+      return Object.keys(allPairDetails[token0Address]).map(token1Address => {
+        const pairAddress = allPairDetails[token0Address][token1Address]
+        return (formattedExchanges[pairAddress] = {
           token0: token0Address,
           token1: token1Address
         })
       })
     })
     return formattedExchanges
-  }, [allExchangeDetails])
+  }, [allPairDetails])
 
   return useMemo(() => {
-    return allExchanges || {}
-  }, [allExchanges])
+    return allPairs || {}
+  }, [allPairs])
 }
 
-export function useTotalSupply(exchange: Exchange) {
+export function useTotalSupply(pair: Pair) {
   const { library } = useWeb3React()
 
   const [totalPoolTokens, setTotalPoolTokens] = useState<TokenAmount>()
 
-  const exchangeContract = useExchangeContract(exchange?.liquidityToken.address)
+  const pairContract = usePairContract(pair?.liquidityToken.address)
 
   const fetchPoolTokens = useCallback(async () => {
-    !!exchangeContract &&
-      exchangeContract
+    !!pairContract &&
+      pairContract
         .deployed()
         .then(() => {
-          if (exchangeContract) {
-            exchangeContract.totalSupply().then(totalSupply => {
-              if (totalSupply !== undefined && exchange?.liquidityToken?.decimals) {
+          if (pairContract) {
+            pairContract.totalSupply().then(totalSupply => {
+              if (totalSupply !== undefined && pair?.liquidityToken?.decimals) {
                 const supplyFormatted = JSBI.BigInt(totalSupply)
-                const tokenSupplyFormatted = new TokenAmount(exchange?.liquidityToken, supplyFormatted)
+                const tokenSupplyFormatted = new TokenAmount(pair?.liquidityToken, supplyFormatted)
                 setTotalPoolTokens(tokenSupplyFormatted)
               }
             })
@@ -175,7 +174,7 @@ export function useTotalSupply(exchange: Exchange) {
      * fix this
      */
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exchangeContract])
+  }, [pairContract])
 
   // on the block make sure we're updated
   useEffect(() => {

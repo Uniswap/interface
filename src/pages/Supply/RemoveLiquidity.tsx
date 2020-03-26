@@ -2,7 +2,7 @@ import React, { useReducer, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
 import { parseUnits } from '@ethersproject/units'
-import { TokenAmount, JSBI, Route, WETH, Percent, Token, Exchange } from '@uniswap/sdk'
+import { TokenAmount, JSBI, Route, WETH, Percent, Token, Pair } from '@uniswap/sdk'
 
 import Slider from '../../components/Slider'
 import TokenLogo from '../../components/TokenLogo'
@@ -21,9 +21,9 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 import { useToken } from '../../contexts/Tokens'
 import { useWeb3React } from '../../hooks'
 import { useAllBalances } from '../../contexts/Balances'
-import { useExchangeContract } from '../../hooks'
+import { usePairContract } from '../../hooks'
 import { useTransactionAdder } from '../../contexts/Transactions'
-import { useExchange, useTotalSupply } from '../../contexts/Exchanges'
+import { usePair, useTotalSupply } from '../../contexts/Pairs'
 
 import { BigNumber } from 'ethers/utils'
 import { splitSignature } from '@ethersproject/bytes'
@@ -160,14 +160,14 @@ export default function RemoveLiquidity({ token0, token1 }) {
     [Field.TOKEN1]: outputToken
   }
 
-  const exchange: Exchange = useExchange(inputToken, outputToken)
-  const exchangeContract: ethers.Contract = useExchangeContract(exchange?.liquidityToken.address)
+  const pair: Pair = usePair(inputToken, outputToken)
+  const pairContract: ethers.Contract = usePairContract(pair?.liquidityToken.address)
 
   // pool token data
-  const totalPoolTokens: TokenAmount = useTotalSupply(exchange)
+  const totalPoolTokens: TokenAmount = useTotalSupply(pair)
 
   const allBalances: TokenAmount[] = useAllBalances()
-  const userLiquidity: TokenAmount = allBalances?.[account]?.[exchange?.liquidityToken?.address]
+  const userLiquidity: TokenAmount = allBalances?.[account]?.[pair?.liquidityToken?.address]
 
   // input state
   const [state, dispatch] = useReducer(reducer, initializeRemoveState(userLiquidity?.toExact(), token0, token1))
@@ -175,19 +175,19 @@ export default function RemoveLiquidity({ token0, token1 }) {
 
   const TokensDeposited: { [field: number]: TokenAmount } = {
     [Field.TOKEN0]:
-      exchange &&
+      pair &&
       totalPoolTokens &&
       userLiquidity &&
-      exchange.getLiquidityValue(tokens[Field.TOKEN0], totalPoolTokens, userLiquidity, false),
+      pair.getLiquidityValue(tokens[Field.TOKEN0], totalPoolTokens, userLiquidity, false),
     [Field.TOKEN1]:
-      exchange &&
+      pair &&
       totalPoolTokens &&
       userLiquidity &&
-      exchange.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, userLiquidity, false)
+      pair.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, userLiquidity, false)
   }
 
-  const route: Route = exchange
-    ? new Route([exchange], independentField !== Field.LIQUIDITY ? tokens[independentField] : tokens[Field.TOKEN1])
+  const route: Route = pair
+    ? new Route([pair], independentField !== Field.LIQUIDITY ? tokens[independentField] : tokens[Field.TOKEN1])
     : undefined
 
   // update input value when user types
@@ -199,7 +199,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
     onUserInput(
       Field.LIQUIDITY,
       new TokenAmount(
-        exchange?.liquidityToken,
+        pair?.liquidityToken,
         JSBI.divide(JSBI.multiply(userLiquidity.raw, JSBI.BigInt(newPercent)), JSBI.BigInt(100))
       ).toExact()
     )
@@ -240,8 +240,8 @@ export default function RemoveLiquidity({ token0, token1 }) {
         }
       }
       if (independentField === Field.LIQUIDITY) {
-        const typedValueParsed = parseUnits(typedValue, exchange?.liquidityToken.decimals).toString()
-        const formattedAmount = new TokenAmount(exchange?.liquidityToken, typedValueParsed)
+        const typedValueParsed = parseUnits(typedValue, pair?.liquidityToken.decimals).toString()
+        const formattedAmount = new TokenAmount(pair?.liquidityToken, typedValueParsed)
         if (typedValueParsed !== '0') {
           if (JSBI.lessThanOrEqual(formattedAmount.raw, userLiquidity?.raw)) {
             poolTokenAmount = typedValueParsed
@@ -256,19 +256,19 @@ export default function RemoveLiquidity({ token0, token1 }) {
 
   // set parsed amounts based on live amount of liquidity
   parsedAmounts[Field.LIQUIDITY] =
-    exchange && poolTokenAmount && userLiquidity && new TokenAmount(exchange.liquidityToken, poolTokenAmount)
+    pair && poolTokenAmount && userLiquidity && new TokenAmount(pair.liquidityToken, poolTokenAmount)
 
   parsedAmounts[Field.TOKEN0] =
     totalPoolTokens &&
-    exchange &&
+    pair &&
     parsedAmounts[Field.LIQUIDITY] &&
-    exchange.getLiquidityValue(tokens[Field.TOKEN0], totalPoolTokens, parsedAmounts[Field.LIQUIDITY], false)
+    pair.getLiquidityValue(tokens[Field.TOKEN0], totalPoolTokens, parsedAmounts[Field.LIQUIDITY], false)
 
   parsedAmounts[Field.TOKEN1] =
     totalPoolTokens &&
-    exchange &&
+    pair &&
     parsedAmounts[Field.LIQUIDITY] &&
-    exchange.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, parsedAmounts[Field.LIQUIDITY], false)
+    pair.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, parsedAmounts[Field.LIQUIDITY], false)
 
   // derived percent for advanced mode
   const derivedPerecent =
@@ -358,7 +358,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
   const [pendingConfirmation, setPendingConfirmation] = useState(true) // waiting for
 
   async function onSign() {
-    const nonce = await exchangeContract.nonces(account)
+    const nonce = await pairContract.nonces(account)
 
     const newDeadline: number = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
     setDeadline(newDeadline)
@@ -374,7 +374,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
       name: 'Uniswap V2',
       version: '1',
       chainId: chainId,
-      verifyingContract: exchange.liquidityToken.address
+      verifyingContract: pair.liquidityToken.address
     }
 
     const Permit = [
@@ -646,12 +646,11 @@ export default function RemoveLiquidity({ token0, token1 }) {
               onUserInput={onUserInput}
               onMax={onMax}
               atMax={atMaxAmount}
-              title={'Burn'}
               error={poolTokenError}
               disableTokenSelect
-              token={exchange?.liquidityToken}
+              token={pair?.liquidityToken}
               isExchange={true}
-              exchange={exchange}
+              pair={pair}
             />
             <ColumnCenter>
               <ArrowDown size="16" color="#888D9B" />
@@ -663,7 +662,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
               onMax={onMax}
               atMax={atMaxAmount}
               token={tokens[Field.TOKEN0]}
-              title={'Withdraw'}
               error={inputError}
               disableTokenSelect
               customBalance={TokensDeposited[Field.TOKEN0]}
@@ -678,7 +676,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
               onMax={onMax}
               atMax={atMaxAmount}
               token={tokens[Field.TOKEN1]}
-              title={'Withdraw'}
               error={outputError}
               disableTokenSelect
               customBalance={TokensDeposited[Field.TOKEN1]}
@@ -689,11 +686,11 @@ export default function RemoveLiquidity({ token0, token1 }) {
           <RowBetween>
             Price:
             <div>
-              1 {exchange?.token0.symbol} ={' '}
+              1 {pair?.token0.symbol} ={' '}
               {independentField === Field.TOKEN0 || independentField === Field.LIQUIDITY
                 ? route?.midPrice.toSignificant(6)
                 : route?.midPrice.invert().toSignificant(6)}{' '}
-              {exchange?.token1.symbol}
+              {pair?.token1.symbol}
             </div>
           </RowBetween>
         </div>
@@ -717,9 +714,9 @@ export default function RemoveLiquidity({ token0, token1 }) {
         </ButtonPrimary>
         <FixedBottom>
           <PositionCard
-            exchangeAddress={exchange?.liquidityToken.address}
-            token0={exchange?.token0}
-            token1={exchange?.token1}
+            pairAddress={pair?.liquidityToken.address}
+            token0={pair?.token0}
+            token1={pair?.token1}
             minimal={true}
           />
         </FixedBottom>

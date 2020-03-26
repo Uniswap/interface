@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { ethers } from 'ethers'
 import { withRouter } from 'react-router-dom'
 import { parseUnits, parseEther } from '@ethersproject/units'
-import { WETH, TradeType, Route, Exchange, Trade, TokenAmount, JSBI, Percent } from '@uniswap/sdk'
+import { WETH, TradeType, Pair, Trade, TokenAmount, JSBI, Percent } from '@uniswap/sdk'
 
 import TokenLogo from '../TokenLogo'
 import QuestionHelper from '../Question'
@@ -21,9 +21,10 @@ import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { ButtonPrimary, ButtonError } from '../Button'
 import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
 
+import { usePair } from '../../contexts/Pairs'
 import { useToken } from '../../contexts/Tokens'
 import { usePopups } from '../../contexts/Application'
-import { useExchange } from '../../contexts/Exchanges'
+import { useRoute } from '../../contexts/Routes'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWeb3React, useTokenContract } from '../../hooks'
@@ -244,9 +245,10 @@ function ExchangePage({ sendingInput = false, history }) {
     [Field.OUTPUT]: useToken(fieldData[Field.OUTPUT].address)
   }
 
-  const exchange: Exchange = useExchange(tokens[Field.INPUT], tokens[Field.OUTPUT])
-  const route: Route = !!exchange ? new Route([exchange], tokens[Field.INPUT]) : undefined
-  const emptyReserves: boolean = exchange && JSBI.equal(JSBI.BigInt(0), exchange.reserve0.raw)
+  const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
+  const route = useRoute(tokens[Field.INPUT], tokens[Field.OUTPUT])
+  const noRoute: boolean = !route && !!tokens[Field.INPUT] && !!tokens[Field.OUTPUT]
+  const emptyReserves = pair && JSBI.equal(JSBI.BigInt(0), pair.reserve0.raw)
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
@@ -271,6 +273,8 @@ function ExchangePage({ sendingInput = false, history }) {
     [Field.INPUT]: useAddressBalance(account, tokens[Field.INPUT]),
     [Field.OUTPUT]: useAddressBalance(account, tokens[Field.OUTPUT])
   }
+
+  // console.log(userBalances[Field.OUTPUT]?.raw.toString())
 
   const parsedAmounts: { [field: number]: TokenAmount } = {}
   if (typedValue !== '' && typedValue !== '.' && tokens[independentField]) {
@@ -621,8 +625,9 @@ function ExchangePage({ sendingInput = false, history }) {
 
     if (
       parsedAmounts[Field.INPUT] &&
-      exchange &&
-      JSBI.greaterThan(parsedAmounts[Field.INPUT].raw, exchange.reserveOf(tokens[Field.INPUT]).raw)
+      pair &&
+      route &&
+      JSBI.greaterThan(parsedAmounts[Field.INPUT].raw, route.pairs[0].reserveOf(tokens[Field.INPUT]).raw)
     ) {
       setTradeError('Insufficient Liquidity')
       setIsValid(false)
@@ -631,8 +636,12 @@ function ExchangePage({ sendingInput = false, history }) {
     if (
       !ignoreOutput &&
       parsedAmounts[Field.OUTPUT] &&
-      exchange &&
-      JSBI.greaterThan(parsedAmounts[Field.OUTPUT].raw, exchange.reserveOf(tokens[Field.OUTPUT]).raw)
+      pair &&
+      route &&
+      JSBI.greaterThan(
+        parsedAmounts[Field.OUTPUT].raw,
+        route.pairs[route.pairs.length - 1].reserveOf(tokens[Field.OUTPUT]).raw
+      )
     ) {
       setTradeError('Insufficient Liquidity')
       setIsValid(false)
@@ -657,7 +666,7 @@ function ExchangePage({ sendingInput = false, history }) {
       setIsValid(false)
     }
   }, [
-    exchange,
+    pair,
     ignoreOutput,
     parsedAmounts,
     recipient,
@@ -667,7 +676,8 @@ function ExchangePage({ sendingInput = false, history }) {
     showInputUnlock,
     showOutputUnlock,
     tokens,
-    userBalances
+    userBalances,
+    route
   ])
 
   // warnings on slippage
@@ -896,9 +906,8 @@ function ExchangePage({ sendingInput = false, history }) {
               atMax={atMaxAmountInput}
               token={tokens[Field.INPUT]}
               onTokenSelection={address => _onTokenSelect(address)}
-              title={'Input'}
               error={inputError}
-              exchange={exchange}
+              pair={pair}
               showUnlock={showInputUnlock}
               hideBalance={true}
               hideInput={true}
@@ -916,9 +925,8 @@ function ExchangePage({ sendingInput = false, history }) {
               value={formattedAmounts[Field.INPUT]}
               atMax={atMaxAmountInput}
               token={tokens[Field.INPUT]}
-              title={'Input'}
               error={inputError}
-              exchange={exchange}
+              pair={pair}
               showUnlock={showInputUnlock}
               onUserInput={onUserInput}
               onMax={() => {
@@ -942,18 +950,17 @@ function ExchangePage({ sendingInput = false, history }) {
               atMax={atMaxAmountOutput}
               token={tokens[Field.OUTPUT]}
               onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
-              title={'Output'}
               error={outputError}
-              exchange={exchange}
+              pair={pair}
               showUnlock={showOutputUnlock}
             />
-            {!emptyReserves && ( // hide price if new exchange
+            {!noRoute && ( // hide price if new exchange
               <RowBetween>
                 <Text fontWeight={500} color="#565A69">
                   Price
                 </Text>
                 <Text fontWeight={500} color="#565A69">
-                  {exchange
+                  {pair
                     ? `1 ${tokens[Field.INPUT].symbol} = ${route?.midPrice.toSignificant(6)} ${
                         tokens[Field.OUTPUT].symbol
                       }`
@@ -989,7 +996,7 @@ function ExchangePage({ sendingInput = false, history }) {
           </AutoColumn>
         )}
 
-        {emptyReserves ? (
+        {noRoute ? (
           <RowBetween style={{ margin: '10px 0' }}>
             <TYPE.main>No exchange for this pair.</TYPE.main>
             <Link
