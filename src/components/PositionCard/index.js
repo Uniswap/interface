@@ -30,7 +30,7 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
   const pair = tokenAmount0 && tokenAmount1 && new Pair(tokenAmount0, tokenAmount1)
 
   const userPoolBalance = allBalances?.[account]?.[pairAddress]
-  const totalPoolTokens = useTotalSupply(pair)
+  const totalPoolTokens = useTotalSupply(token0, token1)
 
   const poolTokenPercentage =
     !!userPoolBalance && !!totalPoolTokens ? new Percent(userPoolBalance.raw, totalPoolTokens.raw) : undefined

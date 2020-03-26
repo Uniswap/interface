@@ -103,13 +103,7 @@ export function useRoute(tokenA: Token, tokenB: Token) {
         update([tokenA.address, tokenB.address], routeThroughETH, chainId)
       }
     }
-    /**
-     * @todo
-     * same infinite render bug here when including
-     * any token or pair instance as dependency (bug also in exchanegs and balances)
-     */
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [route, requiresHop, update, chainId])
+  }, [route, requiresHop, update, chainId, tokenA, tokenB, defaultPair, aToETH, bToETH])
 
   return useMemo(() => route, [route])
 }
