@@ -9,7 +9,7 @@ const StyledIdenticon = styled.div`
   height: 1rem;
   width: 1rem;
   border-radius: 1.125rem;
-  background-color: ${({ theme }) => theme.silverGray};
+  background-color: ${({ theme }) => theme.bg4};
 `
 
 export default function Identicon() {

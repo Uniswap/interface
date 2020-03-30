@@ -44,12 +44,12 @@ const TokenList = styled.div`
 `
 
 const FadedSpan = styled.span`
-  color: ${({ theme }) => theme.royalBlue};
+  color: ${({ theme }) => theme.blue1};
 `
 
 const SpinnerWrapper = styled(Spinner)`
   margin: 0 0.25rem 0 0.25rem;
-  color: ${({ theme }) => theme.chaliceGray};
+  color: ${({ theme }) => theme.text4};
   opacity: 0.6;
 `
 
@@ -66,11 +66,11 @@ const Input = styled.input`
   border: 1px solid #edeef2;
   box-sizing: border-box;
   border-radius: 20px;
-  color: ${({ theme }) => theme.textColor};
+  color: ${({ theme }) => theme.text1};
   font-size: 18px;
 
   ::placeholder {
-    color: ${({ theme }) => theme.fadedText};
+    color: ${({ theme }) => theme.text3};
   }
 `
 
@@ -81,7 +81,7 @@ const TokenModal = styled.div`
 
 const FilterWrapper = styled(RowFixed)`
   padding: 8px;
-  background-color: ${({ selected, theme }) => selected && theme.backgroundColor};
+  background-color: ${({ selected, theme }) => selected && theme.bg2};
   color: ${({ selected, theme }) => (selected ? theme.black : '#888D9B')};
   border-radius: 8px;
   user-select: none;
@@ -107,7 +107,7 @@ const PaddedItem = styled(RowBetween)`
 const MenuItem = styled(PaddedItem)`
   cursor: pointer;
   :hover {
-    background-color: ${({ theme }) => theme.tokenRowHover};
+    background-color: ${({ theme }) => theme.bg2};
   }
 `
 // filters on results

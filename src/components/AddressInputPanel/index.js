@@ -9,10 +9,10 @@ import { useWeb3React, useDebounce } from '../../hooks'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
-  box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
+  box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadow1)};
   position: relative;
   border-radius: 1.25rem;
-  background-color: ${({ theme }) => theme.inputBackground};
+  background-color: ${({ theme }) => theme.bg1};
   z-index: 1;
   width: 100%;
 `
@@ -22,9 +22,8 @@ const ContainerRow = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 1.25rem;
-  border: 1px solid ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
-
-  background-color: ${({ theme }) => theme.inputBackground};
+  border: 1px solid ${({ error, theme }) => (error ? theme.red1 : theme.bg3)};
+  background-color: ${({ theme }) => theme.bg1};
 `
 
 const InputContainer = styled.div`
@@ -43,14 +42,14 @@ const Input = styled.input`
   border: none;
   flex: 1 1 auto;
   width: 0;
-  background-color: ${({ theme }) => theme.inputBackground};
+  background-color: ${({ theme }) => theme.bg1};
 
-  color: ${({ error, theme }) => (error ? theme.salmonRed : theme.royalBlue)};
+  color: ${({ error, theme }) => (error ? theme.red1 : theme.blue1)};
   overflow: hidden;
   text-overflow: ellipsis;
 
   ::placeholder {
-    color: ${({ theme }) => theme.placeholderGray};
+    color: ${({ theme }) => theme.text4};
   }
 `
 
@@ -58,7 +57,7 @@ const QRWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid ${({ theme }) => theme.outlineGrey};
+  border: 1px solid ${({ theme }) => theme.bg3};
   background: #fbfbfb;
   padding: 4px;
   border-radius: 8px;

@@ -23,7 +23,7 @@ const SpinnerWrapper = styled(Spinner)`
   margin-right: 1rem;
   svg {
     path {
-      color: ${({ theme }) => theme.placeholderGray};
+      color: ${({ theme }) => theme.bg4};
     }
   }
 `
@@ -34,8 +34,8 @@ const LoadingMessage = styled.div`
   justify-content: flex-start;
   border-radius: 12px;
   margin-bottom: 20px;
-  color: ${({ theme, error }) => (error ? theme.salmonRed : 'inherit')};
-  border: 1px solid ${({ theme, error }) => (error ? theme.salmonRed : theme.placeholderGray)};
+  color: ${({ theme, error }) => (error ? theme.red1 : 'inherit')};
+  border: 1px solid ${({ theme, error }) => (error ? theme.red1 : theme.text4)};
 
   & > * {
     padding: 1rem;
@@ -51,8 +51,8 @@ const ErrorGroup = styled.div`
 const ErrorButton = styled.div`
   border-radius: 8px;
   font-size: 12px;
-  color: ${({ theme }) => theme.textColor};
-  background-color: ${({ theme }) => theme.placeholderGray};
+  color: ${({ theme }) => theme.text1};
+  background-color: ${({ theme }) => theme.bg4};
   margin-left: 1rem;
   padding: 0.5rem;
   font-weight: 600;
@@ -60,7 +60,7 @@ const ErrorButton = styled.div`
 
   &:hover {
     cursor: pointer;
-    background-color: ${({ theme }) => darken(0.1, theme.placeholderGray)};
+    background-color: ${({ theme }) => darken(0.1, theme.text4)};
   }
 `
 

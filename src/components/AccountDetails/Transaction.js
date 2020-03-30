@@ -50,14 +50,14 @@ const rotate = keyframes`
 const TransactionState = styled.div`
   display: flex;
   background-color: ${({ pending, theme }) =>
-    pending ? transparentize(0.95, theme.royalBlue) : transparentize(0.95, theme.connectedGreen)};
+    pending ? transparentize(0.95, theme.blue1) : transparentize(0.95, theme.green1)};
   border-radius: 1.5rem;
   padding: 0.5rem 0.75rem;
   font-weight: 500;
   font-size: 0.75rem;
   border: 1px solid;
   border-color: ${({ pending, theme }) =>
-    pending ? transparentize(0.75, theme.royalBlue) : transparentize(0.75, theme.connectedGreen)};
+    pending ? transparentize(0.75, theme.blue1) : transparentize(0.75, theme.green1)};
 
   #pending {
     animation: 2s ${rotate} linear infinite;
@@ -65,12 +65,12 @@ const TransactionState = styled.div`
 
   :hover {
     border-color: ${({ pending, theme }) =>
-      pending ? transparentize(0, theme.royalBlue) : transparentize(0, theme.connectedGreen)};
+      pending ? transparentize(0, theme.blue1) : transparentize(0, theme.green1)};
   }
 `
 const ButtonWrapper = styled.div`
   a {
-    color: ${({ pending, theme }) => (pending ? theme.royalBlue : theme.connectedGreen)};
+    color: ${({ pending, theme }) => (pending ? theme.blue1 : theme.green1)};
   }
 `
 

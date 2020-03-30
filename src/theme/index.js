@@ -42,70 +42,42 @@ export default function ThemeProvider({ children }) {
 }
 
 const theme = darkMode => ({
+  // base
   white,
   black,
-  textColor: darkMode ? white : '#010101',
-  greyText: darkMode ? white : '#6C7284',
-  fadedText: darkMode ? white : '#C3C5CB',
 
-  panelBackground: darkMode ? '#292C2F' : '#FFFFFF',
+  // text
+  text1: darkMode ? '#FFFFFF' : '#000000',
+  text2: darkMode ? '#888D9B' : '#565A69',
+  text3: darkMode ? '#6C7284' : '#888D9B',
+  text4: '#C3C5CB',
+  text5: '#EDEEF2',
 
-  // for setting css on <html>
-  backgroundColor: darkMode ? '#333639' : '#F7F8FA',
-  modalBackground: darkMode ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.5)',
-  inputBackground: darkMode ? '#202124' : white,
-  placeholderGray: darkMode ? '#5F5F5F' : '#E1E1E1',
-  shadowColor: darkMode ? '#000' : '#2F80ED',
+  // backgrounds / greys
+  bg1: darkMode ? '#191B1F' : '#FFFFFF',
+  bg2: darkMode ? '#2C2F36' : '#F7F8FA',
+  bg3: darkMode ? '#40444F' : '#EDEEF2',
+  bg4: darkMode ? '#565A69' : '#CED0D9',
+  bg5: darkMode ? '#565A69' : '#888D9B',
 
-  buttonBackgroundPlain: darkMode ? '#333639' : white,
-  buttonOutlinePlain: darkMode ? '#292C2F' : white,
+  //blues
+  blue1: '#2172E5',
+  blue2: darkMode ? '#3680E7' : '#1966D2',
+  blue3: darkMode ? '#4D8FEA' : '#165BBB',
+  blue4: '#C4D9F8',
+  blue5: '#EBF4FF',
 
-  // grays
-  concreteGray: darkMode ? '#292C2F' : '#FAFAFA',
-  mercuryGray: darkMode ? '#333333' : '#E1E1E1',
-  silverGray: darkMode ? '#737373' : '#C4C4C4',
-  chaliceGray: darkMode ? '#7B7B7B' : '#AEAEAE',
-  doveGray: darkMode ? '#C4C4C4' : '#737373',
-  mineshaftGray: darkMode ? '#E1E1E1' : '#2B2B2B',
-  activeGray: darkMode ? '#292C2F' : '#F7F8FA',
-  buttonOutlineGrey: darkMode ? '#FAFAFA' : '#F2F2F2',
-  tokenRowHover: darkMode ? '#404040' : '#F2F2F2',
+  // pinks
+  pink1: '#DC6BE5',
+  pink2: '#ff007a',
 
-  outlineGrey: darkMode ? '#292C2F' : '#EDEEF2',
-  darkGray: darkMode ? '#888D9B' : '#888D9B',
+  // other
+  red1: '#FF6871',
+  green1: '#27AE60',
+  yellow1: '#FFE270',
 
-  //blacks
-  charcoalBlack: darkMode ? '#F2F2F2' : '#404040',
-  // blues
-  zumthorBlue: darkMode ? '#212529' : '#EBF4FF',
-  malibuBlue: darkMode ? '#E67AEF' : '#5CA2FF',
-  royalBlue: darkMode ? '#DC6BE5' : '#2F80ED',
-  disabledBlue: darkMode ? '#2172E5' : '#2172E5',
-  loadingBlue: darkMode ? '#e4f0ff' : '#e4f0ff',
-
-  // purples
-  wisteriaPurple: '#DC6BE5',
-
-  // reds
-  salmonRed: '#FF6871',
-  // orange
-  pizazzOrange: '#FF8F05',
-  // yellows
-  warningYellow: '#FFE270',
-  // pink
-  uniswapPink: '#DC6BE5',
-  darkPink: '#ff007a',
-  //green
-  connectedGreen: '#27AE60',
-
-  //branded
-  metaMaskOrange: '#E8831D',
-
-  //specific
-  textHover: darkMode ? theme.uniswapPink : theme.doveGray,
-
-  // connect button when loggedout
-  buttonFaded: darkMode ? '#DC6BE5' : '#737373',
+  //shadows
+  shadow1: darkMode ? '#000' : '#2F80ED',
 
   // media queries
   mediaWidth: mediaWidthTemplates,
@@ -122,7 +94,7 @@ const theme = darkMode => ({
 
 export const TYPE = {
   main: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().mineshaftGray} {...rest}>
+    <Text fontWeight={500} color={theme().text2} {...rest}>
       {children}
     </Text>
   ),
@@ -137,27 +109,27 @@ export const TYPE = {
     </Text>
   ),
   blue: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().royalBlue} {...rest}>
+    <Text fontWeight={500} color={theme().blue1} {...rest}>
       {children}
     </Text>
   ),
   gray: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().outlineGrey} {...rest}>
+    <Text fontWeight={500} color={theme().bg3} {...rest}>
       {children}
     </Text>
   ),
   darkGray: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().darkGray} {...rest}>
+    <Text fontWeight={500} color={theme().text3} {...rest}>
       {children}
     </Text>
   ),
   italic: ({ children, ...rest }) => (
-    <Text fontWeight={500} fontSize={12} fontStyle={'italic'} color={theme().mineshaftGray} {...rest}>
+    <Text fontWeight={500} fontSize={12} fontStyle={'italic'} color={theme().text2} {...rest}>
       {children}
     </Text>
   ),
   error: ({ children, error, ...rest }) => (
-    <Text fontWeight={500} color={error ? theme().salmonRed : theme().mineshaftGray} {...rest}>
+    <Text fontWeight={500} color={error ? theme().red1 : theme().text2} {...rest}>
       {children}
     </Text>
   )
@@ -188,8 +160,8 @@ export const GlobalStyle = createGlobalStyle`
   html {
     font-size: 16px;
     font-variant: none;
-    color: ${({ theme }) => theme.textColor};
-    background-color: ${({ theme }) => theme.backgroundColor};
+    color: ${({ theme }) => theme.text1};
+    background-color: ${({ theme }) => theme.bg2};
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
