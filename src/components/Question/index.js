@@ -51,14 +51,14 @@ const Popup = styled.div`
   align-items: center;
   padding: 0.6rem 1rem;
   line-height: 150%;
-  background: ${({ theme }) => theme.inputBackground};
-  border: 1px solid ${({ theme }) => theme.mercuryGray};
+  background: ${({ theme }) => theme.bg1};
+  border: 1px solid ${({ theme }) => theme.bg3};
 
   border-radius: 8px;
 
   animation: ${fadeIn} 0.15s linear;
 
-  color: ${({ theme }) => theme.textColor};
+  color: ${({ theme }) => theme.text1};
   font-style: italic;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`

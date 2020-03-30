@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import styled from 'styled-components'
 
 import QuestionHelper from '../Question'
@@ -6,17 +6,17 @@ import NumericalInput from '../NumericalInput'
 import { Link } from '../../theme/components'
 import { TYPE } from '../../theme'
 import { AutoColumn } from '../../components/Column'
-import Row, { RowBetween, RowFixed } from '../../components/Row'
 import { ButtonRadio } from '../Button'
+import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 const InputWrapper = styled(RowBetween)`
   width: 200px;
-  background-color: ${({ theme }) => theme.inputBackground};
+  background-color: ${({ theme }) => theme.bg1};
   border-radius: 8px;
   padding: 4px 8px;
   border: 1px solid transparent;
   border: ${({ active, error, theme }) =>
-    error ? '1px solid ' + theme.salmonRed : active ? '1px solid ' + theme.royalBlue : ''};
+    error ? '1px solid ' + theme.red1 : active ? '1px solid ' + theme.blue1 : ''};
 `
 
 const SLIPPAGE_INDEX = {
@@ -26,25 +26,28 @@ const SLIPPAGE_INDEX = {
   4: 4
 }
 
-export default function AdvancedSettings({ setIsOpen, setDeadline, setAllowedSlippage }) {
+export default function AdvancedSettings({ setIsOpen, setDeadline, allowedSlippage, setAllowedSlippage }) {
   const [deadlineInput, setDeadlineInput] = useState(15)
   const [slippageInput, setSlippageInput] = useState()
   const [activeIndex, setActiveIndex] = useState(SLIPPAGE_INDEX[3])
 
   const [slippageInputError, setSlippageInputError] = useState(null) // error
 
-  function parseCustomInput(val) {
-    const acceptableValues = [/^$/, /^\d{1,2}$/, /^\d{0,2}\.\d{0,2}$/]
-    if (val > 5) {
-      setSlippageInputError('Your transaction may be front-run.')
-    } else {
-      setSlippageInputError(null)
-    }
-    if (acceptableValues.some(a => a.test(val))) {
-      setSlippageInput(val)
-      setAllowedSlippage(val * 100)
-    }
-  }
+  const parseCustomInput = useCallback(
+    val => {
+      const acceptableValues = [/^$/, /^\d{1,2}$/, /^\d{0,2}\.\d{0,2}$/]
+      if (val > 5) {
+        setSlippageInputError('Your transaction may be front-run.')
+      } else {
+        setSlippageInputError(null)
+      }
+      if (acceptableValues.some(a => a.test(val))) {
+        setSlippageInput(val)
+        setAllowedSlippage(val * 100)
+      }
+    },
+    [setAllowedSlippage]
+  )
 
   function parseCustomDeadline(val) {
     const acceptableValues = [/^$/, /^\d+$/]
@@ -53,6 +56,21 @@ export default function AdvancedSettings({ setIsOpen, setDeadline, setAllowedSli
       setDeadline(val * 60)
     }
   }
+
+  // update settings based on current slippage selected
+  useEffect(() => {
+    if (allowedSlippage === 10) {
+      setActiveIndex(1)
+    } else if (allowedSlippage === 100) {
+      setActiveIndex(2)
+    } else if (allowedSlippage === 200) {
+      setActiveIndex(3)
+    } else {
+      setActiveIndex(4)
+      setSlippageInput(allowedSlippage / 100)
+      parseCustomInput(allowedSlippage)
+    }
+  }, [allowedSlippage, parseCustomInput])
 
   return (
     <AutoColumn gap="20px">

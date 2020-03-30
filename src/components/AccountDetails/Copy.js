@@ -6,7 +6,7 @@ import { Link } from '../../theme'
 import { CheckCircle, Copy } from 'react-feather'
 
 const CopyIcon = styled(Link)`
-  color: ${({ theme }) => theme.silverGray};
+  color: ${({ theme }) => theme.text4};
   flex-shrink: 0;
   margin-right: 1rem;
   margin-left: 0.5rem;
@@ -15,7 +15,7 @@ const CopyIcon = styled(Link)`
   :active,
   :focus {
     text-decoration: none;
-    color: ${({ theme }) => theme.doveGray};
+    color: ${({ theme }) => theme.text3};
   }
 `
 const TransactionStatusText = styled.span`

@@ -22,7 +22,7 @@ const Section = styled(AutoColumn)`
 `
 
 const BottomSection = styled(Section)`
-  background-color: ${({ theme }) => theme.activeGray};
+  background-color: ${({ theme }) => theme.bg2};
 `
 
 const ConfirmedIcon = styled(ColumnCenter)`

@@ -36,9 +36,9 @@ const SubCurrencySelect = styled.button`
   outline: none;
   cursor: pointer;
   user-select: none;
-  background: ${({ theme }) => theme.zumthorBlue};
-  border: 1px solid ${({ theme }) => theme.royalBlue};
-  color: ${({ theme }) => theme.royalBlue};
+  background: ${({ theme }) => theme.blue5};
+  border: 1px solid ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.blue1};
 `
 
 const InputRow = styled.div`
@@ -52,20 +52,18 @@ const CurrencySelect = styled.button`
   align-items: center;
   height: 2.2rem;
   font-size: 20px;
-  background-color: ${({ selected, theme }) => (selected ? theme.buttonBackgroundPlain : theme.royalBlue)};
-  color: ${({ selected, theme }) => (selected ? theme.textColor : theme.white)};
+  background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.blue1)};
+  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
   border-radius: 8px;
   outline: none;
   cursor: pointer;
   user-select: none;
 
-  border: 1px solid
-    ${({ selected, theme }) => (selected ? darken(0.1, theme.outlineGrey) : darken(0.1, theme.royalBlue))};
+  border: 1px solid ${({ selected, theme }) => (selected ? darken(0.1, theme.bg3) : darken(0.1, theme.blue1))};
 
   :focus,
   :hover {
-    border: 1px solid
-      ${({ selected, theme }) => (selected ? darken(0.2, theme.outlineGrey) : darken(0.2, theme.royalBlue))};
+    border: 1px solid ${({ selected, theme }) => (selected ? darken(0.2, theme.bg3) : darken(0.2, theme.blue1))};
   }
 `
 
@@ -80,7 +78,7 @@ const StyledDropDown = styled(DropDown)`
   height: 35%;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.textColor : theme.white)};
+    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
   }
 `
 
@@ -88,34 +86,34 @@ const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
   border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
-  background-color: ${({ theme }) => theme.inputBackground};
+  background-color: ${({ theme }) => theme.bg1};
   z-index: 1;
 `
 
 const Container = styled.div`
   border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
-  border: 1px solid ${({ error, theme }) => (error ? theme.salmonRed : theme.backgroundColor)};
-  background-color: ${({ theme }) => theme.inputBackground};
+  border: 1px solid ${({ error, theme }) => (error ? theme.red1 : theme.bg2)};
+  background-color: ${({ theme }) => theme.bg1};
 `
 
 const LabelRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  color: ${({ theme }) => theme.doveGray};
+  color: ${({ theme }) => theme.text3};
   font-size: 0.75rem;
   line-height: 1rem;
   padding: 0.5rem 1rem 1rem 1rem;
   span:hover {
     cursor: pointer;
-    color: ${({ theme }) => darken(0.2, theme.doveGray)};
+    color: ${({ theme }) => darken(0.2, theme.text3)};
   }
 `
 
 const ErrorSpan = styled.span`
-  color: ${({ error, theme }) => error && theme.salmonRed};
+  color: ${({ error, theme }) => error && theme.red1};
   :hover {
     cursor: pointer;
-    color: ${({ error, theme }) => error && darken(0.1, theme.salmonRed)};
+    color: ${({ error, theme }) => error && darken(0.1, theme.red1)};
   }
 `
 
@@ -131,19 +129,19 @@ const ClickableText = styled.div`
 
 const StyledBalanceMax = styled.button`
   height: 35px;
-  background-color: ${({ theme }) => theme.zumthorBlue};
-  border: 1px solid ${({ theme }) => theme.zumthorBlue};
+  background-color: ${({ theme }) => theme.blue5};
+  border: 1px solid ${({ theme }) => theme.blue5};
   border-radius: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
   margin-right: 0.5rem;
-  color: ${({ theme }) => theme.royalBlue};
+  color: ${({ theme }) => theme.blue1};
   :hover {
-    border: 1px solid ${({ theme }) => theme.royalBlue};
+    border: 1px solid ${({ theme }) => theme.blue1};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.royalBlue};
+    border: 1px solid ${({ theme }) => theme.blue1};
     outline: none;
   }
 `

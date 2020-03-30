@@ -54,19 +54,19 @@ const ClickableText = styled(Text)`
 
 const MaxButton = styled.button`
   padding: 0.5rem 1rem;
-  background-color: ${({ theme }) => theme.zumthorBlue};
-  border: 1px solid ${({ theme }) => theme.zumthorBlue};
+  background-color: ${({ theme }) => theme.blue5};
+  border: 1px solid ${({ theme }) => theme.blue5};
   border-radius: 0.5rem;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   margin-right: 0.5rem;
-  color: ${({ theme }) => theme.royalBlue};
+  color: ${({ theme }) => theme.blue1};
   :hover {
-    border: 1px solid ${({ theme }) => theme.royalBlue};
+    border: 1px solid ${({ theme }) => theme.blue1};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.royalBlue};
+    border: 1px solid ${({ theme }) => theme.blue1};
     outline: none;
   }
 `
@@ -141,7 +141,7 @@ function reducer(
 }
 
 const ConfirmedText = styled(Text)`
-  color: ${({ theme, confirmed }) => (confirmed ? theme.connectedGreen : theme.white)};
+  color: ${({ theme, confirmed }) => (confirmed ? theme.green1 : theme.white)};
 `
 
 export default function RemoveLiquidity({ token0, token1 }) {

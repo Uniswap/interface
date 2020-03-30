@@ -105,11 +105,11 @@ const Popup = styled(Flex)`
   align-items: center;
   padding: 0.6rem 1rem;
   line-height: 150%;
-  background: ${({ theme }) => theme.backgroundColor};
-  border: 1px solid ${({ theme }) => theme.mercuryGray};
+  background: ${({ theme }) => theme.bg2};
+  border: 1px solid ${({ theme }) => theme.bg3};
   border-radius: 8px;
   animation: ${fadeIn} 0.15s linear;
-  color: ${({ theme }) => theme.textColor};
+  color: ${({ theme }) => theme.text1};
   font-style: italic;
 
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
@@ -122,7 +122,7 @@ const Popup = styled(Flex)`
 `
 
 const Text = styled.div`
-  color: ${({ theme }) => theme.textColor};
+  color: ${({ theme }) => theme.text1};
 `
 
 function WarningCard({ onDismiss, urlAddedTokens, currency }) {

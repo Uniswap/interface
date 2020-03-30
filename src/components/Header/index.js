@@ -9,6 +9,7 @@ import Web3Status from '../Web3Status'
 import { X } from 'react-feather'
 import { Link } from '../../theme'
 import { Text } from 'rebass'
+import { AutoColumn } from '../Column'
 
 import { WETH } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
@@ -16,7 +17,6 @@ import { isMobile } from 'react-device-detect'
 import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useWalletModalToggle, usePopups } from '../../contexts/Application'
-import { AutoColumn } from '../Column'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -55,8 +55,8 @@ const AccountElement = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.white : theme.outlineGrey)};
-  border: 1px solid ${({ theme }) => theme.outlineGrey};
+  background-color: ${({ theme, active }) => (!active ? theme.white : theme.bg3)};
+  border: 1px solid ${({ theme }) => theme.bg3};
   border-radius: 8px;
   padding-left: ${({ active }) => (active ? '8px' : 0)};
 

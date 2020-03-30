@@ -39,7 +39,7 @@ const Wrapper = styled.div`
 
 const ArrowWrapper = styled.div`
   padding: 4px;
-  border: 1px solid ${({ theme }) => theme.malibuBlue};
+  border: 1px solid ${({ theme }) => theme.blue4};
   border-radius: 12px;
   display: flex;
   justify-content: center;
@@ -59,7 +59,7 @@ const FixedBottom = styled.div`
 
 const ErrorText = styled(Text)`
   color: ${({ theme, warningMedium, warningHigh }) =>
-    warningHigh ? theme.salmonRed : warningMedium ? theme.warningYellow : theme.textColor};
+    warningHigh ? theme.red1 : warningMedium ? theme.yellow1 : theme.text1};
 `
 
 const InputGroup = styled(AutoColumn)`
@@ -82,19 +82,19 @@ const MaxButton = styled.button`
   position: absolute;
   right: 70px;
   padding: 0.5rem 1rem;
-  background-color: ${({ theme }) => theme.zumthorBlue};
-  border: 1px solid ${({ theme }) => theme.zumthorBlue};
+  background-color: ${({ theme }) => theme.blue5};
+  border: 1px solid ${({ theme }) => theme.blue5};
   border-radius: 0.5rem;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   margin-right: 0.5rem;
-  color: ${({ theme }) => theme.royalBlue};
+  color: ${({ theme }) => theme.blue1};
   :hover {
-    border: 1px solid ${({ theme }) => theme.royalBlue};
+    border: 1px solid ${({ theme }) => theme.blue1};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.royalBlue};
+    border: 1px solid ${({ theme }) => theme.blue1};
     outline: none;
   }
 `
@@ -786,6 +786,7 @@ function ExchangePage({ sendingInput = false, history }) {
           setIsOpen={setShowAdvanced}
           setDeadline={setDeadline}
           setAllowedSlippage={setAllowedSlippage}
+          allowedSlippage={allowedSlippage}
         />
       )
     }

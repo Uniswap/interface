@@ -3,7 +3,7 @@ import { darken } from 'polished'
 import { X } from 'react-feather'
 
 export const Button = styled.button.attrs(({ warning, theme }) => ({
-  backgroundColor: warning ? theme.salmonRed : theme.royalBlue
+  backgroundColor: warning ? theme.red1 : theme.blue1
 }))`
   padding: 1rem 2rem 1rem 2rem;
   border-radius: 3rem;
@@ -26,8 +26,8 @@ export const Button = styled.button.attrs(({ warning, theme }) => ({
   }
 
   :disabled {
-    background-color: ${({ theme }) => theme.concreteGray};
-    color: ${({ theme }) => theme.silverGray};
+    background-color: ${({ theme }) => theme.bg1};
+    color: ${({ theme }) => theme.text4};
     cursor: auto;
   }
 `
@@ -44,7 +44,7 @@ export const Link = styled.a.attrs({
 })`
   text-decoration: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.royalBlue};
+  color: ${({ theme }) => theme.blue1};
   font-weight: 500;
 
   :focus {
@@ -54,29 +54,6 @@ export const Link = styled.a.attrs({
 
   :active {
     text-decoration: none;
-  }
-`
-
-export const BorderlessInput = styled.input`
-  color: ${({ theme }) => theme.textColor};
-  font-size: 1rem;
-  outline: none;
-  border: none;
-  flex: 1 1 auto;
-  width: 0;
-  background-color: ${({ theme }) => theme.inputBackground};
-
-  [type='number'] {
-    -moz-appearance: textfield;
-  }
-
-  ::-webkit-outer-spin-button,
-  ::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-  }
-
-  ::placeholder {
-    color: ${({ theme }) => theme.chaliceGray};
   }
 `
 

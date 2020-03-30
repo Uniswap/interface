@@ -50,7 +50,7 @@ const StyledNavLink = styled(NavLink).attrs({
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.doveGray};
+  color: ${({ theme }) => theme.text3};
   font-size: 20px;
   box-sizing: border-box;
 

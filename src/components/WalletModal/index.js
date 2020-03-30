@@ -30,7 +30,7 @@ const CloseIcon = styled.div`
 
 const CloseColor = styled(Close)`
   path {
-    stroke: ${({ theme }) => theme.chaliceGray};
+    stroke: ${({ theme }) => theme.text4};
   }
 `
 
@@ -39,28 +39,28 @@ const Wrapper = styled.div`
   margin: 0;
   padding: 0;
   width: 100%;
-  background-color: ${({ theme }) => theme.backgroundColor};
+  background-color: ${({ theme }) => theme.bg2};
 `
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 1.5rem 1.5rem;
   font-weight: 500;
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.royalBlue : 'inherit')};
+  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.blue1 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
 `
 
 const ContentWrapper = styled.div`
-  background-color: ${({ theme }) => theme.backgroundColor};
+  background-color: ${({ theme }) => theme.bg2};
   padding: 2rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
 `
 
 const UpperSection = styled.div`
   position: relative;
-  background-color: ${({ theme }) => theme.concreteGray};
+  background-color: ${({ theme }) => theme.bg1};
 
   h5 {
     margin: 0;

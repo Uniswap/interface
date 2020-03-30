@@ -21,12 +21,12 @@ const OptionButton = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.royalBlue};
-  color: ${({ theme }) => theme.royalBlue};
+  border: 1px solid ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.blue1};
   padding: 8px 24px;
 
   &:hover {
-    border: 1px solid ${({ theme }) => theme.malibuBlue};
+    border: 1px solid ${({ theme }) => theme.blue3};
     cursor: pointer;
   }
 
@@ -39,7 +39,7 @@ const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 1.5rem 1.5rem;
   font-weight: 500;
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.royalBlue : 'inherit')};
+  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.blue1 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
@@ -47,7 +47,7 @@ const HeaderRow = styled.div`
 
 const UpperSection = styled.div`
   position: relative;
-  background-color: ${({ theme }) => theme.concreteGray};
+  background-color: ${({ theme }) => theme.bg1};
 
   h5 {
     margin: 0;
@@ -68,7 +68,7 @@ const UpperSection = styled.div`
 
 const InfoCard = styled.div`
   padding: 1rem;
-  border: 1px solid ${({ theme }) => theme.placeholderGray};
+  border: 1px solid ${({ theme }) => theme.bg4};
   border-radius: 20px;
 `
 
@@ -77,7 +77,7 @@ const AccountGroupingRow = styled.div`
   justify-content: space-between;
   align-items: center;
   font-weight: 500;
-  color: ${({ theme }) => theme.textColor};
+  color: ${({ theme }) => theme.text1};
 
   div {
     ${({ theme }) => theme.flexRowNoWrap}
@@ -90,7 +90,7 @@ const AccountGroupingRow = styled.div`
 `
 
 const AccountSection = styled.div`
-  background-color: ${({ theme }) => theme.concreteGray};
+  background-color: ${({ theme }) => theme.bg1};
   padding: 0rem 1.5rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1rem 1rem;`};
 `
@@ -117,13 +117,13 @@ const GreenCircle = styled.div`
     width: 8px;
     margin-left: 12px;
     margin-right: 2px;
-    background-color: ${({ theme }) => theme.connectedGreen};
+    background-color: ${({ theme }) => theme.green1};
     border-radius: 50%;
   }
 `
 
 const CircleWrapper = styled.div`
-  color: ${({ theme }) => theme.connectedGreen};
+  color: ${({ theme }) => theme.green1};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -138,7 +138,7 @@ const LowerSection = styled.div`
   h5 {
     margin: 0;
     font-weight: 400;
-    color: ${({ theme }) => theme.doveGray};
+    color: ${({ theme }) => theme.text3};
   }
 `
 
@@ -170,7 +170,7 @@ const ConnectButtonRow = styled.div`
 `
 
 const StyledLink = styled(Link)`
-  color: ${({ hasENS, isENS, theme }) => (hasENS ? (isENS ? theme.royalBlue : theme.doveGray) : theme.royalBlue)};
+  color: ${({ hasENS, isENS, theme }) => (hasENS ? (isENS ? theme.blue1 : theme.text3) : theme.blue1)};
 `
 
 const CloseIcon = styled.div`
@@ -185,7 +185,7 @@ const CloseIcon = styled.div`
 
 const CloseColor = styled(Close)`
   path {
-    stroke: ${({ theme }) => theme.chaliceGray};
+    stroke: ${({ theme }) => theme.text4};
   }
 `
 
@@ -213,7 +213,7 @@ const TransactionListWrapper = styled.div`
 `
 
 const WalletAction = styled.div`
-  color: ${({ theme }) => theme.chaliceGray};
+  color: ${({ theme }) => theme.text4};
   margin-left: 16px;
   font-weight: 400;
   :hover {
@@ -223,7 +223,7 @@ const WalletAction = styled.div`
 `
 
 const MainWalletAction = styled(WalletAction)`
-  color: ${({ theme }) => theme.royalBlue};
+  color: ${({ theme }) => theme.blue1};
 `
 
 function renderTransactions(transactions, pending) {
