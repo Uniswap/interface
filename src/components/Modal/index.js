@@ -29,7 +29,7 @@ const StyledDialogOverlay = styled(WrappedDialogOverlay).attrs({
 
     &::after {
       content: '';
-      background-color: ${({ theme }) => theme.modalBackground};
+      background-color: ${({ theme }) => 'rgba(0,0,0,0.6)'};
       opacity: 0.5;
       top: 0;
       left: 0;
@@ -48,9 +48,9 @@ const FilteredDialogContent = ({ minHeight, maxHeight, isOpen, slideInAnimation,
 const StyledDialogContent = styled(FilteredDialogContent)`
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
-    border: 1px solid ${({ theme }) => theme.concreteGray};
-    background-color: ${({ theme }) => theme.inputBackground};
-    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
+    border: 1px solid ${({ theme }) => theme.bg1};
+    background-color: ${({ theme }) => theme.bg1};
+    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadow1)};
     padding: 0px;
     width: 50vw;
 

@@ -25,13 +25,13 @@ const FooterElement = styled.div`
 const Title = styled.div`
   display: flex;
   align-items: center;
-  color: ${({ theme }) => theme.uniswapPink};
+  color: ${({ theme }) => theme.pink1};
 
   :hover {
     cursor: pointer;
   }
   #link {
-    text-decoration-color: ${({ theme }) => theme.uniswapPink};
+    text-decoration-color: ${({ theme }) => theme.pink1};
   }
 
   #title {
@@ -39,9 +39,9 @@ const Title = styled.div`
     font-size: 0.825rem;
     margin-right: 12px;
     font-weight: 400;
-    color: ${({ theme }) => theme.uniswapPink};
+    color: ${({ theme }) => theme.pink1};
     :hover {
-      color: ${({ theme }) => darken(0.2, theme.uniswapPink)};
+      color: ${({ theme }) => darken(0.2, theme.pink1)};
     }
   }
 `
@@ -50,15 +50,15 @@ const StyledToggle = styled(Toggle)`
   margin-right: 24px;
 
   .react-switch-bg[style] {
-    background-color: ${({ theme }) => darken(0.05, theme.inputBackground)} !important;
-    border: 1px solid ${({ theme }) => theme.concreteGray} !important;
+    background-color: ${({ theme }) => darken(0.05, theme.bg1)} !important;
+    border: 1px solid ${({ theme }) => theme.bg1} !important;
   }
 
   .react-switch-handle[style] {
-    background-color: ${({ theme }) => theme.inputBackground};
-    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.93, theme.shadowColor)};
-    border: 1px solid ${({ theme }) => theme.mercuryGray};
-    border-color: ${({ theme }) => theme.mercuryGray} !important;
+    background-color: ${({ theme }) => theme.bg1};
+    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.93, theme.shadow1)};
+    border: 1px solid ${({ theme }) => theme.bg3};
+    border-color: ${({ theme }) => theme.bg3} !important;
     top: 2px !important;
   }
 `

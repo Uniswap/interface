@@ -2,15 +2,15 @@ import React from 'react'
 import styled from 'styled-components'
 
 const StyledInput = styled.input`
-  color: ${({ error, theme }) => error && theme.salmonRed};
-  background-color: ${({ theme }) => theme.inputBackground};
-  color: ${({ theme }) => theme.textColor};
+  color: ${({ error, theme }) => error && theme.red1};
+  background-color: ${({ theme }) => theme.bg1};
+  color: ${({ theme }) => theme.text1};
   width: 0;
   font-size: 20px;
   outline: none;
   border: none;
   flex: 1 1 auto;
-  background-color: ${({ theme }) => theme.inputBackground};
+  background-color: ${({ theme }) => theme.bg1};
   font-size: ${({ fontSize }) => fontSize && fontSize};
   text-align: ${({ align }) => align && align};
 
@@ -24,7 +24,7 @@ const StyledInput = styled.input`
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.chaliceGray};
+    color: ${({ theme }) => theme.text4};
   }
 `
 

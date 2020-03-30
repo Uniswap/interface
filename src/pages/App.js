@@ -38,15 +38,15 @@ const BetaMessage = styled.div`
   position: relative;
   padding: 0.5rem 1rem;
   margin-bottom: 1rem;
-  border: 1px solid ${({ theme }) => transparentize(0.6, theme.wisteriaPurple)};
-  background-color: ${({ theme }) => transparentize(0.9, theme.wisteriaPurple)};
+  border: 1px solid ${({ theme }) => transparentize(0.6, theme.pink1)};
+  background-color: ${({ theme }) => transparentize(0.9, theme.pink1)};
   border-radius: 1rem;
   font-size: 0.75rem;
   line-height: 1rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: ${({ theme }) => theme.wisteriaPurple};
+  color: ${({ theme }) => theme.pink1};
   min-width: 380px;
   text-align: center;
   justify-content: center;
@@ -66,7 +66,7 @@ const BodyWrapper = styled.div`
 const Body = styled.div`
   max-width: 355px;
   width: 90%;
-  background: ${({ theme }) => theme.panelBackground};
+  background: ${({ theme }) => theme.bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 20px;
