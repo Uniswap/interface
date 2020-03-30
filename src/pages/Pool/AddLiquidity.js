@@ -17,7 +17,7 @@ import { brokenTokens } from '../../constants'
 import { amountFormatter, calculateGasMargin } from '../../utils'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useTokenDetails, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
-import { useAddressBalance, useExchangeReserves, useETHPriceInUSD } from '../../contexts/Balances'
+import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
 
 const INPUT = 0
@@ -39,14 +39,14 @@ const BlueSpan = styled.span`
 const NewExchangeWarning = styled.div`
   margin-top: 1rem;
   padding: 1rem;
-  margin-bottom: 2rem;
+
   border: 1px solid rgba($pizazz-orange, 0.4);
   background-color: rgba($pizazz-orange, 0.1);
   border-radius: 1rem;
 `
 
 const NewExchangeWarningText = styled.div`
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   line-height: 1rem;
   text-align: center;
 
@@ -201,9 +201,6 @@ function getMarketRate(reserveETH, reserveToken, decimals, invert = false) {
 export default function AddLiquidity({ params }) {
   const { t } = useTranslation()
   const { library, account, active, chainId } = useWeb3React()
-
-  // BigNumber.js instance
-  const ethPrice = useETHPriceInUSD()
 
   const urlAddedTokens = {}
   if (params.token) {
@@ -390,15 +387,7 @@ export default function AddLiquidity({ params }) {
 
   async function onAddLiquidity() {
     // take ETH amount, multiplied by ETH rate and 2 for total tx size
-    let usdTransactionSize = ethPrice * (inputValueParsed / 1e18) * 2
-
-    // log pool added to and total usd amount
-    ReactGA.event({
-      category: 'Transaction',
-      action: 'Add Liquidity',
-      label: outputCurrency,
-      value: usdTransactionSize
-    })
+    let ethTransactionSize = (inputValueParsed / 1e18) * 2
 
     const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
 
@@ -424,6 +413,19 @@ export default function AddLiquidity({ params }) {
         }
       )
       .then(response => {
+        // log pool added to and total usd amount
+        ReactGA.event({
+          category: 'Transaction',
+          action: 'Add Liquidity',
+          label: outputCurrency,
+          value: ethTransactionSize,
+          dimension1: response.hash
+        })
+        ReactGA.event({
+          category: 'Hash',
+          action: response.hash,
+          label: ethTransactionSize.toString()
+        })
         addTransaction(response)
       })
   }
@@ -599,17 +601,6 @@ export default function AddLiquidity({ params }) {
   }, [newOutputDetected, setShowOutputWarning])
   return (
     <>
-      {isNewExchange ? (
-        <NewExchangeWarning>
-          <NewExchangeWarningText>
-            <span role="img" aria-label="first-liquidity">
-              🚰
-            </span>{' '}
-            {t('firstLiquidity')}
-          </NewExchangeWarningText>
-          <NewExchangeWarningText>{t('initialExchangeRate', { symbol })}</NewExchangeWarningText>
-        </NewExchangeWarning>
-      ) : null}
       {showOutputWarning && (
         <WarningCard
           onDismiss={() => {
@@ -710,6 +701,24 @@ export default function AddLiquidity({ params }) {
         </SummaryPanel>
       </OversizedPanel>
       {renderSummary()}
+      {isNewExchange ? (
+        <NewExchangeWarning>
+          <NewExchangeWarningText>
+            <span role="img" aria-label="first-liquidity">
+              🚰
+            </span>{' '}
+            {t('firstLiquidity')}
+          </NewExchangeWarningText>
+          <NewExchangeWarningText style={{ marginTop: '10px' }}>
+            {t('initialExchangeRate', { symbol })}
+          </NewExchangeWarningText>
+        </NewExchangeWarning>
+      ) : null}
+      {isNewExchange && (
+        <NewExchangeWarningText style={{ textAlign: 'center', marginTop: '10px' }}>
+          {t('initialWarning')}
+        </NewExchangeWarningText>
+      )}
       <Flex>
         <Button disabled={!isValid} onClick={onAddLiquidity}>
           {t('addLiquidity')}

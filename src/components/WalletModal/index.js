@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import ReactGA from 'react-ga'
 import styled from 'styled-components'
 import { isMobile } from 'react-device-detect'
+import { useTranslation } from 'react-i18next'
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import { URI_AVAILABLE } from '@web3-react/walletconnect-connector'
 
@@ -125,6 +126,8 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
   const walletModalOpen = useWalletModalOpen()
   const toggleWalletModal = useWalletModalToggle()
 
+  const { t } = useTranslation()
+
   // always reset to account view
   useEffect(() => {
     if (walletModalOpen) {
@@ -194,7 +197,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
       const option = SUPPORTED_WALLETS[key]
       // check for mobile options
       if (isMobile) {
-        //disable portis on mobile for now
+        // disable portis on mobile for now
         if (option.connector === portis) {
           return null
         }
@@ -234,7 +237,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
               />
             )
           } else {
-            return null //dont want to return install twice
+            return null // dont want to return install twice
           }
         }
         // don't return metamask if injected provider isn't metamask
@@ -262,7 +265,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
             color={option.color}
             link={option.href}
             header={option.name}
-            subheader={null} //use option.descriptio to bring back multi-line
+            subheader={null} // use option.descriptio to bring back multi-line
             icon={require('../../assets/images/' + option.iconName)}
           />
         )
@@ -317,7 +320,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
           </HeaderRow>
         ) : (
           <HeaderRow>
-            <HoverText>Connect To A Wallet</HoverText>
+            <HoverText>{t('connectToWallet')}</HoverText>
           </HeaderRow>
         )}
         <ContentWrapper>

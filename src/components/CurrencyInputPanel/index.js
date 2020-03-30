@@ -289,7 +289,8 @@ export default function CurrencyInputPanel({
   selectedTokenAddress = '',
   showUnlock,
   value,
-  urlAddedTokens
+  urlAddedTokens,
+  hideETH = false
 }) {
   const { t } = useTranslation()
 
@@ -439,13 +440,14 @@ export default function CurrencyInputPanel({
           urlAddedTokens={urlAddedTokens}
           onTokenSelect={onCurrencySelected}
           allBalances={allBalances}
+          hideETH={hideETH}
         />
       )}
     </InputPanel>
   )
 }
 
-function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens }) {
+function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens, hideETH }) {
   const { t } = useTranslation()
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -459,12 +461,13 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
   const ethPrice = useETHPriceInUSD()
 
   // all balances for both account and exchanges
-  let allBalances = useAllBalances()
+  const allBalances = useAllBalances()
 
   const _usdAmounts = Object.keys(allTokens).map(k => {
     if (ethPrice && allBalances[account] && allBalances[account][k] && allBalances[account][k].value) {
       let ethRate = 1 // default for ETH
       let exchangeDetails = allBalances[allTokens[k].exchangeAddress]
+
       if (
         exchangeDetails &&
         exchangeDetails[k] &&
@@ -472,14 +475,17 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
         exchangeDetails['ETH'] &&
         exchangeDetails['ETH'].value
       ) {
-        const tokenBalance = new BigNumber(exchangeDetails[k].value.toString())
-        const ethBalance = new BigNumber(exchangeDetails['ETH'].value.toString())
-        ethRate = ethBalance.div(tokenBalance)
+        const tokenBalance = new BigNumber(exchangeDetails[k].value)
+        const ethBalance = new BigNumber(exchangeDetails['ETH'].value)
+        ethRate = ethBalance
+          .times(new BigNumber(10).pow(allTokens[k].decimals))
+          .div(tokenBalance)
+          .div(new BigNumber(10).pow(18))
       }
-      const USDRate = ethPrice
-        .times(ethRate)
-        .times(new BigNumber(10).pow(allTokens[k].decimals).div(new BigNumber(10).pow(18)))
-      const balanceBigNumber = new BigNumber(allBalances[account][k].value.toString())
+      const USDRate = ethPrice.times(ethRate)
+
+      const balanceBigNumber = new BigNumber(allBalances[account][k].value)
+
       const usdBalance = balanceBigNumber.times(USDRate).div(new BigNumber(10).pow(allTokens[k].decimals))
       return usdBalance
     } else {
@@ -531,10 +537,10 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
         let usdBalance
         // only update if we have data
         if (k === 'ETH' && allBalances[account] && allBalances[account][k] && allBalances[account][k].value) {
-          balance = formatEthBalance(allBalances[account][k].value)
+          balance = formatEthBalance(ethers.utils.bigNumberify(allBalances[account][k].value))
           usdBalance = usdAmounts[k]
         } else if (allBalances[account] && allBalances[account][k] && allBalances[account][k].value) {
-          balance = formatTokenBalance(allBalances[account][k].value, allTokens[k].decimals)
+          balance = formatTokenBalance(ethers.utils.bigNumberify(allBalances[account][k].value), allTokens[k].decimals)
           usdBalance = usdAmounts[k]
         }
         return {
@@ -548,7 +554,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
   }, [allBalances, allTokens, usdAmounts, account])
 
   const filteredTokenList = useMemo(() => {
-    return tokenList.filter(tokenEntry => {
+    const list = tokenList.filter(tokenEntry => {
       const inputIsAddress = searchQuery.slice(0, 2) === '0x'
 
       // check the regex for each field
@@ -567,6 +573,11 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
         )
       })
       return regexMatches.some(m => m)
+    })
+    // If the user has not inputted anything, preserve previous sort
+    if (searchQuery === '') return list
+    return list.sort((a, b) => {
+      return a.symbol.toLowerCase() === searchQuery.toLowerCase() ? -1 : 1
     })
   }, [tokenList, searchQuery])
 
@@ -601,6 +612,10 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
         INITIAL_TOKENS_CONTEXT[chainId] &&
         !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(address) &&
         !urlAdded
+
+      if (hideETH && address === 'ETH') {
+        return null
+      }
 
       return (
         <TokenModalRow key={address} onClick={() => _onTokenSelect(address)}>
@@ -663,7 +678,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens 
     >
       <TokenModal>
         <ModalHeader>
-          <p>Select Token</p>
+          <p>{t('selectToken')}</p>
           <CloseIcon onClick={clearInputAndDismiss}>
             <CloseColor alt={'close icon'} />
           </CloseIcon>
