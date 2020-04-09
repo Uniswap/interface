@@ -645,6 +645,12 @@ export const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'ZRX',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xaE76c84C9262Cdb9abc0C2c8888e62Db8E22A0bF'
+    },
+    '0x4442556a08a841227bEf04C67A7Ba7acf01b6Fc8': {
+      [NAME]: 'Monarch Token',
+      [SYMBOL]: 'MT',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x4f0ebf1d09AA8b4465F5a242E555AF8138B22ae2'
     }
   },
   4: {
