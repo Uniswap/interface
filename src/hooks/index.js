@@ -146,8 +146,9 @@ export function useENSName(address) {
   useEffect(() => {
     if (isAddress(address)) {
       let stale = false
-      try {
-        library.lookupAddress(address).then(name => {
+      library
+        .lookupAddress(address)
+        .then(name => {
           if (!stale) {
             if (name) {
               setENSName(name)
@@ -156,9 +157,11 @@ export function useENSName(address) {
             }
           }
         })
-      } catch {
-        setENSName(null)
-      }
+        .catch(() => {
+          if (!stale) {
+            setENSName(null)
+          }
+        })
 
       return () => {
         stale = true
@@ -202,7 +205,6 @@ export function useFactoryContract(withSignerIfPossible = true) {
 
   return useMemo(() => {
     try {
-      console.log(chainId)
       return getFactoryContract(chainId, library, withSignerIfPossible ? account : undefined)
     } catch {
       return null

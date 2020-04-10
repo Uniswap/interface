@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import styled, { css, keyframes } from 'styled-components'
 import { darken, lighten } from 'polished'
@@ -81,7 +80,7 @@ const Popup = styled(Flex)`
   position: absolute;
   width: 228px;
   left: -78px;
-  top: -124px;
+  top: -94px;
   flex-direction: column;
   align-items: center;
   padding: 0.6rem 1rem;
@@ -169,6 +168,7 @@ const Input = styled.input`
   background: ${({ theme }) => theme.inputBackground};
   flex-grow: 1;
   font-size: 12px;
+  min-width: 20px;
 
   outline: none;
   box-sizing: border-box;
@@ -259,7 +259,7 @@ const LastSummaryText = styled.div`
 const SlippageSelector = styled.div`
   background-color: ${({ theme }) => darken(0.04, theme.concreteGray)};
   padding: 1rem 1.25rem 1rem 1.25rem;
-  border-radius: 12px;
+  border-radius: 12px 12px 0 0;
 `
 
 const Percent = styled.div`
@@ -293,6 +293,14 @@ const ValueWrapper = styled.span`
   font-variant: tabular-nums;
 `
 
+const DeadlineSelector = styled.div`
+  background-color: ${({ theme }) => darken(0.04, theme.concreteGray)};
+  padding: 1rem 1.25rem 1rem 1.25rem;
+  border-radius: 0 0 12px 12px;
+`
+const DeadlineRow = SlippageRow
+const DeadlineInput = OptionCustom
+
 export default function TransactionDetails(props) {
   const { t } = useTranslation()
 
@@ -313,11 +321,15 @@ export default function TransactionDetails(props) {
     }
   })
 
+  const [deadlineInput, setDeadlineInput] = useState('')
+
   function renderSummary() {
     let contextualInfo = ''
     let isError = false
-
-    if (props.inputError || props.independentError) {
+    if (props.brokenTokenWarning) {
+      contextualInfo = t('brokenToken')
+      isError = true
+    } else if (props.inputError || props.independentError) {
       contextualInfo = props.inputError || props.independentError
       isError = true
     } else if (!props.inputCurrency || !props.outputCurrency) {
@@ -346,6 +358,7 @@ export default function TransactionDetails(props) {
         contextualInfo={contextualInfo ? contextualInfo : slippageWarningText}
         allowExpand={
           !!(
+            !props.brokenTokenWarning &&
             props.inputCurrency &&
             props.outputCurrency &&
             props.inputValueParsed &&
@@ -356,6 +369,7 @@ export default function TransactionDetails(props) {
         isError={isError}
         slippageWarning={props.slippageWarning && !contextualInfo}
         highSlippageWarning={props.highSlippageWarning && !contextualInfo}
+        brokenTokenWarning={props.brokenTokenWarning}
         renderTransactionDetails={renderTransactionDetails}
         dropDownContent={dropDownContent}
       />
@@ -400,22 +414,22 @@ export default function TransactionDetails(props) {
             >
               0.1%
             </Option>
-            <Option
+            <OptionLarge
               onClick={() => {
                 setFromFixed(2, 0.5)
               }}
               active={activeIndex === 2}
             >
-              0.5%
-            </Option>
-            <OptionLarge
+              0.5% <Faded>(suggested)</Faded>
+            </OptionLarge>
+            <Option
               onClick={() => {
                 setFromFixed(3, 1)
               }}
               active={activeIndex === 3}
             >
-              1% <Faded>(suggested)</Faded>
-            </OptionLarge>
+              1%
+            </Option>
             <OptionCustom
               active={activeIndex === 4}
               color={
@@ -491,6 +505,14 @@ export default function TransactionDetails(props) {
             </BottomError>
           </SlippageRow>
         </SlippageSelector>
+        <DeadlineSelector>
+          Set swap deadline (minutes from now)
+          <DeadlineRow wrap>
+            <DeadlineInput>
+              <Input placeholder={'Deadline'} value={deadlineInput} onChange={parseDeadlineInput} />
+            </DeadlineInput>
+          </DeadlineRow>
+        </DeadlineSelector>
       </>
     )
   }
@@ -506,6 +528,7 @@ export default function TransactionDetails(props) {
   const setRawSlippage = props.setRawSlippage
   const setRawTokenSlippage = props.setRawTokenSlippage
   const setcustomSlippageError = props.setcustomSlippageError
+  const setDeadline = props.setDeadline
 
   const updateSlippage = useCallback(
     newSlippage => {
@@ -603,14 +626,25 @@ export default function TransactionDetails(props) {
     }
   }
 
+  const [initialDeadline] = useState(props.deadline)
+
+  useEffect(() => {
+    setDeadlineInput(initialDeadline / 60)
+  }, [initialDeadline])
+
+  const parseDeadlineInput = e => {
+    const input = e.target.value
+
+    const acceptableValues = [/^$/, /^\d+$/]
+    if (acceptableValues.some(re => re.test(input))) {
+      setDeadlineInput(input)
+      setDeadline(parseInt(input) * 60)
+    }
+  }
+
   const b = text => <Bold>{text}</Bold>
 
   const renderTransactionDetails = () => {
-    ReactGA.event({
-      category: 'Advanced Interaction',
-      action: 'Open Advanced Details'
-    })
-
     if (props.independentField === props.INPUT) {
       return props.sending ? (
         <TransactionInfo>

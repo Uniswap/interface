@@ -23,8 +23,8 @@ function reducer(state, { type, payload }) {
         ...state,
         [BLOCK_NUMBER]: {
           ...(safeAccess(state, [BLOCK_NUMBER]) || {}),
-          [networkId]: blockNumber
-        }
+          [networkId]: blockNumber,
+        },
       }
     }
     case TOGGLE_WALLET_MODAL: {
@@ -39,7 +39,7 @@ function reducer(state, { type, payload }) {
 export default function Provider({ children }) {
   const [state, dispatch] = useReducer(reducer, {
     [BLOCK_NUMBER]: {},
-    [WALLET_MODAL_OPEN]: false
+    [WALLET_MODAL_OPEN]: false,
   })
 
   const updateBlockNumber = useCallback((networkId, blockNumber) => {
@@ -55,7 +55,7 @@ export default function Provider({ children }) {
       value={useMemo(() => [state, { updateBlockNumber, toggleWalletModal }], [
         state,
         updateBlockNumber,
-        toggleWalletModal
+        toggleWalletModal,
       ])}
     >
       {children}
@@ -76,7 +76,7 @@ export function Updater() {
       function update() {
         library
           .getBlockNumber()
-          .then(blockNumber => {
+          .then((blockNumber) => {
             if (!stale) {
               updateBlockNumber(chainId, blockNumber)
             }

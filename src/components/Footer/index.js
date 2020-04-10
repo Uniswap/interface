@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactGA from 'react-ga'
 import styled from 'styled-components'
 import { darken, transparentize } from 'polished'
 import Toggle from 'react-switch'
@@ -103,7 +104,14 @@ export default function Footer() {
             {'☀️'}
           </EmojiToggle>
         }
-        onChange={() => toggleDarkMode()}
+        onChange={() => {
+          ReactGA.event({
+            category: 'Advanced Interaction',
+            action: 'Toggle Theme',
+            label: isDark ? 'Light' : 'Dark'
+          })
+          toggleDarkMode()
+        }}
       />
     </FooterFrame>
   )

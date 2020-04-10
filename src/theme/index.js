@@ -89,9 +89,6 @@ const theme = darkMode => ({
 
     pink1: '#DC6BE5',
 
-
-     
-
     pink2: '#FFF8FD',
 
     yellow1: '#F3BE1E',

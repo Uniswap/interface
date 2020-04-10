@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { transparentize } from 'polished'
 import { Link } from '../../theme'
 
 const InfoCard = styled.button`
@@ -10,7 +9,7 @@ const InfoCard = styled.button`
   border: 1px solid;
   border-radius: 12px;
   width: 100% !important;
-  : 0 4px 8px 0 ${({ theme, clickable }) => (clickable ? transparentize(0.95, theme.shadowColor) : 'none')};
+  : 0 4px 8px 0 ${({ theme, clickable }) => (clickable ? theme.shadowColor : 'none')};
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.blue5};
   }
@@ -50,22 +49,26 @@ const GreenCircle = styled.div`
     height: 8px;
     width: 8px;
     margin-right: 8px;
-    background-color: ${({ theme }) => theme.colors.green2};
-    border-radius: 50%;
+    <<<<<<<headbackground-color: ${({ theme }) => theme.colors.green2};
+    =======background-color: ${({ theme }) => theme.connectedGreen};
+    >>>>>>>uniswap-frontend/betaborder-radius: 50%;
   }
 `
 
 const CircleWrapper = styled.div`
-  color: ${({ theme }) => theme.colors.green2};
-  display: flex;
+  <<<<<<<headcolor: ${({ theme }) => theme.colors.green2};
+  =======color: ${({ theme }) => theme.connectedGreen};
+  >>>>>>>uniswap-frontend/betadisplay: flex;
   justify-content: center;
   align-items: center;
 `
 
 const HeaderText = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.colors.blue5 : ({ theme }) => theme.textColor)};
-  font-size: 1rem;
+  <<<<<<<headcolor: ${props =>
+    props.color === 'blue' ? ({ theme }) => theme.colors.blue5 : ({ theme }) => theme.textColor};
+  =======color: ${props => (props.color === 'blue' ? ({ theme }) => theme.royalBlue : ({ theme }) => theme.textColor)};
+  >>>>>>>uniswap-frontend/betafont-size: 1rem;
   font-weight: 500;
 `
 
