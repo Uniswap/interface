@@ -1,50 +1,8 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_factoryV1",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_factoryV2",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_router",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "payable": true,
-    "stateMutability": "payable",
-    "type": "fallback"
-  },
-  {
     "constant": true,
     "inputs": [],
     "name": "factoryV1",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "factoryV2",
     "outputs": [
       {
         "internalType": "address",
@@ -103,7 +61,7 @@
       }
     ],
     "payable": false,
-    "stateMutability": "view",
+    "stateMutability": "pure",
     "type": "function"
   }
 ]

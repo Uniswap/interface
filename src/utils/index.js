@@ -5,7 +5,7 @@ import V2_FACTORY_ABI from '../constants/abis/v2Factory'
 import EXCHANGE_ABI from '../constants/abis/exchange'
 import ERC20_ABI from '../constants/abis/erc20'
 import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32'
-import { FACTORY_ADDRESSES, V2_FACTORY_ADDRESSES, SUPPORTED_THEMES } from '../constants'
+import { FACTORY_ADDRESSES, V2_FACTORY_ADDRESS, SUPPORTED_THEMES } from '../constants'
 import { formatFixed } from '@uniswap/sdk'
 
 import UncheckedJsonRpcSigner from './signer'
@@ -180,7 +180,7 @@ export function getFactoryContract(networkId, library, account) {
 
 // account is optional
 export function getV2FactoryContract(networkId, library, account) {
-  return getContract(V2_FACTORY_ADDRESSES[networkId], V2_FACTORY_ABI, library, account)
+  return getContract(V2_FACTORY_ADDRESS, V2_FACTORY_ABI, library, account)
 }
 
 // account is optional
