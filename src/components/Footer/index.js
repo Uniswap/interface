@@ -78,10 +78,10 @@ export default function Footer() {
     <FooterFrame>
       <FooterElement>
         <Title>
-          <Link id="link" href="https://uniswap.io/">
+          <Link id="link" href="https://uniswap.org/">
             <h1 id="title">About</h1>
           </Link>
-          <Link id="link" href="https://docs.uniswap.io/">
+          <Link id="link" href="https://uniswap.org/docs">
             <h1 id="title">Docs</h1>
           </Link>
           <Link id="link" href="https://github.com/Uniswap">

@@ -3,10 +3,11 @@ import { ethers } from 'ethers'
 import { withRouter } from 'react-router'
 import styled, { keyframes } from 'styled-components'
 import { animated, useTransition } from 'react-spring'
+import { ChainId, WETH } from '@uniswap/sdk-next'
 
 import { useWeb3React, useContract, useExchangeContract, usePrevious } from '../../hooks'
 import { useAllTokenDetails } from '../../contexts/Tokens'
-import { useTransactionAdder, useDoneMigrate } from '../../contexts/Transactions'
+import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useAddressBalance } from '../../contexts/Balances'
 
@@ -26,6 +27,7 @@ import TextBlock from '../Text'
 import Lock from '../../assets/images/lock.png'
 import MIGRATOR_ABI from '../../constants/abis/migrator'
 import { MIGRATOR_ADDRESS } from '../../constants'
+import { Zero } from 'ethers/constants'
 
 const Grouping = styled.div`
   display: grid;
@@ -78,7 +80,7 @@ const flash = keyframes`
   100% {}
 `
 
-const AnimnatedCard = styled(Card)`
+const AnimatedCard = styled(Card)`
   animation: ${({ active }) => active && flash};
   animation-duration: 1s;
   animation-iteration-count: infinite;
@@ -88,7 +90,10 @@ const AnimnatedCard = styled(Card)`
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 const DEFAULT_DEADLINE_FROM_NOW = 60 * 15
 
-function PoolUnit({ token, alreadyMigrated = false }) {
+function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
+  // flag for removing this entry after the user confirms
+  const [done, setDone] = useState(false)
+
   const [open, toggleOpen] = useState(false)
 
   const { account } = useWeb3React()
@@ -103,19 +108,16 @@ function PoolUnit({ token, alreadyMigrated = false }) {
   const migratorContract = useContract(MIGRATOR_ADDRESS, MIGRATOR_ABI)
 
   const v1Balance = useAddressBalance(account, exchangeAddressV1)
-  const v1BalanceFormatted = v1Balance && ethers.utils.bigNumberify(v1Balance)
-
   const v2Balance = useAddressBalance(account, exchangeAddressV2)
-  const v2BalanceFormatted = v2Balance && ethers.utils.bigNumberify(v2Balance)
-  const v2BalancePrevious = usePrevious(v2BalanceFormatted) // used to see if balance increases
+  const v2BalancePrevious = usePrevious(v2Balance) // used to see if balance changes
 
   const tokenAllowance = useAddressAllowance(account, exchangeAddressV1, MIGRATOR_ADDRESS)
 
   const [pendingApproval, setPendingApproval] = useState(false)
-  const approvalDone = tokenAllowance && v1BalanceFormatted && tokenAllowance.gte(v1BalanceFormatted)
+  const approvalDone = tokenAllowance && v1Balance && tokenAllowance.gte(v1Balance)
 
   const [pendingMigration, setPendingMigration] = useState(false)
-  const migrationDone = useDoneMigrate(exchangeAddressV1)
+  const migrationDone = v1Balance.eq(Zero) && !v2Balance.eq(Zero)
 
   const [triggerFlash, setTriggerFlash] = useState(false)
 
@@ -134,37 +136,35 @@ function PoolUnit({ token, alreadyMigrated = false }) {
 
   // trigger flash if new v2 liquidity detected
   useEffect(() => {
-    if (v2BalanceFormatted > v2BalancePrevious) {
+    if (v2Balance && v2BalancePrevious && !v2Balance.eq(v2BalancePrevious)) {
       setTimeout(() => {
         setTriggerFlash(true)
-      }, 1000)
+      }, 500)
+
       setTimeout(() => {
         setTriggerFlash(false)
       }, 4000)
     }
-  }, [v2BalanceFormatted, v2BalancePrevious])
+  }, [v2Balance, v2BalancePrevious])
 
   const tryApproval = async () => {
     setPendingApproval(true)
-    const estimatedGasLimit = await exchangeContractV1.estimate.approve(MIGRATOR_ADDRESS, v1BalanceFormatted)
-    exchangeContractV1 &&
-      token &&
-      v1BalanceFormatted &&
-      exchangeContractV1
-        .approve(MIGRATOR_ADDRESS, v1BalanceFormatted, {
-          gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
-        })
-        .then(response => {
-          addTransaction(response, { approval: token })
-        })
-        .catch(() => {
-          setPendingApproval(false)
-        })
+    const estimatedGasLimit = await exchangeContractV1.estimate.approve(MIGRATOR_ADDRESS, v1Balance)
+    exchangeContractV1
+      .approve(MIGRATOR_ADDRESS, v1Balance, {
+        gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
+      })
+      .then(response => {
+        addTransaction(response, { approval: token })
+      })
+      .catch(() => {
+        setPendingApproval(false)
+      })
   }
 
   const tryMigration = async () => {
     setPendingMigration(true)
-    const now = Math.ceil(Date.now() / 1000)
+    const now = Math.floor(Date.now() / 1000)
     const estimatedGasLimit = await migratorContract.estimate.migrate(
       token,
       0,
@@ -186,42 +186,35 @@ function PoolUnit({ token, alreadyMigrated = false }) {
 
   function DynamicCard() {
     return (
-      <div>
-        <AnimnatedCard outlined={open} style={migrationDone && !open ? { opacity: '0.9' } : {}} active={triggerFlash}>
+      <>
+        <AnimatedCard mt={10} outlined={open} active={triggerFlash}>
           <Grouping>
             {migrationDone ? (
               <DoubleLogo
                 size="24px"
-                addressTwo={'0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'} //weth has better logo than eth
+                addressTwo={WETH[ChainId.MAINNET].address} // weth has better logo than eth
                 addressOne={token}
               />
             ) : (
               <TokenLogo size="24px" address={token} />
             )}
-            {migrationDone && v2BalanceFormatted ? (
+            {migrationDone && v2Balance ? (
               <TextBlock fontSize={20}>
-                {amountFormatter(v2BalanceFormatted, 18, 6) < 0.00001
-                  ? '<0.00001 ' + allTokenDetails[token].symbol
-                  : amountFormatter(v2BalanceFormatted, 18, 5) + ' ' + allTokenDetails[token].symbol}
+                {Number(amountFormatter(v2Balance, 18, 6)) < 0.00001 ? '<0.00001' : amountFormatter(v2Balance, 18, 6)}{' '}
+                {symbol}
                 <InlineSubText>/ETH</InlineSubText> Pool Tokens
               </TextBlock>
             ) : (
-              v1BalanceFormatted && (
+              v1Balance && (
                 <TextBlock fontSize={20}>
-                  {amountFormatter(v1BalanceFormatted, 18, 5) < 0.00001
-                    ? '<0.00001 ' + allTokenDetails[token].symbol
-                    : amountFormatter(v1BalanceFormatted, 18, 6) + ' ' + allTokenDetails[token].symbol}{' '}
-                  Pool Tokens
+                  {Number(amountFormatter(v1Balance, 18, 6)) < 0.00001 ? '<0.00001' : amountFormatter(v1Balance, 18, 6)}{' '}
+                  {symbol} Pool Tokens
                 </TextBlock>
               )
             )}
             {migrationDone ? <Badge variant="green">V2</Badge> : <Badge variant="yellow">V1</Badge>}
             {!open ? (
-              migrationDone ? (
-                <Icon variant="filled" fillColor="green2">
-                  ✓
-                </Icon>
-              ) : (
+              migrationDone ? null : (
                 <Button
                   onClick={() => {
                     toggleOpen(true)
@@ -233,7 +226,7 @@ function PoolUnit({ token, alreadyMigrated = false }) {
             ) : migrationDone ? (
               <Button
                 onClick={() => {
-                  toggleOpen(false)
+                  setDone(true)
                 }}
               >
                 Done
@@ -246,7 +239,7 @@ function PoolUnit({ token, alreadyMigrated = false }) {
               />
             )}
           </Grouping>
-        </AnimnatedCard>
+        </AnimatedCard>
         {open && (
           <BottomWrapper>
             <FormattedCard outlined={!approvalDone && 'outlined'}>
@@ -263,18 +256,19 @@ function PoolUnit({ token, alreadyMigrated = false }) {
               <Button
                 variant={(approvalDone || migrationDone) && 'success'}
                 py={18}
+                disabled={pendingApproval || approvalDone || migrationDone}
                 onClick={() => {
-                  !approvalDone && tryApproval()
+                  tryApproval()
                 }}
               >
-                {approvalDone || migrationDone
-                  ? 'Confirmed'
-                  : pendingApproval
+                {pendingApproval
                   ? 'Waiting For Confirmation...'
+                  : approvalDone || migrationDone
+                  ? 'Confirmed'
                   : 'Approve for upgrade'}
               </Button>
               <TextBlock fontSize={16} color={'grey5'}>
-                The upgrade helper needs your permssion to upgrade on your behalf
+                The upgrade helper needs permission to migrate your liquidity.
               </TextBlock>
             </FormattedCard>
             <FormattedCard outlined={approvalDone && 'outlined'}>
@@ -294,37 +288,39 @@ function PoolUnit({ token, alreadyMigrated = false }) {
               </Row>
               <Button
                 variant={migrationDone && 'success'}
-                disabled={!approvalDone}
+                disabled={!approvalDone || pendingMigration || migrationDone}
                 py={18}
                 onClick={() => {
-                  !migrationDone && tryMigration()
+                  tryMigration()
                 }}
               >
                 {pendingMigration ? 'Waiting For Confirmation...' : migrationDone ? 'Confirmed' : 'Migrate Liquidity'}
               </Button>
               <TextBlock fontSize={16} color={'grey5'}>
-                Your {symbol} Liquidity will appear as {symbol}/ETH wth a new icon. <Link>Read more.</Link>
+                Your {symbol} liquidity will appear as {symbol}/ETH with a new icon.{' '}
+                <Link href="https://uniswap.org/blog/uniswap-v2/" target="_blank" rel="noopener noreferrer">
+                  Read more.
+                </Link>
               </TextBlock>
             </FormattedCard>
           </BottomWrapper>
         )}
-      </div>
+      </>
     )
   }
 
   function V2Card() {
     return (
-      <AnimnatedCard mt={20} style={{ opacity: '0.9' }} active={triggerFlash}>
+      <AnimatedCard mt={10} style={{ opacity: '0.9' }} active={triggerFlash}>
         <Grouping>
           <DoubleLogo
             size="24px"
-            addressTwo={'0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'} //weth has better logo than eth
+            addressTwo={WETH[ChainId.MAINNET].address} // weth has better logo than eth
             addressOne={token}
           />
           <TextBlock fontSize={20}>
-            {amountFormatter(v2BalanceFormatted, 18, 6) < 0.00001
-              ? '<0.00001 ' + allTokenDetails[token].symbol
-              : amountFormatter(v2BalanceFormatted, 18, 5) + ' ' + allTokenDetails[token].symbol}
+            {Number(amountFormatter(v2Balance, 18, 6)) < 0.00001 ? '<0.00001 ' : amountFormatter(v2Balance, 18, 6)}{' '}
+            {symbol}
             <InlineSubText>/ETH</InlineSubText> Pool Tokens
           </TextBlock>
           <Badge variant="green">V2</Badge>
@@ -332,7 +328,32 @@ function PoolUnit({ token, alreadyMigrated = false }) {
             ✓
           </Icon>
         </Grouping>
-      </AnimnatedCard>
+      </AnimatedCard>
+    )
+  }
+
+  function WETHCard() {
+    return (
+      <AnimatedCard mt={10} style={{ opacity: '0.9' }} active={triggerFlash}>
+        <Grouping>
+          <TokenLogo size="24px" address={WETH[ChainId.MAINNET].address} />
+          <TextBlock fontSize={20}>
+            {Number(amountFormatter(v1Balance, 18, 6)) < 0.00001 ? '<0.00001' : amountFormatter(v1Balance, 18, 6)} WETH
+            Pool Tokens
+          </TextBlock>
+          <Badge variant="yellow">V1</Badge>
+          <Button
+            as="a"
+            variant="dull"
+            cursor="pointer"
+            href={`https://v1.uniswap.exchange/remove-liquidity?poolTokenAddress=${WETH[ChainId.MAINNET].address}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Remove
+          </Button>
+        </Grouping>
+      </AnimatedCard>
     )
   }
 
@@ -346,7 +367,7 @@ function PoolUnit({ token, alreadyMigrated = false }) {
     ({ item, key, props }) =>
       item && (
         <animated.div key={key} style={props}>
-          {alreadyMigrated ? !migrationDone && V2Card() : DynamicCard()}
+          {done ? null : isWETH ? WETHCard() : alreadyMigrated ? V2Card() : DynamicCard()}
         </animated.div>
       )
   )

@@ -2093,9 +2093,9 @@
     defer-to-connect "^1.0.1"
 
 "@toruslabs/fetch-node-details@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@toruslabs/fetch-node-details/-/fetch-node-details-2.2.0.tgz#af4c47599a590a0ffabb07b6be8cd851836ca81c"
-  integrity sha512-rpeRGqlcwcg626lBAcBmXZscZAO6UrLcqDhhQpFeJv9jiUsbpfxmpqyg1GzLxkQKUjbUQvShbO8U26uGbijFIw==
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@toruslabs/fetch-node-details/-/fetch-node-details-2.2.1.tgz#91ad943779364d5e393357a50f288afc4e6f8843"
+  integrity sha512-nY2Jzguz33iWVbmNmn+N/oj5+KosTHJarRUMP23P/cikU56TK3oqoYKC/pUdYD+dy4EwgtllxLHUEP3JQn2Xnw==
   dependencies:
     web3-eth-contract "^1.2.6"
     web3-utils "^1.2.6"
@@ -2122,9 +2122,9 @@
     web3 "^0.20.7"
 
 "@toruslabs/torus.js@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@toruslabs/torus.js/-/torus.js-2.1.0.tgz#ea2f563b7afcbc27d489c0dc28819af2acb492ec"
-  integrity sha512-b3k/hD0++T34mslL7aSfE86VRL3Cm08Zwxv6pTUmFV1vRKUdixg1yOPedTotcwz99E6pvADvud2EaBT2Vke/sA==
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@toruslabs/torus.js/-/torus.js-2.1.2.tgz#9014375e6f2c7e1cababe9ef684373c2e6c94190"
+  integrity sha512-5H9+nuD6eDwQLPPXCvzAzYmDmW7y839NWZ0MkGpyOBm7rwRgbTRvdVo58QaMF0QdqeYqAjE44XAkR1wceVX6VQ==
   dependencies:
     bn.js "^5.1.1"
     eccrypto "^1.1.3"
@@ -4597,9 +4597,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000844, caniuse-lite@^1.0.30000981, caniuse-lite@^1.0.30001035, caniuse-lite@^1.0.30001038, caniuse-lite@^1.0.30001039:
-  version "1.0.30001040"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001040.tgz#103fc8e6eb1d7397e95134cd0e996743353d58ea"
-  integrity sha512-Ep0tEPeI5wCvmJNrXjE3etgfI+lkl1fTDU6Y3ZH1mhrjkPlVI9W4pcKbMo+BQLpEWKVYYp2EmYaRsqpPC3k7lQ==
+  version "1.0.30001041"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001041.tgz#c2ea138dafc6fe03877921ddcddd4a02a14daf76"
+  integrity sha512-fqDtRCApddNrQuBxBS7kEiSGdBsgO4wiVw4G/IClfqzfhW45MbTumfN4cuUJGTM0YGFNn97DCXPJ683PS6zwvA==
 
 capture-exit@^2.0.0:
   version "2.0.0"
@@ -6057,9 +6057,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.378, electron-to-chromium@^1.3.390, electron-to-chromium@^1.3.47:
-  version "1.3.402"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.402.tgz#9ad93c0c8ea2e571431739e0d76bd6bc9788a846"
-  integrity sha512-gaCDfX7IUH0s3JmBiHCDPrvVcdnTTP1r4WLJc2dHkYYbLmXZ2XHiJCcGQ9Balf91aKTvuCKCyu2JjJYRykoI1w==
+  version "1.3.403"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.403.tgz#c8bab4e2e72bf78bc28bad1cc355c061f9cc1918"
+  integrity sha512-JaoxV4RzdBAZOnsF4dAlZ2ijJW72MbqO5lNfOBHUWiBQl3Rwe+mk2RCUMrRI3rSClLJ8HSNQNqcry12H+0ZjFw==
 
 elliptic@6.3.3:
   version "6.3.3"
@@ -8293,9 +8293,9 @@ html-encoding-sniffer@^1.0.2:
     whatwg-encoding "^1.0.1"
 
 html-entities@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-1.2.1.tgz#0df29351f0721163515dfb9e5543e5f6eed5162f"
-  integrity sha1-DfKTUfByEWNRXfueVUPl9u7VFi8=
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-1.3.1.tgz#fb9a1a4b5b14c5daba82d3e34c6ae4fe701a0e44"
+  integrity sha512-rhE/4Z3hIhzHAUKbW8jVcCyuT5oJCXXqhN/6mXXVCpzTmvJnoH2HL/bt3EZ6p55jbFJBeAe1ZNpL5BugLujxNA==
 
 html-escaper@^2.0.0:
   version "2.0.2"
@@ -9065,9 +9065,9 @@ is-valid-glob@^1.0.0:
   integrity sha1-Kb8+/3Ab4tTTFdusw5vDn+j2Aao=
 
 is-what@^3.3.1:
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/is-what/-/is-what-3.7.1.tgz#a3f810a99f88e9122cf17bf2be7709688970db1a"
-  integrity sha512-IAoapxlqyLSqt0Zr/7ZMT/fjEw9nwxxmz/TlBH+TJjvcXxmmAdRvo41W74uw3XJMGFpbeft97cpkPmLK89lJWw==
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/is-what/-/is-what-3.8.0.tgz#610bc46a524355f2424eb85eedc6ebbbf7e1ff8c"
+  integrity sha512-UKeBoQfV8bjlM4pmx1FLDHdxslW/1mTksEs8ReVsilPmUv5cORd4+2/wFcviI3cUjrLybxCjzc8DnodAzJ/Wrg==
 
 is-windows@^1.0.1, is-windows@^1.0.2:
   version "1.0.2"
@@ -15603,9 +15603,9 @@ url@^0.11.0:
     querystring "0.2.0"
 
 usb@^1.6.0:
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/usb/-/usb-1.6.2.tgz#4ed7f0d8631c70192b33635f6a4e700d9e6bfe62"
-  integrity sha512-KcovLXRQuH63iEtnqXyDQGOi5dXHpLM5lZBIUsqSJQToua8nL2sVCieQTkzQBfLe5mCuvk40MgKciI61lgevWw==
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/usb/-/usb-1.6.3.tgz#c0bc14994e8f9cb16f9602ec0dbadaa57cb919f5"
+  integrity sha512-23KYMjaWydACd8wgGKMQ4MNwFspAT6Xeim4/9Onqe5Rz/nMb4TM/WHL+qPT0KNFxzNKzAs63n1xQWGEtgaQ2uw==
   dependencies:
     bindings "^1.4.0"
     nan "2.13.2"

@@ -85,7 +85,7 @@ const variants = {
     borderColor: 'green2',
     color: 'green2',
     backgroundColor: 'green1',
-    '&:hover, :focus, :active': {
+    ':hover, :focus, :active': {
       backgroundColor: 'green1',
       cursor: 'auto',
       boxShadow: 'none',

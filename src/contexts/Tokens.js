@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
-import { useBlockNumber } from './Application'
 import { WETH, Token, Pair } from '@uniswap/sdk-next'
 
 import { useWeb3React } from '../hooks'
@@ -630,7 +629,8 @@ export const INITIAL_TOKENS_CONTEXT = {
       [NAME]: 'Wrapped Ether',
       [SYMBOL]: 'WETH',
       [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: '0xA2881A90Bf33F03E7a3f803765Cd2ED5c8928dFb'
+      [EXCHANGE_ADDRESS]: '0xA2881A90Bf33F03E7a3f803765Cd2ED5c8928dFb',
+      [EXCHANGE_ADDRESS_V2]: null
     },
     '0xB4272071eCAdd69d933AdcD19cA99fe80664fc08': {
       [NAME]: 'CryptoFranc',
@@ -663,6 +663,13 @@ export const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'IAN',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x70b4aa67Ffa8501105a85547a3074307762907eC'
+    },
+    '0xc778417E063141139Fce010982780140Aa0cD5Ab': {
+      [NAME]: 'Wrapped Ether',
+      [SYMBOL]: 'WETH',
+      [DECIMALS]: 18,
+      [EXCHANGE_ADDRESS]: '0x591a8905752C35E8BCbCdc3b34e86Ff449f53423',
+      [EXCHANGE_ADDRESS_V2]: null
     }
     // '0xc300A55543AEfB4da5a47e4525E287b3902aFfB5': {
     //   [NAME]: 'Other Coin',
@@ -709,8 +716,33 @@ function reducer(state, { type, payload }) {
   }
 }
 
+function initialize(initalTokensContext) {
+  let augmentedTokensContext = {}
+
+  for (const chainId of Object.keys(initalTokensContext)) {
+    for (const tokenAddress of Object.keys(initalTokensContext[chainId])) {
+      const tokenData = initalTokensContext[chainId][tokenAddress]
+      augmentedTokensContext = {
+        ...augmentedTokensContext,
+        [chainId]: {
+          ...augmentedTokensContext[chainId],
+          [tokenAddress]: {
+            ...tokenData,
+            [EXCHANGE_ADDRESS_V2]:
+              tokenData[EXCHANGE_ADDRESS_V2] === null
+                ? null
+                : Pair.getAddress(new Token(Number(chainId), tokenAddress, tokenData[DECIMALS]), WETH[chainId])
+          }
+        }
+      }
+    }
+  }
+
+  return augmentedTokensContext
+}
+
 export default function Provider({ children }) {
-  const [state, dispatch] = useReducer(reducer, INITIAL_TOKENS_CONTEXT)
+  const [state, dispatch] = useReducer(reducer, INITIAL_TOKENS_CONTEXT, initialize)
 
   const update = useCallback((networkId, tokenAddress, name, symbol, decimals, exchangeAddress, exchangeAddressV2) => {
     dispatch({
@@ -726,50 +758,28 @@ export default function Provider({ children }) {
   )
 }
 
-export function Updater() {
-  const { library, chainId, account } = useWeb3React()
-  const [, { update }] = useTokensContext()
-
-  const allTokens = useAllTokenDetails()
-
-  const globalBlockNumber = useBlockNumber()
-
-  useEffect(() => {
-    Object.keys(allTokens)
-      .filter(tokenAddress => tokenAddress !== 'ETH')
-      .map(token => {
-        if (!allTokens[token].exchangeAddressV2) {
-          const v2PairAddress = Pair.getAddress(new Token(chainId, token, allTokens[token].decimals), WETH[chainId])
-          update(
-            chainId,
-            token,
-            allTokens[token].name,
-            allTokens[token].symbol,
-            allTokens[token].decimals,
-            allTokens[token].exchangeAddress,
-            v2PairAddress
-          )
-        }
-        return true
-      })
-  }, [globalBlockNumber, allTokens, chainId, account, library, update])
-
-  return true
-}
-
 export function useTokenDetails(tokenAddress) {
   const { library, chainId } = useWeb3React()
 
   const [state, { update }] = useTokensContext()
   const allTokensInNetwork = { ...ETH, ...(safeAccess(state, [chainId]) || {}) }
-  const { [NAME]: name, [SYMBOL]: symbol, [DECIMALS]: decimals, [EXCHANGE_ADDRESS]: exchangeAddress } =
-    safeAccess(allTokensInNetwork, [tokenAddress]) || {}
+  const {
+    [NAME]: name,
+    [SYMBOL]: symbol,
+    [DECIMALS]: decimals,
+    [EXCHANGE_ADDRESS]: exchangeAddress,
+    [EXCHANGE_ADDRESS_V2]: exchangeAddressV2
+  } = safeAccess(allTokensInNetwork, [tokenAddress]) || {}
 
   useEffect(() => {
     if (
       isAddress(tokenAddress) &&
-      (name === undefined || symbol === undefined || decimals === undefined || exchangeAddress === undefined) &&
-      (chainId || chainId === 0) &&
+      (name === undefined ||
+        symbol === undefined ||
+        decimals === undefined ||
+        exchangeAddress === undefined ||
+        exchangeAddressV2 === undefined) &&
+      typeof chainId === 'number' &&
       library
     ) {
       let stale = false
@@ -783,7 +793,16 @@ export function useTokenDetails(tokenAddress) {
       Promise.all([namePromise, symbolPromise, decimalsPromise, exchangeAddressPromise]).then(
         ([resolvedName, resolvedSymbol, resolvedDecimals, resolvedExchangeAddress]) => {
           if (!stale) {
-            update(chainId, tokenAddress, resolvedName, resolvedSymbol, resolvedDecimals, resolvedExchangeAddress, null)
+            const exchangeAddressV2 = Pair.getAddress(new Token(chainId, tokenAddress, resolvedDecimals), WETH[chainId])
+            update(
+              chainId,
+              tokenAddress,
+              resolvedName,
+              resolvedSymbol,
+              resolvedDecimals,
+              resolvedExchangeAddress,
+              exchangeAddressV2
+            )
           }
         }
       )
@@ -791,9 +810,9 @@ export function useTokenDetails(tokenAddress) {
         stale = true
       }
     }
-  }, [tokenAddress, name, symbol, decimals, exchangeAddress, chainId, library, update])
+  }, [tokenAddress, name, symbol, decimals, exchangeAddress, exchangeAddressV2, chainId, library, update])
 
-  return { name, symbol, decimals, exchangeAddress }
+  return { name, symbol, decimals, exchangeAddress, exchangeAddressV2 }
 }
 
 export function useAllTokenDetails() {

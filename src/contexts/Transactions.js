@@ -173,51 +173,51 @@ export function useAllTransactions() {
   return safeAccess(state, [chainId]) || {}
 }
 
-export function usePendingApproval(tokenAddress) {
-  const allTransactions = useAllTransactions()
+// export function usePendingApproval(tokenAddress) {
+//   const allTransactions = useAllTransactions()
 
-  return (
-    Object.keys(allTransactions).filter(hash => {
-      if (allTransactions[hash][RECEIPT]) {
-        return false
-      } else if (!allTransactions[hash][RESPONSE]) {
-        return false
-      } else if (allTransactions[hash][RESPONSE][CUSTOM_DATA].approval !== tokenAddress) {
-        return false
-      } else {
-        return true
-      }
-    }).length >= 1
-  )
-}
+//   return (
+//     Object.keys(allTransactions).filter(hash => {
+//       if (allTransactions[hash][RECEIPT]) {
+//         return false
+//       } else if (!allTransactions[hash][RESPONSE]) {
+//         return false
+//       } else if (allTransactions[hash][RESPONSE][CUSTOM_DATA].approval !== tokenAddress) {
+//         return false
+//       } else {
+//         return true
+//       }
+//     }).length >= 1
+//   )
+// }
 
-export function usePendingMigrate(exchangeAddress) {
-  const allTransactions = useAllTransactions()
+// export function usePendingMigrate(exchangeAddress) {
+//   const allTransactions = useAllTransactions()
 
-  return (
-    Object.keys(allTransactions).filter(hash => {
-      if (allTransactions[hash][RECEIPT]) {
-        return false
-      } else if (!allTransactions[hash][RESPONSE]) {
-        return false
-      } else if (allTransactions[hash][RESPONSE][CUSTOM_DATA].migrate !== exchangeAddress) {
-        return false
-      } else {
-        return true
-      }
-    }).length >= 1
-  )
-}
+//   return (
+//     Object.keys(allTransactions).filter(hash => {
+//       if (allTransactions[hash][RECEIPT]) {
+//         return false
+//       } else if (!allTransactions[hash][RESPONSE]) {
+//         return false
+//       } else if (allTransactions[hash][RESPONSE][CUSTOM_DATA].migrate !== exchangeAddress) {
+//         return false
+//       } else {
+//         return true
+//       }
+//     }).length >= 1
+//   )
+// }
 
-export function useDoneMigrate(exchangeAddress) {
-  const allTransactions = useAllTransactions()
-  return (
-    Object.keys(allTransactions).filter(hash => {
-      if (allTransactions[hash][RECEIPT] && allTransactions[hash][RESPONSE][CUSTOM_DATA].migrate === exchangeAddress) {
-        return true
-      } else {
-        return false
-      }
-    }).length >= 1
-  )
-}
+// export function useDoneMigrate(exchangeAddress) {
+// const allTransactions = useAllTransactions()
+//   return (
+//     Object.keys(allTransactions).filter(hash => {
+//       if (allTransactions[hash][RECEIPT] && allTransactions[hash][RESPONSE][CUSTOM_DATA].migrate === exchangeAddress) {
+//         return true
+//       } else {
+//         return false
+//       }
+//     }).length >= 1
+//   )
+// }

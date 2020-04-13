@@ -118,59 +118,59 @@ export function Updater() {
     const getData = async () => {
       if (chainId && library && account) {
         // get 1 eth + all token balances for the account
-        Promise.all(
-          Object.keys(allTokens).map(async tokenAddress => {
-            await new Promise(resolve => setTimeout(resolve, STAGGER_TIME * Math.random()))
+        // Promise.all(
+        //   Object.keys(allTokens).map(async tokenAddress => {
+        //     await new Promise(resolve => setTimeout(resolve, STAGGER_TIME * Math.random()))
 
-            const { value: existingValue } = safeAccess(stateRef.current, [chainId, account, tokenAddress]) || {}
-            return (
-              existingValue ||
-              (await (tokenAddress === 'ETH'
-                ? getEtherBalance(account, library).catch(() => null)
-                : getTokenBalance(tokenAddress, account, library).catch(() => null)))
-            )
-          })
-        ).then(balances => {
-          updateAllForAccount(chainId, account, Object.keys(allTokens), balances)
-        })
+        //     const { value: existingValue } = safeAccess(stateRef.current, [chainId, account, tokenAddress]) || {}
+        //     return (
+        //       existingValue ||
+        //       (await (tokenAddress === 'ETH'
+        //         ? getEtherBalance(account, library).catch(() => null)
+        //         : getTokenBalance(tokenAddress, account, library).catch(() => null)))
+        //     )
+        //   })
+        // ).then(balances => {
+        //   updateAllForAccount(chainId, account, Object.keys(allTokens), balances)
+        // })
 
         const allTokensWithAnExchange = Object.keys(allTokens).filter(tokenAddress => tokenAddress !== 'ETH')
         // get all eth balances for all exchanges
-        Promise.all(
-          allTokensWithAnExchange.map(async tokenAddress => {
-            await new Promise(resolve => setTimeout(resolve, STAGGER_TIME * Math.random()))
+        // Promise.all(
+        //   allTokensWithAnExchange.map(async tokenAddress => {
+        //     await new Promise(resolve => setTimeout(resolve, STAGGER_TIME * Math.random()))
 
-            const exchangeAddress = allTokens[tokenAddress].exchangeAddress
-            const { value: existingValue } = safeAccess(stateRef.current, [chainId, exchangeAddress, 'ETH']) || {}
-            return existingValue || (await getEtherBalance(exchangeAddress, library).catch(() => null))
-          })
-        ).then(ethBalances => {
-          updateAllForExchanges(
-            chainId,
-            allTokensWithAnExchange.map(tokenAddress => allTokens[tokenAddress].exchangeAddress),
-            Array(allTokensWithAnExchange.length).fill('ETH'),
-            ethBalances
-          )
-        })
+        //     const exchangeAddress = allTokens[tokenAddress].exchangeAddress
+        //     const { value: existingValue } = safeAccess(stateRef.current, [chainId, exchangeAddress, 'ETH']) || {}
+        //     return existingValue || (await getEtherBalance(exchangeAddress, library).catch(() => null))
+        //   })
+        // ).then(ethBalances => {
+        //   updateAllForExchanges(
+        //     chainId,
+        //     allTokensWithAnExchange.map(tokenAddress => allTokens[tokenAddress].exchangeAddress),
+        //     Array(allTokensWithAnExchange.length).fill('ETH'),
+        //     ethBalances
+        //   )
+        // })
 
         // get all token balances for all exchanges
-        Promise.all(
-          allTokensWithAnExchange.map(async tokenAddress => {
-            await new Promise(resolve => setTimeout(resolve, STAGGER_TIME * Math.random()))
+        // Promise.all(
+        //   allTokensWithAnExchange.map(async tokenAddress => {
+        //     await new Promise(resolve => setTimeout(resolve, STAGGER_TIME * Math.random()))
 
-            const exchangeAddress = allTokens[tokenAddress].exchangeAddress
-            const { value: existingValue } =
-              safeAccess(stateRef.current, [chainId, exchangeAddress, tokenAddress]) || {}
-            return existingValue || (await getTokenBalance(tokenAddress, exchangeAddress, library).catch(() => null))
-          })
-        ).then(tokenBalances => {
-          updateAllForExchanges(
-            chainId,
-            allTokensWithAnExchange.map(tokenAddress => allTokens[tokenAddress].exchangeAddress),
-            allTokensWithAnExchange.map(tokenAddress => tokenAddress),
-            tokenBalances
-          )
-        })
+        //     const exchangeAddress = allTokens[tokenAddress].exchangeAddress
+        //     const { value: existingValue } =
+        //       safeAccess(stateRef.current, [chainId, exchangeAddress, tokenAddress]) || {}
+        //     return existingValue || (await getTokenBalance(tokenAddress, exchangeAddress, library).catch(() => null))
+        //   })
+        // ).then(tokenBalances => {
+        //   updateAllForExchanges(
+        //     chainId,
+        //     allTokensWithAnExchange.map(tokenAddress => allTokens[tokenAddress].exchangeAddress),
+        //     allTokensWithAnExchange.map(tokenAddress => tokenAddress),
+        //     tokenBalances
+        //   )
+        // })
 
         // get all balances for any V1 LP shares
         Promise.all(
@@ -194,7 +194,6 @@ export function Updater() {
         const allTokensWithAnExchangeV2 = Object.keys(allTokens).filter(
           tokenAddress => allTokens[tokenAddress].exchangeAddressV2 !== null
         )
-
         // get all balances for any V2 LP shares
         Promise.all(
           Object.keys(allTokensWithAnExchangeV2).map(async index => {
@@ -224,8 +223,7 @@ export function Updater() {
 export function useAllBalances() {
   const { chainId } = useWeb3React()
   const [state] = useBalancesContext()
-  const balances = safeAccess(state, [chainId]) || {}
-  return balances
+  return useMemo(() => safeAccess(state, [chainId]) || {}, [state, chainId])
 }
 
 export function useAddressBalance(address, tokenAddress) {
