@@ -580,6 +580,12 @@ export const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x5048b9d01097498Fd72F3F14bC9Bc74A5aAc8fA7'
     },
+    '0x8400D94A5cb0fa0D041a3788e395285d61c9ee5e': {
+      [NAME]: 'UniBright',
+      [SYMBOL]: 'UBT',
+      [DECIMALS]: 8,
+      [EXCHANGE_ADDRESS]: '0xfc96e234d4B31C63051E707105fCC4aba37807Fa'
+    },
     '0x09cabEC1eAd1c0Ba254B09efb3EE13841712bE14': {
       [NAME]: 'Uniswap V1',
       [SYMBOL]: 'UNI-V1:SAI',
