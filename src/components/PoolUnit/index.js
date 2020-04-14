@@ -4,8 +4,10 @@ import { withRouter } from 'react-router'
 import styled, { keyframes } from 'styled-components'
 import { animated, useTransition } from 'react-spring'
 import { ChainId, WETH } from '@uniswap/sdk-next'
+import { BigNumber } from '@uniswap/sdk'
+import { Zero } from 'ethers/constants'
 
-import { useWeb3React, useContract, useExchangeContract, usePrevious } from '../../hooks'
+import { useWeb3React, useContract, useExchangeContract, usePrevious, useTotalSupply } from '../../hooks'
 import { useAllTokenDetails } from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressAllowance } from '../../contexts/Allowances'
@@ -27,7 +29,6 @@ import TextBlock from '../Text'
 import Lock from '../../assets/images/lock.png'
 import MIGRATOR_ABI from '../../constants/abis/migrator'
 import { MIGRATOR_ADDRESS } from '../../constants'
-import { Zero } from 'ethers/constants'
 
 const Grouping = styled.div`
   display: grid;
@@ -45,8 +46,8 @@ const Grouping = styled.div`
 const BottomWrapper = styled.div`
   display: grid;
   width: 100%;
-  padding: 10px 0;
-  grid-column-gap: 10px;
+  padding: 5px 0;
+  grid-gap: 5px;
   grid-template-columns: auto auto;
   & > div {
     height: fit-content;
@@ -96,7 +97,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
 
   const [open, toggleOpen] = useState(false)
 
-  const { account } = useWeb3React()
+  const { account, chainId } = useWeb3React()
   const allTokenDetails = useAllTokenDetails()
   const addTransaction = useTransactionAdder()
 
@@ -113,8 +114,44 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
 
   const tokenAllowance = useAddressAllowance(account, exchangeAddressV1, MIGRATOR_ADDRESS)
 
+  // v1 totalSupply
+  const v1TotalSupply = useTotalSupply(exchangeAddressV1)
+
+  // v1 price
+  const v1PriceToken = useAddressBalance(!done && !alreadyMigrated && !isWETH ? exchangeAddressV1 : undefined, token)
+  const v1PriceETH = useAddressBalance(!done && !alreadyMigrated && !isWETH ? exchangeAddressV1 : undefined, 'ETH')
+  const v1Price =
+    v1PriceToken && v1PriceETH
+      ? v1PriceToken.eq(Zero) || v1PriceETH.eq(Zero)
+        ? new BigNumber(0)
+        : new BigNumber(v1PriceToken.toString()).div(v1PriceETH.toString())
+      : undefined
+
+  // v2 price
+  const v2PriceToken = useAddressBalance(!done && !alreadyMigrated && !isWETH ? exchangeAddressV2 : undefined, token)
+  const v2PriceETH = useAddressBalance(
+    !done && !alreadyMigrated && !isWETH ? exchangeAddressV2 : undefined,
+    WETH[chainId].address
+  )
+  const v2Price =
+    v2PriceToken && v2PriceETH
+      ? v2PriceToken.eq(Zero) || v2PriceETH.eq(Zero)
+        ? new BigNumber(0)
+        : new BigNumber(v2PriceToken.toString()).div(v2PriceETH.toString())
+      : undefined
+  const firstMigrator = v2Price && v2Price.eq(new BigNumber(0))
+  const priceDifference =
+    !firstMigrator && v1Price
+      ? v1Price
+          .minus(v2Price)
+          .abs()
+          .div(v2Price)
+      : undefined
+  const priceWarning = priceDifference && priceDifference.gte(new BigNumber(0.1)) // .1 = 10%, warning threshold for price differences between v1 and v2
   const [pendingApproval, setPendingApproval] = useState(false)
   const approvalDone = tokenAllowance && v1Balance && tokenAllowance.gte(v1Balance)
+
+  const canMigrate = v1TotalSupply && (firstMigrator || v2Price)
 
   const [pendingMigration, setPendingMigration] = useState(false)
   const migrationDone = v1Balance.eq(Zero) && !v2Balance.eq(Zero)
@@ -165,15 +202,34 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
   const tryMigration = async () => {
     setPendingMigration(true)
     const now = Math.floor(Date.now() / 1000)
+
+    const frontrunningTolerance = 0.5 * 100 // .5%, in bips
+    const v1ValueToken = v1PriceToken.mul(v1Balance).div(v1TotalSupply)
+    const v1ValueETH = v1PriceETH.mul(v1Balance).div(v1TotalSupply)
+
+    let amountTokenMin
+    let amountETHMin
+    if (firstMigrator) {
+      amountTokenMin = v1ValueToken
+      amountETHMin = v1ValueETH
+    } else {
+      const projectedETHValue = v1ValueToken.mul(v2PriceETH).div(v2PriceToken)
+      const projectedTokenValue = v1ValueETH.mul(v2PriceToken).div(v2PriceETH)
+      amountTokenMin = projectedTokenValue.lt(v1ValueToken) ? projectedTokenValue : v1ValueToken
+      amountETHMin = projectedETHValue.lt(v1ValueETH) ? projectedTokenValue : v1ValueETH
+    }
+    amountTokenMin = amountTokenMin.mul(100 * 100 - frontrunningTolerance).div(100 * 100)
+    amountETHMin = amountETHMin.mul(100 * 100 - frontrunningTolerance).div(100 * 100)
+
     const estimatedGasLimit = await migratorContract.estimate.migrate(
       token,
-      0,
-      0,
+      amountTokenMin,
+      amountETHMin,
       account,
       now + DEFAULT_DEADLINE_FROM_NOW
     )
     migratorContract
-      .migrate(token, 0, 0, account, now + DEFAULT_DEADLINE_FROM_NOW, {
+      .migrate(token, amountTokenMin, amountETHMin, account, now + DEFAULT_DEADLINE_FROM_NOW, {
         gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
       })
       .then(response => {
@@ -242,6 +298,20 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
         </AnimatedCard>
         {open && (
           <BottomWrapper>
+            <FormattedCard>
+              <TextBlock>
+                V1 Price: {v1Price && v1Price.toPrecision(6)} {symbol}/ETH
+              </TextBlock>
+            </FormattedCard>
+            <FormattedCard>
+              <TextBlock>
+                V2 Price: {v2Price && v2Price.toPrecision(6)} {symbol}/ETH
+              </TextBlock>
+              {priceWarning && (
+                <TextBlock>Warning: {priceDifference.times(100).toFixed(2)}% price difference</TextBlock>
+              )}
+            </FormattedCard>
+
             <FormattedCard outlined={!approvalDone && 'outlined'}>
               <Row>
                 <TextBlock fontSize={20}>Step 1</TextBlock>
@@ -288,7 +358,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
               </Row>
               <Button
                 variant={migrationDone && 'success'}
-                disabled={!approvalDone || pendingMigration || migrationDone}
+                disabled={!approvalDone || pendingMigration || migrationDone || !canMigrate}
                 py={18}
                 onClick={() => {
                   tryMigration()

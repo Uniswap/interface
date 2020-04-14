@@ -199,6 +199,25 @@ export function useTokenContract(tokenAddress, withSignerIfPossible = true) {
   }, [tokenAddress, library, withSignerIfPossible, account])
 }
 
+export function useTotalSupply(tokenAddress) {
+  const token = useTokenContract(tokenAddress, false)
+  const [totalSupply, setTotalSupply] = useState()
+  useEffect(() => {
+    if (token) {
+      let mounted = true
+      token.totalSupply().then(totalSupply => {
+        if (mounted) setTotalSupply(totalSupply)
+      })
+      return () => {
+        mounted = false
+        setTotalSupply()
+      }
+    }
+  }, [token])
+
+  return totalSupply
+}
+
 // returns null on errors
 export function useFactoryContract(withSignerIfPossible = true) {
   const { chainId, library, account } = useWeb3React()
