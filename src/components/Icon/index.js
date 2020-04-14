@@ -1,9 +1,7 @@
 import React from 'react'
 import { Box } from 'rebass/styled-components'
 
-
 function Icon({ children, variant, icon, fillColor, size = '32px', ...rest }) {
-
   let variants = {}
   variants.primary = {
     display: 'flex',
@@ -21,7 +19,7 @@ function Icon({ children, variant, icon, fillColor, size = '32px', ...rest }) {
   }
 
   return (
-    <Box  sx={variants[variant] || variants.primary} {...rest}>
+    <Box sx={variants[variant] || variants.primary} {...rest}>
       {children ? children : <img src={icon} alt="Icon" />}
     </Box>
   )
