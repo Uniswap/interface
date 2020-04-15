@@ -11,23 +11,23 @@ import PositionCard from '../../components/PositionCard'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { Text } from 'rebass'
+import { TYPE } from '../../theme'
 import { Plus } from 'react-feather'
-import { ButtonPrimary } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
+import { ButtonPrimary, ButtonLight } from '../../components/Button'
 import Row, { RowBetween, RowFlat, RowFixed } from '../../components/Row'
 
 import { useToken } from '../../contexts/Tokens'
 import { usePopups } from '../../contexts/Application'
-import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useAddressAllowance } from '../../contexts/Allowances'
-import { useTransactionAdder } from '../../contexts/Transactions'
 import { usePair, useTotalSupply } from '../../contexts/Pairs'
+import { useWeb3React, useTokenContract } from '../../hooks'
+import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 
 import { BigNumber } from 'ethers/utils'
 import { ROUTER_ADDRESSES } from '../../constants'
 import { getRouterContract, calculateGasMargin } from '../../utils'
-import { TYPE } from '../../theme'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = 200
@@ -43,7 +43,7 @@ const Wrapper = styled.div`
 
 const FixedBottom = styled.div`
   position: absolute;
-  bottom: -200px;
+  bottom: -220px;
   width: 100%;
 `
 
@@ -157,6 +157,14 @@ export default function AddLiquidity({ token0, token1 }) {
     [Field.INPUT]: useToken(fieldData[Field.INPUT].address),
     [Field.OUTPUT]: useToken(fieldData[Field.OUTPUT].address)
   }
+
+  // token contracts for approvals and direct sends
+  const tokenContractInput: ethers.Contract = useTokenContract(tokens[Field.INPUT]?.address)
+  const tokenContractOutput: ethers.Contract = useTokenContract(tokens[Field.OUTPUT]?.address)
+
+  // check on pending approvals for token amounts
+  const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
+  const pendingApprovalOutput = usePendingApproval(tokens[Field.OUTPUT]?.address)
 
   // exhchange data
   const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
@@ -456,6 +464,28 @@ export default function AddLiquidity({ token0, token1 }) {
       })
   }
 
+  async function approveAmount(field) {
+    let estimatedGas
+    let useUserBalance = false
+    const tokenContract = field === Field.INPUT ? tokenContractInput : tokenContractOutput
+
+    estimatedGas = await tokenContract.estimate.approve(routerAddress, ethers.constants.MaxUint256).catch(e => {
+      console.log('Error setting max token approval.')
+    })
+    if (!estimatedGas) {
+      // general fallback for tokens who restrict approval amounts
+      estimatedGas = await tokenContract.estimate.approve(routerAddress, userBalances[field])
+      useUserBalance = true
+    }
+    tokenContract
+      .approve(routerAddress, useUserBalance ? userBalances[field] : ethers.constants.MaxUint256, {
+        gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
+      })
+      .then(response => {
+        addTransaction(response, { approval: tokens[field]?.address })
+      })
+  }
+
   const modalHeader = () => {
     return (
       <AutoColumn gap="20px">
@@ -569,7 +599,6 @@ export default function AddLiquidity({ token0, token1 }) {
           onTokenSelection={onTokenSelection}
           error={inputError}
           pair={pair}
-          showUnlock={showInputUnlock}
           disableTokenSelect
         />
         <ColumnCenter>
@@ -587,7 +616,6 @@ export default function AddLiquidity({ token0, token1 }) {
           onTokenSelection={onTokenSelection}
           error={outputError}
           pair={pair}
-          showUnlock={showOutputUnlock}
           disableTokenSelect
         />
         {!noLiquidity && (
@@ -599,16 +627,34 @@ export default function AddLiquidity({ token0, token1 }) {
             </div>
           </RowBetween>
         )}
-        <ButtonPrimary
-          onClick={() => {
-            setShowConfirm(true)
-          }}
-          disabled={!isValid}
-        >
-          <Text fontSize={20} fontWeight={500}>
-            {generalError ? generalError : inputError ? inputError : outputError ? outputError : 'Supply'}
-          </Text>
-        </ButtonPrimary>
+        {showOutputUnlock ? (
+          <ButtonLight
+            onClick={() => {
+              approveAmount(Field.OUTPUT)
+            }}
+          >
+            {pendingApprovalOutput ? 'Waiting for unlock' : 'Unlock ' + tokens[Field.OUTPUT]?.symbol}
+          </ButtonLight>
+        ) : showInputUnlock ? (
+          <ButtonLight
+            onClick={() => {
+              approveAmount(Field.INPUT)
+            }}
+          >
+            {pendingApprovalInput ? 'Waiting for unlock' : 'Unlock ' + tokens[Field.INPUT]?.symbol}
+          </ButtonLight>
+        ) : (
+          <ButtonPrimary
+            onClick={() => {
+              setShowConfirm(true)
+            }}
+            disabled={!isValid}
+          >
+            <Text fontSize={20} fontWeight={500}>
+              {generalError ? generalError : inputError ? inputError : outputError ? outputError : 'Supply'}
+            </Text>
+          </ButtonPrimary>
+        )}
         {!noLiquidity && (
           <FixedBottom>
             <PositionCard

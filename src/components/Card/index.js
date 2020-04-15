@@ -18,12 +18,24 @@ export const LightCard = styled(Card)`
 `
 
 export const GreyCard = styled(Card)`
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.6);
+`
+
+export const YellowCard = styled(Card)`
+  background-color: rgba(243, 190, 30, 0.3);
+  color: ${({ theme }) => theme.yellow2};
+  fontweight: 500;
+`
+
+export const PinkCard = styled(Card)`
+  background-color: rgba(255, 0, 122, 0.03);
+  color: ${({ theme }) => theme.pink2};
+  fontweight: 500;
 `
 
 const BlueCardStyled = styled(Card)`
-  background-color: #ebf4ff;
-  color: #2172e5;
+  background-color: ${({ theme }) => theme.blue5};
+  color: ${({ theme }) => theme.blue1};
   border-radius: 12px;
   padding: 8px;
   width: fit-content;

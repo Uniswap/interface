@@ -75,6 +75,7 @@ const theme = darkMode => ({
   red1: '#FF6871',
   green1: '#27AE60',
   yellow1: '#FFE270',
+  yellow2: '#F3841E',
 
   //shadows
   shadow1: darkMode ? '#000' : '#2F80ED',
@@ -99,7 +100,17 @@ export const TYPE = {
     </Text>
   ),
   largeHeader: ({ children, ...rest }) => (
-    <Text fontWeight={600} fontSize={24} color={theme().black} {...rest}>
+    <Text fontWeight={600} fontSize={24} {...rest}>
+      {children}
+    </Text>
+  ),
+  mediumHeader: ({ children, ...rest }) => (
+    <Text fontWeight={500} fontSize={20} color={theme().text1} {...rest}>
+      {children}
+    </Text>
+  ),
+  subHeader: ({ children, ...rest }) => (
+    <Text fontWeight={400} fontSize={14} color={theme().text1} {...rest}>
       {children}
     </Text>
   ),
@@ -110,6 +121,11 @@ export const TYPE = {
   ),
   blue: ({ children, ...rest }) => (
     <Text fontWeight={500} color={theme().blue1} {...rest}>
+      {children}
+    </Text>
+  ),
+  green: ({ children, ...rest }) => (
+    <Text fontWeight={500} color={theme().green1} {...rest}>
       {children}
     </Text>
   ),

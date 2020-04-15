@@ -30,7 +30,7 @@ function reducer(state: RouteState, { type, payload }) {
         [chainId]: {
           ...state[chainId],
           [tokens[0]]: {
-            ...state[tokens[0]],
+            ...state[chainId]?.[tokens[0]],
             [tokens[1]]: {
               route
             }
@@ -83,8 +83,8 @@ export function useRoute(tokenA: Token, tokenB: Token) {
   // needs to route through WETH
   const requiresHop =
     defaultPair &&
-    JSBI.equal(defaultPair.reserve0.raw, JSBI.BigInt(0)) &&
-    JSBI.equal(defaultPair.reserve1.raw, JSBI.BigInt(0))
+    JSBI.equal(defaultPair?.reserve0?.raw, JSBI.BigInt(0)) &&
+    JSBI.equal(defaultPair?.reserve1?.raw, JSBI.BigInt(0))
 
   useEffect(() => {
     if (!route && tokenA && tokenB) {

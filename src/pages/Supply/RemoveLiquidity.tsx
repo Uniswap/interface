@@ -10,6 +10,7 @@ import DoubleLogo from '../../components/DoubleLogo'
 import PositionCard from '../../components/PositionCard'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import { TYPE } from '../../theme'
 import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
 import { ButtonPrimary } from '../../components/Button'
@@ -29,7 +30,6 @@ import { BigNumber } from 'ethers/utils'
 import { splitSignature } from '@ethersproject/bytes'
 import { ROUTER_ADDRESSES } from '../../constants'
 import { getRouterContract, calculateGasMargin } from '../../utils'
-import { TYPE } from '../../theme'
 
 // denominated in seconds
 const DEADLINE_FROM_NOW = 60 * 15
@@ -42,7 +42,7 @@ const Wrapper = styled.div`
 
 const FixedBottom = styled.div`
   position: absolute;
-  bottom: -200px;
+  bottom: -220px;
   width: 100%;
 `
 

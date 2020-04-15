@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import '@reach/tooltip/styles.css'
-import { ethers } from 'ethers'
 import { darken } from 'polished'
-import { WETH } from '@uniswap/sdk'
 
 import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
@@ -16,30 +14,7 @@ import { Input as NumericalInput } from '../NumericalInput'
 
 import { useWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
-import { useTokenContract } from '../../hooks'
-import { calculateGasMargin } from '../../utils'
 import { useAddressBalance } from '../../contexts/Balances'
-import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
-
-import { ROUTER_ADDRESSES } from '../../constants'
-
-const GAS_MARGIN = ethers.utils.bigNumberify(1000)
-
-const SubCurrencySelect = styled.button`
-  ${({ theme }) => theme.flexRowNoWrap}
-  padding: 4px 50px 4px 15px;
-  margin-right: -40px;
-  line-height: 0;
-  align-items: center;
-  border-radius: 2.5rem;
-  height: 2rem;
-  outline: none;
-  cursor: pointer;
-  user-select: none;
-  background: ${({ theme }) => theme.blue5};
-  border: 1px solid ${({ theme }) => theme.blue1};
-  color: ${({ theme }) => theme.blue1};
-`
 
 const InputRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -156,8 +131,6 @@ export default function CurrencyInputPanel({
   urlAddedTokens = [], // used
   onTokenSelection = null,
   token = null,
-  showUnlock = false, // used to show unlock if approval needed
-  disableUnlock = false,
   disableTokenSelect = false,
   hideBalance = false,
   isExchange = false,
@@ -167,59 +140,11 @@ export default function CurrencyInputPanel({
   showSendWithSwap = false
 }) {
   const { t } = useTranslation()
-  const { account, chainId } = useWeb3React()
-  const routerAddress = ROUTER_ADDRESSES[chainId]
+  const { account } = useWeb3React()
 
-  const addTransaction = useTransactionAdder()
   const [modalOpen, setModalOpen] = useState(false)
 
   const userTokenBalance = useAddressBalance(account, token)
-  const tokenContract = useTokenContract(token?.address)
-  const pendingApproval = usePendingApproval(token?.address)
-
-  function renderUnlockButton() {
-    if (
-      disableUnlock ||
-      !showUnlock ||
-      token?.address === 'ETH' ||
-      token?.address === WETH[chainId].address ||
-      !token?.address
-    ) {
-      return null
-    } else {
-      if (!pendingApproval) {
-        return (
-          <SubCurrencySelect
-            onClick={async () => {
-              let estimatedGas
-              let useUserBalance = false
-              estimatedGas = await tokenContract.estimate
-                .approve(routerAddress, ethers.constants.MaxUint256)
-                .catch(e => {
-                  console.log('Error setting max token approval.')
-                })
-              if (!estimatedGas) {
-                // general fallback for tokens who restrict approval amounts
-                estimatedGas = await tokenContract.estimate.approve(routerAddress, userTokenBalance)
-                useUserBalance = true
-              }
-              tokenContract
-                .approve(routerAddress, useUserBalance ? userTokenBalance : ethers.constants.MaxUint256, {
-                  gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
-                })
-                .then(response => {
-                  addTransaction(response, { approval: token?.address })
-                })
-            }}
-          >
-            {t('unlock')}
-          </SubCurrencySelect>
-        )
-      } else {
-        return <SubCurrencySelect>{t('pending')}</SubCurrencySelect>
-      }
-    }
-  }
 
   return (
     <InputPanel>
@@ -234,7 +159,7 @@ export default function CurrencyInputPanel({
                 }}
               />
               {!!token?.address && !atMax && <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>}
-              {renderUnlockButton()}
+              {/* {renderUnlockButton()} */}
             </>
           )}
           <CurrencySelect
@@ -288,6 +213,7 @@ export default function CurrencyInputPanel({
           field={field}
           onTokenSelect={onTokenSelection}
           showSendWithSwap={showSendWithSwap}
+          hiddenToken={token?.address}
         />
       )}
     </InputPanel>

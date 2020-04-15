@@ -22,9 +22,9 @@ const tabOrder = [
     regex: /\/send/
   },
   {
-    path: '/supply',
+    path: '/pool',
     textKey: 'pool',
-    regex: /\/supply/
+    regex: /\/pool/
   }
 ]
 
@@ -105,7 +105,7 @@ function NavigationTabs({ location: { pathname }, history }) {
       {adding || removing ? (
         <Tabs>
           <RowBetween style={{ padding: '1rem' }}>
-            <HistoryLink to="/supply">
+            <HistoryLink to="/pool">
               <ArrowLink />
             </HistoryLink>
             <ActiveText>{adding ? 'Add' : 'Remove'} Liquidity</ActiveText>
@@ -115,7 +115,7 @@ function NavigationTabs({ location: { pathname }, history }) {
       ) : finding ? (
         <Tabs>
           <RowBetween style={{ padding: '1rem' }}>
-            <HistoryLink to="/supply">
+            <HistoryLink to="/pool">
               <ArrowLink />
             </HistoryLink>
             <ActiveText>Find a Pool</ActiveText>

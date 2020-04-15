@@ -5,6 +5,7 @@ import { INITIAL_TOKENS_CONTEXT } from './Tokens'
 import { ChainId, WETH, Token, TokenAmount, Pair, JSBI } from '@uniswap/sdk'
 
 const UPDATE = 'UPDATE'
+const UPDATE_PAIR_ENTITY = 'UPDATE_PAIR_ENTITY'
 
 const ALL_PAIRS: [Token, Token][] = [
   [
@@ -60,6 +61,16 @@ function reducer(state, { type, payload }) {
         }
       }
     }
+    case UPDATE_PAIR_ENTITY: {
+      const { pairAddress, pair, chainId } = payload
+      return {
+        ...state,
+        [chainId]: {
+          ...state?.[chainId],
+          [pairAddress]: pair
+        }
+      }
+    }
     default: {
       throw Error(`Unexpected action type in ExchangesContext reducer: '${type}'.`)
     }
@@ -73,8 +84,16 @@ export default function Provider({ children }) {
     dispatch({ type: UPDATE, payload: { chainId, tokens } })
   }, [])
 
+  const updatePairEntity = useCallback((pairAddress, pair, chainId) => {
+    dispatch({ type: UPDATE_PAIR_ENTITY, payload: { pairAddress, pair, chainId } })
+  }, [])
+
   return (
-    <PairContext.Provider value={useMemo(() => [state, { update }], [state, update])}>{children}</PairContext.Provider>
+    <PairContext.Provider
+      value={useMemo(() => [state, { update, updatePairEntity }], [state, update, updatePairEntity])}
+    >
+      {children}
+    </PairContext.Provider>
   )
 }
 
@@ -97,20 +116,22 @@ export function usePairAddress(tokenA?: Token, tokenB?: Token): string | undefin
 }
 
 export function usePair(tokenA?: Token, tokenB?: Token): Pair | undefined {
+  const { chainId } = useWeb3React()
+  const [state, { updatePairEntity }] = usePairContext()
+
   const address = usePairAddress(tokenA, tokenB)
+  const pairState = state?.[chainId]?.[address]
+
   const tokenAmountA = useAddressBalance(address, tokenA)
   const tokenAmountB = useAddressBalance(address, tokenB)
-  const [pair, setPair] = useState<Pair>()
 
   useEffect(() => {
-    if (!pair && tokenAmountA && tokenAmountB) {
-      setPair(new Pair(tokenAmountA, tokenAmountB))
+    if (!pairState && tokenAmountA && tokenAmountB) {
+      updatePairEntity(address, new Pair(tokenAmountA, tokenAmountB), chainId)
     }
-  }, [pair, tokenAmountA, tokenAmountB])
+  }, [pairState, tokenAmountA, tokenAmountB, address, updatePairEntity, chainId])
 
-  return useMemo(() => {
-    return pair
-  }, [pair])
+  return pairState
 }
 
 export function useAllPairsRaw() {

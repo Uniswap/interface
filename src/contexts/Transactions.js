@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
 
+import TxnPopup from '../components/TxnPopup'
+
 import { useWeb3React } from '../hooks'
 import { safeAccess } from '../utils'
-import { useBlockNumber } from './Application'
+import { useBlockNumber, usePopups } from './Application'
 
 const RESPONSE = 'response'
 const CUSTOM_DATA = 'CUSTOM_DATA'
@@ -110,6 +112,9 @@ export function Updater() {
   const [state, { check, finalize }] = useTransactionsContext()
   const allTransactions = safeAccess(state, [chainId]) || {}
 
+  // show popup on confirm
+  const [, addPopup] = usePopups()
+
   useEffect(() => {
     if ((chainId || chainId === 0) && library) {
       let stale = false
@@ -126,6 +131,7 @@ export function Updater() {
                   check(chainId, hash, globalBlockNumber)
                 } else {
                   finalize(chainId, hash, receipt)
+                  addPopup(<TxnPopup hash={hash} success={true} />)
                 }
               }
             })
@@ -138,7 +144,7 @@ export function Updater() {
         stale = true
       }
     }
-  }, [chainId, library, allTransactions, globalBlockNumber, check, finalize])
+  }, [chainId, library, allTransactions, globalBlockNumber, check, finalize, addPopup])
 
   return null
 }
