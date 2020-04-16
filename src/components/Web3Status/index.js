@@ -2,7 +2,7 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
-import { darken, transparentize } from 'polished'
+import { darken } from 'polished'
 import { Activity } from 'react-feather'
 
 import { shortenAddress } from '../../utils'
@@ -10,8 +10,6 @@ import { useENSName } from '../../hooks'
 import WalletModal from '../WalletModal'
 import { useAllTransactions } from '../../contexts/Transactions'
 import { useWalletModalToggle } from '../../contexts/Application'
-import { Spinner } from '../../theme'
-import Circle from '../../assets/images/circle.svg'
 import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
@@ -46,39 +44,40 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 `
 
 const Web3StatusConnect = styled(Web3StatusGeneric)`
-  background-color: transparent;
-  border: 1px solid ${({ theme }) => theme.blue1};
+  background-color: ${({ theme }) => theme.blue4};
+  border: 1px solid ${({ theme }) => theme.blue4};
+  border: none;
   color: ${({ theme }) => theme.blue1};
   font-weight: 500;
 
   :hover,
   :focus {
-    border: 1px solid ${({ theme }) => darken(0.1, theme.blue1)};
+    border: 1px solid ${({ theme }) => darken(0.1, theme.blue4)};
     color: ${({ theme }) => darken(0.1, theme.blue1)};
   }
 
   ${({ faded }) =>
     faded &&
     css`
-      background-color: transparent;
-      border: 1px solid ${({ theme }) => theme.blue1};
+      background-color: ${({ theme }) => theme.blue5};
+      border: 1px solid ${({ theme }) => theme.blue5};
       color: ${({ theme }) => theme.blue1};
 
       :hover,
       :focus {
-        border: 1px solid ${({ theme }) => darken(0.1, theme.blue1)};
+        border: 1px solid ${({ theme }) => darken(0.1, theme.blue4)};
         color: ${({ theme }) => darken(0.1, theme.blue1)};
       }
     `}
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)`
-  background-color: ${({ pending, theme }) => (pending ? theme.blue5 : theme.bg1)};
+  background-color: ${({ pending, theme }) => (pending ? theme.blue1 : theme.bg1)};
   border: 1px solid ${({ pending, theme }) => (pending ? theme.blue1 : theme.bg3)};
-  color: ${({ pending, theme }) => (pending ? theme.blue1 : theme.text3)};
+  color: ${({ pending, theme }) => (pending ? theme.white : theme.text3)};
   font-weight: 400;
   :hover {
-    background-color: ${({ pending, theme }) => (pending ? transparentize(0.9, theme.blue1) : darken(0.05, theme.bg1))};
+    background-color: ${({ pending, theme }) => (pending ? darken(0.05, theme.blue1) : darken(0.05, theme.bg1))};
 
     :focus {
       border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.blue1) : darken(0.1, theme.bg3))};
@@ -93,6 +92,8 @@ const Text = styled.p`
   white-space: nowrap;
   margin: 0 0.5rem 0 0.25rem;
   font-size: 0.83rem;
+  width: fit-content;
+  font-weight: 500;
 `
 
 const NetworkIcon = styled(Activity)`
@@ -100,10 +101,6 @@ const NetworkIcon = styled(Activity)`
   margin-right: 0.5rem;
   width: 16px;
   height: 16px;
-`
-
-const SpinnerWrapper = styled(Spinner)`
-  margin: 0 0.25rem 0 0.25rem;
 `
 
 const IconWrapper = styled.div`
@@ -166,9 +163,12 @@ export default function Web3Status() {
     if (account) {
       return (
         <Web3StatusConnected onClick={toggleWalletModal} pending={hasPendingTransactions}>
-          {hasPendingTransactions && <SpinnerWrapper src={Circle} alt="loader" />}
-          <Text>{ENSName || shortenAddress(account)}</Text>
-          {getStatusIcon()}
+          {hasPendingTransactions ? (
+            <Text>{pending?.length} Pending</Text>
+          ) : (
+            <Text>{ENSName || shortenAddress(account)}</Text>
+          )}
+          {!hasPendingTransactions && getStatusIcon()}
         </Web3StatusConnected>
       )
     } else if (error) {

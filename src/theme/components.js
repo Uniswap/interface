@@ -71,3 +71,9 @@ export const Spinner = styled.img`
   width: 16px;
   height: 16px;
 `
+
+export const Hover = styled.div`
+  :hover {
+    cursor: pointer;
+  }
+`

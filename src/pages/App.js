@@ -1,12 +1,16 @@
-import React, { Suspense, lazy } from 'react'
+import React, { Suspense, lazy, useState } from 'react'
 import styled from 'styled-components'
-import { transparentize } from 'polished'
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
+import { Text } from 'rebass'
 import Header from '../components/Header'
 import NavigationTabs from '../components/NavigationTabs'
 import Web3ReactManager from '../components/Web3ReactManager'
-import { useWeb3React } from '../hooks'
+import { TYPE } from '../theme'
+import { Hover } from '../theme/components'
+import { AutoColumn } from '../components/Column'
+import { PinkCard } from '../components/Card'
+import { ButtonPink } from '../components/Button'
 import { isAddress, getAllQueryParams } from '../utils'
 
 const Swap = lazy(() => import('./Swap'))
@@ -29,29 +33,6 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
 `
 
-const BetaMessage = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  cursor: pointer;
-  max-height: 40px;
-  flex: 1 0 auto;
-  align-items: center;
-  position: relative;
-  padding: 0.5rem 1rem;
-  margin-bottom: 1rem;
-  border: 1px solid ${({ theme }) => transparentize(0.6, theme.pink1)};
-  background-color: ${({ theme }) => transparentize(0.9, theme.pink1)};
-  border-radius: 1rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: ${({ theme }) => theme.pink1};
-  min-width: 380px;
-  text-align: center;
-  justify-content: center;
-`
-
 const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -61,6 +42,12 @@ const BodyWrapper = styled.div`
   flex: 1;
   overflow: auto;
   padding-top: 40px;
+
+  & > * {
+    max-width: calc(355px + 4rem);
+    width: 90%;
+    margin-bottom: 20px;
+  }
 `
 
 const Body = styled.div`
@@ -76,7 +63,7 @@ const Body = styled.div`
 export default function App() {
   const params = getAllQueryParams()
 
-  const { chainId } = useWeb3React()
+  const [showMigrationMessage, toggleShowMigrationMessage] = useState(true)
 
   return (
     <>
@@ -86,17 +73,18 @@ export default function App() {
             <Header />
           </HeaderWrapper>
           <BodyWrapper>
-            {chainId === 1 && (
-              <BetaMessage>Incorrect network. This site is intended to be used on Ethereum testnets only.</BetaMessage>
+            {showMigrationMessage && (
+              <PinkCard padding="20px">
+                <AutoColumn justify={'center'} gap={'20px'}>
+                  <TYPE.largeHeader>Uniswap has upgraded.</TYPE.largeHeader>
+                  <Text textAlign="center">Are you a liquidity provider? Upgrade now using the migration helper.</Text>
+                  <ButtonPink width={'265px'}>Migrate your liquidity </ButtonPink>
+                  <Hover onClick={() => toggleShowMigrationMessage(false)}>
+                    <Text textAlign="center">Dismiss</Text>
+                  </Hover>
+                </AutoColumn>
+              </PinkCard>
             )}
-
-            {(chainId === 3 || chainId === 4 || chainId === 5 || chainId === 42) && (
-              <BetaMessage>
-                Connected to{' '}
-                {chainId === 3 ? 'Ropsten ' : chainId === 4 ? 'Rinkeby' : chainId === 5 ? 'Goerli' : 'Kovan'} testnet.
-              </BetaMessage>
-            )}
-
             <Body>
               <Web3ReactManager>
                 <BrowserRouter>
@@ -138,7 +126,7 @@ export default function App() {
                           }
                         }}
                       />
-                      <Route exaxct path={'/supply'} component={() => <Pool params={params} />} />
+                      <Route exaxct path={'/pool'} component={() => <Pool params={params} />} />
                       <Route
                         exact
                         strict
@@ -154,7 +142,7 @@ export default function App() {
                           if (t0 && t1) {
                             return <Add params={params} token0={t0} token1={t1} />
                           } else {
-                            return <Redirect to={{ pathname: '/supply' }} />
+                            return <Redirect to={{ pathname: '/pool' }} />
                           }
                         }}
                       />
@@ -173,7 +161,7 @@ export default function App() {
                           if (t0 && t1) {
                             return <Remove params={params} token0={t0} token1={t1} />
                           } else {
-                            return <Redirect to={{ pathname: '/supply' }} />
+                            return <Redirect to={{ pathname: '/pool' }} />
                           }
                         }}
                       />

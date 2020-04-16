@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Row from '../Row'
 import Menu from '../Menu'
 import Logo from '../../assets/svg/logo.svg'
-import Card from '../Card'
+import Card, { YellowCard } from '../Card'
 import Web3Status from '../Web3Status'
 import { X } from 'react-feather'
 import { Link } from '../../theme'
@@ -59,6 +59,7 @@ const AccountElement = styled.div`
   border: 1px solid ${({ theme }) => theme.bg3};
   border-radius: 8px;
   padding-left: ${({ active }) => (active ? '8px' : 0)};
+  white-space: nowrap;
 
   :focus {
     border: 1px solid blue;
@@ -119,6 +120,26 @@ export default function Header() {
           )}
           <Web3Status onClick={toggleWalletModal} />
         </AccountElement>
+        {chainId === 4 && (
+          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
+            Rinkeby Testnet
+          </YellowCard>
+        )}
+        {chainId === 3 && (
+          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
+            Ropsten Testnet
+          </YellowCard>
+        )}
+        {chainId === 5 && (
+          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
+            Goerli Testnet
+          </YellowCard>
+        )}
+        {chainId === 42 && (
+          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
+            Kovan Testnet
+          </YellowCard>
+        )}
         <Menu />
       </HeaderElement>
       <FixedPopupColumn gap="20px">

@@ -66,7 +66,7 @@ const StyledDialogContent = styled(FilteredDialogContent)`
         min-height: ${minHeight}vh;
       `}
     display: flex;
-    overflow: hidden;
+    /* overflow: hidden; */
     border-radius: 10px;
     ${({ theme }) => theme.mediaWidth.upToMedium`
       width: 65vw;

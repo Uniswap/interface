@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { transparentize } from 'polished'
 
-import QR from '../../assets/svg/QR.svg'
-
+// import QR from '../../assets/svg/QR.svg'
 import { isAddress } from '../../utils'
 import { useWeb3React, useDebounce } from '../../hooks'
 
@@ -15,6 +14,8 @@ const InputPanel = styled.div`
   background-color: ${({ theme }) => theme.bg1};
   z-index: 1;
   width: 100%;
+  height: 60px;
+
 `
 
 const ContainerRow = styled.div`
@@ -22,6 +23,7 @@ const ContainerRow = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 1.25rem;
+  height: 60px;
   border: 1px solid ${({ error, theme }) => (error ? theme.red1 : theme.bg3)};
   background-color: ${({ theme }) => theme.bg1};
 `
@@ -43,25 +45,26 @@ const Input = styled.input`
   flex: 1 1 auto;
   width: 0;
   background-color: ${({ theme }) => theme.bg1};
-
+  font-size: 20px;
   color: ${({ error, theme }) => (error ? theme.red1 : theme.blue1)};
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 500;
 
   ::placeholder {
     color: ${({ theme }) => theme.text4};
   }
 `
 
-const QRWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid ${({ theme }) => theme.bg3};
-  background: #fbfbfb;
-  padding: 4px;
-  border-radius: 8px;
-`
+// const QRWrapper = styled.div`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   border: 1px solid ${({ theme }) => theme.bg3};
+//   background: #fbfbfb;
+//   padding: 4px;
+//   border-radius: 8px;
+// `
 
 export default function AddressInputPanel({ initialInput = '', onChange, onError }) {
   const { library } = useWeb3React()
@@ -172,14 +175,14 @@ export default function AddressInputPanel({ initialInput = '', onChange, onError
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              placeholder="0x1234..."
+              placeholder="Recipient Address"
               error={input !== '' && error}
               onChange={onInput}
               value={input}
             />
-            <QRWrapper>
+            {/* <QRWrapper>
               <img src={QR} alt="" />
-            </QRWrapper>
+            </QRWrapper> */}
           </InputRow>
         </InputContainer>
       </ContainerRow>

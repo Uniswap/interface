@@ -7,6 +7,7 @@ import { Link } from '../../theme/components'
 import { TYPE } from '../../theme'
 import { AutoColumn } from '../../components/Column'
 import { ButtonRadio } from '../Button'
+import { useTranslation } from 'react-i18next'
 import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 const InputWrapper = styled(RowBetween)`
@@ -27,6 +28,9 @@ const SLIPPAGE_INDEX = {
 }
 
 export default function AdvancedSettings({ setIsOpen, setDeadline, allowedSlippage, setAllowedSlippage }) {
+  // text translation
+  const { t } = useTranslation()
+
   const [deadlineInput, setDeadlineInput] = useState(15)
   const [slippageInput, setSlippageInput] = useState()
   const [activeIndex, setActiveIndex] = useState(SLIPPAGE_INDEX[3])
@@ -82,8 +86,8 @@ export default function AdvancedSettings({ setIsOpen, setDeadline, allowedSlippa
         back
       </Link>
       <RowBetween>
-        <TYPE.main>Limit additional price impact</TYPE.main>
-        <QuestionHelper text="" />
+        <TYPE.main>Limit front-running tolerance</TYPE.main>
+        <QuestionHelper text={t('toleranceExplanation')} />
       </RowBetween>
       <Row>
         <ButtonRadio
