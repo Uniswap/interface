@@ -36,8 +36,8 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
 
   const [showMore, setShowMore] = useState(false)
 
-  const tokenAmount0 = allBalances?.[pairAddress]?.[token0.address]
-  const tokenAmount1 = allBalances?.[pairAddress]?.[token1.address]
+  const tokenAmount0 = allBalances?.[pairAddress]?.[token0?.address]
+  const tokenAmount1 = allBalances?.[pairAddress]?.[token1?.address]
 
   const pair = tokenAmount0 && tokenAmount1 && new Pair(tokenAmount0, tokenAmount1)
 

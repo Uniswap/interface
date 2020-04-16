@@ -133,6 +133,7 @@ function SearchModal({
 
   const allTokens = useAllTokens()
   const allPairs = useAllPairs()
+
   const allBalances = useAllBalances()
 
   const [searchQuery, setSearchQuery] = useState('')
