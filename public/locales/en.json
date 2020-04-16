@@ -9,7 +9,7 @@
   "swapAnyway": "Swap Anyway",
   "send": "Send",
   "sendAnyway": "Send Anyway",
-  "pool": "Supply",
+  "pool": "Pool",
   "betaWarning": "This project is in beta. Use at your own risk.",
   "input": "Input",
   "output": "Output",
@@ -85,5 +85,7 @@
   "enterTokenCont": "Enter a token address to continue",
   "priceChange": "Expected price slippage",
   "forAtLeast": "for at least ",
-  "brokenToken": "The selected token is not compatible with Uniswap V1. Adding liquidity will result in locked funds."
+  "brokenToken": "The selected token is not compatible with Uniswap V1. Adding liquidity will result in locked funds.",
+  "toleranceExplanation": "Lowering this limit decreases your risk of frontrunning. However, this makes more likely that your transaction will fail due to normal price movements.",
+  "tokenSearchPlaceholder": "Search name or paste token address"
 }

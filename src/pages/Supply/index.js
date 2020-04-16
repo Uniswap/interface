@@ -3,15 +3,13 @@ import styled from 'styled-components'
 import { JSBI } from '@uniswap/sdk'
 import { withRouter } from 'react-router-dom'
 
-import Card from '../../components/Card'
 import Question from '../../components/Question'
 import SearchModal from '../../components/SearchModal'
 import PositionCard from '../../components/PositionCard'
-import Row, { RowBetween } from '../../components/Row'
 import { Link } from '../../theme'
 import { Text } from 'rebass'
 import { AutoColumn } from '../../components/Column'
-import { ArrowRight } from 'react-feather'
+import { RowBetween } from '../../components/Row'
 import { ButtonPrimary } from '../../components/Button'
 
 import { useAllPairs } from '../../contexts/Pairs'
@@ -22,11 +20,6 @@ import { useAllBalances, useAccountLPBalances } from '../../contexts/Balances'
 const Positions = styled.div`
   position: relative;
   margin-top: 38px;
-`
-const FixedBottom = styled.div`
-  position: absolute;
-  bottom: -260px;
-  width: 100%;
 `
 
 function Supply({ history }) {
@@ -39,6 +32,8 @@ function Supply({ history }) {
 
   // initiate listener for LP balances
   useAccountLPBalances(account)
+
+  // console.log(allPairs)
 
   const filteredExchangeList = Object.keys(allPairs)
     .filter((pairAddress, i) => {
@@ -67,7 +62,7 @@ function Supply({ history }) {
           setShowPoolSearch(true)
         }}
       >
-        <Text fontSize={20}>Join a pool</Text>
+        <Text fontSize={20}>Join {filteredExchangeList?.length > 0 ? 'another' : 'a'} pool</Text>
       </ButtonPrimary>
       <Positions>
         <AutoColumn gap="20px">
@@ -80,34 +75,17 @@ function Supply({ history }) {
           {filteredExchangeList}
           <AutoColumn justify="center">
             <Text color="#AEAEAE">
-              {filteredExchangeList?.length !== 0 ? `Don't see your ` : 'Already have '} liquidity?{' '}
+              {filteredExchangeList?.length !== 0 ? `Don't see a pool you joined? ` : 'Already joined a pool?'}{' '}
               <Link
                 onClick={() => {
                   history.push('/find')
                 }}
               >
-                Find it now.
+                Find it.
               </Link>
             </Text>
           </AutoColumn>
         </AutoColumn>
-        <FixedBottom>
-          <Card bg="rgba(255, 255, 255, 0.6)" padding={'24px'}>
-            <AutoColumn gap="30px">
-              <Text fontSize="20px" fontWeight={500}>
-                Earn fees with pooled market making.
-              </Text>
-              <Text fontSize="12px">
-                <Link>Provide liquidity </Link>to earn .3% spread fees for providing market depth.
-              </Text>
-              <Link>
-                <Row>
-                  Learn More <ArrowRight size="16" />
-                </Row>
-              </Link>
-            </AutoColumn>
-          </Card>
-        </FixedBottom>
       </Positions>
       <SearchModal isOpen={showPoolSearch} onDismiss={() => setShowPoolSearch(false)} />
     </>

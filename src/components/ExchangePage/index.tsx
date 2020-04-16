@@ -16,29 +16,31 @@ import { Link } from '../../theme/components'
 import { Text } from 'rebass'
 import { TYPE } from '../../theme'
 import { ArrowDown, ArrowUp } from 'react-feather'
-import { GreyCard, BlueCard } from '../../components/Card'
+import { GreyCard, BlueCard, YellowCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import { ButtonPrimary, ButtonError } from '../Button'
 import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
+import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
 
 import { usePair } from '../../contexts/Pairs'
 import { useToken } from '../../contexts/Tokens'
 import { usePopups } from '../../contexts/Application'
 import { useRoute } from '../../contexts/Routes'
-import { useTransactionAdder } from '../../contexts/Transactions'
+// import { useTranslation } from 'react-i18next'
+import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWeb3React, useTokenContract } from '../../hooks'
 import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 
+import { INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
 import { ROUTER_ADDRESSES } from '../../constants'
-import { getRouterContract, calculateGasMargin, getProviderOrSigner } from '../../utils'
+import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEtherscanLink } from '../../utils'
 
 const Wrapper = styled.div`
   position: relative;
 `
 
 const ArrowWrapper = styled.div`
-  padding: 4px;
+  padding: 6px;
   border: 1px solid ${({ theme }) => theme.blue4};
   border-radius: 12px;
   display: flex;
@@ -221,6 +223,9 @@ const ALLOWED_SLIPPAGE_MEDIUM = 100
 const ALLOWED_SLIPPAGE_HIGH = 500
 
 function ExchangePage({ sendingInput = false, history }) {
+  // text translation
+  // const { t } = useTranslation()
+
   const { chainId, account, library } = useWeb3React()
   const routerAddress: string = ROUTER_ADDRESSES[chainId]
 
@@ -245,8 +250,27 @@ function ExchangePage({ sendingInput = false, history }) {
     [Field.OUTPUT]: useToken(fieldData[Field.OUTPUT].address)
   }
 
+  // token contracts for approvals and direct sends
+  const tokenContractInput: ethers.Contract = useTokenContract(tokens[Field.INPUT]?.address)
+  const tokenContractOutput: ethers.Contract = useTokenContract(tokens[Field.OUTPUT]?.address)
+
+  // check on pending approvals for token amounts
+  const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
+  const pendingApprovalOutput = usePendingApproval(tokens[Field.OUTPUT]?.address)
+
+  // check for imported tokens to show warning
+  const importedTokenInput = tokens[Field.INPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.INPUT]?.address]
+  const importedTokenOutput =
+    tokens[Field.OUTPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.OUTPUT]?.address]
+
   const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
+
+  // console.log(pair?.token0?.symbol)
+  // console.log(pair?.token1?.symbol)
+  // console.log('--------------')
+
   const route = useRoute(tokens[Field.INPUT], tokens[Field.OUTPUT])
+  // const route = useRoute(pair)
   const noRoute: boolean = !route && !!tokens[Field.INPUT] && !!tokens[Field.OUTPUT]
   const emptyReserves = pair && JSBI.equal(JSBI.BigInt(0), pair.reserve0.raw)
 
@@ -273,8 +297,6 @@ function ExchangePage({ sendingInput = false, history }) {
     [Field.INPUT]: useAddressBalance(account, tokens[Field.INPUT]),
     [Field.OUTPUT]: useAddressBalance(account, tokens[Field.OUTPUT])
   }
-
-  // console.log(userBalances[Field.OUTPUT]?.raw.toString())
 
   const parsedAmounts: { [field: number]: TokenAmount } = {}
   if (typedValue !== '' && typedValue !== '.' && tokens[independentField]) {
@@ -343,6 +365,13 @@ function ExchangePage({ sendingInput = false, history }) {
       }
     })
   }, [])
+
+  // reset field if sending with with swap is cancled
+  useEffect(() => {
+    if (sending && !sendingWithSwap) {
+      onTokenSelection(Field.OUTPUT, null)
+    }
+  }, [onTokenSelection, sending, sendingWithSwap])
 
   const MIN_ETHER: TokenAmount = chainId && new TokenAmount(WETH[chainId], JSBI.BigInt(parseEther('.01')))
 
@@ -427,8 +456,6 @@ function ExchangePage({ sendingInput = false, history }) {
     outputApproval &&
     JSBI.greaterThan(parsedAmounts[Field.OUTPUT].raw, outputApproval.raw)
 
-  const tokenContract: ethers.Contract = useTokenContract(tokens[Field.INPUT]?.address)
-
   // function for a pure send
   async function onSend() {
     setAttemptingTxn(true)
@@ -454,8 +481,8 @@ function ExchangePage({ sendingInput = false, history }) {
           setShowConfirm(false)
         })
     } else {
-      estimate = tokenContract.estimate.transfer
-      method = tokenContract.transfer
+      estimate = tokenContractInput.estimate.transfer
+      method = tokenContractInput.transfer
       args = [recipient, parsedAmounts[Field.INPUT].raw.toString()]
       value = ethers.constants.Zero
       const estimatedGasLimit = await estimate(...args, { value }).catch(e => {
@@ -589,6 +616,28 @@ function ExchangePage({ sendingInput = false, history }) {
         )
         resetModal()
         setShowConfirm(false)
+      })
+  }
+
+  async function approveAmount(field) {
+    let estimatedGas
+    let useUserBalance = false
+    const tokenContract = field === Field.INPUT ? tokenContractInput : tokenContractOutput
+
+    estimatedGas = await tokenContract.estimate.approve(routerAddress, ethers.constants.MaxUint256).catch(e => {
+      console.log('Error setting max token approval.')
+    })
+    if (!estimatedGas) {
+      // general fallback for tokens who restrict approval amounts
+      estimatedGas = await tokenContract.estimate.approve(routerAddress, userBalances[field])
+      useUserBalance = true
+    }
+    tokenContract
+      .approve(routerAddress, useUserBalance ? userBalances[field] : ethers.constants.MaxUint256, {
+        gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
+      })
+      .then(response => {
+        addTransaction(response, { approval: tokens[field]?.address })
       })
   }
 
@@ -806,7 +855,7 @@ function ExchangePage({ sendingInput = false, history }) {
           )}
           <RowBetween>
             <Text color="#565A69" fontWeight={500} fontSize={16}>
-              Slippage <Link onClick={() => setShowAdvanced(true)}>(edit limits)</Link>
+              Slippage
             </Text>
             <ErrorText warningHigh={warningHigh} fontWeight={500}>
               {slippageFromTrade && slippageFromTrade.toFixed(4)}%
@@ -909,7 +958,6 @@ function ExchangePage({ sendingInput = false, history }) {
               onTokenSelection={address => _onTokenSelect(address)}
               error={inputError}
               pair={pair}
-              showUnlock={showInputUnlock}
               hideBalance={true}
               hideInput={true}
               showSendWithSwap={true}
@@ -928,19 +976,30 @@ function ExchangePage({ sendingInput = false, history }) {
               token={tokens[Field.INPUT]}
               error={inputError}
               pair={pair}
-              showUnlock={showInputUnlock}
               onUserInput={onUserInput}
               onMax={() => {
                 maxAmountInput && onMaxInput(maxAmountInput.toExact())
               }}
               onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
             />
-            <ColumnCenter>
-              <ArrowWrapper onClick={onSwapTokens}>
-                <ArrowDown size="16" color="#2F80ED" />
-                <ArrowUp size="16" color="#2F80ED" />
-              </ArrowWrapper>
-            </ColumnCenter>
+            {sendingWithSwap ? (
+              <RowBetween>
+                <ArrowWrapper onClick={onSwapTokens}>
+                  <ArrowDown size="16" color="#2F80ED" />
+                  <ArrowUp size="16" color="#2F80ED" />
+                </ArrowWrapper>
+                <ArrowWrapper onClick={() => setSendingWithSwap(false)} style={{ marginRight: '20px' }}>
+                  <TYPE.blue>Remove Swap</TYPE.blue>
+                </ArrowWrapper>
+              </RowBetween>
+            ) : (
+              <ColumnCenter>
+                <ArrowWrapper onClick={onSwapTokens}>
+                  <ArrowDown size="16" color="#2F80ED" />
+                  <ArrowUp size="16" color="#2F80ED" />
+                </ArrowWrapper>
+              </ColumnCenter>
+            )}
             <CurrencyInputPanel
               field={Field.OUTPUT}
               value={formattedAmounts[Field.OUTPUT]}
@@ -953,7 +1012,6 @@ function ExchangePage({ sendingInput = false, history }) {
               onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
               error={outputError}
               pair={pair}
-              showUnlock={showOutputUnlock}
             />
             {!noRoute && ( // hide price if new exchange
               <RowBetween>
@@ -962,8 +1020,8 @@ function ExchangePage({ sendingInput = false, history }) {
                 </Text>
                 <Text fontWeight={500} color="#565A69">
                   {pair
-                    ? `1 ${tokens[Field.INPUT].symbol} = ${route?.midPrice.toSignificant(6)} ${
-                        tokens[Field.OUTPUT].symbol
+                    ? `1 ${tokens[Field.INPUT]?.symbol} = ${route?.midPrice.toSignificant(6)} ${
+                        tokens[Field.OUTPUT]?.symbol
                       }`
                     : '-'}
                 </Text>
@@ -1009,6 +1067,26 @@ function ExchangePage({ sendingInput = false, history }) {
               Create one now
             </Link>
           </RowBetween>
+        ) : showOutputUnlock ? (
+          <ButtonLight
+            onClick={() => {
+              !pendingApprovalOutput && approveAmount(Field.OUTPUT)
+            }}
+            disabled={pendingApprovalOutput}
+          >
+            {pendingApprovalOutput ? 'Waiting for unlock' : 'Unlock ' + tokens[Field.OUTPUT]?.symbol}
+          </ButtonLight>
+        ) : showInputUnlock ? (
+          <ButtonLight
+            onClick={() => {
+              approveAmount(Field.INPUT)
+            }}
+            disabled={pendingApprovalInput}
+          >
+            {!pendingApprovalInput && pendingApprovalInput
+              ? 'Waiting for unlock'
+              : 'Unlock ' + tokens[Field.INPUT]?.symbol}
+          </ButtonLight>
         ) : (
           <ButtonError
             onClick={() => {
@@ -1039,23 +1117,58 @@ function ExchangePage({ sendingInput = false, history }) {
           </ButtonError>
         )}
       </AutoColumn>
-
-      {warningHigh && (
-        <FixedBottom>
-          <GreyCard>
-            <AutoColumn gap="12px">
-              <RowBetween>
-                <Text fontWeight={500}>Slippage Warning</Text>
-                <QuestionHelper text="" />
-              </RowBetween>
-              <Text color="#565A69" lineHeight="145.23%;">
-                This trade will move the price by {slippageFromTrade.toFixed(2)}%. This pool probably doesn’t have
-                enough liquidity. Are you sure you want to continue this trade?
-              </Text>
-            </AutoColumn>
-          </GreyCard>
-        </FixedBottom>
-      )}
+      <FixedBottom>
+        <AutoColumn gap="20px">
+          {importedTokenInput && (
+            <YellowCard>
+              <AutoColumn gap="10px">
+                <TYPE.mediumHeader>Token imported via address</TYPE.mediumHeader>
+                <AutoRow gap="4px">
+                  <TokenLogo address={tokens[Field.INPUT]?.address || ''} />
+                  <TYPE.body>({tokens[Field.INPUT]?.symbol})</TYPE.body>
+                  <Link href={getEtherscanLink(chainId, tokens[Field.INPUT]?.address, 'address')}>
+                    (View on Etherscan)
+                  </Link>
+                </AutoRow>
+                <TYPE.subHeader>
+                  Please verify the legitimacy of this token before making any transactions.
+                </TYPE.subHeader>
+              </AutoColumn>
+            </YellowCard>
+          )}
+          {importedTokenOutput && (
+            <YellowCard>
+              <AutoColumn gap="10px">
+                <TYPE.mediumHeader>Token imported via address</TYPE.mediumHeader>
+                <AutoRow gap="4px">
+                  <TokenLogo address={tokens[Field.OUTPUT]?.address || ''} />
+                  <TYPE.body>({tokens[Field.OUTPUT]?.symbol})</TYPE.body>
+                  <Link href={getEtherscanLink(chainId, tokens[Field.OUTPUT]?.address, 'address')}>
+                    (View on Etherscan)
+                  </Link>
+                </AutoRow>
+                <TYPE.subHeader>
+                  Please verify the legitimacy of this token before making any transactions.
+                </TYPE.subHeader>
+              </AutoColumn>
+            </YellowCard>
+          )}
+          {warningHigh && (
+            <GreyCard>
+              <AutoColumn gap="12px">
+                <RowBetween>
+                  <Text fontWeight={500}>Slippage Warning</Text>
+                  <QuestionHelper text="" />
+                </RowBetween>
+                <Text color="#565A69" lineHeight="145.23%;">
+                  This trade will move the price by {slippageFromTrade.toFixed(2)}%. This pool probably doesn’t have
+                  enough liquidity. Are you sure you want to continue this trade?
+                </Text>
+              </AutoColumn>
+            </GreyCard>
+          )}
+        </AutoColumn>
+      </FixedBottom>
     </Wrapper>
   )
 }

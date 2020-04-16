@@ -44,6 +44,24 @@ export const ButtonPrimary = styled(Base)`
   }
 `
 
+export const ButtonLight = styled(Base)`
+  background-color: ${({ theme }) => theme.blue5};
+  color: ${({ theme }) => theme.blue1};
+  font-size: 20px;
+  font-weight: 500;
+  &:focus {
+    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.05, theme.blue5)};
+    background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.blue5)};
+  }
+  &:hover {
+    background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.blue5)};
+  }
+  &:active {
+    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.1, theme.blue5)};
+    background-color: ${({ theme, disabled }) => !disabled && darken(0.1, theme.blue5)};
+  }
+`
+
 export const ButtonSecondary = styled(Base)`
   background-color: #ebf4ff;
   color: #2172e5;
@@ -72,8 +90,6 @@ export const ButtonSecondary = styled(Base)`
 export const ButtonPink = styled(Base)`
   background-color: ${({ theme }) => theme.pink2};
   color: white;
-
-  padding: 10px;
 
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.pink2)};

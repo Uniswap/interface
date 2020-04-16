@@ -105,10 +105,11 @@ const PaddedItem = styled(RowBetween)`
 `
 
 const MenuItem = styled(PaddedItem)`
-  cursor: pointer;
+  cursor: ${({ disabled }) => !disabled && 'pointer'};
   :hover {
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
   }
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `
 // filters on results
 const FILTERS = {
@@ -132,6 +133,7 @@ function SearchModal({
 
   const allTokens = useAllTokens()
   const allPairs = useAllPairs()
+
   const allBalances = useAllBalances()
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -175,9 +177,6 @@ function SearchModal({
         }
       })
       .map(k => {
-        if (k === hiddenToken) {
-          return false
-        }
         return {
           name: allTokens[k].name,
           symbol: allTokens[k].symbol,
@@ -185,7 +184,7 @@ function SearchModal({
           balance: allBalances?.[account]?.[k]
         }
       })
-  }, [allTokens, allBalances, account, sortDirection, hiddenToken])
+  }, [allTokens, allBalances, account, sortDirection])
 
   const filteredTokenList = useMemo(() => {
     return tokenList.filter(tokenEntry => {
@@ -350,7 +349,17 @@ function SearchModal({
       const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
 
       return (
-        <MenuItem key={address} onClick={() => (zeroBalance ? _onTokenSelect(address, true) : _onTokenSelect(address))}>
+        <MenuItem
+          key={address}
+          onClick={() =>
+            hiddenToken && hiddenToken === address
+              ? () => {}
+              : zeroBalance
+              ? _onTokenSelect(address, true)
+              : _onTokenSelect(address)
+          }
+          disabled={hiddenToken && hiddenToken === address}
+        >
           <RowFixed>
             <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }} />
             <Column>
@@ -428,7 +437,7 @@ function SearchModal({
           </RowBetween>
           <Input
             type={'text'}
-            placeholder={'Search name or address'}
+            placeholder={t('tokenSearchPlaceholder')}
             value={searchQuery}
             ref={inputRef}
             onChange={onInput}
@@ -447,6 +456,7 @@ function SearchModal({
                   </StyledLink>
                 </Text>
               )}
+              {filterType === 'tokens' && <Text>Token Symbol</Text>}
             </div>
             <div />
             <Filter title="Your Balances" filter={FILTERS.BALANCES} />

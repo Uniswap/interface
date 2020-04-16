@@ -5,6 +5,7 @@ import { INITIAL_TOKENS_CONTEXT } from './Tokens'
 import { ChainId, WETH, Token, TokenAmount, Pair, JSBI } from '@uniswap/sdk'
 
 const UPDATE = 'UPDATE'
+const UPDATE_PAIR_ENTITY = 'UPDATE_PAIR_ENTITY'
 
 const ALL_PAIRS: [Token, Token][] = [
   [
@@ -12,8 +13,8 @@ const ALL_PAIRS: [Token, Token][] = [
     INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735'] //dai
   ],
   [
-    INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735'],
-    INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0x8ab15C890E5C03B5F240f2D146e3DF54bEf3Df44']
+    INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735'], // dai
+    INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0x8ab15C890E5C03B5F240f2D146e3DF54bEf3Df44'] // mkr
   ]
 ]
 
@@ -22,16 +23,20 @@ const PAIR_MAP: {
 } = ALL_PAIRS.reduce((pairMap, [tokenA, tokenB]) => {
   const tokens: [Token, Token] = tokenA?.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
   // ensure exchanges are unique
-  if (pairMap?.[tokens[0].chainId]?.[tokens[0].address]?.[tokens[1].address] !== undefined)
+  if (pairMap?.[tokens[0].chainId]?.[tokens[0].address]?.[tokens[1].address]?.address !== undefined)
     throw Error(`Duplicate exchange: ${tokenA} ${tokenB}`)
   return {
     ...pairMap,
     [tokens[0].chainId]: {
       ...pairMap?.[tokens[0].chainId],
-      [tokens[0].address]: {
-        ...pairMap?.[tokens[0].chainId]?.[tokens[0].address],
-        [tokens[1].address]: Pair.getAddress(...tokens)
-      }
+      addresses: {
+        ...pairMap?.[tokens[0].chainId]?.['addresses'],
+        [tokens[0].address]: {
+          ...pairMap?.[tokens[0].chainId]?.[tokens[0].address],
+          [tokens[1].address]: Pair.getAddress(...tokens)
+        }
+      },
+      entities: {}
     }
   }
 }, {})
@@ -53,9 +58,25 @@ function reducer(state, { type, payload }) {
         ...state,
         [tokensSorted[0].chainId]: {
           ...state?.[tokensSorted[0].chainId],
-          [tokensSorted[0].address]: {
-            ...state?.[tokensSorted[0].chainId]?.[tokensSorted[0].address],
-            [tokensSorted[1].address]: Pair.getAddress(tokensSorted[0], tokensSorted[1])
+          addresses: {
+            ...state?.[tokensSorted[0].chainId]['addresses'],
+            [tokensSorted[0].address]: {
+              ...state?.[tokensSorted[0].chainId]?.[tokensSorted[0].address],
+              [tokensSorted[1].address]: Pair.getAddress(tokensSorted[0], tokensSorted[1])
+            }
+          }
+        }
+      }
+    }
+    case UPDATE_PAIR_ENTITY: {
+      const { pairAddress, pair, chainId } = payload
+      return {
+        ...state,
+        [chainId]: {
+          ...state?.[chainId],
+          entities: {
+            ...state?.[chainId]?.['entities'],
+            [pairAddress]: pair
           }
         }
       }
@@ -73,8 +94,16 @@ export default function Provider({ children }) {
     dispatch({ type: UPDATE, payload: { chainId, tokens } })
   }, [])
 
+  const updatePairEntity = useCallback((pairAddress, pair, chainId) => {
+    dispatch({ type: UPDATE_PAIR_ENTITY, payload: { pairAddress, pair, chainId } })
+  }, [])
+
   return (
-    <PairContext.Provider value={useMemo(() => [state, { update }], [state, update])}>{children}</PairContext.Provider>
+    <PairContext.Provider
+      value={useMemo(() => [state, { update, updatePairEntity }], [state, update, updatePairEntity])}
+    >
+      {children}
+    </PairContext.Provider>
   )
 }
 
@@ -84,7 +113,7 @@ export function usePairAddress(tokenA?: Token, tokenB?: Token): string | undefin
 
   const tokens: [Token, Token] = tokenA && tokenB && tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
 
-  const address = state?.[chainId]?.[tokens[0]?.address]?.[tokens[1]?.address]
+  const address = state?.[chainId]?.['addresses']?.[tokens[0]?.address]?.[tokens[1]?.address]
 
   useEffect(() => {
     if (address === undefined && tokenA && tokenB) {
@@ -97,36 +126,29 @@ export function usePairAddress(tokenA?: Token, tokenB?: Token): string | undefin
 }
 
 export function usePair(tokenA?: Token, tokenB?: Token): Pair | undefined {
+  const { chainId } = useWeb3React()
+  const [state, { updatePairEntity }] = usePairContext()
+
   const address = usePairAddress(tokenA, tokenB)
+  const pair = state?.[chainId]?.['entities']?.[address]
+
   const tokenAmountA = useAddressBalance(address, tokenA)
   const tokenAmountB = useAddressBalance(address, tokenB)
-  const [pair, setPair] = useState<Pair>()
 
   useEffect(() => {
     if (!pair && tokenAmountA && tokenAmountB) {
-      setPair(new Pair(tokenAmountA, tokenAmountB))
+      updatePairEntity(address, new Pair(tokenAmountA, tokenAmountB), chainId)
     }
-  }, [pair, tokenAmountA, tokenAmountB])
+  }, [pair, tokenAmountA, tokenAmountB, address, updatePairEntity, chainId])
 
-  return useMemo(() => {
-    return pair
-  }, [pair])
-}
-
-export function useAllPairsRaw() {
-  const { chainId } = useWeb3React()
-  const [state] = usePairContext()
-
-  const allExchangeDetails = state?.[chainId]
-
-  return allExchangeDetails
+  return pair
 }
 
 export function useAllPairs() {
   const { chainId } = useWeb3React()
   const [state] = usePairContext()
 
-  const allPairDetails = state?.[chainId]
+  const allPairDetails = state?.[chainId]?.['addresses']
 
   const allPairs = useMemo(() => {
     if (!allPairDetails) {
@@ -136,10 +158,14 @@ export function useAllPairs() {
     Object.keys(allPairDetails).map(token0Address => {
       return Object.keys(allPairDetails[token0Address]).map(token1Address => {
         const pairAddress = allPairDetails[token0Address][token1Address]
-        return (formattedExchanges[pairAddress] = {
-          token0: token0Address,
-          token1: token1Address
-        })
+        if (pairAddress) {
+          return (formattedExchanges[pairAddress] = {
+            token0: token0Address,
+            token1: token1Address
+          })
+        } else {
+          return null
+        }
       })
     })
     return formattedExchanges
