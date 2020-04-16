@@ -35,7 +35,7 @@ const PAIR_MAP: {
       [ADDRESSES_KEY]: {
         ...pairMap?.[tokens[0].chainId]?.[ADDRESSES_KEY],
         [tokens[0].address]: {
-          ...pairMap?.[tokens[0].chainId]?.[tokens[0].address],
+          ...pairMap?.[tokens[0].chainId]?.[ADDRESSES_KEY]?.[tokens[0].address],
           [tokens[1].address]: Pair.getAddress(...tokens)
         }
       },
