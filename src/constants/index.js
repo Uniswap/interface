@@ -1,4 +1,4 @@
-import { injected, walletconnect, walletlink, fortmatic, portis } from '../connectors'
+import { injected, walletconnect, walletlink, fortmatic, portis, torus } from '../connectors'
 
 export const FACTORY_ADDRESSES = {
   1: '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95',
@@ -88,6 +88,15 @@ export const SUPPORTED_WALLETS =
             description: 'Login using Portis hosted wallet',
             href: null,
             color: '#4A6C9B',
+            mobile: true
+          },
+          Torus: {
+            connector: torus,
+            name: 'Torus',
+            iconName: 'torus.png',
+            description: 'Login via Google, Facebook and others',
+            href: null,
+            color: '#5495F7',
             mobile: true
           }
         }

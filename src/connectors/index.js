@@ -2,6 +2,7 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { PortisConnector } from '@web3-react/portis-connector'
+import { TorusConnector } from '@web3-react/torus-connector'
 
 import { NetworkConnector } from './Network'
 import { FortmaticConnector } from './Fortmatic'
@@ -39,6 +40,13 @@ export const fortmatic = new FortmaticConnector({
 export const portis = new PortisConnector({
   dAppId: process.env.REACT_APP_PORTIS_ID,
   networks: [1]
+})
+
+export const torus = new TorusConnector({
+  chainId: 1,
+  initOptions: {
+    showTorusButton: false
+  }
 })
 
 // mainnet only
