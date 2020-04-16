@@ -6,6 +6,9 @@ import { isAddress, getTokenName, getTokenSymbol, getTokenDecimals, safeAccess }
 const UPDATE = 'UPDATE'
 
 export const ALL_TOKENS = [
+  //Mainnet Tokens
+  WETH[ChainId.MAINNET],
+
   // Rinkeby Tokens
   WETH[ChainId.RINKEBY],
   new Token(ChainId.RINKEBY, '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735', 18, 'DAI', 'Dai Stablecoin'),
