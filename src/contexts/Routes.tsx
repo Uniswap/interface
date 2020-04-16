@@ -77,8 +77,8 @@ export function useRoute(tokenA: Token, tokenB: Token) {
   const defaultPair = usePair(tokenA, tokenB)
 
   // get token<->WETH pairs
-  const aToETH = usePair(tokenA && !tokenA.equals(WETH[chainId]) ? tokenA : null, WETH[chainId])
-  const bToETH = usePair(tokenB && !tokenB.equals(WETH[chainId]) ? tokenB : null, WETH[chainId])
+  const aToETH = usePair(tokenA && chainId && !tokenA.equals(WETH[chainId]) ? tokenA : null, WETH[chainId])
+  const bToETH = usePair(tokenB && chainId && !tokenB.equals(WETH[chainId]) ? tokenB : null, WETH[chainId])
 
   // needs to route through WETH
   const requiresHop =
