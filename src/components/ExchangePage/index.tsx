@@ -265,10 +265,6 @@ function ExchangePage({ sendingInput = false, history }) {
 
   const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
 
-  // console.log(pair?.token0?.symbol)
-  // console.log(pair?.token1?.symbol)
-  // console.log('--------------')
-
   const route = useRoute(tokens[Field.INPUT], tokens[Field.OUTPUT])
   // const route = useRoute(pair)
   const noRoute: boolean = !route && !!tokens[Field.INPUT] && !!tokens[Field.OUTPUT]

@@ -33,8 +33,6 @@ function Supply({ history }) {
   // initiate listener for LP balances
   useAccountLPBalances(account)
 
-  // console.log(allPairs)
-
   const filteredExchangeList = Object.keys(allPairs)
     .filter((pairAddress, i) => {
       return (
