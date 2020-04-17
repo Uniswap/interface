@@ -146,16 +146,20 @@ export function usePopups() {
 
   const currentPopups = state[POPUP_LIST]
 
-  function addPopup(content) {
-    const newItem = {
-      show: true,
-      key: index,
-      content: content
-    }
-    currentPopups.push(newItem)
-    setPopups(currentPopups)
-    setIndex(index + 1)
-  }
+  const addPopup = useCallback(
+    content => {
+      const newItem = {
+        show: true,
+        key: index,
+        content: content
+      }
+      currentPopups.push(newItem)
+      setPopups(currentPopups)
+      setIndex(index + 1)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [setPopups]
+  )
 
   function removePopup(key) {
     currentPopups.map(item => {

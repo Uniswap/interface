@@ -1,16 +1,11 @@
-import React, { Suspense, lazy, useState } from 'react'
+import React, { Suspense, lazy } from 'react'
 import styled from 'styled-components'
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
-import { Text } from 'rebass'
 import Header from '../components/Header'
 import NavigationTabs from '../components/NavigationTabs'
 import Web3ReactManager from '../components/Web3ReactManager'
-import { TYPE } from '../theme'
-import { Hover } from '../theme/components'
-import { AutoColumn } from '../components/Column'
-import { PinkCard } from '../components/Card'
-import { ButtonPink } from '../components/Button'
+
 import { isAddress, getAllQueryParams } from '../utils'
 
 const Swap = lazy(() => import('./Swap'))
@@ -63,8 +58,6 @@ const Body = styled.div`
 export default function App() {
   const params = getAllQueryParams()
 
-  const [showMigrationMessage, toggleShowMigrationMessage] = useState(true)
-
   return (
     <>
       <Suspense fallback={null}>
@@ -73,18 +66,6 @@ export default function App() {
             <Header />
           </HeaderWrapper>
           <BodyWrapper>
-            {showMigrationMessage && (
-              <PinkCard padding="20px">
-                <AutoColumn justify={'center'} gap={'20px'}>
-                  <TYPE.largeHeader>Uniswap has upgraded.</TYPE.largeHeader>
-                  <Text textAlign="center">Are you a liquidity provider? Upgrade now using the migration helper.</Text>
-                  <ButtonPink width={'265px'}>Migrate your liquidity </ButtonPink>
-                  <Hover onClick={() => toggleShowMigrationMessage(false)}>
-                    <Text textAlign="center">Dismiss</Text>
-                  </Hover>
-                </AutoColumn>
-              </PinkCard>
-            )}
             <Body>
               <Web3ReactManager>
                 <BrowserRouter>
@@ -136,8 +117,8 @@ export default function App() {
                           let t0
                           let t1
                           if (tokens) {
-                            t0 = tokens[0] === 'ETH' ? 'ETH' : isAddress(tokens[0])
-                            t1 = tokens[1] === 'ETH' ? 'ETH' : isAddress(tokens[1])
+                            t0 = tokens?.[0] === 'ETH' ? 'ETH' : isAddress(tokens[0])
+                            t1 = tokens?.[1] === 'ETH' ? 'ETH' : isAddress(tokens[1])
                           }
                           if (t0 && t1) {
                             return <Add params={params} token0={t0} token1={t1} />
@@ -155,8 +136,8 @@ export default function App() {
                           let t0
                           let t1
                           if (tokens) {
-                            t0 = tokens[0] === 'ETH' ? 'ETH' : isAddress(tokens[0])
-                            t1 = tokens[1] === 'ETH' ? 'ETH' : isAddress(tokens[1])
+                            t0 = tokens?.[0] === 'ETH' ? 'ETH' : isAddress(tokens[0])
+                            t1 = tokens?.[1] === 'ETH' ? 'ETH' : isAddress(tokens[1])
                           }
                           if (t0 && t1) {
                             return <Remove params={params} token0={t0} token1={t1} />

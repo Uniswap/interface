@@ -43,8 +43,30 @@ const Wrapper = styled.div`
 
 const FixedBottom = styled.div`
   position: absolute;
-  bottom: -220px;
+  top: 100px;
   width: 100%;
+`
+
+// styles
+const Dots = styled.span`
+  &::after {
+    display: inline-block;
+    animation: ellipsis 1.25s infinite;
+    content: '.';
+    width: 1em;
+    text-align: left;
+  }
+  @keyframes ellipsis {
+    0% {
+      content: '.';
+    }
+    33% {
+      content: '..';
+    }
+    66% {
+      content: '...';
+    }
+  }
 `
 
 enum Field {
@@ -347,14 +369,6 @@ export default function AddLiquidity({ token0, token1 }) {
       setGeneralError('Enter an amount')
       setIsValid(false)
     }
-    if (showInputUnlock) {
-      setInputError('Approve Amount')
-      setIsValid(false)
-    }
-    if (showOutputUnlock) {
-      setOutputError('Approve Amount')
-      setIsValid(false)
-    }
     if (
       parsedAmounts?.[Field.INPUT] &&
       userBalances?.[Field.INPUT] &&
@@ -541,7 +555,7 @@ export default function AddLiquidity({ token0, token1 }) {
           </Text>
         </ButtonPrimary>
         <TYPE.italic fontSize={12} color="#565A69" textAlign="center">
-          {`Output is estimated. You will receive at least ${liquidityMinted?.toFixed(6)} UNI ${
+          {`Output is estimated. You will receive at least ${liquidityMinted?.toSignificant(6)} UNI ${
             tokens[Field.INPUT]?.symbol
           }/${tokens[Field.OUTPUT]?.symbol} or the transaction will revert.`}
         </TYPE.italic>
@@ -627,44 +641,56 @@ export default function AddLiquidity({ token0, token1 }) {
             </div>
           </RowBetween>
         )}
-        {showOutputUnlock ? (
-          <ButtonLight
-            onClick={() => {
-              approveAmount(Field.OUTPUT)
-            }}
-          >
-            {pendingApprovalOutput ? 'Waiting for unlock' : 'Unlock ' + tokens[Field.OUTPUT]?.symbol}
-          </ButtonLight>
-        ) : showInputUnlock ? (
-          <ButtonLight
-            onClick={() => {
-              approveAmount(Field.INPUT)
-            }}
-          >
-            {pendingApprovalInput ? 'Waiting for unlock' : 'Unlock ' + tokens[Field.INPUT]?.symbol}
-          </ButtonLight>
-        ) : (
-          <ButtonPrimary
-            onClick={() => {
-              setShowConfirm(true)
-            }}
-            disabled={!isValid}
-          >
-            <Text fontSize={20} fontWeight={500}>
-              {generalError ? generalError : inputError ? inputError : outputError ? outputError : 'Supply'}
-            </Text>
-          </ButtonPrimary>
-        )}
-        {!noLiquidity && (
-          <FixedBottom>
-            <PositionCard
-              pairAddress={pair?.liquidityToken?.address}
-              token0={tokens[Field.INPUT]}
-              token1={tokens[Field.OUTPUT]}
-              minimal={true}
-            />
-          </FixedBottom>
-        )}
+        <div style={{ position: 'relative' }}>
+          {showOutputUnlock ? (
+            <ButtonLight
+              onClick={() => {
+                !pendingApprovalOutput && approveAmount(Field.OUTPUT)
+              }}
+              disabled={pendingApprovalOutput}
+            >
+              {pendingApprovalOutput ? (
+                <Dots>Unlocking {tokens[Field.OUTPUT]?.symbol}</Dots>
+              ) : (
+                'Unlock ' + tokens[Field.OUTPUT]?.symbol
+              )}
+            </ButtonLight>
+          ) : showInputUnlock ? (
+            <ButtonLight
+              onClick={() => {
+                approveAmount(Field.INPUT)
+              }}
+              disabled={pendingApprovalInput}
+            >
+              {pendingApprovalInput ? (
+                <Dots>Unlocking {tokens[Field.INPUT]?.symbol}</Dots>
+              ) : (
+                'Unlock ' + tokens[Field.INPUT]?.symbol
+              )}
+            </ButtonLight>
+          ) : (
+            <ButtonPrimary
+              onClick={() => {
+                setShowConfirm(true)
+              }}
+              disabled={!isValid}
+            >
+              <Text fontSize={20} fontWeight={500}>
+                {generalError ? generalError : inputError ? inputError : outputError ? outputError : 'Supply'}
+              </Text>
+            </ButtonPrimary>
+          )}
+          {!noLiquidity && (
+            <FixedBottom>
+              <PositionCard
+                pairAddress={pair?.liquidityToken?.address}
+                token0={tokens[Field.INPUT]}
+                token1={tokens[Field.OUTPUT]}
+                minimal={true}
+              />
+            </FixedBottom>
+          )}
+        </div>
       </AutoColumn>
     </Wrapper>
   )

@@ -56,6 +56,23 @@ export function getQueryParam(windowLocation, name) {
 
 export function getAllQueryParams() {
   let params = {}
+
+  params.inputTokenAddress = isAddress(getQueryParam(window.location, 'inputTokenAddress'))
+    ? isAddress(getQueryParam(window.location, 'inputTokenAddress'))
+    : ''
+
+  params.outputTokenAddress = isAddress(getQueryParam(window.location, 'outputTokenAddress'))
+    ? isAddress(getQueryParam(window.location, 'outputTokenAddress'))
+    : ''
+
+  params.inputTokenAmount = !isNaN(getQueryParam(window.location, 'inputTokenAmount'))
+    ? getQueryParam(window.location, 'inputTokenAmount')
+    : ''
+
+  params.outputTokenAmount = !isNaN(getQueryParam(window.location, 'outputTokenAmount'))
+    ? getQueryParam(window.location, 'outputTokenAmount')
+    : ''
+
   return params
 }
 

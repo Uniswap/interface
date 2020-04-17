@@ -11,11 +11,17 @@ import { Link } from '../../theme'
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
 
+import { TYPE } from '../../theme'
+import { Hover } from '../../theme/components'
+import { PinkCard } from '../Card'
+import { ButtonPink } from '../Button'
+
 import { WETH } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
 
 import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
+import { useMigrationMessageManager } from '../../contexts/LocalStorage'
 import { useWalletModalToggle, usePopups } from '../../contexts/Application'
 
 const HeaderFrame = styled.div`
@@ -96,6 +102,7 @@ export default function Header() {
   const toggleWalletModal = useWalletModalToggle()
 
   const [activePopups, , removePopup] = usePopups()
+  const [showMessage, hideMigrationMessage] = useMigrationMessageManager()
 
   return (
     <HeaderFrame>
@@ -151,6 +158,18 @@ export default function Header() {
             </Popup>
           )
         })}
+        {showMessage && (
+          <PinkCard padding="20px" style={{ zIndex: '2' }}>
+            <AutoColumn justify={'center'} gap={'20px'}>
+              <TYPE.largeHeader>Uniswap has upgraded.</TYPE.largeHeader>
+              <Text textAlign="center">Are you a liquidity provider? Upgrade now using the migration helper.</Text>
+              <ButtonPink width={'265px'}>Migrate your liquidity </ButtonPink>
+              <Hover onClick={() => hideMigrationMessage()}>
+                <Text textAlign="center">Dismiss</Text>
+              </Hover>
+            </AutoColumn>
+          </PinkCard>
+        )}
       </FixedPopupColumn>
     </HeaderFrame>
   )

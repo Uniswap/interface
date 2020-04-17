@@ -55,8 +55,14 @@ const ArrowWrapper = styled.div`
 
 const FixedBottom = styled.div`
   position: absolute;
-  bottom: -200px;
+  top: 100px;
   width: 100%;
+  margin-bottom: 40px;
+`
+
+const BottomGrouping = styled.div`
+  margin-top: 20px;
+  position: relative;
 `
 
 const ErrorText = styled(Text)`
@@ -101,6 +107,28 @@ const MaxButton = styled.button`
   }
 `
 
+// styles
+const Dots = styled.span`
+  &::after {
+    display: inline-block;
+    animation: ellipsis 1.25s infinite;
+    content: '.';
+    width: 1em;
+    text-align: left;
+  }
+  @keyframes ellipsis {
+    0% {
+      content: '.';
+    }
+    33% {
+      content: '..';
+    }
+    66% {
+      content: '...';
+    }
+  }
+`
+
 enum Field {
   INPUT,
   OUTPUT
@@ -117,15 +145,15 @@ interface SwapState {
   }
 }
 
-function initializeSwapState(inputAddress?: string, outputAddress?: string): SwapState {
+function initializeSwapState({ inputTokenAddress, outputTokenAddress, typedValue, independentField }): SwapState {
   return {
-    independentField: Field.INPUT,
-    typedValue: '',
+    independentField: independentField,
+    typedValue: typedValue,
     [Field.INPUT]: {
-      address: inputAddress
+      address: inputTokenAddress
     },
     [Field.OUTPUT]: {
-      address: outputAddress
+      address: outputTokenAddress
     }
   }
 }
@@ -222,7 +250,7 @@ const DEFAULT_DEADLINE_FROM_NOW = 60 * 15
 const ALLOWED_SLIPPAGE_MEDIUM = 100
 const ALLOWED_SLIPPAGE_HIGH = 500
 
-function ExchangePage({ sendingInput = false, history }) {
+function ExchangePage({ sendingInput = false, history, initialCurrency, params }) {
   // text translation
   // const { t } = useTranslation()
 
@@ -238,8 +266,34 @@ function ExchangePage({ sendingInput = false, history }) {
   const [sendingWithSwap, setSendingWithSwap] = useState<boolean>(false)
   const [recipient, setRecipient] = useState<string>('')
 
-  // trade details
-  const [state, dispatch] = useReducer(reducer, WETH[chainId].address, initializeSwapState)
+  // trade details, check query params for initial state
+  const [state, dispatch] = useReducer(
+    reducer,
+    {
+      independentField: params.outputTokenAddress && !params.inputTokenAddress ? Field.OUTPUT : Field.INPUT,
+      inputTokenAddress: params.inputTokenAddress
+        ? params.inputTokenAddress
+        : initialCurrency
+        ? initialCurrency
+        : WETH[chainId].address,
+      outputTokenAddress: params.outputTokenAddress ? params.outputTokenAddress : '',
+      typedValue:
+        params.inputTokenAddress && !params.outputTokenAddress
+          ? params.inputTokenAmount
+            ? params.inputTokenAmount
+            : ''
+          : !params.inputTokenAddress && params.outputTokenAddress
+          ? params.outputTokenAmount
+            ? params.outputTokenAmount
+            : ''
+          : params.inputTokenAddress && params.outputTokenAddress
+          ? params.inputTokenAmount
+            ? params.inputTokenAmount
+            : ''
+          : ''
+    },
+    initializeSwapState
+  )
   const { independentField, typedValue, ...fieldData } = state
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
   const tradeType: TradeType = independentField === Field.INPUT ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT
@@ -263,10 +317,11 @@ function ExchangePage({ sendingInput = false, history }) {
   const importedTokenOutput =
     tokens[Field.OUTPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.OUTPUT]?.address]
 
+  // entities for swap
   const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
-
   const route = useRoute(tokens[Field.INPUT], tokens[Field.OUTPUT])
-  // const route = useRoute(pair)
+
+  // check for invalid selection
   const noRoute: boolean = !route && !!tokens[Field.INPUT] && !!tokens[Field.OUTPUT]
   const emptyReserves = pair && JSBI.equal(JSBI.BigInt(0), pair.reserve0.raw)
 
@@ -692,16 +747,6 @@ function ExchangePage({ sendingInput = false, history }) {
       setIsValid(false)
     }
 
-    if (showInputUnlock && !(sending && !sendingWithSwap)) {
-      setInputError('Approval Needed')
-      setIsValid(false)
-    }
-
-    if (showOutputUnlock && !ignoreOutput) {
-      setOutputError('Approval Needed')
-      setIsValid(false)
-    }
-
     if (
       userBalances[Field.INPUT] &&
       parsedAmounts[Field.INPUT] &&
@@ -1050,7 +1095,8 @@ function ExchangePage({ sendingInput = false, history }) {
             />
           </AutoColumn>
         )}
-
+      </AutoColumn>
+      <BottomGrouping>
         {noRoute ? (
           <RowBetween style={{ margin: '10px 0' }}>
             <TYPE.main>No exchange for this pair.</TYPE.main>
@@ -1070,7 +1116,11 @@ function ExchangePage({ sendingInput = false, history }) {
             }}
             disabled={pendingApprovalOutput}
           >
-            {pendingApprovalOutput ? 'Waiting for unlock' : 'Unlock ' + tokens[Field.OUTPUT]?.symbol}
+            {pendingApprovalOutput ? (
+              <Dots>Unlocking {tokens[Field.OUTPUT]?.symbol}</Dots>
+            ) : (
+              'Unlock ' + tokens[Field.OUTPUT]?.symbol
+            )}
           </ButtonLight>
         ) : showInputUnlock ? (
           <ButtonLight
@@ -1079,9 +1129,11 @@ function ExchangePage({ sendingInput = false, history }) {
             }}
             disabled={pendingApprovalInput}
           >
-            {!pendingApprovalInput && pendingApprovalInput
-              ? 'Waiting for unlock'
-              : 'Unlock ' + tokens[Field.INPUT]?.symbol}
+            {pendingApprovalInput ? (
+              <Dots>Unlocking {tokens[Field.INPUT]?.symbol}</Dots>
+            ) : (
+              'Unlock ' + tokens[Field.INPUT]?.symbol
+            )}
           </ButtonLight>
         ) : (
           <ButtonError
@@ -1112,59 +1164,59 @@ function ExchangePage({ sendingInput = false, history }) {
             </Text>
           </ButtonError>
         )}
-      </AutoColumn>
-      <FixedBottom>
-        <AutoColumn gap="20px">
-          {importedTokenInput && (
-            <YellowCard>
-              <AutoColumn gap="10px">
-                <TYPE.mediumHeader>Token imported via address</TYPE.mediumHeader>
-                <AutoRow gap="4px">
-                  <TokenLogo address={tokens[Field.INPUT]?.address || ''} />
-                  <TYPE.body>({tokens[Field.INPUT]?.symbol})</TYPE.body>
-                  <Link href={getEtherscanLink(chainId, tokens[Field.INPUT]?.address, 'address')}>
-                    (View on Etherscan)
-                  </Link>
-                </AutoRow>
-                <TYPE.subHeader>
-                  Please verify the legitimacy of this token before making any transactions.
-                </TYPE.subHeader>
-              </AutoColumn>
-            </YellowCard>
-          )}
-          {importedTokenOutput && (
-            <YellowCard>
-              <AutoColumn gap="10px">
-                <TYPE.mediumHeader>Token imported via address</TYPE.mediumHeader>
-                <AutoRow gap="4px">
-                  <TokenLogo address={tokens[Field.OUTPUT]?.address || ''} />
-                  <TYPE.body>({tokens[Field.OUTPUT]?.symbol})</TYPE.body>
-                  <Link href={getEtherscanLink(chainId, tokens[Field.OUTPUT]?.address, 'address')}>
-                    (View on Etherscan)
-                  </Link>
-                </AutoRow>
-                <TYPE.subHeader>
-                  Please verify the legitimacy of this token before making any transactions.
-                </TYPE.subHeader>
-              </AutoColumn>
-            </YellowCard>
-          )}
-          {warningHigh && (
-            <GreyCard>
-              <AutoColumn gap="12px">
-                <RowBetween>
-                  <Text fontWeight={500}>Slippage Warning</Text>
-                  <QuestionHelper text="" />
-                </RowBetween>
-                <Text color="#565A69" lineHeight="145.23%;">
-                  This trade will move the price by {slippageFromTrade.toFixed(2)}%. This pool probably doesn’t have
-                  enough liquidity. Are you sure you want to continue this trade?
-                </Text>
-              </AutoColumn>
-            </GreyCard>
-          )}
-        </AutoColumn>
-      </FixedBottom>
+        <FixedBottom>
+          <AutoColumn gap="20px">
+            {importedTokenInput && (
+              <YellowCard>
+                <AutoColumn gap="10px">
+                  <TYPE.mediumHeader>Token imported via address</TYPE.mediumHeader>
+                  <AutoRow gap="4px">
+                    <TokenLogo address={tokens[Field.INPUT]?.address || ''} />
+                    <TYPE.body>({tokens[Field.INPUT]?.symbol})</TYPE.body>
+                    <Link href={getEtherscanLink(chainId, tokens[Field.INPUT]?.address, 'address')}>
+                      (View on Etherscan)
+                    </Link>
+                  </AutoRow>
+                  <TYPE.subHeader>
+                    Please verify the legitimacy of this token before making any transactions.
+                  </TYPE.subHeader>
+                </AutoColumn>
+              </YellowCard>
+            )}
+            {importedTokenOutput && (
+              <YellowCard>
+                <AutoColumn gap="10px">
+                  <TYPE.mediumHeader>Token imported via address</TYPE.mediumHeader>
+                  <AutoRow gap="4px">
+                    <TokenLogo address={tokens[Field.OUTPUT]?.address || ''} />
+                    <TYPE.body>({tokens[Field.OUTPUT]?.symbol})</TYPE.body>
+                    <Link href={getEtherscanLink(chainId, tokens[Field.OUTPUT]?.address, 'address')}>
+                      (View on Etherscan)
+                    </Link>
+                  </AutoRow>
+                  <TYPE.subHeader>
+                    Please verify the legitimacy of this token before making any transactions.
+                  </TYPE.subHeader>
+                </AutoColumn>
+              </YellowCard>
+            )}
+            {warningHigh && (
+              <GreyCard>
+                <AutoColumn gap="12px">
+                  <RowBetween>
+                    <Text fontWeight={500}>Slippage Warning</Text>
+                    <QuestionHelper text="" />
+                  </RowBetween>
+                  <Text color="#565A69" lineHeight="145.23%;">
+                    This trade will move the price by {slippageFromTrade.toFixed(2)}%. This pool probably doesn’t have
+                    enough liquidity. Are you sure you want to continue this trade?
+                  </Text>
+                </AutoColumn>
+              </GreyCard>
+            )}
+          </AutoColumn>
+        </FixedBottom>
+      </BottomGrouping>
     </Wrapper>
   )
 }

@@ -62,7 +62,7 @@ function reducer(state, { type, payload }) {
         [tokensSorted[0].chainId]: {
           ...state?.[tokensSorted[0].chainId],
           [ADDRESSES_KEY]: {
-            ...state?.[tokensSorted[0].chainId][ADDRESSES_KEY],
+            ...state?.[tokensSorted[0].chainId]?.[ADDRESSES_KEY],
             [tokensSorted[0].address]: {
               ...state?.[tokensSorted[0].chainId]?.[ADDRESSES_KEY]?.[tokensSorted[0].address],
               [tokensSorted[1].address]: Pair.getAddress(tokensSorted[0], tokensSorted[1])

@@ -5,7 +5,7 @@ import { isAddress, getTokenName, getTokenSymbol, getTokenDecimals, safeAccess }
 
 const UPDATE = 'UPDATE'
 
-export const ALL_TOKENS = [
+export let ALL_TOKENS = [
   //Mainnet Tokens
   WETH[ChainId.MAINNET],
 
@@ -13,7 +13,7 @@ export const ALL_TOKENS = [
   WETH[ChainId.RINKEBY],
   new Token(ChainId.RINKEBY, '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735', 18, 'DAI', 'Dai Stablecoin'),
   new Token(ChainId.RINKEBY, '0x8ab15C890E5C03B5F240f2D146e3DF54bEf3Df44', 18, 'IANV2', 'IAn V2 /Coin'),
-  new Token(ChainId.RINKEBY, '0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85', 18, 'MKR', 'Maker'),
+  // new Token(ChainId.RINKEBY, '0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85', 18, 'MKR', 'Maker'),
 
   //Kovan Tokens
   WETH[ChainId.KOVAN],
@@ -24,9 +24,21 @@ export const ALL_TOKENS = [
   new Token(ChainId.ROPSTEN, '0xaD6D458402F60fD3Bd25163575031ACDce07538D', 18, 'DAI', 'Dai Stablecoin'),
 
   //Goerli Tokens
-  WETH[ChainId.GÖRLI],
-  new Token(ChainId.GÖRLI, '0xaD6D458402F60fD3Bd25163575031ACDce07538D', 18, 'DAI', 'Dai Stablecoin')
+  WETH[ChainId.GÖRLI]
 ]
+
+/**
+ * @todo is there a better way to load these upfront?
+ */
+// add any tokens from local storage
+const savedList = window?.localStorage?.UNISWAP && JSON.parse(window?.localStorage?.UNISWAP)?.TOKEN_LIST
+if (savedList) {
+  const newTokens = Object.keys(savedList).map(key => {
+    const token = savedList[key]
+    return new Token(token.chainId, token.address, token.decimals, token.symbol, token.name)
+  })
+  ALL_TOKENS = ALL_TOKENS.concat(newTokens)
+}
 
 // only meant to be used in exchanges.ts!
 export const INITIAL_TOKENS_CONTEXT = ALL_TOKENS.reduce((tokenMap, token) => {
