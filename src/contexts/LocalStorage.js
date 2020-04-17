@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
-import { useWeb3React } from '../hooks'
 import { useAllTokens } from './Tokens'
 
 const UNISWAP = 'UNISWAP'
