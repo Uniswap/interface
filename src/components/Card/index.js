@@ -24,13 +24,13 @@ export const GreyCard = styled(Card)`
 export const YellowCard = styled(Card)`
   background-color: rgba(243, 190, 30, 0.3);
   color: ${({ theme }) => theme.yellow2};
-  fontweight: 500;
+  font-weight: 500;
 `
 
 export const PinkCard = styled(Card)`
   background-color: rgba(255, 0, 122, 0.03);
   color: ${({ theme }) => theme.pink2};
-  fontweight: 500;
+  font-weight: 500;
 `
 
 const BlueCardStyled = styled(Card)`

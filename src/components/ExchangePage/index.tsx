@@ -848,14 +848,16 @@ function ExchangePage({ sendingInput = false, history }) {
       return (
         <>
           {route && route.midPrice && !emptyReserves && <PriceBar />}
-          {/* <RowBetween>
-            <Text color="#565A69" fontWeight={500} fontSize={16}>
-              Slippage
-            </Text>
-            <ErrorText warningHigh={warningHigh} fontWeight={500}>
-              {slippageFromTrade && slippageFromTrade.toFixed(4)}%
-            </ErrorText>
-          </RowBetween> */}
+          {route && route.midPrice && !emptyReserves && (
+            <RowBetween>
+              <Text color="#565A69" fontWeight={500} fontSize={16}>
+                Slippage
+              </Text>
+              <ErrorText warningHigh={warningHigh} fontWeight={500}>
+                {slippageFromTrade && slippageFromTrade.toFixed(4)}%
+              </ErrorText>
+            </RowBetween>
+          )}
           <ButtonError onClick={onSwap} error={!!warningHigh} style={{ margin: '10px 0' }}>
             <Text fontSize={20} fontWeight={500}>
               {warningHigh ? (sending ? 'Send Anyway' : 'Swap Anyway') : sending ? 'Confirm Send' : 'Confirm Swap'}

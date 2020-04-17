@@ -36,8 +36,9 @@ const StyledMenuButton = styled.button`
   }
 
   svg {
-    width: 25px;
-    height: 24px;
+    margin-top: 2px;
+    /* width: 25px;
+    height: 24px; */
   }
 `
 

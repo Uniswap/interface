@@ -3,7 +3,6 @@ import styled from 'styled-components'
 
 import Row from '../Row'
 import Menu from '../Menu'
-import Logo from '../../assets/svg/logo.svg'
 import Card, { YellowCard } from '../Card'
 import Web3Status from '../Web3Status'
 import { X } from 'react-feather'
@@ -17,6 +16,9 @@ import { isMobile } from 'react-device-detect'
 import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useWalletModalToggle, usePopups } from '../../contexts/Application'
+
+import Logo from '../../assets/svg/logo.svg'
+import Wordmark from '../../assets/svg/wordmark.svg'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -69,7 +71,7 @@ const AccountElement = styled.div`
 const FixedPopupColumn = styled(AutoColumn)`
   position: absolute;
   top: 80px;
-  right: 20px
+  right: 20px;
   width: 380px;
 `
 
@@ -104,6 +106,10 @@ export default function Header() {
           <Link id="link" href="https://uniswap.io">
             <img src={Logo} alt="logo" />
           </Link>
+          <Link id="link" href="https://uniswap.io">
+            <img style={{ marginLeft: '4px' }} src={Wordmark} alt="logo" />
+          </Link>
+          <p style={{ opacity: 0.6, marginLeft: '4px' }}>{'/ Exchange'}</p>
           {/* <Link id="link" href="https://uniswap.io">
             <TitleText>Uniswap</TitleText>
           </Link> */}
@@ -121,22 +127,22 @@ export default function Header() {
           <Web3Status onClick={toggleWalletModal} />
         </AccountElement>
         {chainId === 4 && (
-          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px 12px'}>
+          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'8px 12px'}>
             Rinkeby Testnet
           </YellowCard>
         )}
         {chainId === 3 && (
-          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px 12px'}>
+          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'8px 12px'}>
             Ropsten Testnet
           </YellowCard>
         )}
         {chainId === 5 && (
-          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px 12px'}>
+          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'8px 12px'}>
             Goerli Testnet
           </YellowCard>
         )}
         {chainId === 42 && (
-          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px 12px'}>
+          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'8px 12px'}>
             Kovan Testnet
           </YellowCard>
         )}

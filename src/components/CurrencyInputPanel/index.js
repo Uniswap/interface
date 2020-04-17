@@ -31,6 +31,8 @@ const CurrencySelect = styled.button`
   background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.blue1)};
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
   border-radius: 12px;
+  box-shadow: ${({ selected, theme }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
+
   outline: none;
   cursor: pointer;
   user-select: none;
@@ -94,7 +96,7 @@ const ErrorSpan = styled.span`
 `
 
 const StyledTokenName = styled.span`
-  margin: 0 0.25rem 0 0.75rem;
+  ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.75rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
 `
 
 const ClickableText = styled(Text)`
@@ -183,7 +185,9 @@ export default function CurrencyInputPanel({
                   {pair?.token0.symbol}:{pair?.token1.symbol}
                 </StyledTokenName>
               ) : (
-                <StyledTokenName>{(token && token.symbol) || t('selectToken')}</StyledTokenName>
+                <StyledTokenName active={token && token.symbol}>
+                  {(token && token.symbol) || t('selectToken')}
+                </StyledTokenName>
               )}
               {!disableTokenSelect && <StyledDropDown selected={!!token?.address} />}
             </Aligner>

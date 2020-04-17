@@ -19,7 +19,7 @@ import { useAllBalances, useAccountLPBalances } from '../../contexts/Balances'
 
 const Positions = styled.div`
   position: relative;
-  margin-top: 38px;
+  width: 100%;
 `
 
 function Supply({ history }) {
@@ -56,7 +56,7 @@ function Supply({ history }) {
     })
 
   return (
-    <>
+    <AutoColumn gap="lg" justify="center">
       <ButtonPrimary
         onClick={() => {
           setShowPoolSearch(true)
@@ -67,7 +67,7 @@ function Supply({ history }) {
       <Positions>
         <AutoColumn gap="20px">
           {filteredExchangeList?.length !== 0 && (
-            <RowBetween>
+            <RowBetween padding={'0 8px'}>
               <Text fontWeight={500}>Your Pooled Liquidity</Text>
               <Question text="filler text" />
             </RowBetween>
@@ -88,7 +88,7 @@ function Supply({ history }) {
         </AutoColumn>
       </Positions>
       <SearchModal isOpen={showPoolSearch} onDismiss={() => setShowPoolSearch(false)} />
-    </>
+    </AutoColumn>
   )
 }
 export default withRouter(Supply)
