@@ -27,18 +27,18 @@ const CurrencySelect = styled.button`
   align-items: center;
   height: 2.2rem;
   font-size: 20px;
+  font-weight: 500;
   background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.blue1)};
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-  border-radius: 8px;
+  border-radius: 12px;
   outline: none;
   cursor: pointer;
   user-select: none;
-
-  border: 1px solid ${({ selected, theme }) => (selected ? darken(0.1, theme.bg3) : darken(0.1, theme.blue1))};
+  border: none;
 
   :focus,
   :hover {
-    border: 1px solid ${({ selected, theme }) => (selected ? darken(0.2, theme.bg3) : darken(0.2, theme.blue1))};
+    background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.blue1))};
   }
 `
 
@@ -49,11 +49,12 @@ const Aligner = styled.span`
 `
 
 const StyledDropDown = styled(DropDown)`
-  margin: 0 0.5rem 0 0.5rem;
+  margin: 0 0.25rem 0 0.5rem;
   height: 35%;
 
   path {
     stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+    stroke-width: 1.5px;
   }
 `
 
@@ -96,7 +97,7 @@ const StyledTokenName = styled.span`
   margin: 0 0.25rem 0 0.75rem;
 `
 
-const ClickableText = styled.div`
+const ClickableText = styled(Text)`
   :hover {
     cursor: pointer;
   }
@@ -193,7 +194,7 @@ export default function CurrencyInputPanel({
             <RowBetween>
               <Text>{'-'}</Text>
               <ErrorSpan data-tip={'Enter max'} error={!!error} onClick={() => {}}></ErrorSpan>
-              <ClickableText onClick={onMax}>
+              <ClickableText fontWeight={400} onClick={onMax}>
                 <TYPE.body>
                   Balance: {customBalance ? customBalance?.toSignificant(4) : userTokenBalance?.toSignificant(4)}
                 </TYPE.body>

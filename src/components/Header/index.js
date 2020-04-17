@@ -57,7 +57,7 @@ const AccountElement = styled.div`
   align-items: center;
   background-color: ${({ theme, active }) => (!active ? theme.white : theme.bg3)};
   border: 1px solid ${({ theme }) => theme.bg3};
-  border-radius: 8px;
+  border-radius: 12px;
   padding-left: ${({ active }) => (active ? '8px' : 0)};
   white-space: nowrap;
 
@@ -104,16 +104,16 @@ export default function Header() {
           <Link id="link" href="https://uniswap.io">
             <img src={Logo} alt="logo" />
           </Link>
-          <Link id="link" href="https://uniswap.io">
+          {/* <Link id="link" href="https://uniswap.io">
             <TitleText>Uniswap</TitleText>
-          </Link>
+          </Link> */}
         </Title>
       </HeaderElement>
       <HeaderElement>
         <AccountElement active={!!account}>
           {!isMobile && account ? (
             <Row style={{ marginRight: '-1.25rem', paddingRight: '1.75rem' }}>
-              <Text fontWeight={500}> {userEthBalance && userEthBalance?.toFixed(4) + ' ETH'}</Text>
+              <Text fontWeight={400}> {userEthBalance && userEthBalance?.toFixed(4) + ' ETH'}</Text>
             </Row>
           ) : (
             ''
@@ -121,22 +121,22 @@ export default function Header() {
           <Web3Status onClick={toggleWalletModal} />
         </AccountElement>
         {chainId === 4 && (
-          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
+          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px 12px'}>
             Rinkeby Testnet
           </YellowCard>
         )}
         {chainId === 3 && (
-          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
+          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px 12px'}>
             Ropsten Testnet
           </YellowCard>
         )}
         {chainId === 5 && (
-          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
+          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px 12px'}>
             Goerli Testnet
           </YellowCard>
         )}
         {chainId === 42 && (
-          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
+          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px 12px'}>
             Kovan Testnet
           </YellowCard>
         )}

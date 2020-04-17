@@ -6,7 +6,9 @@ const StyledInput = styled.input`
   background-color: ${({ theme }) => theme.bg1};
   color: ${({ theme }) => theme.text1};
   width: 0;
-  font-size: 20px;
+  font-size: 24px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
   outline: none;
   border: none;
   flex: 1 1 auto;

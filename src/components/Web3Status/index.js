@@ -21,10 +21,10 @@ import Identicon from '../Identicon'
 const Web3StatusGeneric = styled.button`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
-  font-size: 0.9rem;
+  /* font-size: 0.9rem; */
   align-items: center;
   padding: 0.5rem;
-  border-radius: 10px;
+  border-radius: 12px;
   box-sizing: border-box;
   cursor: pointer;
   user-select: none;
@@ -91,9 +91,9 @@ const Text = styled.p`
   text-overflow: ellipsis;
   white-space: nowrap;
   margin: 0 0.5rem 0 0.25rem;
-  font-size: 0.83rem;
+  font-size: 1rem;
   width: fit-content;
-  font-weight: 500;
+  font-weight: 400;
 `
 
 const NetworkIcon = styled(Activity)`
