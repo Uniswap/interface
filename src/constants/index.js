@@ -111,4 +111,17 @@ export const brokenTokens = [
   '0x5C406D99E04B8494dc253FCc52943Ef82bcA7D75'
 ]
 
+export const broken777Tokens = [
+  '0x58e8a6c0e0b58bca809f1faee01f1662c9fc460e',
+  '0xbdfa65533074b0b23ebc18c7190be79fa74b30c2',
+  '0x5228a22e72ccc52d415ecfd199f99d0665e7733b',
+  '0x9b869c2eaae08136c43d824ea75a2f376f1aa983',
+  '0x09a8f2041be23e8ec3c72790c9a92089bc70fbca',
+  '0x49d716dfe60b37379010a75329ae09428f17118d',
+  '0x30e0c58c5670e0bdec98f29f66b092e43e98d699',
+  '0x3212b29e33587a00fb1c83346f5dbfa69a458923',
+  '0x5cffc0b73df80144f0f3f5bf75672777af2bbbfe',
+  '0x0d31444c3f3cd583f30ca1b7cedc973db4bf5abf'
+]
+
 export const NetworkContextName = 'NETWORK'
