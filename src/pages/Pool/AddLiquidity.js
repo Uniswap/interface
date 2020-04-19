@@ -13,7 +13,7 @@ import { ReactComponent as Plus } from '../../assets/images/plus-blue.svg'
 import WarningCard from '../../components/WarningCard'
 
 import { useWeb3React, useExchangeContract } from '../../hooks'
-import { brokenTokens } from '../../constants'
+import { brokenTokens, broken777Tokens } from '../../constants'
 import { amountFormatter, calculateGasMargin } from '../../utils'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useTokenDetails, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
@@ -228,6 +228,7 @@ export default function AddLiquidity({ params }) {
   const [zeroDecimalError, setZeroDecimalError] = useState()
 
   const [brokenTokenWarning, setBrokenTokenWarning] = useState()
+  const [broken777Warning, setBroken777Warning] = useState()
 
   const { symbol, decimals, exchangeAddress } = useTokenDetails(outputCurrency)
   const exchangeContract = useExchangeContract(exchangeAddress)
@@ -358,6 +359,9 @@ export default function AddLiquidity({ params }) {
     if (brokenTokenWarning) {
       contextualInfo = t('brokenToken')
       isError = true
+    } else if (broken777Warning) {
+      contextualInfo = t('broken777')
+      isError = true
     } else if (zeroDecimalError) {
       contextualInfo = zeroDecimalError
     } else if (inputError || outputError) {
@@ -439,6 +443,15 @@ export default function AddLiquidity({ params }) {
     for (let i = 0; i < brokenTokens.length; i++) {
       if (brokenTokens[i].toLowerCase() === outputCurrency.toLowerCase()) {
         setBrokenTokenWarning(true)
+      }
+    }
+  }, [outputCurrency])
+
+  useEffect(() => {
+    setBroken777Warning(false)
+    for (let i = 0; i < broken777Tokens.length; i++) {
+      if (broken777Tokens[i].toLowerCase() === outputCurrency.toLowerCase()) {
+        setBroken777Warning(true)
       }
     }
   }, [outputCurrency])
