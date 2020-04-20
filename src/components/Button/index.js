@@ -199,7 +199,7 @@ export function ButtonError({ children, error, ...rest }) {
 
 export function ButtonDropwdown({ disabled = false, children, ...rest }) {
   return (
-    <ButtonPrimary {...rest}>
+    <ButtonPrimary {...rest} disabled={disabled}>
       <RowBetween>
         <div style={{ display: 'flex', alignItems: 'center' }}>{children}</div>
         <ChevronDown size={24} />
@@ -210,7 +210,7 @@ export function ButtonDropwdown({ disabled = false, children, ...rest }) {
 
 export function ButtonDropwdownLight({ disabled = false, children, ...rest }) {
   return (
-    <ButtonEmpty {...rest}>
+    <ButtonEmpty {...rest} disabled={disabled}>
       <RowBetween>
         <div style={{ display: 'flex', alignItems: 'center' }}>{children}</div>
         <ChevronDown size={24} />

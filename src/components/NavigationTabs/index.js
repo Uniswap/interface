@@ -4,9 +4,10 @@ import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
 import { withRouter, NavLink, Link as HistoryLink } from 'react-router-dom'
 
-import QuestionHelper from '../Question'
+import { Hover } from '../../theme'
 import { ArrowLeft } from 'react-feather'
 import { RowBetween } from '../Row'
+import QuestionHelper from '../Question'
 
 import { useBodyKeyDown } from '../../hooks'
 
@@ -99,15 +100,16 @@ function NavigationTabs({ location: { pathname }, history }) {
   const adding = pathname.match('/add')
   const removing = pathname.match('/remove')
   const finding = pathname.match('/find')
+  const creating = pathname.match('/create')
 
   return (
     <>
       {adding || removing ? (
         <Tabs>
           <RowBetween style={{ padding: '1rem' }}>
-            <HistoryLink to="/pool">
+            <Hover onClick={() => history.goBack()}>
               <ArrowLink />
-            </HistoryLink>
+            </Hover>
             <ActiveText>{adding ? 'Add' : 'Remove'} Liquidity</ActiveText>
             <QuestionHelper text={'helper text'} />
           </RowBetween>
@@ -118,7 +120,17 @@ function NavigationTabs({ location: { pathname }, history }) {
             <HistoryLink to="/pool">
               <ArrowLink />
             </HistoryLink>
-            <ActiveText>Find a Pool</ActiveText>
+            <ActiveText>Import Pool</ActiveText>
+            <QuestionHelper text={'helper text'} />
+          </RowBetween>
+        </Tabs>
+      ) : creating ? (
+        <Tabs>
+          <RowBetween style={{ padding: '1rem' }}>
+            <HistoryLink to="/pool">
+              <ArrowLink />
+            </HistoryLink>
+            <ActiveText>Create Pool</ActiveText>
             <QuestionHelper text={'helper text'} />
           </RowBetween>
         </Tabs>

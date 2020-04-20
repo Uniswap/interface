@@ -14,6 +14,7 @@ const Pool = lazy(() => import('./Supply'))
 const Add = lazy(() => import('./Supply/AddLiquidity'))
 const Remove = lazy(() => import('./Supply/RemoveLiquidity'))
 const Find = lazy(() => import('../components/PoolFinder'))
+const Create = lazy(() => import('../components/CreatePool'))
 
 const AppWrapper = styled.div`
   display: flex;
@@ -75,6 +76,7 @@ export default function App() {
                     <Switch>
                       <Route exact strict path="/" render={() => <Redirect to={{ pathname: '/swap' }} />} />
                       <Route exact strict path="/find" component={() => <Find params={params} />} />
+                      <Route exact strict path="/create" component={() => <Create params={params} />} />
                       <Route exact strict path="/swap" component={() => <Swap params={params} />} />
                       <Route
                         exact
