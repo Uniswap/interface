@@ -11,6 +11,7 @@ import { Text } from 'rebass'
 import { AutoColumn } from '../../components/Column'
 import { RowBetween } from '../../components/Row'
 import { ButtonPrimary } from '../../components/Button'
+import { GreyCard } from '../../components/Card'
 
 import { useAllPairs } from '../../contexts/Pairs'
 import { useWeb3React } from '@web3-react/core'
@@ -73,7 +74,7 @@ function Supply({ history }) {
             </RowBetween>
           )}
           {filteredExchangeList}
-          <AutoColumn justify="center">
+          <GreyCard style={{ textAlign: 'center', padding: '0.5rem 1.25rem 1rem 1.25rem' }}>
             <Text color="#AEAEAE">
               {filteredExchangeList?.length !== 0 ? `Don't see a pool you joined? ` : 'Already joined a pool?'}{' '}
               <Link
@@ -84,7 +85,7 @@ function Supply({ history }) {
                 Find it.
               </Link>
             </Text>
-          </AutoColumn>
+          </GreyCard>
         </AutoColumn>
       </Positions>
       <SearchModal isOpen={showPoolSearch} onDismiss={() => setShowPoolSearch(false)} />

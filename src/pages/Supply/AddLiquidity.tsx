@@ -15,7 +15,8 @@ import { TYPE } from '../../theme'
 import { Plus } from 'react-feather'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { ButtonPrimary, ButtonLight } from '../../components/Button'
-import Row, { RowBetween, RowFlat, RowFixed } from '../../components/Row'
+import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
+import { GreyCard } from '../../components/Card'
 
 import { useToken } from '../../contexts/Tokens'
 import { usePopups } from '../../contexts/Application'
@@ -43,7 +44,7 @@ const Wrapper = styled.div`
 
 const FixedBottom = styled.div`
   position: absolute;
-  bottom: -220px;
+  margin-top: 2rem;
   width: 100%;
 `
 
@@ -548,6 +549,40 @@ export default function AddLiquidity({ token0, token1 }) {
       </>
     )
   }
+  const PriceBar = function(props) {
+    return (
+      // <GreyCard>
+      <AutoRow justify="space-between">
+        <AutoColumn justify="center">
+          <Text fontWeight={500} fontSize={16} color="#000000">
+            {pair ? `${route.midPrice.toSignificant(6)} ` : '-'}
+          </Text>
+          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+            {tokens[Field.OUTPUT]?.symbol} / {tokens[Field.INPUT]?.symbol}
+          </Text>
+        </AutoColumn>
+        <AutoColumn justify="center">
+          <Text fontWeight={500} fontSize={16} color="#000000">
+            {pair ? `${route.midPrice.invert().toSignificant(6)} ` : '-'}
+          </Text>
+          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+            {tokens[Field.INPUT]?.symbol} / {tokens[Field.OUTPUT]?.symbol}
+          </Text>
+        </AutoColumn>
+        <AutoColumn justify="center">
+          <Text fontWeight={500} fontSize={16} color="#000000">
+            {poolTokenPercentage ? poolTokenPercentage?.toFixed(2) : '0.0'}
+            {'%'}
+          </Text>
+
+          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+            Pool Share
+          </Text>
+        </AutoColumn>
+      </AutoRow>
+      // </GreyCard>
+    )
+  }
 
   const pendingText: string = `Supplied ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${
     tokens[Field.INPUT]?.symbol
@@ -618,7 +653,7 @@ export default function AddLiquidity({ token0, token1 }) {
           pair={pair}
           disableTokenSelect
         />
-        {!noLiquidity && (
+        {/* {!noLiquidity && (
           <RowBetween>
             Rate:
             <div>
@@ -626,7 +661,7 @@ export default function AddLiquidity({ token0, token1 }) {
               {tokens[dependentField]?.symbol}
             </div>
           </RowBetween>
-        )}
+        )} */}
         {showOutputUnlock ? (
           <ButtonLight
             onClick={() => {
@@ -655,17 +690,30 @@ export default function AddLiquidity({ token0, token1 }) {
             </Text>
           </ButtonPrimary>
         )}
-        {!noLiquidity && (
-          <FixedBottom>
+      </AutoColumn>
+
+      {!noLiquidity && (
+        <FixedBottom>
+          <AutoColumn>
+            {tokens[Field.OUTPUT] && (
+              <GreyCard pt={2} mb={2}>
+                <PriceBar />
+                {/* <AutoRow justify="center" gap="8px">
+              <Link fontSize="14px" fontWeight={400} href="">
+                Show Advanced
+              </Link>
+            </AutoRow> */}
+              </GreyCard>
+            )}
             <PositionCard
               pairAddress={pair?.liquidityToken?.address}
               token0={tokens[Field.INPUT]}
               token1={tokens[Field.OUTPUT]}
               minimal={true}
             />
-          </FixedBottom>
-        )}
-      </AutoColumn>
+          </AutoColumn>
+        </FixedBottom>
+      )}
     </Wrapper>
   )
 }

@@ -3,7 +3,6 @@ import styled from 'styled-components'
 
 const StyledInput = styled.input`
   color: ${({ error, theme }) => error && theme.red1};
-  background-color: ${({ theme }) => theme.bg1};
   color: ${({ theme }) => theme.text1};
   width: 0;
   font-size: 24px;

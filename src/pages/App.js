@@ -37,26 +37,30 @@ const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  box-sizing: border-box;
   justify-content: flex-start;
   align-items: center;
   flex: 1;
   overflow: auto;
+  padding: 0.5rem;
   padding-top: 40px;
+  margin-top: 4rem;
 
   & > * {
     max-width: calc(355px + 4rem);
-    width: 90%;
+    width: 100%;
     margin-bottom: 20px;
   }
 `
 
 const Body = styled.div`
   max-width: 355px;
-  width: 90%;
+  width: 100%;
   background: ${({ theme }) => theme.bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 30px;
+  box-sizing: border-box;
   padding: 1rem;
 `
 

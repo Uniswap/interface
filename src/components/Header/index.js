@@ -25,6 +25,7 @@ const HeaderFrame = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  position: absolute;
 `
 
 const HeaderElement = styled.div`
@@ -91,6 +92,13 @@ const Popup = styled(Card)`
   background-color: white;
 `
 
+const NetworkCard = styled(YellowCard)`
+  width: fit-content;
+  margin-right: 10px;
+  border-radius: 12px;
+  padding: 8px 12px;
+`
+
 export default function Header() {
   const { account, chainId } = useWeb3React()
 
@@ -106,18 +114,23 @@ export default function Header() {
           <Link id="link" href="https://uniswap.io">
             <img src={Logo} alt="logo" />
           </Link>
-          <Link id="link" href="https://uniswap.io">
-            <img style={{ marginLeft: '4px' }} src={Wordmark} alt="logo" />
-          </Link>
-          <p style={{ opacity: 0.6, marginLeft: '4px' }}>{'/ Exchange'}</p>
-          {/* <Link id="link" href="https://uniswap.io">
-            <TitleText>Uniswap</TitleText>
-          </Link> */}
+          {!isMobile && (
+            <>
+              <Link id="link" href="https://uniswap.io">
+                <img style={{ marginLeft: '4px' }} src={Wordmark} alt="logo" />
+              </Link>
+              <p style={{ opacity: 0.6, marginLeft: '4px', fontSize: '16px' }}>{'/ Exchange'}</p>
+            </>
+          )}
         </Title>
       </HeaderElement>
       <HeaderElement>
+        {!isMobile && chainId === 4 && <NetworkCard>Rinkeby Testnet</NetworkCard>}
+        {!isMobile && chainId === 3 && <NetworkCard> Ropsten Testnet</NetworkCard>}
+        {!isMobile && chainId === 5 && <NetworkCard>Goerli Testnet</NetworkCard>}
+        {!isMobile && chainId === 42 && <NetworkCard>Kovan Testnet</NetworkCard>}
         <AccountElement active={!!account}>
-          {!isMobile && account ? (
+          {account ? (
             <Row style={{ marginRight: '-1.25rem', paddingRight: '1.75rem' }}>
               <Text fontWeight={400}> {userEthBalance && userEthBalance?.toFixed(4) + ' ETH'}</Text>
             </Row>
@@ -126,26 +139,6 @@ export default function Header() {
           )}
           <Web3Status onClick={toggleWalletModal} />
         </AccountElement>
-        {chainId === 4 && (
-          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'8px 12px'}>
-            Rinkeby Testnet
-          </YellowCard>
-        )}
-        {chainId === 3 && (
-          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'8px 12px'}>
-            Ropsten Testnet
-          </YellowCard>
-        )}
-        {chainId === 5 && (
-          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'8px 12px'}>
-            Goerli Testnet
-          </YellowCard>
-        )}
-        {chainId === 42 && (
-          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'8px 12px'}>
-            Kovan Testnet
-          </YellowCard>
-        )}
         <Menu />
       </HeaderElement>
       <FixedPopupColumn gap="20px">

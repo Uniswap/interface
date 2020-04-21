@@ -12,6 +12,7 @@ import AdvancedSettings from '../AdvancedSettings'
 import AddressInputPanel from '../AddressInputPanel'
 import ConfirmationModal from '../ConfirmationModal'
 import CurrencyInputPanel from '../CurrencyInputPanel'
+
 import { Link } from '../../theme/components'
 import { Text } from 'rebass'
 import { TYPE } from '../../theme'
@@ -20,6 +21,7 @@ import { LightCard, GreyCard, BlueCard, YellowCard } from '../../components/Card
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
 import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
+import { CheckCircle, Copy, Link as faLink } from 'react-feather'
 
 import { usePair } from '../../contexts/Pairs'
 import { useToken } from '../../contexts/Tokens'
@@ -41,7 +43,6 @@ const Wrapper = styled.div`
 
 const ArrowWrapper = styled.div`
   padding: 2px;
-  /* border: 1px solid ${({ theme }) => theme.blue4}; */
   border-radius: 12px;
   display: flex;
   justify-content: center;
@@ -55,7 +56,7 @@ const ArrowWrapper = styled.div`
 
 const FixedBottom = styled.div`
   position: absolute;
-  bottom: -200px;
+  margin-top: 2rem;
   width: 100%;
 `
 
@@ -66,7 +67,7 @@ const ErrorText = styled(Text)`
 
 const InputGroup = styled(AutoColumn)`
   position: relative;
-  padding: 40px 0;
+  padding: 40px 0 20px 0;
 `
 
 const StyledNumerical = styled(NumericalInput)`
@@ -83,13 +84,14 @@ const StyledNumerical = styled(NumericalInput)`
 const MaxButton = styled.button`
   position: absolute;
   right: 70px;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.5rem;
   background-color: ${({ theme }) => theme.blue5};
   border: 1px solid ${({ theme }) => theme.blue5};
   border-radius: 0.5rem;
-  font-size: 1rem;
+  font-size: 0.75rem;
   font-weight: 500;
   cursor: pointer;
+  text-transform: uppercase;
   margin-right: 0.5rem;
   color: ${({ theme }) => theme.blue1};
   :hover {
@@ -884,34 +886,40 @@ function ExchangePage({ sendingInput = false, history }) {
 
   const PriceBar = function(props) {
     return (
-      <LightCard>
-        <AutoRow justify="space-between">
-          <AutoColumn justify="center">
-            <Text fontWeight={400} color="#888D9B" pb={12}>
-              {tokens[Field.INPUT]?.symbol} Price
-            </Text>
-            <Text fontWeight={500} color="#000000">
-              {pair ? `${route.midPrice.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}` : '-'}
-            </Text>
-          </AutoColumn>
-          <AutoColumn justify="center">
-            <Text fontWeight={400} color="#888D9B" pb={12}>
-              {tokens[Field.OUTPUT]?.symbol} Price
-            </Text>
-            <Text fontWeight={500} color="#000000">
-              {pair ? `${route.midPrice.invert().toSignificant(6)} ${tokens[Field.INPUT]?.symbol}` : '-'}
-            </Text>
-          </AutoColumn>
-          <AutoColumn justify="center">
-            <Text fontWeight={400} color="#888D9B" pb={12}>
-              Slippage
-            </Text>
-            <ErrorText fontWeight={500} warningLow={warningLow} warningMedium={warningMedium} warningHigh={warningHigh}>
-              {slippageFromTrade ? slippageFromTrade.toFixed(4) : '0'}%
-            </ErrorText>
-          </AutoColumn>
-        </AutoRow>
-      </LightCard>
+      // <GreyCard>
+      <AutoRow justify="space-between">
+        <AutoColumn justify="center">
+          <Text fontWeight={500} fontSize={16} color="#000000">
+            {pair ? `${route.midPrice.toSignificant(6)} ` : '-'}
+          </Text>
+          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+            {tokens[Field.OUTPUT]?.symbol} / {tokens[Field.INPUT]?.symbol}
+          </Text>
+        </AutoColumn>
+        <AutoColumn justify="center">
+          <Text fontWeight={500} fontSize={16} color="#000000">
+            {pair ? `${route.midPrice.invert().toSignificant(6)} ` : '-'}
+          </Text>
+          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+            {tokens[Field.INPUT]?.symbol} / {tokens[Field.OUTPUT]?.symbol}
+          </Text>
+        </AutoColumn>
+        <AutoColumn justify="center">
+          <ErrorText
+            fontWeight={500}
+            fontSize={16}
+            warningLow={warningLow}
+            warningMedium={warningMedium}
+            warningHigh={warningHigh}
+          >
+            {slippageFromTrade ? slippageFromTrade.toFixed(4) : '0'}%
+          </ErrorText>
+          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+            Slippage
+          </Text>
+        </AutoColumn>
+      </AutoRow>
+      // </GreyCard>
     )
   }
 
@@ -975,7 +983,7 @@ function ExchangePage({ sendingInput = false, history }) {
               </MaxButton>
             )}
             <StyledNumerical value={formattedAmounts[Field.INPUT]} onUserInput={val => onUserInput(Field.INPUT, val)} />
-            {!parsedAmounts[Field.INPUT] && <TYPE.gray>Enter an amount.</TYPE.gray>}
+            {/* {!parsedAmounts[Field.INPUT] && <TYPE.gray>Enter an amount.</TYPE.gray>} */}
             <CurrencyInputPanel
               field={Field.INPUT}
               value={formattedAmounts[Field.INPUT]}
@@ -992,6 +1000,10 @@ function ExchangePage({ sendingInput = false, history }) {
               hideInput={true}
               showSendWithSwap={true}
             />
+
+            {/* <ColumnCenter>
+              <ArrowDown size="16" />
+            </ColumnCenter> */}
           </InputGroup>
         </>
       )}
@@ -1013,21 +1025,20 @@ function ExchangePage({ sendingInput = false, history }) {
               onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
             />
             {sendingWithSwap ? (
-              <RowBetween>
-                <ArrowWrapper onClick={onSwapTokens}>
-                  <ArrowDown size="16" color="#2F80ED" />
-                  {/* <ArrowUp size="16" color="#2F80ED" /> */}
-                </ArrowWrapper>
-                <ArrowWrapper onClick={() => setSendingWithSwap(false)} style={{ marginRight: '20px' }}>
-                  <TYPE.blue>Remove Swap</TYPE.blue>
-                </ArrowWrapper>
-              </RowBetween>
+              <ColumnCenter>
+                <RowBetween padding="0 8px">
+                  <ArrowWrapper onClick={onSwapTokens}>
+                    <ArrowDown size="16" color="#2F80ED" />
+                    {/* <ArrowUp size="16" color="#2F80ED" /> */}
+                  </ArrowWrapper>
+                  <ArrowWrapper onClick={() => setSendingWithSwap(false)} style={{ marginRight: '20px' }}>
+                    <TYPE.blue>Remove Swap</TYPE.blue>
+                  </ArrowWrapper>
+                </RowBetween>
+              </ColumnCenter>
             ) : (
               <ColumnCenter>
-                <ArrowWrapper onClick={onSwapTokens}>
-                  <ArrowDown size="16" color="#2F80ED" />
-                  {/* <ArrowUp size="16" color="#2F80ED" /> */}
-                </ArrowWrapper>
+                <ArrowDown size="16" />
               </ColumnCenter>
             )}
             <CurrencyInputPanel
@@ -1037,14 +1048,19 @@ function ExchangePage({ sendingInput = false, history }) {
               onMax={() => {
                 maxAmountOutput && onMaxOutput(maxAmountOutput.toExact())
               }}
+              type={'OUTPUT'}
               atMax={atMaxAmountOutput}
               token={tokens[Field.OUTPUT]}
               onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
               error={outputError}
               pair={pair}
             />
-            {!noRoute && tokens[Field.OUTPUT] && <PriceBar /> // hide price if new exchange
-            }
+            {sendingWithSwap && (
+              <RowBetween padding="0 8px">
+                <ArrowDown size="16" />
+                <div> </div>
+              </RowBetween>
+            )}
           </>
         )}
 
@@ -1054,7 +1070,7 @@ function ExchangePage({ sendingInput = false, history }) {
               onChange={_onRecipient}
               onError={(error: boolean) => {
                 if (error) {
-                  setRecipientError('Inavlid Recipient')
+                  setRecipientError('Invalid Recipient')
                 } else {
                   setRecipientError(null)
                 }
@@ -1064,8 +1080,10 @@ function ExchangePage({ sendingInput = false, history }) {
         )}
 
         {noRoute ? (
-          <RowBetween style={{ margin: '10px 0' }}>
+          <GreyCard style={{ textAlign: 'center' }}>
+            {/* <RowBetween style={{ margin: '10px 0' }}> */}
             <TYPE.main>No exchange for this pair.</TYPE.main>
+
             <Link
               onClick={() => {
                 history.push('/add/' + tokens[Field.INPUT]?.address + '-' + tokens[Field.OUTPUT]?.address)
@@ -1074,7 +1092,8 @@ function ExchangePage({ sendingInput = false, history }) {
               {' '}
               Create one now
             </Link>
-          </RowBetween>
+            {/* </RowBetween> */}
+          </GreyCard>
         ) : showOutputUnlock ? (
           <ButtonLight
             onClick={() => {
@@ -1126,9 +1145,19 @@ function ExchangePage({ sendingInput = false, history }) {
         )}
       </AutoColumn>
       <FixedBottom>
+        {!noRoute && tokens[Field.OUTPUT] && (
+          <GreyCard pt={2} mb={2}>
+            <PriceBar />
+            {/* <AutoRow justify="center" gap="8px">
+              <Link fontSize="14px" fontWeight={400} href="">
+                Show Advanced
+              </Link>
+            </AutoRow> */}
+          </GreyCard>
+        )}
         <AutoColumn gap="lg">
           {importedTokenInput && (
-            <YellowCard>
+            <YellowCard style={{ paddingTop: '1rem' }}>
               <AutoColumn gap="sm">
                 <TYPE.mediumHeader>Token imported via address</TYPE.mediumHeader>
                 <AutoRow gap="4px">
@@ -1137,6 +1166,7 @@ function ExchangePage({ sendingInput = false, history }) {
                   <Link href={getEtherscanLink(chainId, tokens[Field.INPUT]?.address, 'address')}>
                     (View on Etherscan)
                   </Link>
+                  <Copy size={'16'} />
                 </AutoRow>
                 <TYPE.subHeader>
                   Please verify the legitimacy of this token before making any transactions.
@@ -1145,7 +1175,7 @@ function ExchangePage({ sendingInput = false, history }) {
             </YellowCard>
           )}
           {importedTokenOutput && (
-            <YellowCard>
+            <YellowCard style={{ paddingTop: '1rem' }}>
               <AutoColumn gap="sm">
                 <TYPE.mediumHeader>Token imported via address</TYPE.mediumHeader>
                 <AutoRow gap="4px">
@@ -1162,8 +1192,8 @@ function ExchangePage({ sendingInput = false, history }) {
             </YellowCard>
           )}
           {warningHigh && (
-            <GreyCard>
-              <AutoColumn gap="md">
+            <GreyCard style={{ paddingTop: '1rem' }}>
+              <AutoColumn gap="md" mt={2}>
                 <RowBetween>
                   <Text fontWeight={500}>Slippage Warning</Text>
                   <QuestionHelper text="" />
