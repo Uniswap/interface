@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
-import { Token, JSBI } from '@uniswap/sdk'
+import { Token, JSBI, WETH } from '@uniswap/sdk'
 
 import Row from '../Row'
 import TokenLogo from '../TokenLogo'
@@ -13,8 +13,9 @@ import { TYPE, Link } from '../../theme'
 import { AutoColumn, ColumnCenter } from '../Column'
 import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
 
-import { useToken } from '../../contexts/Tokens'
 import { usePair } from '../../contexts/Pairs'
+import { useToken } from '../../contexts/Tokens'
+import { useWeb3React } from '../../hooks'
 
 const Fields = {
   TOKEN0: 0,
@@ -22,10 +23,11 @@ const Fields = {
 }
 
 function CreatePool({ history }) {
+  const { chainId } = useWeb3React()
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN0)
 
-  const [token0Address, setToken0Address] = useState<string>()
+  const [token0Address, setToken0Address] = useState<string>(WETH[chainId].address)
   const [token1Address, setToken1Address] = useState<string>()
 
   const token0: Token = useToken(token0Address)
@@ -38,15 +40,12 @@ function CreatePool({ history }) {
     pair && JSBI.notEqual(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.notEqual(pair.reserve1.raw, JSBI.BigInt(0))
 
   useEffect(() => {
-    if (token0Address && !token1Address) {
-      setStep(2)
-    }
     if (token0Address && token1Address && pair && !pairExists) {
-      setStep(3)
+      setStep(2)
     }
   }, [pair, pairExists, token0Address, token1Address])
 
-  if (step === 3 && !pairExists) {
+  if (step === 2 && !pairExists) {
     return <AddLiquidity token0={token0Address} token1={token1Address} step={true} />
   } else
     return (
@@ -54,16 +53,7 @@ function CreatePool({ history }) {
         <BlueCard>
           <AutoColumn gap="10px">
             <TYPE.blue>{'Step ' + step + '.'} </TYPE.blue>
-
-            {step === 1 && (
-              <TYPE.blue fontWeight={400}>To create a pool you’ll need at least one unique token address. </TYPE.blue>
-            )}
-            {step === 1 && (
-              <TYPE.blue fontWeight={400}>
-                When you have it, click select token and paste it into the search field.
-              </TYPE.blue>
-            )}
-            {step === 2 && <TYPE.blue fontWeight={400}>Select or add your 2nd token to continue.</TYPE.blue>}
+            {step === 1 && <TYPE.blue fontWeight={400}>Select or add your 2nd token to continue.</TYPE.blue>}
           </AutoColumn>
         </BlueCard>
         <AutoColumn gap="24px">
@@ -100,7 +90,7 @@ function CreatePool({ history }) {
                 setShowSearch(true)
                 setActiveField(Fields.TOKEN1)
               }}
-              disabled={step !== 2}
+              disabled={step !== 1}
             >
               <Text fontSize={20}>Select second token</Text>
             </ButtonDropwdown>
@@ -126,7 +116,7 @@ function CreatePool({ history }) {
               <Link onClick={() => history.push('/add/' + token0Address + '-' + token1Address)}>here.</Link>
             </TYPE.body>
           ) : (
-            <ButtonPrimary disabled={step !== 3}>
+            <ButtonPrimary disabled={step !== 2}>
               <Text fontWeight={500} fontSize={20}>
                 Create Pool
               </Text>

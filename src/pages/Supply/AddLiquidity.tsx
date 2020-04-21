@@ -638,7 +638,7 @@ function AddLiquidity({ token0, token1, step = false }) {
           <ColumnCenter>
             <BlueCard>
               <AutoColumn gap="10px">
-                {step && <TYPE.blue fontWeight={400}>Step 3.</TYPE.blue>}
+                {step && <TYPE.blue fontWeight={400}>Step 2.</TYPE.blue>}
                 <TYPE.blue fontWeight={400}>
                   You are the first liquidity provider. The ratio of tokens you add will set the price of this pool.
                 </TYPE.blue>
