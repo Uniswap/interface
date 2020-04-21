@@ -123,7 +123,7 @@ function Migrate() {
           Your Liquidity
         </TextBlock>
         <TextBlock fontSize={16} color={'grey3'}>
-          {!finishedFetching ? (
+          {typeof account !== 'string' ? null : !finishedFetching ? (
             <Row>
               Fetching liquidity <LoaderLight style={{ marginLeft: '10px' }} />
             </Row>
@@ -132,48 +132,60 @@ function Migrate() {
           )}
         </TextBlock>
       </Row>
-      <TextBlock padding={'1rem 0'}>Dont see your liquidity? Enter a token address here.</TextBlock>
-      <Input
-        onChange={e => {
-          setUserInput(e.target.value)
-        }}
-        placeholder="Search token address"
-      />
-      {!finishedFetching ? (
-        <Column>
-          <LoadingCard height={80} />
-          <LoadingCard height={80} />
-          <LoadingCard height={80} />
-        </Column>
+
+      {typeof account !== 'string' ? (
+        <TextBlock fontSize={16}>Please connect a Wallet to view your liquidity.</TextBlock>
       ) : (
-        <Column>
-          {V1Shares &&
-            [...V1Shares]
-              // ensure that WETH is first if it exists
-              .sort((a, b) => {
-                if (a === WETH[chainId].address) {
-                  return -1
-                } else if (b === WETH[chainId].address) {
-                  return 1
-                } else {
-                  return 0
-                }
-              })
-              .map(tokenAddress => {
-                return (
-                  <PoolUnit token={tokenAddress} key={tokenAddress} isWETH={tokenAddress === WETH[chainId].address} />
-                )
-              })}
+        <>
+          <TextBlock padding={'1rem 0'}>Dont see your liquidity? Enter a token address here.</TextBlock>
+          <Input
+            onChange={e => {
+              setUserInput(e.target.value)
+            }}
+            placeholder="Search token address"
+            style={{ paddingLeft: '1.25rem' }}
+          />
+          {!finishedFetching ? (
+            <Column>
+              <LoadingCard height={80} />
+              <LoadingCard height={80} />
+              <LoadingCard height={80} />
+            </Column>
+          ) : (
+            <Column>
+              {V1Shares &&
+                [...V1Shares]
+                  // ensure that WETH is first if it exists
+                  .sort((a, b) => {
+                    if (a === WETH[chainId].address) {
+                      return -1
+                    } else if (b === WETH[chainId].address) {
+                      return 1
+                    } else {
+                      return 0
+                    }
+                  })
+                  .map(tokenAddress => {
+                    return (
+                      <PoolUnit
+                        token={tokenAddress}
+                        key={tokenAddress}
+                        isWETH={tokenAddress === WETH[chainId].address}
+                      />
+                    )
+                  })}
 
-          <TextBlock fontSize="1.25rem" mt="2rem">
-            Migrated Liquidity
-          </TextBlock>
+              <TextBlock fontSize="1.25rem" mt="2rem">
+                Migrated Liquidity
+              </TextBlock>
 
-          {V2Shares &&
-            [...V2Shares].map(tokenAddress => {
-              return <PoolUnit token={tokenAddress} key={tokenAddress} alreadyMigrated={true} />
-            })}
-        </Column>
+              {V2Shares &&
+                [...V2Shares].map(tokenAddress => {
+                  return <PoolUnit token={tokenAddress} key={tokenAddress} alreadyMigrated={true} />
+                })}
+            </Column>
+          )}
+        </>
       )}
     </Column>
   )

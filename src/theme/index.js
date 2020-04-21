@@ -94,7 +94,8 @@ const theme = darkMode => ({
     yellow1: '#F3BE1E',
     yellow2: '#F7F2E3',
 
-    red1: '#FF6871'
+    red1: '#FF6871',
+    red2: '#ffe3e4'
   },
 
   shadows: {

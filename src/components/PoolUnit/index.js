@@ -30,6 +30,11 @@ import Lock from '../../assets/images/lock.png'
 import MIGRATOR_ABI from '../../constants/abis/migrator'
 import { MIGRATOR_ADDRESS } from '../../constants'
 
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
 const Grouping = styled.div`
   display: grid;
   grid-template-columns: auto auto auto 1fr;
@@ -147,7 +152,8 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
           .abs()
           .div(v2Price)
       : undefined
-  const priceWarning = priceDifference && priceDifference.gte(new BigNumber(0.1)) // .1 = 10%, warning threshold for price differences between v1 and v2
+  const priceWarning = priceDifference && priceDifference.gte(new BigNumber(0.05)) // .05 = 5%, warning threshold for price differences between v1 and v2
+  const priceWarningLarge = priceDifference && priceDifference.gte(new BigNumber(0.15)) // .15 = 15%, warning threshold for large price differences between v1 and v2
   const [pendingApproval, setPendingApproval] = useState(false)
   const approvalDone = tokenAllowance && v1Balance && tokenAllowance.gte(v1Balance)
 
@@ -298,19 +304,49 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
         </AnimatedCard>
         {open && (
           <BottomWrapper>
-            <FormattedCard>
-              <TextBlock>
-                V1 Price: {v1Price && v1Price.toPrecision(6)} {symbol}/ETH
-              </TextBlock>
-            </FormattedCard>
-            <FormattedCard>
-              <TextBlock>
-                V2 Price: {v2Price && v2Price.toPrecision(6)} {symbol}/ETH
-              </TextBlock>
-              {priceWarning && (
-                <TextBlock>Warning: {priceDifference.times(100).toFixed(2)}% price difference</TextBlock>
-              )}
-            </FormattedCard>
+            {priceWarning && (
+              <FormattedCard
+                variant={priceWarningLarge ? 'red' : 'yellow'}
+                style={{
+                  gridColumn: 'span 2',
+                  zIndex: -1,
+                  paddingTop: '4rem',
+                  borderTopLeftRadius: 0,
+                  borderTopRightRadius: 0
+                }}
+                marginTop="-2.5rem"
+              >
+                <Row>
+                  <TextBlock fontSize={14} style={{ maxWidth: '45%', paddingRight: '0.5rem' }}>
+                    There is a {priceWarningLarge && 'large'} difference between the V1 and V2 {symbol}/ETH prices. You{' '}
+                    {priceWarningLarge ? 'should' : 'may want to'} wait for the prices to stabilize.
+                  </TextBlock>
+                  <Column style={{ alignItems: 'center', flexShrink: 0 }}>
+                    <TextBlock fontWeight={600} color="grey6" marginBottom="0.5rem">
+                      V1 Price
+                    </TextBlock>
+                    <TextBlock fontWeight={600}>{v1Price && v1Price.toPrecision(6)}</TextBlock>
+                  </Column>
+                  <Column style={{ alignItems: 'center', flexShrink: 0 }}>
+                    <TextBlock fontWeight={600} color="grey6" marginBottom="0.5rem">
+                      V2 Price
+                    </TextBlock>
+                    <TextBlock fontWeight={600}>{v2Price && v2Price.toPrecision(6)}</TextBlock>
+                  </Column>
+                  <Column style={{ alignItems: 'center', flexShrink: 0 }}>
+                    <TextBlock fontWeight={600} color="grey6" marginBottom="0.5rem">
+                      Difference
+                    </TextBlock>
+                    <TextBlock
+                      fontWeight={600}
+                      color={priceWarningLarge ? 'red1' : priceWarning ? 'yellow1' : undefined}
+                    >
+                      {priceDifference && priceDifference.times(100).toFixed(2)}%
+                    </TextBlock>
+                  </Column>
+                </Row>
+              </FormattedCard>
+            )}
 
             <FormattedCard outlined={!approvalDone && 'outlined'}>
               <Row>

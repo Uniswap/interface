@@ -12,6 +12,12 @@ const variants = {
   pink: {
     backgroundColor: 'pink2',
     color: 'pink1'
+  },
+  yellow: {
+    backgroundColor: 'yellow2'
+  },
+  red: {
+    backgroundColor: 'red2'
   }
 }
 
