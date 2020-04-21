@@ -6,6 +6,7 @@ import Header from '../components/Header'
 import NavigationTabs from '../components/NavigationTabs'
 import Web3ReactManager from '../components/Web3ReactManager'
 
+import Popups from '../components/Popups'
 import { isAddress, getAllQueryParams } from '../utils'
 
 const Swap = lazy(() => import('./Swap'))
@@ -20,6 +21,7 @@ const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
+  overflow-x: hidden;
   height: 100vh;
 `
 
@@ -37,7 +39,7 @@ const BodyWrapper = styled.div`
   align-items: center;
   flex: 1;
   overflow: auto;
-  padding-top: 40px;
+  padding-top: 20px;
 
   & > * {
     max-width: calc(355px + 4rem);
@@ -54,6 +56,10 @@ const Body = styled.div`
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 20px;
   padding: 2rem 2rem 1rem 2rem;
+
+  @media screen and (max-width: 480px) {
+    max-width: 290px;
+  }
 `
 
 export default function App() {
@@ -66,6 +72,7 @@ export default function App() {
           <HeaderWrapper>
             <Header />
           </HeaderWrapper>
+          <Popups />
           <BodyWrapper>
             <Body>
               <Web3ReactManager>

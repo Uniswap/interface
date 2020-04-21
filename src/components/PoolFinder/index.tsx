@@ -66,12 +66,18 @@ function PoolFinder({ history }) {
     history.goBack() // return to previous page
     newLiquidity &&
       addPopup(
-        <Row>
-          <DoubleTokenLogo a0={token0Address || ''} a1={token1Address || ''} margin={true} />
-          <Text color="grey">
-            UNI {token0?.symbol} / {token1?.symbol} pool imported.
+        <AutoColumn gap={'10px'}>
+          <Text fontSize={20} fontWeight={500}>
+            Pool Imported
           </Text>
-        </Row>
+          <Row>
+            <DoubleTokenLogo a0={token0Address || ''} a1={token1Address || ''} margin={true} />
+            <Text fontSize={16} fotnWeight={500}>
+              UNI {token0?.symbol} / {token1?.symbol}
+            </Text>
+          </Row>
+          <Link>View on Uniswap Info.</Link>
+        </AutoColumn>
       )
   }
 

@@ -65,11 +65,11 @@ const MenuFlyout = styled.span`
   position: absolute;
   top: 3rem;
   right: 0rem;
+  z-index: 100;
 `
 
 const MenuItem = styled(Link)`
   flex: 1;
-  /* text-align: right; */
   padding: 0.5rem 0.5rem;
   color: ${({ theme }) => theme.text3};
   :hover {

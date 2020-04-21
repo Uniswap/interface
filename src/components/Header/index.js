@@ -4,24 +4,14 @@ import styled from 'styled-components'
 import Row from '../Row'
 import Menu from '../Menu'
 import Logo from '../../assets/svg/logo.svg'
-import Card, { YellowCard } from '../Card'
-import Web3Status from '../Web3Status'
-import { X } from 'react-feather'
 import { Link } from '../../theme'
 import { Text } from 'rebass'
-import { AutoColumn } from '../Column'
-
-import { TYPE } from '../../theme'
-import { Hover } from '../../theme/components'
-import { PinkCard } from '../Card'
-import { ButtonPink } from '../Button'
+import { YellowCard } from '../Card'
+import Web3Status from '../Web3Status'
 
 import { WETH } from '@uniswap/sdk'
-import { isMobile } from 'react-device-detect'
-
 import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
-import { useMigrationMessageManager } from '../../contexts/LocalStorage'
 import { useWalletModalToggle, usePopups } from '../../contexts/Application'
 
 const HeaderFrame = styled.div`
@@ -29,10 +19,10 @@ const HeaderFrame = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  padding: 1.25rem;
 `
 
 const HeaderElement = styled.div`
-  margin: 1.25rem;
   display: flex;
   min-width: 0;
   display: flex;
@@ -53,11 +43,14 @@ const TitleText = styled.div`
   font-weight: 700;
   color: ${({ theme }) => theme.black};
   margin-left: 12px;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
 `
 
 const AccountElement = styled.div`
   display: flex;
-  min-width: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -72,27 +65,12 @@ const AccountElement = styled.div`
   }
 `
 
-const FixedPopupColumn = styled(AutoColumn)`
-  position: absolute;
-  top: 80px;
-  right: 20px
-  width: 380px;
-`
-
-const StyledClose = styled(X)`
-  position: absolute;
-  right: 10px;
-
-  :hover {
-    cursor: pointer;
-  }
-`
-
-const Popup = styled(Card)`
-  z-index: 9999;
-  border-radius: 8px;
-  padding: 1rem;
-  background-color: white;
+const TestnetWrapper = styled.div`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    position: absolute; 
+    top: 70px;
+    right: 20px;
+  `};
 `
 
 export default function Header() {
@@ -101,8 +79,7 @@ export default function Header() {
   const userEthBalance = useAddressBalance(account, WETH[chainId])
   const toggleWalletModal = useWalletModalToggle()
 
-  const [activePopups, , removePopup] = usePopups()
-  const [showMessage, hideMigrationMessage] = useMigrationMessageManager()
+  const [, addPopup] = usePopups()
 
   return (
     <HeaderFrame>
@@ -118,7 +95,7 @@ export default function Header() {
       </HeaderElement>
       <HeaderElement>
         <AccountElement active={!!account}>
-          {!isMobile && account ? (
+          {account ? (
             <Row style={{ marginRight: '-1.25rem', paddingRight: '1.75rem' }}>
               <Text fontWeight={500}> {userEthBalance && userEthBalance?.toFixed(4) + ' ETH'}</Text>
             </Row>
@@ -127,50 +104,30 @@ export default function Header() {
           )}
           <Web3Status onClick={toggleWalletModal} />
         </AccountElement>
-        {chainId === 4 && (
-          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
-            Rinkeby Testnet
-          </YellowCard>
-        )}
-        {chainId === 3 && (
-          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
-            Ropsten Testnet
-          </YellowCard>
-        )}
-        {chainId === 5 && (
-          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
-            Goerli Testnet
-          </YellowCard>
-        )}
-        {chainId === 42 && (
-          <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
-            Kovan Testnet
-          </YellowCard>
-        )}
+        <TestnetWrapper>
+          {chainId === 4 && (
+            <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
+              Rinkeby Testnet
+            </YellowCard>
+          )}
+          {chainId === 3 && (
+            <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
+              Ropsten Testnet
+            </YellowCard>
+          )}
+          {chainId === 5 && (
+            <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
+              Goerli Testnet
+            </YellowCard>
+          )}
+          {chainId === 42 && (
+            <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
+              Kovan Testnet
+            </YellowCard>
+          )}
+        </TestnetWrapper>
         <Menu />
       </HeaderElement>
-      <FixedPopupColumn gap="20px">
-        {activePopups.map(item => {
-          return (
-            <Popup key={item.key}>
-              <StyledClose color="#888D9B" onClick={() => removePopup(item.key)} />
-              {item.content}
-            </Popup>
-          )
-        })}
-        {showMessage && (
-          <PinkCard padding="20px" style={{ zIndex: '2' }}>
-            <AutoColumn justify={'center'} gap={'20px'}>
-              <TYPE.largeHeader>Uniswap has upgraded.</TYPE.largeHeader>
-              <Text textAlign="center">Are you a liquidity provider? Upgrade now using the migration helper.</Text>
-              <ButtonPink width={'265px'}>Migrate your liquidity </ButtonPink>
-              <Hover onClick={() => hideMigrationMessage()}>
-                <Text textAlign="center">Dismiss</Text>
-              </Hover>
-            </AutoColumn>
-          </PinkCard>
-        )}
-      </FixedPopupColumn>
     </HeaderFrame>
   )
 }

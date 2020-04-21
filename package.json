@@ -44,7 +44,8 @@
     "react-use-gesture": "^6.0.14",
     "rebass": "^4.0.7",
     "styled-components": "^4.2.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "use-media": "^1.4.0"
   },
   "scripts": {
     "start": "react-scripts start",

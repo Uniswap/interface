@@ -7,6 +7,7 @@ const BLOCK_NUMBER = 'BLOCK_NUMBER'
 const USD_PRICE = 'USD_PRICE'
 const WALLET_MODAL_OPEN = 'WALLET_MODAL_OPEN'
 const POPUP_LIST = 'POPUP_LIST'
+const POPUP_KEY = 'POPUP_KEY'
 
 const UPDATE_BLOCK_NUMBER = 'UPDATE_BLOCK_NUMBER'
 const TOGGLE_WALLET_MODAL = 'TOGGLE_WALLET_MODAL'
@@ -38,7 +39,7 @@ function reducer(state, { type, payload }) {
 
     case ADD_POPUP: {
       const { newList } = payload
-      return { ...state, [POPUP_LIST]: newList }
+      return { ...state, [POPUP_LIST]: newList, [POPUP_KEY]: state?.[POPUP_KEY] + 1 }
     }
 
     default: {
@@ -52,6 +53,7 @@ export default function Provider({ children }) {
     [BLOCK_NUMBER]: {},
     [USD_PRICE]: {},
     [POPUP_LIST]: [],
+    [POPUP_KEY]: 0,
     [WALLET_MODAL_OPEN]: false
   })
 
@@ -142,24 +144,18 @@ export function useWalletModalToggle() {
 export function usePopups() {
   const [state, { setPopups }] = useApplicationContext()
 
-  const [index, setIndex] = useState(0)
-
+  const index = state[POPUP_KEY]
   const currentPopups = state[POPUP_LIST]
 
-  const addPopup = useCallback(
-    content => {
-      const newItem = {
-        show: true,
-        key: index,
-        content: content
-      }
-      currentPopups.push(newItem)
-      setPopups(currentPopups)
-      setIndex(index + 1)
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [setPopups]
-  )
+  function addPopup(content) {
+    const newItem = {
+      show: true,
+      key: index,
+      content: content
+    }
+    currentPopups.push(newItem)
+    setPopups(currentPopups)
+  }
 
   function removePopup(key) {
     currentPopups.map(item => {

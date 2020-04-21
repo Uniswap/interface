@@ -534,19 +534,30 @@ function SearchModal({
                     </StyledLink>
                   </Text>
                 )}
-                {filterType === 'tokens' && (
-                  <Text fontWeight={500}>
-                    Don't see a token?{' '}
-                    <StyledLink
-                      onClick={() => {
-                        setShowTokenImport(true)
-                      }}
-                    >
-                      {' '}
-                      Import it.
-                    </StyledLink>
-                  </Text>
-                )}
+                {filterType === 'tokens' &&
+                  (isMobile ? (
+                    <Text>
+                      <StyledLink
+                        onClick={() => {
+                          history.push('/find')
+                        }}
+                      >
+                        Import custom token.
+                      </StyledLink>
+                    </Text>
+                  ) : (
+                    <Text fontWeight={500}>
+                      Don't see a token?{' '}
+                      <StyledLink
+                        onClick={() => {
+                          setShowTokenImport(true)
+                        }}
+                      >
+                        {' '}
+                        Import it.
+                      </StyledLink>
+                    </Text>
+                  ))}
               </div>
               <div />
               <Filter title="Your Balances" filter={FILTERS.BALANCES} />
