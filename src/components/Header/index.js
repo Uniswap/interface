@@ -12,7 +12,7 @@ import Web3Status from '../Web3Status'
 import { WETH } from '@uniswap/sdk'
 import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
-import { useWalletModalToggle, usePopups } from '../../contexts/Application'
+import { useWalletModalToggle } from '../../contexts/Application'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -66,10 +66,15 @@ const AccountElement = styled.div`
 `
 
 const TestnetWrapper = styled.div`
+  white-space: nowrap;
+  width: fit-content;
+  margin-left: 10px;
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    position: absolute; 
-    top: 70px;
-    right: 20px;
+    // position: absolute; 
+    // top: 70px;
+    // right: 20px;
+    display: none;
   `};
 `
 
@@ -78,8 +83,6 @@ export default function Header() {
 
   const userEthBalance = useAddressBalance(account, WETH[chainId])
   const toggleWalletModal = useWalletModalToggle()
-
-  const [, addPopup] = usePopups()
 
   return (
     <HeaderFrame>
@@ -105,26 +108,10 @@ export default function Header() {
           <Web3Status onClick={toggleWalletModal} />
         </AccountElement>
         <TestnetWrapper>
-          {chainId === 4 && (
-            <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
-              Rinkeby Testnet
-            </YellowCard>
-          )}
-          {chainId === 3 && (
-            <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
-              Ropsten Testnet
-            </YellowCard>
-          )}
-          {chainId === 5 && (
-            <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
-              Goerli Testnet
-            </YellowCard>
-          )}
-          {chainId === 42 && (
-            <YellowCard style={{ width: 'fit-content', marginLeft: '10px' }} padding={'6px'}>
-              Kovan Testnet
-            </YellowCard>
-          )}
+          {chainId === 4 && <YellowCard padding={'6px'}>Rinkeby Testnet</YellowCard>}
+          {chainId === 3 && <YellowCard padding={'6px'}>Ropsten Testnet</YellowCard>}
+          {chainId === 5 && <YellowCard padding={'6px'}>Goerli Testnet</YellowCard>}
+          {chainId === 42 && <YellowCard padding={'6px'}>Kovan Testnet</YellowCard>}
         </TestnetWrapper>
         <Menu />
       </HeaderElement>

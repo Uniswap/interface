@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect, useState } from 'react'
+import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
 
 import { useWeb3React } from '../hooks'
 import { safeAccess } from '../utils'

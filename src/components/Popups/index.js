@@ -23,14 +23,11 @@ const StyledClose = styled(X)`
 `
 
 const MobilePopupWrapper = styled.div`
-  margin-top: 10px;
   position: relative;
   max-width: 100%;
   height: ${({ height }) => height}
-  margin: 40px auto;
-  margin-bottom: 0;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  margin: ${({ height }) => (height ? '0 auto;' : 0)} 
+  margin-bottom: ${({ height }) => (height ? '20px' : 0)}}
 `
 
 const MobilePopupInner = styled.div`
@@ -74,12 +71,10 @@ const Popup = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     min-width: 290px;
-  `};
+  `}
 `
 
 const MobileCardPink = styled(PinkCard)`
-  max-width: 290px;
-  min-width: 290px;
   z-index: 2;
   padding: 20px;
   white-space: normal;
@@ -120,7 +115,9 @@ export default function App() {
         )}
       </FixedPopupColumn>
     )
-  } else
+  }
+  //mobile
+  else
     return (
       <MobilePopupWrapper height={activePopups?.length > 0 || showMessage ? 'fit-content' : 0}>
         <MobilePopupInner>

@@ -24,7 +24,7 @@ const Web3StatusGeneric = styled.button`
   font-size: 0.9rem;
   align-items: center;
   padding: 0.5rem;
-  border-radius: 10px;
+  border-radius: 6px;
   box-sizing: border-box;
   cursor: pointer;
   user-select: none;

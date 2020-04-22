@@ -44,7 +44,6 @@ const BodyWrapper = styled.div`
   & > * {
     max-width: calc(355px + 4rem);
     width: 90%;
-    margin-bottom: 20px;
   }
 `
 
@@ -72,8 +71,9 @@ export default function App() {
           <HeaderWrapper>
             <Header />
           </HeaderWrapper>
-          <Popups />
           <BodyWrapper>
+            <Popups />
+
             <Body>
               <Web3ReactManager>
                 <BrowserRouter>
