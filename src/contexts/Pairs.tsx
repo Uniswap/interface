@@ -4,6 +4,9 @@ import { useWeb3React, usePairContract } from '../hooks'
 import { INITIAL_TOKENS_CONTEXT } from './Tokens'
 import { ChainId, WETH, Token, TokenAmount, Pair, JSBI } from '@uniswap/sdk'
 
+const ADDRESSES_KEY = 'ADDRESSES_KEY'
+const ENTITIES_KEY = 'ENTITIES_KEY'
+
 const UPDATE = 'UPDATE'
 const UPDATE_PAIR_ENTITY = 'UPDATE_PAIR_ENTITY'
 
@@ -29,14 +32,14 @@ const PAIR_MAP: {
     ...pairMap,
     [tokens[0].chainId]: {
       ...pairMap?.[tokens[0].chainId],
-      addresses: {
-        ...pairMap?.[tokens[0].chainId]?.['addresses'],
+      [ADDRESSES_KEY]: {
+        ...pairMap?.[tokens[0].chainId]?.[ADDRESSES_KEY],
         [tokens[0].address]: {
-          ...pairMap?.[tokens[0].chainId]?.[tokens[0].address],
+          ...pairMap?.[tokens[0].chainId]?.[ADDRESSES_KEY]?.[tokens[0].address],
           [tokens[1].address]: Pair.getAddress(...tokens)
         }
       },
-      entities: {}
+      [ENTITIES_KEY]: {}
     }
   }
 }, {})
@@ -58,10 +61,10 @@ function reducer(state, { type, payload }) {
         ...state,
         [tokensSorted[0].chainId]: {
           ...state?.[tokensSorted[0].chainId],
-          addresses: {
-            ...state?.[tokensSorted[0].chainId]['addresses'],
+          [ADDRESSES_KEY]: {
+            ...state?.[tokensSorted[0].chainId]?.[ADDRESSES_KEY],
             [tokensSorted[0].address]: {
-              ...state?.[tokensSorted[0].chainId]?.[tokensSorted[0].address],
+              ...state?.[tokensSorted[0].chainId]?.[ADDRESSES_KEY]?.[tokensSorted[0].address],
               [tokensSorted[1].address]: Pair.getAddress(tokensSorted[0], tokensSorted[1])
             }
           }
@@ -74,8 +77,8 @@ function reducer(state, { type, payload }) {
         ...state,
         [chainId]: {
           ...state?.[chainId],
-          entities: {
-            ...state?.[chainId]?.['entities'],
+          [ENTITIES_KEY]: {
+            ...state?.[chainId]?.[ENTITIES_KEY],
             [pairAddress]: pair
           }
         }
@@ -113,7 +116,7 @@ export function usePairAddress(tokenA?: Token, tokenB?: Token): string | undefin
 
   const tokens: [Token, Token] = tokenA && tokenB && tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
 
-  const address = state?.[chainId]?.['addresses']?.[tokens[0]?.address]?.[tokens[1]?.address]
+  const address = state?.[chainId]?.[ADDRESSES_KEY]?.[tokens[0]?.address]?.[tokens[1]?.address]
 
   useEffect(() => {
     if (address === undefined && tokenA && tokenB) {
@@ -130,7 +133,7 @@ export function usePair(tokenA?: Token, tokenB?: Token): Pair | undefined {
   const [state, { updatePairEntity }] = usePairContext()
 
   const address = usePairAddress(tokenA, tokenB)
-  const pair = state?.[chainId]?.['entities']?.[address]
+  const pair = state?.[chainId]?.[ENTITIES_KEY]?.[address]
 
   const tokenAmountA = useAddressBalance(address, tokenA)
   const tokenAmountB = useAddressBalance(address, tokenB)
@@ -148,7 +151,7 @@ export function useAllPairs() {
   const { chainId } = useWeb3React()
   const [state] = usePairContext()
 
-  const allPairDetails = state?.[chainId]?.['addresses']
+  const allPairDetails = state?.[chainId]?.[ADDRESSES_KEY]
 
   const allPairs = useMemo(() => {
     if (!allPairDetails) {

@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { withRouter } from 'react-router-dom'
 
 import Modal from '../Modal'
 import Loader from '../Loader'
@@ -31,7 +32,8 @@ const ConfirmedIcon = styled(ColumnCenter)`
   padding: 60px 0;
 `
 
-export default function ConfirmationModal({
+function ConfirmationModal({
+  history,
   isOpen,
   onDismiss,
   hash,
@@ -44,7 +46,10 @@ export default function ConfirmationModal({
 }) {
   const { chainId } = useWeb3React()
 
-  function WrappedOnDismissed() {
+  function WrappedOnDismissed(returnToPool = false) {
+    if (returnToPool && (history.location.pathname.match('/add') || history.location.pathname.match('/remove'))) {
+      history.push('/pool')
+    }
     onDismiss()
   }
 
@@ -89,7 +94,7 @@ export default function ConfirmationModal({
                       View on Etherscan
                     </Text>
                   </Link>
-                  <ButtonPrimary onClick={WrappedOnDismissed} style={{ margin: '20px 0' }}>
+                  <ButtonPrimary onClick={() => WrappedOnDismissed(true)} style={{ margin: '20px 0' }}>
                     <Text fontWeight={500} fontSize={20}>
                       Close
                     </Text>
@@ -109,3 +114,5 @@ export default function ConfirmationModal({
     </Modal>
   )
 }
+
+export default withRouter(ConfirmationModal)

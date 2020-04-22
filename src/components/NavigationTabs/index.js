@@ -4,9 +4,10 @@ import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
 import { withRouter, NavLink, Link as HistoryLink } from 'react-router-dom'
 
-import QuestionHelper from '../Question'
+import { Hover } from '../../theme'
 import { ArrowLeft } from 'react-feather'
 import { RowBetween } from '../Row'
+import QuestionHelper from '../Question'
 
 import { useBodyKeyDown } from '../../hooks'
 
@@ -31,7 +32,6 @@ const tabOrder = [
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  height: 3rem;
   border-radius: 3rem;
   margin-bottom: 20px;
 `
@@ -44,7 +44,7 @@ const StyledNavLink = styled(NavLink).attrs({
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   justify-content: center;
-  height: 2.5rem;
+  height: 3rem;
   flex: 1 0 auto;
   border-radius: 3rem;
   outline: none;
@@ -55,7 +55,7 @@ const StyledNavLink = styled(NavLink).attrs({
   box-sizing: border-box;
 
   &.${activeClassName} {
-    border-radius: 3rem;
+    border-radius: 12px;
     box-sizing: border-box;
     font-weight: 500;
     color: ${({ theme }) => theme.black};
@@ -99,15 +99,16 @@ function NavigationTabs({ location: { pathname }, history }) {
   const adding = pathname.match('/add')
   const removing = pathname.match('/remove')
   const finding = pathname.match('/find')
+  const creating = pathname.match('/create')
 
   return (
     <>
       {adding || removing ? (
         <Tabs>
           <RowBetween style={{ padding: '1rem' }}>
-            <HistoryLink to="/pool">
+            <Hover onClick={() => history.goBack()}>
               <ArrowLink />
-            </HistoryLink>
+            </Hover>
             <ActiveText>{adding ? 'Add' : 'Remove'} Liquidity</ActiveText>
             <QuestionHelper text={'helper text'} />
           </RowBetween>
@@ -118,7 +119,17 @@ function NavigationTabs({ location: { pathname }, history }) {
             <HistoryLink to="/pool">
               <ArrowLink />
             </HistoryLink>
-            <ActiveText>Find a Pool</ActiveText>
+            <ActiveText>Import Pool</ActiveText>
+            <QuestionHelper text={'helper text'} />
+          </RowBetween>
+        </Tabs>
+      ) : creating ? (
+        <Tabs>
+          <RowBetween style={{ padding: '1rem' }}>
+            <HistoryLink to="/pool">
+              <ArrowLink />
+            </HistoryLink>
+            <ActiveText>Create Pool</ActiveText>
             <QuestionHelper text={'helper text'} />
           </RowBetween>
         </Tabs>

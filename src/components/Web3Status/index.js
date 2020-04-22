@@ -2,7 +2,7 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
-import { darken } from 'polished'
+import { darken, lighten } from 'polished'
 import { Activity } from 'react-feather'
 
 import { shortenAddress } from '../../utils'
@@ -21,10 +21,10 @@ import Identicon from '../Identicon'
 const Web3StatusGeneric = styled.button`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
-  font-size: 0.9rem;
+  /* font-size: 0.9rem; */
   align-items: center;
   padding: 0.5rem;
-  border-radius: 10px;
+  border-radius: 12px;
   box-sizing: border-box;
   cursor: pointer;
   user-select: none;
@@ -72,12 +72,12 @@ const Web3StatusConnect = styled(Web3StatusGeneric)`
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)`
-  background-color: ${({ pending, theme }) => (pending ? theme.blue1 : theme.bg1)};
+  background-color: ${({ pending, theme }) => (pending ? theme.blue1 : theme.bg2)};
   border: 1px solid ${({ pending, theme }) => (pending ? theme.blue1 : theme.bg3)};
-  color: ${({ pending, theme }) => (pending ? theme.white : theme.text3)};
-  font-weight: 400;
+  color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
+  font-weight: 500;
   :hover {
-    background-color: ${({ pending, theme }) => (pending ? darken(0.05, theme.blue1) : darken(0.05, theme.bg1))};
+    background-color: ${({ pending, theme }) => (pending ? darken(0.05, theme.blue1) : lighten(0.05, theme.bg2))};
 
     :focus {
       border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.blue1) : darken(0.1, theme.bg3))};
@@ -91,7 +91,7 @@ const Text = styled.p`
   text-overflow: ellipsis;
   white-space: nowrap;
   margin: 0 0.5rem 0 0.25rem;
-  font-size: 0.83rem;
+  font-size: 1rem;
   width: fit-content;
   font-weight: 500;
 `

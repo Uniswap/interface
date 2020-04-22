@@ -51,27 +51,32 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
     token0 &&
     totalPoolTokens &&
     userPoolBalance &&
+    pair &&
+    totalPoolTokens &&
+    pair.liquidityToken.equals(totalPoolTokens.token) &&
     pair.getLiquidityValue(token0, totalPoolTokens, userPoolBalance, false)
   const token1Deposited =
     token1 &&
     totalPoolTokens &&
     userPoolBalance &&
+    totalPoolTokens &&
+    pair.liquidityToken.equals(totalPoolTokens.token) &&
     pair.getLiquidityValue(token1, totalPoolTokens, userPoolBalance, false)
 
   if (minimal) {
     return (
       <GreyCard {...rest}>
-        <AutoColumn gap="20px">
+        <AutoColumn gap="12px">
           <FixedHeightRow>
             <RowFixed>
-              <Text fontWeight={500} fontSize={20}>
-                Current Position
+              <Text fontWeight={500} fontSize={16}>
+                Your current position
               </Text>
             </RowFixed>
           </FixedHeightRow>
           <FixedHeightRow onClick={() => setShowMore(!showMore)}>
             <RowFixed>
-              <DoubleLogo a0={token0?.address || ''} a1={token1?.address || ''} margin={true} size={24} />
+              <DoubleLogo a0={token0?.address || ''} a1={token1?.address || ''} margin={true} size={20} />
               <Text fontWeight={500} fontSize={20}>
                 {token0?.symbol}:{token1?.symbol}
               </Text>
@@ -82,15 +87,15 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
               </Text>
             </RowFixed>
           </FixedHeightRow>
-          <AutoColumn gap="12px">
+          <AutoColumn gap="4px">
             <FixedHeightRow>
-              <Text color="#888D9B" fontSize={16} fontWeight={500}>
+              <Text color="#888D9B" fontSize={14} fontWeight={500}>
                 {token0?.symbol}:
               </Text>
               {token0Deposited ? (
                 <RowFixed>
                   {!minimal && <TokenLogo address={token0?.address || ''} />}
-                  <Text color="#888D9B" fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                  <Text color="#888D9B" fontSize={14} fontWeight={500} marginLeft={'6px'}>
                     {token0Deposited?.toFixed(8)}
                   </Text>
                 </RowFixed>
@@ -99,13 +104,13 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
               )}
             </FixedHeightRow>
             <FixedHeightRow>
-              <Text color="#888D9B" fontSize={16} fontWeight={500}>
+              <Text color="#888D9B" fontSize={14} fontWeight={500}>
                 {token1?.symbol}:
               </Text>
               {token1Deposited ? (
                 <RowFixed>
                   {!minimal && <TokenLogo address={token1?.address || ''} />}
-                  <Text color="#888D9B" fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                  <Text color="#888D9B" fontSize={14} fontWeight={500} marginLeft={'6px'}>
                     {token1Deposited?.toFixed(8)}
                   </Text>
                 </RowFixed>
@@ -120,10 +125,10 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
   } else
     return (
       <HoverCard {...rest} onClick={() => setShowMore(!showMore)}>
-        <AutoColumn gap="20px">
+        <AutoColumn gap="12px">
           <FixedHeightRow>
             <RowFixed>
-              <DoubleLogo a0={token0?.address || ''} a1={token1?.address || ''} margin={true} size={24} />
+              <DoubleLogo a0={token0?.address || ''} a1={token1?.address || ''} margin={true} size={20} />
               <Text fontWeight={500} fontSize={20}>
                 {token0?.symbol}:{token1?.symbol}
               </Text>
@@ -140,15 +145,18 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
             </RowFixed>
           </FixedHeightRow>
           {showMore && (
-            <AutoColumn gap="12px">
+            <AutoColumn gap="4px">
               <FixedHeightRow>
-                <Text color="#888D9B" fontSize={16} fontWeight={500}>
-                  {token0?.symbol}:
-                </Text>
+                <RowFixed>
+                  {!minimal && <TokenLogo size="16px" style={{ marginRight: '4px' }} address={token0?.address || ''} />}
+
+                  <Text color="#888D9B" fontSize={14} fontWeight={500}>
+                    {token0?.symbol}:
+                  </Text>
+                </RowFixed>
                 {token0Deposited ? (
                   <RowFixed>
-                    {!minimal && <TokenLogo address={token0?.address || ''} />}
-                    <Text color="#888D9B" fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                    <Text color="#888D9B" fontSize={14} fontWeight={500} marginLeft={'6px'}>
                       {token0Deposited?.toFixed(8)}
                     </Text>
                   </RowFixed>
@@ -157,26 +165,26 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
                 )}
               </FixedHeightRow>
               <FixedHeightRow>
-                <Text color="#888D9B" fontSize={16} fontWeight={500}>
-                  {token1?.symbol}:
-                </Text>
+                <RowFixed>
+                  {!minimal && <TokenLogo size="16px" style={{ marginRight: '4px' }} address={token1?.address || ''} />}
+                  <Text color="#888D9B" fontSize={14} fontWeight={500}>
+                    {token1?.symbol}:
+                  </Text>
+                </RowFixed>
                 {token1Deposited ? (
-                  <RowFixed>
-                    {!minimal && <TokenLogo address={token1?.address || ''} />}
-                    <Text color="#888D9B" fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                      {token1Deposited?.toFixed(8)}
-                    </Text>
-                  </RowFixed>
+                  <Text color="#888D9B" fontSize={14} fontWeight={500} marginLeft={'6px'}>
+                    {token1Deposited?.toFixed(8)}
+                  </Text>
                 ) : (
                   '-'
                 )}
               </FixedHeightRow>
               {!minimal && (
                 <FixedHeightRow>
-                  <Text color="#888D9B" fontSize={16} fontWeight={500}>
+                  <Text color="#888D9B" fontSize={14} fontWeight={500}>
                     Your pool share:
                   </Text>
-                  <Text color="#888D9B" fontSize={16} fontWeight={500}>
+                  <Text color="#888D9B" fontSize={14} fontWeight={500}>
                     {poolTokenPercentage ? poolTokenPercentage.toFixed(2) + '%' : '-'}
                   </Text>
                 </FixedHeightRow>

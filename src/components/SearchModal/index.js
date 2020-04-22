@@ -9,20 +9,25 @@ import { isMobile } from 'react-device-detect'
 import { withRouter } from 'react-router-dom'
 import { Link as StyledLink } from '../../theme/components'
 
+import { Hover } from '../../theme'
 import Modal from '../Modal'
 import Circle from '../../assets/images/circle.svg'
 import TokenLogo from '../TokenLogo'
 import DoubleTokenLogo from '../DoubleLogo'
 import Column, { AutoColumn } from '../Column'
 import { Text } from 'rebass'
-import { Spinner } from '../../theme'
+import { LightCard } from '../Card'
+import { ArrowLeft } from 'react-feather'
 import { CloseIcon } from '../../theme/components'
 import { ColumnCenter } from '../../components/Column'
+import { Spinner, TYPE } from '../../theme'
+import { ButtonSecondary } from '../Button'
 import { RowBetween, RowFixed } from '../Row'
 
 import { isAddress } from '../../utils'
 import { useAllPairs } from '../../contexts/Pairs'
 import { useWeb3React } from '../../hooks'
+import { useSavedTokens } from '../../contexts/LocalStorage'
 import { useAllBalances } from '../../contexts/Balances'
 import { useTranslation } from 'react-i18next'
 import { useToken, useAllTokens, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
@@ -100,7 +105,7 @@ const PaddedColumn = styled(AutoColumn)`
 
 const PaddedItem = styled(RowBetween)`
   padding: 4px 24px;
-  width: calc(100% - 48px);
+  /* width: calc(100% - 48px); */
   height: 56px;
 `
 
@@ -148,6 +153,17 @@ function SearchModal({
 
   const [activeFilter, setActiveFilter] = useState(FILTERS.BALANCES)
 
+  const [showTokenImport, setShowTokenImport] = useState(false)
+
+  const [, saveUserToken] = useSavedTokens()
+
+  // reset view on close
+  useEffect(() => {
+    if (!isOpen) {
+      setShowTokenImport(false)
+    }
+  }, [isOpen])
+
   const tokenList = useMemo(() => {
     return Object.keys(allTokens)
       .sort((a, b) => {
@@ -188,23 +204,35 @@ function SearchModal({
 
   const filteredTokenList = useMemo(() => {
     return tokenList.filter(tokenEntry => {
+      const urlAdded = urlAddedTokens && urlAddedTokens.hasOwnProperty(tokenEntry.address)
+      const customAdded =
+        tokenEntry.address !== 'ETH' &&
+        INITIAL_TOKENS_CONTEXT[chainId] &&
+        !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(tokenEntry.address) &&
+        !urlAdded
+
+      // if token import page dont show preset list, else show all
+      const include = !showTokenImport || (showTokenImport && customAdded && searchQuery !== '')
+
       const inputIsAddress = searchQuery.slice(0, 2) === '0x'
       const regexMatches = Object.keys(tokenEntry).map(tokenEntryKey => {
         if (tokenEntryKey === 'address') {
           return (
+            include &&
             inputIsAddress &&
             typeof tokenEntry[tokenEntryKey] === 'string' &&
             !!tokenEntry[tokenEntryKey].match(new RegExp(escapeStringRegex(searchQuery), 'i'))
           )
         }
         return (
+          include &&
           typeof tokenEntry[tokenEntryKey] === 'string' &&
           !!tokenEntry[tokenEntryKey].match(new RegExp(escapeStringRegex(searchQuery), 'i'))
         )
       })
       return regexMatches.some(m => m)
     })
-  }, [tokenList, searchQuery])
+  }, [tokenList, urlAddedTokens, chainId, showTokenImport, searchQuery])
 
   function _onTokenSelect(address) {
     setSearchQuery('')
@@ -334,6 +362,7 @@ function SearchModal({
         </>
       )
     }
+
     if (!filteredTokenList.length) {
       return <TokenModalInfo>{t('noToken')}</TokenModalInfo>
     }
@@ -348,16 +377,11 @@ function SearchModal({
 
       const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
 
+      // if token import page dont show preset list, else show all
       return (
         <MenuItem
           key={address}
-          onClick={() =>
-            hiddenToken && hiddenToken === address
-              ? () => {}
-              : zeroBalance
-              ? _onTokenSelect(address, true)
-              : _onTokenSelect(address)
-          }
+          onClick={() => (hiddenToken && hiddenToken === address ? () => {} : _onTokenSelect(address))}
           disabled={hiddenToken && hiddenToken === address}
         >
           <RowFixed>
@@ -428,42 +452,108 @@ function SearchModal({
       initialFocusRef={isMobile ? undefined : inputRef}
     >
       <TokenModal>
-        <PaddedColumn gap="20px">
-          <RowBetween>
-            <Text fontWeight={500} fontSize={16}>
-              {filterType === 'tokens' ? 'Select A Token' : 'Select A Pool'}
-            </Text>
-            <CloseIcon onClick={onDismiss} />
-          </RowBetween>
-          <Input
-            type={'text'}
-            placeholder={t('tokenSearchPlaceholder')}
-            value={searchQuery}
-            ref={inputRef}
-            onChange={onInput}
-          />
-          <RowBetween>
-            <div>
-              {filterType !== 'tokens' && (
-                <Text>
-                  Don't see a pool?{' '}
-                  <StyledLink
+        {showTokenImport ? (
+          <PaddedColumn gap="20px">
+            <RowBetween>
+              <RowFixed>
+                <Hover>
+                  <ArrowLeft
                     onClick={() => {
-                      history.push('/find')
+                      setShowTokenImport(false)
                     }}
-                  >
-                    Import it.
-                  </StyledLink>
+                  />
+                </Hover>
+                <Text fontWeight={500} fontSize={16} marginLeft={'10px'}>
+                  Import A Token
                 </Text>
+              </RowFixed>
+              <CloseIcon onClick={onDismiss} />
+            </RowBetween>
+            <TYPE.body style={{ marginTop: '40px' }}>
+              To import a custom token, paste the token address in the search bar.
+            </TYPE.body>
+            <Input
+              type={'text'}
+              placeholder={t('tokenSearchPlaceholder')}
+              value={searchQuery}
+              ref={inputRef}
+              onChange={onInput}
+            />
+            <LightCard padding={filteredTokenList?.length === 0 ? '20px' : '0px'}>
+              {filteredTokenList?.length === 0 ? (
+                <AutoColumn gap="8px" justify="center">
+                  <TYPE.body color="">No token found.</TYPE.body>
+                </AutoColumn>
+              ) : (
+                renderTokenList()
               )}
-              {filterType === 'tokens' && <Text>Token Symbol</Text>}
-            </div>
-            <div />
-            <Filter title="Your Balances" filter={FILTERS.BALANCES} />
-          </RowBetween>
-        </PaddedColumn>
-        <div style={{ width: '100%', height: '1px', backgroundColor: '#E1E1E1' }} />
-        <TokenList>{filterType === 'tokens' ? renderTokenList() : renderPairsList()}</TokenList>
+            </LightCard>
+            {filteredTokenList?.length > 0 && (
+              <RowBetween>
+                <ButtonSecondary
+                  width="48%"
+                  onClick={() => {
+                    const newToken = filteredTokenList?.[0]
+                    saveUserToken(newToken?.address)
+                  }}
+                >
+                  Save To Your List
+                </ButtonSecondary>
+                <ButtonSecondary width="48%" onClick={() => _onTokenSelect(filteredTokenList[0].address)}>
+                  Import
+                </ButtonSecondary>
+              </RowBetween>
+            )}
+          </PaddedColumn>
+        ) : (
+          <PaddedColumn gap="20px">
+            <RowBetween>
+              <Text fontWeight={500} fontSize={16}>
+                {filterType === 'tokens' ? 'Select A Token' : 'Select A Pool'}
+              </Text>
+              <CloseIcon onClick={onDismiss} />
+            </RowBetween>
+            <Input
+              type={'text'}
+              placeholder={t('tokenSearchPlaceholder')}
+              value={searchQuery}
+              ref={inputRef}
+              onChange={onInput}
+            />
+            <RowBetween>
+              <div>
+                {filterType !== 'tokens' && (
+                  <Text fontWeight={500}>
+                    {!isMobile && 'Dont see a pool? '}
+                    <StyledLink
+                      onClick={() => {
+                        history.push('/find')
+                      }}
+                    >
+                      {!isMobile ? 'Import it.' : 'Import pool.'}
+                    </StyledLink>
+                  </Text>
+                )}
+                {filterType === 'tokens' && (
+                  <Text fontWeight={500}>
+                    {!isMobile && 'Dont see a token? '}
+                    <StyledLink
+                      onClick={() => {
+                        setShowTokenImport(true)
+                      }}
+                    >
+                      {!isMobile ? 'Import it.' : 'Import custom token.'}
+                    </StyledLink>
+                  </Text>
+                )}
+              </div>
+              <div />
+              <Filter title="Your Balances" filter={FILTERS.BALANCES} />
+            </RowBetween>
+          </PaddedColumn>
+        )}
+        {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: '#E1E1E1' }} />}
+        {!showTokenImport && <TokenList>{filterType === 'tokens' ? renderTokenList() : renderPairsList()}</TokenList>}
       </TokenModal>
     </Modal>
   )
