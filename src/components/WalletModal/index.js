@@ -39,7 +39,6 @@ const Wrapper = styled.div`
   margin: 0;
   padding: 0;
   width: 100%;
-  background-color: ${({ theme }) => theme.bg2};
 `
 
 const HeaderRow = styled.div`
@@ -55,12 +54,14 @@ const HeaderRow = styled.div`
 const ContentWrapper = styled.div`
   background-color: ${({ theme }) => theme.bg2};
   padding: 2rem;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
 `
 
 const UpperSection = styled.div`
   position: relative;
-  background-color: ${({ theme }) => theme.bg1};
 
   h5 {
     margin: 0;

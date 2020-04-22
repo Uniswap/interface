@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
+import { useAllTokens } from './Tokens'
 
 const UNISWAP = 'UNISWAP'
 
@@ -7,11 +8,15 @@ const CURRENT_VERSION = 0
 const LAST_SAVED = 'LAST_SAVED'
 
 const BETA_MESSAGE_DISMISSED = 'BETA_MESSAGE_DISMISSED'
+const MIGRATION_MESSAGE_DISMISSED = 'MIGRATION_MESSAGE_DISMISSED'
 const DARK_MODE = 'DARK_MODE'
+const TOKEN_LIST = 'TOKEN_LIST'
 
-const UPDATABLE_KEYS = [BETA_MESSAGE_DISMISSED, DARK_MODE]
+const UPDATABLE_KEYS = [BETA_MESSAGE_DISMISSED, MIGRATION_MESSAGE_DISMISSED, DARK_MODE]
 
 const UPDATE_KEY = 'UPDATE_KEY'
+
+const UPDATE_TOKEN_LIST = 'UPDATE_TOKEN_LIST'
 
 const LocalStorageContext = createContext()
 
@@ -32,6 +37,16 @@ function reducer(state, { type, payload }) {
         }
       }
     }
+    case UPDATE_TOKEN_LIST: {
+      const { tokenAddress, token } = payload
+      return {
+        ...state,
+        [TOKEN_LIST]: {
+          ...state?.[TOKEN_LIST],
+          [tokenAddress]: token
+        }
+      }
+    }
     default: {
       throw Error(`Unexpected action type in LocalStorageContext reducer: '${type}'.`)
     }
@@ -42,6 +57,7 @@ function init() {
   const defaultLocalStorage = {
     [VERSION]: CURRENT_VERSION,
     [BETA_MESSAGE_DISMISSED]: false,
+    [MIGRATION_MESSAGE_DISMISSED]: false,
     [DARK_MODE]: false
   }
 
@@ -65,8 +81,14 @@ export default function Provider({ children }) {
     dispatch({ type: UPDATE_KEY, payload: { key, value } })
   }, [])
 
+  const updateTokenList = useCallback((tokenAddress, token) => {
+    dispatch({ type: UPDATE_TOKEN_LIST, payload: { tokenAddress, token } })
+  }, [])
+
   return (
-    <LocalStorageContext.Provider value={useMemo(() => [state, { updateKey }], [state, updateKey])}>
+    <LocalStorageContext.Provider
+      value={useMemo(() => [state, { updateKey, updateTokenList }], [state, updateKey, updateTokenList])}
+    >
       {children}
     </LocalStorageContext.Provider>
   )
@@ -92,6 +114,16 @@ export function useBetaMessageManager() {
   return [!state[BETA_MESSAGE_DISMISSED], dismissBetaMessage]
 }
 
+export function useMigrationMessageManager() {
+  const [state, { updateKey }] = useLocalStorageContext()
+
+  const dismissMigrationMessage = useCallback(() => {
+    updateKey(MIGRATION_MESSAGE_DISMISSED, true)
+  }, [updateKey])
+
+  return [!state[MIGRATION_MESSAGE_DISMISSED], dismissMigrationMessage]
+}
+
 export function useDarkModeManager() {
   const [state, { updateKey }] = useLocalStorageContext()
 
@@ -105,4 +137,21 @@ export function useDarkModeManager() {
   )
 
   return [state[DARK_MODE], toggleDarkMode]
+}
+
+/**
+ *  @todo is there a better place to store these? should we move into tokens context
+ */
+export function useSavedTokens() {
+  const [state, { updateTokenList }] = useLocalStorageContext()
+  const allTokens = useAllTokens()
+  const userList = state?.[TOKEN_LIST] || []
+
+  function addToken(tokenAddress) {
+    const token = allTokens?.[tokenAddress]
+    if (token) {
+      updateTokenList(token.address, token)
+    }
+  }
+  return [userList, addToken]
 }

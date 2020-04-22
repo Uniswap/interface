@@ -1,8 +1,9 @@
 import React, { useReducer, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
+import { withRouter } from 'react-router-dom'
 import { parseUnits, parseEther } from '@ethersproject/units'
-import { WETH, TokenAmount, JSBI, Percent, Route, Token, Pair } from '@uniswap/sdk'
+import { WETH, TokenAmount, JSBI, Percent, Route, Token, Pair, Price } from '@uniswap/sdk'
 
 import TokenLogo from '../../components/TokenLogo'
 import DoubleLogo from '../../components/DoubleLogo'
@@ -13,9 +14,11 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { Text } from 'rebass'
 import { TYPE } from '../../theme'
 import { Plus } from 'react-feather'
+import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { ButtonPrimary, ButtonLight } from '../../components/Button'
-import Row, { RowBetween, RowFlat, RowFixed } from '../../components/Row'
+import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
+import { GreyCard } from '../../components/Card'
 
 import { useToken } from '../../contexts/Tokens'
 import { usePopups } from '../../contexts/Application'
@@ -43,7 +46,7 @@ const Wrapper = styled.div`
 
 const FixedBottom = styled.div`
   position: absolute;
-  bottom: -220px;
+  margin-top: 2rem;
   width: 100%;
 `
 
@@ -135,7 +138,7 @@ function reducer(
   }
 }
 
-export default function AddLiquidity({ token0, token1 }) {
+function AddLiquidity({ token0, token1, step = false }) {
   const { account, chainId, library } = useWeb3React()
   const [, addPopup] = usePopups()
 
@@ -170,7 +173,8 @@ export default function AddLiquidity({ token0, token1 }) {
   const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
   const route: Route = pair ? new Route([pair], tokens[independentField]) : undefined
   const totalSupply: TokenAmount = useTotalSupply(tokens[Field.INPUT], tokens[Field.OUTPUT])
-  const [noLiquidity, setNoLiquidity] = useState<boolean>(false) // used to detect new exchange
+  const noLiquidity = // used to detect new exchange
+    pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
 
   // state for amount approvals
   const inputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.INPUT], routerAddress)
@@ -183,13 +187,6 @@ export default function AddLiquidity({ token0, token1 }) {
     [Field.INPUT]: useAddressBalance(account, tokens[Field.INPUT]),
     [Field.OUTPUT]: useAddressBalance(account, tokens[Field.OUTPUT])
   }
-
-  // check if no exchange or no liquidity
-  useEffect(() => {
-    if (pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))) {
-      setNoLiquidity(true)
-    }
-  }, [pair])
 
   // track non relational amounts if first person to add liquidity
   const [nonrelationalAmounts, setNonrelationalAmounts] = useState({
@@ -240,13 +237,26 @@ export default function AddLiquidity({ token0, token1 }) {
     [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField]?.toSignificant(8) : ''
   }
 
+  // used for displaying approximate starting price in UI
+  const derivedPrice =
+    parsedAmounts[Field.INPUT] &&
+    parsedAmounts[Field.OUTPUT] &&
+    new Price(
+      parsedAmounts[Field.INPUT].token,
+      parsedAmounts[Field.OUTPUT].token,
+      parsedAmounts[Field.INPUT].raw,
+      parsedAmounts[Field.OUTPUT].raw
+    )
+
   // check for estimated liquidity minted
   const liquidityMinted: TokenAmount =
     !!pair &&
     !!parsedAmounts[Field.INPUT] &&
     !!parsedAmounts[Field.OUTPUT] &&
     !JSBI.equal(parsedAmounts[Field.INPUT].raw, JSBI.BigInt(0)) &&
-    !JSBI.equal(parsedAmounts[Field.OUTPUT].raw, JSBI.BigInt(0))
+    !JSBI.equal(parsedAmounts[Field.OUTPUT].raw, JSBI.BigInt(0)) &&
+    totalSupply &&
+    totalSupply.token.equals(pair.liquidityToken) // if stale value for pair
       ? pair.getLiquidityMinted(
           totalSupply ? totalSupply : new TokenAmount(pair?.liquidityToken, JSBI.BigInt(0)),
           parsedAmounts[Field.INPUT],
@@ -345,14 +355,6 @@ export default function AddLiquidity({ token0, token1 }) {
     }
     if (!parsedAmounts[Field.OUTPUT]) {
       setGeneralError('Enter an amount')
-      setIsValid(false)
-    }
-    if (showInputUnlock) {
-      setInputError('Approve Amount')
-      setIsValid(false)
-    }
-    if (showOutputUnlock) {
-      setOutputError('Approve Amount')
       setIsValid(false)
     }
     if (
@@ -487,7 +489,41 @@ export default function AddLiquidity({ token0, token1 }) {
   }
 
   const modalHeader = () => {
-    return (
+    return noLiquidity ? (
+      <AutoColumn gap="12px">
+        <LightCard margin={'30px 0'} borderRadius="20px">
+          <ColumnCenter>
+            <RowFixed>
+              <Text fontSize={36} fontWeight={500} marginRight={20}>
+                {tokens[Field.INPUT]?.symbol + '-' + tokens[Field.OUTPUT]?.symbol}
+              </Text>{' '}
+              <DoubleLogo a0={tokens[Field.INPUT]?.address} a1={tokens[Field.OUTPUT]?.address} size={36} />
+            </RowFixed>
+          </ColumnCenter>
+        </LightCard>
+        <TYPE.body>Starting pool prices</TYPE.body>
+        <LightCard borderRadius="20px">
+          <TYPE.mediumHeader>
+            {parsedAmounts[0] &&
+              parsedAmounts[1] &&
+              JSBI.greaterThan(parsedAmounts[0].raw, JSBI.BigInt(0)) &&
+              JSBI.greaterThan(parsedAmounts[1].raw, JSBI.BigInt(0)) &&
+              derivedPrice?.invert().toSignificant(6)}{' '}
+            {tokens[Field.INPUT]?.symbol + '/' + tokens[Field.OUTPUT]?.symbol}
+          </TYPE.mediumHeader>
+        </LightCard>
+        <LightCard borderRadius="20px">
+          <TYPE.mediumHeader>
+            {parsedAmounts[0] &&
+              parsedAmounts[1] &&
+              JSBI.greaterThan(parsedAmounts[0].raw, JSBI.BigInt(0)) &&
+              JSBI.greaterThan(parsedAmounts[1].raw, JSBI.BigInt(0)) &&
+              derivedPrice?.toSignificant(6)}{' '}
+            {tokens[Field.OUTPUT]?.symbol + '/' + tokens[Field.INPUT]?.symbol}
+          </TYPE.mediumHeader>
+        </LightCard>
+      </AutoColumn>
+    ) : (
       <AutoColumn gap="20px">
         <RowFlat style={{ marginTop: '60px' }}>
           <Text fontSize="48px" fontWeight={500} lineHeight="32px" marginRight={10}>
@@ -537,15 +573,49 @@ export default function AddLiquidity({ token0, token1 }) {
         </RowBetween>
         <ButtonPrimary style={{ margin: '20px 0' }} onClick={onAdd}>
           <Text fontWeight={500} fontSize={20}>
-            Confirm Supply
+            {noLiquidity ? 'Supply & Create Pool' : 'Confirm Supply'}
           </Text>
         </ButtonPrimary>
         <TYPE.italic fontSize={12} color="#565A69" textAlign="center">
-          {`Output is estimated. You will receive at least ${liquidityMinted?.toFixed(6)} UNI ${
+          {`Output is estimated. You will receive at least ${liquidityMinted?.toSignificant(6)} UNI ${
             tokens[Field.INPUT]?.symbol
           }/${tokens[Field.OUTPUT]?.symbol} or the transaction will revert.`}
         </TYPE.italic>
       </>
+    )
+  }
+  const PriceBar = function(props) {
+    return (
+      // <GreyCard>
+      <AutoRow justify="space-between">
+        <AutoColumn justify="center">
+          <Text fontWeight={500} fontSize={16} color="#000000">
+            {pair ? `${route.midPrice.toSignificant(6)} ` : '-'}
+          </Text>
+          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+            {tokens[Field.OUTPUT]?.symbol} / {tokens[Field.INPUT]?.symbol}
+          </Text>
+        </AutoColumn>
+        <AutoColumn justify="center">
+          <Text fontWeight={500} fontSize={16} color="#000000">
+            {pair ? `${route.midPrice.invert().toSignificant(6)} ` : '-'}
+          </Text>
+          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+            {tokens[Field.INPUT]?.symbol} / {tokens[Field.OUTPUT]?.symbol}
+          </Text>
+        </AutoColumn>
+        <AutoColumn justify="center">
+          <Text fontWeight={500} fontSize={16} color="#000000">
+            {poolTokenPercentage ? poolTokenPercentage?.toFixed(2) : '0.0'}
+            {'%'}
+          </Text>
+
+          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+            Pool Share
+          </Text>
+        </AutoColumn>
+      </AutoRow>
+      // </GreyCard>
     )
   }
 
@@ -568,7 +638,7 @@ export default function AddLiquidity({ token0, token1 }) {
         topContent={() => modalHeader()}
         bottomContent={modalBottom}
         pendingText={pendingText}
-        title="You will receive"
+        title={noLiquidity ? 'You are creating a pool' : 'You will receive'}
       />
       <SearchModal
         isOpen={showSearch}
@@ -579,12 +649,15 @@ export default function AddLiquidity({ token0, token1 }) {
       <AutoColumn gap="20px">
         {noLiquidity && (
           <ColumnCenter>
-            <TYPE.main textAlign="center">
-              <span role="img" aria-label="Thinking">
-                🥇
-              </span>{' '}
-              You are the first to add liquidity. Make sure you're setting rates correctly.
-            </TYPE.main>
+            <BlueCard>
+              <AutoColumn gap="10px">
+                {step && <TYPE.blue fontWeight={400}>Step 2.</TYPE.blue>}
+                <TYPE.blue fontWeight={400}>
+                  You are the first liquidity provider. The ratio of tokens you add will set the price of this pool.
+                </TYPE.blue>
+                <TYPE.blue fontWeight={400}>Once you are happy with the rate. Click create pool to review.</TYPE.blue>
+              </AutoColumn>
+            </BlueCard>
           </ColumnCenter>
         )}
         <CurrencyInputPanel
@@ -596,10 +669,9 @@ export default function AddLiquidity({ token0, token1 }) {
           }}
           atMax={atMaxAmountInput}
           token={tokens[Field.INPUT]}
-          onTokenSelection={onTokenSelection}
+          onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
           error={inputError}
           pair={pair}
-          disableTokenSelect
         />
         <ColumnCenter>
           <Plus size="16" color="#888D9B" />
@@ -613,12 +685,11 @@ export default function AddLiquidity({ token0, token1 }) {
           }}
           atMax={atMaxAmountOutput}
           token={tokens[Field.OUTPUT]}
-          onTokenSelection={onTokenSelection}
+          onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
           error={outputError}
           pair={pair}
-          disableTokenSelect
         />
-        {!noLiquidity && (
+        {/* {!noLiquidity && (
           <RowBetween>
             Rate:
             <div>
@@ -626,7 +697,7 @@ export default function AddLiquidity({ token0, token1 }) {
               {tokens[dependentField]?.symbol}
             </div>
           </RowBetween>
-        )}
+        )} */}
         {showOutputUnlock ? (
           <ButtonLight
             onClick={() => {
@@ -655,17 +726,32 @@ export default function AddLiquidity({ token0, token1 }) {
             </Text>
           </ButtonPrimary>
         )}
-        {!noLiquidity && (
-          <FixedBottom>
+      </AutoColumn>
+
+      {!noLiquidity && (
+        <FixedBottom>
+          <AutoColumn>
+            {tokens[Field.OUTPUT] && (
+              <GreyCard pt={2} mb={2}>
+                <PriceBar />
+                {/* <AutoRow justify="center" gap="8px">
+              <Link fontSize="14px" fontWeight={400} href="">
+                Show Advanced
+              </Link>
+            </AutoRow> */}
+              </GreyCard>
+            )}
             <PositionCard
               pairAddress={pair?.liquidityToken?.address}
               token0={tokens[Field.INPUT]}
               token1={tokens[Field.OUTPUT]}
               minimal={true}
             />
-          </FixedBottom>
-        )}
-      </AutoColumn>
+          </AutoColumn>
+        </FixedBottom>
+      )}
     </Wrapper>
   )
 }
+
+export default withRouter(AddLiquidity)

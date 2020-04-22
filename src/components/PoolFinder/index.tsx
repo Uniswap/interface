@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 import { TokenAmount, JSBI, Token, Pair } from '@uniswap/sdk'
 
@@ -14,11 +14,12 @@ import { LightCard } from '../Card'
 import { AutoColumn, ColumnCenter } from '../Column'
 import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
 
-import { usePair } from '../../contexts/Pairs'
 import { useToken } from '../../contexts/Tokens'
 import { usePopups } from '../../contexts/Application'
+import { usePrevious } from '../../hooks'
 import { useWeb3React } from '@web3-react/core'
 import { useAddressBalance } from '../../contexts/Balances'
+import { usePair, useAllPairs } from '../../contexts/Pairs'
 
 function PoolFinder({ history }) {
   const Fields = {
@@ -44,21 +45,45 @@ function PoolFinder({ history }) {
   const newPair: boolean = pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0))
   const allowImport: boolean = position && JSBI.greaterThan(position.raw, JSBI.BigInt(0))
 
+  const allPairs = useAllPairs()
+  const pairCount = Object.keys(allPairs)?.length
+  const pairCountPrevious = usePrevious(pairCount)
+  const [newLiquidity, setNewLiquidity] = useState<boolean>(false) // check for unimported pair
+
+  // use previous ref to detect new pair added
+  useEffect(() => {
+    if (pairCount !== pairCountPrevious && pairCountPrevious) {
+      setNewLiquidity(true)
+    }
+  }, [pairCount, pairCountPrevious])
+
+  // reset the watcher if tokens change
+  useEffect(() => {
+    setNewLiquidity(false)
+  }, [token0, token1])
+
   function endSearch() {
     history.goBack() // return to previous page
-    addPopup(
-      <Row>
-        <DoubleTokenLogo a0={token0Address || ''} a1={token1Address || ''} margin={true} />
-        <Text color="grey">
-          UNI {token0?.symbol} / {token1?.symbol} pool imported.
-        </Text>
-      </Row>
-    )
+    newLiquidity &&
+      addPopup(
+        <AutoColumn gap={'10px'}>
+          <Text fontSize={20} fontWeight={500}>
+            Pool Imported
+          </Text>
+          <Row>
+            <DoubleTokenLogo a0={token0Address || ''} a1={token1Address || ''} margin={true} />
+            <Text fontSize={16} fotnWeight={500}>
+              UNI {token0?.symbol} / {token1?.symbol}
+            </Text>
+          </Row>
+          <Link>View on Uniswap Info.</Link>
+        </AutoColumn>
+      )
   }
 
   return (
     <>
-      <AutoColumn gap="24px">
+      <AutoColumn gap="md">
         {!token0Address ? (
           <ButtonDropwdown
             onClick={() => {
@@ -111,9 +136,12 @@ function PoolFinder({ history }) {
           </ButtonDropwdownLight>
         )}
         {allowImport && (
-          <ColumnCenter justify="center" style={{ backgroundColor: '#EBF4FF', padding: '8px', borderRadius: '12px' }}>
+          <ColumnCenter
+            justify="center"
+            style={{ backgroundColor: '#EBF4FF', padding: '12px 0px', borderRadius: '12px' }}
+          >
             <Text textAlign="center" fontWeight={500} color="#2172E5">
-              Liquidity Found!
+              {newLiquidity ? 'Pool Found!' : 'Pool already imported.'}
             </Text>
           </ColumnCenter>
         )}
@@ -128,7 +156,7 @@ function PoolFinder({ history }) {
             />
           ) : (
             <LightCard padding="45px">
-              <AutoColumn gap="8px" justify="center">
+              <AutoColumn gap="sm" justify="center">
                 <Text color="">No position found.</Text>
                 <Link
                   onClick={() => {
@@ -142,14 +170,14 @@ function PoolFinder({ history }) {
           )
         ) : newPair ? (
           <LightCard padding="45px">
-            <AutoColumn gap="8px" justify="center">
-              <Text color="">No exchange found.</Text>
+            <AutoColumn gap="sm" justify="center">
+              <Text color="">No pool found.</Text>
               <Link
                 onClick={() => {
                   history.push('/add/' + token0Address + '-' + token1Address)
                 }}
               >
-                Create exchange instead.
+                Create pool instead.
               </Link>
             </AutoColumn>
           </LightCard>
@@ -163,7 +191,7 @@ function PoolFinder({ history }) {
 
         <ButtonPrimary disabled={!allowImport} onClick={endSearch}>
           <Text fontWeight={500} fontSize={20}>
-            Import
+            {newLiquidity ? 'Import' : 'Close'}
           </Text>
         </ButtonPrimary>
       </AutoColumn>

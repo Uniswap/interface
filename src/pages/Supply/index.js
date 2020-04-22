@@ -8,9 +8,10 @@ import SearchModal from '../../components/SearchModal'
 import PositionCard from '../../components/PositionCard'
 import { Link } from '../../theme'
 import { Text } from 'rebass'
-import { AutoColumn } from '../../components/Column'
 import { RowBetween } from '../../components/Row'
 import { ButtonPrimary } from '../../components/Button'
+import { GreyCard } from '../../components/Card'
+import { AutoColumn, ColumnCenter } from '../../components/Column'
 
 import { useAllPairs } from '../../contexts/Pairs'
 import { useWeb3React } from '@web3-react/core'
@@ -19,7 +20,13 @@ import { useAllBalances, useAccountLPBalances } from '../../contexts/Balances'
 
 const Positions = styled.div`
   position: relative;
-  margin-top: 38px;
+  width: 100%;
+`
+
+const FixedBottom = styled.div`
+  position: absolute;
+  bottom: -80px;
+  width: 100%;
 `
 
 function Supply({ history }) {
@@ -32,8 +39,6 @@ function Supply({ history }) {
 
   // initiate listener for LP balances
   useAccountLPBalances(account)
-
-  // console.log(allPairs)
 
   const filteredExchangeList = Object.keys(allPairs)
     .filter((pairAddress, i) => {
@@ -56,7 +61,7 @@ function Supply({ history }) {
     })
 
   return (
-    <>
+    <AutoColumn gap="lg" justify="center">
       <ButtonPrimary
         onClick={() => {
           setShowPoolSearch(true)
@@ -67,13 +72,13 @@ function Supply({ history }) {
       <Positions>
         <AutoColumn gap="20px">
           {filteredExchangeList?.length !== 0 && (
-            <RowBetween>
+            <RowBetween padding={'0 8px'}>
               <Text fontWeight={500}>Your Pooled Liquidity</Text>
               <Question text="filler text" />
             </RowBetween>
           )}
           {filteredExchangeList}
-          <AutoColumn justify="center">
+          <GreyCard style={{ textAlign: 'center', padding: '0.5rem 1.25rem 1rem 1.25rem' }}>
             <Text color="#AEAEAE">
               {filteredExchangeList?.length !== 0 ? `Don't see a pool you joined? ` : 'Already joined a pool?'}{' '}
               <Link
@@ -81,14 +86,21 @@ function Supply({ history }) {
                   history.push('/find')
                 }}
               >
-                Find it.
+                Import it.
               </Link>
             </Text>
-          </AutoColumn>
+          </GreyCard>
         </AutoColumn>
+        <FixedBottom>
+          <ColumnCenter>
+            <ButtonPrimary width="120px" padding="8px" borderRadius="10px" onClick={() => history.push('/create')}>
+              Create Pool
+            </ButtonPrimary>
+          </ColumnCenter>
+        </FixedBottom>
       </Positions>
       <SearchModal isOpen={showPoolSearch} onDismiss={() => setShowPoolSearch(false)} />
-    </>
+    </AutoColumn>
   )
 }
 export default withRouter(Supply)
