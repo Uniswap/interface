@@ -40,7 +40,7 @@ const BodyWrapper = styled.div`
   align-items: center;
   flex: 1;
   overflow: auto;
-  padding-top: 20px;
+  padding-top: 100px;
 
   & > * {
     max-width: calc(355px + 4rem);
@@ -57,11 +57,6 @@ const Body = styled.div`
   border-radius: 30px;
   box-sizing: border-box;
   padding: 1rem;
-
-  @media screen and (max-width: 480px) {
-    max-width: 290px;
-  }
-
 `
 
 export default function App() {

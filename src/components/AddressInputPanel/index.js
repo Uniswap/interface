@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { transparentize } from 'polished'
 
 // import QR from '../../assets/svg/QR.svg'
 import { isAddress } from '../../utils'

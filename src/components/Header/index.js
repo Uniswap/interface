@@ -3,16 +3,13 @@ import styled from 'styled-components'
 
 import Row from '../Row'
 import Menu from '../Menu'
-import Card, { YellowCard } from '../Card'
-import Web3Status from '../Web3Status'
-import { X } from 'react-feather'
-
 import { Link } from '../../theme'
 import { Text } from 'rebass'
 import { YellowCard } from '../Card'
 import Web3Status from '../Web3Status'
 
 import { WETH } from '@uniswap/sdk'
+import { isMobile } from 'react-device-detect'
 import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useWalletModalToggle } from '../../contexts/Application'
@@ -26,6 +23,13 @@ const HeaderFrame = styled.div`
   justify-content: space-between;
   width: 100%;
   position: absolute;
+  padding: 0 10px;
+  width: calc(100% - 20px);
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    padding: 10px;
+    width: calc(100% - 20px);
+  `};
 `
 
 const HeaderElement = styled.div`
@@ -44,12 +48,9 @@ const Title = styled.div`
   }
 `
 
-const TitleText = styled.div`
-  font-size: 24px;
-  font-weight: 700;
-  color: ${({ theme }) => theme.black};
-  margin-left: 12px;
-
+const TitleText = styled(Row)`
+  width: fit-content;
+  white-space: nowrap;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
   `};
@@ -77,9 +78,6 @@ const TestnetWrapper = styled.div`
   margin-left: 10px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    // position: absolute; 
-    // top: 70px;
-    // right: 20px;
     display: none;
   `};
 `
@@ -105,20 +103,22 @@ export default function Header() {
             <img src={Logo} alt="logo" />
           </Link>
           {!isMobile && (
-            <>
+            <TitleText>
               <Link id="link" href="https://uniswap.io">
                 <img style={{ marginLeft: '4px' }} src={Wordmark} alt="logo" />
               </Link>
               <p style={{ opacity: 0.6, marginLeft: '4px', fontSize: '16px' }}>{'/ Exchange'}</p>
-            </>
+            </TitleText>
           )}
         </Title>
       </HeaderElement>
       <HeaderElement>
-        {!isMobile && chainId === 4 && <NetworkCard>Rinkeby Testnet</NetworkCard>}
-        {!isMobile && chainId === 3 && <NetworkCard> Ropsten Testnet</NetworkCard>}
-        {!isMobile && chainId === 5 && <NetworkCard>Goerli Testnet</NetworkCard>}
-        {!isMobile && chainId === 42 && <NetworkCard>Kovan Testnet</NetworkCard>}
+        <TestnetWrapper>
+          {!isMobile && chainId === 4 && <NetworkCard>Rinkeby Testnet</NetworkCard>}
+          {!isMobile && chainId === 3 && <NetworkCard> Ropsten Testnet</NetworkCard>}
+          {!isMobile && chainId === 5 && <NetworkCard>Goerli Testnet</NetworkCard>}
+          {!isMobile && chainId === 42 && <NetworkCard>Kovan Testnet</NetworkCard>}
+        </TestnetWrapper>
         <AccountElement active={!!account}>
           {account ? (
             <Row style={{ marginRight: '-1.25rem', paddingRight: '1.75rem' }}>
@@ -129,12 +129,6 @@ export default function Header() {
           )}
           <Web3Status onClick={toggleWalletModal} />
         </AccountElement>
-        <TestnetWrapper>
-          {chainId === 4 && <YellowCard padding={'6px'}>Rinkeby Testnet</YellowCard>}
-          {chainId === 3 && <YellowCard padding={'6px'}>Ropsten Testnet</YellowCard>}
-          {chainId === 5 && <YellowCard padding={'6px'}>Goerli Testnet</YellowCard>}
-          {chainId === 42 && <YellowCard padding={'6px'}>Kovan Testnet</YellowCard>}
-        </TestnetWrapper>
         <Menu />
       </HeaderElement>
     </HeaderFrame>

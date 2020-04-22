@@ -50,28 +50,6 @@ const FixedBottom = styled.div`
   width: 100%;
 `
 
-// styles
-const Dots = styled.span`
-  &::after {
-    display: inline-block;
-    animation: ellipsis 1.25s infinite;
-    content: '.';
-    width: 1em;
-    text-align: left;
-  }
-  @keyframes ellipsis {
-    0% {
-      content: '.';
-    }
-    33% {
-      content: '..';
-    }
-    66% {
-      content: '...';
-    }
-  }
-`
-
 enum Field {
   INPUT,
   OUTPUT
@@ -772,7 +750,6 @@ function AddLiquidity({ token0, token1, step = false }) {
           </AutoColumn>
         </FixedBottom>
       )}
-
     </Wrapper>
   )
 }

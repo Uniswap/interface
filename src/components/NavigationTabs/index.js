@@ -45,7 +45,6 @@ const StyledNavLink = styled(NavLink).attrs({
   align-items: center;
   justify-content: center;
   height: 3rem;
-  width: 100px;
   flex: 1 0 auto;
   border-radius: 3rem;
   outline: none;

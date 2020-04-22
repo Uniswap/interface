@@ -6,15 +6,10 @@ import { darken } from 'polished'
 import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
 import SearchModal from '../SearchModal'
-import { TYPE } from '../../theme'
-import { Text } from 'rebass'
-import { RowBetween, RowFixed } from '../Row'
-import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { Input as NumericalInput } from '../NumericalInput'
+import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
-import { useWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
-import { useAddressBalance } from '../../contexts/Balances'
 
 const InputRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -76,39 +71,10 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.bg1};
 `
 
-const LabelRow = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: center;
-  color: ${({ theme }) => theme.text1};
-  font-size: 0.75rem;
-  line-height: 1rem;
-  padding: 0rem 1rem 1rem 1rem;
-  span:hover {
-    cursor: pointer;
-    color: ${({ theme }) => darken(0.2, theme.text3)};
-  }
-`
-
-const ErrorSpan = styled.span`
-  color: ${({ error, theme }) => error && theme.red1};
-  :hover {
-    cursor: pointer;
-    color: ${({ error, theme }) => error && darken(0.1, theme.red1)};
-  }
-`
-
 const StyledTokenName = styled.span`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.75rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
   font-size:  ${({ active }) => (active ? '20px' : '16px')};
 
-`
-
-const ClickableText = styled(Text)`
-  font-family: 'Inter';
-  font-weight: 500;
-  :hover {
-    cursor: pointer;
-  }
 `
 
 const StyledBalanceMax = styled.button`
@@ -126,44 +92,6 @@ const StyledBalanceMax = styled.button`
   }
   :focus {
     border: 1px solid ${({ theme }) => theme.blue1};
-    outline: none;
-  }
-`
-
-const MiniMax = styled.button`
-  height: 24px;
-  background-color: ${({ theme }) => theme.blue5};
-  border: 1px solid ${({ theme }) => theme.blue5};
-  border-radius: 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
-  margin-right: 0.5rem;
-  color: ${({ theme }) => theme.blue1};
-  :hover {
-    border: 1px solid ${({ theme }) => theme.blue1};
-  }
-  :focus {
-    border: 1px solid ${({ theme }) => theme.blue1};
-    outline: none;
-  }
-`
-
-const Clear = styled.button`
-  height: 24px;
-  /* background-color: ${({ theme }) => theme.bg2}; */
-  border: 1px solid ${({ theme }) => theme.bg2};
-  border-radius: 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
-  margin-right: 0.5rem;
-  /* color: ${({ theme }) => theme.blue1}; */
-  :hover {
-    border: 1px solid ${({ theme }) => theme.bg3};
-  }
-  :focus {
-    border: 1px solid ${({ theme }) => theme.bg3};
     outline: none;
   }
 `
@@ -188,11 +116,8 @@ export default function CurrencyInputPanel({
   showSendWithSwap = false
 }) {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
 
   const [modalOpen, setModalOpen] = useState(false)
-
-  const userTokenBalance = useAddressBalance(account, token)
 
   return (
     <InputPanel>

@@ -523,41 +523,29 @@ function SearchModal({
             <RowBetween>
               <div>
                 {filterType !== 'tokens' && (
-                  <Text>
-                    Don't see a pool?{' '}
+                  <Text fontWeight={500}>
+                    {!isMobile && 'Dont see a pool? '}
                     <StyledLink
                       onClick={() => {
                         history.push('/find')
                       }}
                     >
-                      Import it.
+                      {!isMobile ? 'Import it.' : 'Import pool.'}
                     </StyledLink>
                   </Text>
                 )}
-                {filterType === 'tokens' &&
-                  (isMobile ? (
-                    <Text>
-                      <StyledLink
-                        onClick={() => {
-                          history.push('/find')
-                        }}
-                      >
-                        Import custom token.
-                      </StyledLink>
-                    </Text>
-                  ) : (
-                    <Text fontWeight={500}>
-                      Don't see a token?{' '}
-                      <StyledLink
-                        onClick={() => {
-                          setShowTokenImport(true)
-                        }}
-                      >
-                        {' '}
-                        Import it.
-                      </StyledLink>
-                    </Text>
-                  ))}
+                {filterType === 'tokens' && (
+                  <Text fontWeight={500}>
+                    {!isMobile && 'Dont see a token? '}
+                    <StyledLink
+                      onClick={() => {
+                        setShowTokenImport(true)
+                      }}
+                    >
+                      {!isMobile ? 'Import it.' : 'Import custom token.'}
+                    </StyledLink>
+                  </Text>
+                )}
               </div>
               <div />
               <Filter title="Your Balances" filter={FILTERS.BALANCES} />

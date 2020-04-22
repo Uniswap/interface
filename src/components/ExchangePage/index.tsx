@@ -13,28 +13,29 @@ import AddressInputPanel from '../AddressInputPanel'
 import ConfirmationModal from '../ConfirmationModal'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 
+import { Copy } from 'react-feather'
 import { Link } from '../../theme/components'
 import { Text } from 'rebass'
 import { TYPE } from '../../theme'
-import { ArrowDown, ArrowUp } from 'react-feather'
-import { LightCard, GreyCard, BlueCard, YellowCard } from '../../components/Card'
+import { Hover } from '../../theme'
+import { ArrowDown } from 'react-feather'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
+import { GreyCard, BlueCard, YellowCard } from '../../components/Card'
 import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
-import { CheckCircle, Copy, Link as faLink } from 'react-feather'
 
 import { usePair } from '../../contexts/Pairs'
 import { useToken } from '../../contexts/Tokens'
 import { usePopups } from '../../contexts/Application'
 import { useRoute } from '../../contexts/Routes'
 // import { useTranslation } from 'react-i18next'
-import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWeb3React, useTokenContract } from '../../hooks'
 import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
+import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 
-import { INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
 import { ROUTER_ADDRESSES } from '../../constants'
+import { INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
 import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEtherscanLink } from '../../utils'
 
 const Wrapper = styled.div`
@@ -891,16 +892,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
       return (
         <>
           {route && route.midPrice && !emptyReserves && <PriceBar />}
-          {route && route.midPrice && !emptyReserves && (
-            <RowBetween>
-              <Text color="#565A69" fontWeight={500} fontSize={16}>
-                Slippage
-              </Text>
-              <ErrorText warningHigh={warningHigh} fontWeight={500}>
-                {slippageFromTrade && slippageFromTrade.toFixed(4)}%
-              </ErrorText>
-            </RowBetween>
-          )}
           <ButtonError onClick={onSwap} error={!!warningHigh} style={{ margin: '10px 0' }}>
             <Text fontSize={20} fontWeight={500}>
               {warningHigh ? (sending ? 'Send Anyway' : 'Swap Anyway') : sending ? 'Confirm Send' : 'Confirm Swap'}
@@ -925,7 +916,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
     }
   }
 
-  const PriceBar = function(props) {
+  const PriceBar = function() {
     return (
       // <GreyCard>
       <AutoRow justify="space-between">
@@ -1041,10 +1032,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
               hideInput={true}
               showSendWithSwap={true}
             />
-
-            {/* <ColumnCenter>
-              <ArrowDown size="16" />
-            </ColumnCenter> */}
           </InputGroup>
         </>
       )}
@@ -1069,8 +1056,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
               <ColumnCenter>
                 <RowBetween padding="0 8px">
                   <ArrowWrapper onClick={onSwapTokens}>
-                    <ArrowDown size="16" color="#2F80ED" />
-                    {/* <ArrowUp size="16" color="#2F80ED" /> */}
+                    <ArrowDown size="16" color="#2F80ED" onClick={onSwapTokens} />
                   </ArrowWrapper>
                   <ArrowWrapper onClick={() => setSendingWithSwap(false)} style={{ marginRight: '20px' }}>
                     <TYPE.blue>Remove Swap</TYPE.blue>
@@ -1078,9 +1064,11 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
                 </RowBetween>
               </ColumnCenter>
             ) : (
-              <ColumnCenter>
-                <ArrowDown size="16" />
-              </ColumnCenter>
+              <Hover>
+                <ColumnCenter>
+                  <ArrowDown size="16" onClick={onSwapTokens} />
+                </ColumnCenter>
+              </Hover>
             )}
             <CurrencyInputPanel
               field={Field.OUTPUT}
@@ -1191,16 +1179,11 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
             </Text>
           </ButtonError>
         )}
-      </AutoColumn>
+      </BottomGrouping>
       <FixedBottom>
         {!noRoute && tokens[Field.OUTPUT] && (
           <GreyCard pt={2} mb={2}>
             <PriceBar />
-            {/* <AutoRow justify="center" gap="8px">
-              <Link fontSize="14px" fontWeight={400} href="">
-                Show Advanced
-              </Link>
-            </AutoRow> */}
           </GreyCard>
         )}
         <AutoColumn gap="lg">
