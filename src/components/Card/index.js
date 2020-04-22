@@ -37,14 +37,13 @@ const BlueCardStyled = styled(Card)`
   background-color: ${({ theme }) => theme.blue5};
   color: ${({ theme }) => theme.blue1};
   border-radius: 12px;
-  padding: 8px;
   width: fit-content;
 `
 
 export const BlueCard = ({ children }) => {
   return (
     <BlueCardStyled>
-      <Text textAlign="center" fontWeight={500} color="#2172E5">
+      <Text fontWeight={500} color="#2172E5">
         {children}
       </Text>
     </BlueCardStyled>

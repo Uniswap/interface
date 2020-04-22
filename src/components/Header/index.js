@@ -6,16 +6,16 @@ import Menu from '../Menu'
 import Card, { YellowCard } from '../Card'
 import Web3Status from '../Web3Status'
 import { X } from 'react-feather'
+
 import { Link } from '../../theme'
 import { Text } from 'rebass'
-import { AutoColumn } from '../Column'
+import { YellowCard } from '../Card'
+import Web3Status from '../Web3Status'
 
 import { WETH } from '@uniswap/sdk'
-import { isMobile } from 'react-device-detect'
-
 import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
-import { useWalletModalToggle, usePopups } from '../../contexts/Application'
+import { useWalletModalToggle } from '../../contexts/Application'
 
 import Logo from '../../assets/svg/logo.svg'
 import Wordmark from '../../assets/svg/wordmark.svg'
@@ -29,7 +29,6 @@ const HeaderFrame = styled.div`
 `
 
 const HeaderElement = styled.div`
-  margin: 1.25rem;
   display: flex;
   min-width: 0;
   display: flex;
@@ -50,11 +49,14 @@ const TitleText = styled.div`
   font-weight: 700;
   color: ${({ theme }) => theme.black};
   margin-left: 12px;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
 `
 
 const AccountElement = styled.div`
   display: flex;
-  min-width: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -69,27 +71,17 @@ const AccountElement = styled.div`
   }
 `
 
-const FixedPopupColumn = styled(AutoColumn)`
-  position: absolute;
-  top: 80px;
-  right: 20px;
-  width: 380px;
-`
+const TestnetWrapper = styled.div`
+  white-space: nowrap;
+  width: fit-content;
+  margin-left: 10px;
 
-const StyledClose = styled(X)`
-  position: absolute;
-  right: 10px;
-
-  :hover {
-    cursor: pointer;
-  }
-`
-
-const Popup = styled(Card)`
-  z-index: 9999;
-  border-radius: 8px;
-  padding: 1rem;
-  background-color: white;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    // position: absolute; 
+    // top: 70px;
+    // right: 20px;
+    display: none;
+  `};
 `
 
 const NetworkCard = styled(YellowCard)`
@@ -104,8 +96,6 @@ export default function Header() {
 
   const userEthBalance = useAddressBalance(account, WETH[chainId])
   const toggleWalletModal = useWalletModalToggle()
-
-  const [activePopups, , removePopup] = usePopups()
 
   return (
     <HeaderFrame>
@@ -139,18 +129,14 @@ export default function Header() {
           )}
           <Web3Status onClick={toggleWalletModal} />
         </AccountElement>
+        <TestnetWrapper>
+          {chainId === 4 && <YellowCard padding={'6px'}>Rinkeby Testnet</YellowCard>}
+          {chainId === 3 && <YellowCard padding={'6px'}>Ropsten Testnet</YellowCard>}
+          {chainId === 5 && <YellowCard padding={'6px'}>Goerli Testnet</YellowCard>}
+          {chainId === 42 && <YellowCard padding={'6px'}>Kovan Testnet</YellowCard>}
+        </TestnetWrapper>
         <Menu />
       </HeaderElement>
-      <FixedPopupColumn gap="20px">
-        {activePopups.map(item => {
-          return (
-            <Popup key={item.key}>
-              <StyledClose color="#888D9B" onClick={() => removePopup(item.key)} />
-              {item.content}
-            </Popup>
-          )
-        })}
-      </FixedPopupColumn>
     </HeaderFrame>
   )
 }

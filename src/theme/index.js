@@ -8,6 +8,7 @@ import { Text } from 'rebass'
 export * from './components'
 
 const MEDIA_WIDTHS = {
+  upToExtraSmall: 500,
   upToSmall: 600,
   upToMedium: 960,
   upToLarge: 1280

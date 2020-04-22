@@ -1,16 +1,12 @@
-import React, { Suspense, lazy, useState } from 'react'
+import React, { Suspense, lazy } from 'react'
 import styled from 'styled-components'
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
-import { Text } from 'rebass'
 import Header from '../components/Header'
 import NavigationTabs from '../components/NavigationTabs'
 import Web3ReactManager from '../components/Web3ReactManager'
-import { TYPE } from '../theme'
-import { Hover } from '../theme/components'
-import { AutoColumn } from '../components/Column'
-import { PinkCard } from '../components/Card'
-import { ButtonPink } from '../components/Button'
+
+import Popups from '../components/Popups'
 import { isAddress, getAllQueryParams } from '../utils'
 
 const Swap = lazy(() => import('./Swap'))
@@ -19,11 +15,13 @@ const Pool = lazy(() => import('./Supply'))
 const Add = lazy(() => import('./Supply/AddLiquidity'))
 const Remove = lazy(() => import('./Supply/RemoveLiquidity'))
 const Find = lazy(() => import('../components/PoolFinder'))
+const Create = lazy(() => import('../components/CreatePool'))
 
 const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
+  overflow-x: hidden;
   height: 100vh;
 `
 
@@ -42,14 +40,11 @@ const BodyWrapper = styled.div`
   align-items: center;
   flex: 1;
   overflow: auto;
-  padding: 0.5rem;
-  padding-top: 40px;
-  margin-top: 4rem;
+  padding-top: 20px;
 
   & > * {
     max-width: calc(355px + 4rem);
-    width: 100%;
-    margin-bottom: 20px;
+    width: 90%;
   }
 `
 
@@ -62,12 +57,15 @@ const Body = styled.div`
   border-radius: 30px;
   box-sizing: border-box;
   padding: 1rem;
+
+  @media screen and (max-width: 480px) {
+    max-width: 290px;
+  }
+
 `
 
 export default function App() {
   const params = getAllQueryParams()
-
-  const [showMigrationMessage, toggleShowMigrationMessage] = useState(true)
 
   return (
     <>
@@ -77,18 +75,8 @@ export default function App() {
             <Header />
           </HeaderWrapper>
           <BodyWrapper>
-            {showMigrationMessage && (
-              <PinkCard padding="20px">
-                <AutoColumn justify={'center'} gap={'20px'}>
-                  <TYPE.largeHeader>Uniswap has upgraded.</TYPE.largeHeader>
-                  <Text textAlign="center">Are you a liquidity provider? Upgrade now using the migration helper.</Text>
-                  <ButtonPink width={'265px'}>Migrate your liquidity </ButtonPink>
-                  <Hover onClick={() => toggleShowMigrationMessage(false)}>
-                    <Text textAlign="center">Dismiss</Text>
-                  </Hover>
-                </AutoColumn>
-              </PinkCard>
-            )}
+            <Popups />
+
             <Body>
               <Web3ReactManager>
                 <BrowserRouter>
@@ -98,6 +86,7 @@ export default function App() {
                     <Switch>
                       <Route exact strict path="/" render={() => <Redirect to={{ pathname: '/swap' }} />} />
                       <Route exact strict path="/find" component={() => <Find params={params} />} />
+                      <Route exact strict path="/create" component={() => <Create params={params} />} />
                       <Route exact strict path="/swap" component={() => <Swap params={params} />} />
                       <Route
                         exact
@@ -140,8 +129,8 @@ export default function App() {
                           let t0
                           let t1
                           if (tokens) {
-                            t0 = tokens[0] === 'ETH' ? 'ETH' : isAddress(tokens[0])
-                            t1 = tokens[1] === 'ETH' ? 'ETH' : isAddress(tokens[1])
+                            t0 = tokens?.[0] === 'ETH' ? 'ETH' : isAddress(tokens[0])
+                            t1 = tokens?.[1] === 'ETH' ? 'ETH' : isAddress(tokens[1])
                           }
                           if (t0 && t1) {
                             return <Add params={params} token0={t0} token1={t1} />
@@ -159,8 +148,8 @@ export default function App() {
                           let t0
                           let t1
                           if (tokens) {
-                            t0 = tokens[0] === 'ETH' ? 'ETH' : isAddress(tokens[0])
-                            t1 = tokens[1] === 'ETH' ? 'ETH' : isAddress(tokens[1])
+                            t0 = tokens?.[0] === 'ETH' ? 'ETH' : isAddress(tokens[0])
+                            t1 = tokens?.[1] === 'ETH' ? 'ETH' : isAddress(tokens[1])
                           }
                           if (t0 && t1) {
                             return <Remove params={params} token0={t0} token1={t1} />

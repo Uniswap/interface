@@ -51,11 +51,16 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
     token0 &&
     totalPoolTokens &&
     userPoolBalance &&
+    pair &&
+    totalPoolTokens &&
+    pair.liquidityToken.equals(totalPoolTokens.token) &&
     pair.getLiquidityValue(token0, totalPoolTokens, userPoolBalance, false)
   const token1Deposited =
     token1 &&
     totalPoolTokens &&
     userPoolBalance &&
+    totalPoolTokens &&
+    pair.liquidityToken.equals(totalPoolTokens.token) &&
     pair.getLiquidityValue(token1, totalPoolTokens, userPoolBalance, false)
 
   if (minimal) {

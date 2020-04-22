@@ -42,7 +42,7 @@ const Wrapper = styled.div`
 
 const FixedBottom = styled.div`
   position: absolute;
-  bottom: -220px;
+  top: 100px;
   width: 100%;
 `
 
@@ -694,32 +694,34 @@ export default function RemoveLiquidity({ token0, token1 }) {
             </div>
           </RowBetween>
         </div>
-        <ButtonPrimary
-          onClick={() => {
-            setShowConfirm(true)
-          }}
-          disabled={!isValid}
-        >
-          <Text fontSize={20} fontWeight={500}>
-            {inputError
-              ? inputError
-              : outputError
-              ? outputError
-              : poolTokenError
-              ? poolTokenError
-              : generalError
-              ? generalError
-              : 'Remove'}
-          </Text>
-        </ButtonPrimary>
-        <FixedBottom>
-          <PositionCard
-            pairAddress={pair?.liquidityToken.address}
-            token0={pair?.token0}
-            token1={pair?.token1}
-            minimal={true}
-          />
-        </FixedBottom>
+        <div style={{ position: 'relative' }}>
+          <ButtonPrimary
+            onClick={() => {
+              setShowConfirm(true)
+            }}
+            disabled={!isValid}
+          >
+            <Text fontSize={20} fontWeight={500}>
+              {inputError
+                ? inputError
+                : outputError
+                ? outputError
+                : poolTokenError
+                ? poolTokenError
+                : generalError
+                ? generalError
+                : 'Remove'}
+            </Text>
+          </ButtonPrimary>
+          <FixedBottom>
+            <PositionCard
+              pairAddress={pair?.liquidityToken.address}
+              token0={pair?.token0}
+              token1={pair?.token1}
+              minimal={true}
+            />
+          </FixedBottom>
+        </div>
       </AutoColumn>
     </Wrapper>
   )
