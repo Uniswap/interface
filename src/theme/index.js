@@ -78,6 +78,12 @@ const theme = darkMode => ({
   yellow1: '#FFE270',
   yellow2: '#F3841E',
 
+  grids: {
+    sm: 8,
+    md: 12,
+    lg: 24
+  },
+
   //shadows
   shadow1: darkMode ? '#000' : '#2F80ED',
 
@@ -116,7 +122,7 @@ export const TYPE = {
     </Text>
   ),
   body: ({ children, ...rest }) => (
-    <Text fontWeight={500} fontSize={16} color={'#565A69'} {...rest}>
+    <Text fontWeight={400} fontSize={16} color={'#888D9B'} {...rest}>
       {children}
     </Text>
   ),
@@ -154,7 +160,11 @@ export const TYPE = {
 
 export const GlobalStyle = createGlobalStyle`
   @import url('https://rsms.me/inter/inter.css');
-  html { font-family: 'Inter', sans-serif; }
+  html { 
+    font-family: 'Inter', sans-serif; 
+    letter-spacing: -0.018em;
+    font-feature-settings: 'cv01', 'cv02', 'cv03', 'cv04';
+    }
   @supports (font-variation-settings: normal) {
     html { font-family: 'Inter var', sans-serif; }
   }

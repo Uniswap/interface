@@ -105,7 +105,7 @@ const PaddedColumn = styled(AutoColumn)`
 
 const PaddedItem = styled(RowBetween)`
   padding: 4px 24px;
-  width: calc(100% - 48px);
+  /* width: calc(100% - 48px); */
   height: 56px;
 `
 

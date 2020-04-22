@@ -8,14 +8,12 @@ import { useWeb3React, useDebounce } from '../../hooks'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
-  box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadow1)};
   position: relative;
   border-radius: 1.25rem;
   background-color: ${({ theme }) => theme.bg1};
   z-index: 1;
   width: 100%;
   height: 60px;
-
 `
 
 const ContainerRow = styled.div`

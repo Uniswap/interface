@@ -83,7 +83,7 @@ function PoolFinder({ history }) {
 
   return (
     <>
-      <AutoColumn gap="24px">
+      <AutoColumn gap="md">
         {!token0Address ? (
           <ButtonDropwdown
             onClick={() => {
@@ -156,7 +156,7 @@ function PoolFinder({ history }) {
             />
           ) : (
             <LightCard padding="45px">
-              <AutoColumn gap="8px" justify="center">
+              <AutoColumn gap="sm" justify="center">
                 <Text color="">No position found.</Text>
                 <Link
                   onClick={() => {
@@ -170,7 +170,7 @@ function PoolFinder({ history }) {
           )
         ) : newPair ? (
           <LightCard padding="45px">
-            <AutoColumn gap="8px" justify="center">
+            <AutoColumn gap="sm" justify="center">
               <Text color="">No pool found.</Text>
               <Link
                 onClick={() => {

@@ -77,7 +77,7 @@ export default function AdvancedSettings({ setIsOpen, setDeadline, allowedSlippa
   }, [allowedSlippage, parseCustomInput])
 
   return (
-    <AutoColumn gap="20px">
+    <AutoColumn gap="lg">
       <Link
         onClick={() => {
           setIsOpen(false)

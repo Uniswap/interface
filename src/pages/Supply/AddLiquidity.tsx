@@ -17,7 +17,8 @@ import { Plus } from 'react-feather'
 import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { ButtonPrimary, ButtonLight } from '../../components/Button'
-import Row, { RowBetween, RowFlat, RowFixed } from '../../components/Row'
+import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
+import { GreyCard } from '../../components/Card'
 
 import { useToken } from '../../contexts/Tokens'
 import { usePopups } from '../../contexts/Application'
@@ -45,7 +46,7 @@ const Wrapper = styled.div`
 
 const FixedBottom = styled.div`
   position: absolute;
-  top: 100px;
+  margin-top: 2rem;
   width: 100%;
 `
 
@@ -605,6 +606,40 @@ function AddLiquidity({ token0, token1, step = false }) {
       </>
     )
   }
+  const PriceBar = function(props) {
+    return (
+      // <GreyCard>
+      <AutoRow justify="space-between">
+        <AutoColumn justify="center">
+          <Text fontWeight={500} fontSize={16} color="#000000">
+            {pair ? `${route.midPrice.toSignificant(6)} ` : '-'}
+          </Text>
+          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+            {tokens[Field.OUTPUT]?.symbol} / {tokens[Field.INPUT]?.symbol}
+          </Text>
+        </AutoColumn>
+        <AutoColumn justify="center">
+          <Text fontWeight={500} fontSize={16} color="#000000">
+            {pair ? `${route.midPrice.invert().toSignificant(6)} ` : '-'}
+          </Text>
+          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+            {tokens[Field.INPUT]?.symbol} / {tokens[Field.OUTPUT]?.symbol}
+          </Text>
+        </AutoColumn>
+        <AutoColumn justify="center">
+          <Text fontWeight={500} fontSize={16} color="#000000">
+            {poolTokenPercentage ? poolTokenPercentage?.toFixed(2) : '0.0'}
+            {'%'}
+          </Text>
+
+          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+            Pool Share
+          </Text>
+        </AutoColumn>
+      </AutoRow>
+      // </GreyCard>
+    )
+  }
 
   const pendingText: string = `Supplied ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${
     tokens[Field.INPUT]?.symbol
@@ -676,7 +711,7 @@ function AddLiquidity({ token0, token1, step = false }) {
           error={outputError}
           pair={pair}
         />
-        {!noLiquidity && (
+        {/* {!noLiquidity && (
           <RowBetween>
             Rate:
             <div>
@@ -684,66 +719,60 @@ function AddLiquidity({ token0, token1, step = false }) {
               {tokens[dependentField]?.symbol}
             </div>
           </RowBetween>
+        )} */}
+        {showOutputUnlock ? (
+          <ButtonLight
+            onClick={() => {
+              approveAmount(Field.OUTPUT)
+            }}
+          >
+            {pendingApprovalOutput ? 'Waiting for unlock' : 'Unlock ' + tokens[Field.OUTPUT]?.symbol}
+          </ButtonLight>
+        ) : showInputUnlock ? (
+          <ButtonLight
+            onClick={() => {
+              approveAmount(Field.INPUT)
+            }}
+          >
+            {pendingApprovalInput ? 'Waiting for unlock' : 'Unlock ' + tokens[Field.INPUT]?.symbol}
+          </ButtonLight>
+        ) : (
+          <ButtonPrimary
+            onClick={() => {
+              setShowConfirm(true)
+            }}
+            disabled={!isValid}
+          >
+            <Text fontSize={20} fontWeight={500}>
+              {generalError ? generalError : inputError ? inputError : outputError ? outputError : 'Supply'}
+            </Text>
+          </ButtonPrimary>
         )}
-        <div style={{ position: 'relative' }}>
-          {showOutputUnlock ? (
-            <ButtonLight
-              onClick={() => {
-                !pendingApprovalOutput && approveAmount(Field.OUTPUT)
-              }}
-              disabled={pendingApprovalOutput}
-            >
-              {pendingApprovalOutput ? (
-                <Dots>Unlocking {tokens[Field.OUTPUT]?.symbol}</Dots>
-              ) : (
-                'Unlock ' + tokens[Field.OUTPUT]?.symbol
-              )}
-            </ButtonLight>
-          ) : showInputUnlock ? (
-            <ButtonLight
-              onClick={() => {
-                approveAmount(Field.INPUT)
-              }}
-              disabled={pendingApprovalInput}
-            >
-              {pendingApprovalInput ? (
-                <Dots>Unlocking {tokens[Field.INPUT]?.symbol}</Dots>
-              ) : (
-                'Unlock ' + tokens[Field.INPUT]?.symbol
-              )}
-            </ButtonLight>
-          ) : (
-            <ButtonPrimary
-              onClick={() => {
-                setShowConfirm(true)
-              }}
-              disabled={!isValid}
-            >
-              <Text fontSize={20} fontWeight={500}>
-                {generalError
-                  ? generalError
-                  : inputError
-                  ? inputError
-                  : outputError
-                  ? outputError
-                  : noLiquidity
-                  ? 'Create Pool'
-                  : 'Supply'}
-              </Text>
-            </ButtonPrimary>
-          )}
-          {!noLiquidity && (
-            <FixedBottom>
-              <PositionCard
-                pairAddress={pair?.liquidityToken?.address}
-                token0={tokens[Field.INPUT]}
-                token1={tokens[Field.OUTPUT]}
-                minimal={true}
-              />
-            </FixedBottom>
-          )}
-        </div>
       </AutoColumn>
+
+      {!noLiquidity && (
+        <FixedBottom>
+          <AutoColumn>
+            {tokens[Field.OUTPUT] && (
+              <GreyCard pt={2} mb={2}>
+                <PriceBar />
+                {/* <AutoRow justify="center" gap="8px">
+              <Link fontSize="14px" fontWeight={400} href="">
+                Show Advanced
+              </Link>
+            </AutoRow> */}
+              </GreyCard>
+            )}
+            <PositionCard
+              pairAddress={pair?.liquidityToken?.address}
+              token0={tokens[Field.INPUT]}
+              token1={tokens[Field.OUTPUT]}
+              minimal={true}
+            />
+          </AutoColumn>
+        </FixedBottom>
+      )}
+
     </Wrapper>
   )
 }

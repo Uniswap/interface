@@ -35,6 +35,7 @@ const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  box-sizing: border-box;
   justify-content: flex-start;
   align-items: center;
   flex: 1;
@@ -49,16 +50,18 @@ const BodyWrapper = styled.div`
 
 const Body = styled.div`
   max-width: 355px;
-  width: 90%;
+  width: 100%;
   background: ${({ theme }) => theme.bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 20px;
-  padding: 2rem 2rem 1rem 2rem;
+  border-radius: 30px;
+  box-sizing: border-box;
+  padding: 1rem;
 
   @media screen and (max-width: 480px) {
     max-width: 290px;
   }
+
 `
 
 export default function App() {
