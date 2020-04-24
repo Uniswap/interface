@@ -192,13 +192,16 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
 
   const tryApproval = async () => {
     setPendingApproval(true)
-    const estimatedGasLimit = await exchangeContractV1.estimate.approve(MIGRATOR_ADDRESS, v1Balance)
-    exchangeContractV1
-      .approve(MIGRATOR_ADDRESS, v1Balance, {
-        gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
-      })
-      .then(response => {
-        addTransaction(response, { approval: token })
+    await exchangeContractV1.estimate
+      .approve(MIGRATOR_ADDRESS, v1Balance)
+      .then(estimatedGasLimit => {
+        return exchangeContractV1
+          .approve(MIGRATOR_ADDRESS, v1Balance, {
+            gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
+          })
+          .then(response => {
+            addTransaction(response, { approval: token })
+          })
       })
       .catch(() => {
         setPendingApproval(false)
@@ -209,7 +212,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
     setPendingMigration(true)
     const now = Math.floor(Date.now() / 1000)
 
-    const frontrunningTolerance = 0.5 * 100 // .5%, in bips
+    const frontrunningTolerance = 0.005 * 100 * 100 // .5%, in bips
     const v1ValueToken = v1PriceToken.mul(v1Balance).div(v1TotalSupply)
     const v1ValueETH = v1PriceETH.mul(v1Balance).div(v1TotalSupply)
 
@@ -219,27 +222,31 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
       amountTokenMin = v1ValueToken
       amountETHMin = v1ValueETH
     } else {
-      const projectedETHValue = v1ValueToken.mul(v2PriceETH).div(v2PriceToken)
+      // how much DAI the V1 ETH is worth at the V2 price
       const projectedTokenValue = v1ValueETH.mul(v2PriceToken).div(v2PriceETH)
-      amountTokenMin = projectedTokenValue.lt(v1ValueToken) ? projectedTokenValue : v1ValueToken
-      amountETHMin = projectedETHValue.lt(v1ValueETH) ? projectedTokenValue : v1ValueETH
+      // how much ETH the V1 DAI is worth at the V2 price
+      const projectedETHValue = v1ValueToken.mul(v2PriceETH).div(v2PriceToken)
+      if (projectedTokenValue.gte(v1ValueToken)) {
+        amountTokenMin = v1ValueToken
+        amountETHMin = projectedETHValue
+      } else {
+        amountTokenMin = projectedTokenValue
+        amountETHMin = v1ValueETH
+      }
     }
     amountTokenMin = amountTokenMin.mul(100 * 100 - frontrunningTolerance).div(100 * 100)
     amountETHMin = amountETHMin.mul(100 * 100 - frontrunningTolerance).div(100 * 100)
 
-    const estimatedGasLimit = await migratorContract.estimate.migrate(
-      token,
-      amountTokenMin,
-      amountETHMin,
-      account,
-      now + DEFAULT_DEADLINE_FROM_NOW
-    )
-    migratorContract
-      .migrate(token, amountTokenMin, amountETHMin, account, now + DEFAULT_DEADLINE_FROM_NOW, {
-        gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
-      })
-      .then(response => {
-        addTransaction(response, { migrate: exchangeAddressV1 })
+    await migratorContract.estimate
+      .migrate(token, amountTokenMin, amountETHMin, account, now + DEFAULT_DEADLINE_FROM_NOW)
+      .then(estimatedGasLimit => {
+        return migratorContract
+          .migrate(token, amountTokenMin, amountETHMin, account, now + DEFAULT_DEADLINE_FROM_NOW, {
+            gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
+          })
+          .then(response => {
+            addTransaction(response, { migrate: exchangeAddressV1 })
+          })
       })
       .catch(() => {
         setPendingMigration(false)

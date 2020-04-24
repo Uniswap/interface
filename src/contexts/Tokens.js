@@ -653,8 +653,8 @@ export const INITIAL_TOKENS_CONTEXT = {
   },
   4: {
     '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735': {
-      [NAME]: 'Rinkeby DAI',
-      [SYMBOL]: 'RDAI',
+      [NAME]: 'DAI Stablecoin',
+      [SYMBOL]: 'DAI',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x9c92A4582Ad8e3D731a73B47B2C6e32Cc0fE9CD9'
     },

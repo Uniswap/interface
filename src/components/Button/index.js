@@ -90,6 +90,12 @@ const variants = {
       cursor: 'auto',
       boxShadow: 'none',
       borderColor: 'green2'
+    },
+    ':disabled': {
+      backgroundColor: 'green1',
+      cursor: 'auto',
+      boxShadow: 'none',
+      borderColor: 'green2'
     }
   }
 }
