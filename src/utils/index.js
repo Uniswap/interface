@@ -9,6 +9,7 @@ import { FACTORY_ADDRESSES, SUPPORTED_THEMES, ROUTER_ADDRESSES } from '../consta
 import { bigNumberify, keccak256, defaultAbiCoder, toUtf8Bytes, solidityPack } from 'ethers/utils'
 
 import UncheckedJsonRpcSigner from './signer'
+import { WETH } from '@uniswap/sdk'
 
 export const ERROR_CODES = ['TOKEN_NAME', 'TOKEN_SYMBOL', 'TOKEN_DECIMALS'].reduce(
   (accumulator, currentValue, currentIndex) => {
@@ -290,4 +291,12 @@ export async function getApprovalDigest(token, approve, nonce, deadline) {
       ]
     )
   )
+}
+
+export function isWETH(token) {
+  if (token && token.address === WETH[token.chainId].address) {
+    return true
+  } else {
+    return false
+  }
 }

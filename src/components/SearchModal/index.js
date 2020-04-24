@@ -3,8 +3,6 @@ import '@reach/tooltip/styles.css'
 import styled from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
 import { JSBI } from '@uniswap/sdk'
-import { Link } from 'react-router-dom'
-import { ethers } from 'ethers'
 import { isMobile } from 'react-device-detect'
 import { withRouter } from 'react-router-dom'
 import { Link as StyledLink } from '../../theme/components'
@@ -16,21 +14,20 @@ import TokenLogo from '../TokenLogo'
 import DoubleTokenLogo from '../DoubleLogo'
 import Column, { AutoColumn } from '../Column'
 import { Text } from 'rebass'
-import { LightCard } from '../Card'
 import { ArrowLeft } from 'react-feather'
 import { CloseIcon } from '../../theme/components'
 import { ColumnCenter } from '../../components/Column'
 import { Spinner, TYPE } from '../../theme'
-import { ButtonSecondary } from '../Button'
 import { RowBetween, RowFixed } from '../Row'
+import { X } from 'react-feather'
 
 import { isAddress } from '../../utils'
 import { useAllPairs } from '../../contexts/Pairs'
 import { useWeb3React } from '../../hooks'
-import { useSavedTokens } from '../../contexts/LocalStorage'
+import { useLocalStorageTokens } from '../../contexts/LocalStorage'
 import { useAllBalances } from '../../contexts/Balances'
 import { useTranslation } from 'react-i18next'
-import { useToken, useAllTokens, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
+import { useToken, useAllTokens, ALL_TOKENS } from '../../contexts/Tokens'
 
 const TokenModalInfo = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -50,6 +47,8 @@ const TokenList = styled.div`
 
 const FadedSpan = styled.span`
   color: ${({ theme }) => theme.blue1};
+  display: flex;
+  align-items: center;
 `
 
 const SpinnerWrapper = styled(Spinner)`
@@ -111,6 +110,7 @@ const PaddedItem = styled(RowBetween)`
 
 const MenuItem = styled(PaddedItem)`
   cursor: ${({ disabled }) => !disabled && 'pointer'};
+  pointer-events: ${({ disabled }) => disabled && 'none'};
   :hover {
     background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
   }
@@ -145,7 +145,27 @@ function SearchModal({
   const [sortDirection, setSortDirection] = useState(true)
 
   const token = useToken(searchQuery)
-  const tokenAddress = token && token.address
+
+  const [, { fetchTokenByAddress, addToken, removeTokenByAddress }] = useLocalStorageTokens()
+  // stores tokens that may be added to a user's local storage
+  const [temporaryToken, setTemporaryToken] = useState()
+
+  // if the current input is an address, and we don't have the token in context, try to fetch it
+  useEffect(() => {
+    const address = isAddress(searchQuery)
+    if (address && !token) {
+      let stale = false
+      fetchTokenByAddress(address).then(token => {
+        if (!stale) {
+          setTemporaryToken(token)
+        }
+      })
+      return () => {
+        stale = true
+        setTemporaryToken()
+      }
+    }
+  }, [searchQuery, token, fetchTokenByAddress])
 
   // amount of tokens to display at once
   const [, setTokensShown] = useState(0)
@@ -154,8 +174,6 @@ function SearchModal({
   const [activeFilter, setActiveFilter] = useState(FILTERS.BALANCES)
 
   const [showTokenImport, setShowTokenImport] = useState(false)
-
-  const [, saveUserToken] = useSavedTokens()
 
   // reset view on close
   useEffect(() => {
@@ -207,8 +225,8 @@ function SearchModal({
       const urlAdded = urlAddedTokens && urlAddedTokens.hasOwnProperty(tokenEntry.address)
       const customAdded =
         tokenEntry.address !== 'ETH' &&
-        INITIAL_TOKENS_CONTEXT[chainId] &&
-        !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(tokenEntry.address) &&
+        ALL_TOKENS[chainId] &&
+        !ALL_TOKENS[chainId].hasOwnProperty(tokenEntry.address) &&
         !urlAdded
 
       // if token import page dont show preset list, else show all
@@ -349,77 +367,111 @@ function SearchModal({
   }
 
   function renderTokenList() {
-    if (isAddress(searchQuery) && tokenAddress === undefined) {
-      return <Text>Searching for Exchange...</Text>
+    if (filteredTokenList.length === 0) {
+      if (isAddress(searchQuery)) {
+        if (temporaryToken === undefined) {
+          return <TokenModalInfo>Searching for Token...</TokenModalInfo>
+        } else if (temporaryToken === null) {
+          return <TokenModalInfo>Address is not a valid ERC-20 token.</TokenModalInfo>
+        } else {
+          // a user found a token by search that isn't yet added to localstorage
+          return (
+            <MenuItem
+              key={temporaryToken.address}
+              onClick={() => {
+                addToken(temporaryToken)
+                _onTokenSelect(temporaryToken.address)
+              }}
+            >
+              <RowFixed>
+                <TokenLogo address={temporaryToken.address} size={'24px'} style={{ marginRight: '14px' }} />
+                <Column>
+                  <Text fontWeight={500}>{temporaryToken.symbol}</Text>
+                  <FadedSpan>(Found by search)</FadedSpan>
+                </Column>
+              </RowFixed>
+            </MenuItem>
+          )
+        }
+      } else {
+        return <TokenModalInfo>{t('noToken')}</TokenModalInfo>
+      }
     }
-    if (isAddress(searchQuery) && tokenAddress === ethers.constants.AddressZero) {
-      return (
-        <>
-          <TokenModalInfo>{t('noToken')}</TokenModalInfo>
-          <TokenModalInfo>
-            <Link to={`/create-exchange/${searchQuery}`}>{t('createExchange')}</Link>
-          </TokenModalInfo>
-        </>
-      )
+    // TODO is this the right place to link to create exchange?
+    // else if (isAddress(searchQuery) && tokenAddress === ethers.constants.AddressZero) {
+    //   return (
+    //     <>
+    //       <TokenModalInfo>{t('noToken')}</TokenModalInfo>
+    //       <TokenModalInfo>
+    //         <Link to={`/create-exchange/${searchQuery}`}>{t('createExchange')}</Link>
+    //       </TokenModalInfo>
+    //     </>
+    //   )
+    // }
+    else {
+      return filteredTokenList.map(({ address, symbol, balance }) => {
+        const urlAdded = urlAddedTokens && urlAddedTokens.hasOwnProperty(address)
+        const customAdded =
+          address !== 'ETH' && ALL_TOKENS[chainId] && !ALL_TOKENS[chainId].hasOwnProperty(address) && !urlAdded
+
+        const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
+
+        // if token import page dont show preset list, else show all
+        return (
+          <MenuItem
+            key={address}
+            onClick={() => (hiddenToken && hiddenToken === address ? () => {} : _onTokenSelect(address))}
+            disabled={hiddenToken && hiddenToken === address}
+          >
+            <RowFixed>
+              <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }} />
+              <Column>
+                <Text fontWeight={500}>{symbol}</Text>
+                <FadedSpan>
+                  {urlAdded && '(Added by URL)'} {customAdded && '(Added by user)'}
+                  {customAdded && (
+                    <X
+                      style={{ transform: 'scale(0.8)' }}
+                      onClick={event => {
+                        event.stopPropagation()
+                        if (searchQuery === address) {
+                          setSearchQuery('')
+                        }
+                        removeTokenByAddress(chainId, address)
+                      }}
+                    />
+                  )}
+                </FadedSpan>
+              </Column>
+            </RowFixed>
+            <AutoColumn gap="4px" justify="end">
+              {balance ? (
+                <Text>
+                  {zeroBalance && showSendWithSwap ? (
+                    <ColumnCenter
+                      justify="center"
+                      style={{ backgroundColor: '#EBF4FF', padding: '8px', borderRadius: '12px' }}
+                    >
+                      <Text textAlign="center" fontWeight={500} color="#2172E5">
+                        Send With Swap
+                      </Text>
+                    </ColumnCenter>
+                  ) : balance ? (
+                    balance.toSignificant(6)
+                  ) : (
+                    '-'
+                  )}
+                </Text>
+              ) : account ? (
+                <SpinnerWrapper src={Circle} alt="loader" />
+              ) : (
+                '-'
+              )}
+            </AutoColumn>
+          </MenuItem>
+        )
+      })
     }
-
-    if (!filteredTokenList.length) {
-      return <TokenModalInfo>{t('noToken')}</TokenModalInfo>
-    }
-
-    return filteredTokenList.map(({ address, symbol, balance }) => {
-      const urlAdded = urlAddedTokens && urlAddedTokens.hasOwnProperty(address)
-      const customAdded =
-        address !== 'ETH' &&
-        INITIAL_TOKENS_CONTEXT[chainId] &&
-        !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(address) &&
-        !urlAdded
-
-      const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
-
-      // if token import page dont show preset list, else show all
-      return (
-        <MenuItem
-          key={address}
-          onClick={() => (hiddenToken && hiddenToken === address ? () => {} : _onTokenSelect(address))}
-          disabled={hiddenToken && hiddenToken === address}
-        >
-          <RowFixed>
-            <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }} />
-            <Column>
-              <Text fontWeight={500}>{symbol}</Text>
-              <FadedSpan>
-                {urlAdded && '(Added by URL)'} {customAdded && '(Added by user)'}
-              </FadedSpan>
-            </Column>
-          </RowFixed>
-          <AutoColumn gap="4px" justify="end">
-            {balance ? (
-              <Text>
-                {zeroBalance && showSendWithSwap ? (
-                  <ColumnCenter
-                    justify="center"
-                    style={{ backgroundColor: '#EBF4FF', padding: '8px', borderRadius: '12px' }}
-                  >
-                    <Text textAlign="center" fontWeight={500} color="#2172E5">
-                      Send With Swap
-                    </Text>
-                  </ColumnCenter>
-                ) : balance ? (
-                  balance.toSignificant(6)
-                ) : (
-                  '-'
-                )}
-              </Text>
-            ) : account ? (
-              <SpinnerWrapper src={Circle} alt="loader" />
-            ) : (
-              '-'
-            )}
-          </AutoColumn>
-        </MenuItem>
-      )
-    })
   }
 
   const Filter = ({ title, filter }) => {
@@ -479,31 +531,7 @@ function SearchModal({
               ref={inputRef}
               onChange={onInput}
             />
-            <LightCard padding={filteredTokenList?.length === 0 ? '20px' : '0px'}>
-              {filteredTokenList?.length === 0 ? (
-                <AutoColumn gap="8px" justify="center">
-                  <TYPE.body color="">No token found.</TYPE.body>
-                </AutoColumn>
-              ) : (
-                renderTokenList()
-              )}
-            </LightCard>
-            {filteredTokenList?.length > 0 && (
-              <RowBetween>
-                <ButtonSecondary
-                  width="48%"
-                  onClick={() => {
-                    const newToken = filteredTokenList?.[0]
-                    saveUserToken(newToken?.address)
-                  }}
-                >
-                  Save To Your List
-                </ButtonSecondary>
-                <ButtonSecondary width="48%" onClick={() => _onTokenSelect(filteredTokenList[0].address)}>
-                  Import
-                </ButtonSecondary>
-              </RowBetween>
-            )}
+            {renderTokenList()}
           </PaddedColumn>
         ) : (
           <PaddedColumn gap="20px">

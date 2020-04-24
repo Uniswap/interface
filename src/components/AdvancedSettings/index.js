@@ -86,7 +86,7 @@ export default function AdvancedSettings({ setIsOpen, setDeadline, allowedSlippa
         back
       </Link>
       <RowBetween>
-        <TYPE.main>Limit front-running tolerance</TYPE.main>
+        <TYPE.main>Front-running tolerance</TYPE.main>
         <QuestionHelper text={t('toleranceExplanation')} />
       </RowBetween>
       <Row>

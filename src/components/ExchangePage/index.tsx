@@ -35,8 +35,8 @@ import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 
 import { ROUTER_ADDRESSES } from '../../constants'
-import { INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
-import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEtherscanLink } from '../../utils'
+import { ALL_TOKENS } from '../../contexts/Tokens'
+import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEtherscanLink, isWETH } from '../../utils'
 
 const Wrapper = styled.div`
   position: relative;
@@ -316,9 +316,8 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
   const pendingApprovalOutput = usePendingApproval(tokens[Field.OUTPUT]?.address)
 
   // check for imported tokens to show warning
-  const importedTokenInput = tokens[Field.INPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.INPUT]?.address]
-  const importedTokenOutput =
-    tokens[Field.OUTPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.OUTPUT]?.address]
+  const importedTokenInput = tokens[Field.INPUT] && !!!ALL_TOKENS?.[chainId]?.[tokens[Field.INPUT]?.address]
+  const importedTokenOutput = tokens[Field.OUTPUT] && !!!ALL_TOKENS?.[chainId]?.[tokens[Field.OUTPUT]?.address]
 
   // entities for swap
   const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
@@ -436,11 +435,8 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
       !!userBalances[Field.INPUT] &&
       !!tokens[Field.INPUT] &&
       WETH[chainId] &&
-      JSBI.greaterThan(
-        userBalances[Field.INPUT].raw,
-        tokens[Field.INPUT].equals(WETH[chainId]) ? MIN_ETHER.raw : JSBI.BigInt(0)
-      )
-        ? tokens[Field.INPUT].equals(WETH[chainId])
+      JSBI.greaterThan(userBalances[Field.INPUT].raw, isWETH(tokens[Field.INPUT]) ? MIN_ETHER.raw : JSBI.BigInt(0))
+        ? isWETH(tokens[Field.INPUT])
           ? userBalances[Field.INPUT].subtract(MIN_ETHER)
           : userBalances[Field.INPUT]
         : undefined
