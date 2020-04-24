@@ -131,7 +131,12 @@ export function Updater() {
                   check(chainId, hash, globalBlockNumber)
                 } else {
                   finalize(chainId, hash, receipt)
-                  addPopup(<TxnPopup hash={hash} success={true} />)
+                  // add success or failure popup
+                  if (receipt.status === 1) {
+                    addPopup(<TxnPopup hash={hash} success={true} />)
+                  } else {
+                    addPopup(<TxnPopup hash={hash} success={false} />)
+                  }
                 }
               }
             })

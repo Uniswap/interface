@@ -104,12 +104,12 @@ export default function App() {
         {showMessage && (
           <PinkCard padding="20px" style={{ zIndex: '2' }}>
             <AutoColumn justify={'center'} gap={'20px'}>
+              <Hover onClick={() => hideMigrationMessage()}>
+                <StyledClose />
+              </Hover>
               <TYPE.largeHeader>Uniswap has upgraded.</TYPE.largeHeader>
               <Text textAlign="center">Are you a liquidity provider? Upgrade now using the migration helper.</Text>
               <ButtonPink width={'265px'}>Migrate your liquidity </ButtonPink>
-              <Hover onClick={() => hideMigrationMessage()}>
-                <Text textAlign="center">Dismiss</Text>
-              </Hover>
             </AutoColumn>
           </PinkCard>
         )}
@@ -135,12 +135,12 @@ export default function App() {
           {showMessage && (
             <MobileCardPink>
               <AutoColumn justify={'center'} gap={'20px'}>
+                <Hover onClick={() => hideMigrationMessage()}>
+                  <StyledClose />
+                </Hover>
                 <Text>Uniswap has upgraded.</Text>
                 <Text textAlign="center">Are you a liquidity provider? Upgrade now using the migration helper.</Text>
                 <ButtonPink width={'265px'}>Migrate your liquidity </ButtonPink>
-                <Hover onClick={() => hideMigrationMessage()}>
-                  <Text textAlign="center">Dismiss</Text>
-                </Hover>
               </AutoColumn>
             </MobileCardPink>
           )}

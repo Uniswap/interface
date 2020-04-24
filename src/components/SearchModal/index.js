@@ -52,6 +52,11 @@ const FadedSpan = styled.span`
   color: ${({ theme }) => theme.blue1};
 `
 
+const GreySpan = styled.span`
+  color: ${({ theme }) => theme.text3};
+  font-weight: 400;
+`
+
 const SpinnerWrapper = styled(Spinner)`
   margin: 0 0.25rem 0 0.25rem;
   color: ${({ theme }) => theme.text4};
@@ -131,7 +136,9 @@ function SearchModal({
   urlAddedTokens,
   filterType,
   hiddenToken,
-  showSendWithSwap
+  showSendWithSwap,
+  otherSelectedTokenAddress,
+  otherSelectedText
 }) {
   const { t } = useTranslation()
   const { account, chainId } = useWeb3React()
@@ -387,7 +394,10 @@ function SearchModal({
           <RowFixed>
             <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }} />
             <Column>
-              <Text fontWeight={500}>{symbol}</Text>
+              <Text fontWeight={500}>
+                {symbol}
+                {otherSelectedTokenAddress === address && <GreySpan> ({otherSelectedText})</GreySpan>}
+              </Text>
               <FadedSpan>
                 {urlAdded && '(Added by URL)'} {customAdded && '(Added by user)'}
               </FadedSpan>
@@ -470,11 +480,11 @@ function SearchModal({
               <CloseIcon onClick={onDismiss} />
             </RowBetween>
             <TYPE.body style={{ marginTop: '40px' }}>
-              To import a custom token, paste the token address in the search bar.
+              To import a custom token, paste token address in the search bar.
             </TYPE.body>
             <Input
               type={'text'}
-              placeholder={t('tokenSearchPlaceholder')}
+              placeholder={'0x0000000000...'}
               value={searchQuery}
               ref={inputRef}
               onChange={onInput}

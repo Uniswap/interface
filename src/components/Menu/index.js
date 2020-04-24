@@ -119,7 +119,7 @@ export default function Menu() {
             Code
           </MenuItem>
           <MenuItem id="link" href="https://uniswap.info/">
-            Stats
+            Analytics
           </MenuItem>
         </MenuFlyout>
       ) : (

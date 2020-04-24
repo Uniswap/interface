@@ -26,7 +26,6 @@ import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
 
 import { usePair } from '../../contexts/Pairs'
 import { useToken } from '../../contexts/Tokens'
-import { usePopups } from '../../contexts/Application'
 import { useRoute } from '../../contexts/Routes'
 // import { useTranslation } from 'react-i18next'
 import { useAddressAllowance } from '../../contexts/Allowances'
@@ -244,10 +243,10 @@ const SWAP_TYPE = {
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
 // default allowed slippage, in bips
-const INITIAL_ALLOWED_SLIPPAGE = 200
+const INITIAL_ALLOWED_SLIPPAGE = 50
 
 // 15 minutes, denominated in seconds
-const DEFAULT_DEADLINE_FROM_NOW = 60 * 15
+const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
 
 // used for warning states based on slippage in bips
 const ALLOWED_SLIPPAGE_MEDIUM = 100
@@ -261,7 +260,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
   const routerAddress: string = ROUTER_ADDRESSES[chainId]
 
   // adding notifications on txns
-  const [, addPopup] = usePopups()
   const addTransaction = useTransactionAdder()
 
   // sending state
@@ -313,7 +311,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
 
   // check on pending approvals for token amounts
   const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
-  const pendingApprovalOutput = usePendingApproval(tokens[Field.OUTPUT]?.address)
 
   // check for imported tokens to show warning
   const importedTokenInput = tokens[Field.INPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.INPUT]?.address]
@@ -341,7 +338,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
 
   // approvals
   const inputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.INPUT], routerAddress)
-  const outputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.OUTPUT], routerAddress)
 
   // all balances for detecting a swap with send
   const allBalances: TokenAmount[] = useAllBalances()
@@ -502,13 +498,8 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
           new TokenAmount(tokens[Field.INPUT], calculateSlippageAmount(parsedAmounts[Field.OUTPUT])?.[0])
   }
 
-  const showInputUnlock: boolean =
+  const showInputApprove: boolean =
     parsedAmounts[Field.INPUT] && inputApproval && JSBI.greaterThan(parsedAmounts[Field.INPUT].raw, inputApproval.raw)
-
-  const showOutputUnlock: boolean =
-    parsedAmounts[Field.OUTPUT] &&
-    outputApproval &&
-    JSBI.greaterThan(parsedAmounts[Field.OUTPUT].raw, outputApproval.raw)
 
   // function for a pure send
   async function onSend() {
@@ -525,12 +516,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
           addTransaction(response)
           setPendingConfirmation(false)
         })
-        .catch(e => {
-          addPopup(
-            <AutoColumn gap="sm">
-              <Text>Transaction Failed: try again.</Text>
-            </AutoColumn>
-          )
+        .catch(() => {
           resetModal()
           setShowConfirm(false)
         })
@@ -551,12 +537,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
           addTransaction(response)
           setPendingConfirmation(false)
         })
-        .catch(e => {
-          addPopup(
-            <AutoColumn gap="sm">
-              <Text>Transaction Failed: try again.</Text>
-            </AutoColumn>
-          )
+        .catch(() => {
           resetModal()
           setShowConfirm(false)
         })
@@ -663,17 +644,12 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
         setPendingConfirmation(false)
       })
       .catch(() => {
-        addPopup(
-          <AutoColumn gap="sm">
-            <Text>Transaction Failed: try again.</Text>
-          </AutoColumn>
-        )
         resetModal()
         setShowConfirm(false)
       })
   }
 
-  async function approveAmount(field) {
+  async function approveAmount(field: Field) {
     let estimatedGas
     let useUserBalance = false
     const tokenContract = field === Field.INPUT ? tokenContractInput : tokenContractOutput
@@ -717,12 +693,12 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
     }
 
     if (!parsedAmounts[Field.INPUT]) {
-      setGeneralError('Enter an amount')
+      setInputError('Enter an amount')
       setIsValid(false)
     }
 
     if (!parsedAmounts[Field.OUTPUT] && !ignoreOutput) {
-      setGeneralError('Enter an amount')
+      setOutputError('Enter an amount')
       setIsValid(false)
     }
 
@@ -755,22 +731,35 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
       parsedAmounts[Field.INPUT] &&
       JSBI.lessThan(userBalances[Field.INPUT].raw, parsedAmounts[Field.INPUT]?.raw)
     ) {
-      setInputError('Insufficient balance.')
+      setInputError('Insufficient ' + tokens[Field.INPUT]?.symbol + ' balance')
+      setIsValid(false)
+    }
+
+    // check for null trade entitiy if not enough balance for trade
+    if (
+      (!sending || sendingWithSwap) &&
+      userBalances[Field.INPUT] &&
+      !trade &&
+      parsedAmounts[independentField] &&
+      !parsedAmounts[dependentField] &&
+      tokens[dependentField]
+    ) {
+      setInputError('Insufficient ' + tokens[Field.INPUT]?.symbol + ' balance')
       setIsValid(false)
     }
   }, [
-    pair,
-    ignoreOutput,
-    parsedAmounts,
-    recipient,
-    recipientError,
     sending,
     sendingWithSwap,
-    showInputUnlock,
-    showOutputUnlock,
+    dependentField,
+    ignoreOutput,
+    independentField,
+    pair,
+    parsedAmounts,
+    recipientError,
+    route,
     tokens,
-    userBalances,
-    route
+    trade,
+    userBalances
   ])
 
   // warnings on slippage
@@ -796,7 +785,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
         <AutoColumn gap="lg" style={{ marginTop: '40px' }}>
           <RowBetween>
             <Text fontSize={36} fontWeight={500}>
-              {parsedAmounts[Field.INPUT]?.toFixed(8)} {tokens[Field.INPUT]?.symbol}
+              {parsedAmounts[Field.INPUT]?.toSignificant(6)} {tokens[Field.INPUT]?.symbol}
             </Text>
             <TokenLogo address={tokens[Field.INPUT]?.address} size={'30px'} />
           </RowBetween>
@@ -898,11 +887,19 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
             </Text>
           </ButtonError>
           <AutoColumn justify="center" gap="lg">
-            <TYPE.italic textAlign="center" style={{ width: '80%' }}>
-              {`Output is estimated. You will receive at least ${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(
-                6
-              )} ${tokens[Field.OUTPUT]?.symbol}  or the transaction will revert.`}
-            </TYPE.italic>
+            {independentField === Field.INPUT ? (
+              <TYPE.italic textAlign="center" style={{ width: '80%' }}>
+                {`Output is estimated. You will receive at least ${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(
+                  6
+                )} ${tokens[Field.OUTPUT]?.symbol}  or the transaction will revert.`}
+              </TYPE.italic>
+            ) : (
+              <TYPE.italic textAlign="center" style={{ width: '80%' }}>
+                {`Input is estimated. You will sell at most ${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} ${
+                  tokens[Field.INPUT]?.symbol
+                }  or the transaction will revert.`}
+              </TYPE.italic>
+            )}
             <Link
               onClick={() => {
                 setShowAdvanced(true)
@@ -918,7 +915,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
 
   const PriceBar = function() {
     return (
-      // <GreyCard>
       <AutoRow justify="space-between">
         <AutoColumn justify="center">
           <Text fontWeight={500} fontSize={16} color="#000000">
@@ -951,7 +947,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
           </Text>
         </AutoColumn>
       </AutoRow>
-      // </GreyCard>
     )
   }
 
@@ -960,7 +955,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
     ? sendingWithSwap
       ? `Sending ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol} to ${recipient}`
       : `Sending ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${tokens[Field.INPUT]?.symbol} to ${recipient}`
-    : ` Swapped ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${tokens[Field.INPUT]?.symbol} for ${parsedAmounts[
+    : ` Swapping ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${tokens[Field.INPUT]?.symbol} for ${parsedAmounts[
         Field.OUTPUT
       ]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}`
 
@@ -1015,7 +1010,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
               </MaxButton>
             )}
             <StyledNumerical value={formattedAmounts[Field.INPUT]} onUserInput={val => onUserInput(Field.INPUT, val)} />
-            {/* {!parsedAmounts[Field.INPUT] && <TYPE.gray>Enter an amount.</TYPE.gray>} */}
             <CurrencyInputPanel
               field={Field.INPUT}
               value={formattedAmounts[Field.INPUT]}
@@ -1031,6 +1025,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
               hideBalance={true}
               hideInput={true}
               showSendWithSwap={true}
+              otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
             />
           </InputGroup>
         </>
@@ -1051,6 +1046,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
                 maxAmountInput && onMaxInput(maxAmountInput.toExact())
               }}
               onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
+              otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
             />
             {sendingWithSwap ? (
               <ColumnCenter>
@@ -1083,6 +1079,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
               onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
               error={outputError}
               pair={pair}
+              otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
             />
             {sendingWithSwap && (
               <RowBetween padding="0 8px">
@@ -1111,7 +1108,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
       <BottomGrouping>
         {noRoute ? (
           <GreyCard style={{ textAlign: 'center' }}>
-            {/* <RowBetween style={{ margin: '10px 0' }}> */}
             <TYPE.main>No exchange for this pair.</TYPE.main>
 
             <Link
@@ -1122,22 +1118,8 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
               {' '}
               Create one now
             </Link>
-            {/* </RowBetween> */}
           </GreyCard>
-        ) : showOutputUnlock ? (
-          <ButtonLight
-            onClick={() => {
-              !pendingApprovalOutput && approveAmount(Field.OUTPUT)
-            }}
-            disabled={pendingApprovalOutput}
-          >
-            {pendingApprovalOutput ? (
-              <Dots>Unlocking {tokens[Field.OUTPUT]?.symbol}</Dots>
-            ) : (
-              'Unlock ' + tokens[Field.OUTPUT]?.symbol
-            )}
-          </ButtonLight>
-        ) : showInputUnlock ? (
+        ) : showInputApprove && !inputError ? (
           <ButtonLight
             onClick={() => {
               approveAmount(Field.INPUT)
@@ -1145,9 +1127,9 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
             disabled={pendingApprovalInput}
           >
             {pendingApprovalInput ? (
-              <Dots>Unlocking {tokens[Field.INPUT]?.symbol}</Dots>
+              <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
             ) : (
-              'Unlock ' + tokens[Field.INPUT]?.symbol
+              'Approve ' + tokens[Field.INPUT]?.symbol
             )}
           </ButtonLight>
         ) : (
@@ -1181,7 +1163,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
         )}
       </BottomGrouping>
       <FixedBottom>
-        {!noRoute && tokens[Field.OUTPUT] && (
+        {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
           <GreyCard pt={2} mb={2}>
             <PriceBar />
           </GreyCard>
@@ -1231,7 +1213,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
                 </RowBetween>
                 <Text color="#565A69" lineHeight="145.23%;">
                   This trade will move the price by {slippageFromTrade.toFixed(2)}%. This pool probably doesn’t have
-                  enough liquidity. Are you sure you want to continue this trade?
+                  enough liquidity to support this trade. Are you sure you want to continue this trade?
                 </Text>
               </AutoColumn>
             </GreyCard>

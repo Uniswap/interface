@@ -102,7 +102,7 @@ function ConfirmationModal({
                 </>
               )}
               {pendingConfirmation && <div style={{ height: '138px' }} />}
-              <Text fontSize={12} color="#565A69">
+              <Text fontSize={12} color="#565A69" textAlign="center">
                 {pendingConfirmation
                   ? 'Confirm this transaction in your wallet'
                   : `Estimated time until confirmation: 3 min`}

@@ -32,7 +32,7 @@ import { ROUTER_ADDRESSES } from '../../constants'
 import { getRouterContract, calculateGasMargin } from '../../utils'
 
 // denominated in seconds
-const DEADLINE_FROM_NOW = 60 * 15
+const DEADLINE_FROM_NOW = 60 * 20
 
 const GAS_MARGIN: BigNumber = ethers.utils.bigNumberify(1000)
 
@@ -560,7 +560,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
       </>
     )
   }
-  const pendingText: string = `Removed ${parsedAmounts[Field.TOKEN0]?.toSignificant(6)} ${
+  const pendingText: string = `Removing ${parsedAmounts[Field.TOKEN0]?.toSignificant(6)} ${
     tokens[Field.TOKEN0]?.symbol
   } and ${parsedAmounts[Field.TOKEN1]?.toSignificant(6)} ${tokens[Field.TOKEN1]?.symbol}`
 
@@ -578,7 +578,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
         topContent={modalHeader}
         bottomContent={modalBottom}
         pendingText={pendingText}
-        title="You will remove"
+        title="You will recieve"
       />
       <AutoColumn gap="20px">
         <LightCard>
@@ -664,7 +664,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
               token={tokens[Field.TOKEN0]}
               error={inputError}
               disableTokenSelect
-              customBalance={TokensDeposited[Field.TOKEN0]}
             />
             <ColumnCenter>
               <Plus size="16" color="#888D9B" />
@@ -678,7 +677,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
               token={tokens[Field.TOKEN1]}
               error={outputError}
               disableTokenSelect
-              customBalance={TokensDeposited[Field.TOKEN1]}
             />
           </>
         )}
