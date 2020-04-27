@@ -33,7 +33,6 @@ const MobilePopupWrapper = styled.div`
 const MobilePopupInner = styled.div`
   height: 99%;
   box-sizing: border-box;
-  white-space: nowrap;
   overflow-x: auto;
   overflow-y: hidden;
   display: flex;
@@ -58,7 +57,7 @@ const FixedPopupColumn = styled(AutoColumn)`
 const Popup = styled.div`
   display: inline-block;
   width: 100%;
-  height: 120px;
+  min-height: 120px;
   padding: 1em;
   box-sizing: border-box;
   background-color: white;
@@ -67,7 +66,7 @@ const Popup = styled.div`
   border-radius: 10px;
   padding: 20px;
   padding-right: 35px;
-  whitespace: normal;
+  z-index: 2;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     min-width: 290px;

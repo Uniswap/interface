@@ -44,6 +44,7 @@ const FixedBottom = styled.div`
   position: absolute;
   top: 100px;
   width: 100%;
+  margin-bottom: 80px;
 `
 
 const ClickableText = styled(Text)`
@@ -467,7 +468,17 @@ export default function RemoveLiquidity({ token0, token1 }) {
       .then(response => {
         setPendingConfirmation(false)
         setTxHash(response.hash)
-        addTransaction(response)
+        addTransaction(
+          response,
+          'Remove ' +
+            parsedAmounts[Field.TOKEN0]?.toSignificant(3) +
+            ' ' +
+            tokens[Field.TOKEN0]?.symbol +
+            ' and ' +
+            parsedAmounts[Field.TOKEN1]?.toSignificant(3) +
+            ' ' +
+            tokens[Field.TOKEN1]?.symbol
+        )
       })
       .catch(e => {
         console.log(e)

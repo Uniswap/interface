@@ -447,7 +447,17 @@ function AddLiquidity({ token0, token1, step = false }) {
     })
       .then(response => {
         setTxHash(response.hash)
-        addTransaction(response)
+        addTransaction(
+          response,
+          'Add ' +
+            parsedAmounts[Field.INPUT]?.toSignificant(3) +
+            ' ' +
+            tokens[Field.INPUT]?.symbol +
+            ' and ' +
+            parsedAmounts[Field.OUTPUT]?.toSignificant(3) +
+            ' ' +
+            tokens[Field.OUTPUT]?.symbol
+        )
         setPendingConfirmation(false)
       })
       .catch((e: Error) => {
@@ -476,7 +486,7 @@ function AddLiquidity({ token0, token1, step = false }) {
         gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
       })
       .then(response => {
-        addTransaction(response, { approval: tokens[field]?.address })
+        addTransaction(response, 'Approve ' + tokens[field]?.symbol, { approval: tokens[field]?.address })
       })
   }
 

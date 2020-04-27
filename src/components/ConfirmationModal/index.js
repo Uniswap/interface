@@ -83,7 +83,7 @@ function ConfirmationModal({
                 {!pendingConfirmation ? 'Transaction Submitted' : 'Waiting For Confirmation'}
               </Text>
               <AutoColumn gap="12px" justify={'center'}>
-                <Text fontWeight={600} fontSize={16} color="#2172E5">
+                <Text fontWeight={600} fontSize={16} color="#2172E5" textAlign="center">
                   {pendingText}
                 </Text>
               </AutoColumn>

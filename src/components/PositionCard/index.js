@@ -139,9 +139,9 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
                 {userPoolBalance ? userPoolBalance.toFixed(6) : '-'}
               </Text>
               {showMore ? (
-                <ChevronUp size="30" style={{ marginLeft: '10px' }} />
+                <ChevronUp size="20" style={{ marginLeft: '10px' }} />
               ) : (
-                <ChevronDown size="30" style={{ marginLeft: '10px' }} />
+                <ChevronDown size="20" style={{ marginLeft: '10px' }} />
               )}
             </RowFixed>
           </FixedHeightRow>

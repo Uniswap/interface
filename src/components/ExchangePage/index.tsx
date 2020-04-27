@@ -27,7 +27,6 @@ import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
 import { usePair } from '../../contexts/Pairs'
 import { useToken } from '../../contexts/Tokens'
 import { useRoute } from '../../contexts/Routes'
-// import { useTranslation } from 'react-i18next'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWeb3React, useTokenContract } from '../../hooks'
 import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
@@ -513,7 +512,15 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
         .sendTransaction({ to: recipient.toString(), value: hex(parsedAmounts[Field.INPUT].raw) })
         .then(response => {
           setTxHash(response.hash)
-          addTransaction(response)
+          addTransaction(
+            response,
+            'Send ' +
+              parsedAmounts[Field.INPUT]?.toSignificant(3) +
+              ' ' +
+              tokens[Field.INPUT]?.symbol +
+              ' to ' +
+              recipient
+          )
           setPendingConfirmation(false)
         })
         .catch(() => {
@@ -534,7 +541,15 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
       })
         .then(response => {
           setTxHash(response.hash)
-          addTransaction(response)
+          addTransaction(
+            response,
+            'Send ' +
+              parsedAmounts[Field.INPUT]?.toSignificant(3) +
+              ' ' +
+              tokens[Field.INPUT]?.symbol +
+              ' to ' +
+              recipient
+          )
           setPendingConfirmation(false)
         })
         .catch(() => {
@@ -640,7 +655,17 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
     })
       .then(response => {
         setTxHash(response.hash)
-        addTransaction(response)
+        addTransaction(
+          response,
+          'Swap ' +
+            slippageAdjustedAmounts?.[Field.INPUT]?.toSignificant(3) +
+            ' ' +
+            tokens[Field.INPUT]?.symbol +
+            ' for ' +
+            slippageAdjustedAmounts?.[Field.OUTPUT]?.toSignificant(3) +
+            ' ' +
+            tokens[Field.OUTPUT]?.symbol
+        )
         setPendingConfirmation(false)
       })
       .catch(() => {
@@ -667,7 +692,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
         gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
       })
       .then(response => {
-        addTransaction(response, { approval: tokens[field]?.address })
+        addTransaction(response, 'Approve ' + tokens[field]?.symbol, { approval: tokens[field]?.address })
       })
   }
 
@@ -1094,9 +1119,11 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
           <AutoColumn gap="sm">
             <AddressInputPanel
               onChange={_onRecipient}
-              onError={(error: boolean) => {
-                if (error) {
+              onError={(error: boolean, input) => {
+                if (error && input !== '') {
                   setRecipientError('Invalid Recipient')
+                } else if (error && input === '') {
+                  setRecipientError('Enter a Recipient')
                 } else {
                   setRecipientError(null)
                 }
