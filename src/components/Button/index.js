@@ -115,13 +115,13 @@ export const ButtonEmpty = styled(Base)`
   color: black;
 
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, '#edeef2')};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg3};
   }
   &:hover {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, '#edeef2')};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg3};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, '#edeef2')};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg3};
   }
   &:disabled {
     opacity: 50%;

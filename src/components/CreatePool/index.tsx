@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Token, JSBI, WETH } from '@uniswap/sdk'
 
-import Row from '../Row'
+import Row, { AutoRow } from '../Row'
 import TokenLogo from '../TokenLogo'
 import SearchModal from '../SearchModal'
 import AddLiquidity from '../../pages/Supply/AddLiquidity'
@@ -53,7 +53,7 @@ function CreatePool({ history }) {
         <BlueCard>
           <AutoColumn gap="10px">
             <TYPE.blue>{'Step ' + step + '.'} </TYPE.blue>
-            {step === 1 && <TYPE.blue fontWeight={400}>Select or add your 2nd token to continue.</TYPE.blue>}
+            {step === 1 && <TYPE.blue fontWeight={400}>Select or add a second token to continue.</TYPE.blue>}
           </AutoColumn>
         </BlueCard>
         <AutoColumn gap="24px">
@@ -73,11 +73,14 @@ function CreatePool({ history }) {
                 setActiveField(Fields.TOKEN0)
               }}
             >
-              <Row>
+              <Row align="flex-end">
                 <TokenLogo address={token0Address} />
                 <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-                  {token0?.symbol}
+                  {token0?.symbol}{' '}
                 </Text>
+                <TYPE.darkGray fontWeight={500} fontSize={16} marginLeft={'8px'}>
+                  {token0.symbol === 'ETH' && '(default)'}
+                </TYPE.darkGray>
               </Row>
             </ButtonDropwdownLight>
           )}
@@ -109,12 +112,13 @@ function CreatePool({ history }) {
               </Row>
             </ButtonDropwdownLight>
           )}
-
           {pairExists ? (
-            <TYPE.body>
-              Pool already exists! Join the pool{' '}
-              <Link onClick={() => history.push('/add/' + token0Address + '-' + token1Address)}>here.</Link>
-            </TYPE.body>
+            <AutoRow padding="10px" justify="center">
+              <TYPE.body textAlign="center">
+                Pool already exists!
+                <Link onClick={() => history.push('/add/' + token0Address + '-' + token1Address)}> Join the pool.</Link>
+              </TYPE.body>
+            </AutoRow>
           ) : (
             <ButtonPrimary disabled={step !== 2}>
               <Text fontWeight={500} fontSize={20}>
@@ -133,6 +137,7 @@ function CreatePool({ history }) {
             setShowSearch(false)
           }}
           hiddenToken={activeField === Fields.TOKEN0 ? token1Address : token0Address}
+          showCommonBases={true}
         />
       </AutoColumn>
     )

@@ -12,11 +12,12 @@ import Card from '../Card'
 import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
 import { Text } from 'rebass'
+import { Link } from '../../theme/components'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../Column'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { ButtonSecondary } from '../Button'
-import { RowBetween, RowFixed } from '../Row'
+import { RowBetween, RowFixed, AutoRow } from '../Row'
 
 const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -138,9 +139,9 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
                 {userPoolBalance ? userPoolBalance.toFixed(6) : '-'}
               </Text>
               {showMore ? (
-                <ChevronUp size="30" style={{ marginLeft: '10px' }} />
+                <ChevronUp size="20" style={{ marginLeft: '10px' }} />
               ) : (
-                <ChevronDown size="30" style={{ marginLeft: '10px' }} />
+                <ChevronDown size="20" style={{ marginLeft: '10px' }} />
               )}
             </RowFixed>
           </FixedHeightRow>
@@ -149,9 +150,8 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
               <FixedHeightRow>
                 <RowFixed>
                   {!minimal && <TokenLogo size="16px" style={{ marginRight: '4px' }} address={token0?.address || ''} />}
-
                   <Text color="#888D9B" fontSize={14} fontWeight={500}>
-                    {token0?.symbol}:
+                    Your {token0?.symbol}:
                   </Text>
                 </RowFixed>
                 {token0Deposited ? (
@@ -168,7 +168,7 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
                 <RowFixed>
                   {!minimal && <TokenLogo size="16px" style={{ marginRight: '4px' }} address={token1?.address || ''} />}
                   <Text color="#888D9B" fontSize={14} fontWeight={500}>
-                    {token1?.symbol}:
+                    Your {token1?.symbol}:
                   </Text>
                 </RowFixed>
                 {token1Deposited ? (
@@ -189,27 +189,28 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
                   </Text>
                 </FixedHeightRow>
               )}
+              <RowBetween marginTop="10px">
+                <ButtonSecondary
+                  width="48%"
+                  onClick={() => {
+                    history.push('/add/' + token0?.address + '-' + token1?.address)
+                  }}
+                >
+                  Add
+                </ButtonSecondary>
+                <ButtonSecondary
+                  width="48%"
+                  onClick={() => {
+                    history.push('/remove/' + token0?.address + '-' + token1?.address)
+                  }}
+                >
+                  Remove
+                </ButtonSecondary>
+              </RowBetween>
+              <AutoRow justify="center" marginTop={'10px'}>
+                <Link>View analytics</Link>
+              </AutoRow>
             </AutoColumn>
-          )}
-          {showMore && (
-            <RowBetween>
-              <ButtonSecondary
-                width="48%"
-                onClick={() => {
-                  history.push('/add/' + token0?.address + '-' + token1?.address)
-                }}
-              >
-                Add
-              </ButtonSecondary>
-              <ButtonSecondary
-                width="48%"
-                onClick={() => {
-                  history.push('/remove/' + token0?.address + '-' + token1?.address)
-                }}
-              >
-                Remove
-              </ButtonSecondary>
-            </RowBetween>
           )}
         </AutoColumn>
       </HoverCard>

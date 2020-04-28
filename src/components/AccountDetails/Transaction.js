@@ -9,14 +9,13 @@ import Copy from './Copy'
 import Circle from '../../assets/images/circle.svg'
 
 import { transparentize } from 'polished'
+import { useAllTransactions } from '../../contexts/Transactions'
 
 const TransactionStatusWrapper = styled.div`
   display: flex;
   align-items: center;
   min-width: 12px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  word-break: break-word;
 `
 
 const TransactionWrapper = styled.div`
@@ -25,17 +24,14 @@ const TransactionWrapper = styled.div`
   width: 100%;
   margin-top: 0.75rem;
   a {
-    /* flex: 1 1 auto; */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     min-width: 0;
-    max-width: 250px;
+    word-break: break-word;
   }
 `
 
 const TransactionStatusText = styled.span`
   margin-left: 0.5rem;
+  word-break: keep-all;
 `
 
 const rotate = keyframes`
@@ -76,11 +72,14 @@ const ButtonWrapper = styled.div`
 
 export default function Transaction({ hash, pending }) {
   const { chainId } = useWeb3React()
+  const allTransactions = useAllTransactions()
+
+  const summary = allTransactions?.[hash]?.response?.summary
 
   return (
     <TransactionWrapper key={hash}>
       <TransactionStatusWrapper>
-        <Link href={getEtherscanLink(chainId, hash, 'transaction')}>{hash} ↗ </Link>
+        <Link href={getEtherscanLink(chainId, hash, 'transaction')}>{summary ? summary : hash} ↗ </Link>
         <Copy toCopy={hash} />
       </TransactionStatusWrapper>
       {pending ? (

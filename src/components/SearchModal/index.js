@@ -2,27 +2,28 @@ import React, { useState, useRef, useMemo, useEffect } from 'react'
 import '@reach/tooltip/styles.css'
 import styled from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
-import { JSBI } from '@uniswap/sdk'
+import { JSBI, WETH } from '@uniswap/sdk'
 import { Link } from 'react-router-dom'
 import { ethers } from 'ethers'
 import { isMobile } from 'react-device-detect'
 import { withRouter } from 'react-router-dom'
+import { COMMON_BASES } from '../../constants'
 import { Link as StyledLink } from '../../theme/components'
 
-import { Hover } from '../../theme'
 import Modal from '../Modal'
 import Circle from '../../assets/images/circle.svg'
 import TokenLogo from '../TokenLogo'
 import DoubleTokenLogo from '../DoubleLogo'
 import Column, { AutoColumn } from '../Column'
 import { Text } from 'rebass'
+import { Hover } from '../../theme'
 import { LightCard } from '../Card'
 import { ArrowLeft } from 'react-feather'
 import { CloseIcon } from '../../theme/components'
 import { ColumnCenter } from '../../components/Column'
 import { Spinner, TYPE } from '../../theme'
 import { ButtonSecondary } from '../Button'
-import { RowBetween, RowFixed } from '../Row'
+import { RowBetween, RowFixed, AutoRow } from '../Row'
 
 import { isAddress } from '../../utils'
 import { useAllPairs } from '../../contexts/Pairs'
@@ -31,6 +32,7 @@ import { useSavedTokens } from '../../contexts/LocalStorage'
 import { useAllBalances } from '../../contexts/Balances'
 import { useTranslation } from 'react-i18next'
 import { useToken, useAllTokens, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
+import QuestionHelper from '../Question'
 
 const TokenModalInfo = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -50,6 +52,11 @@ const TokenList = styled.div`
 
 const FadedSpan = styled.span`
   color: ${({ theme }) => theme.blue1};
+`
+
+const GreySpan = styled.span`
+  color: ${({ theme }) => theme.text3};
+  font-weight: 400;
 `
 
 const SpinnerWrapper = styled(Spinner)`
@@ -79,11 +86,6 @@ const Input = styled.input`
   }
 `
 
-const TokenModal = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap}
-  width: 100%;
-`
-
 const FilterWrapper = styled(RowFixed)`
   padding: 8px;
   background-color: ${({ selected, theme }) => selected && theme.bg2};
@@ -105,7 +107,6 @@ const PaddedColumn = styled(AutoColumn)`
 
 const PaddedItem = styled(RowBetween)`
   padding: 4px 24px;
-  /* width: calc(100% - 48px); */
   height: 56px;
 `
 
@@ -116,6 +117,22 @@ const MenuItem = styled(PaddedItem)`
   }
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `
+
+const BaseWrapper = styled(AutoRow)`
+  border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
+  padding: 0 6px;
+  border-radius: 10px;
+  width: 120px;
+
+  :hover {
+    cursor: ${({ disable }) => !disable && 'pointer'};
+    background-color: ${({ theme, disable }) => !disable && theme.bg2};
+  }
+
+  background-color: ${({ theme, disable }) => disable && theme.bg3};
+  opacity: ${({ disable }) => disable && '0.4'};
+`
+
 // filters on results
 const FILTERS = {
   VOLUME: 'VOLUME',
@@ -131,7 +148,10 @@ function SearchModal({
   urlAddedTokens,
   filterType,
   hiddenToken,
-  showSendWithSwap
+  showSendWithSwap,
+  otherSelectedTokenAddress,
+  otherSelectedText,
+  showCommonBases = false
 }) {
   const { t } = useTranslation()
   const { account, chainId } = useWeb3React()
@@ -367,59 +387,75 @@ function SearchModal({
       return <TokenModalInfo>{t('noToken')}</TokenModalInfo>
     }
 
-    return filteredTokenList.map(({ address, symbol, balance }) => {
-      const urlAdded = urlAddedTokens && urlAddedTokens.hasOwnProperty(address)
-      const customAdded =
-        address !== 'ETH' &&
-        INITIAL_TOKENS_CONTEXT[chainId] &&
-        !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(address) &&
-        !urlAdded
+    return filteredTokenList
+      .sort((a, b) => {
+        if (b?.address === WETH[chainId]?.address) {
+          return 1
+        } else
+          return parseFloat(a?.balance?.toExact()) > parseFloat(b?.balance?.toExact())
+            ? sortDirection
+              ? -1
+              : 1
+            : sortDirection
+            ? 1
+            : -1
+      })
+      .map(({ address, symbol, balance }) => {
+        const urlAdded = urlAddedTokens && urlAddedTokens.hasOwnProperty(address)
+        const customAdded =
+          address !== 'ETH' &&
+          INITIAL_TOKENS_CONTEXT[chainId] &&
+          !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(address) &&
+          !urlAdded
 
-      const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
+        const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
 
-      // if token import page dont show preset list, else show all
-      return (
-        <MenuItem
-          key={address}
-          onClick={() => (hiddenToken && hiddenToken === address ? () => {} : _onTokenSelect(address))}
-          disabled={hiddenToken && hiddenToken === address}
-        >
-          <RowFixed>
-            <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }} />
-            <Column>
-              <Text fontWeight={500}>{symbol}</Text>
-              <FadedSpan>
-                {urlAdded && '(Added by URL)'} {customAdded && '(Added by user)'}
-              </FadedSpan>
-            </Column>
-          </RowFixed>
-          <AutoColumn gap="4px" justify="end">
-            {balance ? (
-              <Text>
-                {zeroBalance && showSendWithSwap ? (
-                  <ColumnCenter
-                    justify="center"
-                    style={{ backgroundColor: '#EBF4FF', padding: '8px', borderRadius: '12px' }}
-                  >
-                    <Text textAlign="center" fontWeight={500} color="#2172E5">
-                      Send With Swap
-                    </Text>
-                  </ColumnCenter>
-                ) : balance ? (
-                  balance.toSignificant(6)
-                ) : (
-                  '-'
-                )}
-              </Text>
-            ) : account ? (
-              <SpinnerWrapper src={Circle} alt="loader" />
-            ) : (
-              '-'
-            )}
-          </AutoColumn>
-        </MenuItem>
-      )
-    })
+        // if token import page dont show preset list, else show all
+        return (
+          <MenuItem
+            key={address}
+            onClick={() => (hiddenToken && hiddenToken === address ? () => {} : _onTokenSelect(address))}
+            disabled={hiddenToken && hiddenToken === address}
+          >
+            <RowFixed>
+              <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }} />
+              <Column>
+                <Text fontWeight={500}>
+                  {symbol}
+                  {otherSelectedTokenAddress === address && <GreySpan> ({otherSelectedText})</GreySpan>}
+                </Text>
+                <FadedSpan>
+                  {urlAdded && '(Added by URL)'} {customAdded && '(Added by user)'}
+                </FadedSpan>
+              </Column>
+            </RowFixed>
+            <AutoColumn gap="4px" justify="end">
+              {balance ? (
+                <Text>
+                  {zeroBalance && showSendWithSwap ? (
+                    <ColumnCenter
+                      justify="center"
+                      style={{ backgroundColor: '#EBF4FF', padding: '8px', borderRadius: '12px' }}
+                    >
+                      <Text textAlign="center" fontWeight={500} color="#2172E5">
+                        Send With Swap
+                      </Text>
+                    </ColumnCenter>
+                  ) : balance ? (
+                    balance.toSignificant(6)
+                  ) : (
+                    '-'
+                  )}
+                </Text>
+              ) : account ? (
+                <SpinnerWrapper src={Circle} alt="loader" />
+              ) : (
+                '-'
+              )}
+            </AutoColumn>
+          </MenuItem>
+        )
+      })
   }
 
   const Filter = ({ title, filter }) => {
@@ -451,9 +487,9 @@ function SearchModal({
       maxHeight={50}
       initialFocusRef={isMobile ? undefined : inputRef}
     >
-      <TokenModal>
+      <Column style={{ width: '100%' }}>
         {showTokenImport ? (
-          <PaddedColumn gap="20px">
+          <PaddedColumn gap="lg">
             <RowBetween>
               <RowFixed>
                 <Hover>
@@ -470,11 +506,11 @@ function SearchModal({
               <CloseIcon onClick={onDismiss} />
             </RowBetween>
             <TYPE.body style={{ marginTop: '40px' }}>
-              To import a custom token, paste the token address in the search bar.
+              To import a custom token, paste token address in the search bar.
             </TYPE.body>
             <Input
               type={'text'}
-              placeholder={t('tokenSearchPlaceholder')}
+              placeholder={'0x0000000000...'}
               value={searchQuery}
               ref={inputRef}
               onChange={onInput}
@@ -520,6 +556,33 @@ function SearchModal({
               ref={inputRef}
               onChange={onInput}
             />
+            {showCommonBases && (
+              <AutoColumn gap="md">
+                <AutoRow>
+                  <Text fontWeight={500} fontSize={16}>
+                    Common Bases
+                  </Text>
+                  <QuestionHelper text="These tokens are commonly used in pairs." />
+                </AutoRow>
+                <AutoRow gap="10px">
+                  {COMMON_BASES[chainId].map(token => {
+                    return (
+                      <BaseWrapper
+                        gap="6px"
+                        onClick={() => hiddenToken !== token.address && _onTokenSelect(token.address)}
+                        disable={hiddenToken === token.address}
+                        key={token.address}
+                      >
+                        <TokenLogo address={token.address} />
+                        <Text fontWeight={500} fontSize={16}>
+                          {token.symbol}
+                        </Text>
+                      </BaseWrapper>
+                    )
+                  })}
+                </AutoRow>
+              </AutoColumn>
+            )}
             <RowBetween>
               <div>
                 {filterType !== 'tokens' && (
@@ -554,7 +617,7 @@ function SearchModal({
         )}
         {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: '#E1E1E1' }} />}
         {!showTokenImport && <TokenList>{filterType === 'tokens' ? renderTokenList() : renderPairsList()}</TokenList>}
-      </TokenModal>
+      </Column>
     </Modal>
   )
 }
