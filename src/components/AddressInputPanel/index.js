@@ -79,8 +79,8 @@ export default function AddressInputPanel({ initialInput = '', onChange, onError
   }, [onChange, data.address, data.name])
 
   useEffect(() => {
-    onError(error)
-  }, [onError, error])
+    onError(error, input)
+  }, [onError, error, input])
 
   // run parser on debounced input
   useEffect(() => {

@@ -155,15 +155,15 @@ function PoolFinder({ history }) {
               border="1px solid #EDEEF2"
             />
           ) : (
-            <LightCard padding="45px">
+            <LightCard padding="45px 10px">
               <AutoColumn gap="sm" justify="center">
-                <Text color="">No position found.</Text>
+                <Text textAlign="center">Pool found, you don’t have liquidity on this pair yet.</Text>
                 <Link
                   onClick={() => {
                     history.push('/add/' + token0Address + '-' + token1Address)
                   }}
                 >
-                  Add liquidity to this pair instead.
+                  <Text textAlign="center">Add liquidity to this pair instead.</Text>
                 </Link>
               </AutoColumn>
             </LightCard>

@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Slider from '@material-ui/core/Slider'
 import { withStyles } from '@material-ui/core/styles'
+import { useDebounce } from '../../hooks'
 
 // const marks = [
 //   {
@@ -65,11 +66,29 @@ const StyledSlider = withStyles({
   }
 })(Slider)
 
-export default function InputSlider({ value, onChange }) {
+export default function InputSlider({ value, onChange, override }) {
+  const [internalVal, setInternalVal] = useState(0)
+  const debouncedInternalValue = useDebounce(internalVal, 10)
+
+  function handleChange(e, val) {
+    setInternalVal(val)
+    console.log(val)
+    console.log(debouncedInternalValue)
+    if (val === debouncedInternalValue) {
+      onChange(e, val)
+    }
+  }
+
+  useEffect(() => {
+    if (override && value !== internalVal) {
+      setInternalVal(value)
+    }
+  }, [internalVal, override, value])
+
   return (
     <StyledSlider
-      value={typeof value === 'number' ? value : 0}
-      onChange={onChange}
+      value={typeof internalVal === 'number' ? internalVal : 0}
+      onChange={handleChange}
       aria-labelledby="input-slider"
       // marks={marks}
     />

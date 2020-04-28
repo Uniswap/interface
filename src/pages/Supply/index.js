@@ -6,11 +6,11 @@ import { withRouter } from 'react-router-dom'
 import Question from '../../components/Question'
 import SearchModal from '../../components/SearchModal'
 import PositionCard from '../../components/PositionCard'
-import { Link } from '../../theme'
+import { Link, TYPE } from '../../theme'
 import { Text } from 'rebass'
+import { LightCard } from '../../components/Card'
 import { RowBetween } from '../../components/Row'
 import { ButtonPrimary } from '../../components/Button'
-import { GreyCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 
 import { useAllPairs } from '../../contexts/Pairs'
@@ -71,25 +71,29 @@ function Supply({ history }) {
       </ButtonPrimary>
       <Positions>
         <AutoColumn gap="20px">
-          {filteredExchangeList?.length !== 0 && (
-            <RowBetween padding={'0 8px'}>
-              <Text fontWeight={500}>Your Pooled Liquidity</Text>
-              <Question text="filler text" />
-            </RowBetween>
+          <RowBetween padding={'0 8px'}>
+            <Text fontWeight={500}>Your Pooled Liquidity</Text>
+            <Question text="filler text" />
+          </RowBetween>
+          {filteredExchangeList?.length === 0 && (
+            <LightCard
+              padding="40px
+          "
+            >
+              <TYPE.body textAlign="center">No liquidity found.</TYPE.body>
+            </LightCard>
           )}
           {filteredExchangeList}
-          <GreyCard style={{ textAlign: 'center', padding: '0.5rem 1.25rem 1rem 1.25rem' }}>
-            <Text color="#AEAEAE">
-              {filteredExchangeList?.length !== 0 ? `Don't see a pool you joined? ` : 'Already joined a pool?'}{' '}
-              <Link
-                onClick={() => {
-                  history.push('/find')
-                }}
-              >
-                Import it.
-              </Link>
-            </Text>
-          </GreyCard>
+          <Text color="#AEAEAE" textAlign="center">
+            {filteredExchangeList?.length !== 0 ? `Don't see a pool you joined? ` : 'Already joined a pool? '}{' '}
+            <Link
+              onClick={() => {
+                history.push('/find')
+              }}
+            >
+              Import it.
+            </Link>
+          </Text>
         </AutoColumn>
         <FixedBottom>
           <ColumnCenter>

@@ -4,10 +4,10 @@ import { ethers } from 'ethers'
 import { parseUnits } from '@ethersproject/units'
 import { TokenAmount, JSBI, Route, WETH, Percent, Token, Pair } from '@uniswap/sdk'
 
-import Slider from '../../components/Slider'
 import TokenLogo from '../../components/TokenLogo'
 import DoubleLogo from '../../components/DoubleLogo'
 import PositionCard from '../../components/PositionCard'
+// import NumericalInput from '../../components/NumericalInput'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { TYPE } from '../../theme'
@@ -32,7 +32,7 @@ import { ROUTER_ADDRESSES } from '../../constants'
 import { getRouterContract, calculateGasMargin } from '../../utils'
 
 // denominated in seconds
-const DEADLINE_FROM_NOW = 60 * 15
+const DEADLINE_FROM_NOW = 60 * 20
 
 const GAS_MARGIN: BigNumber = ethers.utils.bigNumberify(1000)
 
@@ -44,6 +44,7 @@ const FixedBottom = styled.div`
   position: absolute;
   top: 100px;
   width: 100%;
+  margin-bottom: 80px;
 `
 
 const ClickableText = styled(Text)`
@@ -51,6 +52,11 @@ const ClickableText = styled(Text)`
     cursor: pointer;
   }
 `
+
+// const CustomNumericalInput = styled(NumericalInput)`
+//   font-size: 72px;
+//   font-weight: 500;
+// `
 
 const MaxButton = styled.button`
   padding: 0.5rem 1rem;
@@ -195,16 +201,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
     dispatch({ type: RemoveAction.TYPE, payload: { field, typedValue } })
   }, [])
 
-  const handleSliderChange = (event, newPercent) => {
-    onUserInput(
-      Field.LIQUIDITY,
-      new TokenAmount(
-        pair?.liquidityToken,
-        JSBI.divide(JSBI.multiply(userLiquidity.raw, JSBI.BigInt(newPercent)), JSBI.BigInt(100))
-      ).toExact()
-    )
-  }
-
   const parsedAmounts: { [field: number]: TokenAmount } = {}
   let poolTokenAmount
   try {
@@ -270,11 +266,33 @@ export default function RemoveLiquidity({ token0, token1 }) {
     parsedAmounts[Field.LIQUIDITY] &&
     pair.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, parsedAmounts[Field.LIQUIDITY], false)
 
+  // controlled input for percetange input
+  // const [percentageInput, setPercentageInput] = useState(0)
+
   // derived percent for advanced mode
   const derivedPerecent =
     userLiquidity &&
     parsedAmounts[Field.LIQUIDITY] &&
     new Percent(parsedAmounts[Field.LIQUIDITY]?.raw, userLiquidity.raw).toFixed(0)
+
+  const handlePresetPercentage = newPercent => {
+    onUserInput(
+      Field.LIQUIDITY,
+      new TokenAmount(
+        pair?.liquidityToken,
+        JSBI.divide(JSBI.multiply(userLiquidity.raw, JSBI.BigInt(newPercent)), JSBI.BigInt(100))
+      ).toExact()
+    )
+  }
+
+  // update controlled perctenage when derived is updated
+  // useEffect(() => {
+  //   if (derivedPerecent) {
+  //     setPercentageInput(parseFloat(derivedPerecent))
+  //   } else {
+  //     setPercentageInput(0)
+  //   }
+  // }, [derivedPerecent])
 
   // get formatted amounts
   const formattedAmounts = {
@@ -467,7 +485,17 @@ export default function RemoveLiquidity({ token0, token1 }) {
       .then(response => {
         setPendingConfirmation(false)
         setTxHash(response.hash)
-        addTransaction(response)
+        addTransaction(
+          response,
+          'Remove ' +
+            parsedAmounts[Field.TOKEN0]?.toSignificant(3) +
+            ' ' +
+            tokens[Field.TOKEN0]?.symbol +
+            ' and ' +
+            parsedAmounts[Field.TOKEN1]?.toSignificant(3) +
+            ' ' +
+            tokens[Field.TOKEN1]?.symbol
+        )
       })
       .catch(e => {
         console.log(e)
@@ -560,7 +588,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
       </>
     )
   }
-  const pendingText: string = `Removed ${parsedAmounts[Field.TOKEN0]?.toSignificant(6)} ${
+  const pendingText: string = `Removing ${parsedAmounts[Field.TOKEN0]?.toSignificant(6)} ${
     tokens[Field.TOKEN0]?.symbol
   } and ${parsedAmounts[Field.TOKEN1]?.toSignificant(6)} ${tokens[Field.TOKEN1]?.symbol}`
 
@@ -578,7 +606,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
         topContent={modalHeader}
         bottomContent={modalBottom}
         pendingText={pendingText}
-        title="You will remove"
+        title="You will recieve"
       />
       <AutoColumn gap="20px">
         <LightCard>
@@ -595,13 +623,28 @@ export default function RemoveLiquidity({ token0, token1 }) {
                 {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
               </ClickableText>
             </RowBetween>
-            <RowBetween style={{ alignItems: 'flex-end' }}>
+            <Row style={{ alignItems: 'flex-end' }}>
+              {/* <CustomNumericalInput value={percentageInput} onUserInput={input => handlePresetPercentage(input)} /> */}
               <Text fontSize={72} fontWeight={500}>
                 {derivedPerecent ? (parseInt(derivedPerecent) < 1 ? '<1' : derivedPerecent) : '0'}%
               </Text>
-              {!showAdvanced && <MaxButton onClick={e => handleSliderChange(e, 100)}>Max</MaxButton>}
-            </RowBetween>
-            {!showAdvanced && <Slider value={parseFloat(derivedPerecent)} onChange={handleSliderChange} />}
+            </Row>
+            {!showAdvanced && (
+              <RowBetween>
+                <MaxButton onClick={e => handlePresetPercentage(25)} width="20%">
+                  25%
+                </MaxButton>
+                <MaxButton onClick={e => handlePresetPercentage(50)} width="20%">
+                  50%
+                </MaxButton>
+                <MaxButton onClick={e => handlePresetPercentage(75)} width="20%">
+                  75%
+                </MaxButton>
+                <MaxButton onClick={e => handlePresetPercentage(100)} width="20%">
+                  Max
+                </MaxButton>
+              </RowBetween>
+            )}
           </AutoColumn>
         </LightCard>
         {!showAdvanced && (
@@ -664,7 +707,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
               token={tokens[Field.TOKEN0]}
               error={inputError}
               disableTokenSelect
-              customBalance={TokensDeposited[Field.TOKEN0]}
             />
             <ColumnCenter>
               <Plus size="16" color="#888D9B" />
@@ -678,7 +720,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
               token={tokens[Field.TOKEN1]}
               error={outputError}
               disableTokenSelect
-              customBalance={TokensDeposited[Field.TOKEN1]}
             />
           </>
         )}

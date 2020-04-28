@@ -31,9 +31,9 @@ export default function AdvancedSettings({ setIsOpen, setDeadline, allowedSlippa
   // text translation
   const { t } = useTranslation()
 
-  const [deadlineInput, setDeadlineInput] = useState(15)
+  const [deadlineInput, setDeadlineInput] = useState(20)
   const [slippageInput, setSlippageInput] = useState()
-  const [activeIndex, setActiveIndex] = useState(SLIPPAGE_INDEX[3])
+  const [activeIndex, setActiveIndex] = useState(SLIPPAGE_INDEX[2])
 
   const [slippageInputError, setSlippageInputError] = useState(null) // error
 
@@ -65,9 +65,9 @@ export default function AdvancedSettings({ setIsOpen, setDeadline, allowedSlippa
   useEffect(() => {
     if (allowedSlippage === 10) {
       setActiveIndex(1)
-    } else if (allowedSlippage === 100) {
+    } else if (allowedSlippage === 50) {
       setActiveIndex(2)
-    } else if (allowedSlippage === 200) {
+    } else if (allowedSlippage === 100) {
       setActiveIndex(3)
     } else {
       setActiveIndex(4)
@@ -108,25 +108,25 @@ export default function AdvancedSettings({ setIsOpen, setDeadline, allowedSlippa
           padding="4px 6px"
           borderRadius="8px"
           style={{ marginRight: '16px' }}
-          width={'60px'}
+          width={'180px'}
           onClick={() => {
             setActiveIndex(SLIPPAGE_INDEX[2])
-            setAllowedSlippage(100)
+            setAllowedSlippage(50)
           }}
         >
-          1%
+          0.5% (suggested)
         </ButtonRadio>
         <ButtonRadio
           active={SLIPPAGE_INDEX[3] === activeIndex}
           padding="4px"
           borderRadius="8px"
-          width={'140px'}
+          width={'60px'}
           onClick={() => {
             setActiveIndex(SLIPPAGE_INDEX[3])
-            setAllowedSlippage(200)
+            setAllowedSlippage(100)
           }}
         >
-          2% (suggested)
+          1%
         </ButtonRadio>
       </Row>
       <RowFixed>
