@@ -13,7 +13,7 @@ import AddressInputPanel from '../AddressInputPanel'
 import ConfirmationModal from '../ConfirmationModal'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 
-import { Copy } from 'react-feather'
+import Copy from '../AccountDetails/Copy'
 import { Link } from '../../theme/components'
 import { Text } from 'rebass'
 import { TYPE } from '../../theme'
@@ -265,6 +265,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
   const [sending] = useState<boolean>(sendingInput)
   const [sendingWithSwap, setSendingWithSwap] = useState<boolean>(false)
   const [recipient, setRecipient] = useState<string>('')
+  const [ENS, setENS] = useState<string>('')
 
   // trade details, check query params for initial state
   const [state, dispatch] = useReducer(
@@ -799,6 +800,10 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
 
   // reset modal state when closed
   function resetModal() {
+    // clear input if txn submitted
+    if (!pendingConfirmation) {
+      onUserInput(Field.INPUT, '')
+    }
     setPendingConfirmation(true)
     setAttemptingTxn(false)
     setShowAdvanced(false)
@@ -815,9 +820,28 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
             <TokenLogo address={tokens[Field.INPUT]?.address} size={'30px'} />
           </RowBetween>
           <TYPE.darkGray fontSize={20}>To</TYPE.darkGray>
-          <TYPE.blue fontSize={36}>
-            {recipient?.slice(0, 6)}...{recipient?.slice(36, 42)}
-          </TYPE.blue>
+          {ENS ? (
+            <AutoColumn gap="lg">
+              <TYPE.blue fontSize={36}>{ENS}</TYPE.blue>
+              <AutoRow gap="10px">
+                <Link href={getEtherscanLink(chainId, ENS, 'address')}>
+                  <TYPE.blue fontSize={18}>
+                    {recipient?.slice(0, 8)}...{recipient?.slice(34, 42)}↗
+                  </TYPE.blue>
+                </Link>
+                <Copy toCopy={recipient} />
+              </AutoRow>
+            </AutoColumn>
+          ) : (
+            <AutoRow gap="10px">
+              <Link href={getEtherscanLink(chainId, ENS, 'address')}>
+                <TYPE.blue fontSize={36}>
+                  {recipient?.slice(0, 6)}...{recipient?.slice(36, 42)}↗
+                </TYPE.blue>
+              </Link>
+              <Copy toCopy={recipient} />
+            </AutoRow>
+          )}
         </AutoColumn>
       )
     }
@@ -861,7 +885,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
             </RowFixed>
           </RowBetween>
           <RowFixed>
-            <ArrowDown size="16" color="#888D9B" />
+            <ArrowDown size="16" color={'#888D9B'} />
           </RowFixed>
           <RowBetween align="flex-end">
             <Text fontSize={36} fontWeight={500} color={warningHigh ? '#FF6871' : '#2172E5'}>
@@ -1003,6 +1027,9 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
     } else {
       setRecipient('')
     }
+    if (result.name) {
+      setENS(result.name)
+    }
   }
 
   return (
@@ -1087,7 +1114,11 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
             ) : (
               <Hover>
                 <ColumnCenter>
-                  <ArrowDown size="16" onClick={onSwapTokens} />
+                  <ArrowDown
+                    size="16"
+                    onClick={onSwapTokens}
+                    color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? '#2172E5' : '#888D9B'}
+                  />
                 </ColumnCenter>
               </Hover>
             )}
@@ -1116,7 +1147,12 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
         )}
 
         {sending && (
-          <AutoColumn gap="sm">
+          <AutoColumn gap="lg">
+            {!sendingWithSwap && (
+              <Hover onClick={() => setSendingWithSwap(true)}>
+                <TYPE.blue textAlign="center">Add a swap +</TYPE.blue>
+              </Hover>
+            )}
             <AddressInputPanel
               onChange={_onRecipient}
               onError={(error: boolean, input) => {
@@ -1206,7 +1242,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
                   <Link href={getEtherscanLink(chainId, tokens[Field.INPUT]?.address, 'address')}>
                     (View on Etherscan)
                   </Link>
-                  <Copy size={'16'} />
+                  <Copy toCopy={tokens[Field.INPUT]?.address} />
                 </AutoRow>
                 <TYPE.subHeader>
                   Please verify the legitimacy of this token before making any transactions.

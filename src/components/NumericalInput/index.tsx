@@ -5,6 +5,7 @@ const StyledInput = styled.input`
   color: ${({ error, theme }) => error && theme.red1};
   color: ${({ theme }) => theme.text1};
   width: 0;
+  position: relative;
   font-size: 24px;
   font-weight: 500;
   font-family: 'Inter', sans-serif;
