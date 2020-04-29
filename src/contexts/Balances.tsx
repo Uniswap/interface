@@ -414,10 +414,11 @@ export function useAllBalances(): Array<TokenAmount> {
       let newBalances = {}
       Object.keys(state[chainId]).map(address => {
         return Object.keys(state[chainId][address]).map(tokenAddress => {
+          // console.log(allTokens[tokenAddress])
           if (state[chainId][address][tokenAddress].value) {
             // fix if ETH found in local storage from old storage
             if (tokenAddress === 'ETH') {
-              tokenAddress = WETH[chainId]
+              tokenAddress = WETH[chainId]?.address
             }
             newBalances[chainId] = {
               ...newBalances[chainId],
@@ -425,7 +426,9 @@ export function useAllBalances(): Array<TokenAmount> {
                 ...newBalances[chainId]?.[address],
                 [tokenAddress]: new TokenAmount(
                   allTokens[tokenAddress] ? allTokens[tokenAddress] : new Token(chainId, tokenAddress, 18),
-                  JSBI.BigInt(state?.[chainId][address][tokenAddress].value)
+                  JSBI.BigInt(
+                    state?.[chainId][address][tokenAddress]?.value ? state?.[chainId][address][tokenAddress]?.value : 0
+                  )
                 )
               }
             }
