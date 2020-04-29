@@ -106,6 +106,11 @@ export const TYPE = {
       {children}
     </Text>
   ),
+  black: ({ children, ...rest }) => (
+    <Text fontWeight={500} color={theme().text1} {...rest}>
+      {children}
+    </Text>
+  ),
   largeHeader: ({ children, ...rest }) => (
     <Text fontWeight={600} fontSize={24} {...rest}>
       {children}
@@ -128,6 +133,11 @@ export const TYPE = {
   ),
   blue: ({ children, ...rest }) => (
     <Text fontWeight={500} color={theme().blue1} {...rest}>
+      {children}
+    </Text>
+  ),
+  yellow: ({ children, ...rest }) => (
+    <Text fontWeight={500} color={theme().yellow2} {...rest}>
       {children}
     </Text>
   ),

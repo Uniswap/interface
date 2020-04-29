@@ -6,6 +6,8 @@ import { parseUnits, parseEther } from '@ethersproject/units'
 import { WETH, TradeType, Pair, Trade, TokenAmount, JSBI, Percent } from '@uniswap/sdk'
 
 import TokenLogo from '../TokenLogo'
+import SlippageTabs from '../SlippageTabs'
+import BalanceCard from '../BalanceCard'
 import QuestionHelper from '../Question'
 import NumericalInput from '../NumericalInput'
 import AdvancedSettings from '../AdvancedSettings'
@@ -18,10 +20,10 @@ import { Link } from '../../theme/components'
 import { Text } from 'rebass'
 import { TYPE } from '../../theme'
 import { Hover } from '../../theme'
-import { ArrowDown } from 'react-feather'
+import { ArrowDown, ChevronDown, ChevronUp } from 'react-feather'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
-import { GreyCard, BlueCard, YellowCard } from '../../components/Card'
+import { GreyCard, BlueCard, YellowCard, LightCard } from '../../components/Card'
 import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
 
 import { usePair } from '../../contexts/Pairs'
@@ -58,6 +60,27 @@ const FixedBottom = styled.div`
   margin-top: 2rem;
   width: 100%;
   margin-bottom: 40px;
+`
+
+const AdvancedDropwdown = styled.div`
+  position: absolute;
+  margin-top: -10px;
+  left: -14px;
+  width: 351px;
+  z-index: 1;
+  margin-bottom: 40px;
+  background-color: ${({ warning }) => (warning ? ' rgba(243, 132, 30, 0.1);' : 'rgba(237, 238, 242, 0.6);')} 
+  padding: 20px 0;
+  padding-top: 40px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  color: ${({ warning, theme }) => (warning ? theme.yellow2 : theme.text2)};
+`
+
+const SectionBreak = styled.div`
+  height: 2px;
+  width: 100%;
+  background-color: ${({ theme }) => theme.bg1};
 `
 
 const BottomGrouping = styled.div`
@@ -1167,6 +1190,11 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
             />
           </AutoColumn>
         )}
+        {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
+          <LightCard padding="1rem" borderRadius={'20px'}>
+            <PriceBar />
+          </LightCard>
+        )}
       </AutoColumn>
       <BottomGrouping>
         {noRoute ? (
@@ -1225,64 +1253,116 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
           </ButtonError>
         )}
       </BottomGrouping>
-      <FixedBottom>
-        {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-          <GreyCard pt={2} mb={2}>
-            <PriceBar />
-          </GreyCard>
+      <AdvancedDropwdown warning={warningHigh && !showAdvanced}>
+        {!showAdvanced && (
+          <Hover>
+            <RowBetween onClick={() => setShowAdvanced(true)} padding={'0 20px'}>
+              <Text fontSize={14} fontWeight={500}>
+                {warningHigh ? 'Slippage Warning' : 'Show Advanced'}
+              </Text>
+              <ChevronDown color={warningHigh ? '#F3841E' : '#565A69'} />
+            </RowBetween>
+          </Hover>
         )}
-        <AutoColumn gap="lg">
-          {importedTokenInput && (
-            <YellowCard style={{ paddingTop: '1rem' }}>
-              <AutoColumn gap="sm">
-                <TYPE.mediumHeader>Token imported via address</TYPE.mediumHeader>
-                <AutoRow gap="4px">
-                  <TokenLogo address={tokens[Field.INPUT]?.address || ''} />
-                  <TYPE.body>({tokens[Field.INPUT]?.symbol})</TYPE.body>
-                  <Link href={getEtherscanLink(chainId, tokens[Field.INPUT]?.address, 'address')}>
-                    (View on Etherscan)
-                  </Link>
-                  <Copy toCopy={tokens[Field.INPUT]?.address} />
-                </AutoRow>
-                <TYPE.subHeader>
-                  Please verify the legitimacy of this token before making any transactions.
-                </TYPE.subHeader>
-              </AutoColumn>
-            </YellowCard>
-          )}
-          {importedTokenOutput && (
-            <YellowCard style={{ paddingTop: '1rem' }}>
-              <AutoColumn gap="sm">
-                <TYPE.mediumHeader>Token imported via address</TYPE.mediumHeader>
-                <AutoRow gap="4px">
-                  <TokenLogo address={tokens[Field.OUTPUT]?.address || ''} />
-                  <TYPE.body>({tokens[Field.OUTPUT]?.symbol})</TYPE.body>
-                  <Link href={getEtherscanLink(chainId, tokens[Field.OUTPUT]?.address, 'address')}>
-                    (View on Etherscan)
-                  </Link>
-                </AutoRow>
-                <TYPE.subHeader>
-                  Please verify the legitimacy of this token before making any transactions.
-                </TYPE.subHeader>
-              </AutoColumn>
-            </YellowCard>
-          )}
-          {warningHigh && (
-            <GreyCard style={{ paddingTop: '1rem' }}>
-              <AutoColumn gap="md" mt={2}>
-                <RowBetween>
-                  <Text fontWeight={500}>Slippage Warning</Text>
-                  <QuestionHelper text="" />
-                </RowBetween>
-                <Text color="#565A69" lineHeight="145.23%;">
-                  This trade will move the price by {slippageFromTrade.toFixed(2)}%. This pool probably doesn’t have
-                  enough liquidity to support this trade. Are you sure you want to continue this trade?
+        {showAdvanced && (
+          <AutoColumn gap="md">
+            <Hover>
+              <RowBetween onClick={() => setShowAdvanced(false)} padding={'0 20px'}>
+                <Text fontSize={14} color="#565A69" fontWeight={500}>
+                  Hide Advanced
                 </Text>
-              </AutoColumn>
-            </GreyCard>
-          )}
-        </AutoColumn>
-      </FixedBottom>
+                <ChevronUp color="#565A69" />
+              </RowBetween>
+            </Hover>
+            <SectionBreak />
+            <AutoColumn style={{ padding: '0 20px' }}>
+              {warningHigh && (
+                <YellowCard style={{ padding: '20px', paddingTop: '10px', marginBottom: '10px' }}>
+                  <AutoColumn gap="md" mt={2}>
+                    <RowBetween>
+                      <RowFixed>
+                        <span role="img" aria-label="warning">
+                          ⚠️
+                        </span>{' '}
+                        <Text fontWeight={500} marginLeft="4px">
+                          Slippage Warning
+                        </Text>
+                      </RowFixed>
+                      <QuestionHelper text="" />
+                    </RowBetween>
+                    <Text lineHeight="145.23%;" fontSize={14} fontWeight={400}>
+                      This trade will move the price by {slippageFromTrade.toFixed(2)}%. This pool probably doesn’t have
+                      enough liquidity to support this trade.
+                    </Text>
+                  </AutoColumn>
+                </YellowCard>
+              )}
+              <RowBetween>
+                <RowFixed>
+                  <TYPE.black fontSize={14} fontWeight={400}>
+                    {independentField === Field.INPUT ? 'Minimum amount received' : 'Maximum amount sold'}
+                  </TYPE.black>
+                  <QuestionHelper text="" />
+                </RowFixed>
+                <RowFixed>
+                  <TYPE.black fontSize={14}>
+                    {independentField === Field.INPUT
+                      ? slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)
+                      : slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)}
+                  </TYPE.black>
+                  <TYPE.black fontSize={14} marginLeft={'4px'}>
+                    {independentField === Field.INPUT ? tokens[Field.OUTPUT]?.symbol : tokens[Field.INPUT]?.symbol}
+                  </TYPE.black>
+                </RowFixed>
+              </RowBetween>
+              <RowBetween>
+                <RowFixed>
+                  <TYPE.black fontSize={14} fontWeight={400}>
+                    Expected price impact
+                  </TYPE.black>
+                  <QuestionHelper text="" />
+                </RowFixed>
+                <ErrorText
+                  fontWeight={500}
+                  fontSize={14}
+                  warningLow={warningLow}
+                  warningMedium={warningMedium}
+                  warningHigh={warningHigh}
+                >
+                  {slippageFromTrade ? slippageFromTrade.toFixed(4) : '0'}%
+                </ErrorText>
+              </RowBetween>
+              <RowBetween>
+                <RowFixed>
+                  <TYPE.black fontSize={14} fontWeight={400}>
+                    Max Slippage
+                  </TYPE.black>
+                  <QuestionHelper text="" />
+                </RowFixed>
+                <TYPE.black fontSize={14}>2%</TYPE.black>
+              </RowBetween>
+            </AutoColumn>
+            <SectionBreak />
+            <RowFixed padding={'0 20px'}>
+              <TYPE.black fontSize={14}>Set front running resistance</TYPE.black>
+              <QuestionHelper text="" />
+            </RowFixed>
+            <SlippageTabs rawSlippage={allowedSlippage} setRawSlippage={setAllowedSlippage} />
+          </AutoColumn>
+        )}
+        <FixedBottom>
+          <AutoColumn gap="lg">
+            <BalanceCard
+              token0={tokens[Field.INPUT]}
+              token1={tokens[Field.OUTPUT]}
+              import0={importedTokenInput}
+              balance0={userBalances[Field.INPUT]}
+              balance1={userBalances[Field.OUTPUT]}
+              import1={importedTokenOutput}
+            />
+          </AutoColumn>
+        </FixedBottom>
+      </AdvancedDropwdown>
     </Wrapper>
   )
 }

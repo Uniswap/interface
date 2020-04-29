@@ -65,9 +65,7 @@ const InputPanel = styled.div`
 
 const Container = styled.div`
   border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
-  /* border: 1px solid ${({ error, theme }) => (error ? theme.red1 : theme.bg2)}; */
   border: 1px solid ${({ theme }) => theme.bg2};
-
   background-color: ${({ theme }) => theme.bg1};
 `
 

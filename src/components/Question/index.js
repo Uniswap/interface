@@ -26,8 +26,8 @@ const QuestionWrapper = styled.div`
 `
 
 const HelpCircleStyled = styled.img`
-  height: 24px;
-  width: 23px;
+  height: 20px;
+  width: 20px;
 `
 
 const fadeIn = keyframes`
