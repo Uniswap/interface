@@ -34,7 +34,7 @@
     "react": "^16.8.6",
     "react-device-detect": "^1.6.2",
     "react-dom": "^16.8.6",
-    "react-feather": "^1.1.6",
+    "react-feather": "^2.0.8",
     "react-ga": "^2.5.7",
     "react-i18next": "^10.7.0",
     "react-router-dom": "^5.0.0",

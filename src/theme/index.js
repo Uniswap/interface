@@ -127,7 +127,7 @@ export const TYPE = {
     </Text>
   ),
   body: ({ children, ...rest }) => (
-    <Text fontWeight={400} fontSize={16} color={'#888D9B'} {...rest}>
+    <Text fontWeight={400} fontSize={16} color={'#191B1F'} {...rest}>
       {children}
     </Text>
   ),
