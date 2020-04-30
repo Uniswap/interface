@@ -5,26 +5,24 @@ import { withRouter } from 'react-router-dom'
 import { parseUnits, parseEther } from '@ethersproject/units'
 import { WETH, TradeType, Pair, Trade, TokenAmount, JSBI, Percent } from '@uniswap/sdk'
 
+import Copy from '../AccountDetails/Copy'
 import TokenLogo from '../TokenLogo'
 import SlippageTabs from '../SlippageTabs'
-import BalanceCard from '../BalanceCard'
 import QuestionHelper from '../Question'
 import NumericalInput from '../NumericalInput'
-import AdvancedSettings from '../AdvancedSettings'
 import AddressInputPanel from '../AddressInputPanel'
 import ConfirmationModal from '../ConfirmationModal'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 
-import Copy from '../AccountDetails/Copy'
 import { Link } from '../../theme/components'
 import { Text } from 'rebass'
 import { TYPE } from '../../theme'
 import { Hover } from '../../theme'
-import { ArrowDown, ChevronDown, ChevronUp } from 'react-feather'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
-import { GreyCard, BlueCard, YellowCard, LightCard } from '../../components/Card'
+import { ArrowDown, ChevronDown, ChevronUp } from 'react-feather'
 import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
+import { GreyCard, BlueCard, YellowCard, LightCard } from '../../components/Card'
 
 import { usePair } from '../../contexts/Pairs'
 import { useToken } from '../../contexts/Tokens'
@@ -35,7 +33,7 @@ import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 
 import { ROUTER_ADDRESSES } from '../../constants'
-import { INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
+// import { INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
 import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEtherscanLink } from '../../utils'
 
 const Wrapper = styled.div`
@@ -64,18 +62,32 @@ const FixedBottom = styled.div`
 
 const AdvancedDropwdown = styled.div`
   position: absolute;
-  margin-top: -10px;
-  left: -14px;
-  width: 351px;
-  z-index: 1;
+  margin-top: 2px;
+  left: -8px;
+  width: 339px;
   margin-bottom: 40px;
-  background-color: ${({ warning }) => (warning ? ' rgba(243, 132, 30, 0.1);' : 'rgba(237, 238, 242, 0.6);')} 
-  padding: 20px 0;
-  padding-top: 40px;
+  padding: 10px 0;
+  padding-top: 24px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
-  color: ${({ warning, theme }) => (warning ? theme.yellow2 : theme.text2)};
+  color: #565a69;
+  background-color: rgba(237, 238, 242, 0.8);
+  color: ${({ theme }) => theme.text2};
+  z-index: -1;
 `
+
+// const PseudoBottom = styled.div`
+//   height: 14px;
+//   width: 340px;
+//   background: white;
+//   position: absolute;
+//   border-bottom-left-radius: 41px;
+//   top: 0px;
+//   border-bottom-right-radius: 40px;
+//   left: -1px;
+//   /* box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+//     0px 24px 32px rgba(0, 0, 0, 0.01); */
+// `
 
 const SectionBreak = styled.div`
   height: 2px;
@@ -90,7 +102,7 @@ const BottomGrouping = styled.div`
 
 const ErrorText = styled(Text)`
   color: ${({ theme, warningLow, warningMedium, warningHigh }) =>
-    warningHigh ? theme.red1 : warningMedium ? theme.yellow2 : warningLow ? theme.green1 : theme.text3};
+    warningHigh ? theme.red1 : warningMedium ? theme.yellow2 : warningLow ? theme.green1 : theme.text1};
 `
 
 const InputGroup = styled(AutoColumn)`
@@ -336,9 +348,9 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
   const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
 
   // check for imported tokens to show warning
-  const importedTokenInput = tokens[Field.INPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.INPUT]?.address]
-  const importedTokenOutput =
-    tokens[Field.OUTPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.OUTPUT]?.address]
+  // const importedTokenInput = tokens[Field.INPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.INPUT]?.address]
+  // const importedTokenOutput =
+  //   tokens[Field.OUTPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.OUTPUT]?.address]
 
   // entities for swap
   const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
@@ -400,6 +412,16 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
     [independentField]: typedValue,
     [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(8) : ''
   }
+
+  const priceSlippage =
+    slippageFromTrade &&
+    new Percent(
+      JSBI.subtract(
+        JSBI.multiply(slippageFromTrade.numerator, JSBI.BigInt('1000')),
+        JSBI.multiply(JSBI.BigInt('3'), slippageFromTrade.denominator)
+      ),
+      JSBI.multiply(slippageFromTrade.denominator, JSBI.BigInt('1000'))
+    )
 
   const onTokenSelection = useCallback((field: Field, address: string) => {
     dispatch({
@@ -586,6 +608,8 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
   // covers swap or swap with send
   async function onSwap() {
     const routerContract: ethers.Contract = getRouterContract(chainId, library, account)
+
+    console.log(deadline)
 
     setAttemptingTxn(true) // mark that user is attempting transaction
 
@@ -938,16 +962,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
         </AutoColumn>
       )
     }
-    if (showAdvanced) {
-      return (
-        <AdvancedSettings
-          setIsOpen={setShowAdvanced}
-          setDeadline={setDeadline}
-          setAllowedSlippage={setAllowedSlippage}
-          allowedSlippage={allowedSlippage}
-        />
-      )
-    }
 
     if (!sending || (sending && sendingWithSwap)) {
       return (
@@ -972,13 +986,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
                 }  or the transaction will revert.`}
               </TYPE.italic>
             )}
-            <Link
-              onClick={() => {
-                setShowAdvanced(true)
-              }}
-            >
-              Advanced
-            </Link>
           </AutoColumn>
         </>
       )
@@ -1012,10 +1019,14 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
             warningMedium={warningMedium}
             warningHigh={warningHigh}
           >
-            {slippageFromTrade ? slippageFromTrade.toFixed(4) : '0'}%
+            {priceSlippage
+              ? priceSlippage.toFixed(4) === '0.0000'
+                ? '<0.0001%'
+                : priceSlippage.toFixed(4) + '%'
+              : '-'}
           </ErrorText>
           <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
-            Slippage
+            Price Slippage
           </Text>
         </AutoColumn>
       </AutoRow>
@@ -1253,29 +1264,112 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
           </ButtonError>
         )}
       </BottomGrouping>
-      <AdvancedDropwdown warning={warningHigh && !showAdvanced}>
-        {!showAdvanced && (
-          <Hover>
-            <RowBetween onClick={() => setShowAdvanced(true)} padding={'0 20px'}>
-              <Text fontSize={14} fontWeight={500}>
-                {warningHigh ? 'Slippage Warning' : 'Show Advanced'}
-              </Text>
-              <ChevronDown color={warningHigh ? '#F3841E' : '#565A69'} />
-            </RowBetween>
-          </Hover>
-        )}
-        {showAdvanced && (
-          <AutoColumn gap="md">
+      {tokens[Field.INPUT] && tokens[Field.OUTPUT] && !noRoute && (
+        <AdvancedDropwdown>
+          {!showAdvanced && (
             <Hover>
-              <RowBetween onClick={() => setShowAdvanced(false)} padding={'0 20px'}>
-                <Text fontSize={14} color="#565A69" fontWeight={500}>
-                  Hide Advanced
+              <RowBetween onClick={() => setShowAdvanced(true)} padding={'0 20px'}>
+                <Text fontSize={14} fontWeight={500} style={{ userSelect: 'none' }}>
+                  Show Advanced
                 </Text>
-                <ChevronUp color="#565A69" />
+                <ChevronDown color={'#565A69'} />
               </RowBetween>
             </Hover>
-            <SectionBreak />
-            <AutoColumn style={{ padding: '0 20px' }}>
+          )}
+          {showAdvanced && (
+            <AutoColumn gap="md">
+              <Hover>
+                <RowBetween onClick={() => setShowAdvanced(false)} padding={'0 20px'}>
+                  <Text fontSize={14} color="#565A69" fontWeight={500} style={{ userSelect: 'none' }}>
+                    Hide Advanced
+                  </Text>
+                  <ChevronUp color="#565A69" />
+                </RowBetween>
+              </Hover>
+              <SectionBreak />
+              <AutoColumn style={{ padding: '0 20px' }}>
+                <RowBetween>
+                  <RowFixed>
+                    <TYPE.black fontSize={14} fontWeight={400}>
+                      {independentField === Field.INPUT
+                        ? sending
+                          ? 'Maximum amount sent'
+                          : 'Maximum amount received'
+                        : 'Minimum amount sold'}
+                    </TYPE.black>
+                    <QuestionHelper text="" />
+                  </RowFixed>
+                  <RowFixed>
+                    <TYPE.black fontSize={14}>
+                      {independentField === Field.INPUT
+                        ? slippageAdjustedAmounts[Field.OUTPUT]
+                          ? slippageAdjustedAmounts[Field.OUTPUT]?.toFixed(5) === '0.00000'
+                            ? '<0.00001'
+                            : slippageAdjustedAmounts[Field.OUTPUT]?.toFixed(5)
+                          : '-'
+                        : slippageAdjustedAmounts[Field.INPUT]
+                        ? slippageAdjustedAmounts[Field.INPUT]?.toFixed(5) === '0.00000'
+                          ? '<0.00001'
+                          : slippageAdjustedAmounts[Field.INPUT]?.toFixed(5)
+                        : '-'}
+                    </TYPE.black>
+                    {parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.INPUT] && (
+                      <TYPE.black fontSize={14} marginLeft={'4px'}>
+                        {independentField === Field.INPUT
+                          ? parsedAmounts[Field.OUTPUT] && tokens[Field.OUTPUT]?.symbol
+                          : parsedAmounts[Field.INPUT] && tokens[Field.INPUT]?.symbol}
+                      </TYPE.black>
+                    )}
+                  </RowFixed>
+                </RowBetween>
+                <RowBetween>
+                  <RowFixed>
+                    <TYPE.black fontSize={14} fontWeight={400}>
+                      Price Slippage
+                    </TYPE.black>
+                    <QuestionHelper text="" />
+                  </RowFixed>
+                  <ErrorText
+                    fontWeight={500}
+                    fontSize={14}
+                    warningLow={warningLow}
+                    warningMedium={warningMedium}
+                    warningHigh={warningHigh}
+                  >
+                    {priceSlippage
+                      ? priceSlippage.toFixed(4) === '0.0000'
+                        ? '<0.0001%'
+                        : priceSlippage.toFixed(4) + '%'
+                      : '-'}
+                  </ErrorText>
+                </RowBetween>
+                <RowBetween>
+                  <RowFixed>
+                    <TYPE.black fontSize={14} fontWeight={400}>
+                      Total Slippage
+                    </TYPE.black>
+                    <QuestionHelper text="" />
+                  </RowFixed>
+                  <TYPE.black fontSize={14}>
+                    {slippageFromTrade ? slippageFromTrade.toSignificant(4) + '%' : '-'}
+                  </TYPE.black>
+                </RowBetween>
+              </AutoColumn>
+              <SectionBreak />
+              <RowFixed padding={'0 20px'}>
+                <TYPE.black fontSize={14}>Set front running resistance</TYPE.black>
+                <QuestionHelper text="" />
+              </RowFixed>
+              <SlippageTabs
+                rawSlippage={allowedSlippage}
+                setRawSlippage={setAllowedSlippage}
+                deadline={deadline}
+                setDeadline={setDeadline}
+              />
+            </AutoColumn>
+          )}
+          <FixedBottom>
+            <AutoColumn gap="lg">
               {warningHigh && (
                 <YellowCard style={{ padding: '20px', paddingTop: '10px', marginBottom: '10px' }}>
                   <AutoColumn gap="md" mt={2}>
@@ -1288,7 +1382,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
                           Slippage Warning
                         </Text>
                       </RowFixed>
-                      <QuestionHelper text="" />
                     </RowBetween>
                     <Text lineHeight="145.23%;" fontSize={14} fontWeight={400}>
                       This trade will move the price by {slippageFromTrade.toFixed(2)}%. This pool probably doesn’t have
@@ -1297,72 +1390,18 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
                   </AutoColumn>
                 </YellowCard>
               )}
-              <RowBetween>
-                <RowFixed>
-                  <TYPE.black fontSize={14} fontWeight={400}>
-                    {independentField === Field.INPUT ? 'Minimum amount received' : 'Maximum amount sold'}
-                  </TYPE.black>
-                  <QuestionHelper text="" />
-                </RowFixed>
-                <RowFixed>
-                  <TYPE.black fontSize={14}>
-                    {independentField === Field.INPUT
-                      ? slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)
-                      : slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)}
-                  </TYPE.black>
-                  <TYPE.black fontSize={14} marginLeft={'4px'}>
-                    {independentField === Field.INPUT ? tokens[Field.OUTPUT]?.symbol : tokens[Field.INPUT]?.symbol}
-                  </TYPE.black>
-                </RowFixed>
-              </RowBetween>
-              <RowBetween>
-                <RowFixed>
-                  <TYPE.black fontSize={14} fontWeight={400}>
-                    Expected price impact
-                  </TYPE.black>
-                  <QuestionHelper text="" />
-                </RowFixed>
-                <ErrorText
-                  fontWeight={500}
-                  fontSize={14}
-                  warningLow={warningLow}
-                  warningMedium={warningMedium}
-                  warningHigh={warningHigh}
-                >
-                  {slippageFromTrade ? slippageFromTrade.toFixed(4) : '0'}%
-                </ErrorText>
-              </RowBetween>
-              <RowBetween>
-                <RowFixed>
-                  <TYPE.black fontSize={14} fontWeight={400}>
-                    Max Slippage
-                  </TYPE.black>
-                  <QuestionHelper text="" />
-                </RowFixed>
-                <TYPE.black fontSize={14}>2%</TYPE.black>
-              </RowBetween>
+              {/* <BalanceCard
+                token0={tokens[Field.INPUT]}
+                token1={tokens[Field.OUTPUT]}
+                import0={importedTokenInput}
+                balance0={userBalances[Field.INPUT]}
+                balance1={userBalances[Field.OUTPUT]}
+                import1={importedTokenOutput}
+              /> */}
             </AutoColumn>
-            <SectionBreak />
-            <RowFixed padding={'0 20px'}>
-              <TYPE.black fontSize={14}>Set front running resistance</TYPE.black>
-              <QuestionHelper text="" />
-            </RowFixed>
-            <SlippageTabs rawSlippage={allowedSlippage} setRawSlippage={setAllowedSlippage} />
-          </AutoColumn>
-        )}
-        <FixedBottom>
-          <AutoColumn gap="lg">
-            <BalanceCard
-              token0={tokens[Field.INPUT]}
-              token1={tokens[Field.OUTPUT]}
-              import0={importedTokenInput}
-              balance0={userBalances[Field.INPUT]}
-              balance1={userBalances[Field.OUTPUT]}
-              import1={importedTokenOutput}
-            />
-          </AutoColumn>
-        </FixedBottom>
-      </AdvancedDropwdown>
+          </FixedBottom>
+        </AdvancedDropwdown>
+      )}
     </Wrapper>
   )
 }

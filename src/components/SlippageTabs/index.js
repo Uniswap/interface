@@ -1,8 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import styled, { css } from 'styled-components'
+
+import QuestionHelper from '../Question'
+import { Text } from 'rebass'
+import { TYPE } from '../../theme'
+import { AutoColumn } from '../Column'
+import { RowBetween, RowFixed } from '../Row'
+
 import { darken } from 'polished'
 import { useDebounce } from '../../hooks'
-import { RowBetween } from '../Row'
 
 const WARNING_TYPE = Object.freeze({
   none: 'none',
@@ -74,41 +80,29 @@ const Input = styled.input`
     `}
 `
 
-const BottomError = styled.div`
-font-size: 14px;
-font-weight: 500;
+const BottomError = styled(Text)`
+  font-size: 14px;
+  font-weight: 400;
   ${({ show }) =>
     show &&
     css`
       padding-top: 12px;
-    `}
-  color: ${({ theme }) => theme.text1};
-  ${({ color }) =>
-    color === 'red' &&
-    css`
-      color: ${({ theme }) => theme.red1};
     `}
 `
 
 const OptionCustom = styled(FancyButton)`
   height: 2rem;
   position: relative;
-  width: 120px;
-  margin-top: 6px;
   padding: 0 0.75rem;
   ${({ active }) =>
     active &&
     css`
-      border: 1px solid ${({ theme }) => theme.blue1};
+      border: 1px solid ${({ theme, warning }) => (warning ? theme.red1 : theme.blue1)};
       :hover {
-        border: 1px solid ${({ theme }) => darken(0.1, theme.blue1)};
+        border: 1px solid ${({ theme, warning }) => (warning ? darken(0.1, theme.red1) : darken(0.1, theme.blue1))};
       }
     `}
-  ${({ color }) =>
-    color === 'red' &&
-    css`
-      border: 1px solid ${({ theme }) => theme.red1};
-    `}
+
   input {
     width: 100%;
     height: 100%;
@@ -118,7 +112,6 @@ const OptionCustom = styled(FancyButton)`
 `
 
 const SlippageSelector = styled.div`
-  background-color: ${({ theme }) => darken(0.04, theme.bg1)};
   padding: 0 20px;
 `
 
@@ -137,7 +130,7 @@ const Percent = styled.div`
       `)};
 `
 
-export default function TransactionDetails({ setRawSlippage, rawSlippage }) {
+export default function TransactionDetails({ setRawSlippage, rawSlippage, deadline, setDeadline }) {
   const [activeIndex, setActiveIndex] = useState(2)
 
   const [warningType, setWarningType] = useState(WARNING_TYPE.none)
@@ -148,6 +141,17 @@ export default function TransactionDetails({ setRawSlippage, rawSlippage }) {
   const debouncedInput = useDebounce(userInput, 150)
 
   const [initialSlippage] = useState(rawSlippage)
+
+  const [deadlineInput, setDeadlineInput] = useState(deadline / 60)
+
+  function parseCustomDeadline(e) {
+    let val = e.target.value
+    const acceptableValues = [/^$/, /^\d+$/]
+    if (acceptableValues.some(re => re.test(val))) {
+      setDeadlineInput(val)
+      setDeadline(val * 60)
+    }
+  }
 
   const setFromCustom = () => {
     setActiveIndex(4)
@@ -273,12 +277,10 @@ export default function TransactionDetails({ setRawSlippage, rawSlippage }) {
             </Option>
             <OptionCustom
               active={activeIndex === 4}
-              color={
-                warningType === WARNING_TYPE.emptyInput
-                  ? ''
-                  : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
-                  ? 'red'
-                  : ''
+              warning={
+                warningType !== WARNING_TYPE.none &&
+                warningType !== WARNING_TYPE.emptyInput &&
+                warningType !== WARNING_TYPE.riskyEntryLow
               }
               onClick={() => {
                 setFromCustom()
@@ -286,7 +288,18 @@ export default function TransactionDetails({ setRawSlippage, rawSlippage }) {
             >
               <RowBetween>
                 {!(warningType === WARNING_TYPE.none || warningType === WARNING_TYPE.emptyInput) && (
-                  <span role="img" aria-label="warning">
+                  <span
+                    role="img"
+                    aria-label="warning"
+                    style={{
+                      color:
+                        warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
+                          ? 'red'
+                          : warningType === WARNING_TYPE.riskyEntryLow
+                          ? '#F3841E'
+                          : ''
+                    }}
+                  >
                     ⚠️
                   </span>
                 )}
@@ -332,13 +345,14 @@ export default function TransactionDetails({ setRawSlippage, rawSlippage }) {
               show={activeIndex === 4}
               color={
                 warningType === WARNING_TYPE.emptyInput
-                  ? ''
+                  ? '#565A69'
                   : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
                   ? 'red'
+                  : warningType === WARNING_TYPE.riskyEntryLow
+                  ? '#F3841E'
                   : ''
               }
             >
-              {activeIndex === 4 && warningType.toString() === 'none' && 'Custom slippage value'}
               {warningType === WARNING_TYPE.emptyInput && 'Enter a slippage percentage'}
               {warningType === WARNING_TYPE.invalidEntryBound && 'Please select a value no greater than 50%'}
               {warningType === WARNING_TYPE.riskyEntryHigh && 'Your transaction may be frontrun'}
@@ -346,6 +360,17 @@ export default function TransactionDetails({ setRawSlippage, rawSlippage }) {
             </BottomError>
           </RowBetween>
         </SlippageSelector>
+        <AutoColumn gap="md">
+          <RowFixed padding={'0 20px'}>
+            <TYPE.black fontSize={14}>Deadline</TYPE.black>
+            <QuestionHelper text="Deadline in minutes. If your transaction takes longer than this it will revert." />
+          </RowFixed>
+          <RowBetween padding={'0 20px'}>
+            <OptionCustom style={{ width: '80px' }}>
+              <Input tabIndex={-1} placeholder={deadlineInput} value={deadlineInput} onChange={parseCustomDeadline} />
+            </OptionCustom>
+          </RowBetween>
+        </AutoColumn>
       </>
     )
   }

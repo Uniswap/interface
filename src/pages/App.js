@@ -46,6 +46,8 @@ const BodyWrapper = styled.div`
     max-width: calc(355px + 4rem);
     width: 90%;
   }
+
+  z-index: 1;
 `
 
 const Body = styled.div`
@@ -72,7 +74,6 @@ export default function App() {
           </HeaderWrapper>
           <BodyWrapper>
             <Popups />
-
             <Body>
               <Web3ReactManager>
                 <BrowserRouter>

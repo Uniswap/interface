@@ -14,9 +14,9 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { Text } from 'rebass'
 import { TYPE } from '../../theme'
 import { Plus } from 'react-feather'
+import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { ButtonPrimary, ButtonLight } from '../../components/Button'
-import { BlueCard, LightCard, GreyCard } from '../../components/Card'
 import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
 
 import { useToken } from '../../contexts/Tokens'
@@ -688,6 +688,11 @@ function AddLiquidity({ token0, token1, step = false }) {
           error={outputError}
           pair={pair}
         />
+        {tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
+          <LightCard padding="1rem" borderRadius={'20px'}>
+            <PriceBar />
+          </LightCard>
+        )}
         {showOutputApprove ? (
           <ButtonLight
             onClick={() => {
@@ -721,11 +726,6 @@ function AddLiquidity({ token0, token1, step = false }) {
       {!noLiquidity && (
         <FixedBottom>
           <AutoColumn>
-            {tokens[Field.OUTPUT] && (
-              <GreyCard pt={2} mb={2}>
-                <PriceBar />
-              </GreyCard>
-            )}
             <PositionCard
               pairAddress={pair?.liquidityToken?.address}
               token0={tokens[Field.INPUT]}
