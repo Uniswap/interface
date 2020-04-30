@@ -117,13 +117,6 @@ export default function Header() {
           )}
         </Title>
       </HeaderElement>
-      <button
-        onClick={() =>
-          addPopup(<TxnPopup hash={'0c672393874934'} success={false} summary={'Swapped 2 ETH for 12.123 DAI'} />)
-        }
-      >
-        ok
-      </button>
       <HeaderElement>
         <TestnetWrapper>
           {!isMobile && chainId === 4 && <NetworkCard>Rinkeby Testnet</NetworkCard>}

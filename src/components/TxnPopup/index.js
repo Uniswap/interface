@@ -15,7 +15,7 @@ import styled from 'styled-components'
 
 const Fader = styled.div`
   position: absolute;
-  top: 0px;
+  bottom: 0px;
   left: 0px;
   width: ${({ count }) => `calc(100% - (100% / ${150 / count}))`};
   height: 2px;
