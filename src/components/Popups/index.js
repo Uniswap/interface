@@ -45,9 +45,9 @@ const MobilePopupInner = styled.div`
 
 const FixedPopupColumn = styled(AutoColumn)`
   position: absolute;
-  top: 80px;
-  right: 20px
-  width: 380px;
+  bottom: 24px;
+  right: 24px;
+  width: 355px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
@@ -57,7 +57,7 @@ const FixedPopupColumn = styled(AutoColumn)`
 const Popup = styled.div`
   display: inline-block;
   width: 100%;
-  min-height: 120px;
+  /* min-height: 60px; */
   padding: 1em;
   box-sizing: border-box;
   background-color: white;
@@ -67,6 +67,7 @@ const Popup = styled.div`
   padding: 20px;
   padding-right: 35px;
   z-index: 2;
+  overflow: hidden;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     min-width: 290px;
@@ -96,7 +97,7 @@ export default function App() {
           return (
             <Popup key={item.key}>
               <StyledClose color="#888D9B" onClick={() => removePopup(item.key)} />
-              {item.content}
+              {React.cloneElement(item.content, { popKey: item.key })}
             </Popup>
           )
         })}
@@ -127,7 +128,7 @@ export default function App() {
               return (
                 <Popup key={item.key}>
                   <StyledClose color="#888D9B" onClick={() => removePopup(item.key)} />
-                  {item.content}
+                  {React.cloneElement(item.content, { popKey: item.key })}
                 </Popup>
               )
             })}
