@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useCallback, useEffect } from 'react'
+import React, { useState, useReducer, useCallback, useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
 import { withRouter } from 'react-router-dom'
@@ -16,8 +16,7 @@ import CurrencyInputPanel from '../CurrencyInputPanel'
 
 import { Link } from '../../theme/components'
 import { Text } from 'rebass'
-import { TYPE } from '../../theme'
-import { Hover } from '../../theme'
+import { theme, TYPE, Hover } from '../../theme'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
 import { ArrowDown, ChevronDown, ChevronUp } from 'react-feather'
@@ -31,6 +30,8 @@ import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWeb3React, useTokenContract } from '../../hooks'
 import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
+import { useUserAdvanced } from '../../contexts/Application'
+import { ThemeContext } from 'styled-components'
 
 import { ROUTER_ADDRESSES } from '../../constants'
 // import { INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
@@ -293,6 +294,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
   const { chainId, account, library } = useWeb3React()
   const routerAddress: string = ROUTER_ADDRESSES[chainId]
 
+  const simplified = useUserAdvanced()
   // adding notifications on txns
   const addTransaction = useTransactionAdder()
 
@@ -750,6 +752,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
   const [isValid, setIsValid] = useState<boolean>(false)
 
   const ignoreOutput: boolean = sending ? !sendingWithSwap : false
+  const [showInverted, setShowInverted] = useState(false)
 
   useEffect(() => {
     // reset errors
@@ -994,18 +997,18 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
     return (
       <AutoRow justify="space-between">
         <AutoColumn justify="center">
-          <Text fontWeight={500} fontSize={16} color="#000000">
+          <Text fontWeight={500} fontSize={16} color={theme().text1}>
             {pair ? `${route.midPrice.toSignificant(6)} ` : '-'}
           </Text>
-          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+          <Text fontWeight={500} fontSize={14} color={theme().text2} pt={1}>
             {tokens[Field.OUTPUT]?.symbol} / {tokens[Field.INPUT]?.symbol}
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
-          <Text fontWeight={500} fontSize={16} color="#000000">
+          <Text fontWeight={500} fontSize={16} color={theme().text1}>
             {pair ? `${route.midPrice.invert().toSignificant(6)} ` : '-'}
           </Text>
-          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+          <Text fontWeight={500} fontSize={14} color={theme().text2} pt={1}>
             {tokens[Field.INPUT]?.symbol} / {tokens[Field.OUTPUT]?.symbol}
           </Text>
         </AutoColumn>
@@ -1023,8 +1026,8 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
                 : priceSlippage.toFixed(4) + '%'
               : '-'}
           </ErrorText>
-          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
-            Price Slippage
+          <Text fontWeight={500} fontSize={14} color={theme().text2} pt={1}>
+            Price Impact
           </Text>
         </AutoColumn>
       </AutoRow>
@@ -1109,6 +1112,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
               hideBalance={true}
               hideInput={true}
               showSendWithSwap={true}
+              simplified={simplified}
               otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
             />
           </InputGroup>
@@ -1125,6 +1129,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
               token={tokens[Field.INPUT]}
               error={inputError}
               pair={pair}
+              simplified={simplified}
               onUserInput={onUserInput}
               onMax={() => {
                 maxAmountInput && onMaxInput(maxAmountInput.toExact())
@@ -1167,6 +1172,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
               onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
               error={outputError}
               pair={pair}
+              simplified={simplified}
               otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
             />
             {sendingWithSwap && (
@@ -1200,9 +1206,33 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
           </AutoColumn>
         )}
         {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-          <LightCard padding="1rem" borderRadius={'20px'}>
-            <PriceBar />
-          </LightCard>
+          <GreyCard padding={simplified ? '1rem' : '.25rem 1rem'} borderRadius={'20px'}>
+            {simplified ? (
+              <PriceBar />
+            ) : (
+              <AutoColumn style={{ cursor: 'pointer' }} onClick={() => setShowInverted(!showInverted)}>
+                {' '}
+                <RowBetween>
+                  <Text fontWeight={500} fontSize={16} color={theme().text2}>
+                    Price
+                  </Text>
+                  <Text fontWeight={500} fontSize={16} color={theme().text2} pt={1}>
+                    {pair && showInverted
+                      ? route.midPrice.invert().toSignificant(6) +
+                        ' ' +
+                        tokens[Field.INPUT]?.symbol +
+                        ' / ' +
+                        tokens[Field.OUTPUT]?.symbol
+                      : route.midPrice.toSignificant(6) +
+                        ' ' +
+                        tokens[Field.OUTPUT]?.symbol +
+                        ' / ' +
+                        tokens[Field.INPUT]?.symbol}
+                  </Text>
+                </RowBetween>
+              </AutoColumn>
+            )}
+          </GreyCard>
         )}
       </AutoColumn>
       <BottomGrouping>

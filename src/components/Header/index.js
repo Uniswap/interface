@@ -13,6 +13,7 @@ import { YellowCard } from '../Card'
 import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useWalletModalToggle } from '../../contexts/Application'
+import { useToggleUserAdvanced } from '../../contexts/Application'
 
 import Logo from '../../assets/svg/logo.svg'
 import Wordmark from '../../assets/svg/wordmark.svg'
@@ -23,8 +24,8 @@ const HeaderFrame = styled.div`
   justify-content: space-between;
   width: 100%;
   position: absolute;
-  padding: 0 10px;
-  width: calc(100% - 20px);
+  padding: 1rem 1rem;
+  width: calc(100% - 2rem);
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     padding: 10px;
@@ -95,6 +96,7 @@ export default function Header() {
 
   const userEthBalance = useAddressBalance(account, WETH[chainId])
   const toggleWalletModal = useWalletModalToggle()
+  const toggleSimplified = useToggleUserAdvanced()
 
   return (
     <HeaderFrame>
@@ -108,12 +110,12 @@ export default function Header() {
               <Link id="link" href="https://uniswap.io">
                 <img style={{ marginLeft: '4px' }} src={Wordmark} alt="logo" />
               </Link>
-              <p style={{ opacity: 0.6, marginLeft: '4px', fontSize: '16px' }}>{'/ Exchange'}</p>
             </TitleText>
           )}
         </Title>
       </HeaderElement>
       <HeaderElement>
+        <button onClick={toggleSimplified}>Toggle Simplified</button>
         <TestnetWrapper>
           {!isMobile && chainId === 4 && <NetworkCard>Rinkeby Testnet</NetworkCard>}
           {!isMobile && chainId === 3 && <NetworkCard> Ropsten Testnet</NetworkCard>}

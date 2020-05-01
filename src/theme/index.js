@@ -42,7 +42,7 @@ export default function ThemeProvider({ children }) {
   return <StyledComponentsThemeProvider theme={theme(themeToRender)}>{children}</StyledComponentsThemeProvider>
 }
 
-const theme = darkMode => ({
+export const theme = darkMode => ({
   // base
   white,
   black,
@@ -173,7 +173,7 @@ export const GlobalStyle = createGlobalStyle`
   html { 
     font-family: 'Inter', sans-serif; 
     letter-spacing: -0.018em;
-    font-feature-settings: 'cv01', 'cv02', 'cv03', 'cv04';
+    /* font-feature-settings: 'cv01', 'cv02', 'cv03', 'cv04'; */
     }
   @supports (font-variation-settings: normal) {
     html { font-family: 'Inter var', sans-serif; }

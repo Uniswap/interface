@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import styled from 'styled-components'
 import '@reach/tooltip/styles.css'
 import { darken } from 'polished'
@@ -14,6 +14,7 @@ import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
 import { useAddressBalance } from '../../contexts/Balances'
+import { ThemeContext } from 'styled-components'
 
 const InputRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -49,7 +50,8 @@ const LabelRow = styled.div`
   color: ${({ theme }) => theme.text1};
   font-size: 0.75rem;
   line-height: 1rem;
-  padding: 0 1.25rem 1rem 1rem;
+  padding: 0rem 1rem 0.75rem 1rem;
+  height: 20px
   span:hover {
     cursor: pointer;
     color: ${({ theme }) => darken(0.2, theme.text2)};
@@ -118,6 +120,26 @@ const StyledBalanceMax = styled.button`
     outline: none;
   }
 `
+const StyledBalanceMaxMini = styled.button`
+  height: 24px;
+  background-color: ${({ theme, active }) => (active ? theme.blue5 : theme.bg2)};
+  border: 1px solid ${({ theme }) => theme.blue5};
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+
+  pointer-events: ${({ active }) => (active ? 'initial' : 'none')};
+  color: ${({ theme, active }) => (active ? theme.blue1 : theme.text4)};
+
+  :hover {
+    border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.blue4)};
+  }
+  :focus {
+    border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.blue4)};
+    outline: none;
+  }
+`
 
 export default function CurrencyInputPanel({
   value,
@@ -136,13 +158,15 @@ export default function CurrencyInputPanel({
   pair = null, // used for double token logo
   hideInput = false,
   showSendWithSwap = false,
-  otherSelectedTokenAddress = null
+  otherSelectedTokenAddress = null,
+  simplified = false
 }) {
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
   const { account } = useWeb3React()
   const userTokenBalance = useAddressBalance(account, token)
+  const theme = useContext(ThemeContext)
 
   return (
     <InputPanel>
@@ -156,7 +180,7 @@ export default function CurrencyInputPanel({
                   onUserInput(field, val)
                 }}
               />
-              {!!token?.address && !atMax && type !== 'OUTPUT' && (
+              {!simplified && !!token?.address && !atMax && type !== 'OUTPUT' && (
                 <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
               )}
             </>
@@ -189,13 +213,27 @@ export default function CurrencyInputPanel({
             </Aligner>
           </CurrencySelect>
         </InputRow>
-        {!hideBalance && !!token && (
+        {simplified && !hideBalance && !!token && (
           <LabelRow>
-            <RowBetween>
-              <ErrorSpan data-tip={'Enter max'} error={!!error} onClick={() => {}}></ErrorSpan>
-              <Hover onClick={onMax}>
-                <TYPE.body fontWeight={500}>Balance: {userTokenBalance?.toSignificant(6)}</TYPE.body>
-              </Hover>
+            <RowBetween onClick={onMax}>
+              {/* {!!token?.address && !atMax && type !== 'OUTPUT' ? (
+                <StyledBalanceMaxMini>Max</StyledBalanceMaxMini>
+              ) : (
+                <TYPE.body color={'#888D9B'}>Balance</TYPE.body>
+              )} */}
+              {!!token?.address &&
+                (type !== 'OUTPUT' ? (
+                  <StyledBalanceMaxMini active={!atMax}>Input Max</StyledBalanceMaxMini>
+                ) : (
+                  <TYPE.body color={theme.text3}>(Estimated)</TYPE.body>
+                ))}
+
+              <div>
+                <TYPE.body color={theme.text2} fontWeight={500} style={{ display: 'inline' }}>
+                  Balance: {account ? userTokenBalance?.toSignificant(6) : 'Connect to see balances'}
+                </TYPE.body>
+              </div>
+              {/* <ErrorSpan data-tip={'Enter max'} error={!!error} onClick={() => {}}></ErrorSpan> */}
             </RowBetween>
           </LabelRow>
         )}

@@ -25,9 +25,9 @@ const StyledClose = styled(X)`
 const MobilePopupWrapper = styled.div`
   position: relative;
   max-width: 100%;
-  height: ${({ height }) => height}
-  margin: ${({ height }) => (height ? '0 auto;' : 0)} 
-  margin-bottom: ${({ height }) => (height ? '20px' : 0)}}
+  height: ${({ height }) => height};
+  margin: ${({ height }) => (height ? '0 auto;' : 0)};
+  margin-bottom: ${({ height }) => (height ? '20px' : 0)}};
 `
 
 const MobilePopupInner = styled.div`
@@ -45,8 +45,8 @@ const MobilePopupInner = styled.div`
 
 const FixedPopupColumn = styled(AutoColumn)`
   position: absolute;
-  top: 56px;
-  right: 24px;
+  top: 72px;
+  right: 1rem;
   width: 355px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -60,7 +60,7 @@ const Popup = styled.div`
   padding: 1em;
   box-sizing: border-box;
   background-color: white;
-  margin: 0 10px;
+  /* margin: 0 10px; */
   position: relative;
   border-radius: 10px;
   padding: 20px;
