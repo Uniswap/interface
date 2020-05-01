@@ -138,19 +138,16 @@ function SearchModal({
 
   const allTokens = useAllTokens()
   const allPairs = useAllPairs()
-
   const allBalances = useAllBalances()
 
   const [searchQuery, setSearchQuery] = useState('')
   const [sortDirection, setSortDirection] = useState(true)
 
-  const token = useToken(searchQuery)
-
   const [, { fetchTokenByAddress, addToken, removeTokenByAddress }] = useLocalStorageTokens()
-  // stores tokens that may be added to a user's local storage
-  const [temporaryToken, setTemporaryToken] = useState()
 
   // if the current input is an address, and we don't have the token in context, try to fetch it
+  const token = useToken(searchQuery)
+  const [temporaryToken, setTemporaryToken] = useState()
   useEffect(() => {
     const address = isAddress(searchQuery)
     if (address && !token) {
@@ -166,10 +163,6 @@ function SearchModal({
       }
     }
   }, [searchQuery, token, fetchTokenByAddress])
-
-  // amount of tokens to display at once
-  const [, setTokensShown] = useState(0)
-  const [, setPairsShown] = useState(0)
 
   const [activeFilter, setActiveFilter] = useState(FILTERS.BALANCES)
 
@@ -321,14 +314,6 @@ function SearchModal({
       return regexMatches.some(m => m)
     })
   }, [allPairs, allTokens, searchQuery, sortedPairList])
-
-  // update the amount shown as filtered list changes
-  useEffect(() => {
-    setTokensShown(Math.min(Object.keys(filteredTokenList).length, 3))
-  }, [filteredTokenList])
-  useEffect(() => {
-    setPairsShown(Math.min(Object.keys(filteredPairList).length, 3))
-  }, [filteredPairList])
 
   function renderPairsList() {
     if (filteredPairList?.length === 0) {

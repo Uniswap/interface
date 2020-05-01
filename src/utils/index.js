@@ -66,11 +66,11 @@ export function getAllQueryParams() {
     ? isAddress(getQueryParam(window.location, 'outputTokenAddress'))
     : ''
 
-  params.inputTokenAmount = !isNaN(getQueryParam(window.location, 'inputTokenAmount'))
+  params.inputTokenAmount = !isNaN(Number(getQueryParam(window.location, 'inputTokenAmount')))
     ? getQueryParam(window.location, 'inputTokenAmount')
     : ''
 
-  params.outputTokenAmount = !isNaN(getQueryParam(window.location, 'outputTokenAmount'))
+  params.outputTokenAmount = !isNaN(Number(getQueryParam(window.location, 'outputTokenAmount')))
     ? getQueryParam(window.location, 'outputTokenAmount')
     : ''
 
@@ -87,7 +87,7 @@ export function checkSupportedTheme(themeName) {
 export function getNetworkName(networkId) {
   switch (networkId) {
     case 1: {
-      return 'the Main Ethereum Network'
+      return 'the Ethereum Mainnet'
     }
     case 3: {
       return 'the Ropsten Test Network'

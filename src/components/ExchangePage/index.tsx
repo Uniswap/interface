@@ -25,7 +25,7 @@ import { GreyCard, BlueCard, YellowCard } from '../../components/Card'
 import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
 
 import { usePair } from '../../contexts/Pairs'
-import { useToken } from '../../contexts/Tokens'
+import { useToken, useAllTokens } from '../../contexts/Tokens'
 import { usePopups } from '../../contexts/Application'
 import { useRoute } from '../../contexts/Routes'
 // import { useTranslation } from 'react-i18next'
@@ -37,6 +37,7 @@ import { useTransactionAdder, usePendingApproval } from '../../contexts/Transact
 import { ROUTER_ADDRESSES } from '../../constants'
 import { ALL_TOKENS } from '../../contexts/Tokens'
 import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEtherscanLink, isWETH } from '../../utils'
+import { useLocalStorageTokens } from '../../contexts/LocalStorage'
 
 const Wrapper = styled.div`
   position: relative;
@@ -253,7 +254,7 @@ const DEFAULT_DEADLINE_FROM_NOW = 60 * 15
 const ALLOWED_SLIPPAGE_MEDIUM = 100
 const ALLOWED_SLIPPAGE_HIGH = 500
 
-function ExchangePage({ sendingInput = false, history, initialCurrency, params }) {
+function ExchangePage({ sendingInput = false, history, params }) {
   // text translation
   // const { t } = useTranslation()
 
@@ -274,11 +275,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
     reducer,
     {
       independentField: params.outputTokenAddress && !params.inputTokenAddress ? Field.OUTPUT : Field.INPUT,
-      inputTokenAddress: params.inputTokenAddress
-        ? params.inputTokenAddress
-        : initialCurrency
-        ? initialCurrency
-        : WETH[chainId].address,
+      inputTokenAddress: params.inputTokenAddress ? params.inputTokenAddress : WETH[chainId].address,
       outputTokenAddress: params.outputTokenAddress ? params.outputTokenAddress : '',
       typedValue:
         params.inputTokenAddress && !params.outputTokenAddress
@@ -307,13 +304,36 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
     [Field.OUTPUT]: useToken(fieldData[Field.OUTPUT].address)
   }
 
+  // ensure input + output tokens are added to localstorage
+  const [, { fetchTokenByAddress, addToken }] = useLocalStorageTokens()
+  const allTokens = useAllTokens()
+  const inputTokenAddress = fieldData[Field.INPUT].address
+  useEffect(() => {
+    if (inputTokenAddress && !Object.keys(allTokens).some(tokenAddress => tokenAddress === inputTokenAddress)) {
+      fetchTokenByAddress(inputTokenAddress).then(token => {
+        if (token !== null) {
+          addToken(token)
+        }
+      })
+    }
+  }, [inputTokenAddress, allTokens, fetchTokenByAddress, addToken])
+  const outputTokenAddress = fieldData[Field.OUTPUT].address
+  useEffect(() => {
+    if (outputTokenAddress && !Object.keys(allTokens).some(tokenAddress => tokenAddress === outputTokenAddress)) {
+      fetchTokenByAddress(outputTokenAddress).then(token => {
+        if (token !== null) {
+          addToken(token)
+        }
+      })
+    }
+  }, [outputTokenAddress, allTokens, fetchTokenByAddress, addToken])
+
   // token contracts for approvals and direct sends
   const tokenContractInput: ethers.Contract = useTokenContract(tokens[Field.INPUT]?.address)
   const tokenContractOutput: ethers.Contract = useTokenContract(tokens[Field.OUTPUT]?.address)
 
   // check on pending approvals for token amounts
   const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
-  const pendingApprovalOutput = usePendingApproval(tokens[Field.OUTPUT]?.address)
 
   // check for imported tokens to show warning
   const importedTokenInput = tokens[Field.INPUT] && !!!ALL_TOKENS?.[chainId]?.[tokens[Field.INPUT]?.address]
@@ -338,9 +358,8 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
   const [deadline, setDeadline] = useState<number>(DEFAULT_DEADLINE_FROM_NOW)
   const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
 
-  // approvals
+  // input approval
   const inputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.INPUT], routerAddress)
-  const outputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.OUTPUT], routerAddress)
 
   // all balances for detecting a swap with send
   const allBalances: TokenAmount[] = useAllBalances()
@@ -500,11 +519,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
 
   const showInputUnlock: boolean =
     parsedAmounts[Field.INPUT] && inputApproval && JSBI.greaterThan(parsedAmounts[Field.INPUT].raw, inputApproval.raw)
-
-  const showOutputUnlock: boolean =
-    parsedAmounts[Field.OUTPUT] &&
-    outputApproval &&
-    JSBI.greaterThan(parsedAmounts[Field.OUTPUT].raw, outputApproval.raw)
 
   // function for a pure send
   async function onSend() {
@@ -763,7 +777,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
     sending,
     sendingWithSwap,
     showInputUnlock,
-    showOutputUnlock,
     tokens,
     userBalances,
     route
@@ -1120,19 +1133,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
             </Link>
             {/* </RowBetween> */}
           </GreyCard>
-        ) : showOutputUnlock ? (
-          <ButtonLight
-            onClick={() => {
-              !pendingApprovalOutput && approveAmount(Field.OUTPUT)
-            }}
-            disabled={pendingApprovalOutput}
-          >
-            {pendingApprovalOutput ? (
-              <Dots>Unlocking {tokens[Field.OUTPUT]?.symbol}</Dots>
-            ) : (
-              'Unlock ' + tokens[Field.OUTPUT]?.symbol
-            )}
-          </ButtonLight>
         ) : showInputUnlock ? (
           <ButtonLight
             onClick={() => {
