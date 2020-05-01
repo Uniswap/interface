@@ -6,10 +6,14 @@ import { darken } from 'polished'
 import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
 import SearchModal from '../SearchModal'
+import { RowBetween } from '../Row'
+import { TYPE, Hover } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
+import { useWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
+import { useAddressBalance } from '../../contexts/Balances'
 
 const InputRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -39,6 +43,27 @@ const CurrencySelect = styled.button`
   }
 `
 
+const LabelRow = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: center;
+  color: ${({ theme }) => theme.text1};
+  font-size: 0.75rem;
+  line-height: 1rem;
+  padding: 0 1.25rem 1rem 1rem;
+  span:hover {
+    cursor: pointer;
+    color: ${({ theme }) => darken(0.2, theme.text2)};
+  }
+`
+
+const ErrorSpan = styled.span`
+  color: ${({ error, theme }) => error && theme.red1};
+  :hover {
+    cursor: pointer;
+    color: ${({ error, theme }) => error && darken(0.1, theme.red1)};
+  }
+`
+
 const Aligner = styled.span`
   display: flex;
   align-items: center;
@@ -65,9 +90,7 @@ const InputPanel = styled.div`
 
 const Container = styled.div`
   border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
-  /* border: 1px solid ${({ error, theme }) => (error ? theme.red1 : theme.bg2)}; */
   border: 1px solid ${({ theme }) => theme.bg2};
-
   background-color: ${({ theme }) => theme.bg1};
 `
 
@@ -118,6 +141,8 @@ export default function CurrencyInputPanel({
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
+  const { account } = useWeb3React()
+  const userTokenBalance = useAddressBalance(account, token)
 
   return (
     <InputPanel>
@@ -164,6 +189,16 @@ export default function CurrencyInputPanel({
             </Aligner>
           </CurrencySelect>
         </InputRow>
+        {!hideBalance && !!token && (
+          <LabelRow>
+            <RowBetween>
+              <ErrorSpan data-tip={'Enter max'} error={!!error} onClick={() => {}}></ErrorSpan>
+              <Hover onClick={onMax}>
+                <TYPE.body fontWeight={500}>Balance: {userTokenBalance?.toSignificant(6)}</TYPE.body>
+              </Hover>
+            </RowBetween>
+          </LabelRow>
+        )}
       </Container>
       {!disableTokenSelect && (
         <SearchModal
