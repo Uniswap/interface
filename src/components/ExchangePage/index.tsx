@@ -609,8 +609,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
   async function onSwap() {
     const routerContract: ethers.Contract = getRouterContract(chainId, library, account)
 
-    console.log(deadline)
-
     setAttemptingTxn(true) // mark that user is attempting transaction
 
     const path = Object.keys(route.path).map(key => {

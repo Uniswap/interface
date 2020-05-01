@@ -17,9 +17,6 @@ import { useWalletModalToggle } from '../../contexts/Application'
 import Logo from '../../assets/svg/logo.svg'
 import Wordmark from '../../assets/svg/wordmark.svg'
 
-import TxnPopup from '../TxnPopup'
-import { usePopups } from '../../contexts/Application'
-
 const HeaderFrame = styled.div`
   display: flex;
   align-items: center;
@@ -98,8 +95,6 @@ export default function Header() {
 
   const userEthBalance = useAddressBalance(account, WETH[chainId])
   const toggleWalletModal = useWalletModalToggle()
-
-  const [, addPopup] = usePopups()
 
   return (
     <HeaderFrame>

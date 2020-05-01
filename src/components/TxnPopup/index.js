@@ -29,6 +29,7 @@ function useInterval(callback, delay) {
   // Remember the latest callback.
   useEffect(() => {
     savedCallback.current = callback
+    return () => {}
   }, [callback])
 
   // Set up the interval.
@@ -40,16 +41,18 @@ function useInterval(callback, delay) {
       let id = setInterval(tick, delay)
       return () => clearInterval(id)
     }
+    return () => {}
   }, [delay])
 }
+
+const delay = 100
 
 export default function TxnPopup({ hash, success, summary, popKey }) {
   const { chainId } = useWeb3React()
   let [count, setCount] = useState(1)
-  const [delay, setDelay] = useState(100)
 
   const [isRunning, setIsRunning] = useState(true)
-  const [activePopups, , removePopup] = usePopups()
+  const [, , removePopup] = usePopups()
 
   useInterval(
     () => {
@@ -67,7 +70,6 @@ export default function TxnPopup({ hash, success, summary, popKey }) {
         <AlertCircle color={'#FF6871'} size={24} style={{ paddingRight: '24px' }} />
       )}
       <AutoColumn gap="8px">
-        {/* <TYPE.body>Transaction {success ? 'confirmed.' : 'failed.'}</TYPE.body> */}
         <TYPE.body fontWeight={500}>
           {summary ? summary : 'Hash: ' + hash.slice(0, 8) + '...' + hash.slice(58, 65)}
         </TYPE.body>

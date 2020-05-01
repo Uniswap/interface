@@ -414,7 +414,6 @@ export function useAllBalances(): Array<TokenAmount> {
       let newBalances = {}
       Object.keys(state[chainId]).map(address => {
         return Object.keys(state[chainId][address]).map(tokenAddress => {
-          // console.log(allTokens[tokenAddress])
           if (state[chainId][address][tokenAddress].value) {
             // fix if ETH found in local storage from old storage
             if (tokenAddress === 'ETH') {
