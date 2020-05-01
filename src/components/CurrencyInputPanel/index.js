@@ -111,9 +111,9 @@ export default function CurrencyInputPanel({
   hideBalance = false,
   isExchange = false,
   pair = null, // used for double token logo
-  customBalance = null, // used for LP balances instead of token balance
   hideInput = false,
-  showSendWithSwap = false
+  showSendWithSwap = false,
+  otherSelectedTokenAddress = null
 }) {
   const { t } = useTranslation()
 
@@ -134,7 +134,6 @@ export default function CurrencyInputPanel({
               {!!token?.address && !atMax && type !== 'OUTPUT' && (
                 <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
               )}
-              {/* {renderUnlockButton()} */}
             </>
           )}
           <CurrencySelect
@@ -165,26 +164,6 @@ export default function CurrencyInputPanel({
             </Aligner>
           </CurrencySelect>
         </InputRow>
-        {/* {!hideBalance && !!token && (
-          <LabelRow>
-            <RowBetween>
-              <Text fontSize={16} fontWeight={400}>
-                {'-'}
-              </Text>
-              {!!token?.address && type !== 'OUTPUT' && !atMax ? (
-                <MiniMax onClick={onMax}>MAX</MiniMax>
-              ) : (
-                <Clear>Clear</Clear>
-              )}
-              <ErrorSpan data-tip={'Enter max'} error={!!error} onClick={() => {}}></ErrorSpan>
-              <ClickableText fontWeight={500} onClick={onMax}>
-                <TYPE.body>
-                  {customBalance ? customBalance?.toSignificant(4) : userTokenBalance?.toSignificant(4)} {token.symbol}
-                </TYPE.body>
-              </ClickableText>
-            </RowBetween>
-          </LabelRow>
-        )} */}
       </Container>
       {!disableTokenSelect && (
         <SearchModal
@@ -198,6 +177,8 @@ export default function CurrencyInputPanel({
           onTokenSelect={onTokenSelection}
           showSendWithSwap={showSendWithSwap}
           hiddenToken={token?.address}
+          otherSelectedTokenAddress={otherSelectedTokenAddress}
+          otherSelectedText={field === 0 ? ' Selected as output' : 'Selected as input'}
         />
       )}
     </InputPanel>

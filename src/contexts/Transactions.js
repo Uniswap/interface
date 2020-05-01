@@ -10,6 +10,7 @@ const RESPONSE = 'response'
 const CUSTOM_DATA = 'CUSTOM_DATA'
 const BLOCK_NUMBER_CHECKED = 'BLOCK_NUMBER_CHECKED'
 const RECEIPT = 'receipt'
+const SUMMARY = 'summary'
 
 const ADD = 'ADD'
 const CHECK = 'CHECK'
@@ -131,7 +132,14 @@ export function Updater() {
                   check(chainId, hash, globalBlockNumber)
                 } else {
                   finalize(chainId, hash, receipt)
-                  addPopup(<TxnPopup hash={hash} success={true} />)
+                  // add success or failure popup
+                  if (receipt.status === 1) {
+                    addPopup(<TxnPopup hash={hash} success={true} summary={allTransactions[hash]?.response?.summary} />)
+                  } else {
+                    addPopup(
+                      <TxnPopup hash={hash} success={false} summary={allTransactions[hash]?.response?.summary} />
+                    )
+                  }
                 }
               }
             })
@@ -155,17 +163,15 @@ export function useTransactionAdder() {
   const [, { add }] = useTransactionsContext()
 
   return useCallback(
-    (response, customData = {}) => {
+    (response, summary = '', customData = {}) => {
       if (!(chainId || chainId === 0)) {
         throw Error(`Invalid networkId '${chainId}`)
       }
-
       const hash = safeAccess(response, ['hash'])
-
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      add(chainId, hash, { ...response, [CUSTOM_DATA]: customData })
+      add(chainId, hash, { ...response, [CUSTOM_DATA]: customData, [SUMMARY]: summary })
     },
     [chainId, add]
   )
@@ -181,7 +187,6 @@ export function useAllTransactions() {
 
 export function usePendingApproval(tokenAddress) {
   const allTransactions = useAllTransactions()
-
   return (
     Object.keys(allTransactions).filter(hash => {
       if (allTransactions[hash][RECEIPT]) {

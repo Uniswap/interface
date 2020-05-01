@@ -5,18 +5,37 @@ import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import { darken, lighten } from 'polished'
 import { Activity } from 'react-feather'
 
-import { shortenAddress } from '../../utils'
-import { useENSName } from '../../hooks'
+import Identicon from '../Identicon'
+import PortisIcon from '../../assets/images/portisIcon.png'
 import WalletModal from '../WalletModal'
-import { useAllTransactions } from '../../contexts/Transactions'
-import { useWalletModalToggle } from '../../contexts/Application'
-import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
+import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
-import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
-import PortisIcon from '../../assets/images/portisIcon.png'
+
+import { Spinner } from '../../theme'
+import LightCircle from '../../assets/svg/lightcircle.svg'
+
+import { RowBetween } from '../Row'
+import { useENSName } from '../../hooks'
+import { shortenAddress } from '../../utils'
+import { useAllTransactions } from '../../contexts/Transactions'
 import { NetworkContextName } from '../../constants'
-import Identicon from '../Identicon'
+import { useWalletModalToggle } from '../../contexts/Application'
+import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
+
+const SpinnerWrapper = styled(Spinner)`
+  margin: 0 0.25rem 0 0.25rem;
+`
+
+const IconWrapper = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap};
+  align-items: center;
+  justify-content: center;
+  & > * {
+    height: ${({ size }) => (size ? size + 'px' : '32px')};
+    width: ${({ size }) => (size ? size + 'px' : '32px')};
+  }
+`
 
 const Web3StatusGeneric = styled.button`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -103,16 +122,6 @@ const NetworkIcon = styled(Activity)`
   height: 16px;
 `
 
-const IconWrapper = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap};
-  align-items: center;
-  justify-content: center;
-  & > * {
-    height: ${({ size }) => (size ? size + 'px' : '32px')};
-    width: ${({ size }) => (size ? size + 'px' : '32px')};
-  }
-`
-
 export default function Web3Status() {
   const { t } = useTranslation()
   const { active, account, connector, error } = useWeb3React()
@@ -164,7 +173,9 @@ export default function Web3Status() {
       return (
         <Web3StatusConnected onClick={toggleWalletModal} pending={hasPendingTransactions}>
           {hasPendingTransactions ? (
-            <Text>{pending?.length} Pending</Text>
+            <RowBetween>
+              <Text>{pending?.length} Pending</Text> <SpinnerWrapper src={LightCircle} alt="loader" />
+            </RowBetween>
           ) : (
             <Text>{ENSName || shortenAddress(account)}</Text>
           )}

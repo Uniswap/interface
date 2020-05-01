@@ -33,7 +33,6 @@ const MobilePopupWrapper = styled.div`
 const MobilePopupInner = styled.div`
   height: 99%;
   box-sizing: border-box;
-  white-space: nowrap;
   overflow-x: auto;
   overflow-y: hidden;
   display: flex;
@@ -58,7 +57,7 @@ const FixedPopupColumn = styled(AutoColumn)`
 const Popup = styled.div`
   display: inline-block;
   width: 100%;
-  height: 120px;
+  min-height: 120px;
   padding: 1em;
   box-sizing: border-box;
   background-color: white;
@@ -67,7 +66,7 @@ const Popup = styled.div`
   border-radius: 10px;
   padding: 20px;
   padding-right: 35px;
-  whitespace: normal;
+  z-index: 2;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     min-width: 290px;
@@ -104,12 +103,12 @@ export default function App() {
         {showMessage && (
           <PinkCard padding="20px" style={{ zIndex: '2' }}>
             <AutoColumn justify={'center'} gap={'20px'}>
+              <Hover onClick={() => hideMigrationMessage()}>
+                <StyledClose />
+              </Hover>
               <TYPE.largeHeader>Uniswap has upgraded.</TYPE.largeHeader>
               <Text textAlign="center">Are you a liquidity provider? Upgrade now using the migration helper.</Text>
               <ButtonPink width={'265px'}>Migrate your liquidity </ButtonPink>
-              <Hover onClick={() => hideMigrationMessage()}>
-                <Text textAlign="center">Dismiss</Text>
-              </Hover>
             </AutoColumn>
           </PinkCard>
         )}
@@ -135,12 +134,12 @@ export default function App() {
           {showMessage && (
             <MobileCardPink>
               <AutoColumn justify={'center'} gap={'20px'}>
+                <Hover onClick={() => hideMigrationMessage()}>
+                  <StyledClose />
+                </Hover>
                 <Text>Uniswap has upgraded.</Text>
                 <Text textAlign="center">Are you a liquidity provider? Upgrade now using the migration helper.</Text>
                 <ButtonPink width={'265px'}>Migrate your liquidity </ButtonPink>
-                <Hover onClick={() => hideMigrationMessage()}>
-                  <Text textAlign="center">Dismiss</Text>
-                </Hover>
               </AutoColumn>
             </MobileCardPink>
           )}

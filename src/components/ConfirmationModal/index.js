@@ -83,7 +83,7 @@ function ConfirmationModal({
                 {!pendingConfirmation ? 'Transaction Submitted' : 'Waiting For Confirmation'}
               </Text>
               <AutoColumn gap="12px" justify={'center'}>
-                <Text fontWeight={600} fontSize={16} color="#2172E5">
+                <Text fontWeight={600} fontSize={16} color="#2172E5" textAlign="center">
                   {pendingText}
                 </Text>
               </AutoColumn>
@@ -102,7 +102,7 @@ function ConfirmationModal({
                 </>
               )}
               {pendingConfirmation && <div style={{ height: '138px' }} />}
-              <Text fontSize={12} color="#565A69">
+              <Text fontSize={12} color="#565A69" textAlign="center">
                 {pendingConfirmation
                   ? 'Confirm this transaction in your wallet'
                   : `Estimated time until confirmation: 3 min`}

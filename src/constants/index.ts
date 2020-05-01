@@ -1,4 +1,5 @@
 import { injected, walletconnect, walletlink, fortmatic, portis } from '../connectors'
+import { ChainId, WETH, Token } from '@uniswap/sdk'
 
 export const FACTORY_ADDRESSES = {
   1: '',
@@ -14,6 +15,14 @@ export const ROUTER_ADDRESSES = {
   4: '0xcDbE04934d89e97a24BCc07c3562DC8CF17d8167',
   5: '0xcDbE04934d89e97a24BCc07c3562DC8CF17d8167',
   42: '0xcDbE04934d89e97a24BCc07c3562DC8CF17d8167'
+}
+
+export const COMMON_BASES = {
+  1: [WETH[ChainId.MAINNET]],
+  4: [
+    WETH[ChainId.RINKEBY],
+    new Token(ChainId.RINKEBY, '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735', 18, 'DAI', 'Dai Stablecoin')
+  ]
 }
 
 export const SUPPORTED_THEMES = {
