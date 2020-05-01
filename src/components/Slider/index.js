@@ -72,8 +72,6 @@ export default function InputSlider({ value, onChange, override }) {
 
   function handleChange(e, val) {
     setInternalVal(val)
-    console.log(val)
-    console.log(debouncedInternalValue)
     if (val === debouncedInternalValue) {
       onChange(e, val)
     }

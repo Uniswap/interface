@@ -7,7 +7,6 @@ import { TokenAmount, JSBI, Route, WETH, Percent, Token, Pair } from '@uniswap/s
 import TokenLogo from '../../components/TokenLogo'
 import DoubleLogo from '../../components/DoubleLogo'
 import PositionCard from '../../components/PositionCard'
-// import NumericalInput from '../../components/NumericalInput'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { TYPE } from '../../theme'
@@ -266,9 +265,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
     parsedAmounts[Field.LIQUIDITY] &&
     pair.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, parsedAmounts[Field.LIQUIDITY], false)
 
-  // controlled input for percetange input
-  // const [percentageInput, setPercentageInput] = useState(0)
-
   // derived percent for advanced mode
   const derivedPerecent =
     userLiquidity &&
@@ -284,15 +280,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
       ).toExact()
     )
   }
-
-  // update controlled perctenage when derived is updated
-  // useEffect(() => {
-  //   if (derivedPerecent) {
-  //     setPercentageInput(parseFloat(derivedPerecent))
-  //   } else {
-  //     setPercentageInput(0)
-  //   }
-  // }, [derivedPerecent])
 
   // get formatted amounts
   const formattedAmounts = {
@@ -608,7 +595,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
         pendingText={pendingText}
         title="You will recieve"
       />
-      <AutoColumn gap="20px">
+      <AutoColumn gap="md">
         <LightCard>
           <AutoColumn gap="20px">
             <RowBetween>

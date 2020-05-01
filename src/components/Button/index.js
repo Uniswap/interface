@@ -20,6 +20,10 @@ const Base = styled(RebassButton)`
   &:disabled {
     cursor: auto;
   }
+
+  > * {
+    user-select: none;
+  }
 `
 
 export const ButtonPrimary = styled(Base)`

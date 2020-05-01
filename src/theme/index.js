@@ -106,6 +106,11 @@ export const TYPE = {
       {children}
     </Text>
   ),
+  black: ({ children, ...rest }) => (
+    <Text fontWeight={500} color={theme().text1} {...rest}>
+      {children}
+    </Text>
+  ),
   largeHeader: ({ children, ...rest }) => (
     <Text fontWeight={600} fontSize={24} {...rest}>
       {children}
@@ -122,12 +127,17 @@ export const TYPE = {
     </Text>
   ),
   body: ({ children, ...rest }) => (
-    <Text fontWeight={400} fontSize={16} color={'#888D9B'} {...rest}>
+    <Text fontWeight={400} fontSize={16} color={'#191B1F'} {...rest}>
       {children}
     </Text>
   ),
   blue: ({ children, ...rest }) => (
     <Text fontWeight={500} color={theme().blue1} {...rest}>
+      {children}
+    </Text>
+  ),
+  yellow: ({ children, ...rest }) => (
+    <Text fontWeight={500} color={theme().yellow2} {...rest}>
       {children}
     </Text>
   ),
