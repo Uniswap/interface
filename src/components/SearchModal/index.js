@@ -27,7 +27,7 @@ import { useWeb3React } from '../../hooks'
 import { useLocalStorageTokens } from '../../contexts/LocalStorage'
 import { useAllBalances } from '../../contexts/Balances'
 import { useTranslation } from 'react-i18next'
-import { useToken, useAllTokens, INITIAL_TOKENS_CONTEXT, ALL_TOKENS } from '../../contexts/Tokens'
+import { useToken, useAllTokens, ALL_TOKENS } from '../../contexts/Tokens'
 import QuestionHelper from '../Question'
 
 const TokenModalInfo = styled.div`
@@ -429,10 +429,7 @@ function SearchModal({
         .map(({ address, symbol, balance }) => {
           const urlAdded = urlAddedTokens && urlAddedTokens.hasOwnProperty(address)
           const customAdded =
-            address !== 'ETH' &&
-            INITIAL_TOKENS_CONTEXT[chainId] &&
-            !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(address) &&
-            !urlAdded
+            address !== 'ETH' && ALL_TOKENS[chainId] && !ALL_TOKENS[chainId].hasOwnProperty(address) && !urlAdded
 
           const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
 
