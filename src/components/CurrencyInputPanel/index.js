@@ -49,7 +49,7 @@ const LabelRow = styled.div`
   color: ${({ theme }) => theme.text1};
   font-size: 0.75rem;
   line-height: 1rem;
-  padding: 0 1.25rem 1rem 1rem;
+  padding: 0 1rem 1rem 1rem;
   span:hover {
     cursor: pointer;
     color: ${({ theme }) => darken(0.2, theme.text2)};
@@ -194,7 +194,9 @@ export default function CurrencyInputPanel({
             <RowBetween>
               <ErrorSpan data-tip={'Enter max'} error={!!error} onClick={() => {}}></ErrorSpan>
               <Hover onClick={onMax}>
-                <TYPE.body fontWeight={500}>Balance: {userTokenBalance?.toSignificant(6)}</TYPE.body>
+                <TYPE.main fontWeight={500} fontSize={'14px'}>
+                  Balance: {userTokenBalance?.toSignificant(6)}
+                </TYPE.main>
               </Hover>
             </RowBetween>
           </LabelRow>

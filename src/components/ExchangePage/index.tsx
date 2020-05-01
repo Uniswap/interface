@@ -20,9 +20,9 @@ import { TYPE } from '../../theme'
 import { Hover } from '../../theme'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
+import { GreyCard, BlueCard, YellowCard } from '../../components/Card'
 import { ArrowDown, ChevronDown, ChevronUp } from 'react-feather'
 import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
-import { GreyCard, BlueCard, YellowCard, LightCard } from '../../components/Card'
 
 import { usePair } from '../../contexts/Pairs'
 import { useToken } from '../../contexts/Tokens'
@@ -33,7 +33,7 @@ import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 
 import { ROUTER_ADDRESSES } from '../../constants'
-// import { INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
+import { INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
 import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEtherscanLink } from '../../utils'
 
 const Wrapper = styled.div`
@@ -75,19 +75,6 @@ const AdvancedDropwdown = styled.div`
   color: ${({ theme }) => theme.text2};
   z-index: -1;
 `
-
-// const PseudoBottom = styled.div`
-//   height: 14px;
-//   width: 340px;
-//   background: white;
-//   position: absolute;
-//   border-bottom-left-radius: 41px;
-//   top: 0px;
-//   border-bottom-right-radius: 40px;
-//   left: -1px;
-//   /* box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-//     0px 24px 32px rgba(0, 0, 0, 0.01); */
-// `
 
 const SectionBreak = styled.div`
   height: 2px;
@@ -348,9 +335,9 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
   const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
 
   // check for imported tokens to show warning
-  // const importedTokenInput = tokens[Field.INPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.INPUT]?.address]
-  // const importedTokenOutput =
-  //   tokens[Field.OUTPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.OUTPUT]?.address]
+  const importedTokenInput = tokens[Field.INPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.INPUT]?.address]
+  const importedTokenOutput =
+    tokens[Field.OUTPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.OUTPUT]?.address]
 
   // entities for swap
   const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
@@ -992,42 +979,34 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
 
   const PriceBar = function() {
     return (
-      <AutoRow justify="space-between">
-        <AutoColumn justify="center">
-          <Text fontWeight={500} fontSize={16} color="#000000">
-            {pair ? `${route.midPrice.toSignificant(6)} ` : '-'}
-          </Text>
-          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
-            {tokens[Field.OUTPUT]?.symbol} / {tokens[Field.INPUT]?.symbol}
-          </Text>
-        </AutoColumn>
-        <AutoColumn justify="center">
-          <Text fontWeight={500} fontSize={16} color="#000000">
-            {pair ? `${route.midPrice.invert().toSignificant(6)} ` : '-'}
-          </Text>
-          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
-            {tokens[Field.INPUT]?.symbol} / {tokens[Field.OUTPUT]?.symbol}
-          </Text>
-        </AutoColumn>
-        <AutoColumn justify="center">
-          <ErrorText
-            fontWeight={500}
-            fontSize={16}
-            warningLow={warningLow}
-            warningMedium={warningMedium}
-            warningHigh={warningHigh}
-          >
-            {priceSlippage
-              ? priceSlippage.toFixed(4) === '0.0000'
-                ? '<0.0001%'
-                : priceSlippage.toFixed(4) + '%'
-              : '-'}
-          </ErrorText>
-          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
-            Price Slippage
-          </Text>
-        </AutoColumn>
-      </AutoRow>
+      <AutoColumn gap="sm">
+        <RowBetween padding={'0 8pt'}>
+          <RowFixed>
+            <TYPE.main>Price </TYPE.main>
+            <Link href={getEtherscanLink(chainId, tokens[Field.INPUT]?.address, 'address')}>
+              <TYPE.gray marginLeft={'4px'}>(per {tokens[Field.INPUT]?.symbol})</TYPE.gray>
+            </Link>
+          </RowFixed>
+          <RowFixed>
+            <TYPE.main>{pair ? `${route.midPrice.toSignificant(6)} ` : '-'}</TYPE.main>
+            <Link href={getEtherscanLink(chainId, tokens[Field.OUTPUT]?.address, 'address')}>
+              <TYPE.main marginLeft={'4px'}>{tokens[Field.OUTPUT]?.symbol}</TYPE.main>
+            </Link>
+          </RowFixed>
+        </RowBetween>
+        {(warningHigh || warningMedium) && (
+          <RowBetween padding={'0 8pt'}>
+            <TYPE.main>Price Slippage</TYPE.main>
+            <ErrorText fontWeight={500} fontSize={16} warningMedium={warningMedium} warningHigh={warningHigh}>
+              {priceSlippage
+                ? priceSlippage.toFixed(4) === '0.0000'
+                  ? '<0.0001%'
+                  : priceSlippage.toFixed(4) + '%'
+                : '-'}
+            </ErrorText>
+          </RowBetween>
+        )}
+      </AutoColumn>
     )
   }
 
@@ -1199,11 +1178,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
             />
           </AutoColumn>
         )}
-        {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-          <LightCard padding="1rem" borderRadius={'20px'}>
-            <PriceBar />
-          </LightCard>
-        )}
+        {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && <PriceBar />}
       </AutoColumn>
       <BottomGrouping>
         {noRoute ? (
@@ -1388,14 +1363,41 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
                   </AutoColumn>
                 </YellowCard>
               )}
-              {/* <BalanceCard
-                token0={tokens[Field.INPUT]}
-                token1={tokens[Field.OUTPUT]}
-                import0={importedTokenInput}
-                balance0={userBalances[Field.INPUT]}
-                balance1={userBalances[Field.OUTPUT]}
-                import1={importedTokenOutput}
-              /> */}
+              {importedTokenInput && (
+                <YellowCard style={{ paddingTop: '1rem' }}>
+                  <AutoColumn gap="sm">
+                    <TYPE.mediumHeader>Token imported via address</TYPE.mediumHeader>
+                    <AutoRow gap="4px">
+                      <TokenLogo address={tokens[Field.INPUT]?.address || ''} />
+                      <TYPE.body>({tokens[Field.INPUT]?.symbol})</TYPE.body>
+                      <Link href={getEtherscanLink(chainId, tokens[Field.INPUT]?.address, 'address')}>
+                        (View on Etherscan)
+                      </Link>
+                      <Copy toCopy={''} />
+                    </AutoRow>
+                    <TYPE.subHeader>
+                      Please verify the legitimacy of this token before making any transactions.
+                    </TYPE.subHeader>
+                  </AutoColumn>
+                </YellowCard>
+              )}
+              {importedTokenOutput && (
+                <YellowCard style={{ paddingTop: '1rem' }}>
+                  <AutoColumn gap="sm">
+                    <TYPE.mediumHeader>Token imported via address</TYPE.mediumHeader>
+                    <AutoRow gap="4px">
+                      <TokenLogo address={tokens[Field.OUTPUT]?.address || ''} />
+                      <TYPE.body>({tokens[Field.OUTPUT]?.symbol})</TYPE.body>
+                      <Link href={getEtherscanLink(chainId, tokens[Field.OUTPUT]?.address, 'address')}>
+                        (View on Etherscan)
+                      </Link>
+                    </AutoRow>
+                    <TYPE.subHeader>
+                      Please verify the legitimacy of this token before making any transactions.
+                    </TYPE.subHeader>
+                  </AutoColumn>
+                </YellowCard>
+              )}
             </AutoColumn>
           </FixedBottom>
         </AdvancedDropwdown>

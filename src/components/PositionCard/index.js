@@ -208,7 +208,7 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
                 </ButtonSecondary>
               </RowBetween>
               <AutoRow justify="center" marginTop={'10px'}>
-                <Link>View analytics</Link>
+                <Link href={'uniswap.info'}>View analytics</Link>
               </AutoRow>
             </AutoColumn>
           )}

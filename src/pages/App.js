@@ -11,9 +11,9 @@ import { isAddress, getAllQueryParams } from '../utils'
 
 const Swap = lazy(() => import('./Swap'))
 const Send = lazy(() => import('./Send'))
-const Pool = lazy(() => import('./Supply'))
-const Add = lazy(() => import('./Supply/AddLiquidity'))
-const Remove = lazy(() => import('./Supply/RemoveLiquidity'))
+const Pool = lazy(() => import('./Pool'))
+const Add = lazy(() => import('./Pool/AddLiquidity'))
+const Remove = lazy(() => import('./Pool/RemoveLiquidity'))
 const Find = lazy(() => import('../components/PoolFinder'))
 const Create = lazy(() => import('../components/CreatePool'))
 

@@ -78,17 +78,17 @@ export default function InputSlider({ value, onChange, override }) {
   }
 
   useEffect(() => {
-    if (override && value !== internalVal) {
+    if (override) {
       setInternalVal(value)
     }
-  }, [internalVal, override, value])
+  }, [override, value])
 
   return (
     <StyledSlider
       value={typeof internalVal === 'number' ? internalVal : 0}
       onChange={handleChange}
       aria-labelledby="input-slider"
-      // marks={marks}
+      step={1}
     />
   )
 }

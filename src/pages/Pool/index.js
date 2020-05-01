@@ -29,7 +29,7 @@ const FixedBottom = styled.div`
   width: 100%;
 `
 
-function Supply({ history }) {
+function Pool({ history }) {
   const { account } = useWeb3React()
   const [showPoolSearch, setShowPoolSearch] = useState(false)
 
@@ -107,4 +107,4 @@ function Supply({ history }) {
     </AutoColumn>
   )
 }
-export default withRouter(Supply)
+export default withRouter(Pool)

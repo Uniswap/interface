@@ -147,7 +147,7 @@ export const TYPE = {
     </Text>
   ),
   gray: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().bg3} {...rest}>
+    <Text fontWeight={500} color={theme().text3} {...rest}>
       {children}
     </Text>
   ),
