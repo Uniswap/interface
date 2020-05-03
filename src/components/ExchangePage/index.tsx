@@ -13,15 +13,31 @@ import NumericalInput from '../NumericalInput'
 import AddressInputPanel from '../AddressInputPanel'
 import ConfirmationModal from '../ConfirmationModal'
 import CurrencyInputPanel from '../CurrencyInputPanel'
+import BalanceCard from '../BalanceCard'
 
 import { Link } from '../../theme/components'
 import { Text } from 'rebass'
 import { theme, TYPE, Hover } from '../../theme'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
-import { ArrowDown, ChevronDown, ChevronUp } from 'react-feather'
+import {
+  ArrowDown,
+  ChevronDown,
+  ChevronUp,
+  Trello,
+  Tool,
+  Maximize2,
+  Terminal,
+  Minimize2,
+  Maximize,
+  PlusSquare,
+  MinusSquare,
+  Info,
+  Eye,
+  EyeOff
+} from 'react-feather'
 import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
-import { GreyCard, BlueCard, YellowCard, LightCard } from '../../components/Card'
+import Card, { GreyCard, BlueCard, YellowCard, LightCard } from '../../components/Card'
 
 import { usePair } from '../../contexts/Pairs'
 import { useToken } from '../../contexts/Tokens'
@@ -30,11 +46,12 @@ import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWeb3React, useTokenContract } from '../../hooks'
 import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
-import { useUserAdvanced } from '../../contexts/Application'
+import { useUserAdvanced, useToggleUserAdvanced } from '../../contexts/Application'
+
 import { ThemeContext } from 'styled-components'
 
 import { ROUTER_ADDRESSES } from '../../constants'
-// import { INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
+import { INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
 import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEtherscanLink } from '../../utils'
 
 const Wrapper = styled.div`
@@ -56,19 +73,19 @@ const ArrowWrapper = styled.div`
 
 const FixedBottom = styled.div`
   position: absolute;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   width: 100%;
   margin-bottom: 40px;
 `
 
 const AdvancedDropwdown = styled.div`
   position: absolute;
-  margin-top: 2px;
-  left: -8px;
-  width: 339px;
+  margin-top: -12px;
+  left: -16px;
+  width: 355px;
   margin-bottom: 40px;
   padding: 10px 0;
-  padding-top: 24px;
+  padding-top: 36px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   color: #565a69;
@@ -91,7 +108,7 @@ const AdvancedDropwdown = styled.div`
 // `
 
 const SectionBreak = styled.div`
-  height: 2px;
+  height: 1px;
   width: 100%;
   background-color: ${({ theme }) => theme.bg1};
 `
@@ -295,6 +312,8 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
   const routerAddress: string = ROUTER_ADDRESSES[chainId]
 
   const simplified = useUserAdvanced()
+  const toggleSimplified = useToggleUserAdvanced()
+
   // adding notifications on txns
   const addTransaction = useTransactionAdder()
 
@@ -350,9 +369,9 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
   const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
 
   // check for imported tokens to show warning
-  // const importedTokenInput = tokens[Field.INPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.INPUT]?.address]
-  // const importedTokenOutput =
-  //   tokens[Field.OUTPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.OUTPUT]?.address]
+  const importedTokenInput = tokens[Field.INPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.INPUT]?.address]
+  const importedTokenOutput =
+    tokens[Field.OUTPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.OUTPUT]?.address]
 
   // entities for swap
   const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
@@ -752,7 +771,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
   const [isValid, setIsValid] = useState<boolean>(false)
 
   const ignoreOutput: boolean = sending ? !sendingWithSwap : false
-  const [showInverted, setShowInverted] = useState(false)
+  const [showInverted, setShowInverted] = useState<boolean>(false)
 
   useEffect(() => {
     // reset errors
@@ -997,18 +1016,18 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
     return (
       <AutoRow justify="space-between">
         <AutoColumn justify="center">
-          <Text fontWeight={500} fontSize={16} color={theme().text1}>
+          <Text fontWeight={500} fontSize={16} color={theme().text2}>
             {pair ? `${route.midPrice.toSignificant(6)} ` : '-'}
           </Text>
-          <Text fontWeight={500} fontSize={14} color={theme().text2} pt={1}>
+          <Text fontWeight={500} fontSize={14} color={theme().text3} pt={1}>
             {tokens[Field.OUTPUT]?.symbol} / {tokens[Field.INPUT]?.symbol}
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
-          <Text fontWeight={500} fontSize={16} color={theme().text1}>
+          <Text fontWeight={500} fontSize={16} color={theme().text2}>
             {pair ? `${route.midPrice.invert().toSignificant(6)} ` : '-'}
           </Text>
-          <Text fontWeight={500} fontSize={14} color={theme().text2} pt={1}>
+          <Text fontWeight={500} fontSize={14} color={theme().text3} pt={1}>
             {tokens[Field.INPUT]?.symbol} / {tokens[Field.OUTPUT]?.symbol}
           </Text>
         </AutoColumn>
@@ -1026,7 +1045,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
                 : priceSlippage.toFixed(4) + '%'
               : '-'}
           </ErrorText>
-          <Text fontWeight={500} fontSize={14} color={theme().text2} pt={1}>
+          <Text fontWeight={500} fontSize={14} color={theme().text3} pt={1}>
             Price Impact
           </Text>
         </AutoColumn>
@@ -1150,12 +1169,17 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
               </ColumnCenter>
             ) : (
               <Hover>
-                <ColumnCenter>
-                  <ArrowDown
-                    size="16"
-                    onClick={onSwapTokens}
-                    color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? '#2172E5' : '#888D9B'}
-                  />
+                <ColumnCenter padding="0 1rem">
+                  <ArrowWrapper>
+                    <ArrowDown
+                      size="16"
+                      onClick={onSwapTokens}
+                      color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? '#2172E5' : '#888D9B'}
+                    />
+                  </ArrowWrapper>
+                  {/* <ArrowWrapper>
+                    <TYPE.blue onClick={toggleSimplified}>See more &nbsp;</TYPE.blue>
+                  </ArrowWrapper> */}
                 </ColumnCenter>
               </Hover>
             )}
@@ -1206,15 +1230,22 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
           </AutoColumn>
         )}
         {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-          <GreyCard padding={simplified ? '1rem' : '.25rem 1rem'} borderRadius={'20px'}>
+          <Card padding={simplified ? '1rem' : '.25rem 1rem 0 1rem'} borderRadius={'20px'}>
             {simplified ? (
               <PriceBar />
             ) : (
-              <AutoColumn style={{ cursor: 'pointer' }} onClick={() => setShowInverted(!showInverted)}>
+              <AutoColumn style={{ cursor: 'pointer' }} gap="sm">
                 {' '}
                 <RowBetween>
                   <Text fontWeight={500} fontSize={16} color={theme().text2}>
-                    Price
+                    Price{' '}
+                    <TYPE.blue
+                      style={{ display: 'inline', cursor: 'pointer' }}
+                      onClick={() => setShowInverted(!showInverted)}
+                      fontWeight={400}
+                    >
+                      (Invert)
+                    </TYPE.blue>
                   </Text>
                   <Text fontWeight={500} fontSize={16} color={theme().text2} pt={1}>
                     {pair && showInverted
@@ -1230,9 +1261,21 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
                         tokens[Field.INPUT]?.symbol}
                   </Text>
                 </RowBetween>
+                {pair && (warningHigh || warningMedium) && (
+                  <RowBetween>
+                    <TYPE.main>Price Impact</TYPE.main>
+                    <ErrorText fontWeight={500} fontSize={16} warningMedium={warningMedium} warningHigh={warningHigh}>
+                      {priceSlippage
+                        ? priceSlippage.toFixed(4) === '0.0000'
+                          ? '<0.0001%'
+                          : priceSlippage.toFixed(4) + '%'
+                        : '-'}
+                    </ErrorText>
+                  </RowBetween>
+                )}
               </AutoColumn>
             )}
-          </GreyCard>
+          </Card>
         )}
       </AutoColumn>
       <BottomGrouping>
@@ -1296,8 +1339,8 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
         <AdvancedDropwdown>
           {!showAdvanced && (
             <Hover>
-              <RowBetween onClick={() => setShowAdvanced(true)} padding={'0 20px'}>
-                <Text fontSize={14} fontWeight={500} style={{ userSelect: 'none' }}>
+              <RowBetween onClick={() => setShowAdvanced(true)} padding={'8px 20px'}>
+                <Text fontSize={16} fontWeight={500} style={{ userSelect: 'none' }}>
                   Show Advanced
                 </Text>
                 <ChevronDown color={'#565A69'} />
@@ -1307,8 +1350,8 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
           {showAdvanced && (
             <AutoColumn gap="md">
               <Hover>
-                <RowBetween onClick={() => setShowAdvanced(false)} padding={'0 20px'}>
-                  <Text fontSize={14} color="#565A69" fontWeight={500} style={{ userSelect: 'none' }}>
+                <RowBetween onClick={() => setShowAdvanced(false)} padding={'8px 20px'}>
+                  <Text fontSize={16} color="#565A69" fontWeight={500} style={{ userSelect: 'none' }}>
                     Hide Advanced
                   </Text>
                   <ChevronUp color="#565A69" />
@@ -1418,14 +1461,14 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
                   </AutoColumn>
                 </YellowCard>
               )}
-              {/* <BalanceCard
+              <BalanceCard
                 token0={tokens[Field.INPUT]}
                 token1={tokens[Field.OUTPUT]}
                 import0={importedTokenInput}
                 balance0={userBalances[Field.INPUT]}
                 balance1={userBalances[Field.OUTPUT]}
                 import1={importedTokenOutput}
-              /> */}
+              />
             </AutoColumn>
           </FixedBottom>
         </AdvancedDropwdown>

@@ -51,7 +51,7 @@ export const ButtonPrimary = styled(Base)`
 export const ButtonLight = styled(Base)`
   background-color: ${({ theme }) => theme.blue5};
   color: ${({ theme }) => theme.blue1};
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 500;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.05, theme.blue5)};
@@ -116,7 +116,7 @@ export const ButtonPink = styled(Base)`
 export const ButtonEmpty = styled(Base)`
   border: 1px solid #edeef2;
   background-color: transparent;
-  color: black;
+  color: #565a69;
 
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.bg3};

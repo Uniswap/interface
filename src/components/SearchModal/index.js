@@ -21,6 +21,7 @@ import { LightCard } from '../Card'
 import { ArrowLeft } from 'react-feather'
 import { CloseIcon } from '../../theme/components'
 import { ColumnCenter } from '../../components/Column'
+import Card from '../../components/Card'
 import { Spinner, TYPE } from '../../theme'
 import { ButtonSecondary } from '../Button'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
@@ -52,6 +53,7 @@ const TokenList = styled.div`
 
 const FadedSpan = styled.span`
   color: ${({ theme }) => theme.blue1};
+  font-size: 14px;
 `
 
 const GreySpan = styled.span`
@@ -101,12 +103,12 @@ const FilterWrapper = styled(RowFixed)`
 `
 
 const PaddedColumn = styled(AutoColumn)`
-  padding: 24px;
+  padding: 20px;
   padding-bottom: 12px;
 `
 
 const PaddedItem = styled(RowBetween)`
-  padding: 4px 24px;
+  padding: 4px 20px;
   height: 56px;
 `
 
@@ -418,16 +420,16 @@ function SearchModal({
             disabled={hiddenToken && hiddenToken === address}
           >
             <RowFixed>
-              <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }} />
-              <Column>
+              <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px', width: '24px' }} />
+              <RowBetween>
                 <Text fontWeight={500}>
                   {symbol}
                   {otherSelectedTokenAddress === address && <GreySpan> ({otherSelectedText})</GreySpan>}
                 </Text>
-                <FadedSpan>
+                <FadedSpan style={{ marginLeft: '4px' }}>
                   {urlAdded && '(Added by URL)'} {customAdded && '(Added by user)'}
                 </FadedSpan>
-              </Column>
+              </RowBetween>
             </RowFixed>
             <AutoColumn gap="4px" justify="end">
               {balance ? (
@@ -483,8 +485,7 @@ function SearchModal({
     <Modal
       isOpen={isOpen}
       onDismiss={clearInputAndDismiss}
-      minHeight={60}
-      maxHeight={50}
+      maxHeight={70}
       initialFocusRef={isMobile ? undefined : inputRef}
     >
       <Column style={{ width: '100%' }}>
@@ -505,7 +506,7 @@ function SearchModal({
               </RowFixed>
               <CloseIcon onClick={onDismiss} />
             </RowBetween>
-            <TYPE.body style={{ marginTop: '40px' }}>
+            <TYPE.body style={{ marginTop: '10px' }}>
               To import a custom token, paste token address in the search bar.
             </TYPE.body>
             <Input
@@ -518,7 +519,9 @@ function SearchModal({
             <LightCard padding={filteredTokenList?.length === 0 ? '20px' : '0px'}>
               {filteredTokenList?.length === 0 ? (
                 <AutoColumn gap="8px" justify="center">
-                  <TYPE.body color="">No token found.</TYPE.body>
+                  <TYPE.body color={searchQuery ? '#000' : '#888D9B '}>
+                    {searchQuery ? 'No token found' : 'Paste a token address to begin'}.
+                  </TYPE.body>
                 </AutoColumn>
               ) : (
                 renderTokenList()
@@ -527,7 +530,7 @@ function SearchModal({
             {filteredTokenList?.length > 0 && (
               <RowBetween>
                 <ButtonSecondary
-                  width="48%"
+                  width="100%"
                   onClick={() => {
                     const newToken = filteredTokenList?.[0]
                     saveUserToken(newToken?.address)
@@ -535,9 +538,9 @@ function SearchModal({
                 >
                   Save To Your List
                 </ButtonSecondary>
-                <ButtonSecondary width="48%" onClick={() => _onTokenSelect(filteredTokenList[0].address)}>
+                {/* <ButtonSecondary width="48%" onClick={() => _onTokenSelect(filteredTokenList[0].address)}>
                   Import
-                </ButtonSecondary>
+                </ButtonSecondary> */}
               </RowBetween>
             )}
           </PaddedColumn>
@@ -584,10 +587,22 @@ function SearchModal({
               </AutoColumn>
             )}
             <RowBetween>
+              <Text fontSize={14} fontWeight={500}>
+                Token Name
+              </Text>
+              <Filter title="Your Balances" filter={FILTERS.BALANCES} />
+            </RowBetween>
+          </PaddedColumn>
+        )}
+        {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: '#E1E1E1' }} />}
+        {!showTokenImport && <TokenList>{filterType === 'tokens' ? renderTokenList() : renderPairsList()}</TokenList>}
+        {!showTokenImport && (
+          <Card>
+            <AutoRow justify={'center'}>
               <div>
                 {filterType !== 'tokens' && (
                   <Text fontWeight={500}>
-                    {!isMobile && 'Dont see a pool? '}
+                    {!isMobile && "Don't see a pool? "}
                     <StyledLink
                       onClick={() => {
                         history.push('/find')
@@ -599,7 +614,8 @@ function SearchModal({
                 )}
                 {filterType === 'tokens' && (
                   <Text fontWeight={500}>
-                    {!isMobile && 'Dont see a token? '}
+                    {!isMobile && "Don't see a token? "}
+
                     <StyledLink
                       onClick={() => {
                         setShowTokenImport(true)
@@ -610,13 +626,9 @@ function SearchModal({
                   </Text>
                 )}
               </div>
-              <div />
-              <Filter title="Your Balances" filter={FILTERS.BALANCES} />
-            </RowBetween>
-          </PaddedColumn>
+            </AutoRow>
+          </Card>
         )}
-        {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: '#E1E1E1' }} />}
-        {!showTokenImport && <TokenList>{filterType === 'tokens' ? renderTokenList() : renderPairsList()}</TokenList>}
       </Column>
     </Modal>
   )
