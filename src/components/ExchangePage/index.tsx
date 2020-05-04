@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useCallback, useEffect, useContext } from 'react'
+import React, { useState, useReducer, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { ethers } from 'ethers'
 import { withRouter } from 'react-router-dom'
@@ -13,7 +13,7 @@ import NumericalInput from '../NumericalInput'
 import AddressInputPanel from '../AddressInputPanel'
 import ConfirmationModal from '../ConfirmationModal'
 import CurrencyInputPanel from '../CurrencyInputPanel'
-import BalanceCard from '../BalanceCard'
+// import BalanceCard from '../BalanceCard'
 
 import { Link } from '../../theme/components'
 import { Text } from 'rebass'
@@ -22,7 +22,7 @@ import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
 import { ArrowDown, ChevronDown, ChevronUp } from 'react-feather'
 import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
-import Card, { GreyCard, BlueCard, YellowCard, LightCard } from '../../components/Card'
+import Card, { GreyCard, BlueCard, YellowCard } from '../../components/Card'
 
 import { usePair } from '../../contexts/Pairs'
 import { useToken } from '../../contexts/Tokens'
@@ -31,12 +31,8 @@ import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWeb3React, useTokenContract } from '../../hooks'
 import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
-import { useUserAdvanced, useToggleUserAdvanced } from '../../contexts/Application'
-
-import { ThemeContext } from 'styled-components'
-
+import { useUserAdvanced } from '../../contexts/Application'
 import { ROUTER_ADDRESSES } from '../../constants'
-import { INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
 import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEtherscanLink } from '../../utils'
 
 const Wrapper = styled.div`
@@ -78,19 +74,6 @@ const AdvancedDropwdown = styled.div`
   color: ${({ theme }) => theme.text2};
   z-index: -1;
 `
-
-// const PseudoBottom = styled.div`
-//   height: 14px;
-//   width: 340px;
-//   background: white;
-//   position: absolute;
-//   border-bottom-left-radius: 41px;
-//   top: 0px;
-//   border-bottom-right-radius: 40px;
-//   left: -1px;
-//   /* box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-//     0px 24px 32px rgba(0, 0, 0, 0.01); */
-// `
 
 const SectionBreak = styled.div`
   height: 1px;
@@ -317,7 +300,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
   const routerAddress: string = ROUTER_ADDRESSES[chainId]
 
   const simplified = useUserAdvanced()
-  const toggleSimplified = useToggleUserAdvanced()
 
   // adding notifications on txns
   const addTransaction = useTransactionAdder()
@@ -373,18 +355,12 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
   // check on pending approvals for token amounts
   const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
 
-  // check for imported tokens to show warning
-  const importedTokenInput = tokens[Field.INPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.INPUT]?.address]
-  const importedTokenOutput =
-    tokens[Field.OUTPUT] && !!!INITIAL_TOKENS_CONTEXT?.[chainId]?.[tokens[Field.OUTPUT]?.address]
-
   // entities for swap
   const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
   const route = useRoute(tokens[Field.INPUT], tokens[Field.OUTPUT])
 
   // check for invalid selection
   const noRoute: boolean = !route && !!tokens[Field.INPUT] && !!tokens[Field.OUTPUT]
-  const emptyReserves = pair && JSBI.equal(JSBI.BigInt(0), pair.reserve0.raw)
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
@@ -1542,14 +1518,14 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
                   </AutoColumn>
                 </YellowCard>
               )}
-              <BalanceCard
+              {/* <BalanceCard
                 token0={tokens[Field.INPUT]}
                 token1={tokens[Field.OUTPUT]}
                 import0={importedTokenInput}
                 balance0={userBalances[Field.INPUT]}
                 balance1={userBalances[Field.OUTPUT]}
                 import1={importedTokenOutput}
-              />
+              /> */}
             </AutoColumn>
           </FixedBottom>
         </AdvancedDropwdown>
