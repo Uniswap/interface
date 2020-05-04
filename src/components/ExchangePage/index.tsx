@@ -369,11 +369,6 @@ function ExchangePage({ sendingInput = false, history, params }) {
   // check on pending approvals for token amounts
   const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
 
-  // check for imported tokens to show warning
-  const importedTokenInput = tokens[Field.INPUT] && !!!ALL_TOKENS?.[chainId]?.[tokens[Field.INPUT]?.address]
-  const importedTokenOutput = tokens[Field.OUTPUT] && !!!ALL_TOKENS?.[chainId]?.[tokens[Field.OUTPUT]?.address]
-
-
   // entities for swap
   const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
   const route = useRoute(tokens[Field.INPUT], tokens[Field.OUTPUT])
