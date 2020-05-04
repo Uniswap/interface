@@ -84,6 +84,7 @@ const Blurb = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
   margin-top: 2rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin: 1rem;
@@ -93,7 +94,7 @@ const Blurb = styled.div`
 
 const OptionGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* grid-template-columns: 1fr 1fr; */
   grid-gap: 10px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;

@@ -10,7 +10,7 @@ import { Link, TYPE } from '../../theme'
 import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
 import { RowBetween } from '../../components/Row'
-import { ButtonPrimary, ButtonLight } from '../../components/Button'
+import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { PlusSquare } from 'react-feather'
 
@@ -98,9 +98,9 @@ function Supply({ history }) {
         </AutoColumn>
         <FixedBottom>
           <ColumnCenter>
-            <ButtonLight width="136px" padding="8px" borderRadius="10px" onClick={() => history.push('/create')}>
+            <ButtonSecondary width="136px" padding="8px" borderRadius="10px" onClick={() => history.push('/create')}>
               + Create Pool
-            </ButtonLight>
+            </ButtonSecondary>
           </ColumnCenter>
         </FixedBottom>
       </Positions>

@@ -62,11 +62,14 @@ export const theme = darkMode => ({
   bg5: darkMode ? '#565A69' : '#888D9B',
 
   //blues
-  blue1: '#2172E5',
+  // blue1: '#2172E5',
+  blue1: '#ff007a',
   blue2: darkMode ? '#3680E7' : '#1966D2',
   blue3: darkMode ? '#4D8FEA' : '#165BBB',
-  blue4: '#C4D9F8',
-  blue5: '#EBF4FF',
+  // blue5: '#EBF4FF',
+  // blue4: '#C4D9F8',
+  blue4: '#FDEAF1',
+  blue5: '#FDEAF1',
 
   // pinks
   pink1: '#DC6BE5',

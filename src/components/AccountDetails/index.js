@@ -4,6 +4,7 @@ import { useWeb3React } from '../../hooks'
 import { isMobile } from 'react-device-detect'
 import Copy from './Copy'
 import Transaction from './Transaction'
+
 import { SUPPORTED_WALLETS } from '../../constants'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getEtherscanLink } from '../../utils'
@@ -14,7 +15,9 @@ import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
 import Identicon from '../Identicon'
 
-import { Link } from '../../theme'
+import { ButtonLight } from '../Button'
+
+import { Link, TYPE } from '../../theme'
 
 const OptionButton = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -67,7 +70,8 @@ const UpperSection = styled.div`
 
 const InfoCard = styled.div`
   padding: 1rem;
-  border: 1px solid ${({ theme }) => theme.bg4};
+  /* border: 1px solid ${({ theme }) => theme.bg2}; */
+  background-color: ${({ theme }) => theme.bg2}; 
   border-radius: 20px;
 `
 
@@ -168,7 +172,7 @@ const ConnectButtonRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   justify-content: center;
-  margin: 30px;
+  margin: 10px 0;
 `
 
 const StyledLink = styled(Link)`
@@ -352,26 +356,28 @@ export default function AccountDetails({
 
           {!(isMobile && (window.web3 || window.ethereum)) && (
             <ConnectButtonRow>
-              <OptionButton
+              <ButtonLight
+                padding={'8px 12px'}
+                width={240}
                 onClick={() => {
                   openOptions()
                 }}
               >
                 Connect to a different wallet
-              </OptionButton>
+              </ButtonLight>
             </ConnectButtonRow>
           )}
         </AccountSection>
       </UpperSection>
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
         <LowerSection>
-          <h5>Recent Transactions</h5>
+          <TYPE.body>Recent Transactions</TYPE.body>
           {renderTransactions(pendingTransactions, true)}
           {renderTransactions(confirmedTransactions, false)}
         </LowerSection>
       ) : (
         <LowerSection>
-          <h5>Your transactions will appear here...</h5>
+          <TYPE.body>Your transactions will appear here...</TYPE.body>
         </LowerSection>
       )}
     </>

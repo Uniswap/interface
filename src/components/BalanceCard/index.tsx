@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useLayoutEffect } from 'react'
 
 import Copy from '../AccountDetails/Copy'
 import TokenLogo from '../TokenLogo'
@@ -10,226 +10,218 @@ import { Hover } from '../../theme'
 import { GreyCard } from '../Card'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
-import { ChevronDown, ChevronUp, Copy as CopyIcon, BarChart2, Info, Plus } from 'react-feather'
+import { Copy as CopyIcon, BarChart2, Info, Share, ChevronDown, ChevronUp, Plus, Send } from 'react-feather'
 import DoubleLogo from '../DoubleLogo'
-import { ButtonEmpty } from '../Button'
+import { ButtonSecondary, ButtonGray } from '../Button'
 
 import { useWeb3React } from '../../hooks'
 import { getEtherscanLink } from '../../utils'
+import { useUserAdvanced, useToggleUserAdvanced } from '../../contexts/Application'
 
 export default function BalanceCard({ token0, balance0, import0, token1, balance1, import1 }) {
   const [details0, setDetails0] = useState(true)
   const [details1, setDetails1] = useState(true)
   const [pair0, setPair1] = useState(true)
 
-  const [showAdvanced, setShowAdvanced] = useState(false)
+  const [showInfo, setshowInfo] = useState(false)
+  const advanced = useUserAdvanced()
+
+  // useLayoutEffect(() => {
+  //   advanced && setshowInfo(true)
+  // }, [showInfo, setshowInfo, advanced])
 
   const { chainId } = useWeb3React()
 
   return (
-    <AutoColumn gap="lg">
-      <GreyCard>
-        {!showAdvanced ? (
+    <AutoRow
+      gap="lg"
+      justify={'space-between'}
+      style={{
+        minWidth: '200px',
+        maxWidth: '355px',
+        flexWrap: 'nowrap',
+        alignItems: 'flex-end',
+        zIndex: '99'
+      }}
+    >
+      <AutoColumn style={{ width: '100%' }} padding="12px">
+        {!showInfo ? (
           <Hover>
-            <RowBetween onClick={() => setShowAdvanced(true)} padding={' 0'}>
-              <Text fontSize={16} fontWeight={500} style={{ userSelect: 'none' }}>
-                Show token and exchange info
-              </Text>
-              <ChevronDown color={'#565A69'} />
-            </RowBetween>
+            <GreyCard padding="16px 20px">
+              <RowBetween onClick={() => setshowInfo(true)} padding={' 0'}>
+                <Text fontSize={16} fontWeight={500} style={{ userSelect: 'none' }}>
+                  Show selection details
+                </Text>
+                <ChevronDown color={'#565A69'} />
+              </RowBetween>
+            </GreyCard>
           </Hover>
         ) : (
           <Hover>
-            <RowBetween onClick={() => setShowAdvanced(false)} padding={' 0'}>
-              <Text fontSize={16} color="#565A69" fontWeight={500} style={{ userSelect: 'none' }}>
-                Hide token and exchange info
-              </Text>
-              <ChevronUp color="#565A69" />
-            </RowBetween>
+            <GreyCard padding="px 20px" style={{ marginTop: '0' }}>
+              <RowBetween onClick={() => setshowInfo(false)} padding={'0px'}>
+                <Text fontSize={16} color="#565A69" fontWeight={500} style={{ userSelect: 'none' }}>
+                  Hide selection details
+                </Text>
+                <ChevronUp color="#565A69" />
+              </RowBetween>
+            </GreyCard>
           </Hover>
         )}
-
-        {showAdvanced && (
+        {showInfo && (
           <AutoColumn gap="md" style={{ marginTop: '1rem' }}>
-            <RowBetween>
-              <RowFixed>
-                <DoubleLogo a0={token0?.address || ''} a1={token1?.address || ''} margin={true} size={20} />
-                <Text fontWeight={500} fontSize={16}>
-                  {token0?.symbol}:{token1?.symbol}
-                </Text>
-              </RowFixed>
-              <RowFixed></RowFixed>
-            </RowBetween>
-
-            {pair0 && (
-              // <AutoColumn gap="sm" style={{ marginTop: '2px', marginBottom: '6px' }}>
-              //   <RowFixed>
-              //     <Copy toCopy={token0?.address}>
-              //       <TYPE.blue style={{ paddingLeft: '24px' }}>Copy pair address</TYPE.blue>
-              //     </Copy>
-              //   </RowFixed>
-              //   <Link href={getEtherscanLink(chainId, token0?.address, 'address')} style={{ paddingLeft: '32px' }}>
-              //     Add Liquidity ↘
-              //   </Link>
-              //   <Link href={getEtherscanLink(chainId, token0?.address, 'address')} style={{ paddingLeft: '32px' }}>
-              //     View on etherscan ↗
-              //   </Link>
-              //   <Link href={getEtherscanLink(chainId, token0?.address, 'address')} style={{ paddingLeft: '32px' }}>
-              //     View on pool information ↗
-              //   </Link>
-              // </AutoColumn>
-              <AutoRow gap="sm" justify="space-between" style={{ marginTop: '2px', marginBottom: '6px' }}>
-                <ButtonEmpty padding={'8px 12px'} width={'47%'} style={{ margin: '4px' }}>
-                  <AutoRow gap="sm" justify="space-between">
-                    <Text fontWeight={500} fontSize={14}>
-                      Etherscan
-                    </Text>
-                    <Info size={14} />
-                  </AutoRow>
-                </ButtonEmpty>
-                <ButtonEmpty padding={'8px 12px'} width={'47%'} style={{ margin: '4px' }}>
-                  <AutoRow gap="sm" justify="space-between">
-                    <Text fontWeight={500} fontSize={14}>
-                      View Analytics
-                    </Text>
-                    <BarChart2 size={14} />
-                  </AutoRow>
-                </ButtonEmpty>
-                <ButtonEmpty padding={'8px 12px'} width={'47%'} style={{ margin: '4px' }}>
-                  <AutoRow gap="sm" justify="space-between">
-                    <Text fontWeight={500} fontSize={14}>
-                      Copy Address
-                    </Text>
-                    <CopyIcon size={14} />
-                  </AutoRow>
-                </ButtonEmpty>
-                <ButtonEmpty color={'#565A69'} padding={'8px 12px'} width={'47%'} style={{ margin: '4px' }}>
-                  <AutoRow gap="sm" justify="space-between">
-                    <Text fontWeight={500} fontSize={14}>
-                      Add Liquidity
-                    </Text>
-                    <Plus size={14} />
-                  </AutoRow>
-                </ButtonEmpty>
-                {/* <Link href={getEtherscanLink(chainId, token0?.address, 'address')} style={{ paddingLeft: '32px' }}>
-                  Add
-                </Link>
-                <Link href={getEtherscanLink(chainId, token0?.address, 'address')} style={{ paddingLeft: '32px' }}>
-                  Info
-                </Link>
-                <Link href={getEtherscanLink(chainId, token0?.address, 'address')} style={{ paddingLeft: '32px' }}>
-                  Data
-                </Link> */}
-              </AutoRow>
-            )}
-
             {token0 && balance0 && (
               // <Hover onClick={() => setDetails0(!details0)}>
               <>
-                <RowBetween>
-                  <RowFixed>
-                    <TokenLogo address={token0?.address || ''} />
-                    <TYPE.black marginLeft="10px">
+                <GreyCard padding={'1rem'}>
+                  <RowBetween>
+                    <TYPE.body fontWeight={500}>
                       {token0?.name} ({token0?.symbol})
-                    </TYPE.black>
-                  </RowFixed>
-                  <RowFixed>
-                    {/* <TYPE.black>{balance0?.toSignificant(6)}</TYPE.black> */}
-                    {/* {details0 ? (
-                      <ChevronUp size="20" style={{ marginLeft: '10px' }} color="black" />
-                    ) : (
-                      <ChevronDown size="20" style={{ marginLeft: '10px' }} color="black" />
-                    )} */}
-                  </RowFixed>
-                </RowBetween>
-                {import0 && <TYPE.yellow style={{ paddingLeft: '32px' }}>Token imported by user</TYPE.yellow>}
+                    </TYPE.body>
+                    <TokenLogo size={'20px'} address={token0?.address || ''} />
+                  </RowBetween>
+                  {import0 && <TYPE.yellow style={{ paddingLeft: '0' }}>Token imported by user</TYPE.yellow>}
+
+                  <AutoRow gap="sm" justify="flex-start" style={{ marginTop: '1rem' }}>
+                    <ButtonGray padding={'2px'} width={'auto'} style={{ margin: '2px' }}>
+                      <AutoRow gap="sm" justify="space-between" padding={'0 4px'}>
+                        <Info size={14} />
+                        <Text fontWeight={500} fontSize={14} style={{ marginLeft: '6px' }}>
+                          Info
+                        </Text>
+                      </AutoRow>
+                    </ButtonGray>
+                    <ButtonGray padding={'2px'} width={'auto'} style={{ margin: '2px' }}>
+                      <AutoRow gap="sm" justify="space-between" padding={'0 4px'}>
+                        <BarChart2 size={14} />
+                        <Text fontWeight={500} fontSize={14} style={{ marginLeft: '6px' }}>
+                          Charts
+                        </Text>
+                      </AutoRow>
+                    </ButtonGray>
+                    <ButtonGray padding={'2px'} width={'auto'} style={{ margin: '2px' }}>
+                      <AutoRow gap="sm" justify="space-between" padding={'0 4px'}>
+                        <CopyIcon size={14} />
+                        <Text fontWeight={500} fontSize={14} style={{ marginLeft: '6px' }}>
+                          Copy Address
+                        </Text>
+                      </AutoRow>
+                    </ButtonGray>
+                  </AutoRow>
+                </GreyCard>
               </>
             )}
-            {details0 && (
-              <AutoRow gap="sm" justify="space-between" style={{ marginTop: '2px', marginBottom: '6px' }}>
-                <ButtonEmpty padding={'8px 12px'} width={'47%'} style={{ margin: '4px' }}>
-                  <AutoRow gap="sm" justify="space-between">
-                    <Text fontWeight={500} fontSize={14}>
-                      Etherscan
-                    </Text>
-                    <Info size={14} />
-                  </AutoRow>
-                </ButtonEmpty>
-                <ButtonEmpty padding={'8px 12px'} width={'47%'} style={{ margin: '4px' }}>
-                  <AutoRow gap="sm" justify="space-between">
-                    <Text fontWeight={500} fontSize={14}>
-                      View Analytics
-                    </Text>
-                    <BarChart2 size={14} />
-                  </AutoRow>
-                </ButtonEmpty>
-                <ButtonEmpty padding={'8px 12px'} width={'47%'} style={{ margin: '4px' }}>
-                  <AutoRow gap="sm" justify="space-between">
-                    <Text fontWeight={500} fontSize={14}>
-                      Copy Address
-                    </Text>
-                    <CopyIcon size={14} />
-                  </AutoRow>
-                </ButtonEmpty>
-              </AutoRow>
-            )}
+
             {token1 && balance1 && (
               // <Hover onClick={() => setDetails1(!details1)}>
               <>
-                <RowBetween>
-                  <RowFixed>
-                    <TokenLogo address={token1?.address || ''} />
-                    <TYPE.black marginLeft="10px">
+                <GreyCard padding={'1rem'}>
+                  <RowBetween>
+                    <TYPE.body fontWeight={500}>
                       {token1?.name} ({token1?.symbol})
-                    </TYPE.black>
-                  </RowFixed>
-                  <RowFixed>
-                    {/* <TYPE.black>{balance1?.toSignificant(6)}</TYPE.black> */}
-                    {/* {details1 ? (
-                      <ChevronUp size="20" style={{ marginLeft: '10px' }} color="black" />
-                    ) : (
-                      <ChevronDown size="20" style={{ marginLeft: '10px' }} color="black" />
-                    )} */}
-                  </RowFixed>
-                </RowBetween>
-                {import0 && <TYPE.yellow style={{ paddingLeft: '32px' }}>Token imported by user</TYPE.yellow>}
+                    </TYPE.body>
+                    <TokenLogo size={'20px'} address={token1?.address || ''} />
+                  </RowBetween>
+                  {import1 && <TYPE.yellow style={{ paddingLeft: '0' }}>Token imported by user</TYPE.yellow>}
+
+                  <AutoRow gap="sm" justify="flex-start" style={{ marginTop: '1rem' }}>
+                    <ButtonGray padding={'2px'} width={'auto'} style={{ margin: '2px' }}>
+                      <AutoRow gap="sm" justify="space-between" padding={'0 4px'}>
+                        <Info size={14} />
+                        <Text fontWeight={500} fontSize={14} style={{ marginLeft: '6px' }}>
+                          Info
+                        </Text>
+                      </AutoRow>
+                    </ButtonGray>
+                    <ButtonGray padding={'2px'} width={'auto'} style={{ margin: '2px' }}>
+                      <AutoRow gap="sm" justify="space-between" padding={'0 4px'}>
+                        <BarChart2 size={14} />
+                        <Text fontWeight={500} fontSize={14} style={{ marginLeft: '6px' }}>
+                          Charts
+                        </Text>
+                      </AutoRow>
+                    </ButtonGray>
+                    <ButtonGray padding={'2px'} width={'auto'} style={{ margin: '2px' }}>
+                      <AutoRow gap="sm" justify="space-between" padding={'0 4px'}>
+                        <CopyIcon size={14} />
+                        <Text fontWeight={500} fontSize={14} style={{ marginLeft: '6px' }}>
+                          Copy Address
+                        </Text>
+                      </AutoRow>
+                    </ButtonGray>
+                  </AutoRow>
+                </GreyCard>
               </>
             )}
-            {details1 && (
-              <AutoColumn gap="sm" style={{ marginTop: '2px', marginBottom: '6px' }}>
-                <ButtonEmpty padding={'8px 12px'} width={'47%'} style={{ margin: '4px' }}>
-                  <AutoRow gap="sm" justify="space-between">
-                    <Text fontWeight={500} fontSize={14}>
-                      Etherscan
-                    </Text>
+
+            <GreyCard padding={'1rem'}>
+              <RowBetween>
+                <TYPE.body fontWeight={500}>
+                  {token0?.symbol}:{token1?.symbol}
+                </TYPE.body>
+                <DoubleLogo a0={token0?.address || ''} a1={token1?.address || ''} margin={true} size={20} />
+              </RowBetween>
+              {import1 && <TYPE.yellow style={{ paddingLeft: '32px' }}>Token imported by user</TYPE.yellow>}
+
+              <AutoRow gap="sm" justify="flex-start" style={{ marginTop: '1rem' }}>
+                <ButtonGray padding={'2px'} width={'auto'} style={{ margin: '2px' }}>
+                  <AutoRow gap="sm" justify="space-between" padding={'0 4px'}>
                     <Info size={14} />
-                  </AutoRow>
-                </ButtonEmpty>
-                <ButtonEmpty padding={'8px 12px'} width={'47%'} style={{ margin: '4px' }}>
-                  <AutoRow gap="sm" justify="space-between">
-                    <Text fontWeight={500} fontSize={14}>
-                      View Analytics
+                    <Text fontWeight={500} fontSize={14} style={{ marginLeft: '6px' }}>
+                      Info
                     </Text>
-                    <BarChart2 size={14} />
                   </AutoRow>
-                </ButtonEmpty>
-                <ButtonEmpty padding={'8px 12px'} width={'47%'} style={{ margin: '4px' }}>
-                  <AutoRow gap="sm" justify="space-between">
-                    <Text fontWeight={500} fontSize={14}>
+                </ButtonGray>
+                <ButtonGray padding={'2px'} width={'auto'} style={{ margin: '2px' }}>
+                  <AutoRow gap="sm" justify="space-between" padding={'0 4px'}>
+                    <BarChart2 size={14} />
+                    <Text fontWeight={500} fontSize={14} style={{ marginLeft: '6px' }}>
+                      Charts
+                    </Text>
+                  </AutoRow>
+                </ButtonGray>
+                <ButtonGray padding={'2px'} width={'auto'} style={{ margin: '2px' }}>
+                  <AutoRow gap="sm" justify="space-between" padding={'0 4px'}>
+                    <CopyIcon size={14} />
+                    <Text fontWeight={500} fontSize={14} style={{ marginLeft: '6px' }}>
                       Copy Address
                     </Text>
-                    <CopyIcon size={14} />
                   </AutoRow>
-                </ButtonEmpty>
-
-                {/* <Link href={getEtherscanLink(chainId, token0?.address, 'address')} style={{ paddingLeft: '32px' }}>
-                  View on pool information ↗
-                </Link> */}
-              </AutoColumn>
-            )}
+                </ButtonGray>
+                <ButtonGray padding={'2px'} width={'auto'} style={{ margin: '2px' }}>
+                  <AutoRow gap="sm" justify="space-between" padding={'0 4px'}>
+                    <Plus size={14} />
+                    <Text fontWeight={500} fontSize={14} style={{ marginLeft: '6px' }}>
+                      Add Liquidity
+                    </Text>
+                  </AutoRow>
+                </ButtonGray>
+              </AutoRow>
+            </GreyCard>
           </AutoColumn>
         )}
-      </GreyCard>
-    </AutoColumn>
+      </AutoColumn>
+      <AutoRow
+        style={{
+          position: 'fixed',
+          bottom: '16px',
+          right: '132px',
+          width: 'fit-content'
+        }}
+      >
+        {token1 && (
+          <ButtonSecondary
+            style={{
+              padding: ' 8px',
+              marginLeft: '8px',
+              width: 'fit-content'
+            }}
+          >
+            <Share size={16} style={{ marginRight: '8px' }} />
+            Share
+          </ButtonSecondary>
+        )}
+      </AutoRow>
+    </AutoRow>
   )
 }

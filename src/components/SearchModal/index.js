@@ -420,7 +420,13 @@ function SearchModal({
             disabled={hiddenToken && hiddenToken === address}
           >
             <RowFixed>
-              <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px', width: '24px' }} />
+              <TokenLogo
+                address={address}
+                size={'24px'}
+                width="24px"
+                height="24px"
+                style={{ marginRight: '14px', width: '24px', height: '24px' }}
+              />
               <RowBetween>
                 <Text fontWeight={500}>
                   {symbol}

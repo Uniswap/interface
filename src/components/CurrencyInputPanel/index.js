@@ -103,7 +103,7 @@ const StyledTokenName = styled.span`
 `
 
 const StyledBalanceMax = styled.button`
-  height: 35px;
+  height: 32px;
   background-color: ${({ theme }) => theme.blue5};
   border: 1px solid ${({ theme }) => theme.blue5};
   border-radius: 0.5rem;
@@ -133,10 +133,10 @@ const StyledBalanceMaxMini = styled.button`
   color: ${({ theme, active }) => (active ? theme.blue1 : theme.text4)};
 
   :hover {
-    border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.blue4)};
+    border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};
   }
   :focus {
-    border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.blue4)};
+    border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};
     outline: none;
   }
 `
@@ -223,13 +223,13 @@ export default function CurrencyInputPanel({
               )} */}
               {!!token?.address &&
                 (type !== 'OUTPUT' ? (
-                  <StyledBalanceMaxMini active={!atMax}>Input Max</StyledBalanceMaxMini>
+                  <StyledBalanceMaxMini active={!atMax}>Max</StyledBalanceMaxMini>
                 ) : (
-                  <TYPE.body color={theme.text3}>(Estimated)</TYPE.body>
+                  <TYPE.body color={theme.text3}>-</TYPE.body>
                 ))}
 
               <div>
-                <TYPE.body color={theme.text2} fontWeight={500} style={{ display: 'inline' }}>
+                <TYPE.body color={theme.text2} fontWeight={500} fontSize={14} style={{ display: 'inline' }}>
                   Balance: {account ? userTokenBalance?.toSignificant(6) : 'Connect to see balances'}
                 </TYPE.body>
               </div>

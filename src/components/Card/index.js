@@ -21,6 +21,10 @@ export const GreyCard = styled(Card)`
   background-color: rgba(237, 238, 242, 0.5);
 `
 
+export const OutlineCard = styled(Card)`
+  border: 1px solid rgba(237, 238, 242, 0.5);
+`
+
 export const YellowCard = styled(Card)`
   background-color: rgba(243, 132, 30, 0.05);
   color: ${({ theme }) => theme.yellow2};
