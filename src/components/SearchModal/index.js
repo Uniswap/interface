@@ -550,7 +550,6 @@ function SearchModal({
               ref={inputRef}
               onChange={onInput}
             />
-
             {renderTokenList()}
           </PaddedColumn>
         ) : (

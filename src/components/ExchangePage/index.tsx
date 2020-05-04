@@ -33,7 +33,6 @@ import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 import { useUserAdvanced } from '../../contexts/Application'
 import { ROUTER_ADDRESSES } from '../../constants'
-
 import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEtherscanLink, isWETH } from '../../utils'
 import { useLocalStorageTokens } from '../../contexts/LocalStorage'
 
