@@ -67,7 +67,7 @@ const StyledDialogContent = styled(FilteredDialogContent)`
       `}
     display: flex;
     /* overflow: hidden; */
-    border-radius: 10px;
+    border-radius: 20px;
     ${({ theme }) => theme.mediaWidth.upToMedium`
       width: 65vw;
       max-height: 65vh;

@@ -187,13 +187,13 @@ export default function Header() {
           >
             <Send size={16} style={{ marginRight: '8px' }} /> Feeback
           </ButtonSecondary>
-          {/* <ButtonSecondary
-          style={{ padding: '6px 8px', marginRight: '8px', width: 'fit-content' }}
-          onClick={toggleSimplified}
-        >
-          {' '}
-          {advanced ? <EyeOff size={20} /> : <Eye size={20} />}
-        </ButtonSecondary> */}
+          <ButtonSecondary
+            style={{ padding: '6px 8px', marginRight: '0px', width: 'fit-content' }}
+            onClick={toggleSimplified}
+          >
+            {' '}
+            {advanced ? <EyeOff size={20} /> : <Eye size={20} />}
+          </ButtonSecondary>
 
           <TestnetWrapper>
             {!isMobile && chainId === 4 && <NetworkCard>Rinkeby</NetworkCard>}

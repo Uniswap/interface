@@ -128,7 +128,6 @@ const MaxButton = styled.button`
   position: absolute;
   right: 70px;
   padding: 0.5rem 0.5rem;
-  height: 32px;
   background-color: ${({ theme }) => theme.blue5};
   border: 1px solid ${({ theme }) => theme.blue5};
   border-radius: 0.5rem;
@@ -971,7 +970,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
               </Text>
             </RowFixed>
           </RowBetween>
-          <AutoColumn justify="flex-start" gap="sm" padding={'12px 0 0 0px'}>
+          <AutoColumn justify="flex-start" gap="sm" padding={'20px 0 0 0px'}>
             {independentField === Field.INPUT ? (
               <TYPE.italic textAlign="left" style={{ width: '100%' }}>
                 {`Output is estimated. You will receive at least ${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(
@@ -1105,25 +1104,25 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
     return (
       <AutoRow justify="space-between">
         <AutoColumn justify="center">
-          <Text fontWeight={500} fontSize={16} color={theme().text2}>
+          <Text fontWeight={500} fontSize={14} color={theme().text2}>
             {pair ? `${route.midPrice.toSignificant(6)} ` : '-'}
           </Text>
-          <Text fontWeight={500} fontSize={16} color={theme().text3} pt={1}>
+          <Text fontWeight={500} fontSize={14} color={theme().text3} pt={1}>
             {tokens[Field.OUTPUT]?.symbol} / {tokens[Field.INPUT]?.symbol}
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
-          <Text fontWeight={500} fontSize={16} color={theme().text2}>
+          <Text fontWeight={500} fontSize={14} color={theme().text2}>
             {pair ? `${route.midPrice.invert().toSignificant(6)} ` : '-'}
           </Text>
-          <Text fontWeight={500} fontSize={16} color={theme().text3} pt={1}>
+          <Text fontWeight={500} fontSize={14} color={theme().text3} pt={1}>
             {tokens[Field.INPUT]?.symbol} / {tokens[Field.OUTPUT]?.symbol}
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
           <ErrorText
             fontWeight={500}
-            fontSize={16}
+            fontSize={14}
             warningLow={warningLow}
             warningMedium={warningMedium}
             warningHigh={warningHigh}
@@ -1134,7 +1133,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
                 : priceSlippage.toFixed(4) + '%'
               : '-'}
           </ErrorText>
-          <Text fontWeight={500} fontSize={16} color={theme().text3} pt={1}>
+          <Text fontWeight={500} fontSize={14} color={theme().text3} pt={1}>
             Price Impact
           </Text>
         </AutoColumn>
@@ -1266,9 +1265,6 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
                       color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? '#ff007a' : '#888D9B'}
                     />
                   </ArrowWrapper>
-                  {/* <ArrowWrapper>
-                    <TYPE.blue onClick={toggleSimplified}>See more &nbsp;</TYPE.blue>
-                  </ArrowWrapper> */}
                 </ColumnCenter>
               </Hover>
             )}
@@ -1320,48 +1316,44 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
         )}
         {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
           <Card padding={simplified ? '.25rem 1rem 0 1rem' : '.25rem 1rem 0 1rem'} borderRadius={'20px'}>
-            <AutoColumn style={{ cursor: 'pointer' }} gap="sm">
-              {' '}
-              <RowBetween align="center">
-                <Text fontWeight={500} fontSize={16} color={theme().text2}>
-                  Price{' '}
-                  {/* <TYPE.blue
-                      style={{ display: 'inline', cursor: 'pointer' }}
-                      onClick={() => setShowInverted(!showInverted)}
-                      fontWeight={400}
-                      fontSize={16}
-                    >
-                      ↔
-                    </TYPE.blue> */}
-                  <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>Invert</StyledBalanceMaxMini>
-                </Text>
-                <Text fontWeight={500} fontSize={16} color={theme().text2}>
-                  {pair && showInverted
-                    ? route.midPrice.invert().toSignificant(6) +
-                      ' ' +
-                      tokens[Field.INPUT]?.symbol +
-                      ' / ' +
-                      tokens[Field.OUTPUT]?.symbol
-                    : route.midPrice.toSignificant(6) +
-                      ' ' +
-                      tokens[Field.OUTPUT]?.symbol +
-                      ' / ' +
-                      tokens[Field.INPUT]?.symbol}
-                </Text>
-              </RowBetween>
-              {pair && (warningHigh || warningMedium) && (
-                <RowBetween>
-                  <TYPE.main>Price Impact</TYPE.main>
-                  <ErrorText fontWeight={500} fontSize={16} warningMedium={warningMedium} warningHigh={warningHigh}>
-                    {priceSlippage
-                      ? priceSlippage.toFixed(4) === '0.0000'
-                        ? '<0.0001%'
-                        : priceSlippage.toFixed(4) + '%'
-                      : '-'}
-                  </ErrorText>
+            {simplified ? (
+              <PriceBar />
+            ) : (
+              <AutoColumn style={{ cursor: 'pointer' }} gap="sm">
+                {' '}
+                <RowBetween align="center">
+                  <Text fontWeight={500} fontSize={16} color={theme().text2}>
+                    Price{' '}
+                    <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>Invert</StyledBalanceMaxMini>
+                  </Text>
+                  <Text fontWeight={500} fontSize={16} color={theme().text2}>
+                    {pair && showInverted
+                      ? route.midPrice.invert().toSignificant(6) +
+                        ' ' +
+                        tokens[Field.INPUT]?.symbol +
+                        ' / ' +
+                        tokens[Field.OUTPUT]?.symbol
+                      : route.midPrice.toSignificant(6) +
+                        ' ' +
+                        tokens[Field.OUTPUT]?.symbol +
+                        ' / ' +
+                        tokens[Field.INPUT]?.symbol}
+                  </Text>
                 </RowBetween>
-              )}
-            </AutoColumn>
+                {pair && (warningHigh || warningMedium) && (
+                  <RowBetween>
+                    <TYPE.main>Price Impact</TYPE.main>
+                    <ErrorText fontWeight={500} fontSize={16} warningMedium={warningMedium} warningHigh={warningHigh}>
+                      {priceSlippage
+                        ? priceSlippage.toFixed(4) === '0.0000'
+                          ? '<0.0001%'
+                          : priceSlippage.toFixed(4) + '%'
+                        : '-'}
+                    </ErrorText>
+                  </RowBetween>
+                )}
+              </AutoColumn>
+            )}
           </Card>
         )}
       </AutoColumn>
@@ -1538,7 +1530,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
                         <span role="img" aria-label="warning">
                           ⚠️
                         </span>{' '}
-                        <Text fontWeight={500} marginLeft="4px" style={{ padding: '20px', paddingTop: '4px' }}>
+                        <Text fontWeight={500} marginLeft="4px" style={{ padding: '4px', paddingTop: '12px' }}>
                           Slippage Warning
                         </Text>
                       </RowFixed>
