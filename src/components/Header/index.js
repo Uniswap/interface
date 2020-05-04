@@ -30,6 +30,7 @@ const HeaderFrame = styled.div`
     padding: 10px;
     width: calc(100% - 20px);
   `};
+  z-index: 2;
 `
 
 const HeaderElement = styled.div`
