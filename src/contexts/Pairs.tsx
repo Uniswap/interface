@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect, useState } from 'react'
 import { useAddressBalance } from './Balances'
 import { useWeb3React, usePairContract } from '../hooks'
-import { INITIAL_TOKENS_CONTEXT } from './Tokens'
+import { ALL_TOKENS } from './Tokens'
 import { ChainId, WETH, Token, TokenAmount, Pair, JSBI } from '@uniswap/sdk'
 
 const ADDRESSES_KEY = 'ADDRESSES_KEY'
@@ -12,12 +12,12 @@ const UPDATE_PAIR_ENTITY = 'UPDATE_PAIR_ENTITY'
 
 const ALL_PAIRS: [Token, Token][] = [
   [
-    INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY][WETH[ChainId.RINKEBY].address],
-    INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735'] //dai
+    ALL_TOKENS[ChainId.RINKEBY][WETH[ChainId.RINKEBY].address],
+    ALL_TOKENS[ChainId.RINKEBY]['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735'] //dai
   ],
   [
-    INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735'], // dai
-    INITIAL_TOKENS_CONTEXT[ChainId.RINKEBY]['0x8ab15C890E5C03B5F240f2D146e3DF54bEf3Df44'] // mkr
+    ALL_TOKENS[ChainId.RINKEBY]['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735'], // dai
+    ALL_TOKENS[ChainId.RINKEBY]['0x8ab15C890E5C03B5F240f2D146e3DF54bEf3Df44'] // mkr
   ]
 ]
 

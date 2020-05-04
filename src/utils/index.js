@@ -9,6 +9,7 @@ import { FACTORY_ADDRESSES, SUPPORTED_THEMES, ROUTER_ADDRESSES } from '../consta
 import { bigNumberify, keccak256, defaultAbiCoder, toUtf8Bytes, solidityPack } from 'ethers/utils'
 
 import UncheckedJsonRpcSigner from './signer'
+import { WETH } from '@uniswap/sdk'
 
 export const ERROR_CODES = ['TOKEN_NAME', 'TOKEN_SYMBOL', 'TOKEN_DECIMALS'].reduce(
   (accumulator, currentValue, currentIndex) => {
@@ -65,11 +66,11 @@ export function getAllQueryParams() {
     ? isAddress(getQueryParam(window.location, 'outputTokenAddress'))
     : ''
 
-  params.inputTokenAmount = !isNaN(getQueryParam(window.location, 'inputTokenAmount'))
+  params.inputTokenAmount = !isNaN(Number(getQueryParam(window.location, 'inputTokenAmount')))
     ? getQueryParam(window.location, 'inputTokenAmount')
     : ''
 
-  params.outputTokenAmount = !isNaN(getQueryParam(window.location, 'outputTokenAmount'))
+  params.outputTokenAmount = !isNaN(Number(getQueryParam(window.location, 'outputTokenAmount')))
     ? getQueryParam(window.location, 'outputTokenAmount')
     : ''
 
@@ -86,7 +87,7 @@ export function checkSupportedTheme(themeName) {
 export function getNetworkName(networkId) {
   switch (networkId) {
     case 1: {
-      return 'the Main Ethereum Network'
+      return 'the Ethereum Mainnet'
     }
     case 3: {
       return 'the Ropsten Test Network'
@@ -290,4 +291,12 @@ export async function getApprovalDigest(token, approve, nonce, deadline) {
       ]
     )
   )
+}
+
+export function isWETH(token) {
+  if (token && token.address === WETH[token.chainId].address) {
+    return true
+  } else {
+    return false
+  }
 }

@@ -1,6 +1,6 @@
 {
   "name": "uniswap",
-  "description": "Uniswap Exchange Protocol",
+  "description": "Uniswap Protocol",
   "version": "0.1.0",
   "homepage": "https://uniswap.exchange",
   "private": true,
