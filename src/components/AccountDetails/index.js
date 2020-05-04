@@ -19,25 +19,6 @@ import { ButtonLight } from '../Button'
 
 import { Link, TYPE } from '../../theme'
 
-const OptionButton = styled.div`
-  ${({ theme }) => theme.flexColumnNoWrap}
-  justify-content: center;
-  align-items: center;
-  border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.blue1};
-  color: ${({ theme }) => theme.blue1};
-  padding: 8px 24px;
-
-  &:hover {
-    border: 1px solid ${({ theme }) => theme.blue3};
-    cursor: pointer;
-  }
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    font-size: 12px;
-  `};
-`
-
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 1.5rem 1.5rem;

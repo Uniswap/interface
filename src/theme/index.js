@@ -172,7 +172,7 @@ export const TYPE = {
 }
 
 export const GlobalStyle = createGlobalStyle`
-  @import url('https://rsms.me/inter/inter.css');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@531&display=swap');
   html { 
     font-family: 'Inter', sans-serif; 
     letter-spacing: -0.018em;

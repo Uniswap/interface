@@ -5,7 +5,7 @@ import Row from '../Row'
 import Menu from '../Menu'
 import Web3Status from '../Web3Status'
 
-import { Link, TYPE } from '../../theme'
+import { Link } from '../../theme'
 import { Text } from 'rebass'
 import { WETH } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'

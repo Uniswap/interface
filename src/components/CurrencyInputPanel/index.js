@@ -7,7 +7,7 @@ import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
 import SearchModal from '../SearchModal'
 import { RowBetween } from '../Row'
-import { TYPE, Hover } from '../../theme'
+import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
@@ -55,14 +55,6 @@ const LabelRow = styled.div`
   span:hover {
     cursor: pointer;
     color: ${({ theme }) => darken(0.2, theme.text2)};
-  }
-`
-
-const ErrorSpan = styled.span`
-  color: ${({ error, theme }) => error && theme.red1};
-  :hover {
-    cursor: pointer;
-    color: ${({ error, theme }) => error && darken(0.1, theme.red1)};
   }
 `
 

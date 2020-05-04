@@ -13,7 +13,7 @@ import NumericalInput from '../NumericalInput'
 import AddressInputPanel from '../AddressInputPanel'
 import ConfirmationModal from '../ConfirmationModal'
 import CurrencyInputPanel from '../CurrencyInputPanel'
-// import BalanceCard from '../BalanceCard'
+import BalanceCard from '../BalanceCard'
 
 import { Link } from '../../theme/components'
 import { Text } from 'rebass'
@@ -25,7 +25,7 @@ import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
 import Card, { GreyCard, BlueCard, YellowCard } from '../../components/Card'
 
 import { usePair } from '../../contexts/Pairs'
-import { useToken } from '../../contexts/Tokens'
+import { useToken, useAllTokens, ALL_TOKENS } from '../../contexts/Tokens'
 import { useRoute } from '../../contexts/Routes'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWeb3React, useTokenContract } from '../../hooks'
@@ -33,7 +33,9 @@ import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 import { useUserAdvanced } from '../../contexts/Application'
 import { ROUTER_ADDRESSES } from '../../constants'
-import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEtherscanLink } from '../../utils'
+
+import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEtherscanLink, isWETH } from '../../utils'
+import { useLocalStorageTokens } from '../../contexts/LocalStorage'
 
 const Wrapper = styled.div`
   position: relative;
@@ -292,7 +294,7 @@ const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
 const ALLOWED_SLIPPAGE_MEDIUM = 100
 const ALLOWED_SLIPPAGE_HIGH = 500
 
-function ExchangePage({ sendingInput = false, history, initialCurrency, params }) {
+function ExchangePage({ sendingInput = false, history, params }) {
   // text translation
   // const { t } = useTranslation()
 
@@ -315,11 +317,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
     reducer,
     {
       independentField: params.outputTokenAddress && !params.inputTokenAddress ? Field.OUTPUT : Field.INPUT,
-      inputTokenAddress: params.inputTokenAddress
-        ? params.inputTokenAddress
-        : initialCurrency
-        ? initialCurrency
-        : WETH[chainId].address,
+      inputTokenAddress: params.inputTokenAddress ? params.inputTokenAddress : WETH[chainId].address,
       outputTokenAddress: params.outputTokenAddress ? params.outputTokenAddress : '',
       typedValue:
         params.inputTokenAddress && !params.outputTokenAddress
@@ -335,9 +333,12 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
             ? params.inputTokenAmount
             : ''
           : ''
+          ? ''
+          : ''
     },
     initializeSwapState
   )
+
   const { independentField, typedValue, ...fieldData } = state
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
   const tradeType: TradeType = independentField === Field.INPUT ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT
@@ -348,12 +349,40 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
     [Field.OUTPUT]: useToken(fieldData[Field.OUTPUT].address)
   }
 
+  // ensure input + output tokens are added to localstorage
+  const [, { fetchTokenByAddress, addToken }] = useLocalStorageTokens()
+  const allTokens = useAllTokens()
+  const inputTokenAddress = fieldData[Field.INPUT].address
+  useEffect(() => {
+    if (inputTokenAddress && !Object.keys(allTokens).some(tokenAddress => tokenAddress === inputTokenAddress)) {
+      fetchTokenByAddress(inputTokenAddress).then(token => {
+        if (token !== null) {
+          addToken(token)
+        }
+      })
+    }
+  }, [inputTokenAddress, allTokens, fetchTokenByAddress, addToken])
+  const outputTokenAddress = fieldData[Field.OUTPUT].address
+  useEffect(() => {
+    if (outputTokenAddress && !Object.keys(allTokens).some(tokenAddress => tokenAddress === outputTokenAddress)) {
+      fetchTokenByAddress(outputTokenAddress).then(token => {
+        if (token !== null) {
+          addToken(token)
+        }
+      })
+    }
+  }, [outputTokenAddress, allTokens, fetchTokenByAddress, addToken])
+
   // token contracts for approvals and direct sends
   const tokenContractInput: ethers.Contract = useTokenContract(tokens[Field.INPUT]?.address)
   const tokenContractOutput: ethers.Contract = useTokenContract(tokens[Field.OUTPUT]?.address)
 
   // check on pending approvals for token amounts
   const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
+
+  // check for imported tokens to show warning
+  const importedTokenInput = tokens[Field.INPUT] && !!!ALL_TOKENS?.[chainId]?.[tokens[Field.INPUT]?.address]
+  const importedTokenOutput = tokens[Field.OUTPUT] && !!!ALL_TOKENS?.[chainId]?.[tokens[Field.OUTPUT]?.address]
 
   // entities for swap
   const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
@@ -373,7 +402,7 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
   const [deadline, setDeadline] = useState<number>(DEFAULT_DEADLINE_FROM_NOW)
   const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
 
-  // approvals
+  // input approval
   const inputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.INPUT], routerAddress)
 
   // all balances for detecting a swap with send
@@ -479,11 +508,8 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
       !!userBalances[Field.INPUT] &&
       !!tokens[Field.INPUT] &&
       WETH[chainId] &&
-      JSBI.greaterThan(
-        userBalances[Field.INPUT].raw,
-        tokens[Field.INPUT].equals(WETH[chainId]) ? MIN_ETHER.raw : JSBI.BigInt(0)
-      )
-        ? tokens[Field.INPUT].equals(WETH[chainId])
+      JSBI.greaterThan(userBalances[Field.INPUT].raw, isWETH(tokens[Field.INPUT]) ? MIN_ETHER.raw : JSBI.BigInt(0))
+        ? isWETH(tokens[Field.INPUT])
           ? userBalances[Field.INPUT].subtract(MIN_ETHER)
           : userBalances[Field.INPUT]
         : undefined
@@ -1518,14 +1544,14 @@ function ExchangePage({ sendingInput = false, history, initialCurrency, params }
                   </AutoColumn>
                 </YellowCard>
               )}
-              {/* <BalanceCard
+              <BalanceCard
                 token0={tokens[Field.INPUT]}
                 token1={tokens[Field.OUTPUT]}
                 import0={importedTokenInput}
                 balance0={userBalances[Field.INPUT]}
                 balance1={userBalances[Field.OUTPUT]}
                 import1={importedTokenOutput}
-              /> */}
+              />
             </AutoColumn>
           </FixedBottom>
         </AdvancedDropwdown>

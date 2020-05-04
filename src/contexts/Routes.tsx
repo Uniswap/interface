@@ -2,6 +2,7 @@ import React, { createContext, useContext, useReducer, useMemo, useCallback, use
 import { WETH, Token, Route, JSBI } from '@uniswap/sdk'
 import { useWeb3React } from '../hooks'
 import { usePair } from '../contexts/Pairs'
+import { isWETH } from '../utils'
 
 const UPDATE = 'UPDATE'
 
@@ -77,8 +78,8 @@ export function useRoute(tokenA: Token, tokenB: Token) {
   const defaultPair = usePair(tokenA, tokenB)
 
   // get token<->WETH pairs
-  const aToETH = usePair(tokenA && !tokenA.equals(WETH[chainId]) ? tokenA : null, WETH[chainId])
-  const bToETH = usePair(tokenB && !tokenB.equals(WETH[chainId]) ? tokenB : null, WETH[chainId])
+  const aToETH = usePair(tokenA && !isWETH(tokenA) ? tokenA : null, WETH[chainId])
+  const bToETH = usePair(tokenB && !isWETH(tokenB) ? tokenB : null, WETH[chainId])
 
   // needs to route through WETH
   const requiresHop =

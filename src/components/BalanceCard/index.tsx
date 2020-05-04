@@ -1,36 +1,19 @@
-import React, { useState, useLayoutEffect } from 'react'
+import React, { useState } from 'react'
 
-import Copy from '../AccountDetails/Copy'
 import TokenLogo from '../TokenLogo'
-import { Link } from '../../theme/components'
 import { TYPE } from '../../theme'
 import { Text } from 'rebass'
 
 import { Hover } from '../../theme'
 import { GreyCard } from '../Card'
 import { AutoColumn } from '../Column'
-import { RowBetween, RowFixed, AutoRow } from '../Row'
-import { Copy as CopyIcon, BarChart2, Info, Share, ChevronDown, ChevronUp, Plus, Send } from 'react-feather'
+import { RowBetween, AutoRow } from '../Row'
+import { Copy as CopyIcon, BarChart2, Info, Share, ChevronDown, ChevronUp, Plus } from 'react-feather'
 import DoubleLogo from '../DoubleLogo'
 import { ButtonSecondary, ButtonGray } from '../Button'
 
-import { useWeb3React } from '../../hooks'
-import { getEtherscanLink } from '../../utils'
-import { useUserAdvanced, useToggleUserAdvanced } from '../../contexts/Application'
-
 export default function BalanceCard({ token0, balance0, import0, token1, balance1, import1 }) {
-  const [details0, setDetails0] = useState(true)
-  const [details1, setDetails1] = useState(true)
-  const [pair0, setPair1] = useState(true)
-
   const [showInfo, setshowInfo] = useState(false)
-  const advanced = useUserAdvanced()
-
-  // useLayoutEffect(() => {
-  //   advanced && setshowInfo(true)
-  // }, [showInfo, setshowInfo, advanced])
-
-  const { chainId } = useWeb3React()
 
   return (
     <AutoRow

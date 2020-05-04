@@ -12,7 +12,6 @@ import { LightCard } from '../../components/Card'
 import { RowBetween } from '../../components/Row'
 import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import { PlusSquare } from 'react-feather'
 
 import { useAllPairs } from '../../contexts/Pairs'
 import { useWeb3React } from '@web3-react/core'
