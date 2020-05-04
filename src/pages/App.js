@@ -81,58 +81,26 @@ export default function App() {
                   {/* this Suspense is for route code-splitting */}
                   <Suspense fallback={null}>
                     <Switch>
-                      <Route exact strict path="/" render={() => <Redirect to={{ pathname: '/swap' }} />} />
+                      <Route exact strict path="/" render={() => <Redirect to="/swap" />} />
+                      <Route exact strict path="/swap" component={() => <Swap params={params} />} />
+                      <Route exact strict path="/send" component={() => <Send params={params} />} />
                       <Route exact strict path="/find" component={() => <Find params={params} />} />
                       <Route exact strict path="/create" component={() => <Create params={params} />} />
-                      <Route exact strict path="/swap" component={() => <Swap params={params} />} />
-                      <Route
-                        exact
-                        strict
-                        path="/swap/:tokenAddress?"
-                        render={({ match, location }) => {
-                          if (isAddress(match.params.tokenAddress)) {
-                            return (
-                              <Swap
-                                location={location}
-                                initialCurrency={isAddress(match.params.tokenAddress)}
-                                params={params}
-                              />
-                            )
-                          } else {
-                            return <Redirect to={{ pathname: '/swap' }} />
-                          }
-                        }}
-                      />
-                      <Route exact strict path="/send" component={() => <Send params={params} />} />
-                      <Route
-                        exact
-                        strict
-                        path="/send/:tokenAddress?"
-                        render={({ match }) => {
-                          if (isAddress(match.params.tokenAddress)) {
-                            return <Send initialCurrency={isAddress(match.params.tokenAddress)} params={params} />
-                          } else {
-                            return <Redirect to={{ pathname: '/send' }} />
-                          }
-                        }}
-                      />
-                      <Route exaxct path={'/pool'} component={() => <Pool params={params} />} />
+                      <Route exact strict path="/pool" component={() => <Pool params={params} />} />
                       <Route
                         exact
                         strict
                         path={'/add/:tokens'}
                         component={({ match }) => {
                           const tokens = match.params.tokens.split('-')
-                          let t0
-                          let t1
-                          if (tokens) {
-                            t0 = tokens?.[0] === 'ETH' ? 'ETH' : isAddress(tokens[0])
-                            t1 = tokens?.[1] === 'ETH' ? 'ETH' : isAddress(tokens[1])
-                          }
+                          const t0 =
+                            tokens?.[0] === 'ETH' ? 'ETH' : isAddress(tokens?.[0]) ? isAddress(tokens[0]) : undefined
+                          const t1 =
+                            tokens?.[1] === 'ETH' ? 'ETH' : isAddress(tokens?.[1]) ? isAddress(tokens[1]) : undefined
                           if (t0 && t1) {
-                            return <Add params={params} token0={t0} token1={t1} />
+                            return <Add token0={t0} token1={t1} params={params} />
                           } else {
-                            return <Redirect to={{ pathname: '/pool' }} />
+                            return <Redirect to="/pool" />
                           }
                         }}
                       />
@@ -142,20 +110,18 @@ export default function App() {
                         path={'/remove/:tokens'}
                         component={({ match }) => {
                           const tokens = match.params.tokens.split('-')
-                          let t0
-                          let t1
-                          if (tokens) {
-                            t0 = tokens?.[0] === 'ETH' ? 'ETH' : isAddress(tokens[0])
-                            t1 = tokens?.[1] === 'ETH' ? 'ETH' : isAddress(tokens[1])
-                          }
+                          const t0 =
+                            tokens?.[0] === 'ETH' ? 'ETH' : isAddress(tokens?.[0]) ? isAddress(tokens[0]) : undefined
+                          const t1 =
+                            tokens?.[1] === 'ETH' ? 'ETH' : isAddress(tokens?.[1]) ? isAddress(tokens[1]) : undefined
                           if (t0 && t1) {
-                            return <Remove params={params} token0={t0} token1={t1} />
+                            return <Remove token0={t0} token1={t1} params={params} />
                           } else {
-                            return <Redirect to={{ pathname: '/pool' }} />
+                            return <Redirect to="/pool" />
                           }
                         }}
                       />
-                      <Route exaxct path={'/remove'} component={() => <Remove params={params} />} />
+                      <Redirect to="/" />
                     </Switch>
                   </Suspense>
                 </BrowserRouter>

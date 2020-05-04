@@ -6,11 +6,10 @@ import { ethers } from 'ethers'
 
 import { NetworkContextName } from './constants'
 import { isMobile } from 'react-device-detect'
-import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage'
+import LocalStorageContextProvider from './contexts/LocalStorage'
 import ApplicationContextProvider, { Updater as ApplicationContextUpdater } from './contexts/Application'
 import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
 import BalancesContextProvider, { Updater as BalancesContextUpdater } from './contexts/Balances'
-import TokensContextProvider from './contexts/Tokens'
 import ExchangesContextProvider from './contexts/Pairs'
 import AllowancesContextProvider from './contexts/Allowances'
 import RoutesContextProvider from './contexts/Routes'
@@ -44,11 +43,9 @@ function ContextProviders({ children }) {
         <TransactionContextProvider>
           <ExchangesContextProvider>
             <RoutesContextProvider>
-              <TokensContextProvider>
-                <BalancesContextProvider>
-                  <AllowancesContextProvider>{children}</AllowancesContextProvider>
-                </BalancesContextProvider>
-              </TokensContextProvider>
+              <BalancesContextProvider>
+                <AllowancesContextProvider>{children}</AllowancesContextProvider>
+              </BalancesContextProvider>
             </RoutesContextProvider>
           </ExchangesContextProvider>
         </TransactionContextProvider>
@@ -60,7 +57,6 @@ function ContextProviders({ children }) {
 function Updaters() {
   return (
     <>
-      <LocalStorageContextUpdater />
       <ApplicationContextUpdater />
       <TransactionContextUpdater />
       <BalancesContextUpdater />

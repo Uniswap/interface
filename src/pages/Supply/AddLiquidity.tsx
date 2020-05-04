@@ -28,7 +28,7 @@ import { useTransactionAdder, usePendingApproval } from '../../contexts/Transact
 
 import { BigNumber } from 'ethers/utils'
 import { ROUTER_ADDRESSES } from '../../constants'
-import { getRouterContract, calculateGasMargin } from '../../utils'
+import { getRouterContract, calculateGasMargin, isWETH } from '../../utils'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = 50
@@ -293,11 +293,8 @@ function AddLiquidity({ token0, token1, step = false }) {
   const [maxAmountInput, maxAmountOutput]: TokenAmount[] = [Field.INPUT, Field.OUTPUT].map(index => {
     const field = Field[index]
     return !!userBalances[Field[field]] &&
-      JSBI.greaterThan(
-        userBalances[Field[field]].raw,
-        tokens[Field[field]].equals(WETH[chainId]) ? MIN_ETHER.raw : JSBI.BigInt(0)
-      )
-      ? tokens[Field[field]].equals(WETH[chainId])
+      JSBI.greaterThan(userBalances[Field[field]].raw, isWETH(tokens[Field[field]]) ? MIN_ETHER.raw : JSBI.BigInt(0))
+      ? isWETH(tokens[Field[field]])
         ? userBalances[Field[field]].subtract(MIN_ETHER)
         : userBalances[Field[field]]
       : undefined
