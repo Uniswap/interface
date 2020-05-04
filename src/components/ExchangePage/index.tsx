@@ -33,10 +33,8 @@ import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 
 import { ROUTER_ADDRESSES } from '../../constants'
-import { ALL_TOKENS } from '../../contexts/Tokens'
 import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEtherscanLink, isWETH } from '../../utils'
 import { useLocalStorageTokens } from '../../contexts/LocalStorage'
-
 
 const Wrapper = styled.div`
   position: relative;
