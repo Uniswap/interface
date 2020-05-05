@@ -2450,22 +2450,41 @@
     semver "^6.3.0"
     tsutils "^3.17.1"
 
-"@uniswap/sdk@@uniswap/sdk@2.0.0-beta.20":
-  version "2.0.0-beta.23"
-  resolved "https://registry.yarnpkg.com/@uniswap/sdk/-/sdk-2.0.0-beta.23.tgz#3745aa09e0b2dd2f724e79dbf3e8ed38488ceb14"
-  integrity sha512-DolpzpB+d2f3nHtuNAVAwTF1Dt2PEMmMCUiVkBV85xvqadkIqRaprtqgvakzlb97zjhZX6wOp3E0fXSDwJo7nw==
+"@uniswap/lib@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/lib/-/lib-1.1.1.tgz#0afd29601846c16e5d082866cbb24a9e0758e6bc"
+  integrity sha512-2yK7sLpKIT91TiS5sewHtOa7YuM8IuBXVl4GZv2jZFys4D2sY7K5vZh6MqD25TPA95Od+0YzCVq6cTF2IKrOmg==
+
+"@uniswap/sdk@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/sdk/-/sdk-2.0.1.tgz#191fdf0a49bc31c44ae429a1757380b83e22dd5f"
+  integrity sha512-F5SAWhGPPi4tgFTL0Gl3mtLSFkR/Tz/w35Aib5jpC1ti4AHwPWt4ReXMm7ucrvtXZlWmiBHPplNxsIIm1Z5aqQ==
   dependencies:
     "@ethersproject/address" "^5.0.0-beta.134"
     "@ethersproject/contracts" "^5.0.0-beta.143"
     "@ethersproject/networks" "^5.0.0-beta.135"
     "@ethersproject/providers" "^5.0.0-beta.153"
     "@ethersproject/solidity" "^5.0.0-beta.131"
+    "@uniswap/v2-core" "^1.0.0"
     big.js "^5.2.2"
     decimal.js-light "^2.5.0"
     jsbi "^3.1.1"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
+
+"@uniswap/v2-core@1.0.0", "@uniswap/v2-core@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/v2-core/-/v2-core-1.0.0.tgz#e0fab91a7d53e8cafb5326ae4ca18351116b0844"
+  integrity sha512-BJiXrBGnN8mti7saW49MXwxDBRFiWemGetE58q8zgfnPPzQKq55ADltEILqOt6VFZ22kVeVKbF8gVd8aY3l7pA==
+
+"@uniswap/v2-periphery@1.0.0-beta.0":
+  version "1.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/v2-periphery/-/v2-periphery-1.0.0-beta.0.tgz#53ccbd5f6a3e43fd37f04660625873dc7d5c57b2"
+  integrity sha512-r0Iuk7L3gZzbmlZeNhMdLmG0fOqfHCoxmWqYQ9OX4r3w0lJ6dyErJ8kVdTy8PtairkuHkXWeH3OdyzzzBtyRpw==
+  dependencies:
+    "@uniswap/lib" "1.1.1"
+    "@uniswap/v2-core" "1.0.0"
 
 "@walletconnect/browser@^1.0.0-beta.47":
   version "1.0.0-beta.47"
