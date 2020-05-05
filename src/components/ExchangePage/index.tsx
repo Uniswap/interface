@@ -438,6 +438,11 @@ function ExchangePage({ sendingInput = false, history, params }) {
   if (trade)
     parsedAmounts[dependentField] = tradeType === TradeType.EXACT_INPUT ? trade.outputAmount : trade.inputAmount
 
+  const feeAsPercent = new Percent(JSBI.BigInt(3), JSBI.BigInt(1000))
+  const feeTimesInputRaw =
+    parsedAmounts[Field.INPUT] && feeAsPercent.multiply(JSBI.BigInt(parsedAmounts[Field.INPUT].raw))
+  const feeTimesInputFormatted = feeTimesInputRaw && new TokenAmount(tokens[Field.INPUT], feeTimesInputRaw?.quotient)
+
   const formattedAmounts = {
     [independentField]: typedValue,
     [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(8) : ''
@@ -1032,7 +1037,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontSize={14} fontWeight={400}>
-                  {independentField === Field.INPUT ? (sending ? 'Maximum sent' : 'Maximum received') : 'Minimum sold'}
+                  {independentField === Field.INPUT ? (sending ? 'Min sent' : 'Minimum received') : 'Maximum sold'}
                 </TYPE.black>
                 <QuestionHelper text="" />
               </RowFixed>
@@ -1062,7 +1067,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontSize={14} fontWeight={400}>
-                  Price Slippage
+                  Slippage
                 </TYPE.black>
                 <QuestionHelper text="" />
               </RowFixed>
@@ -1087,7 +1092,11 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 </TYPE.black>
                 <QuestionHelper text="" />
               </RowFixed>
-              <TYPE.black fontSize={14}>0.03%</TYPE.black>
+              <TYPE.black fontSize={14}>
+                {feeTimesInputFormatted
+                  ? feeTimesInputFormatted?.toSignificant(8) + ' ' + tokens[Field.INPUT]?.symbol
+                  : '-'}
+              </TYPE.black>
             </RowBetween>
           </AutoColumn>
 
@@ -1135,7 +1144,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
               : '-'}
           </ErrorText>
           <Text fontWeight={500} fontSize={14} color={theme().text3} pt={1}>
-            Price Impact
+            Slippage
           </Text>
         </AutoColumn>
       </AutoRow>
@@ -1444,9 +1453,9 @@ function ExchangePage({ sendingInput = false, history, params }) {
                     <TYPE.black fontSize={14} fontWeight={400}>
                       {independentField === Field.INPUT
                         ? sending
-                          ? 'Maximum sent'
-                          : 'Maximum received'
-                        : 'Minimum sold'}
+                          ? 'Minimum sent'
+                          : 'Minimum received'
+                        : 'Maximum sold'}
                     </TYPE.black>
                     <QuestionHelper text="" />
                   </RowFixed>
@@ -1476,7 +1485,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <RowBetween>
                   <RowFixed>
                     <TYPE.black fontSize={14} fontWeight={400}>
-                      Price Slippage
+                      Slippage
                     </TYPE.black>
                     <QuestionHelper text="" />
                   </RowFixed>
@@ -1497,12 +1506,14 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <RowBetween>
                   <RowFixed>
                     <TYPE.black fontSize={14} fontWeight={400}>
-                      Total Slippage
+                      Liquidity Provider Fee
                     </TYPE.black>
                     <QuestionHelper text="" />
                   </RowFixed>
                   <TYPE.black fontSize={14}>
-                    {slippageFromTrade ? slippageFromTrade.toSignificant(4) + '%' : '-'}
+                    {feeTimesInputFormatted
+                      ? feeTimesInputFormatted?.toSignificant(8) + ' ' + tokens[Field.INPUT]?.symbol
+                      : '-'}
                   </TYPE.black>
                 </RowBetween>
               </AutoColumn>
