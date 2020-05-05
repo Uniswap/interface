@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect, useRef, useState } from 'react'
-import { BigNumber } from '@uniswap/sdk'
+import { BigNumber } from '@uniswap/sdk-v1'
 
 import { useWeb3React } from '../hooks'
 import { safeAccess, isAddress, getEtherBalance, getTokenBalance } from '../utils'

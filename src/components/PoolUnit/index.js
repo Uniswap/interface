@@ -3,9 +3,10 @@ import { ethers } from 'ethers'
 import { withRouter } from 'react-router'
 import styled, { keyframes } from 'styled-components'
 import { animated, useTransition } from 'react-spring'
-import { ChainId, WETH } from '@uniswap/sdk-next'
-import { BigNumber } from '@uniswap/sdk'
+import { BigNumber } from '@uniswap/sdk-v1'
+import { ChainId, WETH } from '@uniswap/sdk-v2'
 import { Zero } from 'ethers/constants'
+import IUniswapV2Migrator from '@uniswap/v2-periphery/build/IUniswapV2Migrator.json'
 
 import { useWeb3React, useContract, useExchangeContract, usePrevious, useTotalSupply } from '../../hooks'
 import { useAllTokenDetails } from '../../contexts/Tokens'
@@ -27,7 +28,6 @@ import { Link } from '../Link'
 import TextBlock from '../Text'
 
 import Lock from '../../assets/images/lock.png'
-import MIGRATOR_ABI from '../../constants/abis/migrator'
 import { MIGRATOR_ADDRESS } from '../../constants'
 
 const Column = styled.div`
@@ -111,7 +111,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
   const exchangeAddressV2 = allTokenDetails[token].exchangeAddressV2
 
   const exchangeContractV1 = useExchangeContract(exchangeAddressV1)
-  const migratorContract = useContract(MIGRATOR_ADDRESS, MIGRATOR_ABI)
+  const migratorContract = useContract(MIGRATOR_ADDRESS, IUniswapV2Migrator.abi)
 
   const v1Balance = useAddressBalance(account, exchangeAddressV1)
   const v2Balance = useAddressBalance(account, exchangeAddressV2)
@@ -160,7 +160,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
   const canMigrate = v1TotalSupply && (firstMigrator || v2Price)
 
   const [pendingMigration, setPendingMigration] = useState(false)
-  const migrationDone = v1Balance.eq(Zero) && !v2Balance.eq(Zero)
+  const migrationDone = v1Balance && v1Balance.eq(Zero) && v2Balance && !v2Balance.eq(Zero)
 
   const [triggerFlash, setTriggerFlash] = useState(false)
 

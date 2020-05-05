@@ -1,4 +1,4 @@
-import { getMarketDetails } from '@uniswap/sdk'
+import { getMarketDetails } from '@uniswap/sdk-v1'
 import { getMedian, getMean } from './math'
 
 const DAI = 'DAI'

@@ -10,7 +10,7 @@ import Card from '../components/CardStyled'
 import LoaderLight from '../components/Loader'
 import TextBlock from '../components/Text'
 import PoolUnit from '../components/PoolUnit'
-import { WETH } from '@uniswap/sdk-next'
+import { WETH } from '@uniswap/sdk-v2'
 
 const Row = styled.div`
   display: flex;

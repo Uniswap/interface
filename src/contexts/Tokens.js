@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
-import { WETH, Token, Pair } from '@uniswap/sdk-next'
+import { WETH, Token, Pair } from '@uniswap/sdk-v2'
 
 import { useWeb3React } from '../hooks'
 import {

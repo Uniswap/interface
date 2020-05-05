@@ -1,4 +1,4 @@
-import { BigNumber } from '@uniswap/sdk'
+import { BigNumber } from '@uniswap/sdk-v1'
 
 // returns a deep copied + sorted list of values, as well as a sortmap
 export function sortBigNumbers(values) {
