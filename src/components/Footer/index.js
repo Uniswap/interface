@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Send } from 'react-feather'
+import { Link } from '../../theme/components'
 
 import { ButtonSecondary } from '../Button'
 
@@ -26,8 +27,11 @@ export default function Footer() {
           marginRight: '0px',
           width: 'fit-content'
         }}
+        href="https://forms.gle/DaLuqvJsVhVaAM3J9"
       >
-        <Send size={16} style={{ marginRight: '8px' }} /> Feedback
+        <Link href="https://forms.gle/DaLuqvJsVhVaAM3J9">
+          <Send size={16} style={{ marginRight: '8px' }} /> Feedback
+        </Link>
       </ButtonSecondary>
     </FooterFrame>
   )

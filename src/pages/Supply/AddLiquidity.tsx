@@ -524,7 +524,7 @@ function AddLiquidity({ token0, token1, step = false }) {
       </AutoColumn>
     ) : (
       <AutoColumn gap="20px">
-        <RowFlat style={{ marginTop: '60px' }}>
+        <RowFlat style={{ marginTop: '20px' }}>
           <Text fontSize="48px" fontWeight={500} lineHeight="32px" marginRight={10}>
             {liquidityMinted?.toFixed(6)}
           </Text>
@@ -535,6 +535,11 @@ function AddLiquidity({ token0, token1, step = false }) {
             {tokens[Field.INPUT]?.symbol + ':' + tokens[Field.OUTPUT]?.symbol + ' Pool Tokens'}
           </Text>
         </Row>
+        <TYPE.italic fontSize={12} color="#565A69" textAlign="center" padding={'12px 0 0 0 '}>
+          {`Output is estimated. You will receive at least ${liquidityMinted?.toSignificant(6)} UNI ${
+            tokens[Field.INPUT]?.symbol
+          }/${tokens[Field.OUTPUT]?.symbol} or the transaction will revert.`}
+        </TYPE.italic>
       </AutoColumn>
     )
   }
@@ -575,11 +580,6 @@ function AddLiquidity({ token0, token1, step = false }) {
             {noLiquidity ? 'Supply & Create Pool' : 'Confirm Supply'}
           </Text>
         </ButtonPrimary>
-        <TYPE.italic fontSize={12} color="#565A69" textAlign="center">
-          {`Output is estimated. You will receive at least ${liquidityMinted?.toSignificant(6)} UNI ${
-            tokens[Field.INPUT]?.symbol
-          }/${tokens[Field.OUTPUT]?.symbol} or the transaction will revert.`}
-        </TYPE.italic>
       </>
     )
   }

@@ -968,7 +968,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
             <ArrowDown size="16" color={'#888D9B'} />
           </RowFixed>
           <RowBetween align="flex-end">
-            <Text fontSize={24} fontWeight={600} color={warningHigh ? '#FF6871' : ''}>
+            <Text fontSize={24} fontWeight={500} color={warningHigh ? '#FF6871' : ''}>
               {!!slippageAdjustedAmounts[Field.OUTPUT] && slippageAdjustedAmounts[Field.OUTPUT].toSignificant(6)}
             </Text>
             <RowFixed gap="4px">
