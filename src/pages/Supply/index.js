@@ -76,7 +76,7 @@ function Supply({ history }) {
         <AutoColumn gap="12px">
           <RowBetween padding={'0 8px'}>
             <Text fontWeight={500}>Your Pooled Liquidity</Text>
-            <Question text="filler text" />
+            <Question text="When you add liquidity, you are given pool tokens that represent your share. If you don’t see a pool you joined in this list, try importing a pool below." />
           </RowBetween>
           {filteredExchangeList?.length === 0 && (
             <LightCard

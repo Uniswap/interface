@@ -13,15 +13,15 @@ import NumericalInput from '../NumericalInput'
 import AddressInputPanel from '../AddressInputPanel'
 import ConfirmationModal from '../ConfirmationModal'
 import CurrencyInputPanel from '../CurrencyInputPanel'
-import BalanceCard from '../BalanceCard'
+// import BalanceCard from '../BalanceCard'
 
 import { Link } from '../../theme/components'
 import { Text } from 'rebass'
 import { theme, TYPE, Hover } from '../../theme'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
-import { ArrowDown, ChevronDown, ChevronUp, Repeat, Eye, EyeOff } from 'react-feather'
-import { ButtonPrimary, ButtonError, ButtonLight, ButtonSecondary } from '../Button'
+import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
+import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
 import Card, { GreyCard, BlueCard, YellowCard } from '../../components/Card'
 
 import { usePair } from '../../contexts/Pairs'
@@ -31,7 +31,7 @@ import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWeb3React, useTokenContract } from '../../hooks'
 import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
-import { useUserAdvanced, useToggleUserAdvanced } from '../../contexts/Application'
+import { useUserAdvanced } from '../../contexts/Application'
 import { ROUTER_ADDRESSES } from '../../constants'
 import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEtherscanLink, isWETH } from '../../utils'
 import { useLocalStorageTokens } from '../../contexts/LocalStorage'
@@ -133,12 +133,10 @@ const MaxButton = styled.button`
 const StyledBalanceMaxMini = styled.button`
   height: 24px;
   background-color: ${({ theme }) => theme.bg2};
-  /* border: 1px solid ${({ theme }) => theme.blue5}; */
   border: none;
   border-radius: 0.5rem;
   font-size: 0.875rem;
   font-weight: 400;
-  /* padding: 0px; */
   margin-left: 6px;
   cursor: pointer;
   color: ${({ theme }) => theme.text2};
@@ -147,7 +145,6 @@ const StyledBalanceMaxMini = styled.button`
   align-items: center;
   width: fit-content;
   float: right;
-  /* padding: 2px; */
 
   :hover {
     background-color: ${({ theme }) => theme.bg3};
@@ -787,7 +784,6 @@ function ExchangePage({ sendingInput = false, history, params }) {
   const ignoreOutput: boolean = sending ? !sendingWithSwap : false
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
-  const toggleadvanced = useToggleUserAdvanced()
   const advanced = useUserAdvanced()
 
   useEffect(() => {
@@ -1103,7 +1099,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <TYPE.black fontSize={14} fontWeight={400}>
                   Liquidity Provider Fee
                 </TYPE.black>
-                <QuestionHelper text="" />
+                <QuestionHelper text="A portion of each trade goes to liquidity providers to incentivize liquidity on the protocol." />
               </RowFixed>
               <TYPE.black fontSize={14}>0.03%</TYPE.black>
             </RowBetween>
@@ -1240,6 +1236,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
               hideInput={true}
               showSendWithSwap={true}
               advanced={advanced}
+              label={''}
               otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
             />
           </InputGroup>
@@ -1250,6 +1247,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
           <>
             <CurrencyInputPanel
               field={Field.INPUT}
+              label={'From'}
               value={formattedAmounts[Field.INPUT]}
               atMax={atMaxAmountInput}
               token={tokens[Field.INPUT]}
@@ -1294,7 +1292,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
               onMax={() => {
                 maxAmountOutput && onMaxOutput(maxAmountOutput.toExact())
               }}
-              type={'OUTPUT'}
+              label={'To'}
               atMax={atMaxAmountOutput}
               token={tokens[Field.OUTPUT]}
               onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
@@ -1368,13 +1366,17 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 </RowBetween>
                 {pair && (warningHigh || warningMedium) && (
                   <RowBetween>
-                    <TYPE.main>Price Impact</TYPE.main>
+                    <TYPE.main style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
+                      Price Impact
+                      <QuestionHelper text="The difference between the market price and your price due to trade size." />
+                    </TYPE.main>
                     <ErrorText fontWeight={500} fontSize={16} warningMedium={warningMedium} warningHigh={warningHigh}>
                       {priceSlippage
                         ? priceSlippage.toFixed(4) === '0.0000'
                           ? '<0.0001%'
                           : priceSlippage.toFixed(4) + '%'
-                        : '-'}
+                        : '-'}{' '}
+                      ⚠️
                     </ErrorText>
                   </RowBetween>
                 )}
@@ -1473,7 +1475,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
                           : 'Maximum received'
                         : 'Minimum sold'}
                     </TYPE.black>
-                    <QuestionHelper text="" />
+                    <QuestionHelper text="A lower bound is set so you never get less than this amount." />
                   </RowFixed>
                   <RowFixed>
                     <TYPE.black fontSize={14}>
@@ -1501,9 +1503,9 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <RowBetween>
                   <RowFixed>
                     <TYPE.black fontSize={14} fontWeight={400}>
-                      Price Slippage
+                      Price Impact
                     </TYPE.black>
-                    <QuestionHelper text="" />
+                    <QuestionHelper text="The difference between the market price and your price due to trade size." />
                   </RowFixed>
                   <ErrorText
                     fontWeight={500}
@@ -1522,9 +1524,9 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <RowBetween>
                   <RowFixed>
                     <TYPE.black fontSize={14} fontWeight={400}>
-                      Total Slippage
+                      Total Price Slippage
                     </TYPE.black>
-                    <QuestionHelper text="" />
+                    <QuestionHelper text="Price change due to trade size and LP fee" />
                   </RowFixed>
                   <TYPE.black fontSize={14}>
                     {slippageFromTrade ? slippageFromTrade.toSignificant(4) + '%' : '-'}
@@ -1536,7 +1538,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <TYPE.black fontWeight={400} fontSize={14}>
                   Set front running resistance
                 </TYPE.black>
-                <QuestionHelper text="" />
+                <QuestionHelper text="Your transaction will revert if the price changes more than this amount after your submit your trade." />
               </RowFixed>
               <SlippageTabs
                 rawSlippage={allowedSlippage}
@@ -1552,12 +1554,12 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <YellowCard style={{ padding: '20px', paddingTop: '10px' }}>
                   <AutoColumn gap="md" mt={2}>
                     <RowBetween>
-                      <RowFixed>
+                      <RowFixed style={{ paddingTop: '8px' }}>
                         <span role="img" aria-label="warning">
                           ⚠️
                         </span>{' '}
-                        <Text fontWeight={500} marginLeft="4px" style={{ padding: '4px', paddingTop: '12px' }}>
-                          Slippage Warning
+                        <Text fontWeight={500} marginLeft="4px">
+                          Price Warning
                         </Text>
                       </RowFixed>
                     </RowBetween>

@@ -669,6 +669,7 @@ function AddLiquidity({ token0, token1, step = false }) {
           onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
           error={inputError}
           pair={pair}
+          label="Input"
         />
         <ColumnCenter>
           <Plus size="16" color="#888D9B" />

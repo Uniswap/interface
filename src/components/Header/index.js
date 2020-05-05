@@ -14,8 +14,6 @@ import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useWalletModalToggle } from '../../contexts/Application'
 
-import { ButtonSecondary } from '../Button'
-
 import Logo from '../../assets/svg/logo.svg'
 import Wordmark from '../../assets/svg/wordmark.svg'
 import { AutoColumn } from '../Column'
@@ -97,33 +95,17 @@ const Alpha = styled(GreyCard)`
   width: fit-content;
   margin-right: 10px;
   border-radius: 12px;
-  padding: 8px 12px;
-  color: ${({ theme }) => theme.text2};
+  padding: 3px 7px;
+  background-color: ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.white};
+  font-size: 12px;
+  font-weight: 600;
 `
 
 const UniIcon = styled(Link)`
   transition: transform 0.3s ease;
   :hover {
     transform: rotate(-5deg);
-  }
-`
-const StyledRed = styled.div`
-  width: 100%;
-  height: 150vh;
-  border-radius: 10vw;
-  background: ${({ theme }) => `radial-gradient(50% 50% at 50% 50%, ${theme.pink2} 0%, ${theme.white} 100%)`};
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  opacity: 0.1;
-  z-index: -99;
-  pointer-events: none;
-  transform: translateY(-70vh);
-
-  @media (max-width: 960px) {
-    height: 300px;
-    width: 100%;
-    transform: translateY(-150px);
   }
 `
 
@@ -151,7 +133,7 @@ export default function Header() {
     <HeaderFrame>
       <MigrateBanner>
         {/* <b>Uniswap V2 is live.&nbsp;</b> Move your liquidity now using the&nbsp; */}
-        Uniswap V2 is coming soon.&nbsp;Read the&nbsp;
+        <b>Testnet only.</b>&nbsp;Uniswap V2 has not been launched and is coming soon.&nbsp;Read the&nbsp;
         {/* <Link href="https://migrate.uniswap.exchange/">
           <b>migration helper</b>
         </Link>
@@ -174,7 +156,7 @@ export default function Header() {
               </TitleText>
             )}
           </Title>
-          <TestnetWrapper>{!isMobile && <Alpha>1.0.1-alpha</Alpha>}</TestnetWrapper>
+          <TestnetWrapper>{!isMobile && <Alpha>V2</Alpha>}</TestnetWrapper>
         </HeaderElement>
         <HeaderElement>
           <TestnetWrapper>
