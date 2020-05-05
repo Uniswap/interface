@@ -18,7 +18,11 @@ export const LightCard = styled(Card)`
 `
 
 export const GreyCard = styled(Card)`
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(237, 238, 242, 0.5);
+`
+
+export const OutlineCard = styled(Card)`
+  border: 1px solid rgba(237, 238, 242, 0.5);
 `
 
 export const YellowCard = styled(Card)`

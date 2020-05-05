@@ -12,7 +12,7 @@ const InfoCard = styled.button`
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.blue1};
   }
-  border-color: ${({ theme, active }) => (active ? 'transparent' : theme.bg4)};
+  border-color: ${({ theme, active }) => (active ? 'transparent' : theme.bg3)};
 `
 
 const OptionCard = styled(InfoCard)`
@@ -34,7 +34,7 @@ const OptionCardClickable = styled(OptionCard)`
   margin-top: 0;
   &:hover {
     cursor: ${({ clickable }) => (clickable ? 'pointer' : '')};
-    border: ${({ clickable, theme }) => (clickable ? `1px solid ${theme.blue2}` : ``)};
+    border: ${({ clickable, theme }) => (clickable ? `1px solid ${theme.blue1}` : ``)};
   }
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
 `
