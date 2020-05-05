@@ -40,7 +40,7 @@ const BodyWrapper = styled.div`
   align-items: center;
   flex: 1;
   overflow: auto;
-  padding-top: 100px;
+  padding-top: 60px;
 
   & > * {
     max-width: calc(355px + 4rem);

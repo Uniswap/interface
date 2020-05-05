@@ -42,7 +42,7 @@ export default function ThemeProvider({ children }) {
   return <StyledComponentsThemeProvider theme={theme(themeToRender)}>{children}</StyledComponentsThemeProvider>
 }
 
-const theme = darkMode => ({
+export const theme = darkMode => ({
   // base
   white,
   black,
@@ -62,11 +62,14 @@ const theme = darkMode => ({
   bg5: darkMode ? '#565A69' : '#888D9B',
 
   //blues
-  blue1: '#2172E5',
+  // blue1: '#2172E5',
+  blue1: '#ff007a',
   blue2: darkMode ? '#3680E7' : '#1966D2',
   blue3: darkMode ? '#4D8FEA' : '#165BBB',
-  blue4: '#C4D9F8',
-  blue5: '#EBF4FF',
+  // blue5: '#EBF4FF',
+  // blue4: '#C4D9F8',
+  blue4: '#FDEAF1',
+  blue5: '#FDEAF1',
 
   // pinks
   pink1: '#DC6BE5',
@@ -172,6 +175,11 @@ export const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@531&display=swap');
   html { 
     font-family: 'Inter', sans-serif; 
+    letter-spacing: -0.018em;
+    /* font-feature-settings: 'cv01', 'cv02', 'cv03', 'cv04'; */
+    }
+  @supports (font-variation-settings: normal) {
+    html { font-family: 'Inter var', sans-serif; }
   }
   
   html,

@@ -15,6 +15,9 @@ const StyledInput = styled.input`
   background-color: ${({ theme }) => theme.bg1};
   font-size: ${({ fontSize }) => fontSize && fontSize};
   text-align: ${({ align }) => align && align};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   [type='number'] {
     -moz-appearance: textfield;

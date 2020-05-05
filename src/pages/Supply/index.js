@@ -10,7 +10,7 @@ import { Link, TYPE } from '../../theme'
 import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
 import { RowBetween } from '../../components/Row'
-import { ButtonPrimary } from '../../components/Button'
+import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 
 import { useAllPairs } from '../../contexts/Pairs'
@@ -70,7 +70,7 @@ function Supply({ history }) {
         <Text fontSize={20}>Join {filteredExchangeList?.length > 0 ? 'another' : 'a'} pool</Text>
       </ButtonPrimary>
       <Positions>
-        <AutoColumn gap="20px">
+        <AutoColumn gap="12px">
           <RowBetween padding={'0 8px'}>
             <Text fontWeight={500}>Your Pooled Liquidity</Text>
             <Question text="filler text" />
@@ -84,7 +84,7 @@ function Supply({ history }) {
             </LightCard>
           )}
           {filteredExchangeList}
-          <Text color="#AEAEAE" textAlign="center">
+          <Text color="#AEAEAE" textAlign="center" style={{ padding: '.5rem 0 .5rem 0' }}>
             {filteredExchangeList?.length !== 0 ? `Don't see a pool you joined? ` : 'Already joined a pool? '}{' '}
             <Link
               onClick={() => {
@@ -97,9 +97,9 @@ function Supply({ history }) {
         </AutoColumn>
         <FixedBottom>
           <ColumnCenter>
-            <ButtonPrimary width="120px" padding="8px" borderRadius="10px" onClick={() => history.push('/create')}>
-              Create Pool
-            </ButtonPrimary>
+            <ButtonSecondary width="136px" padding="8px" borderRadius="10px" onClick={() => history.push('/create')}>
+              + Create Pool
+            </ButtonSecondary>
           </ColumnCenter>
         </FixedBottom>
       </Positions>

@@ -13,6 +13,8 @@ const UPDATE_BLOCK_NUMBER = 'UPDATE_BLOCK_NUMBER'
 const TOGGLE_WALLET_MODAL = 'TOGGLE_WALLET_MODAL'
 
 const ADD_POPUP = 'ADD_POPUP'
+const USER_ADVANCED = 'USER_ADVANCED'
+const TOGGLE_USER_ADVANCED = 'TOGGLE_USER_ADVANCED'
 
 const ApplicationContext = createContext()
 
@@ -37,6 +39,10 @@ function reducer(state, { type, payload }) {
       return { ...state, [WALLET_MODAL_OPEN]: !state[WALLET_MODAL_OPEN] }
     }
 
+    case TOGGLE_USER_ADVANCED: {
+      return { ...state, [USER_ADVANCED]: !state[USER_ADVANCED] }
+    }
+
     case ADD_POPUP: {
       const { newList } = payload
       return { ...state, [POPUP_LIST]: newList, [POPUP_KEY]: state?.[POPUP_KEY] + 1 }
@@ -54,7 +60,8 @@ export default function Provider({ children }) {
     [USD_PRICE]: {},
     [POPUP_LIST]: [],
     [POPUP_KEY]: 0,
-    [WALLET_MODAL_OPEN]: false
+    [WALLET_MODAL_OPEN]: false,
+    [USER_ADVANCED]: true
   })
 
   const updateBlockNumber = useCallback((networkId, blockNumber) => {
@@ -65,16 +72,21 @@ export default function Provider({ children }) {
     dispatch({ type: TOGGLE_WALLET_MODAL })
   }, [])
 
+  const toggleUserAdvanced = useCallback(() => {
+    dispatch({ type: TOGGLE_USER_ADVANCED })
+  }, [])
+
   const setPopups = useCallback(newList => {
     dispatch({ type: ADD_POPUP, payload: { newList } })
   }, [])
 
   return (
     <ApplicationContext.Provider
-      value={useMemo(() => [state, { updateBlockNumber, toggleWalletModal, setPopups }], [
+      value={useMemo(() => [state, { updateBlockNumber, toggleWalletModal, toggleUserAdvanced, setPopups }], [
         state,
         updateBlockNumber,
         toggleWalletModal,
+        toggleUserAdvanced,
         setPopups
       ])}
     >
@@ -139,6 +151,17 @@ export function useWalletModalToggle() {
   const [, { toggleWalletModal }] = useApplicationContext()
 
   return toggleWalletModal
+}
+
+export function useUserAdvanced() {
+  const [state] = useApplicationContext()
+
+  return state[USER_ADVANCED]
+}
+
+export function useToggleUserAdvanced() {
+  const [, { toggleUserAdvanced }] = useApplicationContext()
+  return toggleUserAdvanced
 }
 
 export function usePopups() {
