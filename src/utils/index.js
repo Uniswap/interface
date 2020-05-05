@@ -1,11 +1,11 @@
 import { ethers } from 'ethers'
 
-import FACTORY_ABI from '../constants/abis/factory'
-import EXCHANGE_ABI from '../constants/abis/exchange'
-import ROUTER_ABI from '../constants/abis/router'
+import IUniswapV2Pair from '@uniswap/v2-core/build/IUniswapV2Pair.json'
+import IUniswapV2Router01 from '@uniswap/v2-periphery/build/IUniswapV2Router01.json'
+
 import ERC20_ABI from '../constants/abis/erc20'
 import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32'
-import { FACTORY_ADDRESSES, SUPPORTED_THEMES, ROUTER_ADDRESSES } from '../constants'
+import { SUPPORTED_THEMES, ROUTER_ADDRESS } from '../constants'
 import { bigNumberify, keccak256, defaultAbiCoder, toUtf8Bytes, solidityPack } from 'ethers/utils'
 
 import UncheckedJsonRpcSigner from './signer'
@@ -150,18 +150,13 @@ export function getContract(address, ABI, library, account) {
 
 // account is optional
 export function getRouterContract(chainId, library, account) {
-  const router = getContract(ROUTER_ADDRESSES[chainId], ROUTER_ABI, library, account)
+  const router = getContract(ROUTER_ADDRESS, IUniswapV2Router01.abi, library, account)
   return router
 }
 
 // account is optional
-export function getFactoryContract(networkId, library, account) {
-  return getContract(FACTORY_ADDRESSES[networkId], FACTORY_ABI, library, account)
-}
-
-// account is optional
 export function getExchangeContract(pairAddress, library, account) {
-  return getContract(pairAddress, EXCHANGE_ABI, library, account)
+  return getContract(pairAddress, IUniswapV2Pair.abi, library, account)
 }
 
 // get token name
@@ -213,11 +208,6 @@ export async function getTokenDecimals(tokenAddress, library) {
       error.code = ERROR_CODES.TOKEN_DECIMALS
       throw error
     })
-}
-
-// get the exchange address for a token from the factory
-export async function getTokenpairAddressFromFactory(tokenAddress, networkId, library) {
-  return getFactoryContract(networkId, library).getExchange(tokenAddress)
 }
 
 // get the ether balance of an address

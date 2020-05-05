@@ -32,7 +32,7 @@ import { useWeb3React, useTokenContract } from '../../hooks'
 import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 import { useUserAdvanced } from '../../contexts/Application'
-import { ROUTER_ADDRESSES } from '../../constants'
+import { ROUTER_ADDRESS } from '../../constants'
 import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEtherscanLink, isWETH } from '../../utils'
 import { useLocalStorageTokens } from '../../contexts/LocalStorage'
 
@@ -298,7 +298,6 @@ function ExchangePage({ sendingInput = false, history, params }) {
   // const { t } = useTranslation()
 
   const { chainId, account, library } = useWeb3React()
-  const routerAddress: string = ROUTER_ADDRESSES[chainId]
 
   const simplified = useUserAdvanced()
 
@@ -402,7 +401,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
   const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
 
   // input approval
-  const inputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.INPUT], routerAddress)
+  const inputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.INPUT], ROUTER_ADDRESS)
 
   // all balances for detecting a swap with send
   const allBalances: TokenAmount[] = useAllBalances()
@@ -752,16 +751,16 @@ function ExchangePage({ sendingInput = false, history, params }) {
     let useUserBalance = false
     const tokenContract = field === Field.INPUT ? tokenContractInput : tokenContractOutput
 
-    estimatedGas = await tokenContract.estimate.approve(routerAddress, ethers.constants.MaxUint256).catch(e => {
+    estimatedGas = await tokenContract.estimate.approve(ROUTER_ADDRESS, ethers.constants.MaxUint256).catch(e => {
       console.log('Error setting max token approval.')
     })
     if (!estimatedGas) {
       // general fallback for tokens who restrict approval amounts
-      estimatedGas = await tokenContract.estimate.approve(routerAddress, userBalances[field])
+      estimatedGas = await tokenContract.estimate.approve(ROUTER_ADDRESS, userBalances[field])
       useUserBalance = true
     }
     tokenContract
-      .approve(routerAddress, useUserBalance ? userBalances[field] : ethers.constants.MaxUint256, {
+      .approve(ROUTER_ADDRESS, useUserBalance ? userBalances[field] : ethers.constants.MaxUint256, {
         gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
       })
       .then(response => {

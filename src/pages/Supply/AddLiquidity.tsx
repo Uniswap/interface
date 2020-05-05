@@ -27,7 +27,7 @@ import { useWeb3React, useTokenContract } from '../../hooks'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 
 import { BigNumber } from 'ethers/utils'
-import { ROUTER_ADDRESSES } from '../../constants'
+import { ROUTER_ADDRESS } from '../../constants'
 import { getRouterContract, calculateGasMargin, isWETH } from '../../utils'
 
 // denominated in bips
@@ -139,8 +139,6 @@ function reducer(
 function AddLiquidity({ token0, token1, step = false }) {
   const { account, chainId, library } = useWeb3React()
 
-  const routerAddress: string = ROUTER_ADDRESSES[chainId]
-
   // modal states
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
@@ -174,8 +172,8 @@ function AddLiquidity({ token0, token1, step = false }) {
     pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
 
   // state for amount approvals
-  const inputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.INPUT], routerAddress)
-  const outputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.OUTPUT], routerAddress)
+  const inputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.INPUT], ROUTER_ADDRESS)
+  const outputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.OUTPUT], ROUTER_ADDRESS)
   const [showInputApprove, setShowInputApprove] = useState<boolean>(false)
   const [showOutputApprove, setShowOutputApprove] = useState<boolean>(false)
 
@@ -470,16 +468,16 @@ function AddLiquidity({ token0, token1, step = false }) {
     let useUserBalance = false
     const tokenContract = field === Field.INPUT ? tokenContractInput : tokenContractOutput
 
-    estimatedGas = await tokenContract.estimate.approve(routerAddress, ethers.constants.MaxUint256).catch(e => {
+    estimatedGas = await tokenContract.estimate.approve(ROUTER_ADDRESS, ethers.constants.MaxUint256).catch(e => {
       console.log('Error setting max token approval.')
     })
     if (!estimatedGas) {
       // general fallback for tokens who restrict approval amounts
-      estimatedGas = await tokenContract.estimate.approve(routerAddress, userBalances[field])
+      estimatedGas = await tokenContract.estimate.approve(ROUTER_ADDRESS, userBalances[field])
       useUserBalance = true
     }
     tokenContract
-      .approve(routerAddress, useUserBalance ? userBalances[field] : ethers.constants.MaxUint256, {
+      .approve(ROUTER_ADDRESS, useUserBalance ? userBalances[field] : ethers.constants.MaxUint256, {
         gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
       })
       .then(response => {
