@@ -50,12 +50,12 @@ function CreatePool({ history }) {
   } else
     return (
       <AutoColumn gap="20px">
-        <BlueCard>
+        {/* <BlueCard>
           <AutoColumn gap="10px">
             <TYPE.blue>{'Step ' + step + '.'} </TYPE.blue>
             {step === 1 && <TYPE.blue fontWeight={400}>Select or add a second token to continue.</TYPE.blue>}
           </AutoColumn>
-        </BlueCard>
+        </BlueCard> */}
         <AutoColumn gap="24px">
           {!token0Address ? (
             <ButtonDropwdown

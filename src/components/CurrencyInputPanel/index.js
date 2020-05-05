@@ -19,7 +19,7 @@ import { ThemeContext } from 'styled-components'
 const InputRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  padding: 0.75rem 0.5rem 0.75rem 1rem;
+  padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
 `
 
 const CurrencySelect = styled.button`
@@ -151,7 +151,7 @@ export default function CurrencyInputPanel({
   hideInput = false,
   showSendWithSwap = false,
   otherSelectedTokenAddress = null,
-  simplified = false
+  advanced = false
 }) {
   const { t } = useTranslation()
 
@@ -163,7 +163,11 @@ export default function CurrencyInputPanel({
   return (
     <InputPanel>
       <Container error={!!error} hideInput={hideInput}>
-        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} hideInput={hideInput}>
+        <InputRow
+          style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}
+          hideInput={hideInput}
+          selected={disableTokenSelect}
+        >
           {!hideInput && (
             <>
               <NumericalInput
@@ -172,7 +176,7 @@ export default function CurrencyInputPanel({
                   onUserInput(field, val)
                 }}
               />
-              {!simplified && !!token?.address && !atMax && type !== 'OUTPUT' && (
+              {!advanced && !!token?.address && !atMax && type !== 'OUTPUT' && (
                 <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
               )}
             </>
@@ -205,14 +209,9 @@ export default function CurrencyInputPanel({
             </Aligner>
           </CurrencySelect>
         </InputRow>
-        {simplified && !hideBalance && !!token && (
+        {advanced && !hideBalance && !!token && userTokenBalance && (
           <LabelRow>
             <RowBetween onClick={onMax}>
-              {/* {!!token?.address && !atMax && type !== 'OUTPUT' ? (
-                <StyledBalanceMaxMini>Max</StyledBalanceMaxMini>
-              ) : (
-                <TYPE.body color={'#888D9B'}>Balance</TYPE.body>
-              )} */}
               {!!token?.address &&
                 (type !== 'OUTPUT' ? (
                   <StyledBalanceMaxMini active={!atMax}>Max</StyledBalanceMaxMini>
@@ -221,8 +220,8 @@ export default function CurrencyInputPanel({
                 ))}
 
               <div>
-                <TYPE.body color={theme.text2} fontWeight={500} fontSize={14} style={{ display: 'inline' }}>
-                  Balance: {account ? userTokenBalance?.toSignificant(6) : 'Connect to see balances'}
+                <TYPE.body color={theme.text2} fontWeight={500} fontSize={16} style={{ display: 'inline' }}>
+                  Balance: {account ? userTokenBalance?.toSignificant(6) : '-'}
                 </TYPE.body>
               </div>
               {/* <ErrorSpan data-tip={'Enter max'} error={!!error} onClick={() => {}}></ErrorSpan> */}

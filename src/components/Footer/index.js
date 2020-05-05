@@ -5,45 +5,23 @@ import { darken, transparentize } from 'polished'
 import Toggle from 'react-switch'
 
 import { Link } from '../../theme'
+import { ButtonSecondary } from '../Button'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
+import { useWeb3React } from '../../hooks'
+import { useUserAdvanced, useToggleUserAdvanced } from '../../contexts/Application'
+import { Eye, EyeOff, Send } from 'react-feather'
 
 const FooterFrame = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   width: 100%;
-`
-
-const FooterElement = styled.div`
-  margin: 1.25rem;
-  display: flex;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-`
-
-const Title = styled.div`
-  display: flex;
-  align-items: center;
-  color: ${({ theme }) => theme.pink1};
-
-  :hover {
-    cursor: pointer;
-  }
-  #link {
-    text-decoration-color: ${({ theme }) => theme.pink1};
-  }
-
-  #title {
-    display: inline;
-    font-size: 0.825rem;
-    margin-right: 12px;
-    font-weight: 400;
-    color: ${({ theme }) => theme.pink1};
-    :hover {
-      color: ${({ theme }) => darken(0.2, theme.pink1)};
-    }
-  }
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
 `
 
 const StyledToggle = styled(Toggle)`
@@ -73,10 +51,30 @@ const EmojiToggle = styled.span`
 
 export default function Footer() {
   const [isDark, toggleDarkMode] = useDarkModeManager()
+  const { account, chainId } = useWeb3React()
+  const toggleAdvanced = useToggleUserAdvanced()
+  const advanced = useUserAdvanced()
 
   return (
     <FooterFrame>
-      <FooterElement>
+      {account && (
+        <ButtonSecondary
+          style={{ padding: '6px 8px', marginRight: '8px', width: 'fit-content' }}
+          onClick={toggleAdvanced}
+        >
+          <Eye size={16} style={{ marginRight: '8px' }} /> Expert view
+        </ButtonSecondary>
+      )}
+      <ButtonSecondary
+        style={{
+          padding: ' 8px 12px',
+          marginRight: '0px',
+          width: 'fit-content'
+        }}
+      >
+        <Send size={16} style={{ marginRight: '8px' }} /> Feedback
+      </ButtonSecondary>
+      {/* <FooterElement>
         <Title>
           <Link id="link" href="https://uniswap.io/">
             <h1 id="title">About</h1>
@@ -94,13 +92,11 @@ export default function Footer() {
         checked={!isDark}
         uncheckedIcon={
           <EmojiToggle role="img" aria-label="moon">
-            {/* eslint-disable-line jsx-a11y/accessible-emoji */}
             🌙️
           </EmojiToggle>
         }
         checkedIcon={
           <EmojiToggle role="img" aria-label="sun">
-            {/* eslint-disable-line jsx-a11y/accessible-emoji */}
             {'☀️'}
           </EmojiToggle>
         }
@@ -112,7 +108,7 @@ export default function Footer() {
           })
           toggleDarkMode()
         }}
-      />
+      /> */}
     </FooterFrame>
   )
 }

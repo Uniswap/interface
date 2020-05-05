@@ -34,7 +34,7 @@ import QuestionHelper from '../Question'
 const TokenModalInfo = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  padding: 1rem 1.5rem;
+  padding: 1rem 1rem;
   margin: 0.25rem 0.5rem;
   justify-content: center;
   user-select: none;

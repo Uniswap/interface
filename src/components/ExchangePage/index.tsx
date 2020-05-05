@@ -20,8 +20,8 @@ import { Text } from 'rebass'
 import { theme, TYPE, Hover } from '../../theme'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
-import { ArrowDown, ChevronDown, ChevronUp } from 'react-feather'
-import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
+import { ArrowDown, ChevronDown, ChevronUp, Repeat, Eye, EyeOff } from 'react-feather'
+import { ButtonPrimary, ButtonError, ButtonLight, ButtonSecondary } from '../Button'
 import Card, { GreyCard, BlueCard, YellowCard } from '../../components/Card'
 
 import { usePair } from '../../contexts/Pairs'
@@ -31,7 +31,7 @@ import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWeb3React, useTokenContract } from '../../hooks'
 import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
-import { useUserAdvanced } from '../../contexts/Application'
+import { useUserAdvanced, useToggleUserAdvanced } from '../../contexts/Application'
 import { ROUTER_ADDRESSES } from '../../constants'
 import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEtherscanLink, isWETH } from '../../utils'
 import { useLocalStorageTokens } from '../../contexts/LocalStorage'
@@ -79,7 +79,7 @@ const AdvancedDropwdown = styled.div`
 const SectionBreak = styled.div`
   height: 1px;
   width: 100%;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.bg3};
 `
 
 const BottomGrouping = styled.div`
@@ -132,20 +132,31 @@ const MaxButton = styled.button`
 
 const StyledBalanceMaxMini = styled.button`
   height: 24px;
-  background-color: ${({ theme }) => theme.blue5};
-  border: 1px solid ${({ theme }) => theme.blue5};
+  background-color: ${({ theme }) => theme.bg2};
+  /* border: 1px solid ${({ theme }) => theme.blue5}; */
+  border: none;
   border-radius: 0.5rem;
   font-size: 0.875rem;
   font-weight: 400;
-  margin-left: 8px;
+  /* padding: 0px; */
+  margin-left: 6px;
   cursor: pointer;
-  color: ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.text2};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  float: right;
+  /* padding: 2px; */
 
   :hover {
-    border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.blue4)};
+    background-color: ${({ theme }) => theme.bg3};
+
+    /* border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.blue4)}; */
   }
   :focus {
-    border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.blue4)};
+    background-color: ${({ theme }) => theme.bg3};
+    /* border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.blue4)}; */
     outline: none;
   }
 `
@@ -299,9 +310,6 @@ function ExchangePage({ sendingInput = false, history, params }) {
 
   const { chainId, account, library } = useWeb3React()
   const routerAddress: string = ROUTER_ADDRESSES[chainId]
-
-  const simplified = useUserAdvanced()
-
   // adding notifications on txns
   const addTransaction = useTransactionAdder()
 
@@ -779,6 +787,9 @@ function ExchangePage({ sendingInput = false, history, params }) {
   const ignoreOutput: boolean = sending ? !sendingWithSwap : false
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
+  const toggleadvanced = useToggleUserAdvanced()
+  const advanced = useUserAdvanced()
+
   useEffect(() => {
     // reset errors
     setGeneralError(null)
@@ -973,13 +984,13 @@ function ExchangePage({ sendingInput = false, history, params }) {
           </RowBetween>
           <AutoColumn justify="flex-start" gap="sm" padding={'20px 0 0 0px'}>
             {independentField === Field.INPUT ? (
-              <TYPE.italic textAlign="left" style={{ width: '100%' }}>
+              <TYPE.italic textAlign="left" style={{ width: '100%', paddingTop: '.5rem' }}>
                 {`Output is estimated. You will receive at least ${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(
                   6
                 )} ${tokens[Field.OUTPUT]?.symbol}  or the transaction will revert.`}
               </TYPE.italic>
             ) : (
-              <TYPE.italic textAlign="left" style={{ width: '100%' }}>
+              <TYPE.italic textAlign="left" style={{ width: '100%', paddingTop: '.5rem' }}>
                 {`Input is estimated. You will sell at most ${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} ${
                   tokens[Field.INPUT]?.symbol
                 }  or the transaction will revert.`}
@@ -1009,12 +1020,16 @@ function ExchangePage({ sendingInput = false, history, params }) {
         <>
           <AutoColumn gap="0px">
             {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-              <RowBetween align="center">
+              <RowBetween align="center" justify="center">
                 <Text fontWeight={400} fontSize={14} color={theme().text1}>
-                  Price{' '}
-                  <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>Invert</StyledBalanceMaxMini>
+                  Price
                 </Text>
-                <Text fontWeight={500} fontSize={14} color={theme().text1}>
+                <Text
+                  fontWeight={500}
+                  fontSize={14}
+                  color={theme().text1}
+                  style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
+                >
                   {pair && showInverted
                     ? route.midPrice.invert().toSignificant(6) +
                       ' ' +
@@ -1026,6 +1041,9 @@ function ExchangePage({ sendingInput = false, history, params }) {
                       tokens[Field.OUTPUT]?.symbol +
                       ' / ' +
                       tokens[Field.INPUT]?.symbol}
+                  <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
+                    <Repeat size={14} />
+                  </StyledBalanceMaxMini>
                 </Text>
               </RowBetween>
             )}
@@ -1091,11 +1109,13 @@ function ExchangePage({ sendingInput = false, history, params }) {
             </RowBetween>
           </AutoColumn>
 
-          <ButtonError onClick={onSwap} error={!!warningHigh} style={{ margin: '10px 0 0 0' }}>
-            <Text fontSize={20} fontWeight={500}>
-              {warningHigh ? (sending ? 'Send Anyway' : 'Swap Anyway') : sending ? 'Confirm Send' : 'Confirm Swap'}
-            </Text>
-          </ButtonError>
+          <AutoRow>
+            <ButtonError onClick={onSwap} error={!!warningHigh} style={{ margin: '10px 0 0 0' }}>
+              <Text fontSize={20} fontWeight={500}>
+                {warningHigh ? (sending ? 'Send Anyway' : 'Swap Anyway') : sending ? 'Confirm Send' : 'Confirm Swap'}
+              </Text>
+            </ButtonError>
+          </AutoRow>
         </>
       )
     }
@@ -1105,25 +1125,25 @@ function ExchangePage({ sendingInput = false, history, params }) {
     return (
       <AutoRow justify="space-between">
         <AutoColumn justify="center">
-          <Text fontWeight={500} fontSize={14} color={theme().text2}>
+          <Text fontWeight={500} fontSize={16} color={theme().text2}>
             {pair ? `${route.midPrice.toSignificant(6)} ` : '-'}
           </Text>
-          <Text fontWeight={500} fontSize={14} color={theme().text3} pt={1}>
+          <Text fontWeight={500} fontSize={16} color={theme().text3} pt={1}>
             {tokens[Field.OUTPUT]?.symbol} / {tokens[Field.INPUT]?.symbol}
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
-          <Text fontWeight={500} fontSize={14} color={theme().text2}>
+          <Text fontWeight={500} fontSize={16} color={theme().text2}>
             {pair ? `${route.midPrice.invert().toSignificant(6)} ` : '-'}
           </Text>
-          <Text fontWeight={500} fontSize={14} color={theme().text3} pt={1}>
+          <Text fontWeight={500} fontSize={16} color={theme().text3} pt={1}>
             {tokens[Field.INPUT]?.symbol} / {tokens[Field.OUTPUT]?.symbol}
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
           <ErrorText
             fontWeight={500}
-            fontSize={14}
+            fontSize={16}
             warningLow={warningLow}
             warningMedium={warningMedium}
             warningHigh={warningHigh}
@@ -1134,7 +1154,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 : priceSlippage.toFixed(4) + '%'
               : '-'}
           </ErrorText>
-          <Text fontWeight={500} fontSize={14} color={theme().text3} pt={1}>
+          <Text fontWeight={500} fontSize={16} color={theme().text3} pt={1}>
             Price Impact
           </Text>
         </AutoColumn>
@@ -1191,7 +1211,6 @@ function ExchangePage({ sendingInput = false, history, params }) {
         bottomContent={modalBottom}
         pendingText={pendingText}
       />
-
       {sending && !sendingWithSwap && (
         <>
           <InputGroup gap="lg" justify="center">
@@ -1220,13 +1239,12 @@ function ExchangePage({ sendingInput = false, history, params }) {
               hideBalance={true}
               hideInput={true}
               showSendWithSwap={true}
-              simplified={simplified}
+              advanced={advanced}
               otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
             />
           </InputGroup>
         </>
       )}
-
       <AutoColumn gap={'md'}>
         {(!sending || sendingWithSwap) && (
           <>
@@ -1237,7 +1255,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
               token={tokens[Field.INPUT]}
               error={inputError}
               pair={pair}
-              simplified={simplified}
+              advanced={advanced}
               onUserInput={onUserInput}
               onMax={() => {
                 maxAmountInput && onMaxInput(maxAmountInput.toExact())
@@ -1282,7 +1300,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
               onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
               error={outputError}
               pair={pair}
-              simplified={simplified}
+              advanced={advanced}
               otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
             />
             {sendingWithSwap && (
@@ -1316,18 +1334,22 @@ function ExchangePage({ sendingInput = false, history, params }) {
           </AutoColumn>
         )}
         {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-          <Card padding={simplified ? '.25rem 1rem 0 1rem' : '.25rem 1rem 0 1rem'} borderRadius={'20px'}>
-            {simplified ? (
+          <Card padding={advanced ? '.25rem .75rem 0 .75rem' : '.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
+            {advanced ? (
               <PriceBar />
             ) : (
               <AutoColumn style={{ cursor: 'pointer' }} gap="sm">
                 {' '}
-                <RowBetween align="center">
+                <RowBetween align="center" justify="center">
                   <Text fontWeight={500} fontSize={16} color={theme().text2}>
-                    Price{' '}
-                    <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>Invert</StyledBalanceMaxMini>
+                    Price
                   </Text>
-                  <Text fontWeight={500} fontSize={16} color={theme().text2}>
+                  <Text
+                    fontWeight={500}
+                    fontSize={16}
+                    color={theme().text2}
+                    style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
+                  >
                     {pair && showInverted
                       ? route.midPrice.invert().toSignificant(6) +
                         ' ' +
@@ -1339,6 +1361,9 @@ function ExchangePage({ sendingInput = false, history, params }) {
                         tokens[Field.OUTPUT]?.symbol +
                         ' / ' +
                         tokens[Field.INPUT]?.symbol}
+                    <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
+                      <Repeat size={14} />
+                    </StyledBalanceMaxMini>
                   </Text>
                 </RowBetween>
                 {pair && (warningHigh || warningMedium) && (
@@ -1543,18 +1568,18 @@ function ExchangePage({ sendingInput = false, history, params }) {
                   </AutoColumn>
                 </YellowCard>
               )}
-              <BalanceCard
+              {/* <BalanceCard
                 token0={tokens[Field.INPUT]}
                 token1={tokens[Field.OUTPUT]}
                 import0={importedTokenInput}
                 balance0={userBalances[Field.INPUT]}
                 balance1={userBalances[Field.OUTPUT]}
                 import1={importedTokenOutput}
-              />
+              /> */}
             </AutoColumn>
           </FixedBottom>
         </AdvancedDropwdown>
-      )}
+      )}{' '}
     </Wrapper>
   )
 }

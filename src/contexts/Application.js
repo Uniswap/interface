@@ -61,7 +61,7 @@ export default function Provider({ children }) {
     [POPUP_LIST]: [],
     [POPUP_KEY]: 0,
     [WALLET_MODAL_OPEN]: false,
-    [USER_ADVANCED]: true
+    [USER_ADVANCED]: false
   })
 
   const updateBlockNumber = useCallback((networkId, blockNumber) => {

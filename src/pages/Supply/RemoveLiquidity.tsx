@@ -50,6 +50,7 @@ const ClickableText = styled(Text)`
   :hover {
     cursor: pointer;
   }
+  color: ${({ theme }) => theme.blue1};
 `
 
 // const CustomNumericalInput = styled(NumericalInput)`
@@ -605,7 +606,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
                 onClick={() => {
                   setShowAdvanced(!showAdvanced)
                 }}
-                color="#2172E5"
               >
                 {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
               </ClickableText>

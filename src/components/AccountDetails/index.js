@@ -15,13 +15,13 @@ import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
 import Identicon from '../Identicon'
 
-import { ButtonLight } from '../Button'
+import { ButtonEmpty } from '../Button'
 
 import { Link, TYPE } from '../../theme'
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  padding: 1.5rem 1.5rem;
+  padding: 1rem 1rem;
   font-weight: 500;
   color: ${props => (props.color === 'blue' ? ({ theme }) => theme.blue1 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -75,7 +75,7 @@ const AccountGroupingRow = styled.div`
 
 const AccountSection = styled.div`
   background-color: ${({ theme }) => theme.bg1};
-  padding: 0rem 1.5rem;
+  padding: 0rem 1rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1rem 1rem;`};
 `
 
@@ -337,15 +337,16 @@ export default function AccountDetails({
 
           {!(isMobile && (window.web3 || window.ethereum)) && (
             <ConnectButtonRow>
-              <ButtonLight
-                padding={'8px 12px'}
-                width={240}
+              <ButtonEmpty
+                style={{ fontWeight: '400' }}
+                padding={'px 12px'}
+                width={260}
                 onClick={() => {
                   openOptions()
                 }}
               >
                 Connect to a different wallet
-              </ButtonLight>
+              </ButtonEmpty>
             </ConnectButtonRow>
           )}
         </AccountSection>

@@ -43,7 +43,7 @@ const Wrapper = styled.div`
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  padding: 1.5rem 1.5rem;
+  padding: 1rem 1rem;
   font-weight: 500;
   color: ${props => (props.color === 'blue' ? ({ theme }) => theme.blue1 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`

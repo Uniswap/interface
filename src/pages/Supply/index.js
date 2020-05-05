@@ -63,11 +63,14 @@ function Supply({ history }) {
   return (
     <AutoColumn gap="lg" justify="center">
       <ButtonPrimary
+        padding="16px"
         onClick={() => {
           setShowPoolSearch(true)
         }}
       >
-        <Text fontSize={20}>Join {filteredExchangeList?.length > 0 ? 'another' : 'a'} pool</Text>
+        <Text fontWeight={500} fontSize={20}>
+          Join {filteredExchangeList?.length > 0 ? 'another' : 'a'} pool
+        </Text>
       </ButtonPrimary>
       <Positions>
         <AutoColumn gap="12px">
@@ -84,7 +87,7 @@ function Supply({ history }) {
             </LightCard>
           )}
           {filteredExchangeList}
-          <Text color="#AEAEAE" textAlign="center" style={{ padding: '.5rem 0 .5rem 0' }}>
+          <Text textAlign="center" style={{ padding: '.5rem 0 .5rem 0' }}>
             {filteredExchangeList?.length !== 0 ? `Don't see a pool you joined? ` : 'Already joined a pool? '}{' '}
             <Link
               onClick={() => {
