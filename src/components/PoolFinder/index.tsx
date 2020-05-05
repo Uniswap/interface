@@ -136,11 +136,8 @@ function PoolFinder({ history }) {
           </ButtonDropwdownLight>
         )}
         {allowImport && (
-          <ColumnCenter
-            justify="center"
-            style={{ backgroundColor: '#EBF4FF', padding: '12px 0px', borderRadius: '12px' }}
-          >
-            <Text textAlign="center" fontWeight={500} color="#2172E5">
+          <ColumnCenter justify="center" style={{ backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}>
+            <Text textAlign="center" fontWeight={500} color="">
               {newLiquidity ? 'Pool Found!' : 'Pool already imported.'}
             </Text>
           </ColumnCenter>

@@ -138,9 +138,6 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
               </Text>
             </RowFixed>
             <RowFixed>
-              <Text fontWeight={500} fontSize={20}>
-                {userPoolBalance ? userPoolBalance.toFixed(6) : '-'}
-              </Text>
               {showMore ? (
                 <ChevronUp size="20" style={{ marginLeft: '10px' }} />
               ) : (
@@ -186,7 +183,17 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
               {!minimal && (
                 <FixedHeightRow>
                   <Text color="#888D9B" fontSize={16} fontWeight={500}>
-                    Your pool share:
+                    Your pool tokens:
+                  </Text>
+                  <Text color="#888D9B" fontSize={16} fontWeight={500}>
+                    {userPoolBalance ? userPoolBalance.toFixed(6) : '-'}
+                  </Text>
+                </FixedHeightRow>
+              )}
+              {!minimal && (
+                <FixedHeightRow>
+                  <Text color="#888D9B" fontSize={16} fontWeight={500}>
+                    Your pool share
                   </Text>
                   <Text color="#888D9B" fontSize={16} fontWeight={500}>
                     {poolTokenPercentage ? poolTokenPercentage.toFixed(2) + '%' : '-'}

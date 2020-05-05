@@ -19,6 +19,7 @@ import { ArrowLeft, X } from 'react-feather'
 import { CloseIcon } from '../../theme/components'
 import { ColumnCenter } from '../../components/Column'
 import Card from '../../components/Card'
+import { ButtonPrimary } from '../../components/Button'
 import { Spinner, TYPE } from '../../theme'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 
@@ -34,7 +35,7 @@ import QuestionHelper from '../Question'
 const TokenModalInfo = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  padding: 1rem 1.5rem;
+  padding: 1rem 1rem;
   margin: 0.25rem 0.5rem;
   justify-content: center;
   user-select: none;
@@ -348,7 +349,7 @@ function SearchModal({
       filteredPairList.map((pairAddress, i) => {
         const token0 = allTokens[allPairs[pairAddress].token0]
         const token1 = allTokens[allPairs[pairAddress].token1]
-        const balance = allBalances?.[account]?.[pairAddress]?.toSignificant(6)
+        // const balance = allBalances?.[account]?.[pairAddress]?.toSignificant(6)
         return (
           <MenuItem
             key={i}
@@ -361,9 +362,20 @@ function SearchModal({
               <DoubleTokenLogo a0={token0?.address || ''} a1={token1?.address || ''} size={24} margin={true} />
               <Text fontWeight={500} fontSize={16}>{`${token0?.symbol}/${token1?.symbol}`}</Text>
             </RowFixed>
-            <Text fontWeight={500} fontSize={16}>
+            {/* <Text fontWeight={500} fontSize={16}>
               {balance ? balance.toString() : '-'}
-            </Text>
+            </Text> */}
+            <ButtonPrimary
+              padding={'6px 8px'}
+              width={'56px'}
+              borderRadius={'12px'}
+              onClick={() => {
+                history.push('/add/' + token0.address + '-' + token1.address)
+                onDismiss()
+              }}
+            >
+              Join
+            </ButtonPrimary>
           </MenuItem>
         )
       })
@@ -494,7 +506,7 @@ function SearchModal({
     }
   }
 
-  const Filter = ({ title, filter }) => {
+  const Filter = ({ title, filter, filterType }) => {
     return (
       <FilterWrapper
         onClick={() => {
@@ -506,7 +518,7 @@ function SearchModal({
         <Text fontSize={14} fontWeight={500}>
           {title}
         </Text>
-        {filter === activeFilter && (
+        {filter === activeFilter && filterType === 'tokens' && (
           <Text fontSize={14} fontWeight={500}>
             {sortDirection ? '↓' : '↑'}
           </Text>
@@ -596,9 +608,13 @@ function SearchModal({
             )}
             <RowBetween>
               <Text fontSize={14} fontWeight={500}>
-                Token Name
+                {filterType === 'tokens' ? 'Token Name' : 'Pool Name'}
               </Text>
-              <Filter title="Your Balances" filter={FILTERS.BALANCES} />
+              <Filter
+                title={filterType === 'tokens' ? 'Your Balances' : ' '}
+                filter={FILTERS.BALANCES}
+                filterType={filterType}
+              />
             </RowBetween>
           </PaddedColumn>
         )}

@@ -68,7 +68,7 @@ export const theme = darkMode => ({
   blue3: darkMode ? '#4D8FEA' : '#165BBB',
   // blue5: '#EBF4FF',
   // blue4: '#C4D9F8',
-  blue4: '#FDEAF1',
+  blue4: '#F6DDE8',
   blue5: '#FDEAF1',
 
   // pinks
@@ -172,15 +172,12 @@ export const TYPE = {
 }
 
 export const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@531&display=swap');
-  html { 
-    font-family: 'Inter', sans-serif; 
-    letter-spacing: -0.018em;
-    /* font-feature-settings: 'cv01', 'cv02', 'cv03', 'cv04'; */
-    }
-  @supports (font-variation-settings: normal) {
-    html { font-family: 'Inter var', sans-serif; }
-  }
+@import url('https://rsms.me/inter/inter.css');
+html { font-family: 'Inter', sans-serif; letter-spacing: -0.018em;}
+@supports (font-variation-settings: normal) {
+  html { font-family: 'Inter var', sans-serif; }
+}
+
   
   html,
   body {

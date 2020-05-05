@@ -13,23 +13,20 @@ import { YellowCard, GreyCard } from '../Card'
 import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useWalletModalToggle } from '../../contexts/Application'
-import { useUserAdvanced, useToggleUserAdvanced } from '../../contexts/Application'
-import { Eye, EyeOff, Send } from 'react-feather'
-
-import { ButtonSecondary } from '../Button'
 
 import Logo from '../../assets/svg/logo.svg'
 import Wordmark from '../../assets/svg/wordmark.svg'
 import { AutoColumn } from '../Column'
+import { RowBetween } from '../Row'
 
 const HeaderFrame = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-direction: column;
   width: 100%;
-  /* position: absolute; */
-  padding: 1rem 1rem;
-  width: calc(100% - 2rem);
+  top: 0;
+  position: absolute;
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     padding: 10px;
@@ -98,8 +95,11 @@ const Alpha = styled(GreyCard)`
   width: fit-content;
   margin-right: 10px;
   border-radius: 12px;
-  padding: 8px 12px;
-  color: ${({ theme }) => theme.text2};
+  padding: 3px 7px;
+  background-color: ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.white};
+  font-size: 12px;
+  font-weight: 600;
 `
 
 const UniIcon = styled(Link)`
@@ -108,32 +108,13 @@ const UniIcon = styled(Link)`
     transform: rotate(-5deg);
   }
 `
-const StyledRed = styled.div`
-  width: 100%;
-  height: 150vh;
-  border-radius: 10vw;
-  background: ${({ theme }) => `radial-gradient(50% 50% at 50% 50%, ${theme.pink2} 0%, ${theme.white} 100%)`};
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  opacity: 0.1;
-  z-index: -1;
-
-  transform: translateY(-70vh);
-
-  @media (max-width: 960px) {
-    height: 300px;
-    width: 100%;
-    transform: translateY(-150px);
-  }
-`
 
 const MigrateBanner = styled(AutoColumn)`
   width: 100%;
   padding: 12px 0;
   display: flex;
   justify-content: center;
-  background-color: rgba(255, 0, 122, 0.1);
+  background-color: ${({ theme }) => theme.blue4};
   color: ${({ theme }) => theme.pink2};
   font-weight: 500;
   text-align: center;
@@ -147,18 +128,21 @@ export default function Header() {
 
   const userEthBalance = useAddressBalance(account, WETH[chainId])
   const toggleWalletModal = useWalletModalToggle()
-  const toggleSimplified = useToggleUserAdvanced()
-  const advanced = useUserAdvanced()
 
   return (
-    <AutoColumn style={{ width: '100vw' }}>
+    <HeaderFrame>
       <MigrateBanner>
-        <StyledRed />
-        <b>Uniswap V2 is live.&nbsp;</b> Move your liquidity now using the&nbsp;
-        <a href="https://migrate.uniswap.exchange/">migration helper</a>&nbsp; or read the&nbsp;
-        <a href="https://uniswap.org/blog/uniswap-v2/">announcement </a>
+        {/* <b>Uniswap V2 is live.&nbsp;</b> Move your liquidity now using the&nbsp; */}
+        <b>Testnet only.</b>&nbsp;Uniswap V2 has not been launched and is coming soon.&nbsp;Read the&nbsp;
+        {/* <Link href="https://migrate.uniswap.exchange/">
+          <b>migration helper</b>
+        </Link>
+        &nbsp;or read the&nbsp; */}
+        <Link href="https://uniswap.org/blog/uniswap-v2/">
+          <b>blog post ↗</b>
+        </Link>
       </MigrateBanner>
-      <HeaderFrame>
+      <RowBetween padding="1rem">
         <HeaderElement>
           <Title>
             <UniIcon id="link" href="/">
@@ -171,30 +155,10 @@ export default function Header() {
                 </Link>
               </TitleText>
             )}
-            <TestnetWrapper>{!isMobile && <Alpha>1.0.0-alpha</Alpha>}</TestnetWrapper>
           </Title>
+          <TestnetWrapper>{!isMobile && <Alpha>V2</Alpha>}</TestnetWrapper>
         </HeaderElement>
         <HeaderElement>
-          <ButtonSecondary
-            style={{
-              padding: ' 8px 12px',
-              marginRight: '0px',
-              width: 'fit-content',
-              position: 'fixed',
-              right: '1rem',
-              bottom: '1rem'
-            }}
-          >
-            <Send size={16} style={{ marginRight: '8px' }} /> Feeback
-          </ButtonSecondary>
-          <ButtonSecondary
-            style={{ padding: '6px 8px', marginRight: '0px', width: 'fit-content' }}
-            onClick={toggleSimplified}
-          >
-            {' '}
-            {advanced ? <EyeOff size={20} /> : <Eye size={20} />}
-          </ButtonSecondary>
-
           <TestnetWrapper>
             {!isMobile && chainId === 4 && <NetworkCard>Rinkeby</NetworkCard>}
             {!isMobile && chainId === 3 && <NetworkCard>Ropsten</NetworkCard>}
@@ -204,7 +168,7 @@ export default function Header() {
           <AccountElement active={!!account}>
             {account ? (
               <Row style={{ marginRight: '-1.25rem', paddingRight: '1.75rem' }}>
-                <Text fontWeight={400}> {userEthBalance && userEthBalance?.toFixed(4) + ' ETH'}</Text>
+                <Text fontWeight={500}> {userEthBalance && userEthBalance?.toFixed(4) + ' ETH'}</Text>
               </Row>
             ) : (
               ''
@@ -214,7 +178,8 @@ export default function Header() {
 
           <Menu />
         </HeaderElement>
-      </HeaderFrame>
-    </AutoColumn>
+      </RowBetween>
+    </HeaderFrame>
+    // </AutoColumn>
   )
 }

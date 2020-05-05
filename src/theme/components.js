@@ -47,6 +47,10 @@ export const Link = styled.a.attrs({
   color: ${({ theme }) => theme.blue1};
   font-weight: 500;
 
+  :hover {
+    text-decoration: underline;
+  }
+
   :focus {
     outline: none;
     text-decoration: underline;

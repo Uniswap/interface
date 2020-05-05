@@ -1,118 +1,38 @@
 import React from 'react'
-import ReactGA from 'react-ga'
 import styled from 'styled-components'
-import { darken, transparentize } from 'polished'
-import Toggle from 'react-switch'
+import { Send } from 'react-feather'
+import { Link } from '../../theme/components'
 
-import { Link } from '../../theme'
-import { useDarkModeManager } from '../../contexts/LocalStorage'
+import { ButtonSecondary } from '../Button'
 
 const FooterFrame = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   width: 100%;
-`
-
-const FooterElement = styled.div`
-  margin: 1.25rem;
-  display: flex;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-`
-
-const Title = styled.div`
-  display: flex;
-  align-items: center;
-  color: ${({ theme }) => theme.pink1};
-
-  :hover {
-    cursor: pointer;
-  }
-  #link {
-    text-decoration-color: ${({ theme }) => theme.pink1};
-  }
-
-  #title {
-    display: inline;
-    font-size: 0.825rem;
-    margin-right: 12px;
-    font-weight: 400;
-    color: ${({ theme }) => theme.pink1};
-    :hover {
-      color: ${({ theme }) => darken(0.2, theme.pink1)};
-    }
-  }
-`
-
-const StyledToggle = styled(Toggle)`
-  margin-right: 24px;
-
-  .react-switch-bg[style] {
-    background-color: ${({ theme }) => darken(0.05, theme.bg1)} !important;
-    border: 1px solid ${({ theme }) => theme.bg1} !important;
-  }
-
-  .react-switch-handle[style] {
-    background-color: ${({ theme }) => theme.bg1};
-    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.93, theme.shadow1)};
-    border: 1px solid ${({ theme }) => theme.bg3};
-    border-color: ${({ theme }) => theme.bg3} !important;
-    top: 2px !important;
-  }
-`
-
-const EmojiToggle = styled.span`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  font-family: Arial sans-serif;
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
 `
 
 export default function Footer() {
-  const [isDark, toggleDarkMode] = useDarkModeManager()
-
   return (
     <FooterFrame>
-      <FooterElement>
-        <Title>
-          <Link id="link" href="https://uniswap.io/">
-            <h1 id="title">About</h1>
-          </Link>
-          <Link id="link" href="https://docs.uniswap.io/">
-            <h1 id="title">Docs</h1>
-          </Link>
-          <Link id="link" href="https://github.com/Uniswap">
-            <h1 id="title">Code</h1>
-          </Link>
-        </Title>
-      </FooterElement>
-
-      <StyledToggle
-        checked={!isDark}
-        uncheckedIcon={
-          <EmojiToggle role="img" aria-label="moon">
-            {/* eslint-disable-line jsx-a11y/accessible-emoji */}
-            🌙️
-          </EmojiToggle>
-        }
-        checkedIcon={
-          <EmojiToggle role="img" aria-label="sun">
-            {/* eslint-disable-line jsx-a11y/accessible-emoji */}
-            {'☀️'}
-          </EmojiToggle>
-        }
-        onChange={() => {
-          ReactGA.event({
-            category: 'Advanced Interaction',
-            action: 'Toggle Theme',
-            label: isDark ? 'Light' : 'Dark'
-          })
-          toggleDarkMode()
+      <ButtonSecondary
+        style={{
+          padding: ' 8px 12px',
+          marginRight: '0px',
+          width: 'fit-content'
         }}
-      />
+        href="https://forms.gle/DaLuqvJsVhVaAM3J9"
+      >
+        <Link href="https://forms.gle/DaLuqvJsVhVaAM3J9">
+          <Send size={16} style={{ marginRight: '8px' }} /> Feedback
+        </Link>
+      </ButtonSecondary>
     </FooterFrame>
   )
 }
