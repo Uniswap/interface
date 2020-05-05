@@ -27,7 +27,7 @@ import { usePair, useTotalSupply } from '../../contexts/Pairs'
 
 import { BigNumber } from 'ethers/utils'
 import { splitSignature } from '@ethersproject/bytes'
-import { ROUTER_ADDRESSES } from '../../constants'
+import { ROUTER_ADDRESS } from '../../constants'
 import { getRouterContract, calculateGasMargin } from '../../utils'
 
 // denominated in seconds
@@ -151,7 +151,6 @@ const ConfirmedText = styled(Text)`
 
 export default function RemoveLiquidity({ token0, token1 }) {
   const { account, chainId, library } = useWeb3React()
-  const routerAddress: string = ROUTER_ADDRESSES[chainId]
 
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [showAdvanced, setShowAdvanced] = useState<boolean>(false)
@@ -392,7 +391,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
 
     const message = {
       owner: account,
-      spender: routerAddress,
+      spender: ROUTER_ADDRESS,
       value: parsedAmounts[Field.LIQUIDITY].raw.toString(),
       nonce: nonce.toHexString(),
       deadline: newDeadline

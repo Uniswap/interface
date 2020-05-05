@@ -1,21 +1,7 @@
 import { injected, walletconnect, walletlink, fortmatic, portis } from '../connectors'
 import { ChainId, WETH, Token } from '@uniswap/sdk'
 
-export const FACTORY_ADDRESSES = {
-  1: '',
-  3: '0xe2f197885abe8ec7c866cFf76605FD06d4576218',
-  4: '0xe2f197885abe8ec7c866cFf76605FD06d4576218',
-  5: '0xe2f197885abe8ec7c866cFf76605FD06d4576218',
-  42: '0xe2f197885abe8ec7c866cFf76605FD06d4576218'
-}
-
-export const ROUTER_ADDRESSES = {
-  1: '',
-  3: '0xcDbE04934d89e97a24BCc07c3562DC8CF17d8167',
-  4: '0xcDbE04934d89e97a24BCc07c3562DC8CF17d8167',
-  5: '0xcDbE04934d89e97a24BCc07c3562DC8CF17d8167',
-  42: '0xcDbE04934d89e97a24BCc07c3562DC8CF17d8167'
-}
+export const ROUTER_ADDRESS = '0xf164fC0Ec4E93095b804a4795bBe1e041497b92a'
 
 export const COMMON_BASES = {
   1: [WETH[ChainId.MAINNET]],
