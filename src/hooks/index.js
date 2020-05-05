@@ -6,7 +6,7 @@ import copy from 'copy-to-clipboard'
 import ERC20_ABI from '../constants/abis/erc20'
 import { injected } from '../connectors'
 import { NetworkContextName } from '../constants'
-import { getContract, getFactoryContract, getExchangeContract, isAddress } from '../utils'
+import { getContract, getExchangeContract, isAddress } from '../utils'
 
 export function useWeb3React() {
   const context = useWeb3ReactCore()
@@ -195,19 +195,6 @@ export function useTokenContract(tokenAddress, withSignerIfPossible = true) {
       return null
     }
   }, [tokenAddress, library, withSignerIfPossible, account])
-}
-
-// returns null on errors
-export function useFactoryContract(withSignerIfPossible = true) {
-  const { chainId, library, account } = useWeb3React()
-
-  return useMemo(() => {
-    try {
-      return getFactoryContract(chainId, library, withSignerIfPossible ? account : undefined)
-    } catch {
-      return null
-    }
-  }, [chainId, library, withSignerIfPossible, account])
 }
 
 export function usePairContract(pairAddress, withSignerIfPossible = true) {
