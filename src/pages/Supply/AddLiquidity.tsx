@@ -677,7 +677,7 @@ function AddLiquidity({ token0, token1, step = false }) {
           value={formattedAmounts[Field.OUTPUT]}
           onUserInput={onUserInput}
           onMax={() => {
-            onMax(maxAmountOutput?.toExact(), Field.OUTPUT)
+            maxAmountOutput && onMax(maxAmountOutput?.toExact(), Field.OUTPUT)
           }}
           atMax={atMaxAmountOutput}
           token={tokens[Field.OUTPUT]}

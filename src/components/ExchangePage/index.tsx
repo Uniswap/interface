@@ -1426,7 +1426,9 @@ function ExchangePage({ sendingInput = false, history, params }) {
             error={!!warningHigh}
           >
             <Text fontSize={20} fontWeight={500}>
-              {generalError
+              {!account
+                ? 'Connect Wallet'
+                : generalError
                 ? generalError
                 : inputError
                 ? inputError

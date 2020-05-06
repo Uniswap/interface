@@ -24,7 +24,7 @@ import { useDebounce } from '../../hooks'
 const StyledSlider = withStyles({
   root: {
     width: '95%',
-    color: '#3880ff',
+    color: '#ff007a',
     height: 4,
     marginLeft: '15px',
     padding: '15px 0'
@@ -32,7 +32,7 @@ const StyledSlider = withStyles({
   thumb: {
     height: 28,
     width: 28,
-    backgroundColor: '#2172E5',
+    backgroundColor: '#ff007a',
     marginTop: -14,
     marginLeft: -14,
     '&:focus,&:hover,&$active': {
@@ -78,17 +78,17 @@ export default function InputSlider({ value, onChange, override }) {
   }
 
   useEffect(() => {
-    if (override && value !== internalVal) {
+    if (override) {
       setInternalVal(value)
     }
-  }, [internalVal, override, value])
+  }, [override, value])
 
   return (
     <StyledSlider
       value={typeof internalVal === 'number' ? internalVal : 0}
       onChange={handleChange}
       aria-labelledby="input-slider"
-      // marks={marks}
+      step={1}
     />
   )
 }
