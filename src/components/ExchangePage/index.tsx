@@ -25,7 +25,7 @@ import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
 import Card, { GreyCard, BlueCard, YellowCard } from '../../components/Card'
 
 import { usePair } from '../../contexts/Pairs'
-import { useToken, useAllTokens, ALL_TOKENS } from '../../contexts/Tokens'
+import { useToken, useAllTokens } from '../../contexts/Tokens'
 import { useRoute } from '../../contexts/Routes'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWeb3React, useTokenContract } from '../../hooks'
@@ -384,10 +384,6 @@ function ExchangePage({ sendingInput = false, history, params }) {
   // check on pending approvals for token amounts
   const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
 
-  // check for imported tokens to show warning
-  const importedTokenInput = tokens[Field.INPUT] && !!!ALL_TOKENS?.[chainId]?.[tokens[Field.INPUT]?.address]
-  const importedTokenOutput = tokens[Field.OUTPUT] && !!!ALL_TOKENS?.[chainId]?.[tokens[Field.OUTPUT]?.address]
-
   // entities for swap
   const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
   const route = useRoute(tokens[Field.INPUT], tokens[Field.OUTPUT])
@@ -442,6 +438,11 @@ function ExchangePage({ sendingInput = false, history, params }) {
 
   if (trade)
     parsedAmounts[dependentField] = tradeType === TradeType.EXACT_INPUT ? trade.outputAmount : trade.inputAmount
+
+  const feeAsPercent = new Percent(JSBI.BigInt(3), JSBI.BigInt(1000))
+  const feeTimesInputRaw =
+    parsedAmounts[Field.INPUT] && feeAsPercent.multiply(JSBI.BigInt(parsedAmounts[Field.INPUT].raw))
+  const feeTimesInputFormatted = feeTimesInputRaw && new TokenAmount(tokens[Field.INPUT], feeTimesInputRaw?.quotient)
 
   const formattedAmounts = {
     [independentField]: typedValue,
@@ -1046,7 +1047,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontSize={14} fontWeight={400}>
-                  {independentField === Field.INPUT ? (sending ? 'Maximum sent' : 'Maximum received') : 'Minimum sold'}
+                  {independentField === Field.INPUT ? (sending ? 'Min sent' : 'Minimum received') : 'Maximum sold'}
                 </TYPE.black>
                 <QuestionHelper text="" />
               </RowFixed>
@@ -1076,7 +1077,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontSize={14} fontWeight={400}>
-                  Price Slippage
+                  Slippage
                 </TYPE.black>
                 <QuestionHelper text="" />
               </RowFixed>
@@ -1101,7 +1102,11 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 </TYPE.black>
                 <QuestionHelper text="A portion of each trade goes to liquidity providers to incentivize liquidity on the protocol." />
               </RowFixed>
-              <TYPE.black fontSize={14}>0.03%</TYPE.black>
+              <TYPE.black fontSize={14}>
+                {feeTimesInputFormatted
+                  ? feeTimesInputFormatted?.toSignificant(8) + ' ' + tokens[Field.INPUT]?.symbol
+                  : '-'}
+              </TYPE.black>
             </RowBetween>
           </AutoColumn>
 
@@ -1421,7 +1426,9 @@ function ExchangePage({ sendingInput = false, history, params }) {
             error={!!warningHigh}
           >
             <Text fontSize={20} fontWeight={500}>
-              {generalError
+              {!account
+                ? 'Connect Wallet'
+                : generalError
                 ? generalError
                 : inputError
                 ? inputError
@@ -1471,9 +1478,9 @@ function ExchangePage({ sendingInput = false, history, params }) {
                     <TYPE.black fontSize={14} fontWeight={400}>
                       {independentField === Field.INPUT
                         ? sending
-                          ? 'Maximum sent'
-                          : 'Maximum received'
-                        : 'Minimum sold'}
+                          ? 'Minimum sent'
+                          : 'Minimum received'
+                        : 'Maximum sold'}
                     </TYPE.black>
                     <QuestionHelper text="A lower bound is set so you never get less than this amount." />
                   </RowFixed>
@@ -1524,12 +1531,14 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <RowBetween>
                   <RowFixed>
                     <TYPE.black fontSize={14} fontWeight={400}>
-                      Total Price Slippage
+                      Liquidity Provider Fee
                     </TYPE.black>
                     <QuestionHelper text="Price change due to trade size and LP fee" />
                   </RowFixed>
                   <TYPE.black fontSize={14}>
-                    {slippageFromTrade ? slippageFromTrade.toSignificant(4) + '%' : '-'}
+                    {feeTimesInputFormatted
+                      ? feeTimesInputFormatted?.toSignificant(8) + ' ' + tokens[Field.INPUT]?.symbol
+                      : '-'}
                   </TYPE.black>
                 </RowBetween>
               </AutoColumn>

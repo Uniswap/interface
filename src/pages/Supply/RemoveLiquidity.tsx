@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 import { parseUnits } from '@ethersproject/units'
 import { TokenAmount, JSBI, Route, WETH, Percent, Token, Pair } from '@uniswap/sdk'
 
+import Slider from '../../components/Slider'
 import TokenLogo from '../../components/TokenLogo'
 import DoubleLogo from '../../components/DoubleLogo'
 import PositionCard from '../../components/PositionCard'
@@ -271,7 +272,19 @@ export default function RemoveLiquidity({ token0, token1 }) {
     parsedAmounts[Field.LIQUIDITY] &&
     new Percent(parsedAmounts[Field.LIQUIDITY]?.raw, userLiquidity.raw).toFixed(0)
 
+  const [override, setSliderOverride] = useState(false) // override slider internal value
   const handlePresetPercentage = newPercent => {
+    setSliderOverride(true)
+    onUserInput(
+      Field.LIQUIDITY,
+      new TokenAmount(
+        pair?.liquidityToken,
+        JSBI.divide(JSBI.multiply(userLiquidity.raw, JSBI.BigInt(newPercent)), JSBI.BigInt(100))
+      ).toExact()
+    )
+  }
+
+  const handleSliderChange = (event, newPercent) => {
     onUserInput(
       Field.LIQUIDITY,
       new TokenAmount(
@@ -627,6 +640,9 @@ export default function RemoveLiquidity({ token0, token1 }) {
                 {derivedPerecent ? (parseInt(derivedPerecent) < 1 ? '<1' : derivedPerecent) : '0'}%
               </Text>
             </Row>
+            {!showAdvanced && (
+              <Slider value={parseFloat(derivedPerecent)} onChange={handleSliderChange} override={override} />
+            )}
             {!showAdvanced && (
               <RowBetween>
                 <MaxButton onClick={e => handlePresetPercentage(25)} width="20%">

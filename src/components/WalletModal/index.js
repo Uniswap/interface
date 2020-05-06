@@ -127,6 +127,15 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
   const walletModalOpen = useWalletModalOpen()
   const toggleWalletModal = useWalletModalToggle()
 
+  const previousAccount = usePrevious(account)
+
+  // close on connection, when logged out before
+  useEffect(() => {
+    if (account && !previousAccount && walletModalOpen) {
+      toggleWalletModal()
+    }
+  }, [account, previousAccount, toggleWalletModal, walletModalOpen])
+
   // always reset to account view
   useEffect(() => {
     if (walletModalOpen) {
