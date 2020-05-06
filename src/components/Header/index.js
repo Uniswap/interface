@@ -30,7 +30,9 @@ const HeaderFrame = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     padding: 10px;
-    width: calc(100% - 20px);
+    width: calc(100% - 12px);
+    position: relative;
+
   `};
   z-index: 2;
 `
@@ -121,6 +123,11 @@ const MigrateBanner = styled(AutoColumn)`
   a {
     color: ${({ theme }) => theme.pink2};
   }
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 0;
+    display: none;
+  `};
 `
 
 export default function Header() {

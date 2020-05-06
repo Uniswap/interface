@@ -18,6 +18,12 @@ const StyledInput = styled.input`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding: 0px;
+  -webkit-appearance: textfield;
+
+  ::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
 
   [type='number'] {
     -moz-appearance: textfield;

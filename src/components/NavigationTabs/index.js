@@ -105,7 +105,7 @@ function NavigationTabs({ location: { pathname }, history }) {
     <>
       {adding || removing ? (
         <Tabs>
-          <RowBetween style={{ padding: '1rem' }}>
+          <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
             <Hover onClick={() => history.goBack()}>
               <ArrowLink />
             </Hover>
@@ -114,7 +114,7 @@ function NavigationTabs({ location: { pathname }, history }) {
               text={
                 adding
                   ? 'When you add liqudiity, you are given pool tokens that represent your position in this pool. These tokens automatically earn fees proportional to your pool share and can be redeemed at any time.'
-                  : 'Your liquidity is represented by a pool token (ERC20). Removing will convert your position back into tokens at the current rate and proportional to the amount of each token in the pool. Any fees you accrued are included in the token amounts your receive.'
+                  : 'Your liquidity is represented by a pool token (ERC20). Removing will convert your position back into tokens at the current rate and proportional to the amount of each token in the pool. Any fees you accrued are included in the token amounts you receive.'
               }
             />
           </RowBetween>

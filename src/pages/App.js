@@ -50,6 +50,10 @@ const BodyWrapper = styled.div`
     width: 90%;
   }
 
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+      padding-top: 16px;
+  `};
+
   z-index: 1;
 `
 
@@ -64,6 +68,7 @@ const Body = styled.div`
   box-sizing: border-box;
   padding: 1rem;
   position: relative;
+  margin-bottom: 10rem;
 `
 
 const StyledRed = styled.div`

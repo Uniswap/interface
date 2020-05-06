@@ -115,7 +115,7 @@ const MenuItem = styled(PaddedItem)`
   :hover {
     background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
   }
-  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `
 
 const BaseWrapper = styled(AutoRow)`
@@ -349,7 +349,7 @@ function SearchModal({
       filteredPairList.map((pairAddress, i) => {
         const token0 = allTokens[allPairs[pairAddress].token0]
         const token1 = allTokens[allPairs[pairAddress].token1]
-        // const balance = allBalances?.[account]?.[pairAddress]?.toSignificant(6)
+        const balance = allBalances?.[account]?.[pairAddress]?.toSignificant(6)
         return (
           <MenuItem
             key={i}
@@ -367,14 +367,14 @@ function SearchModal({
             </Text> */}
             <ButtonPrimary
               padding={'6px 8px'}
-              width={'56px'}
+              width={'fit-content'}
               borderRadius={'12px'}
               onClick={() => {
                 history.push('/add/' + token0.address + '-' + token1.address)
                 onDismiss()
               }}
             >
-              Join
+              {balance ? 'Manage' : 'Join'}
             </ButtonPrimary>
           </MenuItem>
         )
@@ -451,6 +451,7 @@ function SearchModal({
               key={address}
               onClick={() => (hiddenToken && hiddenToken === address ? () => {} : _onTokenSelect(address))}
               disabled={hiddenToken && hiddenToken === address}
+              selected={otherSelectedTokenAddress === address}
             >
               <RowFixed>
                 <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }} />

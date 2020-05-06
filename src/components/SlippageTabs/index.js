@@ -365,11 +365,14 @@ export default function TransactionDetails({ setRawSlippage, rawSlippage, deadli
             <TYPE.body fontSize={14}>Deadline</TYPE.body>
             <QuestionHelper text="Deadline in minutes. If your transaction takes longer than this it will revert." />
           </RowFixed>
-          <RowBetween padding={'0 20px'}>
+          <RowFixed padding={'0 20px'}>
             <OptionCustom style={{ width: '80px' }}>
               <Input tabIndex={-1} placeholder={deadlineInput} value={deadlineInput} onChange={parseCustomDeadline} />
             </OptionCustom>
-          </RowBetween>
+            <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>
+              minutes
+            </TYPE.body>
+          </RowFixed>
         </AutoColumn>
       </>
     )
