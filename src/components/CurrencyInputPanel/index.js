@@ -7,7 +7,7 @@ import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
 import SearchModal from '../SearchModal'
 import { RowBetween } from '../Row'
-import { TYPE } from '../../theme'
+import { TYPE, Hover } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
@@ -19,7 +19,7 @@ import { ThemeContext } from 'styled-components'
 const InputRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  padding: 0.75rem 0.5rem 0.75rem 1rem;
+  padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
 `
 
 const CurrencySelect = styled.button`
@@ -50,7 +50,7 @@ const LabelRow = styled.div`
   color: ${({ theme }) => theme.text1};
   font-size: 0.75rem;
   line-height: 1rem;
-  padding: 0rem 1rem 0.75rem 1rem;
+  padding: 0.75rem 1rem 0 1rem;
   height: 20px
   span:hover {
     cursor: pointer;
@@ -112,26 +112,26 @@ const StyledBalanceMax = styled.button`
     outline: none;
   }
 `
-const StyledBalanceMaxMini = styled.button`
-  height: 24px;
-  background-color: ${({ theme, active }) => (active ? theme.blue5 : theme.bg2)};
-  border: 1px solid ${({ theme }) => theme.blue5};
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
+// const StyledBalanceMaxMini = styled.button`
+//   height: 24px;
+//   background-color: ${({ theme, active }) => (active ? theme.blue5 : theme.bg2)};
+//   border: 1px solid ${({ theme }) => theme.blue5};
+//   border-radius: 0.5rem;
+//   font-size: 0.875rem;
+//   font-weight: 500;
+//   cursor: pointer;
 
-  pointer-events: ${({ active }) => (active ? 'initial' : 'none')};
-  color: ${({ theme, active }) => (active ? theme.blue1 : theme.text4)};
+//   pointer-events: ${({ active }) => (active ? 'initial' : 'none')};
+//   color: ${({ theme, active }) => (active ? theme.blue1 : theme.text4)};
 
-  :hover {
-    border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};
-  }
-  :focus {
-    border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};
-    outline: none;
-  }
-`
+//   :hover {
+//     border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};
+//   }
+//   :focus {
+//     border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};
+//     outline: none;
+//   }
+// `
 
 export default function CurrencyInputPanel({
   value,
@@ -141,6 +141,7 @@ export default function CurrencyInputPanel({
   atMax,
   error,
   type = '',
+  label = 'Input',
   urlAddedTokens = [], // used
   onTokenSelection = null,
   token = null,
@@ -151,7 +152,7 @@ export default function CurrencyInputPanel({
   hideInput = false,
   showSendWithSwap = false,
   otherSelectedTokenAddress = null,
-  simplified = false
+  advanced = false
 }) {
   const { t } = useTranslation()
 
@@ -163,7 +164,34 @@ export default function CurrencyInputPanel({
   return (
     <InputPanel>
       <Container error={!!error} hideInput={hideInput}>
-        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} hideInput={hideInput}>
+        {!hideInput && (
+          <LabelRow>
+            <RowBetween>
+              <TYPE.body color={theme.text2} fontWeight={500} fontSize={16}>
+                {label}
+              </TYPE.body>
+
+              <Hover>
+                <TYPE.body
+                  onClick={onMax}
+                  color={theme.text2}
+                  fontWeight={500}
+                  fontSize={16}
+                  style={{ display: 'inline' }}
+                >
+                  {!hideBalance && !!token && userTokenBalance
+                    ? 'Balance: ' + userTokenBalance?.toSignificant(6)
+                    : ' -'}
+                </TYPE.body>
+              </Hover>
+            </RowBetween>
+          </LabelRow>
+        )}
+        <InputRow
+          style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}
+          hideInput={hideInput}
+          selected={disableTokenSelect}
+        >
           {!hideInput && (
             <>
               <NumericalInput
@@ -172,7 +200,7 @@ export default function CurrencyInputPanel({
                   onUserInput(field, val)
                 }}
               />
-              {!simplified && !!token?.address && !atMax && type !== 'OUTPUT' && (
+              {!advanced && !!token?.address && !atMax && label !== 'To' && (
                 <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
               )}
             </>
@@ -205,30 +233,6 @@ export default function CurrencyInputPanel({
             </Aligner>
           </CurrencySelect>
         </InputRow>
-        {simplified && !hideBalance && !!token && (
-          <LabelRow>
-            <RowBetween onClick={onMax}>
-              {/* {!!token?.address && !atMax && type !== 'OUTPUT' ? (
-                <StyledBalanceMaxMini>Max</StyledBalanceMaxMini>
-              ) : (
-                <TYPE.body color={'#888D9B'}>Balance</TYPE.body>
-              )} */}
-              {!!token?.address &&
-                (type !== 'OUTPUT' ? (
-                  <StyledBalanceMaxMini active={!atMax}>Max</StyledBalanceMaxMini>
-                ) : (
-                  <TYPE.body color={theme.text3}>-</TYPE.body>
-                ))}
-
-              <div>
-                <TYPE.body color={theme.text2} fontWeight={500} fontSize={14} style={{ display: 'inline' }}>
-                  Balance: {account ? userTokenBalance?.toSignificant(6) : 'Connect to see balances'}
-                </TYPE.body>
-              </div>
-              {/* <ErrorSpan data-tip={'Enter max'} error={!!error} onClick={() => {}}></ErrorSpan> */}
-            </RowBetween>
-          </LabelRow>
-        )}
       </Container>
       {!disableTokenSelect && (
         <SearchModal

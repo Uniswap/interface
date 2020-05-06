@@ -8,7 +8,6 @@ import SearchModal from '../SearchModal'
 import AddLiquidity from '../../pages/Supply/AddLiquidity'
 import { Text } from 'rebass'
 import { Plus } from 'react-feather'
-import { BlueCard } from '../Card'
 import { TYPE, Link } from '../../theme'
 import { AutoColumn, ColumnCenter } from '../Column'
 import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
@@ -50,12 +49,6 @@ function CreatePool({ history }) {
   } else
     return (
       <AutoColumn gap="20px">
-        <BlueCard>
-          <AutoColumn gap="10px">
-            <TYPE.blue>{'Step ' + step + '.'} </TYPE.blue>
-            {step === 1 && <TYPE.blue fontWeight={400}>Select or add a second token to continue.</TYPE.blue>}
-          </AutoColumn>
-        </BlueCard>
         <AutoColumn gap="24px">
           {!token0Address ? (
             <ButtonDropwdown

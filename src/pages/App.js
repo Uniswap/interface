@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
 import Header from '../components/Header'
+import Footer from '../components/Footer'
 import NavigationTabs from '../components/NavigationTabs'
 import Web3ReactManager from '../components/Web3ReactManager'
 
@@ -36,11 +37,13 @@ const BodyWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   box-sizing: border-box;
-  justify-content: flex-start;
+  /* justify-content: center; */
+  padding-top: 160px;
   align-items: center;
   flex: 1;
   overflow: auto;
-  padding-top: 60px;
+  z-index: 10;
+  transition: height 0.3s ease;
 
   & > * {
     max-width: calc(355px + 4rem);
@@ -53,13 +56,34 @@ const BodyWrapper = styled.div`
 const Body = styled.div`
   max-width: 355px;
   width: 100%;
-  min-height: 340px;
+  /* min-height: 340px; */
   background: ${({ theme }) => theme.bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 30px;
   box-sizing: border-box;
   padding: 1rem;
+  position: relative;
+`
+
+const StyledRed = styled.div`
+  width: 100%;
+  height: 150vh;
+  border-radius: 10vw;
+  background: ${({ theme }) => `radial-gradient(50% 50% at 50% 50%, ${theme.pink2} 0%, ${theme.white} 100%)`};
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  opacity: 0.1;
+  z-index: -1;
+
+  transform: translateY(-70vh);
+
+  @media (max-width: 960px) {
+    height: 300px;
+    width: 100%;
+    transform: translateY(-150px);
+  }
 `
 
 export default function App() {
@@ -127,7 +151,9 @@ export default function App() {
                 </BrowserRouter>
               </Web3ReactManager>
             </Body>
+            <Footer></Footer>
           </BodyWrapper>
+          <StyledRed />
         </AppWrapper>
       </Suspense>
     </>

@@ -522,7 +522,7 @@ function AddLiquidity({ token0, token1, step = false }) {
       </AutoColumn>
     ) : (
       <AutoColumn gap="20px">
-        <RowFlat style={{ marginTop: '60px' }}>
+        <RowFlat style={{ marginTop: '20px' }}>
           <Text fontSize="48px" fontWeight={500} lineHeight="32px" marginRight={10}>
             {liquidityMinted?.toFixed(6)}
           </Text>
@@ -533,6 +533,11 @@ function AddLiquidity({ token0, token1, step = false }) {
             {tokens[Field.INPUT]?.symbol + ':' + tokens[Field.OUTPUT]?.symbol + ' Pool Tokens'}
           </Text>
         </Row>
+        <TYPE.italic fontSize={12} color="#565A69" textAlign="center" padding={'12px 0 0 0 '}>
+          {`Output is estimated. You will receive at least ${liquidityMinted?.toSignificant(6)} UNI ${
+            tokens[Field.INPUT]?.symbol
+          }/${tokens[Field.OUTPUT]?.symbol} or the transaction will revert.`}
+        </TYPE.italic>
       </AutoColumn>
     )
   }
@@ -573,11 +578,6 @@ function AddLiquidity({ token0, token1, step = false }) {
             {noLiquidity ? 'Supply & Create Pool' : 'Confirm Supply'}
           </Text>
         </ButtonPrimary>
-        <TYPE.italic fontSize={12} color="#565A69" textAlign="center">
-          {`Output is estimated. You will receive at least ${liquidityMinted?.toSignificant(6)} UNI ${
-            tokens[Field.INPUT]?.symbol
-          }/${tokens[Field.OUTPUT]?.symbol} or the transaction will revert.`}
-        </TYPE.italic>
       </>
     )
   }
@@ -645,9 +645,10 @@ function AddLiquidity({ token0, token1, step = false }) {
           <ColumnCenter>
             <BlueCard>
               <AutoColumn gap="10px">
-                {step && <TYPE.blue fontWeight={400}>Step 2.</TYPE.blue>}
+                {/* {step && <TYPE.blue fontWeight={400}>Step 2.</TYPE.blue>} */}
                 <TYPE.blue fontWeight={400}>
-                  You are the first liquidity provider. The ratio of tokens you add will set the price of this pool.
+                  <b>You are the first liquidity provider.</b> The ratio of tokens you add will set the price of this
+                  pool.
                 </TYPE.blue>
                 <TYPE.blue fontWeight={400}>Once you are happy with the rate click supply to review.</TYPE.blue>
               </AutoColumn>
@@ -666,6 +667,7 @@ function AddLiquidity({ token0, token1, step = false }) {
           onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
           error={inputError}
           pair={pair}
+          label="Input"
         />
         <ColumnCenter>
           <Plus size="16" color="#888D9B" />

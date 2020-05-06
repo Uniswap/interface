@@ -58,8 +58,9 @@ const Popup = styled.div`
 
   animation: ${fadeIn} 0.15s linear;
 
-  color: ${({ theme }) => theme.text1};
-  font-style: italic;
+  color: ${({ theme }) => theme.text2};
+  font-weight: 400;
+  /* font-style: italic; */
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     left: -20px;
