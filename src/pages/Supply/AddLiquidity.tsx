@@ -48,6 +48,28 @@ const FixedBottom = styled.div`
   width: 100%;
 `
 
+// styles
+const Dots = styled.span`
+  &::after {
+    display: inline-block;
+    animation: ellipsis 1.25s infinite;
+    content: '.';
+    width: 1em;
+    text-align: left;
+  }
+  @keyframes ellipsis {
+    0% {
+      content: '.';
+    }
+    33% {
+      content: '..';
+    }
+    66% {
+      content: '...';
+    }
+  }
+`
+
 enum Field {
   INPUT,
   OUTPUT
@@ -589,7 +611,7 @@ function AddLiquidity({ token0, token1, step = false }) {
             {pair ? `${route.midPrice.toSignificant(6)} ` : '-'}
           </Text>
           <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
-            {tokens[Field.OUTPUT]?.symbol} / {tokens[Field.INPUT]?.symbol}
+            {tokens[Field.OUTPUT]?.symbol} per {tokens[Field.INPUT]?.symbol}
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
@@ -597,7 +619,7 @@ function AddLiquidity({ token0, token1, step = false }) {
             {pair ? `${route.midPrice.invert().toSignificant(6)} ` : '-'}
           </Text>
           <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
-            {tokens[Field.INPUT]?.symbol} / {tokens[Field.OUTPUT]?.symbol}
+            {tokens[Field.INPUT]?.symbol} per {tokens[Field.OUTPUT]?.symbol}
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
@@ -645,11 +667,8 @@ function AddLiquidity({ token0, token1, step = false }) {
           <ColumnCenter>
             <BlueCard>
               <AutoColumn gap="10px">
-                {/* {step && <TYPE.blue fontWeight={400}>Step 2.</TYPE.blue>} */}
-                <TYPE.blue fontWeight={400}>
-                  <b>You are the first liquidity provider.</b> The ratio of tokens you add will set the price of this
-                  pool.
-                </TYPE.blue>
+                <TYPE.blue fontWeight={600}>You are the first liquidity provider.</TYPE.blue>
+                <TYPE.blue fontWeight={400}>The ratio of tokens you add will set the price of this pool.</TYPE.blue>
                 <TYPE.blue fontWeight={400}>Once you are happy with the rate click supply to review.</TYPE.blue>
               </AutoColumn>
             </BlueCard>
@@ -696,7 +715,11 @@ function AddLiquidity({ token0, token1, step = false }) {
               approveAmount(Field.OUTPUT)
             }}
           >
-            {pendingApprovalOutput ? 'Waiting for approve' : 'Approve ' + tokens[Field.OUTPUT]?.symbol}
+            {pendingApprovalOutput ? (
+              <Dots>Approving {tokens[Field.OUTPUT]?.symbol}</Dots>
+            ) : (
+              'Approve ' + tokens[Field.OUTPUT]?.symbol
+            )}
           </ButtonLight>
         ) : showInputApprove ? (
           <ButtonLight
@@ -704,7 +727,11 @@ function AddLiquidity({ token0, token1, step = false }) {
               approveAmount(Field.INPUT)
             }}
           >
-            {pendingApprovalInput ? 'Waiting for approve' : 'Approve ' + tokens[Field.INPUT]?.symbol}
+            {pendingApprovalInput ? (
+              <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
+            ) : (
+              'Approve ' + tokens[Field.INPUT]?.symbol
+            )}
           </ButtonLight>
         ) : (
           <ButtonPrimary
