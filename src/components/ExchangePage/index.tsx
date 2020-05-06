@@ -83,7 +83,7 @@ const SectionBreak = styled.div`
 `
 
 const BottomGrouping = styled.div`
-  margin-top: 20px;
+  margin-top: 12px;
   position: relative;
 `
 
@@ -156,6 +156,12 @@ const StyledBalanceMaxMini = styled.button`
     /* border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.blue4)}; */
     outline: none;
   }
+`
+
+const TruncatedText = styled(Text)`
+  text-overflow: ellipsis;
+  width: 220px;
+  overflow: hidden;
 `
 
 // styles
@@ -955,9 +961,10 @@ function ExchangePage({ sendingInput = false, history, params }) {
       return (
         <AutoColumn gap={'sm'} style={{ marginTop: '20px' }}>
           <RowBetween align="flex-end">
-            <Text fontSize={24} fontWeight={500}>
-              {!!slippageAdjustedAmounts[Field.INPUT] && slippageAdjustedAmounts[Field.INPUT].toSignificant(6)}
-            </Text>
+            <TruncatedText fontSize={24} fontWeight={500}>
+              {!!formattedAmounts[Field.INPUT] && formattedAmounts[Field.INPUT]}
+              {/* {!!slippageAdjustedAmounts[Field.INPUT] && slippageAdjustedAmounts[Field.INPUT].toSignificant(6)} */}
+            </TruncatedText>
             <RowFixed gap="4px">
               <TokenLogo address={tokens[Field.INPUT]?.address} size={'24px'} />
               <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
@@ -969,9 +976,11 @@ function ExchangePage({ sendingInput = false, history, params }) {
             <ArrowDown size="16" color={'#888D9B'} />
           </RowFixed>
           <RowBetween align="flex-end">
-            <Text fontSize={24} fontWeight={500} color={warningHigh ? '#FF6871' : ''}>
-              {!!slippageAdjustedAmounts[Field.OUTPUT] && slippageAdjustedAmounts[Field.OUTPUT].toSignificant(6)}
-            </Text>
+            <TruncatedText fontSize={24} fontWeight={500} color={warningHigh ? '#FF6871' : ''}>
+              {!!formattedAmounts[Field.OUTPUT] && formattedAmounts[Field.OUTPUT]}
+
+              {/* {!!slippageAdjustedAmounts[Field.OUTPUT] && slippageAdjustedAmounts[Field.OUTPUT].toSignificant(6)} */}
+            </TruncatedText>
             <RowFixed gap="4px">
               <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'24px'} />
               <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
@@ -982,15 +991,19 @@ function ExchangePage({ sendingInput = false, history, params }) {
           <AutoColumn justify="flex-start" gap="sm" padding={'20px 0 0 0px'}>
             {independentField === Field.INPUT ? (
               <TYPE.italic textAlign="left" style={{ width: '100%', paddingTop: '.5rem' }}>
-                {`Output is estimated. You will receive at least ${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(
-                  6
-                )} ${tokens[Field.OUTPUT]?.symbol}  or the transaction will revert.`}
+                {`Output is estimated. You will receive at least `}
+                <b>
+                  {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {tokens[Field.OUTPUT]?.symbol}{' '}
+                </b>{' '}
+                {` or the transaction will revert.`}
               </TYPE.italic>
             ) : (
               <TYPE.italic textAlign="left" style={{ width: '100%', paddingTop: '.5rem' }}>
-                {`Input is estimated. You will sell at most ${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} ${
-                  tokens[Field.INPUT]?.symbol
-                }  or the transaction will revert.`}
+                {`Input is estimated. You will sell at most `}{' '}
+                <b>
+                  {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {tokens[Field.INPUT]?.symbol}
+                </b>
+                {` or the transaction will revert.`}
               </TYPE.italic>
             )}
           </AutoColumn>
@@ -1049,7 +1062,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <TYPE.black fontSize={14} fontWeight={400}>
                   {independentField === Field.INPUT ? (sending ? 'Min sent' : 'Minimum received') : 'Maximum sold'}
                 </TYPE.black>
-                <QuestionHelper text="" />
+                <QuestionHelper text="A boundary is set so you are protected from large price movements after you submit your trade." />
               </RowFixed>
               <RowFixed>
                 <TYPE.black fontSize={14}>
@@ -1077,9 +1090,9 @@ function ExchangePage({ sendingInput = false, history, params }) {
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontSize={14} fontWeight={400}>
-                  Slippage
+                  Price impact
                 </TYPE.black>
-                <QuestionHelper text="" />
+                <QuestionHelper text="The difference between the market price and your price due to trade size." />
               </RowFixed>
               <ErrorText
                 fontWeight={500}
@@ -1100,11 +1113,11 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <TYPE.black fontSize={14} fontWeight={400}>
                   Liquidity Provider Fee
                 </TYPE.black>
-                <QuestionHelper text="A portion of each trade goes to liquidity providers to incentivize liquidity on the protocol." />
+                <QuestionHelper text="A portion of each trade (0.03%) goes to liquidity providers to incentivize liquidity on the protocol." />
               </RowFixed>
               <TYPE.black fontSize={14}>
                 {feeTimesInputFormatted
-                  ? feeTimesInputFormatted?.toSignificant(8) + ' ' + tokens[Field.INPUT]?.symbol
+                  ? feeTimesInputFormatted?.toSignificant(6) + ' ' + tokens[Field.INPUT]?.symbol
                   : '-'}
               </TYPE.black>
             </RowBetween>
@@ -1155,8 +1168,8 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 : priceSlippage.toFixed(4) + '%'
               : '-'}
           </ErrorText>
-          <Text fontWeight={500} fontSize={14} color={theme().text3} pt={1}>
-            Slippage
+          <Text fontWeight={500} fontSize={16} color={theme().text3} pt={1}>
+            Price Impact
           </Text>
         </AutoColumn>
       </AutoRow>
@@ -1268,13 +1281,13 @@ function ExchangePage({ sendingInput = false, history, params }) {
             />
             {sendingWithSwap ? (
               <ColumnCenter>
-                <RowBetween padding="0 8px">
+                <RowBetween padding="0 12px">
                   <ArrowWrapper onClick={onSwapTokens}>
                     <ArrowDown size="16" color="#ff007a" onClick={onSwapTokens} />
                   </ArrowWrapper>
-                  <ArrowWrapper onClick={() => setSendingWithSwap(false)} style={{ marginRight: '20px' }}>
+                  <StyledBalanceMaxMini onClick={() => setSendingWithSwap(false)} style={{ marginRight: '0px' }}>
                     <TYPE.blue>Remove Swap</TYPE.blue>
-                  </ArrowWrapper>
+                  </StyledBalanceMaxMini>
                 </RowBetween>
               </ColumnCenter>
             ) : (
@@ -1307,9 +1320,8 @@ function ExchangePage({ sendingInput = false, history, params }) {
               otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
             />
             {sendingWithSwap && (
-              <RowBetween padding="0 8px">
+              <RowBetween padding="0 12px">
                 <ArrowDown size="16" />
-                <div> </div>
               </RowBetween>
             )}
           </>
@@ -1337,19 +1349,19 @@ function ExchangePage({ sendingInput = false, history, params }) {
           </AutoColumn>
         )}
         {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-          <Card padding={advanced ? '.25rem .75rem 0 .75rem' : '.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
+          <Card padding={advanced ? '.25rem 1.25rem 0 .75rem' : '.25rem .7rem .25rem 1.25rem'} borderRadius={'20px'}>
             {advanced ? (
               <PriceBar />
             ) : (
-              <AutoColumn style={{ cursor: 'pointer' }} gap="sm">
+              <AutoColumn gap="4px">
                 {' '}
                 <RowBetween align="center" justify="center">
-                  <Text fontWeight={500} fontSize={16} color={theme().text2}>
+                  <Text fontWeight={500} fontSize={14} color={theme().text2}>
                     Price
                   </Text>
                   <Text
                     fontWeight={500}
-                    fontSize={16}
+                    fontSize={14}
                     color={theme().text2}
                     style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
                   >
@@ -1357,12 +1369,12 @@ function ExchangePage({ sendingInput = false, history, params }) {
                       ? route.midPrice.invert().toSignificant(6) +
                         ' ' +
                         tokens[Field.INPUT]?.symbol +
-                        ' / ' +
+                        ' per ' +
                         tokens[Field.OUTPUT]?.symbol
                       : route.midPrice.toSignificant(6) +
                         ' ' +
                         tokens[Field.OUTPUT]?.symbol +
-                        ' / ' +
+                        ' per ' +
                         tokens[Field.INPUT]?.symbol}
                     <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
                       <Repeat size={14} />
@@ -1371,18 +1383,22 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 </RowBetween>
                 {pair && (warningHigh || warningMedium) && (
                   <RowBetween>
-                    <TYPE.main style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
+                    <TYPE.main
+                      style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
+                      fontSize={14}
+                    >
                       Price Impact
-                      <QuestionHelper text="The difference between the market price and your price due to trade size." />
                     </TYPE.main>
-                    <ErrorText fontWeight={500} fontSize={16} warningMedium={warningMedium} warningHigh={warningHigh}>
-                      {priceSlippage
-                        ? priceSlippage.toFixed(4) === '0.0000'
-                          ? '<0.0001%'
-                          : priceSlippage.toFixed(4) + '%'
-                        : '-'}{' '}
-                      ⚠️
-                    </ErrorText>
+                    <RowFixed>
+                      <ErrorText fontWeight={500} fontSize={14} warningMedium={warningMedium} warningHigh={warningHigh}>
+                        {priceSlippage
+                          ? priceSlippage.toFixed(4) === '0.0000'
+                            ? '<0.0001%'
+                            : priceSlippage.toFixed(4) + '%'
+                          : '-'}{' '}
+                      </ErrorText>
+                      <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
+                    </RowFixed>
                   </RowBetween>
                 )}
               </AutoColumn>
@@ -1510,9 +1526,9 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <RowBetween>
                   <RowFixed>
                     <TYPE.black fontSize={14} fontWeight={400}>
-                      Slippage
+                      Price Impact
                     </TYPE.black>
-                    <QuestionHelper text="The difference between the market price and your price due to trade size." />
+                    <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
                   </RowFixed>
                   <ErrorText
                     fontWeight={500}
@@ -1533,11 +1549,11 @@ function ExchangePage({ sendingInput = false, history, params }) {
                     <TYPE.black fontSize={14} fontWeight={400}>
                       Liquidity Provider Fee
                     </TYPE.black>
-                    <QuestionHelper text="Price change due to trade size and LP fee" />
+                    <QuestionHelper text="A portion of each trade (0.03%) goes to liquidity providers to incentivize liquidity on the protocol." />
                   </RowFixed>
                   <TYPE.black fontSize={14}>
                     {feeTimesInputFormatted
-                      ? feeTimesInputFormatted?.toSignificant(8) + ' ' + tokens[Field.INPUT]?.symbol
+                      ? feeTimesInputFormatted?.toSignificant(6) + ' ' + tokens[Field.INPUT]?.symbol
                       : '-'}
                   </TYPE.black>
                 </RowBetween>
@@ -1547,7 +1563,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <TYPE.black fontWeight={400} fontSize={14}>
                   Set front running resistance
                 </TYPE.black>
-                <QuestionHelper text="Your transaction will revert if the price changes more than this amount after your submit your trade." />
+                <QuestionHelper text="Your transaction will revert if the price changes more than this amount after you submit your trade." />
               </RowFixed>
               <SlippageTabs
                 rawSlippage={allowedSlippage}
