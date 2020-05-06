@@ -25,10 +25,10 @@ import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
 import Card, { GreyCard, BlueCard, YellowCard } from '../../components/Card'
 
 import { usePair } from '../../contexts/Pairs'
-import { useToken, useAllTokens } from '../../contexts/Tokens'
 import { useRoute } from '../../contexts/Routes'
 import { useAddressAllowance } from '../../contexts/Allowances'
-import { useWeb3React, useTokenContract } from '../../hooks'
+import { useToken, useAllTokens } from '../../contexts/Tokens'
+import { useWeb3React, useTokenContract, usePrevious } from '../../hooks'
 import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 import { useUserAdvanced } from '../../contexts/Application'
@@ -504,6 +504,27 @@ function ExchangePage({ sendingInput = false, history, params }) {
       }
     })
   }, [])
+
+  // reset ETH on network change
+  const previousChain = usePrevious(chainId) || null
+  useEffect(() => {
+    if (
+      previousChain &&
+      previousChain !== chainId &&
+      WETH[previousChain] &&
+      tokens[Field.INPUT]?.equals(WETH[previousChain])
+    ) {
+      onTokenSelection(Field.INPUT, WETH[chainId])
+    }
+    if (
+      previousChain &&
+      previousChain !== chainId &&
+      WETH[previousChain] &&
+      tokens[Field.OUTPUT]?.equals(WETH[previousChain])
+    ) {
+      onTokenSelection(Field.OUTPUT, WETH[chainId])
+    }
+  }, [chainId, onTokenSelection, previousChain, tokens])
 
   // reset field if sending with with swap is cancled
   useEffect(() => {

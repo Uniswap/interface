@@ -47,7 +47,7 @@ export function useAllTokens(): { [address: string]: Token } {
         .reduce((tokenMap, token) => {
           return {
             ...tokenMap,
-            [token.address]: token
+            [token.address]: 'token'
           }
         }, ALL_TOKENS?.[chainId] ?? {})
     )
@@ -56,7 +56,6 @@ export function useAllTokens(): { [address: string]: Token } {
 
 export function useToken(tokenAddress: string): Token {
   const tokens = useAllTokens()
-
   const token = tokens?.[tokenAddress]
 
   // rename WETH to ETH
