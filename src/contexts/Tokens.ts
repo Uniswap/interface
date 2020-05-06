@@ -40,9 +40,9 @@ export function useAllTokens(): { [address: string]: Token } {
 
   return useMemo(() => {
     // rename WETH to ETH (in case not used in useToken yet)
-    if (ALL_TOKENS[WETH[chainId]?.address]) {
-      ALL_TOKENS[WETH[chainId]?.address].name = 'ETH'
-      ALL_TOKENS[WETH[chainId]?.address].symbol = 'ETH'
+    if (ALL_TOKENS[chainId]?.[WETH[chainId]?.address]) {
+      ALL_TOKENS[chainId][WETH[chainId].address].name = 'ETH'
+      ALL_TOKENS[chainId][WETH[chainId].address].symbol = 'ETH'
     }
     return (
       localStorageTokens
