@@ -360,9 +360,9 @@ export default function TransactionDetails({ setRawSlippage, rawSlippage, deadli
             </BottomError>
           </RowBetween>
         </SlippageSelector>
-        <AutoColumn gap="md">
+        <AutoColumn gap="sm">
           <RowFixed padding={'0 20px'}>
-            <TYPE.black fontSize={14}>Deadline</TYPE.black>
+            <TYPE.body fontSize={14}>Deadline</TYPE.body>
             <QuestionHelper text="Deadline in minutes. If your transaction takes longer than this it will revert." />
           </RowFixed>
           <RowBetween padding={'0 20px'}>

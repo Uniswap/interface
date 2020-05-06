@@ -50,6 +50,7 @@ const ClickableText = styled(Text)`
   :hover {
     cursor: pointer;
   }
+  color: ${({ theme }) => theme.blue1};
 `
 
 // const CustomNumericalInput = styled(NumericalInput)`
@@ -499,21 +500,40 @@ export default function RemoveLiquidity({ token0, token1 }) {
 
   function modalHeader() {
     return (
-      <AutoColumn gap="16px">
-        <Row style={{ marginTop: '40px' }}>
-          <TokenLogo address={tokens[Field.TOKEN0]?.symbol} size={'30px'} />
-          <Text fontSize="24px" marginLeft={10}>
-            {tokens[Field.TOKEN0]?.symbol}{' '}
-            {!!parsedAmounts[Field.TOKEN0] && parsedAmounts[Field.TOKEN0].toSignificant(8)}
+      <AutoColumn gap={'sm'} style={{ marginTop: '20px' }}>
+        <RowBetween align="flex-end">
+          <Text fontSize={24} fontWeight={500}>
+            {!!parsedAmounts[Field.TOKEN0] && parsedAmounts[Field.TOKEN0].toSignificant(6)}
           </Text>
-        </Row>
-        <Row>
-          <TokenLogo address={tokens[Field.TOKEN1]?.symbol} size={'30px'} />
-          <Text fontSize="24px" marginLeft={10}>
-            {tokens[Field.TOKEN1]?.symbol}{' '}
-            {!!parsedAmounts[Field.TOKEN1] && parsedAmounts[Field.TOKEN1].toSignificant(8)}
+          <RowFixed gap="4px">
+            <TokenLogo address={tokens[Field.TOKEN0]?.address} size={'24px'} />
+            <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
+              {tokens[Field.TOKEN0]?.symbol || ''}
+            </Text>
+          </RowFixed>
+        </RowBetween>
+        <RowFixed>
+          <Plus size="16" color={'#888D9B'} />
+        </RowFixed>
+        <RowBetween align="flex-end">
+          <Text fontSize={24} fontWeight={600}>
+            {!!parsedAmounts[Field.TOKEN1] && parsedAmounts[Field.TOKEN1].toSignificant(6)}
           </Text>
-        </Row>
+          <RowFixed gap="4px">
+            <TokenLogo address={tokens[Field.TOKEN1]?.address} size={'24px'} />
+            <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
+              {tokens[Field.TOKEN1]?.symbol || ''}
+            </Text>
+          </RowFixed>
+        </RowBetween>
+
+        <TYPE.italic fontSize={12} color="#565A69" textAlign="left" padding={'20px 0 0 0'}>
+          {`Output is estimated. You will receive at least ${parsedAmounts[Field.TOKEN0]?.toFixed(6)} ${
+            tokens[Field.TOKEN0]?.symbol
+          } and at least ${parsedAmounts[Field.TOKEN1]?.toFixed(6)} ${
+            tokens[Field.TOKEN1]?.symbol
+          } or the transaction will revert.`}
+        </TYPE.italic>
       </AutoColumn>
     )
   }
@@ -538,7 +558,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
         </RowBetween>
         <RowBetween>
           <Text color="#565A69" fontWeight={500} fontSize={16}>
-            Rate
+            Price
           </Text>
           <Text fontWeight={500} fontSize={16}>
             {`1 ${tokens[Field.TOKEN0]?.symbol} = ${route?.midPrice && route.midPrice.adjusted.toFixed(8)} ${
@@ -546,9 +566,9 @@ export default function RemoveLiquidity({ token0, token1 }) {
             }`}
           </Text>
         </RowBetween>
-        <RowBetween gap="20px">
+        <RowBetween gap="16px">
           <ButtonConfirmed
-            style={{ margin: '20px 0' }}
+            style={{ margin: '20px 0 0 0' }}
             width="48%"
             onClick={onSign}
             confirmed={signed}
@@ -558,19 +578,12 @@ export default function RemoveLiquidity({ token0, token1 }) {
               {signed ? 'Signed' : 'Sign'}
             </ConfirmedText>
           </ButtonConfirmed>
-          <ButtonPrimary width="48%" disabled={!signed} style={{ margin: '20px 0' }} onClick={onRemove}>
+          <ButtonPrimary width="48%" disabled={!signed} style={{ margin: '20px 0 0 0' }} onClick={onRemove}>
             <Text fontWeight={500} fontSize={20}>
-              Confirm Remove
+              Confirm
             </Text>
           </ButtonPrimary>
         </RowBetween>
-        <TYPE.italic fontSize={12} color="#565A69" textAlign="center">
-          {`Output is estimated. You will receive at least ${parsedAmounts[Field.TOKEN0]?.toFixed(6)} ${
-            tokens[Field.TOKEN0]?.symbol
-          } and at least ${parsedAmounts[Field.TOKEN1]?.toFixed(6)} ${
-            tokens[Field.TOKEN1]?.symbol
-          } or the transaction will revert.`}
-        </TYPE.italic>
       </>
     )
   }
@@ -604,7 +617,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
                 onClick={() => {
                   setShowAdvanced(!showAdvanced)
                 }}
-                color="#2172E5"
               >
                 {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
               </ClickableText>
@@ -692,6 +704,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
               atMax={atMaxAmount}
               token={tokens[Field.TOKEN0]}
               error={inputError}
+              label={'Output'}
               disableTokenSelect
             />
             <ColumnCenter>
@@ -705,6 +718,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
               atMax={atMaxAmount}
               token={tokens[Field.TOKEN1]}
               error={outputError}
+              label={'Output'}
               disableTokenSelect
             />
           </>

@@ -25,11 +25,11 @@ const TransactionStatusText = styled.span`
   align-items: center;
 `
 
-export default function CopyHelper(props, { toCopy }) {
+export default function CopyHelper(props) {
   const [isCopied, setCopied] = useCopyClipboard()
 
   return (
-    <CopyIcon onClick={() => setCopied(toCopy)}>
+    <CopyIcon onClick={() => setCopied(props.toCopy)}>
       {props.children}
       {isCopied ? (
         <TransactionStatusText>

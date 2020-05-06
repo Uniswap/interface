@@ -8,7 +8,7 @@ import { Link } from '../../theme'
 import { Text } from 'rebass'
 import { CloseIcon } from '../../theme/components'
 import { RowBetween } from '../Row'
-import { CheckCircle } from 'react-feather'
+import { ArrowUpCircle } from 'react-feather'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 
@@ -24,8 +24,8 @@ const Section = styled(AutoColumn)`
 
 const BottomSection = styled(Section)`
   background-color: ${({ theme }) => theme.bg2};
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 `
 
 const ConfirmedIcon = styled(ColumnCenter)`
@@ -76,32 +76,36 @@ function ConfirmationModal({
               <CloseIcon onClick={WrappedOnDismissed} />
             </RowBetween>
             <ConfirmedIcon>
-              {pendingConfirmation ? <Loader size="90px" /> : <CheckCircle size={90} color="#27AE60" />}
+              {pendingConfirmation ? (
+                <Loader size="90px" />
+              ) : (
+                <ArrowUpCircle strokeWidth={0.5} size={90} color="#ff007a" />
+              )}
             </ConfirmedIcon>
-            <AutoColumn gap="24px" justify={'center'}>
+            <AutoColumn gap="12px" justify={'center'}>
               <Text fontWeight={500} fontSize={20}>
                 {!pendingConfirmation ? 'Transaction Submitted' : 'Waiting For Confirmation'}
               </Text>
               <AutoColumn gap="12px" justify={'center'}>
-                <Text fontWeight={600} fontSize={16} color="#2172E5" textAlign="center">
+                <Text fontWeight={600} fontSize={14} color="" textAlign="center" style={{ width: '70%' }}>
                   {pendingText}
                 </Text>
               </AutoColumn>
               {!pendingConfirmation && (
                 <>
                   <Link href={getEtherscanLink(chainId, hash, 'transaction')}>
-                    <Text fontWeight={500} fontSize={14} color="#2172E5">
+                    <Text fontWeight={500} fontSize={14} color="#ff007a">
                       View on Etherscan
                     </Text>
                   </Link>
-                  <ButtonPrimary onClick={() => WrappedOnDismissed(true)} style={{ margin: '20px 0' }}>
+                  <ButtonPrimary onClick={() => WrappedOnDismissed(true)} style={{ margin: '20px 0 0 0' }}>
                     <Text fontWeight={500} fontSize={20}>
                       Close
                     </Text>
                   </ButtonPrimary>
                 </>
               )}
-              {pendingConfirmation && <div style={{ height: '138px' }} />}
+              {/* {pendingConfirmation && <div style={{ height: '138px' }} />} */}
               <Text fontSize={12} color="#565A69" textAlign="center">
                 {pendingConfirmation
                   ? 'Confirm this transaction in your wallet'

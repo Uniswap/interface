@@ -58,15 +58,15 @@ export const ButtonLight = styled(Base)`
   font-size: 16px;
   font-weight: 500;
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.05, theme.blue5)};
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.blue5)};
+    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.03, theme.blue5)};
+    background-color: ${({ theme, disabled }) => !disabled && darken(0.03, theme.blue5)};
   }
   &:hover {
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.blue5)};
+    background-color: ${({ theme, disabled }) => !disabled && darken(0.03, theme.blue5)};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.1, theme.blue5)};
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.1, theme.blue5)};
+    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.05, theme.blue5)};
+    background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.blue5)};
   }
 `
 
@@ -96,15 +96,15 @@ export const ButtonSecondary = styled(Base)`
   padding: 10px;
 
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.blue5)};
-    background-color: ${({ theme }) => darken(0.05, theme.blue5)};
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.03, theme.blue5)};
+    background-color: ${({ theme }) => darken(0.03, theme.blue5)};
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.blue5)};
+    background-color: ${({ theme }) => darken(0.03, theme.blue5)};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.blue5)};
-    background-color: ${({ theme }) => darken(0.1, theme.blue5)};
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.blue5)};
+    background-color: ${({ theme }) => darken(0.05, theme.blue5)};
   }
   &:disabled {
     background-color: ${({ theme }) => theme.blue5};
@@ -138,7 +138,7 @@ export const ButtonPink = styled(Base)`
 export const ButtonOutlined = styled(Base)`
   border: 1px solid #edeef2;
   background-color: transparent;
-  color: ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.text1};
 
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
@@ -258,12 +258,12 @@ export function ButtonDropwdown({ disabled = false, children, ...rest }) {
 
 export function ButtonDropwdownLight({ disabled = false, children, ...rest }) {
   return (
-    <ButtonEmpty {...rest} disabled={disabled}>
+    <ButtonOutlined {...rest} disabled={disabled}>
       <RowBetween>
         <div style={{ display: 'flex', alignItems: 'center' }}>{children}</div>
         <ChevronDown size={24} />
       </RowBetween>
-    </ButtonEmpty>
+    </ButtonOutlined>
   )
 }
 
