@@ -345,6 +345,8 @@ function ExchangePage({ sendingInput = false, history, params }) {
           : ''
           ? ''
           : ''
+          ? ''
+          : ''
     },
     initializeSwapState
   )
@@ -1409,7 +1411,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
       <BottomGrouping>
         {noRoute ? (
           <GreyCard style={{ textAlign: 'center' }}>
-            <TYPE.main>No exchange for this pair.</TYPE.main>
+            <TYPE.main>No path found.</TYPE.main>
 
             <Link
               onClick={() => {
@@ -1498,7 +1500,15 @@ function ExchangePage({ sendingInput = false, history, params }) {
                           : 'Minimum received'
                         : 'Maximum sold'}
                     </TYPE.black>
-                    <QuestionHelper text="A lower bound is set so you never get less than this amount." />
+                    <QuestionHelper
+                      text={
+                        independentField === Field.INPUT
+                          ? sending
+                            ? 'Price can change between when a transaction is submitted and when it is executed. This is the minimum amount you will send. A worse rate will cause your transaction to revert.'
+                            : 'Price can change between when a transaction is submitted and when it is executed. This is the minimum amount you will receive. A worse rate will cause your transaction to revert.'
+                          : 'Price can change between when a transaction is submitted and when it is executed. This is the maximum amount you will pay. A worse rate will cause your transaction to revert.'
+                      }
+                    />
                   </RowFixed>
                   <RowFixed>
                     <TYPE.black fontSize={14}>
@@ -1528,7 +1538,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
                     <TYPE.black fontSize={14} fontWeight={400}>
                       Price Impact
                     </TYPE.black>
-                    <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
+                    <QuestionHelper text="The difference between the market price and trade price due to trade size and available liquidity." />
                   </RowFixed>
                   <ErrorText
                     fontWeight={500}
@@ -1549,7 +1559,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
                     <TYPE.black fontSize={14} fontWeight={400}>
                       Liquidity Provider Fee
                     </TYPE.black>
-                    <QuestionHelper text="A portion of each trade (0.03%) goes to liquidity providers to incentivize liquidity on the protocol." />
+                    <QuestionHelper text="A small fee on every trade provides an incentive for liquidity providers to participate in the Uniswap protocol." />
                   </RowFixed>
                   <TYPE.black fontSize={14}>
                     {feeTimesInputFormatted
@@ -1563,7 +1573,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <TYPE.black fontWeight={400} fontSize={14}>
                   Set front running resistance
                 </TYPE.black>
-                <QuestionHelper text="Your transaction will revert if the price changes more than this amount after you submit your trade." />
+                <QuestionHelper text="Your transaction will revert if the price changes more than this amount after you submit a trade." />
               </RowFixed>
               <SlippageTabs
                 rawSlippage={allowedSlippage}

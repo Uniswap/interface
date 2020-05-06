@@ -154,8 +154,8 @@ function WarningCard({ onDismiss, urlAddedTokens, currency }) {
         {showPopup ? (
           <Popup>
             <Text>
-              The Uniswap smart contracts are designed to support any ERC20 token on Ethereum. Any token can be loaded
-              into the interface by entering its Ethereum address into the search field or passing it as a URL
+              The Uniswap V2 smart contracts are designed to support any ERC20 token on Ethereum. Any token can be
+              loaded into the interface by entering its Ethereum address into the search field or passing it as a URL
               parameter. Be careful when interacting with imported tokens as they have not been verified.
             </Text>
           </Popup>
