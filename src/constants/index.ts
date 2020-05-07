@@ -5,10 +5,13 @@ export const ROUTER_ADDRESS = '0xf164fC0Ec4E93095b804a4795bBe1e041497b92a'
 
 export const COMMON_BASES = {
   1: [WETH[ChainId.MAINNET]],
+  3: [WETH[ChainId.ROPSTEN]],
   4: [
     WETH[ChainId.RINKEBY],
     new Token(ChainId.RINKEBY, '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735', 18, 'DAI', 'Dai Stablecoin')
-  ]
+  ],
+  5: [WETH[ChainId.GÖRLI]],
+  42: [WETH[ChainId.KOVAN]]
 }
 
 export const SUPPORTED_THEMES = {

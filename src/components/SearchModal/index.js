@@ -592,7 +592,7 @@ function SearchModal({
                   <QuestionHelper text="These tokens are commonly used in pairs." />
                 </AutoRow>
                 <AutoRow gap="10px">
-                  {COMMON_BASES[chainId].map(token => {
+                  {COMMON_BASES[chainId]?.map(token => {
                     return (
                       <BaseWrapper
                         gap="6px"
