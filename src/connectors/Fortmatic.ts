@@ -13,9 +13,10 @@ export class FortmaticConnector extends FortmaticConnectorCore {
   async activate() {
     if (!this.fortmatic) {
       const { default: Fortmatic } = await import('fortmatic')
+      const { apiKey, chainId } = this as any
       this.fortmatic = new Fortmatic(
-        this.apiKey,
-        this.chainId === 1 || this.chainId === 4 ? undefined : chainIdToNetwork[this.chainId]
+        apiKey,
+        chainId === 1 || chainId === 4 ? undefined : chainIdToNetwork[chainId]
       )
     }
 
@@ -33,6 +34,6 @@ export class FortmaticConnector extends FortmaticConnectorCore {
 
     const [account] = await Promise.all([provider.enable().then(accounts => accounts[0]), pollForOverlayReady])
 
-    return { provider: this.fortmatic.getProvider(), chainId: this.chainId, account }
+    return { provider: this.fortmatic.getProvider(), chainId: (this as any).chainId, account }
   }
 }

@@ -143,7 +143,7 @@ export default function App() {
                           const t1 =
                             tokens?.[1] === 'ETH' ? 'ETH' : isAddress(tokens?.[1]) ? isAddress(tokens[1]) : undefined
                           if (t0 && t1) {
-                            return <Remove token0={t0} token1={t1} params={params} />
+                            return <Remove token0={t0} token1={t1} />
                           } else {
                             return <Redirect to="/pool" />
                           }
@@ -154,7 +154,7 @@ export default function App() {
                   </Suspense>
                 </Web3ReactManager>
               </Body>
-              <Footer></Footer>
+              <Footer/>
             </BodyWrapper>
             <StyledRed />
           </AppWrapper>
