@@ -1,5 +1,5 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import { useWeb3React } from '../../hooks'
 import { isMobile } from 'react-device-detect'
 import Copy from './Copy'
@@ -231,6 +231,7 @@ export default function AccountDetails({
   openOptions
 }) {
   const { chainId, account, connector } = useWeb3React()
+  const theme = useContext(ThemeContext)
 
   function formatConnectorName() {
     const isMetaMask = window.ethereum && window.ethereum.isMetaMask ? true : false
@@ -359,7 +360,7 @@ export default function AccountDetails({
         </LowerSection>
       ) : (
         <LowerSection>
-          <TYPE.body>Your transactions will appear here...</TYPE.body>
+          <TYPE.body color={theme.text1}>Your transactions will appear here...</TYPE.body>
         </LowerSection>
       )}
     </>

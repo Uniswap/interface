@@ -46,7 +46,7 @@ const BodyWrapper = styled.div`
   transition: height 0.3s ease;
 
   & > * {
-    max-width: calc(355px + 4rem);
+    max-width: calc(420px + 4rem);
     width: 90%;
   }
 
@@ -58,7 +58,7 @@ const BodyWrapper = styled.div`
 `
 
 const Body = styled.div`
-  max-width: 355px;
+  max-width: 420px;
   width: 100%;
   /* min-height: 340px; */
   background: ${({ theme }) => theme.bg1};
@@ -73,9 +73,8 @@ const Body = styled.div`
 
 const StyledRed = styled.div`
   width: 100%;
-  height: 150vh;
-  border-radius: 10vw;
-  background: ${({ theme }) => `radial-gradient(50% 50% at 50% 50%, ${theme.pink2} 0%, ${theme.white} 100%)`};
+  height: 200vh;
+  background: ${({ theme }) => `radial-gradient(50% 50% at 50% 50%, ${theme.pink2} 0%, ${theme.bg1} 100%)`};
   position: absolute;
   top: 0px;
   left: 0px;

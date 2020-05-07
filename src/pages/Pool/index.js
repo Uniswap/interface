@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
+import React, { useState, useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import { JSBI } from '@uniswap/sdk'
 import { withRouter } from 'react-router-dom'
 
@@ -36,6 +36,7 @@ function Supply({ history }) {
   const allTokens = useAllTokens()
   const allBalances = useAllBalances()
   const allPairs = useAllPairs()
+  const theme = useContext(ThemeContext)
 
   // initiate listener for LP balances
   useAccountLPBalances(account)
@@ -75,7 +76,9 @@ function Supply({ history }) {
       <Positions>
         <AutoColumn gap="12px">
           <RowBetween padding={'0 8px'}>
-            <Text fontWeight={500}>Your Pooled Liquidity</Text>
+            <Text color={theme.text1} fontWeight={500}>
+              Your Pooled Liquidity
+            </Text>
             <Question text="When you add liquidity, you are given pool tokens that represent your share. If you don’t see a pool you joined in this list, try importing a pool below." />
           </RowBetween>
           {filteredExchangeList?.length === 0 && (
@@ -83,7 +86,9 @@ function Supply({ history }) {
               padding="40px
           "
             >
-              <TYPE.body textAlign="center">No liquidity found.</TYPE.body>
+              <TYPE.body color={theme.text3} textAlign="center">
+                No liquidity found.
+              </TYPE.body>
             </LightCard>
           )}
           {filteredExchangeList}

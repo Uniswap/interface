@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import styled from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import '@reach/tooltip/styles.css'
 import { darken } from 'polished'
 
@@ -14,7 +14,6 @@ import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
 import { useAddressBalance } from '../../contexts/Balances'
-import { ThemeContext } from 'styled-components'
 
 const InputRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -103,7 +102,7 @@ const StyledBalanceMax = styled.button`
   font-weight: 500;
   cursor: pointer;
   margin-right: 0.5rem;
-  color: ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.buttonSecondaryText};
   :hover {
     border: 1px solid ${({ theme }) => theme.blue1};
   }

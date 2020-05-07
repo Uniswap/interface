@@ -84,7 +84,7 @@ export default function Provider({ children }) {
     LocalStorageKeys.MIGRATION_MESSAGE_DISMISSED,
     false
   )
-  const [darkMode, setDarkMode] = useLocalStorage<boolean>(LocalStorageKeys.DARK_MODE, false)
+  const [darkMode, setDarkMode] = useLocalStorage<boolean>(LocalStorageKeys.DARK_MODE, true)
   const [tokens, setTokens] = useLocalStorage<Token[], ReturnType<typeof serializeTokens>>(
     LocalStorageKeys.TOKENS,
     [],
