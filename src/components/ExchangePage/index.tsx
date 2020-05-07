@@ -1,6 +1,6 @@
 import React, { useState, useReducer, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { ethers } from 'ethers'
+import { ethers, Signer } from 'ethers'
 import { withRouter } from 'react-router-dom'
 import { parseUnits, parseEther } from '@ethersproject/units'
 import { WETH, TradeType, Pair, Trade, TokenAmount, JSBI, Percent } from '@uniswap/sdk'
@@ -592,10 +592,10 @@ function ExchangePage({ sendingInput = false, history, params }) {
     setAttemptingTxn(true)
 
     const signer = await getProviderOrSigner(library, account)
-    // get token contract if needed
+      // get token contract if needed
     let estimate: Function, method: Function, args, value
     if (tokens[Field.INPUT] === WETH[chainId]) {
-      signer
+      (signer as any)
         .sendTransaction({ to: recipient.toString(), value: hex(parsedAmounts[Field.INPUT].raw) })
         .then(response => {
           setTxHash(response.hash)

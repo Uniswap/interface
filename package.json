@@ -13,7 +13,7 @@
     "@types/node": "^13.7.4",
     "@types/react": "^16.9.21",
     "@types/react-dom": "^16.9.5",
-    "@uniswap/sdk": "^2.0.1",
+    "@uniswap/sdk": "^2.0.3",
     "@uniswap/v2-core": "1.0.0",
     "@uniswap/v2-periphery": "1.0.0-beta.0",
     "@web3-react/core": "^6.0.2",

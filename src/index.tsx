@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
 import { Web3ReactProvider, createWeb3ReactRoot } from '@web3-react/core'
 import { ethers } from 'ethers'
+import { Web3Provider } from 'ethers/providers'
 
 import { NetworkContextName } from './constants'
 import { isMobile } from 'react-device-detect'
@@ -19,16 +20,16 @@ import './i18n'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
-function getLibrary(provider) {
+function getLibrary(provider): Web3Provider {
   const library = new ethers.providers.Web3Provider(provider)
   library.pollingInterval = 10000
   return library
 }
 
 if (process.env.NODE_ENV === 'production') {
-  ReactGA.initialize('UA-128182339-1')
+  ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
   ReactGA.set({
-    customBrowserType: !isMobile ? 'desktop' : window.web3 || window.ethereum ? 'mobileWeb3' : 'mobileRegular'
+    customBrowserType: !isMobile ? 'desktop' : 'web3' in window || 'ethereum' in window ? 'mobileWeb3' : 'mobileRegular'
   })
 } else {
   ReactGA.initialize('test', { testMode: true })
