@@ -69,8 +69,8 @@ const AccountElement = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.white : theme.bg3)};
-  border: 1px solid ${({ theme }) => theme.bg3};
+  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
+  /* border: 1px solid ${({ theme }) => theme.bg1}; */
   border-radius: 12px;
   padding-left: ${({ active }) => (active ? '8px' : 0)};
   white-space: nowrap;
@@ -182,7 +182,7 @@ export default function Header() {
           </TestnetWrapper>
           <AccountElement active={!!account}>
             {account ? (
-              <Row style={{ marginRight: '-1.25rem', paddingRight: '1.75rem' }}>
+              <Row style={{ marginRight: '-1.25rem' }}>
                 <Text fontWeight={500}> {userEthBalance && userEthBalance?.toFixed(4) + ' ETH'}</Text>
               </Row>
             ) : (

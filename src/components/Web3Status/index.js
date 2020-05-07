@@ -8,6 +8,7 @@ import { Activity } from 'react-feather'
 import Identicon from '../Identicon'
 import PortisIcon from '../../assets/images/portisIcon.png'
 import WalletModal from '../WalletModal'
+import { ButtonSecondary } from '../Button'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
@@ -37,7 +38,7 @@ const IconWrapper = styled.div`
   }
 `
 
-const Web3StatusGeneric = styled.button`
+const Web3StatusGeneric = styled(ButtonSecondary)`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
   /* font-size: 0.9rem; */
@@ -64,15 +65,15 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 
 const Web3StatusConnect = styled(Web3StatusGeneric)`
   background-color: ${({ theme }) => theme.blue4};
-  border: 1px solid ${({ theme }) => theme.blue4};
+  /* border: 1px solid ${({ theme }) => theme.blue4}; */
   border: none;
-  color: ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.buttonSecondaryText};
   font-weight: 500;
 
   :hover,
   :focus {
-    border: 1px solid ${({ theme }) => darken(0.1, theme.blue4)};
-    color: ${({ theme }) => darken(0.1, theme.blue1)};
+    border: 1px solid ${({ theme }) => darken(0.05, theme.blue4)};
+    color: ${({ theme }) => theme.buttonSecondaryText};
   }
 
   ${({ faded }) =>
@@ -80,12 +81,12 @@ const Web3StatusConnect = styled(Web3StatusGeneric)`
     css`
       background-color: ${({ theme }) => theme.blue5};
       border: 1px solid ${({ theme }) => theme.blue5};
-      color: ${({ theme }) => theme.blue1};
+      color: ${({ theme }) => theme.buttonSecondaryText};
 
       :hover,
       :focus {
-        border: 1px solid ${({ theme }) => darken(0.1, theme.blue4)};
-        color: ${({ theme }) => darken(0.1, theme.blue1)};
+        border: 1px solid ${({ theme }) => darken(0.05, theme.blue4)};
+        color: ${({ theme }) => darken(0.05, theme.buttonSecondaryText)};
       }
     `}
 `
