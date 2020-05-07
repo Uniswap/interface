@@ -1,19 +1,17 @@
-import { Contract, ethers, Signer } from 'ethers'
+import { WETH } from '@uniswap/sdk'
 
-import IUniswapV2Pair from '@uniswap/v2-core/build/IUniswapV2Pair.json'
-import IUniswapV2Router01 from '@uniswap/v2-periphery/build/IUniswapV2Router01.json'
+import {abi as IUniswapV2PairABI} from '@uniswap/v2-core/build/IUniswapV2Pair.json'
+import { abi as IUniswapV2Router01ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router01.json'
+import { Contract, ethers, Signer } from 'ethers'
 import { JsonRpcProvider, Provider } from 'ethers/providers'
+import { ROUTER_ADDRESS, SUPPORTED_THEMES } from '../constants'
 
 import ERC20_ABI from '../constants/abis/erc20.json'
 import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32.json'
-import { SUPPORTED_THEMES, ROUTER_ADDRESS } from '../constants'
-import { bigNumberify, keccak256, defaultAbiCoder, toUtf8Bytes, solidityPack } from 'ethers/utils'
 
 import UncheckedJsonRpcSigner from './signer'
-import { WETH } from '@uniswap/sdk'
 
 export enum ERROR_CODES {
-  TOKEN_NAME = 0,
   TOKEN_SYMBOL = 1,
   TOKEN_DECIMALS = 2
 }
@@ -55,7 +53,7 @@ export function getQueryParam(windowLocation, name) {
 }
 
 function parseUrlAddress(param: string): string {
-  const addr = isAddress(getQueryParam(window.location, 'inputTokenAddress'))
+  const addr = isAddress(getQueryParam(window.location, param))
   if (addr === false) {
     return ''
   }
@@ -159,13 +157,12 @@ export function getContract(address: string, ABI: any, library: JsonRpcProvider,
 
 // account is optional
 export function getRouterContract(chainId, library, account) {
-  const router = getContract(ROUTER_ADDRESS, IUniswapV2Router01.abi, library, account)
-  return router
+  return getContract(ROUTER_ADDRESS, IUniswapV2Router01ABI, library, account)
 }
 
 // account is optional
 export function getExchangeContract(pairAddress, library, account) {
-  return getContract(pairAddress, IUniswapV2Pair.abi, library, account)
+  return getContract(pairAddress, IUniswapV2PairABI, library, account)
 }
 
 // get token name
@@ -246,50 +243,6 @@ export async function getTokenAllowance(address, tokenAddress, spenderAddress, l
   }
 
   return getContract(tokenAddress, ERC20_ABI, library).allowance(address, spenderAddress)
-}
-
-const PERMIT_TYPEHASH = keccak256(
-  toUtf8Bytes('Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)')
-)
-
-export function expandTo18Decimals(n) {
-  return bigNumberify(n).mul(bigNumberify(10).pow(18))
-}
-
-function getDomainSeparator(name, tokenAddress) {
-  return keccak256(
-    defaultAbiCoder.encode(
-      ['bytes32', 'bytes32', 'bytes32', 'uint256', 'address'],
-      [
-        keccak256(toUtf8Bytes('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)')),
-        keccak256(toUtf8Bytes(name)),
-        keccak256(toUtf8Bytes('1')),
-        1,
-        tokenAddress
-      ]
-    )
-  )
-}
-
-export async function getApprovalDigest(token, approve, nonce, deadline) {
-  const name = await token.name()
-  const DOMAIN_SEPARATOR = getDomainSeparator(name, token.address)
-  return keccak256(
-    solidityPack(
-      ['bytes1', 'bytes1', 'bytes32', 'bytes32'],
-      [
-        '0x19',
-        '0x01',
-        DOMAIN_SEPARATOR,
-        keccak256(
-          defaultAbiCoder.encode(
-            ['bytes32', 'address', 'address', 'uint256', 'uint256', 'uint256'],
-            [PERMIT_TYPEHASH, approve.owner, approve.spender, approve.value, nonce, deadline]
-          )
-        )
-      ]
-    )
-  )
 }
 
 export function isWETH(token) {

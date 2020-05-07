@@ -32,6 +32,7 @@
     "i18next-xhr-backend": "^2.0.1",
     "jazzicon": "^1.5.0",
     "polished": "^3.3.2",
+    "prettier": "^1.17.0",
     "qrcode.react": "^0.9.3",
     "react": "^16.8.6",
     "react-device-detect": "^1.6.2",
@@ -78,8 +79,5 @@
       "last 1 safari version"
     ]
   },
-  "license": "GPL-3.0-or-later",
-  "devDependencies": {
-    "prettier": "^1.17.0"
-  }
+  "license": "GPL-3.0-or-later"
 }

@@ -1,6 +1,6 @@
 import React, { useState, useReducer, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { ethers, Signer } from 'ethers'
+import { ethers } from 'ethers'
 import { withRouter } from 'react-router-dom'
 import { parseUnits, parseEther } from '@ethersproject/units'
 import { WETH, TradeType, Pair, Trade, TokenAmount, JSBI, Percent } from '@uniswap/sdk'
