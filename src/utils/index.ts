@@ -1,25 +1,20 @@
 import { Contract } from '@ethersproject/contracts'
 import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
-import { parseBytes32String, toUtf8Bytes } from '@ethersproject/strings'
-import { keccak256 } from '@ethersproject/keccak256'
-import { pack } from '@ethersproject/solidity'
-import { defaultAbiCoder } from '@ethersproject/abi'
+import { parseBytes32String } from '@ethersproject/strings'
+import { BigNumber } from '@ethersproject/bignumber'
+import { WETH } from '@uniswap/sdk'
 
-import IUniswapV2Pair from '@uniswap/v2-core/build/IUniswapV2Pair.json'
-import IUniswapV2Router01 from '@uniswap/v2-periphery/build/IUniswapV2Router01.json'
+import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
+import { abi as IUniswapV2Router01ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router01.json'
+import { ROUTER_ADDRESS, SUPPORTED_THEMES } from '../constants'
 
 import ERC20_ABI from '../constants/abis/erc20.json'
 import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32.json'
-import { SUPPORTED_THEMES, ROUTER_ADDRESS } from '../constants'
 
-import { WETH } from '@uniswap/sdk'
-import { BigNumber } from '@ethersproject/bignumber'
-
-export const ERROR_CODES = {
-  TOKEN_NAME: 0,
-  TOKEN_SYMBOL: 1,
-  TOKEN_DECIMALS: 2
+export enum ERROR_CODES {
+  TOKEN_SYMBOL = 1,
+  TOKEN_DECIMALS = 2
 }
 
 export function safeAccess(object, path) {
@@ -58,20 +53,35 @@ export function getQueryParam(windowLocation, name) {
   return q && q[1]
 }
 
-export function getAllQueryParams() {
+function parseUrlAddress(param: string): string {
+  const addr = isAddress(getQueryParam(window.location, param))
+  if (addr === false) {
+    return ''
+  }
+  return addr
+}
+
+function parseUrlTokenAmount(paramName: string): string {
+  const value = getQueryParam(window.location, paramName)
+  if (!isNaN(Number(value))) {
+    return ''
+  }
+  return value
+}
+
+interface QueryParams {
+  readonly inputTokenAddress: string
+  readonly outputTokenAddress: string
+  readonly inputTokenAmount: string
+  readonly outputTokenAmount: string
+}
+
+export function getAllQueryParams(): QueryParams {
   return {
-    inputTokenAddress: isAddress(getQueryParam(window.location, 'inputTokenAddress'))
-      ? isAddress(getQueryParam(window.location, 'inputTokenAddress'))
-      : '',
-    outputTokenAddress: isAddress(getQueryParam(window.location, 'outputTokenAddress'))
-      ? isAddress(getQueryParam(window.location, 'outputTokenAddress'))
-      : '',
-    inputTokenAmount: !isNaN(Number(getQueryParam(window.location, 'inputTokenAmount')))
-      ? getQueryParam(window.location, 'inputTokenAmount')
-      : '',
-    outputTokenAmount: !isNaN(Number(getQueryParam(window.location, 'outputTokenAmount')))
-      ? getQueryParam(window.location, 'outputTokenAmount')
-      : ''
+    inputTokenAddress: parseUrlAddress('inputTokenAddress'),
+    outputTokenAddress: parseUrlAddress('outputTokenAddress'),
+    inputTokenAmount: parseUrlTokenAmount('inputTokenAmount'),
+    outputTokenAmount: parseUrlTokenAmount('outputTokenAmount')
   }
 }
 
@@ -116,7 +126,7 @@ export function shortenTransactionHash(hash, digits = 4) {
   return `${hash.substring(0, digits + 2)}...${hash.substring(66 - digits)}`
 }
 
-export function isAddress(value: any) {
+export function isAddress(value: any): string | false {
   try {
     return getAddress(value.toLowerCase())
   } catch {
@@ -129,12 +139,12 @@ export function calculateGasMargin(value: BigNumber) {
 }
 
 // account is optional
-export function getProviderOrSigner(library: any, account?: string) {
+export function getProviderOrSigner(library: any, account?: string): any {
   return account ? library.getSigner(account).connectUnchecked() : library
 }
 
 // account is optional
-export function getContract(address, ABI, library, account?) {
+export function getContract(address: string, ABI: any, library: any, account?: string): Contract {
   if (!isAddress(address) || address === AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
@@ -144,13 +154,12 @@ export function getContract(address, ABI, library, account?) {
 
 // account is optional
 export function getRouterContract(chainId, library, account) {
-  const router = getContract(ROUTER_ADDRESS, IUniswapV2Router01.abi, library, account)
-  return router
+  return getContract(ROUTER_ADDRESS, IUniswapV2Router01ABI, library, account)
 }
 
 // account is optional
 export function getExchangeContract(pairAddress, library, account) {
-  return getContract(pairAddress, IUniswapV2Pair.abi, library, account)
+  return getContract(pairAddress, IUniswapV2PairABI, library, account)
 }
 
 // get token name
@@ -231,50 +240,6 @@ export async function getTokenAllowance(address, tokenAddress, spenderAddress, l
   }
 
   return getContract(tokenAddress, ERC20_ABI, library).allowance(address, spenderAddress)
-}
-
-const PERMIT_TYPEHASH = keccak256(
-  toUtf8Bytes('Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)')
-)
-
-export function expandTo18Decimals(n) {
-  return BigNumber.from(n).mul(BigNumber.from(10).pow(18))
-}
-
-function getDomainSeparator(name, tokenAddress) {
-  return keccak256(
-    defaultAbiCoder.encode(
-      ['bytes32', 'bytes32', 'bytes32', 'uint256', 'address'],
-      [
-        keccak256(toUtf8Bytes('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)')),
-        keccak256(toUtf8Bytes(name)),
-        keccak256(toUtf8Bytes('1')),
-        1,
-        tokenAddress
-      ]
-    )
-  )
-}
-
-export async function getApprovalDigest(token, approve, nonce, deadline) {
-  const name = await token.name()
-  const DOMAIN_SEPARATOR = getDomainSeparator(name, token.address)
-  return keccak256(
-    pack(
-      ['bytes1', 'bytes1', 'bytes32', 'bytes32'],
-      [
-        '0x19',
-        '0x01',
-        DOMAIN_SEPARATOR,
-        keccak256(
-          defaultAbiCoder.encode(
-            ['bytes32', 'address', 'address', 'uint256', 'uint256', 'uint256'],
-            [PERMIT_TYPEHASH, approve.owner, approve.spender, approve.value, nonce, deadline]
-          )
-        )
-      ]
-    )
-  )
 }
 
 export function isWETH(token) {

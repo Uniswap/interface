@@ -19,19 +19,19 @@ import './i18n'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
-function getLibrary(provider) {
+function getLibrary(provider): Web3Provider {
   const library = new Web3Provider(provider)
   library.pollingInterval = 10000
   return library
 }
 
 if (process.env.NODE_ENV === 'production') {
-  ReactGA.initialize('UA-128182339-1')
+  ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
   ReactGA.set({
-    customBrowserType: !isMobile ? 'desktop' : window.web3 || window.ethereum ? 'mobileWeb3' : 'mobileRegular'
+    customBrowserType: !isMobile ? 'desktop' : 'web3' in window || 'ethereum' in window ? 'mobileWeb3' : 'mobileRegular'
   })
 } else {
-  ReactGA.initialize('test', { testMode: true })
+  ReactGA.initialize('test', { testMode: true, debug: true })
 }
 
 ReactGA.pageview(window.location.pathname + window.location.search)
