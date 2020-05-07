@@ -15,21 +15,13 @@ import {
 import { Link } from '../../theme/components'
 
 const tabOrder = [
-  {
-    path: '/swap',
-    textKey: 'swap',
-    regex: /\/swap/
-  },
+
   {
     path: '/send',
     textKey: 'send',
     regex: /\/send/
   },
-  {
-    path: '/add-liquidity',
-    textKey: 'pool',
-    regex: /\/add-liquidity|\/remove-liquidity|\/create-exchange.*/
-  }
+
 ]
 
 const BetaMessage = styled.div`
