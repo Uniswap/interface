@@ -12,9 +12,9 @@ import { isAddress, getAllQueryParams } from '../utils'
 
 const Swap = lazy(() => import('./Swap'))
 const Send = lazy(() => import('./Send'))
-const Pool = lazy(() => import('./Supply'))
-const Add = lazy(() => import('./Supply/AddLiquidity'))
-const Remove = lazy(() => import('./Supply/RemoveLiquidity'))
+const Pool = lazy(() => import('./Pool'))
+const Add = lazy(() => import('./Pool/AddLiquidity'))
+const Remove = lazy(() => import('./Pool/RemoveLiquidity'))
 const Find = lazy(() => import('../components/PoolFinder'))
 const Create = lazy(() => import('../components/CreatePool'))
 
@@ -97,15 +97,15 @@ export default function App() {
   return (
     <>
       <Suspense fallback={null}>
-        <AppWrapper>
-          <HeaderWrapper>
-            <Header />
-          </HeaderWrapper>
-          <BodyWrapper>
-            <Popups />
-            <Body>
-              <Web3ReactManager>
-                <BrowserRouter>
+        <BrowserRouter>
+          <AppWrapper>
+            <HeaderWrapper>
+              <Header />
+            </HeaderWrapper>
+            <BodyWrapper>
+              <Popups />
+              <Body>
+                <Web3ReactManager>
                   <NavigationTabs />
                   {/* this Suspense is for route code-splitting */}
                   <Suspense fallback={null}>
@@ -153,13 +153,13 @@ export default function App() {
                       <Redirect to="/" />
                     </Switch>
                   </Suspense>
-                </BrowserRouter>
-              </Web3ReactManager>
-            </Body>
-            <Footer></Footer>
-          </BodyWrapper>
-          <StyledRed />
-        </AppWrapper>
+                </Web3ReactManager>
+              </Body>
+              <Footer></Footer>
+            </BodyWrapper>
+            <StyledRed />
+          </AppWrapper>
+        </BrowserRouter>
       </Suspense>
     </>
   )
