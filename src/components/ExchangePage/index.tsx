@@ -72,7 +72,7 @@ const AdvancedDropwdown = styled.div`
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   color: ${({ theme }) => theme.text2};
-  background-color: ${({ theme, isDark }) => (isDark ? theme.bg1 : theme.bg2)};
+  background-color: ${({ theme }) => theme.advancedBG};
   color: ${({ theme }) => theme.text2};
   z-index: -1;
 `

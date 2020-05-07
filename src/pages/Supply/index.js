@@ -69,7 +69,7 @@ function Supply({ history }) {
           setShowPoolSearch(true)
         }}
       >
-        <Text fontWeight={500} fontSize={20} color={theme.text1}>
+        <Text fontWeight={500} fontSize={20}>
           Join {filteredExchangeList?.length > 0 ? 'another' : 'a'} pool
         </Text>
       </ButtonPrimary>

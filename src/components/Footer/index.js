@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Send, Sun, Moon } from 'react-feather'
-import { Link } from '../../theme/components'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 import { ButtonSecondary } from '../Button'
@@ -28,7 +27,7 @@ export default function Footer() {
         <ButtonSecondary
           style={{
             padding: ' 8px 12px',
-            marginRight: '0px',
+            marginRight: '8px',
             width: 'fit-content'
           }}
         >
@@ -39,7 +38,7 @@ export default function Footer() {
         onClick={toggleDarkMode}
         style={{
           padding: ' 8px 12px',
-          marginRight: '8px',
+          marginRight: '0px',
           width: 'fit-content'
         }}
       >
