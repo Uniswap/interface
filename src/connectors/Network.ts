@@ -2,14 +2,14 @@ import { NetworkConnector as NetworkConnectorCore } from '@web3-react/network-co
 
 export class NetworkConnector extends NetworkConnectorCore {
   pause() {
-    if (this.active) {
-      this.providers[this.currentChainId].stop()
+    if ((this as any).active) {
+      (this as any).providers[(this as any).currentChainId].stop()
     }
   }
 
   resume() {
-    if (this.active) {
-      this.providers[this.currentChainId].start()
+    if ((this as any).active) {
+      (this as any).providers[(this as any).currentChainId].start()
     }
   }
 }

@@ -130,6 +130,8 @@ const MigrateBanner = styled(AutoColumn)`
   `};
 `
 
+const COMMIT_MESSAGE = `Built @ ${process.env.REACT_APP_GIT_COMMIT}`;
+
 function Header({ history }) {
   const { account, chainId } = useWeb3React()
 
@@ -152,7 +154,7 @@ function Header({ history }) {
         <HeaderElement>
           <Title>
             <UniIcon onClick={() => history.push('/')}>
-              <img src={Logo} alt="logo" />
+              <img src={Logo} alt="logo" title={COMMIT_MESSAGE} />
             </UniIcon>
             {!isMobile && (
               <TitleText onClick={() => history.push('/')}>
