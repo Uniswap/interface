@@ -58,12 +58,12 @@ const StyledNavLink = styled(NavLink).attrs({
     border-radius: 12px;
     box-sizing: border-box;
     font-weight: 500;
-    color: ${({ theme }) => theme.black};
+    color: ${({ theme }) => theme.text1};
   }
 
   :hover,
   :focus {
-    color: ${({ theme }) => darken(0.1, theme.black)};
+    color: ${({ theme }) => darken(0.1, theme.text1)};
   }
 `
 
@@ -73,7 +73,7 @@ const ActiveText = styled.div`
 `
 
 const ArrowLink = styled(ArrowLeft)`
-  color: ${({ theme }) => theme.black};
+  color: ${({ theme }) => theme.text1};
 `
 
 function NavigationTabs({ location: { pathname }, history }) {

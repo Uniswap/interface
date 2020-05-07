@@ -13,9 +13,12 @@ import { YellowCard, GreyCard } from '../Card'
 import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useWalletModalToggle } from '../../contexts/Application'
+import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 import Logo from '../../assets/svg/logo.svg'
 import Wordmark from '../../assets/svg/wordmark.svg'
+import LogoDark from '../../assets/svg/logo_white.svg'
+import WordmarkDark from '../../assets/svg/wordmark_white.svg'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 
@@ -98,7 +101,7 @@ const Alpha = styled(GreyCard)`
   margin-right: 10px;
   border-radius: 12px;
   padding: 3px 7px;
-  background-color: ${({ theme }) => theme.blue1};
+  background-color: ${({ theme }) => theme.pink2};
   color: ${({ theme }) => theme.white};
   font-size: 12px;
   font-weight: 600;
@@ -116,7 +119,7 @@ const MigrateBanner = styled(AutoColumn)`
   padding: 12px 0;
   display: flex;
   justify-content: center;
-  background-color: ${({ theme }) => theme.blue4};
+  background-color: ${({ theme }) => theme.pink3};
   color: ${({ theme }) => theme.pink2};
   font-weight: 500;
   text-align: center;
@@ -135,6 +138,7 @@ export default function Header() {
 
   const userEthBalance = useAddressBalance(account, WETH[chainId])
   const toggleWalletModal = useWalletModalToggle()
+  const [isDark] = useDarkModeManager()
 
   return (
     <HeaderFrame>
@@ -153,12 +157,16 @@ export default function Header() {
         <HeaderElement>
           <Title>
             <UniIcon id="link" href="/">
-              <img src={Logo} alt="logo" />
+              <img src={isDark ? LogoDark : Logo} alt="logo" />
             </UniIcon>
             {!isMobile && (
               <TitleText>
                 <Link id="link" href="/">
-                  <img style={{ marginLeft: '4px', marginTop: '4px' }} src={Wordmark} alt="logo" />
+                  <img
+                    style={{ marginLeft: '4px', marginTop: '4px' }}
+                    src={isDark ? WordmarkDark : Wordmark}
+                    alt="logo"
+                  />
                 </Link>
               </TitleText>
             )}

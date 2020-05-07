@@ -1,5 +1,5 @@
-import React, { useReducer, useState, useCallback, useEffect } from 'react'
-import styled from 'styled-components'
+import React, { useReducer, useState, useCallback, useEffect, useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import { ethers } from 'ethers'
 import { withRouter } from 'react-router-dom'
 import { parseUnits, parseEther } from '@ethersproject/units'
@@ -346,6 +346,8 @@ function AddLiquidity({ token0, token1, step = false }) {
   const [outputError, setOutputError] = useState('')
   const [isValid, setIsValid] = useState(false)
 
+  const theme = useContext(ThemeContext) as object
+
   useEffect(() => {
     // reset errors
     setGeneralError(null)
@@ -555,7 +557,7 @@ function AddLiquidity({ token0, token1, step = false }) {
             {tokens[Field.INPUT]?.symbol + ':' + tokens[Field.OUTPUT]?.symbol + ' Pool Tokens'}
           </Text>
         </Row>
-        <TYPE.italic fontSize={12} color="#565A69" textAlign="center" padding={'12px 0 0 0 '}>
+        <TYPE.italic fontSize={12} textAlign="center" padding={'12px 0 0 0 '}>
           {`Output is estimated. You will receive at least ${liquidityMinted?.toSignificant(6)} UNI ${
             tokens[Field.INPUT]?.symbol
           }/${tokens[Field.OUTPUT]?.symbol} or the transaction will revert.`}
