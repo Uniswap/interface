@@ -155,7 +155,7 @@ export default function App() {
                   </Suspense>
                 </Web3ReactManager>
               </Body>
-              <Footer></Footer>
+              <Footer/>
             </BodyWrapper>
             <StyledRed />
           </AppWrapper>
