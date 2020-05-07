@@ -52,8 +52,8 @@
     "use-media": "^1.4.0"
   },
   "scripts": {
-    "start": "cross-env REACT_APP_GIT_COMMIT=$(git describe --always) react-scripts start",
-    "build": "cross-env REACT_APP_GIT_COMMIT=$(git describe --always) react-scripts build",
+    "start": "cross-env REACT_APP_GIT_COMMIT_HASH=$(git show -s --format=%H) react-scripts start",
+    "build": "cross-env REACT_APP_GIT_COMMIT_HASH=$(git show -s --format=%H) react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint:base": "yarn eslint './src/**/*.{js,jsx}'",
