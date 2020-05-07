@@ -350,6 +350,9 @@ function SearchModal({
         const token0 = allTokens[allPairs[pairAddress].token0]
         const token1 = allTokens[allPairs[pairAddress].token1]
         const balance = allBalances?.[account]?.[pairAddress]?.toSignificant(6)
+        const zeroBalance =
+          allBalances?.[account]?.[pairAddress]?.raw &&
+          JSBI.equal(allBalances?.[account]?.[pairAddress].raw, JSBI.BigInt(0))
         return (
           <MenuItem
             key={i}
@@ -374,7 +377,7 @@ function SearchModal({
                 onDismiss()
               }}
             >
-              {balance ? 'Manage' : 'Join'}
+              {balance ? (zeroBalance ? 'Join' : 'Manage') : 'Join'}
             </ButtonPrimary>
           </MenuItem>
         )
