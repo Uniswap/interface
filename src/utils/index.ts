@@ -79,7 +79,7 @@ export function getAllQueryParams(): QueryParams {
   return {
     inputTokenAddress: parseUrlAddress('inputTokenAddress'),
     outputTokenAddress: parseUrlAddress('outputTokenAddress'),
-    inputTokenAmount: parseUrlAddress('inputTokenAmount'),
+    inputTokenAmount: parseUrlTokenAmount('inputTokenAmount'),
     outputTokenAmount: parseUrlTokenAmount('outputTokenAmount'),
   }
 }
