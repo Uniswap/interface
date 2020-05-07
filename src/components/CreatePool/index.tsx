@@ -72,7 +72,7 @@ function CreatePool({ history }) {
                   {token0?.symbol}{' '}
                 </Text>
                 <TYPE.darkGray fontWeight={500} fontSize={16} marginLeft={'8px'}>
-                  {token0.symbol === 'ETH' && '(default)'}
+                  {token0?.symbol === 'ETH' && '(default)'}
                 </TYPE.darkGray>
               </Row>
             </ButtonDropwdownLight>
