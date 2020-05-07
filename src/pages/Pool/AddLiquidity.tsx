@@ -569,7 +569,7 @@ function AddLiquidity({ token0, token1, step = false }) {
             {tokens[Field.INPUT]?.symbol + ':' + tokens[Field.OUTPUT]?.symbol + ' Pool Tokens'}
           </Text>
         </Row>
-        <TYPE.italic fontSize={12} color="#565A69" textAlign="center" padding={'12px 0 0 0 '}>
+        <TYPE.italic fontSize={12} textAlign="center" padding={'12px 0 0 0 '}>
           {`Output is estimated. You will receive at least ${liquidityMinted?.toSignificant(6)} UNI ${
             tokens[Field.INPUT]?.symbol
           }/${tokens[Field.OUTPUT]?.symbol} or the transaction will revert.`}
@@ -650,26 +650,22 @@ function AddLiquidity({ token0, token1, step = false }) {
     return (
       <AutoRow justify="space-between">
         <AutoColumn justify="center">
-          <Text fontWeight={500} fontSize={16} color="#000000">
-            {displayPriceInput}
-          </Text>
+          <TYPE.black>{displayPriceInput}</TYPE.black>
           <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
             {tokens[Field.OUTPUT]?.symbol} per {tokens[Field.INPUT]?.symbol}
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
-          <Text fontWeight={500} fontSize={16} color="#000000">
-            {displayPriceOutput}
-          </Text>
+          <TYPE.black>{displayPriceOutput}</TYPE.black>
           <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
             {tokens[Field.INPUT]?.symbol} per {tokens[Field.OUTPUT]?.symbol}
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
-          <Text fontWeight={500} fontSize={16} color="#000000">
+          <TYPE.black>
             {noLiquidity && derivedPrice ? '100' : poolTokenPercentage ? poolTokenPercentage?.toFixed(2) : '0.0'}
             {'%'}
-          </Text>
+          </TYPE.black>
           <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
             Pool Share
           </Text>

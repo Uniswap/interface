@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import styled, { keyframes } from 'styled-components'
+import { HelpCircle as Question } from 'react-feather'
 
-import question from '../../assets/images/question.svg'
+// import question from '../../assets/images/question.svg'
 
 const Wrapper = styled.div`
   position: relative;
@@ -18,18 +19,14 @@ const QuestionWrapper = styled.div`
   outline: none;
   cursor: default;
   border-radius: 36px;
+  background-color: ${({ theme }) => theme.bg2};
+  color: ${({ theme }) => theme.text2};
 
   :hover,
   :focus {
     opacity: 0.7;
   }
 `
-
-const HelpCircleStyled = styled.img`
-  height: 20px;
-  width: 20px;
-`
-
 const fadeIn = keyframes`
   from {
     opacity : 0;
@@ -83,7 +80,7 @@ export default function QuestionHelper({ text }) {
           setPopup(false)
         }}
       >
-        <HelpCircleStyled src={question} alt="popup" />
+        <Question size={16} />
       </QuestionWrapper>
       {showPopup && <Popup>{text}</Popup>}
     </Wrapper>
