@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Send } from 'react-feather'
-import { Link } from '../../theme/components'
+import { Send, Sun, Moon } from 'react-feather'
+import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 import { ButtonSecondary } from '../Button'
 
@@ -19,19 +19,30 @@ const FooterFrame = styled.div`
 `
 
 export default function Footer() {
+  const [darkMode, toggleDarkMode] = useDarkModeManager()
+
   return (
     <FooterFrame>
+      <form action="https://forms.gle/DaLuqvJsVhVaAM3J9">
+        <ButtonSecondary
+          style={{
+            padding: ' 8px 12px',
+            marginRight: '8px',
+            width: 'fit-content'
+          }}
+        >
+          <Send size={16} style={{ marginRight: '8px' }} /> Feedback
+        </ButtonSecondary>
+      </form>
       <ButtonSecondary
+        onClick={toggleDarkMode}
         style={{
           padding: ' 8px 12px',
           marginRight: '0px',
           width: 'fit-content'
         }}
-        href="https://forms.gle/DaLuqvJsVhVaAM3J9"
       >
-        <Link href="https://forms.gle/DaLuqvJsVhVaAM3J9">
-          <Send size={16} style={{ marginRight: '8px' }} /> Feedback
-        </Link>
+        {darkMode ? <Sun size={16} /> : <Moon size={16} />}
       </ButtonSecondary>
     </FooterFrame>
   )

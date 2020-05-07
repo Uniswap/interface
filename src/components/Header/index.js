@@ -14,9 +14,12 @@ import { YellowCard, GreyCard } from '../Card'
 import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useWalletModalToggle } from '../../contexts/Application'
+import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 import Logo from '../../assets/svg/logo.svg'
 import Wordmark from '../../assets/svg/wordmark.svg'
+import LogoDark from '../../assets/svg/logo_white2.svg'
+import WordmarkDark from '../../assets/svg/wordmark_white.svg'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 
@@ -67,8 +70,8 @@ const AccountElement = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.white : theme.bg3)};
-  border: 1px solid ${({ theme }) => theme.bg3};
+  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
+  /* border: 1px solid ${({ theme }) => theme.bg1}; */
   border-radius: 12px;
   padding-left: ${({ active }) => (active ? '8px' : 0)};
   white-space: nowrap;
@@ -99,7 +102,7 @@ const Alpha = styled(GreyCard)`
   margin-right: 10px;
   border-radius: 12px;
   padding: 3px 7px;
-  background-color: ${({ theme }) => theme.blue1};
+  background-color: ${({ theme }) => theme.pink2};
   color: ${({ theme }) => theme.white};
   font-size: 12px;
   font-weight: 600;
@@ -117,7 +120,7 @@ const MigrateBanner = styled(AutoColumn)`
   padding: 12px 0;
   display: flex;
   justify-content: center;
-  background-color: ${({ theme }) => theme.blue4};
+  background-color: ${({ theme }) => theme.pink3};
   color: ${({ theme }) => theme.pink2};
   font-weight: 500;
   text-align: center;
@@ -136,6 +139,7 @@ function Header({ history }) {
 
   const userEthBalance = useAddressBalance(account, WETH[chainId])
   const toggleWalletModal = useWalletModalToggle()
+  const [isDark] = useDarkModeManager()
 
   return (
     <HeaderFrame>
@@ -153,12 +157,18 @@ function Header({ history }) {
       <RowBetween padding="1rem">
         <HeaderElement>
           <Title>
-            <UniIcon onClick={() => history.push('/')}>
-              <img src={Logo} alt="logo" />
+            <UniIcon id="link" href="/">
+              <img src={isDark ? LogoDark : Logo} alt="logo" />
             </UniIcon>
             {!isMobile && (
-              <TitleText onClick={() => history.push('/')}>
-                <img style={{ marginLeft: '4px', marginTop: '4px' }} src={Wordmark} alt="logo" />
+              <TitleText>
+                <Link id="link" href="/">
+                  <img
+                    style={{ marginLeft: '4px', marginTop: '4px' }}
+                    src={isDark ? WordmarkDark : Wordmark}
+                    alt="logo"
+                  />
+                </Link>
               </TitleText>
             )}
           </Title>
@@ -173,7 +183,7 @@ function Header({ history }) {
           </TestnetWrapper>
           <AccountElement active={!!account}>
             {account ? (
-              <Row style={{ marginRight: '-1.25rem', paddingRight: '1.75rem' }}>
+              <Row style={{ marginRight: '-1.25rem' }}>
                 <Text fontWeight={500}> {userEthBalance && userEthBalance?.toFixed(4) + ' ETH'}</Text>
               </Row>
             ) : (

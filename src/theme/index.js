@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'styled-components'
+import styled, { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'styled-components'
 import { getQueryParam, checkSupportedTheme } from '../utils'
 import { SUPPORTED_THEMES } from '../constants'
 import { useDarkModeManager } from '../contexts/LocalStorage'
@@ -49,31 +49,41 @@ export const theme = darkMode => ({
 
   // text
   text1: darkMode ? '#FFFFFF' : '#000000',
-  text2: darkMode ? '#888D9B' : '#565A69',
+  text2: darkMode ? '#CED0D9' : '#565A69',
   text3: darkMode ? '#6C7284' : '#888D9B',
-  text4: '#C3C5CB',
+  text4: darkMode ? '#565A69' : '#C3C5CB',
   text5: '#EDEEF2',
 
   // backgrounds / greys
-  bg1: darkMode ? '#191B1F' : '#FFFFFF',
+  bg1: darkMode ? '#212429' : '#FFFFFF',
   bg2: darkMode ? '#2C2F36' : '#F7F8FA',
   bg3: darkMode ? '#40444F' : '#EDEEF2',
   bg4: darkMode ? '#565A69' : '#CED0D9',
   bg5: darkMode ? '#565A69' : '#888D9B',
 
+  modalBG: darkMode ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.6)',
+  advancedBG: darkMode ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.6)',
+
   //blues
-  // blue1: '#2172E5',
-  blue1: '#ff007a',
+  blue1: darkMode ? '#2172E5' : '#ff007a',
   blue2: darkMode ? '#3680E7' : '#1966D2',
   blue3: darkMode ? '#4D8FEA' : '#165BBB',
-  // blue5: '#EBF4FF',
-  // blue4: '#C4D9F8',
-  blue4: '#F6DDE8',
-  blue5: '#FDEAF1',
+  // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
+  // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
+  blue4: darkMode ? '#153d6f70' : '#F6DDE8',
+  blue5: darkMode ? '#153d6f70' : '#FDEAF1',
+
+  buttonSecondaryText: darkMode ? '#6da8ff' : '#ff007a',
+
+  // blue1: '#ff007a',
+  // blue4: '#F6DDE8',
+  // blue5: '#FDEAF1',
 
   // pinks
   pink1: '#DC6BE5',
-  pink2: '#ff007a',
+  pink2: darkMode ? '#2172E5' : '#ff007a',
+  pink3: darkMode ? '#17000b26' : '#F6DDE8',
+  pink4: darkMode ? '#17000b26' : '#FDEAF1',
 
   // other
   red1: '#FF6871',
@@ -103,71 +113,75 @@ export const theme = darkMode => ({
   `
 })
 
+const TextWrapper = styled(Text)`
+  color = ${({ color, theme }) => theme[color]}
+`
+
 export const TYPE = {
   main: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().text2} {...rest}>
+    <TextWrapper fontWeight={500} color={'text2'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   black: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().text1} {...rest}>
+    <TextWrapper fontWeight={500} color={'text1'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   largeHeader: ({ children, ...rest }) => (
-    <Text fontWeight={600} fontSize={24} {...rest}>
+    <TextWrapper fontWeight={600} fontSize={24} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   mediumHeader: ({ children, ...rest }) => (
-    <Text fontWeight={500} fontSize={20} color={theme().text1} {...rest}>
+    <TextWrapper fontWeight={500} fontSize={20} color={'text1'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   subHeader: ({ children, ...rest }) => (
-    <Text fontWeight={400} fontSize={14} color={theme().text1} {...rest}>
+    <TextWrapper fontWeight={400} fontSize={14} color={'text1'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   body: ({ children, ...rest }) => (
-    <Text fontWeight={400} fontSize={16} color={'#191B1F'} {...rest}>
+    <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   blue: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().blue1} {...rest}>
+    <TextWrapper fontWeight={500} color={'blue1'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   yellow: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().yellow2} {...rest}>
+    <TextWrapper fontWeight={500} color={'yellow2'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   green: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().green1} {...rest}>
+    <TextWrapper fontWeight={500} color={'green1'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   gray: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().bg3} {...rest}>
+    <TextWrapper fontWeight={500} color={'bg3'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   darkGray: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().text3} {...rest}>
+    <TextWrapper fontWeight={500} color={'text3'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   italic: ({ children, ...rest }) => (
-    <Text fontWeight={500} fontSize={12} fontStyle={'italic'} color={theme().text2} {...rest}>
+    <TextWrapper fontWeight={500} fontSize={12} fontStyle={'italic'} color={'text2'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   error: ({ children, error, ...rest }) => (
-    <Text fontWeight={500} color={error ? theme().red1 : theme().text2} {...rest}>
+    <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   )
 }
 
