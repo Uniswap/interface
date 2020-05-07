@@ -1,8 +1,9 @@
 import React, { useReducer, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { ethers } from 'ethers'
 import { withRouter } from 'react-router-dom'
 import { parseUnits, parseEther } from '@ethersproject/units'
+import { MaxUint256, Zero } from '@ethersproject/constants'
+import { Contract } from '@ethersproject/contracts'
 import { WETH, TokenAmount, JSBI, Percent, Route, Token, Pair, Price } from '@uniswap/sdk'
 
 import TokenLogo from '../../components/TokenLogo'
@@ -26,17 +27,15 @@ import { usePair, useTotalSupply } from '../../contexts/Pairs'
 import { useWeb3React, useTokenContract } from '../../hooks'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 
-import { BigNumber } from 'ethers/utils'
 import { ROUTER_ADDRESS } from '../../constants'
 import { getRouterContract, calculateGasMargin, isWETH } from '../../utils'
+import { BigNumber } from '@ethersproject/bignumber'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = 50
 
 // denominated in seconds
 const DEADLINE_FROM_NOW = 60 * 20
-
-const GAS_MARGIN: BigNumber = ethers.utils.bigNumberify(1000)
 
 const Wrapper = styled.div`
   position: relative;
@@ -179,8 +178,8 @@ function AddLiquidity({ token0, token1, step = false }) {
   }
 
   // token contracts for approvals and direct sends
-  const tokenContractInput: ethers.Contract = useTokenContract(tokens[Field.INPUT]?.address)
-  const tokenContractOutput: ethers.Contract = useTokenContract(tokens[Field.OUTPUT]?.address)
+  const tokenContractInput: Contract = useTokenContract(tokens[Field.INPUT]?.address)
+  const tokenContractOutput: Contract = useTokenContract(tokens[Field.OUTPUT]?.address)
 
   // check on pending approvals for token amounts
   const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
@@ -409,7 +408,7 @@ function AddLiquidity({ token0, token1, step = false }) {
 
   // format ETH value for transaction
   function hex(value: JSBI) {
-    return ethers.utils.bigNumberify(value.toString())
+    return BigNumber.from(value.toString())
   }
 
   // calculate slippage bounds based on current reserves
@@ -435,7 +434,7 @@ function AddLiquidity({ token0, token1, step = false }) {
 
     if (tokens[Field.INPUT] === WETH[chainId] || tokens[Field.OUTPUT] === WETH[chainId]) {
       method = router.addLiquidityETH
-      estimate = router.estimate.addLiquidityETH
+      estimate = router.estimateGas.addLiquidityETH
 
       args = [
         tokens[Field.OUTPUT] === WETH[chainId] ? tokens[Field.INPUT].address : tokens[Field.OUTPUT].address, // token
@@ -454,7 +453,7 @@ function AddLiquidity({ token0, token1, step = false }) {
       )
     } else {
       method = router.addLiquidity
-      estimate = router.estimate.addLiquidity
+      estimate = router.estimateGas.addLiquidity
       args = [
         tokens[Field.INPUT].address,
         tokens[Field.OUTPUT].address,
@@ -465,32 +464,32 @@ function AddLiquidity({ token0, token1, step = false }) {
         account,
         deadline
       ]
-      value = ethers.constants.Zero
+      value = Zero
     }
 
-    const estimatedGasLimit = await estimate(...args, {
+    await estimate(...args, {
       value: value
     })
-
-    method(...args, {
-      gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN),
-      value: value
-    })
-      .then(response => {
-        setTxHash(response.hash)
-        addTransaction(
-          response,
-          'Add ' +
-            parsedAmounts[Field.INPUT]?.toSignificant(3) +
-            ' ' +
-            tokens[Field.INPUT]?.symbol +
-            ' and ' +
-            parsedAmounts[Field.OUTPUT]?.toSignificant(3) +
-            ' ' +
-            tokens[Field.OUTPUT]?.symbol
-        )
-        setPendingConfirmation(false)
-      })
+      .then(estimatedGasLimit =>
+        method(...args, {
+          gasLimit: calculateGasMargin(estimatedGasLimit),
+          value: value
+        }).then(response => {
+          setTxHash(response.hash)
+          addTransaction(
+            response,
+            'Add ' +
+              parsedAmounts[Field.INPUT]?.toSignificant(3) +
+              ' ' +
+              tokens[Field.INPUT]?.symbol +
+              ' and ' +
+              parsedAmounts[Field.OUTPUT]?.toSignificant(3) +
+              ' ' +
+              tokens[Field.OUTPUT]?.symbol
+          )
+          setPendingConfirmation(false)
+        })
+      )
       .catch((e: Error) => {
         console.log(e)
         setPendingConfirmation(true)
@@ -500,21 +499,18 @@ function AddLiquidity({ token0, token1, step = false }) {
   }
 
   async function approveAmount(field) {
-    let estimatedGas
     let useUserBalance = false
     const tokenContract = field === Field.INPUT ? tokenContractInput : tokenContractOutput
 
-    estimatedGas = await tokenContract.estimate.approve(ROUTER_ADDRESS, ethers.constants.MaxUint256).catch(e => {
-      console.log('Error setting max token approval.')
-    })
-    if (!estimatedGas) {
+    const estimatedGas = await tokenContract.estimateGas.approve(ROUTER_ADDRESS, MaxUint256).catch(() => {
       // general fallback for tokens who restrict approval amounts
-      estimatedGas = await tokenContract.estimate.approve(ROUTER_ADDRESS, userBalances[field])
       useUserBalance = true
-    }
+      return tokenContract.estimateGas.approve(ROUTER_ADDRESS, userBalances[field])
+    })
+
     tokenContract
-      .approve(ROUTER_ADDRESS, useUserBalance ? userBalances[field] : ethers.constants.MaxUint256, {
-        gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
+      .approve(ROUTER_ADDRESS, useUserBalance ? userBalances[field] : MaxUint256, {
+        gasLimit: calculateGasMargin(estimatedGas)
       })
       .then(response => {
         addTransaction(response, 'Approve ' + tokens[field]?.symbol, { approval: tokens[field]?.address })

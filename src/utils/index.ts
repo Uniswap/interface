@@ -1,15 +1,16 @@
+import { Contract } from '@ethersproject/contracts'
+import { getAddress } from '@ethersproject/address'
+import { AddressZero } from '@ethersproject/constants'
+import { parseBytes32String } from '@ethersproject/strings'
+import { BigNumber } from '@ethersproject/bignumber'
 import { WETH } from '@uniswap/sdk'
 
-import {abi as IUniswapV2PairABI} from '@uniswap/v2-core/build/IUniswapV2Pair.json'
+import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { abi as IUniswapV2Router01ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router01.json'
-import { Contract, ethers, Signer } from 'ethers'
-import { JsonRpcProvider, Provider } from 'ethers/providers'
 import { ROUTER_ADDRESS, SUPPORTED_THEMES } from '../constants'
 
 import ERC20_ABI from '../constants/abis/erc20.json'
 import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32.json'
-
-import UncheckedJsonRpcSigner from './signer'
 
 export enum ERROR_CODES {
   TOKEN_SYMBOL = 1,
@@ -19,9 +20,9 @@ export enum ERROR_CODES {
 export function safeAccess(object, path) {
   return object
     ? path.reduce(
-      (accumulator, currentValue) => (accumulator && accumulator[currentValue] ? accumulator[currentValue] : null),
-      object
-    )
+        (accumulator, currentValue) => (accumulator && accumulator[currentValue] ? accumulator[currentValue] : null),
+        object
+      )
     : null
 }
 
@@ -80,7 +81,7 @@ export function getAllQueryParams(): QueryParams {
     inputTokenAddress: parseUrlAddress('inputTokenAddress'),
     outputTokenAddress: parseUrlAddress('outputTokenAddress'),
     inputTokenAmount: parseUrlTokenAmount('inputTokenAmount'),
-    outputTokenAmount: parseUrlTokenAmount('outputTokenAmount'),
+    outputTokenAmount: parseUrlTokenAmount('outputTokenAmount')
   }
 }
 
@@ -125,34 +126,30 @@ export function shortenTransactionHash(hash, digits = 4) {
   return `${hash.substring(0, digits + 2)}...${hash.substring(66 - digits)}`
 }
 
-export function isAddress(value): string | false {
+export function isAddress(value: any): string | false {
   try {
-    return ethers.utils.getAddress(value.toLowerCase())
+    return getAddress(value.toLowerCase())
   } catch {
     return false
   }
 }
 
-export function calculateGasMargin(value, margin) {
-  if (value) {
-    const offset = value.mul(margin).div(ethers.utils.bigNumberify(10000))
-    return value.add(offset)
-  }
-  return null
+export function calculateGasMargin(value: BigNumber) {
+  return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000)) // add 10%
 }
 
 // account is optional
-export function getProviderOrSigner(library: JsonRpcProvider, account?: string): Signer | Provider {
-  return account ? new UncheckedJsonRpcSigner(library.getSigner(account)) : library
+export function getProviderOrSigner(library: any, account?: string): any {
+  return account ? library.getSigner(account).connectUnchecked() : library
 }
 
 // account is optional
-export function getContract(address: string, ABI: any, library: JsonRpcProvider, account?: string): Contract {
-  if (!isAddress(address) || address === ethers.constants.AddressZero) {
+export function getContract(address: string, ABI: any, library: any, account?: string): Contract {
+  if (!isAddress(address) || address === AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
 
-  return new ethers.Contract(address, ABI, getProviderOrSigner(library, account))
+  return new Contract(address, ABI, getProviderOrSigner(library, account))
 }
 
 // account is optional
@@ -176,7 +173,7 @@ export async function getTokenName(tokenAddress, library) {
     .catch(() =>
       getContract(tokenAddress, ERC20_BYTES32_ABI, library)
         .name()
-        .then(bytes32 => ethers.utils.parseBytes32String(bytes32))
+        .then(parseBytes32String)
     )
     .catch(error => {
       error.code = ERROR_CODES.TOKEN_SYMBOL
@@ -194,7 +191,7 @@ export async function getTokenSymbol(tokenAddress, library) {
     .symbol()
     .catch(() => {
       const contractBytes32 = getContract(tokenAddress, ERC20_BYTES32_ABI, library)
-      return contractBytes32.symbol().then(bytes32 => ethers.utils.parseBytes32String(bytes32))
+      return contractBytes32.symbol().then(parseBytes32String)
     })
     .catch(error => {
       error.code = ERROR_CODES.TOKEN_SYMBOL
@@ -237,8 +234,8 @@ export async function getTokenBalance(tokenAddress, address, library) {
 export async function getTokenAllowance(address, tokenAddress, spenderAddress, library) {
   if (!isAddress(address) || !isAddress(tokenAddress) || !isAddress(spenderAddress)) {
     throw Error(
-      'Invalid \'address\' or \'tokenAddress\' or \'spenderAddress\' parameter' +
-      `'${address}' or '${tokenAddress}' or '${spenderAddress}'.`
+      "Invalid 'address' or 'tokenAddress' or 'spenderAddress' parameter" +
+        `'${address}' or '${tokenAddress}' or '${spenderAddress}'.`
     )
   }
 
