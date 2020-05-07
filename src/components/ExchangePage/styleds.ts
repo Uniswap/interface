@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { AutoColumn } from '../Column'
+import { Text } from 'rebass'
 
 import NumericalInput from '../NumericalInput'
 
