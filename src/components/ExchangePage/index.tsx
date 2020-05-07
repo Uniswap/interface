@@ -595,7 +595,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
     // get token contract if needed
     let estimate: Function, method: Function, args, value
     if (tokens[Field.INPUT] === WETH[chainId]) {
-      signer
+      (signer as any)
         .sendTransaction({ to: recipient.toString(), value: hex(parsedAmounts[Field.INPUT].raw) })
         .then(response => {
           setTxHash(response.hash)
