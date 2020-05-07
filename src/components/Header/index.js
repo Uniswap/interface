@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { withRouter } from 'react-router-dom'
 
 import Row from '../Row'
 import Menu from '../Menu'
@@ -104,7 +105,7 @@ const Alpha = styled(GreyCard)`
   font-weight: 600;
 `
 
-const UniIcon = styled(Link)`
+const UniIcon = styled.div`
   transition: transform 0.3s ease;
   :hover {
     transform: rotate(-5deg);
@@ -130,7 +131,7 @@ const MigrateBanner = styled(AutoColumn)`
   `};
 `
 
-export default function Header() {
+function Header({ history }) {
   const { account, chainId } = useWeb3React()
 
   const userEthBalance = useAddressBalance(account, WETH[chainId])
@@ -152,14 +153,12 @@ export default function Header() {
       <RowBetween padding="1rem">
         <HeaderElement>
           <Title>
-            <UniIcon id="link" href="/">
+            <UniIcon onClick={() => history.push('/')}>
               <img src={Logo} alt="logo" />
             </UniIcon>
             {!isMobile && (
-              <TitleText>
-                <Link id="link" href="/">
-                  <img style={{ marginLeft: '4px', marginTop: '4px' }} src={Wordmark} alt="logo" />
-                </Link>
+              <TitleText onClick={() => history.push('/')}>
+                <img style={{ marginLeft: '4px', marginTop: '4px' }} src={Wordmark} alt="logo" />
               </TitleText>
             )}
           </Title>
@@ -187,6 +186,7 @@ export default function Header() {
         </HeaderElement>
       </RowBetween>
     </HeaderFrame>
-    // </AutoColumn>
   )
 }
+
+export default withRouter(Header)
