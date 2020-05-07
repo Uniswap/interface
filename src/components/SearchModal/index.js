@@ -351,6 +351,9 @@ function SearchModal({
         const token0 = allTokens[allPairs[pairAddress].token0]
         const token1 = allTokens[allPairs[pairAddress].token1]
         const balance = allBalances?.[account]?.[pairAddress]?.toSignificant(6)
+        const zeroBalance =
+          allBalances?.[account]?.[pairAddress]?.raw &&
+          JSBI.equal(allBalances?.[account]?.[pairAddress].raw, JSBI.BigInt(0))
         return (
           <MenuItem
             key={i}
@@ -375,7 +378,7 @@ function SearchModal({
                 onDismiss()
               }}
             >
-              {balance > 0 ? 'Manage' : 'Join'}
+              {balance ? (zeroBalance ? 'Join' : 'Manage') : 'Join'}
             </ButtonPrimary>
           </MenuItem>
         )
@@ -590,7 +593,7 @@ function SearchModal({
                   <QuestionHelper text="These tokens are commonly used in pairs." />
                 </AutoRow>
                 <AutoRow gap="10px">
-                  {COMMON_BASES[chainId].map(token => {
+                  {COMMON_BASES[chainId]?.map(token => {
                     return (
                       <BaseWrapper
                         gap="6px"

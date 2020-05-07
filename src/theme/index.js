@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'styled-components'
+import styled, { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'styled-components'
 import { getQueryParam, checkSupportedTheme } from '../utils'
 import { SUPPORTED_THEMES } from '../constants'
 import { useDarkModeManager } from '../contexts/LocalStorage'
@@ -113,71 +113,75 @@ export const theme = darkMode => ({
   `
 })
 
+const TextWrapper = styled(Text)`
+  color: ${({ color, theme }) => theme[color]};
+`
+
 export const TYPE = {
   main: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().text2} {...rest}>
+    <TextWrapper fontWeight={500} color={'text2'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   black: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().text1} {...rest}>
+    <TextWrapper fontWeight={500} color={'text1'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   largeHeader: ({ children, ...rest }) => (
-    <Text fontWeight={600} fontSize={24} {...rest}>
+    <TextWrapper fontWeight={600} fontSize={24} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   mediumHeader: ({ children, ...rest }) => (
-    <Text fontWeight={500} fontSize={20} color={theme().text1} {...rest}>
+    <TextWrapper fontWeight={500} fontSize={20} color={'text1'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   subHeader: ({ children, ...rest }) => (
-    <Text fontWeight={400} fontSize={14} color={theme().text1} {...rest}>
+    <TextWrapper fontWeight={400} fontSize={14} color={'text1'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   body: ({ children, ...rest }) => (
-    <Text fontWeight={400} fontSize={16} color={theme().text1} {...rest}>
+    <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   blue: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().blue1} {...rest}>
+    <TextWrapper fontWeight={500} color={'blue1'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   yellow: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().yellow2} {...rest}>
+    <TextWrapper fontWeight={500} color={'yellow2'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   green: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().green1} {...rest}>
+    <TextWrapper fontWeight={500} color={'green1'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   gray: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().bg3} {...rest}>
+    <TextWrapper fontWeight={500} color={'bg3'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   darkGray: ({ children, ...rest }) => (
-    <Text fontWeight={500} color={theme().text3} {...rest}>
+    <TextWrapper fontWeight={500} color={'text3'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   italic: ({ children, ...rest }) => (
-    <Text fontWeight={500} fontSize={12} fontStyle={'italic'} color={theme().text2} {...rest}>
+    <TextWrapper fontWeight={500} fontSize={12} fontStyle={'italic'} color={'text2'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   ),
   error: ({ children, error, ...rest }) => (
-    <Text fontWeight={500} color={error ? theme().red1 : theme().text2} {...rest}>
+    <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...rest}>
       {children}
-    </Text>
+    </TextWrapper>
   )
 }
 

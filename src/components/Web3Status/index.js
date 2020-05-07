@@ -12,6 +12,7 @@ import { ButtonSecondary } from '../Button'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
+import { ButtonSecondary } from '../Button'
 
 import { Spinner } from '../../theme'
 import LightCircle from '../../assets/svg/lightcircle.svg'
@@ -65,7 +66,6 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 
 const Web3StatusConnect = styled(Web3StatusGeneric)`
   background-color: ${({ theme }) => theme.blue4};
-  /* border: 1px solid ${({ theme }) => theme.blue4}; */
   border: none;
   color: ${({ theme }) => theme.buttonSecondaryText};
   font-weight: 500;

@@ -25,9 +25,9 @@ import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
 import Card, { GreyCard, BlueCard, YellowCard } from '../../components/Card'
 
 import { usePair } from '../../contexts/Pairs'
-import { useToken, useAllTokens } from '../../contexts/Tokens'
 import { useRoute } from '../../contexts/Routes'
 import { useAddressAllowance } from '../../contexts/Allowances'
+import { useToken, useAllTokens } from '../../contexts/Tokens'
 import { useWeb3React, useTokenContract } from '../../hooks'
 import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
@@ -346,6 +346,8 @@ function ExchangePage({ sendingInput = false, history, params }) {
           : ''
           ? ''
           : ''
+          ? ''
+          : ''
     },
     initializeSwapState
   )
@@ -594,7 +596,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
     // get token contract if needed
     let estimate: Function, method: Function, args, value
     if (tokens[Field.INPUT] === WETH[chainId]) {
-      signer
+      ;(signer as any)
         .sendTransaction({ to: recipient.toString(), value: hex(parsedAmounts[Field.INPUT].raw) })
         .then(response => {
           setTxHash(response.hash)
@@ -1115,7 +1117,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <TYPE.black fontSize={14} fontWeight={400}>
                   Liquidity Provider Fee
                 </TYPE.black>
-                <QuestionHelper text="A portion of each trade (0.03%) goes to liquidity providers to incentivize liquidity on the protocol." />
+                <QuestionHelper text="A portion of each trade (0.3%) goes to liquidity providers to incentivize liquidity on the protocol." />
               </RowFixed>
               <TYPE.black fontSize={14}>
                 {feeTimesInputFormatted
@@ -1413,7 +1415,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
       <BottomGrouping>
         {noRoute ? (
           <GreyCard style={{ textAlign: 'center' }}>
-            <TYPE.main>No exchange for this pair.</TYPE.main>
+            <TYPE.main>No path found.</TYPE.main>
 
             <Link
               onClick={() => {
@@ -1502,7 +1504,15 @@ function ExchangePage({ sendingInput = false, history, params }) {
                           : 'Minimum received'
                         : 'Maximum sold'}
                     </TYPE.black>
-                    <QuestionHelper text="A lower bound is set so you never get less than this amount." />
+                    <QuestionHelper
+                      text={
+                        independentField === Field.INPUT
+                          ? sending
+                            ? 'Price can change between when a transaction is submitted and when it is executed. This is the minimum amount you will send. A worse rate will cause your transaction to revert.'
+                            : 'Price can change between when a transaction is submitted and when it is executed. This is the minimum amount you will receive. A worse rate will cause your transaction to revert.'
+                          : 'Price can change between when a transaction is submitted and when it is executed. This is the maximum amount you will pay. A worse rate will cause your transaction to revert.'
+                      }
+                    />
                   </RowFixed>
                   <RowFixed>
                     <TYPE.black color={theme(isDark).text1} fontSize={14}>

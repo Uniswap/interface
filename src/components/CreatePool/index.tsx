@@ -5,7 +5,7 @@ import { Token, JSBI, WETH } from '@uniswap/sdk'
 import Row, { AutoRow } from '../Row'
 import TokenLogo from '../TokenLogo'
 import SearchModal from '../SearchModal'
-import AddLiquidity from '../../pages/Supply/AddLiquidity'
+import AddLiquidity from '../../pages/Pool/AddLiquidity'
 import { Text } from 'rebass'
 import { Plus } from 'react-feather'
 import { TYPE, Link } from '../../theme'
@@ -72,7 +72,7 @@ function CreatePool({ history }) {
                   {token0?.symbol}{' '}
                 </Text>
                 <TYPE.darkGray fontWeight={500} fontSize={16} marginLeft={'8px'}>
-                  {token0.symbol === 'ETH' && '(default)'}
+                  {token0?.symbol === 'ETH' && '(default)'}
                 </TYPE.darkGray>
               </Row>
             </ButtonDropwdownLight>

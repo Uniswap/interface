@@ -126,7 +126,7 @@ function NavigationTabs({ location: { pathname }, history }) {
               <ArrowLink />
             </HistoryLink>
             <ActiveText>Import Pool</ActiveText>
-            <QuestionHelper text={"Use this tool to find pools that don't automatically appear in the interface."} />
+            <QuestionHelper text={"Use this tool to find pairs that don't automatically appear in the interface."} />
           </RowBetween>
         </Tabs>
       ) : creating ? (
