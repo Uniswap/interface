@@ -1,7 +1,8 @@
 import React, { useReducer, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { ethers } from 'ethers'
 import { parseUnits } from '@ethersproject/units'
+import { Zero } from '@ethersproject/constants'
+import { Contract } from '@ethersproject/contracts'
 import { TokenAmount, JSBI, Route, WETH, Percent, Token, Pair } from '@uniswap/sdk'
 
 import Slider from '../../components/Slider'
@@ -26,15 +27,12 @@ import { usePairContract } from '../../hooks'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { usePair, useTotalSupply } from '../../contexts/Pairs'
 
-import { BigNumber } from 'ethers/utils'
 import { splitSignature } from '@ethersproject/bytes'
 import { ROUTER_ADDRESS } from '../../constants'
 import { getRouterContract, calculateGasMargin } from '../../utils'
 
 // denominated in seconds
 const DEADLINE_FROM_NOW = 60 * 20
-
-const GAS_MARGIN: BigNumber = ethers.utils.bigNumberify(1000)
 
 const Wrapper = styled.div`
   position: relative;
@@ -167,7 +165,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
   }
 
   const pair: Pair = usePair(inputToken, outputToken)
-  const pairContract: ethers.Contract = usePairContract(pair?.liquidityToken.address)
+  const pairContract: Contract = usePairContract(pair?.liquidityToken.address)
 
   // pool token data
   const totalPoolTokens: TokenAmount = useTotalSupply(tokens[Field.TOKEN0], tokens[Field.TOKEN1])
@@ -435,7 +433,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
     // removal with ETH
     if (tokens[Field.TOKEN0] === WETH[chainId] || tokens[Field.TOKEN1] === WETH[chainId]) {
       method = router.removeLiquidityETHWithPermit
-      estimate = router.estimate.removeLiquidityETHWithPermit
+      estimate = router.estimateGas.removeLiquidityETHWithPermit
       args = [
         tokens[Field.TOKEN1] === WETH[chainId] ? tokens[Field.TOKEN0].address : tokens[Field.TOKEN1].address,
         parsedAmounts[Field.LIQUIDITY].raw.toString(),
@@ -456,7 +454,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
     //removal without ETH
     else {
       method = router.removeLiquidityWithPermit
-      estimate = router.estimate.removeLiquidityWithPermit
+      estimate = router.estimateGas.removeLiquidityWithPermit
       args = [
         tokens[Field.TOKEN0].address,
         tokens[Field.TOKEN1].address,
@@ -472,31 +470,28 @@ export default function RemoveLiquidity({ token0, token1 }) {
       ]
     }
 
-    const estimatedGasLimit = await estimate(...args, {
-      value: ethers.constants.Zero
-    }).catch(() => {
-      resetModalState()
-      setShowConfirm(false)
+    await estimate(...args, {
+      value: Zero
     })
-
-    method(...args, {
-      gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
-    })
-      .then(response => {
-        setPendingConfirmation(false)
-        setTxHash(response.hash)
-        addTransaction(
-          response,
-          'Remove ' +
-            parsedAmounts[Field.TOKEN0]?.toSignificant(3) +
-            ' ' +
-            tokens[Field.TOKEN0]?.symbol +
-            ' and ' +
-            parsedAmounts[Field.TOKEN1]?.toSignificant(3) +
-            ' ' +
-            tokens[Field.TOKEN1]?.symbol
-        )
-      })
+      .then(estimatedGasLimit =>
+        method(...args, {
+          gasLimit: calculateGasMargin(estimatedGasLimit)
+        }).then(response => {
+          setPendingConfirmation(false)
+          setTxHash(response.hash)
+          addTransaction(
+            response,
+            'Remove ' +
+              parsedAmounts[Field.TOKEN0]?.toSignificant(3) +
+              ' ' +
+              tokens[Field.TOKEN0]?.symbol +
+              ' and ' +
+              parsedAmounts[Field.TOKEN1]?.toSignificant(3) +
+              ' ' +
+              tokens[Field.TOKEN1]?.symbol
+          )
+        })
+      )
       .catch(e => {
         console.log(e)
         resetModalState()
