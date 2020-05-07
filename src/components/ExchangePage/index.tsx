@@ -592,7 +592,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
     setAttemptingTxn(true)
 
     const signer = await getProviderOrSigner(library, account)
-      // get token contract if needed
+    // get token contract if needed
     let estimate: Function, method: Function, args, value
     if (tokens[Field.INPUT] === WETH[chainId]) {
       (signer as any)
