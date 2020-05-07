@@ -30,15 +30,15 @@ export const FixedBottom = styled.div`
 export const AdvancedDropwdown = styled.div`
   position: absolute;
   margin-top: -12px;
-  left: -16px;
-  width: 355px;
+  max-width: 455px;
+  width: 100%;
   margin-bottom: 100px;
   padding: 10px 0;
   padding-top: 36px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
-  color: #565a69;
-  background-color: rgba(237, 238, 242, 0.5);
+  color: ${({ theme }) => theme.text2};
+  background-color: ${({ theme }) => theme.advancedBG};
   color: ${({ theme }) => theme.text2};
   z-index: -1;
 `
@@ -71,7 +71,7 @@ export const StyledNumerical = styled(NumericalInput)`
   width: 100%;
 
   ::placeholder {
-    color: #edeef2;
+    color: ${({ theme }) => theme.text4};
   }
 `
 

@@ -50,263 +50,17 @@ import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEthersca
 import { useLocalStorageTokens } from '../../contexts/LocalStorage'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
 
-const Wrapper = styled.div`
-  position: relative;
-`
-
-const ArrowWrapper = styled.div`
-  padding: 2px;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  :hover {
-    cursor: pointer;
-    opacity: 0.8;
-  }
-`
-
-const FixedBottom = styled.div`
-  position: absolute;
-  margin-top: 1.5rem;
-  width: 100%;
-  margin-bottom: 40px;
-`
-
-const AdvancedDropwdown = styled.div`
-  position: absolute;
-  margin-top: -12px;
-  max-width: 455px;
-  width: 100%;
-  margin-bottom: 100px;
-  padding: 10px 0;
-  padding-top: 36px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  color: ${({ theme }) => theme.text2};
-  background-color: ${({ theme }) => theme.advancedBG};
-  color: ${({ theme }) => theme.text2};
-  z-index: -1;
-`
-
-const SectionBreak = styled.div`
-  height: 1px;
-  width: 100%;
-  background-color: ${({ theme }) => theme.bg3};
-`
-
-const BottomGrouping = styled.div`
-  margin-top: 12px;
-  position: relative;
-`
-
-const ErrorText = styled(Text)`
-  color: ${({ theme, warningLow, warningMedium, warningHigh }) =>
-    warningHigh ? theme.red1 : warningMedium ? theme.yellow2 : warningLow ? theme.green1 : theme.text1};
-`
-
-const InputGroup = styled(AutoColumn)`
-  position: relative;
-  padding: 40px 0 20px 0;
-`
-
-const StyledNumerical = styled(NumericalInput)`
-  text-align: center;
-  font-size: 48px;
-  font-weight: 500px;
-  width: 100%;
-
-  ::placeholder {
-    color: ${({ theme }) => theme.text4};
-  }
-`
-
-const MaxButton = styled.button`
-  position: absolute;
-  right: 70px;
-  padding: 0.5rem 0.5rem;
-  background-color: ${({ theme }) => theme.blue5};
-  border: 1px solid ${({ theme }) => theme.blue5};
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  cursor: pointer;
-  margin-right: 0.5rem;
-  color: ${({ theme }) => theme.blue1};
-  :hover {
-    border: 1px solid ${({ theme }) => theme.blue1};
-  }
-  :focus {
-    border: 1px solid ${({ theme }) => theme.blue1};
-    outline: none;
-  }
-`
-
-const StyledBalanceMaxMini = styled.button`
-  height: 24px;
-  background-color: ${({ theme }) => theme.bg2};
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 400;
-  margin-left: 6px;
-  cursor: pointer;
-  color: ${({ theme }) => theme.text2};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: fit-content;
-  float: right;
-
-  :hover {
-    background-color: ${({ theme }) => theme.bg3};
-
-    /* border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.blue4)}; */
-  }
-  :focus {
-    background-color: ${({ theme }) => theme.bg3};
-    /* border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.blue4)}; */
-    outline: none;
-  }
-`
-
-const TruncatedText = styled(Text)`
-  text-overflow: ellipsis;
-  width: 220px;
-  overflow: hidden;
-`
-
-// styles
-const Dots = styled.span`
-  &::after {
-    display: inline-block;
-    animation: ellipsis 1.25s infinite;
-    content: '.';
-    width: 1em;
-    text-align: left;
-  }
-  @keyframes ellipsis {
-    0% {
-      content: '.';
-    }
-    33% {
-      content: '..';
-    }
-    66% {
-      content: '...';
-    }
-  }
-`
-
-enum Field {
-  INPUT,
-  OUTPUT
-}
-
-interface SwapState {
-  independentField: Field
-  typedValue: string
-  [Field.INPUT]: {
-    address: string | undefined
-  }
-  [Field.OUTPUT]: {
-    address: string | undefined
-  }
-}
-
-function initializeSwapState({ inputTokenAddress, outputTokenAddress, typedValue, independentField }): SwapState {
-  return {
-    independentField: independentField,
-    typedValue: typedValue,
-    [Field.INPUT]: {
-      address: inputTokenAddress
-    },
-    [Field.OUTPUT]: {
-      address: outputTokenAddress
-    }
-  }
-}
-
-enum SwapAction {
-  SELECT_TOKEN,
-  SWITCH_TOKENS,
-  TYPE
-}
-
-interface Payload {
-  [SwapAction.SELECT_TOKEN]: {
-    field: Field
-    address: string
-  }
-  [SwapAction.SWITCH_TOKENS]: undefined
-  [SwapAction.TYPE]: {
-    field: Field
-    typedValue: string
-  }
-}
-
-function reducer(
-  state: SwapState,
-  action: {
-    type: SwapAction
-    payload: Payload[SwapAction]
-  }
-): SwapState {
-  switch (action.type) {
-    case SwapAction.SELECT_TOKEN: {
-      const { field, address } = action.payload as Payload[SwapAction.SELECT_TOKEN]
-      const otherField = field === Field.INPUT ? Field.OUTPUT : Field.INPUT
-      if (address === state[otherField].address) {
-        // the case where we have to swap the order
-        return {
-          ...state,
-          independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-          [field]: { address },
-          [otherField]: { address: state[field].address }
-        }
-      } else {
-        // the normal case
-        return {
-          ...state,
-          [field]: { address }
-        }
-      }
-    }
-    case SwapAction.SWITCH_TOKENS: {
-      return {
-        ...state,
-        independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-        [Field.INPUT]: { address: state[Field.OUTPUT].address },
-        [Field.OUTPUT]: { address: state[Field.INPUT].address }
-      }
-    }
-    case SwapAction.TYPE: {
-      const { field, typedValue } = action.payload as Payload[SwapAction.TYPE]
-      return {
-        ...state,
-        independentField: field,
-        typedValue
-      }
-    }
-    default: {
-      throw Error
-    }
-  }
-}
-
 function hex(value: JSBI) {
   return ethers.utils.bigNumberify(value.toString())
 }
 
-const SWAP_TYPE = {
-  EXACT_TOKENS_FOR_TOKENS: 'EXACT_TOKENS_FOR_TOKENS',
-  EXACT_TOKENS_FOR_ETH: 'EXACT_TOKENS_FOR_ETH',
-  EXACT_ETH_FOR_TOKENS: 'EXACT_ETH_FOR_TOKENS',
-  TOKENS_FOR_EXACT_TOKENS: 'TOKENS_FOR_EXACT_TOKENS',
-  TOKENS_FOR_EXACT_ETH: 'TOKENS_FOR_EXACT_ETH',
-  ETH_FOR_EXACT_TOKENS: 'ETH_FOR_EXACT_TOKENS'
+enum SwapType {
+  EXACT_TOKENS_FOR_TOKENS,
+  EXACT_TOKENS_FOR_ETH,
+  EXACT_ETH_FOR_TOKENS,
+  TOKENS_FOR_EXACT_TOKENS,
+  TOKENS_FOR_EXACT_ETH,
+  ETH_FOR_EXACT_TOKENS
 }
 
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
@@ -559,22 +313,22 @@ function ExchangePage({ sendingInput = false, history, params }) {
       ? JSBI.equal(maxAmountOutput.raw, parsedAmounts[Field.OUTPUT].raw)
       : undefined
 
-  function getSwapType(): string {
+  function getSwapType(): SwapType {
     if (tradeType === TradeType.EXACT_INPUT) {
       if (tokens[Field.INPUT] === WETH[chainId]) {
-        return SWAP_TYPE.EXACT_ETH_FOR_TOKENS
+        return SwapType.EXACT_ETH_FOR_TOKENS
       } else if (tokens[Field.OUTPUT] === WETH[chainId]) {
-        return SWAP_TYPE.EXACT_TOKENS_FOR_ETH
+        return SwapType.EXACT_TOKENS_FOR_ETH
       } else {
-        return SWAP_TYPE.EXACT_TOKENS_FOR_TOKENS
+        return SwapType.EXACT_TOKENS_FOR_TOKENS
       }
     } else if (tradeType === TradeType.EXACT_OUTPUT) {
       if (tokens[Field.INPUT] === WETH[chainId]) {
-        return SWAP_TYPE.ETH_FOR_EXACT_TOKENS
+        return SwapType.ETH_FOR_EXACT_TOKENS
       } else if (tokens[Field.OUTPUT] === WETH[chainId]) {
-        return SWAP_TYPE.TOKENS_FOR_EXACT_ETH
+        return SwapType.TOKENS_FOR_EXACT_ETH
       } else {
-        return SWAP_TYPE.TOKENS_FOR_EXACT_TOKENS
+        return SwapType.TOKENS_FOR_EXACT_TOKENS
       }
     }
   }
@@ -674,9 +428,8 @@ function ExchangePage({ sendingInput = false, history, params }) {
     let estimate: Function, method: Function, args: any[], value: ethers.utils.BigNumber
     const deadlineFromNow: number = Math.ceil(Date.now() / 1000) + deadline
 
-    const swapType = getSwapType()
-    switch (swapType) {
-      case SWAP_TYPE.EXACT_TOKENS_FOR_TOKENS:
+    switch (getSwapType()) {
+      case SwapType.EXACT_TOKENS_FOR_TOKENS:
         estimate = routerContract.estimate.swapExactTokensForTokens
         method = routerContract.swapExactTokensForTokens
         args = [
@@ -688,7 +441,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
         ]
         value = ethers.constants.Zero
         break
-      case SWAP_TYPE.TOKENS_FOR_EXACT_TOKENS:
+      case SwapType.TOKENS_FOR_EXACT_TOKENS:
         estimate = routerContract.estimate.swapTokensForExactTokens
         method = routerContract.swapTokensForExactTokens
         args = [
@@ -700,7 +453,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
         ]
         value = ethers.constants.Zero
         break
-      case SWAP_TYPE.EXACT_ETH_FOR_TOKENS:
+      case SwapType.EXACT_ETH_FOR_TOKENS:
         estimate = routerContract.estimate.swapExactETHForTokens
         method = routerContract.swapExactETHForTokens
         args = [
@@ -711,7 +464,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
         ]
         value = hex(slippageAdjustedAmounts[Field.INPUT].raw)
         break
-      case SWAP_TYPE.TOKENS_FOR_EXACT_ETH:
+      case SwapType.TOKENS_FOR_EXACT_ETH:
         estimate = routerContract.estimate.swapTokensForExactETH
         method = routerContract.swapTokensForExactETH
         args = [
@@ -723,7 +476,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
         ]
         value = ethers.constants.Zero
         break
-      case SWAP_TYPE.EXACT_TOKENS_FOR_ETH:
+      case SwapType.EXACT_TOKENS_FOR_ETH:
         estimate = routerContract.estimate.swapExactTokensForETH
         method = routerContract.swapExactTokensForETH
         args = [
@@ -735,7 +488,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
         ]
         value = ethers.constants.Zero
         break
-      case SWAP_TYPE.ETH_FOR_EXACT_TOKENS:
+      case SwapType.ETH_FOR_EXACT_TOKENS:
         estimate = routerContract.estimate.swapETHForExactTokens
         method = routerContract.swapETHForExactTokens
         args = [
