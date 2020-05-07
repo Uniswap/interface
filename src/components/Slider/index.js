@@ -67,7 +67,7 @@ const StyledSlider = withStyles({
 })(Slider)
 
 export default function InputSlider({ value, onChange, override }) {
-  const [internalVal, setInternalVal] = useState(0)
+  const [internalVal, setInternalVal] = useState(100)
   const debouncedInternalValue = useDebounce(internalVal, 10)
 
   function handleChange(e, val) {
