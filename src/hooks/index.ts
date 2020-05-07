@@ -3,7 +3,7 @@ import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import { isMobile } from 'react-device-detect'
 import copy from 'copy-to-clipboard'
 
-import ERC20_ABI from '../constants/abis/erc20'
+import ERC20_ABI from '../constants/abis/erc20.json'
 import { injected } from '../connectors'
 import { NetworkContextName } from '../constants'
 import { getContract, getExchangeContract, isAddress } from '../utils'
@@ -25,7 +25,7 @@ export function useEagerConnect() {
           setTried(true)
         })
       } else {
-        if (isMobile && window.ethereum) {
+        if (isMobile && (window as any).ethereum) {
           activate(injected, undefined, true).catch(() => {
             setTried(true)
           })
@@ -54,7 +54,7 @@ export function useInactiveListener(suppress = false) {
   const { active, error, activate } = useWeb3ReactCore() // specifically using useWeb3React because of what this hook does
 
   useEffect(() => {
-    const { ethereum } = window
+    const { ethereum } = window as any
 
     if (ethereum && ethereum.on && !active && !error && !suppress) {
       const handleChainChanged = () => {
@@ -139,7 +139,7 @@ export function useBodyKeyDown(targetKey, onKeyDown, suppressOnKeyDown = false) 
 export function useENSName(address) {
   const { library } = useWeb3React()
 
-  const [ENSName, setENSName] = useState()
+  const [ENSName, setENSName] = useState<string | null>(null)
 
   useEffect(() => {
     if (isAddress(address)) {
@@ -163,7 +163,7 @@ export function useENSName(address) {
 
       return () => {
         stale = true
-        setENSName()
+        setENSName(null)
       }
     }
   }, [library, address])
@@ -247,7 +247,7 @@ export function usePrevious(value) {
   return ref.current
 }
 
-export function useToggle(initialState = false) {
+export function useToggle(initialState = false): [boolean, () => void] {
   const [state, setState] = useState(initialState)
   const toggle = useCallback(() => setState(state => !state), [])
   return [state, toggle]

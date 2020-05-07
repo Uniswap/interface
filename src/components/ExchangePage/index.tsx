@@ -1,15 +1,28 @@
 import React, { useState, useReducer, useCallback, useEffect } from 'react'
-import styled from 'styled-components'
 import { ethers } from 'ethers'
 import { withRouter } from 'react-router-dom'
 import { parseUnits, parseEther } from '@ethersproject/units'
-import { WETH, TradeType, Pair, Trade, TokenAmount, JSBI, Percent } from '@uniswap/sdk'
-
+import { Field, initializeSwapState, reducer, SwapAction } from './swap-store'
+import { WETH, TradeType, Pair, Trade, TokenAmount, JSBI, Percent, Fraction } from '@uniswap/sdk'
+import {
+  AdvancedDropwdown,
+  ArrowWrapper,
+  BottomGrouping,
+  Dots,
+  ErrorText,
+  FixedBottom,
+  InputGroup,
+  MaxButton,
+  SectionBreak,
+  StyledBalanceMaxMini,
+  StyledNumerical,
+  TruncatedText,
+  Wrapper
+} from './styleds'
 import Copy from '../AccountDetails/Copy'
 import TokenLogo from '../TokenLogo'
 import SlippageTabs from '../SlippageTabs'
 import QuestionHelper from '../Question'
-import NumericalInput from '../NumericalInput'
 import AddressInputPanel from '../AddressInputPanel'
 import ConfirmationModal from '../ConfirmationModal'
 import CurrencyInputPanel from '../CurrencyInputPanel'
@@ -37,263 +50,17 @@ import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEthersca
 import { useLocalStorageTokens } from '../../contexts/LocalStorage'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
 
-const Wrapper = styled.div`
-  position: relative;
-`
-
-const ArrowWrapper = styled.div`
-  padding: 2px;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  :hover {
-    cursor: pointer;
-    opacity: 0.8;
-  }
-`
-
-const FixedBottom = styled.div`
-  position: absolute;
-  margin-top: 1.5rem;
-  width: 100%;
-  margin-bottom: 40px;
-`
-
-const AdvancedDropwdown = styled.div`
-  position: absolute;
-  margin-top: -12px;
-  max-width: 455px;
-  width: 100%;
-  margin-bottom: 100px;
-  padding: 10px 0;
-  padding-top: 36px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  color: ${({ theme }) => theme.text2};
-  background-color: ${({ theme }) => theme.advancedBG};
-  color: ${({ theme }) => theme.text2};
-  z-index: -1;
-`
-
-const SectionBreak = styled.div`
-  height: 1px;
-  width: 100%;
-  background-color: ${({ theme }) => theme.bg3};
-`
-
-const BottomGrouping = styled.div`
-  margin-top: 12px;
-  position: relative;
-`
-
-const ErrorText = styled(Text)`
-  color: ${({ theme, warningLow, warningMedium, warningHigh }) =>
-    warningHigh ? theme.red1 : warningMedium ? theme.yellow2 : warningLow ? theme.green1 : theme.text1};
-`
-
-const InputGroup = styled(AutoColumn)`
-  position: relative;
-  padding: 40px 0 20px 0;
-`
-
-const StyledNumerical = styled(NumericalInput)`
-  text-align: center;
-  font-size: 48px;
-  font-weight: 500px;
-  width: 100%;
-
-  ::placeholder {
-    color: ${({ theme }) => theme.text4};
-  }
-`
-
-const MaxButton = styled.button`
-  position: absolute;
-  right: 70px;
-  padding: 0.5rem 0.5rem;
-  background-color: ${({ theme }) => theme.blue5};
-  border: 1px solid ${({ theme }) => theme.blue5};
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  cursor: pointer;
-  margin-right: 0.5rem;
-  color: ${({ theme }) => theme.blue1};
-  :hover {
-    border: 1px solid ${({ theme }) => theme.blue1};
-  }
-  :focus {
-    border: 1px solid ${({ theme }) => theme.blue1};
-    outline: none;
-  }
-`
-
-const StyledBalanceMaxMini = styled.button`
-  height: 24px;
-  background-color: ${({ theme }) => theme.bg2};
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 400;
-  margin-left: 6px;
-  cursor: pointer;
-  color: ${({ theme }) => theme.text2};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: fit-content;
-  float: right;
-
-  :hover {
-    background-color: ${({ theme }) => theme.bg3};
-
-    /* border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.blue4)}; */
-  }
-  :focus {
-    background-color: ${({ theme }) => theme.bg3};
-    /* border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.blue4)}; */
-    outline: none;
-  }
-`
-
-const TruncatedText = styled(Text)`
-  text-overflow: ellipsis;
-  width: 220px;
-  overflow: hidden;
-`
-
-// styles
-const Dots = styled.span`
-  &::after {
-    display: inline-block;
-    animation: ellipsis 1.25s infinite;
-    content: '.';
-    width: 1em;
-    text-align: left;
-  }
-  @keyframes ellipsis {
-    0% {
-      content: '.';
-    }
-    33% {
-      content: '..';
-    }
-    66% {
-      content: '...';
-    }
-  }
-`
-
-enum Field {
-  INPUT,
-  OUTPUT
-}
-
-interface SwapState {
-  independentField: Field
-  typedValue: string
-  [Field.INPUT]: {
-    address: string | undefined
-  }
-  [Field.OUTPUT]: {
-    address: string | undefined
-  }
-}
-
-function initializeSwapState({ inputTokenAddress, outputTokenAddress, typedValue, independentField }): SwapState {
-  return {
-    independentField: independentField,
-    typedValue: typedValue,
-    [Field.INPUT]: {
-      address: inputTokenAddress
-    },
-    [Field.OUTPUT]: {
-      address: outputTokenAddress
-    }
-  }
-}
-
-enum SwapAction {
-  SELECT_TOKEN,
-  SWITCH_TOKENS,
-  TYPE
-}
-
-interface Payload {
-  [SwapAction.SELECT_TOKEN]: {
-    field: Field
-    address: string
-  }
-  [SwapAction.SWITCH_TOKENS]: undefined
-  [SwapAction.TYPE]: {
-    field: Field
-    typedValue: string
-  }
-}
-
-function reducer(
-  state: SwapState,
-  action: {
-    type: SwapAction
-    payload: Payload[SwapAction]
-  }
-): SwapState {
-  switch (action.type) {
-    case SwapAction.SELECT_TOKEN: {
-      const { field, address } = action.payload as Payload[SwapAction.SELECT_TOKEN]
-      const otherField = field === Field.INPUT ? Field.OUTPUT : Field.INPUT
-      if (address === state[otherField].address) {
-        // the case where we have to swap the order
-        return {
-          ...state,
-          independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-          [field]: { address },
-          [otherField]: { address: state[field].address }
-        }
-      } else {
-        // the normal case
-        return {
-          ...state,
-          [field]: { address }
-        }
-      }
-    }
-    case SwapAction.SWITCH_TOKENS: {
-      return {
-        ...state,
-        independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-        [Field.INPUT]: { address: state[Field.OUTPUT].address },
-        [Field.OUTPUT]: { address: state[Field.INPUT].address }
-      }
-    }
-    case SwapAction.TYPE: {
-      const { field, typedValue } = action.payload as Payload[SwapAction.TYPE]
-      return {
-        ...state,
-        independentField: field,
-        typedValue
-      }
-    }
-    default: {
-      throw Error
-    }
-  }
-}
-
 function hex(value: JSBI) {
   return ethers.utils.bigNumberify(value.toString())
 }
 
-const SWAP_TYPE = {
-  EXACT_TOKENS_FOR_TOKENS: 'EXACT_TOKENS_FOR_TOKENS',
-  EXACT_TOKENS_FOR_ETH: 'EXACT_TOKENS_FOR_ETH',
-  EXACT_ETH_FOR_TOKENS: 'EXACT_ETH_FOR_TOKENS',
-  TOKENS_FOR_EXACT_TOKENS: 'TOKENS_FOR_EXACT_TOKENS',
-  TOKENS_FOR_EXACT_ETH: 'TOKENS_FOR_EXACT_ETH',
-  ETH_FOR_EXACT_TOKENS: 'ETH_FOR_EXACT_TOKENS'
+enum SwapType {
+  EXACT_TOKENS_FOR_TOKENS,
+  EXACT_TOKENS_FOR_ETH,
+  EXACT_ETH_FOR_TOKENS,
+  TOKENS_FOR_EXACT_TOKENS,
+  TOKENS_FOR_EXACT_ETH,
+  ETH_FOR_EXACT_TOKENS
 }
 
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
@@ -333,21 +100,21 @@ function ExchangePage({ sendingInput = false, history, params }) {
       typedValue:
         params.inputTokenAddress && !params.outputTokenAddress
           ? params.inputTokenAmount
-            ? params.inputTokenAmount
-            : ''
+          ? params.inputTokenAmount
+          : ''
           : !params.inputTokenAddress && params.outputTokenAddress
           ? params.outputTokenAmount
             ? params.outputTokenAmount
             : ''
           : params.inputTokenAddress && params.outputTokenAddress
-          ? params.inputTokenAmount
             ? params.inputTokenAmount
+              ? params.inputTokenAmount
+              : ''
             : ''
-          : ''
-          ? ''
-          : ''
-          ? ''
-          : ''
+              ? ''
+              : ''
+                ? ''
+                : ''
     },
     initializeSwapState
   )
@@ -441,7 +208,8 @@ function ExchangePage({ sendingInput = false, history, params }) {
       !!route && !!parsedAmounts[independentField]
         ? new Trade(route, parsedAmounts[independentField], tradeType)
         : undefined
-  } catch (error) {}
+  } catch (error) {
+  }
 
   const slippageFromTrade: Percent = trade && trade.slippage
 
@@ -524,10 +292,11 @@ function ExchangePage({ sendingInput = false, history, params }) {
       WETH[chainId] &&
       JSBI.greaterThan(userBalances[Field.INPUT].raw, isWETH(tokens[Field.INPUT]) ? MIN_ETHER.raw : JSBI.BigInt(0))
         ? isWETH(tokens[Field.INPUT])
-          ? userBalances[Field.INPUT].subtract(MIN_ETHER)
-          : userBalances[Field.INPUT]
+        ? userBalances[Field.INPUT].subtract(MIN_ETHER)
+        : userBalances[Field.INPUT]
         : undefined
-  } catch {}
+  } catch {
+  }
 
   const atMaxAmountInput: boolean =
     !!maxAmountInput && !!parsedAmounts[Field.INPUT]
@@ -544,22 +313,22 @@ function ExchangePage({ sendingInput = false, history, params }) {
       ? JSBI.equal(maxAmountOutput.raw, parsedAmounts[Field.OUTPUT].raw)
       : undefined
 
-  function getSwapType(): string {
+  function getSwapType(): SwapType {
     if (tradeType === TradeType.EXACT_INPUT) {
       if (tokens[Field.INPUT] === WETH[chainId]) {
-        return SWAP_TYPE.EXACT_ETH_FOR_TOKENS
+        return SwapType.EXACT_ETH_FOR_TOKENS
       } else if (tokens[Field.OUTPUT] === WETH[chainId]) {
-        return SWAP_TYPE.EXACT_TOKENS_FOR_ETH
+        return SwapType.EXACT_TOKENS_FOR_ETH
       } else {
-        return SWAP_TYPE.EXACT_TOKENS_FOR_TOKENS
+        return SwapType.EXACT_TOKENS_FOR_TOKENS
       }
     } else if (tradeType === TradeType.EXACT_OUTPUT) {
       if (tokens[Field.INPUT] === WETH[chainId]) {
-        return SWAP_TYPE.ETH_FOR_EXACT_TOKENS
+        return SwapType.ETH_FOR_EXACT_TOKENS
       } else if (tokens[Field.OUTPUT] === WETH[chainId]) {
-        return SWAP_TYPE.TOKENS_FOR_EXACT_ETH
+        return SwapType.TOKENS_FOR_EXACT_ETH
       } else {
-        return SWAP_TYPE.TOKENS_FOR_EXACT_TOKENS
+        return SwapType.TOKENS_FOR_EXACT_TOKENS
       }
     }
   }
@@ -577,12 +346,12 @@ function ExchangePage({ sendingInput = false, history, params }) {
       Field.INPUT === independentField
         ? parsedAmounts[Field.INPUT]
         : calculateSlippageAmount(parsedAmounts[Field.INPUT])?.[0] &&
-          new TokenAmount(tokens[Field.INPUT], calculateSlippageAmount(parsedAmounts[Field.INPUT])?.[1]),
+        new TokenAmount(tokens[Field.INPUT], calculateSlippageAmount(parsedAmounts[Field.INPUT])?.[1]),
     [Field.OUTPUT]:
       Field.OUTPUT === independentField
         ? parsedAmounts[Field.OUTPUT]
         : calculateSlippageAmount(parsedAmounts[Field.OUTPUT])?.[0] &&
-          new TokenAmount(tokens[Field.INPUT], calculateSlippageAmount(parsedAmounts[Field.OUTPUT])?.[0])
+        new TokenAmount(tokens[Field.INPUT], calculateSlippageAmount(parsedAmounts[Field.OUTPUT])?.[0])
   }
 
   const showInputApprove: boolean =
@@ -603,11 +372,11 @@ function ExchangePage({ sendingInput = false, history, params }) {
           addTransaction(
             response,
             'Send ' +
-              parsedAmounts[Field.INPUT]?.toSignificant(3) +
-              ' ' +
-              tokens[Field.INPUT]?.symbol +
-              ' to ' +
-              recipient
+            parsedAmounts[Field.INPUT]?.toSignificant(3) +
+            ' ' +
+            tokens[Field.INPUT]?.symbol +
+            ' to ' +
+            recipient
           )
           setPendingConfirmation(false)
         })
@@ -632,11 +401,11 @@ function ExchangePage({ sendingInput = false, history, params }) {
           addTransaction(
             response,
             'Send ' +
-              parsedAmounts[Field.INPUT]?.toSignificant(3) +
-              ' ' +
-              tokens[Field.INPUT]?.symbol +
-              ' to ' +
-              recipient
+            parsedAmounts[Field.INPUT]?.toSignificant(3) +
+            ' ' +
+            tokens[Field.INPUT]?.symbol +
+            ' to ' +
+            recipient
           )
           setPendingConfirmation(false)
         })
@@ -659,9 +428,8 @@ function ExchangePage({ sendingInput = false, history, params }) {
     let estimate: Function, method: Function, args: any[], value: ethers.utils.BigNumber
     const deadlineFromNow: number = Math.ceil(Date.now() / 1000) + deadline
 
-    const swapType = getSwapType()
-    switch (swapType) {
-      case SWAP_TYPE.EXACT_TOKENS_FOR_TOKENS:
+    switch (getSwapType()) {
+      case SwapType.EXACT_TOKENS_FOR_TOKENS:
         estimate = routerContract.estimate.swapExactTokensForTokens
         method = routerContract.swapExactTokensForTokens
         args = [
@@ -673,7 +441,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
         ]
         value = ethers.constants.Zero
         break
-      case SWAP_TYPE.TOKENS_FOR_EXACT_TOKENS:
+      case SwapType.TOKENS_FOR_EXACT_TOKENS:
         estimate = routerContract.estimate.swapTokensForExactTokens
         method = routerContract.swapTokensForExactTokens
         args = [
@@ -685,7 +453,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
         ]
         value = ethers.constants.Zero
         break
-      case SWAP_TYPE.EXACT_ETH_FOR_TOKENS:
+      case SwapType.EXACT_ETH_FOR_TOKENS:
         estimate = routerContract.estimate.swapExactETHForTokens
         method = routerContract.swapExactETHForTokens
         args = [
@@ -696,7 +464,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
         ]
         value = hex(slippageAdjustedAmounts[Field.INPUT].raw)
         break
-      case SWAP_TYPE.TOKENS_FOR_EXACT_ETH:
+      case SwapType.TOKENS_FOR_EXACT_ETH:
         estimate = routerContract.estimate.swapTokensForExactETH
         method = routerContract.swapTokensForExactETH
         args = [
@@ -708,7 +476,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
         ]
         value = ethers.constants.Zero
         break
-      case SWAP_TYPE.EXACT_TOKENS_FOR_ETH:
+      case SwapType.EXACT_TOKENS_FOR_ETH:
         estimate = routerContract.estimate.swapExactTokensForETH
         method = routerContract.swapExactTokensForETH
         args = [
@@ -720,7 +488,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
         ]
         value = ethers.constants.Zero
         break
-      case SWAP_TYPE.ETH_FOR_EXACT_TOKENS:
+      case SwapType.ETH_FOR_EXACT_TOKENS:
         estimate = routerContract.estimate.swapETHForExactTokens
         method = routerContract.swapETHForExactTokens
         args = [
@@ -746,13 +514,13 @@ function ExchangePage({ sendingInput = false, history, params }) {
         addTransaction(
           response,
           'Swap ' +
-            slippageAdjustedAmounts?.[Field.INPUT]?.toSignificant(3) +
-            ' ' +
-            tokens[Field.INPUT]?.symbol +
-            ' for ' +
-            slippageAdjustedAmounts?.[Field.OUTPUT]?.toSignificant(3) +
-            ' ' +
-            tokens[Field.OUTPUT]?.symbol
+          slippageAdjustedAmounts?.[Field.INPUT]?.toSignificant(3) +
+          ' ' +
+          tokens[Field.INPUT]?.symbol +
+          ' for ' +
+          slippageAdjustedAmounts?.[Field.OUTPUT]?.toSignificant(3) +
+          ' ' +
+          tokens[Field.OUTPUT]?.symbol
         )
         setPendingConfirmation(false)
       })
@@ -908,7 +676,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
             <Text fontSize={36} fontWeight={500}>
               {parsedAmounts[Field.INPUT]?.toSignificant(6)} {tokens[Field.INPUT]?.symbol}
             </Text>
-            <TokenLogo address={tokens[Field.INPUT]?.address} size={'30px'} />
+            <TokenLogo address={tokens[Field.INPUT]?.address} size={'30px'}/>
           </RowBetween>
           <TYPE.darkGray fontSize={20}>To</TYPE.darkGray>
           {ENS ? (
@@ -920,7 +688,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
                     {recipient?.slice(0, 8)}...{recipient?.slice(34, 42)}↗
                   </TYPE.blue>
                 </Link>
-                <Copy toCopy={recipient} />
+                <Copy toCopy={recipient}/>
               </AutoRow>
             </AutoColumn>
           ) : (
@@ -930,7 +698,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
                   {recipient?.slice(0, 6)}...{recipient?.slice(36, 42)}↗
                 </TYPE.blue>
               </Link>
-              <Copy toCopy={recipient} />
+              <Copy toCopy={recipient}/>
             </AutoRow>
           )}
         </AutoColumn>
@@ -942,7 +710,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
         <AutoColumn gap="lg" style={{ marginTop: '40px' }}>
           <AutoColumn gap="sm">
             <AutoRow gap="10px">
-              <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'30px'} />
+              <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'30px'}/>
               <Text fontSize={36} fontWeight={500}>
                 {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} {tokens[Field.OUTPUT]?.symbol}
               </Text>
@@ -970,14 +738,14 @@ function ExchangePage({ sendingInput = false, history, params }) {
               {/* {!!slippageAdjustedAmounts[Field.INPUT] && slippageAdjustedAmounts[Field.INPUT].toSignificant(6)} */}
             </TruncatedText>
             <RowFixed gap="4px">
-              <TokenLogo address={tokens[Field.INPUT]?.address} size={'24px'} />
+              <TokenLogo address={tokens[Field.INPUT]?.address} size={'24px'}/>
               <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
                 {tokens[Field.INPUT]?.symbol || ''}
               </Text>
             </RowFixed>
           </RowBetween>
           <RowFixed>
-            <ArrowDown size="16" color={theme(isDark).text2} />
+            <ArrowDown size="16" color={theme(isDark).text2}/>
           </RowFixed>
           <RowBetween align="flex-end">
             <TruncatedText fontSize={24} fontWeight={500} color={warningHigh ? theme(isDark).red1 : ''}>
@@ -986,7 +754,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
               {/* {!!slippageAdjustedAmounts[Field.OUTPUT] && slippageAdjustedAmounts[Field.OUTPUT].toSignificant(6)} */}
             </TruncatedText>
             <RowFixed gap="4px">
-              <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'24px'} />
+              <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'24px'}/>
               <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
                 {tokens[Field.OUTPUT]?.symbol || ''}
               </Text>
@@ -1046,17 +814,17 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 >
                   {pair && showInverted
                     ? route.midPrice.invert().toSignificant(6) +
-                      ' ' +
-                      tokens[Field.INPUT]?.symbol +
-                      ' / ' +
-                      tokens[Field.OUTPUT]?.symbol
+                    ' ' +
+                    tokens[Field.INPUT]?.symbol +
+                    ' / ' +
+                    tokens[Field.OUTPUT]?.symbol
                     : route.midPrice.toSignificant(6) +
-                      ' ' +
-                      tokens[Field.OUTPUT]?.symbol +
-                      ' / ' +
-                      tokens[Field.INPUT]?.symbol}
+                    ' ' +
+                    tokens[Field.OUTPUT]?.symbol +
+                    ' / ' +
+                    tokens[Field.INPUT]?.symbol}
                   <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
-                    <Repeat size={14} />
+                    <Repeat size={14}/>
                   </StyledBalanceMaxMini>
                 </Text>
               </RowBetween>
@@ -1066,7 +834,8 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <TYPE.black fontSize={14} fontWeight={400}>
                   {independentField === Field.INPUT ? (sending ? 'Min sent' : 'Minimum received') : 'Maximum sold'}
                 </TYPE.black>
-                <QuestionHelper text="A boundary is set so you are protected from large price movements after you submit your trade." />
+                <QuestionHelper
+                  text="A boundary is set so you are protected from large price movements after you submit your trade."/>
               </RowFixed>
               <RowFixed>
                 <TYPE.black fontSize={14}>
@@ -1077,10 +846,10 @@ function ExchangePage({ sendingInput = false, history, params }) {
                         : slippageAdjustedAmounts[Field.OUTPUT]?.toFixed(5)
                       : '-'
                     : slippageAdjustedAmounts[Field.INPUT]
-                    ? slippageAdjustedAmounts[Field.INPUT]?.toFixed(5) === '0.00000'
-                      ? '<0.00001'
-                      : slippageAdjustedAmounts[Field.INPUT]?.toFixed(5)
-                    : '-'}
+                      ? slippageAdjustedAmounts[Field.INPUT]?.toFixed(5) === '0.00000'
+                        ? '<0.00001'
+                        : slippageAdjustedAmounts[Field.INPUT]?.toFixed(5)
+                      : '-'}
                 </TYPE.black>
                 {parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.INPUT] && (
                   <TYPE.black fontSize={14} marginLeft={'4px'}>
@@ -1096,7 +865,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <TYPE.black color={theme(isDark).text1} fontSize={14} fontWeight={400}>
                   Price impact
                 </TYPE.black>
-                <QuestionHelper text="The difference between the market price and your price due to trade size." />
+                <QuestionHelper text="The difference between the market price and your price due to trade size."/>
               </RowFixed>
               <ErrorText
                 fontWeight={500}
@@ -1117,7 +886,8 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <TYPE.black fontSize={14} fontWeight={400}>
                   Liquidity Provider Fee
                 </TYPE.black>
-                <QuestionHelper text="A portion of each trade (0.3%) goes to liquidity providers to incentivize liquidity on the protocol." />
+                <QuestionHelper
+                  text="A portion of each trade (0.3%) goes to liquidity providers to incentivize liquidity on the protocol."/>
               </RowFixed>
               <TYPE.black fontSize={14}>
                 {feeTimesInputFormatted
@@ -1139,7 +909,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
     }
   }
 
-  const PriceBar = function() {
+  const PriceBar = function () {
     return (
       <AutoRow justify="space-between">
         <AutoColumn justify="center">
@@ -1186,7 +956,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
       ? `Sending ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol} to ${recipient}`
       : `Sending ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${tokens[Field.INPUT]?.symbol} to ${recipient}`
     : ` Swapping ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${tokens[Field.INPUT]?.symbol} for ${parsedAmounts[
-        Field.OUTPUT
+      Field.OUTPUT
       ]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}`
 
   function _onTokenSelect(address: string) {
@@ -1241,7 +1011,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 Max
               </MaxButton>
             )}
-            <StyledNumerical value={formattedAmounts[Field.INPUT]} onUserInput={val => onUserInput(Field.INPUT, val)} />
+            <StyledNumerical value={formattedAmounts[Field.INPUT]} onUserInput={val => onUserInput(Field.INPUT, val)}/>
             <CurrencyInputPanel
               field={Field.INPUT}
               value={formattedAmounts[Field.INPUT]}
@@ -1287,7 +1057,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
               <ColumnCenter>
                 <RowBetween padding="0 12px">
                   <ArrowWrapper onClick={onSwapTokens}>
-                    <ArrowDown size="16" color={theme(isDark).text2} onClick={onSwapTokens} />
+                    <ArrowDown size="16" color={theme(isDark).text2} onClick={onSwapTokens}/>
                   </ArrowWrapper>
                   <StyledBalanceMaxMini onClick={() => setSendingWithSwap(false)} style={{ marginRight: '0px' }}>
                     <TYPE.blue>Remove Swap</TYPE.blue>
@@ -1325,7 +1095,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
             />
             {sendingWithSwap && (
               <RowBetween padding="0 12px">
-                <ArrowDown size="16" />
+                <ArrowDown size="16"/>
               </RowBetween>
             )}
           </>
@@ -1357,7 +1127,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
         {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
           <Card padding={advanced ? '.25rem 1.25rem 0 .75rem' : '.25rem .7rem .25rem 1.25rem'} borderRadius={'20px'}>
             {advanced ? (
-              <PriceBar />
+              <PriceBar/>
             ) : (
               <AutoColumn gap="4px">
                 {' '}
@@ -1373,17 +1143,17 @@ function ExchangePage({ sendingInput = false, history, params }) {
                   >
                     {pair && showInverted
                       ? route.midPrice.invert().toSignificant(6) +
-                        ' ' +
-                        tokens[Field.INPUT]?.symbol +
-                        ' per ' +
-                        tokens[Field.OUTPUT]?.symbol
+                      ' ' +
+                      tokens[Field.INPUT]?.symbol +
+                      ' per ' +
+                      tokens[Field.OUTPUT]?.symbol
                       : route.midPrice.toSignificant(6) +
-                        ' ' +
-                        tokens[Field.OUTPUT]?.symbol +
-                        ' per ' +
-                        tokens[Field.INPUT]?.symbol}
+                      ' ' +
+                      tokens[Field.OUTPUT]?.symbol +
+                      ' per ' +
+                      tokens[Field.INPUT]?.symbol}
                     <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
-                      <Repeat size={14} />
+                      <Repeat size={14}/>
                     </StyledBalanceMaxMini>
                   </Text>
                 </RowBetween>
@@ -1403,7 +1173,8 @@ function ExchangePage({ sendingInput = false, history, params }) {
                             : priceSlippage.toFixed(4) + '%'
                           : '-'}{' '}
                       </ErrorText>
-                      <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
+                      <QuestionHelper
+                        text="The difference between the market price and your quoted price due to trade size."/>
                     </RowFixed>
                   </RowBetween>
                 )}
@@ -1451,22 +1222,22 @@ function ExchangePage({ sendingInput = false, history, params }) {
               {!account
                 ? 'Connect Wallet'
                 : generalError
-                ? generalError
-                : inputError
-                ? inputError
-                : outputError
-                ? outputError
-                : recipientError
-                ? recipientError
-                : tradeError
-                ? tradeError
-                : warningHigh
-                ? sendingWithSwap
-                  ? 'Send Anyway'
-                  : 'Swap Anyway'
-                : sending
-                ? 'Send'
-                : 'Swap'}
+                  ? generalError
+                  : inputError
+                    ? inputError
+                    : outputError
+                      ? outputError
+                      : recipientError
+                        ? recipientError
+                        : tradeError
+                          ? tradeError
+                          : warningHigh
+                            ? sendingWithSwap
+                              ? 'Send Anyway'
+                              : 'Swap Anyway'
+                            : sending
+                              ? 'Send'
+                              : 'Swap'}
             </Text>
           </ButtonError>
         )}
@@ -1479,7 +1250,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
                 <Text fontSize={16} fontWeight={500} style={{ userSelect: 'none' }}>
                   Show Advanced
                 </Text>
-                <ChevronDown color={theme(isDark).text2} />
+                <ChevronDown color={theme(isDark).text2}/>
               </RowBetween>
             </Hover>
           )}
@@ -1490,10 +1261,10 @@ function ExchangePage({ sendingInput = false, history, params }) {
                   <Text fontSize={16} color={theme(isDark).text2} fontWeight={500} style={{ userSelect: 'none' }}>
                     Hide Advanced
                   </Text>
-                  <ChevronUp color={theme(isDark).text2} />
+                  <ChevronUp color={theme(isDark).text2}/>
                 </RowBetween>
               </Hover>
-              <SectionBreak />
+              <SectionBreak/>
               <AutoColumn style={{ padding: '0 20px' }}>
                 <RowBetween>
                   <RowFixed>
@@ -1508,8 +1279,8 @@ function ExchangePage({ sendingInput = false, history, params }) {
                       text={
                         independentField === Field.INPUT
                           ? sending
-                            ? 'Price can change between when a transaction is submitted and when it is executed. This is the minimum amount you will send. A worse rate will cause your transaction to revert.'
-                            : 'Price can change between when a transaction is submitted and when it is executed. This is the minimum amount you will receive. A worse rate will cause your transaction to revert.'
+                          ? 'Price can change between when a transaction is submitted and when it is executed. This is the minimum amount you will send. A worse rate will cause your transaction to revert.'
+                          : 'Price can change between when a transaction is submitted and when it is executed. This is the minimum amount you will receive. A worse rate will cause your transaction to revert.'
                           : 'Price can change between when a transaction is submitted and when it is executed. This is the maximum amount you will pay. A worse rate will cause your transaction to revert.'
                       }
                     />
@@ -1518,15 +1289,15 @@ function ExchangePage({ sendingInput = false, history, params }) {
                     <TYPE.black color={theme(isDark).text1} fontSize={14}>
                       {independentField === Field.INPUT
                         ? slippageAdjustedAmounts[Field.OUTPUT]
-                          ? slippageAdjustedAmounts[Field.OUTPUT]?.toFixed(5) === '0.00000'
+                          ? slippageAdjustedAmounts[Field.OUTPUT]?.lessThan(new Fraction(JSBI.BigInt(1), JSBI.BigInt(10000)))
                             ? '<0.00001'
                             : slippageAdjustedAmounts[Field.OUTPUT]?.toFixed(5)
                           : '-'
                         : slippageAdjustedAmounts[Field.INPUT]
-                        ? slippageAdjustedAmounts[Field.INPUT]?.toFixed(5) === '0.00000'
-                          ? '<0.00001'
-                          : slippageAdjustedAmounts[Field.INPUT]?.toFixed(5)
-                        : '-'}
+                          ? slippageAdjustedAmounts[Field.INPUT]?.lessThan(new Fraction(JSBI.BigInt(1), JSBI.BigInt(10000)))
+                            ? '<0.00001'
+                            : slippageAdjustedAmounts[Field.INPUT]?.toFixed(5)
+                          : '-'}
                     </TYPE.black>
                     {parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.INPUT] && (
                       <TYPE.black fontSize={14} marginLeft={'4px'} color={theme(isDark).text1}>
@@ -1542,7 +1313,8 @@ function ExchangePage({ sendingInput = false, history, params }) {
                     <TYPE.black fontSize={14} fontWeight={400} color={theme(isDark).text1}>
                       Price Impact
                     </TYPE.black>
-                    <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
+                    <QuestionHelper
+                      text="The difference between the market price and your quoted price due to trade size."/>
                   </RowFixed>
                   <ErrorText
                     fontWeight={500}
@@ -1563,7 +1335,8 @@ function ExchangePage({ sendingInput = false, history, params }) {
                     <TYPE.black fontSize={14} fontWeight={400} color={theme(isDark).text1}>
                       Liquidity Provider Fee
                     </TYPE.black>
-                    <QuestionHelper text="A portion of each trade (0.03%) goes to liquidity providers to incentivize liquidity on the protocol." />
+                    <QuestionHelper
+                      text="A portion of each trade (0.03%) goes to liquidity providers to incentivize liquidity on the protocol."/>
                   </RowFixed>
                   <TYPE.black fontSize={14} color={theme(isDark).text1}>
                     {feeTimesInputFormatted
@@ -1572,12 +1345,13 @@ function ExchangePage({ sendingInput = false, history, params }) {
                   </TYPE.black>
                 </RowBetween>
               </AutoColumn>
-              <SectionBreak />
+              <SectionBreak/>
               <RowFixed padding={'0 20px'}>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme(isDark).text1}>
                   Set front running resistance
                 </TYPE.black>
-                <QuestionHelper text="Your transaction will revert if the price changes more than this amount after you submit your trade." />
+                <QuestionHelper
+                  text="Your transaction will revert if the price changes more than this amount after you submit your trade."/>
               </RowFixed>
               <SlippageTabs
                 rawSlippage={allowedSlippage}
