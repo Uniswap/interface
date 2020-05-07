@@ -1,23 +1,26 @@
-import { ethers } from 'ethers'
+import { Contract } from '@ethersproject/contracts'
+import { getAddress } from '@ethersproject/address'
+import { AddressZero } from '@ethersproject/constants'
+import { parseBytes32String, toUtf8Bytes } from '@ethersproject/strings'
+import { keccak256 } from '@ethersproject/keccak256'
+import { pack } from '@ethersproject/solidity'
+import { defaultAbiCoder } from '@ethersproject/abi'
 
 import IUniswapV2Pair from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import IUniswapV2Router01 from '@uniswap/v2-periphery/build/IUniswapV2Router01.json'
 
-import ERC20_ABI from '../constants/abis/erc20'
-import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32'
+import ERC20_ABI from '../constants/abis/erc20.json'
+import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32.json'
 import { SUPPORTED_THEMES, ROUTER_ADDRESS } from '../constants'
-import { bigNumberify, keccak256, defaultAbiCoder, toUtf8Bytes, solidityPack } from 'ethers/utils'
 
-import UncheckedJsonRpcSigner from './signer'
 import { WETH } from '@uniswap/sdk'
+import { BigNumber } from '@ethersproject/bignumber'
 
-export const ERROR_CODES = ['TOKEN_NAME', 'TOKEN_SYMBOL', 'TOKEN_DECIMALS'].reduce(
-  (accumulator, currentValue, currentIndex) => {
-    accumulator[currentValue] = currentIndex
-    return accumulator
-  },
-  {}
-)
+export const ERROR_CODES = {
+  TOKEN_NAME: 0,
+  TOKEN_SYMBOL: 1,
+  TOKEN_DECIMALS: 2
+}
 
 export function safeAccess(object, path) {
   return object
@@ -56,25 +59,20 @@ export function getQueryParam(windowLocation, name) {
 }
 
 export function getAllQueryParams() {
-  let params = {}
-
-  params.inputTokenAddress = isAddress(getQueryParam(window.location, 'inputTokenAddress'))
-    ? isAddress(getQueryParam(window.location, 'inputTokenAddress'))
-    : ''
-
-  params.outputTokenAddress = isAddress(getQueryParam(window.location, 'outputTokenAddress'))
-    ? isAddress(getQueryParam(window.location, 'outputTokenAddress'))
-    : ''
-
-  params.inputTokenAmount = !isNaN(Number(getQueryParam(window.location, 'inputTokenAmount')))
-    ? getQueryParam(window.location, 'inputTokenAmount')
-    : ''
-
-  params.outputTokenAmount = !isNaN(Number(getQueryParam(window.location, 'outputTokenAmount')))
-    ? getQueryParam(window.location, 'outputTokenAmount')
-    : ''
-
-  return params
+  return {
+    inputTokenAddress: isAddress(getQueryParam(window.location, 'inputTokenAddress'))
+      ? isAddress(getQueryParam(window.location, 'inputTokenAddress'))
+      : '',
+    outputTokenAddress: isAddress(getQueryParam(window.location, 'outputTokenAddress'))
+      ? isAddress(getQueryParam(window.location, 'outputTokenAddress'))
+      : '',
+    inputTokenAmount: !isNaN(Number(getQueryParam(window.location, 'inputTokenAmount')))
+      ? getQueryParam(window.location, 'inputTokenAmount')
+      : '',
+    outputTokenAmount: !isNaN(Number(getQueryParam(window.location, 'outputTokenAmount')))
+      ? getQueryParam(window.location, 'outputTokenAmount')
+      : ''
+  }
 }
 
 export function checkSupportedTheme(themeName) {
@@ -118,34 +116,30 @@ export function shortenTransactionHash(hash, digits = 4) {
   return `${hash.substring(0, digits + 2)}...${hash.substring(66 - digits)}`
 }
 
-export function isAddress(value) {
+export function isAddress(value: any) {
   try {
-    return ethers.utils.getAddress(value.toLowerCase())
+    return getAddress(value.toLowerCase())
   } catch {
     return false
   }
 }
 
-export function calculateGasMargin(value, margin) {
-  if (value) {
-    const offset = value.mul(margin).div(ethers.utils.bigNumberify(10000))
-    return value.add(offset)
-  }
-  return null
+export function calculateGasMargin(value: BigNumber) {
+  return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000)) // add 10%
 }
 
 // account is optional
-export function getProviderOrSigner(library, account) {
-  return account ? new UncheckedJsonRpcSigner(library.getSigner(account)) : library
+export function getProviderOrSigner(library: any, account?: string) {
+  return account ? library.getSigner(account).connectUnchecked() : library
 }
 
 // account is optional
-export function getContract(address, ABI, library, account) {
-  if (!isAddress(address) || address === ethers.constants.AddressZero) {
+export function getContract(address, ABI, library, account?) {
+  if (!isAddress(address) || address === AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
 
-  return new ethers.Contract(address, ABI, getProviderOrSigner(library, account))
+  return new Contract(address, ABI, getProviderOrSigner(library, account))
 }
 
 // account is optional
@@ -170,7 +164,7 @@ export async function getTokenName(tokenAddress, library) {
     .catch(() =>
       getContract(tokenAddress, ERC20_BYTES32_ABI, library)
         .name()
-        .then(bytes32 => ethers.utils.parseBytes32String(bytes32))
+        .then(parseBytes32String)
     )
     .catch(error => {
       error.code = ERROR_CODES.TOKEN_SYMBOL
@@ -188,7 +182,7 @@ export async function getTokenSymbol(tokenAddress, library) {
     .symbol()
     .catch(() => {
       const contractBytes32 = getContract(tokenAddress, ERC20_BYTES32_ABI, library)
-      return contractBytes32.symbol().then(bytes32 => ethers.utils.parseBytes32String(bytes32))
+      return contractBytes32.symbol().then(parseBytes32String)
     })
     .catch(error => {
       error.code = ERROR_CODES.TOKEN_SYMBOL
@@ -244,7 +238,7 @@ const PERMIT_TYPEHASH = keccak256(
 )
 
 export function expandTo18Decimals(n) {
-  return bigNumberify(n).mul(bigNumberify(10).pow(18))
+  return BigNumber.from(n).mul(BigNumber.from(10).pow(18))
 }
 
 function getDomainSeparator(name, tokenAddress) {
@@ -266,7 +260,7 @@ export async function getApprovalDigest(token, approve, nonce, deadline) {
   const name = await token.name()
   const DOMAIN_SEPARATOR = getDomainSeparator(name, token.address)
   return keccak256(
-    solidityPack(
+    pack(
       ['bytes1', 'bytes1', 'bytes32', 'bytes32'],
       [
         '0x19',

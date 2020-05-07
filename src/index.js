@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
 import { Web3ReactProvider, createWeb3ReactRoot } from '@web3-react/core'
-import { ethers } from 'ethers'
+import { Web3Provider } from '@ethersproject/providers'
 
 import { NetworkContextName } from './constants'
 import { isMobile } from 'react-device-detect'
@@ -20,7 +20,7 @@ import './i18n'
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
 function getLibrary(provider) {
-  const library = new ethers.providers.Web3Provider(provider)
+  const library = new Web3Provider(provider)
   library.pollingInterval = 10000
   return library
 }
