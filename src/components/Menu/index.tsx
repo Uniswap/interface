@@ -79,13 +79,17 @@ const MenuItem = styled(Link)`
   }
 `
 
+const CODE_LINK = !!process.env.REACT_APP_GIT_COMMIT_HASH ?
+  `https://github.com/Uniswap/uniswap-frontend/tree/${process.env.REACT_APP_GIT_COMMIT_HASH}`:
+  'https://github.com/Uniswap/uniswap-frontend'
+
 export default function Menu() {
-  const node = useRef()
+  const node = useRef<HTMLDivElement>()
   const [open, toggle] = useToggle(false)
 
   useEffect(() => {
     const handleClickOutside = e => {
-      if (node.current.contains(e.target)) {
+      if (node.current?.contains(e.target) ?? false) {
         return
       }
       toggle()
@@ -115,7 +119,7 @@ export default function Menu() {
           <MenuItem id="link" href="https://uniswap.org/docs/v2">
             Docs
           </MenuItem>
-          <MenuItem id="link" href="https://github.com/Uniswap">
+          <MenuItem id="link" href={CODE_LINK}>
             Code
           </MenuItem>
           <MenuItem id="link" href="https://uniswap.info/">

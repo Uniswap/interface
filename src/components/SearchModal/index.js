@@ -1,6 +1,6 @@
-import React, { useState, useRef, useMemo, useEffect } from 'react'
+import React, { useState, useRef, useMemo, useEffect, useContext } from 'react'
 import '@reach/tooltip/styles.css'
-import styled from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
 import { JSBI, WETH } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
@@ -74,7 +74,7 @@ const Input = styled.input`
   background: none;
   border: none;
   outline: none;
-  border: 1px solid #edeef2;
+  border: 1px solid ${({ theme }) => theme.bg2};
   box-sizing: border-box;
   border-radius: 20px;
   color: ${({ theme }) => theme.text1};
@@ -88,7 +88,7 @@ const Input = styled.input`
 const FilterWrapper = styled(RowFixed)`
   padding: 8px;
   background-color: ${({ selected, theme }) => selected && theme.bg2};
-  color: ${({ selected, theme }) => (selected ? theme.black : '#888D9B')};
+  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.text2)};
   border-radius: 8px;
   user-select: none;
   & > * {
@@ -155,6 +155,7 @@ function SearchModal({
 }) {
   const { t } = useTranslation()
   const { account, chainId } = useWeb3React()
+  const theme = useContext(ThemeContext)
 
   const allTokens = useAllTokens()
   const allPairs = useAllPairs()
@@ -486,9 +487,9 @@ function SearchModal({
                     {zeroBalance && showSendWithSwap ? (
                       <ColumnCenter
                         justify="center"
-                        style={{ backgroundColor: '#EBF4FF', padding: '8px', borderRadius: '12px' }}
+                        style={{ backgroundColor: theme.bg2, padding: '8px', borderRadius: '12px' }}
                       >
-                        <Text textAlign="center" fontWeight={500} color="#2172E5">
+                        <Text textAlign="center" fontWeight={500} color={theme.blue1}>
                           Send With Swap
                         </Text>
                       </ColumnCenter>
@@ -622,8 +623,9 @@ function SearchModal({
             </RowBetween>
           </PaddedColumn>
         )}
-        {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: '#E1E1E1' }} />}
+        {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />}
         {!showTokenImport && <TokenList>{filterType === 'tokens' ? renderTokenList() : renderPairsList()}</TokenList>}
+        {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />}
         {!showTokenImport && (
           <Card>
             <AutoRow justify={'center'}>
@@ -641,7 +643,7 @@ function SearchModal({
                   </Text>
                 )}
                 {filterType === 'tokens' && (
-                  <Text fontWeight={500}>
+                  <Text fontWeight={500} color={theme.text2} fontSize={14}>
                     {!isMobile && "Don't see a token? "}
 
                     <StyledLink

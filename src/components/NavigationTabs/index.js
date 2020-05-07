@@ -58,12 +58,12 @@ const StyledNavLink = styled(NavLink).attrs({
     border-radius: 12px;
     box-sizing: border-box;
     font-weight: 500;
-    color: ${({ theme }) => theme.black};
+    color: ${({ theme }) => theme.text1};
   }
 
   :hover,
   :focus {
-    color: ${({ theme }) => darken(0.1, theme.black)};
+    color: ${({ theme }) => darken(0.1, theme.text1)};
   }
 `
 
@@ -73,7 +73,7 @@ const ActiveText = styled.div`
 `
 
 const ArrowLink = styled(ArrowLeft)`
-  color: ${({ theme }) => theme.black};
+  color: ${({ theme }) => theme.text1};
 `
 
 function NavigationTabs({ location: { pathname }, history }) {
@@ -113,8 +113,8 @@ function NavigationTabs({ location: { pathname }, history }) {
             <QuestionHelper
               text={
                 adding
-                  ? 'When you add liquidity to a pair, you receive pool tokens (ERC20) that represent both your portion of the liquidity pool and accrued liquidity provider fees .'
-                  : 'Your liquidity is represented by a pool token (ERC20). Removing will convert your position back into the underlying tokens at the current rate and proportional to the amount of each token in the pool. Any accrued fees are included in the token amounts you receive.'
+                  ? 'When you add liqudiity, you are given pool tokens that represent your position in this pool. These tokens automatically earn fees proportional to your pool share and can be redeemed at any time.'
+                  : 'Your liquidity is represented by a pool token (ERC20). Removing will convert your position back into tokens at the current rate and proportional to the amount of each token in the pool. Any fees you accrued are included in the token amounts you receive.'
               }
             />
           </RowBetween>
