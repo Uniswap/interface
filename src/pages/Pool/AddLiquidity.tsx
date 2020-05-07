@@ -210,14 +210,23 @@ function AddLiquidity({ token0, token1, step = false }) {
     [Field.INPUT]: null,
     [Field.OUTPUT]: null
   })
+
   useEffect(() => {
-    if (typedValue !== '' && typedValue !== '.' && tokens[independentField] && noLiquidity) {
+    if (typedValue !== '.' && tokens[independentField] && noLiquidity) {
       const newNonRelationalAmounts = nonrelationalAmounts
-      const typedValueParsed = parseUnits(typedValue, tokens[independentField].decimals).toString()
-      if (independentField === Field.OUTPUT) {
-        newNonRelationalAmounts[Field.OUTPUT] = new TokenAmount(tokens[independentField], typedValueParsed)
+      if (typedValue === '') {
+        if (independentField === Field.OUTPUT) {
+          newNonRelationalAmounts[Field.OUTPUT] = null
+        } else {
+          newNonRelationalAmounts[Field.INPUT] = null
+        }
       } else {
-        newNonRelationalAmounts[Field.INPUT] = new TokenAmount(tokens[independentField], typedValueParsed)
+        const typedValueParsed = parseUnits(typedValue, tokens[independentField].decimals).toString()
+        if (independentField === Field.OUTPUT) {
+          newNonRelationalAmounts[Field.OUTPUT] = new TokenAmount(tokens[independentField], typedValueParsed)
+        } else {
+          newNonRelationalAmounts[Field.INPUT] = new TokenAmount(tokens[independentField], typedValueParsed)
+        }
       }
       setNonrelationalAmounts(newNonRelationalAmounts)
     }
@@ -255,15 +264,20 @@ function AddLiquidity({ token0, token1, step = false }) {
   }
 
   // used for displaying approximate starting price in UI
+
   const derivedPrice =
     parsedAmounts[Field.INPUT] &&
     parsedAmounts[Field.OUTPUT] &&
-    new Price(
-      parsedAmounts[Field.INPUT].token,
-      parsedAmounts[Field.OUTPUT].token,
-      parsedAmounts[Field.INPUT].raw,
-      parsedAmounts[Field.OUTPUT].raw
-    )
+    nonrelationalAmounts[Field.INPUT] &&
+    nonrelationalAmounts[Field.OUTPUT] &&
+    typedValue !== ''
+      ? new Price(
+          parsedAmounts[Field.INPUT].token,
+          parsedAmounts[Field.OUTPUT].token,
+          parsedAmounts[Field.INPUT].raw,
+          parsedAmounts[Field.OUTPUT].raw
+        )
+      : null
 
   // check for estimated liquidity minted
   const liquidityMinted: TokenAmount =
@@ -603,12 +617,41 @@ function AddLiquidity({ token0, token1, step = false }) {
       </>
     )
   }
+
+  const displayPriceInput = noLiquidity
+    ? parsedAmounts[0] &&
+      parsedAmounts[1] &&
+      derivedPrice &&
+      JSBI.greaterThan(parsedAmounts[0].raw, JSBI.BigInt(0)) &&
+      JSBI.greaterThan(parsedAmounts[1].raw, JSBI.BigInt(0))
+      ? derivedPrice?.toSignificant(6)
+      : '-'
+    : pair && route && tokens[Field.INPUT]
+    ? route?.input.equals(tokens[Field.INPUT])
+      ? route.midPrice.toSignificant(6)
+      : route.midPrice.invert().toSignificant(6)
+    : '-'
+
+  const displayPriceOutput = noLiquidity
+    ? parsedAmounts[0] &&
+      parsedAmounts[1] &&
+      derivedPrice &&
+      JSBI.greaterThan(parsedAmounts[0].raw, JSBI.BigInt(0)) &&
+      JSBI.greaterThan(parsedAmounts[1].raw, JSBI.BigInt(0))
+      ? derivedPrice?.invert().toSignificant(6)
+      : '-'
+    : pair && route && tokens[Field.OUTPUT]
+    ? route?.input.equals(tokens[Field.OUTPUT])
+      ? route.midPrice.toSignificant(6)
+      : route.midPrice.invert().toSignificant(6)
+    : '-'
+
   const PriceBar = () => {
     return (
       <AutoRow justify="space-between">
         <AutoColumn justify="center">
           <Text fontWeight={500} fontSize={16} color="#000000">
-            {pair ? `${route.midPrice.toSignificant(6)} ` : '-'}
+            {displayPriceInput}
           </Text>
           <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
             {tokens[Field.OUTPUT]?.symbol} per {tokens[Field.INPUT]?.symbol}
@@ -616,7 +659,7 @@ function AddLiquidity({ token0, token1, step = false }) {
         </AutoColumn>
         <AutoColumn justify="center">
           <Text fontWeight={500} fontSize={16} color="#000000">
-            {pair ? `${route.midPrice.invert().toSignificant(6)} ` : '-'}
+            {displayPriceOutput}
           </Text>
           <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
             {tokens[Field.INPUT]?.symbol} per {tokens[Field.OUTPUT]?.symbol}
@@ -624,7 +667,7 @@ function AddLiquidity({ token0, token1, step = false }) {
         </AutoColumn>
         <AutoColumn justify="center">
           <Text fontWeight={500} fontSize={16} color="#000000">
-            {poolTokenPercentage ? poolTokenPercentage?.toFixed(2) : '0.0'}
+            {noLiquidity && derivedPrice ? '100' : poolTokenPercentage ? poolTokenPercentage?.toFixed(2) : '0.0'}
             {'%'}
           </Text>
           <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
@@ -712,7 +755,7 @@ function AddLiquidity({ token0, token1, step = false }) {
         {showOutputApprove ? (
           <ButtonLight
             onClick={() => {
-              approveAmount(Field.OUTPUT)
+              !pendingApprovalOutput && approveAmount(Field.OUTPUT)
             }}
           >
             {pendingApprovalOutput ? (
@@ -724,7 +767,7 @@ function AddLiquidity({ token0, token1, step = false }) {
         ) : showInputApprove ? (
           <ButtonLight
             onClick={() => {
-              approveAmount(Field.INPUT)
+              !pendingApprovalInput && approveAmount(Field.INPUT)
             }}
           >
             {pendingApprovalInput ? (
