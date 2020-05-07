@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === 'production') {
     customBrowserType: !isMobile ? 'desktop' : 'web3' in window || 'ethereum' in window ? 'mobileWeb3' : 'mobileRegular'
   })
 } else {
-  ReactGA.initialize('test', { testMode: true })
+  ReactGA.initialize('test', { testMode: true, debug: true })
 }
 
 ReactGA.pageview(window.location.pathname + window.location.search)
@@ -58,9 +58,9 @@ function ContextProviders({ children }) {
 function Updaters() {
   return (
     <>
-      <ApplicationContextUpdater />
-      <TransactionContextUpdater />
-      <BalancesContextUpdater />
+      <ApplicationContextUpdater/>
+      <TransactionContextUpdater/>
+      <BalancesContextUpdater/>
     </>
   )
 }
@@ -69,11 +69,11 @@ ReactDOM.render(
   <Web3ReactProvider getLibrary={getLibrary}>
     <Web3ProviderNetwork getLibrary={getLibrary}>
       <ContextProviders>
-        <Updaters />
+        <Updaters/>
         <ThemeProvider>
           <>
-            <GlobalStyle />
-            <App />
+            <GlobalStyle/>
+            <App/>
           </>
         </ThemeProvider>
       </ContextProviders>
