@@ -11,8 +11,18 @@ import { RowBetween, AutoRow } from '../Row'
 import { Copy as CopyIcon, BarChart2, Info, Share, ChevronDown, ChevronUp, Plus } from 'react-feather'
 import DoubleLogo from '../DoubleLogo'
 import { ButtonSecondary, ButtonGray } from '../Button'
+import { Token } from '@uniswap/sdk'
 
-export default function BalanceCard({ token0, balance0, import0, token1, balance1, import1 }) {
+interface BalanceCardProps {
+  token0: Token
+  balance0: boolean
+  import0: boolean
+  token1: Token
+  balance1: boolean
+  import1: boolean
+}
+
+export default function BalanceCard({ token0, balance0, import0, token1, balance1, import1 }: BalanceCardProps) {
   const [showInfo, setshowInfo] = useState(false)
 
   return (
@@ -24,7 +34,7 @@ export default function BalanceCard({ token0, balance0, import0, token1, balance
         maxWidth: '355px',
         flexWrap: 'nowrap',
         alignItems: 'flex-end',
-        zIndex: '99'
+        zIndex: 99
       }}
     >
       <AutoColumn style={{ width: '100%', padding: '12px' }}>

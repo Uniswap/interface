@@ -115,7 +115,15 @@ const WALLET_VIEWS = {
   PENDING: 'pending'
 }
 
-export default function WalletModal({ pendingTransactions, confirmedTransactions, ENSName }) {
+export default function WalletModal({
+  pendingTransactions,
+  confirmedTransactions,
+  ENSName
+}: {
+  pendingTransactions: any[]
+  confirmedTransactions: any[]
+  ENSName?: string
+}) {
   const { active, account, connector, activate, error } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
@@ -200,7 +208,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
 
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
-    const isMetamask = (window as any).ethereum && (window as any).ethereum.isMetaMask
+    const isMetamask = window.ethereum && window.ethereum.isMetaMask
     return Object.keys(SUPPORTED_WALLETS).map(key => {
       const option = SUPPORTED_WALLETS[key]
       // check for mobile options
@@ -210,7 +218,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
           return null
         }
 
-        if (!(window as any).web3 && !(window as any).ethereum && option.mobile) {
+        if (!window.web3 && !window.ethereum && option.mobile) {
           return (
             <Option
               onClick={() => {
@@ -232,7 +240,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
       // overwrite injected when needed
       if (option.connector === injected) {
         // don't show injected if there's no injected provider
-        if (!((window as any).web3 || (window as any).ethereum)) {
+        if (!(window.web3 || window.ethereum)) {
           if (option.name === 'MetaMask') {
             return (
               <Option

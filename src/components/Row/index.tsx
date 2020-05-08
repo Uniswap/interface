@@ -21,9 +21,9 @@ export const RowFlat = styled.div`
   align-items: flex-end;
 `
 
-export const AutoRow = styled(Row)<{ gap: string; justify?: string }>`
+export const AutoRow = styled(Row)<{ gap?: string; justify?: string }>`
   flex-wrap: wrap;
-  margin: -${({ gap }) => gap};
+  margin: ${({ gap }) => gap && `-${gap}`};
   justify-content: ${({ justify }) => justify && justify};
 
   & > * {

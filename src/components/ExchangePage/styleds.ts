@@ -55,7 +55,7 @@ export const BottomGrouping = styled.div`
   position: relative;
 `
 
-export const ErrorText = styled(Text)`
+export const ErrorText = styled(Text)<{ warningLow?: boolean; warningMedium?: boolean; warningHigh?: boolean }>`
   color: ${({ theme, warningLow, warningMedium, warningHigh }) =>
     warningHigh ? theme.red1 : warningMedium ? theme.yellow2 : warningLow ? theme.green1 : theme.text1};
 `

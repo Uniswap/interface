@@ -72,7 +72,7 @@ function PoolFinder({ history }: RouteComponentProps) {
           </Text>
           <Row>
             <DoubleTokenLogo a0={token0Address || ''} a1={token1Address || ''} margin={true} />
-            <Text fontSize={16} fotnWeight={500}>
+            <Text fontSize={16} fontWeight={500}>
               UNI {token0?.symbol} / {token1?.symbol}
             </Text>
           </Row>

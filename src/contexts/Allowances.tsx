@@ -53,7 +53,7 @@ function reducer(state, { type, payload }) {
   }
 }
 
-export default function Provider({ children }) {
+export default function Provider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, {})
 
   const update = useCallback((networkId, address, tokenAddress, spenderAddress, value, blockNumber) => {

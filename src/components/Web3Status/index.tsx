@@ -63,7 +63,7 @@ const Web3StatusError = styled(Web3StatusGeneric)`
   }
 `
 
-const Web3StatusConnect = styled(Web3StatusGeneric)`
+const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
   background-color: ${({ theme }) => theme.blue4};
   border: none;
   color: ${({ theme }) => theme.buttonSecondaryText};
@@ -90,7 +90,7 @@ const Web3StatusConnect = styled(Web3StatusGeneric)`
     `}
 `
 
-const Web3StatusConnected = styled(Web3StatusGeneric)`
+const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
   background-color: ${({ pending, theme }) => (pending ? theme.blue1 : theme.bg2)};
   border: 1px solid ${({ pending, theme }) => (pending ? theme.blue1 : theme.bg3)};
   color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};

@@ -33,7 +33,11 @@ const ETHERSCAN_PREFIXES = {
   42: 'kovan.'
 }
 
-export function getEtherscanLink(networkId: 1 | 3 | 4 | 5 | 42 | any, data: string, type: 'transaction' | 'address') {
+export function getEtherscanLink(
+  networkId: 1 | 3 | 4 | 5 | 42 | string | number,
+  data: string,
+  type: 'transaction' | 'address'
+) {
   const prefix = `https://${ETHERSCAN_PREFIXES[networkId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
 
   switch (type) {
@@ -47,7 +51,7 @@ export function getEtherscanLink(networkId: 1 | 3 | 4 | 5 | 42 | any, data: stri
   }
 }
 
-export function getQueryParam(windowLocation, name) {
+export function getQueryParam(windowLocation: Location, name: string): string | undefined {
   const q = windowLocation.search.match(new RegExp('[?&]' + name + '=([^&#?]*)'))
   return q && q[1]
 }
@@ -84,44 +88,21 @@ export function getAllQueryParams(): QueryParams {
   }
 }
 
-export function checkSupportedTheme(themeName) {
+export function checkSupportedTheme(themeName: string) {
   if (themeName && themeName.toUpperCase() in SUPPORTED_THEMES) {
     return themeName.toUpperCase()
   }
   return null
 }
 
-export function getNetworkName(networkId) {
-  switch (networkId) {
-    case 1: {
-      return 'the Ethereum Mainnet'
-    }
-    case 3: {
-      return 'the Ropsten Test Network'
-    }
-    case 4: {
-      return 'the Rinkeby Test Network'
-    }
-    case 5: {
-      return 'the Görli Test Network'
-    }
-    case 42: {
-      return 'the Kovan Test Network'
-    }
-    default: {
-      return 'the correct network'
-    }
-  }
-}
-
-export function shortenAddress(address, digits = 4) {
+export function shortenAddress(address: string, chars = 4): string {
   if (!isAddress(address)) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
-  return `${address.substring(0, digits + 2)}...${address.substring(42 - digits)}`
+  return `${address.substring(0, chars + 2)}...${address.substring(42 - chars)}`
 }
 
-export function calculateGasMargin(value: BigNumber) {
+export function calculateGasMargin(value: BigNumber): BigNumber {
   return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000)) // add 10%
 }
 
