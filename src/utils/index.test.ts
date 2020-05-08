@@ -1,7 +1,7 @@
 import { getEtherscanLink } from './index'
 
 describe('utils', () => {
-  describe('index', () => {
+  describe('#getEtherscanLink', () => {
     it('correct for tx', () => {
       expect(getEtherscanLink(1, 'abc', 'transaction')).toEqual('https://etherscan.io/tx/abc')
     })
