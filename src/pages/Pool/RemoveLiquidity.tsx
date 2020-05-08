@@ -425,6 +425,13 @@ export default function RemoveLiquidity({ token0, token1 }) {
     })
   }
 
+  function resetModalState() {
+    setSigned(false)
+    setSigInputs(null)
+    setAttemptedRemoval(false)
+    setPendingConfirmation(true)
+  }
+
   async function onRemove() {
     setAttemptedRemoval(true)
     const router = getRouterContract(chainId, library, account)
@@ -497,13 +504,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
         resetModalState()
         setShowConfirm(false)
       })
-  }
-
-  function resetModalState() {
-    setSigned(false)
-    setSigInputs(null)
-    setAttemptedRemoval(false)
-    setPendingConfirmation(true)
   }
 
   function modalHeader() {

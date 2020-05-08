@@ -25,15 +25,6 @@ export enum ERROR_CODES {
   TOKEN_DECIMALS = 2
 }
 
-export function safeAccess(object, path) {
-  return object
-    ? path.reduce(
-        (accumulator, currentValue) => (accumulator && accumulator[currentValue] ? accumulator[currentValue] : null),
-        object
-      )
-    : null
-}
-
 const ETHERSCAN_PREFIXES = {
   1: '',
   3: 'ropsten.',

@@ -70,7 +70,7 @@ const ButtonWrapper = styled.div<{ pending: boolean }>`
   }
 `
 
-export default function Transaction({ hash, pending }) {
+export default function Transaction({ hash, pending }: { hash: string; pending: boolean }) {
   const { chainId } = useWeb3React()
   const allTransactions = useAllTransactions()
 

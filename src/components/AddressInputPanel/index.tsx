@@ -63,7 +63,15 @@ const Input = styled.input<{ error: boolean }>`
 //   border-radius: 8px;
 // `
 
-export default function AddressInputPanel({ initialInput = '', onChange, onError }) {
+export default function AddressInputPanel({
+  initialInput = '',
+  onChange,
+  onError
+}: {
+  initialInput?: string
+  onChange: (val: { address: string; name?: string }) => void
+  onError: (error: boolean, input: string) => void
+}) {
   const { library } = useWeb3React()
 
   const [input, setInput] = useState(initialInput ? initialInput : '')

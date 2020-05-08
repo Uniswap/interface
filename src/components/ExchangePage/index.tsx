@@ -353,6 +353,17 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   const showInputApprove: boolean =
     parsedAmounts[Field.INPUT] && inputApproval && JSBI.greaterThan(parsedAmounts[Field.INPUT].raw, inputApproval.raw)
 
+  // reset modal state when closed
+  function resetModal() {
+    // clear input if txn submitted
+    if (!pendingConfirmation) {
+      onUserInput(Field.INPUT, '')
+    }
+    setPendingConfirmation(true)
+    setAttemptingTxn(false)
+    setShowAdvanced(false)
+  }
+
   // function for a pure send
   async function onSend() {
     setAttemptingTxn(true)
@@ -643,17 +654,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_MEDIUM / 100
   const warningHigh: boolean =
     slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_HIGH / 100
-
-  // reset modal state when closed
-  function resetModal() {
-    // clear input if txn submitted
-    if (!pendingConfirmation) {
-      onUserInput(Field.INPUT, '')
-    }
-    setPendingConfirmation(true)
-    setAttemptingTxn(false)
-    setShowAdvanced(false)
-  }
 
   function modalHeader() {
     if (sending && !sendingWithSwap) {

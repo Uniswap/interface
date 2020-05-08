@@ -223,13 +223,21 @@ function renderTransactions(transactions, pending) {
   )
 }
 
+interface AccountDetailsProps {
+  toggleWalletModal: () => void
+  pendingTransactions: any[]
+  confirmedTransactions: any[]
+  ENSName?: string
+  openOptions: () => void
+}
+
 export default function AccountDetails({
   toggleWalletModal,
   pendingTransactions,
   confirmedTransactions,
   ENSName,
   openOptions
-}) {
+}: AccountDetailsProps) {
   const { chainId, account, connector } = useWeb3React()
   const theme = useContext(ThemeContext)
 

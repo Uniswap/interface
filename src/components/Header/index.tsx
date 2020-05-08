@@ -133,7 +133,7 @@ const MigrateBanner = styled(AutoColumn)`
   `};
 `
 
-function Header({ history }) {
+export default function Header() {
   const { account, chainId } = useWeb3React()
 
   const userEthBalance = useAddressBalance(account, WETH[chainId])
@@ -196,5 +196,3 @@ function Header({ history }) {
     </HeaderFrame>
   )
 }
-
-export default withRouter(Header)
