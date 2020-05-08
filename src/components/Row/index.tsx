@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Box } from 'rebass/styled-components'
 
-const Row = styled(Box)`
+const Row = styled(Box)<{ align?: string; padding?: string; border?: string; borderRadius?: string }>`
   width: 100%;
   display: flex;
   padding: 0;
@@ -21,7 +21,7 @@ export const RowFlat = styled.div`
   align-items: flex-end;
 `
 
-export const AutoRow = styled(Row)`
+export const AutoRow = styled(Row)<{ gap: string; justify?: string }>`
   flex-wrap: wrap;
   margin: -${({ gap }) => gap};
   justify-content: ${({ justify }) => justify && justify};

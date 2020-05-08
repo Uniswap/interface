@@ -33,10 +33,8 @@ export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColo
   }
 `
 
-export const CloseIcon = styled(X)`
-  :hover {
-    cursor: pointer;
-  }
+export const CloseIcon = styled(X)<{ onClick: () => void}>`
+  cursor: pointer;
 `
 
 export const Link = styled.a.attrs({

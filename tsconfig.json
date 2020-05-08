@@ -18,7 +18,10 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "downlevelIteration": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "types": [
+      "react-spring"
+    ]
   },
   "exclude": [
     "node_modules",

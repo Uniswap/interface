@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { parseEther, parseUnits } from '@ethersproject/units'
 import { Fraction, JSBI, Percent, TokenAmount, TradeType, WETH } from '@uniswap/sdk'
 import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
-import { withRouter,RouteComponentProps } from 'react-router-dom'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Zero, MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
@@ -10,7 +10,7 @@ import { Field, SwapAction, useSwapStateReducer } from './swap-store'
 import { Text } from 'rebass'
 import Card, { BlueCard, GreyCard, YellowCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { ROUTER_ADDRESS } from '../../constants'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useUserAdvanced } from '../../contexts/Application'
@@ -23,7 +23,14 @@ import { useTokenContract, useWeb3React } from '../../hooks'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { Hover, theme, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
-import { calculateGasMargin, getEtherscanLink, getProviderOrSigner, getRouterContract, isWETH, QueryParams } from '../../utils'
+import {
+  calculateGasMargin,
+  getEtherscanLink,
+  getProviderOrSigner,
+  getRouterContract,
+  isWETH,
+  QueryParams
+} from '../../utils'
 import Copy from '../AccountDetails/Copy'
 import AddressInputPanel from '../AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../Button'
@@ -721,7 +728,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               </Text>
             </RowFixed>
           </RowBetween>
-          <AutoColumn justify="flex-start" gap="sm" style={{padding: '20px 0 0 0px'}}>
+          <AutoColumn justify="flex-start" gap="sm" style={{ padding: '20px 0 0 0px' }}>
             {independentField === Field.INPUT ? (
               <TYPE.italic textAlign="left" style={{ width: '100%', paddingTop: '.5rem' }}>
                 {`Output is estimated. You will receive at least `}
@@ -976,14 +983,13 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             <CurrencyInputPanel
               field={Field.INPUT}
               value={formattedAmounts[Field.INPUT]}
-              onUserInput={val => onUserInput(Field.INPUT, val)}
+              onUserInput={(field, val) => onUserInput(Field.INPUT, val)}
               onMax={() => {
                 maxAmountInput && onMaxInput(maxAmountInput.toExact())
               }}
               atMax={atMaxAmountInput}
               token={tokens[Field.INPUT]}
               onTokenSelection={address => _onTokenSelect(address)}
-              error={inputError}
               pair={pair}
               hideBalance={true}
               hideInput={true}
@@ -1005,7 +1011,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               value={formattedAmounts[Field.INPUT]}
               atMax={atMaxAmountInput}
               token={tokens[Field.INPUT]}
-              error={inputError}
               pair={pair}
               advanced={advanced}
               onUserInput={onUserInput}
@@ -1029,7 +1034,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               </ColumnCenter>
             ) : (
               <Hover>
-                <ColumnCenter style={{padding: '0 1rem'}}>
+                <ColumnCenter style={{ padding: '0 1rem' }}>
                   <ArrowWrapper>
                     <ArrowDown
                       size="16"
@@ -1051,7 +1056,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               atMax={atMaxAmountOutput}
               token={tokens[Field.OUTPUT]}
               onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
-              error={outputError}
               pair={pair}
               advanced={advanced}
               otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
@@ -1185,23 +1189,9 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             <Text fontSize={20} fontWeight={500}>
               {!account
                 ? 'Connect Wallet'
-                : generalError
-                  ? generalError
-                  : inputError
-                    ? inputError
-                    : outputError
-                      ? outputError
-                      : recipientError
-                        ? recipientError
-                        : tradeError
-                          ? tradeError
-                          : warningHigh
-                            ? sendingWithSwap
-                              ? 'Send Anyway'
-                              : 'Swap Anyway'
-                            : sending
-                              ? 'Send'
-                              : 'Swap'}
+                : (generalError || inputError || outputError || recipientError || tradeError) ||
+                (`${sending ? 'Send' : 'Swap'}${warningHigh ? ' Anyway' : ''}`)
+              }
             </Text>
           </ButtonError>
         )}

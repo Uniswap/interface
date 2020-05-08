@@ -2,8 +2,6 @@ import React, { useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { HelpCircle as Question } from 'react-feather'
 
-// import question from '../../assets/images/question.svg'
-
 const Wrapper = styled.div`
   position: relative;
 `

@@ -1,3 +1,4 @@
+import { Token } from '@uniswap/sdk'
 import React, { useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 
@@ -125,8 +126,14 @@ const Text = styled.div`
   color: ${({ theme }) => theme.text1};
 `
 
-function WarningCard({ onDismiss, urlAddedTokens, currency }) {
-  const [showPopup, setPopup] = useState()
+interface WarningCardProps {
+  onDismiss: () => void
+  urlAddedTokens: Token[]
+  currency: string
+}
+
+function WarningCard({ onDismiss, urlAddedTokens, currency }: WarningCardProps) {
+  const [showPopup, setPopup] = useState<boolean>(false)
   const { chainId } = useWeb3React()
   const { symbol: inputSymbol, name: inputName } = useToken(currency)
   const fromURL = urlAddedTokens.hasOwnProperty(currency)
@@ -134,7 +141,7 @@ function WarningCard({ onDismiss, urlAddedTokens, currency }) {
   return (
     <Wrapper>
       <CloseIcon onClick={() => onDismiss()}>
-        <CloseColor alt={'close icon'} />
+        <CloseColor />
       </CloseIcon>
       <Row style={{ fontSize: '12px' }}>
         <Text>{fromURL ? 'Token imported by URL ' : 'Token imported by user'}</Text>

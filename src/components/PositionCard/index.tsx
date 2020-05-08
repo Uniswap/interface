@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
-import { withRouter } from 'react-router-dom'
-import { Percent, Pair } from '@uniswap/sdk'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
+import { Percent, Pair, Token } from '@uniswap/sdk'
 
 import { useWeb3React } from '@web3-react/core'
 import { useAllBalances } from '../../contexts/Balances'
@@ -30,7 +30,15 @@ const HoverCard = styled(Card)`
   }
 `
 
-function PositionCard({ pairAddress, token0, token1, history, minimal = false, ...rest }) {
+interface PositionCardProps extends RouteComponentProps<{}> {
+  pairAddress: string;
+  token0: Token
+  token1: Token
+  minimal?: boolean
+  border?: string
+}
+
+function PositionCard({ pairAddress, token0, token1, history, border, minimal = false }: PositionCardProps) {
   const { account } = useWeb3React()
   const allBalances = useAllBalances()
 
@@ -67,7 +75,7 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
     return (
       <>
         {userPoolBalance && userPoolBalance.toFixed(6) > 0 && (
-          <GreyCard {...rest}>
+          <GreyCard border={border}>
             <AutoColumn gap="12px">
               <FixedHeightRow>
                 <RowFixed>
@@ -78,7 +86,7 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
               </FixedHeightRow>
               <FixedHeightRow onClick={() => setShowMore(!showMore)}>
                 <RowFixed>
-                  <DoubleLogo a0={token0?.address || ''} a1={token1?.address || ''} margin={true} size={20} />
+                  <DoubleLogo a0={token0?.address || ''} a1={token1?.address || ''} margin={true} size={20}/>
                   <Text fontWeight={500} fontSize={20}>
                     {token0?.symbol}:{token1?.symbol}
                   </Text>
@@ -96,7 +104,7 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
                   </Text>
                   {token0Deposited ? (
                     <RowFixed>
-                      {!minimal && <TokenLogo address={token0?.address || ''} />}
+                      {!minimal && <TokenLogo address={token0?.address || ''}/>}
                       <Text color="#888D9B" fontSize={16} fontWeight={500} marginLeft={'6px'}>
                         {token0Deposited?.toFixed(8)}
                       </Text>
@@ -111,7 +119,7 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
                   </Text>
                   {token1Deposited ? (
                     <RowFixed>
-                      {!minimal && <TokenLogo address={token1?.address || ''} />}
+                      {!minimal && <TokenLogo address={token1?.address || ''}/>}
                       <Text color="#888D9B" fontSize={16} fontWeight={500} marginLeft={'6px'}>
                         {token1Deposited?.toFixed(8)}
                       </Text>
@@ -128,20 +136,20 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
     )
   } else
     return (
-      <HoverCard {...rest}>
+      <HoverCard border={border}>
         <AutoColumn gap="12px">
           <FixedHeightRow onClick={() => setShowMore(!showMore)} style={{ cursor: 'pointer' }}>
             <RowFixed>
-              <DoubleLogo a0={token0?.address || ''} a1={token1?.address || ''} margin={true} size={20} />
+              <DoubleLogo a0={token0?.address || ''} a1={token1?.address || ''} margin={true} size={20}/>
               <Text fontWeight={500} fontSize={20}>
                 {token0?.symbol}:{token1?.symbol}
               </Text>
             </RowFixed>
             <RowFixed>
               {showMore ? (
-                <ChevronUp size="20" style={{ marginLeft: '10px' }} />
+                <ChevronUp size="20" style={{ marginLeft: '10px' }}/>
               ) : (
-                <ChevronDown size="20" style={{ marginLeft: '10px' }} />
+                <ChevronDown size="20" style={{ marginLeft: '10px' }}/>
               )}
             </RowFixed>
           </FixedHeightRow>
@@ -159,7 +167,7 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
                       {token0Deposited?.toFixed(8)}
                     </Text>
                     {!minimal && (
-                      <TokenLogo size="20px" style={{ marginLeft: '8px' }} address={token0?.address || ''} />
+                      <TokenLogo size="20px" style={{ marginLeft: '8px' }} address={token0?.address || ''}/>
                     )}
                   </RowFixed>
                 ) : (
@@ -179,7 +187,7 @@ function PositionCard({ pairAddress, token0, token1, history, minimal = false, .
                       {token1Deposited?.toFixed(8)}
                     </Text>
                     {!minimal && (
-                      <TokenLogo size="20px" style={{ marginLeft: '8px' }} address={token1?.address || ''} />
+                      <TokenLogo size="20px" style={{ marginLeft: '8px' }} address={token1?.address || ''}/>
                     )}
                   </RowFixed>
                 ) : (
