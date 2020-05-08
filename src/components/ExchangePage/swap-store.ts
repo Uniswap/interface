@@ -1,3 +1,8 @@
+import { WETH } from '@uniswap/sdk'
+import { useReducer } from 'react'
+import { useWeb3React } from '../../hooks'
+import { QueryParams } from '../../utils'
+
 export enum Field {
   INPUT,
   OUTPUT
@@ -92,4 +97,35 @@ export function reducer(
       throw Error
     }
   }
+}
+
+export function useSwapStateReducer(params: QueryParams) {
+  const { chainId } = useWeb3React()
+  return useReducer(
+    reducer,
+    {
+      independentField: params.outputTokenAddress && !params.inputTokenAddress ? Field.OUTPUT : Field.INPUT,
+      inputTokenAddress: params.inputTokenAddress ? params.inputTokenAddress : WETH[chainId].address,
+      outputTokenAddress: params.outputTokenAddress ? params.outputTokenAddress : '',
+      typedValue:
+        params.inputTokenAddress && !params.outputTokenAddress
+          ? params.inputTokenAmount
+          ? params.inputTokenAmount
+          : ''
+          : !params.inputTokenAddress && params.outputTokenAddress
+          ? params.outputTokenAmount
+            ? params.outputTokenAmount
+            : ''
+          : params.inputTokenAddress && params.outputTokenAddress
+            ? params.inputTokenAmount
+              ? params.inputTokenAmount
+              : ''
+            : ''
+              ? ''
+              : ''
+                ? ''
+                : ''
+    },
+    initializeSwapState
+  )
 }
