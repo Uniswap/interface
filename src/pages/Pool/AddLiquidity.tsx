@@ -675,7 +675,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
     )
   }
 
-  const pendingText: string = `Supplying ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${
+  const pendingText = `Supplying ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${
     tokens[Field.INPUT]?.symbol
   } ${'and'} ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}`
 

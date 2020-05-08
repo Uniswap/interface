@@ -22,8 +22,8 @@ const StyledDialogOverlay = styled(WrappedDialogOverlay).attrs({
     background-color: ${({ theme }) => 'transparent'};
 
     ${({ mobile }) =>
-  mobile &&
-  css`
+      mobile &&
+      css`
         align-items: flex-end;
       `}
 
@@ -56,13 +56,13 @@ const StyledDialogContent = styled(FilteredDialogContent)`
 
     max-width: 420px;
     ${({ maxHeight }) =>
-  maxHeight &&
-  css`
+      maxHeight &&
+      css`
         max-height: ${maxHeight}vh;
       `}
     ${({ minHeight }) =>
-  minHeight &&
-  css`
+      minHeight &&
+      css`
         min-height: ${minHeight}vh;
       `}
     display: flex;
@@ -77,7 +77,7 @@ const StyledDialogContent = styled(FilteredDialogContent)`
       width:  85vw;
       max-height: 66vh;
       ${mobile &&
-css`
+        css`
           width: 100vw;
           border-radius: 20px;
           border-bottom-left-radius: 0;
@@ -105,13 +105,13 @@ interface ModalProps {
 }
 
 export default function Modal({
-                                isOpen,
-                                onDismiss,
-                                minHeight = false,
-                                maxHeight = 50,
-                                initialFocusRef = null,
-                                children
-                              }: ModalProps) {
+  isOpen,
+  onDismiss,
+  minHeight = false,
+  maxHeight = 50,
+  initialFocusRef = null,
+  children
+}: ModalProps) {
   const transitions = useTransition(isOpen, null, {
     config: { duration: 200 },
     from: { opacity: 0 },
@@ -163,7 +163,9 @@ export default function Modal({
                   {props => (
                     <animated.div
                       {...bind()}
-                      style={{ transform: (xy as any).interpolate((x, y) => `translate3d(${0}px,${y > 0 ? y : 0}px,0)`) }}
+                      style={{
+                        transform: (xy as any).interpolate((x, y) => `translate3d(${0}px,${y > 0 ? y : 0}px,0)`)
+                      }}
                     >
                       <StyledDialogContent
                         style={props}
@@ -172,7 +174,7 @@ export default function Modal({
                         maxHeight={maxHeight}
                         mobile={isMobile}
                       >
-                        <HiddenCloseButton onClick={onDismiss}/>
+                        <HiddenCloseButton onClick={onDismiss} />
                         {children}
                       </StyledDialogContent>
                     </animated.div>
@@ -203,7 +205,7 @@ export default function Modal({
                   isOpen={isOpen}
                   mobile={isMobile}
                 >
-                  <HiddenCloseButton onClick={onDismiss}/>
+                  <HiddenCloseButton onClick={onDismiss} />
                   {children}
                 </StyledDialogContent>
               </StyledDialogOverlay>

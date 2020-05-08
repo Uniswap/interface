@@ -178,14 +178,22 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   }
 
   const pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
-  let bestTradeExactIn = useTradeExactIn(tradeType === TradeType.EXACT_INPUT ? parsedAmounts[independentField] : null, tokens[Field.OUTPUT])
-  let bestTradeExactOut = useTradeExactOut(tokens[Field.INPUT], tradeType === TradeType.EXACT_OUTPUT ? parsedAmounts[independentField] : null)
+  const bestTradeExactIn = useTradeExactIn(
+    tradeType === TradeType.EXACT_INPUT ? parsedAmounts[independentField] : null,
+    tokens[Field.OUTPUT]
+  )
+  const bestTradeExactOut = useTradeExactOut(
+    tokens[Field.INPUT],
+    tradeType === TradeType.EXACT_OUTPUT ? parsedAmounts[independentField] : null
+  )
 
   const trade = tradeType === TradeType.EXACT_INPUT ? bestTradeExactIn : bestTradeExactOut
   const route = trade?.route
-  const userHasSpecifiedInputOutput = !!parsedAmounts[independentField] &&
+  const userHasSpecifiedInputOutput =
+    !!parsedAmounts[independentField] &&
     parsedAmounts[independentField].greaterThan(JSBI.BigInt(0)) &&
-    !!tokens[Field.INPUT] && !!tokens[Field.OUTPUT]
+    !!tokens[Field.INPUT] &&
+    !!tokens[Field.OUTPUT]
   const noRoute = !route
 
   const slippageFromTrade: Percent = trade && trade.slippage
@@ -213,12 +221,15 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       JSBI.multiply(slippageFromTrade.denominator, JSBI.BigInt('1000'))
     )
 
-  const onTokenSelection = useCallback((field: Field, address: string) => {
-    dispatch({
-      type: SwapAction.SELECT_TOKEN,
-      payload: { field, address }
-    })
-  }, [dispatch])
+  const onTokenSelection = useCallback(
+    (field: Field, address: string) => {
+      dispatch({
+        type: SwapAction.SELECT_TOKEN,
+        payload: { field, address }
+      })
+    },
+    [dispatch]
+  )
 
   const onSwapTokens = useCallback(() => {
     dispatch({
@@ -227,29 +238,38 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     })
   }, [dispatch])
 
-  const onUserInput = useCallback((field: Field, typedValue: string) => {
-    dispatch({ type: SwapAction.TYPE, payload: { field, typedValue } })
-  }, [dispatch])
+  const onUserInput = useCallback(
+    (field: Field, typedValue: string) => {
+      dispatch({ type: SwapAction.TYPE, payload: { field, typedValue } })
+    },
+    [dispatch]
+  )
 
-  const onMaxInput = useCallback((typedValue: string) => {
-    dispatch({
-      type: SwapAction.TYPE,
-      payload: {
-        field: Field.INPUT,
-        typedValue
-      }
-    })
-  }, [dispatch])
+  const onMaxInput = useCallback(
+    (typedValue: string) => {
+      dispatch({
+        type: SwapAction.TYPE,
+        payload: {
+          field: Field.INPUT,
+          typedValue
+        }
+      })
+    },
+    [dispatch]
+  )
 
-  const onMaxOutput = useCallback((typedValue: string) => {
-    dispatch({
-      type: SwapAction.TYPE,
-      payload: {
-        field: Field.OUTPUT,
-        typedValue
-      }
-    })
-  }, [dispatch])
+  const onMaxOutput = useCallback(
+    (typedValue: string) => {
+      dispatch({
+        type: SwapAction.TYPE,
+        payload: {
+          field: Field.OUTPUT,
+          typedValue
+        }
+      })
+    },
+    [dispatch]
+  )
 
   // reset field if sending with with swap is cancled
   useEffect(() => {
@@ -269,11 +289,10 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       WETH[chainId] &&
       JSBI.greaterThan(userBalances[Field.INPUT].raw, isWETH(tokens[Field.INPUT]) ? MIN_ETHER.raw : JSBI.BigInt(0))
         ? isWETH(tokens[Field.INPUT])
-        ? userBalances[Field.INPUT].subtract(MIN_ETHER)
-        : userBalances[Field.INPUT]
+          ? userBalances[Field.INPUT].subtract(MIN_ETHER)
+          : userBalances[Field.INPUT]
         : undefined
-  } catch {
-  }
+  } catch {}
 
   const atMaxAmountInput: boolean =
     !!maxAmountInput && !!parsedAmounts[Field.INPUT]
@@ -323,16 +342,27 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       Field.INPUT === independentField
         ? parsedAmounts[Field.INPUT]
         : calculateSlippageAmount(parsedAmounts[Field.INPUT])?.[0] &&
-        new TokenAmount(tokens[Field.INPUT], calculateSlippageAmount(parsedAmounts[Field.INPUT])?.[1]),
+          new TokenAmount(tokens[Field.INPUT], calculateSlippageAmount(parsedAmounts[Field.INPUT])?.[1]),
     [Field.OUTPUT]:
       Field.OUTPUT === independentField
         ? parsedAmounts[Field.OUTPUT]
         : calculateSlippageAmount(parsedAmounts[Field.OUTPUT])?.[0] &&
-        new TokenAmount(tokens[Field.INPUT], calculateSlippageAmount(parsedAmounts[Field.OUTPUT])?.[0])
+          new TokenAmount(tokens[Field.INPUT], calculateSlippageAmount(parsedAmounts[Field.OUTPUT])?.[0])
   }
 
   const showInputApprove: boolean =
     parsedAmounts[Field.INPUT] && inputApproval && JSBI.greaterThan(parsedAmounts[Field.INPUT].raw, inputApproval.raw)
+
+  // reset modal state when closed
+  function resetModal() {
+    // clear input if txn submitted
+    if (!pendingConfirmation) {
+      onUserInput(Field.INPUT, '')
+    }
+    setPendingConfirmation(true)
+    setAttemptingTxn(false)
+    setShowAdvanced(false)
+  }
 
   // function for a pure send
   async function onSend() {
@@ -349,11 +379,11 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           addTransaction(
             response,
             'Send ' +
-            parsedAmounts[Field.INPUT]?.toSignificant(3) +
-            ' ' +
-            tokens[Field.INPUT]?.symbol +
-            ' to ' +
-            recipient
+              parsedAmounts[Field.INPUT]?.toSignificant(3) +
+              ' ' +
+              tokens[Field.INPUT]?.symbol +
+              ' to ' +
+              recipient
           )
           setPendingConfirmation(false)
         })
@@ -376,11 +406,11 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             addTransaction(
               response,
               'Send ' +
-              parsedAmounts[Field.INPUT]?.toSignificant(3) +
-              ' ' +
-              tokens[Field.INPUT]?.symbol +
-              ' to ' +
-              recipient
+                parsedAmounts[Field.INPUT]?.toSignificant(3) +
+                ' ' +
+                tokens[Field.INPUT]?.symbol +
+                ' to ' +
+                recipient
             )
             setPendingConfirmation(false)
           })
@@ -487,13 +517,13 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           addTransaction(
             response,
             'Swap ' +
-            slippageAdjustedAmounts?.[Field.INPUT]?.toSignificant(3) +
-            ' ' +
-            tokens[Field.INPUT]?.symbol +
-            ' for ' +
-            slippageAdjustedAmounts?.[Field.OUTPUT]?.toSignificant(3) +
-            ' ' +
-            tokens[Field.OUTPUT]?.symbol
+              slippageAdjustedAmounts?.[Field.INPUT]?.toSignificant(3) +
+              ' ' +
+              tokens[Field.INPUT]?.symbol +
+              ' for ' +
+              slippageAdjustedAmounts?.[Field.OUTPUT]?.toSignificant(3) +
+              ' ' +
+              tokens[Field.OUTPUT]?.symbol
           )
           setPendingConfirmation(false)
         })
@@ -625,17 +655,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   const warningHigh: boolean =
     slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_HIGH / 100
 
-  // reset modal state when closed
-  function resetModal() {
-    // clear input if txn submitted
-    if (!pendingConfirmation) {
-      onUserInput(Field.INPUT, '')
-    }
-    setPendingConfirmation(true)
-    setAttemptingTxn(false)
-    setShowAdvanced(false)
-  }
-
   function modalHeader() {
     if (sending && !sendingWithSwap) {
       return (
@@ -644,7 +663,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             <Text fontSize={36} fontWeight={500}>
               {parsedAmounts[Field.INPUT]?.toSignificant(6)} {tokens[Field.INPUT]?.symbol}
             </Text>
-            <TokenLogo address={tokens[Field.INPUT]?.address} size={'30px'}/>
+            <TokenLogo address={tokens[Field.INPUT]?.address} size={'30px'} />
           </RowBetween>
           <TYPE.darkGray fontSize={20}>To</TYPE.darkGray>
           {ENS ? (
@@ -656,7 +675,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     {recipient?.slice(0, 8)}...{recipient?.slice(34, 42)}↗
                   </TYPE.blue>
                 </Link>
-                <Copy toCopy={recipient}/>
+                <Copy toCopy={recipient} />
               </AutoRow>
             </AutoColumn>
           ) : (
@@ -666,7 +685,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                   {recipient?.slice(0, 6)}...{recipient?.slice(36, 42)}↗
                 </TYPE.blue>
               </Link>
-              <Copy toCopy={recipient}/>
+              <Copy toCopy={recipient} />
             </AutoRow>
           )}
         </AutoColumn>
@@ -678,7 +697,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
         <AutoColumn gap="lg" style={{ marginTop: '40px' }}>
           <AutoColumn gap="sm">
             <AutoRow gap="10px">
-              <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'30px'}/>
+              <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'30px'} />
               <Text fontSize={36} fontWeight={500}>
                 {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} {tokens[Field.OUTPUT]?.symbol}
               </Text>
@@ -706,14 +725,14 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               {/* {!!slippageAdjustedAmounts[Field.INPUT] && slippageAdjustedAmounts[Field.INPUT].toSignificant(6)} */}
             </TruncatedText>
             <RowFixed gap="4px">
-              <TokenLogo address={tokens[Field.INPUT]?.address} size={'24px'}/>
+              <TokenLogo address={tokens[Field.INPUT]?.address} size={'24px'} />
               <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
                 {tokens[Field.INPUT]?.symbol || ''}
               </Text>
             </RowFixed>
           </RowBetween>
           <RowFixed>
-            <ArrowDown size="16" color={theme(isDark).text2}/>
+            <ArrowDown size="16" color={theme(isDark).text2} />
           </RowFixed>
           <RowBetween align="flex-end">
             <TruncatedText fontSize={24} fontWeight={500} color={warningHigh ? theme(isDark).red1 : ''}>
@@ -722,7 +741,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               {/* {!!slippageAdjustedAmounts[Field.OUTPUT] && slippageAdjustedAmounts[Field.OUTPUT].toSignificant(6)} */}
             </TruncatedText>
             <RowFixed gap="4px">
-              <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'24px'}/>
+              <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'24px'} />
               <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
                 {tokens[Field.OUTPUT]?.symbol || ''}
               </Text>
@@ -782,17 +801,17 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 >
                   {trade && showInverted
                     ? (trade?.executionPrice?.invert()?.toSignificant(6) ?? '') +
-                    ' ' +
-                    tokens[Field.INPUT]?.symbol +
-                    ' / ' +
-                    tokens[Field.OUTPUT]?.symbol
+                      ' ' +
+                      tokens[Field.INPUT]?.symbol +
+                      ' / ' +
+                      tokens[Field.OUTPUT]?.symbol
                     : (trade?.executionPrice?.toSignificant(6) ?? '') +
-                    ' ' +
-                    tokens[Field.OUTPUT]?.symbol +
-                    ' / ' +
-                    tokens[Field.INPUT]?.symbol}
+                      ' ' +
+                      tokens[Field.OUTPUT]?.symbol +
+                      ' / ' +
+                      tokens[Field.INPUT]?.symbol}
                   <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
-                    <Repeat size={14}/>
+                    <Repeat size={14} />
                   </StyledBalanceMaxMini>
                 </Text>
               </RowBetween>
@@ -802,8 +821,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 <TYPE.black fontSize={14} fontWeight={400}>
                   {independentField === Field.INPUT ? (sending ? 'Min sent' : 'Minimum received') : 'Maximum sold'}
                 </TYPE.black>
-                <QuestionHelper
-                  text="A boundary is set so you are protected from large price movements after you submit your trade."/>
+                <QuestionHelper text="A boundary is set so you are protected from large price movements after you submit your trade." />
               </RowFixed>
               <RowFixed>
                 <TYPE.black fontSize={14}>
@@ -814,10 +832,10 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                         : slippageAdjustedAmounts[Field.OUTPUT]?.toFixed(5)
                       : '-'
                     : slippageAdjustedAmounts[Field.INPUT]
-                      ? slippageAdjustedAmounts[Field.INPUT]?.toFixed(5) === '0.00000'
-                        ? '<0.00001'
-                        : slippageAdjustedAmounts[Field.INPUT]?.toFixed(5)
-                      : '-'}
+                    ? slippageAdjustedAmounts[Field.INPUT]?.toFixed(5) === '0.00000'
+                      ? '<0.00001'
+                      : slippageAdjustedAmounts[Field.INPUT]?.toFixed(5)
+                    : '-'}
                 </TYPE.black>
                 {parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.INPUT] && (
                   <TYPE.black fontSize={14} marginLeft={'4px'}>
@@ -833,7 +851,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 <TYPE.black color={theme(isDark).text1} fontSize={14} fontWeight={400}>
                   Price impact
                 </TYPE.black>
-                <QuestionHelper text="The difference between the market price and your price due to trade size."/>
+                <QuestionHelper text="The difference between the market price and your price due to trade size." />
               </RowFixed>
               <ErrorText
                 fontWeight={500}
@@ -854,8 +872,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 <TYPE.black fontSize={14} fontWeight={400}>
                   Liquidity Provider Fee
                 </TYPE.black>
-                <QuestionHelper
-                  text="A portion of each trade (0.3%) goes to liquidity providers to incentivize liquidity on the protocol."/>
+                <QuestionHelper text="A portion of each trade (0.3%) goes to liquidity providers to incentivize liquidity on the protocol." />
               </RowFixed>
               <TYPE.black fontSize={14}>
                 {feeTimesInputFormatted
@@ -877,7 +894,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     }
   }
 
-  const PriceBar = function () {
+  const PriceBar = function() {
     return (
       <AutoRow justify="space-between">
         <AutoColumn justify="center">
@@ -924,7 +941,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       ? `Sending ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol} to ${recipient}`
       : `Sending ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${tokens[Field.INPUT]?.symbol} to ${recipient}`
     : ` Swapping ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${tokens[Field.INPUT]?.symbol} for ${parsedAmounts[
-      Field.OUTPUT
+        Field.OUTPUT
       ]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}`
 
   function _onTokenSelect(address: string) {
@@ -979,7 +996,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 Max
               </MaxButton>
             )}
-            <StyledNumerical value={formattedAmounts[Field.INPUT]} onUserInput={val => onUserInput(Field.INPUT, val)}/>
+            <StyledNumerical value={formattedAmounts[Field.INPUT]} onUserInput={val => onUserInput(Field.INPUT, val)} />
             <CurrencyInputPanel
               field={Field.INPUT}
               value={formattedAmounts[Field.INPUT]}
@@ -1025,7 +1042,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               <ColumnCenter>
                 <RowBetween padding="0 12px">
                   <ArrowWrapper onClick={onSwapTokens}>
-                    <ArrowDown size="16" color={theme(isDark).text2} onClick={onSwapTokens}/>
+                    <ArrowDown size="16" color={theme(isDark).text2} onClick={onSwapTokens} />
                   </ArrowWrapper>
                   <StyledBalanceMaxMini onClick={() => setSendingWithSwap(false)} style={{ marginRight: '0px' }}>
                     <TYPE.blue>Remove Swap</TYPE.blue>
@@ -1063,7 +1080,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             />
             {sendingWithSwap && (
               <RowBetween padding="0 12px">
-                <ArrowDown size="16"/>
+                <ArrowDown size="16" />
               </RowBetween>
             )}
           </>
@@ -1095,7 +1112,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
         {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
           <Card padding={advanced ? '.25rem 1.25rem 0 .75rem' : '.25rem .7rem .25rem 1.25rem'} borderRadius={'20px'}>
             {advanced ? (
-              <PriceBar/>
+              <PriceBar />
             ) : (
               <AutoColumn gap="4px">
                 {' '}
@@ -1111,17 +1128,17 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                   >
                     {trade && showInverted
                       ? (trade?.executionPrice?.invert()?.toSignificant(6) ?? '') +
-                      ' ' +
-                      tokens[Field.INPUT]?.symbol +
-                      ' per ' +
-                      tokens[Field.OUTPUT]?.symbol
+                        ' ' +
+                        tokens[Field.INPUT]?.symbol +
+                        ' per ' +
+                        tokens[Field.OUTPUT]?.symbol
                       : (trade?.executionPrice?.toSignificant(6) ?? '') +
-                      ' ' +
-                      tokens[Field.OUTPUT]?.symbol +
-                      ' per ' +
-                      tokens[Field.INPUT]?.symbol}
+                        ' ' +
+                        tokens[Field.OUTPUT]?.symbol +
+                        ' per ' +
+                        tokens[Field.INPUT]?.symbol}
                     <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
-                      <Repeat size={14}/>
+                      <Repeat size={14} />
                     </StyledBalanceMaxMini>
                   </Text>
                 </RowBetween>
@@ -1141,8 +1158,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                             : priceSlippage.toFixed(4) + '%'
                           : '-'}{' '}
                       </ErrorText>
-                      <QuestionHelper
-                        text="The difference between the market price and your quoted price due to trade size."/>
+                      <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
                     </RowFixed>
                   </RowBetween>
                 )}
@@ -1189,9 +1205,12 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             <Text fontSize={20} fontWeight={500}>
               {!account
                 ? 'Connect Wallet'
-                : (generalError || inputError || outputError || recipientError || tradeError) ||
-                (`${sending ? 'Send' : 'Swap'}${warningHigh ? ' Anyway' : ''}`)
-              }
+                : generalError ||
+                  inputError ||
+                  outputError ||
+                  recipientError ||
+                  tradeError ||
+                  `${sending ? 'Send' : 'Swap'}${warningHigh ? ' Anyway' : ''}`}
             </Text>
           </ButtonError>
         )}
@@ -1204,7 +1223,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 <Text fontSize={16} fontWeight={500} style={{ userSelect: 'none' }}>
                   Show Advanced
                 </Text>
-                <ChevronDown color={theme(isDark).text2}/>
+                <ChevronDown color={theme(isDark).text2} />
               </RowBetween>
             </Hover>
           )}
@@ -1215,10 +1234,10 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                   <Text fontSize={16} color={theme(isDark).text2} fontWeight={500} style={{ userSelect: 'none' }}>
                     Hide Advanced
                   </Text>
-                  <ChevronUp color={theme(isDark).text2}/>
+                  <ChevronUp color={theme(isDark).text2} />
                 </RowBetween>
               </Hover>
-              <SectionBreak/>
+              <SectionBreak />
               <AutoColumn style={{ padding: '0 20px' }}>
                 <RowBetween>
                   <RowFixed>
@@ -1233,8 +1252,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                       text={
                         independentField === Field.INPUT
                           ? sending
-                          ? 'Price can change between when a transaction is submitted and when it is executed. This is the minimum amount you will send. A worse rate will cause your transaction to revert.'
-                          : 'Price can change between when a transaction is submitted and when it is executed. This is the minimum amount you will receive. A worse rate will cause your transaction to revert.'
+                            ? 'Price can change between when a transaction is submitted and when it is executed. This is the minimum amount you will send. A worse rate will cause your transaction to revert.'
+                            : 'Price can change between when a transaction is submitted and when it is executed. This is the minimum amount you will receive. A worse rate will cause your transaction to revert.'
                           : 'Price can change between when a transaction is submitted and when it is executed. This is the maximum amount you will pay. A worse rate will cause your transaction to revert.'
                       }
                     />
@@ -1244,18 +1263,18 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                       {independentField === Field.INPUT
                         ? slippageAdjustedAmounts[Field.OUTPUT]
                           ? slippageAdjustedAmounts[Field.OUTPUT]?.lessThan(
-                            new Fraction(JSBI.BigInt(1), JSBI.BigInt(10000))
-                          )
+                              new Fraction(JSBI.BigInt(1), JSBI.BigInt(10000))
+                            )
                             ? '<0.00001'
                             : slippageAdjustedAmounts[Field.OUTPUT]?.toFixed(5)
                           : '-'
                         : slippageAdjustedAmounts[Field.INPUT]
-                          ? slippageAdjustedAmounts[Field.INPUT]?.lessThan(
+                        ? slippageAdjustedAmounts[Field.INPUT]?.lessThan(
                             new Fraction(JSBI.BigInt(1), JSBI.BigInt(10000))
                           )
-                            ? '<0.00001'
-                            : slippageAdjustedAmounts[Field.INPUT]?.toFixed(5)
-                          : '-'}
+                          ? '<0.00001'
+                          : slippageAdjustedAmounts[Field.INPUT]?.toFixed(5)
+                        : '-'}
                     </TYPE.black>
                     {parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.INPUT] && (
                       <TYPE.black fontSize={14} marginLeft={'4px'} color={theme(isDark).text1}>
@@ -1271,8 +1290,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     <TYPE.black fontSize={14} fontWeight={400} color={theme(isDark).text1}>
                       Price Impact
                     </TYPE.black>
-                    <QuestionHelper
-                      text="The difference between the market price and your quoted price due to trade size."/>
+                    <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
                   </RowFixed>
                   <ErrorText
                     fontWeight={500}
@@ -1293,8 +1311,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     <TYPE.black fontSize={14} fontWeight={400} color={theme(isDark).text1}>
                       Liquidity Provider Fee
                     </TYPE.black>
-                    <QuestionHelper
-                      text="A portion of each trade (0.03%) goes to liquidity providers to incentivize liquidity on the protocol."/>
+                    <QuestionHelper text="A portion of each trade (0.03%) goes to liquidity providers to incentivize liquidity on the protocol." />
                   </RowFixed>
                   <TYPE.black fontSize={14} color={theme(isDark).text1}>
                     {feeTimesInputFormatted
@@ -1303,13 +1320,12 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                   </TYPE.black>
                 </RowBetween>
               </AutoColumn>
-              <SectionBreak/>
+              <SectionBreak />
               <RowFixed padding={'0 20px'}>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme(isDark).text1}>
                   Set front running resistance
                 </TYPE.black>
-                <QuestionHelper
-                  text="Your transaction will revert if the price changes more than this amount after you submit your trade."/>
+                <QuestionHelper text="Your transaction will revert if the price changes more than this amount after you submit your trade." />
               </RowFixed>
               <SlippageTabs
                 rawSlippage={allowedSlippage}

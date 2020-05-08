@@ -45,17 +45,17 @@ interface ConfirmationModalProps extends RouteComponentProps<{}> {
 }
 
 function ConfirmationModal({
-                             history,
-                             isOpen,
-                             onDismiss,
-                             hash,
-                             topContent,
-                             bottomContent,
-                             attemptingTxn,
-                             pendingConfirmation,
-                             pendingText,
-                             title = ''
-                           }: ConfirmationModalProps) {
+  history,
+  isOpen,
+  onDismiss,
+  hash,
+  topContent,
+  bottomContent,
+  attemptingTxn,
+  pendingConfirmation,
+  pendingText,
+  title = ''
+}: ConfirmationModalProps) {
   const { chainId } = useWeb3React()
 
   const dismissAndReturn = useCallback(() => {
@@ -74,7 +74,7 @@ function ConfirmationModal({
               <Text fontWeight={500} fontSize={20}>
                 {title}
               </Text>
-              <CloseIcon onClick={onDismiss}/>
+              <CloseIcon onClick={onDismiss} />
             </RowBetween>
             {topContent()}
           </Section>
@@ -84,14 +84,14 @@ function ConfirmationModal({
         <Wrapper>
           <Section>
             <RowBetween>
-              <div/>
-              <CloseIcon onClick={onDismiss}/>
+              <div />
+              <CloseIcon onClick={onDismiss} />
             </RowBetween>
             <ConfirmedIcon>
               {pendingConfirmation ? (
-                <Loader size="90px"/>
+                <Loader size="90px" />
               ) : (
-                <ArrowUpCircle strokeWidth={0.5} size={90} color="#ff007a"/>
+                <ArrowUpCircle strokeWidth={0.5} size={90} color="#ff007a" />
               )}
             </ConfirmedIcon>
             <AutoColumn gap="12px" justify={'center'}>
