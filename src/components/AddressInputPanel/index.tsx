@@ -15,7 +15,7 @@ const InputPanel = styled.div`
   height: 60px;
 `
 
-const ContainerRow = styled.div`
+const ContainerRow = styled.div<{ error: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,7 +35,7 @@ const InputRow = styled.div`
   padding: 0.75rem;
 `
 
-const Input = styled.input`
+const Input = styled.input<{ error: boolean }>`
   font-size: 1rem;
   outline: none;
   border: none;
@@ -66,12 +66,12 @@ const Input = styled.input`
 export default function AddressInputPanel({ initialInput = '', onChange, onError }) {
   const { library } = useWeb3React()
 
-  const [input, setInput] = useState(initialInput.address ? initialInput.address : '')
+  const [input, setInput] = useState(initialInput ? initialInput : '')
 
   const debouncedInput = useDebounce(input, 150)
 
   const [data, setData] = useState({ address: undefined, name: undefined })
-  const [error, setError] = useState(false)
+  const [error, setError] = useState<boolean>(false)
 
   // keep data and errors in sync
   useEffect(() => {
@@ -153,7 +153,7 @@ export default function AddressInputPanel({ initialInput = '', onChange, onError
       setData({ address: undefined, name: undefined })
     }
     if (error !== undefined) {
-      setError()
+      setError(true)
     }
     const input = event.target.value
     const checksummedInput = isAddress(input)

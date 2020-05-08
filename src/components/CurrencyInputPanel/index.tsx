@@ -1,3 +1,4 @@
+import { Pair, Token } from '@uniswap/sdk'
 import React, { useState, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import '@reach/tooltip/styles.css'
@@ -15,13 +16,13 @@ import { useWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
 import { useAddressBalance } from '../../contexts/Balances'
 
-const InputRow = styled.div`
+const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
 `
 
-const CurrencySelect = styled.button`
+const CurrencySelect = styled.button<{ selected: boolean }>`
   align-items: center;
   height: 2.2rem;
   font-size: 20px;
@@ -63,7 +64,7 @@ const Aligner = styled.span`
   justify-content: space-between;
 `
 
-const StyledDropDown = styled(DropDown)`
+const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   margin: 0 0.25rem 0 0.5rem;
   height: 35%;
 
@@ -73,7 +74,7 @@ const StyledDropDown = styled(DropDown)`
   }
 `
 
-const InputPanel = styled.div`
+const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
   border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
@@ -81,13 +82,13 @@ const InputPanel = styled.div`
   z-index: 1;
 `
 
-const Container = styled.div`
+const Container = styled.div<{ hideInput: boolean }>`
   border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
   border: 1px solid ${({ theme }) => theme.bg2};
   background-color: ${({ theme }) => theme.bg1};
 `
 
-const StyledTokenName = styled.span`
+const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.75rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
   font-size:  ${({ active }) => (active ? '20px' : '16px')};
 
@@ -132,28 +133,47 @@ const StyledBalanceMax = styled.button`
 //   }
 // `
 
+interface CurrencyInputPanelProps {
+  value: string
+  field: number
+  onUserInput: (field: number, val: string) => void
+  onMax: () => void
+  atMax: boolean
+  label?: string,
+  urlAddedTokens?: Token[]
+  onTokenSelection?: (tokenAddress: string) => void
+  token?: Token | null,
+  disableTokenSelect?: boolean,
+  hideBalance?: boolean,
+  isExchange?: boolean,
+  pair?: Pair | null,
+  hideInput?: boolean,
+  showSendWithSwap?: boolean,
+  otherSelectedTokenAddress?: string | null,
+  advanced?: boolean,
+  inputId: string
+}
+
 export default function CurrencyInputPanel({
-  value,
-  field,
-  onUserInput,
-  onMax,
-  atMax,
-  error,
-  type = '',
-  label = 'Input',
-  urlAddedTokens = [], // used
-  onTokenSelection = null,
-  token = null,
-  disableTokenSelect = false,
-  hideBalance = false,
-  isExchange = false,
-  pair = null, // used for double token logo
-  hideInput = false,
-  showSendWithSwap = false,
-  otherSelectedTokenAddress = null,
-  advanced = false,
-  inputId,
-}) {
+                                             value,
+                                             field,
+                                             onUserInput,
+                                             onMax,
+                                             atMax,
+                                             label = 'Input',
+                                             urlAddedTokens = [], // used
+                                             onTokenSelection = null,
+                                             token = null,
+                                             disableTokenSelect = false,
+                                             hideBalance = false,
+                                             isExchange = false,
+                                             pair = null, // used for double token logo
+                                             hideInput = false,
+                                             showSendWithSwap = false,
+                                             otherSelectedTokenAddress = null,
+                                             advanced = false,
+                                             inputId,
+                                           }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
@@ -163,7 +183,7 @@ export default function CurrencyInputPanel({
 
   return (
     <InputPanel>
-      <Container error={!!error} hideInput={hideInput}>
+      <Container hideInput={hideInput}>
         {!hideInput && (
           <LabelRow>
             <RowBetween>
@@ -189,7 +209,6 @@ export default function CurrencyInputPanel({
         )}
         <InputRow
           style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}
-          hideInput={hideInput}
           selected={disableTokenSelect}
         >
           {!hideInput && (
@@ -213,24 +232,23 @@ export default function CurrencyInputPanel({
                 setModalOpen(true)
               }
             }}
-            disableTokenSelect={disableTokenSelect}
           >
             <Aligner>
               {isExchange ? (
-                <DoubleLogo a0={pair?.token0.address} a1={pair?.token1.address} size={24} margin={true} />
+                <DoubleLogo a0={pair?.token0.address} a1={pair?.token1.address} size={24} margin={true}/>
               ) : token?.address ? (
-                <TokenLogo address={token?.address} size={'24px'} />
+                <TokenLogo address={token?.address} size={'24px'}/>
               ) : null}
               {isExchange ? (
                 <StyledTokenName>
                   {pair?.token0.symbol}:{pair?.token1.symbol}
                 </StyledTokenName>
               ) : (
-                <StyledTokenName active={token && token.symbol}>
+                <StyledTokenName active={Boolean(token && token.symbol)}>
                   {(token && token.symbol) || t('selectToken')}
                 </StyledTokenName>
               )}
-              {!disableTokenSelect && <StyledDropDown selected={!!token?.address} />}
+              {!disableTokenSelect && <StyledDropDown selected={!!token?.address}/>}
             </Aligner>
           </CurrencySelect>
         </InputRow>
