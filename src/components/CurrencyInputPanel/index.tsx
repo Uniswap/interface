@@ -139,41 +139,41 @@ interface CurrencyInputPanelProps {
   onUserInput: (field: number, val: string) => void
   onMax: () => void
   atMax: boolean
-  label?: string,
+  label?: string
   urlAddedTokens?: Token[]
   onTokenSelection?: (tokenAddress: string) => void
-  token?: Token | null,
-  disableTokenSelect?: boolean,
-  hideBalance?: boolean,
-  isExchange?: boolean,
-  pair?: Pair | null,
-  hideInput?: boolean,
-  showSendWithSwap?: boolean,
-  otherSelectedTokenAddress?: string | null,
-  advanced?: boolean,
+  token?: Token | null
+  disableTokenSelect?: boolean
+  hideBalance?: boolean
+  isExchange?: boolean
+  pair?: Pair | null
+  hideInput?: boolean
+  showSendWithSwap?: boolean
+  otherSelectedTokenAddress?: string | null
+  advanced?: boolean
   inputId: string
 }
 
 export default function CurrencyInputPanel({
-                                             value,
-                                             field,
-                                             onUserInput,
-                                             onMax,
-                                             atMax,
-                                             label = 'Input',
-                                             urlAddedTokens = [], // used
-                                             onTokenSelection = null,
-                                             token = null,
-                                             disableTokenSelect = false,
-                                             hideBalance = false,
-                                             isExchange = false,
-                                             pair = null, // used for double token logo
-                                             hideInput = false,
-                                             showSendWithSwap = false,
-                                             otherSelectedTokenAddress = null,
-                                             advanced = false,
-                                             inputId,
-                                           }: CurrencyInputPanelProps) {
+  value,
+  field,
+  onUserInput,
+  onMax,
+  atMax,
+  label = 'Input',
+  urlAddedTokens = [], // used
+  onTokenSelection = null,
+  token = null,
+  disableTokenSelect = false,
+  hideBalance = false,
+  isExchange = false,
+  pair = null, // used for double token logo
+  hideInput = false,
+  showSendWithSwap = false,
+  otherSelectedTokenAddress = null,
+  advanced = false,
+  inputId
+}: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
@@ -207,10 +207,7 @@ export default function CurrencyInputPanel({
             </RowBetween>
           </LabelRow>
         )}
-        <InputRow
-          style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}
-          selected={disableTokenSelect}
-        >
+        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableTokenSelect}>
           {!hideInput && (
             <>
               <NumericalInput
@@ -235,9 +232,9 @@ export default function CurrencyInputPanel({
           >
             <Aligner>
               {isExchange ? (
-                <DoubleLogo a0={pair?.token0.address} a1={pair?.token1.address} size={24} margin={true}/>
+                <DoubleLogo a0={pair?.token0.address} a1={pair?.token1.address} size={24} margin={true} />
               ) : token?.address ? (
-                <TokenLogo address={token?.address} size={'24px'}/>
+                <TokenLogo address={token?.address} size={'24px'} />
               ) : null}
               {isExchange ? (
                 <StyledTokenName>
@@ -248,7 +245,7 @@ export default function CurrencyInputPanel({
                   {(token && token.symbol) || t('selectToken')}
                 </StyledTokenName>
               )}
-              {!disableTokenSelect && <StyledDropDown selected={!!token?.address}/>}
+              {!disableTokenSelect && <StyledDropDown selected={!!token?.address} />}
             </Aligner>
           </CurrencySelect>
         </InputRow>

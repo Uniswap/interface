@@ -57,7 +57,7 @@ export const BottomGrouping = styled.div`
 
 export const ErrorText = styled(Text)`
   color: ${({ theme, warningLow, warningMedium, warningHigh }) =>
-  warningHigh ? theme.red1 : warningMedium ? theme.yellow2 : warningLow ? theme.green1 : theme.text1};
+    warningHigh ? theme.red1 : warningMedium ? theme.yellow2 : warningLow ? theme.green1 : theme.text1};
 `
 
 export const InputGroup = styled(AutoColumn)`

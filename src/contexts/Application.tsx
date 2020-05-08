@@ -17,22 +17,25 @@ const USER_ADVANCED = 'USER_ADVANCED'
 const TOGGLE_USER_ADVANCED = 'TOGGLE_USER_ADVANCED'
 
 interface ApplicationState {
-  BLOCK_NUMBER: {},
-  USD_PRICE: {},
-  POPUP_LIST: Array<{ key: number; show: boolean; content: React.ReactElement }>,
-  POPUP_KEY: number,
-  WALLET_MODAL_OPEN: boolean,
+  BLOCK_NUMBER: {}
+  USD_PRICE: {}
+  POPUP_LIST: Array<{ key: number; show: boolean; content: React.ReactElement }>
+  POPUP_KEY: number
+  WALLET_MODAL_OPEN: boolean
   USER_ADVANCED: boolean
 }
 
-const ApplicationContext = createContext<[ApplicationState, { [updater: string]: (...args: any[]) => void }]>([{
-  [BLOCK_NUMBER]: {},
-  [USD_PRICE]: {},
-  [POPUP_LIST]: [],
-  [POPUP_KEY]: 0,
-  [WALLET_MODAL_OPEN]: false,
-  [USER_ADVANCED]: false
-}, {}])
+const ApplicationContext = createContext<[ApplicationState, { [updater: string]: (...args: any[]) => void }]>([
+  {
+    [BLOCK_NUMBER]: {},
+    [USD_PRICE]: {},
+    [POPUP_LIST]: [],
+    [POPUP_KEY]: 0,
+    [WALLET_MODAL_OPEN]: false,
+    [USER_ADVANCED]: false
+  },
+  {}
+])
 
 function useApplicationContext() {
   return useContext(ApplicationContext)
@@ -80,9 +83,12 @@ export default function Provider({ children }) {
     [USER_ADVANCED]: false
   })
 
-  const updateBlockNumber = useCallback((networkId, blockNumber) => {
-    dispatch({ type: UPDATE_BLOCK_NUMBER, payload: { networkId, blockNumber } })
-  }, [dispatch])
+  const updateBlockNumber = useCallback(
+    (networkId, blockNumber) => {
+      dispatch({ type: UPDATE_BLOCK_NUMBER, payload: { networkId, blockNumber } })
+    },
+    [dispatch]
+  )
 
   const toggleWalletModal = useCallback(() => {
     dispatch({ type: TOGGLE_WALLET_MODAL, payload: null })
@@ -92,9 +98,12 @@ export default function Provider({ children }) {
     dispatch({ type: TOGGLE_USER_ADVANCED, payload: null })
   }, [dispatch])
 
-  const setPopups = useCallback(newList => {
-    dispatch({ type: ADD_POPUP, payload: { newList } })
-  }, [dispatch])
+  const setPopups = useCallback(
+    newList => {
+      dispatch({ type: ADD_POPUP, payload: { newList } })
+    },
+    [dispatch]
+  )
 
   return (
     <ApplicationContext.Provider
@@ -180,7 +189,11 @@ export function useToggleUserAdvanced() {
   return toggleUserAdvanced
 }
 
-export function usePopups(): [ApplicationState['POPUP_LIST'], (content: React.ReactElement) => void, (key: number) => void] {
+export function usePopups(): [
+  ApplicationState['POPUP_LIST'],
+  (content: React.ReactElement) => void,
+  (key: number) => void
+] {
   const [state, { setPopups }] = useApplicationContext()
 
   const index = state[POPUP_KEY]

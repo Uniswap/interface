@@ -44,23 +44,21 @@ export interface UniswapTheme {
   yellow2: string
 
   grids: {
-    sm: number,
-    md: number,
+    sm: number
+    md: number
     lg: number
-  },
+  }
 
   // shadows
   shadow1: string
 
   // media queries
-  mediaWidth: { [width in keyof typeof MEDIA_WIDTHS]: typeof css },
+  mediaWidth: { [width in keyof typeof MEDIA_WIDTHS]: typeof css }
   // css snippets
   flexColumnNoWrap: FlattenSimpleInterpolation
   flexRowNoWrap: FlattenSimpleInterpolation
 }
 
 declare module 'styled-components' {
-  export interface DefaultTheme extends UniswapTheme {
-  }
+  export interface DefaultTheme extends UniswapTheme {}
 }
-

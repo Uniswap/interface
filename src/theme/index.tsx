@@ -1,9 +1,5 @@
 import React, { useEffect } from 'react'
-import styled, {
-  ThemeProvider as StyledComponentsThemeProvider,
-  createGlobalStyle,
-  css,
-} from 'styled-components'
+import styled, { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'styled-components'
 import { getQueryParam, checkSupportedTheme } from '../utils'
 import { SUPPORTED_THEMES } from '../constants'
 import { useDarkModeManager } from '../contexts/LocalStorage'
@@ -19,16 +15,17 @@ const MEDIA_WIDTHS = {
   upToLarge: 1280
 }
 
-const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } =
-  Object.keys(MEDIA_WIDTHS)
-    .reduce((accumulator, size) => {
-      accumulator[size] = (a, b, c) => css`
-    @media (max-width: ${MEDIA_WIDTHS[size]}px) {
-      ${css(a, b, c)}
-    }
-  `
-      return accumulator
-    }, {}) as any
+const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
+  (accumulator, size) => {
+    accumulator[size] = (a, b, c) => css`
+      @media (max-width: ${MEDIA_WIDTHS[size]}px) {
+        ${css(a, b, c)}
+      }
+    `
+    return accumulator
+  },
+  {}
+) as any
 
 const white = '#FFFFFF'
 const black = '#000000'
@@ -40,8 +37,8 @@ export default function ThemeProvider({ children }) {
     ? themeURL.toUpperCase() === SUPPORTED_THEMES.DARK
       ? true
       : themeURL.toUpperCase() === SUPPORTED_THEMES.LIGHT
-        ? false
-        : darkMode
+      ? false
+      : darkMode
     : darkMode
   useEffect(() => {
     toggleDarkMode(themeToRender)

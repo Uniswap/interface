@@ -14,10 +14,7 @@ export class FortmaticConnector extends FortmaticConnectorCore {
     if (!this.fortmatic) {
       const { default: Fortmatic } = await import('fortmatic')
       const { apiKey, chainId } = this as any
-      this.fortmatic = new Fortmatic(
-        apiKey,
-        chainId === 1 || chainId === 4 ? undefined : chainIdToNetwork[chainId]
-      )
+      this.fortmatic = new Fortmatic(apiKey, chainId === 1 || chainId === 4 ? undefined : chainIdToNetwork[chainId])
     }
 
     const provider = this.fortmatic.getProvider()

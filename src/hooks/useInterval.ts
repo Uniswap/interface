@@ -6,8 +6,6 @@ export default function useInterval(callback: () => void, delay: null | number) 
   // Remember the latest callback.
   useEffect(() => {
     savedCallback.current = callback
-    return () => {
-    }
   }, [callback])
 
   // Set up the interval.
@@ -17,10 +15,8 @@ export default function useInterval(callback: () => void, delay: null | number) 
     }
 
     if (delay !== null) {
-      let id = setInterval(tick, delay)
+      const id = setInterval(tick, delay)
       return () => clearInterval(id)
-    }
-    return () => {
     }
   }, [delay])
 }

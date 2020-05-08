@@ -99,21 +99,21 @@ export default function App() {
         <BrowserRouter>
           <AppWrapper>
             <HeaderWrapper>
-              <Header/>
+              <Header />
             </HeaderWrapper>
             <BodyWrapper>
-              <Popups/>
+              <Popups />
               <Body>
                 <Web3ReactManager>
-                  <NavigationTabs/>
+                  <NavigationTabs />
                   {/* this Suspense is for route code-splitting */}
                   <Switch>
-                    <Route exact strict path="/" render={() => <Redirect to="/swap"/>}/>
-                    <Route exact strict path="/swap" component={() => <Swap params={params}/>}/>
-                    <Route exact strict path="/send" component={() => <Send params={params}/>}/>
-                    <Route exact strict path="/find" component={() => <Find/>}/>
-                    <Route exact strict path="/create" component={() => <Create/>}/>
-                    <Route exact strict path="/pool" component={() => <Pool/>}/>
+                    <Route exact strict path="/" render={() => <Redirect to="/swap" />} />
+                    <Route exact strict path="/swap" component={() => <Swap params={params} />} />
+                    <Route exact strict path="/send" component={() => <Send params={params} />} />
+                    <Route exact strict path="/find" component={() => <Find />} />
+                    <Route exact strict path="/create" component={() => <Create />} />
+                    <Route exact strict path="/pool" component={() => <Pool />} />
                     <Route
                       exact
                       strict
@@ -127,7 +127,7 @@ export default function App() {
                         if (t0 && t1) {
                           return <Add token0={t0} token1={t1} />
                         } else {
-                          return <Redirect to="/pool"/>
+                          return <Redirect to="/pool" />
                         }
                       }}
                     />
@@ -142,19 +142,19 @@ export default function App() {
                         const t1 =
                           tokens?.[1] === 'ETH' ? 'ETH' : isAddress(tokens?.[1]) ? isAddress(tokens[1]) : undefined
                         if (t0 && t1) {
-                          return <Remove token0={t0} token1={t1}/>
+                          return <Remove token0={t0} token1={t1} />
                         } else {
-                          return <Redirect to="/pool"/>
+                          return <Redirect to="/pool" />
                         }
                       }}
                     />
-                    <Redirect to="/"/>
+                    <Redirect to="/" />
                   </Switch>
                 </Web3ReactManager>
               </Body>
-              <Footer/>
+              <Footer />
             </BodyWrapper>
-            <StyledRed/>
+            <StyledRed />
           </AppWrapper>
         </BrowserRouter>
       </Suspense>

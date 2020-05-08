@@ -65,20 +65,20 @@ function PoolFinder({ history }) {
   function endSearch() {
     history.goBack() // return to previous page
     newLiquidity &&
-    addPopup(
-      <AutoColumn gap={'10px'}>
-        <Text fontSize={20} fontWeight={500}>
-          Pool Imported
-        </Text>
-        <Row>
-          <DoubleTokenLogo a0={token0Address || ''} a1={token1Address || ''} margin={true}/>
-          <Text fontSize={16} fotnWeight={500}>
-            UNI {token0?.symbol} / {token1?.symbol}
+      addPopup(
+        <AutoColumn gap={'10px'}>
+          <Text fontSize={20} fontWeight={500}>
+            Pool Imported
           </Text>
-        </Row>
-        <Link>View on Uniswap Info.</Link>
-      </AutoColumn>
-    )
+          <Row>
+            <DoubleTokenLogo a0={token0Address || ''} a1={token1Address || ''} margin={true} />
+            <Text fontSize={16} fotnWeight={500}>
+              UNI {token0?.symbol} / {token1?.symbol}
+            </Text>
+          </Row>
+          <Link>View on Uniswap Info.</Link>
+        </AutoColumn>
+      )
   }
 
   return (
@@ -101,7 +101,7 @@ function PoolFinder({ history }) {
             }}
           >
             <Row>
-              <TokenLogo address={token0Address}/>
+              <TokenLogo address={token0Address} />
               <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
                 {token0?.symbol}
               </Text>
@@ -109,7 +109,7 @@ function PoolFinder({ history }) {
           </ButtonDropwdownLight>
         )}
         <ColumnCenter>
-          <Plus size="16" color="#888D9B"/>
+          <Plus size="16" color="#888D9B" />
         </ColumnCenter>
         {!token1Address ? (
           <ButtonDropwdown
@@ -128,7 +128,7 @@ function PoolFinder({ history }) {
             }}
           >
             <Row>
-              <TokenLogo address={token1Address}/>
+              <TokenLogo address={token1Address} />
               <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
                 {token1?.symbol}
               </Text>
@@ -137,7 +137,8 @@ function PoolFinder({ history }) {
         )}
         {allowImport && (
           <ColumnCenter
-            style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}>
+            style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
+          >
             <Text textAlign="center" fontWeight={500} color="">
               {newLiquidity ? 'Pool Found!' : 'Pool already imported.'}
             </Text>
