@@ -722,6 +722,7 @@ function AddLiquidity({ token0, token1, step = false }) {
           error={inputError}
           pair={pair}
           label="Input"
+          inputId="addLiquidityInput"
         />
         <ColumnCenter>
           <Plus size="16" color="#888D9B" />
@@ -738,6 +739,7 @@ function AddLiquidity({ token0, token1, step = false }) {
           onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
           error={outputError}
           pair={pair}
+          inputId="addLiquidityOutput"
         />
         {tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
           <LightCard padding="1rem" borderRadius={'20px'}>

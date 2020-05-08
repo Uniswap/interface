@@ -34,7 +34,7 @@ const ETHERSCAN_PREFIXES = {
   42: 'kovan.'
 }
 
-export function getEtherscanLink(networkId, data, type) {
+export function getEtherscanLink(networkId: 1 | 3 | 4 | 5 | 42 | any, data: string, type: 'transaction' | 'address') {
   const prefix = `https://${ETHERSCAN_PREFIXES[networkId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
 
   switch (type) {
