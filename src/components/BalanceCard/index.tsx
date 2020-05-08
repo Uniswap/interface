@@ -27,7 +27,7 @@ export default function BalanceCard({ token0, balance0, import0, token1, balance
         zIndex: '99'
       }}
     >
-      <AutoColumn style={{ width: '100%' }} padding="12px">
+      <AutoColumn style={{ width: '100%', padding: '12px' }}>
         {!showInfo ? (
           <Hover>
             <GreyCard padding="16px 20px">

@@ -129,7 +129,7 @@ const LowerSection = styled.div`
   }
 `
 
-const AccountControl = styled.div`
+const AccountControl = styled.div<{ hasENS: boolean; isENS: boolean; }>`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
   min-width: 0;
@@ -156,7 +156,7 @@ const ConnectButtonRow = styled.div`
   margin: 10px 0;
 `
 
-const StyledLink = styled(Link)`
+const StyledLink = styled(Link) <{ hasENS: boolean; isENS: boolean; }>`
   color: ${({ hasENS, isENS, theme }) => (hasENS ? (isENS ? theme.blue1 : theme.text3) : theme.blue1)};
 `
 
@@ -181,7 +181,7 @@ const WalletName = styled.div`
   width: initial;
 `
 
-const IconWrapper = styled.div`
+const IconWrapper = styled.div<{size?: number}>`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: center;
@@ -217,24 +217,25 @@ function renderTransactions(transactions, pending) {
   return (
     <TransactionListWrapper>
       {transactions.map((hash, i) => {
-        return <Transaction key={i} hash={hash} pending={pending} />
+        return <Transaction key={i} hash={hash} pending={pending}/>
       })}
     </TransactionListWrapper>
   )
 }
 
 export default function AccountDetails({
-  toggleWalletModal,
-  pendingTransactions,
-  confirmedTransactions,
-  ENSName,
-  openOptions
-}) {
+                                         toggleWalletModal,
+                                         pendingTransactions,
+                                         confirmedTransactions,
+                                         ENSName,
+                                         openOptions
+                                       }) {
   const { chainId, account, connector } = useWeb3React()
   const theme = useContext(ThemeContext)
 
   function formatConnectorName() {
-    const isMetaMask = window.ethereum && window.ethereum.isMetaMask ? true : false
+    const { ethereum } = window as any
+    const isMetaMask = ethereum && ethereum.isMetaMask ? true : false
     const name = Object.keys(SUPPORTED_WALLETS)
       .filter(
         k =>
@@ -248,32 +249,32 @@ export default function AccountDetails({
     if (connector === injected) {
       return (
         <IconWrapper size={16}>
-          <Identicon /> {formatConnectorName()}
+          <Identicon/> {formatConnectorName()}
         </IconWrapper>
       )
     } else if (connector === walletconnect) {
       return (
         <IconWrapper size={16}>
-          <img src={WalletConnectIcon} alt={''} /> {formatConnectorName()}
+          <img src={WalletConnectIcon} alt={''}/> {formatConnectorName()}
         </IconWrapper>
       )
     } else if (connector === walletlink) {
       return (
         <IconWrapper size={16}>
-          <img src={CoinbaseWalletIcon} alt={''} /> {formatConnectorName()}
+          <img src={CoinbaseWalletIcon} alt={''}/> {formatConnectorName()}
         </IconWrapper>
       )
     } else if (connector === fortmatic) {
       return (
         <IconWrapper size={16}>
-          <img src={FortmaticIcon} alt={''} /> {formatConnectorName()}
+          <img src={FortmaticIcon} alt={''}/> {formatConnectorName()}
         </IconWrapper>
       )
     } else if (connector === portis) {
       return (
         <>
           <IconWrapper size={16}>
-            <img src={PortisIcon} alt={''} /> {formatConnectorName()}
+            <img src={PortisIcon} alt={''}/> {formatConnectorName()}
             <MainWalletAction
               onClick={() => {
                 portis.portis.showPortis()
@@ -291,7 +292,7 @@ export default function AccountDetails({
     <>
       <UpperSection>
         <CloseIcon onClick={toggleWalletModal}>
-          <CloseColor alt={'close icon'} />
+          <CloseColor/>
         </CloseIcon>
         <HeaderRow>Account</HeaderRow>
         <AccountSection>
@@ -303,7 +304,7 @@ export default function AccountDetails({
                   {connector !== injected && connector !== walletlink && (
                     <WalletAction
                       onClick={() => {
-                        connector.close()
+                        (connector as any).close()
                       }}
                     >
                       Disconnect
@@ -311,7 +312,7 @@ export default function AccountDetails({
                   )}
                   <CircleWrapper>
                     <GreenCircle>
-                      <div />
+                      <div/>
                     </GreenCircle>
                   </CircleWrapper>
                 </div>
@@ -322,21 +323,21 @@ export default function AccountDetails({
                     <StyledLink hasENS={!!ENSName} isENS={true} href={getEtherscanLink(chainId, ENSName, 'address')}>
                       {ENSName} ↗{' '}
                     </StyledLink>
-                    <Copy toCopy={ENSName} />
+                    <Copy toCopy={ENSName}/>
                   </AccountControl>
                 ) : (
                   <AccountControl hasENS={!!ENSName} isENS={false}>
                     <StyledLink hasENS={!!ENSName} isENS={false} href={getEtherscanLink(chainId, account, 'address')}>
                       {account} ↗{' '}
                     </StyledLink>
-                    <Copy toCopy={account} />
+                    <Copy toCopy={account}/>
                   </AccountControl>
                 )}
               </AccountGroupingRow>
             </InfoCard>
           </YourAccount>
 
-          {!(isMobile && (window.web3 || window.ethereum)) && (
+          {!(isMobile && ((window as any).web3 || (window as any).ethereum)) && (
             <ConnectButtonRow>
               <ButtonEmpty
                 style={{ fontWeight: '400' }}

@@ -98,7 +98,7 @@ export const MaxButton = styled.button`
   }
 `
 
-export const StyledBalanceMaxMini = styled.button`
+export const StyledBalanceMaxMini = styled.button<{ active?: boolean }>`
   height: 24px;
   background-color: ${({ theme }) => theme.bg2};
   border: none;

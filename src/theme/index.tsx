@@ -1,9 +1,14 @@
 import React, { useEffect } from 'react'
-import styled, { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'styled-components'
+import styled, {
+  ThemeProvider as StyledComponentsThemeProvider,
+  createGlobalStyle,
+  css,
+} from 'styled-components'
 import { getQueryParam, checkSupportedTheme } from '../utils'
 import { SUPPORTED_THEMES } from '../constants'
 import { useDarkModeManager } from '../contexts/LocalStorage'
 import { Text } from 'rebass'
+import { UniswapTheme } from './styled'
 
 export * from './components'
 
@@ -14,14 +19,16 @@ const MEDIA_WIDTHS = {
   upToLarge: 1280
 }
 
-const mediaWidthTemplates = Object.keys(MEDIA_WIDTHS).reduce((accumulator, size) => {
-  accumulator[size] = (...args) => css`
+const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } =
+  Object.keys(MEDIA_WIDTHS)
+    .reduce((accumulator, size) => {
+      accumulator[size] = (a, b, c) => css`
     @media (max-width: ${MEDIA_WIDTHS[size]}px) {
-      ${css(...args)}
+      ${css(a, b, c)}
     }
   `
-  return accumulator
-}, {})
+      return accumulator
+    }, {}) as any
 
 const white = '#FFFFFF'
 const black = '#000000'
@@ -33,8 +40,8 @@ export default function ThemeProvider({ children }) {
     ? themeURL.toUpperCase() === SUPPORTED_THEMES.DARK
       ? true
       : themeURL.toUpperCase() === SUPPORTED_THEMES.LIGHT
-      ? false
-      : darkMode
+        ? false
+        : darkMode
     : darkMode
   useEffect(() => {
     toggleDarkMode(themeToRender)
@@ -42,7 +49,7 @@ export default function ThemeProvider({ children }) {
   return <StyledComponentsThemeProvider theme={theme(themeToRender)}>{children}</StyledComponentsThemeProvider>
 }
 
-export const theme = darkMode => ({
+export const theme: (darkMode: boolean) => UniswapTheme = darkMode => ({
   // base
   white,
   black,
@@ -102,6 +109,7 @@ export const theme = darkMode => ({
 
   // media queries
   mediaWidth: mediaWidthTemplates,
+
   // css snippets
   flexColumnNoWrap: css`
     display: flex;
@@ -192,29 +200,28 @@ html { font-family: 'Inter', sans-serif; letter-spacing: -0.018em;}
   html { font-family: 'Inter var', sans-serif; }
 }
 
-  
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;    
-  }
-
-  body > div {
-    height: 100%;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;    
 }
 
-  html {
-    font-size: 16px;
-    font-variant: none;
-    color: ${({ theme }) => theme.text1};
-    background-color: ${({ theme }) => theme.bg2};
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  }
+body > div {
+  height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+html {
+  font-size: 16px;
+  font-variant: none;
+  color: ${({ theme }) => theme.text1};
+  background-color: ${({ theme }) => theme.bg2};
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
 `

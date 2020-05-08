@@ -34,7 +34,7 @@ import CurrencyInputPanel from '../CurrencyInputPanel'
 import { Link } from '../../theme/components'
 import { Text } from 'rebass'
 import { theme, TYPE, Hover } from '../../theme'
-import { AutoColumn, ColumnCenter } from '../../components/Column'
+import { AutoColumn, ColumnCenter } from '../Column'
 import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
 import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
 import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
@@ -753,7 +753,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
               </Text>
             </RowFixed>
           </RowBetween>
-          <AutoColumn justify="flex-start" gap="sm" padding={'20px 0 0 0px'}>
+          <AutoColumn justify="flex-start" gap="sm" style={{padding: '20px 0 0 0px'}}>
             {independentField === Field.INPUT ? (
               <TYPE.italic textAlign="left" style={{ width: '100%', paddingTop: '.5rem' }}>
                 {`Output is estimated. You will receive at least `}
@@ -1057,7 +1057,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
               </ColumnCenter>
             ) : (
               <Hover>
-                <ColumnCenter padding="0 1rem">
+                <ColumnCenter style={{padding: '0 1rem'}}>
                   <ArrowWrapper>
                     <ArrowDown
                       size="16"
@@ -1356,7 +1356,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
             <AutoColumn gap="lg">
               {warningHigh && (
                 <YellowCard style={{ padding: '20px', paddingTop: '10px' }}>
-                  <AutoColumn gap="md" mt={2}>
+                  <AutoColumn gap="md">
                     <RowBetween>
                       <RowFixed style={{ paddingTop: '8px' }}>
                         <span role="img" aria-label="warning">
