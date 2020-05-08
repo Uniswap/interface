@@ -261,7 +261,6 @@ export default function CurrencyInputPanel({
           }}
           filterType="tokens"
           urlAddedTokens={urlAddedTokens}
-          field={field}
           onTokenSelect={onTokenSelection}
           showSendWithSwap={showSendWithSwap}
           hiddenToken={token?.address}
