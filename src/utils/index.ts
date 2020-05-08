@@ -3,7 +3,6 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { parseBytes32String } from '@ethersproject/strings'
 import { BigNumber } from '@ethersproject/bignumber'
-import { WETH, Token } from '@uniswap/sdk'
 
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { abi as IUniswapV2Router01ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router01.json'
