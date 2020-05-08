@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
-import { Percent, Pair, Token } from '@uniswap/sdk'
+import { Percent, Pair } from '@uniswap/sdk'
 
 import { useWeb3React } from '@web3-react/core'
 import { useAllBalances } from '../../contexts/Balances'
