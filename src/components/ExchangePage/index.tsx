@@ -33,7 +33,7 @@ import {
 } from '../../utils'
 import Copy from '../AccountDetails/Copy'
 import AddressInputPanel from '../AddressInputPanel'
-import { ButtonError, ButtonLight, ButtonPrimary } from '../Button'
+import { ButtonError, ButtonLight, ButtonPrimary, ButtonSecondary } from '../Button'
 import ConfirmationModal from '../ConfirmationModal'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import QuestionHelper from '../Question'
@@ -47,7 +47,6 @@ import {
   ErrorText,
   FixedBottom,
   InputGroup,
-  MaxButton,
   SectionBreak,
   StyledBalanceMaxMini,
   StyledNumerical,

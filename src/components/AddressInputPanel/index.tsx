@@ -36,14 +36,7 @@ const InputContainer = styled.div`
   padding: 1rem;
 `
 
-const InputRow = styled.div`
-  ${({ theme }) => theme.flex}
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 1rem;
-`
-
-const Input = styled.input`
+const Input = styled.input<{ error?: boolean }>`
   font-size: 1.25rem;
   outline: none;
   border: none;
