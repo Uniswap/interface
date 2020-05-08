@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
 
 import { useWeb3React } from '../hooks'
-import { safeAccess } from '../utils'
 
 const BLOCK_NUMBER = 'BLOCK_NUMBER'
 const USD_PRICE = 'USD_PRICE'
@@ -48,7 +47,7 @@ function reducer(state: ApplicationState, { type, payload }): ApplicationState {
       return {
         ...state,
         [BLOCK_NUMBER]: {
-          ...(safeAccess(state, [BLOCK_NUMBER]) || {}),
+          ...state?.[BLOCK_NUMBER],
           [networkId]: blockNumber
         }
       }
@@ -163,7 +162,7 @@ export function useBlockNumber() {
 
   const [state] = useApplicationContext()
 
-  return safeAccess(state, [BLOCK_NUMBER, chainId])
+  return state?.[BLOCK_NUMBER]?.[chainId]
 }
 
 export function useWalletModalOpen() {

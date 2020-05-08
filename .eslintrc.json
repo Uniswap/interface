@@ -24,6 +24,9 @@
   ],
   "rules": {
     "@typescript-eslint/explicit-function-return-type": "off",
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "react/prop-types": "warn",
+    "@typescript-eslint/no-empty-function": "warn",
+    "react/display-name": "warn"
   }
 }

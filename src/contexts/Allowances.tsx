@@ -1,13 +1,27 @@
-import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
-import { Token, TokenAmount, WETH } from '@uniswap/sdk'
+import { BigintIsh, Token, TokenAmount, WETH } from '@uniswap/sdk'
+import { BigNumber } from 'ethers/utils'
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useReducer } from 'react'
 
 import { useWeb3React } from '../hooks'
-import { safeAccess, isAddress, getTokenAllowance } from '../utils'
+import { getTokenAllowance, isAddress } from '../utils'
 import { useBlockNumber } from './Application'
 
 const UPDATE = 'UPDATE'
 
-const AllowancesContext = createContext([])
+interface AllowancesState {
+  [chainId: number]: {
+    [address: string]: {
+      [tokenAddress: string]: {
+        [spenderAddress: string]: {
+          value: BigintIsh
+          blockNumber: BigNumber
+        }
+      }
+    }
+  }
+}
+
+const AllowancesContext = createContext<[AllowancesState, any]>([{}, {}])
 
 function useAllowancesContext() {
   return useContext(AllowancesContext)
@@ -20,11 +34,11 @@ function reducer(state, { type, payload }) {
       return {
         ...state,
         [networkId]: {
-          ...(safeAccess(state, [networkId]) || {}),
+          ...state?.[networkId],
           [address]: {
-            ...(safeAccess(state, [networkId, address]) || {}),
+            ...state?.[networkId]?.[address],
             [tokenAddress]: {
-              ...(safeAccess(state, [networkId, address, tokenAddress]) || {}),
+              ...state?.[networkId]?.[address]?.[tokenAddress],
               [spenderAddress]: {
                 value,
                 blockNumber
@@ -34,9 +48,8 @@ function reducer(state, { type, payload }) {
         }
       }
     }
-    default: {
+    default:
       throw Error(`Unexpected action type in AllowancesContext reducer: '${type}'.`)
-    }
   }
 }
 
@@ -60,7 +73,7 @@ export function useAddressAllowance(address: string, token: Token, spenderAddres
   const globalBlockNumber = useBlockNumber()
 
   const [state, { update }] = useAllowancesContext()
-  const { value, blockNumber } = safeAccess(state, [chainId, address, token?.address, spenderAddress]) || {}
+  const { value, blockNumber } = state?.[chainId]?.[address]?.[token?.address]?.[spenderAddress] ?? {}
 
   useEffect(() => {
     if (
@@ -92,6 +105,5 @@ export function useAddressAllowance(address: string, token: Token, spenderAddres
     }
   }, [address, token, spenderAddress, value, blockNumber, globalBlockNumber, chainId, library, update])
 
-  const newTokenAmount: TokenAmount = value ? new TokenAmount(token, value) : null
-  return newTokenAmount
+  return value ? new TokenAmount(token, value) : null
 }

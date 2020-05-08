@@ -153,22 +153,6 @@ export default function TransactionDetails({
 
   const [deadlineInput, setDeadlineInput] = useState(deadline / 60)
 
-  function parseCustomDeadline(e) {
-    const val = e.target.value
-    const acceptableValues = [/^$/, /^\d+$/]
-    if (acceptableValues.some(re => re.test(val))) {
-      setDeadlineInput(val)
-      setDeadline(val * 60)
-    }
-  }
-
-  const setFromCustom = () => {
-    setActiveIndex(4)
-    inputRef.current.focus()
-    // if there's a value, evaluate the bounds
-    checkBounds(debouncedInput)
-  }
-
   const updateSlippage = useCallback(
     newSlippage => {
       // round to 2 decimals to prevent ethers error
@@ -179,6 +163,45 @@ export default function TransactionDetails({
     },
     [setRawSlippage]
   )
+
+  const checkBounds = useCallback(
+    slippageValue => {
+      setWarningType(WARNING_TYPE.none)
+
+      if (slippageValue === '' || slippageValue === '.') {
+        return setWarningType(WARNING_TYPE.emptyInput)
+      }
+
+      // check bounds and set errors
+      if (Number(slippageValue) < 0 || Number(slippageValue) > 50) {
+        return setWarningType(WARNING_TYPE.invalidEntryBound)
+      }
+      if (Number(slippageValue) >= 0 && Number(slippageValue) < 0.1) {
+        setWarningType(WARNING_TYPE.riskyEntryLow)
+      }
+      if (Number(slippageValue) > 5) {
+        setWarningType(WARNING_TYPE.riskyEntryHigh)
+      }
+      //update the actual slippage value in parent
+      updateSlippage(Number(slippageValue))
+    },
+    [updateSlippage]
+  )
+
+  function parseCustomDeadline(e) {
+    const val = e.target.value
+    const acceptableValues = [/^$/, /^\d+$/]
+    if (acceptableValues.some(re => re.test(val))) {
+      setDeadlineInput(val)
+      setDeadline(val * 60)
+    }
+  }
+  const setFromCustom = () => {
+    setActiveIndex(4)
+    inputRef.current.focus()
+    // if there's a value, evaluate the bounds
+    checkBounds(debouncedInput)
+  }
 
   // used for slippage presets
   const setFromFixed = useCallback(
@@ -212,30 +235,6 @@ export default function TransactionDetails({
         }
     }
   }, [initialSlippage, setFromFixed])
-
-  const checkBounds = useCallback(
-    slippageValue => {
-      setWarningType(WARNING_TYPE.none)
-
-      if (slippageValue === '' || slippageValue === '.') {
-        return setWarningType(WARNING_TYPE.emptyInput)
-      }
-
-      // check bounds and set errors
-      if (Number(slippageValue) < 0 || Number(slippageValue) > 50) {
-        return setWarningType(WARNING_TYPE.invalidEntryBound)
-      }
-      if (Number(slippageValue) >= 0 && Number(slippageValue) < 0.1) {
-        setWarningType(WARNING_TYPE.riskyEntryLow)
-      }
-      if (Number(slippageValue) > 5) {
-        setWarningType(WARNING_TYPE.riskyEntryHigh)
-      }
-      //update the actual slippage value in parent
-      updateSlippage(Number(slippageValue))
-    },
-    [updateSlippage]
-  )
 
   // check that the theyve entered number and correct decimal
   const parseInput = e => {
