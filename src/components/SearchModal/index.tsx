@@ -119,7 +119,7 @@ const MenuItem = styled(PaddedItem)`
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `
 
-const BaseWrapper = styled(AutoRow)`
+const BaseWrapper = styled(AutoRow)<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
   padding: 0 6px;
   border-radius: 10px;
@@ -473,7 +473,7 @@ function SearchModal({
           return (
             <MenuItem
               key={address}
-              onClick={() => (hiddenToken && hiddenToken === address ? () => {} : _onTokenSelect(address))}
+              onClick={() => (hiddenToken && hiddenToken === address ? null : _onTokenSelect(address))}
               disabled={hiddenToken && hiddenToken === address}
               selected={otherSelectedTokenAddress === address}
             >
@@ -528,7 +528,7 @@ function SearchModal({
     }
   }
 
-  const Filter = ({ title, filter, filterType }) => {
+  const Filter = ({ title, filter, filterType }: { title: string; filter: string; filterType: string }) => {
     return (
       <FilterWrapper
         onClick={() => {

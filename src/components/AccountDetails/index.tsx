@@ -242,8 +242,8 @@ export default function AccountDetails({
   const theme = useContext(ThemeContext)
 
   function formatConnectorName() {
-    const { ethereum } = window as any
-    const isMetaMask = ethereum && ethereum.isMetaMask ? true : false
+    const { ethereum } = window
+    const isMetaMask = !!(ethereum && ethereum.isMetaMask)
     const name = Object.keys(SUPPORTED_WALLETS)
       .filter(
         k =>
@@ -345,12 +345,12 @@ export default function AccountDetails({
             </InfoCard>
           </YourAccount>
 
-          {!(isMobile && ((window as any).web3 || (window as any).ethereum)) && (
+          {!(isMobile && (window.web3 || window.ethereum)) && (
             <ConnectButtonRow>
               <ButtonEmpty
-                style={{ fontWeight: '400' }}
-                padding={'px 12px'}
-                width={260}
+                style={{ fontWeight: 400 }}
+                padding={'12px'}
+                width={'260px'}
                 onClick={() => {
                   openOptions()
                 }}

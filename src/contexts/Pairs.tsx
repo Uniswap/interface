@@ -90,7 +90,7 @@ function reducer(state, { type, payload }) {
   }
 }
 
-export default function Provider({ children }) {
+export default function Provider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, PAIR_MAP)
 
   const update = useCallback((chainId, tokens) => {
@@ -203,7 +203,9 @@ export function useTotalSupply(tokenA?: Token, tokenB?: Token) {
             })
           }
         })
-        .catch(() => {})
+        .catch(error => {
+          console.log(error)
+        })
   }, [pairContract, pair])
 
   // on the block make sure we're updated

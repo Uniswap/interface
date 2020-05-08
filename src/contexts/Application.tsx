@@ -72,7 +72,7 @@ function reducer(state: ApplicationState, { type, payload }): ApplicationState {
   }
 }
 
-export default function Provider({ children }) {
+export default function Provider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, {
     [BLOCK_NUMBER]: {},
     [USD_PRICE]: {},

@@ -80,14 +80,10 @@ const Input = styled.input<{ active?: boolean }>`
     `}
 `
 
-const BottomError = styled(Text)`
+const BottomError = styled(Text)<{ show?: boolean }>`
   font-size: 14px;
   font-weight: 400;
-  ${({ show }) =>
-    show &&
-    css`
-      padding-top: 12px;
-    `}
+  padding-top: ${({ show }) => (show ? '12px' : '')};
 `
 
 const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }>`

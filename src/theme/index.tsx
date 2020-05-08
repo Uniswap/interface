@@ -8,7 +8,8 @@ import styled, {
 import { getQueryParam, checkSupportedTheme } from '../utils'
 import { SUPPORTED_THEMES } from '../constants'
 import { useDarkModeManager } from '../contexts/LocalStorage'
-import { Text } from 'rebass'
+import { Text, TextProps } from 'rebass'
+import { Colors } from './styled'
 
 export * from './components'
 
@@ -34,7 +35,7 @@ const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } 
 const white = '#FFFFFF'
 const black = '#000000'
 
-export function theme(darkMode: boolean): DefaultTheme {
+export function colors(darkMode: boolean): Colors {
   return {
     // base
     white,
@@ -82,7 +83,13 @@ export function theme(darkMode: boolean): DefaultTheme {
     red1: '#FF6871',
     green1: '#27AE60',
     yellow1: '#FFE270',
-    yellow2: '#F3841E',
+    yellow2: '#F3841E'
+  }
+}
+
+export function theme(darkMode: boolean): DefaultTheme {
+  return {
+    ...colors(darkMode),
 
     grids: {
       sm: 8,
@@ -108,7 +115,7 @@ export function theme(darkMode: boolean): DefaultTheme {
   }
 }
 
-export default function ThemeProvider({ children }) {
+export default function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [darkMode, toggleDarkMode] = useDarkModeManager()
   const themeURL = checkSupportedTheme(getQueryParam(window.location, 'theme'))
   const themeToRender = themeURL
@@ -124,76 +131,47 @@ export default function ThemeProvider({ children }) {
   return <StyledComponentsThemeProvider theme={theme(themeToRender)}>{children}</StyledComponentsThemeProvider>
 }
 
-const TextWrapper = styled(Text)`
+const TextWrapper = styled(Text)<{ color: keyof Colors }>`
   color = ${({ color, theme }) => theme[color]}
 `
 
 export const TYPE = {
-  main: ({ children, ...rest }) => (
-    <TextWrapper fontWeight={500} color={'text2'} {...rest}>
-      {children}
-    </TextWrapper>
-  ),
-  black: ({ children, ...rest }) => (
-    <TextWrapper fontWeight={500} color={'text1'} {...rest}>
-      {children}
-    </TextWrapper>
-  ),
-  largeHeader: ({ children, ...rest }) => (
-    <TextWrapper fontWeight={600} fontSize={24} {...rest}>
-      {children}
-    </TextWrapper>
-  ),
-  mediumHeader: ({ children, ...rest }) => (
-    <TextWrapper fontWeight={500} fontSize={20} color={'text1'} {...rest}>
-      {children}
-    </TextWrapper>
-  ),
-  subHeader: ({ children, ...rest }) => (
-    <TextWrapper fontWeight={400} fontSize={14} color={'text1'} {...rest}>
-      {children}
-    </TextWrapper>
-  ),
-  body: ({ children, ...rest }) => (
-    <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...rest}>
-      {children}
-    </TextWrapper>
-  ),
-  blue: ({ children, ...rest }) => (
-    <TextWrapper fontWeight={500} color={'blue1'} {...rest}>
-      {children}
-    </TextWrapper>
-  ),
-  yellow: ({ children, ...rest }) => (
-    <TextWrapper fontWeight={500} color={'yellow2'} {...rest}>
-      {children}
-    </TextWrapper>
-  ),
-  green: ({ children, ...rest }) => (
-    <TextWrapper fontWeight={500} color={'green1'} {...rest}>
-      {children}
-    </TextWrapper>
-  ),
-  gray: ({ children, ...rest }) => (
-    <TextWrapper fontWeight={500} color={'bg3'} {...rest}>
-      {children}
-    </TextWrapper>
-  ),
-  darkGray: ({ children, ...rest }) => (
-    <TextWrapper fontWeight={500} color={'text3'} {...rest}>
-      {children}
-    </TextWrapper>
-  ),
-  italic: ({ children, ...rest }) => (
-    <TextWrapper fontWeight={500} fontSize={12} fontStyle={'italic'} color={'text2'} {...rest}>
-      {children}
-    </TextWrapper>
-  ),
-  error: ({ children, error, ...rest }) => (
-    <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...rest}>
-      {children}
-    </TextWrapper>
-  )
+  main(props: TextProps) {
+    return <TextWrapper fontWeight={500} color={'text2'} {...props} />
+  },
+  black(props: TextProps) {
+    return <TextWrapper fontWeight={500} color={'text1'} {...props} />
+  },
+  body(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...props} />
+  },
+  largeHeader(props: TextProps) {
+    return <TextWrapper fontWeight={600} fontSize={24} {...props} />
+  },
+  mediumHeader(props: TextProps) {
+    return <TextWrapper fontWeight={500} fontSize={20} {...props} />
+  },
+  subHeader(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={14} {...props} />
+  },
+  blue(props: TextProps) {
+    return <TextWrapper fontWeight={500} color={'blue1'} {...props} />
+  },
+  yellow(props: TextProps) {
+    return <TextWrapper fontWeight={500} color={'yellow1'} {...props} />
+  },
+  darkGray(props: TextProps) {
+    return <TextWrapper fontWeight={500} color={'text3'} {...props} />
+  },
+  gray(props: TextProps) {
+    return <TextWrapper fontWeight={500} color={'bg3'} {...props} />
+  },
+  italic(props: TextProps) {
+    return <TextWrapper fontWeight={500} fontSize={12} fontStyle={'italic'} color={'text2'} {...props} />
+  },
+  error({ error, ...props }: { error: boolean } & TextProps) {
+    return <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...props} />
+  }
 }
 
 export const GlobalStyle = createGlobalStyle`

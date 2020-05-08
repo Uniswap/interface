@@ -1,60 +1,71 @@
-import { css, FlattenSimpleInterpolation } from 'styled-components'
+import { FlattenSimpleInterpolation, ThemedCssFunction } from 'styled-components'
+
+export type Color = string
+export interface Colors {
+  // base
+  white: Color
+  black: Color
+
+  // text
+  text1: Color
+  text2: Color
+  text3: Color
+  text4: Color
+  text5: Color
+
+  // backgrounds / greys
+  bg1: Color
+  bg2: Color
+  bg3: Color
+  bg4: Color
+  bg5: Color
+
+  modalBG: Color
+  advancedBG: Color
+
+  //blues
+  blue1: Color
+  blue2: Color
+  blue3: Color
+  blue4: Color
+  blue5: Color
+
+  buttonSecondaryText: Color
+
+  // pinks
+  pink1: Color
+  pink2: Color
+  pink3: Color
+  pink4: Color
+
+  // other
+  red1: Color
+  green1: Color
+  yellow1: Color
+  yellow2: Color
+}
+
+export interface Grids {
+  sm: number
+  md: number
+  lg: number
+}
 
 declare module 'styled-components' {
-  export interface DefaultTheme {
-    // base
-    white: string
-    black: string
-
-    // text
-    text1: string
-    text2: string
-    text3: string
-    text4: string
-    text5: string
-
-    // backgrounds / greys
-    bg1: string
-    bg2: string
-    bg3: string
-    bg4: string
-    bg5: string
-
-    modalBG: string
-    advancedBG: string
-
-    //blues
-    blue1: string
-    blue2: string
-    blue3: string
-    blue4: string
-    blue5: string
-
-    buttonSecondaryText: string
-
-    // pinks
-    pink1: string
-    pink2: string
-    pink3: string
-    pink4: string
-
-    // other
-    red1: string
-    green1: string
-    yellow1: string
-    yellow2: string
-
-    grids: {
-      sm: number
-      md: number
-      lg: number
-    }
+  export interface DefaultTheme extends Colors {
+    grids: Grids
 
     // shadows
     shadow1: string
 
     // media queries
-    mediaWidth: { [width in keyof typeof MEDIA_WIDTHS]: typeof css }
+    mediaWidth: {
+      upToExtraSmall: ThemedCssFunction<DefaultTheme>
+      upToSmall: ThemedCssFunction<DefaultTheme>
+      upToMedium: ThemedCssFunction<DefaultTheme>
+      upToLarge: ThemedCssFunction<DefaultTheme>
+    }
+
     // css snippets
     flexColumnNoWrap: FlattenSimpleInterpolation
     flexRowNoWrap: FlattenSimpleInterpolation

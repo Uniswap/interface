@@ -26,7 +26,17 @@ const Fader = styled.div<{ count: number }>`
 
 const delay = 100
 
-export default function TxnPopup({ hash, success, summary, popKey }) {
+export default function TxnPopup({
+  hash,
+  success,
+  summary,
+  popKey
+}: {
+  hash: string
+  success?: boolean
+  summary?: string
+  popKey?: number
+}) {
   const { chainId } = useWeb3React()
   const [count, setCount] = useState(1)
 
