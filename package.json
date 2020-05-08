@@ -76,7 +76,8 @@
     "check:format": "yarn format:base --check",
     "check:all": "yarn check:lint && yarn check:format",
     "cy:run": "cypress run",
-    "integration-test": "yarn build && start-server-and-test 'yarn run serve -s build' http://localhost:5000 cy:run"
+    "serve:build": "serve -s build -l 3000",
+    "integration-test": "yarn build && start-server-and-test 'yarn run serve:build' http://localhost:3000 cy:run"
   },
   "eslintConfig": {
     "extends": "react-app"
