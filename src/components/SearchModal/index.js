@@ -39,12 +39,12 @@ const TokenModalInfo = styled.div`
   margin: 0.25rem 0.5rem;
   justify-content: center;
   user-select: none;
+  min-height: 200px;
 `
 
 const ItemList = styled.div`
   flex-grow: 1;
-  min-height: 240px;
-  height: 100%;
+  height: 240px;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 `
