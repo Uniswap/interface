@@ -5,9 +5,6 @@ import TxnPopup from '../components/TxnPopup'
 import { useWeb3React } from '../hooks'
 import { useBlockNumber, usePopups } from './Application'
 
-const BLOCK_NUMBER_CHECKED = 'BLOCK_NUMBER_CHECKED'
-const SUMMARY = 'summary'
-
 const ADD = 'ADD'
 const CHECK = 'CHECK'
 const FINALIZE = 'FINALIZE'
@@ -15,6 +12,7 @@ const FINALIZE = 'FINALIZE'
 interface TransactionState {
   [chainId: number]: {
     [txHash: string]: {
+      blockNumberChecked: any
       response: {
         customData?: any
         summary: any
@@ -62,7 +60,7 @@ function reducer(state: TransactionState, { type, payload }): TransactionState {
           ...state[networkId],
           [hash]: {
             ...state[networkId]?.[hash],
-            [BLOCK_NUMBER_CHECKED]: blockNumber
+            blockNumberChecked: blockNumber
           }
         }
       }
@@ -129,7 +127,7 @@ export function Updater() {
       let stale = false
       Object.keys(allTransactions)
         .filter(
-          hash => !allTransactions[hash].receipt && allTransactions[hash][BLOCK_NUMBER_CHECKED] !== globalBlockNumber
+          hash => !allTransactions[hash].receipt && allTransactions[hash].blockNumberChecked !== globalBlockNumber
         )
         .forEach(hash => {
           library
@@ -191,7 +189,7 @@ export function useTransactionAdder() {
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      add(chainId, hash, { ...response, customData: customData, [SUMMARY]: summary })
+      add(chainId, hash, { ...response, customData: customData, summary })
     },
     [chainId, add]
   )
