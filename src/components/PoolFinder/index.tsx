@@ -181,7 +181,7 @@ function PoolFinder({ history }: RouteComponentProps) {
             </AutoColumn>
           </LightCard>
         ) : (
-          <LightCard bg="rgba(255, 255, 255, 0.6)" padding={'45px'}>
+          <LightCard padding={'45px'}>
             <Text color="#C3C5CB" textAlign="center">
               Select a token pair to find your liquidity.
             </Text>
