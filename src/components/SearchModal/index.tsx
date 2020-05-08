@@ -24,9 +24,8 @@ import { Spinner, TYPE } from '../../theme'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 
 import { isAddress } from '../../utils'
-import { useAllPairs } from '../../contexts/Pairs'
 import { useWeb3React } from '../../hooks'
-import { useLocalStorageTokens } from '../../contexts/LocalStorage'
+import { useLocalStorageTokens, useLocalStoragePairs } from '../../contexts/LocalStorage'
 import { useAllBalances } from '../../contexts/Balances'
 import { useTranslation } from 'react-i18next'
 import { useToken, useAllTokens, ALL_TOKENS } from '../../contexts/Tokens'
@@ -171,7 +170,7 @@ function SearchModal({
   const theme = useContext(ThemeContext)
 
   const allTokens = useAllTokens()
-  const allPairs = useAllPairs()
+  const [allPairs] = useLocalStoragePairs()
   const allBalances = useAllBalances()
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -303,10 +302,10 @@ function SearchModal({
   const escapeStringRegexp = string => string
 
   const sortedPairList = useMemo(() => {
-    return Object.keys(allPairs).sort((a, b): number => {
+    return allPairs.sort((a, b): number => {
       // sort by balance
-      const balanceA = allBalances?.[account]?.[a]
-      const balanceB = allBalances?.[account]?.[b]
+      const balanceA = allBalances?.[account]?.[a.liquidityToken.address]
+      const balanceB = allBalances?.[account]?.[b.liquidityToken.address]
 
       if (balanceA && !balanceB) {
         return sortDirection ? -1 : 1
@@ -325,13 +324,12 @@ function SearchModal({
 
   const filteredPairList = useMemo(() => {
     const isAddress = searchQuery.slice(0, 2) === '0x'
-    return sortedPairList.filter(pairAddress => {
-      const pair = allPairs[pairAddress]
+    return sortedPairList.filter(pair => {
       if (searchQuery === '') {
         return true
       }
-      const token0 = allTokens[pair.token0]
-      const token1 = allTokens[pair.token1]
+      const token0 = pair.token0
+      const token1 = pair.token1
       const regexMatches = Object.keys(token0).map(field => {
         if (
           (field === 'address' && isAddress) ||
@@ -361,9 +359,10 @@ function SearchModal({
 
     return (
       filteredPairList &&
-      filteredPairList.map((pairAddress, i) => {
-        const token0 = allTokens[allPairs[pairAddress].token0]
-        const token1 = allTokens[allPairs[pairAddress].token1]
+      filteredPairList.map((pair, i) => {
+        const token0 = pair.token0
+        const token1 = pair.token1
+        const pairAddress = pair.liquidityToken.address
         const balance = allBalances?.[account]?.[pairAddress]?.toSignificant(6)
         const zeroBalance =
           allBalances?.[account]?.[pairAddress]?.raw &&

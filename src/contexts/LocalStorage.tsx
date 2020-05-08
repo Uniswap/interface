@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useMemo, useCallback, useEffect, useState } from 'react'
-import { Token } from '@uniswap/sdk'
+import { Token, Pair, TokenAmount, JSBI } from '@uniswap/sdk'
 import { getTokenDecimals, getTokenSymbol, getTokenName, isAddress } from '../utils'
 import { useWeb3React } from '@web3-react/core'
 
@@ -9,7 +9,8 @@ enum LocalStorageKeys {
   BETA_MESSAGE_DISMISSED = 'betaMessageDismissed',
   MIGRATION_MESSAGE_DISMISSED = 'migrationMessageDismissed',
   DARK_MODE = 'darkMode',
-  TOKENS = 'tokens'
+  TOKENS = 'tokens',
+  PAIRS = 'pairs'
 }
 
 function useLocalStorage<T, S = T>(
@@ -39,30 +40,31 @@ function useLocalStorage<T, S = T>(
   return [value, setValue]
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function serializeTokens(
-  tokens: Token[]
-): { chainId: number; address: string; decimals: number; symbol: string; name: string }[] {
-  return tokens.map(token => ({
+interface SerializedToken {
+  chainId: number
+  address: string
+  decimals: number
+  symbol: string
+  name: string
+}
+
+function serializeToken(token: Token): SerializedToken {
+  return {
     chainId: token.chainId,
     address: token.address,
     decimals: token.decimals,
     symbol: token.symbol,
     name: token.name
-  }))
+  }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function deserializeTokens(serializedTokens: ReturnType<typeof serializeTokens>): Token[] {
-  return serializedTokens.map(
-    serializedToken =>
-      new Token(
-        serializedToken.chainId,
-        serializedToken.address,
-        serializedToken.decimals,
-        serializedToken.symbol,
-        serializedToken.name
-      )
+function deserializeToken(serializedToken: SerializedToken): Token {
+  return new Token(
+    serializedToken.chainId,
+    serializedToken.address,
+    serializedToken.decimals,
+    serializedToken.symbol,
+    serializedToken.name
   )
 }
 
@@ -85,27 +87,29 @@ export default function Provider({ children }) {
     false
   )
   const [darkMode, setDarkMode] = useLocalStorage<boolean>(LocalStorageKeys.DARK_MODE, true)
-  const [tokens, setTokens] = useLocalStorage<Token[], ReturnType<typeof serializeTokens>>(
-    LocalStorageKeys.TOKENS,
-    [],
-    {
-      serialize: serializeTokens,
-      deserialize: deserializeTokens
-    }
-  )
+  const [tokens, setTokens] = useLocalStorage<Token[], SerializedToken[]>(LocalStorageKeys.TOKENS, [], {
+    serialize: (tokens: Token[]) => tokens.map(serializeToken),
+    deserialize: (serializedTokens: SerializedToken[]) => serializedTokens.map(deserializeToken)
+  })
+  const [pairs, setPairs] = useLocalStorage<Token[][], SerializedToken[][]>(LocalStorageKeys.PAIRS, [], {
+    serialize: (nestedTokens: Token[][]) => nestedTokens.map(tokens => tokens.map(serializeToken)),
+    deserialize: (serializedNestedTokens: SerializedToken[][]) =>
+      serializedNestedTokens.map(serializedTokens => serializedTokens.map(deserializeToken))
+  })
 
   return (
     <LocalStorageContext.Provider
       value={useMemo(
         () => [
-          { version, lastSaved, betaMessageDismissed, migrationMessageDismissed, darkMode, tokens },
+          { version, lastSaved, betaMessageDismissed, migrationMessageDismissed, darkMode, tokens, pairs },
           {
             setVersion,
             setLastSaved,
             setBetaMessageDismissed,
             setMigrationMessageDismissed,
             setDarkMode,
-            setTokens
+            setTokens,
+            setPairs
           }
         ],
         [
@@ -115,12 +119,14 @@ export default function Provider({ children }) {
           migrationMessageDismissed,
           darkMode,
           tokens,
+          pairs,
           setVersion,
           setLastSaved,
           setBetaMessageDismissed,
           setMigrationMessageDismissed,
           setDarkMode,
-          setTokens
+          setTokens,
+          setPairs
         ]
       )}
     >
@@ -209,4 +215,35 @@ export function useLocalStorageTokens(): [
   )
 
   return [tokens, { fetchTokenByAddress, addToken, removeTokenByAddress }]
+}
+
+export function useLocalStoragePairs(): [
+  Pair[],
+  {
+    addPair: (pair: Pair) => void
+  }
+] {
+  const [{ pairs }, { setPairs }] = useLocalStorageContext()
+
+  const addPair = useCallback(
+    (pair: Pair) => {
+      setPairs(pairs =>
+        pairs
+          .filter(tokens => !(tokens[0].equals(pair.token0) && tokens[1].equals(pair.token1)))
+          .concat([[pair.token0, pair.token1]])
+      )
+    },
+    [setPairs]
+  )
+
+  return [
+    useMemo(
+      () =>
+        pairs.map(
+          tokens => new Pair(new TokenAmount(tokens[0], JSBI.BigInt(0)), new TokenAmount(tokens[1], JSBI.BigInt(0)))
+        ),
+      [pairs]
+    ),
+    { addPair }
+  ]
 }

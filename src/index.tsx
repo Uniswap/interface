@@ -10,7 +10,6 @@ import LocalStorageContextProvider from './contexts/LocalStorage'
 import ApplicationContextProvider, { Updater as ApplicationContextUpdater } from './contexts/Application'
 import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
 import BalancesContextProvider, { Updater as BalancesContextUpdater } from './contexts/Balances'
-import ExchangesContextProvider from './contexts/Pairs'
 import App from './pages/App'
 import ThemeProvider, { GlobalStyle } from './theme'
 import './i18n'
@@ -39,9 +38,7 @@ function ContextProviders({ children }) {
     <LocalStorageContextProvider>
       <ApplicationContextProvider>
         <TransactionContextProvider>
-          <ExchangesContextProvider>
-            <BalancesContextProvider>{children}</BalancesContextProvider>
-          </ExchangesContextProvider>
+          <BalancesContextProvider>{children}</BalancesContextProvider>
         </TransactionContextProvider>
       </ApplicationContextProvider>
     </LocalStorageContextProvider>

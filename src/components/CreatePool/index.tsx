@@ -12,9 +12,9 @@ import { TYPE, Link } from '../../theme'
 import { AutoColumn, ColumnCenter } from '../Column'
 import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
 
-import { usePair } from '../../contexts/Pairs'
 import { useToken } from '../../contexts/Tokens'
 import { useWeb3React } from '../../hooks'
+import { useReserves } from '../../data/Reserves'
 
 const Fields = {
   TOKEN0: 0,
@@ -34,7 +34,7 @@ function CreatePool({ history }) {
 
   const [step, setStep] = useState<number>(1)
 
-  const pair = usePair(token0, token1)
+  const pair = useReserves(token0, token1)
   const pairExists = // used to detect new exchange
     pair && JSBI.notEqual(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.notEqual(pair.reserve1.raw, JSBI.BigInt(0))
 
