@@ -94,11 +94,12 @@ const StyledTokenName = styled.span`
 `
 
 const StyledBalanceMax = styled.button`
-  height: 32px;
+  height: 28px;
   background-color: ${({ theme }) => theme.blue5};
   border: 1px solid ${({ theme }) => theme.blue5};
   border-radius: 0.5rem;
   font-size: 0.875rem;
+
   font-weight: 500;
   cursor: pointer;
   margin-right: 0.5rem;

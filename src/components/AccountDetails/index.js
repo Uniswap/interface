@@ -69,7 +69,7 @@ const AccountGroupingRow = styled.div`
   }
 
   &:first-of-type {
-    margin-bottom: 20px;
+    margin-bottom: 8px;
   }
 `
 
@@ -141,8 +141,9 @@ const AccountControl = styled.div`
     text-decoration: underline;
   }
 
-  a {
+  p {
     min-width: 0;
+    margin: 0.5rem 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -318,19 +319,36 @@ export default function AccountDetails({
               </AccountGroupingRow>
               <AccountGroupingRow>
                 {ENSName ? (
-                  <AccountControl hasENS={!!ENSName} isENS={true}>
-                    <StyledLink hasENS={!!ENSName} isENS={true} href={getEtherscanLink(chainId, ENSName, 'address')}>
-                      {ENSName} ↗{' '}
-                    </StyledLink>
-                    <Copy toCopy={ENSName} />
-                  </AccountControl>
+                  <>
+                    <AccountControl hasENS={!!ENSName} isENS={true}>
+                      <p>{ENSName}</p> <Copy toCopy={account} />
+                    </AccountControl>
+                  </>
                 ) : (
-                  <AccountControl hasENS={!!ENSName} isENS={false}>
-                    <StyledLink hasENS={!!ENSName} isENS={false} href={getEtherscanLink(chainId, account, 'address')}>
-                      {account} ↗{' '}
-                    </StyledLink>
-                    <Copy toCopy={account} />
-                  </AccountControl>
+                  <>
+                    <AccountControl hasENS={!!ENSName} isENS={false}>
+                      <p>{account}</p> <Copy toCopy={account} />
+                    </AccountControl>
+                  </>
+                )}
+              </AccountGroupingRow>
+              <AccountGroupingRow>
+                {ENSName ? (
+                  <>
+                    <AccountControl hasENS={!!ENSName} isENS={false}>
+                      <StyledLink hasENS={!!ENSName} isENS={true} href={getEtherscanLink(chainId, ENSName, 'address')}>
+                        View on Etherscan ↗{' '}
+                      </StyledLink>
+                    </AccountControl>
+                  </>
+                ) : (
+                  <>
+                    <AccountControl hasENS={!!ENSName} isENS={false}>
+                      <StyledLink hasENS={!!ENSName} isENS={false} href={getEtherscanLink(chainId, account, 'address')}>
+                        View on Etherscan ↗{' '}
+                      </StyledLink>
+                    </AccountControl>
+                  </>
                 )}
               </AccountGroupingRow>
             </InfoCard>

@@ -12,7 +12,6 @@ import { ButtonSecondary } from '../Button'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
-import { ButtonSecondary } from '../Button'
 
 import { Spinner } from '../../theme'
 import LightCircle from '../../assets/svg/lightcircle.svg'

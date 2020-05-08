@@ -359,8 +359,6 @@ function AddLiquidity({ token0, token1, step = false }) {
   const [outputError, setOutputError] = useState('')
   const [isValid, setIsValid] = useState(false)
 
-  const theme = useContext(ThemeContext) as object
-
   useEffect(() => {
     // reset errors
     setGeneralError(null)
@@ -646,29 +644,31 @@ function AddLiquidity({ token0, token1, step = false }) {
 
   const PriceBar = () => {
     return (
-      <AutoRow justify="space-between">
-        <AutoColumn justify="center">
-          <TYPE.black>{displayPriceInput}</TYPE.black>
-          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
-            {tokens[Field.OUTPUT]?.symbol} per {tokens[Field.INPUT]?.symbol}
-          </Text>
-        </AutoColumn>
-        <AutoColumn justify="center">
-          <TYPE.black>{displayPriceOutput}</TYPE.black>
-          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
-            {tokens[Field.INPUT]?.symbol} per {tokens[Field.OUTPUT]?.symbol}
-          </Text>
-        </AutoColumn>
-        <AutoColumn justify="center">
-          <TYPE.black>
-            {noLiquidity && derivedPrice ? '100' : poolTokenPercentage ? poolTokenPercentage?.toFixed(2) : '0.0'}
-            {'%'}
-          </TYPE.black>
-          <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
-            Pool Share
-          </Text>
-        </AutoColumn>
-      </AutoRow>
+      <AutoColumn gap="md" justify="space-between">
+        <AutoRow justify="space-between">
+          <AutoColumn justify="center">
+            <TYPE.black>{displayPriceInput}</TYPE.black>
+            <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+              {tokens[Field.OUTPUT]?.symbol} per {tokens[Field.INPUT]?.symbol}
+            </Text>
+          </AutoColumn>
+          <AutoColumn justify="center">
+            <TYPE.black>{displayPriceOutput}</TYPE.black>
+            <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+              {tokens[Field.INPUT]?.symbol} per {tokens[Field.OUTPUT]?.symbol}
+            </Text>
+          </AutoColumn>
+          <AutoColumn justify="center">
+            <TYPE.black>
+              {noLiquidity && derivedPrice ? '100' : poolTokenPercentage ? poolTokenPercentage?.toFixed(2) : '0.0'}
+              {'%'}
+            </TYPE.black>
+            <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+              Pool Share
+            </Text>
+          </AutoColumn>
+        </AutoRow>
+      </AutoColumn>
     )
   }
 
@@ -704,9 +704,9 @@ function AddLiquidity({ token0, token1, step = false }) {
           <ColumnCenter>
             <BlueCard>
               <AutoColumn gap="10px">
-                <TYPE.blue fontWeight={600}>You are the first liquidity provider.</TYPE.blue>
-                <TYPE.blue fontWeight={400}>The ratio of tokens you add will set the price of this pool.</TYPE.blue>
-                <TYPE.blue fontWeight={400}>Once you are happy with the rate click supply to review.</TYPE.blue>
+                <TYPE.link fontWeight={600}>You are the first liquidity provider.</TYPE.link>
+                <TYPE.link fontWeight={400}>The ratio of tokens you add will set the price of this pool.</TYPE.link>
+                <TYPE.link fontWeight={400}>Once you are happy with the rate click supply to review.</TYPE.link>
               </AutoColumn>
             </BlueCard>
           </ColumnCenter>
@@ -742,9 +742,18 @@ function AddLiquidity({ token0, token1, step = false }) {
           pair={pair}
         />
         {tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-          <LightCard padding="1rem" borderRadius={'20px'}>
-            <PriceBar />
-          </LightCard>
+          <>
+            <LightCard padding="0px" borderRadius={'20px'}>
+              <RowBetween padding="1rem">
+                <TYPE.subHeader fontWeight={500} fontSize={14}>
+                  {noLiquidity ? 'Initial rates' : 'Rates'} and estimated share
+                </TYPE.subHeader>
+              </RowBetween>{' '}
+              <LightCard padding="1rem" borderRadius={'20px'}>
+                <PriceBar />
+              </LightCard>
+            </LightCard>
+          </>
         )}
         {showOutputApprove ? (
           <ButtonLight

@@ -57,7 +57,7 @@ export const BottomGrouping = styled.div`
 
 export const ErrorText = styled(Text)`
   color: ${({ theme, warningLow, warningMedium, warningHigh }) =>
-  warningHigh ? theme.red1 : warningMedium ? theme.yellow2 : warningLow ? theme.green1 : theme.text1};
+    warningHigh ? theme.red1 : warningMedium ? theme.yellow2 : warningLow ? theme.green1 : theme.text1};
 `
 
 export const InputGroup = styled(AutoColumn)`
@@ -79,7 +79,7 @@ export const StyledNumerical = styled(NumericalInput)`
 export const MaxButton = styled.button`
   position: absolute;
   right: 70px;
-  padding: 0.5rem 0.5rem;
+  padding: 0.25rem 0.35rem;
   background-color: ${({ theme }) => theme.blue5};
   border: 1px solid ${({ theme }) => theme.blue5};
   border-radius: 0.5rem;
@@ -88,7 +88,7 @@ export const MaxButton = styled.button`
   text-transform: uppercase;
   cursor: pointer;
   margin-right: 0.5rem;
-  color: ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.buttonSecondaryText};
   :hover {
     border: 1px solid ${({ theme }) => theme.blue1};
   }
@@ -99,19 +99,21 @@ export const MaxButton = styled.button`
 `
 
 export const StyledBalanceMaxMini = styled.button`
-  height: 24px;
+  height: 22px;
+  width: 22px;
   background-color: ${({ theme }) => theme.bg2};
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 50%;
+  padding: .2rem;
   font-size: 0.875rem;
   font-weight: 400;
-  margin-left: 6px;
+  margin-left: .4rem;
   cursor: pointer;
   color: ${({ theme }) => theme.text2};
   display: flex;
   justify-content: center;
   align-items: center;
-  width: fit-content;
+  /* width: fit-content; */
   float: right;
 
   :hover {

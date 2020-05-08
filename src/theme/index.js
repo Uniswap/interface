@@ -62,7 +62,7 @@ export const theme = darkMode => ({
   bg5: darkMode ? '#565A69' : '#888D9B',
 
   modalBG: darkMode ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.6)',
-  advancedBG: darkMode ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.6)',
+  advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
   //blues
   blue1: darkMode ? '#2172E5' : '#ff007a',
@@ -139,12 +139,17 @@ export const TYPE = {
     </TextWrapper>
   ),
   subHeader: ({ children, ...rest }) => (
-    <TextWrapper fontWeight={400} fontSize={14} color={'text1'} {...rest}>
+    <TextWrapper fontWeight={500} fontSize={14} color={'text2'} {...rest}>
       {children}
     </TextWrapper>
   ),
   body: ({ children, ...rest }) => (
     <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...rest}>
+      {children}
+    </TextWrapper>
+  ),
+  link: ({ children, ...rest }) => (
+    <TextWrapper fontWeight={500} color={'buttonSecondaryText'} {...rest}>
       {children}
     </TextWrapper>
   ),

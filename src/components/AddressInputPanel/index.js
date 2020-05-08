@@ -1,9 +1,15 @@
-import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
+import React, { useState, useEffect, useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 
 // import QR from '../../assets/svg/QR.svg'
 import { isAddress } from '../../utils'
 import { useWeb3React, useDebounce } from '../../hooks'
+import { Link, TYPE } from '../../theme'
+import { AutoColumn } from '../Column'
+import { RowBetween } from '../Row'
+import { ButtonSecondary } from '../Button'
+import { Send } from 'react-feather'
+import { getEtherscanLink } from '../../utils'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -12,7 +18,7 @@ const InputPanel = styled.div`
   background-color: ${({ theme }) => theme.bg1};
   z-index: 1;
   width: 100%;
-  height: 60px;
+  /* height: 60px; */
 `
 
 const ContainerRow = styled.div`
@@ -20,34 +26,36 @@ const ContainerRow = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 1.25rem;
-  height: 60px;
-  border: 1px solid ${({ error, theme }) => (error ? theme.red1 : theme.bg3)};
+  /* height: 60px; */
+  border: 1px solid ${({ error, theme }) => (error ? theme.red1 : theme.bg2)};
   background-color: ${({ theme }) => theme.bg1};
 `
 
 const InputContainer = styled.div`
   flex: 1;
+  padding: 1rem;
 `
 
 const InputRow = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
+  ${({ theme }) => theme.flex}
   align-items: center;
-  padding: 0.75rem;
+  flex-wrap: wrap;
+  padding: 1rem;
 `
 
 const Input = styled.input`
-  font-size: 1rem;
+  font-size: 1.25rem;
   outline: none;
   border: none;
   flex: 1 1 auto;
   width: 0;
   background-color: ${({ theme }) => theme.bg1};
-  font-size: 20px;
   color: ${({ error, theme }) => (error ? theme.red1 : theme.blue1)};
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 500;
-
+  width: 100%;
+  /* padding: 0.5rem 0; */
   ::placeholder {
     color: ${({ theme }) => theme.text4};
   }
@@ -64,7 +72,9 @@ const Input = styled.input`
 // `
 
 export default function AddressInputPanel({ initialInput = '', onChange, onError }) {
-  const { library } = useWeb3React()
+  const { library, chainId, account, connector } = useWeb3React()
+
+  const theme = useContext(ThemeContext)
 
   const [input, setInput] = useState(initialInput.address ? initialInput.address : '')
 
@@ -165,14 +175,29 @@ export default function AddressInputPanel({ initialInput = '', onChange, onError
     <InputPanel>
       <ContainerRow error={input !== '' && error}>
         <InputContainer>
-          <InputRow>
+          <AutoColumn gap="md">
+            <RowBetween>
+              <TYPE.black color={theme.text2} fontWeight={500} fontSize={14}>
+                Recipient
+              </TYPE.black>
+              {data.address && (
+                <Link href={getEtherscanLink(chainId, data.address, 'address')} style={{ fontSize: '14px' }}>
+                  (View on Etherscan)
+                </Link>
+              )}
+              {data.name && (
+                <Link href={getEtherscanLink(chainId, data.name, 'address')} style={{ fontSize: '14px' }}>
+                  (View on Etherscan)
+                </Link>
+              )}
+            </RowBetween>
             <Input
               type="text"
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              placeholder="Recipient Address"
+              placeholder="Wallet Address or ENS name"
               error={input !== '' && error}
               onChange={onInput}
               value={input}
@@ -180,9 +205,18 @@ export default function AddressInputPanel({ initialInput = '', onChange, onError
             {/* <QRWrapper>
               <img src={QR} alt="" />
             </QRWrapper> */}
-          </InputRow>
+          </AutoColumn>
         </InputContainer>
       </ContainerRow>
+      {/* 
+      {input !== '' && !error && (
+        <AutoColumn gap="md" justify="center">
+          <ButtonSecondary width={'fit-content'}>
+            <Send size={14} />
+            Send as request
+          </ButtonSecondary>
+        </AutoColumn>
+      )} */}
     </InputPanel>
   )
 }

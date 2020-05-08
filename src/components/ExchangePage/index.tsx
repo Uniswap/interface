@@ -37,7 +37,7 @@ import { theme, TYPE, Hover } from '../../theme'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
 import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
-import { ButtonPrimary, ButtonError, ButtonLight } from '../Button'
+import { ButtonPrimary, ButtonError, ButtonLight, ButtonSecondary } from '../Button'
 import Card, { GreyCard, BlueCard, YellowCard } from '../../components/Card'
 
 import { usePair } from '../../contexts/Pairs'
@@ -112,11 +112,8 @@ function ExchangePage({ sendingInput = false, history, params }) {
             ? params.inputTokenAmount
             : ''
           : ''
-          ? ''
-          : ''
-          ? ''
-          : ''
     },
+
     initializeSwapState
   )
 
@@ -903,6 +900,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
   const PriceBar = function() {
     return (
       <AutoRow justify="space-between">
+        <RowFixed>Rate info</RowFixed>
         <AutoColumn justify="center">
           <Text fontWeight={500} fontSize={16} color={theme(isDark).text2}>
             {pair ? `${route.midPrice.toSignificant(6)} ` : '-'}
@@ -991,17 +989,8 @@ function ExchangePage({ sendingInput = false, history, params }) {
         pendingText={pendingText}
       />
       {sending && !sendingWithSwap && (
-        <>
+        <AutoColumn justify="center" style={{ marginBottom: '1rem' }}>
           <InputGroup gap="lg" justify="center">
-            {!atMaxAmountInput && (
-              <MaxButton
-                onClick={() => {
-                  maxAmountInput && onMaxInput(maxAmountInput.toExact())
-                }}
-              >
-                Max
-              </MaxButton>
-            )}
             <StyledNumerical value={formattedAmounts[Field.INPUT]} onUserInput={val => onUserInput(Field.INPUT, val)} />
             <CurrencyInputPanel
               field={Field.INPUT}
@@ -1023,7 +1012,21 @@ function ExchangePage({ sendingInput = false, history, params }) {
               otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
             />
           </InputGroup>
-        </>
+          <RowBetween style={{ width: '220px' }}>
+            <ButtonSecondary width="fit-content" onClick={() => setSendingWithSwap(true)} textAlign="center">
+              + Add a swap
+            </ButtonSecondary>
+            <ButtonSecondary
+              width="fit-content"
+              disabled={atMaxAmountInput}
+              onClick={() => {
+                maxAmountInput && onMaxInput(maxAmountInput.toExact())
+              }}
+            >
+              Input Max
+            </ButtonSecondary>
+          </RowBetween>
+        </AutoColumn>
       )}
       <AutoColumn gap={'md'}>
         {(!sending || sendingWithSwap) && (
@@ -1044,15 +1047,19 @@ function ExchangePage({ sendingInput = false, history, params }) {
               onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
               otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
             />
+
             {sendingWithSwap ? (
               <ColumnCenter>
-                <RowBetween padding="0 12px">
+                <RowBetween padding="0 1rem 0 12px">
                   <ArrowWrapper onClick={onSwapTokens}>
                     <ArrowDown size="16" color={theme(isDark).text2} onClick={onSwapTokens} />
                   </ArrowWrapper>
-                  <StyledBalanceMaxMini onClick={() => setSendingWithSwap(false)} style={{ marginRight: '0px' }}>
-                    <TYPE.blue>Remove Swap</TYPE.blue>
-                  </StyledBalanceMaxMini>
+                  <ButtonSecondary
+                    onClick={() => setSendingWithSwap(false)}
+                    style={{ marginRight: '0px', width: 'fit-content' }}
+                  >
+                    - Remove Swap
+                  </ButtonSecondary>
                 </RowBetween>
               </ColumnCenter>
             ) : (
@@ -1085,7 +1092,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
               otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
             />
             {sendingWithSwap && (
-              <RowBetween padding="0 12px">
+              <RowBetween padding="0 1rem 0 12px">
                 <ArrowDown size="16" />
               </RowBetween>
             )}
@@ -1093,14 +1100,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
         )}
 
         {sending && (
-          <AutoColumn gap="lg">
-            {!sendingWithSwap && (
-              <Hover onClick={() => setSendingWithSwap(true)}>
-                <TYPE.blue color={theme(isDark).blue1} textAlign="center">
-                  Add a swap
-                </TYPE.blue>
-              </Hover>
-            )}
+          <AutoColumn gap="lg" justify="center">
             <AddressInputPanel
               onChange={_onRecipient}
               onError={(error: boolean, input) => {

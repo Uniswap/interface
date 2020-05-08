@@ -378,7 +378,7 @@ function SearchModal({
                 onDismiss()
               }}
             >
-              {balance ? (zeroBalance ? 'Join' : 'Manage') : 'Join'}
+              {balance ? (zeroBalance ? 'Join' : 'Add') : 'Join'}
             </ButtonPrimary>
           </MenuItem>
         )

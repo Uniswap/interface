@@ -33,7 +33,6 @@ const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   border-radius: 3rem;
-  margin-bottom: 20px;
 `
 
 const activeClassName = 'ACTIVE'
@@ -105,7 +104,7 @@ function NavigationTabs({ location: { pathname }, history }) {
     <>
       {adding || removing ? (
         <Tabs>
-          <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
+          <RowBetween style={{ padding: '1rem' }}>
             <Hover onClick={() => history.goBack()}>
               <ArrowLink />
             </Hover>
@@ -140,7 +139,7 @@ function NavigationTabs({ location: { pathname }, history }) {
           </RowBetween>
         </Tabs>
       ) : (
-        <Tabs>
+        <Tabs style={{ marginBottom: '20px' }}>
           {tabOrder.map(({ path, textKey, regex }) => (
             <StyledNavLink key={path} to={path} isActive={(_, { pathname }) => pathname.match(regex)}>
               {t(textKey)}

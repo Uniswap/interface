@@ -70,7 +70,6 @@ const AccountElement = styled.div`
   flex-direction: row;
   align-items: center;
   background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
-  /* border: 1px solid ${({ theme }) => theme.bg1}; */
   border-radius: 12px;
   padding-left: ${({ active }) => (active ? '8px' : 0)};
   white-space: nowrap;
@@ -120,11 +119,11 @@ const MigrateBanner = styled(AutoColumn)`
   display: flex;
   justify-content: center;
   background-color: ${({ theme }) => theme.pink3};
-  color: ${({ theme }) => theme.pink2};
-  font-weight: 500;
+  color: ${({ theme }) => theme.buttonSecondaryText};
+  font-weight: 400;
   text-align: center;
   a {
-    color: ${({ theme }) => theme.pink2};
+    color: ${({ theme }) => theme.buttonSecondaryText};
   }
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
