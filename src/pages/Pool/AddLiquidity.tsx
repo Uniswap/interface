@@ -1,6 +1,6 @@
 import React, { useReducer, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { withRouter } from 'react-router-dom'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { parseUnits, parseEther } from '@ethersproject/units'
 import { MaxUint256, Zero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
@@ -157,7 +157,12 @@ function reducer(
   }
 }
 
-function AddLiquidity({ token0, token1, step = false }) {
+interface AddLiquidityProps extends RouteComponentProps<{}> {
+  token0: string
+  token1: string
+}
+
+function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   const { account, chainId, library } = useWeb3React()
 
   // modal states
