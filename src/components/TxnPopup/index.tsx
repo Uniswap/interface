@@ -1,19 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState } from 'react'
+
+import { AlertCircle, CheckCircle } from 'react-feather'
+
+import styled from 'styled-components'
+import { usePopups } from '../../contexts/Application'
+
+import { useWeb3React } from '../../hooks'
+import useInterval from '../../hooks/useInterval'
+import { TYPE } from '../../theme'
 
 import { Link } from '../../theme/components'
-import { TYPE } from '../../theme'
+import { getEtherscanLink } from '../../utils'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
 
-import { useWeb3React } from '../../hooks'
-import { getEtherscanLink } from '../../utils'
-import { usePopups } from '../../contexts/Application'
-
-import { CheckCircle, AlertCircle } from 'react-feather'
-
-import styled from 'styled-components'
-
-const Fader = styled.div`
+const Fader = styled.div<{ count: number }>`
   position: absolute;
   bottom: 0px;
   left: 0px;
@@ -22,28 +23,6 @@ const Fader = styled.div`
   background-color: ${({ theme }) => theme.bg3};
   transition: width 100ms linear;
 `
-
-function useInterval(callback, delay) {
-  const savedCallback = useRef()
-
-  // Remember the latest callback.
-  useEffect(() => {
-    savedCallback.current = callback
-    return () => {}
-  }, [callback])
-
-  // Set up the interval.
-  useEffect(() => {
-    function tick() {
-      savedCallback.current()
-    }
-    if (delay !== null) {
-      let id = setInterval(tick, delay)
-      return () => clearInterval(id)
-    }
-    return () => {}
-  }, [delay])
-}
 
 const delay = 100
 
@@ -65,9 +44,9 @@ export default function TxnPopup({ hash, success, summary, popKey }) {
   return (
     <AutoRow onMouseEnter={() => setIsRunning(false)} onMouseLeave={() => setIsRunning(true)}>
       {success ? (
-        <CheckCircle color={'#27AE60'} size={24} style={{ paddingRight: '24px' }} />
+        <CheckCircle color={'#27AE60'} size={24} style={{ paddingRight: '24px' }}/>
       ) : (
-        <AlertCircle color={'#FF6871'} size={24} style={{ paddingRight: '24px' }} />
+        <AlertCircle color={'#FF6871'} size={24} style={{ paddingRight: '24px' }}/>
       )}
       <AutoColumn gap="8px">
         <TYPE.body fontWeight={500}>
@@ -75,7 +54,7 @@ export default function TxnPopup({ hash, success, summary, popKey }) {
         </TYPE.body>
         <Link href={getEtherscanLink(chainId, hash, 'transaction')}>View on Etherscan</Link>
       </AutoColumn>
-      <Fader count={count} />
+      <Fader count={count}/>
     </AutoRow>
   )
 }

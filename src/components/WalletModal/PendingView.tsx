@@ -28,7 +28,7 @@ const SpinnerWrapper = styled(Spinner)`
   }
 `
 
-const LoadingMessage = styled.div`
+const LoadingMessage = styled.div<{ error?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
   justify-content: flex-start;
@@ -71,14 +71,14 @@ const LoadingWrapper = styled.div`
 `
 
 export default function PendingView({ uri = '', size, connector, error = false, setPendingError, tryActivation }) {
-  const isMetamask = window.ethereum && window.ethereum.isMetaMask
+  const isMetamask = (window as any).ethereum && (window as any).ethereum.isMetaMask
 
   return (
     <PendingSection>
-      {!error && connector === walletconnect && <WalletConnectData size={size} uri={uri} />}
+      {!error && connector === walletconnect && <WalletConnectData size={size} uri={uri}/>}
       <LoadingMessage error={error}>
         <LoadingWrapper>
-          {!error && <SpinnerWrapper src={Circle} />}
+          {!error && <SpinnerWrapper src={Circle}/>}
           {error ? (
             <ErrorGroup>
               <div>Error connecting.</div>

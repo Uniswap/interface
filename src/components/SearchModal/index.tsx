@@ -2,9 +2,9 @@ import React, { useState, useRef, useMemo, useEffect, useContext } from 'react'
 import '@reach/tooltip/styles.css'
 import styled, { ThemeContext } from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
-import { JSBI, WETH } from '@uniswap/sdk'
+import { JSBI, Token, WETH } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
-import { withRouter } from 'react-router-dom'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { COMMON_BASES } from '../../constants'
 import { Link as StyledLink } from '../../theme/components'
 
@@ -140,19 +140,32 @@ const FILTERS = {
   BALANCES: 'BALANCES'
 }
 
+interface SearchModalProps extends RouteComponentProps<{}> {
+  isOpen?: boolean
+  onDismiss?: () => void
+  filterType?: 'tokens'
+  hiddenToken?: string
+  showSendWithSwap?: boolean
+  onTokenSelect?: (address: string) => void
+  urlAddedTokens?: Token[]
+  otherSelectedTokenAddress?: string
+  otherSelectedText?: string
+  showCommonBases?: boolean
+}
+
 function SearchModal({
-  history,
-  isOpen,
-  onDismiss,
-  onTokenSelect,
-  urlAddedTokens,
-  filterType,
-  hiddenToken,
-  showSendWithSwap,
-  otherSelectedTokenAddress,
-  otherSelectedText,
-  showCommonBases = false
-}) {
+                       history,
+                       isOpen,
+                       onDismiss,
+                       onTokenSelect,
+                       urlAddedTokens,
+                       filterType,
+                       hiddenToken,
+                       showSendWithSwap,
+                       otherSelectedTokenAddress,
+                       otherSelectedText,
+                       showCommonBases = false
+                     }: SearchModalProps) {
   const { t } = useTranslation()
   const { account, chainId } = useWeb3React()
   const theme = useContext(ThemeContext)
@@ -168,7 +181,7 @@ function SearchModal({
 
   // if the current input is an address, and we don't have the token in context, try to fetch it
   const token = useToken(searchQuery)
-  const [temporaryToken, setTemporaryToken] = useState()
+  const [temporaryToken, setTemporaryToken] = useState<Token | null>()
   useEffect(() => {
     const address = isAddress(searchQuery)
     if (address && !token) {
@@ -180,7 +193,7 @@ function SearchModal({
       })
       return () => {
         stale = true
-        setTemporaryToken()
+        setTemporaryToken(null)
       }
     }
   }, [searchQuery, token, fetchTokenByAddress])
@@ -198,7 +211,7 @@ function SearchModal({
 
   const tokenList = useMemo(() => {
     return Object.keys(allTokens)
-      .sort((a, b) => {
+      .sort((a, b): number => {
         if (allTokens[a].symbol && allTokens[b].symbol) {
           const aSymbol = allTokens[a].symbol.toLowerCase()
           const bSymbol = allTokens[b].symbol.toLowerCase()
@@ -211,13 +224,13 @@ function SearchModal({
           const balanceB = allBalances?.[account]?.[b]
 
           if (balanceA && !balanceB) {
-            return sortDirection
+            return sortDirection ? -1 : 1
           }
           if (!balanceA && balanceB) {
-            return sortDirection * -1
+            return sortDirection ? 1 : -1
           }
           if (balanceA && balanceB) {
-            return sortDirection * parseFloat(balanceA.toExact()) > parseFloat(balanceB.toExact()) ? -1 : 1
+            return sortDirection && parseFloat(balanceA.toExact()) > parseFloat(balanceB.toExact()) ? -1 : 1
           }
           return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
         } else {
@@ -274,6 +287,7 @@ function SearchModal({
 
   // manage focus on modal show
   const inputRef = useRef()
+
   function onInput(event) {
     const input = event.target.value
     const checksummedInput = isAddress(input)
@@ -289,19 +303,19 @@ function SearchModal({
   const escapeStringRegexp = string => string
 
   const sortedPairList = useMemo(() => {
-    return Object.keys(allPairs).sort((a, b) => {
+    return Object.keys(allPairs).sort((a, b): number => {
       // sort by balance
       const balanceA = allBalances?.[account]?.[a]
       const balanceB = allBalances?.[account]?.[b]
 
       if (balanceA && !balanceB) {
-        return sortDirection
+        return sortDirection ? -1 : 1
       }
       if (!balanceA && balanceB) {
-        return sortDirection * -1
+        return sortDirection ? 1 : -1
       }
       if (balanceA && balanceB) {
-        const order = sortDirection * (parseFloat(balanceA.toExact()) > parseFloat(balanceB.toExact()) ? -1 : 1)
+        const order = sortDirection && (parseFloat(balanceA.toExact()) > parseFloat(balanceB.toExact()) ? -1 : 1)
         return order ? 1 : -1
       } else {
         return 0
@@ -363,7 +377,7 @@ function SearchModal({
             }}
           >
             <RowFixed>
-              <DoubleTokenLogo a0={token0?.address || ''} a1={token1?.address || ''} size={24} margin={true} />
+              <DoubleTokenLogo a0={token0?.address || ''} a1={token1?.address || ''} size={24} margin={true}/>
               <Text fontWeight={500} fontSize={16}>{`${token0?.symbol}/${token1?.symbol}`}</Text>
             </RowFixed>
             {/* <Text fontWeight={500} fontSize={16}>
@@ -404,7 +418,7 @@ function SearchModal({
               }}
             >
               <RowFixed>
-                <TokenLogo address={temporaryToken.address} size={'24px'} style={{ marginRight: '14px' }} />
+                <TokenLogo address={temporaryToken.address} size={'24px'} style={{ marginRight: '14px' }}/>
                 <Column>
                   <Text fontWeight={500}>{temporaryToken.symbol}</Text>
                   <FadedSpan>(Found by search)</FadedSpan>
@@ -417,16 +431,16 @@ function SearchModal({
         return <TokenModalInfo>{t('noToken')}</TokenModalInfo>
       }
     }
-    // TODO is this the right place to link to create exchange?
-    // else if (isAddress(searchQuery) && tokenAddress === ethers.constants.AddressZero) {
-    //   return (
-    //     <>
-    //       <TokenModalInfo>{t('noToken')}</TokenModalInfo>
-    //       <TokenModalInfo>
-    //         <Link to={`/create-exchange/${searchQuery}`}>{t('createExchange')}</Link>
-    //       </TokenModalInfo>
-    //     </>
-    //   )
+      // TODO is this the right place to link to create exchange?
+      // else if (isAddress(searchQuery) && tokenAddress === ethers.constants.AddressZero) {
+      //   return (
+      //     <>
+      //       <TokenModalInfo>{t('noToken')}</TokenModalInfo>
+      //       <TokenModalInfo>
+      //         <Link to={`/create-exchange/${searchQuery}`}>{t('createExchange')}</Link>
+      //       </TokenModalInfo>
+      //     </>
+      //   )
     // }
     else {
       return filteredTokenList
@@ -439,8 +453,8 @@ function SearchModal({
                 ? -1
                 : 1
               : sortDirection
-              ? 1
-              : -1
+                ? 1
+                : -1
         })
         .map(({ address, symbol, balance }) => {
           const urlAdded = urlAddedTokens && urlAddedTokens.hasOwnProperty(address)
@@ -453,12 +467,13 @@ function SearchModal({
           return (
             <MenuItem
               key={address}
-              onClick={() => (hiddenToken && hiddenToken === address ? () => {} : _onTokenSelect(address))}
+              onClick={() => (hiddenToken && hiddenToken === address ? () => {
+              } : _onTokenSelect(address))}
               disabled={hiddenToken && hiddenToken === address}
               selected={otherSelectedTokenAddress === address}
             >
               <RowFixed>
-                <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }} />
+                <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }}/>
                 <Column>
                   <Text fontWeight={500}>
                     {symbol}
@@ -486,7 +501,6 @@ function SearchModal({
                   <Text>
                     {zeroBalance && showSendWithSwap ? (
                       <ColumnCenter
-                        justify="center"
                         style={{ backgroundColor: theme.bg2, padding: '8px', borderRadius: '12px' }}
                       >
                         <Text textAlign="center" fontWeight={500} color={theme.blue1}>
@@ -500,7 +514,7 @@ function SearchModal({
                     )}
                   </Text>
                 ) : account ? (
-                  <SpinnerWrapper src={Circle} alt="loader" />
+                  <SpinnerWrapper src={Circle} alt="loader"/>
                 ) : (
                   '-'
                 )}
@@ -555,7 +569,7 @@ function SearchModal({
                   Import A Token
                 </Text>
               </RowFixed>
-              <CloseIcon onClick={onDismiss} />
+              <CloseIcon onClick={onDismiss}/>
             </RowBetween>
             <TYPE.body style={{ marginTop: '10px' }}>
               To import a custom token, paste token address in the search bar.
@@ -575,7 +589,7 @@ function SearchModal({
               <Text fontWeight={500} fontSize={16}>
                 {filterType === 'tokens' ? 'Select A Token' : 'Select A Pool'}
               </Text>
-              <CloseIcon onClick={onDismiss} />
+              <CloseIcon onClick={onDismiss}/>
             </RowBetween>
             <Input
               type={'text'}
@@ -590,7 +604,7 @@ function SearchModal({
                   <Text fontWeight={500} fontSize={16}>
                     Common Bases
                   </Text>
-                  <QuestionHelper text="These tokens are commonly used in pairs." />
+                  <QuestionHelper text="These tokens are commonly used in pairs."/>
                 </AutoRow>
                 <AutoRow gap="10px">
                   {COMMON_BASES[chainId]?.map(token => {
@@ -601,7 +615,7 @@ function SearchModal({
                         disable={hiddenToken === token.address}
                         key={token.address}
                       >
-                        <TokenLogo address={token.address} />
+                        <TokenLogo address={token.address}/>
                         <Text fontWeight={500} fontSize={16}>
                           {token.symbol}
                         </Text>
@@ -623,16 +637,16 @@ function SearchModal({
             </RowBetween>
           </PaddedColumn>
         )}
-        {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />}
+        {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }}/>}
         {!showTokenImport && <TokenList>{filterType === 'tokens' ? renderTokenList() : renderPairsList()}</TokenList>}
-        {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />}
+        {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }}/>}
         {!showTokenImport && (
           <Card>
             <AutoRow justify={'center'}>
               <div>
                 {filterType !== 'tokens' && (
                   <Text fontWeight={500}>
-                    {!isMobile && "Don't see a pool? "}
+                    {!isMobile && 'Don\'t see a pool? '}
                     <StyledLink
                       onClick={() => {
                         history.push('/find')
@@ -644,7 +658,7 @@ function SearchModal({
                 )}
                 {filterType === 'tokens' && (
                   <Text fontWeight={500} color={theme.text2} fontSize={14}>
-                    {!isMobile && "Don't see a token? "}
+                    {!isMobile && 'Don\'t see a token? '}
 
                     <StyledLink
                       onClick={() => {
