@@ -56,7 +56,10 @@
     "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.7",
     "@types/styled-components": "^4.2.0",
+    "cypress": "^4.5.0",
     "prettier": "^1.17.0",
+    "serve": "^11.3.0",
+    "start-server-and-test": "^1.11.0",
     "typescript": "^3.8.3"
   },
   "scripts": {
@@ -71,7 +74,10 @@
     "fix:all": "yarn fix:lint && yarn fix:format",
     "check:lint": "yarn lint:base",
     "check:format": "yarn format:base --check",
-    "check:all": "yarn check:lint && yarn check:format"
+    "check:all": "yarn check:lint && yarn check:format",
+    "cy:run": "cypress run",
+    "serve:build": "serve -s build -l 3000",
+    "integration-test": "yarn build && start-server-and-test 'yarn run serve:build' http://localhost:3000 cy:run"
   },
   "eslintConfig": {
     "extends": "react-app"

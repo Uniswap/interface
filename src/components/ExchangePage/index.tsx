@@ -940,7 +940,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
   }
 
   return (
-    <Wrapper>
+    <Wrapper id="exchangePage">
       <ConfirmationModal
         isOpen={showConfirm}
         title={sendingWithSwap ? 'Confirm swap and send' : sending ? 'Confirm Send' : 'Confirm Swap'}
@@ -985,6 +985,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
               showSendWithSwap={true}
               advanced={advanced}
               label={''}
+              inputId="swapInputField"
               otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
             />
           </InputGroup>
@@ -1008,6 +1009,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
               }}
               onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
               otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
+              inputId="swapInputField"
             />
             {sendingWithSwap ? (
               <ColumnCenter>
@@ -1048,6 +1050,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
               pair={pair}
               advanced={advanced}
               otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
+              inputId="swapOutputField"
             />
             {sendingWithSwap && (
               <RowBetween padding="0 12px">

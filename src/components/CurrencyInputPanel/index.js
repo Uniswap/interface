@@ -151,7 +151,8 @@ export default function CurrencyInputPanel({
   hideInput = false,
   showSendWithSwap = false,
   otherSelectedTokenAddress = null,
-  advanced = false
+  advanced = false,
+  inputId,
 }) {
   const { t } = useTranslation()
 
@@ -195,6 +196,7 @@ export default function CurrencyInputPanel({
             <>
               <NumericalInput
                 value={value}
+                id={inputId}
                 onUserInput={val => {
                   onUserInput(field, val)
                 }}
