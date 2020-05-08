@@ -136,12 +136,12 @@ const StyledBalanceMax = styled.button`
 interface CurrencyInputPanelProps {
   value: string
   field: number
-  onUserInput: (field: number, input: string) => void
+  onUserInput: (field: number, val: string) => void
   onMax: () => void
   atMax: boolean
   label?: string,
-  urlAddedTokens: Token[]
-  onTokenSelection: (token: Token) => void | null
+  urlAddedTokens?: Token[]
+  onTokenSelection?: (tokenAddress: string) => void
   token?: Token | null,
   disableTokenSelect?: boolean,
   hideBalance?: boolean,

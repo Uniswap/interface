@@ -976,14 +976,13 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             <CurrencyInputPanel
               field={Field.INPUT}
               value={formattedAmounts[Field.INPUT]}
-              onUserInput={val => onUserInput(Field.INPUT, val)}
+              onUserInput={(field, val) => onUserInput(Field.INPUT, val)}
               onMax={() => {
                 maxAmountInput && onMaxInput(maxAmountInput.toExact())
               }}
               atMax={atMaxAmountInput}
               token={tokens[Field.INPUT]}
               onTokenSelection={address => _onTokenSelect(address)}
-              error={inputError}
               pair={pair}
               hideBalance={true}
               hideInput={true}
@@ -1005,7 +1004,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               value={formattedAmounts[Field.INPUT]}
               atMax={atMaxAmountInput}
               token={tokens[Field.INPUT]}
-              error={inputError}
               pair={pair}
               advanced={advanced}
               onUserInput={onUserInput}
@@ -1051,7 +1049,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               atMax={atMaxAmountOutput}
               token={tokens[Field.OUTPUT]}
               onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
-              error={outputError}
               pair={pair}
               advanced={advanced}
               otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
