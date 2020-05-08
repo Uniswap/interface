@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { withRouter } from 'react-router-dom'
 
 import Row from '../Row'
 import Menu from '../Menu'

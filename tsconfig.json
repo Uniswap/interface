@@ -20,7 +20,8 @@
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
     "types": [
-      "react-spring"
+      "react-spring",
+      "jest"
     ]
   },
   "exclude": [
