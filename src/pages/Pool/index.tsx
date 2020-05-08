@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { JSBI } from '@uniswap/sdk'
+import { JSBI, Token } from '@uniswap/sdk'
 import { withRouter } from 'react-router-dom'
 
 import Question from '../../components/Question'
@@ -17,6 +17,7 @@ import { useAllPairs } from '../../contexts/Pairs'
 import { useWeb3React } from '@web3-react/core'
 import { useAllTokens } from '../../contexts/Tokens'
 import { useAllBalances, useAccountLPBalances } from '../../contexts/Balances'
+import { useReserves } from '../../data/Reserves'
 
 const Positions = styled.div`
   position: relative;
@@ -28,6 +29,11 @@ const FixedBottom = styled.div`
   bottom: -80px;
   width: 100%;
 `
+
+function PositionCardWrapper({ token0, token1 }: { token0: Token; token1: Token }) {
+  const pair = useReserves(token0, token1)
+  return <PositionCard pair={pair} />
+}
 
 function Supply({ history }) {
   const { account } = useWeb3React()
@@ -52,9 +58,8 @@ function Supply({ history }) {
     })
     .map((pairAddress, i) => {
       return (
-        <PositionCard
+        <PositionCardWrapper
           key={i}
-          pairAddress={pairAddress}
           token0={allTokens[allPairs[pairAddress].token0]}
           token1={allTokens[allPairs[pairAddress].token1]}
         />

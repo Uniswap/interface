@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { withRouter } from 'react-router-dom'
-import { Percent, Pair } from '@uniswap/sdk'
+import { Percent } from '@uniswap/sdk'
 
 import { useWeb3React } from '@web3-react/core'
 import { useAllBalances } from '../../contexts/Balances'
-import { useTotalSupply } from '../../contexts/Pairs'
+import { useTotalSupply } from '../../data/TotalSupply'
 
 import Card from '../Card'
 import TokenLogo from '../TokenLogo'
@@ -30,19 +30,17 @@ const HoverCard = styled(Card)`
   }
 `
 
-function PositionCard({ pairAddress, token0, token1, history, minimal = false, ...rest }) {
+function PositionCard({ pair, history, minimal = false, ...rest }) {
   const { account } = useWeb3React()
   const allBalances = useAllBalances()
 
+  const token0 = pair?.token0
+  const token1 = pair?.token1
+
   const [showMore, setShowMore] = useState(false)
 
-  const tokenAmount0 = allBalances?.[pairAddress]?.[token0?.address]
-  const tokenAmount1 = allBalances?.[pairAddress]?.[token1?.address]
-
-  const pair = tokenAmount0 && tokenAmount1 && new Pair(tokenAmount0, tokenAmount1)
-
-  const userPoolBalance = allBalances?.[account]?.[pairAddress]
-  const totalPoolTokens = useTotalSupply(token0, token1)
+  const userPoolBalance = allBalances?.[account]?.[pair?.liquidityToken?.address]
+  const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
 
   const poolTokenPercentage =
     !!userPoolBalance && !!totalPoolTokens ? new Percent(userPoolBalance.raw, totalPoolTokens.raw) : undefined

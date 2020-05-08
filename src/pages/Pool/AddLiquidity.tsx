@@ -4,7 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { parseUnits, parseEther } from '@ethersproject/units'
 import { MaxUint256, Zero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { WETH, TokenAmount, JSBI, Percent, Route, Token, Pair, Price } from '@uniswap/sdk'
+import { WETH, TokenAmount, JSBI, Percent, Route, Token, Price } from '@uniswap/sdk'
 
 import TokenLogo from '../../components/TokenLogo'
 import DoubleLogo from '../../components/DoubleLogo'
@@ -23,13 +23,14 @@ import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Ro
 import { useToken } from '../../contexts/Tokens'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useTokenAllowance } from '../../data/Allowances'
-import { usePair, useTotalSupply } from '../../contexts/Pairs'
+import { useTotalSupply } from '../../data/TotalSupply'
 import { useWeb3React, useTokenContract } from '../../hooks'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 
 import { ROUTER_ADDRESS } from '../../constants'
 import { getRouterContract, calculateGasMargin, isWETH } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
+import { useReserves } from '../../data/Reserves'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = 50
@@ -186,12 +187,12 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   const tokenContractInput: Contract = useTokenContract(tokens[Field.INPUT]?.address)
   const tokenContractOutput: Contract = useTokenContract(tokens[Field.OUTPUT]?.address)
 
-  // exhchange data
-  const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
+  // exchange data
+  const pair = useReserves(tokens[Field.INPUT], tokens[Field.OUTPUT])
   const route: Route = pair ? new Route([pair], tokens[independentField]) : undefined
-  const totalSupply: TokenAmount = useTotalSupply(tokens[Field.INPUT], tokens[Field.OUTPUT])
+  const totalSupply: TokenAmount = useTotalSupply(pair?.liquidityToken)
   const noLiquidity = // used to detect new exchange
-    pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
+    !!pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
 
   // get user-pecific and token-specific lookup data
   const userBalances: { [field: number]: TokenAmount } = {
@@ -495,7 +496,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
         })
       )
       .catch((e: Error) => {
-        console.log(e)
+        console.error(e)
         setPendingConfirmation(true)
         setAttemptingTxn(false)
         setShowConfirm(false)
@@ -800,12 +801,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
       {!noLiquidity && (
         <FixedBottom>
           <AutoColumn>
-            <PositionCard
-              pairAddress={pair?.liquidityToken?.address}
-              token0={tokens[Field.INPUT]}
-              token1={tokens[Field.OUTPUT]}
-              minimal={true}
-            />
+            <PositionCard pair={pair} minimal={true} />
           </AutoColumn>
         </FixedBottom>
       )}

@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect, useState } from 'react'
+import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
 import { useAddressBalance } from './Balances'
-import { useWeb3React, usePairContract } from '../hooks'
+import { useWeb3React } from '../hooks'
 import { ALL_TOKENS } from './Tokens'
-import { ChainId, WETH, Token, TokenAmount, Pair, JSBI } from '@uniswap/sdk'
+import { ChainId, WETH, Token, Pair } from '@uniswap/sdk'
 
 const ADDRESSES_KEY = 'ADDRESSES_KEY'
 const ENTITIES_KEY = 'ENTITIES_KEY'
@@ -177,43 +177,4 @@ export function useAllPairs() {
   return useMemo(() => {
     return allPairs || {}
   }, [allPairs])
-}
-
-export function useTotalSupply(tokenA?: Token, tokenB?: Token) {
-  const { library } = useWeb3React()
-
-  const pair = usePair(tokenA, tokenB)
-
-  const [totalPoolTokens, setTotalPoolTokens] = useState<TokenAmount>()
-
-  const pairContract = usePairContract(pair?.liquidityToken.address)
-
-  const fetchPoolTokens = useCallback(async () => {
-    !!pairContract &&
-      pairContract
-        .deployed()
-        .then(() => {
-          if (pairContract) {
-            pairContract.totalSupply().then(totalSupply => {
-              if (totalSupply !== undefined && pair?.liquidityToken?.decimals) {
-                const supplyFormatted = JSBI.BigInt(totalSupply)
-                const tokenSupplyFormatted = new TokenAmount(pair?.liquidityToken, supplyFormatted)
-                setTotalPoolTokens(tokenSupplyFormatted)
-              }
-            })
-          }
-        })
-        .catch(() => {})
-  }, [pairContract, pair])
-
-  // on the block make sure we're updated
-  useEffect(() => {
-    fetchPoolTokens()
-    library.on('block', fetchPoolTokens)
-    return () => {
-      library.removeListener('block', fetchPoolTokens)
-    }
-  }, [fetchPoolTokens, library])
-
-  return totalPoolTokens
 }

@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { WETH, Token, TokenAmount, Trade } from '@uniswap/sdk'
 import { useWeb3React } from './index'
-import { usePair } from '../contexts/Pairs'
 import { isWETH } from '../utils'
+import { useReserves } from '../data/Reserves'
 
 /**
  * Returns the best trade for the exact amount of tokens in to the given token out
@@ -11,11 +11,11 @@ export function useTradeExactIn(amountIn?: TokenAmount, tokenOut?: Token): Trade
   const { chainId } = useWeb3React()
 
   // check for direct pair between tokens
-  const pairBetween = usePair(amountIn?.token, tokenOut)
+  const pairBetween = useReserves(amountIn?.token, tokenOut)
 
   // get token<->WETH pairs
-  const aToETH = usePair(amountIn && !isWETH(amountIn.token) ? amountIn.token : null, WETH[chainId])
-  const bToETH = usePair(tokenOut && !isWETH(tokenOut) ? tokenOut : null, WETH[chainId])
+  const aToETH = useReserves(amountIn && !isWETH(amountIn.token) ? amountIn.token : null, WETH[chainId])
+  const bToETH = useReserves(tokenOut && !isWETH(tokenOut) ? tokenOut : null, WETH[chainId])
 
   return useMemo(() => {
     const allPairs = [pairBetween, aToETH, bToETH].filter(p => !!p)
@@ -34,11 +34,11 @@ export function useTradeExactOut(tokenIn?: Token, amountOut?: TokenAmount): Trad
   const { chainId } = useWeb3React()
 
   // check for direct pair between tokens
-  const pairBetween = usePair(amountOut?.token, tokenIn)
+  const pairBetween = useReserves(amountOut?.token, tokenIn)
 
   // get token<->WETH pairs
-  const aToETH = usePair(amountOut && !isWETH(amountOut.token) ? amountOut.token : null, WETH[chainId])
-  const bToETH = usePair(tokenIn && !isWETH(tokenIn) ? tokenIn : null, WETH[chainId])
+  const aToETH = useReserves(amountOut && !isWETH(amountOut.token) ? amountOut.token : null, WETH[chainId])
+  const bToETH = useReserves(tokenIn && !isWETH(tokenIn) ? tokenIn : null, WETH[chainId])
 
   return useMemo(() => {
     const allPairs = [pairBetween, aToETH, bToETH].filter(p => !!p)

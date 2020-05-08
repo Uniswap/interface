@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { parseUnits } from '@ethersproject/units'
 import { Zero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { TokenAmount, JSBI, Route, WETH, Percent, Token, Pair } from '@uniswap/sdk'
+import { TokenAmount, JSBI, Route, WETH, Percent, Token } from '@uniswap/sdk'
 
 import Slider from '../../components/Slider'
 import TokenLogo from '../../components/TokenLogo'
@@ -25,11 +25,12 @@ import { useWeb3React } from '../../hooks'
 import { useAllBalances } from '../../contexts/Balances'
 import { usePairContract } from '../../hooks'
 import { useTransactionAdder } from '../../contexts/Transactions'
-import { usePair, useTotalSupply } from '../../contexts/Pairs'
+import { useTotalSupply } from '../../data/TotalSupply'
 
 import { splitSignature } from '@ethersproject/bytes'
 import { ROUTER_ADDRESS } from '../../constants'
 import { getRouterContract, calculateGasMargin } from '../../utils'
+import { useReserves } from '../../data/Reserves'
 
 // denominated in seconds
 const DEADLINE_FROM_NOW = 60 * 20
@@ -164,11 +165,11 @@ export default function RemoveLiquidity({ token0, token1 }) {
     [Field.TOKEN1]: outputToken
   }
 
-  const pair: Pair = usePair(inputToken, outputToken)
+  const pair = useReserves(inputToken, outputToken)
   const pairContract: Contract = usePairContract(pair?.liquidityToken.address)
 
   // pool token data
-  const totalPoolTokens: TokenAmount = useTotalSupply(tokens[Field.TOKEN0], tokens[Field.TOKEN1])
+  const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
 
   const allBalances: TokenAmount[] = useAllBalances()
   const userLiquidity: TokenAmount = allBalances?.[account]?.[pair?.liquidityToken?.address]
@@ -179,15 +180,15 @@ export default function RemoveLiquidity({ token0, token1 }) {
 
   const TokensDeposited: { [field: number]: TokenAmount } = {
     [Field.TOKEN0]:
-    pair &&
-    totalPoolTokens &&
-    userLiquidity &&
-    pair.getLiquidityValue(tokens[Field.TOKEN0], totalPoolTokens, userLiquidity, false),
+      pair &&
+      totalPoolTokens &&
+      userLiquidity &&
+      pair.getLiquidityValue(tokens[Field.TOKEN0], totalPoolTokens, userLiquidity, false),
     [Field.TOKEN1]:
-    pair &&
-    totalPoolTokens &&
-    userLiquidity &&
-    pair.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, userLiquidity, false)
+      pair &&
+      totalPoolTokens &&
+      userLiquidity &&
+      pair.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, userLiquidity, false)
   }
 
   const route: Route = pair
@@ -482,18 +483,18 @@ export default function RemoveLiquidity({ token0, token1 }) {
           addTransaction(
             response,
             'Remove ' +
-            parsedAmounts[Field.TOKEN0]?.toSignificant(3) +
-            ' ' +
-            tokens[Field.TOKEN0]?.symbol +
-            ' and ' +
-            parsedAmounts[Field.TOKEN1]?.toSignificant(3) +
-            ' ' +
-            tokens[Field.TOKEN1]?.symbol
+              parsedAmounts[Field.TOKEN0]?.toSignificant(3) +
+              ' ' +
+              tokens[Field.TOKEN0]?.symbol +
+              ' and ' +
+              parsedAmounts[Field.TOKEN1]?.toSignificant(3) +
+              ' ' +
+              tokens[Field.TOKEN1]?.symbol
           )
         })
       )
       .catch(e => {
-        console.log(e)
+        console.error(e)
         resetModalState()
         setShowConfirm(false)
       })
@@ -514,21 +515,21 @@ export default function RemoveLiquidity({ token0, token1 }) {
             {!!parsedAmounts[Field.TOKEN0] && parsedAmounts[Field.TOKEN0].toSignificant(6)}
           </Text>
           <RowFixed gap="4px">
-            <TokenLogo address={tokens[Field.TOKEN0]?.address} size={'24px'}/>
+            <TokenLogo address={tokens[Field.TOKEN0]?.address} size={'24px'} />
             <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
               {tokens[Field.TOKEN0]?.symbol || ''}
             </Text>
           </RowFixed>
         </RowBetween>
         <RowFixed>
-          <Plus size="16" color={'#888D9B'}/>
+          <Plus size="16" color={'#888D9B'} />
         </RowFixed>
         <RowBetween align="flex-end">
           <Text fontSize={24} fontWeight={600}>
             {!!parsedAmounts[Field.TOKEN1] && parsedAmounts[Field.TOKEN1].toSignificant(6)}
           </Text>
           <RowFixed gap="4px">
-            <TokenLogo address={tokens[Field.TOKEN1]?.address} size={'24px'}/>
+            <TokenLogo address={tokens[Field.TOKEN1]?.address} size={'24px'} />
             <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
               {tokens[Field.TOKEN1]?.symbol || ''}
             </Text>
@@ -637,7 +638,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
               </Text>
             </Row>
             {!showAdvanced && (
-              <Slider value={parseFloat(derivedPerecent)} onChange={handleSliderChange} override={override}/>
+              <Slider value={parseFloat(derivedPerecent)} onChange={handleSliderChange} override={override} />
             )}
             {!showAdvanced && (
               <RowBetween>
@@ -660,7 +661,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
         {!showAdvanced && (
           <>
             <ColumnCenter>
-              <ArrowDown size="16" color="#888D9B"/>
+              <ArrowDown size="16" color="#888D9B" />
             </ColumnCenter>{' '}
             <LightCard>
               <AutoColumn gap="10px">
@@ -669,7 +670,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
                     {formattedAmounts[Field.TOKEN0] ? formattedAmounts[Field.TOKEN0] : '-'}
                   </Text>
                   <RowFixed>
-                    <TokenLogo address={tokens[Field.TOKEN0]?.address || ''} style={{ marginRight: '12px' }}/>
+                    <TokenLogo address={tokens[Field.TOKEN0]?.address || ''} style={{ marginRight: '12px' }} />
                     <Text fontSize={24} fontWeight={500}>
                       {tokens[Field.TOKEN0]?.symbol}
                     </Text>
@@ -680,7 +681,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
                     {formattedAmounts[Field.TOKEN1] ? formattedAmounts[Field.TOKEN1] : '-'}
                   </Text>
                   <RowFixed>
-                    <TokenLogo address={tokens[Field.TOKEN1]?.address || ''} style={{ marginRight: '12px' }}/>
+                    <TokenLogo address={tokens[Field.TOKEN1]?.address || ''} style={{ marginRight: '12px' }} />
                     <Text fontSize={24} fontWeight={500}>
                       {tokens[Field.TOKEN1]?.symbol}
                     </Text>
@@ -707,7 +708,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
               inputId="liquidityAmount"
             />
             <ColumnCenter>
-              <ArrowDown size="16" color="#888D9B"/>
+              <ArrowDown size="16" color="#888D9B" />
             </ColumnCenter>
             <CurrencyInputPanel
               field={Field.TOKEN0}
@@ -722,7 +723,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
               inputId="removeLiquidityToken0"
             />
             <ColumnCenter>
-              <Plus size="16" color="#888D9B"/>
+              <Plus size="16" color="#888D9B" />
             </ColumnCenter>
             <CurrencyInputPanel
               field={Field.TOKEN1}
@@ -761,21 +762,16 @@ export default function RemoveLiquidity({ token0, token1 }) {
               {inputError
                 ? inputError
                 : outputError
-                  ? outputError
-                  : poolTokenError
-                    ? poolTokenError
-                    : generalError
-                      ? generalError
-                      : 'Remove'}
+                ? outputError
+                : poolTokenError
+                ? poolTokenError
+                : generalError
+                ? generalError
+                : 'Remove'}
             </Text>
           </ButtonPrimary>
           <FixedBottom>
-            <PositionCard
-              pairAddress={pair?.liquidityToken.address}
-              token0={pair?.token0}
-              token1={pair?.token1}
-              minimal={true}
-            />
+            <PositionCard pair={pair} minimal={true} />
           </FixedBottom>
         </div>
       </AutoColumn>
