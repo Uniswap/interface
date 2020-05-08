@@ -69,7 +69,7 @@ function parseUrlTokenAmount(paramName: string): string {
   return value
 }
 
-interface QueryParams {
+export interface QueryParams {
   readonly inputTokenAddress: string
   readonly outputTokenAddress: string
   readonly inputTokenAmount: string

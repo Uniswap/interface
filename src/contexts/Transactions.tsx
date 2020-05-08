@@ -16,7 +16,11 @@ const ADD = 'ADD'
 const CHECK = 'CHECK'
 const FINALIZE = 'FINALIZE'
 
-const TransactionsContext = createContext()
+interface TransactionState {
+
+}
+
+const TransactionsContext = createContext<[TransactionState, { [updater: string]: (...args: any[]) => void }]>([{}, {}])
 
 export function useTransactionsContext() {
   return useContext(TransactionsContext)
@@ -134,10 +138,12 @@ export function Updater() {
                   finalize(chainId, hash, receipt)
                   // add success or failure popup
                   if (receipt.status === 1) {
-                    addPopup(<TxnPopup hash={hash} success={true} summary={allTransactions[hash]?.response?.summary} />)
+                    addPopup(<TxnPopup popKey={1} hash={hash} success={true}
+                                       summary={allTransactions[hash]?.response?.summary}/>)
                   } else {
                     addPopup(
-                      <TxnPopup hash={hash} success={false} summary={allTransactions[hash]?.response?.summary} />
+                      <TxnPopup popKey={2} hash={hash} success={false}
+                                summary={allTransactions[hash]?.response?.summary}/>
                     )
                   }
                 }
