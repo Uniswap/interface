@@ -8,7 +8,7 @@ import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { ButtonRadio } from '../Button'
 import { useTranslation } from 'react-i18next'
-import Row, { RowBetween, RowFixed } from '../../components/Row'
+import Row, { RowBetween, RowFixed } from '../Row'
 
 const InputWrapper = styled(RowBetween)`
   width: 200px;
@@ -27,12 +27,24 @@ const SLIPPAGE_INDEX = {
   4: 4
 }
 
-export default function AdvancedSettings({ setIsOpen, setDeadline, allowedSlippage, setAllowedSlippage }) {
+interface AdvancedSettingsProps {
+  setIsOpen: (boolean) => void
+  setDeadline: (number) => void
+  allowedSlippage: number
+  setAllowedSlippage: (number) => void
+}
+
+export default function AdvancedSettings({
+  setIsOpen,
+  setDeadline,
+  allowedSlippage,
+  setAllowedSlippage
+}: AdvancedSettingsProps) {
   // text translation
   const { t } = useTranslation()
 
   const [deadlineInput, setDeadlineInput] = useState(20)
-  const [slippageInput, setSlippageInput] = useState()
+  const [slippageInput, setSlippageInput] = useState<string>('')
   const [activeIndex, setActiveIndex] = useState(SLIPPAGE_INDEX[2])
 
   const [slippageInputError, setSlippageInputError] = useState(null) // error
@@ -71,7 +83,7 @@ export default function AdvancedSettings({ setIsOpen, setDeadline, allowedSlippa
       setActiveIndex(3)
     } else {
       setActiveIndex(4)
-      setSlippageInput(allowedSlippage / 100)
+      setSlippageInput('' + allowedSlippage / 100)
       parseCustomInput(allowedSlippage)
     }
   }, [allowedSlippage, parseCustomInput])

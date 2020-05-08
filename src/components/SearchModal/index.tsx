@@ -2,9 +2,9 @@ import React, { useState, useRef, useMemo, useEffect, useContext } from 'react'
 import '@reach/tooltip/styles.css'
 import styled, { ThemeContext } from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
-import { JSBI, WETH } from '@uniswap/sdk'
+import { JSBI, Token, WETH } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
-import { withRouter } from 'react-router-dom'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { COMMON_BASES } from '../../constants'
 import { Link as StyledLink } from '../../theme/components'
 
@@ -140,6 +140,19 @@ const FILTERS = {
   BALANCES: 'BALANCES'
 }
 
+interface SearchModalProps extends RouteComponentProps<{}> {
+  isOpen?: boolean
+  onDismiss?: () => void
+  filterType?: 'tokens'
+  hiddenToken?: string
+  showSendWithSwap?: boolean
+  onTokenSelect?: (address: string) => void
+  urlAddedTokens?: Token[]
+  otherSelectedTokenAddress?: string
+  otherSelectedText?: string
+  showCommonBases?: boolean
+}
+
 function SearchModal({
   history,
   isOpen,
@@ -152,7 +165,7 @@ function SearchModal({
   otherSelectedTokenAddress,
   otherSelectedText,
   showCommonBases = false
-}) {
+}: SearchModalProps) {
   const { t } = useTranslation()
   const { account, chainId } = useWeb3React()
   const theme = useContext(ThemeContext)
@@ -168,7 +181,7 @@ function SearchModal({
 
   // if the current input is an address, and we don't have the token in context, try to fetch it
   const token = useToken(searchQuery)
-  const [temporaryToken, setTemporaryToken] = useState()
+  const [temporaryToken, setTemporaryToken] = useState<Token | null>()
   useEffect(() => {
     const address = isAddress(searchQuery)
     if (address && !token) {
@@ -180,7 +193,7 @@ function SearchModal({
       })
       return () => {
         stale = true
-        setTemporaryToken()
+        setTemporaryToken(null)
       }
     }
   }, [searchQuery, token, fetchTokenByAddress])
@@ -198,7 +211,7 @@ function SearchModal({
 
   const tokenList = useMemo(() => {
     return Object.keys(allTokens)
-      .sort((a, b) => {
+      .sort((a, b): number => {
         if (allTokens[a].symbol && allTokens[b].symbol) {
           const aSymbol = allTokens[a].symbol.toLowerCase()
           const bSymbol = allTokens[b].symbol.toLowerCase()
@@ -211,13 +224,13 @@ function SearchModal({
           const balanceB = allBalances?.[account]?.[b]
 
           if (balanceA && !balanceB) {
-            return sortDirection
+            return sortDirection ? -1 : 1
           }
           if (!balanceA && balanceB) {
-            return sortDirection * -1
+            return sortDirection ? 1 : -1
           }
           if (balanceA && balanceB) {
-            return sortDirection * parseFloat(balanceA.toExact()) > parseFloat(balanceB.toExact()) ? -1 : 1
+            return sortDirection && parseFloat(balanceA.toExact()) > parseFloat(balanceB.toExact()) ? -1 : 1
           }
           return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
         } else {
@@ -274,6 +287,7 @@ function SearchModal({
 
   // manage focus on modal show
   const inputRef = useRef()
+
   function onInput(event) {
     const input = event.target.value
     const checksummedInput = isAddress(input)
@@ -289,19 +303,19 @@ function SearchModal({
   const escapeStringRegexp = string => string
 
   const sortedPairList = useMemo(() => {
-    return Object.keys(allPairs).sort((a, b) => {
+    return Object.keys(allPairs).sort((a, b): number => {
       // sort by balance
       const balanceA = allBalances?.[account]?.[a]
       const balanceB = allBalances?.[account]?.[b]
 
       if (balanceA && !balanceB) {
-        return sortDirection
+        return sortDirection ? -1 : 1
       }
       if (!balanceA && balanceB) {
-        return sortDirection * -1
+        return sortDirection ? 1 : -1
       }
       if (balanceA && balanceB) {
-        const order = sortDirection * (parseFloat(balanceA.toExact()) > parseFloat(balanceB.toExact()) ? -1 : 1)
+        const order = sortDirection && (parseFloat(balanceA.toExact()) > parseFloat(balanceB.toExact()) ? -1 : 1)
         return order ? 1 : -1
       } else {
         return 0
@@ -485,10 +499,7 @@ function SearchModal({
                 {balance ? (
                   <Text>
                     {zeroBalance && showSendWithSwap ? (
-                      <ColumnCenter
-                        justify="center"
-                        style={{ backgroundColor: theme.bg2, padding: '8px', borderRadius: '12px' }}
-                      >
+                      <ColumnCenter style={{ backgroundColor: theme.bg2, padding: '8px', borderRadius: '12px' }}>
                         <Text textAlign="center" fontWeight={500} color={theme.blue1}>
                           Send With Swap
                         </Text>

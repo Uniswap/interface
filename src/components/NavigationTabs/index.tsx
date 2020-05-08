@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
-import { withRouter, NavLink, Link as HistoryLink } from 'react-router-dom'
+import { withRouter, NavLink, Link as HistoryLink, RouteComponentProps } from 'react-router-dom'
 
 import { Hover } from '../../theme'
 import { ArrowLeft } from 'react-feather'
@@ -76,7 +76,7 @@ const ArrowLink = styled(ArrowLeft)`
   color: ${({ theme }) => theme.text1};
 `
 
-function NavigationTabs({ location: { pathname }, history }) {
+function NavigationTabs({ location: { pathname }, history }: RouteComponentProps<{}>) {
   const { t } = useTranslation()
 
   const navigate = useCallback(
@@ -142,7 +142,7 @@ function NavigationTabs({ location: { pathname }, history }) {
       ) : (
         <Tabs>
           {tabOrder.map(({ path, textKey, regex }) => (
-            <StyledNavLink key={path} to={path} isActive={(_, { pathname }) => pathname.match(regex)}>
+            <StyledNavLink key={path} to={path} isActive={(_, { pathname }) => !!pathname.match(regex)}>
               {t(textKey)}
             </StyledNavLink>
           ))}

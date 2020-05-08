@@ -95,6 +95,15 @@ const HiddenCloseButton = styled.button`
   border: none;
 `
 
+interface ModalProps {
+  isOpen: boolean
+  onDismiss: () => void
+  minHeight?: number | false
+  maxHeight?: number
+  initialFocusRef?: React.Ref<any>
+  children?: React.ReactNode
+}
+
 export default function Modal({
   isOpen,
   onDismiss,
@@ -102,7 +111,7 @@ export default function Modal({
   maxHeight = 50,
   initialFocusRef = null,
   children
-}) {
+}: ModalProps) {
   const transitions = useTransition(isOpen, null, {
     config: { duration: 200 },
     from: { opacity: 0 },
@@ -131,68 +140,78 @@ export default function Modal({
   })
 
   if (isMobile) {
-    return transitions.map(
-      ({ item, key, props }) =>
-        item && (
-          <StyledDialogOverlay
-            key={key}
-            style={props}
-            onDismiss={onDismiss}
-            initialFocusRef={initialFocusRef}
-            mobile={isMobile}
-          >
-            <Spring // animation for entrance and exit
-              from={{
-                transform: isOpen ? 'translateY(200px)' : 'translateY(100px)'
-              }}
-              to={{
-                transform: isOpen ? 'translateY(0px)' : 'translateY(200px)'
-              }}
-            >
-              {props => (
-                <animated.div
-                  {...bind()}
-                  style={{ transform: xy.interpolate((x, y) => `translate3d(${0}px,${y > 0 ? y : 0}px,0)`) }}
+    return (
+      <>
+        {transitions.map(
+          ({ item, key, props }) =>
+            item && (
+              <StyledDialogOverlay
+                key={key}
+                style={props}
+                onDismiss={onDismiss}
+                initialFocusRef={initialFocusRef}
+                mobile={isMobile}
+              >
+                <Spring // animation for entrance and exit
+                  from={{
+                    transform: isOpen ? 'translateY(200px)' : 'translateY(100px)'
+                  }}
+                  to={{
+                    transform: isOpen ? 'translateY(0px)' : 'translateY(200px)'
+                  }}
                 >
-                  <StyledDialogContent
-                    style={props}
-                    hidden={true}
-                    minHeight={minHeight}
-                    maxHeight={maxHeight}
-                    mobile={isMobile}
-                  >
-                    <HiddenCloseButton onClick={onDismiss} />
-                    {children}
-                  </StyledDialogContent>
-                </animated.div>
-              )}
-            </Spring>
-          </StyledDialogOverlay>
-        )
+                  {props => (
+                    <animated.div
+                      {...bind()}
+                      style={{
+                        transform: (xy as any).interpolate((x, y) => `translate3d(${0}px,${y > 0 ? y : 0}px,0)`)
+                      }}
+                    >
+                      <StyledDialogContent
+                        style={props}
+                        hidden={true}
+                        minHeight={minHeight}
+                        maxHeight={maxHeight}
+                        mobile={isMobile}
+                      >
+                        <HiddenCloseButton onClick={onDismiss} />
+                        {children}
+                      </StyledDialogContent>
+                    </animated.div>
+                  )}
+                </Spring>
+              </StyledDialogOverlay>
+            )
+        )}
+      </>
     )
   } else {
-    return transitions.map(
-      ({ item, key, props }) =>
-        item && (
-          <StyledDialogOverlay
-            key={key}
-            style={props}
-            onDismiss={onDismiss}
-            initialFocusRef={initialFocusRef}
-            mobile={isMobile}
-          >
-            <StyledDialogContent
-              hidden={true}
-              minHeight={minHeight}
-              maxHeight={maxHeight}
-              isOpen={isOpen}
-              mobile={isMobile}
-            >
-              <HiddenCloseButton onClick={onDismiss} />
-              {children}
-            </StyledDialogContent>
-          </StyledDialogOverlay>
-        )
+    return (
+      <>
+        {transitions.map(
+          ({ item, key, props }) =>
+            item && (
+              <StyledDialogOverlay
+                key={key}
+                style={props}
+                onDismiss={onDismiss}
+                initialFocusRef={initialFocusRef}
+                mobile={isMobile}
+              >
+                <StyledDialogContent
+                  hidden={true}
+                  minHeight={minHeight}
+                  maxHeight={maxHeight}
+                  isOpen={isOpen}
+                  mobile={isMobile}
+                >
+                  <HiddenCloseButton onClick={onDismiss} />
+                  {children}
+                </StyledDialogContent>
+              </StyledDialogOverlay>
+            )
+        )}
+      </>
     )
   }
 }

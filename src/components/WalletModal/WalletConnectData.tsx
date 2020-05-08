@@ -11,7 +11,12 @@ const QRCodeWrapper = styled.div`
   margin-bottom: 20px;
 `
 
-export default function WalletConnectData({ uri = '', size }) {
+interface WalletConnectDataProps {
+  uri?: string
+  size: number
+}
+
+export default function WalletConnectData({ uri = '', size }: WalletConnectDataProps) {
   const [isDark] = useDarkModeManager()
   return (
     <QRCodeWrapper>

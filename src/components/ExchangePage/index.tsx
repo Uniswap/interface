@@ -10,7 +10,7 @@ import { Field, SwapAction, useSwapStateReducer } from './swap-store'
 import { Text } from 'rebass'
 import Card, { BlueCard, GreyCard, YellowCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { ROUTER_ADDRESS } from '../../constants'
 import { useTokenAllowance } from '../../data/Allowances'
 import { useUserAdvanced } from '../../contexts/Application'
@@ -175,11 +175,11 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
 
   const pair = useReserves(tokens[Field.INPUT], tokens[Field.OUTPUT])
 
-  let bestTradeExactIn = useTradeExactIn(
+  const bestTradeExactIn = useTradeExactIn(
     tradeType === TradeType.EXACT_INPUT ? parsedAmounts[independentField] : null,
     tokens[Field.OUTPUT]
   )
-  let bestTradeExactOut = useTradeExactOut(
+  const bestTradeExactOut = useTradeExactOut(
     tokens[Field.INPUT],
     tradeType === TradeType.EXACT_OUTPUT ? parsedAmounts[independentField] : null
   )
@@ -354,6 +354,17 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
         ? parsedAmounts[Field.OUTPUT]
         : calculateSlippageAmount(parsedAmounts[Field.OUTPUT])?.[0] &&
           new TokenAmount(tokens[Field.INPUT], calculateSlippageAmount(parsedAmounts[Field.OUTPUT])?.[0])
+  }
+
+  // reset modal state when closed
+  function resetModal() {
+    // clear input if txn submitted
+    if (!pendingConfirmation) {
+      onUserInput(Field.INPUT, '')
+    }
+    setPendingConfirmation(true)
+    setAttemptingTxn(false)
+    setShowAdvanced(false)
   }
 
   // function for a pure send
@@ -652,17 +663,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_MEDIUM / 100
   const warningHigh: boolean =
     slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_HIGH / 100
-
-  // reset modal state when closed
-  function resetModal() {
-    // clear input if txn submitted
-    if (!pendingConfirmation) {
-      onUserInput(Field.INPUT, '')
-    }
-    setPendingConfirmation(true)
-    setAttemptingTxn(false)
-    setShowAdvanced(false)
-  }
 
   function modalHeader() {
     if (sending && !sendingWithSwap) {
@@ -1009,14 +1009,13 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             <CurrencyInputPanel
               field={Field.INPUT}
               value={formattedAmounts[Field.INPUT]}
-              onUserInput={val => onUserInput(Field.INPUT, val)}
+              onUserInput={(field, val) => onUserInput(Field.INPUT, val)}
               onMax={() => {
                 maxAmountInput && onMaxInput(maxAmountInput.toExact())
               }}
               atMax={atMaxAmountInput}
               token={tokens[Field.INPUT]}
               onTokenSelection={address => _onTokenSelect(address)}
-              error={inputError}
               pair={pair}
               hideBalance={true}
               hideInput={true}
@@ -1038,7 +1037,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               value={formattedAmounts[Field.INPUT]}
               atMax={atMaxAmountInput}
               token={tokens[Field.INPUT]}
-              error={inputError}
               pair={pair}
               advanced={advanced}
               onUserInput={onUserInput}
@@ -1084,7 +1082,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               atMax={atMaxAmountOutput}
               token={tokens[Field.OUTPUT]}
               onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
-              error={outputError}
               pair={pair}
               advanced={advanced}
               otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
@@ -1213,23 +1210,12 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             error={!!warningHigh}
           >
             <Text fontSize={20} fontWeight={500}>
-              {generalError
-                ? generalError
-                : inputError
-                ? inputError
-                : outputError
-                ? outputError
-                : recipientError
-                ? recipientError
-                : tradeError
-                ? tradeError
-                : warningHigh
-                ? sendingWithSwap
-                  ? 'Send Anyway'
-                  : 'Swap Anyway'
-                : sending
-                ? 'Send'
-                : 'Swap'}
+              {generalError ||
+                inputError ||
+                outputError ||
+                recipientError ||
+                tradeError ||
+                `${sending ? 'Send' : 'Swap'}${warningHigh ? ' Anyway' : ''}`}
             </Text>
           </ButtonError>
         )}

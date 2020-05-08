@@ -675,7 +675,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
     )
   }
 
-  const pendingText: string = `Supplying ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${
+  const pendingText = `Supplying ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${
     tokens[Field.INPUT]?.symbol
   } ${'and'} ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}`
 
@@ -724,7 +724,6 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           atMax={atMaxAmountInput}
           token={tokens[Field.INPUT]}
           onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
-          error={inputError}
           pair={pair}
           label="Input"
           inputId="addLiquidityInput"
@@ -742,7 +741,6 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           atMax={atMaxAmountOutput}
           token={tokens[Field.OUTPUT]}
           onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
-          error={outputError}
           pair={pair}
           inputId="addLiquidityOutput"
         />

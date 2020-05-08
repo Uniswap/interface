@@ -28,7 +28,7 @@ const SpinnerWrapper = styled(Spinner)`
   margin: 0 0.25rem 0 0.25rem;
 `
 
-const IconWrapper = styled.div`
+const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: center;

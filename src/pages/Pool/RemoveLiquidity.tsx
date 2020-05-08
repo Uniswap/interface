@@ -283,7 +283,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
     )
   }
 
-  const handleSliderChange = (event, newPercent) => {
+  const handleSliderChange = newPercent => {
     onUserInput(
       Field.LIQUIDITY,
       new TokenAmount(
@@ -426,6 +426,13 @@ export default function RemoveLiquidity({ token0, token1 }) {
     })
   }
 
+  function resetModalState() {
+    setSigned(false)
+    setSigInputs(null)
+    setAttemptedRemoval(false)
+    setPendingConfirmation(true)
+  }
+
   async function onRemove() {
     setAttemptedRemoval(true)
     const router = getRouterContract(chainId, library, account)
@@ -498,13 +505,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
         resetModalState()
         setShowConfirm(false)
       })
-  }
-
-  function resetModalState() {
-    setSigned(false)
-    setSigInputs(null)
-    setAttemptedRemoval(false)
-    setPendingConfirmation(true)
   }
 
   function modalHeader() {
@@ -597,7 +597,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
     )
   }
 
-  const pendingText: string = `Removing ${parsedAmounts[Field.TOKEN0]?.toSignificant(6)} ${
+  const pendingText = `Removing ${parsedAmounts[Field.TOKEN0]?.toSignificant(6)} ${
     tokens[Field.TOKEN0]?.symbol
   } and ${parsedAmounts[Field.TOKEN1]?.toSignificant(6)} ${tokens[Field.TOKEN1]?.symbol}`
 
@@ -700,7 +700,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
               onUserInput={onUserInput}
               onMax={onMax}
               atMax={atMaxAmount}
-              error={poolTokenError}
               disableTokenSelect
               token={pair?.liquidityToken}
               isExchange={true}
@@ -717,7 +716,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
               onMax={onMax}
               atMax={atMaxAmount}
               token={tokens[Field.TOKEN0]}
-              error={inputError}
               label={'Output'}
               disableTokenSelect
               inputId="removeLiquidityToken0"
@@ -732,7 +730,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
               onMax={onMax}
               atMax={atMaxAmount}
               token={tokens[Field.TOKEN1]}
-              error={outputError}
               label={'Output'}
               disableTokenSelect
               inputId="removeLiquidityToken1"
@@ -759,15 +756,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
             disabled={!isValid}
           >
             <Text fontSize={20} fontWeight={500}>
-              {inputError
-                ? inputError
-                : outputError
-                ? outputError
-                : poolTokenError
-                ? poolTokenError
-                : generalError
-                ? generalError
-                : 'Remove'}
+              {inputError || outputError || poolTokenError || generalError || 'Remove'}
             </Text>
           </ButtonPrimary>
           <FixedBottom>

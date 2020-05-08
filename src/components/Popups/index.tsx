@@ -16,7 +16,7 @@ const StyledClose = styled(X)`
   }
 `
 
-const MobilePopupWrapper = styled.div`
+const MobilePopupWrapper = styled.div<{ height: string | number }>`
   position: relative;
   max-width: 100%;
   height: ${({ height }) => height};

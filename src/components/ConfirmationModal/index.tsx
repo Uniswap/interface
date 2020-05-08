@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled from 'styled-components'
-import { withRouter } from 'react-router-dom'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
 
 import Modal from '../Modal'
 import Loader from '../Loader'
@@ -32,6 +32,18 @@ const ConfirmedIcon = styled(ColumnCenter)`
   padding: 60px 0;
 `
 
+interface ConfirmationModalProps extends RouteComponentProps<{}> {
+  isOpen: boolean
+  onDismiss: () => void
+  hash: string
+  topContent: () => React.ReactChild
+  bottomContent: () => React.ReactChild
+  attemptingTxn: boolean
+  pendingConfirmation: boolean
+  pendingText: string
+  title?: string
+}
+
 function ConfirmationModal({
   history,
   isOpen,
@@ -43,18 +55,18 @@ function ConfirmationModal({
   pendingConfirmation,
   pendingText,
   title = ''
-}) {
+}: ConfirmationModalProps) {
   const { chainId } = useWeb3React()
 
-  function WrappedOnDismissed(returnToPool = false) {
-    if (returnToPool && (history.location.pathname.match('/add') || history.location.pathname.match('/remove'))) {
+  const dismissAndReturn = useCallback(() => {
+    if (history.location.pathname.match('/add') || history.location.pathname.match('/remove')) {
       history.push('/pool')
     }
     onDismiss()
-  }
+  }, [onDismiss, history])
 
   return (
-    <Modal isOpen={isOpen} onDismiss={WrappedOnDismissed} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
       {!attemptingTxn ? (
         <Wrapper>
           <Section>
@@ -62,7 +74,7 @@ function ConfirmationModal({
               <Text fontWeight={500} fontSize={20}>
                 {title}
               </Text>
-              <CloseIcon onClick={WrappedOnDismissed} />
+              <CloseIcon onClick={onDismiss} />
             </RowBetween>
             {topContent()}
           </Section>
@@ -73,7 +85,7 @@ function ConfirmationModal({
           <Section>
             <RowBetween>
               <div />
-              <CloseIcon onClick={WrappedOnDismissed} />
+              <CloseIcon onClick={onDismiss} />
             </RowBetween>
             <ConfirmedIcon>
               {pendingConfirmation ? (
@@ -98,7 +110,7 @@ function ConfirmationModal({
                       View on Etherscan
                     </Text>
                   </Link>
-                  <ButtonPrimary onClick={() => WrappedOnDismissed(true)} style={{ margin: '20px 0 0 0' }}>
+                  <ButtonPrimary onClick={dismissAndReturn} style={{ margin: '20px 0 0 0' }}>
                     <Text fontWeight={500} fontSize={20}>
                       Close
                     </Text>

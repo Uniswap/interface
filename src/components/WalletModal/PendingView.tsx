@@ -28,7 +28,7 @@ const SpinnerWrapper = styled(Spinner)`
   }
 `
 
-const LoadingMessage = styled.div`
+const LoadingMessage = styled.div<{ error?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
   justify-content: flex-start;
@@ -71,7 +71,7 @@ const LoadingWrapper = styled.div`
 `
 
 export default function PendingView({ uri = '', size, connector, error = false, setPendingError, tryActivation }) {
-  const isMetamask = window.ethereum && window.ethereum.isMetaMask
+  const isMetamask = (window as any).ethereum && (window as any).ethereum.isMetaMask
 
   return (
     <PendingSection>

@@ -13,7 +13,7 @@ const StyledIdenticon = styled.div`
 `
 
 export default function Identicon() {
-  const ref = useRef()
+  const ref = useRef<HTMLDivElement>()
 
   const { account } = useWeb3React()
 

@@ -2,10 +2,9 @@ import styled, { keyframes } from 'styled-components'
 import { darken } from 'polished'
 import { X } from 'react-feather'
 
-export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColor: string }>(
-  ({ warning, theme }) => ({
-    backgroundColor: warning ? theme.red1 : theme.blue1
-  }))`
+export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColor: string }>(({ warning, theme }) => ({
+  backgroundColor: warning ? theme.red1 : theme.blue1
+}))`
   padding: 1rem 2rem 1rem 2rem;
   border-radius: 3rem;
   cursor: pointer;
@@ -33,10 +32,8 @@ export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColo
   }
 `
 
-export const CloseIcon = styled(X)`
-  :hover {
-    cursor: pointer;
-  }
+export const CloseIcon = styled(X)<{ onClick: () => void }>`
+  cursor: pointer;
 `
 
 export const Link = styled.a.attrs({

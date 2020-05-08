@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { JSBI, Token } from '@uniswap/sdk'
-import { withRouter } from 'react-router-dom'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
 
 import Question from '../../components/Question'
 import SearchModal from '../../components/SearchModal'
@@ -35,7 +35,7 @@ function PositionCardWrapper({ token0, token1 }: { token0: Token; token1: Token 
   return <PositionCard pair={pair} />
 }
 
-function Supply({ history }) {
+function Supply({ history }: RouteComponentProps) {
   const { account } = useWeb3React()
   const [showPoolSearch, setShowPoolSearch] = useState(false)
 
@@ -48,7 +48,7 @@ function Supply({ history }) {
   useAccountLPBalances(account)
 
   const filteredExchangeList = Object.keys(allPairs)
-    .filter((pairAddress, i) => {
+    .filter(pairAddress => {
       return (
         allBalances &&
         allBalances[account] &&

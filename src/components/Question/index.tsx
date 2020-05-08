@@ -2,8 +2,6 @@ import React, { useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { HelpCircle as Question } from 'react-feather'
 
-// import question from '../../assets/images/question.svg'
-
 const Wrapper = styled.div`
   position: relative;
 `
@@ -64,7 +62,7 @@ const Popup = styled.div`
   `}
 `
 
-export default function QuestionHelper({ text }) {
+export default function QuestionHelper({ text }: { text: string }) {
   const [showPopup, setPopup] = useState(false)
 
   return (

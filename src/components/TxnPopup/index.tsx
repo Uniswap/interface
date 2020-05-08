@@ -1,19 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState } from 'react'
+
+import { AlertCircle, CheckCircle } from 'react-feather'
+
+import styled from 'styled-components'
+import { usePopups } from '../../contexts/Application'
+
+import { useWeb3React } from '../../hooks'
+import useInterval from '../../hooks/useInterval'
+import { TYPE } from '../../theme'
 
 import { Link } from '../../theme/components'
-import { TYPE } from '../../theme'
+import { getEtherscanLink } from '../../utils'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
 
-import { useWeb3React } from '../../hooks'
-import { getEtherscanLink } from '../../utils'
-import { usePopups } from '../../contexts/Application'
-
-import { CheckCircle, AlertCircle } from 'react-feather'
-
-import styled from 'styled-components'
-
-const Fader = styled.div`
+const Fader = styled.div<{ count: number }>`
   position: absolute;
   bottom: 0px;
   left: 0px;
@@ -23,33 +24,11 @@ const Fader = styled.div`
   transition: width 100ms linear;
 `
 
-function useInterval(callback, delay) {
-  const savedCallback = useRef()
-
-  // Remember the latest callback.
-  useEffect(() => {
-    savedCallback.current = callback
-    return () => {}
-  }, [callback])
-
-  // Set up the interval.
-  useEffect(() => {
-    function tick() {
-      savedCallback.current()
-    }
-    if (delay !== null) {
-      let id = setInterval(tick, delay)
-      return () => clearInterval(id)
-    }
-    return () => {}
-  }, [delay])
-}
-
 const delay = 100
 
 export default function TxnPopup({ hash, success, summary, popKey }) {
   const { chainId } = useWeb3React()
-  let [count, setCount] = useState(1)
+  const [count, setCount] = useState(1)
 
   const [isRunning, setIsRunning] = useState(true)
   const [, , removePopup] = usePopups()

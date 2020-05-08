@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
-import { withRouter } from 'react-router-dom'
-import { Percent } from '@uniswap/sdk'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
+import { Percent, Pair, Token } from '@uniswap/sdk'
 
 import { useWeb3React } from '@web3-react/core'
 import { useAllBalances } from '../../contexts/Balances'
@@ -30,7 +30,13 @@ const HoverCard = styled(Card)`
   }
 `
 
-function PositionCard({ pair, history, minimal = false, ...rest }) {
+interface PositionCardProps extends RouteComponentProps<{}> {
+  pair: Pair
+  minimal?: boolean
+  border?: string
+}
+
+function PositionCard({ pair, history, border, minimal = false }: PositionCardProps) {
   const { account } = useWeb3React()
   const allBalances = useAllBalances()
 
@@ -65,7 +71,7 @@ function PositionCard({ pair, history, minimal = false, ...rest }) {
     return (
       <>
         {userPoolBalance && userPoolBalance.toFixed(6) > 0 && (
-          <GreyCard {...rest}>
+          <GreyCard border={border}>
             <AutoColumn gap="12px">
               <FixedHeightRow>
                 <RowFixed>
@@ -126,7 +132,7 @@ function PositionCard({ pair, history, minimal = false, ...rest }) {
     )
   } else
     return (
-      <HoverCard {...rest}>
+      <HoverCard border={border}>
         <AutoColumn gap="12px">
           <FixedHeightRow onClick={() => setShowMore(!showMore)} style={{ cursor: 'pointer' }}>
             <RowFixed>
