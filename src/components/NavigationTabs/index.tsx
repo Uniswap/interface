@@ -106,7 +106,7 @@ function NavigationTabs({ location: { pathname }, history }: RouteComponentProps
       {adding || removing ? (
         <Tabs>
           <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
-            <Hover onClick={() => history.goBack()}>
+            <Hover onClick={() => history.push('/pool')}>
               <ArrowLink />
             </Hover>
             <ActiveText>{adding ? 'Add' : 'Remove'} Liquidity</ActiveText>
