@@ -64,7 +64,7 @@ const TitleText = styled(Row)`
   `};
 `
 
-const AccountElement = styled.div`
+const AccountElement = styled.div<{active: boolean;}>`
   display: flex;
   display: flex;
   flex-direction: row;
@@ -107,7 +107,7 @@ const Alpha = styled(GreyCard)`
   font-weight: 600;
 `
 
-const UniIcon = styled.div`
+const UniIcon = styled.div<{href: string}>`
   transition: transform 0.3s ease;
   :hover {
     transform: rotate(-5deg);

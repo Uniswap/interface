@@ -209,7 +209,7 @@ export function usePairContract(pairAddress, withSignerIfPossible = true) {
   }, [pairAddress, library, withSignerIfPossible, account])
 }
 
-export function useCopyClipboard(timeout = 500) {
+export function useCopyClipboard(timeout = 500): [boolean, (toCopy: string) => void] {
   const [isCopied, setIsCopied] = useState(false)
 
   const staticCopy = useCallback(text => {
