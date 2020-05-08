@@ -43,7 +43,7 @@ const rotate = keyframes`
   }
 `
 
-const TransactionState = styled.div`
+const TransactionState = styled.div<{pending?: boolean;}>`
   display: flex;
   background-color: ${({ pending, theme }) =>
     pending ? transparentize(0.95, theme.blue1) : transparentize(0.95, theme.green1)};
@@ -64,7 +64,7 @@ const TransactionState = styled.div`
       pending ? transparentize(0, theme.blue1) : transparentize(0, theme.green1)};
   }
 `
-const ButtonWrapper = styled.div`
+const ButtonWrapper = styled.div<{pending: boolean}>`
   a {
     color: ${({ pending, theme }) => (pending ? theme.blue1 : theme.green1)};
   }

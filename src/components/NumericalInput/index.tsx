@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const StyledInput = styled.input`
+const StyledInput = styled.input<{error?: boolean; fontSize?: string; align?: string}>`
   color: ${({ error, theme }) => error && theme.red1};
   color: ${({ theme }) => theme.text1};
   width: 0;

@@ -716,7 +716,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
               </Text>
             </RowFixed>
           </RowBetween>
-          <AutoColumn justify="flex-start" gap="sm" padding={'20px 0 0 0px'}>
+          <AutoColumn justify="flex-start" gap="sm" style={{padding: '20px 0 0 0px'}}>
             {independentField === Field.INPUT ? (
               <TYPE.italic textAlign="left" style={{ width: '100%', paddingTop: '.5rem' }}>
                 {`Output is estimated. You will receive at least `}
@@ -1022,7 +1022,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
               </ColumnCenter>
             ) : (
               <Hover>
-                <ColumnCenter padding="0 1rem">
+                <ColumnCenter style={{padding: '0 1rem'}}>
                   <ArrowWrapper>
                     <ArrowDown
                       size="16"
@@ -1325,7 +1325,7 @@ function ExchangePage({ sendingInput = false, history, params }) {
             <AutoColumn gap="lg">
               {warningHigh && (
                 <YellowCard style={{ padding: '20px', paddingTop: '10px' }}>
-                  <AutoColumn gap="md" mt={2}>
+                  <AutoColumn gap="md">
                     <RowBetween>
                       <RowFixed style={{ paddingTop: '8px' }}>
                         <span role="img" aria-label="warning">
