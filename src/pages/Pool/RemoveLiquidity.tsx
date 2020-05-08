@@ -755,7 +755,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
             disabled={!isValid}
           >
             <Text fontSize={20} fontWeight={500}>
-              {inputError ?? (outputError ?? (poolTokenError ?? (generalError ?? 'Remove')))}
+              {inputError || outputError || poolTokenError || generalError || 'Remove'}
             </Text>
           </ButtonPrimary>
           <FixedBottom>
