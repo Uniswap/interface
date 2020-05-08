@@ -34,7 +34,7 @@ const ETHERSCAN_PREFIXES = {
   42: 'kovan.'
 }
 
-export function getEtherscanLink(networkId, data, type) {
+export function getEtherscanLink(networkId: 1 | 3 | 4 | 5 | 42 | any, data: string, type: 'transaction' | 'address') {
   const prefix = `https://${ETHERSCAN_PREFIXES[networkId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
 
   switch (type) {
@@ -69,7 +69,7 @@ function parseUrlTokenAmount(paramName: string): string {
   return value
 }
 
-interface QueryParams {
+export interface QueryParams {
   readonly inputTokenAddress: string
   readonly outputTokenAddress: string
   readonly inputTokenAmount: string

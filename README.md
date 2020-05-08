@@ -1,10 +1,10 @@
 # Uniswap Frontend
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/fa110555-b3c7-4eeb-b840-88a835009c62/deploy-status)](https://app.netlify.com/sites/uniswap/deploys)
-[![Build Status](https://travis-ci.org/Uniswap/uniswap-frontend.svg)](https://travis-ci.org/Uniswap/uniswap-frontend)
+[![Tests](https://github.com/Uniswap/uniswap-frontend/workflows/Tests/badge.svg?branch=v2)](https://github.com/Uniswap/uniswap-frontend/actions?query=workflow%3ATests)
 [![Styled With Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://prettier.io/)
 
-This an an open source interface for Uniswap - a protocol for decentralized exchange of Ethereum tokens.
+An open source interface for Uniswap -- a protocol for decentralized exchange of Ethereum tokens.
 
 - Website: [uniswap.org](https://uniswap.org/)
 - Docs: [uniswap.org/docs/](https://uniswap.org/docs/)
@@ -32,7 +32,7 @@ yarn
 
 ### Configure Environment
 
-Rename `.env.local.example` to `.env.local` and fill in the appropriate variables.
+Copy `.env` to `.env.local` and change the appropriate variables.
 
 ### Run
 
@@ -40,10 +40,13 @@ Rename `.env.local.example` to `.env.local` and fill in the appropriate variable
 yarn start
 ```
 
-To run on a testnet, make a copy of `.env.local.example` named `.env.local`, change `REACT_APP_NETWORK_ID` to `"{yourNetworkId}"`, and change `REACT_APP_NETWORK_URL` to e.g. `"https://{yourNetwork}.infura.io/v3/{yourKey}"`.
+To run on a testnet, make a copy of `.env` named `.env.local`, change `REACT_APP_NETWORK_ID` to `"{yourNetworkId}"`, 
+and change `REACT_APP_NETWORK_URL` to e.g. `"https://{yourNetwork}.infura.io/v3/{yourKey}"`. 
 
-If deploying with Github Pages, be aware that there's some [tricky client-side routing behavior with `create-react-app`](https://create-react-app.dev/docs/deployment#notes-on-client-side-routing).
+If deploying with Github Pages, be aware that there's some
+[tricky client-side routing behavior with `create-react-app`](https://create-react-app.dev/docs/deployment#notes-on-client-side-routing).
 
 ## Contributions
 
-**Please open all pull requests against the `beta` branch.** CI checks will run against all PRs. To ensure that your changes will pass, run `yarn check:all` before pushing. If this command fails, you can try to automatically fix problems with `yarn fix:all`, or do it manually.
+**Please open all pull requests against the `v2` branch.** 
+CI checks will run against all PRs. 

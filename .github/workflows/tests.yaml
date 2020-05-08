@@ -1,0 +1,34 @@
+name: Tests
+on:
+  push:
+    branches:
+      - v2
+  pull_request:
+    branches:
+      - v2
+jobs:
+  integration-tests:
+    name: Integration tests
+    runs-on: ubuntu-16.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - run: yarn
+      - run: yarn integration-test
+
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - run: yarn
+      - run: yarn test
+
+# todo: add job for typescript linting

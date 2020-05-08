@@ -92,8 +92,8 @@ export function useInactiveListener(suppress = false) {
 }
 
 // modified from https://usehooks.com/useDebounce/
-export function useDebounce(value, delay) {
-  const [debouncedValue, setDebouncedValue] = useState(value)
+export function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
 
   useEffect(() => {
     // Update debounced value after delay
@@ -209,7 +209,7 @@ export function usePairContract(pairAddress, withSignerIfPossible = true) {
   }, [pairAddress, library, withSignerIfPossible, account])
 }
 
-export function useCopyClipboard(timeout = 500) {
+export function useCopyClipboard(timeout = 500): [boolean, (toCopy: string) => void] {
   const [isCopied, setIsCopied] = useState(false)
 
   const staticCopy = useCallback(text => {
