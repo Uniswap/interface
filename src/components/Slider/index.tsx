@@ -1,25 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import Slider from '@material-ui/core/Slider'
 import { withStyles } from '@material-ui/core/styles'
 import { useDebounce } from '../../hooks'
-
-// const marks = [
-//   {
-//     value: 0
-//   },
-//   {
-//     value: 25
-//   },
-//   {
-//     value: 50
-//   },
-//   {
-//     value: 75
-//   },
-//   {
-//     value: 100
-//   }
-// ]
 
 const StyledSlider = withStyles({
   root: {
@@ -66,16 +48,22 @@ const StyledSlider = withStyles({
   }
 })(Slider)
 
-export default function InputSlider({ value, onChange, override }) {
-  const [internalVal, setInternalVal] = useState(100)
-  const debouncedInternalValue = useDebounce(internalVal, 10)
+interface InputSliderProps {
+  value: number
+  onChange: (val: number) => void
+  override?: boolean
+}
 
-  function handleChange(e, val) {
+export default function InputSlider({ value, onChange, override }: InputSliderProps) {
+  const [internalVal, setInternalVal] = useState<number>(value)
+  const debouncedInternalValue = useDebounce(internalVal, 100)
+
+  const handleChange = useCallback((e, val) => {
     setInternalVal(val)
-    if (val === debouncedInternalValue) {
-      onChange(e, val)
+    if (val !== debouncedInternalValue) {
+      onChange(val)
     }
-  }
+  }, [setInternalVal, onChange, debouncedInternalValue])
 
   useEffect(() => {
     if (override) {

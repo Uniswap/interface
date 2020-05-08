@@ -12,7 +12,7 @@ const TOKEN_ICON_API = address =>
   )}/logo.png`
 const BAD_IMAGES = {}
 
-const Image = styled.img`
+const Image = styled.img<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   background-color: white;
@@ -20,7 +20,7 @@ const Image = styled.img`
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
 `
 
-const Emoji = styled.span`
+const Emoji = styled.span<{size?:string}>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,7 +30,7 @@ const Emoji = styled.span`
   margin-bottom: -4px;
 `
 
-const StyledEthereumLogo = styled(EthereumLogo)`
+const StyledEthereumLogo = styled(EthereumLogo)<{size: string}>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
 `

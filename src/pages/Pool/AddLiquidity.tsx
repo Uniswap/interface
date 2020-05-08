@@ -754,7 +754,6 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           atMax={atMaxAmountInput}
           token={tokens[Field.INPUT]}
           onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
-          error={inputError}
           pair={pair}
           label="Input"
           inputId="addLiquidityInput"
@@ -772,7 +771,6 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           atMax={atMaxAmountOutput}
           token={tokens[Field.OUTPUT]}
           onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
-          error={outputError}
           pair={pair}
           inputId="addLiquidityOutput"
         />

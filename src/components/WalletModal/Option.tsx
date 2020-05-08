@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Link } from '../../theme'
 
-const InfoCard = styled.button`
+const InfoCard = styled.button<{ active?: boolean }>`
   background-color: ${({ theme, active }) => (active ? theme.bg3 : theme.bg2)};
   padding: 1rem;
   outline: none;
@@ -30,7 +30,7 @@ const OptionCardLeft = styled.div`
   height: 100%;
 `
 
-const OptionCardClickable = styled(OptionCard)`
+const OptionCardClickable = styled(OptionCard)<{ clickable?: boolean }>`
   margin-top: 0;
   &:hover {
     cursor: ${({ clickable }) => (clickable ? 'pointer' : '')};
@@ -73,7 +73,7 @@ const SubHeader = styled.div`
   font-size: 12px;
 `
 
-const IconWrapper = styled.div`
+const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: center;
@@ -88,16 +88,16 @@ const IconWrapper = styled.div`
 `
 
 export default function Option({
-  link = null,
-  clickable = true,
-  size = null,
-  onClick = null,
-  color,
-  header,
-  subheader = null,
-  icon,
-  active = false
-}) {
+                                 link = null,
+                                 clickable = true,
+                                 size = null,
+                                 onClick = null,
+                                 color,
+                                 header,
+                                 subheader = null,
+                                 icon,
+                                 active = false
+                               }) {
   const content = (
     <OptionCardClickable onClick={onClick} clickable={clickable && !active} active={active}>
       <OptionCardLeft>
@@ -106,7 +106,7 @@ export default function Option({
           {active ? (
             <CircleWrapper>
               <GreenCircle>
-                <div />
+                <div/>
               </GreenCircle>
             </CircleWrapper>
           ) : (
@@ -116,8 +116,8 @@ export default function Option({
         </HeaderText>
         {subheader && <SubHeader>{subheader}</SubHeader>}
       </OptionCardLeft>
-      <IconWrapper size={size} active={active}>
-        <img src={icon} alt={'Icon'} />
+      <IconWrapper size={size}>
+        <img src={icon} alt={'Icon'}/>
       </IconWrapper>
     </OptionCardClickable>
   )
