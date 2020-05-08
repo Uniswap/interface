@@ -41,8 +41,9 @@ const TokenModalInfo = styled.div`
   user-select: none;
 `
 
-const TokenList = styled.div`
+const ItemList = styled.div`
   flex-grow: 1;
+  min-height: 240px;
   height: 100%;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
@@ -318,21 +319,24 @@ function SearchModal({
       }
       const token0 = allTokens[pair.token0]
       const token1 = allTokens[pair.token1]
-      const regexMatches = Object.keys(token0).map(field => {
-        if (
-          (field === 'address' && isAddress) ||
-          (field === 'name' && !isAddress) ||
-          (field === 'symbol' && !isAddress)
-        ) {
-          return (
-            token0[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i')) ||
-            token1[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i'))
-          )
-        }
-        return false
-      })
-
-      return regexMatches.some(m => m)
+      if (!token0 || !token1) {
+        return false // no token fetched yet
+      } else {
+        const regexMatches = Object.keys(token0).map(field => {
+          if (
+            (field === 'address' && isAddress) ||
+            (field === 'name' && !isAddress) ||
+            (field === 'symbol' && !isAddress)
+          ) {
+            return (
+              token0[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i')) ||
+              token1[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i'))
+            )
+          }
+          return false
+        })
+        return regexMatches.some(m => m)
+      }
     })
   }, [allPairs, allTokens, searchQuery, sortedPairList])
 
@@ -416,19 +420,21 @@ function SearchModal({
       } else {
         return <TokenModalInfo>{t('noToken')}</TokenModalInfo>
       }
-    }
-    // TODO is this the right place to link to create exchange?
-    // else if (isAddress(searchQuery) && tokenAddress === ethers.constants.AddressZero) {
-    //   return (
-    //     <>
-    //       <TokenModalInfo>{t('noToken')}</TokenModalInfo>
-    //       <TokenModalInfo>
-    //         <Link to={`/create-exchange/${searchQuery}`}>{t('createExchange')}</Link>
-    //       </TokenModalInfo>
-    //     </>
-    //   )
-    // }
-    else {
+    } else {
+      /**
+       * @TODO
+      // TODO is this the right place to link to create exchange?
+      // else if (isAddress(searchQuery) && tokenAddress === ethers.constants.AddressZero) {
+      //   return (
+      //     <>
+      //       <TokenModalInfo>{t('noToken')}</TokenModalInfo>
+      //       <TokenModalInfo>
+      //         <Link to={`/create-exchange/${searchQuery}`}>{t('createExchange')}</Link>
+      //       </TokenModalInfo>
+      //     </>
+      //   )
+      // }
+     */
       return filteredTokenList
         .sort((a, b) => {
           if (b?.address === WETH[chainId]?.address) {
@@ -624,7 +630,7 @@ function SearchModal({
           </PaddedColumn>
         )}
         {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />}
-        {!showTokenImport && <TokenList>{filterType === 'tokens' ? renderTokenList() : renderPairsList()}</TokenList>}
+        {!showTokenImport && <ItemList>{filterType === 'tokens' ? renderTokenList() : renderPairsList()}</ItemList>}
         {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />}
         {!showTokenImport && (
           <Card>
