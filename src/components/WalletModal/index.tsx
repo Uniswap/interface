@@ -286,7 +286,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
       return (
         <UpperSection>
           <CloseIcon onClick={toggleWalletModal}>
-            <CloseColor/>
+            <CloseColor />
           </CloseIcon>
           <HeaderRow>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}</HeaderRow>
           <ContentWrapper>
@@ -313,7 +313,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
     return (
       <UpperSection>
         <CloseIcon onClick={toggleWalletModal}>
-          <CloseColor/>
+          <CloseColor />
         </CloseIcon>
         {walletView !== WALLET_VIEWS.ACCOUNT ? (
           <HeaderRow color="blue">
@@ -358,12 +358,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
   }
 
   return (
-    <Modal
-      isOpen={walletModalOpen}
-      onDismiss={toggleWalletModal}
-      minHeight={null}
-      maxHeight={90}
-    >
+    <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={null} maxHeight={90}>
       <Wrapper>{getModalContent()}</Wrapper>
     </Modal>
   )

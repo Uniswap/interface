@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const StyledInput = styled.input<{error?: boolean; fontSize?: string; align?: string}>`
+const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string }>`
   color: ${({ error, theme }) => error && theme.red1};
   color: ${({ theme }) => theme.text1};
   width: 0;
@@ -45,8 +45,20 @@ function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
 
-export const Input = React.memo(({ value, onUserInput, placeHolder = null, ...rest }: any) => {
-  function enforcer(nextUserInput: string) {
+export const Input = React.memo(function InnerInput({
+  value,
+  onUserInput,
+  placeHolder,
+  ...rest
+}: {
+  value: string | number
+  onUserInput: (string) => void
+  placeHolder?: string
+  align?: 'right' | 'left'
+  id?: string
+  onClick?: () => void
+}) {
+  const enforcer = (nextUserInput: string) => {
     if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
       onUserInput(nextUserInput)
     }

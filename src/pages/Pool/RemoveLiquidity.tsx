@@ -179,15 +179,15 @@ export default function RemoveLiquidity({ token0, token1 }) {
 
   const TokensDeposited: { [field: number]: TokenAmount } = {
     [Field.TOKEN0]:
-    pair &&
-    totalPoolTokens &&
-    userLiquidity &&
-    pair.getLiquidityValue(tokens[Field.TOKEN0], totalPoolTokens, userLiquidity, false),
+      pair &&
+      totalPoolTokens &&
+      userLiquidity &&
+      pair.getLiquidityValue(tokens[Field.TOKEN0], totalPoolTokens, userLiquidity, false),
     [Field.TOKEN1]:
-    pair &&
-    totalPoolTokens &&
-    userLiquidity &&
-    pair.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, userLiquidity, false)
+      pair &&
+      totalPoolTokens &&
+      userLiquidity &&
+      pair.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, userLiquidity, false)
   }
 
   const route: Route = pair
@@ -282,7 +282,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
     )
   }
 
-  const handleSliderChange = (newPercent) => {
+  const handleSliderChange = newPercent => {
     onUserInput(
       Field.LIQUIDITY,
       new TokenAmount(
@@ -425,6 +425,13 @@ export default function RemoveLiquidity({ token0, token1 }) {
     })
   }
 
+  function resetModalState() {
+    setSigned(false)
+    setSigInputs(null)
+    setAttemptedRemoval(false)
+    setPendingConfirmation(true)
+  }
+
   async function onRemove() {
     setAttemptedRemoval(true)
     const router = getRouterContract(chainId, library, account)
@@ -482,13 +489,13 @@ export default function RemoveLiquidity({ token0, token1 }) {
           addTransaction(
             response,
             'Remove ' +
-            parsedAmounts[Field.TOKEN0]?.toSignificant(3) +
-            ' ' +
-            tokens[Field.TOKEN0]?.symbol +
-            ' and ' +
-            parsedAmounts[Field.TOKEN1]?.toSignificant(3) +
-            ' ' +
-            tokens[Field.TOKEN1]?.symbol
+              parsedAmounts[Field.TOKEN0]?.toSignificant(3) +
+              ' ' +
+              tokens[Field.TOKEN0]?.symbol +
+              ' and ' +
+              parsedAmounts[Field.TOKEN1]?.toSignificant(3) +
+              ' ' +
+              tokens[Field.TOKEN1]?.symbol
           )
         })
       )
@@ -499,13 +506,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
       })
   }
 
-  function resetModalState() {
-    setSigned(false)
-    setSigInputs(null)
-    setAttemptedRemoval(false)
-    setPendingConfirmation(true)
-  }
-
   function modalHeader() {
     return (
       <AutoColumn gap={'sm'} style={{ marginTop: '20px' }}>
@@ -514,21 +514,21 @@ export default function RemoveLiquidity({ token0, token1 }) {
             {!!parsedAmounts[Field.TOKEN0] && parsedAmounts[Field.TOKEN0].toSignificant(6)}
           </Text>
           <RowFixed gap="4px">
-            <TokenLogo address={tokens[Field.TOKEN0]?.address} size={'24px'}/>
+            <TokenLogo address={tokens[Field.TOKEN0]?.address} size={'24px'} />
             <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
               {tokens[Field.TOKEN0]?.symbol || ''}
             </Text>
           </RowFixed>
         </RowBetween>
         <RowFixed>
-          <Plus size="16" color={'#888D9B'}/>
+          <Plus size="16" color={'#888D9B'} />
         </RowFixed>
         <RowBetween align="flex-end">
           <Text fontSize={24} fontWeight={600}>
             {!!parsedAmounts[Field.TOKEN1] && parsedAmounts[Field.TOKEN1].toSignificant(6)}
           </Text>
           <RowFixed gap="4px">
-            <TokenLogo address={tokens[Field.TOKEN1]?.address} size={'24px'}/>
+            <TokenLogo address={tokens[Field.TOKEN1]?.address} size={'24px'} />
             <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
               {tokens[Field.TOKEN1]?.symbol || ''}
             </Text>
@@ -596,7 +596,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
     )
   }
 
-  const pendingText: string = `Removing ${parsedAmounts[Field.TOKEN0]?.toSignificant(6)} ${
+  const pendingText = `Removing ${parsedAmounts[Field.TOKEN0]?.toSignificant(6)} ${
     tokens[Field.TOKEN0]?.symbol
   } and ${parsedAmounts[Field.TOKEN1]?.toSignificant(6)} ${tokens[Field.TOKEN1]?.symbol}`
 
@@ -637,7 +637,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
               </Text>
             </Row>
             {!showAdvanced && (
-              <Slider value={parseFloat(derivedPerecent)} onChange={handleSliderChange} override={override}/>
+              <Slider value={parseFloat(derivedPerecent)} onChange={handleSliderChange} override={override} />
             )}
             {!showAdvanced && (
               <RowBetween>
@@ -660,7 +660,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
         {!showAdvanced && (
           <>
             <ColumnCenter>
-              <ArrowDown size="16" color="#888D9B"/>
+              <ArrowDown size="16" color="#888D9B" />
             </ColumnCenter>{' '}
             <LightCard>
               <AutoColumn gap="10px">
@@ -669,7 +669,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
                     {formattedAmounts[Field.TOKEN0] ? formattedAmounts[Field.TOKEN0] : '-'}
                   </Text>
                   <RowFixed>
-                    <TokenLogo address={tokens[Field.TOKEN0]?.address || ''} style={{ marginRight: '12px' }}/>
+                    <TokenLogo address={tokens[Field.TOKEN0]?.address || ''} style={{ marginRight: '12px' }} />
                     <Text fontSize={24} fontWeight={500}>
                       {tokens[Field.TOKEN0]?.symbol}
                     </Text>
@@ -680,7 +680,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
                     {formattedAmounts[Field.TOKEN1] ? formattedAmounts[Field.TOKEN1] : '-'}
                   </Text>
                   <RowFixed>
-                    <TokenLogo address={tokens[Field.TOKEN1]?.address || ''} style={{ marginRight: '12px' }}/>
+                    <TokenLogo address={tokens[Field.TOKEN1]?.address || ''} style={{ marginRight: '12px' }} />
                     <Text fontSize={24} fontWeight={500}>
                       {tokens[Field.TOKEN1]?.symbol}
                     </Text>
@@ -706,7 +706,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
               inputId="liquidityAmount"
             />
             <ColumnCenter>
-              <ArrowDown size="16" color="#888D9B"/>
+              <ArrowDown size="16" color="#888D9B" />
             </ColumnCenter>
             <CurrencyInputPanel
               field={Field.TOKEN0}
@@ -720,7 +720,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
               inputId="removeLiquidityToken0"
             />
             <ColumnCenter>
-              <Plus size="16" color="#888D9B"/>
+              <Plus size="16" color="#888D9B" />
             </ColumnCenter>
             <CurrencyInputPanel
               field={Field.TOKEN1}

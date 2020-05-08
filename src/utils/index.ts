@@ -12,18 +12,17 @@ import { ROUTER_ADDRESS, SUPPORTED_THEMES } from '../constants'
 import ERC20_ABI from '../constants/abis/erc20.json'
 import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32.json'
 
+export function isAddress(value: any): string | false {
+  try {
+    return getAddress(value.toLowerCase())
+  } catch {
+    return false
+  }
+}
+
 export enum ERROR_CODES {
   TOKEN_SYMBOL = 1,
   TOKEN_DECIMALS = 2
-}
-
-export function safeAccess(object, path) {
-  return object
-    ? path.reduce(
-        (accumulator, currentValue) => (accumulator && accumulator[currentValue] ? accumulator[currentValue] : null),
-        object
-      )
-    : null
 }
 
 const ETHERSCAN_PREFIXES = {
@@ -49,7 +48,7 @@ export function getEtherscanLink(networkId: 1 | 3 | 4 | 5 | 42 | any, data: stri
 }
 
 export function getQueryParam(windowLocation, name) {
-  var q = windowLocation.search.match(new RegExp('[?&]' + name + '=([^&#?]*)'))
+  const q = windowLocation.search.match(new RegExp('[?&]' + name + '=([^&#?]*)'))
   return q && q[1]
 }
 
@@ -120,18 +119,6 @@ export function shortenAddress(address, digits = 4) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
   return `${address.substring(0, digits + 2)}...${address.substring(42 - digits)}`
-}
-
-export function shortenTransactionHash(hash, digits = 4) {
-  return `${hash.substring(0, digits + 2)}...${hash.substring(66 - digits)}`
-}
-
-export function isAddress(value: any): string | false {
-  try {
-    return getAddress(value.toLowerCase())
-  } catch {
-    return false
-  }
 }
 
 export function calculateGasMargin(value: BigNumber) {

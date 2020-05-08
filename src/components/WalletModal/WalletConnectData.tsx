@@ -21,7 +21,7 @@ export default function WalletConnectData({ uri = '', size }: WalletConnectDataP
   return (
     <QRCodeWrapper>
       {uri && (
-        <QRCode size={size} value={uri} bgColor={isDark ? '#333639' : 'white'} fgColor={isDark ? 'white' : 'black'}/>
+        <QRCode size={size} value={uri} bgColor={isDark ? '#333639' : 'white'} fgColor={isDark ? 'white' : 'black'} />
       )}
     </QRCodeWrapper>
   )

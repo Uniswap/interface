@@ -154,18 +154,18 @@ interface SearchModalProps extends RouteComponentProps<{}> {
 }
 
 function SearchModal({
-                       history,
-                       isOpen,
-                       onDismiss,
-                       onTokenSelect,
-                       urlAddedTokens,
-                       filterType,
-                       hiddenToken,
-                       showSendWithSwap,
-                       otherSelectedTokenAddress,
-                       otherSelectedText,
-                       showCommonBases = false
-                     }: SearchModalProps) {
+  history,
+  isOpen,
+  onDismiss,
+  onTokenSelect,
+  urlAddedTokens,
+  filterType,
+  hiddenToken,
+  showSendWithSwap,
+  otherSelectedTokenAddress,
+  otherSelectedText,
+  showCommonBases = false
+}: SearchModalProps) {
   const { t } = useTranslation()
   const { account, chainId } = useWeb3React()
   const theme = useContext(ThemeContext)
@@ -377,7 +377,7 @@ function SearchModal({
             }}
           >
             <RowFixed>
-              <DoubleTokenLogo a0={token0?.address || ''} a1={token1?.address || ''} size={24} margin={true}/>
+              <DoubleTokenLogo a0={token0?.address || ''} a1={token1?.address || ''} size={24} margin={true} />
               <Text fontWeight={500} fontSize={16}>{`${token0?.symbol}/${token1?.symbol}`}</Text>
             </RowFixed>
             {/* <Text fontWeight={500} fontSize={16}>
@@ -418,7 +418,7 @@ function SearchModal({
               }}
             >
               <RowFixed>
-                <TokenLogo address={temporaryToken.address} size={'24px'} style={{ marginRight: '14px' }}/>
+                <TokenLogo address={temporaryToken.address} size={'24px'} style={{ marginRight: '14px' }} />
                 <Column>
                   <Text fontWeight={500}>{temporaryToken.symbol}</Text>
                   <FadedSpan>(Found by search)</FadedSpan>
@@ -431,16 +431,16 @@ function SearchModal({
         return <TokenModalInfo>{t('noToken')}</TokenModalInfo>
       }
     }
-      // TODO is this the right place to link to create exchange?
-      // else if (isAddress(searchQuery) && tokenAddress === ethers.constants.AddressZero) {
-      //   return (
-      //     <>
-      //       <TokenModalInfo>{t('noToken')}</TokenModalInfo>
-      //       <TokenModalInfo>
-      //         <Link to={`/create-exchange/${searchQuery}`}>{t('createExchange')}</Link>
-      //       </TokenModalInfo>
-      //     </>
-      //   )
+    // TODO is this the right place to link to create exchange?
+    // else if (isAddress(searchQuery) && tokenAddress === ethers.constants.AddressZero) {
+    //   return (
+    //     <>
+    //       <TokenModalInfo>{t('noToken')}</TokenModalInfo>
+    //       <TokenModalInfo>
+    //         <Link to={`/create-exchange/${searchQuery}`}>{t('createExchange')}</Link>
+    //       </TokenModalInfo>
+    //     </>
+    //   )
     // }
     else {
       return filteredTokenList
@@ -453,8 +453,8 @@ function SearchModal({
                 ? -1
                 : 1
               : sortDirection
-                ? 1
-                : -1
+              ? 1
+              : -1
         })
         .map(({ address, symbol, balance }) => {
           const urlAdded = urlAddedTokens && urlAddedTokens.hasOwnProperty(address)
@@ -467,13 +467,12 @@ function SearchModal({
           return (
             <MenuItem
               key={address}
-              onClick={() => (hiddenToken && hiddenToken === address ? () => {
-              } : _onTokenSelect(address))}
+              onClick={() => (hiddenToken && hiddenToken === address ? () => {} : _onTokenSelect(address))}
               disabled={hiddenToken && hiddenToken === address}
               selected={otherSelectedTokenAddress === address}
             >
               <RowFixed>
-                <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }}/>
+                <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }} />
                 <Column>
                   <Text fontWeight={500}>
                     {symbol}
@@ -500,9 +499,7 @@ function SearchModal({
                 {balance ? (
                   <Text>
                     {zeroBalance && showSendWithSwap ? (
-                      <ColumnCenter
-                        style={{ backgroundColor: theme.bg2, padding: '8px', borderRadius: '12px' }}
-                      >
+                      <ColumnCenter style={{ backgroundColor: theme.bg2, padding: '8px', borderRadius: '12px' }}>
                         <Text textAlign="center" fontWeight={500} color={theme.blue1}>
                           Send With Swap
                         </Text>
@@ -514,7 +511,7 @@ function SearchModal({
                     )}
                   </Text>
                 ) : account ? (
-                  <SpinnerWrapper src={Circle} alt="loader"/>
+                  <SpinnerWrapper src={Circle} alt="loader" />
                 ) : (
                   '-'
                 )}
@@ -569,7 +566,7 @@ function SearchModal({
                   Import A Token
                 </Text>
               </RowFixed>
-              <CloseIcon onClick={onDismiss}/>
+              <CloseIcon onClick={onDismiss} />
             </RowBetween>
             <TYPE.body style={{ marginTop: '10px' }}>
               To import a custom token, paste token address in the search bar.
@@ -589,7 +586,7 @@ function SearchModal({
               <Text fontWeight={500} fontSize={16}>
                 {filterType === 'tokens' ? 'Select A Token' : 'Select A Pool'}
               </Text>
-              <CloseIcon onClick={onDismiss}/>
+              <CloseIcon onClick={onDismiss} />
             </RowBetween>
             <Input
               type={'text'}
@@ -604,7 +601,7 @@ function SearchModal({
                   <Text fontWeight={500} fontSize={16}>
                     Common Bases
                   </Text>
-                  <QuestionHelper text="These tokens are commonly used in pairs."/>
+                  <QuestionHelper text="These tokens are commonly used in pairs." />
                 </AutoRow>
                 <AutoRow gap="10px">
                   {COMMON_BASES[chainId]?.map(token => {
@@ -615,7 +612,7 @@ function SearchModal({
                         disable={hiddenToken === token.address}
                         key={token.address}
                       >
-                        <TokenLogo address={token.address}/>
+                        <TokenLogo address={token.address} />
                         <Text fontWeight={500} fontSize={16}>
                           {token.symbol}
                         </Text>
@@ -637,16 +634,16 @@ function SearchModal({
             </RowBetween>
           </PaddedColumn>
         )}
-        {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }}/>}
+        {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />}
         {!showTokenImport && <TokenList>{filterType === 'tokens' ? renderTokenList() : renderPairsList()}</TokenList>}
-        {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }}/>}
+        {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />}
         {!showTokenImport && (
           <Card>
             <AutoRow justify={'center'}>
               <div>
                 {filterType !== 'tokens' && (
                   <Text fontWeight={500}>
-                    {!isMobile && 'Don\'t see a pool? '}
+                    {!isMobile && "Don't see a pool? "}
                     <StyledLink
                       onClick={() => {
                         history.push('/find')
@@ -658,7 +655,7 @@ function SearchModal({
                 )}
                 {filterType === 'tokens' && (
                   <Text fontWeight={500} color={theme.text2} fontSize={14}>
-                    {!isMobile && 'Don\'t see a token? '}
+                    {!isMobile && "Don't see a token? "}
 
                     <StyledLink
                       onClick={() => {
