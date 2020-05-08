@@ -146,11 +146,11 @@ function reducer(
   }
 }
 
-const ConfirmedText = styled(Text)`
+const ConfirmedText = styled(Text)<{ confirmed?: boolean }>`
   color: ${({ theme, confirmed }) => (confirmed ? theme.green1 : theme.white)};
 `
 
-export default function RemoveLiquidity({ token0, token1 }) {
+export default function RemoveLiquidity({ token0, token1 }: { token0: string; token1: string }) {
   const { account, chainId, library } = useWeb3React()
 
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
@@ -514,7 +514,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
           <Text fontSize={24} fontWeight={500}>
             {!!parsedAmounts[Field.TOKEN0] && parsedAmounts[Field.TOKEN0].toSignificant(6)}
           </Text>
-          <RowFixed gap="4px">
+          <RowFixed>
             <TokenLogo address={tokens[Field.TOKEN0]?.address} size={'24px'} />
             <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
               {tokens[Field.TOKEN0]?.symbol || ''}
@@ -528,7 +528,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
           <Text fontSize={24} fontWeight={600}>
             {!!parsedAmounts[Field.TOKEN1] && parsedAmounts[Field.TOKEN1].toSignificant(6)}
           </Text>
-          <RowFixed gap="4px">
+          <RowFixed>
             <TokenLogo address={tokens[Field.TOKEN1]?.address} size={'24px'} />
             <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
               {tokens[Field.TOKEN1]?.symbol || ''}
@@ -575,7 +575,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
             }`}
           </Text>
         </RowBetween>
-        <RowBetween gap="16px">
+        <RowBetween>
           <ButtonConfirmed
             style={{ margin: '20px 0 0 0' }}
             width="48%"
@@ -642,16 +642,16 @@ export default function RemoveLiquidity({ token0, token1 }) {
             )}
             {!showAdvanced && (
               <RowBetween>
-                <MaxButton onClick={e => handlePresetPercentage(25)} width="20%">
+                <MaxButton onClick={() => handlePresetPercentage(25)} width="20%">
                   25%
                 </MaxButton>
-                <MaxButton onClick={e => handlePresetPercentage(50)} width="20%">
+                <MaxButton onClick={() => handlePresetPercentage(50)} width="20%">
                   50%
                 </MaxButton>
-                <MaxButton onClick={e => handlePresetPercentage(75)} width="20%">
+                <MaxButton onClick={() => handlePresetPercentage(75)} width="20%">
                   75%
                 </MaxButton>
-                <MaxButton onClick={e => handlePresetPercentage(100)} width="20%">
+                <MaxButton onClick={() => handlePresetPercentage(100)} width="20%">
                   Max
                 </MaxButton>
               </RowBetween>

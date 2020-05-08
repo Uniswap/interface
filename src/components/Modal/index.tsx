@@ -9,17 +9,15 @@ import '@reach/dialog/styles.css'
 import { transparentize } from 'polished'
 import { useGesture } from 'react-use-gesture'
 
+// errors emitted, fix with https://github.com/styled-components/styled-components/pull/3006
 const AnimatedDialogOverlay = animated(DialogOverlay)
-const WrappedDialogOverlay = ({ suppressClassNameWarning, mobile, ...rest }) => <AnimatedDialogOverlay {...rest} />
-const StyledDialogOverlay = styled(WrappedDialogOverlay).attrs({
-  suppressClassNameWarning: true
-})`
+const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
   &[data-reach-dialog-overlay] {
     z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: ${({ theme }) => 'transparent'};
+    background-color: transparent;
 
     ${({ mobile }) =>
       mobile &&
@@ -42,10 +40,7 @@ const StyledDialogOverlay = styled(WrappedDialogOverlay).attrs({
   }
 `
 
-const FilteredDialogContent = ({ minHeight, maxHeight, isOpen, slideInAnimation, mobile, ...rest }) => (
-  <DialogContent {...rest} />
-)
-const StyledDialogContent = styled(FilteredDialogContent)`
+const StyledDialogContent = styled(DialogContent)<{ mobile?: boolean }>`
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
     border: 1px solid ${({ theme }) => theme.bg1};
@@ -73,7 +68,7 @@ const StyledDialogContent = styled(FilteredDialogContent)`
       max-height: 65vh;
       margin: 0;
     `}
-    ${({ theme, mobile, isOpen }) => theme.mediaWidth.upToSmall`
+    ${({ theme, mobile }) => theme.mediaWidth.upToSmall`
       width:  85vw;
       max-height: 66vh;
       ${mobile &&

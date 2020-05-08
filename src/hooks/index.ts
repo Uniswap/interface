@@ -25,7 +25,7 @@ export function useEagerConnect() {
           setTried(true)
         })
       } else {
-        if (isMobile && (window as any).ethereum) {
+        if (isMobile && window.ethereum) {
           activate(injected, undefined, true).catch(() => {
             setTried(true)
           })
@@ -54,24 +54,30 @@ export function useInactiveListener(suppress = false) {
   const { active, error, activate } = useWeb3ReactCore() // specifically using useWeb3React because of what this hook does
 
   useEffect(() => {
-    const { ethereum } = window as any
+    const { ethereum } = window
 
     if (ethereum && ethereum.on && !active && !error && !suppress) {
       const handleChainChanged = () => {
         // eat errors
-        activate(injected, undefined, true).catch(() => {})
+        activate(injected, undefined, true).catch(error => {
+          console.log(error)
+        })
       }
 
       const handleAccountsChanged = accounts => {
         if (accounts.length > 0) {
           // eat errors
-          activate(injected, undefined, true).catch(() => {})
+          activate(injected, undefined, true).catch(error => {
+            console.log(error)
+          })
         }
       }
 
       const handleNetworkChanged = () => {
         // eat errors
-        activate(injected, undefined, true).catch(() => {})
+        activate(injected, undefined, true).catch(error => {
+          console.log(error)
+        })
       }
 
       ethereum.on('chainChanged', handleChainChanged)
@@ -86,8 +92,6 @@ export function useInactiveListener(suppress = false) {
         }
       }
     }
-
-    return () => {}
   }, [active, error, suppress, activate])
 }
 

@@ -10,7 +10,7 @@ import { ButtonRadio } from '../Button'
 import { useTranslation } from 'react-i18next'
 import Row, { RowBetween, RowFixed } from '../Row'
 
-const InputWrapper = styled(RowBetween)`
+const InputWrapper = styled(RowBetween)<{ active?: boolean; error?: boolean }>`
   width: 200px;
   background-color: ${({ theme }) => theme.bg1};
   border-radius: 8px;
@@ -105,7 +105,6 @@ export default function AdvancedSettings({
         <ButtonRadio
           active={SLIPPAGE_INDEX[1] === activeIndex}
           padding="4px 6px"
-          borderRadius="8px"
           style={{ marginRight: '16px' }}
           width={'60px'}
           onClick={() => {
@@ -118,7 +117,6 @@ export default function AdvancedSettings({
         <ButtonRadio
           active={SLIPPAGE_INDEX[2] === activeIndex}
           padding="4px 6px"
-          borderRadius="8px"
           style={{ marginRight: '16px' }}
           width={'180px'}
           onClick={() => {
@@ -131,7 +129,6 @@ export default function AdvancedSettings({
         <ButtonRadio
           active={SLIPPAGE_INDEX[3] === activeIndex}
           padding="4px"
-          borderRadius="8px"
           width={'60px'}
           onClick={() => {
             setActiveIndex(SLIPPAGE_INDEX[3])

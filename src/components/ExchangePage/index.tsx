@@ -729,7 +729,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               {!!formattedAmounts[Field.INPUT] && formattedAmounts[Field.INPUT]}
               {/* {!!slippageAdjustedAmounts[Field.INPUT] && slippageAdjustedAmounts[Field.INPUT].toSignificant(6)} */}
             </TruncatedText>
-            <RowFixed gap="4px">
+            <RowFixed>
               <TokenLogo address={tokens[Field.INPUT]?.address} size={'24px'} />
               <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
                 {tokens[Field.INPUT]?.symbol || ''}
@@ -745,7 +745,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
 
               {/* {!!slippageAdjustedAmounts[Field.OUTPUT] && slippageAdjustedAmounts[Field.OUTPUT].toSignificant(6)} */}
             </TruncatedText>
-            <RowFixed gap="4px">
+            <RowFixed>
               <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'24px'} />
               <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
                 {tokens[Field.OUTPUT]?.symbol || ''}
@@ -794,7 +794,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
         <>
           <AutoColumn gap="0px">
             {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-              <RowBetween align="center" justify="center">
+              <RowBetween align="center">
                 <Text fontWeight={400} fontSize={14} color={theme(isDark).text2}>
                   Price
                 </Text>
@@ -1120,7 +1120,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               <PriceBar />
             ) : (
               <AutoColumn gap="4px">
-                <RowBetween align="center" justify="center">
+                <RowBetween align="center">
                   <Text fontWeight={500} fontSize={14} color={theme(isDark).text2}>
                     Price
                   </Text>

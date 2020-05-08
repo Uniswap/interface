@@ -35,7 +35,15 @@ const StyledEthereumLogo = styled(EthereumLogo)<{ size: string }>`
   height: ${({ size }) => size};
 `
 
-export default function TokenLogo({ address, size = '24px', ...rest }) {
+export default function TokenLogo({
+  address,
+  size = '24px',
+  ...rest
+}: {
+  address: string
+  size?: string
+  style?: React.CSSProperties
+}) {
   const [error, setError] = useState(false)
   const { chainId } = useWeb3React()
 

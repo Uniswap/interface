@@ -89,7 +89,7 @@ function reducer(state: TransactionState, { type, payload }): TransactionState {
   }
 }
 
-export default function Provider({ children }) {
+export default function Provider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, {})
 
   const add = useCallback((networkId, hash, response) => {
