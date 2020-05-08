@@ -12,7 +12,6 @@ import TransactionContextProvider, { Updater as TransactionContextUpdater } from
 import BalancesContextProvider, { Updater as BalancesContextUpdater } from './contexts/Balances'
 import ExchangesContextProvider from './contexts/Pairs'
 import AllowancesContextProvider from './contexts/Allowances'
-import RoutesContextProvider from './contexts/Routes'
 import App from './pages/App'
 import ThemeProvider, { GlobalStyle } from './theme'
 import './i18n'
@@ -42,11 +41,9 @@ function ContextProviders({ children }) {
       <ApplicationContextProvider>
         <TransactionContextProvider>
           <ExchangesContextProvider>
-            <RoutesContextProvider>
-              <BalancesContextProvider>
-                <AllowancesContextProvider>{children}</AllowancesContextProvider>
-              </BalancesContextProvider>
-            </RoutesContextProvider>
+            <BalancesContextProvider>
+              <AllowancesContextProvider>{children}</AllowancesContextProvider>
+            </BalancesContextProvider>
           </ExchangesContextProvider>
         </TransactionContextProvider>
       </ApplicationContextProvider>

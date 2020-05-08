@@ -16,13 +16,29 @@ const ADD_POPUP = 'ADD_POPUP'
 const USER_ADVANCED = 'USER_ADVANCED'
 const TOGGLE_USER_ADVANCED = 'TOGGLE_USER_ADVANCED'
 
-const ApplicationContext = createContext()
+interface ApplicationState {
+  BLOCK_NUMBER: {},
+  USD_PRICE: {},
+  POPUP_LIST: Array<{ key: number; show: boolean; content: React.ReactElement }>,
+  POPUP_KEY: number,
+  WALLET_MODAL_OPEN: boolean,
+  USER_ADVANCED: boolean
+}
+
+const ApplicationContext = createContext<[ApplicationState, { [updater: string]: (...args: any[]) => void }]>([{
+  [BLOCK_NUMBER]: {},
+  [USD_PRICE]: {},
+  [POPUP_LIST]: [],
+  [POPUP_KEY]: 0,
+  [WALLET_MODAL_OPEN]: false,
+  [USER_ADVANCED]: false
+}, {}])
 
 function useApplicationContext() {
   return useContext(ApplicationContext)
 }
 
-function reducer(state, { type, payload }) {
+function reducer(state: ApplicationState, { type, payload }): ApplicationState {
   switch (type) {
     case UPDATE_BLOCK_NUMBER: {
       const { networkId, blockNumber } = payload
@@ -66,19 +82,19 @@ export default function Provider({ children }) {
 
   const updateBlockNumber = useCallback((networkId, blockNumber) => {
     dispatch({ type: UPDATE_BLOCK_NUMBER, payload: { networkId, blockNumber } })
-  }, [])
+  }, [dispatch])
 
   const toggleWalletModal = useCallback(() => {
-    dispatch({ type: TOGGLE_WALLET_MODAL })
-  }, [])
+    dispatch({ type: TOGGLE_WALLET_MODAL, payload: null })
+  }, [dispatch])
 
   const toggleUserAdvanced = useCallback(() => {
-    dispatch({ type: TOGGLE_USER_ADVANCED })
-  }, [])
+    dispatch({ type: TOGGLE_USER_ADVANCED, payload: null })
+  }, [dispatch])
 
   const setPopups = useCallback(newList => {
     dispatch({ type: ADD_POPUP, payload: { newList } })
-  }, [])
+  }, [dispatch])
 
   return (
     <ApplicationContext.Provider
@@ -105,7 +121,7 @@ export function Updater() {
     if (library) {
       let stale = false
 
-      function update() {
+      const update = () => {
         library
           .getBlockNumber()
           .then(blockNumber => {
@@ -164,13 +180,13 @@ export function useToggleUserAdvanced() {
   return toggleUserAdvanced
 }
 
-export function usePopups() {
+export function usePopups(): [ApplicationState['POPUP_LIST'], (content: React.ReactElement) => void, (key: number) => void] {
   const [state, { setPopups }] = useApplicationContext()
 
   const index = state[POPUP_KEY]
   const currentPopups = state[POPUP_LIST]
 
-  function addPopup(content) {
+  function addPopup(content: React.ReactElement): void {
     const newItem = {
       show: true,
       key: index,
@@ -180,7 +196,7 @@ export function usePopups() {
     setPopups(currentPopups)
   }
 
-  function removePopup(key) {
+  function removePopup(key: number): void {
     currentPopups.map(item => {
       if (key === item.key) {
         item.show = false
