@@ -8,7 +8,7 @@ import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { ButtonRadio } from '../Button'
 import { useTranslation } from 'react-i18next'
-import Row, { RowBetween, RowFixed } from '../../components/Row'
+import Row, { RowBetween, RowFixed } from '../Row'
 
 const InputWrapper = styled(RowBetween)`
   width: 200px;
