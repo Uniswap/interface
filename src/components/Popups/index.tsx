@@ -79,7 +79,7 @@ export default function App() {
         {activePopups.map(item => {
           return (
             <Popup key={item.key}>
-              <StyledClose color="#888D9B" onClick={() => removePopup(item.key)}/>
+              <StyledClose color="#888D9B" onClick={() => removePopup(item.key)} />
               {React.cloneElement(item.content, { popKey: item.key })}
             </Popup>
           )
@@ -98,7 +98,7 @@ export default function App() {
             .map(item => {
               return (
                 <Popup key={item.key}>
-                  <StyledClose color="#888D9B" onClick={() => removePopup(item.key)}/>
+                  <StyledClose color="#888D9B" onClick={() => removePopup(item.key)} />
                   {React.cloneElement(item.content, { popKey: item.key })}
                 </Popup>
               )

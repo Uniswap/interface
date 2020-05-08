@@ -75,10 +75,10 @@ export default function PendingView({ uri = '', size, connector, error = false, 
 
   return (
     <PendingSection>
-      {!error && connector === walletconnect && <WalletConnectData size={size} uri={uri}/>}
+      {!error && connector === walletconnect && <WalletConnectData size={size} uri={uri} />}
       <LoadingMessage error={error}>
         <LoadingWrapper>
-          {!error && <SpinnerWrapper src={Circle}/>}
+          {!error && <SpinnerWrapper src={Circle} />}
           {error ? (
             <ErrorGroup>
               <div>Error connecting.</div>

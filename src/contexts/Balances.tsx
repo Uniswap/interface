@@ -411,7 +411,7 @@ export function useAllBalances(): Array<TokenAmount> {
     if (!state || !state[chainId]) {
       return {}
     } else {
-      let newBalances = {}
+      const newBalances = {}
       Object.keys(state[chainId]).map(address => {
         return Object.keys(state[chainId][address]).map(tokenAddress => {
           if (state[chainId][address][tokenAddress].value) {
