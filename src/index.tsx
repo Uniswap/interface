@@ -2,8 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
 import { Web3ReactProvider, createWeb3ReactRoot } from '@web3-react/core'
-import { ethers } from 'ethers'
-import { Web3Provider } from 'ethers/providers'
+import { Web3Provider } from '@ethersproject/providers'
 
 import { NetworkContextName } from './constants'
 import { isMobile } from 'react-device-detect'
@@ -21,7 +20,7 @@ import './i18n'
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
 function getLibrary(provider): Web3Provider {
-  const library = new ethers.providers.Web3Provider(provider)
+  const library = new Web3Provider(provider)
   library.pollingInterval = 10000
   return library
 }
@@ -58,9 +57,9 @@ function ContextProviders({ children }) {
 function Updaters() {
   return (
     <>
-      <ApplicationContextUpdater/>
-      <TransactionContextUpdater/>
-      <BalancesContextUpdater/>
+      <ApplicationContextUpdater />
+      <TransactionContextUpdater />
+      <BalancesContextUpdater />
     </>
   )
 }
@@ -69,11 +68,11 @@ ReactDOM.render(
   <Web3ReactProvider getLibrary={getLibrary}>
     <Web3ProviderNetwork getLibrary={getLibrary}>
       <ContextProviders>
-        <Updaters/>
+        <Updaters />
         <ThemeProvider>
           <>
-            <GlobalStyle/>
-            <App/>
+            <GlobalStyle />
+            <App />
           </>
         </ThemeProvider>
       </ContextProviders>

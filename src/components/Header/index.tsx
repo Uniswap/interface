@@ -13,7 +13,6 @@ import { isMobile } from 'react-device-detect'
 import { YellowCard, GreyCard } from '../Card'
 import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
-import { useWalletModalToggle } from '../../contexts/Application'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 import Logo from '../../assets/svg/logo.svg'
@@ -138,7 +137,6 @@ function Header({ history }) {
   const { account, chainId } = useWeb3React()
 
   const userEthBalance = useAddressBalance(account, WETH[chainId])
-  const toggleWalletModal = useWalletModalToggle()
   const [isDark] = useDarkModeManager()
 
   return (
@@ -189,7 +187,7 @@ function Header({ history }) {
             ) : (
               ''
             )}
-            <Web3Status onClick={toggleWalletModal} />
+            <Web3Status />
           </AccountElement>
 
           <Menu />

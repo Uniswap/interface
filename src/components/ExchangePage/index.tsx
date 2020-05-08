@@ -1,15 +1,31 @@
 import React, { useState, useReducer, useCallback, useEffect } from 'react'
-import styled from 'styled-components'
-import { ethers } from 'ethers'
 import { withRouter } from 'react-router-dom'
 import { parseUnits, parseEther } from '@ethersproject/units'
-import { WETH, TradeType, Pair, Trade, TokenAmount, JSBI, Percent } from '@uniswap/sdk'
+import { BigNumber } from '@ethersproject/bignumber'
+import { Zero, MaxUint256 } from '@ethersproject/constants'
+import { Contract } from '@ethersproject/contracts'
+import { WETH, TradeType, Pair, Trade, TokenAmount, JSBI, Percent, Fraction } from '@uniswap/sdk'
 
+import { Field, initializeSwapState, reducer, SwapAction } from './swap-store'
+import {
+  AdvancedDropwdown,
+  ArrowWrapper,
+  BottomGrouping,
+  Dots,
+  ErrorText,
+  FixedBottom,
+  InputGroup,
+  MaxButton,
+  SectionBreak,
+  StyledBalanceMaxMini,
+  StyledNumerical,
+  TruncatedText,
+  Wrapper
+} from './styleds'
 import Copy from '../AccountDetails/Copy'
 import TokenLogo from '../TokenLogo'
 import SlippageTabs from '../SlippageTabs'
 import QuestionHelper from '../Question'
-import NumericalInput from '../NumericalInput'
 import AddressInputPanel from '../AddressInputPanel'
 import ConfirmationModal from '../ConfirmationModal'
 import CurrencyInputPanel from '../CurrencyInputPanel'
@@ -37,266 +53,18 @@ import { getRouterContract, calculateGasMargin, getProviderOrSigner, getEthersca
 import { useLocalStorageTokens } from '../../contexts/LocalStorage'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
 
-const Wrapper = styled.div`
-  position: relative;
-`
-
-const ArrowWrapper = styled.div`
-  padding: 2px;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  :hover {
-    cursor: pointer;
-    opacity: 0.8;
-  }
-`
-
-const FixedBottom = styled.div`
-  position: absolute;
-  margin-top: 1.5rem;
-  width: 100%;
-  margin-bottom: 40px;
-`
-
-const AdvancedDropwdown = styled.div`
-  position: absolute;
-  margin-top: -12px;
-  max-width: 455px;
-  width: 100%;
-  margin-bottom: 100px;
-  padding: 10px 0;
-  padding-top: 36px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  color: ${({ theme }) => theme.text2};
-  background-color: ${({ theme }) => theme.advancedBG};
-  color: ${({ theme }) => theme.text2};
-  z-index: -1;
-`
-
-const SectionBreak = styled.div`
-  height: 1px;
-  width: 100%;
-  background-color: ${({ theme }) => theme.bg3};
-`
-
-const BottomGrouping = styled.div`
-  margin-top: 12px;
-  position: relative;
-`
-
-const ErrorText = styled(Text)`
-  color: ${({ theme, warningLow, warningMedium, warningHigh }) =>
-    warningHigh ? theme.red1 : warningMedium ? theme.yellow2 : warningLow ? theme.green1 : theme.text1};
-`
-
-const InputGroup = styled(AutoColumn)`
-  position: relative;
-  padding: 40px 0 20px 0;
-`
-
-const StyledNumerical = styled(NumericalInput)`
-  text-align: center;
-  font-size: 48px;
-  font-weight: 500px;
-  width: 100%;
-
-  ::placeholder {
-    color: ${({ theme }) => theme.text4};
-  }
-`
-
-const MaxButton = styled.button`
-  position: absolute;
-  right: 70px;
-  padding: 0.5rem 0.5rem;
-  background-color: ${({ theme }) => theme.blue5};
-  border: 1px solid ${({ theme }) => theme.blue5};
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  cursor: pointer;
-  margin-right: 0.5rem;
-  color: ${({ theme }) => theme.blue1};
-  :hover {
-    border: 1px solid ${({ theme }) => theme.blue1};
-  }
-  :focus {
-    border: 1px solid ${({ theme }) => theme.blue1};
-    outline: none;
-  }
-`
-
-const StyledBalanceMaxMini = styled.button`
-  height: 24px;
-  background-color: ${({ theme }) => theme.bg2};
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 400;
-  margin-left: 6px;
-  cursor: pointer;
-  color: ${({ theme }) => theme.text2};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: fit-content;
-  float: right;
-
-  :hover {
-    background-color: ${({ theme }) => theme.bg3};
-
-    /* border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.blue4)}; */
-  }
-  :focus {
-    background-color: ${({ theme }) => theme.bg3};
-    /* border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.blue4)}; */
-    outline: none;
-  }
-`
-
-const TruncatedText = styled(Text)`
-  text-overflow: ellipsis;
-  width: 220px;
-  overflow: hidden;
-`
-
-// styles
-const Dots = styled.span`
-  &::after {
-    display: inline-block;
-    animation: ellipsis 1.25s infinite;
-    content: '.';
-    width: 1em;
-    text-align: left;
-  }
-  @keyframes ellipsis {
-    0% {
-      content: '.';
-    }
-    33% {
-      content: '..';
-    }
-    66% {
-      content: '...';
-    }
-  }
-`
-
-enum Field {
-  INPUT,
-  OUTPUT
-}
-
-interface SwapState {
-  independentField: Field
-  typedValue: string
-  [Field.INPUT]: {
-    address: string | undefined
-  }
-  [Field.OUTPUT]: {
-    address: string | undefined
-  }
-}
-
-function initializeSwapState({ inputTokenAddress, outputTokenAddress, typedValue, independentField }): SwapState {
-  return {
-    independentField: independentField,
-    typedValue: typedValue,
-    [Field.INPUT]: {
-      address: inputTokenAddress
-    },
-    [Field.OUTPUT]: {
-      address: outputTokenAddress
-    }
-  }
-}
-
-enum SwapAction {
-  SELECT_TOKEN,
-  SWITCH_TOKENS,
-  TYPE
-}
-
-interface Payload {
-  [SwapAction.SELECT_TOKEN]: {
-    field: Field
-    address: string
-  }
-  [SwapAction.SWITCH_TOKENS]: undefined
-  [SwapAction.TYPE]: {
-    field: Field
-    typedValue: string
-  }
-}
-
-function reducer(
-  state: SwapState,
-  action: {
-    type: SwapAction
-    payload: Payload[SwapAction]
-  }
-): SwapState {
-  switch (action.type) {
-    case SwapAction.SELECT_TOKEN: {
-      const { field, address } = action.payload as Payload[SwapAction.SELECT_TOKEN]
-      const otherField = field === Field.INPUT ? Field.OUTPUT : Field.INPUT
-      if (address === state[otherField].address) {
-        // the case where we have to swap the order
-        return {
-          ...state,
-          independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-          [field]: { address },
-          [otherField]: { address: state[field].address }
-        }
-      } else {
-        // the normal case
-        return {
-          ...state,
-          [field]: { address }
-        }
-      }
-    }
-    case SwapAction.SWITCH_TOKENS: {
-      return {
-        ...state,
-        independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-        [Field.INPUT]: { address: state[Field.OUTPUT].address },
-        [Field.OUTPUT]: { address: state[Field.INPUT].address }
-      }
-    }
-    case SwapAction.TYPE: {
-      const { field, typedValue } = action.payload as Payload[SwapAction.TYPE]
-      return {
-        ...state,
-        independentField: field,
-        typedValue
-      }
-    }
-    default: {
-      throw Error
-    }
-  }
-}
-
 function hex(value: JSBI) {
-  return ethers.utils.bigNumberify(value.toString())
+  return BigNumber.from(value.toString())
 }
 
-const SWAP_TYPE = {
-  EXACT_TOKENS_FOR_TOKENS: 'EXACT_TOKENS_FOR_TOKENS',
-  EXACT_TOKENS_FOR_ETH: 'EXACT_TOKENS_FOR_ETH',
-  EXACT_ETH_FOR_TOKENS: 'EXACT_ETH_FOR_TOKENS',
-  TOKENS_FOR_EXACT_TOKENS: 'TOKENS_FOR_EXACT_TOKENS',
-  TOKENS_FOR_EXACT_ETH: 'TOKENS_FOR_EXACT_ETH',
-  ETH_FOR_EXACT_TOKENS: 'ETH_FOR_EXACT_TOKENS'
+enum SwapType {
+  EXACT_TOKENS_FOR_TOKENS,
+  EXACT_TOKENS_FOR_ETH,
+  EXACT_ETH_FOR_TOKENS,
+  TOKENS_FOR_EXACT_TOKENS,
+  TOKENS_FOR_EXACT_ETH,
+  ETH_FOR_EXACT_TOKENS
 }
-
-const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
 // default allowed slippage, in bips
 const INITIAL_ALLOWED_SLIPPAGE = 50
@@ -387,8 +155,8 @@ function ExchangePage({ sendingInput = false, history, params }) {
   }, [outputTokenAddress, allTokens, fetchTokenByAddress, addToken])
 
   // token contracts for approvals and direct sends
-  const tokenContractInput: ethers.Contract = useTokenContract(tokens[Field.INPUT]?.address)
-  const tokenContractOutput: ethers.Contract = useTokenContract(tokens[Field.OUTPUT]?.address)
+  const tokenContractInput: Contract = useTokenContract(tokens[Field.INPUT]?.address)
+  const tokenContractOutput: Contract = useTokenContract(tokens[Field.OUTPUT]?.address)
 
   // check on pending approvals for token amounts
   const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
@@ -544,22 +312,22 @@ function ExchangePage({ sendingInput = false, history, params }) {
       ? JSBI.equal(maxAmountOutput.raw, parsedAmounts[Field.OUTPUT].raw)
       : undefined
 
-  function getSwapType(): string {
+  function getSwapType(): SwapType {
     if (tradeType === TradeType.EXACT_INPUT) {
       if (tokens[Field.INPUT] === WETH[chainId]) {
-        return SWAP_TYPE.EXACT_ETH_FOR_TOKENS
+        return SwapType.EXACT_ETH_FOR_TOKENS
       } else if (tokens[Field.OUTPUT] === WETH[chainId]) {
-        return SWAP_TYPE.EXACT_TOKENS_FOR_ETH
+        return SwapType.EXACT_TOKENS_FOR_ETH
       } else {
-        return SWAP_TYPE.EXACT_TOKENS_FOR_TOKENS
+        return SwapType.EXACT_TOKENS_FOR_TOKENS
       }
     } else if (tradeType === TradeType.EXACT_OUTPUT) {
       if (tokens[Field.INPUT] === WETH[chainId]) {
-        return SWAP_TYPE.ETH_FOR_EXACT_TOKENS
+        return SwapType.ETH_FOR_EXACT_TOKENS
       } else if (tokens[Field.OUTPUT] === WETH[chainId]) {
-        return SWAP_TYPE.TOKENS_FOR_EXACT_ETH
+        return SwapType.TOKENS_FOR_EXACT_ETH
       } else {
-        return SWAP_TYPE.TOKENS_FOR_EXACT_TOKENS
+        return SwapType.TOKENS_FOR_EXACT_TOKENS
       }
     }
   }
@@ -616,30 +384,29 @@ function ExchangePage({ sendingInput = false, history, params }) {
           setShowConfirm(false)
         })
     } else {
-      estimate = tokenContractInput.estimate.transfer
+      estimate = tokenContractInput.estimateGas.transfer
       method = tokenContractInput.transfer
       args = [recipient, parsedAmounts[Field.INPUT].raw.toString()]
-      value = ethers.constants.Zero
-      const estimatedGasLimit = await estimate(...args, { value }).catch(e => {
-        console.log('error getting gas limit')
-      })
-      method(...args, {
-        value,
-        gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
-      })
-        .then(response => {
-          setTxHash(response.hash)
-          addTransaction(
-            response,
-            'Send ' +
-              parsedAmounts[Field.INPUT]?.toSignificant(3) +
-              ' ' +
-              tokens[Field.INPUT]?.symbol +
-              ' to ' +
-              recipient
-          )
-          setPendingConfirmation(false)
-        })
+      value = Zero
+      await estimate(...args, { value })
+        .then(estimatedGasLimit =>
+          method(...args, {
+            value,
+            gasLimit: calculateGasMargin(estimatedGasLimit)
+          }).then(response => {
+            setTxHash(response.hash)
+            addTransaction(
+              response,
+              'Send ' +
+                parsedAmounts[Field.INPUT]?.toSignificant(3) +
+                ' ' +
+                tokens[Field.INPUT]?.symbol +
+                ' to ' +
+                recipient
+            )
+            setPendingConfirmation(false)
+          })
+        )
         .catch(() => {
           resetModal()
           setShowConfirm(false)
@@ -649,20 +416,19 @@ function ExchangePage({ sendingInput = false, history, params }) {
 
   // covers swap or swap with send
   async function onSwap() {
-    const routerContract: ethers.Contract = getRouterContract(chainId, library, account)
+    const routerContract: Contract = getRouterContract(chainId, library, account)
 
     setAttemptingTxn(true) // mark that user is attempting transaction
 
     const path = Object.keys(route.path).map(key => {
       return route.path[key].address
     })
-    let estimate: Function, method: Function, args: any[], value: ethers.utils.BigNumber
+    let estimate: Function, method: Function, args: any[], value: BigNumber
     const deadlineFromNow: number = Math.ceil(Date.now() / 1000) + deadline
 
-    const swapType = getSwapType()
-    switch (swapType) {
-      case SWAP_TYPE.EXACT_TOKENS_FOR_TOKENS:
-        estimate = routerContract.estimate.swapExactTokensForTokens
+    switch (getSwapType()) {
+      case SwapType.EXACT_TOKENS_FOR_TOKENS:
+        estimate = routerContract.estimateGas.swapExactTokensForTokens
         method = routerContract.swapExactTokensForTokens
         args = [
           slippageAdjustedAmounts[Field.INPUT].raw.toString(),
@@ -671,10 +437,10 @@ function ExchangePage({ sendingInput = false, history, params }) {
           sending ? recipient : account,
           deadlineFromNow
         ]
-        value = ethers.constants.Zero
+        value = Zero
         break
-      case SWAP_TYPE.TOKENS_FOR_EXACT_TOKENS:
-        estimate = routerContract.estimate.swapTokensForExactTokens
+      case SwapType.TOKENS_FOR_EXACT_TOKENS:
+        estimate = routerContract.estimateGas.swapTokensForExactTokens
         method = routerContract.swapTokensForExactTokens
         args = [
           slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
@@ -683,10 +449,10 @@ function ExchangePage({ sendingInput = false, history, params }) {
           sending ? recipient : account,
           deadlineFromNow
         ]
-        value = ethers.constants.Zero
+        value = Zero
         break
-      case SWAP_TYPE.EXACT_ETH_FOR_TOKENS:
-        estimate = routerContract.estimate.swapExactETHForTokens
+      case SwapType.EXACT_ETH_FOR_TOKENS:
+        estimate = routerContract.estimateGas.swapExactETHForTokens
         method = routerContract.swapExactETHForTokens
         args = [
           slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
@@ -696,8 +462,8 @@ function ExchangePage({ sendingInput = false, history, params }) {
         ]
         value = hex(slippageAdjustedAmounts[Field.INPUT].raw)
         break
-      case SWAP_TYPE.TOKENS_FOR_EXACT_ETH:
-        estimate = routerContract.estimate.swapTokensForExactETH
+      case SwapType.TOKENS_FOR_EXACT_ETH:
+        estimate = routerContract.estimateGas.swapTokensForExactETH
         method = routerContract.swapTokensForExactETH
         args = [
           slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
@@ -706,10 +472,10 @@ function ExchangePage({ sendingInput = false, history, params }) {
           sending ? recipient : account,
           deadlineFromNow
         ]
-        value = ethers.constants.Zero
+        value = Zero
         break
-      case SWAP_TYPE.EXACT_TOKENS_FOR_ETH:
-        estimate = routerContract.estimate.swapExactTokensForETH
+      case SwapType.EXACT_TOKENS_FOR_ETH:
+        estimate = routerContract.estimateGas.swapExactTokensForETH
         method = routerContract.swapExactTokensForETH
         args = [
           slippageAdjustedAmounts[Field.INPUT].raw.toString(),
@@ -718,10 +484,10 @@ function ExchangePage({ sendingInput = false, history, params }) {
           sending ? recipient : account,
           deadlineFromNow
         ]
-        value = ethers.constants.Zero
+        value = Zero
         break
-      case SWAP_TYPE.ETH_FOR_EXACT_TOKENS:
-        estimate = routerContract.estimate.swapETHForExactTokens
+      case SwapType.ETH_FOR_EXACT_TOKENS:
+        estimate = routerContract.estimateGas.swapETHForExactTokens
         method = routerContract.swapETHForExactTokens
         args = [
           slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
@@ -733,29 +499,27 @@ function ExchangePage({ sendingInput = false, history, params }) {
         break
     }
 
-    const estimatedGasLimit = await estimate(...args, { value }).catch(e => {
-      console.log(e)
-    })
-
-    method(...args, {
-      value,
-      gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN)
-    })
-      .then(response => {
-        setTxHash(response.hash)
-        addTransaction(
-          response,
-          'Swap ' +
-            slippageAdjustedAmounts?.[Field.INPUT]?.toSignificant(3) +
-            ' ' +
-            tokens[Field.INPUT]?.symbol +
-            ' for ' +
-            slippageAdjustedAmounts?.[Field.OUTPUT]?.toSignificant(3) +
-            ' ' +
-            tokens[Field.OUTPUT]?.symbol
-        )
-        setPendingConfirmation(false)
-      })
+    await estimate(...args, { value })
+      .then(estimatedGasLimit =>
+        method(...args, {
+          value,
+          gasLimit: calculateGasMargin(estimatedGasLimit)
+        }).then(response => {
+          setTxHash(response.hash)
+          addTransaction(
+            response,
+            'Swap ' +
+              slippageAdjustedAmounts?.[Field.INPUT]?.toSignificant(3) +
+              ' ' +
+              tokens[Field.INPUT]?.symbol +
+              ' for ' +
+              slippageAdjustedAmounts?.[Field.OUTPUT]?.toSignificant(3) +
+              ' ' +
+              tokens[Field.OUTPUT]?.symbol
+          )
+          setPendingConfirmation(false)
+        })
+      )
       .catch(() => {
         resetModal()
         setShowConfirm(false)
@@ -763,21 +527,18 @@ function ExchangePage({ sendingInput = false, history, params }) {
   }
 
   async function approveAmount(field: Field) {
-    let estimatedGas
     let useUserBalance = false
     const tokenContract = field === Field.INPUT ? tokenContractInput : tokenContractOutput
 
-    estimatedGas = await tokenContract.estimate.approve(ROUTER_ADDRESS, ethers.constants.MaxUint256).catch(e => {
-      console.log('Error setting max token approval.')
-    })
-    if (!estimatedGas) {
+    const estimatedGas = await tokenContract.estimateGas.approve(ROUTER_ADDRESS, MaxUint256).catch(() => {
       // general fallback for tokens who restrict approval amounts
-      estimatedGas = await tokenContract.estimate.approve(ROUTER_ADDRESS, userBalances[field])
       useUserBalance = true
-    }
+      return tokenContract.estimateGas.approve(ROUTER_ADDRESS, userBalances[field])
+    })
+
     tokenContract
-      .approve(ROUTER_ADDRESS, useUserBalance ? userBalances[field] : ethers.constants.MaxUint256, {
-        gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
+      .approve(ROUTER_ADDRESS, useUserBalance ? userBalances[field] : MaxUint256, {
+        gasLimit: calculateGasMargin(estimatedGas)
       })
       .then(response => {
         addTransaction(response, 'Approve ' + tokens[field]?.symbol, { approval: tokens[field]?.address })
@@ -1518,12 +1279,16 @@ function ExchangePage({ sendingInput = false, history, params }) {
                     <TYPE.black color={theme(isDark).text1} fontSize={14}>
                       {independentField === Field.INPUT
                         ? slippageAdjustedAmounts[Field.OUTPUT]
-                          ? slippageAdjustedAmounts[Field.OUTPUT]?.toFixed(5) === '0.00000'
+                          ? slippageAdjustedAmounts[Field.OUTPUT]?.lessThan(
+                              new Fraction(JSBI.BigInt(1), JSBI.BigInt(10000))
+                            )
                             ? '<0.00001'
                             : slippageAdjustedAmounts[Field.OUTPUT]?.toFixed(5)
                           : '-'
                         : slippageAdjustedAmounts[Field.INPUT]
-                        ? slippageAdjustedAmounts[Field.INPUT]?.toFixed(5) === '0.00000'
+                        ? slippageAdjustedAmounts[Field.INPUT]?.lessThan(
+                            new Fraction(JSBI.BigInt(1), JSBI.BigInt(10000))
+                          )
                           ? '<0.00001'
                           : slippageAdjustedAmounts[Field.INPUT]?.toFixed(5)
                         : '-'}
