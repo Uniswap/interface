@@ -7,7 +7,7 @@ on:
     branches:
       - v2
 jobs:
-  cypress-run:
+  integration-tests:
     name: Integration tests
     runs-on: ubuntu-16.04
     steps:
@@ -18,3 +18,16 @@ jobs:
           node-version: '12'
       - run: yarn
       - run: yarn integration-test
+
+  unit-tests:
+    name: Unit tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - run: yarn
+      - run: yarn test
+
+# todo: add job for typescript linting
