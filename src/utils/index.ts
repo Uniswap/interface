@@ -216,13 +216,3 @@ export async function getTokenBalance(tokenAddress, address, library) {
 
   return getContract(tokenAddress, ERC20_ABI, library).balanceOf(address)
 }
-
-// necessary because we override the name/symbol of WETH for display purposes, which messes with the equality
-// comparison in the SDK
-export function isWETH(token: Token) {
-  if (token && token.address === WETH[token.chainId].address) {
-    return true
-  } else {
-    return false
-  }
-}

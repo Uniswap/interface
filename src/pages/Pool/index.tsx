@@ -16,7 +16,7 @@ import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { useWeb3React } from '@web3-react/core'
 import { useAllBalances, useAccountLPBalances } from '../../contexts/Balances'
 import { useReserves } from '../../data/Reserves'
-import { useLocalStoragePairs } from '../../contexts/LocalStorage'
+import { useAllDummyPairs } from '../../contexts/LocalStorage'
 
 const Positions = styled.div`
   position: relative;
@@ -43,7 +43,7 @@ function Supply({ history }: RouteComponentProps) {
   const allBalances = useAllBalances()
   useAccountLPBalances(account)
 
-  const [pairs] = useLocalStoragePairs()
+  const pairs = useAllDummyPairs()
 
   const filteredExchangeList = pairs
     .filter(pair => {

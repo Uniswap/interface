@@ -6,7 +6,7 @@ import { useBlockNumber } from './Application'
 import { useWeb3React, useDebounce } from '../hooks'
 
 import { getEtherBalance, getTokenBalance, isAddress } from '../utils'
-import { useLocalStoragePairs } from './LocalStorage'
+import { useAllDummyPairs } from './LocalStorage'
 
 const LOCAL_STORAGE_KEY = 'BALANCES'
 const SHORT_BLOCK_TIMEOUT = (60 * 2) / 15 // in seconds, represented as a block number delta
@@ -325,7 +325,7 @@ export function Updater() {
   }, [chainId, account, blockNumber, allTokens, fetchBalance, batchUpdateAccount])
 
   // ensure token balances for all exchanges
-  const [allPairs] = useLocalStoragePairs()
+  const allPairs = useAllDummyPairs()
   useEffect(() => {
     if (typeof chainId === 'number' && typeof blockNumber === 'number') {
       Promise.all(
@@ -475,7 +475,7 @@ export function useAddressBalance(address: string, token: Token): TokenAmount | 
 export function useAccountLPBalances(account: string) {
   const { chainId } = useWeb3React()
   const [, { startListening, stopListening }] = useBalancesContext()
-  const [pairs] = useLocalStoragePairs()
+  const pairs = useAllDummyPairs()
 
   useEffect(() => {
     if (typeof chainId === 'number' && isAddress(account)) {

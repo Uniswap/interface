@@ -28,7 +28,7 @@ import { useWeb3React, useTokenContract } from '../../hooks'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 
 import { ROUTER_ADDRESS } from '../../constants'
-import { getRouterContract, calculateGasMargin, isWETH } from '../../utils'
+import { getRouterContract, calculateGasMargin } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useReserves } from '../../data/Reserves'
 
@@ -262,12 +262,12 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   const inputApproval: TokenAmount = useTokenAllowance(tokens[Field.INPUT], account, ROUTER_ADDRESS)
   const outputApproval: TokenAmount = useTokenAllowance(tokens[Field.OUTPUT], account, ROUTER_ADDRESS)
   const inputApproved =
-    isWETH(tokens[Field.INPUT]) ||
+    tokens[Field.INPUT]?.equals(WETH[chainId]) ||
     (!!inputApproval &&
       !!parsedAmounts[Field.INPUT] &&
       JSBI.greaterThanOrEqual(inputApproval.raw, parsedAmounts[Field.INPUT].raw))
   const outputApproved =
-    isWETH(tokens[Field.OUTPUT]) ||
+    tokens[Field.OUTPUT]?.equals(WETH[chainId]) ||
     (!!outputApproval &&
       !!parsedAmounts[Field.OUTPUT] &&
       JSBI.greaterThanOrEqual(outputApproval.raw, parsedAmounts[Field.OUTPUT].raw))
@@ -338,8 +338,11 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   const [maxAmountInput, maxAmountOutput]: TokenAmount[] = [Field.INPUT, Field.OUTPUT].map(index => {
     const field = Field[index]
     return !!userBalances[Field[field]] &&
-      JSBI.greaterThan(userBalances[Field[field]].raw, isWETH(tokens[Field[field]]) ? MIN_ETHER.raw : JSBI.BigInt(0))
-      ? isWETH(tokens[Field[field]])
+      JSBI.greaterThan(
+        userBalances[Field[field]].raw,
+        tokens[Field[field]]?.equals(WETH[chainId]) ? MIN_ETHER.raw : JSBI.BigInt(0)
+      )
+      ? tokens[Field[field]]?.equals(WETH[chainId])
         ? userBalances[Field[field]].subtract(MIN_ETHER)
         : userBalances[Field[field]]
       : undefined

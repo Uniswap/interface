@@ -23,14 +23,7 @@ import { useTokenContract, useWeb3React } from '../../hooks'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { Hover, theme, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
-import {
-  calculateGasMargin,
-  getEtherscanLink,
-  getProviderOrSigner,
-  getRouterContract,
-  isWETH,
-  QueryParams
-} from '../../utils'
+import { calculateGasMargin, getEtherscanLink, getProviderOrSigner, getRouterContract, QueryParams } from '../../utils'
 import Copy from '../AccountDetails/Copy'
 import AddressInputPanel from '../AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../Button'
@@ -201,7 +194,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   // check whether the user has approved the router on the input token
   const inputApproval: TokenAmount = useTokenAllowance(tokens[Field.INPUT], account, ROUTER_ADDRESS)
   const userHasApprovedRouter =
-    isWETH(tokens[Field.INPUT]) ||
+    tokens[Field.INPUT]?.equals(WETH[chainId]) ||
     (!!inputApproval &&
       !!parsedAmounts[Field.INPUT] &&
       JSBI.greaterThanOrEqual(inputApproval.raw, parsedAmounts[Field.INPUT].raw))
@@ -293,8 +286,11 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       !!userBalances[Field.INPUT] &&
       !!tokens[Field.INPUT] &&
       WETH[chainId] &&
-      JSBI.greaterThan(userBalances[Field.INPUT].raw, isWETH(tokens[Field.INPUT]) ? MIN_ETHER.raw : JSBI.BigInt(0))
-        ? isWETH(tokens[Field.INPUT])
+      JSBI.greaterThan(
+        userBalances[Field.INPUT].raw,
+        tokens[Field.INPUT].equals(WETH[chainId]) ? MIN_ETHER.raw : JSBI.BigInt(0)
+      )
+        ? tokens[Field.INPUT].equals(WETH[chainId])
           ? userBalances[Field.INPUT].subtract(MIN_ETHER)
           : userBalances[Field.INPUT]
         : undefined

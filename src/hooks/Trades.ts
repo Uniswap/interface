@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { WETH, Token, TokenAmount, Trade } from '@uniswap/sdk'
 import { useWeb3React } from './index'
-import { isWETH } from '../utils'
 import { useReserves } from '../data/Reserves'
 
 /**
@@ -14,8 +13,8 @@ export function useTradeExactIn(amountIn?: TokenAmount, tokenOut?: Token): Trade
   const pairBetween = useReserves(amountIn?.token, tokenOut)
 
   // get token<->WETH pairs
-  const aToETH = useReserves(amountIn && !isWETH(amountIn.token) ? amountIn.token : null, WETH[chainId])
-  const bToETH = useReserves(tokenOut && !isWETH(tokenOut) ? tokenOut : null, WETH[chainId])
+  const aToETH = useReserves(amountIn && !amountIn.token?.equals(WETH[chainId]) ? amountIn.token : null, WETH[chainId])
+  const bToETH = useReserves(tokenOut && !tokenOut?.equals(WETH[chainId]) ? tokenOut : null, WETH[chainId])
 
   return useMemo(() => {
     const allPairs = [pairBetween, aToETH, bToETH].filter(p => !!p)
@@ -37,8 +36,11 @@ export function useTradeExactOut(tokenIn?: Token, amountOut?: TokenAmount): Trad
   const pairBetween = useReserves(amountOut?.token, tokenIn)
 
   // get token<->WETH pairs
-  const aToETH = useReserves(amountOut && !isWETH(amountOut.token) ? amountOut.token : null, WETH[chainId])
-  const bToETH = useReserves(tokenIn && !isWETH(tokenIn) ? tokenIn : null, WETH[chainId])
+  const aToETH = useReserves(
+    amountOut && !amountOut.token?.equals(WETH[chainId]) ? amountOut.token : null,
+    WETH[chainId]
+  )
+  const bToETH = useReserves(tokenIn && !tokenIn?.equals(WETH[chainId]) ? tokenIn : null, WETH[chainId])
 
   return useMemo(() => {
     const allPairs = [pairBetween, aToETH, bToETH].filter(p => !!p)

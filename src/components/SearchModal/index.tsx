@@ -25,7 +25,7 @@ import { RowBetween, RowFixed, AutoRow } from '../Row'
 
 import { isAddress } from '../../utils'
 import { useWeb3React } from '../../hooks'
-import { useLocalStorageTokens, useLocalStoragePairs } from '../../contexts/LocalStorage'
+import { useLocalStorageTokens, useAllDummyPairs } from '../../contexts/LocalStorage'
 import { useAllBalances } from '../../contexts/Balances'
 import { useTranslation } from 'react-i18next'
 import { useToken, useAllTokens, ALL_TOKENS } from '../../contexts/Tokens'
@@ -170,7 +170,7 @@ function SearchModal({
   const theme = useContext(ThemeContext)
 
   const allTokens = useAllTokens()
-  const [allPairs] = useLocalStoragePairs()
+  const allPairs = useAllDummyPairs()
   const allBalances = useAllBalances()
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -346,7 +346,7 @@ function SearchModal({
 
       return regexMatches.some(m => m)
     })
-  }, [allPairs, allTokens, searchQuery, sortedPairList])
+  }, [searchQuery, sortedPairList])
 
   function renderPairsList() {
     if (filteredPairList?.length === 0) {
