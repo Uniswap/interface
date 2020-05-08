@@ -76,8 +76,8 @@ const Web3StatusConnect = styled(Web3StatusGeneric)`
   }
 
   ${({ faded }) =>
-  faded &&
-  css`
+    faded &&
+    css`
       background-color: ${({ theme }) => theme.blue5};
       border: 1px solid ${({ theme }) => theme.blue5};
       color: ${({ theme }) => theme.buttonSecondaryText};
@@ -140,29 +140,29 @@ export default function Web3Status() {
   // handle the logo we want to show with the account
   function getStatusIcon() {
     if (connector === injected) {
-      return <Identicon/>
+      return <Identicon />
     } else if (connector === walletconnect) {
       return (
         <IconWrapper size={16}>
-          <img src={WalletConnectIcon} alt={''}/>
+          <img src={WalletConnectIcon} alt={''} />
         </IconWrapper>
       )
     } else if (connector === walletlink) {
       return (
         <IconWrapper size={16}>
-          <img src={CoinbaseWalletIcon} alt={''}/>
+          <img src={CoinbaseWalletIcon} alt={''} />
         </IconWrapper>
       )
     } else if (connector === fortmatic) {
       return (
         <IconWrapper size={16}>
-          <img src={FortmaticIcon} alt={''}/>
+          <img src={FortmaticIcon} alt={''} />
         </IconWrapper>
       )
     } else if (connector === portis) {
       return (
         <IconWrapper size={16}>
-          <img src={PortisIcon} alt={''}/>
+          <img src={PortisIcon} alt={''} />
         </IconWrapper>
       )
     }
@@ -174,7 +174,7 @@ export default function Web3Status() {
         <Web3StatusConnected onClick={toggleWalletModal} pending={hasPendingTransactions}>
           {hasPendingTransactions ? (
             <RowBetween>
-              <Text>{pending?.length} Pending</Text> <SpinnerWrapper src={LightCircle} alt="loader"/>
+              <Text>{pending?.length} Pending</Text> <SpinnerWrapper src={LightCircle} alt="loader" />
             </RowBetween>
           ) : (
             <Text>{ENSName || shortenAddress(account)}</Text>
@@ -185,7 +185,7 @@ export default function Web3Status() {
     } else if (error) {
       return (
         <Web3StatusError onClick={toggleWalletModal}>
-          <NetworkIcon/>
+          <NetworkIcon />
           <Text>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}</Text>
         </Web3StatusError>
       )
@@ -205,7 +205,7 @@ export default function Web3Status() {
   return (
     <>
       {getWeb3Status()}
-      <WalletModal ENSName={ENSName} pendingTransactions={pending} confirmedTransactions={confirmed}/>
+      <WalletModal ENSName={ENSName} pendingTransactions={pending} confirmedTransactions={confirmed} />
     </>
   )
 }

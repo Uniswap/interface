@@ -58,12 +58,15 @@ export default function InputSlider({ value, onChange, override }: InputSliderPr
   const [internalVal, setInternalVal] = useState<number>(value)
   const debouncedInternalValue = useDebounce(internalVal, 100)
 
-  const handleChange = useCallback((e, val) => {
-    setInternalVal(val)
-    if (val !== debouncedInternalValue) {
-      onChange(val)
-    }
-  }, [setInternalVal, onChange, debouncedInternalValue])
+  const handleChange = useCallback(
+    (e, val) => {
+      setInternalVal(val)
+      if (val !== debouncedInternalValue) {
+        onChange(val)
+      }
+    },
+    [setInternalVal, onChange, debouncedInternalValue]
+  )
 
   useEffect(() => {
     if (override) {

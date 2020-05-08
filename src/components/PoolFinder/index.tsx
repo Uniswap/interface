@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { TokenAmount, JSBI, Token, Pair } from '@uniswap/sdk'
 
 import Row from '../Row'
@@ -21,7 +21,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useAddressBalance } from '../../contexts/Balances'
 import { usePair, useAllPairs } from '../../contexts/Pairs'
 
-function PoolFinder({ history }) {
+function PoolFinder({ history }: RouteComponentProps) {
   const Fields = {
     TOKEN0: 0,
     TOKEN1: 1

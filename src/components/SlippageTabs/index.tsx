@@ -61,21 +61,21 @@ const Input = styled.input<{ active?: boolean }>`
   color: ${({ theme }) => theme.text1};
   text-align: left;
   ${({ active }) =>
-  active &&
-  css`
+    active &&
+    css`
       color: initial;
       cursor: initial;
       text-align: right;
     `}
   ${({ placeholder }) =>
-  placeholder !== 'Custom' &&
-  css`
+    placeholder !== 'Custom' &&
+    css`
       text-align: right;
       color: ${({ theme }) => theme.text1};
     `}
   ${({ color }) =>
-  color === 'red' &&
-  css`
+    color === 'red' &&
+    css`
       color: ${({ theme }) => theme.red1};
     `}
 `
@@ -84,8 +84,8 @@ const BottomError = styled(Text)`
   font-size: 14px;
   font-weight: 400;
   ${({ show }) =>
-  show &&
-  css`
+    show &&
+    css`
       padding-top: 12px;
     `}
 `
@@ -94,9 +94,10 @@ const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }
   height: 2rem;
   position: relative;
   padding: 0 0.75rem;
-  border: ${({ theme, active, warning }) => active && `1px solid ${(warning ? theme.red1 : theme.blue1)}`};
+  border: ${({ theme, active, warning }) => active && `1px solid ${warning ? theme.red1 : theme.blue1}`};
   :hover {
-    border: ${({ theme, active, warning }) => active && `1px solid ${(warning ? darken(0.1, theme.red1) : darken(0.1, theme.blue1))}`};
+    border: ${({ theme, active, warning }) =>
+      active && `1px solid ${warning ? darken(0.1, theme.red1) : darken(0.1, theme.blue1)}`};
   }
 
   input {
@@ -116,12 +117,12 @@ const Percent = styled.div`
   font-size: 0, 8rem;
   flex-grow: 0;
   ${({ color, theme }) =>
-  (color === 'faded' &&
-    css`
+    (color === 'faded' &&
+      css`
         color: ${theme.bg1};
       `) ||
-  (color === 'red' &&
-    css`
+    (color === 'red' &&
+      css`
         color: ${theme.red1};
       `)};
 `
@@ -133,7 +134,12 @@ interface TransactionDetailsProps {
   setDeadline: (deadline: number) => void
 }
 
-export default function TransactionDetails({ setRawSlippage, rawSlippage, deadline, setDeadline }: TransactionDetailsProps) {
+export default function TransactionDetails({
+  setRawSlippage,
+  rawSlippage,
+  deadline,
+  setDeadline
+}: TransactionDetailsProps) {
   const [activeIndex, setActiveIndex] = useState(2)
 
   const [warningType, setWarningType] = useState(WARNING_TYPE.none)
@@ -147,65 +153,16 @@ export default function TransactionDetails({ setRawSlippage, rawSlippage, deadli
 
   const [deadlineInput, setDeadlineInput] = useState(deadline / 60)
 
-  function parseCustomDeadline(e) {
-    let val = e.target.value
-    const acceptableValues = [/^$/, /^\d+$/]
-    if (acceptableValues.some(re => re.test(val))) {
-      setDeadlineInput(val)
-      setDeadline(val * 60)
-    }
-  }
-
-  const setFromCustom = () => {
-    setActiveIndex(4)
-    inputRef.current.focus()
-    // if there's a value, evaluate the bounds
-    checkBounds(debouncedInput)
-  }
-
   const updateSlippage = useCallback(
     newSlippage => {
       // round to 2 decimals to prevent ethers error
-      let numParsed = newSlippage * 100
+      const numParsed = newSlippage * 100
 
       // set both slippage values in parents
       setRawSlippage(numParsed)
     },
     [setRawSlippage]
   )
-
-  // used for slippage presets
-  const setFromFixed = useCallback(
-    (index, slippage) => {
-      // update slippage in parent, reset errors and input state
-      updateSlippage(slippage)
-      setWarningType(WARNING_TYPE.none)
-      setActiveIndex(index)
-    },
-    [updateSlippage]
-  )
-
-  useEffect(() => {
-    switch (initialSlippage) {
-      case 10:
-        setFromFixed(1, 0.1)
-        break
-      case 50:
-        setFromFixed(2, 0.5)
-        break
-      case 100:
-        setFromFixed(3, 1)
-        break
-      default:
-        // restrict to 2 decimal places
-        let acceptableValues = [/^$/, /^\d{1,2}$/, /^\d{0,2}\.\d{0,2}$/]
-        // if its within accepted decimal limit, update the input state
-        if (acceptableValues.some(val => val.test('' + (initialSlippage / 100)))) {
-          setUserInput('' + (initialSlippage / 100))
-          setActiveIndex(4)
-        }
-    }
-  }, [initialSlippage, setFromFixed])
 
   const checkBounds = useCallback(
     slippageValue => {
@@ -231,12 +188,60 @@ export default function TransactionDetails({ setRawSlippage, rawSlippage, deadli
     [updateSlippage]
   )
 
+  function parseCustomDeadline(e) {
+    const val = e.target.value
+    const acceptableValues = [/^$/, /^\d+$/]
+    if (acceptableValues.some(re => re.test(val))) {
+      setDeadlineInput(val)
+      setDeadline(val * 60)
+    }
+  }
+  const setFromCustom = () => {
+    setActiveIndex(4)
+    inputRef.current.focus()
+    // if there's a value, evaluate the bounds
+    checkBounds(debouncedInput)
+  }
+
+  // used for slippage presets
+  const setFromFixed = useCallback(
+    (index, slippage) => {
+      // update slippage in parent, reset errors and input state
+      updateSlippage(slippage)
+      setWarningType(WARNING_TYPE.none)
+      setActiveIndex(index)
+    },
+    [updateSlippage]
+  )
+
+  useEffect(() => {
+    switch (initialSlippage) {
+      case 10:
+        setFromFixed(1, 0.1)
+        break
+      case 50:
+        setFromFixed(2, 0.5)
+        break
+      case 100:
+        setFromFixed(3, 1)
+        break
+      default:
+        // restrict to 2 decimal places
+        const acceptableValues = [/^$/, /^\d{1,2}$/, /^\d{0,2}\.\d{0,2}$/]
+        // if its within accepted decimal limit, update the input state
+        if (acceptableValues.some(val => val.test('' + initialSlippage / 100))) {
+          setUserInput('' + initialSlippage / 100)
+          setActiveIndex(4)
+        }
+    }
+  }, [initialSlippage, setFromFixed])
+
   // check that the theyve entered number and correct decimal
   const parseInput = e => {
-    let input = e.target.value
+    const input = e.target.value
 
     // restrict to 2 decimal places
-    let acceptableValues = [/^$/, /^\d{1,2}$/, /^\d{0,2}\.\d{0,2}$/]
+    const acceptableValues = [/^$/, /^\d{1,2}$/, /^\d{0,2}\.\d{0,2}$/]
     // if its within accepted decimal limit, update the input state
     if (acceptableValues.some(a => a.test(input))) {
       setUserInput(input)
@@ -313,8 +318,8 @@ export default function TransactionDetails({ setRawSlippage, rawSlippage, deadli
                   placeholder={
                     activeIndex === 4
                       ? !!userInput
-                      ? ''
-                      : '0'
+                        ? ''
+                        : '0'
                       : activeIndex !== 4 && userInput !== ''
                       ? userInput
                       : 'Custom'
@@ -352,8 +357,8 @@ export default function TransactionDetails({ setRawSlippage, rawSlippage, deadli
                   : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
                   ? 'red'
                   : warningType === WARNING_TYPE.riskyEntryLow
-                    ? '#F3841E'
-                    : ''
+                  ? '#F3841E'
+                  : ''
               }
             >
               {warningType === WARNING_TYPE.emptyInput && 'Enter a slippage percentage'}
@@ -366,12 +371,16 @@ export default function TransactionDetails({ setRawSlippage, rawSlippage, deadli
         <AutoColumn gap="sm">
           <RowFixed padding={'0 20px'}>
             <TYPE.body fontSize={14}>Deadline</TYPE.body>
-            <QuestionHelper text="Deadline in minutes. If your transaction takes longer than this it will revert."/>
+            <QuestionHelper text="Deadline in minutes. If your transaction takes longer than this it will revert." />
           </RowFixed>
           <RowFixed padding={'0 20px'}>
             <OptionCustom style={{ width: '80px' }}>
-              <Input tabIndex={-1} placeholder={'' + deadlineInput} value={deadlineInput}
-                     onChange={parseCustomDeadline}/>
+              <Input
+                tabIndex={-1}
+                placeholder={'' + deadlineInput}
+                value={deadlineInput}
+                onChange={parseCustomDeadline}
+              />
             </OptionCustom>
             <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>
               minutes

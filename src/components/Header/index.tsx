@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { withRouter } from 'react-router-dom'
 
 import Row from '../Row'
 import Menu from '../Menu'
@@ -64,7 +63,7 @@ const TitleText = styled(Row)`
   `};
 `
 
-const AccountElement = styled.div<{active: boolean;}>`
+const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   display: flex;
   flex-direction: row;
@@ -107,7 +106,7 @@ const Alpha = styled(GreyCard)`
   font-weight: 600;
 `
 
-const UniIcon = styled.div<{href: string}>`
+const UniIcon = styled.div<{ href: string }>`
   transition: transform 0.3s ease;
   :hover {
     transform: rotate(-5deg);
@@ -133,7 +132,7 @@ const MigrateBanner = styled(AutoColumn)`
   `};
 `
 
-function Header({ history }) {
+export default function Header() {
   const { account, chainId } = useWeb3React()
 
   const userEthBalance = useAddressBalance(account, WETH[chainId])
@@ -196,5 +195,3 @@ function Header({ history }) {
     </HeaderFrame>
   )
 }
-
-export default withRouter(Header)

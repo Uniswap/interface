@@ -19,7 +19,12 @@ export interface SwapState {
   }
 }
 
-export function initializeSwapState({ inputTokenAddress, outputTokenAddress, typedValue, independentField }): SwapState {
+export function initializeSwapState({
+  inputTokenAddress,
+  outputTokenAddress,
+  typedValue,
+  independentField
+}): SwapState {
   return {
     independentField: independentField,
     typedValue: typedValue,
@@ -110,21 +115,21 @@ export function useSwapStateReducer(params: QueryParams) {
       typedValue:
         params.inputTokenAddress && !params.outputTokenAddress
           ? params.inputTokenAmount
-          ? params.inputTokenAmount
-          : ''
+            ? params.inputTokenAmount
+            : ''
           : !params.inputTokenAddress && params.outputTokenAddress
           ? params.outputTokenAmount
             ? params.outputTokenAmount
             : ''
           : params.inputTokenAddress && params.outputTokenAddress
+          ? params.inputTokenAmount
             ? params.inputTokenAmount
-              ? params.inputTokenAmount
-              : ''
             : ''
-              ? ''
-              : ''
-                ? ''
-                : ''
+          : ''
+          ? ''
+          : ''
+          ? ''
+          : ''
     },
     initializeSwapState
   )

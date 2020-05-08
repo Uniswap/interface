@@ -3,21 +3,23 @@ import React, { createContext, useContext, useReducer, useMemo, useCallback, use
 import TxnPopup from '../components/TxnPopup'
 
 import { useWeb3React } from '../hooks'
-import { safeAccess } from '../utils'
 import { useBlockNumber, usePopups } from './Application'
-
-const RESPONSE = 'response'
-const CUSTOM_DATA = 'CUSTOM_DATA'
-const BLOCK_NUMBER_CHECKED = 'BLOCK_NUMBER_CHECKED'
-const RECEIPT = 'receipt'
-const SUMMARY = 'summary'
 
 const ADD = 'ADD'
 const CHECK = 'CHECK'
 const FINALIZE = 'FINALIZE'
 
 interface TransactionState {
-
+  [chainId: number]: {
+    [txHash: string]: {
+      blockNumberChecked: any
+      response: {
+        customData?: any
+        summary: any
+      }
+      receipt: any
+    }
+  }
 }
 
 const TransactionsContext = createContext<[TransactionState, { [updater: string]: (...args: any[]) => void }]>([{}, {}])
@@ -26,21 +28,21 @@ export function useTransactionsContext() {
   return useContext(TransactionsContext)
 }
 
-function reducer(state, { type, payload }) {
+function reducer(state: TransactionState, { type, payload }): TransactionState {
   switch (type) {
     case ADD: {
       const { networkId, hash, response } = payload
 
-      if (safeAccess(state, [networkId, hash]) !== null) {
+      if (state[networkId]?.[hash]) {
         throw Error('Attempted to add existing transaction.')
       }
 
       return {
         ...state,
         [networkId]: {
-          ...(safeAccess(state, [networkId]) || {}),
+          ...state[networkId],
           [hash]: {
-            [RESPONSE]: response
+            response
           }
         }
       }
@@ -48,17 +50,17 @@ function reducer(state, { type, payload }) {
     case CHECK: {
       const { networkId, hash, blockNumber } = payload
 
-      if (safeAccess(state, [networkId, hash]) === null) {
+      if (!state[networkId]?.[hash]) {
         throw Error('Attempted to check non-existent transaction.')
       }
 
       return {
         ...state,
         [networkId]: {
-          ...(safeAccess(state, [networkId]) || {}),
+          ...state[networkId],
           [hash]: {
-            ...(safeAccess(state, [networkId, hash]) || {}),
-            [BLOCK_NUMBER_CHECKED]: blockNumber
+            ...state[networkId]?.[hash],
+            blockNumberChecked: blockNumber
           }
         }
       }
@@ -66,17 +68,17 @@ function reducer(state, { type, payload }) {
     case FINALIZE: {
       const { networkId, hash, receipt } = payload
 
-      if (safeAccess(state, [networkId, hash]) === null) {
+      if (!state[networkId]?.[hash]) {
         throw Error('Attempted to finalize non-existent transaction.')
       }
 
       return {
         ...state,
         [networkId]: {
-          ...(safeAccess(state, [networkId]) || {}),
+          ...state[networkId],
           [hash]: {
-            ...(safeAccess(state, [networkId, hash]) || {}),
-            [RECEIPT]: receipt
+            ...state[networkId]?.[hash],
+            receipt
           }
         }
       }
@@ -115,7 +117,7 @@ export function Updater() {
   const globalBlockNumber = useBlockNumber()
 
   const [state, { check, finalize }] = useTransactionsContext()
-  const allTransactions = safeAccess(state, [chainId]) || {}
+  const allTransactions = state[chainId] ?? {}
 
   // show popup on confirm
   const [, addPopup] = usePopups()
@@ -125,7 +127,7 @@ export function Updater() {
       let stale = false
       Object.keys(allTransactions)
         .filter(
-          hash => !allTransactions[hash][RECEIPT] && allTransactions[hash][BLOCK_NUMBER_CHECKED] !== globalBlockNumber
+          hash => !allTransactions[hash].receipt && allTransactions[hash].blockNumberChecked !== globalBlockNumber
         )
         .forEach(hash => {
           library
@@ -138,12 +140,22 @@ export function Updater() {
                   finalize(chainId, hash, receipt)
                   // add success or failure popup
                   if (receipt.status === 1) {
-                    addPopup(<TxnPopup popKey={1} hash={hash} success={true}
-                                       summary={allTransactions[hash]?.response?.summary}/>)
+                    addPopup(
+                      <TxnPopup
+                        popKey={1}
+                        hash={hash}
+                        success={true}
+                        summary={allTransactions[hash]?.response?.summary}
+                      />
+                    )
                   } else {
                     addPopup(
-                      <TxnPopup popKey={2} hash={hash} success={false}
-                                summary={allTransactions[hash]?.response?.summary}/>
+                      <TxnPopup
+                        popKey={2}
+                        hash={hash}
+                        success={false}
+                        summary={allTransactions[hash]?.response?.summary}
+                      />
                     )
                   }
                 }
@@ -173,11 +185,11 @@ export function useTransactionAdder() {
       if (!(chainId || chainId === 0)) {
         throw Error(`Invalid networkId '${chainId}`)
       }
-      const hash = safeAccess(response, ['hash'])
+      const hash = response?.hash
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      add(chainId, hash, { ...response, [CUSTOM_DATA]: customData, [SUMMARY]: summary })
+      add(chainId, hash, { ...response, customData: customData, summary })
     },
     [chainId, add]
   )
@@ -188,18 +200,18 @@ export function useAllTransactions() {
 
   const [state] = useTransactionsContext()
 
-  return safeAccess(state, [chainId]) || {}
+  return state[chainId] || {}
 }
 
 export function usePendingApproval(tokenAddress) {
   const allTransactions = useAllTransactions()
   return (
     Object.keys(allTransactions).filter(hash => {
-      if (allTransactions[hash][RECEIPT]) {
+      if (allTransactions[hash]?.receipt) {
         return false
-      } else if (!allTransactions[hash][RESPONSE]) {
+      } else if (!allTransactions[hash]?.response) {
         return false
-      } else if (allTransactions[hash][RESPONSE][CUSTOM_DATA].approval !== tokenAddress) {
+      } else if (allTransactions[hash]?.response?.customData?.approval !== tokenAddress) {
         return false
       } else {
         return true
