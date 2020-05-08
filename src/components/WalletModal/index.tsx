@@ -122,7 +122,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
 
   const [pendingWallet, setPendingWallet] = useState()
 
-  const [pendingError, setPendingError] = useState()
+  const [pendingError, setPendingError] = useState<boolean>()
 
   const walletModalOpen = useWalletModalOpen()
   const toggleWalletModal = useWalletModalToggle()
@@ -200,7 +200,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
 
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
-    const isMetamask = window.ethereum && window.ethereum.isMetaMask
+    const isMetamask = (window as any).ethereum && (window as any).ethereum.isMetaMask
     return Object.keys(SUPPORTED_WALLETS).map(key => {
       const option = SUPPORTED_WALLETS[key]
       // check for mobile options
@@ -210,7 +210,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
           return null
         }
 
-        if (!window.web3 && !window.ethereum && option.mobile) {
+        if (!(window as any).web3 && !(window as any).ethereum && option.mobile) {
           return (
             <Option
               onClick={() => {
@@ -232,7 +232,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
       // overwrite injected when needed
       if (option.connector === injected) {
         // don't show injected if there's no injected provider
-        if (!(window.web3 || window.ethereum)) {
+        if (!((window as any).web3 || (window as any).ethereum)) {
           if (option.name === 'MetaMask') {
             return (
               <Option
@@ -286,7 +286,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
       return (
         <UpperSection>
           <CloseIcon onClick={toggleWalletModal}>
-            <CloseColor alt={'close icon'} />
+            <CloseColor/>
           </CloseIcon>
           <HeaderRow>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}</HeaderRow>
           <ContentWrapper>
@@ -313,7 +313,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
     return (
       <UpperSection>
         <CloseIcon onClick={toggleWalletModal}>
-          <CloseColor alt={'close icon'} />
+          <CloseColor/>
         </CloseIcon>
         {walletView !== WALLET_VIEWS.ACCOUNT ? (
           <HeaderRow color="blue">
@@ -359,7 +359,6 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
 
   return (
     <Modal
-      style={{ userSelect: 'none' }}
       isOpen={walletModalOpen}
       onDismiss={toggleWalletModal}
       minHeight={null}
