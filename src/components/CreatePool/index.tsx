@@ -45,7 +45,7 @@ function CreatePool({ history }) {
   }, [pair, pairExists, token0Address, token1Address])
 
   if (step === 2 && !pairExists) {
-    return <AddLiquidity token0={token0Address} token1={token1Address} step={true} />
+    return <AddLiquidity token0={token0Address} token1={token1Address} />
   } else
     return (
       <AutoColumn gap="20px">

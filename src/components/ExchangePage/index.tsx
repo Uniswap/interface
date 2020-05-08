@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { parseEther, parseUnits } from '@ethersproject/units'
 import { Fraction, JSBI, Percent, TokenAmount, TradeType, WETH } from '@uniswap/sdk'
 import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
-import { withRouter } from 'react-router-dom'
+import { withRouter,RouteComponentProps } from 'react-router-dom'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Zero, MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
@@ -23,7 +23,7 @@ import { useTokenContract, useWeb3React } from '../../hooks'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { Hover, theme, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
-import { calculateGasMargin, getEtherscanLink, getProviderOrSigner, getRouterContract, isWETH } from '../../utils'
+import { calculateGasMargin, getEtherscanLink, getProviderOrSigner, getRouterContract, isWETH, QueryParams } from '../../utils'
 import Copy from '../AccountDetails/Copy'
 import AddressInputPanel from '../AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../Button'
@@ -73,7 +73,12 @@ const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
 const ALLOWED_SLIPPAGE_MEDIUM = 100
 const ALLOWED_SLIPPAGE_HIGH = 500
 
-function ExchangePage({ sendingInput = false, history, params }) {
+interface ExchangePageProps extends RouteComponentProps<{}> {
+  sendingInput: boolean
+  params: QueryParams
+}
+
+function ExchangePage({ sendingInput = false, history, params }: ExchangePageProps) {
   // text translation
   // const { t } = useTranslation()
   const { chainId, account, library } = useWeb3React()
