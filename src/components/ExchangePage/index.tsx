@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { parseEther, parseUnits } from '@ethersproject/units'
 import { Fraction, JSBI, Percent, TokenAmount, TradeType, WETH } from '@uniswap/sdk'
 import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
-import { withRouter,RouteComponentProps } from 'react-router-dom'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Zero, MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
@@ -23,7 +23,14 @@ import { useTokenContract, useWeb3React } from '../../hooks'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { Hover, theme, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
-import { calculateGasMargin, getEtherscanLink, getProviderOrSigner, getRouterContract, isWETH, QueryParams } from '../../utils'
+import {
+  calculateGasMargin,
+  getEtherscanLink,
+  getProviderOrSigner,
+  getRouterContract,
+  isWETH,
+  QueryParams
+} from '../../utils'
 import Copy from '../AccountDetails/Copy'
 import AddressInputPanel from '../AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../Button'
@@ -721,7 +728,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               </Text>
             </RowFixed>
           </RowBetween>
-          <AutoColumn justify="flex-start" gap="sm" style={{padding: '20px 0 0 0px'}}>
+          <AutoColumn justify="flex-start" gap="sm" style={{ padding: '20px 0 0 0px' }}>
             {independentField === Field.INPUT ? (
               <TYPE.italic textAlign="left" style={{ width: '100%', paddingTop: '.5rem' }}>
                 {`Output is estimated. You will receive at least `}
@@ -1027,7 +1034,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               </ColumnCenter>
             ) : (
               <Hover>
-                <ColumnCenter style={{padding: '0 1rem'}}>
+                <ColumnCenter style={{ padding: '0 1rem' }}>
                   <ArrowWrapper>
                     <ArrowDown
                       size="16"
@@ -1182,23 +1189,9 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             <Text fontSize={20} fontWeight={500}>
               {!account
                 ? 'Connect Wallet'
-                : generalError
-                  ? generalError
-                  : inputError
-                    ? inputError
-                    : outputError
-                      ? outputError
-                      : recipientError
-                        ? recipientError
-                        : tradeError
-                          ? tradeError
-                          : warningHigh
-                            ? sendingWithSwap
-                              ? 'Send Anyway'
-                              : 'Swap Anyway'
-                            : sending
-                              ? 'Send'
-                              : 'Swap'}
+                : (generalError || inputError || outputError || recipientError || tradeError) ||
+                (`${sending ? 'Send' : 'Swap'}${warningHigh ? ' Anyway' : ''}`)
+              }
             </Text>
           </ButtonError>
         )}
