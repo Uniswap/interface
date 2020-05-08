@@ -365,6 +365,11 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
     setOutputError(null)
     setIsValid(true)
 
+    if (!account) {
+      setGeneralError('Connect Wallet')
+      setIsValid(false)
+    }
+
     if (noLiquidity && parsedAmounts[Field.INPUT] && JSBI.equal(parsedAmounts[Field.INPUT].raw, JSBI.BigInt(0))) {
       setGeneralError('Enter an amount')
       setIsValid(false)
@@ -399,7 +404,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
       setOutputError('Insufficient ' + tokens[Field.OUTPUT]?.symbol + ' balance')
       setIsValid(false)
     }
-  }, [noLiquidity, parsedAmounts, tokens, userBalances])
+  }, [noLiquidity, parsedAmounts, tokens, userBalances, account])
 
   // state for txn
   const addTransaction = useTransactionAdder()
@@ -745,39 +750,46 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
             <PriceBar />
           </LightCard>
         )}
-        {!outputApproved && !outputError ? (
-          <ButtonLight
-            onClick={() => {
-              approveAmount(Field.OUTPUT)
-            }}
-            disabled={pendingApprovalOutput}
-          >
-            {pendingApprovalOutput ? (
-              <Dots>Approving {tokens[Field.OUTPUT]?.symbol}</Dots>
-            ) : (
-              'Approve ' + tokens[Field.OUTPUT]?.symbol
-            )}
-          </ButtonLight>
-        ) : !inputApproved && !inputError ? (
-          <ButtonLight
-            onClick={() => {
-              approveAmount(Field.INPUT)
-            }}
-            disabled={pendingApprovalInput}
-          >
-            {pendingApprovalInput ? (
-              <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
-            ) : (
-              'Approve ' + tokens[Field.INPUT]?.symbol
-            )}
-          </ButtonLight>
+        {isValid ? (
+          !inputApproved ? (
+            <ButtonLight
+              onClick={() => {
+                approveAmount(Field.INPUT)
+              }}
+              disabled={pendingApprovalInput}
+            >
+              {pendingApprovalInput ? (
+                <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
+              ) : (
+                'Approve ' + tokens[Field.INPUT]?.symbol
+              )}
+            </ButtonLight>
+          ) : !outputApproved ? (
+            <ButtonLight
+              onClick={() => {
+                approveAmount(Field.OUTPUT)
+              }}
+              disabled={pendingApprovalOutput}
+            >
+              {pendingApprovalOutput ? (
+                <Dots>Approving {tokens[Field.OUTPUT]?.symbol}</Dots>
+              ) : (
+                'Approve ' + tokens[Field.OUTPUT]?.symbol
+              )}
+            </ButtonLight>
+          ) : (
+            <ButtonPrimary
+              onClick={() => {
+                setShowConfirm(true)
+              }}
+            >
+              <Text fontSize={20} fontWeight={500}>
+                Supply
+              </Text>
+            </ButtonPrimary>
+          )
         ) : (
-          <ButtonPrimary
-            onClick={() => {
-              setShowConfirm(true)
-            }}
-            disabled={!isValid}
-          >
+          <ButtonPrimary disabled={true}>
             <Text fontSize={20} fontWeight={500}>
               {generalError ? generalError : inputError ? inputError : outputError ? outputError : 'Supply'}
             </Text>

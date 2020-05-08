@@ -569,6 +569,11 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       setIsValid(false)
     }
 
+    if (!account) {
+      setGeneralError('Connect Wallet')
+      setIsValid(false)
+    }
+
     if (!parsedAmounts[Field.INPUT]) {
       setInputError('Enter an amount')
       setIsValid(false)
@@ -633,7 +638,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     tokens,
     route,
     trade,
-    userBalances
+    userBalances,
+    account
   ])
 
   // warnings on slippage
@@ -1206,9 +1212,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             error={!!warningHigh}
           >
             <Text fontSize={20} fontWeight={500}>
-              {!account
-                ? 'Connect Wallet'
-                : generalError
+              {generalError
                 ? generalError
                 : inputError
                 ? inputError
