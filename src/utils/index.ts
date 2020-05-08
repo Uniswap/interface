@@ -3,7 +3,7 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { parseBytes32String } from '@ethersproject/strings'
 import { BigNumber } from '@ethersproject/bignumber'
-import { WETH } from '@uniswap/sdk'
+import { WETH, Token } from '@uniswap/sdk'
 
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { abi as IUniswapV2Router01ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router01.json'
@@ -230,19 +230,9 @@ export async function getTokenBalance(tokenAddress, address, library) {
   return getContract(tokenAddress, ERC20_ABI, library).balanceOf(address)
 }
 
-// get the token allowance
-export async function getTokenAllowance(address, tokenAddress, spenderAddress, library) {
-  if (!isAddress(address) || !isAddress(tokenAddress) || !isAddress(spenderAddress)) {
-    throw Error(
-      "Invalid 'address' or 'tokenAddress' or 'spenderAddress' parameter" +
-        `'${address}' or '${tokenAddress}' or '${spenderAddress}'.`
-    )
-  }
-
-  return getContract(tokenAddress, ERC20_ABI, library).allowance(address, spenderAddress)
-}
-
-export function isWETH(token) {
+// necessary because we override the name/symbol of WETH for display purposes, which messes with the equality
+// comparison in the SDK
+export function isWETH(token: Token) {
   if (token && token.address === WETH[token.chainId].address) {
     return true
   } else {

@@ -22,7 +22,7 @@ import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Ro
 
 import { useToken } from '../../contexts/Tokens'
 import { useAddressBalance } from '../../contexts/Balances'
-import { useAddressAllowance } from '../../contexts/Allowances'
+import { useTokenAllowance } from '../../data/Allowances'
 import { usePair, useTotalSupply } from '../../contexts/Pairs'
 import { useWeb3React, useTokenContract } from '../../hooks'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
@@ -186,22 +186,12 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   const tokenContractInput: Contract = useTokenContract(tokens[Field.INPUT]?.address)
   const tokenContractOutput: Contract = useTokenContract(tokens[Field.OUTPUT]?.address)
 
-  // check on pending approvals for token amounts
-  const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
-  const pendingApprovalOutput = usePendingApproval(tokens[Field.OUTPUT]?.address)
-
   // exhchange data
   const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
   const route: Route = pair ? new Route([pair], tokens[independentField]) : undefined
   const totalSupply: TokenAmount = useTotalSupply(tokens[Field.INPUT], tokens[Field.OUTPUT])
   const noLiquidity = // used to detect new exchange
     pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
-
-  // state for amount approvals
-  const inputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.INPUT], ROUTER_ADDRESS)
-  const outputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.OUTPUT], ROUTER_ADDRESS)
-  const [showInputApprove, setShowInputApprove] = useState<boolean>(false)
-  const [showOutputApprove, setShowOutputApprove] = useState<boolean>(false)
 
   // get user-pecific and token-specific lookup data
   const userBalances: { [field: number]: TokenAmount } = {
@@ -267,8 +257,24 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
     [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField]?.toSignificant(8) : ''
   }
 
-  // used for displaying approximate starting price in UI
+  // check whether the user has approved the router on both tokens
+  const inputApproval: TokenAmount = useTokenAllowance(tokens[Field.INPUT], account, ROUTER_ADDRESS)
+  const outputApproval: TokenAmount = useTokenAllowance(tokens[Field.OUTPUT], account, ROUTER_ADDRESS)
+  const inputApproved =
+    isWETH(tokens[Field.INPUT]) ||
+    (!!inputApproval &&
+      !!parsedAmounts[Field.INPUT] &&
+      JSBI.greaterThanOrEqual(inputApproval.raw, parsedAmounts[Field.INPUT].raw))
+  const outputApproved =
+    isWETH(tokens[Field.OUTPUT]) ||
+    (!!outputApproval &&
+      !!parsedAmounts[Field.OUTPUT] &&
+      JSBI.greaterThanOrEqual(outputApproval.raw, parsedAmounts[Field.OUTPUT].raw))
+  // check on pending approvals for token amounts
+  const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
+  const pendingApprovalOutput = usePendingApproval(tokens[Field.OUTPUT]?.address)
 
+  // used for displaying approximate starting price in UI
   const derivedPrice =
     parsedAmounts[Field.INPUT] &&
     parsedAmounts[Field.OUTPUT] &&
@@ -346,18 +352,6 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
       : undefined
   })
 
-  // monitor parsed amounts and update approve buttons
-  useEffect(() => {
-    setShowInputApprove(
-      parsedAmounts[Field.INPUT] && inputApproval && JSBI.greaterThan(parsedAmounts[Field.INPUT].raw, inputApproval.raw)
-    )
-    setShowOutputApprove(
-      parsedAmounts[Field.OUTPUT] &&
-        outputApproval &&
-        JSBI.greaterThan(parsedAmounts[Field.OUTPUT].raw, outputApproval.raw)
-    )
-  }, [inputApproval, outputApproval, parsedAmounts])
-
   // errors
   const [generalError, setGeneralError] = useState('')
   const [inputError, setInputError] = useState('')
@@ -405,7 +399,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
       setOutputError('Insufficient ' + tokens[Field.OUTPUT]?.symbol + ' balance')
       setIsValid(false)
     }
-  }, [noLiquidity, parsedAmounts, showInputApprove, showOutputApprove, tokens, userBalances])
+  }, [noLiquidity, parsedAmounts, tokens, userBalances])
 
   // state for txn
   const addTransaction = useTransactionAdder()
@@ -751,11 +745,12 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
             <PriceBar />
           </LightCard>
         )}
-        {showOutputApprove ? (
+        {!outputApproved && !outputError ? (
           <ButtonLight
             onClick={() => {
-              !pendingApprovalOutput && approveAmount(Field.OUTPUT)
+              approveAmount(Field.OUTPUT)
             }}
+            disabled={pendingApprovalOutput}
           >
             {pendingApprovalOutput ? (
               <Dots>Approving {tokens[Field.OUTPUT]?.symbol}</Dots>
@@ -763,11 +758,12 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
               'Approve ' + tokens[Field.OUTPUT]?.symbol
             )}
           </ButtonLight>
-        ) : showInputApprove ? (
+        ) : !inputApproved && !inputError ? (
           <ButtonLight
             onClick={() => {
-              !pendingApprovalInput && approveAmount(Field.INPUT)
+              approveAmount(Field.INPUT)
             }}
+            disabled={pendingApprovalInput}
           >
             {pendingApprovalInput ? (
               <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
