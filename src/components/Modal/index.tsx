@@ -40,7 +40,9 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
   }
 `
 
-const StyledDialogContent = styled(DialogContent)<{ mobile?: boolean }>`
+// destructure to not pass custom props to Dialog DOM element
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...rest }) => <DialogContent {...rest} />)`
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
     border: 1px solid ${({ theme }) => theme.bg1};
@@ -61,7 +63,6 @@ const StyledDialogContent = styled(DialogContent)<{ mobile?: boolean }>`
         min-height: ${minHeight}vh;
       `}
     display: flex;
-    /* overflow: hidden; */
     border-radius: 20px;
     ${({ theme }) => theme.mediaWidth.upToMedium`
       width: 65vw;
@@ -191,14 +192,14 @@ export default function Modal({
                 style={props}
                 onDismiss={onDismiss}
                 initialFocusRef={initialFocusRef}
-                mobile={isMobile}
+                mobile={isMobile ? isMobile : undefined}
               >
                 <StyledDialogContent
                   hidden={true}
                   minHeight={minHeight}
                   maxHeight={maxHeight}
                   isOpen={isOpen}
-                  mobile={isMobile}
+                  mobile={isMobile ? isMobile : undefined}
                 >
                   <HiddenCloseButton onClick={onDismiss} />
                   {children}
