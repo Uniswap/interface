@@ -2,7 +2,7 @@ import React, { useReducer, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { parseUnits, parseEther } from '@ethersproject/units'
-import { MaxUint256, Zero } from '@ethersproject/constants'
+import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { WETH, TokenAmount, JSBI, Percent, Route, Token, Price } from '@uniswap/sdk'
 
@@ -444,51 +444,47 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   const addTransaction = useTransactionAdder()
   const [txHash, setTxHash] = useState<string>('')
 
-  // format ETH value for transaction
-  function hex(value: JSBI) {
-    return BigNumber.from(value.toString())
-  }
-
   // calculate slippage bounds based on current reserves
-  function calculateSlippageAmount(value: TokenAmount): JSBI[] {
-    if (value && value.raw) {
-      const offset = JSBI.divide(JSBI.multiply(JSBI.BigInt(ALLOWED_SLIPPAGE), value.raw), JSBI.BigInt(10000))
-      return [JSBI.subtract(value.raw, offset), JSBI.add(value.raw, offset)]
-    } else {
-      return null
-    }
+  function calculateSlippageAmount(value: TokenAmount): [JSBI, JSBI] {
+    return [
+      JSBI.divide(
+        JSBI.multiply(value.raw, JSBI.subtract(JSBI.BigInt(10000), JSBI.BigInt(ALLOWED_SLIPPAGE))),
+        JSBI.BigInt(10000)
+      ),
+      JSBI.divide(
+        JSBI.multiply(value.raw, JSBI.add(JSBI.BigInt(10000), JSBI.BigInt(ALLOWED_SLIPPAGE))),
+        JSBI.BigInt(10000)
+      )
+    ]
   }
 
   async function onAdd() {
     setAttemptingTxn(true)
     const router = getRouterContract(chainId, library, account)
 
-    const minTokenInput = calculateSlippageAmount(parsedAmounts[Field.INPUT])[0]
-    const minTokenOutput = calculateSlippageAmount(parsedAmounts[Field.OUTPUT])[0]
+    const minInput = calculateSlippageAmount(parsedAmounts[Field.INPUT])[0]
+    const minOutput = calculateSlippageAmount(parsedAmounts[Field.OUTPUT])[0]
 
     const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
 
     let method, estimate, args, value
 
-    if (tokens[Field.INPUT] === WETH[chainId] || tokens[Field.OUTPUT] === WETH[chainId]) {
+    // one of the tokens is ETH
+    if (tokens[Field.INPUT].equals(WETH[chainId]) || tokens[Field.OUTPUT].equals(WETH[chainId])) {
       method = router.addLiquidityETH
       estimate = router.estimateGas.addLiquidityETH
 
+      const outputIsETH = tokens[Field.OUTPUT].equals(WETH[chainId])
+
       args = [
-        tokens[Field.OUTPUT] === WETH[chainId] ? tokens[Field.INPUT].address : tokens[Field.OUTPUT].address, // token
-        tokens[Field.OUTPUT] === WETH[chainId] // token desired
-          ? parsedAmounts[Field.INPUT].raw.toString()
-          : parsedAmounts[Field.OUTPUT].raw.toString(),
-        tokens[Field.OUTPUT] === WETH[chainId] ? minTokenInput.toString() : minTokenOutput.toString(), // token min
-        tokens[Field.OUTPUT] === WETH[chainId] ? minTokenOutput.toString() : minTokenInput.toString(), // eth min
+        tokens[outputIsETH ? Field.INPUT : Field.OUTPUT].address, // token
+        parsedAmounts[outputIsETH ? Field.INPUT : Field.OUTPUT].raw.toString(), // token desired
+        outputIsETH ? minInput.toString() : minOutput.toString(), // token min
+        outputIsETH ? minOutput.toString() : minInput.toString(), // eth min
         account,
         deadline
       ]
-      value = hex(
-        tokens[Field.OUTPUT] === WETH[chainId] // eth desired
-          ? parsedAmounts[Field.OUTPUT].raw
-          : parsedAmounts[Field.INPUT].raw
-      )
+      value = BigNumber.from(parsedAmounts[outputIsETH ? Field.OUTPUT : Field.INPUT].raw.toString())
     } else {
       method = router.addLiquidity
       estimate = router.estimateGas.addLiquidity
@@ -497,21 +493,19 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
         tokens[Field.OUTPUT].address,
         parsedAmounts[Field.INPUT].raw.toString(),
         parsedAmounts[Field.OUTPUT].raw.toString(),
-        noLiquidity ? parsedAmounts[Field.INPUT].raw.toString() : minTokenInput.toString(),
-        noLiquidity ? parsedAmounts[Field.OUTPUT].raw.toString() : minTokenOutput.toString(),
+        noLiquidity ? parsedAmounts[Field.INPUT].raw.toString() : minInput.toString(),
+        noLiquidity ? parsedAmounts[Field.OUTPUT].raw.toString() : minOutput.toString(),
         account,
         deadline
       ]
-      value = Zero
+      value = null
     }
 
-    await estimate(...args, {
-      value: value
-    })
+    await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
         method(...args, {
-          gasLimit: calculateGasMargin(estimatedGasLimit),
-          value: value
+          ...(value ? { value } : {}),
+          gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setTxHash(response.hash)
           addTransaction(

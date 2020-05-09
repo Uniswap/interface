@@ -450,7 +450,7 @@ function SearchModal({
      */
       return filteredTokenList
         .sort((a, b) => {
-          if (b?.address === WETH[chainId]?.address) {
+          if (b.address === WETH[chainId].address) {
             return 1
           } else
             return parseFloat(a?.balance?.toExact()) > parseFloat(b?.balance?.toExact())

@@ -4,7 +4,7 @@ import { Fraction, JSBI, Percent, TokenAmount, TradeType, WETH } from '@uniswap/
 import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { BigNumber } from '@ethersproject/bignumber'
-import { Zero, MaxUint256 } from '@ethersproject/constants'
+import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { Field, SwapAction, useSwapStateReducer } from './swap-store'
 import { Text } from 'rebass'
@@ -47,12 +47,6 @@ import {
   TruncatedText,
   Wrapper
 } from './styleds'
-
-// import BalanceCard from '../BalanceCard'
-
-function hex(value: JSBI) {
-  return BigNumber.from(value.toString())
-}
 
 enum SwapType {
   EXACT_TOKENS_FOR_TOKENS,
@@ -313,17 +307,17 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
 
   function getSwapType(): SwapType {
     if (tradeType === TradeType.EXACT_INPUT) {
-      if (tokens[Field.INPUT] === WETH[chainId]) {
+      if (tokens[Field.INPUT].equals(WETH[chainId])) {
         return SwapType.EXACT_ETH_FOR_TOKENS
-      } else if (tokens[Field.OUTPUT] === WETH[chainId]) {
+      } else if (tokens[Field.OUTPUT].equals(WETH[chainId])) {
         return SwapType.EXACT_TOKENS_FOR_ETH
       } else {
         return SwapType.EXACT_TOKENS_FOR_TOKENS
       }
     } else if (tradeType === TradeType.EXACT_OUTPUT) {
-      if (tokens[Field.INPUT] === WETH[chainId]) {
+      if (tokens[Field.INPUT].equals(WETH[chainId])) {
         return SwapType.ETH_FOR_EXACT_TOKENS
-      } else if (tokens[Field.OUTPUT] === WETH[chainId]) {
+      } else if (tokens[Field.OUTPUT].equals(WETH[chainId])) {
         return SwapType.TOKENS_FOR_EXACT_ETH
       } else {
         return SwapType.TOKENS_FOR_EXACT_TOKENS
@@ -369,10 +363,10 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
 
     const signer = await getProviderOrSigner(library, account)
     // get token contract if needed
-    let estimate: Function, method: Function, args, value
-    if (tokens[Field.INPUT] === WETH[chainId]) {
+    let estimate: Function, method: Function, args
+    if (tokens[Field.INPUT].equals(WETH[chainId])) {
       ;(signer as any)
-        .sendTransaction({ to: recipient.toString(), value: hex(parsedAmounts[Field.INPUT].raw) })
+        .sendTransaction({ to: recipient.toString(), value: BigNumber.from(parsedAmounts[Field.INPUT].raw.toString()) })
         .then(response => {
           setTxHash(response.hash)
           addTransaction(
@@ -394,11 +388,9 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       estimate = tokenContractInput.estimateGas.transfer
       method = tokenContractInput.transfer
       args = [recipient, parsedAmounts[Field.INPUT].raw.toString()]
-      value = Zero
-      await estimate(...args, { value })
+      await estimate(...args)
         .then(estimatedGasLimit =>
           method(...args, {
-            value,
             gasLimit: calculateGasMargin(estimatedGasLimit)
           }).then(response => {
             setTxHash(response.hash)
@@ -444,7 +436,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           sending ? recipient : account,
           deadlineFromNow
         ]
-        value = Zero
+        value = null
         break
       case SwapType.TOKENS_FOR_EXACT_TOKENS:
         estimate = routerContract.estimateGas.swapTokensForExactTokens
@@ -456,7 +448,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           sending ? recipient : account,
           deadlineFromNow
         ]
-        value = Zero
+        value = null
         break
       case SwapType.EXACT_ETH_FOR_TOKENS:
         estimate = routerContract.estimateGas.swapExactETHForTokens
@@ -467,7 +459,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           sending ? recipient : account,
           deadlineFromNow
         ]
-        value = hex(slippageAdjustedAmounts[Field.INPUT].raw)
+        value = BigNumber.from(slippageAdjustedAmounts[Field.INPUT].raw.toString())
         break
       case SwapType.TOKENS_FOR_EXACT_ETH:
         estimate = routerContract.estimateGas.swapTokensForExactETH
@@ -479,7 +471,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           sending ? recipient : account,
           deadlineFromNow
         ]
-        value = Zero
+        value = null
         break
       case SwapType.EXACT_TOKENS_FOR_ETH:
         estimate = routerContract.estimateGas.swapExactTokensForETH
@@ -491,7 +483,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           sending ? recipient : account,
           deadlineFromNow
         ]
-        value = Zero
+        value = null
         break
       case SwapType.ETH_FOR_EXACT_TOKENS:
         estimate = routerContract.estimateGas.swapETHForExactTokens
@@ -502,14 +494,14 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           sending ? recipient : account,
           deadlineFromNow
         ]
-        value = hex(slippageAdjustedAmounts[Field.INPUT].raw)
+        value = BigNumber.from(slippageAdjustedAmounts[Field.INPUT].raw.toString())
         break
     }
 
-    await estimate(...args, { value })
+    await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
         method(...args, {
-          value,
+          ...(value ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setTxHash(response.hash)

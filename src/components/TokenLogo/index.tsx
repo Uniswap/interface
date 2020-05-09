@@ -47,18 +47,14 @@ export default function TokenLogo({
   const [error, setError] = useState(false)
   const { chainId } = useWeb3React()
 
-  // hard code change to show ETH instead of WETH in UI
-  if (address === WETH[chainId].address) {
-    address = 'ETH'
-  }
-
-  // remove this just for testing
+  // mock testnet DAI
   if (address === isAddress('0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735')) {
     address = '0x6b175474e89094c44da98b954eedeac495271d0f'
   }
 
   let path = ''
-  if (address === 'ETH') {
+  // hard code to show ETH instead of WETH in UI
+  if (address === WETH[chainId].address) {
     return (
       <StyledEthereumLogo
         style={{ boxShadow: '0px 6px 10px rgba(0, 0, 0, 0.075)', borderRadius: '24px' }}

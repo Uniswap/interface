@@ -1,7 +1,6 @@
 import React, { useReducer, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { parseUnits } from '@ethersproject/units'
-import { Zero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { TokenAmount, JSBI, Route, WETH, Percent, Token } from '@uniswap/sdk'
 
@@ -439,16 +438,16 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
     let method, args, estimate
 
     // removal with ETH
-    if (tokens[Field.TOKEN0] === WETH[chainId] || tokens[Field.TOKEN1] === WETH[chainId]) {
+    if (tokens[Field.TOKEN0].equals(WETH[chainId]) || tokens[Field.TOKEN1].equals(WETH[chainId])) {
       method = router.removeLiquidityETHWithPermit
       estimate = router.estimateGas.removeLiquidityETHWithPermit
       args = [
-        tokens[Field.TOKEN1] === WETH[chainId] ? tokens[Field.TOKEN0].address : tokens[Field.TOKEN1].address,
+        tokens[Field.TOKEN1].equals(WETH[chainId]) ? tokens[Field.TOKEN0].address : tokens[Field.TOKEN1].address,
         parsedAmounts[Field.LIQUIDITY].raw.toString(),
-        tokens[Field.TOKEN1] === WETH[chainId]
+        tokens[Field.TOKEN1].equals(WETH[chainId])
           ? parsedAmounts[Field.TOKEN0].raw.toString()
           : parsedAmounts[Field.TOKEN1].raw.toString(),
-        tokens[Field.TOKEN1] === WETH[chainId]
+        tokens[Field.TOKEN1].equals(WETH[chainId])
           ? parsedAmounts[Field.TOKEN1].raw.toString()
           : parsedAmounts[Field.TOKEN0].raw.toString(),
         account,
@@ -478,9 +477,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
       ]
     }
 
-    await estimate(...args, {
-      value: Zero
-    })
+    await estimate(...args)
       .then(estimatedGasLimit =>
         method(...args, {
           gasLimit: calculateGasMargin(estimatedGasLimit)
