@@ -506,6 +506,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
         value = hex(slippageAdjustedAmounts[Field.INPUT].raw)
         break
     }
+    console.log(value)
 
     await estimate(...args, { value })
       .then(estimatedGasLimit =>
@@ -528,7 +529,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           setPendingConfirmation(false)
         })
       )
-      .catch(() => {
+      .catch(e => {
+        console.log(e)
         resetModal()
         setShowConfirm(false)
       })
