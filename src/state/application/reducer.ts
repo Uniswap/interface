@@ -24,10 +24,10 @@ export default createReducer(
         const { networkId, blockNumber } = action.payload
         state.blockNumber[networkId] = blockNumber
       })
-      .addCase(toggleUserAdvanced, (state, action) => {
+      .addCase(toggleUserAdvanced, state => {
         state.userAdvanced = !state.userAdvanced
       })
-      .addCase(toggleWalletModal, (state, action) => {
+      .addCase(toggleWalletModal, state => {
         state.walletModalOpen = !state.walletModalOpen
       })
       .addCase(addPopup, (state, action) => {

@@ -29,9 +29,7 @@ export function usePopups(): [
   (key: string) => void
 ] {
   const dispatch = useDispatch()
-  const { activePopups } = useSelector((state: State) => ({
-    currentPopups: state.application.popupList.filter(item => item.show)
-  }))
+  const activePopups = useSelector((state: State) => state.application.popupList.filter(item => item.show))
 
   const wrappedAddPopup = useCallback(
     (content: React.ReactElement) => {
