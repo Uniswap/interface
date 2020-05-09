@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useReducer, useRef, useMemo, useCallback, useEffect, ReactNode } from 'react'
 import { TokenAmount, Token, JSBI, WETH } from '@uniswap/sdk'
+import { useBlockNumber } from '../state/application/hooks'
 
 import { useAllTokens } from './Tokens'
-import { useBlockNumber } from './Application'
 import { useWeb3React, useDebounce } from '../hooks'
 
 import { getEtherBalance, getTokenBalance, isAddress } from '../utils'

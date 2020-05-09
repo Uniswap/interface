@@ -3,7 +3,7 @@ import styled, { ThemeContext } from 'styled-components'
 import { useMediaLayout } from 'use-media'
 
 import { X } from 'react-feather'
-import { usePopups } from '../../contexts/Application'
+import { usePopups } from '../../state/application/hooks'
 import { AutoColumn } from '../Column'
 
 const StyledClose = styled(X)`
