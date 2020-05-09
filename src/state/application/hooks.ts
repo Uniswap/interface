@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import { useWeb3React } from '../../hooks'
 import { addPopup, PopupContent, removePopup, toggleWalletModal } from './actions'
 import { useSelector, useDispatch } from 'react-redux'
