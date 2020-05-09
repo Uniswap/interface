@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useWeb3React } from '../../hooks'
 import { addPopup, removePopup, toggleWalletModal } from './actions'
 import { useSelector, useDispatch } from 'react-redux'
@@ -16,7 +16,7 @@ export function useWalletModalOpen() {
 
 export function useWalletModalToggle() {
   const dispatch = useDispatch()
-  return () => dispatch(toggleWalletModal())
+  return useCallback(() => dispatch(toggleWalletModal()), [dispatch])
 }
 
 export function useUserAdvanced() {
@@ -29,21 +29,23 @@ export function usePopups(): [
   (key: string) => void
 ] {
   const dispatch = useDispatch()
-  const { currentPopups } = useSelector((state: State) => ({
-    currentPopups: state.application.popupList
+  const { activePopups } = useSelector((state: State) => ({
+    currentPopups: state.application.popupList.filter(item => item.show)
   }))
 
-  function wrappedAddPopup(content: React.ReactElement): void {
-    dispatch(addPopup({ content }))
-  }
+  const wrappedAddPopup = useCallback(
+    (content: React.ReactElement) => {
+      dispatch(addPopup({ content }))
+    },
+    [dispatch]
+  )
 
-  function wrappedRemovePopup(key: string): void {
-    dispatch(removePopup({ key }))
-  }
-
-  const activePopups = currentPopups.filter(item => {
-    return item.show
-  })
+  const wrappedRemovePopup = useCallback(
+    (key: string) => {
+      dispatch(removePopup({ key }))
+    },
+    [dispatch]
+  )
 
   return [activePopups, wrappedAddPopup, wrappedRemovePopup]
 }
