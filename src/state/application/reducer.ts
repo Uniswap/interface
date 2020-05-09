@@ -5,8 +5,7 @@ import { addPopup, removePopup, toggleUserAdvanced, toggleWalletModal, updateBlo
 type PopupList = Array<{ key: string; show: boolean; content: React.ReactElement }>
 
 interface ApplicationState {
-  blockNumber: {}
-  usdPrice: {}
+  blockNumber: { [chainId: number]: number }
   popupList: PopupList
   walletModalOpen: boolean
   userAdvanced: boolean
@@ -15,7 +14,6 @@ interface ApplicationState {
 export default createReducer(
   {
     blockNumber: {},
-    usdPrice: {},
     popupList: [],
     walletModalOpen: false,
     userAdvanced: false
