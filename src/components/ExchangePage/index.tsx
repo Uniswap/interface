@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useContext } from 'react'
+import { ThemeContext } from 'styled-components'
 import { parseEther, parseUnits } from '@ethersproject/units'
 import { Fraction, JSBI, Percent, TokenAmount, TradeType, WETH } from '@uniswap/sdk'
 import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
@@ -88,6 +89,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   // text translation
   // const { t } = useTranslation()
   const { chainId, account, library } = useWeb3React()
+  const theme = useContext(ThemeContext)
 
   // adding notifications on txns
   const addTransaction = useTransactionAdder()
@@ -717,7 +719,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
 
     if (!sending) {
       return (
-        <AutoColumn gap={'sm'} style={{ marginTop: '20px' }}>
+        <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
           <RowBetween align="flex-end">
             <TruncatedText fontSize={24} fontWeight={500}>
               {!!formattedAmounts[Field.INPUT] && formattedAmounts[Field.INPUT]}
@@ -731,10 +733,10 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             </RowFixed>
           </RowBetween>
           <RowFixed>
-            <ArrowDown size="16" color={theme(isDark).text2} />
+            <ArrowDown size="16" color={theme.text2} />
           </RowFixed>
           <RowBetween align="flex-end">
-            <TruncatedText fontSize={24} fontWeight={500} color={warningHigh ? theme(isDark).red1 : ''}>
+            <TruncatedText fontSize={24} fontWeight={500} color={warningHigh ? theme.red1 : ''}>
               {!!formattedAmounts[Field.OUTPUT] && formattedAmounts[Field.OUTPUT]}
 
               {/* {!!slippageAdjustedAmounts[Field.OUTPUT] && slippageAdjustedAmounts[Field.OUTPUT].toSignificant(6)} */}
@@ -746,9 +748,9 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               </Text>
             </RowFixed>
           </RowBetween>
-          <AutoColumn justify="flex-start" gap="sm" style={{ padding: '20px 0 0 0px' }}>
+          <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
             {independentField === Field.INPUT ? (
-              <TYPE.italic textAlign="left" style={{ width: '100%', paddingTop: '.5rem' }}>
+              <TYPE.italic textAlign="left" style={{ width: '100%' }}>
                 {`Output is estimated. You will receive at least `}
                 <b>
                   {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {tokens[Field.OUTPUT]?.symbol}{' '}
@@ -756,7 +758,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 {` or the transaction will revert.`}
               </TYPE.italic>
             ) : (
-              <TYPE.italic textAlign="left" style={{ width: '100%', paddingTop: '.5rem' }}>
+              <TYPE.italic textAlign="left" style={{ width: '100%' }}>
                 {`Input is estimated. You will sell at most `}{' '}
                 <b>
                   {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {tokens[Field.INPUT]?.symbol}
@@ -789,13 +791,13 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           <AutoColumn gap="0px">
             {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
               <RowBetween align="center" justify="center">
-                <Text fontWeight={400} fontSize={14} color={theme(isDark).text2}>
+                <Text fontWeight={400} fontSize={14} color={theme.text2}>
                   Price
                 </Text>
                 <Text
                   fontWeight={500}
                   fontSize={14}
-                  color={theme(isDark).text2}
+                  color={theme.text1}
                   style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
                 >
                   {trade && showInverted
@@ -817,7 +819,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             )}
             <RowBetween>
               <RowFixed>
-                <TYPE.black fontSize={14} fontWeight={400}>
+                <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
                   {independentField === Field.INPUT ? (sending ? 'Min sent' : 'Minimum received') : 'Maximum sold'}
                 </TYPE.black>
                 <QuestionHelper text="A boundary is set so you are protected from large price movements after you submit your trade." />
@@ -847,7 +849,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             </RowBetween>
             <RowBetween>
               <RowFixed>
-                <TYPE.black color={theme(isDark).text1} fontSize={14} fontWeight={400}>
+                <TYPE.black color={theme.text2} fontSize={14} fontWeight={400}>
                   Price impact
                 </TYPE.black>
                 <QuestionHelper text="The difference between the market price and your price due to trade size." />
@@ -868,7 +870,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             </RowBetween>
             <RowBetween>
               <RowFixed>
-                <TYPE.black fontSize={14} fontWeight={400}>
+                <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
                   Liquidity Provider Fee
                 </TYPE.black>
                 <QuestionHelper text="A portion of each trade (0.3%) goes to liquidity providers to incentivize liquidity on the protocol." />
@@ -898,18 +900,18 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       <AutoRow justify="space-between">
         <RowFixed>Rate info</RowFixed>
         <AutoColumn justify="center">
-          <Text fontWeight={500} fontSize={16} color={theme(isDark).text2}>
+          <Text fontWeight={500} fontSize={16} color={theme.text2}>
             {trade ? `${trade.executionPrice.toSignificant(6)} ` : '-'}
           </Text>
-          <Text fontWeight={500} fontSize={16} color={theme(isDark).text3} pt={1}>
+          <Text fontWeight={500} fontSize={16} color={theme.text3} pt={1}>
             {tokens[Field.OUTPUT]?.symbol} / {tokens[Field.INPUT]?.symbol}
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
-          <Text fontWeight={500} fontSize={16} color={theme(isDark).text2}>
+          <Text fontWeight={500} fontSize={16} color={theme.text2}>
             {trade ? `${trade.executionPrice.invert().toSignificant(6)} ` : '-'}
           </Text>
-          <Text fontWeight={500} fontSize={16} color={theme(isDark).text3} pt={1}>
+          <Text fontWeight={500} fontSize={16} color={theme.text3} pt={1}>
             {tokens[Field.INPUT]?.symbol} / {tokens[Field.OUTPUT]?.symbol}
           </Text>
         </AutoColumn>
@@ -927,7 +929,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 : priceSlippage.toFixed(4) + '%'
               : '-'}
           </ErrorText>
-          <Text fontWeight={500} fontSize={16} color={theme(isDark).text3} pt={1}>
+          <Text fontWeight={500} fontSize={16} color={theme.text3} pt={1}>
             Price Impact
           </Text>
         </AutoColumn>
@@ -1008,11 +1010,19 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
             />
           </InputGroup>
-          <RowBetween style={{ width: '220px' }}>
-            <ButtonSecondary width="fit-content" onClick={() => setSendingWithSwap(true)} textAlign="center">
+          <RowBetween style={{ width: '200px' }}>
+            <ButtonSecondary
+              width="fit-content"
+              style={{ fontSize: '14px' }}
+              padding={'4px 8px'}
+              onClick={() => setSendingWithSwap(true)}
+              textAlign="center"
+            >
               + Add a swap
             </ButtonSecondary>
             <ButtonSecondary
+              style={{ fontSize: '14px' }}
+              padding={'4px 8px'}
               width="fit-content"
               disabled={atMaxAmountInput}
               onClick={() => {
@@ -1048,27 +1058,28 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               <ColumnCenter>
                 <RowBetween padding="0 1rem 0 12px">
                   <ArrowWrapper onClick={onSwapTokens}>
-                    <ArrowDown size="16" color={theme(isDark).text2} onClick={onSwapTokens} />
+                    <ArrowDown size="16" color={theme.text2} onClick={onSwapTokens} />
                   </ArrowWrapper>
                   <ButtonSecondary
                     onClick={() => setSendingWithSwap(false)}
-                    style={{ marginRight: '0px', width: 'fit-content' }}
+                    style={{ marginRight: '0px', width: 'fit-content', fontSize: '14px' }}
+                    padding={'4px 6px'}
                   >
-                    - Remove Swap
+                    Remove Swap
                   </ButtonSecondary>
                 </RowBetween>
               </ColumnCenter>
             ) : (
               <Hover>
-                <ColumnCenter style={{ padding: '0 1rem' }}>
+                <AutoColumn style={{ padding: '0 1rem' }}>
                   <ArrowWrapper>
                     <ArrowDown
                       size="16"
                       onClick={onSwapTokens}
-                      color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme(isDark).blue1 : theme(isDark).text2}
+                      color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme.blue1 : theme.text2}
                     />
                   </ArrowWrapper>
-                </ColumnCenter>
+                </AutoColumn>
               </Hover>
             )}
             <CurrencyInputPanel
@@ -1089,7 +1100,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             />
             {sendingWithSwap && (
               <RowBetween padding="0 1rem 0 12px">
-                <ArrowDown size="16" />
+                <ArrowDown size="16" color={theme.text2} />
               </RowBetween>
             )}
           </>
@@ -1119,13 +1130,13 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               <AutoColumn gap="4px">
                 {' '}
                 <RowBetween align="center" justify="center">
-                  <Text fontWeight={500} fontSize={14} color={theme(isDark).text2}>
+                  <Text fontWeight={500} fontSize={14} color={theme.text2}>
                     Price
                   </Text>
                   <Text
                     fontWeight={500}
                     fontSize={14}
-                    color={theme(isDark).text2}
+                    color={theme.text2}
                     style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
                   >
                     {trade && showInverted
@@ -1225,7 +1236,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 <Text fontSize={16} fontWeight={500} style={{ userSelect: 'none' }}>
                   Show Advanced
                 </Text>
-                <ChevronDown color={theme(isDark).text2} />
+                <ChevronDown color={theme.text2} />
               </RowBetween>
             </Hover>
           )}
@@ -1233,17 +1244,17 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             <AutoColumn gap="md">
               <Hover>
                 <RowBetween onClick={() => setShowAdvanced(false)} padding={'8px 20px'}>
-                  <Text fontSize={16} color={theme(isDark).text2} fontWeight={500} style={{ userSelect: 'none' }}>
+                  <Text fontSize={16} color={theme.text2} fontWeight={500} style={{ userSelect: 'none' }}>
                     Hide Advanced
                   </Text>
-                  <ChevronUp color={theme(isDark).text2} />
+                  <ChevronUp color={theme.text2} />
                 </RowBetween>
               </Hover>
               <SectionBreak />
               <AutoColumn style={{ padding: '0 20px' }}>
                 <RowBetween>
                   <RowFixed>
-                    <TYPE.black fontSize={14} fontWeight={400} color={theme(isDark).text1}>
+                    <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
                       {independentField === Field.INPUT
                         ? sending
                           ? 'Minimum sent'
@@ -1261,7 +1272,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     />
                   </RowFixed>
                   <RowFixed>
-                    <TYPE.black color={theme(isDark).text1} fontSize={14}>
+                    <TYPE.black color={theme.text1} fontSize={14}>
                       {independentField === Field.INPUT
                         ? slippageAdjustedAmounts[Field.OUTPUT]
                           ? slippageAdjustedAmounts[Field.OUTPUT]?.lessThan(
@@ -1279,7 +1290,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                         : '-'}
                     </TYPE.black>
                     {parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.INPUT] && (
-                      <TYPE.black fontSize={14} marginLeft={'4px'} color={theme(isDark).text1}>
+                      <TYPE.black fontSize={14} marginLeft={'4px'} color={theme.text1}>
                         {independentField === Field.INPUT
                           ? parsedAmounts[Field.OUTPUT] && tokens[Field.OUTPUT]?.symbol
                           : parsedAmounts[Field.INPUT] && tokens[Field.INPUT]?.symbol}
@@ -1289,7 +1300,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 </RowBetween>
                 <RowBetween>
                   <RowFixed>
-                    <TYPE.black fontSize={14} fontWeight={400} color={theme(isDark).text1}>
+                    <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
                       Price Impact
                     </TYPE.black>
                     <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
@@ -1310,12 +1321,12 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 </RowBetween>
                 <RowBetween>
                   <RowFixed>
-                    <TYPE.black fontSize={14} fontWeight={400} color={theme(isDark).text1}>
+                    <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
                       Liquidity Provider Fee
                     </TYPE.black>
                     <QuestionHelper text="A portion of each trade (0.03%) goes to liquidity providers to incentivize liquidity on the protocol." />
                   </RowFixed>
-                  <TYPE.black fontSize={14} color={theme(isDark).text1}>
+                  <TYPE.black fontSize={14} color={theme.text1}>
                     {feeTimesInputFormatted
                       ? feeTimesInputFormatted?.toSignificant(6) + ' ' + tokens[Field.INPUT]?.symbol
                       : '-'}
@@ -1324,7 +1335,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               </AutoColumn>
               <SectionBreak />
               <RowFixed padding={'0 20px'}>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme(isDark).text1}>
+                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
                   Set front running resistance
                 </TYPE.black>
                 <QuestionHelper text="Your transaction will revert if the price changes more than this amount after you submit your trade." />
@@ -1347,12 +1358,12 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                         <span role="img" aria-label="warning">
                           ⚠️
                         </span>{' '}
-                        <Text fontWeight={500} marginLeft="4px" color={theme(isDark).text1}>
+                        <Text fontWeight={500} marginLeft="4px" color={theme.text1}>
                           Price Warning
                         </Text>
                       </RowFixed>
                     </RowBetween>
-                    <Text lineHeight="145.23%;" fontSize={16} fontWeight={400} color={theme(isDark).text1}>
+                    <Text lineHeight="145.23%;" fontSize={16} fontWeight={400} color={theme.text1}>
                       This trade will move the price by {slippageFromTrade.toFixed(2)}%. This pool probably doesn’t have
                       enough liquidity to support this trade.
                     </Text>

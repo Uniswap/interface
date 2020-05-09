@@ -1,5 +1,5 @@
-import React, { useReducer, useState, useCallback, useEffect } from 'react'
-import styled from 'styled-components'
+import React, { useReducer, useState, useCallback, useEffect, useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import { parseUnits } from '@ethersproject/units'
 import { Zero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
@@ -151,6 +151,7 @@ const ConfirmedText = styled(Text)`
 
 export default function RemoveLiquidity({ token0, token1 }) {
   const { account, chainId, library } = useWeb3React()
+  const theme = useContext(ThemeContext)
 
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [showAdvanced, setShowAdvanced] = useState<boolean>(false)
@@ -179,15 +180,15 @@ export default function RemoveLiquidity({ token0, token1 }) {
 
   const TokensDeposited: { [field: number]: TokenAmount } = {
     [Field.TOKEN0]:
-    pair &&
-    totalPoolTokens &&
-    userLiquidity &&
-    pair.getLiquidityValue(tokens[Field.TOKEN0], totalPoolTokens, userLiquidity, false),
+      pair &&
+      totalPoolTokens &&
+      userLiquidity &&
+      pair.getLiquidityValue(tokens[Field.TOKEN0], totalPoolTokens, userLiquidity, false),
     [Field.TOKEN1]:
-    pair &&
-    totalPoolTokens &&
-    userLiquidity &&
-    pair.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, userLiquidity, false)
+      pair &&
+      totalPoolTokens &&
+      userLiquidity &&
+      pair.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, userLiquidity, false)
   }
 
   const route: Route = pair
@@ -282,7 +283,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
     )
   }
 
-  const handleSliderChange = (newPercent) => {
+  const handleSliderChange = newPercent => {
     onUserInput(
       Field.LIQUIDITY,
       new TokenAmount(
@@ -482,13 +483,13 @@ export default function RemoveLiquidity({ token0, token1 }) {
           addTransaction(
             response,
             'Remove ' +
-            parsedAmounts[Field.TOKEN0]?.toSignificant(3) +
-            ' ' +
-            tokens[Field.TOKEN0]?.symbol +
-            ' and ' +
-            parsedAmounts[Field.TOKEN1]?.toSignificant(3) +
-            ' ' +
-            tokens[Field.TOKEN1]?.symbol
+              parsedAmounts[Field.TOKEN0]?.toSignificant(3) +
+              ' ' +
+              tokens[Field.TOKEN0]?.symbol +
+              ' and ' +
+              parsedAmounts[Field.TOKEN1]?.toSignificant(3) +
+              ' ' +
+              tokens[Field.TOKEN1]?.symbol
           )
         })
       )
@@ -508,34 +509,34 @@ export default function RemoveLiquidity({ token0, token1 }) {
 
   function modalHeader() {
     return (
-      <AutoColumn gap={'sm'} style={{ marginTop: '20px' }}>
+      <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
         <RowBetween align="flex-end">
           <Text fontSize={24} fontWeight={500}>
             {!!parsedAmounts[Field.TOKEN0] && parsedAmounts[Field.TOKEN0].toSignificant(6)}
           </Text>
           <RowFixed gap="4px">
-            <TokenLogo address={tokens[Field.TOKEN0]?.address} size={'24px'}/>
+            <TokenLogo address={tokens[Field.TOKEN0]?.address} size={'24px'} />
             <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
               {tokens[Field.TOKEN0]?.symbol || ''}
             </Text>
           </RowFixed>
         </RowBetween>
         <RowFixed>
-          <Plus size="16" color={'#888D9B'}/>
+          <Plus size="16" color={theme.text2} />
         </RowFixed>
         <RowBetween align="flex-end">
           <Text fontSize={24} fontWeight={600}>
             {!!parsedAmounts[Field.TOKEN1] && parsedAmounts[Field.TOKEN1].toSignificant(6)}
           </Text>
           <RowFixed gap="4px">
-            <TokenLogo address={tokens[Field.TOKEN1]?.address} size={'24px'}/>
+            <TokenLogo address={tokens[Field.TOKEN1]?.address} size={'24px'} />
             <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
               {tokens[Field.TOKEN1]?.symbol || ''}
             </Text>
           </RowFixed>
         </RowBetween>
 
-        <TYPE.italic fontSize={12} color="#565A69" textAlign="left" padding={'20px 0 0 0'}>
+        <TYPE.italic fontSize={12} color={theme.text2} textAlign="left" padding={'12px 0 0 0'}>
           {`Output is estimated. You will receive at least ${parsedAmounts[Field.TOKEN0]?.toFixed(6)} ${
             tokens[Field.TOKEN0]?.symbol
           } and at least ${parsedAmounts[Field.TOKEN1]?.toFixed(6)} ${
@@ -550,7 +551,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
     return (
       <>
         <RowBetween>
-          <Text color="#565A69" fontWeight={500} fontSize={16}>
+          <Text color={theme.text2} fontWeight={500} fontSize={16}>
             {'UNI ' + tokens[Field.TOKEN0]?.symbol + ':' + tokens[Field.TOKEN1]?.symbol} Burned
           </Text>
           <RowFixed>
@@ -565,10 +566,10 @@ export default function RemoveLiquidity({ token0, token1 }) {
           </RowFixed>
         </RowBetween>
         <RowBetween>
-          <Text color="#565A69" fontWeight={500} fontSize={16}>
+          <Text color={theme.text2} fontWeight={500} fontSize={16}>
             Price
           </Text>
-          <Text fontWeight={500} fontSize={16}>
+          <Text fontWeight={500} fontSize={16} color={theme.text1}>
             {`1 ${tokens[Field.TOKEN0]?.symbol} = ${route?.midPrice && route.midPrice.adjusted.toFixed(8)} ${
               tokens[Field.TOKEN1]?.symbol
             }`}
@@ -637,7 +638,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
               </Text>
             </Row>
             {!showAdvanced && (
-              <Slider value={parseFloat(derivedPerecent)} onChange={handleSliderChange} override={override}/>
+              <Slider value={parseFloat(derivedPerecent)} onChange={handleSliderChange} override={override} />
             )}
             {!showAdvanced && (
               <RowBetween>
@@ -660,7 +661,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
         {!showAdvanced && (
           <>
             <ColumnCenter>
-              <ArrowDown size="16" color="#888D9B"/>
+              <ArrowDown size="16" color={theme.text2} />
             </ColumnCenter>{' '}
             <LightCard>
               <AutoColumn gap="10px">
@@ -669,7 +670,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
                     {formattedAmounts[Field.TOKEN0] ? formattedAmounts[Field.TOKEN0] : '-'}
                   </Text>
                   <RowFixed>
-                    <TokenLogo address={tokens[Field.TOKEN0]?.address || ''} style={{ marginRight: '12px' }}/>
+                    <TokenLogo address={tokens[Field.TOKEN0]?.address || ''} style={{ marginRight: '12px' }} />
                     <Text fontSize={24} fontWeight={500}>
                       {tokens[Field.TOKEN0]?.symbol}
                     </Text>
@@ -680,7 +681,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
                     {formattedAmounts[Field.TOKEN1] ? formattedAmounts[Field.TOKEN1] : '-'}
                   </Text>
                   <RowFixed>
-                    <TokenLogo address={tokens[Field.TOKEN1]?.address || ''} style={{ marginRight: '12px' }}/>
+                    <TokenLogo address={tokens[Field.TOKEN1]?.address || ''} style={{ marginRight: '12px' }} />
                     <Text fontSize={24} fontWeight={500}>
                       {tokens[Field.TOKEN1]?.symbol}
                     </Text>
@@ -706,7 +707,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
               inputId="liquidityAmount"
             />
             <ColumnCenter>
-              <ArrowDown size="16" color="#888D9B"/>
+              <ArrowDown size="16" color={theme.text2} />
             </ColumnCenter>
             <CurrencyInputPanel
               field={Field.TOKEN0}
@@ -720,7 +721,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
               inputId="removeLiquidityToken0"
             />
             <ColumnCenter>
-              <Plus size="16" color="#888D9B"/>
+              <Plus size="16" color={theme.text2} />
             </ColumnCenter>
             <CurrencyInputPanel
               field={Field.TOKEN1}

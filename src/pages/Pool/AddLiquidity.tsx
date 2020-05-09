@@ -1,5 +1,5 @@
-import React, { useReducer, useState, useCallback, useEffect } from 'react'
-import styled from 'styled-components'
+import React, { useReducer, useState, useCallback, useEffect, useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { parseUnits, parseEther } from '@ethersproject/units'
 import { MaxUint256, Zero } from '@ethersproject/constants'
@@ -15,7 +15,7 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { Text } from 'rebass'
 import { TYPE } from '../../theme'
 import { Plus } from 'react-feather'
-import { BlueCard, LightCard } from '../../components/Card'
+import { BlueCard, GreyCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { ButtonPrimary, ButtonLight } from '../../components/Button'
 import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
@@ -164,6 +164,7 @@ interface AddLiquidityProps extends RouteComponentProps<{}> {
 
 function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   const { account, chainId, library } = useWeb3React()
+  const theme = useContext(ThemeContext)
 
   // modal states
   const [showSearch, setShowSearch] = useState<boolean>(false)
@@ -653,13 +654,13 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
         <AutoRow justify="space-between">
           <AutoColumn justify="center">
             <TYPE.black>{displayPriceInput}</TYPE.black>
-            <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+            <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
               {tokens[Field.OUTPUT]?.symbol} per {tokens[Field.INPUT]?.symbol}
             </Text>
           </AutoColumn>
           <AutoColumn justify="center">
             <TYPE.black>{displayPriceOutput}</TYPE.black>
-            <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+            <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
               {tokens[Field.INPUT]?.symbol} per {tokens[Field.OUTPUT]?.symbol}
             </Text>
           </AutoColumn>
@@ -668,7 +669,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
               {noLiquidity && derivedPrice ? '100' : poolTokenPercentage ? poolTokenPercentage?.toFixed(2) : '0.0'}
               {'%'}
             </TYPE.black>
-            <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
+            <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
               Pool Share
             </Text>
           </AutoColumn>
@@ -731,7 +732,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           inputId="addLiquidityInput"
         />
         <ColumnCenter>
-          <Plus size="16" color="#888D9B" />
+          <Plus size="16" color={theme.text2} />
         </ColumnCenter>
         <CurrencyInputPanel
           field={Field.OUTPUT}
@@ -748,16 +749,16 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
         />
         {tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
           <>
-            <LightCard padding="0px" borderRadius={'20px'}>
+            <GreyCard padding="0px" borderRadius={'20px'}>
               <RowBetween padding="1rem">
                 <TYPE.subHeader fontWeight={500} fontSize={14}>
-                  {noLiquidity ? 'Initial rates' : 'Rates'} and estimated share
+                  {noLiquidity ? 'Initial prices' : 'Prices'} and pool share
                 </TYPE.subHeader>
               </RowBetween>{' '}
               <LightCard padding="1rem" borderRadius={'20px'}>
                 <PriceBar />
               </LightCard>
-            </LightCard>
+            </GreyCard>
           </>
         )}
         {showOutputApprove ? (

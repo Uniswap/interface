@@ -93,18 +93,18 @@ export const ButtonSecondary = styled(Base)`
   color: ${({ theme }) => theme.buttonSecondaryText};
   font-size: 16px;
   border-radius: 8px;
-  padding: 10px;
+  padding: ${({ padding }) => (padding ? padding : '10px')};
 
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.03, theme.blue5)};
-    background-color: ${({ theme }) => darken(0.03, theme.blue5)};
+    box-shadow: 0 0 0 1pt ${({ theme }) => theme.blue4};
+    background-color: ${({ theme }) => theme.blue4};
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.03, theme.blue5)};
+    background-color: ${({ theme }) => theme.blue4};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.blue5)};
-    background-color: ${({ theme }) => darken(0.05, theme.blue5)};
+    box-shadow: 0 0 0 1pt ${({ theme }) => theme.blue4};
+    background-color: ${({ theme }) => theme.blue4};
   }
   &:disabled {
     background-color: ${({ theme }) => theme.blue5};
@@ -163,13 +163,13 @@ export const ButtonEmpty = styled(Base)`
   align-items: center;
 
   &:focus {
-    background-color: ${({ theme }) => theme.bg3};
+    background-color: ${({ theme }) => theme.advancedBG};
   }
   &:hover {
-    background-color: ${({ theme }) => theme.bg3};
+    background-color: ${({ theme }) => theme.advancedBG};
   }
   &:active {
-    background-color: ${({ theme }) => theme.bg3};
+    background-color: ${({ theme }) => theme.advancedBG};
   }
   &:disabled {
     opacity: 50%;

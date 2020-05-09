@@ -23,14 +23,14 @@ const StyledMenuButton = styled.button`
   padding: 0;
   height: 35px;
   background-color: ${({ theme }) => theme.bg3};
-  border: 1px solid ${({ theme }) => theme.bg3};
+  /* border: 1px solid ${({ theme }) => theme.bg2}; */
 
   padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
 
   :hover, :focus {
     /* background-color: ${({ theme }) => darken(0.2, theme.bg1)}; */
-    border: 1px solid ${({ theme }) => darken(0.2, theme.bg1)};
+    /* border: 1px solid ${({ theme }) => darken(0.2, theme.bg1)}; */
     cursor: pointer;
     outline: none;
   }
@@ -78,9 +78,9 @@ const MenuItem = styled(Link)`
   }
 `
 
-const CODE_LINK = !!process.env.REACT_APP_GIT_COMMIT_HASH ?
-  `https://github.com/Uniswap/uniswap-frontend/tree/${process.env.REACT_APP_GIT_COMMIT_HASH}`:
-  'https://github.com/Uniswap/uniswap-frontend'
+const CODE_LINK = !!process.env.REACT_APP_GIT_COMMIT_HASH
+  ? `https://github.com/Uniswap/uniswap-frontend/tree/${process.env.REACT_APP_GIT_COMMIT_HASH}`
+  : 'https://github.com/Uniswap/uniswap-frontend'
 
 export default function Menu() {
   const node = useRef<HTMLDivElement>()

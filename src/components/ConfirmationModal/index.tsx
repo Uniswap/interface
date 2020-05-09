@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react'
-import styled from 'styled-components'
+import React, { useCallback, useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 
 import Modal from '../Modal'
@@ -45,18 +45,19 @@ interface ConfirmationModalProps extends RouteComponentProps<{}> {
 }
 
 function ConfirmationModal({
-                             history,
-                             isOpen,
-                             onDismiss,
-                             hash,
-                             topContent,
-                             bottomContent,
-                             attemptingTxn,
-                             pendingConfirmation,
-                             pendingText,
-                             title = ''
-                           }: ConfirmationModalProps) {
+  history,
+  isOpen,
+  onDismiss,
+  hash,
+  topContent,
+  bottomContent,
+  attemptingTxn,
+  pendingConfirmation,
+  pendingText,
+  title = ''
+}: ConfirmationModalProps) {
   const { chainId } = useWeb3React()
+  const theme = useContext(ThemeContext)
 
   const dismissAndReturn = useCallback(() => {
     if (history.location.pathname.match('/add') || history.location.pathname.match('/remove')) {
@@ -74,7 +75,7 @@ function ConfirmationModal({
               <Text fontWeight={500} fontSize={20}>
                 {title}
               </Text>
-              <CloseIcon onClick={onDismiss}/>
+              <CloseIcon onClick={onDismiss} />
             </RowBetween>
             {topContent()}
           </Section>
@@ -84,14 +85,14 @@ function ConfirmationModal({
         <Wrapper>
           <Section>
             <RowBetween>
-              <div/>
-              <CloseIcon onClick={onDismiss}/>
+              <div />
+              <CloseIcon onClick={onDismiss} />
             </RowBetween>
             <ConfirmedIcon>
               {pendingConfirmation ? (
-                <Loader size="90px"/>
+                <Loader size="90px" />
               ) : (
-                <ArrowUpCircle strokeWidth={0.5} size={90} color="#ff007a"/>
+                <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.blue1} />
               )}
             </ConfirmedIcon>
             <AutoColumn gap="12px" justify={'center'}>
@@ -99,14 +100,14 @@ function ConfirmationModal({
                 {!pendingConfirmation ? 'Transaction Submitted' : 'Waiting For Confirmation'}
               </Text>
               <AutoColumn gap="12px" justify={'center'}>
-                <Text fontWeight={600} fontSize={14} color="" textAlign="center" style={{ width: '70%' }}>
+                <Text fontWeight={600} fontSize={14} color="" textAlign="center">
                   {pendingText}
                 </Text>
               </AutoColumn>
               {!pendingConfirmation && (
                 <>
                   <Link href={getEtherscanLink(chainId, hash, 'transaction')}>
-                    <Text fontWeight={500} fontSize={14} color="#ff007a">
+                    <Text fontWeight={500} fontSize={14} color={theme.blue1}>
                       View on Etherscan
                     </Text>
                   </Link>
