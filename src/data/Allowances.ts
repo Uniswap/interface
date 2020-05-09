@@ -28,8 +28,8 @@ export function useTokenAllowance(
     shouldFetch ? [SWRKeys.Allowances, token.chainId, token.address, owner, spender] : null,
     getTokenAllowance(contract, token),
     {
-      dedupingInterval: 15 * 1000,
-      refreshInterval: 30 * 1000
+      dedupingInterval: 10 * 1000,
+      refreshInterval: 20 * 1000
     }
   )
 

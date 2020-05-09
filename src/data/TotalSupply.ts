@@ -20,8 +20,8 @@ export function useTotalSupply(token?: Token): TokenAmount {
     shouldFetch ? [SWRKeys.TotalSupply, token.chainId, token.address] : null,
     getTotalSupply(contract, token),
     {
-      dedupingInterval: 15 * 1000,
-      refreshInterval: 30 * 1000
+      dedupingInterval: 10 * 1000,
+      refreshInterval: 20 * 1000
     }
   )
   return data
