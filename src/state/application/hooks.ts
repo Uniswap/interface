@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { useWeb3React } from '../../hooks'
-import { addPopup, removePopup, toggleWalletModal } from './actions'
+import { addPopup, PopupContent, removePopup, toggleWalletModal } from './actions'
 import { useSelector, useDispatch } from 'react-redux'
 import { AppState } from '../index'
 
@@ -25,14 +25,14 @@ export function useUserAdvanced() {
 
 export function usePopups(): [
   AppState['application']['popupList'],
-  (content: React.ReactElement) => void,
+  (content: PopupContent) => void,
   (key: string) => void
 ] {
   const dispatch = useDispatch()
   const activePopups = useSelector((state: AppState) => state.application.popupList.filter(item => item.show))
 
   const wrappedAddPopup = useCallback(
-    (content: React.ReactElement) => {
+    (content: PopupContent) => {
       dispatch(addPopup({ content }))
     },
     [dispatch]
