@@ -528,7 +528,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           setPendingConfirmation(false)
         })
       )
-      .catch(() => {
+      .catch(e => {
+        console.error(e)
         resetModal()
         setShowConfirm(false)
       })
