@@ -2,16 +2,16 @@ import React, { useCallback } from 'react'
 import { useWeb3React } from '../../hooks'
 import { addPopup, removePopup, toggleWalletModal } from './actions'
 import { useSelector, useDispatch } from 'react-redux'
-import { State } from '../index'
+import { AppState } from '../index'
 
 export function useBlockNumber() {
   const { chainId } = useWeb3React()
 
-  return useSelector((state: State) => state.application.blockNumber[chainId])
+  return useSelector((state: AppState) => state.application.blockNumber[chainId])
 }
 
 export function useWalletModalOpen() {
-  return useSelector((state: State) => state.application.walletModalOpen)
+  return useSelector((state: AppState) => state.application.walletModalOpen)
 }
 
 export function useWalletModalToggle() {
@@ -20,16 +20,16 @@ export function useWalletModalToggle() {
 }
 
 export function useUserAdvanced() {
-  return useSelector((state: State) => state.application.userAdvanced)
+  return useSelector((state: AppState) => state.application.userAdvanced)
 }
 
 export function usePopups(): [
-  State['application']['popupList'],
+  AppState['application']['popupList'],
   (content: React.ReactElement) => void,
   (key: string) => void
 ] {
   const dispatch = useDispatch()
-  const activePopups = useSelector((state: State) => state.application.popupList.filter(item => item.show))
+  const activePopups = useSelector((state: AppState) => state.application.popupList.filter(item => item.show))
 
   const wrappedAddPopup = useCallback(
     (content: React.ReactElement) => {

@@ -1,3 +1,4 @@
+import { Web3Provider } from '@ethersproject/providers'
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import { isMobile } from 'react-device-detect'
@@ -9,8 +10,8 @@ import { NetworkContextName } from '../constants'
 import { getContract, getExchangeContract, isAddress } from '../utils'
 
 export function useWeb3React() {
-  const context = useWeb3ReactCore()
-  const contextNetwork = useWeb3ReactCore(NetworkContextName)
+  const context = useWeb3ReactCore<Web3Provider>()
+  const contextNetwork = useWeb3ReactCore<Web3Provider>(NetworkContextName)
   return context.active ? context : contextNetwork
 }
 
