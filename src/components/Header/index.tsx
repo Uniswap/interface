@@ -1,4 +1,6 @@
 import React from 'react'
+import { Link as HistoryLink } from 'react-router-dom'
+
 import styled from 'styled-components'
 
 import Row from '../Row'
@@ -94,7 +96,7 @@ const NetworkCard = styled(YellowCard)`
   padding: 8px 12px;
 `
 
-const UniIcon = styled.div<{ href: string }>`
+const UniIcon = styled(HistoryLink)<{ to: string }>`
   transition: transform 0.3s ease;
   :hover {
     transform: rotate(-5deg);
@@ -169,18 +171,18 @@ export default function Header() {
       <RowBetween padding="1rem">
         <HeaderElement>
           <Title>
-            <UniIcon id="link" href="/">
+            <UniIcon id="link" to="/">
               <img src={isDark ? LogoDark : Logo} alt="logo" />
             </UniIcon>
             {!isMobile && (
               <TitleText>
-                <Link id="link" href="/">
+                <HistoryLink id="link" to="/">
                   <img
                     style={{ marginLeft: '4px', marginTop: '4px' }}
                     src={isDark ? WordmarkDark : Wordmark}
                     alt="logo"
                   />
-                </Link>
+                </HistoryLink>
               </TitleText>
             )}
           </Title>
