@@ -679,7 +679,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
                     {formattedAmounts[Field.TOKEN0] ? formattedAmounts[Field.TOKEN0] : '-'}
                   </Text>
                   <RowFixed>
-                    <TokenLogo address={tokens[Field.TOKEN0]?.address || ''} style={{ marginRight: '12px' }} />
+                    <TokenLogo address={tokens[Field.TOKEN0]?.address} style={{ marginRight: '12px' }} />
                     <Text fontSize={24} fontWeight={500}>
                       {tokens[Field.TOKEN0]?.symbol}
                     </Text>
@@ -690,7 +690,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
                     {formattedAmounts[Field.TOKEN1] ? formattedAmounts[Field.TOKEN1] : '-'}
                   </Text>
                   <RowFixed>
-                    <TokenLogo address={tokens[Field.TOKEN1]?.address || ''} style={{ marginRight: '12px' }} />
+                    <TokenLogo address={tokens[Field.TOKEN1]?.address} style={{ marginRight: '12px' }} />
                     <Text fontSize={24} fontWeight={500}>
                       {tokens[Field.TOKEN1]?.symbol}
                     </Text>

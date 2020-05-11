@@ -7,9 +7,7 @@ import { WETH } from '@uniswap/sdk'
 import { ReactComponent as EthereumLogo } from '../../assets/images/ethereum-logo.svg'
 
 const TOKEN_ICON_API = address =>
-  `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
-    address
-  )}/logo.png`
+  `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 const BAD_IMAGES = {}
 
 const Image = styled.img<{ size: string }>`
@@ -40,15 +38,15 @@ export default function TokenLogo({
   size = '24px',
   ...rest
 }: {
-  address: string
+  address?: string
   size?: string
   style?: React.CSSProperties
 }) {
   const [error, setError] = useState(false)
   const { chainId } = useWeb3React()
 
-  // mock testnet DAI
-  if (address === isAddress('0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735')) {
+  // mock rinkeby DAI
+  if (chainId === 4 && address === '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735') {
     address = '0x6b175474e89094c44da98b954eedeac495271d0f'
   }
 
@@ -62,8 +60,8 @@ export default function TokenLogo({
         {...rest}
       />
     )
-  } else if (!error && !BAD_IMAGES[address]) {
-    path = TOKEN_ICON_API(address?.toLowerCase())
+  } else if (!error && !BAD_IMAGES[address] && isAddress(address)) {
+    path = TOKEN_ICON_API(address)
   } else {
     return (
       <Emoji {...rest} size={size}>

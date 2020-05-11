@@ -598,14 +598,14 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
         <RowBetween>
           <TYPE.body>{tokens[Field.INPUT]?.symbol} Deposited</TYPE.body>
           <RowFixed>
-            <TokenLogo address={tokens[Field.INPUT]?.address || ''} style={{ marginRight: '8px' }} />
+            <TokenLogo address={tokens[Field.INPUT]?.address} style={{ marginRight: '8px' }} />
             <TYPE.body>{!!parsedAmounts[Field.INPUT] && parsedAmounts[Field.INPUT].toSignificant(6)}</TYPE.body>
           </RowFixed>
         </RowBetween>
         <RowBetween>
           <TYPE.body>{tokens[Field.OUTPUT]?.symbol} Deposited</TYPE.body>
           <RowFixed>
-            <TokenLogo address={tokens[Field.OUTPUT]?.address || ''} style={{ marginRight: '8px' }} />
+            <TokenLogo address={tokens[Field.OUTPUT]?.address} style={{ marginRight: '8px' }} />
             <TYPE.body>{!!parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.OUTPUT].toSignificant(6)}</TYPE.body>
           </RowFixed>
         </RowBetween>

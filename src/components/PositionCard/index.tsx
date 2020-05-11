@@ -100,7 +100,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
                   </Text>
                   {token0Deposited ? (
                     <RowFixed>
-                      {!minimal && <TokenLogo address={token0?.address || ''} />}
+                      {!minimal && <TokenLogo address={token0?.address} />}
                       <Text color="#888D9B" fontSize={16} fontWeight={500} marginLeft={'6px'}>
                         {token0Deposited?.toSignificant(6)}
                       </Text>
@@ -115,7 +115,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
                   </Text>
                   {token1Deposited ? (
                     <RowFixed>
-                      {!minimal && <TokenLogo address={token1?.address || ''} />}
+                      {!minimal && <TokenLogo address={token1?.address} />}
                       <Text color="#888D9B" fontSize={16} fontWeight={500} marginLeft={'6px'}>
                         {token1Deposited?.toSignificant(6)}
                       </Text>
@@ -162,9 +162,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
                     <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                       {token0Deposited?.toSignificant(6)}
                     </Text>
-                    {!minimal && (
-                      <TokenLogo size="20px" style={{ marginLeft: '8px' }} address={token0?.address || ''} />
-                    )}
+                    {!minimal && <TokenLogo size="20px" style={{ marginLeft: '8px' }} address={token0?.address} />}
                   </RowFixed>
                 ) : (
                   '-'
@@ -182,9 +180,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
                     <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                       {token1Deposited?.toSignificant(6)}
                     </Text>
-                    {!minimal && (
-                      <TokenLogo size="20px" style={{ marginLeft: '8px' }} address={token1?.address || ''} />
-                    )}
+                    {!minimal && <TokenLogo size="20px" style={{ marginLeft: '8px' }} address={token1?.address} />}
                   </RowFixed>
                 ) : (
                   '-'
