@@ -37,6 +37,7 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   cursor: pointer;
   user-select: none;
   border: none;
+  padding: 0 0.5rem;
 
   :focus,
   :hover {
@@ -51,7 +52,7 @@ const LabelRow = styled.div`
   font-size: 0.75rem;
   line-height: 1rem;
   padding: 0.75rem 1rem 0 1rem;
-  height: 20px
+  height: 20px;
   span:hover {
     cursor: pointer;
     color: ${({ theme }) => darken(0.2, theme.text2)};
@@ -112,6 +113,10 @@ const StyledBalanceMax = styled.button`
     border: 1px solid ${({ theme }) => theme.primary1};
     outline: none;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    margin-right: 0.5rem;
+  `};
 `
 // const StyledBalanceMaxMini = styled.button`
 //   height: 24px;

@@ -16,7 +16,7 @@ import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 import Logo from '../../assets/svg/logo.svg'
 import Wordmark from '../../assets/svg/wordmark.svg'
-import LogoDark from '../../assets/svg/logo_white2.svg'
+import LogoDark from '../../assets/svg/logo_white.svg'
 import WordmarkDark from '../../assets/svg/wordmark_white.svg'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
@@ -31,10 +31,9 @@ const HeaderFrame = styled.div`
   position: absolute;
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    padding: 10px;
-    width: calc(100% - 12px);
+    padding: 12px 0 0 0;
+    width: calc(100%);
     position: relative;
-
   `};
   z-index: 2;
 `
@@ -132,7 +131,7 @@ const MigrateBanner = styled(AutoColumn)`
 `
 
 const VersionLabel = styled.span<{ isV2?: boolean }>`
-  padding: 0.15rem 0.5rem 0.16rem 0.45rem;
+  padding: ${({ isV2 }) => (isV2 ? '0.15rem 0.5rem 0.16rem 0.45rem' : '0.15rem 0.5rem 0.16rem 0.35rem')};
   border-radius: 14px;
   background: ${({ theme, isV2 }) => (isV2 ? theme.primary1 : 'none')};
   color: ${({ theme, isV2 }) => (isV2 ? theme.white : theme.primary1)};
