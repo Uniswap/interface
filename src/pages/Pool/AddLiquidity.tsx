@@ -285,7 +285,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   // get formatted amounts
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField]?.toSignificant(8) : ''
+    [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField]?.toSignificant(6) : ''
   }
 
   // check whether the user has approved the router on both tokens
@@ -588,7 +588,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
       <AutoColumn gap="20px">
         <RowFlat style={{ marginTop: '20px' }}>
           <Text fontSize="48px" fontWeight={500} lineHeight="32px" marginRight={10}>
-            {liquidityMinted?.toFixed(6)}
+            {liquidityMinted?.toSignificant(6)}
           </Text>
           <DoubleLogo a0={tokens[Field.INPUT]?.symbol || ''} a1={tokens[Field.OUTPUT]?.symbol || ''} size={30} />
         </RowFlat>
@@ -629,13 +629,13 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
             <TYPE.body>
               {`1 ${tokens[Field.INPUT]?.symbol} = ${route?.midPrice &&
                 route?.midPrice?.raw?.denominator &&
-                route?.midPrice?.adjusted?.toFixed(8)} ${tokens[Field.OUTPUT]?.symbol}`}
+                route?.midPrice?.adjusted?.toSignificant(8)} ${tokens[Field.OUTPUT]?.symbol}`}
             </TYPE.body>
           </RowBetween>
         )}
         <RowBetween>
           <TYPE.body>Minted Pool Share:</TYPE.body>
-          <TYPE.body>{noLiquidity ? '100%' : poolTokenPercentage?.toFixed(6) + '%'}</TYPE.body>
+          <TYPE.body>{noLiquidity ? '100%' : poolTokenPercentage?.toSignificant(6) + '%'}</TYPE.body>
         </RowBetween>
         <ButtonPrimary style={{ margin: '20px 0' }} onClick={onAdd}>
           <Text fontWeight={500} fontSize={20}>
@@ -690,10 +690,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
-          <TYPE.black>
-            {noLiquidity && derivedPrice ? '100' : poolTokenPercentage ? poolTokenPercentage?.toFixed(2) : '0.0'}
-            {'%'}
-          </TYPE.black>
+          <TYPE.black>{noLiquidity && derivedPrice ? '100' : poolTokenPercentage?.toSignificant(4) ?? '0'}%</TYPE.black>
           <Text fontWeight={500} fontSize={14} color="#888D9B" pt={1}>
             Pool Share
           </Text>

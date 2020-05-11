@@ -265,10 +265,10 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
     pair.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, parsedAmounts[Field.LIQUIDITY], false)
 
   // derived percent for advanced mode
-  const derivedPerecent =
-    userLiquidity &&
+  const derivedPercent =
     parsedAmounts[Field.LIQUIDITY] &&
-    new Percent(parsedAmounts[Field.LIQUIDITY]?.raw, userLiquidity.raw).toFixed(0)
+    userLiquidity &&
+    new Percent(parsedAmounts[Field.LIQUIDITY]?.raw, userLiquidity.raw)
 
   const [override, setSliderOverride] = useState(false) // override slider internal value
   const handlePresetPercentage = newPercent => {
@@ -298,19 +298,19 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
       independentField === Field.LIQUIDITY
         ? typedValue
         : parsedAmounts[Field.LIQUIDITY]
-        ? parsedAmounts[Field.LIQUIDITY].toSignificant(8)
+        ? parsedAmounts[Field.LIQUIDITY].toSignificant(6)
         : '',
     [Field.TOKEN0]:
       independentField === Field.TOKEN0
         ? typedValue
         : parsedAmounts[Field.TOKEN0]
-        ? parsedAmounts[Field.TOKEN0].toSignificant(8)
+        ? parsedAmounts[Field.TOKEN0].toSignificant(6)
         : '',
     [Field.TOKEN1]:
       independentField === Field.TOKEN1
         ? typedValue
         : parsedAmounts[Field.TOKEN1]
-        ? parsedAmounts[Field.TOKEN1].toSignificant(8)
+        ? parsedAmounts[Field.TOKEN1].toSignificant(6)
         : ''
   }
 
@@ -534,9 +534,9 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
         </RowBetween>
 
         <TYPE.italic fontSize={12} color="#565A69" textAlign="left" padding={'20px 0 0 0'}>
-          {`Output is estimated. You will receive at least ${parsedAmounts[Field.TOKEN0]?.toFixed(6)} ${
+          {`Output is estimated. You will receive at least ${parsedAmounts[Field.TOKEN0]?.toSignificant(6)} ${
             tokens[Field.TOKEN0]?.symbol
-          } and at least ${parsedAmounts[Field.TOKEN1]?.toFixed(6)} ${
+          } and at least ${parsedAmounts[Field.TOKEN1]?.toSignificant(6)} ${
             tokens[Field.TOKEN1]?.symbol
           } or the transaction will revert.`}
         </TYPE.italic>
@@ -567,7 +567,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
             Price
           </Text>
           <Text fontWeight={500} fontSize={16}>
-            {`1 ${tokens[Field.TOKEN0]?.symbol} = ${route?.midPrice && route.midPrice.adjusted.toFixed(8)} ${
+            {`1 ${tokens[Field.TOKEN0]?.symbol} = ${route?.midPrice && route.midPrice.adjusted.toSignificant(6)} ${
               tokens[Field.TOKEN1]?.symbol
             }`}
           </Text>
@@ -631,11 +631,15 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
             <Row style={{ alignItems: 'flex-end' }}>
               {/* <CustomNumericalInput value={percentageInput} onUserInput={input => handlePresetPercentage(input)} /> */}
               <Text fontSize={72} fontWeight={500}>
-                {derivedPerecent ? (parseInt(derivedPerecent) < 1 ? '<1' : derivedPerecent) : '0'}%
+                {derivedPercent?.toFixed(0) === '0' ? '<1' : derivedPercent?.toFixed(0) ?? '0'}%
               </Text>
             </Row>
             {!showAdvanced && (
-              <Slider value={parseFloat(derivedPerecent)} onChange={handleSliderChange} override={override} />
+              <Slider
+                value={parseInt(derivedPercent?.toFixed(0) ?? '0')}
+                onChange={handleSliderChange}
+                override={override}
+              />
             )}
             {!showAdvanced && (
               <RowBetween>

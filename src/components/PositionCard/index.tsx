@@ -70,7 +70,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
   if (minimal) {
     return (
       <>
-        {userPoolBalance && userPoolBalance.toFixed(6) > 0 && (
+        {userPoolBalance && userPoolBalance.toSignificant(5) > 0 && (
           <GreyCard border={border}>
             <AutoColumn gap="12px">
               <FixedHeightRow>
@@ -89,7 +89,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
                 </RowFixed>
                 <RowFixed>
                   <Text fontWeight={500} fontSize={20}>
-                    {userPoolBalance ? userPoolBalance.toFixed(6) : '-'}
+                    {userPoolBalance ? userPoolBalance.toSignificant(5) : '-'}
                   </Text>
                 </RowFixed>
               </FixedHeightRow>
@@ -102,7 +102,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
                     <RowFixed>
                       {!minimal && <TokenLogo address={token0?.address || ''} />}
                       <Text color="#888D9B" fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                        {token0Deposited?.toFixed(8)}
+                        {token0Deposited?.toSignificant(6)}
                       </Text>
                     </RowFixed>
                   ) : (
@@ -117,7 +117,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
                     <RowFixed>
                       {!minimal && <TokenLogo address={token1?.address || ''} />}
                       <Text color="#888D9B" fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                        {token1Deposited?.toFixed(8)}
+                        {token1Deposited?.toSignificant(6)}
                       </Text>
                     </RowFixed>
                   ) : (
@@ -160,7 +160,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
                 {token0Deposited ? (
                   <RowFixed>
                     <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                      {token0Deposited?.toFixed(8)}
+                      {token0Deposited?.toSignificant(6)}
                     </Text>
                     {!minimal && (
                       <TokenLogo size="20px" style={{ marginLeft: '8px' }} address={token0?.address || ''} />
@@ -180,7 +180,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
                 {token1Deposited ? (
                   <RowFixed>
                     <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                      {token1Deposited?.toFixed(8)}
+                      {token1Deposited?.toSignificant(6)}
                     </Text>
                     {!minimal && (
                       <TokenLogo size="20px" style={{ marginLeft: '8px' }} address={token1?.address || ''} />
@@ -196,7 +196,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
                     Your pool tokens:
                   </Text>
                   <Text fontSize={16} fontWeight={500}>
-                    {userPoolBalance ? userPoolBalance.toFixed(6) : '-'}
+                    {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
                   </Text>
                 </FixedHeightRow>
               )}

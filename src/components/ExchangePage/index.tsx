@@ -201,7 +201,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
 
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(8) : ''
+    [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(6) : ''
   }
 
   const priceSlippage =
@@ -646,8 +646,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   // warnings on slippage
   const warningLow: boolean =
     slippageFromTrade &&
-    parseFloat(slippageFromTrade.toFixed(4)) < ALLOWED_SLIPPAGE_MEDIUM / 100 &&
-    parseFloat(slippageFromTrade.toFixed(4)) > 0
+    parseFloat(slippageFromTrade.toFixed(4)) > 0 &&
+    parseFloat(slippageFromTrade.toFixed(4)) < ALLOWED_SLIPPAGE_MEDIUM / 100
   const warningMedium: boolean =
     slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_MEDIUM / 100
   const warningHigh: boolean =
@@ -751,8 +751,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 {`Output is estimated. You will receive at least `}
                 <b>
                   {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {tokens[Field.OUTPUT]?.symbol}{' '}
-                </b>{' '}
-                {` or the transaction will revert.`}
+                </b>
+                {' or the transaction will revert.'}
               </TYPE.italic>
             ) : (
               <TYPE.italic textAlign="left" style={{ width: '100%', paddingTop: '.5rem' }}>
@@ -760,7 +760,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 <b>
                   {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {tokens[Field.INPUT]?.symbol}
                 </b>
-                {` or the transaction will revert.`}
+                {' or the transaction will revert.'}
               </TYPE.italic>
             )}
           </AutoColumn>
@@ -824,16 +824,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               <RowFixed>
                 <TYPE.black fontSize={14}>
                   {independentField === Field.INPUT
-                    ? slippageAdjustedAmounts[Field.OUTPUT]
-                      ? slippageAdjustedAmounts[Field.OUTPUT]?.toFixed(5) === '0.00000'
-                        ? '<0.00001'
-                        : slippageAdjustedAmounts[Field.OUTPUT]?.toFixed(5)
-                      : '-'
-                    : slippageAdjustedAmounts[Field.INPUT]
-                    ? slippageAdjustedAmounts[Field.INPUT]?.toFixed(5) === '0.00000'
-                      ? '<0.00001'
-                      : slippageAdjustedAmounts[Field.INPUT]?.toFixed(5)
-                    : '-'}
+                    ? slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4) ?? '-'
+                    : slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4) ?? '-'}
                 </TYPE.black>
                 {parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.INPUT] && (
                   <TYPE.black fontSize={14} marginLeft={'4px'}>
@@ -858,11 +850,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 warningMedium={warningMedium}
                 warningHigh={warningHigh}
               >
-                {priceSlippage
-                  ? priceSlippage.toFixed(4) === '0.0000'
-                    ? '<0.0001%'
-                    : priceSlippage.toFixed(4) + '%'
-                  : '-'}
+                {priceSlippage?.toFixed(2) === '0.00' ? '<0.01%' : `${priceSlippage?.toFixed(2)}%` ?? '-'}
               </ErrorText>
             </RowBetween>
             <RowBetween>
@@ -919,11 +907,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             warningMedium={warningMedium}
             warningHigh={warningHigh}
           >
-            {priceSlippage
-              ? priceSlippage.toFixed(4) === '0.0000'
-                ? '<0.0001%'
-                : priceSlippage.toFixed(4) + '%'
-              : '-'}
+            {priceSlippage?.toFixed(2) === '0.00' ? '<0.01%' : `${priceSlippage?.toFixed(2)}%` ?? '-'}
           </ErrorText>
           <Text fontWeight={500} fontSize={16} color={theme(isDark).text3} pt={1}>
             Price Impact
@@ -1153,11 +1137,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     </TYPE.main>
                     <RowFixed>
                       <ErrorText fontWeight={500} fontSize={14} warningMedium={warningMedium} warningHigh={warningHigh}>
-                        {priceSlippage
-                          ? priceSlippage.toFixed(4) === '0.0000'
-                            ? '<0.0001%'
-                            : priceSlippage.toFixed(4) + '%'
-                          : '-'}{' '}
+                        {priceSlippage?.toFixed(2) === '0.00' ? '<0.01%' : `${priceSlippage?.toFixed(2)}%` ?? '-'}
                       </ErrorText>
                       <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
                     </RowFixed>
@@ -1259,20 +1239,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                   <RowFixed>
                     <TYPE.black color={theme(isDark).text1} fontSize={14}>
                       {independentField === Field.INPUT
-                        ? slippageAdjustedAmounts[Field.OUTPUT]
-                          ? slippageAdjustedAmounts[Field.OUTPUT]?.lessThan(
-                              new Fraction(JSBI.BigInt(1), JSBI.BigInt(10000))
-                            )
-                            ? '<0.00001'
-                            : slippageAdjustedAmounts[Field.OUTPUT]?.toFixed(5)
-                          : '-'
-                        : slippageAdjustedAmounts[Field.INPUT]
-                        ? slippageAdjustedAmounts[Field.INPUT]?.lessThan(
-                            new Fraction(JSBI.BigInt(1), JSBI.BigInt(10000))
-                          )
-                          ? '<0.00001'
-                          : slippageAdjustedAmounts[Field.INPUT]?.toFixed(5)
-                        : '-'}
+                        ? slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4) ?? '-'
+                        : slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4) ?? '-'}
                     </TYPE.black>
                     {parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.INPUT] && (
                       <TYPE.black fontSize={14} marginLeft={'4px'} color={theme(isDark).text1}>
@@ -1297,11 +1265,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     warningMedium={warningMedium}
                     warningHigh={warningHigh}
                   >
-                    {priceSlippage
-                      ? priceSlippage.toFixed(4) === '0.0000'
-                        ? '<0.0001%'
-                        : priceSlippage.toFixed(4) + '%'
-                      : '-'}
+                    {priceSlippage?.toFixed(2) === '0.00' ? '<0.01%' : `${priceSlippage?.toFixed(2)}%` ?? '-'}
                   </ErrorText>
                 </RowBetween>
                 <RowBetween>
@@ -1349,8 +1313,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                       </RowFixed>
                     </RowBetween>
                     <Text lineHeight="145.23%;" fontSize={16} fontWeight={400} color={theme(isDark).text1}>
-                      This trade will move the price by {slippageFromTrade.toFixed(2)}%. This pool probably doesn’t have
-                      enough liquidity to support this trade.
+                      This trade will move the price by {slippageFromTrade?.toFixed(2)}%. This pool probably doesn’t
+                      have enough liquidity to support this trade.
                     </Text>
                   </AutoColumn>
                 </YellowCard>
