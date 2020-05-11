@@ -1372,7 +1372,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                   </AutoColumn>
                 </YellowCard>
               )}
-           
             </AutoColumn>
           </FixedBottom>
         </AdvancedDropwdown>

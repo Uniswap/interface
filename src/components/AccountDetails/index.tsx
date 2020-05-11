@@ -51,7 +51,7 @@ const UpperSection = styled.div`
 
 const InfoCard = styled.div`
   padding: 1rem;
-  background-color: ${({ theme }) => theme.bg2}; 
+  background-color: ${({ theme }) => theme.bg2};
   border-radius: 20px;
 `
 

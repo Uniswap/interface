@@ -130,7 +130,7 @@ const VersionLabel = styled.span<{ isV2?: boolean }>`
   font-size: 0.825rem;
   font-weight: 400;
   :hover {
-    user-select: ${({ theme, isV2 }) => (isV2 ? 'none' : 'initial')};
+    user-select: ${({ isV2 }) => (isV2 ? 'none' : 'initial')};
     background: ${({ theme, isV2 }) => (isV2 ? theme.primary1 : 'none')};
     color: ${({ theme, isV2 }) => (isV2 ? theme.white : theme.primary3)};
   }
