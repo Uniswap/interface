@@ -3,7 +3,6 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { parseBytes32String } from '@ethersproject/strings'
 import { BigNumber } from '@ethersproject/bignumber'
-import { WETH } from '@uniswap/sdk'
 
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { abi as IUniswapV2Router01ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router01.json'
@@ -11,6 +10,7 @@ import { ROUTER_ADDRESS, SUPPORTED_THEMES } from '../constants'
 
 import ERC20_ABI from '../constants/abis/erc20.json'
 import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32.json'
+import { JSBI, TokenAmount } from '@uniswap/sdk'
 
 export function isAddress(value: any): string | false {
   try {
@@ -106,6 +106,16 @@ export function calculateGasMargin(value: BigNumber): BigNumber {
   return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000)) // add 10%
 }
 
+export function calculateSlippageAmount(value: TokenAmount, slippage: number): [JSBI, JSBI] {
+  if (slippage < 0 || slippage > 10000) {
+    throw Error(`Unexpected slippage value: ${slippage}`)
+  }
+  return [
+    JSBI.divide(JSBI.multiply(value.raw, JSBI.BigInt(10000 - slippage)), JSBI.BigInt(10000)),
+    JSBI.divide(JSBI.multiply(value.raw, JSBI.BigInt(10000 + slippage)), JSBI.BigInt(10000))
+  ]
+}
+
 // account is optional
 export function getProviderOrSigner(library: any, account?: string): any {
   return account ? library.getSigner(account).connectUnchecked() : library
@@ -196,24 +206,4 @@ export async function getTokenBalance(tokenAddress, address, library) {
   }
 
   return getContract(tokenAddress, ERC20_ABI, library).balanceOf(address)
-}
-
-// get the token allowance
-export async function getTokenAllowance(address, tokenAddress, spenderAddress, library) {
-  if (!isAddress(address) || !isAddress(tokenAddress) || !isAddress(spenderAddress)) {
-    throw Error(
-      "Invalid 'address' or 'tokenAddress' or 'spenderAddress' parameter" +
-        `'${address}' or '${tokenAddress}' or '${spenderAddress}'.`
-    )
-  }
-
-  return getContract(tokenAddress, ERC20_ABI, library).allowance(address, spenderAddress)
-}
-
-export function isWETH(token) {
-  if (token && token.address === WETH[token.chainId].address) {
-    return true
-  } else {
-    return false
-  }
 }

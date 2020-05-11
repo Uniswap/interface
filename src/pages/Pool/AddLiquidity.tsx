@@ -2,9 +2,9 @@ import React, { useReducer, useState, useCallback, useEffect, useContext } from 
 import styled, { ThemeContext } from 'styled-components'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { parseUnits, parseEther } from '@ethersproject/units'
-import { MaxUint256, Zero } from '@ethersproject/constants'
+import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { WETH, TokenAmount, JSBI, Percent, Route, Token, Pair, Price } from '@uniswap/sdk'
+import { WETH, TokenAmount, JSBI, Percent, Route, Token, Price } from '@uniswap/sdk'
 
 import TokenLogo from '../../components/TokenLogo'
 import DoubleLogo from '../../components/DoubleLogo'
@@ -22,14 +22,15 @@ import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Ro
 
 import { useToken } from '../../contexts/Tokens'
 import { useAddressBalance } from '../../contexts/Balances'
-import { useAddressAllowance } from '../../contexts/Allowances'
-import { usePair, useTotalSupply } from '../../contexts/Pairs'
+import { useTokenAllowance } from '../../data/Allowances'
+import { useTotalSupply } from '../../data/TotalSupply'
 import { useWeb3React, useTokenContract } from '../../hooks'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 
 import { ROUTER_ADDRESS } from '../../constants'
-import { getRouterContract, calculateGasMargin, isWETH } from '../../utils'
+import { getRouterContract, calculateGasMargin, calculateSlippageAmount } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
+import { usePair } from '../../data/Reserves'
 import { useLocalStorageTokens } from '../../contexts/LocalStorage'
 import { useAllTokens } from '../../contexts/Tokens'
 
@@ -213,22 +214,12 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   const tokenContractInput: Contract = useTokenContract(tokens[Field.INPUT]?.address)
   const tokenContractOutput: Contract = useTokenContract(tokens[Field.OUTPUT]?.address)
 
-  // check on pending approvals for token amounts
-  const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
-  const pendingApprovalOutput = usePendingApproval(tokens[Field.OUTPUT]?.address)
-
-  // exhchange data
-  const pair: Pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
+  // exchange data
+  const pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
   const route: Route = pair ? new Route([pair], tokens[independentField]) : undefined
-  const totalSupply: TokenAmount = useTotalSupply(tokens[Field.INPUT], tokens[Field.OUTPUT])
+  const totalSupply: TokenAmount = useTotalSupply(pair?.liquidityToken)
   const noLiquidity = // used to detect new exchange
-    pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
-
-  // state for amount approvals
-  const inputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.INPUT], ROUTER_ADDRESS)
-  const outputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.OUTPUT], ROUTER_ADDRESS)
-  const [showInputApprove, setShowInputApprove] = useState<boolean>(false)
-  const [showOutputApprove, setShowOutputApprove] = useState<boolean>(false)
+    !!pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
 
   // get user-pecific and token-specific lookup data
   const userBalances: { [field: number]: TokenAmount } = {
@@ -295,11 +286,27 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   // get formatted amounts
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField]?.toSignificant(8) : ''
+    [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField]?.toSignificant(6) : ''
   }
 
-  // used for displaying approximate starting price in UI
+  // check whether the user has approved the router on both tokens
+  const inputApproval: TokenAmount = useTokenAllowance(tokens[Field.INPUT], account, ROUTER_ADDRESS)
+  const outputApproval: TokenAmount = useTokenAllowance(tokens[Field.OUTPUT], account, ROUTER_ADDRESS)
+  const inputApproved =
+    tokens[Field.INPUT]?.equals(WETH[chainId]) ||
+    (!!inputApproval &&
+      !!parsedAmounts[Field.INPUT] &&
+      JSBI.greaterThanOrEqual(inputApproval.raw, parsedAmounts[Field.INPUT].raw))
+  const outputApproved =
+    tokens[Field.OUTPUT]?.equals(WETH[chainId]) ||
+    (!!outputApproval &&
+      !!parsedAmounts[Field.OUTPUT] &&
+      JSBI.greaterThanOrEqual(outputApproval.raw, parsedAmounts[Field.OUTPUT].raw))
+  // check on pending approvals for token amounts
+  const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
+  const pendingApprovalOutput = usePendingApproval(tokens[Field.OUTPUT]?.address)
 
+  // used for displaying approximate starting price in UI
   const derivedPrice =
     parsedAmounts[Field.INPUT] &&
     parsedAmounts[Field.OUTPUT] &&
@@ -362,8 +369,11 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   const [maxAmountInput, maxAmountOutput]: TokenAmount[] = [Field.INPUT, Field.OUTPUT].map(index => {
     const field = Field[index]
     return !!userBalances[Field[field]] &&
-      JSBI.greaterThan(userBalances[Field[field]].raw, isWETH(tokens[Field[field]]) ? MIN_ETHER.raw : JSBI.BigInt(0))
-      ? isWETH(tokens[Field[field]])
+      JSBI.greaterThan(
+        userBalances[Field[field]].raw,
+        tokens[Field[field]]?.equals(WETH[chainId]) ? MIN_ETHER.raw : JSBI.BigInt(0)
+      )
+      ? tokens[Field[field]]?.equals(WETH[chainId])
         ? userBalances[Field[field]].subtract(MIN_ETHER)
         : userBalances[Field[field]]
       : undefined
@@ -377,18 +387,6 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
       : undefined
   })
 
-  // monitor parsed amounts and update approve buttons
-  useEffect(() => {
-    setShowInputApprove(
-      parsedAmounts[Field.INPUT] && inputApproval && JSBI.greaterThan(parsedAmounts[Field.INPUT].raw, inputApproval.raw)
-    )
-    setShowOutputApprove(
-      parsedAmounts[Field.OUTPUT] &&
-        outputApproval &&
-        JSBI.greaterThan(parsedAmounts[Field.OUTPUT].raw, outputApproval.raw)
-    )
-  }, [inputApproval, outputApproval, parsedAmounts])
-
   // errors
   const [generalError, setGeneralError] = useState('')
   const [inputError, setInputError] = useState('')
@@ -401,6 +399,11 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
     setInputError(null)
     setOutputError(null)
     setIsValid(true)
+
+    if (!account) {
+      setGeneralError('Connect Wallet')
+      setIsValid(false)
+    }
 
     if (noLiquidity && parsedAmounts[Field.INPUT] && JSBI.equal(parsedAmounts[Field.INPUT].raw, JSBI.BigInt(0))) {
       setGeneralError('Enter an amount')
@@ -436,57 +439,39 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
       setOutputError('Insufficient ' + tokens[Field.OUTPUT]?.symbol + ' balance')
       setIsValid(false)
     }
-  }, [noLiquidity, parsedAmounts, showInputApprove, showOutputApprove, tokens, userBalances])
+  }, [noLiquidity, parsedAmounts, tokens, userBalances, account])
 
   // state for txn
   const addTransaction = useTransactionAdder()
   const [txHash, setTxHash] = useState<string>('')
 
-  // format ETH value for transaction
-  function hex(value: JSBI) {
-    return BigNumber.from(value.toString())
-  }
-
-  // calculate slippage bounds based on current reserves
-  function calculateSlippageAmount(value: TokenAmount): JSBI[] {
-    if (value && value.raw) {
-      const offset = JSBI.divide(JSBI.multiply(JSBI.BigInt(ALLOWED_SLIPPAGE), value.raw), JSBI.BigInt(10000))
-      return [JSBI.subtract(value.raw, offset), JSBI.add(value.raw, offset)]
-    } else {
-      return null
-    }
-  }
-
   async function onAdd() {
     setAttemptingTxn(true)
     const router = getRouterContract(chainId, library, account)
 
-    const minTokenInput = calculateSlippageAmount(parsedAmounts[Field.INPUT])[0]
-    const minTokenOutput = calculateSlippageAmount(parsedAmounts[Field.OUTPUT])[0]
+    const minInput = calculateSlippageAmount(parsedAmounts[Field.INPUT], ALLOWED_SLIPPAGE)[0]
+    const minOutput = calculateSlippageAmount(parsedAmounts[Field.OUTPUT], ALLOWED_SLIPPAGE)[0]
 
     const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
 
     let method, estimate, args, value
 
-    if (tokens[Field.INPUT] === WETH[chainId] || tokens[Field.OUTPUT] === WETH[chainId]) {
+    // one of the tokens is ETH
+    if (tokens[Field.INPUT].equals(WETH[chainId]) || tokens[Field.OUTPUT].equals(WETH[chainId])) {
       method = router.addLiquidityETH
       estimate = router.estimateGas.addLiquidityETH
 
+      const outputIsETH = tokens[Field.OUTPUT].equals(WETH[chainId])
+
       args = [
-        tokens[Field.OUTPUT] === WETH[chainId] ? tokens[Field.INPUT].address : tokens[Field.OUTPUT].address, // token
-        tokens[Field.OUTPUT] === WETH[chainId] // token desired
-          ? parsedAmounts[Field.INPUT].raw.toString()
-          : parsedAmounts[Field.OUTPUT].raw.toString(),
-        tokens[Field.OUTPUT] === WETH[chainId] ? minTokenInput.toString() : minTokenOutput.toString(), // token min
-        tokens[Field.OUTPUT] === WETH[chainId] ? minTokenOutput.toString() : minTokenInput.toString(), // eth min
+        tokens[outputIsETH ? Field.INPUT : Field.OUTPUT].address, // token
+        parsedAmounts[outputIsETH ? Field.INPUT : Field.OUTPUT].raw.toString(), // token desired
+        outputIsETH ? minInput.toString() : minOutput.toString(), // token min
+        outputIsETH ? minOutput.toString() : minInput.toString(), // eth min
         account,
         deadline
       ]
-      value = hex(
-        tokens[Field.OUTPUT] === WETH[chainId] // eth desired
-          ? parsedAmounts[Field.OUTPUT].raw
-          : parsedAmounts[Field.INPUT].raw
-      )
+      value = BigNumber.from(parsedAmounts[outputIsETH ? Field.OUTPUT : Field.INPUT].raw.toString())
     } else {
       method = router.addLiquidity
       estimate = router.estimateGas.addLiquidity
@@ -495,21 +480,19 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
         tokens[Field.OUTPUT].address,
         parsedAmounts[Field.INPUT].raw.toString(),
         parsedAmounts[Field.OUTPUT].raw.toString(),
-        noLiquidity ? parsedAmounts[Field.INPUT].raw.toString() : minTokenInput.toString(),
-        noLiquidity ? parsedAmounts[Field.OUTPUT].raw.toString() : minTokenOutput.toString(),
+        noLiquidity ? parsedAmounts[Field.INPUT].raw.toString() : minInput.toString(),
+        noLiquidity ? parsedAmounts[Field.OUTPUT].raw.toString() : minOutput.toString(),
         account,
         deadline
       ]
-      value = Zero
+      value = null
     }
 
-    await estimate(...args, {
-      value: value
-    })
+    await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
         method(...args, {
-          gasLimit: calculateGasMargin(estimatedGasLimit),
-          value: value
+          ...(value ? { value } : {}),
+          gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setTxHash(response.hash)
           addTransaction(
@@ -527,7 +510,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
         })
       )
       .catch((e: Error) => {
-        console.log(e)
+        console.error(e)
         setPendingConfirmation(true)
         setAttemptingTxn(false)
         setShowConfirm(false)
@@ -592,7 +575,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
       <AutoColumn gap="20px">
         <RowFlat style={{ marginTop: '20px' }}>
           <Text fontSize="48px" fontWeight={500} lineHeight="32px" marginRight={10}>
-            {liquidityMinted?.toFixed(6)}
+            {liquidityMinted?.toSignificant(6)}
           </Text>
           <DoubleLogo a0={tokens[Field.INPUT]?.symbol || ''} a1={tokens[Field.OUTPUT]?.symbol || ''} size={30} />
         </RowFlat>
@@ -616,14 +599,14 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
         <RowBetween>
           <TYPE.body>{tokens[Field.INPUT]?.symbol} Deposited</TYPE.body>
           <RowFixed>
-            <TokenLogo address={tokens[Field.INPUT]?.address || ''} style={{ marginRight: '8px' }} />
+            <TokenLogo address={tokens[Field.INPUT]?.address} style={{ marginRight: '8px' }} />
             <TYPE.body>{!!parsedAmounts[Field.INPUT] && parsedAmounts[Field.INPUT].toSignificant(6)}</TYPE.body>
           </RowFixed>
         </RowBetween>
         <RowBetween>
           <TYPE.body>{tokens[Field.OUTPUT]?.symbol} Deposited</TYPE.body>
           <RowFixed>
-            <TokenLogo address={tokens[Field.OUTPUT]?.address || ''} style={{ marginRight: '8px' }} />
+            <TokenLogo address={tokens[Field.OUTPUT]?.address} style={{ marginRight: '8px' }} />
             <TYPE.body>{!!parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.OUTPUT].toSignificant(6)}</TYPE.body>
           </RowFixed>
         </RowBetween>
@@ -633,13 +616,13 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
             <TYPE.body>
               {`1 ${tokens[Field.INPUT]?.symbol} = ${route?.midPrice &&
                 route?.midPrice?.raw?.denominator &&
-                route?.midPrice?.adjusted?.toFixed(8)} ${tokens[Field.OUTPUT]?.symbol}`}
+                route?.midPrice?.adjusted?.toSignificant(4)} ${tokens[Field.OUTPUT]?.symbol}`}
             </TYPE.body>
           </RowBetween>
         )}
         <RowBetween>
           <TYPE.body>Minted Pool Share:</TYPE.body>
-          <TYPE.body>{noLiquidity ? '100%' : poolTokenPercentage?.toFixed(6) + '%'}</TYPE.body>
+          <TYPE.body>{noLiquidity ? '100%' : poolTokenPercentage?.toSignificant(6) + '%'}</TYPE.body>
         </RowBetween>
         <ButtonPrimary style={{ margin: '20px 0' }} onClick={onAdd}>
           <Text fontWeight={500} fontSize={20}>
@@ -696,7 +679,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           </AutoColumn>
           <AutoColumn justify="center">
             <TYPE.black>
-              {noLiquidity && derivedPrice ? '100' : poolTokenPercentage ? poolTokenPercentage?.toFixed(2) : '0.0'}
+              {noLiquidity && derivedPrice ? '100' : poolTokenPercentage?.toSignificant(4) ?? '0'}
               {'%'}
             </TYPE.black>
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
@@ -791,37 +774,46 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
             </GreyCard>
           </>
         )}
-        {showOutputApprove ? (
-          <ButtonLight
-            onClick={() => {
-              !pendingApprovalOutput && approveAmount(Field.OUTPUT)
-            }}
-          >
-            {pendingApprovalOutput ? (
-              <Dots>Approving {tokens[Field.OUTPUT]?.symbol}</Dots>
-            ) : (
-              'Approve ' + tokens[Field.OUTPUT]?.symbol
-            )}
-          </ButtonLight>
-        ) : showInputApprove ? (
-          <ButtonLight
-            onClick={() => {
-              !pendingApprovalInput && approveAmount(Field.INPUT)
-            }}
-          >
-            {pendingApprovalInput ? (
-              <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
-            ) : (
-              'Approve ' + tokens[Field.INPUT]?.symbol
-            )}
-          </ButtonLight>
+        {isValid ? (
+          !inputApproved ? (
+            <ButtonLight
+              onClick={() => {
+                approveAmount(Field.INPUT)
+              }}
+              disabled={pendingApprovalInput}
+            >
+              {pendingApprovalInput ? (
+                <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
+              ) : (
+                'Approve ' + tokens[Field.INPUT]?.symbol
+              )}
+            </ButtonLight>
+          ) : !outputApproved ? (
+            <ButtonLight
+              onClick={() => {
+                approveAmount(Field.OUTPUT)
+              }}
+              disabled={pendingApprovalOutput}
+            >
+              {pendingApprovalOutput ? (
+                <Dots>Approving {tokens[Field.OUTPUT]?.symbol}</Dots>
+              ) : (
+                'Approve ' + tokens[Field.OUTPUT]?.symbol
+              )}
+            </ButtonLight>
+          ) : (
+            <ButtonPrimary
+              onClick={() => {
+                setShowConfirm(true)
+              }}
+            >
+              <Text fontSize={20} fontWeight={500}>
+                Supply
+              </Text>
+            </ButtonPrimary>
+          )
         ) : (
-          <ButtonPrimary
-            onClick={() => {
-              setShowConfirm(true)
-            }}
-            disabled={!isValid}
-          >
+          <ButtonPrimary disabled={true}>
             <Text fontSize={20} fontWeight={500}>
               {generalError ? generalError : inputError ? inputError : outputError ? outputError : 'Supply'}
             </Text>
@@ -832,12 +824,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
       {!noLiquidity && (
         <FixedBottom>
           <AutoColumn>
-            <PositionCard
-              pairAddress={pair?.liquidityToken?.address}
-              token0={tokens[Field.INPUT]}
-              token1={tokens[Field.OUTPUT]}
-              minimal={true}
-            />
+            <PositionCard pair={pair} minimal={true} />
           </AutoColumn>
         </FixedBottom>
       )}

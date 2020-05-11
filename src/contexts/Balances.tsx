@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useReducer, useRef, useMemo, useCallback, useEffect, ReactNode } from 'react'
 import { TokenAmount, Token, JSBI, WETH } from '@uniswap/sdk'
 
-import { useAllPairs } from './Pairs'
 import { useAllTokens } from './Tokens'
 import { useBlockNumber } from './Application'
 import { useWeb3React, useDebounce } from '../hooks'
 
 import { getEtherBalance, getTokenBalance, isAddress } from '../utils'
+import { useAllDummyPairs } from './LocalStorage'
 
 const LOCAL_STORAGE_KEY = 'BALANCES'
 const SHORT_BLOCK_TIMEOUT = (60 * 2) / 15 // in seconds, represented as a block number delta
@@ -324,26 +324,27 @@ export function Updater() {
     }
   }, [chainId, account, blockNumber, allTokens, fetchBalance, batchUpdateAccount])
 
-  // ensure  token balances for all exchanges
-  const allPairs = useAllPairs()
+  // ensure token balances for all exchanges
+  const allPairs = useAllDummyPairs()
   useEffect(() => {
     if (typeof chainId === 'number' && typeof blockNumber === 'number') {
       Promise.all(
-        Object.keys(allPairs)
-          .filter(pairAddress => {
-            const token0 = allPairs[pairAddress].token0
-            const token1 = allPairs[pairAddress].token1
+        allPairs
+          .filter(pair => {
+            const token0Address = pair.token0.address
+            const token1Address = pair.token1.address
+            const pairAddress = pair.liquidityToken.address
 
-            const hasValueToken0 = !!stateRef.current?.[chainId]?.[pairAddress]?.[token0]?.value
-            const hasValueToken1 = !!stateRef.current?.[chainId]?.[pairAddress]?.[token1]?.value
+            const hasValueToken0 = !!stateRef.current?.[chainId]?.[pairAddress]?.[token0Address]?.value
+            const hasValueToken1 = !!stateRef.current?.[chainId]?.[pairAddress]?.[token1Address]?.value
 
             const cachedFetchedAsOfToken0 = fetchedAsOfCache.current?.[chainId]?.[pairAddress]?.token0
             const cachedFetchedAsOfToken1 = fetchedAsOfCache.current?.[chainId]?.[pairAddress]?.token1
 
             const fetchedAsOfToken0 =
-              stateRef.current?.[chainId]?.[pairAddress]?.[token0]?.blockNumber ?? cachedFetchedAsOfToken0
+              stateRef.current?.[chainId]?.[pairAddress]?.[token0Address]?.blockNumber ?? cachedFetchedAsOfToken0
             const fetchedAsOfToken1 =
-              stateRef.current?.[chainId]?.[pairAddress]?.[token1]?.blockNumber ?? cachedFetchedAsOfToken1
+              stateRef.current?.[chainId]?.[pairAddress]?.[token1Address]?.blockNumber ?? cachedFetchedAsOfToken1
 
             // if there's no values, and they're not being fetched, we need to fetch!
             if (
@@ -366,9 +367,10 @@ export function Updater() {
               return false
             }
           })
-          .map(async pairAddress => {
-            const token0 = allPairs[pairAddress].token0
-            const token1 = allPairs[pairAddress].token1
+          .map(async pair => {
+            const token0Address = pair.token0.address
+            const token1Address = pair.token1.address
+            const pairAddress = pair.liquidityToken.address
 
             fetchedAsOfCache.current = {
               ...fetchedAsOfCache.current,
@@ -376,21 +378,27 @@ export function Updater() {
                 ...fetchedAsOfCache.current?.[chainId],
                 [pairAddress]: {
                   ...fetchedAsOfCache.current?.[chainId]?.[pairAddress],
-                  [token0]: blockNumber,
-                  [token1]: blockNumber
+                  [token0Address]: blockNumber,
+                  [token1Address]: blockNumber
                 }
               }
             }
             return Promise.all([
-              fetchBalance(pairAddress, token0),
-              fetchBalance(pairAddress, token1)
-            ]).then(([valueToken0, valueToken1]) => ({ pairAddress, token0, token1, valueToken0, valueToken1 }))
+              fetchBalance(pairAddress, token0Address),
+              fetchBalance(pairAddress, token1Address)
+            ]).then(([valueToken0, valueToken1]) => ({
+              pairAddress,
+              token0Address,
+              token1Address,
+              valueToken0,
+              valueToken1
+            }))
           })
       ).then(results => {
         batchUpdateExchanges(
           chainId,
           results.flatMap(result => [result.pairAddress, result.pairAddress]),
-          results.flatMap(result => [result.token0, result.token1]),
+          results.flatMap(result => [result.token0Address, result.token1Address]),
           results.flatMap(result => [result.valueToken0, result.valueToken1]),
           blockNumber
         )
@@ -401,7 +409,7 @@ export function Updater() {
   return null
 }
 
-export function useAllBalances(): Array<TokenAmount> {
+export function useAllBalances(): { [ownerAddress: string]: { [tokenAddress: string]: TokenAmount } } {
   const { chainId } = useWeb3React()
   const [state] = useBalancesContext()
 
@@ -453,7 +461,7 @@ export function useAddressBalance(address: string, token: Token): TokenAmount | 
   const formattedValue = value && token && new TokenAmount(token, value)
 
   useEffect(() => {
-    if (typeof chainId === 'number' && isAddress(address) && token && token.address && isAddress(token.address)) {
+    if (typeof chainId === 'number' && isAddress(address) && isAddress(token?.address)) {
       startListening(chainId, address, token.address)
       return () => {
         stopListening(chainId, address, token.address)
@@ -467,17 +475,19 @@ export function useAddressBalance(address: string, token: Token): TokenAmount | 
 export function useAccountLPBalances(account: string) {
   const { chainId } = useWeb3React()
   const [, { startListening, stopListening }] = useBalancesContext()
-  const allPairs = useAllPairs()
+  const pairs = useAllDummyPairs()
 
   useEffect(() => {
-    Object.keys(allPairs).map(pairAddress => {
-      if (typeof chainId === 'number' && isAddress(account)) {
-        startListening(chainId, account, pairAddress)
-        return () => {
-          stopListening(chainId, account, pairAddress)
-        }
+    if (typeof chainId === 'number' && isAddress(account)) {
+      const cleanupFunctions = []
+      pairs.forEach(pair => {
+        startListening(chainId, account, pair.liquidityToken.address)
+        cleanupFunctions.push(() => stopListening(chainId, account, pair.liquidityToken.address))
+      })
+
+      return () => {
+        cleanupFunctions.forEach(cleanupFunction => cleanupFunction())
       }
-      return true
-    })
-  }, [account, allPairs, chainId, startListening, stopListening])
+    }
+  }, [chainId, account, pairs, startListening, stopListening])
 }

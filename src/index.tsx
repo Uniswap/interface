@@ -10,8 +10,6 @@ import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } fr
 import ApplicationContextProvider, { Updater as ApplicationContextUpdater } from './contexts/Application'
 import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
 import BalancesContextProvider, { Updater as BalancesContextUpdater } from './contexts/Balances'
-import ExchangesContextProvider from './contexts/Pairs'
-import AllowancesContextProvider from './contexts/Allowances'
 import App from './pages/App'
 import ThemeProvider, { GlobalStyle } from './theme'
 import './i18n'
@@ -40,11 +38,7 @@ function ContextProviders({ children }: { children: React.ReactNode }) {
     <LocalStorageContextProvider>
       <ApplicationContextProvider>
         <TransactionContextProvider>
-          <ExchangesContextProvider>
-            <BalancesContextProvider>
-              <AllowancesContextProvider>{children}</AllowancesContextProvider>
-            </BalancesContextProvider>
-          </ExchangesContextProvider>
+          <BalancesContextProvider>{children}</BalancesContextProvider>
         </TransactionContextProvider>
       </ApplicationContextProvider>
     </LocalStorageContextProvider>

@@ -6,7 +6,6 @@ import Row from '../Row'
 import TokenLogo from '../TokenLogo'
 import SearchModal from '../SearchModal'
 import PositionCard from '../PositionCard'
-import DoubleTokenLogo from '../DoubleLogo'
 import { Link } from '../../theme'
 import { Text } from 'rebass'
 import { Plus } from 'react-feather'
@@ -15,71 +14,40 @@ import { AutoColumn, ColumnCenter } from '../Column'
 import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
 
 import { useToken } from '../../contexts/Tokens'
-import { usePopups } from '../../contexts/Application'
-import { usePrevious } from '../../hooks'
 import { useWeb3React } from '@web3-react/core'
 import { useAddressBalance } from '../../contexts/Balances'
-import { usePair, useAllPairs } from '../../contexts/Pairs'
+import { useLocalStoragePairAdder } from '../../contexts/LocalStorage'
+import { usePair } from '../../data/Reserves'
+
+const Fields = {
+  TOKEN0: 0,
+  TOKEN1: 1
+}
 
 function PoolFinder({ history }: RouteComponentProps) {
-  const Fields = {
-    TOKEN0: 0,
-    TOKEN1: 1
-  }
-
   const { account } = useWeb3React()
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN0)
 
-  const [, addPopup] = usePopups()
-
   const [token0Address, setToken0Address] = useState<string>()
   const [token1Address, setToken1Address] = useState<string>()
-
   const token0: Token = useToken(token0Address)
   const token1: Token = useToken(token1Address)
 
   const pair: Pair = usePair(token0, token1)
+  const addPair = useLocalStoragePairAdder()
+
+  useEffect(() => {
+    if (pair) {
+      addPair(pair)
+    }
+  }, [pair, addPair])
+
   const position: TokenAmount = useAddressBalance(account, pair?.liquidityToken)
 
-  const newPair: boolean = pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0))
+  const newPair: boolean =
+    !!pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
   const allowImport: boolean = position && JSBI.greaterThan(position.raw, JSBI.BigInt(0))
-
-  const allPairs = useAllPairs()
-  const pairCount = Object.keys(allPairs)?.length
-  const pairCountPrevious = usePrevious(pairCount)
-  const [newLiquidity, setNewLiquidity] = useState<boolean>(false) // check for unimported pair
-
-  // use previous ref to detect new pair added
-  useEffect(() => {
-    if (pairCount !== pairCountPrevious && pairCountPrevious) {
-      setNewLiquidity(true)
-    }
-  }, [pairCount, pairCountPrevious])
-
-  // reset the watcher if tokens change
-  useEffect(() => {
-    setNewLiquidity(false)
-  }, [token0, token1])
-
-  function endSearch() {
-    history.goBack() // return to previous page
-    newLiquidity &&
-      addPopup(
-        <AutoColumn gap={'10px'}>
-          <Text fontSize={20} fontWeight={500}>
-            Pool Imported
-          </Text>
-          <Row>
-            <DoubleTokenLogo a0={token0Address || ''} a1={token1Address || ''} margin={true} />
-            <Text fontSize={16} fontWeight={500}>
-              UNI {token0?.symbol} / {token1?.symbol}
-            </Text>
-          </Row>
-          <Link>View on Uniswap Info.</Link>
-        </AutoColumn>
-      )
-  }
 
   return (
     <>
@@ -140,19 +108,13 @@ function PoolFinder({ history }: RouteComponentProps) {
             style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
           >
             <Text textAlign="center" fontWeight={500} color="">
-              {newLiquidity ? 'Pool Found!' : 'Pool already imported.'}
+              Pool Imported!
             </Text>
           </ColumnCenter>
         )}
         {position ? (
           !JSBI.equal(position.raw, JSBI.BigInt(0)) ? (
-            <PositionCard
-              pairAddress={pair?.liquidityToken.address}
-              token0={token0}
-              token1={token1}
-              minimal={true}
-              border="1px solid #CED0D9"
-            />
+            <PositionCard pair={pair} minimal={true} border="1px solid #CED0D9" />
           ) : (
             <LightCard padding="45px 10px">
               <AutoColumn gap="sm" justify="center">
@@ -176,7 +138,7 @@ function PoolFinder({ history }: RouteComponentProps) {
                   history.push('/add/' + token0Address + '-' + token1Address)
                 }}
               >
-                Create pool instead.
+                Create pool?
               </Link>
             </AutoColumn>
           </LightCard>
@@ -188,9 +150,9 @@ function PoolFinder({ history }: RouteComponentProps) {
           </LightCard>
         )}
 
-        <ButtonPrimary disabled={!allowImport} onClick={endSearch}>
+        <ButtonPrimary disabled={!allowImport} onClick={() => history.goBack()}>
           <Text fontWeight={500} fontSize={20}>
-            {newLiquidity ? 'Import' : 'Close'}
+            Close
           </Text>
         </ButtonPrimary>
       </AutoColumn>

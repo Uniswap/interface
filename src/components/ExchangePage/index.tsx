@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react'
 import { ThemeContext } from 'styled-components'
 import { parseEther, parseUnits } from '@ethersproject/units'
-import { Fraction, JSBI, Percent, TokenAmount, TradeType, WETH } from '@uniswap/sdk'
+import { JSBI, Percent, TokenAmount, TradeType, WETH, Fraction } from '@uniswap/sdk'
 import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { BigNumber } from '@ethersproject/bignumber'
-import { Zero, MaxUint256 } from '@ethersproject/constants'
+import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { Field, SwapAction, useSwapStateReducer } from './swap-store'
 import { Text } from 'rebass'
@@ -13,11 +13,11 @@ import Card, { BlueCard, GreyCard, YellowCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { ROUTER_ADDRESS } from '../../constants'
-import { useAddressAllowance } from '../../contexts/Allowances'
+import { useTokenAllowance } from '../../data/Allowances'
 import { useUserAdvanced } from '../../contexts/Application'
 import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useLocalStorageTokens } from '../../contexts/LocalStorage'
-import { usePair } from '../../contexts/Pairs'
+import { usePair } from '../../data/Reserves'
 import { useAllTokens, useToken } from '../../contexts/Tokens'
 import { usePendingApproval, useTransactionAdder } from '../../contexts/Transactions'
 import { useTokenContract, useWeb3React } from '../../hooks'
@@ -29,8 +29,8 @@ import {
   getEtherscanLink,
   getProviderOrSigner,
   getRouterContract,
-  isWETH,
-  QueryParams
+  QueryParams,
+  calculateSlippageAmount
 } from '../../utils'
 import Copy from '../AccountDetails/Copy'
 import AddressInputPanel from '../AddressInputPanel'
@@ -54,12 +54,6 @@ import {
   TruncatedText,
   Wrapper
 } from './styleds'
-
-// import BalanceCard from '../BalanceCard'
-
-function hex(value: JSBI) {
-  return BigNumber.from(value.toString())
-}
 
 enum SwapType {
   EXACT_TOKENS_FOR_TOKENS,
@@ -141,9 +135,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   const tokenContractInput: Contract = useTokenContract(tokens[Field.INPUT]?.address)
   const tokenContractOutput: Contract = useTokenContract(tokens[Field.OUTPUT]?.address)
 
-  // check on pending approvals for token amounts
-  const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
-
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [showAdvanced, setShowAdvanced] = useState<boolean>(false)
@@ -155,11 +146,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   const [deadline, setDeadline] = useState<number>(DEFAULT_DEADLINE_FROM_NOW)
   const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
 
-  // input approval
-  const inputApproval: TokenAmount = useAddressAllowance(account, tokens[Field.INPUT], ROUTER_ADDRESS)
-
   // all balances for detecting a swap with send
-  const allBalances: TokenAmount[] = useAllBalances()
+  const allBalances = useAllBalances()
 
   // get user- and token-specific lookup data
   const userBalances = {
@@ -167,6 +155,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     [Field.OUTPUT]: useAddressBalance(account, tokens[Field.OUTPUT])
   }
 
+  // parse the amount that the user typed
   const parsedAmounts: { [field: number]: TokenAmount } = {}
   if (typedValue !== '' && typedValue !== '.' && tokens[independentField]) {
     try {
@@ -174,11 +163,13 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       if (typedValueParsed !== '0')
         parsedAmounts[independentField] = new TokenAmount(tokens[independentField], typedValueParsed)
     } catch (error) {
+      // should only fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
       console.error(error)
     }
   }
 
   const pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
+
   const bestTradeExactIn = useTradeExactIn(
     tradeType === TradeType.EXACT_INPUT ? parsedAmounts[independentField] : null,
     tokens[Field.OUTPUT]
@@ -191,16 +182,25 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   const trade = tradeType === TradeType.EXACT_INPUT ? bestTradeExactIn : bestTradeExactOut
   const route = trade?.route
   const userHasSpecifiedInputOutput =
-    !!parsedAmounts[independentField] &&
-    parsedAmounts[independentField].greaterThan(JSBI.BigInt(0)) &&
     !!tokens[Field.INPUT] &&
-    !!tokens[Field.OUTPUT]
+    !!tokens[Field.OUTPUT] &&
+    !!parsedAmounts[independentField] &&
+    parsedAmounts[independentField].greaterThan(JSBI.BigInt(0))
   const noRoute = !route
 
   const slippageFromTrade: Percent = trade && trade.slippage
 
   if (trade)
     parsedAmounts[dependentField] = tradeType === TradeType.EXACT_INPUT ? trade.outputAmount : trade.inputAmount
+
+  // check whether the user has approved the router on the input token
+  const inputApproval: TokenAmount = useTokenAllowance(tokens[Field.INPUT], account, ROUTER_ADDRESS)
+  const userHasApprovedRouter =
+    tokens[Field.INPUT]?.equals(WETH[chainId]) ||
+    (!!inputApproval &&
+      !!parsedAmounts[Field.INPUT] &&
+      JSBI.greaterThanOrEqual(inputApproval.raw, parsedAmounts[Field.INPUT].raw))
+  const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
 
   const feeAsPercent = new Percent(JSBI.BigInt(3), JSBI.BigInt(1000))
   const feeTimesInputRaw =
@@ -209,17 +209,14 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
 
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(8) : ''
+    [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(6) : ''
   }
 
   const priceSlippage =
     slippageFromTrade &&
     new Percent(
-      JSBI.subtract(
-        JSBI.multiply(slippageFromTrade.numerator, JSBI.BigInt('1000')),
-        JSBI.multiply(JSBI.BigInt('3'), slippageFromTrade.denominator)
-      ),
-      JSBI.multiply(slippageFromTrade.denominator, JSBI.BigInt('1000'))
+      slippageFromTrade.subtract(new Fraction('30', '10000')).numerator,
+      slippageFromTrade.subtract(new Fraction('30', '10000')).denominator
     )
 
   const onTokenSelection = useCallback(
@@ -288,8 +285,11 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       !!userBalances[Field.INPUT] &&
       !!tokens[Field.INPUT] &&
       WETH[chainId] &&
-      JSBI.greaterThan(userBalances[Field.INPUT].raw, isWETH(tokens[Field.INPUT]) ? MIN_ETHER.raw : JSBI.BigInt(0))
-        ? isWETH(tokens[Field.INPUT])
+      JSBI.greaterThan(
+        userBalances[Field.INPUT].raw,
+        tokens[Field.INPUT].equals(WETH[chainId]) ? MIN_ETHER.raw : JSBI.BigInt(0)
+      )
+        ? tokens[Field.INPUT].equals(WETH[chainId])
           ? userBalances[Field.INPUT].subtract(MIN_ETHER)
           : userBalances[Field.INPUT]
         : undefined
@@ -312,17 +312,17 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
 
   function getSwapType(): SwapType {
     if (tradeType === TradeType.EXACT_INPUT) {
-      if (tokens[Field.INPUT] === WETH[chainId]) {
+      if (tokens[Field.INPUT].equals(WETH[chainId])) {
         return SwapType.EXACT_ETH_FOR_TOKENS
-      } else if (tokens[Field.OUTPUT] === WETH[chainId]) {
+      } else if (tokens[Field.OUTPUT].equals(WETH[chainId])) {
         return SwapType.EXACT_TOKENS_FOR_ETH
       } else {
         return SwapType.EXACT_TOKENS_FOR_TOKENS
       }
     } else if (tradeType === TradeType.EXACT_OUTPUT) {
-      if (tokens[Field.INPUT] === WETH[chainId]) {
+      if (tokens[Field.INPUT].equals(WETH[chainId])) {
         return SwapType.ETH_FOR_EXACT_TOKENS
-      } else if (tokens[Field.OUTPUT] === WETH[chainId]) {
+      } else if (tokens[Field.OUTPUT].equals(WETH[chainId])) {
         return SwapType.TOKENS_FOR_EXACT_ETH
       } else {
         return SwapType.TOKENS_FOR_EXACT_TOKENS
@@ -330,29 +330,20 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     }
   }
 
-  function calculateSlippageAmount(value: TokenAmount): JSBI[] {
-    if (value && value.raw) {
-      const offset = JSBI.divide(JSBI.multiply(JSBI.BigInt(allowedSlippage), value.raw), JSBI.BigInt(10000))
-      return [JSBI.subtract(value.raw, offset), JSBI.add(value.raw, offset)]
-    }
-    return null
+  const slippageAdjustedAmounts: { [field: number]: TokenAmount } = {
+    [independentField]: parsedAmounts[independentField],
+    [dependentField]: parsedAmounts[dependentField]
+      ? tradeType === TradeType.EXACT_INPUT
+        ? new TokenAmount(
+            tokens[dependentField],
+            calculateSlippageAmount(parsedAmounts[dependentField], allowedSlippage)[0]
+          )
+        : new TokenAmount(
+            tokens[dependentField],
+            calculateSlippageAmount(parsedAmounts[dependentField], allowedSlippage)[1]
+          )
+      : undefined
   }
-
-  const slippageAdjustedAmounts: { [field in Field]: TokenAmount } = {
-    [Field.INPUT]:
-      Field.INPUT === independentField
-        ? parsedAmounts[Field.INPUT]
-        : calculateSlippageAmount(parsedAmounts[Field.INPUT])?.[0] &&
-          new TokenAmount(tokens[Field.INPUT], calculateSlippageAmount(parsedAmounts[Field.INPUT])?.[1]),
-    [Field.OUTPUT]:
-      Field.OUTPUT === independentField
-        ? parsedAmounts[Field.OUTPUT]
-        : calculateSlippageAmount(parsedAmounts[Field.OUTPUT])?.[0] &&
-          new TokenAmount(tokens[Field.INPUT], calculateSlippageAmount(parsedAmounts[Field.OUTPUT])?.[0])
-  }
-
-  const showInputApprove: boolean =
-    parsedAmounts[Field.INPUT] && inputApproval && JSBI.greaterThan(parsedAmounts[Field.INPUT].raw, inputApproval.raw)
 
   // reset modal state when closed
   function resetModal() {
@@ -371,10 +362,10 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
 
     const signer = await getProviderOrSigner(library, account)
     // get token contract if needed
-    let estimate: Function, method: Function, args, value
-    if (tokens[Field.INPUT] === WETH[chainId]) {
+    let estimate: Function, method: Function, args
+    if (tokens[Field.INPUT].equals(WETH[chainId])) {
       ;(signer as any)
-        .sendTransaction({ to: recipient.toString(), value: hex(parsedAmounts[Field.INPUT].raw) })
+        .sendTransaction({ to: recipient.toString(), value: BigNumber.from(parsedAmounts[Field.INPUT].raw.toString()) })
         .then(response => {
           setTxHash(response.hash)
           addTransaction(
@@ -396,11 +387,9 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       estimate = tokenContractInput.estimateGas.transfer
       method = tokenContractInput.transfer
       args = [recipient, parsedAmounts[Field.INPUT].raw.toString()]
-      value = Zero
-      await estimate(...args, { value })
+      await estimate(...args)
         .then(estimatedGasLimit =>
           method(...args, {
-            value,
             gasLimit: calculateGasMargin(estimatedGasLimit)
           }).then(response => {
             setTxHash(response.hash)
@@ -446,7 +435,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           sending ? recipient : account,
           deadlineFromNow
         ]
-        value = Zero
+        value = null
         break
       case SwapType.TOKENS_FOR_EXACT_TOKENS:
         estimate = routerContract.estimateGas.swapTokensForExactTokens
@@ -458,7 +447,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           sending ? recipient : account,
           deadlineFromNow
         ]
-        value = Zero
+        value = null
         break
       case SwapType.EXACT_ETH_FOR_TOKENS:
         estimate = routerContract.estimateGas.swapExactETHForTokens
@@ -469,7 +458,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           sending ? recipient : account,
           deadlineFromNow
         ]
-        value = hex(slippageAdjustedAmounts[Field.INPUT].raw)
+        value = BigNumber.from(slippageAdjustedAmounts[Field.INPUT].raw.toString())
         break
       case SwapType.TOKENS_FOR_EXACT_ETH:
         estimate = routerContract.estimateGas.swapTokensForExactETH
@@ -481,7 +470,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           sending ? recipient : account,
           deadlineFromNow
         ]
-        value = Zero
+        value = null
         break
       case SwapType.EXACT_TOKENS_FOR_ETH:
         estimate = routerContract.estimateGas.swapExactTokensForETH
@@ -493,7 +482,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           sending ? recipient : account,
           deadlineFromNow
         ]
-        value = Zero
+        value = null
         break
       case SwapType.ETH_FOR_EXACT_TOKENS:
         estimate = routerContract.estimateGas.swapETHForExactTokens
@@ -504,14 +493,14 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           sending ? recipient : account,
           deadlineFromNow
         ]
-        value = hex(slippageAdjustedAmounts[Field.INPUT].raw)
+        value = BigNumber.from(slippageAdjustedAmounts[Field.INPUT].raw.toString())
         break
     }
 
-    await estimate(...args, { value })
+    await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
         method(...args, {
-          value,
+          ...(value ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setTxHash(response.hash)
@@ -579,6 +568,11 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       setIsValid(false)
     }
 
+    if (!account) {
+      setGeneralError('Connect Wallet')
+      setIsValid(false)
+    }
+
     if (!parsedAmounts[Field.INPUT]) {
       setInputError('Enter an amount')
       setIsValid(false)
@@ -643,18 +637,20 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     tokens,
     route,
     trade,
-    userBalances
+    userBalances,
+    account
   ])
 
   // warnings on slippage
-  const warningLow: boolean =
-    slippageFromTrade &&
-    parseFloat(slippageFromTrade.toFixed(4)) < ALLOWED_SLIPPAGE_MEDIUM / 100 &&
-    parseFloat(slippageFromTrade.toFixed(4)) > 0
+  const warningLow: boolean = slippageFromTrade?.lessThan(new Percent(ALLOWED_SLIPPAGE_MEDIUM.toString(), '10000'))
+  // TODO greaterThanOrEqualTo in SDK
   const warningMedium: boolean =
-    slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_MEDIUM / 100
+    slippageFromTrade?.equalTo(new Percent(ALLOWED_SLIPPAGE_MEDIUM.toString(), '10000')) ||
+    slippageFromTrade?.greaterThan(new Percent(ALLOWED_SLIPPAGE_MEDIUM.toString(), '10000'))
+  // TODO greaterThanOrEqualTo in SDK
   const warningHigh: boolean =
-    slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_HIGH / 100
+    slippageFromTrade?.equalTo(new Percent(ALLOWED_SLIPPAGE_HIGH.toString(), '10000')) ||
+    slippageFromTrade?.greaterThan(new Percent(ALLOWED_SLIPPAGE_HIGH.toString(), '10000'))
 
   function modalHeader() {
     if (sending && !sendingWithSwap) {
@@ -751,8 +747,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 {`Output is estimated. You will receive at least `}
                 <b>
                   {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {tokens[Field.OUTPUT]?.symbol}{' '}
-                </b>{' '}
-                {` or the transaction will revert.`}
+                </b>
+                {' or the transaction will revert.'}
               </TYPE.italic>
             ) : (
               <TYPE.italic textAlign="left" style={{ width: '100%' }}>
@@ -760,7 +756,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 <b>
                   {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {tokens[Field.INPUT]?.symbol}
                 </b>
-                {` or the transaction will revert.`}
+                {' or the transaction will revert.'}
               </TYPE.italic>
             )}
           </AutoColumn>
@@ -824,16 +820,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               <RowFixed>
                 <TYPE.black fontSize={14}>
                   {independentField === Field.INPUT
-                    ? slippageAdjustedAmounts[Field.OUTPUT]
-                      ? slippageAdjustedAmounts[Field.OUTPUT]?.toFixed(5) === '0.00000'
-                        ? '<0.00001'
-                        : slippageAdjustedAmounts[Field.OUTPUT]?.toFixed(5)
-                      : '-'
-                    : slippageAdjustedAmounts[Field.INPUT]
-                    ? slippageAdjustedAmounts[Field.INPUT]?.toFixed(5) === '0.00000'
-                      ? '<0.00001'
-                      : slippageAdjustedAmounts[Field.INPUT]?.toFixed(5)
-                    : '-'}
+                    ? slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4) ?? '-'
+                    : slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4) ?? '-'}
                 </TYPE.black>
                 {parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.INPUT] && (
                   <TYPE.black fontSize={14} marginLeft={'4px'}>
@@ -858,11 +846,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 warningMedium={warningMedium}
                 warningHigh={warningHigh}
               >
-                {priceSlippage
-                  ? priceSlippage.toFixed(4) === '0.0000'
-                    ? '<0.0001%'
-                    : priceSlippage.toFixed(4) + '%'
-                  : '-'}
+                {priceSlippage?.lessThan(new Percent('1', '10000')) ? '<0.01%' : `${priceSlippage?.toFixed(2)}%` ?? '-'}
               </ErrorText>
             </RowBetween>
             <RowBetween>
@@ -920,11 +904,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             warningMedium={warningMedium}
             warningHigh={warningHigh}
           >
-            {priceSlippage
-              ? priceSlippage.toFixed(4) === '0.0000'
-                ? '<0.0001%'
-                : priceSlippage.toFixed(4) + '%'
-              : '-'}
+            {priceSlippage?.lessThan(new Percent('1', '10000')) ? '<0.01%' : `${priceSlippage?.toFixed(2)}%` ?? '-'}
           </ErrorText>
           <Text fontWeight={500} fontSize={16} color={theme.text3} pt={1}>
             Price Impact
@@ -1130,7 +1110,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               <PriceBar />
             ) : (
               <AutoColumn gap="4px">
-                {' '}
                 <RowBetween align="center">
                   <Text fontWeight={500} fontSize={14} color={theme.text2}>
                     Price
@@ -1167,11 +1146,9 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     </TYPE.main>
                     <RowFixed>
                       <ErrorText fontWeight={500} fontSize={14} warningMedium={warningMedium} warningHigh={warningHigh}>
-                        {priceSlippage
-                          ? priceSlippage.toFixed(4) === '0.0000'
-                            ? '<0.0001%'
-                            : priceSlippage.toFixed(4) + '%'
-                          : '-'}{' '}
+                        {priceSlippage?.lessThan(new Percent('1', '10000'))
+                          ? '<0.01%'
+                          : `${priceSlippage?.toFixed(2)}%` ?? '-'}
                       </ErrorText>
                       <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
                     </RowFixed>
@@ -1192,11 +1169,10 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 history.push('/add/' + tokens[Field.INPUT]?.address + '-' + tokens[Field.OUTPUT]?.address)
               }}
             >
-              {' '}
               Create one now
             </Link>
           </GreyCard>
-        ) : showInputApprove && !inputError ? (
+        ) : !userHasApprovedRouter && !inputError ? (
           <ButtonLight
             onClick={() => {
               approveAmount(Field.INPUT)
@@ -1218,14 +1194,12 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             error={!!warningHigh}
           >
             <Text fontSize={20} fontWeight={500}>
-              {!account
-                ? 'Connect Wallet'
-                : generalError ||
-                  inputError ||
-                  outputError ||
-                  recipientError ||
-                  tradeError ||
-                  `${sending ? 'Send' : 'Swap'}${warningHigh ? ' Anyway' : ''}`}
+              {generalError ||
+                inputError ||
+                outputError ||
+                recipientError ||
+                tradeError ||
+                `${sending ? 'Send' : 'Swap'}${warningHigh ? ' Anyway' : ''}`}
             </Text>
           </ButtonError>
         )}
@@ -1276,20 +1250,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                   <RowFixed>
                     <TYPE.black color={theme.text1} fontSize={14}>
                       {independentField === Field.INPUT
-                        ? slippageAdjustedAmounts[Field.OUTPUT]
-                          ? slippageAdjustedAmounts[Field.OUTPUT]?.lessThan(
-                              new Fraction(JSBI.BigInt(1), JSBI.BigInt(10000))
-                            )
-                            ? '<0.00001'
-                            : slippageAdjustedAmounts[Field.OUTPUT]?.toFixed(5)
-                          : '-'
-                        : slippageAdjustedAmounts[Field.INPUT]
-                        ? slippageAdjustedAmounts[Field.INPUT]?.lessThan(
-                            new Fraction(JSBI.BigInt(1), JSBI.BigInt(10000))
-                          )
-                          ? '<0.00001'
-                          : slippageAdjustedAmounts[Field.INPUT]?.toFixed(5)
-                        : '-'}
+                        ? slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4) ?? '-'
+                        : slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4) ?? '-'}
                     </TYPE.black>
                     {parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.INPUT] && (
                       <TYPE.black fontSize={14} marginLeft={'4px'} color={theme.text1}>
@@ -1314,11 +1276,9 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     warningMedium={warningMedium}
                     warningHigh={warningHigh}
                   >
-                    {priceSlippage
-                      ? priceSlippage.toFixed(4) === '0.0000'
-                        ? '<0.0001%'
-                        : priceSlippage.toFixed(4) + '%'
-                      : '-'}
+                    {priceSlippage?.lessThan(new Percent('1', '10000'))
+                      ? '<0.01%'
+                      : `${priceSlippage?.toFixed(2)}%` ?? '-'}
                   </ErrorText>
                 </RowBetween>
                 <RowBetween>
@@ -1366,8 +1326,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                       </RowFixed>
                     </RowBetween>
                     <Text lineHeight="145.23%;" fontSize={16} fontWeight={400} color={theme.text1}>
-                      This trade will move the price by {slippageFromTrade.toFixed(2)}%. This pool probably doesn’t have
-                      enough liquidity to support this trade.
+                      This trade will move the price by {slippageFromTrade?.toFixed(2)}%. This pool probably doesn’t
+                      have enough liquidity to support this trade.
                     </Text>
                   </AutoColumn>
                 </YellowCard>

@@ -34,7 +34,6 @@
     "i18next-xhr-backend": "^2.0.1",
     "jazzicon": "^1.5.0",
     "polished": "^3.3.2",
-    "prettier": "^1.17.0",
     "qrcode.react": "^0.9.3",
     "react": "^16.13.1",
     "react-device-detect": "^1.6.2",
@@ -48,6 +47,7 @@
     "react-use-gesture": "^6.0.14",
     "rebass": "^4.0.7",
     "styled-components": "^4.2.0",
+    "swr": "0.1.18",
     "use-media": "^1.4.0"
   },
   "devDependencies": {
