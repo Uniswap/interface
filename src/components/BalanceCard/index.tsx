@@ -71,7 +71,7 @@ export default function BalanceCard({ token0, balance0, import0, token1, balance
                     <TYPE.body fontWeight={500}>
                       {token0?.name} ({token0?.symbol})
                     </TYPE.body>
-                    <TokenLogo size={'20px'} address={token0?.address || ''} />
+                    <TokenLogo size={'20px'} address={token0?.address} />
                   </RowBetween>
                   {import0 && <TYPE.yellow style={{ paddingLeft: '0' }}>Token imported by user</TYPE.yellow>}
 
@@ -113,7 +113,7 @@ export default function BalanceCard({ token0, balance0, import0, token1, balance
                     <TYPE.body fontWeight={500}>
                       {token1?.name} ({token1?.symbol})
                     </TYPE.body>
-                    <TokenLogo size={'20px'} address={token1?.address || ''} />
+                    <TokenLogo size={'20px'} address={token1?.address} />
                   </RowBetween>
                   {import1 && <TYPE.yellow style={{ paddingLeft: '0' }}>Token imported by user</TYPE.yellow>}
 

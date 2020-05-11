@@ -12,9 +12,9 @@ import { TYPE, Link } from '../../theme'
 import { AutoColumn, ColumnCenter } from '../Column'
 import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
 
-import { usePair } from '../../contexts/Pairs'
 import { useToken } from '../../contexts/Tokens'
 import { useWeb3React } from '../../hooks'
+import { usePair } from '../../data/Reserves'
 
 const Fields = {
   TOKEN0: 0,
