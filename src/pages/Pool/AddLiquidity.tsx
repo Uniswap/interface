@@ -30,7 +30,7 @@ import { useTransactionAdder, usePendingApproval } from '../../contexts/Transact
 import { ROUTER_ADDRESS } from '../../constants'
 import { getRouterContract, calculateGasMargin, calculateSlippageAmount } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useReserves } from '../../data/Reserves'
+import { usePair } from '../../data/Reserves'
 import { useLocalStorageTokens } from '../../contexts/LocalStorage'
 import { useAllTokens } from '../../contexts/Tokens'
 
@@ -215,7 +215,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   const tokenContractOutput: Contract = useTokenContract(tokens[Field.OUTPUT]?.address)
 
   // exchange data
-  const pair = useReserves(tokens[Field.INPUT], tokens[Field.OUTPUT])
+  const pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
   const route: Route = pair ? new Route([pair], tokens[independentField]) : undefined
   const totalSupply: TokenAmount = useTotalSupply(pair?.liquidityToken)
   const noLiquidity = // used to detect new exchange

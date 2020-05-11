@@ -18,7 +18,7 @@ function getReserves(contract: Contract, token0: Token, token1: Token): () => Pr
 }
 
 // undefined while loading, null if no liquidity, pair otherwise
-export function useReserves(tokenA?: Token, tokenB?: Token): undefined | Pair | null {
+export function usePair(tokenA?: Token, tokenB?: Token): undefined | Pair | null {
   const bothDefined = !!tokenA && !!tokenB
   const invalid = bothDefined && tokenA.equals(tokenB)
   const [token0, token1] =

@@ -17,7 +17,7 @@ import { useToken } from '../../contexts/Tokens'
 import { useWeb3React } from '@web3-react/core'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useLocalStoragePairAdder } from '../../contexts/LocalStorage'
-import { useReserves } from '../../data/Reserves'
+import { usePair } from '../../data/Reserves'
 
 const Fields = {
   TOKEN0: 0,
@@ -34,7 +34,7 @@ function PoolFinder({ history }: RouteComponentProps) {
   const token0: Token = useToken(token0Address)
   const token1: Token = useToken(token1Address)
 
-  const pair: Pair = useReserves(token0, token1)
+  const pair: Pair = usePair(token0, token1)
   const addPair = useLocalStoragePairAdder()
 
   useEffect(() => {

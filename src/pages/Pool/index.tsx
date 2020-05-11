@@ -15,7 +15,7 @@ import { AutoColumn, ColumnCenter } from '../../components/Column'
 
 import { useWeb3React } from '@web3-react/core'
 import { useAllBalances, useAccountLPBalances } from '../../contexts/Balances'
-import { useReserves } from '../../data/Reserves'
+import { usePair } from '../../data/Reserves'
 import { useAllDummyPairs } from '../../contexts/LocalStorage'
 
 const Positions = styled.div`
@@ -30,7 +30,7 @@ const FixedBottom = styled.div`
 `
 
 function PositionCardWrapper({ dummyPair }: { dummyPair: Pair }) {
-  const pair = useReserves(dummyPair.token0, dummyPair.token1)
+  const pair = usePair(dummyPair.token0, dummyPair.token1)
   return <PositionCard pair={pair} />
 }
 

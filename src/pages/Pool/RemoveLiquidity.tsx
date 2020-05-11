@@ -29,7 +29,7 @@ import { useTotalSupply } from '../../data/TotalSupply'
 import { splitSignature } from '@ethersproject/bytes'
 import { ROUTER_ADDRESS } from '../../constants'
 import { getRouterContract, calculateGasMargin, calculateSlippageAmount } from '../../utils'
-import { useReserves } from '../../data/Reserves'
+import { usePair } from '../../data/Reserves'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = 50
@@ -168,7 +168,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
     [Field.TOKEN1]: outputToken
   }
 
-  const pair = useReserves(inputToken, outputToken)
+  const pair = usePair(inputToken, outputToken)
   const pairContract: Contract = usePairContract(pair?.liquidityToken.address)
 
   // pool token data

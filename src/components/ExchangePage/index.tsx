@@ -17,7 +17,7 @@ import { useTokenAllowance } from '../../data/Allowances'
 import { useUserAdvanced } from '../../contexts/Application'
 import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useLocalStorageTokens } from '../../contexts/LocalStorage'
-import { useReserves } from '../../data/Reserves'
+import { usePair } from '../../data/Reserves'
 import { useAllTokens, useToken } from '../../contexts/Tokens'
 import { usePendingApproval, useTransactionAdder } from '../../contexts/Transactions'
 import { useTokenContract, useWeb3React } from '../../hooks'
@@ -168,7 +168,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     }
   }
 
-  const pair = useReserves(tokens[Field.INPUT], tokens[Field.OUTPUT])
+  const pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
 
   const bestTradeExactIn = useTradeExactIn(
     tradeType === TradeType.EXACT_INPUT ? parsedAmounts[independentField] : null,

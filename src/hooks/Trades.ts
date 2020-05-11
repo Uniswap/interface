@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { WETH, Token, TokenAmount, Trade, ChainId } from '@uniswap/sdk'
 import { useWeb3React } from './index'
-import { useReserves } from '../data/Reserves'
+import { usePair } from '../data/Reserves'
 
 /**
  * Returns the best trade for the exact amount of tokens in to the given token out
@@ -15,19 +15,19 @@ export function useTradeExactIn(amountIn?: TokenAmount, tokenOut?: Token): Trade
   const { chainId } = useWeb3React()
 
   // check for direct pair between tokens
-  const pairBetween = useReserves(inputToken, outputToken)
+  const pairBetween = usePair(inputToken, outputToken)
 
   // get token<->WETH pairs
-  const aToETH = useReserves(inputToken, WETH[chainId])
-  const bToETH = useReserves(outputToken, WETH[chainId])
+  const aToETH = usePair(inputToken, WETH[chainId])
+  const bToETH = usePair(outputToken, WETH[chainId])
 
   // get token<->DAI pairs
-  const aToDAI = useReserves(inputToken, chainId === ChainId.MAINNET ? DAI : null)
-  const bToDAI = useReserves(outputToken, chainId === ChainId.MAINNET ? DAI : null)
+  const aToDAI = usePair(inputToken, chainId === ChainId.MAINNET ? DAI : null)
+  const bToDAI = usePair(outputToken, chainId === ChainId.MAINNET ? DAI : null)
 
   // get token<->USDC pairs
-  const aToUSDC = useReserves(inputToken, chainId === ChainId.MAINNET ? USDC : null)
-  const bToUSDC = useReserves(outputToken, chainId === ChainId.MAINNET ? USDC : null)
+  const aToUSDC = usePair(inputToken, chainId === ChainId.MAINNET ? USDC : null)
+  const bToUSDC = usePair(outputToken, chainId === ChainId.MAINNET ? USDC : null)
 
   return useMemo(() => {
     const allPairs = [pairBetween, aToETH, bToETH, aToDAI, bToDAI, aToUSDC, bToUSDC].filter(p => !!p)
@@ -54,19 +54,19 @@ export function useTradeExactOut(tokenIn?: Token, amountOut?: TokenAmount): Trad
   const { chainId } = useWeb3React()
 
   // check for direct pair between tokens
-  const pairBetween = useReserves(amountOut?.token, tokenIn)
+  const pairBetween = usePair(amountOut?.token, tokenIn)
 
   // get token<->WETH pairs
-  const aToETH = useReserves(inputToken, WETH[chainId])
-  const bToETH = useReserves(outputToken, WETH[chainId])
+  const aToETH = usePair(inputToken, WETH[chainId])
+  const bToETH = usePair(outputToken, WETH[chainId])
 
   // get token<->DAI pairs
-  const aToDAI = useReserves(inputToken, chainId === ChainId.MAINNET ? DAI : null)
-  const bToDAI = useReserves(outputToken, chainId === ChainId.MAINNET ? DAI : null)
+  const aToDAI = usePair(inputToken, chainId === ChainId.MAINNET ? DAI : null)
+  const bToDAI = usePair(outputToken, chainId === ChainId.MAINNET ? DAI : null)
 
   // get token<->USDC pairs
-  const aToUSDC = useReserves(inputToken, chainId === ChainId.MAINNET ? USDC : null)
-  const bToUSDC = useReserves(outputToken, chainId === ChainId.MAINNET ? USDC : null)
+  const aToUSDC = usePair(inputToken, chainId === ChainId.MAINNET ? USDC : null)
+  const bToUSDC = usePair(outputToken, chainId === ChainId.MAINNET ? USDC : null)
 
   return useMemo(() => {
     const allPairs = [pairBetween, aToETH, bToETH, aToDAI, bToDAI, aToUSDC, bToUSDC].filter(p => !!p)
