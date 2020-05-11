@@ -142,7 +142,12 @@ function NavigationTabs({ location: { pathname }, history }: RouteComponentProps
       ) : (
         <Tabs>
           {tabOrder.map(({ path, textKey, regex }) => (
-            <StyledNavLink key={path} to={path} isActive={(_, { pathname }) => !!pathname.match(regex)}>
+            <StyledNavLink
+              id={`${textKey}-navLink`}
+              key={path}
+              to={path}
+              isActive={(_, { pathname }) => !!pathname.match(regex)}
+            >
               {t(textKey)}
             </StyledNavLink>
           ))}
