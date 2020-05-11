@@ -28,8 +28,11 @@ import { useTotalSupply } from '../../data/TotalSupply'
 
 import { splitSignature } from '@ethersproject/bytes'
 import { ROUTER_ADDRESS } from '../../constants'
-import { getRouterContract, calculateGasMargin } from '../../utils'
+import { getRouterContract, calculateGasMargin, calculateSlippageAmount } from '../../utils'
 import { useReserves } from '../../data/Reserves'
+
+// denominated in bips
+const ALLOWED_SLIPPAGE = 50
 
 // denominated in seconds
 const DEADLINE_FROM_NOW = 60 * 20
@@ -441,15 +444,20 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
     if (tokens[Field.TOKEN0].equals(WETH[chainId]) || tokens[Field.TOKEN1].equals(WETH[chainId])) {
       method = router.removeLiquidityETHWithPermit
       estimate = router.estimateGas.removeLiquidityETHWithPermit
+
+      const token0IsETH = tokens[Field.TOKEN0].equals(WETH[chainId])
+
       args = [
-        tokens[Field.TOKEN1].equals(WETH[chainId]) ? tokens[Field.TOKEN0].address : tokens[Field.TOKEN1].address,
+        tokens[token0IsETH ? Field.TOKEN1 : Field.TOKEN0].address,
         parsedAmounts[Field.LIQUIDITY].raw.toString(),
-        tokens[Field.TOKEN1].equals(WETH[chainId])
-          ? parsedAmounts[Field.TOKEN0].raw.toString()
-          : parsedAmounts[Field.TOKEN1].raw.toString(),
-        tokens[Field.TOKEN1].equals(WETH[chainId])
-          ? parsedAmounts[Field.TOKEN1].raw.toString()
-          : parsedAmounts[Field.TOKEN0].raw.toString(),
+        calculateSlippageAmount(
+          parsedAmounts[token0IsETH ? Field.TOKEN1 : Field.TOKEN0],
+          ALLOWED_SLIPPAGE
+        )[0].toString(),
+        calculateSlippageAmount(
+          parsedAmounts[token0IsETH ? Field.TOKEN0 : Field.TOKEN1],
+          ALLOWED_SLIPPAGE
+        )[0].toString(),
         account,
         deadline,
         false,
@@ -466,8 +474,8 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
         tokens[Field.TOKEN0].address,
         tokens[Field.TOKEN1].address,
         parsedAmounts[Field.LIQUIDITY].raw.toString(),
-        parsedAmounts[Field.TOKEN0].raw.toString(),
-        parsedAmounts[Field.TOKEN1].raw.toString(),
+        calculateSlippageAmount(parsedAmounts[Field.TOKEN0], ALLOWED_SLIPPAGE)[0].toString(),
+        calculateSlippageAmount(parsedAmounts[Field.TOKEN1], ALLOWED_SLIPPAGE)[0].toString(),
         account,
         deadline,
         false,

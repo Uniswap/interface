@@ -23,7 +23,14 @@ import { useTokenContract, useWeb3React } from '../../hooks'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { Hover, theme, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
-import { calculateGasMargin, getEtherscanLink, getProviderOrSigner, getRouterContract, QueryParams } from '../../utils'
+import {
+  calculateGasMargin,
+  getEtherscanLink,
+  getProviderOrSigner,
+  getRouterContract,
+  QueryParams,
+  calculateSlippageAmount
+} from '../../utils'
 import Copy from '../AccountDetails/Copy'
 import AddressInputPanel from '../AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../Button'
@@ -325,25 +332,19 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     }
   }
 
-  function calculateSlippageAmount(value: TokenAmount): JSBI[] {
-    if (value && value.raw) {
-      const offset = JSBI.divide(JSBI.multiply(JSBI.BigInt(allowedSlippage), value.raw), JSBI.BigInt(10000))
-      return [JSBI.subtract(value.raw, offset), JSBI.add(value.raw, offset)]
-    }
-    return null
-  }
-
-  const slippageAdjustedAmounts: { [field in Field]: TokenAmount } = {
-    [Field.INPUT]:
-      Field.INPUT === independentField
-        ? parsedAmounts[Field.INPUT]
-        : calculateSlippageAmount(parsedAmounts[Field.INPUT])?.[0] &&
-          new TokenAmount(tokens[Field.INPUT], calculateSlippageAmount(parsedAmounts[Field.INPUT])?.[1]),
-    [Field.OUTPUT]:
-      Field.OUTPUT === independentField
-        ? parsedAmounts[Field.OUTPUT]
-        : calculateSlippageAmount(parsedAmounts[Field.OUTPUT])?.[0] &&
-          new TokenAmount(tokens[Field.INPUT], calculateSlippageAmount(parsedAmounts[Field.OUTPUT])?.[0])
+  const slippageAdjustedAmounts: { [field: number]: TokenAmount } = {
+    [independentField]: parsedAmounts[independentField],
+    [dependentField]: parsedAmounts[dependentField]
+      ? tradeType === TradeType.EXACT_INPUT
+        ? new TokenAmount(
+            tokens[dependentField],
+            calculateSlippageAmount(parsedAmounts[dependentField], allowedSlippage)[0]
+          )
+        : new TokenAmount(
+            tokens[dependentField],
+            calculateSlippageAmount(parsedAmounts[dependentField], allowedSlippage)[1]
+          )
+      : undefined
   }
 
   // reset modal state when closed

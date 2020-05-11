@@ -28,7 +28,7 @@ import { useWeb3React, useTokenContract } from '../../hooks'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
 
 import { ROUTER_ADDRESS } from '../../constants'
-import { getRouterContract, calculateGasMargin } from '../../utils'
+import { getRouterContract, calculateGasMargin, calculateSlippageAmount } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useReserves } from '../../data/Reserves'
 import { useLocalStorageTokens } from '../../contexts/LocalStorage'
@@ -444,26 +444,12 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   const addTransaction = useTransactionAdder()
   const [txHash, setTxHash] = useState<string>('')
 
-  // calculate slippage bounds based on current reserves
-  function calculateSlippageAmount(value: TokenAmount): [JSBI, JSBI] {
-    return [
-      JSBI.divide(
-        JSBI.multiply(value.raw, JSBI.subtract(JSBI.BigInt(10000), JSBI.BigInt(ALLOWED_SLIPPAGE))),
-        JSBI.BigInt(10000)
-      ),
-      JSBI.divide(
-        JSBI.multiply(value.raw, JSBI.add(JSBI.BigInt(10000), JSBI.BigInt(ALLOWED_SLIPPAGE))),
-        JSBI.BigInt(10000)
-      )
-    ]
-  }
-
   async function onAdd() {
     setAttemptingTxn(true)
     const router = getRouterContract(chainId, library, account)
 
-    const minInput = calculateSlippageAmount(parsedAmounts[Field.INPUT])[0]
-    const minOutput = calculateSlippageAmount(parsedAmounts[Field.OUTPUT])[0]
+    const minInput = calculateSlippageAmount(parsedAmounts[Field.INPUT], ALLOWED_SLIPPAGE)[0]
+    const minOutput = calculateSlippageAmount(parsedAmounts[Field.OUTPUT], ALLOWED_SLIPPAGE)[0]
 
     const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
 
