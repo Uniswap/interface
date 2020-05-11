@@ -178,7 +178,7 @@ export const TYPE = {
   }
 }
 
-export const GlobalStyle = createGlobalStyle`
+export const FixedGlobalStyle = createGlobalStyle`
 @import url('https://rsms.me/inter/inter.css');
 html { font-family: 'Inter', sans-serif; letter-spacing: -0.018em;}
 @supports (font-variation-settings: normal) {
@@ -203,10 +203,15 @@ body > div {
 html {
   font-size: 16px;
   font-variant: none;
-  color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg2};
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+`
+
+export const ThemedGlobalStyle = createGlobalStyle`
+html {
+  color: ${({ theme }) => theme.text1};
+  background-color: ${({ theme }) => theme.bg2};
 }
 `
