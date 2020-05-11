@@ -1014,7 +1014,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
             />
           </InputGroup>
-          <RowBetween style={{ width: '200px' }}>
+          <RowBetween style={{ width: 'fit-content' }}>
             <ButtonSecondary
               width="fit-content"
               style={{ fontSize: '14px' }}
@@ -1023,17 +1023,19 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             >
               + Add a swap
             </ButtonSecondary>
-            <ButtonSecondary
-              style={{ fontSize: '14px' }}
-              padding={'4px 8px'}
-              width="fit-content"
-              disabled={atMaxAmountInput}
-              onClick={() => {
-                maxAmountInput && onMaxInput(maxAmountInput.toExact())
-              }}
-            >
-              Input Max
-            </ButtonSecondary>
+            {account && (
+              <ButtonSecondary
+                style={{ fontSize: '14px', marginLeft: '8px' }}
+                padding={'4px 8px'}
+                width="fit-content"
+                disabled={atMaxAmountInput}
+                onClick={() => {
+                  maxAmountInput && onMaxInput(maxAmountInput.toExact())
+                }}
+              >
+                Input Max
+              </ButtonSecondary>
+            )}
           </RowBetween>
         </AutoColumn>
       )}

@@ -176,19 +176,21 @@ export default function CurrencyInputPanel({
                 {label}
               </TYPE.body>
 
-              <Hover>
-                <TYPE.body
-                  onClick={onMax}
-                  color={theme.text2}
-                  fontWeight={500}
-                  fontSize={14}
-                  style={{ display: 'inline' }}
-                >
-                  {!hideBalance && !!token && userTokenBalance
-                    ? 'Balance: ' + userTokenBalance?.toSignificant(6)
-                    : ' -'}
-                </TYPE.body>
-              </Hover>
+              {account && (
+                <Hover>
+                  <TYPE.body
+                    onClick={onMax}
+                    color={theme.text2}
+                    fontWeight={500}
+                    fontSize={14}
+                    style={{ display: 'inline' }}
+                  >
+                    {!hideBalance && !!token && userTokenBalance
+                      ? 'Balance: ' + userTokenBalance?.toSignificant(6)
+                      : ' -'}
+                  </TYPE.body>
+                </Hover>
+              )}
             </RowBetween>
           </LabelRow>
         )}
@@ -202,7 +204,7 @@ export default function CurrencyInputPanel({
                   onUserInput(field, val)
                 }}
               />
-              {!advanced && !!token?.address && !atMax && label !== 'To' && (
+              {account && !advanced && !!token?.address && !atMax && label !== 'To' && (
                 <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
               )}
             </>
