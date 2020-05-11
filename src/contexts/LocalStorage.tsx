@@ -168,15 +168,16 @@ export function useDarkModeManager() {
   }
 
   useEffect(() => {
-    systemDarkMode && onBrowserThemeChanged(val => val ? setDarkMode(val === 'dark' ? true : false) : setDarkMode(true))
-  }, [])
+    systemDarkMode &&
+      onBrowserThemeChanged(val => (val ? setDarkMode(val === 'dark' ? true : false) : setDarkMode(true)))
+  }, [setDarkMode, systemDarkMode])
 
   const toggleSetDarkMode = useCallback(
     value => {
       setDarkMode(typeof value === 'boolean' ? value : !darkMode)
       setSystemDarkMode(false)
     },
-    [darkMode, setDarkMode]
+    [darkMode, setDarkMode, setSystemDarkMode]
   )
 
   return [darkMode, toggleSetDarkMode, systemDarkMode, setSystemDarkMode]
