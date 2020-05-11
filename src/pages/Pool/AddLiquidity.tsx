@@ -615,7 +615,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
             <TYPE.body>
               {`1 ${tokens[Field.INPUT]?.symbol} = ${route?.midPrice &&
                 route?.midPrice?.raw?.denominator &&
-                route?.midPrice?.adjusted?.toSignificant(8)} ${tokens[Field.OUTPUT]?.symbol}`}
+                route?.midPrice?.adjusted?.toSignificant(4)} ${tokens[Field.OUTPUT]?.symbol}`}
             </TYPE.body>
           </RowBetween>
         )}
