@@ -11,7 +11,7 @@ import ApplicationContextProvider, { Updater as ApplicationContextUpdater } from
 import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
 import BalancesContextProvider, { Updater as BalancesContextUpdater } from './contexts/Balances'
 import App from './pages/App'
-import ThemeProvider, { GlobalStyle } from './theme'
+import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import './i18n'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
@@ -57,18 +57,21 @@ function Updaters() {
 }
 
 ReactDOM.render(
-  <Web3ReactProvider getLibrary={getLibrary}>
-    <Web3ProviderNetwork getLibrary={getLibrary}>
-      <ContextProviders>
-        <Updaters />
-        <ThemeProvider>
-          <>
-            <GlobalStyle />
-            <App />
-          </>
-        </ThemeProvider>
-      </ContextProviders>
-    </Web3ProviderNetwork>
-  </Web3ReactProvider>,
+  <>
+    <FixedGlobalStyle />
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <Web3ProviderNetwork getLibrary={getLibrary}>
+        <ContextProviders>
+          <Updaters />
+          <ThemeProvider>
+            <>
+              <ThemedGlobalStyle />
+              <App />
+            </>
+          </ThemeProvider>
+        </ContextProviders>
+      </Web3ProviderNetwork>
+    </Web3ReactProvider>
+  </>,
   document.getElementById('root')
 )
