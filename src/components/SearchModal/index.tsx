@@ -74,10 +74,13 @@ const Input = styled.input`
   background: none;
   border: none;
   outline: none;
-  border: 1px solid ${({ theme }) => theme.bg2};
   box-sizing: border-box;
   border-radius: 20px;
   color: ${({ theme }) => theme.text1};
+  border-style: solid;
+  border: 1px solid ${({ theme }) => theme.bg3};
+  -webkit-appearance: none;
+
   font-size: 18px;
 
   ::placeholder {
