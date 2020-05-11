@@ -997,7 +997,11 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 Max
               </MaxButton>
             )}
-            <StyledNumerical value={formattedAmounts[Field.INPUT]} onUserInput={val => onUserInput(Field.INPUT, val)} />
+            <StyledNumerical
+              id="sending-no-swap-input"
+              value={formattedAmounts[Field.INPUT]}
+              onUserInput={val => onUserInput(Field.INPUT, val)}
+            />
             <CurrencyInputPanel
               field={Field.INPUT}
               value={formattedAmounts[Field.INPUT]}

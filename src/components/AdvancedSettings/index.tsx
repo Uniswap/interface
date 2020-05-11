@@ -147,7 +147,7 @@ export default function AdvancedSettings({
               parseCustomInput(val)
               setActiveIndex(SLIPPAGE_INDEX[4])
             }}
-            placeHolder="Custom"
+            placeholder="Custom"
             onClick={() => {
               setActiveIndex(SLIPPAGE_INDEX[4])
               if (slippageInput) {
