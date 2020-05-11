@@ -5,16 +5,17 @@ import { useDebounce } from '../../hooks'
 
 const StyledSlider = withStyles({
   root: {
-    width: '95%',
-    color: '#ff007a',
+    width: '90%',
+    color: '#565A69',
     height: 4,
     marginLeft: '15px',
+    marginRight: '15px',
     padding: '15px 0'
   },
   thumb: {
     height: 28,
     width: 28,
-    backgroundColor: '#ff007a',
+    backgroundColor: '#565A69',
     marginTop: -14,
     marginLeft: -14,
     '&:focus,&:hover,&$active': {
@@ -31,10 +32,10 @@ const StyledSlider = withStyles({
   rail: {
     height: 2,
     opacity: 0.5,
-    backgroundColor: '#bfbfbf'
+    backgroundColor: '#C3C5CB'
   },
   mark: {
-    backgroundColor: '#bfbfbf',
+    backgroundColor: '#C3C5CB',
     height: 12,
     width: 2,
     marginTop: -4

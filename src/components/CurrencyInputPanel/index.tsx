@@ -28,19 +28,19 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   font-size: 20px;
   font-family: 'Inter';
   font-weight: 500;
-  background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.blue1)};
+  background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.primary1)};
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
   border-radius: 12px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
-  /* padding: 0px; */
   outline: none;
   cursor: pointer;
   user-select: none;
   border: none;
+  padding: 0 0.5rem;
 
   :focus,
   :hover {
-    background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.blue1))};
+    background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
   }
 `
 
@@ -51,7 +51,7 @@ const LabelRow = styled.div`
   font-size: 0.75rem;
   line-height: 1rem;
   padding: 0.75rem 1rem 0 1rem;
-  height: 20px
+  height: 20px;
   span:hover {
     cursor: pointer;
     color: ${({ theme }) => darken(0.2, theme.text2)};
@@ -95,43 +95,28 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 `
 
 const StyledBalanceMax = styled.button`
-  height: 32px;
-  background-color: ${({ theme }) => theme.blue5};
-  border: 1px solid ${({ theme }) => theme.blue5};
+  height: 28px;
+  background-color: ${({ theme }) => theme.primary5};
+  border: 1px solid ${({ theme }) => theme.primary5};
   border-radius: 0.5rem;
   font-size: 0.875rem;
+
   font-weight: 500;
   cursor: pointer;
   margin-right: 0.5rem;
-  color: ${({ theme }) => theme.buttonSecondaryText};
+  color: ${({ theme }) => theme.primaryText1};
   :hover {
-    border: 1px solid ${({ theme }) => theme.blue1};
+    border: 1px solid ${({ theme }) => theme.primary1};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.blue1};
+    border: 1px solid ${({ theme }) => theme.primary1};
     outline: none;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    margin-right: 0.5rem;
+  `};
 `
-// const StyledBalanceMaxMini = styled.button`
-//   height: 24px;
-//   background-color: ${({ theme, active }) => (active ? theme.blue5 : theme.bg2)};
-//   border: 1px solid ${({ theme }) => theme.blue5};
-//   border-radius: 0.5rem;
-//   font-size: 0.875rem;
-//   font-weight: 500;
-//   cursor: pointer;
-
-//   pointer-events: ${({ active }) => (active ? 'initial' : 'none')};
-//   color: ${({ theme, active }) => (active ? theme.blue1 : theme.text4)};
-
-//   :hover {
-//     border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};
-//   }
-//   :focus {
-//     border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};
-//     outline: none;
-//   }
-// `
 
 interface CurrencyInputPanelProps {
   value: string
@@ -191,19 +176,21 @@ export default function CurrencyInputPanel({
                 {label}
               </TYPE.body>
 
-              <Hover>
-                <TYPE.body
-                  onClick={onMax}
-                  color={theme.text2}
-                  fontWeight={500}
-                  fontSize={14}
-                  style={{ display: 'inline' }}
-                >
-                  {!hideBalance && !!token && userTokenBalance
-                    ? 'Balance: ' + userTokenBalance?.toSignificant(6)
-                    : ' -'}
-                </TYPE.body>
-              </Hover>
+              {account && (
+                <Hover>
+                  <TYPE.body
+                    onClick={onMax}
+                    color={theme.text2}
+                    fontWeight={500}
+                    fontSize={14}
+                    style={{ display: 'inline' }}
+                  >
+                    {!hideBalance && !!token && userTokenBalance
+                      ? 'Balance: ' + userTokenBalance?.toSignificant(6)
+                      : ' -'}
+                  </TYPE.body>
+                </Hover>
+              )}
             </RowBetween>
           </LabelRow>
         )}
@@ -217,7 +204,7 @@ export default function CurrencyInputPanel({
                   onUserInput(field, val)
                 }}
               />
-              {!advanced && !!token?.address && !atMax && label !== 'To' && (
+              {account && !advanced && !!token?.address && !atMax && label !== 'To' && (
                 <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
               )}
             </>

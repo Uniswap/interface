@@ -33,7 +33,6 @@ const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   border-radius: 3rem;
-  margin-bottom: 20px;
 `
 
 const activeClassName = 'ACTIVE'
@@ -105,7 +104,7 @@ function NavigationTabs({ location: { pathname }, history }: RouteComponentProps
     <>
       {adding || removing ? (
         <Tabs>
-          <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
+          <RowBetween style={{ padding: '1rem' }}>
             <Hover onClick={() => history.push('/pool')}>
               <ArrowLink />
             </Hover>
@@ -113,7 +112,7 @@ function NavigationTabs({ location: { pathname }, history }: RouteComponentProps
             <QuestionHelper
               text={
                 adding
-                  ? 'When you add liqudiity, you are given pool tokens that represent your position in this pool. These tokens automatically earn fees proportional to your pool share and can be redeemed at any time.'
+                  ? 'When you add liquidity, you are given pool tokens that represent your position in this pool. These tokens automatically earn fees proportional to your pool share and can be redeemed at any time.'
                   : 'Your liquidity is represented by a pool token (ERC20). Removing will convert your position back into tokens at the current rate and proportional to the amount of each token in the pool. Any fees you accrued are included in the token amounts you receive.'
               }
             />
@@ -140,7 +139,7 @@ function NavigationTabs({ location: { pathname }, history }: RouteComponentProps
           </RowBetween>
         </Tabs>
       ) : (
-        <Tabs>
+        <Tabs style={{ marginBottom: '20px' }}>
           {tabOrder.map(({ path, textKey, regex }) => (
             <StyledNavLink
               id={`${textKey}-navLink`}

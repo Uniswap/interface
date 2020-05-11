@@ -84,7 +84,11 @@ export default function Provider({ children }: { children: React.ReactNode }) {
     LocalStorageKeys.MIGRATION_MESSAGE_DISMISSED,
     false
   )
-  const [darkMode, setDarkMode] = useLocalStorage<boolean>(LocalStorageKeys.DARK_MODE, true)
+  const [darkMode, setDarkMode] = useLocalStorage<boolean>(
+    LocalStorageKeys.DARK_MODE,
+    window?.matchMedia('(prefers-color-scheme: dark)')?.matches ? true : false
+  )
+
   const [tokens, setTokens] = useLocalStorage<Token[], ReturnType<typeof serializeTokens>>(
     LocalStorageKeys.TOKENS,
     [],
@@ -114,6 +118,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
           betaMessageDismissed,
           migrationMessageDismissed,
           darkMode,
+
           tokens,
           setVersion,
           setLastSaved,
@@ -127,6 +132,33 @@ export default function Provider({ children }: { children: React.ReactNode }) {
       {children}
     </LocalStorageContext.Provider>
   )
+}
+
+export function Updater() {
+  const [, { setDarkMode }] = useLocalStorageContext()
+
+  useEffect(() => {
+    const darkHandler = (match: MediaQueryListEvent) => {
+      if (match.matches) {
+        setDarkMode(true)
+      }
+    }
+    const lightHandler = (match: MediaQueryListEvent) => {
+      if (match.matches) {
+        setDarkMode(false)
+      }
+    }
+
+    window?.matchMedia('(prefers-color-scheme: dark)')?.addListener(darkHandler)
+    window?.matchMedia('(prefers-color-scheme: light)')?.addListener(lightHandler)
+
+    return () => {
+      window?.matchMedia('(prefers-color-scheme: dark)')?.removeListener(darkHandler)
+      window?.matchMedia('(prefers-color-scheme: light)')?.removeListener(lightHandler)
+    }
+  }, [setDarkMode])
+
+  return null
 }
 
 export function useBetaMessageManager() {

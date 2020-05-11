@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react'
-import styled from 'styled-components'
+import React, { useCallback, useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 
 import Modal from '../Modal'
@@ -57,6 +57,7 @@ function ConfirmationModal({
   title = ''
 }: ConfirmationModalProps) {
   const { chainId } = useWeb3React()
+  const theme = useContext(ThemeContext)
 
   const dismissAndReturn = useCallback(() => {
     if (history.location.pathname.match('/add') || history.location.pathname.match('/remove')) {
@@ -91,7 +92,7 @@ function ConfirmationModal({
               {pendingConfirmation ? (
                 <Loader size="90px" />
               ) : (
-                <ArrowUpCircle strokeWidth={0.5} size={90} color="#ff007a" />
+                <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary1} />
               )}
             </ConfirmedIcon>
             <AutoColumn gap="12px" justify={'center'}>
@@ -99,14 +100,14 @@ function ConfirmationModal({
                 {!pendingConfirmation ? 'Transaction Submitted' : 'Waiting For Confirmation'}
               </Text>
               <AutoColumn gap="12px" justify={'center'}>
-                <Text fontWeight={600} fontSize={14} color="" textAlign="center" style={{ width: '70%' }}>
+                <Text fontWeight={600} fontSize={14} color="" textAlign="center">
                   {pendingText}
                 </Text>
               </AutoColumn>
               {!pendingConfirmation && (
                 <>
                   <Link href={getEtherscanLink(chainId, hash, 'transaction')}>
-                    <Text fontWeight={500} fontSize={14} color="#ff007a">
+                    <Text fontWeight={500} fontSize={14} color={theme.primary1}>
                       View on Etherscan
                     </Text>
                   </Link>
@@ -117,7 +118,6 @@ function ConfirmationModal({
                   </ButtonPrimary>
                 </>
               )}
-              {/* {pendingConfirmation && <div style={{ height: '138px' }} />} */}
               <Text fontSize={12} color="#565A69" textAlign="center">
                 {pendingConfirmation
                   ? 'Confirm this transaction in your wallet'
