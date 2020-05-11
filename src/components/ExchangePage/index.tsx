@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { parseEther, parseUnits } from '@ethersproject/units'
-import { Fraction, JSBI, Percent, TokenAmount, TradeType, WETH } from '@uniswap/sdk'
+import { JSBI, Percent, TokenAmount, TradeType, WETH } from '@uniswap/sdk'
 import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { BigNumber } from '@ethersproject/bignumber'
