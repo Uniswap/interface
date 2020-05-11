@@ -69,7 +69,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
   if (minimal) {
     return (
       <>
-        {userPoolBalance && userPoolBalance.toSignificant(5) > 0 && (
+        {userPoolBalance && (
           <GreyCard border={border}>
             <AutoColumn gap="12px">
               <FixedHeightRow>

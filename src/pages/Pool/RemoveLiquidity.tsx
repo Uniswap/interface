@@ -174,8 +174,8 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
   // pool token data
   const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
 
-  const allBalances: TokenAmount[] = useAllBalances()
-  const userLiquidity: TokenAmount = allBalances?.[account]?.[pair?.liquidityToken?.address]
+  const allBalances = useAllBalances()
+  const userLiquidity = allBalances?.[account]?.[pair?.liquidityToken?.address]
 
   // input state
   const [state, dispatch] = useReducer(reducer, initializeRemoveState(userLiquidity?.toExact(), token0, token1))

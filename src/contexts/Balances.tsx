@@ -409,7 +409,7 @@ export function Updater() {
   return null
 }
 
-export function useAllBalances(): Array<TokenAmount> {
+export function useAllBalances(): { [ownerAddress: string]: { [tokenAddress: string]: TokenAmount } } {
   const { chainId } = useWeb3React()
   const [state] = useBalancesContext()
 

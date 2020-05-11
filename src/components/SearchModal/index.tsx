@@ -225,14 +225,11 @@ function SearchModal({
           const balanceA = allBalances?.[account]?.[a]
           const balanceB = allBalances?.[account]?.[b]
 
-          if (balanceA && !balanceB) {
+          if (balanceA?.greaterThan('0') && !balanceB?.greaterThan('0')) {
             return sortDirection ? -1 : 1
           }
-          if (!balanceA && balanceB) {
+          if (!balanceA?.greaterThan('0') && balanceB?.greaterThan('0')) {
             return sortDirection ? 1 : -1
-          }
-          if (balanceA && balanceB) {
-            return sortDirection && parseFloat(balanceA.toExact()) > parseFloat(balanceB.toExact()) ? -1 : 1
           }
           return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
         } else {
@@ -310,15 +307,11 @@ function SearchModal({
       const balanceA = allBalances?.[account]?.[a.liquidityToken.address]
       const balanceB = allBalances?.[account]?.[b.liquidityToken.address]
 
-      if (balanceA && !balanceB) {
+      if (balanceA?.greaterThan('0') && !balanceB?.greaterThan('0')) {
         return sortDirection ? -1 : 1
       }
-      if (!balanceA && balanceB) {
+      if (!balanceA?.greaterThan('0') && balanceB?.greaterThan('0')) {
         return sortDirection ? 1 : -1
-      }
-      if (balanceA && balanceB) {
-        const order = sortDirection && (parseFloat(balanceA.toExact()) > parseFloat(balanceB.toExact()) ? -1 : 1)
-        return order ? 1 : -1
       } else {
         return 0
       }
@@ -450,16 +443,17 @@ function SearchModal({
      */
       return filteredTokenList
         .sort((a, b) => {
-          if (b.address === WETH[chainId].address) {
+          if (a.address === WETH[chainId].address) {
+            return -1
+          } else if (b.address === WETH[chainId].address) {
             return 1
-          } else
-            return parseFloat(a?.balance?.toExact()) > parseFloat(b?.balance?.toExact())
-              ? sortDirection
-                ? -1
-                : 1
-              : sortDirection
-              ? 1
-              : -1
+          } else if (a.balance?.greaterThan('0') && !b.balance?.greaterThan('0')) {
+            return sortDirection ? -1 : 1
+          } else if (!a.balance?.greaterThan('0') && b.balance?.greaterThan('0')) {
+            return sortDirection ? 1 : -1
+          } else {
+            return sortDirection ? -1 : 1
+          }
         })
         .map(({ address, symbol, balance }) => {
           const urlAdded = urlAddedTokens && urlAddedTokens.hasOwnProperty(address)
@@ -579,13 +573,7 @@ function SearchModal({
             <TYPE.body style={{ marginTop: '10px' }}>
               To import a custom token, paste token address in the search bar.
             </TYPE.body>
-            <Input
-              type={'text'}
-              placeholder={'0x0000000000...'}
-              value={searchQuery}
-              ref={inputRef}
-              onChange={onInput}
-            />
+            <Input type={'text'} placeholder={'0x000000...'} value={searchQuery} ref={inputRef} onChange={onInput} />
             {renderTokenList()}
           </PaddedColumn>
         ) : (

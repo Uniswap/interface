@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react'
 import { ThemeContext } from 'styled-components'
 import { parseEther, parseUnits } from '@ethersproject/units'
-import { JSBI, Percent, TokenAmount, TradeType, WETH } from '@uniswap/sdk'
+import { JSBI, Percent, TokenAmount, TradeType, WETH, Fraction } from '@uniswap/sdk'
 import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -147,7 +147,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
 
   // all balances for detecting a swap with send
-  const allBalances: TokenAmount[] = useAllBalances()
+  const allBalances = useAllBalances()
 
   // get user- and token-specific lookup data
   const userBalances = {
@@ -215,11 +215,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   const priceSlippage =
     slippageFromTrade &&
     new Percent(
-      JSBI.subtract(
-        JSBI.multiply(slippageFromTrade.numerator, JSBI.BigInt('1000')),
-        JSBI.multiply(JSBI.BigInt('3'), slippageFromTrade.denominator)
-      ),
-      JSBI.multiply(slippageFromTrade.denominator, JSBI.BigInt('1000'))
+      slippageFromTrade.subtract(new Fraction('30', '10000')).numerator,
+      slippageFromTrade.subtract(new Fraction('30', '10000')).denominator
     )
 
   const onTokenSelection = useCallback(
@@ -645,14 +642,15 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   ])
 
   // warnings on slippage
-  const warningLow: boolean =
-    slippageFromTrade &&
-    parseFloat(slippageFromTrade.toFixed(4)) > 0 &&
-    parseFloat(slippageFromTrade.toFixed(4)) < ALLOWED_SLIPPAGE_MEDIUM / 100
+  const warningLow: boolean = slippageFromTrade?.lessThan(new Percent(ALLOWED_SLIPPAGE_MEDIUM.toString(), '10000'))
+  // TODO greaterThanOrEqualTo in SDK
   const warningMedium: boolean =
-    slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_MEDIUM / 100
+    slippageFromTrade?.equalTo(new Percent(ALLOWED_SLIPPAGE_MEDIUM.toString(), '10000')) ||
+    slippageFromTrade?.greaterThan(new Percent(ALLOWED_SLIPPAGE_MEDIUM.toString(), '10000'))
+  // TODO greaterThanOrEqualTo in SDK
   const warningHigh: boolean =
-    slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_HIGH / 100
+    slippageFromTrade?.equalTo(new Percent(ALLOWED_SLIPPAGE_HIGH.toString(), '10000')) ||
+    slippageFromTrade?.greaterThan(new Percent(ALLOWED_SLIPPAGE_HIGH.toString(), '10000'))
 
   function modalHeader() {
     if (sending && !sendingWithSwap) {
