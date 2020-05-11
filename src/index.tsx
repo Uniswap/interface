@@ -39,9 +39,7 @@ function ContextProviders({ children }: { children: React.ReactNode }) {
   return (
     <LocalStorageContextProvider>
       <TransactionContextProvider>
-        <BalancesContextProvider>
-          {children}
-        </BalancesContextProvider>
+        <BalancesContextProvider>{children}</BalancesContextProvider>
       </TransactionContextProvider>
     </LocalStorageContextProvider>
   );
