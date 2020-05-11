@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { TokenAmount, JSBI, Token, Pair } from '@uniswap/sdk'
-import { usePopups } from '../../state/application/hooks'
 
 import Row from '../Row'
 import TokenLogo from '../TokenLogo'
@@ -15,7 +14,6 @@ import { AutoColumn, ColumnCenter } from '../Column'
 import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
 
 import { useToken } from '../../contexts/Tokens'
-import { usePrevious } from '../../hooks'
 import { useWeb3React } from '@web3-react/core'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useLocalStoragePairAdder } from '../../contexts/LocalStorage'
