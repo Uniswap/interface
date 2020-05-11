@@ -23,7 +23,7 @@ const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 1rem 1rem;
   font-weight: 500;
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.blue1 : 'inherit')};
+  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
@@ -158,7 +158,7 @@ const ConnectButtonRow = styled.div`
 `
 
 const StyledLink = styled(Link)<{ hasENS: boolean; isENS: boolean }>`
-  color: ${({ hasENS, isENS, theme }) => (hasENS ? (isENS ? theme.blue1 : theme.text3) : theme.blue1)};
+  color: ${({ hasENS, isENS, theme }) => (hasENS ? (isENS ? theme.primary1 : theme.text3) : theme.primary1)};
 `
 
 const CloseIcon = styled.div`
@@ -211,7 +211,7 @@ const WalletAction = styled.div`
 `
 
 const MainWalletAction = styled(WalletAction)`
-  color: ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.primary1};
 `
 
 function renderTransactions(transactions, pending) {
@@ -224,19 +224,27 @@ function renderTransactions(transactions, pending) {
   )
 }
 
+interface AccountDetailsProps {
+  toggleWalletModal: () => void
+  pendingTransactions: any[]
+  confirmedTransactions: any[]
+  ENSName?: string
+  openOptions: () => void
+}
+
 export default function AccountDetails({
   toggleWalletModal,
   pendingTransactions,
   confirmedTransactions,
   ENSName,
   openOptions
-}) {
+}: AccountDetailsProps) {
   const { chainId, account, connector } = useWeb3React()
   const theme = useContext(ThemeContext)
 
   function formatConnectorName() {
-    const { ethereum } = window as any
-    const isMetaMask = ethereum && ethereum.isMetaMask ? true : false
+    const { ethereum } = window
+    const isMetaMask = !!(ethereum && ethereum.isMetaMask)
     const name = Object.keys(SUPPORTED_WALLETS)
       .filter(
         k =>
@@ -355,12 +363,12 @@ export default function AccountDetails({
             </InfoCard>
           </YourAccount>
 
-          {!(isMobile && ((window as any).web3 || (window as any).ethereum)) && (
+          {!(isMobile && (window.web3 || window.ethereum)) && (
             <ConnectButtonRow>
               <ButtonEmpty
-                style={{ fontWeight: '400' }}
-                padding={'px 12px'}
-                width={260}
+                style={{ fontWeight: 400 }}
+                padding={'12px'}
+                width={'260px'}
                 onClick={() => {
                   openOptions()
                 }}

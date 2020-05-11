@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const StyledInput = styled.input<{error?: boolean; fontSize?: string; align?: string}>`
+const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string }>`
   color: ${({ error, theme }) => error && theme.red1};
   color: ${({ theme }) => theme.text1};
   width: 0;
@@ -45,8 +45,19 @@ function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
 
-export const Input = React.memo(({ value, onUserInput, placeHolder = null, ...rest }: any) => {
-  function enforcer(nextUserInput: string) {
+export const Input = React.memo(function InnerInput({
+  value,
+  onUserInput,
+  placeholder,
+  ...rest
+}: {
+  value: string | number
+  onUserInput: (string) => void
+  error?: boolean
+  fontSize?: string
+  align?: 'right' | 'left'
+} & Omit<React.HTMLProps<HTMLInputElement>, 'ref' | 'onChange' | 'as'>) {
+  const enforcer = (nextUserInput: string) => {
     if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
       onUserInput(nextUserInput)
     }
@@ -66,7 +77,7 @@ export const Input = React.memo(({ value, onUserInput, placeHolder = null, ...re
       autoCorrect="off"
       // text-specific options
       type="text"
-      placeholder={placeHolder || '0.0'}
+      placeholder={placeholder || '0.0'}
       minLength={1}
       maxLength={79}
       spellCheck="false"

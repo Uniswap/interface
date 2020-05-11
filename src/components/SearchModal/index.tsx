@@ -8,6 +8,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { COMMON_BASES } from '../../constants'
 import { Link as StyledLink } from '../../theme/components'
 
+import Card from '../../components/Card'
 import Modal from '../Modal'
 import Circle from '../../assets/images/circle.svg'
 import TokenLogo from '../TokenLogo'
@@ -15,10 +16,8 @@ import DoubleTokenLogo from '../DoubleLogo'
 import Column, { AutoColumn } from '../Column'
 import { Text } from 'rebass'
 import { Hover } from '../../theme'
-import { ArrowLeft, X } from 'react-feather'
+import { ArrowLeft } from 'react-feather'
 import { CloseIcon } from '../../theme/components'
-import { ColumnCenter } from '../Column'
-import Card from '../../components/Card'
 import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { Spinner, TYPE } from '../../theme'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
@@ -39,17 +38,18 @@ const TokenModalInfo = styled.div`
   margin: 0.25rem 0.5rem;
   justify-content: center;
   user-select: none;
+  min-height: 200px;
 `
 
-const TokenList = styled.div`
+const ItemList = styled.div`
   flex-grow: 1;
-  height: 100%;
+  height: 240px;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 `
 
 const FadedSpan = styled(RowFixed)`
-  color: ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.primary1};
   font-size: 14px;
 `
 
@@ -118,7 +118,7 @@ const MenuItem = styled(PaddedItem)`
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `
 
-const BaseWrapper = styled(AutoRow)`
+const BaseWrapper = styled(AutoRow)<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
   padding: 0 6px;
   border-radius: 10px;
@@ -332,21 +332,24 @@ function SearchModal({
       }
       const token0 = allTokens[pair.token0]
       const token1 = allTokens[pair.token1]
-      const regexMatches = Object.keys(token0).map(field => {
-        if (
-          (field === 'address' && isAddress) ||
-          (field === 'name' && !isAddress) ||
-          (field === 'symbol' && !isAddress)
-        ) {
-          return (
-            token0[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i')) ||
-            token1[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i'))
-          )
-        }
-        return false
-      })
-
-      return regexMatches.some(m => m)
+      if (!token0 || !token1) {
+        return false // no token fetched yet
+      } else {
+        const regexMatches = Object.keys(token0).map(field => {
+          if (
+            (field === 'address' && isAddress) ||
+            (field === 'name' && !isAddress) ||
+            (field === 'symbol' && !isAddress)
+          ) {
+            return (
+              token0[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i')) ||
+              token1[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i'))
+            )
+          }
+          return false
+        })
+        return regexMatches.some(m => m)
+      }
     })
   }, [allPairs, allTokens, searchQuery, sortedPairList])
 
@@ -430,19 +433,21 @@ function SearchModal({
       } else {
         return <TokenModalInfo>{t('noToken')}</TokenModalInfo>
       }
-    }
-    // TODO is this the right place to link to create exchange?
-    // else if (isAddress(searchQuery) && tokenAddress === ethers.constants.AddressZero) {
-    //   return (
-    //     <>
-    //       <TokenModalInfo>{t('noToken')}</TokenModalInfo>
-    //       <TokenModalInfo>
-    //         <Link to={`/create-exchange/${searchQuery}`}>{t('createExchange')}</Link>
-    //       </TokenModalInfo>
-    //     </>
-    //   )
-    // }
-    else {
+    } else {
+      /**
+       * @TODO
+      // TODO is this the right place to link to create exchange?
+      // else if (isAddress(searchQuery) && tokenAddress === ethers.constants.AddressZero) {
+      //   return (
+      //     <>
+      //       <TokenModalInfo>{t('noToken')}</TokenModalInfo>
+      //       <TokenModalInfo>
+      //         <Link to={`/create-exchange/${searchQuery}`}>{t('createExchange')}</Link>
+      //       </TokenModalInfo>
+      //     </>
+      //   )
+      // }
+     */
       return filteredTokenList
         .sort((a, b) => {
           if (b?.address === WETH[chainId]?.address) {
@@ -467,7 +472,7 @@ function SearchModal({
           return (
             <MenuItem
               key={address}
-              onClick={() => (hiddenToken && hiddenToken === address ? () => {} : _onTokenSelect(address))}
+              onClick={() => (hiddenToken && hiddenToken === address ? null : _onTokenSelect(address))}
               disabled={hiddenToken && hiddenToken === address}
               selected={otherSelectedTokenAddress === address}
             >
@@ -503,7 +508,7 @@ function SearchModal({
                   <Text>
                     {zeroBalance && showSendWithSwap ? (
                       <ButtonSecondary padding={'4px 8px'}>
-                        <Text textAlign="center" fontWeight={500} fontSize={14} color={theme.blue1}>
+                        <Text textAlign="center" fontWeight={500} fontSize={14} color={theme.primary1}>
                           Send With Swap
                         </Text>
                       </ButtonSecondary>
@@ -525,7 +530,7 @@ function SearchModal({
     }
   }
 
-  const Filter = ({ title, filter, filterType }) => {
+  const Filter = ({ title, filter, filterType }: { title: string; filter: string; filterType: string }) => {
     return (
       <FilterWrapper
         onClick={() => {
@@ -593,6 +598,7 @@ function SearchModal({
             </RowBetween>
             <Input
               type={'text'}
+              id="token-search-input"
               placeholder={t('tokenSearchPlaceholder')}
               value={searchQuery}
               ref={inputRef}
@@ -638,7 +644,7 @@ function SearchModal({
           </PaddedColumn>
         )}
         {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />}
-        {!showTokenImport && <TokenList>{filterType === 'tokens' ? renderTokenList() : renderPairsList()}</TokenList>}
+        {!showTokenImport && <ItemList>{filterType === 'tokens' ? renderTokenList() : renderPairsList()}</ItemList>}
         {!showTokenImport && <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />}
         {!showTokenImport && (
           <Card>

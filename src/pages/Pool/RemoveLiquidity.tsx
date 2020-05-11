@@ -49,7 +49,7 @@ const ClickableText = styled(Text)`
   :hover {
     cursor: pointer;
   }
-  color: ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.primary1};
 `
 
 // const CustomNumericalInput = styled(NumericalInput)`
@@ -59,19 +59,19 @@ const ClickableText = styled(Text)`
 
 const MaxButton = styled.button<{ width: string }>`
   padding: 0.5rem 1rem;
-  background-color: ${({ theme }) => theme.blue5};
-  border: 1px solid ${({ theme }) => theme.blue5};
+  background-color: ${({ theme }) => theme.primary5};
+  border: 1px solid ${({ theme }) => theme.primary5};
   border-radius: 0.5rem;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   margin-right: 0.5rem;
-  color: ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.primary1};
   :hover {
-    border: 1px solid ${({ theme }) => theme.blue1};
+    border: 1px solid ${({ theme }) => theme.primary1};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.blue1};
+    border: 1px solid ${({ theme }) => theme.primary1};
     outline: none;
   }
 `
@@ -145,11 +145,11 @@ function reducer(
   }
 }
 
-const ConfirmedText = styled(Text)`
+const ConfirmedText = styled(Text)<{ confirmed?: boolean }>`
   color: ${({ theme, confirmed }) => (confirmed ? theme.green1 : theme.white)};
 `
 
-export default function RemoveLiquidity({ token0, token1 }) {
+export default function RemoveLiquidity({ token0, token1 }: { token0: string; token1: string }) {
   const { account, chainId, library } = useWeb3React()
   const theme = useContext(ThemeContext)
 
@@ -426,6 +426,13 @@ export default function RemoveLiquidity({ token0, token1 }) {
     })
   }
 
+  function resetModalState() {
+    setSigned(false)
+    setSigInputs(null)
+    setAttemptedRemoval(false)
+    setPendingConfirmation(true)
+  }
+
   async function onRemove() {
     setAttemptedRemoval(true)
     const router = getRouterContract(chainId, library, account)
@@ -500,13 +507,6 @@ export default function RemoveLiquidity({ token0, token1 }) {
       })
   }
 
-  function resetModalState() {
-    setSigned(false)
-    setSigInputs(null)
-    setAttemptedRemoval(false)
-    setPendingConfirmation(true)
-  }
-
   function modalHeader() {
     return (
       <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
@@ -575,7 +575,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
             }`}
           </Text>
         </RowBetween>
-        <RowBetween gap="16px">
+        <RowBetween>
           <ButtonConfirmed
             style={{ margin: '20px 0 0 0' }}
             width="48%"
@@ -597,7 +597,7 @@ export default function RemoveLiquidity({ token0, token1 }) {
     )
   }
 
-  const pendingText: string = `Removing ${parsedAmounts[Field.TOKEN0]?.toSignificant(6)} ${
+  const pendingText = `Removing ${parsedAmounts[Field.TOKEN0]?.toSignificant(6)} ${
     tokens[Field.TOKEN0]?.symbol
   } and ${parsedAmounts[Field.TOKEN1]?.toSignificant(6)} ${tokens[Field.TOKEN1]?.symbol}`
 
@@ -642,16 +642,16 @@ export default function RemoveLiquidity({ token0, token1 }) {
             )}
             {!showAdvanced && (
               <RowBetween>
-                <MaxButton onClick={e => handlePresetPercentage(25)} width="20%">
+                <MaxButton onClick={() => handlePresetPercentage(25)} width="20%">
                   25%
                 </MaxButton>
-                <MaxButton onClick={e => handlePresetPercentage(50)} width="20%">
+                <MaxButton onClick={() => handlePresetPercentage(50)} width="20%">
                   50%
                 </MaxButton>
-                <MaxButton onClick={e => handlePresetPercentage(75)} width="20%">
+                <MaxButton onClick={() => handlePresetPercentage(75)} width="20%">
                   75%
                 </MaxButton>
-                <MaxButton onClick={e => handlePresetPercentage(100)} width="20%">
+                <MaxButton onClick={() => handlePresetPercentage(100)} width="20%">
                   Max
                 </MaxButton>
               </RowBetween>

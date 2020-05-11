@@ -1,3 +1,4 @@
+import { AbstractConnector } from '@web3-react/abstract-connector'
 import React from 'react'
 import styled from 'styled-components'
 import Option from './Option'
@@ -70,15 +71,29 @@ const LoadingWrapper = styled.div`
   justify-content: center;
 `
 
-export default function PendingView({ uri = '', size, connector, error = false, setPendingError, tryActivation }) {
-  const isMetamask = (window as any).ethereum && (window as any).ethereum.isMetaMask
+export default function PendingView({
+  uri = '',
+  size,
+  connector,
+  error = false,
+  setPendingError,
+  tryActivation
+}: {
+  uri?: string
+  size?: number
+  connector?: AbstractConnector
+  error?: boolean
+  setPendingError: (error: boolean) => void
+  tryActivation: (connector: AbstractConnector) => void
+}) {
+  const isMetamask = window.ethereum && window.ethereum.isMetaMask
 
   return (
     <PendingSection>
-      {!error && connector === walletconnect && <WalletConnectData size={size} uri={uri}/>}
+      {!error && connector === walletconnect && <WalletConnectData size={size} uri={uri} />}
       <LoadingMessage error={error}>
         <LoadingWrapper>
-          {!error && <SpinnerWrapper src={Circle}/>}
+          {!error && <SpinnerWrapper src={Circle} />}
           {error ? (
             <ErrorGroup>
               <div>Error connecting.</div>

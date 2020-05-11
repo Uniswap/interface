@@ -20,7 +20,7 @@ const Image = styled.img<{ size: string }>`
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
 `
 
-const Emoji = styled.span<{size?:string}>`
+const Emoji = styled.span<{ size?: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,12 +30,20 @@ const Emoji = styled.span<{size?:string}>`
   margin-bottom: -4px;
 `
 
-const StyledEthereumLogo = styled(EthereumLogo)<{size: string}>`
+const StyledEthereumLogo = styled(EthereumLogo)<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
 `
 
-export default function TokenLogo({ address, size = '24px', ...rest }) {
+export default function TokenLogo({
+  address,
+  size = '24px',
+  ...rest
+}: {
+  address: string
+  size?: string
+  style?: React.CSSProperties
+}) {
   const [error, setError] = useState(false)
   const { chainId } = useWeb3React()
 

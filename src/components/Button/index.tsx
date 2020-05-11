@@ -4,9 +4,9 @@ import { darken, lighten } from 'polished'
 
 import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'
-import { Button as RebassButton } from 'rebass/styled-components'
+import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
 
-const Base = styled(RebassButton)`
+const Base = styled(RebassButton)<{ padding?: string; width?: string; borderRadius?: string }>`
   padding: ${({ padding }) => (padding ? padding : '18px')};
   width: ${({ width }) => (width ? width : '100%')};
   font-weight: 500;
@@ -184,13 +184,14 @@ export const ButtonWhite = styled(Base)`
   color: black;
 
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, '#edeef2')};
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    box-shadow: 0 0 0 1pt ${darken(0.05, '#edeef2')};
   }
   &:hover {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, '#edeef2')};
+    box-shadow: 0 0 0 1pt ${darken(0.1, '#edeef2')};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, '#edeef2')};
+    box-shadow: 0 0 0 1pt ${darken(0.1, '#edeef2')};
   }
   &:disabled {
     opacity: 50%;
@@ -229,23 +230,23 @@ const ButtonErrorStyle = styled(Base)`
   }
 `
 
-export function ButtonConfirmed({ children, confirmed, ...rest }) {
+export function ButtonConfirmed({ confirmed, ...rest }: { confirmed?: boolean } & ButtonProps) {
   if (confirmed) {
-    return <ButtonConfirmedStyle {...rest}>{children}</ButtonConfirmedStyle>
+    return <ButtonConfirmedStyle {...rest} />
   } else {
-    return <ButtonPrimary {...rest}>{children}</ButtonPrimary>
+    return <ButtonPrimary {...rest} />
   }
 }
 
-export function ButtonError({ children, error, ...rest }) {
+export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProps) {
   if (error) {
-    return <ButtonErrorStyle {...rest}>{children}</ButtonErrorStyle>
+    return <ButtonErrorStyle {...rest} />
   } else {
-    return <ButtonPrimary {...rest}>{children}</ButtonPrimary>
+    return <ButtonPrimary {...rest} />
   }
 }
 
-export function ButtonDropwdown({ disabled = false, children, ...rest }) {
+export function ButtonDropwdown({ disabled = false, children, ...rest }: { disabled?: boolean } & ButtonProps) {
   return (
     <ButtonPrimary {...rest} disabled={disabled}>
       <RowBetween>
@@ -256,7 +257,7 @@ export function ButtonDropwdown({ disabled = false, children, ...rest }) {
   )
 }
 
-export function ButtonDropwdownLight({ disabled = false, children, ...rest }) {
+export function ButtonDropwdownLight({ disabled = false, children, ...rest }: { disabled?: boolean } & ButtonProps) {
   return (
     <ButtonOutlined {...rest} disabled={disabled}>
       <RowBetween>
@@ -267,10 +268,10 @@ export function ButtonDropwdownLight({ disabled = false, children, ...rest }) {
   )
 }
 
-export function ButtonRadio({ active, children, ...rest }) {
+export function ButtonRadio({ active, ...rest }: { active?: boolean } & ButtonProps) {
   if (!active) {
-    return <ButtonWhite {...rest}>{children}</ButtonWhite>
+    return <ButtonWhite {...rest} />
   } else {
-    return <ButtonPrimary {...rest}>{children}</ButtonPrimary>
+    return <ButtonPrimary {...rest} />
   }
 }

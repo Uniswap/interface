@@ -26,9 +26,19 @@ const Fader = styled.div<{ count: number }>`
 
 const delay = 100
 
-export default function TxnPopup({ hash, success, summary, popKey }) {
+export default function TxnPopup({
+  hash,
+  success,
+  summary,
+  popKey
+}: {
+  hash: string
+  success?: boolean
+  summary?: string
+  popKey?: number
+}) {
   const { chainId } = useWeb3React()
-  let [count, setCount] = useState(1)
+  const [count, setCount] = useState(1)
 
   const [isRunning, setIsRunning] = useState(true)
   const [, , removePopup] = usePopups()
@@ -44,9 +54,9 @@ export default function TxnPopup({ hash, success, summary, popKey }) {
   return (
     <AutoRow onMouseEnter={() => setIsRunning(false)} onMouseLeave={() => setIsRunning(true)}>
       {success ? (
-        <CheckCircle color={'#27AE60'} size={24} style={{ paddingRight: '24px' }}/>
+        <CheckCircle color={'#27AE60'} size={24} style={{ paddingRight: '24px' }} />
       ) : (
-        <AlertCircle color={'#FF6871'} size={24} style={{ paddingRight: '24px' }}/>
+        <AlertCircle color={'#FF6871'} size={24} style={{ paddingRight: '24px' }} />
       )}
       <AutoColumn gap="8px">
         <TYPE.body fontWeight={500}>
@@ -54,7 +64,7 @@ export default function TxnPopup({ hash, success, summary, popKey }) {
         </TYPE.body>
         <Link href={getEtherscanLink(chainId, hash, 'transaction')}>View on Etherscan</Link>
       </AutoColumn>
-      <Fader count={count}/>
+      <Fader count={count} />
     </AutoRow>
   )
 }

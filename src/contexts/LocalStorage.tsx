@@ -72,7 +72,7 @@ function useLocalStorageContext() {
   return useContext(LocalStorageContext)
 }
 
-export default function Provider({ children }) {
+export default function Provider({ children }: { children: React.ReactNode }) {
   // global localstorage state
   const [version, setVersion] = useLocalStorage<number>(LocalStorageKeys.VERSION, 0)
   const [lastSaved, setLastSaved] = useLocalStorage<number>(LocalStorageKeys.LAST_SAVED, Math.floor(Date.now() / 1000))

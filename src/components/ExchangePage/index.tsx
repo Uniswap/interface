@@ -179,11 +179,11 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   }
 
   const pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
-  let bestTradeExactIn = useTradeExactIn(
+  const bestTradeExactIn = useTradeExactIn(
     tradeType === TradeType.EXACT_INPUT ? parsedAmounts[independentField] : null,
     tokens[Field.OUTPUT]
   )
-  let bestTradeExactOut = useTradeExactOut(
+  const bestTradeExactOut = useTradeExactOut(
     tokens[Field.INPUT],
     tradeType === TradeType.EXACT_OUTPUT ? parsedAmounts[independentField] : null
   )
@@ -354,6 +354,17 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   const showInputApprove: boolean =
     parsedAmounts[Field.INPUT] && inputApproval && JSBI.greaterThan(parsedAmounts[Field.INPUT].raw, inputApproval.raw)
 
+  // reset modal state when closed
+  function resetModal() {
+    // clear input if txn submitted
+    if (!pendingConfirmation) {
+      onUserInput(Field.INPUT, '')
+    }
+    setPendingConfirmation(true)
+    setAttemptingTxn(false)
+    setShowAdvanced(false)
+  }
+
   // function for a pure send
   async function onSend() {
     setAttemptingTxn(true)
@@ -518,7 +529,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           setPendingConfirmation(false)
         })
       )
-      .catch(() => {
+      .catch(e => {
+        console.error(e)
         resetModal()
         setShowConfirm(false)
       })
@@ -644,17 +656,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_MEDIUM / 100
   const warningHigh: boolean =
     slippageFromTrade && parseFloat(slippageFromTrade.toFixed(4)) > ALLOWED_SLIPPAGE_HIGH / 100
-
-  // reset modal state when closed
-  function resetModal() {
-    // clear input if txn submitted
-    if (!pendingConfirmation) {
-      onUserInput(Field.INPUT, '')
-    }
-    setPendingConfirmation(true)
-    setAttemptingTxn(false)
-    setShowAdvanced(false)
-  }
 
   function modalHeader() {
     if (sending && !sendingWithSwap) {
@@ -790,7 +791,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
         <>
           <AutoColumn gap="0px">
             {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-              <RowBetween align="center" justify="center">
+              <RowBetween align="center">
                 <Text fontWeight={400} fontSize={14} color={theme.text2}>
                   Price
                 </Text>
@@ -989,7 +990,11 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       {sending && !sendingWithSwap && (
         <AutoColumn justify="center" style={{ marginBottom: '1rem' }}>
           <InputGroup gap="lg" justify="center">
-            <StyledNumerical value={formattedAmounts[Field.INPUT]} onUserInput={val => onUserInput(Field.INPUT, val)} />
+            <StyledNumerical
+              id="sending-no-swap-input"
+              value={formattedAmounts[Field.INPUT]}
+              onUserInput={val => onUserInput(Field.INPUT, val)}
+            />
             <CurrencyInputPanel
               field={Field.INPUT}
               value={formattedAmounts[Field.INPUT]}
@@ -1016,7 +1021,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               style={{ fontSize: '14px' }}
               padding={'4px 8px'}
               onClick={() => setSendingWithSwap(true)}
-              textAlign="center"
             >
               + Add a swap
             </ButtonSecondary>
@@ -1076,7 +1080,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     <ArrowDown
                       size="16"
                       onClick={onSwapTokens}
-                      color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme.blue1 : theme.text2}
+                      color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme.primary1 : theme.text2}
                     />
                   </ArrowWrapper>
                 </AutoColumn>
@@ -1129,7 +1133,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             ) : (
               <AutoColumn gap="4px">
                 {' '}
-                <RowBetween align="center" justify="center">
+                <RowBetween align="center">
                   <Text fontWeight={500} fontSize={14} color={theme.text2}>
                     Price
                   </Text>

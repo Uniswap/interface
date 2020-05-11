@@ -9,21 +9,19 @@ import '@reach/dialog/styles.css'
 import { transparentize } from 'polished'
 import { useGesture } from 'react-use-gesture'
 
+// errors emitted, fix with https://github.com/styled-components/styled-components/pull/3006
 const AnimatedDialogOverlay = animated(DialogOverlay)
-const WrappedDialogOverlay = ({ suppressClassNameWarning, mobile, ...rest }) => <AnimatedDialogOverlay {...rest} />
-const StyledDialogOverlay = styled(WrappedDialogOverlay).attrs({
-  suppressClassNameWarning: true
-})`
+const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
   &[data-reach-dialog-overlay] {
     z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: ${({ theme }) => 'transparent'};
+    background-color: transparent;
 
     ${({ mobile }) =>
-  mobile &&
-  css`
+      mobile &&
+      css`
         align-items: flex-end;
       `}
 
@@ -42,10 +40,9 @@ const StyledDialogOverlay = styled(WrappedDialogOverlay).attrs({
   }
 `
 
-const FilteredDialogContent = ({ minHeight, maxHeight, isOpen, slideInAnimation, mobile, ...rest }) => (
-  <DialogContent {...rest} />
-)
-const StyledDialogContent = styled(FilteredDialogContent)`
+// destructure to not pass custom props to Dialog DOM element
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...rest }) => <DialogContent {...rest} />)`
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
     border: 1px solid ${({ theme }) => theme.bg1};
@@ -56,28 +53,27 @@ const StyledDialogContent = styled(FilteredDialogContent)`
 
     max-width: 420px;
     ${({ maxHeight }) =>
-  maxHeight &&
-  css`
+      maxHeight &&
+      css`
         max-height: ${maxHeight}vh;
       `}
     ${({ minHeight }) =>
-  minHeight &&
-  css`
+      minHeight &&
+      css`
         min-height: ${minHeight}vh;
       `}
     display: flex;
-    /* overflow: hidden; */
     border-radius: 20px;
     ${({ theme }) => theme.mediaWidth.upToMedium`
       width: 65vw;
       max-height: 65vh;
       margin: 0;
     `}
-    ${({ theme, mobile, isOpen }) => theme.mediaWidth.upToSmall`
+    ${({ theme, mobile }) => theme.mediaWidth.upToSmall`
       width:  85vw;
       max-height: 66vh;
       ${mobile &&
-css`
+        css`
           width: 100vw;
           border-radius: 20px;
           border-bottom-left-radius: 0;
@@ -105,13 +101,13 @@ interface ModalProps {
 }
 
 export default function Modal({
-                                isOpen,
-                                onDismiss,
-                                minHeight = false,
-                                maxHeight = 50,
-                                initialFocusRef = null,
-                                children
-                              }: ModalProps) {
+  isOpen,
+  onDismiss,
+  minHeight = false,
+  maxHeight = 50,
+  initialFocusRef = null,
+  children
+}: ModalProps) {
   const transitions = useTransition(isOpen, null, {
     config: { duration: 200 },
     from: { opacity: 0 },
@@ -163,7 +159,9 @@ export default function Modal({
                   {props => (
                     <animated.div
                       {...bind()}
-                      style={{ transform: (xy as any).interpolate((x, y) => `translate3d(${0}px,${y > 0 ? y : 0}px,0)`) }}
+                      style={{
+                        transform: (xy as any).interpolate((x, y) => `translate3d(${0}px,${y > 0 ? y : 0}px,0)`)
+                      }}
                     >
                       <StyledDialogContent
                         style={props}
@@ -172,7 +170,7 @@ export default function Modal({
                         maxHeight={maxHeight}
                         mobile={isMobile}
                       >
-                        <HiddenCloseButton onClick={onDismiss}/>
+                        <HiddenCloseButton onClick={onDismiss} />
                         {children}
                       </StyledDialogContent>
                     </animated.div>
@@ -194,16 +192,16 @@ export default function Modal({
                 style={props}
                 onDismiss={onDismiss}
                 initialFocusRef={initialFocusRef}
-                mobile={isMobile}
+                mobile={isMobile ? isMobile : undefined}
               >
                 <StyledDialogContent
                   hidden={true}
                   minHeight={minHeight}
                   maxHeight={maxHeight}
                   isOpen={isOpen}
-                  mobile={isMobile}
+                  mobile={isMobile ? isMobile : undefined}
                 >
-                  <HiddenCloseButton onClick={onDismiss}/>
+                  <HiddenCloseButton onClick={onDismiss} />
                   {children}
                 </StyledDialogContent>
               </StyledDialogOverlay>

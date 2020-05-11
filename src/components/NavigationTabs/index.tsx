@@ -105,7 +105,7 @@ function NavigationTabs({ location: { pathname }, history }: RouteComponentProps
       {adding || removing ? (
         <Tabs>
           <RowBetween style={{ padding: '1rem' }}>
-            <Hover onClick={() => history.goBack()}>
+            <Hover onClick={() => history.push('/pool')}>
               <ArrowLink />
             </Hover>
             <ActiveText>{adding ? 'Add' : 'Remove'} Liquidity</ActiveText>
@@ -141,7 +141,12 @@ function NavigationTabs({ location: { pathname }, history }: RouteComponentProps
       ) : (
         <Tabs style={{ marginBottom: '20px' }}>
           {tabOrder.map(({ path, textKey, regex }) => (
-            <StyledNavLink key={path} to={path} isActive={(_, { pathname }) => !!pathname.match(regex)}>
+            <StyledNavLink
+              id={`${textKey}-navLink`}
+              key={path}
+              to={path}
+              isActive={(_, { pathname }) => !!pathname.match(regex)}
+            >
               {t(textKey)}
             </StyledNavLink>
           ))}

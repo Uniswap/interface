@@ -43,7 +43,7 @@ const Input = styled.input<{ error?: boolean }>`
   flex: 1 1 auto;
   width: 0;
   background-color: ${({ theme }) => theme.bg1};
-  color: ${({ error, theme }) => (error ? theme.red1 : theme.blue1)};
+  color: ${({ error, theme }) => (error ? theme.red1 : theme.primary1)};
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 500;
@@ -64,9 +64,16 @@ const Input = styled.input<{ error?: boolean }>`
 //   border-radius: 8px;
 // `
 
-export default function AddressInputPanel({ initialInput = '', onChange, onError }) {
-  const { library, chainId, account, connector } = useWeb3React()
-
+export default function AddressInputPanel({
+  initialInput = '',
+  onChange,
+  onError
+}: {
+  initialInput?: string
+  onChange: (val: { address: string; name?: string }) => void
+  onError: (error: boolean, input: string) => void
+}) {
+  const { chainId, library } = useWeb3React()
   const theme = useContext(ThemeContext)
 
   const [input, setInput] = useState(initialInput ? initialInput : '')

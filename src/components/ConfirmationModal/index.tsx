@@ -92,7 +92,7 @@ function ConfirmationModal({
               {pendingConfirmation ? (
                 <Loader size="90px" />
               ) : (
-                <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.blue1} />
+                <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary1} />
               )}
             </ConfirmedIcon>
             <AutoColumn gap="12px" justify={'center'}>
@@ -107,7 +107,7 @@ function ConfirmationModal({
               {!pendingConfirmation && (
                 <>
                   <Link href={getEtherscanLink(chainId, hash, 'transaction')}>
-                    <Text fontWeight={500} fontSize={14} color={theme.blue1}>
+                    <Text fontWeight={500} fontSize={14} color={theme.primary1}>
                       View on Etherscan
                     </Text>
                   </Link>

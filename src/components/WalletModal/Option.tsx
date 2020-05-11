@@ -88,16 +88,16 @@ const IconWrapper = styled.div<{ size?: number }>`
 `
 
 export default function Option({
-                                 link = null,
-                                 clickable = true,
-                                 size = null,
-                                 onClick = null,
-                                 color,
-                                 header,
-                                 subheader = null,
-                                 icon,
-                                 active = false
-                               }) {
+  link = null,
+  clickable = true,
+  size = null,
+  onClick = null,
+  color,
+  header,
+  subheader = null,
+  icon,
+  active = false
+}) {
   const content = (
     <OptionCardClickable onClick={onClick} clickable={clickable && !active} active={active}>
       <OptionCardLeft>
@@ -106,7 +106,7 @@ export default function Option({
           {active ? (
             <CircleWrapper>
               <GreenCircle>
-                <div/>
+                <div />
               </GreenCircle>
             </CircleWrapper>
           ) : (
@@ -117,7 +117,7 @@ export default function Option({
         {subheader && <SubHeader>{subheader}</SubHeader>}
       </OptionCardLeft>
       <IconWrapper size={size}>
-        <img src={icon} alt={'Icon'}/>
+        <img src={icon} alt={'Icon'} />
       </IconWrapper>
     </OptionCardClickable>
   )

@@ -62,7 +62,7 @@ const Popup = styled.div`
   `}
 `
 
-export default function QuestionHelper({ text }) {
+export default function QuestionHelper({ text }: { text: string }) {
   const [showPopup, setPopup] = useState(false)
 
   return (

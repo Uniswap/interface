@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === 'production') {
 
 ReactGA.pageview(window.location.pathname + window.location.search)
 
-function ContextProviders({ children }) {
+function ContextProviders({ children }: { children: React.ReactNode }) {
   return (
     <LocalStorageContextProvider>
       <ApplicationContextProvider>

@@ -24,5 +24,5 @@ export default function Identicon() {
     }
   }, [account])
 
-  return <StyledIdenticon ref={ref}/>
+  return <StyledIdenticon ref={ref} />
 }

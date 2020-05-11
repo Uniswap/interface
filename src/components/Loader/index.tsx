@@ -11,5 +11,5 @@ const SpinnerWrapper = styled(Spinner)<{ size: string }>`
 `
 
 export default function Loader({ size }: { size: string }) {
-  return <SpinnerWrapper src={Circle} alt="loader" size={size}/>
+  return <SpinnerWrapper src={Circle} alt="loader" size={size} />
 }

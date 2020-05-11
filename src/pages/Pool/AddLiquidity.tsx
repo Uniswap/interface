@@ -30,6 +30,8 @@ import { useTransactionAdder, usePendingApproval } from '../../contexts/Transact
 import { ROUTER_ADDRESS } from '../../constants'
 import { getRouterContract, calculateGasMargin, isWETH } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
+import { useLocalStorageTokens } from '../../contexts/LocalStorage'
+import { useAllTokens } from '../../contexts/Tokens'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = 50
@@ -183,6 +185,30 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
     [Field.OUTPUT]: useToken(fieldData[Field.OUTPUT].address)
   }
 
+  // ensure input + output tokens are added to localstorage
+  const [, { fetchTokenByAddress, addToken }] = useLocalStorageTokens()
+  const allTokens = useAllTokens()
+  const inputTokenAddress = fieldData[Field.INPUT].address
+  useEffect(() => {
+    if (inputTokenAddress && !Object.keys(allTokens).some(tokenAddress => tokenAddress === inputTokenAddress)) {
+      fetchTokenByAddress(inputTokenAddress).then(token => {
+        if (token !== null) {
+          addToken(token)
+        }
+      })
+    }
+  }, [inputTokenAddress, allTokens, fetchTokenByAddress, addToken])
+  const outputTokenAddress = fieldData[Field.OUTPUT].address
+  useEffect(() => {
+    if (outputTokenAddress && !Object.keys(allTokens).some(tokenAddress => tokenAddress === outputTokenAddress)) {
+      fetchTokenByAddress(outputTokenAddress).then(token => {
+        if (token !== null) {
+          addToken(token)
+        }
+      })
+    }
+  }, [outputTokenAddress, allTokens, fetchTokenByAddress, addToken])
+
   // token contracts for approvals and direct sends
   const tokenContractInput: Contract = useTokenContract(tokens[Field.INPUT]?.address)
   const tokenContractOutput: Contract = useTokenContract(tokens[Field.OUTPUT]?.address)
@@ -226,11 +252,15 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           newNonRelationalAmounts[Field.INPUT] = null
         }
       } else {
-        const typedValueParsed = parseUnits(typedValue, tokens[independentField].decimals).toString()
-        if (independentField === Field.OUTPUT) {
-          newNonRelationalAmounts[Field.OUTPUT] = new TokenAmount(tokens[independentField], typedValueParsed)
-        } else {
-          newNonRelationalAmounts[Field.INPUT] = new TokenAmount(tokens[independentField], typedValueParsed)
+        try {
+          const typedValueParsed = parseUnits(typedValue, tokens[independentField].decimals).toString()
+          if (independentField === Field.OUTPUT) {
+            newNonRelationalAmounts[Field.OUTPUT] = new TokenAmount(tokens[independentField], typedValueParsed)
+          } else {
+            newNonRelationalAmounts[Field.INPUT] = new TokenAmount(tokens[independentField], typedValueParsed)
+          }
+        } catch (error) {
+          console.log(error)
         }
       }
       setNonrelationalAmounts(newNonRelationalAmounts)
@@ -678,7 +708,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
     )
   }
 
-  const pendingText: string = `Supplying ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${
+  const pendingText = `Supplying ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${
     tokens[Field.INPUT]?.symbol
   } ${'and'} ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}`
 

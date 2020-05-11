@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { TokenAmount, JSBI, Token, Pair } from '@uniswap/sdk'
 
 import Row from '../Row'
@@ -21,7 +21,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useAddressBalance } from '../../contexts/Balances'
 import { usePair, useAllPairs } from '../../contexts/Pairs'
 
-function PoolFinder({ history }) {
+function PoolFinder({ history }: RouteComponentProps) {
   const Fields = {
     TOKEN0: 0,
     TOKEN1: 1
@@ -72,7 +72,7 @@ function PoolFinder({ history }) {
           </Text>
           <Row>
             <DoubleTokenLogo a0={token0Address || ''} a1={token1Address || ''} margin={true} />
-            <Text fontSize={16} fotnWeight={500}>
+            <Text fontSize={16} fontWeight={500}>
               UNI {token0?.symbol} / {token1?.symbol}
             </Text>
           </Row>

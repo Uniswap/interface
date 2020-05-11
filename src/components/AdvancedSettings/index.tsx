@@ -10,14 +10,14 @@ import { ButtonRadio } from '../Button'
 import { useTranslation } from 'react-i18next'
 import Row, { RowBetween, RowFixed } from '../Row'
 
-const InputWrapper = styled(RowBetween)`
+const InputWrapper = styled(RowBetween)<{ active?: boolean; error?: boolean }>`
   width: 200px;
   background-color: ${({ theme }) => theme.bg1};
   border-radius: 8px;
   padding: 4px 8px;
   border: 1px solid transparent;
   border: ${({ active, error, theme }) =>
-  error ? '1px solid ' + theme.red1 : active ? '1px solid ' + theme.blue1 : ''};
+    error ? '1px solid ' + theme.red1 : active ? '1px solid ' + theme.blue1 : ''};
 `
 
 const SLIPPAGE_INDEX = {
@@ -34,7 +34,12 @@ interface AdvancedSettingsProps {
   setAllowedSlippage: (number) => void
 }
 
-export default function AdvancedSettings({ setIsOpen, setDeadline, allowedSlippage, setAllowedSlippage }: AdvancedSettingsProps) {
+export default function AdvancedSettings({
+  setIsOpen,
+  setDeadline,
+  allowedSlippage,
+  setAllowedSlippage
+}: AdvancedSettingsProps) {
   // text translation
   const { t } = useTranslation()
 
@@ -78,7 +83,7 @@ export default function AdvancedSettings({ setIsOpen, setDeadline, allowedSlippa
       setActiveIndex(3)
     } else {
       setActiveIndex(4)
-      setSlippageInput('' + (allowedSlippage / 100))
+      setSlippageInput('' + allowedSlippage / 100)
       parseCustomInput(allowedSlippage)
     }
   }, [allowedSlippage, parseCustomInput])
@@ -94,13 +99,12 @@ export default function AdvancedSettings({ setIsOpen, setDeadline, allowedSlippa
       </Link>
       <RowBetween>
         <TYPE.main>Front-running tolerance</TYPE.main>
-        <QuestionHelper text={t('toleranceExplanation')}/>
+        <QuestionHelper text={t('toleranceExplanation')} />
       </RowBetween>
       <Row>
         <ButtonRadio
           active={SLIPPAGE_INDEX[1] === activeIndex}
           padding="4px 6px"
-          borderRadius="8px"
           style={{ marginRight: '16px' }}
           width={'60px'}
           onClick={() => {
@@ -113,7 +117,6 @@ export default function AdvancedSettings({ setIsOpen, setDeadline, allowedSlippa
         <ButtonRadio
           active={SLIPPAGE_INDEX[2] === activeIndex}
           padding="4px 6px"
-          borderRadius="8px"
           style={{ marginRight: '16px' }}
           width={'180px'}
           onClick={() => {
@@ -126,7 +129,6 @@ export default function AdvancedSettings({ setIsOpen, setDeadline, allowedSlippa
         <ButtonRadio
           active={SLIPPAGE_INDEX[3] === activeIndex}
           padding="4px"
-          borderRadius="8px"
           width={'60px'}
           onClick={() => {
             setActiveIndex(SLIPPAGE_INDEX[3])
@@ -145,7 +147,7 @@ export default function AdvancedSettings({ setIsOpen, setDeadline, allowedSlippa
               parseCustomInput(val)
               setActiveIndex(SLIPPAGE_INDEX[4])
             }}
-            placeHolder="Custom"
+            placeholder="Custom"
             onClick={() => {
               setActiveIndex(SLIPPAGE_INDEX[4])
               if (slippageInput) {

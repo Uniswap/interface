@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { JSBI } from '@uniswap/sdk'
-import { withRouter } from 'react-router-dom'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
 
 import Question from '../../components/Question'
 import SearchModal from '../../components/SearchModal'
@@ -29,7 +29,7 @@ const FixedBottom = styled.div`
   width: 100%;
 `
 
-function Supply({ history }) {
+function Supply({ history }: RouteComponentProps) {
   const { account } = useWeb3React()
   const [showPoolSearch, setShowPoolSearch] = useState(false)
 
@@ -42,7 +42,7 @@ function Supply({ history }) {
   useAccountLPBalances(account)
 
   const filteredExchangeList = Object.keys(allPairs)
-    .filter((pairAddress, i) => {
+    .filter(pairAddress => {
       return (
         allBalances &&
         allBalances[account] &&
@@ -64,6 +64,7 @@ function Supply({ history }) {
   return (
     <AutoColumn gap="lg" justify="center">
       <ButtonPrimary
+        id="join-pool-button"
         padding="16px"
         onClick={() => {
           setShowPoolSearch(true)
@@ -95,6 +96,7 @@ function Supply({ history }) {
           <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
             {filteredExchangeList?.length !== 0 ? `Don't see a pool you joined? ` : 'Already joined a pool? '}{' '}
             <Link
+              id="import-pool-link"
               onClick={() => {
                 history.push('/find')
               }}
