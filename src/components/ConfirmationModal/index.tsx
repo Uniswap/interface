@@ -118,7 +118,6 @@ function ConfirmationModal({
                   </ButtonPrimary>
                 </>
               )}
-              {/* {pendingConfirmation && <div style={{ height: '138px' }} />} */}
               <Text fontSize={12} color="#565A69" textAlign="center">
                 {pendingConfirmation
                   ? 'Confirm this transaction in your wallet'

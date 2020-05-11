@@ -94,7 +94,6 @@ const Blurb = styled.div`
 
 const OptionGrid = styled.div`
   display: grid;
-  /* grid-template-columns: 1fr 1fr; */
   grid-gap: 10px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;

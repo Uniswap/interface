@@ -7,8 +7,6 @@ import { useWeb3React, useDebounce } from '../../hooks'
 import { Link, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
-// import { ButtonSecondary } from '../Button'
-// import { Send } from 'react-feather'
 import { getEtherscanLink } from '../../utils'
 
 const InputPanel = styled.div`
@@ -46,7 +44,6 @@ const Input = styled.input<{ error?: boolean }>`
   text-overflow: ellipsis;
   font-weight: 500;
   width: 100%;
-  /* padding: 0.5rem 0; */
   ::placeholder {
     color: ${({ theme }) => theme.text4};
   }
@@ -193,13 +190,13 @@ export default function AddressInputPanel({
               <TYPE.black color={theme.text2} fontWeight={500} fontSize={14}>
                 Recipient
               </TYPE.black>
-              {data.address && (
-                <Link href={getEtherscanLink(chainId, data.address, 'address')} style={{ fontSize: '14px' }}>
+
+              {data.name ? (
+                <Link href={getEtherscanLink(chainId, data.name, 'address')} style={{ fontSize: '14px' }}>
                   (View on Etherscan)
                 </Link>
-              )}
-              {data.name && (
-                <Link href={getEtherscanLink(chainId, data.name, 'address')} style={{ fontSize: '14px' }}>
+              ) : (
+                <Link href={getEtherscanLink(chainId, data.address, 'address')} style={{ fontSize: '14px' }}>
                   (View on Etherscan)
                 </Link>
               )}
@@ -221,15 +218,6 @@ export default function AddressInputPanel({
           </AutoColumn>
         </InputContainer>
       </ContainerRow>
-      {/* 
-      {input !== '' && !error && (
-        <AutoColumn gap="md" justify="center">
-          <ButtonSecondary width={'fit-content'}>
-            <Send size={14} />
-            Send as request
-          </ButtonSecondary>
-        </AutoColumn>
-      )} */}
     </InputPanel>
   )
 }

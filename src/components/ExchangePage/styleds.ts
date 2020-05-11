@@ -104,26 +104,22 @@ export const StyledBalanceMaxMini = styled.button<{ active?: boolean }>`
   background-color: ${({ theme }) => theme.bg2};
   border: none;
   border-radius: 50%;
-  padding: .2rem;
+  padding: 0.2rem;
   font-size: 0.875rem;
   font-weight: 400;
-  margin-left: .4rem;
+  margin-left: 0.4rem;
   cursor: pointer;
   color: ${({ theme }) => theme.text2};
   display: flex;
   justify-content: center;
   align-items: center;
-  /* width: fit-content; */
   float: right;
 
   :hover {
     background-color: ${({ theme }) => theme.bg3};
-
-    /* border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.primary4)}; */
   }
   :focus {
     background-color: ${({ theme }) => theme.bg3};
-    /* border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.primary4)}; */
     outline: none;
   }
 `

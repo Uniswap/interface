@@ -386,9 +386,7 @@ function SearchModal({
               <DoubleTokenLogo a0={token0?.address || ''} a1={token1?.address || ''} size={24} margin={true} />
               <Text fontWeight={500} fontSize={16}>{`${token0?.symbol}/${token1?.symbol}`}</Text>
             </RowFixed>
-            {/* <Text fontWeight={500} fontSize={16}>
-              {balance ? balance.toString() : '-'}
-            </Text> */}
+
             <ButtonPrimary
               padding={'6px 8px'}
               width={'fit-content'}

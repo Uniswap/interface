@@ -723,7 +723,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           <RowBetween align="flex-end">
             <TruncatedText fontSize={24} fontWeight={500}>
               {!!formattedAmounts[Field.INPUT] && formattedAmounts[Field.INPUT]}
-              {/* {!!slippageAdjustedAmounts[Field.INPUT] && slippageAdjustedAmounts[Field.INPUT].toSignificant(6)} */}
             </TruncatedText>
             <RowFixed gap="4px">
               <TokenLogo address={tokens[Field.INPUT]?.address} size={'24px'} />
@@ -738,8 +737,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           <RowBetween align="flex-end">
             <TruncatedText fontSize={24} fontWeight={500} color={warningHigh ? theme.red1 : ''}>
               {!!formattedAmounts[Field.OUTPUT] && formattedAmounts[Field.OUTPUT]}
-
-              {/* {!!slippageAdjustedAmounts[Field.OUTPUT] && slippageAdjustedAmounts[Field.OUTPUT].toSignificant(6)} */}
             </TruncatedText>
             <RowFixed gap="4px">
               <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'24px'} />
@@ -1375,14 +1372,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                   </AutoColumn>
                 </YellowCard>
               )}
-              {/* <BalanceCard
-                token0={tokens[Field.INPUT]}
-                token1={tokens[Field.OUTPUT]}
-                import0={importedTokenInput}
-                balance0={userBalances[Field.INPUT]}
-                balance1={userBalances[Field.OUTPUT]}
-                import1={importedTokenOutput}
-              /> */}
+           
             </AutoColumn>
           </FixedBottom>
         </AdvancedDropwdown>

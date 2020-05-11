@@ -632,7 +632,6 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
               </ClickableText>
             </RowBetween>
             <Row style={{ alignItems: 'flex-end' }}>
-              {/* <CustomNumericalInput value={percentageInput} onUserInput={input => handlePresetPercentage(input)} /> */}
               <Text fontSize={72} fontWeight={500}>
                 {derivedPerecent ? (parseInt(derivedPerecent) < 1 ? '<1' : derivedPerecent) : '0'}%
               </Text>
