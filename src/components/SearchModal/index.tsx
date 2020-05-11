@@ -16,10 +16,9 @@ import DoubleTokenLogo from '../DoubleLogo'
 import Column, { AutoColumn } from '../Column'
 import { Text } from 'rebass'
 import { Hover } from '../../theme'
-import { ArrowLeft, X } from 'react-feather'
+import { ArrowLeft } from 'react-feather'
 import { CloseIcon } from '../../theme/components'
-import { ColumnCenter } from '../Column'
-import { ButtonPrimary } from '../../components/Button'
+import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { Spinner, TYPE } from '../../theme'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 
@@ -48,8 +47,8 @@ const ItemList = styled.div`
   -webkit-overflow-scrolling: touch;
 `
 
-const FadedSpan = styled.span`
-  color: ${({ theme }) => theme.blue1};
+const FadedSpan = styled(RowFixed)`
+  color: ${({ theme }) => theme.primary1};
   font-size: 14px;
 `
 
@@ -74,10 +73,13 @@ const Input = styled.input`
   background: none;
   border: none;
   outline: none;
-  border: 1px solid ${({ theme }) => theme.bg2};
   box-sizing: border-box;
   border-radius: 20px;
   color: ${({ theme }) => theme.text1};
+  border-style: solid;
+  border: 1px solid ${({ theme }) => theme.bg3};
+  -webkit-appearance: none;
+
   font-size: 18px;
 
   ::placeholder {
@@ -383,9 +385,7 @@ function SearchModal({
               <DoubleTokenLogo a0={token0?.address || ''} a1={token1?.address || ''} size={24} margin={true} />
               <Text fontWeight={500} fontSize={16}>{`${token0?.symbol}/${token1?.symbol}`}</Text>
             </RowFixed>
-            {/* <Text fontWeight={500} fontSize={16}>
-              {balance ? balance.toString() : '-'}
-            </Text> */}
+
             <ButtonPrimary
               padding={'6px 8px'}
               width={'fit-content'}
@@ -395,7 +395,7 @@ function SearchModal({
                 onDismiss()
               }}
             >
-              {balance ? (zeroBalance ? 'Join' : 'Manage') : 'Join'}
+              {balance ? (zeroBalance ? 'Join' : 'Add Liquidity') : 'Join'}
             </ButtonPrimary>
           </MenuItem>
         )
@@ -484,10 +484,11 @@ function SearchModal({
                     {otherSelectedTokenAddress === address && <GreySpan> ({otherSelectedText})</GreySpan>}
                   </Text>
                   <FadedSpan>
-                    {urlAdded && '(Added by URL)'} {customAdded && '(Added by user)'}
+                    <TYPE.blue fontWeight={500}>
+                      {urlAdded && '(Added by URL)'} {customAdded && 'Added by user'}
+                    </TYPE.blue>
                     {customAdded && (
-                      <X
-                        style={{ transform: 'scale(0.8)' }}
+                      <div
                         onClick={event => {
                           event.stopPropagation()
                           if (searchQuery === address) {
@@ -495,7 +496,9 @@ function SearchModal({
                           }
                           removeTokenByAddress(chainId, address)
                         }}
-                      />
+                      >
+                        <StyledLink style={{ marginLeft: '4px', fontWeight: 400 }}>(Remove)</StyledLink>
+                      </div>
                     )}
                   </FadedSpan>
                 </Column>
@@ -504,11 +507,11 @@ function SearchModal({
                 {balance ? (
                   <Text>
                     {zeroBalance && showSendWithSwap ? (
-                      <ColumnCenter style={{ backgroundColor: theme.bg2, padding: '8px', borderRadius: '12px' }}>
-                        <Text textAlign="center" fontWeight={500} color={theme.blue1}>
+                      <ButtonSecondary padding={'4px 8px'}>
+                        <Text textAlign="center" fontWeight={500} fontSize={14} color={theme.primary1}>
                           Send With Swap
                         </Text>
-                      </ColumnCenter>
+                      </ButtonSecondary>
                     ) : balance ? (
                       balance.toSignificant(6)
                     ) : (

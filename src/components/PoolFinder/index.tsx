@@ -114,7 +114,7 @@ function PoolFinder({ history }: RouteComponentProps) {
         )}
         {position ? (
           !JSBI.equal(position.raw, JSBI.BigInt(0)) ? (
-            <PositionCard pair={pair} minimal={true} border="1px solid #EDEEF2" />
+            <PositionCard pair={pair} minimal={true} border="1px solid #CED0D9" />
           ) : (
             <LightCard padding="45px 10px">
               <AutoColumn gap="sm" justify="center">

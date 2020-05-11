@@ -55,7 +55,6 @@ const Popup = styled.div`
 
   color: ${({ theme }) => theme.text2};
   font-weight: 400;
-  /* font-style: italic; */
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     left: -20px;

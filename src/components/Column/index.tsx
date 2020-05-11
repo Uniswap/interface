@@ -12,7 +12,7 @@ export const ColumnCenter = styled(Column)`
 
 export const AutoColumn = styled.div<{
   gap?: 'sm' | 'md' | 'lg' | string
-  justify?: 'stretch' | 'center' | 'start' | 'end' | 'flex-start' | 'flex-end'
+  justify?: 'stretch' | 'center' | 'start' | 'end' | 'flex-start' | 'flex-end' | 'space-between'
 }>`
   display: grid;
   grid-auto-rows: auto;

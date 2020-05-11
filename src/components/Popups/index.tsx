@@ -1,5 +1,5 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import { useMediaLayout } from 'use-media'
 
 import { X } from 'react-feather'
@@ -41,7 +41,7 @@ const FixedPopupColumn = styled(AutoColumn)`
   position: absolute;
   top: 112px;
   right: 1rem;
-  width: 355px;
+  width: 220px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
@@ -53,7 +53,7 @@ const Popup = styled.div`
   width: 100%;
   padding: 1em;
   box-sizing: border-box;
-  background-color: white;
+  background-color: ${({ theme }) => theme.advancedBG};
   position: relative;
   border-radius: 10px;
   padding: 20px;
@@ -67,6 +67,7 @@ const Popup = styled.div`
 `
 
 export default function App() {
+  const theme = useContext(ThemeContext)
   // get all popups
   const [activePopups, , removePopup] = usePopups()
 
@@ -79,7 +80,7 @@ export default function App() {
         {activePopups.map(item => {
           return (
             <Popup key={item.key}>
-              <StyledClose color="#888D9B" onClick={() => removePopup(item.key)} />
+              <StyledClose color={theme.text2} onClick={() => removePopup(item.key)} />
               {React.cloneElement(item.content, { popKey: item.key })}
             </Popup>
           )
@@ -98,7 +99,7 @@ export default function App() {
             .map(item => {
               return (
                 <Popup key={item.key}>
-                  <StyledClose color="#888D9B" onClick={() => removePopup(item.key)} />
+                  <StyledClose color={theme.text2} onClick={() => removePopup(item.key)} />
                   {React.cloneElement(item.content, { popKey: item.key })}
                 </Popup>
               )

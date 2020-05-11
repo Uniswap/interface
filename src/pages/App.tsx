@@ -37,7 +37,6 @@ const BodyWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   box-sizing: border-box;
-  /* justify-content: center; */
   padding-top: 160px;
   align-items: center;
   flex: 1;
@@ -76,7 +75,7 @@ const Body = styled.div`
 const StyledRed = styled.div`
   width: 100%;
   height: 200vh;
-  background: ${({ theme }) => `radial-gradient(50% 50% at 50% 50%, ${theme.pink2} 0%, ${theme.bg1} 100%)`};
+  background: ${({ theme }) => `radial-gradient(50% 50% at 50% 50%, ${theme.primary1} 0%, ${theme.bg1} 100%)`};
   position: absolute;
   top: 0px;
   left: 0px;
