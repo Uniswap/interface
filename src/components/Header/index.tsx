@@ -131,6 +131,33 @@ const MigrateBanner = styled(AutoColumn)`
   `};
 `
 
+const VersionLabel = styled.span<{ isV2?: boolean }>`
+  padding: 0.15rem 0.5rem 0.16rem 0.45rem;
+  border-radius: 14px;
+  background: ${({ theme, isV2 }) => (isV2 ? theme.primary1 : 'none')};
+  color: ${({ theme, isV2 }) => (isV2 ? theme.white : theme.primary1)};
+  font-size: 0.825rem;
+  font-weight: 400;
+  :hover {
+    user-select: ${({ theme, isV2 }) => (isV2 ? 'none' : 'initial')};
+    background: ${({ theme, isV2 }) => (isV2 ? theme.primary1 : 'none')};
+    color: ${({ theme, isV2 }) => (isV2 ? theme.white : theme.primary3)};
+  }
+`
+
+const VersionToggle = styled.a`
+  border-radius: 16px;
+  border: 1px solid ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.primary1};
+  display: flex;
+  width: fit-content;
+  cursor: pointer;
+  text-decoration: none;
+  :hover {
+    text-decoration: none;
+  }
+`
+
 export default function Header() {
   const { account, chainId } = useWeb3React()
 
@@ -168,7 +195,14 @@ export default function Header() {
               </TitleText>
             )}
           </Title>
-          <TestnetWrapper>{!isMobile && <Alpha>V2</Alpha>}</TestnetWrapper>
+          <TestnetWrapper>
+            {!isMobile && (
+              <VersionToggle target="_self" href="https://v1.uniswap.exchange">
+                <VersionLabel isV2={true}>V2</VersionLabel>
+                <VersionLabel isV2={false}>V1</VersionLabel>
+              </VersionToggle>
+            )}
+          </TestnetWrapper>
         </HeaderElement>
         <HeaderElement>
           <TestnetWrapper>

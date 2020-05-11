@@ -131,7 +131,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 }
 
 const TextWrapper = styled(Text)<{ color: keyof Colors }>`
-  color = ${({ color, theme }) => theme[color]}
+  color: ${({ color, theme }) => theme[color]};
 `
 
 export const TYPE = {
