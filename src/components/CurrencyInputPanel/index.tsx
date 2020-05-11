@@ -28,7 +28,7 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   font-size: 20px;
   font-family: 'Inter';
   font-weight: 500;
-  background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.blue1)};
+  background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.primary1)};
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
   border-radius: 12px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
@@ -40,7 +40,7 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
 
   :focus,
   :hover {
-    background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.blue1))};
+    background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
   }
 `
 
@@ -96,34 +96,34 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 
 const StyledBalanceMax = styled.button`
   height: 28px;
-  background-color: ${({ theme }) => theme.blue5};
-  border: 1px solid ${({ theme }) => theme.blue5};
+  background-color: ${({ theme }) => theme.primary5};
+  border: 1px solid ${({ theme }) => theme.primary5};
   border-radius: 0.5rem;
   font-size: 0.875rem;
 
   font-weight: 500;
   cursor: pointer;
   margin-right: 0.5rem;
-  color: ${({ theme }) => theme.buttonSecondaryText};
+  color: ${({ theme }) => theme.primaryText1};
   :hover {
-    border: 1px solid ${({ theme }) => theme.blue1};
+    border: 1px solid ${({ theme }) => theme.primary1};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.blue1};
+    border: 1px solid ${({ theme }) => theme.primary1};
     outline: none;
   }
 `
 // const StyledBalanceMaxMini = styled.button`
 //   height: 24px;
-//   background-color: ${({ theme, active }) => (active ? theme.blue5 : theme.bg2)};
-//   border: 1px solid ${({ theme }) => theme.blue5};
+//   background-color: ${({ theme, active }) => (active ? theme.primary5 : theme.bg2)};
+//   border: 1px solid ${({ theme }) => theme.primary5};
 //   border-radius: 0.5rem;
 //   font-size: 0.875rem;
 //   font-weight: 500;
 //   cursor: pointer;
 
 //   pointer-events: ${({ active }) => (active ? 'initial' : 'none')};
-//   color: ${({ theme, active }) => (active ? theme.blue1 : theme.text4)};
+//   color: ${({ theme, active }) => (active ? theme.primary1 : theme.text4)};
 
 //   :hover {
 //     border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};

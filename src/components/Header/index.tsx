@@ -99,7 +99,7 @@ const Alpha = styled(GreyCard)`
   margin-right: 10px;
   border-radius: 12px;
   padding: 3px 7px;
-  background-color: ${({ theme }) => theme.pink2};
+  background-color: ${({ theme }) => theme.primary1};
   color: ${({ theme }) => theme.white};
   font-size: 12px;
   font-weight: 600;
@@ -117,12 +117,12 @@ const MigrateBanner = styled(AutoColumn)`
   padding: 12px 0;
   display: flex;
   justify-content: center;
-  background-color: ${({ theme }) => theme.pink3};
-  color: ${({ theme }) => theme.buttonSecondaryText};
+  background-color: ${({ theme }) => theme.primary5};
+  color: ${({ theme }) => theme.primaryText1};
   font-weight: 400;
   text-align: center;
   a {
-    color: ${({ theme }) => theme.buttonSecondaryText};
+    color: ${({ theme }) => theme.primaryText1};
   }
 
   ${({ theme }) => theme.mediaWidth.upToSmall`

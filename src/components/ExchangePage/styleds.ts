@@ -80,20 +80,20 @@ export const MaxButton = styled.button`
   position: absolute;
   right: 70px;
   padding: 0.25rem 0.35rem;
-  background-color: ${({ theme }) => theme.blue5};
-  border: 1px solid ${({ theme }) => theme.blue5};
+  background-color: ${({ theme }) => theme.primary5};
+  border: 1px solid ${({ theme }) => theme.primary5};
   border-radius: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
   text-transform: uppercase;
   cursor: pointer;
   margin-right: 0.5rem;
-  color: ${({ theme }) => theme.buttonSecondaryText};
+  color: ${({ theme }) => theme.primaryText1};
   :hover {
-    border: 1px solid ${({ theme }) => theme.blue1};
+    border: 1px solid ${({ theme }) => theme.primary1};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.blue1};
+    border: 1px solid ${({ theme }) => theme.primary1};
     outline: none;
   }
 `
@@ -119,11 +119,11 @@ export const StyledBalanceMaxMini = styled.button<{ active?: boolean }>`
   :hover {
     background-color: ${({ theme }) => theme.bg3};
 
-    /* border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.blue4)}; */
+    /* border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.primary4)}; */
   }
   :focus {
     background-color: ${({ theme }) => theme.bg3};
-    /* border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.blue4)}; */
+    /* border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.primary4)}; */
     outline: none;
   }
 `

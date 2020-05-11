@@ -12,7 +12,7 @@ const Row = styled(Box)<{ align?: string; padding?: string; border?: string; bor
   border-radius: ${({ borderRadius }) => borderRadius};
 `
 
-export const RowBetween = styled(Row)`
+export const RowBetween = styled(Row)<{ align?: string; padding?: string; border?: string; borderRadius?: string }>`
   justify-content: space-between;
 `
 
@@ -31,8 +31,9 @@ export const AutoRow = styled(Row)<{ gap?: string; justify?: string }>`
   }
 `
 
-export const RowFixed = styled(Row)`
+export const RowFixed = styled(Row)<{ gap?: string; justify?: string }>`
   width: fit-content;
+  margin: ${({ gap }) => gap && `-${gap}`};
 `
 
 export default Row
