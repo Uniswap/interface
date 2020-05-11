@@ -124,9 +124,11 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
       ? false
       : darkMode
     : darkMode
+
   useEffect(() => {
-    toggleDarkMode(themeToRender)
+    themeURL && toggleDarkMode(themeToRender)
   }, [toggleDarkMode, themeToRender])
+
   return <StyledComponentsThemeProvider theme={theme(themeToRender)}>{children}</StyledComponentsThemeProvider>
 }
 
