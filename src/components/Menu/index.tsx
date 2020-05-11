@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 
 import { Link } from '../../theme'
-import { darken } from 'polished'
 
 import { useToggle } from '../../hooks'
 

@@ -16,13 +16,13 @@ import { ROUTER_ADDRESS } from '../../constants'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useUserAdvanced } from '../../contexts/Application'
 import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
-import { useDarkModeManager, useLocalStorageTokens } from '../../contexts/LocalStorage'
+import { useLocalStorageTokens } from '../../contexts/LocalStorage'
 import { usePair } from '../../contexts/Pairs'
 import { useAllTokens, useToken } from '../../contexts/Tokens'
 import { usePendingApproval, useTransactionAdder } from '../../contexts/Transactions'
 import { useTokenContract, useWeb3React } from '../../hooks'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
-import { Hover, theme, TYPE } from '../../theme'
+import { Hover, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
 import {
   calculateGasMargin,
@@ -566,7 +566,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   const advanced = useUserAdvanced()
-  const [isDark] = useDarkModeManager()
 
   useEffect(() => {
     // reset errors

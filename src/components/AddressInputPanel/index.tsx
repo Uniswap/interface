@@ -7,8 +7,8 @@ import { useWeb3React, useDebounce } from '../../hooks'
 import { Link, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
-import { ButtonSecondary } from '../Button'
-import { Send } from 'react-feather'
+// import { ButtonSecondary } from '../Button'
+// import { Send } from 'react-feather'
 import { getEtherscanLink } from '../../utils'
 
 const InputPanel = styled.div`
@@ -18,7 +18,6 @@ const InputPanel = styled.div`
   background-color: ${({ theme }) => theme.bg1};
   z-index: 1;
   width: 100%;
-  /* height: 60px; */
 `
 
 const ContainerRow = styled.div<{ error: boolean }>`
@@ -26,7 +25,6 @@ const ContainerRow = styled.div<{ error: boolean }>`
   justify-content: center;
   align-items: center;
   border-radius: 1.25rem;
-  /* height: 60px; */
   border: 1px solid ${({ error, theme }) => (error ? theme.red1 : theme.bg2)};
   background-color: ${({ theme }) => theme.bg1};
 `

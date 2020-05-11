@@ -9,7 +9,7 @@ import { Link } from '../../theme'
 import { Text } from 'rebass'
 import { WETH } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
-import { YellowCard, GreyCard } from '../Card'
+import { YellowCard } from '../Card'
 import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
@@ -92,16 +92,6 @@ const NetworkCard = styled(YellowCard)`
   margin-right: 10px;
   border-radius: 12px;
   padding: 8px 12px;
-`
-const Alpha = styled(GreyCard)`
-  width: fit-content;
-  margin-right: 10px;
-  border-radius: 12px;
-  padding: 3px 7px;
-  background-color: ${({ theme }) => theme.primary1};
-  color: ${({ theme }) => theme.white};
-  font-size: 12px;
-  font-weight: 600;
 `
 
 const UniIcon = styled.div<{ href: string }>`
