@@ -3,14 +3,16 @@ import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
 import { Web3ReactProvider, createWeb3ReactRoot } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
+import { Provider } from 'react-redux'
 
 import { NetworkContextName } from './constants'
 import { isMobile } from 'react-device-detect'
 import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage'
-import ApplicationContextProvider, { Updater as ApplicationContextUpdater } from './contexts/Application'
 import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
 import BalancesContextProvider, { Updater as BalancesContextUpdater } from './contexts/Balances'
 import App from './pages/App'
+import store from './state'
+import { Updater as ApplicationContextUpdater } from './state/application/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import './i18n'
 
@@ -36,11 +38,9 @@ ReactGA.pageview(window.location.pathname + window.location.search)
 function ContextProviders({ children }: { children: React.ReactNode }) {
   return (
     <LocalStorageContextProvider>
-      <ApplicationContextProvider>
-        <TransactionContextProvider>
-          <BalancesContextProvider>{children}</BalancesContextProvider>
-        </TransactionContextProvider>
-      </ApplicationContextProvider>
+      <TransactionContextProvider>
+        <BalancesContextProvider>{children}</BalancesContextProvider>
+      </TransactionContextProvider>
     </LocalStorageContextProvider>
   )
 }
@@ -61,15 +61,17 @@ ReactDOM.render(
     <FixedGlobalStyle />
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3ProviderNetwork getLibrary={getLibrary}>
-        <ContextProviders>
-          <Updaters />
-          <ThemeProvider>
-            <>
-              <ThemedGlobalStyle />
-              <App />
-            </>
-          </ThemeProvider>
-        </ContextProviders>
+        <Provider store={store}>
+          <ContextProviders>
+            <Updaters />
+            <ThemeProvider>
+              <>
+                <ThemedGlobalStyle />
+                <App />
+              </>
+            </ThemeProvider>
+          </ContextProviders>
+        </Provider>
       </Web3ProviderNetwork>
     </Web3ReactProvider>
   </>,

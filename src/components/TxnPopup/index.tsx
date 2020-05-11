@@ -3,10 +3,10 @@ import React, { useState } from 'react'
 import { AlertCircle, CheckCircle } from 'react-feather'
 
 import styled from 'styled-components'
-import { usePopups } from '../../contexts/Application'
 
 import { useWeb3React } from '../../hooks'
 import useInterval from '../../hooks/useInterval'
+import { usePopups } from '../../state/application/hooks'
 import { TYPE } from '../../theme'
 
 import { Link } from '../../theme/components'
@@ -35,7 +35,7 @@ export default function TxnPopup({
   hash: string
   success?: boolean
   summary?: string
-  popKey?: number
+  popKey?: string
 }) {
   const { chainId } = useWeb3React()
   const [count, setCount] = useState(1)

@@ -1,9 +1,7 @@
 import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
 
-import TxnPopup from '../components/TxnPopup'
-
 import { useWeb3React } from '../hooks'
-import { useBlockNumber, usePopups } from './Application'
+import { useBlockNumber, usePopups } from '../state/application/hooks'
 
 const ADD = 'ADD'
 const CHECK = 'CHECK'
@@ -140,23 +138,17 @@ export function Updater() {
                   finalize(chainId, hash, receipt)
                   // add success or failure popup
                   if (receipt.status === 1) {
-                    addPopup(
-                      <TxnPopup
-                        popKey={1}
-                        hash={hash}
-                        success={true}
-                        summary={allTransactions[hash]?.response?.summary}
-                      />
-                    )
+                    addPopup({
+                      txn: {
+                        hash,
+                        success: true,
+                        summary: allTransactions[hash]?.response?.summary
+                      }
+                    })
                   } else {
-                    addPopup(
-                      <TxnPopup
-                        popKey={2}
-                        hash={hash}
-                        success={false}
-                        summary={allTransactions[hash]?.response?.summary}
-                      />
-                    )
+                    addPopup({
+                      txn: { hash, success: false, summary: allTransactions[hash]?.response?.summary }
+                    })
                   }
                 }
               }

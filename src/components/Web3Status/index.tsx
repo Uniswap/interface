@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import { darken, lighten } from 'polished'
 import { Activity } from 'react-feather'
+import { useWalletModalToggle } from '../../state/application/hooks'
 
 import Identicon from '../Identicon'
 import PortisIcon from '../../assets/images/portisIcon.png'
@@ -21,7 +22,6 @@ import { useENSName } from '../../hooks'
 import { shortenAddress } from '../../utils'
 import { useAllTransactions } from '../../contexts/Transactions'
 import { NetworkContextName } from '../../constants'
-import { useWalletModalToggle } from '../../contexts/Application'
 import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
 
 const SpinnerWrapper = styled(Spinner)`
