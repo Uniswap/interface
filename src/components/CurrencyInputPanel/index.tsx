@@ -32,7 +32,6 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
   border-radius: 12px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
-  /* padding: 0px; */
   outline: none;
   cursor: pointer;
   user-select: none;
@@ -118,26 +117,6 @@ const StyledBalanceMax = styled.button`
     margin-right: 0.5rem;
   `};
 `
-// const StyledBalanceMaxMini = styled.button`
-//   height: 24px;
-//   background-color: ${({ theme, active }) => (active ? theme.primary5 : theme.bg2)};
-//   border: 1px solid ${({ theme }) => theme.primary5};
-//   border-radius: 0.5rem;
-//   font-size: 0.875rem;
-//   font-weight: 500;
-//   cursor: pointer;
-
-//   pointer-events: ${({ active }) => (active ? 'initial' : 'none')};
-//   color: ${({ theme, active }) => (active ? theme.primary1 : theme.text4)};
-
-//   :hover {
-//     border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};
-//   }
-//   :focus {
-//     border: 1px solid ${({ theme, active }) => (active ? theme.bg2 : theme.bg1)};
-//     outline: none;
-//   }
-// `
 
 interface CurrencyInputPanelProps {
   value: string
