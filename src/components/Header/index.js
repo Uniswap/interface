@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { Link } from '../../theme'
 import Web3Status from '../Web3Status'
-import { darken, transparentize } from 'polished'
+import { darken } from 'polished'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -33,8 +33,16 @@ const MigrateBanner = styled.div`
     color: ${({ theme }) => theme.inputBackground};
     text-decoration: underline;
   }
+`
 
+const MigrateBannerSmall = styled(MigrateBanner)`
   @media (min-width: 960px) {
+    display: none;
+  }
+`
+
+const MigrateBannerLarge = styled(MigrateBanner)`
+  @media (max-width: 960px) {
     display: none;
   }
 `
@@ -107,31 +115,13 @@ const VersionToggle = styled.a`
   }
 `
 
-const MigrateBannerLarge = styled.div`
-  width: 100%;
-  padding: 12px 0;
-  display: flex;
-  justify-content: center;
-  background-color: ${({ theme }) => theme.uniswapPink};
-  color: ${({ theme }) => theme.inputBackground};
-  font-weight: 400;
-  text-align: center;
-  a {
-    color: ${({ theme }) => theme.inputBackground};
-    text-decoration: underline;
-  }
-  @media (max-width: 960px) {
-    display: none;
-  }
-`
-
 export default function Header() {
   return (
     <HeaderFrame>
-      <MigrateBanner>
+      <MigrateBannerSmall>
         <b>V2 is here!&nbsp;</b> <Link href="https://migrate.uniswap.exchange/">Migrate your liquidity&nbsp;</Link>or{' '}
         <Link href="https://v2.uniswap.exchange"> &nbsp;use V2 ↗</Link>
-      </MigrateBanner>
+      </MigrateBannerSmall>
       <MigrateBannerLarge>
         <b>Uniswap V2 is here!&nbsp;</b> Move your liquidity now using the&nbsp;
         <Link href="https://migrate.uniswap.exchange/">
