@@ -156,7 +156,7 @@ export function Updater() {
       window?.matchMedia('(prefers-color-scheme: dark)')?.removeListener(darkHandler)
       window?.matchMedia('(prefers-color-scheme: light)')?.removeListener(lightHandler)
     }
-  }, [])
+  }, [setDarkMode])
 
   return null
 }
