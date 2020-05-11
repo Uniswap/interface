@@ -846,7 +846,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 warningMedium={warningMedium}
                 warningHigh={warningHigh}
               >
-                {priceSlippage?.toFixed(2) === '0.00' ? '<0.01%' : `${priceSlippage?.toFixed(2)}%` ?? '-'}
+                {priceSlippage?.lessThan(new Percent('1', '10000')) ? '<0.01%' : `${priceSlippage?.toFixed(2)}%` ?? '-'}
               </ErrorText>
             </RowBetween>
             <RowBetween>
@@ -904,7 +904,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             warningMedium={warningMedium}
             warningHigh={warningHigh}
           >
-            {priceSlippage?.toFixed(2) === '0.00' ? '<0.01%' : `${priceSlippage?.toFixed(2)}%` ?? '-'}
+            {priceSlippage?.lessThan(new Percent('1', '10000')) ? '<0.01%' : `${priceSlippage?.toFixed(2)}%` ?? '-'}
           </ErrorText>
           <Text fontWeight={500} fontSize={16} color={theme.text3} pt={1}>
             Price Impact
@@ -1146,7 +1146,9 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     </TYPE.main>
                     <RowFixed>
                       <ErrorText fontWeight={500} fontSize={14} warningMedium={warningMedium} warningHigh={warningHigh}>
-                        {priceSlippage?.toFixed(2) === '0.00' ? '<0.01%' : `${priceSlippage?.toFixed(2)}%` ?? '-'}
+                        {priceSlippage?.lessThan(new Percent('1', '10000'))
+                          ? '<0.01%'
+                          : `${priceSlippage?.toFixed(2)}%` ?? '-'}
                       </ErrorText>
                       <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
                     </RowFixed>
@@ -1274,7 +1276,9 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     warningMedium={warningMedium}
                     warningHigh={warningHigh}
                   >
-                    {priceSlippage?.toFixed(2) === '0.00' ? '<0.01%' : `${priceSlippage?.toFixed(2)}%` ?? '-'}
+                    {priceSlippage?.lessThan(new Percent('1', '10000'))
+                      ? '<0.01%'
+                      : `${priceSlippage?.toFixed(2)}%` ?? '-'}
                   </ErrorText>
                 </RowBetween>
                 <RowBetween>
