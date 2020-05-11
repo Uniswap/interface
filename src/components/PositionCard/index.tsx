@@ -8,12 +8,11 @@ import { useWeb3React } from '@web3-react/core'
 import { useAllBalances } from '../../contexts/Balances'
 import { useTotalSupply } from '../../contexts/Pairs'
 
-import Card from '../Card'
+import Card, { GreyCard } from '../Card'
 import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
 import { Text } from 'rebass'
 import { Link } from '../../theme/components'
-import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../Column'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { ButtonSecondary } from '../Button'
@@ -24,9 +23,9 @@ const FixedHeightRow = styled(RowBetween)`
 `
 
 const HoverCard = styled(Card)`
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.bg2};
   :hover {
-    border: 1px solid ${({ theme }) => darken(0.06, theme.bg3)};
+    border: 1px solid ${({ theme }) => darken(0.06, theme.bg2)};
   }
 `
 

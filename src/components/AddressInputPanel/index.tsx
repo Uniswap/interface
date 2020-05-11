@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
+import React, { useState, useEffect, useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 
 // import QR from '../../assets/svg/QR.svg'
 import { isAddress } from '../../utils'
 import { useWeb3React, useDebounce } from '../../hooks'
+import { Link, TYPE } from '../../theme'
+import { AutoColumn } from '../Column'
+import { RowBetween } from '../Row'
+import { getEtherscanLink } from '../../utils'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -12,7 +16,6 @@ const InputPanel = styled.div`
   background-color: ${({ theme }) => theme.bg1};
   z-index: 1;
   width: 100%;
-  height: 60px;
 `
 
 const ContainerRow = styled.div<{ error: boolean }>`
@@ -20,33 +23,41 @@ const ContainerRow = styled.div<{ error: boolean }>`
   justify-content: center;
   align-items: center;
   border-radius: 1.25rem;
-  height: 60px;
-  border: 1px solid ${({ error, theme }) => (error ? theme.red1 : theme.bg3)};
+  border: 1px solid ${({ error, theme }) => (error ? theme.red1 : theme.bg2)};
   background-color: ${({ theme }) => theme.bg1};
 `
 
 const InputContainer = styled.div`
   flex: 1;
+  padding: 1rem;
 `
 
-const InputRow = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: center;
-  padding: 0.75rem;
-`
-
-const Input = styled.input<{ error: boolean }>`
-  font-size: 1rem;
+const Input = styled.input<{ error?: boolean }>`
+  font-size: 1.25rem;
   outline: none;
   border: none;
   flex: 1 1 auto;
   width: 0;
   background-color: ${({ theme }) => theme.bg1};
-  font-size: 20px;
-  color: ${({ error, theme }) => (error ? theme.red1 : theme.blue1)};
+  color: ${({ error, theme }) => (error ? theme.red1 : theme.primary1)};
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 500;
+  width: 100%;
+  ::placeholder {
+    color: ${({ theme }) => theme.text4};
+  }
+  padding: 0px;
+  -webkit-appearance: textfield;
+
+  ::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
+
+  ::-webkit-outer-spin-button,
+  ::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
 
   ::placeholder {
     color: ${({ theme }) => theme.text4};
@@ -72,7 +83,8 @@ export default function AddressInputPanel({
   onChange: (val: { address: string; name?: string }) => void
   onError: (error: boolean, input: string) => void
 }) {
-  const { library } = useWeb3React()
+  const { chainId, library } = useWeb3React()
+  const theme = useContext(ThemeContext)
 
   const [input, setInput] = useState(initialInput ? initialInput : '')
 
@@ -173,14 +185,29 @@ export default function AddressInputPanel({
     <InputPanel>
       <ContainerRow error={input !== '' && error}>
         <InputContainer>
-          <InputRow>
+          <AutoColumn gap="md">
+            <RowBetween>
+              <TYPE.black color={theme.text2} fontWeight={500} fontSize={14}>
+                Recipient
+              </TYPE.black>
+
+              {data.name ? (
+                <Link href={getEtherscanLink(chainId, data.name, 'address')} style={{ fontSize: '14px' }}>
+                  (View on Etherscan)
+                </Link>
+              ) : (
+                <Link href={getEtherscanLink(chainId, data.address, 'address')} style={{ fontSize: '14px' }}>
+                  (View on Etherscan)
+                </Link>
+              )}
+            </RowBetween>
             <Input
               type="text"
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              placeholder="Recipient Address"
+              placeholder="Wallet Address or ENS name"
               error={input !== '' && error}
               onChange={onInput}
               value={input}
@@ -188,7 +215,7 @@ export default function AddressInputPanel({
             {/* <QRWrapper>
               <img src={QR} alt="" />
             </QRWrapper> */}
-          </InputRow>
+          </AutoColumn>
         </InputContainer>
       </ContainerRow>
     </InputPanel>

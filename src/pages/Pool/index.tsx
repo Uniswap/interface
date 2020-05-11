@@ -93,7 +93,7 @@ function Supply({ history }: RouteComponentProps) {
             </LightCard>
           )}
           {filteredExchangeList}
-          <Text textAlign="center" style={{ padding: '.5rem 0 .5rem 0' }}>
+          <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
             {filteredExchangeList?.length !== 0 ? `Don't see a pool you joined? ` : 'Already joined a pool? '}{' '}
             <Link
               id="import-pool-link"

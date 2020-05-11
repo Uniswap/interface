@@ -1,4 +1,6 @@
 import React from 'react'
+import { Link as HistoryLink } from 'react-router-dom'
+
 import styled from 'styled-components'
 
 import Row from '../Row'
@@ -9,14 +11,14 @@ import { Link } from '../../theme'
 import { Text } from 'rebass'
 import { WETH } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
-import { YellowCard, GreyCard } from '../Card'
+import { YellowCard } from '../Card'
 import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 import Logo from '../../assets/svg/logo.svg'
 import Wordmark from '../../assets/svg/wordmark.svg'
-import LogoDark from '../../assets/svg/logo_white2.svg'
+import LogoDark from '../../assets/svg/logo_white.svg'
 import WordmarkDark from '../../assets/svg/wordmark_white.svg'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
@@ -31,10 +33,9 @@ const HeaderFrame = styled.div`
   position: absolute;
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    padding: 10px;
-    width: calc(100% - 12px);
+    padding: 12px 0 0 0;
+    width: calc(100%);
     position: relative;
-
   `};
   z-index: 2;
 `
@@ -69,7 +70,6 @@ const AccountElement = styled.div<{ active: boolean }>`
   flex-direction: row;
   align-items: center;
   background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
-  /* border: 1px solid ${({ theme }) => theme.bg1}; */
   border-radius: 12px;
   padding-left: ${({ active }) => (active ? '8px' : 0)};
   white-space: nowrap;
@@ -95,18 +95,8 @@ const NetworkCard = styled(YellowCard)`
   border-radius: 12px;
   padding: 8px 12px;
 `
-const Alpha = styled(GreyCard)`
-  width: fit-content;
-  margin-right: 10px;
-  border-radius: 12px;
-  padding: 3px 7px;
-  background-color: ${({ theme }) => theme.pink2};
-  color: ${({ theme }) => theme.white};
-  font-size: 12px;
-  font-weight: 600;
-`
 
-const UniIcon = styled.div<{ href: string }>`
+const UniIcon = styled(HistoryLink)<{ to: string }>`
   transition: transform 0.3s ease;
   :hover {
     transform: rotate(-5deg);
@@ -118,18 +108,45 @@ const MigrateBanner = styled(AutoColumn)`
   padding: 12px 0;
   display: flex;
   justify-content: center;
-  background-color: ${({ theme }) => theme.pink3};
-  color: ${({ theme }) => theme.pink2};
-  font-weight: 500;
+  background-color: ${({ theme }) => theme.primary5};
+  color: ${({ theme }) => theme.primaryText1};
+  font-weight: 400;
   text-align: center;
   a {
-    color: ${({ theme }) => theme.pink2};
+    color: ${({ theme }) => theme.primaryText1};
   }
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 0;
     display: none;
   `};
+`
+
+const VersionLabel = styled.span<{ isV2?: boolean }>`
+  padding: ${({ isV2 }) => (isV2 ? '0.15rem 0.5rem 0.16rem 0.45rem' : '0.15rem 0.5rem 0.16rem 0.35rem')};
+  border-radius: 14px;
+  background: ${({ theme, isV2 }) => (isV2 ? theme.primary1 : 'none')};
+  color: ${({ theme, isV2 }) => (isV2 ? theme.white : theme.primary1)};
+  font-size: 0.825rem;
+  font-weight: 400;
+  :hover {
+    user-select: ${({ isV2 }) => (isV2 ? 'none' : 'initial')};
+    background: ${({ theme, isV2 }) => (isV2 ? theme.primary1 : 'none')};
+    color: ${({ theme, isV2 }) => (isV2 ? theme.white : theme.primary3)};
+  }
+`
+
+const VersionToggle = styled.a`
+  border-radius: 16px;
+  border: 1px solid ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.primary1};
+  display: flex;
+  width: fit-content;
+  cursor: pointer;
+  text-decoration: none;
+  :hover {
+    text-decoration: none;
+  }
 `
 
 export default function Header() {
@@ -154,22 +171,29 @@ export default function Header() {
       <RowBetween padding="1rem">
         <HeaderElement>
           <Title>
-            <UniIcon id="link" href="/">
+            <UniIcon id="link" to="/">
               <img src={isDark ? LogoDark : Logo} alt="logo" />
             </UniIcon>
             {!isMobile && (
               <TitleText>
-                <Link id="link" href="/">
+                <HistoryLink id="link" to="/">
                   <img
                     style={{ marginLeft: '4px', marginTop: '4px' }}
                     src={isDark ? WordmarkDark : Wordmark}
                     alt="logo"
                   />
-                </Link>
+                </HistoryLink>
               </TitleText>
             )}
           </Title>
-          <TestnetWrapper>{!isMobile && <Alpha>V2</Alpha>}</TestnetWrapper>
+          <TestnetWrapper>
+            {!isMobile && (
+              <VersionToggle target="_self" href="https://v1.uniswap.exchange">
+                <VersionLabel isV2={true}>V2</VersionLabel>
+                <VersionLabel isV2={false}>V1</VersionLabel>
+              </VersionToggle>
+            )}
+          </TestnetWrapper>
         </HeaderElement>
         <HeaderElement>
           <TestnetWrapper>

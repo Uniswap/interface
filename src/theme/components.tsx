@@ -3,7 +3,7 @@ import { darken } from 'polished'
 import { X } from 'react-feather'
 
 export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColor: string }>(({ warning, theme }) => ({
-  backgroundColor: warning ? theme.red1 : theme.blue1
+  backgroundColor: warning ? theme.red1 : theme.primary1
 }))`
   padding: 1rem 2rem 1rem 2rem;
   border-radius: 3rem;
@@ -42,7 +42,7 @@ export const Link = styled.a.attrs({
 })`
   text-decoration: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.primary1};
   font-weight: 500;
 
   :hover {

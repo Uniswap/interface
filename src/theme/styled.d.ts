@@ -24,19 +24,18 @@ export interface Colors {
   advancedBG: Color
 
   //blues
-  blue1: Color
-  blue2: Color
-  blue3: Color
-  blue4: Color
-  blue5: Color
+  primary1: Color
+  primary2: Color
+  primary3: Color
+  primary4: Color
+  primary5: Color
 
-  buttonSecondaryText: Color
+  primaryText1: Color
 
   // pinks
-  pink1: Color
-  pink2: Color
-  pink3: Color
-  pink4: Color
+  secondary1: Color
+  secondary2: Color
+  secondary3: Color
 
   // other
   red1: Color

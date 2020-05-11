@@ -17,7 +17,7 @@ const InputWrapper = styled(RowBetween)<{ active?: boolean; error?: boolean }>`
   padding: 4px 8px;
   border: 1px solid transparent;
   border: ${({ active, error, theme }) =>
-    error ? '1px solid ' + theme.red1 : active ? '1px solid ' + theme.blue1 : ''};
+    error ? '1px solid ' + theme.red1 : active ? '1px solid ' + theme.primary1 : ''};
 `
 
 const SLIPPAGE_INDEX = {

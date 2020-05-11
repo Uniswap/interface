@@ -151,7 +151,7 @@ function PoolFinder({ history }: RouteComponentProps) {
               token0={token0}
               token1={token1}
               minimal={true}
-              border="1px solid #EDEEF2"
+              border="1px solid #CED0D9"
             />
           ) : (
             <LightCard padding="45px 10px">

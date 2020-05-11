@@ -15,6 +15,7 @@ export default Card
 
 export const LightCard = styled(Card)`
   border: 1px solid ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg1};
 `
 
 export const GreyCard = styled(Card)`
@@ -33,13 +34,13 @@ export const YellowCard = styled(Card)`
 
 export const PinkCard = styled(Card)`
   background-color: rgba(255, 0, 122, 0.03);
-  color: ${({ theme }) => theme.pink2};
+  color: ${({ theme }) => theme.primary1};
   font-weight: 500;
 `
 
 const BlueCardStyled = styled(Card)`
-  background-color: ${({ theme }) => theme.blue5};
-  color: ${({ theme }) => theme.blue1};
+  background-color: ${({ theme }) => theme.primary5};
+  color: ${({ theme }) => theme.primary1};
   border-radius: 12px;
   width: fit-content;
 `

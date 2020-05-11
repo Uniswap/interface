@@ -1,5 +1,5 @@
-import React, { useReducer, useState, useCallback, useEffect } from 'react'
-import styled from 'styled-components'
+import React, { useReducer, useState, useCallback, useEffect, useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import { parseUnits } from '@ethersproject/units'
 import { Zero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
@@ -49,7 +49,7 @@ const ClickableText = styled(Text)`
   :hover {
     cursor: pointer;
   }
-  color: ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.primary1};
 `
 
 // const CustomNumericalInput = styled(NumericalInput)`
@@ -59,19 +59,19 @@ const ClickableText = styled(Text)`
 
 const MaxButton = styled.button<{ width: string }>`
   padding: 0.5rem 1rem;
-  background-color: ${({ theme }) => theme.blue5};
-  border: 1px solid ${({ theme }) => theme.blue5};
+  background-color: ${({ theme }) => theme.primary5};
+  border: 1px solid ${({ theme }) => theme.primary5};
   border-radius: 0.5rem;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   margin-right: 0.5rem;
-  color: ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.primary1};
   :hover {
-    border: 1px solid ${({ theme }) => theme.blue1};
+    border: 1px solid ${({ theme }) => theme.primary1};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.blue1};
+    border: 1px solid ${({ theme }) => theme.primary1};
     outline: none;
   }
 `
@@ -151,6 +151,7 @@ const ConfirmedText = styled(Text)<{ confirmed?: boolean }>`
 
 export default function RemoveLiquidity({ token0, token1 }: { token0: string; token1: string }) {
   const { account, chainId, library } = useWeb3React()
+  const theme = useContext(ThemeContext)
 
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [showAdvanced, setShowAdvanced] = useState<boolean>(false)
@@ -508,12 +509,12 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
 
   function modalHeader() {
     return (
-      <AutoColumn gap={'sm'} style={{ marginTop: '20px' }}>
+      <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
         <RowBetween align="flex-end">
           <Text fontSize={24} fontWeight={500}>
             {!!parsedAmounts[Field.TOKEN0] && parsedAmounts[Field.TOKEN0].toSignificant(6)}
           </Text>
-          <RowFixed>
+          <RowFixed gap="4px">
             <TokenLogo address={tokens[Field.TOKEN0]?.address} size={'24px'} />
             <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
               {tokens[Field.TOKEN0]?.symbol || ''}
@@ -521,13 +522,13 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
           </RowFixed>
         </RowBetween>
         <RowFixed>
-          <Plus size="16" color={'#888D9B'} />
+          <Plus size="16" color={theme.text2} />
         </RowFixed>
         <RowBetween align="flex-end">
           <Text fontSize={24} fontWeight={600}>
             {!!parsedAmounts[Field.TOKEN1] && parsedAmounts[Field.TOKEN1].toSignificant(6)}
           </Text>
-          <RowFixed>
+          <RowFixed gap="4px">
             <TokenLogo address={tokens[Field.TOKEN1]?.address} size={'24px'} />
             <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
               {tokens[Field.TOKEN1]?.symbol || ''}
@@ -535,7 +536,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
           </RowFixed>
         </RowBetween>
 
-        <TYPE.italic fontSize={12} color="#565A69" textAlign="left" padding={'20px 0 0 0'}>
+        <TYPE.italic fontSize={12} color={theme.text2} textAlign="left" padding={'12px 0 0 0'}>
           {`Output is estimated. You will receive at least ${parsedAmounts[Field.TOKEN0]?.toFixed(6)} ${
             tokens[Field.TOKEN0]?.symbol
           } and at least ${parsedAmounts[Field.TOKEN1]?.toFixed(6)} ${
@@ -550,7 +551,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
     return (
       <>
         <RowBetween>
-          <Text color="#565A69" fontWeight={500} fontSize={16}>
+          <Text color={theme.text2} fontWeight={500} fontSize={16}>
             {'UNI ' + tokens[Field.TOKEN0]?.symbol + ':' + tokens[Field.TOKEN1]?.symbol} Burned
           </Text>
           <RowFixed>
@@ -565,10 +566,10 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
           </RowFixed>
         </RowBetween>
         <RowBetween>
-          <Text color="#565A69" fontWeight={500} fontSize={16}>
+          <Text color={theme.text2} fontWeight={500} fontSize={16}>
             Price
           </Text>
-          <Text fontWeight={500} fontSize={16}>
+          <Text fontWeight={500} fontSize={16} color={theme.text1}>
             {`1 ${tokens[Field.TOKEN0]?.symbol} = ${route?.midPrice && route.midPrice.adjusted.toFixed(8)} ${
               tokens[Field.TOKEN1]?.symbol
             }`}
@@ -631,7 +632,6 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
               </ClickableText>
             </RowBetween>
             <Row style={{ alignItems: 'flex-end' }}>
-              {/* <CustomNumericalInput value={percentageInput} onUserInput={input => handlePresetPercentage(input)} /> */}
               <Text fontSize={72} fontWeight={500}>
                 {derivedPerecent ? (parseInt(derivedPerecent) < 1 ? '<1' : derivedPerecent) : '0'}%
               </Text>
@@ -660,7 +660,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
         {!showAdvanced && (
           <>
             <ColumnCenter>
-              <ArrowDown size="16" color="#888D9B" />
+              <ArrowDown size="16" color={theme.text2} />
             </ColumnCenter>{' '}
             <LightCard>
               <AutoColumn gap="10px">
@@ -706,7 +706,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
               inputId="liquidityAmount"
             />
             <ColumnCenter>
-              <ArrowDown size="16" color="#888D9B" />
+              <ArrowDown size="16" color={theme.text2} />
             </ColumnCenter>
             <CurrencyInputPanel
               field={Field.TOKEN0}
@@ -720,7 +720,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
               inputId="removeLiquidityToken0"
             />
             <ColumnCenter>
-              <Plus size="16" color="#888D9B" />
+              <Plus size="16" color={theme.text2} />
             </ColumnCenter>
             <CurrencyInputPanel
               field={Field.TOKEN1}

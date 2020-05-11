@@ -23,7 +23,7 @@ const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 1rem 1rem;
   font-weight: 500;
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.blue1 : 'inherit')};
+  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
@@ -51,8 +51,7 @@ const UpperSection = styled.div`
 
 const InfoCard = styled.div`
   padding: 1rem;
-  /* border: 1px solid ${({ theme }) => theme.bg2}; */
-  background-color: ${({ theme }) => theme.bg2}; 
+  background-color: ${({ theme }) => theme.bg2};
   border-radius: 20px;
 `
 
@@ -69,7 +68,7 @@ const AccountGroupingRow = styled.div`
   }
 
   &:first-of-type {
-    margin-bottom: 20px;
+    margin-bottom: 8px;
   }
 `
 
@@ -141,8 +140,9 @@ const AccountControl = styled.div<{ hasENS: boolean; isENS: boolean }>`
     text-decoration: underline;
   }
 
-  a {
+  p {
     min-width: 0;
+    margin: 0.5rem 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -157,7 +157,7 @@ const ConnectButtonRow = styled.div`
 `
 
 const StyledLink = styled(Link)<{ hasENS: boolean; isENS: boolean }>`
-  color: ${({ hasENS, isENS, theme }) => (hasENS ? (isENS ? theme.blue1 : theme.text3) : theme.blue1)};
+  color: ${({ hasENS, isENS, theme }) => (hasENS ? (isENS ? theme.primary1 : theme.text3) : theme.primary1)};
 `
 
 const CloseIcon = styled.div`
@@ -210,7 +210,7 @@ const WalletAction = styled.div`
 `
 
 const MainWalletAction = styled(WalletAction)`
-  color: ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.primary1};
 `
 
 function renderTransactions(transactions, pending) {
@@ -327,19 +327,36 @@ export default function AccountDetails({
               </AccountGroupingRow>
               <AccountGroupingRow>
                 {ENSName ? (
-                  <AccountControl hasENS={!!ENSName} isENS={true}>
-                    <StyledLink hasENS={!!ENSName} isENS={true} href={getEtherscanLink(chainId, ENSName, 'address')}>
-                      {ENSName} ↗{' '}
-                    </StyledLink>
-                    <Copy toCopy={ENSName} />
-                  </AccountControl>
+                  <>
+                    <AccountControl hasENS={!!ENSName} isENS={true}>
+                      <p>{ENSName}</p> <Copy toCopy={account} />
+                    </AccountControl>
+                  </>
                 ) : (
-                  <AccountControl hasENS={!!ENSName} isENS={false}>
-                    <StyledLink hasENS={!!ENSName} isENS={false} href={getEtherscanLink(chainId, account, 'address')}>
-                      {account} ↗{' '}
-                    </StyledLink>
-                    <Copy toCopy={account} />
-                  </AccountControl>
+                  <>
+                    <AccountControl hasENS={!!ENSName} isENS={false}>
+                      <p>{account}</p> <Copy toCopy={account} />
+                    </AccountControl>
+                  </>
+                )}
+              </AccountGroupingRow>
+              <AccountGroupingRow>
+                {ENSName ? (
+                  <>
+                    <AccountControl hasENS={!!ENSName} isENS={false}>
+                      <StyledLink hasENS={!!ENSName} isENS={true} href={getEtherscanLink(chainId, ENSName, 'address')}>
+                        View on Etherscan ↗{' '}
+                      </StyledLink>
+                    </AccountControl>
+                  </>
+                ) : (
+                  <>
+                    <AccountControl hasENS={!!ENSName} isENS={false}>
+                      <StyledLink hasENS={!!ENSName} isENS={false} href={getEtherscanLink(chainId, account, 'address')}>
+                        View on Etherscan ↗{' '}
+                      </StyledLink>
+                    </AccountControl>
+                  </>
                 )}
               </AccountGroupingRow>
             </InfoCard>
