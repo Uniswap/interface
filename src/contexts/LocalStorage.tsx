@@ -9,7 +9,6 @@ enum LocalStorageKeys {
   BETA_MESSAGE_DISMISSED = 'betaMessageDismissed',
   MIGRATION_MESSAGE_DISMISSED = 'migrationMessageDismissed',
   DARK_MODE = 'darkMode',
-  SYSTEM_DARK_MODE = 'systemDarkMode',
   TOKENS = 'tokens'
 }
 
@@ -85,8 +84,10 @@ export default function Provider({ children }: { children: React.ReactNode }) {
     LocalStorageKeys.MIGRATION_MESSAGE_DISMISSED,
     false
   )
-  const [darkMode, setDarkMode] = useLocalStorage<boolean>(LocalStorageKeys.DARK_MODE, false)
-  const [systemDarkMode, setSystemDarkMode] = useLocalStorage<boolean>(LocalStorageKeys.SYSTEM_DARK_MODE, true)
+  const [darkMode, setDarkMode] = useLocalStorage<boolean>(
+    LocalStorageKeys.DARK_MODE,
+    window?.matchMedia('(prefers-color-scheme: dark)')?.matches ? true : false
+  )
 
   const [tokens, setTokens] = useLocalStorage<Token[], ReturnType<typeof serializeTokens>>(
     LocalStorageKeys.TOKENS,
@@ -101,14 +102,13 @@ export default function Provider({ children }: { children: React.ReactNode }) {
     <LocalStorageContext.Provider
       value={useMemo(
         () => [
-          { version, lastSaved, betaMessageDismissed, migrationMessageDismissed, darkMode, systemDarkMode, tokens },
+          { version, lastSaved, betaMessageDismissed, migrationMessageDismissed, darkMode, tokens },
           {
             setVersion,
             setLastSaved,
             setBetaMessageDismissed,
             setMigrationMessageDismissed,
             setDarkMode,
-            setSystemDarkMode,
             setTokens
           }
         ],
@@ -118,7 +118,6 @@ export default function Provider({ children }: { children: React.ReactNode }) {
           betaMessageDismissed,
           migrationMessageDismissed,
           darkMode,
-          systemDarkMode,
 
           tokens,
           setVersion,
@@ -126,7 +125,6 @@ export default function Provider({ children }: { children: React.ReactNode }) {
           setBetaMessageDismissed,
           setMigrationMessageDismissed,
           setDarkMode,
-          setSystemDarkMode,
           setTokens
         ]
       )}
@@ -134,6 +132,33 @@ export default function Provider({ children }: { children: React.ReactNode }) {
       {children}
     </LocalStorageContext.Provider>
   )
+}
+
+export function Updater() {
+  const [, { setDarkMode }] = useLocalStorageContext()
+
+  useEffect(() => {
+    const darkHandler = (match: MediaQueryListEvent) => {
+      if (match.matches) {
+        setDarkMode(true)
+      }
+    }
+    const lightHandler = (match: MediaQueryListEvent) => {
+      if (match.matches) {
+        setDarkMode(false)
+      }
+    }
+
+    window?.matchMedia('(prefers-color-scheme: dark)')?.addListener(darkHandler)
+    window?.matchMedia('(prefers-color-scheme: light)')?.addListener(lightHandler)
+
+    return () => {
+      window?.matchMedia('(prefers-color-scheme: dark)')?.removeListener(darkHandler)
+      window?.matchMedia('(prefers-color-scheme: light)')?.removeListener(lightHandler)
+    }
+  }, [])
+
+  return null
 }
 
 export function useBetaMessageManager() {
@@ -158,29 +183,15 @@ export function useMigrationMessageManager() {
 
 export function useDarkModeManager() {
   const [{ darkMode }, { setDarkMode }] = useLocalStorageContext()
-  const [{ systemDarkMode }, { setSystemDarkMode }] = useLocalStorageContext()
-
-  const onBrowserThemeChanged = callback => {
-    const theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)')
-    const themeListener = e => callback(e.matches ? 'dark' : 'light')
-    theme && theme.addListener(themeListener)
-    return () => theme && theme.removeListener(themeListener)
-  }
-
-  useEffect(() => {
-    systemDarkMode &&
-      onBrowserThemeChanged(val => (val ? setDarkMode(val === 'dark' ? true : false) : setDarkMode(true)))
-  }, [setDarkMode, systemDarkMode])
 
   const toggleSetDarkMode = useCallback(
     value => {
       setDarkMode(typeof value === 'boolean' ? value : !darkMode)
-      setSystemDarkMode(false)
     },
-    [darkMode, setDarkMode, setSystemDarkMode]
+    [darkMode, setDarkMode]
   )
 
-  return [darkMode, toggleSetDarkMode, systemDarkMode, setSystemDarkMode]
+  return [darkMode, toggleSetDarkMode]
 }
 
 export function useLocalStorageTokens(): [
