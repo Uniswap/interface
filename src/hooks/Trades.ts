@@ -33,7 +33,12 @@ export function useTradeExactIn(amountIn?: TokenAmount, tokenOut?: Token): Trade
     const allPairs = [pairBetween, aToETH, bToETH, aToDAI, bToDAI, aToUSDC, bToUSDC].filter(p => !!p)
 
     if (amountIn && tokenOut && allPairs.length > 0) {
-      return Trade.bestTradeExactIn(allPairs, amountIn, tokenOut)[0] ?? null
+      try {
+        // TODO(moodysalem): remove when the insufficient reserves/input errors do not throw exceptions
+        return Trade.bestTradeExactIn(allPairs, amountIn, tokenOut)[0] ?? null
+      } catch (error) {
+        return null
+      }
     }
     return null
   }, [pairBetween, aToETH, bToETH, aToDAI, bToDAI, aToUSDC, bToUSDC, amountIn, tokenOut])
@@ -67,7 +72,12 @@ export function useTradeExactOut(tokenIn?: Token, amountOut?: TokenAmount): Trad
     const allPairs = [pairBetween, aToETH, bToETH, aToDAI, bToDAI, aToUSDC, bToUSDC].filter(p => !!p)
 
     if (tokenIn && amountOut && allPairs.length > 0) {
-      return Trade.bestTradeExactOut(allPairs, tokenIn, amountOut)[0] ?? null
+      try {
+        // TODO(moodysalem): remove when the insufficient reserves/input errors do not throw exceptions
+        return Trade.bestTradeExactOut(allPairs, tokenIn, amountOut)[0] ?? null
+      } catch (error) {
+        return null
+      }
     }
     return null
   }, [pairBetween, aToETH, bToETH, aToDAI, bToDAI, aToUSDC, bToUSDC, tokenIn, amountOut])

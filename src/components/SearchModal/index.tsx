@@ -595,6 +595,7 @@ function SearchModal({
             </RowBetween>
             <Input
               type={'text'}
+              id="token-search-input"
               placeholder={t('tokenSearchPlaceholder')}
               value={searchQuery}
               ref={inputRef}

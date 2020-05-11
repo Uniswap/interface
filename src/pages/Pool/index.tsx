@@ -61,6 +61,7 @@ function Supply({ history }: RouteComponentProps) {
   return (
     <AutoColumn gap="lg" justify="center">
       <ButtonPrimary
+        id="join-pool-button"
         padding="16px"
         onClick={() => {
           setShowPoolSearch(true)
@@ -92,6 +93,7 @@ function Supply({ history }: RouteComponentProps) {
           <Text textAlign="center" style={{ padding: '.5rem 0 .5rem 0' }}>
             {filteredExchangeList?.length !== 0 ? `Don't see a pool you joined? ` : 'Already joined a pool? '}{' '}
             <Link
+              id="import-pool-link"
               onClick={() => {
                 history.push('/find')
               }}
