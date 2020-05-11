@@ -96,10 +96,22 @@ export default function Option({
   header,
   subheader = null,
   icon,
-  active = false
+  active = false,
+  id
+}: {
+  link?: string | null
+  clickable?: boolean
+  size?: number | null
+  onClick?: null | (() => void)
+  color: string
+  header: React.ReactNode
+  subheader: React.ReactNode | null
+  icon: string
+  active?: boolean
+  id: string
 }) {
   const content = (
-    <OptionCardClickable onClick={onClick} clickable={clickable && !active} active={active}>
+    <OptionCardClickable id={id} onClick={onClick} clickable={clickable && !active} active={active}>
       <OptionCardLeft>
         <HeaderText color={color}>
           {' '}
