@@ -6,7 +6,7 @@ import { Web3Provider } from '@ethersproject/providers'
 
 import { NetworkContextName } from './constants'
 import { isMobile } from 'react-device-detect'
-import LocalStorageContextProvider from './contexts/LocalStorage'
+import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage'
 import ApplicationContextProvider, { Updater as ApplicationContextUpdater } from './contexts/Application'
 import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
 import BalancesContextProvider, { Updater as BalancesContextUpdater } from './contexts/Balances'
@@ -54,6 +54,7 @@ function ContextProviders({ children }: { children: React.ReactNode }) {
 function Updaters() {
   return (
     <>
+      <LocalStorageContextUpdater />
       <ApplicationContextUpdater />
       <TransactionContextUpdater />
       <BalancesContextUpdater />
