@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useReducer, useRef, useMemo, useCallback, useEffect, ReactNode } from 'react'
 import { TokenAmount, Token, JSBI, WETH } from '@uniswap/sdk'
+import { useBlockNumber } from '../state/application/hooks'
 
 import { useAllTokens } from './Tokens'
-import { useBlockNumber } from './Application'
 import { useWeb3React, useDebounce } from '../hooks'
 
 import { getEtherBalance, getTokenBalance, isAddress } from '../utils'
@@ -158,28 +158,46 @@ function useBalancesContext() {
 export default function Provider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, undefined, initialize)
 
-  const startListening = useCallback((chainId, address, tokenAddress) => {
-    dispatch({ type: Action.START_LISTENING, payload: { chainId, address, tokenAddress } })
-  }, [])
+  const startListening = useCallback(
+    (chainId, address, tokenAddress) => {
+      dispatch({ type: Action.START_LISTENING, payload: { chainId, address, tokenAddress } })
+    },
+    [dispatch]
+  )
 
-  const stopListening = useCallback((chainId, address, tokenAddress) => {
-    dispatch({ type: Action.STOP_LISTENING, payload: { chainId, address, tokenAddress } })
-  }, [])
+  const stopListening = useCallback(
+    (chainId, address, tokenAddress) => {
+      dispatch({ type: Action.STOP_LISTENING, payload: { chainId, address, tokenAddress } })
+    },
+    [dispatch]
+  )
 
-  const update = useCallback((chainId, address, tokenAddress, value, blockNumber) => {
-    dispatch({ type: Action.UPDATE, payload: { chainId, address, tokenAddress, value, blockNumber } })
-  }, [])
+  const update = useCallback(
+    (chainId, address, tokenAddress, value, blockNumber) => {
+      dispatch({ type: Action.UPDATE, payload: { chainId, address, tokenAddress, value, blockNumber } })
+    },
+    [dispatch]
+  )
 
-  const batchUpdateAccount = useCallback((chainId, address, tokenAddresses, values, blockNumber) => {
-    dispatch({ type: Action.BATCH_UPDATE_ACCOUNT, payload: { chainId, address, tokenAddresses, values, blockNumber } })
-  }, [])
+  const batchUpdateAccount = useCallback(
+    (chainId, address, tokenAddresses, values, blockNumber) => {
+      dispatch({
+        type: Action.BATCH_UPDATE_ACCOUNT,
+        payload: { chainId, address, tokenAddresses, values, blockNumber }
+      })
+    },
+    [dispatch]
+  )
 
-  const batchUpdateExchanges = useCallback((chainId, pairAddresses, tokenAddresses, values, blockNumber) => {
-    dispatch({
-      type: Action.BATCH_UPDATE_EXCHANGES,
-      payload: { chainId, pairAddresses, tokenAddresses, values, blockNumber }
-    })
-  }, [])
+  const batchUpdateExchanges = useCallback(
+    (chainId, pairAddresses, tokenAddresses, values, blockNumber) => {
+      dispatch({
+        type: Action.BATCH_UPDATE_EXCHANGES,
+        payload: { chainId, pairAddresses, tokenAddresses, values, blockNumber }
+      })
+    },
+    [dispatch]
+  )
 
   return (
     <BalancesContext.Provider

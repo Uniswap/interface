@@ -3,8 +3,14 @@ import styled, { ThemeContext } from 'styled-components'
 import { useMediaLayout } from 'use-media'
 
 import { X } from 'react-feather'
-import { usePopups } from '../../contexts/Application'
+import { PopupContent } from '../../state/application/actions'
+import { usePopups } from '../../state/application/hooks'
+import { Link } from '../../theme'
 import { AutoColumn } from '../Column'
+import DoubleTokenLogo from '../DoubleLogo'
+import Row from '../Row'
+import TxnPopup from '../TxnPopup'
+import { Text } from 'rebass'
 
 const StyledClose = styled(X)`
   position: absolute;
@@ -66,6 +72,33 @@ const Popup = styled.div`
   `}
 `
 
+function PopupItem({ content, popKey }: { content: PopupContent; popKey: string }) {
+  if ('txn' in content) {
+    const {
+      txn: { hash, success, summary }
+    } = content
+    return <TxnPopup popKey={popKey} hash={hash} success={success} summary={summary} />
+  } else if ('poolAdded' in content) {
+    const {
+      poolAdded: { token0, token1 }
+    } = content
+    return (
+      <AutoColumn gap={'10px'}>
+        <Text fontSize={20} fontWeight={500}>
+          Pool Imported
+        </Text>
+        <Row>
+          <DoubleTokenLogo a0={token0?.address ?? ''} a1={token1?.address ?? ''} margin={true} />
+          <Text fontSize={16} fontWeight={500}>
+            UNI {token0?.symbol} / {token1?.symbol}
+          </Text>
+        </Row>
+        <Link>View on Uniswap Info.</Link>
+      </AutoColumn>
+    )
+  }
+}
+
 export default function App() {
   const theme = useContext(ThemeContext)
   // get all popups
@@ -81,7 +114,7 @@ export default function App() {
           return (
             <Popup key={item.key}>
               <StyledClose color={theme.text2} onClick={() => removePopup(item.key)} />
-              {React.cloneElement(item.content, { popKey: item.key })}
+              <PopupItem content={item.content} popKey={item.key} />
             </Popup>
           )
         })}
@@ -100,7 +133,7 @@ export default function App() {
               return (
                 <Popup key={item.key}>
                   <StyledClose color={theme.text2} onClick={() => removePopup(item.key)} />
-                  {React.cloneElement(item.content, { popKey: item.key })}
+                  <PopupItem content={item.content} popKey={item.key} />
                 </Popup>
               )
             })}
