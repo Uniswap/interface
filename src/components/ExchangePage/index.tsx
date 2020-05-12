@@ -816,6 +816,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 </Text>
               </RowBetween>
             )}
+
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
@@ -1142,6 +1143,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     </StyledBalanceMaxMini>
                   </Text>
                 </RowBetween>
+
                 {trade && (warningHigh || warningMedium) && (
                   <RowBetween>
                     <TYPE.main
@@ -1169,7 +1171,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
         {noRoute && userHasSpecifiedInputOutput ? (
           <GreyCard style={{ textAlign: 'center' }}>
             <TYPE.main>No path found.</TYPE.main>
-
             <Link
               onClick={() => {
                 history.push('/add/' + tokens[Field.INPUT]?.address + '-' + tokens[Field.OUTPUT]?.address)
@@ -1208,6 +1209,19 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 `${sending ? 'Send' : 'Swap'}${warningHigh ? ' Anyway' : ''}`}
             </Text>
           </ButtonError>
+        )}
+        {v1TradeLinkIfBetter && (
+          <YellowCard style={{ marginTop: '12px', padding: '.75rem .5rem' }}>
+            <AutoColumn gap="sm" justify="center" style={{ alignItems: 'center', textAlign: 'center' }}>
+              <Text lineHeight="145.23%;" fontSize={16} fontWeight={400} color={theme.text1}>
+                There is a better price for this trade on <br />
+                <Link href={v1TradeLinkIfBetter}>
+                  <b>Uniswap V1 ↗</b>
+                </Link>
+                .
+              </Text>
+            </AutoColumn>
+          </YellowCard>
         )}
       </BottomGrouping>
       {tokens[Field.INPUT] && tokens[Field.OUTPUT] && !noRoute && (
