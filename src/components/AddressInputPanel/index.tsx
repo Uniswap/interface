@@ -190,16 +190,14 @@ export default function AddressInputPanel({
               <TYPE.black color={theme.text2} fontWeight={500} fontSize={14}>
                 Recipient
               </TYPE.black>
-
-              {data.name ? (
-                <Link href={getEtherscanLink(chainId, data.name, 'address')} style={{ fontSize: '14px' }}>
+              {(data.name || data.address) && (
+                <Link
+                  href={getEtherscanLink(chainId, data.name || data.address, 'address')}
+                  style={{ fontSize: '14px' }}
+                >
                   (View on Etherscan)
                 </Link>
-              ) : data.address ? (
-                <Link href={getEtherscanLink(chainId, data.address, 'address')} style={{ fontSize: '14px' }}>
-                  (View on Etherscan)
-                </Link>
-              ) : null}
+              )}
             </RowBetween>
             <Input
               type="text"

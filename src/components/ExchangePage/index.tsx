@@ -22,6 +22,7 @@ import { useAllTokens, useToken } from '../../contexts/Tokens'
 import { usePendingApproval, useTransactionAdder } from '../../contexts/Transactions'
 import { useTokenContract, useWeb3React } from '../../hooks'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
+import { useWalletModalToggle } from '../../state/application/hooks'
 import { Hover, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
 import {
@@ -88,6 +89,9 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
 
   // adding notifications on txns
   const addTransaction = useTransactionAdder()
+
+  // toggle wallet when disconnected
+  const toggleWalletModal = useWalletModalToggle()
 
   // sending state
   const [sending] = useState<boolean>(sendingInput)
@@ -841,7 +845,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             <RowBetween>
               <RowFixed>
                 <TYPE.black color={theme.text2} fontSize={14} fontWeight={400}>
-                  Price impact
+                  Price Impact
                 </TYPE.black>
                 <QuestionHelper text="The difference between the market price and your price due to trade size." />
               </RowFixed>
@@ -1027,7 +1031,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           <>
             <CurrencyInputPanel
               field={Field.INPUT}
-              label={'From'}
+              label={independentField === Field.OUTPUT && parsedAmounts[Field.INPUT] ? 'From (estimated)' : 'From'}
               value={formattedAmounts[Field.INPUT]}
               atMax={atMaxAmountInput}
               token={tokens[Field.INPUT]}
@@ -1077,7 +1081,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               onMax={() => {
                 maxAmountOutput && onMaxOutput(maxAmountOutput.toExact())
               }}
-              label={'To'}
+              label={independentField === Field.INPUT && parsedAmounts[Field.OUTPUT] ? 'To (estimated)' : 'To'}
               atMax={atMaxAmountOutput}
               token={tokens[Field.OUTPUT]}
               onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
@@ -1167,15 +1171,24 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
         )}
       </AutoColumn>
       <BottomGrouping>
-        {noRoute && userHasSpecifiedInputOutput ? (
+        {!account ? (
+          <ButtonLight
+            onClick={() => {
+              toggleWalletModal()
+            }}
+          >
+            Connect Wallet
+          </ButtonLight>
+        ) : noRoute && userHasSpecifiedInputOutput ? (
           <GreyCard style={{ textAlign: 'center' }}>
-            <TYPE.main>No path found.</TYPE.main>
+            <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
             <Link
               onClick={() => {
                 history.push('/add/' + tokens[Field.INPUT]?.address + '-' + tokens[Field.OUTPUT]?.address)
               }}
             >
-              Create one now
+              {' '}
+              Add liquidity now.
             </Link>
           </GreyCard>
         ) : !userHasApprovedRouter && !inputError ? (
@@ -1316,7 +1329,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               <SectionBreak />
               <RowFixed padding={'0 20px'}>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  Set front running resistance
+                  Set slippage tolerance
                 </TYPE.black>
                 <QuestionHelper text="Your transaction will revert if the price changes more than this amount after you submit your trade." />
               </RowFixed>
@@ -1344,8 +1357,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                       </RowFixed>
                     </RowBetween>
                     <Text lineHeight="145.23%;" fontSize={16} fontWeight={400} color={theme.text1}>
-                      This trade will move the price by {slippageFromTrade?.toFixed(2)}%. This pool probably doesn’t
-                      have enough liquidity to support this trade.
+                      This trade will move the price by ~{priceSlippage.toFixed(2)}%. This pool probably doesn’t have
+                      enough liquidity to support this trade.
                     </Text>
                   </AutoColumn>
                 </YellowCard>
