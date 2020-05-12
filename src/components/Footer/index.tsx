@@ -23,7 +23,7 @@ export default function Footer() {
 
   return (
     <FooterFrame>
-      <form action="https://forms.gle/DaLuqvJsVhVaAM3J9">
+      <form action="https://forms.gle/DaLuqvJsVhVaAM3J9" target="_blank">
         <ButtonSecondary
           style={{
             padding: ' 8px 12px',

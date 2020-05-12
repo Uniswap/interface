@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
-import { Token, JSBI, WETH } from '@uniswap/sdk'
+import { Token, WETH } from '@uniswap/sdk'
 
 import Row, { AutoRow } from '../Row'
 import TokenLogo from '../TokenLogo'
@@ -35,16 +35,14 @@ function CreatePool({ history }) {
   const [step, setStep] = useState<number>(1)
 
   const pair = usePair(token0, token1)
-  const pairExists = // used to detect new exchange
-    pair && JSBI.notEqual(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.notEqual(pair.reserve1.raw, JSBI.BigInt(0))
 
   useEffect(() => {
-    if (token0Address && token1Address && pair && !pairExists) {
+    if (token0Address && token1Address && !pair) {
       setStep(2)
     }
-  }, [pair, pairExists, token0Address, token1Address])
+  }, [pair, token0Address, token1Address])
 
-  if (step === 2 && !pairExists) {
+  if (step === 3 && !pair) {
     return <AddLiquidity token0={token0Address} token1={token1Address} />
   } else
     return (
@@ -105,7 +103,7 @@ function CreatePool({ history }) {
               </Row>
             </ButtonDropwdownLight>
           )}
-          {pairExists ? (
+          {pair ? (
             <AutoRow padding="10px" justify="center">
               <TYPE.body textAlign="center">
                 Pool already exists!
@@ -113,7 +111,7 @@ function CreatePool({ history }) {
               </TYPE.body>
             </AutoRow>
           ) : (
-            <ButtonPrimary disabled={step !== 2}>
+            <ButtonPrimary disabled={step !== 2} onClick={() => setStep(3)}>
               <Text fontWeight={500} fontSize={20}>
                 Create Pool
               </Text>

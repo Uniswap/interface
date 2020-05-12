@@ -184,6 +184,19 @@ function SearchModal({
   // if the current input is an address, and we don't have the token in context, try to fetch it
   const token = useToken(searchQuery)
   const [temporaryToken, setTemporaryToken] = useState<Token | null>()
+
+  // filters for ordering
+  const [activeFilter, setActiveFilter] = useState(FILTERS.BALANCES)
+
+  // toggle specific token import view
+  const [showTokenImport, setShowTokenImport] = useState(false)
+
+  // for sorting
+  const escapeStringRegexp = string => string
+
+  // used to help scanning on results, put token found from input on left
+  const [identifiedToken, setIdentifiedToken] = useState<Token | null>()
+
   useEffect(() => {
     const address = isAddress(searchQuery)
     if (address && !token) {
@@ -199,10 +212,6 @@ function SearchModal({
       }
     }
   }, [searchQuery, token, fetchTokenByAddress])
-
-  const [activeFilter, setActiveFilter] = useState(FILTERS.BALANCES)
-
-  const [showTokenImport, setShowTokenImport] = useState(false)
 
   // reset view on close
   useEffect(() => {
@@ -286,7 +295,6 @@ function SearchModal({
 
   // manage focus on modal show
   const inputRef = useRef()
-
   function onInput(event) {
     const input = event.target.value
     const checksummedInput = isAddress(input)
@@ -297,9 +305,6 @@ function SearchModal({
     setSearchQuery('')
     onDismiss()
   }
-
-  // sort tokens
-  const escapeStringRegexp = string => string
 
   const sortedPairList = useMemo(() => {
     return allPairs.sort((a, b): number => {
@@ -335,6 +340,12 @@ function SearchModal({
             (field === 'name' && !isAddress) ||
             (field === 'symbol' && !isAddress)
           ) {
+            if (token0[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i'))) {
+              setIdentifiedToken(token0)
+            }
+            if (token1[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i'))) {
+              setIdentifiedToken(token1)
+            }
             return (
               token0[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i')) ||
               token1[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i'))
@@ -359,8 +370,9 @@ function SearchModal({
     return (
       filteredPairList &&
       filteredPairList.map((pair, i) => {
-        const token0 = pair.token0
-        const token1 = pair.token1
+        // reset ordering to help scan search results
+        const token0 = identifiedToken ? (identifiedToken.equals(pair.token0) ? pair.token0 : pair.token1) : pair.token0
+        const token1 = identifiedToken ? (identifiedToken.equals(pair.token0) ? pair.token1 : pair.token0) : pair.token1
         const pairAddress = pair.liquidityToken.address
         const balance = allBalances?.[account]?.[pairAddress]?.toSignificant(6)
         const zeroBalance =
@@ -427,20 +439,6 @@ function SearchModal({
         return <TokenModalInfo>{t('noToken')}</TokenModalInfo>
       }
     } else {
-      /**
-       * @TODO
-      // TODO is this the right place to link to create exchange?
-      // else if (isAddress(searchQuery) && tokenAddress === ethers.constants.AddressZero) {
-      //   return (
-      //     <>
-      //       <TokenModalInfo>{t('noToken')}</TokenModalInfo>
-      //       <TokenModalInfo>
-      //         <Link to={`/create-exchange/${searchQuery}`}>{t('createExchange')}</Link>
-      //       </TokenModalInfo>
-      //     </>
-      //   )
-      // }
-     */
       return filteredTokenList
         .sort((a, b) => {
           if (a.address === WETH[chainId].address) {
