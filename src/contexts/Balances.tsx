@@ -6,7 +6,7 @@ import { useAllTokens } from './Tokens'
 import { useWeb3React, useDebounce } from '../hooks'
 
 import { getEtherBalance, getTokenBalance, isAddress } from '../utils'
-import { useAllDummyPairs } from './LocalStorage'
+import { useAllDummyPairs } from '../state/user/hooks'
 
 const LOCAL_STORAGE_KEY = 'BALANCES'
 const SHORT_BLOCK_TIMEOUT = (60 * 2) / 15 // in seconds, represented as a block number delta

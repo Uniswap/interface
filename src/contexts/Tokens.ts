@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { ChainId, WETH, Token } from '@uniswap/sdk'
 import { useWeb3React } from '../hooks'
-import { useLocalStorageTokens } from './LocalStorage'
+import { useUserAddedTokens } from '../state/user/hooks'
 
 export const ALL_TOKENS = [
   // WETH on all chains
@@ -47,13 +47,11 @@ export const ALL_TOKENS = [
 
 export function useAllTokens(): { [address: string]: Token } {
   const { chainId } = useWeb3React()
-  const [localStorageTokens] = useLocalStorageTokens()
+  const [userAddedTokens] = useUserAddedTokens()
 
   return useMemo(() => {
     return (
-      localStorageTokens
-        // filter to the current chain
-        .filter(token => token.chainId === chainId)
+      userAddedTokens
         // reduce into all ALL_TOKENS filtered by the current chain
         .reduce((tokenMap, token) => {
           return {
@@ -62,7 +60,7 @@ export function useAllTokens(): { [address: string]: Token } {
           }
         }, ALL_TOKENS?.[chainId] ?? {})
     )
-  }, [localStorageTokens, chainId])
+  }, [userAddedTokens, chainId])
 }
 
 export function useToken(tokenAddress: string): Token {
