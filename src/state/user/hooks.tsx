@@ -1,7 +1,7 @@
 import { ChainId, JSBI, Pair, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useEffect, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { useAllTokens } from '../../contexts/Tokens'
 import { getTokenDecimals, getTokenName, getTokenSymbol } from '../../utils'
 import { AppDispatch, AppState } from '../index'
@@ -80,7 +80,8 @@ export function useIsDarkMode(): boolean {
     ({ user: { matchesDarkMode, userDarkMode } }) => ({
       userDarkMode,
       matchesDarkMode
-    })
+    }),
+    shallowEqual
   )
 
   return userDarkMode === null ? matchesDarkMode : userDarkMode
@@ -97,7 +98,7 @@ export function useDarkModeManager(): [boolean, () => void] {
   return [darkMode, toggleSetDarkMode]
 }
 
-export function useFetchTokensByAddress(): (address: string) => Promise<Token | null> {
+export function useFetchTokenByAddress(): (address: string) => Promise<Token | null> {
   const { library, chainId } = useWeb3React()
 
   return useCallback(
@@ -118,44 +119,34 @@ export function useFetchTokensByAddress(): (address: string) => Promise<Token | 
   )
 }
 
-export function useUserAddedTokens(): [
-  Token[],
-  {
-    fetchTokenByAddress: (address: string) => Promise<Token | null>
-    addToken: (token: Token) => void
-    removeTokenByAddress: (chainId: number, address: string) => void
-  }
-] {
-  const { chainId } = useWeb3React()
-  const serializedTokens = useSelector<AppState, SerializedToken[]>(({ user: { tokens } }) =>
-    Object.values(tokens[chainId] ?? {})
-  )
+export function useAddUserToken(): (token: Token) => void {
   const dispatch = useDispatch<AppDispatch>()
-
-  const fetchTokenByAddress = useFetchTokensByAddress()
-
-  const addToken = useCallback(
+  return useCallback(
     (token: Token) => {
       dispatch(addSerializedToken({ serializedToken: serializeToken(token) }))
     },
     [dispatch]
   )
+}
 
-  const removeTokenByAddress = useCallback(
+export function useRemoveUserAddedToken(): (chainId: number, address: string) => void {
+  const dispatch = useDispatch<AppDispatch>()
+  return useCallback(
     (chainId: number, address: string) => {
       dispatch(removeSerializedToken({ chainId, address }))
     },
     [dispatch]
   )
+}
 
-  const deserializedTokens = useMemo(() => serializedTokens.map(deserializeToken), [serializedTokens])
+export function useUserAddedTokens(): Token[] {
+  const { chainId } = useWeb3React()
+  const serializedTokens = useSelector<AppState, SerializedToken[]>(
+    ({ user: { tokens } }) => Object.values(tokens[chainId] ?? {}),
+    shallowEqual
+  )
 
-  return useMemo(() => [deserializedTokens, { fetchTokenByAddress, addToken, removeTokenByAddress }], [
-    deserializedTokens,
-    fetchTokenByAddress,
-    addToken,
-    removeTokenByAddress
-  ])
+  return useMemo(() => serializedTokens.map(deserializeToken), [serializedTokens])
 }
 
 const ZERO = JSBI.BigInt(0)
@@ -212,8 +203,9 @@ export function useAllDummyPairs(): Pair[] {
     [tokens, chainId]
   )
 
-  const savedSerializedPairs = useSelector<AppState, SerializedPair[]>(({ user: { pairs } }) =>
-    Object.values(pairs[chainId] ?? {})
+  const savedSerializedPairs = useSelector<AppState, SerializedPair[]>(
+    ({ user: { pairs } }) => Object.values(pairs[chainId] ?? {}),
+    shallowEqual
   )
 
   const userPairs = useMemo(
