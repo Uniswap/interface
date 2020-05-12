@@ -214,7 +214,7 @@ export function useAllDummyPairs(): Pair[] {
             new TokenAmount(deserializeToken(pair.token1), ZERO)
           )
       ),
-    [savedSerializedPairs]
+    [savedSerializedPairs, chainId]
   )
 
   return useMemo(() => {
