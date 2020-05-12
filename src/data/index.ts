@@ -1,5 +1,8 @@
 export enum SWRKeys {
   Allowances,
   Reserves,
-  TotalSupply
+  TotalSupply,
+  TokenBalance,
+  ETHBalance,
+  V1PairAddress
 }

@@ -1,17 +1,24 @@
 import { injected, walletconnect, walletlink, fortmatic, portis } from '../connectors'
 import { ChainId, WETH, Token } from '@uniswap/sdk'
 
+export const V1_FACTORY_ADDRESS = '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95'
+
 export const ROUTER_ADDRESS = '0xf164fC0Ec4E93095b804a4795bBe1e041497b92a'
 
+// used for display in the default list when adding liquidity
 export const COMMON_BASES = {
-  1: [WETH[ChainId.MAINNET]],
-  3: [WETH[ChainId.ROPSTEN]],
-  4: [
+  [ChainId.MAINNET]: [
+    WETH[ChainId.MAINNET],
+    new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin'),
+    new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
+  ],
+  [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
+  [ChainId.RINKEBY]: [
     WETH[ChainId.RINKEBY],
     new Token(ChainId.RINKEBY, '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735', 18, 'DAI', 'Dai Stablecoin')
   ],
-  5: [WETH[ChainId.GÖRLI]],
-  42: [WETH[ChainId.KOVAN]]
+  [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
+  [ChainId.KOVAN]: [WETH[ChainId.KOVAN]]
 }
 
 export const SUPPORTED_THEMES = {

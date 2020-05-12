@@ -54,6 +54,7 @@ import {
   TruncatedText,
   Wrapper
 } from './styleds'
+import { useV1TradeLinkIfBetter } from '../../data/V1'
 
 enum SwapType {
   EXACT_TOKENS_FOR_TOKENS,
@@ -180,6 +181,11 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   )
 
   const trade = tradeType === TradeType.EXACT_INPUT ? bestTradeExactIn : bestTradeExactOut
+
+  // return link to the approriate v1 pair if the slippage on v1 is lower
+  const v1TradeLinkIfBetter = useV1TradeLinkIfBetter(trade)
+  console.log(v1TradeLinkIfBetter)
+
   const route = trade?.route
   const userHasSpecifiedInputOutput =
     !!tokens[Field.INPUT] &&
@@ -1335,7 +1341,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             </AutoColumn>
           </FixedBottom>
         </AdvancedDropwdown>
-      )}{' '}
+      )}
     </Wrapper>
   )
 }
