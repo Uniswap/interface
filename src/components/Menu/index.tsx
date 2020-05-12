@@ -123,7 +123,6 @@ export default function Menu() {
           <MenuItem id="link" href="https://uniswap.info/">
             Analytics
           </MenuItem>
-          <MenuItem onClick={toggleDarkMode}>{darkMode ? 'Light theme' : 'Dark theme'}</MenuItem>
         </MenuFlyout>
       ) : (
         ''
