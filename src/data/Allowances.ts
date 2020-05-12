@@ -15,12 +15,7 @@ function getTokenAllowance(
       .then((balance: { toString: () => string }) => new TokenAmount(token, balance.toString()))
 }
 
-export function useTokenAllowance(
-  token?: Token,
-  owner?: string,
-  spender?: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): TokenAmount {
+export function useTokenAllowance(token?: Token, owner?: string, spender?: string): TokenAmount {
   const contract = useTokenContract(token?.address, false)
   const shouldFetch = !!contract && typeof owner === 'string' && typeof spender === 'string'
 

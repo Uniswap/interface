@@ -9,7 +9,7 @@ import Web3Status from '../Web3Status'
 
 import { Link } from '../../theme'
 import { Text } from 'rebass'
-import { WETH } from '@uniswap/sdk'
+import { WETH, ChainId } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
 import { YellowCard } from '../Card'
 import { useWeb3React } from '../../hooks'
@@ -42,8 +42,6 @@ const HeaderFrame = styled.div`
 
 const HeaderElement = styled.div`
   display: flex;
-  min-width: 0;
-  display: flex;
   align-items: center;
 `
 
@@ -66,12 +64,10 @@ const TitleText = styled(Row)`
 
 const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
-  display: flex;
   flex-direction: row;
   align-items: center;
   background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
   border-radius: 12px;
-  padding-left: ${({ active }) => (active ? '8px' : 0)};
   white-space: nowrap;
 
   :focus {
@@ -197,22 +193,19 @@ export default function Header() {
         </HeaderElement>
         <HeaderElement>
           <TestnetWrapper>
-            {!isMobile && chainId === 4 && <NetworkCard>Rinkeby</NetworkCard>}
-            {!isMobile && chainId === 3 && <NetworkCard>Ropsten</NetworkCard>}
-            {!isMobile && chainId === 5 && <NetworkCard>Goerli</NetworkCard>}
-            {!isMobile && chainId === 42 && <NetworkCard>Kovan</NetworkCard>}
+            {!isMobile && chainId === ChainId.ROPSTEN && <NetworkCard>Ropsten</NetworkCard>}
+            {!isMobile && chainId === ChainId.RINKEBY && <NetworkCard>Rinkeby</NetworkCard>}
+            {!isMobile && chainId === ChainId.GÖRLI && <NetworkCard>Görli</NetworkCard>}
+            {!isMobile && chainId === ChainId.KOVAN && <NetworkCard>Kovan</NetworkCard>}
           </TestnetWrapper>
           <AccountElement active={!!account}>
-            {account ? (
-              <Row style={{ marginRight: '-1.25rem' }}>
-                <Text fontWeight={500}> {userEthBalance && `${userEthBalance?.toSignificant(4)} ETH`}</Text>
-              </Row>
-            ) : (
-              ''
-            )}
+            {account && userEthBalance ? (
+              <Text style={{ flexShrink: 0 }} px="0.5rem" fontWeight={500}>
+                {userEthBalance?.toSignificant(4)} ETH
+              </Text>
+            ) : null}
             <Web3Status />
           </AccountElement>
-
           <Menu />
         </HeaderElement>
       </RowBetween>
