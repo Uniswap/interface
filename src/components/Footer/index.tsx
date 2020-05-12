@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Send, Sun, Moon } from 'react-feather'
-import { useDarkModeManager } from '../../contexts/LocalStorage'
+import { useDarkModeManager } from '../../state/user/hooks'
 
 import { ButtonSecondary } from '../Button'
 

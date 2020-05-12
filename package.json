@@ -48,6 +48,7 @@
     "react-spring": "^8.0.27",
     "react-use-gesture": "^6.0.14",
     "rebass": "^4.0.7",
+    "redux-localstorage-simple": "^2.2.0",
     "styled-components": "^4.2.0",
     "swr": "0.1.18",
     "use-media": "^1.4.0"

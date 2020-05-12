@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 
 import { useTokenOrETHBalance } from './Balances'
 import { useAllTokens } from '../contexts/Tokens'
-import { useAllDummyPairs } from '../contexts/LocalStorage'
+import { useAllDummyPairs } from '../state/user/hooks'
 
 const SWR_BATCH_CONFIG = { refreshInterval: 60 * 2.5 * 1000 }
 

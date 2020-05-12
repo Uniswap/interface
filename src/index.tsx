@@ -7,7 +7,7 @@ import { Provider } from 'react-redux'
 
 import { NetworkContextName } from './constants'
 import { isMobile } from 'react-device-detect'
-import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage'
+import { Updater as LocalStorageContextUpdater } from './state/user/hooks'
 import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
 import { FetchBatchAccountBalances } from './data/BatchAccountBalances'
 import App from './pages/App'
@@ -37,11 +37,7 @@ if (process.env.NODE_ENV === 'production') {
 ReactGA.pageview(window.location.pathname + window.location.search)
 
 function ContextProviders({ children }: { children: React.ReactNode }) {
-  return (
-    <LocalStorageContextProvider>
-      <TransactionContextProvider>{children}</TransactionContextProvider>
-    </LocalStorageContextProvider>
-  )
+  return <TransactionContextProvider>{children}</TransactionContextProvider>
 }
 
 function Updaters() {

@@ -1,10 +1,14 @@
 import React, { useState, useRef, useMemo, useEffect, useContext } from 'react'
-import '@reach/tooltip/styles.css'
 import styled, { ThemeContext } from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
 import { JSBI, Token, WETH } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
+import { useTranslation } from 'react-i18next'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
+import { Text } from 'rebass'
+
+import '@reach/tooltip/styles.css'
+
 import { COMMON_BASES } from '../../constants'
 import { Link as StyledLink } from '../../theme/components'
 
@@ -14,7 +18,6 @@ import Circle from '../../assets/images/circle.svg'
 import TokenLogo from '../TokenLogo'
 import DoubleTokenLogo from '../DoubleLogo'
 import Column, { AutoColumn } from '../Column'
-import { Text } from 'rebass'
 import { Hover } from '../../theme'
 import { ArrowLeft } from 'react-feather'
 import { CloseIcon } from '../../theme/components'
@@ -24,8 +27,12 @@ import { RowBetween, RowFixed, AutoRow } from '../Row'
 
 import { isAddress } from '../../utils'
 import { useWeb3React } from '../../hooks'
-import { useLocalStorageTokens, useAllDummyPairs } from '../../contexts/LocalStorage'
-import { useTranslation } from 'react-i18next'
+import {
+  useAllDummyPairs,
+  useFetchTokenByAddress,
+  useAddUserToken,
+  useRemoveUserAddedToken
+} from '../../state/user/hooks'
 import { useToken, useAllTokens, ALL_TOKENS } from '../../contexts/Tokens'
 import QuestionHelper from '../Question'
 import { AccountBalancesProps, withAccountBalances } from '../../data/BatchAccountBalances'
@@ -179,7 +186,9 @@ function SearchModal({
   const [searchQuery, setSearchQuery] = useState('')
   const [sortDirection, setSortDirection] = useState(true)
 
-  const [, { fetchTokenByAddress, addToken, removeTokenByAddress }] = useLocalStorageTokens()
+  const fetchTokenByAddress = useFetchTokenByAddress()
+  const addToken = useAddUserToken()
+  const removeTokenByAddress = useRemoveUserAddedToken()
 
   // if the current input is an address, and we don't have the token in context, try to fetch it
   const token = useToken(searchQuery)

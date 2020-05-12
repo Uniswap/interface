@@ -15,8 +15,8 @@ import { AutoColumn, ColumnCenter } from '../../components/Column'
 
 import { useWeb3React } from '@web3-react/core'
 import { usePair } from '../../data/Reserves'
-import { useAllDummyPairs } from '../../contexts/LocalStorage'
 import { AccountBalancesProps, withAccountBalances } from '../../data/BatchAccountBalances'
+import { useAllDummyPairs } from '../../state/user/hooks'
 
 const Positions = styled.div`
   position: relative;

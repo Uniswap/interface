@@ -1,13 +1,16 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled, {
   ThemeProvider as StyledComponentsThemeProvider,
   createGlobalStyle,
   css,
   DefaultTheme
 } from 'styled-components'
+import { AppDispatch, AppState } from '../state'
+import { updateUserDarkMode } from '../state/user/actions'
 import { getQueryParam, checkSupportedTheme } from '../utils'
 import { SUPPORTED_THEMES } from '../constants'
-import { useDarkModeManager } from '../contexts/LocalStorage'
+import { useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
 
@@ -115,21 +118,28 @@ export function theme(darkMode: boolean): DefaultTheme {
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [darkMode, toggleDarkMode] = useDarkModeManager()
+  const dispatch = useDispatch<AppDispatch>()
+  const userDarkMode = useSelector<AppState, boolean | null>(state => state.user.userDarkMode)
+  const darkMode = useIsDarkMode()
+
   const themeURL = checkSupportedTheme(getQueryParam(window.location, 'theme'))
-  const themeToRender = themeURL
+  const urlContainsDarkMode: boolean | null = themeURL
     ? themeURL.toUpperCase() === SUPPORTED_THEMES.DARK
       ? true
       : themeURL.toUpperCase() === SUPPORTED_THEMES.LIGHT
       ? false
-      : darkMode
-    : darkMode
+      : null
+    : null
 
   useEffect(() => {
-    themeURL && toggleDarkMode(themeToRender)
-  }, [toggleDarkMode, themeToRender, themeURL])
+    if (urlContainsDarkMode !== null && userDarkMode === null) {
+      dispatch(updateUserDarkMode({ userDarkMode: urlContainsDarkMode }))
+    }
+  }, [dispatch, userDarkMode, urlContainsDarkMode])
 
-  return <StyledComponentsThemeProvider theme={theme(themeToRender)}>{children}</StyledComponentsThemeProvider>
+  const themeObject = useMemo(() => theme(darkMode), [darkMode])
+
+  return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 
 const TextWrapper = styled(Text)<{ color: keyof Colors }>`
