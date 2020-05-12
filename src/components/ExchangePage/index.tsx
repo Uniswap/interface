@@ -121,7 +121,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     if (inputTokenAddress && !Object.keys(allTokens).some(tokenAddress => tokenAddress === inputTokenAddress)) {
       fetchTokenByAddress(inputTokenAddress).then(token => {
         if (token !== null) {
-          // addToken(token)
+          addToken(token)
         }
       })
     }

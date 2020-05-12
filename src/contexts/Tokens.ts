@@ -53,11 +53,9 @@ export function useAllTokens(): { [address: string]: Token } {
     return (
       userAddedTokens
         // reduce into all ALL_TOKENS filtered by the current chain
-        .reduce((tokenMap, token) => {
-          return {
-            ...tokenMap,
-            [token.address]: token
-          }
+        .reduce<{ [address: string]: Token }>((tokenMap, token) => {
+          tokenMap[token.address] = token
+          return tokenMap
         }, ALL_TOKENS?.[chainId] ?? {})
     )
   }, [userAddedTokens, chainId])

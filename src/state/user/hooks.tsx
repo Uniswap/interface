@@ -141,12 +141,11 @@ export function useRemoveUserAddedToken(): (chainId: number, address: string) =>
 
 export function useUserAddedTokens(): Token[] {
   const { chainId } = useWeb3React()
-  const serializedTokens = useSelector<AppState, SerializedToken[]>(
-    ({ user: { tokens } }) => Object.values(tokens[chainId] ?? {}),
-    shallowEqual
-  )
+  const serializedTokensMap = useSelector<AppState, AppState['user']['tokens']>(({ user: { tokens } }) => tokens)
 
-  return useMemo(() => serializedTokens.map(deserializeToken), [serializedTokens])
+  return useMemo(() => {
+    return Object.values(serializedTokensMap[chainId] ?? {}).map(deserializeToken)
+  }, [serializedTokensMap, chainId])
 }
 
 const ZERO = JSBI.BigInt(0)
@@ -178,6 +177,7 @@ const bases = [
 export function useAllDummyPairs(): Pair[] {
   const { chainId } = useWeb3React()
   const tokens = useAllTokens()
+
   const generatedPairs: Pair[] = useMemo(
     () =>
       Object.values(tokens)
@@ -203,14 +203,11 @@ export function useAllDummyPairs(): Pair[] {
     [tokens, chainId]
   )
 
-  const savedSerializedPairs = useSelector<AppState, SerializedPair[]>(
-    ({ user: { pairs } }) => Object.values(pairs[chainId] ?? {}),
-    shallowEqual
-  )
+  const savedSerializedPairs = useSelector<AppState>(({ user: { pairs } }) => pairs)
 
   const userPairs = useMemo(
     () =>
-      savedSerializedPairs.map(
+      Object.values<SerializedPair>(savedSerializedPairs[chainId] ?? {}).map(
         pair =>
           new Pair(
             new TokenAmount(deserializeToken(pair.token0), ZERO),
