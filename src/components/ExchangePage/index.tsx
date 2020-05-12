@@ -1,4 +1,3 @@
-import { JsonRpcSigner } from '@ethersproject/providers'
 import React, { useState, useCallback, useEffect, useContext } from 'react'
 import { ThemeContext } from 'styled-components'
 import { parseEther, parseUnits } from '@ethersproject/units'
