@@ -1167,7 +1167,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
         {!account ? (
           <ButtonLight
             onClick={() => {
-              toggleWalletModal(true)
+              toggleWalletModal()
             }}
           >
             Connect Wallet
