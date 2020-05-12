@@ -15,7 +15,7 @@ import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { ROUTER_ADDRESS } from '../../constants'
 import { useTokenAllowance } from '../../data/Allowances'
-import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
+import { useAllBalances } from '../../contexts/Balances'
 import { useLocalStorageTokens } from '../../contexts/LocalStorage'
 import { usePair } from '../../data/Reserves'
 import { useAllTokens, useToken } from '../../contexts/Tokens'
@@ -56,6 +56,7 @@ import {
   Wrapper
 } from './styleds'
 import { useV1TradeLinkIfBetter } from '../../data/V1'
+import { useTokenOrETHBalance } from '../../data/Balances'
 
 enum SwapType {
   EXACT_TOKENS_FOR_TOKENS,
@@ -156,8 +157,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
 
   // get user- and token-specific lookup data
   const userBalances = {
-    [Field.INPUT]: useAddressBalance(account, tokens[Field.INPUT]),
-    [Field.OUTPUT]: useAddressBalance(account, tokens[Field.OUTPUT])
+    [Field.INPUT]: useTokenOrETHBalance(tokens[Field.INPUT], account),
+    [Field.OUTPUT]: useTokenOrETHBalance(tokens[Field.OUTPUT], account)
   }
 
   // parse the amount that the user typed

@@ -21,7 +21,6 @@ import { ButtonPrimary, ButtonLight } from '../../components/Button'
 import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
 
 import { useToken } from '../../contexts/Tokens'
-import { useAddressBalance } from '../../contexts/Balances'
 import { useTokenAllowance } from '../../data/Allowances'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useWeb3React, useTokenContract } from '../../hooks'
@@ -33,6 +32,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { usePair } from '../../data/Reserves'
 import { useLocalStorageTokens } from '../../contexts/LocalStorage'
 import { useAllTokens } from '../../contexts/Tokens'
+import { useTokenOrETHBalance } from '../../data/Balances'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = 50
@@ -223,8 +223,8 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
 
   // get user-pecific and token-specific lookup data
   const userBalances: { [field: number]: TokenAmount } = {
-    [Field.INPUT]: useAddressBalance(account, tokens[Field.INPUT]),
-    [Field.OUTPUT]: useAddressBalance(account, tokens[Field.OUTPUT])
+    [Field.INPUT]: useTokenOrETHBalance(tokens[Field.INPUT], account),
+    [Field.OUTPUT]: useTokenOrETHBalance(tokens[Field.OUTPUT], account)
   }
 
   // track non relational amounts if first person to add liquidity

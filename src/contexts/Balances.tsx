@@ -471,25 +471,6 @@ export function useAllBalances(): { [ownerAddress: string]: { [tokenAddress: str
   ])
 }
 
-export function useAddressBalance(address: string, token: Token): TokenAmount | undefined | null {
-  const { chainId } = useWeb3React()
-  const [state, { startListening, stopListening }] = useBalancesContext()
-
-  const value = typeof chainId === 'number' ? state?.[chainId]?.[address]?.[token?.address]?.value : undefined
-  const formattedValue = value && token && new TokenAmount(token, value)
-
-  useEffect(() => {
-    if (typeof chainId === 'number' && isAddress(address) && isAddress(token?.address)) {
-      startListening(chainId, address, token.address)
-      return () => {
-        stopListening(chainId, address, token.address)
-      }
-    }
-  }, [chainId, address, startListening, stopListening, token])
-
-  return useMemo(() => formattedValue, [formattedValue])
-}
-
 export function useAccountLPBalances(account: string) {
   const { chainId } = useWeb3React()
   const [, { startListening, stopListening }] = useBalancesContext()

@@ -1,6 +1,7 @@
+import { useMemo } from 'react'
 import { Web3Provider } from '@ethersproject/providers'
 import { Contract } from '@ethersproject/contracts'
-import { Token, TokenAmount } from '@uniswap/sdk'
+import { Token, TokenAmount, WETH } from '@uniswap/sdk'
 import useSWR from 'swr'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -46,4 +47,21 @@ export function useETHBalance(owner?: string): BigNumber {
   })
 
   return data
+}
+
+export function useTokenOrETHBalance(token?: Token, owner?: string): TokenAmount {
+  // do a little memo dance so we can pass WETH to the return useMemo
+  const chainId = token?.chainId
+  const currentWETH = useMemo(() => WETH[chainId], [chainId])
+  const isWETH = !!token && !!WETH && token.equals(currentWETH)
+  const tokenBalance = useTokenBalance(isWETH ? undefined : token, owner)
+  const ETHBalance = useETHBalance(isWETH ? owner : undefined)
+
+  return useMemo(() => {
+    if (!isWETH) {
+      return tokenBalance
+    } else {
+      return currentWETH && ETHBalance ? new TokenAmount(currentWETH, ETHBalance.toString()) : undefined
+    }
+  }, [isWETH, tokenBalance, currentWETH, ETHBalance])
 }

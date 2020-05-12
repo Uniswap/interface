@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
-import { TokenAmount, JSBI, Token, Pair } from '@uniswap/sdk'
+import { JSBI, Token, Pair } from '@uniswap/sdk'
+import { Text } from 'rebass'
+import { Plus } from 'react-feather'
 
 import Row from '../Row'
 import TokenLogo from '../TokenLogo'
 import SearchModal from '../SearchModal'
 import PositionCard from '../PositionCard'
 import { Link } from '../../theme'
-import { Text } from 'rebass'
-import { Plus } from 'react-feather'
 import { LightCard } from '../Card'
 import { AutoColumn, ColumnCenter } from '../Column'
 import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
 
 import { useToken } from '../../contexts/Tokens'
 import { useWeb3React } from '@web3-react/core'
-import { useAddressBalance } from '../../contexts/Balances'
 import { useLocalStoragePairAdder } from '../../contexts/LocalStorage'
 import { usePair } from '../../data/Reserves'
+import { useTokenOrETHBalance } from '../../data/Balances'
 
 const Fields = {
   TOKEN0: 0,
@@ -43,7 +43,7 @@ function PoolFinder({ history }: RouteComponentProps) {
     }
   }, [pair, addPair])
 
-  const position: TokenAmount = useAddressBalance(account, pair?.liquidityToken)
+  const position = useTokenOrETHBalance(pair?.liquidityToken, account)
 
   const newPair: boolean =
     !!pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))

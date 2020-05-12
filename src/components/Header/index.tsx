@@ -13,7 +13,6 @@ import { WETH, ChainId } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
 import { YellowCard } from '../Card'
 import { useWeb3React } from '../../hooks'
-import { useAddressBalance } from '../../contexts/Balances'
 import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 import Logo from '../../assets/svg/logo.svg'
@@ -22,6 +21,7 @@ import LogoDark from '../../assets/svg/logo_white.svg'
 import WordmarkDark from '../../assets/svg/wordmark_white.svg'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
+import { useTokenOrETHBalance } from '../../data/Balances'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -148,7 +148,7 @@ const VersionToggle = styled.a`
 export default function Header() {
   const { account, chainId } = useWeb3React()
 
-  const userEthBalance = useAddressBalance(account, WETH[chainId])
+  const userEthBalance = useTokenOrETHBalance(WETH[chainId], account)
   const [isDark] = useDarkModeManager()
 
   return (
