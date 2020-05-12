@@ -130,7 +130,7 @@ function CreatePool({ history }) {
             setShowSearch(false)
           }}
           hiddenToken={activeField === Fields.TOKEN0 ? token1Address : token0Address}
-          showCommonBases={true}
+          showCommonBases={activeField === Fields.TOKEN0}
         />
       </AutoColumn>
     )
