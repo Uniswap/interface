@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useWeb3React } from '../../hooks'
 import { useAddPopup, useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
-import { addTransaction, checkTransaction, CustomData, finalizeTransaction } from './actions'
-import { TransactionData } from './reducer'
+import { addTransaction, checkTransaction, finalizeTransaction } from './actions'
+import { TransactionDetails } from './reducer'
 
 export function Updater() {
   const { chainId, library } = useWeb3React()
@@ -34,9 +34,9 @@ export function Updater() {
             .then(receipt => {
               if (!stale) {
                 if (!receipt) {
-                  dispatch(checkTransaction({ networkId: chainId, hash, blockNumber: globalBlockNumber }))
+                  dispatch(checkTransaction({ chainId, hash, blockNumber: globalBlockNumber }))
                 } else {
-                  dispatch(finalizeTransaction({ networkId: chainId, hash, receipt }))
+                  dispatch(finalizeTransaction({ chainId, hash, receipt }))
                   // add success or failure popup
                   if (receipt.status === 1) {
                     addPopup({
@@ -55,7 +55,7 @@ export function Updater() {
               }
             })
             .catch(() => {
-              dispatch(checkTransaction({ networkId: chainId, hash, blockNumber: globalBlockNumber }))
+              dispatch(checkTransaction({ chainId, hash, blockNumber: globalBlockNumber }))
             })
         })
 
@@ -71,25 +71,28 @@ export function Updater() {
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
   response: TransactionResponse,
-  summary?: string,
-  customData?: CustomData
+  customData?: { summary?: string; approvalOfToken?: string }
 ) => void {
+  const { chainId } = useWeb3React()
   const dispatch = useDispatch<AppDispatch>()
 
   return useCallback(
-    (response: TransactionResponse, summary?: string, customData: CustomData = {}) => {
-      const { hash, chainId, from } = response
+    (
+      response: TransactionResponse,
+      { summary, approvalOfToken }: { summary?: string; approvalOfToken?: string } = {}
+    ) => {
+      const { hash } = response
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      dispatch(addTransaction({ hash, from, networkId: chainId, customData, summary }))
+      dispatch(addTransaction({ hash, chainId, approvalOfToken, summary }))
     },
     [dispatch]
   )
 }
 
 // returns all the transactions for the current chain
-export function useAllTransactions(): { [txHash: string]: TransactionData } {
+export function useAllTransactions(): { [txHash: string]: TransactionDetails } {
   const { chainId } = useWeb3React()
 
   const state = useSelector<AppState>(state => state.transactions)
@@ -104,7 +107,7 @@ export function useHasPendingApproval(tokenAddress: string): boolean {
     if (allTransactions[hash]?.receipt) {
       return false
     } else {
-      return allTransactions[hash]?.customData?.approval === tokenAddress
+      return allTransactions[hash]?.approvalOfToken === tokenAddress
     }
   })
 }

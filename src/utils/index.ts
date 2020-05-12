@@ -1,6 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
+import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { parseBytes32String } from '@ethersproject/strings'
 import { BigNumber } from '@ethersproject/bignumber'
 
@@ -117,12 +118,12 @@ export function calculateSlippageAmount(value: TokenAmount, slippage: number): [
 }
 
 // account is optional
-export function getProviderOrSigner(library: any, account?: string): any {
+export function getProviderOrSigner(library: Web3Provider, account?: string): Web3Provider | JsonRpcSigner {
   return account ? library.getSigner(account).connectUnchecked() : library
 }
 
 // account is optional
-export function getContract(address: string, ABI: any, library: any, account?: string): Contract {
+export function getContract(address: string, ABI: any, library: Web3Provider, account?: string): Contract {
   if (!isAddress(address) || address === AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }

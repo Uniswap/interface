@@ -1,19 +1,17 @@
 import { TransactionReceipt } from '@ethersproject/providers'
 import { createReducer } from '@reduxjs/toolkit'
-import { addTransaction, checkTransaction, CustomData, finalizeTransaction } from './actions'
+import { addTransaction, checkTransaction, finalizeTransaction } from './actions'
 
-export interface TransactionData {
-  customData: CustomData
+export interface TransactionDetails {
+  approvalOfToken?: string
   blockNumberChecked?: number
   summary?: string
   receipt?: TransactionReceipt
-  from: string
-  hash: string
 }
 
 export interface TransactionState {
   [chainId: number]: {
-    [txHash: string]: TransactionData
+    [txHash: string]: TransactionDetails
   }
 }
 
@@ -21,25 +19,25 @@ const initialState: TransactionState = {}
 
 export default createReducer(initialState, builder =>
   builder
-    .addCase(addTransaction, (state, { payload: { networkId, hash, from, customData } }) => {
-      if (state[networkId]?.[hash]) {
+    .addCase(addTransaction, (state, { payload: { chainId, hash, approvalOfToken, summary } }) => {
+      if (state[chainId]?.[hash]) {
         throw Error('Attempted to add existing transaction.')
       }
-      state[networkId] = state[networkId] ?? {}
-      state[networkId][hash] = { customData, from, hash }
+      state[chainId] = state[chainId] ?? {}
+      state[chainId][hash] = { approvalOfToken, summary }
     })
-    .addCase(checkTransaction, (state, { payload: { networkId, blockNumber, hash } }) => {
-      if (!state[networkId]?.[hash]) {
+    .addCase(checkTransaction, (state, { payload: { chainId, blockNumber, hash } }) => {
+      if (!state[chainId]?.[hash]) {
         throw Error('Attempted to check non-existent transaction.')
       }
 
-      state[networkId][hash].blockNumberChecked = blockNumber
+      state[chainId][hash].blockNumberChecked = blockNumber
     })
-    .addCase(finalizeTransaction, (state, { payload: { hash, networkId, receipt } }) => {
-      if (!state[networkId]?.[hash]) {
+    .addCase(finalizeTransaction, (state, { payload: { hash, chainId, receipt } }) => {
+      if (!state[chainId]?.[hash]) {
         throw Error('Attempted to finalize non-existent transaction.')
       }
-      state[networkId] = state[networkId] ?? {}
-      state[networkId][hash].receipt = receipt
+      state[chainId] = state[chainId] ?? {}
+      state[chainId][hash].receipt = receipt
     })
 )

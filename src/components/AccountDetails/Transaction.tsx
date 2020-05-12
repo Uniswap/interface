@@ -74,7 +74,7 @@ export default function Transaction({ hash, pending }: { hash: string; pending: 
   const { chainId } = useWeb3React()
   const allTransactions = useAllTransactions()
 
-  const summary = allTransactions?.[hash]?.response?.summary
+  const summary = allTransactions?.[hash]?.summary
 
   return (
     <TransactionWrapper key={hash}>

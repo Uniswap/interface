@@ -1,3 +1,4 @@
+import { JsonRpcSigner } from '@ethersproject/providers'
 import React, { useState, useCallback, useEffect, useContext } from 'react'
 import { ThemeContext } from 'styled-components'
 import { parseEther, parseUnits } from '@ethersproject/units'
@@ -373,20 +374,20 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     const signer = await getProviderOrSigner(library, account)
     // get token contract if needed
     let estimate: Function, method: Function, args
-    if (tokens[Field.INPUT].equals(WETH[chainId])) {
-      ;(signer as any)
+    if (tokens[Field.INPUT].equals(WETH[chainId]) && signer instanceof JsonRpcSigner) {
+      signer
         .sendTransaction({ to: recipient.toString(), value: BigNumber.from(parsedAmounts[Field.INPUT].raw.toString()) })
         .then(response => {
           setTxHash(response.hash)
-          addTransaction(
-            response,
-            'Send ' +
+          addTransaction(response, {
+            summary:
+              'Send ' +
               parsedAmounts[Field.INPUT]?.toSignificant(3) +
               ' ' +
               tokens[Field.INPUT]?.symbol +
               ' to ' +
               recipient
-          )
+          })
           setPendingConfirmation(false)
         })
         .catch(() => {
@@ -403,15 +404,15 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             gasLimit: calculateGasMargin(estimatedGasLimit)
           }).then(response => {
             setTxHash(response.hash)
-            addTransaction(
-              response,
-              'Send ' +
+            addTransaction(response, {
+              summary:
+                'Send ' +
                 parsedAmounts[Field.INPUT]?.toSignificant(3) +
                 ' ' +
                 tokens[Field.INPUT]?.symbol +
                 ' to ' +
                 recipient
-            )
+            })
             setPendingConfirmation(false)
           })
         )
@@ -514,9 +515,9 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setTxHash(response.hash)
-          addTransaction(
-            response,
-            'Swap ' +
+          addTransaction(response, {
+            summary:
+              'Swap ' +
               slippageAdjustedAmounts?.[Field.INPUT]?.toSignificant(3) +
               ' ' +
               tokens[Field.INPUT]?.symbol +
@@ -524,7 +525,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               slippageAdjustedAmounts?.[Field.OUTPUT]?.toSignificant(3) +
               ' ' +
               tokens[Field.OUTPUT]?.symbol
-          )
+          })
           setPendingConfirmation(false)
         })
       )
@@ -550,7 +551,10 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
         gasLimit: calculateGasMargin(estimatedGas)
       })
       .then(response => {
-        addTransaction(response, 'Approve ' + tokens[field]?.symbol, { approval: tokens[field]?.address })
+        addTransaction(response, {
+          summary: 'Approve ' + tokens[field]?.symbol,
+          approvalOfToken: tokens[field].address
+        })
       })
   }
 
