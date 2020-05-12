@@ -1,5 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
-import { Token, TokenAmount, Pair, Trade, ChainId, WETH, Route, TradeType } from '@uniswap/sdk'
+import { Token, TokenAmount, Pair, Trade, ChainId, WETH, Route, TradeType, Percent } from '@uniswap/sdk'
 import useSWR from 'swr'
 
 import IUniswapV1Factory from '../constants/abis/v1_factory.json'
@@ -38,7 +38,7 @@ function useMockV1Pair(token?: Token) {
     : undefined
 }
 
-export function useV1TradeLinkIfBetter(trade: Trade): string {
+export function useV1TradeLinkIfBetter(trade: Trade, minimumDelta: Percent = new Percent('0')): string {
   const inputPair = useMockV1Pair(trade?.route?.input)
   const outputPair = useMockV1Pair(trade?.route?.output)
 
@@ -65,7 +65,7 @@ export function useV1TradeLinkIfBetter(trade: Trade): string {
       trade.tradeType
     )
 
-  const v1HasBetterRate = v1Trade?.slippage?.lessThan(trade?.slippage)
+  const v1HasBetterRate = v1Trade?.slippage?.add(minimumDelta)?.lessThan(trade?.slippage)
 
   return v1HasBetterRate
     ? `https://v1.uniswap.exchange/swap?inputCurrency=${

@@ -182,9 +182,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
 
   const trade = tradeType === TradeType.EXACT_INPUT ? bestTradeExactIn : bestTradeExactOut
 
-  // return link to the approriate v1 pair if the slippage on v1 is lower
-  const v1TradeLinkIfBetter = useV1TradeLinkIfBetter(trade)
-  console.log(v1TradeLinkIfBetter)
+  // return link to the appropriate v1 pair if the slippage on v1 is lower
+  const v1TradeLinkIfBetter = useV1TradeLinkIfBetter(trade, new Percent('50', '10000'))
 
   const route = trade?.route
   const userHasSpecifiedInputOutput =
