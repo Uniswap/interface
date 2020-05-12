@@ -14,9 +14,9 @@ import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 
 import { useWeb3React } from '@web3-react/core'
-import { useAllBalances, useAccountLPBalances } from '../../contexts/Balances'
 import { usePair } from '../../data/Reserves'
 import { useAllDummyPairs } from '../../contexts/LocalStorage'
+import { AccountBalancesProps, withAccountBalances } from '../../data/BatchAccountBalances'
 
 const Positions = styled.div`
   position: relative;
@@ -34,24 +34,20 @@ function PositionCardWrapper({ dummyPair }: { dummyPair: Pair }) {
   return <PositionCard pair={pair} />
 }
 
-function Supply({ history }: RouteComponentProps) {
+interface SupplyProps extends AccountBalancesProps, RouteComponentProps<{}> {}
+
+function Supply({ accountBalances, history }: SupplyProps) {
   const theme = useContext(ThemeContext)
   const { account } = useWeb3React()
   const [showPoolSearch, setShowPoolSearch] = useState(false)
-
-  // initiate listener for LP balances
-  const allBalances = useAllBalances()
-  useAccountLPBalances(account)
 
   const pairs = useAllDummyPairs()
 
   const filteredExchangeList = pairs
     .filter(pair => {
       return (
-        allBalances &&
-        allBalances[account] &&
-        allBalances[account][pair.liquidityToken.address] &&
-        JSBI.greaterThan(allBalances[account][pair.liquidityToken.address].raw, JSBI.BigInt(0))
+        accountBalances?.[account]?.[pair.liquidityToken.address] &&
+        JSBI.greaterThan(accountBalances[account][pair.liquidityToken.address].raw, JSBI.BigInt(0))
       )
     })
     .map((pair, i) => {
@@ -114,4 +110,4 @@ function Supply({ history }: RouteComponentProps) {
     </AutoColumn>
   )
 }
-export default withRouter(Supply)
+export default withRouter(withAccountBalances(Supply))

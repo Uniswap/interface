@@ -15,7 +15,6 @@ import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { ROUTER_ADDRESS } from '../../constants'
 import { useTokenAllowance } from '../../data/Allowances'
-import { useAllBalances } from '../../contexts/Balances'
 import { useLocalStorageTokens } from '../../contexts/LocalStorage'
 import { usePair } from '../../data/Reserves'
 import { useAllTokens, useToken } from '../../contexts/Tokens'
@@ -57,6 +56,7 @@ import {
 } from './styleds'
 import { useV1TradeLinkIfBetter } from '../../data/V1'
 import { useTokenOrETHBalance } from '../../data/Balances'
+import { AccountBalancesProps, withAccountBalances } from '../../data/BatchAccountBalances'
 
 enum SwapType {
   EXACT_TOKENS_FOR_TOKENS,
@@ -77,12 +77,12 @@ const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
 const ALLOWED_SLIPPAGE_MEDIUM = 100
 const ALLOWED_SLIPPAGE_HIGH = 500
 
-interface ExchangePageProps extends RouteComponentProps<{}> {
+interface ExchangePageProps extends AccountBalancesProps, RouteComponentProps<{}> {
   sendingInput: boolean
   params: QueryParams
 }
 
-function ExchangePage({ sendingInput = false, history, params }: ExchangePageProps) {
+function ExchangePage({ sendingInput = false, params, accountBalances, history }: ExchangePageProps) {
   // text translation
   // const { t } = useTranslation()
   const { chainId, account, library } = useWeb3React()
@@ -151,9 +151,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   const [txHash, setTxHash] = useState<string>('')
   const [deadline, setDeadline] = useState<number>(DEFAULT_DEADLINE_FROM_NOW)
   const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
-
-  // all balances for detecting a swap with send
-  const allBalances = useAllBalances()
 
   // get user- and token-specific lookup data
   const userBalances = {
@@ -935,7 +932,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       ]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}`
 
   function _onTokenSelect(address: string) {
-    const balance = allBalances?.[account]?.[address]
+    const balance = accountBalances?.[account]?.[address]
     // if no user balance - switch view to a send with swap
     const hasBalance = balance && JSBI.greaterThan(balance.raw, JSBI.BigInt(0))
     if (!hasBalance && sending) {
@@ -1372,4 +1369,4 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   )
 }
 
-export default withRouter(ExchangePage)
+export default withRouter(withAccountBalances(ExchangePage))

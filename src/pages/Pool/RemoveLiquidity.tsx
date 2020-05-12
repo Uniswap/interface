@@ -21,7 +21,6 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import { useToken } from '../../contexts/Tokens'
 import { useWeb3React } from '../../hooks'
-import { useAllBalances } from '../../contexts/Balances'
 import { usePairContract } from '../../hooks'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useTotalSupply } from '../../data/TotalSupply'
@@ -30,6 +29,7 @@ import { splitSignature } from '@ethersproject/bytes'
 import { ROUTER_ADDRESS } from '../../constants'
 import { getRouterContract, calculateGasMargin, calculateSlippageAmount } from '../../utils'
 import { usePair } from '../../data/Reserves'
+import { withAccountBalances, AccountBalancesProps } from '../../data/BatchAccountBalances'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = 50
@@ -152,7 +152,12 @@ const ConfirmedText = styled(Text)<{ confirmed?: boolean }>`
   color: ${({ theme, confirmed }) => (confirmed ? theme.green1 : theme.white)};
 `
 
-export default function RemoveLiquidity({ token0, token1 }: { token0: string; token1: string }) {
+interface RemoveLiquidityProps extends AccountBalancesProps {
+  token0: string
+  token1: string
+}
+
+function RemoveLiquidity({ token0, token1, accountBalances }: RemoveLiquidityProps) {
   const { account, chainId, library } = useWeb3React()
   const theme = useContext(ThemeContext)
 
@@ -174,8 +179,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
   // pool token data
   const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
 
-  const allBalances = useAllBalances()
-  const userLiquidity = allBalances?.[account]?.[pair?.liquidityToken?.address]
+  const userLiquidity = accountBalances?.[account]?.[pair?.liquidityToken?.address]
 
   // input state
   const [state, dispatch] = useReducer(reducer, initializeRemoveState(userLiquidity?.toExact(), token0, token1))
@@ -776,3 +780,5 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
     </Wrapper>
   )
 }
+
+export default withAccountBalances(RemoveLiquidity)

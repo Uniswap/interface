@@ -25,10 +25,10 @@ import { RowBetween, RowFixed, AutoRow } from '../Row'
 import { isAddress } from '../../utils'
 import { useWeb3React } from '../../hooks'
 import { useLocalStorageTokens, useAllDummyPairs } from '../../contexts/LocalStorage'
-import { useAllBalances } from '../../contexts/Balances'
 import { useTranslation } from 'react-i18next'
 import { useToken, useAllTokens, ALL_TOKENS } from '../../contexts/Tokens'
 import QuestionHelper from '../Question'
+import { AccountBalancesProps, withAccountBalances } from '../../data/BatchAccountBalances'
 
 const TokenModalInfo = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -142,7 +142,7 @@ const FILTERS = {
   BALANCES: 'BALANCES'
 }
 
-interface SearchModalProps extends RouteComponentProps<{}> {
+interface SearchModalProps extends AccountBalancesProps, RouteComponentProps<{}> {
   isOpen?: boolean
   onDismiss?: () => void
   filterType?: 'tokens'
@@ -156,7 +156,6 @@ interface SearchModalProps extends RouteComponentProps<{}> {
 }
 
 function SearchModal({
-  history,
   isOpen,
   onDismiss,
   onTokenSelect,
@@ -166,7 +165,9 @@ function SearchModal({
   showSendWithSwap,
   otherSelectedTokenAddress,
   otherSelectedText,
-  showCommonBases = false
+  showCommonBases = false,
+  accountBalances,
+  history
 }: SearchModalProps) {
   const { t } = useTranslation()
   const { account, chainId } = useWeb3React()
@@ -174,7 +175,6 @@ function SearchModal({
 
   const allTokens = useAllTokens()
   const allPairs = useAllDummyPairs()
-  const allBalances = useAllBalances()
 
   const [searchQuery, setSearchQuery] = useState('')
   const [sortDirection, setSortDirection] = useState(true)
@@ -222,8 +222,8 @@ function SearchModal({
             return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
           }
           // sort by balance
-          const balanceA = allBalances?.[account]?.[a]
-          const balanceB = allBalances?.[account]?.[b]
+          const balanceA = accountBalances?.[account]?.[a]
+          const balanceB = accountBalances?.[account]?.[b]
 
           if (balanceA?.greaterThan('0') && !balanceB?.greaterThan('0')) {
             return sortDirection ? -1 : 1
@@ -241,10 +241,10 @@ function SearchModal({
           name: allTokens[k].name,
           symbol: allTokens[k].symbol,
           address: k,
-          balance: allBalances?.[account]?.[k]
+          balance: accountBalances?.[account]?.[k]
         }
       })
-  }, [allTokens, allBalances, account, sortDirection])
+  }, [allTokens, accountBalances, account, sortDirection])
 
   const filteredTokenList = useMemo(() => {
     return tokenList.filter(tokenEntry => {
@@ -304,8 +304,8 @@ function SearchModal({
   const sortedPairList = useMemo(() => {
     return allPairs.sort((a, b): number => {
       // sort by balance
-      const balanceA = allBalances?.[account]?.[a.liquidityToken.address]
-      const balanceB = allBalances?.[account]?.[b.liquidityToken.address]
+      const balanceA = accountBalances?.[account]?.[a.liquidityToken.address]
+      const balanceB = accountBalances?.[account]?.[b.liquidityToken.address]
 
       if (balanceA?.greaterThan('0') && !balanceB?.greaterThan('0')) {
         return sortDirection ? -1 : 1
@@ -316,7 +316,7 @@ function SearchModal({
         return 0
       }
     })
-  }, [account, allBalances, allPairs, sortDirection])
+  }, [account, accountBalances, allPairs, sortDirection])
 
   const filteredPairList = useMemo(() => {
     const isAddress = searchQuery.slice(0, 2) === '0x'
@@ -362,10 +362,10 @@ function SearchModal({
         const token0 = pair.token0
         const token1 = pair.token1
         const pairAddress = pair.liquidityToken.address
-        const balance = allBalances?.[account]?.[pairAddress]?.toSignificant(6)
+        const balance = accountBalances?.[account]?.[pairAddress]?.toSignificant(6)
         const zeroBalance =
-          allBalances?.[account]?.[pairAddress]?.raw &&
-          JSBI.equal(allBalances?.[account]?.[pairAddress].raw, JSBI.BigInt(0))
+          accountBalances?.[account]?.[pairAddress]?.raw &&
+          JSBI.equal(accountBalances?.[account]?.[pairAddress].raw, JSBI.BigInt(0))
         return (
           <MenuItem
             key={i}
@@ -672,4 +672,4 @@ function SearchModal({
   )
 }
 
-export default withRouter(SearchModal)
+export default withRouter(withAccountBalances(SearchModal))

@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { Web3Provider } from '@ethersproject/providers'
 import { Contract } from '@ethersproject/contracts'
 import { Token, TokenAmount, WETH } from '@uniswap/sdk'
-import useSWR from 'swr'
+import useSWR, { ConfigInterface } from 'swr'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from '@ethersproject/bignumber'
 
@@ -17,7 +17,7 @@ function getTokenBalance(
     contract.balanceOf(owner).then((balance: { toString: () => string }) => new TokenAmount(token, balance.toString()))
 }
 
-export function useTokenBalance(token?: Token, owner?: string): TokenAmount {
+export function useTokenBalance(token?: Token, owner?: string, swrOverrides: ConfigInterface = {}): TokenAmount {
   const contract = useTokenContract(token?.address, false)
   const shouldFetch = !!contract && typeof owner === 'string'
 
@@ -26,7 +26,8 @@ export function useTokenBalance(token?: Token, owner?: string): TokenAmount {
     getTokenBalance(contract, token),
     {
       dedupingInterval: 10 * 1000,
-      refreshInterval: 20 * 1000
+      refreshInterval: 20 * 1000,
+      ...swrOverrides
     }
   )
 
@@ -37,25 +38,27 @@ function getETHBalance(library: Web3Provider): (_: SWRKeys, owner: string) => Pr
   return async (_, owner: string): Promise<BigNumber> => library.getBalance(owner)
 }
 
-export function useETHBalance(owner?: string): BigNumber {
+export function useETHBalance(owner?: string, swrOverrides: ConfigInterface = {}): BigNumber {
   const { library } = useWeb3React()
   const shouldFetch = !!library && typeof owner === 'string'
 
   const { data } = useSWR(shouldFetch ? [SWRKeys.ETHBalance, owner] : null, getETHBalance(library), {
     dedupingInterval: 10 * 1000,
-    refreshInterval: 20 * 1000
+    refreshInterval: 20 * 1000,
+    ...swrOverrides
   })
 
   return data
 }
 
-export function useTokenOrETHBalance(token?: Token, owner?: string): TokenAmount {
+// fetch token balances, or, if WETH is passed, ETH balances
+export function useTokenOrETHBalance(token?: Token, owner?: string, swrOverrides: ConfigInterface = {}): TokenAmount {
   // do a little memo dance so we can pass WETH to the return useMemo
   const chainId = token?.chainId
   const currentWETH = useMemo(() => WETH[chainId], [chainId])
   const isWETH = !!token && !!WETH && token.equals(currentWETH)
-  const tokenBalance = useTokenBalance(isWETH ? undefined : token, owner)
-  const ETHBalance = useETHBalance(isWETH ? owner : undefined)
+  const tokenBalance = useTokenBalance(isWETH ? undefined : token, owner, swrOverrides)
+  const ETHBalance = useETHBalance(isWETH ? owner : undefined, swrOverrides)
 
   return useMemo(() => {
     if (!isWETH) {

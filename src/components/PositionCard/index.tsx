@@ -3,18 +3,17 @@ import styled from 'styled-components'
 import { darken } from 'polished'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { Percent, Pair } from '@uniswap/sdk'
-
 import { useWeb3React } from '@web3-react/core'
-import { useAllBalances } from '../../contexts/Balances'
-import { useTotalSupply } from '../../data/TotalSupply'
+import { ChevronDown, ChevronUp } from 'react-feather'
 
+import { useTotalSupply } from '../../data/TotalSupply'
+import { withAccountBalances, AccountBalancesProps } from '../../data/BatchAccountBalances'
 import Card, { GreyCard } from '../Card'
 import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
 import { Text } from 'rebass'
 import { Link } from '../../theme/components'
 import { AutoColumn } from '../Column'
-import { ChevronDown, ChevronUp } from 'react-feather'
 import { ButtonSecondary } from '../Button'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 
@@ -29,22 +28,21 @@ const HoverCard = styled(Card)`
   }
 `
 
-interface PositionCardProps extends RouteComponentProps<{}> {
+interface PositionCardProps extends AccountBalancesProps, RouteComponentProps<{}> {
   pair: Pair
   minimal?: boolean
   border?: string
 }
 
-function PositionCard({ pair, history, border, minimal = false }: PositionCardProps) {
+function PositionCard({ pair, border, minimal = false, accountBalances, history }: PositionCardProps) {
   const { account } = useWeb3React()
-  const allBalances = useAllBalances()
 
   const token0 = pair?.token0
   const token1 = pair?.token1
 
   const [showMore, setShowMore] = useState(false)
 
-  const userPoolBalance = allBalances?.[account]?.[pair?.liquidityToken?.address]
+  const userPoolBalance = accountBalances?.[account]?.[pair?.liquidityToken?.address]
   const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
 
   const poolTokenPercentage =
@@ -234,4 +232,4 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
     )
 }
 
-export default withRouter(PositionCard)
+export default withRouter(withAccountBalances(PositionCard))

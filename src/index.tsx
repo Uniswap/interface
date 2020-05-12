@@ -9,11 +9,12 @@ import { NetworkContextName } from './constants'
 import { isMobile } from 'react-device-detect'
 import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage'
 import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
-import BalancesContextProvider, { Updater as BalancesContextUpdater } from './contexts/Balances'
+import { FetchBatchAccountBalances } from './data/BatchAccountBalances'
 import App from './pages/App'
 import store from './state'
 import { Updater as ApplicationContextUpdater } from './state/application/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
+
 import './i18n'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
@@ -38,9 +39,7 @@ ReactGA.pageview(window.location.pathname + window.location.search)
 function ContextProviders({ children }: { children: React.ReactNode }) {
   return (
     <LocalStorageContextProvider>
-      <TransactionContextProvider>
-        <BalancesContextProvider>{children}</BalancesContextProvider>
-      </TransactionContextProvider>
+      <TransactionContextProvider>{children}</TransactionContextProvider>
     </LocalStorageContextProvider>
   )
 }
@@ -51,7 +50,6 @@ function Updaters() {
       <LocalStorageContextUpdater />
       <ApplicationContextUpdater />
       <TransactionContextUpdater />
-      <BalancesContextUpdater />
     </>
   )
 }
@@ -64,6 +62,7 @@ ReactDOM.render(
         <Provider store={store}>
           <ContextProviders>
             <Updaters />
+            <FetchBatchAccountBalances />
             <ThemeProvider>
               <>
                 <ThemedGlobalStyle />
