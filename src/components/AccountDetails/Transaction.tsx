@@ -9,7 +9,7 @@ import Copy from './Copy'
 import Circle from '../../assets/images/circle.svg'
 
 import { transparentize } from 'polished'
-import { useAllTransactions } from '../../contexts/Transactions'
+import { useAllTransactions } from '../../state/transactions/hooks'
 
 const TransactionStatusWrapper = styled.div`
   display: flex;
@@ -74,7 +74,7 @@ export default function Transaction({ hash, pending }: { hash: string; pending: 
   const { chainId } = useWeb3React()
   const allTransactions = useAllTransactions()
 
-  const summary = allTransactions?.[hash]?.response?.summary
+  const summary = allTransactions?.[hash]?.summary
 
   return (
     <TransactionWrapper key={hash}>

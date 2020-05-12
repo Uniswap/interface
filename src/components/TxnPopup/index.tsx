@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import { useWeb3React } from '../../hooks'
 import useInterval from '../../hooks/useInterval'
-import { usePopups } from '../../state/application/hooks'
+import { useRemovePopup } from '../../state/application/hooks'
 import { TYPE } from '../../theme'
 
 import { Link } from '../../theme/components'
@@ -41,7 +41,7 @@ export default function TxnPopup({
   const [count, setCount] = useState(1)
 
   const [isRunning, setIsRunning] = useState(true)
-  const [, , removePopup] = usePopups()
+  const removePopup = useRemovePopup()
 
   useInterval(
     () => {
