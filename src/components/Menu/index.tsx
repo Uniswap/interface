@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from 'react'
 import styled from 'styled-components'
-import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 
@@ -82,8 +81,6 @@ const CODE_LINK = !!process.env.REACT_APP_GIT_COMMIT_HASH
 export default function Menu() {
   const node = useRef<HTMLDivElement>()
   const [open, toggle] = useToggle(false)
-
-  const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   useEffect(() => {
     const handleClickOutside = e => {
