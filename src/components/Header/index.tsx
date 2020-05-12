@@ -205,7 +205,7 @@ export default function Header() {
           <AccountElement active={!!account}>
             {account ? (
               <Row style={{ marginRight: '-1.25rem' }}>
-                <Text fontWeight={500}> {userEthBalance && userEthBalance?.toFixed(4) + ' ETH'}</Text>
+                <Text fontWeight={500}> {userEthBalance && `${userEthBalance?.toSignificant(4)} ETH`}</Text>
               </Row>
             ) : (
               ''

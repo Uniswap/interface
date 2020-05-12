@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { isMobile } from 'react-device-detect'
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import { URI_AVAILABLE } from '@web3-react/walletconnect-connector'
+import { useWalletModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 
 import Modal from '../Modal'
 import AccountDetails from '../AccountDetails'
@@ -15,7 +16,6 @@ import { Link } from '../../theme'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected, walletconnect, fortmatic, portis } from '../../connectors'
-import { useWalletModalToggle, useWalletModalOpen } from '../../contexts/Application'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
 
 const CloseIcon = styled.div`

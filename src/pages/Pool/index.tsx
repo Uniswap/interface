@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { JSBI } from '@uniswap/sdk'
+import { JSBI, Pair } from '@uniswap/sdk'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 
 import Question from '../../components/Question'
@@ -13,10 +13,10 @@ import { RowBetween } from '../../components/Row'
 import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 
-import { useAllPairs } from '../../contexts/Pairs'
 import { useWeb3React } from '@web3-react/core'
-import { useAllTokens } from '../../contexts/Tokens'
 import { useAllBalances, useAccountLPBalances } from '../../contexts/Balances'
+import { usePair } from '../../data/Reserves'
+import { useAllDummyPairs } from '../../contexts/LocalStorage'
 
 const Positions = styled.div`
   position: relative;
@@ -29,36 +29,33 @@ const FixedBottom = styled.div`
   width: 100%;
 `
 
+function PositionCardWrapper({ dummyPair }: { dummyPair: Pair }) {
+  const pair = usePair(dummyPair.token0, dummyPair.token1)
+  return <PositionCard pair={pair} />
+}
+
 function Supply({ history }: RouteComponentProps) {
+  const theme = useContext(ThemeContext)
   const { account } = useWeb3React()
   const [showPoolSearch, setShowPoolSearch] = useState(false)
 
-  const allTokens = useAllTokens()
-  const allBalances = useAllBalances()
-  const allPairs = useAllPairs()
-  const theme = useContext(ThemeContext)
-
   // initiate listener for LP balances
+  const allBalances = useAllBalances()
   useAccountLPBalances(account)
 
-  const filteredExchangeList = Object.keys(allPairs)
-    .filter(pairAddress => {
+  const pairs = useAllDummyPairs()
+
+  const filteredExchangeList = pairs
+    .filter(pair => {
       return (
         allBalances &&
         allBalances[account] &&
-        allBalances[account][pairAddress] &&
-        JSBI.greaterThan(allBalances[account][pairAddress].raw, JSBI.BigInt(0))
+        allBalances[account][pair.liquidityToken.address] &&
+        JSBI.greaterThan(allBalances[account][pair.liquidityToken.address].raw, JSBI.BigInt(0))
       )
     })
-    .map((pairAddress, i) => {
-      return (
-        <PositionCard
-          key={i}
-          pairAddress={pairAddress}
-          token0={allTokens[allPairs[pairAddress].token0]}
-          token1={allTokens[allPairs[pairAddress].token1]}
-        />
-      )
+    .map((pair, i) => {
+      return <PositionCardWrapper key={i} dummyPair={pair} />
     })
 
   return (

@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useMemo, useCallback, useEffect, useState } from 'react'
-import { Token } from '@uniswap/sdk'
+import { Token, Pair, TokenAmount, JSBI, WETH, ChainId } from '@uniswap/sdk'
 import { getTokenDecimals, getTokenSymbol, getTokenName, isAddress } from '../utils'
 import { useWeb3React } from '@web3-react/core'
+import { useAllTokens } from './Tokens'
 
 enum LocalStorageKeys {
   VERSION = 'version',
@@ -9,7 +10,8 @@ enum LocalStorageKeys {
   BETA_MESSAGE_DISMISSED = 'betaMessageDismissed',
   MIGRATION_MESSAGE_DISMISSED = 'migrationMessageDismissed',
   DARK_MODE = 'darkMode',
-  TOKENS = 'tokens'
+  TOKENS = 'tokens',
+  PAIRS = 'pairs'
 }
 
 function useLocalStorage<T, S = T>(
@@ -39,30 +41,31 @@ function useLocalStorage<T, S = T>(
   return [value, setValue]
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function serializeTokens(
-  tokens: Token[]
-): { chainId: number; address: string; decimals: number; symbol: string; name: string }[] {
-  return tokens.map(token => ({
+interface SerializedToken {
+  chainId: number
+  address: string
+  decimals: number
+  symbol: string
+  name: string
+}
+
+function serializeToken(token: Token): SerializedToken {
+  return {
     chainId: token.chainId,
     address: token.address,
     decimals: token.decimals,
     symbol: token.symbol,
     name: token.name
-  }))
+  }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function deserializeTokens(serializedTokens: ReturnType<typeof serializeTokens>): Token[] {
-  return serializedTokens.map(
-    serializedToken =>
-      new Token(
-        serializedToken.chainId,
-        serializedToken.address,
-        serializedToken.decimals,
-        serializedToken.symbol,
-        serializedToken.name
-      )
+function deserializeToken(serializedToken: SerializedToken): Token {
+  return new Token(
+    serializedToken.chainId,
+    serializedToken.address,
+    serializedToken.decimals,
+    serializedToken.symbol,
+    serializedToken.name
   )
 }
 
@@ -88,28 +91,29 @@ export default function Provider({ children }: { children: React.ReactNode }) {
     LocalStorageKeys.DARK_MODE,
     window?.matchMedia('(prefers-color-scheme: dark)')?.matches ? true : false
   )
-
-  const [tokens, setTokens] = useLocalStorage<Token[], ReturnType<typeof serializeTokens>>(
-    LocalStorageKeys.TOKENS,
-    [],
-    {
-      serialize: serializeTokens,
-      deserialize: deserializeTokens
-    }
-  )
+  const [tokens, setTokens] = useLocalStorage<Token[], SerializedToken[]>(LocalStorageKeys.TOKENS, [], {
+    serialize: (tokens: Token[]) => tokens.map(serializeToken),
+    deserialize: (serializedTokens: SerializedToken[]) => serializedTokens.map(deserializeToken)
+  })
+  const [pairs, setPairs] = useLocalStorage<Token[][], SerializedToken[][]>(LocalStorageKeys.PAIRS, [], {
+    serialize: (nestedTokens: Token[][]) => nestedTokens.map(tokens => tokens.map(serializeToken)),
+    deserialize: (serializedNestedTokens: SerializedToken[][]) =>
+      serializedNestedTokens.map(serializedTokens => serializedTokens.map(deserializeToken))
+  })
 
   return (
     <LocalStorageContext.Provider
       value={useMemo(
         () => [
-          { version, lastSaved, betaMessageDismissed, migrationMessageDismissed, darkMode, tokens },
+          { version, lastSaved, betaMessageDismissed, migrationMessageDismissed, darkMode, tokens, pairs },
           {
             setVersion,
             setLastSaved,
             setBetaMessageDismissed,
             setMigrationMessageDismissed,
             setDarkMode,
-            setTokens
+            setTokens,
+            setPairs
           }
         ],
         [
@@ -120,12 +124,14 @@ export default function Provider({ children }: { children: React.ReactNode }) {
           darkMode,
 
           tokens,
+          pairs,
           setVersion,
           setLastSaved,
           setBetaMessageDismissed,
           setMigrationMessageDismissed,
           setDarkMode,
-          setTokens
+          setTokens,
+          setPairs
         ]
       )}
     >
@@ -241,4 +247,79 @@ export function useLocalStorageTokens(): [
   )
 
   return [tokens, { fetchTokenByAddress, addToken, removeTokenByAddress }]
+}
+
+const ZERO = JSBI.BigInt(0)
+export function useLocalStoragePairAdder(): (pair: Pair) => void {
+  const [, { setPairs }] = useLocalStorageContext()
+
+  return useCallback(
+    (pair: Pair) => {
+      setPairs(pairs =>
+        pairs
+          .filter(tokens => !(tokens[0].equals(pair.token0) && tokens[1].equals(pair.token1)))
+          .concat([[pair.token0, pair.token1]])
+      )
+    },
+    [setPairs]
+  )
+}
+
+const bases = [
+  ...Object.values(WETH),
+  new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin'),
+  new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
+]
+
+export function useAllDummyPairs(): Pair[] {
+  const { chainId } = useWeb3React()
+  const tokens = useAllTokens()
+  const generatedPairs: Pair[] = useMemo(
+    () =>
+      Object.values(tokens)
+        // select only tokens on the current chain
+        .filter(token => token.chainId === chainId)
+        .flatMap(token => {
+          // for each token on the current chain,
+          return (
+            bases
+              // loop through all the bases valid for the current chain,
+              .filter(base => base.chainId === chainId)
+              // to construct pairs of the given token with each base
+              .map(base => {
+                if (base.equals(token)) {
+                  return null
+                } else {
+                  return new Pair(new TokenAmount(base, ZERO), new TokenAmount(token, ZERO))
+                }
+              })
+              .filter(pair => !!pair)
+          )
+        }),
+    [tokens, chainId]
+  )
+
+  const [{ pairs }] = useLocalStorageContext()
+  const userPairs = useMemo(
+    () =>
+      pairs
+        .filter(tokens => tokens[0].chainId === chainId)
+        .map(tokens => new Pair(new TokenAmount(tokens[0], ZERO), new TokenAmount(tokens[1], ZERO))),
+    [pairs, chainId]
+  )
+
+  return useMemo(() => {
+    return (
+      generatedPairs
+        .concat(userPairs)
+        // filter out duplicate pairs
+        .filter((pair, i, concatenatedPairs) => {
+          const firstAppearance = concatenatedPairs.findIndex(
+            concatenatedPair =>
+              concatenatedPair.token0.equals(pair.token0) && concatenatedPair.token1.equals(pair.token1)
+          )
+          return i === firstAppearance
+        })
+    )
+  }, [generatedPairs, userPairs])
 }

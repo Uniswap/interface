@@ -23,9 +23,8 @@ import { Spinner, TYPE } from '../../theme'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 
 import { isAddress } from '../../utils'
-import { useAllPairs } from '../../contexts/Pairs'
 import { useWeb3React } from '../../hooks'
-import { useLocalStorageTokens } from '../../contexts/LocalStorage'
+import { useLocalStorageTokens, useAllDummyPairs } from '../../contexts/LocalStorage'
 import { useAllBalances } from '../../contexts/Balances'
 import { useTranslation } from 'react-i18next'
 import { useToken, useAllTokens, ALL_TOKENS } from '../../contexts/Tokens'
@@ -174,7 +173,7 @@ function SearchModal({
   const theme = useContext(ThemeContext)
 
   const allTokens = useAllTokens()
-  const allPairs = useAllPairs()
+  const allPairs = useAllDummyPairs()
   const allBalances = useAllBalances()
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -226,14 +225,11 @@ function SearchModal({
           const balanceA = allBalances?.[account]?.[a]
           const balanceB = allBalances?.[account]?.[b]
 
-          if (balanceA && !balanceB) {
+          if (balanceA?.greaterThan('0') && !balanceB?.greaterThan('0')) {
             return sortDirection ? -1 : 1
           }
-          if (!balanceA && balanceB) {
+          if (!balanceA?.greaterThan('0') && balanceB?.greaterThan('0')) {
             return sortDirection ? 1 : -1
-          }
-          if (balanceA && balanceB) {
-            return sortDirection && parseFloat(balanceA.toExact()) > parseFloat(balanceB.toExact()) ? -1 : 1
           }
           return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
         } else {
@@ -306,20 +302,16 @@ function SearchModal({
   const escapeStringRegexp = string => string
 
   const sortedPairList = useMemo(() => {
-    return Object.keys(allPairs).sort((a, b): number => {
+    return allPairs.sort((a, b): number => {
       // sort by balance
-      const balanceA = allBalances?.[account]?.[a]
-      const balanceB = allBalances?.[account]?.[b]
+      const balanceA = allBalances?.[account]?.[a.liquidityToken.address]
+      const balanceB = allBalances?.[account]?.[b.liquidityToken.address]
 
-      if (balanceA && !balanceB) {
+      if (balanceA?.greaterThan('0') && !balanceB?.greaterThan('0')) {
         return sortDirection ? -1 : 1
       }
-      if (!balanceA && balanceB) {
+      if (!balanceA?.greaterThan('0') && balanceB?.greaterThan('0')) {
         return sortDirection ? 1 : -1
-      }
-      if (balanceA && balanceB) {
-        const order = sortDirection && (parseFloat(balanceA.toExact()) > parseFloat(balanceB.toExact()) ? -1 : 1)
-        return order ? 1 : -1
       } else {
         return 0
       }
@@ -328,13 +320,12 @@ function SearchModal({
 
   const filteredPairList = useMemo(() => {
     const isAddress = searchQuery.slice(0, 2) === '0x'
-    return sortedPairList.filter(pairAddress => {
-      const pair = allPairs[pairAddress]
+    return sortedPairList.filter(pair => {
       if (searchQuery === '') {
         return true
       }
-      const token0 = allTokens[pair.token0]
-      const token1 = allTokens[pair.token1]
+      const token0 = pair.token0
+      const token1 = pair.token1
       if (!token0 || !token1) {
         return false // no token fetched yet
       } else {
@@ -354,7 +345,7 @@ function SearchModal({
         return regexMatches.some(m => m)
       }
     })
-  }, [allPairs, allTokens, searchQuery, sortedPairList])
+  }, [searchQuery, sortedPairList])
 
   function renderPairsList() {
     if (filteredPairList?.length === 0) {
@@ -367,9 +358,10 @@ function SearchModal({
 
     return (
       filteredPairList &&
-      filteredPairList.map((pairAddress, i) => {
-        const token0 = allTokens[allPairs[pairAddress].token0]
-        const token1 = allTokens[allPairs[pairAddress].token1]
+      filteredPairList.map((pair, i) => {
+        const token0 = pair.token0
+        const token1 = pair.token1
+        const pairAddress = pair.liquidityToken.address
         const balance = allBalances?.[account]?.[pairAddress]?.toSignificant(6)
         const zeroBalance =
           allBalances?.[account]?.[pairAddress]?.raw &&
@@ -451,16 +443,17 @@ function SearchModal({
      */
       return filteredTokenList
         .sort((a, b) => {
-          if (b?.address === WETH[chainId]?.address) {
+          if (a.address === WETH[chainId].address) {
+            return -1
+          } else if (b.address === WETH[chainId].address) {
             return 1
-          } else
-            return parseFloat(a?.balance?.toExact()) > parseFloat(b?.balance?.toExact())
-              ? sortDirection
-                ? -1
-                : 1
-              : sortDirection
-              ? 1
-              : -1
+          } else if (a.balance?.greaterThan('0') && !b.balance?.greaterThan('0')) {
+            return sortDirection ? -1 : 1
+          } else if (!a.balance?.greaterThan('0') && b.balance?.greaterThan('0')) {
+            return sortDirection ? 1 : -1
+          } else {
+            return sortDirection ? -1 : 1
+          }
         })
         .map(({ address, symbol, balance }) => {
           const urlAdded = urlAddedTokens && urlAddedTokens.hasOwnProperty(address)
@@ -580,13 +573,7 @@ function SearchModal({
             <TYPE.body style={{ marginTop: '10px' }}>
               To import a custom token, paste token address in the search bar.
             </TYPE.body>
-            <Input
-              type={'text'}
-              placeholder={'0x0000000000...'}
-              value={searchQuery}
-              ref={inputRef}
-              onChange={onInput}
-            />
+            <Input type={'text'} placeholder={'0x000000...'} value={searchQuery} ref={inputRef} onChange={onInput} />
             {renderTokenList()}
           </PaddedColumn>
         ) : (

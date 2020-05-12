@@ -7,9 +7,7 @@ import { WETH } from '@uniswap/sdk'
 import { ReactComponent as EthereumLogo } from '../../assets/images/ethereum-logo.svg'
 
 const TOKEN_ICON_API = address =>
-  `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
-    address
-  )}/logo.png`
+  `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 const BAD_IMAGES = {}
 
 const Image = styled.img<{ size: string }>`
@@ -40,25 +38,21 @@ export default function TokenLogo({
   size = '24px',
   ...rest
 }: {
-  address: string
+  address?: string
   size?: string
   style?: React.CSSProperties
 }) {
   const [error, setError] = useState(false)
   const { chainId } = useWeb3React()
 
-  // hard code change to show ETH instead of WETH in UI
-  if (address === WETH[chainId].address) {
-    address = 'ETH'
-  }
-
-  // remove this just for testing
-  if (address === isAddress('0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735')) {
-    address = '0x6b175474e89094c44da98b954eedeac495271d0f'
+  // mock rinkeby DAI
+  if (chainId === 4 && address === '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735') {
+    address = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
   }
 
   let path = ''
-  if (address === 'ETH') {
+  // hard code to show ETH instead of WETH in UI
+  if (address === WETH[chainId].address) {
     return (
       <StyledEthereumLogo
         style={{ boxShadow: '0px 6px 10px rgba(0, 0, 0, 0.075)', borderRadius: '24px' }}
@@ -66,8 +60,8 @@ export default function TokenLogo({
         {...rest}
       />
     )
-  } else if (!error && !BAD_IMAGES[address]) {
-    path = TOKEN_ICON_API(address?.toLowerCase())
+  } else if (!error && !BAD_IMAGES[address] && isAddress(address)) {
+    path = TOKEN_ICON_API(address)
   } else {
     return (
       <Emoji {...rest} size={size}>

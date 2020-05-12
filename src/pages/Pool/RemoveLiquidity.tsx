@@ -1,9 +1,8 @@
 import React, { useReducer, useState, useCallback, useEffect, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { parseUnits } from '@ethersproject/units'
-import { Zero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { TokenAmount, JSBI, Route, WETH, Percent, Token, Pair } from '@uniswap/sdk'
+import { TokenAmount, JSBI, Route, WETH, Percent, Token } from '@uniswap/sdk'
 
 import Slider from '../../components/Slider'
 import TokenLogo from '../../components/TokenLogo'
@@ -25,11 +24,15 @@ import { useWeb3React } from '../../hooks'
 import { useAllBalances } from '../../contexts/Balances'
 import { usePairContract } from '../../hooks'
 import { useTransactionAdder } from '../../contexts/Transactions'
-import { usePair, useTotalSupply } from '../../contexts/Pairs'
+import { useTotalSupply } from '../../data/TotalSupply'
 
 import { splitSignature } from '@ethersproject/bytes'
 import { ROUTER_ADDRESS } from '../../constants'
-import { getRouterContract, calculateGasMargin } from '../../utils'
+import { getRouterContract, calculateGasMargin, calculateSlippageAmount } from '../../utils'
+import { usePair } from '../../data/Reserves'
+
+// denominated in bips
+const ALLOWED_SLIPPAGE = 50
 
 // denominated in seconds
 const DEADLINE_FROM_NOW = 60 * 20
@@ -165,14 +168,14 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
     [Field.TOKEN1]: outputToken
   }
 
-  const pair: Pair = usePair(inputToken, outputToken)
+  const pair = usePair(inputToken, outputToken)
   const pairContract: Contract = usePairContract(pair?.liquidityToken.address)
 
   // pool token data
-  const totalPoolTokens: TokenAmount = useTotalSupply(tokens[Field.TOKEN0], tokens[Field.TOKEN1])
+  const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
 
-  const allBalances: TokenAmount[] = useAllBalances()
-  const userLiquidity: TokenAmount = allBalances?.[account]?.[pair?.liquidityToken?.address]
+  const allBalances = useAllBalances()
+  const userLiquidity = allBalances?.[account]?.[pair?.liquidityToken?.address]
 
   // input state
   const [state, dispatch] = useReducer(reducer, initializeRemoveState(userLiquidity?.toExact(), token0, token1))
@@ -266,10 +269,10 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
     pair.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, parsedAmounts[Field.LIQUIDITY], false)
 
   // derived percent for advanced mode
-  const derivedPerecent =
-    userLiquidity &&
+  const derivedPercent =
     parsedAmounts[Field.LIQUIDITY] &&
-    new Percent(parsedAmounts[Field.LIQUIDITY]?.raw, userLiquidity.raw).toFixed(0)
+    userLiquidity &&
+    new Percent(parsedAmounts[Field.LIQUIDITY]?.raw, userLiquidity.raw)
 
   const [override, setSliderOverride] = useState(false) // override slider internal value
   const handlePresetPercentage = newPercent => {
@@ -299,19 +302,19 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
       independentField === Field.LIQUIDITY
         ? typedValue
         : parsedAmounts[Field.LIQUIDITY]
-        ? parsedAmounts[Field.LIQUIDITY].toSignificant(8)
+        ? parsedAmounts[Field.LIQUIDITY].toSignificant(6)
         : '',
     [Field.TOKEN0]:
       independentField === Field.TOKEN0
         ? typedValue
         : parsedAmounts[Field.TOKEN0]
-        ? parsedAmounts[Field.TOKEN0].toSignificant(8)
+        ? parsedAmounts[Field.TOKEN0].toSignificant(6)
         : '',
     [Field.TOKEN1]:
       independentField === Field.TOKEN1
         ? typedValue
         : parsedAmounts[Field.TOKEN1]
-        ? parsedAmounts[Field.TOKEN1].toSignificant(8)
+        ? parsedAmounts[Field.TOKEN1].toSignificant(6)
         : ''
   }
 
@@ -439,18 +442,23 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
     let method, args, estimate
 
     // removal with ETH
-    if (tokens[Field.TOKEN0] === WETH[chainId] || tokens[Field.TOKEN1] === WETH[chainId]) {
+    if (tokens[Field.TOKEN0].equals(WETH[chainId]) || tokens[Field.TOKEN1].equals(WETH[chainId])) {
       method = router.removeLiquidityETHWithPermit
       estimate = router.estimateGas.removeLiquidityETHWithPermit
+
+      const token0IsETH = tokens[Field.TOKEN0].equals(WETH[chainId])
+
       args = [
-        tokens[Field.TOKEN1] === WETH[chainId] ? tokens[Field.TOKEN0].address : tokens[Field.TOKEN1].address,
+        tokens[token0IsETH ? Field.TOKEN1 : Field.TOKEN0].address,
         parsedAmounts[Field.LIQUIDITY].raw.toString(),
-        tokens[Field.TOKEN1] === WETH[chainId]
-          ? parsedAmounts[Field.TOKEN0].raw.toString()
-          : parsedAmounts[Field.TOKEN1].raw.toString(),
-        tokens[Field.TOKEN1] === WETH[chainId]
-          ? parsedAmounts[Field.TOKEN1].raw.toString()
-          : parsedAmounts[Field.TOKEN0].raw.toString(),
+        calculateSlippageAmount(
+          parsedAmounts[token0IsETH ? Field.TOKEN1 : Field.TOKEN0],
+          ALLOWED_SLIPPAGE
+        )[0].toString(),
+        calculateSlippageAmount(
+          parsedAmounts[token0IsETH ? Field.TOKEN0 : Field.TOKEN1],
+          ALLOWED_SLIPPAGE
+        )[0].toString(),
         account,
         deadline,
         false,
@@ -467,8 +475,8 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
         tokens[Field.TOKEN0].address,
         tokens[Field.TOKEN1].address,
         parsedAmounts[Field.LIQUIDITY].raw.toString(),
-        parsedAmounts[Field.TOKEN0].raw.toString(),
-        parsedAmounts[Field.TOKEN1].raw.toString(),
+        calculateSlippageAmount(parsedAmounts[Field.TOKEN0], ALLOWED_SLIPPAGE)[0].toString(),
+        calculateSlippageAmount(parsedAmounts[Field.TOKEN1], ALLOWED_SLIPPAGE)[0].toString(),
         account,
         deadline,
         false,
@@ -478,9 +486,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
       ]
     }
 
-    await estimate(...args, {
-      value: Zero
-    })
+    await estimate(...args)
       .then(estimatedGasLimit =>
         method(...args, {
           gasLimit: calculateGasMargin(estimatedGasLimit)
@@ -501,7 +507,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
         })
       )
       .catch(e => {
-        console.log(e)
+        console.error(e)
         resetModalState()
         setShowConfirm(false)
       })
@@ -537,9 +543,9 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
         </RowBetween>
 
         <TYPE.italic fontSize={12} color={theme.text2} textAlign="left" padding={'12px 0 0 0'}>
-          {`Output is estimated. You will receive at least ${parsedAmounts[Field.TOKEN0]?.toFixed(6)} ${
+          {`Output is estimated. You will receive at least ${parsedAmounts[Field.TOKEN0]?.toSignificant(6)} ${
             tokens[Field.TOKEN0]?.symbol
-          } and at least ${parsedAmounts[Field.TOKEN1]?.toFixed(6)} ${
+          } and at least ${parsedAmounts[Field.TOKEN1]?.toSignificant(6)} ${
             tokens[Field.TOKEN1]?.symbol
           } or the transaction will revert.`}
         </TYPE.italic>
@@ -570,7 +576,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
             Price
           </Text>
           <Text fontWeight={500} fontSize={16} color={theme.text1}>
-            {`1 ${tokens[Field.TOKEN0]?.symbol} = ${route?.midPrice && route.midPrice.adjusted.toFixed(8)} ${
+            {`1 ${tokens[Field.TOKEN0]?.symbol} = ${route?.midPrice && route.midPrice.adjusted.toSignificant(6)} ${
               tokens[Field.TOKEN1]?.symbol
             }`}
           </Text>
@@ -633,11 +639,15 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
             </RowBetween>
             <Row style={{ alignItems: 'flex-end' }}>
               <Text fontSize={72} fontWeight={500}>
-                {derivedPerecent ? (parseInt(derivedPerecent) < 1 ? '<1' : derivedPerecent) : '0'}%
+                {derivedPercent?.toFixed(0) === '0' ? '<1' : derivedPercent?.toFixed(0) ?? '0'}%
               </Text>
             </Row>
             {!showAdvanced && (
-              <Slider value={parseFloat(derivedPerecent)} onChange={handleSliderChange} override={override} />
+              <Slider
+                value={parseInt(derivedPercent?.toFixed(0) ?? '0')}
+                onChange={handleSliderChange}
+                override={override}
+              />
             )}
             {!showAdvanced && (
               <RowBetween>
@@ -669,7 +679,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
                     {formattedAmounts[Field.TOKEN0] ? formattedAmounts[Field.TOKEN0] : '-'}
                   </Text>
                   <RowFixed>
-                    <TokenLogo address={tokens[Field.TOKEN0]?.address || ''} style={{ marginRight: '12px' }} />
+                    <TokenLogo address={tokens[Field.TOKEN0]?.address} style={{ marginRight: '12px' }} />
                     <Text fontSize={24} fontWeight={500}>
                       {tokens[Field.TOKEN0]?.symbol}
                     </Text>
@@ -680,7 +690,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
                     {formattedAmounts[Field.TOKEN1] ? formattedAmounts[Field.TOKEN1] : '-'}
                   </Text>
                   <RowFixed>
-                    <TokenLogo address={tokens[Field.TOKEN1]?.address || ''} style={{ marginRight: '12px' }} />
+                    <TokenLogo address={tokens[Field.TOKEN1]?.address} style={{ marginRight: '12px' }} />
                     <Text fontSize={24} fontWeight={500}>
                       {tokens[Field.TOKEN1]?.symbol}
                     </Text>
@@ -759,12 +769,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
             </Text>
           </ButtonPrimary>
           <FixedBottom>
-            <PositionCard
-              pairAddress={pair?.liquidityToken.address}
-              token0={pair?.token0}
-              token1={pair?.token1}
-              minimal={true}
-            />
+            <PositionCard pair={pair} minimal={true} />
           </FixedBottom>
         </div>
       </AutoColumn>
