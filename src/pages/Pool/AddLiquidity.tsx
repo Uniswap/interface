@@ -31,7 +31,7 @@ import { ROUTER_ADDRESS } from '../../constants'
 import { getRouterContract, calculateGasMargin, calculateSlippageAmount } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
 import { usePair } from '../../data/Reserves'
-import { useLocalStorageTokens } from '../../contexts/LocalStorage'
+import { useAddUserToken, useFetchTokenByAddress } from '../../state/user/hooks'
 import { useAllTokens } from '../../contexts/Tokens'
 
 // denominated in bips
@@ -187,7 +187,9 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   }
 
   // ensure input + output tokens are added to localstorage
-  const [, { fetchTokenByAddress, addToken }] = useLocalStorageTokens()
+  const fetchTokenByAddress = useFetchTokenByAddress()
+  const addToken = useAddUserToken()
+
   const allTokens = useAllTokens()
   const inputTokenAddress = fieldData[Field.INPUT].address
   useEffect(() => {

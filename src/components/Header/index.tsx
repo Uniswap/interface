@@ -14,7 +14,7 @@ import { isMobile } from 'react-device-detect'
 import { YellowCard } from '../Card'
 import { useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
-import { useDarkModeManager } from '../../contexts/LocalStorage'
+import { useDarkModeManager } from '../../state/user/hooks'
 
 import Logo from '../../assets/svg/logo.svg'
 import Wordmark from '../../assets/svg/wordmark.svg'
