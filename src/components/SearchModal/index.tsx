@@ -24,7 +24,12 @@ import { RowBetween, RowFixed, AutoRow } from '../Row'
 
 import { isAddress } from '../../utils'
 import { useWeb3React } from '../../hooks'
-import { useLocalStorageTokens, useAllDummyPairs } from '../../contexts/LocalStorage'
+import {
+  useAllDummyPairs,
+  useFetchTokenByAddress,
+  useAddUserToken,
+  useRemoveUserAddedToken
+} from '../../state/user/hooks'
 import { useAllBalances } from '../../contexts/Balances'
 import { useTranslation } from 'react-i18next'
 import { useToken, useAllTokens, ALL_TOKENS } from '../../contexts/Tokens'
@@ -179,7 +184,9 @@ function SearchModal({
   const [searchQuery, setSearchQuery] = useState('')
   const [sortDirection, setSortDirection] = useState(true)
 
-  const [, { fetchTokenByAddress, addToken, removeTokenByAddress }] = useLocalStorageTokens()
+  const fetchTokenByAddress = useFetchTokenByAddress()
+  const addToken = useAddUserToken()
+  const removeTokenByAddress = useRemoveUserAddedToken()
 
   // if the current input is an address, and we don't have the token in context, try to fetch it
   const token = useToken(searchQuery)

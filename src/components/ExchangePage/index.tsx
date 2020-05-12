@@ -16,7 +16,7 @@ import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { ROUTER_ADDRESS } from '../../constants'
 import { useTokenAllowance } from '../../data/Allowances'
 import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
-import { useLocalStorageTokens } from '../../contexts/LocalStorage'
+import { useAddUserToken, useFetchTokenByAddress } from '../../state/user/hooks'
 import { usePair } from '../../data/Reserves'
 import { useAllTokens, useToken } from '../../contexts/Tokens'
 import { usePendingApproval, useTransactionAdder } from '../../contexts/Transactions'
@@ -113,7 +113,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   }
 
   // ensure input + output tokens are added to localstorage
-  const [, { fetchTokenByAddress, addToken }] = useLocalStorageTokens()
+  const fetchTokenByAddress = useFetchTokenByAddress()
+  const addToken = useAddUserToken()
   const allTokens = useAllTokens()
   const inputTokenAddress = fieldData[Field.INPUT].address
   useEffect(() => {

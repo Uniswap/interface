@@ -7,7 +7,7 @@ import { Provider } from 'react-redux'
 
 import { NetworkContextName } from './constants'
 import { isMobile } from 'react-device-detect'
-import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage'
+import { Updater as LocalStorageContextUpdater } from './state/user/hooks'
 import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
 import BalancesContextProvider, { Updater as BalancesContextUpdater } from './contexts/Balances'
 import App from './pages/App'
@@ -37,11 +37,9 @@ ReactGA.pageview(window.location.pathname + window.location.search)
 
 function ContextProviders({ children }: { children: React.ReactNode }) {
   return (
-    <LocalStorageContextProvider>
-      <TransactionContextProvider>
-        <BalancesContextProvider>{children}</BalancesContextProvider>
-      </TransactionContextProvider>
-    </LocalStorageContextProvider>
+    <TransactionContextProvider>
+      <BalancesContextProvider>{children}</BalancesContextProvider>
+    </TransactionContextProvider>
   )
 }
 
