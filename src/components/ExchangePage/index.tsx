@@ -1025,7 +1025,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           <>
             <CurrencyInputPanel
               field={Field.INPUT}
-              label={independentField == Field.OUTPUT && parsedAmounts[Field.INPUT] ? 'From (estimated)' : 'From'}
+              label={independentField === Field.OUTPUT && parsedAmounts[Field.INPUT] ? 'From (estimated)' : 'From'}
               value={formattedAmounts[Field.INPUT]}
               atMax={atMaxAmountInput}
               token={tokens[Field.INPUT]}
@@ -1075,7 +1075,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               onMax={() => {
                 maxAmountOutput && onMaxOutput(maxAmountOutput.toExact())
               }}
-              label={independentField == Field.INPUT && parsedAmounts[Field.OUTPUT] ? 'To (estimated)' : 'To'}
+              label={independentField === Field.INPUT && parsedAmounts[Field.OUTPUT] ? 'To (estimated)' : 'To'}
               atMax={atMaxAmountOutput}
               token={tokens[Field.OUTPUT]}
               onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
