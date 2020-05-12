@@ -13,8 +13,8 @@ import {
 
 const currentTimestamp = () => new Date().getTime()
 
-interface LocalStorageState {
-  version: string
+interface UserState {
+  lastVersion: string
 
   userDarkMode: boolean | null // the user's choice for dark mode or light mode
   matchesDarkMode: boolean // whether the dark mode media query matches
@@ -41,8 +41,8 @@ function pairKey(token0Address: string, token1Address: string) {
   return `${token0Address};${token1Address}`
 }
 
-const initialState: LocalStorageState = {
-  version: '0',
+const initialState: UserState = {
+  lastVersion: '',
 
   userDarkMode: null,
   matchesDarkMode: false,
@@ -58,8 +58,8 @@ const initialState: LocalStorageState = {
 export default createReducer(initialState, builder =>
   builder
     .addCase(updateVersion, state => {
-      if (state.version !== process.env.REACT_APP_GIT_COMMIT_HASH) {
-        state.version = process.env.REACT_APP_GIT_COMMIT_HASH
+      if (state.lastVersion !== process.env.REACT_APP_GIT_COMMIT_HASH) {
+        state.lastVersion = process.env.REACT_APP_GIT_COMMIT_HASH
         // other stuff
       }
       state.timestamp = currentTimestamp()
