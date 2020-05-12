@@ -29,10 +29,10 @@ import { Link } from '../../theme/components'
 import {
   calculateGasMargin,
   getEtherscanLink,
-  getProviderOrSigner,
   getRouterContract,
   QueryParams,
-  calculateSlippageAmount
+  calculateSlippageAmount,
+  getSigner
 } from '../../utils'
 import Copy from '../AccountDetails/Copy'
 import AddressInputPanel from '../AddressInputPanel'
@@ -371,10 +371,10 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   async function onSend() {
     setAttemptingTxn(true)
 
-    const signer = await getProviderOrSigner(library, account)
+    const signer = getSigner(library, account)
     // get token contract if needed
     let estimate: Function, method: Function, args
-    if (tokens[Field.INPUT].equals(WETH[chainId]) && signer instanceof JsonRpcSigner) {
+    if (tokens[Field.INPUT].equals(WETH[chainId])) {
       signer
         .sendTransaction({ to: recipient.toString(), value: BigNumber.from(parsedAmounts[Field.INPUT].raw.toString()) })
         .then(response => {
