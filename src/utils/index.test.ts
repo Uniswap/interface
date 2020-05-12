@@ -1,7 +1,7 @@
 import { AddressZero } from '@ethersproject/constants'
 import { TokenAmount, Token, ChainId } from '@uniswap/sdk'
 
-import { getEtherscanLink } from '.'
+import { getEtherscanLink, calculateSlippageAmount } from '.'
 
 describe('utils', () => {
   describe('#getEtherscanLink', () => {
