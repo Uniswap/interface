@@ -25,7 +25,7 @@ import { useAddressBalance } from '../../contexts/Balances'
 import { useTokenAllowance } from '../../data/Allowances'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useWeb3React, useTokenContract } from '../../hooks'
-import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
+import { useTransactionAdder, useHasPendingApproval } from '../../state/transactions/hooks'
 
 import { ROUTER_ADDRESS } from '../../constants'
 import { getRouterContract, calculateGasMargin, calculateSlippageAmount } from '../../utils'
@@ -305,8 +305,8 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
       !!parsedAmounts[Field.OUTPUT] &&
       JSBI.greaterThanOrEqual(outputApproval.raw, parsedAmounts[Field.OUTPUT].raw))
   // check on pending approvals for token amounts
-  const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
-  const pendingApprovalOutput = usePendingApproval(tokens[Field.OUTPUT]?.address)
+  const pendingApprovalInput = useHasPendingApproval(tokens[Field.INPUT]?.address)
+  const pendingApprovalOutput = useHasPendingApproval(tokens[Field.OUTPUT]?.address)
 
   // used for displaying approximate starting price in UI
   const derivedPrice =

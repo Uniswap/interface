@@ -23,7 +23,7 @@ import { useToken } from '../../contexts/Tokens'
 import { useWeb3React } from '../../hooks'
 import { useAllBalances } from '../../contexts/Balances'
 import { usePairContract } from '../../hooks'
-import { useTransactionAdder } from '../../contexts/Transactions'
+import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 
 import { splitSignature } from '@ethersproject/bytes'

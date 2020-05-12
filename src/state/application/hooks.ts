@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useWeb3React } from '../../hooks'
 import { addPopup, PopupContent, removePopup, toggleWalletModal } from './actions'
 import { useSelector, useDispatch } from 'react-redux'
@@ -23,27 +23,31 @@ export function useUserAdvanced() {
   return useSelector((state: AppState) => state.application.userAdvanced)
 }
 
-export function usePopups(): [
-  AppState['application']['popupList'],
-  (content: PopupContent) => void,
-  (key: string) => void
-] {
+// returns a function that allows adding a popup
+export function useAddPopup(): (content: PopupContent) => void {
   const dispatch = useDispatch()
-  const activePopups = useSelector((state: AppState) => state.application.popupList.filter(item => item.show))
 
-  const wrappedAddPopup = useCallback(
+  return useCallback(
     (content: PopupContent) => {
       dispatch(addPopup({ content }))
     },
     [dispatch]
   )
+}
 
-  const wrappedRemovePopup = useCallback(
+// returns a function that allows removing a popup via its key
+export function useRemovePopup(): (key: string) => void {
+  const dispatch = useDispatch()
+  return useCallback(
     (key: string) => {
       dispatch(removePopup({ key }))
     },
     [dispatch]
   )
+}
 
-  return [activePopups, wrappedAddPopup, wrappedRemovePopup]
+// get the list of active popups
+export function useActivePopups(): AppState['application']['popupList'] {
+  const list = useSelector((state: AppState) => state.application.popupList)
+  return useMemo(() => list.filter(item => item.show), [list])
 }

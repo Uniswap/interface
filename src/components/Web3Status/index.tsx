@@ -20,7 +20,7 @@ import LightCircle from '../../assets/svg/lightcircle.svg'
 import { RowBetween } from '../Row'
 import { useENSName } from '../../hooks'
 import { shortenAddress } from '../../utils'
-import { useAllTransactions } from '../../contexts/Transactions'
+import { useAllTransactions } from '../../state/transactions/hooks'
 import { NetworkContextName } from '../../constants'
 import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
 

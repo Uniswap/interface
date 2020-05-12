@@ -4,7 +4,7 @@ import { useMediaLayout } from 'use-media'
 
 import { X } from 'react-feather'
 import { PopupContent } from '../../state/application/actions'
-import { usePopups } from '../../state/application/hooks'
+import { useActivePopups, useRemovePopup } from '../../state/application/hooks'
 import { Link } from '../../theme'
 import { AutoColumn } from '../Column'
 import DoubleTokenLogo from '../DoubleLogo'
@@ -102,7 +102,8 @@ function PopupItem({ content, popKey }: { content: PopupContent; popKey: string 
 export default function App() {
   const theme = useContext(ThemeContext)
   // get all popups
-  const [activePopups, , removePopup] = usePopups()
+  const activePopups = useActivePopups()
+  const removePopup = useRemovePopup()
 
   // switch view settings on mobile
   const isMobile = useMediaLayout({ maxWidth: '600px' })

@@ -9,7 +9,7 @@ import Copy from './Copy'
 import Circle from '../../assets/images/circle.svg'
 
 import { transparentize } from 'polished'
-import { useAllTransactions } from '../../contexts/Transactions'
+import { useAllTransactions } from '../../state/transactions/hooks'
 
 const TransactionStatusWrapper = styled.div`
   display: flex;

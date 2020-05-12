@@ -19,7 +19,7 @@ import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useAddUserToken, useFetchTokenByAddress } from '../../state/user/hooks'
 import { usePair } from '../../data/Reserves'
 import { useAllTokens, useToken } from '../../contexts/Tokens'
-import { usePendingApproval, useTransactionAdder } from '../../contexts/Transactions'
+import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
 import { useTokenContract, useWeb3React } from '../../hooks'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -210,7 +210,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     (!!inputApproval &&
       !!parsedAmounts[Field.INPUT] &&
       JSBI.greaterThanOrEqual(inputApproval.raw, parsedAmounts[Field.INPUT].raw))
-  const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
+  const pendingApprovalInput = useHasPendingApproval(tokens[Field.INPUT]?.address)
 
   const feeAsPercent = new Percent(JSBI.BigInt(3), JSBI.BigInt(1000))
   const feeTimesInputRaw =
