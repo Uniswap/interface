@@ -175,7 +175,6 @@ export default function CurrencyInputPanel({
               <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
                 {label}
               </TYPE.body>
-
               {account && (
                 <Hover>
                   <TYPE.body
