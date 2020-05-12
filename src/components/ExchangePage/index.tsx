@@ -55,6 +55,7 @@ import {
   TruncatedText,
   Wrapper
 } from './styleds'
+import { useV1TradeLinkIfBetter } from '../../data/V1'
 
 enum SwapType {
   EXACT_TOKENS_FOR_TOKENS,
@@ -184,6 +185,10 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   )
 
   const trade = tradeType === TradeType.EXACT_INPUT ? bestTradeExactIn : bestTradeExactOut
+
+  // return link to the appropriate v1 pair if the slippage on v1 is lower
+  const v1TradeLinkIfBetter = useV1TradeLinkIfBetter(trade, new Percent('50', '10000'))
+
   const route = trade?.route
   const userHasSpecifiedInputOutput =
     !!tokens[Field.INPUT] &&
@@ -814,6 +819,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 </Text>
               </RowBetween>
             )}
+
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
@@ -1140,6 +1146,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     </StyledBalanceMaxMini>
                   </Text>
                 </RowBetween>
+
                 {trade && (warningHigh || warningMedium) && (
                   <RowBetween>
                     <TYPE.main
@@ -1214,6 +1221,18 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 `${sending ? 'Send' : 'Swap'}${warningHigh ? ' Anyway' : ''}`}
             </Text>
           </ButtonError>
+        )}
+        {v1TradeLinkIfBetter && (
+          <YellowCard style={{ marginTop: '12px', padding: '8px 4px' }}>
+            <AutoColumn gap="sm" justify="center" style={{ alignItems: 'center', textAlign: 'center' }}>
+              <Text lineHeight="145.23%;" fontSize={14} fontWeight={400} color={theme.text1}>
+                There is a better price for this trade on
+                <Link href={v1TradeLinkIfBetter}>
+                  <b> Uniswap V1 ↗</b>
+                </Link>
+              </Text>
+            </AutoColumn>
+          </YellowCard>
         )}
       </BottomGrouping>
       {tokens[Field.INPUT] && tokens[Field.OUTPUT] && !noRoute && (
@@ -1347,7 +1366,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             </AutoColumn>
           </FixedBottom>
         </AdvancedDropwdown>
-      )}{' '}
+      )}
     </Wrapper>
   )
 }

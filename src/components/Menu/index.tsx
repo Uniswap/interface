@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from 'react'
 import styled from 'styled-components'
-import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 
@@ -83,8 +82,6 @@ export default function Menu() {
   const node = useRef<HTMLDivElement>()
   const [open, toggle] = useToggle(false)
 
-  const [darkMode, toggleDarkMode] = useDarkModeManager()
-
   useEffect(() => {
     const handleClickOutside = e => {
       if (node.current?.contains(e.target) ?? false) {
@@ -123,7 +120,6 @@ export default function Menu() {
           <MenuItem id="link" href="https://uniswap.info/">
             Analytics
           </MenuItem>
-          <MenuItem onClick={toggleDarkMode}>{darkMode ? 'Light theme' : 'Dark theme'}</MenuItem>
         </MenuFlyout>
       ) : (
         ''
