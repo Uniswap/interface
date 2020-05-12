@@ -1,5 +1,5 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import React, { useCallback, useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useWeb3React } from '../../hooks'
@@ -87,7 +87,7 @@ export function useTransactionAdder(): (
       }
       dispatch(addTransaction({ hash, chainId, approvalOfToken, summary }))
     },
-    [dispatch]
+    [dispatch, chainId]
   )
 }
 
