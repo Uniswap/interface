@@ -195,11 +195,11 @@ export default function AddressInputPanel({
                 <Link href={getEtherscanLink(chainId, data.name, 'address')} style={{ fontSize: '14px' }}>
                   (View on Etherscan)
                 </Link>
-              ) : (
+              ) : data.address ? (
                 <Link href={getEtherscanLink(chainId, data.address, 'address')} style={{ fontSize: '14px' }}>
                   (View on Etherscan)
                 </Link>
-              )}
+              ) : null}
             </RowBetween>
             <Input
               type="text"
