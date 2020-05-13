@@ -49,10 +49,11 @@ export default function Updater() {
 
   const tokenBalancesNeedUpdate: { [address: string]: string[] } = useMemo(() => {
     return Object.keys(activeTokenBalanceListeners).reduce<{ [address: string]: string[] }>((map, address) => {
-      const needsUpdate = map[address].filter(tokenAddress => {
-        const data = allBalances[balanceKey({ chainId, tokenAddress, address })]
-        return !data || data.blockNumber < lastBlockNumber
-      })
+      const needsUpdate =
+        map[address]?.filter(tokenAddress => {
+          const data = allBalances[balanceKey({ chainId, tokenAddress, address })]
+          return !data || data.blockNumber < lastBlockNumber
+        }) ?? []
       if (needsUpdate.length > 0) {
         map[address] = needsUpdate
       }

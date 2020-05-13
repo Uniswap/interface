@@ -9,7 +9,6 @@ import { NetworkContextName } from './constants'
 import { isMobile } from 'react-device-detect'
 import { Updater as LocalStorageContextUpdater } from './state/user/hooks'
 import { Updater as TransactionContextUpdater } from './state/transactions/hooks'
-import BalancesContextProvider, { Updater as BalancesContextUpdater } from './contexts/Balances'
 import WalletUpdater from './state/wallet/updater'
 import App from './pages/App'
 import store from './state'
@@ -36,17 +35,12 @@ if (process.env.NODE_ENV === 'production') {
 
 ReactGA.pageview(window.location.pathname + window.location.search)
 
-function ContextProviders({ children }: { children: React.ReactNode }) {
-  return <BalancesContextProvider>{children}</BalancesContextProvider>
-}
-
 function Updaters() {
   return (
     <>
       <LocalStorageContextUpdater />
       <ApplicationContextUpdater />
       <TransactionContextUpdater />
-      <BalancesContextUpdater />
       <WalletUpdater />
     </>
   )
@@ -58,15 +52,13 @@ ReactDOM.render(
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3ProviderNetwork getLibrary={getLibrary}>
         <Provider store={store}>
-          <ContextProviders>
-            <Updaters />
-            <ThemeProvider>
-              <>
-                <ThemedGlobalStyle />
-                <App />
-              </>
-            </ThemeProvider>
-          </ContextProviders>
+          <Updaters />
+          <ThemeProvider>
+            <>
+              <ThemedGlobalStyle />
+              <App />
+            </>
+          </ThemeProvider>
         </Provider>
       </Web3ProviderNetwork>
     </Web3ReactProvider>

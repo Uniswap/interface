@@ -1,6 +1,7 @@
 import { JSBI, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useAllTokens } from '../../contexts/Tokens'
 import { useWeb3React } from '../../hooks'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
@@ -29,7 +30,7 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [
     if (addresses.length === 0) return
     dispatch(startListeningForBalance({ addresses }))
     return () => dispatch(stopListeningForBalance({ addresses }))
-  }, [addresses])
+  }, [addresses, dispatch])
 
   const rawBalanceMap = useSelector<AppState>(({ wallet: { balances } }) => balances)
 
@@ -64,7 +65,7 @@ export function useTokenBalances(
       dispatch(startListeningForTokenBalances(combos))
       return () => dispatch(stopListeningForTokenBalances(combos))
     }
-  }, [address, validTokens])
+  }, [address, validTokens, dispatch])
 
   const rawBalanceMap = useSelector<AppState>(({ wallet: { balances } }) => balances)
 
@@ -76,7 +77,7 @@ export function useTokenBalances(
       validTokens.reduce<{ [address: string]: TokenAmount }>((map, token) => {
         const key = balanceKey({ address, chainId, tokenAddress: token.address })
         const { value } = rawBalanceMap[key] ?? {}
-        map[token.address] = new TokenAmount(token, JSBI.BigInt(value))
+        map[token.address] = new TokenAmount(token, JSBI.BigInt(value ?? 0))
         return map
       }, {}) ?? {}
     )
@@ -96,12 +97,12 @@ export function useTokenBalancesTreatWETHAsETH(
     }
     let includesWETH = false
     const tokensWithoutWETH = tokens.filter(t => {
-      const isWETH = t.equals(WETH[chainId])
+      const isWETH = t?.equals(WETH[chainId]) ?? false
       if (isWETH) includesWETH = true
       return !isWETH
     })
     return { includesWETH, tokensWithoutWETH }
-  }, [tokens])
+  }, [tokens, chainId])
 
   const balancesWithoutWETH = useTokenBalances(address, tokensWithoutWETH)
   const ETHBalance = useETHBalances(includesWETH ? [address] : [])
@@ -115,5 +116,20 @@ export function useTokenBalancesTreatWETHAsETH(
         ...(ethBalance && weth ? { [weth.address]: new TokenAmount(weth, ethBalance) } : null)
       }
     }
-  }, [balancesWithoutWETH, ETHBalance, includesWETH])
+  }, [balancesWithoutWETH, ETHBalance, includesWETH, address, chainId])
+}
+
+// mimics the behavior of useAddressBalance
+export function useTokenBalanceTreatingWETHasETH(account?: string, token?: Token): TokenAmount | undefined {
+  const balances = useTokenBalancesTreatWETHAsETH(account, [token])
+  return token && token.address && balances?.[token.address]
+}
+
+// mimics useAllBalances
+export function useAllTokenBalancesTreatingWETHasETH(): { [account: string]: { [tokenAddress: string]: TokenAmount } } {
+  const { account } = useWeb3React()
+  const allTokens = useAllTokens()
+  const tokensOnly = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
+  const balances = useTokenBalancesTreatWETHAsETH(account, tokensOnly)
+  return account ? { [account]: balances } : {}
 }
