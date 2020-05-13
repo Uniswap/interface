@@ -10,6 +10,7 @@ import { isMobile } from 'react-device-detect'
 import { Updater as LocalStorageContextUpdater } from './state/user/hooks'
 import { Updater as TransactionContextUpdater } from './state/transactions/hooks'
 import BalancesContextProvider, { Updater as BalancesContextUpdater } from './contexts/Balances'
+import WalletUpdater from './state/wallet/updater'
 import App from './pages/App'
 import store from './state'
 import { Updater as ApplicationContextUpdater } from './state/application/updater'
@@ -46,6 +47,7 @@ function Updaters() {
       <ApplicationContextUpdater />
       <TransactionContextUpdater />
       <BalancesContextUpdater />
+      <WalletUpdater />
     </>
   )
 }

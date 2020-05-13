@@ -13,6 +13,7 @@ import ERC20_ABI from '../constants/abis/erc20.json'
 import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32.json'
 import { JSBI, TokenAmount } from '@uniswap/sdk'
 
+// returns the address if it's valid, otherwise returns `false`
 export function isAddress(value: any): string | false {
   try {
     return getAddress(value.toLowerCase())

@@ -1,6 +1,7 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import application from './application/reducer'
 import user from './user/reducer'
+import wallet from './wallet/reducer'
 import transactions from './transactions/reducer'
 import { save, load } from 'redux-localstorage-simple'
 
@@ -10,7 +11,8 @@ const store = configureStore({
   reducer: {
     application,
     user,
-    transactions
+    transactions,
+    wallet
   },
   middleware: [...getDefaultMiddleware(), save({ states: PERSISTED_KEYS })],
   preloadedState: load({ states: PERSISTED_KEYS })
