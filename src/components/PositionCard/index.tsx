@@ -6,7 +6,7 @@ import { Percent, Pair } from '@uniswap/sdk'
 
 import { useWeb3React } from '@web3-react/core'
 import { useTotalSupply } from '../../data/TotalSupply'
-import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
+import { useTokenBalance } from '../../state/wallet/hooks'
 
 import Card, { GreyCard } from '../Card'
 import TokenLogo from '../TokenLogo'
@@ -37,14 +37,13 @@ interface PositionCardProps extends RouteComponentProps<{}> {
 
 function PositionCard({ pair, history, border, minimal = false }: PositionCardProps) {
   const { account } = useWeb3React()
-  const allBalances = useAllTokenBalancesTreatingWETHasETH()
 
   const token0 = pair?.token0
   const token1 = pair?.token1
 
   const [showMore, setShowMore] = useState(false)
 
-  const userPoolBalance = allBalances?.[account]?.[pair?.liquidityToken?.address]
+  const userPoolBalance = useTokenBalance(account, pair?.liquidityToken)
   const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
 
   const poolTokenPercentage =
