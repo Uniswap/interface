@@ -62,6 +62,7 @@ export default function Updater() {
   }, [activeTokenBalanceListeners, allBalances, chainId, lastBlockNumber])
 
   useEffect(() => {
+    if (!library) return
     if (ethBalancesNeedUpdate.length === 0) return
     getEtherBalances(library, ethBalancesNeedUpdate)
       .then(balanceMap => {
@@ -79,6 +80,7 @@ export default function Updater() {
   }, [library, ethBalancesNeedUpdate, dispatch, lastBlockNumber, chainId])
 
   useEffect(() => {
+    if (!library) return
     Object.keys(tokenBalancesNeedUpdate).forEach(address => {
       if (tokenBalancesNeedUpdate[address].length === 0) return
       getTokensBalance(library, address, tokenBalancesNeedUpdate[address])

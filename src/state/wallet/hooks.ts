@@ -56,9 +56,7 @@ export function useTokenBalances(
   const dispatch = useDispatch<AppDispatch>()
   const { chainId } = useWeb3React()
 
-  const validTokens: Token[] = useMemo(() => tokens?.filter(t => t && t.address && isAddress(t.address)) ?? [], [
-    tokens
-  ])
+  const validTokens: Token[] = useMemo(() => tokens?.filter(t => isAddress(t?.address)) ?? [], [tokens])
 
   // keep the listeners up to date
   useEffect(() => {
@@ -123,6 +121,11 @@ export function useTokenBalancesTreatWETHAsETH(
       return balancesWithoutWETH
     }
   }, [balancesWithoutWETH, ETHBalance, includesWETH, address, chainId])
+}
+
+// get the balance for a single token/account combo
+export function useTokenBalance(account?: string, token?: Token): TokenAmount | undefined {
+  return useTokenBalances(account, [token])?.[token?.address]
 }
 
 // mimics the behavior of useAddressBalance

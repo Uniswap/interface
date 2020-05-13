@@ -49,8 +49,7 @@ function Supply({ history }: RouteComponentProps) {
   const filteredExchangeList = pairs
     .filter(pair => {
       return (
-        pairBalances &&
-        pairBalances[pair.liquidityToken.address] &&
+        pairBalances?.[pair.liquidityToken.address] &&
         JSBI.greaterThan(pairBalances[pair.liquidityToken.address].raw, JSBI.BigInt(0))
       )
     })
