@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
-import { Token, JSBI, WETH } from '@uniswap/sdk'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
+import { Token, WETH } from '@uniswap/sdk'
 
 import Row, { AutoRow } from '../Row'
 import TokenLogo from '../TokenLogo'
@@ -21,7 +21,13 @@ const Fields = {
   TOKEN1: 1
 }
 
-function CreatePool({ history }) {
+const STEP = {
+  SELECT_TOKENS: 'SELECT_TOKENS', // choose input and output tokens
+  READY_TO_CREATE: 'READY_TO_CREATE', // enable 'create' button
+  SHOW_CREATE_PAGE: 'SHOW_CREATE_PAGE' // show create page
+}
+
+function CreatePool({ history }: RouteComponentProps<{}>) {
   const { chainId } = useWeb3React()
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN0)
@@ -32,108 +38,109 @@ function CreatePool({ history }) {
   const token0: Token = useToken(token0Address)
   const token1: Token = useToken(token1Address)
 
-  const [step, setStep] = useState<number>(1)
+  const [step, setStep] = useState<string>(STEP.SELECT_TOKENS)
 
   const pair = usePair(token0, token1)
-  const pairExists = // used to detect new exchange
-    pair && JSBI.notEqual(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.notEqual(pair.reserve1.raw, JSBI.BigInt(0))
 
+  // if both tokens selected but pair doesnt exist, enable button to create pair
   useEffect(() => {
-    if (token0Address && token1Address && pair && !pairExists) {
-      setStep(2)
+    if (token0Address && token1Address && pair === null) {
+      setStep(STEP.READY_TO_CREATE)
     }
-  }, [pair, pairExists, token0Address, token1Address])
+  }, [pair, token0Address, token1Address])
 
-  if (step === 2 && !pairExists) {
+  // if theyve clicked create, show add liquidity page
+  if (step === STEP.SHOW_CREATE_PAGE) {
     return <AddLiquidity token0={token0Address} token1={token1Address} />
-  } else
-    return (
-      <AutoColumn gap="20px">
-        <AutoColumn gap="24px">
-          {!token0Address ? (
-            <ButtonDropwdown
-              onClick={() => {
-                setShowSearch(true)
-                setActiveField(Fields.TOKEN0)
-              }}
-            >
-              <Text fontSize={20}>Select first token</Text>
-            </ButtonDropwdown>
-          ) : (
-            <ButtonDropwdownLight
-              onClick={() => {
-                setShowSearch(true)
-                setActiveField(Fields.TOKEN0)
-              }}
-            >
-              <Row align="flex-end">
-                <TokenLogo address={token0Address} />
-                <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-                  {token0?.symbol}{' '}
-                </Text>
-                <TYPE.darkGray fontWeight={500} fontSize={16} marginLeft={'8px'}>
-                  {token0?.symbol === 'ETH' && '(default)'}
-                </TYPE.darkGray>
-              </Row>
-            </ButtonDropwdownLight>
-          )}
-          <ColumnCenter>
-            <Plus size="16" color="#888D9B" />
-          </ColumnCenter>
-          {!token1Address ? (
-            <ButtonDropwdown
-              onClick={() => {
-                setShowSearch(true)
-                setActiveField(Fields.TOKEN1)
-              }}
-              disabled={step !== 1}
-            >
-              <Text fontSize={20}>Select second token</Text>
-            </ButtonDropwdown>
-          ) : (
-            <ButtonDropwdownLight
-              onClick={() => {
-                setShowSearch(true)
-                setActiveField(Fields.TOKEN1)
-              }}
-            >
-              <Row>
-                <TokenLogo address={token1Address} />
-                <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-                  {token1?.symbol}
-                </Text>
-              </Row>
-            </ButtonDropwdownLight>
-          )}
-          {pairExists ? (
-            <AutoRow padding="10px" justify="center">
-              <TYPE.body textAlign="center">
-                Pool already exists!
-                <Link onClick={() => history.push('/add/' + token0Address + '-' + token1Address)}> Join the pool.</Link>
-              </TYPE.body>
-            </AutoRow>
-          ) : (
-            <ButtonPrimary disabled={step !== 2}>
-              <Text fontWeight={500} fontSize={20}>
-                Create Pool
+  }
+
+  return (
+    <AutoColumn gap="20px">
+      <AutoColumn gap="24px">
+        {!token0Address ? (
+          <ButtonDropwdown
+            onClick={() => {
+              setShowSearch(true)
+              setActiveField(Fields.TOKEN0)
+            }}
+          >
+            <Text fontSize={20}>Select first token</Text>
+          </ButtonDropwdown>
+        ) : (
+          <ButtonDropwdownLight
+            onClick={() => {
+              setShowSearch(true)
+              setActiveField(Fields.TOKEN0)
+            }}
+          >
+            <Row align="flex-end">
+              <TokenLogo address={token0Address} />
+              <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
+                {token0?.symbol}{' '}
               </Text>
-            </ButtonPrimary>
-          )}
-        </AutoColumn>
-        <SearchModal
-          isOpen={showSearch}
-          filterType="tokens"
-          onTokenSelect={address => {
-            activeField === Fields.TOKEN0 ? setToken0Address(address) : setToken1Address(address)
-          }}
-          onDismiss={() => {
-            setShowSearch(false)
-          }}
-          hiddenToken={activeField === Fields.TOKEN0 ? token1Address : token0Address}
-          showCommonBases={activeField === Fields.TOKEN0}
-        />
+              <TYPE.darkGray fontWeight={500} fontSize={16} marginLeft={'8px'}>
+                {token0?.symbol === 'ETH' && '(default)'}
+              </TYPE.darkGray>
+            </Row>
+          </ButtonDropwdownLight>
+        )}
+        <ColumnCenter>
+          <Plus size="16" color="#888D9B" />
+        </ColumnCenter>
+        {!token1Address ? (
+          <ButtonDropwdown
+            onClick={() => {
+              setShowSearch(true)
+              setActiveField(Fields.TOKEN1)
+            }}
+            disabled={step !== STEP.SELECT_TOKENS}
+          >
+            <Text fontSize={20}>Select second token</Text>
+          </ButtonDropwdown>
+        ) : (
+          <ButtonDropwdownLight
+            onClick={() => {
+              setShowSearch(true)
+              setActiveField(Fields.TOKEN1)
+            }}
+          >
+            <Row>
+              <TokenLogo address={token1Address} />
+              <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
+                {token1?.symbol}
+              </Text>
+            </Row>
+          </ButtonDropwdownLight>
+        )}
+        {pair ? ( // pair already exists - prompt to add liquidity to existing pool
+          <AutoRow padding="10px" justify="center">
+            <TYPE.body textAlign="center">
+              Pool already exists!
+              <Link onClick={() => history.push('/add/' + token0Address + '-' + token1Address)}> Join the pool.</Link>
+            </TYPE.body>
+          </AutoRow>
+        ) : (
+          <ButtonPrimary disabled={step !== STEP.READY_TO_CREATE} onClick={() => setStep(STEP.SHOW_CREATE_PAGE)}>
+            <Text fontWeight={500} fontSize={20}>
+              Create Pool
+            </Text>
+          </ButtonPrimary>
+        )}
       </AutoColumn>
-    )
+      <SearchModal
+        isOpen={showSearch}
+        filterType="tokens"
+        onTokenSelect={address => {
+          activeField === Fields.TOKEN0 ? setToken0Address(address) : setToken1Address(address)
+        }}
+        onDismiss={() => {
+          setShowSearch(false)
+        }}
+        hiddenToken={activeField === Fields.TOKEN0 ? token1Address : token0Address}
+        showCommonBases={activeField === Fields.TOKEN0}
+      />
+    </AutoColumn>
+  )
 }
 
 export default withRouter(CreatePool)

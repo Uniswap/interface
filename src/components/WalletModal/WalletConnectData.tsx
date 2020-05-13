@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import QRCode from 'qrcode.react'
-import { useDarkModeManager } from '../../state/user/hooks'
 
 const QRCodeWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -17,12 +16,5 @@ interface WalletConnectDataProps {
 }
 
 export default function WalletConnectData({ uri = '', size }: WalletConnectDataProps) {
-  const [isDark] = useDarkModeManager()
-  return (
-    <QRCodeWrapper>
-      {uri && (
-        <QRCode size={size} value={uri} bgColor={isDark ? '#333639' : 'white'} fgColor={isDark ? 'white' : 'black'} />
-      )}
-    </QRCodeWrapper>
-  )
+  return <QRCodeWrapper>{uri && <QRCode size={size} value={uri} />}</QRCodeWrapper>
 }

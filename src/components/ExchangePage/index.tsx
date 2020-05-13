@@ -28,8 +28,8 @@ import {
   calculateGasMargin,
   getEtherscanLink,
   getRouterContract,
+  basisPointsToPercent,
   QueryParams,
-  calculateSlippageAmount,
   getSigner
 } from '../../utils'
 import Copy from '../AccountDetails/Copy'
@@ -339,17 +339,12 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
 
   const slippageAdjustedAmounts: { [field: number]: TokenAmount } = {
     [independentField]: parsedAmounts[independentField],
-    [dependentField]: parsedAmounts[dependentField]
-      ? tradeType === TradeType.EXACT_INPUT
-        ? new TokenAmount(
-            tokens[dependentField],
-            calculateSlippageAmount(parsedAmounts[dependentField], allowedSlippage)[0]
-          )
-        : new TokenAmount(
-            tokens[dependentField],
-            calculateSlippageAmount(parsedAmounts[dependentField], allowedSlippage)[1]
-          )
-      : undefined
+    [dependentField]:
+      parsedAmounts[dependentField] && trade
+        ? tradeType === TradeType.EXACT_INPUT
+          ? trade.minimumAmountOut(basisPointsToPercent(allowedSlippage))
+          : trade.maximumAmountIn(basisPointsToPercent(allowedSlippage))
+        : undefined
   }
 
   // reset modal state when closed
@@ -1307,7 +1302,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
                   Set slippage tolerance
                 </TYPE.black>
-                <QuestionHelper text="Your transaction will revert if the price changes more than this amount after you submit your trade." />
+                <QuestionHelper text="Your transaction will revert if the execution price changes by more than this amount after you submit your trade." />
               </RowFixed>
               <SlippageTabs
                 rawSlippage={allowedSlippage}

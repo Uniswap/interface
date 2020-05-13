@@ -21,11 +21,6 @@ export const COMMON_BASES = {
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]]
 }
 
-export const SUPPORTED_THEMES = {
-  DARK: 'DARK',
-  LIGHT: 'LIGHT'
-}
-
 const MAINNET_WALLETS = {
   INJECTED: {
     connector: injected,
