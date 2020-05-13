@@ -25,13 +25,13 @@ import { useAddressBalance } from '../../contexts/Balances'
 import { useTokenAllowance } from '../../data/Allowances'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useWeb3React, useTokenContract } from '../../hooks'
-import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
+import { useTransactionAdder, useHasPendingApproval } from '../../state/transactions/hooks'
 
 import { ROUTER_ADDRESS } from '../../constants'
 import { getRouterContract, calculateGasMargin, calculateSlippageAmount } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
 import { usePair } from '../../data/Reserves'
-import { useLocalStorageTokens } from '../../contexts/LocalStorage'
+import { useAddUserToken, useFetchTokenByAddress } from '../../state/user/hooks'
 import { useAllTokens } from '../../contexts/Tokens'
 
 // denominated in bips
@@ -187,7 +187,9 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   }
 
   // ensure input + output tokens are added to localstorage
-  const [, { fetchTokenByAddress, addToken }] = useLocalStorageTokens()
+  const fetchTokenByAddress = useFetchTokenByAddress()
+  const addToken = useAddUserToken()
+
   const allTokens = useAllTokens()
   const inputTokenAddress = fieldData[Field.INPUT].address
   useEffect(() => {
@@ -304,8 +306,8 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
       !!parsedAmounts[Field.OUTPUT] &&
       JSBI.greaterThanOrEqual(outputApproval.raw, parsedAmounts[Field.OUTPUT].raw))
   // check on pending approvals for token amounts
-  const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
-  const pendingApprovalOutput = usePendingApproval(tokens[Field.OUTPUT]?.address)
+  const pendingApprovalInput = useHasPendingApproval(tokens[Field.INPUT]?.address)
+  const pendingApprovalOutput = useHasPendingApproval(tokens[Field.OUTPUT]?.address)
 
   // used for displaying approximate starting price in UI
   const derivedPrice =
@@ -496,9 +498,9 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setTxHash(response.hash)
-          addTransaction(
-            response,
-            'Add ' +
+          addTransaction(response, {
+            summary:
+              'Add ' +
               parsedAmounts[Field.INPUT]?.toSignificant(3) +
               ' ' +
               tokens[Field.INPUT]?.symbol +
@@ -506,7 +508,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
               parsedAmounts[Field.OUTPUT]?.toSignificant(3) +
               ' ' +
               tokens[Field.OUTPUT]?.symbol
-          )
+          })
           setPendingConfirmation(false)
         })
       )
@@ -533,7 +535,10 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
         gasLimit: calculateGasMargin(estimatedGas)
       })
       .then(response => {
-        addTransaction(response, 'Approve ' + tokens[field]?.symbol, { approval: tokens[field]?.address })
+        addTransaction(response, {
+          summary: 'Approve ' + tokens[field]?.symbol,
+          approvalOfToken: tokens[field].address
+        })
       })
   }
 

@@ -16,10 +16,10 @@ import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { ROUTER_ADDRESS } from '../../constants'
 import { useTokenAllowance } from '../../data/Allowances'
 import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
-import { useLocalStorageTokens } from '../../contexts/LocalStorage'
+import { useAddUserToken, useFetchTokenByAddress } from '../../state/user/hooks'
 import { usePair } from '../../data/Reserves'
 import { useAllTokens, useToken } from '../../contexts/Tokens'
-import { usePendingApproval, useTransactionAdder } from '../../contexts/Transactions'
+import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
 import { useTokenContract, useWeb3React } from '../../hooks'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -28,10 +28,10 @@ import { Link } from '../../theme/components'
 import {
   calculateGasMargin,
   getEtherscanLink,
-  getProviderOrSigner,
   getRouterContract,
   QueryParams,
-  calculateSlippageAmount
+  calculateSlippageAmount,
+  getSigner
 } from '../../utils'
 import Copy from '../AccountDetails/Copy'
 import AddressInputPanel from '../AddressInputPanel'
@@ -113,7 +113,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   }
 
   // ensure input + output tokens are added to localstorage
-  const [, { fetchTokenByAddress, addToken }] = useLocalStorageTokens()
+  const fetchTokenByAddress = useFetchTokenByAddress()
+  const addToken = useAddUserToken()
   const allTokens = useAllTokens()
   const inputTokenAddress = fieldData[Field.INPUT].address
   useEffect(() => {
@@ -209,7 +210,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     (!!inputApproval &&
       !!parsedAmounts[Field.INPUT] &&
       JSBI.greaterThanOrEqual(inputApproval.raw, parsedAmounts[Field.INPUT].raw))
-  const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
+  const pendingApprovalInput = useHasPendingApproval(tokens[Field.INPUT]?.address)
 
   const feeAsPercent = new Percent(JSBI.BigInt(3), JSBI.BigInt(1000))
   const feeTimesInputRaw =
@@ -369,23 +370,23 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   async function onSend() {
     setAttemptingTxn(true)
 
-    const signer = await getProviderOrSigner(library, account)
+    const signer = getSigner(library, account)
     // get token contract if needed
     let estimate: Function, method: Function, args
     if (tokens[Field.INPUT].equals(WETH[chainId])) {
-      ;(signer as any)
+      signer
         .sendTransaction({ to: recipient.toString(), value: BigNumber.from(parsedAmounts[Field.INPUT].raw.toString()) })
         .then(response => {
           setTxHash(response.hash)
-          addTransaction(
-            response,
-            'Send ' +
+          addTransaction(response, {
+            summary:
+              'Send ' +
               parsedAmounts[Field.INPUT]?.toSignificant(3) +
               ' ' +
               tokens[Field.INPUT]?.symbol +
               ' to ' +
               recipient
-          )
+          })
           setPendingConfirmation(false)
         })
         .catch(() => {
@@ -402,15 +403,15 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             gasLimit: calculateGasMargin(estimatedGasLimit)
           }).then(response => {
             setTxHash(response.hash)
-            addTransaction(
-              response,
-              'Send ' +
+            addTransaction(response, {
+              summary:
+                'Send ' +
                 parsedAmounts[Field.INPUT]?.toSignificant(3) +
                 ' ' +
                 tokens[Field.INPUT]?.symbol +
                 ' to ' +
                 recipient
-            )
+            })
             setPendingConfirmation(false)
           })
         )
@@ -513,9 +514,9 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setTxHash(response.hash)
-          addTransaction(
-            response,
-            'Swap ' +
+          addTransaction(response, {
+            summary:
+              'Swap ' +
               slippageAdjustedAmounts?.[Field.INPUT]?.toSignificant(3) +
               ' ' +
               tokens[Field.INPUT]?.symbol +
@@ -523,7 +524,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               slippageAdjustedAmounts?.[Field.OUTPUT]?.toSignificant(3) +
               ' ' +
               tokens[Field.OUTPUT]?.symbol
-          )
+          })
           setPendingConfirmation(false)
         })
       )
@@ -549,7 +550,10 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
         gasLimit: calculateGasMargin(estimatedGas)
       })
       .then(response => {
-        addTransaction(response, 'Approve ' + tokens[field]?.symbol, { approval: tokens[field]?.address })
+        addTransaction(response, {
+          summary: 'Approve ' + tokens[field]?.symbol,
+          approvalOfToken: tokens[field].address
+        })
       })
   }
 

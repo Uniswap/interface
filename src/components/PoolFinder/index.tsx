@@ -16,7 +16,7 @@ import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
 import { useToken } from '../../contexts/Tokens'
 import { useWeb3React } from '@web3-react/core'
 import { useAddressBalance } from '../../contexts/Balances'
-import { useLocalStoragePairAdder } from '../../contexts/LocalStorage'
+import { usePairAdder } from '../../state/user/hooks'
 import { usePair } from '../../data/Reserves'
 
 const Fields = {
@@ -35,7 +35,7 @@ function PoolFinder({ history }: RouteComponentProps) {
   const token1: Token = useToken(token1Address)
 
   const pair: Pair = usePair(token0, token1)
-  const addPair = useLocalStoragePairAdder()
+  const addPair = usePairAdder()
 
   useEffect(() => {
     if (pair) {
