@@ -11,7 +11,7 @@ import { ROUTER_ADDRESS, SUPPORTED_THEMES } from '../constants'
 
 import ERC20_ABI from '../constants/abis/erc20.json'
 import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32.json'
-import { JSBI, TokenAmount } from '@uniswap/sdk'
+import { JSBI, Percent, TokenAmount } from '@uniswap/sdk'
 
 export function isAddress(value: any): string | false {
   try {
@@ -105,6 +105,11 @@ export function shortenAddress(address: string, chars = 4): string {
 
 export function calculateGasMargin(value: BigNumber): BigNumber {
   return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000)) // add 10%
+}
+
+// converts a basis points value to a sdk percent
+export function basisPointsToPercent(num: number): Percent {
+  return new Percent(JSBI.BigInt(num), JSBI.BigInt(10000))
 }
 
 export function calculateSlippageAmount(value: TokenAmount, slippage: number): [JSBI, JSBI] {
