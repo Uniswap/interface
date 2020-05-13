@@ -8,6 +8,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { useUserAdvanced } from '../../state/application/hooks'
+import { useTokenBalanceTreatingWETHasETH, useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { Field, SwapAction, useSwapStateReducer } from './swap-store'
 import { Text } from 'rebass'
 import Card, { BlueCard, GreyCard, YellowCard } from '../../components/Card'
@@ -15,7 +16,6 @@ import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { ROUTER_ADDRESS } from '../../constants'
 import { useTokenAllowance } from '../../data/Allowances'
-import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useAddUserToken, useFetchTokenByAddress } from '../../state/user/hooks'
 import { useAllTokens, useToken } from '../../contexts/Tokens'
 import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
@@ -152,12 +152,12 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
 
   // all balances for detecting a swap with send
-  const allBalances = useAllBalances()
+  const allBalances = useAllTokenBalancesTreatingWETHasETH()
 
   // get user- and token-specific lookup data
   const userBalances = {
-    [Field.INPUT]: useAddressBalance(account, tokens[Field.INPUT]),
-    [Field.OUTPUT]: useAddressBalance(account, tokens[Field.OUTPUT])
+    [Field.INPUT]: useTokenBalanceTreatingWETHasETH(account, tokens[Field.INPUT]),
+    [Field.OUTPUT]: useTokenBalanceTreatingWETHasETH(account, tokens[Field.OUTPUT])
   }
 
   // parse the amount that the user typed
