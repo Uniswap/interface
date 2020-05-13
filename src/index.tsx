@@ -7,12 +7,12 @@ import { Provider } from 'react-redux'
 
 import { NetworkContextName } from './constants'
 import { isMobile } from 'react-device-detect'
-import { Updater as LocalStorageContextUpdater } from './state/user/hooks'
-import { Updater as TransactionContextUpdater } from './state/transactions/hooks'
 import BalancesContextProvider, { Updater as BalancesContextUpdater } from './contexts/Balances'
 import App from './pages/App'
 import store from './state'
-import { Updater as ApplicationContextUpdater } from './state/application/updater'
+import ApplicationUpdater from './state/application/updater'
+import TransactionUpdater from './state/transactions/updater'
+import UserUpdater from './state/user/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import './i18n'
 
@@ -42,9 +42,9 @@ function ContextProviders({ children }: { children: React.ReactNode }) {
 function Updaters() {
   return (
     <>
-      <LocalStorageContextUpdater />
-      <ApplicationContextUpdater />
-      <TransactionContextUpdater />
+      <UserUpdater />
+      <ApplicationUpdater />
+      <TransactionUpdater />
       <BalancesContextUpdater />
     </>
   )

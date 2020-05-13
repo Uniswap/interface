@@ -119,8 +119,8 @@ export default function WalletModal({
   confirmedTransactions,
   ENSName
 }: {
-  pendingTransactions: any[]
-  confirmedTransactions: any[]
+  pendingTransactions: string[] // hashes of pending
+  confirmedTransactions: string[] // hashes of confirmed
   ENSName?: string
 }) {
   const { active, account, connector, activate, error } = useWeb3React()
