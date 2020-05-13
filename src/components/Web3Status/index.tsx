@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled, { css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import { darken, lighten } from 'polished'
 import { Activity } from 'react-feather'
 import { useWalletModalToggle } from '../../state/application/hooks'
+import { TransactionDetails } from '../../state/transactions/reducer'
 
 import Identicon from '../Identicon'
 import PortisIcon from '../../assets/images/portisIcon.png'
@@ -121,6 +122,15 @@ const NetworkIcon = styled(Activity)`
   height: 16px;
 `
 
+// we want the latest one to come first, so return negative if a is after b
+function newTranscationsFirst(a: TransactionDetails, b: TransactionDetails) {
+  return b.addedTime - a.addedTime
+}
+
+function recentTransactionsOnly(a: TransactionDetails) {
+  return new Date().getTime() - a.addedTime < 86_400_000
+}
+
 export default function Web3Status() {
   const { t } = useTranslation()
   const { active, account, connector, error } = useWeb3React()
@@ -129,8 +139,14 @@ export default function Web3Status() {
   const ENSName = useENSName(account)
 
   const allTransactions = useAllTransactions()
-  const pending = Object.keys(allTransactions).filter(hash => !allTransactions[hash].receipt)
-  const confirmed = Object.keys(allTransactions).filter(hash => allTransactions[hash].receipt)
+
+  const sortedRecentTransactions = useMemo(() => {
+    const txs = Object.values(allTransactions)
+    return txs.filter(recentTransactionsOnly).sort(newTranscationsFirst)
+  }, [allTransactions])
+
+  const pending = sortedRecentTransactions.filter(tx => !tx.receipt).map(tx => tx.hash)
+  const confirmed = sortedRecentTransactions.filter(tx => tx.receipt).map(tx => tx.hash)
 
   const hasPendingTransactions = !!pending.length
 

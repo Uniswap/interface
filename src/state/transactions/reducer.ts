@@ -1,11 +1,16 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { addTransaction, checkTransaction, finalizeTransaction, SerializableTransactionReceipt } from './actions'
 
+const now = () => new Date().getTime()
+
 export interface TransactionDetails {
+  hash: string
   approvalOfToken?: string
   blockNumberChecked?: number
   summary?: string
   receipt?: SerializableTransactionReceipt
+  addedTime: number
+  confirmedTime?: number
 }
 
 export interface TransactionState {
@@ -23,7 +28,7 @@ export default createReducer(initialState, builder =>
         throw Error('Attempted to add existing transaction.')
       }
       state[chainId] = state[chainId] ?? {}
-      state[chainId][hash] = { approvalOfToken, summary }
+      state[chainId][hash] = { hash, approvalOfToken, summary, addedTime: now() }
     })
     .addCase(checkTransaction, (state, { payload: { chainId, blockNumber, hash } }) => {
       if (!state[chainId]?.[hash]) {
@@ -38,5 +43,6 @@ export default createReducer(initialState, builder =>
       }
       state[chainId] = state[chainId] ?? {}
       state[chainId][hash].receipt = receipt
+      state[chainId][hash].confirmedTime = now()
     })
 )
