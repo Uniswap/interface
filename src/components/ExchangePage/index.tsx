@@ -597,28 +597,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     }
 
     if (
-      parsedAmounts[Field.INPUT] &&
-      route &&
-      JSBI.greaterThan(parsedAmounts[Field.INPUT].raw, route.pairs[0].reserveOf(tokens[Field.INPUT]).raw)
-    ) {
-      setTradeError('Insufficient Liquidity')
-      setIsValid(false)
-    }
-
-    if (
-      !ignoreOutput &&
-      parsedAmounts[Field.OUTPUT] &&
-      route &&
-      JSBI.greaterThan(
-        parsedAmounts[Field.OUTPUT].raw,
-        route.pairs[route.pairs.length - 1].reserveOf(tokens[Field.OUTPUT]).raw
-      )
-    ) {
-      setTradeError('Insufficient Liquidity')
-      setIsValid(false)
-    }
-
-    if (
       userBalances[Field.INPUT] &&
       parsedAmounts[Field.INPUT] &&
       JSBI.lessThan(userBalances[Field.INPUT].raw, parsedAmounts[Field.INPUT]?.raw)
