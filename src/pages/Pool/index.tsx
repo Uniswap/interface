@@ -6,6 +6,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom'
 import Question from '../../components/Question'
 import SearchModal from '../../components/SearchModal'
 import PositionCard from '../../components/PositionCard'
+import { useTokenBalances } from '../../state/wallet/hooks'
 import { Link, TYPE } from '../../theme'
 import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
@@ -14,7 +15,6 @@ import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 
 import { useWeb3React } from '@web3-react/core'
-import { useAllBalances, useAccountLPBalances } from '../../contexts/Balances'
 import { usePair } from '../../data/Reserves'
 import { useAllDummyPairs } from '../../state/user/hooks'
 
@@ -40,18 +40,17 @@ function Supply({ history }: RouteComponentProps) {
   const [showPoolSearch, setShowPoolSearch] = useState(false)
 
   // initiate listener for LP balances
-  const allBalances = useAllBalances()
-  useAccountLPBalances(account)
-
   const pairs = useAllDummyPairs()
+  const pairBalances = useTokenBalances(
+    account,
+    pairs?.map(p => p.liquidityToken)
+  )
 
   const filteredExchangeList = pairs
     .filter(pair => {
       return (
-        allBalances &&
-        allBalances[account] &&
-        allBalances[account][pair.liquidityToken.address] &&
-        JSBI.greaterThan(allBalances[account][pair.liquidityToken.address].raw, JSBI.BigInt(0))
+        pairBalances?.[pair.liquidityToken.address] &&
+        JSBI.greaterThan(pairBalances[pair.liquidityToken.address].raw, JSBI.BigInt(0))
       )
     })
     .map((pair, i) => {

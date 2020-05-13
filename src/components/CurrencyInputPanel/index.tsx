@@ -3,6 +3,7 @@ import React, { useState, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import '@reach/tooltip/styles.css'
 import { darken } from 'polished'
+import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
 
 import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
@@ -14,7 +15,6 @@ import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
 import { useWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
-import { useAddressBalance } from '../../contexts/Balances'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -163,7 +163,7 @@ export default function CurrencyInputPanel({
 
   const [modalOpen, setModalOpen] = useState(false)
   const { account } = useWeb3React()
-  const userTokenBalance = useAddressBalance(account, token)
+  const userTokenBalance = useTokenBalanceTreatingWETHasETH(account, token)
   const theme = useContext(ThemeContext)
 
   return (

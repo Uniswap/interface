@@ -6,8 +6,8 @@ import IUniswapV1Factory from '../constants/abis/v1_factory.json'
 import { V1_FACTORY_ADDRESS } from '../constants'
 import { useContract } from '../hooks'
 import { SWRKeys } from '.'
-import { useTokenBalance, useETHBalance } from './Balances'
 import { AddressZero } from '@ethersproject/constants'
+import { useETHBalances, useTokenBalances } from '../state/wallet/hooks'
 
 function getV1PairAddress(contract: Contract): (_: SWRKeys, tokenAddress: string) => Promise<string> {
   return async (_: SWRKeys, tokenAddress: string): Promise<string> => contract.getExchange(tokenAddress)
@@ -30,8 +30,8 @@ function useMockV1Pair(token?: Token) {
   const isWETH = token?.equals(WETH[ChainId.MAINNET])
 
   const v1PairAddress = useV1PairAddress(mainnet && !isWETH ? token?.address : undefined)
-  const tokenBalance = useTokenBalance(token, v1PairAddress)
-  const ETHBalance = useETHBalance(v1PairAddress)
+  const tokenBalance = useTokenBalances(v1PairAddress, [token])[token?.address]
+  const ETHBalance = useETHBalances([v1PairAddress])[v1PairAddress]
 
   return tokenBalance && ETHBalance
     ? new Pair(tokenBalance, new TokenAmount(DUMMY_ETH, ETHBalance.toString()))

@@ -5,8 +5,8 @@ import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { Percent, Pair } from '@uniswap/sdk'
 
 import { useWeb3React } from '@web3-react/core'
-import { useAllBalances } from '../../contexts/Balances'
 import { useTotalSupply } from '../../data/TotalSupply'
+import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 
 import Card, { GreyCard } from '../Card'
 import TokenLogo from '../TokenLogo'
@@ -37,7 +37,7 @@ interface PositionCardProps extends RouteComponentProps<{}> {
 
 function PositionCard({ pair, history, border, minimal = false }: PositionCardProps) {
   const { account } = useWeb3React()
-  const allBalances = useAllBalances()
+  const allBalances = useAllTokenBalancesTreatingWETHasETH()
 
   const token0 = pair?.token0
   const token1 = pair?.token1

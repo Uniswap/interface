@@ -13,6 +13,7 @@ import PositionCard from '../../components/PositionCard'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { Text } from 'rebass'
+import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { Plus } from 'react-feather'
 import { BlueCard, GreyCard, LightCard } from '../../components/Card'
@@ -21,7 +22,6 @@ import { ButtonPrimary, ButtonLight } from '../../components/Button'
 import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
 
 import { useToken } from '../../contexts/Tokens'
-import { useAddressBalance } from '../../contexts/Balances'
 import { useTokenAllowance } from '../../data/Allowances'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useWeb3React, useTokenContract } from '../../hooks'
@@ -226,8 +226,8 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
 
   // get user-pecific and token-specific lookup data
   const userBalances: { [field: number]: TokenAmount } = {
-    [Field.INPUT]: useAddressBalance(account, tokens[Field.INPUT]),
-    [Field.OUTPUT]: useAddressBalance(account, tokens[Field.OUTPUT])
+    [Field.INPUT]: useTokenBalanceTreatingWETHasETH(account, tokens[Field.INPUT]),
+    [Field.OUTPUT]: useTokenBalanceTreatingWETHasETH(account, tokens[Field.OUTPUT])
   }
 
   // track non relational amounts if first person to add liquidity

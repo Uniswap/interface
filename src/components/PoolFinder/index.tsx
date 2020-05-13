@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { TokenAmount, JSBI, Token, Pair } from '@uniswap/sdk'
+import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
 
 import Row from '../Row'
 import TokenLogo from '../TokenLogo'
@@ -15,7 +16,6 @@ import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
 
 import { useToken } from '../../contexts/Tokens'
 import { useWeb3React } from '@web3-react/core'
-import { useAddressBalance } from '../../contexts/Balances'
 import { usePairAdder } from '../../state/user/hooks'
 import { usePair } from '../../data/Reserves'
 
@@ -43,7 +43,7 @@ function PoolFinder({ history }: RouteComponentProps) {
     }
   }, [pair, addPair])
 
-  const position: TokenAmount = useAddressBalance(account, pair?.liquidityToken)
+  const position: TokenAmount = useTokenBalanceTreatingWETHasETH(account, pair?.liquidityToken)
 
   const newPair: boolean =
     pair === null ||
