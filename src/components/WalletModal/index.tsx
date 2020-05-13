@@ -223,6 +223,7 @@ export default function WalletModal({
               onClick={() => {
                 option.connector !== connector && !option.href && tryActivation(option.connector)
               }}
+              id={`connect-${key}`}
               key={key}
               active={option.connector && option.connector === connector}
               color={option.color}
@@ -243,6 +244,7 @@ export default function WalletModal({
           if (option.name === 'MetaMask') {
             return (
               <Option
+                id={`connect-${key}`}
                 key={key}
                 color={'#E8831D'}
                 header={'Install Metamask'}
@@ -270,6 +272,7 @@ export default function WalletModal({
         !isMobile &&
         !option.mobileOnly && (
           <Option
+            id={`connect-${key}`}
             onClick={() => {
               option.connector === connector
                 ? setWalletView(WALLET_VIEWS.ACCOUNT)

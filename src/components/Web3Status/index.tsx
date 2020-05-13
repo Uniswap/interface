@@ -170,7 +170,7 @@ export default function Web3Status() {
   function getWeb3Status() {
     if (account) {
       return (
-        <Web3StatusConnected onClick={toggleWalletModal} pending={hasPendingTransactions}>
+        <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
           {hasPendingTransactions ? (
             <RowBetween>
               <Text>{pending?.length} Pending</Text> <SpinnerWrapper src={LightCircle} alt="loader" />
@@ -190,7 +190,7 @@ export default function Web3Status() {
       )
     } else {
       return (
-        <Web3StatusConnect onClick={toggleWalletModal} faded={!account}>
+        <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
           <Text>{t('Connect to a Wallet')}</Text>
         </Web3StatusConnect>
       )

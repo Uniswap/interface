@@ -54,6 +54,8 @@
     "use-media": "^1.4.0"
   },
   "devDependencies": {
+    "@ethersproject/experimental": "^5.0.0-beta.141",
+    "@ethersproject/wallet": "^5.0.0-beta.141",
     "@types/jest": "^25.2.1",
     "@types/node": "^13.13.5",
     "@types/react": "^16.9.34",
@@ -62,6 +64,7 @@
     "@types/react-router-dom": "^5.0.0",
     "@types/rebass": "^4.0.5",
     "@types/styled-components": "^4.2.0",
+    "@types/testing-library__cypress": "^5.0.5",
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
     "cypress": "^4.5.0",
