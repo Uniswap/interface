@@ -115,6 +115,8 @@ export function useTokenBalancesTreatWETHAsETH(
         ...balancesWithoutWETH,
         ...(ethBalance && weth ? { [weth.address]: new TokenAmount(weth, ethBalance) } : null)
       }
+    } else {
+      return balancesWithoutWETH
     }
   }, [balancesWithoutWETH, ETHBalance, includesWETH, address, chainId])
 }
