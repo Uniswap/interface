@@ -325,7 +325,7 @@ export default function AccountDetails({
                   </CircleWrapper>
                 </div>
               </AccountGroupingRow>
-              <AccountGroupingRow>
+              <AccountGroupingRow id="web3-account-identifier-row">
                 {ENSName ? (
                   <>
                     <AccountControl hasENS={!!ENSName} isENS={true}>
