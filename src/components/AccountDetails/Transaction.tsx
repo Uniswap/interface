@@ -68,8 +68,12 @@ const TransactionState = styled.div<{ pending: boolean; success?: boolean }>`
   }
 
   :hover {
-    border-color: ${({ pending, theme }) =>
-      pending ? transparentize(0, theme.primary1) : transparentize(0, theme.green1)};
+    border-color: ${({ pending, success, theme }) =>
+      pending
+        ? transparentize(0, theme.primary1)
+        : success
+        ? transparentize(0, theme.green1)
+        : transparentize(0, theme.red1)};
   }
 `
 const ButtonWrapper = styled.div<{ pending: boolean; success?: boolean }>`
