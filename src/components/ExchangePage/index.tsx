@@ -220,7 +220,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   }
 
   // for each hop in our trade, take away the "innate" price impact from 0.3% fees
-  // i.e. calculate: 1 - ((1 - .03) * (1-.03))
+  // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
   const baseFee = basisPointsToPercent(10000 - 30)
   const realizedFee =
     trade &&
