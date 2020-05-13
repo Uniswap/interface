@@ -7,15 +7,16 @@ import { BigNumber } from '@ethersproject/bignumber'
 
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { abi as IUniswapV2Router01ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router01.json'
-import { ROUTER_ADDRESS, SUPPORTED_THEMES } from '../constants'
+import { ROUTER_ADDRESS } from '../constants'
 
 import ERC20_ABI from '../constants/abis/erc20.json'
 import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32.json'
-import { JSBI, Percent, TokenAmount } from '@uniswap/sdk'
+import { ChainId, JSBI, Percent, TokenAmount } from '@uniswap/sdk'
 
+// returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
   try {
-    return getAddress(value.toLowerCase())
+    return getAddress(value)
   } catch {
     return false
   }
@@ -26,7 +27,7 @@ export enum ERROR_CODES {
   TOKEN_DECIMALS = 2
 }
 
-const ETHERSCAN_PREFIXES = {
+const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   1: '',
   3: 'ropsten.',
   4: 'rinkeby.',
@@ -34,12 +35,8 @@ const ETHERSCAN_PREFIXES = {
   42: 'kovan.'
 }
 
-export function getEtherscanLink(
-  networkId: 1 | 3 | 4 | 5 | 42 | string | number,
-  data: string,
-  type: 'transaction' | 'address'
-) {
-  const prefix = `https://${ETHERSCAN_PREFIXES[networkId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
+export function getEtherscanLink(chainId: ChainId, data: string, type: 'transaction' | 'address'): string {
+  const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
 
   switch (type) {
     case 'transaction': {
@@ -89,22 +86,18 @@ export function getAllQueryParams(): QueryParams {
   }
 }
 
-export function checkSupportedTheme(themeName: string) {
-  if (themeName && themeName.toUpperCase() in SUPPORTED_THEMES) {
-    return themeName.toUpperCase()
-  }
-  return null
-}
-
+// shorten the checksummed version of the input address to have 0x + 4 characters at start and end
 export function shortenAddress(address: string, chars = 4): string {
-  if (!isAddress(address)) {
+  const parsed = isAddress(address)
+  if (!parsed) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
-  return `${address.substring(0, chars + 2)}...${address.substring(42 - chars)}`
+  return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
 }
 
+// add 10%
 export function calculateGasMargin(value: BigNumber): BigNumber {
-  return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000)) // add 10%
+  return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000))
 }
 
 // converts a basis points value to a sdk percent
