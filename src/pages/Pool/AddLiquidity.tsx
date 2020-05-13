@@ -221,7 +221,8 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   const route: Route = pair ? new Route([pair], tokens[independentField]) : undefined
   const totalSupply: TokenAmount = useTotalSupply(pair?.liquidityToken)
   const noLiquidity = // used to detect new exchange
-    !!pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
+    pair === null ||
+    (!!pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0)))
 
   // get user-pecific and token-specific lookup data
   const userBalances: { [field: number]: TokenAmount } = {

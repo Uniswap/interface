@@ -46,7 +46,8 @@ function PoolFinder({ history }: RouteComponentProps) {
   const position: TokenAmount = useAddressBalance(account, pair?.liquidityToken)
 
   const newPair: boolean =
-    !!pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
+    pair === null ||
+    (!!pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0)))
   const allowImport: boolean = position && JSBI.greaterThan(position.raw, JSBI.BigInt(0))
 
   return (

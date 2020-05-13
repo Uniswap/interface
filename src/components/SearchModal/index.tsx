@@ -1,7 +1,6 @@
 import React, { useState, useRef, useMemo, useEffect, useContext } from 'react'
 import '@reach/tooltip/styles.css'
 import styled, { ThemeContext } from 'styled-components'
-import escapeStringRegex from 'escape-string-regexp'
 import { JSBI, Token, WETH } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
@@ -22,7 +21,7 @@ import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { Spinner, TYPE } from '../../theme'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 
-import { isAddress } from '../../utils'
+import { isAddress, escapeRegExp } from '../../utils'
 import { useWeb3React } from '../../hooks'
 import {
   useAllDummyPairs,
@@ -191,6 +190,16 @@ function SearchModal({
   // if the current input is an address, and we don't have the token in context, try to fetch it
   const token = useToken(searchQuery)
   const [temporaryToken, setTemporaryToken] = useState<Token | null>()
+
+  // filters for ordering
+  const [activeFilter, setActiveFilter] = useState(FILTERS.BALANCES)
+
+  // toggle specific token import view
+  const [showTokenImport, setShowTokenImport] = useState(false)
+
+  // used to help scanning on results, put token found from input on left
+  const [identifiedToken, setIdentifiedToken] = useState<Token | null>()
+
   useEffect(() => {
     const address = isAddress(searchQuery)
     if (address && !token) {
@@ -206,10 +215,6 @@ function SearchModal({
       }
     }
   }, [searchQuery, token, fetchTokenByAddress])
-
-  const [activeFilter, setActiveFilter] = useState(FILTERS.BALANCES)
-
-  const [showTokenImport, setShowTokenImport] = useState(false)
 
   // reset view on close
   useEffect(() => {
@@ -272,13 +277,13 @@ function SearchModal({
             include &&
             inputIsAddress &&
             typeof tokenEntry[tokenEntryKey] === 'string' &&
-            !!tokenEntry[tokenEntryKey].match(new RegExp(escapeStringRegex(searchQuery), 'i'))
+            !!tokenEntry[tokenEntryKey].match(new RegExp(escapeRegExp(searchQuery), 'i'))
           )
         }
         return (
           include &&
           typeof tokenEntry[tokenEntryKey] === 'string' &&
-          !!tokenEntry[tokenEntryKey].match(new RegExp(escapeStringRegex(searchQuery), 'i'))
+          !!tokenEntry[tokenEntryKey].match(new RegExp(escapeRegExp(searchQuery), 'i'))
         )
       })
       return regexMatches.some(m => m)
@@ -293,7 +298,6 @@ function SearchModal({
 
   // manage focus on modal show
   const inputRef = useRef()
-
   function onInput(event) {
     const input = event.target.value
     const checksummedInput = isAddress(input)
@@ -304,9 +308,6 @@ function SearchModal({
     setSearchQuery('')
     onDismiss()
   }
-
-  // sort tokens
-  const escapeStringRegexp = string => string
 
   const sortedPairList = useMemo(() => {
     return allPairs.sort((a, b): number => {
@@ -342,9 +343,15 @@ function SearchModal({
             (field === 'name' && !isAddress) ||
             (field === 'symbol' && !isAddress)
           ) {
+            if (token0[field].match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
+              setIdentifiedToken(token0)
+            }
+            if (token1[field].match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
+              setIdentifiedToken(token1)
+            }
             return (
-              token0[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i')) ||
-              token1[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i'))
+              token0[field].match(new RegExp(escapeRegExp(searchQuery), 'i')) ||
+              token1[field].match(new RegExp(escapeRegExp(searchQuery), 'i'))
             )
           }
           return false
@@ -366,8 +373,9 @@ function SearchModal({
     return (
       filteredPairList &&
       filteredPairList.map((pair, i) => {
-        const token0 = pair.token0
-        const token1 = pair.token1
+        // reset ordering to help scan search results
+        const token0 = identifiedToken ? (identifiedToken.equals(pair.token0) ? pair.token0 : pair.token1) : pair.token0
+        const token1 = identifiedToken ? (identifiedToken.equals(pair.token0) ? pair.token1 : pair.token0) : pair.token1
         const pairAddress = pair.liquidityToken.address
         const balance = allBalances?.[account]?.[pairAddress]?.toSignificant(6)
         const zeroBalance =
@@ -434,20 +442,6 @@ function SearchModal({
         return <TokenModalInfo>{t('noToken')}</TokenModalInfo>
       }
     } else {
-      /**
-       * @TODO
-      // TODO is this the right place to link to create exchange?
-      // else if (isAddress(searchQuery) && tokenAddress === ethers.constants.AddressZero) {
-      //   return (
-      //     <>
-      //       <TokenModalInfo>{t('noToken')}</TokenModalInfo>
-      //       <TokenModalInfo>
-      //         <Link to={`/create-exchange/${searchQuery}`}>{t('createExchange')}</Link>
-      //       </TokenModalInfo>
-      //     </>
-      //   )
-      // }
-     */
       return filteredTokenList
         .sort((a, b) => {
           if (a.address === WETH[chainId].address) {
