@@ -222,13 +222,15 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   // for each hop in our trade, take away the "innate" price impact from 0.3% fees
   // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
   const baseFee = basisPointsToPercent(10000 - 30)
-  const realizedFee =
-    trade &&
-    basisPointsToPercent(10000).subtract(
-      new Array(trade.route.path.length - 2)
-        .fill(0)
-        .reduce<Fraction>((currentFee: Percent | Fraction): Fraction => currentFee.multiply(baseFee), baseFee)
-    )
+  const realizedFee = !trade
+    ? undefined
+    : trade.route.path.length === 2
+    ? baseFee
+    : basisPointsToPercent(10000).subtract(
+        new Array(trade.route.path.length - 2)
+          .fill(0)
+          .reduce<Fraction>((currentFee: Percent | Fraction): Fraction => currentFee.multiply(baseFee), baseFee)
+      )
   const priceSlippage =
     slippageFromTrade && realizedFee
       ? new Percent(
