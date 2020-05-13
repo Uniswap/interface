@@ -15,10 +15,18 @@ export default function Updater() {
     const match = window?.matchMedia('(prefers-color-scheme: dark)')
     dispatch(updateMatchesDarkMode({ matchesDarkMode: match.matches }))
 
-    match?.addEventListener('change', darkHandler)
+    if (match?.addListener) {
+      match?.addListener(darkHandler)
+    } else if (match?.addEventListener) {
+      match?.addEventListener('change', darkHandler)
+    }
 
     return () => {
-      match?.removeEventListener('change', darkHandler)
+      if (match?.removeListener) {
+        match?.removeListener(darkHandler)
+      } else if (match?.removeEventListener) {
+        match?.removeEventListener('change', darkHandler)
+      }
     }
   }, [dispatch])
 
