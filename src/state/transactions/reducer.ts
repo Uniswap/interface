@@ -1,12 +1,11 @@
-import { TransactionReceipt } from '@ethersproject/providers'
 import { createReducer } from '@reduxjs/toolkit'
-import { addTransaction, checkTransaction, finalizeTransaction } from './actions'
+import { addTransaction, checkTransaction, finalizeTransaction, SerializableTransactionReceipt } from './actions'
 
 export interface TransactionDetails {
   approvalOfToken?: string
   blockNumberChecked?: number
   summary?: string
-  receipt?: TransactionReceipt
+  receipt?: SerializableTransactionReceipt
 }
 
 export interface TransactionState {
