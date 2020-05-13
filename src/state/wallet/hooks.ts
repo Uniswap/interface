@@ -129,7 +129,7 @@ export function useTokenBalanceTreatingWETHasETH(account?: string, token?: Token
 export function useAllTokenBalancesTreatingWETHasETH(): { [account: string]: { [tokenAddress: string]: TokenAmount } } {
   const { account } = useWeb3React()
   const allTokens = useAllTokens()
-  const tokensOnly = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
-  const balances = useTokenBalancesTreatWETHAsETH(account, tokensOnly)
+  const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
+  const balances = useTokenBalancesTreatWETHAsETH(account, allTokensArray)
   return account ? { [account]: balances } : {}
 }

@@ -50,7 +50,7 @@ export default function Updater() {
   const tokenBalancesNeedUpdate: { [address: string]: string[] } = useMemo(() => {
     return Object.keys(activeTokenBalanceListeners).reduce<{ [address: string]: string[] }>((map, address) => {
       const needsUpdate =
-        map[address]?.filter(tokenAddress => {
+        activeTokenBalanceListeners[address]?.filter(tokenAddress => {
           const data = allBalances[balanceKey({ chainId, tokenAddress, address })]
           return !data || data.blockNumber < lastBlockNumber
         }) ?? []
