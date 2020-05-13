@@ -103,7 +103,8 @@ export default createReducer(initialState, builder =>
       Object.keys(tokenBalances).forEach(tokenAddress => {
         const balance = tokenBalances[tokenAddress]
         const key = balanceKey({ chainId, address, tokenAddress })
-        if (!state.balances[key] || state.balances[key].blockNumber <= blockNumber) {
+        const data = state.balances[key]
+        if (!data || typeof data.blockNumber === 'undefined' || data.blockNumber <= blockNumber) {
           state.balances[key] = { value: balance, blockNumber }
         }
       })
@@ -112,7 +113,8 @@ export default createReducer(initialState, builder =>
       Object.keys(etherBalances).forEach(address => {
         const balance = etherBalances[address]
         const key = balanceKey({ chainId, address })
-        if (!state.balances[key] || state.balances[key].blockNumber <= blockNumber) {
+        const data = state.balances[key]
+        if (!data || typeof data.blockNumber === 'undefined' || data.blockNumber <= blockNumber) {
           state.balances[key] = { value: balance, blockNumber }
         }
       })
