@@ -219,12 +219,23 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(6) : ''
   }
 
-  const priceSlippage =
-    slippageFromTrade &&
-    new Percent(
-      slippageFromTrade.subtract(new Fraction('30', '10000')).numerator,
-      slippageFromTrade.subtract(new Fraction('30', '10000')).denominator
+  // for each hop in our trade, take away the "innate" price impact from 0.3% fees
+  // i.e. calculate: 1 - ((1 - .03) * (1-.03))
+  const baseFee = basisPointsToPercent(10000 - 30)
+  const realizedFee =
+    trade &&
+    basisPointsToPercent(10000).subtract(
+      new Array(trade.route.path.length - 2)
+        .fill(0)
+        .reduce<Fraction>((currentFee: Percent | Fraction): Fraction => currentFee.multiply(baseFee), baseFee)
     )
+  const priceSlippage =
+    slippageFromTrade && realizedFee
+      ? new Percent(
+          slippageFromTrade.subtract(realizedFee).numerator,
+          slippageFromTrade.subtract(realizedFee).denominator
+        )
+      : undefined
 
   const onTokenSelection = useCallback(
     (field: Field, address: string) => {
