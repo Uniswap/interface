@@ -74,7 +74,7 @@ export default function Updater() {
         )
       })
       .catch(error => {
-        console.error('balance fetch failed', error)
+        console.error('balance fetch failed', ethBalancesNeedUpdate, error)
       })
   }, [library, ethBalancesNeedUpdate, dispatch, lastBlockNumber, chainId])
 
@@ -93,7 +93,7 @@ export default function Updater() {
           )
         })
         .catch(error => {
-          console.error(`failed to get token balances`, address, tokenBalancesNeedUpdate[address])
+          console.error(`failed to get token balances`, address, tokenBalancesNeedUpdate[address], error)
         })
     })
   }, [library, tokenBalancesNeedUpdate, dispatch, lastBlockNumber, chainId])
