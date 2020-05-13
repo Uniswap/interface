@@ -3,7 +3,7 @@ import { useWeb3React } from '../../hooks'
 import { updateBlockNumber } from './actions'
 import { useDispatch } from 'react-redux'
 
-export function Updater() {
+export default function Updater() {
   const { library, chainId } = useWeb3React()
   const dispatch = useDispatch()
 

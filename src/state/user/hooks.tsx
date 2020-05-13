@@ -1,6 +1,6 @@
 import { ChainId, JSBI, Pair, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import { useWeb3React } from '@web3-react/core'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { useAllTokens } from '../../contexts/Tokens'
 import { getTokenDecimals, getTokenName, getTokenSymbol } from '../../utils'
@@ -12,9 +12,7 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
-  updateMatchesDarkMode,
-  updateUserDarkMode,
-  updateVersion
+  updateUserDarkMode
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -35,32 +33,6 @@ function deserializeToken(serializedToken: SerializedToken): Token {
     serializedToken.symbol,
     serializedToken.name
   )
-}
-
-export function Updater() {
-  const dispatch = useDispatch<AppDispatch>()
-
-  useEffect(() => {
-    dispatch(updateVersion())
-  }, [dispatch])
-
-  // keep dark mode in sync with the system
-  useEffect(() => {
-    const darkHandler = (match: MediaQueryListEvent) => {
-      dispatch(updateMatchesDarkMode({ matchesDarkMode: match.matches }))
-    }
-
-    const match = window?.matchMedia('(prefers-color-scheme: dark)')
-    dispatch(updateMatchesDarkMode({ matchesDarkMode: match.matches }))
-
-    match?.addEventListener('change', darkHandler)
-
-    return () => {
-      match?.removeEventListener('change', darkHandler)
-    }
-  }, [dispatch])
-
-  return null
 }
 
 // this currently isn't used anywhere, but is kept as an example of how to store/update a simple boolean
