@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { escapeRegExp } from '../../utils'
 
 const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string }>`
   color: ${({ error, theme }) => error && theme.red1};
@@ -40,10 +41,6 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
 `
 
 const inputRegex = RegExp(`^\\d*(?:\\\\.)?\\d*$`) // match escaped "." characters via in a non-capturing group
-
-function escapeRegExp(string: string): string {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
-}
 
 export const Input = React.memo(function InnerInput({
   value,

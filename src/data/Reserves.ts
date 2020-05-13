@@ -15,9 +15,16 @@ function getReserves(contract: Contract, token0: Token, token1: Token): () => Pr
           return new Pair(new TokenAmount(token0, reserve0.toString()), new TokenAmount(token1, reserve1.toString()))
         }
       )
+      .catch(() => {
+        return null
+      })
 }
 
-// undefined while loading, null if no liquidity, pair otherwise
+/*
+ * if loading, return undefined
+ * if no pair created yet, return null
+ * if pair already created (even if 0 reserves), return pair
+ */
 export function usePair(tokenA?: Token, tokenB?: Token): undefined | Pair | null {
   const bothDefined = !!tokenA && !!tokenB
   const invalid = bothDefined && tokenA.equals(tokenB)

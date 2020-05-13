@@ -218,3 +218,7 @@ export async function getTokenBalance(tokenAddress, address, library) {
 
   return getContract(tokenAddress, ERC20_ABI, library).balanceOf(address)
 }
+
+export function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
+}
