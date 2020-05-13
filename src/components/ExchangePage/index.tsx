@@ -209,35 +209,36 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       JSBI.greaterThanOrEqual(inputApproval.raw, parsedAmounts[Field.INPUT].raw))
   const pendingApprovalInput = useHasPendingApproval(tokens[Field.INPUT]?.address)
 
-  const feeAsPercent = new Percent(JSBI.BigInt(3), JSBI.BigInt(1000))
-  const feeTimesInputRaw =
-    parsedAmounts[Field.INPUT] && feeAsPercent.multiply(JSBI.BigInt(parsedAmounts[Field.INPUT].raw))
-  const feeTimesInputFormatted = feeTimesInputRaw && new TokenAmount(tokens[Field.INPUT], feeTimesInputRaw?.quotient)
-
   const formattedAmounts = {
     [independentField]: typedValue,
     [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(6) : ''
   }
 
-  // for each hop in our trade, take away the "innate" price impact from 0.3% fees
+  // for each hop in our trade, take away the x*y=k price impact from 0.3% fees
   // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
   const baseFee = basisPointsToPercent(10000 - 30)
-  const realizedFee = !trade
+  const realizedLPFee = !trade
     ? undefined
-    : trade.route.path.length === 2
-    ? baseFee
     : basisPointsToPercent(10000).subtract(
-        new Array(trade.route.path.length - 2)
-          .fill(0)
-          .reduce<Fraction>((currentFee: Percent | Fraction): Fraction => currentFee.multiply(baseFee), baseFee)
+        trade.route.path.length === 2
+          ? baseFee
+          : new Array(trade.route.path.length - 2)
+              .fill(0)
+              .reduce<Fraction>((currentFee: Percent | Fraction): Fraction => currentFee.multiply(baseFee), baseFee)
       )
+  // the x*y=k impact
   const priceSlippage =
-    slippageFromTrade && realizedFee
+    slippageFromTrade && realizedLPFee
       ? new Percent(
-          slippageFromTrade.subtract(realizedFee).numerator,
-          slippageFromTrade.subtract(realizedFee).denominator
+          slippageFromTrade.subtract(realizedLPFee).numerator,
+          slippageFromTrade.subtract(realizedLPFee).denominator
         )
       : undefined
+
+  // the amount of the input that accrues to LPs
+  const realizedLPFeeAmount =
+    realizedLPFee &&
+    new TokenAmount(tokens[Field.INPUT], realizedLPFee.multiply(parsedAmounts[Field.INPUT].raw).quotient)
 
   const onTokenSelection = useCallback(
     (field: Field, address: string) => {
@@ -854,9 +855,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 <QuestionHelper text="A portion of each trade (0.3%) goes to liquidity providers to incentivize liquidity on the protocol." />
               </RowFixed>
               <TYPE.black fontSize={14}>
-                {feeTimesInputFormatted
-                  ? feeTimesInputFormatted?.toSignificant(6) + ' ' + tokens[Field.INPUT]?.symbol
-                  : '-'}
+                {realizedLPFeeAmount ? realizedLPFeeAmount?.toSignificant(6) + ' ' + tokens[Field.INPUT]?.symbol : '-'}
               </TYPE.black>
             </RowBetween>
           </AutoColumn>
@@ -1304,8 +1303,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     <QuestionHelper text="A portion of each trade (0.03%) goes to liquidity providers to incentivize liquidity on the protocol." />
                   </RowFixed>
                   <TYPE.black fontSize={14} color={theme.text1}>
-                    {feeTimesInputFormatted
-                      ? feeTimesInputFormatted?.toSignificant(6) + ' ' + tokens[Field.INPUT]?.symbol
+                    {realizedLPFeeAmount
+                      ? realizedLPFeeAmount?.toSignificant(6) + ' ' + tokens[Field.INPUT]?.symbol
                       : '-'}
                   </TYPE.black>
                 </RowBetween>
