@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled, { css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import { darken, lighten } from 'polished'
 import { Activity } from 'react-feather'
 import { useWalletModalToggle } from '../../state/application/hooks'
+import { TransactionDetails } from '../../state/transactions/reducer'
 
 import Identicon from '../Identicon'
 import PortisIcon from '../../assets/images/portisIcon.png'
@@ -20,7 +21,7 @@ import LightCircle from '../../assets/svg/lightcircle.svg'
 import { RowBetween } from '../Row'
 import { useENSName } from '../../hooks'
 import { shortenAddress } from '../../utils'
-import { useAllTransactions } from '../../contexts/Transactions'
+import { useAllTransactions } from '../../state/transactions/hooks'
 import { NetworkContextName } from '../../constants'
 import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
 
@@ -121,6 +122,15 @@ const NetworkIcon = styled(Activity)`
   height: 16px;
 `
 
+// we want the latest one to come first, so return negative if a is after b
+function newTranscationsFirst(a: TransactionDetails, b: TransactionDetails) {
+  return b.addedTime - a.addedTime
+}
+
+function recentTransactionsOnly(a: TransactionDetails) {
+  return new Date().getTime() - a.addedTime < 86_400_000
+}
+
 export default function Web3Status() {
   const { t } = useTranslation()
   const { active, account, connector, error } = useWeb3React()
@@ -129,8 +139,14 @@ export default function Web3Status() {
   const ENSName = useENSName(account)
 
   const allTransactions = useAllTransactions()
-  const pending = Object.keys(allTransactions).filter(hash => !allTransactions[hash].receipt)
-  const confirmed = Object.keys(allTransactions).filter(hash => allTransactions[hash].receipt)
+
+  const sortedRecentTransactions = useMemo(() => {
+    const txs = Object.values(allTransactions)
+    return txs.filter(recentTransactionsOnly).sort(newTranscationsFirst)
+  }, [allTransactions])
+
+  const pending = sortedRecentTransactions.filter(tx => !tx.receipt).map(tx => tx.hash)
+  const confirmed = sortedRecentTransactions.filter(tx => tx.receipt).map(tx => tx.hash)
 
   const hasPendingTransactions = !!pending.length
 
@@ -170,7 +186,7 @@ export default function Web3Status() {
   function getWeb3Status() {
     if (account) {
       return (
-        <Web3StatusConnected onClick={toggleWalletModal} pending={hasPendingTransactions}>
+        <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
           {hasPendingTransactions ? (
             <RowBetween>
               <Text>{pending?.length} Pending</Text> <SpinnerWrapper src={LightCircle} alt="loader" />
@@ -190,7 +206,7 @@ export default function Web3Status() {
       )
     } else {
       return (
-        <Web3StatusConnect onClick={toggleWalletModal} faded={!account}>
+        <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
           <Text>{t('Connect to a Wallet')}</Text>
         </Web3StatusConnect>
       )

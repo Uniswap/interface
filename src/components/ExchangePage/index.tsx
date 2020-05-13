@@ -8,6 +8,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { useUserAdvanced } from '../../state/application/hooks'
+import { useTokenBalanceTreatingWETHasETH, useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { Field, SwapAction, useSwapStateReducer } from './swap-store'
 import { Text } from 'rebass'
 import Card, { BlueCard, GreyCard, YellowCard } from '../../components/Card'
@@ -15,11 +16,9 @@ import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { ROUTER_ADDRESS } from '../../constants'
 import { useTokenAllowance } from '../../data/Allowances'
-import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useAddUserToken, useFetchTokenByAddress } from '../../state/user/hooks'
-import { usePair } from '../../data/Reserves'
 import { useAllTokens, useToken } from '../../contexts/Tokens'
-import { usePendingApproval, useTransactionAdder } from '../../contexts/Transactions'
+import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
 import { useTokenContract, useWeb3React } from '../../hooks'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -28,10 +27,10 @@ import { Link } from '../../theme/components'
 import {
   calculateGasMargin,
   getEtherscanLink,
-  getProviderOrSigner,
   getRouterContract,
+  basisPointsToPercent,
   QueryParams,
-  calculateSlippageAmount
+  getSigner
 } from '../../utils'
 import Copy from '../AccountDetails/Copy'
 import AddressInputPanel from '../AddressInputPanel'
@@ -153,12 +152,12 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
 
   // all balances for detecting a swap with send
-  const allBalances = useAllBalances()
+  const allBalances = useAllTokenBalancesTreatingWETHasETH()
 
   // get user- and token-specific lookup data
   const userBalances = {
-    [Field.INPUT]: useAddressBalance(account, tokens[Field.INPUT]),
-    [Field.OUTPUT]: useAddressBalance(account, tokens[Field.OUTPUT])
+    [Field.INPUT]: useTokenBalanceTreatingWETHasETH(account, tokens[Field.INPUT]),
+    [Field.OUTPUT]: useTokenBalanceTreatingWETHasETH(account, tokens[Field.OUTPUT])
   }
 
   // parse the amount that the user typed
@@ -173,8 +172,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       console.error(error)
     }
   }
-
-  const pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
 
   const bestTradeExactIn = useTradeExactIn(
     tradeType === TradeType.EXACT_INPUT ? parsedAmounts[independentField] : null,
@@ -210,7 +207,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     (!!inputApproval &&
       !!parsedAmounts[Field.INPUT] &&
       JSBI.greaterThanOrEqual(inputApproval.raw, parsedAmounts[Field.INPUT].raw))
-  const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
+  const pendingApprovalInput = useHasPendingApproval(tokens[Field.INPUT]?.address)
 
   const feeAsPercent = new Percent(JSBI.BigInt(3), JSBI.BigInt(1000))
   const feeTimesInputRaw =
@@ -222,12 +219,25 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(6) : ''
   }
 
+  // for each hop in our trade, take away the "innate" price impact from 0.3% fees
+  // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
+  const baseFee = basisPointsToPercent(10000 - 30)
+  const realizedFee = !trade
+    ? undefined
+    : trade.route.path.length === 2
+    ? baseFee
+    : basisPointsToPercent(10000).subtract(
+        new Array(trade.route.path.length - 2)
+          .fill(0)
+          .reduce<Fraction>((currentFee: Percent | Fraction): Fraction => currentFee.multiply(baseFee), baseFee)
+      )
   const priceSlippage =
-    slippageFromTrade &&
-    new Percent(
-      slippageFromTrade.subtract(new Fraction('30', '10000')).numerator,
-      slippageFromTrade.subtract(new Fraction('30', '10000')).denominator
-    )
+    slippageFromTrade && realizedFee
+      ? new Percent(
+          slippageFromTrade.subtract(realizedFee).numerator,
+          slippageFromTrade.subtract(realizedFee).denominator
+        )
+      : undefined
 
   const onTokenSelection = useCallback(
     (field: Field, address: string) => {
@@ -342,17 +352,12 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
 
   const slippageAdjustedAmounts: { [field: number]: TokenAmount } = {
     [independentField]: parsedAmounts[independentField],
-    [dependentField]: parsedAmounts[dependentField]
-      ? tradeType === TradeType.EXACT_INPUT
-        ? new TokenAmount(
-            tokens[dependentField],
-            calculateSlippageAmount(parsedAmounts[dependentField], allowedSlippage)[0]
-          )
-        : new TokenAmount(
-            tokens[dependentField],
-            calculateSlippageAmount(parsedAmounts[dependentField], allowedSlippage)[1]
-          )
-      : undefined
+    [dependentField]:
+      parsedAmounts[dependentField] && trade
+        ? tradeType === TradeType.EXACT_INPUT
+          ? trade.minimumAmountOut(basisPointsToPercent(allowedSlippage))
+          : trade.maximumAmountIn(basisPointsToPercent(allowedSlippage))
+        : undefined
   }
 
   // reset modal state when closed
@@ -370,23 +375,23 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   async function onSend() {
     setAttemptingTxn(true)
 
-    const signer = await getProviderOrSigner(library, account)
+    const signer = getSigner(library, account)
     // get token contract if needed
     let estimate: Function, method: Function, args
     if (tokens[Field.INPUT].equals(WETH[chainId])) {
-      ;(signer as any)
+      signer
         .sendTransaction({ to: recipient.toString(), value: BigNumber.from(parsedAmounts[Field.INPUT].raw.toString()) })
         .then(response => {
           setTxHash(response.hash)
-          addTransaction(
-            response,
-            'Send ' +
+          addTransaction(response, {
+            summary:
+              'Send ' +
               parsedAmounts[Field.INPUT]?.toSignificant(3) +
               ' ' +
               tokens[Field.INPUT]?.symbol +
               ' to ' +
               recipient
-          )
+          })
           setPendingConfirmation(false)
         })
         .catch(() => {
@@ -403,15 +408,15 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             gasLimit: calculateGasMargin(estimatedGasLimit)
           }).then(response => {
             setTxHash(response.hash)
-            addTransaction(
-              response,
-              'Send ' +
+            addTransaction(response, {
+              summary:
+                'Send ' +
                 parsedAmounts[Field.INPUT]?.toSignificant(3) +
                 ' ' +
                 tokens[Field.INPUT]?.symbol +
                 ' to ' +
                 recipient
-            )
+            })
             setPendingConfirmation(false)
           })
         )
@@ -514,9 +519,9 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setTxHash(response.hash)
-          addTransaction(
-            response,
-            'Swap ' +
+          addTransaction(response, {
+            summary:
+              'Swap ' +
               slippageAdjustedAmounts?.[Field.INPUT]?.toSignificant(3) +
               ' ' +
               tokens[Field.INPUT]?.symbol +
@@ -524,7 +529,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               slippageAdjustedAmounts?.[Field.OUTPUT]?.toSignificant(3) +
               ' ' +
               tokens[Field.OUTPUT]?.symbol
-          )
+          })
           setPendingConfirmation(false)
         })
       )
@@ -550,7 +555,10 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
         gasLimit: calculateGasMargin(estimatedGas)
       })
       .then(response => {
-        addTransaction(response, 'Approve ' + tokens[field]?.symbol, { approval: tokens[field]?.address })
+        addTransaction(response, {
+          summary: 'Approve ' + tokens[field]?.symbol,
+          approvalOfToken: tokens[field].address
+        })
       })
   }
 
@@ -590,28 +598,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
 
     if (!parsedAmounts[Field.OUTPUT] && !ignoreOutput) {
       setOutputError('Enter an amount')
-      setIsValid(false)
-    }
-
-    if (
-      parsedAmounts[Field.INPUT] &&
-      route &&
-      JSBI.greaterThan(parsedAmounts[Field.INPUT].raw, route.pairs[0].reserveOf(tokens[Field.INPUT]).raw)
-    ) {
-      setTradeError('Insufficient Liquidity')
-      setIsValid(false)
-    }
-
-    if (
-      !ignoreOutput &&
-      parsedAmounts[Field.OUTPUT] &&
-      route &&
-      JSBI.greaterThan(
-        parsedAmounts[Field.OUTPUT].raw,
-        route.pairs[route.pairs.length - 1].reserveOf(tokens[Field.OUTPUT]).raw
-      )
-    ) {
-      setTradeError('Insufficient Liquidity')
       setIsValid(false)
     }
 
@@ -992,7 +978,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               atMax={atMaxAmountInput}
               token={tokens[Field.INPUT]}
               onTokenSelection={address => _onTokenSelect(address)}
-              pair={pair}
               hideBalance={true}
               hideInput={true}
               showSendWithSwap={true}
@@ -1036,7 +1021,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               value={formattedAmounts[Field.INPUT]}
               atMax={atMaxAmountInput}
               token={tokens[Field.INPUT]}
-              pair={pair}
               advanced={advanced}
               onUserInput={onUserInput}
               onMax={() => {
@@ -1086,7 +1070,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               atMax={atMaxAmountOutput}
               token={tokens[Field.OUTPUT]}
               onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
-              pair={pair}
               advanced={advanced}
               otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
               inputId="swapOutputField"
@@ -1332,7 +1315,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
                   Set slippage tolerance
                 </TYPE.black>
-                <QuestionHelper text="Your transaction will revert if the price changes more than this amount after you submit your trade." />
+                <QuestionHelper text="Your transaction will revert if the execution price changes by more than this amount after you submit your trade." />
               </RowFixed>
               <SlippageTabs
                 rawSlippage={allowedSlippage}

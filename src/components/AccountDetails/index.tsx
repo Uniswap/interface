@@ -213,11 +213,11 @@ const MainWalletAction = styled(WalletAction)`
   color: ${({ theme }) => theme.primary1};
 `
 
-function renderTransactions(transactions, pending) {
+function renderTransactions(transactions) {
   return (
     <TransactionListWrapper>
       {transactions.map((hash, i) => {
-        return <Transaction key={i} hash={hash} pending={pending} />
+        return <Transaction key={i} hash={hash} />
       })}
     </TransactionListWrapper>
   )
@@ -325,7 +325,7 @@ export default function AccountDetails({
                   </CircleWrapper>
                 </div>
               </AccountGroupingRow>
-              <AccountGroupingRow>
+              <AccountGroupingRow id="web3-account-identifier-row">
                 {ENSName ? (
                   <>
                     <AccountControl hasENS={!!ENSName} isENS={true}>
@@ -381,8 +381,8 @@ export default function AccountDetails({
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
         <LowerSection>
           <TYPE.body>Recent Transactions</TYPE.body>
-          {renderTransactions(pendingTransactions, true)}
-          {renderTransactions(confirmedTransactions, false)}
+          {renderTransactions(pendingTransactions)}
+          {renderTransactions(confirmedTransactions)}
         </LowerSection>
       ) : (
         <LowerSection>

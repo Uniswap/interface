@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 
-// import QR from '../../assets/svg/QR.svg'
 import { isAddress } from '../../utils'
 import { useWeb3React, useDebounce } from '../../hooks'
 import { Link, TYPE } from '../../theme'
@@ -63,16 +62,6 @@ const Input = styled.input<{ error?: boolean }>`
     color: ${({ theme }) => theme.text4};
   }
 `
-
-// const QRWrapper = styled.div`
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   border: 1px solid ${({ theme }) => theme.bg3};
-//   background: #fbfbfb;
-//   padding: 4px;
-//   border-radius: 8px;
-// `
 
 export default function AddressInputPanel({
   initialInput = '',
@@ -190,7 +179,7 @@ export default function AddressInputPanel({
               <TYPE.black color={theme.text2} fontWeight={500} fontSize={14}>
                 Recipient
               </TYPE.black>
-              {(data.name || data.address) && (
+              {data.address && (
                 <Link
                   href={getEtherscanLink(chainId, data.name || data.address, 'address')}
                   style={{ fontSize: '14px' }}
@@ -210,9 +199,6 @@ export default function AddressInputPanel({
               onChange={onInput}
               value={input}
             />
-            {/* <QRWrapper>
-              <img src={QR} alt="" />
-            </QRWrapper> */}
           </AutoColumn>
         </InputContainer>
       </ContainerRow>

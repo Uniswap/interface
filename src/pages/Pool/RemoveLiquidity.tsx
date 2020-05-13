@@ -10,6 +10,7 @@ import DoubleLogo from '../../components/DoubleLogo'
 import PositionCard from '../../components/PositionCard'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import { useTokenBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
@@ -21,9 +22,8 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import { useToken } from '../../contexts/Tokens'
 import { useWeb3React } from '../../hooks'
-import { useAllBalances } from '../../contexts/Balances'
 import { usePairContract } from '../../hooks'
-import { useTransactionAdder } from '../../contexts/Transactions'
+import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 
 import { splitSignature } from '@ethersproject/bytes'
@@ -174,8 +174,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
   // pool token data
   const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
 
-  const allBalances = useAllBalances()
-  const userLiquidity = allBalances?.[account]?.[pair?.liquidityToken?.address]
+  const userLiquidity = useTokenBalance(account, pair?.liquidityToken)
 
   // input state
   const [state, dispatch] = useReducer(reducer, initializeRemoveState(userLiquidity?.toExact(), token0, token1))
@@ -493,9 +492,9 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
         }).then(response => {
           setPendingConfirmation(false)
           setTxHash(response.hash)
-          addTransaction(
-            response,
-            'Remove ' +
+          addTransaction(response, {
+            summary:
+              'Remove ' +
               parsedAmounts[Field.TOKEN0]?.toSignificant(3) +
               ' ' +
               tokens[Field.TOKEN0]?.symbol +
@@ -503,7 +502,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
               parsedAmounts[Field.TOKEN1]?.toSignificant(3) +
               ' ' +
               tokens[Field.TOKEN1]?.symbol
-          )
+          })
         })
       )
       .catch(e => {

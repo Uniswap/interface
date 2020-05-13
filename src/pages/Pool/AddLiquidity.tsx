@@ -13,6 +13,7 @@ import PositionCard from '../../components/PositionCard'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { Text } from 'rebass'
+import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { Plus } from 'react-feather'
 import { BlueCard, GreyCard, LightCard } from '../../components/Card'
@@ -21,11 +22,10 @@ import { ButtonPrimary, ButtonLight } from '../../components/Button'
 import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
 
 import { useToken } from '../../contexts/Tokens'
-import { useAddressBalance } from '../../contexts/Balances'
 import { useTokenAllowance } from '../../data/Allowances'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useWeb3React, useTokenContract } from '../../hooks'
-import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
+import { useTransactionAdder, useHasPendingApproval } from '../../state/transactions/hooks'
 
 import { ROUTER_ADDRESS } from '../../constants'
 import { getRouterContract, calculateGasMargin, calculateSlippageAmount } from '../../utils'
@@ -221,12 +221,13 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   const route: Route = pair ? new Route([pair], tokens[independentField]) : undefined
   const totalSupply: TokenAmount = useTotalSupply(pair?.liquidityToken)
   const noLiquidity = // used to detect new exchange
-    !!pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
+    pair === null ||
+    (!!pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0)))
 
   // get user-pecific and token-specific lookup data
   const userBalances: { [field: number]: TokenAmount } = {
-    [Field.INPUT]: useAddressBalance(account, tokens[Field.INPUT]),
-    [Field.OUTPUT]: useAddressBalance(account, tokens[Field.OUTPUT])
+    [Field.INPUT]: useTokenBalanceTreatingWETHasETH(account, tokens[Field.INPUT]),
+    [Field.OUTPUT]: useTokenBalanceTreatingWETHasETH(account, tokens[Field.OUTPUT])
   }
 
   // track non relational amounts if first person to add liquidity
@@ -305,8 +306,8 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
       !!parsedAmounts[Field.OUTPUT] &&
       JSBI.greaterThanOrEqual(outputApproval.raw, parsedAmounts[Field.OUTPUT].raw))
   // check on pending approvals for token amounts
-  const pendingApprovalInput = usePendingApproval(tokens[Field.INPUT]?.address)
-  const pendingApprovalOutput = usePendingApproval(tokens[Field.OUTPUT]?.address)
+  const pendingApprovalInput = useHasPendingApproval(tokens[Field.INPUT]?.address)
+  const pendingApprovalOutput = useHasPendingApproval(tokens[Field.OUTPUT]?.address)
 
   // used for displaying approximate starting price in UI
   const derivedPrice =
@@ -497,9 +498,9 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setTxHash(response.hash)
-          addTransaction(
-            response,
-            'Add ' +
+          addTransaction(response, {
+            summary:
+              'Add ' +
               parsedAmounts[Field.INPUT]?.toSignificant(3) +
               ' ' +
               tokens[Field.INPUT]?.symbol +
@@ -507,7 +508,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
               parsedAmounts[Field.OUTPUT]?.toSignificant(3) +
               ' ' +
               tokens[Field.OUTPUT]?.symbol
-          )
+          })
           setPendingConfirmation(false)
         })
       )
@@ -534,7 +535,10 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
         gasLimit: calculateGasMargin(estimatedGas)
       })
       .then(response => {
-        addTransaction(response, 'Approve ' + tokens[field]?.symbol, { approval: tokens[field]?.address })
+        addTransaction(response, {
+          summary: 'Approve ' + tokens[field]?.symbol,
+          approvalOfToken: tokens[field].address
+        })
       })
   }
 

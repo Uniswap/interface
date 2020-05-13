@@ -7,12 +7,12 @@ import { Provider } from 'react-redux'
 
 import { NetworkContextName } from './constants'
 import { isMobile } from 'react-device-detect'
-import { Updater as LocalStorageContextUpdater } from './state/user/hooks'
-import TransactionContextProvider, { Updater as TransactionContextUpdater } from './contexts/Transactions'
-import BalancesContextProvider, { Updater as BalancesContextUpdater } from './contexts/Balances'
+import WalletUpdater from './state/wallet/updater'
 import App from './pages/App'
 import store from './state'
-import { Updater as ApplicationContextUpdater } from './state/application/updater'
+import ApplicationUpdater from './state/application/updater'
+import TransactionUpdater from './state/transactions/updater'
+import UserUpdater from './state/user/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import './i18n'
 
@@ -35,21 +35,13 @@ if (process.env.NODE_ENV === 'production') {
 
 ReactGA.pageview(window.location.pathname + window.location.search)
 
-function ContextProviders({ children }: { children: React.ReactNode }) {
-  return (
-    <TransactionContextProvider>
-      <BalancesContextProvider>{children}</BalancesContextProvider>
-    </TransactionContextProvider>
-  )
-}
-
 function Updaters() {
   return (
     <>
-      <LocalStorageContextUpdater />
-      <ApplicationContextUpdater />
-      <TransactionContextUpdater />
-      <BalancesContextUpdater />
+      <UserUpdater />
+      <ApplicationUpdater />
+      <TransactionUpdater />
+      <WalletUpdater />
     </>
   )
 }
@@ -60,15 +52,13 @@ ReactDOM.render(
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3ProviderNetwork getLibrary={getLibrary}>
         <Provider store={store}>
-          <ContextProviders>
-            <Updaters />
-            <ThemeProvider>
-              <>
-                <ThemedGlobalStyle />
-                <App />
-              </>
-            </ThemeProvider>
-          </ContextProviders>
+          <Updaters />
+          <ThemeProvider>
+            <>
+              <ThemedGlobalStyle />
+              <App />
+            </>
+          </ThemeProvider>
         </Provider>
       </Web3ProviderNetwork>
     </Web3ReactProvider>
