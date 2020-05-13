@@ -17,7 +17,6 @@ import { ROUTER_ADDRESS } from '../../constants'
 import { useTokenAllowance } from '../../data/Allowances'
 import { useAddressBalance, useAllBalances } from '../../contexts/Balances'
 import { useAddUserToken, useFetchTokenByAddress } from '../../state/user/hooks'
-import { usePair } from '../../data/Reserves'
 import { useAllTokens, useToken } from '../../contexts/Tokens'
 import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
 import { useTokenContract, useWeb3React } from '../../hooks'
@@ -173,8 +172,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       console.error(error)
     }
   }
-
-  const pair = usePair(tokens[Field.INPUT], tokens[Field.OUTPUT])
 
   const bestTradeExactIn = useTradeExactIn(
     tradeType === TradeType.EXACT_INPUT ? parsedAmounts[independentField] : null,
@@ -973,7 +970,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               atMax={atMaxAmountInput}
               token={tokens[Field.INPUT]}
               onTokenSelection={address => _onTokenSelect(address)}
-              pair={pair}
               hideBalance={true}
               hideInput={true}
               showSendWithSwap={true}
@@ -1017,7 +1013,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               value={formattedAmounts[Field.INPUT]}
               atMax={atMaxAmountInput}
               token={tokens[Field.INPUT]}
-              pair={pair}
               advanced={advanced}
               onUserInput={onUserInput}
               onMax={() => {
@@ -1067,7 +1062,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               atMax={atMaxAmountOutput}
               token={tokens[Field.OUTPUT]}
               onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
-              pair={pair}
               advanced={advanced}
               otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
               inputId="swapOutputField"
