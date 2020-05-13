@@ -25,7 +25,7 @@ interface WalletState {
   readonly balances: {
     readonly [balanceKey: string]: {
       readonly value: string
-      readonly blockNumber: number
+      readonly blockNumber: number | undefined
     }
   }
 }
@@ -104,7 +104,7 @@ export default createReducer(initialState, builder =>
         const balance = tokenBalances[tokenAddress]
         const key = balanceKey({ chainId, address, tokenAddress })
         const data = state.balances[key]
-        if (!data || typeof data.blockNumber === 'undefined' || data.blockNumber <= blockNumber) {
+        if (!data || data.blockNumber === undefined || data.blockNumber <= blockNumber) {
           state.balances[key] = { value: balance, blockNumber }
         }
       })
@@ -114,7 +114,7 @@ export default createReducer(initialState, builder =>
         const balance = etherBalances[address]
         const key = balanceKey({ chainId, address })
         const data = state.balances[key]
-        if (!data || typeof data.blockNumber === 'undefined' || data.blockNumber <= blockNumber) {
+        if (!data || data.blockNumber === undefined || data.blockNumber <= blockNumber) {
           state.balances[key] = { value: balance, blockNumber }
         }
       })
