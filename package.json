@@ -28,7 +28,6 @@
     "@web3-react/walletlink-connector": "^6.0.9",
     "copy-to-clipboard": "^3.2.0",
     "cross-env": "^7.0.2",
-    "escape-string-regexp": "^2.0.0",
     "history": "^4.9.0",
     "i18next": "^15.0.9",
     "i18next-browser-languagedetector": "^3.0.1",

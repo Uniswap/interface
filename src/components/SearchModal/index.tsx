@@ -1,7 +1,6 @@
 import React, { useState, useRef, useMemo, useEffect, useContext } from 'react'
 import '@reach/tooltip/styles.css'
 import styled, { ThemeContext } from 'styled-components'
-import escapeStringRegex from 'escape-string-regexp'
 import { JSBI, Token, WETH } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
@@ -22,7 +21,7 @@ import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { Spinner, TYPE } from '../../theme'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 
-import { isAddress } from '../../utils'
+import { isAddress, escapeRegExp } from '../../utils'
 import { useWeb3React } from '../../hooks'
 import { useLocalStorageTokens, useAllDummyPairs } from '../../contexts/LocalStorage'
 import { useAllBalances } from '../../contexts/Balances'
@@ -191,9 +190,6 @@ function SearchModal({
   // toggle specific token import view
   const [showTokenImport, setShowTokenImport] = useState(false)
 
-  // for sorting
-  const escapeStringRegexp = string => string
-
   // used to help scanning on results, put token found from input on left
   const [identifiedToken, setIdentifiedToken] = useState<Token | null>()
 
@@ -274,13 +270,13 @@ function SearchModal({
             include &&
             inputIsAddress &&
             typeof tokenEntry[tokenEntryKey] === 'string' &&
-            !!tokenEntry[tokenEntryKey].match(new RegExp(escapeStringRegex(searchQuery), 'i'))
+            !!tokenEntry[tokenEntryKey].match(new RegExp(escapeRegExp(searchQuery), 'i'))
           )
         }
         return (
           include &&
           typeof tokenEntry[tokenEntryKey] === 'string' &&
-          !!tokenEntry[tokenEntryKey].match(new RegExp(escapeStringRegex(searchQuery), 'i'))
+          !!tokenEntry[tokenEntryKey].match(new RegExp(escapeRegExp(searchQuery), 'i'))
         )
       })
       return regexMatches.some(m => m)
@@ -340,15 +336,15 @@ function SearchModal({
             (field === 'name' && !isAddress) ||
             (field === 'symbol' && !isAddress)
           ) {
-            if (token0[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i'))) {
+            if (token0[field].match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
               setIdentifiedToken(token0)
             }
-            if (token1[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i'))) {
+            if (token1[field].match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
               setIdentifiedToken(token1)
             }
             return (
-              token0[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i')) ||
-              token1[field].match(new RegExp(escapeStringRegexp(searchQuery), 'i'))
+              token0[field].match(new RegExp(escapeRegExp(searchQuery), 'i')) ||
+              token1[field].match(new RegExp(escapeRegExp(searchQuery), 'i'))
             )
           }
           return false
