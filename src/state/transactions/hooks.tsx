@@ -36,7 +36,22 @@ export function Updater() {
                 if (!receipt) {
                   dispatch(checkTransaction({ chainId, hash, blockNumber: globalBlockNumber }))
                 } else {
-                  dispatch(finalizeTransaction({ chainId, hash, receipt }))
+                  dispatch(
+                    finalizeTransaction({
+                      chainId,
+                      hash,
+                      receipt: {
+                        blockHash: receipt.blockHash,
+                        blockNumber: receipt.blockNumber,
+                        contractAddress: receipt.contractAddress,
+                        from: receipt.from,
+                        status: receipt.status,
+                        to: receipt.to,
+                        transactionHash: receipt.transactionHash,
+                        transactionIndex: receipt.transactionIndex
+                      }
+                    })
+                  )
                   // add success or failure popup
                   if (receipt.status === 1) {
                     addPopup({
