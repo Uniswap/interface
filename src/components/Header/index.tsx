@@ -2,6 +2,7 @@ import React from 'react'
 import { Link as HistoryLink } from 'react-router-dom'
 
 import styled from 'styled-components'
+import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
 
 import Row from '../Row'
 import Menu from '../Menu'
@@ -13,7 +14,6 @@ import { WETH, ChainId } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
 import { YellowCard } from '../Card'
 import { useWeb3React } from '../../hooks'
-import { useAddressBalance } from '../../contexts/Balances'
 import { useDarkModeManager } from '../../state/user/hooks'
 
 import Logo from '../../assets/svg/logo.svg'
@@ -148,7 +148,7 @@ const VersionToggle = styled.a`
 export default function Header() {
   const { account, chainId } = useWeb3React()
 
-  const userEthBalance = useAddressBalance(account, WETH[chainId])
+  const userEthBalance = useTokenBalanceTreatingWETHasETH(account, WETH[chainId])
   const [isDark] = useDarkModeManager()
 
   return (

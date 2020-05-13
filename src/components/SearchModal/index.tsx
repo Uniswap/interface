@@ -5,6 +5,7 @@ import { JSBI, Token, WETH } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { COMMON_BASES } from '../../constants'
+import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { Link as StyledLink } from '../../theme/components'
 
 import Card from '../../components/Card'
@@ -29,7 +30,6 @@ import {
   useAddUserToken,
   useRemoveUserAddedToken
 } from '../../state/user/hooks'
-import { useAllBalances } from '../../contexts/Balances'
 import { useTranslation } from 'react-i18next'
 import { useToken, useAllTokens, ALL_TOKENS } from '../../contexts/Tokens'
 import QuestionHelper from '../Question'
@@ -178,7 +178,7 @@ function SearchModal({
 
   const allTokens = useAllTokens()
   const allPairs = useAllDummyPairs()
-  const allBalances = useAllBalances()
+  const allBalances = useAllTokenBalancesTreatingWETHasETH()
 
   const [searchQuery, setSearchQuery] = useState('')
   const [sortDirection, setSortDirection] = useState(true)
