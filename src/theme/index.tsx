@@ -8,8 +8,7 @@ import styled, {
 } from 'styled-components'
 import { AppDispatch, AppState } from '../state'
 import { updateUserDarkMode } from '../state/user/actions'
-import { getQueryParam, checkSupportedTheme } from '../utils'
-import { SUPPORTED_THEMES } from '../constants'
+import { getQueryParam } from '../utils'
 import { useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
@@ -122,11 +121,11 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   const userDarkMode = useSelector<AppState, boolean | null>(state => state.user.userDarkMode)
   const darkMode = useIsDarkMode()
 
-  const themeURL = checkSupportedTheme(getQueryParam(window.location, 'theme'))
+  const themeURL = getQueryParam(window.location, 'theme')
   const urlContainsDarkMode: boolean | null = themeURL
-    ? themeURL.toUpperCase() === SUPPORTED_THEMES.DARK
+    ? themeURL.toUpperCase() === 'DARK'
       ? true
-      : themeURL.toUpperCase() === SUPPORTED_THEMES.LIGHT
+      : themeURL.toUpperCase() === 'LIGHT'
       ? false
       : null
     : null
