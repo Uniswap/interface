@@ -1,4 +1,4 @@
-import { TEST_ADDRESS } from '../support/commands'
+import { TEST_ADDRESS_NEVER_USE } from '../support/commands'
 
 describe('Landing Page', () => {
   beforeEach(() => cy.visit('/'))
@@ -22,6 +22,6 @@ describe('Landing Page', () => {
 
   it('is connected', () => {
     cy.get('#web3-status-connected').click()
-    cy.get('#web3-account-identifier-row').contains(TEST_ADDRESS)
+    cy.get('#web3-account-identifier-row').contains(TEST_ADDRESS_NEVER_USE)
   })
 })

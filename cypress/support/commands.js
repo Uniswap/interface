@@ -9,10 +9,10 @@ import { Wallet } from '@ethersproject/wallet'
 import { _Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 
 // never send real ether to this, obviously
-const PRIVATE_KEY_TEST_NEVER_USE = '0x0123456789012345678901234567890123456789012345678901234567890123'
+const PRIVATE_KEY_TEST_NEVER_USE = '0xad20c82497421e9784f18460ad2fe84f73569068e98e270b3e63743268af5763'
 
 // address of the above key
-export const TEST_ADDRESS = '0x14791697260E4c9A71f18484C9f997B308e59325'
+export const TEST_ADDRESS_NEVER_USE = '0x0ff2d1efd7a57b7562b2bf27f3f37899db27f4a5'
 
 class CustomizedBridge extends _Eip1193Bridge {
   async send(method, params) {
@@ -25,9 +25,9 @@ class CustomizedBridge extends _Eip1193Bridge {
     }
     if (method === 'eth_requestAccounts' || method === 'eth_accounts') {
       if (isCallbackForm) {
-        callback({ result: [TEST_ADDRESS] })
+        callback({ result: [TEST_ADDRESS_NEVER_USE] })
       } else {
-        return Promise.resolve([TEST_ADDRESS])
+        return Promise.resolve([TEST_ADDRESS_NEVER_USE])
       }
     }
     if (method === 'eth_chainId') {
