@@ -17,7 +17,7 @@ import { balanceKey } from './reducer'
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
  */
-export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [address: string]: JSBI } {
+export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [address: string]: JSBI | undefined } {
   const dispatch = useDispatch<AppDispatch>()
   const { chainId } = useWeb3React()
 
@@ -38,7 +38,9 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [
     return addresses.reduce<{ [address: string]: JSBI }>((map, address) => {
       const key = balanceKey({ address, chainId })
       const { value } = rawBalanceMap[key] ?? {}
-      map[address] = JSBI.BigInt(value ?? 0)
+      if (value) {
+        map[address] = JSBI.BigInt(value)
+      }
       return map
     }, {})
   }, [chainId, addresses, rawBalanceMap])
@@ -50,7 +52,7 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [
 export function useTokenBalances(
   address?: string,
   tokens?: (Token | undefined)[]
-): { [tokenAddress: string]: TokenAmount } {
+): { [tokenAddress: string]: TokenAmount | undefined } {
   const dispatch = useDispatch<AppDispatch>()
   const { chainId } = useWeb3React()
 
@@ -77,19 +79,21 @@ export function useTokenBalances(
       validTokens.reduce<{ [address: string]: TokenAmount }>((map, token) => {
         const key = balanceKey({ address, chainId, tokenAddress: token.address })
         const { value } = rawBalanceMap[key] ?? {}
-        map[token.address] = new TokenAmount(token, JSBI.BigInt(value ?? 0))
+        if (value) {
+          map[token.address] = new TokenAmount(token, JSBI.BigInt(value))
+        }
         return map
       }, {}) ?? {}
     )
   }, [address, validTokens, chainId, rawBalanceMap])
 }
 
-// contains the hacky logic to treat WETH as if it's WETH to maintain compatibility
-// until we start treating them separately
+// contains the hacky logic to treat the WETH token input as if it's ETH to
+// maintain compatibility until we handle them separately.
 export function useTokenBalancesTreatWETHAsETH(
   address?: string,
   tokens?: (Token | undefined)[]
-): { [tokenAddress: string]: TokenAmount } {
+): { [tokenAddress: string]: TokenAmount | undefined } {
   const { chainId } = useWeb3React()
   const { tokensWithoutWETH, includesWETH } = useMemo(() => {
     if (!tokens || tokens.length === 0) {
@@ -128,7 +132,9 @@ export function useTokenBalanceTreatingWETHasETH(account?: string, token?: Token
 }
 
 // mimics useAllBalances
-export function useAllTokenBalancesTreatingWETHasETH(): { [account: string]: { [tokenAddress: string]: TokenAmount } } {
+export function useAllTokenBalancesTreatingWETHasETH(): {
+  [account: string]: { [tokenAddress: string]: TokenAmount | undefined }
+} {
   const { account } = useWeb3React()
   const allTokens = useAllTokens()
   const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
