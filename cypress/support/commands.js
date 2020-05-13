@@ -12,16 +12,26 @@ import { _Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 const PRIVATE_KEY_TEST_NEVER_USE = '0xad20c82497421e9784f18460ad2fe84f73569068e98e270b3e63743268af5763'
 
 // address of the above key
-export const TEST_ADDRESS_NEVER_USE = '0x0ff2d1efd7a57b7562b2bf27f3f37899db27f4a5'
+export const TEST_ADDRESS_NEVER_USE = '0x0fF2D1eFd7A57B7562b2bf27F3f37899dB27F4a5'
 
 class CustomizedBridge extends _Eip1193Bridge {
-  async send(method, params) {
-    const isCallbackForm = typeof method === 'object' && typeof params === 'function'
+  async sendAsync(...args) {
+    console.debug('sendAsync called', ...args)
+    return this.send(...args)
+  }
+  async send(...args) {
+    console.debug('send called', ...args)
+    const isCallbackForm = typeof args[0] === 'object' && typeof args[1] === 'function'
     let callback
+    let method
+    let params
     if (isCallbackForm) {
-      callback = params
-      method = method.method
-      params = method.params
+      callback = args[1]
+      method = args[0].method
+      params = args[0].params
+    } else {
+      method = args[0]
+      params = args[1]
     }
     if (method === 'eth_requestAccounts' || method === 'eth_accounts') {
       if (isCallbackForm) {
@@ -39,6 +49,7 @@ class CustomizedBridge extends _Eip1193Bridge {
     }
     try {
       const result = await super.send(method, params)
+      console.debug('result received', method, params, result)
       if (isCallbackForm) {
         callback(null, { result })
       } else {
