@@ -44,7 +44,7 @@ function CreatePool({ history }: RouteComponentProps<{}>) {
 
   // if both tokens selected but pair doesnt exist, enable button to create pair
   useEffect(() => {
-    if (token0Address && token1Address && !pair) {
+    if (token0Address && token1Address && pair === null) {
       setStep(STEP.READY_TO_CREATE)
     }
   }, [pair, token0Address, token1Address])
