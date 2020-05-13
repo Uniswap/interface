@@ -1,10 +1,10 @@
-import { BalanceMap, getEtherBalances } from '@mycrypto/eth-scan'
+import { BalanceMap, getEtherBalances, getTokensBalance } from '@mycrypto/eth-scan'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useWeb3React } from '../../hooks'
 import { useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
-import { updateEtherBalances } from './actions'
+import { updateEtherBalances, updateTokenBalances } from './actions'
 import { balanceKey } from './reducer'
 
 function convertBalanceMapValuesToString(balanceMap: BalanceMap): { [key: string]: string } {
@@ -15,7 +15,7 @@ function convertBalanceMapValuesToString(balanceMap: BalanceMap): { [key: string
 }
 
 export default function Updater() {
-  const { chainId, account, library } = useWeb3React()
+  const { chainId, library } = useWeb3React()
   const lastBlockNumber = useBlockNumber()
   const dispatch = useDispatch<AppDispatch>()
   const ethBalanceListeners = useSelector<AppState>(state => {
@@ -45,7 +45,20 @@ export default function Updater() {
       const data = allBalances[balanceKey({ chainId, address })]
       return !data || data.blockNumber < lastBlockNumber
     })
-  }, [activeETHListeners, allBalances])
+  }, [activeETHListeners, allBalances, chainId, lastBlockNumber])
+
+  const tokenBalancesNeedUpdate: { [address: string]: string[] } = useMemo(() => {
+    return Object.keys(activeTokenBalanceListeners).reduce<{ [address: string]: string[] }>((map, address) => {
+      const needsUpdate = map[address].filter(tokenAddress => {
+        const data = allBalances[balanceKey({ chainId, tokenAddress, address })]
+        return !data || data.blockNumber < lastBlockNumber
+      })
+      if (needsUpdate.length > 0) {
+        map[address] = needsUpdate
+      }
+      return map
+    }, {})
+  }, [activeTokenBalanceListeners, allBalances, chainId, lastBlockNumber])
 
   useEffect(() => {
     getEtherBalances(library, ethBalancesNeedUpdate)
@@ -61,7 +74,26 @@ export default function Updater() {
       .catch(error => {
         console.error('balance fetch failed', error)
       })
-  }, [library, ethBalancesNeedUpdate, dispatch, lastBlockNumber])
+  }, [library, ethBalancesNeedUpdate, dispatch, lastBlockNumber, chainId])
+
+  useEffect(() => {
+    Object.keys(tokenBalancesNeedUpdate).forEach(address => {
+      getTokensBalance(library, address, tokenBalancesNeedUpdate[address])
+        .then(tokenBalanceMap => {
+          dispatch(
+            updateTokenBalances({
+              address,
+              chainId,
+              blockNumber: lastBlockNumber,
+              tokenBalances: convertBalanceMapValuesToString(tokenBalanceMap)
+            })
+          )
+        })
+        .catch(error => {
+          console.error(`failed to get token balances`, address, tokenBalancesNeedUpdate[address])
+        })
+    })
+  }, [library, tokenBalancesNeedUpdate, dispatch, lastBlockNumber, chainId])
 
   return null
 }
