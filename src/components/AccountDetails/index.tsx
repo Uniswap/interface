@@ -114,7 +114,7 @@ const CircleWrapper = styled.div`
 
 const LowerSection = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
-  padding: 2rem;
+  padding: 1.5rem;
   flex-grow: 1;
   overflow: auto;
   background-color: ${({ theme }) => theme.bg2};
