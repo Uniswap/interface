@@ -24,7 +24,3 @@ export const finalizeTransaction = createAction<{
   hash: string
   receipt: SerializableTransactionReceipt
 }>('finalizeTransaction')
-
-export const updateTransactionCount = createAction<{ address: string; transactionCount: number; chainId: number }>(
-  'updateTransactionCount'
-)

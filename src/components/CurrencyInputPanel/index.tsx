@@ -136,7 +136,7 @@ interface CurrencyInputPanelProps {
   showSendWithSwap?: boolean
   otherSelectedTokenAddress?: string | null
   advanced?: boolean
-  inputId: string
+  id: string
 }
 
 export default function CurrencyInputPanel({
@@ -157,7 +157,7 @@ export default function CurrencyInputPanel({
   showSendWithSwap = false,
   otherSelectedTokenAddress = null,
   advanced = false,
-  inputId
+  id
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -167,7 +167,7 @@ export default function CurrencyInputPanel({
   const theme = useContext(ThemeContext)
 
   return (
-    <InputPanel>
+    <InputPanel id={id}>
       <Container hideInput={hideInput}>
         {!hideInput && (
           <LabelRow>
@@ -197,8 +197,8 @@ export default function CurrencyInputPanel({
           {!hideInput && (
             <>
               <NumericalInput
+                className="token-amount-input"
                 value={value}
-                id={inputId}
                 onUserInput={val => {
                   onUserInput(field, val)
                 }}
@@ -210,6 +210,7 @@ export default function CurrencyInputPanel({
           )}
           <CurrencySelect
             selected={!!token}
+            className="open-currency-select-button"
             onClick={() => {
               if (!disableTokenSelect) {
                 setModalOpen(true)
@@ -223,7 +224,7 @@ export default function CurrencyInputPanel({
                 <TokenLogo address={token?.address} size={'24px'} />
               ) : null}
               {isExchange ? (
-                <StyledTokenName>
+                <StyledTokenName className="token-name-container">
                   {pair?.token0.symbol}:{pair?.token1.symbol}
                 </StyledTokenName>
               ) : (
@@ -248,7 +249,7 @@ export default function CurrencyInputPanel({
           showSendWithSwap={showSendWithSwap}
           hiddenToken={token?.address}
           otherSelectedTokenAddress={otherSelectedTokenAddress}
-          otherSelectedText={field === 0 ? ' Selected as output' : 'Selected as input'}
+          otherSelectedText={field === 0 ? 'Selected as output' : 'Selected as input'}
         />
       )}
     </InputPanel>

@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 
 import { useWeb3React } from '../../hooks'
-import { useToken } from '../../contexts/Tokens'
+import { useToken } from '../../hooks/Tokens'
 import { getEtherscanLink } from '../../utils'
 
 import { Link } from '../../theme'
