@@ -45,6 +45,7 @@ import { Link } from '../../theme/components'
 import { basisPointsToPercent, calculateGasMargin, getRouterContract } from '../../utils'
 import {
   ALLOWED_SLIPPAGE_HIGH,
+  ALLOWED_SLIPPAGE_LOW,
   ALLOWED_SLIPPAGE_MEDIUM,
   DEFAULT_DEADLINE_FROM_NOW,
   INITIAL_ALLOWED_SLIPPAGE,
@@ -425,15 +426,9 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
   }, [dependentField, independentField, parsedAmounts, tokens, route, trade, userBalances, account])
 
   // warnings on slippage
-  const warningLow: boolean = slippageFromTrade?.lessThan(new Percent(ALLOWED_SLIPPAGE_MEDIUM.toString(), '10000'))
-  // TODO greaterThanOrEqualTo in SDK
-  const warningMedium: boolean =
-    slippageFromTrade?.equalTo(new Percent(ALLOWED_SLIPPAGE_MEDIUM.toString(), '10000')) ||
-    slippageFromTrade?.greaterThan(new Percent(ALLOWED_SLIPPAGE_MEDIUM.toString(), '10000'))
-  // TODO greaterThanOrEqualTo in SDK
-  const warningHigh: boolean =
-    slippageFromTrade?.equalTo(new Percent(ALLOWED_SLIPPAGE_HIGH.toString(), '10000')) ||
-    slippageFromTrade?.greaterThan(new Percent(ALLOWED_SLIPPAGE_HIGH.toString(), '10000'))
+  const warningLow = !slippageFromTrade?.lessThan(ALLOWED_SLIPPAGE_LOW)
+  const warningMedium = !slippageFromTrade?.lessThan(ALLOWED_SLIPPAGE_MEDIUM)
+  const warningHigh = !slippageFromTrade?.lessThan(ALLOWED_SLIPPAGE_HIGH)
 
   function modalHeader() {
     return (
