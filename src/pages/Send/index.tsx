@@ -47,14 +47,16 @@ import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { useUserAdvanced, useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
-import { SwapType, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
+import { SwapType, useDefaultsFromURL, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
 import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
 import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
 import { basisPointsToPercent, calculateGasMargin, getEtherscanLink, getRouterContract, getSigner } from '../../utils'
 
-export default function Send({ history }: RouteComponentProps) {
+export default function Send({ history, location: { search } }: RouteComponentProps) {
+  useDefaultsFromURL(search)
+
   // text translation
   // const { t } = useTranslation()
   const { chainId, account, library } = useWeb3React()

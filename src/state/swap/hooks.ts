@@ -1,7 +1,8 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
-import { Field, selectToken, switchTokens, typeInput } from './actions'
+import { Field, selectToken, setDefaultsFromURL, switchTokens, typeInput } from './actions'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -68,4 +69,14 @@ export enum SwapType {
   TOKENS_FOR_EXACT_TOKENS,
   TOKENS_FOR_EXACT_ETH,
   ETH_FOR_EXACT_TOKENS
+}
+
+// updates the swap state to use the defaults for a given network whenever the query
+// string updates
+export function useDefaultsFromURL(search?: string) {
+  const { chainId } = useWeb3React()
+  const dispatch = useDispatch<AppDispatch>()
+  useEffect(() => {
+    dispatch(setDefaultsFromURL({ chainId, queryString: search }))
+  }, [dispatch, search, chainId])
 }
