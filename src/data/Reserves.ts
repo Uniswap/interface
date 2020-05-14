@@ -1,12 +1,10 @@
-import { useEffect, useRef } from 'react'
 import { Contract } from '@ethersproject/contracts'
 import { Token, TokenAmount, Pair } from '@uniswap/sdk'
 import useSWR from 'swr'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 
-import { SWRKeys } from '.'
+import { SWRKeys, useKeepSWRDataLiveAsBlocksArrive } from '.'
 import { useContract } from '../hooks'
-import { useBlockNumber } from '../state/application/hooks'
 
 function getReserves(contract: Contract, tokenA: Token, tokenB: Token): () => Promise<Pair | null> {
   return async (): Promise<Pair | null> =>
@@ -35,16 +33,7 @@ export function usePair(tokenA?: Token, tokenB?: Token): undefined | Pair | null
   const shouldFetch = !!contract
   const key = shouldFetch ? [pairAddress, tokenA.chainId, SWRKeys.Reserves] : null
   const { data, mutate } = useSWR(key, getReserves(contract, tokenA, tokenB))
-
-  // fetch data again every time there's a new block
-  const mutateRef = useRef(mutate)
-  useEffect(() => {
-    mutateRef.current = mutate
-  })
-  const blockNumber = useBlockNumber()
-  useEffect(() => {
-    mutateRef.current()
-  }, [blockNumber])
+  useKeepSWRDataLiveAsBlocksArrive(mutate)
 
   return data
 }

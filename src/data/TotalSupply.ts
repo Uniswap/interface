@@ -1,12 +1,10 @@
-import { useRef, useEffect } from 'react'
 import { Contract } from '@ethersproject/contracts'
 import { Token, TokenAmount } from '@uniswap/sdk'
 import useSWR from 'swr'
 import { abi as IERC20ABI } from '@uniswap/v2-core/build/IERC20.json'
 
-import { useContract } from '../hooks'
+import { useContract, useKeepSWRDataLiveAsBlocksArrive } from '../hooks'
 import { SWRKeys } from '.'
-import { useBlockNumber } from '../state/application/hooks'
 
 function getTotalSupply(contract: Contract, token: Token): () => Promise<TokenAmount> {
   return async (): Promise<TokenAmount> =>
@@ -23,16 +21,7 @@ export function useTotalSupply(token?: Token): TokenAmount {
     shouldFetch ? [token.address, token.chainId, SWRKeys.TotalSupply] : null,
     getTotalSupply(contract, token)
   )
-
-  // fetch data again every time there's a new block
-  const mutateRef = useRef(mutate)
-  useEffect(() => {
-    mutateRef.current = mutate
-  })
-  const blockNumber = useBlockNumber()
-  useEffect(() => {
-    mutateRef.current()
-  }, [blockNumber])
+  useKeepSWRDataLiveAsBlocksArrive(mutate)
 
   return data
 }
