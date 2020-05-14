@@ -28,10 +28,11 @@ import {
   useAllDummyPairs,
   useFetchTokenByAddress,
   useAddUserToken,
-  useRemoveUserAddedToken
+  useRemoveUserAddedToken,
+  useUserAddedTokens
 } from '../../state/user/hooks'
 import { useTranslation } from 'react-i18next'
-import { useToken, useAllTokens, ALL_TOKENS } from '../../hooks/Tokens'
+import { useToken, useAllTokens } from '../../hooks/Tokens'
 import QuestionHelper from '../Question'
 
 const TokenModalInfo = styled.div`
@@ -183,6 +184,7 @@ function SearchModal({
   const [searchQuery, setSearchQuery] = useState('')
   const [sortDirection, setSortDirection] = useState(true)
 
+  const userAddedTokens = useUserAddedTokens()
   const fetchTokenByAddress = useFetchTokenByAddress()
   const addToken = useAddUserToken()
   const removeTokenByAddress = useRemoveUserAddedToken()
@@ -259,12 +261,8 @@ function SearchModal({
 
   const filteredTokenList = useMemo(() => {
     return tokenList.filter(tokenEntry => {
-      const urlAdded = urlAddedTokens && urlAddedTokens.hasOwnProperty(tokenEntry.address)
-      const customAdded =
-        tokenEntry.address !== 'ETH' &&
-        ALL_TOKENS[chainId] &&
-        !ALL_TOKENS[chainId].hasOwnProperty(tokenEntry.address) &&
-        !urlAdded
+      const urlAdded = urlAddedTokens?.some(token => token.address === tokenEntry.address)
+      const customAdded = userAddedTokens?.some(token => token.address === tokenEntry.address) && !urlAdded
 
       // if token import page dont show preset list, else show all
       const include = !showTokenImport || (showTokenImport && customAdded && searchQuery !== '')
@@ -287,7 +285,7 @@ function SearchModal({
       })
       return regexMatches.some(m => m)
     })
-  }, [tokenList, urlAddedTokens, chainId, showTokenImport, searchQuery])
+  }, [tokenList, urlAddedTokens, userAddedTokens, showTokenImport, searchQuery])
 
   function _onTokenSelect(address) {
     setSearchQuery('')
@@ -457,9 +455,8 @@ function SearchModal({
           }
         })
         .map(({ address, symbol, balance }) => {
-          const urlAdded = urlAddedTokens && urlAddedTokens.hasOwnProperty(address)
-          const customAdded =
-            address !== 'ETH' && ALL_TOKENS[chainId] && !ALL_TOKENS[chainId].hasOwnProperty(address) && !urlAdded
+          const urlAdded = urlAddedTokens?.some(token => token.address === address)
+          const customAdded = userAddedTokens?.some(token => token.address === address) && !urlAdded
 
           const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
 
@@ -481,7 +478,8 @@ function SearchModal({
                   </Text>
                   <FadedSpan>
                     <TYPE.blue fontWeight={500}>
-                      {urlAdded && '(Added by URL)'} {customAdded && 'Added by user'}
+                      {urlAdded && 'Added by URL'}
+                      {customAdded && 'Added by user'}
                     </TYPE.blue>
                     {customAdded && (
                       <div
