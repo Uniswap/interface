@@ -11,7 +11,7 @@ export enum SWRKeys {
 }
 
 export function useKeepSWRDataLiveAsBlocksArrive(mutate: responseInterface<any, any>['mutate']) {
-  // because we don't care about teh referential identity of mutate, just bind it to a ref
+  // because we don't care about the referential identity of mutate, just bind it to a ref
   const mutateRef = useRef(mutate)
   useEffect(() => {
     mutateRef.current = mutate
