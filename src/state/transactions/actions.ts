@@ -14,6 +14,7 @@ export interface SerializableTransactionReceipt {
 export const addTransaction = createAction<{
   chainId: number
   hash: string
+  from: string
   approvalOfToken?: string
   summary?: string
 }>('addTransaction')
@@ -23,3 +24,7 @@ export const finalizeTransaction = createAction<{
   hash: string
   receipt: SerializableTransactionReceipt
 }>('finalizeTransaction')
+
+export const updateTransactionCount = createAction<{ address: string; transactionCount: number; chainId: number }>(
+  'updateTransactionCount'
+)
