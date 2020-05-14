@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react'
-
 import { AlertCircle, CheckCircle } from 'react-feather'
 
 import styled from 'styled-components'
