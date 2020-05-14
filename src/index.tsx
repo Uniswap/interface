@@ -33,8 +33,6 @@ if (process.env.NODE_ENV === 'production') {
   ReactGA.initialize('test', { testMode: true, debug: true })
 }
 
-ReactGA.pageview(window.location.pathname + window.location.search)
-
 function Updaters() {
   return (
     <>

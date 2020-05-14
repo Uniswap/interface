@@ -1,4 +1,5 @@
 import React, { useReducer, useState, useCallback, useEffect, useContext } from 'react'
+import ReactGA from 'react-ga'
 import styled, { ThemeContext } from 'styled-components'
 import { parseUnits } from '@ethersproject/units'
 import { Contract } from '@ethersproject/contracts'
@@ -490,6 +491,11 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
         method(...args, {
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
+          ReactGA.event({
+            category: 'Liquidity',
+            action: 'Remove',
+            label: [tokens[Field.TOKEN0]?.symbol, tokens[Field.TOKEN1]?.symbol].join(';')
+          })
           setPendingConfirmation(false)
           setTxHash(response.hash)
           addTransaction(response, {
