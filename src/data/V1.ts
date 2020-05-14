@@ -68,9 +68,20 @@ export function useV1TradeLinkIfBetter(trade: Trade, minimumDelta: Percent = new
       trade.tradeType
     )
 
-  const v1HasBetterRate = v1Trade?.slippage?.add(minimumDelta)?.lessThan(trade?.slippage)
+  let v1HasBetterTrade = false
+  if (v1Trade) {
+    if (trade.tradeType === TradeType.EXACT_INPUT) {
+      // check if the output amount on v1, discounted by minimumDelta, is greater than on v2
+      const discountedV1Output = v1Trade.outputAmount.multiply(new Percent('1').subtract(minimumDelta))
+      v1HasBetterTrade = discountedV1Output.greaterThan(trade.outputAmount)
+    } else {
+      // check if the input amount on v1, inflated by minimumDelta, is less than on v2
+      const inflatedV1Input = v1Trade.inputAmount.multiply(new Percent('1').add(minimumDelta))
+      v1HasBetterTrade = inflatedV1Input.lessThan(trade.inputAmount)
+    }
+  }
 
-  return v1HasBetterRate
+  return v1HasBetterTrade
     ? `https://v1.uniswap.exchange/swap?inputCurrency=${
         inputIsWETH ? 'ETH' : trade.route.input.address
       }&outputCurrency=${outputIsWETH ? 'ETH' : trade.route.output.address}`
