@@ -1,6 +1,7 @@
 import { parse } from 'qs'
 import { createReducer } from '@reduxjs/toolkit'
 import { WETH } from '@uniswap/sdk'
+import { isAddress } from '../../utils'
 import { Field, selectToken, setDefaultsFromURL, switchTokens, typeInput } from './actions'
 
 export interface SwapState {
@@ -25,17 +26,27 @@ const initialState: SwapState = {
   }
 }
 
+function parseTokenURL(input: any, chainId: number): string {
+  if (typeof input !== 'string') return ''
+  const valid = isAddress(input)
+  if (valid) return valid
+  if (input.toLowerCase() === 'eth') return WETH[chainId]?.address ?? ''
+  return ''
+}
+
 export default createReducer<SwapState>(initialState, builder =>
   builder
     .addCase(setDefaultsFromURL, (state, { payload: { queryString, chainId } }) => {
       if (queryString && queryString.length > 1) {
         const result = parse(queryString.substr(1), { parseArrays: false })
+        const inToken = parseTokenURL(result.inputToken, chainId)
+        const outToken = parseTokenURL(result.outputToken, chainId)
         return {
           [Field.INPUT]: {
-            address: result.inputToken === 'ETH' ? WETH[chainId]?.address : ''
+            address: inToken
           },
           [Field.OUTPUT]: {
-            address: result.outputToken === 'ETH' && result.inputToken !== 'ETH' ? WETH[chainId]?.address : ''
+            address: inToken === outToken ? '' : outToken
           },
           typedValue: typeof result.amount === 'string' ? result.amount : '',
           independentField: result.exact === 'out' ? Field.OUTPUT : Field.INPUT
