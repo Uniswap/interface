@@ -1,12 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { isAddress } from '../../utils'
-import {
-  addTransaction,
-  checkTransaction,
-  finalizeTransaction,
-  SerializableTransactionReceipt,
-  updateTransactionCount
-} from './actions'
+import { addTransaction, checkTransaction, finalizeTransaction, SerializableTransactionReceipt } from './actions'
 
 const now = () => new Date().getTime()
 
@@ -19,7 +12,6 @@ export interface TransactionDetails {
   addedTime: number
   confirmedTime?: number
   from: string
-  nonce?: number // todo: find a way to populate this
 
   // set to true when we receive a transaction count that exceeds the nonce of this transaction
   unknownStatus?: boolean
@@ -57,15 +49,5 @@ export default createReducer(initialState, builder =>
       state[chainId][hash].receipt = receipt
       state[chainId][hash].unknownStatus = false
       state[chainId][hash].confirmedTime = now()
-    })
-    // marks every transaction with a nonce less than the transaction count unknown if it was pending
-    // this can be overridden by a finalize that comes later
-    .addCase(updateTransactionCount, (state, { payload: { transactionCount, address, chainId } }) => {
-      // mark any transactions under the transaction count to be unknown status
-      Object.values(state?.[chainId] ?? {})
-        .filter(t => !t.receipt)
-        .filter(t => t.from === isAddress(address))
-        .filter(t => typeof t.nonce && t.nonce < transactionCount)
-        .forEach(t => (t.unknownStatus = t.unknownStatus ?? true))
     })
 )

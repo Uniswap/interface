@@ -31,7 +31,7 @@ import {
   useRemoveUserAddedToken
 } from '../../state/user/hooks'
 import { useTranslation } from 'react-i18next'
-import { useToken, useAllTokens, ALL_TOKENS } from '../../contexts/Tokens'
+import { useToken, useAllTokens, ALL_TOKENS } from '../../hooks/Tokens'
 import QuestionHelper from '../Question'
 
 const TokenModalInfo = styled.div`
@@ -226,13 +226,12 @@ function SearchModal({
   const tokenList = useMemo(() => {
     return Object.keys(allTokens)
       .sort((a, b): number => {
+        if (a && allTokens[a]?.equals(WETH[chainId])) return -1
+        if (b && allTokens[b]?.equals(WETH[chainId])) return 1
+
         if (allTokens[a].symbol && allTokens[b].symbol) {
           const aSymbol = allTokens[a].symbol.toLowerCase()
           const bSymbol = allTokens[b].symbol.toLowerCase()
-          // pin ETH to top
-          if (aSymbol === 'ETH'.toLowerCase() || bSymbol === 'ETH'.toLowerCase()) {
-            return aSymbol === bSymbol ? 0 : aSymbol === 'ETH'.toLowerCase() ? -1 : 1
-          }
           // sort by balance
           const balanceA = allBalances?.[account]?.[a]
           const balanceB = allBalances?.[account]?.[b]
@@ -256,7 +255,7 @@ function SearchModal({
           balance: allBalances?.[account]?.[k]
         }
       })
-  }, [allTokens, allBalances, account, sortDirection])
+  }, [allTokens, allBalances, account, sortDirection, chainId])
 
   const filteredTokenList = useMemo(() => {
     return tokenList.filter(tokenEntry => {
@@ -423,6 +422,7 @@ function SearchModal({
           return (
             <MenuItem
               key={temporaryToken.address}
+              className={`temporary-token-${temporaryToken}`}
               onClick={() => {
                 addToken(temporaryToken)
                 _onTokenSelect(temporaryToken.address)
@@ -467,6 +467,7 @@ function SearchModal({
           return (
             <MenuItem
               key={address}
+              className={`token-item-${address}`}
               onClick={() => (hiddenToken && hiddenToken === address ? null : _onTokenSelect(address))}
               disabled={hiddenToken && hiddenToken === address}
               selected={otherSelectedTokenAddress === address}

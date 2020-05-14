@@ -1,84 +1,40 @@
-import React, { useReducer, useState, useCallback, useEffect, useContext } from 'react'
-import ReactGA from 'react-ga'
-import styled, { ThemeContext } from 'styled-components'
-import { parseUnits } from '@ethersproject/units'
+import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
-import { TokenAmount, JSBI, Route, WETH, Percent, Token } from '@uniswap/sdk'
+import { parseUnits } from '@ethersproject/units'
+import { JSBI, Percent, Route, Token, TokenAmount, WETH } from '@uniswap/sdk'
+import React, { useCallback, useContext, useEffect, useReducer, useState } from 'react'
+import { ArrowDown, Plus } from 'react-feather'
+import ReactGA from 'react-ga'
+import { Text } from 'rebass'
+import styled, { ThemeContext } from 'styled-components'
+import { ButtonConfirmed, ButtonPrimary } from '../../components/Button'
+import { LightCard } from '../../components/Card'
+import { AutoColumn, ColumnCenter } from '../../components/Column'
+import ConfirmationModal from '../../components/ConfirmationModal'
+import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import DoubleLogo from '../../components/DoubleLogo'
+import PositionCard from '../../components/PositionCard'
+import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import Slider from '../../components/Slider'
 import TokenLogo from '../../components/TokenLogo'
-import DoubleLogo from '../../components/DoubleLogo'
-import PositionCard from '../../components/PositionCard'
-import ConfirmationModal from '../../components/ConfirmationModal'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import { ROUTER_ADDRESS } from '../../constants'
+import { usePair } from '../../data/Reserves'
+import { useTotalSupply } from '../../data/TotalSupply'
+import { usePairContract, useWeb3React } from '../../hooks'
+
+import { useToken } from '../../hooks/Tokens'
+import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
-import { Text } from 'rebass'
-import { LightCard } from '../../components/Card'
-import { ButtonPrimary } from '../../components/Button'
-import { ButtonConfirmed } from '../../components/Button'
-import { ArrowDown, Plus } from 'react-feather'
-import { AutoColumn, ColumnCenter } from '../../components/Column'
-import Row, { RowBetween, RowFixed } from '../../components/Row'
-
-import { useToken } from '../../contexts/Tokens'
-import { useWeb3React } from '../../hooks'
-import { usePairContract } from '../../hooks'
-import { useTransactionAdder } from '../../state/transactions/hooks'
-import { useTotalSupply } from '../../data/TotalSupply'
-
-import { splitSignature } from '@ethersproject/bytes'
-import { ROUTER_ADDRESS } from '../../constants'
-import { getRouterContract, calculateGasMargin, calculateSlippageAmount } from '../../utils'
-import { usePair } from '../../data/Reserves'
+import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import { ClickableText, FixedBottom, MaxButton, Wrapper } from './styleds'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = 50
 
 // denominated in seconds
 const DEADLINE_FROM_NOW = 60 * 20
-
-const Wrapper = styled.div`
-  position: relative;
-`
-
-const FixedBottom = styled.div`
-  position: absolute;
-  top: 100px;
-  width: 100%;
-  margin-bottom: 80px;
-`
-
-const ClickableText = styled(Text)`
-  :hover {
-    cursor: pointer;
-  }
-  color: ${({ theme }) => theme.primary1};
-`
-
-// const CustomNumericalInput = styled(NumericalInput)`
-//   font-size: 72px;
-//   font-weight: 500;
-// `
-
-const MaxButton = styled.button<{ width: string }>`
-  padding: 0.5rem 1rem;
-  background-color: ${({ theme }) => theme.primary5};
-  border: 1px solid ${({ theme }) => theme.primary5};
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  margin-right: 0.5rem;
-  color: ${({ theme }) => theme.primary1};
-  :hover {
-    border: 1px solid ${({ theme }) => theme.primary1};
-  }
-  :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
-    outline: none;
-  }
-`
 
 enum Field {
   LIQUIDITY,
@@ -718,7 +674,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
               token={pair?.liquidityToken}
               isExchange={true}
               pair={pair}
-              inputId="liquidityAmount"
+              id="liquidity-amount"
             />
             <ColumnCenter>
               <ArrowDown size="16" color={theme.text2} />
@@ -732,7 +688,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
               token={tokens[Field.TOKEN0]}
               label={'Output'}
               disableTokenSelect
-              inputId="removeLiquidityToken0"
+              id="remove-liquidity-token0"
             />
             <ColumnCenter>
               <Plus size="16" color={theme.text2} />
@@ -746,7 +702,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
               token={tokens[Field.TOKEN1]}
               label={'Output'}
               disableTokenSelect
-              inputId="removeLiquidityToken1"
+              id="remove-liquidity-token1"
             />
           </>
         )}

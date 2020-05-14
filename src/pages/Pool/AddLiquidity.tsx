@@ -1,39 +1,38 @@
-import React, { useReducer, useState, useCallback, useEffect, useContext } from 'react'
-import ReactGA from 'react-ga'
-import styled, { ThemeContext } from 'styled-components'
-import { RouteComponentProps, withRouter } from 'react-router-dom'
-import { parseUnits, parseEther } from '@ethersproject/units'
+import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { WETH, TokenAmount, JSBI, Percent, Route, Token, Price } from '@uniswap/sdk'
-
-import TokenLogo from '../../components/TokenLogo'
-import DoubleLogo from '../../components/DoubleLogo'
-import SearchModal from '../../components/SearchModal'
-import PositionCard from '../../components/PositionCard'
-import ConfirmationModal from '../../components/ConfirmationModal'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { Text } from 'rebass'
-import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
-import { TYPE } from '../../theme'
+import { parseEther, parseUnits } from '@ethersproject/units'
+import { JSBI, Percent, Price, Route, Token, TokenAmount, WETH } from '@uniswap/sdk'
+import React, { useCallback, useContext, useEffect, useReducer, useState } from 'react'
 import { Plus } from 'react-feather'
+import ReactGA from 'react-ga'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
+import { Text } from 'rebass'
+import styled, { ThemeContext } from 'styled-components'
+import { ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, GreyCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import { ButtonPrimary, ButtonLight } from '../../components/Button'
-import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
+import ConfirmationModal from '../../components/ConfirmationModal'
+import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import DoubleLogo from '../../components/DoubleLogo'
+import PositionCard from '../../components/PositionCard'
+import Row, { AutoRow, RowBetween, RowFixed, RowFlat } from '../../components/Row'
+import SearchModal from '../../components/SearchModal'
 
-import { useToken } from '../../contexts/Tokens'
-import { useTokenAllowance } from '../../data/Allowances'
-import { useTotalSupply } from '../../data/TotalSupply'
-import { useWeb3React, useTokenContract } from '../../hooks'
-import { useTransactionAdder, useHasPendingApproval } from '../../state/transactions/hooks'
+import TokenLogo from '../../components/TokenLogo'
 
 import { ROUTER_ADDRESS } from '../../constants'
-import { getRouterContract, calculateGasMargin, calculateSlippageAmount } from '../../utils'
-import { BigNumber } from '@ethersproject/bignumber'
+import { useTokenAllowance } from '../../data/Allowances'
 import { usePair } from '../../data/Reserves'
-import { useAddUserToken, useFetchTokenByAddress } from '../../state/user/hooks'
-import { useAllTokens } from '../../contexts/Tokens'
+import { useTotalSupply } from '../../data/TotalSupply'
+import { useTokenContract, useWeb3React } from '../../hooks'
+
+import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
+import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
+import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
+import { TYPE } from '../../theme'
+import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import { Dots, Wrapper } from './styleds'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = 50
@@ -41,36 +40,10 @@ const ALLOWED_SLIPPAGE = 50
 // denominated in seconds
 const DEADLINE_FROM_NOW = 60 * 20
 
-const Wrapper = styled.div`
-  position: relative;
-`
-
 const FixedBottom = styled.div`
   position: absolute;
   margin-top: 2rem;
   width: 100%;
-`
-
-// styles
-const Dots = styled.span`
-  &::after {
-    display: inline-block;
-    animation: ellipsis 1.25s infinite;
-    content: '.';
-    width: 1em;
-    text-align: left;
-  }
-  @keyframes ellipsis {
-    0% {
-      content: '.';
-    }
-    33% {
-      content: '..';
-    }
-    66% {
-      content: '...';
-    }
-  }
 `
 
 enum Field {
@@ -161,7 +134,7 @@ function reducer(
   }
 }
 
-interface AddLiquidityProps extends RouteComponentProps<{}> {
+interface AddLiquidityProps extends RouteComponentProps {
   token0: string
   token1: string
 }
@@ -183,35 +156,9 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
 
   // get basic SDK entities
   const tokens: { [field: number]: Token } = {
-    [Field.INPUT]: useToken(fieldData[Field.INPUT].address),
-    [Field.OUTPUT]: useToken(fieldData[Field.OUTPUT].address)
+    [Field.INPUT]: useTokenByAddressAndAutomaticallyAdd(fieldData[Field.INPUT].address),
+    [Field.OUTPUT]: useTokenByAddressAndAutomaticallyAdd(fieldData[Field.OUTPUT].address)
   }
-
-  // ensure input + output tokens are added to localstorage
-  const fetchTokenByAddress = useFetchTokenByAddress()
-  const addToken = useAddUserToken()
-
-  const allTokens = useAllTokens()
-  const inputTokenAddress = fieldData[Field.INPUT].address
-  useEffect(() => {
-    if (inputTokenAddress && !Object.keys(allTokens).some(tokenAddress => tokenAddress === inputTokenAddress)) {
-      fetchTokenByAddress(inputTokenAddress).then(token => {
-        if (token !== null) {
-          addToken(token)
-        }
-      })
-    }
-  }, [inputTokenAddress, allTokens, fetchTokenByAddress, addToken])
-  const outputTokenAddress = fieldData[Field.OUTPUT].address
-  useEffect(() => {
-    if (outputTokenAddress && !Object.keys(allTokens).some(tokenAddress => tokenAddress === outputTokenAddress)) {
-      fetchTokenByAddress(outputTokenAddress).then(token => {
-        if (token !== null) {
-          addToken(token)
-        }
-      })
-    }
-  }, [outputTokenAddress, allTokens, fetchTokenByAddress, addToken])
 
   // token contracts for approvals and direct sends
   const tokenContractInput: Contract = useTokenContract(tokens[Field.INPUT]?.address)
@@ -754,7 +701,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
           pair={pair}
           label="Input"
-          inputId="addLiquidityInput"
+          id="add-liquidity-input"
         />
         <ColumnCenter>
           <Plus size="16" color={theme.text2} />
@@ -770,7 +717,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           token={tokens[Field.OUTPUT]}
           onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
           pair={pair}
-          inputId="addLiquidityOutput"
+          id="add-liquidity-output"
         />
         {tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
           <>
