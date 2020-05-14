@@ -12,7 +12,7 @@ import { TYPE, Link } from '../../theme'
 import { AutoColumn, ColumnCenter } from '../Column'
 import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
 
-import { useToken } from '../../contexts/Tokens'
+import { useToken } from '../../hooks/Tokens'
 import { useWeb3React } from '../../hooks'
 import { usePair } from '../../data/Reserves'
 
@@ -79,7 +79,7 @@ function CreatePool({ history }: RouteComponentProps<{}>) {
                 {token0?.symbol}{' '}
               </Text>
               <TYPE.darkGray fontWeight={500} fontSize={16} marginLeft={'8px'}>
-                {token0?.symbol === 'ETH' && '(default)'}
+                {token0?.address === 'ETH' && '(default)'}
               </TYPE.darkGray>
             </Row>
           </ButtonDropwdownLight>

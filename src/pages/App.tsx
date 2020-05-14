@@ -1,6 +1,7 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import styled from 'styled-components'
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
+import ReactGA from 'react-ga'
+import { BrowserRouter, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom'
 
 import Header from '../components/Header'
 import Footer from '../components/Footer'
@@ -91,6 +92,14 @@ const StyledRed = styled.div`
   }
 `
 
+// fires a GA pageview every time the route changes
+function GoogleAnalyticsReporter({ location: { pathname, search } }: RouteComponentProps) {
+  useEffect(() => {
+    ReactGA.pageview(`${pathname}${search}`)
+  }, [pathname, search])
+  return null
+}
+
 export default function App() {
   const params = getAllQueryParams()
 
@@ -98,14 +107,15 @@ export default function App() {
     <>
       <Suspense fallback={null}>
         <BrowserRouter>
+          <Route component={GoogleAnalyticsReporter} />
           <AppWrapper>
             <HeaderWrapper>
               <Header />
             </HeaderWrapper>
             <BodyWrapper>
               <Popups />
-              <Body>
-                <Web3ReactManager>
+              <Web3ReactManager>
+                <Body>
                   <NavigationTabs />
                   {/* this Suspense is for route code-splitting */}
                   <Switch>
@@ -151,8 +161,8 @@ export default function App() {
                     />
                     <Redirect to="/" />
                   </Switch>
-                </Web3ReactManager>
-              </Body>
+                </Body>
+              </Web3ReactManager>
               <Footer />
             </BodyWrapper>
             <StyledRed />

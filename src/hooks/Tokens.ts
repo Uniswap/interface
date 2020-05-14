@@ -1,7 +1,7 @@
 import { ChainId, Token, WETH } from '@uniswap/sdk'
-import { useMemo } from 'react'
-import { useWeb3React } from '../hooks'
-import { useUserAddedTokens } from '../state/user/hooks'
+import { useEffect, useMemo } from 'react'
+import { useAddUserToken, useFetchTokenByAddress, useUserAddedTokens } from '../state/user/hooks'
+import { useWeb3React } from './index'
 
 export const ALL_TOKENS = [
   // WETH on all chains
@@ -65,4 +65,24 @@ export function useToken(tokenAddress: string): Token {
   const tokens = useAllTokens()
 
   return tokens?.[tokenAddress]
+}
+
+// gets token information by address (typically user input) and
+// automatically adds it for the user if the token address is valid
+export function useTokenByAddressAndAutomaticallyAdd(tokenAddress?: string): Token | undefined {
+  const fetchTokenByAddress = useFetchTokenByAddress()
+  const addToken = useAddUserToken()
+  const allTokens = useAllTokens()
+
+  useEffect(() => {
+    if (tokenAddress && !allTokens?.[tokenAddress]) {
+      fetchTokenByAddress(tokenAddress).then(token => {
+        if (token !== null) {
+          addToken(token)
+        }
+      })
+    }
+  }, [tokenAddress, allTokens, fetchTokenByAddress, addToken])
+
+  return useMemo(() => allTokens?.[tokenAddress], [allTokens, tokenAddress])
 }

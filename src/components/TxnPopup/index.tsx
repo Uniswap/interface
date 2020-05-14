@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-
+import React, { useCallback, useState } from 'react'
 import { AlertCircle, CheckCircle } from 'react-feather'
 
 import styled from 'styled-components'
@@ -43,10 +42,11 @@ export default function TxnPopup({
   const [isRunning, setIsRunning] = useState(true)
   const removePopup = useRemovePopup()
 
+  const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
+
   useInterval(
     () => {
-      count > 150 && removePopup(popKey)
-      setCount(count + 1)
+      count > 150 ? removeThisPopup() : setCount(count + 1)
     },
     isRunning ? delay : null
   )
