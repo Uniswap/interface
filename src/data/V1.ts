@@ -6,7 +6,6 @@ import IUniswapV1Factory from '../constants/abis/v1_factory.json'
 import { V1_FACTORY_ADDRESS } from '../constants'
 import { useContract } from '../hooks'
 import { SWRKeys } from '.'
-import { AddressZero } from '@ethersproject/constants'
 import { useETHBalances, useTokenBalances } from '../state/wallet/hooks'
 
 function getV1PairAddress(contract: Contract): (_: SWRKeys, tokenAddress: string) => Promise<string> {
@@ -24,7 +23,6 @@ function useV1PairAddress(tokenAddress: string) {
   return data
 }
 
-const DUMMY_ETH = new Token(ChainId.MAINNET, AddressZero, 18)
 function useMockV1Pair(token?: Token) {
   const mainnet = token?.chainId === ChainId.MAINNET
   const isWETH = token?.equals(WETH[ChainId.MAINNET])
@@ -34,7 +32,7 @@ function useMockV1Pair(token?: Token) {
   const ETHBalance = useETHBalances([v1PairAddress])[v1PairAddress]
 
   return tokenBalance && ETHBalance
-    ? new Pair(tokenBalance, new TokenAmount(DUMMY_ETH, ETHBalance.toString()))
+    ? new Pair(tokenBalance, new TokenAmount(WETH[ChainId.MAINNET], ETHBalance.toString()))
     : undefined
 }
 
@@ -56,7 +54,7 @@ export function useV1TradeLinkIfBetter(trade: Trade, minimumDelta: Percent = new
     pairs = [inputPair, outputPair]
   }
 
-  const route = pairs && new Route(pairs, inputIsWETH ? DUMMY_ETH : trade.route.input)
+  const route = pairs && new Route(pairs, trade.route.input)
   const v1Trade =
     route &&
     new Trade(
