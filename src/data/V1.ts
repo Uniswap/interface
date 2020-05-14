@@ -15,9 +15,10 @@ function getV1PairAddress(contract: Contract): (tokenAddress: string) => Promise
 
 function useV1PairAddress(tokenAddress: string) {
   const { chainId } = useWeb3React()
-  const contract = useContract(V1_FACTORY_ADDRESS, IUniswapV1Factory, false)
-  const shouldFetch = chainId === ChainId.MAINNET && typeof tokenAddress === 'string' && !!contract
 
+  const contract = useContract(V1_FACTORY_ADDRESS, IUniswapV1Factory, false)
+
+  const shouldFetch = chainId === ChainId.MAINNET && typeof tokenAddress === 'string' && !!contract
   const { data } = useSWR(shouldFetch ? [tokenAddress, SWRKeys.V1PairAddress] : null, getV1PairAddress(contract), {
     // don't need to update this data
     revalidateOnFocus: false,

@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { Contract } from '@ethersproject/contracts'
 import { Token, TokenAmount } from '@uniswap/sdk'
 import useSWR from 'swr'
@@ -14,17 +15,23 @@ function getTokenAllowance(contract: Contract, token: Token): (owner: string, sp
 }
 
 export function useTokenAllowance(token?: Token, owner?: string, spender?: string): TokenAmount {
-  const blockNumber = useBlockNumber()
   const contract = useTokenContract(token?.address, false)
-  const shouldFetch = !!contract && typeof owner === 'string' && typeof spender === 'string'
 
-  const { data } = useSWR(
-    shouldFetch ? [owner, spender, token.chainId, token.address, SWRKeys.Allowances, blockNumber] : null,
-    getTokenAllowance(contract, token),
-    {
-      dedupingInterval: 4 * 1000
-    }
+  const shouldFetch = !!contract && typeof owner === 'string' && typeof spender === 'string'
+  const { data, mutate } = useSWR(
+    shouldFetch ? [owner, spender, token.address, token.chainId, SWRKeys.Allowances] : null,
+    getTokenAllowance(contract, token)
   )
+
+  // fetch data again every time there's a new block
+  const mutateRef = useRef(mutate)
+  useEffect(() => {
+    mutateRef.current = mutate
+  })
+  const blockNumber = useBlockNumber()
+  useEffect(() => {
+    mutateRef.current()
+  }, [blockNumber])
 
   return data
 }

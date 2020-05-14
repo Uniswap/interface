@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react'
 import { Contract } from '@ethersproject/contracts'
 import { Token, TokenAmount } from '@uniswap/sdk'
 import useSWR from 'swr'
@@ -15,15 +16,23 @@ function getTotalSupply(contract: Contract, token: Token): () => Promise<TokenAm
 }
 
 export function useTotalSupply(token?: Token): TokenAmount {
-  const blockNumber = useBlockNumber()
   const contract = useContract(token?.address, IERC20ABI, false)
+
   const shouldFetch = !!contract
-  const { data } = useSWR(
-    shouldFetch ? [token.chainId, token.address, SWRKeys.TotalSupply, blockNumber] : null,
-    getTotalSupply(contract, token),
-    {
-      dedupingInterval: 4 * 1000
-    }
+  const { data, mutate } = useSWR(
+    shouldFetch ? [token.address, token.chainId, SWRKeys.TotalSupply] : null,
+    getTotalSupply(contract, token)
   )
+
+  // fetch data again every time there's a new block
+  const mutateRef = useRef(mutate)
+  useEffect(() => {
+    mutateRef.current = mutate
+  })
+  const blockNumber = useBlockNumber()
+  useEffect(() => {
+    mutateRef.current()
+  }, [blockNumber])
+
   return data
 }
