@@ -674,7 +674,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
               token={pair?.liquidityToken}
               isExchange={true}
               pair={pair}
-              inputId="liquidityAmount"
+              id="liquidity-amount"
             />
             <ColumnCenter>
               <ArrowDown size="16" color={theme.text2} />
@@ -688,7 +688,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
               token={tokens[Field.TOKEN0]}
               label={'Output'}
               disableTokenSelect
-              inputId="removeLiquidityToken0"
+              id="remove-liquidity-token0"
             />
             <ColumnCenter>
               <Plus size="16" color={theme.text2} />
@@ -702,7 +702,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
               token={tokens[Field.TOKEN1]}
               label={'Output'}
               disableTokenSelect
-              inputId="removeLiquidityToken1"
+              id="remove-liquidity-token1"
             />
           </>
         )}

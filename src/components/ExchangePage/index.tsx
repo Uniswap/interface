@@ -746,7 +746,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     if (sending && !sendingWithSwap) {
       return (
         <AutoColumn>
-          <ButtonPrimary onClick={onSend}>
+          <ButtonPrimary onClick={onSend} id="exchange-page-confirm-send">
             <Text color="white" fontSize={20}>
               Confirm send
             </Text>
@@ -841,7 +841,12 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           </AutoColumn>
 
           <AutoRow>
-            <ButtonError onClick={onSwap} error={!!warningHigh} style={{ margin: '10px 0 0 0' }}>
+            <ButtonError
+              onClick={onSwap}
+              error={!!warningHigh}
+              style={{ margin: '10px 0 0 0' }}
+              id="exchange-page-confirm-swap-or-send"
+            >
               <Text fontSize={20} fontWeight={500}>
                 {warningHigh ? (sending ? 'Send Anyway' : 'Swap Anyway') : sending ? 'Confirm Send' : 'Confirm Swap'}
               </Text>
@@ -924,7 +929,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   }
 
   return (
-    <Wrapper id="exchangePage">
+    <Wrapper id="exchange-page">
       <ConfirmationModal
         isOpen={showConfirm}
         title={sendingWithSwap ? 'Confirm swap and send' : sending ? 'Confirm Send' : 'Confirm Swap'}
@@ -962,7 +967,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               showSendWithSwap={true}
               advanced={advanced}
               label={''}
-              inputId="swapInputField"
+              id="swap-currency-input"
               otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
             />
           </InputGroup>
@@ -1007,7 +1012,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               }}
               onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
               otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
-              inputId="swapInputField"
+              id="swap-currency-input"
             />
 
             {sendingWithSwap ? (
@@ -1051,7 +1056,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
               advanced={advanced}
               otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
-              inputId="swapOutputField"
+              id="swap-currency-output"
             />
             {sendingWithSwap && (
               <RowBetween padding="0 1rem 0 12px">
@@ -1172,6 +1177,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             onClick={() => {
               setShowConfirm(true)
             }}
+            id="exchange-swap-button"
             disabled={!isValid}
             error={!!warningHigh}
           >
@@ -1202,7 +1208,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
         <AdvancedDropwdown>
           {!showAdvanced && (
             <Hover>
-              <RowBetween onClick={() => setShowAdvanced(true)} padding={'8px 20px'}>
+              <RowBetween onClick={() => setShowAdvanced(true)} padding={'8px 20px'} id="exchange-show-advanced">
                 <Text fontSize={16} fontWeight={500} style={{ userSelect: 'none' }}>
                   Show Advanced
                 </Text>

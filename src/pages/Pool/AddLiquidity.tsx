@@ -701,7 +701,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
           pair={pair}
           label="Input"
-          inputId="addLiquidityInput"
+          id="add-liquidity-input"
         />
         <ColumnCenter>
           <Plus size="16" color={theme.text2} />
@@ -717,7 +717,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           token={tokens[Field.OUTPUT]}
           onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
           pair={pair}
-          inputId="addLiquidityOutput"
+          id="add-liquidity-output"
         />
         {tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
           <>

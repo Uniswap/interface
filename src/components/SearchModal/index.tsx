@@ -422,6 +422,7 @@ function SearchModal({
           return (
             <MenuItem
               key={temporaryToken.address}
+              className={`temporary-token-${temporaryToken}`}
               onClick={() => {
                 addToken(temporaryToken)
                 _onTokenSelect(temporaryToken.address)
@@ -466,6 +467,7 @@ function SearchModal({
           return (
             <MenuItem
               key={address}
+              className={`token-item-${address}`}
               onClick={() => (hiddenToken && hiddenToken === address ? null : _onTokenSelect(address))}
               disabled={hiddenToken && hiddenToken === address}
               selected={otherSelectedTokenAddress === address}
