@@ -1,37 +1,34 @@
-import React, { useState, useCallback, useEffect, useContext } from 'react'
-import ReactGA from 'react-ga'
-import { ThemeContext } from 'styled-components'
-import { parseEther, parseUnits } from '@ethersproject/units'
-import { JSBI, Percent, TokenAmount, TradeType, WETH, Fraction } from '@uniswap/sdk'
-import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
-import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { useUserAdvanced } from '../../state/application/hooks'
-import { useTokenBalanceTreatingWETHasETH, useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
-import { Field, SwapAction, useSwapStateReducer } from './swap-store'
+import { parseEther, parseUnits } from '@ethersproject/units'
+import { Fraction, JSBI, Percent, TokenAmount, TradeType, WETH } from '@uniswap/sdk'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
+import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
+import ReactGA from 'react-ga'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { Text } from 'rebass'
+import { ThemeContext } from 'styled-components'
 import Card, { BlueCard, GreyCard, YellowCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { ROUTER_ADDRESS } from '../../constants'
 import { useTokenAllowance } from '../../data/Allowances'
-import { useAddUserToken, useFetchTokenByAddress } from '../../state/user/hooks'
-import { useAllTokens, useToken } from '../../contexts/Tokens'
-import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
+import { useV1TradeLinkIfBetter } from '../../data/V1'
 import { useTokenContract, useWeb3React } from '../../hooks'
+import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useUserAdvanced, useWalletModalToggle } from '../../state/application/hooks'
+import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
+import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { Hover, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
 import {
+  basisPointsToPercent,
   calculateGasMargin,
   getEtherscanLink,
   getRouterContract,
-  basisPointsToPercent,
-  QueryParams,
-  getSigner
+  getSigner,
+  QueryParams
 } from '../../utils'
 import Copy from '../AccountDetails/Copy'
 import AddressInputPanel from '../AddressInputPanel'
@@ -39,6 +36,7 @@ import { ButtonError, ButtonLight, ButtonPrimary, ButtonSecondary } from '../But
 import ConfirmationModal from '../ConfirmationModal'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import QuestionHelper from '../Question'
+import { AutoRow, RowBetween, RowFixed } from '../Row'
 import SlippageTabs from '../SlippageTabs'
 import TokenLogo from '../TokenLogo'
 import {
@@ -55,7 +53,7 @@ import {
   TruncatedText,
   Wrapper
 } from './styleds'
-import { useV1TradeLinkIfBetter } from '../../data/V1'
+import { Field, SwapAction, useSwapStateReducer } from './swap-store'
 
 enum SwapType {
   EXACT_TOKENS_FOR_TOKENS,
@@ -108,34 +106,9 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   const [tradeError, setTradeError] = useState<string>('') // error for things like reserve size or route
 
   const tokens = {
-    [Field.INPUT]: useToken(fieldData[Field.INPUT].address),
-    [Field.OUTPUT]: useToken(fieldData[Field.OUTPUT].address)
+    [Field.INPUT]: useTokenByAddressAndAutomaticallyAdd(fieldData[Field.INPUT].address),
+    [Field.OUTPUT]: useTokenByAddressAndAutomaticallyAdd(fieldData[Field.OUTPUT].address)
   }
-
-  // ensure input + output tokens are added to localstorage
-  const fetchTokenByAddress = useFetchTokenByAddress()
-  const addToken = useAddUserToken()
-  const allTokens = useAllTokens()
-  const inputTokenAddress = fieldData[Field.INPUT].address
-  useEffect(() => {
-    if (inputTokenAddress && !Object.keys(allTokens).some(tokenAddress => tokenAddress === inputTokenAddress)) {
-      fetchTokenByAddress(inputTokenAddress).then(token => {
-        if (token !== null) {
-          addToken(token)
-        }
-      })
-    }
-  }, [inputTokenAddress, allTokens, fetchTokenByAddress, addToken])
-  const outputTokenAddress = fieldData[Field.OUTPUT].address
-  useEffect(() => {
-    if (outputTokenAddress && !Object.keys(allTokens).some(tokenAddress => tokenAddress === outputTokenAddress)) {
-      fetchTokenByAddress(outputTokenAddress).then(token => {
-        if (token !== null) {
-          addToken(token)
-        }
-      })
-    }
-  }, [outputTokenAddress, allTokens, fetchTokenByAddress, addToken])
 
   // token contracts for approvals and direct sends
   const tokenContractInput: Contract = useTokenContract(tokens[Field.INPUT]?.address)
@@ -157,8 +130,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
 
   // get user- and token-specific lookup data
   const userBalances = {
-    [Field.INPUT]: useTokenBalanceTreatingWETHasETH(account, tokens[Field.INPUT]),
-    [Field.OUTPUT]: useTokenBalanceTreatingWETHasETH(account, tokens[Field.OUTPUT])
+    [Field.INPUT]: allBalances?.[tokens[Field.INPUT]?.address]?.raw,
+    [Field.OUTPUT]: allBalances?.[tokens[Field.OUTPUT]?.address]?.raw
   }
 
   // parse the amount that the user typed

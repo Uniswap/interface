@@ -2,7 +2,7 @@ import { ChainId, JSBI, Pair, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { useAllTokens } from '../../contexts/Tokens'
+import { useAllTokens } from '../../hooks/Tokens'
 import { getTokenDecimals, getTokenName, getTokenSymbol } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import {

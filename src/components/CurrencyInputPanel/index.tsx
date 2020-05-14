@@ -248,7 +248,7 @@ export default function CurrencyInputPanel({
           showSendWithSwap={showSendWithSwap}
           hiddenToken={token?.address}
           otherSelectedTokenAddress={otherSelectedTokenAddress}
-          otherSelectedText={field === 0 ? ' Selected as output' : 'Selected as input'}
+          otherSelectedText={field === 0 ? 'Selected as output' : 'Selected as input'}
         />
       )}
     </InputPanel>
