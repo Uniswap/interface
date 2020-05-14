@@ -40,7 +40,7 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   }
 `
 
-const inputRegex = RegExp(`^\\d*(?:\\\\.)?\\d*$`) // match escaped "." characters via in a non-capturing group
+const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
 
 export const Input = React.memo(function InnerInput({
   value,
@@ -55,6 +55,7 @@ export const Input = React.memo(function InnerInput({
   align?: 'right' | 'left'
 } & Omit<React.HTMLProps<HTMLInputElement>, 'ref' | 'onChange' | 'as'>) {
   const enforcer = (nextUserInput: string) => {
+    console.log(escapeRegExp(nextUserInput))
     if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
       onUserInput(nextUserInput)
     }
