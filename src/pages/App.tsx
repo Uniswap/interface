@@ -104,8 +104,8 @@ export default function App() {
             </HeaderWrapper>
             <BodyWrapper>
               <Popups />
-              <Body>
-                <Web3ReactManager>
+              <Web3ReactManager>
+                <Body>
                   <NavigationTabs />
                   {/* this Suspense is for route code-splitting */}
                   <Switch>
@@ -151,8 +151,8 @@ export default function App() {
                     />
                     <Redirect to="/" />
                   </Switch>
-                </Web3ReactManager>
-              </Body>
+                </Body>
+              </Web3ReactManager>
               <Footer />
             </BodyWrapper>
             <StyledRed />
