@@ -1,4 +1,5 @@
 import React, { useReducer, useState, useCallback, useEffect, useContext } from 'react'
+import ReactGA from 'react-ga'
 import styled, { ThemeContext } from 'styled-components'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { parseUnits, parseEther } from '@ethersproject/units'
@@ -497,6 +498,11 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           ...(value ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
+          ReactGA.event({
+            category: 'Liquidity',
+            action: 'Add',
+            label: [tokens[Field.INPUT]?.symbol, tokens[Field.OUTPUT]?.symbol].join(';')
+          })
           setTxHash(response.hash)
           addTransaction(response, {
             summary:

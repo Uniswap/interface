@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react'
+import ReactGA from 'react-ga'
 import { ThemeContext } from 'styled-components'
 import { parseEther, parseUnits } from '@ethersproject/units'
 import { JSBI, Percent, TokenAmount, TradeType, WETH, Fraction } from '@uniswap/sdk'
@@ -75,7 +76,7 @@ const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
 const ALLOWED_SLIPPAGE_MEDIUM = 100
 const ALLOWED_SLIPPAGE_HIGH = 500
 
-interface ExchangePageProps extends RouteComponentProps<{}> {
+interface ExchangePageProps extends RouteComponentProps {
   sendingInput: boolean
   params: QueryParams
 }
@@ -384,6 +385,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
         .sendTransaction({ to: recipient.toString(), value: BigNumber.from(parsedAmounts[Field.INPUT].raw.toString()) })
         .then(response => {
           setTxHash(response.hash)
+          ReactGA.event({ category: 'ExchangePage', action: 'Send', label: tokens[Field.INPUT]?.symbol })
           addTransaction(response, {
             summary:
               'Send ' +
@@ -520,6 +522,11 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setTxHash(response.hash)
+          ReactGA.event({
+            category: 'ExchangePage',
+            label: sending && recipient !== account ? 'Swap w/ Send' : 'Swap',
+            action: [tokens[Field.INPUT]?.symbol, tokens[Field.OUTPUT]?.symbol].join(';')
+          })
           addTransaction(response, {
             summary:
               'Swap ' +
