@@ -1300,11 +1300,11 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
                       Liquidity Provider Fee
                     </TYPE.black>
-                    <QuestionHelper text="A portion of each trade (0.03%) goes to liquidity providers to incentivize liquidity on the protocol." />
+                    <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
                   </RowFixed>
                   <TYPE.black fontSize={14} color={theme.text1}>
                     {realizedLPFeeAmount
-                      ? realizedLPFeeAmount?.toSignificant(6) + ' ' + tokens[Field.INPUT]?.symbol
+                      ? realizedLPFeeAmount?.toSignificant(4) + ' ' + tokens[Field.INPUT]?.symbol
                       : '-'}
                   </TYPE.black>
                 </RowBetween>
