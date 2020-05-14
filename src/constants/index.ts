@@ -1,5 +1,5 @@
-import { injected, walletconnect, walletlink, fortmatic, portis } from '../connectors'
-import { ChainId, WETH, Token } from '@uniswap/sdk'
+import { ChainId, Token, WETH } from '@uniswap/sdk'
+import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
 export const V1_FACTORY_ADDRESS = '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95'
 
@@ -103,3 +103,11 @@ export const SUPPORTED_WALLETS =
       }
 
 export const NetworkContextName = 'NETWORK'
+
+// default allowed slippage, in bips
+export const INITIAL_ALLOWED_SLIPPAGE = 50
+// 15 minutes, denominated in seconds
+export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
+// used for warning states based on slippage in bips
+export const ALLOWED_SLIPPAGE_MEDIUM = 100
+export const ALLOWED_SLIPPAGE_HIGH = 500

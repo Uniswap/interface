@@ -60,3 +60,12 @@ export function useSwapActionHandlers(): {
     onUserInput
   }
 }
+
+export enum SwapType {
+  EXACT_TOKENS_FOR_TOKENS,
+  EXACT_TOKENS_FOR_ETH,
+  EXACT_ETH_FOR_TOKENS,
+  TOKENS_FOR_EXACT_TOKENS,
+  TOKENS_FOR_EXACT_ETH,
+  ETH_FOR_EXACT_TOKENS
+}

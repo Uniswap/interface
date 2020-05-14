@@ -9,29 +9,11 @@ import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
+import { ButtonError, ButtonLight } from '../../components/Button'
 import Card, { GreyCard, YellowCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
-import { ROUTER_ADDRESS } from '../../constants'
-import { useTokenAllowance } from '../../data/Allowances'
-import { useV1TradeLinkIfBetter } from '../../data/V1'
-import { useTokenContract, useWeb3React } from '../../hooks'
-import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
-import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
-import { useUserAdvanced, useWalletModalToggle } from '../../state/application/hooks'
-import { Field } from '../../state/swap/actions'
-import { useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
-import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
-import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
-import { CursorPointer, TYPE } from '../../theme'
-import { Link } from '../../theme/components'
-import { basisPointsToPercent, calculateGasMargin, getRouterContract } from '../../utils'
-import { ButtonError, ButtonLight } from '../../components/Button'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import QuestionHelper from '../../components/Question'
-import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
-import SlippageTabs from '../../components/SlippageTabs'
-import TokenLogo from '../../components/TokenLogo'
 import {
   AdvancedDropwdown,
   ArrowWrapper,
@@ -44,25 +26,30 @@ import {
   TruncatedText,
   Wrapper
 } from '../../components/ExchangePage/styleds'
-
-enum SwapType {
-  EXACT_TOKENS_FOR_TOKENS,
-  EXACT_TOKENS_FOR_ETH,
-  EXACT_ETH_FOR_TOKENS,
-  TOKENS_FOR_EXACT_TOKENS,
-  TOKENS_FOR_EXACT_ETH,
-  ETH_FOR_EXACT_TOKENS
-}
-
-// default allowed slippage, in bips
-const INITIAL_ALLOWED_SLIPPAGE = 50
-
-// 15 minutes, denominated in seconds
-const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
-
-// used for warning states based on slippage in bips
-const ALLOWED_SLIPPAGE_MEDIUM = 100
-const ALLOWED_SLIPPAGE_HIGH = 500
+import QuestionHelper from '../../components/Question'
+import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import SlippageTabs from '../../components/SlippageTabs'
+import TokenLogo from '../../components/TokenLogo'
+import { useTokenAllowance } from '../../data/Allowances'
+import { useV1TradeLinkIfBetter } from '../../data/V1'
+import { useTokenContract, useWeb3React } from '../../hooks'
+import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
+import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
+import { useUserAdvanced, useWalletModalToggle } from '../../state/application/hooks'
+import { Field } from '../../state/swap/actions'
+import { SwapType, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
+import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
+import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
+import { CursorPointer, TYPE } from '../../theme'
+import { Link } from '../../theme/components'
+import { basisPointsToPercent, calculateGasMargin, getRouterContract } from '../../utils'
+import {
+  ALLOWED_SLIPPAGE_HIGH,
+  ALLOWED_SLIPPAGE_MEDIUM,
+  DEFAULT_DEADLINE_FROM_NOW,
+  INITIAL_ALLOWED_SLIPPAGE,
+  ROUTER_ADDRESS
+} from '../../constants'
 
 export default function Swap({ history }: RouteComponentProps) {
   // text translation
