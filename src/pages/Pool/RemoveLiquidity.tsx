@@ -37,9 +37,9 @@ const ALLOWED_SLIPPAGE = 50
 const DEADLINE_FROM_NOW = 60 * 20
 
 enum Field {
-  LIQUIDITY,
-  TOKEN0,
-  TOKEN1
+  LIQUIDITY = 'LIQUIDITY',
+  TOKEN0 = 'TOKEN0',
+  TOKEN1 = 'TOKEN1'
 }
 
 interface RemoveState {
@@ -120,7 +120,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
   const outputToken: Token = useToken(token1)
 
   // get basic SDK entities
-  const tokens: { [field: number]: Token } = {
+  const tokens: { [field in Field]?: Token } = {
     [Field.TOKEN0]: inputToken,
     [Field.TOKEN1]: outputToken
   }
@@ -137,7 +137,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
   const [state, dispatch] = useReducer(reducer, initializeRemoveState(userLiquidity?.toExact(), token0, token1))
   const { independentField, typedValue } = state
 
-  const TokensDeposited: { [field: number]: TokenAmount } = {
+  const TokensDeposited: { [field in Field]?: TokenAmount } = {
     [Field.TOKEN0]:
       pair &&
       totalPoolTokens &&
@@ -159,7 +159,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
     dispatch({ type: RemoveAction.TYPE, payload: { field, typedValue } })
   }, [])
 
-  const parsedAmounts: { [field: number]: TokenAmount } = {}
+  const parsedAmounts: { [field in Field]?: TokenAmount } = {}
   let poolTokenAmount
   try {
     if (typedValue !== '' && typedValue !== '.' && tokens[Field.TOKEN0] && tokens[Field.TOKEN1] && userLiquidity) {

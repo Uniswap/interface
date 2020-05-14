@@ -4,7 +4,7 @@ import TokenLogo from '../TokenLogo'
 import { TYPE } from '../../theme'
 import { Text } from 'rebass'
 
-import { Hover } from '../../theme'
+import { CursorPointer } from '../../theme'
 import { GreyCard } from '../Card'
 import { AutoColumn } from '../Column'
 import { RowBetween, AutoRow } from '../Row'
@@ -39,7 +39,7 @@ export default function BalanceCard({ token0, balance0, import0, token1, balance
     >
       <AutoColumn style={{ width: '100%', padding: '12px' }}>
         {!showInfo ? (
-          <Hover>
+          <CursorPointer>
             <GreyCard padding="16px 20px">
               <RowBetween onClick={() => setshowInfo(true)} padding={' 0'}>
                 <Text fontSize={16} fontWeight={500} style={{ userSelect: 'none' }}>
@@ -48,9 +48,9 @@ export default function BalanceCard({ token0, balance0, import0, token1, balance
                 <ChevronDown color={'#565A69'} />
               </RowBetween>
             </GreyCard>
-          </Hover>
+          </CursorPointer>
         ) : (
-          <Hover>
+          <CursorPointer>
             <GreyCard padding="px 20px" style={{ marginTop: '0' }}>
               <RowBetween onClick={() => setshowInfo(false)} padding={'0px'}>
                 <Text fontSize={16} color="#565A69" fontWeight={500} style={{ userSelect: 'none' }}>
@@ -59,7 +59,7 @@ export default function BalanceCard({ token0, balance0, import0, token1, balance
                 <ChevronUp color="#565A69" />
               </RowBetween>
             </GreyCard>
-          </Hover>
+          </CursorPointer>
         )}
         {showInfo && (
           <AutoColumn gap="md" style={{ marginTop: '1rem' }}>
