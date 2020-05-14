@@ -76,17 +76,15 @@ export default function AddressInputPanel({
   const theme = useContext(ThemeContext)
 
   const [input, setInput] = useState(initialInput ? initialInput : '')
+  const debouncedInput = useDebounce(input, 200)
 
-  const debouncedInput = useDebounce(input, 150)
-
-  const [data, setData] = useState({ address: undefined, name: undefined })
+  const [data, setData] = useState<{ address: string; name: string }>({ address: undefined, name: undefined })
   const [error, setError] = useState<boolean>(false)
 
   // keep data and errors in sync
   useEffect(() => {
     onChange({ address: data.address, name: data.name })
   }, [onChange, data.address, data.name])
-
   useEffect(() => {
     onError(error, input)
   }, [onError, error, input])
@@ -94,55 +92,45 @@ export default function AddressInputPanel({
   // run parser on debounced input
   useEffect(() => {
     let stale = false
+    // if the input is an address, try to look up its name
     if (isAddress(debouncedInput)) {
-      try {
+      library
+        .lookupAddress(debouncedInput)
+        .then(name => {
+          if (stale) return
+          // if an ENS name exists, set it as the destination
+          if (name) {
+            setInput(name)
+          } else {
+            setData({ address: debouncedInput, name: '' })
+            setError(null)
+          }
+        })
+        .catch(() => {
+          if (stale) return
+          setData({ address: debouncedInput, name: '' })
+          setError(null)
+        })
+    }
+    // otherwise try to look up the address of the input, treated as an ENS name
+    else {
+      if (debouncedInput !== '') {
         library
-          .lookupAddress(debouncedInput)
-          .then(name => {
-            if (!stale) {
-              // if an ENS name exists, set it as the destination
-              if (name) {
-                setInput(name)
-              } else {
-                setData({ address: debouncedInput, name: '' })
-                setError(null)
-              }
+          .resolveName(debouncedInput)
+          .then(address => {
+            if (stale) return
+            // if the debounced input name resolves to an address
+            if (address) {
+              setData({ address: address, name: debouncedInput })
+              setError(null)
+            } else {
+              setError(true)
             }
           })
           .catch(() => {
-            if (!stale) {
-              setData({ address: debouncedInput, name: '' })
-              setError(null)
-            }
+            if (stale) return
+            setError(true)
           })
-      } catch {
-        setData({ address: debouncedInput, name: '' })
-        setError(null)
-      }
-    } else {
-      if (debouncedInput !== '') {
-        try {
-          library
-            .resolveName(debouncedInput)
-            .then(address => {
-              if (!stale) {
-                // if the debounced input name resolves to an address
-                if (address) {
-                  setData({ address: address, name: debouncedInput })
-                  setError(null)
-                } else {
-                  setError(true)
-                }
-              }
-            })
-            .catch(() => {
-              if (!stale) {
-                setError(true)
-              }
-            })
-        } catch {
-          setError(true)
-        }
       } else if (debouncedInput === '') {
         setError(true)
       }
@@ -151,22 +139,13 @@ export default function AddressInputPanel({
     return () => {
       stale = true
     }
-  }, [debouncedInput, library, onChange, onError])
+  }, [debouncedInput, library])
 
   function onInput(event) {
-    if (event.target.value === '') {
-      setData({ address: undefined, name: undefined })
-    }
-
-    if (data.address !== undefined || data.name !== undefined) {
-      setData({ address: undefined, name: undefined })
-    }
-    if (error !== undefined) {
-      setError(true)
-    }
+    setData({ address: undefined, name: undefined })
+    setError(false)
     const input = event.target.value
-    const checksummedInput = isAddress(input)
-
+    const checksummedInput = isAddress(input.replace(/\s/g, '')) // delete whitespace
     setInput(checksummedInput || input)
   }
 
