@@ -5,6 +5,7 @@ import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.
 
 import { useContract } from '../hooks'
 import { SWRKeys } from '.'
+import { useBlockNumber } from '../state/application/hooks'
 
 function getReserves(contract: Contract, token0: Token, token1: Token): () => Promise<Pair | null> {
   return async (): Promise<Pair | null> =>
@@ -26,6 +27,7 @@ function getReserves(contract: Contract, token0: Token, token1: Token): () => Pr
  * if pair already created (even if 0 reserves), return pair
  */
 export function usePair(tokenA?: Token, tokenB?: Token): undefined | Pair | null {
+  const blockNumber = useBlockNumber()
   const bothDefined = !!tokenA && !!tokenB
   const invalid = bothDefined && tokenA.equals(tokenB)
   const [token0, token1] =
@@ -34,11 +36,10 @@ export function usePair(tokenA?: Token, tokenB?: Token): undefined | Pair | null
   const contract = useContract(pairAddress, IUniswapV2PairABI, false)
   const shouldFetch = !!contract
   const { data } = useSWR(
-    shouldFetch ? [SWRKeys.Reserves, token0.chainId, pairAddress] : null,
+    shouldFetch ? [token0.chainId, pairAddress, SWRKeys.Reserves, blockNumber] : null,
     getReserves(contract, token0, token1),
     {
-      dedupingInterval: 10 * 1000,
-      refreshInterval: 20 * 1000
+      dedupingInterval: 4 * 1000
     }
   )
 

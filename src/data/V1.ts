@@ -1,6 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import { Token, TokenAmount, Pair, Trade, ChainId, WETH, Route, TradeType, Percent } from '@uniswap/sdk'
 import useSWR from 'swr'
+import { useWeb3React } from '@web3-react/core'
 
 import IUniswapV1Factory from '../constants/abis/v1_factory.json'
 import { V1_FACTORY_ADDRESS } from '../constants'
@@ -8,31 +9,34 @@ import { useContract } from '../hooks'
 import { SWRKeys } from '.'
 import { useETHBalances, useTokenBalances } from '../state/wallet/hooks'
 
-function getV1PairAddress(contract: Contract): (_: SWRKeys, tokenAddress: string) => Promise<string> {
-  return async (_: SWRKeys, tokenAddress: string): Promise<string> => contract.getExchange(tokenAddress)
+function getV1PairAddress(contract: Contract): (tokenAddress: string) => Promise<string> {
+  return async (tokenAddress: string): Promise<string> => contract.getExchange(tokenAddress)
 }
 
 function useV1PairAddress(tokenAddress: string) {
+  const { chainId } = useWeb3React()
   const contract = useContract(V1_FACTORY_ADDRESS, IUniswapV1Factory, false)
-  const shouldFetch = typeof tokenAddress === 'string' && !!contract
+  const shouldFetch = chainId === ChainId.MAINNET && typeof tokenAddress === 'string' && !!contract
 
-  const { data } = useSWR(shouldFetch ? [SWRKeys.V1PairAddress, tokenAddress] : null, getV1PairAddress(contract), {
-    refreshInterval: 0 // don't need to update these
+  const { data } = useSWR(shouldFetch ? [tokenAddress, SWRKeys.V1PairAddress] : null, getV1PairAddress(contract), {
+    // don't need to update this data
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false
   })
 
   return data
 }
 
 function useMockV1Pair(token?: Token) {
-  const mainnet = token?.chainId === ChainId.MAINNET
-  const isWETH = token?.equals(WETH[ChainId.MAINNET])
+  const isWETH = token?.equals(WETH[token?.chainId])
 
-  const v1PairAddress = useV1PairAddress(mainnet && !isWETH ? token?.address : undefined)
+  // will only return an address on mainnet, and not for WETH
+  const v1PairAddress = useV1PairAddress(isWETH ? undefined : token?.address)
   const tokenBalance = useTokenBalances(v1PairAddress, [token])[token?.address]
   const ETHBalance = useETHBalances([v1PairAddress])[v1PairAddress]
 
   return tokenBalance && ETHBalance
-    ? new Pair(tokenBalance, new TokenAmount(WETH[ChainId.MAINNET], ETHBalance.toString()))
+    ? new Pair(tokenBalance, new TokenAmount(WETH[token?.chainId], ETHBalance.toString()))
     : undefined
 }
 
