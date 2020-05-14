@@ -583,7 +583,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           <Text fontSize="48px" fontWeight={500} lineHeight="32px" marginRight={10}>
             {liquidityMinted?.toSignificant(6)}
           </Text>
-          <DoubleLogo a0={tokens[Field.INPUT]?.symbol || ''} a1={tokens[Field.OUTPUT]?.symbol || ''} size={30} />
+          <DoubleLogo a0={tokens[Field.INPUT]?.address} a1={tokens[Field.OUTPUT]?.address} size={30} />
         </RowFlat>
         <Row>
           <Text fontSize="24px">

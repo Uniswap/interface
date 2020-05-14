@@ -78,7 +78,7 @@ const TransactionState = styled.div<{ pending: boolean; success?: boolean }>`
 `
 const ButtonWrapper = styled.div<{ pending: boolean; success?: boolean }>`
   a {
-    color: ${({ pending, success, theme }) => (pending ? theme.primary1 : success ? theme.green1 : theme.red1)};
+    color: ${({ pending, success, theme }) => (pending ? theme.primary1 : success ? theme.green1 : theme.primary1)};
   }
 `
 
