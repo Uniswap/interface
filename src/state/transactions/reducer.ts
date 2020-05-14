@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { addTransaction, checkTransaction, finalizeTransaction } from './actions'
+import { addTransaction, checkTransaction, finalizeTransaction, SerializableTransactionReceipt } from './actions'
 
 const now = () => new Date().getTime()
 
@@ -8,10 +8,7 @@ export interface TransactionDetails {
   approvalOfToken?: string
   blockNumberChecked?: number
   summary?: string
-  receipt?: {
-    blockNumber: number
-    status?: number
-  }
+  receipt?: SerializableTransactionReceipt
   addedTime: number
   confirmedTime?: number
   from: string
