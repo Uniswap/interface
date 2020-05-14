@@ -14,7 +14,7 @@ import { LightCard } from '../Card'
 import { AutoColumn, ColumnCenter } from '../Column'
 import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
 
-import { useToken } from '../../contexts/Tokens'
+import { useToken } from '../../hooks/Tokens'
 import { useWeb3React } from '@web3-react/core'
 import { usePairAdder } from '../../state/user/hooks'
 import { usePair } from '../../data/Reserves'

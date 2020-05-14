@@ -3,11 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useWeb3React } from '../../hooks'
 import { useAddPopup, useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
-import { checkTransaction, finalizeTransaction, updateTransactionCount } from './actions'
-import useSWR from 'swr'
+import { checkTransaction, finalizeTransaction } from './actions'
 
 export default function Updater() {
-  const { chainId, account, library } = useWeb3React()
+  const { chainId, library } = useWeb3React()
 
   const lastBlockNumber = useBlockNumber()
 
@@ -18,16 +17,6 @@ export default function Updater() {
 
   // show popup on confirm
   const addPopup = useAddPopup()
-
-  const { data: transactionCount } = useSWR<number | null>(['accountNonce', account, lastBlockNumber], () => {
-    if (!account) return null
-    return library.getTransactionCount(account, 'latest')
-  })
-
-  useEffect(() => {
-    if (transactionCount === null) return
-    dispatch(updateTransactionCount({ address: account, transactionCount, chainId }))
-  }, [transactionCount, account, chainId, dispatch])
 
   useEffect(() => {
     if (typeof chainId === 'number' && library) {
