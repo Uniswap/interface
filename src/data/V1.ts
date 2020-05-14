@@ -6,7 +6,6 @@ import IUniswapV1Factory from '../constants/abis/v1_factory.json'
 import { V1_FACTORY_ADDRESS } from '../constants'
 import { useContract } from '../hooks'
 import { SWRKeys } from '.'
-import { AddressZero } from '@ethersproject/constants'
 import { useETHBalances, useTokenBalances } from '../state/wallet/hooks'
 
 function getV1PairAddress(contract: Contract): (_: SWRKeys, tokenAddress: string) => Promise<string> {
