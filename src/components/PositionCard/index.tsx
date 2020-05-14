@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
-import { Percent, Pair } from '@uniswap/sdk'
+import { Percent, Pair, JSBI } from '@uniswap/sdk'
 
 import { useWeb3React } from '@web3-react/core'
 import { useTotalSupply } from '../../data/TotalSupply'
@@ -47,23 +47,21 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
   const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
 
   const poolTokenPercentage =
-    !!userPoolBalance && !!totalPoolTokens ? new Percent(userPoolBalance.raw, totalPoolTokens.raw) : undefined
+    !!userPoolBalance && !!totalPoolTokens && JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
+      ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
+      : undefined
 
-  const token0Deposited =
-    token0 &&
-    totalPoolTokens &&
-    userPoolBalance &&
-    pair &&
-    totalPoolTokens &&
-    pair.liquidityToken.equals(totalPoolTokens.token) &&
-    pair.getLiquidityValue(token0, totalPoolTokens, userPoolBalance, false)
-  const token1Deposited =
-    token1 &&
-    totalPoolTokens &&
-    userPoolBalance &&
-    totalPoolTokens &&
-    pair.liquidityToken.equals(totalPoolTokens.token) &&
-    pair.getLiquidityValue(token1, totalPoolTokens, userPoolBalance, false)
+  const [token0Deposited, token1Deposited] =
+    !!pair &&
+    !!totalPoolTokens &&
+    !!userPoolBalance &&
+    // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
+    JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
+      ? [
+          pair.getLiquidityValue(token0, totalPoolTokens, userPoolBalance, false),
+          pair.getLiquidityValue(token1, totalPoolTokens, userPoolBalance, false)
+        ]
+      : [undefined, undefined]
 
   if (minimal) {
     return (
@@ -87,7 +85,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
                 </RowFixed>
                 <RowFixed>
                   <Text fontWeight={500} fontSize={20}>
-                    {userPoolBalance ? userPoolBalance.toSignificant(5) : '-'}
+                    {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
                   </Text>
                 </RowFixed>
               </FixedHeightRow>

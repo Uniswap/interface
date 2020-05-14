@@ -1,6 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import { Token, TokenAmount, Pair, Trade, ChainId, WETH, Route, TradeType, Percent } from '@uniswap/sdk'
 import useSWR from 'swr'
+import { useWeb3React } from '@web3-react/core'
 
 import IUniswapV1Factory from '../constants/abis/v1_factory.json'
 import { V1_FACTORY_ADDRESS } from '../constants'
@@ -8,31 +9,35 @@ import { useContract } from '../hooks'
 import { SWRKeys } from '.'
 import { useETHBalances, useTokenBalances } from '../state/wallet/hooks'
 
-function getV1PairAddress(contract: Contract): (_: SWRKeys, tokenAddress: string) => Promise<string> {
-  return async (_: SWRKeys, tokenAddress: string): Promise<string> => contract.getExchange(tokenAddress)
+function getV1PairAddress(contract: Contract): (tokenAddress: string) => Promise<string> {
+  return async (tokenAddress: string): Promise<string> => contract.getExchange(tokenAddress)
 }
 
 function useV1PairAddress(tokenAddress: string) {
-  const contract = useContract(V1_FACTORY_ADDRESS, IUniswapV1Factory, false)
-  const shouldFetch = typeof tokenAddress === 'string' && !!contract
+  const { chainId } = useWeb3React()
 
-  const { data } = useSWR(shouldFetch ? [SWRKeys.V1PairAddress, tokenAddress] : null, getV1PairAddress(contract), {
-    refreshInterval: 0 // don't need to update these
+  const contract = useContract(V1_FACTORY_ADDRESS, IUniswapV1Factory, false)
+
+  const shouldFetch = chainId === ChainId.MAINNET && typeof tokenAddress === 'string' && !!contract
+  const { data } = useSWR(shouldFetch ? [tokenAddress, SWRKeys.V1PairAddress] : null, getV1PairAddress(contract), {
+    // don't need to update this data
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false
   })
 
   return data
 }
 
 function useMockV1Pair(token?: Token) {
-  const mainnet = token?.chainId === ChainId.MAINNET
-  const isWETH = token?.equals(WETH[ChainId.MAINNET])
+  const isWETH = token?.equals(WETH[token?.chainId])
 
-  const v1PairAddress = useV1PairAddress(mainnet && !isWETH ? token?.address : undefined)
+  // will only return an address on mainnet, and not for WETH
+  const v1PairAddress = useV1PairAddress(isWETH ? undefined : token?.address)
   const tokenBalance = useTokenBalances(v1PairAddress, [token])[token?.address]
   const ETHBalance = useETHBalances([v1PairAddress])[v1PairAddress]
 
   return tokenBalance && ETHBalance
-    ? new Pair(tokenBalance, new TokenAmount(WETH[ChainId.MAINNET], ETHBalance.toString()))
+    ? new Pair(tokenBalance, new TokenAmount(WETH[token?.chainId], ETHBalance.toString()))
     : undefined
 }
 
@@ -63,9 +68,20 @@ export function useV1TradeLinkIfBetter(trade: Trade, minimumDelta: Percent = new
       trade.tradeType
     )
 
-  const v1HasBetterRate = v1Trade?.slippage?.add(minimumDelta)?.lessThan(trade?.slippage)
+  let v1HasBetterTrade = false
+  if (v1Trade) {
+    if (trade.tradeType === TradeType.EXACT_INPUT) {
+      // check if the output amount on v1, discounted by minimumDelta, is greater than on v2
+      const discountedV1Output = v1Trade.outputAmount.multiply(new Percent('1').subtract(minimumDelta))
+      v1HasBetterTrade = discountedV1Output.greaterThan(trade.outputAmount)
+    } else {
+      // check if the input amount on v1, inflated by minimumDelta, is less than on v2
+      const inflatedV1Input = v1Trade.inputAmount.multiply(new Percent('1').add(minimumDelta))
+      v1HasBetterTrade = inflatedV1Input.lessThan(trade.inputAmount)
+    }
+  }
 
-  return v1HasBetterRate
+  return v1HasBetterTrade
     ? `https://v1.uniswap.exchange/swap?inputCurrency=${
         inputIsWETH ? 'ETH' : trade.route.input.address
       }&outputCurrency=${outputIsWETH ? 'ETH' : trade.route.output.address}`
