@@ -9,7 +9,6 @@ const InfoCard = styled.button`
   border: 1px solid;
   border-radius: 12px;
   width: 100% !important;
-  : 0 4px 8px 0 ${({ theme, clickable }) => (clickable ? theme.shadowColor : 'none')};
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.blue5};
   }

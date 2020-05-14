@@ -5,12 +5,12 @@ const variants = {
   primary: {
     padding: '1rem',
     borderRadius: '20px',
-    backgroundColor: 'grey1',
+    backgroundColor: 'bg2',
     border: '1px solid',
-    borderColor: 'grey1'
+    borderColor: 'bg2'
   },
   pink: {
-    backgroundColor: 'pink2',
+    backgroundColor: 'pink1',
     color: 'pink1'
   },
   yellow: {
@@ -24,7 +24,7 @@ const variants = {
 const outlinedStyles = {
   primary: {
     border: '1px solid',
-    borderColor: 'blue2'
+    borderColor: 'primary1'
   },
 
   pink: {

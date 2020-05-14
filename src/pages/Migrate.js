@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { withRouter } from 'react-router'
 import styled, { keyframes } from 'styled-components'
+import { darken } from 'polished'
 
 import { useAllBalances } from '../contexts/Balances'
 import { useAllTokenDetails, useTokenDetails } from '../contexts/Tokens'
@@ -12,6 +13,8 @@ import TextBlock from '../components/Text'
 import PoolUnit from '../components/PoolUnit'
 import { WETH } from '@uniswap/sdk-v2'
 
+import { Info } from 'react-feather'
+
 const Row = styled.div`
   display: flex;
   flex-direction: row;
@@ -19,6 +22,12 @@ const Row = styled.div`
   align-items: center;
   height: 60px;
   padding: 1rem 0;
+`
+
+const RowStart = styled(Row)`
+  justify-content: flex-start;
+  height: fit-content;
+  padding: 0;
 `
 
 const Column = styled.div`
@@ -31,18 +40,35 @@ const shine = keyframes`
     to {background-position: -100%}
 `
 
+const InfoCard = styled(Card)`
+  color: ${({ theme }) => theme.colors.primary1};
+  border: 1px solid ${({ theme }) => theme.colors.primary5};
+  background-color: transparent;
+`
+
+const Link = styled.a`
+  color: ${({ theme }) => theme.colors.primary1};
+  font-weight: 500;
+`
+
 const LoadingCard = styled(Card)`
-  background-image: linear-gradient(90deg, #f2f2f2 0px, #f8f8f8 20%, #f2f2f2 50%);
+  background-image: linear-gradient(
+    90deg,
+    ${({ theme }) => theme.colors.bg2} 0px,
+    ${({ theme }) => darken(0.03, theme.colors.bg2)} 20%,
+    ${({ theme }) => theme.colors.bg2} 50%
+  );
   background-size: 200%;
-  animation: ${shine} 0.8s infinite linear;
+  animation: ${shine} 1.2s infinite linear;
   margin-top: 10px;
 `
 
 const Input = styled.input`
   border-radius: 20px;
   font-size: 16px;
-  border: 1px solid ${({ theme }) => theme.colors.grey3};
-  color: ${({ theme }) => theme.colors.grey5};
+  border: 1px solid ${({ theme }) => theme.colors.bg2};
+  color: ${({ theme }) => theme.colors.text1};
+  background-color: ${({ theme }) => theme.colors.bg2};
   padding: 20px 10px;
   outline: none;
   -webkit-appearance: none;
@@ -134,7 +160,48 @@ function Migrate() {
       </Row>
 
       {typeof account !== 'string' ? (
-        <TextBlock fontSize={16}>Please connect a Wallet to view your liquidity.</TextBlock>
+        <Card style={{ marginTop: '0' }}>
+          <RowStart>
+            <Info style={{ marginRight: '.5rem' }} />
+            <div style={{ fontWeight: '500', fontSize: '18px' }}>Connect your wallet to get started</div>
+          </RowStart>
+          <TextBlock padding={'1rem 0 0 0'}>
+            This tool is for Uniswap liquidity providers only. <Link href="v2.uniswap.exchange">Click here</Link> for
+            regular trading and access to the new V2 interface.
+          </TextBlock>
+          <Link style={{ marginTop: '1rem', display: 'inline-block' }} href="https://uniswap.org/blog/uniswap-v2/">
+            Read more about Uniswap V2
+          </Link>
+        </Card>
+      ) : (
+        <InfoCard style={{ marginTop: '0' }}>
+          <RowStart>
+            {/* <Info style={{ marginRight: '.5rem' }} /> */}
+            <div style={{ fontWeight: '500', fontSize: '18px' }}>Uniswap V2 Migration</div>
+          </RowStart>
+          <TextBlock padding={'1rem 0 0 0'} style={{ lineHeight: '140%' }}>
+            Connect with a wallet that own liquidity pool shares. For each pool, you'll need to approve the migration
+            helper then confirm. Once you've completed your migration you can view your liquidity on the new{' '}
+            <Link href="v2.uniswap.exchange">Uniswap interface</Link>
+          </TextBlock>
+          <TextBlock padding={'1rem 0 0 0'} style={{ lineHeight: '140%' }}>
+            If your tokens don't automatically appear, you may need to find your liquidity by pasting the token address
+            into the search box below.
+          </TextBlock>
+          <Link style={{ marginTop: '1rem', display: 'inline-block' }} href="https://uniswap.org/blog/uniswap-v2/">
+            Read more about Uniswap V2
+          </Link>
+        </InfoCard>
+      )}
+
+      {typeof account !== 'string' ? (
+        <>
+          <Column>
+            <LoadingCard height={80} />
+            <LoadingCard height={80} />
+            <LoadingCard height={80} />
+          </Column>
+        </>
       ) : (
         <>
           <TextBlock padding={'1rem 0'}>Dont see your liquidity? Enter a token address here.</TextBlock>

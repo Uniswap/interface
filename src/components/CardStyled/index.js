@@ -6,13 +6,13 @@ import { Box } from 'rebass/styled-components'
 const Base = styled(Box)`
   padding: 1rem;
   border-radius: 20px;
-  background-color: ${({ theme }) => theme.colors.grey1};
+  background-color: ${({ theme }) => theme.colors.bg2};
   border: 1px solid;
-  border-color: ${({ theme }) => theme.colors.grey1};
+  border-color: ${({ theme }) => theme.colors.bg1};
 `
 
 const Outlined = styled(Base)`
-  border-color: ${({ theme }) => theme.colors.blue2};
+  border-color: ${({ theme }) => theme.colors.primary2};
 `
 
 const Pink = styled(Base)`

@@ -4,6 +4,12 @@ import styled from 'styled-components'
 import { Link } from '../../theme'
 import Web3Status from '../Web3Status'
 import { darken } from 'polished'
+import { useDarkModeManager } from '../../contexts/LocalStorage'
+
+import Logo from '../../assets/images/logo.svg'
+import Wordmark from '../../assets/images/wordmark.svg'
+import LogoDark from '../../assets/images/logo_white.svg'
+import WordmarkDark from '../../assets/images/wordmark_white.svg'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -20,12 +26,10 @@ const HeaderElement = styled.div`
   align-items: center;
 `
 
-const Nod = styled.span`
-  transform: rotate(0deg);
-  transition: transform 150ms ease-out;
-
+const UniIcon = styled(Link)`
+  transition: transform 0.3s ease;
   :hover {
-    transform: rotate(-10deg);
+    transform: rotate(-5deg);
   }
 `
 
@@ -53,20 +57,16 @@ const Title = styled.div`
 `
 
 export default function Header() {
+  const [isDark] = useDarkModeManager()
+
   return (
     <HeaderFrame>
       <HeaderElement>
         <Title>
-          <Nod>
-            <Link id="link" href="https://uniswap.io">
-              <span role="img" aria-label="unicorn">
-                🦄{'  '}
-              </span>
-            </Link>
-          </Nod>
-          <Link id="link" href="https://uniswap.io">
-            <h1 id="title">Uniswap</h1>
-          </Link>
+          <UniIcon id="link">
+            <img src={isDark ? LogoDark : Logo} alt="logo" />
+          </UniIcon>
+          <img style={{ marginLeft: '4px', marginTop: '0px' }} src={isDark ? WordmarkDark : Wordmark} alt="logo" />
         </Title>
       </HeaderElement>
       <HeaderElement>

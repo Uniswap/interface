@@ -6,7 +6,7 @@ export const Link = styled.a.attrs({
 })`
   text-decoration: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.colors.blue5};
+  color: ${({ theme }) => theme.colors.primary1};
 
   :focus {
     outline: none;

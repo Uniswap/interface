@@ -62,11 +62,11 @@ const theme = darkMode => ({
   doveGray: darkMode ? '#C4C4C4' : '#737373',
 
   colors: {
-    blue1: darkMode ? '#DC6BE5' : '#D4E4FA',
+    blue1: darkMode ? '#ff007a' : '#D4E4FA',
     blue2: darkMode ? '#1966D2' : '#A9C8F5',
     blue3: darkMode ? '#165BBB' : '#7DACF0',
     blue4: darkMode ? '#2D47A6' : '#5190EB',
-    blue5: darkMode ? '#C4D9F8' : '#2172E5',
+    blue5: darkMode ? '#2172E5' : '#2172E5',
     blue6: darkMode ? '#C4D9F8' : '#1A5BB6',
     blue7: darkMode ? '#C4D9F8' : '#144489',
     blue8: darkMode ? '#C4D9F8' : '#0E2F5E',
@@ -82,12 +82,39 @@ const theme = darkMode => ({
     grey8: darkMode ? '#2C2F36' : '#2C2F36',
     grey9: darkMode ? '#191B1F' : '#191B1F',
 
+    bg1: darkMode ? '#212429' : '#FFFFFF',
+    bg2: darkMode ? '#2C2F36' : '#F7F8FA',
+    bg3: darkMode ? '#40444F' : '#EDEEF2',
+    bg4: darkMode ? '#565A69' : '#CED0D9',
+    bg5: darkMode ? '#565A69' : '#888D9B',
+
+    text1: darkMode ? '#FFFFFF' : '#000000',
+    text2: darkMode ? '#C3C5CB' : '#565A69',
+    text3: darkMode ? '#6C7284' : '#888D9B',
+    text4: darkMode ? '#565A69' : '#C3C5CB',
+    text5: darkMode ? '#2C2F36' : '#EDEEF2',
+
+    //primary colors
+    primary1: darkMode ? '#2172E5' : '#ff007a',
+    primary2: darkMode ? '#3680E7' : '#FF8CC3',
+    primary3: darkMode ? '#4D8FEA' : '#FF99C9',
+    primary4: darkMode ? '#376bad70' : '#F6DDE8',
+    primary5: darkMode ? '#153d6f70' : '#FDEAF1',
+
+    // color text
+    primaryText1: darkMode ? '#6da8ff' : '#ff007a',
+
+    // secondary colors
+    secondary1: darkMode ? '#2172E5' : '#ff007a',
+    secondary2: darkMode ? '#17000b26' : '#F6DDE8',
+    secondary3: darkMode ? '#17000b26' : '#FDEAF1',
+
     white: '#FFFFFF',
 
-    green1: '#E6F3EC',
+    green1: '#27AE6020',
     green2: '#27AE60',
 
-    pink1: '#DC6BE5',
+    pink1: '#ff007a',
 
     pink2: '#FFF8FD',
 
@@ -141,8 +168,8 @@ export const GlobalStyle = createGlobalStyle`
   html {
     font-size: 16px;
     font-variant: none;
-    color: ${({ theme }) => theme.textColor};
-    background-color: ${({ theme }) => theme.backgroundColor};
+    color: ${({ theme }) => theme.colors.text1};
+    background-color: ${({ theme }) => theme.colors.bg1};
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
