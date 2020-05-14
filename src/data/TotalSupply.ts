@@ -3,8 +3,8 @@ import { Token, TokenAmount } from '@uniswap/sdk'
 import useSWR from 'swr'
 import { abi as IERC20ABI } from '@uniswap/v2-core/build/IERC20.json'
 
-import { useContract, useKeepSWRDataLiveAsBlocksArrive } from '../hooks'
-import { SWRKeys } from '.'
+import { SWRKeys, useKeepSWRDataLiveAsBlocksArrive } from '.'
+import { useContract } from '../hooks'
 
 function getTotalSupply(contract: Contract, token: Token): () => Promise<TokenAmount> {
   return async (): Promise<TokenAmount> =>
