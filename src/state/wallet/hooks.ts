@@ -1,8 +1,9 @@
+import { getAddress } from '@ethersproject/address'
 import { JSBI, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAllTokens } from '../../contexts/Tokens'
-import { useWeb3React } from '../../hooks'
+import { usePrevious, useWeb3React } from '../../hooks'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import {
@@ -21,16 +22,29 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [
   const dispatch = useDispatch<AppDispatch>()
   const { chainId } = useWeb3React()
 
-  const addresses: string[] = useMemo(() => (uncheckedAddresses ? uncheckedAddresses.filter(isAddress) : []), [
-    uncheckedAddresses
-  ])
+  const addresses: string[] = useMemo(
+    () =>
+      uncheckedAddresses
+        ? uncheckedAddresses
+            .filter(isAddress)
+            .map(getAddress)
+            .sort()
+        : [],
+    [uncheckedAddresses]
+  )
+
+  const previousAddresses = usePrevious(addresses)
+  const unchanged = JSON.stringify(previousAddresses) === JSON.stringify(addresses)
 
   // add the listeners on mount, remove them on dismount
   useEffect(() => {
+    if (unchanged) return
     if (addresses.length === 0) return
     dispatch(startListeningForBalance({ addresses }))
-    return () => dispatch(stopListeningForBalance({ addresses }))
-  }, [addresses, dispatch])
+    if (addresses.length > 0) {
+      return () => dispatch(stopListeningForBalance({ addresses }))
+    }
+  }, [addresses, unchanged, dispatch])
 
   const rawBalanceMap = useSelector<AppState>(({ wallet: { balances } }) => balances)
 
@@ -57,15 +71,22 @@ export function useTokenBalances(
   const { chainId } = useWeb3React()
 
   const validTokens: Token[] = useMemo(() => tokens?.filter(t => isAddress(t?.address)) ?? [], [tokens])
+  const tokenAddresses: string[] = useMemo(() => validTokens.map(t => t.address).sort(), [validTokens])
+  const previousTokenAddresses = usePrevious(tokenAddresses)
+  const unchanged = JSON.stringify(tokenAddresses) === JSON.stringify(previousTokenAddresses)
 
   // keep the listeners up to date
   useEffect(() => {
-    if (address && validTokens.length > 0) {
-      const combos: TokenBalanceListenerKey[] = validTokens.map(token => ({ address, tokenAddress: token.address }))
-      dispatch(startListeningForTokenBalances(combos))
+    if (unchanged) return
+    if (!address) return
+    if (tokenAddresses.length === 0) return
+
+    const combos: TokenBalanceListenerKey[] = tokenAddresses.map(tokenAddress => ({ address, tokenAddress }))
+    dispatch(startListeningForTokenBalances(combos))
+    if (combos.length > 0) {
       return () => dispatch(stopListeningForTokenBalances(combos))
     }
-  }, [address, validTokens, dispatch])
+  }, [address, tokenAddresses, unchanged, dispatch])
 
   const rawBalanceMap = useSelector<AppState>(({ wallet: { balances } }) => balances)
 
