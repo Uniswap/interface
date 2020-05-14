@@ -32,7 +32,7 @@ import {
   useUserAddedTokens
 } from '../../state/user/hooks'
 import { useTranslation } from 'react-i18next'
-import { useToken, useAllTokens } from '../../contexts/Tokens'
+import { useToken, useAllTokens } from '../../hooks/Tokens'
 import QuestionHelper from '../Question'
 
 const TokenModalInfo = styled.div`
