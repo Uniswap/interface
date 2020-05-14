@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { parseEther, parseUnits } from '@ethersproject/units'
+import { parseUnits } from '@ethersproject/units'
 import { Fraction, JSBI, Percent, TokenAmount, TradeType, WETH } from '@uniswap/sdk'
 import React, { useContext, useEffect, useState } from 'react'
 import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
@@ -48,6 +48,7 @@ import {
   ALLOWED_SLIPPAGE_MEDIUM,
   DEFAULT_DEADLINE_FROM_NOW,
   INITIAL_ALLOWED_SLIPPAGE,
+  MIN_ETH,
   ROUTER_ADDRESS
 } from '../../constants'
 
@@ -96,9 +97,9 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
   const allBalances = useAllTokenBalancesTreatingWETHasETH()
 
   // get user- and token-specific lookup data
-  const userBalances = {
-    [Field.INPUT]: allBalances?.[tokens[Field.INPUT]?.address]?.raw,
-    [Field.OUTPUT]: allBalances?.[tokens[Field.OUTPUT]?.address]?.raw
+  const userBalances: { [field in Field]?: TokenAmount } = {
+    [Field.INPUT]: allBalances?.[account]?.[tokens[Field.INPUT]?.address],
+    [Field.OUTPUT]: allBalances?.[account]?.[tokens[Field.OUTPUT]?.address]
   }
 
   // parse the amount that the user typed
@@ -183,39 +184,19 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
 
   const { onMaxInput, onMaxOutput, onSwapTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
 
-  const MIN_ETHER: TokenAmount = chainId && new TokenAmount(WETH[chainId], JSBI.BigInt(parseEther('.01')))
-
-  let maxAmountInput: TokenAmount
-
-  try {
-    maxAmountInput =
-      !!userBalances[Field.INPUT] &&
-      !!tokens[Field.INPUT] &&
-      WETH[chainId] &&
-      JSBI.greaterThan(
-        userBalances[Field.INPUT].raw,
-        tokens[Field.INPUT].equals(WETH[chainId]) ? MIN_ETHER.raw : JSBI.BigInt(0)
-      )
-        ? tokens[Field.INPUT].equals(WETH[chainId])
-          ? userBalances[Field.INPUT].subtract(MIN_ETHER)
-          : userBalances[Field.INPUT]
-        : undefined
-  } catch {}
-
+  const maxAmountInput: TokenAmount =
+    !!userBalances[Field.INPUT] &&
+    !!tokens[Field.INPUT] &&
+    !!WETH[chainId] &&
+    userBalances[Field.INPUT].greaterThan(
+      new TokenAmount(tokens[Field.INPUT], tokens[Field.INPUT].equals(WETH[chainId]) ? MIN_ETH : '0')
+    )
+      ? tokens[Field.INPUT].equals(WETH[chainId])
+        ? userBalances[Field.INPUT].subtract(new TokenAmount(WETH[chainId], MIN_ETH))
+        : userBalances[Field.INPUT]
+      : undefined
   const atMaxAmountInput: boolean =
-    !!maxAmountInput && !!parsedAmounts[Field.INPUT]
-      ? JSBI.equal(maxAmountInput.raw, parsedAmounts[Field.INPUT].raw)
-      : undefined
-
-  const maxAmountOutput: TokenAmount =
-    !!userBalances[Field.OUTPUT] && JSBI.greaterThan(userBalances[Field.OUTPUT].raw, JSBI.BigInt(0))
-      ? userBalances[Field.OUTPUT]
-      : undefined
-
-  const atMaxAmountOutput: boolean =
-    !!maxAmountOutput && !!parsedAmounts[Field.OUTPUT]
-      ? JSBI.equal(maxAmountOutput.raw, parsedAmounts[Field.OUTPUT].raw)
-      : undefined
+    !!maxAmountInput && !!parsedAmounts[Field.INPUT] ? maxAmountInput.equalTo(parsedAmounts[Field.INPUT]) : undefined
 
   function getSwapType(): SwapType {
     if (tradeType === TradeType.EXACT_INPUT) {
@@ -373,11 +354,11 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
     const estimatedGas = await tokenContract.estimateGas.approve(ROUTER_ADDRESS, MaxUint256).catch(() => {
       // general fallback for tokens who restrict approval amounts
       useUserBalance = true
-      return tokenContract.estimateGas.approve(ROUTER_ADDRESS, userBalances[field])
+      return tokenContract.estimateGas.approve(ROUTER_ADDRESS, userBalances[field].raw.toString())
     })
 
     tokenContract
-      .approve(ROUTER_ADDRESS, useUserBalance ? userBalances[field] : MaxUint256, {
+      .approve(ROUTER_ADDRESS, useUserBalance ? userBalances[field].raw.toString() : MaxUint256, {
         gasLimit: calculateGasMargin(estimatedGas)
       })
       .then(response => {
@@ -424,7 +405,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
     if (
       userBalances[Field.INPUT] &&
       parsedAmounts[Field.INPUT] &&
-      JSBI.lessThan(userBalances[Field.INPUT].raw, parsedAmounts[Field.INPUT]?.raw)
+      userBalances[Field.INPUT].lessThan(parsedAmounts[Field.INPUT])
     ) {
       setInputError('Insufficient ' + tokens[Field.INPUT]?.symbol + ' balance')
       setIsValid(false)
@@ -582,7 +563,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
               <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
                 Liquidity Provider Fee
               </TYPE.black>
-              <QuestionHelper text="A portion of each trade (0.3%) goes to liquidity providers to incentivize liquidity on the protocol." />
+              <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
             </RowFixed>
             <TYPE.black fontSize={14}>
               {realizedLPFeeAmount ? realizedLPFeeAmount?.toSignificant(6) + ' ' + tokens[Field.INPUT]?.symbol : '-'}
@@ -700,11 +681,10 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
             field={Field.OUTPUT}
             value={formattedAmounts[Field.OUTPUT]}
             onUserInput={onUserInput}
-            onMax={() => {
-              maxAmountOutput && onMaxOutput(maxAmountOutput.toExact())
-            }}
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            onMax={() => {}}
             label={independentField === Field.INPUT && parsedAmounts[Field.OUTPUT] ? 'To (estimated)' : 'To'}
-            atMax={atMaxAmountOutput}
+            atMax={true}
             token={tokens[Field.OUTPUT]}
             onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
             advanced={advanced}
@@ -906,11 +886,11 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
                     <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
                       Liquidity Provider Fee
                     </TYPE.black>
-                    <QuestionHelper text="A portion of each trade (0.03%) goes to liquidity providers to incentivize liquidity on the protocol." />
+                    <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
                   </RowFixed>
                   <TYPE.black fontSize={14} color={theme.text1}>
                     {realizedLPFeeAmount
-                      ? realizedLPFeeAmount?.toSignificant(6) + ' ' + tokens[Field.INPUT]?.symbol
+                      ? realizedLPFeeAmount?.toSignificant(4) + ' ' + tokens[Field.INPUT]?.symbol
                       : '-'}
                   </TYPE.black>
                 </RowBetween>

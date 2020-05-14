@@ -1,4 +1,4 @@
-import { ChainId, Token, WETH } from '@uniswap/sdk'
+import { ChainId, Token, WETH, JSBI, Percent } from '@uniswap/sdk'
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
 export const V1_FACTORY_ADDRESS = '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95'
@@ -109,5 +109,7 @@ export const INITIAL_ALLOWED_SLIPPAGE = 50
 // 15 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
 // used for warning states based on slippage in bips
-export const ALLOWED_SLIPPAGE_MEDIUM = 100
-export const ALLOWED_SLIPPAGE_HIGH = 500
+export const ALLOWED_SLIPPAGE_MEDIUM: Percent = new Percent(JSBI.BigInt(100), JSBI.BigInt(10000))
+export const ALLOWED_SLIPPAGE_HIGH: Percent = new Percent(JSBI.BigInt(500), JSBI.BigInt(10000))
+// used to ensure the user doesn't send so much ETH so they end up with <.01
+export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
