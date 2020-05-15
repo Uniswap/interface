@@ -58,29 +58,38 @@ const StyledLink = styled.a`
   }
 `
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function Link({ onClick, as, ref, target, href, rel, ...rest }: HTMLProps<HTMLAnchorElement>) {
+export function Link({
+  onClick,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  as,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ref,
+  target = '_blank',
+  href,
+  rel = 'noopener noreferrer',
+  ...rest
+}: HTMLProps<HTMLAnchorElement>) {
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLAnchorElement>) => {
       onClick && onClick(event) // first call back into the original onClick
       if (!href) return
-      event.preventDefault()
-      // send a ReactGA event and then trigger a location change
-      ReactGA.outboundLink({ label: href }, () => {
-        window.location.href = href
-      })
+
+      // don't prevent default, don't redirect
+      if (target === '_blank') {
+        ReactGA.outboundLink({ label: href }, () => {
+          console.debug('Fired outbound link event', href)
+        })
+      } else {
+        event.preventDefault()
+        // send a ReactGA event and then trigger a location change
+        ReactGA.outboundLink({ label: href }, () => {
+          window.location.href = href
+        })
+      }
     },
-    [href, onClick]
+    [href, onClick, target]
   )
-  return (
-    <StyledLink
-      target={target ?? '_blank'}
-      rel={rel ?? 'noopener noreferrer'}
-      href={href}
-      onClick={handleClick}
-      {...rest}
-    />
-  )
+  return <StyledLink target={target} rel={rel} href={href} onClick={handleClick} {...rest} />
 }
 
 const rotate = keyframes`
