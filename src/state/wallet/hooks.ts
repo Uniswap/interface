@@ -33,18 +33,13 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [
     [uncheckedAddresses]
   )
 
-  const previousAddresses = usePrevious(addresses)
-  const unchanged = JSON.stringify(previousAddresses) === JSON.stringify(addresses)
-
   // add the listeners on mount, remove them on dismount
   useEffect(() => {
-    if (unchanged) return
     if (addresses.length === 0) return
+
     dispatch(startListeningForBalance({ addresses }))
-    if (addresses.length > 0) {
-      return () => dispatch(stopListeningForBalance({ addresses }))
-    }
-  }, [addresses, unchanged, dispatch])
+    return () => dispatch(stopListeningForBalance({ addresses }))
+  }, [addresses, dispatch])
 
   const rawBalanceMap = useSelector<AppState>(({ wallet: { balances } }) => balances)
 
@@ -72,21 +67,16 @@ export function useTokenBalances(
 
   const validTokens: Token[] = useMemo(() => tokens?.filter(t => isAddress(t?.address)) ?? [], [tokens])
   const tokenAddresses: string[] = useMemo(() => validTokens.map(t => t.address).sort(), [validTokens])
-  const previousTokenAddresses = usePrevious(tokenAddresses)
-  const unchanged = JSON.stringify(tokenAddresses) === JSON.stringify(previousTokenAddresses)
 
   // keep the listeners up to date
   useEffect(() => {
-    if (unchanged) return
     if (!address) return
     if (tokenAddresses.length === 0) return
 
     const combos: TokenBalanceListenerKey[] = tokenAddresses.map(tokenAddress => ({ address, tokenAddress }))
     dispatch(startListeningForTokenBalances(combos))
-    if (combos.length > 0) {
-      return () => dispatch(stopListeningForTokenBalances(combos))
-    }
-  }, [address, tokenAddresses, unchanged, dispatch])
+    return () => dispatch(stopListeningForTokenBalances(combos))
+  }, [address, tokenAddresses, dispatch])
 
   const rawBalanceMap = useSelector<AppState>(({ wallet: { balances } }) => balances)
 
