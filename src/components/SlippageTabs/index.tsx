@@ -123,14 +123,14 @@ const Percent = styled.div`
       `)};
 `
 
-interface SlippageTabs {
+export interface SlippageTabsProps {
   rawSlippage: number
   setRawSlippage: (rawSlippage: number) => void
   deadline: number
   setDeadline: (deadline: number) => void
 }
 
-export default function SlippageTabs({ setRawSlippage, rawSlippage, deadline, setDeadline }: SlippageTabs) {
+export default function SlippageTabs({ setRawSlippage, rawSlippage, deadline, setDeadline }: SlippageTabsProps) {
   const [activeIndex, setActiveIndex] = useState(2)
 
   const [warningType, setWarningType] = useState(WARNING_TYPE.none)

@@ -1,10 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import PriceBar, { warningServerity } from '../../components/swap/PriceBar'
-import { Fraction, JSBI, Percent, TokenAmount, WETH } from '@uniswap/sdk'
+import { JSBI, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useContext, useEffect, useState } from 'react'
-import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
+import { ArrowDown, ChevronDown, Repeat } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -19,18 +18,25 @@ import {
   ArrowWrapper,
   BottomGrouping,
   Dots,
-  ErrorText,
   FixedBottom,
-  SectionBreak,
   StyledBalanceMaxMini,
   TruncatedText,
   Wrapper
 } from '../../components/ExchangePage/styleds'
 import QuestionHelper from '../../components/Question'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
-import SlippageTabs from '../../components/SlippageTabs'
+import { AdvancedSwapDetails } from '../../components/swap/AdvancedSwapDetails'
+import FormattedPriceImpact from '../../components/swap/FormattedPriceImpact'
+import PriceBar, { warningServerity } from '../../components/swap/PriceBar'
 import { PriceSlippageWarningCard } from '../../components/swap/PriceSlippageWarningCard'
 import TokenLogo from '../../components/TokenLogo'
+import {
+  DEFAULT_DEADLINE_FROM_NOW,
+  INITIAL_ALLOWED_SLIPPAGE,
+  MIN_ETH,
+  ROUTER_ADDRESS,
+  V1_TRADE_LINK_THRESHOLD
+} from '../../constants'
 import { useTokenAllowance } from '../../data/Allowances'
 import { useV1TradeLinkIfBetter } from '../../data/V1'
 import { useTokenContract, useWeb3React } from '../../hooks'
@@ -46,16 +52,8 @@ import {
 import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
-import { basisPointsToPercent, calculateGasMargin, getRouterContract } from '../../utils'
-import {
-  ALLOWED_SLIPPAGE_HIGH,
-  ALLOWED_SLIPPAGE_MEDIUM,
-  DEFAULT_DEADLINE_FROM_NOW,
-  INITIAL_ALLOWED_SLIPPAGE,
-  MIN_ETH,
-  ROUTER_ADDRESS,
-  V1_TRADE_LINK_THRESHOLD
-} from '../../constants'
+import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../util/prices'
+import { calculateGasMargin, getRouterContract } from '../../utils'
 
 export default function Swap({ history, location: { search } }: RouteComponentProps) {
   useDefaultsFromURL(search)
@@ -100,8 +98,6 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
     parsedAmounts[independentField].greaterThan(JSBI.BigInt(0))
   const noRoute = !route
 
-  const slippageFromTrade: Percent | undefined = bestTrade?.slippage
-
   // check whether the user has approved the router on the input token
   const inputApproval: TokenAmount = useTokenAllowance(tokens[Field.INPUT], account, ROUTER_ADDRESS)
   const userHasApprovedRouter =
@@ -115,32 +111,6 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
     [independentField]: typedValue,
     [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(6) : ''
   }
-
-  // for each hop in our trade, take away the x*y=k price impact from 0.3% fees
-  // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
-  const baseFee = basisPointsToPercent(10000 - 30)
-  const realizedLPFee = !bestTrade
-    ? undefined
-    : basisPointsToPercent(10000).subtract(
-        bestTrade.route.path.length === 2
-          ? baseFee
-          : new Array(bestTrade.route.path.length - 2)
-              .fill(0)
-              .reduce<Fraction>((currentFee: Percent | Fraction): Fraction => currentFee.multiply(baseFee), baseFee)
-      )
-  // the x*y=k impact
-  const priceImpact =
-    slippageFromTrade && realizedLPFee
-      ? new Percent(
-          slippageFromTrade.subtract(realizedLPFee).numerator,
-          slippageFromTrade.subtract(realizedLPFee).denominator
-        )
-      : undefined
-
-  // the amount of the input that accrues to LPs
-  const realizedLPFeeAmount =
-    realizedLPFee &&
-    new TokenAmount(tokens[Field.INPUT], realizedLPFee.multiply(parsedAmounts[Field.INPUT].raw).quotient)
 
   const { onSwapTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
 
@@ -158,15 +128,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
   const atMaxAmountInput: boolean =
     !!maxAmountInput && !!parsedAmounts[Field.INPUT] ? maxAmountInput.equalTo(parsedAmounts[Field.INPUT]) : undefined
 
-  const slippageAdjustedAmounts: { [field: number]: TokenAmount } = {
-    [independentField]: parsedAmounts[independentField],
-    [dependentField]:
-      parsedAmounts[dependentField] && bestTrade
-        ? independentField === Field.INPUT
-          ? bestTrade.minimumAmountOut(basisPointsToPercent(allowedSlippage))
-          : bestTrade.maximumAmountIn(basisPointsToPercent(allowedSlippage))
-        : undefined
-  }
+  const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(bestTrade, allowedSlippage)
 
   // reset modal state when closed
   function resetModal() {
@@ -363,8 +325,12 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
     }
   }, [dependentField, independentField, parsedAmounts, tokens, route, bestTrade, tokenBalances, account])
 
+  const { priceImpactWithoutFee: priceImpactWithoutFee, realizedLPFee: realizedLPFee } = computeTradePriceBreakdown(
+    bestTrade
+  )
+
   // warnings on slippage
-  const severity = warningServerity(priceImpact)
+  const severity = warningServerity(priceImpactWithoutFee)
 
   function modalHeader() {
     return (
@@ -479,9 +445,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
               </TYPE.black>
               <QuestionHelper text="The difference between the market price and your price due to trade size." />
             </RowFixed>
-            <ErrorText fontWeight={500} fontSize={14} severity={severity}>
-              {priceImpact?.lessThan(new Percent('1', '10000')) ? '<0.01%' : `${priceImpact?.toFixed(2)}%` ?? '-'}
-            </ErrorText>
+            <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
           </RowBetween>
           <RowBetween>
             <RowFixed>
@@ -491,7 +455,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
               <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
             </RowFixed>
             <TYPE.black fontSize={14}>
-              {realizedLPFeeAmount ? realizedLPFeeAmount?.toSignificant(6) + ' ' + tokens[Field.INPUT]?.symbol : '-'}
+              {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + tokens[Field.INPUT]?.symbol : '-'}
             </TYPE.black>
           </RowBetween>
         </AutoColumn>
@@ -582,7 +546,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
         {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
           <Card padding={advanced ? '.25rem 1.25rem 0 .75rem' : '.25rem .7rem .25rem 1.25rem'} borderRadius={'20px'}>
             {advanced ? (
-              <PriceBar bestTrade={bestTrade} priceImpact={priceImpact} tokens={tokens} />
+              <PriceBar bestTrade={bestTrade} tokens={tokens} />
             ) : (
               <AutoColumn gap="4px">
                 <RowBetween align="center">
@@ -621,11 +585,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
                       Price Impact
                     </TYPE.main>
                     <RowFixed>
-                      <ErrorText fontWeight={500} fontSize={14} severity={severity}>
-                        {priceImpact?.lessThan(new Percent('1', '10000'))
-                          ? '<0.01%'
-                          : `${priceImpact?.toFixed(2)}%` ?? '-'}
-                      </ErrorText>
+                      <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
                       <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
                     </RowFixed>
                   </RowBetween>
@@ -709,88 +669,18 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
             </CursorPointer>
           )}
           {showAdvanced && (
-            <AutoColumn gap="md">
-              <CursorPointer>
-                <RowBetween onClick={() => setShowAdvanced(false)} padding={'8px 20px'}>
-                  <Text fontSize={16} color={theme.text2} fontWeight={500} style={{ userSelect: 'none' }}>
-                    Hide Advanced
-                  </Text>
-                  <ChevronUp color={theme.text2} />
-                </RowBetween>
-              </CursorPointer>
-              <SectionBreak />
-              <AutoColumn style={{ padding: '0 20px' }}>
-                <RowBetween>
-                  <RowFixed>
-                    <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-                      {independentField === Field.INPUT ? 'Minimum received' : 'Maximum sold'}
-                    </TYPE.black>
-                    <QuestionHelper
-                      text={
-                        independentField === Field.INPUT
-                          ? 'Price can change between when a transaction is submitted and when it is executed. This is the minimum amount you will receive. A worse rate will cause your transaction to revert.'
-                          : 'Price can change between when a transaction is submitted and when it is executed. This is the maximum amount you will pay. A worse rate will cause your transaction to revert.'
-                      }
-                    />
-                  </RowFixed>
-                  <RowFixed>
-                    <TYPE.black color={theme.text1} fontSize={14}>
-                      {independentField === Field.INPUT
-                        ? slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4) ?? '-'
-                        : slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4) ?? '-'}
-                    </TYPE.black>
-                    {parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.INPUT] && (
-                      <TYPE.black fontSize={14} marginLeft={'4px'} color={theme.text1}>
-                        {independentField === Field.INPUT
-                          ? parsedAmounts[Field.OUTPUT] && tokens[Field.OUTPUT]?.symbol
-                          : parsedAmounts[Field.INPUT] && tokens[Field.INPUT]?.symbol}
-                      </TYPE.black>
-                    )}
-                  </RowFixed>
-                </RowBetween>
-                <RowBetween>
-                  <RowFixed>
-                    <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-                      Price Impact
-                    </TYPE.black>
-                    <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
-                  </RowFixed>
-                  <ErrorText fontWeight={500} fontSize={14} severity={severity}>
-                    {priceImpact?.lessThan(new Percent('1', '10000')) ? '<0.01%' : `${priceImpact?.toFixed(2)}%` ?? '-'}
-                  </ErrorText>
-                </RowBetween>
-                <RowBetween>
-                  <RowFixed>
-                    <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-                      Liquidity Provider Fee
-                    </TYPE.black>
-                    <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
-                  </RowFixed>
-                  <TYPE.black fontSize={14} color={theme.text1}>
-                    {realizedLPFeeAmount
-                      ? realizedLPFeeAmount?.toSignificant(4) + ' ' + tokens[Field.INPUT]?.symbol
-                      : '-'}
-                  </TYPE.black>
-                </RowBetween>
-              </AutoColumn>
-              <SectionBreak />
-              <RowFixed padding={'0 20px'}>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  Set slippage tolerance
-                </TYPE.black>
-                <QuestionHelper text="Your transaction will revert if the execution price changes by more than this amount after you submit your trade." />
-              </RowFixed>
-              <SlippageTabs
-                rawSlippage={allowedSlippage}
-                setRawSlippage={setAllowedSlippage}
-                deadline={deadline}
-                setDeadline={setDeadline}
-              />
-            </AutoColumn>
+            <AdvancedSwapDetails
+              trade={bestTrade}
+              rawSlippage={allowedSlippage}
+              deadline={deadline}
+              onDismiss={() => setShowAdvanced(false)}
+              setDeadline={setDeadline}
+              setRawSlippage={setAllowedSlippage}
+            />
           )}
           <FixedBottom>
             <AutoColumn gap="lg">
-              {severity === 'high' && <PriceSlippageWarningCard priceSlippage={priceImpact} />}
+              {severity === 'high' && <PriceSlippageWarningCard priceSlippage={priceImpactWithoutFee} />}
             </AutoColumn>
           </FixedBottom>
         </AdvancedDropwdown>

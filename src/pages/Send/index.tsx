@@ -20,7 +20,6 @@ import {
   ArrowWrapper,
   BottomGrouping,
   Dots,
-  ErrorText,
   FixedBottom,
   InputGroup,
   SectionBreak,
@@ -31,6 +30,7 @@ import {
 import QuestionHelper from '../../components/Question'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import SlippageTabs from '../../components/SlippageTabs'
+import FormattedPriceImpact from '../../components/swap/FormattedPriceImpact'
 import PriceBar, { warningServerity } from '../../components/swap/PriceBar'
 import { PriceSlippageWarningCard } from '../../components/swap/PriceSlippageWarningCard'
 import TokenLogo from '../../components/TokenLogo'
@@ -590,9 +590,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
                 </TYPE.black>
                 <QuestionHelper text="The difference between the market price and your price due to trade size." />
               </RowFixed>
-              <ErrorText fontWeight={500} fontSize={14} severity={severity}>
-                {priceImpact?.lessThan(new Percent('1', '10000')) ? '<0.01%' : `${priceImpact?.toFixed(2)}%` ?? '-'}
-              </ErrorText>
+              <FormattedPriceImpact priceImpact={priceImpact} />
             </RowBetween>
             <RowBetween>
               <RowFixed>
@@ -806,7 +804,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
         {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
           <Card padding={advanced ? '.25rem 1.25rem 0 .75rem' : '.25rem .7rem .25rem 1.25rem'} borderRadius={'20px'}>
             {advanced ? (
-              <PriceBar priceImpact={priceImpact} tokens={tokens} bestTrade={bestTrade} />
+              <PriceBar tokens={tokens} bestTrade={bestTrade} />
             ) : (
               <AutoColumn gap="4px">
                 <RowBetween align="center">
@@ -845,11 +843,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
                       Price Impact
                     </TYPE.main>
                     <RowFixed>
-                      <ErrorText fontWeight={500} fontSize={14} severity={severity}>
-                        {priceImpact?.lessThan(new Percent('1', '10000'))
-                          ? '<0.01%'
-                          : `${priceImpact?.toFixed(2)}%` ?? '-'}
-                      </ErrorText>
+                      <FormattedPriceImpact priceImpact={priceImpact} />
                       <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
                     </RowFixed>
                   </RowBetween>
@@ -983,9 +977,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
                     </TYPE.black>
                     <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
                   </RowFixed>
-                  <ErrorText fontWeight={500} fontSize={14} severity={severity}>
-                    {priceImpact?.lessThan(new Percent('1', '10000')) ? '<0.01%' : `${priceImpact?.toFixed(2)}%` ?? '-'}
-                  </ErrorText>
+                  <FormattedPriceImpact priceImpact={priceImpact} />
                 </RowBetween>
                 <RowBetween>
                   <RowFixed>

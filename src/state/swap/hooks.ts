@@ -56,8 +56,8 @@ function tryParseAmount(value?: string, token?: Token): TokenAmount | undefined 
     const typedValueParsed = parseUnits(value, token.decimals).toString()
     if (typedValueParsed !== '0') return new TokenAmount(token, JSBI.BigInt(typedValueParsed))
   } catch (error) {
-    // should only fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
-    console.error(`Failed to parse input amount: "${value}"`, error)
+    // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
+    console.debug(`Failed to parse input amount: "${value}"`, error)
   }
 }
 

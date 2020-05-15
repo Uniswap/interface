@@ -16,16 +16,9 @@ export function warningServerity(priceImpact: Percent): 'low' | 'medium' | 'high
 
 const MIN_PERCENT_IMPACT = new Percent(JSBI.BigInt(1), JSBI.BigInt(10000))
 
-export default function PriceBar({
-  bestTrade,
-  tokens,
-  priceImpact
-}: {
-  bestTrade?: Trade
-  tokens: { [field in Field]?: Token }
-  priceImpact?: Percent
-}) {
+export default function PriceBar({ bestTrade, tokens }: { bestTrade?: Trade; tokens: { [field in Field]?: Token } }) {
   const theme = useContext(ThemeContext)
+  const priceImpact = bestTrade?.slippage
   return (
     <AutoRow justify="space-between">
       <RowFixed>Rate info</RowFixed>
