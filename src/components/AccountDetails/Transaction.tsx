@@ -48,6 +48,10 @@ const TransactionState = styled(Link)<{ pending: boolean; success?: boolean }>`
   }
 `
 
+const IconWrapper = styled.div`
+  flex-shrink: 0;
+`
+
 export default function Transaction({ hash }: { hash: string }) {
   const { chainId } = useWeb3React()
   const allTransactions = useAllTransactions()
@@ -62,7 +66,9 @@ export default function Transaction({ hash }: { hash: string }) {
     <TransactionWrapper>
       <TransactionState href={getEtherscanLink(chainId, hash, 'transaction')} pending={pending} success={success}>
         <TransactionStatusText>{summary ? summary : hash}</TransactionStatusText>
-        {pending ? <Spinner src={Circle} /> : success ? <Check size="16" /> : <Triangle size="16" />}
+        <IconWrapper>
+          {pending ? <Spinner src={Circle} /> : success ? <Check size="16" /> : <Triangle size="16" />}
+        </IconWrapper>
       </TransactionState>
     </TransactionWrapper>
   )
