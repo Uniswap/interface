@@ -3,7 +3,7 @@ import { JSBI, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAllTokens } from '../../hooks/Tokens'
-import { usePrevious, useWeb3React } from '../../hooks'
+import { useWeb3React } from '../../hooks'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import {
