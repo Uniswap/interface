@@ -143,8 +143,8 @@ export default function Send({ history, location: { search } }: RouteComponentPr
 
       ReactGA.event({
         category: 'Send',
-        label: recipient === account ? 'Swap w/o Send' : 'Swap w/ Send',
-        action: [bestTrade.inputAmount.token.symbol, bestTrade.outputAmount.token.symbol].join(';')
+        action: recipient === account ? 'Swap w/o Send' : 'Swap w/ Send',
+        label: [bestTrade.inputAmount.token.symbol, bestTrade.outputAmount.token.symbol].join(';')
       })
     })
   }

@@ -112,8 +112,8 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
 
       ReactGA.event({
         category: 'Swap',
-        label: 'Swap w/o Send',
-        action: [bestTrade.inputAmount.token.symbol, bestTrade.outputAmount.token.symbol].join(';')
+        action: 'Swap w/o Send',
+        label: [bestTrade.inputAmount.token.symbol, bestTrade.outputAmount.token.symbol].join('/')
       })
     })
   }

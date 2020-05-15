@@ -443,7 +443,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           ReactGA.event({
             category: 'Liquidity',
             action: 'Add',
-            label: [tokens[Field.INPUT]?.symbol, tokens[Field.OUTPUT]?.symbol].join(';')
+            label: [tokens[Field.INPUT]?.symbol, tokens[Field.OUTPUT]?.symbol].join('/')
           })
           setTxHash(response.hash)
           addTransaction(response, {
