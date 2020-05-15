@@ -8,7 +8,7 @@ import { Field } from '../state/swap/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { calculateGasMargin, getRouterContract, isAddress } from '../utils'
-import { useWeb3React } from './index'
+import { useENSName, useWeb3React } from './index'
 
 enum SwapType {
   EXACT_TOKENS_FOR_TOKENS,
@@ -50,6 +50,8 @@ export function useSwapCallback(
   const { account, chainId, library } = useWeb3React()
   const inputAllowance = useTokenAllowance(trade?.inputAmount?.token, account, ROUTER_ADDRESS)
   const addTransaction = useTransactionAdder()
+  const recipient = to ? isAddress(to) : account
+  const ensName = useENSName(to)
 
   return useMemo(() => {
     if (!trade) {
@@ -57,8 +59,6 @@ export function useSwapCallback(
     }
 
     const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage ?? INITIAL_ALLOWED_SLIPPAGE)
-
-    const recipient = to ? isAddress(to) : account
 
     if (!recipient) {
       return null
@@ -162,17 +162,34 @@ export function useSwapCallback(
           })
         )
         .then(response => {
-          addTransaction(response, {
-            summary:
-              'Swap ' +
-              slippageAdjustedAmounts[Field.INPUT].toSignificant(3) +
-              ' ' +
-              trade.inputAmount.token.symbol +
-              ' for ' +
-              slippageAdjustedAmounts[Field.OUTPUT].toSignificant(3) +
-              ' ' +
-              trade.outputAmount.token.symbol
-          })
+          if (recipient === account) {
+            addTransaction(response, {
+              summary:
+                'Swap ' +
+                slippageAdjustedAmounts[Field.INPUT].toSignificant(3) +
+                ' ' +
+                trade.inputAmount.token.symbol +
+                ' for ' +
+                slippageAdjustedAmounts[Field.OUTPUT].toSignificant(3) +
+                ' ' +
+                trade.outputAmount.token.symbol
+            })
+          } else {
+            addTransaction(response, {
+              summary:
+                'Swap ' +
+                slippageAdjustedAmounts[Field.INPUT].toSignificant(3) +
+                ' ' +
+                trade.inputAmount.token.symbol +
+                ' for ' +
+                slippageAdjustedAmounts[Field.OUTPUT].toSignificant(3) +
+                ' ' +
+                trade.outputAmount.token.symbol +
+                ' to ' +
+                (ensName ?? recipient)
+            })
+          }
+
           return response.hash
         })
         .catch(error => {
@@ -180,5 +197,5 @@ export function useSwapCallback(
           throw error
         })
     }
-  }, [account, allowedSlippage, addTransaction, chainId, deadline, inputAllowance, library, to, trade])
+  }, [account, allowedSlippage, addTransaction, chainId, deadline, inputAllowance, library, trade, ensName, recipient])
 }
