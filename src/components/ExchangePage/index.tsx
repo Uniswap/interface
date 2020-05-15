@@ -1064,7 +1064,13 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     fontWeight={500}
                     fontSize={14}
                     color={theme.text2}
-                    style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      display: 'flex',
+                      textAlign: 'right',
+                      paddingLeft: '10px'
+                    }}
                   >
                     {trade && showInverted
                       ? (trade?.executionPrice?.invert()?.toSignificant(6) ?? '') +

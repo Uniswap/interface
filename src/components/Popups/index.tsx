@@ -47,7 +47,8 @@ const FixedPopupColumn = styled(AutoColumn)`
   position: absolute;
   top: 112px;
   right: 1rem;
-  width: 220px;
+  max-width: 355px !important;
+  width: 100%;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
@@ -59,7 +60,7 @@ const Popup = styled.div`
   width: 100%;
   padding: 1em;
   box-sizing: border-box;
-  background-color: ${({ theme }) => theme.advancedBG};
+  background-color: ${({ theme }) => theme.bg1};
   position: relative;
   border-radius: 10px;
   padding: 20px;
