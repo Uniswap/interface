@@ -1,5 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { Contract } from '@ethersproject/contracts'
 import { JSBI, Percent, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useContext, useEffect, useState } from 'react'
 import { ArrowDown, ChevronDown, Repeat } from 'react-feather'
@@ -34,29 +32,27 @@ import { PriceSlippageWarningCard } from '../../components/swap/PriceSlippageWar
 import TokenLogo from '../../components/TokenLogo'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '../../constants'
 import { useV1TradeLinkIfBetter } from '../../data/V1'
-import { useTokenContract, useWeb3React } from '../../hooks'
+import { useWeb3React } from '../../hooks'
 import { useApproveCallback } from '../../hooks/useApproveCallback'
+import { useSendCallback } from '../../hooks/useSendCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useUserAdvanced, useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
-import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
+import { useHasPendingApproval } from '../../state/transactions/hooks'
 import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../util/prices'
-import { calculateGasMargin, getEtherscanLink, getSigner } from '../../utils'
+import { getEtherscanLink } from '../../utils'
 
 export default function Send({ history, location: { search } }: RouteComponentProps) {
   useDefaultsFromURL(search)
 
   // text translation
   // const { t } = useTranslation()
-  const { chainId, account, library } = useWeb3React()
+  const { chainId, account } = useWeb3React()
   const theme = useContext(ThemeContext)
-
-  // adding notifications on txns
-  const addTransaction = useTransactionAdder()
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
@@ -70,12 +66,9 @@ export default function Send({ history, location: { search } }: RouteComponentPr
   // trade details, check query params for initial state
   const { independentField, typedValue } = useSwapState()
   const { parsedAmounts, bestTrade, tokenBalances, tokens, error } = useDerivedSwapInfo()
-  const isValid = !error && !recipientError && bestTrade
+  const isSwapValid = !error && !recipientError && bestTrade
 
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
-
-  // token contracts for approvals and direct sends
-  const tokenContractInput: Contract = useTokenContract(tokens[Field.INPUT]?.address)
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
@@ -100,8 +93,8 @@ export default function Send({ history, location: { search } }: RouteComponentPr
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const doApprove = useApproveCallback(bestTrade, allowedSlippage)
-  const userHasApprovedRouter = !doApprove
+  const approveAmount = useApproveCallback(bestTrade, allowedSlippage)
+  const userHasApprovedRouter = !approveAmount
   const pendingApprovalInput = useHasPendingApproval(tokens[Field.INPUT]?.address)
 
   const formattedAmounts = {
@@ -147,61 +140,21 @@ export default function Send({ history, location: { search } }: RouteComponentPr
     setShowAdvanced(false)
   }
 
-  // function for a pure send
+  const sendCallback = useSendCallback(parsedAmounts?.[Field.INPUT], recipient)
+
   async function onSend() {
     setAttemptingTxn(true)
 
-    const signer = getSigner(library, account)
-    // get token contract if needed
-    let estimate: Function, method: Function, args
-    if (tokens[Field.INPUT].equals(WETH[chainId])) {
-      signer
-        .sendTransaction({ to: recipient.toString(), value: BigNumber.from(parsedAmounts[Field.INPUT].raw.toString()) })
-        .then(response => {
-          setTxHash(response.hash)
-          ReactGA.event({ category: 'ExchangePage', action: 'Send', label: tokens[Field.INPUT]?.symbol })
-          addTransaction(response, {
-            summary:
-              'Send ' +
-              parsedAmounts[Field.INPUT]?.toSignificant(3) +
-              ' ' +
-              tokens[Field.INPUT]?.symbol +
-              ' to ' +
-              recipient
-          })
-          setPendingConfirmation(false)
-        })
-        .catch(() => {
-          resetModal()
-          setShowConfirm(false)
-        })
-    } else {
-      estimate = tokenContractInput.estimateGas.transfer
-      method = tokenContractInput.transfer
-      args = [recipient, parsedAmounts[Field.INPUT].raw.toString()]
-      await estimate(...args)
-        .then(estimatedGasLimit =>
-          method(...args, {
-            gasLimit: calculateGasMargin(estimatedGasLimit)
-          }).then(response => {
-            setTxHash(response.hash)
-            addTransaction(response, {
-              summary:
-                'Send ' +
-                parsedAmounts[Field.INPUT]?.toSignificant(3) +
-                ' ' +
-                tokens[Field.INPUT]?.symbol +
-                ' to ' +
-                recipient
-            })
-            setPendingConfirmation(false)
-          })
-        )
-        .catch(() => {
-          resetModal()
-          setShowConfirm(false)
-        })
-    }
+    sendCallback()
+      .then(hash => {
+        setTxHash(hash)
+        ReactGA.event({ category: 'Swap', action: 'Send', label: tokens[Field.INPUT]?.symbol })
+        setPendingConfirmation(false)
+      })
+      .catch(() => {
+        resetModal()
+        setShowConfirm(false)
+      })
   }
 
   const swapCallback = useSwapCallback(bestTrade, allowedSlippage, deadline, recipient)
@@ -214,7 +167,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
 
       ReactGA.event({
         category: 'Swap',
-        label: 'Swap w/o Send',
+        label: recipient === account ? 'Swap w/o Send' : 'Swap w/ Send',
         action: [bestTrade.inputAmount.token.symbol, bestTrade.outputAmount.token.symbol].join(';')
       })
     })
@@ -648,8 +601,8 @@ export default function Send({ history, location: { search } }: RouteComponentPr
               Add liquidity now.
             </Link>
           </GreyCard>
-        ) : !userHasApprovedRouter && isValid ? (
-          <ButtonLight onClick={doApprove} disabled={pendingApprovalInput}>
+        ) : !userHasApprovedRouter ? (
+          <ButtonLight onClick={approveAmount} disabled={pendingApprovalInput}>
             {pendingApprovalInput ? (
               <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
             ) : (
@@ -662,8 +615,8 @@ export default function Send({ history, location: { search } }: RouteComponentPr
               setShowConfirm(true)
             }}
             id="send-button"
-            disabled={!isValid}
-            error={isValid && severity > 2}
+            disabled={!isSwapValid}
+            error={isSwapValid && severity > 2}
           >
             <Text fontSize={20} fontWeight={500}>
               {error || recipientError || `Send${severity > 2 ? ' Anyway' : ''}`}
