@@ -93,8 +93,8 @@ export default function Send({ history, location: { search } }: RouteComponentPr
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const approveAmount = useApproveCallback(bestTrade, allowedSlippage)
-  const userHasApprovedRouter = !approveAmount
+  const approveCallback = useApproveCallback(bestTrade, allowedSlippage)
+  const userHasApprovedRouter = !approveCallback
   const pendingApprovalInput = useHasPendingApproval(tokens[Field.INPUT]?.address)
 
   const formattedAmounts = {
@@ -140,23 +140,6 @@ export default function Send({ history, location: { search } }: RouteComponentPr
     setShowAdvanced(false)
   }
 
-  const sendCallback = useSendCallback(parsedAmounts?.[Field.INPUT], recipient)
-
-  async function onSend() {
-    setAttemptingTxn(true)
-
-    sendCallback()
-      .then(hash => {
-        setTxHash(hash)
-        ReactGA.event({ category: 'Swap', action: 'Send', label: tokens[Field.INPUT]?.symbol })
-        setPendingConfirmation(false)
-      })
-      .catch(() => {
-        resetModal()
-        setShowConfirm(false)
-      })
-  }
-
   const swapCallback = useSwapCallback(bestTrade, allowedSlippage, deadline, recipient)
 
   function onSwap() {
@@ -173,12 +156,30 @@ export default function Send({ history, location: { search } }: RouteComponentPr
     })
   }
 
+  const sendCallback = useSendCallback(parsedAmounts?.[Field.INPUT], recipient)
+  const isSendValid = sendCallback !== null && approveCallback === null
+
+  async function onSend() {
+    setAttemptingTxn(true)
+
+    sendCallback()
+      .then(hash => {
+        setTxHash(hash)
+        ReactGA.event({ category: 'Swap', action: 'Send', label: tokens[Field.INPUT]?.symbol })
+        setPendingConfirmation(false)
+      })
+      .catch(() => {
+        resetModal()
+        setShowConfirm(false)
+      })
+  }
+
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   const advanced = useUserAdvanced()
 
   // warnings on slippage
-  const severity = warningServerity(priceImpactWithoutFee)
+  const severity = !sendingWithSwap ? 0 : warningServerity(priceImpactWithoutFee)
 
   function modalHeader() {
     if (!sendingWithSwap) {
@@ -377,6 +378,11 @@ export default function Send({ history, location: { search } }: RouteComponentPr
       setENS(result.name)
     }
   }
+
+  const sendAmountError =
+    !sendingWithSwap && JSBI.equal(parsedAmounts?.[Field.INPUT]?.raw ?? JSBI.BigInt(0), JSBI.BigInt(0))
+      ? 'Enter an amount'
+      : null
 
   return (
     <Wrapper id="send-page">
@@ -602,7 +608,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
             </Link>
           </GreyCard>
         ) : !userHasApprovedRouter ? (
-          <ButtonLight onClick={approveAmount} disabled={pendingApprovalInput}>
+          <ButtonLight onClick={approveCallback} disabled={pendingApprovalInput}>
             {pendingApprovalInput ? (
               <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
             ) : (
@@ -615,11 +621,14 @@ export default function Send({ history, location: { search } }: RouteComponentPr
               setShowConfirm(true)
             }}
             id="send-button"
-            disabled={!isSwapValid}
-            error={isSwapValid && severity > 2}
+            disabled={(sendingWithSwap && !isSwapValid) || (!sendingWithSwap && !isSendValid)}
+            error={sendingWithSwap && isSwapValid && severity > 2}
           >
             <Text fontSize={20} fontWeight={500}>
-              {error || recipientError || `Send${severity > 2 ? ' Anyway' : ''}`}
+              {(sendingWithSwap ? error : null) ||
+                sendAmountError ||
+                recipientError ||
+                `Send${severity > 2 ? ' Anyway' : ''}`}
             </Text>
           </ButtonError>
         )}

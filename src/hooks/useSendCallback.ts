@@ -16,7 +16,7 @@ export function useSendCallback(amount?: TokenAmount, recipient?: string): null 
 
   return useMemo(() => {
     if (!amount) return null
-    if (amount.equalTo(JSBI.BigInt(0))) return null
+    if (!amount.greaterThan(JSBI.BigInt(0))) return null
     if (!isAddress(recipient)) return null
 
     const token = amount?.token
