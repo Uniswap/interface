@@ -149,7 +149,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
       setPendingConfirmation(false)
 
       ReactGA.event({
-        category: 'Swap',
+        category: 'Send',
         label: recipient === account ? 'Swap w/o Send' : 'Swap w/ Send',
         action: [bestTrade.inputAmount.token.symbol, bestTrade.outputAmount.token.symbol].join(';')
       })
