@@ -16,7 +16,6 @@ import QuestionHelper from '../../components/Question'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import FormattedPriceImpact from '../../components/swap/FormattedPriceImpact'
-import PriceBar, { warningServerity } from '../../components/swap/PriceBar'
 import {
   ArrowWrapper,
   BottomGrouping,
@@ -40,7 +39,7 @@ import { useHasPendingApproval } from '../../state/transactions/hooks'
 import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
-import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../util/prices'
+import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
 import { getEtherscanLink } from '../../utils'
 
 export default function Send({ history, location: { search } }: RouteComponentProps) {
@@ -527,57 +526,47 @@ export default function Send({ history, location: { search } }: RouteComponentPr
           />
         </AutoColumn>
         {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-          <Card
-            padding={showAdvanced ? '.25rem 1.25rem 0 .75rem' : '.25rem .7rem .25rem 1.25rem'}
-            borderRadius={'20px'}
-          >
-            {showAdvanced ? (
-              <PriceBar tokens={tokens} bestTrade={bestTrade} />
-            ) : (
-              <AutoColumn gap="4px">
-                <RowBetween align="center">
-                  <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                    Price
-                  </Text>
-                  <Text
-                    fontWeight={500}
-                    fontSize={14}
-                    color={theme.text2}
-                    style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
-                  >
-                    {bestTrade && showInverted
-                      ? (bestTrade?.executionPrice?.invert()?.toSignificant(6) ?? '') +
-                        ' ' +
-                        tokens[Field.INPUT]?.symbol +
-                        ' per ' +
-                        tokens[Field.OUTPUT]?.symbol
-                      : (bestTrade?.executionPrice?.toSignificant(6) ?? '') +
-                        ' ' +
-                        tokens[Field.OUTPUT]?.symbol +
-                        ' per ' +
-                        tokens[Field.INPUT]?.symbol}
-                    <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
-                      <Repeat size={14} />
-                    </StyledBalanceMaxMini>
-                  </Text>
-                </RowBetween>
+          <Card padding={'.25rem 1.25rem 0 .75rem'} borderRadius={'20px'}>
+            <AutoColumn gap="4px">
+              <RowBetween align="center">
+                <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                  Price
+                </Text>
+                <Text
+                  fontWeight={500}
+                  fontSize={14}
+                  color={theme.text2}
+                  style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
+                >
+                  {bestTrade && showInverted
+                    ? (bestTrade?.executionPrice?.invert()?.toSignificant(6) ?? '') +
+                      ' ' +
+                      tokens[Field.INPUT]?.symbol +
+                      ' per ' +
+                      tokens[Field.OUTPUT]?.symbol
+                    : (bestTrade?.executionPrice?.toSignificant(6) ?? '') +
+                      ' ' +
+                      tokens[Field.OUTPUT]?.symbol +
+                      ' per ' +
+                      tokens[Field.INPUT]?.symbol}
+                  <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
+                    <Repeat size={14} />
+                  </StyledBalanceMaxMini>
+                </Text>
+              </RowBetween>
 
-                {bestTrade && severity > 1 && (
-                  <RowBetween>
-                    <TYPE.main
-                      style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
-                      fontSize={14}
-                    >
-                      Price Impact
-                    </TYPE.main>
-                    <RowFixed>
-                      <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
-                      <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
-                    </RowFixed>
-                  </RowBetween>
-                )}
-              </AutoColumn>
-            )}
+              {bestTrade && severity > 1 && (
+                <RowBetween>
+                  <TYPE.main style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }} fontSize={14}>
+                    Price Impact
+                  </TYPE.main>
+                  <RowFixed>
+                    <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
+                    <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
+                  </RowFixed>
+                </RowBetween>
+              )}
+            </AutoColumn>
           </Card>
         )}
       </AutoColumn>

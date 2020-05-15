@@ -6,7 +6,7 @@ import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, ROUTER_ADDRESS } f
 import { useTokenAllowance } from '../data/Allowances'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { computeSlippageAdjustedAmounts } from '../util/prices'
+import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { calculateGasMargin, getRouterContract, isAddress } from '../utils'
 import { useWeb3React } from './index'
 

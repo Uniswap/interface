@@ -1,6 +1,7 @@
 import { Fraction, JSBI, Percent, TokenAmount, Trade } from '@uniswap/sdk'
+import { ALLOWED_SLIPPAGE_HIGH, ALLOWED_SLIPPAGE_LOW, ALLOWED_SLIPPAGE_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
-import { basisPointsToPercent } from '../utils'
+import { basisPointsToPercent } from './index'
 
 const BASE_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
 const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000))
@@ -45,4 +46,11 @@ export function computeSlippageAdjustedAmounts(
     [Field.INPUT]: trade?.maximumAmountIn(pct),
     [Field.OUTPUT]: trade?.minimumAmountOut(pct)
   }
+}
+
+export function warningServerity(priceImpact: Percent): 0 | 1 | 2 | 3 {
+  if (!priceImpact?.lessThan(ALLOWED_SLIPPAGE_HIGH)) return 3
+  if (!priceImpact?.lessThan(ALLOWED_SLIPPAGE_MEDIUM)) return 2
+  if (!priceImpact?.lessThan(ALLOWED_SLIPPAGE_LOW)) return 1
+  return 0
 }

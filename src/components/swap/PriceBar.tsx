@@ -2,18 +2,11 @@ import { JSBI, Percent, Token, Trade } from '@uniswap/sdk'
 import React, { useContext } from 'react'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { ALLOWED_SLIPPAGE_HIGH, ALLOWED_SLIPPAGE_LOW, ALLOWED_SLIPPAGE_MEDIUM } from '../../constants'
 import { Field } from '../../state/swap/actions'
+import { warningServerity } from '../../utils/prices'
 import { AutoColumn } from '../Column'
-import { ErrorText } from './styleds'
 import { AutoRow, RowFixed } from '../Row'
-
-export function warningServerity(priceImpact: Percent): 0 | 1 | 2 | 3 {
-  if (!priceImpact?.lessThan(ALLOWED_SLIPPAGE_HIGH)) return 3
-  if (!priceImpact?.lessThan(ALLOWED_SLIPPAGE_MEDIUM)) return 2
-  if (!priceImpact?.lessThan(ALLOWED_SLIPPAGE_LOW)) return 1
-  return 0
-}
+import { ErrorText } from './styleds'
 
 const MIN_PERCENT_IMPACT = new Percent(JSBI.BigInt(1), JSBI.BigInt(10000))
 

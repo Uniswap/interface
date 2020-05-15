@@ -1,8 +1,8 @@
 import { Percent } from '@uniswap/sdk'
 import React from 'react'
 import { ONE_BIPS } from '../../constants'
+import { warningServerity } from '../../utils/prices'
 import { ErrorText } from './styleds'
-import { warningServerity } from './PriceBar'
 
 export default function FormattedPriceImpact({ priceImpact }: { priceImpact?: Percent }) {
   return (
