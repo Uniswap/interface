@@ -320,11 +320,15 @@ export default function Send({ history, location: { search } }: RouteComponentPr
     : `Sending ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${tokens[Field.INPUT]?.symbol} to ${recipient}`
 
   const allBalances = useAllTokenBalancesTreatingWETHasETH() // only for 0 balance token selection behavior
+  const swapState = useSwapState()
   function _onTokenSelect(address: string) {
     // if no user balance - switch view to a send with swap
     const hasBalance = allBalances?.[account]?.[address]?.greaterThan('0') ?? false
     if (!hasBalance) {
-      onTokenSelection(Field.INPUT, null)
+      onTokenSelection(
+        Field.INPUT,
+        swapState[Field.INPUT]?.address === address ? null : swapState[Field.INPUT]?.address
+      )
       onTokenSelection(Field.OUTPUT, address)
       setSendingWithSwap(true)
     } else {
