@@ -123,8 +123,8 @@ interface CurrencyInputPanelProps {
   value: string
   field: string
   onUserInput: (field: string, val: string) => void
-  onMax: () => void
-  atMax: boolean
+  onMax?: () => void
+  showMaxButton: boolean
   label?: string
   urlAddedTokens?: Token[]
   onTokenSelection?: (tokenAddress: string) => void
@@ -145,7 +145,7 @@ export default function CurrencyInputPanel({
   field,
   onUserInput,
   onMax,
-  atMax,
+  showMaxButton,
   label = 'Input',
   urlAddedTokens = [], // used
   onTokenSelection = null,
@@ -204,7 +204,7 @@ export default function CurrencyInputPanel({
                   onUserInput(field, val)
                 }}
               />
-              {account && !advanced && !!token?.address && !atMax && label !== 'To' && (
+              {account && !advanced && !!token?.address && showMaxButton && label !== 'To' && (
                 <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
               )}
             </>

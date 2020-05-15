@@ -680,7 +680,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
               value={formattedAmounts[Field.LIQUIDITY]}
               onUserInput={onUserInput}
               onMax={onMax}
-              atMax={atMaxAmount}
+              showMaxButton={!atMaxAmount}
               disableTokenSelect
               token={pair?.liquidityToken}
               isExchange={true}
@@ -695,7 +695,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
               value={formattedAmounts[Field.TOKEN0]}
               onUserInput={onUserInput}
               onMax={onMax}
-              atMax={atMaxAmount}
+              showMaxButton={!atMaxAmount}
               token={tokens[Field.TOKEN0]}
               label={'Output'}
               disableTokenSelect
@@ -709,7 +709,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
               value={formattedAmounts[Field.TOKEN1]}
               onUserInput={onUserInput}
               onMax={onMax}
-              atMax={atMaxAmount}
+              showMaxButton={!atMaxAmount}
               token={tokens[Field.TOKEN1]}
               label={'Output'}
               disableTokenSelect

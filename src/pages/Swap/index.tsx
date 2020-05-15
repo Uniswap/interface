@@ -1,8 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { parseUnits } from '@ethersproject/units'
-import { Fraction, JSBI, Percent, TokenAmount, TradeType, WETH } from '@uniswap/sdk'
+import { Fraction, JSBI, Percent, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useContext, useEffect, useState } from 'react'
 import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -33,13 +32,16 @@ import TokenLogo from '../../components/TokenLogo'
 import { useTokenAllowance } from '../../data/Allowances'
 import { useV1TradeLinkIfBetter } from '../../data/V1'
 import { useTokenContract, useWeb3React } from '../../hooks'
-import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
-import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { useUserAdvanced, useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
-import { SwapType, useDefaultsFromURL, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
+import {
+  SwapType,
+  useDefaultsFromURL,
+  useDerivedSwapInfo,
+  useSwapActionHandlers,
+  useSwapState
+} from '../../state/swap/hooks'
 import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
-import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
 import { basisPointsToPercent, calculateGasMargin, getRouterContract } from '../../utils'
@@ -50,7 +52,8 @@ import {
   DEFAULT_DEADLINE_FROM_NOW,
   INITIAL_ALLOWED_SLIPPAGE,
   MIN_ETH,
-  ROUTER_ADDRESS
+  ROUTER_ADDRESS,
+  V1_TRADE_LINK_THRESHOLD
 } from '../../constants'
 
 export default function Swap({ history, location: { search } }: RouteComponentProps) {
@@ -66,18 +69,9 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
 
-  // trade details, check query params for initial state
-  const state = useSwapState()
-
-  const { independentField, typedValue, ...fieldData } = state
+  const { independentField, typedValue } = useSwapState()
+  const { bestTrade, tokenBalances, parsedAmounts, swapType, tokens } = useDerivedSwapInfo()
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
-  const tradeType: TradeType = independentField === Field.INPUT ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT
-  const [tradeError, setTradeError] = useState<string>('') // error for things like reserve size or route
-
-  const tokens = {
-    [Field.INPUT]: useTokenByAddressAndAutomaticallyAdd(fieldData[Field.INPUT].address),
-    [Field.OUTPUT]: useTokenByAddressAndAutomaticallyAdd(fieldData[Field.OUTPUT].address)
-  }
 
   // token contracts for approvals and direct sends
   const tokenContractInput: Contract = useTokenContract(tokens[Field.INPUT]?.address)
@@ -94,43 +88,10 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
   const [deadline, setDeadline] = useState<number>(DEFAULT_DEADLINE_FROM_NOW)
   const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
 
-  // all balances for detecting a swap with send
-  const allBalances = useAllTokenBalancesTreatingWETHasETH()
-
-  // get user- and token-specific lookup data
-  const userBalances: { [field in Field]?: TokenAmount } = {
-    [Field.INPUT]: allBalances?.[account]?.[tokens[Field.INPUT]?.address],
-    [Field.OUTPUT]: allBalances?.[account]?.[tokens[Field.OUTPUT]?.address]
-  }
-
-  // parse the amount that the user typed
-  const parsedAmounts: { [field: number]: TokenAmount } = {}
-  if (typedValue !== '' && typedValue !== '.' && tokens[independentField]) {
-    try {
-      const typedValueParsed = parseUnits(typedValue, tokens[independentField].decimals).toString()
-      if (typedValueParsed !== '0')
-        parsedAmounts[independentField] = new TokenAmount(tokens[independentField], typedValueParsed)
-    } catch (error) {
-      // should only fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
-      console.error(error)
-    }
-  }
-
-  const bestTradeExactIn = useTradeExactIn(
-    tradeType === TradeType.EXACT_INPUT ? parsedAmounts[independentField] : null,
-    tokens[Field.OUTPUT]
-  )
-  const bestTradeExactOut = useTradeExactOut(
-    tokens[Field.INPUT],
-    tradeType === TradeType.EXACT_OUTPUT ? parsedAmounts[independentField] : null
-  )
-
-  const trade = tradeType === TradeType.EXACT_INPUT ? bestTradeExactIn : bestTradeExactOut
-
   // return link to the appropriate v1 pair if the slippage on v1 is lower
-  const v1TradeLinkIfBetter = useV1TradeLinkIfBetter(trade, new Percent('50', '10000'))
+  const v1TradeLinkIfBetter = useV1TradeLinkIfBetter(bestTrade, V1_TRADE_LINK_THRESHOLD)
 
-  const route = trade?.route
+  const route = bestTrade?.route
   const userHasSpecifiedInputOutput =
     !!tokens[Field.INPUT] &&
     !!tokens[Field.OUTPUT] &&
@@ -138,10 +99,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
     parsedAmounts[independentField].greaterThan(JSBI.BigInt(0))
   const noRoute = !route
 
-  const slippageFromTrade: Percent | undefined = trade?.slippage
-
-  if (trade)
-    parsedAmounts[dependentField] = tradeType === TradeType.EXACT_INPUT ? trade.outputAmount : trade.inputAmount
+  const slippageFromTrade: Percent | undefined = bestTrade?.slippage
 
   // check whether the user has approved the router on the input token
   const inputApproval: TokenAmount = useTokenAllowance(tokens[Field.INPUT], account, ROUTER_ADDRESS)
@@ -160,12 +118,12 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
   // for each hop in our trade, take away the x*y=k price impact from 0.3% fees
   // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
   const baseFee = basisPointsToPercent(10000 - 30)
-  const realizedLPFee = !trade
+  const realizedLPFee = !bestTrade
     ? undefined
     : basisPointsToPercent(10000).subtract(
-        trade.route.path.length === 2
+        bestTrade.route.path.length === 2
           ? baseFee
-          : new Array(trade.route.path.length - 2)
+          : new Array(bestTrade.route.path.length - 2)
               .fill(0)
               .reduce<Fraction>((currentFee: Percent | Fraction): Fraction => currentFee.multiply(baseFee), baseFee)
       )
@@ -183,49 +141,29 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
     realizedLPFee &&
     new TokenAmount(tokens[Field.INPUT], realizedLPFee.multiply(parsedAmounts[Field.INPUT].raw).quotient)
 
-  const { onMaxInput, onSwapTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
+  const { onSwapTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
 
   const maxAmountInput: TokenAmount =
-    !!userBalances[Field.INPUT] &&
+    !!tokenBalances[Field.INPUT] &&
     !!tokens[Field.INPUT] &&
     !!WETH[chainId] &&
-    userBalances[Field.INPUT].greaterThan(
+    tokenBalances[Field.INPUT].greaterThan(
       new TokenAmount(tokens[Field.INPUT], tokens[Field.INPUT].equals(WETH[chainId]) ? MIN_ETH : '0')
     )
       ? tokens[Field.INPUT].equals(WETH[chainId])
-        ? userBalances[Field.INPUT].subtract(new TokenAmount(WETH[chainId], MIN_ETH))
-        : userBalances[Field.INPUT]
+        ? tokenBalances[Field.INPUT].subtract(new TokenAmount(WETH[chainId], MIN_ETH))
+        : tokenBalances[Field.INPUT]
       : undefined
   const atMaxAmountInput: boolean =
     !!maxAmountInput && !!parsedAmounts[Field.INPUT] ? maxAmountInput.equalTo(parsedAmounts[Field.INPUT]) : undefined
 
-  function getSwapType(): SwapType {
-    if (tradeType === TradeType.EXACT_INPUT) {
-      if (tokens[Field.INPUT].equals(WETH[chainId])) {
-        return SwapType.EXACT_ETH_FOR_TOKENS
-      } else if (tokens[Field.OUTPUT].equals(WETH[chainId])) {
-        return SwapType.EXACT_TOKENS_FOR_ETH
-      } else {
-        return SwapType.EXACT_TOKENS_FOR_TOKENS
-      }
-    } else if (tradeType === TradeType.EXACT_OUTPUT) {
-      if (tokens[Field.INPUT].equals(WETH[chainId])) {
-        return SwapType.ETH_FOR_EXACT_TOKENS
-      } else if (tokens[Field.OUTPUT].equals(WETH[chainId])) {
-        return SwapType.TOKENS_FOR_EXACT_ETH
-      } else {
-        return SwapType.TOKENS_FOR_EXACT_TOKENS
-      }
-    }
-  }
-
   const slippageAdjustedAmounts: { [field: number]: TokenAmount } = {
     [independentField]: parsedAmounts[independentField],
     [dependentField]:
-      parsedAmounts[dependentField] && trade
-        ? tradeType === TradeType.EXACT_INPUT
-          ? trade.minimumAmountOut(basisPointsToPercent(allowedSlippage))
-          : trade.maximumAmountIn(basisPointsToPercent(allowedSlippage))
+      parsedAmounts[dependentField] && bestTrade
+        ? independentField === Field.INPUT
+          ? bestTrade.minimumAmountOut(basisPointsToPercent(allowedSlippage))
+          : bestTrade.maximumAmountIn(basisPointsToPercent(allowedSlippage))
         : undefined
   }
 
@@ -252,7 +190,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
     let estimate: Function, method: Function, args: any[], value: BigNumber
     const deadlineFromNow: number = Math.ceil(Date.now() / 1000) + deadline
 
-    switch (getSwapType()) {
+    switch (swapType) {
       case SwapType.EXACT_TOKENS_FOR_TOKENS:
         estimate = routerContract.estimateGas.swapExactTokensForTokens
         method = routerContract.swapExactTokensForTokens
@@ -355,11 +293,11 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
     const estimatedGas = await tokenContract.estimateGas.approve(ROUTER_ADDRESS, MaxUint256).catch(() => {
       // general fallback for tokens who restrict approval amounts
       useUserBalance = true
-      return tokenContract.estimateGas.approve(ROUTER_ADDRESS, userBalances[field].raw.toString())
+      return tokenContract.estimateGas.approve(ROUTER_ADDRESS, tokenBalances[field].raw.toString())
     })
 
     tokenContract
-      .approve(ROUTER_ADDRESS, useUserBalance ? userBalances[field].raw.toString() : MaxUint256, {
+      .approve(ROUTER_ADDRESS, useUserBalance ? tokenBalances[field].raw.toString() : MaxUint256, {
         gasLimit: calculateGasMargin(estimatedGas)
       })
       .then(response => {
@@ -385,7 +323,6 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
     setGeneralError(null)
     setInputError(null)
     setOutputError(null)
-    setTradeError(null)
     setIsValid(true)
 
     if (!account) {
@@ -404,9 +341,9 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
     }
 
     if (
-      userBalances[Field.INPUT] &&
+      tokenBalances[Field.INPUT] &&
       parsedAmounts[Field.INPUT] &&
-      userBalances[Field.INPUT].lessThan(parsedAmounts[Field.INPUT])
+      tokenBalances[Field.INPUT].lessThan(parsedAmounts[Field.INPUT])
     ) {
       setInputError('Insufficient ' + tokens[Field.INPUT]?.symbol + ' balance')
       setIsValid(false)
@@ -414,8 +351,8 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
 
     // check for null trade entitiy if not enough balance for trade
     if (
-      userBalances[Field.INPUT] &&
-      !trade &&
+      tokenBalances[Field.INPUT] &&
+      !bestTrade &&
       parsedAmounts[independentField] &&
       !parsedAmounts[dependentField] &&
       tokens[dependentField]
@@ -423,7 +360,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
       setInputError('Insufficient ' + tokens[Field.INPUT]?.symbol + ' balance')
       setIsValid(false)
     }
-  }, [dependentField, independentField, parsedAmounts, tokens, route, trade, userBalances, account])
+  }, [dependentField, independentField, parsedAmounts, tokens, route, bestTrade, tokenBalances, account])
 
   // warnings on slippage
   const warningLow = !slippageFromTrade?.lessThan(ALLOWED_SLIPPAGE_LOW)
@@ -496,13 +433,13 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
                 color={theme.text1}
                 style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
               >
-                {trade && showInverted
-                  ? (trade?.executionPrice?.invert()?.toSignificant(6) ?? '') +
+                {bestTrade && showInverted
+                  ? (bestTrade?.executionPrice?.invert()?.toSignificant(6) ?? '') +
                     ' ' +
                     tokens[Field.INPUT]?.symbol +
                     ' / ' +
                     tokens[Field.OUTPUT]?.symbol
-                  : (trade?.executionPrice?.toSignificant(6) ?? '') +
+                  : (bestTrade?.executionPrice?.toSignificant(6) ?? '') +
                     ' ' +
                     tokens[Field.OUTPUT]?.symbol +
                     ' / ' +
@@ -588,7 +525,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
         <RowFixed>Rate info</RowFixed>
         <AutoColumn justify="center">
           <Text fontWeight={500} fontSize={16} color={theme.text2}>
-            {trade ? `${trade.executionPrice.toSignificant(6)} ` : '-'}
+            {bestTrade ? `${bestTrade.executionPrice.toSignificant(6)} ` : '-'}
           </Text>
           <Text fontWeight={500} fontSize={16} color={theme.text3} pt={1}>
             {tokens[Field.OUTPUT]?.symbol} / {tokens[Field.INPUT]?.symbol}
@@ -596,7 +533,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
         </AutoColumn>
         <AutoColumn justify="center">
           <Text fontWeight={500} fontSize={16} color={theme.text2}>
-            {trade ? `${trade.executionPrice.invert().toSignificant(6)} ` : '-'}
+            {bestTrade ? `${bestTrade.executionPrice.invert().toSignificant(6)} ` : '-'}
           </Text>
           <Text fontWeight={500} fontSize={16} color={theme.text3} pt={1}>
             {tokens[Field.INPUT]?.symbol} / {tokens[Field.OUTPUT]?.symbol}
@@ -646,14 +583,14 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
         <>
           <CurrencyInputPanel
             field={Field.INPUT}
-            label={independentField === Field.OUTPUT && parsedAmounts[Field.INPUT] ? 'From (estimated)' : 'From'}
+            label={independentField === Field.OUTPUT ? 'From (estimated)' : 'From'}
             value={formattedAmounts[Field.INPUT]}
-            atMax={atMaxAmountInput}
+            showMaxButton={!atMaxAmountInput}
             token={tokens[Field.INPUT]}
             advanced={advanced}
             onUserInput={onUserInput}
             onMax={() => {
-              maxAmountInput && onMaxInput(maxAmountInput.toExact())
+              maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
             }}
             onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
             otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
@@ -677,9 +614,8 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
             value={formattedAmounts[Field.OUTPUT]}
             onUserInput={onUserInput}
             // eslint-disable-next-line @typescript-eslint/no-empty-function
-            onMax={() => {}}
-            label={independentField === Field.INPUT && parsedAmounts[Field.OUTPUT] ? 'To (estimated)' : 'To'}
-            atMax={true}
+            label={independentField === Field.INPUT ? 'To (estimated)' : 'To'}
+            showMaxButton={false}
             token={tokens[Field.OUTPUT]}
             onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
             advanced={advanced}
@@ -704,13 +640,13 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
                     color={theme.text2}
                     style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
                   >
-                    {trade && showInverted
-                      ? (trade?.executionPrice?.invert()?.toSignificant(6) ?? '') +
+                    {bestTrade && showInverted
+                      ? (bestTrade?.executionPrice?.invert()?.toSignificant(6) ?? '') +
                         ' ' +
                         tokens[Field.INPUT]?.symbol +
                         ' per ' +
                         tokens[Field.OUTPUT]?.symbol
-                      : (trade?.executionPrice?.toSignificant(6) ?? '') +
+                      : (bestTrade?.executionPrice?.toSignificant(6) ?? '') +
                         ' ' +
                         tokens[Field.OUTPUT]?.symbol +
                         ' per ' +
@@ -721,7 +657,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
                   </Text>
                 </RowBetween>
 
-                {trade && (warningHigh || warningMedium) && (
+                {bestTrade && (warningHigh || warningMedium) && (
                   <RowBetween>
                     <TYPE.main
                       style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
@@ -788,7 +724,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
             error={!!warningHigh}
           >
             <Text fontSize={20} fontWeight={500}>
-              {generalError || inputError || outputError || tradeError || `Swap${warningHigh ? ' Anyway' : ''}`}
+              {generalError || inputError || outputError || `Swap${warningHigh ? ' Anyway' : ''}`}
             </Text>
           </ButtonError>
         )}

@@ -114,3 +114,4 @@ export const ALLOWED_SLIPPAGE_MEDIUM: Percent = new Percent(JSBI.BigInt(500), JS
 export const ALLOWED_SLIPPAGE_HIGH: Percent = new Percent(JSBI.BigInt(1000), JSBI.BigInt(10000))
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
+export const V1_TRADE_LINK_THRESHOLD = new Percent(JSBI.BigInt(50), JSBI.BigInt(10000))

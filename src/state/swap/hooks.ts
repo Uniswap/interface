@@ -1,8 +1,12 @@
-import { Trade, TradeType, WETH } from '@uniswap/sdk'
+import { parseUnits } from '@ethersproject/units'
+import { TokenAmount, Trade, Token, JSBI, WETH } from '@uniswap/sdk'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useWeb3React } from '../../hooks'
+import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
+import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { AppDispatch, AppState } from '../index'
+import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
 import { Field, selectToken, setDefaultsFromURL, switchTokens, typeInput } from './actions'
 
 export function useSwapState(): AppState['swap'] {
@@ -13,7 +17,6 @@ export function useSwapActionHandlers(): {
   onTokenSelection: (field: Field, address: string) => void
   onSwapTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
-  onMaxInput: (typedValue: string) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
   const onTokenSelection = useCallback(
@@ -39,24 +42,23 @@ export function useSwapActionHandlers(): {
     [dispatch]
   )
 
-  const onMaxInput = useCallback(
-    (typedValue: string) => {
-      dispatch(typeInput({ field: Field.INPUT, typedValue }))
-    },
-    [dispatch]
-  )
-
   return {
-    onMaxInput,
     onSwapTokens,
     onTokenSelection,
     onUserInput
   }
 }
 
-// from the current swap inputs, compute the best trade and return it.
-export function useSwapInfo(): { bestTrade?: Trade } {
-  return {}
+// try to parse a user entered amount for a given token
+function tryParseAmount(value?: string, token?: Token): TokenAmount | undefined {
+  if (!value || !token) return
+  try {
+    const typedValueParsed = parseUnits(value, token.decimals).toString()
+    if (typedValueParsed !== '0') return new TokenAmount(token, JSBI.BigInt(typedValueParsed))
+  } catch (error) {
+    // should only fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
+    console.error(`Failed to parse input amount: "${value}"`, error)
+  }
 }
 
 export enum SwapType {
@@ -66,6 +68,74 @@ export enum SwapType {
   TOKENS_FOR_EXACT_TOKENS,
   TOKENS_FOR_EXACT_ETH,
   ETH_FOR_EXACT_TOKENS
+}
+
+function getSwapType(tokens: { [field in Field]?: Token }, isExactIn: boolean, chainId: number): SwapType {
+  if (isExactIn) {
+    if (tokens[Field.INPUT]?.equals(WETH[chainId])) {
+      return SwapType.EXACT_ETH_FOR_TOKENS
+    } else if (tokens[Field.OUTPUT]?.equals(WETH[chainId])) {
+      return SwapType.EXACT_TOKENS_FOR_ETH
+    } else {
+      return SwapType.EXACT_TOKENS_FOR_TOKENS
+    }
+  } else {
+    if (tokens[Field.INPUT]?.equals(WETH[chainId])) {
+      return SwapType.ETH_FOR_EXACT_TOKENS
+    } else if (tokens[Field.OUTPUT]?.equals(WETH[chainId])) {
+      return SwapType.TOKENS_FOR_EXACT_ETH
+    } else {
+      return SwapType.TOKENS_FOR_EXACT_TOKENS
+    }
+  }
+}
+
+// from the current swap inputs, compute the best trade and return it.
+export function useDerivedSwapInfo(): {
+  tokens: { [field in Field]?: Token }
+  tokenBalances: { [field in Field]?: TokenAmount }
+  parsedAmounts: { [field in Field]?: TokenAmount }
+  bestTrade?: Trade
+  swapType: SwapType
+} {
+  const { account, chainId } = useWeb3React()
+
+  const {
+    independentField,
+    typedValue,
+    [Field.INPUT]: { address: tokenInAddress },
+    [Field.OUTPUT]: { address: tokenOutAddress }
+  } = useSwapState()
+
+  const tokenIn = useTokenByAddressAndAutomaticallyAdd(tokenInAddress)
+  const tokenOut = useTokenByAddressAndAutomaticallyAdd(tokenOutAddress)
+
+  const tokenBalances = useTokenBalancesTreatWETHAsETH(account, [tokenIn, tokenOut])
+
+  const isExactIn: boolean = independentField === Field.INPUT
+  const amount = tryParseAmount(typedValue, isExactIn ? tokenIn : tokenOut)
+
+  const bestTradeExactIn = useTradeExactIn(isExactIn ? amount : null, tokenOut)
+  const bestTradeExactOut = useTradeExactOut(tokenIn, !isExactIn ? amount : null)
+
+  const bestTrade = isExactIn ? bestTradeExactIn : bestTradeExactOut
+
+  return {
+    tokens: {
+      [Field.INPUT]: tokenIn,
+      [Field.OUTPUT]: tokenOut
+    },
+    tokenBalances: {
+      [Field.INPUT]: tokenBalances?.[tokenIn?.address],
+      [Field.OUTPUT]: tokenBalances?.[tokenOut?.address]
+    },
+    parsedAmounts: {
+      [Field.INPUT]: isExactIn ? amount : bestTrade?.inputAmount,
+      [Field.OUTPUT]: isExactIn ? bestTrade?.outputAmount : amount
+    },
+    bestTrade,
+    swapType: getSwapType({ [Field.INPUT]: tokenIn, [Field.OUTPUT]: tokenOut }, isExactIn, chainId)
+  }
 }
 
 // updates the swap state to use the defaults for a given network whenever the query

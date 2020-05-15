@@ -691,7 +691,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           onMax={() => {
             maxAmountInput && onMax(maxAmountInput.toExact(), Field.INPUT)
           }}
-          atMax={atMaxAmountInput}
+          showMaxButton={!atMaxAmountInput}
           token={tokens[Field.INPUT]}
           onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
           pair={pair}
@@ -708,7 +708,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           onMax={() => {
             maxAmountOutput && onMax(maxAmountOutput?.toExact(), Field.OUTPUT)
           }}
-          atMax={atMaxAmountOutput}
+          showMaxButton={!atMaxAmountOutput}
           token={tokens[Field.OUTPUT]}
           onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
           pair={pair}
