@@ -31,20 +31,13 @@ import {
 import QuestionHelper from '../../components/Question'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import SlippageTabs from '../../components/SlippageTabs'
+import PriceBar, { warningServerity } from '../../components/swap/PriceBar'
+import { PriceSlippageWarningCard } from '../../components/swap/PriceSlippageWarningCard'
 import TokenLogo from '../../components/TokenLogo'
-import {
-  ALLOWED_SLIPPAGE_HIGH,
-  ALLOWED_SLIPPAGE_LOW,
-  ALLOWED_SLIPPAGE_MEDIUM,
-  DEFAULT_DEADLINE_FROM_NOW,
-  INITIAL_ALLOWED_SLIPPAGE,
-  MIN_ETH,
-  ROUTER_ADDRESS
-} from '../../constants'
+import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH, ROUTER_ADDRESS } from '../../constants'
 import { useTokenAllowance } from '../../data/Allowances'
 import { useV1TradeLinkIfBetter } from '../../data/V1'
 import { useTokenContract, useWeb3React } from '../../hooks'
-import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useUserAdvanced, useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import {
@@ -80,10 +73,9 @@ export default function Send({ history, location: { search } }: RouteComponentPr
   const [ENS, setENS] = useState<string>('')
 
   // trade details, check query params for initial state
-  const state = useSwapState()
+  const { independentField, typedValue } = useSwapState()
   const { swapType, parsedAmounts, bestTrade, tokenBalances, tokens } = useDerivedSwapInfo()
 
-  const { independentField, typedValue, ...fieldData } = state
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   // token contracts for approvals and direct sends
@@ -141,7 +133,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
               .reduce<Fraction>((currentFee: Percent | Fraction): Fraction => currentFee.multiply(baseFee), baseFee)
       )
   // the x*y=k impact
-  const priceSlippage =
+  const priceImpact =
     slippageFromTrade && realizedLPFee
       ? new Percent(
           slippageFromTrade.subtract(realizedLPFee).numerator,
@@ -459,9 +451,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
   ])
 
   // warnings on slippage
-  const warningLow = !slippageFromTrade?.lessThan(ALLOWED_SLIPPAGE_LOW)
-  const warningMedium = !slippageFromTrade?.lessThan(ALLOWED_SLIPPAGE_MEDIUM)
-  const warningHigh = !slippageFromTrade?.lessThan(ALLOWED_SLIPPAGE_HIGH)
+  const severity = warningServerity(priceImpact)
 
   function modalHeader() {
     if (!sendingWithSwap) {
@@ -529,7 +519,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
     if (!sendingWithSwap) {
       return (
         <AutoColumn>
-          <ButtonPrimary onClick={onSend} id="exchange-page-confirm-send">
+          <ButtonPrimary onClick={onSend} id="confirm-send">
             <Text color="white" fontSize={20}>
               Confirm send
             </Text>
@@ -600,14 +590,8 @@ export default function Send({ history, location: { search } }: RouteComponentPr
                 </TYPE.black>
                 <QuestionHelper text="The difference between the market price and your price due to trade size." />
               </RowFixed>
-              <ErrorText
-                fontWeight={500}
-                fontSize={14}
-                warningLow={warningLow}
-                warningMedium={warningMedium}
-                warningHigh={warningHigh}
-              >
-                {priceSlippage?.lessThan(new Percent('1', '10000')) ? '<0.01%' : `${priceSlippage?.toFixed(2)}%` ?? '-'}
+              <ErrorText fontWeight={500} fontSize={14} severity={severity}>
+                {priceImpact?.lessThan(new Percent('1', '10000')) ? '<0.01%' : `${priceImpact?.toFixed(2)}%` ?? '-'}
               </ErrorText>
             </RowBetween>
             <RowBetween>
@@ -626,56 +610,18 @@ export default function Send({ history, location: { search } }: RouteComponentPr
           <AutoRow>
             <ButtonError
               onClick={onSwap}
-              error={!!warningHigh}
+              error={severity !== 'high'}
               style={{ margin: '10px 0 0 0' }}
               id="exchange-page-confirm-swap-or-send"
             >
               <Text fontSize={20} fontWeight={500}>
-                {warningHigh ? 'Send Anyway' : 'Confirm Send'}
+                {severity === 'high' ? 'Send Anyway' : 'Confirm Send'}
               </Text>
             </ButtonError>
           </AutoRow>
         </>
       )
     }
-  }
-
-  const PriceBar = function() {
-    return (
-      <AutoRow justify="space-between">
-        <RowFixed>Rate info</RowFixed>
-        <AutoColumn justify="center">
-          <Text fontWeight={500} fontSize={16} color={theme.text2}>
-            {bestTrade ? `${bestTrade.executionPrice.toSignificant(6)} ` : '-'}
-          </Text>
-          <Text fontWeight={500} fontSize={16} color={theme.text3} pt={1}>
-            {tokens[Field.OUTPUT]?.symbol} / {tokens[Field.INPUT]?.symbol}
-          </Text>
-        </AutoColumn>
-        <AutoColumn justify="center">
-          <Text fontWeight={500} fontSize={16} color={theme.text2}>
-            {bestTrade ? `${bestTrade.executionPrice.invert().toSignificant(6)} ` : '-'}
-          </Text>
-          <Text fontWeight={500} fontSize={16} color={theme.text3} pt={1}>
-            {tokens[Field.INPUT]?.symbol} / {tokens[Field.OUTPUT]?.symbol}
-          </Text>
-        </AutoColumn>
-        <AutoColumn justify="center">
-          <ErrorText
-            fontWeight={500}
-            fontSize={16}
-            warningLow={warningLow}
-            warningMedium={warningMedium}
-            warningHigh={warningHigh}
-          >
-            {priceSlippage?.lessThan(new Percent('1', '10000')) ? '<0.01%' : `${priceSlippage?.toFixed(2)}%` ?? '-'}
-          </ErrorText>
-          <Text fontWeight={500} fontSize={16} color={theme.text3} pt={1}>
-            Price Impact
-          </Text>
-        </AutoColumn>
-      </AutoRow>
-    )
   }
 
   // text to show while loading
@@ -708,7 +654,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
   }
 
   return (
-    <Wrapper id="exchange-page">
+    <Wrapper id="swap-page">
       <ConfirmationModal
         isOpen={showConfirm}
         title={sendingWithSwap ? 'Confirm swap and send' : 'Confirm Send'}
@@ -860,7 +806,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
         {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
           <Card padding={advanced ? '.25rem 1.25rem 0 .75rem' : '.25rem .7rem .25rem 1.25rem'} borderRadius={'20px'}>
             {advanced ? (
-              <PriceBar />
+              <PriceBar priceImpact={priceImpact} tokens={tokens} bestTrade={bestTrade} />
             ) : (
               <AutoColumn gap="4px">
                 <RowBetween align="center">
@@ -890,7 +836,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
                   </Text>
                 </RowBetween>
 
-                {bestTrade && (warningHigh || warningMedium) && (
+                {bestTrade && (severity === 'high' || severity === 'medium') && (
                   <RowBetween>
                     <TYPE.main
                       style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
@@ -899,10 +845,10 @@ export default function Send({ history, location: { search } }: RouteComponentPr
                       Price Impact
                     </TYPE.main>
                     <RowFixed>
-                      <ErrorText fontWeight={500} fontSize={14} warningMedium={warningMedium} warningHigh={warningHigh}>
-                        {priceSlippage?.lessThan(new Percent('1', '10000'))
+                      <ErrorText fontWeight={500} fontSize={14} severity={severity}>
+                        {priceImpact?.lessThan(new Percent('1', '10000'))
                           ? '<0.01%'
-                          : `${priceSlippage?.toFixed(2)}%` ?? '-'}
+                          : `${priceImpact?.toFixed(2)}%` ?? '-'}
                       </ErrorText>
                       <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
                     </RowFixed>
@@ -952,12 +898,16 @@ export default function Send({ history, location: { search } }: RouteComponentPr
             onClick={() => {
               setShowConfirm(true)
             }}
-            id="exchange-swap-button"
+            id="send-button"
             disabled={!isValid}
-            error={!!warningHigh}
+            error={severity !== 'high'}
           >
             <Text fontSize={20} fontWeight={500}>
-              {generalError || inputError || outputError || recipientError || `Send${warningHigh ? ' Anyway' : ''}`}
+              {generalError ||
+                inputError ||
+                outputError ||
+                recipientError ||
+                `Send${severity === 'high' ? ' Anyway' : ''}`}
             </Text>
           </ButtonError>
         )}
@@ -1033,16 +983,8 @@ export default function Send({ history, location: { search } }: RouteComponentPr
                     </TYPE.black>
                     <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
                   </RowFixed>
-                  <ErrorText
-                    fontWeight={500}
-                    fontSize={14}
-                    warningLow={warningLow}
-                    warningMedium={warningMedium}
-                    warningHigh={warningHigh}
-                  >
-                    {priceSlippage?.lessThan(new Percent('1', '10000'))
-                      ? '<0.01%'
-                      : `${priceSlippage?.toFixed(2)}%` ?? '-'}
+                  <ErrorText fontWeight={500} fontSize={14} severity={severity}>
+                    {priceImpact?.lessThan(new Percent('1', '10000')) ? '<0.01%' : `${priceImpact?.toFixed(2)}%` ?? '-'}
                   </ErrorText>
                 </RowBetween>
                 <RowBetween>
@@ -1076,26 +1018,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
           )}
           <FixedBottom>
             <AutoColumn gap="lg">
-              {warningHigh && (
-                <YellowCard style={{ padding: '20px', paddingTop: '10px' }}>
-                  <AutoColumn gap="md">
-                    <RowBetween>
-                      <RowFixed style={{ paddingTop: '8px' }}>
-                        <span role="img" aria-label="warning">
-                          ⚠️
-                        </span>{' '}
-                        <Text fontWeight={500} marginLeft="4px" color={theme.text1}>
-                          Price Warning
-                        </Text>
-                      </RowFixed>
-                    </RowBetween>
-                    <Text lineHeight="145.23%;" fontSize={16} fontWeight={400} color={theme.text1}>
-                      This trade will move the price by ~{priceSlippage.toFixed(2)}%. This pool probably doesn’t have
-                      enough liquidity to support this trade.
-                    </Text>
-                  </AutoColumn>
-                </YellowCard>
-              )}
+              {severity === 'high' && <PriceSlippageWarningCard priceSlippage={priceImpact} />}
             </AutoColumn>
           </FixedBottom>
         </AdvancedDropwdown>
