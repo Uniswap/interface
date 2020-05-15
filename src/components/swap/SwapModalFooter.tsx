@@ -13,7 +13,7 @@ import { AutoRow, RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import { StyledBalanceMaxMini } from './styleds'
 
-export default function SendWithSwapModalFooter({
+export default function SwapModalFooter({
   trade,
   showInverted,
   setShowInverted,
@@ -22,7 +22,8 @@ export default function SendWithSwapModalFooter({
   onSwap,
   parsedAmounts,
   realizedLPFee,
-  priceImpactWithoutFee
+  priceImpactWithoutFee,
+  confirmText
 }: {
   trade?: Trade
   showInverted: boolean
@@ -33,6 +34,7 @@ export default function SendWithSwapModalFooter({
   parsedAmounts?: { [field in Field]?: TokenAmount }
   realizedLPFee?: TokenAmount
   priceImpactWithoutFee?: Percent
+  confirmText: string
 }) {
   const theme = useContext(ThemeContext)
   return (
@@ -108,7 +110,7 @@ export default function SendWithSwapModalFooter({
       <AutoRow>
         <ButtonError onClick={onSwap} error={severity > 2} style={{ margin: '10px 0 0 0' }} id="confirm-swap-or-send">
           <Text fontSize={20} fontWeight={500}>
-            {severity > 2 ? 'Send Anyway' : 'Confirm Send'}
+            {confirmText}
           </Text>
         </ButtonError>
       </AutoRow>

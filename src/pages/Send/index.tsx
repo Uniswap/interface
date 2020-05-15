@@ -15,7 +15,7 @@ import QuestionHelper from '../../components/Question'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import FormattedPriceImpact from '../../components/swap/FormattedPriceImpact'
-import SendWithSwapModalFooter from '../../components/swap/SendWithSwapModalFooter'
+import SwapModalFooter from '../../components/swap/SwapModalFooter'
 import {
   ArrowWrapper,
   BottomGrouping,
@@ -217,7 +217,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
 
     if (sendingWithSwap) {
       return (
-        <SendWithSwapModalFooter
+        <SwapModalFooter
           trade={bestTrade}
           onSwap={onSwap}
           setShowInverted={setShowInverted}
@@ -227,6 +227,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
           priceImpactWithoutFee={priceImpactWithoutFee}
           parsedAmounts={parsedAmounts}
           realizedLPFee={realizedLPFee}
+          confirmText={severity > 2 ? 'Send Anyway' : 'Confirm Send'}
         />
       )
     }
