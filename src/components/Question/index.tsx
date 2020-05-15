@@ -68,7 +68,7 @@ export default function QuestionHelper({ text }: { text: string }) {
     <Wrapper>
       <QuestionWrapper
         onClick={() => {
-          setPopup(!showPopup)
+          setPopup(true)
         }}
         onMouseEnter={() => {
           setPopup(true)

@@ -192,7 +192,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
     realizedLPFee &&
     new TokenAmount(tokens[Field.INPUT], realizedLPFee.multiply(parsedAmounts[Field.INPUT].raw).quotient)
 
-  const { onMaxInput, onMaxOutput, onSwapTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
+  const { onMaxInput, onSwapTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
 
   // reset field if sending with with swap is cancled
   useEffect(() => {

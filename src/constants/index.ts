@@ -108,7 +108,7 @@ export const NetworkContextName = 'NETWORK'
 export const INITIAL_ALLOWED_SLIPPAGE = 50
 // 15 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
-// used for warning states based on slippage in bips
+// used for warning states
 export const ALLOWED_SLIPPAGE_LOW: Percent = new Percent(JSBI.BigInt(100), JSBI.BigInt(10000))
 export const ALLOWED_SLIPPAGE_MEDIUM: Percent = new Percent(JSBI.BigInt(500), JSBI.BigInt(10000))
 export const ALLOWED_SLIPPAGE_HIGH: Percent = new Percent(JSBI.BigInt(1000), JSBI.BigInt(10000))

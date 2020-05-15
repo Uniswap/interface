@@ -1,3 +1,4 @@
+import { Trade, TradeType, WETH } from '@uniswap/sdk'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useWeb3React } from '../../hooks'
@@ -13,7 +14,6 @@ export function useSwapActionHandlers(): {
   onSwapTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
   onMaxInput: (typedValue: string) => void
-  onMaxOutput: (typedValue: string) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
   const onTokenSelection = useCallback(
@@ -46,20 +46,17 @@ export function useSwapActionHandlers(): {
     [dispatch]
   )
 
-  const onMaxOutput = useCallback(
-    (typedValue: string) => {
-      dispatch(typeInput({ field: Field.OUTPUT, typedValue }))
-    },
-    [dispatch]
-  )
-
   return {
     onMaxInput,
-    onMaxOutput,
     onSwapTokens,
     onTokenSelection,
     onUserInput
   }
+}
+
+// from the current swap inputs, compute the best trade and return it.
+export function useSwapInfo(): { bestTrade?: Trade } {
+  return {}
 }
 
 export enum SwapType {

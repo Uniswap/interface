@@ -138,7 +138,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
     parsedAmounts[independentField].greaterThan(JSBI.BigInt(0))
   const noRoute = !route
 
-  const slippageFromTrade: Percent = trade && trade.slippage
+  const slippageFromTrade: Percent | undefined = trade?.slippage
 
   if (trade)
     parsedAmounts[dependentField] = tradeType === TradeType.EXACT_INPUT ? trade.outputAmount : trade.inputAmount
@@ -183,7 +183,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
     realizedLPFee &&
     new TokenAmount(tokens[Field.INPUT], realizedLPFee.multiply(parsedAmounts[Field.INPUT].raw).quotient)
 
-  const { onMaxInput, onMaxOutput, onSwapTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
+  const { onMaxInput, onSwapTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
 
   const maxAmountInput: TokenAmount =
     !!userBalances[Field.INPUT] &&
