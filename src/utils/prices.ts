@@ -54,3 +54,14 @@ export function warningServerity(priceImpact: Percent): 0 | 1 | 2 | 3 {
   if (!priceImpact?.lessThan(ALLOWED_SLIPPAGE_LOW)) return 1
   return 0
 }
+
+export function formatExecutionPrice(trade?: Trade, inverted?: boolean): string {
+  if (!trade) {
+    return ''
+  }
+  return inverted
+    ? `${trade.executionPrice.invert().toSignificant(6)} ${trade.inputAmount.token.symbol} / ${
+        trade.outputAmount.token.symbol
+      }`
+    : `${trade.executionPrice.toSignificant(6)} ${trade.outputAmount.token.symbol} / ${trade.inputAmount.token.symbol}`
+}
