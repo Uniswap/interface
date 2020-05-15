@@ -74,7 +74,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
 
   // trade details, check query params for initial state
   const { independentField, typedValue } = useSwapState()
-  const { swapType, parsedAmounts, bestTrade, tokenBalances, tokens, error } = useDerivedSwapInfo()
+  const { parsedAmounts, bestTrade, tokenBalances, tokens, error } = useDerivedSwapInfo()
   const isValid = !error && !recipientError && bestTrade
 
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
@@ -215,10 +215,16 @@ export default function Send({ history, location: { search } }: RouteComponentPr
     setAttemptingTxn(true)
     swapCallback().then(hash => {
       setTxHash(hash)
+      setPendingConfirmation(false)
+
+      ReactGA.event({
+        category: 'Swap',
+        label: 'Swap w/o Send',
+        action: [bestTrade.inputAmount.token.symbol, bestTrade.outputAmount.token.symbol].join(';')
+      })
     })
   }
 
-  // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   const advanced = useUserAdvanced()
@@ -425,7 +431,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
   }
 
   return (
-    <Wrapper id="swap-page">
+    <Wrapper id="send-page">
       <ConfirmationModal
         isOpen={showConfirm}
         title={sendingWithSwap ? 'Confirm swap and send' : 'Confirm Send'}

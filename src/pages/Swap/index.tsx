@@ -40,7 +40,7 @@ import {
   useSwapCallback,
   useSwapState
 } from '../../state/swap/hooks'
-import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
+import { useHasPendingApproval } from '../../state/transactions/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../util/prices'
@@ -49,14 +49,14 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
   useDefaultsFromURL(search)
   // text translation
   // const { t } = useTranslation()
-  const { chainId, account, library } = useWeb3React()
+  const { chainId, account } = useWeb3React()
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
 
   const { independentField, typedValue } = useSwapState()
-  const { bestTrade, tokenBalances, parsedAmounts, swapType, tokens, error } = useDerivedSwapInfo()
+  const { bestTrade, tokenBalances, parsedAmounts, tokens, error } = useDerivedSwapInfo()
   const isValid = !error
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 

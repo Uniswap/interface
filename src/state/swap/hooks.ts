@@ -104,10 +104,9 @@ export function useDerivedSwapInfo(): {
   tokenBalances: { [field in Field]?: TokenAmount }
   parsedAmounts: { [field in Field]?: TokenAmount }
   bestTrade?: Trade
-  swapType: SwapType
   error?: string
 } {
-  const { account, chainId } = useWeb3React()
+  const { account } = useWeb3React()
 
   const {
     independentField,
@@ -170,8 +169,7 @@ export function useDerivedSwapInfo(): {
     tokenBalances,
     parsedAmounts,
     bestTrade,
-    error,
-    swapType: getSwapType({ [Field.INPUT]: tokenIn, [Field.OUTPUT]: tokenOut }, isExactIn, chainId)
+    error
   }
 }
 
@@ -223,7 +221,7 @@ export function useApproveCallback(trade?: Trade, allowedSlippage?: number): nul
           throw error
         })
     }
-  }, [trade, chainId, currentAllowance, addTransaction, tokenContract])
+  }, [trade, chainId, currentAllowance, addTransaction, tokenContract, allowedSlippage])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
