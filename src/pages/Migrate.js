@@ -144,21 +144,6 @@ function Migrate() {
 
   return (
     <Column>
-      <Row>
-        <TextBlock fontSize={24} fontWeight={500}>
-          Your Liquidity
-        </TextBlock>
-        <TextBlock fontSize={16} color={'grey3'}>
-          {typeof account !== 'string' ? null : !finishedFetching ? (
-            <Row>
-              Fetching liquidity <LoaderLight style={{ marginLeft: '10px' }} />
-            </Row>
-          ) : (
-            poolAmount + ` pool${poolAmount === 1 ? '' : 's'} found`
-          )}
-        </TextBlock>
-      </Row>
-
       {typeof account !== 'string' ? (
         <Card style={{ marginTop: '0' }}>
           <RowStart>
@@ -180,8 +165,9 @@ function Migrate() {
             <div style={{ fontWeight: '500', fontSize: '18px' }}>Uniswap V2 Migration</div>
           </RowStart>
           <TextBlock padding={'1rem 0 0 0'} style={{ lineHeight: '140%' }}>
-            Connect with a wallet that own liquidity pool shares. For each pool, you'll need to approve the migration
-            helper then confirm. Once you've completed your migration you can view your liquidity on the new{' '}
+            For each pool you'll need to approve the helper before completing the migration. Your migrated share will
+            include all your accrued fees and continue functioning with no other actions necessary. Once you've
+            completed your migration you can view your liquidity on the new{' '}
             <Link href="v2.uniswap.exchange">Uniswap interface</Link>
           </TextBlock>
           <TextBlock padding={'1rem 0 0 0'} style={{ lineHeight: '140%' }}>
@@ -193,6 +179,20 @@ function Migrate() {
           </Link>
         </InfoCard>
       )}
+      <Row>
+        <TextBlock fontSize={24} fontWeight={500}>
+          Your Uniswap Liquidity
+        </TextBlock>
+        <TextBlock fontSize={16} color={'grey3'}>
+          {typeof account !== 'string' ? null : !finishedFetching ? (
+            <Row>
+              Fetching liquidity <LoaderLight style={{ marginLeft: '10px' }} />
+            </Row>
+          ) : (
+            poolAmount + ` pool${poolAmount === 1 ? '' : 's'} found`
+          )}
+        </TextBlock>
+      </Row>
 
       {typeof account !== 'string' ? (
         <>
