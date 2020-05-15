@@ -533,7 +533,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
     ) : (
       <AutoColumn gap="20px">
         <RowFlat style={{ marginTop: '20px' }}>
-          <Text fontSize="48px" fontWeight={500} lineHeight="32px" marginRight={10}>
+          <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
             {liquidityMinted?.toSignificant(6)}
           </Text>
           <DoubleLogo a0={tokens[Field.INPUT]?.address} a1={tokens[Field.OUTPUT]?.address} size={30} />
@@ -543,7 +543,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
             {tokens[Field.INPUT]?.symbol + ':' + tokens[Field.OUTPUT]?.symbol + ' Pool Tokens'}
           </Text>
         </Row>
-        <TYPE.italic fontSize={12} textAlign="center" padding={'12px 0 0 0 '}>
+        <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
           {`Output is estimated. You will receive at least ${liquidityMinted?.toSignificant(6)} UNI ${
             tokens[Field.INPUT]?.symbol
           }/${tokens[Field.OUTPUT]?.symbol} or the transaction will revert.`}
@@ -583,7 +583,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           <TYPE.body>Minted Pool Share:</TYPE.body>
           <TYPE.body>{noLiquidity ? '100%' : poolTokenPercentage?.toSignificant(6) + '%'}</TYPE.body>
         </RowBetween>
-        <ButtonPrimary style={{ margin: '20px 0' }} onClick={onAdd}>
+        <ButtonPrimary style={{ margin: '20px 0 0 0' }} onClick={onAdd}>
           <Text fontWeight={500} fontSize={20}>
             {noLiquidity ? 'Supply & Create Pool' : 'Confirm Supply'}
           </Text>
