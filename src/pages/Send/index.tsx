@@ -227,7 +227,13 @@ export default function Send({ history, location: { search } }: RouteComponentPr
                   fontWeight={500}
                   fontSize={14}
                   color={theme.text1}
-                  style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    display: 'flex',
+                    textAlign: 'right',
+                    paddingLeft: '10px'
+                  }}
                 >
                   {bestTrade && showInverted
                     ? (bestTrade?.executionPrice?.invert()?.toSignificant(6) ?? '') +
