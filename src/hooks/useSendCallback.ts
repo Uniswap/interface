@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { WETH, TokenAmount, JSBI } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { useTransactionAdder } from '../state/transactions/hooks'
+import { useTokenBalanceTreatingWETHasETH } from '../state/wallet/hooks'
 
 import { calculateGasMargin, getSigner, isAddress } from '../utils'
 import { useENSName, useTokenContract, useWeb3React } from './index'
@@ -13,11 +14,14 @@ export function useSendCallback(amount?: TokenAmount, recipient?: string): null 
   const addTransaction = useTransactionAdder()
   const ensName = useENSName(recipient)
   const tokenContract = useTokenContract(amount?.token?.address)
+  const balance = useTokenBalanceTreatingWETHasETH(account, amount?.token)
 
   return useMemo(() => {
     if (!amount) return null
     if (!amount.greaterThan(JSBI.BigInt(0))) return null
     if (!isAddress(recipient)) return null
+    if (!balance) return null
+    if (balance.lessThan(amount)) return null
 
     const token = amount?.token
 
@@ -56,5 +60,5 @@ export function useSendCallback(amount?: TokenAmount, recipient?: string): null 
           })
       }
     }
-  }, [addTransaction, library, account, chainId, amount, ensName, recipient, tokenContract])
+  }, [addTransaction, library, account, chainId, amount, ensName, recipient, tokenContract, balance])
 }

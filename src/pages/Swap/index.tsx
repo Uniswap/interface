@@ -1,6 +1,6 @@
 import { JSBI, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useContext, useState } from 'react'
-import { ArrowDown, ChevronDown, Repeat } from 'react-feather'
+import { ArrowDown, Repeat } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -10,29 +10,26 @@ import Card, { GreyCard, YellowCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import {
-  AdvancedDropwdown,
   ArrowWrapper,
   BottomGrouping,
   Dots,
-  FixedBottom,
   StyledBalanceMaxMini,
   TruncatedText,
   Wrapper
 } from '../../components/swap/styleds'
 import QuestionHelper from '../../components/Question'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
-import { AdvancedSwapDetails } from '../../components/swap/AdvancedSwapDetails'
 import FormattedPriceImpact from '../../components/swap/FormattedPriceImpact'
 import PriceBar, { warningServerity } from '../../components/swap/PriceBar'
-import { PriceSlippageWarningCard } from '../../components/swap/PriceSlippageWarningCard'
 import TokenLogo from '../../components/TokenLogo'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH, V1_TRADE_LINK_THRESHOLD } from '../../constants'
 import { useV1TradeLinkIfBetter } from '../../data/V1'
 import { useWeb3React } from '../../hooks'
 import { useApproveCallback } from '../../hooks/useApproveCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import { useUserAdvanced, useWalletModalToggle } from '../../state/application/hooks'
+import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
 import { useHasPendingApproval } from '../../state/transactions/hooks'
@@ -135,8 +132,6 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
-
-  const advanced = useUserAdvanced()
 
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(bestTrade)
 
@@ -317,7 +312,6 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
             value={formattedAmounts[Field.INPUT]}
             showMaxButton={!atMaxAmountInput}
             token={tokens[Field.INPUT]}
-            advanced={advanced}
             onUserInput={onUserInput}
             onMax={() => {
               maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
@@ -348,15 +342,17 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
             showMaxButton={false}
             token={tokens[Field.OUTPUT]}
             onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
-            advanced={advanced}
             otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
             id="swap-currency-output"
           />
         </>
 
         {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-          <Card padding={advanced ? '.25rem 1.25rem 0 .75rem' : '.25rem .7rem .25rem 1.25rem'} borderRadius={'20px'}>
-            {advanced ? (
+          <Card
+            padding={showAdvanced ? '.25rem 1.25rem 0 .75rem' : '.25rem .7rem .25rem 1.25rem'}
+            borderRadius={'20px'}
+          >
+            {showAdvanced ? (
               <PriceBar bestTrade={bestTrade} tokens={tokens} />
             ) : (
               <AutoColumn gap="4px">
@@ -463,33 +459,16 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
         )}
       </BottomGrouping>
       {tokens[Field.INPUT] && tokens[Field.OUTPUT] && !noRoute && (
-        <AdvancedDropwdown>
-          {!showAdvanced && (
-            <CursorPointer>
-              <RowBetween onClick={() => setShowAdvanced(true)} padding={'8px 20px'} id="show-advanced">
-                <Text fontSize={16} fontWeight={500} style={{ userSelect: 'none' }}>
-                  Show Advanced
-                </Text>
-                <ChevronDown color={theme.text2} />
-              </RowBetween>
-            </CursorPointer>
-          )}
-          {showAdvanced && (
-            <AdvancedSwapDetails
-              trade={bestTrade}
-              rawSlippage={allowedSlippage}
-              deadline={deadline}
-              onDismiss={() => setShowAdvanced(false)}
-              setDeadline={setDeadline}
-              setRawSlippage={setAllowedSlippage}
-            />
-          )}
-          <FixedBottom>
-            <AutoColumn gap="lg">
-              {priceImpactSeverity > 2 && <PriceSlippageWarningCard priceSlippage={priceImpactWithoutFee} />}
-            </AutoColumn>
-          </FixedBottom>
-        </AdvancedDropwdown>
+        <AdvancedSwapDetailsDropdown
+          trade={bestTrade}
+          rawSlippage={allowedSlippage}
+          deadline={deadline}
+          showAdvanced={showAdvanced}
+          setShowAdvanced={setShowAdvanced}
+          priceImpactWithoutFee={priceImpactWithoutFee}
+          setDeadline={setDeadline}
+          setRawSlippage={setAllowedSlippage}
+        />
       )}
     </Wrapper>
   )

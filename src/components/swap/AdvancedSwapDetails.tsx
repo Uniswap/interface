@@ -13,11 +13,12 @@ import { RowBetween, RowFixed } from '../Row'
 import SlippageTabs, { SlippageTabsProps } from '../SlippageTabs'
 import FormattedPriceImpact from './FormattedPriceImpact'
 
-export function AdvancedSwapDetails({
-  trade,
-  onDismiss,
-  ...slippageTabProps
-}: { trade: Trade; onDismiss: () => void } & SlippageTabsProps) {
+export interface AdvancedSwapDetailsProps extends SlippageTabsProps {
+  trade: Trade
+  onDismiss: () => void
+}
+
+export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: AdvancedSwapDetailsProps) {
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
   const theme = useContext(ThemeContext)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT

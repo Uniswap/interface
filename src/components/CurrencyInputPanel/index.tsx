@@ -136,7 +136,6 @@ interface CurrencyInputPanelProps {
   hideInput?: boolean
   showSendWithSwap?: boolean
   otherSelectedTokenAddress?: string | null
-  advanced?: boolean
   id: string
 }
 
@@ -157,7 +156,6 @@ export default function CurrencyInputPanel({
   hideInput = false,
   showSendWithSwap = false,
   otherSelectedTokenAddress = null,
-  advanced = false,
   id
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
@@ -204,7 +202,7 @@ export default function CurrencyInputPanel({
                   onUserInput(field, val)
                 }}
               />
-              {account && !advanced && !!token?.address && showMaxButton && label !== 'To' && (
+              {account && !!token?.address && showMaxButton && label !== 'To' && (
                 <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
               )}
             </>
