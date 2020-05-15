@@ -275,17 +275,12 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   // check for estimated liquidity minted
   const liquidityMinted: TokenAmount =
     !!pair &&
+    !!totalSupply &&
     !!parsedAmounts[Field.INPUT] &&
     !!parsedAmounts[Field.OUTPUT] &&
     !JSBI.equal(parsedAmounts[Field.INPUT].raw, JSBI.BigInt(0)) &&
-    !JSBI.equal(parsedAmounts[Field.OUTPUT].raw, JSBI.BigInt(0)) &&
-    totalSupply &&
-    totalSupply.token.equals(pair.liquidityToken) // if stale value for pair
-      ? pair.getLiquidityMinted(
-          totalSupply ? totalSupply : new TokenAmount(pair?.liquidityToken, JSBI.BigInt(0)),
-          parsedAmounts[Field.INPUT],
-          parsedAmounts[Field.OUTPUT]
-        )
+    !JSBI.equal(parsedAmounts[Field.OUTPUT].raw, JSBI.BigInt(0))
+      ? pair.getLiquidityMinted(totalSupply, parsedAmounts[Field.INPUT], parsedAmounts[Field.OUTPUT])
       : undefined
 
   const poolTokenPercentage: Percent =

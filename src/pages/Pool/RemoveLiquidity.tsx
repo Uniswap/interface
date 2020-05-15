@@ -129,25 +129,30 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
   const pairContract: Contract = usePairContract(pair?.liquidityToken.address)
 
   // pool token data
-  const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
-
   const userLiquidity = useTokenBalance(account, pair?.liquidityToken)
+  const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
 
   // input state
   const [state, dispatch] = useReducer(reducer, initializeRemoveState(userLiquidity?.toExact(), token0, token1))
   const { independentField, typedValue } = state
 
-  const TokensDeposited: { [field: number]: TokenAmount } = {
+  const tokensDeposited: { [field: number]: TokenAmount } = {
     [Field.TOKEN0]:
       pair &&
       totalPoolTokens &&
       userLiquidity &&
-      pair.getLiquidityValue(tokens[Field.TOKEN0], totalPoolTokens, userLiquidity, false),
+      // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
+      JSBI.greaterThanOrEqual(totalPoolTokens.raw, userLiquidity.raw)
+        ? pair.getLiquidityValue(tokens[Field.TOKEN0], totalPoolTokens, userLiquidity, false)
+        : undefined,
     [Field.TOKEN1]:
       pair &&
       totalPoolTokens &&
       userLiquidity &&
-      pair.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, userLiquidity, false)
+      // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
+      JSBI.greaterThanOrEqual(totalPoolTokens.raw, userLiquidity.raw)
+        ? pair.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, userLiquidity, false)
+        : undefined
   }
 
   const route: Route = pair
@@ -168,12 +173,12 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
         if (typedValueParsed !== '0') {
           const tokenAmount = new TokenAmount(tokens[Field.TOKEN0], typedValueParsed)
           if (
-            TokensDeposited[Field.TOKEN0] &&
-            JSBI.lessThanOrEqual(tokenAmount.raw, TokensDeposited[Field.TOKEN0].raw)
+            tokensDeposited[Field.TOKEN0] &&
+            JSBI.lessThanOrEqual(tokenAmount.raw, tokensDeposited[Field.TOKEN0].raw)
           ) {
             poolTokenAmount = JSBI.divide(
               JSBI.multiply(tokenAmount.raw, userLiquidity.raw),
-              TokensDeposited[Field.TOKEN0].raw
+              tokensDeposited[Field.TOKEN0].raw
             )
           }
         }
@@ -183,12 +188,12 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
         if (typedValueParsed !== '0') {
           const tokenAmount = new TokenAmount(tokens[Field.TOKEN1], typedValueParsed)
           if (
-            TokensDeposited[Field.TOKEN1] &&
-            JSBI.lessThanOrEqual(tokenAmount.raw, TokensDeposited[Field.TOKEN1].raw)
+            tokensDeposited[Field.TOKEN1] &&
+            JSBI.lessThanOrEqual(tokenAmount.raw, tokensDeposited[Field.TOKEN1].raw)
           ) {
             poolTokenAmount = JSBI.divide(
               JSBI.multiply(tokenAmount.raw, userLiquidity.raw),
-              TokensDeposited[Field.TOKEN1].raw
+              tokensDeposited[Field.TOKEN1].raw
             )
           }
         }
@@ -210,25 +215,31 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
 
   // set parsed amounts based on live amount of liquidity
   parsedAmounts[Field.LIQUIDITY] =
-    pair && poolTokenAmount && userLiquidity && new TokenAmount(pair.liquidityToken, poolTokenAmount)
+    !!pair && !!poolTokenAmount ? new TokenAmount(pair.liquidityToken, poolTokenAmount) : undefined
 
   parsedAmounts[Field.TOKEN0] =
-    totalPoolTokens &&
-    pair &&
-    parsedAmounts[Field.LIQUIDITY] &&
-    pair.getLiquidityValue(tokens[Field.TOKEN0], totalPoolTokens, parsedAmounts[Field.LIQUIDITY], false)
+    !!pair &&
+    !!totalPoolTokens &&
+    !!parsedAmounts[Field.LIQUIDITY] &&
+    // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
+    JSBI.greaterThanOrEqual(totalPoolTokens.raw, userLiquidity.raw)
+      ? pair.getLiquidityValue(tokens[Field.TOKEN0], totalPoolTokens, parsedAmounts[Field.LIQUIDITY], false)
+      : undefined
 
   parsedAmounts[Field.TOKEN1] =
-    totalPoolTokens &&
-    pair &&
-    parsedAmounts[Field.LIQUIDITY] &&
-    pair.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, parsedAmounts[Field.LIQUIDITY], false)
+    !!pair &&
+    !!totalPoolTokens &&
+    !!parsedAmounts[Field.LIQUIDITY] &&
+    // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
+    JSBI.greaterThanOrEqual(totalPoolTokens.raw, userLiquidity.raw)
+      ? pair.getLiquidityValue(tokens[Field.TOKEN1], totalPoolTokens, parsedAmounts[Field.LIQUIDITY], false)
+      : undefined
 
   // derived percent for advanced mode
   const derivedPercent =
-    parsedAmounts[Field.LIQUIDITY] &&
-    userLiquidity &&
-    new Percent(parsedAmounts[Field.LIQUIDITY]?.raw, userLiquidity.raw)
+    !!parsedAmounts[Field.LIQUIDITY] && !!userLiquidity
+      ? new Percent(parsedAmounts[Field.LIQUIDITY].raw, userLiquidity.raw)
+      : undefined
 
   const [override, setSliderOverride] = useState(false) // override slider internal value
   const handlePresetPercentage = newPercent => {
