@@ -190,7 +190,7 @@ export function useContract(address, ABI, withSignerIfPossible = true) {
 }
 
 // returns null on errors
-export function useTokenContract(tokenAddress, withSignerIfPossible = true) {
+export function useTokenContract(tokenAddress: string, withSignerIfPossible = true) {
   const { library, account } = useWeb3React()
 
   return useMemo(() => {

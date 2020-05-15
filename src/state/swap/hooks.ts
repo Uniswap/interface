@@ -1,12 +1,18 @@
+import { MaxUint256 } from '@ethersproject/constants'
 import { parseUnits } from '@ethersproject/units'
 import { TokenAmount, Trade, Token, JSBI, WETH } from '@uniswap/sdk'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useWeb3React } from '../../hooks'
+import { ROUTER_ADDRESS } from '../../constants'
+import { useTokenAllowance } from '../../data/Allowances'
+import { useTokenContract, useWeb3React } from '../../hooks'
 import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
+import { computeSlippageAdjustedAmounts } from '../../util/prices'
+import { calculateGasMargin } from '../../utils'
 import { AppDispatch, AppState } from '../index'
-import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
+import { useTransactionAdder } from '../transactions/hooks'
+import { useTokenBalancesTreatWETHAsETH, useTokenBalanceTreatingWETHasETH } from '../wallet/hooks'
 import { Field, selectToken, setDefaultsFromURL, switchTokens, typeInput } from './actions'
 
 export function useSwapState(): AppState['swap'] {
@@ -166,6 +172,54 @@ export function useDerivedSwapInfo(): {
     swapType: getSwapType({ [Field.INPUT]: tokenIn, [Field.OUTPUT]: tokenOut }, isExactIn, chainId)
   }
 }
+
+// returns a function to approve the amount required to execute a trade if necessary, otherwise null
+export function useApproveCallback(trade?: Trade, allowedSlippage?: number): null | (() => Promise<void>) {
+  const { account, chainId } = useWeb3React()
+  const currentAllowance = useTokenAllowance(trade?.inputAmount?.token, account, ROUTER_ADDRESS)
+  const slippageAdjustedAmountIn = computeSlippageAdjustedAmounts(trade, allowedSlippage)?.[Field.INPUT]
+  const tokenContract = useTokenContract(trade?.inputAmount?.token?.address)
+  const addTransaction = useTransactionAdder()
+  return useMemo(() => {
+    if (!slippageAdjustedAmountIn) {
+      return null
+    }
+
+    // we treat WETH as ETH which requires no approvals
+    if (trade?.inputAmount?.token?.equals(WETH[chainId])) {
+      return null
+    }
+
+    // gte
+    if (!currentAllowance?.lessThan(slippageAdjustedAmountIn) ?? false) {
+      return null
+    }
+
+    return async function approveAmount(): Promise<void> {
+      let useUserBalance = false
+
+      const estimatedGas = await tokenContract.estimateGas.approve(ROUTER_ADDRESS, MaxUint256).catch(() => {
+        // general fallback for tokens who restrict approval amounts
+        useUserBalance = true
+        return tokenContract.estimateGas.approve(ROUTER_ADDRESS, slippageAdjustedAmountIn.raw.toString())
+      })
+
+      tokenContract
+        .approve(ROUTER_ADDRESS, useUserBalance ? slippageAdjustedAmountIn.raw.toString() : MaxUint256, {
+          gasLimit: calculateGasMargin(estimatedGas)
+        })
+        .then(response => {
+          addTransaction(response, {
+            summary: 'Approve ' + trade?.inputAmount?.token?.symbol,
+            approvalOfToken: trade?.inputAmount?.token?.symbol
+          })
+        })
+    }
+  }, [trade, account, chainId, currentAllowance, slippageAdjustedAmountIn, addTransaction])
+}
+
+// returns a function
+// export function useDoSwap(allowedSlippage: number): null | (() => Promise<void>) {}
 
 // updates the swap state to use the defaults for a given network whenever the query
 // string updates

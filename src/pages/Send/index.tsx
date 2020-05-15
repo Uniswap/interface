@@ -41,6 +41,7 @@ import { useUserAdvanced, useWalletModalToggle } from '../../state/application/h
 import { Field } from '../../state/swap/actions'
 import {
   SwapType,
+  useApproveCallback,
   useDefaultsFromURL,
   useDerivedSwapInfo,
   useSwapActionHandlers,
@@ -107,12 +108,8 @@ export default function Send({ history, location: { search } }: RouteComponentPr
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const inputApproval: TokenAmount = useTokenAllowance(tokens[Field.INPUT], account, ROUTER_ADDRESS)
-  const userHasApprovedRouter =
-    tokens[Field.INPUT]?.equals(WETH[chainId]) ||
-    (!!inputApproval &&
-      !!parsedAmounts[Field.INPUT] &&
-      JSBI.greaterThanOrEqual(inputApproval.raw, parsedAmounts[Field.INPUT].raw))
+  const doApprove = useApproveCallback(bestTrade, allowedSlippage)
+  const userHasApprovedRouter = !doApprove
   const pendingApprovalInput = useHasPendingApproval(tokens[Field.INPUT]?.address)
 
   const formattedAmounts = {
@@ -320,28 +317,6 @@ export default function Send({ history, location: { search } }: RouteComponentPr
         console.error(e)
         resetModal()
         setShowConfirm(false)
-      })
-  }
-
-  async function approveAmount(field: Field) {
-    let useUserBalance = false
-    const tokenContract = field === Field.INPUT ? tokenContractInput : tokenContractOutput
-
-    const estimatedGas = await tokenContract.estimateGas.approve(ROUTER_ADDRESS, MaxUint256).catch(() => {
-      // general fallback for tokens who restrict approval amounts
-      useUserBalance = true
-      return tokenContract.estimateGas.approve(ROUTER_ADDRESS, tokenBalances[field].raw.toString())
-    })
-
-    tokenContract
-      .approve(ROUTER_ADDRESS, useUserBalance ? tokenBalances[field].raw.toString() : MaxUint256, {
-        gasLimit: calculateGasMargin(estimatedGas)
-      })
-      .then(response => {
-        addTransaction(response, {
-          summary: 'Approve ' + tokens[field]?.symbol,
-          approvalOfToken: tokens[field].address
-        })
       })
   }
 
@@ -775,12 +750,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
             </Link>
           </GreyCard>
         ) : !userHasApprovedRouter && isValid ? (
-          <ButtonLight
-            onClick={() => {
-              approveAmount(Field.INPUT)
-            }}
-            disabled={pendingApprovalInput}
-          >
+          <ButtonLight onClick={doApprove} disabled={pendingApprovalInput}>
             {pendingApprovalInput ? (
               <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
             ) : (
