@@ -42,7 +42,7 @@ import {
 } from '../../state/swap/hooks'
 import { useHasPendingApproval } from '../../state/transactions/hooks'
 import { CursorPointer, TYPE } from '../../theme'
-import { Link } from '../../theme/components'
+import { Link } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../util/prices'
 
 export default function Swap({ history, location: { search } }: RouteComponentProps) {
@@ -281,7 +281,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
             onClick={onSwap}
             error={priceImpactSeverity > 2}
             style={{ margin: '10px 0 0 0' }}
-            id="send-page-confirm-swap-or-send"
+            id="confirm-swap"
           >
             <Text fontSize={20} fontWeight={500}>
               {priceImpactSeverity > 2 ? 'Swap Anyway' : 'Confirm Swap'}

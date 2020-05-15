@@ -118,9 +118,9 @@ export default function App() {
                   <Switch>
                     <Route exact strict path="/swap" component={Swap} />
                     <Route exact strict path="/send" component={Send} />
-                    <Route exact strict path="/find" component={() => <Find />} />
-                    <Route exact strict path="/create" component={() => <Create />} />
-                    <Route exact strict path="/pool" component={() => <Pool />} />
+                    <Route exact strict path="/find" component={Find} />
+                    <Route exact strict path="/create" component={Create} />
+                    <Route exact strict path="/pool" component={Pool} />
                     <Route
                       exact
                       strict

@@ -389,7 +389,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
               onClick={onSwap}
               error={severity > 2}
               style={{ margin: '10px 0 0 0' }}
-              id="send-page-confirm-swap-or-send"
+              id="confirm-swap-or-send"
             >
               <Text fontSize={20} fontWeight={500}>
                 {severity > 2 ? 'Send Anyway' : 'Confirm Send'}
