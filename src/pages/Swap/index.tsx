@@ -30,16 +30,11 @@ import TokenLogo from '../../components/TokenLogo'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH, V1_TRADE_LINK_THRESHOLD } from '../../constants'
 import { useV1TradeLinkIfBetter } from '../../data/V1'
 import { useWeb3React } from '../../hooks'
+import { useApproveCallback } from '../../hooks/useApproveCallback'
+import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useUserAdvanced, useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
-import {
-  useApproveCallback,
-  useDefaultsFromURL,
-  useDerivedSwapInfo,
-  useSwapActionHandlers,
-  useSwapCallback,
-  useSwapState
-} from '../../state/swap/hooks'
+import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
 import { useHasPendingApproval } from '../../state/transactions/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { Link } from '../../theme'
@@ -279,7 +274,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
         <AutoRow>
           <ButtonError
             onClick={onSwap}
-            error={priceImpactSeverity > 2}
+            error={isValid && priceImpactSeverity > 2}
             style={{ margin: '10px 0 0 0' }}
             id="confirm-swap"
           >
@@ -447,7 +442,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
             }}
             id="swap-button"
             disabled={!isValid}
-            error={priceImpactSeverity > 2}
+            error={isValid && priceImpactSeverity > 2}
           >
             <Text fontSize={20} fontWeight={500}>
               {error ?? `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
