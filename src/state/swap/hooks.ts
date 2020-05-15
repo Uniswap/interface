@@ -1,18 +1,20 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
+import { Contract } from '@ethersproject/contracts'
 import { parseUnits } from '@ethersproject/units'
-import { TokenAmount, Trade, Token, JSBI, WETH } from '@uniswap/sdk'
+import { JSBI, Token, TokenAmount, Trade, TradeType, WETH } from '@uniswap/sdk'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ROUTER_ADDRESS } from '../../constants'
+import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, ROUTER_ADDRESS } from '../../constants'
 import { useTokenAllowance } from '../../data/Allowances'
 import { useTokenContract, useWeb3React } from '../../hooks'
 import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { computeSlippageAdjustedAmounts } from '../../util/prices'
-import { calculateGasMargin } from '../../utils'
+import { calculateGasMargin, getRouterContract, isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useTransactionAdder } from '../transactions/hooks'
-import { useTokenBalancesTreatWETHAsETH, useTokenBalanceTreatingWETHasETH } from '../wallet/hooks'
+import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
 import { Field, selectToken, setDefaultsFromURL, switchTokens, typeInput } from './actions'
 
 export function useSwapState(): AppState['swap'] {
@@ -21,7 +23,7 @@ export function useSwapState(): AppState['swap'] {
 
 export function useSwapActionHandlers(): {
   onTokenSelection: (field: Field, address: string) => void
-  onSwapTokens: () => void
+  onSwitchTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
@@ -49,7 +51,7 @@ export function useSwapActionHandlers(): {
   )
 
   return {
-    onSwapTokens,
+    onSwitchTokens: onSwapTokens,
     onTokenSelection,
     onUserInput
   }
@@ -177,10 +179,12 @@ export function useDerivedSwapInfo(): {
 export function useApproveCallback(trade?: Trade, allowedSlippage?: number): null | (() => Promise<void>) {
   const { account, chainId } = useWeb3React()
   const currentAllowance = useTokenAllowance(trade?.inputAmount?.token, account, ROUTER_ADDRESS)
-  const slippageAdjustedAmountIn = computeSlippageAdjustedAmounts(trade, allowedSlippage)?.[Field.INPUT]
   const tokenContract = useTokenContract(trade?.inputAmount?.token?.address)
   const addTransaction = useTransactionAdder()
+
   return useMemo(() => {
+    const slippageAdjustedAmountIn = computeSlippageAdjustedAmounts(trade, allowedSlippage)?.[Field.INPUT]
+
     if (!slippageAdjustedAmountIn) {
       return null
     }
@@ -204,7 +208,7 @@ export function useApproveCallback(trade?: Trade, allowedSlippage?: number): nul
         return tokenContract.estimateGas.approve(ROUTER_ADDRESS, slippageAdjustedAmountIn.raw.toString())
       })
 
-      tokenContract
+      return tokenContract
         .approve(ROUTER_ADDRESS, useUserBalance ? slippageAdjustedAmountIn.raw.toString() : MaxUint256, {
           gasLimit: calculateGasMargin(estimatedGas)
         })
@@ -214,12 +218,157 @@ export function useApproveCallback(trade?: Trade, allowedSlippage?: number): nul
             approvalOfToken: trade?.inputAmount?.token?.symbol
           })
         })
+        .catch(error => {
+          console.debug('Failed to approve token', error)
+          throw error
+        })
     }
-  }, [trade, account, chainId, currentAllowance, slippageAdjustedAmountIn, addTransaction])
+  }, [trade, chainId, currentAllowance, addTransaction, tokenContract])
 }
 
-// returns a function
-// export function useDoSwap(allowedSlippage: number): null | (() => Promise<void>) {}
+// returns a function that will execute a swap, if the parameters are all valid
+// and the user has approved the slippage adjusted input amount for the trade
+export function useSwapCallback(
+  trade?: Trade, // trade to execute, required
+  allowedSlippage?: number, // in bips, optional
+  deadline?: number, // in seconds from now, optional
+  to?: string // recipient of output, optional
+): null | (() => Promise<string>) {
+  const { account, chainId, library } = useWeb3React()
+  const inputAllowance = useTokenAllowance(trade?.inputAmount?.token, account, ROUTER_ADDRESS)
+  const addTransaction = useTransactionAdder()
+
+  return useMemo(() => {
+    if (!trade) {
+      return null
+    }
+
+    const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage ?? INITIAL_ALLOWED_SLIPPAGE)
+
+    const recipient = to ? isAddress(to) : account
+
+    if (!recipient) {
+      return null
+    }
+
+    if (!slippageAdjustedAmounts) {
+      return null
+    }
+
+    // no allowance
+    if (
+      inputAllowance &&
+      !trade.inputAmount.token.equals(WETH[chainId]) &&
+      slippageAdjustedAmounts[Field.INPUT].greaterThan(inputAllowance)
+    ) {
+      return null
+    }
+
+    return async function onSwap() {
+      const routerContract: Contract = getRouterContract(chainId, library, account)
+
+      const path = trade.route.path.map(t => isAddress(t.address))
+
+      const deadlineFromNow: number = Math.ceil(Date.now() / 1000) + (deadline ?? DEFAULT_DEADLINE_FROM_NOW)
+
+      const swapType = getSwapType(
+        { [Field.INPUT]: trade.inputAmount.token, [Field.OUTPUT]: trade.outputAmount.token },
+        trade.tradeType === TradeType.EXACT_INPUT,
+        chainId
+      )
+
+      let estimate, method, args, value
+      switch (swapType) {
+        case SwapType.EXACT_TOKENS_FOR_TOKENS:
+          estimate = routerContract.estimateGas.swapExactTokensForTokens
+          method = routerContract.swapExactTokensForTokens
+          args = [
+            slippageAdjustedAmounts[Field.INPUT].raw.toString(),
+            slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
+            path,
+            account,
+            deadlineFromNow
+          ]
+          value = null
+          break
+        case SwapType.TOKENS_FOR_EXACT_TOKENS:
+          estimate = routerContract.estimateGas.swapTokensForExactTokens
+          method = routerContract.swapTokensForExactTokens
+          args = [
+            slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
+            slippageAdjustedAmounts[Field.INPUT].raw.toString(),
+            path,
+            account,
+            deadlineFromNow
+          ]
+          value = null
+          break
+        case SwapType.EXACT_ETH_FOR_TOKENS:
+          estimate = routerContract.estimateGas.swapExactETHForTokens
+          method = routerContract.swapExactETHForTokens
+          args = [slippageAdjustedAmounts[Field.OUTPUT].raw.toString(), path, account, deadlineFromNow]
+          value = BigNumber.from(slippageAdjustedAmounts[Field.INPUT].raw.toString())
+          break
+        case SwapType.TOKENS_FOR_EXACT_ETH:
+          estimate = routerContract.estimateGas.swapTokensForExactETH
+          method = routerContract.swapTokensForExactETH
+          args = [
+            slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
+            slippageAdjustedAmounts[Field.INPUT].raw.toString(),
+            path,
+            account,
+            deadlineFromNow
+          ]
+          value = null
+          break
+        case SwapType.EXACT_TOKENS_FOR_ETH:
+          estimate = routerContract.estimateGas.swapExactTokensForETH
+          method = routerContract.swapExactTokensForETH
+          args = [
+            slippageAdjustedAmounts[Field.INPUT].raw.toString(),
+            slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
+            path,
+            account,
+            deadlineFromNow
+          ]
+          value = null
+          break
+        case SwapType.ETH_FOR_EXACT_TOKENS:
+          estimate = routerContract.estimateGas.swapETHForExactTokens
+          method = routerContract.swapETHForExactTokens
+          args = [slippageAdjustedAmounts[Field.OUTPUT].raw.toString(), path, account, deadlineFromNow]
+          value = BigNumber.from(slippageAdjustedAmounts[Field.INPUT].raw.toString())
+          break
+      }
+
+      return estimate(...args, value ? { value } : {})
+        .then(estimatedGasLimit =>
+          method(...args, {
+            ...(value ? { value } : {}),
+            gasLimit: calculateGasMargin(estimatedGasLimit)
+          })
+        )
+        .then(response => {
+          addTransaction(response, {
+            summary:
+              'Swap ' +
+              slippageAdjustedAmounts[Field.INPUT].toSignificant(3) +
+              ' ' +
+              trade.inputAmount.token.symbol +
+              ' for ' +
+              slippageAdjustedAmounts[Field.OUTPUT].toSignificant(3) +
+              ' ' +
+              trade.outputAmount.token.symbol
+          })
+          return response.hash
+        })
+        .catch(error => {
+          console.error(`Swap or gas estimate failed`, error)
+          throw error
+        })
+    }
+  }, [account, allowedSlippage, addTransaction, chainId, deadline, inputAllowance, library, to, trade])
+}
 
 // updates the swap state to use the defaults for a given network whenever the query
 // string updates

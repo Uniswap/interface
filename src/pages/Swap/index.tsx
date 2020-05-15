@@ -1,6 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { MaxUint256 } from '@ethersproject/constants'
-import { Contract } from '@ethersproject/contracts'
 import { JSBI, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useContext, useState } from 'react'
 import { ArrowDown, ChevronDown, Repeat } from 'react-feather'
@@ -30,31 +27,23 @@ import FormattedPriceImpact from '../../components/swap/FormattedPriceImpact'
 import PriceBar, { warningServerity } from '../../components/swap/PriceBar'
 import { PriceSlippageWarningCard } from '../../components/swap/PriceSlippageWarningCard'
 import TokenLogo from '../../components/TokenLogo'
-import {
-  DEFAULT_DEADLINE_FROM_NOW,
-  INITIAL_ALLOWED_SLIPPAGE,
-  MIN_ETH,
-  ROUTER_ADDRESS,
-  V1_TRADE_LINK_THRESHOLD
-} from '../../constants'
-import { useTokenAllowance } from '../../data/Allowances'
+import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH, V1_TRADE_LINK_THRESHOLD } from '../../constants'
 import { useV1TradeLinkIfBetter } from '../../data/V1'
-import { useTokenContract, useWeb3React } from '../../hooks'
+import { useWeb3React } from '../../hooks'
 import { useUserAdvanced, useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import {
-  SwapType,
   useApproveCallback,
   useDefaultsFromURL,
   useDerivedSwapInfo,
   useSwapActionHandlers,
+  useSwapCallback,
   useSwapState
 } from '../../state/swap/hooks'
 import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../util/prices'
-import { calculateGasMargin, getRouterContract } from '../../utils'
 
 export default function Swap({ history, location: { search } }: RouteComponentProps) {
   useDefaultsFromURL(search)
@@ -62,9 +51,6 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
   // const { t } = useTranslation()
   const { chainId, account, library } = useWeb3React()
   const theme = useContext(ThemeContext)
-
-  // adding notifications on txns
-  const addTransaction = useTransactionAdder()
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
@@ -106,7 +92,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
     [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(6) : ''
   }
 
-  const { onSwapTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
+  const { onSwitchTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
 
   const maxAmountInput: TokenAmount =
     !!tokenBalances[Field.INPUT] &&
@@ -135,112 +121,21 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
     setShowAdvanced(false)
   }
 
-  // covers swap
-  async function onSwap() {
-    const routerContract: Contract = getRouterContract(chainId, library, account)
+  // the callback to execute the swap
+  const swapCallback = useSwapCallback(bestTrade, allowedSlippage, deadline)
 
-    setAttemptingTxn(true) // mark that user is attempting transaction
+  function onSwap() {
+    setAttemptingTxn(true)
+    swapCallback().then(hash => {
+      setTxHash(hash)
+      setPendingConfirmation(false)
 
-    const path = Object.keys(route.path).map(key => {
-      return route.path[key].address
-    })
-    let estimate: Function, method: Function, args: any[], value: BigNumber
-    const deadlineFromNow: number = Math.ceil(Date.now() / 1000) + deadline
-
-    switch (swapType) {
-      case SwapType.EXACT_TOKENS_FOR_TOKENS:
-        estimate = routerContract.estimateGas.swapExactTokensForTokens
-        method = routerContract.swapExactTokensForTokens
-        args = [
-          slippageAdjustedAmounts[Field.INPUT].raw.toString(),
-          slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
-          path,
-          account,
-          deadlineFromNow
-        ]
-        value = null
-        break
-      case SwapType.TOKENS_FOR_EXACT_TOKENS:
-        estimate = routerContract.estimateGas.swapTokensForExactTokens
-        method = routerContract.swapTokensForExactTokens
-        args = [
-          slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
-          slippageAdjustedAmounts[Field.INPUT].raw.toString(),
-          path,
-          account,
-          deadlineFromNow
-        ]
-        value = null
-        break
-      case SwapType.EXACT_ETH_FOR_TOKENS:
-        estimate = routerContract.estimateGas.swapExactETHForTokens
-        method = routerContract.swapExactETHForTokens
-        args = [slippageAdjustedAmounts[Field.OUTPUT].raw.toString(), path, account, deadlineFromNow]
-        value = BigNumber.from(slippageAdjustedAmounts[Field.INPUT].raw.toString())
-        break
-      case SwapType.TOKENS_FOR_EXACT_ETH:
-        estimate = routerContract.estimateGas.swapTokensForExactETH
-        method = routerContract.swapTokensForExactETH
-        args = [
-          slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
-          slippageAdjustedAmounts[Field.INPUT].raw.toString(),
-          path,
-          account,
-          deadlineFromNow
-        ]
-        value = null
-        break
-      case SwapType.EXACT_TOKENS_FOR_ETH:
-        estimate = routerContract.estimateGas.swapExactTokensForETH
-        method = routerContract.swapExactTokensForETH
-        args = [
-          slippageAdjustedAmounts[Field.INPUT].raw.toString(),
-          slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
-          path,
-          account,
-          deadlineFromNow
-        ]
-        value = null
-        break
-      case SwapType.ETH_FOR_EXACT_TOKENS:
-        estimate = routerContract.estimateGas.swapETHForExactTokens
-        method = routerContract.swapETHForExactTokens
-        args = [slippageAdjustedAmounts[Field.OUTPUT].raw.toString(), path, account, deadlineFromNow]
-        value = BigNumber.from(slippageAdjustedAmounts[Field.INPUT].raw.toString())
-        break
-    }
-
-    await estimate(...args, value ? { value } : {})
-      .then(estimatedGasLimit =>
-        method(...args, {
-          ...(value ? { value } : {}),
-          gasLimit: calculateGasMargin(estimatedGasLimit)
-        }).then(response => {
-          setTxHash(response.hash)
-          ReactGA.event({
-            category: 'ExchangePage',
-            label: 'Swap',
-            action: [tokens[Field.INPUT]?.symbol, tokens[Field.OUTPUT]?.symbol].join(';')
-          })
-          addTransaction(response, {
-            summary:
-              'Swap ' +
-              slippageAdjustedAmounts?.[Field.INPUT]?.toSignificant(3) +
-              ' ' +
-              tokens[Field.INPUT]?.symbol +
-              ' for ' +
-              slippageAdjustedAmounts?.[Field.OUTPUT]?.toSignificant(3) +
-              ' ' +
-              tokens[Field.OUTPUT]?.symbol
-          })
-          setPendingConfirmation(false)
-        })
-      )
-      .catch(e => {
-        console.error(e)
-        resetModal()
-        setShowConfirm(false)
+      ReactGA.event({
+        category: 'Swap',
+        label: 'Swap w/o Send',
+        action: [bestTrade.inputAmount.token.symbol, bestTrade.outputAmount.token.symbol].join(';')
       })
+    })
   }
 
   // errors
@@ -386,7 +281,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
             onClick={onSwap}
             error={priceImpactSeverity > 2}
             style={{ margin: '10px 0 0 0' }}
-            id="exchange-page-confirm-swap-or-send"
+            id="send-page-confirm-swap-or-send"
           >
             <Text fontSize={20} fontWeight={500}>
               {priceImpactSeverity > 2 ? 'Swap Anyway' : 'Confirm Swap'}
@@ -442,7 +337,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
               <ArrowWrapper>
                 <ArrowDown
                   size="16"
-                  onClick={onSwapTokens}
+                  onClick={onSwitchTokens}
                   color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme.primary1 : theme.text2}
                 />
               </ArrowWrapper>
@@ -550,7 +445,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
             onClick={() => {
               setShowConfirm(true)
             }}
-            id="exchange-swap-button"
+            id="swap-button"
             disabled={!isValid}
             error={priceImpactSeverity > 2}
           >
@@ -576,7 +471,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
         <AdvancedDropwdown>
           {!showAdvanced && (
             <CursorPointer>
-              <RowBetween onClick={() => setShowAdvanced(true)} padding={'8px 20px'} id="exchange-show-advanced">
+              <RowBetween onClick={() => setShowAdvanced(true)} padding={'8px 20px'} id="show-advanced">
                 <Text fontSize={16} fontWeight={500} style={{ userSelect: 'none' }}>
                   Show Advanced
                 </Text>
