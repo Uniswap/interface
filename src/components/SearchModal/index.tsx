@@ -477,10 +477,10 @@ function SearchModal({
                     {otherSelectedTokenAddress === address && <GreySpan> ({otherSelectedText})</GreySpan>}
                   </Text>
                   <FadedSpan>
-                    <TYPE.blue fontWeight={500}>
+                    <TYPE.main fontWeight={500}>
                       {urlAdded && 'Added by URL'}
                       {customAdded && 'Added by user'}
-                    </TYPE.blue>
+                    </TYPE.main>
                     {customAdded && (
                       <div
                         onClick={event => {
