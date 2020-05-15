@@ -5,7 +5,7 @@ import { ThemeContext } from 'styled-components'
 import { ALLOWED_SLIPPAGE_HIGH, ALLOWED_SLIPPAGE_LOW, ALLOWED_SLIPPAGE_MEDIUM } from '../../constants'
 import { Field } from '../../state/swap/actions'
 import { AutoColumn } from '../Column'
-import { ErrorText } from '../ExchangePage/styleds'
+import { ErrorText } from './styleds'
 import { AutoRow, RowFixed } from '../Row'
 
 export function warningServerity(priceImpact: Percent): 0 | 1 | 2 | 3 {

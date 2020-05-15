@@ -24,7 +24,7 @@ import {
   StyledBalanceMaxMini,
   StyledNumerical,
   Wrapper
-} from '../../components/ExchangePage/styleds'
+} from '../../components/swap/styleds'
 import QuestionHelper from '../../components/Question'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { AdvancedSwapDetails } from '../../components/swap/AdvancedSwapDetails'
