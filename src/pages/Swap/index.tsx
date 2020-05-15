@@ -10,20 +10,12 @@ import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
-import {
-  ArrowWrapper,
-  BottomGrouping,
-  Dots,
-  StyledBalanceMaxMini,
-  TruncatedText,
-  Wrapper
-} from '../../components/swap/styleds'
 import QuestionHelper from '../../components/Question'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import FormattedPriceImpact from '../../components/swap/FormattedPriceImpact'
+import { ArrowWrapper, BottomGrouping, Dots, StyledBalanceMaxMini, Wrapper } from '../../components/swap/styleds'
 import V1TradeLink from '../../components/swap/V1TradeLink'
-import TokenLogo from '../../components/TokenLogo'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '../../constants'
 import { useWeb3React } from '../../hooks'
 import { useApproveCallback } from '../../hooks/useApproveCallback'
@@ -32,9 +24,9 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
 import { useHasPendingApproval } from '../../state/transactions/hooks'
-import { CursorPointer, TYPE } from '../../theme'
-import { Link } from '../../theme'
+import { CursorPointer, Link, TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
+import SwapModalHeader from '../../components/swap/SwapModalHeader'
 
 export default function Swap({ history, location: { search } }: RouteComponentProps) {
   useDefaultsFromURL(search)
@@ -136,52 +128,13 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
 
   function modalHeader() {
     return (
-      <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
-        <RowBetween align="flex-end">
-          <TruncatedText fontSize={24} fontWeight={500}>
-            {!!formattedAmounts[Field.INPUT] && formattedAmounts[Field.INPUT]}
-          </TruncatedText>
-          <RowFixed gap="4px">
-            <TokenLogo address={tokens[Field.INPUT]?.address} size={'24px'} />
-            <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-              {tokens[Field.INPUT]?.symbol || ''}
-            </Text>
-          </RowFixed>
-        </RowBetween>
-        <RowFixed>
-          <ArrowDown size="16" color={theme.text2} />
-        </RowFixed>
-        <RowBetween align="flex-end">
-          <TruncatedText fontSize={24} fontWeight={500} color={priceImpactSeverity > 2 ? theme.red1 : ''}>
-            {!!formattedAmounts[Field.OUTPUT] && formattedAmounts[Field.OUTPUT]}
-          </TruncatedText>
-          <RowFixed gap="4px">
-            <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'24px'} />
-            <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-              {tokens[Field.OUTPUT]?.symbol || ''}
-            </Text>
-          </RowFixed>
-        </RowBetween>
-        <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
-          {independentField === Field.INPUT ? (
-            <TYPE.italic textAlign="left" style={{ width: '100%' }}>
-              {`Output is estimated. You will receive at least `}
-              <b>
-                {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {tokens[Field.OUTPUT]?.symbol}{' '}
-              </b>
-              {' or the transaction will revert.'}
-            </TYPE.italic>
-          ) : (
-            <TYPE.italic textAlign="left" style={{ width: '100%' }}>
-              {`Input is estimated. You will sell at most `}{' '}
-              <b>
-                {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {tokens[Field.INPUT]?.symbol}
-              </b>
-              {' or the transaction will revert.'}
-            </TYPE.italic>
-          )}
-        </AutoColumn>
-      </AutoColumn>
+      <SwapModalHeader
+        independentField={independentField}
+        priceImpactSeverity={priceImpactSeverity}
+        tokens={tokens}
+        formattedAmounts={formattedAmounts}
+        slippageAdjustedAmounts={slippageAdjustedAmounts}
+      />
     )
   }
 
