@@ -55,15 +55,9 @@ export const BottomGrouping = styled.div`
   position: relative;
 `
 
-export const ErrorText = styled(Text)<{ severity?: 'low' | 'medium' | 'high' }>`
+export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 }>`
   color: ${({ theme, severity }) =>
-    severity === 'high'
-      ? theme.red1
-      : severity === 'medium'
-      ? theme.yellow2
-      : severity === 'low'
-      ? theme.green1
-      : theme.text1};
+    severity === 3 ? theme.red1 : severity === 2 ? theme.yellow2 : severity === 1 ? theme.green1 : theme.text1};
 `
 
 export const InputGroup = styled(AutoColumn)`

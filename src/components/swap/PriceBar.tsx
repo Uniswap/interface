@@ -8,10 +8,11 @@ import { AutoColumn } from '../Column'
 import { ErrorText } from '../ExchangePage/styleds'
 import { AutoRow, RowFixed } from '../Row'
 
-export function warningServerity(priceImpact: Percent): 'low' | 'medium' | 'high' | undefined {
-  if (!priceImpact?.lessThan(ALLOWED_SLIPPAGE_HIGH)) return 'high'
-  if (!priceImpact?.lessThan(ALLOWED_SLIPPAGE_MEDIUM)) return 'medium'
-  if (!priceImpact?.lessThan(ALLOWED_SLIPPAGE_LOW)) return 'low'
+export function warningServerity(priceImpact: Percent): 0 | 1 | 2 | 3 {
+  if (!priceImpact?.lessThan(ALLOWED_SLIPPAGE_HIGH)) return 3
+  if (!priceImpact?.lessThan(ALLOWED_SLIPPAGE_MEDIUM)) return 2
+  if (!priceImpact?.lessThan(ALLOWED_SLIPPAGE_LOW)) return 1
+  return 0
 }
 
 const MIN_PERCENT_IMPACT = new Percent(JSBI.BigInt(1), JSBI.BigInt(10000))

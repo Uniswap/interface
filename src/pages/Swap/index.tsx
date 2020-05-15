@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { JSBI, TokenAmount, WETH } from '@uniswap/sdk'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { ArrowDown, ChevronDown, Repeat } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
@@ -69,7 +69,8 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
   const toggleWalletModal = useWalletModalToggle()
 
   const { independentField, typedValue } = useSwapState()
-  const { bestTrade, tokenBalances, parsedAmounts, swapType, tokens } = useDerivedSwapInfo()
+  const { bestTrade, tokenBalances, parsedAmounts, swapType, tokens, error } = useDerivedSwapInfo()
+  const isValid = !error
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   // token contracts for approvals and direct sends
@@ -272,65 +273,14 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
   }
 
   // errors
-  const [generalError, setGeneralError] = useState<string>('')
-  const [inputError, setInputError] = useState<string>('')
-  const [outputError, setOutputError] = useState<string>('')
-  const [isValid, setIsValid] = useState<boolean>(false)
-
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   const advanced = useUserAdvanced()
 
-  useEffect(() => {
-    // reset errors
-    setGeneralError(null)
-    setInputError(null)
-    setOutputError(null)
-    setIsValid(true)
-
-    if (!account) {
-      setGeneralError('Connect Wallet')
-      setIsValid(false)
-    }
-
-    if (!parsedAmounts[Field.INPUT]) {
-      setInputError('Enter an amount')
-      setIsValid(false)
-    }
-
-    if (!parsedAmounts[Field.OUTPUT]) {
-      setOutputError('Enter an amount')
-      setIsValid(false)
-    }
-
-    if (
-      tokenBalances[Field.INPUT] &&
-      parsedAmounts[Field.INPUT] &&
-      tokenBalances[Field.INPUT].lessThan(parsedAmounts[Field.INPUT])
-    ) {
-      setInputError('Insufficient ' + tokens[Field.INPUT]?.symbol + ' balance')
-      setIsValid(false)
-    }
-
-    // check for null trade entitiy if not enough balance for trade
-    if (
-      tokenBalances[Field.INPUT] &&
-      !bestTrade &&
-      parsedAmounts[independentField] &&
-      !parsedAmounts[dependentField] &&
-      tokens[dependentField]
-    ) {
-      setInputError('Insufficient ' + tokens[Field.INPUT]?.symbol + ' balance')
-      setIsValid(false)
-    }
-  }, [dependentField, independentField, parsedAmounts, tokens, route, bestTrade, tokenBalances, account])
-
-  const { priceImpactWithoutFee: priceImpactWithoutFee, realizedLPFee: realizedLPFee } = computeTradePriceBreakdown(
-    bestTrade
-  )
+  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(bestTrade)
 
   // warnings on slippage
-  const severity = warningServerity(priceImpactWithoutFee)
+  const priceImpactSeverity = warningServerity(priceImpactWithoutFee)
 
   function modalHeader() {
     return (
@@ -350,7 +300,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
           <ArrowDown size="16" color={theme.text2} />
         </RowFixed>
         <RowBetween align="flex-end">
-          <TruncatedText fontSize={24} fontWeight={500} color={severity === 'high' ? theme.red1 : ''}>
+          <TruncatedText fontSize={24} fontWeight={500} color={priceImpactSeverity > 2 ? theme.red1 : ''}>
             {!!formattedAmounts[Field.OUTPUT] && formattedAmounts[Field.OUTPUT]}
           </TruncatedText>
           <RowFixed gap="4px">
@@ -463,12 +413,12 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
         <AutoRow>
           <ButtonError
             onClick={onSwap}
-            error={severity === 'high'}
+            error={priceImpactSeverity > 2}
             style={{ margin: '10px 0 0 0' }}
             id="exchange-page-confirm-swap-or-send"
           >
             <Text fontSize={20} fontWeight={500}>
-              {severity === 'high' ? 'Swap Anyway' : 'Confirm Swap'}
+              {priceImpactSeverity > 2 ? 'Swap Anyway' : 'Confirm Swap'}
             </Text>
           </ButtonError>
         </AutoRow>
@@ -576,7 +526,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
                   </Text>
                 </RowBetween>
 
-                {bestTrade && (severity === 'high' || severity === 'medium') && (
+                {bestTrade && priceImpactSeverity > 1 && (
                   <RowBetween>
                     <TYPE.main
                       style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
@@ -616,7 +566,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
               Add liquidity now.
             </Link>
           </GreyCard>
-        ) : !userHasApprovedRouter && !inputError ? (
+        ) : !userHasApprovedRouter && !!bestTrade ? (
           <ButtonLight
             onClick={() => {
               approveAmount(Field.INPUT)
@@ -636,10 +586,10 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
             }}
             id="exchange-swap-button"
             disabled={!isValid}
-            error={severity === 'high'}
+            error={priceImpactSeverity > 2}
           >
             <Text fontSize={20} fontWeight={500}>
-              {generalError || inputError || outputError || `Swap${severity === 'high' ? ' Anyway' : ''}`}
+              {error ?? `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
             </Text>
           </ButtonError>
         )}
@@ -680,7 +630,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
           )}
           <FixedBottom>
             <AutoColumn gap="lg">
-              {severity === 'high' && <PriceSlippageWarningCard priceSlippage={priceImpactWithoutFee} />}
+              {priceImpactSeverity > 2 && <PriceSlippageWarningCard priceSlippage={priceImpactWithoutFee} />}
             </AutoColumn>
           </FixedBottom>
         </AdvancedDropwdown>

@@ -97,6 +97,7 @@ export function useDerivedSwapInfo(): {
   parsedAmounts: { [field in Field]?: TokenAmount }
   bestTrade?: Trade
   swapType: SwapType
+  error?: string
 } {
   const { account, chainId } = useWeb3React()
 
@@ -110,7 +111,7 @@ export function useDerivedSwapInfo(): {
   const tokenIn = useTokenByAddressAndAutomaticallyAdd(tokenInAddress)
   const tokenOut = useTokenByAddressAndAutomaticallyAdd(tokenOutAddress)
 
-  const tokenBalances = useTokenBalancesTreatWETHAsETH(account, [tokenIn, tokenOut])
+  const relevantTokenBalances = useTokenBalancesTreatWETHAsETH(account, [tokenIn, tokenOut])
 
   const isExactIn: boolean = independentField === Field.INPUT
   const amount = tryParseAmount(typedValue, isExactIn ? tokenIn : tokenOut)
@@ -120,20 +121,48 @@ export function useDerivedSwapInfo(): {
 
   const bestTrade = isExactIn ? bestTradeExactIn : bestTradeExactOut
 
+  const parsedAmounts = {
+    [Field.INPUT]: isExactIn ? amount : bestTrade?.inputAmount,
+    [Field.OUTPUT]: isExactIn ? bestTrade?.outputAmount : amount
+  }
+
+  const tokenBalances = {
+    [Field.INPUT]: relevantTokenBalances?.[tokenIn?.address],
+    [Field.OUTPUT]: relevantTokenBalances?.[tokenOut?.address]
+  }
+
+  const tokens = {
+    [Field.INPUT]: tokenIn,
+    [Field.OUTPUT]: tokenOut
+  }
+
+  let error: string | undefined
+  if (!account) {
+    error = error ?? 'Connect Wallet'
+  }
+
+  if (!parsedAmounts[Field.INPUT]) {
+    error = error ?? 'Enter an amount'
+  }
+
+  if (!parsedAmounts[Field.OUTPUT]) {
+    error = error ?? 'Enter an amount'
+  }
+
+  if (
+    tokenBalances[Field.INPUT] &&
+    parsedAmounts[Field.INPUT] &&
+    tokenBalances[Field.INPUT].lessThan(parsedAmounts[Field.INPUT])
+  ) {
+    error = 'Insufficient ' + tokens[Field.INPUT]?.symbol + ' balance'
+  }
+
   return {
-    tokens: {
-      [Field.INPUT]: tokenIn,
-      [Field.OUTPUT]: tokenOut
-    },
-    tokenBalances: {
-      [Field.INPUT]: tokenBalances?.[tokenIn?.address],
-      [Field.OUTPUT]: tokenBalances?.[tokenOut?.address]
-    },
-    parsedAmounts: {
-      [Field.INPUT]: isExactIn ? amount : bestTrade?.inputAmount,
-      [Field.OUTPUT]: isExactIn ? bestTrade?.outputAmount : amount
-    },
+    tokens,
+    tokenBalances,
+    parsedAmounts,
     bestTrade,
+    error,
     swapType: getSwapType({ [Field.INPUT]: tokenIn, [Field.OUTPUT]: tokenOut }, isExactIn, chainId)
   }
 }

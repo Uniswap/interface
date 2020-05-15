@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { Fraction, JSBI, Percent, TokenAmount, TradeType, WETH } from '@uniswap/sdk'
+import { JSBI, Percent, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useContext, useEffect, useState } from 'react'
-import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
+import { ArrowDown, ChevronDown, Repeat } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -22,14 +22,13 @@ import {
   Dots,
   FixedBottom,
   InputGroup,
-  SectionBreak,
   StyledBalanceMaxMini,
   StyledNumerical,
   Wrapper
 } from '../../components/ExchangePage/styleds'
 import QuestionHelper from '../../components/Question'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
-import SlippageTabs from '../../components/SlippageTabs'
+import { AdvancedSwapDetails } from '../../components/swap/AdvancedSwapDetails'
 import FormattedPriceImpact from '../../components/swap/FormattedPriceImpact'
 import PriceBar, { warningServerity } from '../../components/swap/PriceBar'
 import { PriceSlippageWarningCard } from '../../components/swap/PriceSlippageWarningCard'
@@ -51,7 +50,8 @@ import { useHasPendingApproval, useTransactionAdder } from '../../state/transact
 import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
-import { basisPointsToPercent, calculateGasMargin, getEtherscanLink, getRouterContract, getSigner } from '../../utils'
+import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../util/prices'
+import { calculateGasMargin, getEtherscanLink, getRouterContract, getSigner } from '../../utils'
 
 export default function Send({ history, location: { search } }: RouteComponentProps) {
   useDefaultsFromURL(search)
@@ -71,10 +71,12 @@ export default function Send({ history, location: { search } }: RouteComponentPr
   const [sendingWithSwap, setSendingWithSwap] = useState<boolean>(false)
   const [recipient, setRecipient] = useState<string>('')
   const [ENS, setENS] = useState<string>('')
+  const [recipientError, setRecipientError] = useState<string | null>('Enter a Recipient')
 
   // trade details, check query params for initial state
   const { independentField, typedValue } = useSwapState()
-  const { swapType, parsedAmounts, bestTrade, tokenBalances, tokens } = useDerivedSwapInfo()
+  const { swapType, parsedAmounts, bestTrade, tokenBalances, tokens, error } = useDerivedSwapInfo()
+  const isValid = !error && !recipientError && bestTrade
 
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -104,8 +106,6 @@ export default function Send({ history, location: { search } }: RouteComponentPr
     parsedAmounts[independentField].greaterThan(JSBI.BigInt(0))
   const noRoute = !route
 
-  const slippageFromTrade: Percent = bestTrade && bestTrade.slippage
-
   // check whether the user has approved the router on the input token
   const inputApproval: TokenAmount = useTokenAllowance(tokens[Field.INPUT], account, ROUTER_ADDRESS)
   const userHasApprovedRouter =
@@ -120,31 +120,9 @@ export default function Send({ history, location: { search } }: RouteComponentPr
     [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(6) : ''
   }
 
-  // for each hop in our trade, take away the x*y=k price impact from 0.3% fees
-  // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
-  const baseFee = basisPointsToPercent(10000 - 30)
-  const realizedLPFee = !bestTrade
-    ? undefined
-    : basisPointsToPercent(10000).subtract(
-        bestTrade.route.path.length === 2
-          ? baseFee
-          : new Array(bestTrade.route.path.length - 2)
-              .fill(0)
-              .reduce<Fraction>((currentFee: Percent | Fraction): Fraction => currentFee.multiply(baseFee), baseFee)
-      )
-  // the x*y=k impact
-  const priceImpact =
-    slippageFromTrade && realizedLPFee
-      ? new Percent(
-          slippageFromTrade.subtract(realizedLPFee).numerator,
-          slippageFromTrade.subtract(realizedLPFee).denominator
-        )
-      : undefined
+  const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(bestTrade, allowedSlippage)
 
-  // the amount of the input that accrues to LPs
-  const realizedLPFeeAmount =
-    realizedLPFee &&
-    new TokenAmount(tokens[Field.INPUT], realizedLPFee.multiply(parsedAmounts[Field.INPUT].raw).quotient)
+  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(bestTrade)
 
   const { onSwapTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
 
@@ -168,16 +146,6 @@ export default function Send({ history, location: { search } }: RouteComponentPr
       : undefined
   const atMaxAmountInput: boolean =
     !!maxAmountInput && !!parsedAmounts[Field.INPUT] ? maxAmountInput.equalTo(parsedAmounts[Field.INPUT]) : undefined
-
-  const slippageAdjustedAmounts: { [field: number]: TokenAmount } = {
-    [independentField]: parsedAmounts[independentField],
-    [dependentField]:
-      parsedAmounts[dependentField] && bestTrade
-        ? bestTrade.tradeType === TradeType.EXACT_INPUT
-          ? bestTrade.minimumAmountOut(basisPointsToPercent(allowedSlippage))
-          : bestTrade.maximumAmountIn(basisPointsToPercent(allowedSlippage))
-        : undefined
-  }
 
   // reset modal state when closed
   function resetModal() {
@@ -378,80 +346,12 @@ export default function Send({ history, location: { search } }: RouteComponentPr
   }
 
   // errors
-  const [generalError, setGeneralError] = useState<string>('')
-  const [inputError, setInputError] = useState<string>('')
-  const [outputError, setOutputError] = useState<string>('')
-  const [recipientError, setRecipientError] = useState<string>('')
-  const [isValid, setIsValid] = useState<boolean>(false)
-
-  const ignoreOutput = !sendingWithSwap
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   const advanced = useUserAdvanced()
 
-  useEffect(() => {
-    // reset errors
-    setGeneralError(null)
-    setInputError(null)
-    setOutputError(null)
-    setIsValid(true)
-
-    if (recipientError) {
-      setIsValid(false)
-    }
-
-    if (!account) {
-      setGeneralError('Connect Wallet')
-      setIsValid(false)
-    }
-
-    if (!parsedAmounts[Field.INPUT]) {
-      setInputError('Enter an amount')
-      setIsValid(false)
-    }
-
-    if (!parsedAmounts[Field.OUTPUT] && !ignoreOutput) {
-      setOutputError('Enter an amount')
-      setIsValid(false)
-    }
-
-    if (
-      tokenBalances[Field.INPUT] &&
-      parsedAmounts[Field.INPUT] &&
-      JSBI.lessThan(tokenBalances[Field.INPUT].raw, parsedAmounts[Field.INPUT]?.raw)
-    ) {
-      setInputError('Insufficient ' + tokens[Field.INPUT]?.symbol + ' balance')
-      setIsValid(false)
-    }
-
-    // check for null trade entitiy if not enough balance for trade
-    if (
-      sendingWithSwap &&
-      tokenBalances[Field.INPUT] &&
-      !bestTrade &&
-      parsedAmounts[independentField] &&
-      !parsedAmounts[dependentField] &&
-      tokens[dependentField]
-    ) {
-      setInputError('Insufficient ' + tokens[Field.INPUT]?.symbol + ' balance')
-      setIsValid(false)
-    }
-  }, [
-    sendingWithSwap,
-    dependentField,
-    ignoreOutput,
-    independentField,
-    parsedAmounts,
-    recipientError,
-    tokens,
-    route,
-    bestTrade,
-    tokenBalances,
-    account
-  ])
-
   // warnings on slippage
-  const severity = warningServerity(priceImpact)
+  const severity = warningServerity(priceImpactWithoutFee)
 
   function modalHeader() {
     if (!sendingWithSwap) {
@@ -590,7 +490,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
                 </TYPE.black>
                 <QuestionHelper text="The difference between the market price and your price due to trade size." />
               </RowFixed>
-              <FormattedPriceImpact priceImpact={priceImpact} />
+              <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
             </RowBetween>
             <RowBetween>
               <RowFixed>
@@ -600,7 +500,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
                 <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
               </RowFixed>
               <TYPE.black fontSize={14}>
-                {realizedLPFeeAmount ? realizedLPFeeAmount?.toSignificant(6) + ' ' + tokens[Field.INPUT]?.symbol : '-'}
+                {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + tokens[Field.INPUT]?.symbol : '-'}
               </TYPE.black>
             </RowBetween>
           </AutoColumn>
@@ -608,12 +508,12 @@ export default function Send({ history, location: { search } }: RouteComponentPr
           <AutoRow>
             <ButtonError
               onClick={onSwap}
-              error={severity !== 'high'}
+              error={severity > 2}
               style={{ margin: '10px 0 0 0' }}
               id="exchange-page-confirm-swap-or-send"
             >
               <Text fontSize={20} fontWeight={500}>
-                {severity === 'high' ? 'Send Anyway' : 'Confirm Send'}
+                {severity > 2 ? 'Send Anyway' : 'Confirm Send'}
               </Text>
             </ButtonError>
           </AutoRow>
@@ -834,7 +734,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
                   </Text>
                 </RowBetween>
 
-                {bestTrade && (severity === 'high' || severity === 'medium') && (
+                {bestTrade && severity > 1 && (
                   <RowBetween>
                     <TYPE.main
                       style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
@@ -843,7 +743,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
                       Price Impact
                     </TYPE.main>
                     <RowFixed>
-                      <FormattedPriceImpact priceImpact={priceImpact} />
+                      <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
                       <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
                     </RowFixed>
                   </RowBetween>
@@ -874,7 +774,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
               Add liquidity now.
             </Link>
           </GreyCard>
-        ) : !userHasApprovedRouter && !inputError ? (
+        ) : !userHasApprovedRouter && isValid ? (
           <ButtonLight
             onClick={() => {
               approveAmount(Field.INPUT)
@@ -894,14 +794,10 @@ export default function Send({ history, location: { search } }: RouteComponentPr
             }}
             id="send-button"
             disabled={!isValid}
-            error={severity !== 'high'}
+            error={severity > 2}
           >
             <Text fontSize={20} fontWeight={500}>
-              {generalError ||
-                inputError ||
-                outputError ||
-                recipientError ||
-                `Send${severity === 'high' ? ' Anyway' : ''}`}
+              {error || recipientError || `Send${severity > 2 ? ' Anyway' : ''}`}
             </Text>
           </ButtonError>
         )}
@@ -931,86 +827,18 @@ export default function Send({ history, location: { search } }: RouteComponentPr
             </CursorPointer>
           )}
           {showAdvanced && (
-            <AutoColumn gap="md">
-              <CursorPointer>
-                <RowBetween onClick={() => setShowAdvanced(false)} padding={'8px 20px'}>
-                  <Text fontSize={16} color={theme.text2} fontWeight={500} style={{ userSelect: 'none' }}>
-                    Hide Advanced
-                  </Text>
-                  <ChevronUp color={theme.text2} />
-                </RowBetween>
-              </CursorPointer>
-              <SectionBreak />
-              <AutoColumn style={{ padding: '0 20px' }}>
-                <RowBetween>
-                  <RowFixed>
-                    <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-                      {independentField === Field.INPUT ? 'Minimum sent' : 'Maximum sold'}
-                    </TYPE.black>
-                    <QuestionHelper
-                      text={
-                        independentField === Field.INPUT
-                          ? 'Price can change between when a transaction is submitted and when it is executed. This is the minimum amount you will send. A worse rate will cause your transaction to revert.'
-                          : 'Price can change between when a transaction is submitted and when it is executed. This is the maximum amount you will pay. A worse rate will cause your transaction to revert.'
-                      }
-                    />
-                  </RowFixed>
-                  <RowFixed>
-                    <TYPE.black color={theme.text1} fontSize={14}>
-                      {independentField === Field.INPUT
-                        ? slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4) ?? '-'
-                        : slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4) ?? '-'}
-                    </TYPE.black>
-                    {parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.INPUT] && (
-                      <TYPE.black fontSize={14} marginLeft={'4px'} color={theme.text1}>
-                        {independentField === Field.INPUT
-                          ? parsedAmounts[Field.OUTPUT] && tokens[Field.OUTPUT]?.symbol
-                          : parsedAmounts[Field.INPUT] && tokens[Field.INPUT]?.symbol}
-                      </TYPE.black>
-                    )}
-                  </RowFixed>
-                </RowBetween>
-                <RowBetween>
-                  <RowFixed>
-                    <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-                      Price Impact
-                    </TYPE.black>
-                    <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
-                  </RowFixed>
-                  <FormattedPriceImpact priceImpact={priceImpact} />
-                </RowBetween>
-                <RowBetween>
-                  <RowFixed>
-                    <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-                      Liquidity Provider Fee
-                    </TYPE.black>
-                    <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
-                  </RowFixed>
-                  <TYPE.black fontSize={14} color={theme.text1}>
-                    {realizedLPFeeAmount
-                      ? realizedLPFeeAmount?.toSignificant(4) + ' ' + tokens[Field.INPUT]?.symbol
-                      : '-'}
-                  </TYPE.black>
-                </RowBetween>
-              </AutoColumn>
-              <SectionBreak />
-              <RowFixed padding={'0 20px'}>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  Set slippage tolerance
-                </TYPE.black>
-                <QuestionHelper text="Your transaction will revert if the execution price changes by more than this amount after you submit your trade." />
-              </RowFixed>
-              <SlippageTabs
-                rawSlippage={allowedSlippage}
-                setRawSlippage={setAllowedSlippage}
-                deadline={deadline}
-                setDeadline={setDeadline}
-              />
-            </AutoColumn>
+            <AdvancedSwapDetails
+              trade={bestTrade}
+              onDismiss={() => setShowAdvanced(false)}
+              rawSlippage={allowedSlippage}
+              setRawSlippage={setAllowedSlippage}
+              deadline={deadline}
+              setDeadline={setDeadline}
+            />
           )}
           <FixedBottom>
             <AutoColumn gap="lg">
-              {severity === 'high' && <PriceSlippageWarningCard priceSlippage={priceImpact} />}
+              {severity > 2 && <PriceSlippageWarningCard priceSlippage={priceImpactWithoutFee} />}
             </AutoColumn>
           </FixedBottom>
         </AdvancedDropwdown>
