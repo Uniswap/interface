@@ -1,36 +1,34 @@
-import React, { useState, useCallback, useEffect, useContext } from 'react'
-import { ThemeContext } from 'styled-components'
-import { parseEther, parseUnits } from '@ethersproject/units'
-import { JSBI, Percent, TokenAmount, TradeType, WETH, Fraction } from '@uniswap/sdk'
-import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
-import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { useUserAdvanced } from '../../state/application/hooks'
-import { useTokenBalanceTreatingWETHasETH, useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
-import { Field, SwapAction, useSwapStateReducer } from './swap-store'
+import { parseUnits } from '@ethersproject/units'
+import { Fraction, JSBI, Percent, TokenAmount, TradeType, WETH } from '@uniswap/sdk'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
+import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
+import ReactGA from 'react-ga'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { Text } from 'rebass'
+import { ThemeContext } from 'styled-components'
 import Card, { BlueCard, GreyCard, YellowCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { ROUTER_ADDRESS } from '../../constants'
 import { useTokenAllowance } from '../../data/Allowances'
-import { useAddUserToken, useFetchTokenByAddress } from '../../state/user/hooks'
-import { useAllTokens, useToken } from '../../contexts/Tokens'
-import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
+import { useV1TradeLinkIfBetter } from '../../data/V1'
 import { useTokenContract, useWeb3React } from '../../hooks'
+import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useUserAdvanced, useWalletModalToggle } from '../../state/application/hooks'
+import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
+import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { Hover, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
 import {
+  basisPointsToPercent,
   calculateGasMargin,
   getEtherscanLink,
   getRouterContract,
-  basisPointsToPercent,
-  QueryParams,
-  getSigner
+  getSigner,
+  QueryParams
 } from '../../utils'
 import Copy from '../AccountDetails/Copy'
 import AddressInputPanel from '../AddressInputPanel'
@@ -38,6 +36,7 @@ import { ButtonError, ButtonLight, ButtonPrimary, ButtonSecondary } from '../But
 import ConfirmationModal from '../ConfirmationModal'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import QuestionHelper from '../Question'
+import { AutoRow, RowBetween, RowFixed } from '../Row'
 import SlippageTabs from '../SlippageTabs'
 import TokenLogo from '../TokenLogo'
 import {
@@ -54,7 +53,7 @@ import {
   TruncatedText,
   Wrapper
 } from './styleds'
-import { useV1TradeLinkIfBetter } from '../../data/V1'
+import { Field, SwapAction, useSwapStateReducer } from './swap-store'
 
 enum SwapType {
   EXACT_TOKENS_FOR_TOKENS,
@@ -75,7 +74,10 @@ const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
 const ALLOWED_SLIPPAGE_MEDIUM = 100
 const ALLOWED_SLIPPAGE_HIGH = 500
 
-interface ExchangePageProps extends RouteComponentProps<{}> {
+// used to ensure the user doesn't send so much ETH so they end up with <.01
+const MIN_ETH: JSBI = JSBI.BigInt(`1${'0'.repeat(16)}`) // .01 ETH
+
+interface ExchangePageProps extends RouteComponentProps {
   sendingInput: boolean
   params: QueryParams
 }
@@ -107,34 +109,9 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   const [tradeError, setTradeError] = useState<string>('') // error for things like reserve size or route
 
   const tokens = {
-    [Field.INPUT]: useToken(fieldData[Field.INPUT].address),
-    [Field.OUTPUT]: useToken(fieldData[Field.OUTPUT].address)
+    [Field.INPUT]: useTokenByAddressAndAutomaticallyAdd(fieldData[Field.INPUT].address),
+    [Field.OUTPUT]: useTokenByAddressAndAutomaticallyAdd(fieldData[Field.OUTPUT].address)
   }
-
-  // ensure input + output tokens are added to localstorage
-  const fetchTokenByAddress = useFetchTokenByAddress()
-  const addToken = useAddUserToken()
-  const allTokens = useAllTokens()
-  const inputTokenAddress = fieldData[Field.INPUT].address
-  useEffect(() => {
-    if (inputTokenAddress && !Object.keys(allTokens).some(tokenAddress => tokenAddress === inputTokenAddress)) {
-      fetchTokenByAddress(inputTokenAddress).then(token => {
-        if (token !== null) {
-          addToken(token)
-        }
-      })
-    }
-  }, [inputTokenAddress, allTokens, fetchTokenByAddress, addToken])
-  const outputTokenAddress = fieldData[Field.OUTPUT].address
-  useEffect(() => {
-    if (outputTokenAddress && !Object.keys(allTokens).some(tokenAddress => tokenAddress === outputTokenAddress)) {
-      fetchTokenByAddress(outputTokenAddress).then(token => {
-        if (token !== null) {
-          addToken(token)
-        }
-      })
-    }
-  }, [outputTokenAddress, allTokens, fetchTokenByAddress, addToken])
 
   // token contracts for approvals and direct sends
   const tokenContractInput: Contract = useTokenContract(tokens[Field.INPUT]?.address)
@@ -156,8 +133,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
 
   // get user- and token-specific lookup data
   const userBalances = {
-    [Field.INPUT]: useTokenBalanceTreatingWETHasETH(account, tokens[Field.INPUT]),
-    [Field.OUTPUT]: useTokenBalanceTreatingWETHasETH(account, tokens[Field.OUTPUT])
+    [Field.INPUT]: allBalances?.[account]?.[tokens[Field.INPUT]?.address],
+    [Field.OUTPUT]: allBalances?.[account]?.[tokens[Field.OUTPUT]?.address]
   }
 
   // parse the amount that the user typed
@@ -277,19 +254,6 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     [dispatch]
   )
 
-  const onMaxOutput = useCallback(
-    (typedValue: string) => {
-      dispatch({
-        type: SwapAction.TYPE,
-        payload: {
-          field: Field.OUTPUT,
-          typedValue
-        }
-      })
-    },
-    [dispatch]
-  )
-
   // reset field if sending with with swap is cancled
   useEffect(() => {
     if (sending && !sendingWithSwap) {
@@ -297,39 +261,19 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     }
   }, [onTokenSelection, sending, sendingWithSwap])
 
-  const MIN_ETHER: TokenAmount = chainId && new TokenAmount(WETH[chainId], JSBI.BigInt(parseEther('.01')))
-
-  let maxAmountInput: TokenAmount
-
-  try {
-    maxAmountInput =
-      !!userBalances[Field.INPUT] &&
-      !!tokens[Field.INPUT] &&
-      WETH[chainId] &&
-      JSBI.greaterThan(
-        userBalances[Field.INPUT].raw,
-        tokens[Field.INPUT].equals(WETH[chainId]) ? MIN_ETHER.raw : JSBI.BigInt(0)
-      )
-        ? tokens[Field.INPUT].equals(WETH[chainId])
-          ? userBalances[Field.INPUT].subtract(MIN_ETHER)
-          : userBalances[Field.INPUT]
-        : undefined
-  } catch {}
-
+  const maxAmountInput: TokenAmount =
+    !!userBalances[Field.INPUT] &&
+    !!tokens[Field.INPUT] &&
+    !!WETH[chainId] &&
+    userBalances[Field.INPUT].greaterThan(
+      new TokenAmount(tokens[Field.INPUT], tokens[Field.INPUT].equals(WETH[chainId]) ? MIN_ETH : '0')
+    )
+      ? tokens[Field.INPUT].equals(WETH[chainId])
+        ? userBalances[Field.INPUT].subtract(new TokenAmount(WETH[chainId], MIN_ETH))
+        : userBalances[Field.INPUT]
+      : undefined
   const atMaxAmountInput: boolean =
-    !!maxAmountInput && !!parsedAmounts[Field.INPUT]
-      ? JSBI.equal(maxAmountInput.raw, parsedAmounts[Field.INPUT].raw)
-      : undefined
-
-  const maxAmountOutput: TokenAmount =
-    !!userBalances[Field.OUTPUT] && JSBI.greaterThan(userBalances[Field.OUTPUT].raw, JSBI.BigInt(0))
-      ? userBalances[Field.OUTPUT]
-      : undefined
-
-  const atMaxAmountOutput: boolean =
-    !!maxAmountOutput && !!parsedAmounts[Field.OUTPUT]
-      ? JSBI.equal(maxAmountOutput.raw, parsedAmounts[Field.OUTPUT].raw)
-      : undefined
+    !!maxAmountInput && !!parsedAmounts[Field.INPUT] ? maxAmountInput.equalTo(parsedAmounts[Field.INPUT]) : undefined
 
   function getSwapType(): SwapType {
     if (tradeType === TradeType.EXACT_INPUT) {
@@ -384,6 +328,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
         .sendTransaction({ to: recipient.toString(), value: BigNumber.from(parsedAmounts[Field.INPUT].raw.toString()) })
         .then(response => {
           setTxHash(response.hash)
+          ReactGA.event({ category: 'ExchangePage', action: 'Send', label: tokens[Field.INPUT]?.symbol })
           addTransaction(response, {
             summary:
               'Send ' +
@@ -520,6 +465,11 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setTxHash(response.hash)
+          ReactGA.event({
+            category: 'ExchangePage',
+            label: sending && recipient !== account ? 'Swap w/ Send' : 'Swap',
+            action: [tokens[Field.INPUT]?.symbol, tokens[Field.OUTPUT]?.symbol].join(';')
+          })
           addTransaction(response, {
             summary:
               'Swap ' +
@@ -548,11 +498,11 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     const estimatedGas = await tokenContract.estimateGas.approve(ROUTER_ADDRESS, MaxUint256).catch(() => {
       // general fallback for tokens who restrict approval amounts
       useUserBalance = true
-      return tokenContract.estimateGas.approve(ROUTER_ADDRESS, userBalances[field])
+      return tokenContract.estimateGas.approve(ROUTER_ADDRESS, userBalances[field].raw.toString())
     })
 
     tokenContract
-      .approve(ROUTER_ADDRESS, useUserBalance ? userBalances[field] : MaxUint256, {
+      .approve(ROUTER_ADDRESS, useUserBalance ? userBalances[field].raw.toString() : MaxUint256, {
         gasLimit: calculateGasMargin(estimatedGas)
       })
       .then(response => {
@@ -605,7 +555,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     if (
       userBalances[Field.INPUT] &&
       parsedAmounts[Field.INPUT] &&
-      JSBI.lessThan(userBalances[Field.INPUT].raw, parsedAmounts[Field.INPUT]?.raw)
+      userBalances[Field.INPUT].lessThan(parsedAmounts[Field.INPUT])
     ) {
       setInputError('Insufficient ' + tokens[Field.INPUT]?.symbol + ' balance')
       setIsValid(false)
@@ -766,7 +716,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
     if (sending && !sendingWithSwap) {
       return (
         <AutoColumn>
-          <ButtonPrimary onClick={onSend}>
+          <ButtonPrimary onClick={onSend} id="exchange-page-confirm-send">
             <Text color="white" fontSize={20}>
               Confirm send
             </Text>
@@ -861,7 +811,12 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
           </AutoColumn>
 
           <AutoRow>
-            <ButtonError onClick={onSwap} error={!!warningHigh} style={{ margin: '10px 0 0 0' }}>
+            <ButtonError
+              onClick={onSwap}
+              error={!!warningHigh}
+              style={{ margin: '10px 0 0 0' }}
+              id="exchange-page-confirm-swap-or-send"
+            >
               <Text fontSize={20} fontWeight={500}>
                 {warningHigh ? (sending ? 'Send Anyway' : 'Swap Anyway') : sending ? 'Confirm Send' : 'Confirm Swap'}
               </Text>
@@ -920,9 +875,8 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
       ]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}`
 
   function _onTokenSelect(address: string) {
-    const balance = allBalances?.[account]?.[address]
     // if no user balance - switch view to a send with swap
-    const hasBalance = balance && JSBI.greaterThan(balance.raw, JSBI.BigInt(0))
+    const hasBalance = allBalances?.[account]?.[address]?.greaterThan('0')
     if (!hasBalance && sending) {
       onTokenSelection(Field.INPUT, null)
       onTokenSelection(Field.OUTPUT, address)
@@ -944,7 +898,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
   }
 
   return (
-    <Wrapper id="exchangePage">
+    <Wrapper id="exchange-page">
       <ConfirmationModal
         isOpen={showConfirm}
         title={sendingWithSwap ? 'Confirm swap and send' : sending ? 'Confirm Send' : 'Confirm Swap'}
@@ -982,7 +936,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               showSendWithSwap={true}
               advanced={advanced}
               label={''}
-              inputId="swapInputField"
+              id="swap-currency-input"
               otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
             />
           </InputGroup>
@@ -1027,7 +981,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               }}
               onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
               otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
-              inputId="swapInputField"
+              id="swap-currency-input"
             />
 
             {sendingWithSwap ? (
@@ -1062,16 +1016,15 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
               field={Field.OUTPUT}
               value={formattedAmounts[Field.OUTPUT]}
               onUserInput={onUserInput}
-              onMax={() => {
-                maxAmountOutput && onMaxOutput(maxAmountOutput.toExact())
-              }}
+              // eslint-disable-next-line @typescript-eslint/no-empty-function
+              onMax={() => {}}
+              atMax={true}
               label={independentField === Field.INPUT && parsedAmounts[Field.OUTPUT] ? 'To (estimated)' : 'To'}
-              atMax={atMaxAmountOutput}
               token={tokens[Field.OUTPUT]}
               onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
               advanced={advanced}
               otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
-              inputId="swapOutputField"
+              id="swap-currency-output"
             />
             {sendingWithSwap && (
               <RowBetween padding="0 1rem 0 12px">
@@ -1192,6 +1145,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
             onClick={() => {
               setShowConfirm(true)
             }}
+            id="exchange-swap-button"
             disabled={!isValid}
             error={!!warningHigh}
           >
@@ -1222,7 +1176,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
         <AdvancedDropwdown>
           {!showAdvanced && (
             <Hover>
-              <RowBetween onClick={() => setShowAdvanced(true)} padding={'8px 20px'}>
+              <RowBetween onClick={() => setShowAdvanced(true)} padding={'8px 20px'} id="exchange-show-advanced">
                 <Text fontSize={16} fontWeight={500} style={{ userSelect: 'none' }}>
                   Show Advanced
                 </Text>
@@ -1300,11 +1254,11 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
                       Liquidity Provider Fee
                     </TYPE.black>
-                    <QuestionHelper text="A portion of each trade (0.03%) goes to liquidity providers to incentivize liquidity on the protocol." />
+                    <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
                   </RowFixed>
                   <TYPE.black fontSize={14} color={theme.text1}>
                     {realizedLPFeeAmount
-                      ? realizedLPFeeAmount?.toSignificant(6) + ' ' + tokens[Field.INPUT]?.symbol
+                      ? realizedLPFeeAmount?.toSignificant(4) + ' ' + tokens[Field.INPUT]?.symbol
                       : '-'}
                   </TYPE.black>
                 </RowBetween>

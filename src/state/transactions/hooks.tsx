@@ -12,7 +12,7 @@ export function useTransactionAdder(): (
   response: TransactionResponse,
   customData?: { summary?: string; approvalOfToken?: string }
 ) => void {
-  const { chainId } = useWeb3React()
+  const { chainId, account } = useWeb3React()
   const dispatch = useDispatch<AppDispatch>()
 
   return useCallback(
@@ -24,9 +24,9 @@ export function useTransactionAdder(): (
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      dispatch(addTransaction({ hash, chainId, approvalOfToken, summary }))
+      dispatch(addTransaction({ hash, from: account, chainId, approvalOfToken, summary }))
     },
-    [dispatch, chainId]
+    [dispatch, chainId, account]
   )
 }
 

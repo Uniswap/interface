@@ -1,3 +1,5 @@
+import React, { HTMLProps, useCallback } from 'react'
+import ReactGA from 'react-ga'
 import styled, { keyframes } from 'styled-components'
 import { darken } from 'polished'
 import { X } from 'react-feather'
@@ -36,10 +38,7 @@ export const CloseIcon = styled(X)<{ onClick: () => void }>`
   cursor: pointer;
 `
 
-export const Link = styled.a.attrs({
-  target: '_blank',
-  rel: 'noopener noreferrer'
-})`
+const StyledLink = styled.a`
   text-decoration: none;
   cursor: pointer;
   color: ${({ theme }) => theme.primary1};
@@ -58,6 +57,31 @@ export const Link = styled.a.attrs({
     text-decoration: none;
   }
 `
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function Link({ onClick, as, ref, target, href, rel, ...rest }: HTMLProps<HTMLAnchorElement>) {
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLAnchorElement>) => {
+      onClick && onClick(event) // first call back into the original onClick
+      if (!href) return
+      event.preventDefault()
+      // send a ReactGA event and then trigger a location change
+      ReactGA.outboundLink({ label: href }, () => {
+        window.location.href = href
+      })
+    },
+    [href, onClick]
+  )
+  return (
+    <StyledLink
+      target={target ?? '_blank'}
+      rel={rel ?? 'noopener noreferrer'}
+      href={href}
+      onClick={handleClick}
+      {...rest}
+    />
+  )
+}
 
 const rotate = keyframes`
   from {
