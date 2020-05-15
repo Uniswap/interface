@@ -1,14 +1,13 @@
-import { JSBI, Percent, TokenAmount, WETH } from '@uniswap/sdk'
+import { JSBI, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useContext, useEffect, useState } from 'react'
 import { ArrowDown, Repeat } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import Copy from '../../components/AccountDetails/Copy'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonSecondary } from '../../components/Button'
-import Card, { BlueCard, GreyCard, YellowCard } from '../../components/Card'
+import Card, { BlueCard, GreyCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -25,9 +24,10 @@ import {
   StyledNumerical,
   Wrapper
 } from '../../components/swap/styleds'
+import { TransferModalHeader } from '../../components/swap/TransferModalHeader'
+import V1TradeLink from '../../components/swap/V1TradeLink'
 import TokenLogo from '../../components/TokenLogo'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '../../constants'
-import { useV1TradeLinkIfBetter } from '../../data/V1'
 import { useWeb3React } from '../../hooks'
 import { useApproveCallback } from '../../hooks/useApproveCallback'
 import { useSendCallback } from '../../hooks/useSendCallback'
@@ -40,7 +40,6 @@ import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { Link } from '../../theme/components'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
-import { getEtherscanLink } from '../../utils'
 
 export default function Send({ history, location: { search } }: RouteComponentProps) {
   useDefaultsFromURL(search)
@@ -61,8 +60,8 @@ export default function Send({ history, location: { search } }: RouteComponentPr
 
   // trade details, check query params for initial state
   const { independentField, typedValue } = useSwapState()
-  const { parsedAmounts, bestTrade, tokenBalances, tokens, error } = useDerivedSwapInfo()
-  const isSwapValid = !error && !recipientError && bestTrade
+  const { parsedAmounts, bestTrade, tokenBalances, tokens, error: swapError } = useDerivedSwapInfo()
+  const isSwapValid = !swapError && !recipientError && bestTrade
 
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -76,9 +75,6 @@ export default function Send({ history, location: { search } }: RouteComponentPr
   const [txHash, setTxHash] = useState<string>('')
   const [deadline, setDeadline] = useState<number>(DEFAULT_DEADLINE_FROM_NOW)
   const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
-
-  // return link to the appropriate v1 pair if the slippage on v1 is lower
-  const v1TradeLinkIfBetter = useV1TradeLinkIfBetter(bestTrade, new Percent('50', '10000'))
 
   const route = bestTrade?.route
   const userHasSpecifiedInputOutput =
@@ -177,39 +173,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
 
   function modalHeader() {
     if (!sendingWithSwap) {
-      return (
-        <AutoColumn gap="lg" style={{ marginTop: '40px' }}>
-          <RowBetween>
-            <Text fontSize={36} fontWeight={500}>
-              {parsedAmounts[Field.INPUT]?.toSignificant(6)} {tokens[Field.INPUT]?.symbol}
-            </Text>
-            <TokenLogo address={tokens[Field.INPUT]?.address} size={'30px'} />
-          </RowBetween>
-          <TYPE.darkGray fontSize={20}>To</TYPE.darkGray>
-          {ENS ? (
-            <AutoColumn gap="lg">
-              <TYPE.blue fontSize={36}>{ENS}</TYPE.blue>
-              <AutoRow gap="10px">
-                <Link href={getEtherscanLink(chainId, ENS, 'address')}>
-                  <TYPE.blue fontSize={18}>
-                    {recipient?.slice(0, 8)}...{recipient?.slice(34, 42)}↗
-                  </TYPE.blue>
-                </Link>
-                <Copy toCopy={recipient} />
-              </AutoRow>
-            </AutoColumn>
-          ) : (
-            <AutoRow gap="10px">
-              <Link href={getEtherscanLink(chainId, ENS, 'address')}>
-                <TYPE.blue fontSize={36}>
-                  {recipient?.slice(0, 6)}...{recipient?.slice(36, 42)}↗
-                </TYPE.blue>
-              </Link>
-              <Copy toCopy={recipient} />
-            </AutoRow>
-          )}
-        </AutoColumn>
-      )
+      return <TransferModalHeader amount={parsedAmounts?.[Field.INPUT]} ENSName={ENS} recipient={recipient} />
     }
 
     if (sendingWithSwap) {
@@ -609,27 +573,16 @@ export default function Send({ history, location: { search } }: RouteComponentPr
             error={sendingWithSwap && isSwapValid && severity > 2}
           >
             <Text fontSize={20} fontWeight={500}>
-              {(sendingWithSwap ? error : null) ||
+              {(sendingWithSwap ? swapError : null) ||
                 sendAmountError ||
                 recipientError ||
                 `Send${severity > 2 ? ' Anyway' : ''}`}
             </Text>
           </ButtonError>
         )}
-        {v1TradeLinkIfBetter && (
-          <YellowCard style={{ marginTop: '12px', padding: '8px 4px' }}>
-            <AutoColumn gap="sm" justify="center" style={{ alignItems: 'center', textAlign: 'center' }}>
-              <Text lineHeight="145.23%;" fontSize={14} fontWeight={400} color={theme.text1}>
-                There is a better price for this trade on
-                <Link href={v1TradeLinkIfBetter}>
-                  <b> Uniswap V1 ↗</b>
-                </Link>
-              </Text>
-            </AutoColumn>
-          </YellowCard>
-        )}
+        <V1TradeLink bestV2Trade={bestTrade} />
       </BottomGrouping>
-      {tokens[Field.INPUT] && tokens[Field.OUTPUT] && !noRoute && (
+      {bestTrade && (
         <AdvancedSwapDetailsDropdown
           trade={bestTrade}
           rawSlippage={allowedSlippage}

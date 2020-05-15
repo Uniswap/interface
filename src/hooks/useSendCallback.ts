@@ -31,7 +31,7 @@ export function useSendCallback(amount?: TokenAmount, recipient?: string): null 
           .sendTransaction({ to: recipient, value: BigNumber.from(amount.raw.toString()) })
           .then(response => {
             addTransaction(response, {
-              summary: 'Send ' + amount.toSignificant(3) + ' ' + token?.symbol + ' to ' + ensName ?? recipient
+              summary: 'Send ' + amount.toSignificant(3) + ' ' + token?.symbol + ' to ' + (ensName ?? recipient)
             })
             return response.hash
           })
@@ -49,7 +49,7 @@ export function useSendCallback(amount?: TokenAmount, recipient?: string): null 
               })
               .then(response => {
                 addTransaction(response, {
-                  summary: 'Send ' + amount.toSignificant(3) + ' ' + token.symbol + ' to ' + ensName ?? recipient
+                  summary: 'Send ' + amount.toSignificant(3) + ' ' + token.symbol + ' to ' + (ensName ?? recipient)
                 })
                 return response.hash
               })

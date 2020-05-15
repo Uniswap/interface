@@ -6,7 +6,7 @@ import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { ButtonError, ButtonLight } from '../../components/Button'
-import Card, { GreyCard, YellowCard } from '../../components/Card'
+import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -22,9 +22,9 @@ import {
 import QuestionHelper from '../../components/Question'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import FormattedPriceImpact from '../../components/swap/FormattedPriceImpact'
+import V1TradeLink from '../../components/swap/V1TradeLink'
 import TokenLogo from '../../components/TokenLogo'
-import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH, V1_TRADE_LINK_THRESHOLD } from '../../constants'
-import { useV1TradeLinkIfBetter } from '../../data/V1'
+import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '../../constants'
 import { useWeb3React } from '../../hooks'
 import { useApproveCallback } from '../../hooks/useApproveCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
@@ -61,9 +61,6 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
   const [txHash, setTxHash] = useState<string>('')
   const [deadline, setDeadline] = useState<number>(DEFAULT_DEADLINE_FROM_NOW)
   const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
-
-  // return link to the appropriate v1 pair if the slippage on v1 is lower
-  const v1TradeLinkIfBetter = useV1TradeLinkIfBetter(bestTrade, V1_TRADE_LINK_THRESHOLD)
 
   const route = bestTrade?.route
   const userHasSpecifiedInputOutput =
@@ -434,20 +431,9 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
             </Text>
           </ButtonError>
         )}
-        {v1TradeLinkIfBetter && (
-          <YellowCard style={{ marginTop: '12px', padding: '8px 4px' }}>
-            <AutoColumn gap="sm" justify="center" style={{ alignItems: 'center', textAlign: 'center' }}>
-              <Text lineHeight="145.23%;" fontSize={14} fontWeight={400} color={theme.text1}>
-                There is a better price for this trade on
-                <Link href={v1TradeLinkIfBetter}>
-                  <b> Uniswap V1 ↗</b>
-                </Link>
-              </Text>
-            </AutoColumn>
-          </YellowCard>
-        )}
+        <V1TradeLink bestV2Trade={bestTrade} />
       </BottomGrouping>
-      {tokens[Field.INPUT] && tokens[Field.OUTPUT] && !noRoute && (
+      {bestTrade && (
         <AdvancedSwapDetailsDropdown
           trade={bestTrade}
           rawSlippage={allowedSlippage}
