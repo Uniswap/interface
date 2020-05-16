@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
+import { createPortal } from 'react-dom'
 import styled, { keyframes } from 'styled-components'
 import { HelpCircle as Question } from 'react-feather'
+import { usePopper } from 'react-popper'
 
 const Wrapper = styled.div`
   position: relative;
@@ -36,14 +38,9 @@ const fadeIn = keyframes`
 `
 
 const Popup = styled.div`
-  position: absolute;
   width: 228px;
   z-index: 9999;
-  left: 40px;
-  top: -10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin: 0.4rem;
   padding: 0.6rem 1rem;
   line-height: 150%;
   background: ${({ theme }) => theme.bg1};
@@ -55,31 +52,43 @@ const Popup = styled.div`
 
   color: ${({ theme }) => theme.text2};
   font-weight: 400;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    left: -20px;
-  `}
 `
 
 export default function QuestionHelper({ text }: { text: string }) {
-  const [showPopup, setPopup] = useState(false)
+  const [showPopup, setShowPopup] = useState<boolean>(false)
+  const [referenceElement, setReferenceElement] = useState(null)
+  const [popperElement, setPopperElement] = useState(null)
+  const { styles, attributes } = usePopper(referenceElement, popperElement, {
+    placement: 'auto',
+    strategy: 'fixed'
+  })
+
+  const portal = createPortal(
+    showPopup && (
+      <Popup ref={setPopperElement} style={styles.popper} {...attributes.popper}>
+        {text}
+      </Popup>
+    ),
+    document.getElementById('popover-container')
+  )
 
   return (
     <Wrapper>
       <QuestionWrapper
         onClick={() => {
-          setPopup(!showPopup)
+          setShowPopup(true)
         }}
         onMouseEnter={() => {
-          setPopup(true)
+          setShowPopup(true)
         }}
         onMouseLeave={() => {
-          setPopup(false)
+          setShowPopup(false)
         }}
+        ref={setReferenceElement}
       >
         <Question size={16} />
       </QuestionWrapper>
-      {showPopup && <Popup>{text}</Popup>}
+      {portal}
     </Wrapper>
   )
 }

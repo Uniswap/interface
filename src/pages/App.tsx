@@ -51,9 +51,7 @@ const BodyWrapper = styled.div`
   }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-      padding-top: 16px;
-      padding-left: 16px;
-      padding-right: 16px;
+      padding: 16px;
   `};
 
   z-index: 1;
@@ -168,6 +166,7 @@ export default function App() {
             <StyledRed />
           </AppWrapper>
         </BrowserRouter>
+        <div id="popover-container" />
       </Suspense>
     </>
   )
