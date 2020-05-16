@@ -185,6 +185,9 @@ function Migrate() {
             </Link>{' '}
             for the full Uniswap V2 interface.
           </TextBlock>
+          <Link style={{ marginTop: '1rem', display: 'inline-block' }} href="https://uniswap.org/blog/uniswap-v2/">
+            Read more about Uniswap V2
+          </Link>
         </InfoCard>
       ) : (
         <InfoCard style={{ marginTop: '0', display: showHelperCard ? 'inline-block' : 'none' }}>
@@ -194,13 +197,13 @@ function Migrate() {
             <div style={{ fontWeight: '500', fontSize: '24px' }}>Uniswap V2 Migration Info</div>
           </RowStart>
           <TextBlock padding={'1rem 0 0 0'} style={{ lineHeight: '140%' }}>
-            For each pool you'll need to approve the helper before completing the migration. Your migrated share will
-            include all your accrued fees and continue functioning with no other actions necessary. Once you've
-            completed your migration you can view your liquidity on the new{' '}
-            <Link href="v2.uniswap.exchange">Uniswap interface</Link>
+            For each pool, first approve the migration helper and then click migrate liquidity. Your liquidity will
+            be withdrawn from Uniswap V1 and deposited into Uniswap V2. Once you've
+            completed the migration you can view your liquidity on the new{' '}
+            <Link href="v2.uniswap.exchange">Uniswap V2 interface</Link>
           </TextBlock>
           <TextBlock padding={'1rem 0 0 0'} style={{ lineHeight: '140%' }}>
-            If your tokens don't automatically appear below, you may need to find your liquidity by pasting the token
+            If your liquidity does not appear below automatically, you may need to find it by pasting in the token
             address into the search box below.
           </TextBlock>
           <Link style={{ marginTop: '1rem', display: 'inline-block' }} href="https://uniswap.org/blog/uniswap-v2/">
