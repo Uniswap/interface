@@ -21,7 +21,8 @@ import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
 import Badge from '../Badge'
 import Button from '../Button'
-import CloseIcon from '../CloseIcon'
+// import CloseIcon from '../CloseIcon'
+import { X } from 'react-feather'
 import Loader from '../Loader'
 import Icon from '../Icon'
 import { Link } from '../Link'
@@ -76,6 +77,10 @@ const Row = styled.div`
 
 const InlineSubText = styled.span`
   font-size: 12px;
+`
+
+const CloseIcon = styled(X)`
+  color: ${({ theme }) => theme.colors.text1};
 `
 
 const flash = keyframes`
@@ -302,6 +307,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
               </Button>
             ) : (
               <CloseIcon
+                size={20}
                 onClick={() => {
                   toggleOpen(false)
                 }}

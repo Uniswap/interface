@@ -13,8 +13,7 @@ import LoaderLight from '../components/Loader'
 import TextBlock from '../components/Text'
 import PoolUnit from '../components/PoolUnit'
 import { WETH } from '@uniswap/sdk-v2'
-
-import { Lock, Power } from 'react-feather'
+import { X } from 'react-feather'
 
 const Row = styled.div`
   display: flex;
@@ -41,10 +40,19 @@ const shine = keyframes`
     to {background-position: -100%}
 `
 
+const CloseIcon = styled(X)`
+  position: absolute;
+  cursor: pointer;
+  top: 1rem;
+  right: 1rem;
+  color: ${({ theme }) => theme.colors.primaryText1};
+`
+
 const InfoCard = styled(Card)`
   color: ${({ theme }) => theme.colors.primaryText1};
   border: 1px solid ${({ theme }) => theme.colors.primary5};
   background-color: transparent;
+  position: relative;
 `
 
 const Link = styled.a`
@@ -97,6 +105,7 @@ function Migrate() {
   const [finishedFetching, setFinishedFetching] = useState(false)
 
   const toggleWalletModal = useWalletModalToggle()
+  const [showHelperCard, setShowHelperCard] = useState(true)
 
   useEffect(() => {
     if (allTokenDetails && allBalances) {
@@ -150,11 +159,9 @@ function Migrate() {
     }
   }, [account, chainId, allTokenDetails, allBalances])
 
-  console.log(V2Shares)
-
   return (
     <Column>
-      {typeof account !== 'string' ? (
+      {typeof account !== 'string' && showHelperCard ? (
         <InfoCard style={{ marginTop: '0' }}>
           <RowStart>
             <TextBlock color={'primaryText1'} style={{ fontWeight: '500', fontSize: '24px' }}>
@@ -180,7 +187,8 @@ function Migrate() {
           </TextBlock>
         </InfoCard>
       ) : (
-        <InfoCard style={{ marginTop: '0' }}>
+        <InfoCard style={{ marginTop: '0', display: showHelperCard ? 'inline-block' : 'none' }}>
+          <CloseIcon onClick={() => setShowHelperCard(false)} />
           <RowStart>
             {/* <Info style={{ marginRight: '.5rem' }} /> */}
             <div style={{ fontWeight: '500', fontSize: '24px' }}>Uniswap V2 Migration Info</div>
