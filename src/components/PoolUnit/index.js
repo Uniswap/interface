@@ -338,8 +338,6 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
                 <TextBlock fontSize={16}>
                   It is best to deposit liquidity into Uniswap V2 at a price you believe is correct. If you believe the
                   price is incorrect, you can either make a swap to move the price or wait for someone else to do so.
-                  {/* There is a {priceWarningLarge && 'large'} difference between the V1 and V2 {symbol}/ETH prices. You{' '}
-                  {priceWarningLarge ? 'should' : 'may want to'} wait for the prices to stabilize. */}
                 </TextBlock>
               </Row>
               <Row style={{ justifyContent: 'space-around' }}>
