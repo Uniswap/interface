@@ -64,8 +64,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const doApprove = useApproveCallback(bestTrade, allowedSlippage)
-  const userHasApprovedRouter = !doApprove
+  const [mustApprove, approveCallback] = useApproveCallback(bestTrade, allowedSlippage)
   const pendingApprovalInput = useHasPendingApproval(tokens[Field.INPUT]?.address)
 
   const formattedAmounts = {
@@ -287,8 +286,8 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
               Add liquidity now.
             </Link>
           </GreyCard>
-        ) : !userHasApprovedRouter ? (
-          <ButtonLight onClick={doApprove} disabled={pendingApprovalInput}>
+        ) : mustApprove === true ? (
+          <ButtonLight onClick={approveCallback} disabled={pendingApprovalInput}>
             {pendingApprovalInput ? (
               <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
             ) : (

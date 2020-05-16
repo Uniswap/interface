@@ -86,8 +86,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const approveCallback = useApproveCallback(bestTrade, allowedSlippage)
-  const userHasApprovedRouter = !approveCallback
+  const [mustApprove, approveCallback] = useApproveCallback(bestTrade, allowedSlippage)
   const pendingApprovalInput = useHasPendingApproval(tokens[Field.INPUT]?.address)
 
   const formattedAmounts = {
@@ -150,7 +149,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
   }
 
   const sendCallback = useSendCallback(parsedAmounts?.[Field.INPUT], recipient)
-  const isSendValid = sendCallback !== null && approveCallback === null
+  const isSendValid = sendCallback !== null && (sendingWithSwap === false || mustApprove === false)
 
   async function onSend() {
     setAttemptingTxn(true)
@@ -480,11 +479,10 @@ export default function Send({ history, location: { search } }: RouteComponentPr
                 history.push('/add/' + tokens[Field.INPUT]?.address + '-' + tokens[Field.OUTPUT]?.address)
               }}
             >
-              {' '}
               Add liquidity now.
             </Link>
           </GreyCard>
-        ) : !userHasApprovedRouter ? (
+        ) : mustApprove === true ? (
           <ButtonLight onClick={approveCallback} disabled={pendingApprovalInput}>
             {pendingApprovalInput ? (
               <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
