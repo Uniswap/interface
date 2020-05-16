@@ -9,6 +9,7 @@ import {
   updateTokenBalances
 } from './actions'
 
+// all address keys are checksummed and valid addresses starting with 0x
 interface WalletState {
   readonly tokenBalanceListeners: {
     readonly [address: string]: {
@@ -52,57 +53,65 @@ export default createReducer(initialState, builder =>
   builder
     .addCase(startListeningForTokenBalances, (state, { payload: combos }) => {
       combos.forEach(combo => {
-        if (!isAddress(combo.tokenAddress) || !isAddress(combo.address)) {
+        const [checksummedTokenAddress, checksummedAddress] = [isAddress(combo.tokenAddress), isAddress(combo.address)]
+        if (!checksummedAddress || !checksummedTokenAddress) {
           console.error('invalid combo', combo)
           return
         }
-        state.tokenBalanceListeners[combo.address] = state.tokenBalanceListeners[combo.address] ?? {}
-        state.tokenBalanceListeners[combo.address][combo.tokenAddress] =
-          (state.tokenBalanceListeners[combo.address][combo.tokenAddress] ?? 0) + 1
+        state.tokenBalanceListeners[checksummedAddress] = state.tokenBalanceListeners[checksummedAddress] ?? {}
+        state.tokenBalanceListeners[checksummedAddress][checksummedTokenAddress] =
+          (state.tokenBalanceListeners[checksummedAddress][checksummedTokenAddress] ?? 0) + 1
       })
     })
     .addCase(stopListeningForTokenBalances, (state, { payload: combos }) => {
       combos.forEach(combo => {
-        if (!isAddress(combo.tokenAddress) || !isAddress(combo.address)) {
+        const [checksummedTokenAddress, checksummedAddress] = [isAddress(combo.tokenAddress), isAddress(combo.address)]
+        if (!checksummedAddress || !checksummedTokenAddress) {
           console.error('invalid combo', combo)
           return
         }
-        if (!state.tokenBalanceListeners[combo.address]) return
-        if (!state.tokenBalanceListeners[combo.address][combo.tokenAddress]) return
-        if (state.tokenBalanceListeners[combo.address][combo.tokenAddress] === 1) {
-          delete state.tokenBalanceListeners[combo.address][combo.tokenAddress]
+        if (!state.tokenBalanceListeners[checksummedAddress]) return
+        if (!state.tokenBalanceListeners[checksummedAddress][checksummedTokenAddress]) return
+        if (state.tokenBalanceListeners[checksummedAddress][checksummedTokenAddress] === 1) {
+          delete state.tokenBalanceListeners[checksummedAddress][checksummedTokenAddress]
         } else {
-          state.tokenBalanceListeners[combo.address][combo.tokenAddress]--
+          state.tokenBalanceListeners[checksummedAddress][checksummedTokenAddress]--
         }
       })
     })
     .addCase(startListeningForBalance, (state, { payload: { addresses } }) => {
       addresses.forEach(address => {
-        if (!isAddress(address)) {
+        const checksummedAddress = isAddress(address)
+        if (!checksummedAddress) {
           console.error('invalid address', address)
           return
         }
-        state.balanceListeners[address] = (state.balanceListeners[address] ?? 0) + 1
+        state.balanceListeners[checksummedAddress] = (state.balanceListeners[checksummedAddress] ?? 0) + 1
       })
     })
     .addCase(stopListeningForBalance, (state, { payload: { addresses } }) => {
       addresses.forEach(address => {
-        if (!isAddress(address)) {
+        const checksummedAddress = isAddress(address)
+        if (!checksummedAddress) {
           console.error('invalid address', address)
           return
         }
-        if (!state.balanceListeners[address]) return
-        if (state.balanceListeners[address] === 1) {
-          delete state.balanceListeners[address]
+        if (!state.balanceListeners[checksummedAddress]) return
+        if (state.balanceListeners[checksummedAddress] === 1) {
+          delete state.balanceListeners[checksummedAddress]
         } else {
-          state.balanceListeners[address]--
+          state.balanceListeners[checksummedAddress]--
         }
       })
     })
     .addCase(updateTokenBalances, (state, { payload: { chainId, address, blockNumber, tokenBalances } }) => {
+      const checksummedAddress = isAddress(address)
+      if (!checksummedAddress) return
       Object.keys(tokenBalances).forEach(tokenAddress => {
-        const balance = tokenBalances[tokenAddress]
-        const key = balanceKey({ chainId, address, tokenAddress })
+        const checksummedTokenAddress = isAddress(tokenAddress)
+        if (!checksummedTokenAddress) return
+        const balance = tokenBalances[checksummedTokenAddress]
+        const key = balanceKey({ chainId, address: checksummedAddress, tokenAddress: checksummedTokenAddress })
         const data = state.balances[key]
         if (!data || data.blockNumber === undefined || data.blockNumber <= blockNumber) {
           state.balances[key] = { value: balance, blockNumber }
@@ -111,8 +120,11 @@ export default createReducer(initialState, builder =>
     })
     .addCase(updateEtherBalances, (state, { payload: { etherBalances, chainId, blockNumber } }) => {
       Object.keys(etherBalances).forEach(address => {
-        const balance = etherBalances[address]
-        const key = balanceKey({ chainId, address })
+        const checksummedAddress = isAddress(address)
+        if (!checksummedAddress) return
+
+        const balance = etherBalances[checksummedAddress]
+        const key = balanceKey({ chainId, address: checksummedAddress })
         const data = state.balances[key]
         if (!data || data.blockNumber === undefined || data.blockNumber <= blockNumber) {
           state.balances[key] = { value: balance, blockNumber }
