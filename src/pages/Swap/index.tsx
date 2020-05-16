@@ -156,7 +156,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
   }
 
   // text to show while loading
-  const pendingText = ` Swapping ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${
+  const pendingText = `Swapping ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${
     tokens[Field.INPUT]?.symbol
   } for ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}`
 
