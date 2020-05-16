@@ -1103,7 +1103,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                           ? '<0.01%'
                           : `${priceSlippage?.toFixed(2)}%` ?? '-'}
                       </ErrorText>
-                      <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
+                      <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
                     </RowFixed>
                   </RowBetween>
                 )}
@@ -1241,7 +1241,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                     <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
                       Price Impact
                     </TYPE.black>
-                    <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
+                    <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
                   </RowFixed>
                   <ErrorText
                     fontWeight={500}
@@ -1300,8 +1300,7 @@ function ExchangePage({ sendingInput = false, history, params }: ExchangePagePro
                       </RowFixed>
                     </RowBetween>
                     <Text lineHeight="145.23%;" fontSize={16} fontWeight={400} color={theme.text1}>
-                      This trade will move the price by ~{priceSlippage.toFixed(2)}%. This pool probably doesn’t have
-                      enough liquidity to support this trade.
+                      This trade will move the price by ~{priceSlippage.toFixed(2)}%.
                     </Text>
                   </AutoColumn>
                 </YellowCard>
