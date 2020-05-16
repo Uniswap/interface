@@ -179,11 +179,11 @@ function Migrate() {
             </TextBlock>
           </RowStart>
           <TextBlock color={'primary3'} padding={'1rem 0 0 0'}>
-            This tool is for Uniswap liquidity providers only.{' '}
+            This tool is only for liquidity providers wishing to migrate from Uniswap V1 pools into Uniswap V2.{' '}
             <Link color={'primary3'} href="https://v2.uniswap.exchange">
               Click here
             </Link>{' '}
-            for regular trading and access to the new V2 interface.
+            for the full Uniswap V2 interface.
           </TextBlock>
         </InfoCard>
       ) : (
@@ -210,7 +210,7 @@ function Migrate() {
       )}
       <Row>
         <TextBlock fontSize={24} fontWeight={500} color={typeof account !== 'string' ? 'text4' : 'text1'}>
-          Your Uniswap Liquidity
+          Your Uniswap V1 Liquidity
         </TextBlock>
         <TextBlock fontSize={16} color={'grey3'}>
           {typeof account !== 'string' ? null : !finishedFetching ? (
@@ -273,7 +273,7 @@ function Migrate() {
 
               <Row>
                 <TextBlock fontSize={24} fontWeight={500} color={[...V2Shares].length > 0 ? 'text1' : 'text4'}>
-                  Migrated Liquidity
+                  Your Uniswap V2 Liquidity
                 </TextBlock>
                 {[...V2Shares].length > 0 && <Link href="https://v2.uniswap.exchange/pool">Manage V2 Liquidity</Link>}
               </Row>
