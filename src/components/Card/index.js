@@ -24,12 +24,11 @@ const variants = {
 const outlinedStyles = {
   primary: {
     border: '1px solid',
-    borderColor: 'primary1'
+    borderColor: 'primary3'
   },
-
   pink: {
     border: '1px solid',
-    borderColor: 'pink1'
+    borderColor: 'primary3'
   }
 }
 

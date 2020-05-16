@@ -62,14 +62,14 @@ const BottomWrapper = styled.div`
 const FormattedCard = styled(Card)`
   display: grid;
   row-gap: 20px;
-  padding: 2rem 1rem;
+  padding: 1rem;
 `
 
 const Row = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 32px;
+  /* height: 32px; */
   justify-content: space-between;
   align-items: center;
 `
@@ -317,7 +317,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
                 style={{
                   gridColumn: 'span 2',
                   zIndex: -1,
-                  paddingTop: '4rem',
+                  paddingTop: '3rem',
                   borderTopLeftRadius: 0,
                   borderTopRightRadius: 0
                 }}
@@ -329,19 +329,19 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
                     {priceWarningLarge ? 'should' : 'may want to'} wait for the prices to stabilize.
                   </TextBlock>
                   <Column style={{ alignItems: 'center', flexShrink: 0 }}>
-                    <TextBlock fontWeight={600} color="grey6" marginBottom="0.5rem">
+                    <TextBlock fontWeight={600} color="text1" marginBottom="0.5rem">
                       V1 Price
                     </TextBlock>
                     <TextBlock fontWeight={600}>{v1Price && v1Price.toPrecision(6)}</TextBlock>
                   </Column>
                   <Column style={{ alignItems: 'center', flexShrink: 0 }}>
-                    <TextBlock fontWeight={600} color="grey6" marginBottom="0.5rem">
+                    <TextBlock fontWeight={600} color="text1" marginBottom="0.5rem">
                       V2 Price
                     </TextBlock>
                     <TextBlock fontWeight={600}>{v2Price && v2Price.toPrecision(6)}</TextBlock>
                   </Column>
                   <Column style={{ alignItems: 'center', flexShrink: 0 }}>
-                    <TextBlock fontWeight={600} color="grey6" marginBottom="0.5rem">
+                    <TextBlock fontWeight={600} color="text1" marginBottom="0.5rem">
                       Difference
                     </TextBlock>
                     <TextBlock
@@ -380,7 +380,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
                   ? 'Confirmed'
                   : 'Approve for upgrade'}
               </Button>
-              <TextBlock fontSize={16} color={'grey5'}>
+              <TextBlock fontSize={16} color={'text2'}>
                 The upgrade helper needs permission to migrate your liquidity.
               </TextBlock>
             </FormattedCard>
@@ -409,7 +409,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
               >
                 {pendingMigration ? 'Waiting For Confirmation...' : migrationDone ? 'Confirmed' : 'Migrate Liquidity'}
               </Button>
-              <TextBlock fontSize={16} color={'grey5'}>
+              <TextBlock fontSize={16} color={'text2'}>
                 Your {symbol} liquidity will appear as {symbol}/ETH with a new icon.{' '}
                 <Link href="https://uniswap.org/blog/uniswap-v2/" target="_blank" rel="noopener noreferrer">
                   Read more.

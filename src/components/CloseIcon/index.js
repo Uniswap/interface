@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import xIcon from '../../assets/images/x.svg'
 
 const Wrapper = styled.div`
-  color: ${({ theme }) => theme.bg2};
+  color: ${({ theme }) => theme.text1};
   padding: 0.5rem;
   opacity: 0.6;
 
