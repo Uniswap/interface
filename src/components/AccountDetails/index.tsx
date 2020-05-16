@@ -1,7 +1,11 @@
-import React, { useContext } from 'react'
+import React, { useCallback, useContext } from 'react'
+import { useDispatch } from 'react-redux'
 import styled, { ThemeContext } from 'styled-components'
 import { useWeb3React } from '../../hooks'
 import { isMobile } from 'react-device-detect'
+import { AppDispatch } from '../../state'
+import { clearAllTransactions } from '../../state/transactions/actions'
+import { AutoRow } from '../Row'
 import Copy from './Copy'
 import Transaction from './Transaction'
 
@@ -240,6 +244,7 @@ export default function AccountDetails({
 }: AccountDetailsProps) {
   const { chainId, account, connector } = useWeb3React()
   const theme = useContext(ThemeContext)
+  const dispatch = useDispatch<AppDispatch>()
 
   function formatConnectorName() {
     const { ethereum } = window
@@ -295,6 +300,14 @@ export default function AccountDetails({
       )
     }
   }
+
+  const clearAllTransactionsCallback = useCallback(
+    (event: React.MouseEvent) => {
+      event.preventDefault()
+      dispatch(clearAllTransactions({ chainId }))
+    },
+    [dispatch, chainId]
+  )
 
   return (
     <>
@@ -380,7 +393,10 @@ export default function AccountDetails({
       </UpperSection>
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
         <LowerSection>
-          <TYPE.body>Recent Transactions</TYPE.body>
+          <AutoRow style={{ justifyContent: 'space-between' }}>
+            <TYPE.body>Recent Transactions</TYPE.body>
+            <Link onClick={clearAllTransactionsCallback}>(clear all)</Link>
+          </AutoRow>
           {renderTransactions(pendingTransactions)}
           {renderTransactions(confirmedTransactions)}
         </LowerSection>
