@@ -42,7 +42,7 @@ export function TransferModalHeader({
         </AutoColumn>
       ) : (
         <AutoRow gap="10px">
-          <Link href={getEtherscanLink(chainId, ENSName, 'address')}>
+          <Link href={getEtherscanLink(chainId, recipient, 'address')}>
             <TYPE.blue fontSize={36}>
               {recipient?.slice(0, 6)}...{recipient?.slice(36, 42)}↗
             </TYPE.blue>
