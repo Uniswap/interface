@@ -48,26 +48,24 @@ const GreenCircle = styled.div`
     height: 8px;
     width: 8px;
     margin-right: 8px;
-    <<<<<<<headbackground-color: ${({ theme }) => theme.colors.green2};
-    =======background-color: ${({ theme }) => theme.connectedGreen};
-    >>>>>>>uniswap-frontend/betaborder-radius: 50%;
+    background-color: ${({ theme }) => theme.colors.green2};
+    background-color: ${({ theme }) => theme.connectedGreen};
+    border-radius: 50%;
   }
 `
 
 const CircleWrapper = styled.div`
-  <<<<<<<headcolor: ${({ theme }) => theme.colors.green2};
-  =======color: ${({ theme }) => theme.connectedGreen};
-  >>>>>>>uniswap-frontend/betadisplay: flex;
+  color: ${({ theme }) => theme.colors.green2};
+  color: ${({ theme }) => theme.connectedGreen};
+  display: flex;
   justify-content: center;
   align-items: center;
 `
 
 const HeaderText = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  <<<<<<<headcolor: ${props =>
-    props.color === 'blue' ? ({ theme }) => theme.colors.blue5 : ({ theme }) => theme.textColor};
-  =======color: ${props => (props.color === 'blue' ? ({ theme }) => theme.royalBlue : ({ theme }) => theme.textColor)};
-  >>>>>>>uniswap-frontend/betafont-size: 1rem;
+  color: ${({ theme }) => theme.colors.text1};
+  font-size: 1rem;
   font-weight: 500;
 `
 
