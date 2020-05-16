@@ -27,7 +27,7 @@ const STEP = {
   SHOW_CREATE_PAGE: 'SHOW_CREATE_PAGE' // show create page
 }
 
-function CreatePool({ history }: RouteComponentProps<{}>) {
+function CreatePool({ history }: RouteComponentProps) {
   const { chainId } = useWeb3React()
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN0)

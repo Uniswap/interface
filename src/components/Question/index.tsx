@@ -40,7 +40,6 @@ const fadeIn = keyframes`
 const Popup = styled.div`
   width: 228px;
   z-index: 9999;
-  margin: 0.4rem;
   padding: 0.6rem 1rem;
   line-height: 150%;
   background: ${({ theme }) => theme.bg1};

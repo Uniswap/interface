@@ -123,19 +123,14 @@ const Percent = styled.div`
       `)};
 `
 
-interface TransactionDetailsProps {
+export interface SlippageTabsProps {
   rawSlippage: number
   setRawSlippage: (rawSlippage: number) => void
   deadline: number
   setDeadline: (deadline: number) => void
 }
 
-export default function TransactionDetails({
-  setRawSlippage,
-  rawSlippage,
-  deadline,
-  setDeadline
-}: TransactionDetailsProps) {
+export default function SlippageTabs({ setRawSlippage, rawSlippage, deadline, setDeadline }: SlippageTabsProps) {
   const [activeIndex, setActiveIndex] = useState(2)
 
   const [warningType, setWarningType] = useState(WARNING_TYPE.none)
@@ -250,142 +245,138 @@ export default function TransactionDetails({
     }
   })
 
-  const dropDownContent = () => {
-    return (
-      <>
-        <SlippageSelector>
-          <RowBetween>
-            <Option
-              onClick={() => {
-                setFromFixed(1, 0.1)
-              }}
-              active={activeIndex === 1}
-            >
-              0.1%
-            </Option>
-            <Option
-              onClick={() => {
-                setFromFixed(2, 0.5)
-              }}
-              active={activeIndex === 2}
-            >
-              0.5%
-            </Option>
-            <Option
-              onClick={() => {
-                setFromFixed(3, 1)
-              }}
-              active={activeIndex === 3}
-            >
-              1%
-            </Option>
-            <OptionCustom
-              active={activeIndex === 4}
-              warning={
-                warningType !== WARNING_TYPE.none &&
-                warningType !== WARNING_TYPE.emptyInput &&
-                warningType !== WARNING_TYPE.riskyEntryLow
-              }
-              onClick={() => {
-                setFromCustom()
-              }}
-            >
-              <RowBetween>
-                {!(warningType === WARNING_TYPE.none || warningType === WARNING_TYPE.emptyInput) && (
-                  <span
-                    role="img"
-                    aria-label="warning"
-                    style={{
-                      color:
-                        warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
-                          ? 'red'
-                          : warningType === WARNING_TYPE.riskyEntryLow
-                          ? '#F3841E'
-                          : ''
-                    }}
-                  >
-                    ⚠️
-                  </span>
-                )}
-                <Input
-                  tabIndex={-1}
-                  ref={inputRef}
-                  active={activeIndex === 4}
-                  placeholder={
-                    activeIndex === 4
-                      ? !!userInput
-                        ? ''
-                        : '0'
-                      : activeIndex !== 4 && userInput !== ''
-                      ? userInput
-                      : 'Custom'
-                  }
-                  value={activeIndex === 4 ? userInput : ''}
-                  onChange={parseInput}
-                  color={
-                    warningType === WARNING_TYPE.emptyInput
-                      ? ''
-                      : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
-                      ? 'red'
-                      : ''
-                  }
-                />
-                <Percent
-                  color={
-                    activeIndex !== 4
-                      ? 'faded'
-                      : warningType === WARNING_TYPE.riskyEntryHigh || warningType === WARNING_TYPE.invalidEntryBound
-                      ? 'red'
-                      : ''
-                  }
+  return (
+    <>
+      <SlippageSelector>
+        <RowBetween>
+          <Option
+            onClick={() => {
+              setFromFixed(1, 0.1)
+            }}
+            active={activeIndex === 1}
+          >
+            0.1%
+          </Option>
+          <Option
+            onClick={() => {
+              setFromFixed(2, 0.5)
+            }}
+            active={activeIndex === 2}
+          >
+            0.5%
+          </Option>
+          <Option
+            onClick={() => {
+              setFromFixed(3, 1)
+            }}
+            active={activeIndex === 3}
+          >
+            1%
+          </Option>
+          <OptionCustom
+            active={activeIndex === 4}
+            warning={
+              warningType !== WARNING_TYPE.none &&
+              warningType !== WARNING_TYPE.emptyInput &&
+              warningType !== WARNING_TYPE.riskyEntryLow
+            }
+            onClick={() => {
+              setFromCustom()
+            }}
+          >
+            <RowBetween>
+              {!(warningType === WARNING_TYPE.none || warningType === WARNING_TYPE.emptyInput) && (
+                <span
+                  role="img"
+                  aria-label="warning"
+                  style={{
+                    color:
+                      warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
+                        ? 'red'
+                        : warningType === WARNING_TYPE.riskyEntryLow
+                        ? '#F3841E'
+                        : ''
+                  }}
                 >
-                  %
-                </Percent>
-              </RowBetween>
-            </OptionCustom>
-          </RowBetween>
-          <RowBetween>
-            <BottomError
-              show={activeIndex === 4}
-              color={
-                warningType === WARNING_TYPE.emptyInput
-                  ? '#565A69'
-                  : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
-                  ? 'red'
-                  : warningType === WARNING_TYPE.riskyEntryLow
-                  ? '#F3841E'
-                  : ''
-              }
-            >
-              {warningType === WARNING_TYPE.emptyInput && 'Enter a slippage percentage'}
-              {warningType === WARNING_TYPE.invalidEntryBound && 'Please select a value no greater than 50%'}
-              {warningType === WARNING_TYPE.riskyEntryHigh && 'Your transaction may be frontrun'}
-              {warningType === WARNING_TYPE.riskyEntryLow && 'Your transaction may fail'}
-            </BottomError>
-          </RowBetween>
-        </SlippageSelector>
-        <AutoColumn gap="sm">
-          <RowFixed padding={'0 20px'}>
-            <TYPE.body fontSize={14}>Deadline</TYPE.body>
-            <QuestionHelper text="Deadline in minutes. If your transaction takes longer than this it will revert." />
-          </RowFixed>
-          <RowFixed padding={'0 20px'}>
-            <OptionCustom style={{ width: '80px' }}>
+                  ⚠️
+                </span>
+              )}
               <Input
                 tabIndex={-1}
-                placeholder={'' + deadlineInput}
-                value={deadlineInput}
-                onChange={parseCustomDeadline}
+                ref={inputRef}
+                active={activeIndex === 4}
+                placeholder={
+                  activeIndex === 4
+                    ? !!userInput
+                      ? ''
+                      : '0'
+                    : activeIndex !== 4 && userInput !== ''
+                    ? userInput
+                    : 'Custom'
+                }
+                value={activeIndex === 4 ? userInput : ''}
+                onChange={parseInput}
+                color={
+                  warningType === WARNING_TYPE.emptyInput
+                    ? ''
+                    : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
+                    ? 'red'
+                    : ''
+                }
               />
-            </OptionCustom>
-            <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>
-              minutes
-            </TYPE.body>
-          </RowFixed>
-        </AutoColumn>
-      </>
-    )
-  }
-
-  return dropDownContent()
+              <Percent
+                color={
+                  activeIndex !== 4
+                    ? 'faded'
+                    : warningType === WARNING_TYPE.riskyEntryHigh || warningType === WARNING_TYPE.invalidEntryBound
+                    ? 'red'
+                    : ''
+                }
+              >
+                %
+              </Percent>
+            </RowBetween>
+          </OptionCustom>
+        </RowBetween>
+        <RowBetween>
+          <BottomError
+            show={activeIndex === 4}
+            color={
+              warningType === WARNING_TYPE.emptyInput
+                ? '#565A69'
+                : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
+                ? 'red'
+                : warningType === WARNING_TYPE.riskyEntryLow
+                ? '#F3841E'
+                : ''
+            }
+          >
+            {warningType === WARNING_TYPE.emptyInput && 'Enter a slippage percentage'}
+            {warningType === WARNING_TYPE.invalidEntryBound && 'Please select a value no greater than 50%'}
+            {warningType === WARNING_TYPE.riskyEntryHigh && 'Your transaction may be frontrun'}
+            {warningType === WARNING_TYPE.riskyEntryLow && 'Your transaction may fail'}
+          </BottomError>
+        </RowBetween>
+      </SlippageSelector>
+      <AutoColumn gap="sm">
+        <RowFixed padding={'0 20px'}>
+          <TYPE.body fontSize={14}>Deadline</TYPE.body>
+          <QuestionHelper text="Deadline in minutes. If your transaction takes longer than this it will revert." />
+        </RowFixed>
+        <RowFixed padding={'0 20px'}>
+          <OptionCustom style={{ width: '80px' }}>
+            <Input
+              tabIndex={-1}
+              placeholder={'' + deadlineInput}
+              value={deadlineInput}
+              onChange={parseCustomDeadline}
+            />
+          </OptionCustom>
+          <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>
+            minutes
+          </TYPE.body>
+        </RowFixed>
+      </AutoColumn>
+    </>
+  )
 }

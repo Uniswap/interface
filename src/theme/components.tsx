@@ -107,7 +107,7 @@ export const Spinner = styled.img`
   height: 16px;
 `
 
-export const Hover = styled.div`
+export const CursorPointer = styled.div`
   :hover {
     cursor: pointer;
   }

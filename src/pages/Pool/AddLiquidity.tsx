@@ -47,8 +47,8 @@ const FixedBottom = styled.div`
 `
 
 enum Field {
-  INPUT,
-  OUTPUT
+  INPUT = 'INPUT',
+  OUTPUT = 'OUTPUT'
 }
 
 interface AddState {
@@ -155,7 +155,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   // get basic SDK entities
-  const tokens: { [field: number]: Token } = {
+  const tokens: { [field in Field]: Token } = {
     [Field.INPUT]: useTokenByAddressAndAutomaticallyAdd(fieldData[Field.INPUT].address),
     [Field.OUTPUT]: useTokenByAddressAndAutomaticallyAdd(fieldData[Field.OUTPUT].address)
   }
@@ -173,7 +173,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
     (!!pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0)))
 
   // get user-pecific and token-specific lookup data
-  const userBalances: { [field: number]: TokenAmount } = {
+  const userBalances: { [field in Field]: TokenAmount } = {
     [Field.INPUT]: useTokenBalanceTreatingWETHasETH(account, tokens[Field.INPUT]),
     [Field.OUTPUT]: useTokenBalanceTreatingWETHasETH(account, tokens[Field.OUTPUT])
   }
@@ -443,7 +443,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           ReactGA.event({
             category: 'Liquidity',
             action: 'Add',
-            label: [tokens[Field.INPUT]?.symbol, tokens[Field.OUTPUT]?.symbol].join(';')
+            label: [tokens[Field.INPUT]?.symbol, tokens[Field.OUTPUT]?.symbol].join('/')
           })
           setTxHash(response.hash)
           addTransaction(response, {
@@ -697,7 +697,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           onMax={() => {
             maxAmountInput && onMax(maxAmountInput.toExact(), Field.INPUT)
           }}
-          atMax={atMaxAmountInput}
+          showMaxButton={!atMaxAmountInput}
           token={tokens[Field.INPUT]}
           onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
           pair={pair}
@@ -714,7 +714,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
           onMax={() => {
             maxAmountOutput && onMax(maxAmountOutput?.toExact(), Field.OUTPUT)
           }}
-          atMax={atMaxAmountOutput}
+          showMaxButton={!atMaxAmountOutput}
           token={tokens[Field.OUTPUT]}
           onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
           pair={pair}

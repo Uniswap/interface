@@ -37,9 +37,9 @@ const ALLOWED_SLIPPAGE = 50
 const DEADLINE_FROM_NOW = 60 * 20
 
 enum Field {
-  LIQUIDITY,
-  TOKEN0,
-  TOKEN1
+  LIQUIDITY = 'LIQUIDITY',
+  TOKEN0 = 'TOKEN0',
+  TOKEN1 = 'TOKEN1'
 }
 
 interface RemoveState {
@@ -120,7 +120,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
   const outputToken: Token = useToken(token1)
 
   // get basic SDK entities
-  const tokens: { [field: number]: Token } = {
+  const tokens: { [field in Field]?: Token } = {
     [Field.TOKEN0]: inputToken,
     [Field.TOKEN1]: outputToken
   }
@@ -136,7 +136,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
   const [state, dispatch] = useReducer(reducer, initializeRemoveState(userLiquidity?.toExact(), token0, token1))
   const { independentField, typedValue } = state
 
-  const tokensDeposited: { [field: number]: TokenAmount } = {
+  const tokensDeposited: { [field in Field]?: TokenAmount } = {
     [Field.TOKEN0]:
       pair &&
       totalPoolTokens &&
@@ -164,7 +164,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
     dispatch({ type: RemoveAction.TYPE, payload: { field, typedValue } })
   }, [])
 
-  const parsedAmounts: { [field: number]: TokenAmount } = {}
+  const parsedAmounts: { [field in Field]?: TokenAmount } = {}
   let poolTokenAmount
   try {
     if (typedValue !== '' && typedValue !== '.' && tokens[Field.TOKEN0] && tokens[Field.TOKEN1] && userLiquidity) {
@@ -461,7 +461,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
           ReactGA.event({
             category: 'Liquidity',
             action: 'Remove',
-            label: [tokens[Field.TOKEN0]?.symbol, tokens[Field.TOKEN1]?.symbol].join(';')
+            label: [tokens[Field.TOKEN0]?.symbol, tokens[Field.TOKEN1]?.symbol].join('/')
           })
           setPendingConfirmation(false)
           setTxHash(response.hash)
@@ -680,7 +680,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
               value={formattedAmounts[Field.LIQUIDITY]}
               onUserInput={onUserInput}
               onMax={onMax}
-              atMax={atMaxAmount}
+              showMaxButton={!atMaxAmount}
               disableTokenSelect
               token={pair?.liquidityToken}
               isExchange={true}
@@ -695,7 +695,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
               value={formattedAmounts[Field.TOKEN0]}
               onUserInput={onUserInput}
               onMax={onMax}
-              atMax={atMaxAmount}
+              showMaxButton={!atMaxAmount}
               token={tokens[Field.TOKEN0]}
               label={'Output'}
               disableTokenSelect
@@ -709,7 +709,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
               value={formattedAmounts[Field.TOKEN1]}
               onUserInput={onUserInput}
               onMax={onMax}
-              atMax={atMaxAmount}
+              showMaxButton={!atMaxAmount}
               token={tokens[Field.TOKEN1]}
               label={'Output'}
               disableTokenSelect

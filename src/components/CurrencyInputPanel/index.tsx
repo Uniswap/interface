@@ -3,13 +3,14 @@ import React, { useState, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import '@reach/tooltip/styles.css'
 import { darken } from 'polished'
+import { Field } from '../../state/swap/actions'
 import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
 
 import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
 import SearchModal from '../SearchModal'
 import { RowBetween } from '../Row'
-import { TYPE, Hover } from '../../theme'
+import { TYPE, CursorPointer } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
@@ -120,10 +121,10 @@ const StyledBalanceMax = styled.button`
 
 interface CurrencyInputPanelProps {
   value: string
-  field: number
-  onUserInput: (field: number, val: string) => void
-  onMax: () => void
-  atMax: boolean
+  field: string
+  onUserInput: (field: string, val: string) => void
+  onMax?: () => void
+  showMaxButton: boolean
   label?: string
   urlAddedTokens?: Token[]
   onTokenSelection?: (tokenAddress: string) => void
@@ -135,7 +136,6 @@ interface CurrencyInputPanelProps {
   hideInput?: boolean
   showSendWithSwap?: boolean
   otherSelectedTokenAddress?: string | null
-  advanced?: boolean
   id: string
 }
 
@@ -144,7 +144,7 @@ export default function CurrencyInputPanel({
   field,
   onUserInput,
   onMax,
-  atMax,
+  showMaxButton,
   label = 'Input',
   urlAddedTokens = [], // used
   onTokenSelection = null,
@@ -156,7 +156,6 @@ export default function CurrencyInputPanel({
   hideInput = false,
   showSendWithSwap = false,
   otherSelectedTokenAddress = null,
-  advanced = false,
   id
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
@@ -176,7 +175,7 @@ export default function CurrencyInputPanel({
                 {label}
               </TYPE.body>
               {account && (
-                <Hover>
+                <CursorPointer>
                   <TYPE.body
                     onClick={onMax}
                     color={theme.text2}
@@ -188,7 +187,7 @@ export default function CurrencyInputPanel({
                       ? 'Balance: ' + userTokenBalance?.toSignificant(6)
                       : ' -'}
                   </TYPE.body>
-                </Hover>
+                </CursorPointer>
               )}
             </RowBetween>
           </LabelRow>
@@ -203,7 +202,7 @@ export default function CurrencyInputPanel({
                   onUserInput(field, val)
                 }}
               />
-              {account && !advanced && !!token?.address && !atMax && label !== 'To' && (
+              {account && !!token?.address && showMaxButton && label !== 'To' && (
                 <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
               )}
             </>
@@ -249,7 +248,7 @@ export default function CurrencyInputPanel({
           showSendWithSwap={showSendWithSwap}
           hiddenToken={token?.address}
           otherSelectedTokenAddress={otherSelectedTokenAddress}
-          otherSelectedText={field === 0 ? 'Selected as output' : 'Selected as input'}
+          otherSelectedText={field === Field.INPUT ? 'Selected as output' : 'Selected as input'}
         />
       )}
     </InputPanel>

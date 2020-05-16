@@ -118,11 +118,12 @@ function ConfirmationModal({
                   </ButtonPrimary>
                 </>
               )}
-              <Text fontSize={12} color="#565A69" textAlign="center">
-                {pendingConfirmation
-                  ? 'Confirm this transaction in your wallet'
-                  : `Estimated time until confirmation: 3 min`}
-              </Text>
+
+              {pendingConfirmation && (
+                <Text fontSize={12} color="#565A69" textAlign="center">
+                  Confirm this transaction in your wallet
+                </Text>
+              )}
             </AutoColumn>
           </Section>
         </Wrapper>

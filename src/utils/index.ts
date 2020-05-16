@@ -54,38 +54,6 @@ export function getQueryParam(windowLocation: Location, name: string): string | 
   return q && q[1]
 }
 
-function parseUrlAddress(param: string): string {
-  const addr = isAddress(getQueryParam(window.location, param))
-  if (addr === false) {
-    return ''
-  }
-  return addr
-}
-
-function parseUrlTokenAmount(paramName: string): string {
-  const value = getQueryParam(window.location, paramName)
-  if (!isNaN(Number(value))) {
-    return ''
-  }
-  return value
-}
-
-export interface QueryParams {
-  readonly inputTokenAddress: string
-  readonly outputTokenAddress: string
-  readonly inputTokenAmount: string
-  readonly outputTokenAmount: string
-}
-
-export function getAllQueryParams(): QueryParams {
-  return {
-    inputTokenAddress: parseUrlAddress('inputTokenAddress'),
-    outputTokenAddress: parseUrlAddress('outputTokenAddress'),
-    inputTokenAmount: parseUrlTokenAmount('inputTokenAmount'),
-    outputTokenAmount: parseUrlTokenAmount('outputTokenAmount')
-  }
-}
-
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
 export function shortenAddress(address: string, chars = 4): string {
   const parsed = isAddress(address)
@@ -193,23 +161,6 @@ export async function getTokenDecimals(tokenAddress, library) {
       error.code = ERROR_CODES.TOKEN_DECIMALS
       throw error
     })
-}
-
-// get the ether balance of an address
-export async function getEtherBalance(address, library) {
-  if (!isAddress(address)) {
-    throw Error(`Invalid 'address' parameter '${address}'`)
-  }
-  return library.getBalance(address)
-}
-
-// get the token balance of an address
-export async function getTokenBalance(tokenAddress, address, library) {
-  if (!isAddress(tokenAddress) || !isAddress(address)) {
-    throw Error(`Invalid 'tokenAddress' or 'address' parameter '${tokenAddress}' or '${address}'.`)
-  }
-
-  return getContract(tokenAddress, ERC20_ABI, library).balanceOf(address)
 }
 
 export function escapeRegExp(string: string): string {

@@ -2,8 +2,8 @@ import { TEST_ADDRESS_NEVER_USE } from '../support/commands'
 
 describe('Landing Page', () => {
   beforeEach(() => cy.visit('/'))
-  it('loads exchange page', () => {
-    cy.get('#exchange-page')
+  it('loads swap page', () => {
+    cy.get('#swap-page')
   })
 
   it('redirects to url /swap', () => {
