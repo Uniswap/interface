@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled, { css, keyframes } from 'styled-components'
 import { darken, lighten } from 'polished'
-import { isAddress, amountFormatter } from '../../utils'
+import { isAddress, amountFormatter, MIN_DECIMALS } from '../../utils'
 import { useDebounce } from '../../hooks'
 
 import question from '../../assets/images/question.svg'
@@ -655,7 +655,7 @@ export default function TransactionDetails(props) {
                 `${amountFormatter(
                   props.independentValueParsed,
                   props.independentDecimals,
-                  Math.min(4, props.independentDecimals)
+                  Math.min(MIN_DECIMALS, props.independentDecimals)
                 )} ${props.inputSymbol}`
               )}
             </ValueWrapper>
@@ -665,9 +665,9 @@ export default function TransactionDetails(props) {
             <ValueWrapper>
               {b(
                 `${amountFormatter(
-                  props.dependentValueMinumum,
+                  props.dependentValueMinimum,
                   props.dependentDecimals,
-                  Math.min(4, props.dependentDecimals)
+                  Math.min(MIN_DECIMALS, props.dependentDecimals)
                 )} ${props.outputSymbol}`
               )}
             </ValueWrapper>{' '}
@@ -685,7 +685,7 @@ export default function TransactionDetails(props) {
                 `${amountFormatter(
                   props.independentValueParsed,
                   props.independentDecimals,
-                  Math.min(4, props.independentDecimals)
+                  Math.min(MIN_DECIMALS, props.independentDecimals)
                 )} ${props.inputSymbol}`
               )}
             </ValueWrapper>{' '}
@@ -693,9 +693,9 @@ export default function TransactionDetails(props) {
             <ValueWrapper>
               {b(
                 `${amountFormatter(
-                  props.dependentValueMinumum,
+                  props.dependentValueMinimum,
                   props.dependentDecimals,
-                  Math.min(4, props.dependentDecimals)
+                  Math.min(MIN_DECIMALS, props.dependentDecimals)
                 )} ${props.outputSymbol}`
               )}
             </ValueWrapper>
@@ -715,7 +715,7 @@ export default function TransactionDetails(props) {
                 `${amountFormatter(
                   props.independentValueParsed,
                   props.independentDecimals,
-                  Math.min(4, props.independentDecimals)
+                  Math.min(MIN_DECIMALS, props.independentDecimals)
                 )} ${props.outputSymbol}`
               )}
             </ValueWrapper>{' '}
@@ -725,7 +725,7 @@ export default function TransactionDetails(props) {
                 `${amountFormatter(
                   props.dependentValueMaximum,
                   props.dependentDecimals,
-                  Math.min(4, props.dependentDecimals)
+                  Math.min(MIN_DECIMALS, props.dependentDecimals)
                 )} ${props.inputSymbol}`
               )}
             </ValueWrapper>{' '}
@@ -742,7 +742,7 @@ export default function TransactionDetails(props) {
               `${amountFormatter(
                 props.independentValueParsed,
                 props.independentDecimals,
-                Math.min(4, props.independentDecimals)
+                Math.min(MIN_DECIMALS, props.independentDecimals)
               )} ${props.outputSymbol}`
             )}
           </ValueWrapper>{' '}
@@ -752,7 +752,7 @@ export default function TransactionDetails(props) {
               `${amountFormatter(
                 props.dependentValueMaximum,
                 props.dependentDecimals,
-                Math.min(4, props.dependentDecimals)
+                Math.min(MIN_DECIMALS, props.dependentDecimals)
               )} ${props.inputSymbol}`
             )}
           </ValueWrapper>{' '}

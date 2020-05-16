@@ -12,6 +12,7 @@ import TransactionContextProvider, { Updater as TransactionContextUpdater } from
 import BalancesContextProvider, { Updater as BalancesContextUpdater } from './contexts/Balances'
 import TokensContextProvider from './contexts/Tokens'
 import AllowancesContextProvider from './contexts/Allowances'
+import DolomiteOrderBooksContextProvider from './contexts/DolomiteOrderBooks'
 import App from './pages/App'
 import ThemeProvider, { GlobalStyle } from './theme'
 import './i18n'
@@ -42,7 +43,9 @@ function ContextProviders({ children }) {
         <TransactionContextProvider>
           <TokensContextProvider>
             <BalancesContextProvider>
-              <AllowancesContextProvider>{children}</AllowancesContextProvider>
+              <AllowancesContextProvider>
+                <DolomiteOrderBooksContextProvider>{children}</DolomiteOrderBooksContextProvider>
+              </AllowancesContextProvider>
             </BalancesContextProvider>
           </TokensContextProvider>
         </TransactionContextProvider>

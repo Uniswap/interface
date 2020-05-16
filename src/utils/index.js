@@ -8,6 +8,10 @@ import { FACTORY_ADDRESSES, SUPPORTED_THEMES } from '../constants'
 import { formatFixed } from '@uniswap/sdk'
 
 import UncheckedJsonRpcSigner from './signer'
+import { DAI_ADDRESS, DMG_ADDRESS } from '../contexts/Tokens'
+
+export const MIN_DECIMALS = 6
+export const MIN_DECIMALS_EXCHANGE_RATE = 8
 
 export const ERROR_CODES = ['TOKEN_NAME', 'TOKEN_SYMBOL', 'TOKEN_DECIMALS'].reduce(
   (accumulator, currentValue, currentIndex) => {
@@ -57,14 +61,8 @@ export function getAllQueryParams() {
   let params = {}
   params.theme = checkSupportedTheme(getQueryParam(window.location, 'theme'))
 
-  params.inputCurrency = isAddress(getQueryParam(window.location, 'inputCurrency'))
-    ? isAddress(getQueryParam(window.location, 'inputCurrency'))
-    : ''
-  params.outputCurrency = isAddress(getQueryParam(window.location, 'outputCurrency'))
-    ? isAddress(getQueryParam(window.location, 'outputCurrency'))
-    : getQueryParam(window.location, 'outputCurrency') === 'ETH'
-    ? 'ETH'
-    : ''
+  params.inputCurrency = DAI_ADDRESS
+  params.outputCurrency = DMG_ADDRESS
   params.slippage = !isNaN(getQueryParam(window.location, 'slippage')) ? getQueryParam(window.location, 'slippage') : ''
   params.exactField = getQueryParam(window.location, 'exactField')
   params.exactAmount = !isNaN(getQueryParam(window.location, 'exactAmount'))
@@ -247,11 +245,11 @@ export async function getEtherBalance(address, library) {
 }
 
 export function formatEthBalance(balance) {
-  return amountFormatter(balance, 18, 6)
+  return amountFormatter(balance, 18, MIN_DECIMALS)
 }
 
 export function formatTokenBalance(balance, decimal) {
-  return !!(balance && Number.isInteger(decimal)) ? amountFormatter(balance, decimal, Math.min(4, decimal)) : 0
+  return !!(balance && Number.isInteger(decimal)) ? amountFormatter(balance, decimal, Math.min(MIN_DECIMALS, decimal)) : 0
 }
 
 export function formatToUsd(price) {
@@ -286,7 +284,7 @@ export async function getTokenAllowance(address, tokenAddress, spenderAddress, l
 }
 
 // amount must be a BigNumber, {base,display}Decimals must be Numbers
-export function amountFormatter(amount, baseDecimals = 18, displayDecimals = 3, useLessThan = true) {
+export function amountFormatter(amount, baseDecimals = 18, displayDecimals = MIN_DECIMALS, useLessThan = true) {
   if (baseDecimals > 18 || displayDecimals > 18 || displayDecimals > baseDecimals) {
     throw Error(`Invalid combination of baseDecimals '${baseDecimals}' and displayDecimals '${displayDecimals}.`)
   }
