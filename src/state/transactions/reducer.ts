@@ -1,5 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { addTransaction, checkTransaction, finalizeTransaction, SerializableTransactionReceipt } from './actions'
+import {
+  addTransaction,
+  checkTransaction,
+  clearAllTransactions,
+  finalizeTransaction,
+  SerializableTransactionReceipt
+} from './actions'
 
 const now = () => new Date().getTime()
 
@@ -33,6 +39,10 @@ export default createReducer(initialState, builder =>
       }
       state[chainId] = state[chainId] ?? {}
       state[chainId][hash] = { hash, approvalOfToken, summary, from, addedTime: now() }
+    })
+    .addCase(clearAllTransactions, (state, { payload: { chainId } }) => {
+      if (!state[chainId]) return
+      state[chainId] = {}
     })
     .addCase(checkTransaction, (state, { payload: { chainId, blockNumber, hash } }) => {
       if (!state[chainId]?.[hash]) {
