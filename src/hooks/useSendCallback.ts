@@ -8,7 +8,7 @@ import { calculateGasMargin, getSigner, isAddress } from '../utils'
 import { useENSName, useTokenContract, useWeb3React } from './index'
 
 // returns a callback for sending a token amount, treating WETH as ETH
-// returns null with invalid arguments, or if the amount is not approved
+// returns null with invalid arguments
 export function useSendCallback(amount?: TokenAmount, recipient?: string): null | (() => Promise<string>) {
   const { library, account, chainId } = useWeb3React()
   const addTransaction = useTransactionAdder()

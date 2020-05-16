@@ -43,8 +43,8 @@ function getSwapType(tokens: { [field in Field]?: Token }, isExactIn: boolean, c
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
   trade?: Trade, // trade to execute, required
-  allowedSlippage?: number, // in bips, optional
-  deadline?: number, // in seconds from now, optional
+  allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips, optional
+  deadline: number = DEFAULT_DEADLINE_FROM_NOW, // in seconds from now, optional
   to?: string // recipient of output, optional
 ): null | (() => Promise<string>) {
   const { account, chainId, library } = useWeb3React()
@@ -54,25 +54,16 @@ export function useSwapCallback(
   const ensName = useENSName(to)
 
   return useMemo(() => {
-    if (!trade) {
-      return null
-    }
+    if (!trade) return null
+    if (!recipient) return null
 
-    const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage ?? INITIAL_ALLOWED_SLIPPAGE)
-
-    if (!recipient) {
-      return null
-    }
-
-    if (!slippageAdjustedAmounts) {
-      return null
-    }
+    // will always be defined
+    const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
     // no allowance
     if (
-      inputAllowance &&
       !trade.inputAmount.token.equals(WETH[chainId]) &&
-      slippageAdjustedAmounts[Field.INPUT].greaterThan(inputAllowance)
+      (!inputAllowance || slippageAdjustedAmounts[Field.INPUT].greaterThan(inputAllowance))
     ) {
       return null
     }
@@ -80,9 +71,9 @@ export function useSwapCallback(
     return async function onSwap() {
       const routerContract: Contract = getRouterContract(chainId, library, account)
 
-      const path = trade.route.path.map(t => isAddress(t.address))
+      const path = trade.route.path.map(t => t.address)
 
-      const deadlineFromNow: number = Math.ceil(Date.now() / 1000) + (deadline ?? DEFAULT_DEADLINE_FROM_NOW)
+      const deadlineFromNow: number = Math.ceil(Date.now() / 1000) + deadline
 
       const swapType = getSwapType(
         { [Field.INPUT]: trade.inputAmount.token, [Field.OUTPUT]: trade.outputAmount.token },
