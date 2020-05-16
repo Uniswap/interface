@@ -31,6 +31,8 @@ const Emoji = styled.span<{ size?: string }>`
 const StyledEthereumLogo = styled(EthereumLogo)<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
+  border-radius: 24px;
 `
 
 export default function TokenLogo({
@@ -53,13 +55,7 @@ export default function TokenLogo({
   let path = ''
   // hard code to show ETH instead of WETH in UI
   if (address === WETH[chainId].address) {
-    return (
-      <StyledEthereumLogo
-        style={{ boxShadow: '0px 6px 10px rgba(0, 0, 0, 0.075)', borderRadius: '24px' }}
-        size={size}
-        {...rest}
-      />
-    )
+    return <StyledEthereumLogo size={size} {...rest} />
   } else if (!error && !BAD_IMAGES[address] && isAddress(address)) {
     path = TOKEN_ICON_API(address)
   } else {
