@@ -175,11 +175,11 @@ function Migrate() {
               color={'primaryText1'}
               style={{ fontWeight: '500', fontSize: '16px', textDecoration: 'underline', cursor: 'pointer' }}
             >
-              Connect your wallet to get started
+              Connect an Ethereum wallet to get started
             </TextBlock>
           </RowStart>
           <TextBlock color={'primary3'} padding={'1rem 0 0 0'}>
-            This tool is only for liquidity providers wishing to migrate from Uniswap V1 pools into Uniswap V2.{' '}
+            This tool is for liquidity providers wishing to migrate liquidity from Uniswap V1 pools into Uniswap V2.{' '}
             <Link color={'primary3'} href="https://v2.uniswap.exchange">
               Click here
             </Link>{' '}
@@ -197,8 +197,8 @@ function Migrate() {
             <div style={{ fontWeight: '500', fontSize: '24px' }}>Uniswap V2 Migration Info</div>
           </RowStart>
           <TextBlock padding={'1rem 0 0 0'} style={{ lineHeight: '140%' }}>
-            For each pool, first approve the migration helper and then click migrate liquidity. Your liquidity will
-            be withdrawn from Uniswap V1 and deposited into Uniswap V2. Once you've
+            For each pool, approve the migration helper and click migrate liquidity. Your liquidity 
+            will be withdrawn from Uniswap V1 and deposited into Uniswap V2. Once you've
             completed the migration you can view your liquidity on the new{' '}
             <Link href="v2.uniswap.exchange">Uniswap V2 interface</Link>
           </TextBlock>
