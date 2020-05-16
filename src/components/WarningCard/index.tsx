@@ -132,7 +132,7 @@ interface WarningCardProps {
   currency: string
 }
 
-function WarningCard({ onDismiss, urlAddedTokens, currency }: WarningCardProps) {
+export default function WarningCard({ onDismiss, urlAddedTokens, currency }: WarningCardProps) {
   const [showPopup, setPopup] = useState<boolean>(false)
   const { chainId } = useWeb3React()
   const { symbol: inputSymbol, name: inputName } = useToken(currency)
@@ -183,5 +183,3 @@ function WarningCard({ onDismiss, urlAddedTokens, currency }: WarningCardProps) 
     </Wrapper>
   )
 }
-
-export default WarningCard

@@ -19,10 +19,6 @@ export function useWalletModalToggle() {
   return useCallback(() => dispatch(toggleWalletModal()), [dispatch])
 }
 
-export function useUserAdvanced() {
-  return useSelector((state: AppState) => state.application.userAdvanced)
-}
-
 // returns a function that allows adding a popup
 export function useAddPopup(): (content: PopupContent) => void {
   const dispatch = useDispatch()

@@ -15,7 +15,7 @@ import TokenLogo from '../TokenLogo'
 import DoubleTokenLogo from '../DoubleLogo'
 import Column, { AutoColumn } from '../Column'
 import { Text } from 'rebass'
-import { Hover } from '../../theme'
+import { CursorPointer } from '../../theme'
 import { ArrowLeft } from 'react-feather'
 import { CloseIcon } from '../../theme/components'
 import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
@@ -557,13 +557,13 @@ function SearchModal({
           <PaddedColumn gap="lg">
             <RowBetween>
               <RowFixed>
-                <Hover>
+                <CursorPointer>
                   <ArrowLeft
                     onClick={() => {
                       setShowTokenImport(false)
                     }}
                   />
-                </Hover>
+                </CursorPointer>
                 <Text fontWeight={500} fontSize={16} marginLeft={'10px'}>
                   Import A Token
                 </Text>
