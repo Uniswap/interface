@@ -62,7 +62,7 @@ export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: A
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
               Price Impact
             </TYPE.black>
-            <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
+            <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
           </RowFixed>
           <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
         </RowBetween>

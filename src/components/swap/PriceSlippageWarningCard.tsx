@@ -22,8 +22,7 @@ export function PriceSlippageWarningCard({ priceSlippage }: { priceSlippage: Per
           </RowFixed>
         </RowBetween>
         <Text lineHeight="145.23%;" fontSize={16} fontWeight={400} color={theme.text1}>
-          This trade will move the price by ~{priceSlippage.toFixed(2)}%. This pool probably doesn’t have enough
-          liquidity to support this trade.
+          This trade will move the price by ~{priceSlippage.toFixed(2)}%.
         </Text>
       </AutoColumn>
     </YellowCard>

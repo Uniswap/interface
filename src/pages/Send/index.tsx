@@ -454,7 +454,7 @@ export default function Send({ history, location: { search } }: RouteComponentPr
                   </TYPE.main>
                   <RowFixed>
                     <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
-                    <QuestionHelper text="The difference between the market price and your quoted price due to trade size." />
+                    <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
                   </RowFixed>
                 </RowBetween>
               )}
