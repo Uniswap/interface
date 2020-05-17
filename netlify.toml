@@ -14,8 +14,6 @@
   status = 200
 
 [build.environment]
-  REACT_APP_CHAIN_ID = "4"
-  REACT_APP_NETWORK_URL = "https://rinkeby.infura.io/v3/b8800ce81b8c451698081d269b86692b"
   REACT_APP_IS_PRODUCTION_DEPLOY = "false"
 
 [context.production.environment]
