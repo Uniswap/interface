@@ -304,7 +304,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
                     toggleOpen(true)
                   }}
                 >
-                  Upgrade
+                  Migrate
                 </Button>
               )
             ) : migrationDone ? (
@@ -404,10 +404,10 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
                   ? 'Waiting For Confirmation...'
                   : approvalDone || migrationDone
                   ? 'Confirmed'
-                  : 'Approve for upgrade'}
+                  : 'Approve migration'}
               </Button>
               <TextBlock fontSize={16} color={'text2'}>
-                The upgrade helper needs permission to migrate your liquidity.
+                The migration helper needs permission to move your liquidity.
               </TextBlock>
             </FormattedCard>
             <FormattedCard outlined={approvalDone && 'outlined'}>
@@ -436,7 +436,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
                 {pendingMigration ? 'Waiting For Confirmation...' : migrationDone ? 'Confirmed' : 'Migrate Liquidity'}
               </Button>
               <TextBlock fontSize={16} color={'text2'}>
-                Your {symbol} liquidity will appear as {symbol}/ETH with a new icon.{' '}
+                Your {symbol} liquidity will become Uniswap V2 {symbol}/ETH liquidity with a new icon.{' '}
                 <Link href="https://uniswap.org/blog/uniswap-v2/" target="_blank" rel="noopener noreferrer">
                   Read more.
                 </Link>
