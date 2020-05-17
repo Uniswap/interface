@@ -24,7 +24,6 @@ import Button from '../Button'
 import { X, Repeat } from 'react-feather'
 import Loader from '../Loader'
 import Icon from '../Icon'
-import { Link } from '../Link'
 import TextBlock from '../Text'
 
 import Lock from '../../assets/images/lock.png'
@@ -53,9 +52,11 @@ const BottomWrapper = styled.div`
   width: 100%;
   padding: 5px 0;
   grid-gap: 5px;
+
   grid-template-columns: auto auto;
   & > div {
     height: fit-content;
+    height: 240px;
   }
 `
 
@@ -84,6 +85,7 @@ const InlineSubText = styled.span`
 `
 
 const CloseIcon = styled(X)`
+  margin-right: 0.5rem;
   color: ${({ theme }) => theme.colors.text1};
 `
 
@@ -317,7 +319,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
               </Button>
             ) : (
               <CloseIcon
-                size={20}
+                size={24}
                 onClick={() => {
                   toggleOpen(false)
                 }}
@@ -331,7 +333,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
                 gridColumn: 'span 2',
                 zIndex: -1,
                 paddingTop: '1rem',
-                marginTop: '.5rem'
+                marginTop: '1rem'
               }}
             >
               <Row>
@@ -382,7 +384,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
         {open && (
           <BottomWrapper>
             <FormattedCard outlined={!approvalDone && 'outlined'}>
-              <Row>
+              <Row style={{ width: 'auto', height: '30px', paddingRight: '.5rem' }}>
                 <TextBlock fontSize={20}>Step 1</TextBlock>
                 {approvalDone || migrationDone ? (
                   <TextBlock color={'green2'}>✓</TextBlock>
@@ -395,6 +397,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
               <Button
                 variant={(approvalDone || migrationDone) && 'success'}
                 py={18}
+                height={64}
                 disabled={pendingApproval || approvalDone || migrationDone}
                 onClick={() => {
                   tryApproval()
@@ -406,12 +409,12 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
                   ? 'Confirmed'
                   : 'Approve migration'}
               </Button>
-              <TextBlock fontSize={16} color={'text2'}>
+              <TextBlock style={{ height: '64px' }} fontSize={16} color={'text2'}>
                 The migration helper needs permission to move your liquidity.
               </TextBlock>
             </FormattedCard>
             <FormattedCard outlined={approvalDone && 'outlined'}>
-              <Row>
+              <Row style={{ width: 'auto', height: '30px', paddingRight: '.5rem' }}>
                 <TextBlock fontSize={20}>Step 2</TextBlock>
                 {pendingMigration ? (
                   <Loader />
@@ -422,24 +425,22 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
                 ) : approvalDone ? (
                   ''
                 ) : (
-                  <Icon icon={Lock} />
+                  <Icon size={'20px'} icon={Lock} />
                 )}
               </Row>
               <Button
                 variant={migrationDone && 'success'}
                 disabled={!approvalDone || pendingMigration || migrationDone || !canMigrate}
                 py={18}
+                height={64}
                 onClick={() => {
                   tryMigration()
                 }}
               >
                 {pendingMigration ? 'Waiting For Confirmation...' : migrationDone ? 'Confirmed' : 'Migrate Liquidity'}
               </Button>
-              <TextBlock fontSize={16} color={'text2'}>
-                Your {symbol} liquidity will become Uniswap V2 {symbol}/ETH liquidity with a new icon.{' '}
-                <Link href="https://uniswap.org/blog/uniswap-v2/" target="_blank" rel="noopener noreferrer">
-                  Read more.
-                </Link>
+              <TextBlock style={{ height: '64px' }} fontSize={16} color={'text2'}>
+                Your {symbol} liquidity will become Uniswap V2 {symbol}/ETH liquidity.
               </TextBlock>
             </FormattedCard>
           </BottomWrapper>
