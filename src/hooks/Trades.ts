@@ -23,15 +23,16 @@ function useAllCommonPairs(tokenA?: Token, tokenB?: Token): Pair[] {
   const aToUSDC = usePair(tokenA, chainId === ChainId.MAINNET ? USDC : null)
   const bToUSDC = usePair(tokenB, chainId === ChainId.MAINNET ? USDC : null)
 
-  return useMemo(() => [pairBetween, aToETH, bToETH, aToDAI, bToDAI, aToUSDC, bToUSDC].filter(p => !!p), [
-    pairBetween,
-    aToETH,
-    bToETH,
-    aToDAI,
-    bToDAI,
-    aToUSDC,
-    bToUSDC
-  ])
+  // get connecting pairs
+  const DAIToETH = usePair(chainId === ChainId.MAINNET ? DAI : null, WETH[chainId])
+  const USDCToETH = usePair(chainId === ChainId.MAINNET ? USDC : null, WETH[chainId])
+  const DAIToUSDC = usePair(chainId === ChainId.MAINNET ? DAI : null, chainId === ChainId.MAINNET ? USDC : null)
+
+  return useMemo(
+    () =>
+      [pairBetween, aToETH, bToETH, aToDAI, bToDAI, aToUSDC, bToUSDC, DAIToETH, USDCToETH, DAIToUSDC].filter(p => !!p),
+    [pairBetween, aToETH, bToETH, aToDAI, bToDAI, aToUSDC, bToUSDC, DAIToETH, USDCToETH, DAIToUSDC]
+  )
 }
 
 /**
