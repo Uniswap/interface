@@ -199,14 +199,14 @@ function Migrate() {
           <TextBlock padding={'1rem 0 0 0'} style={{ lineHeight: '140%' }}>
             For each pool, approve the migration helper and click migrate liquidity. Your liquidity will be withdrawn
             from Uniswap V1 and deposited into Uniswap V2. Once you've completed the migration you can view your
-            liquidity on the new <Link href="v2.uniswap.exchange">Uniswap V2 interface</Link>
+            liquidity on the new <Link href="v2.uniswap.exchange">Uniswap V2 interface</Link>.
           </TextBlock>
           <TextBlock padding={'1rem 0 0 0'} style={{ lineHeight: '140%' }}>
             If your liquidity does not appear below automatically, you may need to find it by pasting in the token
             address into the search box below.
           </TextBlock>
           <Link style={{ marginTop: '1rem', display: 'inline-block' }} href="https://uniswap.org/blog/uniswap-v2/">
-            Read more about Uniswap V2
+            Read more about Uniswap V2.
           </Link>
         </InfoCard>
       )}
