@@ -356,6 +356,7 @@ function SearchModal({
           return true
         }
       }
+      return false
     })
   }, [searchQuery, sortedPairList])
 
