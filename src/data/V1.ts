@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import { Token, TokenAmount, Pair, Trade, ChainId, WETH, Route, TradeType, Percent } from '@uniswap/sdk'
 import useSWR from 'swr'
-import { useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '../hooks'
 
 import IUniswapV1Factory from '../constants/abis/v1_factory.json'
 import { V1_FACTORY_ADDRESS } from '../constants'

@@ -14,7 +14,7 @@ import { RowBetween } from '../../components/Row'
 import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 
-import { useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '../../hooks'
 import { usePair } from '../../data/Reserves'
 import { useAllDummyPairs } from '../../state/user/hooks'
 

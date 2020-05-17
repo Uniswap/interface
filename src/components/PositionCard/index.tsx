@@ -4,7 +4,7 @@ import { darken } from 'polished'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { Percent, Pair, JSBI } from '@uniswap/sdk'
 
-import { useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '../../hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useTokenBalance } from '../../state/wallet/hooks'
 
