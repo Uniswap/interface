@@ -28,6 +28,7 @@
   "selectTokenCont": "Select a token to continue.",
   "noLiquidity": "No liquidity.",
   "insufficientLiquidity": "Insufficient liquidity.",
+  "orderBooksLoading": "Exchange is loading.",
   "unlockTokenCont": "Please unlock token to continue.",
   "transactionDetails": "Advanced Details",
   "hideDetails": "Hide Details",

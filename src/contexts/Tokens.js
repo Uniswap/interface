@@ -13,6 +13,7 @@ import {
 const NAME = 'name'
 const SYMBOL = 'symbol'
 const DECIMALS = 'decimals'
+const PRICE_DECIMALS = 'priceDecimals'
 const EXCHANGE_ADDRESS = 'exchangeAddress'
 
 const UPDATE = 'UPDATE'
@@ -38,18 +39,21 @@ export const INITIAL_TOKENS_CONTEXT = {
       [NAME]: 'Dai Stablecoin',
       [SYMBOL]: 'DAI',
       [DECIMALS]: 18,
+      [PRICE_DECIMALS]: 6,
       [EXCHANGE_ADDRESS]: '0x2a1530C4C41db0B0b2bB646CB5Eb1A67b7158667'
     },
     '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48': {
       [NAME]: 'USD//C',
       [SYMBOL]: 'USDC',
       [DECIMALS]: 6,
+      [PRICE_DECIMALS]: 6,
       [EXCHANGE_ADDRESS]: '0x97deC872013f6B5fB443861090ad931542878126'
     },
     '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2': {
       [NAME]: 'Wrapped Ether',
       [SYMBOL]: 'WETH',
       [DECIMALS]: 18,
+      [PRICE_DECIMALS]: 7,
       [EXCHANGE_ADDRESS]: '0xA2881A90Bf33F03E7a3f803765Cd2ED5c8928dFb'
     },
     [DMG_ADDRESS]: {
