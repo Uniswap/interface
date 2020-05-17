@@ -32,6 +32,8 @@ const HeaderFrame = styled.div`
   top: 0;
   position: absolute;
 
+  pointer-events: none;
+
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     padding: 12px 0 0 0;
     width: calc(100%);
@@ -48,6 +50,7 @@ const HeaderElement = styled.div`
 const Title = styled.div`
   display: flex;
   align-items: center;
+  pointer-events: auto;
 
   :hover {
     cursor: pointer;
@@ -108,6 +111,7 @@ const MigrateBanner = styled(AutoColumn)`
   color: ${({ theme }) => theme.primaryText1};
   font-weight: 400;
   text-align: center;
+  pointer-events: auto;
   a {
     color: ${({ theme }) => theme.primaryText1};
   }
@@ -182,7 +186,7 @@ export default function Header() {
               </TitleText>
             )}
           </Title>
-          <TestnetWrapper>
+          <TestnetWrapper style={{ pointerEvents: 'auto' }}>
             {!isMobile && (
               <VersionToggle target="_self" href="https://v1.uniswap.exchange">
                 <VersionLabel isV2={true}>V2</VersionLabel>
@@ -198,7 +202,7 @@ export default function Header() {
             {!isMobile && chainId === ChainId.GÖRLI && <NetworkCard>Görli</NetworkCard>}
             {!isMobile && chainId === ChainId.KOVAN && <NetworkCard>Kovan</NetworkCard>}
           </TestnetWrapper>
-          <AccountElement active={!!account}>
+          <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <Text style={{ flexShrink: 0 }} px="0.5rem" fontWeight={500}>
                 {userEthBalance?.toSignificant(4)} ETH
@@ -206,7 +210,9 @@ export default function Header() {
             ) : null}
             <Web3Status />
           </AccountElement>
-          <Menu />
+          <div style={{ pointerEvents: 'auto' }}>
+            <Menu />
+          </div>
         </HeaderElement>
       </RowBetween>
     </HeaderFrame>

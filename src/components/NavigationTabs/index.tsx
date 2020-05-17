@@ -4,7 +4,7 @@ import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
 import { withRouter, NavLink, Link as HistoryLink, RouteComponentProps } from 'react-router-dom'
 
-import { Hover } from '../../theme'
+import { CursorPointer } from '../../theme'
 import { ArrowLeft } from 'react-feather'
 import { RowBetween } from '../Row'
 import QuestionHelper from '../Question'
@@ -105,9 +105,9 @@ function NavigationTabs({ location: { pathname }, history }: RouteComponentProps
       {adding || removing ? (
         <Tabs>
           <RowBetween style={{ padding: '1rem' }}>
-            <Hover onClick={() => history.push('/pool')}>
+            <CursorPointer onClick={() => history.push('/pool')}>
               <ArrowLink />
-            </Hover>
+            </CursorPointer>
             <ActiveText>{adding ? 'Add' : 'Remove'} Liquidity</ActiveText>
             <QuestionHelper
               text={

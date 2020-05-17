@@ -15,7 +15,7 @@ import TokenLogo from '../TokenLogo'
 import DoubleTokenLogo from '../DoubleLogo'
 import Column, { AutoColumn } from '../Column'
 import { Text } from 'rebass'
-import { Hover } from '../../theme'
+import { CursorPointer } from '../../theme'
 import { ArrowLeft } from 'react-feather'
 import { CloseIcon } from '../../theme/components'
 import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
@@ -227,16 +227,16 @@ function SearchModal({
 
   const tokenList = useMemo(() => {
     return Object.keys(allTokens)
-      .sort((a, b): number => {
-        if (a && allTokens[a]?.equals(WETH[chainId])) return -1
-        if (b && allTokens[b]?.equals(WETH[chainId])) return 1
+      .sort((tokenAddressA, tokenAddressB): number => {
+        if (tokenAddressA && allTokens[tokenAddressA]?.equals(WETH[chainId])) return -1
+        if (tokenAddressB && allTokens[tokenAddressB]?.equals(WETH[chainId])) return 1
 
-        if (allTokens[a].symbol && allTokens[b].symbol) {
-          const aSymbol = allTokens[a].symbol.toLowerCase()
-          const bSymbol = allTokens[b].symbol.toLowerCase()
+        if (allTokens[tokenAddressA].symbol && allTokens[tokenAddressB].symbol) {
+          const aSymbol = allTokens[tokenAddressA].symbol.toLowerCase()
+          const bSymbol = allTokens[tokenAddressB].symbol.toLowerCase()
           // sort by balance
-          const balanceA = allBalances?.[account]?.[a]
-          const balanceB = allBalances?.[account]?.[b]
+          const balanceA = allBalances?.[account]?.[tokenAddressA]
+          const balanceB = allBalances?.[account]?.[tokenAddressB]
 
           if (balanceA?.greaterThan('0') && !balanceB?.greaterThan('0')) {
             return sortDirection ? -1 : 1
@@ -249,12 +249,13 @@ function SearchModal({
           return 0
         }
       })
-      .map(k => {
+      .filter(tokenAddress => isAddress(tokenAddress))
+      .map(tokenAddress => {
         return {
-          name: allTokens[k].name,
-          symbol: allTokens[k].symbol,
-          address: k,
-          balance: allBalances?.[account]?.[k]
+          name: allTokens[tokenAddress].name,
+          symbol: allTokens[tokenAddress].symbol,
+          address: isAddress(tokenAddress) as string, // always a string after filtering
+          balance: allBalances?.[account]?.[tokenAddress]
         }
       })
   }, [allTokens, allBalances, account, sortDirection, chainId])
@@ -459,6 +460,7 @@ function SearchModal({
           const customAdded = userAddedTokens?.some(token => token.address === address) && !urlAdded
 
           const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
+          console.log(balance, address)
 
           // if token import page dont show preset list, else show all
           return (
@@ -477,10 +479,10 @@ function SearchModal({
                     {otherSelectedTokenAddress === address && <GreySpan> ({otherSelectedText})</GreySpan>}
                   </Text>
                   <FadedSpan>
-                    <TYPE.blue fontWeight={500}>
+                    <TYPE.main fontWeight={500}>
                       {urlAdded && 'Added by URL'}
                       {customAdded && 'Added by user'}
-                    </TYPE.blue>
+                    </TYPE.main>
                     {customAdded && (
                       <div
                         onClick={event => {
@@ -557,13 +559,13 @@ function SearchModal({
           <PaddedColumn gap="lg">
             <RowBetween>
               <RowFixed>
-                <Hover>
+                <CursorPointer>
                   <ArrowLeft
                     onClick={() => {
                       setShowTokenImport(false)
                     }}
                   />
-                </Hover>
+                </CursorPointer>
                 <Text fontWeight={500} fontSize={16} marginLeft={'10px'}>
                   Import A Token
                 </Text>

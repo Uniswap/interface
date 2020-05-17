@@ -9,7 +9,7 @@ import NavigationTabs from '../components/NavigationTabs'
 import Web3ReactManager from '../components/Web3ReactManager'
 
 import Popups from '../components/Popups'
-import { isAddress, getAllQueryParams } from '../utils'
+import { isAddress } from '../utils'
 
 import Swap from './Swap'
 import Send from './Send'
@@ -51,9 +51,7 @@ const BodyWrapper = styled.div`
   }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-      padding-top: 16px;
-      padding-left: 16px;
-      padding-right: 16px;
+      padding: 16px;
   `};
 
   z-index: 1;
@@ -101,8 +99,6 @@ function GoogleAnalyticsReporter({ location: { pathname, search } }: RouteCompon
 }
 
 export default function App() {
-  const params = getAllQueryParams()
-
   return (
     <>
       <Suspense fallback={null}>
@@ -117,14 +113,12 @@ export default function App() {
               <Web3ReactManager>
                 <Body>
                   <NavigationTabs />
-                  {/* this Suspense is for route code-splitting */}
                   <Switch>
-                    <Route exact strict path="/" render={() => <Redirect to="/swap" />} />
-                    <Route exact strict path="/swap" component={() => <Swap params={params} />} />
-                    <Route exact strict path="/send" component={() => <Send params={params} />} />
-                    <Route exact strict path="/find" component={() => <Find />} />
-                    <Route exact strict path="/create" component={() => <Create />} />
-                    <Route exact strict path="/pool" component={() => <Pool />} />
+                    <Route exact strict path="/swap" component={Swap} />
+                    <Route exact strict path="/send" component={Send} />
+                    <Route exact strict path="/find" component={Find} />
+                    <Route exact strict path="/create" component={Create} />
+                    <Route exact strict path="/pool" component={Pool} />
                     <Route
                       exact
                       strict
@@ -159,7 +153,7 @@ export default function App() {
                         }
                       }}
                     />
-                    <Redirect to="/" />
+                    <Redirect to="/swap" />
                   </Switch>
                 </Body>
               </Web3ReactManager>
@@ -168,6 +162,7 @@ export default function App() {
             <StyledRed />
           </AppWrapper>
         </BrowserRouter>
+        <div id="popover-container" />
       </Suspense>
     </>
   )

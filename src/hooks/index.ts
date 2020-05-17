@@ -1,3 +1,4 @@
+import { Contract } from '@ethersproject/contracts'
 import { Web3Provider } from '@ethersproject/providers'
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
@@ -190,7 +191,7 @@ export function useContract(address, ABI, withSignerIfPossible = true) {
 }
 
 // returns null on errors
-export function useTokenContract(tokenAddress, withSignerIfPossible = true) {
+export function useTokenContract(tokenAddress: string, withSignerIfPossible = true): Contract {
   const { library, account } = useWeb3React()
 
   return useMemo(() => {
