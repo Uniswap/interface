@@ -460,7 +460,6 @@ function SearchModal({
           const customAdded = userAddedTokens?.some(token => token.address === address) && !urlAdded
 
           const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
-          console.log(balance, address)
 
           // if token import page dont show preset list, else show all
           return (
