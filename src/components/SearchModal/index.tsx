@@ -254,7 +254,7 @@ function SearchModal({
         return {
           name: token.name,
           symbol: token.symbol,
-          address: tokenAddress,
+          address: isAddress(tokenAddress) as string,
           balance: allBalances?.[account]?.[tokenAddress]
         }
       })
