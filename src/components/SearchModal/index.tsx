@@ -182,7 +182,7 @@ function SearchModal({
   const allBalances = useAllTokenBalancesTreatingWETHasETH()
 
   const [searchQuery, setSearchQuery] = useState('')
-  const [sortDirection, setSortDirection] = useState(true)
+  const [invertSearchOrder, setInvertSearchOrder] = useState(false)
 
   const userAddedTokens = useUserAddedTokens()
   const fetchTokenByAddress = useFetchTokenByAddress()
@@ -228,37 +228,37 @@ function SearchModal({
   const tokenList = useMemo(() => {
     return Object.keys(allTokens)
       .sort((tokenAddressA, tokenAddressB): number => {
-        if (tokenAddressA && allTokens[tokenAddressA]?.equals(WETH[chainId])) return -1
-        if (tokenAddressB && allTokens[tokenAddressB]?.equals(WETH[chainId])) return 1
+        // -1 = a is first
+        // 1 = b is first
 
-        if (allTokens[tokenAddressA].symbol && allTokens[tokenAddressB].symbol) {
-          const aSymbol = allTokens[tokenAddressA].symbol.toLowerCase()
-          const bSymbol = allTokens[tokenAddressB].symbol.toLowerCase()
-          // sort by balance
-          const balanceA = allBalances?.[account]?.[tokenAddressA]
-          const balanceB = allBalances?.[account]?.[tokenAddressB]
+        // sort ETH first
+        const a = allTokens[tokenAddressA]
+        const b = allTokens[tokenAddressB]
+        if (a.equals(WETH[chainId])) return -1
+        if (b.equals(WETH[chainId])) return 1
 
-          if (balanceA?.greaterThan('0') && !balanceB?.greaterThan('0')) {
-            return sortDirection ? -1 : 1
-          }
-          if (!balanceA?.greaterThan('0') && balanceB?.greaterThan('0')) {
-            return sortDirection ? 1 : -1
-          }
-          return aSymbol < bSymbol ? -1 : aSymbol > bSymbol ? 1 : 0
-        } else {
-          return 0
+        // sort by balances
+        const balanceA = allBalances[account]?.[tokenAddressA]
+        const balanceB = allBalances[account]?.[tokenAddressB]
+        if (balanceA?.greaterThan('0') && !balanceB?.greaterThan('0')) return !invertSearchOrder ? -1 : 1
+        if (!balanceA?.greaterThan('0') && balanceB?.greaterThan('0')) return !invertSearchOrder ? 1 : -1
+        if (balanceA?.greaterThan('0') && balanceB?.greaterThan('0')) {
+          return balanceA.greaterThan(balanceB) ? (!invertSearchOrder ? -1 : 1) : !invertSearchOrder ? 1 : -1
         }
+
+        // sort by symbol
+        return a.symbol.toLowerCase() < b.symbol.toLowerCase() ? -1 : 1
       })
-      .filter(tokenAddress => isAddress(tokenAddress))
       .map(tokenAddress => {
+        const token = allTokens[tokenAddress]
         return {
-          name: allTokens[tokenAddress].name,
-          symbol: allTokens[tokenAddress].symbol,
-          address: isAddress(tokenAddress) as string, // always a string after filtering
+          name: token.name,
+          symbol: token.symbol,
+          address: tokenAddress,
           balance: allBalances?.[account]?.[tokenAddress]
         }
       })
-  }, [allTokens, allBalances, account, sortDirection, chainId])
+  }, [allTokens, chainId, allBalances, account, invertSearchOrder])
 
   const filteredTokenList = useMemo(() => {
     return tokenList.filter(tokenEntry => {
@@ -310,51 +310,51 @@ function SearchModal({
   const sortedPairList = useMemo(() => {
     return allPairs.sort((a, b): number => {
       // sort by balance
-      const balanceA = allBalances?.[account]?.[a.liquidityToken.address]
-      const balanceB = allBalances?.[account]?.[b.liquidityToken.address]
-
-      if (balanceA?.greaterThan('0') && !balanceB?.greaterThan('0')) {
-        return sortDirection ? -1 : 1
+      const balanceA = allBalances[account]?.[a.liquidityToken.address]
+      const balanceB = allBalances[account]?.[b.liquidityToken.address]
+      if (balanceA?.greaterThan('0') && !balanceB?.greaterThan('0')) return !invertSearchOrder ? -1 : 1
+      if (!balanceA?.greaterThan('0') && balanceB?.greaterThan('0')) return !invertSearchOrder ? 1 : -1
+      if (balanceA?.greaterThan('0') && balanceB?.greaterThan('0')) {
+        return balanceA.greaterThan(balanceB) ? (!invertSearchOrder ? -1 : 1) : !invertSearchOrder ? 1 : -1
       }
-      if (!balanceA?.greaterThan('0') && balanceB?.greaterThan('0')) {
-        return sortDirection ? 1 : -1
-      } else {
-        return 0
-      }
+      return 0
     })
-  }, [account, allBalances, allPairs, sortDirection])
+  }, [allPairs, allBalances, account, invertSearchOrder])
 
   const filteredPairList = useMemo(() => {
-    const isAddress = searchQuery.slice(0, 2) === '0x'
+    const searchQueryIsAddress = !!isAddress(searchQuery)
     return sortedPairList.filter(pair => {
-      if (searchQuery === '') {
-        return true
-      }
+      if (searchQuery === '') return true
+
       const token0 = pair.token0
       const token1 = pair.token1
-      if (!token0 || !token1) {
-        return false // no token fetched yet
+
+      if (searchQueryIsAddress) {
+        if (token0.address.match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
+          setIdentifiedToken(token0)
+          return true
+        }
+        if (token1.address.match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
+          setIdentifiedToken(token1)
+          return true
+        }
       } else {
-        const regexMatches = Object.keys(token0).map(field => {
-          if (
-            (field === 'address' && isAddress) ||
-            (field === 'name' && !isAddress) ||
-            (field === 'symbol' && !isAddress)
-          ) {
-            if (token0[field].match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
-              setIdentifiedToken(token0)
-            }
-            if (token1[field].match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
-              setIdentifiedToken(token1)
-            }
-            return (
-              token0[field].match(new RegExp(escapeRegExp(searchQuery), 'i')) ||
-              token1[field].match(new RegExp(escapeRegExp(searchQuery), 'i'))
-            )
-          }
-          return false
-        })
-        return regexMatches.some(m => m)
+        if (token0.symbol.match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
+          setIdentifiedToken(token0)
+          return true
+        }
+        if (token0.name.match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
+          setIdentifiedToken(token0)
+          return true
+        }
+        if (token1.symbol.match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
+          setIdentifiedToken(token1)
+          return true
+        }
+        if (token1.name.match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
+          setIdentifiedToken(token1)
+          return true
+        }
       }
     })
   }, [searchQuery, sortedPairList])
@@ -441,87 +441,73 @@ function SearchModal({
         return <TokenModalInfo>{t('noToken')}</TokenModalInfo>
       }
     } else {
-      return filteredTokenList
-        .sort((a, b) => {
-          if (a.address === WETH[chainId].address) {
-            return -1
-          } else if (b.address === WETH[chainId].address) {
-            return 1
-          } else if (a.balance?.greaterThan('0') && !b.balance?.greaterThan('0')) {
-            return sortDirection ? -1 : 1
-          } else if (!a.balance?.greaterThan('0') && b.balance?.greaterThan('0')) {
-            return sortDirection ? 1 : -1
-          } else {
-            return sortDirection ? -1 : 1
-          }
-        })
-        .map(({ address, symbol, balance }) => {
-          const urlAdded = urlAddedTokens?.some(token => token.address === address)
-          const customAdded = userAddedTokens?.some(token => token.address === address) && !urlAdded
+      return filteredTokenList.map(({ address, symbol, balance }) => {
+        const urlAdded = urlAddedTokens?.some(token => token.address === address)
+        const customAdded = userAddedTokens?.some(token => token.address === address) && !urlAdded
 
-          const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
+        const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
 
-          // if token import page dont show preset list, else show all
-          return (
-            <MenuItem
-              key={address}
-              className={`token-item-${address}`}
-              onClick={() => (hiddenToken && hiddenToken === address ? null : _onTokenSelect(address))}
-              disabled={hiddenToken && hiddenToken === address}
-              selected={otherSelectedTokenAddress === address}
-            >
-              <RowFixed>
-                <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }} />
-                <Column>
-                  <Text fontWeight={500}>
-                    {symbol}
-                    {otherSelectedTokenAddress === address && <GreySpan> ({otherSelectedText})</GreySpan>}
-                  </Text>
-                  <FadedSpan>
-                    <TYPE.main fontWeight={500}>
-                      {urlAdded && 'Added by URL'}
-                      {customAdded && 'Added by user'}
-                    </TYPE.main>
-                    {customAdded && (
-                      <div
-                        onClick={event => {
-                          event.stopPropagation()
-                          if (searchQuery === address) {
-                            setSearchQuery('')
-                          }
-                          removeTokenByAddress(chainId, address)
-                        }}
-                      >
-                        <StyledLink style={{ marginLeft: '4px', fontWeight: 400 }}>(Remove)</StyledLink>
-                      </div>
-                    )}
-                  </FadedSpan>
-                </Column>
-              </RowFixed>
-              <AutoColumn gap="4px" justify="end">
-                {balance ? (
-                  <Text>
-                    {zeroBalance && showSendWithSwap ? (
-                      <ButtonSecondary padding={'4px 8px'}>
-                        <Text textAlign="center" fontWeight={500} fontSize={14} color={theme.primary1}>
-                          Send With Swap
-                        </Text>
-                      </ButtonSecondary>
-                    ) : balance ? (
-                      balance.toSignificant(6)
-                    ) : (
-                      '-'
-                    )}
-                  </Text>
-                ) : account ? (
-                  <SpinnerWrapper src={Circle} alt="loader" />
-                ) : (
-                  '-'
-                )}
-              </AutoColumn>
-            </MenuItem>
-          )
-        })
+        // if token import page dont show preset list, else show all
+        return (
+          <MenuItem
+            key={address}
+            className={`token-item-${address}`}
+            onClick={() => (hiddenToken && hiddenToken === address ? null : _onTokenSelect(address))}
+            disabled={hiddenToken && hiddenToken === address}
+            selected={otherSelectedTokenAddress === address}
+          >
+            <RowFixed>
+              <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }} />
+              <Column>
+                <Text fontWeight={500}>
+                  {symbol}
+                  {otherSelectedTokenAddress === address && <GreySpan> ({otherSelectedText})</GreySpan>}
+                </Text>
+                <FadedSpan>
+                  <TYPE.main fontWeight={500}>
+                    {urlAdded && 'Added by URL'}
+                    {customAdded && 'Added by user'}
+                  </TYPE.main>
+                  {customAdded && (
+                    <div
+                      onClick={event => {
+                        event.stopPropagation()
+                        if (searchQuery === address) {
+                          setSearchQuery('')
+                        }
+                        removeTokenByAddress(chainId, address)
+                      }}
+                    >
+                      <StyledLink style={{ marginLeft: '4px', fontWeight: 400 }}>(Remove)</StyledLink>
+                    </div>
+                  )}
+                </FadedSpan>
+              </Column>
+            </RowFixed>
+            <AutoColumn gap="4px" justify="end">
+              {balance ? (
+                <Text>
+                  {zeroBalance && showSendWithSwap ? (
+                    <ButtonSecondary padding={'4px 8px'}>
+                      <Text textAlign="center" fontWeight={500} fontSize={14} color={theme.primary1}>
+                        Send With Swap
+                      </Text>
+                    </ButtonSecondary>
+                  ) : balance ? (
+                    balance.toSignificant(6)
+                  ) : (
+                    '-'
+                  )}
+                </Text>
+              ) : account ? (
+                <SpinnerWrapper src={Circle} alt="loader" />
+              ) : (
+                '-'
+              )}
+            </AutoColumn>
+          </MenuItem>
+        )
+      })
     }
   }
 
@@ -530,7 +516,7 @@ function SearchModal({
       <FilterWrapper
         onClick={() => {
           setActiveFilter(filter)
-          setSortDirection(!sortDirection)
+          setInvertSearchOrder(invertSearchOrder => !invertSearchOrder)
         }}
         selected={filter === activeFilter}
       >
@@ -539,7 +525,7 @@ function SearchModal({
         </Text>
         {filter === activeFilter && filterType === 'tokens' && (
           <Text fontSize={14} fontWeight={500}>
-            {sortDirection ? '↓' : '↑'}
+            {!invertSearchOrder ? '↓' : '↑'}
           </Text>
         )}
       </FilterWrapper>
