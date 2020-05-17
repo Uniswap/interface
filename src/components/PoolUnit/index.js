@@ -21,10 +21,9 @@ import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
 import Badge from '../Badge'
 import Button from '../Button'
-import CloseIcon from '../CloseIcon'
+import { X, Repeat } from 'react-feather'
 import Loader from '../Loader'
 import Icon from '../Icon'
-import { Link } from '../Link'
 import TextBlock from '../Text'
 
 import Lock from '../../assets/images/lock.png'
@@ -53,29 +52,41 @@ const BottomWrapper = styled.div`
   width: 100%;
   padding: 5px 0;
   grid-gap: 5px;
+
   grid-template-columns: auto auto;
   & > div {
     height: fit-content;
+    height: 240px;
   }
 `
 
 const FormattedCard = styled(Card)`
   display: grid;
   row-gap: 20px;
-  padding: 2rem 1rem;
+  padding: 1rem;
 `
 
 const Row = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 32px;
+  /* height: 32px; */
   justify-content: space-between;
   align-items: center;
 `
 
+const RowStart = styled(Row)`
+  justify-content: flex-start;
+  width: fit-content;
+`
+
 const InlineSubText = styled.span`
   font-size: 12px;
+`
+
+const CloseIcon = styled(X)`
+  margin-right: 0.5rem;
+  color: ${({ theme }) => theme.colors.text1};
 `
 
 const flash = keyframes`
@@ -90,6 +101,11 @@ const AnimatedCard = styled(Card)`
   animation: ${({ active }) => active && flash};
   animation-duration: 1s;
   animation-iteration-count: infinite;
+`
+
+const InvertedIcon = styled(Repeat)`
+  cursor: pointer;
+  margin-left: 0.5rem;
 `
 
 // % above the calculated gas cost that we actually send, denominated in bips
@@ -163,6 +179,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
   const migrationDone = v1Balance && v1Balance.eq(Zero) && v2Balance && !v2Balance.eq(Zero)
 
   const [triggerFlash, setTriggerFlash] = useState(false)
+  const [inverted, setInverted] = useState(false)
 
   // reset pending state when on-chain data updates
   useEffect(() => {
@@ -289,7 +306,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
                     toggleOpen(true)
                   }}
                 >
-                  Upgrade
+                  Migrate
                 </Button>
               )
             ) : migrationDone ? (
@@ -302,61 +319,72 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
               </Button>
             ) : (
               <CloseIcon
+                size={24}
                 onClick={() => {
                   toggleOpen(false)
                 }}
               />
             )}
           </Grouping>
+          {priceWarning && open && (
+            <FormattedCard
+              variant={priceWarningLarge ? 'red' : 'yellow'}
+              style={{
+                gridColumn: 'span 2',
+                zIndex: -1,
+                paddingTop: '1rem',
+                marginTop: '1rem'
+              }}
+            >
+              <Row>
+                <TextBlock fontSize={16}>
+                  It is best to deposit liquidity into Uniswap V2 at a price you believe is correct. If you believe the
+                  price is incorrect, you can either make a swap to move the price or wait for someone else to do so.
+                </TextBlock>
+              </Row>
+              <Row style={{ justifyContent: 'space-around' }}>
+                <Column>
+                  <RowStart style={{ flexShrink: 0 }}>
+                    <TextBlock fontWeight={500} color="text1" style={{ marginRight: '.5rem' }}>
+                      V1 Price:
+                    </TextBlock>
+                    <TextBlock fontWeight={600}>
+                      {v1Price && inverted ? new BigNumber(1).div(v1Price).toPrecision(6) : v1Price.toPrecision(6)}{' '}
+                      {inverted ? `ETH/${symbol}` : `${symbol}/ETH`}
+                      <InvertedIcon size={12} onClick={() => setInverted(!inverted)} />
+                    </TextBlock>
+                  </RowStart>
+                  <RowStart style={{ flexShrink: 0 }}>
+                    <TextBlock fontWeight={500} color="text1" style={{ marginRight: '.5rem' }}>
+                      V2 Price:
+                    </TextBlock>
+                    <TextBlock fontWeight={600}>
+                      {v2Price && inverted ? new BigNumber(1).div(v2Price).toPrecision(6) : v2Price.toPrecision(6)}{' '}
+                      {inverted ? `ETH/${symbol}` : `${symbol}/ETH`}
+                      <InvertedIcon size={12} onClick={() => setInverted(!inverted)} />
+                    </TextBlock>
+                  </RowStart>
+                </Column>
+                <Column style={{ alignItems: 'center', flexShrink: 0 }}>
+                  <TextBlock fontWeight={500} color="text1" style={{ marginRight: '.5rem' }}>
+                    Price Difference
+                  </TextBlock>
+                  <TextBlock
+                    fontWeight={600}
+                    fontSize={16}
+                    color={priceWarningLarge ? 'red1' : priceWarning ? 'yellow1' : undefined}
+                  >
+                    {priceDifference && priceDifference.times(100).toFixed(2)}%
+                  </TextBlock>
+                </Column>
+              </Row>
+            </FormattedCard>
+          )}
         </AnimatedCard>
         {open && (
           <BottomWrapper>
-            {priceWarning && (
-              <FormattedCard
-                variant={priceWarningLarge ? 'red' : 'yellow'}
-                style={{
-                  gridColumn: 'span 2',
-                  zIndex: -1,
-                  paddingTop: '4rem',
-                  borderTopLeftRadius: 0,
-                  borderTopRightRadius: 0
-                }}
-                marginTop="-2.5rem"
-              >
-                <Row>
-                  <TextBlock fontSize={14} style={{ maxWidth: '45%', paddingRight: '0.5rem' }}>
-                    There is a {priceWarningLarge && 'large'} difference between the V1 and V2 {symbol}/ETH prices. You{' '}
-                    {priceWarningLarge ? 'should' : 'may want to'} wait for the prices to stabilize.
-                  </TextBlock>
-                  <Column style={{ alignItems: 'center', flexShrink: 0 }}>
-                    <TextBlock fontWeight={600} color="grey6" marginBottom="0.5rem">
-                      V1 Price
-                    </TextBlock>
-                    <TextBlock fontWeight={600}>{v1Price && v1Price.toPrecision(6)}</TextBlock>
-                  </Column>
-                  <Column style={{ alignItems: 'center', flexShrink: 0 }}>
-                    <TextBlock fontWeight={600} color="grey6" marginBottom="0.5rem">
-                      V2 Price
-                    </TextBlock>
-                    <TextBlock fontWeight={600}>{v2Price && v2Price.toPrecision(6)}</TextBlock>
-                  </Column>
-                  <Column style={{ alignItems: 'center', flexShrink: 0 }}>
-                    <TextBlock fontWeight={600} color="grey6" marginBottom="0.5rem">
-                      Difference
-                    </TextBlock>
-                    <TextBlock
-                      fontWeight={600}
-                      color={priceWarningLarge ? 'red1' : priceWarning ? 'yellow1' : undefined}
-                    >
-                      {priceDifference && priceDifference.times(100).toFixed(2)}%
-                    </TextBlock>
-                  </Column>
-                </Row>
-              </FormattedCard>
-            )}
-
             <FormattedCard outlined={!approvalDone && 'outlined'}>
-              <Row>
+              <Row style={{ width: 'auto', height: '30px', paddingRight: '.5rem' }}>
                 <TextBlock fontSize={20}>Step 1</TextBlock>
                 {approvalDone || migrationDone ? (
                   <TextBlock color={'green2'}>✓</TextBlock>
@@ -369,6 +397,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
               <Button
                 variant={(approvalDone || migrationDone) && 'success'}
                 py={18}
+                height={64}
                 disabled={pendingApproval || approvalDone || migrationDone}
                 onClick={() => {
                   tryApproval()
@@ -378,14 +407,14 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
                   ? 'Waiting For Confirmation...'
                   : approvalDone || migrationDone
                   ? 'Confirmed'
-                  : 'Approve for upgrade'}
+                  : 'Approve migration'}
               </Button>
-              <TextBlock fontSize={16} color={'grey5'}>
-                The upgrade helper needs permission to migrate your liquidity.
+              <TextBlock style={{ height: '64px' }} fontSize={16} color={'text2'}>
+                The migration helper needs permission to move your liquidity.
               </TextBlock>
             </FormattedCard>
             <FormattedCard outlined={approvalDone && 'outlined'}>
-              <Row>
+              <Row style={{ width: 'auto', height: '30px', paddingRight: '.5rem' }}>
                 <TextBlock fontSize={20}>Step 2</TextBlock>
                 {pendingMigration ? (
                   <Loader />
@@ -396,24 +425,22 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
                 ) : approvalDone ? (
                   ''
                 ) : (
-                  <Icon icon={Lock} />
+                  <Icon size={'20px'} icon={Lock} />
                 )}
               </Row>
               <Button
                 variant={migrationDone && 'success'}
                 disabled={!approvalDone || pendingMigration || migrationDone || !canMigrate}
                 py={18}
+                height={64}
                 onClick={() => {
                   tryMigration()
                 }}
               >
                 {pendingMigration ? 'Waiting For Confirmation...' : migrationDone ? 'Confirmed' : 'Migrate Liquidity'}
               </Button>
-              <TextBlock fontSize={16} color={'grey5'}>
-                Your {symbol} liquidity will appear as {symbol}/ETH with a new icon.{' '}
-                <Link href="https://uniswap.org/blog/uniswap-v2/" target="_blank" rel="noopener noreferrer">
-                  Read more.
-                </Link>
+              <TextBlock style={{ height: '64px' }} fontSize={16} color={'text2'}>
+                Your {symbol} liquidity will become Uniswap V2 {symbol}/ETH liquidity.
               </TextBlock>
             </FormattedCard>
           </BottomWrapper>

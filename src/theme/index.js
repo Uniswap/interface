@@ -63,7 +63,7 @@ const theme = darkMode => ({
 
   colors: {
     blue1: darkMode ? '#ff007a' : '#D4E4FA',
-    blue2: darkMode ? '#1966D2' : '#A9C8F5',
+    blue2: darkMode ? '#2172E5' : '#A9C8F5',
     blue3: darkMode ? '#165BBB' : '#7DACF0',
     blue4: darkMode ? '#2D47A6' : '#5190EB',
     blue5: darkMode ? '#2172E5' : '#2172E5',
@@ -90,13 +90,13 @@ const theme = darkMode => ({
 
     text1: darkMode ? '#FFFFFF' : '#000000',
     text2: darkMode ? '#C3C5CB' : '#565A69',
-    text3: darkMode ? '#6C7284' : '#888D9B',
+    text3: darkMode ? '#6C7284' : '#988D9B',
     text4: darkMode ? '#565A69' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     //primary colors
     primary1: darkMode ? '#2172E5' : '#ff007a',
-    primary2: darkMode ? '#3680E7' : '#FF8CC3',
+    primary2: darkMode ? '#3680E7' : '#ff007acc',
     primary3: darkMode ? '#4D8FEA' : '#FF99C9',
     primary4: darkMode ? '#376bad70' : '#F6DDE8',
     primary5: darkMode ? '#153d6f70' : '#FDEAF1',
@@ -119,10 +119,10 @@ const theme = darkMode => ({
     pink2: '#FFF8FD',
 
     yellow1: '#F3BE1E',
-    yellow2: '#F7F2E3',
+    yellow2: '#F3BE1E20',
 
     red1: '#FF6871',
-    red2: '#ffe3e4'
+    red2: '#FF687120'
   },
 
   shadows: {

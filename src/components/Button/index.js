@@ -9,41 +9,41 @@ const variants = {
     fontSize: '1rem',
     fontWeight: '600',
     borderRadius: '12px',
-    backgroundColor: 'blue5',
+    backgroundColor: 'primary1',
     color: 'white',
     cursor: 'pointer',
     outline: 'none',
     border: '1px solid',
-    borderColor: 'blue5',
+    borderColor: 'primary1',
     ':hover,:focus': {
-      backgroundColor: 'blue6',
-      borderColor: 'blue6'
+      backgroundColor: 'primary2',
+      borderColor: 'primary2'
     },
     ':focus': {
-      boxShadow: '0 0 0 1pt #2D47A6'
+      boxShadow: '0 0 0 1pt primary4'
     },
     ':active': {
-      backgroundColor: 'blue7',
-      borderColor: 'blue7'
+      backgroundColor: 'primary3',
+      borderColor: 'primary3'
     },
     ':disabled': {
-      backgroundColor: 'grey2',
-      color: 'grey3',
+      backgroundColor: 'bg3',
+      color: 'bg4',
       cursor: 'auto',
-      borderColor: 'grey2'
+      borderColor: 'bg3'
     }
   },
 
   secondary: {
     backgroundColor: 'none',
     border: '1px solid',
-    borderColor: 'blue5',
-    color: 'blue5',
+    borderColor: 'primary3',
+    color: 'primary3',
     ':hover': {
-      backgroundColor: 'grey1'
+      backgroundColor: 'bg1'
     },
     ':active, :focus': {
-      backgroundColor: 'grey1'
+      backgroundColor: 'bg1'
     },
     ':disabled': {
       opacity: 0.5,

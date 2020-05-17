@@ -6,14 +6,14 @@ import { darken } from 'polished'
 import { useAllBalances } from '../contexts/Balances'
 import { useAllTokenDetails, useTokenDetails } from '../contexts/Tokens'
 import { useWeb3React } from '../hooks'
+import { useWalletModalToggle } from '../contexts/Application'
 
 import Card from '../components/CardStyled'
 import LoaderLight from '../components/Loader'
 import TextBlock from '../components/Text'
 import PoolUnit from '../components/PoolUnit'
 import { WETH } from '@uniswap/sdk-v2'
-
-import { Info } from 'react-feather'
+import { X } from 'react-feather'
 
 const Row = styled.div`
   display: flex;
@@ -40,14 +40,23 @@ const shine = keyframes`
     to {background-position: -100%}
 `
 
+const CloseIcon = styled(X)`
+  position: absolute;
+  cursor: pointer;
+  top: 1rem;
+  right: 1rem;
+  color: ${({ theme }) => theme.colors.primaryText1};
+`
+
 const InfoCard = styled(Card)`
-  color: ${({ theme }) => theme.colors.primary1};
+  color: ${({ theme }) => theme.colors.primaryText1};
   border: 1px solid ${({ theme }) => theme.colors.primary5};
   background-color: transparent;
+  position: relative;
 `
 
 const Link = styled.a`
-  color: ${({ theme }) => theme.colors.primary1};
+  color: ${({ theme, color }) => (color ? theme.colors[color] : theme.colors.primary2)};
   font-weight: 500;
 `
 
@@ -63,16 +72,21 @@ const LoadingCard = styled(Card)`
   margin-top: 10px;
 `
 
+const PlaceholderCard = styled(Card)`
+  background-color: ${({ theme }) => theme.colors.bg2};
+  margin-top: 10px;
+`
+
 const Input = styled.input`
   border-radius: 20px;
   font-size: 16px;
-  border: 1px solid ${({ theme }) => theme.colors.bg2};
+  border: 1px solid ${({ theme }) => theme.colors.bg3};
   color: ${({ theme }) => theme.colors.text1};
-  background-color: ${({ theme }) => theme.colors.bg2};
+  background-color: ${({ theme }) => theme.colors.bg1};
   padding: 20px 10px;
   outline: none;
   -webkit-appearance: none;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 `
 
 function Migrate() {
@@ -89,6 +103,9 @@ function Migrate() {
 
   const poolAmount = new Set([...V1Shares, ...V2Shares]).size
   const [finishedFetching, setFinishedFetching] = useState(false)
+
+  const toggleWalletModal = useWalletModalToggle()
+  const [showHelperCard, setShowHelperCard] = useState(true)
 
   useEffect(() => {
     if (allTokenDetails && allBalances) {
@@ -144,44 +161,58 @@ function Migrate() {
 
   return (
     <Column>
-      {typeof account !== 'string' ? (
-        <Card style={{ marginTop: '0' }}>
-          <RowStart>
-            <Info style={{ marginRight: '.5rem' }} />
-            <div style={{ fontWeight: '500', fontSize: '18px' }}>Connect your wallet to get started</div>
-          </RowStart>
-          <TextBlock padding={'1rem 0 0 0'}>
-            This tool is for Uniswap liquidity providers only. <Link href="v2.uniswap.exchange">Click here</Link> for
-            regular trading and access to the new V2 interface.
-          </TextBlock>
-          <Link style={{ marginTop: '1rem', display: 'inline-block' }} href="https://uniswap.org/blog/uniswap-v2/">
-            Read more about Uniswap V2
-          </Link>
-        </Card>
-      ) : (
+      {typeof account !== 'string' && showHelperCard ? (
         <InfoCard style={{ marginTop: '0' }}>
           <RowStart>
-            {/* <Info style={{ marginRight: '.5rem' }} /> */}
-            <div style={{ fontWeight: '500', fontSize: '18px' }}>Uniswap V2 Migration</div>
+            <TextBlock color={'primaryText1'} style={{ fontWeight: '500', fontSize: '24px' }}>
+              Uniswap V2 Migration
+            </TextBlock>
           </RowStart>
-          <TextBlock padding={'1rem 0 0 0'} style={{ lineHeight: '140%' }}>
-            For each pool you'll need to approve the helper before completing the migration. Your migrated share will
-            include all your accrued fees and continue functioning with no other actions necessary. Once you've
-            completed your migration you can view your liquidity on the new{' '}
-            <Link href="v2.uniswap.exchange">Uniswap interface</Link>
-          </TextBlock>
-          <TextBlock padding={'1rem 0 0 0'} style={{ lineHeight: '140%' }}>
-            If your tokens don't automatically appear, you may need to find your liquidity by pasting the token address
-            into the search box below.
+          <RowStart style={{ marginTop: '1rem' }}>
+            {/* <Power size={18} style={{ marginRight: '.5rem' }} /> */}
+            <TextBlock
+              onClick={toggleWalletModal}
+              color={'primaryText1'}
+              style={{ fontWeight: '500', fontSize: '16px', textDecoration: 'underline', cursor: 'pointer' }}
+            >
+              Connect an Ethereum wallet to get started
+            </TextBlock>
+          </RowStart>
+          <TextBlock color={'primaryText1'} padding={'1rem 0 0 0'}>
+            This tool is for liquidity providers wishing to migrate liquidity from Uniswap V1 pools into Uniswap V2.{' '}
+            <Link color={'primaryText1'} href="https://v2.uniswap.exchange">
+              Click here
+            </Link>{' '}
+            for the full Uniswap V2 interface.
           </TextBlock>
           <Link style={{ marginTop: '1rem', display: 'inline-block' }} href="https://uniswap.org/blog/uniswap-v2/">
             Read more about Uniswap V2
           </Link>
         </InfoCard>
+      ) : (
+        <InfoCard style={{ marginTop: '0', display: showHelperCard ? 'inline-block' : 'none' }}>
+          <CloseIcon onClick={() => setShowHelperCard(false)} />
+          <RowStart>
+            {/* <Info style={{ marginRight: '.5rem' }} /> */}
+            <div style={{ fontWeight: '500', fontSize: '24px' }}>Uniswap V2 Migration Info</div>
+          </RowStart>
+          <TextBlock padding={'1rem 0 0 0'} style={{ lineHeight: '140%' }}>
+            For each pool, approve the migration helper and click migrate liquidity. Your liquidity will be withdrawn
+            from Uniswap V1 and deposited into Uniswap V2. Once you've completed the migration you can view your
+            liquidity on the new <Link href="v2.uniswap.exchange">Uniswap V2 interface</Link>.
+          </TextBlock>
+          <TextBlock padding={'1rem 0 0 0'} style={{ lineHeight: '140%' }}>
+            If your liquidity does not appear below automatically, you may need to find it by pasting the token address
+            into the search box below.
+          </TextBlock>
+          <Link style={{ marginTop: '1rem', display: 'inline-block' }} href="https://uniswap.org/blog/uniswap-v2/">
+            Read more about Uniswap V2.
+          </Link>
+        </InfoCard>
       )}
       <Row>
-        <TextBlock fontSize={24} fontWeight={500}>
-          Your Uniswap Liquidity
+        <TextBlock fontSize={24} fontWeight={500} color={typeof account !== 'string' ? 'text4' : 'text1'}>
+          Your Uniswap V1 Liquidity
         </TextBlock>
         <TextBlock fontSize={16} color={'grey3'}>
           {typeof account !== 'string' ? null : !finishedFetching ? (
@@ -197,19 +228,19 @@ function Migrate() {
       {typeof account !== 'string' ? (
         <>
           <Column>
-            <LoadingCard height={80} />
-            <LoadingCard height={80} />
-            <LoadingCard height={80} />
+            <PlaceholderCard height={80} />
+            <PlaceholderCard height={80} />
+            <PlaceholderCard height={80} />
           </Column>
         </>
       ) : (
         <>
-          <TextBlock padding={'1rem 0'}>Dont see your liquidity? Enter a token address here.</TextBlock>
+          {/* <TextBlock padding={'1rem 0'}>Dont see your liquidity? Enter a token address here.</TextBlock> */}
           <Input
             onChange={e => {
               setUserInput(e.target.value)
             }}
-            placeholder="Search token address"
+            placeholder="Dont see your liquidity? Enter a token address here."
             style={{ paddingLeft: '1.25rem' }}
           />
           {!finishedFetching ? (
@@ -242,9 +273,12 @@ function Migrate() {
                     )
                   })}
 
-              <TextBlock fontSize="1.25rem" mt="2rem">
-                Migrated Liquidity
-              </TextBlock>
+              <Row>
+                <TextBlock fontSize={24} fontWeight={500} color={[...V2Shares].length > 0 ? 'text1' : 'text4'}>
+                  Your Uniswap V2 Liquidity
+                </TextBlock>
+                {[...V2Shares].length > 0 && <Link href="https://v2.uniswap.exchange/pool">Manage V2 Liquidity</Link>}
+              </Row>
 
               {V2Shares &&
                 [...V2Shares].map(tokenAddress => {
