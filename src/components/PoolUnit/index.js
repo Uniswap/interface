@@ -347,7 +347,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
                       V1 Price:
                     </TextBlock>
                     <TextBlock fontWeight={600}>
-                      {v1Price && inverted ? (1 / v1Price).toPrecision(6) : v1Price.toPrecision(6)}{' '}
+                      {v1Price && inverted ? new BigNumber(1).div(v1Price).toPrecision(6) : v1Price.toPrecision(6)}{' '}
                       {inverted ? `ETH/${symbol}` : `${symbol}/ETH`}
                       <InvertedIcon size={12} onClick={() => setInverted(!inverted)} />
                     </TextBlock>
@@ -357,7 +357,7 @@ function PoolUnit({ token, alreadyMigrated = false, isWETH = false }) {
                       V2 Price:
                     </TextBlock>
                     <TextBlock fontWeight={600}>
-                      {v2Price && inverted ? (1 / v2Price).toPrecision(6) : v2Price.toPrecision(6)}{' '}
+                      {v2Price && inverted ? new BigNumber(1).div(v2Price).toPrecision(6) : v2Price.toPrecision(6)}{' '}
                       {inverted ? `ETH/${symbol}` : `${symbol}/ETH`}
                       <InvertedIcon size={12} onClick={() => setInverted(!inverted)} />
                     </TextBlock>

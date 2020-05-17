@@ -18,8 +18,8 @@ const FooterElement = styled.div`
   margin: 1.25rem;
   display: flex;
   min-width: 0;
-  display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
 `
 
 const Title = styled.div`
@@ -84,8 +84,10 @@ export default function Footer() {
           <Link id="link" href="https://uniswap.org/docs">
             <h1 id="title">Docs</h1>
           </Link>
-          <Link id="link" href="https://github.com/Uniswap">
-            <h1 id="title">Code</h1>
+        </Title>
+        <Title>
+          <Link id="link" href="0x16D4F26C15f3658ec65B1126ff27DD3dF2a2996b">
+            <h1 id="title">Interacting with 0x16D4…996b</h1>
           </Link>
         </Title>
       </FooterElement>
