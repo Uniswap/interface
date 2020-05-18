@@ -39,10 +39,9 @@ import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapS
 import { useHasPendingApproval } from '../../state/transactions/hooks'
 import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { CursorPointer, TYPE } from '../../theme'
-import { Link } from '../../theme/components'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
 
-export default function Send({ history, location: { search } }: RouteComponentProps) {
+export default function Send({ location: { search } }: RouteComponentProps) {
   useDefaultsFromURL(search)
 
   // text translation
@@ -474,13 +473,6 @@ export default function Send({ history, location: { search } }: RouteComponentPr
         ) : noRoute && userHasSpecifiedInputOutput ? (
           <GreyCard style={{ textAlign: 'center' }}>
             <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
-            <Link
-              onClick={() => {
-                history.push('/add/' + tokens[Field.INPUT]?.address + '-' + tokens[Field.OUTPUT]?.address)
-              }}
-            >
-              Add liquidity now.
-            </Link>
           </GreyCard>
         ) : mustApprove === true ? (
           <ButtonLight onClick={approveCallback} disabled={pendingApprovalInput}>
