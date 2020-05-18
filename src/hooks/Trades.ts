@@ -28,9 +28,16 @@ function useAllCommonPairs(tokenA?: Token, tokenB?: Token): Pair[] {
   const USDCToETH = usePair(chainId === ChainId.MAINNET ? USDC : null, WETH[chainId])
   const DAIToUSDC = usePair(chainId === ChainId.MAINNET ? DAI : null, chainId === ChainId.MAINNET ? USDC : null)
 
+  // only pass along valid pairs, non-duplicated pairs
   return useMemo(
     () =>
-      [pairBetween, aToETH, bToETH, aToDAI, bToDAI, aToUSDC, bToUSDC, DAIToETH, USDCToETH, DAIToUSDC].filter(p => !!p),
+      [pairBetween, aToETH, bToETH, aToDAI, bToDAI, aToUSDC, bToUSDC, DAIToETH, USDCToETH, DAIToUSDC]
+        // filter out invalid pairs
+        .filter(p => !!p)
+        // filter out duplicated pairs
+        .filter(
+          (p, i, pairs) => i === pairs.findIndex(pair => pair?.liquidityToken.address === p.liquidityToken.address)
+        ),
     [pairBetween, aToETH, bToETH, aToDAI, bToDAI, aToUSDC, bToUSDC, DAIToETH, USDCToETH, DAIToUSDC]
   )
 }
