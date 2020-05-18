@@ -120,7 +120,7 @@ export default function Header() {
     <HeaderFrame>
       <MigrateBannerSmall>
         <b>V2 is here!&nbsp;</b> <Link href="https://migrate.uniswap.exchange/">Migrate your liquidity&nbsp;</Link>or{' '}
-        <Link href="https://v2.uniswap.exchange"> &nbsp;use V2 ↗</Link>
+        <Link href="https://uniswap.exchange"> &nbsp;use V2 ↗</Link>
       </MigrateBannerSmall>
       <MigrateBannerLarge>
         <b>Uniswap V2 is here!&nbsp;</b> Move your liquidity now using the&nbsp;
@@ -128,8 +128,8 @@ export default function Header() {
           <b>migration helper</b>
         </Link>
         &nbsp;or use the&nbsp;
-        <Link href="https://uniswap.org/blog/uniswap-v2/">
-          <b>V2 trading interface ↗</b>
+        <Link href="https://uniswap.exchange">
+          <b>Uniswap V2 Interface ↗</b>
         </Link>
       </MigrateBannerLarge>
       <HeaderSpan>

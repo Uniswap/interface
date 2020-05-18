@@ -25,3 +25,6 @@ Test `removeLiquidity` transaction:
 
 Are you willing to add liquidity to the liquidity pool for this token? (Y/N): 
 If so, how much liquidity are you willing to add?: 
+
+# WARNING
+Uniswap v1 is not compatible with any token that issues untrusted callbacks as part of a token transfer!  This includes all ERC-777 tokens.  Such a token will appear to work, but it will be suseptible to theft by attackers.
