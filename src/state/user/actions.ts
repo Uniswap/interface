@@ -4,8 +4,8 @@ export interface SerializedToken {
   chainId: number
   address: string
   decimals: number
-  symbol: string
-  name: string
+  symbol?: string
+  name?: string
 }
 
 export interface SerializedPair {

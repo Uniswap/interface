@@ -35,7 +35,10 @@ function deserializeToken(serializedToken: SerializedToken): Token {
 }
 
 export function useIsDarkMode(): boolean {
-  const { userDarkMode, matchesDarkMode } = useSelector<AppState, { userDarkMode: boolean; matchesDarkMode: boolean }>(
+  const { userDarkMode, matchesDarkMode } = useSelector<
+    AppState,
+    { userDarkMode: boolean | null; matchesDarkMode: boolean }
+  >(
     ({ user: { matchesDarkMode, userDarkMode } }) => ({
       userDarkMode,
       matchesDarkMode
@@ -61,7 +64,8 @@ export function useFetchTokenByAddress(): (address: string) => Promise<Token | n
   const { library, chainId } = useWeb3React()
 
   return useCallback(
-    async (address: string) => {
+    async (address: string): Promise<Token | null> => {
+      if (!library || !chainId) return null
       const [decimals, symbol, name] = await Promise.all([
         getTokenDecimals(address, library).catch(() => null),
         getTokenSymbol(address, library).catch(() => 'UNKNOWN'),
@@ -103,7 +107,7 @@ export function useUserAddedTokens(): Token[] {
   const serializedTokensMap = useSelector<AppState, AppState['user']['tokens']>(({ user: { tokens } }) => tokens)
 
   return useMemo(() => {
-    return Object.values(serializedTokensMap[chainId] ?? {}).map(deserializeToken)
+    return Object.values(serializedTokensMap[chainId as ChainId] ?? {}).map(deserializeToken)
   }, [serializedTokensMap, chainId])
 }
 
@@ -156,17 +160,17 @@ export function useAllDummyPairs(): Pair[] {
                   return new Pair(new TokenAmount(base, ZERO), new TokenAmount(token, ZERO))
                 }
               })
-              .filter(pair => !!pair)
+              .filter(pair => !!pair) as Pair[]
           )
         }),
     [tokens, chainId]
   )
 
-  const savedSerializedPairs = useSelector<AppState>(({ user: { pairs } }) => pairs)
+  const savedSerializedPairs = useSelector<AppState, AppState['user']['pairs']>(({ user: { pairs } }) => pairs)
 
   const userPairs = useMemo(
     () =>
-      Object.values<SerializedPair>(savedSerializedPairs[chainId] ?? {}).map(
+      Object.values<SerializedPair>(savedSerializedPairs[chainId ?? -1] ?? {}).map(
         pair =>
           new Pair(
             new TokenAmount(deserializeToken(pair.token0), ZERO),

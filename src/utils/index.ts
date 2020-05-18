@@ -22,11 +22,6 @@ export function isAddress(value: any): string | false {
   }
 }
 
-export enum ERROR_CODES {
-  TOKEN_SYMBOL = 1,
-  TOKEN_DECIMALS = 2
-}
-
 const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   1: '',
   3: 'ropsten.',
@@ -47,11 +42,6 @@ export function getEtherscanLink(chainId: ChainId, data: string, type: 'transact
       return `${prefix}/address/${data}`
     }
   }
-}
-
-export function getQueryParam(windowLocation: Location, name: string): string | undefined {
-  const q = windowLocation.search.match(new RegExp('[?&]' + name + '=([^&#?]*)'))
-  return q && q[1]
 }
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
@@ -103,17 +93,17 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 }
 
 // account is optional
-export function getRouterContract(chainId, library, account) {
+export function getRouterContract(chainId: number, library: Web3Provider, account?: string) {
   return getContract(ROUTER_ADDRESS, IUniswapV2Router01ABI, library, account)
 }
 
 // account is optional
-export function getExchangeContract(pairAddress, library, account) {
+export function getExchangeContract(pairAddress: string, library: Web3Provider, account?: string) {
   return getContract(pairAddress, IUniswapV2PairABI, library, account)
 }
 
 // get token name
-export async function getTokenName(tokenAddress, library) {
+export async function getTokenName(tokenAddress: string, library: Web3Provider) {
   if (!isAddress(tokenAddress)) {
     throw Error(`Invalid 'tokenAddress' parameter '${tokenAddress}'.`)
   }
@@ -125,14 +115,10 @@ export async function getTokenName(tokenAddress, library) {
         .name()
         .then(parseBytes32String)
     )
-    .catch(error => {
-      error.code = ERROR_CODES.TOKEN_SYMBOL
-      throw error
-    })
 }
 
 // get token symbol
-export async function getTokenSymbol(tokenAddress, library) {
+export async function getTokenSymbol(tokenAddress: string, library: Web3Provider) {
   if (!isAddress(tokenAddress)) {
     throw Error(`Invalid 'tokenAddress' parameter '${tokenAddress}'.`)
   }
@@ -143,24 +129,15 @@ export async function getTokenSymbol(tokenAddress, library) {
       const contractBytes32 = getContract(tokenAddress, ERC20_BYTES32_ABI, library)
       return contractBytes32.symbol().then(parseBytes32String)
     })
-    .catch(error => {
-      error.code = ERROR_CODES.TOKEN_SYMBOL
-      throw error
-    })
 }
 
 // get token decimals
-export async function getTokenDecimals(tokenAddress, library) {
+export async function getTokenDecimals(tokenAddress: string, library: Web3Provider) {
   if (!isAddress(tokenAddress)) {
     throw Error(`Invalid 'tokenAddress' parameter '${tokenAddress}'.`)
   }
 
-  return getContract(tokenAddress, ERC20_ABI, library)
-    .decimals()
-    .catch(error => {
-      error.code = ERROR_CODES.TOKEN_DECIMALS
-      throw error
-    })
+  return getContract(tokenAddress, ERC20_ABI, library).decimals()
 }
 
 export function escapeRegExp(string: string): string {
