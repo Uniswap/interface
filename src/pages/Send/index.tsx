@@ -60,7 +60,14 @@ export default function Send({ location: { search } }: RouteComponentProps) {
 
   // trade details, check query params for initial state
   const { independentField, typedValue } = useSwapState()
-  const { parsedAmounts, bestTrade, tokenBalances, tokens, error: swapError } = useDerivedSwapInfo()
+  const {
+    parsedAmounts,
+    bestTrade,
+    tokenBalances,
+    tokens,
+    error: swapError,
+    v1TradeLinkIfBetter
+  } = useDerivedSwapInfo()
   const isSwapValid = !swapError && !recipientError && bestTrade
 
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
@@ -499,7 +506,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
             </Text>
           </ButtonError>
         )}
-        <V1TradeLink bestV2Trade={bestTrade} />
+        <V1TradeLink v1TradeLinkIfBetter={v1TradeLinkIfBetter} />
       </BottomGrouping>
       {bestTrade && (
         <AdvancedSwapDetailsDropdown

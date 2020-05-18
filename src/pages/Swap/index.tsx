@@ -40,7 +40,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
   const toggleWalletModal = useWalletModalToggle()
 
   const { independentField, typedValue } = useSwapState()
-  const { bestTrade, tokenBalances, parsedAmounts, tokens, error } = useDerivedSwapInfo()
+  const { bestTrade, tokenBalances, parsedAmounts, tokens, error, v1TradeLinkIfBetter } = useDerivedSwapInfo()
   const isValid = !error
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -300,7 +300,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
             </Text>
           </ButtonError>
         )}
-        <V1TradeLink bestV2Trade={bestTrade} />
+        <V1TradeLink v1TradeLinkIfBetter={v1TradeLinkIfBetter} />
       </BottomGrouping>
       {bestTrade && (
         <AdvancedSwapDetailsDropdown
