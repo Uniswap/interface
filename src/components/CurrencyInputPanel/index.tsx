@@ -228,7 +228,11 @@ export default function CurrencyInputPanel({
                 </StyledTokenName>
               ) : (
                 <StyledTokenName active={Boolean(token && token.symbol)}>
-                  {(token && token.symbol) || t('selectToken')}
+                  {(token && token.symbol && token.symbol.length > 20
+                    ? token.symbol.slice(0, 4) +
+                      '...' +
+                      token.symbol.slice(token.symbol.length - 5, token.symbol.length)
+                    : token?.symbol) || t('selectToken')}
                 </StyledTokenName>
               )}
               {!disableTokenSelect && <StyledDropDown selected={!!token?.address} />}
