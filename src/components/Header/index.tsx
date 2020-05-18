@@ -159,7 +159,7 @@ export default function Header() {
     <HeaderFrame>
       <MigrateBanner>
         Uniswap V2 is live! Read the&nbsp;
-        <Link href="https://uniswap.org/blog/uniswap-v2/">
+        <Link href="https://uniswap.org/blog/launch-uniswap-v2/">
           <b>blog post ↗</b>
         </Link>
         &nbsp;or&nbsp;
