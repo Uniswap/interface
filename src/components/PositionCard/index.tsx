@@ -80,7 +80,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
                 <RowFixed>
                   <DoubleLogo a0={token0?.address || ''} a1={token1?.address || ''} margin={true} size={20} />
                   <Text fontWeight={500} fontSize={20}>
-                    {token0?.symbol}:{token1?.symbol}
+                    {token0?.symbol}/{token1?.symbol}
                   </Text>
                 </RowFixed>
                 <RowFixed>
@@ -134,7 +134,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
             <RowFixed>
               <DoubleLogo a0={token0?.address || ''} a1={token1?.address || ''} margin={true} size={20} />
               <Text fontWeight={500} fontSize={20}>
-                {token0?.symbol}:{token1?.symbol}
+                {token0?.symbol}/{token1?.symbol}
               </Text>
             </RowFixed>
             <RowFixed>
@@ -204,7 +204,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
               )}
 
               <AutoRow justify="center" marginTop={'10px'}>
-                <Link href={`https://uniswap.info/pair/${pair.liquidityToken.address}`}>View pool information ↗</Link>
+                <Link href={`https://uniswap.info/pair/${pair?.liquidityToken.address}`}>View pool information ↗</Link>
               </AutoRow>
               <RowBetween marginTop="10px">
                 <ButtonSecondary

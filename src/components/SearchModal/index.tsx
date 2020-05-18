@@ -200,7 +200,7 @@ function SearchModal({
   const [showTokenImport, setShowTokenImport] = useState(false)
 
   // used to help scanning on results, put token found from input on left
-  const [identifiedToken, setIdentifiedToken] = useState<Token | null>()
+  const [identifiedToken, setIdentifiedToken] = useState<Token>()
 
   useEffect(() => {
     const address = isAddress(searchQuery)
@@ -307,6 +307,34 @@ function SearchModal({
     onDismiss()
   }
 
+  // make an effort to identify the specific token a user is searching for
+  useEffect(() => {
+    const searchQueryIsAddress = !!isAddress(searchQuery)
+
+    // try to find an exact match by address
+    if (searchQueryIsAddress) {
+      const identifiedTokenByAddress = Object.values(allTokens).filter(token => {
+        if (searchQueryIsAddress && token.address === isAddress(searchQuery)) {
+          return true
+        }
+        return false
+      })
+      if (identifiedTokenByAddress.length > 0) setIdentifiedToken(identifiedTokenByAddress[0])
+    }
+    // try to find an exact match by symbol
+    else {
+      const identifiedTokenBySymbol = Object.values(allTokens).filter(token => {
+        if (token.symbol.slice(0, searchQuery.length).toLowerCase() === searchQuery.toLowerCase()) return true
+        return false
+      })
+      if (identifiedTokenBySymbol.length > 0) setIdentifiedToken(identifiedTokenBySymbol[0])
+    }
+
+    return () => {
+      setIdentifiedToken(undefined)
+    }
+  }, [allTokens, searchQuery])
+
   const sortedPairList = useMemo(() => {
     return allPairs.sort((a, b): number => {
       // sort by balance
@@ -324,41 +352,24 @@ function SearchModal({
   const filteredPairList = useMemo(() => {
     const searchQueryIsAddress = !!isAddress(searchQuery)
     return sortedPairList.filter(pair => {
-      if (searchQuery === '') return true
+      // if there's no search query, hide non-ETH pairs
+      if (searchQuery === '') return pair.token0.equals(WETH[chainId]) || pair.token1.equals(WETH[chainId])
 
       const token0 = pair.token0
       const token1 = pair.token1
 
       if (searchQueryIsAddress) {
-        if (token0.address.match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
-          setIdentifiedToken(token0)
-          return true
-        }
-        if (token1.address.match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
-          setIdentifiedToken(token1)
-          return true
-        }
+        if (token0.address === isAddress(searchQuery)) return true
+        if (token1.address === isAddress(searchQuery)) return true
       } else {
-        if (token0.symbol.match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
-          setIdentifiedToken(token0)
-          return true
-        }
-        if (token0.name.match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
-          setIdentifiedToken(token0)
-          return true
-        }
-        if (token1.symbol.match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
-          setIdentifiedToken(token1)
-          return true
-        }
-        if (token1.name.match(new RegExp(escapeRegExp(searchQuery), 'i'))) {
-          setIdentifiedToken(token1)
-          return true
-        }
+        const identifier0 = `${token0.symbol}/${token1.symbol}`
+        const identifier1 = `${token1.symbol}/${token0.symbol}`
+        if (identifier0.slice(0, searchQuery.length).toLowerCase() === searchQuery.toLowerCase()) return true
+        if (identifier1.slice(0, searchQuery.length).toLowerCase() === searchQuery.toLowerCase()) return true
       }
       return false
     })
-  }, [searchQuery, sortedPairList])
+  }, [searchQuery, sortedPairList, chainId])
 
   function renderPairsList() {
     if (filteredPairList?.length === 0) {
