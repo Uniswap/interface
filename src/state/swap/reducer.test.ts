@@ -33,6 +33,22 @@ describe('swap reducer', () => {
       })
     })
 
+    test('does not duplicate eth for invalid output token', () => {
+      store.dispatch(
+        setDefaultsFromURL({
+          chainId: ChainId.MAINNET,
+          queryString: '?outputCurrency=invalid'
+        })
+      )
+
+      expect(store.getState()).toEqual({
+        [Field.INPUT]: { address: '' },
+        [Field.OUTPUT]: { address: WETH[ChainId.MAINNET].address },
+        typedValue: '',
+        independentField: Field.INPUT
+      })
+    })
+
     test('output ETH only', () => {
       store.dispatch(
         setDefaultsFromURL({
