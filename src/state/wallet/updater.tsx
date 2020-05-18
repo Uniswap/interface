@@ -18,13 +18,13 @@ export default function Updater() {
   const { chainId, library } = useWeb3React()
   const lastBlockNumber = useBlockNumber()
   const dispatch = useDispatch<AppDispatch>()
-  const ethBalanceListeners = useSelector<AppState>(state => {
+  const ethBalanceListeners = useSelector<AppState, AppState['wallet']['balanceListeners']>(state => {
     return state.wallet.balanceListeners
   })
-  const tokenBalanceListeners = useSelector<AppState>(state => {
+  const tokenBalanceListeners = useSelector<AppState, AppState['wallet']['tokenBalanceListeners']>(state => {
     return state.wallet.tokenBalanceListeners
   })
-  const allBalances = useSelector<AppState>(state => state.wallet.balances)
+  const allBalances = useSelector<AppState, AppState['wallet']['balances']>(state => state.wallet.balances)
 
   const activeETHListeners: string[] = useMemo(() => {
     return Object.keys(ethBalanceListeners).filter(address => ethBalanceListeners[address] > 0) // redundant check
@@ -41,18 +41,22 @@ export default function Updater() {
   }, [tokenBalanceListeners])
 
   const ethBalancesNeedUpdate: string[] = useMemo(() => {
+    if (!chainId || !lastBlockNumber) return []
     return activeETHListeners.filter(address => {
       const data = allBalances[balanceKey({ chainId, address })]
-      return !data || data.blockNumber < lastBlockNumber
+      if (!data || !data.blockNumber) return true
+      return data.blockNumber < lastBlockNumber
     })
   }, [activeETHListeners, allBalances, chainId, lastBlockNumber])
 
   const tokenBalancesNeedUpdate: { [address: string]: string[] } = useMemo(() => {
+    if (!chainId || !lastBlockNumber) return {}
     return Object.keys(activeTokenBalanceListeners).reduce<{ [address: string]: string[] }>((map, address) => {
       const needsUpdate =
         activeTokenBalanceListeners[address]?.filter(tokenAddress => {
           const data = allBalances[balanceKey({ chainId, tokenAddress, address })]
-          return !data || data.blockNumber < lastBlockNumber
+          if (!data || !data.blockNumber) return true
+          return data.blockNumber < lastBlockNumber
         }) ?? []
       if (needsUpdate.length > 0) {
         map[address] = needsUpdate
@@ -62,8 +66,7 @@ export default function Updater() {
   }, [activeTokenBalanceListeners, allBalances, chainId, lastBlockNumber])
 
   useEffect(() => {
-    if (!library) return
-    if (ethBalancesNeedUpdate.length === 0) return
+    if (!library || !chainId || !lastBlockNumber || ethBalancesNeedUpdate.length === 0) return
     getEtherBalances(library, ethBalancesNeedUpdate)
       .then(balanceMap => {
         dispatch(
@@ -80,7 +83,7 @@ export default function Updater() {
   }, [library, ethBalancesNeedUpdate, dispatch, lastBlockNumber, chainId])
 
   useEffect(() => {
-    if (!library) return
+    if (!library || !chainId || !lastBlockNumber) return
     Object.keys(tokenBalancesNeedUpdate).forEach(address => {
       if (tokenBalancesNeedUpdate[address].length === 0) return
       getTokensBalance(library, address, tokenBalancesNeedUpdate[address])

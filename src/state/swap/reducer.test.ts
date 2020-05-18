@@ -1,10 +1,10 @@
 import { ChainId, WETH } from '@uniswap/sdk'
-import { createStore } from 'redux'
+import { createStore, Store } from 'redux'
 import { Field, setDefaultsFromURL } from './actions'
-import reducer from './reducer'
+import reducer, { SwapState } from './reducer'
 
 describe('swap reducer', () => {
-  let store
+  let store: Store<SwapState>
 
   beforeEach(() => {
     store = createStore(reducer, {

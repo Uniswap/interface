@@ -1,14 +1,10 @@
-import React, { useEffect, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useMemo } from 'react'
 import styled, {
   ThemeProvider as StyledComponentsThemeProvider,
   createGlobalStyle,
   css,
   DefaultTheme
 } from 'styled-components'
-import { AppDispatch, AppState } from '../state'
-import { updateUserDarkMode } from '../state/user/actions'
-import { getQueryParam } from '../utils'
 import { useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
@@ -24,8 +20,8 @@ const MEDIA_WIDTHS = {
 
 const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
   (accumulator, size) => {
-    accumulator[size] = (a, b, c) => css`
-      @media (max-width: ${MEDIA_WIDTHS[size]}px) {
+    ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
+      @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
         ${css(a, b, c)}
       }
     `
@@ -117,24 +113,7 @@ export function theme(darkMode: boolean): DefaultTheme {
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const dispatch = useDispatch<AppDispatch>()
-  const userDarkMode = useSelector<AppState, boolean | null>(state => state.user.userDarkMode)
   const darkMode = useIsDarkMode()
-
-  const themeURL = getQueryParam(window.location, 'theme')
-  const urlContainsDarkMode: boolean | null = themeURL
-    ? themeURL.toUpperCase() === 'DARK'
-      ? true
-      : themeURL.toUpperCase() === 'LIGHT'
-      ? false
-      : null
-    : null
-
-  useEffect(() => {
-    if (urlContainsDarkMode !== null && userDarkMode === null) {
-      dispatch(updateUserDarkMode({ userDarkMode: urlContainsDarkMode }))
-    }
-  }, [dispatch, userDarkMode, urlContainsDarkMode])
 
   const themeObject = useMemo(() => theme(darkMode), [darkMode])
 
@@ -142,7 +121,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 }
 
 const TextWrapper = styled(Text)<{ color: keyof Colors }>`
-  color: ${({ color, theme }) => theme[color]};
+  color: ${({ color, theme }) => (theme as any)[color]};
 `
 
 export const TYPE = {

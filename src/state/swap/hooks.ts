@@ -53,14 +53,20 @@ export function useSwapActionHandlers(): {
 
 // try to parse a user entered amount for a given token
 function tryParseAmount(value?: string, token?: Token): TokenAmount | undefined {
-  if (!value || !token) return
+  if (!value || !token) {
+    return
+  }
   try {
     const typedValueParsed = parseUnits(value, token.decimals).toString()
-    if (typedValueParsed !== '0') return new TokenAmount(token, JSBI.BigInt(typedValueParsed))
+    if (typedValueParsed !== '0') {
+      return new TokenAmount(token, JSBI.BigInt(typedValueParsed))
+    }
   } catch (error) {
     // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
     console.debug(`Failed to parse input amount: "${value}"`, error)
   }
+  // necessary for all paths to return a value
+  return
 }
 
 // from the current swap inputs, compute the best trade and return it.
@@ -68,7 +74,7 @@ export function useDerivedSwapInfo(): {
   tokens: { [field in Field]?: Token }
   tokenBalances: { [field in Field]?: TokenAmount }
   parsedAmounts: { [field in Field]?: TokenAmount }
-  bestTrade?: Trade
+  bestTrade: Trade | null
   error?: string
   v1TradeLinkIfBetter?: string
 } {
@@ -84,13 +90,13 @@ export function useDerivedSwapInfo(): {
   const tokenIn = useTokenByAddressAndAutomaticallyAdd(tokenInAddress)
   const tokenOut = useTokenByAddressAndAutomaticallyAdd(tokenOutAddress)
 
-  const relevantTokenBalances = useTokenBalancesTreatWETHAsETH(account, [tokenIn, tokenOut])
+  const relevantTokenBalances = useTokenBalancesTreatWETHAsETH(account ?? undefined, [tokenIn, tokenOut])
 
   const isExactIn: boolean = independentField === Field.INPUT
   const amount = tryParseAmount(typedValue, isExactIn ? tokenIn : tokenOut)
 
-  const bestTradeExactIn = useTradeExactIn(isExactIn ? amount : null, tokenOut)
-  const bestTradeExactOut = useTradeExactOut(tokenIn, !isExactIn ? amount : null)
+  const bestTradeExactIn = useTradeExactIn(isExactIn ? amount : undefined, tokenOut)
+  const bestTradeExactOut = useTradeExactOut(tokenIn, !isExactIn ? amount : undefined)
 
   const bestTrade = isExactIn ? bestTradeExactIn : bestTradeExactOut
 
@@ -100,11 +106,11 @@ export function useDerivedSwapInfo(): {
   }
 
   const tokenBalances = {
-    [Field.INPUT]: relevantTokenBalances?.[tokenIn?.address],
-    [Field.OUTPUT]: relevantTokenBalances?.[tokenOut?.address]
+    [Field.INPUT]: relevantTokenBalances?.[tokenIn?.address ?? ''],
+    [Field.OUTPUT]: relevantTokenBalances?.[tokenOut?.address ?? '']
   }
 
-  const tokens = {
+  const tokens: { [field in Field]?: Token } = {
     [Field.INPUT]: tokenIn,
     [Field.OUTPUT]: tokenOut
   }
@@ -115,7 +121,7 @@ export function useDerivedSwapInfo(): {
     tokens[Field.INPUT],
     tokens[Field.OUTPUT],
     isExactIn ? parsedAmounts[Field.INPUT] : parsedAmounts[Field.OUTPUT],
-    bestTrade,
+    bestTrade ?? undefined,
     V1_TRADE_LINK_THRESHOLD
   )
 
@@ -132,12 +138,9 @@ export function useDerivedSwapInfo(): {
     error = error ?? 'Enter an amount'
   }
 
-  if (
-    tokenBalances[Field.INPUT] &&
-    parsedAmounts[Field.INPUT] &&
-    tokenBalances[Field.INPUT].lessThan(parsedAmounts[Field.INPUT])
-  ) {
-    error = 'Insufficient ' + tokens[Field.INPUT]?.symbol + ' balance'
+  const [balanceIn, amountIn] = [tokenBalances[Field.INPUT], parsedAmounts[Field.INPUT]]
+  if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
+    error = 'Insufficient ' + amountIn.token.symbol + ' balance'
   }
 
   return {
@@ -156,6 +159,7 @@ export function useDefaultsFromURL(search?: string) {
   const { chainId } = useWeb3React()
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
+    if (!chainId) return
     dispatch(setDefaultsFromURL({ chainId, queryString: search }))
   }, [dispatch, search, chainId])
 }

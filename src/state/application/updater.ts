@@ -9,31 +9,20 @@ export default function Updater() {
 
   // update block number
   useEffect(() => {
-    if (library) {
-      let stale = false
+    if (!library || !chainId) return
 
-      const update = () => {
-        library
-          .getBlockNumber()
-          .then(blockNumber => {
-            if (!stale) {
-              dispatch(updateBlockNumber({ networkId: chainId, blockNumber }))
-            }
-          })
-          .catch(() => {
-            if (!stale) {
-              dispatch(updateBlockNumber({ networkId: chainId, blockNumber: null }))
-            }
-          })
-      }
+    const blockListener = (blockNumber: number) => {
+      dispatch(updateBlockNumber({ chainId, blockNumber }))
+    }
 
-      update()
-      library.on('block', update)
+    library
+      .getBlockNumber()
+      .then(blockNumber => updateBlockNumber({ chainId, blockNumber }))
+      .catch(error => console.error(`Failed to get block number for chainId ${chainId}`, error))
 
-      return () => {
-        stale = true
-        library.removeListener('block', update)
-      }
+    library.on('block', blockListener)
+    return () => {
+      library.removeListener('block', blockListener)
     }
   }, [dispatch, chainId, library])
 

@@ -42,11 +42,11 @@ function useMockV1Pair(token?: Token) {
 }
 
 export function useV1TradeLinkIfBetter(
-  isExactIn: boolean,
-  inputToken: Token,
-  outputToken: Token,
-  exactAmount: TokenAmount,
-  v2Trade: Trade,
+  isExactIn?: boolean,
+  inputToken?: Token,
+  outputToken?: Token,
+  exactAmount?: TokenAmount,
+  v2Trade?: Trade,
   minimumDelta: Percent = new Percent('0')
 ): string {
   const { chainId } = useWeb3React()
