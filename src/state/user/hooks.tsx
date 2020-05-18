@@ -8,7 +8,6 @@ import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
   addSerializedToken,
-  dismissBetaMessage,
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
@@ -33,18 +32,6 @@ function deserializeToken(serializedToken: SerializedToken): Token {
     serializedToken.symbol,
     serializedToken.name
   )
-}
-
-// this currently isn't used anywhere, but is kept as an example of how to store/update a simple boolean
-export function useBetaMessageManager() {
-  const betaMessageDismissed = useSelector<AppState, boolean>(state => state.user.betaMessageDismissed)
-  const dispatch = useDispatch<AppDispatch>()
-
-  const wrappedDismissBetaMessage = useCallback(() => {
-    dispatch(dismissBetaMessage())
-  }, [dispatch])
-
-  return [!betaMessageDismissed, wrappedDismissBetaMessage]
 }
 
 export function useIsDarkMode(): boolean {

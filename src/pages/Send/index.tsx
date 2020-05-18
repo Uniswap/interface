@@ -1,6 +1,6 @@
 import { JSBI, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useContext, useEffect, useState } from 'react'
-import { ArrowDown, Repeat } from 'react-feather'
+import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -16,15 +16,8 @@ import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import FormattedPriceImpact from '../../components/swap/FormattedPriceImpact'
 import SwapModalFooter from '../../components/swap/SwapModalFooter'
-import {
-  ArrowWrapper,
-  BottomGrouping,
-  Dots,
-  InputGroup,
-  StyledBalanceMaxMini,
-  StyledNumerical,
-  Wrapper
-} from '../../components/swap/styleds'
+import { ArrowWrapper, BottomGrouping, Dots, InputGroup, StyledNumerical, Wrapper } from '../../components/swap/styleds'
+import TradePrice from '../../components/swap/TradePrice'
 import { TransferModalHeader } from '../../components/swap/TransferModalHeader'
 import V1TradeLink from '../../components/swap/V1TradeLink'
 import TokenLogo from '../../components/TokenLogo'
@@ -430,27 +423,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
                 <Text fontWeight={500} fontSize={14} color={theme.text2}>
                   Price
                 </Text>
-                <Text
-                  fontWeight={500}
-                  fontSize={14}
-                  color={theme.text2}
-                  style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
-                >
-                  {bestTrade && showInverted
-                    ? (bestTrade?.executionPrice?.invert()?.toSignificant(6) ?? '') +
-                      ' ' +
-                      tokens[Field.INPUT]?.symbol +
-                      ' per ' +
-                      tokens[Field.OUTPUT]?.symbol
-                    : (bestTrade?.executionPrice?.toSignificant(6) ?? '') +
-                      ' ' +
-                      tokens[Field.OUTPUT]?.symbol +
-                      ' per ' +
-                      tokens[Field.INPUT]?.symbol}
-                  <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
-                    <Repeat size={14} />
-                  </StyledBalanceMaxMini>
-                </Text>
+                <TradePrice showInverted={showInverted} setShowInverted={setShowInverted} trade={bestTrade} />
               </RowBetween>
 
               {bestTrade && severity > 1 && (
