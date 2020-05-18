@@ -49,7 +49,7 @@ export default createReducer<SwapState>(initialState, builder =>
   builder
     .addCase(setDefaultsFromURL, (state, { payload: { queryString, chainId } }) => {
       if (queryString && queryString.length > 1) {
-        const parsedQs = parse(queryString.substr(1), { parseArrays: false })
+        const parsedQs = parse(queryString, { parseArrays: false, ignoreQueryPrefix: true })
 
         let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, chainId)
         let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, chainId)

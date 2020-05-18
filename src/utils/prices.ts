@@ -1,5 +1,4 @@
 import { Fraction, JSBI, Percent, TokenAmount, Trade } from '@uniswap/sdk'
-import { ZERO } from '@uniswap/sdk/dist/constants'
 import { ALLOWED_SLIPPAGE_HIGH, ALLOWED_SLIPPAGE_LOW, ALLOWED_SLIPPAGE_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'

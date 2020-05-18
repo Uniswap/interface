@@ -1,23 +1,24 @@
-import React, { Suspense, useEffect } from 'react'
-import styled from 'styled-components'
-import ReactGA from 'react-ga'
+import React, { Suspense } from 'react'
 import { BrowserRouter, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom'
+import styled from 'styled-components'
+import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
+import Create from '../components/CreatePool'
+import Footer from '../components/Footer'
 
 import Header from '../components/Header'
-import Footer from '../components/Footer'
 import NavigationTabs from '../components/NavigationTabs'
-import Web3ReactManager from '../components/Web3ReactManager'
+import Find from '../components/PoolFinder'
 
 import Popups from '../components/Popups'
+import Web3ReactManager from '../components/Web3ReactManager'
+import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import { isAddress } from '../utils'
-
-import Swap from './Swap'
-import Send from './Send'
 import Pool from './Pool'
 import Add from './Pool/AddLiquidity'
 import Remove from './Pool/RemoveLiquidity'
-import Find from '../components/PoolFinder'
-import Create from '../components/CreatePool'
+import Send from './Send'
+
+import Swap from './Swap'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -90,14 +91,6 @@ const StyledRed = styled.div`
   }
 `
 
-// fires a GA pageview every time the route changes
-function GoogleAnalyticsReporter({ location: { pathname, search } }: RouteComponentProps) {
-  useEffect(() => {
-    ReactGA.pageview(`${pathname}${search}`)
-  }, [pathname, search])
-  return null
-}
-
 // Redirects to swap but only replace the pathname
 function RedirectPathToSwapOnly({ location }: RouteComponentProps) {
   return <Redirect to={{ ...location, pathname: '/swap' }} />
@@ -132,6 +125,7 @@ export default function App() {
       <Suspense fallback={null}>
         <BrowserRouter>
           <Route component={GoogleAnalyticsReporter} />
+          <Route component={DarkModeQueryParamReader} />
           <AppWrapper>
             <HeaderWrapper>
               <Header />

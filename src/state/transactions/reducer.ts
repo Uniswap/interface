@@ -37,7 +37,6 @@ export default createReducer(initialState, builder =>
       if (state[chainId]?.[hash]) {
         throw Error('Attempted to add existing transaction.')
       }
-      let x: any
       state[chainId] = state[chainId] ?? {}
       state[chainId][hash] = { hash, approvalOfToken, summary, from, addedTime: now() }
     })
