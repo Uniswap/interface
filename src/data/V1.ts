@@ -75,10 +75,13 @@ export function useV1TradeLinkIfBetter(
   }
 
   const route = pairs && new Route(pairs, input)
-  const v1Trade =
-    route && exactAmount
-      ? new Trade(route, exactAmount, isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT)
-      : undefined
+  let v1Trade: Trade
+  try {
+    v1Trade =
+      route && exactAmount
+        ? new Trade(route, exactAmount, isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT)
+        : undefined
+  } catch {}
 
   let v1HasBetterTrade = false
   if (v1Trade) {
