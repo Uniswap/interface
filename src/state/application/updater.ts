@@ -1,4 +1,3 @@
-import { Block } from '@ethersproject/providers'
 import { useEffect } from 'react'
 import { useWeb3React } from '../../hooks'
 import { updateBlockNumber } from './actions'
@@ -10,11 +9,10 @@ export default function Updater() {
 
   // update block number
   useEffect(() => {
-    if (!library) return
-    if (!chainId) return
+    if (!library || !chainId) return
 
-    const blockListener = (block: Block) => {
-      dispatch(updateBlockNumber({ chainId, blockNumber: block.number }))
+    const blockListener = (blockNumber: number) => {
+      dispatch(updateBlockNumber({ chainId, blockNumber }))
     }
 
     library

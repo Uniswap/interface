@@ -19,7 +19,11 @@ export default createReducer(initialState, builder =>
   builder
     .addCase(updateBlockNumber, (state, action) => {
       const { chainId, blockNumber } = action.payload
-      state.blockNumber[chainId] = blockNumber
+      if (typeof state.blockNumber[chainId] !== 'number') {
+        state.blockNumber[chainId] = blockNumber
+      } else {
+        state.blockNumber[chainId] = Math.max(blockNumber, state.blockNumber[chainId])
+      }
     })
     .addCase(toggleWalletModal, state => {
       state.walletModalOpen = !state.walletModalOpen
