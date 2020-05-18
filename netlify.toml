@@ -7,6 +7,12 @@
   conditions = {Country=["BY","CU","IR","IQ","CI","LR","KP","SD","SY","ZW"]}
   headers = {Link="<https://uniswap.exchange>"}
 
+# forward v2 subdomain to apex
+[[redirects]]
+  from = "https://v2.uniswap.exchange/*"
+  to = "https://uniswap.exchange/:splat"
+  status = 301
+
 # support SPA setup
 [[redirects]]
   from = "/*"

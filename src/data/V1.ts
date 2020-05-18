@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import { Token, TokenAmount, Pair, Trade, ChainId, WETH, Route, TradeType, Percent } from '@uniswap/sdk'
 import useSWR from 'swr'
-import { useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '../hooks'
 
 import IUniswapV1Factory from '../constants/abis/v1_factory.json'
 import { V1_FACTORY_ADDRESS } from '../constants'
@@ -41,49 +41,63 @@ function useMockV1Pair(token?: Token) {
     : undefined
 }
 
-export function useV1TradeLinkIfBetter(trade: Trade, minimumDelta: Percent = new Percent('0')): string {
-  const inputPair = useMockV1Pair(trade?.route?.input)
-  const outputPair = useMockV1Pair(trade?.route?.output)
+export function useV1TradeLinkIfBetter(
+  isExactIn: boolean,
+  inputToken: Token,
+  outputToken: Token,
+  exactAmount: TokenAmount,
+  v2Trade: Trade,
+  minimumDelta: Percent = new Percent('0')
+): string {
+  const { chainId } = useWeb3React()
 
-  const mainnet = trade?.route?.input?.chainId === ChainId.MAINNET
-  const inputIsWETH = mainnet && trade?.route?.input?.equals(WETH[ChainId.MAINNET])
-  const outputIsWETH = mainnet && trade?.route?.output?.equals(WETH[ChainId.MAINNET])
-  const neitherWETH = mainnet && !!trade && !inputIsWETH && !outputIsWETH
+  const input = inputToken
+  const output = outputToken
+  const mainnet = chainId === ChainId.MAINNET
 
+  // get the mock v1 pairs
+  const inputPair = useMockV1Pair(input)
+  const outputPair = useMockV1Pair(output)
+
+  const inputIsWETH = mainnet && input?.equals(WETH[ChainId.MAINNET])
+  const outputIsWETH = mainnet && output?.equals(WETH[ChainId.MAINNET])
+
+  // construct a direct or through ETH v1 route
   let pairs: Pair[]
   if (inputIsWETH && outputPair) {
     pairs = [outputPair]
   } else if (outputIsWETH && inputPair) {
     pairs = [inputPair]
-  } else if (neitherWETH && inputPair && outputPair) {
+  }
+  // if neither are WETH, it's token-to-token (if they both exist)
+  else if (inputPair && outputPair) {
     pairs = [inputPair, outputPair]
   }
 
-  const route = pairs && new Route(pairs, trade.route.input)
+  const route = pairs && new Route(pairs, input)
   const v1Trade =
-    route &&
-    new Trade(
-      route,
-      trade.tradeType === TradeType.EXACT_INPUT ? trade.inputAmount : trade.outputAmount,
-      trade.tradeType
-    )
+    route && exactAmount
+      ? new Trade(route, exactAmount, isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT)
+      : undefined
 
   let v1HasBetterTrade = false
   if (v1Trade) {
-    if (trade.tradeType === TradeType.EXACT_INPUT) {
-      // check if the output amount on v1, discounted by minimumDelta, is greater than on v2
-      const discountedV1Output = v1Trade.outputAmount.multiply(new Percent('1').subtract(minimumDelta))
-      v1HasBetterTrade = discountedV1Output.greaterThan(trade.outputAmount)
+    if (isExactIn) {
+      // discount the v1 output amount by minimumDelta
+      const discountedV1Output = v1Trade?.outputAmount.multiply(new Percent('1').subtract(minimumDelta))
+      // check if the discounted v1 amount is still greater than v2, short-circuiting if no v2 trade exists
+      v1HasBetterTrade = !!!v2Trade || discountedV1Output.greaterThan(v2Trade.outputAmount)
     } else {
-      // check if the input amount on v1, inflated by minimumDelta, is less than on v2
-      const inflatedV1Input = v1Trade.inputAmount.multiply(new Percent('1').add(minimumDelta))
-      v1HasBetterTrade = inflatedV1Input.lessThan(trade.inputAmount)
+      // inflate the v1 amount by minimumDelta
+      const inflatedV1Input = v1Trade?.inputAmount.multiply(new Percent('1').add(minimumDelta))
+      // check if the inflated v1 amount is still less than v2, short-circuiting if no v2 trade exists
+      v1HasBetterTrade = !!!v2Trade || inflatedV1Input.lessThan(v2Trade.inputAmount)
     }
   }
 
   return v1HasBetterTrade
-    ? `https://v1.uniswap.exchange/swap?inputCurrency=${
-        inputIsWETH ? 'ETH' : trade.route.input.address
-      }&outputCurrency=${outputIsWETH ? 'ETH' : trade.route.output.address}`
+    ? `https://v1.uniswap.exchange/swap?inputCurrency=${inputIsWETH ? 'ETH' : input.address}&outputCurrency=${
+        outputIsWETH ? 'ETH' : output.address
+      }`
     : undefined
 }
