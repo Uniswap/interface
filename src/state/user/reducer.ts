@@ -19,8 +19,6 @@ interface UserState {
   userDarkMode: boolean | null // the user's choice for dark mode or light mode
   matchesDarkMode: boolean // whether the dark mode media query matches
 
-  betaMessageDismissed: boolean
-
   tokens: {
     [chainId: number]: {
       [address: string]: SerializedToken
@@ -46,8 +44,6 @@ const initialState: UserState = {
 
   userDarkMode: null,
   matchesDarkMode: false,
-
-  betaMessageDismissed: false,
 
   tokens: {},
   pairs: {},
