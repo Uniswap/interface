@@ -98,6 +98,34 @@ function GoogleAnalyticsReporter({ location: { pathname, search } }: RouteCompon
   return null
 }
 
+// Redirects to swap but only replace the pathname
+function RedirectPathToSwapOnly({ location }: RouteComponentProps) {
+  return <Redirect to={{ ...location, pathname: '/swap' }} />
+}
+
+// Redirects from the /swap/:outputCurrency path to the /swap?outputCurrency=:outputCurrency format
+function RedirectToSwap(props: RouteComponentProps<{ outputCurrency: string }>) {
+  const {
+    location: { search },
+    match: {
+      params: { outputCurrency }
+    }
+  } = props
+
+  return (
+    <Redirect
+      to={{
+        ...props.location,
+        pathname: '/swap',
+        search:
+          search && search.length > 1
+            ? `${search}&outputCurrency=${outputCurrency}`
+            : `?outputCurrency=${outputCurrency}`
+      }}
+    />
+  )
+}
+
 export default function App() {
   return (
     <>
@@ -115,6 +143,7 @@ export default function App() {
                   <NavigationTabs />
                   <Switch>
                     <Route exact strict path="/swap" component={Swap} />
+                    <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                     <Route exact strict path="/send" component={Send} />
                     <Route exact strict path="/find" component={Find} />
                     <Route exact strict path="/create" component={Create} />
@@ -153,7 +182,7 @@ export default function App() {
                         }
                       }}
                     />
-                    <Redirect to="/swap" />
+                    <Route component={RedirectPathToSwapOnly} />
                   </Switch>
                 </Body>
               </Web3ReactManager>

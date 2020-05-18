@@ -54,10 +54,10 @@ export default createReducer<SwapState>(initialState, builder =>
         let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, chainId)
         let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, chainId)
         if (inputCurrency === outputCurrency) {
-          if (typeof parsedQs.inputCurrency === 'string') {
-            outputCurrency = ''
-          } else if (typeof parsedQs.outputCurrency === 'string') {
+          if (typeof parsedQs.outputCurrency === 'string') {
             inputCurrency = ''
+          } else {
+            outputCurrency = ''
           }
         }
 
