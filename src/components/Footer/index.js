@@ -86,7 +86,7 @@ export default function Footer() {
           </Link>
         </Title>
         <Title>
-          <Link id="link" href="0x16D4F26C15f3658ec65B1126ff27DD3dF2a2996b">
+          <Link id="link" href="https://etherscan.io/address/0x16D4F26C15f3658ec65B1126ff27DD3dF2a2996b">
             <h1 id="title">Interacting with 0x16D4…996b</h1>
           </Link>
         </Title>
