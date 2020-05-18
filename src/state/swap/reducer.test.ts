@@ -27,9 +27,25 @@ describe('swap reducer', () => {
 
       expect(store.getState()).toEqual({
         [Field.OUTPUT]: { address: '0x6B175474E89094C44Da98b954EedeAC495271d0F' },
-        [Field.INPUT]: { address: WETH[ChainId.MAINNET]?.address },
+        [Field.INPUT]: { address: WETH[ChainId.MAINNET].address },
         typedValue: '20.5',
         independentField: Field.OUTPUT
+      })
+    })
+
+    test('output ETH only', () => {
+      store.dispatch(
+        setDefaultsFromURL({
+          chainId: ChainId.MAINNET,
+          queryString: '?outputCurrency=eth&exactAmount=20.5'
+        })
+      )
+
+      expect(store.getState()).toEqual({
+        [Field.OUTPUT]: { address: WETH[ChainId.MAINNET].address },
+        [Field.INPUT]: { address: '' },
+        typedValue: '20.5',
+        independentField: Field.INPUT
       })
     })
   })
