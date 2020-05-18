@@ -4,17 +4,17 @@ import { addPopup, PopupContent, removePopup, toggleWalletModal } from './action
 import { useSelector, useDispatch } from 'react-redux'
 import { AppState } from '../index'
 
-export function useBlockNumber() {
+export function useBlockNumber(): number | undefined {
   const { chainId } = useWeb3React()
 
-  return useSelector((state: AppState) => state.application.blockNumber[chainId])
+  return useSelector((state: AppState) => state.application.blockNumber[chainId ?? -1])
 }
 
-export function useWalletModalOpen() {
+export function useWalletModalOpen(): boolean {
   return useSelector((state: AppState) => state.application.walletModalOpen)
 }
 
-export function useWalletModalToggle() {
+export function useWalletModalToggle(): () => void {
   const dispatch = useDispatch()
   return useCallback(() => dispatch(toggleWalletModal()), [dispatch])
 }

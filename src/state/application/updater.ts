@@ -1,3 +1,4 @@
+import { Block } from '@ethersproject/providers'
 import { useEffect } from 'react'
 import { useWeb3React } from '../../hooks'
 import { updateBlockNumber } from './actions'
@@ -9,31 +10,21 @@ export default function Updater() {
 
   // update block number
   useEffect(() => {
-    if (library) {
-      let stale = false
+    if (!library) return
+    if (!chainId) return
 
-      const update = () => {
-        library
-          .getBlockNumber()
-          .then(blockNumber => {
-            if (!stale) {
-              dispatch(updateBlockNumber({ networkId: chainId, blockNumber }))
-            }
-          })
-          .catch(() => {
-            if (!stale) {
-              dispatch(updateBlockNumber({ networkId: chainId, blockNumber: null }))
-            }
-          })
-      }
+    const blockListener = (block: Block) => {
+      dispatch(updateBlockNumber({ chainId, blockNumber: block.number }))
+    }
 
-      update()
-      library.on('block', update)
+    library
+      .getBlockNumber()
+      .then(blockNumber => updateBlockNumber({ chainId, blockNumber }))
+      .catch(error => console.error(`Failed to get block number for chainId ${chainId}`, error))
 
-      return () => {
-        stale = true
-        library.removeListener('block', update)
-      }
+    library.on('block', blockListener)
+    return () => {
+      library.removeListener('block', blockListener)
     }
   }, [dispatch, chainId, library])
 

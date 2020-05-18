@@ -1,4 +1,5 @@
 import { Fraction, JSBI, Percent, TokenAmount, Trade } from '@uniswap/sdk'
+import { ZERO } from '@uniswap/sdk/dist/constants'
 import { ALLOWED_SLIPPAGE_HIGH, ALLOWED_SLIPPAGE_LOW, ALLOWED_SLIPPAGE_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'
@@ -6,6 +7,7 @@ import { basisPointsToPercent } from './index'
 const BASE_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
 const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000))
 const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(BASE_FEE)
+
 // computes price breakdown for the trade
 export function computeTradePriceBreakdown(
   trade?: Trade
@@ -22,7 +24,7 @@ export function computeTradePriceBreakdown(
       )
 
   // remove lp fees from price impact
-  const priceImpactWithoutFeeFraction = trade?.slippage?.subtract(realizedLPFee)
+  const priceImpactWithoutFeeFraction = trade && realizedLPFee ? trade.slippage.subtract(realizedLPFee) : undefined
 
   // the x*y=k impact
   const priceImpactWithoutFeePercent = priceImpactWithoutFeeFraction
@@ -31,7 +33,9 @@ export function computeTradePriceBreakdown(
 
   // the amount of the input that accrues to LPs
   const realizedLPFeeAmount =
-    realizedLPFee && new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
+    realizedLPFee &&
+    trade &&
+    new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
 
   return { priceImpactWithoutFee: priceImpactWithoutFeePercent, realizedLPFee: realizedLPFeeAmount }
 }

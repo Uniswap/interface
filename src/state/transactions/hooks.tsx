@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import { addTransaction } from './actions'
-import { TransactionDetails } from './reducer'
+import { TransactionDetails, TransactionState } from './reducer'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
@@ -20,6 +20,9 @@ export function useTransactionAdder(): (
       response: TransactionResponse,
       { summary, approvalOfToken }: { summary?: string; approvalOfToken?: string } = {}
     ) => {
+      if (!account) return
+      if (!chainId) return
+
       const { hash } = response
       if (!hash) {
         throw Error('No transaction hash found.')
@@ -34,9 +37,9 @@ export function useTransactionAdder(): (
 export function useAllTransactions(): { [txHash: string]: TransactionDetails } {
   const { chainId } = useWeb3React()
 
-  const state = useSelector<AppState>(state => state.transactions)
+  const state = useSelector<AppState, TransactionState>(state => state.transactions)
 
-  return state[chainId] ?? {}
+  return state[chainId ?? -1] ?? {}
 }
 
 // returns whether a token has a pending approval transaction

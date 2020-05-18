@@ -18,8 +18,8 @@ const initialState: ApplicationState = {
 export default createReducer(initialState, builder =>
   builder
     .addCase(updateBlockNumber, (state, action) => {
-      const { networkId, blockNumber } = action.payload
-      state.blockNumber[networkId] = blockNumber
+      const { chainId, blockNumber } = action.payload
+      state.blockNumber[chainId] = blockNumber
     })
     .addCase(toggleWalletModal, state => {
       state.walletModalOpen = !state.walletModalOpen
