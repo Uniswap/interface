@@ -26,30 +26,50 @@ const initialState: SwapState = {
   }
 }
 
-function parseTokenURL(input: any, chainId: number): string {
-  if (typeof input !== 'string') return ''
-  const valid = isAddress(input)
-  if (valid) return valid
-  if (input.toLowerCase() === 'eth') return WETH[chainId]?.address ?? ''
-  return ''
+function parseCurrencyFromURLParameter(urlParam: any, chainId: number): string {
+  if (typeof urlParam === 'string') {
+    const valid = isAddress(urlParam)
+    if (valid) return valid
+    if (urlParam.toLowerCase() === 'eth') return WETH[chainId]?.address ?? ''
+    if (valid === false) return WETH[chainId]?.address ?? ''
+  }
+
+  return WETH[chainId]?.address
+}
+
+function parseTokenAmountURLParameter(urlParam: any): string {
+  return typeof urlParam === 'string' && !isNaN(parseFloat(urlParam)) ? urlParam : ''
+}
+
+function parseIndependentFieldURLParameter(urlParam: any): Field {
+  return typeof urlParam === 'string' && urlParam.toLowerCase() === 'output' ? Field.OUTPUT : Field.INPUT
 }
 
 export default createReducer<SwapState>(initialState, builder =>
   builder
     .addCase(setDefaultsFromURL, (state, { payload: { queryString, chainId } }) => {
       if (queryString && queryString.length > 1) {
-        const result = parse(queryString.substr(1), { parseArrays: false })
-        const inToken = parseTokenURL(result.inputToken, chainId)
-        const outToken = parseTokenURL(result.outputToken, chainId)
+        const parsedQs = parse(queryString.substr(1), { parseArrays: false })
+
+        let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, chainId)
+        let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, chainId)
+        if (inputCurrency === outputCurrency) {
+          if (typeof parsedQs.inputCurrency === 'string') {
+            outputCurrency = ''
+          } else if (typeof parsedQs.outputCurrency === 'string') {
+            inputCurrency = ''
+          }
+        }
+
         return {
           [Field.INPUT]: {
-            address: inToken
+            address: inputCurrency
           },
           [Field.OUTPUT]: {
-            address: inToken === outToken ? '' : outToken
+            address: outputCurrency
           },
-          typedValue: typeof result.amount === 'string' ? result.amount : '',
-          independentField: result.exact === 'out' ? Field.OUTPUT : Field.INPUT
+          typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
+          independentField: parseIndependentFieldURLParameter(parsedQs.exactField)
         }
       }
 
