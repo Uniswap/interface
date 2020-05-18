@@ -25,11 +25,11 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
 import { useHasPendingApproval } from '../../state/transactions/hooks'
-import { CursorPointer, Link, TYPE } from '../../theme'
+import { CursorPointer, TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
 import SwapModalHeader from '../../components/swap/SwapModalHeader'
 
-export default function Swap({ history, location: { search } }: RouteComponentProps) {
+export default function Swap({ location: { search } }: RouteComponentProps) {
   useDefaultsFromURL(search)
   // text translation
   // const { t } = useTranslation()
@@ -40,7 +40,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
   const toggleWalletModal = useWalletModalToggle()
 
   const { independentField, typedValue } = useSwapState()
-  const { bestTrade, tokenBalances, parsedAmounts, tokens, error } = useDerivedSwapInfo()
+  const { bestTrade, tokenBalances, parsedAmounts, tokens, error, v1TradeLinkIfBetter } = useDerivedSwapInfo()
   const isValid = !error
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -277,14 +277,6 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
         ) : noRoute && userHasSpecifiedInputOutput ? (
           <GreyCard style={{ textAlign: 'center' }}>
             <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
-            <Link
-              onClick={() => {
-                history.push('/add/' + tokens[Field.INPUT]?.address + '-' + tokens[Field.OUTPUT]?.address)
-              }}
-            >
-              {' '}
-              Add liquidity now.
-            </Link>
           </GreyCard>
         ) : mustApprove === true ? (
           <ButtonLight onClick={approveCallback} disabled={pendingApprovalInput}>
@@ -308,7 +300,7 @@ export default function Swap({ history, location: { search } }: RouteComponentPr
             </Text>
           </ButtonError>
         )}
-        <V1TradeLink bestV2Trade={bestTrade} />
+        <V1TradeLink v1TradeLinkIfBetter={v1TradeLinkIfBetter} />
       </BottomGrouping>
       {bestTrade && (
         <AdvancedSwapDetailsDropdown

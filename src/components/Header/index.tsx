@@ -158,15 +158,15 @@ export default function Header() {
   return (
     <HeaderFrame>
       <MigrateBanner>
-        {/* <b>Uniswap V2 is live.&nbsp;</b> Move your liquidity now using the&nbsp; */}
-        <b>Testnet only.</b>&nbsp;Uniswap V2 has not been launched and is coming soon.&nbsp;Read the&nbsp;
-        {/* <Link href="https://migrate.uniswap.exchange/">
-          <b>migration helper</b>
-        </Link>
-        &nbsp;or read the&nbsp; */}
-        <Link href="https://uniswap.org/blog/uniswap-v2/">
+        Uniswap V2 is live! Read the&nbsp;
+        <Link href="https://uniswap.org/blog/launch-uniswap-v2/">
           <b>blog post ↗</b>
         </Link>
+        &nbsp;or&nbsp;
+        <Link href="https://migrate.uniswap.exchange/">
+          <b>migrate your liquidity ↗</b>
+        </Link>
+        .
       </MigrateBanner>
       <RowBetween padding="1rem">
         <HeaderElement>

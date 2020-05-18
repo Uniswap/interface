@@ -8,6 +8,8 @@ import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { AppDispatch, AppState } from '../index'
 import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
 import { Field, selectToken, setDefaultsFromURL, switchTokens, typeInput } from './actions'
+import { useV1TradeLinkIfBetter } from '../../data/V1'
+import { V1_TRADE_LINK_THRESHOLD } from '../../constants'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -68,6 +70,7 @@ export function useDerivedSwapInfo(): {
   parsedAmounts: { [field in Field]?: TokenAmount }
   bestTrade?: Trade
   error?: string
+  v1TradeLinkIfBetter?: string
 } {
   const { account } = useWeb3React()
 
@@ -106,6 +109,16 @@ export function useDerivedSwapInfo(): {
     [Field.OUTPUT]: tokenOut
   }
 
+  // get link to trade on v1, if a better rate exists
+  const v1TradeLinkIfBetter = useV1TradeLinkIfBetter(
+    isExactIn,
+    tokens[Field.INPUT],
+    tokens[Field.OUTPUT],
+    isExactIn ? parsedAmounts[Field.INPUT] : parsedAmounts[Field.OUTPUT],
+    bestTrade,
+    V1_TRADE_LINK_THRESHOLD
+  )
+
   let error: string | undefined
   if (!account) {
     error = 'Connect Wallet'
@@ -132,7 +145,8 @@ export function useDerivedSwapInfo(): {
     tokenBalances,
     parsedAmounts,
     bestTrade,
-    error
+    error,
+    v1TradeLinkIfBetter
   }
 }
 

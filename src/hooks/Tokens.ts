@@ -1,29 +1,21 @@
-import { ChainId, Token, WETH } from '@uniswap/sdk'
+import { Token, WETH } from '@uniswap/sdk'
 import { useEffect, useMemo } from 'react'
 import { useAddUserToken, useFetchTokenByAddress, useUserAddedTokens } from '../state/user/hooks'
+
 import { useWeb3React } from './index'
+import MAINNET_TOKENS from '../constants/tokens/mainnet'
+import RINKEBY_TOKENS from '../constants/tokens/rinkeby'
+import KOVAN_TOKENS from '../constants/tokens/kovan'
+import ROPSTEN_TOKENS from '../constants/tokens/ropsten'
 
 export const ALL_TOKENS = [
   // WETH on all chains
   ...Object.values(WETH),
-
-  // Mainnet Tokens
-  new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin'),
-  new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C'),
-  new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker'),
-
-  // Rinkeby Tokens
-  new Token(ChainId.RINKEBY, '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735', 18, 'DAI', 'Dai Stablecoin'),
-  new Token(ChainId.RINKEBY, '0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85', 18, 'MKR', 'Maker'),
-
-  // Kovan Tokens
-  new Token(ChainId.KOVAN, '0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa', 18, 'DAI', 'Dai Stablecoin'),
-  new Token(ChainId.KOVAN, '0xAaF64BFCC32d0F15873a02163e7E500671a4ffcD', 18, 'MKR', 'Maker'),
-
-  // Ropsten Tokens
-  new Token(ChainId.ROPSTEN, '0xaD6D458402F60fD3Bd25163575031ACDce07538D', 18, 'DAI', 'Dai Stablecoin')
-
-  // Goerli Tokens
+  // chain-specific tokens
+  ...MAINNET_TOKENS,
+  ...RINKEBY_TOKENS,
+  ...KOVAN_TOKENS,
+  ...ROPSTEN_TOKENS
 ]
   // remap WETH to ETH
   .map(token => {
