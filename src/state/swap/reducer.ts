@@ -42,7 +42,7 @@ function parseTokenAmountURLParameter(urlParam: any): string {
 }
 
 function parseIndependentFieldURLParameter(urlParam: any): Field {
-  return typeof urlParam === 'string' && urlParam.toLowerCase() === 'OUTPUT' ? Field.OUTPUT : Field.INPUT
+  return typeof urlParam === 'string' && urlParam.toLowerCase() === 'output' ? Field.OUTPUT : Field.INPUT
 }
 
 export default createReducer<SwapState>(initialState, builder =>
@@ -50,15 +50,23 @@ export default createReducer<SwapState>(initialState, builder =>
     .addCase(setDefaultsFromURL, (state, { payload: { queryString, chainId } }) => {
       if (queryString && queryString.length > 1) {
         const parsedQs = parse(queryString.substr(1), { parseArrays: false })
-        const inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, chainId)
-        const outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, chainId)
+
+        let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, chainId)
+        let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, chainId)
+        if (inputCurrency === outputCurrency) {
+          if (typeof parsedQs.inputCurrency === 'string') {
+            outputCurrency = ''
+          } else if (typeof parsedQs.outputCurrency === 'string') {
+            inputCurrency = ''
+          }
+        }
 
         return {
           [Field.INPUT]: {
             address: inputCurrency
           },
           [Field.OUTPUT]: {
-            address: inputCurrency === outputCurrency ? '' : outputCurrency
+            address: outputCurrency
           },
           typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
           independentField: parseIndependentFieldURLParameter(parsedQs.exactField)
