@@ -33,15 +33,19 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [
     [uncheckedAddresses]
   )
 
+  // used so that we do a deep comparison in `useEffect`
+  const serializedAddresses = JSON.stringify(addresses)
+
   // add the listeners on mount, remove them on dismount
   useEffect(() => {
+    const addresses = JSON.parse(serializedAddresses)
     if (addresses.length === 0) return
 
     dispatch(startListeningForBalance({ addresses }))
     return () => {
       dispatch(stopListeningForBalance({ addresses }))
     }
-  }, [addresses, dispatch])
+  }, [serializedAddresses, dispatch])
 
   const rawBalanceMap = useSelector<AppState, AppState['wallet']['balances']>(({ wallet: { balances } }) => balances)
 
@@ -72,19 +76,29 @@ export function useTokenBalances(
     () => tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false) ?? [],
     [tokens]
   )
-  const tokenAddresses: string[] = useMemo(() => validTokens.map(t => t.address).sort(), [validTokens])
+
+  // used so that we do a deep comparison in `useEffect`
+  const serializedCombos: string = useMemo(() => {
+    return JSON.stringify(
+      !address || validTokens.length === 0
+        ? []
+        : validTokens
+            .map(t => t.address)
+            .sort()
+            .map(tokenAddress => ({ address, tokenAddress }))
+    )
+  }, [address, validTokens])
 
   // keep the listeners up to date
   useEffect(() => {
-    if (!address) return
-    if (tokenAddresses.length === 0) return
+    const combos: TokenBalanceListenerKey[] = JSON.parse(serializedCombos)
+    if (combos.length === 0) return
 
-    const combos: TokenBalanceListenerKey[] = tokenAddresses.map(tokenAddress => ({ address, tokenAddress }))
     dispatch(startListeningForTokenBalances(combos))
     return () => {
       dispatch(stopListeningForTokenBalances(combos))
     }
-  }, [address, tokenAddresses, dispatch])
+  }, [address, serializedCombos, dispatch])
 
   const rawBalanceMap = useSelector<AppState, AppState['wallet']['balances']>(({ wallet: { balances } }) => balances)
 
