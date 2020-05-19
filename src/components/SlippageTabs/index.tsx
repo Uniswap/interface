@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
-import styled, { css } from 'styled-components'
+import React, { useState, useEffect, useRef, useCallback, useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 
 import QuestionHelper from '../Question'
 import { Text } from 'rebass'
@@ -57,27 +57,9 @@ const Input = styled.input<{ active?: boolean }>`
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
-  cursor: inherit;
-  color: ${({ theme }) => theme.text1};
-  text-align: left;
-  ${({ active }) =>
-    active &&
-    css`
-      color: initial;
-      cursor: initial;
-      text-align: right;
-    `}
-  ${({ placeholder }) =>
-    placeholder !== 'Custom' &&
-    css`
-      text-align: right;
-      color: ${({ theme }) => theme.text1};
-    `}
-  ${({ color }) =>
-    color === 'red' &&
-    css`
-      color: ${({ theme }) => theme.red1};
-    `}
+  color: ${({ active, theme, color }) => (color === 'red' ? theme.red1 : active ? 'initial' : theme.text1)};
+  cursor: ${({ active }) => (active ? 'initial' : 'inherit')};
+  text-align: ${({ active }) => (active ? 'right' : 'left')};
 `
 
 const BottomError = styled(Text)<{ show?: boolean }>`
@@ -109,18 +91,9 @@ const SlippageSelector = styled.div`
 `
 
 const Percent = styled.div`
-  color: inherit;
+  color: ${({ color, theme }) => (color === 'faded' ? theme.bg1 : color === 'red' ? theme.red1 : 'inherit')};
   font-size: 0, 8rem;
   flex-grow: 0;
-  ${({ color, theme }) =>
-    (color === 'faded' &&
-      css`
-        color: ${theme.bg1};
-      `) ||
-    (color === 'red' &&
-      css`
-        color: ${theme.red1};
-      `)};
 `
 
 export interface SlippageTabsProps {
@@ -131,6 +104,7 @@ export interface SlippageTabsProps {
 }
 
 export default function SlippageTabs({ setRawSlippage, rawSlippage, deadline, setDeadline }: SlippageTabsProps) {
+  const theme = useContext(ThemeContext)
   const [activeIndex, setActiveIndex] = useState(2)
 
   const [warningType, setWarningType] = useState(WARNING_TYPE.none)
@@ -360,7 +334,9 @@ export default function SlippageTabs({ setRawSlippage, rawSlippage, deadline, se
       </SlippageSelector>
       <AutoColumn gap="sm">
         <RowFixed padding={'0 20px'}>
-          <TYPE.body fontSize={14}>Deadline</TYPE.body>
+          <TYPE.black fontSize={14} color={theme.text2}>
+            Deadline
+          </TYPE.black>
           <QuestionHelper text="Deadline in minutes. If your transaction takes longer than this it will revert." />
         </RowFixed>
         <RowFixed padding={'0 20px'}>
