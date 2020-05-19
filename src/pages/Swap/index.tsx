@@ -20,7 +20,7 @@ import SwapModalFooter from '../../components/swap/SwapModalFooter'
 import SwapModalHeader from '../../components/swap/SwapModalHeader'
 import TradePrice from '../../components/swap/TradePrice'
 import V1TradeLink from '../../components/swap/V1TradeLink'
-import TokenWarningCard from '../../components/TokenWarningCard'
+import TokenWarningCard, { TokenWarningCards } from '../../components/TokenWarningCard'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '../../constants'
 import { useWeb3React } from '../../hooks'
 import { useApproveCallback } from '../../hooks/useApproveCallback'
@@ -302,13 +302,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
         />
       )}
 
-      <div style={{ position: 'absolute', top: 'calc(100% + 30px)' }}>
-        {Object.keys(tokens).map(field => (
-          <div key={field} style={{ marginBottom: 10 }}>
-            <TokenWarningCard token={tokens[field]} />
-          </div>
-        ))}
-      </div>
+      <TokenWarningCards tokens={tokens} />
     </Wrapper>
   )
 }

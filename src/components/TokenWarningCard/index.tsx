@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { useWeb3React } from '../../hooks'
 import { ALL_TOKENS, useAllTokens } from '../../hooks/Tokens'
+import { Field } from '../../state/swap/actions'
 import { getEtherscanLink } from '../../utils'
 import { Link } from '../../theme'
 import QuestionHelper from '../Question'
@@ -119,5 +120,17 @@ export default function TokenWarningCard({ token }: TokenWarningCardProps) {
         <TYPE.italic>Verify this is the correct token before making any transactions.</TYPE.italic>
       </Row>
     </Wrapper>
+  )
+}
+
+export function TokenWarningCards({ tokens }: { tokens: { [field in Field]?: Token } }) {
+  return (
+    <div style={{ width: '100%', position: 'absolute', top: 'calc(100% + 30px)' }}>
+      {Object.keys(tokens).map(field => (
+        <div key={field} style={{ marginBottom: 10 }}>
+          <TokenWarningCard token={tokens[field]} />
+        </div>
+      ))}
+    </div>
   )
 }
