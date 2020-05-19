@@ -123,8 +123,6 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
   const pair = usePair(inputToken, outputToken)
   const pairContract: Contract = usePairContract(pair?.liquidityToken.address)
 
-  console.log(pair?.liquidityToken?.address)
-
   // pool token data
   const userLiquidity = useTokenBalance(account, pair?.liquidityToken)
   const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
