@@ -20,7 +20,7 @@ import TradePrice from '../../components/swap/TradePrice'
 import V1TradeLink from '../../components/swap/V1TradeLink'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '../../constants'
 import { useWeb3React } from '../../hooks'
-import { useApproveCallback } from '../../hooks/useApproveCallback'
+import { useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
@@ -65,7 +65,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const [mustApprove, approveCallback] = useApproveCallback(bestTrade, allowedSlippage)
+  const [mustApprove, approveCallback] = useApproveCallbackFromTrade(bestTrade, allowedSlippage)
   const pendingApprovalInput = useHasPendingApproval(tokens[Field.INPUT]?.address)
 
   const formattedAmounts = {
