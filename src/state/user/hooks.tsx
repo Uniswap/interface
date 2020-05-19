@@ -1,5 +1,5 @@
 import { ChainId, JSBI, Pair, Token, TokenAmount, WETH } from '@uniswap/sdk'
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { useAllTokens } from '../../hooks/Tokens'
@@ -61,7 +61,7 @@ export function useDarkModeManager(): [boolean, () => void] {
 }
 
 export function useFetchTokenByAddress(): (address: string) => Promise<Token | null> {
-  const { library, chainId } = useWeb3React()
+  const { library, chainId } = useActiveWeb3React()
 
   return useCallback(
     async (address: string): Promise<Token | null> => {
@@ -103,7 +103,7 @@ export function useRemoveUserAddedToken(): (chainId: number, address: string) =>
 }
 
 export function useUserAddedTokens(): Token[] {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const serializedTokensMap = useSelector<AppState, AppState['user']['tokens']>(({ user: { tokens } }) => tokens)
 
   return useMemo(() => {
@@ -139,7 +139,7 @@ const bases = [
 ]
 
 export function useAllDummyPairs(): Pair[] {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
 
   const generatedPairs: Pair[] = useMemo(

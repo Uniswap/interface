@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { isAddress } from '../../utils'
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { WETH } from '@uniswap/sdk'
 
 import { ReactComponent as EthereumLogo } from '../../assets/images/ethereum-logo.svg'
@@ -45,7 +45,7 @@ export default function TokenLogo({
   style?: React.CSSProperties
 }) {
   const [error, setError] = useState(false)
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
 
   // mock rinkeby DAI
   if (chainId === 4 && address === '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735') {

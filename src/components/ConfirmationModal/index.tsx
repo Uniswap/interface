@@ -12,7 +12,7 @@ import { ArrowUpCircle } from 'react-feather'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { getEtherscanLink } from '../../utils'
 
 const Wrapper = styled.div`
@@ -56,7 +56,7 @@ function ConfirmationModal({
   pendingText,
   title = ''
 }: ConfirmationModalProps) {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   const dismissAndReturn = useCallback(() => {

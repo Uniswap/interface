@@ -14,7 +14,7 @@ import { RowBetween } from '../../components/Row'
 import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { usePair } from '../../data/Reserves'
 import { useAllDummyPairs } from '../../state/user/hooks'
 
@@ -36,7 +36,7 @@ function PositionCardWrapper({ dummyPair }: { dummyPair: Pair }) {
 
 function Supply({ history }: RouteComponentProps) {
   const theme = useContext(ThemeContext)
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const [showPoolSearch, setShowPoolSearch] = useState(false)
 
   // initiate listener for LP balances

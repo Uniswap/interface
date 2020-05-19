@@ -3,7 +3,7 @@ import { ChainId, JSBI, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAllTokens } from '../../hooks/Tokens'
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import {
@@ -20,7 +20,7 @@ import { balanceKey } from './reducer'
  */
 export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [address: string]: JSBI | undefined } {
   const dispatch = useDispatch<AppDispatch>()
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
 
   const addresses: string[] = useMemo(
     () =>
@@ -70,7 +70,7 @@ export function useTokenBalances(
   tokens?: (Token | undefined)[]
 ): { [tokenAddress: string]: TokenAmount | undefined } {
   const dispatch = useDispatch<AppDispatch>()
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
 
   const validTokens: Token[] = useMemo(
     () => tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false) ?? [],
@@ -125,7 +125,7 @@ export function useTokenBalancesTreatWETHAsETH(
   address?: string,
   tokens?: (Token | undefined)[]
 ): { [tokenAddress: string]: TokenAmount | undefined } {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const { tokensWithoutWETH, includesWETH } = useMemo(() => {
     if (!tokens || tokens.length === 0) {
       return { includesWETH: false, tokensWithoutWETH: [] }
@@ -176,7 +176,7 @@ export function useTokenBalanceTreatingWETHasETH(account?: string, token?: Token
 export function useAllTokenBalancesTreatingWETHasETH(): {
   [account: string]: { [tokenAddress: string]: TokenAmount | undefined }
 } {
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const allTokens = useAllTokens()
   const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
   const balances = useTokenBalancesTreatWETHAsETH(account ?? undefined, allTokensArray)

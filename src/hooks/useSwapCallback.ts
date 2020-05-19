@@ -8,7 +8,7 @@ import { Field } from '../state/swap/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { calculateGasMargin, getRouterContract, isAddress } from '../utils'
-import { useENSName, useWeb3React } from './index'
+import { useENSName, useActiveWeb3React } from './index'
 
 enum SwapType {
   EXACT_TOKENS_FOR_TOKENS,
@@ -47,7 +47,7 @@ export function useSwapCallback(
   deadline: number = DEFAULT_DEADLINE_FROM_NOW, // in seconds from now, optional
   to?: string // recipient of output, optional
 ): null | (() => Promise<string>) {
-  const { account, chainId, library } = useWeb3React()
+  const { account, chainId, library } = useActiveWeb3React()
   const inputAllowance = useTokenAllowance(trade?.inputAmount?.token, account, ROUTER_ADDRESS)
   const addTransaction = useTransactionAdder()
   const recipient = to ? isAddress(to) : account
