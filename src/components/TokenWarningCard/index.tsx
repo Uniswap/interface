@@ -68,30 +68,30 @@ parameter.
 export default function TokenWarningCard({ token }: TokenWarningCardProps) {
   const { chainId } = useWeb3React()
   const [dismissed, setDismissed] = useState<boolean>(false)
-  const isDefaultToken = Boolean(token && token.address && ALL_TOKENS[chainId] && ALL_TOKENS[chainId][token.address])
+  const isDefaultToken = Boolean(
+    token && token.address && chainId && ALL_TOKENS[chainId] && ALL_TOKENS[chainId][token.address]
+  )
 
   useEffect(() => {
     setDismissed(false)
-  }, [token])
+  }, [token, setDismissed])
 
   const tokenSymbol = token?.symbol?.toLowerCase() ?? ''
   const tokenName = token?.name?.toLowerCase() ?? ''
 
   const allTokens = useAllTokens()
 
-  const duplicateNameOrSymbol = useMemo(
-    () =>
-      (token &&
-        Object.keys(allTokens ?? {}).some(tokenAddress => {
-          const userToken = allTokens[tokenAddress]
-          if (userToken.equals(token)) {
-            return false
-          }
-          return userToken.symbol.toLowerCase() === tokenSymbol || userToken.name.toLowerCase() === tokenName
-        })) ??
-      false,
-    [token, allTokens, tokenSymbol, tokenName]
-  )
+  const duplicateNameOrSymbol = useMemo(() => {
+    if (isDefaultToken || !token || !chainId) return false
+
+    return Object.keys(allTokens).some(tokenAddress => {
+      const userToken = allTokens[tokenAddress]
+      if (userToken.equals(token)) {
+        return false
+      }
+      return userToken.symbol.toLowerCase() === tokenSymbol || userToken.name.toLowerCase() === tokenName
+    })
+  }, [isDefaultToken, token, chainId, allTokens, tokenSymbol, tokenName])
 
   if (isDefaultToken || !token || dismissed) return null
 
