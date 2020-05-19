@@ -10,7 +10,7 @@ import { calculateGasMargin } from '../utils'
 import { useTokenContract, useWeb3React } from './index'
 
 // returns a boolean indicating whether approval is necessary, and a function to approve if it is
-function useApproveCallback(
+export function useApproveCallback(
   amountToApprove?: TokenAmount,
   addressToApprove?: string
 ): [undefined | boolean, () => Promise<void>] {
@@ -46,7 +46,7 @@ function useApproveCallback(
       .then(response => {
         addTransaction(response, {
           summary: 'Approve ' + amountToApprove?.token?.symbol,
-          approvalOfToken: amountToApprove?.token?.symbol
+          approvalOfToken: amountToApprove?.token?.address
         })
       })
       .catch(error => {

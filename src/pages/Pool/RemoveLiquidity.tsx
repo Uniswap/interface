@@ -6,7 +6,7 @@ import React, { useCallback, useContext, useEffect, useReducer, useState } from 
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components'
+import { ThemeContext } from 'styled-components'
 import { ButtonConfirmed, ButtonPrimary } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -18,23 +18,22 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import Slider from '../../components/Slider'
 import TokenLogo from '../../components/TokenLogo'
-import { ROUTER_ADDRESS } from '../../constants'
+import { ROUTER_ADDRESS, DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
 import { usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { usePairContract, useWeb3React } from '../../hooks'
 
 import { useToken } from '../../hooks/Tokens'
-import { useTransactionAdder } from '../../state/transactions/hooks'
+import { useTransactionAdder, useHasPendingApproval } from '../../state/transactions/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
 import { ClickableText, FixedBottom, MaxButton, Wrapper } from './styleds'
+import { useApproveCallback } from '../../hooks/useApproveCallback'
+import { Dots } from '../../components/swap/styleds'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = 50
-
-// denominated in seconds
-const DEADLINE_FROM_NOW = 60 * 20
 
 enum Field {
   LIQUIDITY = 'LIQUIDITY',
@@ -105,10 +104,6 @@ function reducer(
   }
 }
 
-const ConfirmedText = styled(Text)<{ confirmed?: boolean }>`
-  color: ${({ theme, confirmed }) => (confirmed ? theme.green1 : theme.white)};
-`
-
 export default function RemoveLiquidity({ token0, token1 }: { token0: string; token1: string }) {
   const { account, chainId, library } = useWeb3React()
   const theme = useContext(ThemeContext)
@@ -127,6 +122,8 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
 
   const pair = usePair(inputToken, outputToken)
   const pairContract: Contract = usePairContract(pair?.liquidityToken.address)
+
+  console.log(pair?.liquidityToken?.address)
 
   // pool token data
   const userLiquidity = useTokenBalance(account, pair?.liquidityToken)
@@ -263,6 +260,10 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
     )
   }
 
+  // check if the user has approved router to withdraw their LP tokens
+  const [mustApprove, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
+  const pendingApproval = useHasPendingApproval(pair?.liquidityToken?.address)
+
   // adjust amounts for slippage
   const slippageAdjustedAmounts = {
     [Field.TOKEN0]:
@@ -356,17 +357,14 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
   // state for txn
   const addTransaction = useTransactionAdder()
   const [txHash, setTxHash] = useState()
-  const [sigInputs, setSigInputs] = useState([])
-  const [deadline, setDeadline] = useState(null)
-  const [signed, setSigned] = useState(false) // waiting for signature sign
-  const [attemptedRemoval, setAttemptedRemoval] = useState(false) // clicke confirm
+  const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number }>(null)
+  const [attemptedRemoval, setAttemptedRemoval] = useState(false) // clicked confirm
   const [pendingConfirmation, setPendingConfirmation] = useState(true) // waiting for
 
-  async function onSign() {
+  async function onAttemptToApprove() {
+    // try to gather a signature for permission
     const nonce = await pairContract.nonces(account)
-
-    const newDeadline: number = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW
-    setDeadline(newDeadline)
+    const deadlineForSignature: number = Math.ceil(Date.now() / 1000) + DEFAULT_DEADLINE_FROM_NOW
 
     const EIP712Domain = [
       { name: 'name', type: 'string' },
@@ -374,14 +372,12 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
       { name: 'chainId', type: 'uint256' },
       { name: 'verifyingContract', type: 'address' }
     ]
-
     const domain = {
       name: 'Uniswap V2',
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address
     }
-
     const Permit = [
       { name: 'owner', type: 'address' },
       { name: 'spender', type: 'address' },
@@ -389,13 +385,12 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
       { name: 'nonce', type: 'uint256' },
       { name: 'deadline', type: 'uint256' }
     ]
-
     const message = {
       owner: account,
       spender: ROUTER_ADDRESS,
       value: parsedAmounts[Field.LIQUIDITY].raw.toString(),
       nonce: nonce.toHexString(),
-      deadline: newDeadline
+      deadline: deadlineForSignature
     }
     const data = JSON.stringify({
       types: {
@@ -407,62 +402,109 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
       message
     })
 
-    library.send('eth_signTypedData_v4', [account, data]).then(_signature => {
-      const signature = splitSignature(_signature)
-      setSigInputs([signature.v, signature.r, signature.s])
-      setSigned(true)
-    })
+    library
+      .send('eth_signTypedData_v4', [account, data])
+      .then(splitSignature)
+      .then(signature => {
+        setSignatureData({
+          v: signature.v,
+          r: signature.r,
+          s: signature.s,
+          deadline: deadlineForSignature
+        })
+      })
+      .catch(error => {
+        // for all errors other than 4001 (EIP-1193 user rejected request), fall back to manual approve
+        if (error?.code !== 4001) {
+          approveCallback()
+        }
+      })
   }
 
   function resetModalState() {
-    setSigned(false)
-    setSigInputs(null)
+    setSignatureData(null)
     setAttemptedRemoval(false)
     setPendingConfirmation(true)
   }
 
   async function onRemove() {
     setAttemptedRemoval(true)
+
     const router = getRouterContract(chainId, library, account)
-    let method, args, estimate
 
-    // removal with ETH
-    if (tokens[Field.TOKEN0].equals(WETH[chainId]) || tokens[Field.TOKEN1].equals(WETH[chainId])) {
-      method = router.removeLiquidityETHWithPermit
-      estimate = router.estimateGas.removeLiquidityETHWithPermit
+    const token0IsETH = tokens[Field.TOKEN0].equals(WETH[chainId])
+    const oneTokenIsETH = token0IsETH || tokens[Field.TOKEN1].equals(WETH[chainId])
 
-      const token0IsETH = tokens[Field.TOKEN0].equals(WETH[chainId])
-
-      args = [
-        tokens[token0IsETH ? Field.TOKEN1 : Field.TOKEN0].address,
-        parsedAmounts[Field.LIQUIDITY].raw.toString(),
-        slippageAdjustedAmounts[token0IsETH ? Field.TOKEN1 : Field.TOKEN0].raw.toString(),
-        slippageAdjustedAmounts[token0IsETH ? Field.TOKEN0 : Field.TOKEN1].raw.toString(),
-        account,
-        deadline,
-        false,
-        sigInputs[0],
-        sigInputs[1],
-        sigInputs[2]
-      ]
+    let estimate, method, args
+    // we have approval, use normal remove liquidity
+    if (mustApprove === false) {
+      // removeLiquidityETH
+      if (oneTokenIsETH) {
+        estimate = router.estimateGas.removeLiquidityETH
+        method = router.removeLiquidityETH
+        args = [
+          tokens[token0IsETH ? Field.TOKEN1 : Field.TOKEN0].address,
+          parsedAmounts[Field.LIQUIDITY].raw.toString(),
+          slippageAdjustedAmounts[token0IsETH ? Field.TOKEN1 : Field.TOKEN0].raw.toString(),
+          slippageAdjustedAmounts[token0IsETH ? Field.TOKEN0 : Field.TOKEN1].raw.toString(),
+          account,
+          Math.ceil(Date.now() / 1000) + DEFAULT_DEADLINE_FROM_NOW
+        ]
+      }
+      // removeLiquidity
+      else {
+        estimate = router.estimateGas.removeLiquidity
+        method = router.removeLiquidity
+        args = [
+          tokens[Field.TOKEN0].address,
+          tokens[Field.TOKEN1].address,
+          parsedAmounts[Field.LIQUIDITY].raw.toString(),
+          slippageAdjustedAmounts[Field.TOKEN0].raw.toString(),
+          slippageAdjustedAmounts[Field.TOKEN1].raw.toString(),
+          account,
+          Math.ceil(Date.now() / 1000) + DEFAULT_DEADLINE_FROM_NOW
+        ]
+      }
     }
-    //removal without ETH
-    else {
-      method = router.removeLiquidityWithPermit
-      estimate = router.estimateGas.removeLiquidityWithPermit
-      args = [
-        tokens[Field.TOKEN0].address,
-        tokens[Field.TOKEN1].address,
-        parsedAmounts[Field.LIQUIDITY].raw.toString(),
-        slippageAdjustedAmounts[Field.TOKEN0].raw.toString(),
-        slippageAdjustedAmounts[Field.TOKEN1].raw.toString(),
-        account,
-        deadline,
-        false,
-        sigInputs[0],
-        sigInputs[1],
-        sigInputs[2]
-      ]
+    // we have a signataure, use permit versions of remove liquidity
+    else if (signatureData !== null) {
+      // removeLiquidityETHWithPermit
+      if (oneTokenIsETH) {
+        estimate = router.estimateGas.removeLiquidityETHWithPermit
+        method = router.removeLiquidityETHWithPermit
+        args = [
+          tokens[token0IsETH ? Field.TOKEN1 : Field.TOKEN0].address,
+          parsedAmounts[Field.LIQUIDITY].raw.toString(),
+          slippageAdjustedAmounts[token0IsETH ? Field.TOKEN1 : Field.TOKEN0].raw.toString(),
+          slippageAdjustedAmounts[token0IsETH ? Field.TOKEN0 : Field.TOKEN1].raw.toString(),
+          account,
+          signatureData.deadline,
+          false,
+          signatureData.v,
+          signatureData.r,
+          signatureData.s
+        ]
+      }
+      // removeLiquidityETHWithPermit
+      else {
+        estimate = router.estimateGas.removeLiquidityWithPermit
+        method = router.removeLiquidityWithPermit
+        args = [
+          tokens[Field.TOKEN0].address,
+          tokens[Field.TOKEN1].address,
+          parsedAmounts[Field.LIQUIDITY].raw.toString(),
+          slippageAdjustedAmounts[Field.TOKEN0].raw.toString(),
+          slippageAdjustedAmounts[Field.TOKEN1].raw.toString(),
+          account,
+          signatureData.deadline,
+          false,
+          signatureData.v,
+          signatureData.r,
+          signatureData.s
+        ]
+      }
+    } else {
+      console.error('Attempting to confirm without approval or a signature.')
     }
 
     await estimate(...args)
@@ -565,19 +607,25 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
             }`}
           </Text>
         </RowBetween>
-        <RowBetween>
+        <RowBetween mt="1rem">
           <ButtonConfirmed
-            style={{ margin: '20px 0 0 0' }}
-            width="48%"
-            onClick={onSign}
-            confirmed={signed}
-            disabled={signed}
+            onClick={onAttemptToApprove}
+            confirmed={mustApprove === false || signatureData !== null}
+            disabled={mustApprove !== true || pendingApproval || signatureData !== null}
+            mr="0.5rem"
+            fontWeight={500}
+            fontSize={20}
           >
-            <ConfirmedText fontWeight={500} fontSize={20} confirmed={signed}>
-              {signed ? 'Signed' : 'Sign'}
-            </ConfirmedText>
+            {pendingApproval ? (
+              <Dots>Approving</Dots>
+            ) : mustApprove === false || signatureData !== null ? (
+              'Approved'
+            ) : (
+              'Approve'
+            )}
           </ButtonConfirmed>
-          <ButtonPrimary width="48%" disabled={!signed} style={{ margin: '20px 0 0 0' }} onClick={onRemove}>
+
+          <ButtonPrimary disabled={!(mustApprove === false || signatureData !== null)} onClick={onRemove} ml="0.5rem">
             <Text fontWeight={500} fontSize={20}>
               Confirm
             </Text>
