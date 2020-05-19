@@ -223,11 +223,11 @@ export default function CurrencyInputPanel({
                 <TokenLogo address={token?.address} size={'24px'} />
               ) : null}
               {isExchange ? (
-                <StyledTokenName className="token-name-container">
+                <StyledTokenName className="pair-name-container">
                   {pair?.token0.symbol}:{pair?.token1.symbol}
                 </StyledTokenName>
               ) : (
-                <StyledTokenName active={Boolean(token && token.symbol)}>
+                <StyledTokenName className="token-symbol-container" active={Boolean(token && token.symbol)}>
                   {(token && token.symbol && token.symbol.length > 20
                     ? token.symbol.slice(0, 4) +
                       '...' +
