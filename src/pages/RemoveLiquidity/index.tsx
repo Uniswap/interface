@@ -106,6 +106,14 @@ function reducer(
   }
 }
 
+function useTokenByAddressOrETHAndAutomaticallyAdd(tokenId?: string, chainId?: number): Token | undefined {
+  const isWETH = tokenId?.toUpperCase() === 'ETH' || tokenId?.toUpperCase() === 'WETH'
+
+  const tokenByAddress = useTokenByAddressAndAutomaticallyAdd(isWETH ? null : tokenId)
+
+  return isWETH ? WETH[chainId] : tokenByAddress
+}
+
 export default function RemoveLiquidity({ match: { params } }: RouteComponentProps<{ tokens: string }>) {
   const [token0, token1] = params.tokens.split('-')
 
@@ -115,8 +123,8 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [showAdvanced, setShowAdvanced] = useState<boolean>(false)
 
-  const inputToken: Token = useTokenByAddressAndAutomaticallyAdd(token0)
-  const outputToken: Token = useTokenByAddressAndAutomaticallyAdd(token1)
+  const inputToken: Token = useTokenByAddressOrETHAndAutomaticallyAdd(token0, chainId)
+  const outputToken: Token = useTokenByAddressOrETHAndAutomaticallyAdd(token1, chainId)
 
   // get basic SDK entities
   const tokens: { [field in Field]?: Token } = {
