@@ -25,7 +25,7 @@ import { ROUTER_ADDRESS } from '../../constants'
 import { useTokenAllowance } from '../../data/Allowances'
 import { usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
-import { useTokenContract, useWeb3React } from '../../hooks'
+import { useTokenContract, useActiveWeb3React } from '../../hooks'
 
 import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
@@ -140,7 +140,7 @@ interface AddLiquidityProps extends RouteComponentProps {
 }
 
 function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
-  const { account, chainId, library } = useWeb3React()
+  const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   // modal states

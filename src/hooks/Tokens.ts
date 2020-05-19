@@ -2,7 +2,7 @@ import { ChainId, Token, WETH } from '@uniswap/sdk'
 import { useEffect, useMemo } from 'react'
 import { useAddUserToken, useFetchTokenByAddress, useUserAddedTokens } from '../state/user/hooks'
 
-import { useWeb3React } from './index'
+import { useActiveWeb3React } from './index'
 import MAINNET_TOKENS from '../constants/tokens/mainnet'
 import RINKEBY_TOKENS from '../constants/tokens/rinkeby'
 import KOVAN_TOKENS from '../constants/tokens/kovan'
@@ -39,7 +39,7 @@ export const ALL_TOKENS: Readonly<AllTokens> = [
   }, {})
 
 export function useAllTokens(): { [address: string]: Token } {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const userAddedTokens = useUserAddedTokens()
 
   return useMemo(() => {

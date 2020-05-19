@@ -14,7 +14,7 @@ import { TYPE, CursorPointer } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
 
 const InputRow = styled.div<{ selected: boolean }>`
@@ -161,7 +161,7 @@ export default function CurrencyInputPanel({
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const userTokenBalance = useTokenBalanceTreatingWETHasETH(account, token)
   const theme = useContext(ThemeContext)
 

@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import { Token, TokenAmount, Pair, Trade, ChainId, WETH, Route, TradeType, Percent } from '@uniswap/sdk'
 import useSWR from 'swr'
-import { useWeb3React } from '../hooks'
+import { useActiveWeb3React } from '../hooks'
 
 import IUniswapV1Factory from '../constants/abis/v1_factory.json'
 import { V1_FACTORY_ADDRESS } from '../constants'
@@ -14,7 +14,7 @@ function getV1PairAddress(contract: Contract): (tokenAddress: string) => Promise
 }
 
 function useV1PairAddress(tokenAddress: string) {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
 
   const contract = useContract(V1_FACTORY_ADDRESS, IUniswapV1Factory, false)
 
@@ -49,7 +49,7 @@ export function useV1TradeLinkIfBetter(
   v2Trade?: Trade,
   minimumDelta: Percent = new Percent('0')
 ): string {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
 
   const input = inputToken
   const output = outputToken

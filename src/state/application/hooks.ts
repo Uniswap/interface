@@ -1,11 +1,11 @@
 import { useCallback, useMemo } from 'react'
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { addPopup, PopupContent, removePopup, toggleWalletModal } from './actions'
 import { useSelector, useDispatch } from 'react-redux'
 import { AppState } from '../index'
 
 export function useBlockNumber(): number | undefined {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
 
   return useSelector((state: AppState) => state.application.blockNumber[chainId ?? -1])
 }

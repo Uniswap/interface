@@ -10,7 +10,7 @@ import { injected } from '../connectors'
 import { NetworkContextName } from '../constants'
 import { getContract, getExchangeContract, isAddress } from '../utils'
 
-export function useWeb3React() {
+export function useActiveWeb3React() {
   const context = useWeb3ReactCore<Web3Provider>()
   const contextNetwork = useWeb3ReactCore<Web3Provider>(NetworkContextName)
   return context.active ? context : contextNetwork
@@ -143,7 +143,7 @@ export function useBodyKeyDown(targetKey, onKeyDown, suppressOnKeyDown = false) 
 }
 
 export function useENSName(address) {
-  const { library } = useWeb3React()
+  const { library } = useActiveWeb3React()
 
   const [ENSName, setENSName] = useState<string | null>(null)
 
@@ -179,7 +179,7 @@ export function useENSName(address) {
 
 // returns null on errors
 export function useContract(address, ABI, withSignerIfPossible = true) {
-  const { library, account } = useWeb3React()
+  const { library, account } = useActiveWeb3React()
 
   return useMemo(() => {
     try {
@@ -192,7 +192,7 @@ export function useContract(address, ABI, withSignerIfPossible = true) {
 
 // returns null on errors
 export function useTokenContract(tokenAddress: string, withSignerIfPossible = true): Contract {
-  const { library, account } = useWeb3React()
+  const { library, account } = useActiveWeb3React()
 
   return useMemo(() => {
     try {
@@ -204,7 +204,7 @@ export function useTokenContract(tokenAddress: string, withSignerIfPossible = tr
 }
 
 export function usePairContract(pairAddress, withSignerIfPossible = true) {
-  const { library, account } = useWeb3React()
+  const { library, account } = useActiveWeb3React()
 
   return useMemo(() => {
     try {

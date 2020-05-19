@@ -15,7 +15,7 @@ import { AutoColumn, ColumnCenter } from '../Column'
 import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
 
 import { useToken } from '../../hooks/Tokens'
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { usePairAdder } from '../../state/user/hooks'
 import { usePair } from '../../data/Reserves'
 
@@ -25,7 +25,7 @@ const Fields = {
 }
 
 function PoolFinder({ history }: RouteComponentProps) {
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN0)
 

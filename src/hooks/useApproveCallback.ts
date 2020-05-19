@@ -7,14 +7,14 @@ import { Field } from '../state/swap/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { calculateGasMargin } from '../utils'
-import { useTokenContract, useWeb3React } from './index'
+import { useTokenContract, useActiveWeb3React } from './index'
 
 // returns a boolean indicating whether approval is necessary, and a function to approve if it is
 export function useApproveCallback(
   amountToApprove?: TokenAmount,
   addressToApprove?: string
 ): [undefined | boolean, () => Promise<void>] {
-  const { account, chainId } = useWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const currentAllowance = useTokenAllowance(amountToApprove?.token, account, addressToApprove)
 
   const mustApprove = useMemo(() => {

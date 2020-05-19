@@ -2,7 +2,7 @@ import { Token } from '@uniswap/sdk'
 import React, { useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { useToken } from '../../hooks/Tokens'
 import { getEtherscanLink } from '../../utils'
 
@@ -134,7 +134,7 @@ interface WarningCardProps {
 
 export default function WarningCard({ onDismiss, urlAddedTokens, currency }: WarningCardProps) {
   const [showPopup, setPopup] = useState<boolean>(false)
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const { symbol: inputSymbol, name: inputName } = useToken(currency)
   const fromURL = urlAddedTokens.hasOwnProperty(currency)
 

@@ -22,7 +22,7 @@ import { TransferModalHeader } from '../../components/swap/TransferModalHeader'
 import V1TradeLink from '../../components/swap/V1TradeLink'
 import TokenLogo from '../../components/TokenLogo'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '../../constants'
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { useSendCallback } from '../../hooks/useSendCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
@@ -39,7 +39,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
 
   // text translation
   // const { t } = useTranslation()
-  const { chainId, account } = useWeb3React()
+  const { chainId, account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected

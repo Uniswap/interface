@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useDebounce, useWeb3React } from '../../hooks'
+import { useDebounce, useActiveWeb3React } from '../../hooks'
 import { updateBlockNumber } from './actions'
 import { useDispatch } from 'react-redux'
 
 export default function Updater() {
-  const { library, chainId } = useWeb3React()
+  const { library, chainId } = useActiveWeb3React()
   const dispatch = useDispatch()
 
   const [maxBlockNumber, setMaxBlockNumber] = useState<number | null>(null)
