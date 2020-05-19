@@ -59,7 +59,15 @@ export default function QuestionHelper({ text }: { text: string }) {
   const [popperElement, setPopperElement] = useState(null)
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
     placement: 'auto',
-    strategy: 'fixed'
+    strategy: 'fixed',
+    modifiers: [
+      {
+        name: 'offset',
+        options: {
+          offset: [6, 6]
+        }
+      }
+    ]
   })
 
   const portal = createPortal(
