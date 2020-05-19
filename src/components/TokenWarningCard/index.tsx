@@ -61,6 +61,8 @@ loaded into the interface by entering its Ethereum address into the search field
 parameter.
 `
 
+const DUPLICATE_NAME_HELP_TEXT = `${HELP_TEXT} This token has the same name or symbol as another token in your list.`
+
 export default function TokenWarningCard({ token }: TokenWarningCardProps) {
   const { chainId } = useWeb3React()
   const [dismissed, setDismissed] = useState<boolean>(false)
@@ -100,7 +102,7 @@ export default function TokenWarningCard({ token }: TokenWarningCardProps) {
       )}
       <Row>
         <TYPE.subHeader>{duplicateNameOrSymbol ? 'Duplicate token name or symbol' : 'Imported token'}</TYPE.subHeader>
-        <QuestionHelper text={HELP_TEXT} />
+        <QuestionHelper text={duplicateNameOrSymbol ? DUPLICATE_NAME_HELP_TEXT : HELP_TEXT} />
       </Row>
       <Row>
         <TokenLogo address={token.address} />
@@ -114,10 +116,7 @@ export default function TokenWarningCard({ token }: TokenWarningCardProps) {
         </Link>
       </Row>
       <Row>
-        <TYPE.italic>
-          {duplicateNameOrSymbol ? 'This token has the same name or symbol as another token in your list. ' : null}
-          Verify the legitimacy of this token before making any transactions.
-        </TYPE.italic>
+        <TYPE.italic>Verify this is the correct token before making any transactions.</TYPE.italic>
       </Row>
     </Wrapper>
   )
