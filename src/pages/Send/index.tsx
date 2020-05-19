@@ -23,14 +23,13 @@ import { TransferModalHeader } from '../../components/swap/TransferModalHeader'
 import V1TradeLink from '../../components/swap/V1TradeLink'
 import TokenLogo from '../../components/TokenLogo'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '../../constants'
-import { useWeb3React } from '../../hooks'
-import { useApproveCallback } from '../../hooks/useApproveCallback'
+import { useActiveWeb3React } from '../../hooks'
+import { useApproveCallbackFromTrade, Approval } from '../../hooks/useApproveCallback'
 import { useSendCallback } from '../../hooks/useSendCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
-import { useHasPendingApproval } from '../../state/transactions/hooks'
 import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
@@ -40,7 +39,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
 
   // text translation
   // const { t } = useTranslation()
-  const { chainId, account } = useWeb3React()
+  const { chainId, account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
@@ -86,8 +85,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const [mustApprove, approveCallback] = useApproveCallback(bestTrade, allowedSlippage)
-  const pendingApprovalInput = useHasPendingApproval(tokens[Field.INPUT]?.address)
+  const [approval, approveCallback] = useApproveCallbackFromTrade(bestTrade, allowedSlippage)
 
   const formattedAmounts = {
     [independentField]: typedValue,
@@ -153,7 +151,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
   }
 
   const sendCallback = useSendCallback(parsedAmounts?.[Field.INPUT], recipient)
-  const isSendValid = sendCallback !== null && (sendingWithSwap === false || mustApprove === false)
+  const isSendValid = sendCallback !== null && (sendingWithSwap === false || approval === Approval.APPROVED)
 
   async function onSend() {
     setAttemptingTxn(true)
@@ -459,9 +457,9 @@ export default function Send({ location: { search } }: RouteComponentProps) {
           <GreyCard style={{ textAlign: 'center' }}>
             <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
           </GreyCard>
-        ) : mustApprove === true ? (
-          <ButtonLight onClick={approveCallback} disabled={pendingApprovalInput}>
-            {pendingApprovalInput ? (
+        ) : approval === Approval.NOT_APPROVED || approval === Approval.PENDING ? (
+          <ButtonLight onClick={approveCallback} disabled={approval === Approval.PENDING}>
+            {approval === Approval.PENDING ? (
               <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
             ) : (
               'Approve ' + tokens[Field.INPUT]?.symbol

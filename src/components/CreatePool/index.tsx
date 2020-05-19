@@ -13,7 +13,7 @@ import { AutoColumn, ColumnCenter } from '../Column'
 import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
 
 import { useToken } from '../../hooks/Tokens'
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { usePair } from '../../data/Reserves'
 
 const Fields = {
@@ -28,7 +28,7 @@ const STEP = {
 }
 
 function CreatePool({ history }: RouteComponentProps) {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN0)
 

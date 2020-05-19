@@ -2,7 +2,7 @@ import { parseUnits } from '@ethersproject/units'
 import { JSBI, Token, TokenAmount, Trade } from '@uniswap/sdk'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { AppDispatch, AppState } from '../index'
@@ -78,7 +78,7 @@ export function useDerivedSwapInfo(): {
   error?: string
   v1TradeLinkIfBetter?: string
 } {
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   const {
     independentField,
@@ -156,7 +156,7 @@ export function useDerivedSwapInfo(): {
 // updates the swap state to use the defaults for a given network whenever the query
 // string updates
 export function useDefaultsFromURL(search?: string) {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
     if (!chainId) return

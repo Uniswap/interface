@@ -13,7 +13,7 @@ import { Text } from 'rebass'
 import { WETH, ChainId } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
 import { YellowCard } from '../Card'
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 
 import Logo from '../../assets/svg/logo.svg'
@@ -150,7 +150,7 @@ const VersionToggle = styled.a`
 `
 
 export default function Header() {
-  const { account, chainId } = useWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const userEthBalance = useTokenBalanceTreatingWETHasETH(account, WETH[chainId])
   const [isDark] = useDarkModeManager()

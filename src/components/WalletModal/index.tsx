@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react'
 import ReactGA from 'react-ga'
 import styled from 'styled-components'
 import { isMobile } from 'react-device-detect'
-import { UnsupportedChainIdError } from '@web3-react/core'
-import { useWeb3React } from '../../hooks'
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { URI_AVAILABLE } from '@web3-react/walletconnect-connector'
 import { useWalletModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 
@@ -124,6 +123,7 @@ export default function WalletModal({
   confirmedTransactions: string[] // hashes of confirmed
   ENSName?: string
 }) {
+  // important that these are destructed from the account-specific web3-react context
   const { active, account, connector, activate, error } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)

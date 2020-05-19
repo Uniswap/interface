@@ -1,61 +1,82 @@
 import { MaxUint256 } from '@ethersproject/constants'
-import { Trade, WETH } from '@uniswap/sdk'
+import { Trade, WETH, TokenAmount } from '@uniswap/sdk'
 import { useCallback, useMemo } from 'react'
 import { ROUTER_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
 import { Field } from '../state/swap/actions'
-import { useTransactionAdder } from '../state/transactions/hooks'
+import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { calculateGasMargin } from '../utils'
-import { useTokenContract, useWeb3React } from './index'
+import { useTokenContract, useActiveWeb3React } from './index'
 
-// returns a function to approve the amount required to execute a trade if necessary, otherwise null
-export function useApproveCallback(trade?: Trade, allowedSlippage = 0): [undefined | boolean, () => Promise<void>] {
-  const { account, chainId } = useWeb3React()
-  const currentAllowance = useTokenAllowance(trade?.inputAmount?.token, account, ROUTER_ADDRESS)
+export enum Approval {
+  UNKNOWN,
+  NOT_APPROVED,
+  PENDING,
+  APPROVED
+}
 
-  const slippageAdjustedAmountIn = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT], [
-    trade,
-    allowedSlippage
-  ])
+// returns a variable indicating the state of the approval and a function which approves if necessary or early returns
+export function useApproveCallback(
+  amountToApprove?: TokenAmount,
+  addressToApprove?: string
+): [Approval, () => Promise<void>] {
+  const { account } = useActiveWeb3React()
 
-  const mustApprove = useMemo(() => {
+  const currentAllowance = useTokenAllowance(amountToApprove?.token, account, addressToApprove)
+  const pendingApproval = useHasPendingApproval(amountToApprove?.token?.address)
+
+  // check the current approval status
+  const approval = useMemo(() => {
     // we treat WETH as ETH which requires no approvals
-    if (trade?.inputAmount?.token?.equals(WETH[chainId])) return false
-    // return undefined if we don't have enough data to know whether or not we need to approve
-    if (!currentAllowance) return undefined
-    // slippageAdjustedAmountIn will be defined if currentAllowance is
-    return currentAllowance.lessThan(slippageAdjustedAmountIn)
-  }, [trade, chainId, currentAllowance, slippageAdjustedAmountIn])
+    if (amountToApprove?.token?.equals(WETH[amountToApprove?.token?.chainId])) return Approval.APPROVED
+    // we might not have enough data to know whether or not we need to approve
+    if (!currentAllowance) return Approval.UNKNOWN
+    if (pendingApproval) return Approval.PENDING
+    // amountToApprove will be defined if currentAllowance is
+    return currentAllowance.lessThan(amountToApprove) ? Approval.NOT_APPROVED : Approval.APPROVED
+  }, [amountToApprove, currentAllowance, pendingApproval])
 
-  const tokenContract = useTokenContract(trade?.inputAmount?.token?.address)
+  const tokenContract = useTokenContract(amountToApprove?.token?.address)
   const addTransaction = useTransactionAdder()
+
   const approve = useCallback(async (): Promise<void> => {
-    if (!mustApprove) return
+    if (approval !== Approval.NOT_APPROVED) {
+      console.error('approve was called unnecessarily, this is likely an error.')
+      return
+    }
 
-    let useUserBalance = false
-
-    const estimatedGas = await tokenContract.estimateGas.approve(ROUTER_ADDRESS, MaxUint256).catch(() => {
+    let useExact = false
+    const estimatedGas = await tokenContract.estimateGas.approve(addressToApprove, MaxUint256).catch(() => {
       // general fallback for tokens who restrict approval amounts
-      useUserBalance = true
-      return tokenContract.estimateGas.approve(ROUTER_ADDRESS, slippageAdjustedAmountIn.raw.toString())
+      useExact = true
+      return tokenContract.estimateGas.approve(addressToApprove, amountToApprove.raw.toString())
     })
 
     return tokenContract
-      .approve(ROUTER_ADDRESS, useUserBalance ? slippageAdjustedAmountIn.raw.toString() : MaxUint256, {
+      .approve(addressToApprove, useExact ? amountToApprove.raw.toString() : MaxUint256, {
         gasLimit: calculateGasMargin(estimatedGas)
       })
       .then(response => {
         addTransaction(response, {
-          summary: 'Approve ' + trade?.inputAmount?.token?.symbol,
-          approvalOfToken: trade?.inputAmount?.token?.symbol
+          summary: 'Approve ' + amountToApprove?.token?.symbol,
+          approvalOfToken: amountToApprove?.token?.address
         })
       })
       .catch(error => {
         console.debug('Failed to approve token', error)
         throw error
       })
-  }, [mustApprove, tokenContract, slippageAdjustedAmountIn, trade, addTransaction])
+  }, [approval, tokenContract, addressToApprove, amountToApprove, addTransaction])
 
-  return [mustApprove, approve]
+  return [approval, approve]
+}
+
+// wraps useApproveCallback in the context of a swap
+export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) {
+  const amountToApprove = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT], [
+    trade,
+    allowedSlippage
+  ])
+  return useApproveCallback(amountToApprove, ROUTER_ADDRESS)
 }

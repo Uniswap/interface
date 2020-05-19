@@ -4,7 +4,7 @@ import { darken } from 'polished'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { Percent, Pair, JSBI } from '@uniswap/sdk'
 
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useTokenBalance } from '../../state/wallet/hooks'
 
@@ -36,7 +36,7 @@ interface PositionCardProps extends RouteComponentProps<{}> {
 }
 
 function PositionCard({ pair, history, border, minimal = false }: PositionCardProps) {
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
 
   const token0 = pair?.token0
   const token1 = pair?.token1

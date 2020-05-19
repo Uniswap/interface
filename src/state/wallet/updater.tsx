@@ -1,7 +1,7 @@
 import { BalanceMap, getEtherBalances, getTokensBalance } from '@mycrypto/eth-scan'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
 import { updateEtherBalances, updateTokenBalances } from './actions'
@@ -15,7 +15,7 @@ function convertBalanceMapValuesToString(balanceMap: BalanceMap): { [key: string
 }
 
 export default function Updater() {
-  const { chainId, library } = useWeb3React()
+  const { chainId, library } = useActiveWeb3React()
   const lastBlockNumber = useBlockNumber()
   const dispatch = useDispatch<AppDispatch>()
   const ethBalanceListeners = useSelector<AppState, AppState['wallet']['balanceListeners']>(state => {
