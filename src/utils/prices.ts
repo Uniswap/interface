@@ -1,5 +1,5 @@
 import { Fraction, JSBI, Percent, TokenAmount, Trade } from '@uniswap/sdk'
-import { ALLOWED_SLIPPAGE_HIGH, ALLOWED_SLIPPAGE_LOW, ALLOWED_SLIPPAGE_MEDIUM } from '../constants'
+import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'
 
@@ -52,9 +52,9 @@ export function computeSlippageAdjustedAmounts(
 }
 
 export function warningServerity(priceImpact: Percent): 0 | 1 | 2 | 3 {
-  if (!priceImpact?.lessThan(ALLOWED_SLIPPAGE_HIGH)) return 3
-  if (!priceImpact?.lessThan(ALLOWED_SLIPPAGE_MEDIUM)) return 2
-  if (!priceImpact?.lessThan(ALLOWED_SLIPPAGE_LOW)) return 1
+  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_HIGH)) return 3
+  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return 2
+  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_LOW)) return 1
   return 0
 }
 

@@ -14,6 +14,7 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import QuestionHelper from '../../components/Question'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
+import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import FormattedPriceImpact from '../../components/swap/FormattedPriceImpact'
 import SwapModalFooter from '../../components/swap/SwapModalFooter'
 import { ArrowWrapper, BottomGrouping, Dots, InputGroup, StyledNumerical, Wrapper } from '../../components/swap/styleds'
@@ -134,6 +135,10 @@ export default function Send({ location: { search } }: RouteComponentProps) {
   const swapCallback = useSwapCallback(bestTrade, allowedSlippage, deadline, recipient)
 
   function onSwap() {
+    if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
+      return
+    }
+
     setAttemptingTxn(true)
     swapCallback().then(hash => {
       setTxHash(hash)
