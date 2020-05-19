@@ -13,7 +13,7 @@ import { Text } from 'rebass'
 import { WETH, ChainId } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
 import { YellowCard } from '../Card'
-import { useActiveWeb3ReactuseActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 
 import Logo from '../../assets/svg/logo.svg'

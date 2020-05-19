@@ -20,12 +20,11 @@ import TradePrice from '../../components/swap/TradePrice'
 import V1TradeLink from '../../components/swap/V1TradeLink'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
-import { useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
+import { useApproveCallbackFromTrade, Approval } from '../../hooks/useApproveCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
-import { useHasPendingApproval } from '../../state/transactions/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
 import SwapModalHeader from '../../components/swap/SwapModalHeader'
@@ -65,8 +64,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const [mustApprove, approveCallback] = useApproveCallbackFromTrade(bestTrade, allowedSlippage)
-  const pendingApprovalInput = useHasPendingApproval(tokens[Field.INPUT]?.address)
+  const [approval, approveCallback] = useApproveCallbackFromTrade(bestTrade, allowedSlippage)
 
   const formattedAmounts = {
     [independentField]: typedValue,
@@ -259,9 +257,9 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
           <GreyCard style={{ textAlign: 'center' }}>
             <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
           </GreyCard>
-        ) : mustApprove === true ? (
-          <ButtonLight onClick={approveCallback} disabled={pendingApprovalInput}>
-            {pendingApprovalInput ? (
+        ) : approval === Approval.NOT_APPROVED || approval === Approval.PENDING ? (
+          <ButtonLight onClick={approveCallback} disabled={approval === Approval.PENDING}>
+            {approval === Approval.PENDING ? (
               <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
             ) : (
               'Approve ' + tokens[Field.INPUT]?.symbol

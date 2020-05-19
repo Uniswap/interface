@@ -43,13 +43,15 @@ export function useAllTransactions(): { [txHash: string]: TransactionDetails } {
 }
 
 // returns whether a token has a pending approval transaction
-export function useHasPendingApproval(tokenAddress: string): boolean {
+export function useHasPendingApproval(tokenAddress?: string): boolean {
   const allTransactions = useAllTransactions()
-  return Object.keys(allTransactions).some(hash => {
-    if (allTransactions[hash]?.receipt) {
-      return false
-    } else {
-      return allTransactions[hash]?.approvalOfToken === tokenAddress
-    }
-  })
+  return typeof tokenAddress !== 'string'
+    ? false
+    : Object.keys(allTransactions).some(hash => {
+        if (allTransactions[hash]?.receipt) {
+          return false
+        } else {
+          return allTransactions[hash]?.approvalOfToken === tokenAddress
+        }
+      })
 }

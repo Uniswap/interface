@@ -21,15 +21,15 @@ import TokenLogo from '../../components/TokenLogo'
 import { ROUTER_ADDRESS, DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
 import { usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
-import { usePairContract, useWeb3React } from '../../hooks'
+import { usePairContract, useActiveWeb3React } from '../../hooks'
 
 import { useToken } from '../../hooks/Tokens'
-import { useTransactionAdder, useHasPendingApproval } from '../../state/transactions/hooks'
+import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
 import { ClickableText, FixedBottom, MaxButton, Wrapper } from './styleds'
-import { useApproveCallback } from '../../hooks/useApproveCallback'
+import { useApproveCallback, Approval } from '../../hooks/useApproveCallback'
 import { Dots } from '../../components/swap/styleds'
 
 // denominated in bips
@@ -105,7 +105,7 @@ function reducer(
 }
 
 export default function RemoveLiquidity({ token0, token1 }: { token0: string; token1: string }) {
-  const { account, chainId, library } = useWeb3React()
+  const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
@@ -259,8 +259,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
   }
 
   // check if the user has approved router to withdraw their LP tokens
-  const [mustApprove, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
-  const pendingApproval = useHasPendingApproval(pair?.liquidityToken?.address)
+  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
 
   // adjust amounts for slippage
   const slippageAdjustedAmounts = {
@@ -435,7 +434,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
 
     let estimate, method, args
     // we have approval, use normal remove liquidity
-    if (mustApprove === false) {
+    if (approval === Approval.APPROVED) {
       // removeLiquidityETH
       if (oneTokenIsETH) {
         estimate = router.estimateGas.removeLiquidityETH
@@ -608,22 +607,26 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
         <RowBetween mt="1rem">
           <ButtonConfirmed
             onClick={onAttemptToApprove}
-            confirmed={mustApprove === false || signatureData !== null}
-            disabled={mustApprove !== true || pendingApproval || signatureData !== null}
+            confirmed={approval === Approval.APPROVED || signatureData !== null}
+            disabled={approval !== Approval.NOT_APPROVED || signatureData !== null}
             mr="0.5rem"
             fontWeight={500}
             fontSize={20}
           >
-            {pendingApproval ? (
+            {approval === Approval.PENDING ? (
               <Dots>Approving</Dots>
-            ) : mustApprove === false || signatureData !== null ? (
+            ) : approval === Approval.APPROVED || signatureData !== null ? (
               'Approved'
             ) : (
               'Approve'
             )}
           </ButtonConfirmed>
 
-          <ButtonPrimary disabled={!(mustApprove === false || signatureData !== null)} onClick={onRemove} ml="0.5rem">
+          <ButtonPrimary
+            disabled={!(approval === Approval.APPROVED || signatureData !== null)}
+            onClick={onRemove}
+            ml="0.5rem"
+          >
             <Text fontWeight={500} fontSize={20}>
               Confirm
             </Text>
