@@ -548,8 +548,8 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
             Price
           </Text>
           <Text fontWeight={500} fontSize={16} color={theme.text1}>
-            {`1 ${tokens[Field.TOKEN0]?.symbol} = ${route?.midPrice && route.midPrice.adjusted.toSignificant(6)} ${
-              tokens[Field.TOKEN1]?.symbol
+            {`1 ${tokens[Field.TOKEN1]?.symbol} = ${route?.midPrice && route.midPrice.adjusted.toSignificant(6)} ${
+              tokens[Field.TOKEN0]?.symbol
             }`}
           </Text>
         </RowBetween>
