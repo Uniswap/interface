@@ -5,12 +5,12 @@ import { useTransactionAdder } from '../state/transactions/hooks'
 import { useTokenBalanceTreatingWETHasETH } from '../state/wallet/hooks'
 
 import { calculateGasMargin, getSigner, isAddress } from '../utils'
-import { useENSName, useTokenContract, useWeb3React } from './index'
+import { useENSName, useTokenContract, useActiveWeb3React } from './index'
 
 // returns a callback for sending a token amount, treating WETH as ETH
 // returns null with invalid arguments
 export function useSendCallback(amount?: TokenAmount, recipient?: string): null | (() => Promise<string>) {
-  const { library, account, chainId } = useWeb3React()
+  const { library, account, chainId } = useActiveWeb3React()
   const addTransaction = useTransactionAdder()
   const ensName = useENSName(recipient)
   const tokenContract = useTokenContract(amount?.token?.address)

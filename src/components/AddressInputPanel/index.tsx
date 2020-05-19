@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 
 import { isAddress } from '../../utils'
-import { useWeb3React, useDebounce } from '../../hooks'
+import { useActiveWeb3React, useDebounce } from '../../hooks'
 import { Link, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
@@ -72,7 +72,7 @@ export default function AddressInputPanel({
   onChange: (val: { address: string; name?: string }) => void
   onError: (error: boolean, input: string) => void
 }) {
-  const { chainId, library } = useWeb3React()
+  const { chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   const [input, setInput] = useState(initialInput ? initialInput : '')

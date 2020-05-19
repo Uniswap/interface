@@ -3,7 +3,7 @@ import { AlertCircle, CheckCircle } from 'react-feather'
 
 import styled from 'styled-components'
 
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import useInterval from '../../hooks/useInterval'
 import { useRemovePopup } from '../../state/application/hooks'
 import { TYPE } from '../../theme'
@@ -36,7 +36,7 @@ export default function TxnPopup({
   summary?: string
   popKey?: string
 }) {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const [count, setCount] = useState(1)
 
   const [isRunning, setIsRunning] = useState(true)

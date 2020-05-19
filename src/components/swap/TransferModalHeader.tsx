@@ -1,7 +1,7 @@
 import { TokenAmount } from '@uniswap/sdk'
 import React from 'react'
 import { Text } from 'rebass'
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { Link, TYPE } from '../../theme'
 import { getEtherscanLink } from '../../utils'
 import Copy from '../AccountDetails/Copy'
@@ -18,7 +18,7 @@ export function TransferModalHeader({
   ENSName: string
   amount: TokenAmount
 }) {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   return (
     <AutoColumn gap="lg" style={{ marginTop: '40px' }}>
       <RowBetween>

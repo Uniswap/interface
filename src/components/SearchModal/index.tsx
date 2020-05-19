@@ -23,7 +23,7 @@ import { Spinner, TYPE } from '../../theme'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 
 import { isAddress, escapeRegExp } from '../../utils'
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import {
   useAllDummyPairs,
   useFetchTokenByAddress,
@@ -174,7 +174,7 @@ function SearchModal({
   showCommonBases = false
 }: SearchModalProps) {
   const { t } = useTranslation()
-  const { account, chainId } = useWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   const allTokens = useAllTokens()

@@ -2,7 +2,7 @@ import { Token } from '@uniswap/sdk'
 import { transparentize } from 'polished'
 import React, { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { useWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { ALL_TOKENS, useAllTokens } from '../../hooks/Tokens'
 import { Field } from '../../state/swap/actions'
 import { getEtherscanLink } from '../../utils'
@@ -65,7 +65,7 @@ parameter.
 const DUPLICATE_NAME_HELP_TEXT = `${HELP_TEXT} This token has the same name or symbol as another token in your list.`
 
 export default function TokenWarningCard({ token }: TokenWarningCardProps) {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const [dismissed, setDismissed] = useState<boolean>(false)
   const isDefaultToken = Boolean(
     token && token.address && chainId && ALL_TOKENS[chainId] && ALL_TOKENS[chainId][token.address]
