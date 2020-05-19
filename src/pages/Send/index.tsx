@@ -156,7 +156,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
     sendCallback()
       .then(hash => {
         setTxHash(hash)
-        ReactGA.event({ category: 'Swap', action: 'Send', label: tokens[Field.INPUT]?.symbol })
+        ReactGA.event({ category: 'Send', action: 'Send', label: tokens[Field.INPUT]?.symbol })
         setPendingConfirmation(false)
       })
       .catch(() => {
