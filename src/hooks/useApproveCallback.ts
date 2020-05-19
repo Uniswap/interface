@@ -16,7 +16,7 @@ export enum Approval {
   APPROVED
 }
 
-// returns a boolean indicating whether approval is necessary, and a function to approve if it is
+// returns a variable indicating the state of the approval and a function which approves if necessary or early returns
 export function useApproveCallback(
   amountToApprove?: TokenAmount,
   addressToApprove?: string
