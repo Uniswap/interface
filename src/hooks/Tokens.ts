@@ -76,5 +76,5 @@ export function useTokenByAddressAndAutomaticallyAdd(tokenAddress?: string): Tok
     }
   }, [tokenAddress, allTokens, fetchTokenByAddress, addToken])
 
-  return useMemo(() => allTokens?.[tokenAddress], [allTokens, tokenAddress])
+  return allTokens?.[tokenAddress]
 }
