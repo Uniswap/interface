@@ -1,4 +1,4 @@
-import { Token, WETH } from '@uniswap/sdk'
+import { ChainId, Token, WETH } from '@uniswap/sdk'
 import { useEffect, useMemo } from 'react'
 import { useAddUserToken, useFetchTokenByAddress, useUserAddedTokens } from '../state/user/hooks'
 
@@ -8,7 +8,8 @@ import RINKEBY_TOKENS from '../constants/tokens/rinkeby'
 import KOVAN_TOKENS from '../constants/tokens/kovan'
 import ROPSTEN_TOKENS from '../constants/tokens/ropsten'
 
-export const ALL_TOKENS = [
+type AllTokens = { [chainId in ChainId]?: { [tokenAddress: string]: Token } }
+export const ALL_TOKENS: Readonly<AllTokens> = [
   // WETH on all chains
   ...Object.values(WETH),
   // chain-specific tokens
@@ -26,7 +27,7 @@ export const ALL_TOKENS = [
     return token
   })
   // put into an object
-  .reduce((tokenMap, token) => {
+  .reduce<AllTokens>((tokenMap, token) => {
     if (tokenMap?.[token.chainId]?.[token.address] !== undefined) throw Error('Duplicate tokens.')
     return {
       ...tokenMap,
@@ -42,13 +43,17 @@ export function useAllTokens(): { [address: string]: Token } {
   const userAddedTokens = useUserAddedTokens()
 
   return useMemo(() => {
+    if (!chainId) return {}
     return (
       userAddedTokens
         // reduce into all ALL_TOKENS filtered by the current chain
-        .reduce<{ [address: string]: Token }>((tokenMap, token) => {
-          tokenMap[token.address] = token
-          return tokenMap
-        }, ALL_TOKENS[chainId] ?? {})
+        .reduce<{ [address: string]: Token }>(
+          (tokenMap, token) => {
+            tokenMap[token.address] = token
+            return tokenMap
+          },
+          { ...ALL_TOKENS[chainId] }
+        )
     )
   }, [userAddedTokens, chainId])
 }
