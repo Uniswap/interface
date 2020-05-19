@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useWeb3React } from '../../hooks'
 import { useAddPopup, useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
-import { checkTransaction, finalizeTransaction } from './actions'
+import { finalizeTransaction } from './actions'
 
 export default function Updater() {
   const { chainId, library } = useWeb3React()
@@ -19,24 +19,15 @@ export default function Updater() {
   const addPopup = useAddPopup()
 
   useEffect(() => {
-    if (!chainId) return
-    if (!library) return
-    if (!lastBlockNumber) return
+    if (!chainId || !library || !lastBlockNumber) return
 
     Object.keys(allTransactions)
       .filter(hash => !allTransactions[hash].receipt)
-      .filter(hash => {
-        const lastChecked = allTransactions[hash].blockNumberChecked
-
-        return !lastChecked || lastChecked < lastBlockNumber
-      })
       .forEach(hash => {
         library
           .getTransactionReceipt(hash)
           .then(receipt => {
-            if (!receipt) {
-              dispatch(checkTransaction({ chainId, hash, blockNumber: lastBlockNumber }))
-            } else {
+            if (receipt) {
               dispatch(
                 finalizeTransaction({
                   chainId,
