@@ -19,8 +19,8 @@ const Wrapper = styled.div<{ error: boolean }>`
   border-radius: 10px;
   margin-bottom: 20px;
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
-  grid-row-gap: 10px;
+  grid-template-rows: auto auto auto;
+  grid-row-gap: 14px;
 `
 
 const Row = styled.div`
@@ -119,11 +119,11 @@ export default function TokenWarningCard({ token }: TokenWarningCardProps) {
           (View on Etherscan)
         </Link>
       </Row>
-      <Row style={{ fontSize: '12px', fontStyle: 'italic' }}>
-        <Text>
+      <Row>
+        <TYPE.italic>
           {duplicateNameOrSymbol ? 'This token has the same name or symbol as another token in your list. ' : null}
           Please verify the legitimacy of this token before making any transactions.
-        </Text>
+        </TYPE.italic>
       </Row>
     </Wrapper>
   )
