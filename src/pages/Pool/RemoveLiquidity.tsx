@@ -263,6 +263,24 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
     )
   }
 
+  // adjust amounts for slippage
+  const slippageAdjustedAmounts = {
+    [Field.TOKEN0]:
+      tokens[Field.TOKEN0] && parsedAmounts[Field.TOKEN0]
+        ? new TokenAmount(
+            tokens[Field.TOKEN0],
+            calculateSlippageAmount(parsedAmounts[Field.TOKEN0], ALLOWED_SLIPPAGE)[0]
+          )
+        : undefined,
+    [Field.TOKEN1]:
+      tokens[Field.TOKEN1] && parsedAmounts[Field.TOKEN1]
+        ? new TokenAmount(
+            tokens[Field.TOKEN1],
+            calculateSlippageAmount(parsedAmounts[Field.TOKEN1], ALLOWED_SLIPPAGE)[0]
+          )
+        : undefined
+  }
+
   // get formatted amounts
   const formattedAmounts = {
     [Field.LIQUIDITY]:
@@ -418,14 +436,8 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
       args = [
         tokens[token0IsETH ? Field.TOKEN1 : Field.TOKEN0].address,
         parsedAmounts[Field.LIQUIDITY].raw.toString(),
-        calculateSlippageAmount(
-          parsedAmounts[token0IsETH ? Field.TOKEN1 : Field.TOKEN0],
-          ALLOWED_SLIPPAGE
-        )[0].toString(),
-        calculateSlippageAmount(
-          parsedAmounts[token0IsETH ? Field.TOKEN0 : Field.TOKEN1],
-          ALLOWED_SLIPPAGE
-        )[0].toString(),
+        slippageAdjustedAmounts[token0IsETH ? Field.TOKEN1 : Field.TOKEN0].raw.toString(),
+        slippageAdjustedAmounts[token0IsETH ? Field.TOKEN0 : Field.TOKEN1].raw.toString(),
         account,
         deadline,
         false,
@@ -442,8 +454,8 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
         tokens[Field.TOKEN0].address,
         tokens[Field.TOKEN1].address,
         parsedAmounts[Field.LIQUIDITY].raw.toString(),
-        calculateSlippageAmount(parsedAmounts[Field.TOKEN0], ALLOWED_SLIPPAGE)[0].toString(),
-        calculateSlippageAmount(parsedAmounts[Field.TOKEN1], ALLOWED_SLIPPAGE)[0].toString(),
+        slippageAdjustedAmounts[Field.TOKEN0].raw.toString(),
+        slippageAdjustedAmounts[Field.TOKEN1].raw.toString(),
         account,
         deadline,
         false,
@@ -515,9 +527,9 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
         </RowBetween>
 
         <TYPE.italic fontSize={12} color={theme.text2} textAlign="left" padding={'12px 0 0 0'}>
-          {`Output is estimated. You will receive at least ${parsedAmounts[Field.TOKEN0]?.toSignificant(6)} ${
+          {`Output is estimated. You will receive at least ${slippageAdjustedAmounts[Field.TOKEN0]?.toSignificant(6)} ${
             tokens[Field.TOKEN0]?.symbol
-          } and at least ${parsedAmounts[Field.TOKEN1]?.toSignificant(6)} ${
+          } and ${slippageAdjustedAmounts[Field.TOKEN1]?.toSignificant(6)} ${
             tokens[Field.TOKEN1]?.symbol
           } or the transaction will revert.`}
         </TYPE.italic>
@@ -530,7 +542,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
       <>
         <RowBetween>
           <Text color={theme.text2} fontWeight={500} fontSize={16}>
-            {'UNI ' + tokens[Field.TOKEN0]?.symbol + ':' + tokens[Field.TOKEN1]?.symbol} Burned
+            {'UNI ' + tokens[Field.TOKEN0]?.symbol + '/' + tokens[Field.TOKEN1]?.symbol} Burned
           </Text>
           <RowFixed>
             <DoubleLogo
@@ -593,7 +605,7 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
         topContent={modalHeader}
         bottomContent={modalBottom}
         pendingText={pendingText}
-        title="You will recieve"
+        title="You will receive"
       />
       <AutoColumn gap="md">
         <LightCard>

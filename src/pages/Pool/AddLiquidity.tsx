@@ -535,7 +535,7 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
         </RowFlat>
         <Row>
           <Text fontSize="24px">
-            {tokens[Field.INPUT]?.symbol + ':' + tokens[Field.OUTPUT]?.symbol + ' Pool Tokens'}
+            {tokens[Field.INPUT]?.symbol + '/' + tokens[Field.OUTPUT]?.symbol + ' Pool Tokens'}
           </Text>
         </Row>
         <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
