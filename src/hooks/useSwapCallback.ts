@@ -90,7 +90,7 @@ export function useSwapCallback(
             slippageAdjustedAmounts[Field.INPUT].raw.toString(),
             slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
             path,
-            account,
+            recipient,
             deadlineFromNow
           ]
           value = null
@@ -102,7 +102,7 @@ export function useSwapCallback(
             slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
             slippageAdjustedAmounts[Field.INPUT].raw.toString(),
             path,
-            account,
+            recipient,
             deadlineFromNow
           ]
           value = null
@@ -110,7 +110,7 @@ export function useSwapCallback(
         case SwapType.EXACT_ETH_FOR_TOKENS:
           estimate = routerContract.estimateGas.swapExactETHForTokens
           method = routerContract.swapExactETHForTokens
-          args = [slippageAdjustedAmounts[Field.OUTPUT].raw.toString(), path, account, deadlineFromNow]
+          args = [slippageAdjustedAmounts[Field.OUTPUT].raw.toString(), path, recipient, deadlineFromNow]
           value = BigNumber.from(slippageAdjustedAmounts[Field.INPUT].raw.toString())
           break
         case SwapType.TOKENS_FOR_EXACT_ETH:
@@ -120,7 +120,7 @@ export function useSwapCallback(
             slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
             slippageAdjustedAmounts[Field.INPUT].raw.toString(),
             path,
-            account,
+            recipient,
             deadlineFromNow
           ]
           value = null
@@ -132,7 +132,7 @@ export function useSwapCallback(
             slippageAdjustedAmounts[Field.INPUT].raw.toString(),
             slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
             path,
-            account,
+            recipient,
             deadlineFromNow
           ]
           value = null
@@ -140,7 +140,7 @@ export function useSwapCallback(
         case SwapType.ETH_FOR_EXACT_TOKENS:
           estimate = routerContract.estimateGas.swapETHForExactTokens
           method = routerContract.swapETHForExactTokens
-          args = [slippageAdjustedAmounts[Field.OUTPUT].raw.toString(), path, account, deadlineFromNow]
+          args = [slippageAdjustedAmounts[Field.OUTPUT].raw.toString(), path, recipient, deadlineFromNow]
           value = BigNumber.from(slippageAdjustedAmounts[Field.INPUT].raw.toString())
           break
       }
