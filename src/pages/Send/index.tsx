@@ -22,6 +22,7 @@ import TradePrice from '../../components/swap/TradePrice'
 import { TransferModalHeader } from '../../components/swap/TransferModalHeader'
 import V1TradeLink from '../../components/swap/V1TradeLink'
 import TokenLogo from '../../components/TokenLogo'
+import { TokenWarningCards } from '../../components/TokenWarningCard'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useApproveCallbackFromTrade, Approval } from '../../hooks/useApproveCallback'
@@ -496,6 +497,8 @@ export default function Send({ location: { search } }: RouteComponentProps) {
           setRawSlippage={setAllowedSlippage}
         />
       )}
+
+      {sendingWithSwap ? <TokenWarningCards tokens={tokens} /> : null}
     </Wrapper>
   )
 }
