@@ -51,10 +51,6 @@ const CloseIcon = styled.div`
   }
 `
 
-const Text = styled.div`
-  color: ${({ theme }) => theme.text1};
-`
-
 interface TokenWarningCardProps {
   token?: Token
 }
@@ -103,9 +99,7 @@ export default function TokenWarningCard({ token }: TokenWarningCardProps) {
         </CloseIcon>
       )}
       <Row>
-        <TYPE.subHeader>
-          {duplicateNameOrSymbol ? 'Duplicate token name or symbol' : 'Check that you are trading the correct token'}
-        </TYPE.subHeader>
+        <TYPE.subHeader>{duplicateNameOrSymbol ? 'Duplicate token name or symbol' : 'Imported token'}</TYPE.subHeader>
         <QuestionHelper text={HELP_TEXT} />
       </Row>
       <Row>
@@ -122,7 +116,7 @@ export default function TokenWarningCard({ token }: TokenWarningCardProps) {
       <Row>
         <TYPE.italic>
           {duplicateNameOrSymbol ? 'This token has the same name or symbol as another token in your list. ' : null}
-          Please verify the legitimacy of this token before making any transactions.
+          Verify the legitimacy of this token before making any transactions.
         </TYPE.italic>
       </Row>
     </Wrapper>
