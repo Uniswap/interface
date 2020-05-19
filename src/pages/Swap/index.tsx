@@ -13,9 +13,11 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import QuestionHelper from '../../components/Question'
 import { RowBetween, RowFixed } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
+import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import FormattedPriceImpact from '../../components/swap/FormattedPriceImpact'
 import { ArrowWrapper, BottomGrouping, Dots, Wrapper } from '../../components/swap/styleds'
 import SwapModalFooter from '../../components/swap/SwapModalFooter'
+import SwapModalHeader from '../../components/swap/SwapModalHeader'
 import TradePrice from '../../components/swap/TradePrice'
 import V1TradeLink from '../../components/swap/V1TradeLink'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '../../constants'
@@ -28,7 +30,6 @@ import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapS
 import { useHasPendingApproval } from '../../state/transactions/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
-import SwapModalHeader from '../../components/swap/SwapModalHeader'
 
 export default function Swap({ location: { search } }: RouteComponentProps) {
   useDefaultsFromURL(search)
@@ -105,7 +106,13 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
   // the callback to execute the swap
   const swapCallback = useSwapCallback(bestTrade, allowedSlippage, deadline)
 
+  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(bestTrade)
+
   function onSwap() {
+    if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
+      return
+    }
+
     setAttemptingTxn(true)
     swapCallback().then(hash => {
       setTxHash(hash)
@@ -121,8 +128,6 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
-
-  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(bestTrade)
 
   // warnings on slippage
   const priceImpactSeverity = warningServerity(priceImpactWithoutFee)
