@@ -123,14 +123,17 @@ export default function TokenWarningCard({ token }: TokenWarningCardProps) {
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function TokenWarningCards({ tokens }: { tokens: { [field in Field]?: Token } }) {
-  return (
-    <div style={{ width: '100%', position: 'absolute', top: 'calc(100% + 30px)' }}>
-      {Object.keys(tokens).map(field => (
-        <div key={field} style={{ marginBottom: 10 }}>
-          <TokenWarningCard token={tokens[field]} />
-        </div>
-      ))}
-    </div>
-  )
+  return null
+  // temporarily disabled for styling
+  // return (
+  //   <div style={{ width: '100%', position: 'absolute', top: 'calc(100% + 30px)' }}>
+  //     {Object.keys(tokens).map(field => (
+  //       <div key={field} style={{ marginBottom: 10 }}>
+  //         <TokenWarningCard token={tokens[field]} />
+  //       </div>
+  //     ))}
+  //   </div>
+  // )
 }
