@@ -2,10 +2,7 @@ import { Contract } from '@ethersproject/contracts'
 import { Token, TokenAmount, Pair, Trade, ChainId, WETH, Route, TradeType, Percent } from '@uniswap/sdk'
 import useSWR from 'swr'
 import { useActiveWeb3React } from '../hooks'
-
-import IUniswapV1Factory from '../constants/abis/v1_factory.json'
-import { V1_FACTORY_ADDRESS } from '../constants'
-import { useContract } from '../hooks'
+import { useV1FactoryContract } from '../hooks'
 import { SWRKeys } from '.'
 import { useETHBalances, useTokenBalances } from '../state/wallet/hooks'
 
@@ -16,7 +13,7 @@ function getV1PairAddress(contract: Contract): (tokenAddress: string) => Promise
 function useV1PairAddress(tokenAddress: string) {
   const { chainId } = useActiveWeb3React()
 
-  const contract = useContract(V1_FACTORY_ADDRESS, IUniswapV1Factory, false)
+  const contract = useV1FactoryContract()
 
   const shouldFetch = chainId === ChainId.MAINNET && typeof tokenAddress === 'string' && !!contract
   const { data } = useSWR(shouldFetch ? [tokenAddress, SWRKeys.V1PairAddress] : null, getV1PairAddress(contract), {

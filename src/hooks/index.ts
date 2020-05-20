@@ -5,10 +5,11 @@ import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import { isMobile } from 'react-device-detect'
 import copy from 'copy-to-clipboard'
 
+import IUniswapV1Factory from '../constants/abis/v1_factory.json'
 import ERC20_ABI from '../constants/abis/erc20.json'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { injected } from '../connectors'
-import { NetworkContextName } from '../constants'
+import { NetworkContextName, V1_FACTORY_ADDRESS } from '../constants'
 import { getContract, isAddress } from '../utils'
 
 export function useActiveWeb3React() {
@@ -182,7 +183,7 @@ export function useENSName(address?: string): string | null {
 }
 
 // returns null on errors
-function useContract(address?: string, ABI?: any, withSignerIfPossible = true) {
+function useContract(address?: string, ABI?: any, withSignerIfPossible = true): Contract | null {
   const { library, account } = useActiveWeb3React()
 
   return useMemo(() => {
@@ -193,6 +194,10 @@ function useContract(address?: string, ABI?: any, withSignerIfPossible = true) {
       return null
     }
   }, [address, ABI, library, withSignerIfPossible, account])
+}
+
+export function useV1FactoryContract(): Contract | null {
+  return useContract(V1_FACTORY_ADDRESS, IUniswapV1Factory, false)
 }
 
 // returns null on errors
