@@ -182,6 +182,10 @@ body {
   overflow: hidden;    
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body > div {
   height: 100%;
   overflow: auto;

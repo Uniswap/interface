@@ -125,7 +125,6 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
 const WarningContainer = styled.div`
   max-width: 420px;
   width: 100%;
-  box-sizing: border-box;
   padding: 1rem;
 `
 

@@ -40,7 +40,6 @@ const StyledMenuButton = styled.button`
 const StyledMenu = styled.div`
   margin-left: 0.5rem;
   display: flex;
-  box-sizing: border-box;
   justify-content: center;
   align-items: center;
   position: relative;

@@ -45,7 +45,6 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   align-items: center;
   padding: 0.5rem;
   border-radius: 12px;
-  box-sizing: border-box;
   cursor: pointer;
   user-select: none;
   :focus {
