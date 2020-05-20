@@ -47,7 +47,7 @@ const TokenModalInfo = styled.div`
 
 const ItemList = styled.div`
   flex-grow: 1;
-  height: 240px;
+  height: 254px;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 `
