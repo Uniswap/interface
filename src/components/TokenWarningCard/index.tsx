@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk'
 import { transparentize } from 'polished'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { useActiveWeb3React } from '../../hooks'
