@@ -8,8 +8,8 @@ import RINKEBY_TOKENS from '../constants/tokens/rinkeby'
 import KOVAN_TOKENS from '../constants/tokens/kovan'
 import ROPSTEN_TOKENS from '../constants/tokens/ropsten'
 
-type AllTokens = { [chainId in ChainId]?: { [tokenAddress: string]: Token } }
-export const ALL_TOKENS: Readonly<AllTokens> = [
+type AllTokens = Readonly<{ [chainId in ChainId]?: Readonly<{ [tokenAddress: string]: Token }> }>
+export const ALL_TOKENS: AllTokens = [
   // WETH on all chains
   ...Object.values(WETH),
   // chain-specific tokens
