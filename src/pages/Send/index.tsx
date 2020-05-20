@@ -34,6 +34,7 @@ import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapS
 import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
+import AppBody from '../AppBody'
 
 export default function Send({ location: { search } }: RouteComponentProps) {
   useDefaultsFromURL(search)
@@ -274,231 +275,237 @@ export default function Send({ location: { search } }: RouteComponentProps) {
       : null
 
   return (
-    <Wrapper id="send-page">
-      <ConfirmationModal
-        isOpen={showConfirm}
-        title={sendingWithSwap ? 'Confirm swap and send' : 'Confirm Send'}
-        onDismiss={() => {
-          resetModal()
-          setShowConfirm(false)
-        }}
-        attemptingTxn={attemptingTxn}
-        pendingConfirmation={pendingConfirmation}
-        hash={txHash}
-        topContent={modalHeader}
-        bottomContent={modalBottom}
-        pendingText={pendingText}
-      />
-      {!sendingWithSwap && (
-        <AutoColumn justify="center" style={{ marginBottom: '1rem' }}>
-          <InputGroup gap="lg" justify="center">
-            <StyledNumerical
-              id="sending-no-swap-input"
-              value={formattedAmounts[Field.INPUT]}
-              onUserInput={val => onUserInput(Field.INPUT, val)}
-            />
-            <CurrencyInputPanel
-              field={Field.INPUT}
-              value={formattedAmounts[Field.INPUT]}
-              onUserInput={(field, val) => onUserInput(Field.INPUT, val)}
-              onMax={() => {
-                maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
-              }}
-              showMaxButton={!atMaxAmountInput}
-              token={tokens[Field.INPUT]}
-              onTokenSelection={address => _onTokenSelect(address)}
-              hideBalance={true}
-              hideInput={true}
-              showSendWithSwap={true}
-              label={''}
-              id="swap-currency-input"
-              otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
-            />
-          </InputGroup>
-          <RowBetween style={{ width: 'fit-content' }}>
-            <ButtonSecondary
-              width="fit-content"
-              style={{ fontSize: '14px' }}
-              padding={'4px 8px'}
-              onClick={() => setSendingWithSwap(true)}
-            >
-              + Add a swap
-            </ButtonSecondary>
-            {account && (
-              <ButtonSecondary
-                style={{ fontSize: '14px', marginLeft: '8px' }}
-                padding={'4px 8px'}
-                width="fit-content"
-                disabled={atMaxAmountInput}
+    <>
+      {sendingWithSwap ? <TokenWarningCards tokens={tokens} /> : null}
+      <AppBody>
+        <Wrapper id="send-page">
+          <ConfirmationModal
+            isOpen={showConfirm}
+            title={sendingWithSwap ? 'Confirm swap and send' : 'Confirm Send'}
+            onDismiss={() => {
+              resetModal()
+              setShowConfirm(false)
+            }}
+            attemptingTxn={attemptingTxn}
+            pendingConfirmation={pendingConfirmation}
+            hash={txHash}
+            topContent={modalHeader}
+            bottomContent={modalBottom}
+            pendingText={pendingText}
+          />
+          {!sendingWithSwap && (
+            <AutoColumn justify="center" style={{ marginBottom: '1rem' }}>
+              <InputGroup gap="lg" justify="center">
+                <StyledNumerical
+                  id="sending-no-swap-input"
+                  value={formattedAmounts[Field.INPUT]}
+                  onUserInput={val => onUserInput(Field.INPUT, val)}
+                />
+                <CurrencyInputPanel
+                  field={Field.INPUT}
+                  value={formattedAmounts[Field.INPUT]}
+                  onUserInput={(field, val) => onUserInput(Field.INPUT, val)}
+                  onMax={() => {
+                    maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
+                  }}
+                  showMaxButton={!atMaxAmountInput}
+                  token={tokens[Field.INPUT]}
+                  onTokenSelection={address => _onTokenSelect(address)}
+                  hideBalance={true}
+                  hideInput={true}
+                  showSendWithSwap={true}
+                  label={''}
+                  id="swap-currency-input"
+                  otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
+                />
+              </InputGroup>
+              <RowBetween style={{ width: 'fit-content' }}>
+                <ButtonSecondary
+                  width="fit-content"
+                  style={{ fontSize: '14px' }}
+                  padding={'4px 8px'}
+                  onClick={() => setSendingWithSwap(true)}
+                >
+                  + Add a swap
+                </ButtonSecondary>
+                {account && (
+                  <ButtonSecondary
+                    style={{ fontSize: '14px', marginLeft: '8px' }}
+                    padding={'4px 8px'}
+                    width="fit-content"
+                    disabled={atMaxAmountInput}
+                    onClick={() => {
+                      maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
+                    }}
+                  >
+                    Input Max
+                  </ButtonSecondary>
+                )}
+              </RowBetween>
+            </AutoColumn>
+          )}
+          <AutoColumn gap={'md'}>
+            {sendingWithSwap && (
+              <>
+                <CurrencyInputPanel
+                  field={Field.INPUT}
+                  label={independentField === Field.OUTPUT && parsedAmounts[Field.INPUT] ? 'From (estimated)' : 'From'}
+                  value={formattedAmounts[Field.INPUT]}
+                  showMaxButton={!atMaxAmountInput}
+                  token={tokens[Field.INPUT]}
+                  onUserInput={onUserInput}
+                  onMax={() => {
+                    maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
+                  }}
+                  onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
+                  otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
+                  id="swap-currency-input"
+                />
+
+                {sendingWithSwap ? (
+                  <ColumnCenter>
+                    <RowBetween padding="0 1rem 0 12px">
+                      <ArrowWrapper onClick={onSwitchTokens}>
+                        <ArrowDown size="16" color={theme.text2} onClick={onSwitchTokens} />
+                      </ArrowWrapper>
+                      <ButtonSecondary
+                        onClick={() => setSendingWithSwap(false)}
+                        style={{ marginRight: '0px', width: 'fit-content', fontSize: '14px' }}
+                        padding={'4px 6px'}
+                      >
+                        Remove Swap
+                      </ButtonSecondary>
+                    </RowBetween>
+                  </ColumnCenter>
+                ) : (
+                  <CursorPointer>
+                    <AutoColumn style={{ padding: '0 1rem' }}>
+                      <ArrowWrapper>
+                        <ArrowDown
+                          size="16"
+                          onClick={onSwitchTokens}
+                          color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme.primary1 : theme.text2}
+                        />
+                      </ArrowWrapper>
+                    </AutoColumn>
+                  </CursorPointer>
+                )}
+                <CurrencyInputPanel
+                  field={Field.OUTPUT}
+                  value={formattedAmounts[Field.OUTPUT]}
+                  onUserInput={onUserInput}
+                  // eslint-disable-next-line @typescript-eslint/no-empty-function
+                  label={independentField === Field.INPUT && parsedAmounts[Field.OUTPUT] ? 'To (estimated)' : 'To'}
+                  showMaxButton={false}
+                  token={tokens[Field.OUTPUT]}
+                  onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
+                  otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
+                  id="swap-currency-output"
+                />
+                {sendingWithSwap && (
+                  <RowBetween padding="0 1rem 0 12px">
+                    <ArrowDown size="16" color={theme.text2} />
+                  </RowBetween>
+                )}
+              </>
+            )}
+
+            <AutoColumn gap="lg" justify="center">
+              <AddressInputPanel
+                onChange={_onRecipient}
+                onError={(error: boolean, input) => {
+                  if (error && input !== '') {
+                    setRecipientError('Invalid Recipient')
+                  } else if (error && input === '') {
+                    setRecipientError('Enter a Recipient')
+                  } else {
+                    setRecipientError(null)
+                  }
+                }}
+              />
+            </AutoColumn>
+            {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
+              <Card padding={'.25rem 1.25rem 0 .75rem'} borderRadius={'20px'}>
+                <AutoColumn gap="4px">
+                  <RowBetween align="center">
+                    <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                      Price
+                    </Text>
+                    <TradePrice showInverted={showInverted} setShowInverted={setShowInverted} trade={bestTrade} />
+                  </RowBetween>
+
+                  {bestTrade && severity > 1 && (
+                    <RowBetween>
+                      <TYPE.main
+                        style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
+                        fontSize={14}
+                      >
+                        Price Impact
+                      </TYPE.main>
+                      <RowFixed>
+                        <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
+                        <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
+                      </RowFixed>
+                    </RowBetween>
+                  )}
+                </AutoColumn>
+              </Card>
+            )}
+          </AutoColumn>
+          <BottomGrouping>
+            {!account ? (
+              <ButtonLight
                 onClick={() => {
-                  maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
+                  toggleWalletModal()
                 }}
               >
-                Input Max
-              </ButtonSecondary>
-            )}
-          </RowBetween>
-        </AutoColumn>
-      )}
-      <AutoColumn gap={'md'}>
-        {sendingWithSwap && (
-          <>
-            <CurrencyInputPanel
-              field={Field.INPUT}
-              label={independentField === Field.OUTPUT && parsedAmounts[Field.INPUT] ? 'From (estimated)' : 'From'}
-              value={formattedAmounts[Field.INPUT]}
-              showMaxButton={!atMaxAmountInput}
-              token={tokens[Field.INPUT]}
-              onUserInput={onUserInput}
-              onMax={() => {
-                maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
-              }}
-              onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
-              otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
-              id="swap-currency-input"
-            />
-
-            {sendingWithSwap ? (
-              <ColumnCenter>
-                <RowBetween padding="0 1rem 0 12px">
-                  <ArrowWrapper onClick={onSwitchTokens}>
-                    <ArrowDown size="16" color={theme.text2} onClick={onSwitchTokens} />
-                  </ArrowWrapper>
-                  <ButtonSecondary
-                    onClick={() => setSendingWithSwap(false)}
-                    style={{ marginRight: '0px', width: 'fit-content', fontSize: '14px' }}
-                    padding={'4px 6px'}
-                  >
-                    Remove Swap
-                  </ButtonSecondary>
-                </RowBetween>
-              </ColumnCenter>
+                Connect Wallet
+              </ButtonLight>
+            ) : noRoute && userHasSpecifiedInputOutput ? (
+              <GreyCard style={{ textAlign: 'center' }}>
+                <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
+              </GreyCard>
+            ) : approval === Approval.NOT_APPROVED || approval === Approval.PENDING ? (
+              <ButtonLight onClick={approveCallback} disabled={approval === Approval.PENDING}>
+                {approval === Approval.PENDING ? (
+                  <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
+                ) : (
+                  'Approve ' + tokens[Field.INPUT]?.symbol
+                )}
+              </ButtonLight>
             ) : (
-              <CursorPointer>
-                <AutoColumn style={{ padding: '0 1rem' }}>
-                  <ArrowWrapper>
-                    <ArrowDown
-                      size="16"
-                      onClick={onSwitchTokens}
-                      color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme.primary1 : theme.text2}
-                    />
-                  </ArrowWrapper>
-                </AutoColumn>
-              </CursorPointer>
-            )}
-            <CurrencyInputPanel
-              field={Field.OUTPUT}
-              value={formattedAmounts[Field.OUTPUT]}
-              onUserInput={onUserInput}
-              // eslint-disable-next-line @typescript-eslint/no-empty-function
-              label={independentField === Field.INPUT && parsedAmounts[Field.OUTPUT] ? 'To (estimated)' : 'To'}
-              showMaxButton={false}
-              token={tokens[Field.OUTPUT]}
-              onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
-              otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
-              id="swap-currency-output"
-            />
-            {sendingWithSwap && (
-              <RowBetween padding="0 1rem 0 12px">
-                <ArrowDown size="16" color={theme.text2} />
-              </RowBetween>
-            )}
-          </>
-        )}
-
-        <AutoColumn gap="lg" justify="center">
-          <AddressInputPanel
-            onChange={_onRecipient}
-            onError={(error: boolean, input) => {
-              if (error && input !== '') {
-                setRecipientError('Invalid Recipient')
-              } else if (error && input === '') {
-                setRecipientError('Enter a Recipient')
-              } else {
-                setRecipientError(null)
-              }
-            }}
-          />
-        </AutoColumn>
-        {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-          <Card padding={'.25rem 1.25rem 0 .75rem'} borderRadius={'20px'}>
-            <AutoColumn gap="4px">
-              <RowBetween align="center">
-                <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                  Price
+              <ButtonError
+                onClick={() => {
+                  setShowConfirm(true)
+                }}
+                id="send-button"
+                disabled={(sendingWithSwap && !isSwapValid) || (!sendingWithSwap && !isSendValid)}
+                error={sendingWithSwap && isSwapValid && severity > 2}
+              >
+                <Text fontSize={20} fontWeight={500}>
+                  {(sendingWithSwap ? swapError : null) ||
+                    sendAmountError ||
+                    recipientError ||
+                    `Send${severity > 2 ? ' Anyway' : ''}`}
                 </Text>
-                <TradePrice showInverted={showInverted} setShowInverted={setShowInverted} trade={bestTrade} />
-              </RowBetween>
-
-              {bestTrade && severity > 1 && (
-                <RowBetween>
-                  <TYPE.main style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }} fontSize={14}>
-                    Price Impact
-                  </TYPE.main>
-                  <RowFixed>
-                    <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
-                    <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
-                  </RowFixed>
-                </RowBetween>
-              )}
-            </AutoColumn>
-          </Card>
-        )}
-      </AutoColumn>
-      <BottomGrouping>
-        {!account ? (
-          <ButtonLight
-            onClick={() => {
-              toggleWalletModal()
-            }}
-          >
-            Connect Wallet
-          </ButtonLight>
-        ) : noRoute && userHasSpecifiedInputOutput ? (
-          <GreyCard style={{ textAlign: 'center' }}>
-            <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
-          </GreyCard>
-        ) : approval === Approval.NOT_APPROVED || approval === Approval.PENDING ? (
-          <ButtonLight onClick={approveCallback} disabled={approval === Approval.PENDING}>
-            {approval === Approval.PENDING ? (
-              <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
-            ) : (
-              'Approve ' + tokens[Field.INPUT]?.symbol
+              </ButtonError>
             )}
-          </ButtonLight>
-        ) : (
-          <ButtonError
-            onClick={() => {
-              setShowConfirm(true)
-            }}
-            id="send-button"
-            disabled={(sendingWithSwap && !isSwapValid) || (!sendingWithSwap && !isSendValid)}
-            error={sendingWithSwap && isSwapValid && severity > 2}
-          >
-            <Text fontSize={20} fontWeight={500}>
-              {(sendingWithSwap ? swapError : null) ||
-                sendAmountError ||
-                recipientError ||
-                `Send${severity > 2 ? ' Anyway' : ''}`}
-            </Text>
-          </ButtonError>
-        )}
-        <V1TradeLink v1TradeLinkIfBetter={v1TradeLinkIfBetter} />
-      </BottomGrouping>
-      {bestTrade && (
-        <AdvancedSwapDetailsDropdown
-          trade={bestTrade}
-          rawSlippage={allowedSlippage}
-          deadline={deadline}
-          showAdvanced={showAdvanced}
-          setShowAdvanced={setShowAdvanced}
-          priceImpactWithoutFee={priceImpactWithoutFee}
-          setDeadline={setDeadline}
-          setRawSlippage={setAllowedSlippage}
-        />
-      )}
-
-      {sendingWithSwap ? <TokenWarningCards tokens={tokens} /> : null}
-    </Wrapper>
+            <V1TradeLink v1TradeLinkIfBetter={v1TradeLinkIfBetter} />
+          </BottomGrouping>
+          {bestTrade && (
+            <AdvancedSwapDetailsDropdown
+              trade={bestTrade}
+              rawSlippage={allowedSlippage}
+              deadline={deadline}
+              showAdvanced={showAdvanced}
+              setShowAdvanced={setShowAdvanced}
+              priceImpactWithoutFee={priceImpactWithoutFee}
+              setDeadline={setDeadline}
+              setRawSlippage={setAllowedSlippage}
+            />
+          )}
+        </Wrapper>
+      </AppBody>
+    </>
   )
 }
