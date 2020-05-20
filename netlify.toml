@@ -18,12 +18,3 @@
   from = "/*"
   to = "/index.html"
   status = 200
-
-[build.environment]
-  REACT_APP_NETWORK_URL = "https://mainnet.infura.io/v3/b8800ce81b8c451698081d269b86692b"
-
-[context.production.environment]
-  REACT_APP_CHAIN_ID = "1"
-  REACT_APP_NETWORK_URL = "https://mainnet.infura.io/v3/2acb2baa4c06402792e0c701a3697d10"
-  REACT_APP_FORTMATIC_KEY = "pk_live_F937DF033A1666BF"
-  REACT_APP_PORTIS_ID = "c0e2bf01-4b08-4fd5-ac7b-8e26b58cd236"
