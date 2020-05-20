@@ -78,7 +78,6 @@ const Input = styled.input`
   background: none;
   border: none;
   outline: none;
-  box-sizing: border-box;
   border-radius: 20px;
   color: ${({ theme }) => theme.text1};
   border-style: solid;

@@ -52,7 +52,6 @@ const Input = styled.input<{ active?: boolean }>`
   font-size: 12px;
   min-width: 20px;
   outline: none;
-  box-sizing: border-box;
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;

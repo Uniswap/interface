@@ -32,7 +32,6 @@ const MobilePopupWrapper = styled.div<{ height: string | number }>`
 
 const MobilePopupInner = styled.div`
   height: 99%;
-  box-sizing: border-box;
   overflow-x: auto;
   overflow-y: hidden;
   display: flex;
@@ -59,7 +58,6 @@ const Popup = styled.div`
   display: inline-block;
   width: 100%;
   padding: 1em;
-  box-sizing: border-box;
   background-color: ${({ theme }) => theme.bg1};
   position: relative;
   border-radius: 10px;
