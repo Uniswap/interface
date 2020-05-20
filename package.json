@@ -1,6 +1,6 @@
 {
   "name": "uniswap",
-  "description": "Uniswap Protocol",
+  "description": "Uniswap Interface",
   "version": "0.1.0",
   "homepage": "https://uniswap.exchange",
   "private": true,
@@ -83,8 +83,9 @@
     "typescript": "^3.8.3"
   },
   "scripts": {
-    "start": "cross-env REACT_APP_GIT_COMMIT_HASH=$(git show -s --format=%H) react-scripts start",
+    "start": "react-scripts start",
     "build": "cross-env REACT_APP_GIT_COMMIT_HASH=$(git show -s --format=%H) react-scripts build",
+    "ipfs-build": "cross-env PUBLIC_URL=\".\" react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
