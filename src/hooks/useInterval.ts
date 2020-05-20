@@ -11,12 +11,14 @@ export default function useInterval(callback: () => void, delay: null | number) 
   // Set up the interval.
   useEffect(() => {
     function tick() {
-      savedCallback.current()
+      const current = savedCallback.current
+      current && current()
     }
 
     if (delay !== null) {
       const id = setInterval(tick, delay)
       return () => clearInterval(id)
     }
+    return
   }, [delay])
 }

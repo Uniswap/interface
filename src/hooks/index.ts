@@ -6,9 +6,10 @@ import { isMobile } from 'react-device-detect'
 import copy from 'copy-to-clipboard'
 
 import ERC20_ABI from '../constants/abis/erc20.json'
+import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { injected } from '../connectors'
 import { NetworkContextName } from '../constants'
-import { getContract, getExchangeContract, isAddress } from '../utils'
+import { getContract, isAddress } from '../utils'
 
 export function useActiveWeb3React() {
   const context = useWeb3ReactCore<Web3Provider>()
@@ -66,7 +67,7 @@ export function useInactiveListener(suppress = false) {
         })
       }
 
-      const handleAccountsChanged = accounts => {
+      const handleAccountsChanged = (accounts: string[]) => {
         if (accounts.length > 0) {
           // eat errors
           activate(injected, undefined, true).catch(error => {
@@ -94,6 +95,7 @@ export function useInactiveListener(suppress = false) {
         }
       }
     }
+    return
   }, [active, error, suppress, activate])
 }
 
@@ -119,7 +121,7 @@ export function useDebounce<T>(value: T, delay: number): T {
 }
 
 // modified from https://usehooks.com/useKeyPress/
-export function useBodyKeyDown(targetKey, onKeyDown, suppressOnKeyDown = false) {
+export function useBodyKeyDown(targetKey: string, onKeyDown: () => void, suppressOnKeyDown = false) {
   const downHandler = useCallback(
     event => {
       const {
@@ -142,12 +144,13 @@ export function useBodyKeyDown(targetKey, onKeyDown, suppressOnKeyDown = false) 
   }, [downHandler])
 }
 
-export function useENSName(address) {
+export function useENSName(address?: string): string | null {
   const { library } = useActiveWeb3React()
 
   const [ENSName, setENSName] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!library || !address) return
     if (isAddress(address)) {
       let stale = false
       library
@@ -172,18 +175,20 @@ export function useENSName(address) {
         setENSName(null)
       }
     }
+    return
   }, [library, address])
 
   return ENSName
 }
 
 // returns null on errors
-export function useContract(address, ABI, withSignerIfPossible = true) {
+function useContract(address?: string, ABI?: any, withSignerIfPossible = true) {
   const { library, account } = useActiveWeb3React()
 
   return useMemo(() => {
+    if (!address || !ABI || !library) return null
     try {
-      return getContract(address, ABI, library, withSignerIfPossible ? account : undefined)
+      return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
     } catch {
       return null
     }
@@ -191,28 +196,12 @@ export function useContract(address, ABI, withSignerIfPossible = true) {
 }
 
 // returns null on errors
-export function useTokenContract(tokenAddress: string, withSignerIfPossible = true): Contract {
-  const { library, account } = useActiveWeb3React()
-
-  return useMemo(() => {
-    try {
-      return getContract(tokenAddress, ERC20_ABI, library, withSignerIfPossible ? account : undefined)
-    } catch {
-      return null
-    }
-  }, [tokenAddress, library, withSignerIfPossible, account])
+export function useTokenContract(tokenAddress?: string, withSignerIfPossible = true): Contract | null {
+  return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible)
 }
 
-export function usePairContract(pairAddress, withSignerIfPossible = true) {
-  const { library, account } = useActiveWeb3React()
-
-  return useMemo(() => {
-    try {
-      return getExchangeContract(pairAddress, library, withSignerIfPossible ? account : undefined)
-    } catch {
-      return null
-    }
-  }, [pairAddress, library, withSignerIfPossible, account])
+export function usePairContract(pairAddress?: string, withSignerIfPossible = true): Contract | null {
+  return useContract(pairAddress, IUniswapV2PairABI, withSignerIfPossible)
 }
 
 export function useCopyClipboard(timeout = 500): [boolean, (toCopy: string) => void] {
@@ -233,16 +222,17 @@ export function useCopyClipboard(timeout = 500): [boolean, (toCopy: string) => v
         clearTimeout(hide)
       }
     }
+    return
   }, [isCopied, setIsCopied, timeout])
 
   return [isCopied, staticCopy]
 }
 
 // modified from https://usehooks.com/usePrevious/
-export function usePrevious(value) {
+export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  const ref = useRef()
+  const ref = useRef<T>()
 
   // Store current value in ref
   useEffect(() => {

@@ -12,28 +12,31 @@ function useAllCommonPairs(tokenA?: Token, tokenB?: Token): Pair[] {
   const pairBetween = usePair(tokenA, tokenB)
 
   // get token<->WETH pairs
-  const aToETH = usePair(tokenA, WETH[chainId])
-  const bToETH = usePair(tokenB, WETH[chainId])
+  const aToETH = usePair(tokenA, WETH[chainId as ChainId])
+  const bToETH = usePair(tokenB, WETH[chainId as ChainId])
 
   // get token<->DAI pairs
-  const aToDAI = usePair(tokenA, chainId === ChainId.MAINNET ? DAI : null)
-  const bToDAI = usePair(tokenB, chainId === ChainId.MAINNET ? DAI : null)
+  const aToDAI = usePair(tokenA, chainId === ChainId.MAINNET ? DAI : undefined)
+  const bToDAI = usePair(tokenB, chainId === ChainId.MAINNET ? DAI : undefined)
 
   // get token<->USDC pairs
-  const aToUSDC = usePair(tokenA, chainId === ChainId.MAINNET ? USDC : null)
-  const bToUSDC = usePair(tokenB, chainId === ChainId.MAINNET ? USDC : null)
+  const aToUSDC = usePair(tokenA, chainId === ChainId.MAINNET ? USDC : undefined)
+  const bToUSDC = usePair(tokenB, chainId === ChainId.MAINNET ? USDC : undefined)
 
   // get connecting pairs
-  const DAIToETH = usePair(chainId === ChainId.MAINNET ? DAI : null, WETH[chainId])
-  const USDCToETH = usePair(chainId === ChainId.MAINNET ? USDC : null, WETH[chainId])
-  const DAIToUSDC = usePair(chainId === ChainId.MAINNET ? DAI : null, chainId === ChainId.MAINNET ? USDC : null)
+  const DAIToETH = usePair(chainId === ChainId.MAINNET ? DAI : undefined, WETH[chainId as ChainId])
+  const USDCToETH = usePair(chainId === ChainId.MAINNET ? USDC : undefined, WETH[chainId as ChainId])
+  const DAIToUSDC = usePair(
+    chainId === ChainId.MAINNET ? DAI : undefined,
+    chainId === ChainId.MAINNET ? USDC : undefined
+  )
 
   // only pass along valid pairs, non-duplicated pairs
   return useMemo(
     () =>
       [pairBetween, aToETH, bToETH, aToDAI, bToDAI, aToUSDC, bToUSDC, DAIToETH, USDCToETH, DAIToUSDC]
         // filter out invalid pairs
-        .filter(p => !!p)
+        .filter((p): p is Pair => !!p)
         // filter out duplicated pairs
         .filter(
           (p, i, pairs) => i === pairs.findIndex(pair => pair?.liquidityToken.address === p.liquidityToken.address)

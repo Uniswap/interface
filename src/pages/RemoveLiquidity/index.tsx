@@ -31,7 +31,7 @@ import { TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
 import AppBody from '../AppBody'
 import { ClickableText, FixedBottom, MaxButton, Wrapper } from '../Pool/styleds'
-import { useApproveCallback, Approval } from '../../hooks/useApproveCallback'
+import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
 import { Dots } from '../../components/swap/styleds'
 
 // denominated in bips
@@ -446,7 +446,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
 
     let estimate, method, args
     // we have approval, use normal remove liquidity
-    if (approval === Approval.APPROVED) {
+    if (approval === ApprovalState.APPROVED) {
       // removeLiquidityETH
       if (oneTokenIsETH) {
         estimate = router.estimateGas.removeLiquidityETH
@@ -619,15 +619,15 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
         <RowBetween mt="1rem">
           <ButtonConfirmed
             onClick={onAttemptToApprove}
-            confirmed={approval === Approval.APPROVED || signatureData !== null}
-            disabled={approval !== Approval.NOT_APPROVED || signatureData !== null}
+            confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
+            disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
             mr="0.5rem"
             fontWeight={500}
             fontSize={20}
           >
-            {approval === Approval.PENDING ? (
+            {approval === ApprovalState.PENDING ? (
               <Dots>Approving</Dots>
-            ) : approval === Approval.APPROVED || signatureData !== null ? (
+            ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
               'Approved'
             ) : (
               'Approve'
@@ -635,7 +635,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
           </ButtonConfirmed>
 
           <ButtonPrimary
-            disabled={!(approval === Approval.APPROVED || signatureData !== null)}
+            disabled={!(approval === ApprovalState.APPROVED || signatureData !== null)}
             onClick={onRemove}
             ml="0.5rem"
           >

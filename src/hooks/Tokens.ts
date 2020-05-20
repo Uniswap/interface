@@ -52,7 +52,7 @@ export function useAllTokens(): { [address: string]: Token } {
             tokenMap[token.address] = token
             return tokenMap
           },
-          { ...ALL_TOKENS[chainId] }
+          { ...ALL_TOKENS[chainId as ChainId] }
         )
     )
   }, [userAddedTokens, chainId])
@@ -81,5 +81,5 @@ export function useTokenByAddressAndAutomaticallyAdd(tokenAddress?: string): Tok
     }
   }, [tokenAddress, allTokens, fetchTokenByAddress, addToken])
 
-  return allTokens?.[tokenAddress]
+  return tokenAddress ? allTokens?.[tokenAddress] : undefined
 }
