@@ -1,31 +1,30 @@
+import { Web3Provider } from '@ethersproject/providers'
+import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import React from 'react'
+import { isMobile } from 'react-device-detect'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
-import { Web3ReactProvider, createWeb3ReactRoot } from '@web3-react/core'
-import { Web3Provider } from '@ethersproject/providers'
 import { Provider } from 'react-redux'
 
 import { NetworkContextName } from './constants'
-import { isMobile } from 'react-device-detect'
-import WalletUpdater from './state/wallet/updater'
+import './i18n'
 import App from './pages/App'
 import store from './state'
 import ApplicationUpdater from './state/application/updater'
 import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
+import WalletUpdater from './state/wallet/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
-import './i18n'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
-function getLibrary(provider): Web3Provider {
-  const library = new Web3Provider(provider)
-  library.pollingInterval = 10000
-  return library
+function getLibrary(provider: any): Web3Provider {
+  return new Web3Provider(provider)
 }
 
-if (process.env.NODE_ENV === 'production') {
-  ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
+const GOOGLE_ANALYTICS_ID: string | undefined = process.env.REACT_APP_GOOGLE_ANALYTICS_ID
+if (typeof GOOGLE_ANALYTICS_ID === 'string') {
+  ReactGA.initialize(GOOGLE_ANALYTICS_ID)
   ReactGA.set({
     customBrowserType: !isMobile ? 'desktop' : 'web3' in window || 'ethereum' in window ? 'mobileWeb3' : 'mobileRegular'
   })
