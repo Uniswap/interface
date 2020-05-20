@@ -134,7 +134,8 @@ export function usePairAdder(): (pair: Pair) => void {
 }
 
 /**
- * Returns whether a token warning has been dismissed and a callback to dismiss it.
+ * Returns whether a token warning has been dismissed and a callback to dismiss it,
+ * iff it has not already been dismissed and is a valid token.
  */
 export function useTokenWarningDismissal(chainId?: number, token?: Token): [boolean, null | (() => void)] {
   const dismissalState = useSelector<AppState, AppState['user']['dismissedTokenWarnings']>(

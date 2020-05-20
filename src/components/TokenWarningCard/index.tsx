@@ -74,7 +74,7 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
   const tokenSymbol = token?.symbol?.toLowerCase() ?? ''
   const tokenName = token?.name?.toLowerCase() ?? ''
 
-  const [dismissed, dismissToken] = useTokenWarningDismissal(chainId, token)
+  const [dismissed, dismissTokenWarning] = useTokenWarningDismissal(chainId, token)
 
   const allTokens = useAllTokens()
 
@@ -95,7 +95,7 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
   return (
     <Wrapper error={duplicateNameOrSymbol} {...rest}>
       {duplicateNameOrSymbol ? null : (
-        <CloseIcon onClick={dismissToken}>
+        <CloseIcon onClick={dismissTokenWarning}>
           <CloseColor />
         </CloseIcon>
       )}
