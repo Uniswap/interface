@@ -6,7 +6,7 @@ import { JSBI, Percent, Price, Route, Token, TokenAmount, WETH } from '@uniswap/
 import React, { useCallback, useContext, useEffect, useReducer, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
-import { RouteComponentProps, withRouter } from 'react-router-dom'
+import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import { ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -32,7 +32,8 @@ import { useHasPendingApproval, useTransactionAdder } from '../../state/transact
 import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
-import { Dots, Wrapper } from './styleds'
+import AppBody from '../AppBody'
+import { Dots, Wrapper } from '../Pool/styleds'
 
 // denominated in bips
 const ALLOWED_SLIPPAGE = 50
@@ -134,12 +135,17 @@ function reducer(
   }
 }
 
-interface AddLiquidityProps extends RouteComponentProps {
-  token0: string
-  token1: string
+function useTokenByAddressOrETHAndAutomaticallyAdd(tokenId?: string, chainId?: number): Token | undefined {
+  const isWETH = tokenId?.toUpperCase() === 'ETH' || tokenId?.toUpperCase() === 'WETH'
+
+  const tokenByAddress = useTokenByAddressAndAutomaticallyAdd(isWETH ? null : tokenId)
+
+  return isWETH ? WETH[chainId] : tokenByAddress
 }
 
-function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
+export default function AddLiquidity({ match: { params } }: RouteComponentProps<{ tokens: string }>) {
+  const [token0, token1] = params.tokens.split('-')
+
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
@@ -156,8 +162,8 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
 
   // get basic SDK entities
   const tokens: { [field in Field]: Token } = {
-    [Field.INPUT]: useTokenByAddressAndAutomaticallyAdd(fieldData[Field.INPUT].address),
-    [Field.OUTPUT]: useTokenByAddressAndAutomaticallyAdd(fieldData[Field.OUTPUT].address)
+    [Field.INPUT]: useTokenByAddressOrETHAndAutomaticallyAdd(fieldData[Field.INPUT].address, chainId),
+    [Field.OUTPUT]: useTokenByAddressOrETHAndAutomaticallyAdd(fieldData[Field.OUTPUT].address, chainId)
   }
 
   // token contracts for approvals and direct sends
@@ -650,146 +656,146 @@ function AddLiquidity({ token0, token1 }: AddLiquidityProps) {
   } ${'and'} ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}`
 
   return (
-    <Wrapper>
-      <ConfirmationModal
-        isOpen={showConfirm}
-        onDismiss={() => {
-          setPendingConfirmation(true)
-          setAttemptingTxn(false)
-          setShowConfirm(false)
-        }}
-        attemptingTxn={attemptingTxn}
-        pendingConfirmation={pendingConfirmation}
-        hash={txHash ? txHash : ''}
-        topContent={() => modalHeader()}
-        bottomContent={modalBottom}
-        pendingText={pendingText}
-        title={noLiquidity ? 'You are creating a pool' : 'You will receive'}
-      />
-      <SearchModal
-        isOpen={showSearch}
-        onDismiss={() => {
-          setShowSearch(false)
-        }}
-      />
-      <AutoColumn gap="20px">
-        {noLiquidity && (
+    <AppBody>
+      <Wrapper>
+        <ConfirmationModal
+          isOpen={showConfirm}
+          onDismiss={() => {
+            setPendingConfirmation(true)
+            setAttemptingTxn(false)
+            setShowConfirm(false)
+          }}
+          attemptingTxn={attemptingTxn}
+          pendingConfirmation={pendingConfirmation}
+          hash={txHash ? txHash : ''}
+          topContent={() => modalHeader()}
+          bottomContent={modalBottom}
+          pendingText={pendingText}
+          title={noLiquidity ? 'You are creating a pool' : 'You will receive'}
+        />
+        <SearchModal
+          isOpen={showSearch}
+          onDismiss={() => {
+            setShowSearch(false)
+          }}
+        />
+        <AutoColumn gap="20px">
+          {noLiquidity && (
+            <ColumnCenter>
+              <BlueCard>
+                <AutoColumn gap="10px">
+                  <TYPE.link fontWeight={600} color={'primaryText1'}>
+                    You are the first liquidity provider.
+                  </TYPE.link>
+                  <TYPE.link fontWeight={400} color={'primaryText1'}>
+                    The ratio of tokens you add will set the price of this pool.
+                  </TYPE.link>
+                  <TYPE.link fontWeight={400} color={'primaryText1'}>
+                    Once you are happy with the rate click supply to review.
+                  </TYPE.link>
+                </AutoColumn>
+              </BlueCard>
+            </ColumnCenter>
+          )}
+          <CurrencyInputPanel
+            field={Field.INPUT}
+            value={formattedAmounts[Field.INPUT]}
+            onUserInput={onUserInput}
+            onMax={() => {
+              maxAmountInput && onMax(maxAmountInput.toExact(), Field.INPUT)
+            }}
+            showMaxButton={!atMaxAmountInput}
+            token={tokens[Field.INPUT]}
+            onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
+            pair={pair}
+            label="Input"
+            id="add-liquidity-input"
+          />
           <ColumnCenter>
-            <BlueCard>
-              <AutoColumn gap="10px">
-                <TYPE.link fontWeight={600} color={'primaryText1'}>
-                  You are the first liquidity provider.
-                </TYPE.link>
-                <TYPE.link fontWeight={400} color={'primaryText1'}>
-                  The ratio of tokens you add will set the price of this pool.
-                </TYPE.link>
-                <TYPE.link fontWeight={400} color={'primaryText1'}>
-                  Once you are happy with the rate click supply to review.
-                </TYPE.link>
-              </AutoColumn>
-            </BlueCard>
+            <Plus size="16" color={theme.text2} />
           </ColumnCenter>
-        )}
-        <CurrencyInputPanel
-          field={Field.INPUT}
-          value={formattedAmounts[Field.INPUT]}
-          onUserInput={onUserInput}
-          onMax={() => {
-            maxAmountInput && onMax(maxAmountInput.toExact(), Field.INPUT)
-          }}
-          showMaxButton={!atMaxAmountInput}
-          token={tokens[Field.INPUT]}
-          onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
-          pair={pair}
-          label="Input"
-          id="add-liquidity-input"
-        />
-        <ColumnCenter>
-          <Plus size="16" color={theme.text2} />
-        </ColumnCenter>
-        <CurrencyInputPanel
-          field={Field.OUTPUT}
-          value={formattedAmounts[Field.OUTPUT]}
-          onUserInput={onUserInput}
-          onMax={() => {
-            maxAmountOutput && onMax(maxAmountOutput?.toExact(), Field.OUTPUT)
-          }}
-          showMaxButton={!atMaxAmountOutput}
-          token={tokens[Field.OUTPUT]}
-          onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
-          pair={pair}
-          id="add-liquidity-output"
-        />
-        {tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-          <>
-            <GreyCard padding="0px" borderRadius={'20px'}>
-              <RowBetween padding="1rem">
-                <TYPE.subHeader fontWeight={500} fontSize={14}>
-                  {noLiquidity ? 'Initial prices' : 'Prices'} and pool share
-                </TYPE.subHeader>
-              </RowBetween>{' '}
-              <LightCard padding="1rem" borderRadius={'20px'}>
-                <PriceBar />
-              </LightCard>
-            </GreyCard>
-          </>
-        )}
-        {isValid ? (
-          !inputApproved ? (
-            <ButtonLight
-              onClick={() => {
-                approveAmount(Field.INPUT)
-              }}
-              disabled={pendingApprovalInput}
-            >
-              {pendingApprovalInput ? (
-                <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
-              ) : (
-                'Approve ' + tokens[Field.INPUT]?.symbol
-              )}
-            </ButtonLight>
-          ) : !outputApproved ? (
-            <ButtonLight
-              onClick={() => {
-                approveAmount(Field.OUTPUT)
-              }}
-              disabled={pendingApprovalOutput}
-            >
-              {pendingApprovalOutput ? (
-                <Dots>Approving {tokens[Field.OUTPUT]?.symbol}</Dots>
-              ) : (
-                'Approve ' + tokens[Field.OUTPUT]?.symbol
-              )}
-            </ButtonLight>
+          <CurrencyInputPanel
+            field={Field.OUTPUT}
+            value={formattedAmounts[Field.OUTPUT]}
+            onUserInput={onUserInput}
+            onMax={() => {
+              maxAmountOutput && onMax(maxAmountOutput?.toExact(), Field.OUTPUT)
+            }}
+            showMaxButton={!atMaxAmountOutput}
+            token={tokens[Field.OUTPUT]}
+            onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
+            pair={pair}
+            id="add-liquidity-output"
+          />
+          {tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
+            <>
+              <GreyCard padding="0px" borderRadius={'20px'}>
+                <RowBetween padding="1rem">
+                  <TYPE.subHeader fontWeight={500} fontSize={14}>
+                    {noLiquidity ? 'Initial prices' : 'Prices'} and pool share
+                  </TYPE.subHeader>
+                </RowBetween>{' '}
+                <LightCard padding="1rem" borderRadius={'20px'}>
+                  <PriceBar />
+                </LightCard>
+              </GreyCard>
+            </>
+          )}
+          {isValid ? (
+            !inputApproved ? (
+              <ButtonLight
+                onClick={() => {
+                  approveAmount(Field.INPUT)
+                }}
+                disabled={pendingApprovalInput}
+              >
+                {pendingApprovalInput ? (
+                  <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
+                ) : (
+                  'Approve ' + tokens[Field.INPUT]?.symbol
+                )}
+              </ButtonLight>
+            ) : !outputApproved ? (
+              <ButtonLight
+                onClick={() => {
+                  approveAmount(Field.OUTPUT)
+                }}
+                disabled={pendingApprovalOutput}
+              >
+                {pendingApprovalOutput ? (
+                  <Dots>Approving {tokens[Field.OUTPUT]?.symbol}</Dots>
+                ) : (
+                  'Approve ' + tokens[Field.OUTPUT]?.symbol
+                )}
+              </ButtonLight>
+            ) : (
+              <ButtonPrimary
+                onClick={() => {
+                  setShowConfirm(true)
+                }}
+              >
+                <Text fontSize={20} fontWeight={500}>
+                  Supply
+                </Text>
+              </ButtonPrimary>
+            )
           ) : (
-            <ButtonPrimary
-              onClick={() => {
-                setShowConfirm(true)
-              }}
-            >
+            <ButtonPrimary disabled={true}>
               <Text fontSize={20} fontWeight={500}>
-                Supply
+                {generalError ? generalError : inputError ? inputError : outputError ? outputError : 'Supply'}
               </Text>
             </ButtonPrimary>
-          )
-        ) : (
-          <ButtonPrimary disabled={true}>
-            <Text fontSize={20} fontWeight={500}>
-              {generalError ? generalError : inputError ? inputError : outputError ? outputError : 'Supply'}
-            </Text>
-          </ButtonPrimary>
-        )}
-      </AutoColumn>
+          )}
+        </AutoColumn>
 
-      {!noLiquidity && (
-        <FixedBottom>
-          <AutoColumn>
-            <PositionCard pair={pair} minimal={true} />
-          </AutoColumn>
-        </FixedBottom>
-      )}
-    </Wrapper>
+        {!noLiquidity && (
+          <FixedBottom>
+            <AutoColumn>
+              <PositionCard pair={pair} minimal={true} />
+            </AutoColumn>
+          </FixedBottom>
+        )}
+      </Wrapper>
+    </AppBody>
   )
 }
-
-export default withRouter(AddLiquidity)

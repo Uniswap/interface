@@ -8,6 +8,7 @@ import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
   addSerializedToken,
+  dismissTokenWarning,
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
@@ -130,6 +131,28 @@ export function usePairAdder(): (pair: Pair) => void {
     },
     [dispatch]
   )
+}
+
+/**
+ * Returns whether a token warning has been dismissed and a callback to dismiss it,
+ * iff it has not already been dismissed and is a valid token.
+ */
+export function useTokenWarningDismissal(chainId?: number, token?: Token): [boolean, null | (() => void)] {
+  const dismissalState = useSelector<AppState, AppState['user']['dismissedTokenWarnings']>(
+    state => state.user.dismissedTokenWarnings
+  )
+
+  const dispatch = useDispatch<AppDispatch>()
+
+  return useMemo(() => {
+    if (!chainId || !token) return [false, null]
+
+    const dismissed: boolean = dismissalState?.[chainId]?.[token.address] === true
+
+    const callback = dismissed ? null : () => dispatch(dismissTokenWarning({ chainId, tokenAddress: token.address }))
+
+    return [dismissed, callback]
+  }, [chainId, token, dismissalState, dispatch])
 }
 
 const bases = [

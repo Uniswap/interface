@@ -30,6 +30,7 @@ import { Field } from '../../state/swap/actions'
 import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
+import AppBody from '../AppBody'
 
 export default function Swap({ location: { search } }: RouteComponentProps) {
   useDefaultsFromURL(search)
@@ -166,141 +167,147 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
   } for ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}`
 
   return (
-    <Wrapper id="swap-page">
-      <ConfirmationModal
-        isOpen={showConfirm}
-        title="Confirm Swap"
-        onDismiss={() => {
-          resetModal()
-          setShowConfirm(false)
-        }}
-        attemptingTxn={attemptingTxn}
-        pendingConfirmation={pendingConfirmation}
-        hash={txHash}
-        topContent={modalHeader}
-        bottomContent={modalBottom}
-        pendingText={pendingText}
-      />
-
-      <AutoColumn gap={'md'}>
-        <>
-          <CurrencyInputPanel
-            field={Field.INPUT}
-            label={independentField === Field.OUTPUT ? 'From (estimated)' : 'From'}
-            value={formattedAmounts[Field.INPUT]}
-            showMaxButton={!atMaxAmountInput}
-            token={tokens[Field.INPUT]}
-            onUserInput={onUserInput}
-            onMax={() => {
-              maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
-            }}
-            onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
-            otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
-            id="swap-currency-input"
-          />
-
-          <CursorPointer>
-            <AutoColumn style={{ padding: '0 1rem' }}>
-              <ArrowWrapper>
-                <ArrowDown
-                  size="16"
-                  onClick={onSwitchTokens}
-                  color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme.primary1 : theme.text2}
-                />
-              </ArrowWrapper>
-            </AutoColumn>
-          </CursorPointer>
-
-          <CurrencyInputPanel
-            field={Field.OUTPUT}
-            value={formattedAmounts[Field.OUTPUT]}
-            onUserInput={onUserInput}
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            label={independentField === Field.INPUT ? 'To (estimated)' : 'To'}
-            showMaxButton={false}
-            token={tokens[Field.OUTPUT]}
-            onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
-            otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
-            id="swap-currency-output"
-          />
-        </>
-
-        {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-          <Card padding={'.25rem 1.25rem 0 .75rem'} borderRadius={'20px'}>
-            <AutoColumn gap="4px">
-              <RowBetween align="center">
-                <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                  Price
-                </Text>
-                <TradePrice trade={bestTrade} showInverted={showInverted} setShowInverted={setShowInverted} />
-              </RowBetween>
-
-              {bestTrade && priceImpactSeverity > 1 && (
-                <RowBetween>
-                  <TYPE.main style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }} fontSize={14}>
-                    Price Impact
-                  </TYPE.main>
-                  <RowFixed>
-                    <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
-                    <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
-                  </RowFixed>
-                </RowBetween>
-              )}
-            </AutoColumn>
-          </Card>
-        )}
-      </AutoColumn>
-      <BottomGrouping>
-        {!account ? (
-          <ButtonLight
-            onClick={() => {
-              toggleWalletModal()
-            }}
-          >
-            Connect Wallet
-          </ButtonLight>
-        ) : noRoute && userHasSpecifiedInputOutput ? (
-          <GreyCard style={{ textAlign: 'center' }}>
-            <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
-          </GreyCard>
-        ) : approval === Approval.NOT_APPROVED || approval === Approval.PENDING ? (
-          <ButtonLight onClick={approveCallback} disabled={approval === Approval.PENDING}>
-            {approval === Approval.PENDING ? (
-              <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
-            ) : (
-              'Approve ' + tokens[Field.INPUT]?.symbol
-            )}
-          </ButtonLight>
-        ) : (
-          <ButtonError
-            onClick={() => {
-              setShowConfirm(true)
-            }}
-            id="swap-button"
-            disabled={!isValid}
-            error={isValid && priceImpactSeverity > 2}
-          >
-            <Text fontSize={20} fontWeight={500}>
-              {error ?? `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
-            </Text>
-          </ButtonError>
-        )}
-        <V1TradeLink v1TradeLinkIfBetter={v1TradeLinkIfBetter} />
-      </BottomGrouping>
-      {bestTrade && (
-        <AdvancedSwapDetailsDropdown
-          trade={bestTrade}
-          rawSlippage={allowedSlippage}
-          deadline={deadline}
-          showAdvanced={showAdvanced}
-          setShowAdvanced={setShowAdvanced}
-          priceImpactWithoutFee={priceImpactWithoutFee}
-          setDeadline={setDeadline}
-          setRawSlippage={setAllowedSlippage}
-        />
-      )}
-
+    <>
       <TokenWarningCards tokens={tokens} />
-    </Wrapper>
+      <AppBody>
+        <Wrapper id="swap-page">
+          <ConfirmationModal
+            isOpen={showConfirm}
+            title="Confirm Swap"
+            onDismiss={() => {
+              resetModal()
+              setShowConfirm(false)
+            }}
+            attemptingTxn={attemptingTxn}
+            pendingConfirmation={pendingConfirmation}
+            hash={txHash}
+            topContent={modalHeader}
+            bottomContent={modalBottom}
+            pendingText={pendingText}
+          />
+
+          <AutoColumn gap={'md'}>
+            <>
+              <CurrencyInputPanel
+                field={Field.INPUT}
+                label={independentField === Field.OUTPUT ? 'From (estimated)' : 'From'}
+                value={formattedAmounts[Field.INPUT]}
+                showMaxButton={!atMaxAmountInput}
+                token={tokens[Field.INPUT]}
+                onUserInput={onUserInput}
+                onMax={() => {
+                  maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
+                }}
+                onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
+                otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
+                id="swap-currency-input"
+              />
+
+              <CursorPointer>
+                <AutoColumn style={{ padding: '0 1rem' }}>
+                  <ArrowWrapper>
+                    <ArrowDown
+                      size="16"
+                      onClick={onSwitchTokens}
+                      color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme.primary1 : theme.text2}
+                    />
+                  </ArrowWrapper>
+                </AutoColumn>
+              </CursorPointer>
+
+              <CurrencyInputPanel
+                field={Field.OUTPUT}
+                value={formattedAmounts[Field.OUTPUT]}
+                onUserInput={onUserInput}
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                label={independentField === Field.INPUT ? 'To (estimated)' : 'To'}
+                showMaxButton={false}
+                token={tokens[Field.OUTPUT]}
+                onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
+                otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
+                id="swap-currency-output"
+              />
+            </>
+
+            {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
+              <Card padding={'.25rem 1.25rem 0 .75rem'} borderRadius={'20px'}>
+                <AutoColumn gap="4px">
+                  <RowBetween align="center">
+                    <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                      Price
+                    </Text>
+                    <TradePrice trade={bestTrade} showInverted={showInverted} setShowInverted={setShowInverted} />
+                  </RowBetween>
+
+                  {bestTrade && priceImpactSeverity > 1 && (
+                    <RowBetween>
+                      <TYPE.main
+                        style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
+                        fontSize={14}
+                      >
+                        Price Impact
+                      </TYPE.main>
+                      <RowFixed>
+                        <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
+                        <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
+                      </RowFixed>
+                    </RowBetween>
+                  )}
+                </AutoColumn>
+              </Card>
+            )}
+          </AutoColumn>
+          <BottomGrouping>
+            {!account ? (
+              <ButtonLight
+                onClick={() => {
+                  toggleWalletModal()
+                }}
+              >
+                Connect Wallet
+              </ButtonLight>
+            ) : noRoute && userHasSpecifiedInputOutput ? (
+              <GreyCard style={{ textAlign: 'center' }}>
+                <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
+              </GreyCard>
+            ) : approval === Approval.NOT_APPROVED || approval === Approval.PENDING ? (
+              <ButtonLight onClick={approveCallback} disabled={approval === Approval.PENDING}>
+                {approval === Approval.PENDING ? (
+                  <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
+                ) : (
+                  'Approve ' + tokens[Field.INPUT]?.symbol
+                )}
+              </ButtonLight>
+            ) : (
+              <ButtonError
+                onClick={() => {
+                  setShowConfirm(true)
+                }}
+                id="swap-button"
+                disabled={!isValid}
+                error={isValid && priceImpactSeverity > 2}
+              >
+                <Text fontSize={20} fontWeight={500}>
+                  {error ?? `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                </Text>
+              </ButtonError>
+            )}
+            <V1TradeLink v1TradeLinkIfBetter={v1TradeLinkIfBetter} />
+          </BottomGrouping>
+          {bestTrade && (
+            <AdvancedSwapDetailsDropdown
+              trade={bestTrade}
+              rawSlippage={allowedSlippage}
+              deadline={deadline}
+              showAdvanced={showAdvanced}
+              setShowAdvanced={setShowAdvanced}
+              priceImpactWithoutFee={priceImpactWithoutFee}
+              setDeadline={setDeadline}
+              setRawSlippage={setAllowedSlippage}
+            />
+          )}
+        </Wrapper>
+      </AppBody>
+    </>
   )
 }

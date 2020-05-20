@@ -1,30 +1,29 @@
-import React, { useState, useEffect } from 'react'
-import { RouteComponentProps, withRouter } from 'react-router-dom'
-import { TokenAmount, JSBI, Token, Pair } from '@uniswap/sdk'
-import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
-
-import Row from '../Row'
-import TokenLogo from '../TokenLogo'
-import SearchModal from '../SearchModal'
-import PositionCard from '../PositionCard'
-import { Link } from '../../theme'
-import { Text } from 'rebass'
+import { JSBI, Pair, Token, TokenAmount } from '@uniswap/sdk'
+import React, { useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
-import { LightCard } from '../Card'
-import { AutoColumn, ColumnCenter } from '../Column'
-import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../Button'
-
-import { useToken } from '../../hooks/Tokens'
-import { useActiveWeb3React } from '../../hooks'
-import { usePairAdder } from '../../state/user/hooks'
+import { RouteComponentProps } from 'react-router-dom'
+import { Text } from 'rebass'
+import { ButtonDropwdown, ButtonDropwdownLight, ButtonPrimary } from '../../components/Button'
+import { LightCard } from '../../components/Card'
+import { AutoColumn, ColumnCenter } from '../../components/Column'
+import PositionCard from '../../components/PositionCard'
+import Row from '../../components/Row'
+import SearchModal from '../../components/SearchModal'
+import TokenLogo from '../../components/TokenLogo'
 import { usePair } from '../../data/Reserves'
+import { useActiveWeb3React } from '../../hooks'
+import { useToken } from '../../hooks/Tokens'
+import { usePairAdder } from '../../state/user/hooks'
+import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
+import { Link } from '../../theme'
+import AppBody from '../AppBody'
 
-const Fields = {
-  TOKEN0: 0,
-  TOKEN1: 1
+enum Fields {
+  TOKEN0 = 0,
+  TOKEN1 = 1
 }
 
-function PoolFinder({ history }: RouteComponentProps) {
+export default function PoolFinder({ history }: RouteComponentProps) {
   const { account } = useActiveWeb3React()
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN0)
@@ -51,7 +50,7 @@ function PoolFinder({ history }: RouteComponentProps) {
   const allowImport: boolean = position && JSBI.greaterThan(position.raw, JSBI.BigInt(0))
 
   return (
-    <>
+    <AppBody>
       <AutoColumn gap="md">
         {!token0Address ? (
           <ButtonDropwdown
@@ -168,8 +167,6 @@ function PoolFinder({ history }: RouteComponentProps) {
         }}
         hiddenToken={activeField === Fields.TOKEN0 ? token1Address : token0Address}
       />
-    </>
+    </AppBody>
   )
 }
-
-export default withRouter(PoolFinder)

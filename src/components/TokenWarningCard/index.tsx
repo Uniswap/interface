@@ -1,16 +1,17 @@
 import { Token } from '@uniswap/sdk'
 import { transparentize } from 'polished'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
+import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { ALL_TOKENS, useAllTokens } from '../../hooks/Tokens'
 import { Field } from '../../state/swap/actions'
+import { useTokenWarningDismissal } from '../../state/user/hooks'
+import { Link, TYPE } from '../../theme'
 import { getEtherscanLink } from '../../utils'
-import { Link } from '../../theme'
+import PropsOfExcluding from '../../utils/props-of-excluding'
 import QuestionHelper from '../Question'
 import TokenLogo from '../TokenLogo'
-import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { TYPE } from '../../theme'
 
 const Wrapper = styled.div<{ error: boolean }>`
   background: ${({ theme, error }) => transparentize(0.9, error ? theme.red1 : theme.yellow1)};
@@ -52,10 +53,6 @@ const CloseIcon = styled.div`
   }
 `
 
-interface TokenWarningCardProps {
-  token?: Token
-}
-
 const HELP_TEXT = `
 The Uniswap V2 smart contracts are designed to support any ERC20 token on Ethereum. Any token can be
 loaded into the interface by entering its Ethereum address into the search field or passing it as a URL
@@ -64,19 +61,20 @@ parameter.
 
 const DUPLICATE_NAME_HELP_TEXT = `${HELP_TEXT} This token has the same name or symbol as another token in your list.`
 
-export default function TokenWarningCard({ token }: TokenWarningCardProps) {
+interface TokenWarningCardProps extends PropsOfExcluding<typeof Wrapper, 'error'> {
+  token?: Token
+}
+
+export default function TokenWarningCard({ token, ...rest }: TokenWarningCardProps) {
   const { chainId } = useActiveWeb3React()
-  const [dismissed, setDismissed] = useState<boolean>(false)
   const isDefaultToken = Boolean(
     token && token.address && chainId && ALL_TOKENS[chainId] && ALL_TOKENS[chainId][token.address]
   )
 
-  useEffect(() => {
-    setDismissed(false)
-  }, [token, setDismissed])
-
   const tokenSymbol = token?.symbol?.toLowerCase() ?? ''
   const tokenName = token?.name?.toLowerCase() ?? ''
+
+  const [dismissed, dismissTokenWarning] = useTokenWarningDismissal(chainId, token)
 
   const allTokens = useAllTokens()
 
@@ -95,9 +93,9 @@ export default function TokenWarningCard({ token }: TokenWarningCardProps) {
   if (isDefaultToken || !token || dismissed) return null
 
   return (
-    <Wrapper error={duplicateNameOrSymbol}>
+    <Wrapper error={duplicateNameOrSymbol} {...rest}>
       {duplicateNameOrSymbol ? null : (
-        <CloseIcon onClick={() => setDismissed(true)}>
+        <CloseIcon onClick={dismissTokenWarning}>
           <CloseColor />
         </CloseIcon>
       )}
@@ -123,17 +121,12 @@ export default function TokenWarningCard({ token }: TokenWarningCardProps) {
   )
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function TokenWarningCards({ tokens }: { tokens: { [field in Field]?: Token } }) {
-  return null
-  // temporarily disabled for styling
-  // return (
-  //   <div style={{ width: '100%', position: 'absolute', top: 'calc(100% + 30px)' }}>
-  //     {Object.keys(tokens).map(field => (
-  //       <div key={field} style={{ marginBottom: 10 }}>
-  //         <TokenWarningCard token={tokens[field]} />
-  //       </div>
-  //     ))}
-  //   </div>
-  // )
+  return (
+    <>
+      {Object.keys(tokens).map(field =>
+        tokens[field] ? <TokenWarningCard style={{ marginBottom: 10 }} key={field} token={tokens[field]} /> : null
+      )}
+    </>
+  )
 }

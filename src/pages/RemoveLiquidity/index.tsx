@@ -5,6 +5,7 @@ import { JSBI, Percent, Route, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useCallback, useContext, useEffect, useReducer, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
+import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { ButtonConfirmed, ButtonPrimary } from '../../components/Button'
@@ -23,12 +24,13 @@ import { usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { usePairContract, useActiveWeb3React } from '../../hooks'
 
-import { useToken } from '../../hooks/Tokens'
+import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
-import { ClickableText, FixedBottom, MaxButton, Wrapper } from './styleds'
+import AppBody from '../AppBody'
+import { ClickableText, FixedBottom, MaxButton, Wrapper } from '../Pool/styleds'
 import { useApproveCallback, Approval } from '../../hooks/useApproveCallback'
 import { Dots } from '../../components/swap/styleds'
 
@@ -104,15 +106,25 @@ function reducer(
   }
 }
 
-export default function RemoveLiquidity({ token0, token1 }: { token0: string; token1: string }) {
+function useTokenByAddressOrETHAndAutomaticallyAdd(tokenId?: string, chainId?: number): Token | undefined {
+  const isWETH = tokenId?.toUpperCase() === 'ETH' || tokenId?.toUpperCase() === 'WETH'
+
+  const tokenByAddress = useTokenByAddressAndAutomaticallyAdd(isWETH ? null : tokenId)
+
+  return isWETH ? WETH[chainId] : tokenByAddress
+}
+
+export default function RemoveLiquidity({ match: { params } }: RouteComponentProps<{ tokens: string }>) {
+  const [token0, token1] = params.tokens.split('-')
+
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [showAdvanced, setShowAdvanced] = useState<boolean>(false)
 
-  const inputToken: Token = useToken(token0)
-  const outputToken: Token = useToken(token1)
+  const inputToken: Token = useTokenByAddressOrETHAndAutomaticallyAdd(token0, chainId)
+  const outputToken: Token = useTokenByAddressOrETHAndAutomaticallyAdd(token1, chainId)
 
   // get basic SDK entities
   const tokens: { [field in Field]?: Token } = {
@@ -641,171 +653,173 @@ export default function RemoveLiquidity({ token0, token1 }: { token0: string; to
   } and ${parsedAmounts[Field.TOKEN1]?.toSignificant(6)} ${tokens[Field.TOKEN1]?.symbol}`
 
   return (
-    <Wrapper>
-      <ConfirmationModal
-        isOpen={showConfirm}
-        onDismiss={() => {
-          resetModalState()
-          setShowConfirm(false)
-        }}
-        attemptingTxn={attemptedRemoval}
-        pendingConfirmation={pendingConfirmation}
-        hash={txHash ? txHash : ''}
-        topContent={modalHeader}
-        bottomContent={modalBottom}
-        pendingText={pendingText}
-        title="You will receive"
-      />
-      <AutoColumn gap="md">
-        <LightCard>
-          <AutoColumn gap="20px">
-            <RowBetween>
-              <Text fontWeight={500}>Amount</Text>
-              <ClickableText
-                fontWeight={500}
-                onClick={() => {
-                  setShowAdvanced(!showAdvanced)
-                }}
-              >
-                {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
-              </ClickableText>
-            </RowBetween>
-            <Row style={{ alignItems: 'flex-end' }}>
-              <Text fontSize={72} fontWeight={500}>
-                {derivedPercent?.toFixed(0) === '0' ? '<1' : derivedPercent?.toFixed(0) ?? '0'}%
-              </Text>
-            </Row>
-            {!showAdvanced && (
-              <Slider
-                value={parseInt(derivedPercent?.toFixed(0) ?? '0')}
-                onChange={handleSliderChange}
-                override={override}
-              />
-            )}
-            {!showAdvanced && (
+    <AppBody>
+      <Wrapper>
+        <ConfirmationModal
+          isOpen={showConfirm}
+          onDismiss={() => {
+            resetModalState()
+            setShowConfirm(false)
+          }}
+          attemptingTxn={attemptedRemoval}
+          pendingConfirmation={pendingConfirmation}
+          hash={txHash ? txHash : ''}
+          topContent={modalHeader}
+          bottomContent={modalBottom}
+          pendingText={pendingText}
+          title="You will receive"
+        />
+        <AutoColumn gap="md">
+          <LightCard>
+            <AutoColumn gap="20px">
               <RowBetween>
-                <MaxButton onClick={() => handlePresetPercentage(25)} width="20%">
-                  25%
-                </MaxButton>
-                <MaxButton onClick={() => handlePresetPercentage(50)} width="20%">
-                  50%
-                </MaxButton>
-                <MaxButton onClick={() => handlePresetPercentage(75)} width="20%">
-                  75%
-                </MaxButton>
-                <MaxButton onClick={() => handlePresetPercentage(100)} width="20%">
-                  Max
-                </MaxButton>
+                <Text fontWeight={500}>Amount</Text>
+                <ClickableText
+                  fontWeight={500}
+                  onClick={() => {
+                    setShowAdvanced(!showAdvanced)
+                  }}
+                >
+                  {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
+                </ClickableText>
               </RowBetween>
-            )}
-          </AutoColumn>
-        </LightCard>
-        {!showAdvanced && (
-          <>
-            <ColumnCenter>
-              <ArrowDown size="16" color={theme.text2} />
-            </ColumnCenter>{' '}
-            <LightCard>
-              <AutoColumn gap="10px">
+              <Row style={{ alignItems: 'flex-end' }}>
+                <Text fontSize={72} fontWeight={500}>
+                  {derivedPercent?.toFixed(0) === '0' ? '<1' : derivedPercent?.toFixed(0) ?? '0'}%
+                </Text>
+              </Row>
+              {!showAdvanced && (
+                <Slider
+                  value={parseInt(derivedPercent?.toFixed(0) ?? '0')}
+                  onChange={handleSliderChange}
+                  override={override}
+                />
+              )}
+              {!showAdvanced && (
                 <RowBetween>
-                  <Text fontSize={24} fontWeight={500}>
-                    {formattedAmounts[Field.TOKEN0] ? formattedAmounts[Field.TOKEN0] : '-'}
-                  </Text>
-                  <RowFixed>
-                    <TokenLogo address={tokens[Field.TOKEN0]?.address} style={{ marginRight: '12px' }} />
-                    <Text fontSize={24} fontWeight={500}>
-                      {tokens[Field.TOKEN0]?.symbol}
-                    </Text>
-                  </RowFixed>
+                  <MaxButton onClick={() => handlePresetPercentage(25)} width="20%">
+                    25%
+                  </MaxButton>
+                  <MaxButton onClick={() => handlePresetPercentage(50)} width="20%">
+                    50%
+                  </MaxButton>
+                  <MaxButton onClick={() => handlePresetPercentage(75)} width="20%">
+                    75%
+                  </MaxButton>
+                  <MaxButton onClick={() => handlePresetPercentage(100)} width="20%">
+                    Max
+                  </MaxButton>
                 </RowBetween>
-                <RowBetween>
-                  <Text fontSize={24} fontWeight={500}>
-                    {formattedAmounts[Field.TOKEN1] ? formattedAmounts[Field.TOKEN1] : '-'}
-                  </Text>
-                  <RowFixed>
-                    <TokenLogo address={tokens[Field.TOKEN1]?.address} style={{ marginRight: '12px' }} />
+              )}
+            </AutoColumn>
+          </LightCard>
+          {!showAdvanced && (
+            <>
+              <ColumnCenter>
+                <ArrowDown size="16" color={theme.text2} />
+              </ColumnCenter>{' '}
+              <LightCard>
+                <AutoColumn gap="10px">
+                  <RowBetween>
                     <Text fontSize={24} fontWeight={500}>
-                      {tokens[Field.TOKEN1]?.symbol}
+                      {formattedAmounts[Field.TOKEN0] ? formattedAmounts[Field.TOKEN0] : '-'}
                     </Text>
-                  </RowFixed>
-                </RowBetween>
-              </AutoColumn>
-            </LightCard>
-          </>
-        )}
+                    <RowFixed>
+                      <TokenLogo address={tokens[Field.TOKEN0]?.address} style={{ marginRight: '12px' }} />
+                      <Text fontSize={24} fontWeight={500}>
+                        {tokens[Field.TOKEN0]?.symbol}
+                      </Text>
+                    </RowFixed>
+                  </RowBetween>
+                  <RowBetween>
+                    <Text fontSize={24} fontWeight={500}>
+                      {formattedAmounts[Field.TOKEN1] ? formattedAmounts[Field.TOKEN1] : '-'}
+                    </Text>
+                    <RowFixed>
+                      <TokenLogo address={tokens[Field.TOKEN1]?.address} style={{ marginRight: '12px' }} />
+                      <Text fontSize={24} fontWeight={500}>
+                        {tokens[Field.TOKEN1]?.symbol}
+                      </Text>
+                    </RowFixed>
+                  </RowBetween>
+                </AutoColumn>
+              </LightCard>
+            </>
+          )}
 
-        {showAdvanced && (
-          <>
-            <CurrencyInputPanel
-              field={Field.LIQUIDITY}
-              value={formattedAmounts[Field.LIQUIDITY]}
-              onUserInput={onUserInput}
-              onMax={onMax}
-              showMaxButton={!atMaxAmount}
-              disableTokenSelect
-              token={pair?.liquidityToken}
-              isExchange={true}
-              pair={pair}
-              id="liquidity-amount"
-            />
-            <ColumnCenter>
-              <ArrowDown size="16" color={theme.text2} />
-            </ColumnCenter>
-            <CurrencyInputPanel
-              field={Field.TOKEN0}
-              value={formattedAmounts[Field.TOKEN0]}
-              onUserInput={onUserInput}
-              onMax={onMax}
-              showMaxButton={!atMaxAmount}
-              token={tokens[Field.TOKEN0]}
-              label={'Output'}
-              disableTokenSelect
-              id="remove-liquidity-token0"
-            />
-            <ColumnCenter>
-              <Plus size="16" color={theme.text2} />
-            </ColumnCenter>
-            <CurrencyInputPanel
-              field={Field.TOKEN1}
-              value={formattedAmounts[Field.TOKEN1]}
-              onUserInput={onUserInput}
-              onMax={onMax}
-              showMaxButton={!atMaxAmount}
-              token={tokens[Field.TOKEN1]}
-              label={'Output'}
-              disableTokenSelect
-              id="remove-liquidity-token1"
-            />
-          </>
-        )}
-        <div style={{ padding: '10px 20px' }}>
-          <RowBetween>
-            Price:
-            <div>
-              1 {pair?.token0.symbol} ={' '}
-              {independentField === Field.TOKEN0 || independentField === Field.LIQUIDITY
-                ? route?.midPrice.toSignificant(6)
-                : route?.midPrice.invert().toSignificant(6)}{' '}
-              {pair?.token1.symbol}
-            </div>
-          </RowBetween>
-        </div>
-        <div style={{ position: 'relative' }}>
-          <ButtonPrimary
-            onClick={() => {
-              setShowConfirm(true)
-            }}
-            disabled={!isValid}
-          >
-            <Text fontSize={20} fontWeight={500}>
-              {inputError || outputError || poolTokenError || generalError || 'Remove'}
-            </Text>
-          </ButtonPrimary>
-          <FixedBottom>
-            <PositionCard pair={pair} minimal={true} />
-          </FixedBottom>
-        </div>
-      </AutoColumn>
-    </Wrapper>
+          {showAdvanced && (
+            <>
+              <CurrencyInputPanel
+                field={Field.LIQUIDITY}
+                value={formattedAmounts[Field.LIQUIDITY]}
+                onUserInput={onUserInput}
+                onMax={onMax}
+                showMaxButton={!atMaxAmount}
+                disableTokenSelect
+                token={pair?.liquidityToken}
+                isExchange={true}
+                pair={pair}
+                id="liquidity-amount"
+              />
+              <ColumnCenter>
+                <ArrowDown size="16" color={theme.text2} />
+              </ColumnCenter>
+              <CurrencyInputPanel
+                field={Field.TOKEN0}
+                value={formattedAmounts[Field.TOKEN0]}
+                onUserInput={onUserInput}
+                onMax={onMax}
+                showMaxButton={!atMaxAmount}
+                token={tokens[Field.TOKEN0]}
+                label={'Output'}
+                disableTokenSelect
+                id="remove-liquidity-token0"
+              />
+              <ColumnCenter>
+                <Plus size="16" color={theme.text2} />
+              </ColumnCenter>
+              <CurrencyInputPanel
+                field={Field.TOKEN1}
+                value={formattedAmounts[Field.TOKEN1]}
+                onUserInput={onUserInput}
+                onMax={onMax}
+                showMaxButton={!atMaxAmount}
+                token={tokens[Field.TOKEN1]}
+                label={'Output'}
+                disableTokenSelect
+                id="remove-liquidity-token1"
+              />
+            </>
+          )}
+          <div style={{ padding: '10px 20px' }}>
+            <RowBetween>
+              Price:
+              <div>
+                1 {pair?.token0.symbol} ={' '}
+                {independentField === Field.TOKEN0 || independentField === Field.LIQUIDITY
+                  ? route?.midPrice.toSignificant(6)
+                  : route?.midPrice.invert().toSignificant(6)}{' '}
+                {pair?.token1.symbol}
+              </div>
+            </RowBetween>
+          </div>
+          <div style={{ position: 'relative' }}>
+            <ButtonPrimary
+              onClick={() => {
+                setShowConfirm(true)
+              }}
+              disabled={!isValid}
+            >
+              <Text fontSize={20} fontWeight={500}>
+                {inputError || outputError || poolTokenError || generalError || 'Remove'}
+              </Text>
+            </ButtonPrimary>
+            <FixedBottom>
+              <PositionCard pair={pair} minimal={true} />
+            </FixedBottom>
+          </div>
+        </AutoColumn>
+      </Wrapper>
+    </AppBody>
   )
 }
