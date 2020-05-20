@@ -99,32 +99,37 @@ export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: A
             </TYPE.black>
             <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
           </RowFixed>
-          <Flex my="0.5rem" width="100%" justifyContent="center">
-            <Flex
-              px="1rem"
-              py="0.5rem"
-              style={{ border: `1px solid ${theme.bg3}`, borderRadius: '1rem' }}
-              flexWrap="wrap"
-            >
-              {trade?.route?.path.map((token, i) => {
-                const lastItem = i === trade.route.path.length - 1
-                return (
-                  <Flex
-                    mr={lastItem ? 0 : '1rem'}
-                    my="0.5rem"
-                    alignItems="center"
-                    key={token.address}
-                    style={{ flexShrink: 0 }}
-                  >
-                    <TokenLogo address={token.address} size="1.5rem" />
-                    <TYPE.black fontSize={14} color={theme.text1} ml="0.5rem">
-                      {token.symbol}
-                    </TYPE.black>
-                    {!lastItem && <ChevronRight color={theme.text2} style={{ marginLeft: '1rem' }} />}
-                  </Flex>
-                )
+          <Flex
+            px="1rem"
+            py="0.5rem"
+            my="0.5rem"
+            style={{ border: `1px solid ${theme.bg3}`, borderRadius: '1rem' }}
+            flexWrap="wrap"
+            width="100%"
+            justifyContent="space-evenly"
+            alignItems="center"
+          >
+            {trade.route.path
+              // add a null in-between each item
+              .flatMap((token, i, array) => {
+                const lastItem = i === array.length - 1
+                return lastItem ? [token] : [token, null]
+              })
+              .map((token, i) => {
+                // use null as an indicator to insert chevrons
+                if (token === null) {
+                  return <ChevronRight key={i} color={theme.text2} />
+                } else {
+                  return (
+                    <Flex my="0.5rem" alignItems="center" key={token.address} style={{ flexShrink: 0 }}>
+                      <TokenLogo address={token.address} size="1.5rem" />
+                      <TYPE.black fontSize={14} color={theme.text1} ml="0.5rem">
+                        {token.symbol}
+                      </TYPE.black>
+                    </Flex>
+                  )
+                }
               })}
-            </Flex>
           </Flex>
         </AutoColumn>
       )}
