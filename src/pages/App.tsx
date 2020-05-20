@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter, HashRouter, Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Footer from '../components/Footer'
@@ -67,10 +67,17 @@ const BackgroundGradient = styled.div`
   }
 `
 
+let Router: React.ComponentType
+if (process.env.PUBLIC_URL === '.') {
+  Router = HashRouter
+} else {
+  Router = BrowserRouter
+}
+
 export default function App() {
   return (
     <Suspense fallback={null}>
-      <BrowserRouter>
+      <Router>
         <Route component={GoogleAnalyticsReporter} />
         <Route component={DarkModeQueryParamReader} />
         <AppWrapper>
@@ -96,7 +103,7 @@ export default function App() {
           </BodyWrapper>
           <BackgroundGradient />
         </AppWrapper>
-      </BrowserRouter>
+      </Router>
       <div id="popover-container" />
     </Suspense>
   )
