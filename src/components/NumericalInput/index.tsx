@@ -3,18 +3,15 @@ import styled from 'styled-components'
 import { escapeRegExp } from '../../utils'
 
 const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string }>`
-  color: ${({ error, theme }) => error && theme.red1};
-  color: ${({ theme }) => theme.text1};
+  color: ${({ error, theme }) => (error ? theme.red1 : theme.text1)};
   width: 0;
   position: relative;
-  font-size: 24px;
   font-weight: 500;
-  font-family: 'Inter', sans-serif;
   outline: none;
   border: none;
   flex: 1 1 auto;
   background-color: ${({ theme }) => theme.bg1};
-  font-size: ${({ fontSize }) => fontSize && fontSize};
+  font-size: ${({ fontSize }) => fontSize ?? '24px'};
   text-align: ${({ align }) => align && align};
   white-space: nowrap;
   overflow: hidden;
@@ -65,7 +62,8 @@ export const Input = React.memo(function InnerInput({
       {...rest}
       value={value}
       onChange={event => {
-        enforcer(event.target.value)
+        // replace commas with periods, because uniswap exclusively uses period as the decimal separator
+        enforcer(event.target.value.replace(/,/g, '.'))
       }}
       // universal input options
       inputMode="decimal"
@@ -74,6 +72,7 @@ export const Input = React.memo(function InnerInput({
       autoCorrect="off"
       // text-specific options
       type="text"
+      pattern="^[0-9]*[.,]?[0-9]*$"
       placeholder={placeholder || '0.0'}
       minLength={1}
       maxLength={79}
@@ -83,3 +82,5 @@ export const Input = React.memo(function InnerInput({
 })
 
 export default Input
+
+// const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
