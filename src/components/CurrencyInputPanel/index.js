@@ -53,8 +53,8 @@ const InputRow = styled.div`
 
 const Input = styled(BorderlessInput)`
   font-size: 1.5rem;
-  color: ${({ error, theme }) => error && theme.salmonRed};
-  background-color: ${({ theme }) => theme.inputBackground};
+  color: #000000;
+  background-color: #FFFFFF;
   -moz-appearance: textfield;
 `
 
@@ -63,7 +63,8 @@ const StyledBorderlessInput = styled(BorderlessInput)`
   flex-shrink: 0;
   text-align: left;
   padding-left: 1.6rem;
-  background-color: ${({ theme }) => theme.concreteGray};
+  background-color: #FFFFFF;
+  color: #000000;
 `
 
 const CurrencySelect = styled.button`
@@ -71,24 +72,20 @@ const CurrencySelect = styled.button`
   font-size: 1rem;
   color: ${({ selected, theme }) => (selected ? theme.textColor : theme.royalBlue)};
   height: 2rem;
-  border: 1px solid ${({ selected, theme }) => (selected ? theme.mercuryGray : theme.royalBlue)};
   border-radius: 2.5rem;
-  background-color: ${({ selected, theme }) => (selected ? theme.concreteGray : theme.zumthorBlue)};
+  background-color: #FFFFFF;
   outline: none;
   cursor: pointer;
   user-select: none;
 
   :hover {
-    border: 1px solid
-      ${({ selected, theme }) => (selected ? darken(0.1, theme.mercuryGray) : darken(0.1, theme.royalBlue))};
   }
 
   :focus {
-    border: 1px solid ${({ theme }) => darken(0.1, theme.royalBlue)};
   }
 
   :active {
-    background-color: ${({ theme }) => theme.zumthorBlue};
+    background-color: #C6C6C6;
   }
 `
 
@@ -103,13 +100,13 @@ const StyledDropDown = styled(DropDown)`
   height: 35%;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.textColor : theme.royalBlue)};
+    stroke: #000000;
   }
 `
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
-  box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
+  box-shadow: 1px 1px 8px -4px rgba(0,0,0,.5), 1px 1px 4px -4px rgba(0,0,0,.5);
   position: relative;
   border-radius: 1.25rem;
   background-color: ${({ theme }) => theme.inputBackground};
@@ -118,25 +115,19 @@ const InputPanel = styled.div`
 
 const Container = styled.div`
   border-radius: 1.25rem;
-  border: 1px solid ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
 
-  background-color: ${({ theme }) => theme.inputBackground};
+  background-color: #FFFFFF;
   :focus-within {
-    border: 1px solid ${({ theme }) => theme.malibuBlue};
   }
 `
 
 const LabelRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  color: ${({ theme }) => theme.doveGray};
+  color: #000000;
   font-size: 0.75rem;
   line-height: 1rem;
   padding: 0.75rem 1rem;
-  span:hover {
-    cursor: pointer;
-    color: ${({ theme }) => darken(0.2, theme.doveGray)};
-  }
 `
 
 const LabelContainer = styled.div`
@@ -189,7 +180,7 @@ const SearchContainer = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   justify-content: flex-start;
   padding: 0.5rem 1.5rem;
-  background-color: ${({ theme }) => theme.concreteGray};
+  background-color: #FFFFFF;
 `
 
 const TokenModalInfo = styled.div`
@@ -221,7 +212,7 @@ const TokenModalRow = styled.div`
   }
 
   :hover {
-    background-color: ${({ theme }) => theme.tokenRowHover};
+    background-color: #E0E0E0;
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -266,6 +257,7 @@ const TokenRowRight = styled.div`
 
 const StyledTokenName = styled.span`
   margin: 0 0.25rem 0 0.25rem;
+  color: #000000;
 `
 
 const SpinnerWrapper = styled(Spinner)`

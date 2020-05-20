@@ -22,12 +22,11 @@ const OptionButton = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.royalBlue};
-  color: ${({ theme }) => theme.royalBlue};
+  color: #327ccb;
   padding: 8px 24px;
 
   &:hover {
-    border: 1px solid ${({ theme }) => theme.malibuBlue};
+    color: #5490d0;
     cursor: pointer;
   }
 
@@ -48,7 +47,7 @@ const HeaderRow = styled.div`
 
 const UpperSection = styled.div`
   position: relative;
-  background-color: ${({ theme }) => theme.concreteGray};
+  background-color: #FFFFFF;
 
   h5 {
     margin: 0;
@@ -78,7 +77,8 @@ const AccountGroupingRow = styled.div`
   justify-content: space-between;
   align-items: center;
   font-weight: 500;
-  color: ${({ theme }) => theme.textColor};
+  color: #000000;
+  text-decoration: none;
 
   div {
     ${({ theme }) => theme.flexRowNoWrap}
@@ -91,7 +91,7 @@ const AccountGroupingRow = styled.div`
 `
 
 const AccountSection = styled.div`
-  background-color: ${({ theme }) => theme.concreteGray};
+  background-color: #FFFFFF;
   padding: 0rem 1.5rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1rem 1rem;`};
 `
@@ -139,7 +139,7 @@ const LowerSection = styled.div`
   h5 {
     margin: 0;
     font-weight: 400;
-    color: ${({ theme }) => theme.doveGray};
+    color: #000000;
   }
 `
 

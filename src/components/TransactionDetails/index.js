@@ -85,8 +85,7 @@ const Popup = styled(Flex)`
   align-items: center;
   padding: 0.6rem 1rem;
   line-height: 150%;
-  background: ${({ theme }) => theme.inputBackground};
-  border: 1px solid ${({ theme }) => theme.mercuryGray};
+  background: #FFFFFF;
 
   border-radius: 8px;
 
@@ -107,16 +106,13 @@ const FancyButton = styled.button`
   height: 2rem;
   border-radius: 36px;
   font-size: 12px;
-  border: 1px solid ${({ theme }) => theme.mercuryGray};
   outline: none;
-  background: ${({ theme }) => theme.inputBackground};
+  background: #FFFFFF;
 
   :hover {
     cursor: inherit;
-    border: 1px solid ${({ theme }) => theme.chaliceGray};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.royalBlue};
   }
 `
 
@@ -237,7 +233,7 @@ const OptionCustom = styled(FancyButton)`
   ${({ color }) =>
     color === 'red' &&
     css`
-      border: 1px solid ${({ theme }) => theme.salmonRed};
+      border: 1px solid #000000;
     `}
 
   input {
@@ -377,6 +373,7 @@ export default function TransactionDetails(props) {
   }
 
   const dropDownContent = () => {
+    return (<></>);
     return (
       <>
         {renderTransactionDetails()}

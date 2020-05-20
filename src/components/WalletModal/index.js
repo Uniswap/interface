@@ -40,28 +40,28 @@ const Wrapper = styled.div`
   margin: 0;
   padding: 0;
   width: 100%;
-  background-color: ${({ theme }) => theme.backgroundColor};
+  background-color: #E0E0E0;
 `
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 1.5rem 1.5rem;
   font-weight: 500;
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.royalBlue : 'inherit')};
+  color: #000000;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
 `
 
 const ContentWrapper = styled.div`
-  background-color: ${({ theme }) => theme.backgroundColor};
+  background-color: #FFFFFF;
   padding: 2rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
 `
 
 const UpperSection = styled.div`
   position: relative;
-  background-color: ${({ theme }) => theme.concreteGray};
+  background-color: #E0E0E0;
 
   h5 {
     margin: 0;
@@ -95,6 +95,7 @@ const OptionGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
+  color: #000000;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
     grid-gap: 10px;
@@ -210,7 +211,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
               }}
               key={key}
               active={option.connector && option.connector === connector}
-              color={option.color}
+              color={'#000000'}
               link={option.href}
               header={option.name}
               subheader={null}
@@ -262,7 +263,7 @@ export default function WalletModal({ pendingTransactions, confirmedTransactions
             }}
             key={key}
             active={option.connector === connector}
-            color={option.color}
+            color={'#000000'}
             link={option.href}
             header={option.name}
             subheader={null} // use option.descriptio to bring back multi-line

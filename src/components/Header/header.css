@@ -1,0 +1,155 @@
+.navbar {
+    height: 60px;
+    background: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: left;
+    padding-top: 10px;
+    padding-right: 20px;
+    width: calc(100% - 20px);
+    z-index: 90;
+}
+
+.content {
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+}
+
+.logo {
+    border-radius: 50%;
+    width: 44px;
+    height: auto;
+    margin: 13px 9px 8px 15px;
+    display: inline-block;
+}
+
+.logo img {
+    width: 70px;
+    height: auto;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.logoText {
+    font-family: "Raleway",sans-serif;
+    font-size: 28px;
+    line-height: 60px;
+    display: inline-block;
+    vertical-align: top;
+    color: #000000;
+}
+
+.swapText {
+    font-family: 'Open Sans', sans-serif;
+    line-height: 55px;
+}
+
+.purchaseCryptoButton,
+.connectWalletButton {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 10px;
+}
+
+.purchaseCryptoButton .loadWallet {
+    width: 110px !important;
+    background-color: #8b9db1 !important;
+    color: white !important;
+}
+
+.purchaseCryptoButton .loadWallet:hover {
+    background-color: #9aaec5 !important;
+}
+
+.loadWallet {
+    color: black !important;
+    background-color: #327ccb !important;
+    font-weight: 100 !important;
+    box-shadow: rgba(0,0,0,0.5) 1px 1px 8px -4px, rgba(0,0,0,0.5) 1px 1px 4px -4px;
+    transition: all 0.2s ease-in-out;
+    -webkit-border-radius: 5px !important;
+    -moz-border-radius: 5px !important;
+    border-radius: 5px !important;
+    font-size: 15px !important;
+    height: 40px !important;
+    width: 140px !important;
+    margin-top: 10px !important;
+    text-transform: none !important;
+}
+
+.loadWallet:hover {
+    box-shadow: rgba(0,0,0,0.5) 1px 1px 8px -4px, rgba(0,0,0,0.5) 1px 1px 4px -4px;
+    background-color: #e0e0e0 !important;
+}
+
+.loadWallet.loaded {
+    width: 100px !important;
+    -webkit-transition: height 0.3s ease-in-out;
+    -moz-transition: height 0.3s ease-in-out;
+    -ms-transition: height 0.3s ease-in-out;
+    -o-transition: height 0.3s ease-in-out;
+    transition: height 0.3s ease-in-out;
+}
+
+.loadWallet.loaded:hover {
+    height: 53px !important;
+    overflow: hidden !important;
+}
+
+.loadWallet.loaded .walletConnected {
+    opacity: 0;
+    -webkit-transition: opacity 0.3s ease-in-out;
+    -moz-transition: opacity 0.3s ease-in-out;
+    -ms-transition: opacity 0.3s ease-in-out;
+    -o-transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.loadWallet.loaded:hover .walletConnected {
+    opacity: 1;
+}
+
+.walletConnected {
+    font-size: 9px;
+}
+
+.toolbar {
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.progressBar {
+    padding: 4px;
+    margin: 8px 55px 0;
+    color: #327ccb;
+}
+
+@media (max-width: 700px) {
+    .purchaseCryptoButton {
+        display: none;
+    }
+}
+
+@media (max-width: 550px) {
+    .navbar {
+        padding-top: 5px;
+    }
+
+    .logo {
+        width: 32px;
+    }
+
+    .logoText {
+        font-size: 20px;
+        line-height: 60px;
+        margin-top: -5px;
+    }
+
+    .swapText {
+        line-height: 55px;
+    }
+}

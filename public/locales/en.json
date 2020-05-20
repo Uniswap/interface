@@ -29,7 +29,7 @@
   "noLiquidity": "No liquidity.",
   "insufficientLiquidity": "Insufficient liquidity.",
   "unlockTokenCont": "Please unlock token to continue.",
-  "transactionDetails": "Advanced Details",
+  "transactionDetails": "",
   "hideDetails": "Hide Details",
   "slippageWarning": "Slippage Warning",
   "highSlippageWarning": "High Slippage Warning",

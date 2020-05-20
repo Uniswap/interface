@@ -11,22 +11,22 @@ export const Button = styled.button.attrs(({ warning, theme }) => ({
   font-size: 1rem;
   border: none;
   outline: none;
-  background-color: ${({ backgroundColor }) => backgroundColor};
+  background-color: #327ccb;
   color: ${({ theme }) => theme.white};
   width: 100%;
 
   :hover,
   :focus {
-    background-color: ${({ backgroundColor }) => darken(0.05, backgroundColor)};
+    background-color: #5490d0;
   }
 
   :active {
-    background-color: ${({ backgroundColor }) => darken(0.1, backgroundColor)};
+    background-color: #327ccb;
   }
 
   :disabled {
-    background-color: ${({ theme }) => theme.concreteGray};
-    color: ${({ theme }) => theme.silverGray};
+    background-color: rgba(50,124,203,.3);
+    color: #FFFFFF;
     cursor: auto;
   }
 `
@@ -37,7 +37,7 @@ export const Link = styled.a.attrs({
 })`
   text-decoration: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.royalBlue};
+  color: #327ccb !important;
 
   :focus {
     outline: none;

@@ -18,6 +18,7 @@ const AppWrapper = styled.div`
   flex-flow: column;
   align-items: flex-start;
   height: 100vh;
+  background: linear-gradient(360deg, #327ccb, #4f94de 5%, #8bbbef 15%, #bdddff 25%, #deeeff 40%);
 `
 
 const HeaderWrapper = styled.div`
@@ -44,6 +45,7 @@ const BodyWrapper = styled.div`
 const Body = styled.div`
   max-width: 35rem;
   width: 90%;
+  margin-top: 150px;
   /* margin: 0 1.25rem 1.25rem 1.25rem; */
 `
 

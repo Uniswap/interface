@@ -27,18 +27,21 @@ const Web3StatusGeneric = styled.button`
   font-size: 0.9rem;
   align-items: center;
   padding: 0.5rem;
-  border-radius: 2rem;
+  border-radius: 5px;
   box-sizing: border-box;
   cursor: pointer;
   user-select: none;
+  box-shadow: 1px 1px 8px -4px rgba(0,0,0,.5), 1px 1px 4px -4px rgba(0,0,0,.5);
+  margin-top: 10px;
+  height: 40px;
+  border: none !important;
   :focus {
     outline: none;
   }
 `
 const Web3StatusError = styled(Web3StatusGeneric)`
   background-color: ${({ theme }) => theme.salmonRed};
-  border: 1px solid ${({ theme }) => theme.salmonRed};
-  color: ${({ theme }) => theme.white};
+  color: #FFFFFF;
   font-weight: 500;
   :hover,
   :focus {
@@ -48,13 +51,11 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 
 const Web3StatusConnect = styled(Web3StatusGeneric)`
   background-color: transparent;
-  border: 1px solid ${({ theme }) => theme.royalBlue};
-  color: ${({ theme }) => theme.royalBlue};
+  color: #000000;
   font-weight: 500;
 
   :hover,
   :focus {
-    border: 1px solid ${({ theme }) => darken(0.1, theme.royalBlue)};
     color: ${({ theme }) => darken(0.1, theme.royalBlue)};
   }
 
@@ -62,29 +63,23 @@ const Web3StatusConnect = styled(Web3StatusGeneric)`
     faded &&
     css`
       background-color: transparent;
-      border: 1px solid ${({ theme }) => theme.royalBlue};
       color: ${({ theme }) => theme.royalBlue};
 
       :hover,
       :focus {
-        border: 1px solid ${({ theme }) => darken(0.1, theme.royalBlue)};
-        color: ${({ theme }) => darken(0.1, theme.royalBlue)};
+        color: #F0F0F0;
       }
     `}
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)`
-  background-color: ${({ pending, theme }) => (pending ? theme.zumthorBlue : theme.inputBackground)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.royalBlue : theme.mercuryGray)};
-  color: ${({ pending, theme }) => (pending ? theme.royalBlue : theme.doveGray)};
+  background-color: #327ccb;
+  color: #FFFFFF;
   font-weight: 400;
   :hover {
-    background-color: ${({ pending, theme }) =>
-      pending ? transparentize(0.9, theme.royalBlue) : darken(0.05, theme.inputBackground)};
+    background-color: #5490d0;
 
     :focus {
-      border: 1px solid
-        ${({ pending, theme }) => (pending ? darken(0.1, theme.royalBlue) : darken(0.1, theme.mercuryGray))};
     }
   }
 `

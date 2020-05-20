@@ -64,7 +64,7 @@ const StyledNavLink = styled(NavLink).attrs({
   font-size: 1rem;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.doveGray};
+  color: #327ccb;
   font-size: 1rem;
 
   &.${activeClassName} {

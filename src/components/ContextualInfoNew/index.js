@@ -9,7 +9,7 @@ const SummaryWrapper = styled.div`
   color: ${({ error, brokenTokenWarning, theme }) => (error || brokenTokenWarning ? theme.salmonRed : theme.doveGray)};
   font-size: 0.75rem;
   text-align: center;
-  margin-top: 1rem;
+  margin-top: 0rem;
   padding-top: 1rem;
 `
 
@@ -19,7 +19,6 @@ const SummaryWrapperContainer = styled.div`
   text-align: center;
   margin-top: 1rem;
   padding-top: 1rem;
-  cursor: pointer;
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
@@ -39,7 +38,6 @@ const Details = styled.div`
 `
 
 const ErrorSpan = styled.span`
-  margin-right: 12px;
   font-size: 0.75rem;
   line-height: 0.75rem;
 
@@ -85,8 +83,8 @@ const ColoredDropdown = styled(WrappedDropdown)`
 `
 
 export default function ContextualInfo({
-  openDetailsText = 'Advanced Details',
-  closeDetailsText = 'Hide Advanced',
+  openDetailsText = '',
+  closeDetailsText = '',
   contextualInfo = '',
   allowExpand = false,
   isError = false,
@@ -101,7 +99,7 @@ export default function ContextualInfo({
   ) : (
     <>
       <SummaryWrapperContainer
-        onClick={() => {
+        /*onClick={() => {
           !showDetails &&
             ReactGA.event({
               category: 'Advanced Interaction',
@@ -109,7 +107,7 @@ export default function ContextualInfo({
               label: 'Swap/Send Page Details'
             })
           setShowDetails(s => !s)
-        }}
+        }}*/
       >
         <>
           <ErrorSpan isError={isError} slippageWarning={slippageWarning} highSlippageWarning={highSlippageWarning}>
@@ -120,11 +118,11 @@ export default function ContextualInfo({
             )}
             {contextualInfo ? contextualInfo : showDetails ? closeDetailsText : openDetailsText}
           </ErrorSpan>
-          {showDetails ? (
+          {/*showDetails ? (
             <ColoredDropup isError={isError} highSlippageWarning={highSlippageWarning} />
           ) : (
             <ColoredDropdown isError={isError} highSlippageWarning={highSlippageWarning} />
-          )}
+          )*/}
         </>
       </SummaryWrapperContainer>
       {showDetails && <Details>{dropDownContent()}</Details>}

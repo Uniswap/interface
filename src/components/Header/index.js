@@ -1,58 +1,74 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import Button from "@material-ui/core/Button";
 import { Link } from '../../theme'
 import Web3Status from '../Web3Status'
 import { darken } from 'polished'
+import './header.css';
+import DMMLogo from '../../assets/images/dmm-logo.svg';
+import FiatAdapter from 'fiat-adapter';
 
-const HeaderFrame = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-`
 
-const HeaderElement = styled.div`
-  margin: 1.25rem;
-  display: flex;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-`
+class Header extends React.Component {
+  constructor(props) {
+    super(props);
 
-const Nod = styled.span`
-  transform: rotate(0deg);
-  transition: transform 150ms ease-out;
-
-  :hover {
-    transform: rotate(-10deg);
-  }
-`
-
-const Title = styled.div`
-  display: flex;
-  align-items: center;
-
-  :hover {
-    cursor: pointer;
+    this.state = {
+      fiatAdapterOpen: false,
+    };
   }
 
-  #link {
-    text-decoration-color: ${({ theme }) => theme.UniswapPink};
-  }
+  render() {
 
-  #title {
-    display: inline;
-    font-size: 1rem;
-    font-weight: 500;
-    color: ${({ theme }) => theme.wisteriaPurple};
-    :hover {
-      color: ${({ theme }) => darken(0.1, theme.wisteriaPurple)};
-    }
+    return (
+      <div className={'navbar'}>
+        <div className={'content'}>
+          <div className={'logoWrapper'}>
+            <div className={'logo'}>
+              <img src={DMMLogo} alt={"DMM Logo"}/>
+            </div>
+            <div className={'logoText'}>
+              DMM <span className={'swapText'}></span>
+            </div>
+          </div>
+          <div className={'buttonsWrapper'}>
+            <div className={'purchaseCryptoButton'}>
+              <Button className={'loadWallet'} onClick={() => this.setState({ fiatAdapterOpen: true })}>
+                Buy Crypto
+              </Button>
+            </div>
+            <div className={'connectWalletButton'}>
+              <Web3Status />
+              {/*this.state.isLoading ? (
+                <CircularProgress className={'progressBar'} color={"inherit"}/>
+              ) : (
+                <Button className={`${'loadWallet'} ${isWalletLoaded && 'loaded'}`}
+                        onClick={() => this.props.loadWallet()}>
+                  {isWalletLoaded ? (
+                    <div>
+                      <div>{'0x' + DmmWeb3Service.onboard.getState().address.substring(2, 4) + '...' + DmmWeb3Service.onboard.getState().address.slice(-4)}</div>
+                      <div className={'walletConnected'}>Wallet Connected</div>
+                    </div>
+                  ) : "Connect Wallet"}
+                </Button>
+              )*/}
+            </div>
+          </div>
+        </div>
+        <FiatAdapter
+          open={this.state.fiatAdapterOpen}
+          onClose={() => this.setState({ fiatAdapterOpen: false })}
+          allowedCryptos={['DAI', 'USDC']}
+        />
+      </div>
+    )
   }
-`
+}
 
-export default function Header() {
+export default Header;
+
+/*export default function Header() {
   return (
     <HeaderFrame>
       <HeaderElement>
@@ -74,4 +90,4 @@ export default function Header() {
       </HeaderElement>
     </HeaderFrame>
   )
-}
+}*/

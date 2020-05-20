@@ -94,7 +94,7 @@ const CloseIcon = styled.div`
 const WarningHeader = styled.div`
   margin-bottom: 10px;
   font-weight: 500;
-  color: ${({ theme }) => theme.uniswapPink};
+  color: #000000;
 `
 
 const WarningFooter = styled.div`
@@ -108,10 +108,18 @@ const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   height: 2.5rem;
-  background-color: ${({ theme }) => theme.concreteGray};
+  background-color: #FFFFFF;
   border-radius: 3rem;
   /* border: 1px solid ${({ theme }) => theme.mercuryGray}; */
   margin-bottom: 1rem;
+  box-shadow: 1px 1px 8px -4px rgba(0,0,0,.5), 1px 1px 4px -4px rgba(0,0,0,.5);
+`
+
+const Title = styled.div`
+  color: #000000;
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 25px;
 `
 
 const activeClassName = 'ACTIVE'
@@ -134,22 +142,21 @@ const StyledNavLink = styled(NavLink).attrs({
   box-sizing: border-box;
 
   &.${activeClassName} {
-    background-color: ${({ theme }) => theme.inputBackground};
+    background-color: #c3d7f0;
     border-radius: 3rem;
-    border: 1px solid ${({ theme }) => theme.mercuryGray};
     box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
     box-sizing: border-box;
     font-weight: 500;
-    color: ${({ theme }) => theme.royalBlue};
+    color: #000000;
     :hover {
       /* border: 1px solid ${({ theme }) => darken(0.1, theme.mercuryGray)}; */
-      background-color: ${({ theme }) => darken(0.01, theme.inputBackground)};
+      background-color: #a3c3ea;
     }
   }
 
   :hover,
   :focus {
-    color: ${({ theme }) => darken(0.1, theme.royalBlue)};
+    color: #000000;
   }
 `
 
@@ -193,13 +200,16 @@ function NavigationTabs({ location: { pathname }, history }) {
 
   return (
     <>
-      <Tabs>
+      {/*<Tabs>
         {tabOrder.map(({ path, textKey, regex }) => (
           <StyledNavLink key={path} to={path} isActive={(_, { pathname }) => pathname.match(regex)}>
             {t(textKey)}
           </StyledNavLink>
         ))}
-      </Tabs>
+      </Tabs>*/}
+      <Title>
+        DMG Purchase Portal
+      </Title>
       {providerMessage && (
         <DaiMessage>
           <CloseIcon onClick={dismissSaiHolderMessage}>✕</CloseIcon>
@@ -224,24 +234,6 @@ function NavigationTabs({ location: { pathname }, history }) {
             about this change on the official Maker blog.
           </WarningFooter>
         </DaiMessage>
-      )}
-      {generalMessage && !providerMessage && (
-        <DaiMessage>
-          <CloseIcon onClick={dismissGeneralDaiMessage}>✕</CloseIcon>
-          <WarningHeader>DAI has upgraded!</WarningHeader>
-          <div>
-            Your old DAI is now SAI. To upgrade use the{' '}
-            <Link href="https://migrate.makerdao.com/">migration tool.</Link>
-          </div>
-        </DaiMessage>
-      )}
-      {showBetaMessage && (
-        <BetaMessage onClick={dismissBetaMessage}>
-          <span role="img" aria-label="warning">
-            💀
-          </span>{' '}
-          {t('betaWarning')}
-        </BetaMessage>
       )}
     </>
   )

@@ -20,7 +20,7 @@ const ContainerRow = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 1.25rem;
-  border: 1px solid ${({ error, theme }) => (error ? theme.salmonRed : theme.mercuryGray)};
+  border: 1px solid #000000;
 
   background-color: ${({ theme }) => theme.inputBackground};
 `

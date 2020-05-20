@@ -3,14 +3,15 @@ import styled from 'styled-components'
 import { Link } from '../../theme'
 
 const InfoCard = styled.button`
-  background-color: ${({ theme, active }) => (active ? theme.activeGray : theme.backgroundColor)};
+  background-color: ${({ active }) => (active ? '#E0E0E0' : 'transparent')};
   padding: 1rem;
   outline: none;
   border: 1px solid;
   border-radius: 12px;
+  color: #000000 !important;
   width: 100% !important;
   &:focus {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.royalBlue};
+    box-shadow: 1px 1px 8px -4px rgba(0,0,0,.5), 1px 1px 4px -4px rgba(0,0,0,.5);
   }
   border-color: ${({ theme, active }) => (active ? 'transparent' : theme.placeholderGray)};
 `
@@ -20,8 +21,9 @@ const OptionCard = styled(InfoCard)`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-top: 2rem;
-  padding: 1rem;
+  margin-top: 2rem;/
+  padding: 1rem;#
+  background-color: #e0e0e0;
 `
 
 const OptionCardLeft = styled.div`
@@ -34,7 +36,7 @@ const OptionCardClickable = styled(OptionCard)`
   margin-top: 0;
   &:hover {
     cursor: ${({ clickable }) => (clickable ? 'pointer' : '')};
-    border: ${({ clickable, theme }) => (clickable ? `1px solid ${theme.malibuBlue}` : ``)};
+    border: 1px solid #E0E0E0;
   }
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
 `
@@ -62,7 +64,7 @@ const CircleWrapper = styled.div`
 
 const HeaderText = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.royalBlue : ({ theme }) => theme.textColor)};
+  color: #000000;
   font-size: 1rem;
   font-weight: 500;
 `
@@ -101,7 +103,7 @@ export default function Option({
   const content = (
     <OptionCardClickable onClick={onClick} clickable={clickable && !active} active={active}>
       <OptionCardLeft>
-        <HeaderText color={color}>
+        <HeaderText color={'#000000'}>
           {' '}
           {active ? (
             <CircleWrapper>

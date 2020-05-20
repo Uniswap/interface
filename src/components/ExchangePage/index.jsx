@@ -49,7 +49,7 @@ const DownArrowBackground = styled.div`
 
 const WrappedArrowDown = ({ clickable, active, ...rest }) => <ArrowDown {...rest} />
 const DownArrow = styled(WrappedArrowDown)`
-  color: ${({ theme, active }) => (active ? theme.royalBlue : theme.chaliceGray)};
+  color: black;
   width: 0.625rem;
   height: 0.625rem;
   position: relative;
@@ -74,7 +74,7 @@ const ExchangeRate = styled.span`
 const Flex = styled.div`
   display: flex;
   justify-content: center;
-  padding: 2rem;
+  padding: 5px 2rem 2rem 2rem;
 
   button {
     max-width: 20rem;

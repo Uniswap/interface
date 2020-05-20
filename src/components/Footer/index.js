@@ -39,9 +39,9 @@ const Title = styled.div`
     font-size: 0.825rem;
     margin-right: 12px;
     font-weight: 400;
-    color: ${({ theme }) => theme.uniswapPink};
+    color: #FFFFFF;
     :hover {
-      color: ${({ theme }) => darken(0.2, theme.uniswapPink)};
+      color: #E0E0E0;
     }
   }
 `
@@ -78,7 +78,7 @@ export default function Footer() {
     <FooterFrame>
       <FooterElement>
         <Title>
-          <Link id="link" href="https://uniswap.io/">
+          <Link id="link" href="https://defimoneymarket.com/">
             <h1 id="title">About</h1>
           </Link>
           <Link id="link" href="https://docs.uniswap.io/">
@@ -89,30 +89,6 @@ export default function Footer() {
           </Link>
         </Title>
       </FooterElement>
-
-      <StyledToggle
-        checked={!isDark}
-        uncheckedIcon={
-          <EmojiToggle role="img" aria-label="moon">
-            {/* eslint-disable-line jsx-a11y/accessible-emoji */}
-            🌙️
-          </EmojiToggle>
-        }
-        checkedIcon={
-          <EmojiToggle role="img" aria-label="sun">
-            {/* eslint-disable-line jsx-a11y/accessible-emoji */}
-            {'☀️'}
-          </EmojiToggle>
-        }
-        onChange={() => {
-          ReactGA.event({
-            category: 'Advanced Interaction',
-            action: 'Toggle Theme',
-            label: isDark ? 'Light' : 'Dark'
-          })
-          toggleDarkMode()
-        }}
-      />
     </FooterFrame>
   )
 }

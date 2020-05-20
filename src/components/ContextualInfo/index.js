@@ -66,8 +66,8 @@ class ContextualInfo extends Component {
   }
 
   static defaultProps = {
-    openDetailsText: 'Advanced Details',
-    closeDetailsText: 'Hide Advanced',
+    openDetailsText: '',
+    closeDetailsText: '',
     renderTransactionDetails() {},
     contextualInfo: '',
     isError: false
@@ -99,7 +99,7 @@ class ContextualInfo extends Component {
             !this.state.showDetails &&
               ReactGA.event({
                 category: 'Advanced Interaction',
-                action: 'Open Advanced Details',
+                action: '',
                 label: 'Pool Page Details'
               })
             this.setState(prevState => {
@@ -119,7 +119,7 @@ class ContextualInfo extends Component {
             </>
           )}
         </SummaryWrapperContainer>
-        {this.renderDetails()}
+        {/*this.renderDetails()*/}
       </>
     )
   }

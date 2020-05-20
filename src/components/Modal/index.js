@@ -15,7 +15,7 @@ const StyledDialogOverlay = styled(WrappedDialogOverlay).attrs({
   suppressClassNameWarning: true
 })`
   &[data-reach-dialog-overlay] {
-    z-index: 2;
+    z-index: 999;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -24,6 +24,7 @@ const StyledDialogOverlay = styled(WrappedDialogOverlay).attrs({
     ${({ mobile }) =>
       mobile &&
       css`
+      
         align-items: flex-end;
       `}
 
@@ -48,11 +49,11 @@ const FilteredDialogContent = ({ minHeight, maxHeight, isOpen, slideInAnimation,
 const StyledDialogContent = styled(FilteredDialogContent)`
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
-    border: 1px solid ${({ theme }) => theme.concreteGray};
-    background-color: ${({ theme }) => theme.inputBackground};
-    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
+    background-color: #FFFFFF;
+    box-shadow: 1px 1px 8px -4px rgba(0,0,0,.5), 1px 1px 4px -4px rgba(0,0,0,.5);
     padding: 0px;
     width: 50vw;
+    color: #000000;
 
     max-width: 650px;
     ${({ maxHeight }) =>

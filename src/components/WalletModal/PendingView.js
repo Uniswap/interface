@@ -35,7 +35,7 @@ const LoadingMessage = styled.div`
   border-radius: 12px;
   margin-bottom: 20px;
   color: ${({ theme, error }) => (error ? theme.salmonRed : 'inherit')};
-  border: 1px solid ${({ theme, error }) => (error ? theme.salmonRed : theme.placeholderGray)};
+  border: 1px solid #000000;
 
   & > * {
     padding: 1rem;
