@@ -33,13 +33,14 @@ jobs:
           path: build/
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1.0.0
+        uses: actions/create-release@v1.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           draft: true
+          prerelease: ${{ !startsWith(github.ref, 'refs/tags/v') }}
           body: |
             This release can be accessed at the following IPFS URLs:
             - https://cloudflare-ipfs.com/ipfs/${{ steps.upload.outputs.hash }}/
