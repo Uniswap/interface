@@ -1,7 +1,7 @@
 import { Trade, TradeType } from '@uniswap/sdk'
 import React, { useContext } from 'react'
-import { ChevronUp } from 'react-feather'
-import { Text } from 'rebass'
+import { ChevronUp, ChevronRight } from 'react-feather'
+import { Text, Flex } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { CursorPointer, TYPE } from '../../theme'
@@ -12,6 +12,7 @@ import QuestionHelper from '../Question'
 import { RowBetween, RowFixed } from '../Row'
 import SlippageTabs, { SlippageTabsProps } from '../SlippageTabs'
 import FormattedPriceImpact from './FormattedPriceImpact'
+import TokenLogo from '../TokenLogo'
 
 export interface AdvancedSwapDetailsProps extends SlippageTabsProps {
   trade: Trade
@@ -66,6 +67,7 @@ export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: A
           </RowFixed>
           <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
         </RowBetween>
+
         <RowBetween>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
@@ -78,7 +80,9 @@ export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: A
           </TYPE.black>
         </RowBetween>
       </AutoColumn>
+
       <SectionBreak />
+
       <RowFixed padding={'0 20px'}>
         <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
           Set slippage tolerance
@@ -86,6 +90,49 @@ export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: A
         <QuestionHelper text="Your transaction will revert if the execution price changes by more than this amount after you submit your trade." />
       </RowFixed>
       <SlippageTabs {...slippageTabProps} />
+
+      {trade.route.path.length > 2 && (
+        <AutoColumn style={{ padding: '0 20px' }}>
+          <RowFixed>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+              Route
+            </TYPE.black>
+            <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
+          </RowFixed>
+          <Flex
+            px="1rem"
+            py="0.5rem"
+            my="0.5rem"
+            style={{ border: `1px solid ${theme.bg3}`, borderRadius: '1rem' }}
+            flexWrap="wrap"
+            width="100%"
+            justifyContent="space-evenly"
+            alignItems="center"
+          >
+            {trade.route.path
+              // add a null in-between each item
+              .flatMap((token, i, array) => {
+                const lastItem = i === array.length - 1
+                return lastItem ? [token] : [token, null]
+              })
+              .map((token, i) => {
+                // use null as an indicator to insert chevrons
+                if (token === null) {
+                  return <ChevronRight key={i} color={theme.text2} />
+                } else {
+                  return (
+                    <Flex my="0.5rem" alignItems="center" key={token.address} style={{ flexShrink: 0 }}>
+                      <TokenLogo address={token.address} size="1.5rem" />
+                      <TYPE.black fontSize={14} color={theme.text1} ml="0.5rem">
+                        {token.symbol}
+                      </TYPE.black>
+                    </Flex>
+                  )
+                }
+              })}
+          </Flex>
+        </AutoColumn>
+      )}
     </AutoColumn>
   )
 }
