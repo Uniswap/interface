@@ -25,7 +25,7 @@ import TokenLogo from '../../components/TokenLogo'
 import { TokenWarningCards } from '../../components/TokenWarningCard'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
-import { useApproveCallbackFromTrade, Approval } from '../../hooks/useApproveCallback'
+import { useApproveCallbackFromTrade, ApprovalState } from '../../hooks/useApproveCallback'
 import { useSendCallback } from '../../hooks/useSendCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -153,7 +153,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
   }
 
   const sendCallback = useSendCallback(parsedAmounts?.[Field.INPUT], recipient)
-  const isSendValid = sendCallback !== null && (sendingWithSwap === false || approval === Approval.APPROVED)
+  const isSendValid = sendCallback !== null && (sendingWithSwap === false || approval === ApprovalState.APPROVED)
 
   async function onSend() {
     setAttemptingTxn(true)
@@ -465,9 +465,9 @@ export default function Send({ location: { search } }: RouteComponentProps) {
               <GreyCard style={{ textAlign: 'center' }}>
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
               </GreyCard>
-            ) : approval === Approval.NOT_APPROVED || approval === Approval.PENDING ? (
-              <ButtonLight onClick={approveCallback} disabled={approval === Approval.PENDING}>
-                {approval === Approval.PENDING ? (
+            ) : approval === ApprovalState.NOT_APPROVED || approval === ApprovalState.PENDING ? (
+              <ButtonLight onClick={approveCallback} disabled={approval === ApprovalState.PENDING}>
+                {approval === ApprovalState.PENDING ? (
                   <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
                 ) : (
                   'Approve ' + tokens[Field.INPUT]?.symbol

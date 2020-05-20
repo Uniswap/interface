@@ -1,10 +1,9 @@
 import { Contract } from '@ethersproject/contracts'
 import { Token, TokenAmount } from '@uniswap/sdk'
 import useSWR from 'swr'
-import { abi as IERC20ABI } from '@uniswap/v2-core/build/IERC20.json'
 
 import { SWRKeys, useKeepSWRDataLiveAsBlocksArrive } from '.'
-import { useContract } from '../hooks'
+import { useTokenContract } from '../hooks'
 
 function getTotalSupply(contract: Contract, token: Token): () => Promise<TokenAmount> {
   return async (): Promise<TokenAmount> =>
@@ -14,7 +13,7 @@ function getTotalSupply(contract: Contract, token: Token): () => Promise<TokenAm
 }
 
 export function useTotalSupply(token?: Token): TokenAmount {
-  const contract = useContract(token?.address, IERC20ABI, false)
+  const contract = useTokenContract(token?.address, false)
 
   const shouldFetch = !!contract
   const { data, mutate } = useSWR(
