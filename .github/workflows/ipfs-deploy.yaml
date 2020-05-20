@@ -29,4 +29,4 @@ jobs:
       - name: Install ipfs-deploy
         run: yarn global add ipfs-deploy
       - name: Deploy build
-        run: ipd build/
+        run: ipd --no-open --no-clipboard --pinner infura build
