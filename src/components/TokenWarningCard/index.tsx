@@ -122,12 +122,19 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
   )
 }
 
+const WarningContainer = styled.div`
+  max-width: 420px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1rem;
+`
+
 export function TokenWarningCards({ tokens }: { tokens: { [field in Field]?: Token } }) {
   return (
-    <>
+    <WarningContainer>
       {Object.keys(tokens).map(field =>
         tokens[field] ? <TokenWarningCard style={{ marginBottom: 10 }} key={field} token={tokens[field]} /> : null
       )}
-    </>
+    </WarningContainer>
   )
 }
