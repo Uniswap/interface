@@ -26,7 +26,8 @@ jobs:
             ${{ runner.os }}-yarn-
       - run: yarn
       - run: yarn ipfs-build
-      - name: Install ipfs-deploy
-        run: yarn global add ipfs-deploy
-      - name: Deploy build
-        run: ipd --no-open --no-clipboard --pinner infura build
+      - name: Upload to IPFS
+        id: upload
+        uses: aquiladev/ipfs-action@v1
+        with:
+          path: build/
