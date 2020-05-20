@@ -104,6 +104,7 @@ export default [
   new Token(ChainId.MAINNET, '0x04Fa0d235C4abf4BcF4787aF4CF447DE572eF828', 18, 'UMA', 'UMA Voting Token v1'),
   new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C'),
   new Token(ChainId.MAINNET, '0xA4Bdb11dc0a2bEC88d24A3aa1E6Bb17201112eBe', 6, 'USDS', 'StableUSD'),
+  new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD'),
   new Token(ChainId.MAINNET, '0xeb269732ab75A6fD61Ea60b06fE994cD32a83549', 18, 'USDx', 'dForce'),
   new Token(ChainId.MAINNET, '0x8f3470A7388c05eE4e7AF3d01D8C722b0FF52374', 18, 'VERI', 'Veritaseum'),
   new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC'),
