@@ -5,7 +5,6 @@ import { isMobile } from 'react-device-detect'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
 import { Provider } from 'react-redux'
-
 import { NetworkContextName } from './constants'
 import './i18n'
 import App from './pages/App'
