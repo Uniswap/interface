@@ -1,4 +1,5 @@
 import { MaxUint256 } from '@ethersproject/constants'
+import { TransactionResponse } from '@ethersproject/providers'
 import { Trade, WETH, TokenAmount } from '@uniswap/sdk'
 import { useCallback, useMemo } from 'react'
 import { ROUTER_ADDRESS } from '../constants'
@@ -9,7 +10,7 @@ import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { calculateGasMargin } from '../utils'
 import { useTokenContract, useActiveWeb3React } from './index'
 
-export enum Approval {
+export enum ApprovalState {
   UNKNOWN,
   NOT_APPROVED,
   PENDING,
@@ -20,29 +21,40 @@ export enum Approval {
 export function useApproveCallback(
   amountToApprove?: TokenAmount,
   addressToApprove?: string
-): [Approval, () => Promise<void>] {
+): [ApprovalState, () => Promise<void>] {
   const { account } = useActiveWeb3React()
 
-  const currentAllowance = useTokenAllowance(amountToApprove?.token, account, addressToApprove)
+  const currentAllowance = useTokenAllowance(amountToApprove?.token, account ?? undefined, addressToApprove)
   const pendingApproval = useHasPendingApproval(amountToApprove?.token?.address)
 
   // check the current approval status
   const approval = useMemo(() => {
+    if (!amountToApprove) return ApprovalState.UNKNOWN
     // we treat WETH as ETH which requires no approvals
-    if (amountToApprove?.token?.equals(WETH[amountToApprove?.token?.chainId])) return Approval.APPROVED
+    if (amountToApprove.token.equals(WETH[amountToApprove.token.chainId])) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
-    if (!currentAllowance) return Approval.UNKNOWN
-    if (pendingApproval) return Approval.PENDING
+    if (!currentAllowance) return ApprovalState.UNKNOWN
+    if (pendingApproval) return ApprovalState.PENDING
     // amountToApprove will be defined if currentAllowance is
-    return currentAllowance.lessThan(amountToApprove) ? Approval.NOT_APPROVED : Approval.APPROVED
+    return currentAllowance.lessThan(amountToApprove) ? ApprovalState.NOT_APPROVED : ApprovalState.APPROVED
   }, [amountToApprove, currentAllowance, pendingApproval])
 
   const tokenContract = useTokenContract(amountToApprove?.token?.address)
   const addTransaction = useTransactionAdder()
 
   const approve = useCallback(async (): Promise<void> => {
-    if (approval !== Approval.NOT_APPROVED) {
-      console.error('approve was called unnecessarily, this is likely an error.')
+    if (approval !== ApprovalState.NOT_APPROVED) {
+      console.error('approve was called unnecessarily')
+      return
+    }
+
+    if (!tokenContract) {
+      console.error('tokenContract is null')
+      return
+    }
+
+    if (!amountToApprove) {
+      console.error('missing amount to approve')
       return
     }
 
@@ -57,13 +69,13 @@ export function useApproveCallback(
       .approve(addressToApprove, useExact ? amountToApprove.raw.toString() : MaxUint256, {
         gasLimit: calculateGasMargin(estimatedGas)
       })
-      .then(response => {
+      .then((response: TransactionResponse) => {
         addTransaction(response, {
           summary: 'Approve ' + amountToApprove?.token?.symbol,
           approvalOfToken: amountToApprove?.token?.address
         })
       })
-      .catch(error => {
+      .catch((error: Error) => {
         console.debug('Failed to approve token', error)
         throw error
       })
@@ -74,9 +86,9 @@ export function useApproveCallback(
 
 // wraps useApproveCallback in the context of a swap
 export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) {
-  const amountToApprove = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT], [
-    trade,
-    allowedSlippage
-  ])
+  const amountToApprove = useMemo(
+    () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
+    [trade, allowedSlippage]
+  )
   return useApproveCallback(amountToApprove, ROUTER_ADDRESS)
 }

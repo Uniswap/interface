@@ -23,7 +23,7 @@ import V1TradeLink from '../../components/swap/V1TradeLink'
 import { TokenWarningCards } from '../../components/TokenWarningCard'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
-import { useApproveCallbackFromTrade, Approval } from '../../hooks/useApproveCallback'
+import { useApproveCallbackFromTrade, ApprovalState } from '../../hooks/useApproveCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
@@ -270,9 +270,9 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
               <GreyCard style={{ textAlign: 'center' }}>
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
               </GreyCard>
-            ) : approval === Approval.NOT_APPROVED || approval === Approval.PENDING ? (
-              <ButtonLight onClick={approveCallback} disabled={approval === Approval.PENDING}>
-                {approval === Approval.PENDING ? (
+            ) : approval === ApprovalState.NOT_APPROVED || approval === ApprovalState.PENDING ? (
+              <ButtonLight onClick={approveCallback} disabled={approval === ApprovalState.PENDING}>
+                {approval === ApprovalState.PENDING ? (
                   <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
                 ) : (
                   'Approve ' + tokens[Field.INPUT]?.symbol

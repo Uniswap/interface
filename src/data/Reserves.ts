@@ -1,10 +1,9 @@
 import { Contract } from '@ethersproject/contracts'
 import { Token, TokenAmount, Pair } from '@uniswap/sdk'
 import useSWR from 'swr'
-import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 
 import { SWRKeys, useKeepSWRDataLiveAsBlocksArrive } from '.'
-import { useContract } from '../hooks'
+import { usePairContract } from '../hooks'
 
 function getReserves(contract: Contract, tokenA: Token, tokenB: Token): () => Promise<Pair | null> {
   return async (): Promise<Pair | null> =>
@@ -28,7 +27,7 @@ function getReserves(contract: Contract, tokenA: Token, tokenB: Token): () => Pr
  */
 export function usePair(tokenA?: Token, tokenB?: Token): undefined | Pair | null {
   const pairAddress = !!tokenA && !!tokenB && !tokenA.equals(tokenB) ? Pair.getAddress(tokenA, tokenB) : undefined
-  const contract = useContract(pairAddress, IUniswapV2PairABI, false)
+  const contract = usePairContract(pairAddress, false)
 
   const shouldFetch = !!contract
   const key = shouldFetch ? [pairAddress, tokenA.chainId, SWRKeys.Reserves] : null

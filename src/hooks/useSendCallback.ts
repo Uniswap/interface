@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { WETH, TokenAmount, JSBI } from '@uniswap/sdk'
+import { TransactionResponse } from '@ethersproject/providers'
+import { WETH, TokenAmount, JSBI, ChainId } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useTokenBalanceTreatingWETHasETH } from '../state/wallet/hooks'
@@ -14,7 +15,7 @@ export function useSendCallback(amount?: TokenAmount, recipient?: string): null 
   const addTransaction = useTransactionAdder()
   const ensName = useENSName(recipient)
   const tokenContract = useTokenContract(amount?.token?.address)
-  const balance = useTokenBalanceTreatingWETHasETH(account, amount?.token)
+  const balance = useTokenBalanceTreatingWETHasETH(account ?? undefined, amount?.token)
 
   return useMemo(() => {
     if (!amount) return null
@@ -26,16 +27,19 @@ export function useSendCallback(amount?: TokenAmount, recipient?: string): null 
     const token = amount?.token
 
     return async function onSend(): Promise<string> {
-      if (token.equals(WETH[chainId])) {
+      if (!chainId || !library || !account || !tokenContract) {
+        throw new Error('missing dependencies in onSend callback')
+      }
+      if (token.equals(WETH[chainId as ChainId])) {
         return getSigner(library, account)
           .sendTransaction({ to: recipient, value: BigNumber.from(amount.raw.toString()) })
-          .then(response => {
+          .then((response: TransactionResponse) => {
             addTransaction(response, {
               summary: 'Send ' + amount.toSignificant(3) + ' ' + token?.symbol + ' to ' + (ensName ?? recipient)
             })
             return response.hash
           })
-          .catch(error => {
+          .catch((error: Error) => {
             console.error('Failed to transfer ETH', error)
             throw error
           })
@@ -47,7 +51,7 @@ export function useSendCallback(amount?: TokenAmount, recipient?: string): null 
               .transfer(recipient, amount.raw.toString(), {
                 gasLimit: calculateGasMargin(estimatedGasLimit)
               })
-              .then(response => {
+              .then((response: TransactionResponse) => {
                 addTransaction(response, {
                   summary: 'Send ' + amount.toSignificant(3) + ' ' + token.symbol + ' to ' + (ensName ?? recipient)
                 })

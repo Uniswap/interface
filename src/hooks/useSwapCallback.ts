@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { Token, Trade, TradeType, WETH } from '@uniswap/sdk'
+import { ChainId, Token, Trade, TradeType, WETH } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, ROUTER_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
@@ -21,17 +21,17 @@ enum SwapType {
 
 function getSwapType(tokens: { [field in Field]?: Token }, isExactIn: boolean, chainId: number): SwapType {
   if (isExactIn) {
-    if (tokens[Field.INPUT]?.equals(WETH[chainId])) {
+    if (tokens[Field.INPUT]?.equals(WETH[chainId as ChainId])) {
       return SwapType.EXACT_ETH_FOR_TOKENS
-    } else if (tokens[Field.OUTPUT]?.equals(WETH[chainId])) {
+    } else if (tokens[Field.OUTPUT]?.equals(WETH[chainId as ChainId])) {
       return SwapType.EXACT_TOKENS_FOR_ETH
     } else {
       return SwapType.EXACT_TOKENS_FOR_TOKENS
     }
   } else {
-    if (tokens[Field.INPUT]?.equals(WETH[chainId])) {
+    if (tokens[Field.INPUT]?.equals(WETH[chainId as ChainId])) {
       return SwapType.ETH_FOR_EXACT_TOKENS
-    } else if (tokens[Field.OUTPUT]?.equals(WETH[chainId])) {
+    } else if (tokens[Field.OUTPUT]?.equals(WETH[chainId as ChainId])) {
       return SwapType.TOKENS_FOR_EXACT_ETH
     } else {
       return SwapType.TOKENS_FOR_EXACT_TOKENS
@@ -48,27 +48,35 @@ export function useSwapCallback(
   to?: string // recipient of output, optional
 ): null | (() => Promise<string>) {
   const { account, chainId, library } = useActiveWeb3React()
-  const inputAllowance = useTokenAllowance(trade?.inputAmount?.token, account, ROUTER_ADDRESS)
+  const inputAllowance = useTokenAllowance(trade?.inputAmount?.token, account ?? undefined, ROUTER_ADDRESS)
   const addTransaction = useTransactionAdder()
   const recipient = to ? isAddress(to) : account
   const ensName = useENSName(to)
 
   return useMemo(() => {
-    if (!trade) return null
-    if (!recipient) return null
+    if (!trade || !recipient) return null
 
     // will always be defined
-    const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
+    const {
+      [Field.INPUT]: slippageAdjustedInput,
+      [Field.OUTPUT]: slippageAdjustedOutput
+    } = computeSlippageAdjustedAmounts(trade, allowedSlippage)
+
+    if (!slippageAdjustedInput || !slippageAdjustedOutput) return null
 
     // no allowance
     if (
-      !trade.inputAmount.token.equals(WETH[chainId]) &&
-      (!inputAllowance || slippageAdjustedAmounts[Field.INPUT].greaterThan(inputAllowance))
+      !trade.inputAmount.token.equals(WETH[chainId as ChainId]) &&
+      (!inputAllowance || slippageAdjustedInput.greaterThan(inputAllowance))
     ) {
       return null
     }
 
     return async function onSwap() {
+      if (!chainId || !library || !account) {
+        throw new Error('missing dependencies in onSwap callback')
+      }
+
       const routerContract: Contract = getRouterContract(chainId, library, account)
 
       const path = trade.route.path.map(t => t.address)
@@ -78,17 +86,17 @@ export function useSwapCallback(
       const swapType = getSwapType(
         { [Field.INPUT]: trade.inputAmount.token, [Field.OUTPUT]: trade.outputAmount.token },
         trade.tradeType === TradeType.EXACT_INPUT,
-        chainId
+        chainId as ChainId
       )
 
-      let estimate, method, args, value
+      let estimate, method: Function, args: Array<string | string[] | number>, value: BigNumber | null
       switch (swapType) {
         case SwapType.EXACT_TOKENS_FOR_TOKENS:
           estimate = routerContract.estimateGas.swapExactTokensForTokens
           method = routerContract.swapExactTokensForTokens
           args = [
-            slippageAdjustedAmounts[Field.INPUT].raw.toString(),
-            slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
+            slippageAdjustedInput.raw.toString(),
+            slippageAdjustedOutput.raw.toString(),
             path,
             recipient,
             deadlineFromNow
@@ -99,8 +107,8 @@ export function useSwapCallback(
           estimate = routerContract.estimateGas.swapTokensForExactTokens
           method = routerContract.swapTokensForExactTokens
           args = [
-            slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
-            slippageAdjustedAmounts[Field.INPUT].raw.toString(),
+            slippageAdjustedOutput.raw.toString(),
+            slippageAdjustedInput.raw.toString(),
             path,
             recipient,
             deadlineFromNow
@@ -110,15 +118,15 @@ export function useSwapCallback(
         case SwapType.EXACT_ETH_FOR_TOKENS:
           estimate = routerContract.estimateGas.swapExactETHForTokens
           method = routerContract.swapExactETHForTokens
-          args = [slippageAdjustedAmounts[Field.OUTPUT].raw.toString(), path, recipient, deadlineFromNow]
-          value = BigNumber.from(slippageAdjustedAmounts[Field.INPUT].raw.toString())
+          args = [slippageAdjustedOutput.raw.toString(), path, recipient, deadlineFromNow]
+          value = BigNumber.from(slippageAdjustedInput.raw.toString())
           break
         case SwapType.TOKENS_FOR_EXACT_ETH:
           estimate = routerContract.estimateGas.swapTokensForExactETH
           method = routerContract.swapTokensForExactETH
           args = [
-            slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
-            slippageAdjustedAmounts[Field.INPUT].raw.toString(),
+            slippageAdjustedOutput.raw.toString(),
+            slippageAdjustedInput.raw.toString(),
             path,
             recipient,
             deadlineFromNow
@@ -129,8 +137,8 @@ export function useSwapCallback(
           estimate = routerContract.estimateGas.swapExactTokensForETH
           method = routerContract.swapExactTokensForETH
           args = [
-            slippageAdjustedAmounts[Field.INPUT].raw.toString(),
-            slippageAdjustedAmounts[Field.OUTPUT].raw.toString(),
+            slippageAdjustedInput.raw.toString(),
+            slippageAdjustedOutput.raw.toString(),
             path,
             recipient,
             deadlineFromNow
@@ -140,8 +148,8 @@ export function useSwapCallback(
         case SwapType.ETH_FOR_EXACT_TOKENS:
           estimate = routerContract.estimateGas.swapETHForExactTokens
           method = routerContract.swapETHForExactTokens
-          args = [slippageAdjustedAmounts[Field.OUTPUT].raw.toString(), path, recipient, deadlineFromNow]
-          value = BigNumber.from(slippageAdjustedAmounts[Field.INPUT].raw.toString())
+          args = [slippageAdjustedOutput.raw.toString(), path, recipient, deadlineFromNow]
+          value = BigNumber.from(slippageAdjustedInput.raw.toString())
           break
       }
 
@@ -157,11 +165,11 @@ export function useSwapCallback(
             addTransaction(response, {
               summary:
                 'Swap ' +
-                slippageAdjustedAmounts[Field.INPUT].toSignificant(3) +
+                slippageAdjustedInput.toSignificant(3) +
                 ' ' +
                 trade.inputAmount.token.symbol +
                 ' for ' +
-                slippageAdjustedAmounts[Field.OUTPUT].toSignificant(3) +
+                slippageAdjustedOutput.toSignificant(3) +
                 ' ' +
                 trade.outputAmount.token.symbol
             })
@@ -169,11 +177,11 @@ export function useSwapCallback(
             addTransaction(response, {
               summary:
                 'Swap ' +
-                slippageAdjustedAmounts[Field.INPUT].toSignificant(3) +
+                slippageAdjustedInput.toSignificant(3) +
                 ' ' +
                 trade.inputAmount.token.symbol +
                 ' for ' +
-                slippageAdjustedAmounts[Field.OUTPUT].toSignificant(3) +
+                slippageAdjustedOutput.toSignificant(3) +
                 ' ' +
                 trade.outputAmount.token.symbol +
                 ' to ' +
