@@ -23,17 +23,18 @@ import V1TradeLink from '../../components/swap/V1TradeLink'
 import { TokenWarningCards } from '../../components/TokenWarningCard'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
-import { useApproveCallbackFromTrade, ApprovalState } from '../../hooks/useApproveCallback'
+import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
 import { CursorPointer, TYPE } from '../../theme'
+import constructQueryParametersFromTrade from '../../utils/constructQueryParametersFromTrade'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
 import AppBody from '../AppBody'
 
-export default function Swap({ location: { search } }: RouteComponentProps) {
-  useDefaultsFromURL(search)
+export default function Swap({ location, history }: RouteComponentProps) {
+  useDefaultsFromURL(location.search)
   // text translation
   // const { t } = useTranslation()
   const { chainId, account } = useActiveWeb3React()
@@ -281,6 +282,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
             ) : (
               <ButtonError
                 onClick={() => {
+                  history.push({ ...location, search: constructQueryParametersFromTrade(bestTrade) })
                   setShowConfirm(true)
                 }}
                 id="swap-button"

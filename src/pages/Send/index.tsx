@@ -34,10 +34,11 @@ import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapS
 import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
+import constructQueryParametersFromTrade from '../../utils/constructQueryParametersFromTrade'
 import AppBody from '../AppBody'
 
-export default function Send({ location: { search } }: RouteComponentProps) {
-  useDefaultsFromURL(search)
+export default function Send({ location, history }: RouteComponentProps) {
+  useDefaultsFromURL(location.search)
 
   // text translation
   // const { t } = useTranslation()
@@ -476,6 +477,9 @@ export default function Send({ location: { search } }: RouteComponentProps) {
             ) : (
               <ButtonError
                 onClick={() => {
+                  if (sendingWithSwap) {
+                    history.push({ ...location, search: constructQueryParametersFromTrade(bestTrade) })
+                  }
                   setShowConfirm(true)
                 }}
                 id="send-button"
