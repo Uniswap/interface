@@ -2,6 +2,7 @@ import { createReducer } from '@reduxjs/toolkit'
 import {
   addSerializedPair,
   addSerializedToken,
+  dismissTokenWarning,
   removeSerializedPair,
   removeSerializedToken,
   SerializedPair,
@@ -22,6 +23,13 @@ interface UserState {
   tokens: {
     [chainId: number]: {
       [address: string]: SerializedToken
+    }
+  }
+
+  // the token warnings that the user has dismissed
+  dismissedTokenWarnings?: {
+    [chainId: number]: {
+      [tokenAddress: string]: true
     }
   }
 
@@ -78,6 +86,11 @@ export default createReducer(initialState, builder =>
       state.tokens[chainId] = state.tokens[chainId] || {}
       delete state.tokens[chainId][address]
       state.timestamp = currentTimestamp()
+    })
+    .addCase(dismissTokenWarning, (state, { payload: { chainId, tokenAddress } }) => {
+      state.dismissedTokenWarnings = state.dismissedTokenWarnings ?? {}
+      state.dismissedTokenWarnings[chainId] = state.dismissedTokenWarnings[chainId] ?? {}
+      state.dismissedTokenWarnings[chainId][tokenAddress] = true
     })
     .addCase(addSerializedPair, (state, { payload: { serializedPair } }) => {
       if (

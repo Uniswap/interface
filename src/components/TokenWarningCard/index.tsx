@@ -6,6 +6,7 @@ import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { ALL_TOKENS, useAllTokens } from '../../hooks/Tokens'
 import { Field } from '../../state/swap/actions'
+import { useTokenWarningDismissal } from '../../state/user/hooks'
 import { Link, TYPE } from '../../theme'
 import { getEtherscanLink } from '../../utils'
 import PropsOfExcluding from '../../utils/props-of-excluding'
@@ -66,17 +67,14 @@ interface TokenWarningCardProps extends PropsOfExcluding<typeof Wrapper, 'error'
 
 export default function TokenWarningCard({ token, ...rest }: TokenWarningCardProps) {
   const { chainId } = useActiveWeb3React()
-  const [dismissed, setDismissed] = useState<boolean>(false)
   const isDefaultToken = Boolean(
     token && token.address && chainId && ALL_TOKENS[chainId] && ALL_TOKENS[chainId][token.address]
   )
 
-  useEffect(() => {
-    setDismissed(false)
-  }, [token, setDismissed])
-
   const tokenSymbol = token?.symbol?.toLowerCase() ?? ''
   const tokenName = token?.name?.toLowerCase() ?? ''
+
+  const [dismissed, dismissToken] = useTokenWarningDismissal(chainId, token)
 
   const allTokens = useAllTokens()
 
@@ -97,7 +95,7 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
   return (
     <Wrapper error={duplicateNameOrSymbol} {...rest}>
       {duplicateNameOrSymbol ? null : (
-        <CloseIcon onClick={() => setDismissed(true)}>
+        <CloseIcon onClick={dismissToken}>
           <CloseColor />
         </CloseIcon>
       )}
