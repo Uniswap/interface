@@ -32,16 +32,16 @@ jobs:
         with:
           path: build/
       - name: Create Release
-          id: create_release
-          uses: actions/create-release@v1.0.0
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            tag_name: ${{ github.ref }}
-            release_name: Release ${{ github.ref }}
-            draft: true
-            body: |
-              This release can be accessed at the following IPFS URLs:
-              - https://cloudflare-ipfs.com/ipfs/${{ steps.upload.outputs.hash }}/
-              - https://ipfs.infura.io/ipfs/${{ steps.upload.outputs.hash }}/
-              - https://ipfs.io/ipfs/${{ steps.upload.outputs.hash }}/
+        id: create_release
+        uses: actions/create-release@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          body: |
+            This release can be accessed at the following IPFS URLs:
+            - https://cloudflare-ipfs.com/ipfs/${{ steps.upload.outputs.hash }}/
+            - https://ipfs.infura.io/ipfs/${{ steps.upload.outputs.hash }}/
+            - https://ipfs.io/ipfs/${{ steps.upload.outputs.hash }}/
