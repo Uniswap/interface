@@ -16,6 +16,9 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           release_branches: .*
+      - name: Cancel if new tag is not generated
+        uses: andymckay/cancel-action@0.2
+        if: !startsWith(steps.bump_version.outputs.new_tag, 'v')
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
@@ -40,7 +43,7 @@ jobs:
           release_name: Release ${{ steps.bump_version.outputs.new_tag }}
           draft: true
           body: |
-            Release built from commit `${{ github.sha }}`
+            Release built from commit [`${{ github.sha }}`](https://github.com/Uniswap/uniswap-frontend/tree/${{ github.sha }})
 
             The IPFS hash of the bundle is `${{ steps.upload.outputs.hash }}`
 
