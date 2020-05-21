@@ -27,11 +27,11 @@ import { usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useTokenContract, useActiveWeb3React } from '../../hooks'
 
-import { useToken } from '../../hooks/Tokens'
+import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
 import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import { calculateGasMargin, calculateSlippageAmount, getRouterContract, isAddress } from '../../utils'
 import AppBody from '../AppBody'
 import { Dots, Wrapper } from '../Pool/styleds'
 
@@ -64,14 +64,16 @@ interface AddState {
 }
 
 function initializeAddState(inputAddress?: string, outputAddress?: string): AddState {
+  const validatedInput = isAddress(inputAddress)
+  const validatedOutput = isAddress(outputAddress)
   return {
     independentField: Field.INPUT,
     typedValue: '',
     [Field.INPUT]: {
-      address: inputAddress
+      address: validatedInput || ''
     },
     [Field.OUTPUT]: {
-      address: outputAddress
+      address: validatedOutput && validatedOutput !== validatedInput ? validatedOutput : ''
     }
   }
 }
@@ -152,10 +154,13 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
   const { independentField, typedValue, ...fieldData } = state
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
+  const inputToken = useTokenByAddressAndAutomaticallyAdd(fieldData[Field.INPUT].address)
+  const outputToken = useTokenByAddressAndAutomaticallyAdd(fieldData[Field.OUTPUT].address)
+
   // get basic SDK entities
   const tokens: { [field in Field]: Token } = {
-    [Field.INPUT]: useToken(fieldData[Field.INPUT].address),
-    [Field.OUTPUT]: useToken(fieldData[Field.OUTPUT].address)
+    [Field.INPUT]: inputToken,
+    [Field.OUTPUT]: outputToken
   }
 
   // token contracts for approvals and direct sends

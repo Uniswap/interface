@@ -35,10 +35,13 @@ export function useAllTokens(): { [address: string]: Token } {
   }, [userAddedTokens, chainId])
 }
 
-export function useToken(tokenAddress: string): Token {
+export function useToken(tokenAddress?: string): Token | undefined {
   const tokens = useAllTokens()
-
-  return tokens?.[tokenAddress]
+  return useMemo(() => {
+    const validatedAddress = isAddress(tokenAddress)
+    if (!validatedAddress) return
+    return tokens[validatedAddress]
+  }, [tokens, tokenAddress])
 }
 
 // gets token information by address (typically user input) and
@@ -46,22 +49,22 @@ export function useToken(tokenAddress: string): Token {
 export function useTokenByAddressAndAutomaticallyAdd(tokenAddress?: string): Token | undefined {
   const fetchTokenByAddress = useFetchTokenByAddress()
   const addToken = useAddUserToken()
-  const allTokens = useAllTokens()
+  const token = useToken(tokenAddress)
   const { chainId } = useActiveWeb3React()
 
   useEffect(() => {
-    if (!chainId) return
+    if (!chainId || !isAddress(tokenAddress)) return
     const weth = WETH[chainId as ChainId]
     if (weth && weth.address === isAddress(tokenAddress)) return
 
-    if (tokenAddress && !allTokens?.[tokenAddress]) {
+    if (tokenAddress && !token) {
       fetchTokenByAddress(tokenAddress).then(token => {
         if (token !== null) {
           addToken(token)
         }
       })
     }
-  }, [tokenAddress, allTokens, fetchTokenByAddress, addToken, chainId])
+  }, [tokenAddress, token, fetchTokenByAddress, addToken, chainId])
 
-  return tokenAddress ? allTokens?.[tokenAddress] : undefined
+  return token
 }
