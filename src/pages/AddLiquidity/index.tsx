@@ -701,7 +701,7 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
             onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
             pair={pair}
             label="Input"
-            id="add-liquidity-input"
+            id="add-liquidity-input-token0"
           />
           <ColumnCenter>
             <Plus size="16" color={theme.text2} />
@@ -717,7 +717,7 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
             token={tokens[Field.OUTPUT]}
             onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
             pair={pair}
-            id="add-liquidity-output"
+            id="add-liquidity-input-token1"
           />
           {tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
             <>

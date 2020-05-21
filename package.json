@@ -1,7 +1,6 @@
 {
-  "name": "uniswap",
+  "name": "@uniswap/interface",
   "description": "Uniswap Interface",
-  "version": "0.1.0",
   "homepage": "https://uniswap.exchange",
   "private": true,
   "dependencies": {
