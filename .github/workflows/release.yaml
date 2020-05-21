@@ -52,7 +52,7 @@ jobs:
         with:
           tag_name: ${{ steps.bump_version.outputs.new_tag }}
           release_name: Release ${{ steps.bump_version.outputs.new_tag }}
-          draft: true
+          draft: false
           body: |
             Release built from commit [`${{ github.sha }}`](https://github.com/Uniswap/uniswap-frontend/tree/${{ github.sha }})
 
