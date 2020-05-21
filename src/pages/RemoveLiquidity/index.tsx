@@ -106,14 +106,6 @@ function reducer(
   }
 }
 
-function useTokenByAddressOrETHAndAutomaticallyAdd(tokenId?: string, chainId?: number): Token | undefined {
-  const isWETH = tokenId?.toUpperCase() === 'ETH' || tokenId?.toUpperCase() === 'WETH'
-
-  const tokenByAddress = useTokenByAddressAndAutomaticallyAdd(isWETH ? null : tokenId)
-
-  return isWETH ? WETH[chainId] : tokenByAddress
-}
-
 export default function RemoveLiquidity({ match: { params } }: RouteComponentProps<{ tokens: string }>) {
   const [token0, token1] = params.tokens.split('-')
 
@@ -123,13 +115,13 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [showAdvanced, setShowAdvanced] = useState<boolean>(false)
 
-  const inputToken: Token = useTokenByAddressOrETHAndAutomaticallyAdd(token0, chainId)
-  const outputToken: Token = useTokenByAddressOrETHAndAutomaticallyAdd(token1, chainId)
+  const inputToken: Token = useTokenByAddressAndAutomaticallyAdd(token0)
+  const outputToken: Token = useTokenByAddressAndAutomaticallyAdd(token1)
 
   // get basic SDK entities
   const tokens: { [field in Field]?: Token } = {
     [Field.TOKEN0]: inputToken,
-    [Field.TOKEN1]: outputToken
+    [Field.TOKEN1]: outputToken && inputToken && outputToken.equals(inputToken) ? undefined : outputToken
   }
 
   const pair = usePair(inputToken, outputToken)
@@ -726,7 +718,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
                     </Text>
                     <RowFixed>
                       <TokenLogo address={tokens[Field.TOKEN0]?.address} style={{ marginRight: '12px' }} />
-                      <Text fontSize={24} fontWeight={500}>
+                      <Text fontSize={24} fontWeight={500} id="remove-liquidity-token0-symbol">
                         {tokens[Field.TOKEN0]?.symbol}
                       </Text>
                     </RowFixed>
@@ -737,7 +729,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
                     </Text>
                     <RowFixed>
                       <TokenLogo address={tokens[Field.TOKEN1]?.address} style={{ marginRight: '12px' }} />
-                      <Text fontSize={24} fontWeight={500}>
+                      <Text fontSize={24} fontWeight={500} id="remove-liquidity-token1-symbol">
                         {tokens[Field.TOKEN1]?.symbol}
                       </Text>
                     </RowFixed>
