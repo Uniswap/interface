@@ -28,11 +28,13 @@ jobs:
         run: yarn
       - name: Build the IPFS bundle
         run: yarn ipfs-build
-      - name: Upload to IPFS
-        id: upload
-        uses: aquiladev/ipfs-action@master
+      - name: Pin to IPFS
+        uses: anantaramdas/ipfs-pinata-deploy-action@v1.5.2
         with:
-          path: build/
+          pin-name: Uniswap ${{ steps.bump_version.outputs.new_tag }}
+          path: './build'
+          pinata-api-key: ${{ secrets.PINATA_API_KEY }}
+          pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET_KEY }}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1.1.0
