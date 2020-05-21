@@ -64,6 +64,4 @@ jobs:
             - https://ipfs.io/ipfs/${{ steps.upload.outputs.hash }}/
             - https://dweb.link/ipfs/${{ steps.upload.outputs.hash }}/
 
-            Changes since the last release below.
-
             ${{ steps.bump_version.outputs.changelog }}
