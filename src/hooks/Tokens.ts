@@ -29,7 +29,7 @@ export function useAllTokens(): { [address: string]: Token } {
       // we have to replace it as a workaround because if it is automatically
       // fetched by address it will cause an invariant when used in constructing
       // pairs since we replace the name and symbol with 'ETH' and 'Ether'
-      tokens[weth.address] = WETH[chainId as ChainId]
+      tokens[weth.address] = weth
     }
     return tokens
   }, [userAddedTokens, chainId])
