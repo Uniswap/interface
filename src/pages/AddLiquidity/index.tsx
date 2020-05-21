@@ -27,7 +27,7 @@ import { usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useTokenContract, useActiveWeb3React } from '../../hooks'
 
-import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
+import { useToken } from '../../hooks/Tokens'
 import { useHasPendingApproval, useTransactionAdder } from '../../state/transactions/hooks'
 import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
@@ -135,14 +135,6 @@ function reducer(
   }
 }
 
-function useTokenByAddressOrETHAndAutomaticallyAdd(tokenId?: string, chainId?: number): Token | undefined {
-  const isWETH = tokenId?.toUpperCase() === 'ETH' || tokenId?.toUpperCase() === 'WETH'
-
-  const tokenByAddress = useTokenByAddressAndAutomaticallyAdd(isWETH ? null : tokenId)
-
-  return isWETH ? WETH[chainId] : tokenByAddress
-}
-
 export default function AddLiquidity({ match: { params } }: RouteComponentProps<{ tokens: string }>) {
   const [token0, token1] = params.tokens.split('-')
 
@@ -162,8 +154,8 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
 
   // get basic SDK entities
   const tokens: { [field in Field]: Token } = {
-    [Field.INPUT]: useTokenByAddressOrETHAndAutomaticallyAdd(fieldData[Field.INPUT].address, chainId),
-    [Field.OUTPUT]: useTokenByAddressOrETHAndAutomaticallyAdd(fieldData[Field.OUTPUT].address, chainId)
+    [Field.INPUT]: useToken(fieldData[Field.INPUT].address),
+    [Field.OUTPUT]: useToken(fieldData[Field.OUTPUT].address)
   }
 
   // token contracts for approvals and direct sends
