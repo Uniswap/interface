@@ -18,7 +18,6 @@ jobs:
           release_branches: .*
       - name: Cancel this build if no new commits
         uses: andymckay/cancel-action@0.2
-        if: steps.bump_version.outputs.new_tag == undefined
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
