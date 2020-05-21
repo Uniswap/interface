@@ -1,8 +1,12 @@
 name: Daily Release
 # every morning
+#on:
+#  schedule:
+#    - cron:  '0 12 * * *'
 on:
-  schedule:
-    - cron:  '0 12 * * *'
+  push:
+    branches:
+      - v2
 jobs:
   create-release:
     name: Create Release
@@ -10,31 +14,41 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+
       - name: Bump version and push tag
         id: bump_version
         uses: mathieudutour/github-tag-action@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           release_branches: .*
+
       - name: Cancel this build if no new commits
+        if: ${{ steps.bump_version.outputs.new_tag == null }}
         uses: andymckay/cancel-action@0.2
+
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
+
       - name: Install yarn
         run: npm install -g yarn
+
       - name: Install dependencies
         run: yarn
+
       - name: Build the IPFS bundle
         run: yarn ipfs-build
+
       - name: Pin to IPFS
+        id: upload
         uses: anantaramdas/ipfs-pinata-deploy-action@v1.5.2
         with:
           pin-name: Uniswap ${{ steps.bump_version.outputs.new_tag }}
           path: './build'
           pinata-api-key: ${{ secrets.PINATA_API_KEY }}
           pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET_KEY }}
-      - name: Create Release
+
+      - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1.1.0
         env:
