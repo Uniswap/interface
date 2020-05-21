@@ -16,9 +16,9 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           release_branches: .*
-      - name: Cancel if new tag is not generated
+      - name: Cancel this build if no new commits
         uses: andymckay/cancel-action@0.2
-        if: !startsWith(steps.bump_version.outputs.new_tag, 'v')
+        if: steps.bump_version.outputs.new_tag == undefined
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
