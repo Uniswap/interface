@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
+import { ChainId, WETH } from '@uniswap/sdk'
 import {
   addSerializedPair,
   addSerializedToken,
@@ -66,6 +67,14 @@ export default createReducer(initialState, builder =>
     .addCase(updateVersion, state => {
       if (GIT_COMMIT_HASH && state.lastVersion !== GIT_COMMIT_HASH) {
         state.lastVersion = GIT_COMMIT_HASH
+
+        // Wed May 20, 2020 @ ~9pm central
+        if (state.timestamp < 1590027589111) {
+          // this should remove the user added token from 'eth' for mainnet
+          if (state.tokens[ChainId.MAINNET]) {
+            delete state.tokens[ChainId.MAINNET][WETH[ChainId.MAINNET].address]
+          }
+        }
       }
       state.timestamp = currentTimestamp()
     })
