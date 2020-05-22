@@ -12,7 +12,8 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
-  updateUserDarkMode
+  updateUserDarkMode,
+  updateUserExpertMode
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -59,6 +60,22 @@ export function useDarkModeManager(): [boolean, () => void] {
   }, [darkMode, dispatch])
 
   return [darkMode, toggleSetDarkMode]
+}
+
+export function useIsExpertMode(): boolean {
+  const userExpertMode = useSelector<AppState, AppState['user']['userExpertMode']>(state => state.user.userExpertMode)
+  return userExpertMode
+}
+
+export function useExpertModeManager(): [boolean, () => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const expertMode = useIsExpertMode()
+
+  const toggleSetExpertMode = useCallback(() => {
+    dispatch(updateUserExpertMode({ userExpertMode: !expertMode }))
+  }, [expertMode, dispatch])
+
+  return [expertMode, toggleSetExpertMode]
 }
 
 export function useFetchTokenByAddress(): (address: string) => Promise<Token | null> {

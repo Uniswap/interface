@@ -11,8 +11,10 @@ import { SectionBreak } from './styleds'
 import QuestionHelper from '../Question'
 import { RowBetween, RowFixed } from '../Row'
 import SlippageTabs, { SlippageTabsProps } from '../SlippageTabs'
+import Toggle from '../Toggle'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import TokenLogo from '../TokenLogo'
+import { useExpertModeManager } from '../../state/user/hooks'
 
 export interface AdvancedSwapDetailsProps extends SlippageTabsProps {
   trade: Trade
@@ -24,6 +26,8 @@ export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: A
   const theme = useContext(ThemeContext)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, slippageTabProps.rawSlippage)
+
+  const [expertMode, toggleExpertMode] = useExpertModeManager()
 
   return (
     <AutoColumn gap="md">
@@ -133,6 +137,17 @@ export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: A
           </Flex>
         </AutoColumn>
       )}
+      <SectionBreak />
+
+      <RowBetween padding={'0 20px 4px 20px'}>
+        <RowFixed>
+          <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+            Toggle Expert Mode
+          </TYPE.black>
+          <QuestionHelper text="Bypasses swap confirm modals. Use at your own risk." />
+        </RowFixed>
+        <Toggle isActive={expertMode} toggle={toggleExpertMode} />
+      </RowBetween>
     </AutoColumn>
   )
 }

@@ -16,6 +16,7 @@ export interface SerializedPair {
 export const updateVersion = createAction<void>('updateVersion')
 export const updateMatchesDarkMode = createAction<{ matchesDarkMode: boolean }>('updateMatchesDarkMode')
 export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('updateUserDarkMode')
+export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('updateUserExpertMode')
 export const addSerializedToken = createAction<{ serializedToken: SerializedToken }>('addSerializedToken')
 export const removeSerializedToken = createAction<{ chainId: number; address: string }>('removeSerializedToken')
 export const addSerializedPair = createAction<{ serializedPair: SerializedPair }>('addSerializedPair')
