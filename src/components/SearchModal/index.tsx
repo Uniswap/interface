@@ -199,19 +199,7 @@ function SearchModal({
         <Card>
           <AutoRow justify={'center'}>
             <div>
-              {isTokenView && (
-                <Text fontWeight={500}>
-                  {!isMobile && "Don't see a pool? "}
-                  <StyledLink
-                    onClick={() => {
-                      history.push('/find')
-                    }}
-                  >
-                    {!isMobile ? 'Import it.' : 'Import pool.'}
-                  </StyledLink>
-                </Text>
-              )}
-              {isTokenView && (
+              {isTokenView ? (
                 <Text fontWeight={500} color={theme.text2} fontSize={14}>
                   {!isMobile && "Don't see a token? "}
                   <StyledLink
@@ -221,6 +209,17 @@ function SearchModal({
                     }}
                   >
                     {!isMobile ? 'Import it.' : 'Import custom token.'}
+                  </StyledLink>
+                </Text>
+              ) : (
+                <Text fontWeight={500}>
+                  {!isMobile && "Don't see a pool? "}
+                  <StyledLink
+                    onClick={() => {
+                      history.push('/find')
+                    }}
+                  >
+                    {!isMobile ? 'Import it.' : 'Import pool.'}
                   </StyledLink>
                 </Text>
               )}
