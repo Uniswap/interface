@@ -125,7 +125,6 @@ interface CurrencyInputPanelProps {
   onMax?: () => void
   showMaxButton: boolean
   label?: string
-  urlAddedTokens?: Token[]
   onTokenSelection?: (tokenAddress: string) => void
   token?: Token | null
   disableTokenSelect?: boolean
@@ -145,7 +144,6 @@ export default function CurrencyInputPanel({
   onMax,
   showMaxButton,
   label = 'Input',
-  urlAddedTokens = [], // used
   onTokenSelection = null,
   token = null,
   disableTokenSelect = false,
@@ -246,7 +244,6 @@ export default function CurrencyInputPanel({
             setModalOpen(false)
           }}
           filterType="tokens"
-          urlAddedTokens={urlAddedTokens}
           onTokenSelect={onTokenSelection}
           showSendWithSwap={showSendWithSwap}
           hiddenToken={token?.address}

@@ -80,7 +80,7 @@ export default function CreatePool({ history, location }: RouteComponentProps) {
                   {token0?.symbol}{' '}
                 </Text>
                 <TYPE.darkGray fontWeight={500} fontSize={16} marginLeft={'8px'}>
-                  {token0?.address === 'ETH' && '(default)'}
+                  {token0?.address === WETH[chainId]?.address && '(default)'}
                 </TYPE.darkGray>
               </Row>
             </ButtonDropwdownLight>

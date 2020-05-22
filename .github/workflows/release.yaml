@@ -1,4 +1,4 @@
-name: Daily Release
+name: Release
 # every morning
 on:
   schedule:
@@ -10,27 +10,45 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+
       - name: Bump version and push tag
         id: bump_version
         uses: mathieudutour/github-tag-action@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           release_branches: .*
+
+      - name: Cancel this build if no new commits
+        if: ${{ steps.bump_version.outputs.new_tag == null }}
+        uses: andymckay/cancel-action@0.2
+
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
+
       - name: Install yarn
         run: npm install -g yarn
+
       - name: Install dependencies
         run: yarn
+
       - name: Build the IPFS bundle
         run: yarn ipfs-build
-      - name: Upload to IPFS
+
+      - name: Pin to IPFS
         id: upload
-        uses: aquiladev/ipfs-action@master
+        uses: anantaramdas/ipfs-pinata-deploy-action@v1.5.2
         with:
-          path: build/
-      - name: Create Release
+          pin-name: Uniswap ${{ steps.bump_version.outputs.new_tag }}
+          path: './build'
+          pinata-api-key: ${{ secrets.PINATA_API_KEY }}
+          pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET_KEY }}
+
+      - name: Update DNS with new IPFS hash
+        id: update_dns
+        run: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --scope uniswap dns add uniswap.org _dnslink.app TXT "dnslink=/ipfs/${{ steps.upload.outputs.hash }}"
+
+      - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1.1.0
         env:
@@ -38,9 +56,8 @@ jobs:
         with:
           tag_name: ${{ steps.bump_version.outputs.new_tag }}
           release_name: Release ${{ steps.bump_version.outputs.new_tag }}
-          draft: true
           body: |
-            Release built from commit `${{ github.sha }}`
+            Release built from commit [`${{ github.sha }}`](https://github.com/Uniswap/uniswap-frontend/tree/${{ github.sha }})
 
             The IPFS hash of the bundle is `${{ steps.upload.outputs.hash }}`
 
@@ -48,7 +65,6 @@ jobs:
             - https://cloudflare-ipfs.com/ipfs/${{ steps.upload.outputs.hash }}/
             - https://ipfs.infura.io/ipfs/${{ steps.upload.outputs.hash }}/
             - https://ipfs.io/ipfs/${{ steps.upload.outputs.hash }}/
-
-            Includes the following changes:
+            - https://dweb.link/ipfs/${{ steps.upload.outputs.hash }}/
 
             ${{ steps.bump_version.outputs.changelog }}
