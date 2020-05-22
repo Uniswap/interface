@@ -1,30 +1,26 @@
 import '@reach/tooltip/styles.css'
-import { JSBI, Pair, Token, TokenAmount } from '@uniswap/sdk'
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { Pair, Token } from '@uniswap/sdk'
+import React, { useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
-import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import Card from '../../components/Card'
-import { COMMON_BASES } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useAllDummyPairs, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useAllTokenBalancesTreatingWETHasETH, useTokenBalances } from '../../state/wallet/hooks'
 import { CloseIcon, Link as StyledLink } from '../../theme/components'
 import { isAddress } from '../../utils'
-import { ButtonPrimary } from '../Button'
-import Column, { AutoColumn } from '../Column'
-import DoubleTokenLogo from '../DoubleLogo'
+import Column from '../Column'
 import Modal from '../Modal'
-import QuestionHelper from '../Question'
-import { AutoRow, RowBetween, RowFixed } from '../Row'
-import TokenLogo from '../TokenLogo'
+import { AutoRow, RowBetween } from '../Row'
+import { CommonBases } from './CommonBases'
 import { filterPairs, filterTokens } from './filtering'
+import { PairList } from './PairList'
 import { balanceComparator, useTokenComparator } from './sorting'
-import { BaseWrapper, Input, MenuItem, PaddedColumn } from './styleds'
+import { Input, PaddedColumn } from './styleds'
 import { TokenList } from './TokenList'
 import { TokenSortButton } from './TokenSortButton'
 
@@ -38,60 +34,6 @@ interface SearchModalProps extends RouteComponentProps {
   otherSelectedTokenAddress?: string
   otherSelectedText?: string
   showCommonBases?: boolean
-}
-
-function PairList({
-  pairs,
-  focusTokenAddress,
-  pairBalances,
-  onSelectPair,
-  onAddLiquidity = onSelectPair
-}: {
-  pairs: Pair[]
-  focusTokenAddress?: string
-  pairBalances: { [pairAddress: string]: TokenAmount }
-  onSelectPair: (pair: Pair) => void
-  onAddLiquidity: (pair: Pair) => void
-}) {
-  if (pairs.length === 0) {
-    return (
-      <PaddedColumn justify="center">
-        <Text>No Pools Found</Text>
-      </PaddedColumn>
-    )
-  }
-
-  return (
-    <FixedSizeList itemSize={54} height={254} itemCount={pairs.length} width="100%">
-      {({ index, style }) => {
-        const pair = pairs[index]
-
-        // reset ordering to help scan search results
-        const tokenA = focusTokenAddress === pair.token1.address ? pair.token1 : pair.token0
-        const tokenB = tokenA === pair.token0 ? pair.token1 : pair.token0
-
-        const pairAddress = pair.liquidityToken.address
-        const balance = pairBalances[pairAddress]?.toSignificant(6)
-        const zeroBalance = pairBalances[pairAddress]?.raw && JSBI.equal(pairBalances[pairAddress].raw, JSBI.BigInt(0))
-
-        const selectPair = () => onSelectPair(pair)
-        const addLiquidity = () => onAddLiquidity(pair)
-
-        return (
-          <MenuItem style={style} onClick={selectPair}>
-            <RowFixed>
-              <DoubleTokenLogo a0={tokenA.address} a1={tokenB.address} size={24} margin={true} />
-              <Text fontWeight={500} fontSize={16}>{`${tokenA.symbol}/${tokenB.symbol}`}</Text>
-            </RowFixed>
-
-            <ButtonPrimary padding={'6px 8px'} width={'fit-content'} borderRadius={'12px'} onClick={addLiquidity}>
-              {balance ? (zeroBalance ? 'Join' : 'Add Liquidity') : 'Join'}
-            </ButtonPrimary>
-          </MenuItem>
-        )
-      }}
-    </FixedSizeList>
-  )
 }
 
 function SearchModal({
@@ -127,9 +69,6 @@ function SearchModal({
   // if the current input is an address, and we don't have the token in context, try to fetch it
   useTokenByAddressAndAutomaticallyAdd(searchQuery)
 
-  // used to help scanning on results, put token found from input on left
-  const [identifiedToken, setIdentifiedToken] = useState<Token>()
-
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
   const sortedTokens: Token[] = useMemo(() => {
@@ -158,30 +97,6 @@ function SearchModal({
     setSearchQuery('')
     onDismiss()
   }
-
-  // make an effort to identify the specific token a user is searching for
-  useEffect(() => {
-    const searchQueryIsAddress = !!isAddress(searchQuery)
-
-    // try to find an exact match by address
-    if (searchQueryIsAddress) {
-      const identifiedTokenByAddress = Object.values(allTokens).filter(token => {
-        return searchQueryIsAddress && token.address === isAddress(searchQuery)
-      })
-      if (identifiedTokenByAddress.length > 0) setIdentifiedToken(identifiedTokenByAddress[0])
-    }
-    // try to find an exact match by symbol
-    else {
-      const identifiedTokenBySymbol = Object.values(allTokens).filter(token => {
-        return token.symbol.slice(0, searchQuery.length).toLowerCase() === searchQuery.toLowerCase()
-      })
-      if (identifiedTokenBySymbol.length > 0) setIdentifiedToken(identifiedTokenBySymbol[0])
-    }
-
-    return () => {
-      setIdentifiedToken(undefined)
-    }
-  }, [allTokens, searchQuery])
 
   const sortedPairList = useMemo(() => {
     if (filterType === 'tokens') return []
@@ -234,31 +149,7 @@ function SearchModal({
             onChange={onInput}
           />
           {showCommonBases && (
-            <AutoColumn gap="md">
-              <AutoRow>
-                <Text fontWeight={500} fontSize={16}>
-                  Common Bases
-                </Text>
-                <QuestionHelper text="These tokens are commonly used in pairs." />
-              </AutoRow>
-              <AutoRow gap="10px">
-                {COMMON_BASES[chainId]?.map(token => {
-                  return (
-                    <BaseWrapper
-                      gap="6px"
-                      onClick={() => hiddenToken !== token.address && _onTokenSelect(token.address)}
-                      disable={hiddenToken === token.address}
-                      key={token.address}
-                    >
-                      <TokenLogo address={token.address} />
-                      <Text fontWeight={500} fontSize={16}>
-                        {token.symbol}
-                      </Text>
-                    </BaseWrapper>
-                  )
-                })}
-              </AutoRow>
-            </AutoColumn>
+            <CommonBases chainId={chainId} onSelect={_onTokenSelect} selectedTokenAddress={hiddenToken} />
           )}
           <RowBetween>
             <Text fontSize={14} fontWeight={500}>
