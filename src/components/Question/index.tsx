@@ -6,6 +6,7 @@ import { usePopper } from 'react-popper'
 
 const Wrapper = styled.div`
   position: relative;
+  display: inline-block;
 `
 
 const QuestionWrapper = styled.div`

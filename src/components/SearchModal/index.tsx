@@ -15,6 +15,7 @@ import { CloseIcon, Link as StyledLink } from '../../theme/components'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import Modal from '../Modal'
+import QuestionHelper from '../Question'
 import { AutoRow, RowBetween } from '../Row'
 import { CommonBases } from './CommonBases'
 import { filterPairs, filterTokens } from './filtering'
@@ -51,6 +52,8 @@ function SearchModal({
   const { t } = useTranslation()
   const { account, chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
+
+  const isTokenView = filterType === 'tokens'
 
   const allTokens = useAllTokens()
   const allPairs = useAllDummyPairs()
@@ -99,7 +102,7 @@ function SearchModal({
   }
 
   const sortedPairList = useMemo(() => {
-    if (filterType === 'tokens') return []
+    if (isTokenView) return []
     return allPairs.sort((a, b): number => {
       // sort by balance
       const balanceA = allPairBalances[account]?.[a.liquidityToken.address]
@@ -110,7 +113,7 @@ function SearchModal({
   }, [filterType, allPairs, allPairBalances, account])
 
   const filteredPairs = useMemo(() => {
-    if (filterType === 'tokens') return []
+    if (isTokenView) return []
     return filterPairs(sortedPairList, searchQuery)
   }, [filterType, searchQuery, sortedPairList])
 
@@ -136,7 +139,14 @@ function SearchModal({
         <PaddedColumn gap="20px">
           <RowBetween>
             <Text fontWeight={500} fontSize={16}>
-              {filterType === 'tokens' ? 'Select a token' : 'Select a pool'}
+              {isTokenView ? 'Select a token' : 'Select a pool'}
+              <QuestionHelper
+                text={
+                  isTokenView
+                    ? 'Find a token by searching for its name or symbol or by pasting its address below.'
+                    : 'Find a pair by searching for a token below.'
+                }
+              />
             </Text>
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
@@ -153,19 +163,19 @@ function SearchModal({
           )}
           <RowBetween>
             <Text fontSize={14} fontWeight={500}>
-              {filterType === 'tokens' ? 'Token Name' : 'Pool Name'}
+              {isTokenView ? 'Token Name' : 'Pool Name'}
             </Text>
-            {filterType === 'tokens' && (
+            {isTokenView && (
               <TokenSortButton
                 invertSearchOrder={invertSearchOrder}
                 toggleSortOrder={() => setInvertSearchOrder(iso => !iso)}
-                title={filterType === 'tokens' ? 'Your Balances' : ' '}
+                title={isTokenView ? 'Your Balances' : ' '}
               />
             )}
           </RowBetween>
         </PaddedColumn>
         <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />
-        {filterType === 'tokens' ? (
+        {isTokenView ? (
           <TokenList
             tokens={filteredTokens}
             allTokenBalances={allTokenBalances}
@@ -201,7 +211,7 @@ function SearchModal({
                   </StyledLink>
                 </Text>
               )}
-              {filterType === 'tokens' && (
+              {isTokenView && (
                 <Text fontWeight={500} color={theme.text2} fontSize={14}>
                   {!isMobile && "Don't see a token? "}
                   <StyledLink
