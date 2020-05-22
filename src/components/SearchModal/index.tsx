@@ -1,162 +1,59 @@
-import React, { useState, useRef, useMemo, useEffect, useContext } from 'react'
 import '@reach/tooltip/styles.css'
-import styled, { ThemeContext } from 'styled-components'
-import { JSBI, Token, WETH } from '@uniswap/sdk'
+import { ChainId, JSBI, Token, WETH } from '@uniswap/sdk'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
-import { RouteComponentProps, withRouter } from 'react-router-dom'
-import { COMMON_BASES } from '../../constants'
-import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
-import { Link as StyledLink } from '../../theme/components'
-
-import Card from '../../components/Card'
-import Modal from '../Modal'
-import Circle from '../../assets/images/circle.svg'
-import TokenLogo from '../TokenLogo'
-import DoubleTokenLogo from '../DoubleLogo'
-import Column, { AutoColumn } from '../Column'
-import { Text } from 'rebass'
-import { CursorPointer } from '../../theme'
 import { ArrowLeft } from 'react-feather'
-import { CloseIcon } from '../../theme/components'
-import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
-import { Spinner, TYPE } from '../../theme'
-import { RowBetween, RowFixed, AutoRow } from '../Row'
-
-import { isAddress, escapeRegExp } from '../../utils'
-import { useActiveWeb3React } from '../../hooks'
-import {
-  useAllDummyPairs,
-  useFetchTokenByAddress,
-  useAddUserToken,
-  useRemoveUserAddedToken,
-  useUserAddedTokens
-} from '../../state/user/hooks'
 import { useTranslation } from 'react-i18next'
-import { useToken, useAllTokens } from '../../hooks/Tokens'
+import { RouteComponentProps, withRouter } from 'react-router-dom'
+import { Text } from 'rebass'
+import { ThemeContext } from 'styled-components'
+import Circle from '../../assets/images/circle.svg'
+import Card from '../../components/Card'
+import { COMMON_BASES } from '../../constants'
+import { ALL_TOKENS } from '../../constants/tokens'
+import { useActiveWeb3React } from '../../hooks'
+import { useAllTokens, useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
+import { useAllDummyPairs, useRemoveUserAddedToken, useUserAddedTokens } from '../../state/user/hooks'
+import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
+import { CursorPointer, TYPE } from '../../theme'
+import { CloseIcon, Link as StyledLink } from '../../theme/components'
+import { escapeRegExp, isAddress } from '../../utils'
+import { ButtonPrimary, ButtonSecondary } from '../Button'
+import Column, { AutoColumn } from '../Column'
+import DoubleTokenLogo from '../DoubleLogo'
+import Modal from '../Modal'
 import QuestionHelper from '../Question'
+import { AutoRow, RowBetween, RowFixed } from '../Row'
+import TokenLogo from '../TokenLogo'
+import { useTokenComparator } from './sorting'
+import {
+  BaseWrapper,
+  FadedSpan,
+  GreySpan,
+  Input,
+  ItemList,
+  MenuItem,
+  PaddedColumn,
+  SpinnerWrapper,
+  TokenModalInfo
+} from './styleds'
+import { TokenSortButton } from './TokenSortButton'
 
-const TokenModalInfo = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: center;
-  padding: 1rem 1rem;
-  margin: 0.25rem 0.5rem;
-  justify-content: center;
-  user-select: none;
-  min-height: 200px;
-`
-
-const ItemList = styled.div`
-  flex-grow: 1;
-  height: 254px;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-`
-
-const FadedSpan = styled(RowFixed)`
-  color: ${({ theme }) => theme.primary1};
-  font-size: 14px;
-`
-
-const GreySpan = styled.span`
-  color: ${({ theme }) => theme.text3};
-  font-weight: 400;
-`
-
-const SpinnerWrapper = styled(Spinner)`
-  margin: 0 0.25rem 0 0.25rem;
-  color: ${({ theme }) => theme.text4};
-  opacity: 0.6;
-`
-
-const Input = styled.input`
-  position: relative;
-  display: flex;
-  padding: 16px;
-  align-items: center;
-  width: 100%;
-  white-space: nowrap;
-  background: none;
-  border: none;
-  outline: none;
-  border-radius: 20px;
-  color: ${({ theme }) => theme.text1};
-  border-style: solid;
-  border: 1px solid ${({ theme }) => theme.bg3};
-  -webkit-appearance: none;
-
-  font-size: 18px;
-
-  ::placeholder {
-    color: ${({ theme }) => theme.text3};
-  }
-`
-
-const FilterWrapper = styled(RowFixed)`
-  padding: 8px;
-  background-color: ${({ selected, theme }) => selected && theme.bg2};
-  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.text2)};
-  border-radius: 8px;
-  user-select: none;
-  & > * {
-    user-select: none;
-  }
-  :hover {
-    cursor: pointer;
-  }
-`
-
-const PaddedColumn = styled(AutoColumn)`
-  padding: 20px;
-  padding-bottom: 12px;
-`
-
-const PaddedItem = styled(RowBetween)`
-  padding: 4px 20px;
-  height: 56px;
-`
-
-const MenuItem = styled(PaddedItem)`
-  cursor: ${({ disabled }) => !disabled && 'pointer'};
-  pointer-events: ${({ disabled }) => disabled && 'none'};
-  :hover {
-    background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
-  }
-  opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
-`
-
-const BaseWrapper = styled(AutoRow)<{ disable?: boolean }>`
-  border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
-  padding: 0 6px;
-  border-radius: 10px;
-  width: 120px;
-
-  :hover {
-    cursor: ${({ disable }) => !disable && 'pointer'};
-    background-color: ${({ theme, disable }) => !disable && theme.bg2};
-  }
-
-  background-color: ${({ theme, disable }) => disable && theme.bg3};
-  opacity: ${({ disable }) => disable && '0.4'};
-`
-
-// filters on results
-const FILTERS = {
-  VOLUME: 'VOLUME',
-  LIQUIDITY: 'LIQUIDITY',
-  BALANCES: 'BALANCES'
-}
-
-interface SearchModalProps extends RouteComponentProps<{}> {
+interface SearchModalProps extends RouteComponentProps {
   isOpen?: boolean
   onDismiss?: () => void
   filterType?: 'tokens'
   hiddenToken?: string
   showSendWithSwap?: boolean
   onTokenSelect?: (address: string) => void
-  urlAddedTokens?: Token[]
   otherSelectedTokenAddress?: string
   otherSelectedText?: string
   showCommonBases?: boolean
+}
+
+function isDefaultToken(tokenAddress: string, chainId?: number): boolean {
+  const address = isAddress(tokenAddress)
+  return Boolean(chainId && address && ALL_TOKENS[chainId as ChainId]?.[tokenAddress])
 }
 
 function SearchModal({
@@ -164,7 +61,6 @@ function SearchModal({
   isOpen,
   onDismiss,
   onTokenSelect,
-  urlAddedTokens,
   filterType,
   hiddenToken,
   showSendWithSwap,
@@ -184,38 +80,16 @@ function SearchModal({
   const [invertSearchOrder, setInvertSearchOrder] = useState(false)
 
   const userAddedTokens = useUserAddedTokens()
-  const fetchTokenByAddress = useFetchTokenByAddress()
-  const addToken = useAddUserToken()
   const removeTokenByAddress = useRemoveUserAddedToken()
 
   // if the current input is an address, and we don't have the token in context, try to fetch it
-  const token = useToken(searchQuery)
-  const [temporaryToken, setTemporaryToken] = useState<Token | null>()
-
-  // filters for ordering
-  const [activeFilter, setActiveFilter] = useState(FILTERS.BALANCES)
+  const searchQueryToken = useTokenByAddressAndAutomaticallyAdd(searchQuery)
 
   // toggle specific token import view
   const [showTokenImport, setShowTokenImport] = useState(false)
 
   // used to help scanning on results, put token found from input on left
   const [identifiedToken, setIdentifiedToken] = useState<Token>()
-
-  useEffect(() => {
-    const address = isAddress(searchQuery)
-    if (address && !token) {
-      let stale = false
-      fetchTokenByAddress(address).then(token => {
-        if (!stale) {
-          setTemporaryToken(token)
-        }
-      })
-      return () => {
-        stale = true
-        setTemporaryToken(null)
-      }
-    }
-  }, [searchQuery, token, fetchTokenByAddress])
 
   // reset view on close
   useEffect(() => {
@@ -224,45 +98,24 @@ function SearchModal({
     }
   }, [isOpen])
 
-  const tokenList = useMemo(() => {
-    return Object.keys(allTokens)
-      .sort((tokenAddressA, tokenAddressB): number => {
-        // -1 = a is first
-        // 1 = b is first
+  const tokenComparator = useTokenComparator(invertSearchOrder)
 
-        // sort ETH first
-        const a = allTokens[tokenAddressA]
-        const b = allTokens[tokenAddressB]
-        if (a.equals(WETH[chainId])) return -1
-        if (b.equals(WETH[chainId])) return 1
-
-        // sort by balances
-        const balanceA = allBalances[account]?.[tokenAddressA]
-        const balanceB = allBalances[account]?.[tokenAddressB]
-        if (balanceA?.greaterThan('0') && !balanceB?.greaterThan('0')) return !invertSearchOrder ? -1 : 1
-        if (!balanceA?.greaterThan('0') && balanceB?.greaterThan('0')) return !invertSearchOrder ? 1 : -1
-        if (balanceA?.greaterThan('0') && balanceB?.greaterThan('0')) {
-          return balanceA.greaterThan(balanceB) ? (!invertSearchOrder ? -1 : 1) : !invertSearchOrder ? 1 : -1
-        }
-
-        // sort by symbol
-        return a.symbol.toLowerCase() < b.symbol.toLowerCase() ? -1 : 1
-      })
-      .map(tokenAddress => {
-        const token = allTokens[tokenAddress]
+  const sortedTokenList = useMemo(() => {
+    return Object.values(allTokens)
+      .sort(tokenComparator)
+      .map(token => {
         return {
           name: token.name,
           symbol: token.symbol,
-          address: isAddress(tokenAddress) as string,
-          balance: allBalances?.[account]?.[tokenAddress]
+          address: token.address,
+          balance: allBalances[account]?.[token.address]
         }
       })
-  }, [allTokens, chainId, allBalances, account, invertSearchOrder])
+  }, [allTokens, tokenComparator, allBalances, account])
 
   const filteredTokenList = useMemo(() => {
-    return tokenList.filter(tokenEntry => {
-      const urlAdded = urlAddedTokens?.some(token => token.address === tokenEntry.address)
-      const customAdded = userAddedTokens?.some(token => token.address === tokenEntry.address) && !urlAdded
+    return sortedTokenList.filter(tokenEntry => {
+      const customAdded = !isDefaultToken(tokenEntry.address, chainId)
 
       // if token import page dont show preset list, else show all
       const include = !showTokenImport || (showTokenImport && customAdded && searchQuery !== '')
@@ -285,7 +138,7 @@ function SearchModal({
       })
       return regexMatches.some(m => m)
     })
-  }, [tokenList, urlAddedTokens, userAddedTokens, showTokenImport, searchQuery])
+  }, [sortedTokenList, chainId, showTokenImport, searchQuery])
 
   function _onTokenSelect(address) {
     setSearchQuery('')
@@ -313,18 +166,14 @@ function SearchModal({
     // try to find an exact match by address
     if (searchQueryIsAddress) {
       const identifiedTokenByAddress = Object.values(allTokens).filter(token => {
-        if (searchQueryIsAddress && token.address === isAddress(searchQuery)) {
-          return true
-        }
-        return false
+        return searchQueryIsAddress && token.address === isAddress(searchQuery)
       })
       if (identifiedTokenByAddress.length > 0) setIdentifiedToken(identifiedTokenByAddress[0])
     }
     // try to find an exact match by symbol
     else {
       const identifiedTokenBySymbol = Object.values(allTokens).filter(token => {
-        if (token.symbol.slice(0, searchQuery.length).toLowerCase() === searchQuery.toLowerCase()) return true
-        return false
+        return token.symbol.slice(0, searchQuery.length).toLowerCase() === searchQuery.toLowerCase()
       })
       if (identifiedTokenBySymbol.length > 0) setIdentifiedToken(identifiedTokenBySymbol[0])
     }
@@ -423,25 +272,22 @@ function SearchModal({
   function renderTokenList() {
     if (filteredTokenList.length === 0) {
       if (isAddress(searchQuery)) {
-        if (temporaryToken === undefined) {
-          return <TokenModalInfo>Searching for Token...</TokenModalInfo>
-        } else if (temporaryToken === null) {
-          return <TokenModalInfo>Address is not a valid ERC-20 token.</TokenModalInfo>
+        if (!searchQueryToken) {
+          return <TokenModalInfo>Searching...</TokenModalInfo>
         } else {
           // a user found a token by search that isn't yet added to localstorage
           return (
             <MenuItem
-              key={temporaryToken.address}
-              className={`temporary-token-${temporaryToken}`}
+              key={searchQueryToken.address}
+              className={`temporary-token-${searchQueryToken.address}`}
               onClick={() => {
-                addToken(temporaryToken)
-                _onTokenSelect(temporaryToken.address)
+                _onTokenSelect(searchQueryToken.address)
               }}
             >
               <RowFixed>
-                <TokenLogo address={temporaryToken.address} size={'24px'} style={{ marginRight: '14px' }} />
+                <TokenLogo address={searchQueryToken.address} size={'24px'} style={{ marginRight: '14px' }} />
                 <Column>
-                  <Text fontWeight={500}>{temporaryToken.symbol}</Text>
+                  <Text fontWeight={500}>{searchQueryToken.symbol}</Text>
                   <FadedSpan>(Found by search)</FadedSpan>
                 </Column>
               </RowFixed>
@@ -453,8 +299,7 @@ function SearchModal({
       }
     } else {
       return filteredTokenList.map(({ address, symbol, balance }) => {
-        const urlAdded = urlAddedTokens?.some(token => token.address === address)
-        const customAdded = userAddedTokens?.some(token => token.address === address) && !urlAdded
+        const customAdded = !isDefaultToken(address, chainId)
 
         const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
 
@@ -475,10 +320,7 @@ function SearchModal({
                   {otherSelectedTokenAddress === address && <GreySpan> ({otherSelectedText})</GreySpan>}
                 </Text>
                 <FadedSpan>
-                  <TYPE.main fontWeight={500}>
-                    {urlAdded && 'Added by URL'}
-                    {customAdded && 'Added by user'}
-                  </TYPE.main>
+                  <TYPE.main fontWeight={500}>{customAdded && 'Added by user'}</TYPE.main>
                   {customAdded && (
                     <div
                       onClick={event => {
@@ -522,27 +364,6 @@ function SearchModal({
     }
   }
 
-  const Filter = ({ title, filter, filterType }: { title: string; filter: string; filterType: string }) => {
-    return (
-      <FilterWrapper
-        onClick={() => {
-          setActiveFilter(filter)
-          setInvertSearchOrder(invertSearchOrder => !invertSearchOrder)
-        }}
-        selected={filter === activeFilter}
-      >
-        <Text fontSize={14} fontWeight={500}>
-          {title}
-        </Text>
-        {filter === activeFilter && filterType === 'tokens' && (
-          <Text fontSize={14} fontWeight={500}>
-            {!invertSearchOrder ? '↓' : '↑'}
-          </Text>
-        )}
-      </FilterWrapper>
-    )
-  }
-
   return (
     <Modal
       isOpen={isOpen}
@@ -578,7 +399,7 @@ function SearchModal({
           <PaddedColumn gap="20px">
             <RowBetween>
               <Text fontWeight={500} fontSize={16}>
-                {filterType === 'tokens' ? 'Select A Token' : 'Select A Pool'}
+                {filterType === 'tokens' ? 'Select a token' : 'Select a pool'}
               </Text>
               <CloseIcon onClick={onDismiss} />
             </RowBetween>
@@ -621,11 +442,13 @@ function SearchModal({
               <Text fontSize={14} fontWeight={500}>
                 {filterType === 'tokens' ? 'Token Name' : 'Pool Name'}
               </Text>
-              <Filter
-                title={filterType === 'tokens' ? 'Your Balances' : ' '}
-                filter={FILTERS.BALANCES}
-                filterType={filterType}
-              />
+              {filterType === 'tokens' && (
+                <TokenSortButton
+                  invertSearchOrder={invertSearchOrder}
+                  toggleSortOrder={() => setInvertSearchOrder(iso => !iso)}
+                  title={filterType === 'tokens' ? 'Your Balances' : ' '}
+                />
+              )}
             </RowBetween>
           </PaddedColumn>
         )}
