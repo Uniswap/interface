@@ -31,12 +31,9 @@ const initialState: MintState = {
 function parseTokens(chainId: number, tokens: string): string[] {
   return (
     tokens
-      // split by '-', if one exists
+      // split by '-'
       .split('-')
-      // add an empty element for the case where the array from split is only length 1
-      .concat([''])
-      // only consider the first 2 elements
-      .slice(0, 2)
+      // map to addresses
       .map((token): string =>
         isAddress(token)
           ? token
@@ -44,6 +41,12 @@ function parseTokens(chainId: number, tokens: string): string[] {
           ? WETH[chainId as ChainId]?.address ?? ''
           : ''
       )
+      //remove duplicates
+      .filter((token, i, array) => array.indexOf(token) === i)
+      // add two empty elements for cases where the array is length 0
+      .concat(['', ''])
+      // only consider the first 2 elements
+      .slice(0, 2)
   )
 }
 
