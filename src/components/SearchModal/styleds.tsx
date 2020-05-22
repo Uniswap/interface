@@ -54,6 +54,11 @@ export const Input = styled.input`
 
   font-size: 18px;
 
+  :focus {
+    border: 1px solid ${({ theme }) => theme.primary1};
+    outline: none;
+  }
+
   ::placeholder {
     color: ${({ theme }) => theme.text3};
   }
