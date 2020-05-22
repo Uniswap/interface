@@ -21,7 +21,7 @@ import { CommonBases } from './CommonBases'
 import { filterPairs, filterTokens } from './filtering'
 import { PairList } from './PairList'
 import { balanceComparator, useTokenComparator } from './sorting'
-import { Input, PaddedColumn } from './styleds'
+import { PaddedColumn, SearchInput, TallScreenOnly } from './styleds'
 import { TokenList } from './TokenList'
 import { TokenSortButton } from './TokenSortButton'
 
@@ -124,7 +124,7 @@ function SearchModal({
     [history]
   )
 
-  const focusedToken = filteredTokens.filter(token => {
+  const focusedToken = Object.values(allTokens[chainId] ?? {}).filter(token => {
     return token.symbol.toLowerCase() === searchQuery || searchQuery === token.address
   })[0]
 
@@ -150,7 +150,7 @@ function SearchModal({
             </Text>
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
-          <Input
+          <SearchInput
             type={'text'}
             id="token-search-input"
             placeholder={t('tokenSearchPlaceholder')}
@@ -195,37 +195,31 @@ function SearchModal({
             pairBalances={allPairBalances}
           />
         )}
-        <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />
-        <Card>
-          <AutoRow justify={'center'}>
-            <div>
-              {isTokenView ? (
-                <Text fontWeight={500} color={theme.text2} fontSize={14}>
-                  {!isMobile && "Don't see a token? "}
-                  <StyledLink
-                    onClick={() => {
-                      setSearchQuery('')
-                      inputRef.current?.focus()
-                    }}
-                  >
-                    {!isMobile ? 'Import it.' : 'Import custom token.'}
-                  </StyledLink>
-                </Text>
-              ) : (
-                <Text fontWeight={500}>
-                  {!isMobile && "Don't see a pool? "}
-                  <StyledLink
-                    onClick={() => {
-                      history.push('/find')
-                    }}
-                  >
-                    {!isMobile ? 'Import it.' : 'Import pool.'}
-                  </StyledLink>
-                </Text>
-              )}
-            </div>
-          </AutoRow>
-        </Card>
+        <TallScreenOnly>
+          <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />
+          <Card>
+            <AutoRow justify={'center'}>
+              <div>
+                {isTokenView ? (
+                  <Text fontWeight={500} color={theme.text2} fontSize={14}>
+                    Import any token into your list by pasting the token address into the search above.
+                  </Text>
+                ) : (
+                  <Text fontWeight={500}>
+                    {!isMobile && "Don't see a pool? "}
+                    <StyledLink
+                      onClick={() => {
+                        history.push('/find')
+                      }}
+                    >
+                      {!isMobile ? 'Import it.' : 'Import pool.'}
+                    </StyledLink>
+                  </Text>
+                )}
+              </div>
+            </AutoRow>
+          </Card>
+        </TallScreenOnly>
       </Column>
     </Modal>
   )

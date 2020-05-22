@@ -13,13 +13,6 @@ export const TokenModalInfo = styled.div`
   min-height: 200px;
 `
 
-export const ItemList = styled.div`
-  flex-grow: 1;
-  height: 254px;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-`
-
 export const FadedSpan = styled(RowFixed)`
   color: ${({ theme }) => theme.primary1};
   font-size: 14px;
@@ -53,11 +46,6 @@ export const Input = styled.input`
   -webkit-appearance: none;
 
   font-size: 18px;
-
-  :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
-    outline: none;
-  }
 
   ::placeholder {
     color: ${({ theme }) => theme.text3};
@@ -110,4 +98,18 @@ export const BaseWrapper = styled(AutoRow)<{ disable?: boolean }>`
 
   background-color: ${({ theme, disable }) => disable && theme.bg3};
   opacity: ${({ disable }) => disable && '0.4'};
+`
+
+export const SearchInput = styled(Input)`
+  transition: border 100ms;
+  :focus {
+    border: 1px solid ${({ theme }) => theme.primary1};
+    outline: none;
+  }
+`
+
+export const TallScreenOnly = styled.div`
+  @media (max-height: 800px) {
+    display: none;
+  }
 `
