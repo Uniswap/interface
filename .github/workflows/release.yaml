@@ -44,6 +44,10 @@ jobs:
           pinata-api-key: ${{ secrets.PINATA_API_KEY }}
           pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET_KEY }}
 
+      - name: Update DNS with new IPFS hash
+        id: update_dns
+        run: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --scope uniswap dns add uniswap.org _dnslink.app TXT "dnslink=/ipfs/${{ steps.upload.outputs.hash }}"
+
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1.1.0
@@ -52,7 +56,6 @@ jobs:
         with:
           tag_name: ${{ steps.bump_version.outputs.new_tag }}
           release_name: Release ${{ steps.bump_version.outputs.new_tag }}
-          draft: false
           body: |
             Release built from commit [`${{ github.sha }}`](https://github.com/Uniswap/uniswap-frontend/tree/${{ github.sha }})
 
