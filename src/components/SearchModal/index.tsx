@@ -110,12 +110,12 @@ function SearchModal({
 
       return balanceComparator(balanceA, balanceB)
     })
-  }, [filterType, allPairs, allPairBalances, account])
+  }, [isTokenView, allPairs, allPairBalances, account])
 
   const filteredPairs = useMemo(() => {
     if (isTokenView) return []
     return filterPairs(sortedPairList, searchQuery)
-  }, [filterType, searchQuery, sortedPairList])
+  }, [isTokenView, searchQuery, sortedPairList])
 
   const selectPair = useCallback(
     (pair: Pair) => {
@@ -199,7 +199,7 @@ function SearchModal({
         <Card>
           <AutoRow justify={'center'}>
             <div>
-              {filterType !== 'tokens' && (
+              {isTokenView && (
                 <Text fontWeight={500}>
                   {!isMobile && "Don't see a pool? "}
                   <StyledLink
