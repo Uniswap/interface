@@ -79,7 +79,6 @@ export default function CreatePool({ history, location }: RouteComponentProps) {
                 <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
                   {token0?.symbol}{' '}
                 </Text>
-                {console.log(token0)}
                 <TYPE.darkGray fontWeight={500} fontSize={16} marginLeft={'8px'}>
                   {token0?.address === WETH[chainId]?.address && '(default)'}
                 </TYPE.darkGray>
