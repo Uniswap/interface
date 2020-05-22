@@ -30,14 +30,19 @@ import { useSendCallback } from '../../hooks/useSendCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
-import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
+import {
+  useDefaultsFromURLSearch,
+  useDerivedSwapInfo,
+  useSwapActionHandlers,
+  useSwapState
+} from '../../state/swap/hooks'
 import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
 import AppBody from '../AppBody'
 
 export default function Send({ location: { search } }: RouteComponentProps) {
-  useDefaultsFromURL(search)
+  useDefaultsFromURLSearch(search)
 
   // text translation
   // const { t } = useTranslation()

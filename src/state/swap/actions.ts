@@ -5,7 +5,7 @@ export enum Field {
   OUTPUT = 'OUTPUT'
 }
 
-export const setDefaultsFromURL = createAction<{ chainId: number; queryString?: string }>('setDefaultsFromURL')
+export const setDefaultsFromURLSearch = createAction<{ chainId: number; queryString?: string }>('setDefaultsFromURL')
 export const selectToken = createAction<{ field: Field; address: string }>('selectToken')
 export const switchTokens = createAction<void>('switchTokens')
 export const typeInput = createAction<{ field: Field; typedValue: string }>('typeInput')
