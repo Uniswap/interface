@@ -13,7 +13,7 @@ import { COMMON_BASES } from '../../constants'
 import { ALL_TOKENS } from '../../constants/tokens'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
-import { useAllDummyPairs, useRemoveUserAddedToken, useUserAddedTokens } from '../../state/user/hooks'
+import { useAllDummyPairs, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { CloseIcon, Link as StyledLink } from '../../theme/components'
@@ -79,7 +79,6 @@ function SearchModal({
   const [searchQuery, setSearchQuery] = useState('')
   const [invertSearchOrder, setInvertSearchOrder] = useState(false)
 
-  const userAddedTokens = useUserAddedTokens()
   const removeTokenByAddress = useRemoveUserAddedToken()
 
   // if the current input is an address, and we don't have the token in context, try to fetch it
