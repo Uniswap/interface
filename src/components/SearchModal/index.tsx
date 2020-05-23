@@ -58,11 +58,10 @@ function SearchModal({
   const allTokens = useAllTokens()
   const allPairs = useAllDummyPairs()
   const allTokenBalances = useAllTokenBalancesTreatingWETHasETH()[account] ?? {}
-  const allPairBalances =
-    useTokenBalances(
-      account,
-      allPairs.map(p => p.liquidityToken)
-    )[account] ?? {}
+  const allPairBalances = useTokenBalances(
+    account,
+    allPairs.map(p => p.liquidityToken)
+  )
 
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [tooltipOpen, setTooltipOpen] = useState<boolean>(false)
@@ -106,12 +105,12 @@ function SearchModal({
     if (isTokenView) return []
     return allPairs.sort((a, b): number => {
       // sort by balance
-      const balanceA = allPairBalances[account]?.[a.liquidityToken.address]
-      const balanceB = allPairBalances[account]?.[b.liquidityToken.address]
+      const balanceA = allPairBalances[a.liquidityToken.address]
+      const balanceB = allPairBalances[b.liquidityToken.address]
 
       return balanceComparator(balanceA, balanceB)
     })
-  }, [isTokenView, allPairs, allPairBalances, account])
+  }, [isTokenView, allPairs, allPairBalances])
 
   const filteredPairs = useMemo(() => {
     if (isTokenView) return []
