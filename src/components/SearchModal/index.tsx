@@ -17,13 +17,13 @@ import Modal from '../Modal'
 import QuestionHelper from '../QuestionHelper'
 import { AutoRow, RowBetween } from '../Row'
 import Tooltip from '../Tooltip'
-import { CommonBases } from './CommonBases'
+import CommonBases from './CommonBases'
 import { filterPairs, filterTokens } from './filtering'
-import { PairList } from './PairList'
+import PairList from './PairList'
 import { balanceComparator, useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput } from './styleds'
-import { TokenList } from './TokenList'
-import { TokenSortButton } from './TokenSortButton'
+import TokenList from './TokenList'
+import SortButton from './SortButton'
 
 interface SearchModalProps extends RouteComponentProps {
   isOpen?: boolean
@@ -69,18 +69,20 @@ function SearchModal({
 
   const removeTokenByAddress = useRemoveUserAddedToken()
 
-  // if the current input is an address, and we don't have the token in context, try to fetch it
+  // if the current input is an address, and we don't have the token in context, try to fetch it and import
   useTokenByAddressAndAutomaticallyAdd(searchQuery)
 
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
   const sortedTokens: Token[] = useMemo(() => {
+    if (!isTokenView) return []
     return Object.values(allTokens).sort(tokenComparator)
-  }, [allTokens, tokenComparator])
+  }, [allTokens, isTokenView, tokenComparator])
 
   const filteredTokens: Token[] = useMemo(() => {
+    if (!isTokenView) return []
     return filterTokens(sortedTokens, searchQuery)
-  }, [sortedTokens, searchQuery])
+  }, [isTokenView, sortedTokens, searchQuery])
 
   function _onTokenSelect(address: string) {
     onTokenSelect(address)
@@ -89,7 +91,7 @@ function SearchModal({
 
   // clear the input on open
   useEffect(() => {
-    setSearchQuery('')
+    if (isOpen) setSearchQuery('')
   }, [isOpen, setSearchQuery])
 
   // manage focus on modal show
@@ -144,7 +146,7 @@ function SearchModal({
                 text={
                   isTokenView
                     ? 'Find a token by searching for its name or symbol or by pasting its address below.'
-                    : 'Find a pair by searching for a token below.'
+                    : 'Find a pair by searching for its name below.'
                 }
               />
             </Text>
@@ -172,8 +174,8 @@ function SearchModal({
               {isTokenView ? 'Token Name' : 'Pool Name'}
             </Text>
             {isTokenView && (
-              <TokenSortButton
-                invertSearchOrder={invertSearchOrder}
+              <SortButton
+                ascending={invertSearchOrder}
                 toggleSortOrder={() => setInvertSearchOrder(iso => !iso)}
                 title={isTokenView ? 'Your Balances' : ' '}
               />
@@ -181,26 +183,28 @@ function SearchModal({
           </RowBetween>
         </PaddedColumn>
         <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />
-        {isTokenView ? (
-          <TokenList
-            tokens={filteredTokens}
-            allTokenBalances={allTokenBalances}
-            onRemoveAddedToken={removeTokenByAddress}
-            onTokenSelect={_onTokenSelect}
-            otherSelectedText={otherSelectedText}
-            otherToken={otherSelectedTokenAddress}
-            selectedToken={hiddenToken}
-            showSendWithSwap={showSendWithSwap}
-          />
-        ) : (
-          <PairList
-            pairs={filteredPairs}
-            focusTokenAddress={focusedToken?.address}
-            onAddLiquidity={selectPair}
-            onSelectPair={selectPair}
-            pairBalances={allPairBalances}
-          />
-        )}
+        {isTokenView
+          ? isOpen && (
+              <TokenList
+                tokens={filteredTokens}
+                allTokenBalances={allTokenBalances}
+                onRemoveAddedToken={removeTokenByAddress}
+                onTokenSelect={_onTokenSelect}
+                otherSelectedText={otherSelectedText}
+                otherToken={otherSelectedTokenAddress}
+                selectedToken={hiddenToken}
+                showSendWithSwap={showSendWithSwap}
+              />
+            )
+          : isOpen && (
+              <PairList
+                pairs={filteredPairs}
+                focusTokenAddress={focusedToken?.address}
+                onAddLiquidity={selectPair}
+                onSelectPair={selectPair}
+                pairBalances={allPairBalances}
+              />
+            )}
         <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />
         <Card>
           <AutoRow justify={'center'}>

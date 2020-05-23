@@ -7,7 +7,7 @@ import { AutoRow } from '../Row'
 import TokenLogo from '../TokenLogo'
 import { BaseWrapper } from './styleds'
 
-export function CommonBases({
+export default function CommonBases({
   chainId,
   onSelect,
   selectedTokenAddress

@@ -7,7 +7,7 @@ import DoubleTokenLogo from '../DoubleLogo'
 import { RowFixed } from '../Row'
 import { MenuItem, ModalInfo } from './styleds'
 
-export function PairList({
+export default function PairList({
   pairs,
   focusTokenAddress,
   pairBalances,

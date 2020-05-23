@@ -20,7 +20,7 @@ function isDefaultToken(tokenAddress: string, chainId?: number): boolean {
   return Boolean(chainId && address && ALL_TOKENS[chainId as ChainId]?.[tokenAddress])
 }
 
-export function TokenList({
+export default function TokenList({
   tokens,
   allTokenBalances,
   selectedToken,

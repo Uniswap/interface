@@ -52,20 +52,6 @@ export const Input = styled.input`
   }
 `
 
-export const FilterWrapper = styled(RowFixed)`
-  padding: 8px;
-  background-color: ${({ selected, theme }) => selected && theme.bg2};
-  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.text2)};
-  border-radius: 8px;
-  user-select: none;
-  & > * {
-    user-select: none;
-  }
-  :hover {
-    cursor: pointer;
-  }
-`
-
 export const PaddedColumn = styled(AutoColumn)`
   padding: 20px;
   padding-bottom: 12px;
