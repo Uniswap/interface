@@ -7,7 +7,6 @@ const QuestionWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 0.4rem;
   padding: 0.2rem;
   border: none;
   background: none;
@@ -27,20 +26,22 @@ export default function QuestionHelper({ text }: { text: string }) {
   const [showPopup, setShowPopup] = useState<boolean>(false)
 
   return (
-    <Tooltip text={text} showPopup={showPopup}>
-      <QuestionWrapper
-        onClick={() => {
-          setShowPopup(true)
-        }}
-        onMouseEnter={() => {
-          setShowPopup(true)
-        }}
-        onMouseLeave={() => {
-          setShowPopup(false)
-        }}
-      >
-        <Question size={16} />
-      </QuestionWrapper>
-    </Tooltip>
+    <span style={{ marginLeft: 4 }}>
+      <Tooltip text={text} showPopup={showPopup}>
+        <QuestionWrapper
+          onClick={() => {
+            setShowPopup(true)
+          }}
+          onMouseEnter={() => {
+            setShowPopup(true)
+          }}
+          onMouseLeave={() => {
+            setShowPopup(false)
+          }}
+        >
+          <Question size={16} />
+        </QuestionWrapper>
+      </Tooltip>
+    </span>
   )
 }
