@@ -2,9 +2,9 @@ import React, { useCallback, useContext } from 'react'
 import { useDispatch } from 'react-redux'
 import styled, { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { isMobile } from 'react-device-detect'
 import { AppDispatch } from '../../state'
 import { clearAllTransactions } from '../../state/transactions/actions'
+import { shortenAddress } from '../../utils'
 import { AutoRow } from '../Row'
 import Copy from './Copy'
 import Transaction from './Transaction'
@@ -13,13 +13,13 @@ import { SUPPORTED_WALLETS } from '../../constants'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getEtherscanLink } from '../../utils'
 import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
+import { ExternalLink } from 'react-feather'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
 import Identicon from '../Identicon'
-
-import { ButtonEmpty } from '../Button'
+import { ButtonSecondary } from '../Button'
 
 import { Link, TYPE } from '../../theme'
 
@@ -57,13 +57,15 @@ const InfoCard = styled.div`
   padding: 1rem;
   background-color: ${({ theme }) => theme.bg2};
   border-radius: 20px;
+  margin-bottom: 20px;
+  position: relative;
 `
 
 const AccountGroupingRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   justify-content: space-between;
   align-items: center;
-  font-weight: 500;
+  font-weight: 400;
   color: ${({ theme }) => theme.text1};
 
   div {
@@ -94,28 +96,6 @@ const YourAccount = styled.div`
   }
 `
 
-const GreenCircle = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  justify-content: center;
-  align-items: center;
-
-  &:first-child {
-    height: 8px;
-    width: 8px;
-    margin-left: 12px;
-    margin-right: 2px;
-    background-color: ${({ theme }) => theme.green1};
-    border-radius: 50%;
-  }
-`
-
-const CircleWrapper = styled.div`
-  color: ${({ theme }) => theme.green1};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
 const LowerSection = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
   padding: 1.5rem;
@@ -133,12 +113,13 @@ const LowerSection = styled.div`
 `
 
 const AccountControl = styled.div<{ hasENS: boolean; isENS: boolean }>`
-  ${({ theme }) => theme.flexRowNoWrap};
-  align-items: center;
+  display: flex;
+  justify-content: space-between;
   min-width: 0;
+  width: 100%;
 
   font-weight: ${({ hasENS, isENS }) => (hasENS ? (isENS ? 500 : 400) : 500)};
-  font-size: ${({ hasENS, isENS }) => (hasENS ? (isENS ? '1rem' : '0.8rem') : '1rem')};
+  font-size: 1.25rem;
 
   a:hover {
     text-decoration: underline;
@@ -146,22 +127,20 @@ const AccountControl = styled.div<{ hasENS: boolean; isENS: boolean }>`
 
   p {
     min-width: 0;
-    margin: 0.5rem 0;
+    margin: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 `
 
-const ConnectButtonRow = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: center;
-  justify-content: center;
-  margin: 10px 0;
-`
-
 const StyledLink = styled(Link)<{ hasENS: boolean; isENS: boolean }>`
-  color: ${({ hasENS, isENS, theme }) => (hasENS ? (isENS ? theme.primary1 : theme.text3) : theme.primary1)};
+  color: ${({ theme }) => theme.text3};
+  margin-right: 8px;
+
+  :hover {
+    color: ${({ theme }) => theme.text2};
+  }
 `
 
 const CloseIcon = styled.div`
@@ -181,14 +160,15 @@ const CloseColor = styled(Close)`
 `
 
 const WalletName = styled.div`
-  padding-left: 0.5rem;
   width: initial;
+  font-size: 0.825rem;
 `
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: center;
+  margin-right: 8px;
   & > img,
   span {
     height: ${({ size }) => (size ? size + 'px' : '32px')};
@@ -203,10 +183,12 @@ const TransactionListWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
 `
 
-const WalletAction = styled.div`
-  color: ${({ theme }) => theme.text4};
-  margin-left: 16px;
+const WalletAction = styled(ButtonSecondary)`
+  width: fit-content;
   font-weight: 400;
+  margin-left: 8px;
+  font-size: 0.825rem;
+  padding: 4px 6px;
   :hover {
     cursor: pointer;
     text-decoration: underline;
@@ -255,39 +237,39 @@ export default function AccountDetails({
           SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
       )
       .map(k => SUPPORTED_WALLETS[k].name)[0]
-    return <WalletName>{name}</WalletName>
+    return <WalletName>Connected with {name}</WalletName>
   }
 
   function getStatusIcon() {
     if (connector === injected) {
       return (
         <IconWrapper size={16}>
-          <Identicon /> {formatConnectorName()}
+          <Identicon />
         </IconWrapper>
       )
     } else if (connector === walletconnect) {
       return (
         <IconWrapper size={16}>
-          <img src={WalletConnectIcon} alt={''} /> {formatConnectorName()}
+          <img src={WalletConnectIcon} alt={''} />
         </IconWrapper>
       )
     } else if (connector === walletlink) {
       return (
         <IconWrapper size={16}>
-          <img src={CoinbaseWalletIcon} alt={''} /> {formatConnectorName()}
+          <img src={CoinbaseWalletIcon} alt={''} />
         </IconWrapper>
       )
     } else if (connector === fortmatic) {
       return (
         <IconWrapper size={16}>
-          <img src={FortmaticIcon} alt={''} /> {formatConnectorName()}
+          <img src={FortmaticIcon} alt={''} />
         </IconWrapper>
       )
     } else if (connector === portis) {
       return (
         <>
           <IconWrapper size={16}>
-            <img src={PortisIcon} alt={''} /> {formatConnectorName()}
+            <img src={PortisIcon} alt={''} />
             <MainWalletAction
               onClick={() => {
                 portis.portis.showPortis()
@@ -316,11 +298,53 @@ export default function AccountDetails({
           <CloseColor />
         </CloseIcon>
         <HeaderRow>Account</HeaderRow>
+
         <AccountSection>
           <YourAccount>
             <InfoCard>
+              <AccountGroupingRow id="web3-account-identifier-row">
+                {ENSName ? (
+                  <>
+                    <AccountControl hasENS={!!ENSName} isENS={true}>
+                      <div>
+                        {getStatusIcon()}
+                        <p> {ENSName}</p>
+                      </div>
+                      <div>
+                        <StyledLink
+                          hasENS={!!ENSName}
+                          isENS={true}
+                          href={getEtherscanLink(chainId, ENSName, 'address')}
+                        >
+                          <ExternalLink size={16} />
+                        </StyledLink>
+                        <Copy toCopy={account} />
+                      </div>
+                    </AccountControl>
+                  </>
+                ) : (
+                  <>
+                    <AccountControl hasENS={!!ENSName} isENS={false}>
+                      <div>
+                        {getStatusIcon()}
+                        <p> {shortenAddress(account)}</p>
+                      </div>
+                      <div>
+                        <StyledLink
+                          hasENS={!!ENSName}
+                          isENS={false}
+                          href={getEtherscanLink(chainId, account, 'address')}
+                        >
+                          <ExternalLink size={16} />
+                        </StyledLink>
+                        <Copy toCopy={account} />
+                      </div>
+                    </AccountControl>
+                  </>
+                )}
+              </AccountGroupingRow>
               <AccountGroupingRow>
-                {getStatusIcon()}
+                {formatConnectorName()}
                 <div>
                   {connector !== injected && connector !== walletlink && (
                     <WalletAction
@@ -331,64 +355,17 @@ export default function AccountDetails({
                       Disconnect
                     </WalletAction>
                   )}
-                  <CircleWrapper>
-                    <GreenCircle>
-                      <div />
-                    </GreenCircle>
-                  </CircleWrapper>
+                  <WalletAction
+                    onClick={() => {
+                      openOptions()
+                    }}
+                  >
+                    Change
+                  </WalletAction>
                 </div>
-              </AccountGroupingRow>
-              <AccountGroupingRow id="web3-account-identifier-row">
-                {ENSName ? (
-                  <>
-                    <AccountControl hasENS={!!ENSName} isENS={true}>
-                      <p>{ENSName}</p> <Copy toCopy={account} />
-                    </AccountControl>
-                  </>
-                ) : (
-                  <>
-                    <AccountControl hasENS={!!ENSName} isENS={false}>
-                      <p>{account}</p> <Copy toCopy={account} />
-                    </AccountControl>
-                  </>
-                )}
-              </AccountGroupingRow>
-              <AccountGroupingRow>
-                {ENSName ? (
-                  <>
-                    <AccountControl hasENS={!!ENSName} isENS={false}>
-                      <StyledLink hasENS={!!ENSName} isENS={true} href={getEtherscanLink(chainId, ENSName, 'address')}>
-                        View on Etherscan ↗
-                      </StyledLink>
-                    </AccountControl>
-                  </>
-                ) : (
-                  <>
-                    <AccountControl hasENS={!!ENSName} isENS={false}>
-                      <StyledLink hasENS={!!ENSName} isENS={false} href={getEtherscanLink(chainId, account, 'address')}>
-                        View on Etherscan ↗
-                      </StyledLink>
-                    </AccountControl>
-                  </>
-                )}
               </AccountGroupingRow>
             </InfoCard>
           </YourAccount>
-
-          {!(isMobile && (window.web3 || window.ethereum)) && (
-            <ConnectButtonRow>
-              <ButtonEmpty
-                style={{ fontWeight: 400 }}
-                padding={'12px'}
-                width={'260px'}
-                onClick={() => {
-                  openOptions()
-                }}
-              >
-                Connect to a different wallet
-              </ButtonEmpty>
-            </ConnectButtonRow>
-          )}
         </AccountSection>
       </UpperSection>
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (

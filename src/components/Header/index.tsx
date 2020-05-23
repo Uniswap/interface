@@ -138,7 +138,8 @@ const VersionLabel = styled.span<{ isV2?: boolean }>`
 
 const VersionToggle = styled.a`
   border-radius: 16px;
-  border: 1px solid ${({ theme }) => theme.primary1};
+  background: ${({ theme }) => theme.primary5};
+  border: 1px solid ${({ theme }) => theme.primary4};
   color: ${({ theme }) => theme.primary1};
   display: flex;
   width: fit-content;
@@ -160,11 +161,11 @@ export default function Header() {
       <MigrateBanner>
         Uniswap V2 is live! Read the&nbsp;
         <Link href="https://uniswap.org/blog/launch-uniswap-v2/">
-          <b>blog post ↗</b>
+          <b>blog post</b>
         </Link>
         &nbsp;or&nbsp;
         <Link href="https://migrate.uniswap.exchange/">
-          <b>migrate your liquidity ↗</b>
+          <b>migrate your liquidity</b>
         </Link>
         .
       </MigrateBanner>
@@ -204,7 +205,7 @@ export default function Header() {
           </TestnetWrapper>
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
-              <Text style={{ flexShrink: 0 }} px="0.5rem" fontWeight={500}>
+              <Text style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
                 {userEthBalance?.toSignificant(4)} ETH
               </Text>
             ) : null}

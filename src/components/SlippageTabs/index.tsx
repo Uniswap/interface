@@ -333,7 +333,7 @@ export default function SlippageTabs({ setRawSlippage, rawSlippage, deadline, se
       </SlippageSelector>
       <AutoColumn gap="sm">
         <RowFixed padding={'0 20px'}>
-          <TYPE.black fontSize={14} color={theme.text2}>
+          <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
             Deadline
           </TYPE.black>
           <QuestionHelper text="Deadline in minutes. If your transaction takes longer than this it will revert." />

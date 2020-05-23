@@ -6,21 +6,23 @@ import { Link } from '../../theme'
 import { CheckCircle, Copy } from 'react-feather'
 
 const CopyIcon = styled(Link)`
-  color: ${({ theme }) => theme.text4};
+  color: ${({ theme }) => theme.text3};
   flex-shrink: 0;
+  /* width: 16px; */
   display: flex;
-  margin-right: 1rem;
-  margin-left: 0.5rem;
+  /* margin-right: 1rem;
+  margin-left: 0.5rem; */
   text-decoration: none;
   :hover,
   :active,
   :focus {
     text-decoration: none;
-    color: ${({ theme }) => theme.text3};
+    color: ${({ theme }) => theme.text2};
   }
 `
 const TransactionStatusText = styled.span`
   margin-left: 0.25rem;
+  font-size: 1rem;
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
 `
