@@ -6,10 +6,10 @@ import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 // compare two token amounts with highest one coming first
 export function balanceComparator(balanceA?: TokenAmount, balanceB?: TokenAmount) {
   if (balanceA && balanceB) {
-    return balanceA.greaterThan(balanceB) ? -1 : 1
-  } else if (balanceA && !balanceB) {
+    return balanceA.greaterThan(balanceB) ? -1 : balanceA.equalTo(balanceB) ? 0 : 1
+  } else if (balanceA && balanceA.greaterThan('0')) {
     return -1
-  } else if (balanceB && !balanceA) {
+  } else if (balanceB && balanceB.greaterThan('0')) {
     return 1
   }
   return 0

@@ -107,9 +107,3 @@ export const SearchInput = styled(Input)`
     outline: none;
   }
 `
-
-export const TallScreenOnly = styled.div`
-  @media (max-height: 800px) {
-    display: none;
-  }
-`

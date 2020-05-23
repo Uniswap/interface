@@ -15,13 +15,14 @@ import { CloseIcon, Link as StyledLink } from '../../theme/components'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import Modal from '../Modal'
-import QuestionHelper from '../Question'
+import QuestionHelper from '../QuestionHelper'
 import { AutoRow, RowBetween } from '../Row'
+import Tooltip from '../Tooltip'
 import { CommonBases } from './CommonBases'
 import { filterPairs, filterTokens } from './filtering'
 import { PairList } from './PairList'
 import { balanceComparator, useTokenComparator } from './sorting'
-import { PaddedColumn, SearchInput, TallScreenOnly } from './styleds'
+import { PaddedColumn, SearchInput } from './styleds'
 import { TokenList } from './TokenList'
 import { TokenSortButton } from './TokenSortButton'
 
@@ -64,8 +65,9 @@ function SearchModal({
       allPairs.map(p => p.liquidityToken)
     )[account] ?? {}
 
-  const [searchQuery, setSearchQuery] = useState('')
-  const [invertSearchOrder, setInvertSearchOrder] = useState(false)
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [tooltipOpen, setTooltipOpen] = useState<boolean>(false)
+  const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
 
   const removeTokenByAddress = useRemoveUserAddedToken()
 
@@ -128,6 +130,12 @@ function SearchModal({
     return token.symbol.toLowerCase() === searchQuery || searchQuery === token.address
   })[0]
 
+  const openTooltip = useCallback(() => {
+    setTooltipOpen(true)
+    inputRef.current?.focus()
+  }, [setTooltipOpen])
+  const closeTooltip = useCallback(() => setTooltipOpen(false), [setTooltipOpen])
+
   return (
     <Modal
       isOpen={isOpen}
@@ -150,14 +158,20 @@ function SearchModal({
             </Text>
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
-          <SearchInput
-            type={'text'}
-            id="token-search-input"
-            placeholder={t('tokenSearchPlaceholder')}
-            value={searchQuery}
-            ref={inputRef}
-            onChange={onInput}
-          />
+          <Tooltip
+            text="Import any token into your list by pasting the token address into the search field."
+            showPopup={tooltipOpen}
+          >
+            <SearchInput
+              type={'text'}
+              id="token-search-input"
+              placeholder={t('tokenSearchPlaceholder')}
+              value={searchQuery}
+              ref={inputRef}
+              onChange={onInput}
+              onBlur={closeTooltip}
+            />
+          </Tooltip>
           {showCommonBases && (
             <CommonBases chainId={chainId} onSelect={_onTokenSelect} selectedTokenAddress={hiddenToken} />
           )}
@@ -195,31 +209,29 @@ function SearchModal({
             pairBalances={allPairBalances}
           />
         )}
-        <TallScreenOnly>
-          <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />
-          <Card>
-            <AutoRow justify={'center'}>
-              <div>
-                {isTokenView ? (
-                  <Text fontWeight={500} color={theme.text2} fontSize={14}>
-                    Import any token into your list by pasting the token address into the search above.
-                  </Text>
-                ) : (
-                  <Text fontWeight={500}>
-                    {!isMobile && "Don't see a pool? "}
-                    <StyledLink
-                      onClick={() => {
-                        history.push('/find')
-                      }}
-                    >
-                      {!isMobile ? 'Import it.' : 'Import pool.'}
-                    </StyledLink>
-                  </Text>
-                )}
-              </div>
-            </AutoRow>
-          </Card>
-        </TallScreenOnly>
+        <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />
+        <Card>
+          <AutoRow justify={'center'}>
+            <div>
+              {isTokenView ? (
+                <Text fontWeight={500} color={theme.text2} fontSize={14}>
+                  <StyledLink onClick={openTooltip}>Having trouble importing a token?</StyledLink>
+                </Text>
+              ) : (
+                <Text fontWeight={500}>
+                  {!isMobile && "Don't see a pool? "}
+                  <StyledLink
+                    onClick={() => {
+                      history.push('/find')
+                    }}
+                  >
+                    {!isMobile ? 'Import it.' : 'Import pool.'}
+                  </StyledLink>
+                </Text>
+              )}
+            </div>
+          </AutoRow>
+        </Card>
       </Column>
     </Modal>
   )
