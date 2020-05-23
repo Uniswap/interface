@@ -60,15 +60,11 @@ const StyledLink = styled.a`
 
 export function Link({
   onClick,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  as,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ref,
   target = '_blank',
   href,
   rel = 'noopener noreferrer',
   ...rest
-}: HTMLProps<HTMLAnchorElement>) {
+}: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref'>) {
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLAnchorElement>) => {
       onClick && onClick(event) // first call back into the original onClick
