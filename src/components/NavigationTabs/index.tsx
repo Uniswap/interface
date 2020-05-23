@@ -7,7 +7,7 @@ import { withRouter, NavLink, Link as HistoryLink, RouteComponentProps } from 'r
 import { CursorPointer } from '../../theme'
 import { ArrowLeft } from 'react-feather'
 import { RowBetween } from '../Row'
-import QuestionHelper from '../Question'
+import QuestionHelper from '../QuestionHelper'
 
 import { useBodyKeyDown } from '../../hooks'
 
