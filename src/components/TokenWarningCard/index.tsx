@@ -11,7 +11,7 @@ import { useTokenWarningDismissal } from '../../state/user/hooks'
 import { Link, TYPE } from '../../theme'
 import { getEtherscanLink } from '../../utils'
 import PropsOfExcluding from '../../utils/props-of-excluding'
-import QuestionHelper from '../Question'
+import QuestionHelper from '../QuestionHelper'
 import TokenLogo from '../TokenLogo'
 
 const Wrapper = styled.div<{ error: boolean }>`

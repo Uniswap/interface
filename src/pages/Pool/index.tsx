@@ -3,7 +3,7 @@ import styled, { ThemeContext } from 'styled-components'
 import { JSBI, Pair } from '@uniswap/sdk'
 import { RouteComponentProps } from 'react-router-dom'
 
-import Question from '../../components/Question'
+import Question from '../../components/QuestionHelper'
 import SearchModal from '../../components/SearchModal'
 import PositionCard from '../../components/PositionCard'
 import { useTokenBalances } from '../../state/wallet/hooks'

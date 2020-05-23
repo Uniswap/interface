@@ -32,8 +32,10 @@ describe('Swap', () => {
 
   it('can swap ETH for DAI', () => {
     cy.get('#swap-currency-output .open-currency-select-button').click()
-    cy.get('.token-item-0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735').click()
-    cy.get('#swap-currency-input .token-amount-input').type('0.001')
+    cy.get('.token-item-0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735').should('be.visible')
+    cy.get('.token-item-0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735').click({ force: true })
+    cy.get('#swap-currency-input .token-amount-input').should('be.visible')
+    cy.get('#swap-currency-input .token-amount-input').type('0.001', { force: true })
     cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
     cy.get('#show-advanced').click()
     cy.get('#swap-button').click()

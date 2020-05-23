@@ -3,7 +3,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { useAllTokens } from '../../hooks/Tokens'
-import { getTokenDecimals, getTokenName, getTokenSymbol, isAddress } from '../../utils'
+import { getTokenInfoWithFallback, isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
@@ -69,11 +69,7 @@ export function useFetchTokenByAddress(): (address: string) => Promise<Token | n
       if (!library || !chainId) return null
       const validatedAddress = isAddress(address)
       if (!validatedAddress) return null
-      const [decimals, symbol, name] = await Promise.all([
-        getTokenDecimals(address, library).catch(() => null),
-        getTokenSymbol(address, library).catch(() => 'UNKNOWN'),
-        getTokenName(address, library).catch(() => 'Unknown')
-      ])
+      const { name, symbol, decimals } = await getTokenInfoWithFallback(validatedAddress, library)
 
       if (decimals === null) {
         return null
