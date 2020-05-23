@@ -1,11 +1,9 @@
 import { Pair, Token } from '@uniswap/sdk'
 import React, { useState, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import '@reach/tooltip/styles.css'
 import { darken } from 'polished'
 import { Field } from '../../state/swap/actions'
 import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
-
 import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
 import SearchModal from '../SearchModal'

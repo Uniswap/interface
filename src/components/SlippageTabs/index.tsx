@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 
-import QuestionHelper from '../Question'
+import QuestionHelper from '../QuestionHelper'
 import { Text } from 'rebass'
 import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'

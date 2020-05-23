@@ -3,7 +3,7 @@ import { Spinner } from '../../theme'
 import { AutoColumn } from '../Column'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 
-export const TokenModalInfo = styled.div`
+export const ModalInfo = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   padding: 1rem 1rem;
@@ -11,13 +11,6 @@ export const TokenModalInfo = styled.div`
   justify-content: center;
   user-select: none;
   min-height: 200px;
-`
-
-export const ItemList = styled.div`
-  flex-grow: 1;
-  height: 254px;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
 `
 
 export const FadedSpan = styled(RowFixed)`
@@ -59,20 +52,6 @@ export const Input = styled.input`
   }
 `
 
-export const FilterWrapper = styled(RowFixed)`
-  padding: 8px;
-  background-color: ${({ selected, theme }) => selected && theme.bg2};
-  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.text2)};
-  border-radius: 8px;
-  user-select: none;
-  & > * {
-    user-select: none;
-  }
-  :hover {
-    cursor: pointer;
-  }
-`
-
 export const PaddedColumn = styled(AutoColumn)`
   padding: 20px;
   padding-bottom: 12px;
@@ -105,4 +84,12 @@ export const BaseWrapper = styled(AutoRow)<{ disable?: boolean }>`
 
   background-color: ${({ theme, disable }) => disable && theme.bg3};
   opacity: ${({ disable }) => disable && '0.4'};
+`
+
+export const SearchInput = styled(Input)`
+  transition: border 100ms;
+  :focus {
+    border: 1px solid ${({ theme }) => theme.primary1};
+    outline: none;
+  }
 `
