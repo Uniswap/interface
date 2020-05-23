@@ -78,7 +78,7 @@ const Arrow = styled.div`
   }
 
   &.arrow-left {
-    right: -4px;
+    right: -5px;
 
     ::before {
       border-bottom: none;
@@ -87,7 +87,7 @@ const Arrow = styled.div`
   }
 
   &.arrow-right {
-    left: -4px;
+    left: -5px;
     ::before {
       border-right: none;
       border-top: none;
