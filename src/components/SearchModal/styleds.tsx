@@ -3,7 +3,7 @@ import { Spinner } from '../../theme'
 import { AutoColumn } from '../Column'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 
-export const TokenModalInfo = styled.div`
+export const ModalInfo = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   padding: 1rem 1rem;

@@ -5,7 +5,7 @@ import { Text } from 'rebass'
 import { ButtonPrimary } from '../Button'
 import DoubleTokenLogo from '../DoubleLogo'
 import { RowFixed } from '../Row'
-import { MenuItem, PaddedColumn } from './styleds'
+import { MenuItem, ModalInfo } from './styleds'
 
 export function PairList({
   pairs,
@@ -21,11 +21,7 @@ export function PairList({
   onAddLiquidity: (pair: Pair) => void
 }) {
   if (pairs.length === 0) {
-    return (
-      <PaddedColumn justify="center">
-        <Text>No Pools Found</Text>
-      </PaddedColumn>
-    )
+    return <ModalInfo>No Pools Found</ModalInfo>
   }
 
   return (
@@ -33,7 +29,7 @@ export function PairList({
       {({ index, style }) => {
         const pair = pairs[index]
 
-        // reset ordering to help scan search results
+        // the focused token is shown first
         const tokenA = focusTokenAddress === pair.token1.address ? pair.token1 : pair.token0
         const tokenB = tokenA === pair.token0 ? pair.token1 : pair.token0
 

@@ -13,7 +13,7 @@ import { ButtonSecondary } from '../Button'
 import Column, { AutoColumn } from '../Column'
 import { RowFixed } from '../Row'
 import TokenLogo from '../TokenLogo'
-import { FadedSpan, GreySpan, MenuItem, SpinnerWrapper, TokenModalInfo } from './styleds'
+import { FadedSpan, GreySpan, MenuItem, SpinnerWrapper, ModalInfo } from './styleds'
 
 function isDefaultToken(tokenAddress: string, chainId?: number): boolean {
   const address = isAddress(tokenAddress)
@@ -44,7 +44,7 @@ export function TokenList({
   const theme = useContext(ThemeContext)
 
   if (tokens.length === 0) {
-    return <TokenModalInfo>{t('noToken')}</TokenModalInfo>
+    return <ModalInfo>{t('noToken')}</ModalInfo>
   }
   return (
     <FixedSizeList width="100%" height={500} itemCount={tokens.length} itemSize={50} style={{ flex: '1' }}>

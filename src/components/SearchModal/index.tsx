@@ -1,4 +1,3 @@
-import '@reach/tooltip/styles.css'
 import { Pair, Token } from '@uniswap/sdk'
 import React, { useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
@@ -126,7 +125,7 @@ function SearchModal({
     [history]
   )
 
-  const focusedToken = Object.values(allTokens[chainId] ?? {}).filter(token => {
+  const focusedToken = Object.values(allTokens ?? {}).filter(token => {
     return token.symbol.toLowerCase() === searchQuery || searchQuery === token.address
   })[0]
 
