@@ -1,5 +1,5 @@
 import { Pair, Token } from '@uniswap/sdk'
-import React, { useCallback, useContext, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
@@ -83,10 +83,14 @@ function SearchModal({
   }, [sortedTokens, searchQuery])
 
   function _onTokenSelect(address: string) {
-    setSearchQuery('')
     onTokenSelect(address)
     onDismiss()
   }
+
+  // clear the input on open
+  useEffect(() => {
+    setSearchQuery('')
+  }, [isOpen, setSearchQuery])
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
@@ -94,11 +98,6 @@ function SearchModal({
     const input = event.target.value
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input)
-  }
-
-  function clearInputAndDismiss() {
-    setSearchQuery('')
-    onDismiss()
   }
 
   const sortedPairList = useMemo(() => {
@@ -135,12 +134,7 @@ function SearchModal({
   const closeTooltip = useCallback(() => setTooltipOpen(false), [setTooltipOpen])
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onDismiss={clearInputAndDismiss}
-      maxHeight={70}
-      initialFocusRef={isMobile ? undefined : inputRef}
-    >
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={70} initialFocusRef={isMobile ? undefined : inputRef}>
       <Column style={{ width: '100%' }}>
         <PaddedColumn gap="20px">
           <RowBetween>
