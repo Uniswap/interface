@@ -22,12 +22,12 @@ const QuestionWrapper = styled.div`
   }
 `
 
-export default function QuestionHelper({ text }: { text: string }) {
+export default function QuestionHelper({ text, disabled }: { text: string; disabled?: boolean }) {
   const [showPopup, setShowPopup] = useState<boolean>(false)
 
   return (
     <span style={{ marginLeft: 4 }}>
-      <Tooltip text={text} showPopup={showPopup}>
+      <Tooltip text={text} showPopup={showPopup && !disabled}>
         <QuestionWrapper
           onClick={() => {
             setShowPopup(true)
