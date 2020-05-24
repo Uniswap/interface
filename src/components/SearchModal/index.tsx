@@ -143,6 +143,7 @@ function SearchModal({
             <Text fontWeight={500} fontSize={16}>
               {isTokenView ? 'Select a token' : 'Select a pool'}
               <QuestionHelper
+                disabled={tooltipOpen}
                 text={
                   isTokenView
                     ? 'Find a token by searching for its name or symbol or by pasting its address below.'
@@ -183,28 +184,26 @@ function SearchModal({
           </RowBetween>
         </PaddedColumn>
         <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />
-        {isTokenView
-          ? isOpen && (
-              <TokenList
-                tokens={filteredTokens}
-                allTokenBalances={allTokenBalances}
-                onRemoveAddedToken={removeTokenByAddress}
-                onTokenSelect={_onTokenSelect}
-                otherSelectedText={otherSelectedText}
-                otherToken={otherSelectedTokenAddress}
-                selectedToken={hiddenToken}
-                showSendWithSwap={showSendWithSwap}
-              />
-            )
-          : isOpen && (
-              <PairList
-                pairs={filteredPairs}
-                focusTokenAddress={focusedToken?.address}
-                onAddLiquidity={selectPair}
-                onSelectPair={selectPair}
-                pairBalances={allPairBalances}
-              />
-            )}
+        {isTokenView ? (
+          <TokenList
+            tokens={filteredTokens}
+            allTokenBalances={allTokenBalances}
+            onRemoveAddedToken={removeTokenByAddress}
+            onTokenSelect={_onTokenSelect}
+            otherSelectedText={otherSelectedText}
+            otherToken={otherSelectedTokenAddress}
+            selectedToken={hiddenToken}
+            showSendWithSwap={showSendWithSwap}
+          />
+        ) : (
+          <PairList
+            pairs={filteredPairs}
+            focusTokenAddress={focusedToken?.address}
+            onAddLiquidity={selectPair}
+            onSelectPair={selectPair}
+            pairBalances={allPairBalances}
+          />
+        )}
         <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />
         <Card>
           <AutoRow justify={'center'}>
