@@ -177,7 +177,7 @@ function SearchModal({
               <SortButton
                 ascending={invertSearchOrder}
                 toggleSortOrder={() => setInvertSearchOrder(iso => !iso)}
-                title={isTokenView ? 'Your Balances' : ' '}
+                title="Your Balances"
               />
             )}
           </RowBetween>
