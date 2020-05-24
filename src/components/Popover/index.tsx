@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { usePopper } from 'react-popper'
 import styled, { keyframes } from 'styled-components'
+import useInterval from '../../hooks/useInterval'
 
 const fadeIn = keyframes`
   from {
@@ -105,7 +106,7 @@ export default function Popover({ content, showPopup, children }: PopoverProps) 
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement>(null)
   const [popperElement, setPopperElement] = useState<HTMLDivElement>(null)
   const [arrowElement, setArrowElement] = useState<HTMLDivElement>(null)
-  const { styles, attributes } = usePopper(referenceElement, popperElement, {
+  const { styles, update, attributes } = usePopper(referenceElement, popperElement, {
     placement: 'auto',
     strategy: 'fixed',
     modifiers: [
@@ -126,6 +127,8 @@ export default function Popover({ content, showPopup, children }: PopoverProps) 
     </PopoverContainer>,
     document.getElementById('popover-container')
   )
+
+  useInterval(update, showPopup ? 100 : null)
 
   return (
     <>
