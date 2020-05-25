@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { HelpCircle as Question } from 'react-feather'
 import styled from 'styled-components'
 import Tooltip from '../Tooltip'
@@ -23,22 +23,15 @@ const QuestionWrapper = styled.div`
 `
 
 export default function QuestionHelper({ text, disabled }: { text: string; disabled?: boolean }) {
-  const [showPopup, setShowPopup] = useState<boolean>(false)
+  const [show, setShow] = useState<boolean>(false)
+
+  const open = useCallback(() => setShow(true), [setShow])
+  const close = useCallback(() => setShow(false), [setShow])
 
   return (
     <span style={{ marginLeft: 4 }}>
-      <Tooltip text={text} showPopup={showPopup && !disabled}>
-        <QuestionWrapper
-          onClick={() => {
-            setShowPopup(true)
-          }}
-          onMouseEnter={() => {
-            setShowPopup(true)
-          }}
-          onMouseLeave={() => {
-            setShowPopup(false)
-          }}
-        >
+      <Tooltip text={text} show={show && !disabled}>
+        <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
           <Question size={16} />
         </QuestionWrapper>
       </Tooltip>

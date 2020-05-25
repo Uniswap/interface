@@ -62,10 +62,8 @@ jobs:
 
             The IPFS hash of the bundle is `${{ steps.upload.outputs.hash }}`
 
-            Uniswap uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
-            to store your settings.
-            **Beware** that other sites you access via the same IPFS gateway can read and modify your settings on
-            Uniswap without your permission.
+            Uniswap uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to store your settings.
+            **Beware** that other sites you access via the _same_ IPFS gateway can read and modify your settings on Uniswap without your permission.
 
             Preferred URLs:
             - [ipfs://${{ steps.upload.outputs.hash }}/](ipfs://${{ steps.upload.outputs.hash }}/)

@@ -18,19 +18,14 @@ export const FilterWrapper = styled(RowFixed)`
 `
 
 export default function SortButton({
-  title,
   toggleSortOrder,
   ascending
 }: {
-  title: string
   toggleSortOrder: () => void
   ascending: boolean
 }) {
   return (
     <FilterWrapper onClick={toggleSortOrder}>
-      <Text fontSize={14} fontWeight={500}>
-        {title}
-      </Text>
       <Text fontSize={14} fontWeight={500}>
         {ascending ? '↑' : '↓'}
       </Text>

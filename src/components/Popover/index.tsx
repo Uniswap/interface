@@ -1,9 +1,10 @@
+import { Placement } from '@popperjs/core'
 import { transparentize } from 'polished'
 import React, { useState } from 'react'
-import { createPortal } from 'react-dom'
 import { usePopper } from 'react-popper'
 import styled, { keyframes } from 'styled-components'
 import useInterval from '../../hooks/useInterval'
+import Portal from '@reach/portal'
 
 const fadeIn = keyframes`
   from {
@@ -26,7 +27,6 @@ const fadeOut = keyframes`
 `
 
 const PopoverContainer = styled.div<{ show: boolean }>`
-  position: relative;
   z-index: 9999;
 
   visibility: ${props => (!props.show ? 'hidden' : 'visible')};
@@ -45,7 +45,6 @@ const ReferenceElement = styled.div`
 `
 
 const Arrow = styled.div`
-  position: absolute;
   width: 8px;
   height: 8px;
   z-index: 9998;
@@ -98,42 +97,39 @@ const Arrow = styled.div`
 
 export interface PopoverProps {
   content: React.ReactNode
-  showPopup: boolean
+  show: boolean
   children: React.ReactNode
+  placement?: Placement
 }
 
-export default function Popover({ content, showPopup, children }: PopoverProps) {
+export default function Popover({ content, show, children, placement = 'auto' }: PopoverProps) {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement>(null)
   const [popperElement, setPopperElement] = useState<HTMLDivElement>(null)
   const [arrowElement, setArrowElement] = useState<HTMLDivElement>(null)
   const { styles, update, attributes } = usePopper(referenceElement, popperElement, {
-    placement: 'auto',
+    placement,
     strategy: 'fixed',
     modifiers: [
       { name: 'offset', options: { offset: [8, 8] } },
       { name: 'arrow', options: { element: arrowElement } }
     ]
   })
-
-  const portal = createPortal(
-    <PopoverContainer show={showPopup} ref={setPopperElement} style={styles.popper} {...attributes.popper}>
-      {content}
-      <Arrow
-        className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}
-        ref={setArrowElement}
-        style={styles.arrow}
-        {...attributes.arrow}
-      />
-    </PopoverContainer>,
-    document.getElementById('popover-container')
-  )
-
-  useInterval(update, showPopup ? 100 : null)
+  useInterval(update, show ? 100 : null)
 
   return (
     <>
       <ReferenceElement ref={setReferenceElement}>{children}</ReferenceElement>
-      {portal}
+      <Portal>
+        <PopoverContainer show={show} ref={setPopperElement} style={styles.popper} {...attributes.popper}>
+          {content}
+          <Arrow
+            className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}
+            ref={setArrowElement}
+            style={styles.arrow}
+            {...attributes.arrow}
+          />
+        </PopoverContainer>
+      </Portal>
     </>
   )
 }

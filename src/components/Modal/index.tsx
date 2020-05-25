@@ -11,7 +11,7 @@ import { useGesture } from 'react-use-gesture'
 
 // errors emitted, fix with https://github.com/styled-components/styled-components/pull/3006
 const AnimatedDialogOverlay = animated(DialogOverlay)
-const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
+const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ mobile: boolean }>`
   &[data-reach-dialog-overlay] {
     z-index: 2;
     display: flex;
@@ -95,7 +95,7 @@ interface ModalProps {
   onDismiss: () => void
   minHeight?: number | false
   maxHeight?: number
-  initialFocusRef?: React.Ref<any>
+  initialFocusRef?: React.RefObject<any>
   children?: React.ReactNode
 }
 
@@ -145,7 +145,7 @@ export default function Modal({
                 style={props}
                 onDismiss={onDismiss}
                 initialFocusRef={initialFocusRef}
-                mobile={isMobile}
+                mobile={true}
               >
                 <Spring // animation for entrance and exit
                   from={{
@@ -191,15 +191,9 @@ export default function Modal({
                 style={props}
                 onDismiss={onDismiss}
                 initialFocusRef={initialFocusRef}
-                mobile={isMobile ? isMobile : undefined}
+                mobile={false}
               >
-                <StyledDialogContent
-                  hidden={true}
-                  minHeight={minHeight}
-                  maxHeight={maxHeight}
-                  isOpen={isOpen}
-                  mobile={isMobile ? isMobile : undefined}
-                >
+                <StyledDialogContent hidden={true} minHeight={minHeight} maxHeight={maxHeight} isOpen={isOpen}>
                   <HiddenCloseButton onClick={onDismiss} />
                   {children}
                 </StyledDialogContent>
