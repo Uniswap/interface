@@ -7,6 +7,8 @@ import { TorusConnector } from '@web3-react/torus-connector'
 import { NetworkConnector } from './Network'
 import { FortmaticConnector } from './Fortmatic'
 
+import * as dolomite from '@dolomite-exchange/dolomite'
+
 const POLLING_INTERVAL = 10000
 const NETWORK_URL =
   process.env.REACT_APP_IS_PRODUCTION_DEPLOY === 'true'
@@ -52,7 +54,13 @@ export const torus = new TorusConnector({
 // mainnet only
 export const walletlink = new WalletLinkConnector({
   url: NETWORK_URL,
-  appName: 'Uniswap',
-  appLogoUrl:
-    'https://mpng.pngfly.com/20181202/bex/kisspng-emoji-domain-unicorn-pin-badges-sticker-unicorn-tumblr-emoji-unicorn-iphoneemoji-5c046729264a77.5671679315437924251569.jpg'
+  appName: 'DMM Governance',
+  appLogoUrl: 'https://github.com/defi-money-market-ecosystem/dmm-assets/blob/master/src/logo/dmm-logo-square.png?raw=true'
 })
+
+export const exchange = setupExchange()
+
+function setupExchange() {
+  dolomite.exchange.configure({ apiKey: 'EXCHANGE_API_KEY' })
+  return dolomite.exchange
+}
