@@ -69,7 +69,7 @@ const Input = styled(BorderlessInput)`
 //   text-align: left;
 //   padding-left: 1.6rem;
 //   background-color: #FFFFFF;
-  color: #000000;
+//   color: #000000;
 // `
 
 const CurrencySelect = styled.button`
