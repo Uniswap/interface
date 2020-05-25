@@ -6,7 +6,11 @@ import { isMobile } from 'react-device-detect'
 import { NetworkContextName } from '../constants'
 import ERC20_ABI from '../constants/abis/erc20'
 import { getContract, getFactoryContract, getExchangeContract, isAddress } from '../utils'
-import { injected } from '../connectors'
+import { injected, exchange } from '../connectors'
+
+export function useDolomiteExchange() {
+  return exchange;
+}
 
 export function useWeb3React() {
   const context = useWeb3ReactCore()

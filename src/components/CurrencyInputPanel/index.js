@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
@@ -16,9 +16,14 @@ import { isAddress, calculateGasMargin, formatToUsd, formatTokenBalance, formatE
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import Modal from '../Modal'
 import TokenLogo from '../TokenLogo'
-import SearchIcon from '../../assets/images/magnifying-glass.svg'
+// import SearchIcon from '../../assets/images/magnifying-glass.svg'
 import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
-import { useTokenDetails, useAllTokenDetails, INITIAL_TOKENS_CONTEXT } from '../../contexts/Tokens'
+import {
+  useTokenDetails,
+  useAllTokenDetails,
+  DMG_ADDRESS,
+  DELEGATE_ADDRESS
+} from '../../contexts/Tokens'
 import { useAddressBalance } from '../../contexts/Balances'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { transparentize } from 'polished'
@@ -58,14 +63,14 @@ const Input = styled(BorderlessInput)`
   -moz-appearance: textfield;
 `
 
-const StyledBorderlessInput = styled(BorderlessInput)`
-  min-height: 2.5rem;
-  flex-shrink: 0;
-  text-align: left;
-  padding-left: 1.6rem;
-  background-color: #FFFFFF;
+// const StyledBorderlessInput = styled(BorderlessInput)`
+//   min-height: 2.5rem;
+//   flex-shrink: 0;
+//   text-align: left;
+//   padding-left: 1.6rem;
+//   background-color: #FFFFFF;
   color: #000000;
-`
+// `
 
 const CurrencySelect = styled.button`
   align-items: center;
@@ -176,12 +181,12 @@ const CloseIcon = styled.div`
   }
 `
 
-const SearchContainer = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  justify-content: flex-start;
-  padding: 0.5rem 1.5rem;
-  background-color: #FFFFFF;
-`
+// const SearchContainer = styled.div`
+//   ${({ theme }) => theme.flexRowNoWrap}
+//   justify-content: flex-start;
+//   padding: 0.5rem 1.5rem;
+//   background-color: #FFFFFF;
+// `
 
 const TokenModalInfo = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -235,9 +240,9 @@ const TokenFullName = styled.div`
   color: ${({ theme }) => theme.chaliceGray};
 `
 
-const FadedSpan = styled.span`
-  color: ${({ theme }) => theme.royalBlue};
-`
+// const FadedSpan = styled.span`
+//   color: ${({ theme }) => theme.royalBlue};
+// `
 
 const TokenRowBalance = styled.div`
   font-size: 1rem;
@@ -289,7 +294,6 @@ export default function CurrencyInputPanel({
   const [modalIsOpen, setModalIsOpen] = useState(false)
 
   const tokenContract = useTokenContract(selectedTokenAddress)
-  const { exchangeAddress: selectedTokenExchangeAddress } = useTokenDetails(selectedTokenAddress)
 
   const pendingApproval = usePendingApproval(selectedTokenAddress)
 
@@ -312,18 +316,18 @@ export default function CurrencyInputPanel({
               let estimatedGas
               let useUserBalance = false
               estimatedGas = await tokenContract.estimate
-                .approve(selectedTokenExchangeAddress, ethers.constants.MaxUint256)
+                .approve(DELEGATE_ADDRESS, ethers.constants.MaxUint256)
                 .catch(e => {
                   console.log('Error setting max token approval.')
                 })
               if (!estimatedGas) {
                 // general fallback for tokens who restrict approval amounts
-                estimatedGas = await tokenContract.estimate.approve(selectedTokenExchangeAddress, userTokenBalance)
+                estimatedGas = await tokenContract.estimate.approve(DELEGATE_ADDRESS, userTokenBalance)
                 useUserBalance = true
               }
               tokenContract
                 .approve(
-                  selectedTokenExchangeAddress,
+                  DELEGATE_ADDRESS,
                   useUserBalance ? userTokenBalance : ethers.constants.MaxUint256,
                   {
                     gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
@@ -378,7 +382,7 @@ export default function CurrencyInputPanel({
           }}
         >
           <Aligner>
-            {selectedTokenAddress ? <TokenLogo address={selectedTokenAddress} /> : null}
+            {selectedTokenAddress && selectedTokenAddress !== 'ETH' ? <TokenLogo address={selectedTokenAddress} /> : null}
             {
               <StyledTokenName>
                 {(allTokens[selectedTokenAddress] && allTokens[selectedTokenAddress].symbol) || t('selectToken')}
@@ -446,8 +450,13 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
   const { exchangeAddress } = useTokenDetails(searchQuery)
 
   const allTokens = useAllTokenDetails()
+  Object.keys(useAllTokenDetails()).forEach(token => {
+    if(token === DMG_ADDRESS) {
+      delete allTokens[token]
+    }
+  });
 
-  const { account, chainId } = useWeb3React()
+  const { account } = useWeb3React()
 
   // BigNumber.js instance
   const ethPrice = useETHPriceInUSD()
@@ -555,6 +564,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
         if (tokenEntryKey === 'address') {
           return (
             inputIsAddress &&
+            tokenEntry[tokenEntryKey].toLowerCase() !== DMG_ADDRESS.toLowerCase() &&
             typeof tokenEntry[tokenEntryKey] === 'string' &&
             !!tokenEntry[tokenEntryKey].match(new RegExp(escapeStringRegex(searchQuery), 'i'))
           )
@@ -598,13 +608,6 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
     }
 
     return filteredTokenList.map(({ address, symbol, name, balance, usdBalance }) => {
-      const urlAdded = urlAddedTokens && urlAddedTokens.hasOwnProperty(address)
-      const customAdded =
-        address !== 'ETH' &&
-        INITIAL_TOKENS_CONTEXT[chainId] &&
-        !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(address) &&
-        !urlAdded
-
       if (hideETH && address === 'ETH') {
         return null
       }
@@ -616,9 +619,9 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
             <TokenSymbolGroup>
               <div>
                 <span id="symbol">{symbol}</span>
-                <FadedSpan>
-                  {urlAdded && '(Added by URL)'} {customAdded && '(Added by user)'}
-                </FadedSpan>
+                {/*<FadedSpan>*/}
+                {/*  {urlAdded && '(Added by URL)'} {customAdded && '(Added by user)'}*/}
+                {/*</FadedSpan>*/}
               </div>
               <TokenFullName> {name}</TokenFullName>
             </TokenSymbolGroup>
@@ -646,14 +649,14 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
     })
   }
 
-  // manage focus on modal show
-  const inputRef = useRef()
-
-  function onInput(event) {
-    const input = event.target.value
-    const checksummedInput = isAddress(input)
-    setSearchQuery(checksummedInput || input)
-  }
+  // // manage focus on modal show
+  // const inputRef = useRef()
+  //
+  // function onInput(event) {
+  //   const input = event.target.value
+  //   const checksummedInput = isAddress(input)
+  //   setSearchQuery(checksummedInput || input)
+  // }
 
   function clearInputAndDismiss() {
     setSearchQuery('')
@@ -666,7 +669,8 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
       onDismiss={clearInputAndDismiss}
       minHeight={60}
       maxHeight={50}
-      initialFocusRef={isMobile ? undefined : inputRef}
+      // initialFocusRef={isMobile ? undefined : inputRef} // This can be uncommented if the search bar is added back
+      initialFocusRef={isMobile ? undefined : undefined} // This can be deleted
     >
       <TokenModal>
         <ModalHeader>
@@ -675,15 +679,16 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
             <CloseColor alt={'close icon'} />
           </CloseIcon>
         </ModalHeader>
-        <SearchContainer>
-          <img src={SearchIcon} alt="search" />
-          <StyledBorderlessInput
-            ref={inputRef}
-            type="text"
-            placeholder={isMobile ? t('searchOrPasteMobile') : t('searchOrPaste')}
-            onChange={onInput}
-          />
-        </SearchContainer>
+        {/* Not needed since we only support 3 tokens */}
+        {/*<SearchContainer>*/}
+        {/*  <img src={SearchIcon} alt="search" />*/}
+        {/*  <StyledBorderlessInput*/}
+        {/*    ref={inputRef}*/}
+        {/*    type="text"*/}
+        {/*    placeholder={isMobile ? t('searchOrPasteMobile') : t('searchOrPaste')}*/}
+        {/*    onChange={onInput}*/}
+        {/*  />*/}
+        {/*</SearchContainer>*/}
         <TokenList>{renderTokenList()}</TokenList>
       </TokenModal>
     </Modal>

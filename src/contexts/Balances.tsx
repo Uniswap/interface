@@ -56,7 +56,7 @@ function reducer(state: BalancesState, { type, payload }: { type: Action; payloa
   switch (type) {
     case Action.START_LISTENING: {
       const { chainId, address, tokenAddress } = payload
-      const uninitialized = !!!state?.[chainId]?.[address]?.[tokenAddress]
+      const uninitialized = !state?.[chainId]?.[address]?.[tokenAddress]
       return {
         ...state,
         [chainId]: {

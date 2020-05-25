@@ -112,13 +112,15 @@ export function useGeneralDaiMessageManager() {
 }
 
 export function useBetaMessageManager() {
-  const [state, { updateKey }] = useLocalStorageContext()
+  // const [state, { updateKey }] = useLocalStorageContext()
+  const [, { updateKey }] = useLocalStorageContext()
 
   const dismissBetaMessage = useCallback(() => {
     updateKey(BETA_MESSAGE_DISMISSED, true)
   }, [updateKey])
 
-  return [!state[BETA_MESSAGE_DISMISSED], dismissBetaMessage]
+  // return [!state[BETA_MESSAGE_DISMISSED], dismissBetaMessage]
+  return [false, dismissBetaMessage]
 }
 
 export function useDarkModeManager() {
