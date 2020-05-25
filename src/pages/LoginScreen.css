@@ -1,0 +1,127 @@
+
+.loginScreen {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    background: linear-gradient(360deg, #327ccb, #4f94de 5%, #8bbbef 15%, #bdddff 25%, #deeeff 40%);
+}
+
+.loginScreenInner {
+    width: 500px;
+    margin: 20vh auto 0;
+    color: black;
+    font-family: 'Open Sans', sans-serif;
+    text-align: center;
+}
+
+.loginScreenTitleWrapper {
+    width: 100%;
+    text-align: center;
+}
+
+.loginScreenDmmLogo {
+    width: 18%;
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 18px;
+    margin-top: 6px;
+}
+
+.loginScreenDmmLogo img {
+    width: 100%;
+}
+
+.loginScreenTitleInner {
+    text-align: left;
+    width: 70%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.loginScreenTitle {
+    font-size: 42px;
+    font-weight: 100;
+}
+
+.loginScreenSubtitle {
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.76);
+    font-weight: 100;
+    margin-top: -10px;
+}
+
+.loginScreenDescription {
+    width: 150%;
+    text-align: center;
+    margin-left: -25%;
+    margin-top: 30px;
+    font-weight: 100;
+}
+
+.loginScreenLineOne {
+    margin-bottom: 5px;
+}
+
+.loginScreenPasswordWrapper {
+    margin-top: 25px;
+}
+
+.loginScreenPasswordField {
+    width: fit-content;
+    display: inline-block;
+}
+
+.loginScreenPasswordField input {
+    border: none;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 10px 15px 11px;
+    color: black;
+    font-weight: 100;
+    font-size: 15px;
+    letter-spacing: 1px;
+}
+
+.loginScreenPasswordField input:focus {
+    outline: none;
+}
+
+.loginScreenPasswordSubmit {
+    width: fit-content;
+    display: inline-block;
+    margin-left: 15px;
+}
+
+.loginScreenPasswordSubmitButton {
+    height: 39px;
+    width: 75px;
+    border: none;
+    background-color: #327ccb;
+    color: white;
+    font-size: 15px;
+    font-weight: 100;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.loginScreenPasswordSubmitButton:hover {
+    background-color: #5490cb;
+}
+
+.loginScreenPasswordSubmitButton:focus {
+    outline: none;
+}
+
+.loginScreenError {
+    font-weight: 500;
+    color: #d81530;
+    margin-top: 6px;
+    margin-left: -82px;
+}
