@@ -2,6 +2,7 @@ import React from 'react'
 
 import styles from './LoginScreen.css';
 import DMMLogo from '../assets/images/dmm-logo.svg';
+import Button from "@material-ui/core/Button";
 
 class LoginScreen extends React.Component {
   constructor(props) {
@@ -78,12 +79,12 @@ class LoginScreen extends React.Component {
               />
             </div>
             <div className={'loginScreenPasswordSubmit'}>
-              <button
+              <Button
                 className={'loginScreenPasswordSubmitButton'+(this.state.fade ? ' faded' : '')}
                 onClick={() => this.login()}
               >
                 Enter
-              </button>
+              </Button>
             </div>
           </div>
           { this.state.showError &&

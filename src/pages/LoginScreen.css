@@ -97,18 +97,21 @@
 }
 
 .loginScreenPasswordSubmitButton {
-    height: 39px;
-    width: 75px;
-    border: none;
-    background-color: #327ccb;
-    color: white;
-    font-size: 15px;
-    font-weight: 100;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
+    height: 39px !important;
+    width: 75px !important;
+    border: none !important;
+    background-color: #327ccb !important;
+    color: white !important;
+    font-size: 15px !important;
+    font-weight: 100 !important;
+    -webkit-border-radius: 5px !important;
+    -moz-border-radius: 5px !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    text-align: center !important;
+    text-transform: capitalize !important;
+    line-height: normal !important;
+    vertical-align: baseline !important;
 }
 
 .loginScreenPasswordSubmitButton.faded,

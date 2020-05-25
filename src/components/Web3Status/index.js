@@ -20,6 +20,7 @@ import PortisIcon from '../../assets/images/portisIcon.png'
 import TorusIcon from '../../assets/images/torus.png'
 import { NetworkContextName } from '../../constants'
 import Identicon from '../Identicon'
+import Button from "@material-ui/core/Button";
 
 const Web3StatusGeneric = styled.button`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -169,24 +170,24 @@ export default function Web3Status() {
   function getWeb3Status() {
     if (account) {
       return (
-        <Web3StatusConnected onClick={toggleWalletModal} pending={hasPendingTransactions}>
+        <Button onClick={toggleWalletModal} pending={hasPendingTransactions}>
           {hasPendingTransactions && <SpinnerWrapper src={Circle} alt="loader" />}
           <Text>{ENSName || shortenAddress(account)}</Text>
           {getStatusIcon()}
-        </Web3StatusConnected>
+        </Button>
       )
     } else if (error) {
       return (
-        <Web3StatusError onClick={toggleWalletModal}>
+        <Button onClick={toggleWalletModal}>
           <NetworkIcon />
           <Text>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}</Text>
-        </Web3StatusError>
+        </Button>
       )
     } else {
       return (
-        <Web3StatusConnect onClick={toggleWalletModal} faded={!account}>
+        <Button onClick={toggleWalletModal} faded={!account}>
           <Text>{t('connectToWallet')}</Text>
-        </Web3StatusConnect>
+        </Button>
       )
     }
   }
