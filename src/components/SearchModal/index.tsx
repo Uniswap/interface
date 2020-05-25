@@ -155,7 +155,8 @@ function SearchModal({
           </RowBetween>
           <Tooltip
             text="Import any token into your list by pasting the token address into the search field."
-            showPopup={tooltipOpen}
+            show={tooltipOpen}
+            placement="bottom"
           >
             <SearchInput
               type={'text'}
@@ -175,11 +176,7 @@ function SearchModal({
               {isTokenView ? 'Token Name' : 'Pool Name'}
             </Text>
             {isTokenView && (
-              <SortButton
-                ascending={invertSearchOrder}
-                toggleSortOrder={() => setInvertSearchOrder(iso => !iso)}
-                title="Your Balances"
-              />
+              <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />
             )}
           </RowBetween>
         </PaddedColumn>
@@ -210,7 +207,7 @@ function SearchModal({
             <div>
               {isTokenView ? (
                 <Text fontWeight={500} color={theme.text2} fontSize={14}>
-                  <StyledLink onClick={openTooltip}>Having trouble importing a token?</StyledLink>
+                  <StyledLink onClick={openTooltip}>Having trouble finding a token?</StyledLink>
                 </Text>
               ) : (
                 <Text fontWeight={500}>
