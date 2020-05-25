@@ -10,11 +10,22 @@ class LoginScreen extends React.Component {
     this.state = {
       password: null,
       showError: false,
+      fade: false
+    }
+  }
+
+  _handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      this.setState({ fade: true });
+      this.login();
+      setTimeout(() => {
+        this.setState({ fade: false });
+      }, 200);
     }
   }
 
   login() {
-    fetch('http://api.defimoneymarket.com/v1/dmg-sale/verify-password', {
+    fetch('https://api.defimoneymarket.com/v1/dmg-sale/verify-password', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -24,8 +35,6 @@ class LoginScreen extends React.Component {
       body: JSON.stringify({})
     }).then(response => response.text())
       .then(body => {
-          console.log('BODY');
-          console.log(body);
           const response = JSON.parse(body).data;
           if (response) {
             this.props.onLogin();
@@ -65,11 +74,12 @@ class LoginScreen extends React.Component {
                 value={this.state.password}
                 onChange={e => this.setState({ password: e.target.value })}
                 type={'password'}
+                onKeyDown={this._handleKeyDown}
               />
             </div>
             <div className={'loginScreenPasswordSubmit'}>
               <button
-                className={'loginScreenPasswordSubmitButton'}
+                className={'loginScreenPasswordSubmitButton'+(this.state.fade ? ' faded' : '')}
                 onClick={() => this.login()}
               >
                 Enter

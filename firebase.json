@@ -1,0 +1,21 @@
+{
+  "hosting": {
+    "public": "build",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "headers": [
+      { "source":"/service-worker.js", "headers": [{"key": "Cache-Control", "value": "no-cache"}] },
+      { "source":"**/*.html", "headers": [{"key": "Cache-Control", "value": "no-cache"}] },
+      { "source":"**/*.@(css|js)", "headers": [{"key": "Cache-Control", "value": "no-cache"}] }
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

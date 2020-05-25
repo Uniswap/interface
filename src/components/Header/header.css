@@ -55,6 +55,22 @@
     margin-left: 10px;
 }
 
+.connectWalletButton button {
+    color: white !important;
+    background-color: #327ccb !important;
+    font-weight: 100 !important;
+    box-shadow: rgba(0,0,0,0.5) 1px 1px 8px -4px, rgba(0,0,0,0.5) 1px 1px 4px -4px;
+    transition: all 0.2s ease-in-out;
+    -webkit-border-radius: 5px !important;
+    -moz-border-radius: 5px !important;
+    border-radius: 5px !important;
+    font-size: 15px !important;
+    height: 40px !important;
+    width: 153px !important;
+    margin-top: 10px !important;
+    text-transform: none !important;
+}
+
 .purchaseCryptoButton .loadWallet {
     width: 110px !important;
     background-color: #8b9db1 !important;

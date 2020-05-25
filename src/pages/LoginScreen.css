@@ -111,6 +111,7 @@
     text-align: center;
 }
 
+.loginScreenPasswordSubmitButton.faded,
 .loginScreenPasswordSubmitButton:hover {
     background-color: #5490cb;
 }
