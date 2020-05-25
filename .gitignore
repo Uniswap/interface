@@ -29,3 +29,5 @@ notes.txt
 .vscode/
 
 package-lock.json
+
+.firebase
