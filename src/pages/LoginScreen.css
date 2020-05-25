@@ -59,6 +59,7 @@
     margin-left: -25%;
     margin-top: 30px;
     font-weight: 100;
+    max-width: 100vw;
 }
 
 .loginScreenLineOne {
@@ -128,4 +129,25 @@
     color: #d81530;
     margin-top: 6px;
     margin-left: -82px;
+}
+
+@media screen and (max-width: 750px) {
+    .loginScreenDescription {
+        width: 90%;
+        margin: 30px auto;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .loginScreenInner {
+        width: 340px;
+    }
+
+    .loginScreenTitle {
+        font-size: 32px;
+    }
+
+    .loginScreenSubtitle {
+        font-size: 18px;
+    }
 }
