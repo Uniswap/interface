@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDebounce, useActiveWeb3React } from '../../hooks'
+import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { updateBlockNumber } from './actions'
 import { useDispatch } from 'react-redux'
 
@@ -7,6 +8,7 @@ export default function Updater() {
   const { library, chainId } = useActiveWeb3React()
   const dispatch = useDispatch()
 
+  const windowVisible = useIsWindowVisible()
   const [maxBlockNumber, setMaxBlockNumber] = useState<number | null>(null)
   // because blocks arrive in bunches with longer polling periods, we just want
   // to process the latest one.
@@ -38,8 +40,10 @@ export default function Updater() {
 
   useEffect(() => {
     if (!chainId || !debouncedMaxBlockNumber) return
-    dispatch(updateBlockNumber({ chainId, blockNumber: debouncedMaxBlockNumber }))
-  }, [chainId, debouncedMaxBlockNumber, dispatch])
+    if (windowVisible) {
+      dispatch(updateBlockNumber({ chainId, blockNumber: debouncedMaxBlockNumber }))
+    }
+  }, [chainId, debouncedMaxBlockNumber, windowVisible, dispatch])
 
   return null
 }
