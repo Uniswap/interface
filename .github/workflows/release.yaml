@@ -4,10 +4,10 @@ on:
   schedule:
     - cron:  '0 12 * * *'
 
-  # triggered releases, must have tag trigger-release
+  # releases are triggered on changes to this file
   push:
-    tags:
-      - trigger-release
+    paths:
+      - '.github/workflows/release.yaml'
 
 jobs:
   bump_version:
