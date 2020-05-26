@@ -1,0 +1,7 @@
+{
+  "main": "index.js",
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "node-fetch": "^2.6.0"
+  }
+}
