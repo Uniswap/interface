@@ -1,9 +1,9 @@
 # Uniswap Frontend
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/fa110555-b3c7-4eeb-b840-88a835009c62/deploy-status)](https://app.netlify.com/sites/uniswap/deploys)
-[![Tests](https://github.com/Uniswap/uniswap-frontend/workflows/Tests/badge.svg?branch=v2)](https://github.com/Uniswap/uniswap-frontend/actions?query=workflow%3ATests)
+[![Tests](https://github.com/Uniswap/uniswap-frontend/workflows/Tests/badge.svg)](https://github.com/Uniswap/uniswap-frontend/actions?query=workflow%3ATests)
 [![Styled With Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://prettier.io/)
-[![Release](https://github.com/Uniswap/uniswap-frontend/workflows/Release/badge.svg?branch=v2)](https://github.com/Uniswap/uniswap-frontend/actions?query=workflow%3ARelease)
+[![Release](https://github.com/Uniswap/uniswap-frontend/workflows/Release/badge.svg)](https://github.com/Uniswap/uniswap-frontend/actions?query=workflow%3ARelease)
 
 An open source interface for Uniswap -- a protocol for decentralized exchange of Ethereum tokens.
 
