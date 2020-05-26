@@ -11,7 +11,7 @@ import Card, { BlueCard, GreyCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import QuestionHelper from '../../components/Question'
+import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
@@ -376,7 +376,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
                       </ArrowWrapper>
                       <ButtonSecondary
                         onClick={() => setSendingWithSwap(false)}
-                        style={{ marginRight: '0px', width: 'fit-content', fontSize: '14px' }}
+                        style={{ marginRight: '0px', width: 'auto', fontSize: '14px' }}
                         padding={'4px 6px'}
                       >
                         Remove Swap

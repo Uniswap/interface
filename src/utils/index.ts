@@ -102,42 +102,49 @@ export function getExchangeContract(pairAddress: string, library: Web3Provider, 
   return getContract(pairAddress, IUniswapV2PairABI, library, account)
 }
 
-// get token name
-export async function getTokenName(tokenAddress: string, library: Web3Provider) {
+// get token info and fall back to unknown if not available, except for the
+// decimals which falls back to null
+export async function getTokenInfoWithFallback(
+  tokenAddress: string,
+  library: Web3Provider
+): Promise<{ name: string; symbol: string; decimals: null | number }> {
   if (!isAddress(tokenAddress)) {
     throw Error(`Invalid 'tokenAddress' parameter '${tokenAddress}'.`)
   }
 
-  return getContract(tokenAddress, ERC20_ABI, library)
-    .name()
-    .catch(() =>
-      getContract(tokenAddress, ERC20_BYTES32_ABI, library)
-        .name()
-        .then(parseBytes32String)
-    )
-}
+  const token = getContract(tokenAddress, ERC20_ABI, library)
 
-// get token symbol
-export async function getTokenSymbol(tokenAddress: string, library: Web3Provider) {
-  if (!isAddress(tokenAddress)) {
-    throw Error(`Invalid 'tokenAddress' parameter '${tokenAddress}'.`)
-  }
+  const namePromise: Promise<string> = token.name().catch(() =>
+    getContract(tokenAddress, ERC20_BYTES32_ABI, library)
+      .name()
+      .then(parseBytes32String)
+      .catch((e: Error) => {
+        console.debug('Failed to get name for token address', e, tokenAddress)
+        return 'Unknown'
+      })
+  )
 
-  return getContract(tokenAddress, ERC20_ABI, library)
-    .symbol()
-    .catch(() => {
-      const contractBytes32 = getContract(tokenAddress, ERC20_BYTES32_ABI, library)
-      return contractBytes32.symbol().then(parseBytes32String)
-    })
-}
+  const symbolPromise: Promise<string> = token.symbol().catch(() => {
+    const contractBytes32 = getContract(tokenAddress, ERC20_BYTES32_ABI, library)
+    return contractBytes32
+      .symbol()
+      .then(parseBytes32String)
+      .catch((e: Error) => {
+        console.debug('Failed to get symbol for token address', e, tokenAddress)
+        return 'UNKNOWN'
+      })
+  })
+  const decimalsPromise: Promise<number | null> = token.decimals().catch((e: Error) => {
+    console.debug('Failed to get decimals for token address', e, tokenAddress)
+    return null
+  })
 
-// get token decimals
-export async function getTokenDecimals(tokenAddress: string, library: Web3Provider) {
-  if (!isAddress(tokenAddress)) {
-    throw Error(`Invalid 'tokenAddress' parameter '${tokenAddress}'.`)
-  }
-
-  return getContract(tokenAddress, ERC20_ABI, library).decimals()
+  const [name, symbol, decimals]: [string, string, number | null] = (await Promise.all([
+    namePromise,
+    symbolPromise,
+    decimalsPromise
+  ])) as [string, string, number | null]
+  return { name, symbol, decimals }
 }
 
 export function escapeRegExp(string: string): string {
