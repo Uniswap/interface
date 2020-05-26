@@ -271,13 +271,19 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
               </GreyCard>
             ) : approval === ApprovalState.NOT_APPROVED || approval === ApprovalState.PENDING ? (
-              <ButtonLight onClick={approveCallback} disabled={approval === ApprovalState.PENDING}>
-                {approval === ApprovalState.PENDING ? (
-                  <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
-                ) : (
-                  'Approve ' + tokens[Field.INPUT]?.symbol
-                )}
-              </ButtonLight>
+              <RowBetween>
+                <ButtonLight onClick={approveCallback} disabled={approval === ApprovalState.PENDING}>
+                  {approval === ApprovalState.PENDING ? (
+                    <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
+                  ) : (
+                    'Approve ' + tokens[Field.INPUT]?.symbol
+                  )}
+                </ButtonLight>
+                <div style={{ width: '12px', height: '12px' }}></div>
+                <ButtonError style={{ textAlign: 'center' }} disabled={true}>
+                  <TYPE.main mb="4px">Confirm</TYPE.main>
+                </ButtonError>
+              </RowBetween>
             ) : (
               <ButtonError
                 onClick={() => {

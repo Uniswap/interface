@@ -55,10 +55,12 @@ const UpperSection = styled.div`
 
 const InfoCard = styled.div`
   padding: 1rem;
-  background-color: ${({ theme }) => theme.bg2};
+  border: 1px solid ${({ theme }) => theme.bg3};
   border-radius: 20px;
-  margin-bottom: 20px;
   position: relative;
+  display: grid;
+  grid-row-gap: 12px;
+  margin-bottom: 20px;
 `
 
 const AccountGroupingRow = styled.div`
@@ -72,16 +74,12 @@ const AccountGroupingRow = styled.div`
     ${({ theme }) => theme.flexRowNoWrap}
     align-items: center;
   }
-
-  &:first-of-type {
-    margin-bottom: 8px;
-  }
 `
 
 const AccountSection = styled.div`
   background-color: ${({ theme }) => theme.bg1};
   padding: 0rem 1rem;
-  ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1rem 1rem;`};
+  ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1.5rem 1rem;`};
 `
 
 const YourAccount = styled.div`
@@ -102,6 +100,7 @@ const LowerSection = styled.div`
   flex-grow: 1;
   overflow: auto;
   background-color: ${({ theme }) => theme.bg2};
+  /* border-top: 1px solid ${({ theme }) => theme.bg2}; */
   border-bottom-left-radius: 25px;
   border-bottom-right-radius: 20px;
 
@@ -112,13 +111,13 @@ const LowerSection = styled.div`
   }
 `
 
-const AccountControl = styled.div<{ hasENS: boolean; isENS: boolean }>`
+const AccountControl = styled.div`
   display: flex;
   justify-content: space-between;
   min-width: 0;
   width: 100%;
 
-  font-weight: ${({ hasENS, isENS }) => (hasENS ? (isENS ? 500 : 400) : 500)};
+  font-weight: 500;
   font-size: 1.25rem;
 
   a:hover {
@@ -136,7 +135,9 @@ const AccountControl = styled.div<{ hasENS: boolean; isENS: boolean }>`
 
 const StyledLink = styled(Link)<{ hasENS: boolean; isENS: boolean }>`
   color: ${({ theme }) => theme.text3};
-  margin-right: 8px;
+  margin-left: 1rem;
+  font-size: 0.825rem;
+  display: flex;
 
   :hover {
     color: ${({ theme }) => theme.text2};
@@ -162,6 +163,8 @@ const CloseColor = styled(Close)`
 const WalletName = styled.div`
   width: initial;
   font-size: 0.825rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.text3};
 `
 
 const IconWrapper = styled.div<{ size?: number }>`
@@ -302,67 +305,87 @@ export default function AccountDetails({
         <AccountSection>
           <YourAccount>
             <InfoCard>
+              <AccountGroupingRow>
+                {formatConnectorName()}
+                <div>
+                  {connector !== injected && connector !== walletlink && (
+                    <Link
+                      style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
+                      onClick={() => {
+                        ;(connector as any).close()
+                      }}
+                    >
+                      Disconnect
+                    </Link>
+                  )}
+                  <Link
+                    style={{ fontSize: '.825rem', fontWeight: 400 }}
+                    onClick={() => {
+                      openOptions()
+                    }}
+                  >
+                    Change
+                  </Link>
+                </div>
+              </AccountGroupingRow>
               <AccountGroupingRow id="web3-account-identifier-row">
-                {ENSName ? (
-                  <>
-                    <AccountControl hasENS={!!ENSName} isENS={true}>
+                <AccountControl>
+                  {ENSName ? (
+                    <>
                       <div>
                         {getStatusIcon()}
                         <p> {ENSName}</p>
                       </div>
+                    </>
+                  ) : (
+                    <>
                       <div>
+                        {getStatusIcon()}
+                        <p> {shortenAddress(account)}</p>
+                      </div>
+                    </>
+                  )}
+                </AccountControl>
+              </AccountGroupingRow>
+              <AccountGroupingRow>
+                {ENSName ? (
+                  <>
+                    <AccountControl>
+                      <div>
+                        <Copy toCopy={account}>
+                          <span style={{ marginLeft: '4px' }}>Copy Address</span>
+                        </Copy>
                         <StyledLink
                           hasENS={!!ENSName}
                           isENS={true}
                           href={getEtherscanLink(chainId, ENSName, 'address')}
                         >
                           <ExternalLink size={16} />
+                          <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
                         </StyledLink>
-                        <Copy toCopy={account} />
                       </div>
                     </AccountControl>
                   </>
                 ) : (
                   <>
-                    <AccountControl hasENS={!!ENSName} isENS={false}>
+                    <AccountControl>
                       <div>
-                        {getStatusIcon()}
-                        <p> {shortenAddress(account)}</p>
-                      </div>
-                      <div>
+                        <Copy toCopy={account}>
+                          <span style={{ marginLeft: '4px' }}>Copy Address</span>
+                        </Copy>
                         <StyledLink
                           hasENS={!!ENSName}
                           isENS={false}
                           href={getEtherscanLink(chainId, account, 'address')}
                         >
                           <ExternalLink size={16} />
+                          <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
                         </StyledLink>
-                        <Copy toCopy={account} />
                       </div>
                     </AccountControl>
                   </>
                 )}
-              </AccountGroupingRow>
-              <AccountGroupingRow>
-                {formatConnectorName()}
-                <div>
-                  {connector !== injected && connector !== walletlink && (
-                    <WalletAction
-                      onClick={() => {
-                        ;(connector as any).close()
-                      }}
-                    >
-                      Disconnect
-                    </WalletAction>
-                  )}
-                  <WalletAction
-                    onClick={() => {
-                      openOptions()
-                    }}
-                  >
-                    Change
-                  </WalletAction>
-                </div>
+                {/* {formatConnectorName()} */}
               </AccountGroupingRow>
             </InfoCard>
           </YourAccount>
@@ -370,9 +393,11 @@ export default function AccountDetails({
       </UpperSection>
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
         <LowerSection>
-          <AutoRow style={{ justifyContent: 'space-between' }}>
+          <AutoRow mb={'1rem'} style={{ justifyContent: 'space-between' }}>
             <TYPE.body>Recent Transactions</TYPE.body>
-            <Link onClick={clearAllTransactionsCallback}>(clear all)</Link>
+            <Link style={{ fontSize: '.825rem', fontWeight: 400 }} onClick={clearAllTransactionsCallback}>
+              (clear all)
+            </Link>
           </AutoRow>
           {renderTransactions(pendingTransactions)}
           {renderTransactions(confirmedTransactions)}
