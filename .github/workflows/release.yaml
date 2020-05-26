@@ -33,7 +33,7 @@ jobs:
           node-version: '12'
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --ignore-scripts
 
       - name: Build the IPFS bundle
         run: yarn ipfs-build
