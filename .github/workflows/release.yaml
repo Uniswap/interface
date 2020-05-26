@@ -1,8 +1,12 @@
 name: Release
-# every morning
 on:
+  # every morning
   schedule:
     - cron:  '0 12 * * *'
+  # triggered releases, must have tag trigger-release on v2 branch
+  push:
+    tags:
+      - trigger-release
 jobs:
   create-release:
     name: Create Release
@@ -26,11 +30,8 @@ jobs:
         with:
           node-version: '12'
 
-      - name: Install yarn
-        run: npm install -g yarn
-
       - name: Install dependencies
-        run: yarn
+        run: yarn install --ignore-scripts --frozen-lockfile
 
       - name: Build the IPFS bundle
         run: yarn ipfs-build
@@ -45,8 +46,14 @@ jobs:
           pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET_KEY }}
 
       - name: Update DNS with new IPFS hash
-        id: update_dns
-        run: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --scope uniswap dns add uniswap.org _dnslink.app TXT "dnslink=/ipfs/${{ steps.upload.outputs.hash }}"
+        uses: uniswap/replace-vercel-dns-records@v1.0.0
+        with:
+          domain: 'uniswap.org'
+          subdomain: '_dnslink.app'
+          record-type: 'TXT'
+          value: /ipfs/${{ steps.upload.outputs.hash }}
+          token: ${{ secrets.VERCEL_TOKEN }}
+          team-name: 'uniswap'
 
       - name: Create GitHub Release
         id: create_release
@@ -57,14 +64,21 @@ jobs:
           tag_name: ${{ steps.bump_version.outputs.new_tag }}
           release_name: Release ${{ steps.bump_version.outputs.new_tag }}
           body: |
-            Release built from commit [`${{ github.sha }}`](https://github.com/Uniswap/uniswap-frontend/tree/${{ github.sha }})
+            Release built from commit
+            [`${{ github.sha }}`](https://github.com/Uniswap/uniswap-frontend/tree/${{ github.sha }})
 
             The IPFS hash of the bundle is `${{ steps.upload.outputs.hash }}`
 
-            The following IPFS Gateways can be used to access the release:
+            Uniswap uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to store your settings.
+            **Beware** that other sites you access via the _same_ IPFS gateway can read and modify your settings on Uniswap without your permission.
+
+            Preferred URLs:
+            - [ipfs://${{ steps.upload.outputs.hash }}/](ipfs://${{ steps.upload.outputs.hash }}/)
+            - https://dweb.link/ipfs/${{ steps.upload.outputs.hash }}/
+
+            Other IPFS gateways:
             - https://cloudflare-ipfs.com/ipfs/${{ steps.upload.outputs.hash }}/
             - https://ipfs.infura.io/ipfs/${{ steps.upload.outputs.hash }}/
             - https://ipfs.io/ipfs/${{ steps.upload.outputs.hash }}/
-            - https://dweb.link/ipfs/${{ steps.upload.outputs.hash }}/
 
             ${{ steps.bump_version.outputs.changelog }}

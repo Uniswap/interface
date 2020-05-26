@@ -47,7 +47,13 @@ export default function TokenList({
     return <ModalInfo>{t('noToken')}</ModalInfo>
   }
   return (
-    <FixedSizeList width="100%" height={500} itemCount={tokens.length} itemSize={50} style={{ flex: '1' }}>
+    <FixedSizeList
+      width="100%"
+      height={500}
+      itemCount={tokens.length}
+      itemSize={50}
+      style={{ flex: '1', minHeight: 200 }}
+    >
       {({ index, style }) => {
         const { address, symbol } = tokens[index]
 

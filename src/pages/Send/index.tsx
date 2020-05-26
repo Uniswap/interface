@@ -370,7 +370,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
                       </ArrowWrapper>
                       <ButtonSecondary
                         onClick={() => setSendingWithSwap(false)}
-                        style={{ marginRight: '0px', width: 'fit-content', fontSize: '14px' }}
+                        style={{ marginRight: '0px', width: 'auto', fontSize: '14px' }}
                         padding={'4px 6px'}
                       >
                         Remove Swap
