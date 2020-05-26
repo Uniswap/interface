@@ -88,10 +88,11 @@ jobs:
 
             Uniswap uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to store your settings.
             **Beware** that other sites you access via the _same_ IPFS gateway can read and modify your settings on Uniswap without your permission.
-            You can avoid this issue by using a subdomain IPFS gateway. The ipfs.dweb.link gateway URL below utilizes the CIDv1 of the release in the subdomain, and is safe from these issues.
+            You can avoid this issue by using a subdomain IPFS gateway. The preferred gateway URLs below utilize the CIDv1 of the release in the subdomain, and are relatively safer.
 
             Preferred URLs:
             - https://${{ steps.convert_cidv1.outputs.cidv1 }}.ipfs.dweb.link/
+            - https://${{ steps.convert_cidv1.outputs.cidv1 }}.ipfs.cf-ipfs.com/
             - [ipfs://${{ steps.upload.outputs.hash }}/](ipfs://${{ steps.upload.outputs.hash }}/)
 
             Other IPFS gateways:
