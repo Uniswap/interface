@@ -44,9 +44,9 @@ const SubCurrencySelect = styled.button`
   outline: none;
   cursor: pointer;
   user-select: none;
-  background: ${({ theme }) => theme.zumthorBlue};
-  border: 1px solid ${({ theme }) => theme.royalBlue};
-  color: ${({ theme }) => theme.royalBlue};
+  background-color: #E0E0E0;
+  color: #000000;
+  border: 1px solid #000000;
 `
 
 const InputRow = styled.div`
@@ -129,7 +129,7 @@ const Container = styled.div`
 const LabelRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  color: #000000;
+  color: #000000 !important;
   font-size: 0.75rem;
   line-height: 1rem;
   padding: 0.75rem 1rem;
@@ -144,10 +144,10 @@ const LabelContainer = styled.div`
 `
 
 const ErrorSpan = styled.span`
-  color: ${({ error, theme }) => error && theme.salmonRed};
+  color: #000000s;
   :hover {
     cursor: pointer;
-    color: ${({ error, theme }) => error && darken(0.1, theme.salmonRed)};
+    color: #444444;
   }
 `
 

@@ -14,6 +14,7 @@ import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useDolomiteOrderBooks } from '../../contexts/DolomiteOrderBooks'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWalletModalToggle } from '../../contexts/Application'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { Button } from '../../theme'
 import CurrencyInputPanel from '../CurrencyInputPanel'
@@ -81,6 +82,10 @@ const Flex = styled.div`
 
   button {
     max-width: 20rem;
+  }
+  
+  svg {
+    color: white !important;
   }
 `
 
@@ -312,6 +317,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   }
 
   const [brokenTokenWarning, setBrokenTokenWarning] = useState()
+
+  const [isSubmitting, setIsSubmitting] = useState();
 
   const [deadlineFromNow, setDeadlineFromNow] = useState(DEFAULT_DEADLINE_FROM_NOW)
 
@@ -871,7 +878,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           warning={highSlippageWarning || customSlippageError === 'warning'}
           loggedOut={!account}
         >
-          {brokenTokenWarning
+          {isSubmitting ? <CircularProgress/> :brokenTokenWarning
             ? 'Swap'
             : !account
               ? t('connectToWallet')
