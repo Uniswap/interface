@@ -309,7 +309,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
       )}
 
       {priceImpactWithoutFee && priceImpactSeverity > 2 && (
-        <AutoColumn gap="lg">
+        <AutoColumn gap="lg" style={{ marginTop: '1rem' }}>
           <PriceSlippageWarningCard priceSlippage={priceImpactWithoutFee} />
         </AutoColumn>
       )}

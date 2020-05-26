@@ -514,7 +514,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
       )}
 
       {priceImpactWithoutFee && severity > 2 && (
-        <AutoColumn gap="lg">
+        <AutoColumn gap="lg" style={{ marginTop: '1rem' }}>
           <PriceSlippageWarningCard priceSlippage={priceImpactWithoutFee} />
         </AutoColumn>
       )}
