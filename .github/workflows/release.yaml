@@ -91,4 +91,4 @@ jobs:
             - https://ipfs.infura.io/ipfs/${{ steps.upload.outputs.hash }}/
             - https://ipfs.io/ipfs/${{ steps.upload.outputs.hash }}/
 
-            ${{ needs.bump_version.outputs.new_tag.changelog }}
+            ${{ needs.bump_version.outputs.changelog }}
