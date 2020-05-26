@@ -1,8 +1,14 @@
 name: Release
-# every morning
 on:
+  # every morning
   schedule:
     - cron:  '0 12 * * *'
+  # triggered releases, must have tag trigger-release on v2 branch
+  push:
+    branches:
+      - v2
+    tags:
+      - trigger-release
 jobs:
   create-release:
     name: Create Release
