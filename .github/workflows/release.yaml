@@ -55,6 +55,12 @@ jobs:
           pinata-api-key: ${{ secrets.PINATA_API_KEY }}
           pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET_KEY }}
 
+      - name: Convert CIDv0 to CIDv1
+        id: convert_cidv0
+        uses: uniswap/convert-cidv0-cidv1@v1.0.0
+        with:
+          cidv0: ${{ steps.upload.outputs.hash }}
+
       - name: Update DNS with new IPFS hash
         uses: uniswap/replace-vercel-dns-records@v1.0.0
         with:
@@ -74,17 +80,19 @@ jobs:
           tag_name: ${{ needs.bump_version.outputs.new_tag }}
           release_name: Release ${{ needs.bump_version.outputs.new_tag }}
           body: |
-            Release built from commit
-            [`${{ github.sha }}`](https://github.com/Uniswap/uniswap-frontend/tree/${{ github.sha }})
+            Release built from commit [`${{ github.sha }}`](https://github.com/Uniswap/uniswap-frontend/tree/${{ github.sha }})
 
-            The IPFS hash of the bundle is `${{ steps.upload.outputs.hash }}`
+            The IPFS hash of the bundle is:
+            - CIDv0: `${{ steps.upload.outputs.hash }}`
+            - CIDv1: `${{ steps.convert_cidv0.outputs.cidv1 }}`
 
             Uniswap uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to store your settings.
             **Beware** that other sites you access via the _same_ IPFS gateway can read and modify your settings on Uniswap without your permission.
+            You can avoid this issue by using a subdomain IPFS gateway. The ipfs.dweb.link gateway URL below utilizes the CIDv1 of the release in the subdomain, and is safe from these issues.
 
             Preferred URLs:
+            - https://${{ steps.convert_cidv1.outputs.cidv1 }}.ipfs.dweb.link/
             - [ipfs://${{ steps.upload.outputs.hash }}/](ipfs://${{ steps.upload.outputs.hash }}/)
-            - https://dweb.link/ipfs/${{ steps.upload.outputs.hash }}/
 
             Other IPFS gateways:
             - https://cloudflare-ipfs.com/ipfs/${{ steps.upload.outputs.hash }}/
