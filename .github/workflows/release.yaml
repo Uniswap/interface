@@ -46,7 +46,7 @@ jobs:
           pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET_KEY }}
 
       - name: Update DNS with new IPFS hash
-        uses: uniswap/replace-vercel-dns-record@v1
+        uses: uniswap/replace-vercel-dns-records@v1
         with:
           domain: 'uniswap.org'
           subdomain: '_dnslink.app'
