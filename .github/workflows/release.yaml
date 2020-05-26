@@ -32,11 +32,8 @@ jobs:
         with:
           node-version: '12'
 
-      - name: Install yarn
-        run: npm install -g yarn
-
       - name: Install dependencies
-        run: yarn
+        run: yarn install
 
       - name: Build the IPFS bundle
         run: yarn ipfs-build
