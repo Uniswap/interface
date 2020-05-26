@@ -91,8 +91,8 @@ jobs:
             You can avoid this issue by using a subdomain IPFS gateway. The preferred gateway URLs below utilize the CIDv1 of the release in the subdomain, and are relatively safer.
 
             Preferred URLs:
-            - https://${{ steps.convert_cidv1.outputs.cidv1 }}.ipfs.dweb.link/
-            - https://${{ steps.convert_cidv1.outputs.cidv1 }}.ipfs.cf-ipfs.com/
+            - https://${{ steps.convert_cidv0.outputs.cidv1 }}.ipfs.dweb.link/
+            - https://${{ steps.convert_cidv0.outputs.cidv1 }}.ipfs.cf-ipfs.com/
             - [ipfs://${{ steps.upload.outputs.hash }}/](ipfs://${{ steps.upload.outputs.hash }}/)
 
             Other IPFS gateways:
