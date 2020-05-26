@@ -48,7 +48,7 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - run: yarn
+      - run: yarn install --ignore-scripts
       - run: yarn test
 
   lint:
@@ -70,6 +70,6 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - run: yarn
+      - run: yarn install --ignore-scripts
       - run: yarn lint
 
