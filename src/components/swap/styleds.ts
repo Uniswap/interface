@@ -28,19 +28,17 @@ export const FixedBottom = styled.div`
   margin-bottom: 40px;
 `
 
-export const AdvancedDropwdown = styled.div`
-  position: absolute;
-  margin-top: -12px;
-  max-width: 455px;
+export const AdvancedDropdown = styled.div`
+  padding-top: calc(10px + 2rem);
+  padding-bottom: 10px;
+  margin-top: -2rem;
+  margin-bottom: 1rem;
   width: 100%;
-  margin-bottom: 100px;
-  padding: 10px 0;
-  padding-top: 36px;
+  max-width: 400px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   color: ${({ theme }) => theme.text2};
   background-color: ${({ theme }) => theme.advancedBG};
-  color: ${({ theme }) => theme.text2};
   z-index: -1;
 `
 

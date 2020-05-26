@@ -34,8 +34,9 @@ import {
   useSwapState
 } from '../../state/swap/hooks'
 import { CursorPointer, TYPE } from '../../theme'
-import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
+import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
+import { PriceSlippageWarningCard } from '../../components/swap/PriceSlippageWarningCard'
 
 export default function Swap({ location: { search } }: RouteComponentProps) {
   useDefaultsFromURLSearch(search)
@@ -134,7 +135,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   // warnings on slippage
-  const priceImpactSeverity = warningServerity(priceImpactWithoutFee)
+  const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
 
   function modalHeader() {
     return (
@@ -292,20 +293,26 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
             )}
             <V1TradeLink v1TradeLinkIfBetter={v1TradeLinkIfBetter} />
           </BottomGrouping>
-          {bestTrade && (
-            <AdvancedSwapDetailsDropdown
-              trade={bestTrade}
-              rawSlippage={allowedSlippage}
-              deadline={deadline}
-              showAdvanced={showAdvanced}
-              setShowAdvanced={setShowAdvanced}
-              priceImpactWithoutFee={priceImpactWithoutFee}
-              setDeadline={setDeadline}
-              setRawSlippage={setAllowedSlippage}
-            />
-          )}
         </Wrapper>
       </AppBody>
+
+      {bestTrade && (
+        <AdvancedSwapDetailsDropdown
+          trade={bestTrade}
+          rawSlippage={allowedSlippage}
+          deadline={deadline}
+          showAdvanced={showAdvanced}
+          setShowAdvanced={setShowAdvanced}
+          setDeadline={setDeadline}
+          setRawSlippage={setAllowedSlippage}
+        />
+      )}
+
+      {priceImpactWithoutFee && priceImpactSeverity > 2 && (
+        <AutoColumn gap="lg">
+          <PriceSlippageWarningCard priceSlippage={priceImpactWithoutFee} />
+        </AutoColumn>
+      )}
     </>
   )
 }
