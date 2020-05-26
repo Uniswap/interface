@@ -9,8 +9,7 @@
     }
   },
   "ignorePatterns": [
-    "node_modules/**/*",
-    "actions/**/*"
+    "node_modules/**/*"
   ],
   "settings": {
     "react": {
