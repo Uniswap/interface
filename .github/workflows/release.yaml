@@ -6,6 +6,8 @@ on:
 
   # releases are triggered on changes to this file
   push:
+    branches:
+      - v2
     paths:
       - '.github/workflows/release.yaml'
 
@@ -22,7 +24,7 @@ jobs:
 
       - name: Bump version and push tag
         id: github_tag_action
-        uses: mathieudutour/github-tag-action@v4
+        uses: mathieudutour/github-tag-action@v4.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           release_branches: .*
@@ -67,7 +69,7 @@ jobs:
           domain: 'uniswap.org'
           subdomain: '_dnslink.app'
           record-type: 'TXT'
-          value: /ipfs/${{ steps.upload.outputs.hash }}
+          value: dnslink=/ipfs/${{ steps.upload.outputs.hash }}
           token: ${{ secrets.VERCEL_TOKEN }}
           team-name: 'uniswap'
 
@@ -92,7 +94,7 @@ jobs:
 
             Preferred URLs:
             - https://${{ steps.convert_cidv0.outputs.cidv1 }}.ipfs.dweb.link/
-            - https://${{ steps.convert_cidv0.outputs.cidv1 }}.ipfs.cf-ipfs.com/
+            - https://${{ steps.convert_cidv0.outputs.cidv1 }}.cf-ipfs.com/
             - [ipfs://${{ steps.upload.outputs.hash }}/](ipfs://${{ steps.upload.outputs.hash }}/)
 
             Other IPFS gateways:

@@ -1,9 +1,7 @@
 # Uniswap Frontend
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/fa110555-b3c7-4eeb-b840-88a835009c62/deploy-status)](https://app.netlify.com/sites/uniswap/deploys)
 [![Tests](https://github.com/Uniswap/uniswap-frontend/workflows/Tests/badge.svg)](https://github.com/Uniswap/uniswap-frontend/actions?query=workflow%3ATests)
 [![Styled With Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://prettier.io/)
-[![Release](https://github.com/Uniswap/uniswap-frontend/workflows/Release/badge.svg)](https://github.com/Uniswap/uniswap-frontend/actions?query=workflow%3ARelease)
 
 An open source interface for Uniswap -- a protocol for decentralized exchange of Ethereum tokens.
 
@@ -17,10 +15,9 @@ An open source interface for Uniswap -- a protocol for decentralized exchange of
 
 ## Accessing the frontend
 
-The front end is deployed to IPFS as well as to [uniswap.exchange](https://uniswap.exchange).
-
-To access the front end via IPFS, use a link from the
-[latest release](https://github.com/Uniswap/uniswap-frontend/releases/latest).
+To access the front end, use an IPFS gateway link from the
+[latest release](https://github.com/Uniswap/uniswap-frontend/releases/latest)
+or visit [uniswap.exchange](https://uniswap.exchange).
 
 ## Development
 

@@ -14,6 +14,7 @@ import {
   SerializedToken,
   updateUserDarkMode
 } from './actions'
+import flatMap from 'lodash.flatmap'
 
 function serializeToken(token: Token): SerializedToken {
   return {
@@ -165,10 +166,11 @@ export function useAllDummyPairs(): Pair[] {
 
   const generatedPairs: Pair[] = useMemo(
     () =>
-      Object.values(tokens)
-        // select only tokens on the current chain
-        .filter(token => token.chainId === chainId)
-        .flatMap(token => {
+      flatMap(
+        Object.values(tokens)
+          // select only tokens on the current chain
+          .filter(token => token.chainId === chainId),
+        token => {
           // for each token on the current chain,
           return (
             bases
@@ -184,7 +186,8 @@ export function useAllDummyPairs(): Pair[] {
               })
               .filter(pair => !!pair) as Pair[]
           )
-        }),
+        }
+      ),
     [tokens, chainId]
   )
 
