@@ -1,6 +1,6 @@
 import { ChainId, WETH } from '@uniswap/sdk'
 import { createStore, Store } from 'redux'
-import { Field, setDefaultsFromURL } from './actions'
+import { Field, setDefaultsFromURLSearch } from './actions'
 import reducer, { SwapState } from './reducer'
 
 describe('swap reducer', () => {
@@ -18,7 +18,7 @@ describe('swap reducer', () => {
   describe('setDefaultsFromURL', () => {
     test('ETH to DAI', () => {
       store.dispatch(
-        setDefaultsFromURL({
+        setDefaultsFromURLSearch({
           chainId: ChainId.MAINNET,
           queryString:
             '?inputCurrency=ETH&outputCurrency=0x6b175474e89094c44da98b954eedeac495271d0f&exactAmount=20.5&exactField=outPUT'
@@ -35,7 +35,7 @@ describe('swap reducer', () => {
 
     test('does not duplicate eth for invalid output token', () => {
       store.dispatch(
-        setDefaultsFromURL({
+        setDefaultsFromURLSearch({
           chainId: ChainId.MAINNET,
           queryString: '?outputCurrency=invalid'
         })
@@ -51,7 +51,7 @@ describe('swap reducer', () => {
 
     test('output ETH only', () => {
       store.dispatch(
-        setDefaultsFromURL({
+        setDefaultsFromURLSearch({
           chainId: ChainId.MAINNET,
           queryString: '?outputCurrency=eth&exactAmount=20.5'
         })

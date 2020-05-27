@@ -1,11 +1,14 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
+import { save, load } from 'redux-localstorage-simple'
+
 import application from './application/reducer'
-import { updateVersion } from './user/actions'
 import user from './user/reducer'
+import transactions from './transactions/reducer'
 import wallet from './wallet/reducer'
 import swap from './swap/reducer'
-import transactions from './transactions/reducer'
-import { save, load } from 'redux-localstorage-simple'
+import mint from './mint/reducer'
+
+import { updateVersion } from './user/actions'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions']
 
@@ -15,7 +18,8 @@ const store = configureStore({
     user,
     transactions,
     wallet,
-    swap
+    swap,
+    mint
   },
   middleware: [...getDefaultMiddleware(), save({ states: PERSISTED_KEYS })],
   preloadedState: load({ states: PERSISTED_KEYS })

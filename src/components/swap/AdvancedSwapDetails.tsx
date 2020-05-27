@@ -15,28 +15,14 @@ import FormattedPriceImpact from './FormattedPriceImpact'
 import TokenLogo from '../TokenLogo'
 import flatMap from 'lodash.flatmap'
 
-export interface AdvancedSwapDetailsProps extends SlippageTabsProps {
-  trade: Trade
-  onDismiss: () => void
-}
-
-export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: AdvancedSwapDetailsProps) {
-  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
+function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
   const theme = useContext(ThemeContext)
+  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
-  const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, slippageTabProps.rawSlippage)
+  const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
   return (
-    <AutoColumn gap="md">
-      <CursorPointer>
-        <RowBetween onClick={onDismiss} padding={'8px 20px'}>
-          <Text fontSize={16} color={theme.text2} fontWeight={500} style={{ userSelect: 'none' }}>
-            Hide Advanced
-          </Text>
-          <ChevronUp color={theme.text2} />
-        </RowBetween>
-      </CursorPointer>
-      <SectionBreak />
+    <>
       <AutoColumn style={{ padding: '0 20px' }}>
         <RowBetween>
           <RowFixed>
@@ -83,16 +69,36 @@ export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: A
       </AutoColumn>
 
       <SectionBreak />
+    </>
+  )
+}
 
-      <RowFixed padding={'0 20px'}>
-        <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-          Set slippage tolerance
-        </TYPE.black>
-        <QuestionHelper text="Your transaction will revert if the execution price changes by more than this amount after you submit your trade." />
-      </RowFixed>
+export interface AdvancedSwapDetailsProps extends SlippageTabsProps {
+  trade?: Trade
+  onDismiss: () => void
+}
+
+export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: AdvancedSwapDetailsProps) {
+  const theme = useContext(ThemeContext)
+
+  return (
+    <AutoColumn gap="md">
+      <CursorPointer>
+        <RowBetween onClick={onDismiss} padding={'8px 20px'}>
+          <Text fontSize={16} color={theme.text2} fontWeight={500} style={{ userSelect: 'none' }}>
+            Hide Advanced
+          </Text>
+          <ChevronUp color={theme.text2} />
+        </RowBetween>
+      </CursorPointer>
+
+      <SectionBreak />
+
+      {trade && <TradeSummary trade={trade} allowedSlippage={slippageTabProps.rawSlippage} />}
+
       <SlippageTabs {...slippageTabProps} />
 
-      {trade.route.path.length > 2 && (
+      {trade?.route?.path?.length > 2 && (
         <AutoColumn style={{ padding: '0 20px' }}>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>

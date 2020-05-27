@@ -51,7 +51,7 @@ export function computeSlippageAdjustedAmounts(
   }
 }
 
-export function warningServerity(priceImpact: Percent): 0 | 1 | 2 | 3 {
+export function warningSeverity(priceImpact: Percent): 0 | 1 | 2 | 3 {
   if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_HIGH)) return 3
   if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return 2
   if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_LOW)) return 1

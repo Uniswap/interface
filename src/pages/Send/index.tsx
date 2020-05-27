@@ -30,14 +30,20 @@ import { useSendCallback } from '../../hooks/useSendCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
-import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
+import {
+  useDefaultsFromURLSearch,
+  useDerivedSwapInfo,
+  useSwapActionHandlers,
+  useSwapState
+} from '../../state/swap/hooks'
 import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { CursorPointer, TYPE } from '../../theme'
-import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
+import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
+import { PriceSlippageWarningCard } from '../../components/swap/PriceSlippageWarningCard'
 
 export default function Send({ location: { search } }: RouteComponentProps) {
-  useDefaultsFromURL(search)
+  useDefaultsFromURLSearch(search)
 
   // text translation
   // const { t } = useTranslation()
@@ -173,7 +179,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   // warnings on slippage
-  const severity = !sendingWithSwap ? 0 : warningServerity(priceImpactWithoutFee)
+  const severity = !sendingWithSwap ? 0 : warningSeverity(priceImpactWithoutFee)
 
   function modalHeader() {
     if (!sendingWithSwap) {
@@ -492,20 +498,26 @@ export default function Send({ location: { search } }: RouteComponentProps) {
             )}
             <V1TradeLink v1TradeLinkIfBetter={v1TradeLinkIfBetter} />
           </BottomGrouping>
-          {bestTrade && (
-            <AdvancedSwapDetailsDropdown
-              trade={bestTrade}
-              rawSlippage={allowedSlippage}
-              deadline={deadline}
-              showAdvanced={showAdvanced}
-              setShowAdvanced={setShowAdvanced}
-              priceImpactWithoutFee={priceImpactWithoutFee}
-              setDeadline={setDeadline}
-              setRawSlippage={setAllowedSlippage}
-            />
-          )}
         </Wrapper>
       </AppBody>
+
+      {bestTrade && (
+        <AdvancedSwapDetailsDropdown
+          trade={bestTrade}
+          rawSlippage={allowedSlippage}
+          deadline={deadline}
+          showAdvanced={showAdvanced}
+          setShowAdvanced={setShowAdvanced}
+          setDeadline={setDeadline}
+          setRawSlippage={setAllowedSlippage}
+        />
+      )}
+
+      {priceImpactWithoutFee && severity > 2 && (
+        <AutoColumn gap="lg" style={{ marginTop: '1rem' }}>
+          <PriceSlippageWarningCard priceSlippage={priceImpactWithoutFee} />
+        </AutoColumn>
+      )}
     </>
   )
 }

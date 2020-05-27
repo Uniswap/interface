@@ -7,7 +7,7 @@ import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { AppDispatch, AppState } from '../index'
 import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
-import { Field, selectToken, setDefaultsFromURL, switchTokens, typeInput } from './actions'
+import { Field, selectToken, setDefaultsFromURLSearch, switchTokens, typeInput } from './actions'
 import { useV1TradeLinkIfBetter } from '../../data/V1'
 import { V1_TRADE_LINK_THRESHOLD } from '../../constants'
 
@@ -52,7 +52,7 @@ export function useSwapActionHandlers(): {
 }
 
 // try to parse a user entered amount for a given token
-function tryParseAmount(value?: string, token?: Token): TokenAmount | undefined {
+export function tryParseAmount(value?: string, token?: Token): TokenAmount | undefined {
   if (!value || !token) {
     return
   }
@@ -155,11 +155,11 @@ export function useDerivedSwapInfo(): {
 
 // updates the swap state to use the defaults for a given network whenever the query
 // string updates
-export function useDefaultsFromURL(search?: string) {
+export function useDefaultsFromURLSearch(search?: string) {
   const { chainId } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
     if (!chainId) return
-    dispatch(setDefaultsFromURL({ chainId, queryString: search }))
+    dispatch(setDefaultsFromURLSearch({ chainId, queryString: search }))
   }, [dispatch, search, chainId])
 }
