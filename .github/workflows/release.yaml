@@ -6,6 +6,8 @@ on:
 
   # releases are triggered on changes to this file
   push:
+    branches:
+      - v2
     paths:
       - '.github/workflows/release.yaml'
 
