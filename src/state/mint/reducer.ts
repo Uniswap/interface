@@ -28,7 +28,7 @@ const initialState: MintState = {
   }
 }
 
-function parseTokens(chainId: number, tokens: string): string[] {
+export function parseTokens(chainId: number, tokens: string): string[] {
   return (
     tokens
       // split by '-'

@@ -4,12 +4,7 @@ import styled from 'styled-components'
 export const Wrapper = styled.div`
   position: relative;
 `
-export const FixedBottom = styled.div`
-  position: absolute;
-  top: 100px;
-  width: 100%;
-  margin-bottom: 80px;
-`
+
 export const ClickableText = styled(Text)`
   :hover {
     cursor: pointer;

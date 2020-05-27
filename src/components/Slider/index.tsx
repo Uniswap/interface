@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React from 'react'
 import Slider from '@material-ui/core/Slider'
 import { withStyles } from '@material-ui/core/styles'
-import { useDebounce } from '../../hooks'
 
 const StyledSlider = withStyles({
   root: {
@@ -51,36 +50,12 @@ const StyledSlider = withStyles({
 
 interface InputSliderProps {
   value: number
-  onChange: (val: number) => void
-  override?: boolean
+  onChange: (value: number) => void
 }
 
-export default function InputSlider({ value, onChange, override }: InputSliderProps) {
-  const [internalVal, setInternalVal] = useState<number>(value)
-  const debouncedInternalValue = useDebounce(internalVal, 100)
-
-  const handleChange = useCallback(
-    (e, val) => {
-      setInternalVal(val)
-      if (val !== debouncedInternalValue) {
-        onChange(val)
-      }
-    },
-    [setInternalVal, onChange, debouncedInternalValue]
-  )
-
-  useEffect(() => {
-    if (override) {
-      setInternalVal(value)
-    }
-  }, [override, value])
-
-  return (
-    <StyledSlider
-      value={typeof internalVal === 'number' ? internalVal : 0}
-      onChange={handleChange}
-      aria-labelledby="input-slider"
-      step={1}
-    />
-  )
+export default function InputSlider({ value, onChange }: InputSliderProps) {
+  function wrappedOnChange(_, value) {
+    onChange(value)
+  }
+  return <StyledSlider value={value} onChange={wrappedOnChange} aria-labelledby="input-slider" step={1} />
 }
