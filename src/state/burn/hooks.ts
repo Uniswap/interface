@@ -8,7 +8,7 @@ import { setDefaultsFromURLMatchParams } from '../mint/actions'
 import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { Token, Pair, TokenAmount, Percent, JSBI, Route } from '@uniswap/sdk'
 import { usePair } from '../../data/Reserves'
-import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
+import { useTokenBalances } from '../wallet/hooks'
 import { tryParseAmount } from '../swap/hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
 
@@ -19,7 +19,7 @@ export function useBurnState(): AppState['burn'] {
 }
 
 export function useDerivedBurnInfo(): {
-  tokens: { [field in Exclude<Field, Field.LIQUIDITY_PERCENT | Field.LIQUIDITY>]?: Token }
+  tokens: { [field in Extract<Field, Field.TOKEN_A | Field.TOKEN_B>]?: Token }
   pair?: Pair | null
   route?: Route
   parsedAmounts: {
@@ -42,7 +42,7 @@ export function useDerivedBurnInfo(): {
   // tokens
   const tokenA = useTokenByAddressAndAutomaticallyAdd(tokenAAddress)
   const tokenB = useTokenByAddressAndAutomaticallyAdd(tokenBAddress)
-  const tokens: { [field in Exclude<Field, Field.LIQUIDITY_PERCENT | Field.LIQUIDITY>]?: Token } = useMemo(
+  const tokens: { [field in Extract<Field, Field.TOKEN_A | Field.TOKEN_B>]?: Token } = useMemo(
     () => ({
       [Field.TOKEN_A]: tokenA,
       [Field.TOKEN_B]: tokenB
@@ -60,12 +60,12 @@ export function useDerivedBurnInfo(): {
     !noLiquidity && pair && tokens[Field.TOKEN_A] ? new Route([pair], tokens[Field.TOKEN_A] as Token) : undefined
 
   // balances
-  const relevantTokenBalances = useTokenBalancesTreatWETHAsETH(account ?? undefined, [pair?.liquidityToken])
+  const relevantTokenBalances = useTokenBalances(account ?? undefined, [pair?.liquidityToken])
   const userLiquidity: undefined | TokenAmount = relevantTokenBalances?.[pair?.liquidityToken?.address ?? '']
 
   // liquidity values
   const totalSupply = useTotalSupply(pair?.liquidityToken)
-  const liquidityValues: { [field in Exclude<Field, Field.LIQUIDITY_PERCENT | Field.LIQUIDITY>]?: TokenAmount } = {
+  const liquidityValues: { [field in Extract<Field, Field.TOKEN_A | Field.TOKEN_B>]?: TokenAmount } = {
     [Field.TOKEN_A]:
       pair &&
       tokens[Field.TOKEN_A] &&
