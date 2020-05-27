@@ -3,13 +3,12 @@ import styled from 'styled-components'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
 import { withRouter, NavLink, Link as HistoryLink, RouteComponentProps } from 'react-router-dom'
+import useBodyKeyDown from '../../hooks/useBodyKeyDown'
 
 import { CursorPointer } from '../../theme'
 import { ArrowLeft } from 'react-feather'
 import { RowBetween } from '../Row'
 import QuestionHelper from '../QuestionHelper'
-
-import { useBodyKeyDown } from '../../hooks'
 
 const tabOrder = [
   {

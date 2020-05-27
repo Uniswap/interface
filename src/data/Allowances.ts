@@ -3,7 +3,7 @@ import { Token, TokenAmount } from '@uniswap/sdk'
 import useSWR from 'swr'
 
 import { SWRKeys, useKeepSWRDataLiveAsBlocksArrive } from '.'
-import { useTokenContract } from '../hooks'
+import { useTokenContract } from '../hooks/useContract'
 
 function getTokenAllowance(contract: Contract, token: Token): (owner: string, spender: string) => Promise<TokenAmount> {
   return async (owner: string, spender: string): Promise<TokenAmount> =>

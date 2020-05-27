@@ -3,7 +3,7 @@ import { Token, TokenAmount } from '@uniswap/sdk'
 import useSWR from 'swr'
 
 import { SWRKeys, useKeepSWRDataLiveAsBlocksArrive } from '.'
-import { useTokenContract } from '../hooks'
+import { useTokenContract } from '../hooks/useContract'
 
 function getTotalSupply(contract: Contract, token: Token): () => Promise<TokenAmount> {
   return async (): Promise<TokenAmount> =>
@@ -12,13 +12,14 @@ function getTotalSupply(contract: Contract, token: Token): () => Promise<TokenAm
       .then((totalSupply: { toString: () => string }) => new TokenAmount(token, totalSupply.toString()))
 }
 
-export function useTotalSupply(token?: Token): TokenAmount {
+// returns undefined if input token is undefined, or fails to get token contract,
+// or contract total supply cannot be fetched
+export function useTotalSupply(token?: Token): TokenAmount | undefined {
   const contract = useTokenContract(token?.address, false)
 
-  const shouldFetch = !!contract
   const { data, mutate } = useSWR(
-    shouldFetch ? [token.address, token.chainId, SWRKeys.TotalSupply] : null,
-    getTotalSupply(contract, token)
+    token ? [token.address, token.chainId, SWRKeys.TotalSupply] : null,
+    token && contract ? getTotalSupply(contract, token) : () => undefined
   )
   useKeepSWRDataLiveAsBlocksArrive(mutate)
 
