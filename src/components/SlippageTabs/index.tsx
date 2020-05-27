@@ -151,7 +151,7 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
         <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
           Set slippage tolerance
         </TYPE.black>
-        <QuestionHelper text="Your transaction will revert if the execution price changes by more than this amount after you submit your trade." />
+        <QuestionHelper text="Your transaction will revert if the price changes unfavorably by more than this percentage." />
       </RowFixed>
 
       <SlippageSelector>
@@ -227,7 +227,7 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
           <TYPE.black fontSize={14} color={theme.text2}>
             Deadline
           </TYPE.black>
-          <QuestionHelper text="Deadline in minutes. If your transaction takes longer than this it will revert." />
+          <QuestionHelper text="Your transaction will revert if it is pending for more than this long." />
         </RowFixed>
         <RowFixed padding={'0 20px'}>
           <OptionCustom style={{ width: '80px' }} tabIndex={-1}>
