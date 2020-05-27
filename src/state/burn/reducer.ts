@@ -31,7 +31,8 @@ export default createReducer<MintState>(initialState, builder =>
     .addCase(setDefaultsFromURLMatchParams, (state, { payload: { chainId, params } }) => {
       const tokens = parseTokens(chainId, params?.tokens ?? '')
       return {
-        ...state,
+        independentField: Field.LIQUIDITY_PERCENT,
+        typedValue: '0',
         [Field.TOKEN_A]: {
           address: tokens[0]
         },
