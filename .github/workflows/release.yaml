@@ -94,7 +94,7 @@ jobs:
 
             Preferred URLs:
             - https://${{ steps.convert_cidv0.outputs.cidv1 }}.ipfs.dweb.link/
-            - https://${{ steps.convert_cidv0.outputs.cidv1 }}.ipfs.cf-ipfs.com/
+            - https://${{ steps.convert_cidv0.outputs.cidv1 }}.cf-ipfs.com/
             - [ipfs://${{ steps.upload.outputs.hash }}/](ipfs://${{ steps.upload.outputs.hash }}/)
 
             Other IPFS gateways:
