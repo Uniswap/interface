@@ -12,9 +12,3 @@
   from = "/*"
   to = "/index.html"
   status = 200
-
-[build.environment]
-  REACT_APP_IS_PRODUCTION_DEPLOY = "false"
-
-[context.production.environment]
-  REACT_APP_IS_PRODUCTION_DEPLOY = "true"
