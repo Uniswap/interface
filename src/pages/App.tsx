@@ -67,6 +67,10 @@ const BackgroundGradient = styled.div`
   }
 `
 
+const Marginer = styled.div`
+  margin-top: 5rem;
+`
+
 let Router: React.ComponentType
 if (process.env.PUBLIC_URL === '.') {
   Router = HashRouter
@@ -99,6 +103,7 @@ export default function App() {
                 <Route component={RedirectPathToSwapOnly} />
               </Switch>
             </Web3ReactManager>
+            <Marginer />
             <Footer />
           </BodyWrapper>
           <BackgroundGradient />

@@ -27,23 +27,30 @@ import { useApproveCallbackFromTrade, ApprovalState } from '../../hooks/useAppro
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
-import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
+import {
+  useDefaultsFromURLSearch,
+  useDerivedSwapInfo,
+  useSwapActionHandlers,
+  useSwapState
+} from '../../state/swap/hooks'
 import { CursorPointer, TYPE } from '../../theme'
-import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
+import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
+import { PriceSlippageWarningCard } from '../../components/swap/PriceSlippageWarningCard'
 
 export default function Swap({ location: { search } }: RouteComponentProps) {
-  useDefaultsFromURL(search)
-  // text translation
-  // const { t } = useTranslation()
+  useDefaultsFromURLSearch(search)
+
   const { chainId, account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
 
+  // swap state
   const { independentField, typedValue } = useSwapState()
   const { bestTrade, tokenBalances, parsedAmounts, tokens, error, v1TradeLinkIfBetter } = useDerivedSwapInfo()
+  const { onSwitchTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
   const isValid = !error
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -58,6 +65,11 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
   const [deadline, setDeadline] = useState<number>(DEFAULT_DEADLINE_FROM_NOW)
   const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
 
+  const formattedAmounts = {
+    [independentField]: typedValue,
+    [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(6) : ''
+  }
+
   const route = bestTrade?.route
   const userHasSpecifiedInputOutput =
     !!tokens[Field.INPUT] &&
@@ -68,13 +80,6 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
 
   // check whether the user has approved the router on the input token
   const [approval, approveCallback] = useApproveCallbackFromTrade(bestTrade, allowedSlippage)
-
-  const formattedAmounts = {
-    [independentField]: typedValue,
-    [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(6) : ''
-  }
-
-  const { onSwitchTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
 
   const maxAmountInput: TokenAmount =
     !!tokenBalances[Field.INPUT] &&
@@ -88,7 +93,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
         : tokenBalances[Field.INPUT]
       : undefined
   const atMaxAmountInput: boolean =
-    !!maxAmountInput && !!parsedAmounts[Field.INPUT] ? maxAmountInput.equalTo(parsedAmounts[Field.INPUT]) : undefined
+    maxAmountInput && parsedAmounts[Field.INPUT] ? maxAmountInput.equalTo(parsedAmounts[Field.INPUT]) : undefined
 
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(bestTrade, allowedSlippage)
 
@@ -130,7 +135,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   // warnings on slippage
-  const priceImpactSeverity = warningServerity(priceImpactWithoutFee)
+  const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
 
   function modalHeader() {
     return (
@@ -259,13 +264,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
           </AutoColumn>
           <BottomGrouping>
             {!account ? (
-              <ButtonLight
-                onClick={() => {
-                  toggleWalletModal()
-                }}
-              >
-                Connect Wallet
-              </ButtonLight>
+              <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
             ) : noRoute && userHasSpecifiedInputOutput ? (
               <GreyCard style={{ textAlign: 'center' }}>
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
@@ -294,20 +293,26 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
             )}
             <V1TradeLink v1TradeLinkIfBetter={v1TradeLinkIfBetter} />
           </BottomGrouping>
-          {bestTrade && (
-            <AdvancedSwapDetailsDropdown
-              trade={bestTrade}
-              rawSlippage={allowedSlippage}
-              deadline={deadline}
-              showAdvanced={showAdvanced}
-              setShowAdvanced={setShowAdvanced}
-              priceImpactWithoutFee={priceImpactWithoutFee}
-              setDeadline={setDeadline}
-              setRawSlippage={setAllowedSlippage}
-            />
-          )}
         </Wrapper>
       </AppBody>
+
+      {bestTrade && (
+        <AdvancedSwapDetailsDropdown
+          trade={bestTrade}
+          rawSlippage={allowedSlippage}
+          deadline={deadline}
+          showAdvanced={showAdvanced}
+          setShowAdvanced={setShowAdvanced}
+          setDeadline={setDeadline}
+          setRawSlippage={setAllowedSlippage}
+        />
+      )}
+
+      {priceImpactWithoutFee && priceImpactSeverity > 2 && (
+        <AutoColumn gap="lg" style={{ marginTop: '1rem' }}>
+          <PriceSlippageWarningCard priceSlippage={priceImpactWithoutFee} />
+        </AutoColumn>
+      )}
     </>
   )
 }
