@@ -2,7 +2,7 @@ import { createReducer } from '@reduxjs/toolkit'
 import { ChainId, WETH } from '@uniswap/sdk'
 
 import { isAddress } from '../../utils'
-import { Field, setDefaultsFromURLMatchParams, selectToken, typeInput } from './actions'
+import { Field, setDefaultsFromURLMatchParams, typeInput } from './actions'
 
 export interface MintState {
   readonly independentField: Field
@@ -55,30 +55,14 @@ export default createReducer<MintState>(initialState, builder =>
     .addCase(setDefaultsFromURLMatchParams, (state, { payload: { chainId, params } }) => {
       const tokens = parseTokens(chainId, params?.tokens ?? '')
       return {
-        ...state,
+        independentField: Field.TOKEN_A,
+        typedValue: '',
+        otherTypedValue: '',
         [Field.TOKEN_A]: {
           address: tokens[0]
         },
         [Field.TOKEN_B]: {
           address: tokens[1]
-        }
-      }
-    })
-    .addCase(selectToken, (state, { payload: { address, field } }) => {
-      const otherField = field === Field.TOKEN_A ? Field.TOKEN_B : Field.TOKEN_A
-      if (address === state[otherField].address) {
-        // the case where we have to swap the order
-        return {
-          ...state,
-          independentField: state.independentField === Field.TOKEN_A ? Field.TOKEN_B : Field.TOKEN_A,
-          [field]: { address },
-          [otherField]: { address: state[field].address }
-        }
-      } else {
-        // the normal case
-        return {
-          ...state,
-          [field]: { address }
         }
       }
     })
