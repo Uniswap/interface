@@ -10,18 +10,22 @@ import {
   safeAccess
 } from '../utils'
 
-const NAME = 'name'
-const SYMBOL = 'symbol'
-const DECIMALS = 'decimals'
-const PRICE_DECIMALS = 'priceDecimals'
-const EXCHANGE_ADDRESS = 'exchangeAddress'
+export const NAME = 'name'
+export const SYMBOL = 'symbol'
+export const DECIMALS = 'decimals'
+export const PRICE_DECIMALS = 'priceDecimals'
+export const EXCHANGE_ADDRESS = 'exchangeAddress'
+export const PRIMARY = 'primary'
+export const PRIMARY_DECIMALS = 'primaryDecimals'
+export const SECONDARY = 'secondary'
+export const SECONDARY_DECIMALS = 'secondaryDecimals'
 
 const UPDATE = 'UPDATE'
 
 export const DAI_ADDRESS = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
-// TODO replace
-// export const DMG_ADDRESS = '0xBBbbCA6A901c926F240b89EacB641d8Aec7AEafD'
 export const DMG_ADDRESS = '0xEd91879919B71bB6905f23af0A68d231EcF87b14'
+export const USDC_ADDRESS = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
+export const WETH_ADDRESS = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
 
 const ETH = {
   // ETH: {
@@ -40,21 +44,18 @@ export const INITIAL_TOKENS_CONTEXT = {
       [NAME]: 'Dai Stablecoin',
       [SYMBOL]: 'DAI',
       [DECIMALS]: 18,
-      [PRICE_DECIMALS]: 6,
       [EXCHANGE_ADDRESS]: '0x2a1530C4C41db0B0b2bB646CB5Eb1A67b7158667',
     },
-    '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48': {
+    [USDC_ADDRESS]: {
       [NAME]: 'USD//C',
       [SYMBOL]: 'USDC',
       [DECIMALS]: 6,
-      [PRICE_DECIMALS]: 6,
       [EXCHANGE_ADDRESS]: '0x97deC872013f6B5fB443861090ad931542878126',
     },
-    '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2': {
+    [WETH_ADDRESS]: {
       [NAME]: 'Wrapped Ether',
       [SYMBOL]: 'WETH',
       [DECIMALS]: 18,
-      [PRICE_DECIMALS]: 7,
       [EXCHANGE_ADDRESS]: '0xA2881A90Bf33F03E7a3f803765Cd2ED5c8928dFb',
     },
     [DMG_ADDRESS]: {
@@ -63,6 +64,29 @@ export const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xA539BAaa3aCA455c986bB1E25301CEF936CE1B65',
     }
+  }
+}
+
+export const MARKETS = {
+  1: {
+    [`${DMG_ADDRESS}-${DAI_ADDRESS}`]: {
+      [PRIMARY]: DMG_ADDRESS,
+      [SECONDARY]: DAI_ADDRESS,
+      [PRIMARY_DECIMALS]: 2,
+      [SECONDARY_DECIMALS]: 8,
+    },
+    [`${DMG_ADDRESS}-${USDC_ADDRESS}`]: {
+      [PRIMARY]: DMG_ADDRESS,
+      [SECONDARY]: USDC_ADDRESS,
+      [PRIMARY_DECIMALS]: 2,
+      [SECONDARY_DECIMALS]: 6,
+    },
+    [`${DMG_ADDRESS}-${WETH_ADDRESS}`]: {
+      [PRIMARY]: DMG_ADDRESS,
+      [SECONDARY]: WETH_ADDRESS,
+      [PRIMARY_DECIMALS]: 1,
+      [SECONDARY_DECIMALS]: 8,
+    },
   }
 }
 

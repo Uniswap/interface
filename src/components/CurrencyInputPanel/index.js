@@ -22,7 +22,7 @@ import {
   useTokenDetails,
   useAllTokenDetails,
   DMG_ADDRESS,
-  DELEGATE_ADDRESS
+  DELEGATE_ADDRESS, SECONDARY_DECIMALS, MARKETS, PRIMARY, PRIMARY_DECIMALS
 } from '../../contexts/Tokens'
 import { useAddressBalance } from '../../contexts/Balances'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
@@ -287,7 +287,9 @@ export default function CurrencyInputPanel({
   showUnlock,
   value,
   urlAddedTokens,
-  hideETH = false
+  hideETH = false,
+  market,
+  tokenAddress,
 }) {
   const { t } = useTranslation()
 
@@ -317,8 +319,8 @@ export default function CurrencyInputPanel({
               let useUserBalance = false
               estimatedGas = await tokenContract.estimate
                 .approve(DELEGATE_ADDRESS, ethers.constants.MaxUint256)
-                .catch(e => {
-                  console.log('Error setting max token approval.')
+                .catch(error => {
+                  console.error('Error setting max token approval ', error)
                 })
               if (!estimatedGas) {
                 // general fallback for tokens who restrict approval amounts
@@ -352,12 +354,17 @@ export default function CurrencyInputPanel({
       return renderInput()
     }
 
+
+    const decimals = market[PRIMARY] === tokenAddress ? market[PRIMARY_DECIMALS] : market[SECONDARY_DECIMALS]
+
+    const min = '0.' + ('0'.repeat(decimals - 1)) + '1'
+
     return (
       <InputRow>
         <Input
           type="number"
-          min="0"
-          step="0.000000000000000001"
+          min={min}
+          step={min}
           error={!!errorMessage}
           placeholder="0.0"
           onChange={e => onValueChange(e.target.value)}
@@ -619,9 +626,6 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
             <TokenSymbolGroup>
               <div>
                 <span id="symbol">{symbol}</span>
-                {/*<FadedSpan>*/}
-                {/*  {urlAdded && '(Added by URL)'} {customAdded && '(Added by user)'}*/}
-                {/*</FadedSpan>*/}
               </div>
               <TokenFullName> {name}</TokenFullName>
             </TokenSymbolGroup>

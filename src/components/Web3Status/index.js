@@ -170,7 +170,7 @@ export default function Web3Status() {
   function getWeb3Status() {
     if (account) {
       return (
-        <Button onClick={toggleWalletModal} pending={hasPendingTransactions}>
+        <Button onClick={toggleWalletModal}>
           {hasPendingTransactions && <SpinnerWrapper src={Circle} alt="loader" />}
           <Text>{ENSName || shortenAddress(account)}</Text>
           {getStatusIcon()}
