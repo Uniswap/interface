@@ -7,6 +7,7 @@ import transactions from './transactions/reducer'
 import wallet from './wallet/reducer'
 import swap from './swap/reducer'
 import mint from './mint/reducer'
+import burn from './burn/reducer'
 
 import { updateVersion } from './user/actions'
 
@@ -19,7 +20,8 @@ const store = configureStore({
     transactions,
     wallet,
     swap,
-    mint
+    mint,
+    burn
   },
   middleware: [...getDefaultMiddleware(), save({ states: PERSISTED_KEYS })],
   preloadedState: load({ states: PERSISTED_KEYS })

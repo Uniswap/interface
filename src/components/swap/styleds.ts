@@ -21,13 +21,6 @@ export const ArrowWrapper = styled.div`
   }
 `
 
-export const FixedBottom = styled.div`
-  position: absolute;
-  margin-top: 1.5rem;
-  width: 100%;
-  margin-bottom: 40px;
-`
-
 export const AdvancedDropdown = styled.div`
   padding-top: calc(10px + 2rem);
   padding-bottom: 10px;
