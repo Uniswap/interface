@@ -4,7 +4,7 @@ import { Token, TokenAmount, Route, JSBI, Price, Percent, Pair } from '@uniswap/
 
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
-import { setDefaultsFromURLMatchParams, Field, selectToken, typeInput } from './actions'
+import { setDefaultsFromURLMatchParams, Field, typeInput } from './actions'
 import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
 import { usePair } from '../../data/Reserves'
@@ -173,24 +173,11 @@ export function useDerivedMintInfo(): {
 }
 
 export function useMintActionHandlers(): {
-  onTokenSelection: (field: Field, address: string) => void
   onUserInput: (field: Field, typedValue: string) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
 
   const { noLiquidity } = useDerivedMintInfo()
-
-  const onTokenSelection = useCallback(
-    (field: Field, address: string) => {
-      dispatch(
-        selectToken({
-          field,
-          address
-        })
-      )
-    },
-    [dispatch]
-  )
 
   const onUserInput = useCallback(
     (field: Field, typedValue: string) => {
@@ -200,7 +187,6 @@ export function useMintActionHandlers(): {
   )
 
   return {
-    onTokenSelection,
     onUserInput
   }
 }

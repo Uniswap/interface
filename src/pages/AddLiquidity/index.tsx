@@ -59,7 +59,7 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
     poolTokenPercentage,
     error
   } = useDerivedMintInfo()
-  const { onTokenSelection, onUserInput } = useMintActionHandlers()
+  const { onUserInput } = useMintActionHandlers()
 
   const isValid = !error
 
@@ -342,6 +342,7 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
               </ColumnCenter>
             )}
             <CurrencyInputPanel
+              disableTokenSelect={true}
               field={Field.TOKEN_A}
               value={formattedAmounts[Field.TOKEN_A]}
               onUserInput={onUserInput}
@@ -350,7 +351,6 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
               }}
               showMaxButton={!atMaxAmounts[Field.TOKEN_A]}
               token={tokens[Field.TOKEN_A]}
-              onTokenSelection={address => onTokenSelection(Field.TOKEN_A, address)}
               pair={pair}
               label="Input"
               id="add-liquidity-input-tokena"
@@ -359,6 +359,7 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
               <Plus size="16" color={theme.text2} />
             </ColumnCenter>
             <CurrencyInputPanel
+              disableTokenSelect={true}
               field={Field.TOKEN_B}
               value={formattedAmounts[Field.TOKEN_B]}
               onUserInput={onUserInput}
@@ -367,7 +368,6 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
               }}
               showMaxButton={!atMaxAmounts[Field.TOKEN_B]}
               token={tokens[Field.TOKEN_B]}
-              onTokenSelection={address => onTokenSelection(Field.TOKEN_B, address)}
               pair={pair}
               id="add-liquidity-input-tokenb"
             />
