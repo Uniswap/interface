@@ -9,11 +9,13 @@ import { FortmaticConnector } from './Fortmatic'
 
 import * as dolomite from '@dolomite-exchange/dolomite'
 
-const POLLING_INTERVAL = 10000
+const POLLING_INTERVAL = 5000
 const NETWORK_URL =
   process.env.REACT_APP_IS_PRODUCTION_DEPLOY === 'true'
     ? process.env.REACT_APP_NETWORK_URL_PROD
     : process.env.REACT_APP_NETWORK_URL
+
+console.log('network ', NETWORK_URL)
 
 export const network = new NetworkConnector({
   urls: { [Number(process.env.REACT_APP_CHAIN_ID)]: NETWORK_URL },
@@ -28,7 +30,7 @@ export const injected = new InjectedConnector({
 export const walletconnect = new WalletConnectConnector({
   rpc: { 1: NETWORK_URL },
   bridge: 'https://bridge.walletconnect.org',
-  qrcode: false,
+  qrcode: true,
   pollingInterval: POLLING_INTERVAL
 })
 

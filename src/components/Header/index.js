@@ -29,7 +29,7 @@ class Header extends React.Component {
               <img src={DMMLogo} alt={"DMM Logo"}/>
             </div>
             <div className={'logoText'}>
-              DMM <span className={'swapText'}></span>
+              DMM <span className={'swapText'}/>
             </div>
           </div>
           <div className={'buttonsWrapper'}>
@@ -40,19 +40,6 @@ class Header extends React.Component {
             </div>
             <div className={'connectWalletButton'}>
               <Web3Status />
-              {/*this.state.isLoading ? (
-                <CircularProgress className={'progressBar'} color={"inherit"}/>
-              ) : (
-                <Button className={`${'loadWallet'} ${isWalletLoaded && 'loaded'}`}
-                        onClick={() => this.props.loadWallet()}>
-                  {isWalletLoaded ? (
-                    <div>
-                      <div>{'0x' + DmmWeb3Service.onboard.getState().address.substring(2, 4) + '...' + DmmWeb3Service.onboard.getState().address.slice(-4)}</div>
-                      <div className={'walletConnected'}>Wallet Connected</div>
-                    </div>
-                  ) : "Connect Wallet"}
-                </Button>
-              )*/}
             </div>
           </div>
         </div>

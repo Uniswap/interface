@@ -615,6 +615,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       }
     }
 
+    const orderSide = loopringOrderData.tokenB === DMG_ADDRESS ? 'BUY' : 'SELL'
+
     loopringOrder = constructLoopringOrder(
       library,
       {
@@ -657,7 +659,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           orderType: 'MARKET',
           tokenB: loopringOrder.tokenB,
           tokenS: loopringOrder.tokenS,
-          side: 'BUY',
+          side: orderSide,
           estimatedNumberOfFills: 16,
           constantNetworkFeePremium: 0,
           perMatchNetworkFee: 0
