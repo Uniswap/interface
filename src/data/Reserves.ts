@@ -1,23 +1,8 @@
-import { Contract } from '@ethersproject/contracts'
 import { Token, TokenAmount, Pair } from '@uniswap/sdk'
-import useSWR from 'swr'
+import { useMemo } from 'react'
 
-import { SWRKeys, useKeepSWRDataLiveAsBlocksArrive } from '.'
 import { usePairContract } from '../hooks/useContract'
-
-function getReserves(contract: Contract, tokenA: Token, tokenB: Token): () => Promise<Pair | null> {
-  return async (): Promise<Pair | null> => {
-    return contract
-      .getReserves()
-      .then(
-        ({ reserve0, reserve1 }: { reserve0: { toString: () => string }; reserve1: { toString: () => string } }) => {
-          const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
-          return new Pair(new TokenAmount(token0, reserve0.toString()), new TokenAmount(token1, reserve1.toString()))
-        }
-      )
-      .catch(() => null)
-  }
-}
+import { useContractData } from '../state/multicall/hooks'
 
 /*
  * if loading, return undefined
@@ -27,14 +12,12 @@ function getReserves(contract: Contract, tokenA: Token, tokenB: Token): () => Pr
 export function usePair(tokenA?: Token, tokenB?: Token): undefined | Pair | null {
   const pairAddress = tokenA && tokenB && !tokenA.equals(tokenB) ? Pair.getAddress(tokenA, tokenB) : undefined
   const contract = usePairContract(pairAddress, false)
+  const reserves = useContractData(contract?.interface, pairAddress, 'getReserves')
 
-  const key = pairAddress && contract && tokenA ? [pairAddress, tokenA.chainId, SWRKeys.Reserves] : null
-
-  const { data, mutate } = useSWR(
-    key,
-    contract && tokenA && tokenB ? getReserves(contract, tokenA, tokenB) : () => null
-  )
-  useKeepSWRDataLiveAsBlocksArrive(mutate)
-
-  return data
+  return useMemo(() => {
+    if (!pairAddress || !contract || !reserves || !tokenA || !tokenB) return undefined
+    const { reserve0, reserve1 } = reserves
+    const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
+    return new Pair(new TokenAmount(token0, reserve0.toString()), new TokenAmount(token1, reserve1.toString()))
+  }, [contract, pairAddress, reserves, tokenA, tokenB])
 }

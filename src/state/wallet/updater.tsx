@@ -32,10 +32,9 @@ export default function Updater() {
 
   const activeTokenBalanceListeners: { [address: string]: string[] } = useMemo(() => {
     return Object.keys(tokenBalanceListeners).reduce<{ [address: string]: string[] }>((map, address) => {
-      const tokenAddresses = Object.keys(tokenBalanceListeners[address]).filter(
+      map[address] = Object.keys(tokenBalanceListeners[address]).filter(
         tokenAddress => tokenBalanceListeners[address][tokenAddress] > 0 // redundant check
       )
-      map[address] = tokenAddresses
       return map
     }, {})
   }, [tokenBalanceListeners])

@@ -17,7 +17,8 @@ function useContract(address?: string, ABI?: any, withSignerIfPossible = true): 
     if (!address || !ABI || !library) return null
     try {
       return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
-    } catch {
+    } catch (error) {
+      console.error('Failed to get contract', error)
       return null
     }
   }, [address, ABI, library, withSignerIfPossible, account])

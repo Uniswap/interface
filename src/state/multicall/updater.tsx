@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
@@ -11,14 +12,14 @@ export default function Updater() {
   const state = useSelector<AppState, AppState['multicall']>(state => state.multicall)
   const latestBlockNumber = useBlockNumber()
   const { chainId } = useActiveWeb3React()
-  const contract = useMulticallContract()
+  const multicallContract = useMulticallContract()
 
   const listeningKeys = useMemo(() => {
     if (!chainId || !state.callListeners[chainId]) return []
     return Object.keys(state.callListeners[chainId]).filter(callKey => state.callListeners[chainId][callKey] > 0)
   }, [state.callListeners, chainId])
 
-  const outdatedCallKeys = useMemo(() => {
+  const unserializedOutdatedCallKeys = useMemo(() => {
     if (!chainId || !state.callResults[chainId]) return listeningKeys
     if (!latestBlockNumber) return []
 
@@ -28,25 +29,33 @@ export default function Updater() {
     })
   }, [chainId, state.callResults, listeningKeys, latestBlockNumber])
 
+  const serializedOutdatedCallKeys = useMemo(() => JSON.stringify(unserializedOutdatedCallKeys.sort()), [
+    unserializedOutdatedCallKeys
+  ])
+
   useEffect(() => {
-    if (!contract || !chainId || outdatedCallKeys.length === 0) return
+    const outdatedCallKeys: string[] = JSON.parse(serializedOutdatedCallKeys)
+    if (!multicallContract || !chainId || outdatedCallKeys.length === 0) return
     const calls = outdatedCallKeys.map(key => splitCallKey(key))
 
-    contract.aggregate.call(calls).then((results: any) => {
-      console.log(results)
-      debugger
-      dispatch(
-        updateMulticallResults({
-          chainId,
-          results: outdatedCallKeys.reduce<{ [callKey: string]: string | null }>((memo, callKey, i) => {
-            memo[callKey] = results[i]
-            return memo
-          }, {}),
-          blockNumber: results[0]
-        })
-      )
-    })
-  }, [chainId, contract, dispatch, outdatedCallKeys])
+    multicallContract
+      .aggregate(calls.map(obj => [obj.address, obj.callData]))
+      .then(([resultsBlockNumber, returnData]: [BigNumber, string[]]) => {
+        dispatch(
+          updateMulticallResults({
+            chainId,
+            results: outdatedCallKeys.reduce<{ [callKey: string]: string | null }>((memo, callKey, i) => {
+              memo[callKey] = returnData[i] ?? null
+              return memo
+            }, {}),
+            blockNumber: resultsBlockNumber.toNumber()
+          })
+        )
+      })
+      .catch((error: any) => {
+        console.error('Failed to fetch multicall', calls, error)
+      })
+  }, [chainId, multicallContract, dispatch, serializedOutdatedCallKeys])
 
   return null
 }

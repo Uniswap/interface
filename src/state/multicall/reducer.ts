@@ -46,6 +46,8 @@ export default createReducer(initialState, builder =>
     .addCase(updateMulticallResults, (state, { payload: { chainId, results, blockNumber } }) => {
       state.callResults[chainId] = state.callResults[chainId] ?? {}
       Object.keys(results).forEach(callKey => {
+        const current = state.callResults[chainId][callKey]
+        if (current && current.blockNumber > blockNumber) return
         state.callResults[chainId][callKey] = {
           data: results[callKey],
           blockNumber

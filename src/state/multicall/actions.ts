@@ -20,7 +20,7 @@ export function splitCallKey(callKey: string): Call {
     throw new Error(`Invalid address: ${pcs[0]}`)
   }
 
-  if (!pcs[1].match(/^(0x[a-fA-F0-9]*){0,1}$/)) {
+  if (!pcs[1].match(/^0x[a-fA-F0-9]*$/)) {
     throw new Error(`Invalid hex: ${pcs[1]}`)
   }
 
