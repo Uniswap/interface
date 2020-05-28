@@ -4,6 +4,7 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
 import Web3ReactManager from '../components/Web3ReactManager'
 import Header from '../components/Header'
+import InfoPage from '../components/InfoPage/InfoPage'
 import Footer from '../components/Footer'
 import LoginScreen from './LoginScreen';
 
@@ -55,7 +56,8 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      isLoggedIn: false
+      isLoggedIn: false,
+      displayInfoPage: false,
     }
   }
 
@@ -69,18 +71,28 @@ class App extends React.Component {
       );
     }
 
+    if (this.state.displayInfoPage) {
+      return (
+        <InfoPage
+          onClose={() => this.setState({ displayInfoPage: false })}
+        />
+      );
+    }
+
     return (
       <>
         <Suspense fallback={null}>
           <AppWrapper>
             <HeaderWrapper>
-              <Header />
+              <Header
+                onDisplayInfo={() => this.setState({ displayInfoPage: true })}
+              />
             </HeaderWrapper>
             <BodyWrapper>
               <Body>
               <Web3ReactManager>
                 <BrowserRouter>
-                  <NavigationTabs />
+                  <NavigationTabs/>
                   {/* this Suspense is for route code-splitting */}
                   <Suspense fallback={null}>
                     <Switch>
