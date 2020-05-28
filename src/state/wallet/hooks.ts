@@ -1,10 +1,11 @@
 import { ChainId, JSBI, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import { useMemo } from 'react'
+import ERC20_INTERFACE from '../../constants/abis/erc20'
 import { useAllTokens } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks'
-import { useEthScanContract, useMulticallContract } from '../../hooks/useContract'
+import { useMulticallContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
-import { useMultipleCallSingleContractResult, useSingleCallResult } from '../multicall/hooks'
+import { useMultipleCallSingleContractResult, useMultipleContractSingleData } from '../multicall/hooks'
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
@@ -32,7 +33,7 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [
   return useMemo(
     () =>
       addresses.reduce<{ [address: string]: JSBI | undefined }>((memo, address, i) => {
-        const value = results?.[i]
+        const value = results?.[i]?.[0]
         if (value) memo[address] = JSBI.BigInt(value.toString())
         return memo
       }, {}),
@@ -47,9 +48,6 @@ export function useTokenBalances(
   address?: string,
   tokens?: (Token | undefined)[]
 ): { [tokenAddress: string]: TokenAmount | undefined } {
-  const ethScan = useEthScanContract()
-  const validatedAddress = isAddress(address)
-
   const validatedTokens: Token[] = useMemo(
     () => tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false) ?? [],
     [tokens]
@@ -57,23 +55,21 @@ export function useTokenBalances(
 
   const validatedTokenAddresses = useMemo(() => validatedTokens.map(vt => vt.address), [validatedTokens])
 
-  const balances = useSingleCallResult(ethScan, 'tokensBalance', [
-    validatedAddress ? validatedAddress : undefined,
-    validatedTokens.length > 0 ? validatedTokenAddresses : undefined
-  ])?.[0]
+  const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20_INTERFACE, 'balanceOf', [address])
 
   return useMemo(
     () =>
-      validatedAddress && validatedTokens.length > 0
+      address && validatedTokens.length > 0
         ? validatedTokens.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, token, i) => {
-            const amount = balances?.[i] ? JSBI.BigInt(balances[i].toString()) : undefined
+            const value = balances?.[i]?.[0]
+            const amount = value ? JSBI.BigInt(value.toString()) : undefined
             if (amount) {
               memo[token.address] = new TokenAmount(token, amount)
             }
             return memo
           }, {})
         : {},
-    [validatedTokens, validatedAddress, balances]
+    [address, validatedTokens, balances]
   )
 }
 

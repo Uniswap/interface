@@ -123,8 +123,8 @@ function useCallsData(
   }, [callResults, calls, chainId, contractInterfaces, specs])
 }
 
-function getFragment(contract?: Contract | null, methodName?: string): FunctionFragment | undefined {
-  return methodName ? contract?.interface?.getFunction(methodName) : undefined
+function getFragment(contractInterface?: Interface | null, methodName?: string): FunctionFragment | undefined {
+  return methodName ? contractInterface?.getFunction(methodName) : undefined
 }
 
 export function useMultipleCallSingleContractResult(
@@ -133,7 +133,7 @@ export function useMultipleCallSingleContractResult(
   callInputs: OptionalMethodInputs[]
 ): (Result | undefined)[] {
   const validated = isAddress(contract?.address)
-  const fragment = getFragment(contract, methodName)
+  const fragment = getFragment(contract?.interface, methodName)
 
   const calls = useMemo(
     () =>
@@ -152,19 +152,51 @@ export function useMultipleCallSingleContractResult(
   return useCallsData(calls)
 }
 
+export function useMultipleContractSingleData(
+  addresses: (string | undefined)[],
+  contractInterface: Interface,
+  methodName: string,
+  callInputs?: OptionalMethodInputs
+): (Result | undefined)[] {
+  const fragment = getFragment(contractInterface, methodName)
+
+  const calls = useMemo(
+    () =>
+      fragment && callInputs
+        ? addresses.map(address => {
+            return {
+              fragment,
+              address: address,
+              inputs: callInputs
+            }
+          })
+        : [],
+    [addresses, callInputs, fragment]
+  )
+
+  return useCallsData(calls)
+}
+
 export function useSingleCallResult(
   contract: Contract | null | undefined,
   methodName: string,
   inputs?: OptionalMethodInputs
 ): Result | undefined {
   const validated = isAddress(contract?.address)
-  const data = useCallsData([
-    {
-      fragment: getFragment(contract, methodName),
-      address: validated ? validated : undefined,
-      inputs: inputs
-    }
-  ])
+  const fragment = getFragment(contract?.interface, methodName)
+
+  const calls = useMemo(() => {
+    return validated && fragment
+      ? [
+          {
+            fragment: getFragment(contract?.interface, methodName),
+            address: validated ? validated : undefined,
+            inputs: inputs
+          }
+        ]
+      : []
+  }, [contract, inputs, methodName, validated])
+  const data = useCallsData(calls)
   if (!validated) return undefined
   return data[0]
 }
