@@ -14,7 +14,7 @@ export function useContractsData(
   contractInterface?: Interface,
   addresses?: (string | undefined)[],
   methodName?: string,
-  methodArgs?: Array<any>
+  methodArgs?: Array<string | number>
 ): {
   [address: string]: Result | undefined
 } {
@@ -24,6 +24,9 @@ export function useContractsData(
 
   const unserializedCallKeys = useMemo<string[]>(() => {
     if (!contractInterface || !methodName) return []
+    // skip if any args are undefined
+    if (methodArgs && methodArgs.some(arg => ['string', 'number'].indexOf(typeof arg) === -1)) return []
+
     const validAddresses: string[] = addresses?.map(isAddress)?.filter((a): a is string => a !== false) ?? []
 
     const callData = contractInterface.encodeFunctionData(methodName, methodArgs)
@@ -72,7 +75,7 @@ export function useContractData(
   contractInterface?: Interface,
   address?: string,
   methodName?: string,
-  methodArgs?: Array<any>
+  methodArgs?: Array<string | number>
 ): Result | undefined {
   const data = useContractsData(contractInterface, [address], methodName, methodArgs)
   const validated = isAddress(address)
