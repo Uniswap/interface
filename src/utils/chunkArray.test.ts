@@ -1,4 +1,4 @@
-import { chunkArray } from './chunkArray'
+import chunkArray from './chunkArray'
 
 describe('#chunkArray', () => {
   it('size 1', () => {
