@@ -5,12 +5,10 @@ import { isMobile } from 'react-device-detect'
 
 import { NetworkContextName } from '../constants'
 import ERC20_ABI from '../constants/abis/erc20'
+import WETH_ABI from '../constants/abis/weth'
 import { getContract, getFactoryContract, getExchangeContract, isAddress } from '../utils'
-import { injected, exchange } from '../connectors'
-
-export function useDolomiteExchange() {
-  return exchange;
-}
+import { injected } from '../connectors'
+import { WETH_ADDRESS } from '../contexts/Tokens'
 
 export function useWeb3React() {
   const context = useWeb3ReactCore()
@@ -196,7 +194,8 @@ export function useTokenContract(tokenAddress, withSignerIfPossible = true) {
 
   return useMemo(() => {
     try {
-      return getContract(tokenAddress, ERC20_ABI, library, withSignerIfPossible ? account : undefined)
+      const abi = tokenAddress === WETH_ADDRESS ? WETH_ABI : ERC20_ABI
+      return getContract(tokenAddress, abi, library, withSignerIfPossible ? account : undefined)
     } catch {
       return null
     }

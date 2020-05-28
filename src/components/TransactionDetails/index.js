@@ -325,6 +325,8 @@ export default function TransactionDetails(props) {
     if (props.brokenTokenWarning) {
       contextualInfo = t('brokenToken')
       isError = true
+    } else if (props.wrapWarning) {
+      contextualInfo = t('wrapTokenCont')
     } else if (props.inputError || props.independentError) {
       contextualInfo = props.inputError || props.independentError
       isError = true
@@ -524,7 +526,7 @@ export default function TransactionDetails(props) {
   // destructure props for to limit effect callbacks
   const setRawSlippage = props.setRawSlippage
   const setRawTokenSlippage = props.setRawTokenSlippage
-  const setcustomSlippageError = props.setcustomSlippageError
+  const setCustomSlippageError = props.setCustomSlippageError
   const setDeadline = props.setDeadline
 
   const updateSlippage = useCallback(
@@ -546,9 +548,9 @@ export default function TransactionDetails(props) {
       updateSlippage(slippage)
       setWarningType(WARNING_TYPE.none)
       setActiveIndex(index)
-      setcustomSlippageError('valid`')
+      setCustomSlippageError('valid`')
     },
-    [setcustomSlippageError, updateSlippage]
+    [setCustomSlippageError, updateSlippage]
   )
 
   /**
@@ -585,30 +587,30 @@ export default function TransactionDetails(props) {
   const checkBounds = useCallback(
     slippageValue => {
       setWarningType(WARNING_TYPE.none)
-      setcustomSlippageError('valid')
+      setCustomSlippageError('valid')
 
       if (slippageValue === '' || slippageValue === '.') {
-        setcustomSlippageError('invalid')
+        setCustomSlippageError('invalid')
         return setWarningType(WARNING_TYPE.emptyInput)
       }
 
       // check bounds and set errors
       if (Number(slippageValue) < 0 || Number(slippageValue) > 50) {
-        setcustomSlippageError('invalid')
+        setCustomSlippageError('invalid')
         return setWarningType(WARNING_TYPE.invalidEntryBound)
       }
       if (Number(slippageValue) >= 0 && Number(slippageValue) < 0.1) {
-        setcustomSlippageError('valid')
+        setCustomSlippageError('valid')
         setWarningType(WARNING_TYPE.riskyEntryLow)
       }
       if (Number(slippageValue) > 5) {
-        setcustomSlippageError('warning')
+        setCustomSlippageError('warning')
         setWarningType(WARNING_TYPE.riskyEntryHigh)
       }
       //update the actual slippage value in parent
       updateSlippage(Number(slippageValue))
     },
-    [setcustomSlippageError, updateSlippage]
+    [setCustomSlippageError, updateSlippage]
   )
 
   // check that the theyve entered number and correct decimal

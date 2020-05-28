@@ -1,6 +1,6 @@
 import React from 'react'
 
-import styles from './LoginScreen.css';
+import * as styles from './LoginScreen.css';
 import DMMLogo from '../assets/images/dmm-logo.svg';
 import Button from "@material-ui/core/Button";
 
@@ -9,9 +9,10 @@ class LoginScreen extends React.Component {
     super(props);
 
     this.state = {
-      password: null,
+      password: '',
       showError: false,
-      fade: false
+      fade: false,
+      subscriptionIds: {}
     }
   }
 
@@ -19,10 +20,21 @@ class LoginScreen extends React.Component {
     if (e.key === 'Enter') {
       this.setState({ fade: true });
       this.login();
-      setTimeout(() => {
+      const subscriptionId = setTimeout(() => {
         this.setState({ fade: false });
+        delete this.state.subscriptionIds[subscriptionId]
+        this.setState({
+          subscriptionIds:  this.state.subscriptionIds
+        });
       }, 200);
+      this.state.subscriptionIds[subscriptionId] = true;
     }
+  }
+
+  componentWillUnmount() {
+    Object.keys(this.state.subscriptionIds).forEach(subscriptionId => {
+      clearTimeout(subscriptionId);
+    })
   }
 
   login() {

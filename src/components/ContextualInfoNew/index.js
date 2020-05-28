@@ -6,7 +6,7 @@ import { ReactComponent as Dropup } from '../../assets/images/dropup-blue.svg'
 import { ReactComponent as Dropdown } from '../../assets/images/dropdown-blue.svg'
 
 const SummaryWrapper = styled.div`
-  color: ${({ error, brokenTokenWarning, theme }) => (error || brokenTokenWarning ? theme.salmonRed : theme.doveGray)};
+  color: ${({ error, brokenTokenWarning, theme }) => (error ? theme.salmonRed : brokenTokenWarning ? theme.chaliceGray : theme.chaliceGray)};
   font-size: 0.75rem;
   text-align: center;
   margin-top: 0rem;
@@ -15,7 +15,7 @@ const SummaryWrapper = styled.div`
 
 const SummaryWrapperContainer = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  color: ${({ theme }) => theme.royalBlue};
+  color: ${({ theme }) => theme.chaliceGray};
   text-align: center;
   margin-top: 1rem;
   padding-top: 1rem;
@@ -99,16 +99,18 @@ export default function ContextualInfo({
   ) : (
     <>
       <SummaryWrapperContainer
-        /*onClick={() => {
-          !showDetails &&
-            ReactGA.event({
-              category: 'Advanced Interaction',
-              action: 'Open Advanced Details',
-              label: 'Swap/Send Page Details'
-            })
-          setShowDetails(s => !s)
-        }}*/
-      >
+        onClick={() => {
+          // {/*    !showDetails &&*/}
+          // {/*      ReactGA.event({*/}
+          // {/*        category: 'Advanced Interaction',*/}
+          // {/*        action: 'Open Advanced Details',*/}
+          // {/*        label: 'Swap/Send Page Details'*/}
+          // {/*      })*/}
+          // {/*    setShowDetails(s => !s)*/}
+          // {/*  }}*/}
+          // {/*>*/}
+        }}
+        >
         <>
           <ErrorSpan isError={isError} slippageWarning={slippageWarning} highSlippageWarning={highSlippageWarning}>
             {(slippageWarning || highSlippageWarning) && (
