@@ -301,7 +301,6 @@ export default function AccountDetails({
           <CloseColor />
         </CloseIcon>
         <HeaderRow>Account</HeaderRow>
-
         <AccountSection>
           <YourAccount>
             <InfoCard>
