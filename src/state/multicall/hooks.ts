@@ -1,4 +1,5 @@
 import { Interface } from '@ethersproject/abi'
+import { Contract } from '@ethersproject/contracts'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
@@ -10,11 +11,24 @@ export interface Result extends ReadonlyArray<any> {
   readonly [key: string]: any
 }
 
+type MethodArg = string | number
+type MethodArgs = Array<MethodArg | MethodArg[]>
+
+type OptionalMethodArgs = MethodArgs | Array<MethodArg | MethodArg[] | undefined>
+
+function isMethodArg(x: unknown): x is MethodArg {
+  return ['string', 'number'].indexOf(typeof x) !== -1
+}
+
+function isMethodArgs(x: unknown): x is MethodArgs {
+  return x && Array.isArray(x) && x.every(y => isMethodArg(y) || (Array.isArray(y) && y.every(isMethodArg)))
+}
+
 export function useContractsData(
   contractInterface?: Interface,
   addresses?: (string | undefined)[],
   methodName?: string,
-  methodArgs?: Array<string | number>
+  methodArgs?: OptionalMethodArgs
 ): {
   [address: string]: Result | undefined
 } {
@@ -25,16 +39,17 @@ export function useContractsData(
   const unserializedCallKeys = useMemo<string[]>(() => {
     if (!contractInterface || !methodName) return []
     // skip if any args are undefined
-    if (methodArgs && methodArgs.some(arg => ['string', 'number'].indexOf(typeof arg) === -1)) return []
+    if (methodArgs !== undefined && !isMethodArgs(methodArgs)) return []
 
     const validAddresses: string[] = addresses?.map(isAddress)?.filter((a): a is string => a !== false) ?? []
 
     const callData = contractInterface.encodeFunctionData(methodName, methodArgs)
-    return callData ? validAddresses.map(address => toCallKey({ address, callData })) : []
+    return validAddresses.map(address => toCallKey({ address, callData }))
   }, [addresses, contractInterface, methodArgs, methodName])
 
   const serializedCallKeys: string = useMemo(() => JSON.stringify(unserializedCallKeys.sort()), [unserializedCallKeys])
 
+  // update listeners when there is an actual change
   useEffect(() => {
     const calls: string[] = JSON.parse(serializedCallKeys)
     const parsedCalls: Call[] = calls.map(c => parseCallKey(c))
@@ -72,13 +87,12 @@ export function useContractsData(
 }
 
 export function useContractData(
-  contractInterface?: Interface,
-  address?: string,
+  contract?: Contract | null,
   methodName?: string,
-  methodArgs?: Array<string | number>
+  methodArgs?: OptionalMethodArgs
 ): Result | undefined {
-  const data = useContractsData(contractInterface, [address], methodName, methodArgs)
-  const validated = isAddress(address)
+  const data = useContractsData(contract?.interface, [contract?.address], methodName, methodArgs)
+  const validated = isAddress(contract?.address)
   if (!validated) return undefined
   return data[validated]
 }

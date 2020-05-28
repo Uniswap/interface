@@ -7,7 +7,7 @@ import { useETHBalances, useTokenBalance } from '../state/wallet/hooks'
 function useV1PairAddress(tokenAddress?: string): string | undefined {
   const contract = useV1FactoryContract()
 
-  return useContractData(contract?.interface, contract?.address, 'getExchange', [tokenAddress])?.[0]
+  return useContractData(contract, 'getExchange', [tokenAddress])?.[0]
 }
 
 function useMockV1Pair(token?: Token) {

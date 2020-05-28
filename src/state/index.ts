@@ -4,7 +4,6 @@ import { save, load } from 'redux-localstorage-simple'
 import application from './application/reducer'
 import user from './user/reducer'
 import transactions from './transactions/reducer'
-import wallet from './wallet/reducer'
 import swap from './swap/reducer'
 import mint from './mint/reducer'
 import burn from './burn/reducer'
@@ -19,7 +18,6 @@ const store = configureStore({
     application,
     user,
     transactions,
-    wallet,
     swap,
     mint,
     burn,

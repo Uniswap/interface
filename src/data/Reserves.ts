@@ -12,7 +12,7 @@ import { useContractData } from '../state/multicall/hooks'
 export function usePair(tokenA?: Token, tokenB?: Token): undefined | Pair | null {
   const pairAddress = tokenA && tokenB && !tokenA.equals(tokenB) ? Pair.getAddress(tokenA, tokenB) : undefined
   const contract = usePairContract(pairAddress, false)
-  const reserves = useContractData(contract?.interface, pairAddress, 'getReserves')
+  const reserves = useContractData(contract, 'getReserves')
 
   return useMemo(() => {
     if (!pairAddress || !contract || !reserves || !tokenA || !tokenB) return undefined

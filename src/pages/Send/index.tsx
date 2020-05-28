@@ -251,7 +251,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
   const swapState = useSwapState()
   function _onTokenSelect(address: string) {
     // if no user balance - switch view to a send with swap
-    const hasBalance = allBalances?.[account]?.[address]?.greaterThan('0') ?? false
+    const hasBalance = allBalances?.[address]?.greaterThan('0') ?? false
     if (!hasBalance) {
       onTokenSelection(
         Field.INPUT,
