@@ -2,15 +2,15 @@ import { ChainId, JSBI, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { useAllTokens } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks'
-import { useEthScanContract } from '../../hooks/useContract'
+import { useEthScanContract, useMulticallContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
-import { useSingleCallResult } from '../multicall/hooks'
+import { useMultipleCallSingleContractResult, useSingleCallResult } from '../multicall/hooks'
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
  */
 export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [address: string]: JSBI | undefined } {
-  const ethScan = useEthScanContract()
+  const multicallContract = useMulticallContract()
 
   const addresses: string[] = useMemo(
     () =>
@@ -23,15 +23,20 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [
     [uncheckedAddresses]
   )
 
-  const balances = useSingleCallResult(ethScan, 'etherBalances', [addresses])?.[0]
+  const results = useMultipleCallSingleContractResult(
+    multicallContract,
+    'getEthBalance',
+    addresses.map(address => [address])
+  )
 
   return useMemo(
     () =>
       addresses.reduce<{ [address: string]: JSBI | undefined }>((memo, address, i) => {
-        memo[address] = balances?.[i] ? JSBI.BigInt(balances[i].toString()) : undefined
+        const value = results?.[i]
+        if (value) memo[address] = JSBI.BigInt(value.toString())
         return memo
       }, {}),
-    [addresses, balances]
+    [addresses, results]
   )
 }
 

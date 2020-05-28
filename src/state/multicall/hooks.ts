@@ -16,7 +16,7 @@ export interface Result extends ReadonlyArray<any> {
 type MethodArg = string | number | BigNumber
 type MethodArgs = Array<MethodArg | MethodArg[]>
 
-type OptionalMethodInputs = MethodArgs | Array<MethodArg | MethodArg[] | undefined>
+type OptionalMethodInputs = Array<MethodArg | MethodArg[] | undefined> | undefined
 
 function isMethodArg(x: unknown): x is MethodArg {
   return ['string', 'number'].indexOf(typeof x) !== -1
@@ -133,17 +133,21 @@ export function useMultipleCallSingleContractResult(
   callInputs: OptionalMethodInputs[]
 ): (Result | undefined)[] {
   const validated = isAddress(contract?.address)
+  const fragment = getFragment(contract, methodName)
 
-  const calls =
-    validated && callInputs
-      ? callInputs.map(input => {
-          return {
-            fragment: getFragment(contract, methodName),
-            address: validated,
-            input
-          }
-        })
-      : []
+  const calls = useMemo(
+    () =>
+      validated && callInputs && fragment
+        ? callInputs.map(inputs => {
+            return {
+              fragment,
+              address: validated,
+              inputs
+            }
+          })
+        : [],
+    [callInputs, fragment, validated]
+  )
 
   return useCallsData(calls)
 }
