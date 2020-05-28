@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
-import { addMulticallListeners, Call, removeMulticallListeners, toCallKey } from './actions'
+import { addMulticallListeners, Call, removeMulticallListeners, parseCallKey, toCallKey } from './actions'
 
 export interface Result extends ReadonlyArray<any> {
   readonly [key: string]: any
@@ -19,26 +19,27 @@ export function useContractsData(
   [address: string]: Result | undefined
 } {
   const { chainId } = useActiveWeb3React()
-  const results = useSelector<AppState, AppState['multicall']['callResults']>(state => state.multicall.callResults)
+  const callResults = useSelector<AppState, AppState['multicall']['callResults']>(state => state.multicall.callResults)
   const dispatch = useDispatch<AppDispatch>()
 
-  const unserializedCalls = useMemo<Call[]>(() => {
+  const unserializedCallKeys = useMemo<string[]>(() => {
     if (!contractInterface || !methodName) return []
     const validAddresses: string[] = addresses?.map(isAddress)?.filter((a): a is string => a !== false) ?? []
 
     const callData = contractInterface.encodeFunctionData(methodName, methodArgs)
-    return callData ? validAddresses.map(address => ({ address, callData })) : []
-  }, [addresses, methodArgs, contractInterface, methodName])
+    return callData ? validAddresses.map(address => toCallKey({ address, callData })) : []
+  }, [addresses, contractInterface, methodArgs, methodName])
 
-  const serializedCalls = useMemo(() => JSON.stringify(unserializedCalls.sort()), [unserializedCalls])
+  const serializedCallKeys: string = useMemo(() => JSON.stringify(unserializedCallKeys.sort()), [unserializedCallKeys])
 
   useEffect(() => {
-    const calls: Call[] = JSON.parse(serializedCalls)
+    const calls: string[] = JSON.parse(serializedCallKeys)
+    const parsedCalls: Call[] = calls.map(c => parseCallKey(c))
     if (!chainId || calls.length === 0) return
     dispatch(
       addMulticallListeners({
         chainId,
-        calls
+        calls: parsedCalls
       })
     )
 
@@ -46,24 +47,25 @@ export function useContractsData(
       dispatch(
         removeMulticallListeners({
           chainId,
-          calls
+          calls: parsedCalls
         })
       )
     }
-  }, [contractInterface, addresses, methodName, chainId, dispatch, serializedCalls])
+  }, [chainId, dispatch, serializedCallKeys])
 
   return useMemo(() => {
-    const calls: Call[] = JSON.parse(serializedCalls)
-    if (!chainId || calls.length === 0 || !contractInterface || !methodName) return {}
+    const callKeys: string[] = JSON.parse(serializedCallKeys)
+    if (!chainId || callKeys.length === 0 || !contractInterface || !methodName) return {}
 
-    return calls.reduce<{ [address: string]: Result }>((memo, call) => {
-      const data = results[chainId]?.[toCallKey(call)]?.data
-      if (data?.match(/^0x[a-fA-F0-9]+/)) {
-        memo[call.address] = contractInterface.decodeFunctionResult(methodName, data)
+    return callKeys.reduce<{ [address: string]: Result }>((memo, callKey) => {
+      const data = callResults[chainId]?.[callKey]?.data
+      if (data && data !== '0x') {
+        const parsed = parseCallKey(callKey)
+        memo[parsed.address] = contractInterface.decodeFunctionResult(methodName, data)
       }
       return memo
     }, {})
-  }, [chainId, contractInterface, methodName, results, serializedCalls])
+  }, [callResults, chainId, contractInterface, methodName, serializedCallKeys])
 }
 
 export function useContractData(

@@ -3,9 +3,10 @@ import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import { useMulticallContract } from '../../hooks/useContract'
+import useDebounce from '../../hooks/useDebounce'
 import { useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
-import { splitCallKey, updateMulticallResults } from './actions'
+import { parseCallKey, updateMulticallResults } from './actions'
 
 export default function Updater() {
   const dispatch = useDispatch<AppDispatch>()
@@ -19,15 +20,17 @@ export default function Updater() {
     return Object.keys(state.callListeners[chainId]).filter(callKey => state.callListeners[chainId][callKey] > 0)
   }, [state.callListeners, chainId])
 
+  const debouncedListeningKeys = useDebounce(listeningKeys, 100)
+
   const unserializedOutdatedCallKeys = useMemo(() => {
-    if (!chainId || !state.callResults[chainId]) return listeningKeys
+    if (!chainId || !state.callResults[chainId]) return debouncedListeningKeys
     if (!latestBlockNumber) return []
 
-    return listeningKeys.filter(key => {
+    return debouncedListeningKeys.filter(key => {
       const data = state.callResults[chainId][key]
       return !data || data.blockNumber < latestBlockNumber
     })
-  }, [chainId, state.callResults, listeningKeys, latestBlockNumber])
+  }, [chainId, state.callResults, debouncedListeningKeys, latestBlockNumber])
 
   const serializedOutdatedCallKeys = useMemo(() => JSON.stringify(unserializedOutdatedCallKeys.sort()), [
     unserializedOutdatedCallKeys
@@ -36,7 +39,7 @@ export default function Updater() {
   useEffect(() => {
     const outdatedCallKeys: string[] = JSON.parse(serializedOutdatedCallKeys)
     if (!multicallContract || !chainId || outdatedCallKeys.length === 0) return
-    const calls = outdatedCallKeys.map(key => splitCallKey(key))
+    const calls = outdatedCallKeys.map(key => parseCallKey(key))
 
     multicallContract
       .aggregate(calls.map(obj => [obj.address, obj.callData]))
