@@ -5,16 +5,26 @@ import { ethers } from 'ethers'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 
-import { useExchangeContract, useWeb3React } from '../../hooks'
+import { useInterval, useWeb3React } from '../../hooks'
 import { brokenTokens } from '../../constants'
 import { amountFormatter, getProviderOrSigner, isAddress, MIN_DECIMALS, MIN_DECIMALS_EXCHANGE_RATE } from '../../utils'
-import { DELEGATE_ADDRESS, DMG_ADDRESS, INITIAL_TOKENS_CONTEXT, useTokenDetails } from '../../contexts/Tokens'
+import {
+  DECIMALS,
+  DELEGATE_ADDRESS,
+  DMG_ADDRESS,
+  INITIAL_TOKENS_CONTEXT,
+  MARKETS,
+  PRIMARY,
+  PRIMARY_DECIMALS,
+  SECONDARY_DECIMALS,
+  useTokenDetails, WETH_ADDRESS
+} from '../../contexts/Tokens'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
 import { useDolomiteOrderBooks } from '../../contexts/DolomiteOrderBooks'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWalletModalToggle } from '../../contexts/Application'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { Button } from '../../theme'
 import CurrencyInputPanel from '../CurrencyInputPanel'
@@ -28,6 +38,8 @@ import { exchange } from '../../connectors'
 import { Zero } from 'ethers/constants'
 import { getSignableData } from '../../connectors/Loopring/LoopringEIP712Schema'
 
+import * as crypto from 'crypto'
+
 const INPUT = 0
 const OUTPUT = 1
 
@@ -38,9 +50,6 @@ const TOKEN_TO_TOKEN = 2
 // denominated in bips
 const ALLOWED_SLIPPAGE_DEFAULT = 50
 const TOKEN_ALLOWED_SLIPPAGE_DEFAULT = 50
-
-// 15 minutes, denominated in seconds
-const DEFAULT_DEADLINE_FROM_NOW = 60 * 15
 
 // % above the calculated gas cost that we actually send, denominated in bips
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
@@ -89,6 +98,14 @@ const Flex = styled.div`
   }
 `
 
+function getEffectiveInputCurrency(inputCurrency) {
+  if(inputCurrency === 'ETH') {
+    return WETH_ADDRESS
+  } else {
+    return inputCurrency
+  }
+}
+
 function getSwapType(inputCurrency, outputCurrency) {
   if (!inputCurrency || !outputCurrency) {
     return null
@@ -134,10 +151,11 @@ function calculateTokenValueFromOtherValue(valueAmount, books, isValueAmountOutp
           innerFillAmount.mul(tupleOutputAmount).div(tupleInputAmount) :
           innerFillAmount.mul(tupleOutputAmount).div(tupleInputAmount)
         outputAmount = outputAmount.add(outputFillAmount)
-        break
+        return outputAmount
       }
     }
-    return outputAmount
+
+    throw Error('INSUFFICIENT_LIQUIDITY')
   }
 }
 
@@ -256,31 +274,6 @@ function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals,
   }
 }
 
-function getMarketRate(
-  swapType,
-  inputReserveETH,
-  inputReserveToken,
-  inputDecimals,
-  outputReserveETH,
-  outputReserveToken,
-  outputDecimals,
-  invert = false
-) {
-  if (swapType === ETH_TO_TOKEN) {
-    return getExchangeRate(outputReserveETH, 18, outputReserveToken, outputDecimals, invert)
-  } else if (swapType === TOKEN_TO_ETH) {
-    return getExchangeRate(inputReserveToken, inputDecimals, inputReserveETH, 18, invert)
-  } else if (swapType === TOKEN_TO_TOKEN) {
-    const factor = ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))
-    const firstRate = getExchangeRate(inputReserveToken, inputDecimals, inputReserveETH, 18)
-    const secondRate = getExchangeRate(outputReserveETH, 18, outputReserveToken, outputDecimals)
-    try {
-      return !!(firstRate && secondRate) ? firstRate.mul(secondRate).div(factor) : undefined
-    } catch {
-    }
-  }
-}
-
 export default function ExchangePage({ initialCurrency, sending = false, params }) {
   const { t } = useTranslation()
   const { library, account, chainId, error } = useWeb3React()
@@ -318,9 +311,20 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
   const [brokenTokenWarning, setBrokenTokenWarning] = useState()
 
-  const [isSubmitting, setIsSubmitting] = useState();
+  const [dolomiteOrderId, setDolomiteOrderId] = useState('')
 
-  const [deadlineFromNow, setDeadlineFromNow] = useState(DEFAULT_DEADLINE_FROM_NOW)
+  useInterval(() => {
+    if (dolomiteOrderId) {
+      fetch(`https://exchange-api.dolomite.io/v1/orders/${dolomiteOrderId}`)
+        .then(response => response.json())
+        .then(response => {
+          const status = response['data']['order_status']
+          if (status === 'FILLED') {
+            setDolomiteOrderId('')
+          }
+        })
+    }
+  }, 1000)
 
   const [rawSlippage, setRawSlippage] = useState(() => initialSlippage())
   const [rawTokenSlippage, setRawTokenSlippage] = useState(() => initialSlippage(true))
@@ -370,45 +374,48 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const swapType = getSwapType(inputCurrency, outputCurrency)
 
   // get decimals and exchange address for each of the currency types
-  const { symbol: inputSymbol, decimals: inputDecimals, exchangeAddress: inputExchangeAddress } = useTokenDetails(
-    inputCurrency
-  )
-  const { symbol: outputSymbol, decimals: outputDecimals, exchangeAddress: outputExchangeAddress } = useTokenDetails(
-    outputCurrency
-  )
+  const { symbol: inputSymbol, decimals: inputDecimals } = useTokenDetails(inputCurrency)
+  const { symbol: outputSymbol, decimals: outputDecimals } = useTokenDetails(outputCurrency)
 
-  const inputExchangeContract = useExchangeContract(inputExchangeAddress)
-  const outputExchangeContract = useExchangeContract(outputExchangeAddress)
-  const contract = swapType === ETH_TO_TOKEN ? outputExchangeContract : inputExchangeContract
+  const effectiveInputCurrency = getEffectiveInputCurrency(inputCurrency)
+  const market = !!MARKETS['1'][`${inputCurrency}-${outputCurrency}`] ?
+    MARKETS['1'][`${effectiveInputCurrency}-${outputCurrency}`] : MARKETS['1'][`${outputCurrency}-${effectiveInputCurrency}`]
+  const inputFormatDecimals = market[PRIMARY] === effectiveInputCurrency ? market[PRIMARY_DECIMALS] : market[SECONDARY_DECIMALS]
+  const outputFormatDecimals = market[PRIMARY] === outputCurrency ? market[PRIMARY_DECIMALS] : market[SECONDARY_DECIMALS]
 
   // get input allowance
-  const inputAllowance = useAddressAllowance(account, inputCurrency, DELEGATE_ADDRESS)
+  const inputAllowance = useAddressAllowance(account, effectiveInputCurrency, DELEGATE_ADDRESS)
 
   // fetch reserves for each of the currency types
   const primarySymbol = INITIAL_TOKENS_CONTEXT['1'][DMG_ADDRESS].symbol
-  const secondarySymbol = INITIAL_TOKENS_CONTEXT['1'][inputCurrency].symbol
+  const secondarySymbol = INITIAL_TOKENS_CONTEXT['1'][effectiveInputCurrency].symbol
   const orderBooks = useDolomiteOrderBooks(primarySymbol, secondarySymbol)
-  const { reserveETH: inputReserveETH, reserveToken: inputReserveToken } = useExchangeReserves(inputCurrency)
+  const { reserveETH: inputReserveETH, reserveToken: inputReserveToken } = useExchangeReserves(effectiveInputCurrency)
   const { reserveETH: outputReserveETH, reserveToken: outputReserveToken } = useExchangeReserves(outputCurrency)
 
   // get balances for each of the currency types
   const inputBalance = useAddressBalance(account, inputCurrency)
   const outputBalance = useAddressBalance(account, outputCurrency)
   const inputBalanceFormatted = !!(inputBalance && Number.isInteger(inputDecimals))
-    ? amountFormatter(inputBalance, inputDecimals, Math.min(MIN_DECIMALS, inputDecimals))
+    ? amountFormatter(inputBalance, inputDecimals, Math.min(MIN_DECIMALS, inputFormatDecimals))
     : ''
   const outputBalanceFormatted = !!(outputBalance && Number.isInteger(outputDecimals))
-    ? amountFormatter(outputBalance, outputDecimals, Math.min(MIN_DECIMALS, outputDecimals))
+    ? amountFormatter(outputBalance, outputDecimals, Math.min(MIN_DECIMALS, outputFormatDecimals))
     : ''
+  const isInputIndependent = independentField === INPUT ?
+    effectiveInputCurrency === market[PRIMARY] : outputCurrency === market[PRIMARY]
 
   // compute useful transforms of the data above
   const independentDecimals = independentField === INPUT ? inputDecimals : outputDecimals
   const dependentDecimals = independentField === OUTPUT ? inputDecimals : outputDecimals
 
+  const independentCurrency = independentField === INPUT ? effectiveInputCurrency : outputCurrency
+  const dependentCurrency = independentField === OUTPUT ? effectiveInputCurrency : outputCurrency
+
   // declare/get parsed and formatted versions of input/output values
   const [independentValueParsed, setIndependentValueParsed] = useState()
   const dependentValueFormatted = !!(dependentValue && (dependentDecimals || dependentDecimals === 0))
-    ? amountFormatter(dependentValue, dependentDecimals, Math.min(MIN_DECIMALS, dependentDecimals), false)
+    ? amountFormatter(dependentValue, dependentDecimals, Math.min(MIN_DECIMALS, isInputIndependent ? inputFormatDecimals : outputFormatDecimals), false)
     : ''
   const inputValueParsed = independentField === INPUT ? independentValueParsed : dependentValue
   const inputValueFormatted = independentField === INPUT ? independentValue : dependentValueFormatted
@@ -421,8 +428,23 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     if (independentValue && (independentDecimals || independentDecimals === 0)) {
       try {
         const parsedValue = ethers.utils.parseUnits(independentValue, independentDecimals)
+        let isPrimary
+        if (independentField === INPUT) {
+          isPrimary = market[PRIMARY] === effectiveInputCurrency
+        } else {
+          isPrimary = market[PRIMARY] === outputCurrency
+        }
+
+        let minValue
+        if (isPrimary) {
+          minValue = new ethers.utils.BigNumber(10).pow(INITIAL_TOKENS_CONTEXT['1'][market.primary][DECIMALS] - market[PRIMARY_DECIMALS])
+        } else {
+          minValue = new ethers.utils.BigNumber(10).pow(INITIAL_TOKENS_CONTEXT['1'][market.secondary][DECIMALS] - market[SECONDARY_DECIMALS])
+        }
 
         if (parsedValue.lte(ethers.constants.Zero) || parsedValue.gte(ethers.constants.MaxUint256)) {
+          throw Error()
+        } else if (parsedValue.lt(minValue) || !parsedValue.mod(minValue).eq(0)) {
           throw Error()
         } else {
           setIndependentValueParsed(parsedValue)
@@ -453,10 +475,10 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const [showUnlock, setShowUnlock] = useState(false)
   useEffect(() => {
     const inputValueCalculation = independentField === INPUT ? independentValueParsed : dependentValueMaximum
-    if (inputBalance && (inputAllowance || inputCurrency === 'ETH') && inputValueCalculation) {
+    if (inputBalance && (inputAllowance || effectiveInputCurrency === 'ETH') && inputValueCalculation) {
       if (inputBalance.lt(inputValueCalculation)) {
         setInputError(t('insufficientBalance'))
-      } else if (inputCurrency !== 'ETH' && inputAllowance.lt(inputValueCalculation)) {
+      } else if (effectiveInputCurrency !== 'ETH' && inputAllowance.lt(inputValueCalculation)) {
         setInputError(t('unlockTokenCont'))
         setShowUnlock(true)
       } else {
@@ -468,7 +490,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         setShowUnlock(false)
       }
     }
-  }, [independentField, independentValueParsed, dependentValueMaximum, inputBalance, inputCurrency, inputAllowance, t])
+  }, [independentField, independentValueParsed, dependentValueMaximum, inputBalance, effectiveInputCurrency, inputAllowance, t])
 
   // calculate dependent value
   useEffect(() => {
@@ -496,7 +518,11 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           })
         }
       } catch (error) {
-        setIndependentError(t('orderBooksLoading'))
+        if (error.message === 'INSUFFICIENT_LIQUIDITY') {
+          setIndependentError(t('insufficientLiquidity'))
+        } else {
+          setIndependentError(t('orderBooksLoading'))
+        }
       }
       return () => {
         dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: '' })
@@ -519,35 +545,9 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const exchangeRate = getExchangeRate(inputValueParsed, inputDecimals, outputValueParsed, outputDecimals)
   const exchangeRateInverted = getExchangeRate(inputValueParsed, inputDecimals, outputValueParsed, outputDecimals, true)
 
-  const marketRate = getMarketRate(
-    swapType,
-    inputReserveETH,
-    inputReserveToken,
-    inputDecimals,
-    outputReserveETH,
-    outputReserveToken,
-    outputDecimals
-  )
-
-  const percentSlippage =
-    exchangeRate && marketRate && !marketRate.isZero()
-      ? exchangeRate
-        .sub(marketRate)
-        .abs()
-        .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18)))
-        .div(marketRate)
-        .sub(ethers.utils.bigNumberify(3).mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(15))))
-      : undefined
-  const percentSlippageFormatted = percentSlippage && amountFormatter(percentSlippage, 16, 2)
-  const slippageWarning =
-    percentSlippage &&
-    percentSlippage.gte(ethers.utils.parseEther('.05')) &&
-    percentSlippage.lt(ethers.utils.parseEther('.2')) // [5% - 20%)
-  const highSlippageWarning = percentSlippage && percentSlippage.gte(ethers.utils.parseEther('.2')) // [20+%
-
   const isValid = sending
-    ? exchangeRate && inputError === null && independentError === null && recipientError === null && deadlineFromNow
-    : exchangeRate && inputError === null && independentError === null && deadlineFromNow
+    ? exchangeRate && inputError === null && independentError === null && recipientError === null : exchangeRate
+    && inputError === null && independentError === null
 
   const estimatedText = `(${t('estimated')})`
 
@@ -556,88 +556,87 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   }
 
   async function onSwap() {
-    let loopringOrder, value
+    let loopringOrder
+
+    const secondaryMarketDecimals = market[SECONDARY_DECIMALS]
+    const primaryMarketDecimals = market[PRIMARY_DECIMALS]
+
+    const primaryPriceDecimalsFactor = new ethers.utils.BigNumber(10).pow(primaryMarketDecimals)
+    const secondaryPriceDecimalsFactor = new ethers.utils.BigNumber(10).pow(secondaryMarketDecimals - primaryMarketDecimals)
+
+    const dependentPriceDecimals = dependentCurrency === DMG_ADDRESS ? primaryMarketDecimals : secondaryMarketDecimals - primaryMarketDecimals
+    const dependentPriceDecimalsFactor = new ethers.utils.BigNumber(10).pow(dependentDecimals - dependentPriceDecimals)
+
+    const independentPriceDecimals = independentCurrency === DMG_ADDRESS ? primaryMarketDecimals : secondaryMarketDecimals - primaryMarketDecimals
+
+    const dependentDecimalsFactor = new ethers.utils.BigNumber(10).pow(dependentDecimals)
+    const dependentTruncationDecimalsFactor = new ethers.utils.BigNumber(10).pow(dependentDecimals - dependentPriceDecimals)
+
+    const independentDecimalsFactor = new ethers.utils.BigNumber(10).pow(independentDecimals)
+    const independentTruncationDecimalsFactor = new ethers.utils.BigNumber(10).pow(independentDecimals - independentPriceDecimals)
 
     let dependentValueStandardized
     let independentValueParsedStandardized
+    let loopringOrderData
     if (independentField === INPUT) {
-      // tokenS == SECONDARY
-      const independentPriceDecimals = INITIAL_TOKENS_CONTEXT['1'][inputCurrency].priceDecimals
-      const independentDecimals = INITIAL_TOKENS_CONTEXT['1'][inputCurrency].decimals
-      const independentDecimalsPriceFactor = new ethers.utils.BigNumber(10).pow(independentDecimals - independentPriceDecimals)
-
-      // tokenB == PRIMARY
-      const dependentPriceDecimals = 8 - independentPriceDecimals
-      const dependentDecimals = INITIAL_TOKENS_CONTEXT['1'][DMG_ADDRESS].decimals
-      const dependentDecimalsFactor = new ethers.utils.BigNumber(10).pow(dependentDecimals)
-      const dependentTruncationDecimalsFactor = new ethers.utils.BigNumber(10).pow(dependentDecimals - dependentPriceDecimals)
 
       dependentValueStandardized = dependentValue.div(dependentTruncationDecimalsFactor).mul(dependentTruncationDecimalsFactor)
 
       const priceWithPremiumStandardized = independentValueParsed.mul(dependentDecimalsFactor).div(dependentValueStandardized) // get price
         .mul(11).div(10) // premium
-        .div(independentDecimalsPriceFactor).mul(independentDecimalsPriceFactor) // standardized
+        .div(independentTruncationDecimalsFactor).mul(independentTruncationDecimalsFactor) // standardized
 
       independentValueParsedStandardized = priceWithPremiumStandardized.mul(dependentValueStandardized).div(dependentDecimalsFactor)
 
-      loopringOrder = constructLoopringOrder(
-        library,
-        {
-          primaryToken: DMG_ADDRESS,
-          owner: account,
-          tokenB: DMG_ADDRESS,
-          tokenS: inputCurrency,
-          amountB: dependentValueStandardized.toHexString(),
-          amountS: independentValueParsedStandardized.toHexString(),
-          feeAmount: Zero,
-          validUntil: null,
-          transferDataS: null,
-          broker: null,
-          tokenRecipient: account,
-        }
-      )
+      loopringOrderData = {
+        tokenB: outputCurrency,
+        tokenS: effectiveInputCurrency,
+        amountB: dependentValueStandardized.toHexString(),
+        amountS: independentValueParsedStandardized.toHexString(),
+      }
     } else if (independentField === OUTPUT) {
-      // tokenS == SECONDARY == DEPENDENT
-      const dependentPriceDecimals = INITIAL_TOKENS_CONTEXT['1'][inputCurrency].priceDecimals
-      const dependentDecimals = INITIAL_TOKENS_CONTEXT['1'][inputCurrency].decimals
-      const dependentDecimalsPriceFactor = new ethers.utils.BigNumber(10).pow(dependentDecimals - dependentPriceDecimals)
-      const dependentDecimalsFactor = new ethers.utils.BigNumber(10).pow(dependentDecimals)
-
-      // tokenB == PRIMARY == INDEPENDENT
-      const independentPriceDecimals = 8 - dependentPriceDecimals
-      const independentDecimals = INITIAL_TOKENS_CONTEXT['1'][DMG_ADDRESS].decimals
+      // tokenS == SECONDARY == DEPENDENT == INPUT
+      // tokenB == PRIMARY == INDEPENDENT == OUTPUT
       const independentDecimalsFactor = new ethers.utils.BigNumber(10).pow(independentDecimals)
-      const independentPriceDecimalsFactor = new ethers.utils.BigNumber(10).pow(independentDecimals - independentPriceDecimals)
 
-      independentValueParsedStandardized = independentValueParsed.div(independentPriceDecimalsFactor).mul(independentPriceDecimalsFactor)
+      independentValueParsedStandardized = independentValueParsed.div(independentTruncationDecimalsFactor).mul(independentTruncationDecimalsFactor)
 
-      const priceWithPremiumStandardized = dependentValue.mul(dependentDecimalsFactor).div(independentValueParsedStandardized) // get price
+      const priceWithPremiumStandardized = dependentValue.mul(independentDecimalsFactor).div(independentValueParsedStandardized) // get price
         .mul(11).div(10) // premium
-        .div(dependentDecimalsPriceFactor).mul(dependentDecimalsPriceFactor) // standardized
+        .div(dependentTruncationDecimalsFactor).mul(dependentTruncationDecimalsFactor) // standardized
 
       dependentValueStandardized = priceWithPremiumStandardized.mul(independentValueParsedStandardized).div(independentDecimalsFactor)
 
-      loopringOrder = constructLoopringOrder(
-        library,
-        {
-          primaryToken: DMG_ADDRESS,
-          owner: account,
-          tokenS: inputCurrency,
-          tokenB: DMG_ADDRESS,
-          amountB: independentValueParsedStandardized.toHexString(),
-          amountS: dependentValueStandardized.toHexString(),
-          feeAmount: Zero,
-          validUntil: null,
-          transferDataS: null,
-          broker: null,
-          tokenRecipient: account,
-        }
-      )
+      loopringOrderData = {
+        tokenS: effectiveInputCurrency,
+        tokenB: outputCurrency,
+        amountB: independentValueParsedStandardized.toHexString(),
+        amountS: dependentValueStandardized.toHexString(),
+      }
     }
 
+    const orderSide = loopringOrderData.tokenB === DMG_ADDRESS ? 'BUY' : 'SELL'
+
+    loopringOrder = constructLoopringOrder(
+      library,
+      {
+        primaryToken: DMG_ADDRESS,
+        owner: account,
+        tokenB: loopringOrderData.tokenB,
+        tokenS: loopringOrderData.tokenS,
+        amountB: loopringOrderData.amountB,
+        amountS: loopringOrderData.amountS,
+        feeAmount: Zero,
+        validUntil: null,
+        transferDataS: null,
+        broker: null,
+        tokenRecipient: account
+      }
+    )
     const signableData = getSignableData(loopringOrder)
     const signer = getProviderOrSigner(library, account)
 
+    // TODO add ETH --> WETH broker call here if need-be.
     let signaturePromise
     if (typeof signer.signTypedMessage === 'function') {
       signaturePromise = signer.signTypedMessage(signableData)
@@ -660,22 +659,59 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           orderType: 'MARKET',
           tokenB: loopringOrder.tokenB,
           tokenS: loopringOrder.tokenS,
-          side: 'BUY',
+          side: orderSide,
           estimatedNumberOfFills: 16,
           constantNetworkFeePremium: 0,
-          perMatchNetworkFee: 0,
+          perMatchNetworkFee: 0
         }
         const dolomiteOrder = toDolomiteOrder(
           loopringOrder,
           signature,
-          data,
+          data
         )
-        exchange.orders.createOrder(dolomiteOrder)
+        return exchange.orders.createOrder(dolomiteOrder).then(response => ({ response, dolomiteOrder }))
       })
-      .then(response => {
-        // TODO - log events
-        console.log('response ', response)
+      .then(({ response, dolomiteOrder }) => {
+        setDolomiteOrderId(response['data']['dolomite_order_id'])
+        dolomiteOrder.dolomite_order_uuid = response['data']['dolomite_order_id'];
+        return dolomiteOrder
       })
+      .then(dolomiteOrder => {
+        if (params.referrer) {
+          const signature = dolomiteOrder.ecdsa_multi_hash_signature
+          const timestamp = new Date().getTime()
+          const key = new Buffer(process.env.REACT_APP_ADMIN_API_KEY, "utf-8")
+          const hash = crypto.createHmac('sha256', key)
+            .update(timestamp.toString(10))
+            .digest('base64')
+
+          const body = {
+            'dolomite_order_uuid': dolomiteOrder.dolomite_order_uuid,
+            'signature': {
+              'v': Number.parseInt(signature.slice(6, 8), 16),
+              'r': `0x${signature.slice(8, 72)}`,
+              's': `0x${signature.slice(72, 136)}`,
+            },
+            'signature_algorithm': Number.parseInt(signature.slice(2, 4), 16),
+            'buyer_address': dolomiteOrder.owner_address,
+            'order_hash': dolomiteOrder.order_hash,
+            'referrer_address': params.referrer,
+            'dmg_bought': new ethers.utils.BigNumber(dolomiteOrder.primary_padded_amount).toString(),
+          }
+          const options = {
+            method: 'POST',
+            headers: {
+              'X-Dmm-Api-Signature': hash,
+              'X-Dmm-Api-Timestamp': timestamp,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body)
+          }
+          const referralUrl = 'https://api.defimoneymarket.com/v1/dmg-sale/insert-referral'
+          return fetch(referralUrl, options)
+        }
+      })
+      .then(response => response?.json())
       .catch(error => {
         console.error('Could not submit order due to error ', error)
       })
@@ -686,7 +722,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const toggleWalletModal = useWalletModalToggle()
 
   const newInputDetected =
-    inputCurrency !== 'ETH' && inputCurrency && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(inputCurrency)
+    effectiveInputCurrency !== 'ETH' && effectiveInputCurrency && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(effectiveInputCurrency)
 
   const newOutputDetected =
     outputCurrency !== 'ETH' && outputCurrency && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(outputCurrency)
@@ -718,7 +754,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
             setShowInputWarning(false)
           }}
           urlAddedTokens={urlAddedTokens}
-          currency={inputCurrency}
+          currency={effectiveInputCurrency}
         />
       )}
       {showOutputWarning && (
@@ -737,7 +773,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         extraText={inputBalanceFormatted && formatBalance(inputBalanceFormatted)}
         extraTextClickHander={() => {
           if (inputBalance && inputDecimals) {
-            const valueToSet = inputCurrency === 'ETH' ? inputBalance.sub(ethers.utils.parseEther('.1')) : inputBalance
+            const valueToSet = effectiveInputCurrency === 'ETH' ? inputBalance.sub(ethers.utils.parseEther('.1')) : inputBalance
             if (valueToSet.gt(ethers.constants.Zero)) {
               dispatchSwapState({
                 type: 'UPDATE_INDEPENDENT',
@@ -763,9 +799,12 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         }}
         showUnlock={showUnlock}
         selectedTokens={[inputCurrency, outputCurrency]}
+        // selectedTokenAddress={effectiveInputCurrency}
         selectedTokenAddress={inputCurrency}
         value={inputValueFormatted}
         errorMessage={inputError ? inputError : independentField === INPUT ? independentError : ''}
+        tokenAddress={effectiveInputCurrency}
+        market={market}
       />
       <OversizedPanel>
         <DownArrowBackground>
@@ -803,6 +842,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         errorMessage={independentField === OUTPUT ? independentError : ''}
         disableTokenSelect
         disableUnlock
+        tokenAddress={outputCurrency}
+        market={market}
       />
       {sending ? (
         <>
@@ -843,11 +884,9 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         setRawSlippage={setRawSlippage}
         setRawTokenSlippage={setRawTokenSlippage}
         rawSlippage={rawSlippage}
-        slippageWarning={slippageWarning}
-        highSlippageWarning={highSlippageWarning}
+        slippageWarning={false}
+        highSlippageWarning={false}
         brokenTokenWarning={brokenTokenWarning}
-        setDeadline={setDeadlineFromNow}
-        deadline={deadlineFromNow}
         inputError={inputError}
         independentError={independentError}
         inputCurrency={inputCurrency}
@@ -864,7 +903,6 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         dependentValueMaximum={dependentValueMaximum}
         dependentDecimals={dependentDecimals}
         independentDecimals={independentDecimals}
-        percentSlippageFormatted={percentSlippageFormatted}
         setcustomSlippageError={setcustomSlippageError}
         recipientAddress={recipient.address}
         sending={sending}
@@ -875,18 +913,18 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
             brokenTokenWarning ? true : !account && !error ? false : !isValid || customSlippageError === 'invalid'
           }
           onClick={account && !error ? onSwap : toggleWalletModal}
-          warning={highSlippageWarning || customSlippageError === 'warning'}
+          warning={customSlippageError === 'warning'}
           loggedOut={!account}
         >
-          {isSubmitting ? <CircularProgress/> :brokenTokenWarning
+          {(!!dolomiteOrderId) ? <CircularProgress/> : brokenTokenWarning
             ? 'Swap'
             : !account
               ? t('connectToWallet')
               : sending
-                ? highSlippageWarning || customSlippageError === 'warning'
+                ? customSlippageError === 'warning'
                   ? t('sendAnyway')
                   : t('send')
-                : highSlippageWarning || customSlippageError === 'warning'
+                : customSlippageError === 'warning'
                   ? t('swapAnyway')
                   : t('swap')}
         </Button>

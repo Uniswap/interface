@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef } from 'react'
 
-import { useWeb3React } from '../hooks'
+import { useInterval, useWeb3React } from '../hooks'
 import { exchange } from '../connectors/index'
 import { DMG_ADDRESS, INITIAL_TOKENS_CONTEXT } from './Tokens'
 
@@ -135,7 +135,7 @@ export default function Provider({ children }) {
   )
 }
 
-async function getAllBooksAndDispatch(dispatch, chainId) {
+function getAllBooksAndDispatch(dispatch, chainId) {
   const primarySymbol = INITIAL_TOKENS_CONTEXT['1'][DMG_ADDRESS].symbol
   const secondarySymbols = Object.keys(INITIAL_TOKENS_CONTEXT['1'])
     .filter(tokenAddress => INITIAL_TOKENS_CONTEXT['1'][tokenAddress].symbol !== primarySymbol)
@@ -152,26 +152,5 @@ async function getAllBooksAndDispatch(dispatch, chainId) {
         dispatch({ type: GET_BOOKS, payload: { chainId, primarySymbol, secondarySymbol, value: undefined } })
       })
   })
-  await Promise.all(booksPromises)
-}
-
-function useInterval(callback, delay) {
-  const savedCallback = useRef()
-
-  // Remember the latest callback.
-  useEffect(() => {
-    savedCallback.current = callback
-  }, [callback])
-
-  // Set up the interval.
-  useEffect(() => {
-    function tick() {
-      savedCallback.current()
-    }
-
-    if (delay !== null) {
-      let id = setInterval(tick, delay)
-      return () => clearInterval(id)
-    }
-  }, [delay])
+  return Promise.all(booksPromises)
 }

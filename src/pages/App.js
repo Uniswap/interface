@@ -85,46 +85,46 @@ class App extends React.Component {
                   <Suspense fallback={null}>
                     <Switch>
                       <Route exact strict path="/swap" component={() => <Swap params={params} />} />
-                      <Route
-                        exact
-                        strict
-                        path="/swap/:tokenAddress?"
-                        render={({ match, location }) => {
-                          if (isAddress(match.params.tokenAddress)) {
-                            return (
-                              <Swap
-                                location={location}
-                                initialCurrency={isAddress(match.params.tokenAddress)}
-                                params={params}
-                              />
-                            )
-                          } else {
-                            return <Redirect to={{ pathname: '/swap' }} />
-                          }
-                        }}
-                      />
-                      <Route exact strict path="/send" component={() => <Send params={params} />} />
-                      <Route
-                        exact
-                        strict
-                        path="/send/:tokenAddress?"
-                        render={({ match }) => {
-                          if (isAddress(match.params.tokenAddress)) {
-                            return <Send initialCurrency={isAddress(match.params.tokenAddress)} params={params} />
-                          } else {
-                            return <Redirect to={{ pathname: '/send' }} />
-                          }
-                        }}
-                      />
-                      <Route
-                        path={[
-                          '/add-liquidity',
-                          '/remove-liquidity',
-                          '/create-exchange',
-                          '/create-exchange/:tokenAddress?'
-                        ]}
-                        component={() => <Pool params={params} />}
-                      />
+                      {/*<Route*/}
+                      {/*  exact*/}
+                      {/*  strict*/}
+                      {/*  path="/swap/:tokenAddress?"*/}
+                      {/*  render={({ match, location }) => {*/}
+                      {/*    if (isAddress(match.params.tokenAddress)) {*/}
+                      {/*      return (*/}
+                      {/*        <Swap*/}
+                      {/*          location={location}*/}
+                      {/*          initialCurrency={isAddress(match.params.tokenAddress)}*/}
+                      {/*          params={params}*/}
+                      {/*        />*/}
+                      {/*      )*/}
+                      {/*    } else {*/}
+                      {/*      return <Redirect to={{ pathname: '/swap' }} />*/}
+                      {/*    }*/}
+                      {/*  }}*/}
+                      {/*/>*/}
+                      {/*<Route exact strict path="/send" component={() => <Send params={params} />} />*/}
+                      {/*<Route*/}
+                      {/*  exact*/}
+                      {/*  strict*/}
+                      {/*  path="/send/:tokenAddress?"*/}
+                      {/*  render={({ match }) => {*/}
+                      {/*    if (isAddress(match.params.tokenAddress)) {*/}
+                      {/*      return <Send initialCurrency={isAddress(match.params.tokenAddress)} params={params} />*/}
+                      {/*    } else {*/}
+                      {/*      return <Redirect to={{ pathname: '/send' }} />*/}
+                      {/*    }*/}
+                      {/*  }}*/}
+                      {/*/>*/}
+                      {/*<Route*/}
+                      {/*  path={[*/}
+                      {/*    '/add-liquidity',*/}
+                      {/*    '/remove-liquidity',*/}
+                      {/*    '/create-exchange',*/}
+                      {/*    '/create-exchange/:tokenAddress?'*/}
+                      {/*  ]}*/}
+                      {/*  component={() => <Pool params={params} />}*/}
+                      {/*/>*/}
                       <Redirect to="/swap" />
                     </Switch>
                   </Suspense>

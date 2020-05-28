@@ -99,6 +99,10 @@ export function getAllQueryParams() {
     ? isAddress(getQueryParam(window.location, 'tokenAddress'))
     : ''
 
+  params.referrer = isAddress(getQueryParam(window.location, 'r'))
+    ? isAddress(getQueryParam(window.location, 'r'))
+    : ''
+
   return params
 }
 
