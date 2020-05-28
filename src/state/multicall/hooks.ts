@@ -132,21 +132,20 @@ export function useMultipleCallSingleContractResult(
   methodName: string,
   callInputs: OptionalMethodInputs[]
 ): (Result | undefined)[] {
-  const validated = isAddress(contract?.address)
   const fragment = getFragment(contract?.interface, methodName)
 
   const calls = useMemo(
     () =>
-      validated && callInputs && fragment
+      contract && callInputs && fragment
         ? callInputs.map(inputs => {
             return {
               fragment,
-              address: validated,
+              address: contract.address,
               inputs
             }
           })
         : [],
-    [callInputs, fragment, validated]
+    [callInputs, contract, fragment]
   )
 
   return useCallsData(calls)
@@ -158,7 +157,7 @@ export function useMultipleContractSingleData(
   methodName: string,
   callInputs?: OptionalMethodInputs
 ): (Result | undefined)[] {
-  const fragment = getFragment(contractInterface, methodName)
+  const fragment = useMemo(() => getFragment(contractInterface, methodName), [contractInterface, methodName])
 
   const calls = useMemo(
     () =>
@@ -182,21 +181,17 @@ export function useSingleCallResult(
   methodName: string,
   inputs?: OptionalMethodInputs
 ): Result | undefined {
-  const validated = isAddress(contract?.address)
-  const fragment = getFragment(contract?.interface, methodName)
-
   const calls = useMemo(() => {
-    return validated && fragment
+    return contract
       ? [
           {
-            fragment: getFragment(contract?.interface, methodName),
-            address: validated ? validated : undefined,
+            fragment: getFragment(contract.interface, methodName),
+            address: contract.address,
             inputs: inputs
           }
         ]
       : []
-  }, [contract, inputs, methodName, validated])
-  const data = useCallsData(calls)
-  if (!validated) return undefined
-  return data[0]
+  }, [contract, inputs, methodName])
+
+  return useCallsData(calls)[0]
 }

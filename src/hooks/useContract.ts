@@ -5,7 +5,6 @@ import { useMemo } from 'react'
 import { V1_FACTORY_ADDRESS } from '../constants'
 import ERC20_ABI from '../constants/abis/erc20.json'
 import IUniswapV1Factory from '../constants/abis/v1_factory.json'
-import { ETH_SCAN_ABI, ETH_SCAN_NETWORKS } from '../constants/eth-scan'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
@@ -40,9 +39,4 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible = tru
 export function useMulticallContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(MULTICALL_NETWORKS[chainId as ChainId], MULTICALL_ABI, false)
-}
-
-export function useEthScanContract(): Contract | null {
-  const { chainId } = useActiveWeb3React()
-  return useContract(ETH_SCAN_NETWORKS[chainId as ChainId], ETH_SCAN_ABI, false)
 }
