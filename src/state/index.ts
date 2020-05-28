@@ -8,6 +8,7 @@ import wallet from './wallet/reducer'
 import swap from './swap/reducer'
 import mint from './mint/reducer'
 import burn from './burn/reducer'
+import multicall from './multicall/reducer'
 
 import { updateVersion } from './user/actions'
 
@@ -21,7 +22,8 @@ const store = configureStore({
     wallet,
     swap,
     mint,
-    burn
+    burn,
+    multicall
   },
   middleware: [...getDefaultMiddleware(), save({ states: PERSISTED_KEYS })],
   preloadedState: load({ states: PERSISTED_KEYS })

@@ -1,12 +1,33 @@
 import { createAction } from '@reduxjs/toolkit'
+import { isAddress } from '../../utils'
 
 export interface Call {
   address: string
-  calldata: string
+  callData: string
 }
 
 export function toCallKey(call: Call): string {
-  return `${call.address}-${call.calldata}`
+  return `${call.address}-${call.callData}`
+}
+
+export function splitCallKey(callKey: string): Call {
+  const pcs = callKey.split('-')
+  if (pcs.length !== 2) {
+    throw new Error(`Invalid call key: ${callKey}`)
+  }
+  const addr = isAddress(pcs[0])
+  if (!addr) {
+    throw new Error(`Invalid address: ${pcs[0]}`)
+  }
+
+  if (!pcs[1].match(/^(0x[a-fA-F0-9]*){0,1}$/)) {
+    throw new Error(`Invalid hex: ${pcs[1]}`)
+  }
+
+  return {
+    address: pcs[0],
+    callData: pcs[1]
+  }
 }
 
 export const addMulticallListeners = createAction<{ chainId: number; calls: Call[] }>('addMulticallListeners')
@@ -15,9 +36,6 @@ export const updateMulticallResults = createAction<{
   chainId: number
   blockNumber: number
   results: {
-    [callKey: string]: {
-      error: boolean
-      data: string | null
-    }
+    [callKey: string]: string | null
   }
 }>('updateMulticallResults')

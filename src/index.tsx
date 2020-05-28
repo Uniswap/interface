@@ -13,6 +13,7 @@ import ApplicationUpdater from './state/application/updater'
 import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import WalletUpdater from './state/wallet/updater'
+import MulticallUpdater from './state/multicall/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
@@ -38,6 +39,7 @@ function Updaters() {
       <ApplicationUpdater />
       <TransactionUpdater />
       <WalletUpdater />
+      <MulticallUpdater />
     </>
   )
 }

@@ -2,17 +2,16 @@ import { createReducer } from '@reduxjs/toolkit'
 import { addMulticallListeners, removeMulticallListeners, toCallKey, updateMulticallResults } from './actions'
 
 interface MulticallState {
-  listeners: {
+  callListeners: {
     [chainId: number]: {
-      [key: string]: number
+      [callKey: string]: number
     }
   }
 
-  results: {
+  callResults: {
     [chainId: number]: {
-      [key: string]: {
+      [callKey: string]: {
         data: string | null
-        error: boolean
         blockNumber: number
       }
     }
@@ -20,31 +19,37 @@ interface MulticallState {
 }
 
 const initialState: MulticallState = {
-  listeners: {},
-  results: {}
+  callListeners: {},
+  callResults: {}
 }
 
 export default createReducer(initialState, builder =>
   builder
     .addCase(addMulticallListeners, (state, { payload: { calls, chainId } }) => {
-      state.listeners[chainId] = state.listeners[chainId] ?? {}
+      state.callListeners[chainId] = state.callListeners[chainId] ?? {}
       calls.forEach(call => {
         const callKey = toCallKey(call)
-        state.listeners[chainId][callKey] = (state.listeners[chainId][callKey] ?? 0) + 1
+        state.callListeners[chainId][callKey] = (state.callListeners[chainId][callKey] ?? 0) + 1
       })
     })
     .addCase(removeMulticallListeners, (state, { payload: { chainId, calls } }) => {
-      if (!state.listeners[chainId]) return
+      if (!state.callListeners[chainId]) return
       calls.forEach(call => {
         const callKey = toCallKey(call)
-        if (state.listeners[chainId][callKey] === 1) {
-          delete state.listeners[chainId][callKey]
+        if (state.callListeners[chainId][callKey] === 1) {
+          delete state.callListeners[chainId][callKey]
         } else {
-          state.listeners[chainId][callKey]--
+          state.callListeners[chainId][callKey]--
         }
       })
     })
     .addCase(updateMulticallResults, (state, { payload: { chainId, results, blockNumber } }) => {
-      state.results[chainId] = state.results[chainId] ?? {}
+      state.callResults[chainId] = state.callResults[chainId] ?? {}
+      Object.keys(results).forEach(callKey => {
+        state.callResults[chainId][callKey] = {
+          data: results[callKey],
+          blockNumber
+        }
+      })
     })
 )
