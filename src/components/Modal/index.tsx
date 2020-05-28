@@ -10,6 +10,7 @@ import { transparentize } from 'polished'
 import { useGesture } from 'react-use-gesture'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const StyledDialogOverlay = styled(({ mobile, ...rest }) => <AnimatedDialogOverlay {...rest} />)<{ mobile: boolean }>`
   &[data-reach-dialog-overlay] {
     z-index: 2;
