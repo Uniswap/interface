@@ -49,6 +49,8 @@ export const ButtonPrimary = styled(Base)`
     color: ${({ theme }) => theme.text3}
     cursor: auto;
     box-shadow: none;
+    border: none;
+    outline: none;
   }
 `
 

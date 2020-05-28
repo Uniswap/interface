@@ -18,11 +18,11 @@ const Wrapper = styled.div<{ error: boolean }>`
   background: ${({ theme, error }) => transparentize(0.9, error ? theme.red1 : theme.yellow1)};
   position: relative;
   padding: 1rem;
-  border: 0.5px solid ${({ theme, error }) => transparentize(0.4, error ? theme.red1 : theme.yellow1)};
+  /* border: 0.5px solid ${({ theme, error }) => transparentize(0.4, error ? theme.red1 : theme.yellow1)}; */
   border-radius: 10px;
   margin-bottom: 20px;
   display: grid;
-  grid-template-rows: auto auto auto;
+  grid-template-rows: 14px auto auto;
   grid-row-gap: 14px;
 `
 
@@ -42,15 +42,15 @@ const CloseColor = styled(Close)`
 const CloseIcon = styled.div`
   position: absolute;
   right: 1rem;
-  top: 14px;
+  top: 12px;
   &:hover {
     cursor: pointer;
     opacity: 0.6;
   }
 
   & > * {
-    height: 14px;
-    width: 14px;
+    height: 16px;
+    width: 16px;
   }
 `
 
@@ -111,7 +111,10 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
             ? `${token.name} (${token.symbol})`
             : token.name || token.symbol}
         </div>
-        <Link style={{ fontWeight: 400 }} href={getEtherscanLink(chainId, token.address, 'address')}>
+        <Link
+          style={{ fontSize: '0.825rem', fontWeight: 400 }}
+          href={getEtherscanLink(chainId, token.address, 'address')}
+        >
           (View on Etherscan)
         </Link>
       </Row>
