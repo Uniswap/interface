@@ -1,13 +1,13 @@
 import { ChainId, Pair, Percent, Route, Token, TokenAmount, Trade, TradeType, WETH } from '@uniswap/sdk'
 import { useActiveWeb3React } from '../hooks'
 import { useV1FactoryContract } from '../hooks/useContract'
-import { useContractData } from '../state/multicall/hooks'
+import { useSingleCallResult } from '../state/multicall/hooks'
 import { useETHBalances, useTokenBalance } from '../state/wallet/hooks'
 
 function useV1PairAddress(tokenAddress?: string): string | undefined {
   const contract = useV1FactoryContract()
 
-  return useContractData(contract, 'getExchange', [tokenAddress])?.[0]
+  return useSingleCallResult(contract, 'getExchange', [tokenAddress])?.[0]
 }
 
 function useMockV1Pair(token?: Token) {

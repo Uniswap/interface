@@ -2,7 +2,7 @@ import { Token, TokenAmount, Pair } from '@uniswap/sdk'
 import { useMemo } from 'react'
 
 import { usePairContract } from '../hooks/useContract'
-import { useContractData } from '../state/multicall/hooks'
+import { useSingleCallResult } from '../state/multicall/hooks'
 
 /*
  * if loading, return undefined
@@ -12,7 +12,7 @@ import { useContractData } from '../state/multicall/hooks'
 export function usePair(tokenA?: Token, tokenB?: Token): undefined | Pair | null {
   const pairAddress = tokenA && tokenB && !tokenA.equals(tokenB) ? Pair.getAddress(tokenA, tokenB) : undefined
   const contract = usePairContract(pairAddress, false)
-  const reserves = useContractData(contract, 'getReserves')
+  const reserves = useSingleCallResult(contract, 'getReserves')
 
   return useMemo(() => {
     if (!pairAddress || !contract || !reserves || !tokenA || !tokenB) return undefined

@@ -4,7 +4,7 @@ import { useAllTokens } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks'
 import { useEthScanContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
-import { useContractData } from '../multicall/hooks'
+import { useSingleCallResult } from '../multicall/hooks'
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
@@ -23,7 +23,7 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [
     [uncheckedAddresses]
   )
 
-  const balances = useContractData(ethScan, 'etherBalances', [addresses])?.[0]
+  const balances = useSingleCallResult(ethScan, 'etherBalances', [addresses])?.[0]
 
   return useMemo(
     () =>
@@ -52,7 +52,7 @@ export function useTokenBalances(
 
   const validatedTokenAddresses = useMemo(() => validatedTokens.map(vt => vt.address), [validatedTokens])
 
-  const balances = useContractData(ethScan, 'tokensBalance', [
+  const balances = useSingleCallResult(ethScan, 'tokensBalance', [
     validatedAddress ? validatedAddress : undefined,
     validatedTokens.length > 0 ? validatedTokenAddresses : undefined
   ])?.[0]
