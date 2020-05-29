@@ -53,11 +53,9 @@ function useCallsData(calls: (Call | undefined)[]): CallResult[] {
     [calls]
   )
 
-  const debouncedSerializedCallKeys = useDebounce(serializedCallKeys, 20)
-
   // update listeners when there is an actual change that persists for at least 100ms
   useEffect(() => {
-    const callKeys: string[] = JSON.parse(debouncedSerializedCallKeys)
+    const callKeys: string[] = JSON.parse(serializedCallKeys)
     if (!chainId || callKeys.length === 0) return
     const calls = callKeys.map(key => parseCallKey(key))
     dispatch(
@@ -75,7 +73,7 @@ function useCallsData(calls: (Call | undefined)[]): CallResult[] {
         })
       )
     }
-  }, [chainId, dispatch, debouncedSerializedCallKeys])
+  }, [chainId, dispatch, serializedCallKeys])
 
   return useMemo(
     () =>
