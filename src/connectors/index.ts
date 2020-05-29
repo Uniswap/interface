@@ -8,6 +8,12 @@ import { FortmaticConnector } from './Fortmatic'
 
 const POLLING_INTERVAL = 10000
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
+const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
+const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
+
+if (typeof NETWORK_URL === 'undefined') {
+  throw new Error(`REACT_APP_NETWORK_URL must be a defined environment variable`)
+}
 
 export const network = new NetworkConnector({
   urls: { [Number(process.env.REACT_APP_CHAIN_ID)]: NETWORK_URL },
@@ -28,13 +34,13 @@ export const walletconnect = new WalletConnectConnector({
 
 // mainnet only
 export const fortmatic = new FortmaticConnector({
-  apiKey: process.env.REACT_APP_FORTMATIC_KEY,
+  apiKey: FORMATIC_KEY ?? '',
   chainId: 1
 })
 
 // mainnet only
 export const portis = new PortisConnector({
-  dAppId: process.env.REACT_APP_PORTIS_ID,
+  dAppId: PORTIS_ID ?? '',
   networks: [1]
 })
 
