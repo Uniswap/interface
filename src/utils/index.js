@@ -8,7 +8,7 @@ import { FACTORY_ADDRESSES, SUPPORTED_THEMES } from '../constants'
 import { formatFixed } from '@uniswap/sdk'
 
 import UncheckedJsonRpcSigner from './signer'
-import { DAI_ADDRESS, DMG_ADDRESS } from '../contexts/Tokens'
+import { ETH_ADDRESS, DMG_ADDRESS } from '../contexts/Tokens'
 
 export const MIN_DECIMALS = 6
 export const MIN_DECIMALS_EXCHANGE_RATE = 8
@@ -61,7 +61,7 @@ export function getAllQueryParams() {
   let params = {}
   params.theme = checkSupportedTheme(getQueryParam(window.location, 'theme'))
 
-  params.inputCurrency = DAI_ADDRESS
+  params.inputCurrency = ETH_ADDRESS
   params.outputCurrency = DMG_ADDRESS
   params.slippage = !isNaN(getQueryParam(window.location, 'slippage')) ? getQueryParam(window.location, 'slippage') : ''
   params.exactField = getQueryParam(window.location, 'exactField')
