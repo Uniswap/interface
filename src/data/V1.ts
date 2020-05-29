@@ -9,7 +9,7 @@ function useV1PairAddress(tokenAddress?: string): string | undefined {
   const contract = useV1FactoryContract()
 
   const inputs = useMemo(() => [tokenAddress], [tokenAddress])
-  return useSingleCallResult(contract, 'getExchange', inputs)?.[0]
+  return useSingleCallResult(contract, 'getExchange', inputs)?.result?.[0]
 }
 
 class MockV1Pair extends Pair {
