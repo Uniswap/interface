@@ -2,6 +2,7 @@ import React, { useEffect, useReducer, useState } from 'react'
 import ReactGA from 'react-ga'
 import { createBrowserHistory } from 'history'
 import { ethers } from 'ethers'
+import { BigNumber, bigNumberify, parseEther, parseUnits } from 'ethers/utils'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 
@@ -60,7 +61,7 @@ const ALLOWED_SLIPPAGE_DEFAULT = 50
 const TOKEN_ALLOWED_SLIPPAGE_DEFAULT = 50
 
 // % above the calculated gas cost that we actually send, denominated in bips
-const GAS_MARGIN = ethers.utils.bigNumberify(1000)
+const GAS_MARGIN = bigNumberify(1000)
 
 const DownArrowBackground = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -100,13 +101,13 @@ const Flex = styled.div`
   button {
     max-width: 20rem;
   }
-  
+
   svg {
     color: white !important;
   }
 `
 
-const ethBalanceBuffer = new ethers.utils.BigNumber('50000000000000000')
+const ethBalanceBuffer = new BigNumber('50000000000000000')
 
 function getEffectiveInputCurrency(inputCurrency) {
   if (inputCurrency === 'ETH') {
@@ -144,8 +145,8 @@ function calculateTokenValueFromOtherValue(valueAmount, books, isValueAmountOutp
     let outputAmount = ethers.constants.Zero
     for (let i = 0; i < books.sellDepths.length; i++) {
       const tuple = books.sellDepths[i]
-      const secondaryAmount = new ethers.utils.BigNumber(tuple.total.value.toLocaleString('fullwide', { useGrouping: false }))
-      const primaryAmount = new ethers.utils.BigNumber(tuple.quantity.value.toLocaleString('fullwide', { useGrouping: false }))
+      const secondaryAmount = new BigNumber(tuple.total.value.toLocaleString('fullwide', { useGrouping: false }))
+      const primaryAmount = new BigNumber(tuple.quantity.value.toLocaleString('fullwide', { useGrouping: false }))
 
       const tupleInputAmount = isValueAmountOutputValue ? primaryAmount : secondaryAmount
       const tupleOutputAmount = isValueAmountOutputValue ? secondaryAmount : primaryAmount
@@ -157,9 +158,9 @@ function calculateTokenValueFromOtherValue(valueAmount, books, isValueAmountOutp
         const innerFillAmount = valueAmount.sub(fillAmount)
         fillAmount = fillAmount.add(innerFillAmount)
 
-        const outputFillAmount = isValueAmountOutputValue ?
-          innerFillAmount.mul(tupleOutputAmount).div(tupleInputAmount) :
-          innerFillAmount.mul(tupleOutputAmount).div(tupleInputAmount)
+        const outputFillAmount = isValueAmountOutputValue
+          ? innerFillAmount.mul(tupleOutputAmount).div(tupleInputAmount)
+          : innerFillAmount.mul(tupleOutputAmount).div(tupleInputAmount)
         outputAmount = outputAmount.add(outputFillAmount)
         return outputAmount
       }
@@ -171,7 +172,7 @@ function calculateTokenValueFromOtherValue(valueAmount, books, isValueAmountOutp
 
 function calculateSlippageBounds(value, token = false, tokenAllowedSlippage, allowedSlippage) {
   if (value) {
-    const offset = value.mul(token ? tokenAllowedSlippage : allowedSlippage).div(ethers.utils.bigNumberify(10000))
+    const offset = value.mul(token ? tokenAllowedSlippage : allowedSlippage).div(bigNumberify(10000))
     const minimum = value.sub(offset)
     const maximum = value.add(offset)
     return {
@@ -196,8 +197,8 @@ function getInitialSwapState(state) {
           : ''
         : state.outputCurrencyURL
       : state.initialCurrency
-        ? state.initialCurrency
-        : ''
+      ? state.initialCurrency
+      : ''
   }
 }
 
@@ -264,24 +265,23 @@ function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals,
       outputValue &&
       (outputDecimals || outputDecimals === 0)
     ) {
-      const factor = ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(18))
+      const factor = bigNumberify(10).pow(bigNumberify(18))
 
       if (invert) {
         return inputValue
           .mul(factor)
-          .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
-          .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
+          .mul(bigNumberify(10).pow(bigNumberify(outputDecimals)))
+          .div(bigNumberify(10).pow(bigNumberify(inputDecimals)))
           .div(outputValue)
       } else {
         return outputValue
           .mul(factor)
-          .mul(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(inputDecimals)))
-          .div(ethers.utils.bigNumberify(10).pow(ethers.utils.bigNumberify(outputDecimals)))
+          .mul(bigNumberify(10).pow(bigNumberify(inputDecimals)))
+          .div(bigNumberify(10).pow(bigNumberify(outputDecimals)))
           .div(inputValue)
       }
     }
-  } catch {
-  }
+  } catch {}
 }
 
 export default function ExchangePage({ initialCurrency, sending = false, params }) {
@@ -319,7 +319,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     return ''
   }
 
-  const [brokenTokenWarning, setBrokenTokenWarning] = useState()
+  const [brokenTokenWarning, setBrokenTokenWarning] = useState(false)
 
   const [dolomiteOrderId, setDolomiteOrderId] = useState('')
   const [isAwaitingSignature, setIsAwaitingSignature] = useState(false)
@@ -340,8 +340,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const [rawSlippage, setRawSlippage] = useState(() => initialSlippage())
   const [rawTokenSlippage, setRawTokenSlippage] = useState(() => initialSlippage(true))
 
-  const allowedSlippageBig = ethers.utils.bigNumberify(rawSlippage)
-  const tokenAllowedSlippageBig = ethers.utils.bigNumberify(rawTokenSlippage)
+  const allowedSlippageBig = bigNumberify(rawSlippage)
+  const tokenAllowedSlippageBig = bigNumberify(rawTokenSlippage)
 
   // analytics
   useEffect(() => {
@@ -389,10 +389,13 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const { symbol: outputSymbol, decimals: outputDecimals } = useTokenDetails(outputCurrency)
 
   const effectiveInputCurrency = getEffectiveInputCurrency(inputCurrency)
-  const market = !!MARKETS['1'][`${inputCurrency}-${outputCurrency}`] ?
-    MARKETS['1'][`${effectiveInputCurrency}-${outputCurrency}`] : MARKETS['1'][`${outputCurrency}-${effectiveInputCurrency}`]
-  const inputFormatDecimals = market[PRIMARY] === effectiveInputCurrency ? market[PRIMARY_DECIMALS] : market[SECONDARY_DECIMALS]
-  const outputFormatDecimals = market[PRIMARY] === outputCurrency ? market[PRIMARY_DECIMALS] : market[SECONDARY_DECIMALS]
+  const market = !!MARKETS['1'][`${inputCurrency}-${outputCurrency}`]
+    ? MARKETS['1'][`${effectiveInputCurrency}-${outputCurrency}`]
+    : MARKETS['1'][`${outputCurrency}-${effectiveInputCurrency}`]
+  const inputFormatDecimals =
+    market[PRIMARY] === effectiveInputCurrency ? market[PRIMARY_DECIMALS] : market[SECONDARY_DECIMALS]
+  const outputFormatDecimals =
+    market[PRIMARY] === outputCurrency ? market[PRIMARY_DECIMALS] : market[SECONDARY_DECIMALS]
 
   // get input allowance
   const inputAllowance = useAddressAllowance(account, effectiveInputCurrency, DELEGATE_ADDRESS)
@@ -413,8 +416,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const outputBalanceFormatted = !!(outputBalance && Number.isInteger(outputDecimals))
     ? amountFormatter(outputBalance, outputDecimals, Math.min(MIN_DECIMALS, outputFormatDecimals))
     : ''
-  const isInputIndependent = independentField === INPUT ?
-    effectiveInputCurrency === market[PRIMARY] : outputCurrency === market[PRIMARY]
+  const isInputIndependent =
+    independentField === INPUT ? effectiveInputCurrency === market[PRIMARY] : outputCurrency === market[PRIMARY]
 
   // compute useful transforms of the data above
   const independentDecimals = independentField === INPUT ? inputDecimals : outputDecimals
@@ -426,7 +429,12 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   // declare/get parsed and formatted versions of input/output values
   const [independentValueParsed, setIndependentValueParsed] = useState()
   const dependentValueFormatted = !!(dependentValue && (dependentDecimals || dependentDecimals === 0))
-    ? amountFormatter(dependentValue, dependentDecimals, Math.min(MIN_DECIMALS, isInputIndependent ? inputFormatDecimals : outputFormatDecimals), false)
+    ? amountFormatter(
+        dependentValue,
+        dependentDecimals,
+        Math.min(MIN_DECIMALS, isInputIndependent ? inputFormatDecimals : outputFormatDecimals),
+        false
+      )
     : ''
   const inputValueParsed = independentField === INPUT ? independentValueParsed : dependentValue
   const inputValueFormatted = independentField === INPUT ? independentValue : dependentValueFormatted
@@ -438,7 +446,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   useEffect(() => {
     if (independentValue && (independentDecimals || independentDecimals === 0)) {
       try {
-        const parsedValue = ethers.utils.parseUnits(independentValue, independentDecimals)
+        const parsedValue = parseUnits(independentValue, independentDecimals)
         let isPrimary
         if (independentField === INPUT) {
           isPrimary = market[PRIMARY] === effectiveInputCurrency
@@ -448,9 +456,13 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
         let minValue
         if (isPrimary) {
-          minValue = new ethers.utils.BigNumber(10).pow(INITIAL_TOKENS_CONTEXT['1'][market.primary][DECIMALS] - market[PRIMARY_DECIMALS])
+          minValue = new BigNumber(10).pow(
+            INITIAL_TOKENS_CONTEXT['1'][market.primary][DECIMALS] - market[PRIMARY_DECIMALS]
+          )
         } else {
-          minValue = new ethers.utils.BigNumber(10).pow(INITIAL_TOKENS_CONTEXT['1'][market.secondary][DECIMALS] - market[SECONDARY_DECIMALS])
+          minValue = new BigNumber(10).pow(
+            INITIAL_TOKENS_CONTEXT['1'][market.secondary][DECIMALS] - market[SECONDARY_DECIMALS]
+          )
         }
 
         if (parsedValue.lte(ethers.constants.Zero) || parsedValue.gte(ethers.constants.MaxUint256)) {
@@ -470,7 +482,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         setIndependentError()
       }
     }
-  }, [independentValue, independentDecimals, t])
+  }, [independentValue, independentDecimals, t, independentField, market, effectiveInputCurrency, outputCurrency])
 
   // // calculate slippage from target rate
   const { minimum: dependentValueMinimum, maximum: dependentValueMaximum } = calculateSlippageBounds(
@@ -514,7 +526,16 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         setShowWrap(false)
       }
     }
-  }, [independentField, independentValueParsed, dependentValueMaximum, inputBalance, effectiveInputCurrency, inputAllowance, t])
+  }, [
+    independentField,
+    independentValueParsed,
+    dependentValueMaximum,
+    inputBalance,
+    effectiveInputCurrency,
+    inputAllowance,
+    t,
+    inputCurrency
+  ])
 
   // calculate dependent value
   useEffect(() => {
@@ -552,13 +573,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: '' })
       }
     }
-  }, [
-    independentValueParsed,
-    swapType,
-    orderBooks,
-    independentField,
-    t
-  ])
+  }, [independentValueParsed, swapType, orderBooks, independentField, t])
 
   useEffect(() => {
     const history = createBrowserHistory()
@@ -570,8 +585,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const exchangeRateInverted = getExchangeRate(inputValueParsed, inputDecimals, outputValueParsed, outputDecimals, true)
 
   const isValid = sending
-    ? exchangeRate && inputError === null && independentError === null && recipientError === null : exchangeRate
-    && inputError === null && independentError === null
+    ? exchangeRate && inputError === null && independentError === null && recipientError === null
+    : exchangeRate && inputError === null && independentError === null
 
   const estimatedText = `(${t('estimated')})`
 
@@ -584,33 +599,41 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
     const secondaryMarketDecimals = market[SECONDARY_DECIMALS]
     const primaryMarketDecimals = market[PRIMARY_DECIMALS]
+    const diffDecimals = secondaryMarketDecimals - primaryMarketDecimals
 
-    const primaryPriceDecimalsFactor = new ethers.utils.BigNumber(10).pow(primaryMarketDecimals)
-    const secondaryPriceDecimalsFactor = new ethers.utils.BigNumber(10).pow(secondaryMarketDecimals - primaryMarketDecimals)
+    // const primaryPriceDecimalsFactor = new BigNumber(10).pow(primaryMarketDecimals)
+    // const secondaryPriceDecimalsFactor = new BigNumber(10).pow(secondaryMarketDecimals - primaryMarketDecimals)
 
-    const dependentPriceDecimals = dependentCurrency === DMG_ADDRESS ? primaryMarketDecimals : secondaryMarketDecimals - primaryMarketDecimals
-    const dependentPriceDecimalsFactor = new ethers.utils.BigNumber(10).pow(dependentDecimals - dependentPriceDecimals)
+    const dependentPriceDecimals = dependentCurrency === DMG_ADDRESS ? primaryMarketDecimals : diffDecimals
+    // const dependentPriceDecimalsFactor = new BigNumber(10).pow(dependentDecimals - dependentPriceDecimals)
 
-    const independentPriceDecimals = independentCurrency === DMG_ADDRESS ? primaryMarketDecimals : secondaryMarketDecimals - primaryMarketDecimals
+    const independentPriceDecimals = independentCurrency === DMG_ADDRESS ? primaryMarketDecimals : diffDecimals
 
-    const dependentDecimalsFactor = new ethers.utils.BigNumber(10).pow(dependentDecimals)
-    const dependentTruncationDecimalsFactor = new ethers.utils.BigNumber(10).pow(dependentDecimals - dependentPriceDecimals)
+    const dependentDecimalsFactor = new BigNumber(10).pow(dependentDecimals)
+    const dependentTruncationDecimalsFactor = new BigNumber(10).pow(dependentDecimals - dependentPriceDecimals)
 
-    const independentDecimalsFactor = new ethers.utils.BigNumber(10).pow(independentDecimals)
-    const independentTruncationDecimalsFactor = new ethers.utils.BigNumber(10).pow(independentDecimals - independentPriceDecimals)
+    // const independentDecimalsFactor = new BigNumber(10).pow(independentDecimals)
+    const independentTruncationDecimalsFactor = new BigNumber(10).pow(independentDecimals - independentPriceDecimals)
 
     let dependentValueStandardized
     let independentValueParsedStandardized
     let loopringOrderData
     if (independentField === INPUT) {
+      dependentValueStandardized = dependentValue
+        .div(dependentTruncationDecimalsFactor)
+        .mul(dependentTruncationDecimalsFactor)
 
-      dependentValueStandardized = dependentValue.div(dependentTruncationDecimalsFactor).mul(dependentTruncationDecimalsFactor)
+      const priceWithPremiumStandardized = independentValueParsed
+        .mul(dependentDecimalsFactor)
+        .div(dependentValueStandardized) // get price
+        .mul(11)
+        .div(10) // premium
+        .div(independentTruncationDecimalsFactor)
+        .mul(independentTruncationDecimalsFactor) // standardized
 
-      const priceWithPremiumStandardized = independentValueParsed.mul(dependentDecimalsFactor).div(dependentValueStandardized) // get price
-        .mul(11).div(10) // premium
-        .div(independentTruncationDecimalsFactor).mul(independentTruncationDecimalsFactor) // standardized
-
-      independentValueParsedStandardized = priceWithPremiumStandardized.mul(dependentValueStandardized).div(dependentDecimalsFactor)
+      independentValueParsedStandardized = priceWithPremiumStandardized
+        .mul(dependentValueStandardized)
+        .div(dependentDecimalsFactor)
 
       loopringOrderData = {
         tokenB: outputCurrency,
@@ -621,15 +644,23 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     } else if (independentField === OUTPUT) {
       // tokenS == SECONDARY == DEPENDENT == INPUT
       // tokenB == PRIMARY == INDEPENDENT == OUTPUT
-      const independentDecimalsFactor = new ethers.utils.BigNumber(10).pow(independentDecimals)
+      const independentDecimalsFactor = new BigNumber(10).pow(independentDecimals)
 
-      independentValueParsedStandardized = independentValueParsed.div(independentTruncationDecimalsFactor).mul(independentTruncationDecimalsFactor)
+      independentValueParsedStandardized = independentValueParsed
+        .div(independentTruncationDecimalsFactor)
+        .mul(independentTruncationDecimalsFactor)
 
-      const priceWithPremiumStandardized = dependentValue.mul(independentDecimalsFactor).div(independentValueParsedStandardized) // get price
-        .mul(11).div(10) // premium
-        .div(dependentTruncationDecimalsFactor).mul(dependentTruncationDecimalsFactor) // standardized
+      const priceWithPremiumStandardized = dependentValue
+        .mul(independentDecimalsFactor)
+        .div(independentValueParsedStandardized) // get price
+        .mul(11)
+        .div(10) // premium
+        .div(dependentTruncationDecimalsFactor)
+        .mul(dependentTruncationDecimalsFactor) // standardized
 
-      dependentValueStandardized = priceWithPremiumStandardized.mul(independentValueParsedStandardized).div(independentDecimalsFactor)
+      dependentValueStandardized = priceWithPremiumStandardized
+        .mul(independentValueParsedStandardized)
+        .div(independentDecimalsFactor)
 
       loopringOrderData = {
         tokenS: effectiveInputCurrency,
@@ -641,14 +672,12 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
     let wrapPromise = Promise.resolve()
     if (showWrap && inputCurrency === 'ETH') {
-      let amountToWrap = new ethers.utils.BigNumber(loopringOrderData.amountS)
+      let amountToWrap = new BigNumber(loopringOrderData.amountS)
       const usableBalance = inputBalance.sub(ethBalanceBuffer) // 0.05
       amountToWrap = amountToWrap.gt(usableBalance) ? usableBalance : amountToWrap
-      const estimatedGas = await tokenContract.estimate
-        .deposit({ value: amountToWrap })
-        .catch(error => {
-          console.error('Error wrapping WETH ', error)
-        })
+      const estimatedGas = await tokenContract.estimate.deposit({ value: amountToWrap }).catch(error => {
+        console.error('Error wrapping WETH ', error)
+      })
 
       setIsAwaitingSignature(true)
 
@@ -682,22 +711,19 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
     const orderSide = loopringOrderData.tokenB === DMG_ADDRESS ? 'BUY' : 'SELL'
 
-    loopringOrder = constructLoopringOrder(
-      library,
-      {
-        primaryToken: DMG_ADDRESS,
-        owner: account,
-        tokenB: loopringOrderData.tokenB,
-        tokenS: loopringOrderData.tokenS,
-        amountB: loopringOrderData.amountB,
-        amountS: loopringOrderData.amountS,
-        feeAmount: Zero,
-        validUntil: null,
-        transferDataS: null,
-        broker: null,
-        tokenRecipient: account
-      }
-    )
+    loopringOrder = constructLoopringOrder(library, {
+      primaryToken: DMG_ADDRESS,
+      owner: account,
+      tokenB: loopringOrderData.tokenB,
+      tokenS: loopringOrderData.tokenS,
+      amountB: loopringOrderData.amountB,
+      amountS: loopringOrderData.amountS,
+      feeAmount: Zero,
+      validUntil: null,
+      transferDataS: null,
+      broker: null,
+      tokenRecipient: account
+    })
     const signableData = getSignableData(loopringOrder)
     const signer = getProviderOrSigner(library, account)
 
@@ -706,14 +732,17 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       signaturePromise = signer.signTypedMessage(signableData)
     } else {
       signaturePromise = new Promise((respond, reject) => {
-        library.provider.sendAsync({
-          method: 'eth_signTypedData',
-          params: [account, JSON.stringify(signableData)],
-          from: account
-        }, function(err, result) {
-          if (err || result.error) reject(err || result.error.message)
-          else respond(result.result)
-        })
+        library.provider.sendAsync(
+          {
+            method: 'eth_signTypedData',
+            params: [account, JSON.stringify(signableData)],
+            from: account
+          },
+          function(err, result) {
+            if (err || result.error) reject(err || result.error.message)
+            else respond(result.result)
+          }
+        )
       })
     }
 
@@ -732,11 +761,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           constantNetworkFeePremium: 0,
           perMatchNetworkFee: 0
         }
-        const dolomiteOrder = toDolomiteOrder(
-          loopringOrder,
-          signature,
-          data
-        )
+        const dolomiteOrder = toDolomiteOrder(loopringOrder, signature, data)
         return exchange.orders.createOrder(dolomiteOrder).then(response => ({ response, dolomiteOrder }))
       })
       .then(({ response, dolomiteOrder }) => {
@@ -749,22 +774,23 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           const signature = dolomiteOrder.ecdsa_multi_hash_signature
           const timestamp = new Date().getTime()
           const key = new Buffer(process.env.REACT_APP_ADMIN_API_KEY, 'utf-8')
-          const hash = crypto.createHmac('sha256', key)
+          const hash = crypto
+            .createHmac('sha256', key)
             .update(timestamp.toString(10))
             .digest('base64')
 
           const body = {
-            'dolomite_order_uuid': dolomiteOrder.dolomite_order_uuid,
-            'signature': {
-              'v': Number.parseInt(signature.slice(6, 8), 16),
-              'r': `0x${signature.slice(8, 72)}`,
-              's': `0x${signature.slice(72, 136)}`
+            dolomite_order_uuid: dolomiteOrder.dolomite_order_uuid,
+            signature: {
+              v: Number.parseInt(signature.slice(6, 8), 16),
+              r: `0x${signature.slice(8, 72)}`,
+              s: `0x${signature.slice(72, 136)}`
             },
-            'signature_algorithm': Number.parseInt(signature.slice(2, 4), 16),
-            'buyer_address': dolomiteOrder.owner_address,
-            'order_hash': dolomiteOrder.order_hash,
-            'referrer_address': params.referrer,
-            'dmg_bought': new ethers.utils.BigNumber(dolomiteOrder.primary_padded_amount).toString()
+            signature_algorithm: Number.parseInt(signature.slice(2, 4), 16),
+            buyer_address: dolomiteOrder.owner_address,
+            order_hash: dolomiteOrder.order_hash,
+            referrer_address: params.referrer,
+            dmg_bought: new BigNumber(dolomiteOrder.primary_padded_amount).toString()
           }
           const options = {
             method: 'POST',
@@ -791,7 +817,9 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const toggleWalletModal = useWalletModalToggle()
 
   const newInputDetected =
-    effectiveInputCurrency !== 'ETH' && effectiveInputCurrency && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(effectiveInputCurrency)
+    effectiveInputCurrency !== 'ETH' &&
+    effectiveInputCurrency &&
+    !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(effectiveInputCurrency)
 
   const newOutputDetected =
     outputCurrency !== 'ETH' && outputCurrency && !INITIAL_TOKENS_CONTEXT[chainId].hasOwnProperty(outputCurrency)
@@ -801,7 +829,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
   function getButtonText() {
     if (!!dolomiteOrderId) {
-      return (<CircularProgress/>)
+      return <CircularProgress />
     } else if (pendingWrapping) {
       return t('wrapping')
     } else if (isAwaitingSignature) {
@@ -866,7 +894,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         extraText={inputBalanceFormatted && formatBalance(inputBalanceFormatted)}
         extraTextClickHander={() => {
           if (inputBalance && inputDecimals) {
-            const valueToSet = effectiveInputCurrency === 'ETH' ? inputBalance.sub(ethers.utils.parseEther('.1')) : inputBalance
+            const valueToSet = effectiveInputCurrency === 'ETH' ? inputBalance.sub(parseEther('.1')) : inputBalance
             if (valueToSet.gt(ethers.constants.Zero)) {
               dispatchSwapState({
                 type: 'UPDATE_INDEPENDENT',
@@ -942,10 +970,10 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         <>
           <OversizedPanel>
             <DownArrowBackground>
-              <DownArrow active={isValid} alt="arrow"/>
+              <DownArrow active={isValid} alt="arrow" />
             </DownArrowBackground>
           </OversizedPanel>
-          <AddressInputPanel onChange={setRecipient} onError={setRecipientError} initialInput={recipient}/>
+          <AddressInputPanel onChange={setRecipient} onError={setRecipientError} initialInput={recipient} />
         </>
       ) : (
         ''
@@ -960,13 +988,23 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           {inverted ? (
             <span>
               {exchangeRate
-                ? `1 ${inputSymbol} = ${amountFormatter(exchangeRate, 18, MIN_DECIMALS_EXCHANGE_RATE, false)} ${outputSymbol}`
+                ? `1 ${inputSymbol} = ${amountFormatter(
+                    exchangeRate,
+                    18,
+                    MIN_DECIMALS_EXCHANGE_RATE,
+                    false
+                  )} ${outputSymbol}`
                 : ' - '}
             </span>
           ) : (
             <span>
               {exchangeRate
-                ? `1 ${outputSymbol} = ${amountFormatter(exchangeRateInverted, 18, MIN_DECIMALS_EXCHANGE_RATE, false)} ${inputSymbol}`
+                ? `1 ${outputSymbol} = ${amountFormatter(
+                    exchangeRateInverted,
+                    18,
+                    MIN_DECIMALS_EXCHANGE_RATE,
+                    false
+                  )} ${inputSymbol}`
                 : ' - '}
             </span>
           )}
@@ -1004,7 +1042,15 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       <Flex>
         <Button
           disabled={
-            brokenTokenWarning ? true : !account && !error ? false : !isValid || customSlippageError === 'invalid' || pendingWrapping || isAwaitingSignature || !!dolomiteOrderId
+            brokenTokenWarning
+              ? true
+              : !account && !error
+              ? false
+              : !isValid ||
+                customSlippageError === 'invalid' ||
+                pendingWrapping ||
+                isAwaitingSignature ||
+                !!dolomiteOrderId
           }
           onClick={account && !error ? onSwap : toggleWalletModal}
           warning={customSlippageError === 'warning'}

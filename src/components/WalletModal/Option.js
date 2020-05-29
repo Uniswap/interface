@@ -11,7 +11,7 @@ const InfoCard = styled.button`
   color: #000000 !important;
   width: 100% !important;
   &:focus {
-    box-shadow: 1px 1px 8px -4px rgba(0,0,0,.5), 1px 1px 4px -4px rgba(0,0,0,.5);
+    box-shadow: 1px 1px 8px -4px rgba(0, 0, 0, 0.5), 1px 1px 4px -4px rgba(0, 0, 0, 0.5);
   }
   border-color: ${({ theme, active }) => (active ? 'transparent' : theme.placeholderGray)};
 `
@@ -21,9 +21,9 @@ const OptionCard = styled(InfoCard)`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-top: 2rem;/
-  padding: 1rem;#
-  background-color: #e0e0e0;
+  margin-top: 2rem;
+  /padding: 1rem;
+  #background-color: #e0e0e0;
 `
 
 const OptionCardLeft = styled.div`
@@ -36,7 +36,7 @@ const OptionCardClickable = styled(OptionCard)`
   margin-top: 0;
   &:hover {
     cursor: ${({ clickable }) => (clickable ? 'pointer' : '')};
-    border: 1px solid #E0E0E0;
+    border: 1px solid #e0e0e0;
   }
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
 `

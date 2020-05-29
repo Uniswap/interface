@@ -176,11 +176,11 @@ export function useAllTransactions() {
 }
 
 export function usePendingApproval(tokenAddress) {
-  return usePendingTransaction(tokenAddress, "approval")
+  return usePendingTransaction(tokenAddress, 'approval')
 }
 
 export function usePendingWrapping(tokenAddress) {
-  return usePendingTransaction(tokenAddress, "wrapping")
+  return usePendingTransaction(tokenAddress, 'wrapping')
 }
 
 function usePendingTransaction(tokenAddress, customDataKey) {

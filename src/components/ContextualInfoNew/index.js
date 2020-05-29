@@ -6,7 +6,8 @@ import { ReactComponent as Dropup } from '../../assets/images/dropup-blue.svg'
 import { ReactComponent as Dropdown } from '../../assets/images/dropdown-blue.svg'
 
 const SummaryWrapper = styled.div`
-  color: ${({ error, brokenTokenWarning, theme }) => (error ? theme.salmonRed : brokenTokenWarning ? theme.chaliceGray : theme.chaliceGray)};
+  color: ${({ error, brokenTokenWarning, theme }) =>
+    error ? theme.salmonRed : brokenTokenWarning ? theme.chaliceGray : theme.chaliceGray};
   font-size: 0.75rem;
   text-align: center;
   margin-top: 0rem;
@@ -110,7 +111,7 @@ export default function ContextualInfo({
           // {/*  }}*/}
           // {/*>*/}
         }}
-        >
+      >
         <>
           <ErrorSpan isError={isError} slippageWarning={slippageWarning} highSlippageWarning={highSlippageWarning}>
             {(slippageWarning || highSlippageWarning) && (

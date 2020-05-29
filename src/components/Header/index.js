@@ -1,35 +1,33 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import Button from "@material-ui/core/Button";
+import Button from '@material-ui/core/Button'
 import { Link } from '../../theme'
 import Web3Status from '../Web3Status'
 import { darken } from 'polished'
-import './header.css';
-import DMMLogo from '../../assets/images/dmm-logo.svg';
-import FiatAdapter from 'fiat-adapter';
-
+import './header.css'
+import DMMLogo from '../../assets/images/dmm-logo.svg'
+import FiatAdapter from 'fiat-adapter'
 
 class Header extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
-      fiatAdapterOpen: false,
-    };
+      fiatAdapterOpen: false
+    }
   }
 
   render() {
-
     return (
       <div className={'navbar'}>
         <div className={'content'}>
           <div className={'logoWrapper'}>
             <div className={'logo'}>
-              <img src={DMMLogo} alt={"DMM Logo"}/>
+              <img src={DMMLogo} alt={'DMM Logo'} />
             </div>
             <div className={'logoText'}>
-              DMM <span className={'swapText'}/>
+              DMM <span className={'swapText'} />
             </div>
           </div>
           <div className={'buttonsWrapper'}>
@@ -58,7 +56,7 @@ class Header extends React.Component {
   }
 }
 
-export default Header;
+export default Header
 
 /*export default function Header() {
   return (

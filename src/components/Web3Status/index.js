@@ -1,8 +1,7 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
-import { darken, transparentize } from 'polished'
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { Activity } from 'react-feather'
 
 import { shortenAddress } from '../../utils'
@@ -12,7 +11,7 @@ import { useAllTransactions } from '../../contexts/Transactions'
 import { useWalletModalToggle } from '../../contexts/Application'
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle.svg'
-import { injected, walletconnect, walletlink, fortmatic, portis, torus } from '../../connectors'
+import { fortmatic, injected, portis, torus, walletconnect, walletlink } from '../../connectors'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
@@ -20,7 +19,7 @@ import PortisIcon from '../../assets/images/portisIcon.png'
 import TorusIcon from '../../assets/images/torus.png'
 import { NetworkContextName } from '../../constants'
 import Identicon from '../Identicon'
-import Button from "@material-ui/core/Button";
+import Button from '@material-ui/core/Button'
 
 const Web3StatusGeneric = styled.button`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -32,7 +31,7 @@ const Web3StatusGeneric = styled.button`
   box-sizing: border-box;
   cursor: pointer;
   user-select: none;
-  box-shadow: 1px 1px 8px -4px rgba(0,0,0,.5), 1px 1px 4px -4px rgba(0,0,0,.5);
+  box-shadow: 1px 1px 8px -4px rgba(0, 0, 0, 0.5), 1px 1px 4px -4px rgba(0, 0, 0, 0.5);
   margin-top: 10px;
   height: 40px;
   border: none !important;
@@ -40,50 +39,50 @@ const Web3StatusGeneric = styled.button`
     outline: none;
   }
 `
-const Web3StatusError = styled(Web3StatusGeneric)`
-  background-color: ${({ theme }) => theme.salmonRed};
-  color: #FFFFFF;
-  font-weight: 500;
-  :hover,
-  :focus {
-    background-color: ${({ theme }) => darken(0.1, theme.salmonRed)};
-  }
-`
+// const Web3StatusError = styled(Web3StatusGeneric)`
+//   background-color: ${({ theme }) => theme.salmonRed};
+//   color: #ffffff;
+//   font-weight: 500;
+//   :hover,
+//   :focus {
+//     background-color: ${({ theme }) => darken(0.1, theme.salmonRed)};
+//   }
+// `
 
-const Web3StatusConnect = styled(Web3StatusGeneric)`
-  background-color: transparent;
-  color: #000000;
-  font-weight: 500;
+// const Web3StatusConnect = styled(Web3StatusGeneric)`
+//   background-color: transparent;
+//   color: #000000;
+//   font-weight: 500;
+//
+//   :hover,
+//   :focus {
+//     color: ${({ theme }) => darken(0.1, theme.royalBlue)};
+//   }
+//
+//   ${({ faded }) =>
+//   faded &&
+//   css`
+//       background-color: transparent;
+//       color: ${({ theme }) => theme.royalBlue};
+//
+//       :hover,
+//       :focus {
+//         color: #f0f0f0;
+//       }
+//     `}
+// `
 
-  :hover,
-  :focus {
-    color: ${({ theme }) => darken(0.1, theme.royalBlue)};
-  }
-
-  ${({ faded }) =>
-    faded &&
-    css`
-      background-color: transparent;
-      color: ${({ theme }) => theme.royalBlue};
-
-      :hover,
-      :focus {
-        color: #F0F0F0;
-      }
-    `}
-`
-
-const Web3StatusConnected = styled(Web3StatusGeneric)`
-  background-color: #327ccb;
-  color: #FFFFFF;
-  font-weight: 400;
-  :hover {
-    background-color: #5490d0;
-
-    :focus {
-    }
-  }
-`
+// const Web3StatusConnected = styled(Web3StatusGeneric)`
+//   background-color: #327ccb;
+//   color: #ffffff;
+//   font-weight: 400;
+//   :hover {
+//     background-color: #5490d0;
+//
+//     :focus {
+//     }
+//   }
+// `
 
 const Text = styled.p`
   flex: 1 1 auto;

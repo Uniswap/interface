@@ -208,9 +208,7 @@ function NavigationTabs({ location: { pathname }, history }) {
           </StyledNavLink>
         ))}
       </Tabs>*/}
-      <Title>
-        DMG Purchase Portal
-      </Title>
+      <Title>DMG Purchase Portal</Title>
     </>
   )
 }

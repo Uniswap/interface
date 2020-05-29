@@ -24,7 +24,6 @@ const StyledDialogOverlay = styled(WrappedDialogOverlay).attrs({
     ${({ mobile }) =>
       mobile &&
       css`
-      
         align-items: flex-end;
       `}
 
@@ -49,8 +48,8 @@ const FilteredDialogContent = ({ minHeight, maxHeight, isOpen, slideInAnimation,
 const StyledDialogContent = styled(FilteredDialogContent)`
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
-    background-color: #FFFFFF;
-    box-shadow: 1px 1px 8px -4px rgba(0,0,0,.5), 1px 1px 4px -4px rgba(0,0,0,.5);
+    background-color: #ffffff;
+    box-shadow: 1px 1px 8px -4px rgba(0, 0, 0, 0.5), 1px 1px 4px -4px rgba(0, 0, 0, 0.5);
     padding: 0px;
     width: 50vw;
     color: #000000;

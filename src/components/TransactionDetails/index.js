@@ -85,7 +85,7 @@ const Popup = styled(Flex)`
   align-items: center;
   padding: 0.6rem 1rem;
   line-height: 150%;
-  background: #FFFFFF;
+  background: #ffffff;
 
   border-radius: 8px;
 
@@ -107,7 +107,7 @@ const FancyButton = styled.button`
   border-radius: 36px;
   font-size: 12px;
   outline: none;
-  background: #FFFFFF;
+  background: #ffffff;
 
   :hover {
     cursor: inherit;
@@ -375,145 +375,148 @@ export default function TransactionDetails(props) {
   }
 
   const dropDownContent = () => {
-    return (<></>);
-    return (
-      <>
-        {renderTransactionDetails()}
-        <SlippageSelector>
-          <SlippageRow>
-            Limit additional price slippage
-            <QuestionWrapper
-              onClick={() => {
-                setPopup(!showPopup)
-              }}
-              onMouseEnter={() => {
-                setPopup(true)
-              }}
-              onMouseLeave={() => {
-                setPopup(false)
-              }}
-            >
-              <HelpCircleStyled src={question} alt="popup" />
-            </QuestionWrapper>
-            {showPopup ? (
-              <Popup>
-                Lowering this limit decreases your risk of frontrunning. However, this makes it more likely that your
-                transaction will fail due to normal price movements.
-              </Popup>
-            ) : (
-              ''
-            )}
-          </SlippageRow>
-          <SlippageRow wrap>
-            <Option
-              onClick={() => {
-                setFromFixed(1, 0.1)
-              }}
-              active={activeIndex === 1}
-            >
-              0.1%
-            </Option>
-            <OptionLarge
-              onClick={() => {
-                setFromFixed(2, 0.5)
-              }}
-              active={activeIndex === 2}
-            >
-              0.5% <Faded>(suggested)</Faded>
-            </OptionLarge>
-            <Option
-              onClick={() => {
-                setFromFixed(3, 1)
-              }}
-              active={activeIndex === 3}
-            >
-              1%
-            </Option>
-            <OptionCustom
-              active={activeIndex === 4}
-              color={
-                warningType === WARNING_TYPE.emptyInput
-                  ? ''
-                  : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
-                  ? 'red'
-                  : ''
-              }
-              onClick={() => {
-                setFromCustom()
-              }}
-            >
-              <FlexBetween>
-                {!(warningType === WARNING_TYPE.none || warningType === WARNING_TYPE.emptyInput) && (
-                  <span role="img" aria-label="warning">
-                    ⚠️
-                  </span>
-                )}
-                <Input
-                  tabIndex={-1}
-                  ref={inputRef}
-                  active={activeIndex === 4}
-                  placeholder={
-                    activeIndex === 4
-                      ? !!userInput
+    if (true) {
+      return <></>
+    } else {
+      return (
+        <>
+          {renderTransactionDetails()}
+          <SlippageSelector>
+            <SlippageRow>
+              Limit additional price slippage
+              <QuestionWrapper
+                onClick={() => {
+                  setPopup(!showPopup)
+                }}
+                onMouseEnter={() => {
+                  setPopup(true)
+                }}
+                onMouseLeave={() => {
+                  setPopup(false)
+                }}
+              >
+                <HelpCircleStyled src={question} alt="popup" />
+              </QuestionWrapper>
+              {showPopup ? (
+                <Popup>
+                  Lowering this limit decreases your risk of frontrunning. However, this makes it more likely that your
+                  transaction will fail due to normal price movements.
+                </Popup>
+              ) : (
+                ''
+              )}
+            </SlippageRow>
+            <SlippageRow wrap>
+              <Option
+                onClick={() => {
+                  setFromFixed(1, 0.1)
+                }}
+                active={activeIndex === 1}
+              >
+                0.1%
+              </Option>
+              <OptionLarge
+                onClick={() => {
+                  setFromFixed(2, 0.5)
+                }}
+                active={activeIndex === 2}
+              >
+                0.5% <Faded>(suggested)</Faded>
+              </OptionLarge>
+              <Option
+                onClick={() => {
+                  setFromFixed(3, 1)
+                }}
+                active={activeIndex === 3}
+              >
+                1%
+              </Option>
+              <OptionCustom
+                active={activeIndex === 4}
+                color={
+                  warningType === WARNING_TYPE.emptyInput
+                    ? ''
+                    : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
+                    ? 'red'
+                    : ''
+                }
+                onClick={() => {
+                  setFromCustom()
+                }}
+              >
+                <FlexBetween>
+                  {!(warningType === WARNING_TYPE.none || warningType === WARNING_TYPE.emptyInput) && (
+                    <span role="img" aria-label="warning">
+                      ⚠️
+                    </span>
+                  )}
+                  <Input
+                    tabIndex={-1}
+                    ref={inputRef}
+                    active={activeIndex === 4}
+                    placeholder={
+                      activeIndex === 4
+                        ? !!userInput
+                          ? ''
+                          : '0'
+                        : activeIndex !== 4 && userInput !== ''
+                        ? userInput
+                        : 'Custom'
+                    }
+                    value={activeIndex === 4 ? userInput : ''}
+                    onChange={parseInput}
+                    color={
+                      warningType === WARNING_TYPE.emptyInput
                         ? ''
-                        : '0'
-                      : activeIndex !== 4 && userInput !== ''
-                      ? userInput
-                      : 'Custom'
-                  }
-                  value={activeIndex === 4 ? userInput : ''}
-                  onChange={parseInput}
-                  color={
-                    warningType === WARNING_TYPE.emptyInput
-                      ? ''
-                      : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
-                      ? 'red'
-                      : ''
-                  }
-                />
-                <Percent
-                  color={
-                    activeIndex !== 4
-                      ? 'faded'
-                      : warningType === WARNING_TYPE.riskyEntryHigh || warningType === WARNING_TYPE.invalidEntryBound
-                      ? 'red'
-                      : ''
-                  }
-                >
-                  %
-                </Percent>
-              </FlexBetween>
-            </OptionCustom>
-          </SlippageRow>
-          <SlippageRow>
-            <BottomError
-              show={activeIndex === 4}
-              color={
-                warningType === WARNING_TYPE.emptyInput
-                  ? ''
-                  : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
-                  ? 'red'
-                  : ''
-              }
-            >
-              {activeIndex === 4 && warningType.toString() === 'none' && 'Custom slippage value'}
-              {warningType === WARNING_TYPE.emptyInput && 'Enter a slippage percentage'}
-              {warningType === WARNING_TYPE.invalidEntryBound && 'Please select a value no greater than 50%'}
-              {warningType === WARNING_TYPE.riskyEntryHigh && 'Your transaction may be frontrun'}
-              {warningType === WARNING_TYPE.riskyEntryLow && 'Your transaction may fail'}
-            </BottomError>
-          </SlippageRow>
-        </SlippageSelector>
-        <DeadlineSelector>
-          Set swap deadline (minutes from now)
-          <DeadlineRow wrap>
-            <DeadlineInput>
-              <Input placeholder={'Deadline'} value={deadlineInput} onChange={parseDeadlineInput} />
-            </DeadlineInput>
-          </DeadlineRow>
-        </DeadlineSelector>
-      </>
-    )
+                        : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
+                        ? 'red'
+                        : ''
+                    }
+                  />
+                  <Percent
+                    color={
+                      activeIndex !== 4
+                        ? 'faded'
+                        : warningType === WARNING_TYPE.riskyEntryHigh || warningType === WARNING_TYPE.invalidEntryBound
+                        ? 'red'
+                        : ''
+                    }
+                  >
+                    %
+                  </Percent>
+                </FlexBetween>
+              </OptionCustom>
+            </SlippageRow>
+            <SlippageRow>
+              <BottomError
+                show={activeIndex === 4}
+                color={
+                  warningType === WARNING_TYPE.emptyInput
+                    ? ''
+                    : warningType !== WARNING_TYPE.none && warningType !== WARNING_TYPE.riskyEntryLow
+                    ? 'red'
+                    : ''
+                }
+              >
+                {activeIndex === 4 && warningType.toString() === 'none' && 'Custom slippage value'}
+                {warningType === WARNING_TYPE.emptyInput && 'Enter a slippage percentage'}
+                {warningType === WARNING_TYPE.invalidEntryBound && 'Please select a value no greater than 50%'}
+                {warningType === WARNING_TYPE.riskyEntryHigh && 'Your transaction may be frontrun'}
+                {warningType === WARNING_TYPE.riskyEntryLow && 'Your transaction may fail'}
+              </BottomError>
+            </SlippageRow>
+          </SlippageSelector>
+          <DeadlineSelector>
+            Set swap deadline (minutes from now)
+            <DeadlineRow wrap>
+              <DeadlineInput>
+                <Input placeholder={'Deadline'} value={deadlineInput} onChange={parseDeadlineInput} />
+              </DeadlineInput>
+            </DeadlineRow>
+          </DeadlineSelector>
+        </>
+      )
+    }
   }
 
   const setFromCustom = () => {

@@ -10,7 +10,7 @@ const StyledIdenticon = styled.div`
   width: 1rem;
   border-radius: 1.125rem;
   background-color: ${({ theme }) => theme.silverGray};
-  
+
   div {
     border: 1px solid white;
   }

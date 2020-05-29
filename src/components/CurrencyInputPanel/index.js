@@ -44,7 +44,7 @@ const SubCurrencySelect = styled.button`
   outline: none;
   cursor: pointer;
   user-select: none;
-  background-color: #E0E0E0;
+  background-color: #e0e0e0;
   color: #000000;
   border: 1px solid #000000;
 `
@@ -59,7 +59,7 @@ const InputRow = styled.div`
 const Input = styled(BorderlessInput)`
   font-size: 1.5rem;
   color: #000000;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   -moz-appearance: textfield;
 `
 
@@ -78,7 +78,7 @@ const CurrencySelect = styled.button`
   color: ${({ selected, theme }) => (selected ? theme.textColor : theme.royalBlue)};
   height: 2rem;
   border-radius: 2.5rem;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   outline: none;
   cursor: pointer;
   user-select: none;
@@ -91,7 +91,7 @@ const CurrencySelect = styled.button`
   }
 
   :active {
-    background-color: #C6C6C6;
+    background-color: #c6c6c6;
   }
 `
 
@@ -122,7 +122,7 @@ const InputPanel = styled.div`
 const Container = styled.div`
   border-radius: 1.25rem;
 
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   :focus-within {
   }
 `
@@ -218,7 +218,7 @@ const TokenModalRow = styled.div`
   }
 
   :hover {
-    background-color: #E0E0E0;
+    background-color: #e0e0e0;
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -273,30 +273,27 @@ const SpinnerWrapper = styled(Spinner)`
 `
 
 export default function CurrencyInputPanel({
-                                             onValueChange = () => {
-                                             },
-                                             allBalances,
-                                             renderInput,
-                                             onCurrencySelected = () => {
-                                             },
-                                             title,
-                                             description,
-                                             extraText,
-                                             extraTextClickHander = () => {
-                                             },
-                                             errorMessage,
-                                             disableUnlock,
-                                             disableTokenSelect,
-                                             selectedTokenAddress = '',
-                                             showUnlock,
-                                             showWrap,
-                                             disableWrap,
-                                             value,
-                                             urlAddedTokens,
-                                             hideETH = false,
-                                             market,
-                                             tokenAddress
-                                           }) {
+  onValueChange = () => {},
+  allBalances,
+  renderInput,
+  onCurrencySelected = () => {},
+  title,
+  description,
+  extraText,
+  extraTextClickHander = () => {},
+  errorMessage,
+  disableUnlock,
+  disableTokenSelect,
+  selectedTokenAddress = '',
+  showUnlock,
+  showWrap,
+  disableWrap,
+  value,
+  urlAddedTokens,
+  hideETH = false,
+  market,
+  tokenAddress
+}) {
   const { t } = useTranslation()
 
   const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -334,13 +331,9 @@ export default function CurrencyInputPanel({
                 useUserBalance = true
               }
               tokenContract
-                .approve(
-                  DELEGATE_ADDRESS,
-                  useUserBalance ? userTokenBalance : ethers.constants.MaxUint256,
-                  {
-                    gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
-                  }
-                )
+                .approve(DELEGATE_ADDRESS, useUserBalance ? userTokenBalance : ethers.constants.MaxUint256, {
+                  gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
+                })
                 .then(response => {
                   addTransaction(response, { approval: selectedTokenAddress })
                 })
@@ -360,10 +353,9 @@ export default function CurrencyInputPanel({
       return renderInput()
     }
 
-
     const decimals = market[PRIMARY] === tokenAddress ? market[PRIMARY_DECIMALS] : market[SECONDARY_DECIMALS]
 
-    const min = '0.' + ('0'.repeat(decimals - 1)) + '1'
+    const min = '0.' + '0'.repeat(decimals - 1) + '1'
 
     return (
       <InputRow>
@@ -395,13 +387,13 @@ export default function CurrencyInputPanel({
           }}
         >
           <Aligner>
-            {selectedTokenAddress ? <TokenLogo address={selectedTokenAddress}/> : null}
+            {selectedTokenAddress ? <TokenLogo address={selectedTokenAddress} /> : null}
             {
               <StyledTokenName>
                 {(allTokens[selectedTokenAddress] && allTokens[selectedTokenAddress].symbol) || t('selectToken')}
               </StyledTokenName>
             }
-            {!disableTokenSelect && <StyledDropDown selected={!!selectedTokenAddress}/>}
+            {!disableTokenSelect && <StyledDropDown selected={!!selectedTokenAddress} />}
           </Aligner>
         </CurrencySelect>
       </InputRow>
@@ -628,7 +620,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
       return (
         <TokenModalRow key={address} onClick={() => _onTokenSelect(address)}>
           <TokenRowLeft>
-            <TokenLogo address={address} size={'2rem'}/>
+            <TokenLogo address={address} size={'2rem'} />
             <TokenSymbolGroup>
               <div>
                 <span id="symbol">{symbol}</span>
@@ -640,7 +632,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
             {balance ? (
               <TokenRowBalance>{balance && (balance > 0 || balance === '<0.0001') ? balance : '-'}</TokenRowBalance>
             ) : account ? (
-              <SpinnerWrapper src={Circle} alt="loader"/>
+              <SpinnerWrapper src={Circle} alt="loader" />
             ) : (
               '-'
             )}
@@ -649,8 +641,8 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
                 ? usdBalance.isZero()
                   ? ''
                   : usdBalance.lt(0.01)
-                    ? '<$0.01'
-                    : '$' + formatToUsd(usdBalance)
+                  ? '<$0.01'
+                  : '$' + formatToUsd(usdBalance)
                 : ''}
             </TokenRowUsd>
           </TokenRowRight>
@@ -686,7 +678,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
         <ModalHeader>
           <p>{t('selectToken')}</p>
           <CloseIcon onClick={clearInputAndDismiss}>
-            <CloseColor alt={'close icon'}/>
+            <CloseColor alt={'close icon'} />
           </CloseIcon>
         </ModalHeader>
         {/* Not needed since we only support 3 tokens */}

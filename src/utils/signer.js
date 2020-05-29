@@ -35,7 +35,8 @@ export default class UncheckedJsonRpcSigner extends ethers.Signer {
   }
 
   signTypedMessage(data) {
-    return this.signer.getAddress()
+    return this.signer
+      .getAddress()
       .then(address => {
         if (typeof this.signer.provider?.provider?.enable === 'function') {
           return this.signer.provider.provider.enable().then(() => address)
@@ -46,18 +47,19 @@ export default class UncheckedJsonRpcSigner extends ethers.Signer {
         }
       })
       .then(address => {
-          return new Promise((respond, reject) => {
-            this.signer.provider.provider.sendAsync({
+        return new Promise((respond, reject) => {
+          this.signer.provider.provider.sendAsync(
+            {
               method: 'eth_signTypedData_v3',
               params: [address, JSON.stringify(data)],
               from: address
-            }, function(err, result) {
+            },
+            function(err, result) {
               if (err || result.error) reject(err || result.error.message)
               else respond(result.result)
-            })
-          })
-        }
-      )
+            }
+          )
+        })
+      })
   }
-
 }

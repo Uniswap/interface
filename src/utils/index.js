@@ -99,9 +99,7 @@ export function getAllQueryParams() {
     ? isAddress(getQueryParam(window.location, 'tokenAddress'))
     : ''
 
-  params.referrer = isAddress(getQueryParam(window.location, 'r'))
-    ? isAddress(getQueryParam(window.location, 'r'))
-    : ''
+  params.referrer = isAddress(getQueryParam(window.location, 'r')) ? isAddress(getQueryParam(window.location, 'r')) : ''
 
   return params
 }
@@ -253,7 +251,9 @@ export function formatEthBalance(balance) {
 }
 
 export function formatTokenBalance(balance, decimal) {
-  return !!(balance && Number.isInteger(decimal)) ? amountFormatter(balance, decimal, Math.min(MIN_DECIMALS, decimal)) : 0
+  return !!(balance && Number.isInteger(decimal))
+    ? amountFormatter(balance, decimal, Math.min(MIN_DECIMALS, decimal))
+    : 0
 }
 
 export function formatToUsd(price) {

@@ -55,7 +55,8 @@ export const torus = new TorusConnector({
 export const walletlink = new WalletLinkConnector({
   url: NETWORK_URL,
   appName: 'DMM Governance',
-  appLogoUrl: 'https://github.com/defi-money-market-ecosystem/dmm-assets/blob/master/src/logo/dmm-logo-square.png?raw=true'
+  appLogoUrl:
+    'https://github.com/defi-money-market-ecosystem/dmm-assets/blob/master/src/logo/dmm-logo-square.png?raw=true'
 })
 
 export const exchange = setupExchange()

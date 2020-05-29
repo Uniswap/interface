@@ -39,9 +39,9 @@ const Title = styled.div`
     font-size: 0.825rem;
     margin-right: 12px;
     font-weight: 400;
-    color: #FFFFFF;
+    color: #ffffff;
     :hover {
-      color: #E0E0E0;
+      color: #e0e0e0;
     }
   }
 `

@@ -44,25 +44,25 @@ export const INITIAL_TOKENS_CONTEXT = {
       [NAME]: 'Dai Stablecoin',
       [SYMBOL]: 'DAI',
       [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: '0x2a1530C4C41db0B0b2bB646CB5Eb1A67b7158667',
+      [EXCHANGE_ADDRESS]: '0x2a1530C4C41db0B0b2bB646CB5Eb1A67b7158667'
     },
     [USDC_ADDRESS]: {
       [NAME]: 'USD//C',
       [SYMBOL]: 'USDC',
       [DECIMALS]: 6,
-      [EXCHANGE_ADDRESS]: '0x97deC872013f6B5fB443861090ad931542878126',
+      [EXCHANGE_ADDRESS]: '0x97deC872013f6B5fB443861090ad931542878126'
     },
     [WETH_ADDRESS]: {
       [NAME]: 'Wrapped Ether',
       [SYMBOL]: 'WETH',
       [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: '0xA2881A90Bf33F03E7a3f803765Cd2ED5c8928dFb',
+      [EXCHANGE_ADDRESS]: '0xA2881A90Bf33F03E7a3f803765Cd2ED5c8928dFb'
     },
     [DMG_ADDRESS]: {
       [NAME]: 'DMM Governance',
       [SYMBOL]: 'DMG',
       [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: '0xA539BAaa3aCA455c986bB1E25301CEF936CE1B65',
+      [EXCHANGE_ADDRESS]: '0xA539BAaa3aCA455c986bB1E25301CEF936CE1B65'
     }
   }
 }
@@ -73,20 +73,20 @@ export const MARKETS = {
       [PRIMARY]: DMG_ADDRESS,
       [SECONDARY]: DAI_ADDRESS,
       [PRIMARY_DECIMALS]: 2,
-      [SECONDARY_DECIMALS]: 8,
+      [SECONDARY_DECIMALS]: 8
     },
     [`${DMG_ADDRESS}-${USDC_ADDRESS}`]: {
       [PRIMARY]: DMG_ADDRESS,
       [SECONDARY]: USDC_ADDRESS,
       [PRIMARY_DECIMALS]: 2,
-      [SECONDARY_DECIMALS]: 6,
+      [SECONDARY_DECIMALS]: 6
     },
     [`${DMG_ADDRESS}-${WETH_ADDRESS}`]: {
       [PRIMARY]: DMG_ADDRESS,
       [SECONDARY]: WETH_ADDRESS,
       [PRIMARY_DECIMALS]: 1,
-      [SECONDARY_DECIMALS]: 8,
-    },
+      [SECONDARY_DECIMALS]: 8
+    }
   }
 }
 
@@ -139,7 +139,7 @@ export function useTokenDetails(tokenAddress) {
   const [state, { update }] = useTokensContext()
   const allTokensInNetwork = { ...ETH, ...(safeAccess(state, [chainId]) || {}) }
   const { [NAME]: name, [SYMBOL]: symbol, [DECIMALS]: decimals, [EXCHANGE_ADDRESS]: exchangeAddress } =
-  safeAccess(allTokensInNetwork, [tokenAddress]) || {}
+    safeAccess(allTokensInNetwork, [tokenAddress]) || {}
 
   useEffect(() => {
     if (

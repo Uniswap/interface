@@ -56,12 +56,12 @@ function reducer(state, { type, payload }) {
           ...state?.[chainId],
           [market]: uninitialized
             ? {
-              listenerCount: 1
-            }
+                listenerCount: 1
+              }
             : {
-              ...state[chainId][market],
-              listenerCount: state[chainId][market].listenerCount + 1
-            }
+                ...state[chainId][market],
+                listenerCount: state[chainId][market].listenerCount + 1
+              }
         }
       }
     }
@@ -126,10 +126,14 @@ export default function Provider({ children }) {
   }, 10000)
 
   return (
-    <DolomiteOrderBooksContext.Provider value={useMemo(
-      () => [state, { startListening, stopListening, update }],
-      [state, startListening, stopListening, update]
-    )}>
+    <DolomiteOrderBooksContext.Provider
+      value={useMemo(() => [state, { startListening, stopListening, update }], [
+        state,
+        startListening,
+        stopListening,
+        update
+      ])}
+    >
       {children}
     </DolomiteOrderBooksContext.Provider>
   )
@@ -143,7 +147,8 @@ function getAllBooksAndDispatch(dispatch, chainId) {
 
   const booksPromises = secondarySymbols.map(secondarySymbol => {
     const market = `${primarySymbol}-${secondarySymbol}`
-    return exchange.orders.getDepthChart(primarySymbol, secondarySymbol)
+    return exchange.orders
+      .getDepthChart(primarySymbol, secondarySymbol)
       .then(books => {
         dispatch({ type: GET_BOOKS, payload: { chainId, primarySymbol, secondarySymbol, value: books } })
       })

@@ -31,8 +31,8 @@ export default function ThemeProvider({ children }) {
     ? themeURL.toUpperCase() === SUPPORTED_THEMES.DARK
       ? true
       : themeURL.toUpperCase() === SUPPORTED_THEMES.LIGHT
-        ? false
-        : darkMode
+      ? false
+      : darkMode
     : darkMode
   useEffect(() => {
     toggleDarkMode(themeToRender)

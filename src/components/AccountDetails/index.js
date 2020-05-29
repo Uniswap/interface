@@ -47,7 +47,7 @@ const HeaderRow = styled.div`
 
 const UpperSection = styled.div`
   position: relative;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 
   h5 {
     margin: 0;
@@ -91,7 +91,7 @@ const AccountGroupingRow = styled.div`
 `
 
 const AccountSection = styled.div`
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   padding: 0rem 1.5rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1rem 1rem;`};
 `

@@ -1,5 +1,4 @@
 import styled, { keyframes } from 'styled-components'
-import { darken } from 'polished'
 
 export const Button = styled.button.attrs(({ warning, theme }) => ({
   backgroundColor: warning ? theme.salmonRed : theme.royalBlue
@@ -25,8 +24,8 @@ export const Button = styled.button.attrs(({ warning, theme }) => ({
   }
 
   :disabled {
-    background-color: rgba(50,124,203,.3);
-    color: #FFFFFF;
+    background-color: rgba(50, 124, 203, 0.3);
+    color: #ffffff;
     cursor: auto;
   }
 `
