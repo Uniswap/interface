@@ -33,7 +33,7 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [
   return useMemo(
     () =>
       addresses.reduce<{ [address: string]: JSBI | undefined }>((memo, address, i) => {
-        const value = results?.[i]?.[0]
+        const value = results?.[i]?.result?.[0]
         if (value) memo[address] = JSBI.BigInt(value.toString())
         return memo
       }, {}),
@@ -61,7 +61,7 @@ export function useTokenBalances(
     () =>
       address && validatedTokens.length > 0
         ? validatedTokens.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, token, i) => {
-            const value = balances?.[i]?.[0]
+            const value = balances?.[i]?.result?.[0]
             const amount = value ? JSBI.BigInt(value.toString()) : undefined
             if (amount) {
               memo[token.address] = new TokenAmount(token, amount)

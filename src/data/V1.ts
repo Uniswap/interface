@@ -12,7 +12,11 @@ function useV1PairAddress(tokenAddress?: string): string | undefined {
   return useSingleCallResult(contract, 'getExchange', inputs)?.[0]
 }
 
-function useMockV1Pair(token?: Token) {
+class MockV1Pair extends Pair {
+  readonly isV1: true = true
+}
+
+function useMockV1Pair(token?: Token): MockV1Pair | undefined {
   const isWETH = token?.equals(WETH[token?.chainId])
 
   // will only return an address on mainnet, and not for WETH
@@ -21,7 +25,7 @@ function useMockV1Pair(token?: Token) {
   const ETHBalance = useETHBalances([v1PairAddress])[v1PairAddress ?? '']
 
   return tokenBalance && ETHBalance && token
-    ? new Pair(tokenBalance, new TokenAmount(WETH[token.chainId], ETHBalance.toString()))
+    ? new MockV1Pair(tokenBalance, new TokenAmount(WETH[token.chainId], ETHBalance.toString()))
     : undefined
 }
 
