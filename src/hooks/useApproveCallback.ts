@@ -8,7 +8,8 @@ import { Field } from '../state/swap/actions'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { calculateGasMargin } from '../utils'
-import { useTokenContract, useActiveWeb3React } from './index'
+import { useTokenContract } from './useContract'
+import { useActiveWeb3React } from './index'
 
 export enum ApprovalState {
   UNKNOWN,

@@ -43,7 +43,7 @@ change `REACT_APP_NETWORK_ID` to `"{yourNetworkId}"`, and change `REACT_APP_NETW
 
 Note that the front end only works properly on testnets where both 
 [Uniswap V2](https://uniswap.org/docs/v2/smart-contracts/factory/) and 
-[eth-scan](https://github.com/MyCryptoHQ/eth-scan) are deployed.
+[multicall](https://github.com/makerdao/multicall) are deployed.
 The frontend will not work on other networks.
 
 ## Contributions
