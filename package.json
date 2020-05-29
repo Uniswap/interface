@@ -14,7 +14,6 @@
     "@ethersproject/units": "^5.0.0-beta.132",
     "@ethersproject/wallet": "^5.0.0-beta.141",
     "@material-ui/core": "^4.9.5",
-    "@mycrypto/eth-scan": "^2.1.0",
     "@popperjs/core": "^2.4.0",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
@@ -79,7 +78,6 @@
     "serve": "^11.3.0",
     "start-server-and-test": "^1.11.0",
     "styled-components": "^4.2.0",
-    "swr": "0.1.18",
     "typescript": "^3.8.3",
     "use-media": "^1.4.0"
   },

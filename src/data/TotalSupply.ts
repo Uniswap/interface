@@ -1,26 +1,14 @@
-import { Contract } from '@ethersproject/contracts'
+import { BigNumber } from '@ethersproject/bignumber'
 import { Token, TokenAmount } from '@uniswap/sdk'
-import useSWR from 'swr'
+import { useTokenContract } from '../hooks/useContract'
+import { useSingleCallResult } from '../state/multicall/hooks'
 
-import { SWRKeys, useKeepSWRDataLiveAsBlocksArrive } from '.'
-import { useTokenContract } from '../hooks'
-
-function getTotalSupply(contract: Contract, token: Token): () => Promise<TokenAmount> {
-  return async (): Promise<TokenAmount> =>
-    contract
-      .totalSupply()
-      .then((totalSupply: { toString: () => string }) => new TokenAmount(token, totalSupply.toString()))
-}
-
-export function useTotalSupply(token?: Token): TokenAmount {
+// returns undefined if input token is undefined, or fails to get token contract,
+// or contract total supply cannot be fetched
+export function useTotalSupply(token?: Token): TokenAmount | undefined {
   const contract = useTokenContract(token?.address, false)
 
-  const shouldFetch = !!contract
-  const { data, mutate } = useSWR(
-    shouldFetch ? [token.address, token.chainId, SWRKeys.TotalSupply] : null,
-    getTotalSupply(contract, token)
-  )
-  useKeepSWRDataLiveAsBlocksArrive(mutate)
+  const totalSupply: BigNumber = useSingleCallResult(contract, 'totalSupply')?.[0]
 
-  return data
+  return token && totalSupply ? new TokenAmount(token, totalSupply.toString()) : undefined
 }

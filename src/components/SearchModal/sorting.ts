@@ -42,10 +42,10 @@ function getTokenComparator(
 }
 
 export function useTokenComparator(inverted: boolean): (tokenA: Token, tokenB: Token) => number {
-  const { account, chainId } = useActiveWeb3React()
+  const { chainId } = useActiveWeb3React()
   const weth = WETH[chainId]
   const balances = useAllTokenBalancesTreatingWETHasETH()
-  const comparator = useMemo(() => getTokenComparator(weth, balances[account] ?? {}), [account, balances, weth])
+  const comparator = useMemo(() => getTokenComparator(weth, balances ?? {}), [balances, weth])
   return useMemo(() => {
     if (inverted) {
       return (tokenA: Token, tokenB: Token) => comparator(tokenA, tokenB) * -1

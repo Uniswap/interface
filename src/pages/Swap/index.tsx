@@ -213,7 +213,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
                   maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
                 }}
                 onTokenSelection={address => {
-                  setApprovalSubmitted(false)
+                  setApprovalSubmitted(false) // reset 2 step UI for approvals
                   onTokenSelection(Field.INPUT, address)
                 }}
                 otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
@@ -225,7 +225,10 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
                   <ArrowWrapper>
                     <ArrowDown
                       size="16"
-                      onClick={onSwitchTokens}
+                      onClick={() => {
+                        setApprovalSubmitted(false) // reset 2 step UI for approvals
+                        onSwitchTokens()
+                      }}
                       color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme.primary1 : theme.text2}
                     />
                   </ArrowWrapper>
@@ -285,7 +288,11 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
               approval === ApprovalState.PENDING ||
               (approvalSubmitted && approval === ApprovalState.APPROVED) ? (
               <RowBetween>
-                <ButtonLight onClick={approveCallback} disabled={approval === ApprovalState.APPROVED} width="48%">
+                <ButtonLight
+                  onClick={approveCallback}
+                  disabled={approval === ApprovalState.APPROVED || approval === ApprovalState.PENDING}
+                  width="48%"
+                >
                   {approval === ApprovalState.PENDING ? (
                     <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
                   ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
@@ -303,8 +310,12 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
                   disabled={!isValid || approval !== ApprovalState.APPROVED}
                   error={isValid && priceImpactSeverity > 2}
                 >
-                  <Text fontSize={20} fontWeight={500}>
-                    {error ?? `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                  <Text fontSize={16} fontWeight={500}>
+                    {error
+                      ? error.includes('balance')
+                        ? error.substring(0, error.lastIndexOf(' '))
+                        : error
+                      : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                   </Text>
                 </ButtonError>
               </RowBetween>

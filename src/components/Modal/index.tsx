@@ -9,9 +9,9 @@ import '@reach/dialog/styles.css'
 import { transparentize } from 'polished'
 import { useGesture } from 'react-use-gesture'
 
-// errors emitted, fix with https://github.com/styled-components/styled-components/pull/3006
 const AnimatedDialogOverlay = animated(DialogOverlay)
-const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ mobile: boolean }>`
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const StyledDialogOverlay = styled(({ mobile, ...rest }) => <AnimatedDialogOverlay {...rest} />)<{ mobile: boolean }>`
   &[data-reach-dialog-overlay] {
     z-index: 2;
     display: flex;
@@ -167,6 +167,7 @@ export default function Modal({
                       }}
                     >
                       <StyledDialogContent
+                        ariaLabel="test"
                         style={props}
                         hidden={true}
                         minHeight={minHeight}
@@ -190,20 +191,8 @@ export default function Modal({
         {transitions.map(
           ({ item, key, props }) =>
             item && (
-              <StyledDialogOverlay
-                key={key}
-                style={props}
-                onDismiss={onDismiss}
-                initialFocusRef={initialFocusRef}
-                mobile={undefined}
-              >
-                <StyledDialogContent
-                  hidden={true}
-                  minHeight={minHeight}
-                  maxHeight={maxHeight}
-                  isOpen={isOpen}
-                  aria-label=""
-                >
+              <StyledDialogOverlay key={key} style={props} onDismiss={onDismiss} initialFocusRef={initialFocusRef}>
+                <StyledDialogContent hidden={true} minHeight={minHeight} maxHeight={maxHeight} isOpen={isOpen}>
                   <HiddenCloseButton onClick={onDismiss} />
                   {children}
                 </StyledDialogContent>

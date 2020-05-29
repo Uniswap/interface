@@ -6,7 +6,9 @@ import { useTransactionAdder } from '../state/transactions/hooks'
 import { useTokenBalanceTreatingWETHasETH } from '../state/wallet/hooks'
 
 import { calculateGasMargin, getSigner, isAddress } from '../utils'
-import { useENSName, useTokenContract, useActiveWeb3React } from './index'
+import { useTokenContract } from './useContract'
+import { useActiveWeb3React } from './index'
+import useENSName from './useENSName'
 
 // returns a callback for sending a token amount, treating WETH as ETH
 // returns null with invalid arguments

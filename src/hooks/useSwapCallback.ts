@@ -8,7 +8,8 @@ import { Field } from '../state/swap/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { calculateGasMargin, getRouterContract, isAddress } from '../utils'
-import { useENSName, useActiveWeb3React } from './index'
+import { useActiveWeb3React } from './index'
+import useENSName from './useENSName'
 
 enum SwapType {
   EXACT_TOKENS_FOR_TOKENS,
