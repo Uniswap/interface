@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
-import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'styled-components'
-import { getQueryParam, checkSupportedTheme } from '../utils'
+import { createGlobalStyle, css, ThemeProvider as StyledComponentsThemeProvider } from 'styled-components'
+import { checkSupportedTheme, getQueryParam } from '../utils'
 import { SUPPORTED_THEMES } from '../constants'
 import { useDarkModeManager } from '../contexts/LocalStorage'
 
@@ -31,8 +31,8 @@ export default function ThemeProvider({ children }) {
     ? themeURL.toUpperCase() === SUPPORTED_THEMES.DARK
       ? true
       : themeURL.toUpperCase() === SUPPORTED_THEMES.LIGHT
-      ? false
-      : darkMode
+        ? false
+        : darkMode
     : darkMode
   useEffect(() => {
     toggleDarkMode(themeToRender)
@@ -128,7 +128,12 @@ export const GlobalStyle = createGlobalStyle`
     height: 100%;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-}
+  }
+  
+  button {
+    // border-color: ${({ theme }) => theme.silverGray};
+    border-color: ${({ theme }) => theme.placeholderGray};
+  }
 
   html {
     font-size: 16px;

@@ -125,7 +125,9 @@ export function Updater() {
                 if (!receipt) {
                   check(chainId, hash, globalBlockNumber)
                 } else {
-                  finalize(chainId, hash, receipt)
+                  setTimeout(() => {
+                    finalize(chainId, hash, receipt)
+                  }, 5000)
                 }
               }
             })
@@ -174,6 +176,14 @@ export function useAllTransactions() {
 }
 
 export function usePendingApproval(tokenAddress) {
+  return usePendingTransaction(tokenAddress, "approval")
+}
+
+export function usePendingWrapping(tokenAddress) {
+  return usePendingTransaction(tokenAddress, "wrapping")
+}
+
+function usePendingTransaction(tokenAddress, customDataKey) {
   const allTransactions = useAllTransactions()
 
   return (
@@ -182,7 +192,7 @@ export function usePendingApproval(tokenAddress) {
         return false
       } else if (!allTransactions[hash][RESPONSE]) {
         return false
-      } else if (allTransactions[hash][RESPONSE][CUSTOM_DATA].approval !== tokenAddress) {
+      } else if (!!customDataKey && allTransactions[hash][RESPONSE][CUSTOM_DATA][customDataKey] !== tokenAddress) {
         return false
       } else {
         return true

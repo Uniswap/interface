@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useMemo, useCallback, useEffect } from 'react'
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useReducer } from 'react'
 
 const UNISWAP = 'UNISWAP'
 
@@ -123,6 +123,8 @@ export function useBetaMessageManager() {
   return [false, dismissBetaMessage]
 }
 
+let isLightModeSet = false
+
 export function useDarkModeManager() {
   const [state, { updateKey }] = useLocalStorageContext()
 
@@ -134,6 +136,11 @@ export function useDarkModeManager() {
     },
     [updateKey, isDarkMode]
   )
+
+  if (!isLightModeSet) {
+    isLightModeSet = true
+    toggleDarkMode(false)
+  }
 
   return [state[DARK_MODE], toggleDarkMode]
 }

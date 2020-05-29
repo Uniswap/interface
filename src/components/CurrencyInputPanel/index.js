@@ -1,35 +1,35 @@
-import React, { useState, useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
 import { BigNumber } from '@uniswap/sdk'
 import styled from 'styled-components'
 import escapeStringRegex from 'escape-string-regexp'
-import { darken } from 'polished'
 import Tooltip from '@reach/tooltip'
 import '@reach/tooltip/styles.css'
 import { isMobile } from 'react-device-detect'
 
-import { BorderlessInput } from '../../theme'
-import { useWeb3React, useTokenContract } from '../../hooks'
-import { isAddress, calculateGasMargin, formatToUsd, formatTokenBalance, formatEthBalance } from '../../utils'
+import { BorderlessInput, Spinner } from '../../theme'
+import { useTokenContract, useWeb3React } from '../../hooks'
+import { calculateGasMargin, formatEthBalance, formatTokenBalance, formatToUsd, isAddress } from '../../utils'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import Modal from '../Modal'
 import TokenLogo from '../TokenLogo'
 // import SearchIcon from '../../assets/images/magnifying-glass.svg'
-import { useTransactionAdder, usePendingApproval } from '../../contexts/Transactions'
+import { usePendingApproval, useTransactionAdder } from '../../contexts/Transactions'
 import {
-  useTokenDetails,
-  useAllTokenDetails,
+  DELEGATE_ADDRESS,
   DMG_ADDRESS,
-  DELEGATE_ADDRESS, SECONDARY_DECIMALS, MARKETS, PRIMARY, PRIMARY_DECIMALS
+  PRIMARY,
+  PRIMARY_DECIMALS,
+  SECONDARY_DECIMALS,
+  useAllTokenDetails,
+  useTokenDetails,
+  WETH_ADDRESS
 } from '../../contexts/Tokens'
-import { useAddressBalance } from '../../contexts/Balances'
+import { useAddressBalance, useAllBalances, useETHPriceInUSD } from '../../contexts/Balances'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { transparentize } from 'polished'
-import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle-grey.svg'
-import { useETHPriceInUSD, useAllBalances } from '../../contexts/Balances'
 
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
@@ -273,30 +273,35 @@ const SpinnerWrapper = styled(Spinner)`
 `
 
 export default function CurrencyInputPanel({
-  onValueChange = () => {},
-  allBalances,
-  renderInput,
-  onCurrencySelected = () => {},
-  title,
-  description,
-  extraText,
-  extraTextClickHander = () => {},
-  errorMessage,
-  disableUnlock,
-  disableTokenSelect,
-  selectedTokenAddress = '',
-  showUnlock,
-  value,
-  urlAddedTokens,
-  hideETH = false,
-  market,
-  tokenAddress,
-}) {
+                                             onValueChange = () => {
+                                             },
+                                             allBalances,
+                                             renderInput,
+                                             onCurrencySelected = () => {
+                                             },
+                                             title,
+                                             description,
+                                             extraText,
+                                             extraTextClickHander = () => {
+                                             },
+                                             errorMessage,
+                                             disableUnlock,
+                                             disableTokenSelect,
+                                             selectedTokenAddress = '',
+                                             showUnlock,
+                                             showWrap,
+                                             disableWrap,
+                                             value,
+                                             urlAddedTokens,
+                                             hideETH = false,
+                                             market,
+                                             tokenAddress
+                                           }) {
   const { t } = useTranslation()
 
   const [modalIsOpen, setModalIsOpen] = useState(false)
 
-  const tokenContract = useTokenContract(selectedTokenAddress)
+  const tokenContract = useTokenContract(selectedTokenAddress === 'ETH' ? WETH_ADDRESS : selectedTokenAddress)
 
   const pendingApproval = usePendingApproval(selectedTokenAddress)
 
@@ -309,7 +314,7 @@ export default function CurrencyInputPanel({
   const userTokenBalance = useAddressBalance(account, selectedTokenAddress)
 
   function renderUnlockButton() {
-    if (disableUnlock || !showUnlock || selectedTokenAddress === 'ETH' || !selectedTokenAddress) {
+    if (disableUnlock || !showUnlock || !selectedTokenAddress) {
       return null
     } else {
       if (!pendingApproval) {
@@ -390,13 +395,13 @@ export default function CurrencyInputPanel({
           }}
         >
           <Aligner>
-            {selectedTokenAddress && selectedTokenAddress !== 'ETH' ? <TokenLogo address={selectedTokenAddress} /> : null}
+            {selectedTokenAddress ? <TokenLogo address={selectedTokenAddress}/> : null}
             {
               <StyledTokenName>
                 {(allTokens[selectedTokenAddress] && allTokens[selectedTokenAddress].symbol) || t('selectToken')}
               </StyledTokenName>
             }
-            {!disableTokenSelect && <StyledDropDown selected={!!selectedTokenAddress} />}
+            {!disableTokenSelect && <StyledDropDown selected={!!selectedTokenAddress}/>}
           </Aligner>
         </CurrencySelect>
       </InputRow>
@@ -459,10 +464,10 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
 
   const allTokens = useAllTokenDetails()
   Object.keys(useAllTokenDetails()).forEach(token => {
-    if(token === DMG_ADDRESS) {
+    if (token === DMG_ADDRESS) {
       delete allTokens[token]
     }
-  });
+  })
 
   const { account } = useWeb3React()
 
@@ -623,7 +628,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
       return (
         <TokenModalRow key={address} onClick={() => _onTokenSelect(address)}>
           <TokenRowLeft>
-            <TokenLogo address={address} size={'2rem'} />
+            <TokenLogo address={address} size={'2rem'}/>
             <TokenSymbolGroup>
               <div>
                 <span id="symbol">{symbol}</span>
@@ -635,7 +640,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
             {balance ? (
               <TokenRowBalance>{balance && (balance > 0 || balance === '<0.0001') ? balance : '-'}</TokenRowBalance>
             ) : account ? (
-              <SpinnerWrapper src={Circle} alt="loader" />
+              <SpinnerWrapper src={Circle} alt="loader"/>
             ) : (
               '-'
             )}
@@ -644,8 +649,8 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
                 ? usdBalance.isZero()
                   ? ''
                   : usdBalance.lt(0.01)
-                  ? '<$0.01'
-                  : '$' + formatToUsd(usdBalance)
+                    ? '<$0.01'
+                    : '$' + formatToUsd(usdBalance)
                 : ''}
             </TokenRowUsd>
           </TokenRowRight>
@@ -681,7 +686,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
         <ModalHeader>
           <p>{t('selectToken')}</p>
           <CloseIcon onClick={clearInputAndDismiss}>
-            <CloseColor alt={'close icon'} />
+            <CloseColor alt={'close icon'}/>
           </CloseIcon>
         </ModalHeader>
         {/* Not needed since we only support 3 tokens */}

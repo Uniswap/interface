@@ -28,12 +28,12 @@ export const USDC_ADDRESS = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
 export const WETH_ADDRESS = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
 
 const ETH = {
-  // ETH: {
-  //   [NAME]: 'Ethereum',
-  //   [SYMBOL]: 'ETH',
-  //   [DECIMALS]: 18,
-  //   [EXCHANGE_ADDRESS]: null
-  // }
+  ETH: {
+    [NAME]: 'Ethereum',
+    [SYMBOL]: 'ETH',
+    [DECIMALS]: 18,
+    [EXCHANGE_ADDRESS]: null
+  }
 }
 
 export const DELEGATE_ADDRESS = '0xE2466deB9536A69BF8131Ecd0c267EE41dd1cdA0'

@@ -5,9 +5,16 @@ import { ethers } from 'ethers'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 
-import { useInterval, useWeb3React } from '../../hooks'
+import { useInterval, useTokenContract, useWeb3React } from '../../hooks'
 import { brokenTokens } from '../../constants'
-import { amountFormatter, getProviderOrSigner, isAddress, MIN_DECIMALS, MIN_DECIMALS_EXCHANGE_RATE } from '../../utils'
+import {
+  amountFormatter,
+  calculateGasMargin,
+  getProviderOrSigner,
+  isAddress,
+  MIN_DECIMALS,
+  MIN_DECIMALS_EXCHANGE_RATE
+} from '../../utils'
 import {
   DECIMALS,
   DELEGATE_ADDRESS,
@@ -17,10 +24,11 @@ import {
   PRIMARY,
   PRIMARY_DECIMALS,
   SECONDARY_DECIMALS,
-  useTokenDetails, WETH_ADDRESS
+  useTokenDetails,
+  WETH_ADDRESS
 } from '../../contexts/Tokens'
-import { useTransactionAdder } from '../../contexts/Transactions'
-import { useAddressBalance, useExchangeReserves } from '../../contexts/Balances'
+import { usePendingWrapping, useTransactionAdder } from '../../contexts/Transactions'
+import { useAddressBalance } from '../../contexts/Balances'
 import { useDolomiteOrderBooks } from '../../contexts/DolomiteOrderBooks'
 import { useAddressAllowance } from '../../contexts/Allowances'
 import { useWalletModalToggle } from '../../contexts/Application'
@@ -98,8 +106,10 @@ const Flex = styled.div`
   }
 `
 
+const ethBalanceBuffer = new ethers.utils.BigNumber('50000000000000000')
+
 function getEffectiveInputCurrency(inputCurrency) {
-  if(inputCurrency === 'ETH') {
+  if (inputCurrency === 'ETH') {
     return WETH_ADDRESS
   } else {
     return inputCurrency
@@ -312,6 +322,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const [brokenTokenWarning, setBrokenTokenWarning] = useState()
 
   const [dolomiteOrderId, setDolomiteOrderId] = useState('')
+  const [isAwaitingSignature, setIsAwaitingSignature] = useState(false)
 
   useInterval(() => {
     if (dolomiteOrderId) {
@@ -390,8 +401,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const primarySymbol = INITIAL_TOKENS_CONTEXT['1'][DMG_ADDRESS].symbol
   const secondarySymbol = INITIAL_TOKENS_CONTEXT['1'][effectiveInputCurrency].symbol
   const orderBooks = useDolomiteOrderBooks(primarySymbol, secondarySymbol)
-  const { reserveETH: inputReserveETH, reserveToken: inputReserveToken } = useExchangeReserves(effectiveInputCurrency)
-  const { reserveETH: outputReserveETH, reserveToken: outputReserveToken } = useExchangeReserves(outputCurrency)
+
+  const tokenContract = useTokenContract(effectiveInputCurrency)
 
   // get balances for each of the currency types
   const inputBalance = useAddressBalance(account, inputCurrency)
@@ -469,25 +480,38 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     allowedSlippageBig
   )
 
+  const pendingWrapping = usePendingWrapping(effectiveInputCurrency)
 
   // validate input allowance + balance
   const [inputError, setInputError] = useState()
   const [showUnlock, setShowUnlock] = useState(false)
+  const [showWrap, setShowWrap] = useState(false)
   useEffect(() => {
     const inputValueCalculation = independentField === INPUT ? independentValueParsed : dependentValueMaximum
-    if (inputBalance && (inputAllowance || effectiveInputCurrency === 'ETH') && inputValueCalculation) {
+    if (inputBalance && inputAllowance && inputValueCalculation) {
       if (inputBalance.lt(inputValueCalculation)) {
         setInputError(t('insufficientBalance'))
-      } else if (effectiveInputCurrency !== 'ETH' && inputAllowance.lt(inputValueCalculation)) {
+      } else if (inputAllowance.lt(inputValueCalculation)) {
         setInputError(t('unlockTokenCont'))
         setShowUnlock(true)
+        setShowWrap(false)
+      } else if (inputCurrency === 'ETH' && inputValueCalculation.gt(inputBalance.sub(ethBalanceBuffer))) {
+        setInputError(t('insufficientBalanceWithBuffer'))
+        setShowWrap(false)
+        setShowUnlock(false)
+      } else if (inputCurrency === 'ETH') {
+        setInputError(null)
+        setShowWrap(true)
+        setShowUnlock(false)
       } else {
         setInputError(null)
         setShowUnlock(false)
+        setShowWrap(false)
       }
       return () => {
-        setInputError()
+        setInputError(undefined)
         setShowUnlock(false)
+        setShowWrap(false)
       }
     }
   }, [independentField, independentValueParsed, dependentValueMaximum, inputBalance, effectiveInputCurrency, inputAllowance, t])
@@ -592,7 +616,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         tokenB: outputCurrency,
         tokenS: effectiveInputCurrency,
         amountB: dependentValueStandardized.toHexString(),
-        amountS: independentValueParsedStandardized.toHexString(),
+        amountS: independentValueParsedStandardized.toHexString()
       }
     } else if (independentField === OUTPUT) {
       // tokenS == SECONDARY == DEPENDENT == INPUT
@@ -611,9 +635,50 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         tokenS: effectiveInputCurrency,
         tokenB: outputCurrency,
         amountB: independentValueParsedStandardized.toHexString(),
-        amountS: dependentValueStandardized.toHexString(),
+        amountS: dependentValueStandardized.toHexString()
       }
     }
+
+    let wrapPromise = Promise.resolve()
+    if (showWrap && inputCurrency === 'ETH') {
+      let amountToWrap = new ethers.utils.BigNumber(loopringOrderData.amountS)
+      const usableBalance = inputBalance.sub(ethBalanceBuffer) // 0.05
+      amountToWrap = amountToWrap.gt(usableBalance) ? usableBalance : amountToWrap
+      const estimatedGas = await tokenContract.estimate
+        .deposit({ value: amountToWrap })
+        .catch(error => {
+          console.error('Error wrapping WETH ', error)
+        })
+
+      setIsAwaitingSignature(true)
+
+      wrapPromise = tokenContract
+        .deposit({
+          gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN),
+          value: amountToWrap
+        })
+        .then(tx => {
+          console.log('Waiting for ETH finish wrapping...')
+          setIsAwaitingSignature(false)
+          addTransaction(tx, { wrapping: effectiveInputCurrency })
+          return tx.wait()
+        })
+        .then(() => {
+          console.log('Successfully wrapped ETH.')
+          dispatchSwapState({
+            type: 'SELECT_CURRENCY',
+            payload: { currency: effectiveInputCurrency, field: INPUT }
+          })
+          setShowWrap(false)
+        })
+        .catch(() => {
+          setShowWrap(false)
+          setIsAwaitingSignature(false)
+          return Promise.reject('Could not wrap ETH.')
+        })
+    }
+
+    await wrapPromise
 
     const orderSide = loopringOrderData.tokenB === DMG_ADDRESS ? 'BUY' : 'SELL'
 
@@ -636,7 +701,6 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     const signableData = getSignableData(loopringOrder)
     const signer = getProviderOrSigner(library, account)
 
-    // TODO add ETH --> WETH broker call here if need-be.
     let signaturePromise
     if (typeof signer.signTypedMessage === 'function') {
       signaturePromise = signer.signTypedMessage(signableData)
@@ -653,8 +717,12 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       })
     }
 
+    // We are now going to wait for the user to sign the Loopring order.
+    setIsAwaitingSignature(true)
+
     signaturePromise
       .then(signature => {
+        setIsAwaitingSignature(false)
         const data = {
           orderType: 'MARKET',
           tokenB: loopringOrder.tokenB,
@@ -673,14 +741,14 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       })
       .then(({ response, dolomiteOrder }) => {
         setDolomiteOrderId(response['data']['dolomite_order_id'])
-        dolomiteOrder.dolomite_order_uuid = response['data']['dolomite_order_id'];
+        dolomiteOrder.dolomite_order_uuid = response['data']['dolomite_order_id']
         return dolomiteOrder
       })
       .then(dolomiteOrder => {
         if (params.referrer) {
           const signature = dolomiteOrder.ecdsa_multi_hash_signature
           const timestamp = new Date().getTime()
-          const key = new Buffer(process.env.REACT_APP_ADMIN_API_KEY, "utf-8")
+          const key = new Buffer(process.env.REACT_APP_ADMIN_API_KEY, 'utf-8')
           const hash = crypto.createHmac('sha256', key)
             .update(timestamp.toString(10))
             .digest('base64')
@@ -690,20 +758,20 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
             'signature': {
               'v': Number.parseInt(signature.slice(6, 8), 16),
               'r': `0x${signature.slice(8, 72)}`,
-              's': `0x${signature.slice(72, 136)}`,
+              's': `0x${signature.slice(72, 136)}`
             },
             'signature_algorithm': Number.parseInt(signature.slice(2, 4), 16),
             'buyer_address': dolomiteOrder.owner_address,
             'order_hash': dolomiteOrder.order_hash,
             'referrer_address': params.referrer,
-            'dmg_bought': new ethers.utils.BigNumber(dolomiteOrder.primary_padded_amount).toString(),
+            'dmg_bought': new ethers.utils.BigNumber(dolomiteOrder.primary_padded_amount).toString()
           }
           const options = {
             method: 'POST',
             headers: {
               'X-Dmm-Api-Signature': hash,
               'X-Dmm-Api-Timestamp': timestamp,
-              'Content-Type': 'application/json',
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify(body)
           }
@@ -713,11 +781,12 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       })
       .then(response => response?.json())
       .catch(error => {
+        setIsAwaitingSignature(false)
         console.error('Could not submit order due to error ', error)
       })
   }
 
-  const [customSlippageError, setcustomSlippageError] = useState('')
+  const [customSlippageError, setCustomSlippageError] = useState('')
 
   const toggleWalletModal = useWalletModalToggle()
 
@@ -729,6 +798,30 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
   const [showInputWarning, setShowInputWarning] = useState(false)
   const [showOutputWarning, setShowOutputWarning] = useState(false)
+
+  function getButtonText() {
+    if (!!dolomiteOrderId) {
+      return (<CircularProgress/>)
+    } else if (pendingWrapping) {
+      return t('wrapping')
+    } else if (isAwaitingSignature) {
+      return t('awaitingSignature')
+    } else if (brokenTokenWarning) {
+      return t('swap')
+    } else if (!account) {
+      return t('connectToWallet')
+    } else if (sending) {
+      if (customSlippageError === 'warning') {
+        return t('sendAnyway')
+      } else {
+        return t('send')
+      }
+    } else if (customSlippageError === 'warning') {
+      return t('swapAnyway')
+    } else {
+      return t('swap')
+    }
+  }
 
   useEffect(() => {
     if (newInputDetected) {
@@ -799,7 +892,6 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         }}
         showUnlock={showUnlock}
         selectedTokens={[inputCurrency, outputCurrency]}
-        // selectedTokenAddress={effectiveInputCurrency}
         selectedTokenAddress={inputCurrency}
         value={inputValueFormatted}
         errorMessage={inputError ? inputError : independentField === INPUT ? independentError : ''}
@@ -842,6 +934,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         errorMessage={independentField === OUTPUT ? independentError : ''}
         disableTokenSelect
         disableUnlock
+        disableWrap
         tokenAddress={outputCurrency}
         market={market}
       />
@@ -903,30 +996,21 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         dependentValueMaximum={dependentValueMaximum}
         dependentDecimals={dependentDecimals}
         independentDecimals={independentDecimals}
-        setcustomSlippageError={setcustomSlippageError}
+        setCustomSlippageError={setCustomSlippageError}
+        wrapWarning={showWrap}
         recipientAddress={recipient.address}
         sending={sending}
       />
       <Flex>
         <Button
           disabled={
-            brokenTokenWarning ? true : !account && !error ? false : !isValid || customSlippageError === 'invalid'
+            brokenTokenWarning ? true : !account && !error ? false : !isValid || customSlippageError === 'invalid' || pendingWrapping || isAwaitingSignature || !!dolomiteOrderId
           }
           onClick={account && !error ? onSwap : toggleWalletModal}
           warning={customSlippageError === 'warning'}
           loggedOut={!account}
         >
-          {(!!dolomiteOrderId) ? <CircularProgress/> : brokenTokenWarning
-            ? 'Swap'
-            : !account
-              ? t('connectToWallet')
-              : sending
-                ? customSlippageError === 'warning'
-                  ? t('sendAnyway')
-                  : t('send')
-                : customSlippageError === 'warning'
-                  ? t('swapAnyway')
-                  : t('swap')}
+          {getButtonText()}
         </Button>
       </Flex>
     </>
