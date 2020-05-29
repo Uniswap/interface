@@ -44,7 +44,7 @@ function useCallsData(calls: (Call | undefined)[]): (string | undefined)[] {
     [calls]
   )
 
-  const debouncedSerializedCallKeys = useDebounce(serializedCallKeys, 100)
+  const debouncedSerializedCallKeys = useDebounce(serializedCallKeys, 20)
 
   // update listeners when there is an actual change that persists for at least 100ms
   useEffect(() => {

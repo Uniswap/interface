@@ -24,8 +24,8 @@ export default function Updater() {
     return Object.keys(state.callListeners[chainId]).filter(callKey => state.callListeners[chainId][callKey] > 0)
   }, [state.callListeners, chainId])
 
-  const debouncedResults = useDebounce(state.callResults, 25)
-  const debouncedListeningKeys = useDebounce(listeningKeys, 25)
+  const debouncedResults = useDebounce(state.callResults, 20)
+  const debouncedListeningKeys = useDebounce(listeningKeys, 20)
 
   const unserializedOutdatedCallKeys = useMemo(() => {
     if (!chainId || !debouncedResults[chainId]) return debouncedListeningKeys
