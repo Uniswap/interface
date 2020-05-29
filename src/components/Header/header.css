@@ -48,6 +48,7 @@
     line-height: 55px;
 }
 
+.tokenInfoButton,
 .purchaseCryptoButton,
 .connectWalletButton {
     display: inline-block;
@@ -69,6 +70,16 @@
     width: 153px !important;
     margin-top: 10px !important;
     text-transform: none !important;
+}
+
+.tokenInfoButton .loadWallet {
+    width: 140px !important;
+    background-color: #8b9db1 !important;
+    color: white !important;
+}
+
+.tokenInfoButton .loadWallet:hover {
+    background-color: #9aaec5 !important;
 }
 
 .purchaseCryptoButton .loadWallet {
