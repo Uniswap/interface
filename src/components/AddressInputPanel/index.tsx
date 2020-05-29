@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
+import useDebounce from '../../hooks/useDebounce'
 
 import { isAddress } from '../../utils'
-import { useActiveWeb3React, useDebounce } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks'
 import { Link, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'

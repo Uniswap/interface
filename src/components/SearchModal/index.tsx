@@ -57,7 +57,7 @@ function SearchModal({
 
   const allTokens = useAllTokens()
   const allPairs = useAllDummyPairs()
-  const allTokenBalances = useAllTokenBalancesTreatingWETHasETH()[account] ?? {}
+  const allTokenBalances = useAllTokenBalancesTreatingWETHasETH() ?? {}
   const allPairBalances = useTokenBalances(
     account,
     allPairs.map(p => p.liquidityToken)

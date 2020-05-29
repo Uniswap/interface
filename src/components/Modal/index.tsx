@@ -9,9 +9,9 @@ import '@reach/dialog/styles.css'
 import { transparentize } from 'polished'
 import { useGesture } from 'react-use-gesture'
 
-// errors emitted, fix with https://github.com/styled-components/styled-components/pull/3006
 const AnimatedDialogOverlay = animated(DialogOverlay)
-const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ mobile: boolean }>`
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const StyledDialogOverlay = styled(({ mobile, ...rest }) => <AnimatedDialogOverlay {...rest} />)<{ mobile: boolean }>`
   &[data-reach-dialog-overlay] {
     z-index: 2;
     display: flex;
@@ -41,7 +41,9 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ mobile: boolean }>`
 
 // destructure to not pass custom props to Dialog DOM element
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...rest }) => <DialogContent {...rest} />)`
+const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...rest }) => (
+  <DialogContent aria-label="content" {...rest} />
+))`
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
     border: 1px solid ${({ theme }) => theme.bg1};
@@ -163,6 +165,7 @@ export default function Modal({
                       }}
                     >
                       <StyledDialogContent
+                        ariaLabel="test"
                         style={props}
                         hidden={true}
                         minHeight={minHeight}
