@@ -77,6 +77,31 @@
     color: #0e58a7;
 }
 
+.fullDocumentWrapper {
+    text-align: center;
+    padding: 40px 0;
+    margin-bottom: 50px;
+}
+
+.fullDocumentText {
+    font-weight: 200;
+    font-size: 26px;
+}
+
+.fullDocumentWrapper a {
+    text-decoration: none !important;
+}
+
+.fullDocumentWrapper button {
+    background: white;
+    color: #000000;
+    text-decoration: none !important;
+    width: 140px;
+    font-size: 18px;
+    font-weight: 100;
+    margin: 20px;
+}
+
 @media (max-width: 1100px) {
     .infoPage .navbar {
         position: relative;

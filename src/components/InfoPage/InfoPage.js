@@ -94,6 +94,18 @@ class InfoPage extends React.Component {
             <p>
               Being backed by real-world assets also means mTokens can offer users a much more stable and reliable ROI on their deposited funds. This is in contrast to many other on-chain money markets which offer variable interest rates driven by leverage traders or other borrowing. Transparency into the off-chain assets backing mTokens and their valuations can be found on-chain or on the DMM Explorer. Additionally, our collaboration and usage of Chainlink’s decentralized oracles adds an extra layer of security and trust to the ecosystem by writing essential data on-chain that details the ecosystem’s valuation and total active collateralization.
             </p>
+            <div className={'fullDocumentWrapper'}>
+              <div className={'fullDocument'}>
+                <div className={'fullDocumentText'}>
+                  Read the full document here:
+                </div>
+                <a href={'https://docs.google.com/document/d/1HaR_twza6oxegvWSNNwzSfyK322U7SV1VNDWDV2k-aM/edit?usp=sharing'} target={'_blank'}>
+                  <Button>
+                    DMG Sale
+                  </Button>
+                </a>
+              </div>
+            </div>
             <div className={'infoTitle'}>
               More Information
             </div>
