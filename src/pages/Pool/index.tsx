@@ -108,12 +108,7 @@ export default function Pool({ history }: RouteComponentProps) {
                   </Link>
                 </>
               ) : (
-                <Link
-                  id="migrate-v1-liquidity-link"
-                  onClick={() => {
-                    history.push('/migrate/v1')
-                  }}
-                >
+                <Link id="migrate-v1-liquidity-link" href="https://migrate.uniswap.exchange">
                   Migrate your V1 liquidity.
                 </Link>
               )}

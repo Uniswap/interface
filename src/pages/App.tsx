@@ -101,7 +101,6 @@ export default function App() {
                 <Route exact strict path="/create" component={CreatePool} />
                 <Route exact strict path="/add/:tokens" component={AddLiquidity} />
                 <Route exact strict path="/remove/:tokens" component={RemoveLiquidity} />
-                <Route exact strict path="/migrate/v1" component={MigrateV1} />
                 <Route component={RedirectPathToSwapOnly} />
               </Switch>
             </Web3ReactManager>
