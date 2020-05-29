@@ -82,6 +82,7 @@ const CurrencySelect = styled.button`
   outline: none;
   cursor: pointer;
   user-select: none;
+  border: 1px solid black;
 
   :hover {
   }

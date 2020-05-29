@@ -120,6 +120,7 @@ const Title = styled.div`
   font-size: 2rem;
   text-align: center;
   margin-bottom: 25px;
+  font-weight: 200;
 `
 
 const activeClassName = 'ACTIVE'
@@ -210,31 +211,6 @@ function NavigationTabs({ location: { pathname }, history }) {
       <Title>
         DMG Purchase Portal
       </Title>
-      {providerMessage && (
-        <DaiMessage>
-          <CloseIcon onClick={dismissSaiHolderMessage}>✕</CloseIcon>
-          <WarningHeader>Missing your DAI?</WarningHeader>
-          <div>
-            Don’t worry, check the{' '}
-            <Link href={'/remove-liquidity?poolTokenAddress=0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359'}>
-              SAI liquidity pool.
-            </Link>{' '}
-            Your old DAI is now SAI. If you want to migrate,{' '}
-            <Link href="/remove-liquidity?poolTokenAddress=0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359">
-              remove your SAI liquidity,
-            </Link>{' '}
-            migrate using the <Link href="https://migrate.makerdao.com/">migration tool</Link> then add your migrated
-            DAI to the{' '}
-            <Link href="add-liquidity?token=0x6B175474E89094C44Da98b954EedeAC495271d0F">new DAI liquidity pool.</Link>
-          </div>
-          <WarningFooter>
-            <Link href="https://blog.makerdao.com/looking-ahead-how-to-upgrade-to-multi-collateral-dai/">
-              Read more
-            </Link>{' '}
-            about this change on the official Maker blog.
-          </WarningFooter>
-        </DaiMessage>
-      )}
     </>
   )
 }
