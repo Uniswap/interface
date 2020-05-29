@@ -1,10 +1,8 @@
 import { JSBI, Token } from '@uniswap/sdk'
 import React, { useMemo } from 'react'
 import { RouteComponentProps } from 'react-router'
-import { V1_EXCHANGE_INTERFACE } from '../../constants/v1'
 import { useAllV1ExchangeAddresses } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
-import { useMultipleContractSingleData } from '../../state/multicall/hooks'
 import { useTokenBalances } from '../../state/wallet/hooks'
 
 const PLACEHOLDER_ACCOUNT = (
