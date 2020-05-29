@@ -1,11 +1,10 @@
-import { Interface, FunctionFragment } from '@ethersproject/abi'
+import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import useDebounce from '../../hooks/useDebounce'
-import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { addMulticallListeners, Call, removeMulticallListeners, parseCallKey, toCallKey } from './actions'
 
@@ -22,66 +21,30 @@ function isMethodArg(x: unknown): x is MethodArg {
   return ['string', 'number'].indexOf(typeof x) !== -1
 }
 
-function isMethodArgs(x: unknown): x is MethodArgs {
-  return x && Array.isArray(x) && x.every(y => isMethodArg(y) || (Array.isArray(y) && y.every(isMethodArg)))
+function isValidMethodArgs(x: unknown): x is MethodArgs | undefined {
+  return (
+    x === undefined || (Array.isArray(x) && x.every(y => isMethodArg(y) || (Array.isArray(y) && y.every(isMethodArg))))
+  )
 }
 
 // the lowest level call for subscribing to contract data
-function useCallsData(
-  specs?: (
-    | {
-        address?: string
-        fragment?: FunctionFragment
-        inputs?: OptionalMethodInputs
-      }
-    | undefined
-  )[]
-): (Result | undefined)[] {
+function useCallsData(calls: (Call | undefined)[]): (string | undefined)[] {
   const { chainId } = useActiveWeb3React()
   const callResults = useSelector<AppState, AppState['multicall']['callResults']>(state => state.multicall.callResults)
   const dispatch = useDispatch<AppDispatch>()
-
-  const contractInterfaces: (Interface | undefined)[] = useMemo(() => {
-    return specs?.map(s => (s && s.fragment ? new Interface([s.fragment]) : undefined)) ?? []
-  }, [specs])
-
-  // used for subscribing to the contract data
-  const calls = useMemo<(Call | false)[]>(() => {
-    if (!specs || specs.length === 0) return []
-
-    return specs.map((spec, i): Call | false => {
-      const validated = isAddress(spec?.address)
-      const contractInterface = contractInterfaces[i]
-
-      if (
-        !spec ||
-        !validated ||
-        !contractInterface ||
-        !spec.fragment ||
-        (typeof spec.inputs !== 'undefined' && !isMethodArgs(spec.inputs))
-      ) {
-        return false
-      }
-
-      return {
-        address: validated,
-        callData: contractInterface.encodeFunctionData(spec.fragment, spec.inputs)
-      }
-    })
-  }, [contractInterfaces, specs])
 
   const serializedCallKeys: string = useMemo(
     () =>
       JSON.stringify(
         calls
-          .filter((c): c is Call => c !== false)
-          .map(toCallKey)
-          .sort()
+          ?.filter((c): c is Call => Boolean(c))
+          ?.map(toCallKey)
+          ?.sort() ?? []
       ),
     [calls]
   )
 
-  const debouncedSerializedCallKeys = useDebounce(serializedCallKeys, 100)
+  const debouncedSerializedCallKeys = useDebounce(serializedCallKeys, 250)
 
   // update listeners when there is an actual change
   useEffect(() => {
@@ -106,49 +69,45 @@ function useCallsData(
   }, [chainId, dispatch, debouncedSerializedCallKeys])
 
   return useMemo(() => {
-    return calls.map<Result | undefined>((c, i) => {
-      if (!chainId || !c || !contractInterfaces[i]) return undefined
+    return calls.map<string | undefined>(call => {
+      if (!chainId || !call) return undefined
 
-      const contractInterface = contractInterfaces[i]
-      const fragment = specs?.[i]?.fragment
-      if (!contractInterface || !fragment) return undefined
-
-      const result = callResults[chainId]?.[toCallKey(c)]
+      const result = callResults[chainId]?.[toCallKey(call)]
       if (!result || !result.data || result.data === '0x') {
         return undefined
       }
 
-      return contractInterface.decodeFunctionResult(fragment, result.data)
+      return result.data
     })
-  }, [callResults, calls, chainId, contractInterfaces, specs])
+  }, [callResults, calls, chainId])
 }
 
-function getFragment(contractInterface?: Interface | null, methodName?: string): FunctionFragment | undefined {
-  return methodName ? contractInterface?.getFunction(methodName) : undefined
-}
-
-export function useMultipleCallSingleContractResult(
+export function useSingleContractMultipleData(
   contract: Contract | null | undefined,
   methodName: string,
   callInputs: OptionalMethodInputs[]
 ): (Result | undefined)[] {
-  const fragment = getFragment(contract?.interface, methodName)
+  const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
 
   const calls = useMemo(
     () =>
-      contract && callInputs && fragment
-        ? callInputs.map(inputs => {
+      contract && fragment && callInputs && callInputs.length > 0
+        ? callInputs.map<Call>(inputs => {
             return {
-              fragment,
               address: contract.address,
-              inputs
+              callData: contract.interface.encodeFunctionData(fragment, inputs)
             }
           })
         : [],
     [callInputs, contract, fragment]
   )
 
-  return useCallsData(calls)
+  const data = useCallsData(calls)
+
+  return useMemo(() => {
+    if (!fragment || !contract) return []
+    return data.map(data => (data ? contract.interface.decodeFunctionResult(fragment, data) : undefined))
+  }, [contract, data, fragment])
 }
 
 export function useMultipleContractSingleData(
@@ -157,23 +116,36 @@ export function useMultipleContractSingleData(
   methodName: string,
   callInputs?: OptionalMethodInputs
 ): (Result | undefined)[] {
-  const fragment = useMemo(() => getFragment(contractInterface, methodName), [contractInterface, methodName])
+  const fragment = useMemo(() => contractInterface.getFunction(methodName), [contractInterface, methodName])
+  const callData: string | undefined = useMemo(
+    () =>
+      fragment && isValidMethodArgs(callInputs)
+        ? contractInterface.encodeFunctionData(fragment, callInputs)
+        : undefined,
+    [callInputs, contractInterface, fragment]
+  )
 
   const calls = useMemo(
     () =>
-      fragment && callInputs
-        ? addresses.map(address => {
-            return {
-              fragment,
-              address: address,
-              inputs: callInputs
-            }
+      fragment && addresses && addresses.length > 0 && callData
+        ? addresses.map<Call | undefined>(address => {
+            return address && callData
+              ? {
+                  address,
+                  callData
+                }
+              : undefined
           })
         : [],
-    [addresses, callInputs, fragment]
+    [addresses, callData, fragment]
   )
 
-  return useCallsData(calls)
+  const data = useCallsData(calls)
+
+  return useMemo(() => {
+    if (!fragment) return []
+    return data.map(data => (data ? contractInterface.decodeFunctionResult(fragment, data) : undefined))
+  }, [contractInterface, data, fragment])
 }
 
 export function useSingleCallResult(
@@ -181,17 +153,22 @@ export function useSingleCallResult(
   methodName: string,
   inputs?: OptionalMethodInputs
 ): Result | undefined {
-  const calls = useMemo(() => {
-    return contract
+  const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
+
+  const calls = useMemo<Call[]>(() => {
+    return contract && fragment && isValidMethodArgs(inputs)
       ? [
           {
-            fragment: getFragment(contract.interface, methodName),
             address: contract.address,
-            inputs: inputs
+            callData: contract.interface.encodeFunctionData(fragment, inputs)
           }
         ]
       : []
-  }, [contract, inputs, methodName])
+  }, [contract, fragment, inputs])
 
-  return useCallsData(calls)[0]
+  const data = useCallsData(calls)[0]
+  return useMemo(() => {
+    if (!contract || !fragment || !data) return undefined
+    return contract.interface.decodeFunctionResult(fragment, data)
+  }, [data, fragment, contract])
 }

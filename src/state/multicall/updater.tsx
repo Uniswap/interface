@@ -10,7 +10,7 @@ import { AppDispatch, AppState } from '../index'
 import { parseCallKey, updateMulticallResults } from './actions'
 
 // limit to 100 calls at a time max, so that we do not exceed the block gas limit
-const CALL_CHUNK_SIZE = 100
+const CALL_CHUNK_SIZE = 200
 
 export default function Updater() {
   const dispatch = useDispatch<AppDispatch>()

@@ -5,7 +5,7 @@ import { useAllTokens } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks'
 import { useMulticallContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
-import { useMultipleCallSingleContractResult, useMultipleContractSingleData } from '../multicall/hooks'
+import { useSingleContractMultipleData, useMultipleContractSingleData } from '../multicall/hooks'
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
@@ -24,7 +24,7 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [
     [uncheckedAddresses]
   )
 
-  const results = useMultipleCallSingleContractResult(
+  const results = useSingleContractMultipleData(
     multicallContract,
     'getEthBalance',
     addresses.map(address => [address])
