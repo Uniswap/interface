@@ -9,8 +9,8 @@ import { useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
 import { parseCallKey, updateMulticallResults } from './actions'
 
-// limit to 100 calls at a time max, so that we do not exceed the block gas limit
-const CALL_CHUNK_SIZE = 200
+// chunk calls so we do not exceed the gas limit
+const CALL_CHUNK_SIZE = 250
 
 export default function Updater() {
   const dispatch = useDispatch<AppDispatch>()
@@ -24,17 +24,18 @@ export default function Updater() {
     return Object.keys(state.callListeners[chainId]).filter(callKey => state.callListeners[chainId][callKey] > 0)
   }, [state.callListeners, chainId])
 
-  const debouncedListeningKeys = useDebounce(listeningKeys, 100)
+  const debouncedResults = useDebounce(state.callResults, 25)
+  const debouncedListeningKeys = useDebounce(listeningKeys, 25)
 
   const unserializedOutdatedCallKeys = useMemo(() => {
-    if (!chainId || !state.callResults[chainId]) return debouncedListeningKeys
+    if (!chainId || !debouncedResults[chainId]) return debouncedListeningKeys
     if (!latestBlockNumber) return []
 
     return debouncedListeningKeys.filter(key => {
-      const data = state.callResults[chainId][key]
+      const data = debouncedResults[chainId][key]
       return !data || data.blockNumber < latestBlockNumber
     })
-  }, [chainId, state.callResults, debouncedListeningKeys, latestBlockNumber])
+  }, [chainId, debouncedResults, debouncedListeningKeys, latestBlockNumber])
 
   const serializedOutdatedCallKeys = useMemo(() => JSON.stringify(unserializedOutdatedCallKeys.sort()), [
     unserializedOutdatedCallKeys
@@ -46,6 +47,8 @@ export default function Updater() {
     const calls = outdatedCallKeys.map(key => parseCallKey(key))
 
     const chunkedCalls = chunkArray(calls, CALL_CHUNK_SIZE)
+
+    console.debug('Firing off chunked calls', chunkedCalls)
 
     chunkedCalls.forEach((chunk, index) =>
       multicallContract
