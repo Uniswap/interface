@@ -2,7 +2,7 @@ import { ChainId, Pair, Percent, Route, Token, TokenAmount, Trade, TradeType, WE
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
 import { useV1FactoryContract } from '../hooks/useContract'
-import { useSingleCallResult } from '../state/multicall/hooks'
+import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from '../state/multicall/hooks'
 import { useETHBalances, useTokenBalance } from '../state/wallet/hooks'
 
 function useV1PairAddress(tokenAddress?: string): string | undefined {
@@ -27,6 +27,20 @@ function useMockV1Pair(token?: Token): MockV1Pair | undefined {
   return tokenBalance && ETHBalance && token
     ? new MockV1Pair(tokenBalance, new TokenAmount(WETH[token.chainId], ETHBalance.toString()))
     : undefined
+}
+
+export function useAllV1ExchangeAddresses(): string[] {
+  const factory = useV1FactoryContract()
+  const exchangeCount = useSingleCallResult(factory, 'tokenCount')?.result
+
+  const parsedCount = parseInt(exchangeCount?.toString() ?? '0')
+
+  const indices = [...Array(parsedCount).keys()].map(ix => [ix])
+  return (
+    useSingleContractMultipleData(factory, 'getTokenWithId', indices, NEVER_RELOAD)
+      ?.map(({ result }) => result?.[0])
+      ?.filter(x => x) ?? []
+  )
 }
 
 export function useV1TradeLinkIfBetter(
