@@ -3,6 +3,7 @@ import React from 'react'
 import './LoginScreen.css'
 import DMMLogo from '../../assets/images/dmm-logo.svg'
 import Button from '@material-ui/core/Button'
+import { getDefaultApiKeyHeaders, getIpAddress, routes, sessionId } from '../../utils/api-signer'
 
 class LoginScreen extends React.Component {
   constructor(props) {
@@ -42,17 +43,35 @@ class LoginScreen extends React.Component {
   }
 
   login() {
-    fetch('https://api.defimoneymarket.com/v1/dmg-sale/verify-password', {
-      method: 'POST',
+    const params = {
+      method: routes.verifyPrivateSalePassword.method,
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
         Authorization: this.state.password
       },
       body: JSON.stringify({})
-    })
+    }
+    fetch(routes.verifyPrivateSalePassword.url, params)
       .then(response => response.text())
       .then(body => {
+        getIpAddress()
+          .then(ipAddress => {
+            const body = {
+              key: 'PRIVATE_SALE_LOGIN',
+              data: {
+                session_id: sessionId,
+                ip_address: ipAddress,
+                password_used: this.state.password,
+              }
+            }
+            const options = {
+              method: routes.insertEvent.method,
+              headers: getDefaultApiKeyHeaders(),
+              body: JSON.stringify(body)
+            }
+            return fetch(routes.insertEvent.url, options)
+          })
         const response = JSON.parse(body).data
         if (response) {
           this.props.onLogin()
@@ -68,7 +87,7 @@ class LoginScreen extends React.Component {
         <div className={'loginScreenInner'}>
           <div className={'loginScreenTitleWrapper'}>
             <div className={'loginScreenDmmLogo'}>
-              <img src={DMMLogo} alt={'Logo'} />
+              <img src={DMMLogo} alt={'Logo'}/>
             </div>
             <div className={'loginScreenTitleInner'}>
               <div className={'loginScreenTitle'}>DMG Token Sale</div>

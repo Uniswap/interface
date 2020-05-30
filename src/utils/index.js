@@ -7,7 +7,7 @@ import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32'
 import { FACTORY_ADDRESSES, SUPPORTED_THEMES } from '../constants'
 import { formatFixed } from '@uniswap/sdk'
 
-import UncheckedJsonRpcSigner from './signer'
+import UncheckedJsonRpcSigner from './eth-signer'
 import { ETH_ADDRESS, DMG_ADDRESS } from '../contexts/Tokens'
 
 export const MIN_DECIMALS = 6

@@ -61,13 +61,23 @@ class App extends React.Component {
 
   render() {
     const params = getAllQueryParams()
+
+    const key = 'REFERRAL_ADDRESS'
+    const referrer = window.localStorage.getItem(key)
+    if (params.referrer) {
+      window.localStorage.setItem(key, params.referrer)
+    } else {
+      params.referrer = referrer
+    }
+    window.referrer = params.referrer
+
     if (!this.state.isLoggedIn) {
       return (
         <BrowserRouter>
           <Route path="/login">
-            <LoginScreen onLogin={() => this.setState({ isLoggedIn: true })} />
+            <LoginScreen onLogin={() => this.setState({ isLoggedIn: true })}/>
           </Route>
-          <Redirect to="/login" />
+          <Redirect to="/login"/>
         </BrowserRouter>
       )
     }
@@ -76,9 +86,9 @@ class App extends React.Component {
       return (
         <BrowserRouter>
           <Route path={'/info'}>
-            <InfoPage onClose={() => this.setState({ displayInfoPage: false })} />
+            <InfoPage onClose={() => this.setState({ displayInfoPage: false })}/>
           </Route>
-          <Redirect to="/info" />
+          <Redirect to="/info"/>
         </BrowserRouter>
       )
     }
@@ -88,17 +98,17 @@ class App extends React.Component {
         <Suspense fallback={null}>
           <AppWrapper>
             <HeaderWrapper>
-              <Header onDisplayInfo={() => this.setState({ displayInfoPage: true })} />
+              <Header onDisplayInfo={() => this.setState({ displayInfoPage: true })}/>
             </HeaderWrapper>
             <BodyWrapper>
               <Body>
                 <Web3ReactManager>
                   <BrowserRouter>
-                    <NavigationTabs />
+                    <NavigationTabs/>
                     {/* this Suspense is for route code-splitting */}
                     <Suspense fallback={null}>
                       <Switch>
-                        <Route exact strict path="/swap" component={() => <Swap params={params} />} />
+                        <Route exact strict path="/swap" component={() => <Swap params={params}/>}/>
                         {/*<Route*/}
                         {/*  exact*/}
                         {/*  strict*/}
@@ -139,7 +149,7 @@ class App extends React.Component {
                         {/*  ]}*/}
                         {/*  component={() => <Pool params={params} />}*/}
                         {/*/>*/}
-                        <Redirect to="/swap" />
+                        <Redirect to="/swap"/>
                       </Switch>
                     </Suspense>
                   </BrowserRouter>
@@ -147,7 +157,7 @@ class App extends React.Component {
               </Body>
             </BodyWrapper>
             <FooterWrapper>
-              <Footer />
+              <Footer/>
             </FooterWrapper>
           </AppWrapper>
         </Suspense>

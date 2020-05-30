@@ -47,7 +47,8 @@
     "react-switch": "^5.0.1",
     "react-use-gesture": "^6.0.14",
     "styled-components": "^4.2.0",
-    "typescript": "^3.8.2"
+    "typescript": "^3.8.2",
+    "uuid": "^8.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -247,7 +247,7 @@ export default function AccountDetails({
   const { chainId, account, connector } = useWeb3React()
 
   function formatConnectorName() {
-    const isMetaMask = window.ethereum && window.ethereum.isMetaMask ? true : false
+    const isMetaMask = window.ethereum && window.ethereum.isMetaMask
     const name = Object.keys(SUPPORTED_WALLETS)
       .filter(
         k =>

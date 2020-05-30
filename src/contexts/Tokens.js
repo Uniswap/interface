@@ -40,6 +40,8 @@ const ETH = {
     [DECIMALS]: 18,
     [EXCHANGE_ADDRESS]: null,
     [MIN_ORDER]: new BigNumber('25000000000000000000'),
+    // [MIN_ORDER]: new BigNumber('1250000000000000000'),
+    // [MIN_ORDER]: _0,
   }
 }
 

@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useReducer } from 'react'
 
-const UNISWAP = 'UNISWAP'
+const DMM_DAO = 'DMM_DAO'
 
 const VERSION = 'VERSION'
 const CURRENT_VERSION = 0
@@ -9,13 +9,15 @@ const LAST_SAVED = 'LAST_SAVED'
 const BETA_MESSAGE_DISMISSED = 'BETA_MESSAGE_DISMISSED'
 const GENERAL_DAI__MESSAGE_DISMISSED = 'GENERAL_DAI__MESSAGE_DISMISSED'
 const SAI_HOLDER__MESSAGE_DISMISSED = 'SAI_HOLDER__MESSAGE_DISMISSED'
+const REFERRAL_ADDRESS = 'REFERRAL_ADDRESS'
 const DARK_MODE = 'DARK_MODE'
 
 const UPDATABLE_KEYS = [
   GENERAL_DAI__MESSAGE_DISMISSED,
   SAI_HOLDER__MESSAGE_DISMISSED,
   BETA_MESSAGE_DISMISSED,
-  DARK_MODE
+  DARK_MODE,
+  REFERRAL_ADDRESS
 ]
 
 const UPDATE_KEY = 'UPDATE_KEY'
@@ -55,7 +57,7 @@ function init() {
   }
 
   try {
-    const parsed = JSON.parse(window.localStorage.getItem(UNISWAP))
+    const parsed = JSON.parse(window.localStorage.getItem(DMM_DAO))
     if (parsed[VERSION] !== CURRENT_VERSION) {
       // this is where we could run migration logic
       return defaultLocalStorage
@@ -85,7 +87,7 @@ export function Updater() {
   const [state] = useLocalStorageContext()
 
   useEffect(() => {
-    window.localStorage.setItem(UNISWAP, JSON.stringify({ ...state, [LAST_SAVED]: Math.floor(Date.now() / 1000) }))
+    window.localStorage.setItem(DMM_DAO, JSON.stringify({ ...state, [LAST_SAVED]: Math.floor(Date.now() / 1000) }))
   })
 
   return null

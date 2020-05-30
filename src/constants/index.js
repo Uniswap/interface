@@ -41,6 +41,7 @@ export const SUPPORTED_WALLETS =
           WALLET_CONNECT: {
             connector: walletconnect,
             name: 'WalletConnect',
+            type: 'Wallet-Connect',
             iconName: 'walletConnectIcon.svg',
             description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
             href: null,
@@ -49,6 +50,7 @@ export const SUPPORTED_WALLETS =
           WALLET_LINK: {
             connector: walletlink,
             name: 'Coinbase Wallet',
+            type: 'Coinbase-Wallet',
             iconName: 'coinbaseWalletIcon.svg',
             description: 'Use Coinbase Wallet app on mobile device',
             href: null,
@@ -56,6 +58,7 @@ export const SUPPORTED_WALLETS =
           },
           COINBASE_LINK: {
             name: 'Open in Coinbase Wallet',
+            type: 'Coinbase-Wallet-Link',
             iconName: 'coinbaseWalletIcon.svg',
             description: 'Open in Coinbase Wallet app.',
             href: 'https://go.cb-w.com/mtUDhEZPy1',
@@ -65,9 +68,10 @@ export const SUPPORTED_WALLETS =
           },
           TRUST_WALLET_LINK: {
             name: 'Open in Trust Wallet',
+            type: 'Trust-Wallet-Link',
             iconName: 'trustWallet.png',
             description: 'iOS and Android app.',
-            href: 'https://link.trustwallet.com/open_url?coin_id=60&url=https://uniswap.exchange/swap',
+            href: 'https://link.trustwallet.com/open_url?coin_id=60&url=https://dao.defimoneymarket.com',
             color: '#1C74CC',
             mobile: true,
             mobileOnly: true
@@ -75,6 +79,7 @@ export const SUPPORTED_WALLETS =
           FORTMATIC: {
             connector: fortmatic,
             name: 'Fortmatic',
+            type: 'Fortmatic',
             iconName: 'fortmaticIcon.png',
             description: 'Login using Fortmatic hosted wallet',
             href: null,
@@ -84,6 +89,7 @@ export const SUPPORTED_WALLETS =
           Portis: {
             connector: portis,
             name: 'Portis',
+            type: 'Portis',
             iconName: 'portisIcon.png',
             description: 'Login using Portis hosted wallet',
             href: null,
@@ -93,6 +99,7 @@ export const SUPPORTED_WALLETS =
           Torus: {
             connector: torus,
             name: 'Torus',
+            type: 'Torus',
             iconName: 'torus.png',
             description: 'Login via Google, Facebook and others',
             href: null,

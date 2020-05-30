@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
@@ -8,6 +8,7 @@ import { useEagerConnect, useInactiveListener } from '../../hooks'
 import { Spinner } from '../../theme'
 import Circle from '../../assets/images/circle.svg'
 import { NetworkContextName } from '../../constants'
+import { getDefaultApiKeyHeaders, getIpAddress, getConnectorName, routes, sessionId } from '../../utils/api-signer'
 
 const MessageWrapper = styled.div`
   display: flex;
@@ -32,8 +33,31 @@ const SpinnerWrapper = styled(Spinner)`
 
 export default function Web3ReactManager({ children }) {
   const { t } = useTranslation()
-  const { active } = useWeb3React()
-  const { active: networkActive, error: networkError, activate: activateNetwork } = useWeb3React(NetworkContextName)
+  const { active, account } = useWeb3React()
+  const { active: networkActive, error: networkError, activate: activateNetwork, connector } = useWeb3React(NetworkContextName)
+
+  useEffect(() => {
+    if (!!account) {
+      getIpAddress()
+        .then(ipAddress => {
+          const body = {
+            key: 'WALLET_SELECTED',
+            data: {
+              session_id: sessionId,
+              ip_address: ipAddress,
+              wallet_address: account,
+              wallet_type: getConnectorName(connector),
+            }
+          }
+          const options = {
+            method: routes.insertEvent.method,
+            headers: getDefaultApiKeyHeaders(),
+            body: JSON.stringify(body)
+          }
+          return fetch(routes.insertEvent.url, options)
+        })
+    }
+  }, [account])
 
   // try to eagerly connect to an injected provider, if it exists and has granted access already
   const triedEager = useEagerConnect()
@@ -93,7 +117,7 @@ export default function Web3ReactManager({ children }) {
   if (!active && !networkActive) {
     return showLoader ? (
       <MessageWrapper>
-        <SpinnerWrapper src={Circle} />
+        <SpinnerWrapper src={Circle}/>
       </MessageWrapper>
     ) : null
   }

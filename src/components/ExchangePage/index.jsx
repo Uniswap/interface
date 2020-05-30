@@ -49,7 +49,7 @@ import { exchange } from '../../connectors'
 import { Zero } from 'ethers/constants'
 import { getSignableData } from '../../connectors/Loopring/LoopringEIP712Schema'
 
-import * as crypto from 'crypto'
+import { routes, getDefaultApiKeyHeaders, getIpAddress, sessionId } from '../../utils/api-signer'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -514,16 +514,16 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         setInputError(t('insufficientBalanceWithBuffer'))
         setShowWrap(false)
         setShowUnlock(false)
-      } else if (inputCurrency === 'ETH') {
-        setInputError(null)
-        setShowWrap(true)
-        setShowUnlock(false)
       } else if (inputValueCalculation.lt(INITIAL_TOKENS_CONTEXT['1'][effectiveInputCurrency][MIN_ORDER])) {
         const token = INITIAL_TOKENS_CONTEXT['1'][effectiveInputCurrency]
         const minimumOrder = token[MIN_ORDER]
         setInputError(`Minimum order is ${formatUnits(minimumOrder.toString(), token[DECIMALS])} ${token[SYMBOL]}`)
         setShowUnlock(false)
         setShowWrap(false)
+      } else if (inputCurrency === 'ETH') {
+        setInputError(null)
+        setShowWrap(true)
+        setShowUnlock(false)
       } else {
         setInputError(null)
         setShowUnlock(false)
@@ -779,39 +779,51 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         return dolomiteOrder
       })
       .then(dolomiteOrder => {
+        getIpAddress()
+          .then(ipAddress => {
+            const body = {
+              key: 'ORDER_SUBMITTED',
+              data: {
+                session_id: sessionId,
+                ip_address: ipAddress,
+                dolomite_order_uuid: dolomiteOrder['dolomite_order_uuid'],
+                buyer_address: dolomiteOrder['owner_address'],
+                market: dolomiteOrder.market,
+                dmg_bought: new BigNumber(dolomiteOrder['primary_padded_amount']).toString(),
+                otherSold: dolomiteOrder['dealt_amount_secondary']?.amount || '0',
+              },
+            }
+            const options = {
+              method: routes.insertEvent.method,
+              headers: getDefaultApiKeyHeaders(),
+              body: JSON.stringify(body)
+            }
+            return fetch(routes.insertEvent.url, options)
+          })
+          .then(() => dolomiteOrder)
+      })
+      .then(dolomiteOrder => {
         if (params.referrer) {
-          const signature = dolomiteOrder.ecdsa_multi_hash_signature
-          const timestamp = new Date().getTime()
-          const key = new Buffer(process.env.REACT_APP_ADMIN_API_KEY, 'utf-8')
-          const hash = crypto
-            .createHmac('sha256', key)
-            .update(timestamp.toString(10))
-            .digest('base64')
-
+          const signature = dolomiteOrder['ecdsa_multi_hash_signature']
           const body = {
-            dolomite_order_uuid: dolomiteOrder.dolomite_order_uuid,
+            dolomite_order_uuid: dolomiteOrder['dolomite_order_uuid'],
             signature: {
               v: Number.parseInt(signature.slice(6, 8), 16),
               r: `0x${signature.slice(8, 72)}`,
               s: `0x${signature.slice(72, 136)}`
             },
             signature_algorithm: Number.parseInt(signature.slice(2, 4), 16),
-            buyer_address: dolomiteOrder.owner_address,
-            order_hash: dolomiteOrder.order_hash,
+            buyer_address: dolomiteOrder['owner_address'],
+            order_hash: dolomiteOrder['order_hash'],
             referrer_address: params.referrer,
-            dmg_bought: new BigNumber(dolomiteOrder.primary_padded_amount).toString()
+            dmg_bought: new BigNumber(dolomiteOrder['primary_padded_amount']).toString()
           }
           const options = {
-            method: 'POST',
-            headers: {
-              'X-Dmm-Api-Signature': hash,
-              'X-Dmm-Api-Timestamp': timestamp,
-              'Content-Type': 'application/json'
-            },
+            method: routes.insertReferral.method,
+            headers: getDefaultApiKeyHeaders(),
             body: JSON.stringify(body)
           }
-          const referralUrl = 'https://api.defimoneymarket.com/v1/dmg-sale/insert-referral'
-          return fetch(referralUrl, options)
+          return fetch(routes.insertReferral.url, options)
         }
       })
       .then(response => response?.json())
