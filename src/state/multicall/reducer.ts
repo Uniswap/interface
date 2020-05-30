@@ -8,7 +8,7 @@ import {
   updateMulticallResults
 } from './actions'
 
-interface MulticallState {
+export interface MulticallState {
   callListeners?: {
     // on a per-chain basis
     [chainId: number]: {
@@ -23,8 +23,8 @@ interface MulticallState {
   callResults: {
     [chainId: number]: {
       [callKey: string]: {
-        data: string | null
-        blockNumber: number
+        data?: string | null
+        blockNumber?: number
         fetchingBlockNumber?: number
       }
     }
@@ -74,10 +74,13 @@ export default createReducer(initialState, builder =>
       calls.forEach(call => {
         const callKey = toCallKey(call)
         const current = state.callResults[chainId][callKey]
-        if (current && current.blockNumber > fetchingBlockNumber) return
-        state.callResults[chainId][callKey] = {
-          ...state.callResults[chainId][callKey],
-          fetchingBlockNumber
+        if (!current) {
+          state.callResults[chainId][callKey] = {
+            fetchingBlockNumber
+          }
+        } else {
+          if (current.fetchingBlockNumber ?? 0 >= fetchingBlockNumber) return
+          state.callResults[chainId][callKey].fetchingBlockNumber = fetchingBlockNumber
         }
       })
     })
@@ -94,7 +97,7 @@ export default createReducer(initialState, builder =>
       state.callResults[chainId] = state.callResults[chainId] ?? {}
       Object.keys(results).forEach(callKey => {
         const current = state.callResults[chainId][callKey]
-        if (current && current.blockNumber > blockNumber) return
+        if (current?.blockNumber ?? 0 > blockNumber) return
         state.callResults[chainId][callKey] = {
           data: results[callKey],
           blockNumber

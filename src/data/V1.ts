@@ -1,9 +1,10 @@
-import { ChainId, Pair, Percent, Route, Token, TokenAmount, Trade, TradeType, WETH } from '@uniswap/sdk'
+import { ChainId, JSBI, Pair, Percent, Route, Token, TokenAmount, Trade, TradeType, WETH } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
+import { useAllTokens } from '../hooks/Tokens'
 import { useV1FactoryContract } from '../hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from '../state/multicall/hooks'
-import { useETHBalances, useTokenBalance } from '../state/wallet/hooks'
+import { useETHBalances, useTokenBalance, useTokenBalances } from '../state/wallet/hooks'
 
 function useV1PairAddress(tokenAddress?: string): string | undefined {
   const contract = useV1FactoryContract()
@@ -29,17 +30,50 @@ function useMockV1Pair(token?: Token): MockV1Pair | undefined {
     : undefined
 }
 
+// returns ALL v1 exchange addresses
 export function useAllV1ExchangeAddresses(): string[] {
   const factory = useV1FactoryContract()
   const exchangeCount = useSingleCallResult(factory, 'tokenCount')?.result
 
   const parsedCount = parseInt(exchangeCount?.toString() ?? '0')
 
-  const indices = [...Array(parsedCount).keys()].map(ix => [ix])
-  return (
-    useSingleContractMultipleData(factory, 'getTokenWithId', indices, NEVER_RELOAD)
-      ?.map(({ result }) => result?.[0])
-      ?.filter(x => x) ?? []
+  const indices = useMemo(() => [...Array(parsedCount).keys()].map(ix => [ix]), [parsedCount])
+  const data = useSingleContractMultipleData(factory, 'getTokenWithId', indices, NEVER_RELOAD)
+
+  return useMemo(() => data?.map(({ result }) => result?.[0])?.filter(x => x) ?? [], [data])
+}
+
+// returns all v1 exchange addresses in the user's token list
+export function useAllTokenV1ExchangeAddresses(): string[] {
+  const allTokens = useAllTokens()
+  const factory = useV1FactoryContract()
+  const args = useMemo(() => Object.keys(allTokens).map(tokenAddress => [tokenAddress]), [allTokens])
+
+  const data = useSingleContractMultipleData(factory, 'getExchange', args, NEVER_RELOAD)
+
+  return useMemo(() => data?.map(({ result }) => result?.[0])?.filter(x => x) ?? [], [data])
+}
+
+// returns whether any of the tokens in the user's token list have liquidity on v1
+export function useUserProbablyHasV1Liquidity(): boolean | undefined {
+  const exchangeAddresses = useAllTokenV1ExchangeAddresses()
+
+  const { account, chainId } = useActiveWeb3React()
+
+  const fakeTokens = useMemo(
+    () => (chainId ? exchangeAddresses.map(address => new Token(chainId, address, 18, 'UNI-V1')) : []),
+    [chainId, exchangeAddresses]
+  )
+
+  const balances = useTokenBalances(account ?? undefined, fakeTokens)
+
+  return useMemo(
+    () =>
+      Object.keys(balances).some(tokenAddress => {
+        const b = balances[tokenAddress]?.raw
+        return b && JSBI.greaterThan(b, JSBI.BigInt(0))
+      }),
+    [balances]
   )
 }
 
