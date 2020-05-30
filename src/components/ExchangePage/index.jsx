@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useState } from 'react'
 import ReactGA from 'react-ga'
 import { createBrowserHistory } from 'history'
 import { ethers } from 'ethers'
-import { BigNumber, bigNumberify, parseEther, parseUnits } from 'ethers/utils'
+import { BigNumber, bigNumberify, parseEther, formatUnits, parseUnits } from 'ethers/utils'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 
@@ -19,8 +19,10 @@ import {
 import {
   DECIMALS,
   DELEGATE_ADDRESS,
+  SYMBOL,
   DMG_ADDRESS,
   INITIAL_TOKENS_CONTEXT,
+  MIN_ORDER,
   MARKETS,
   PRIMARY,
   PRIMARY_DECIMALS,
@@ -331,7 +333,10 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         .then(response => {
           const status = response['data']['order_status']
           if (status === 'FILLED') {
-            setDolomiteOrderId('')
+            // Clear out the order ID after a 3 second delay to allow for the 1-block delay to catch up.
+            setTimeout(() => {
+              setDolomiteOrderId('')
+            }, 3000)
           }
         })
     }
@@ -456,13 +461,11 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
         let minValue
         if (isPrimary) {
-          minValue = new BigNumber(10).pow(
-            INITIAL_TOKENS_CONTEXT['1'][market.primary][DECIMALS] - market[PRIMARY_DECIMALS]
-          )
+          const decimalsDiff = INITIAL_TOKENS_CONTEXT['1'][market.primary][DECIMALS] - market[PRIMARY_DECIMALS]
+          minValue = new BigNumber(10).pow(decimalsDiff)
         } else {
-          minValue = new BigNumber(10).pow(
-            INITIAL_TOKENS_CONTEXT['1'][market.secondary][DECIMALS] - market[SECONDARY_DECIMALS]
-          )
+          const decimalsDiff = INITIAL_TOKENS_CONTEXT['1'][market.secondary][DECIMALS] - market[SECONDARY_DECIMALS]
+          minValue = new BigNumber(10).pow(decimalsDiff)
         }
 
         if (parsedValue.lte(ethers.constants.Zero) || parsedValue.gte(ethers.constants.MaxUint256)) {
@@ -495,7 +498,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const pendingWrapping = usePendingWrapping(effectiveInputCurrency)
 
   // validate input allowance + balance
-  const [inputError, setInputError] = useState()
+  const [inputError, setInputError] = useState('')
   const [showUnlock, setShowUnlock] = useState(false)
   const [showWrap, setShowWrap] = useState(false)
   useEffect(() => {
@@ -515,13 +518,19 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         setInputError(null)
         setShowWrap(true)
         setShowUnlock(false)
+      } else if (inputValueCalculation.lt(INITIAL_TOKENS_CONTEXT['1'][effectiveInputCurrency][MIN_ORDER])) {
+        const token = INITIAL_TOKENS_CONTEXT['1'][effectiveInputCurrency]
+        const minimumOrder = token[MIN_ORDER]
+        setInputError(`Minimum order is ${formatUnits(minimumOrder.toString(), token[DECIMALS])} ${token[SYMBOL]}`)
+        setShowUnlock(false)
+        setShowWrap(false)
       } else {
         setInputError(null)
         setShowUnlock(false)
         setShowWrap(false)
       }
       return () => {
-        setInputError(undefined)
+        setInputError(null)
         setShowUnlock(false)
         setShowWrap(false)
       }

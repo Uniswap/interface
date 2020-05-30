@@ -10,11 +10,14 @@ import {
   safeAccess
 } from '../utils'
 
+import { BigNumber } from 'ethers/utils'
+
 export const NAME = 'name'
 export const SYMBOL = 'symbol'
 export const DECIMALS = 'decimals'
 export const PRICE_DECIMALS = 'priceDecimals'
 export const EXCHANGE_ADDRESS = 'exchangeAddress'
+export const MIN_ORDER = 'minOrder' // in the native currency
 export const PRIMARY = 'primary'
 export const PRIMARY_DECIMALS = 'primaryDecimals'
 export const SECONDARY = 'secondary'
@@ -28,12 +31,15 @@ export const DMG_ADDRESS = '0xEd91879919B71bB6905f23af0A68d231EcF87b14'
 export const USDC_ADDRESS = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
 export const WETH_ADDRESS = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
 
+const _0 = new BigNumber(0)
+
 const ETH = {
   ETH: {
     [NAME]: 'Ethereum',
     [SYMBOL]: 'ETH',
     [DECIMALS]: 18,
-    [EXCHANGE_ADDRESS]: null
+    [EXCHANGE_ADDRESS]: null,
+    [MIN_ORDER]: new BigNumber('25000000000000000000'),
   }
 }
 
@@ -45,25 +51,37 @@ export const INITIAL_TOKENS_CONTEXT = {
       [NAME]: 'Dai Stablecoin',
       [SYMBOL]: 'DAI',
       [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: '0x2a1530C4C41db0B0b2bB646CB5Eb1A67b7158667'
+      [EXCHANGE_ADDRESS]: '0x2a1530C4C41db0B0b2bB646CB5Eb1A67b7158667',
+      [MIN_ORDER]: new BigNumber('5000000000000000000000'),
+      // [MIN_ORDER]: new BigNumber('250000000000000000000'),
+      // [MIN_ORDER]: _0,
     },
     [USDC_ADDRESS]: {
       [NAME]: 'USD//C',
       [SYMBOL]: 'USDC',
       [DECIMALS]: 6,
-      [EXCHANGE_ADDRESS]: '0x97deC872013f6B5fB443861090ad931542878126'
+      [EXCHANGE_ADDRESS]: '0x97deC872013f6B5fB443861090ad931542878126',
+      [MIN_ORDER]: new BigNumber('5000000000000000000000'),
+      // [MIN_ORDER]: new BigNumber('250000000000000000000'),
+      // [MIN_ORDER]: _0,
     },
     [WETH_ADDRESS]: {
       [NAME]: 'Wrapped Ether',
       [SYMBOL]: 'WETH',
       [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: '0xA2881A90Bf33F03E7a3f803765Cd2ED5c8928dFb'
+      [EXCHANGE_ADDRESS]: '0xA2881A90Bf33F03E7a3f803765Cd2ED5c8928dFb',
+      [MIN_ORDER]: new BigNumber('25000000000000000000'),
+      // [MIN_ORDER]: new BigNumber('1250000000000000000'),
+      // [MIN_ORDER]: _0,
     },
     [DMG_ADDRESS]: {
       [NAME]: 'DMM Governance',
       [SYMBOL]: 'DMG',
       [DECIMALS]: 18,
-      [EXCHANGE_ADDRESS]: '0xA539BAaa3aCA455c986bB1E25301CEF936CE1B65'
+      [EXCHANGE_ADDRESS]: '0xA539BAaa3aCA455c986bB1E25301CEF936CE1B65',
+      [MIN_ORDER]: new BigNumber('500000000000000000000'),
+      // [MIN_ORDER]: new BigNumber('10000000000000000000'),
+      // [MIN_ORDER]: _0,
     }
   }
 }
