@@ -97,7 +97,7 @@ export default createReducer(initialState, builder =>
       state.callResults[chainId] = state.callResults[chainId] ?? {}
       Object.keys(results).forEach(callKey => {
         const current = state.callResults[chainId][callKey]
-        if (current?.blockNumber ?? 0 > blockNumber) return
+        if ((current?.blockNumber ?? 0) > blockNumber) return
         state.callResults[chainId][callKey] = {
           data: results[callKey],
           blockNumber
