@@ -6,6 +6,7 @@ import { RouteComponentProps } from 'react-router-dom'
 import Question from '../../components/QuestionHelper'
 import SearchModal from '../../components/SearchModal'
 import PositionCard from '../../components/PositionCard'
+import { useUserProbablyHasV1Liquidity } from '../../data/V1'
 import { useTokenBalances } from '../../state/wallet/hooks'
 import { Link, TYPE } from '../../theme'
 import { Text } from 'rebass'
@@ -58,6 +59,8 @@ export default function Pool({ history }: RouteComponentProps) {
       return <PositionCardWrapper key={i} dummyPair={pair} />
     })
 
+  const hasV1Liquidity = useUserProbablyHasV1Liquidity()
+
   return (
     <AppBody>
       <AutoColumn gap="lg" justify="center">
@@ -92,15 +95,23 @@ export default function Pool({ history }: RouteComponentProps) {
             )}
             {filteredExchangeList}
             <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
-              {filteredExchangeList?.length !== 0 ? `Don't see a pool you joined? ` : 'Already joined a pool? '}{' '}
-              <Link
-                id="import-pool-link"
-                onClick={() => {
-                  history.push('/find')
-                }}
-              >
-                Import it.
-              </Link>
+              {!hasV1Liquidity ? (
+                <>
+                  {filteredExchangeList?.length !== 0 ? `Don't see a pool you joined? ` : 'Already joined a pool? '}{' '}
+                  <Link
+                    id="import-pool-link"
+                    onClick={() => {
+                      history.push('/find')
+                    }}
+                  >
+                    Import it.
+                  </Link>
+                </>
+              ) : (
+                <Link id="migrate-v1-liquidity-link" href="https://migrate.uniswap.exchange">
+                  Migrate your V1 liquidity.
+                </Link>
+              )}
             </Text>
           </AutoColumn>
           <FixedBottom>
