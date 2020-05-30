@@ -98,7 +98,7 @@ function PopupItem({ content, popKey }: { content: PopupContent; popKey: string 
   }
 }
 
-export default function App() {
+export default function Popups() {
   const theme = useContext(ThemeContext)
   // get all popups
   const activePopups = useActivePopups()

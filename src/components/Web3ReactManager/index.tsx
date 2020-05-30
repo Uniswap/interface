@@ -45,20 +45,6 @@ export default function Web3ReactManager({ children }) {
     }
   }, [triedEager, networkActive, networkError, activateNetwork, active])
 
-  // 'pause' the network connector if we're ever connected to an account and it's active
-  useEffect(() => {
-    if (active && networkActive) {
-      network.pause()
-    }
-  }, [active, networkActive])
-
-  // 'resume' the network connector if we're ever not connected to an account and it's active
-  useEffect(() => {
-    if (!active && networkActive) {
-      network.resume()
-    }
-  }, [active, networkActive])
-
   // when there's no account connected, react to logins (broadly speaking) on the injected provider, if it exists
   useInactiveListener(!triedEager)
 
