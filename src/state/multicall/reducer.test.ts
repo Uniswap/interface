@@ -1,4 +1,4 @@
-import { addMulticallListeners, removeMulticallListeners } from './actions'
+import { addMulticallListeners, removeMulticallListeners, updateMulticallResults } from './actions'
 import reducer, { MulticallState } from './reducer'
 import { Store, createStore } from '@reduxjs/toolkit'
 
@@ -78,6 +78,90 @@ describe('multicall reducer', () => {
         })
       )
       expect(store.getState()).toEqual({ callResults: {}, callListeners: { [1]: { '0x-0x': {} } } })
+    })
+  })
+
+  describe('updateMulticallResults', () => {
+    it('updates data if not present', () => {
+      store.dispatch(
+        updateMulticallResults({
+          chainId: 1,
+          blockNumber: 1,
+          results: {
+            abc: '0x'
+          }
+        })
+      )
+      expect(store.getState()).toEqual({
+        callResults: {
+          [1]: {
+            abc: {
+              blockNumber: 1,
+              data: '0x'
+            }
+          }
+        }
+      })
+    })
+    it('updates old data', () => {
+      store.dispatch(
+        updateMulticallResults({
+          chainId: 1,
+          blockNumber: 1,
+          results: {
+            abc: '0x'
+          }
+        })
+      )
+      store.dispatch(
+        updateMulticallResults({
+          chainId: 1,
+          blockNumber: 2,
+          results: {
+            abc: '0x2'
+          }
+        })
+      )
+      expect(store.getState()).toEqual({
+        callResults: {
+          [1]: {
+            abc: {
+              blockNumber: 2,
+              data: '0x2'
+            }
+          }
+        }
+      })
+    })
+    it('ignores late updates', () => {
+      store.dispatch(
+        updateMulticallResults({
+          chainId: 1,
+          blockNumber: 2,
+          results: {
+            abc: '0x2'
+          }
+        })
+      )
+      store.dispatch(
+        updateMulticallResults({
+          chainId: 1,
+          blockNumber: 1,
+          results: {
+            abc: '0x1'
+          }
+        })
+      )
+      expect(store.getState()).toEqual({
+        callResults: {
+          [1]: {
+            abc: {
+              blockNumber: 2,
+              data: '0x2'
+            }
+          }
+        }
+      })
     })
   })
 })
