@@ -63,8 +63,8 @@ export const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'USDC',
       [DECIMALS]: 6,
       [EXCHANGE_ADDRESS]: '0x97deC872013f6B5fB443861090ad931542878126',
-      [MIN_ORDER]: new BigNumber('5000000000000000000000'),
-      // [MIN_ORDER]: new BigNumber('250000000000000000000'),
+      [MIN_ORDER]: new BigNumber('5000000000'),
+      // [MIN_ORDER]: new BigNumber('250000000'),
       // [MIN_ORDER]: _0,
     },
     [WETH_ADDRESS]: {
