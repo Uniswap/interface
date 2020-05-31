@@ -206,9 +206,9 @@ function SearchModal({
           <AutoRow justify={'center'}>
             <div>
               {isTokenView ? (
-                <Text fontWeight={500} color={theme.text2} fontSize={14}>
-                  <LinkStyledButton onClick={openTooltip}>Having trouble finding a token?</LinkStyledButton>
-                </Text>
+                <LinkStyledButton style={{ fontWeight: 500, color: theme.text2, fontSize: 16 }} onClick={openTooltip}>
+                  Having trouble finding a token?
+                </LinkStyledButton>
               ) : (
                 <Text fontWeight={500}>
                   {!isMobile && "Don't see a pool? "}
