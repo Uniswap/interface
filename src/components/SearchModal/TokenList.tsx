@@ -7,7 +7,7 @@ import { ThemeContext } from 'styled-components'
 import Circle from '../../assets/images/circle.svg'
 import { ALL_TOKENS } from '../../constants/tokens'
 import { useActiveWeb3React } from '../../hooks'
-import { Link as StyledLink, TYPE } from '../../theme'
+import { LinkStyledButton, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import { ButtonSecondary } from '../Button'
 import Column, { AutoColumn } from '../Column'
@@ -87,7 +87,7 @@ export default function TokenList({
                         onRemoveAddedToken(chainId, address)
                       }}
                     >
-                      <StyledLink style={{ marginLeft: '4px', fontWeight: 400 }}>(Remove)</StyledLink>
+                      <LinkStyledButton style={{ marginLeft: '4px', fontWeight: 400 }}>(Remove)</LinkStyledButton>
                     </div>
                   )}
                 </FadedSpan>

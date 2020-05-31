@@ -10,7 +10,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useAllDummyPairs, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useAllTokenBalancesTreatingWETHasETH, useTokenBalances } from '../../state/wallet/hooks'
-import { CloseIcon, Link as StyledLink } from '../../theme/components'
+import { CloseIcon, LinkStyledButton, StyledInternalLink } from '../../theme/components'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import Modal from '../Modal'
@@ -207,18 +207,12 @@ function SearchModal({
             <div>
               {isTokenView ? (
                 <Text fontWeight={500} color={theme.text2} fontSize={14}>
-                  <StyledLink onClick={openTooltip}>Having trouble finding a token?</StyledLink>
+                  <LinkStyledButton onClick={openTooltip}>Having trouble finding a token?</LinkStyledButton>
                 </Text>
               ) : (
                 <Text fontWeight={500}>
                   {!isMobile && "Don't see a pool? "}
-                  <StyledLink
-                    onClick={() => {
-                      history.push('/find')
-                    }}
-                  >
-                    {!isMobile ? 'Import it.' : 'Import pool.'}
-                  </StyledLink>
+                  <StyledInternalLink to="/find">{!isMobile ? 'Import it.' : 'Import pool.'}</StyledInternalLink>
                 </Text>
               )}
             </div>

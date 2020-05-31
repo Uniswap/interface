@@ -12,7 +12,7 @@ import Card, { GreyCard } from '../Card'
 import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
 import { Text } from 'rebass'
-import { Link } from '../../theme/components'
+import { ExternalLink } from '../../theme/components'
 import { AutoColumn } from '../Column'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { ButtonSecondary } from '../Button'
@@ -204,7 +204,9 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
               )}
 
               <AutoRow justify="center" marginTop={'10px'}>
-                <Link href={`https://uniswap.info/pair/${pair?.liquidityToken.address}`}>View pool information ↗</Link>
+                <ExternalLink href={`https://uniswap.info/pair/${pair?.liquidityToken.address}`}>
+                  View pool information ↗
+                </ExternalLink>
               </AutoRow>
               <RowBetween marginTop="10px">
                 <ButtonSecondary

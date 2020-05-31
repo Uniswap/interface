@@ -2,10 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 import useCopyClipboard from '../../hooks/useCopyClipboard'
 
-import { Link } from '../../theme'
+import { LinkStyledButton } from '../../theme'
 import { CheckCircle, Copy } from 'react-feather'
 
-const CopyIcon = styled(Link)`
+const CopyIcon = styled(LinkStyledButton)`
   color: ${({ theme }) => theme.text4};
   flex-shrink: 0;
   display: flex;

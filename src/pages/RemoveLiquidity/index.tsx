@@ -35,7 +35,7 @@ import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetai
 import { Field } from '../../state/burn/actions'
 import { useWalletModalToggle } from '../../state/application/hooks'
 
-export default function RemoveLiquidity({ match: { params } }: RouteComponentProps<{ tokens: string }>) {
+export default function RemoveLiquidity({ match: { params }, history }: RouteComponentProps<{ tokens: string }>) {
   useDefaultsFromURLMatchParams(params)
 
   const { account, chainId, library } = useActiveWeb3React()
@@ -398,6 +398,10 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
           <ConfirmationModal
             isOpen={showConfirm}
             onDismiss={() => {
+              if (attemptingTxn) {
+                history.push('/pool')
+                return
+              }
               resetModalState()
               setShowConfirm(false)
               setShowAdvanced(false)

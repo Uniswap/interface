@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Link } from '../../theme'
+import { ExternalLink } from '../../theme'
 
 const InfoCard = styled.button<{ active?: boolean }>`
   background-color: ${({ theme, active }) => (active ? theme.bg3 : theme.bg2)};
@@ -134,7 +134,7 @@ export default function Option({
     </OptionCardClickable>
   )
   if (link) {
-    return <Link href={link}>{content}</Link>
+    return <ExternalLink href={link}>{content}</ExternalLink>
   }
 
   return content
