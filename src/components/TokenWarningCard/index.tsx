@@ -8,7 +8,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
 import { Field } from '../../state/swap/actions'
 import { useTokenWarningDismissal } from '../../state/user/hooks'
-import { Link, TYPE } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import { getEtherscanLink } from '../../utils'
 import PropsOfExcluding from '../../utils/props-of-excluding'
 import QuestionHelper from '../QuestionHelper'
@@ -111,9 +111,9 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
             ? `${token.name} (${token.symbol})`
             : token.name || token.symbol}
         </div>
-        <Link style={{ fontWeight: 400 }} href={getEtherscanLink(chainId, token.address, 'address')}>
+        <ExternalLink style={{ fontWeight: 400 }} href={getEtherscanLink(chainId, token.address, 'address')}>
           (View on Etherscan)
-        </Link>
+        </ExternalLink>
       </Row>
       <Row>
         <TYPE.italic>Verify this is the correct token before making any transactions.</TYPE.italic>

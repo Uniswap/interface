@@ -1,10 +1,8 @@
-import React, { useCallback, useContext } from 'react'
+import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { RouteComponentProps, withRouter } from 'react-router-dom'
-
 import Modal from '../Modal'
 import Loader from '../Loader'
-import { Link } from '../../theme'
+import { ExternalLink } from '../../theme'
 import { Text } from 'rebass'
 import { CloseIcon } from '../../theme/components'
 import { RowBetween } from '../Row'
@@ -32,7 +30,7 @@ const ConfirmedIcon = styled(ColumnCenter)`
   padding: 60px 0;
 `
 
-interface ConfirmationModalProps extends RouteComponentProps<{}> {
+interface ConfirmationModalProps {
   isOpen: boolean
   onDismiss: () => void
   hash: string
@@ -44,8 +42,7 @@ interface ConfirmationModalProps extends RouteComponentProps<{}> {
   title?: string
 }
 
-function ConfirmationModal({
-  history,
+export default function ConfirmationModal({
   isOpen,
   onDismiss,
   hash,
@@ -58,13 +55,6 @@ function ConfirmationModal({
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
-
-  const dismissAndReturn = useCallback(() => {
-    if (history.location.pathname.match('/add') || history.location.pathname.match('/remove')) {
-      history.push('/pool')
-    }
-    onDismiss()
-  }, [onDismiss, history])
 
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
@@ -106,12 +96,12 @@ function ConfirmationModal({
               </AutoColumn>
               {!pendingConfirmation && (
                 <>
-                  <Link href={getEtherscanLink(chainId, hash, 'transaction')}>
+                  <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
                     <Text fontWeight={500} fontSize={14} color={theme.primary1}>
                       View on Etherscan
                     </Text>
-                  </Link>
-                  <ButtonPrimary onClick={dismissAndReturn} style={{ margin: '20px 0 0 0' }}>
+                  </ExternalLink>
+                  <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
                     <Text fontWeight={500} fontSize={20}>
                       Close
                     </Text>
@@ -131,5 +121,3 @@ function ConfirmationModal({
     </Modal>
   )
 }
-
-export default withRouter(ConfirmationModal)

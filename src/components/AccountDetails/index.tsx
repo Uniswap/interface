@@ -21,7 +21,7 @@ import Identicon from '../Identicon'
 
 import { ButtonEmpty } from '../Button'
 
-import { Link, TYPE } from '../../theme'
+import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
@@ -160,7 +160,7 @@ const ConnectButtonRow = styled.div`
   margin: 10px 0;
 `
 
-const StyledLink = styled(Link)<{ hasENS: boolean; isENS: boolean }>`
+const AddressLink = styled(ExternalLink)<{ hasENS: boolean; isENS: boolean }>`
   color: ${({ hasENS, isENS, theme }) => (hasENS ? (isENS ? theme.primary1 : theme.text3) : theme.primary1)};
 `
 
@@ -357,17 +357,21 @@ export default function AccountDetails({
                 {ENSName ? (
                   <>
                     <AccountControl hasENS={!!ENSName} isENS={false}>
-                      <StyledLink hasENS={!!ENSName} isENS={true} href={getEtherscanLink(chainId, ENSName, 'address')}>
+                      <AddressLink hasENS={!!ENSName} isENS={true} href={getEtherscanLink(chainId, ENSName, 'address')}>
                         View on Etherscan ↗
-                      </StyledLink>
+                      </AddressLink>
                     </AccountControl>
                   </>
                 ) : (
                   <>
                     <AccountControl hasENS={!!ENSName} isENS={false}>
-                      <StyledLink hasENS={!!ENSName} isENS={false} href={getEtherscanLink(chainId, account, 'address')}>
+                      <AddressLink
+                        hasENS={!!ENSName}
+                        isENS={false}
+                        href={getEtherscanLink(chainId, account, 'address')}
+                      >
                         View on Etherscan ↗
-                      </StyledLink>
+                      </AddressLink>
                     </AccountControl>
                   </>
                 )}
@@ -395,7 +399,7 @@ export default function AccountDetails({
         <LowerSection>
           <AutoRow style={{ justifyContent: 'space-between' }}>
             <TYPE.body>Recent Transactions</TYPE.body>
-            <Link onClick={clearAllTransactionsCallback}>(clear all)</Link>
+            <LinkStyledButton onClick={clearAllTransactionsCallback}>(clear all)</LinkStyledButton>
           </AutoRow>
           {renderTransactions(pendingTransactions)}
           {renderTransactions(confirmedTransactions)}

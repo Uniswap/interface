@@ -8,7 +8,7 @@ import SearchModal from '../../components/SearchModal'
 import PositionCard from '../../components/PositionCard'
 import { useUserProbablyHasV1Liquidity } from '../../data/V1'
 import { useTokenBalances } from '../../state/wallet/hooks'
-import { Link, TYPE } from '../../theme'
+import { LinkStyledButton, StyledInternalLink, TYPE } from '../../theme'
 import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
 import { RowBetween } from '../../components/Row'
@@ -98,19 +98,12 @@ export default function Pool({ history }: RouteComponentProps) {
               {!hasV1Liquidity ? (
                 <>
                   {filteredExchangeList?.length !== 0 ? `Don't see a pool you joined? ` : 'Already joined a pool? '}{' '}
-                  <Link
-                    id="import-pool-link"
-                    onClick={() => {
-                      history.push('/find')
-                    }}
-                  >
+                  <StyledInternalLink id="import-pool-link" to="/find">
                     Import it.
-                  </Link>
+                  </StyledInternalLink>
                 </>
               ) : (
-                <Link id="migrate-v1-liquidity-link" href="https://migrate.uniswap.exchange">
-                  Migrate your V1 liquidity.
-                </Link>
+                <LinkStyledButton id="migrate-v1-liquidity-link">Migrate your V1 liquidity.</LinkStyledButton>
               )}
             </Text>
           </AutoColumn>

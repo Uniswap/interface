@@ -4,7 +4,7 @@ import { Check, Triangle } from 'react-feather'
 
 import { useActiveWeb3React } from '../../hooks'
 import { getEtherscanLink } from '../../utils'
-import { Link, Spinner } from '../../theme'
+import { ExternalLink, Spinner } from '../../theme'
 import Circle from '../../assets/images/circle.svg'
 
 import { transparentize } from 'polished'
@@ -18,7 +18,7 @@ const TransactionStatusText = styled.div`
   margin-right: 0.5rem;
 `
 
-const TransactionState = styled(Link)<{ pending: boolean; success?: boolean }>`
+const TransactionState = styled(ExternalLink)<{ pending: boolean; success?: boolean }>`
   display: flex;
   justify-content: space-between;
   text-decoration: none !important;

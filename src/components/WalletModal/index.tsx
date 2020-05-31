@@ -12,7 +12,7 @@ import AccountDetails from '../AccountDetails'
 import PendingView from './PendingView'
 import Option from './Option'
 import { SUPPORTED_WALLETS } from '../../constants'
-import { Link } from '../../theme'
+import { ExternalLink } from '../../theme'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected, walletconnect, fortmatic, portis } from '../../connectors'
@@ -358,9 +358,9 @@ export default function WalletModal({
           {walletView !== WALLET_VIEWS.PENDING && (
             <Blurb>
               <span>New to Ethereum? &nbsp;</span>{' '}
-              <Link href="https://ethereum.org/use/#3-what-is-a-wallet-and-which-one-should-i-use">
+              <ExternalLink href="https://ethereum.org/use/#3-what-is-a-wallet-and-which-one-should-i-use">
                 Learn more about wallets
-              </Link>
+              </ExternalLink>
             </Blurb>
           )}
         </ContentWrapper>

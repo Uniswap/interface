@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import useToggle from '../../hooks/useToggle'
 
-import { Link } from '../../theme'
+import { ExternalLink } from '../../theme'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -63,7 +63,7 @@ const MenuFlyout = styled.span`
   z-index: 100;
 `
 
-const MenuItem = styled(Link)`
+const MenuItem = styled(ExternalLink)`
   flex: 1;
   padding: 0.5rem 0.5rem;
   color: ${({ theme }) => theme.text2};
