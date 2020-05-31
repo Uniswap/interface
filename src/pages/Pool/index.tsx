@@ -103,7 +103,9 @@ export default function Pool({ history }: RouteComponentProps) {
                   </StyledInternalLink>
                 </>
               ) : (
-                <LinkStyledButton id="migrate-v1-liquidity-link">Migrate your V1 liquidity.</LinkStyledButton>
+                <StyledInternalLink id="migrate-v1-liquidity-link" to="/migrate/v1">
+                  Migrate your V1 liquidity.
+                </StyledInternalLink>
               )}
             </Text>
           </AutoColumn>

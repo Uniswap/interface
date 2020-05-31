@@ -8,7 +8,7 @@ import Row from '../Row'
 import Menu from '../Menu'
 import Web3Status from '../Web3Status'
 
-import { ExternalLink } from '../../theme'
+import { ExternalLink, StyledInternalLink } from '../../theme'
 import { Text } from 'rebass'
 import { WETH, ChainId } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
@@ -163,9 +163,9 @@ export default function Header() {
           <b>blog post ↗</b>
         </ExternalLink>
         &nbsp;or&nbsp;
-        <ExternalLink href="https://migrate.uniswap.exchange/">
+        <StyledInternalLink to="/migrate/v1">
           <b>migrate your liquidity ↗</b>
-        </ExternalLink>
+        </StyledInternalLink>
         .
       </MigrateBanner>
       <RowBetween padding="1rem">

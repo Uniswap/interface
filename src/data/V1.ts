@@ -30,19 +30,6 @@ function useMockV1Pair(token?: Token): MockV1Pair | undefined {
     : undefined
 }
 
-// returns ALL v1 exchange addresses
-export function useAllV1ExchangeAddresses(): string[] {
-  const factory = useV1FactoryContract()
-  const exchangeCount = useSingleCallResult(factory, 'tokenCount')?.result
-
-  const parsedCount = parseInt(exchangeCount?.toString() ?? '0')
-
-  const indices = useMemo(() => [...Array(parsedCount).keys()].map(ix => [ix]), [parsedCount])
-  const data = useSingleContractMultipleData(factory, 'getTokenWithId', indices, NEVER_RELOAD)
-
-  return useMemo(() => data?.map(({ result }) => result?.[0])?.filter(x => x) ?? [], [data])
-}
-
 // returns all v1 exchange addresses in the user's token list
 export function useAllTokenV1ExchangeAddresses(): string[] {
   const allTokens = useAllTokens()
