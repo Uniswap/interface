@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useActiveWeb3React } from '../../hooks'
-import useDebounce from '../../hooks/useDebounce'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { updateBlockNumber } from './actions'
 import { useDispatch } from 'react-redux'
@@ -10,41 +9,46 @@ export default function Updater() {
   const dispatch = useDispatch()
 
   const windowVisible = useIsWindowVisible()
-  const [maxBlockNumber, setMaxBlockNumber] = useState<number | null>(null)
-  // because blocks arrive in bunches with longer polling periods, we just want
-  // to process the latest one.
-  const debouncedMaxBlockNumber = useDebounce<number | null>(maxBlockNumber, 100)
 
-  // update block number
-  useEffect(() => {
-    if (!library || !chainId) return
+  const [state, setState] = useState<{ chainId: number | undefined; blockNumber: number | null }>({
+    chainId,
+    blockNumber: null
+  })
 
-    const blockListener = (blockNumber: number) => {
-      setMaxBlockNumber(maxBlockNumber => {
-        if (typeof maxBlockNumber !== 'number') return blockNumber
-        return Math.max(maxBlockNumber, blockNumber)
+  const blockNumberCallback = useCallback(
+    (blockNumber: number) => {
+      setState(state => {
+        if (chainId === state.chainId) {
+          if (typeof state.blockNumber !== 'number') return { chainId, blockNumber }
+          return { chainId, blockNumber: Math.max(blockNumber, state.blockNumber) }
+        }
+        return state
       })
-    }
+    },
+    [chainId, setState]
+  )
 
-    setMaxBlockNumber(null)
+  // attach/detach listeners
+  useEffect(() => {
+    if (!library || !chainId || !windowVisible) return
+
+    setState({ chainId, blockNumber: null })
 
     library
       .getBlockNumber()
-      .then(blockNumber => dispatch(updateBlockNumber({ chainId, blockNumber })))
-      .catch(error => console.error(`Failed to get block number for chainId ${chainId}`, error))
+      .then(blockNumberCallback)
+      .catch(error => console.error(`Failed to get block number for chainId: ${chainId}`, error))
 
-    library.on('block', blockListener)
+    library.on('block', blockNumberCallback)
     return () => {
-      library.removeListener('block', blockListener)
+      library.removeListener('block', blockNumberCallback)
     }
-  }, [dispatch, chainId, library])
+  }, [dispatch, chainId, library, blockNumberCallback, windowVisible])
 
   useEffect(() => {
-    if (!chainId || !debouncedMaxBlockNumber) return
-    if (windowVisible) {
-      dispatch(updateBlockNumber({ chainId, blockNumber: debouncedMaxBlockNumber }))
-    }
-  }, [chainId, debouncedMaxBlockNumber, windowVisible, dispatch])
+    if (!state.chainId || !state.blockNumber || !windowVisible) return
+    dispatch(updateBlockNumber({ chainId: state.chainId, blockNumber: state.blockNumber }))
+  }, [windowVisible, dispatch, state.blockNumber, state.chainId])
 
   return null
 }
