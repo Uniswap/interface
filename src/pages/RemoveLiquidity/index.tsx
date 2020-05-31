@@ -1,7 +1,7 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { Percent, WETH } from '@uniswap/sdk'
-import React, { useContext, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
@@ -384,6 +384,13 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
     tokens[Field.TOKEN_A]?.symbol
   } and ${parsedAmounts[Field.TOKEN_B]?.toSignificant(6)} ${tokens[Field.TOKEN_B]?.symbol}`
 
+  const liquidityPercentChangeCallback = useCallback(
+    (value: number) => {
+      onUserInput(Field.LIQUIDITY_PERCENT, value.toString())
+    },
+    [onUserInput]
+  )
+
   return (
     <>
       <AppBody>
@@ -426,9 +433,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
                   <>
                     <Slider
                       value={Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0))}
-                      onChange={value => {
-                        onUserInput(Field.LIQUIDITY_PERCENT, value.toString())
-                      }}
+                      onChange={liquidityPercentChangeCallback}
                     />
                     <RowBetween>
                       <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '25')} width="20%">
