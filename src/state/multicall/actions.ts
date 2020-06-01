@@ -30,8 +30,25 @@ export function parseCallKey(callKey: string): Call {
   }
 }
 
-export const addMulticallListeners = createAction<{ chainId: number; calls: Call[] }>('addMulticallListeners')
-export const removeMulticallListeners = createAction<{ chainId: number; calls: Call[] }>('removeMulticallListeners')
+interface ListenerOptions {
+  // how often this data should be fetched, by default 1
+  blocksPerFetch?: number
+}
+
+export const addMulticallListeners = createAction<{ chainId: number; calls: Call[]; options?: ListenerOptions }>(
+  'addMulticallListeners'
+)
+export const removeMulticallListeners = createAction<{ chainId: number; calls: Call[]; options?: ListenerOptions }>(
+  'removeMulticallListeners'
+)
+export const fetchingMulticallResults = createAction<{ chainId: number; calls: Call[]; fetchingBlockNumber: number }>(
+  'fetchingMulticallResults'
+)
+export const errorFetchingMulticallResults = createAction<{
+  chainId: number
+  calls: Call[]
+  fetchingBlockNumber: number
+}>('errorFetchingMulticallResults')
 export const updateMulticallResults = createAction<{
   chainId: number
   blockNumber: number
