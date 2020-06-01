@@ -14,7 +14,7 @@ async function main() {
   await new Promise((success, failure) => {
     const command = 'git rev-parse --abbrev-ref HEAD'
     exec(command, (error, stdout) => {
-      if (!!error || stdout !== 'master') {
+      if (!!error || stdout.trim() !== 'master') {
         const message = 'You must be on the master branch to build and deploy!'
         failure(message)
       } else {
