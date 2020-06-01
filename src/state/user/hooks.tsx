@@ -1,7 +1,9 @@
-import { ChainId, JSBI, Pair, Token, TokenAmount, WETH } from '@uniswap/sdk'
-import { useActiveWeb3React } from '../../hooks'
+import { ChainId, JSBI, Pair, Token, TokenAmount } from '@uniswap/sdk'
+import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
+
+import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
 import { getTokenInfoWithFallback, isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
@@ -14,7 +16,7 @@ import {
   SerializedToken,
   updateUserDarkMode
 } from './actions'
-import flatMap from 'lodash.flatmap'
+import { BASES_TO_TRACK_LIQUIDITY_FOR, DUMMY_PAIRS_TO_PIN } from '../../constants'
 
 function serializeToken(token: Token): SerializedToken {
   return {
@@ -154,16 +156,14 @@ export function useTokenWarningDismissal(chainId?: number, token?: Token): [bool
   }, [chainId, token, dismissalState, dispatch])
 }
 
-const bases = [
-  ...Object.values(WETH),
-  new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin'),
-  new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
-]
-
 export function useAllDummyPairs(): Pair[] {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
 
+  // pinned pairs
+  const pinnedPairs = useMemo(() => DUMMY_PAIRS_TO_PIN[chainId as ChainId] ?? [], [chainId])
+
+  // pairs for every token against every base
   const generatedPairs: Pair[] = useMemo(
     () =>
       flatMap(
@@ -173,9 +173,8 @@ export function useAllDummyPairs(): Pair[] {
         token => {
           // for each token on the current chain,
           return (
-            bases
-              // loop through all the bases valid for the current chain,
-              .filter(base => base.chainId === chainId)
+            // loop though all bases on the current chain
+            (BASES_TO_TRACK_LIQUIDITY_FOR[chainId as ChainId] ?? [])
               // to construct pairs of the given token with each base
               .map(base => {
                 if (base.equals(token)) {
@@ -191,8 +190,8 @@ export function useAllDummyPairs(): Pair[] {
     [tokens, chainId]
   )
 
+  // pairs saved by users
   const savedSerializedPairs = useSelector<AppState, AppState['user']['pairs']>(({ user: { pairs } }) => pairs)
-
   const userPairs = useMemo(
     () =>
       Object.values<SerializedPair>(savedSerializedPairs[chainId ?? -1] ?? {}).map(
@@ -208,7 +207,8 @@ export function useAllDummyPairs(): Pair[] {
   return useMemo(() => {
     const cache: { [pairKey: string]: boolean } = {}
     return (
-      generatedPairs
+      pinnedPairs
+        .concat(generatedPairs)
         .concat(userPairs)
         // filter out duplicate pairs
         .filter(pair => {
@@ -219,5 +219,5 @@ export function useAllDummyPairs(): Pair[] {
           return (cache[pairKey] = true)
         })
     )
-  }, [generatedPairs, userPairs])
+  }, [pinnedPairs, generatedPairs, userPairs])
 }
