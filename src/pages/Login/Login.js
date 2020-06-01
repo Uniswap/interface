@@ -1,11 +1,11 @@
 import React from 'react'
 
-import './LoginScreen.css'
+import './Login.css'
 import DMMLogo from '../../assets/images/dmm-logo.svg'
 import Button from '@material-ui/core/Button'
 import { getDefaultApiKeyHeaders, getIpAddress, routes, sessionId } from '../../utils/api-signer'
 
-class LoginScreen extends React.Component {
+class Login extends React.Component {
   constructor(props) {
     super(props)
 
@@ -130,4 +130,4 @@ class LoginScreen extends React.Component {
   }
 }
 
-export default LoginScreen
+export default Login

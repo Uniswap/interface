@@ -807,7 +807,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
                 buyer_address: dolomiteOrder['owner_address'],
                 market: dolomiteOrder.market,
                 dmg_bought: new BigNumber(dolomiteOrder['primary_padded_amount']).toString(),
-                otherSold: primaryAmount.mul(priceBN).div(primaryFactor)
+                otherSold: primaryAmount.mul(priceBN).div(primaryFactor).toString()
               }
             }
             const options = {

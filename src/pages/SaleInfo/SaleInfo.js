@@ -1,10 +1,10 @@
 import React from 'react'
 
-import styles from './InfoPage.css'
+import './SaleInfo.css'
 import DMMLogo from '../../assets/images/dmm-logo.svg'
 import Button from '@material-ui/core/Button'
 
-class InfoPage extends React.Component {
+class SaleInfo extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -38,9 +38,9 @@ class InfoPage extends React.Component {
             </p>
             <p>
               The private sale will begin at a starting price of <b>$0.16 per token</b> for a total diluted valuation of
-              $40M. The public sale will occur a couple weeks afterwards at a starting price of <b>$0.20 per token</b>{' '}
-              for a total diluted valuation of $50M. This means the public sale will have a 25% markup compared to the
-              private sale.
+              $40M. Limit sell orders will be placed in blocks of 83,333 DMG, increasing 1.5% in price each block to
+              enable price discovery as DMG is purchased. The public sale will occur a couple weeks afterwards with the
+              starting price marked up by 25% from where the private sale left ended.
             </p>
             <p>
               The current expected distribution of tokens over time is as follows:
@@ -222,4 +222,4 @@ class InfoPage extends React.Component {
   }
 }
 
-export default InfoPage
+export default SaleInfo

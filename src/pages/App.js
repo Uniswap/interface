@@ -4,9 +4,9 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
 import Web3ReactManager from '../components/Web3ReactManager'
 import Header from '../components/Header'
-import InfoPage from '../components/InfoPage/InfoPage'
+import SaleInfo from './SaleInfo/SaleInfo'
 import Footer from '../components/Footer'
-import LoginScreen from './Login/LoginScreen'
+import Login from './Login/Login'
 
 import NavigationTabs from '../components/NavigationTabs'
 import { getAllQueryParams } from '../utils'
@@ -75,7 +75,7 @@ class App extends React.Component {
       return (
         <BrowserRouter>
           <Route path="/login">
-            <LoginScreen onLogin={() => this.setState({ isLoggedIn: true })}/>
+            <Login onLogin={() => this.setState({ isLoggedIn: true })}/>
           </Route>
           <Redirect to="/login"/>
         </BrowserRouter>
@@ -86,7 +86,7 @@ class App extends React.Component {
       return (
         <BrowserRouter>
           <Route path={'/info'}>
-            <InfoPage onClose={() => this.setState({ displayInfoPage: false })}/>
+            <SaleInfo onClose={() => this.setState({ displayInfoPage: false })}/>
           </Route>
           <Redirect to="/info"/>
         </BrowserRouter>
