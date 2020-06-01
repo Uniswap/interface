@@ -133,15 +133,15 @@ function getSwapType(inputCurrency, outputCurrency) {
   }
 }
 
-function calculateTokenOutputFromInput(inputAmount, books) {
-  return calculateTokenValueFromOtherValue(inputAmount, books, false)
+function calculateTokenOutputFromInput(inputAmount, books, inputCurrency, outputCurrency) {
+  return calculateTokenValueFromOtherValue(inputAmount, books, inputCurrency, outputCurrency, false)
 }
 
-function calculateTokenInputFromOutput(outputAmount, books) {
-  return calculateTokenValueFromOtherValue(outputAmount, books, true)
+function calculateTokenInputFromOutput(outputAmount, books, inputCurrency, outputCurrency) {
+  return calculateTokenValueFromOtherValue(outputAmount, books, inputCurrency, outputCurrency, true)
 }
 
-function calculateTokenValueFromOtherValue(valueAmount, books, isValueAmountOutputValue) {
+function calculateTokenValueFromOtherValue(valueAmount, books, inputCurrency, outputCurrency, isValueAmountOutputValue) {
   if (!books) {
     return ethers.constants.Zero
   } else {
@@ -149,8 +149,15 @@ function calculateTokenValueFromOtherValue(valueAmount, books, isValueAmountOutp
     let outputAmount = ethers.constants.Zero
     for (let i = 0; i < books.sellDepths.length; i++) {
       const tuple = books.sellDepths[i]
-      const secondaryAmount = new BigNumber(tuple.total.value.toLocaleString('fullwide', { useGrouping: false }))
+      const secondaryTokenDecimals = inputCurrency === DMG_ADDRESS ?
+        INITIAL_TOKENS_CONTEXT['1'][outputCurrency][DECIMALS] :
+        INITIAL_TOKENS_CONTEXT['1'][inputCurrency][DECIMALS]
+
+      const rawPriceAmount = new BigNumber(tuple.price.value.toLocaleString('fullwide', { useGrouping: false }))
+      const priceAmount = rawPriceAmount.mul(new BigNumber(10).pow(secondaryTokenDecimals - tuple.price.precision))
+
       const primaryAmount = new BigNumber(tuple.quantity.value.toLocaleString('fullwide', { useGrouping: false }))
+      const secondaryAmount = primaryAmount.mul(priceAmount).div(new BigNumber(10).pow(tuple.quantity.precision))
 
       const tupleInputAmount = isValueAmountOutputValue ? primaryAmount : secondaryAmount
       const tupleOutputAmount = isValueAmountOutputValue ? secondaryAmount : primaryAmount
@@ -555,7 +562,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     if (amount) {
       try {
         if (independentField === INPUT) {
-          const calculatedDependentValue = calculateTokenOutputFromInput(amount, orderBooks)
+          const calculatedDependentValue = calculateTokenOutputFromInput(amount, orderBooks, inputCurrency, outputCurrency)
           if (calculatedDependentValue.lte(ethers.constants.Zero)) {
             throw Error()
           }
@@ -564,7 +571,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
             payload: calculatedDependentValue
           })
         } else {
-          const calculatedDependentValue = calculateTokenInputFromOutput(amount, orderBooks)
+          const calculatedDependentValue = calculateTokenInputFromOutput(amount, orderBooks, inputCurrency, outputCurrency)
           if (calculatedDependentValue.lte(ethers.constants.Zero)) {
             throw Error()
           }
@@ -699,13 +706,13 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           value: amountToWrap
         })
         .then(tx => {
-          console.log('Waiting for ETH finish wrapping...')
+          console.log('Waiting for ETH to finish wrapping')
           setIsAwaitingSignature(false)
           addTransaction(tx, { wrapping: effectiveInputCurrency })
           return tx.wait()
         })
         .then(() => {
-          console.log('Successfully wrapped ETH.')
+          console.log(`Successfully wrapped ${amountToWrap} ETH`)
           dispatchSwapState({
             type: 'SELECT_CURRENCY',
             payload: { currency: effectiveInputCurrency, field: INPUT }
