@@ -11,6 +11,19 @@ async function main() {
   releases.push(version)
 
   await new Promise((success, failure) => {
+    const untrackedMessage = 'untracked'
+    const commands = `git diff-index --quiet HEAD -- || echo "${untrackedMessage}";`
+    exec(commands, (error, stdout) => {
+      if (!!error || stdout.trim().toString() === untrackedMessage) {
+        const message = 'There are untracked changes in the repository that must be committed first! Run \`git status\` to see what changed.'
+        failure(message)
+      } else {
+        success()
+      }
+    })
+  });
+
+  await new Promise((success, failure) => {
     const command1 = `sentry-cli releases --project dmm-dao-web-app new ${version}`
     const command2 = `sentry-cli releases --project dmm-dao-web-app files ${version} upload-sourcemaps ./build`
     const command3 = `sentry-cli releases --project dmm-dao-web-app finalize ${version}`
