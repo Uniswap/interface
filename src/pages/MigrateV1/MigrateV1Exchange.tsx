@@ -1,6 +1,6 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { ChainId, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@uniswap/sdk'
-import React, { useCallback, useContext, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { ButtonConfirmed, ButtonPrimary } from '../../components/Button'
@@ -121,7 +121,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
   return (
     <AutoColumn gap="20px">
       <YellowCard>
-        <TYPE.main>
+        <TYPE.main style={{ marginBottom: 8 }}>
           It is best to deposit liquidity into Uniswap V2 at a price you believe is correct. If you believe the price is
           incorrect, you can either make a swap to move the price or wait for someone else to do so.
         </TYPE.main>
