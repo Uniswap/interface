@@ -154,7 +154,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
         <AutoColumn gap="8px" style={{ flex: '1', marginRight: 12 }}>
           <TYPE.mediumHeader>
             <span>Step 1</span>
-            <QuestionHelper text="Before you migrate your liquidity, you must approve the liquidity tokens to be moved by the Uniswap migration contract." />
+            <QuestionHelper text="Before you can migrate your liquidity, you must approve the liquidity tokens to be moved by the Uniswap V2 migration contract." />
           </TYPE.mediumHeader>
           <ButtonConfirmed
             confirmed={approval === ApprovalState.APPROVED}
@@ -229,7 +229,7 @@ export default function MigrateV1Exchange({
         </div>
         <TYPE.mediumHeader>Migrate {token.symbol} Pool Tokens</TYPE.mediumHeader>
         <div>
-          <QuestionHelper text="This tool helps you move your liquidity from Uniswap V1 to Uniswap V2." />
+          <QuestionHelper text="Migrate your liquidity tokens from Uniswap V1 to Uniswap V2." />
         </div>
       </AutoRow>
       <V1PairMigration liquidityTokenAmount={userLiquidityBalance} token={token} />
