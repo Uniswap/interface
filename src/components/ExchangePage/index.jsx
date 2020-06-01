@@ -794,9 +794,9 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         const { response, dolomiteOrder } = data
         getIpAddress()
           .then(ipAddress => {
-            const priceBN = new BigNumber(response['market_order_effective_price'].amount)
-            const primaryAmount = new BigNumber(response['primary_amount']?.amount)
-            const primaryFactor = new BigNumber(10).pow(response['primary_amount']['currency']?.precision)
+            const priceBN = new BigNumber(response['data']['market_order_effective_price'].amount)
+            const primaryAmount = new BigNumber(response['data']['primary_amount']?.amount)
+            const primaryFactor = new BigNumber(10).pow(response['data']['primary_amount']['currency']?.precision)
 
             const body = {
               key: 'ORDER_SUBMITTED',
