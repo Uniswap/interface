@@ -39,7 +39,7 @@ async function main() {
 
   console.log('Pushing tags to repository');
   await new Promise((success, failure) => {
-    exec('URL=`git remote get-url origin`; git push --tags URL', (error, stdout) => {
+    exec('URL=`git remote get-url origin`; git push --tags ${URL}', (error, stdout) => {
       console.log('git push tag output: ', stdout);
       if (!!error) {
         failure(error.message)
