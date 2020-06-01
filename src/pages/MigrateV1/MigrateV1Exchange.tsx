@@ -43,15 +43,14 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
   const [confirmingMigration, setConfirmingMigration] = useState<boolean>(false)
   const [pendingMigrationHash, setPendingMigrationHash] = useState<string | null>(null)
 
-  const sharePercent =
-    exchangeETHBalance && totalSupply ? new Percent(liquidityTokenAmount.raw, totalSupply.raw) : ZERO_FRACTION
+  const shareFraction: Fraction = totalSupply ? new Percent(liquidityTokenAmount.raw, totalSupply.raw) : ZERO_FRACTION
 
   const ethWorth: Fraction = exchangeETHBalance
-    ? new Fraction(sharePercent.multiply(exchangeETHBalance).quotient, WEI_DENOM)
+    ? new Fraction(shareFraction.multiply(exchangeETHBalance).quotient, WEI_DENOM)
     : ZERO_FRACTION
 
   const tokenWorth: TokenAmount = exchangeTokenBalance
-    ? new TokenAmount(token, sharePercent.multiply(exchangeTokenBalance.raw).quotient)
+    ? new TokenAmount(token, shareFraction.multiply(exchangeTokenBalance.raw).quotient)
     : new TokenAmount(token, ZERO)
 
   const [approval, approve] = useApproveCallback(liquidityTokenAmount, MIGRATOR_ADDRESS)
