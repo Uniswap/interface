@@ -1,4 +1,4 @@
-import { JSBI, Token, TokenAmount } from '@uniswap/sdk'
+import { Fraction, JSBI, Token, TokenAmount } from '@uniswap/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { RouteComponentProps } from 'react-router'
@@ -16,6 +16,18 @@ import { useTokenBalances } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { BodyWrapper } from '../AppBody'
 import { EmptyState } from './EmptyState'
+
+const POOL_TOKEN_AMOUNT_MIN = new Fraction(JSBI.BigInt(1), JSBI.BigInt(1000000))
+
+function FormattedPoolTokenAmount({ tokenAmount }: { tokenAmount: TokenAmount }) {
+  return (
+    <>
+      {tokenAmount.greaterThan(POOL_TOKEN_AMOUNT_MIN)
+        ? tokenAmount.toSignificant(6)
+        : `<${POOL_TOKEN_AMOUNT_MIN.toSignificant(1)}`}
+    </>
+  )
+}
 
 export default function MigrateV1({ history }: RouteComponentProps) {
   const { account, chainId } = useActiveWeb3React()
@@ -80,20 +92,23 @@ export default function MigrateV1({ history }: RouteComponentProps) {
           />
         </AutoRow>
 
-        {unmigratedLiquidityExchangeAddresses.map(amount => (
-          <div key={amount.token.address} style={{ borderRadius: '0.5rem', padding: 16, backgroundColor: theme.bg3 }}>
+        {unmigratedLiquidityExchangeAddresses.map(poolTokenAmount => (
+          <div
+            key={poolTokenAmount.token.address}
+            style={{ borderRadius: '0.5rem', padding: 16, backgroundColor: theme.bg3 }}
+          >
             <AutoRow style={{ justifyContent: 'space-between' }}>
               <div>
-                <TokenLogo size="24px" address={allV1Exchanges[amount.token.address].address} />
+                <TokenLogo size="24px" address={allV1Exchanges[poolTokenAmount.token.address].address} />
               </div>
               <TYPE.mediumHeader fontWeight={400}>
-                {v1LiquidityBalances[amount.token.address]?.toSignificant(6)}{' '}
-                {allV1Exchanges[amount.token.address].symbol} Pool Tokens
+                <FormattedPoolTokenAmount tokenAmount={poolTokenAmount} />{' '}
+                {allV1Exchanges[poolTokenAmount.token.address].symbol} Pool Tokens
               </TYPE.mediumHeader>
               <div>
                 <ButtonPrimary
                   onClick={() => {
-                    history.push(`/migrate/v1/${amount.token.address}`)
+                    history.push(`/migrate/v1/${poolTokenAmount.token.address}`)
                   }}
                   style={{ padding: '8px 12px', borderRadius: '12px' }}
                 >

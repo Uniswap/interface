@@ -47,7 +47,7 @@ export function useIsTransactionPending(transactionHash?: string): boolean {
 
   if (!transactionHash || !transactions[transactionHash]) return false
 
-  return Boolean(transactions[transactionHash].receipt)
+  return !transactions[transactionHash].receipt
 }
 
 // returns whether a token has a pending approval transaction
