@@ -26,6 +26,7 @@ function getLibrary(provider) {
   return library
 }
 
+console.log('Running process for ', process.env.NODE_ENV, ' environment.')
 if (process.env.NODE_ENV === 'production') {
   ReactGA.initialize('UA-128182339-1')
   ReactGA.set({
