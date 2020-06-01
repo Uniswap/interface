@@ -16,6 +16,7 @@ import DolomiteOrderBooksContextProvider from './contexts/DolomiteOrderBooks'
 import App from './pages/App'
 import ThemeProvider, { GlobalStyle } from './theme'
 import './i18n'
+import * as Sentry from '@sentry/browser';
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
@@ -30,6 +31,8 @@ if (process.env.NODE_ENV === 'production') {
   ReactGA.set({
     customBrowserType: !isMobile ? 'desktop' : window.web3 || window.ethereum ? 'mobileWeb3' : 'mobileRegular'
   })
+  Sentry.init({dsn: "https://3cc535de51794ceba826f94ff3061521@o162178.ingest.sentry.io/5259601"});
+  Sentry.captureMessage("Sentry is initialized for production!", Sentry.Severity.Info)
 } else {
   ReactGA.initialize('test', { testMode: true })
 }

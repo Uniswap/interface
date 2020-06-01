@@ -9,6 +9,7 @@
     "@material-ui/core": "^4.9.14",
     "@reach/dialog": "^0.2.8",
     "@reach/tooltip": "^0.2.0",
+    "@sentry/browser": "^5.15.5",
     "@types/jest": "^25.1.3",
     "@types/node": "^13.7.4",
     "@types/react": "^16.9.22",
@@ -53,6 +54,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "release": "node ./sentry-releases/script.js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint:base": "yarn eslint './src/**/*.{js,jsx}'",
