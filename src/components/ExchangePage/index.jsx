@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useState } from 'react'
 import ReactGA from 'react-ga'
 import { createBrowserHistory } from 'history'
 import { ethers } from 'ethers'
-import { BigNumber, bigNumberify, parseEther, formatUnits, parseUnits } from 'ethers/utils'
+import { BigNumber, bigNumberify, formatUnits, parseEther, parseUnits } from 'ethers/utils'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 
@@ -19,14 +19,14 @@ import {
 import {
   DECIMALS,
   DELEGATE_ADDRESS,
-  SYMBOL,
   DMG_ADDRESS,
   INITIAL_TOKENS_CONTEXT,
-  MIN_ORDER,
   MARKETS,
+  MIN_ORDER,
   PRIMARY,
   PRIMARY_DECIMALS,
   SECONDARY_DECIMALS,
+  SYMBOL,
   useTokenDetails,
   WETH_ADDRESS
 } from '../../contexts/Tokens'
@@ -51,7 +51,7 @@ import { getSignableData } from '../../connectors/Loopring/LoopringEIP712Schema'
 
 import * as Sentry from '@sentry/browser'
 
-import { routes, getDefaultApiKeyHeaders, getIpAddress, sessionId } from '../../utils/api-signer'
+import { getDefaultApiKeyHeaders, getIpAddress, routes, sessionId } from '../../utils/api-signer'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -208,8 +208,8 @@ function getInitialSwapState(state) {
           : ''
         : state.outputCurrencyURL
       : state.initialCurrency
-      ? state.initialCurrency
-      : ''
+        ? state.initialCurrency
+        : ''
   }
 }
 
@@ -292,7 +292,8 @@ function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals,
           .div(inputValue)
       }
     }
-  } catch {}
+  } catch {
+  }
 }
 
 export default function ExchangePage({ initialCurrency, sending = false, params }) {
@@ -444,11 +445,11 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const [independentValueParsed, setIndependentValueParsed] = useState()
   const dependentValueFormatted = !!(dependentValue && (dependentDecimals || dependentDecimals === 0))
     ? amountFormatter(
-        dependentValue,
-        dependentDecimals,
-        Math.min(MIN_DECIMALS, isInputIndependent ? inputFormatDecimals : outputFormatDecimals),
-        false
-      )
+      dependentValue,
+      dependentDecimals,
+      Math.min(MIN_DECIMALS, isInputIndependent ? inputFormatDecimals : outputFormatDecimals),
+      false
+    )
     : ''
   const inputValueParsed = independentField === INPUT ? independentValueParsed : dependentValue
   const inputValueFormatted = independentField === INPUT ? independentValue : dependentValueFormatted
@@ -787,11 +788,16 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       .then(({ response, dolomiteOrder }) => {
         setDolomiteOrderId(response['data']['dolomite_order_id'])
         dolomiteOrder.dolomite_order_uuid = response['data']['dolomite_order_id']
-        return dolomiteOrder
+        return { response, dolomiteOrder }
       })
-      .then(dolomiteOrder => {
+      .then(data => {
+        const { response, dolomiteOrder } = data
         getIpAddress()
           .then(ipAddress => {
+            const priceBN = new BigNumber(response['market_order_effective_price'].amount)
+            const primaryAmount = new BigNumber(response['primary_amount']?.amount)
+            const primaryFactor = new BigNumber(10).pow(response['primary_amount']['currency']?.precision)
+
             const body = {
               key: 'ORDER_SUBMITTED',
               data: {
@@ -801,8 +807,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
                 buyer_address: dolomiteOrder['owner_address'],
                 market: dolomiteOrder.market,
                 dmg_bought: new BigNumber(dolomiteOrder['primary_padded_amount']).toString(),
-                otherSold: dolomiteOrder['dealt_amount_secondary']?.amount || '0',
-              },
+                otherSold: primaryAmount.mul(priceBN).div(primaryFactor)
+              }
             }
             const options = {
               method: routes.insertEvent.method,
@@ -862,7 +868,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
   function getButtonText() {
     if (!!dolomiteOrderId) {
-      return <CircularProgress />
+      return <CircularProgress/>
     } else if (pendingWrapping) {
       return t('wrapping')
     } else if (isAwaitingSignature) {
@@ -1003,10 +1009,10 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         <>
           <OversizedPanel>
             <DownArrowBackground>
-              <DownArrow active={isValid} alt="arrow" />
+              <DownArrow active={isValid} alt="arrow"/>
             </DownArrowBackground>
           </OversizedPanel>
-          <AddressInputPanel onChange={setRecipient} onError={setRecipientError} initialInput={recipient} />
+          <AddressInputPanel onChange={setRecipient} onError={setRecipientError} initialInput={recipient}/>
         </>
       ) : (
         ''
@@ -1022,22 +1028,22 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
             <span>
               {exchangeRate
                 ? `1 ${inputSymbol} = ${amountFormatter(
-                    exchangeRate,
-                    18,
-                    MIN_DECIMALS_EXCHANGE_RATE,
-                    false
-                  )} ${outputSymbol}`
+                  exchangeRate,
+                  18,
+                  MIN_DECIMALS_EXCHANGE_RATE,
+                  false
+                )} ${outputSymbol}`
                 : ' - '}
             </span>
           ) : (
             <span>
               {exchangeRate
                 ? `1 ${outputSymbol} = ${amountFormatter(
-                    exchangeRateInverted,
-                    18,
-                    MIN_DECIMALS_EXCHANGE_RATE,
-                    false
-                  )} ${inputSymbol}`
+                  exchangeRateInverted,
+                  18,
+                  MIN_DECIMALS_EXCHANGE_RATE,
+                  false
+                )} ${inputSymbol}`
                 : ' - '}
             </span>
           )}
@@ -1080,10 +1086,10 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
               : !account && !error
               ? false
               : !isValid ||
-                customSlippageError === 'invalid' ||
-                pendingWrapping ||
-                isAwaitingSignature ||
-                !!dolomiteOrderId
+              customSlippageError === 'invalid' ||
+              pendingWrapping ||
+              isAwaitingSignature ||
+              !!dolomiteOrderId
           }
           onClick={account && !error ? onSwap : toggleWalletModal}
           warning={customSlippageError === 'warning'}
