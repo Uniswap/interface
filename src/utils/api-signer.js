@@ -11,19 +11,19 @@ export const sessionId = uuidv4()
 export const routes = {
   insertReferral: {
     method: 'POST',
-    url: `${host}/v1/dmg-sale/insert-referral`
+    url: `${host}/v1/dmg-sale/insert-referral`,
   },
   insertEvent: {
     method: 'POST',
-    url: `${host}/v1/analytics/insert-event`
+    url: `${host}/v1/analytics/insert-event`,
   },
   verifyPrivateSalePassword: {
     method: 'POST',
-    url: `${host}/v1/dmg-sale/verify-password`
+    url: `${host}/v1/dmg-sale/verify-password`,
   },
   getIpAddress: {
     method: 'GET',
-    url: 'https://api.ipify.org/?format=json'
+    url: 'https://api.defimoneymarket.com/ip-address',
   }
 }
 
@@ -38,7 +38,9 @@ export const createApiKeySignature = () => {
 }
 
 export const getIpAddress = () => {
-  return fetch(routes.getIpAddress.url).then(result => result.json())
+  return fetch(routes.getIpAddress.url)
+    .then(result => result.json())
+    .then(json => json['ip'])
 }
 
 export const getDefaultApiKeyHeaders = () => {

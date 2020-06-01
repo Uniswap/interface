@@ -73,7 +73,7 @@ class LoginScreen extends React.Component {
             return fetch(routes.insertEvent.url, options)
           })
         const response = JSON.parse(body).data
-        if (response) {
+        if (!!response) {
           this.props.onLogin()
         } else {
           this.setState({ showError: true })

@@ -563,7 +563,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     if (amount) {
       try {
         if (independentField === INPUT) {
-          const calculatedDependentValue = calculateTokenOutputFromInput(amount, orderBooks, inputCurrency, outputCurrency)
+          const calculatedDependentValue = calculateTokenOutputFromInput(amount, orderBooks, effectiveInputCurrency, outputCurrency)
           if (calculatedDependentValue.lte(ethers.constants.Zero)) {
             throw Error()
           }
@@ -572,7 +572,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
             payload: calculatedDependentValue
           })
         } else {
-          const calculatedDependentValue = calculateTokenInputFromOutput(amount, orderBooks, inputCurrency, outputCurrency)
+          const calculatedDependentValue = calculateTokenInputFromOutput(amount, orderBooks, effectiveInputCurrency, outputCurrency)
           if (calculatedDependentValue.lte(ethers.constants.Zero)) {
             throw Error()
           }
