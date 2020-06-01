@@ -50,3 +50,8 @@ The frontend will not work on other networks.
 
 **Please open all pull requests against the `v2` branch.** 
 CI checks will run against all PRs. 
+
+## Accessing Uniswap V1 interface
+
+The Uniswap V1 interface for mainnet and testnets is accessible via IPFS gateways linked 
+from the [v1.0.0 release](https://github.com/Uniswap/uniswap-frontend/releases/tag/v1.0.0).
