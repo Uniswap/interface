@@ -1,5 +1,6 @@
 import { JSBI, Token, TokenAmount } from '@uniswap/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
+import { ArrowLeft } from 'react-feather'
 import { RouteComponentProps } from 'react-router'
 import { ThemeContext } from 'styled-components'
 import { ButtonPrimary } from '../../components/Button'
@@ -53,10 +54,17 @@ export default function MigrateV1({ history }: RouteComponentProps) {
 
   const toggleWalletModal = useWalletModalToggle()
 
+  const handleBackClick = useCallback(() => {
+    history.push('/pool')
+  }, [history])
+
   return (
     <BodyWrapper style={{ maxWidth: 560, padding: 24 }}>
       <AutoColumn gap="24px">
         <AutoRow style={{ justifyContent: 'space-between' }}>
+          <div>
+            <ArrowLeft style={{ cursor: 'pointer' }} onClick={handleBackClick} />
+          </div>
           <TYPE.largeHeader>Your Uniswap V1 Liquidity</TYPE.largeHeader>
           <TYPE.subHeader>
             {unmigratedLiquidityExchangeAddresses.length}
