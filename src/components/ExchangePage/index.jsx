@@ -49,6 +49,8 @@ import { exchange } from '../../connectors'
 import { Zero } from 'ethers/constants'
 import { getSignableData } from '../../connectors/Loopring/LoopringEIP712Schema'
 
+import * as Sentry from '@sentry/browser'
+
 import { routes, getDefaultApiKeyHeaders, getIpAddress, sessionId } from '../../utils/api-signer'
 
 const INPUT = 0
@@ -686,6 +688,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       amountToWrap = amountToWrap.gt(usableBalance) ? usableBalance : amountToWrap
       const estimatedGas = await tokenContract.estimate.deposit({ value: amountToWrap }).catch(error => {
         console.error('Error wrapping WETH ', error)
+        Sentry.captureException(error)
       })
 
       setIsAwaitingSignature(true)
@@ -830,6 +833,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       .catch(error => {
         setIsAwaitingSignature(false)
         console.error('Could not submit order due to error ', error)
+        Sentry.captureException(error)
       })
   }
 

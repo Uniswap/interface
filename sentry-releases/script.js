@@ -12,6 +12,18 @@ async function main() {
   releases.push(version)
 
   await new Promise((success, failure) => {
+    const command = 'git rev-parse --abbrev-ref HEAD'
+    exec(command, (error, stdout) => {
+      if (!!error || stdout !== 'master') {
+        const message = 'You must be on the master branch to build and deploy!'
+        failure(message)
+      } else {
+        success()
+      }
+    })
+  })
+
+  await new Promise((success, failure) => {
     const untrackedMessage = 'untracked'
     const commands = `git diff-index --quiet HEAD -- || echo "${untrackedMessage}";`
     exec(commands, (error, stdout) => {
