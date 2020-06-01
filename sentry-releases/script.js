@@ -61,7 +61,21 @@ async function main() {
     })
   });
 
+  console.log(`Writing new version to file ${fileName}`);
   fs.writeFileSync(`./sentry-releases/${fileName}`, JSON.stringify({ releases: releases }));
+
+  console.log('Committing new release into repo');
+  await new Promise((success, failure) => {
+    const command = `git add --all; git commit -m "Incremented releases to ${version}"; git push origin master`
+    exec(command, (error, stdout) => {
+      console.log('git commit new release output: ', stdout);
+      if (!!error) {
+        failure(error.message)
+      } else {
+        success()
+      }
+    })
+  });
 
   console.log('Saved new release: ', version)
 }
