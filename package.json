@@ -54,7 +54,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "release:deploy": "node ./sentry-releases/script.js",
+    "build:deploy": "node ./sentry-releases/script.js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint:base": "yarn eslint './src/**/*.{js,jsx}'",
