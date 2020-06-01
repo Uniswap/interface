@@ -35,7 +35,6 @@ if (process.env.NODE_ENV === 'production') {
     dsn: "https://3cc535de51794ceba826f94ff3061521@o162178.ingest.sentry.io/5259601",
     release: process.env.REACT_APP_RELEASE_VERSION,
   })
-  Sentry.captureException(new Error("Sentry is initialized for production!"))
 } else {
   ReactGA.initialize('test', { testMode: true })
 }
