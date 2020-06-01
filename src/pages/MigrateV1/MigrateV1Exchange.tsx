@@ -1,3 +1,4 @@
+import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { ChainId, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -15,6 +16,7 @@ import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useV1ExchangeContract, useV2MigratorContract } from '../../hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
+import { useIsTransactionPending, useTransactionAdder } from '../../state/transactions/hooks'
 import { useETHBalances, useTokenBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { isAddress } from '../../utils'
@@ -37,7 +39,8 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
 
   const v2SpotPrice = v2Pair?.reserveOf(token)?.divide(v2Pair?.reserveOf(WETH[chainId as ChainId]))
 
-  const [migrating, setMigrating] = useState<boolean>(false)
+  const [confirmingMigration, setConfirmingMigration] = useState<boolean>(false)
+  const [pendingMigrationHash, setPendingMigrationHash] = useState<string | null>(null)
 
   const sharePercent =
     exchangeETHBalance && totalSupply ? new Percent(liquidityTokenAmount.raw, totalSupply.raw) : ZERO_FRACTION
@@ -85,11 +88,14 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
           .multiply(ALLOWED_OUTPUT_MIN_PERCENT).quotient
       : undefined
 
+  const addTransaction = useTransactionAdder()
+  const isMigrationPending = useIsTransactionPending(pendingMigrationHash)
+
   const migrator = useV2MigratorContract()
   const migrate = useCallback(() => {
     if (!minAmountToken || !minAmountETH) return
 
-    setMigrating(true)
+    setConfirmingMigration(true)
     migrator
       .migrate(
         token.address,
@@ -98,13 +104,23 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
         account,
         Math.floor(new Date().getTime() / 1000) + DEFAULT_DEADLINE_FROM_NOW
       )
-      .then(() => {
-        setMigrating(false)
+      .then((response: TransactionResponse) => {
+        addTransaction(response, {
+          summary: `Migrate ${token.symbol} liquidity to V2`
+        })
+        setPendingMigrationHash(response.hash)
+        setConfirmingMigration(false)
       })
       .catch(() => {
-        setMigrating(false)
+        setConfirmingMigration(false)
       })
-  }, [minAmountToken, minAmountETH, account, migrator, token.address])
+  }, [minAmountToken, minAmountETH, migrator, token.address, token.symbol, account, addTransaction])
+
+  const noLiquidityTokens = liquidityTokenAmount && liquidityTokenAmount.equalTo(ZERO)
+
+  if (noLiquidityTokens) {
+    return <Redirect to="/migrate/v1" />
+  }
 
   return (
     <AutoColumn gap="12px">
@@ -162,7 +178,11 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
             disabled={approval !== ApprovalState.NOT_APPROVED}
             onClick={approve}
           >
-            Approve
+            {approval === ApprovalState.PENDING
+              ? 'Approving...'
+              : approval === ApprovalState.APPROVED
+              ? 'Approved'
+              : 'Approve'}
           </ButtonConfirmed>
         </AutoColumn>
         <AutoColumn gap="8px" style={{ flex: '1' }}>
@@ -170,8 +190,11 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
             <span>Step 2</span>
             <QuestionHelper text="Migrate your liquidity to Uniswap V2!" />
           </TYPE.mediumHeader>
-          <ButtonPrimary disabled={approval !== ApprovalState.APPROVED || migrating} onClick={migrate}>
-            Migrate
+          <ButtonPrimary
+            disabled={isMigrationPending || approval !== ApprovalState.APPROVED || confirmingMigration}
+            onClick={migrate}
+          >
+            {pendingMigrationHash && isMigrationPending ? 'Migrating...' : 'Migrate'}
           </ButtonPrimary>
         </AutoColumn>
       </div>
