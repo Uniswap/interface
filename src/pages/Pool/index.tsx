@@ -6,7 +6,7 @@ import { RouteComponentProps } from 'react-router-dom'
 import Question from '../../components/QuestionHelper'
 import SearchModal from '../../components/SearchModal'
 import PositionCard from '../../components/PositionCard'
-import { useUserProbablyHasV1Liquidity } from '../../data/V1'
+import { useUserHasLiquidityInAllTokens } from '../../data/V1'
 import { useTokenBalances } from '../../state/wallet/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
 import { Text } from 'rebass'
@@ -59,7 +59,7 @@ export default function Pool({ history }: RouteComponentProps) {
       return <PositionCardWrapper key={i} dummyPair={pair} />
     })
 
-  const hasV1Liquidity = useUserProbablyHasV1Liquidity()
+  const hasV1Liquidity = useUserHasLiquidityInAllTokens()
 
   return (
     <AppBody>

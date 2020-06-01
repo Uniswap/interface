@@ -52,7 +52,7 @@ export function useAllTokenV1Exchanges(): { [exchangeAddress: string]: Token } {
 }
 
 // returns whether any of the tokens in the user's token list have liquidity on v1
-export function useUserProbablyHasV1Liquidity(): boolean | undefined {
+export function useUserHasLiquidityInAllTokens(): boolean | undefined {
   const exchanges = useAllTokenV1Exchanges()
 
   const { account, chainId } = useActiveWeb3React()

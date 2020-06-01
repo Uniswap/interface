@@ -14,11 +14,12 @@ import { useActiveWeb3React } from '../../hooks'
 import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useV1ExchangeContract, useV2MigratorContract } from '../../hooks/useContract'
-import { useSingleCallResult } from '../../state/multicall/hooks'
+import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { useETHBalances, useTokenBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import { BodyWrapper } from '../AppBody'
+import { EmptyState } from './EmptyState'
 
 const WEI_DENOM = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 const ZERO = JSBI.BigInt(0)
@@ -187,18 +188,18 @@ export default function MigrateV1Exchange({
   const validated = isAddress(address)
   const { chainId, account } = useActiveWeb3React()
 
-  const liquidityToken: Token | undefined = useMemo(() => (validated ? new Token(chainId, validated, 18) : undefined), [
-    chainId,
-    validated
-  ])
-
-  const userLiquidityBalance = useTokenBalance(account, liquidityToken)
-
   const exchangeContract = useV1ExchangeContract(validated ? validated : undefined)
 
-  const tokenAddress = useSingleCallResult(exchangeContract, 'tokenAddress')?.result?.[0]
+  const tokenAddress = useSingleCallResult(exchangeContract, 'tokenAddress', undefined, NEVER_RELOAD)?.result?.[0]
 
   const token = useTokenByAddressAndAutomaticallyAdd(tokenAddress)
+
+  const liquidityToken: Token | undefined = useMemo(
+    () => (validated && token ? new Token(chainId, validated, 18, `UNI-V1-${token.symbol}`) : undefined),
+    [chainId, token, validated]
+  )
+
+  const userLiquidityBalance = useTokenBalance(account, liquidityToken)
 
   const handleBack = useCallback(() => {
     history.push('/migrate/v1')
@@ -217,22 +218,23 @@ export default function MigrateV1Exchange({
     )
   }
 
-  if (!userLiquidityBalance || !token) {
-    return <BodyWrapper></BodyWrapper>
-  }
-
   return (
     <BodyWrapper style={{ padding: 24 }}>
       <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
         <div style={{ cursor: 'pointer' }}>
           <ArrowLeft onClick={handleBack} />
         </div>
-        <TYPE.mediumHeader>Migrate {token.symbol} Pool Tokens</TYPE.mediumHeader>
+        <TYPE.mediumHeader>Migrate {token?.symbol} Pool Tokens</TYPE.mediumHeader>
         <div>
           <QuestionHelper text="Migrate your liquidity tokens from Uniswap V1 to Uniswap V2." />
         </div>
       </AutoRow>
-      <V1PairMigration liquidityTokenAmount={userLiquidityBalance} token={token} />
+
+      {userLiquidityBalance && token ? (
+        <V1PairMigration liquidityTokenAmount={userLiquidityBalance} token={token} />
+      ) : (
+        <EmptyState message="Loading..." />
+      )}
     </BodyWrapper>
   )
 }
