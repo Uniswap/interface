@@ -159,6 +159,14 @@
     .purchaseCryptoButton {
         display: none;
     }
+
+    .logoWrapper {
+        width: 200px;
+    }
+    
+    .buttonsWrapper {
+        text-align: right;
+    }
 }
 
 @media (max-width: 550px) {

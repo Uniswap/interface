@@ -25,7 +25,7 @@
     width: 18%;
     display: inline-block;
     vertical-align: top;
-    margin-right: 18px;
+    margin-right: 10px;
     margin-top: 3px;
 }
 
@@ -35,7 +35,7 @@
 
 .loginScreenTitleInner {
     text-align: left;
-    width: 70%;
+    width: auto;
     display: inline-block;
     vertical-align: top;
 }
@@ -143,10 +143,15 @@
     }
 
     .loginScreenTitle {
-        font-size: 32px;
+        font-size: 28px;
     }
 
     .loginScreenSubtitle {
-        font-size: 18px;
+        font-size: 16px;
+        margin-top: -5px;
+    }
+
+    .loginScreenDescription {
+        font-size: 14px;
     }
 }

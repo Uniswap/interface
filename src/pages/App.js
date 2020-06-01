@@ -40,6 +40,7 @@ const BodyWrapper = styled.div`
   align-items: center;
   flex: 1;
   overflow: auto;
+  padding:bottom: 40px;
 `
 
 const Body = styled.div`

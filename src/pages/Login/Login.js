@@ -98,9 +98,6 @@ class Login extends React.Component {
             <div className={'loginScreenLineOne'}>
               This pre-sale of DMG (DMM Governance Tokens) is only open to select participants until June 10.
             </div>
-            <div className={'loginScreenLineOne'}>
-              On June 10, the private sale will open up and the initial price will be marked up by 25%.
-            </div>
             <div>
               If you have been provided a password, please enter it below to proceed.
             </div>
