@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import NavigationTabs from '../components/NavigationTabs'
 
-const Body = styled.div`
+export const BodyWrapper = styled.div`
   position: relative;
   max-width: 420px;
   width: 100%;
@@ -18,9 +18,9 @@ const Body = styled.div`
  */
 export default function AppBody({ children }: { children: React.ReactNode }) {
   return (
-    <Body>
+    <BodyWrapper>
       <NavigationTabs />
       <>{children}</>
-    </Body>
+    </BodyWrapper>
   )
 }
