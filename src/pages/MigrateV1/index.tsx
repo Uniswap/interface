@@ -15,6 +15,7 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { useTokenBalances } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { BodyWrapper } from '../AppBody'
+import { EmptyState } from './EmptyState'
 
 export default function MigrateV1({ history }: RouteComponentProps) {
   const { account, chainId } = useActiveWeb3React()
@@ -75,7 +76,7 @@ export default function MigrateV1({ history }: RouteComponentProps) {
           <SearchInput
             value={tokenSearch}
             onChange={handleTokenSearchChange}
-            placeholder="Don't see your liquidity? Enter a token address here."
+            placeholder="Don't see your liquidity? Paste a token address here."
           />
         </AutoRow>
 
@@ -102,6 +103,10 @@ export default function MigrateV1({ history }: RouteComponentProps) {
             </AutoRow>
           </div>
         ))}
+
+        {account && unmigratedLiquidityExchangeAddresses.length === 0 ? (
+          <EmptyState message="No V1 Liquidity found." />
+        ) : null}
 
         {!account ? <ButtonPrimary onClick={toggleWalletModal}>Connect to a wallet</ButtonPrimary> : null}
       </AutoColumn>
