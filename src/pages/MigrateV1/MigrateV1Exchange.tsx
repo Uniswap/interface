@@ -1,9 +1,10 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { ChainId, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@uniswap/sdk'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { ButtonConfirmed, ButtonPrimary } from '../../components/Button'
+import { YellowCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow } from '../../components/Row'
@@ -109,7 +110,6 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
           summary: `Migrate ${token.symbol} liquidity to V2`
         })
         setPendingMigrationHash(response.hash)
-        setConfirmingMigration(false)
       })
       .catch(() => {
         setConfirmingMigration(false)
@@ -118,55 +118,28 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
 
   const noLiquidityTokens = liquidityTokenAmount && liquidityTokenAmount.equalTo(ZERO)
 
-  if (noLiquidityTokens) {
-    return <Redirect to="/migrate/v1" />
-  }
-
   return (
-    <AutoColumn gap="12px">
-      <dl>
-        <dt>Total Supply</dt>
-        <dd>{totalSupply?.toSignificant(6)}</dd>
-        <dt>Your # shares</dt>
-        <dd>{liquidityTokenAmount.toSignificant(6)}</dd>
-        <dt>Share %</dt>
-        <dd>{sharePercent.toSignificant(6)}%</dd>
-        <dt>Worth ETH</dt>
-        <dd>{ethWorth.toSignificant(6)}</dd>
-        <dt>Worth {token.symbol}</dt>
-        <dd>{tokenWorth.toSignificant(6)}</dd>
-        <dt>V1 ETH price</dt>
-        <dd>
-          {v1SpotPrice?.toSignificant(6)} {token.symbol}/ETH
-        </dd>
-        <dt>V1 {token.symbol} Price</dt>
-        <dd>
-          {v1SpotPrice?.invert()?.toSignificant(6)} ETH/{token.symbol}
-        </dd>
-        <dt>V2 ETH price</dt>
-        <dd>
-          {v2SpotPrice?.toSignificant(6)} {token.symbol}/ETH
-        </dd>
-        <dt>V2 {token.symbol} Price</dt>
-        <dd>
-          {v2SpotPrice?.invert()?.toSignificant(6)} ETH/{token.symbol}
-        </dd>
-        <dt>Price difference</dt>
-        <dd>{priceDifferenceAbs?.toSignificant(4)}%</dd>
-        <dt>Pair ETH balance</dt>
-        <dd>
-          {new Fraction(
-            exchangeETHBalance?.toString() ?? '0',
-            JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
-          ).toSignificant(6)}
-        </dd>
-        <dt>Pair {token.symbol} balance</dt>
-        <dd>{exchangeTokenBalance?.toSignificant(6)}</dd>
-        <dt>Min amount ETH</dt>
-        <dd>{minAmountETH?.toString()}</dd>
-        <dt>Min amount {token.symbol}</dt>
-        <dd>{minAmountToken?.toString()}</dd>
-      </dl>
+    <AutoColumn gap="20px">
+      <YellowCard>
+        <TYPE.main>
+          It is best to deposit liquidity into Uniswap V2 at a price you believe is correct. If you believe the price is
+          incorrect, you can either make a swap to move the price or wait for someone else to do so.
+        </TYPE.main>
+        <AutoRow style={{ justifyContent: 'space-around' }}>
+          <AutoColumn>
+            <TYPE.body>
+              V1 Price: {v1SpotPrice?.toSignificant(6)} {token.symbol}/ETH
+            </TYPE.body>
+            <TYPE.body>
+              V2 Price: {v2SpotPrice?.toSignificant(6)} {token.symbol}/ETH
+            </TYPE.body>
+          </AutoColumn>
+          <AutoColumn>
+            <div>Price Difference</div>
+            <div>{priceDifferenceAbs?.toSignificant(6)}%</div>
+          </AutoColumn>
+        </AutoRow>
+      </YellowCard>
       <div style={{ display: 'flex' }}>
         <AutoColumn gap="8px" style={{ flex: '1', marginRight: 12 }}>
           <TYPE.mediumHeader>
@@ -191,10 +164,12 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
             <QuestionHelper text="Migrate your liquidity to Uniswap V2!" />
           </TYPE.mediumHeader>
           <ButtonPrimary
-            disabled={isMigrationPending || approval !== ApprovalState.APPROVED || confirmingMigration}
+            disabled={
+              noLiquidityTokens || isMigrationPending || approval !== ApprovalState.APPROVED || confirmingMigration
+            }
             onClick={migrate}
           >
-            {pendingMigrationHash && isMigrationPending ? 'Migrating...' : 'Migrate'}
+            {isMigrationPending ? 'Migrating...' : 'Migrate'}
           </ButtonPrimary>
         </AutoColumn>
       </div>
@@ -243,21 +218,23 @@ export default function MigrateV1Exchange({
 
   return (
     <BodyWrapper style={{ padding: 24 }}>
-      <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
-        <div style={{ cursor: 'pointer' }}>
-          <ArrowLeft onClick={handleBack} />
-        </div>
-        <TYPE.mediumHeader>Migrate {token?.symbol} Pool Tokens</TYPE.mediumHeader>
-        <div>
-          <QuestionHelper text="Migrate your liquidity tokens from Uniswap V1 to Uniswap V2." />
-        </div>
-      </AutoRow>
+      <AutoColumn gap="16px">
+        <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
+          <div style={{ cursor: 'pointer' }}>
+            <ArrowLeft onClick={handleBack} />
+          </div>
+          <TYPE.mediumHeader>Migrate {token?.symbol} Pool Tokens</TYPE.mediumHeader>
+          <div>
+            <QuestionHelper text="Migrate your liquidity tokens from Uniswap V1 to Uniswap V2." />
+          </div>
+        </AutoRow>
 
-      {userLiquidityBalance && token ? (
-        <V1PairMigration liquidityTokenAmount={userLiquidityBalance} token={token} />
-      ) : (
-        <EmptyState message="Loading..." />
-      )}
+        {userLiquidityBalance && token ? (
+          <V1PairMigration liquidityTokenAmount={userLiquidityBalance} token={token} />
+        ) : (
+          <EmptyState message="Loading..." />
+        )}
+      </AutoColumn>
     </BodyWrapper>
   )
 }
