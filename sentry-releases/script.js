@@ -8,6 +8,7 @@ async function main() {
   const { releases } = require(`./${fileName}`)
 
   const version = `v1.${releases.length}`
+  console.log('Starting building flow for new version: ', version)
   releases.push(version)
 
   await new Promise((success, failure) => {
@@ -29,7 +30,7 @@ async function main() {
   fs.writeFileSync(envFilePath, newEnvFileContent)
   console.log(`Successfully wrote new version to ${envFilePath} file`)
 
-  console.log('Building project for production deployment. This may take a couple moments.', version)
+  console.log('Building project for production deployment. This may take a couple moments.')
   await new Promise((success, failure) => {
     exec(`npm run build`, (error, stdout) => {
       console.log('Build output: ', stdout)
