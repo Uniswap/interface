@@ -20,7 +20,7 @@ import Tooltip from '../Tooltip'
 import CommonBases from './CommonBases'
 import { filterPairs, filterTokens } from './filtering'
 import PairList from './PairList'
-import { balanceComparator, useTokenComparator } from './sorting'
+import { useTokenComparator, pairComparator } from './sorting'
 import { PaddedColumn, SearchInput } from './styleds'
 import TokenList from './TokenList'
 import SortButton from './SortButton'
@@ -105,11 +105,9 @@ function SearchModal({
   const sortedPairList = useMemo(() => {
     if (isTokenView) return []
     return allPairs.sort((a, b): number => {
-      // sort by balance
       const balanceA = allPairBalances[a.liquidityToken.address]
       const balanceB = allPairBalances[b.liquidityToken.address]
-
-      return balanceComparator(balanceA, balanceB)
+      return pairComparator(a, b, balanceA, balanceB)
     })
   }, [isTokenView, allPairs, allPairBalances])
 
