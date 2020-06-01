@@ -846,8 +846,11 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       .then(response => response?.json())
       .catch(error => {
         setIsAwaitingSignature(false)
-        console.error('Could not submit order due to error ', error)
-        Sentry.captureException(error)
+        if (error?.code !== 4001) {
+          // This is the error code for cancelling a request
+          console.error('Could not submit order due to error ', error)
+          Sentry.captureException(error)
+        }
       })
   }
 
