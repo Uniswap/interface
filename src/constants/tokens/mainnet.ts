@@ -7,6 +7,7 @@ export default [
   new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth'),
   new Token(ChainId.MAINNET, '0xcD62b1C403fa761BAadFC74C525ce2B51780b184', 18, 'ANJ', 'Aragon Network Juror'),
   new Token(ChainId.MAINNET, '0x960b236A07cf122663c4303350609A66A7B288C0', 18, 'ANT', 'Aragon Network Token'),
+  new Token(ChainId.MAINNET, '0x27054b13b1B798B345b591a4d22e6562d47eA75a', 4, 'AST', 'AirSwap Token'),
   new Token(ChainId.MAINNET, '0xBA11D00c5f74255f56a5E366F4F77f5A186d7f55', 18, 'BAND', 'BandToken'),
   new Token(ChainId.MAINNET, '0x0D8775F648430679A709E98d2b0Cb6250d2887EF', 18, 'BAT', 'Basic Attention Token'),
   new Token(ChainId.MAINNET, '0x107c4504cd79C5d2696Ea0030a8dD4e92601B82e', 18, 'BLT', 'Bloom Token'),
@@ -31,6 +32,7 @@ export default [
     'Decentralized Insurance Protocol'
   ),
   new Token(ChainId.MAINNET, '0xC0F9bD5Fa5698B6505F643900FFA515Ea5dF54A9', 18, 'DONUT', 'Donut'),
+  new Token(ChainId.MAINNET, '0x86FADb80d8D2cff3C3680819E4da99C10232Ba0F', 18, 'EBASE', 'EURBASE Stablecoin'),
   new Token(ChainId.MAINNET, '0xF629cBd94d3791C9250152BD8dfBDF380E2a3B9c', 18, 'ENJ', 'Enjin Coin'),
   new Token(ChainId.MAINNET, '0x06f65b8CfCb13a9FE37d836fE9708dA38Ecb29B2', 18, 'FAME', 'SAINT FAME: Genesis Shirt'),
   new Token(ChainId.MAINNET, '0x4946Fcea7C692606e8908002e55A582af44AC121', 18, 'FOAM', 'FOAM Token'),
