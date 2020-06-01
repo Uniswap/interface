@@ -6,7 +6,7 @@ import { ButtonConfirmed, ButtonPrimary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow } from '../../components/Row'
-import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
+import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { MIGRATOR_ADDRESS } from '../../constants/abis/migrator'
 import { usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
@@ -24,7 +24,7 @@ const WEI_DENOM = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 const ZERO = JSBI.BigInt(0)
 const ONE = JSBI.BigInt(1)
 const ZERO_FRACTION = new Fraction(ZERO, ONE)
-const ALLOWED_OUTPUT_MIN_PERCENT = new Percent(JSBI.BigInt(99), JSBI.BigInt(100))
+const ALLOWED_OUTPUT_MIN_PERCENT = new Percent(JSBI.BigInt(10000 - INITIAL_ALLOWED_SLIPPAGE), JSBI.BigInt(10000))
 
 function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount: TokenAmount; token: Token }) {
   const { account, chainId } = useActiveWeb3React()
@@ -68,17 +68,32 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
     ? priceDifference?.multiply('-1')
     : priceDifference
 
-  // whether the refund is expected in ETH or the token
-  const refundInETH: boolean | undefined = v2SpotPrice && v1SpotPrice ? v2SpotPrice.lessThan(v1SpotPrice) : undefined
+  const minAmountETH =
+    v2SpotPrice && tokenWorth
+      ? tokenWorth
+          .divide(v2SpotPrice)
+          .multiply(WEI_DENOM)
+          .multiply(ALLOWED_OUTPUT_MIN_PERCENT).quotient
+      : undefined
+
+  const minAmountToken =
+    v2SpotPrice && ethWorth
+      ? ethWorth
+          .multiply(v2SpotPrice)
+          .multiply(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(token.decimals)))
+          .multiply(ALLOWED_OUTPUT_MIN_PERCENT).quotient
+      : undefined
 
   const migrator = useV2MigratorContract()
   const migrate = useCallback(() => {
+    if (!minAmountToken || !minAmountETH) return
+
     setMigrating(true)
     migrator
       .migrate(
         token.address,
-        ALLOWED_OUTPUT_MIN_PERCENT.multiply(tokenWorth.raw).quotient.toString(),
-        ALLOWED_OUTPUT_MIN_PERCENT.multiply(ethWorth.numerator).quotient.toString(),
+        minAmountToken.toString(),
+        minAmountETH.toString(),
         account,
         Math.floor(new Date().getTime() / 1000) + DEFAULT_DEADLINE_FROM_NOW
       )
@@ -88,7 +103,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
       .catch(() => {
         setMigrating(false)
       })
-  }, [account, ethWorth.numerator, migrator, token.address, tokenWorth.raw])
+  }, [minAmountToken, minAmountETH, account, migrator, token.address])
 
   return (
     <AutoColumn gap="12px">
@@ -130,8 +145,10 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
         </dd>
         <dt>Pair {token.symbol} balance</dt>
         <dd>{exchangeTokenBalance?.toSignificant(6)}</dd>
-        <dt>Refund in ETH?</dt>
-        <dd>{refundInETH ? 'Yes' : 'No'}</dd>
+        <dt>Min amount ETH</dt>
+        <dd>{minAmountETH?.toString()}</dd>
+        <dt>Min amount {token.symbol}</dt>
+        <dd>{minAmountToken?.toString()}</dd>
       </dl>
       <div style={{ display: 'flex' }}>
         <AutoColumn gap="8px" style={{ flex: '1', marginRight: 12 }}>
@@ -192,10 +209,20 @@ export default function MigrateV1Exchange({
     return <Redirect to="/migrate/v1" />
   }
 
-  if (!token || !userLiquidityBalance) return null
+  if (!account) {
+    return (
+      <BodyWrapper>
+        <TYPE.largeHeader>You must connect an account.</TYPE.largeHeader>
+      </BodyWrapper>
+    )
+  }
+
+  if (!userLiquidityBalance || !token) {
+    return <BodyWrapper></BodyWrapper>
+  }
 
   return (
-    <BodyWrapper>
+    <BodyWrapper style={{ padding: 24 }}>
       <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
         <div style={{ cursor: 'pointer' }}>
           <ArrowLeft onClick={handleBack} />
