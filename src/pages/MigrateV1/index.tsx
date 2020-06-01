@@ -1,4 +1,4 @@
-import { JSBI, Token } from '@uniswap/sdk'
+import { JSBI, Token, TokenAmount } from '@uniswap/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { RouteComponentProps } from 'react-router'
 import { ThemeContext } from 'styled-components'
@@ -10,8 +10,10 @@ import TokenLogo from '../../components/TokenLogo'
 import { useAllTokenV1Exchanges } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
+import { useWalletModalToggle } from '../../state/application/hooks'
 import { useTokenBalances } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
+import { BodyWrapper } from '../AppBody'
 
 export default function MigrateV1({ history }: RouteComponentProps) {
   const { account, chainId } = useActiveWeb3React()
@@ -26,9 +28,9 @@ export default function MigrateV1({ history }: RouteComponentProps) {
   const [tokenSearch, setTokenSearch] = useState<string>('')
   const handleTokenSearchChange = useCallback(e => setTokenSearch(e.target.value), [setTokenSearch])
 
-  const searchedToken = useTokenByAddressAndAutomaticallyAdd(tokenSearch)
+  const searchedToken: Token | undefined = useTokenByAddressAndAutomaticallyAdd(tokenSearch)
 
-  const unmigratedLiquidityExchangeAddresses = useMemo(
+  const unmigratedLiquidityExchangeAddresses: TokenAmount[] = useMemo(
     () =>
       Object.keys(v1LiquidityBalances)
         .filter(tokenAddress =>
@@ -49,14 +51,16 @@ export default function MigrateV1({ history }: RouteComponentProps) {
 
   const theme = useContext(ThemeContext)
 
+  const toggleWalletModal = useWalletModalToggle()
+
   return (
-    <div style={{ width: '100%', maxWidth: 560, padding: 16 }}>
-      <AutoColumn gap="24px" style={{ padding: 24, backgroundColor: theme.bg1, borderRadius: 12 }}>
+    <BodyWrapper style={{ maxWidth: 560, padding: 24 }}>
+      <AutoColumn gap="24px">
         <AutoRow style={{ justifyContent: 'space-between' }}>
           <TYPE.largeHeader>Your Uniswap V1 Liquidity</TYPE.largeHeader>
           <TYPE.subHeader>
-            {unmigratedLiquidityExchangeAddresses?.length} pool
-            {unmigratedLiquidityExchangeAddresses?.length === 1 ? '' : 's'} found
+            {unmigratedLiquidityExchangeAddresses.length}
+            {unmigratedLiquidityExchangeAddresses.length === 1 ? ' pool' : ' pools'} found
           </TYPE.subHeader>
         </AutoRow>
         <AutoRow>
@@ -67,7 +71,7 @@ export default function MigrateV1({ history }: RouteComponentProps) {
           />
         </AutoRow>
 
-        {unmigratedLiquidityExchangeAddresses?.map(amount => (
+        {unmigratedLiquidityExchangeAddresses.map(amount => (
           <div key={amount.token.address} style={{ borderRadius: '0.5rem', padding: 16, backgroundColor: theme.bg3 }}>
             <AutoRow style={{ justifyContent: 'space-between' }}>
               <div>
@@ -90,7 +94,9 @@ export default function MigrateV1({ history }: RouteComponentProps) {
             </AutoRow>
           </div>
         ))}
+
+        {!account ? <ButtonPrimary onClick={toggleWalletModal}>Connect to a wallet</ButtonPrimary> : null}
       </AutoColumn>
-    </div>
+    </BodyWrapper>
   )
 }
