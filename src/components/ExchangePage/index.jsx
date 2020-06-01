@@ -712,9 +712,10 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           })
           setShowWrap(false)
         })
-        .catch(() => {
+        .catch(error => {
           setShowWrap(false)
           setIsAwaitingSignature(false)
+          Sentry.captureException(error)
           return Promise.reject('Could not wrap ETH.')
         })
     }
