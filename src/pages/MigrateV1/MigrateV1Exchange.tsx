@@ -61,7 +61,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
       ? exchangeTokenBalance.divide(new Fraction(exchangeETHBalance, WEI_DENOM))
       : null
 
-  const priceDifference: Fraction | undefined =
+  const priceDifferencePct: Fraction | undefined =
     v1SpotPrice && v2SpotPrice
       ? v1SpotPrice
           .divide(v2SpotPrice)
@@ -69,25 +69,25 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
           .subtract('100')
       : undefined
 
-  const priceDifferenceAbs: Fraction | undefined = priceDifference?.lessThan(ZERO)
-    ? priceDifference?.multiply('-1')
-    : priceDifference
+  const priceDifferenceAbs: Fraction | undefined = priceDifferencePct?.lessThan(ZERO)
+    ? priceDifferencePct?.multiply('-1')
+    : priceDifferencePct
 
-  const minAmountETH =
+  const minAmountETH: JSBI | undefined =
     v2SpotPrice && tokenWorth
       ? tokenWorth
           .divide(v2SpotPrice)
           .multiply(WEI_DENOM)
           .multiply(ALLOWED_OUTPUT_MIN_PERCENT).quotient
-      : undefined
+      : ethWorth?.numerator
 
-  const minAmountToken =
+  const minAmountToken: JSBI | undefined =
     v2SpotPrice && ethWorth
       ? ethWorth
           .multiply(v2SpotPrice)
           .multiply(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(token.decimals)))
           .multiply(ALLOWED_OUTPUT_MIN_PERCENT).quotient
-      : undefined
+      : tokenWorth?.numerator
 
   const addTransaction = useTransactionAdder()
   const isMigrationPending = useIsTransactionPending(pendingMigrationHash)
