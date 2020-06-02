@@ -234,7 +234,6 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
                   </ArrowWrapper>
                 </AutoColumn>
               </CursorPointer>
-
               <CurrencyInputPanel
                 field={Field.OUTPUT}
                 value={formattedAmounts[Field.OUTPUT]}
@@ -290,7 +289,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
               <RowBetween>
                 <ButtonLight
                   onClick={approveCallback}
-                  disabled={approval === ApprovalState.APPROVED || approval === ApprovalState.PENDING}
+                  disabled={approval === ApprovalState.APPROVED || approval === ApprovalState.PENDING || !!error}
                   width="48%"
                 >
                   {approval === ApprovalState.PENDING ? (

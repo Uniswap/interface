@@ -71,6 +71,7 @@ export const ButtonLight = styled(Base)`
     background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.primary5)};
   }
   :disabled {
+    opacity: 0.4;
     :hover {
       cursor: auto;
       background-color: ${({ theme }) => theme.primary5};
