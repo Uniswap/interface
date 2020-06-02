@@ -36,7 +36,7 @@ import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallbac
 import { useWalletModalToggle } from '../../state/application/hooks'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 
-export default function AddLiquidity({ match: { params } }: RouteComponentProps<{ tokens: string }>) {
+export default function AddLiquidity({ match: { params }, history }: RouteComponentProps<{ tokens: string }>) {
   useDefaultsFromURLMatchParams(params)
 
   const { account, chainId, library } = useActiveWeb3React()
@@ -311,6 +311,10 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
           <ConfirmationModal
             isOpen={showConfirm}
             onDismiss={() => {
+              if (attemptingTxn) {
+                history.push('/pool')
+                return
+              }
               setPendingConfirmation(true)
               setAttemptingTxn(false)
               setShowConfirm(false)

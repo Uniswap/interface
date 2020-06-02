@@ -8,7 +8,7 @@ import Row from '../Row'
 import Menu from '../Menu'
 import Web3Status from '../Web3Status'
 
-import { Link } from '../../theme'
+import { ExternalLink } from '../../theme'
 import { Text } from 'rebass'
 import { WETH, ChainId } from '@uniswap/sdk'
 import { isMobile } from 'react-device-detect'
@@ -160,13 +160,13 @@ export default function Header() {
     <HeaderFrame>
       <MigrateBanner>
         Uniswap V2 is live! Read the&nbsp;
-        <Link href="https://uniswap.org/blog/launch-uniswap-v2/">
-          <b>blog post</b>
-        </Link>
+        <ExternalLink href="https://uniswap.org/blog/launch-uniswap-v2/">
+          <b>blog post ↗</b>
+        </ExternalLink>
         &nbsp;or&nbsp;
-        <Link href="https://migrate.uniswap.exchange/">
-          <b>migrate your liquidity</b>
-        </Link>
+        <ExternalLink href="https://migrate.uniswap.exchange/">
+          <b>migrate your liquidity ↗</b>
+        </ExternalLink>
         .
       </MigrateBanner>
       <RowBetween padding="1rem">

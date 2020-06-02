@@ -13,15 +13,14 @@ import { SUPPORTED_WALLETS } from '../../constants'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getEtherscanLink } from '../../utils'
 import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
-import { ExternalLink } from 'react-feather'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
 import Identicon from '../Identicon'
 import { ButtonSecondary } from '../Button'
-
-import { Link, TYPE } from '../../theme'
+import { ExternalLink as LinkIcon } from 'react-feather'
+import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
@@ -132,12 +131,12 @@ const AccountControl = styled.div`
   }
 `
 
-const StyledLink = styled(Link)<{ hasENS: boolean; isENS: boolean }>`
+const AddressLink = styled(ExternalLink)<{ hasENS: boolean; isENS: boolean }>`
+  font-size: 0.825rem;
   color: ${({ theme }) => theme.text3};
   margin-left: 1rem;
   font-size: 0.825rem;
   display: flex;
-
   :hover {
     color: ${({ theme }) => theme.text2};
   }
@@ -307,23 +306,23 @@ export default function AccountDetails({
                 {formatConnectorName()}
                 <div>
                   {connector !== injected && connector !== walletlink && (
-                    <Link
+                    <WalletAction
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                       onClick={() => {
                         ;(connector as any).close()
                       }}
                     >
                       Disconnect
-                    </Link>
+                    </WalletAction>
                   )}
-                  <Link
+                  <WalletAction
                     style={{ fontSize: '.825rem', fontWeight: 400 }}
                     onClick={() => {
                       openOptions()
                     }}
                   >
                     Change
-                  </Link>
+                  </WalletAction>
                 </div>
               </AccountGroupingRow>
               <AccountGroupingRow id="web3-account-identifier-row">
@@ -353,14 +352,14 @@ export default function AccountDetails({
                         <Copy toCopy={account}>
                           <span style={{ marginLeft: '4px' }}>Copy Address</span>
                         </Copy>
-                        <StyledLink
+                        <AddressLink
                           hasENS={!!ENSName}
                           isENS={true}
                           href={getEtherscanLink(chainId, ENSName, 'address')}
                         >
-                          <ExternalLink size={16} />
+                          <LinkIcon size={16} />
                           <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
-                        </StyledLink>
+                        </AddressLink>
                       </div>
                     </AccountControl>
                   </>
@@ -371,14 +370,14 @@ export default function AccountDetails({
                         <Copy toCopy={account}>
                           <span style={{ marginLeft: '4px' }}>Copy Address</span>
                         </Copy>
-                        <StyledLink
+                        <AddressLink
                           hasENS={!!ENSName}
                           isENS={false}
                           href={getEtherscanLink(chainId, account, 'address')}
                         >
-                          <ExternalLink size={16} />
+                          <LinkIcon size={16} />
                           <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
-                        </StyledLink>
+                        </AddressLink>
                       </div>
                     </AccountControl>
                   </>
@@ -393,9 +392,7 @@ export default function AccountDetails({
         <LowerSection>
           <AutoRow mb={'1rem'} style={{ justifyContent: 'space-between' }}>
             <TYPE.body>Recent Transactions</TYPE.body>
-            <Link style={{ fontSize: '.825rem', fontWeight: 400 }} onClick={clearAllTransactionsCallback}>
-              (clear all)
-            </Link>
+            <LinkStyledButton onClick={clearAllTransactionsCallback}>(clear all)</LinkStyledButton>
           </AutoRow>
           {renderTransactions(pendingTransactions)}
           {renderTransactions(confirmedTransactions)}

@@ -2,7 +2,7 @@ import { TokenAmount } from '@uniswap/sdk'
 import React from 'react'
 import { Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks'
-import { Link, TYPE } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import { getEtherscanLink } from '../../utils'
 import Copy from '../AccountDetails/Copy'
 import { AutoColumn } from '../Column'
@@ -32,21 +32,21 @@ export function TransferModalHeader({
         <AutoColumn gap="lg">
           <TYPE.blue fontSize={36}>{ENSName}</TYPE.blue>
           <AutoRow gap="10px">
-            <Link href={getEtherscanLink(chainId, ENSName, 'address')}>
+            <ExternalLink href={getEtherscanLink(chainId, ENSName, 'address')}>
               <TYPE.blue fontSize={18}>
                 {recipient?.slice(0, 8)}...{recipient?.slice(34, 42)}↗
               </TYPE.blue>
-            </Link>
+            </ExternalLink>
             <Copy toCopy={recipient} />
           </AutoRow>
         </AutoColumn>
       ) : (
         <AutoRow gap="10px">
-          <Link href={getEtherscanLink(chainId, recipient, 'address')}>
+          <ExternalLink href={getEtherscanLink(chainId, recipient, 'address')}>
             <TYPE.blue fontSize={36}>
               {recipient?.slice(0, 6)}...{recipient?.slice(36, 42)}↗
             </TYPE.blue>
-          </Link>
+          </ExternalLink>
           <Copy toCopy={recipient} />
         </AutoRow>
       )}

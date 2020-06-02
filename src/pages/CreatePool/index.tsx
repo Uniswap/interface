@@ -8,7 +8,7 @@ import TokenLogo from '../../components/TokenLogo'
 import SearchModal from '../../components/SearchModal'
 import { Text } from 'rebass'
 import { Plus } from 'react-feather'
-import { TYPE, Link } from '../../theme'
+import { TYPE, StyledInternalLink } from '../../theme'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../../components/Button'
 
@@ -27,7 +27,7 @@ enum STEP {
   SHOW_CREATE_PAGE = 'SHOW_CREATE_PAGE' // show create page
 }
 
-export default function CreatePool({ history, location }: RouteComponentProps) {
+export default function CreatePool({ location }: RouteComponentProps) {
   const { chainId } = useActiveWeb3React()
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN0)
@@ -116,8 +116,8 @@ export default function CreatePool({ history, location }: RouteComponentProps) {
           {pair ? ( // pair already exists - prompt to add liquidity to existing pool
             <AutoRow padding="10px" justify="center">
               <TYPE.body textAlign="center">
-                Pool already exists!
-                <Link onClick={() => history.push('/add/' + token0Address + '-' + token1Address)}> Join the pool.</Link>
+                Pool already exists!{' '}
+                <StyledInternalLink to={`/add/${token0Address}-${token1Address}`}>Join the pool.</StyledInternalLink>
               </TYPE.body>
             </AutoRow>
           ) : (

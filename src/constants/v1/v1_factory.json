@@ -14,8 +14,7 @@
     "inputs": [{ "type": "address", "name": "template" }],
     "constant": false,
     "payable": false,
-    "type": "function",
-    "gas": 35725
+    "type": "function"
   },
   {
     "name": "createExchange",
@@ -23,8 +22,7 @@
     "inputs": [{ "type": "address", "name": "token" }],
     "constant": false,
     "payable": false,
-    "type": "function",
-    "gas": 187911
+    "type": "function"
   },
   {
     "name": "getExchange",
@@ -32,8 +30,7 @@
     "inputs": [{ "type": "address", "name": "token" }],
     "constant": true,
     "payable": false,
-    "type": "function",
-    "gas": 715
+    "type": "function"
   },
   {
     "name": "getToken",
@@ -41,8 +38,7 @@
     "inputs": [{ "type": "address", "name": "exchange" }],
     "constant": true,
     "payable": false,
-    "type": "function",
-    "gas": 745
+    "type": "function"
   },
   {
     "name": "getTokenWithId",
@@ -50,8 +46,7 @@
     "inputs": [{ "type": "uint256", "name": "token_id" }],
     "constant": true,
     "payable": false,
-    "type": "function",
-    "gas": 736
+    "type": "function"
   },
   {
     "name": "exchangeTemplate",
@@ -59,8 +54,7 @@
     "inputs": [],
     "constant": true,
     "payable": false,
-    "type": "function",
-    "gas": 633
+    "type": "function"
   },
   {
     "name": "tokenCount",
@@ -68,7 +62,6 @@
     "inputs": [],
     "constant": true,
     "payable": false,
-    "type": "function",
-    "gas": 663
+    "type": "function"
   }
 ]

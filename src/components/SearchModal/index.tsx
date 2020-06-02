@@ -10,7 +10,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useAllDummyPairs, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useAllTokenBalancesTreatingWETHasETH, useTokenBalances } from '../../state/wallet/hooks'
-import { CloseIcon, Link as StyledLink } from '../../theme/components'
+import { CloseIcon, LinkStyledButton, StyledInternalLink } from '../../theme/components'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import Modal from '../Modal'
@@ -20,7 +20,7 @@ import Tooltip from '../Tooltip'
 import CommonBases from './CommonBases'
 import { filterPairs, filterTokens } from './filtering'
 import PairList from './PairList'
-import { balanceComparator, useTokenComparator } from './sorting'
+import { useTokenComparator, pairComparator } from './sorting'
 import { PaddedColumn, SearchInput } from './styleds'
 import TokenList from './TokenList'
 import SortButton from './SortButton'
@@ -105,11 +105,9 @@ function SearchModal({
   const sortedPairList = useMemo(() => {
     if (isTokenView) return []
     return allPairs.sort((a, b): number => {
-      // sort by balance
       const balanceA = allPairBalances[a.liquidityToken.address]
       const balanceB = allPairBalances[b.liquidityToken.address]
-
-      return balanceComparator(balanceA, balanceB)
+      return pairComparator(a, b, balanceA, balanceB)
     })
   }, [isTokenView, allPairs, allPairBalances])
 
@@ -206,19 +204,13 @@ function SearchModal({
           <AutoRow justify={'center'}>
             <div>
               {isTokenView ? (
-                <Text fontWeight={500} color={theme.text2} fontSize={14}>
-                  <StyledLink onClick={openTooltip}>Having trouble finding a token?</StyledLink>
-                </Text>
+                <LinkStyledButton style={{ fontWeight: 500, color: theme.text2, fontSize: 16 }} onClick={openTooltip}>
+                  Having trouble finding a token?
+                </LinkStyledButton>
               ) : (
                 <Text fontWeight={500}>
                   {!isMobile && "Don't see a pool? "}
-                  <StyledLink
-                    onClick={() => {
-                      history.push('/find')
-                    }}
-                  >
-                    {!isMobile ? 'Import it.' : 'Import pool.'}
-                  </StyledLink>
+                  <StyledInternalLink to="/find">{!isMobile ? 'Import it.' : 'Import pool.'}</StyledInternalLink>
                 </Text>
               )}
             </div>

@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import { CheckCircle, Triangle, ExternalLink } from 'react-feather'
+import { CheckCircle, Triangle, ExternalLink as LinkIcon } from 'react-feather'
 
 import { useActiveWeb3React } from '../../hooks'
 import { getEtherscanLink } from '../../utils'
-import { Link, Spinner } from '../../theme'
+import { ExternalLink, Spinner } from '../../theme'
 import Circle from '../../assets/images/circle.svg'
 import { useAllTransactions } from '../../state/transactions/hooks'
 
@@ -27,12 +27,7 @@ const SpinnerWrapper = styled(Spinner)`
   }
 `
 
-const StyledExternalLink = styled(ExternalLink)`
-  color: ${({ theme }) => theme.text4};
-  margin-left: 8px;
-`
-
-const TransactionState = styled(Link)<{ pending: boolean; success?: boolean }>`
+const TransactionState = styled(ExternalLink)<{ pending: boolean; success?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -62,7 +57,7 @@ export default function Transaction({ hash }: { hash: string }) {
     <TransactionWrapper>
       <TransactionState href={getEtherscanLink(chainId, hash, 'transaction')} pending={pending} success={success}>
         <TransactionStatusText>
-          {summary ? summary : hash} <StyledExternalLink size={16} />
+          {summary ? summary : hash} <LinkIcon size={16} />
         </TransactionStatusText>
         <IconWrapper pending={pending} success={success}>
           {pending ? <SpinnerWrapper src={Circle} /> : success ? <CheckCircle size="16" /> : <Triangle size="16" />}

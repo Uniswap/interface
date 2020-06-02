@@ -1,47 +1,38 @@
 import { useMemo } from 'react'
-import { WETH, Token, TokenAmount, Trade, ChainId, Pair } from '@uniswap/sdk'
-import { useActiveWeb3React } from './index'
-import { usePair } from '../data/Reserves'
+import { Token, TokenAmount, Trade, ChainId, Pair } from '@uniswap/sdk'
+import flatMap from 'lodash.flatmap'
 
-const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
-const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
+import { useActiveWeb3React } from './index'
+import { usePairs } from '../data/Reserves'
+import { BASES_TO_CHECK_TRADES_AGAINST } from '../constants'
+
 function useAllCommonPairs(tokenA?: Token, tokenB?: Token): Pair[] {
   const { chainId } = useActiveWeb3React()
 
-  // check for direct pair between tokens
-  const pairBetween = usePair(tokenA, tokenB)
+  const bases = useMemo(() => BASES_TO_CHECK_TRADES_AGAINST[chainId as ChainId] ?? [], [chainId])
 
-  // get token<->WETH pairs
-  const aToETH = usePair(tokenA, WETH[chainId as ChainId])
-  const bToETH = usePair(tokenB, WETH[chainId as ChainId])
-
-  // get token<->DAI pairs
-  const aToDAI = usePair(tokenA, chainId === ChainId.MAINNET ? DAI : undefined)
-  const bToDAI = usePair(tokenB, chainId === ChainId.MAINNET ? DAI : undefined)
-
-  // get token<->USDC pairs
-  const aToUSDC = usePair(tokenA, chainId === ChainId.MAINNET ? USDC : undefined)
-  const bToUSDC = usePair(tokenB, chainId === ChainId.MAINNET ? USDC : undefined)
-
-  // get connecting pairs
-  const DAIToETH = usePair(chainId === ChainId.MAINNET ? DAI : undefined, WETH[chainId as ChainId])
-  const USDCToETH = usePair(chainId === ChainId.MAINNET ? USDC : undefined, WETH[chainId as ChainId])
-  const DAIToUSDC = usePair(
-    chainId === ChainId.MAINNET ? DAI : undefined,
-    chainId === ChainId.MAINNET ? USDC : undefined
-  )
+  const allPairs = usePairs([
+    // the direct pair
+    [tokenA, tokenB],
+    // token A against all bases
+    ...bases.map((base): [Token | undefined, Token | undefined] => [tokenA, base]),
+    // token B against all bases
+    ...bases.map((base): [Token | undefined, Token | undefined] => [tokenB, base]),
+    // each base against all bases
+    ...flatMap(bases, (base): [Token, Token][] => bases.map(otherBase => [base, otherBase]))
+  ])
 
   // only pass along valid pairs, non-duplicated pairs
   return useMemo(
     () =>
-      [pairBetween, aToETH, bToETH, aToDAI, bToDAI, aToUSDC, bToUSDC, DAIToETH, USDCToETH, DAIToUSDC]
+      allPairs
         // filter out invalid pairs
         .filter((p): p is Pair => !!p)
         // filter out duplicated pairs
         .filter(
           (p, i, pairs) => i === pairs.findIndex(pair => pair?.liquidityToken.address === p.liquidityToken.address)
         ),
-    [pairBetween, aToETH, bToETH, aToDAI, bToDAI, aToUSDC, bToUSDC, DAIToETH, USDCToETH, DAIToUSDC]
+    [allPairs]
   )
 }
 

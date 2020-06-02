@@ -177,19 +177,10 @@ html,
 body {
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;    
 }
 
 * {
   box-sizing: border-box;
-}
-
-body > div {
-  height: 100%;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 html {
