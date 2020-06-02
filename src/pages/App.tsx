@@ -49,7 +49,7 @@ const BodyWrapper = styled.div`
 
 const BackgroundGradient = styled.div`
   width: 100%;
-  height: 200vh;
+  height: 100vh;
   background: ${({ theme }) => `radial-gradient(50% 50% at 50% 50%, ${theme.primary1} 0%, ${theme.bg1} 100%)`};
   position: absolute;
   top: 0px;
