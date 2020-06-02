@@ -11,21 +11,22 @@ function useAllCommonPairs(tokenA?: Token, tokenB?: Token): Pair[] {
   const { chainId } = useActiveWeb3React()
 
   const bases = useMemo(() => BASES_TO_CHECK_TRADES_AGAINST[chainId as ChainId] ?? [], [chainId])
-  const commonBases = useMemo(
-    () => flatMap(bases, (base): [Token, Token][] => bases.map(otherBase => [base, otherBase])),
-    [bases]
+
+  const allPairCombinations: [Token | undefined, Token | undefined][] = useMemo(
+    () => [
+      // the direct pair
+      [tokenA, tokenB],
+      // token A against all bases
+      ...bases.map((base): [Token | undefined, Token | undefined] => [tokenA, base]),
+      // token B against all bases
+      ...bases.map((base): [Token | undefined, Token | undefined] => [tokenB, base]),
+      // each base against all bases
+      ...flatMap(bases, (base): [Token, Token][] => bases.map(otherBase => [base, otherBase]))
+    ],
+    [tokenA, tokenB, bases]
   )
 
-  const allPairs = usePairs([
-    // the direct pair
-    [tokenA, tokenB],
-    // token A against all bases
-    ...bases.map((base): [Token | undefined, Token | undefined] => [tokenA, base]),
-    // token B against all bases
-    ...bases.map((base): [Token | undefined, Token | undefined] => [tokenB, base]),
-    // each base against all bases
-    ...commonBases
-  ])
+  const allPairs = usePairs(allPairCombinations)
 
   // only pass along valid pairs, non-duplicated pairs
   return useMemo(
