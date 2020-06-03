@@ -28,9 +28,10 @@ export default createReducer(initialState, builder =>
     .addCase(toggleWalletModal, state => {
       state.walletModalOpen = !state.walletModalOpen
     })
-    .addCase(addPopup, (state, { payload: { content } }) => {
+    .addCase(addPopup, (state, { payload: { content, key } }) => {
+      if (key && state.popupList.some(popup => popup.key === key)) return
       state.popupList.push({
-        key: nanoid(),
+        key: key || nanoid(),
         show: true,
         content
       })
