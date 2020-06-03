@@ -6,9 +6,9 @@ import { RouteComponentProps } from 'react-router-dom'
 import Question from '../../components/QuestionHelper'
 import SearchModal from '../../components/SearchModal'
 import PositionCard from '../../components/PositionCard'
-import { useUserProbablyHasV1Liquidity } from '../../data/V1'
+import { useUserHasLiquidityInAllTokens } from '../../data/V1'
 import { useTokenBalances } from '../../state/wallet/hooks'
-import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
+import { StyledInternalLink, TYPE } from '../../theme'
 import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
 import { RowBetween } from '../../components/Row'
@@ -59,7 +59,7 @@ export default function Pool({ history }: RouteComponentProps) {
       return <PositionCardWrapper key={i} dummyPair={pair} />
     })
 
-  const hasV1Liquidity = useUserProbablyHasV1Liquidity()
+  const hasV1Liquidity = useUserHasLiquidityInAllTokens()
 
   return (
     <AppBody>
@@ -103,9 +103,9 @@ export default function Pool({ history }: RouteComponentProps) {
                   </StyledInternalLink>
                 </>
               ) : (
-                <ExternalLink href="https://migrate.uniswap.exchange" id="migrate-v1-liquidity-link">
+                <StyledInternalLink id="migrate-v1-liquidity-link" to="/migrate/v1">
                   Migrate your V1 liquidity.
-                </ExternalLink>
+                </StyledInternalLink>
               )}
             </Text>
           </AutoColumn>

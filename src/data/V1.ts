@@ -30,42 +30,39 @@ function useMockV1Pair(token?: Token): MockV1Pair | undefined {
     : undefined
 }
 
-// returns ALL v1 exchange addresses
-export function useAllV1ExchangeAddresses(): string[] {
-  const factory = useV1FactoryContract()
-  const exchangeCount = useSingleCallResult(factory, 'tokenCount')?.result
-
-  const parsedCount = parseInt(exchangeCount?.toString() ?? '0')
-
-  const indices = useMemo(() => [...Array(parsedCount).keys()].map(ix => [ix]), [parsedCount])
-  const data = useSingleContractMultipleData(factory, 'getTokenWithId', indices, NEVER_RELOAD)
-
-  return useMemo(() => data?.map(({ result }) => result?.[0])?.filter(x => x) ?? [], [data])
-}
-
 // returns all v1 exchange addresses in the user's token list
-export function useAllTokenV1ExchangeAddresses(): string[] {
+export function useAllTokenV1Exchanges(): { [exchangeAddress: string]: Token } {
   const allTokens = useAllTokens()
   const factory = useV1FactoryContract()
   const args = useMemo(() => Object.keys(allTokens).map(tokenAddress => [tokenAddress]), [allTokens])
 
   const data = useSingleContractMultipleData(factory, 'getExchange', args, NEVER_RELOAD)
 
-  return useMemo(() => data?.map(({ result }) => result?.[0])?.filter(x => x) ?? [], [data])
+  return useMemo(
+    () =>
+      data?.reduce<{ [exchangeAddress: string]: Token }>((memo, { result }, ix) => {
+        const token = allTokens[args[ix][0]]
+        if (result?.[0]) {
+          memo[result?.[0]] = token
+        }
+        return memo
+      }, {}) ?? {},
+    [allTokens, args, data]
+  )
 }
 
 // returns whether any of the tokens in the user's token list have liquidity on v1
-export function useUserProbablyHasV1Liquidity(): boolean | undefined {
-  const exchangeAddresses = useAllTokenV1ExchangeAddresses()
+export function useUserHasLiquidityInAllTokens(): boolean | undefined {
+  const exchanges = useAllTokenV1Exchanges()
 
   const { account, chainId } = useActiveWeb3React()
 
-  const fakeTokens = useMemo(
-    () => (chainId ? exchangeAddresses.map(address => new Token(chainId, address, 18, 'UNI-V1')) : []),
-    [chainId, exchangeAddresses]
+  const fakeLiquidityTokens = useMemo(
+    () => (chainId ? Object.keys(exchanges).map(address => new Token(chainId, address, 18, 'UNI-V1')) : []),
+    [chainId, exchanges]
   )
 
-  const balances = useTokenBalances(account ?? undefined, fakeTokens)
+  const balances = useTokenBalances(account ?? undefined, fakeLiquidityTokens)
 
   return useMemo(
     () =>
