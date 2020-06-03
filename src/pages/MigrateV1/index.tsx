@@ -84,7 +84,7 @@ export default function MigrateV1({ history }: RouteComponentProps) {
           <TYPE.largeHeader>Migrate Liquidity</TYPE.largeHeader>
           <div></div>
         </AutoRow>
-        <GreyCard style={{ marginTop: '0', padding: 0, display: 'inline-block' }}>
+        <GreyCard>
           <TYPE.main style={{ lineHeight: '140%' }}>
             For each pool, approve the migration helper and click migrate liquidity. Your liquidity will be withdrawn
             from Uniswap V1 and deposited into Uniswap V2.
