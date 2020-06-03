@@ -4,7 +4,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { ButtonConfirmed, ButtonPrimary } from '../../components/Button'
-import { YellowCard } from '../../components/Card'
+import { PinkCard, YellowCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow } from '../../components/Row'
@@ -37,6 +37,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
   const exchangeTokenBalance = useTokenBalance(liquidityTokenAmount.token.address, token)
 
   const v2Pair = usePair(WETH[chainId as ChainId], token)
+  const isFirstLiquidityProvider: boolean = v2Pair === null
 
   const v2SpotPrice = v2Pair?.reserveOf(token)?.divide(v2Pair?.reserveOf(WETH[chainId as ChainId]))
 
@@ -60,7 +61,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
       ? exchangeTokenBalance.divide(new Fraction(exchangeETHBalance, WEI_DENOM))
       : null
 
-  const priceDifferencePct: Fraction | undefined =
+  const priceDifferenceFraction: Fraction | undefined =
     v1SpotPrice && v2SpotPrice
       ? v1SpotPrice
           .divide(v2SpotPrice)
@@ -68,9 +69,9 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
           .subtract('100')
       : undefined
 
-  const priceDifferenceAbs: Fraction | undefined = priceDifferencePct?.lessThan(ZERO)
-    ? priceDifferencePct?.multiply('-1')
-    : priceDifferencePct
+  const priceDifferenceAbs: Fraction | undefined = priceDifferenceFraction?.lessThan(ZERO)
+    ? priceDifferenceFraction?.multiply('-1')
+    : priceDifferenceFraction
 
   const minAmountETH: JSBI | undefined =
     v2SpotPrice && tokenWorth
@@ -119,26 +120,50 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
 
   return (
     <AutoColumn gap="20px">
-      <YellowCard>
-        <TYPE.main style={{ marginBottom: 8 }}>
-          It is best to deposit liquidity into Uniswap V2 at a price you believe is correct. If you believe the price is
-          incorrect, you can either make a swap to move the price or wait for someone else to do so.
-        </TYPE.main>
-        <AutoRow style={{ justifyContent: 'space-around' }}>
-          <AutoColumn>
-            <TYPE.body>
-              V1 Price: {v1SpotPrice?.toSignificant(6)} {token.symbol}/ETH
-            </TYPE.body>
-            <TYPE.body>
-              V2 Price: {v2SpotPrice?.toSignificant(6)} {token.symbol}/ETH
-            </TYPE.body>
+      {!isFirstLiquidityProvider ? (
+        <YellowCard>
+          <TYPE.main style={{ marginBottom: 8 }}>
+            It is best to deposit liquidity into Uniswap V2 at a price you believe is correct. If you believe the price
+            is incorrect, you can either make a swap to move the price or wait for someone else to do so.
+          </TYPE.main>
+          <AutoRow style={{ justifyContent: 'space-around' }}>
+            <AutoColumn>
+              <TYPE.body>
+                V1 Price: {v1SpotPrice?.toSignificant(6)} {token.symbol}/ETH
+              </TYPE.body>
+              <TYPE.body>
+                V2 Price: {v2SpotPrice?.toSignificant(6)} {token.symbol}/ETH
+              </TYPE.body>
+            </AutoColumn>
+            <AutoColumn>
+              <div>Price Difference</div>
+              <div>{priceDifferenceAbs?.toSignificant(6)}%</div>
+            </AutoColumn>
+          </AutoRow>
+        </YellowCard>
+      ) : (
+        <PinkCard>
+          <AutoColumn gap="10px">
+            <div>
+              You are the first liquidity provider for this pair on Uniswap V2. Your liquidity will be migrated at the
+              current V1 price.
+            </div>
+            <div>
+              <AutoRow style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>V1 Price</div>
+                <AutoColumn>
+                  <div>
+                    {v1SpotPrice?.invert()?.toSignificant(6)} ETH/{token.symbol}
+                  </div>
+                  <div>
+                    {v1SpotPrice?.toSignificant(6)} {token.symbol}/ETH
+                  </div>
+                </AutoColumn>
+              </AutoRow>
+            </div>
           </AutoColumn>
-          <AutoColumn>
-            <div>Price Difference</div>
-            <div>{priceDifferenceAbs?.toSignificant(6)}%</div>
-          </AutoColumn>
-        </AutoRow>
-      </YellowCard>
+        </PinkCard>
+      )}
       <div style={{ display: 'flex' }}>
         <AutoColumn gap="8px" style={{ flex: '1', marginRight: 12 }}>
           <TYPE.mediumHeader>
