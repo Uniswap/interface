@@ -2,15 +2,10 @@ import { Contract } from '@ethersproject/contracts'
 import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { parseBytes32String } from '@ethersproject/strings'
 import { BigNumber } from '@ethersproject/bignumber'
-
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { abi as IUniswapV2Router01ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router01.json'
 import { ROUTER_ADDRESS } from '../constants'
-
-import ERC20_ABI from '../constants/abis/erc20.json'
-import ERC20_BYTES32_ABI from '../constants/abis/erc20_bytes32.json'
 import { ChainId, JSBI, Percent, TokenAmount } from '@uniswap/sdk'
 
 // returns the checksummed address if the address is valid, otherwise returns false
@@ -100,51 +95,6 @@ export function getRouterContract(chainId: number, library: Web3Provider, accoun
 // account is optional
 export function getExchangeContract(pairAddress: string, library: Web3Provider, account?: string) {
   return getContract(pairAddress, IUniswapV2PairABI, library, account)
-}
-
-// get token info and fall back to unknown if not available, except for the
-// decimals which falls back to null
-export async function getTokenInfoWithFallback(
-  tokenAddress: string,
-  library: Web3Provider
-): Promise<{ name: string; symbol: string; decimals: null | number }> {
-  if (!isAddress(tokenAddress)) {
-    throw Error(`Invalid 'tokenAddress' parameter '${tokenAddress}'.`)
-  }
-
-  const token = getContract(tokenAddress, ERC20_ABI, library)
-
-  const namePromise: Promise<string> = token.name().catch(() =>
-    getContract(tokenAddress, ERC20_BYTES32_ABI, library)
-      .name()
-      .then(parseBytes32String)
-      .catch((e: Error) => {
-        console.debug('Failed to get name for token address', e, tokenAddress)
-        return 'Unknown'
-      })
-  )
-
-  const symbolPromise: Promise<string> = token.symbol().catch(() => {
-    const contractBytes32 = getContract(tokenAddress, ERC20_BYTES32_ABI, library)
-    return contractBytes32
-      .symbol()
-      .then(parseBytes32String)
-      .catch((e: Error) => {
-        console.debug('Failed to get symbol for token address', e, tokenAddress)
-        return 'UNKNOWN'
-      })
-  })
-  const decimalsPromise: Promise<number | null> = token.decimals().catch((e: Error) => {
-    console.debug('Failed to get decimals for token address', e, tokenAddress)
-    return null
-  })
-
-  const [name, symbol, decimals]: [string, string, number | null] = (await Promise.all([
-    namePromise,
-    symbolPromise,
-    decimalsPromise
-  ])) as [string, string, number | null]
-  return { name, symbol, decimals }
 }
 
 export function escapeRegExp(string: string): string {
