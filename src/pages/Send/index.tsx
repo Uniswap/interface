@@ -486,7 +486,11 @@ export default function Send({ location: { search } }: RouteComponentProps) {
               approval === ApprovalState.PENDING ||
               (approvalSubmitted && approval === ApprovalState.APPROVED) ? (
               <RowBetween>
-                <ButtonLight onClick={approveCallback} disabled={approval === ApprovalState.APPROVED} width="48%">
+                <ButtonPrimary
+                  onClick={approveCallback}
+                  disabled={approval === ApprovalState.APPROVED || !!recipientError || (sendingWithSwap && !!swapError)}
+                  width="48%"
+                >
                   {approval === ApprovalState.PENDING ? (
                     <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
                   ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
@@ -494,7 +498,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
                   ) : (
                     'Approve ' + tokens[Field.INPUT]?.symbol
                   )}
-                </ButtonLight>
+                </ButtonPrimary>
                 <ButtonError
                   onClick={() => {
                     setShowConfirm(true)
@@ -508,8 +512,14 @@ export default function Send({ location: { search } }: RouteComponentProps) {
                   }
                   error={sendingWithSwap && isSwapValid && severity > 2}
                 >
-                  <Text fontSize={20} fontWeight={500}>
-                    {(sendingWithSwap ? swapError : null) ||
+                  <Text fontSize={16} fontWeight={500}>
+                    {(sendingWithSwap
+                      ? swapError
+                        ? swapError.includes('balance')
+                          ? swapError.substring(0, swapError.lastIndexOf(' '))
+                          : swapError
+                        : null
+                      : null) ||
                       sendAmountError ||
                       recipientError ||
                       `Send${severity > 2 ? ' Anyway' : ''}`}

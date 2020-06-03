@@ -5,7 +5,7 @@ import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { ButtonError, ButtonLight } from '../../components/Button'
+import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
@@ -287,19 +287,19 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
               approval === ApprovalState.PENDING ||
               (approvalSubmitted && approval === ApprovalState.APPROVED) ? (
               <RowBetween>
-                <ButtonLight
+                <ButtonPrimary
                   onClick={approveCallback}
                   disabled={approval === ApprovalState.APPROVED || approval === ApprovalState.PENDING || !!error}
                   width="48%"
                 >
                   {approval === ApprovalState.PENDING ? (
-                    <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
+                    <Dots>Approving</Dots>
                   ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
                     'Approved'
                   ) : (
                     'Approve ' + tokens[Field.INPUT]?.symbol
                   )}
-                </ButtonLight>
+                </ButtonPrimary>
                 <ButtonError
                   onClick={() => {
                     setShowConfirm(true)
