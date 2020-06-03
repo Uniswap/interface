@@ -3,7 +3,7 @@ import { ChainId, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@uni
 import React, { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Redirect, RouteComponentProps } from 'react-router'
-import { ButtonConfirmed, ButtonPrimary } from '../../components/Button'
+import { ButtonConfirmed } from '../../components/Button'
 import { PinkCard, YellowCard, LightCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import QuestionHelper from '../../components/QuestionHelper'
@@ -24,6 +24,7 @@ import { isAddress } from '../../utils'
 import { BodyWrapper } from '../AppBody'
 import { EmptyState } from './EmptyState'
 import TokenLogo from '../../components/TokenLogo'
+import { FormattedPoolTokenAmount } from './index'
 
 const WEI_DENOM = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 const ZERO = JSBI.BigInt(0)
@@ -119,33 +120,39 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
 
   const noLiquidityTokens = liquidityTokenAmount && liquidityTokenAmount.equalTo(ZERO)
 
+  const largePriceDifference = Boolean(priceDifferenceAbs && !priceDifferenceAbs.lessThan(JSBI.BigInt(5)))
+
+  const isSuccessfullyMigrated = Boolean(noLiquidityTokens && pendingMigrationHash)
+
   return (
     <AutoColumn gap="20px">
       {!isFirstLiquidityProvider ? (
-        <YellowCard>
-          <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
-            It is best to deposit liquidity into Uniswap V2 at a price you believe is correct. If you believe the price
-            is incorrect, you can either make a swap to move the price or wait for someone else to do so.
-          </TYPE.body>
-          <AutoColumn gap="8px">
-            <RowBetween>
-              <TYPE.body>V1 Price:</TYPE.body>
-              <TYPE.black>
-                {v1SpotPrice?.toSignificant(6)} {token.symbol}/ETH
-              </TYPE.black>
-            </RowBetween>
-            <RowBetween>
-              <TYPE.body>V2 Price:</TYPE.body>
-              <TYPE.black>
-                {v2SpotPrice?.toSignificant(6)} {token.symbol}/ETH
-              </TYPE.black>
-            </RowBetween>
-            <RowBetween>
-              <div>Price Difference:</div>
-              <div>{priceDifferenceAbs?.toSignificant(6)}%</div>
-            </RowBetween>
-          </AutoColumn>
-        </YellowCard>
+        largePriceDifference ? (
+          <YellowCard>
+            <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
+              It is best to deposit liquidity into Uniswap V2 at a price you believe is correct. If you believe the
+              price is incorrect, you can either make a swap to move the price or wait for someone else to do so.
+            </TYPE.body>
+            <AutoColumn gap="8px">
+              <RowBetween>
+                <TYPE.body>V1 Price:</TYPE.body>
+                <TYPE.black>
+                  {v1SpotPrice?.toSignificant(6)} {token.symbol}/ETH
+                </TYPE.black>
+              </RowBetween>
+              <RowBetween>
+                <TYPE.body>V2 Price:</TYPE.body>
+                <TYPE.black>
+                  {v2SpotPrice?.toSignificant(6)} {token.symbol}/ETH
+                </TYPE.black>
+              </RowBetween>
+              <RowBetween>
+                <div>Price Difference:</div>
+                <div>{priceDifferenceAbs.toSignificant(4)}%</div>
+              </RowBetween>
+            </AutoColumn>
+          </YellowCard>
+        ) : null
       ) : (
         <PinkCard>
           <AutoColumn gap="10px">
@@ -169,7 +176,9 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
         <AutoRow style={{ justifyContent: 'flex-start', width: 'fit-content' }}>
           <TokenLogo size="24px" address={token.address} />{' '}
           <div style={{ marginLeft: '.75rem' }}>
-            <TYPE.mediumHeader>1 {token.symbol} Pool Tokens</TYPE.mediumHeader>
+            <TYPE.mediumHeader>
+              {<FormattedPoolTokenAmount tokenAmount={liquidityTokenAmount} />} {token.symbol} Pool Tokens
+            </TYPE.mediumHeader>
           </div>
         </AutoRow>
         <div style={{ display: 'flex', marginTop: '1rem' }}>
@@ -187,14 +196,19 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
             </ButtonConfirmed>
           </AutoColumn>
           <AutoColumn gap="12px" style={{ flex: '1' }}>
-            <ButtonPrimary
+            <ButtonConfirmed
+              confirmed={isSuccessfullyMigrated}
               disabled={
-                noLiquidityTokens || isMigrationPending || approval !== ApprovalState.APPROVED || confirmingMigration
+                isSuccessfullyMigrated ||
+                noLiquidityTokens ||
+                isMigrationPending ||
+                approval !== ApprovalState.APPROVED ||
+                confirmingMigration
               }
               onClick={migrate}
             >
-              {isMigrationPending ? 'Migrating...' : 'Migrate'}
-            </ButtonPrimary>
+              {isSuccessfullyMigrated ? 'Success' : isMigrationPending ? 'Migrating...' : 'Migrate'}
+            </ButtonConfirmed>
           </AutoColumn>
         </div>
       </LightCard>

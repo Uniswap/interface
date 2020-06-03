@@ -20,10 +20,12 @@ import { EmptyState } from './EmptyState'
 
 const POOL_TOKEN_AMOUNT_MIN = new Fraction(JSBI.BigInt(1), JSBI.BigInt(1000000))
 
-function FormattedPoolTokenAmount({ tokenAmount }: { tokenAmount: TokenAmount }) {
+export function FormattedPoolTokenAmount({ tokenAmount }: { tokenAmount: TokenAmount }) {
   return (
     <>
-      {tokenAmount.greaterThan(POOL_TOKEN_AMOUNT_MIN)
+      {tokenAmount.equalTo(JSBI.BigInt(0))
+        ? '0'
+        : tokenAmount.greaterThan(POOL_TOKEN_AMOUNT_MIN)
         ? tokenAmount.toSignificant(6)
         : `<${POOL_TOKEN_AMOUNT_MIN.toSignificant(1)}`}
     </>
