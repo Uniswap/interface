@@ -23,5 +23,5 @@ export type PopupContent =
 
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('updateBlockNumber')
 export const toggleWalletModal = createAction<void>('toggleWalletModal')
-export const addPopup = createAction<{ content: PopupContent }>('addPopup')
+export const addPopup = createAction<{ key?: string; content: PopupContent }>('addPopup')
 export const removePopup = createAction<{ key: string }>('removePopup')
