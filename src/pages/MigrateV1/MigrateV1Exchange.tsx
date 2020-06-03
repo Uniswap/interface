@@ -4,10 +4,10 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { ButtonConfirmed, ButtonPrimary } from '../../components/Button'
-import { PinkCard, YellowCard } from '../../components/Card'
+import { PinkCard, YellowCard, LightCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import QuestionHelper from '../../components/QuestionHelper'
-import { AutoRow } from '../../components/Row'
+import { AutoRow, RowBetween } from '../../components/Row'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { MIGRATOR_ADDRESS } from '../../constants/abis/migrator'
 import { usePair } from '../../data/Reserves'
@@ -23,6 +23,7 @@ import { TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import { BodyWrapper } from '../AppBody'
 import { EmptyState } from './EmptyState'
+import TokenLogo from '../../components/TokenLogo'
 
 const WEI_DENOM = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 const ZERO = JSBI.BigInt(0)
@@ -122,81 +123,84 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
     <AutoColumn gap="20px">
       {!isFirstLiquidityProvider ? (
         <YellowCard>
-          <TYPE.main style={{ marginBottom: 8 }}>
+          <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
             It is best to deposit liquidity into Uniswap V2 at a price you believe is correct. If you believe the price
             is incorrect, you can either make a swap to move the price or wait for someone else to do so.
-          </TYPE.main>
-          <AutoRow style={{ justifyContent: 'space-around' }}>
-            <AutoColumn>
-              <TYPE.body>
-                V1 Price: {v1SpotPrice?.toSignificant(6)} {token.symbol}/ETH
-              </TYPE.body>
-              <TYPE.body>
-                V2 Price: {v2SpotPrice?.toSignificant(6)} {token.symbol}/ETH
-              </TYPE.body>
-            </AutoColumn>
-            <AutoColumn>
-              <div>Price Difference</div>
+          </TYPE.body>
+          <AutoColumn gap="8px">
+            <RowBetween>
+              <TYPE.body>V1 Price:</TYPE.body>
+              <TYPE.black>
+                {v1SpotPrice?.toSignificant(6)} {token.symbol}/ETH
+              </TYPE.black>
+            </RowBetween>
+            <RowBetween>
+              <TYPE.body>V2 Price:</TYPE.body>
+              <TYPE.black>
+                {v2SpotPrice?.toSignificant(6)} {token.symbol}/ETH
+              </TYPE.black>
+            </RowBetween>
+            <RowBetween>
+              <div>Price Difference:</div>
               <div>{priceDifferenceAbs?.toSignificant(6)}%</div>
-            </AutoColumn>
-          </AutoRow>
+            </RowBetween>
+          </AutoColumn>
         </YellowCard>
       ) : (
         <PinkCard>
           <AutoColumn gap="10px">
             <div>
               You are the first liquidity provider for this pair on Uniswap V2. Your liquidity will be migrated at the
-              current V1 price.
+              current V1 price. Your transaction cost also includes the gas to create the pool.
             </div>
-            <div>
-              <AutoRow style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div>V1 Price</div>
-                <AutoColumn>
-                  <div>
-                    {v1SpotPrice?.invert()?.toSignificant(6)} ETH/{token.symbol}
-                  </div>
-                  <div>
-                    {v1SpotPrice?.toSignificant(6)} {token.symbol}/ETH
-                  </div>
-                </AutoColumn>
-              </AutoRow>
-            </div>
+            <div>V1 Price</div>
+            <AutoColumn>
+              <div>
+                {v1SpotPrice?.invert()?.toSignificant(6)} ETH/{token.symbol}
+              </div>
+              <div>
+                {v1SpotPrice?.toSignificant(6)} {token.symbol}/ETH
+              </div>
+            </AutoColumn>
           </AutoColumn>
         </PinkCard>
       )}
-      <div style={{ display: 'flex' }}>
-        <AutoColumn gap="8px" style={{ flex: '1', marginRight: 12 }}>
-          <TYPE.mediumHeader>
-            <span>Step 1</span>
-            <QuestionHelper text="Before you can migrate your liquidity, you must approve the liquidity tokens to be moved by the Uniswap V2 migration contract." />
-          </TYPE.mediumHeader>
-          <ButtonConfirmed
-            confirmed={approval === ApprovalState.APPROVED}
-            disabled={approval !== ApprovalState.NOT_APPROVED}
-            onClick={approve}
-          >
-            {approval === ApprovalState.PENDING
-              ? 'Approving...'
-              : approval === ApprovalState.APPROVED
-              ? 'Approved'
-              : 'Approve'}
-          </ButtonConfirmed>
-        </AutoColumn>
-        <AutoColumn gap="8px" style={{ flex: '1' }}>
-          <TYPE.mediumHeader>
-            <span>Step 2</span>
-            <QuestionHelper text="Migrate your liquidity to Uniswap V2!" />
-          </TYPE.mediumHeader>
-          <ButtonPrimary
-            disabled={
-              noLiquidityTokens || isMigrationPending || approval !== ApprovalState.APPROVED || confirmingMigration
-            }
-            onClick={migrate}
-          >
-            {isMigrationPending ? 'Migrating...' : 'Migrate'}
-          </ButtonPrimary>
-        </AutoColumn>
-      </div>
+      <LightCard>
+        <AutoRow style={{ justifyContent: 'flex-start', width: 'fit-content' }}>
+          <TokenLogo size="24px" address={token.address} />{' '}
+          <div style={{ marginLeft: '.75rem' }}>
+            <TYPE.mediumHeader>1 {token.symbol} Pool Tokens</TYPE.mediumHeader>
+          </div>
+        </AutoRow>
+        <div style={{ display: 'flex', marginTop: '1rem' }}>
+          <AutoColumn gap="12px" style={{ flex: '1', marginRight: 12 }}>
+            <ButtonConfirmed
+              confirmed={approval === ApprovalState.APPROVED}
+              disabled={approval !== ApprovalState.NOT_APPROVED}
+              onClick={approve}
+            >
+              {approval === ApprovalState.PENDING
+                ? 'Approving...'
+                : approval === ApprovalState.APPROVED
+                ? 'Approved'
+                : 'Approve'}
+            </ButtonConfirmed>
+          </AutoColumn>
+          <AutoColumn gap="12px" style={{ flex: '1' }}>
+            <ButtonPrimary
+              disabled={
+                noLiquidityTokens || isMigrationPending || approval !== ApprovalState.APPROVED || confirmingMigration
+              }
+              onClick={migrate}
+            >
+              {isMigrationPending ? 'Migrating...' : 'Migrate'}
+            </ButtonPrimary>
+          </AutoColumn>
+        </div>
+      </LightCard>
+      <TYPE.darkGray style={{ textAlign: 'center' }}>
+        {'Your ' + token.symbol + ' liquidity will become Uniswap V2 ' + token.symbol + '/ETH liquidity.'}
+      </TYPE.darkGray>
     </AutoColumn>
   )
 }

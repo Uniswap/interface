@@ -5,7 +5,7 @@ import { RouteComponentProps } from 'react-router'
 import { ThemeContext } from 'styled-components'
 import { ButtonPrimary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
-import { AutoRow } from '../../components/Row'
+import { AutoRow, RowFixed } from '../../components/Row'
 import { SearchInput } from '../../components/SearchModal/styleds'
 import TokenLogo from '../../components/TokenLogo'
 import { useAllTokenV1Exchanges } from '../../data/V1'
@@ -14,6 +14,7 @@ import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useTokenBalances } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
+import { GreyCard } from '../../components/Card'
 import { BodyWrapper } from '../AppBody'
 import { EmptyState } from './EmptyState'
 
@@ -72,39 +73,50 @@ export default function MigrateV1({ history }: RouteComponentProps) {
   }, [history])
 
   return (
-    <BodyWrapper style={{ maxWidth: 560, padding: 24 }}>
+    <BodyWrapper style={{ maxWidth: 450, padding: 24 }}>
       <AutoColumn gap="24px">
         <AutoRow style={{ justifyContent: 'space-between' }}>
           <div>
             <ArrowLeft style={{ cursor: 'pointer' }} onClick={handleBackClick} />
           </div>
-          <TYPE.largeHeader>Your Uniswap V1 Liquidity</TYPE.largeHeader>
-          <TYPE.subHeader>
-            {unmigratedLiquidityExchangeAddresses.length}
-            {unmigratedLiquidityExchangeAddresses.length === 1 ? ' pool' : ' pools'} found
-          </TYPE.subHeader>
+          <TYPE.largeHeader>Migrate Liquidity</TYPE.largeHeader>
+          <div></div>
         </AutoRow>
+        <GreyCard style={{ marginTop: '0', padding: 0, display: 'inline-block' }}>
+          <TYPE.main style={{ lineHeight: '140%' }}>
+            For each pool, approve the migration helper and click migrate liquidity. Your liquidity will be withdrawn
+            from Uniswap V1 and deposited into Uniswap V2.
+          </TYPE.main>
+          <TYPE.black padding={'1rem 0 0 0'} style={{ lineHeight: '140%' }}>
+            If your liquidity does not appear below automatically, you may need to find it by pasting the token address
+            into the search box below.
+          </TYPE.black>
+        </GreyCard>
         <AutoRow>
           <SearchInput
             value={tokenSearch}
             onChange={handleTokenSearchChange}
-            placeholder="Don't see your liquidity? Paste a token address here."
+            placeholder="Find liquidity by pasting a token address."
           />
         </AutoRow>
 
         {unmigratedLiquidityExchangeAddresses.map(poolTokenAmount => (
           <div
             key={poolTokenAmount.token.address}
-            style={{ borderRadius: '0.5rem', padding: 16, backgroundColor: theme.bg3 }}
+            style={{ borderRadius: '20px', padding: 16, backgroundColor: theme.bg2 }}
           >
             <AutoRow style={{ justifyContent: 'space-between' }}>
-              <div>
-                <TokenLogo size="24px" address={allV1Exchanges[poolTokenAmount.token.address].address} />
-              </div>
-              <TYPE.mediumHeader fontWeight={400}>
-                <FormattedPoolTokenAmount tokenAmount={poolTokenAmount} />{' '}
-                {allV1Exchanges[poolTokenAmount.token.address].symbol} Pool Tokens
-              </TYPE.mediumHeader>
+              <AutoRow style={{ justifyContent: 'flex-start', width: 'fit-content' }}>
+                <TokenLogo size="32px" address={allV1Exchanges[poolTokenAmount.token.address].address} />{' '}
+                <div style={{ marginLeft: '.75rem' }}>
+                  <TYPE.main fontWeight={600}>
+                    <FormattedPoolTokenAmount tokenAmount={poolTokenAmount} />
+                  </TYPE.main>
+                  <TYPE.main fontWeight={500}>
+                    {allV1Exchanges[poolTokenAmount.token.address].symbol} Pool Tokens
+                  </TYPE.main>
+                </div>
+              </AutoRow>
               <div>
                 <ButtonPrimary
                   onClick={() => {
