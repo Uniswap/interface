@@ -98,7 +98,6 @@ export function useTokenByAddressAndAutomaticallyAdd(tokenAddress?: string): Tok
     if (!chainId || !token) return
     if (WETH[chainId as ChainId]?.address === token.address) return
     if (allTokens[token.address]) return
-    console.log('adding token', token)
     addToken(token)
   }, [token, addToken, chainId, allTokens])
 
