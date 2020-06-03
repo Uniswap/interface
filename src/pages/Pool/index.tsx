@@ -8,7 +8,7 @@ import SearchModal from '../../components/SearchModal'
 import PositionCard from '../../components/PositionCard'
 import { useUserProbablyHasV1Liquidity } from '../../data/V1'
 import { useTokenBalances } from '../../state/wallet/hooks'
-import { LinkStyledButton, StyledInternalLink, TYPE } from '../../theme'
+import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
 import { RowBetween } from '../../components/Row'
@@ -103,7 +103,9 @@ export default function Pool({ history }: RouteComponentProps) {
                   </StyledInternalLink>
                 </>
               ) : (
-                <LinkStyledButton id="migrate-v1-liquidity-link">Migrate your V1 liquidity.</LinkStyledButton>
+                <ExternalLink href="https://migrate.uniswap.exchange" id="migrate-v1-liquidity-link">
+                  Migrate your V1 liquidity.
+                </ExternalLink>
               )}
             </Text>
           </AutoColumn>
