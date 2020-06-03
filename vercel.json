@@ -1,0 +1,13 @@
+{
+  "redirects": [
+    {
+      "source": "https://migrate.uniswap.exchange/.*",
+      "destination": "https://app.uniswap.org/#/migrate/v1"
+    },
+    {
+      "source": "/.*",
+      "destination": "https://app.uniswap.org/#/$1",
+      "permanent": true
+    }
+  ]
+}
