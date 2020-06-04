@@ -6,8 +6,16 @@ export interface Call {
   callData: string
 }
 
+const LOWER_HEX_REGEX = /^0x[a-f0-9]*$/
 export function toCallKey(call: Call): string {
-  return `${call.address}-${call.callData}`
+  const addr = isAddress(call.address)
+  if (!addr) {
+    throw new Error(`Invalid address: ${call.address}`)
+  }
+  if (!LOWER_HEX_REGEX.test(call.callData)) {
+    throw new Error(`Invalid hex: ${call.callData}`)
+  }
+  return `${addr}-${call.callData}`
 }
 
 export function parseCallKey(callKey: string): Call {
@@ -20,12 +28,12 @@ export function parseCallKey(callKey: string): Call {
     throw new Error(`Invalid address: ${pcs[0]}`)
   }
 
-  if (!pcs[1].match(/^0x[a-fA-F0-9]*$/)) {
+  if (!LOWER_HEX_REGEX.test(pcs[1])) {
     throw new Error(`Invalid hex: ${pcs[1]}`)
   }
 
   return {
-    address: pcs[0],
+    address: addr,
     callData: pcs[1]
   }
 }
