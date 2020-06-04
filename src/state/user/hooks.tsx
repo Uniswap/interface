@@ -5,7 +5,6 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
-import { getTokenInfoWithFallback, isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
@@ -62,26 +61,6 @@ export function useDarkModeManager(): [boolean, () => void] {
   }, [darkMode, dispatch])
 
   return [darkMode, toggleSetDarkMode]
-}
-
-export function useFetchTokenByAddress(): (address: string) => Promise<Token | null> {
-  const { library, chainId } = useActiveWeb3React()
-
-  return useCallback(
-    async (address: string): Promise<Token | null> => {
-      if (!library || !chainId) return null
-      const validatedAddress = isAddress(address)
-      if (!validatedAddress) return null
-      const { name, symbol, decimals } = await getTokenInfoWithFallback(validatedAddress, library)
-
-      if (decimals === null) {
-        return null
-      } else {
-        return new Token(chainId, validatedAddress, decimals, symbol, name)
-      }
-    },
-    [library, chainId]
-  )
 }
 
 export function useAddUserToken(): (token: Token) => void {

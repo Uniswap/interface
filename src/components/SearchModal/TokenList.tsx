@@ -28,7 +28,8 @@ export default function TokenList({
   otherToken,
   showSendWithSwap,
   onRemoveAddedToken,
-  otherSelectedText
+  otherSelectedText,
+  hideRemove
 }: {
   tokens: Token[]
   selectedToken: string
@@ -38,6 +39,7 @@ export default function TokenList({
   otherToken: string
   showSendWithSwap?: boolean
   otherSelectedText: string
+  hideRemove?: boolean
 }) {
   const { t } = useTranslation()
   const { account, chainId } = useActiveWeb3React()
@@ -80,15 +82,16 @@ export default function TokenList({
                 </Text>
                 <FadedSpan>
                   <TYPE.main fontWeight={500}>{customAdded && 'Added by user'}</TYPE.main>
-                  {customAdded && (
-                    <div
+                  {customAdded && !hideRemove && (
+                    <LinkStyledButton
                       onClick={event => {
                         event.stopPropagation()
                         onRemoveAddedToken(chainId, address)
                       }}
+                      style={{ marginLeft: '4px', fontWeight: 400 }}
                     >
-                      <LinkStyledButton style={{ marginLeft: '4px', fontWeight: 400 }}>(Remove)</LinkStyledButton>
-                    </div>
+                      (Remove)
+                    </LinkStyledButton>
                   )}
                 </FadedSpan>
               </Column>

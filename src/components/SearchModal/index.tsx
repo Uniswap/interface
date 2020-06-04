@@ -189,6 +189,7 @@ function SearchModal({
             otherToken={otherSelectedTokenAddress}
             selectedToken={hiddenToken}
             showSendWithSwap={showSendWithSwap}
+            hideRemove={Boolean(isAddress(searchQuery))}
           />
         ) : (
           <PairList
