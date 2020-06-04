@@ -3,7 +3,6 @@ import reducer, { MulticallState } from './reducer'
 import { Store, createStore } from '@reduxjs/toolkit'
 
 const DAI_ADDRESS = '0x6b175474e89094c44da98b954eedeac495271d0f'
-const CHECKSUMMED_DAI_ADDRESS = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
 
 describe('multicall reducer', () => {
   let store: Store<MulticallState>
@@ -32,7 +31,7 @@ describe('multicall reducer', () => {
       expect(store.getState()).toEqual({
         callListeners: {
           [1]: {
-            [`${CHECKSUMMED_DAI_ADDRESS}-0x`]: {
+            [`${DAI_ADDRESS}-0x`]: {
               [1]: 1
             }
           }
@@ -82,7 +81,7 @@ describe('multicall reducer', () => {
       )
       expect(store.getState()).toEqual({
         callResults: {},
-        callListeners: { [1]: { [`${CHECKSUMMED_DAI_ADDRESS}-0x`]: {} } }
+        callListeners: { [1]: { [`${DAI_ADDRESS}-0x`]: {} } }
       })
     })
   })
