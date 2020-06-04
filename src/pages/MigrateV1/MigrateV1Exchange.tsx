@@ -123,7 +123,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
       .catch(() => {
         setConfirmingMigration(false)
       })
-  }, [minAmountToken, minAmountETH, migrator, token.address, token.symbol, account, addTransaction])
+  }, [minAmountToken, minAmountETH, migrator, token, account, addTransaction])
 
   const noLiquidityTokens = liquidityTokenAmount && liquidityTokenAmount.equalTo(ZERO)
 
