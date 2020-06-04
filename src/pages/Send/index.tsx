@@ -97,6 +97,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
+
   // mark when a user has submitted an approval, reset onTokenSelection for input field
   useEffect(() => {
     if (approval === ApprovalState.PENDING) {
@@ -189,6 +190,13 @@ export default function Send({ location: { search } }: RouteComponentProps) {
 
   // warnings on slippage
   const severity = !sendingWithSwap ? 0 : warningSeverity(priceImpactWithoutFee)
+
+  // show approval buttons when: no errors on input, not approved or pending, or has been approved in this session
+  const showApproveFlow =
+    ((sendingWithSwap && isSwapValid) || (!sendingWithSwap && isSendValid)) &&
+    (approval === ApprovalState.NOT_APPROVED ||
+      approval === ApprovalState.PENDING ||
+      (approvalSubmitted && approval === ApprovalState.APPROVED))
 
   function modalHeader() {
     if (!sendingWithSwap) {
@@ -482,17 +490,16 @@ export default function Send({ location: { search } }: RouteComponentProps) {
               <GreyCard style={{ textAlign: 'center' }}>
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
               </GreyCard>
-            ) : approval === ApprovalState.NOT_APPROVED ||
-              approval === ApprovalState.PENDING ||
-              (approvalSubmitted && approval === ApprovalState.APPROVED) ? (
+            ) : showApproveFlow ? (
               <RowBetween>
                 <ButtonPrimary
                   onClick={approveCallback}
-                  disabled={approval === ApprovalState.APPROVED || !!recipientError || (sendingWithSwap && !!swapError)}
+                  disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
                   width="48%"
+                  altDisbaledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
                 >
                   {approval === ApprovalState.PENDING ? (
-                    <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
+                    <Dots>Approving</Dots>
                   ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
                     'Approved'
                   ) : (
@@ -505,24 +512,11 @@ export default function Send({ location: { search } }: RouteComponentProps) {
                   }}
                   width="48%"
                   id="send-button"
-                  disabled={
-                    (sendingWithSwap && !isSwapValid) ||
-                    (!sendingWithSwap && !isSendValid) ||
-                    approval !== ApprovalState.APPROVED
-                  }
+                  disabled={approval !== ApprovalState.APPROVED}
                   error={sendingWithSwap && isSwapValid && severity > 2}
                 >
                   <Text fontSize={16} fontWeight={500}>
-                    {(sendingWithSwap
-                      ? swapError
-                        ? swapError.includes('balance')
-                          ? swapError.substring(0, swapError.lastIndexOf(' '))
-                          : swapError
-                        : null
-                      : null) ||
-                      sendAmountError ||
-                      recipientError ||
-                      `Send${severity > 2 ? ' Anyway' : ''}`}
+                    {`Send${severity > 2 ? ' Anyway' : ''}`}
                   </Text>
                 </ButtonError>
               </RowBetween>

@@ -83,6 +83,14 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
+
+  // show approve flow when: no error on inputs, not approved or pending, or approved in current session
+  const showApproveFlow =
+    !error &&
+    (approval === ApprovalState.NOT_APPROVED ||
+      approval === ApprovalState.PENDING ||
+      (approvalSubmitted && approval === ApprovalState.APPROVED))
+
   // mark when a user has submitted an approval, reset onTokenSelection for input field
   useEffect(() => {
     if (approval === ApprovalState.PENDING) {
@@ -283,14 +291,13 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
               <GreyCard style={{ textAlign: 'center' }}>
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
               </GreyCard>
-            ) : approval === ApprovalState.NOT_APPROVED ||
-              approval === ApprovalState.PENDING ||
-              (approvalSubmitted && approval === ApprovalState.APPROVED) ? (
+            ) : showApproveFlow ? (
               <RowBetween>
                 <ButtonPrimary
                   onClick={approveCallback}
-                  disabled={approval === ApprovalState.APPROVED || approval === ApprovalState.PENDING || !!error}
+                  disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
                   width="48%"
+                  altDisbaledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
                 >
                   {approval === ApprovalState.PENDING ? (
                     <Dots>Approving</Dots>
@@ -310,11 +317,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
                   error={isValid && priceImpactSeverity > 2}
                 >
                   <Text fontSize={16} fontWeight={500}>
-                    {error
-                      ? error.includes('balance')
-                        ? error.substring(0, error.lastIndexOf(' '))
-                        : error
-                      : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                    {`Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                   </Text>
                 </ButtonError>
               </RowBetween>

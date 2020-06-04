@@ -4,10 +4,10 @@ import { CheckCircle, Triangle, ExternalLink as LinkIcon } from 'react-feather'
 
 import { useActiveWeb3React } from '../../hooks'
 import { getEtherscanLink } from '../../utils'
-import { ExternalLink, Spinner } from '../../theme'
-import Circle from '../../assets/images/circle.svg'
+import { ExternalLink } from '../../theme'
 import { useAllTransactions } from '../../state/transactions/hooks'
 import { RowFixed } from '../Row'
+import Loader from '../Loader'
 
 const TransactionWrapper = styled.div``
 
@@ -17,14 +17,6 @@ const TransactionStatusText = styled.div`
   align-items: center;
   :hover {
     text-decoration: underline;
-  }
-`
-
-const SpinnerWrapper = styled(Spinner)`
-  svg {
-    path {
-      color: ${({ theme }) => theme.bg4};
-    }
   }
 `
 
@@ -62,7 +54,7 @@ export default function Transaction({ hash }: { hash: string }) {
           <LinkIcon size={16} />
         </RowFixed>
         <IconWrapper pending={pending} success={success}>
-          {pending ? <SpinnerWrapper src={Circle} /> : success ? <CheckCircle size="16" /> : <Triangle size="16" />}
+          {pending ? <Loader /> : success ? <CheckCircle size="16" /> : <Triangle size="16" />}
         </IconWrapper>
       </TransactionState>
     </TransactionWrapper>
