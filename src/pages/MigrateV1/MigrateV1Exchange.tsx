@@ -2,6 +2,7 @@ import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { ChainId, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
+import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { ButtonConfirmed } from '../../components/Button'
 import { PinkCard, YellowCard, LightCard } from '../../components/Card'
@@ -108,6 +109,12 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
         Math.floor(new Date().getTime() / 1000) + DEFAULT_DEADLINE_FROM_NOW
       )
       .then((response: TransactionResponse) => {
+        ReactGA.event({
+          category: 'Migrate',
+          action: 'V1->V2',
+          label: token?.symbol
+        })
+
         addTransaction(response, {
           summary: `Migrate ${token.symbol} liquidity to V2`
         })
