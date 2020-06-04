@@ -30,7 +30,7 @@ const ConfirmedIcon = styled(ColumnCenter)`
   padding: 60px 0;
 `
 
-const SpinnerWrapper = styled(Spinner)<{ size: string }>`
+const CustomLightSpinner = styled(Spinner)<{ size: string }>`
   height: ${({ size }) => size};
   width: ${({ size }) => size};
 `
@@ -85,7 +85,7 @@ export default function ConfirmationModal({
             </RowBetween>
             <ConfirmedIcon>
               {pendingConfirmation ? (
-                <SpinnerWrapper src={Circle} alt="loader" size={'90px'} />
+                <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
               ) : (
                 <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary1} />
               )}
