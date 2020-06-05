@@ -1,13 +1,11 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import { isAddress } from '../../utils'
-import { useActiveWeb3React } from '../../hooks'
-import { WETH } from '@uniswap/sdk'
 
-import EthereumLogo from '../../assets/images/ethereum-logo.png'
+function getTokenUrl(address: string): string {
+  return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+}
 
-const TOKEN_ICON_API = address =>
-  `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 const BAD_IMAGES = {}
 
 const Image = styled.img<{ size: string }>`
@@ -44,17 +42,16 @@ export default function TokenLogo({
   size?: string
   style?: React.CSSProperties
 }) {
-  const [error, setError] = useState(false)
-  const { chainId } = useActiveWeb3React()
+  const [, setErrorCount] = useState<number>(0)
 
-  // mock rinkeby DAI
-  if (chainId === 4 && address === '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735') {
-    address = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
-  }
+  const errorCallback = useCallback(() => {
+    BAD_IMAGES[address] = true
+    setErrorCount(count => count + 1)
+  }, [address])
 
   let path = ''
-  if (!error && !BAD_IMAGES[address] && isAddress(address)) {
-    path = TOKEN_ICON_API(address)
+  if (!BAD_IMAGES[address] && isAddress(address)) {
+    path = getTokenUrl(address)
   } else {
     return (
       <Emoji {...rest} size={size}>
@@ -65,16 +62,5 @@ export default function TokenLogo({
     )
   }
 
-  return (
-    <Image
-      {...rest}
-      // alt={address}
-      src={path}
-      size={size}
-      onError={() => {
-        BAD_IMAGES[address] = true
-        setError(true)
-      }}
-    />
-  )
+  return <Image {...rest} src={path} size={size} onError={errorCallback} />
 }

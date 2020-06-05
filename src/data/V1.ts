@@ -17,7 +17,7 @@ export function useV1ExchangeAddress(tokenAddress?: string): string | undefined 
 class MockV1Pair extends Pair {}
 
 function useMockV1Pair(token?: Token): MockV1Pair | undefined {
-  const isWETH: boolean = token && WETH[token.chainId] ? token.equals(WETH[token.chainId]) : false
+  const isWETH = token ? token.equals(WETH[token.chainId]) : false
 
   const v1PairAddress = useV1ExchangeAddress(isWETH ? undefined : token?.address)
   const tokenBalance = useTokenBalance(v1PairAddress, token)
@@ -38,13 +38,13 @@ export function useAllTokenV1Exchanges(): { [exchangeAddress: string]: Token } {
 
   return useMemo(
     () =>
-      data?.reduce<{ [exchangeAddress: string]: Token }>((memo, { result }, ix) => {
+      data.reduce<{ [exchangeAddress: string]: Token }>((memo, { result }, ix) => {
         const token = allTokens[args[ix][0]]
         if (result?.[0]) {
           memo[result[0]] = token
         }
         return memo
-      }, {}) ?? {},
+      }, {}),
     [allTokens, args, data]
   )
 }

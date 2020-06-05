@@ -1,5 +1,4 @@
 import { Contract } from '@ethersproject/contracts'
-import { ChainId } from '@uniswap/sdk'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { useMemo } from 'react'
 import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
@@ -27,7 +26,7 @@ function useContract(address?: string, ABI?: any, withSignerIfPossible = true): 
 
 export function useV1FactoryContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(V1_FACTORY_ADDRESSES[chainId as ChainId], V1_FACTORY_ABI, false)
+  return useContract(chainId ? V1_FACTORY_ADDRESSES[chainId] : undefined, V1_FACTORY_ABI, false)
 }
 
 export function useV2MigratorContract(): Contract | null {
@@ -52,5 +51,5 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 
 export function useMulticallContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(MULTICALL_NETWORKS[chainId as ChainId], MULTICALL_ABI, false)
+  return useContract(chainId ? MULTICALL_NETWORKS[chainId] : undefined, MULTICALL_ABI, false)
 }
