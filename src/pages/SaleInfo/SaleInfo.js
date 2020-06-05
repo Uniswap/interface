@@ -47,10 +47,10 @@ class SaleInfo extends React.Component {
               initial price of $0.16).
             </p>
             <div className={'bondingCurveImageWrapper'}>
-              <img src={ETH_BONDING_CURVE} alt={'ETH Bonding Curve'}/>
+              <img className={'bondingCurveImage'} src={ETH_BONDING_CURVE} alt={'ETH Bonding Curve'}/>
             </div>
             <div className={'bondingCurveImageWrapper'}>
-              <img src={DAI_USDC_BONDING_CURVE} alt={'DAI & USDC Bonding Curve'}/>
+              <img className={'bondingCurveImage'} src={DAI_USDC_BONDING_CURVE} alt={'DAI & USDC Bonding Curve'}/>
             </div>
             <p>
               The current expected distribution of tokens over time is as follows:

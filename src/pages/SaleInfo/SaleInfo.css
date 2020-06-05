@@ -101,6 +101,11 @@
     margin: 20px;
 }
 
+.bondingCurveImageWrapper {
+    text-align: center;
+    padding: 16px;
+}
+
 @media (max-width: 1100px) {
     .infoPage .navbar {
         position: relative;
@@ -110,6 +115,11 @@
 
     .infoContent {
         margin: 40px auto 200px;
+    }
+
+    .bondingCurveImage {
+        width: 100%;
+        height: auto;
     }
 }
 
@@ -131,9 +141,4 @@
     .infoPage .swapText {
         line-height: 55px;
     }
-}
-
-.bondingCurveImageWrapper {
-    text-align: center;
-    padding: 16px;
 }
