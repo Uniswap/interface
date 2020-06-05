@@ -33,7 +33,7 @@
     "@typescript-eslint/parser": "^2.31.0",
     "@uniswap/sdk": "^2.0.5",
     "@uniswap/v2-core": "1.0.0",
-    "@uniswap/v2-periphery": "1.0.0-beta.0",
+    "@uniswap/v2-periphery": "^1.1.0-beta.0",
     "@web3-react/core": "^6.0.9",
     "@web3-react/fortmatic-connector": "^6.0.9",
     "@web3-react/injected-connector": "^6.0.7",

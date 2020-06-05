@@ -4,7 +4,7 @@ import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
-import { abi as IUniswapV2Router01ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router01.json'
+import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import { ROUTER_ADDRESS } from '../constants'
 import { ChainId, JSBI, Percent, TokenAmount } from '@uniswap/sdk'
 
@@ -88,8 +88,8 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 }
 
 // account is optional
-export function getRouterContract(chainId: number, library: Web3Provider, account?: string) {
-  return getContract(ROUTER_ADDRESS, IUniswapV2Router01ABI, library, account)
+export function getRouterContract(_: number, library: Web3Provider, account?: string) {
+  return getContract(ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account)
 }
 
 // account is optional
