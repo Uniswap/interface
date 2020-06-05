@@ -5,9 +5,8 @@ import { useTranslation } from 'react-i18next'
 
 import { network } from '../../connectors'
 import { useEagerConnect, useInactiveListener } from '../../hooks'
-import { Spinner } from '../../theme'
-import Circle from '../../assets/images/circle.svg'
 import { NetworkContextName } from '../../constants'
+import Loader from '../Loader'
 
 const MessageWrapper = styled.div`
   display: flex;
@@ -18,16 +17,6 @@ const MessageWrapper = styled.div`
 
 const Message = styled.h2`
   color: ${({ theme }) => theme.secondary1};
-`
-
-const SpinnerWrapper = styled(Spinner)`
-  font-size: 4rem;
-
-  svg {
-    path {
-      color: ${({ theme }) => theme.secondary1};
-    }
-  }
 `
 
 export default function Web3ReactManager({ children }) {
@@ -78,7 +67,7 @@ export default function Web3ReactManager({ children }) {
   if (!active && !networkActive) {
     return showLoader ? (
       <MessageWrapper>
-        <SpinnerWrapper src={Circle} />
+        <Loader />
       </MessageWrapper>
     ) : null
   }

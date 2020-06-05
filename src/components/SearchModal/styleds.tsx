@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { Spinner } from '../../theme'
 import { AutoColumn } from '../Column'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 
@@ -21,12 +20,6 @@ export const FadedSpan = styled(RowFixed)`
 export const GreySpan = styled.span`
   color: ${({ theme }) => theme.text3};
   font-weight: 400;
-`
-
-export const SpinnerWrapper = styled(Spinner)`
-  margin: 0 0.25rem 0 0.25rem;
-  color: ${({ theme }) => theme.text4};
-  opacity: 0.6;
 `
 
 export const Input = styled.input`

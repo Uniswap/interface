@@ -74,15 +74,26 @@ function SearchModal({
 
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
-  const sortedTokens: Token[] = useMemo(() => {
-    if (!isTokenView) return []
-    return Object.values(allTokens).sort(tokenComparator)
-  }, [allTokens, isTokenView, tokenComparator])
-
   const filteredTokens: Token[] = useMemo(() => {
     if (!isTokenView) return []
-    return filterTokens(sortedTokens, searchQuery)
-  }, [isTokenView, sortedTokens, searchQuery])
+    return filterTokens(Object.values(allTokens), searchQuery)
+  }, [isTokenView, allTokens, searchQuery])
+
+  const filteredSortedTokens: Token[] = useMemo(() => {
+    if (!isTokenView) return []
+    const sorted = filteredTokens.sort(tokenComparator)
+    const symbolMatch = searchQuery
+      .toLowerCase()
+      .split(/\s+/)
+      .filter(s => s.length > 0)
+    if (symbolMatch.length > 1) return sorted
+
+    return [
+      // sort any exact symbol matches first
+      ...sorted.filter(token => token.symbol.toLowerCase() === symbolMatch[0]),
+      ...sorted.filter(token => token.symbol.toLowerCase() !== symbolMatch[0])
+    ]
+  }, [filteredTokens, isTokenView, searchQuery, tokenComparator])
 
   function _onTokenSelect(address: string) {
     onTokenSelect(address)
@@ -157,7 +168,7 @@ function SearchModal({
             placement="bottom"
           >
             <SearchInput
-              type={'text'}
+              type="text"
               id="token-search-input"
               placeholder={t('tokenSearchPlaceholder')}
               value={searchQuery}
@@ -181,7 +192,7 @@ function SearchModal({
         <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />
         {isTokenView ? (
           <TokenList
-            tokens={filteredTokens}
+            tokens={filteredSortedTokens}
             allTokenBalances={allTokenBalances}
             onRemoveAddedToken={removeTokenByAddress}
             onTokenSelect={_onTokenSelect}
