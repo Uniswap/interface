@@ -2,6 +2,8 @@ import React from 'react'
 
 import './SaleInfo.css'
 import DMMLogo from '../../assets/images/dmm-logo.svg'
+import DAI_USDC_BONDING_CURVE from '../../assets/images/DAI_USDC_Bonding_Curve.png'
+import ETH_BONDING_CURVE from '../../assets/images/ETH_Bonding_Curve.png'
 import Button from '@material-ui/core/Button'
 
 class SaleInfo extends React.Component {
@@ -39,9 +41,16 @@ class SaleInfo extends React.Component {
             <p>
               The private sale will begin at a starting price of <b>$0.16 per token</b> for a total diluted valuation of
               $40M. Limit sell orders will be placed in blocks of 83,333 DMG, increasing 1.5% in price each block to
-              enable price discovery as DMG is purchased. The public sale will occur a couple weeks afterwards with the
-              starting price marked up by 25% from where the private sale left ended.
+              enable price discovery as DMG is purchased. The below charts show the prior criteria, represented as a
+              bonding curve: The public sale will occur a couple weeks afterwards with the starting price marked up by
+              25% from where the private sale ended.
             </p>
+            <div className={'bondingCurveImageWrapper'}>
+              <img src={ETH_BONDING_CURVE} alt={'ETH Bonding Curve'}/>
+            </div>
+            <div className={'bondingCurveImageWrapper'}>
+              <img src={DAI_USDC_BONDING_CURVE} alt={'DAI & USDC Bonding Curve'}/>
+            </div>
             <p>
               The current expected distribution of tokens over time is as follows:
               <ul>
