@@ -55,13 +55,12 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   // modal and loading
-  const [showConfirm, setShowConfirm] = useState<boolean>(false)
-  const [showAdvanced, setShowAdvanced] = useState<boolean>(false)
-  const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirmed
-  const [pendingConfirmation, setPendingConfirmation] = useState<boolean>(true) // waiting for user confirmation
-
-  // txn values
+  const [showAdvanced, setShowAdvanced] = useState<boolean>(false) // toggling slippage, deadline, etc. on and off
+  const [showConfirm, setShowConfirm] = useState<boolean>(false) // show confirmation modal
+  const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // waiting for user confirmaion/rejection
   const [txHash, setTxHash] = useState<string>('')
+
+  // tx parameters
   const [deadline, setDeadline] = useState<number>(DEFAULT_DEADLINE_FROM_NOW)
   const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
 
@@ -114,17 +113,6 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
 
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(bestTrade, allowedSlippage)
 
-  // reset modal state when closed
-  function resetModal() {
-    // clear input if txn submitted
-    if (!pendingConfirmation) {
-      onUserInput(Field.INPUT, '')
-    }
-    setPendingConfirmation(true)
-    setAttemptingTxn(false)
-    setShowAdvanced(false)
-  }
-
   // the callback to execute the swap
   const swapCallback = useSwapCallback(bestTrade, allowedSlippage, deadline)
 
@@ -136,16 +124,24 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
     }
 
     setAttemptingTxn(true)
-    swapCallback().then(hash => {
-      setTxHash(hash)
-      setPendingConfirmation(false)
+    swapCallback()
+      .then(hash => {
+        setAttemptingTxn(false)
+        setTxHash(hash)
 
-      ReactGA.event({
-        category: 'Swap',
-        action: 'Swap w/o Send',
-        label: [bestTrade.inputAmount.token.symbol, bestTrade.outputAmount.token.symbol].join('/')
+        ReactGA.event({
+          category: 'Swap',
+          action: 'Swap w/o Send',
+          label: [bestTrade.inputAmount.token.symbol, bestTrade.outputAmount.token.symbol].join('/')
+        })
       })
-    })
+      .catch(error => {
+        setAttemptingTxn(false)
+        // we only care if the error is something _other_ than the user rejected the tx
+        if (error?.code !== 4001) {
+          console.error(error)
+        }
+      })
   }
 
   // errors
@@ -157,11 +153,11 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
   function modalHeader() {
     return (
       <SwapModalHeader
-        independentField={independentField}
-        priceImpactSeverity={priceImpactSeverity}
         tokens={tokens}
         formattedAmounts={formattedAmounts}
         slippageAdjustedAmounts={slippageAdjustedAmounts}
+        priceImpactSeverity={priceImpactSeverity}
+        independentField={independentField}
       />
     )
   }
@@ -197,11 +193,14 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
             isOpen={showConfirm}
             title="Confirm Swap"
             onDismiss={() => {
-              resetModal()
               setShowConfirm(false)
+              // if there was a tx hash, we want to clear the input
+              if (txHash) {
+                onUserInput(Field.INPUT, '')
+              }
+              setTxHash('')
             }}
             attemptingTxn={attemptingTxn}
-            pendingConfirmation={pendingConfirmation}
             hash={txHash}
             topContent={modalHeader}
             bottomContent={modalBottom}
