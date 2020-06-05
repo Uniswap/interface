@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import Circle from '../../assets/images/circle.svg'
 import { ALL_TOKENS } from '../../constants/tokens'
 import { useActiveWeb3React } from '../../hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
@@ -13,7 +12,8 @@ import { ButtonSecondary } from '../Button'
 import Column, { AutoColumn } from '../Column'
 import { RowFixed } from '../Row'
 import TokenLogo from '../TokenLogo'
-import { FadedSpan, GreySpan, MenuItem, SpinnerWrapper, ModalInfo } from './styleds'
+import { FadedSpan, GreySpan, MenuItem, ModalInfo } from './styleds'
+import Loader from '../Loader'
 
 function isDefaultToken(tokenAddress: string, chainId?: number): boolean {
   const address = isAddress(tokenAddress)
@@ -112,7 +112,7 @@ export default function TokenList({
                   )}
                 </Text>
               ) : account ? (
-                <SpinnerWrapper src={Circle} alt="loader" />
+                <Loader />
               ) : (
                 '-'
               )}

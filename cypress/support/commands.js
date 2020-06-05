@@ -14,6 +14,8 @@ const PRIVATE_KEY_TEST_NEVER_USE = '0xad20c82497421e9784f18460ad2fe84f73569068e9
 // address of the above key
 export const TEST_ADDRESS_NEVER_USE = '0x0fF2D1eFd7A57B7562b2bf27F3f37899dB27F4a5'
 
+export const TEST_ADDRESS_NEVER_USE_SHORTENED = '0x0fF2...F4a5'
+
 class CustomizedBridge extends _Eip1193Bridge {
   async sendAsync(...args) {
     console.debug('sendAsync called', ...args)
