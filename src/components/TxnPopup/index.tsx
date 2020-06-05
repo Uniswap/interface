@@ -8,7 +8,7 @@ import useInterval from '../../hooks/useInterval'
 import { useRemovePopup } from '../../state/application/hooks'
 import { TYPE } from '../../theme'
 
-import { Link } from '../../theme/components'
+import { ExternalLink } from '../../theme/components'
 import { getEtherscanLink } from '../../utils'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
@@ -62,7 +62,7 @@ export default function TxnPopup({
         <TYPE.body fontWeight={500}>
           {summary ? summary : 'Hash: ' + hash.slice(0, 8) + '...' + hash.slice(58, 65)}
         </TYPE.body>
-        <Link href={getEtherscanLink(chainId, hash, 'transaction')}>View on Etherscan</Link>
+        <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>View on Etherscan</ExternalLink>
       </AutoColumn>
       <Fader count={count} />
     </AutoRow>

@@ -8,51 +8,30 @@ import { CursorPointer, TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { SectionBreak } from './styleds'
-import QuestionHelper from '../Question'
+import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import SlippageTabs, { SlippageTabsProps } from '../SlippageTabs'
 import Toggle from '../Toggle'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import TokenLogo from '../TokenLogo'
 import { useExpertModeManager } from '../../state/user/hooks'
+import flatMap from 'lodash.flatmap'
 
-export interface AdvancedSwapDetailsProps extends SlippageTabsProps {
-  trade: Trade
-  onDismiss: () => void
-}
-
-export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: AdvancedSwapDetailsProps) {
-  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
+function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
   const theme = useContext(ThemeContext)
+  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
-  const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, slippageTabProps.rawSlippage)
-
-  const [expertMode, toggleExpertMode] = useExpertModeManager()
+  const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
   return (
-    <AutoColumn gap="md">
-      <CursorPointer>
-        <RowBetween onClick={onDismiss} padding={'8px 20px'}>
-          <Text fontSize={16} color={theme.text2} fontWeight={500} style={{ userSelect: 'none' }}>
-            Hide Advanced
-          </Text>
-          <ChevronUp color={theme.text2} />
-        </RowBetween>
-      </CursorPointer>
-      <SectionBreak />
+    <>
       <AutoColumn style={{ padding: '0 20px' }}>
         <RowBetween>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
               {isExactIn ? 'Minimum received' : 'Maximum sold'}
             </TYPE.black>
-            <QuestionHelper
-              text={
-                isExactIn
-                  ? 'Price can change between when a transaction is submitted and when it is executed. This is the minimum amount you will receive. A worse rate will cause your transaction to revert.'
-                  : 'Price can change between when a transaction is submitted and when it is executed. This is the maximum amount you will pay. A worse rate will cause your transaction to revert.'
-              }
-            />
+            <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
           </RowFixed>
           <RowFixed>
             <TYPE.black color={theme.text1} fontSize={14}>
@@ -86,16 +65,37 @@ export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: A
       </AutoColumn>
 
       <SectionBreak />
+    </>
+  )
+}
 
-      <RowFixed padding={'0 20px'}>
-        <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-          Set slippage tolerance
-        </TYPE.black>
-        <QuestionHelper text="Your transaction will revert if the execution price changes by more than this amount after you submit your trade." />
-      </RowFixed>
+export interface AdvancedSwapDetailsProps extends SlippageTabsProps {
+  trade?: Trade
+  onDismiss: () => void
+}
+
+export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: AdvancedSwapDetailsProps) {
+  const theme = useContext(ThemeContext)
+  const [expertMode, toggleExpertMode] = useExpertModeManager()
+
+  return (
+    <AutoColumn gap="md">
+      <CursorPointer>
+        <RowBetween onClick={onDismiss} padding={'8px 20px'}>
+          <Text fontSize={16} color={theme.text2} fontWeight={500} style={{ userSelect: 'none' }}>
+            Hide Advanced
+          </Text>
+          <ChevronUp color={theme.text2} />
+        </RowBetween>
+      </CursorPointer>
+
+      <SectionBreak />
+
+      {trade && <TradeSummary trade={trade} allowedSlippage={slippageTabProps.rawSlippage} />}
+
       <SlippageTabs {...slippageTabProps} />
 
-      {trade.route.path.length > 2 && (
+      {trade?.route?.path?.length > 2 && (
         <AutoColumn style={{ padding: '0 20px' }}>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
@@ -113,27 +113,28 @@ export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: A
             justifyContent="space-evenly"
             alignItems="center"
           >
-            {trade.route.path
+            {flatMap(
+              trade.route.path,
               // add a null in-between each item
-              .flatMap((token, i, array) => {
+              (token, i, array) => {
                 const lastItem = i === array.length - 1
                 return lastItem ? [token] : [token, null]
-              })
-              .map((token, i) => {
-                // use null as an indicator to insert chevrons
-                if (token === null) {
-                  return <ChevronRight key={i} color={theme.text2} />
-                } else {
-                  return (
-                    <Flex my="0.5rem" alignItems="center" key={token.address} style={{ flexShrink: 0 }}>
-                      <TokenLogo address={token.address} size="1.5rem" />
-                      <TYPE.black fontSize={14} color={theme.text1} ml="0.5rem">
-                        {token.symbol}
-                      </TYPE.black>
-                    </Flex>
-                  )
-                }
-              })}
+              }
+            ).map((token, i) => {
+              // use null as an indicator to insert chevrons
+              if (token === null) {
+                return <ChevronRight key={i} color={theme.text2} />
+              } else {
+                return (
+                  <Flex my="0.5rem" alignItems="center" key={token.address} style={{ flexShrink: 0 }}>
+                    <TokenLogo address={token.address} size="1.5rem" />
+                    <TYPE.black fontSize={14} color={theme.text1} ml="0.5rem">
+                      {token.symbol}
+                    </TYPE.black>
+                  </Flex>
+                )
+              }
+            })}
           </Flex>
         </AutoColumn>
       )}

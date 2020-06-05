@@ -2,7 +2,7 @@ import { parse } from 'qs'
 import { createReducer } from '@reduxjs/toolkit'
 import { ChainId, WETH } from '@uniswap/sdk'
 import { isAddress } from '../../utils'
-import { Field, selectToken, setDefaultsFromURL, switchTokens, typeInput } from './actions'
+import { Field, selectToken, setDefaultsFromURLSearch, switchTokens, typeInput } from './actions'
 
 export interface SwapState {
   readonly independentField: Field
@@ -47,7 +47,7 @@ function parseIndependentFieldURLParameter(urlParam: any): Field {
 
 export default createReducer<SwapState>(initialState, builder =>
   builder
-    .addCase(setDefaultsFromURL, (state, { payload: { queryString, chainId } }) => {
+    .addCase(setDefaultsFromURLSearch, (_, { payload: { queryString, chainId } }) => {
       if (queryString && queryString.length > 1) {
         const parsedQs = parse(queryString, { parseArrays: false, ignoreQueryPrefix: true })
 

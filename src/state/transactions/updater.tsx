@@ -44,20 +44,17 @@ export default function Updater() {
                   }
                 })
               )
-              // add success or failure popup
-              if (receipt.status === 1) {
-                addPopup({
+
+              addPopup(
+                {
                   txn: {
                     hash,
-                    success: true,
+                    success: receipt.status === 1,
                     summary: allTransactions[hash]?.summary
                   }
-                })
-              } else {
-                addPopup({
-                  txn: { hash, success: false, summary: allTransactions[hash]?.summary }
-                })
-              }
+                },
+                hash
+              )
             }
           })
           .catch(error => {

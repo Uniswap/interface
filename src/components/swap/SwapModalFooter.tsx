@@ -8,7 +8,7 @@ import { TYPE } from '../../theme'
 import { formatExecutionPrice } from '../../utils/prices'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
-import QuestionHelper from '../Question'
+import QuestionHelper from '../QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import { StyledBalanceMaxMini } from './styleds'
@@ -66,9 +66,9 @@ export default function SwapModalFooter({
         <RowBetween>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-              {trade?.tradeType === TradeType.EXACT_INPUT ? 'Min sent' : 'Maximum sold'}
+              {trade?.tradeType === TradeType.EXACT_INPUT ? 'Minimum sent' : 'Maximum sold'}
             </TYPE.black>
-            <QuestionHelper text="A boundary is set so you are protected from large price movements after you submit your trade." />
+            <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
           </RowFixed>
           <RowFixed>
             <TYPE.black fontSize={14}>

@@ -6,7 +6,12 @@ import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
 
-const Base = styled(RebassButton)<{ padding?: string; width?: string; borderRadius?: string }>`
+const Base = styled(RebassButton)<{
+  padding?: string
+  width?: string
+  borderRadius?: string
+  altDisbaledStyle?: boolean
+}>`
   padding: ${({ padding }) => (padding ? padding : '18px')};
   width: ${({ width }) => (width ? width : '100%')};
   font-weight: 500;
@@ -45,10 +50,12 @@ export const ButtonPrimary = styled(Base)`
     background-color: ${({ theme }) => darken(0.1, theme.primary1)};
   }
   &:disabled {
-    background-color: ${({ theme }) => theme.bg3};
-    color: ${({ theme }) => theme.text3}
+    background-color: ${({ theme, altDisbaledStyle }) => (altDisbaledStyle ? theme.primary1 : theme.bg3)};
+    color: ${({ theme, altDisbaledStyle }) => (altDisbaledStyle ? 'white' : theme.text3)}
     cursor: auto;
     box-shadow: none;
+    border: 1px solid transparent;;
+    outline: none;
   }
 `
 
@@ -67,6 +74,16 @@ export const ButtonLight = styled(Base)`
   &:active {
     box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.05, theme.primary5)};
     background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.primary5)};
+  }
+  :disabled {
+    opacity: 0.4;
+    :hover {
+      cursor: auto;
+      background-color: ${({ theme }) => theme.primary5};
+      box-shadow: none;
+      border: 1px solid transparent;
+      outline: none;
+    }
   }
 `
 

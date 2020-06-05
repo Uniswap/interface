@@ -9,9 +9,9 @@ import '@reach/dialog/styles.css'
 import { transparentize } from 'polished'
 import { useGesture } from 'react-use-gesture'
 
-// errors emitted, fix with https://github.com/styled-components/styled-components/pull/3006
 const AnimatedDialogOverlay = animated(DialogOverlay)
-const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const StyledDialogOverlay = styled(({ mobile, ...rest }) => <AnimatedDialogOverlay {...rest} />)<{ mobile: boolean }>`
   &[data-reach-dialog-overlay] {
     z-index: 2;
     display: flex;
@@ -41,7 +41,11 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
 
 // destructure to not pass custom props to Dialog DOM element
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...rest }) => <DialogContent {...rest} />)`
+const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...rest }) => (
+  <DialogContent {...rest} />
+)).attrs({
+  'aria-label': 'dialog'
+})`
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
     border: 1px solid ${({ theme }) => theme.bg1};
@@ -95,7 +99,7 @@ interface ModalProps {
   onDismiss: () => void
   minHeight?: number | false
   maxHeight?: number
-  initialFocusRef?: React.Ref<any>
+  initialFocusRef?: React.RefObject<any>
   children?: React.ReactNode
 }
 
@@ -145,7 +149,7 @@ export default function Modal({
                 style={props}
                 onDismiss={onDismiss}
                 initialFocusRef={initialFocusRef}
-                mobile={isMobile}
+                mobile={true}
               >
                 <Spring // animation for entrance and exit
                   from={{
@@ -163,11 +167,12 @@ export default function Modal({
                       }}
                     >
                       <StyledDialogContent
+                        ariaLabel="test"
                         style={props}
                         hidden={true}
                         minHeight={minHeight}
                         maxHeight={maxHeight}
-                        mobile={isMobile}
+                        mobile={isMobile ?? undefined}
                       >
                         <HiddenCloseButton onClick={onDismiss} />
                         {children}
@@ -186,20 +191,8 @@ export default function Modal({
         {transitions.map(
           ({ item, key, props }) =>
             item && (
-              <StyledDialogOverlay
-                key={key}
-                style={props}
-                onDismiss={onDismiss}
-                initialFocusRef={initialFocusRef}
-                mobile={isMobile ? isMobile : undefined}
-              >
-                <StyledDialogContent
-                  hidden={true}
-                  minHeight={minHeight}
-                  maxHeight={maxHeight}
-                  isOpen={isOpen}
-                  mobile={isMobile ? isMobile : undefined}
-                >
+              <StyledDialogOverlay key={key} style={props} onDismiss={onDismiss} initialFocusRef={initialFocusRef}>
+                <StyledDialogContent hidden={true} minHeight={minHeight} maxHeight={maxHeight} isOpen={isOpen}>
                   <HiddenCloseButton onClick={onDismiss} />
                   {children}
                 </StyledDialogContent>

@@ -9,6 +9,8 @@ import Web3ReactManager from '../components/Web3ReactManager'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
 import CreatePool from './CreatePool'
+import MigrateV1 from './MigrateV1'
+import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
 import Pool from './Pool'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -21,7 +23,6 @@ const AppWrapper = styled.div`
   flex-flow: column;
   align-items: flex-start;
   overflow-x: hidden;
-  height: 100vh;
 `
 
 const HeaderWrapper = styled.div`
@@ -50,7 +51,7 @@ const BodyWrapper = styled.div`
 
 const BackgroundGradient = styled.div`
   width: 100%;
-  height: 200vh;
+  height: 170vh;
   background: ${({ theme }) => `radial-gradient(50% 50% at 50% 50%, ${theme.primary1} 0%, ${theme.bg1} 100%)`};
   position: absolute;
   top: 0px;
@@ -65,6 +66,10 @@ const BackgroundGradient = styled.div`
     width: 100%;
     transform: translateY(-150px);
   }
+`
+
+const Marginer = styled.div`
+  margin-top: 5rem;
 `
 
 let Router: React.ComponentType
@@ -96,15 +101,17 @@ export default function App() {
                 <Route exact strict path="/create" component={CreatePool} />
                 <Route exact strict path="/add/:tokens" component={AddLiquidity} />
                 <Route exact strict path="/remove/:tokens" component={RemoveLiquidity} />
+                <Route exact strict path="/migrate/v1" component={MigrateV1} />
+                <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
                 <Route component={RedirectPathToSwapOnly} />
               </Switch>
             </Web3ReactManager>
+            <Marginer />
             <Footer />
           </BodyWrapper>
           <BackgroundGradient />
         </AppWrapper>
       </Router>
-      <div id="popover-container" />
     </Suspense>
   )
 }

@@ -1,10 +1,10 @@
 import React, { useRef, useEffect } from 'react'
+import { Info, BookOpen, Code, PieChart, MessageCircle } from 'react-feather'
 import styled from 'styled-components'
-
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
+import useToggle from '../../hooks/useToggle'
 
-import { Link } from '../../theme'
-import { useToggle } from '../../hooks'
+import { ExternalLink } from '../../theme'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -63,13 +63,17 @@ const MenuFlyout = styled.span`
   z-index: 100;
 `
 
-const MenuItem = styled(Link)`
+const MenuItem = styled(ExternalLink)`
   flex: 1;
   padding: 0.5rem 0.5rem;
   color: ${({ theme }) => theme.text2};
   :hover {
     color: ${({ theme }) => theme.text1};
     cursor: pointer;
+    text-decoration: none;
+  }
+  > svg {
+    margin-right: 8px;
   }
 `
 
@@ -102,26 +106,32 @@ export default function Menu() {
 
   return (
     <StyledMenu ref={node}>
-      <StyledMenuButton onClick={() => toggle()}>
+      <StyledMenuButton onClick={toggle}>
         <StyledMenuIcon />
       </StyledMenuButton>
-      {open ? (
+      {open && (
         <MenuFlyout>
           <MenuItem id="link" href="https://uniswap.org/">
+            <Info size={14} />
             About
           </MenuItem>
           <MenuItem id="link" href="https://uniswap.org/docs/v2">
+            <BookOpen size={14} />
             Docs
           </MenuItem>
           <MenuItem id="link" href={CODE_LINK}>
+            <Code size={14} />
             Code
           </MenuItem>
+          <MenuItem id="link" href="https://discord.gg/vXCdddD">
+            <MessageCircle size={14} />
+            Discord
+          </MenuItem>
           <MenuItem id="link" href="https://uniswap.info/">
+            <PieChart size={14} />
             Analytics
           </MenuItem>
         </MenuFlyout>
-      ) : (
-        ''
       )}
     </StyledMenu>
   )

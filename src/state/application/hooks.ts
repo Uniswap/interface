@@ -20,12 +20,12 @@ export function useWalletModalToggle(): () => void {
 }
 
 // returns a function that allows adding a popup
-export function useAddPopup(): (content: PopupContent) => void {
+export function useAddPopup(): (content: PopupContent, key?: string) => void {
   const dispatch = useDispatch()
 
   return useCallback(
-    (content: PopupContent) => {
-      dispatch(addPopup({ content }))
+    (content: PopupContent, key?: string) => {
+      dispatch(addPopup({ content, key }))
     },
     [dispatch]
   )

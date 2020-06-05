@@ -1,86 +1,127 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import Slider from '@material-ui/core/Slider'
-import { withStyles } from '@material-ui/core/styles'
-import { useDebounce } from '../../hooks'
+import React, { useCallback } from 'react'
+import styled from 'styled-components'
 
-const StyledSlider = withStyles({
-  root: {
-    width: '90%',
-    color: '#565A69',
-    height: 4,
-    marginLeft: '15px',
-    marginRight: '15px',
-    padding: '15px 0'
-  },
-  thumb: {
-    height: 28,
-    width: 28,
-    backgroundColor: '#565A69',
-    marginTop: -14,
-    marginLeft: -14,
-    '&:focus,&:hover,&$active': {
-      boxShadow:
-        '0px 0px 1px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 24px 32px rgba(0, 0, 0, 0.04)',
-      // Reset on touch devices, it doesn't add specificity
-      '@media (hover: none)': {}
-    }
-  },
-  active: {},
-  track: {
-    height: 4
-  },
-  rail: {
-    height: 2,
-    opacity: 0.5,
-    backgroundColor: '#C3C5CB'
-  },
-  mark: {
-    backgroundColor: '#C3C5CB',
-    height: 12,
-    width: 2,
-    marginTop: -4
-  },
-  markActive: {
-    opacity: 1,
-    backgroundColor: 'currentColor',
-    height: 12,
-    width: 2,
-    marginTop: -4
+const StyledRangeInput = styled.input<{ value: number }>`
+  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  width: 100%; /* Specific width is required for Firefox. */
+  background: transparent; /* Otherwise white in Chrome */
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
   }
-})(Slider)
+
+  &::-moz-focus-outer {
+    border: 0;
+  }
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 28px;
+    width: 28px;
+    background-color: #565a69;
+    border-radius: 100%;
+    border: none;
+    transform: translateY(-50%);
+    color: ${({ theme }) => theme.bg1};
+
+    &:hover,
+    &:focus {
+      box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 4px 8px rgba(0, 0, 0, 0.08), 0px 16px 24px rgba(0, 0, 0, 0.06),
+        0px 24px 32px rgba(0, 0, 0, 0.04);
+    }
+  }
+
+  &::-moz-range-thumb {
+    height: 28px;
+    width: 28px;
+    background-color: #565a69;
+    border-radius: 100%;
+    border: none;
+    color: ${({ theme }) => theme.bg1};
+
+    &:hover,
+    &:focus {
+      box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 4px 8px rgba(0, 0, 0, 0.08), 0px 16px 24px rgba(0, 0, 0, 0.06),
+        0px 24px 32px rgba(0, 0, 0, 0.04);
+    }
+  }
+
+  &::-ms-thumb {
+    height: 28px;
+    width: 28px;
+    background-color: #565a69;
+    border-radius: 100%;
+    color: ${({ theme }) => theme.bg1};
+
+    &:hover,
+    &:focus {
+      box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 4px 8px rgba(0, 0, 0, 0.08), 0px 16px 24px rgba(0, 0, 0, 0.06),
+        0px 24px 32px rgba(0, 0, 0, 0.04);
+    }
+  }
+
+  &::-webkit-slider-runnable-track {
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.bg5},
+      ${({ theme }) => theme.bg5} ${({ value }) => value}%,
+      ${({ theme }) => theme.bg3} ${({ value }) => value}%,
+      ${({ theme }) => theme.bg3}
+    );
+    height: 2px;
+  }
+
+  &::-moz-range-track {
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.bg5},
+      ${({ theme }) => theme.bg5} ${({ value }) => value}%,
+      ${({ theme }) => theme.bg3} ${({ value }) => value}%,
+      ${({ theme }) => theme.bg3}
+    );
+    height: 2px;
+  }
+
+  &::-ms-track {
+    width: 100%;
+    border-color: transparent;
+    color: transparent;
+
+    background: ${({ theme }) => theme.bg5};
+    height: 2px;
+  }
+  &::-ms-fill-lower {
+    background: ${({ theme }) => theme.bg5};
+  }
+  &::-ms-fill-upper {
+    background: ${({ theme }) => theme.bg3};
+  }
+`
 
 interface InputSliderProps {
   value: number
-  onChange: (val: number) => void
-  override?: boolean
+  onChange: (value: number) => void
 }
 
-export default function InputSlider({ value, onChange, override }: InputSliderProps) {
-  const [internalVal, setInternalVal] = useState<number>(value)
-  const debouncedInternalValue = useDebounce(internalVal, 100)
-
-  const handleChange = useCallback(
-    (e, val) => {
-      setInternalVal(val)
-      if (val !== debouncedInternalValue) {
-        onChange(val)
-      }
+export default function InputSlider({ value, onChange }: InputSliderProps) {
+  const changeCallback = useCallback(
+    e => {
+      onChange(e.target.value)
     },
-    [setInternalVal, onChange, debouncedInternalValue]
+    [onChange]
   )
 
-  useEffect(() => {
-    if (override) {
-      setInternalVal(value)
-    }
-  }, [override, value])
-
   return (
-    <StyledSlider
-      value={typeof internalVal === 'number' ? internalVal : 0}
-      onChange={handleChange}
+    <StyledRangeInput
+      type="range"
+      value={value}
+      style={{ width: '90%', marginLeft: 15, marginRight: 15, padding: '15px 0' }}
+      onChange={changeCallback}
       aria-labelledby="input-slider"
       step={1}
+      min={0}
+      max={100}
     />
   )
 }

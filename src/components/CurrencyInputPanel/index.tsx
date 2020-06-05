@@ -1,11 +1,9 @@
 import { Pair, Token } from '@uniswap/sdk'
 import React, { useState, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import '@reach/tooltip/styles.css'
 import { darken } from 'polished'
 import { Field } from '../../state/swap/actions'
 import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
-
 import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
 import SearchModal from '../SearchModal'
@@ -51,7 +49,6 @@ const LabelRow = styled.div`
   font-size: 0.75rem;
   line-height: 1rem;
   padding: 0.75rem 1rem 0 1rem;
-  height: 20px;
   span:hover {
     cursor: pointer;
     color: ${({ theme }) => darken(0.2, theme.text2)};

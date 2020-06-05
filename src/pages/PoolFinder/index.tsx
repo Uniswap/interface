@@ -15,7 +15,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useToken } from '../../hooks/Tokens'
 import { usePairAdder } from '../../state/user/hooks'
 import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
-import { Link } from '../../theme'
+import { StyledInternalLink } from '../../theme'
 import AppBody from '../AppBody'
 
 enum Fields {
@@ -119,13 +119,9 @@ export default function PoolFinder({ history }: RouteComponentProps) {
             <LightCard padding="45px 10px">
               <AutoColumn gap="sm" justify="center">
                 <Text textAlign="center">Pool found, you don’t have liquidity on this pair yet.</Text>
-                <Link
-                  onClick={() => {
-                    history.push('/add/' + token0Address + '-' + token1Address)
-                  }}
-                >
+                <StyledInternalLink to={`/add/${token0Address}-${token1Address}`}>
                   <Text textAlign="center">Add liquidity to this pair instead.</Text>
-                </Link>
+                </StyledInternalLink>
               </AutoColumn>
             </LightCard>
           )
@@ -133,13 +129,7 @@ export default function PoolFinder({ history }: RouteComponentProps) {
           <LightCard padding="45px">
             <AutoColumn gap="sm" justify="center">
               <Text color="">No pool found.</Text>
-              <Link
-                onClick={() => {
-                  history.push('/add/' + token0Address + '-' + token1Address)
-                }}
-              >
-                Create pool?
-              </Link>
+              <StyledInternalLink to={`/add/${token0Address}-${token1Address}`}>Create pool?</StyledInternalLink>
             </AutoColumn>
           </LightCard>
         ) : (

@@ -11,7 +11,7 @@ import Card, { BlueCard, GreyCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import QuestionHelper from '../../components/Question'
+import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
@@ -30,14 +30,20 @@ import { useSendCallback } from '../../hooks/useSendCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
-import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
+import {
+  useDefaultsFromURLSearch,
+  useDerivedSwapInfo,
+  useSwapActionHandlers,
+  useSwapState
+} from '../../state/swap/hooks'
 import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { CursorPointer, TYPE } from '../../theme'
-import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
+import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
+import { PriceSlippageWarningCard } from '../../components/swap/PriceSlippageWarningCard'
 
 export default function Send({ location: { search } }: RouteComponentProps) {
-  useDefaultsFromURL(search)
+  useDefaultsFromURLSearch(search)
 
   // text translation
   // const { t } = useTranslation()
@@ -88,6 +94,16 @@ export default function Send({ location: { search } }: RouteComponentProps) {
 
   // check whether the user has approved the router on the input token
   const [approval, approveCallback] = useApproveCallbackFromTrade(bestTrade, allowedSlippage)
+
+  // check if user has gone through approval process, used to show two step buttons, reset on token change
+  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
+
+  // mark when a user has submitted an approval, reset onTokenSelection for input field
+  useEffect(() => {
+    if (approval === ApprovalState.PENDING) {
+      setApprovalSubmitted(true)
+    }
+  }, [approval, approvalSubmitted])
 
   const formattedAmounts = {
     [independentField]: typedValue,
@@ -173,7 +189,14 @@ export default function Send({ location: { search } }: RouteComponentProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   // warnings on slippage
-  const severity = !sendingWithSwap ? 0 : warningServerity(priceImpactWithoutFee)
+  const severity = !sendingWithSwap ? 0 : warningSeverity(priceImpactWithoutFee)
+
+  // show approval buttons when: no errors on input, not approved or pending, or has been approved in this session
+  const showApproveFlow =
+    ((sendingWithSwap && isSwapValid) || (!sendingWithSwap && isSendValid)) &&
+    (approval === ApprovalState.NOT_APPROVED ||
+      approval === ApprovalState.PENDING ||
+      (approvalSubmitted && approval === ApprovalState.APPROVED))
 
   function modalHeader() {
     if (!sendingWithSwap) {
@@ -245,7 +268,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
   const swapState = useSwapState()
   function _onTokenSelect(address: string) {
     // if no user balance - switch view to a send with swap
-    const hasBalance = allBalances?.[account]?.[address]?.greaterThan('0') ?? false
+    const hasBalance = allBalances?.[address]?.greaterThan('0') ?? false
     if (!hasBalance) {
       onTokenSelection(
         Field.INPUT,
@@ -357,11 +380,13 @@ export default function Send({ location: { search } }: RouteComponentProps) {
                   onMax={() => {
                     maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
                   }}
-                  onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
+                  onTokenSelection={address => {
+                    setApprovalSubmitted(false)
+                    onTokenSelection(Field.INPUT, address)
+                  }}
                   otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
                   id="swap-currency-input"
                 />
-
                 {sendingWithSwap ? (
                   <ColumnCenter>
                     <RowBetween padding="0 1rem 0 12px">
@@ -370,7 +395,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
                       </ArrowWrapper>
                       <ButtonSecondary
                         onClick={() => setSendingWithSwap(false)}
-                        style={{ marginRight: '0px', width: 'fit-content', fontSize: '14px' }}
+                        style={{ marginRight: '0px', width: 'auto', fontSize: '14px' }}
                         padding={'4px 6px'}
                       >
                         Remove Swap
@@ -425,7 +450,7 @@ export default function Send({ location: { search } }: RouteComponentProps) {
               />
             </AutoColumn>
             {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-              <Card padding={'.25rem 1.25rem 0 .75rem'} borderRadius={'20px'}>
+              <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
                 <AutoColumn gap="4px">
                   <RowBetween align="center">
                     <Text fontWeight={500} fontSize={14} color={theme.text2}>
@@ -465,14 +490,36 @@ export default function Send({ location: { search } }: RouteComponentProps) {
               <GreyCard style={{ textAlign: 'center' }}>
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
               </GreyCard>
-            ) : approval === ApprovalState.NOT_APPROVED || approval === ApprovalState.PENDING ? (
-              <ButtonLight onClick={approveCallback} disabled={approval === ApprovalState.PENDING}>
-                {approval === ApprovalState.PENDING ? (
-                  <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
-                ) : (
-                  'Approve ' + tokens[Field.INPUT]?.symbol
-                )}
-              </ButtonLight>
+            ) : showApproveFlow ? (
+              <RowBetween>
+                <ButtonPrimary
+                  onClick={approveCallback}
+                  disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
+                  width="48%"
+                  altDisbaledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
+                >
+                  {approval === ApprovalState.PENDING ? (
+                    <Dots>Approving</Dots>
+                  ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
+                    'Approved'
+                  ) : (
+                    'Approve ' + tokens[Field.INPUT]?.symbol
+                  )}
+                </ButtonPrimary>
+                <ButtonError
+                  onClick={() => {
+                    setShowConfirm(true)
+                  }}
+                  width="48%"
+                  id="send-button"
+                  disabled={approval !== ApprovalState.APPROVED}
+                  error={sendingWithSwap && isSwapValid && severity > 2}
+                >
+                  <Text fontSize={16} fontWeight={500}>
+                    {`Send${severity > 2 ? ' Anyway' : ''}`}
+                  </Text>
+                </ButtonError>
+              </RowBetween>
             ) : (
               <ButtonError
                 onClick={() => {
@@ -492,20 +539,26 @@ export default function Send({ location: { search } }: RouteComponentProps) {
             )}
             <V1TradeLink v1TradeLinkIfBetter={v1TradeLinkIfBetter} />
           </BottomGrouping>
-          {bestTrade && (
-            <AdvancedSwapDetailsDropdown
-              trade={bestTrade}
-              rawSlippage={allowedSlippage}
-              deadline={deadline}
-              showAdvanced={showAdvanced}
-              setShowAdvanced={setShowAdvanced}
-              priceImpactWithoutFee={priceImpactWithoutFee}
-              setDeadline={setDeadline}
-              setRawSlippage={setAllowedSlippage}
-            />
-          )}
         </Wrapper>
       </AppBody>
+
+      {bestTrade && (
+        <AdvancedSwapDetailsDropdown
+          trade={bestTrade}
+          rawSlippage={allowedSlippage}
+          deadline={deadline}
+          showAdvanced={showAdvanced}
+          setShowAdvanced={setShowAdvanced}
+          setDeadline={setDeadline}
+          setRawSlippage={setAllowedSlippage}
+        />
+      )}
+
+      {priceImpactWithoutFee && severity > 2 && (
+        <AutoColumn gap="lg" style={{ marginTop: '1rem' }}>
+          <PriceSlippageWarningCard priceSlippage={priceImpactWithoutFee} />
+        </AutoColumn>
+      )}
     </>
   )
 }

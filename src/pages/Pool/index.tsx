@@ -3,11 +3,12 @@ import styled, { ThemeContext } from 'styled-components'
 import { JSBI, Pair } from '@uniswap/sdk'
 import { RouteComponentProps } from 'react-router-dom'
 
-import Question from '../../components/Question'
+import Question from '../../components/QuestionHelper'
 import SearchModal from '../../components/SearchModal'
 import PositionCard from '../../components/PositionCard'
+import { useUserHasLiquidityInAllTokens } from '../../data/V1'
 import { useTokenBalances } from '../../state/wallet/hooks'
-import { Link, TYPE } from '../../theme'
+import { StyledInternalLink, TYPE } from '../../theme'
 import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
 import { RowBetween } from '../../components/Row'
@@ -58,6 +59,8 @@ export default function Pool({ history }: RouteComponentProps) {
       return <PositionCardWrapper key={i} dummyPair={pair} />
     })
 
+  const hasV1Liquidity = useUserHasLiquidityInAllTokens()
+
   return (
     <AppBody>
       <AutoColumn gap="lg" justify="center">
@@ -92,15 +95,18 @@ export default function Pool({ history }: RouteComponentProps) {
             )}
             {filteredExchangeList}
             <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
-              {filteredExchangeList?.length !== 0 ? `Don't see a pool you joined? ` : 'Already joined a pool? '}{' '}
-              <Link
-                id="import-pool-link"
-                onClick={() => {
-                  history.push('/find')
-                }}
-              >
-                Import it.
-              </Link>
+              {!hasV1Liquidity ? (
+                <>
+                  {filteredExchangeList?.length !== 0 ? `Don't see a pool you joined? ` : 'Already joined a pool? '}{' '}
+                  <StyledInternalLink id="import-pool-link" to="/find">
+                    Import it.
+                  </StyledInternalLink>
+                </>
+              ) : (
+                <StyledInternalLink id="migrate-v1-liquidity-link" to="/migrate/v1">
+                  Migrate your V1 liquidity.
+                </StyledInternalLink>
+              )}
             </Text>
           </AutoColumn>
           <FixedBottom>

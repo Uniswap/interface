@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
+import useDebounce from '../../hooks/useDebounce'
 
 import { isAddress } from '../../utils'
-import { useActiveWeb3React, useDebounce } from '../../hooks'
-import { Link, TYPE } from '../../theme'
+import { useActiveWeb3React } from '../../hooks'
+import { ExternalLink, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import { getEtherscanLink } from '../../utils'
@@ -159,12 +160,12 @@ export default function AddressInputPanel({
                 Recipient
               </TYPE.black>
               {data.address && (
-                <Link
+                <ExternalLink
                   href={getEtherscanLink(chainId, data.name || data.address, 'address')}
                   style={{ fontSize: '14px' }}
                 >
                   (View on Etherscan)
-                </Link>
+                </ExternalLink>
               )}
             </RowBetween>
             <Input

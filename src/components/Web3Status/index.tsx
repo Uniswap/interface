@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import { darken, lighten } from 'polished'
 import { Activity } from 'react-feather'
+import useENSName from '../../hooks/useENSName'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { TransactionDetails } from '../../state/transactions/reducer'
 
@@ -15,19 +16,12 @@ import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 
-import { Spinner } from '../../theme'
-import LightCircle from '../../assets/svg/lightcircle.svg'
-
 import { RowBetween } from '../Row'
-import { useENSName } from '../../hooks'
 import { shortenAddress } from '../../utils'
 import { useAllTransactions } from '../../state/transactions/hooks'
 import { NetworkContextName } from '../../constants'
 import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
-
-const SpinnerWrapper = styled(Spinner)`
-  margin: 0 0.25rem 0 0.25rem;
-`
+import Loader from '../Loader'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -189,7 +183,7 @@ export default function Web3Status() {
         <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
           {hasPendingTransactions ? (
             <RowBetween>
-              <Text>{pending?.length} Pending</Text> <SpinnerWrapper src={LightCircle} alt="loader" />
+              <Text>{pending?.length} Pending</Text> <Loader stroke="white" />
             </RowBetween>
           ) : (
             <Text>{ENSName || shortenAddress(account)}</Text>

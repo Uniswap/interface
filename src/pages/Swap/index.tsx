@@ -1,16 +1,16 @@
 import { JSBI, TokenAmount, WETH } from '@uniswap/sdk'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { ButtonError, ButtonLight } from '../../components/Button'
+import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import QuestionHelper from '../../components/Question'
+import QuestionHelper from '../../components/QuestionHelper'
 import { RowBetween, RowFixed } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
@@ -29,15 +29,20 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { useExpertModeManager } from '../../state/user/hooks'
 
 import { Field } from '../../state/swap/actions'
-import { useDefaultsFromURL, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
+import {
+  useDefaultsFromURLSearch,
+  useDerivedSwapInfo,
+  useSwapActionHandlers,
+  useSwapState
+} from '../../state/swap/hooks'
 import { CursorPointer, TYPE } from '../../theme'
-import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningServerity } from '../../utils/prices'
+import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
+import { PriceSlippageWarningCard } from '../../components/swap/PriceSlippageWarningCard'
 
 export default function Swap({ location: { search } }: RouteComponentProps) {
-  useDefaultsFromURL(search)
-  // text translation
-  // const { t } = useTranslation()
+  useDefaultsFromURLSearch(search)
+
   const { chainId, account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
@@ -45,8 +50,10 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
   const toggleWalletModal = useWalletModalToggle()
   const [expertMode] = useExpertModeManager()
 
+  // swap state
   const { independentField, typedValue } = useSwapState()
   const { bestTrade, tokenBalances, parsedAmounts, tokens, error, v1TradeLinkIfBetter } = useDerivedSwapInfo()
+  const { onSwitchTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
   const isValid = !error
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -61,6 +68,11 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
   const [deadline, setDeadline] = useState<number>(DEFAULT_DEADLINE_FROM_NOW)
   const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
 
+  const formattedAmounts = {
+    [independentField]: typedValue,
+    [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(6) : ''
+  }
+
   const route = bestTrade?.route
   const userHasSpecifiedInputOutput =
     !!tokens[Field.INPUT] &&
@@ -72,12 +84,22 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
   // check whether the user has approved the router on the input token
   const [approval, approveCallback] = useApproveCallbackFromTrade(bestTrade, allowedSlippage)
 
-  const formattedAmounts = {
-    [independentField]: typedValue,
-    [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(6) : ''
-  }
+  // check if user has gone through approval process, used to show two step buttons, reset on token change
+  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
 
-  const { onSwitchTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
+  // show approve flow when: no error on inputs, not approved or pending, or approved in current session
+  const showApproveFlow =
+    !error &&
+    (approval === ApprovalState.NOT_APPROVED ||
+      approval === ApprovalState.PENDING ||
+      (approvalSubmitted && approval === ApprovalState.APPROVED))
+
+  // mark when a user has submitted an approval, reset onTokenSelection for input field
+  useEffect(() => {
+    if (approval === ApprovalState.PENDING) {
+      setApprovalSubmitted(true)
+    }
+  }, [approval, approvalSubmitted])
 
   const maxAmountInput: TokenAmount =
     !!tokenBalances[Field.INPUT] &&
@@ -91,7 +113,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
         : tokenBalances[Field.INPUT]
       : undefined
   const atMaxAmountInput: boolean =
-    !!maxAmountInput && !!parsedAmounts[Field.INPUT] ? maxAmountInput.equalTo(parsedAmounts[Field.INPUT]) : undefined
+    maxAmountInput && parsedAmounts[Field.INPUT] ? maxAmountInput.equalTo(parsedAmounts[Field.INPUT]) : undefined
 
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(bestTrade, allowedSlippage)
 
@@ -135,7 +157,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   // warnings on slippage
-  const priceImpactSeverity = warningServerity(priceImpactWithoutFee)
+  const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
 
   function modalHeader() {
     return (
@@ -203,7 +225,10 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
                 onMax={() => {
                   maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
                 }}
-                onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
+                onTokenSelection={address => {
+                  setApprovalSubmitted(false) // reset 2 step UI for approvals
+                  onTokenSelection(Field.INPUT, address)
+                }}
                 otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
                 id="swap-currency-input"
               />
@@ -213,13 +238,15 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
                   <ArrowWrapper>
                     <ArrowDown
                       size="16"
-                      onClick={onSwitchTokens}
+                      onClick={() => {
+                        setApprovalSubmitted(false) // reset 2 step UI for approvals
+                        onSwitchTokens()
+                      }}
                       color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme.primary1 : theme.text2}
                     />
                   </ArrowWrapper>
                 </AutoColumn>
               </CursorPointer>
-
               <CurrencyInputPanel
                 field={Field.OUTPUT}
                 value={formattedAmounts[Field.OUTPUT]}
@@ -235,7 +262,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
             </>
 
             {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-              <Card padding={'.25rem 1.25rem 0 .75rem'} borderRadius={'20px'}>
+              <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
                 <AutoColumn gap="4px">
                   <RowBetween align="center">
                     <Text fontWeight={500} fontSize={14} color={theme.text2}>
@@ -264,25 +291,41 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
           </AutoColumn>
           <BottomGrouping>
             {!account ? (
-              <ButtonLight
-                onClick={() => {
-                  toggleWalletModal()
-                }}
-              >
-                Connect Wallet
-              </ButtonLight>
+              <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
             ) : noRoute && userHasSpecifiedInputOutput ? (
               <GreyCard style={{ textAlign: 'center' }}>
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
               </GreyCard>
-            ) : approval === ApprovalState.NOT_APPROVED || approval === ApprovalState.PENDING ? (
-              <ButtonLight onClick={approveCallback} disabled={approval === ApprovalState.PENDING}>
-                {approval === ApprovalState.PENDING ? (
-                  <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
-                ) : (
-                  'Approve ' + tokens[Field.INPUT]?.symbol
-                )}
-              </ButtonLight>
+            ) : showApproveFlow ? (
+              <RowBetween>
+                <ButtonPrimary
+                  onClick={approveCallback}
+                  disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
+                  width="48%"
+                  altDisbaledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
+                >
+                  {approval === ApprovalState.PENDING ? (
+                    <Dots>Approving</Dots>
+                  ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
+                    'Approved'
+                  ) : (
+                    'Approve ' + tokens[Field.INPUT]?.symbol
+                  )}
+                </ButtonPrimary>
+                <ButtonError
+                  onClick={() => {
+                    setShowConfirm(true)
+                  }}
+                  width="48%"
+                  id="swap-button"
+                  disabled={!isValid || approval !== ApprovalState.APPROVED}
+                  error={isValid && priceImpactSeverity > 2}
+                >
+                  <Text fontSize={16} fontWeight={500}>
+                    {`Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                  </Text>
+                </ButtonError>
+              </RowBetween>
             ) : (
               <ButtonError
                 onClick={() => {
@@ -299,20 +342,26 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
             )}
             <V1TradeLink v1TradeLinkIfBetter={v1TradeLinkIfBetter} />
           </BottomGrouping>
-          {bestTrade && (
-            <AdvancedSwapDetailsDropdown
-              trade={bestTrade}
-              rawSlippage={allowedSlippage}
-              deadline={deadline}
-              showAdvanced={showAdvanced}
-              setShowAdvanced={setShowAdvanced}
-              priceImpactWithoutFee={priceImpactWithoutFee}
-              setDeadline={setDeadline}
-              setRawSlippage={setAllowedSlippage}
-            />
-          )}
         </Wrapper>
       </AppBody>
+
+      {bestTrade && (
+        <AdvancedSwapDetailsDropdown
+          trade={bestTrade}
+          rawSlippage={allowedSlippage}
+          deadline={deadline}
+          showAdvanced={showAdvanced}
+          setShowAdvanced={setShowAdvanced}
+          setDeadline={setDeadline}
+          setRawSlippage={setAllowedSlippage}
+        />
+      )}
+
+      {priceImpactWithoutFee && priceImpactSeverity > 2 && (
+        <AutoColumn gap="lg" style={{ marginTop: '1rem' }}>
+          <PriceSlippageWarningCard priceSlippage={priceImpactWithoutFee} />
+        </AutoColumn>
+      )}
     </>
   )
 }

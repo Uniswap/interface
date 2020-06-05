@@ -168,28 +168,19 @@ export const TYPE = {
 
 export const FixedGlobalStyle = createGlobalStyle`
 @import url('https://rsms.me/inter/inter.css');
-html { font-family: 'Inter', sans-serif; letter-spacing: -0.018em;}
+  html, body, input, textarea, button  { font-family: 'Inter', sans-serif; letter-spacing: -0.018em;}
 @supports (font-variation-settings: normal) {
-  html { font-family: 'Inter var', sans-serif; }
+  html, body, input, textarea, button { font-family: 'Inter var', sans-serif; }
 }
 
 html,
 body {
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;    
 }
 
 * {
   box-sizing: border-box;
-}
-
-body > div {
-  height: 100%;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 html {
