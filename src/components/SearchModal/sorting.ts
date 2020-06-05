@@ -1,7 +1,6 @@
 import { Token, TokenAmount, WETH, Pair } from '@uniswap/sdk'
 import { useMemo } from 'react'
-import { useActiveWeb3React } from '../../hooks'
-import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
+import { useAllTokenBalances } from '../../state/wallet/hooks'
 import { DUMMY_PAIRS_TO_PIN } from '../../constants'
 
 // compare two token amounts with highest one coming first
@@ -36,19 +35,12 @@ export function pairComparator(pairA: Pair, pairB: Pair, balanceA?: TokenAmount,
   }
 }
 
-function getTokenComparator(
-  weth: Token | undefined,
-  balances: { [tokenAddress: string]: TokenAmount }
-): (tokenA: Token, tokenB: Token) => number {
+function getTokenComparator(balances: {
+  [tokenAddress: string]: TokenAmount
+}): (tokenA: Token, tokenB: Token) => number {
   return function sortTokens(tokenA: Token, tokenB: Token): number {
     // -1 = a is first
     // 1 = b is first
-
-    // sort ETH first
-    if (weth) {
-      if (tokenA.equals(weth)) return -1
-      if (tokenB.equals(weth)) return 1
-    }
 
     // sort by balances
     const balanceA = balances[tokenA.address]
@@ -63,10 +55,8 @@ function getTokenComparator(
 }
 
 export function useTokenComparator(inverted: boolean): (tokenA: Token, tokenB: Token) => number {
-  const { chainId } = useActiveWeb3React()
-  const weth = WETH[chainId]
-  const balances = useAllTokenBalancesTreatingWETHasETH()
-  const comparator = useMemo(() => getTokenComparator(weth, balances ?? {}), [balances, weth])
+  const balances = useAllTokenBalances()
+  const comparator = useMemo(() => getTokenComparator(balances), [balances])
   return useMemo(() => {
     if (inverted) {
       return (tokenA: Token, tokenB: Token) => comparator(tokenA, tokenB) * -1

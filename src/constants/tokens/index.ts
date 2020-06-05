@@ -14,25 +14,12 @@ export const ALL_TOKENS: AllTokens = [
   ...KOVAN_TOKENS,
   ...ROPSTEN_TOKENS
 ]
-  // remap WETH to ETH
-  .map(token => {
-    if (token.equals(WETH[token.chainId])) {
-      ;(token as any).symbol = 'ETH'
-      ;(token as any).name = 'Ether'
-    }
-    return token
-  })
   // put into an object
-  .reduce<AllTokens>(
+  .reduce<{ [chainId in ChainId]: { [tokenAddress: string]: Token } }>(
     (tokenMap, token) => {
       if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.')
-      return {
-        ...tokenMap,
-        [token.chainId]: {
-          ...tokenMap[token.chainId],
-          [token.address]: token
-        }
-      }
+      tokenMap[token.chainId][token.address] = token
+      return tokenMap
     },
     {
       [ChainId.MAINNET]: {},

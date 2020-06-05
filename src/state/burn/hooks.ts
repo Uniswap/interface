@@ -44,8 +44,8 @@ export function useDerivedBurnInfo(): {
   const tokenB = useTokenByAddressAndAutomaticallyAdd(tokenBAddress)
   const tokens: { [field in Extract<Field, Field.TOKEN_A | Field.TOKEN_B>]?: Token } = useMemo(
     () => ({
-      [Field.TOKEN_A]: tokenA,
-      [Field.TOKEN_B]: tokenB
+      [Field.TOKEN_A]: tokenA ?? undefined,
+      [Field.TOKEN_B]: tokenB ?? undefined
     }),
     [tokenA, tokenB]
   )
@@ -99,7 +99,7 @@ export function useDerivedBurnInfo(): {
   }
   // user specified a specific amount of liquidity tokens
   else if (independentField === Field.LIQUIDITY) {
-    if (pair?.liquidityToken) {
+    if (pair && pair.liquidityToken) {
       const independentAmount = tryParseAmount(typedValue, pair.liquidityToken)
       if (independentAmount && userLiquidity && !independentAmount.greaterThan(userLiquidity)) {
         percentToRemove = new Percent(independentAmount.raw, userLiquidity.raw)

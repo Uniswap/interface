@@ -122,16 +122,12 @@ export default function Swap() {
   }, [approval, approvalSubmitted])
 
   const maxAmountInput: TokenAmount =
-    !!tokenBalances[Field.INPUT] &&
-    !!tokens[Field.INPUT] &&
-    !!WETH[chainId] &&
-    tokenBalances[Field.INPUT].greaterThan(
-      new TokenAmount(tokens[Field.INPUT], tokens[Field.INPUT].equals(WETH[chainId]) ? MIN_ETH : '0')
-    )
-      ? tokens[Field.INPUT].equals(WETH[chainId])
-        ? tokenBalances[Field.INPUT].subtract(new TokenAmount(WETH[chainId], MIN_ETH))
-        : tokenBalances[Field.INPUT]
+    tokenBalances[Field.INPUT] &&
+    tokens[Field.INPUT] &&
+    tokenBalances[Field.INPUT].greaterThan(new TokenAmount(tokens[Field.INPUT], '0'))
+      ? tokenBalances[Field.INPUT]
       : undefined
+
   const atMaxAmountInput: boolean =
     maxAmountInput && parsedAmounts[Field.INPUT] ? maxAmountInput.equalTo(parsedAmounts[Field.INPUT]) : undefined
 

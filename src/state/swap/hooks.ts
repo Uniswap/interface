@@ -10,7 +10,7 @@ import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
-import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
+import { useTokenBalances } from '../wallet/hooks'
 import { Field, replaceSwapState, selectToken, switchTokens, typeInput } from './actions'
 import { SwapState } from './reducer'
 
@@ -55,7 +55,7 @@ export function useSwapActionHandlers(): {
 }
 
 // try to parse a user entered amount for a given token
-export function tryParseAmount(value?: string, token?: Token): TokenAmount | undefined {
+export function tryParseAmount(value?: string, token?: Token | null): TokenAmount | undefined {
   if (!value || !token) {
     return
   }
@@ -90,10 +90,10 @@ export function useDerivedSwapInfo(): {
     [Field.OUTPUT]: { address: tokenOutAddress }
   } = useSwapState()
 
-  const tokenIn = useTokenByAddressAndAutomaticallyAdd(tokenInAddress)
-  const tokenOut = useTokenByAddressAndAutomaticallyAdd(tokenOutAddress)
+  const tokenIn = useTokenByAddressAndAutomaticallyAdd(tokenInAddress) ?? undefined
+  const tokenOut = useTokenByAddressAndAutomaticallyAdd(tokenOutAddress) ?? undefined
 
-  const relevantTokenBalances = useTokenBalancesTreatWETHAsETH(account ?? undefined, [
+  const relevantTokenBalances = useTokenBalances(account ?? undefined, [
     tokenIn ?? undefined,
     tokenOut ?? undefined
   ])

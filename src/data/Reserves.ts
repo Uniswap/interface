@@ -11,7 +11,7 @@ import { useSingleCallResult, useMultipleContractSingleData } from '../state/mul
  * if no pair created yet, return null
  * if pair already created (even if 0 reserves), return pair
  */
-export function usePair(tokenA?: Token, tokenB?: Token): undefined | Pair | null {
+export function usePair(tokenA: Token | null | undefined, tokenB: Token | null | undefined): undefined | Pair | null {
   const pairAddress = tokenA && tokenB && !tokenA.equals(tokenB) ? Pair.getAddress(tokenA, tokenB) : undefined
   const contract = usePairContract(pairAddress, false)
   const { result: reserves, loading } = useSingleCallResult(contract, 'getReserves')

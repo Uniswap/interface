@@ -42,7 +42,7 @@ import {
   useSwapActionHandlers,
   useSwapState
 } from '../../state/swap/hooks'
-import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
+import { useAllTokenBalances } from '../../state/wallet/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
@@ -147,16 +147,12 @@ export default function Send() {
   }, [onTokenSelection, sendingWithSwap])
 
   const maxAmountInput: TokenAmount =
-    !!tokenBalances[Field.INPUT] &&
-    !!tokens[Field.INPUT] &&
-    !!WETH[chainId] &&
-    tokenBalances[Field.INPUT].greaterThan(
-      new TokenAmount(tokens[Field.INPUT], tokens[Field.INPUT].equals(WETH[chainId]) ? MIN_ETH : '0')
-    )
-      ? tokens[Field.INPUT].equals(WETH[chainId])
-        ? tokenBalances[Field.INPUT].subtract(new TokenAmount(WETH[chainId], MIN_ETH))
-        : tokenBalances[Field.INPUT]
+    tokenBalances[Field.INPUT] &&
+    tokens[Field.INPUT] &&
+    tokenBalances[Field.INPUT].greaterThan(new TokenAmount(tokens[Field.INPUT], '0'))
+      ? tokenBalances[Field.INPUT]
       : undefined
+
   const atMaxAmountInput: boolean =
     !!maxAmountInput && !!parsedAmounts[Field.INPUT] ? maxAmountInput.equalTo(parsedAmounts[Field.INPUT]) : undefined
 
@@ -291,7 +287,7 @@ export default function Send() {
     ? `Sending ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol} to ${recipient}`
     : `Sending ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${tokens[Field.INPUT]?.symbol} to ${recipient}`
 
-  const allBalances = useAllTokenBalancesTreatingWETHasETH() // only for 0 balance token selection behavior
+  const allBalances = useAllTokenBalances() // only for 0 balance token selection behavior
   const swapState = useSwapState()
   function _onTokenSelect(address: string) {
     // if no user balance - switch view to a send with swap

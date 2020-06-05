@@ -45,7 +45,7 @@ function useAllCommonPairs(tokenA?: Token, tokenB?: Token): Pair[] {
 /**
  * Returns the best trade for the exact amount of tokens in to the given token out
  */
-export function useTradeExactIn(amountIn?: TokenAmount, tokenOut?: Token): Trade | null {
+export function useTradeExactIn(amountIn: TokenAmount | undefined, tokenOut: Token | undefined): Trade | null {
   const inputToken = amountIn?.token
   const outputToken = tokenOut
 

@@ -6,7 +6,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import { setDefaultsFromURLMatchParams, Field, typeInput } from './actions'
 import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
-import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
+import { useTokenBalances } from '../wallet/hooks'
 import { usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { tryParseAmount } from '../swap/hooks'
@@ -46,8 +46,8 @@ export function useDerivedMintInfo(): {
   const tokenB = useTokenByAddressAndAutomaticallyAdd(tokenBAddress)
   const tokens: { [field in Field]?: Token } = useMemo(
     () => ({
-      [Field.TOKEN_A]: tokenA,
-      [Field.TOKEN_B]: tokenB
+      [Field.TOKEN_A]: tokenA ?? undefined,
+      [Field.TOKEN_B]: tokenB ?? undefined
     }),
     [tokenA, tokenB]
   )
@@ -65,10 +65,7 @@ export function useDerivedMintInfo(): {
   )
 
   // balances
-  const relevantTokenBalances = useTokenBalancesTreatWETHAsETH(account ?? undefined, [
-    tokens[Field.TOKEN_A],
-    tokens[Field.TOKEN_B]
-  ])
+  const relevantTokenBalances = useTokenBalances(account ?? undefined, [tokens[Field.TOKEN_A], tokens[Field.TOKEN_B]])
   const tokenBalances: { [field in Field]?: TokenAmount } = {
     [Field.TOKEN_A]: relevantTokenBalances?.[tokens[Field.TOKEN_A]?.address ?? ''],
     [Field.TOKEN_B]: relevantTokenBalances?.[tokens[Field.TOKEN_B]?.address ?? '']
@@ -181,7 +178,7 @@ export function useMintActionHandlers(): {
 
   const onUserInput = useCallback(
     (field: Field, typedValue: string) => {
-      dispatch(typeInput({ field, typedValue, noLiquidity: noLiquidity === true ? true : false }))
+      dispatch(typeInput({ field, typedValue, noLiquidity: noLiquidity === true }))
     },
     [dispatch, noLiquidity]
   )

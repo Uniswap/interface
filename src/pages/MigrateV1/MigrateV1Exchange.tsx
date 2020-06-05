@@ -151,7 +151,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
               <RowBetween>
                 <TYPE.body>V2 Price:</TYPE.body>
                 <TYPE.black>
-                  {v2SpotPrice?.toSignificant(6)} {token.symbol}/ETH
+                  {v2SpotPrice?.toSignificant(6)} {token.symbol}/WETH
                 </TYPE.black>
               </RowBetween>
               <RowBetween>
@@ -223,7 +223,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
         </div>
       </LightCard>
       <TYPE.darkGray style={{ textAlign: 'center' }}>
-        {'Your ' + token.symbol + ' liquidity will become Uniswap V2 ' + token.symbol + '/ETH liquidity.'}
+        {`Your ${token.symbol} liquidity will become Uniswap V2 ${token.symbol}/WETH liquidity.`}
       </TYPE.darkGray>
     </AutoColumn>
   )

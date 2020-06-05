@@ -9,7 +9,7 @@ import Card from '../../components/Card'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useAllDummyPairs, useRemoveUserAddedToken } from '../../state/user/hooks'
-import { useAllTokenBalancesTreatingWETHasETH, useTokenBalances } from '../../state/wallet/hooks'
+import { useAllTokenBalances, useTokenBalances } from '../../state/wallet/hooks'
 import { CloseIcon, LinkStyledButton, StyledInternalLink } from '../../theme/components'
 import { isAddress } from '../../utils'
 import Column from '../Column'
@@ -57,7 +57,7 @@ function SearchModal({
 
   const allTokens = useAllTokens()
   const allPairs = useAllDummyPairs()
-  const allTokenBalances = useAllTokenBalancesTreatingWETHasETH() ?? {}
+  const allTokenBalances = useAllTokenBalances()
   const allPairBalances = useTokenBalances(
     account,
     allPairs.map(p => p.liquidityToken)

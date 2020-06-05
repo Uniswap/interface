@@ -1,4 +1,4 @@
-import { ChainId, WETH } from '@uniswap/sdk'
+import { ChainId, Fraction, JSBI } from '@uniswap/sdk'
 import React from 'react'
 import { isMobile } from 'react-device-detect'
 import { Link as HistoryLink } from 'react-router-dom'
@@ -12,7 +12,7 @@ import Wordmark from '../../assets/svg/wordmark.svg'
 import WordmarkDark from '../../assets/svg/wordmark_white.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
-import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
+import { useETHBalances } from '../../state/wallet/hooks'
 
 import { ExternalLink, StyledInternalLink } from '../../theme'
 import { YellowCard } from '../Card'
@@ -133,7 +133,10 @@ const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
 
-  const userEthBalance = useTokenBalanceTreatingWETHasETH(account, WETH[chainId])
+  const userEthBalance = useETHBalances([account])[account]
+  const fractionETH = userEthBalance
+    ? new Fraction(userEthBalance, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18)))
+    : undefined
   const [isDark] = useDarkModeManager()
 
   return (
@@ -176,7 +179,7 @@ export default function Header() {
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <Text style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userEthBalance?.toSignificant(4)} ETH
+                {fractionETH?.toSignificant(4)} ETH
               </Text>
             ) : null}
             <Web3Status />

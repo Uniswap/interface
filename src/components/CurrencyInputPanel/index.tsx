@@ -3,7 +3,7 @@ import React, { useState, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { darken } from 'polished'
 import { Field } from '../../state/swap/actions'
-import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
+import { useTokenBalance } from '../../state/wallet/hooks'
 import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
 import SearchModal from '../SearchModal'
@@ -156,7 +156,7 @@ export default function CurrencyInputPanel({
 
   const [modalOpen, setModalOpen] = useState(false)
   const { account } = useActiveWeb3React()
-  const userTokenBalance = useTokenBalanceTreatingWETHasETH(account, token)
+  const userTokenBalance = useTokenBalance(account, token)
   const theme = useContext(ThemeContext)
 
   return (
