@@ -90,11 +90,13 @@ export function useSwapCallback(
         chainId as ChainId
       )
 
-      let estimate, method: Function, args: Array<string | string[] | number>, value: BigNumber | null
+      // let estimate: Function, method: Function,
+      let methodNames: string[],
+        args: Array<string | string[] | number>,
+        value: BigNumber | null = null
       switch (swapType) {
         case SwapType.EXACT_TOKENS_FOR_TOKENS:
-          estimate = routerContract.estimateGas.swapExactTokensForTokens
-          method = routerContract.swapExactTokensForTokens
+          methodNames = ['swapExactTokensForTokens', 'swapExactTokensForTokensSupportingFeeOnTransferTokens']
           args = [
             slippageAdjustedInput.raw.toString(),
             slippageAdjustedOutput.raw.toString(),
@@ -102,11 +104,9 @@ export function useSwapCallback(
             recipient,
             deadlineFromNow
           ]
-          value = null
           break
         case SwapType.TOKENS_FOR_EXACT_TOKENS:
-          estimate = routerContract.estimateGas.swapTokensForExactTokens
-          method = routerContract.swapTokensForExactTokens
+          methodNames = ['swapTokensForExactTokens']
           args = [
             slippageAdjustedOutput.raw.toString(),
             slippageAdjustedInput.raw.toString(),
@@ -114,17 +114,14 @@ export function useSwapCallback(
             recipient,
             deadlineFromNow
           ]
-          value = null
           break
         case SwapType.EXACT_ETH_FOR_TOKENS:
-          estimate = routerContract.estimateGas.swapExactETHForTokens
-          method = routerContract.swapExactETHForTokens
+          methodNames = ['swapExactETHForTokens', 'swapExactETHForTokensSupportingFeeOnTransferTokens']
           args = [slippageAdjustedOutput.raw.toString(), path, recipient, deadlineFromNow]
           value = BigNumber.from(slippageAdjustedInput.raw.toString())
           break
         case SwapType.TOKENS_FOR_EXACT_ETH:
-          estimate = routerContract.estimateGas.swapTokensForExactETH
-          method = routerContract.swapTokensForExactETH
+          methodNames = ['swapTokensForExactETH']
           args = [
             slippageAdjustedOutput.raw.toString(),
             slippageAdjustedInput.raw.toString(),
@@ -132,11 +129,9 @@ export function useSwapCallback(
             recipient,
             deadlineFromNow
           ]
-          value = null
           break
         case SwapType.EXACT_TOKENS_FOR_ETH:
-          estimate = routerContract.estimateGas.swapExactTokensForETH
-          method = routerContract.swapExactTokensForETH
+          methodNames = ['swapExactTokensForETH', 'swapExactTokensForETHSupportingFeeOnTransferTokens']
           args = [
             slippageAdjustedInput.raw.toString(),
             slippageAdjustedOutput.raw.toString(),
@@ -144,58 +139,99 @@ export function useSwapCallback(
             recipient,
             deadlineFromNow
           ]
-          value = null
           break
         case SwapType.ETH_FOR_EXACT_TOKENS:
-          estimate = routerContract.estimateGas.swapETHForExactTokens
-          method = routerContract.swapETHForExactTokens
+          methodNames = ['swapETHForExactTokens']
           args = [slippageAdjustedOutput.raw.toString(), path, recipient, deadlineFromNow]
           value = BigNumber.from(slippageAdjustedInput.raw.toString())
           break
       }
 
-      return estimate(...args, value ? { value } : {})
-        .then(estimatedGasLimit =>
-          method(...args, {
-            ...(value ? { value } : {}),
-            gasLimit: calculateGasMargin(estimatedGasLimit)
-          })
+      const safeGasEstimates = await Promise.all(
+        methodNames.map(methodName =>
+          routerContract.estimateGas[methodName](...args, value ? { value } : {})
+            .then(calculateGasMargin)
+            .catch(error => {
+              console.error(`estimateGas failed for ${methodName}`, error)
+            })
         )
-        .then(response => {
-          if (recipient === account) {
-            addTransaction(response, {
-              summary:
-                'Swap ' +
-                slippageAdjustedInput.toSignificant(3) +
-                ' ' +
-                trade.inputAmount.token.symbol +
-                ' for ' +
-                slippageAdjustedOutput.toSignificant(3) +
-                ' ' +
-                trade.outputAmount.token.symbol
-            })
-          } else {
-            addTransaction(response, {
-              summary:
-                'Swap ' +
-                slippageAdjustedInput.toSignificant(3) +
-                ' ' +
-                trade.inputAmount.token.symbol +
-                ' for ' +
-                slippageAdjustedOutput.toSignificant(3) +
-                ' ' +
-                trade.outputAmount.token.symbol +
-                ' to ' +
-                (ensName ?? recipient)
-            })
-          }
+      )
 
-          return response.hash
+      const indexOfSuccessfulEstimation = safeGasEstimates.findIndex(safeGasEstimate =>
+        BigNumber.isBigNumber(safeGasEstimate)
+      )
+
+      // all estimations failed...
+      if (indexOfSuccessfulEstimation === -1) {
+        // if only 1 method exists, either:
+        // a) the token is doing something weird not related to FoT (e.g. enforcing a whitelist)
+        // b) the token is FoT and the user specified an exact output, which is not allowed
+        if (methodNames.length === 1) {
+          throw Error(
+            `An error occurred. If either of the tokens you're swapping take a fee on transfer, you must specify an exact input amount.`
+          )
+        }
+        // if 2 methods exists, either:
+        // a) the token is doing something weird not related to FoT (e.g. enforcing a whitelist)
+        // b) the token is FoT and is taking more than the specified slippage
+        else if (methodNames.length === 2) {
+          throw Error(
+            `An error occurred. If either of the tokens you're swapping take a fee on transfer, you must specify a slippage tolerance higher than the fee.`
+          )
+        } else {
+          throw Error('This transaction would fail. Please contact support.')
+        }
+      } else {
+        const methodName = methodNames[indexOfSuccessfulEstimation]
+        const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
+
+        return routerContract[methodName](...args, {
+          gasLimit: safeGasEstimate,
+          ...(value ? { value } : {})
         })
-        .catch(error => {
-          console.error(`Swap or gas estimate failed`, error)
-          throw error
-        })
+          .then((response: any) => {
+            if (recipient === account) {
+              addTransaction(response, {
+                summary:
+                  'Swap ' +
+                  slippageAdjustedInput.toSignificant(3) +
+                  ' ' +
+                  trade.inputAmount.token.symbol +
+                  ' for ' +
+                  slippageAdjustedOutput.toSignificant(3) +
+                  ' ' +
+                  trade.outputAmount.token.symbol
+              })
+            } else {
+              addTransaction(response, {
+                summary:
+                  'Swap ' +
+                  slippageAdjustedInput.toSignificant(3) +
+                  ' ' +
+                  trade.inputAmount.token.symbol +
+                  ' for ' +
+                  slippageAdjustedOutput.toSignificant(3) +
+                  ' ' +
+                  trade.outputAmount.token.symbol +
+                  ' to ' +
+                  (ensName ?? recipient)
+              })
+            }
+
+            return response.hash
+          })
+          .catch((error: any) => {
+            // if the user rejected the tx, pass this along
+            if (error?.code === 4001) {
+              throw error
+            }
+            // otherwise, the error was unexpected and we need to convey that
+            else {
+              console.error(`swap failed for ${methodName}`, error)
+              throw Error('An error occurred while swapping. Please contact support.')
+            }
+          })
+      }
     }
   }, [account, allowedSlippage, addTransaction, chainId, deadline, inputAllowance, library, trade, ensName, recipient])
 }

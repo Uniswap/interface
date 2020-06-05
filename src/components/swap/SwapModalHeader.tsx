@@ -11,29 +11,30 @@ import TokenLogo from '../TokenLogo'
 import { TruncatedText } from './styleds'
 
 export default function SwapModalHeader({
-  formattedAmounts,
   tokens,
+  formattedAmounts,
   slippageAdjustedAmounts,
   priceImpactSeverity,
   independentField
 }: {
-  formattedAmounts?: { [field in Field]?: string }
-  tokens?: { [field in Field]?: Token }
-  slippageAdjustedAmounts?: { [field in Field]?: TokenAmount }
+  tokens: { [field in Field]?: Token }
+  formattedAmounts: { [field in Field]?: string }
+  slippageAdjustedAmounts: { [field in Field]?: TokenAmount }
   priceImpactSeverity: number
   independentField: Field
 }) {
   const theme = useContext(ThemeContext)
+
   return (
     <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
       <RowBetween align="flex-end">
         <TruncatedText fontSize={24} fontWeight={500}>
-          {!!formattedAmounts[Field.INPUT] && formattedAmounts[Field.INPUT]}
+          {formattedAmounts[Field.INPUT]}
         </TruncatedText>
         <RowFixed gap="4px">
           <TokenLogo address={tokens[Field.INPUT]?.address} size={'24px'} />
           <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-            {tokens[Field.INPUT]?.symbol || ''}
+            {tokens[Field.INPUT]?.symbol}
           </Text>
         </RowFixed>
       </RowBetween>
@@ -42,12 +43,12 @@ export default function SwapModalHeader({
       </RowFixed>
       <RowBetween align="flex-end">
         <TruncatedText fontSize={24} fontWeight={500} color={priceImpactSeverity > 2 ? theme.red1 : ''}>
-          {!!formattedAmounts[Field.OUTPUT] && formattedAmounts[Field.OUTPUT]}
+          {formattedAmounts[Field.OUTPUT]}
         </TruncatedText>
         <RowFixed gap="4px">
           <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'24px'} />
           <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-            {tokens[Field.OUTPUT]?.symbol || ''}
+            {tokens[Field.OUTPUT]?.symbol}
           </Text>
         </RowFixed>
       </RowBetween>
@@ -56,7 +57,7 @@ export default function SwapModalHeader({
           <TYPE.italic textAlign="left" style={{ width: '100%' }}>
             {`Output is estimated. You will receive at least `}
             <b>
-              {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {tokens[Field.OUTPUT]?.symbol}{' '}
+              {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {tokens[Field.OUTPUT]?.symbol}
             </b>
             {' or the transaction will revert.'}
           </TYPE.italic>

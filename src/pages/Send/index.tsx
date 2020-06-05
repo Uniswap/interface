@@ -74,13 +74,12 @@ export default function Send({ location: { search } }: RouteComponentProps) {
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   // modal and loading
-  const [showConfirm, setShowConfirm] = useState<boolean>(false)
-  const [showAdvanced, setShowAdvanced] = useState<boolean>(false)
-  const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirmed
-  const [pendingConfirmation, setPendingConfirmation] = useState<boolean>(true) // waiting for user confirmation
-
-  // txn values
+  const [showAdvanced, setShowAdvanced] = useState<boolean>(false) // toggling slippage, deadline, etc. on and off
+  const [showConfirm, setShowConfirm] = useState<boolean>(false) // show confirmation modal
+  const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // waiting for user confirmaion/rejection
   const [txHash, setTxHash] = useState<string>('')
+
+  // tx parameters
   const [deadline, setDeadline] = useState<number>(DEFAULT_DEADLINE_FROM_NOW)
   const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
 
@@ -137,17 +136,6 @@ export default function Send({ location: { search } }: RouteComponentProps) {
   const atMaxAmountInput: boolean =
     !!maxAmountInput && !!parsedAmounts[Field.INPUT] ? maxAmountInput.equalTo(parsedAmounts[Field.INPUT]) : undefined
 
-  // reset modal state when closed
-  function resetModal() {
-    // clear input if txn submitted
-    if (!pendingConfirmation) {
-      onUserInput(Field.INPUT, '')
-    }
-    setPendingConfirmation(true)
-    setAttemptingTxn(false)
-    setShowAdvanced(false)
-  }
-
   const swapCallback = useSwapCallback(bestTrade, allowedSlippage, deadline, recipient)
 
   function onSwap() {
@@ -156,16 +144,24 @@ export default function Send({ location: { search } }: RouteComponentProps) {
     }
 
     setAttemptingTxn(true)
-    swapCallback().then(hash => {
-      setTxHash(hash)
-      setPendingConfirmation(false)
+    swapCallback()
+      .then(hash => {
+        setAttemptingTxn(false)
+        setTxHash(hash)
 
-      ReactGA.event({
-        category: 'Send',
-        action: recipient === account ? 'Swap w/o Send' : 'Swap w/ Send',
-        label: [bestTrade.inputAmount.token.symbol, bestTrade.outputAmount.token.symbol].join(';')
+        ReactGA.event({
+          category: 'Send',
+          action: recipient === account ? 'Swap w/o Send' : 'Swap w/ Send',
+          label: [bestTrade.inputAmount.token.symbol, bestTrade.outputAmount.token.symbol].join(';')
+        })
       })
-    })
+      .catch(error => {
+        setAttemptingTxn(false)
+        // we only care if the error is something _other_ than the user rejected the tx
+        if (error?.code !== 4001) {
+          console.error(error)
+        }
+      })
   }
 
   const sendCallback = useSendCallback(parsedAmounts?.[Field.INPUT], recipient)
@@ -173,16 +169,19 @@ export default function Send({ location: { search } }: RouteComponentProps) {
 
   async function onSend() {
     setAttemptingTxn(true)
-
     sendCallback()
       .then(hash => {
+        setAttemptingTxn(false)
         setTxHash(hash)
+
         ReactGA.event({ category: 'Send', action: 'Send', label: tokens[Field.INPUT]?.symbol })
-        setPendingConfirmation(false)
       })
-      .catch(() => {
-        resetModal()
-        setShowConfirm(false)
+      .catch(error => {
+        setAttemptingTxn(false)
+        // we only care if the error is something _other_ than the user rejected the tx
+        if (error?.code !== 4001) {
+          console.error(error)
+        }
       })
   }
 
@@ -306,11 +305,13 @@ export default function Send({ location: { search } }: RouteComponentProps) {
             isOpen={showConfirm}
             title={sendingWithSwap ? 'Confirm swap and send' : 'Confirm Send'}
             onDismiss={() => {
-              resetModal()
               setShowConfirm(false)
+              if (txHash) {
+                onUserInput(Field.INPUT, '')
+              }
+              setTxHash('')
             }}
             attemptingTxn={attemptingTxn}
-            pendingConfirmation={pendingConfirmation}
             hash={txHash}
             topContent={modalHeader}
             bottomContent={modalBottom}
