@@ -11,15 +11,19 @@ import { SectionBreak } from './styleds'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import SlippageTabs, { SlippageTabsProps } from '../SlippageTabs'
+import Toggle from '../Toggle'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import TokenLogo from '../TokenLogo'
 import flatMap from 'lodash.flatmap'
+import { useExpertModeManager } from '../../state/user/hooks'
 
 function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
   const theme = useContext(ThemeContext)
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
+
+  const [expertMode, toggleExpertMode] = useExpertModeManager()
 
   return (
     <>
@@ -135,6 +139,17 @@ export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: A
           </Flex>
         </AutoColumn>
       )}
+      <SectionBreak />
+
+      <RowBetween padding={'0 20px 4px 20px'}>
+        <RowFixed>
+          <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+            Toggle Expert Mode
+          </TYPE.black>
+          <QuestionHelper text="Bypasses swap confirm modals. Use at your own risk." />
+        </RowFixed>
+        <Toggle isActive={expertMode} toggle={toggleExpertMode} />
+      </RowBetween>
     </AutoColumn>
   )
 }

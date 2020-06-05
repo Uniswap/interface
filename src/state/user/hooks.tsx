@@ -13,7 +13,8 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
-  updateUserDarkMode
+  updateUserDarkMode,
+  updateUserExpertMode
 } from './actions'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, DUMMY_PAIRS_TO_PIN } from '../../constants'
 
@@ -61,6 +62,46 @@ export function useDarkModeManager(): [boolean, () => void] {
   }, [darkMode, dispatch])
 
   return [darkMode, toggleSetDarkMode]
+}
+
+export function useIsExpertMode(): boolean {
+  const userExpertMode = useSelector<AppState, AppState['user']['userExpertMode']>(state => state.user.userExpertMode)
+  return userExpertMode
+}
+
+export function useExpertModeManager(): [boolean, () => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const expertMode = useIsExpertMode()
+
+  const toggleSetExpertMode = useCallback(() => {
+    dispatch(updateUserExpertMode({ userExpertMode: !expertMode }))
+  }, [expertMode, dispatch])
+
+  return [expertMode, toggleSetExpertMode]
+}
+
+export function useFetchTokenByAddress(): (address: string) => Promise<Token | null> {
+  const { library, chainId } = useActiveWeb3React()
+
+  return useCallback(
+    async (address: string): Promise<Token | null> => {
+      if (!library || !chainId) return null
+      const validatedAddress = isAddress(address)
+      if (!validatedAddress) return null
+      const [decimals, symbol, name] = await Promise.all([
+        getTokenDecimals(address, library).catch(() => null),
+        getTokenSymbol(address, library).catch(() => 'UNKNOWN'),
+        getTokenName(address, library).catch(() => 'Unknown')
+      ])
+
+      if (decimals === null) {
+        return null
+      } else {
+        return new Token(chainId, validatedAddress, decimals, symbol, name)
+      }
+    },
+    [library, chainId]
+  )
 }
 
 export function useAddUserToken(): (token: Token) => void {

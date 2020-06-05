@@ -10,7 +10,8 @@ import {
   SerializedToken,
   updateMatchesDarkMode,
   updateUserDarkMode,
-  updateVersion
+  updateVersion,
+  updateUserExpertMode
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
@@ -20,6 +21,8 @@ interface UserState {
 
   userDarkMode: boolean | null // the user's choice for dark mode or light mode
   matchesDarkMode: boolean // whether the dark mode media query matches
+
+  userExpertMode: boolean
 
   tokens: {
     [chainId: number]: {
@@ -54,6 +57,8 @@ const initialState: UserState = {
   userDarkMode: null,
   matchesDarkMode: false,
 
+  userExpertMode: false,
+
   tokens: {},
   pairs: {},
 
@@ -84,6 +89,10 @@ export default createReducer(initialState, builder =>
     })
     .addCase(updateMatchesDarkMode, (state, action) => {
       state.matchesDarkMode = action.payload.matchesDarkMode
+      state.timestamp = currentTimestamp()
+    })
+    .addCase(updateUserExpertMode, (state, action) => {
+      state.userExpertMode = action.payload.userExpertMode
       state.timestamp = currentTimestamp()
     })
     .addCase(addSerializedToken, (state, { payload: { serializedToken } }) => {

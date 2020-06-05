@@ -26,6 +26,8 @@ import { useActiveWeb3React } from '../../hooks'
 import { useApproveCallbackFromTrade, ApprovalState } from '../../hooks/useApproveCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
+import { useExpertModeManager } from '../../state/user/hooks'
+
 import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
@@ -46,6 +48,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
+  const [expertMode] = useExpertModeManager()
 
   // swap state
   const { independentField, typedValue } = useSwapState()
@@ -122,7 +125,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
     }
     setPendingConfirmation(true)
     setAttemptingTxn(false)
-    setShowAdvanced(false)
+    // setShowAdvanced(false)
   }
 
   // the callback to execute the swap
@@ -134,6 +137,8 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
     if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
       return
     }
+
+    console.log('trying to swap?')
 
     setAttemptingTxn(true)
     swapCallback().then(hash => {
@@ -324,7 +329,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
             ) : (
               <ButtonError
                 onClick={() => {
-                  setShowConfirm(true)
+                  expertMode ? onSwap() : setShowConfirm(true)
                 }}
                 id="swap-button"
                 disabled={!isValid}
