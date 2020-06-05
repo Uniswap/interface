@@ -1,11 +1,11 @@
 import { JSBI, TokenAmount, WETH } from '@uniswap/sdk'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { ButtonError, ButtonLight } from '../../components/Button'
+import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
@@ -80,6 +80,23 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
 
   // check whether the user has approved the router on the input token
   const [approval, approveCallback] = useApproveCallbackFromTrade(bestTrade, allowedSlippage)
+
+  // check if user has gone through approval process, used to show two step buttons, reset on token change
+  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
+
+  // show approve flow when: no error on inputs, not approved or pending, or approved in current session
+  const showApproveFlow =
+    !error &&
+    (approval === ApprovalState.NOT_APPROVED ||
+      approval === ApprovalState.PENDING ||
+      (approvalSubmitted && approval === ApprovalState.APPROVED))
+
+  // mark when a user has submitted an approval, reset onTokenSelection for input field
+  useEffect(() => {
+    if (approval === ApprovalState.PENDING) {
+      setApprovalSubmitted(true)
+    }
+  }, [approval, approvalSubmitted])
 
   const maxAmountInput: TokenAmount =
     !!tokenBalances[Field.INPUT] &&
@@ -203,7 +220,10 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
                 onMax={() => {
                   maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
                 }}
-                onTokenSelection={address => onTokenSelection(Field.INPUT, address)}
+                onTokenSelection={address => {
+                  setApprovalSubmitted(false) // reset 2 step UI for approvals
+                  onTokenSelection(Field.INPUT, address)
+                }}
                 otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
                 id="swap-currency-input"
               />
@@ -213,13 +233,15 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
                   <ArrowWrapper>
                     <ArrowDown
                       size="16"
-                      onClick={onSwitchTokens}
+                      onClick={() => {
+                        setApprovalSubmitted(false) // reset 2 step UI for approvals
+                        onSwitchTokens()
+                      }}
                       color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme.primary1 : theme.text2}
                     />
                   </ArrowWrapper>
                 </AutoColumn>
               </CursorPointer>
-
               <CurrencyInputPanel
                 field={Field.OUTPUT}
                 value={formattedAmounts[Field.OUTPUT]}
@@ -235,7 +257,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
             </>
 
             {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-              <Card padding={'.25rem 1.25rem 0 .75rem'} borderRadius={'20px'}>
+              <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
                 <AutoColumn gap="4px">
                   <RowBetween align="center">
                     <Text fontWeight={500} fontSize={14} color={theme.text2}>
@@ -269,14 +291,36 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
               <GreyCard style={{ textAlign: 'center' }}>
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
               </GreyCard>
-            ) : approval === ApprovalState.NOT_APPROVED || approval === ApprovalState.PENDING ? (
-              <ButtonLight onClick={approveCallback} disabled={approval === ApprovalState.PENDING}>
-                {approval === ApprovalState.PENDING ? (
-                  <Dots>Approving {tokens[Field.INPUT]?.symbol}</Dots>
-                ) : (
-                  'Approve ' + tokens[Field.INPUT]?.symbol
-                )}
-              </ButtonLight>
+            ) : showApproveFlow ? (
+              <RowBetween>
+                <ButtonPrimary
+                  onClick={approveCallback}
+                  disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
+                  width="48%"
+                  altDisbaledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
+                >
+                  {approval === ApprovalState.PENDING ? (
+                    <Dots>Approving</Dots>
+                  ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
+                    'Approved'
+                  ) : (
+                    'Approve ' + tokens[Field.INPUT]?.symbol
+                  )}
+                </ButtonPrimary>
+                <ButtonError
+                  onClick={() => {
+                    setShowConfirm(true)
+                  }}
+                  width="48%"
+                  id="swap-button"
+                  disabled={!isValid || approval !== ApprovalState.APPROVED}
+                  error={isValid && priceImpactSeverity > 2}
+                >
+                  <Text fontSize={16} fontWeight={500}>
+                    {`Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                  </Text>
+                </ButtonError>
+              </RowBetween>
             ) : (
               <ButtonError
                 onClick={() => {

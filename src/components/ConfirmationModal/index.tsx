@@ -1,14 +1,14 @@
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import Modal from '../Modal'
-import Loader from '../Loader'
 import { ExternalLink } from '../../theme'
 import { Text } from 'rebass'
-import { CloseIcon } from '../../theme/components'
+import { CloseIcon, Spinner } from '../../theme/components'
 import { RowBetween } from '../Row'
 import { ArrowUpCircle } from 'react-feather'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
+import Circle from '../../assets/images/blue-loader.svg'
 
 import { useActiveWeb3React } from '../../hooks'
 import { getEtherscanLink } from '../../utils'
@@ -28,6 +28,11 @@ const BottomSection = styled(Section)`
 
 const ConfirmedIcon = styled(ColumnCenter)`
   padding: 60px 0;
+`
+
+const CustomLightSpinner = styled(Spinner)<{ size: string }>`
+  height: ${({ size }) => size};
+  width: ${({ size }) => size};
 `
 
 interface ConfirmationModalProps {
@@ -80,7 +85,7 @@ export default function ConfirmationModal({
             </RowBetween>
             <ConfirmedIcon>
               {pendingConfirmation ? (
-                <Loader size="90px" />
+                <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
               ) : (
                 <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary1} />
               )}

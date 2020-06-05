@@ -42,8 +42,10 @@ const StyledDialogOverlay = styled(({ mobile, ...rest }) => <AnimatedDialogOverl
 // destructure to not pass custom props to Dialog DOM element
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...rest }) => (
-  <DialogContent aria-label="content" {...rest} />
-))`
+  <DialogContent {...rest} />
+)).attrs({
+  'aria-label': 'dialog'
+})`
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
     border: 1px solid ${({ theme }) => theme.bg1};
@@ -170,7 +172,7 @@ export default function Modal({
                         hidden={true}
                         minHeight={minHeight}
                         maxHeight={maxHeight}
-                        mobile={isMobile}
+                        mobile={isMobile ?? undefined}
                       >
                         <HiddenCloseButton onClick={onDismiss} />
                         {children}
@@ -189,13 +191,7 @@ export default function Modal({
         {transitions.map(
           ({ item, key, props }) =>
             item && (
-              <StyledDialogOverlay
-                key={key}
-                style={props}
-                onDismiss={onDismiss}
-                initialFocusRef={initialFocusRef}
-                mobile={false}
-              >
+              <StyledDialogOverlay key={key} style={props} onDismiss={onDismiss} initialFocusRef={initialFocusRef}>
                 <StyledDialogContent hidden={true} minHeight={minHeight} maxHeight={maxHeight} isOpen={isOpen}>
                   <HiddenCloseButton onClick={onDismiss} />
                   {children}
