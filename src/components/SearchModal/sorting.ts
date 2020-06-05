@@ -1,4 +1,4 @@
-import { Token, TokenAmount, WETH, Pair } from '@uniswap/sdk'
+import { Token, TokenAmount, Pair } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { useAllTokenBalances } from '../../state/wallet/hooks'
 import { DUMMY_PAIRS_TO_PIN } from '../../constants'

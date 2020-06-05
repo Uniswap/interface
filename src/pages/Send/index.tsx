@@ -1,4 +1,4 @@
-import { JSBI, TokenAmount, WETH } from '@uniswap/sdk'
+import { JSBI, TokenAmount } from '@uniswap/sdk'
 import React, { useContext, useEffect, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -25,7 +25,6 @@ import { TokenWarningCards } from '../../components/TokenWarningCard'
 import {
   DEFAULT_DEADLINE_FROM_NOW,
   INITIAL_ALLOWED_SLIPPAGE,
-  MIN_ETH,
   BETTER_TRADE_LINK_THRESHOLD
 } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
@@ -53,7 +52,7 @@ export default function Send() {
 
   // text translation
   // const { t } = useTranslation()
-  const { chainId, account } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
