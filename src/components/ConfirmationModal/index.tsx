@@ -10,8 +10,8 @@ import { ArrowUpCircle } from 'react-feather'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 
-import { useActiveWeb3React } from '../../hooks'
 import { getEtherscanLink } from '../../utils'
+import { useActiveWeb3React } from '../../hooks'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -37,7 +37,6 @@ interface ConfirmationModalProps {
   topContent: () => React.ReactChild
   bottomContent: () => React.ReactChild
   attemptingTxn: boolean
-  pendingConfirmation: boolean
   pendingText: string
   title?: string
 }
@@ -45,33 +44,22 @@ interface ConfirmationModalProps {
 export default function ConfirmationModal({
   isOpen,
   onDismiss,
-  hash,
   topContent,
   bottomContent,
   attemptingTxn,
-  pendingConfirmation,
+  hash,
   pendingText,
   title = ''
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
-  return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
-      {!attemptingTxn ? (
-        <Wrapper>
-          <Section>
-            <RowBetween>
-              <Text fontWeight={500} fontSize={20}>
-                {title}
-              </Text>
-              <CloseIcon onClick={onDismiss} />
-            </RowBetween>
-            {topContent()}
-          </Section>
-          <BottomSection gap="12px">{bottomContent()}</BottomSection>
-        </Wrapper>
-      ) : (
+  const transactionBroadcast = !!hash
+
+  // waiting for user to confirm/reject tx _or_ showing info on a tx that has been broadcast
+  if (attemptingTxn || transactionBroadcast) {
+    return (
+      <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
         <Wrapper>
           <Section>
             <RowBetween>
@@ -79,22 +67,23 @@ export default function ConfirmationModal({
               <CloseIcon onClick={onDismiss} />
             </RowBetween>
             <ConfirmedIcon>
-              {pendingConfirmation ? (
-                <Loader size="90px" />
-              ) : (
+              {transactionBroadcast ? (
                 <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary1} />
+              ) : (
+                <Loader size="90px" />
               )}
             </ConfirmedIcon>
             <AutoColumn gap="12px" justify={'center'}>
               <Text fontWeight={500} fontSize={20}>
-                {!pendingConfirmation ? 'Transaction Submitted' : 'Waiting For Confirmation'}
+                {transactionBroadcast ? 'Transaction Submitted' : 'Waiting For Confirmation'}
               </Text>
               <AutoColumn gap="12px" justify={'center'}>
                 <Text fontWeight={600} fontSize={14} color="" textAlign="center">
                   {pendingText}
                 </Text>
               </AutoColumn>
-              {!pendingConfirmation && (
+
+              {transactionBroadcast ? (
                 <>
                   <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
                     <Text fontWeight={500} fontSize={14} color={theme.primary1}>
@@ -107,9 +96,7 @@ export default function ConfirmationModal({
                     </Text>
                   </ButtonPrimary>
                 </>
-              )}
-
-              {pendingConfirmation && (
+              ) : (
                 <Text fontSize={12} color="#565A69" textAlign="center">
                   Confirm this transaction in your wallet
                 </Text>
@@ -117,7 +104,25 @@ export default function ConfirmationModal({
             </AutoColumn>
           </Section>
         </Wrapper>
-      )}
+      </Modal>
+    )
+  }
+
+  // confirmation screen
+  return (
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
+      <Wrapper>
+        <Section>
+          <RowBetween>
+            <Text fontWeight={500} fontSize={20}>
+              {title}
+            </Text>
+            <CloseIcon onClick={onDismiss} />
+          </RowBetween>
+          {topContent()}
+        </Section>
+        <BottomSection gap="12px">{bottomContent()}</BottomSection>
+      </Wrapper>
     </Modal>
   )
 }
