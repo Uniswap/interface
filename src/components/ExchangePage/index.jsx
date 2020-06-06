@@ -509,11 +509,15 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
   // validate input allowance + balance
   const [inputError, setInputError] = useState('')
+  const [orderSubmissionError, setOrderSubmissionError] = useState('')
   const [showUnlock, setShowUnlock] = useState(false)
   const [showWrap, setShowWrap] = useState(false)
   useEffect(() => {
     const inputValueCalculation = independentField === INPUT ? independentValueParsed : dependentValueMaximum
-    if (inputBalance && inputAllowance && inputValueCalculation) {
+    if (!!orderSubmissionError) {
+      console.log('setting submission error: ', orderSubmissionError)
+      setInputError(orderSubmissionError)
+    } else if (inputBalance && inputAllowance && inputValueCalculation) {
       if (inputBalance.lt(inputValueCalculation)) {
         setInputError(t('insufficientBalance'))
       } else if (inputAllowance.lt(inputValueCalculation)) {
@@ -553,7 +557,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     effectiveInputCurrency,
     inputAllowance,
     t,
-    inputCurrency
+    inputCurrency,
+    orderSubmissionError
   ])
 
   // calculate dependent value
@@ -623,6 +628,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   }
 
   async function onSwapAsync() {
+    setOrderSubmissionError('')
+
     let loopringOrder
 
     const secondaryMarketDecimals = market[SECONDARY_DECIMALS]
@@ -794,6 +801,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           perMatchNetworkFee: 0
         }
         const dolomiteOrder = toDolomiteOrder(loopringOrder, signature, data)
+        console.log('dolomiteOrder ', dolomiteOrder)
         return exchange.orders.createOrder(dolomiteOrder).then(response => ({ response, dolomiteOrder }))
       })
       .then(({ response, dolomiteOrder }) => {
@@ -857,6 +865,17 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       .then(response => response?.json())
       .catch(error => {
         setIsAwaitingSignature(false)
+
+        if (error?.code !== 4001) {
+          setOrderSubmissionError(t('submissionError'))
+          setTimeout(() => {
+            setOrderSubmissionError('')
+          }, 7500)
+          exchange.addresses.getPortfolio(account).then(response => {
+            console.error('Portfolio Data: ', response)
+          })
+        }
+
         console.error('Could not submit order due to error ', error)
         return Promise.reject(error)
       })
