@@ -40,6 +40,9 @@ function getSwapType(tokens: { [field in Field]?: Token }, isExactIn: boolean, c
   }
 }
 
+// list of checksummed addresses that are forced to go through the FoT methods
+const FORCED_FOT_TOKENS = ['0xF0FAC7104aAC544e4a7CE1A55ADF2B5a25c65bD1']
+
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
@@ -81,6 +84,7 @@ export function useSwapCallback(
       const routerContract: Contract = getRouterContract(chainId, library, account)
 
       const path = trade.route.path.map(t => t.address)
+      const isForcedFOT: boolean = path.some(tokenAddress => FORCED_FOT_TOKENS.indexOf(tokenAddress) !== -1)
 
       const deadlineFromNow: number = Math.ceil(Date.now() / 1000) + deadline
 
@@ -96,7 +100,9 @@ export function useSwapCallback(
         value: BigNumber | null = null
       switch (swapType) {
         case SwapType.EXACT_TOKENS_FOR_TOKENS:
-          methodNames = ['swapExactTokensForTokens', 'swapExactTokensForTokensSupportingFeeOnTransferTokens']
+          methodNames = isForcedFOT
+            ? ['swapExactTokensForTokensSupportingFeeOnTransferTokens']
+            : ['swapExactTokensForTokens', 'swapExactTokensForTokensSupportingFeeOnTransferTokens']
           args = [
             slippageAdjustedInput.raw.toString(),
             slippageAdjustedOutput.raw.toString(),
@@ -116,7 +122,9 @@ export function useSwapCallback(
           ]
           break
         case SwapType.EXACT_ETH_FOR_TOKENS:
-          methodNames = ['swapExactETHForTokens', 'swapExactETHForTokensSupportingFeeOnTransferTokens']
+          methodNames = isForcedFOT
+            ? ['swapExactETHForTokensSupportingFeeOnTransferTokens']
+            : ['swapExactETHForTokens', 'swapExactETHForTokensSupportingFeeOnTransferTokens']
           args = [slippageAdjustedOutput.raw.toString(), path, recipient, deadlineFromNow]
           value = BigNumber.from(slippageAdjustedInput.raw.toString())
           break
@@ -131,7 +139,9 @@ export function useSwapCallback(
           ]
           break
         case SwapType.EXACT_TOKENS_FOR_ETH:
-          methodNames = ['swapExactTokensForETH', 'swapExactTokensForETHSupportingFeeOnTransferTokens']
+          methodNames = isForcedFOT
+            ? ['swapExactTokensForETHSupportingFeeOnTransferTokens']
+            : ['swapExactTokensForETH', 'swapExactTokensForETHSupportingFeeOnTransferTokens']
           args = [
             slippageAdjustedInput.raw.toString(),
             slippageAdjustedOutput.raw.toString(),
