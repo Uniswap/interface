@@ -15,7 +15,6 @@ import { calculateGasMargin, formatEthBalance, formatTokenBalance, formatToUsd, 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import Modal from '../Modal'
 import TokenLogo from '../TokenLogo'
-// import SearchIcon from '../../assets/images/magnifying-glass.svg'
 import { usePendingApproval, useTransactionAdder } from '../../contexts/Transactions'
 import {
   DELEGATE_ADDRESS,
@@ -30,6 +29,7 @@ import {
 import { useAddressBalance, useAllBalances, useETHPriceInUSD } from '../../contexts/Balances'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import Circle from '../../assets/images/circle-grey.svg'
+import * as Sentry from '@sentry/browser'
 
 const GAS_MARGIN = ethers.utils.bigNumberify(1000)
 
@@ -286,8 +286,6 @@ export default function CurrencyInputPanel({
   disableTokenSelect,
   selectedTokenAddress = '',
   showUnlock,
-  showWrap,
-  disableWrap,
   value,
   urlAddedTokens,
   hideETH = false,
@@ -336,6 +334,14 @@ export default function CurrencyInputPanel({
                 })
                 .then(response => {
                   addTransaction(response, { approval: selectedTokenAddress })
+                })
+                .catch(error => {
+                  if(error?.code !== 4001) {
+                    console.error(`Could not approve ${tokenAddress} due to error: `, error)
+                    Sentry.captureException(error)
+                  } else {
+                    console.log('Could not approve tokens because the txn was cancelled')
+                  }
                 })
             }}
           >

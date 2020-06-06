@@ -39,9 +39,6 @@ const ETH = {
     [SYMBOL]: 'ETH',
     [DECIMALS]: 18,
     [EXCHANGE_ADDRESS]: null,
-    [MIN_ORDER]: new BigNumber('25000000000000000000'),
-    // [MIN_ORDER]: new BigNumber('1250000000000000000'),
-    // [MIN_ORDER]: _0,
   }
 }
 
@@ -72,9 +69,9 @@ export const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'WETH',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xA2881A90Bf33F03E7a3f803765Cd2ED5c8928dFb',
-      [MIN_ORDER]: new BigNumber('25000000000000000000'),
+      // [MIN_ORDER]: new BigNumber('25000000000000000000'),
       // [MIN_ORDER]: new BigNumber('1250000000000000000'),
-      // [MIN_ORDER]: _0,
+      [MIN_ORDER]: _0,
     },
     [DMG_ADDRESS]: {
       [NAME]: 'DMM Governance',

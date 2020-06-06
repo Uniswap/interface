@@ -592,7 +592,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         dispatchSwapState({ type: 'UPDATE_DEPENDENT', payload: '' })
       }
     }
-  }, [independentValueParsed, swapType, orderBooks, independentField, t])
+  }, [independentValueParsed, swapType, orderBooks, independentField, t, effectiveInputCurrency, outputCurrency])
 
   useEffect(() => {
     const history = createBrowserHistory()
@@ -613,7 +613,16 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     return `Balance: ${value}`
   }
 
-  async function onSwap() {
+  function onSwap() {
+    onSwapAsync().catch(error => {
+      if (error?.code !== 4001) {
+        // Ignore cancellation of the signature
+        Sentry.captureException(error)
+      }
+    })
+  }
+
+  async function onSwapAsync() {
     let loopringOrder
 
     const secondaryMarketDecimals = market[SECONDARY_DECIMALS]
@@ -694,10 +703,12 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       let amountToWrap = new BigNumber(loopringOrderData.amountS)
       const usableBalance = inputBalance.sub(ethBalanceBuffer) // 0.05
       amountToWrap = amountToWrap.gt(usableBalance) ? usableBalance : amountToWrap
-      const estimatedGas = await tokenContract.estimate.deposit({ value: amountToWrap }).catch(error => {
-        console.error('Error wrapping WETH ', error)
-        Sentry.captureException(error)
-      })
+      const estimatedGas = await tokenContract
+        .estimate.deposit({ value: amountToWrap })
+        .catch(error => {
+          console.error('Error wrapping WETH due to error: ', error)
+          return Promise.reject(error)
+        })
 
       setIsAwaitingSignature(true)
 
@@ -723,8 +734,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         .catch(error => {
           setShowWrap(false)
           setIsAwaitingSignature(false)
-          Sentry.captureException(error)
-          return Promise.reject('Could not wrap ETH.')
+          console.error('Could not wrap ETH due to error: ', error)
+          return Promise.reject(error)
         })
     }
 
@@ -770,7 +781,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     // We are now going to wait for the user to sign the Loopring order.
     setIsAwaitingSignature(true)
 
-    signaturePromise
+    return signaturePromise
       .then(signature => {
         setIsAwaitingSignature(false)
         const data = {
@@ -846,11 +857,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       .then(response => response?.json())
       .catch(error => {
         setIsAwaitingSignature(false)
-        if (error?.code !== 4001) {
-          // This is the error code for cancelling a request
-          console.error('Could not submit order due to error ', error)
-          Sentry.captureException(error)
-        }
+        console.error('Could not submit order due to error ', error)
+        return Promise.reject(error)
       })
   }
 
