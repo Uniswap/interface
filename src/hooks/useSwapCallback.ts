@@ -40,9 +40,6 @@ function getSwapType(tokens: { [field in Field]?: Token }, isExactIn: boolean, c
   }
 }
 
-// list of checksummed addresses that are forced to go through the FoT methods
-const FORCED_FOT_TOKENS = ['0xF0FAC7104aAC544e4a7CE1A55ADF2B5a25c65bD1']
-
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
@@ -84,7 +81,6 @@ export function useSwapCallback(
       const routerContract: Contract = getRouterContract(chainId, library, account)
 
       const path = trade.route.path.map(t => t.address)
-      const isForcedFOT: boolean = path.some(tokenAddress => FORCED_FOT_TOKENS.indexOf(tokenAddress) !== -1)
 
       const deadlineFromNow: number = Math.ceil(Date.now() / 1000) + deadline
 
@@ -100,9 +96,7 @@ export function useSwapCallback(
         value: BigNumber | null = null
       switch (swapType) {
         case SwapType.EXACT_TOKENS_FOR_TOKENS:
-          methodNames = isForcedFOT
-            ? ['swapExactTokensForTokensSupportingFeeOnTransferTokens']
-            : ['swapExactTokensForTokens', 'swapExactTokensForTokensSupportingFeeOnTransferTokens']
+          methodNames = ['swapExactTokensForTokens', 'swapExactTokensForTokensSupportingFeeOnTransferTokens']
           args = [
             slippageAdjustedInput.raw.toString(),
             slippageAdjustedOutput.raw.toString(),
@@ -122,9 +116,7 @@ export function useSwapCallback(
           ]
           break
         case SwapType.EXACT_ETH_FOR_TOKENS:
-          methodNames = isForcedFOT
-            ? ['swapExactETHForTokensSupportingFeeOnTransferTokens']
-            : ['swapExactETHForTokens', 'swapExactETHForTokensSupportingFeeOnTransferTokens']
+          methodNames = ['swapExactETHForTokens', 'swapExactETHForTokensSupportingFeeOnTransferTokens']
           args = [slippageAdjustedOutput.raw.toString(), path, recipient, deadlineFromNow]
           value = BigNumber.from(slippageAdjustedInput.raw.toString())
           break
@@ -139,9 +131,7 @@ export function useSwapCallback(
           ]
           break
         case SwapType.EXACT_TOKENS_FOR_ETH:
-          methodNames = isForcedFOT
-            ? ['swapExactTokensForETHSupportingFeeOnTransferTokens']
-            : ['swapExactTokensForETH', 'swapExactTokensForETHSupportingFeeOnTransferTokens']
+          methodNames = ['swapExactTokensForETH', 'swapExactTokensForETHSupportingFeeOnTransferTokens']
           args = [
             slippageAdjustedInput.raw.toString(),
             slippageAdjustedOutput.raw.toString(),
@@ -157,15 +147,28 @@ export function useSwapCallback(
           break
       }
 
-      const safeGasEstimates = await Promise.all(
+      const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
         methodNames.map(methodName =>
           routerContract.estimateGas[methodName](...args, value ? { value } : {})
             .then(calculateGasMargin)
             .catch(error => {
               console.error(`estimateGas failed for ${methodName}`, error)
+              return undefined
             })
         )
       )
+
+      // we expect failures from left to right, so throw if we see failures
+      // from right to left
+      for (let i = 0; i < safeGasEstimates.length - 1; i++) {
+        // if the FoT method fails, but the regular method does not, we should not
+        // use the regular method. this probably means something is wrong with the fot token.
+        if (BigNumber.isBigNumber(safeGasEstimates[i]) && !BigNumber.isBigNumber(safeGasEstimates[i + 1])) {
+          throw new Error(
+            'An error occurred. Please try raising your slippage. If that does not work, contact support.'
+          )
+        }
+      }
 
       const indexOfSuccessfulEstimation = safeGasEstimates.findIndex(safeGasEstimate =>
         BigNumber.isBigNumber(safeGasEstimate)
