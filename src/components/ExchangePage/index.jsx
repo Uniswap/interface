@@ -821,7 +821,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       })
       .then(data => {
         const { response, dolomiteOrder } = data
-        getIpAddress()
+        return getIpAddress()
           .then(ipAddress => {
             const priceBN = new BigNumber(response['data']['market_order_effective_price'].amount)
             const primaryAmount = new BigNumber(response['data']['primary_amount']?.amount)
