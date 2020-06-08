@@ -94,5 +94,6 @@
   "forAtLeast": "for at least ",
   "brokenToken": "The selected token is not compatible with Uniswap V1. Adding liquidity will result in locked funds.",
   "broken777": "ERC-777 tokens are not supported in Uniswap V1.",
-  "submissionError": "There was an error submitting your order. Please try again"
+  "submissionError": "There was an error submitting your order. Please try again",
+  "unsupportedDeviceForSubmittingOrders": "This device is not supported for submitting orders. Please use a different wallet."
 }

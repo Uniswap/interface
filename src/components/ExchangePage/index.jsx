@@ -737,8 +737,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
             setTimeout(() => {
               console.log('Finished waiting for ETH wrapping to finish')
               resolve()
-            }, 7000);
-          });
+            }, 7000)
+          })
         })
         .then(() => {
           console.log(`Successfully wrapped ${amountToWrap} ETH`)
@@ -876,14 +876,23 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       .catch(error => {
         setIsAwaitingSignature(false)
 
+        let submissionError
         if (error?.code !== 4001) {
-          setOrderSubmissionError(t('submissionError'))
+          if (error?.code === -32603) {
+            submissionError = t('unsupportedDeviceForSubmittingOrders')
+          } else {
+            submissionError = t('submissionError')
+            exchange.addresses.getPortfolio(account).then(response => {
+              console.error('Portfolio Data: ', JSON.stringify(response))
+            })
+          }
+        }
+
+        if (orderSubmissionError) {
+          setOrderSubmissionError(submissionError)
           setTimeout(() => {
             setOrderSubmissionError('')
           }, 7500)
-          exchange.addresses.getPortfolio(account).then(response => {
-            console.error('Portfolio Data: ', response)
-          })
         }
 
         console.error('Could not submit order due to error ', error)
