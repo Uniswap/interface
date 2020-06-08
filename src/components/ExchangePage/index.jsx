@@ -812,7 +812,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         }
         const dolomiteOrder = toDolomiteOrder(loopringOrder, signature, data)
         console.log('dolomiteOrder ', dolomiteOrder)
-        return exchange.orders.createOrder(dolomiteOrder).then(response => ({ response, dolomiteOrder }))
+        // return exchange.orders.createOrder(dolomiteOrder).then(response => ({ response, dolomiteOrder }))
+        return Promise.reject({code: -32603})
       })
       .then(({ response, dolomiteOrder }) => {
         setDolomiteOrderId(response['data']['dolomite_order_id'])
@@ -876,20 +877,20 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       .catch(error => {
         setIsAwaitingSignature(false)
 
-        let submissionError
+        let errorMessage
         if (error?.code !== 4001) {
           if (error?.code === -32603) {
-            submissionError = t('unsupportedDeviceForSubmittingOrders')
+            errorMessage = t('unsupportedDeviceForSubmittingOrders')
           } else {
-            submissionError = t('submissionError')
+            errorMessage = t('submissionError')
             exchange.addresses.getPortfolio(account).then(response => {
               console.error('Portfolio Data: ', JSON.stringify(response))
             })
           }
         }
 
-        if (orderSubmissionError) {
-          setOrderSubmissionError(submissionError)
+        if (errorMessage) {
+          setOrderSubmissionError(errorMessage)
           setTimeout(() => {
             setOrderSubmissionError('')
           }, 7500)
