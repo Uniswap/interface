@@ -16,6 +16,7 @@ import DolomiteOrderBooksContextProvider from './contexts/DolomiteOrderBooks'
 import App from './pages/App'
 import ThemeProvider, { GlobalStyle } from './theme'
 import './i18n'
+import * as ServiceWorker from './utils/register-service-worker'
 import * as Sentry from '@sentry/browser';
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
@@ -40,6 +41,11 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 ReactGA.pageview(window.location.pathname + window.location.search)
+
+ServiceWorker.register(() => {
+  alert('A new updated is available. The page will refresh now.')
+  window.location.reload()
+})
 
 function ContextProviders({ children }) {
   return (

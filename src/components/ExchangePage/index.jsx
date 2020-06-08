@@ -731,6 +731,16 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           return tx.wait()
         })
         .then(() => {
+          console.log('Waiting 10 seconds for ETH wrapping to finish')
+          setIsAwaitingSignature(true)
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              console.log('Finished waiting for ETH wrapping to finish')
+              resolve()
+            }, 7000);
+          });
+        })
+        .then(() => {
           console.log(`Successfully wrapped ${amountToWrap} ETH`)
           dispatchSwapState({
             type: 'SELECT_CURRENCY',

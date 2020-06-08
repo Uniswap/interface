@@ -7,10 +7,6 @@ import ETH_BONDING_CURVE from '../../assets/images/ETH_Bonding_Curve.png'
 import Button from '@material-ui/core/Button'
 
 class SaleInfo extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   render() {
     return (
       <div className={'infoPage'}>
