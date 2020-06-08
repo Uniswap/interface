@@ -620,8 +620,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
   function onSwap() {
     onSwapAsync().catch(error => {
-      if (error?.code !== 4001) {
-        // Ignore cancellation of the signature
+      if (error?.code !== 4001 && error?.code !== -32603) {
+        // Ignore handled errors
         Sentry.captureException(error)
       }
     })
