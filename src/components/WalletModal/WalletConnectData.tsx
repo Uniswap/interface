@@ -10,11 +10,15 @@ const QRCodeWrapper = styled.div`
   margin-bottom: 20px;
 `
 
+const StyledQRCode = styled(QRCode)`
+  border: 3px solid white;
+`
+
 interface WalletConnectDataProps {
   uri?: string
   size: number
 }
 
 export default function WalletConnectData({ uri = '', size }: WalletConnectDataProps) {
-  return <QRCodeWrapper>{uri && <QRCode size={size} value={uri} />}</QRCodeWrapper>
+  return <QRCodeWrapper>{uri && <StyledQRCode size={size} value={uri} />}</QRCodeWrapper>
 }
