@@ -803,7 +803,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         }
         const dolomiteOrder = toDolomiteOrder(loopringOrder, signature, data)
         console.log('dolomiteOrder ', dolomiteOrder)
-        if (wrapTransactionHash) {
+        if (!!wrapTransactionHash) {
           dolomiteOrder['dependent_transaction_hash'] = wrapTransactionHash
           return exchange.orders.createDependentOrder(dolomiteOrder).then(response => ({ response, dolomiteOrder }))
         } else {
