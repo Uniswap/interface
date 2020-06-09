@@ -812,8 +812,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         }
         const dolomiteOrder = toDolomiteOrder(loopringOrder, signature, data)
         console.log('dolomiteOrder ', dolomiteOrder)
-        // return exchange.orders.createOrder(dolomiteOrder).then(response => ({ response, dolomiteOrder }))
-        return Promise.reject({code: -32603})
+        return exchange.orders.createOrder(dolomiteOrder).then(response => ({ response, dolomiteOrder }))
       })
       .then(({ response, dolomiteOrder }) => {
         setDolomiteOrderId(response['data']['dolomite_order_id'])
