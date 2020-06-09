@@ -705,7 +705,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       }
     }
 
-    let wrapPromise = Promise.resolve()
+    let wrapPromise = Promise.resolve(undefined)
     if (showWrap && inputCurrency === 'ETH') {
       let amountToWrap = new BigNumber(loopringOrderData.amountS)
       const usableBalance = inputBalance.sub(ethBalanceBuffer) // 0.05
@@ -728,25 +728,16 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           console.log('Waiting for ETH to finish wrapping')
           setIsAwaitingSignature(false)
           addTransaction(tx, { wrapping: effectiveInputCurrency })
-          return tx.wait()
+          return tx.wait().then(response => response['transactionHash'])
         })
-        .then(() => {
-          console.log('Waiting 10 seconds for ETH wrapping to finish')
-          setIsAwaitingSignature(true)
-          return new Promise((resolve) => {
-            setTimeout(() => {
-              console.log('Finished waiting for ETH wrapping to finish')
-              resolve()
-            }, 7000)
-          })
-        })
-        .then(() => {
+        .then(transactionHash => {
           console.log(`Successfully wrapped ${amountToWrap} ETH`)
           dispatchSwapState({
             type: 'SELECT_CURRENCY',
             payload: { currency: effectiveInputCurrency, field: INPUT }
           })
           setShowWrap(false)
+          return transactionHash
         })
         .catch(error => {
           setShowWrap(false)
@@ -756,7 +747,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         })
     }
 
-    await wrapPromise
+    let wrapTransactionHash = await wrapPromise
 
     const orderSide = loopringOrderData.tokenB === DMG_ADDRESS ? 'BUY' : 'SELL'
 
@@ -812,7 +803,12 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         }
         const dolomiteOrder = toDolomiteOrder(loopringOrder, signature, data)
         console.log('dolomiteOrder ', dolomiteOrder)
-        return exchange.orders.createOrder(dolomiteOrder).then(response => ({ response, dolomiteOrder }))
+        if (wrapTransactionHash) {
+          dolomiteOrder['dependent_transaction_hash'] = wrapTransactionHash
+          return exchange.orders.createDependentOrder(dolomiteOrder).then(response => ({ response, dolomiteOrder }))
+        } else {
+          return exchange.orders.createOrder(dolomiteOrder).then(response => ({ response, dolomiteOrder }))
+        }
       })
       .then(({ response, dolomiteOrder }) => {
         setDolomiteOrderId(response['data']['dolomite_order_id'])
