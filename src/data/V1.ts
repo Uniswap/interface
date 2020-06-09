@@ -1,4 +1,4 @@
-import { ChainId, JSBI, Pair, Percent, Route, Token, TokenAmount, Trade, TradeType, WETH } from '@uniswap/sdk'
+import { JSBI, Pair, Percent, Route, Token, TokenAmount, Trade, TradeType, WETH } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
 import { useAllTokens } from '../hooks/Tokens'
@@ -18,9 +18,8 @@ class MockV1Pair extends Pair {
 }
 
 function useMockV1Pair(token?: Token): MockV1Pair | undefined {
-  const isWETH = token?.equals(WETH[token?.chainId])
+  const isWETH: boolean = token && WETH[token.chainId] ? token.equals(WETH[token.chainId]) : false
 
-  // will only return an address on mainnet, and not for WETH
   const v1PairAddress = useV1PairAddress(isWETH ? undefined : token?.address)
   const tokenBalance = useTokenBalance(v1PairAddress, token)
   const ETHBalance = useETHBalances([v1PairAddress])[v1PairAddress ?? '']
@@ -43,7 +42,7 @@ export function useAllTokenV1Exchanges(): { [exchangeAddress: string]: Token } {
       data?.reduce<{ [exchangeAddress: string]: Token }>((memo, { result }, ix) => {
         const token = allTokens[args[ix][0]]
         if (result?.[0]) {
-          memo[result?.[0]] = token
+          memo[result[0]] = token
         }
         return memo
       }, {}) ?? {},
@@ -74,24 +73,23 @@ export function useUserHasLiquidityInAllTokens(): boolean | undefined {
   )
 }
 
-export function useV1TradeLinkIfBetter(
+/**
+ * Returns the trade to execute on V1 to go between input and output token
+ */
+export function useV1Trade(
   isExactIn?: boolean,
-  input?: Token,
-  output?: Token,
-  exactAmount?: TokenAmount,
-  v2Trade?: Trade,
-  minimumDelta: Percent = new Percent('0')
-): string | undefined {
+  inputToken?: Token,
+  outputToken?: Token,
+  exactAmount?: TokenAmount
+): { v1Trade: Trade | undefined; inputIsWETH: boolean; outputIsWETH: boolean } {
   const { chainId } = useActiveWeb3React()
 
-  const isMainnet: boolean = chainId === ChainId.MAINNET
-
   // get the mock v1 pairs
-  const inputPair = useMockV1Pair(input)
-  const outputPair = useMockV1Pair(output)
+  const inputPair = useMockV1Pair(inputToken)
+  const outputPair = useMockV1Pair(outputToken)
 
-  const inputIsWETH = isMainnet && input?.equals(WETH[ChainId.MAINNET])
-  const outputIsWETH = isMainnet && output?.equals(WETH[ChainId.MAINNET])
+  const inputIsWETH = (inputToken && chainId && WETH[chainId] && inputToken.equals(WETH[chainId])) ?? false
+  const outputIsWETH = (outputToken && chainId && WETH[chainId] && outputToken.equals(WETH[chainId])) ?? false
 
   // construct a direct or through ETH v1 route
   let pairs: Pair[] = []
@@ -105,7 +103,7 @@ export function useV1TradeLinkIfBetter(
     pairs = [inputPair, outputPair]
   }
 
-  const route = input && pairs && pairs.length > 0 && new Route(pairs, input)
+  const route = inputToken && pairs && pairs.length > 0 && new Route(pairs, inputToken)
   let v1Trade: Trade | undefined
   try {
     v1Trade =
@@ -113,6 +111,37 @@ export function useV1TradeLinkIfBetter(
         ? new Trade(route, exactAmount, isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT)
         : undefined
   } catch {}
+  return { v1Trade, inputIsWETH, outputIsWETH }
+}
+
+export function useSwapCallbackV1(
+  isExactIn?: boolean,
+  inputToken?: Token,
+  outputToken?: Token,
+  exactAmount?: TokenAmount
+): null | (() => Promise<string>) {
+  const { outputIsWETH, inputIsWETH, v1Trade } = useV1Trade(isExactIn, inputToken, outputToken, exactAmount)
+  return useMemo(() => {
+    if (!v1Trade) return null
+
+    if (inputIsWETH) {
+    } else if (outputIsWETH) {
+    } else {
+    }
+
+    return null
+  }, [inputIsWETH, outputIsWETH, v1Trade])
+}
+
+export function useV1TradeLinkIfBetter(
+  isExactIn?: boolean,
+  input?: Token,
+  output?: Token,
+  exactAmount?: TokenAmount,
+  v2Trade?: Trade,
+  minimumDelta: Percent = new Percent('0')
+): string | undefined {
+  const { v1Trade, inputIsWETH, outputIsWETH } = useV1Trade(isExactIn, input, output, exactAmount)
 
   let v1HasBetterTrade = false
   if (v1Trade) {

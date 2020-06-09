@@ -33,7 +33,7 @@ export function useSwapActionHandlers(): {
     [dispatch]
   )
 
-  const onSwapTokens = useCallback(() => {
+  const onSwitchTokens = useCallback(() => {
     dispatch(switchTokens())
   }, [dispatch])
 
@@ -45,7 +45,7 @@ export function useSwapActionHandlers(): {
   )
 
   return {
-    onSwitchTokens: onSwapTokens,
+    onSwitchTokens,
     onTokenSelection,
     onUserInput
   }
@@ -90,13 +90,16 @@ export function useDerivedSwapInfo(): {
   const tokenIn = useTokenByAddressAndAutomaticallyAdd(tokenInAddress)
   const tokenOut = useTokenByAddressAndAutomaticallyAdd(tokenOutAddress)
 
-  const relevantTokenBalances = useTokenBalancesTreatWETHAsETH(account ?? undefined, [tokenIn, tokenOut])
+  const relevantTokenBalances = useTokenBalancesTreatWETHAsETH(account ?? undefined, [
+    tokenIn ?? undefined,
+    tokenOut ?? undefined
+  ])
 
   const isExactIn: boolean = independentField === Field.INPUT
-  const amount = tryParseAmount(typedValue, isExactIn ? tokenIn : tokenOut)
+  const amount = tryParseAmount(typedValue, (isExactIn ? tokenIn : tokenOut) ?? undefined)
 
-  const bestTradeExactIn = useTradeExactIn(isExactIn ? amount : undefined, tokenOut)
-  const bestTradeExactOut = useTradeExactOut(tokenIn, !isExactIn ? amount : undefined)
+  const bestTradeExactIn = useTradeExactIn(isExactIn ? amount : undefined, tokenOut ?? undefined)
+  const bestTradeExactOut = useTradeExactOut(tokenIn ?? undefined, !isExactIn ? amount : undefined)
 
   const bestTrade = isExactIn ? bestTradeExactIn : bestTradeExactOut
 
@@ -111,8 +114,8 @@ export function useDerivedSwapInfo(): {
   }
 
   const tokens: { [field in Field]?: Token } = {
-    [Field.INPUT]: tokenIn,
-    [Field.OUTPUT]: tokenOut
+    [Field.INPUT]: tokenIn ?? undefined,
+    [Field.OUTPUT]: tokenOut ?? undefined
   }
 
   // get link to trade on v1, if a better rate exists
