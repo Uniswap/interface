@@ -2,7 +2,6 @@ import { JSBI, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useContext, useEffect, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
-import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -42,8 +41,8 @@ import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeve
 import AppBody from '../AppBody'
 import { PriceSlippageWarningCard } from '../../components/swap/PriceSlippageWarningCard'
 
-export default function Send({ location: { search } }: RouteComponentProps) {
-  useDefaultsFromURLSearch(search)
+export default function Send() {
+  useDefaultsFromURLSearch()
 
   // text translation
   // const { t } = useTranslation()

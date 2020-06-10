@@ -1,15 +1,19 @@
 import { parseUnits } from '@ethersproject/units'
-import { JSBI, Token, TokenAmount, Trade } from '@uniswap/sdk'
+import { ChainId, JSBI, Token, TokenAmount, Trade, WETH } from '@uniswap/sdk'
+import { ParsedQs } from 'qs'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { V1_TRADE_LINK_THRESHOLD } from '../../constants'
+import { useV1TradeLinkIfBetter } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
+import useParsedQueryString from '../../hooks/useParsedQueryString'
+import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
-import { Field, selectToken, setDefaultsFromURLSearch, switchTokens, typeInput } from './actions'
-import { useV1TradeLinkIfBetter } from '../../data/V1'
-import { V1_TRADE_LINK_THRESHOLD } from '../../constants'
+import { Field, replaceSwapState, selectToken, switchTokens, typeInput } from './actions'
+import { SwapState } from './reducer'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -156,13 +160,65 @@ export function useDerivedSwapInfo(): {
   }
 }
 
-// updates the swap state to use the defaults for a given network whenever the query
-// string updates
-export function useDefaultsFromURLSearch(search?: string) {
+function parseCurrencyFromURLParameter(urlParam: any, chainId: number): string {
+  if (typeof urlParam === 'string') {
+    const valid = isAddress(urlParam)
+    if (valid) return valid
+    if (urlParam.toLowerCase() === 'eth') return WETH[chainId as ChainId]?.address ?? ''
+    if (valid === false) return WETH[chainId as ChainId]?.address ?? ''
+  }
+
+  return WETH[chainId as ChainId]?.address
+}
+
+function parseTokenAmountURLParameter(urlParam: any): string {
+  return typeof urlParam === 'string' && !isNaN(parseFloat(urlParam)) ? urlParam : ''
+}
+
+function parseIndependentFieldURLParameter(urlParam: any): Field {
+  return typeof urlParam === 'string' && urlParam.toLowerCase() === 'output' ? Field.OUTPUT : Field.INPUT
+}
+
+export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId): SwapState {
+  let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, chainId)
+  let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, chainId)
+  if (inputCurrency === outputCurrency) {
+    if (typeof parsedQs.outputCurrency === 'string') {
+      inputCurrency = ''
+    } else {
+      outputCurrency = ''
+    }
+  }
+
+  return {
+    [Field.INPUT]: {
+      address: inputCurrency
+    },
+    [Field.OUTPUT]: {
+      address: outputCurrency
+    },
+    typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
+    independentField: parseIndependentFieldURLParameter(parsedQs.exactField)
+  }
+}
+
+// updates the swap state to use the defaults for a given network
+export function useDefaultsFromURLSearch() {
   const { chainId } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
+  const parsedQs = useParsedQueryString()
+
   useEffect(() => {
     if (!chainId) return
-    dispatch(setDefaultsFromURLSearch({ chainId, queryString: search }))
-  }, [dispatch, search, chainId])
+    const parsed = queryParametersToSwapState(parsedQs, chainId)
+    dispatch(
+      replaceSwapState({
+        typedValue: parsed.typedValue,
+        field: parsed.independentField,
+        inputTokenAddress: parsed[Field.INPUT].address,
+        outputTokenAddress: parsed[Field.OUTPUT].address
+      })
+    )
+    // eslint-disable-next-line
+  }, [dispatch, chainId])
 }

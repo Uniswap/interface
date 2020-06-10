@@ -1,7 +1,6 @@
-import { parse } from 'qs'
-import React, { useMemo } from 'react'
-import { useLocation } from 'react-router-dom'
+import React from 'react'
 import styled from 'styled-components'
+import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 
 const VersionLabel = styled.span<{ enabled: boolean }>`
   padding: ${({ enabled }) => (enabled ? '0.15rem 0.5rem 0.16rem 0.45rem' : '0.15rem 0.5rem 0.16rem 0.35rem')};
@@ -30,21 +29,13 @@ const VersionToggle = styled.div`
   }
 `
 
-function useParsedQueryString() {
-  const { search } = useLocation()
-  return useMemo(
-    () => (search && search.length > 1 ? parse(search, { parseArrays: false, ignoreQueryPrefix: true }) : {}),
-    [search]
-  )
-}
-
 export function VersionSwitch() {
-  const parsed = useParsedQueryString()
-  const isV1 = parsed['use'] === 'v1'
+  const version = useToggledVersion()
+
   return (
     <VersionToggle>
-      <VersionLabel enabled={!isV1}>V2</VersionLabel>
-      <VersionLabel enabled={isV1}>V1</VersionLabel>
+      <VersionLabel enabled={version === Version.v2}>V2</VersionLabel>
+      <VersionLabel enabled={version === Version.v1}>V1</VersionLabel>
     </VersionToggle>
   )
 }

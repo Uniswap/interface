@@ -2,7 +2,6 @@ import { JSBI, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useContext, useState, useEffect } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
-import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -38,8 +37,8 @@ import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeve
 import AppBody from '../AppBody'
 import { PriceSlippageWarningCard } from '../../components/swap/PriceSlippageWarningCard'
 
-export default function Swap({ location: { search } }: RouteComponentProps) {
-  useDefaultsFromURLSearch(search)
+export default function Swap() {
+  useDefaultsFromURLSearch()
 
   const { chainId, account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
