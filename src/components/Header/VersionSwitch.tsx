@@ -1,5 +1,8 @@
-import React from 'react'
+import { stringify } from 'qs'
+import React, { useCallback, useMemo } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
+import useParsedQueryString from '../../hooks/useParsedQueryString'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 
 const VersionLabel = styled.span<{ enabled: boolean }>`
@@ -15,7 +18,7 @@ const VersionLabel = styled.span<{ enabled: boolean }>`
     color: ${({ theme, enabled }) => (enabled ? theme.white : theme.primary3)};
   }
 `
-const VersionToggle = styled.div`
+const VersionToggle = styled(Link)`
   border-radius: 16px;
   background: ${({ theme }) => theme.primary5};
   border: 1px solid ${({ theme }) => theme.primary4};
@@ -31,9 +34,17 @@ const VersionToggle = styled.div`
 
 export function VersionSwitch() {
   const version = useToggledVersion()
+  const location = useLocation()
+  const query = useParsedQueryString()
+  const toggleDest = useMemo(() => {
+    return {
+      ...location,
+      search: `?${stringify({ ...query, use: version === Version.v1 ? undefined : Version.v1 })}`
+    }
+  }, [location, query, version])
 
   return (
-    <VersionToggle>
+    <VersionToggle to={toggleDest}>
       <VersionLabel enabled={version === Version.v2}>V2</VersionLabel>
       <VersionLabel enabled={version === Version.v1}>V1</VersionLabel>
     </VersionToggle>
