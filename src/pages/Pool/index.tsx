@@ -1,12 +1,13 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { JSBI, Pair } from '@uniswap/sdk'
+import { JSBI, Pair, Token } from '@uniswap/sdk'
 import { RouteComponentProps } from 'react-router-dom'
 
 import Question from '../../components/QuestionHelper'
 import SearchModal from '../../components/SearchModal'
 import PositionCard from '../../components/PositionCard'
-import { useUserHasLiquidityInAllTokens } from '../../data/V1'
+import V1PositionCard from '../../components/PositionCard/V1'
+import { useAllTokenV1Exchanges } from '../../data/V1'
 import { useTokenBalances } from '../../state/wallet/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
 import { Text } from 'rebass'
@@ -19,6 +20,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { usePair } from '../../data/Reserves'
 import { useAllDummyPairs } from '../../state/user/hooks'
 import AppBody from '../AppBody'
+import { Dots } from '../../components/swap/styleds'
 
 const Positions = styled.div`
   position: relative;
@@ -38,28 +40,52 @@ function PositionCardWrapper({ dummyPair }: { dummyPair: Pair }) {
 
 export default function Pool({ history }: RouteComponentProps) {
   const theme = useContext(ThemeContext)
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const [showPoolSearch, setShowPoolSearch] = useState(false)
 
-  // initiate listener for LP balances
-  const pairs = useAllDummyPairs()
-  const pairBalances = useTokenBalances(
+  // get V2 LP balances
+  const V2Pairs = useAllDummyPairs()
+  const V2PairsBalances = useTokenBalances(
     account,
-    pairs?.map(p => p.liquidityToken)
+    V2Pairs?.map(p => p.liquidityToken)
   )
+  const V2IsLoading = (Object.keys(V2PairsBalances)?.length ?? 0) < (V2Pairs?.length ?? 0)
+  const allV2PairsWithLiquidity = V2Pairs.filter(pair => {
+    return (
+      V2PairsBalances?.[pair.liquidityToken.address] &&
+      JSBI.greaterThan(V2PairsBalances[pair.liquidityToken.address].raw, JSBI.BigInt(0))
+    )
+  }).map((pair, i) => {
+    return <PositionCardWrapper key={i} dummyPair={pair} />
+  })
 
-  const filteredExchangeList = pairs
-    .filter(pair => {
-      return (
-        pairBalances?.[pair.liquidityToken.address] &&
-        JSBI.greaterThan(pairBalances[pair.liquidityToken.address].raw, JSBI.BigInt(0))
-      )
-    })
-    .map((pair, i) => {
-      return <PositionCardWrapper key={i} dummyPair={pair} />
-    })
+  // get V1 LP balances
+  const V1Exchanges = useAllTokenV1Exchanges()
+  const V1LiquidityTokens: Token[] = useMemo(() => {
+    return Object.keys(V1Exchanges).map(
+      exchangeAddress => new Token(chainId, exchangeAddress, 18, 'UNI-V1', 'Uniswap V1')
+    )
+  }, [chainId, V1Exchanges])
+  const V1LiquidityBalances = useTokenBalances(account, V1LiquidityTokens)
+  const V1IsLoading = (Object.keys(V1LiquidityBalances)?.length ?? 0) < (V1LiquidityTokens?.length ?? 0)
+  const allV1PairsWithLiquidity = V1LiquidityTokens.filter(V1LiquidityToken => {
+    return (
+      V1LiquidityBalances?.[V1LiquidityToken.address] &&
+      JSBI.greaterThan(V1LiquidityBalances[V1LiquidityToken.address].raw, JSBI.BigInt(0))
+    )
+  }).map(V1LiquidityToken => {
+    return (
+      <V1PositionCard
+        key={V1LiquidityToken.address}
+        token={V1Exchanges[V1LiquidityToken.address]}
+        V1LiquidityBalance={V1LiquidityBalances[V1LiquidityToken.address]}
+      >
+        {V1LiquidityToken.address}
+      </V1PositionCard>
+    )
+  })
 
-  const hasV1Liquidity = useUserHasLiquidityInAllTokens()
+  const isLoading = V1IsLoading || V2IsLoading
 
   return (
     <AppBody>
@@ -72,9 +98,10 @@ export default function Pool({ history }: RouteComponentProps) {
           }}
         >
           <Text fontWeight={500} fontSize={20}>
-            Join {filteredExchangeList?.length > 0 ? 'another' : 'a'} pool
+            Join {allV2PairsWithLiquidity?.length > 0 ? 'another' : 'a'} pool
           </Text>
         </ButtonPrimary>
+
         <Positions>
           <AutoColumn gap="12px">
             <RowBetween padding={'0 8px'}>
@@ -83,30 +110,37 @@ export default function Pool({ history }: RouteComponentProps) {
               </Text>
               <Question text="When you add liquidity, you are given pool tokens that represent your share. If you don’t see a pool you joined in this list, try importing a pool below." />
             </RowBetween>
-            {filteredExchangeList?.length === 0 && (
-              <LightCard
-                padding="40px
-          "
-              >
+
+            {!account ? (
+              <LightCard padding="40px">
+                <TYPE.body color={theme.text3} textAlign="center">
+                  Connect to a wallet to view your liquidity.
+                </TYPE.body>
+              </LightCard>
+            ) : isLoading ? (
+              <LightCard padding="40px">
+                <TYPE.body color={theme.text3} textAlign="center">
+                  <Dots>Loading</Dots>
+                </TYPE.body>
+              </LightCard>
+            ) : allV2PairsWithLiquidity?.length > 0 || allV1PairsWithLiquidity?.length > 0 ? (
+              <>
+                {allV2PairsWithLiquidity}
+                {allV1PairsWithLiquidity}
+              </>
+            ) : (
+              <LightCard padding="40px">
                 <TYPE.body color={theme.text3} textAlign="center">
                   No liquidity found.
                 </TYPE.body>
               </LightCard>
             )}
-            {filteredExchangeList}
+
             <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
-              {!hasV1Liquidity ? (
-                <>
-                  {filteredExchangeList?.length !== 0 ? `Don't see a pool you joined? ` : 'Already joined a pool? '}{' '}
-                  <StyledInternalLink id="import-pool-link" to="/find">
-                    Import it.
-                  </StyledInternalLink>
-                </>
-              ) : (
-                <StyledInternalLink id="migrate-v1-liquidity-link" to="/migrate/v1">
-                  Migrate your V1 liquidity.
-                </StyledInternalLink>
-              )}
+              {allV2PairsWithLiquidity?.length !== 0 ? `Don't see a pool you joined? ` : 'Already joined a pool? '}{' '}
+              <StyledInternalLink id="import-pool-link" to="/find">
+                Import it.
+              </StyledInternalLink>
             </Text>
           </AutoColumn>
           <FixedBottom>

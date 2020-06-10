@@ -30,8 +30,8 @@ export function useV1FactoryContract(): Contract | null {
   return useContract(V1_FACTORY_ADDRESSES[chainId as ChainId], V1_FACTORY_ABI, false)
 }
 
-export function useV1ExchangeContract(address: string): Contract | null {
-  return useContract(address, V1_EXCHANGE_ABI, false)
+export function useV1ExchangeContract(address: string, withSignerIfPossible = false): Contract | null {
+  return useContract(address, V1_EXCHANGE_ABI, withSignerIfPossible)
 }
 
 export function useV2MigratorContract(): Contract | null {

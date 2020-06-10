@@ -10,7 +10,7 @@
 # forward migrate
 [[redirects]]
   from = "https://migrate.uniswap.exchange/*"
-  to = "https://uniswap.exchange/migrate/v1"
+  to = "https://uniswap.exchange/pool"
   status = 301
   force = true
 

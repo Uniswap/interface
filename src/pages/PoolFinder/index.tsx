@@ -135,7 +135,7 @@ export default function PoolFinder({ history }: RouteComponentProps) {
         ) : (
           <LightCard padding={'45px'}>
             <Text color="#C3C5CB" textAlign="center">
-              Select a token pair to find your liquidity.
+              {!account ? 'Connect to a wallet to find your liquidity' : 'Select a token pair to find your liquidity.'}
             </Text>
           </LightCard>
         )}
