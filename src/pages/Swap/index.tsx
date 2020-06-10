@@ -24,6 +24,7 @@ import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '..
 import { useActiveWeb3React } from '../../hooks'
 import { useApproveCallbackFromTrade, ApprovalState } from '../../hooks/useApproveCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
+import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import {
@@ -48,7 +49,19 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue } = useSwapState()
-  const { bestTrade, tokenBalances, parsedAmounts, tokens, error, isV1TradeBetter } = useDerivedSwapInfo()
+  const {
+    bestTrade: bestTradeV2,
+    tokenBalances,
+    parsedAmounts,
+    tokens,
+    error,
+    isV1TradeBetter,
+    v1Trade
+  } = useDerivedSwapInfo()
+  const bestTrade = {
+    [Version.v1]: v1Trade,
+    [Version.v2]: bestTradeV2
+  }[useToggledVersion()]
   const { onSwitchTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
   const isValid = !error
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT

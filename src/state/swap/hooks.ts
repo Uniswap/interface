@@ -80,6 +80,7 @@ export function useDerivedSwapInfo(): {
   parsedAmounts: { [field in Field]?: TokenAmount }
   bestTrade: Trade | null
   error?: string
+  v1Trade: Trade | undefined
   isV1TradeBetter: boolean
 } {
   const { account } = useActiveWeb3React()
@@ -123,7 +124,7 @@ export function useDerivedSwapInfo(): {
   }
 
   // get link to trade on v1, if a better rate exists
-  const isV1TradeBetter: boolean = useIsV1TradeBetter(
+  const [isV1TradeBetter, v1Trade] = useIsV1TradeBetter(
     isExactIn,
     tokens[Field.INPUT],
     tokens[Field.OUTPUT],
@@ -156,7 +157,8 @@ export function useDerivedSwapInfo(): {
     parsedAmounts,
     bestTrade,
     error,
-    isV1TradeBetter
+    isV1TradeBetter,
+    v1Trade
   }
 }
 

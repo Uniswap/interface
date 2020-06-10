@@ -1,5 +1,5 @@
 import { stringify } from 'qs'
-import React, { useCallback, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import useParsedQueryString from '../../hooks/useParsedQueryString'

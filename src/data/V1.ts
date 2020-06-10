@@ -140,7 +140,7 @@ export function useIsV1TradeBetter(
   exactAmount?: TokenAmount,
   v2Trade?: Trade,
   minimumDelta: Percent = new Percent('0')
-): boolean {
+): [boolean, Trade | undefined] {
   const { v1Trade } = useV1Trade(isExactIn, input, output, exactAmount)
   let v1HasBetterTrade = false
   if (v1Trade) {
@@ -156,5 +156,5 @@ export function useIsV1TradeBetter(
       v1HasBetterTrade = !v2Trade || inflatedV1Input.lessThan(v2Trade.inputAmount)
     }
   }
-  return v1HasBetterTrade
+  return [v1HasBetterTrade, v1Trade]
 }
