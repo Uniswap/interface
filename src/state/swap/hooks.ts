@@ -4,7 +4,7 @@ import { ParsedQs } from 'qs'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { V1_TRADE_LINK_THRESHOLD } from '../../constants'
-import { useV1TradeLinkIfBetter } from '../../data/V1'
+import { useIsV1TradeBetter } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
@@ -80,7 +80,7 @@ export function useDerivedSwapInfo(): {
   parsedAmounts: { [field in Field]?: TokenAmount }
   bestTrade: Trade | null
   error?: string
-  v1TradeLinkIfBetter?: string
+  isV1TradeBetter: boolean
 } {
   const { account } = useActiveWeb3React()
 
@@ -123,7 +123,7 @@ export function useDerivedSwapInfo(): {
   }
 
   // get link to trade on v1, if a better rate exists
-  const v1TradeLinkIfBetter = useV1TradeLinkIfBetter(
+  const isV1TradeBetter: boolean = useIsV1TradeBetter(
     isExactIn,
     tokens[Field.INPUT],
     tokens[Field.OUTPUT],
@@ -156,7 +156,7 @@ export function useDerivedSwapInfo(): {
     parsedAmounts,
     bestTrade,
     error,
-    v1TradeLinkIfBetter
+    isV1TradeBetter
   }
 }
 

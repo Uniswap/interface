@@ -48,7 +48,7 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue } = useSwapState()
-  const { bestTrade, tokenBalances, parsedAmounts, tokens, error, v1TradeLinkIfBetter } = useDerivedSwapInfo()
+  const { bestTrade, tokenBalances, parsedAmounts, tokens, error, isV1TradeBetter } = useDerivedSwapInfo()
   const { onSwitchTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
   const isValid = !error
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
@@ -333,7 +333,7 @@ export default function Swap() {
                 </Text>
               </ButtonError>
             )}
-            <V1TradeLink v1TradeLinkIfBetter={v1TradeLinkIfBetter} />
+            <V1TradeLink isV1TradeBetter={isV1TradeBetter} />
           </BottomGrouping>
         </Wrapper>
       </AppBody>

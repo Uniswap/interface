@@ -60,14 +60,7 @@ export default function Send() {
 
   // trade details, check query params for initial state
   const { independentField, typedValue } = useSwapState()
-  const {
-    parsedAmounts,
-    bestTrade,
-    tokenBalances,
-    tokens,
-    error: swapError,
-    v1TradeLinkIfBetter
-  } = useDerivedSwapInfo()
+  const { parsedAmounts, bestTrade, tokenBalances, tokens, error: swapError, isV1TradeBetter } = useDerivedSwapInfo()
   const isSwapValid = !swapError && !recipientError && bestTrade
 
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
@@ -537,7 +530,7 @@ export default function Send() {
                 </Text>
               </ButtonError>
             )}
-            <V1TradeLink v1TradeLinkIfBetter={v1TradeLinkIfBetter} />
+            <V1TradeLink isV1TradeBetter={isV1TradeBetter} />
           </BottomGrouping>
         </Wrapper>
       </AppBody>

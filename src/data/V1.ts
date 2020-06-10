@@ -133,16 +133,15 @@ export function useSwapCallbackV1(
   }, [inputIsWETH, outputIsWETH, v1Trade])
 }
 
-export function useV1TradeLinkIfBetter(
+export function useIsV1TradeBetter(
   isExactIn?: boolean,
   input?: Token,
   output?: Token,
   exactAmount?: TokenAmount,
   v2Trade?: Trade,
   minimumDelta: Percent = new Percent('0')
-): string | undefined {
-  const { v1Trade, inputIsWETH, outputIsWETH } = useV1Trade(isExactIn, input, output, exactAmount)
-
+): boolean {
+  const { v1Trade } = useV1Trade(isExactIn, input, output, exactAmount)
   let v1HasBetterTrade = false
   if (v1Trade) {
     if (isExactIn) {
@@ -157,10 +156,5 @@ export function useV1TradeLinkIfBetter(
       v1HasBetterTrade = !v2Trade || inflatedV1Input.lessThan(v2Trade.inputAmount)
     }
   }
-
-  return v1HasBetterTrade && input && output
-    ? `https://v1.uniswap.exchange/swap?inputCurrency=${inputIsWETH ? 'ETH' : input.address}&outputCurrency=${
-        outputIsWETH ? 'ETH' : output.address
-      }`
-    : undefined
+  return v1HasBetterTrade
 }
