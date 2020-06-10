@@ -10,12 +10,10 @@ import { AutoColumn } from '../Column'
 import { SectionBreak } from './styleds'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
-import SlippageTabs, { SlippageTabsProps } from '../SlippageTabs'
-import Toggle from '../Toggle'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import TokenLogo from '../TokenLogo'
-import { useExpertModeManager } from '../../state/user/hooks'
 import flatMap from 'lodash.flatmap'
+import { useUserSlippageTolerance } from '../../state/user/hooks'
 
 function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
   const theme = useContext(ThemeContext)
@@ -63,20 +61,19 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
           </TYPE.black>
         </RowBetween>
       </AutoColumn>
-
-      <SectionBreak />
     </>
   )
 }
 
-export interface AdvancedSwapDetailsProps extends SlippageTabsProps {
+export interface AdvancedSwapDetailsProps {
   trade?: Trade
   onDismiss: () => void
 }
 
-export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: AdvancedSwapDetailsProps) {
+export function AdvancedSwapDetails({ trade, onDismiss }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
-  const [expertMode, toggleExpertMode] = useExpertModeManager()
+
+  const [allowedSlippage] = useUserSlippageTolerance()
 
   return (
     <AutoColumn gap="md">
@@ -88,13 +85,9 @@ export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: A
           <ChevronUp color={theme.text2} />
         </RowBetween>
       </CursorPointer>
-
       <SectionBreak />
-
-      {trade && <TradeSummary trade={trade} allowedSlippage={slippageTabProps.rawSlippage} />}
-
-      <SlippageTabs {...slippageTabProps} />
-
+      {trade && <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />}
+      {trade?.route?.path?.length > 2 && <SectionBreak />}
       {trade?.route?.path?.length > 2 && (
         <AutoColumn style={{ padding: '0 20px' }}>
           <RowFixed>
@@ -138,17 +131,6 @@ export function AdvancedSwapDetails({ trade, onDismiss, ...slippageTabProps }: A
           </Flex>
         </AutoColumn>
       )}
-      <SectionBreak />
-
-      <RowBetween padding={'0 20px 4px 20px'}>
-        <RowFixed>
-          <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-            Toggle Expert Mode
-          </TYPE.black>
-          <QuestionHelper text="Bypasses swap confirm modals. Use at your own risk." />
-        </RowFixed>
-        <Toggle isActive={expertMode} toggle={toggleExpertMode} />
-      </RowBetween>
     </AutoColumn>
   )
 }

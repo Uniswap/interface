@@ -44,8 +44,8 @@ function getSwapType(tokens: { [field in Field]?: Token }, isExactIn: boolean, c
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
   trade?: Trade, // trade to execute, required
-  allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips, optional
-  deadline: number = DEFAULT_DEADLINE_FROM_NOW, // in seconds from now, optional
+  allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
+  deadline: number = DEFAULT_DEADLINE_FROM_NOW, // in seconds from now
   to?: string // recipient of output, optional
 ): null | (() => Promise<string>) {
   const { account, chainId, library } = useActiveWeb3React()

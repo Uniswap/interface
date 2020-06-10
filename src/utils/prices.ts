@@ -1,3 +1,4 @@
+import { INITIAL_ALLOWED_SLIPPAGE, BLOCKED_PRICE_IMPACT_NON_EXPERT } from './../constants/index'
 import { Fraction, JSBI, Percent, TokenAmount, Trade } from '@uniswap/sdk'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
@@ -42,7 +43,7 @@ export function computeTradePriceBreakdown(
 // computes the minimum amount out and maximum amount in for a trade given a user specified allowed slippage in bips
 export function computeSlippageAdjustedAmounts(
   trade: Trade,
-  allowedSlippage: number
+  allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE
 ): { [field in Field]?: TokenAmount } {
   const pct = basisPointsToPercent(allowedSlippage)
   return {
@@ -51,7 +52,8 @@ export function computeSlippageAdjustedAmounts(
   }
 }
 
-export function warningSeverity(priceImpact: Percent): 0 | 1 | 2 | 3 {
+export function warningSeverity(priceImpact: Percent): 0 | 1 | 2 | 3 | 4 {
+  if (!priceImpact?.lessThan(BLOCKED_PRICE_IMPACT_NON_EXPERT)) return 4
   if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_HIGH)) return 3
   if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return 2
   if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_LOW)) return 1

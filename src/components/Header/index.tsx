@@ -22,6 +22,7 @@ import LogoDark from '../../assets/svg/logo_white.svg'
 import WordmarkDark from '../../assets/svg/wordmark_white.svg'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
+import Settings from '../Settings'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -31,15 +32,13 @@ const HeaderFrame = styled.div`
   width: 100%;
   top: 0;
   position: absolute;
-
   pointer-events: none;
-
+  z-index: 2;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     padding: 12px 0 0 0;
     width: calc(100%);
     position: relative;
   `};
-  z-index: 2;
 `
 
 const HeaderElement = styled.div`
@@ -150,6 +149,12 @@ const VersionToggle = styled.a`
   }
 `
 
+const BalanceWrapper = styled.div`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
+`
+
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
 
@@ -204,13 +209,18 @@ export default function Header() {
             {!isMobile && chainId === ChainId.KOVAN && <NetworkCard>Kovan</NetworkCard>}
           </TestnetWrapper>
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            {account && userEthBalance ? (
-              <Text style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userEthBalance?.toSignificant(4)} ETH
-              </Text>
-            ) : null}
+            <BalanceWrapper>
+              {account && userEthBalance ? (
+                <Text style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+                  {userEthBalance?.toSignificant(4)} ETH
+                </Text>
+              ) : null}
+            </BalanceWrapper>
             <Web3Status />
           </AccountElement>
+          <div style={{ pointerEvents: 'auto' }}>
+            <Settings />
+          </div>
           <div style={{ pointerEvents: 'auto' }}>
             <Menu />
           </div>

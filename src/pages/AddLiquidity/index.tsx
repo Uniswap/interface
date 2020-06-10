@@ -17,7 +17,7 @@ import Row, { AutoRow, RowBetween, RowFixed, RowFlat } from '../../components/Ro
 
 import TokenLogo from '../../components/TokenLogo'
 
-import { ROUTER_ADDRESS, MIN_ETH, ONE_BIPS, DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
+import { ROUTER_ADDRESS, MIN_ETH, ONE_BIPS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -34,7 +34,7 @@ import {
 import { Field } from '../../state/mint/actions'
 import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
+import { useUserSlippageTolerance, useUserDeadline, useIsExpertMode } from '../../state/user/hooks'
 
 export default function AddLiquidity({ match: { params }, history }: RouteComponentProps<{ tokens: string }>) {
   useDefaultsFromURLMatchParams(params)
@@ -44,6 +44,8 @@ export default function AddLiquidity({ match: { params }, history }: RouteCompon
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
+
+  const expertMode = useIsExpertMode()
 
   // mint state
   const { independentField, typedValue, otherTypedValue } = useMintState()
@@ -65,14 +67,13 @@ export default function AddLiquidity({ match: { params }, history }: RouteCompon
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
-  const [showAdvanced, setShowAdvanced] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
   const [pendingConfirmation, setPendingConfirmation] = useState<boolean>(true) // waiting for user confirmation
 
   // txn values
   const [txHash, setTxHash] = useState<string>('')
-  const [deadline, setDeadline] = useState<number>(DEFAULT_DEADLINE_FROM_NOW)
-  const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
+  const [deadline] = useUserDeadline() // custom from users settings
+  const [allowedSlippage] = useUserSlippageTolerance() // custom from users
 
   // get formatted amounts
   const formattedAmounts = {
@@ -188,7 +189,6 @@ export default function AddLiquidity({ match: { params }, history }: RouteCompon
         setPendingConfirmation(true)
         setAttemptingTxn(false)
         setShowConfirm(false)
-        setShowAdvanced(false)
       })
   }
 
@@ -411,7 +411,7 @@ export default function AddLiquidity({ match: { params }, history }: RouteCompon
             ) : (
               <ButtonError
                 onClick={() => {
-                  setShowConfirm(true)
+                  expertMode ? onAdd() : setShowConfirm(true)
                 }}
                 disabled={!isValid}
                 error={!isValid && !!parsedAmounts[Field.TOKEN_A] && !!parsedAmounts[Field.TOKEN_B]}
@@ -424,17 +424,6 @@ export default function AddLiquidity({ match: { params }, history }: RouteCompon
           </AutoColumn>
         </Wrapper>
       </AppBody>
-
-      {isValid && !!parsedAmounts[Field.TOKEN_A] && !!parsedAmounts[Field.TOKEN_B] ? (
-        <AdvancedSwapDetailsDropdown
-          rawSlippage={allowedSlippage}
-          deadline={deadline}
-          showAdvanced={showAdvanced}
-          setShowAdvanced={setShowAdvanced}
-          setDeadline={setDeadline}
-          setRawSlippage={setAllowedSlippage}
-        />
-      ) : null}
 
       {pair && !noLiquidity ? (
         <AutoColumn style={{ minWidth: '20rem', marginTop: '1rem' }}>

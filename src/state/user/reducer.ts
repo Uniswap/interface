@@ -1,3 +1,4 @@
+import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from './../../constants/index'
 import { createReducer } from '@reduxjs/toolkit'
 import { ChainId, WETH } from '@uniswap/sdk'
 import {
@@ -11,7 +12,9 @@ import {
   updateMatchesDarkMode,
   updateUserDarkMode,
   updateVersion,
-  updateUserExpertMode
+  updateUserExpertMode,
+  updateUserSlippageTolerance,
+  updateUserDeadline
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
@@ -23,6 +26,12 @@ interface UserState {
   matchesDarkMode: boolean // whether the dark mode media query matches
 
   userExpertMode: boolean
+
+  // user defined slippage tolerance in bips, used in all txns
+  userSlippageTolerance: number
+
+  // deadline set by user in minutes, used in all txns
+  userDeadline: number
 
   tokens: {
     [chainId: number]: {
@@ -53,15 +62,13 @@ function pairKey(token0Address: string, token1Address: string) {
 
 const initialState: UserState = {
   lastVersion: '',
-
   userDarkMode: null,
   matchesDarkMode: false,
-
   userExpertMode: false,
-
+  userSlippageTolerance: INITIAL_ALLOWED_SLIPPAGE,
+  userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
   pairs: {},
-
   timestamp: currentTimestamp()
 }
 
@@ -93,6 +100,14 @@ export default createReducer(initialState, builder =>
     })
     .addCase(updateUserExpertMode, (state, action) => {
       state.userExpertMode = action.payload.userExpertMode
+      state.timestamp = currentTimestamp()
+    })
+    .addCase(updateUserSlippageTolerance, (state, action) => {
+      state.userSlippageTolerance = action.payload.userSlippageTolerance
+      state.timestamp = currentTimestamp()
+    })
+    .addCase(updateUserDeadline, (state, action) => {
+      state.userDeadline = action.payload.userDeadline
       state.timestamp = currentTimestamp()
     })
     .addCase(addSerializedToken, (state, { payload: { serializedToken } }) => {
