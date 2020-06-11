@@ -173,7 +173,7 @@ export default function SettingsTab() {
           <MenuFlyout>
             <RowBetween padding="1rem">
               <StyledArrow onClick={() => setShowConfirmation(false)} />
-              <TYPE.black>Settings</TYPE.black>
+              <TYPE.black>{showConfirmation ? 'Are you sure?' : 'Settings'}</TYPE.black>
               <StyledCloseIcon onClick={toggle} />
             </RowBetween>
             <Break />
