@@ -2,7 +2,7 @@ import { ChainId, JSBI, Percent, Token, WETH, Pair, TokenAmount } from '@uniswap
 
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
-export const ROUTER_ADDRESS = '0xf164fC0Ec4E93095b804a4795bBe1e041497b92a'
+export const ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: { readonly [chainId in ChainId]: Token[] } = {

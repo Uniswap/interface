@@ -34,8 +34,9 @@ import { useDerivedBurnInfo, useBurnState } from '../../state/burn/hooks'
 import { Field } from '../../state/burn/actions'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
+import { BigNumber } from '@ethersproject/bignumber'
 
-export default function RemoveLiquidity({ match: { params }, history }: RouteComponentProps<{ tokens: string }>) {
+export default function RemoveLiquidity({ match: { params } }: RouteComponentProps<{ tokens: string }>) {
   useDefaultsFromURLMatchParams(params)
 
   const { account, chainId, library } = useActiveWeb3React()
@@ -54,7 +55,6 @@ export default function RemoveLiquidity({ match: { params }, history }: RouteCom
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [showDetailed, setShowDetailed] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState(false) // clicked confirm
-  const [pendingConfirmation, setPendingConfirmation] = useState(true) // waiting for
 
   // txn values
   const [txHash, setTxHash] = useState<string>('')
@@ -143,17 +143,9 @@ export default function RemoveLiquidity({ match: { params }, history }: RouteCom
       })
   }
 
-  function resetModalState() {
-    setSignatureData(null)
-    setAttemptingTxn(false)
-    setPendingConfirmation(true)
-  }
-
   // tx sending
   const addTransaction = useTransactionAdder()
   async function onRemove() {
-    setAttemptingTxn(true)
-
     const router = getRouterContract(chainId, library, account)
 
     const amountsMin = {
@@ -166,13 +158,12 @@ export default function RemoveLiquidity({ match: { params }, history }: RouteCom
 
     const deadlineFromNow = Math.ceil(Date.now() / 1000) + deadline
 
-    let estimate, method: Function, args: Array<string | string[] | number | boolean>
+    let methodNames: string[], args: Array<string | string[] | number | boolean>
     // we have approval, use normal remove liquidity
     if (approval === ApprovalState.APPROVED) {
       // removeLiquidityETH
       if (oneTokenIsETH) {
-        estimate = router.estimateGas.removeLiquidityETH
-        method = router.removeLiquidityETH
+        methodNames = ['removeLiquidityETH', 'removeLiquidityETHSupportingFeeOnTransferTokens']
         args = [
           tokens[tokenBIsETH ? Field.TOKEN_A : Field.TOKEN_B].address,
           parsedAmounts[Field.LIQUIDITY].raw.toString(),
@@ -184,8 +175,7 @@ export default function RemoveLiquidity({ match: { params }, history }: RouteCom
       }
       // removeLiquidity
       else {
-        estimate = router.estimateGas.removeLiquidity
-        method = router.removeLiquidity
+        methodNames = ['removeLiquidity']
         args = [
           tokens[Field.TOKEN_A].address,
           tokens[Field.TOKEN_B].address,
@@ -201,8 +191,7 @@ export default function RemoveLiquidity({ match: { params }, history }: RouteCom
     else if (signatureData !== null) {
       // removeLiquidityETHWithPermit
       if (oneTokenIsETH) {
-        estimate = router.estimateGas.removeLiquidityETHWithPermit
-        method = router.removeLiquidityETHWithPermit
+        methodNames = ['removeLiquidityETHWithPermit', 'removeLiquidityETHWithPermitSupportingFeeOnTransferTokens']
         args = [
           tokens[tokenBIsETH ? Field.TOKEN_A : Field.TOKEN_B].address,
           parsedAmounts[Field.LIQUIDITY].raw.toString(),
@@ -218,8 +207,7 @@ export default function RemoveLiquidity({ match: { params }, history }: RouteCom
       }
       // removeLiquidityETHWithPermit
       else {
-        estimate = router.estimateGas.removeLiquidityWithPermit
-        method = router.removeLiquidityWithPermit
+        methodNames = ['removeLiquidityWithPermit']
         args = [
           tokens[Field.TOKEN_A].address,
           tokens[Field.TOKEN_B].address,
@@ -235,14 +223,37 @@ export default function RemoveLiquidity({ match: { params }, history }: RouteCom
         ]
       }
     } else {
-      console.error('Attempting to confirm without approval or a signature.')
+      console.error('Attempting to confirm without approval or a signature. Please contact support.')
     }
 
-    await estimate(...args)
-      .then(estimatedGasLimit =>
-        method(...args, {
-          gasLimit: calculateGasMargin(estimatedGasLimit)
-        }).then(response => {
+    const safeGasEstimates = await Promise.all(
+      methodNames.map(methodName =>
+        router.estimateGas[methodName](...args)
+          .then(calculateGasMargin)
+          .catch(error => {
+            console.error(`estimateGas failed for ${methodName}`, error)
+          })
+      )
+    )
+
+    const indexOfSuccessfulEstimation = safeGasEstimates.findIndex(safeGasEstimate =>
+      BigNumber.isBigNumber(safeGasEstimate)
+    )
+
+    // all estimations failed...
+    if (indexOfSuccessfulEstimation === -1) {
+      console.error('This transaction would fail. Please contact support.')
+    } else {
+      const methodName = methodNames[indexOfSuccessfulEstimation]
+      const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
+
+      setAttemptingTxn(true)
+      await router[methodName](...args, {
+        gasLimit: safeGasEstimate
+      })
+        .then(response => {
+          setAttemptingTxn(false)
+
           addTransaction(response, {
             summary:
               'Remove ' +
@@ -256,7 +267,6 @@ export default function RemoveLiquidity({ match: { params }, history }: RouteCom
           })
 
           setTxHash(response.hash)
-          setPendingConfirmation(false)
 
           ReactGA.event({
             category: 'Liquidity',
@@ -264,12 +274,14 @@ export default function RemoveLiquidity({ match: { params }, history }: RouteCom
             label: [tokens[Field.TOKEN_A]?.symbol, tokens[Field.TOKEN_B]?.symbol].join('/')
           })
         })
-      )
-      .catch(e => {
-        console.error(e)
-        resetModalState()
-        setShowConfirm(false)
-      })
+        .catch(error => {
+          setAttemptingTxn(false)
+          // we only care if the error is something _other_ than the user rejected the tx
+          if (error?.code !== 4001) {
+            console.error(error)
+          }
+        })
+    }
   }
 
   function modalHeader() {
@@ -396,15 +408,15 @@ export default function RemoveLiquidity({ match: { params }, history }: RouteCom
           <ConfirmationModal
             isOpen={showConfirm}
             onDismiss={() => {
-              if (attemptingTxn) {
-                history.push('/pool')
-                return
-              }
-              resetModalState()
               setShowConfirm(false)
+              setSignatureData(null) // important that we clear signature data to avoid bad sigs
+              // if there was a tx hash, we want to clear the input
+              if (txHash) {
+                onUserInput(Field.LIQUIDITY_PERCENT, '0')
+              }
+              setTxHash('')
             }}
             attemptingTxn={attemptingTxn}
-            pendingConfirmation={pendingConfirmation}
             hash={txHash ? txHash : ''}
             topContent={modalHeader}
             bottomContent={modalBottom}

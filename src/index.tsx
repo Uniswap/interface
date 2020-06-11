@@ -18,7 +18,9 @@ import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
 function getLibrary(provider: any): Web3Provider {
-  return new Web3Provider(provider)
+  const library = new Web3Provider(provider)
+  library.pollingInterval = 15000
+  return library
 }
 
 const GOOGLE_ANALYTICS_ID: string | undefined = process.env.REACT_APP_GOOGLE_ANALYTICS_ID

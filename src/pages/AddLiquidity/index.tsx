@@ -36,7 +36,7 @@ import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallbac
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useUserSlippageTolerance, useUserDeadline, useIsExpertMode } from '../../state/user/hooks'
 
-export default function AddLiquidity({ match: { params }, history }: RouteComponentProps<{ tokens: string }>) {
+export default function AddLiquidity({ match: { params } }: RouteComponentProps<{ tokens: string }>) {
   useDefaultsFromURLMatchParams(params)
 
   const { account, chainId, library } = useActiveWeb3React()
@@ -68,12 +68,11 @@ export default function AddLiquidity({ match: { params }, history }: RouteCompon
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
-  const [pendingConfirmation, setPendingConfirmation] = useState<boolean>(true) // waiting for user confirmation
 
   // txn values
-  const [txHash, setTxHash] = useState<string>('')
   const [deadline] = useUserDeadline() // custom from users settings
   const [allowedSlippage] = useUserSlippageTolerance() // custom from users
+  const [txHash, setTxHash] = useState<string>('')
 
   // get formatted amounts
   const formattedAmounts = {
@@ -115,8 +114,6 @@ export default function AddLiquidity({ match: { params }, history }: RouteCompon
 
   const addTransaction = useTransactionAdder()
   async function onAdd() {
-    setAttemptingTxn(true)
-
     const router = getRouterContract(chainId, library, account)
 
     const amountsMin = {
@@ -156,12 +153,15 @@ export default function AddLiquidity({ match: { params }, history }: RouteCompon
       value = null
     }
 
+    setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
         method(...args, {
           ...(value ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
+          setAttemptingTxn(false)
+
           addTransaction(response, {
             summary:
               'Add ' +
@@ -175,7 +175,6 @@ export default function AddLiquidity({ match: { params }, history }: RouteCompon
           })
 
           setTxHash(response.hash)
-          setPendingConfirmation(false)
 
           ReactGA.event({
             category: 'Liquidity',
@@ -184,11 +183,12 @@ export default function AddLiquidity({ match: { params }, history }: RouteCompon
           })
         })
       )
-      .catch((e: Error) => {
-        console.error(e)
-        setPendingConfirmation(true)
+      .catch(error => {
         setAttemptingTxn(false)
-        setShowConfirm(false)
+        // we only care if the error is something _other_ than the user rejected the tx
+        if (error?.code !== 4001) {
+          console.error(error)
+        }
       })
   }
 
@@ -311,17 +311,15 @@ export default function AddLiquidity({ match: { params }, history }: RouteCompon
           <ConfirmationModal
             isOpen={showConfirm}
             onDismiss={() => {
-              if (attemptingTxn) {
-                history.push('/pool')
-                return
-              }
-              setPendingConfirmation(true)
-              setAttemptingTxn(false)
               setShowConfirm(false)
+              // if there was a tx hash, we want to clear the input
+              if (txHash) {
+                onUserInput(Field.TOKEN_A, '')
+              }
+              setTxHash('')
             }}
             attemptingTxn={attemptingTxn}
-            pendingConfirmation={pendingConfirmation}
-            hash={txHash ? txHash : ''}
+            hash={txHash}
             topContent={() => modalHeader()}
             bottomContent={modalBottom}
             pendingText={pendingText}
