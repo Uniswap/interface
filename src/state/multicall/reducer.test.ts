@@ -1,4 +1,10 @@
-import { addMulticallListeners, removeMulticallListeners, updateMulticallResults } from './actions'
+import {
+  addMulticallListeners,
+  errorFetchingMulticallResults,
+  fetchingMulticallResults,
+  removeMulticallListeners,
+  updateMulticallResults
+} from './actions'
 import reducer, { MulticallState } from './reducer'
 import { Store, createStore } from '@reduxjs/toolkit'
 
@@ -164,6 +170,91 @@ describe('multicall reducer', () => {
               blockNumber: 2,
               data: '0x2'
             }
+          }
+        }
+      })
+    })
+  })
+  describe('fetchingMulticallResults', () => {
+    it('updates state to fetching', () => {
+      store.dispatch(
+        fetchingMulticallResults({
+          chainId: 1,
+          fetchingBlockNumber: 2,
+          calls: [{ address: DAI_ADDRESS, callData: '0x0' }]
+        })
+      )
+      expect(store.getState()).toEqual({
+        callResults: {
+          [1]: {
+            [`${DAI_ADDRESS}-0x0`]: { fetchingBlockNumber: 2 }
+          }
+        }
+      })
+    })
+  })
+
+  describe('errorFetchingMulticallResults', () => {
+    it('does nothing if not fetching', () => {
+      store.dispatch(
+        errorFetchingMulticallResults({
+          chainId: 1,
+          fetchingBlockNumber: 1,
+          calls: [{ address: DAI_ADDRESS, callData: '0x0' }]
+        })
+      )
+      expect(store.getState()).toEqual({
+        callResults: {
+          [1]: {}
+        }
+      })
+    })
+    it('updates block number if we were fetching', () => {
+      store.dispatch(
+        fetchingMulticallResults({
+          chainId: 1,
+          fetchingBlockNumber: 2,
+          calls: [{ address: DAI_ADDRESS, callData: '0x0' }]
+        })
+      )
+      store.dispatch(
+        errorFetchingMulticallResults({
+          chainId: 1,
+          fetchingBlockNumber: 2,
+          calls: [{ address: DAI_ADDRESS, callData: '0x0' }]
+        })
+      )
+      expect(store.getState()).toEqual({
+        callResults: {
+          [1]: {
+            [`${DAI_ADDRESS}-0x0`]: {
+              blockNumber: 2,
+              // null data indicates error
+              data: null
+            }
+          }
+        }
+      })
+    })
+    it('does nothing if not errored on latest block', () => {
+      store.dispatch(
+        fetchingMulticallResults({
+          chainId: 1,
+          fetchingBlockNumber: 3,
+          calls: [{ address: DAI_ADDRESS, callData: '0x0' }]
+        })
+      )
+      store.dispatch(
+        errorFetchingMulticallResults({
+          chainId: 1,
+          fetchingBlockNumber: 2,
+          calls: [{ address: DAI_ADDRESS, callData: '0x0' }]
+        })
+      )
+      expect(store.getState()).toEqual({
+        callResults: {
+          [1]: {
+            [`${DAI_ADDRESS}-0x0`]: { fetchingBlockNumber: 3 }
           }
         }
       })

@@ -2,7 +2,7 @@ name: Release
 on:
   # every morning
   schedule:
-    - cron:  '0 12 * * *'
+    - cron:  '0 12 * * 1-4'
 
   # releases are triggered on changes to this file
   push:
@@ -82,14 +82,12 @@ jobs:
           tag_name: ${{ needs.bump_version.outputs.new_tag }}
           release_name: Release ${{ needs.bump_version.outputs.new_tag }}
           body: |
-            Release built from commit [`${{ github.sha }}`](https://github.com/Uniswap/uniswap-frontend/tree/${{ github.sha }})
-
-            The IPFS hash of the bundle is:
+            IPFS hash of the deployment:
             - CIDv0: `${{ steps.upload.outputs.hash }}`
             - CIDv1: `${{ steps.convert_cidv0.outputs.cidv1 }}`
 
-            Uniswap uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to store your settings.
-            **Beware** that other sites you access via the _same_ IPFS gateway can read and modify your settings on Uniswap without your permission.
+            The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to store your settings.
+            **Beware** that other sites you access via the _same_ IPFS gateway can read and modify your settings on the Uniswap interface without your permission.
             You can avoid this issue by using a subdomain IPFS gateway. The preferred gateway URLs below utilize the CIDv1 of the release in the subdomain, and are relatively safer.
 
             Preferred URLs:
