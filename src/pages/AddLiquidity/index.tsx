@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TokenAmount, WETH } from '@uniswap/sdk'
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
@@ -110,23 +110,6 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.TOKEN_A], ROUTER_ADDRESS)
   const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.TOKEN_B], ROUTER_ADDRESS)
-
-  // used to keep approves disabled before balance syncs after approval
-  const [approvalASubmitted, setApprovalASubmitted] = useState<boolean>(false)
-  const [approvalBSubmitted, setApprovalBSubmitted] = useState<boolean>(false)
-
-  // mark when a user has submitted an approval, reset onTokenSelection for input field
-  useEffect(() => {
-    if (approvalA === ApprovalState.PENDING) {
-      setApprovalASubmitted(true)
-    }
-  }, [approvalA])
-
-  useEffect(() => {
-    if (approvalB === ApprovalState.PENDING) {
-      setApprovalBSubmitted(true)
-    }
-  }, [approvalB])
 
   const addTransaction = useTransactionAdder()
   async function onAdd() {
@@ -417,7 +400,7 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
                       {approvalA !== ApprovalState.APPROVED && (
                         <ButtonPrimary
                           onClick={approveACallback}
-                          disabled={approvalA === ApprovalState.PENDING || !isValid || approvalASubmitted}
+                          disabled={approvalA === ApprovalState.PENDING || !isValid}
                           width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
                         >
                           {approvalA === ApprovalState.PENDING ? (
@@ -430,7 +413,7 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
                       {approvalB !== ApprovalState.APPROVED && (
                         <ButtonPrimary
                           onClick={approveBCallback}
-                          disabled={approvalB === ApprovalState.PENDING || !isValid || approvalBSubmitted}
+                          disabled={approvalB === ApprovalState.PENDING || !isValid}
                           width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
                         >
                           {approvalB === ApprovalState.PENDING ? (
