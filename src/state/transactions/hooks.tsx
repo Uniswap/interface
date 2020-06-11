@@ -1,5 +1,5 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -10,7 +10,7 @@ import { TransactionDetails, TransactionState } from './reducer'
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
   response: TransactionResponse,
-  customData?: { summary?: string; approvalOfToken?: string }
+  customData?: { summary?: string; approval?: { tokenAddress: string; spender: string } }
 ) => void {
   const { chainId, account } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
@@ -18,7 +18,7 @@ export function useTransactionAdder(): (
   return useCallback(
     (
       response: TransactionResponse,
-      { summary, approvalOfToken }: { summary?: string; approvalOfToken?: string } = {}
+      { summary, approval }: { summary?: string; approval?: { tokenAddress: string; spender: string } } = {}
     ) => {
       if (!account) return
       if (!chainId) return
@@ -27,7 +27,7 @@ export function useTransactionAdder(): (
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      dispatch(addTransaction({ hash, from: account, chainId, approvalOfToken, summary }))
+      dispatch(addTransaction({ hash, from: account, chainId, approval, summary }))
     },
     [dispatch, chainId, account]
   )
@@ -51,15 +51,22 @@ export function useIsTransactionPending(transactionHash?: string): boolean {
 }
 
 // returns whether a token has a pending approval transaction
-export function useHasPendingApproval(tokenAddress?: string): boolean {
+export function useHasPendingApproval(tokenAddress: string | undefined, spender: string | undefined): boolean {
   const allTransactions = useAllTransactions()
-  return typeof tokenAddress !== 'string'
-    ? false
-    : Object.keys(allTransactions).some(hash => {
+  return useMemo(
+    () =>
+      typeof tokenAddress === 'string' &&
+      typeof spender === 'string' &&
+      Object.keys(allTransactions).some(hash => {
         if (allTransactions[hash]?.receipt) {
           return false
         } else {
-          return allTransactions[hash]?.approvalOfToken === tokenAddress
+          return (
+            allTransactions[hash]?.approval?.tokenAddress === tokenAddress &&
+            allTransactions[hash]?.approval?.spender === spender
+          )
         }
-      })
+      }),
+    [allTransactions, spender, tokenAddress]
+  )
 }
