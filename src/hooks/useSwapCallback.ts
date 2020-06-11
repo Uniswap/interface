@@ -65,12 +65,16 @@ export function useSwapCallback(
   to?: string // recipient of output, optional
 ): null | (() => Promise<string>) {
   const { account, chainId, library } = useActiveWeb3React()
-  const inputAllowance = useTokenAllowance(trade?.inputAmount?.token, account ?? undefined, ROUTER_ADDRESS)
   const addTransaction = useTransactionAdder()
   const recipient = to ? isAddress(to) : account
   const ensName = useENSName(to)
   const tradeVersion = getTradeVersion(trade)
   const v1Exchange = useV1ExchangeContract(useV1TradeExchangeAddress(trade), true)
+  const inputAllowance = useTokenAllowance(
+    trade?.inputAmount?.token,
+    account ?? undefined,
+    tradeVersion === Version.v1 ? v1Exchange?.address : ROUTER_ADDRESS
+  )
 
   return useMemo(() => {
     if (!trade || !recipient || !tradeVersion) return null
