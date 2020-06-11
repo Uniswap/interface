@@ -1,5 +1,5 @@
 import { stringify } from 'qs'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
@@ -18,14 +18,15 @@ const VersionLabel = styled.span<{ enabled: boolean }>`
     color: ${({ theme, enabled }) => (enabled ? theme.white : theme.primary3)};
   }
 `
-const VersionToggle = styled(Link)`
+const VersionToggle = styled(Link)<{ enabled: boolean }>`
   border-radius: 16px;
+  opacity: ${({ enabled }) => (enabled ? 1 : 0.5)};
+  cursor: ${({ enabled }) => (enabled ? 'pointer' : 'default')};
   background: ${({ theme }) => theme.primary5};
   border: 1px solid ${({ theme }) => theme.primary4};
   color: ${({ theme }) => theme.primary1};
   display: flex;
   width: fit-content;
-  cursor: pointer;
   text-decoration: none;
   :hover {
     text-decoration: none;
@@ -36,17 +37,28 @@ export function VersionSwitch() {
   const version = useToggledVersion()
   const location = useLocation()
   const query = useParsedQueryString()
+  const versionSwitchAvailable = location.pathname === '/swap' || location.pathname === '/send'
+
   const toggleDest = useMemo(() => {
-    return {
-      ...location,
-      search: `?${stringify({ ...query, use: version === Version.v1 ? undefined : Version.v1 })}`
-    }
-  }, [location, query, version])
+    return versionSwitchAvailable
+      ? {
+          ...location,
+          search: `?${stringify({ ...query, use: version === Version.v1 ? undefined : Version.v1 })}`
+        }
+      : location
+  }, [location, query, version, versionSwitchAvailable])
+
+  const handleClick = useCallback(
+    e => {
+      if (!versionSwitchAvailable) e.preventDefault()
+    },
+    [versionSwitchAvailable]
+  )
 
   return (
-    <VersionToggle to={toggleDest}>
-      <VersionLabel enabled={version === Version.v2}>V2</VersionLabel>
-      <VersionLabel enabled={version === Version.v1}>V1</VersionLabel>
+    <VersionToggle enabled={versionSwitchAvailable} to={toggleDest} onClick={handleClick}>
+      <VersionLabel enabled={version === Version.v2 || !versionSwitchAvailable}>V2</VersionLabel>
+      <VersionLabel enabled={version === Version.v1 && versionSwitchAvailable}>V1</VersionLabel>
     </VersionToggle>
   )
 }
