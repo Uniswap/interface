@@ -468,12 +468,12 @@ export default function Send({ location: { search } }: RouteComponentProps) {
                     <RowBetween align="center">
                       <ClickableText>
                         <Text fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                          Custom Slippage
+                          Slippage Tolerance
                         </Text>
                       </ClickableText>
                       <ClickableText>
                         <Text fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                          {allowedSlippage / 100}%
+                          {allowedSlippage ? allowedSlippage / 100 : '-'}%
                         </Text>
                       </ClickableText>
                     </RowBetween>

@@ -87,6 +87,16 @@ export default createReducer(initialState, builder =>
             delete state.tokens[ChainId.MAINNET][WETH[ChainId.MAINNET].address]
           }
         }
+
+        // slippage isnt being tracked in local storage, reset to default
+        if (!!!state.userSlippageTolerance) {
+          state.userSlippageTolerance = INITIAL_ALLOWED_SLIPPAGE
+        }
+
+        // deadline isnt being tracked in local storage, reset to default
+        if (!!!state.userDeadline) {
+          state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
+        }
       }
       state.timestamp = currentTimestamp()
     })

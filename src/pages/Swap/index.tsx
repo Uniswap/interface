@@ -275,10 +275,10 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
                   {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
                     <RowBetween align="center">
                       <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                        Custom Slippage
+                        Slippage Tolerance
                       </ClickableText>
                       <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                        {allowedSlippage / 100}%
+                        {allowedSlippage ? allowedSlippage / 100 : '-'}%
                       </ClickableText>
                     </RowBetween>
                   )}
