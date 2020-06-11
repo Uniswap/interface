@@ -182,7 +182,7 @@ export default function SettingsTab() {
                 Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result
                 in bad rates and lost funds.
               </Text>
-              <Text fontWeight={500} fontSize={16}>
+              <Text fontWeight={600} fontSize={16}>
                 ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING.
               </Text>
               <ButtonError
