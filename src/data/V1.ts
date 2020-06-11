@@ -120,6 +120,22 @@ export function getTradeVersion(trade?: Trade): Version | undefined {
   return undefined
 }
 
+// returns the v1 exchange against which a trade should be executed
+export function useV1TradeExchangeAddress(trade: Trade | undefined): string | undefined {
+  const tokenAddress: string | undefined = useMemo(() => {
+    const tradeVersion = getTradeVersion(trade)
+    const isV1 = tradeVersion === Version.v1
+    return isV1
+      ? trade &&
+        WETH[trade.inputAmount.token.chainId] &&
+        trade.inputAmount.token.equals(WETH[trade.inputAmount.token.chainId])
+        ? trade.outputAmount.token.address
+        : trade?.inputAmount?.token?.address
+      : undefined
+  }, [trade])
+  return useV1ExchangeAddress(tokenAddress)
+}
+
 const ZERO_PERCENT = new Percent('0')
 const ONE_HUNDRED_PERCENT = new Percent('1')
 // returns whether tradeB is better than tradeA by at least a threshold

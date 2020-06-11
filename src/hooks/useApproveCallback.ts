@@ -4,7 +4,7 @@ import { Trade, WETH, TokenAmount } from '@uniswap/sdk'
 import { useCallback, useMemo } from 'react'
 import { ROUTER_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
-import { getTradeVersion, useV1ExchangeAddress } from '../data/V1'
+import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
@@ -94,6 +94,6 @@ export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) 
     [trade, allowedSlippage]
   )
   const tradeIsV1 = getTradeVersion(trade) === Version.v1
-  const v1Exchange = useV1ExchangeAddress(trade && tradeIsV1 ? trade.inputAmount.token.address : undefined)
-  return useApproveCallback(amountToApprove, v1Exchange ?? ROUTER_ADDRESS)
+  const v1ExchangeAddress = useV1TradeExchangeAddress(trade)
+  return useApproveCallback(amountToApprove, tradeIsV1 ? v1ExchangeAddress : ROUTER_ADDRESS)
 }

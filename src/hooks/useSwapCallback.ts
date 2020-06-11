@@ -1,10 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { ChainId, Trade, TradeType, WETH } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, ROUTER_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
-import { getTradeVersion, useV1ExchangeAddress } from '../data/V1'
+import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin, getRouterContract, isAddress } from '../utils'
@@ -69,15 +70,7 @@ export function useSwapCallback(
   const recipient = to ? isAddress(to) : account
   const ensName = useENSName(to)
   const tradeVersion = getTradeVersion(trade)
-  const isV1 = tradeVersion === Version.v1
-  const v1ExchangeAddress = useV1ExchangeAddress(
-    isV1
-      ? trade && chainId && WETH[chainId] && trade.inputAmount.token.equals(WETH[chainId])
-        ? trade.outputAmount.token.address
-        : trade?.inputAmount?.token?.address
-      : undefined
-  )
-  const v1Exchange = useV1ExchangeContract(v1ExchangeAddress, true)
+  const v1Exchange = useV1ExchangeContract(useV1TradeExchangeAddress(trade), true)
 
   return useMemo(() => {
     if (!trade || !recipient || !tradeVersion) return null
@@ -214,7 +207,7 @@ export function useSwapCallback(
           args = [
             slippageAdjustedOutput.raw.toString(),
             slippageAdjustedInput.raw.toString(),
-            0,
+            MaxUint256.toString(),
             deadlineFromNow,
             recipient,
             trade.outputAmount.token.address
