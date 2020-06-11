@@ -4,7 +4,7 @@ import { Token, TokenAmount, WETH } from '@uniswap/sdk'
 
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
-import { ButtonSecondary, ButtonEmpty } from '../Button'
+import { ButtonSecondary } from '../Button'
 import { RowBetween, RowFixed } from '../Row'
 import { FixedHeightRow, HoverCard } from './index'
 import DoubleTokenLogo from '../DoubleLogo'

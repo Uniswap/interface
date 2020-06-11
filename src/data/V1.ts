@@ -1,10 +1,10 @@
-import { ChainId, JSBI, Pair, Percent, Route, Token, TokenAmount, Trade, TradeType, WETH } from '@uniswap/sdk'
+import { ChainId, Pair, Percent, Route, Token, TokenAmount, Trade, TradeType, WETH } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
 import { useAllTokens } from '../hooks/Tokens'
 import { useV1FactoryContract } from '../hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from '../state/multicall/hooks'
-import { useETHBalances, useTokenBalance, useTokenBalances } from '../state/wallet/hooks'
+import { useETHBalances, useTokenBalance } from '../state/wallet/hooks'
 import { AddressZero } from '@ethersproject/constants'
 
 function useV1PairAddress(tokenAddress?: string): string | undefined {
