@@ -9,6 +9,7 @@ import { PinkCard, YellowCard, LightCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow, RowBetween } from '../../components/Row'
+import { Dots } from '../../components/swap/styleds'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { MIGRATOR_ADDRESS } from '../../constants/abis/migrator'
 import { usePair } from '../../data/Reserves'
@@ -195,11 +196,13 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
               disabled={approval !== ApprovalState.NOT_APPROVED}
               onClick={approve}
             >
-              {approval === ApprovalState.PENDING
-                ? 'Approving...'
-                : approval === ApprovalState.APPROVED
-                ? 'Approved'
-                : 'Approve'}
+              {approval === ApprovalState.PENDING ? (
+                <Dots>Approving</Dots>
+              ) : approval === ApprovalState.APPROVED ? (
+                'Approved'
+              ) : (
+                'Approve'
+              )}
             </ButtonConfirmed>
           </AutoColumn>
           <AutoColumn gap="12px" style={{ flex: '1' }}>
