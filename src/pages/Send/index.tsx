@@ -28,7 +28,7 @@ import {
   MIN_ETH,
   BETTER_TRADE_LINK_THRESHOLD
 } from '../../constants'
-import { isTradeBetter } from '../../data/V1'
+import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useApproveCallbackFromTrade, ApprovalState } from '../../hooks/useApproveCallback'
 import { useSendCallback } from '../../hooks/useSendCallback'
@@ -176,7 +176,11 @@ export default function Send() {
         ReactGA.event({
           category: 'Send',
           action: recipient === account ? 'Swap w/o Send' : 'Swap w/ Send',
-          label: [bestTrade.inputAmount.token.symbol, bestTrade.outputAmount.token.symbol].join(';')
+          label: [
+            bestTrade.inputAmount.token.symbol,
+            bestTrade.outputAmount.token.symbol,
+            getTradeVersion(bestTrade)
+          ].join('/')
         })
       })
       .catch(error => {
