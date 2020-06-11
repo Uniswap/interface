@@ -76,7 +76,7 @@ export function tryParseAmount(value?: string, token?: Token): TokenAmount | und
 export function useDerivedSwapInfo(): {
   tokens: { [field in Field]?: Token }
   tokenBalances: { [field in Field]?: TokenAmount }
-  parsedAmounts: { [field in Field]?: TokenAmount }
+  parsedAmount: TokenAmount | undefined
   bestTrade: Trade | null
   error?: string
   v1Trade: Trade | undefined
@@ -99,17 +99,12 @@ export function useDerivedSwapInfo(): {
   ])
 
   const isExactIn: boolean = independentField === Field.INPUT
-  const amount = tryParseAmount(typedValue, (isExactIn ? tokenIn : tokenOut) ?? undefined)
+  const parsedAmount = tryParseAmount(typedValue, (isExactIn ? tokenIn : tokenOut) ?? undefined)
 
-  const bestTradeExactIn = useTradeExactIn(isExactIn ? amount : undefined, tokenOut ?? undefined)
-  const bestTradeExactOut = useTradeExactOut(tokenIn ?? undefined, !isExactIn ? amount : undefined)
+  const bestTradeExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, tokenOut ?? undefined)
+  const bestTradeExactOut = useTradeExactOut(tokenIn ?? undefined, !isExactIn ? parsedAmount : undefined)
 
   const bestTrade = isExactIn ? bestTradeExactIn : bestTradeExactOut
-
-  const parsedAmounts = {
-    [Field.INPUT]: isExactIn ? amount : bestTrade?.inputAmount,
-    [Field.OUTPUT]: isExactIn ? bestTrade?.outputAmount : amount
-  }
 
   const tokenBalances = {
     [Field.INPUT]: relevantTokenBalances?.[tokenIn?.address ?? ''],
@@ -122,35 +117,32 @@ export function useDerivedSwapInfo(): {
   }
 
   // get link to trade on v1, if a better rate exists
-  const { v1Trade } = useV1Trade(
-    isExactIn,
-    tokens[Field.INPUT],
-    tokens[Field.OUTPUT],
-    isExactIn ? parsedAmounts[Field.INPUT] : parsedAmounts[Field.OUTPUT]
-  )
+  const v1Trade = useV1Trade(isExactIn, tokens[Field.INPUT], tokens[Field.OUTPUT], parsedAmount)
 
   let error: string | undefined
   if (!account) {
     error = 'Connect Wallet'
   }
 
-  if (!parsedAmounts[Field.INPUT]) {
+  if (!parsedAmount) {
     error = error ?? 'Enter an amount'
   }
 
-  if (!parsedAmounts[Field.OUTPUT]) {
-    error = error ?? 'Enter an amount'
+  if (!tokens[Field.INPUT] || !tokens[Field.OUTPUT]) {
+    error = error ?? 'Select a token'
   }
 
-  const [balanceIn, amountIn] = [tokenBalances[Field.INPUT], parsedAmounts[Field.INPUT]]
-  if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-    error = 'Insufficient ' + amountIn.token.symbol + ' balance'
-  }
+  // this check is incorrect, it should check against the maximum amount in
+  // rather than the estimated amount in
+  // const [balanceIn, amountIn] = [tokenBalances[Field.INPUT], parsedAmounts[Field.INPUT]]
+  // if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
+  //   error = 'Insufficient ' + amountIn.token.symbol + ' balance'
+  // }
 
   return {
     tokens,
     tokenBalances,
-    parsedAmounts,
+    parsedAmount,
     bestTrade,
     error,
     v1Trade

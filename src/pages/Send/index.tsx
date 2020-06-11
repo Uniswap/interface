@@ -68,7 +68,7 @@ export default function Send() {
   // trade details, check query params for initial state
   const { independentField, typedValue } = useSwapState()
   const {
-    parsedAmounts,
+    parsedAmount,
     bestTrade: bestTradeV2,
     tokenBalances,
     tokens,
@@ -88,6 +88,11 @@ export default function Send() {
       : toggledVersion === Version.v1 && isTradeBetter(v1Trade, bestTradeV2)
       ? Version.v2
       : undefined
+
+  const parsedAmounts = {
+    [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : bestTrade?.inputAmount,
+    [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : bestTrade?.outputAmount
+  }
 
   const isSwapValid = !swapError && !recipientError && bestTrade
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
@@ -439,7 +444,6 @@ export default function Send() {
                   field={Field.OUTPUT}
                   value={formattedAmounts[Field.OUTPUT]}
                   onUserInput={onUserInput}
-                  // eslint-disable-next-line @typescript-eslint/no-empty-function
                   label={independentField === Field.INPUT && parsedAmounts[Field.OUTPUT] ? 'To (estimated)' : 'To'}
                   showMaxButton={false}
                   token={tokens[Field.OUTPUT]}

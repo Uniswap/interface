@@ -13,9 +13,7 @@ function useV1PairAddress(tokenAddress?: string): string | undefined {
   return useSingleCallResult(contract, 'getExchange', inputs)?.result?.[0]
 }
 
-class MockV1Pair extends Pair {
-  readonly isV1: true = true
-}
+class MockV1Pair extends Pair {}
 
 function useMockV1Pair(token?: Token): MockV1Pair | undefined {
   const isWETH: boolean = token && WETH[token.chainId] ? token.equals(WETH[token.chainId]) : false
@@ -81,7 +79,7 @@ export function useV1Trade(
   inputToken?: Token,
   outputToken?: Token,
   exactAmount?: TokenAmount
-): { v1Trade: Trade | undefined; inputIsWETH: boolean; outputIsWETH: boolean } {
+): Trade | undefined {
   const { chainId } = useActiveWeb3React()
 
   // get the mock v1 pairs
@@ -111,7 +109,11 @@ export function useV1Trade(
         ? new Trade(route, exactAmount, isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT)
         : undefined
   } catch {}
-  return { v1Trade, inputIsWETH, outputIsWETH }
+  return v1Trade
+}
+
+export function isTradeV1(trade?: Trade): boolean | undefined {
+  return trade?.route?.pairs?.some(pair => pair instanceof MockV1Pair)
 }
 
 const ZERO_PERCENT = new Percent('0')

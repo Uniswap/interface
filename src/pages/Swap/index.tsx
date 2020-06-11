@@ -55,7 +55,7 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue } = useSwapState()
-  const { bestTrade: bestTradeV2, tokenBalances, parsedAmounts, tokens, error, v1Trade } = useDerivedSwapInfo()
+  const { bestTrade: bestTradeV2, tokenBalances, parsedAmount, tokens, error, v1Trade } = useDerivedSwapInfo()
   const toggledVersion = useToggledVersion()
   const bestTrade = {
     [Version.v1]: v1Trade,
@@ -68,6 +68,11 @@ export default function Swap() {
       : toggledVersion === Version.v1 && isTradeBetter(v1Trade, bestTradeV2)
       ? Version.v2
       : undefined
+
+  const parsedAmounts = {
+    [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : bestTrade?.inputAmount,
+    [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : bestTrade?.outputAmount
+  }
 
   const { onSwitchTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
   const isValid = !error
@@ -264,7 +269,6 @@ export default function Swap() {
                 field={Field.OUTPUT}
                 value={formattedAmounts[Field.OUTPUT]}
                 onUserInput={onUserInput}
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
                 label={independentField === Field.INPUT ? 'To (estimated)' : 'To'}
                 showMaxButton={false}
                 token={tokens[Field.OUTPUT]}
