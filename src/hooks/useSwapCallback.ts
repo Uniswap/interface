@@ -177,7 +177,7 @@ export function useSwapCallback(
           args = [
             slippageAdjustedInput.raw.toString(),
             slippageAdjustedOutput.raw.toString(),
-            0,
+            1,
             deadlineFromNow,
             recipient,
             trade.outputAmount.token.address
