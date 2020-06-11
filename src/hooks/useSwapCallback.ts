@@ -213,6 +213,8 @@ export function useSwapCallback(
             trade.outputAmount.token.address
           ]
           break
+        default:
+          throw new Error(`Unhandled swap type: ${swapType}`)
       }
 
       const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
