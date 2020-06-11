@@ -51,8 +51,7 @@ export const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'DAI',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x2a1530C4C41db0B0b2bB646CB5Eb1A67b7158667',
-      [MIN_ORDER]: new BigNumber('10000000000000000000000'),
-      // [MIN_ORDER]: new BigNumber('250000000000000000000'),
+      [MIN_ORDER]: new BigNumber('250000000000000000000'),
       // [MIN_ORDER]: _0,
     },
     [USDC_ADDRESS]: {
@@ -60,8 +59,7 @@ export const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'USDC',
       [DECIMALS]: 6,
       [EXCHANGE_ADDRESS]: '0x97deC872013f6B5fB443861090ad931542878126',
-      [MIN_ORDER]: new BigNumber('10000000000'),
-      // [MIN_ORDER]: new BigNumber('250000000'),
+      [MIN_ORDER]: new BigNumber('250000000'),
       // [MIN_ORDER]: _0,
     },
     [WETH_ADDRESS]: {
@@ -69,8 +67,7 @@ export const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'WETH',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xA2881A90Bf33F03E7a3f803765Cd2ED5c8928dFb',
-      [MIN_ORDER]: new BigNumber('50000000000000000000'),
-      // [MIN_ORDER]: new BigNumber('1250000000000000000'),
+      [MIN_ORDER]: new BigNumber('1250000000000000000'),
       // [MIN_ORDER]: _0,
     },
     [DMG_ADDRESS]: {
@@ -78,8 +75,7 @@ export const INITIAL_TOKENS_CONTEXT = {
       [SYMBOL]: 'DMG',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xA539BAaa3aCA455c986bB1E25301CEF936CE1B65',
-      [MIN_ORDER]: new BigNumber('500000000000000000000'),
-      // [MIN_ORDER]: new BigNumber('10000000000000000000'),
+      [MIN_ORDER]: new BigNumber('10000000000000000000'),
       // [MIN_ORDER]: _0,
     }
   }

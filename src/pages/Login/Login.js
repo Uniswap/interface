@@ -96,30 +96,30 @@ class Login extends React.Component {
           </div>
           <div className={'loginScreenDescription'}>
             <div className={'loginScreenLineOne'}>
-              This pre-sale of DMG (DMM Governance Tokens) is only open to select participants until June 22.
+              Due to a high level of demand, the private sale has ended after reaching a cap of $2M.
             </div>
             <div>
-              If you have been provided a password, please enter it below to proceed.
+              The public sale of DMG will occur on June 22.
             </div>
           </div>
-          <div className={'loginScreenPasswordWrapper'}>
-            <div className={'loginScreenPasswordField'}>
-              <input
-                value={this.state.password}
-                onChange={e => this.setState({ password: e.target.value })}
-                type={'password'}
-                onKeyDown={this._handleKeyDown}
-              />
-            </div>
-            <div className={'loginScreenPasswordSubmit'}>
-              <Button
-                className={'loginScreenPasswordSubmitButton' + (this.state.fade ? ' faded' : '')}
-                onClick={() => this.login()}
-              >
-                Enter
-              </Button>
-            </div>
-          </div>
+          {/*<div className={'loginScreenPasswordWrapper'}>*/}
+          {/*  <div className={'loginScreenPasswordField'}>*/}
+          {/*    <input*/}
+          {/*      value={this.state.password}*/}
+          {/*      onChange={e => this.setState({ password: e.target.value })}*/}
+          {/*      type={'password'}*/}
+          {/*      onKeyDown={this._handleKeyDown}*/}
+          {/*    />*/}
+          {/*  </div>*/}
+          {/*  <div className={'loginScreenPasswordSubmit'}>*/}
+          {/*    <Button*/}
+          {/*      className={'loginScreenPasswordSubmitButton' + (this.state.fade ? ' faded' : '')}*/}
+          {/*      onClick={() => this.login()}*/}
+          {/*    >*/}
+          {/*      Enter*/}
+          {/*    </Button>*/}
+          {/*  </div>*/}
+          {/*</div>*/}
           {this.state.showError && <div className={'loginScreenError'}>Invalid password</div>}
         </div>
       </div>
