@@ -2,7 +2,6 @@ import { JSBI, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useContext, useState, useEffect } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
-import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -19,12 +18,19 @@ import { ArrowWrapper, BottomGrouping, Dots, Wrapper } from '../../components/sw
 import SwapModalFooter from '../../components/swap/SwapModalFooter'
 import SwapModalHeader from '../../components/swap/SwapModalHeader'
 import TradePrice from '../../components/swap/TradePrice'
-import V1TradeLink from '../../components/swap/V1TradeLink'
+import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import { TokenWarningCards } from '../../components/TokenWarningCard'
-import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '../../constants'
+import {
+  DEFAULT_DEADLINE_FROM_NOW,
+  INITIAL_ALLOWED_SLIPPAGE,
+  MIN_ETH,
+  BETTER_TRADE_LINK_THRESHOLD
+} from '../../constants'
+import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useApproveCallbackFromTrade, ApprovalState } from '../../hooks/useApproveCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
+import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import {
@@ -38,8 +44,8 @@ import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeve
 import AppBody from '../AppBody'
 import { PriceSlippageWarningCard } from '../../components/swap/PriceSlippageWarningCard'
 
-export default function Swap({ location: { search } }: RouteComponentProps) {
-  useDefaultsFromURLSearch(search)
+export default function Swap() {
+  useDefaultsFromURLSearch()
 
   const { chainId, account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
@@ -49,7 +55,25 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
 
   // swap state
   const { independentField, typedValue } = useSwapState()
-  const { bestTrade, tokenBalances, parsedAmounts, tokens, error, v1TradeLinkIfBetter } = useDerivedSwapInfo()
+  const { bestTrade: bestTradeV2, tokenBalances, parsedAmount, tokens, error, v1Trade } = useDerivedSwapInfo()
+  const toggledVersion = useToggledVersion()
+  const bestTrade = {
+    [Version.v1]: v1Trade,
+    [Version.v2]: bestTradeV2
+  }[toggledVersion]
+
+  const betterTradeLinkVersion: Version | undefined =
+    toggledVersion === Version.v2 && isTradeBetter(bestTradeV2, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
+      ? Version.v1
+      : toggledVersion === Version.v1 && isTradeBetter(v1Trade, bestTradeV2)
+      ? Version.v2
+      : undefined
+
+  const parsedAmounts = {
+    [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : bestTrade?.inputAmount,
+    [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : bestTrade?.outputAmount
+  }
+
   const { onSwitchTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
   const isValid = !error
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
@@ -132,7 +156,11 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
         ReactGA.event({
           category: 'Swap',
           action: 'Swap w/o Send',
-          label: [bestTrade.inputAmount.token.symbol, bestTrade.outputAmount.token.symbol].join('/')
+          label: [
+            bestTrade.inputAmount.token.symbol,
+            bestTrade.outputAmount.token.symbol,
+            getTradeVersion(bestTrade)
+          ].join('/')
         })
       })
       .catch(error => {
@@ -245,7 +273,6 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
                 field={Field.OUTPUT}
                 value={formattedAmounts[Field.OUTPUT]}
                 onUserInput={onUserInput}
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
                 label={independentField === Field.INPUT ? 'To (estimated)' : 'To'}
                 showMaxButton={false}
                 token={tokens[Field.OUTPUT]}
@@ -334,7 +361,7 @@ export default function Swap({ location: { search } }: RouteComponentProps) {
                 </Text>
               </ButtonError>
             )}
-            <V1TradeLink v1TradeLinkIfBetter={v1TradeLinkIfBetter} />
+            {betterTradeLinkVersion && <BetterTradeLink version={betterTradeLinkVersion} />}
           </BottomGrouping>
         </Wrapper>
       </AppBody>

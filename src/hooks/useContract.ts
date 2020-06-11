@@ -30,23 +30,23 @@ export function useV1FactoryContract(): Contract | null {
   return useContract(V1_FACTORY_ADDRESSES[chainId as ChainId], V1_FACTORY_ABI, false)
 }
 
-export function useV1ExchangeContract(address: string): Contract | null {
-  return useContract(address, V1_EXCHANGE_ABI, false)
-}
-
 export function useV2MigratorContract(): Contract | null {
   return useContract(MIGRATOR_ADDRESS, MIGRATOR_ABI, true)
 }
 
-export function useTokenContract(tokenAddress?: string, withSignerIfPossible = true): Contract | null {
+export function useV1ExchangeContract(address?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(address, V1_EXCHANGE_ABI, withSignerIfPossible)
+}
+
+export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible)
 }
 
-export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossible = true): Contract | null {
+export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(tokenAddress, ERC20_BYTES32_ABI, withSignerIfPossible)
 }
 
-export function usePairContract(pairAddress?: string, withSignerIfPossible = true): Contract | null {
+export function usePairContract(pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(pairAddress, IUniswapV2PairABI, withSignerIfPossible)
 }
 

@@ -1,27 +1,27 @@
+import { ChainId, WETH } from '@uniswap/sdk'
 import React from 'react'
+import { isMobile } from 'react-device-detect'
 import { Link as HistoryLink } from 'react-router-dom'
+import { Text } from 'rebass'
 
 import styled from 'styled-components'
-import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
-
-import Row from '../Row'
-import Menu from '../Menu'
-import Web3Status from '../Web3Status'
-
-import { ExternalLink, StyledInternalLink } from '../../theme'
-import { Text } from 'rebass'
-import { WETH, ChainId } from '@uniswap/sdk'
-import { isMobile } from 'react-device-detect'
-import { YellowCard } from '../Card'
-import { useActiveWeb3React } from '../../hooks'
-import { useDarkModeManager } from '../../state/user/hooks'
 
 import Logo from '../../assets/svg/logo.svg'
-import Wordmark from '../../assets/svg/wordmark.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
+import Wordmark from '../../assets/svg/wordmark.svg'
 import WordmarkDark from '../../assets/svg/wordmark_white.svg'
+import { useActiveWeb3React } from '../../hooks'
+import { useDarkModeManager } from '../../state/user/hooks'
+import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
+
+import { ExternalLink, StyledInternalLink } from '../../theme'
+import { YellowCard } from '../Card'
 import { AutoColumn } from '../Column'
-import { RowBetween } from '../Row'
+import Menu from '../Menu'
+
+import Row, { RowBetween } from '../Row'
+import Web3Status from '../Web3Status'
+import { VersionSwitch } from './VersionSwitch'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -122,33 +122,13 @@ const MigrateBanner = styled(AutoColumn)`
   `};
 `
 
-const VersionLabel = styled.span<{ isV2?: boolean }>`
-  padding: ${({ isV2 }) => (isV2 ? '0.15rem 0.5rem 0.16rem 0.45rem' : '0.15rem 0.5rem 0.16rem 0.35rem')};
-  border-radius: 14px;
-  background: ${({ theme, isV2 }) => (isV2 ? theme.primary1 : 'none')};
-  color: ${({ theme, isV2 }) => (isV2 ? theme.white : theme.primary1)};
-  font-size: 0.825rem;
-  font-weight: 400;
-  :hover {
-    user-select: ${({ isV2 }) => (isV2 ? 'none' : 'initial')};
-    background: ${({ theme, isV2 }) => (isV2 ? theme.primary1 : 'none')};
-    color: ${({ theme, isV2 }) => (isV2 ? theme.white : theme.primary3)};
-  }
-`
-
-const VersionToggle = styled.a`
-  border-radius: 16px;
-  background: ${({ theme }) => theme.primary5};
-  border: 1px solid ${({ theme }) => theme.primary4};
-  color: ${({ theme }) => theme.primary1};
-  display: flex;
-  width: fit-content;
-  cursor: pointer;
-  text-decoration: none;
-  :hover {
-    text-decoration: none;
-  }
-`
+const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
+  [ChainId.MAINNET]: null,
+  [ChainId.RINKEBY]: 'Rinkeby',
+  [ChainId.ROPSTEN]: 'Ropsten',
+  [ChainId.GÖRLI]: 'Görli',
+  [ChainId.KOVAN]: 'Kovan'
+}
 
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
@@ -187,21 +167,11 @@ export default function Header() {
               </TitleText>
             )}
           </Title>
-          <TestnetWrapper style={{ pointerEvents: 'auto' }}>
-            {!isMobile && (
-              <VersionToggle target="_self" href="https://v1.uniswap.exchange">
-                <VersionLabel isV2={true}>V2</VersionLabel>
-                <VersionLabel isV2={false}>V1</VersionLabel>
-              </VersionToggle>
-            )}
-          </TestnetWrapper>
+          <TestnetWrapper style={{ pointerEvents: 'auto' }}>{!isMobile && <VersionSwitch />}</TestnetWrapper>
         </HeaderElement>
         <HeaderElement>
           <TestnetWrapper>
-            {!isMobile && chainId === ChainId.ROPSTEN && <NetworkCard>Ropsten</NetworkCard>}
-            {!isMobile && chainId === ChainId.RINKEBY && <NetworkCard>Rinkeby</NetworkCard>}
-            {!isMobile && chainId === ChainId.GÖRLI && <NetworkCard>Görli</NetworkCard>}
-            {!isMobile && chainId === ChainId.KOVAN && <NetworkCard>Kovan</NetworkCard>}
+            {!isMobile && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
           </TestnetWrapper>
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
