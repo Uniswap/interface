@@ -18,9 +18,15 @@ import { ArrowWrapper, BottomGrouping, Dots, Wrapper } from '../../components/sw
 import SwapModalFooter from '../../components/swap/SwapModalFooter'
 import SwapModalHeader from '../../components/swap/SwapModalHeader'
 import TradePrice from '../../components/swap/TradePrice'
-import V1TradeLink from '../../components/swap/V1TradeLink'
+import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import { TokenWarningCards } from '../../components/TokenWarningCard'
-import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '../../constants'
+import {
+  DEFAULT_DEADLINE_FROM_NOW,
+  INITIAL_ALLOWED_SLIPPAGE,
+  MIN_ETH,
+  BETTER_TRADE_LINK_THRESHOLD
+} from '../../constants'
+import { isTradeBetter } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useApproveCallbackFromTrade, ApprovalState } from '../../hooks/useApproveCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
@@ -49,19 +55,20 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue } = useSwapState()
-  const {
-    bestTrade: bestTradeV2,
-    tokenBalances,
-    parsedAmounts,
-    tokens,
-    error,
-    isV1TradeBetter,
-    v1Trade
-  } = useDerivedSwapInfo()
+  const { bestTrade: bestTradeV2, tokenBalances, parsedAmounts, tokens, error, v1Trade } = useDerivedSwapInfo()
+  const toggledVersion = useToggledVersion()
   const bestTrade = {
     [Version.v1]: v1Trade,
     [Version.v2]: bestTradeV2
-  }[useToggledVersion()]
+  }[toggledVersion]
+
+  const betterTradeLinkVersion: Version | undefined =
+    toggledVersion === Version.v2 && isTradeBetter(bestTradeV2, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
+      ? Version.v1
+      : toggledVersion === Version.v1 && isTradeBetter(v1Trade, bestTradeV2)
+      ? Version.v2
+      : undefined
+
   const { onSwitchTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
   const isValid = !error
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
@@ -346,7 +353,7 @@ export default function Swap() {
                 </Text>
               </ButtonError>
             )}
-            <V1TradeLink isV1TradeBetter={isV1TradeBetter} />
+            {betterTradeLinkVersion && <BetterTradeLink version={betterTradeLinkVersion} />}
           </BottomGrouping>
         </Wrapper>
       </AppBody>

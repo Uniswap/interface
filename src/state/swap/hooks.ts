@@ -3,8 +3,7 @@ import { ChainId, JSBI, Token, TokenAmount, Trade, WETH } from '@uniswap/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { V1_TRADE_LINK_THRESHOLD } from '../../constants'
-import { useIsV1TradeBetter } from '../../data/V1'
+import { useV1Trade } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
@@ -81,7 +80,6 @@ export function useDerivedSwapInfo(): {
   bestTrade: Trade | null
   error?: string
   v1Trade: Trade | undefined
-  isV1TradeBetter: boolean
 } {
   const { account } = useActiveWeb3React()
 
@@ -124,13 +122,11 @@ export function useDerivedSwapInfo(): {
   }
 
   // get link to trade on v1, if a better rate exists
-  const [isV1TradeBetter, v1Trade] = useIsV1TradeBetter(
+  const { v1Trade } = useV1Trade(
     isExactIn,
     tokens[Field.INPUT],
     tokens[Field.OUTPUT],
-    isExactIn ? parsedAmounts[Field.INPUT] : parsedAmounts[Field.OUTPUT],
-    bestTrade ?? undefined,
-    V1_TRADE_LINK_THRESHOLD
+    isExactIn ? parsedAmounts[Field.INPUT] : parsedAmounts[Field.OUTPUT]
   )
 
   let error: string | undefined
@@ -157,7 +153,6 @@ export function useDerivedSwapInfo(): {
     parsedAmounts,
     bestTrade,
     error,
-    isV1TradeBetter,
     v1Trade
   }
 }

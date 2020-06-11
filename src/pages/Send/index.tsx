@@ -19,14 +19,21 @@ import SwapModalFooter from '../../components/swap/SwapModalFooter'
 import { ArrowWrapper, BottomGrouping, Dots, InputGroup, StyledNumerical, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
 import { TransferModalHeader } from '../../components/swap/TransferModalHeader'
-import V1TradeLink from '../../components/swap/V1TradeLink'
+import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import TokenLogo from '../../components/TokenLogo'
 import { TokenWarningCards } from '../../components/TokenWarningCard'
-import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, MIN_ETH } from '../../constants'
+import {
+  DEFAULT_DEADLINE_FROM_NOW,
+  INITIAL_ALLOWED_SLIPPAGE,
+  MIN_ETH,
+  BETTER_TRADE_LINK_THRESHOLD
+} from '../../constants'
+import { isTradeBetter } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useApproveCallbackFromTrade, ApprovalState } from '../../hooks/useApproveCallback'
 import { useSendCallback } from '../../hooks/useSendCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
+import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import {
@@ -60,9 +67,29 @@ export default function Send() {
 
   // trade details, check query params for initial state
   const { independentField, typedValue } = useSwapState()
-  const { parsedAmounts, bestTrade, tokenBalances, tokens, error: swapError, isV1TradeBetter } = useDerivedSwapInfo()
-  const isSwapValid = !swapError && !recipientError && bestTrade
+  const {
+    parsedAmounts,
+    bestTrade: bestTradeV2,
+    tokenBalances,
+    tokens,
+    error: swapError,
+    v1Trade
+  } = useDerivedSwapInfo()
 
+  const toggledVersion = useToggledVersion()
+  const bestTrade = {
+    [Version.v1]: v1Trade,
+    [Version.v2]: bestTradeV2
+  }[toggledVersion]
+
+  const betterTradeLinkVersion: Version | undefined =
+    toggledVersion === Version.v2 && isTradeBetter(bestTradeV2, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
+      ? Version.v1
+      : toggledVersion === Version.v1 && isTradeBetter(v1Trade, bestTradeV2)
+      ? Version.v2
+      : undefined
+
+  const isSwapValid = !swapError && !recipientError && bestTrade
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   // modal and loading
@@ -530,7 +557,7 @@ export default function Send() {
                 </Text>
               </ButtonError>
             )}
-            <V1TradeLink isV1TradeBetter={isV1TradeBetter} />
+            {betterTradeLinkVersion && <BetterTradeLink version={betterTradeLinkVersion} />}
           </BottomGrouping>
         </Wrapper>
       </AppBody>

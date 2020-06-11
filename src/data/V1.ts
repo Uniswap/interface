@@ -114,47 +114,27 @@ export function useV1Trade(
   return { v1Trade, inputIsWETH, outputIsWETH }
 }
 
-export function useSwapCallbackV1(
-  isExactIn?: boolean,
-  inputToken?: Token,
-  outputToken?: Token,
-  exactAmount?: TokenAmount
-): null | (() => Promise<string>) {
-  const { outputIsWETH, inputIsWETH, v1Trade } = useV1Trade(isExactIn, inputToken, outputToken, exactAmount)
-  return useMemo(() => {
-    if (!v1Trade) return null
+const ZERO_PERCENT = new Percent('0')
+const ONE_HUNDRED_PERCENT = new Percent('1')
+// returns whether tradeB is better than tradeA by at least a threshold
+export function isTradeBetter(
+  tradeA: Trade | undefined,
+  tradeB: Trade | undefined,
+  minimumDelta: Percent = ZERO_PERCENT
+): boolean | undefined {
+  if (!tradeA || !tradeB) return undefined
 
-    if (inputIsWETH) {
-    } else if (outputIsWETH) {
-    } else {
-    }
-
-    return null
-  }, [inputIsWETH, outputIsWETH, v1Trade])
-}
-
-export function useIsV1TradeBetter(
-  isExactIn?: boolean,
-  input?: Token,
-  output?: Token,
-  exactAmount?: TokenAmount,
-  v2Trade?: Trade,
-  minimumDelta: Percent = new Percent('0')
-): [boolean, Trade | undefined] {
-  const { v1Trade } = useV1Trade(isExactIn, input, output, exactAmount)
-  let v1HasBetterTrade = false
-  if (v1Trade) {
-    if (isExactIn) {
-      // discount the v1 output amount by minimumDelta
-      const discountedV1Output = v1Trade?.outputAmount.multiply(new Percent('1').subtract(minimumDelta))
-      // check if the discounted v1 amount is still greater than v2, short-circuiting if no v2 trade exists
-      v1HasBetterTrade = !v2Trade || discountedV1Output.greaterThan(v2Trade.outputAmount)
-    } else {
-      // inflate the v1 amount by minimumDelta
-      const inflatedV1Input = v1Trade?.inputAmount.multiply(new Percent('1').add(minimumDelta))
-      // check if the inflated v1 amount is still less than v2, short-circuiting if no v2 trade exists
-      v1HasBetterTrade = !v2Trade || inflatedV1Input.lessThan(v2Trade.inputAmount)
-    }
+  if (
+    tradeA.tradeType !== tradeB.tradeType ||
+    !tradeA.inputAmount.token.equals(tradeB.inputAmount.token) ||
+    !tradeB.outputAmount.token.equals(tradeB.outputAmount.token)
+  ) {
+    throw new Error('Trades are not comparable')
   }
-  return [v1HasBetterTrade, v1Trade]
+
+  if (minimumDelta.equalTo(ZERO_PERCENT)) {
+    return tradeA.executionPrice.lessThan(tradeB.executionPrice)
+  } else {
+    return tradeA.executionPrice.raw.multiply(minimumDelta.add(ONE_HUNDRED_PERCENT)).lessThan(tradeB.executionPrice)
+  }
 }
