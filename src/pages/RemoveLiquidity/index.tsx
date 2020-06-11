@@ -7,7 +7,7 @@ import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { ButtonConfirmed, ButtonPrimary, ButtonLight, ButtonError } from '../../components/Button'
+import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
@@ -359,34 +359,11 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
             </RowBetween>
           </>
         )}
-        <RowBetween mt="1rem">
-          <ButtonConfirmed
-            onClick={onAttemptToApprove}
-            confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
-            disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
-            mr="0.5rem"
-            fontWeight={500}
-            fontSize={20}
-          >
-            {approval === ApprovalState.PENDING ? (
-              <Dots>Approving</Dots>
-            ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
-              'Approved'
-            ) : (
-              'Approve'
-            )}
-          </ButtonConfirmed>
-
-          <ButtonPrimary
-            disabled={!(approval === ApprovalState.APPROVED || signatureData !== null)}
-            onClick={onRemove}
-            ml="0.5rem"
-          >
-            <Text fontWeight={500} fontSize={20}>
-              Confirm
-            </Text>
-          </ButtonPrimary>
-        </RowBetween>
+        <ButtonPrimary disabled={!(approval === ApprovalState.APPROVED || signatureData !== null)} onClick={onRemove}>
+          <Text fontWeight={500} fontSize={20}>
+            Confirm
+          </Text>
+        </ButtonPrimary>
       </>
     )
   }
@@ -571,17 +548,35 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
               {!account ? (
                 <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
               ) : (
-                <ButtonError
-                  onClick={() => {
-                    setShowConfirm(true)
-                  }}
-                  disabled={!isValid}
-                  error={!isValid && !!parsedAmounts[Field.TOKEN_A] && !!parsedAmounts[Field.TOKEN_B]}
-                >
-                  <Text fontSize={20} fontWeight={500}>
-                    {error || 'Remove'}
-                  </Text>
-                </ButtonError>
+                <RowBetween>
+                  <ButtonConfirmed
+                    onClick={onAttemptToApprove}
+                    confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
+                    disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
+                    mr="0.5rem"
+                    fontWeight={500}
+                    fontSize={16}
+                  >
+                    {approval === ApprovalState.PENDING ? (
+                      <Dots>Approving</Dots>
+                    ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
+                      'Approved'
+                    ) : (
+                      'Approve'
+                    )}
+                  </ButtonConfirmed>
+                  <ButtonError
+                    onClick={() => {
+                      setShowConfirm(true)
+                    }}
+                    disabled={!isValid || signatureData === null}
+                    error={!isValid && !!parsedAmounts[Field.TOKEN_A] && !!parsedAmounts[Field.TOKEN_B]}
+                  >
+                    <Text fontSize={16} fontWeight={500}>
+                      {error || 'Remove'}
+                    </Text>
+                  </ButtonError>
+                </RowBetween>
               )}
             </div>
           </AutoColumn>

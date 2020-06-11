@@ -389,34 +389,54 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
 
             {!account ? (
               <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
-            ) : approvalA === ApprovalState.NOT_APPROVED || approvalA === ApprovalState.PENDING ? (
-              <ButtonLight onClick={approveACallback} disabled={approvalA === ApprovalState.PENDING}>
-                {approvalA === ApprovalState.PENDING ? (
-                  <Dots>Approving {tokens[Field.TOKEN_A]?.symbol}</Dots>
-                ) : (
-                  'Approve ' + tokens[Field.TOKEN_A]?.symbol
-                )}
-              </ButtonLight>
-            ) : approvalB === ApprovalState.NOT_APPROVED || approvalB === ApprovalState.PENDING ? (
-              <ButtonLight onClick={approveBCallback} disabled={approvalB === ApprovalState.PENDING}>
-                {approvalB === ApprovalState.PENDING ? (
-                  <Dots>Approving {tokens[Field.TOKEN_B]?.symbol}</Dots>
-                ) : (
-                  'Approve ' + tokens[Field.TOKEN_B]?.symbol
-                )}
-              </ButtonLight>
             ) : (
-              <ButtonError
-                onClick={() => {
-                  setShowConfirm(true)
-                }}
-                disabled={!isValid}
-                error={!isValid && !!parsedAmounts[Field.TOKEN_A] && !!parsedAmounts[Field.TOKEN_B]}
-              >
-                <Text fontSize={20} fontWeight={500}>
-                  {error ?? 'Supply'}
-                </Text>
-              </ButtonError>
+              <AutoColumn gap={'md'}>
+                {(approvalA === ApprovalState.NOT_APPROVED ||
+                  approvalA === ApprovalState.PENDING ||
+                  approvalB === ApprovalState.NOT_APPROVED ||
+                  approvalB === ApprovalState.PENDING) &&
+                  isValid && (
+                    <RowBetween>
+                      {approvalA !== ApprovalState.APPROVED && (
+                        <ButtonPrimary
+                          onClick={approveACallback}
+                          disabled={approvalA === ApprovalState.PENDING || !isValid}
+                          width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
+                        >
+                          {approvalA === ApprovalState.PENDING ? (
+                            <Dots>Approving {tokens[Field.TOKEN_A]?.symbol}</Dots>
+                          ) : (
+                            'Approve ' + tokens[Field.TOKEN_A]?.symbol
+                          )}
+                        </ButtonPrimary>
+                      )}
+                      {approvalB !== ApprovalState.APPROVED && (
+                        <ButtonPrimary
+                          onClick={approveBCallback}
+                          disabled={approvalB === ApprovalState.PENDING || !isValid}
+                          width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
+                        >
+                          {approvalB === ApprovalState.PENDING ? (
+                            <Dots>Approving {tokens[Field.TOKEN_B]?.symbol}</Dots>
+                          ) : (
+                            'Approve ' + tokens[Field.TOKEN_B]?.symbol
+                          )}
+                        </ButtonPrimary>
+                      )}
+                    </RowBetween>
+                  )}
+                <ButtonError
+                  onClick={() => {
+                    setShowConfirm(true)
+                  }}
+                  disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
+                  error={!isValid && !!parsedAmounts[Field.TOKEN_A] && !!parsedAmounts[Field.TOKEN_B]}
+                >
+                  <Text fontSize={20} fontWeight={500}>
+                    {error ?? 'Supply'}
+                  </Text>
+                </ButtonError>
+              </AutoColumn>
             )}
           </AutoColumn>
         </Wrapper>
