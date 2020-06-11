@@ -1,15 +1,19 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { ChainId, Token, Trade, TradeType, WETH } from '@uniswap/sdk'
+import { ChainId, Trade, TradeType, WETH } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, ROUTER_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
+import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { calculateGasMargin, getRouterContract, isAddress } from '../utils'
+import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { useActiveWeb3React } from './index'
+import { useV1ExchangeContract } from './useContract'
 import useENSName from './useENSName'
+import { Version } from './useToggledVersion'
 
 enum SwapType {
   EXACT_TOKENS_FOR_TOKENS,
@@ -17,25 +21,37 @@ enum SwapType {
   EXACT_ETH_FOR_TOKENS,
   TOKENS_FOR_EXACT_TOKENS,
   TOKENS_FOR_EXACT_ETH,
-  ETH_FOR_EXACT_TOKENS
+  ETH_FOR_EXACT_TOKENS,
+  V1_EXACT_ETH_FOR_TOKENS,
+  V1_EXACT_TOKENS_FOR_ETH,
+  V1_EXACT_TOKENS_FOR_TOKENS,
+  V1_ETH_FOR_EXACT_TOKENS,
+  V1_TOKENS_FOR_EXACT_ETH,
+  V1_TOKENS_FOR_EXACT_TOKENS
 }
 
-function getSwapType(tokens: { [field in Field]?: Token }, isExactIn: boolean, chainId: number): SwapType {
+function getSwapType(trade: Trade | undefined): SwapType | undefined {
+  if (!trade) return undefined
+  const chainId = trade.inputAmount.token.chainId
+  const inputWETH = trade.inputAmount.token.equals(WETH[chainId])
+  const outputWETH = trade.outputAmount.token.equals(WETH[chainId])
+  const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
+  const isV1 = getTradeVersion(trade) === Version.v1
   if (isExactIn) {
-    if (tokens[Field.INPUT]?.equals(WETH[chainId as ChainId])) {
-      return SwapType.EXACT_ETH_FOR_TOKENS
-    } else if (tokens[Field.OUTPUT]?.equals(WETH[chainId as ChainId])) {
-      return SwapType.EXACT_TOKENS_FOR_ETH
+    if (inputWETH) {
+      return isV1 ? SwapType.V1_EXACT_ETH_FOR_TOKENS : SwapType.EXACT_ETH_FOR_TOKENS
+    } else if (outputWETH) {
+      return isV1 ? SwapType.V1_EXACT_TOKENS_FOR_ETH : SwapType.EXACT_TOKENS_FOR_ETH
     } else {
-      return SwapType.EXACT_TOKENS_FOR_TOKENS
+      return isV1 ? SwapType.V1_EXACT_TOKENS_FOR_TOKENS : SwapType.EXACT_TOKENS_FOR_TOKENS
     }
   } else {
-    if (tokens[Field.INPUT]?.equals(WETH[chainId as ChainId])) {
-      return SwapType.ETH_FOR_EXACT_TOKENS
-    } else if (tokens[Field.OUTPUT]?.equals(WETH[chainId as ChainId])) {
-      return SwapType.TOKENS_FOR_EXACT_ETH
+    if (inputWETH) {
+      return isV1 ? SwapType.V1_ETH_FOR_EXACT_TOKENS : SwapType.ETH_FOR_EXACT_TOKENS
+    } else if (outputWETH) {
+      return isV1 ? SwapType.V1_TOKENS_FOR_EXACT_ETH : SwapType.TOKENS_FOR_EXACT_ETH
     } else {
-      return SwapType.TOKENS_FOR_EXACT_TOKENS
+      return isV1 ? SwapType.V1_TOKENS_FOR_EXACT_TOKENS : SwapType.TOKENS_FOR_EXACT_TOKENS
     }
   }
 }
@@ -49,13 +65,19 @@ export function useSwapCallback(
   to?: string // recipient of output, optional
 ): null | (() => Promise<string>) {
   const { account, chainId, library } = useActiveWeb3React()
-  const inputAllowance = useTokenAllowance(trade?.inputAmount?.token, account ?? undefined, ROUTER_ADDRESS)
   const addTransaction = useTransactionAdder()
   const recipient = to ? isAddress(to) : account
   const ensName = useENSName(to)
+  const tradeVersion = getTradeVersion(trade)
+  const v1Exchange = useV1ExchangeContract(useV1TradeExchangeAddress(trade), true)
+  const inputAllowance = useTokenAllowance(
+    trade?.inputAmount?.token,
+    account ?? undefined,
+    tradeVersion === Version.v1 ? v1Exchange?.address : ROUTER_ADDRESS
+  )
 
   return useMemo(() => {
-    if (!trade || !recipient) return null
+    if (!trade || !recipient || !tradeVersion) return null
 
     // will always be defined
     const {
@@ -78,17 +100,17 @@ export function useSwapCallback(
         throw new Error('missing dependencies in onSwap callback')
       }
 
-      const routerContract: Contract = getRouterContract(chainId, library, account)
+      const contract: Contract | null =
+        tradeVersion === Version.v2 ? getRouterContract(chainId, library, account) : v1Exchange
+      if (!contract) {
+        throw new Error('Failed to get a swap contract')
+      }
 
       const path = trade.route.path.map(t => t.address)
 
       const deadlineFromNow: number = Math.ceil(Date.now() / 1000) + deadline
 
-      const swapType = getSwapType(
-        { [Field.INPUT]: trade.inputAmount.token, [Field.OUTPUT]: trade.outputAmount.token },
-        trade.tradeType === TradeType.EXACT_INPUT,
-        chainId as ChainId
-      )
+      const swapType = getSwapType(trade)
 
       // let estimate: Function, method: Function,
       let methodNames: string[],
@@ -145,11 +167,63 @@ export function useSwapCallback(
           args = [slippageAdjustedOutput.raw.toString(), path, recipient, deadlineFromNow]
           value = BigNumber.from(slippageAdjustedInput.raw.toString())
           break
+        case SwapType.V1_EXACT_ETH_FOR_TOKENS:
+          methodNames = ['ethToTokenTransferInput']
+          args = [slippageAdjustedOutput.raw.toString(), deadlineFromNow, recipient]
+          value = BigNumber.from(slippageAdjustedInput.raw.toString())
+          break
+        case SwapType.V1_EXACT_TOKENS_FOR_TOKENS:
+          methodNames = ['tokenToTokenTransferInput']
+          args = [
+            slippageAdjustedInput.raw.toString(),
+            slippageAdjustedOutput.raw.toString(),
+            1,
+            deadlineFromNow,
+            recipient,
+            trade.outputAmount.token.address
+          ]
+          break
+        case SwapType.V1_EXACT_TOKENS_FOR_ETH:
+          methodNames = ['tokenToEthTransferOutput']
+          args = [
+            slippageAdjustedOutput.raw.toString(),
+            slippageAdjustedInput.raw.toString(),
+            deadlineFromNow,
+            recipient
+          ]
+          break
+        case SwapType.V1_ETH_FOR_EXACT_TOKENS:
+          methodNames = ['ethToTokenTransferOutput']
+          args = [slippageAdjustedOutput.raw.toString(), deadlineFromNow, recipient]
+          value = BigNumber.from(slippageAdjustedInput.raw.toString())
+          break
+        case SwapType.V1_TOKENS_FOR_EXACT_ETH:
+          methodNames = ['tokenToEthTransferOutput']
+          args = [
+            slippageAdjustedOutput.raw.toString(),
+            slippageAdjustedInput.raw.toString(),
+            deadlineFromNow,
+            recipient
+          ]
+          break
+        case SwapType.V1_TOKENS_FOR_EXACT_TOKENS:
+          methodNames = ['tokenToTokenTransferOutput']
+          args = [
+            slippageAdjustedOutput.raw.toString(),
+            slippageAdjustedInput.raw.toString(),
+            MaxUint256.toString(),
+            deadlineFromNow,
+            recipient,
+            trade.outputAmount.token.address
+          ]
+          break
+        default:
+          throw new Error(`Unhandled swap type: ${swapType}`)
       }
 
       const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
         methodNames.map(methodName =>
-          routerContract.estimateGas[methodName](...args, value ? { value } : {})
+          contract.estimateGas[methodName](...args, value ? { value } : {})
             .then(calculateGasMargin)
             .catch(error => {
               console.error(`estimateGas failed for ${methodName}`, error)
@@ -198,38 +272,25 @@ export function useSwapCallback(
         const methodName = methodNames[indexOfSuccessfulEstimation]
         const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
 
-        return routerContract[methodName](...args, {
+        return contract[methodName](...args, {
           gasLimit: safeGasEstimate,
           ...(value ? { value } : {})
         })
           .then((response: any) => {
-            if (recipient === account) {
-              addTransaction(response, {
-                summary:
-                  'Swap ' +
-                  slippageAdjustedInput.toSignificant(3) +
-                  ' ' +
-                  trade.inputAmount.token.symbol +
-                  ' for ' +
-                  slippageAdjustedOutput.toSignificant(3) +
-                  ' ' +
-                  trade.outputAmount.token.symbol
-              })
-            } else {
-              addTransaction(response, {
-                summary:
-                  'Swap ' +
-                  slippageAdjustedInput.toSignificant(3) +
-                  ' ' +
-                  trade.inputAmount.token.symbol +
-                  ' for ' +
-                  slippageAdjustedOutput.toSignificant(3) +
-                  ' ' +
-                  trade.outputAmount.token.symbol +
-                  ' to ' +
-                  (ensName ?? recipient)
-              })
-            }
+            const inputSymbol = trade.inputAmount.token.symbol
+            const outputSymbol = trade.outputAmount.token.symbol
+            const inputAmount = slippageAdjustedInput.toSignificant(3)
+            const outputAmount = slippageAdjustedOutput.toSignificant(3)
+
+            const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
+            const withRecipient = recipient === account ? base : `${base} to ${ensName ?? recipient}`
+
+            const withVersion =
+              tradeVersion === Version.v2 ? withRecipient : `${withRecipient} on ${tradeVersion.toUpperCase()}`
+
+            addTransaction(response, {
+              summary: withVersion
+            })
 
             return response.hash
           })
@@ -240,11 +301,24 @@ export function useSwapCallback(
             }
             // otherwise, the error was unexpected and we need to convey that
             else {
-              console.error(`swap failed for ${methodName}`, error)
+              console.error(`Swap failed`, error, methodName, args, value)
               throw Error('An error occurred while swapping. Please contact support.')
             }
           })
       }
     }
-  }, [account, allowedSlippage, addTransaction, chainId, deadline, inputAllowance, library, trade, ensName, recipient])
+  }, [
+    trade,
+    recipient,
+    tradeVersion,
+    allowedSlippage,
+    chainId,
+    inputAllowance,
+    library,
+    account,
+    v1Exchange,
+    deadline,
+    addTransaction,
+    ensName
+  ])
 }
