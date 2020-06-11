@@ -6,7 +6,7 @@ import { useV1FactoryContract } from '../hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from '../state/multicall/hooks'
 import { useETHBalances, useTokenBalance, useTokenBalances } from '../state/wallet/hooks'
 
-function useV1PairAddress(tokenAddress?: string): string | undefined {
+export function useV1PairAddress(tokenAddress?: string): string | undefined {
   const contract = useV1FactoryContract()
 
   const inputs = useMemo(() => [tokenAddress], [tokenAddress])
