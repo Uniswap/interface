@@ -344,13 +344,13 @@ export default function MigrateV1Exchange({
   const userLiquidityBalance = useTokenBalance(account, liquidityToken)
 
   const handleBack = useCallback(() => {
-    history.push('/pool')
+    history.push('/migrate/v1')
   }, [history])
 
   // redirect for invalid url params
   if (!validatedAddress || tokenAddress === AddressZero) {
     console.error('Invalid address in path', address)
-    return <Redirect to="/pool" />
+    return <Redirect to="/migrate/v1" />
   }
 
   return (

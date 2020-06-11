@@ -164,7 +164,7 @@ export default function Header() {
           <b>blog post ↗</b>
         </ExternalLink>
         &nbsp;or&nbsp;
-        <StyledInternalLink to="/pool">
+        <StyledInternalLink to="/migrate/v1">
           <b>migrate your liquidity ↗</b>
         </StyledInternalLink>
         .

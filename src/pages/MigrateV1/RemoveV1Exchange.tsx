@@ -96,6 +96,10 @@ function V1PairRemoval({
 
   return (
     <AutoColumn gap="20px">
+      <TYPE.body my={9} style={{ fontWeight: 400 }}>
+        This tool will remove your V1 liquidity and send the underlying assets to your wallet.
+      </TYPE.body>
+
       <LightCard>
         <V1LiquidityInfo
           token={token}
@@ -146,13 +150,13 @@ export default function RemoveV1Exchange({
   const userLiquidityBalance = useTokenBalance(account, liquidityToken)
 
   const handleBack = useCallback(() => {
-    history.push('/pool')
+    history.push('/migrate/v1')
   }, [history])
 
   // redirect for invalid url params
   if (!validatedAddress || tokenAddress === AddressZero) {
     console.error('Invalid address in path', address)
-    return <Redirect to="/pool" />
+    return <Redirect to="/migrate/v1" />
   }
 
   return (
