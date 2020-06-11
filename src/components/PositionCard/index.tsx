@@ -73,7 +73,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
               <FixedHeightRow>
                 <RowFixed>
                   <Text fontWeight={500} fontSize={16}>
-                    Your current position
+                    Your position
                   </Text>
                 </RowFixed>
               </FixedHeightRow>
@@ -191,7 +191,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
               </FixedHeightRow>
               <FixedHeightRow>
                 <Text fontSize={16} fontWeight={500}>
-                  Your pool share
+                  Your pool share:
                 </Text>
                 <Text fontSize={16} fontWeight={500}>
                   {poolTokenPercentage ? poolTokenPercentage.toFixed(2) + '%' : '-'}

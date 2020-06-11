@@ -1,6 +1,6 @@
 import React, { useState, useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { JSBI, Pair, Token } from '@uniswap/sdk'
+import { JSBI, Token } from '@uniswap/sdk'
 import { RouteComponentProps } from 'react-router-dom'
 
 import Question from '../../components/QuestionHelper'
@@ -17,7 +17,7 @@ import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
-import { usePair } from '../../data/Reserves'
+import { usePairs } from '../../data/Reserves'
 import { useAllDummyPairs } from '../../state/user/hooks'
 import AppBody from '../AppBody'
 import { Dots } from '../../components/swap/styleds'
@@ -33,31 +33,35 @@ const FixedBottom = styled.div`
   width: 100%;
 `
 
-function PositionCardWrapper({ dummyPair }: { dummyPair: Pair }) {
-  const pair = usePair(dummyPair.token0, dummyPair.token1)
-  return <PositionCard pair={pair} />
-}
-
 export default function Pool({ history }: RouteComponentProps) {
   const theme = useContext(ThemeContext)
   const { account, chainId } = useActiveWeb3React()
   const [showPoolSearch, setShowPoolSearch] = useState(false)
 
-  // get V2 LP balances
-  const V2Pairs = useAllDummyPairs()
+  // fetch the user's balances of all tracked V2 LP tokens
+  const V2DummyPairs = useAllDummyPairs()
   const V2PairsBalances = useTokenBalances(
     account,
-    V2Pairs?.map(p => p.liquidityToken)
+    V2DummyPairs?.map(p => p.liquidityToken)
   )
-  const V2IsLoading = (Object.keys(V2PairsBalances)?.length ?? 0) < (V2Pairs?.length ?? 0)
-  const allV2PairsWithLiquidity = V2Pairs.filter(pair => {
-    return (
-      V2PairsBalances?.[pair.liquidityToken.address] &&
-      JSBI.greaterThan(V2PairsBalances[pair.liquidityToken.address].raw, JSBI.BigInt(0))
-    )
-  }).map((pair, i) => {
-    return <PositionCardWrapper key={i} dummyPair={pair} />
-  })
+  const V2IsLoading = (Object.keys(V2PairsBalances)?.length ?? 0) < V2DummyPairs.length
+
+  // fetch the reserves for all V2 pools in which the user has a balance
+  const V2DummyPairsWithABalance = V2IsLoading
+    ? []
+    : V2DummyPairs.filter(V2DummyPair =>
+        JSBI.greaterThan(V2PairsBalances[V2DummyPair.liquidityToken.address].raw, JSBI.BigInt(0))
+      )
+  const V2Pairs = usePairs(
+    V2DummyPairsWithABalance.map(V2DummyPairWithABalance => [
+      V2DummyPairWithABalance.token0,
+      V2DummyPairWithABalance.token1
+    ])
+  )
+  const V2IsLoadingReserves = (V2Pairs?.length ?? 0) < V2DummyPairsWithABalance.length
+  const allV2PairsWithLiquidity = V2Pairs.filter(V2Pair => !!V2Pair).map(V2Pair => (
+    <PositionCard key={V2Pair.liquidityToken.address} pair={V2Pair} />
+  ))
 
   // get V1 LP balances
   const V1Exchanges = useAllTokenV1Exchanges()
@@ -85,7 +89,7 @@ export default function Pool({ history }: RouteComponentProps) {
     )
   })
 
-  const isLoading = V1IsLoading || V2IsLoading
+  const isLoading = V2IsLoading || V2IsLoadingReserves || V1IsLoading
 
   return (
     <AppBody>
@@ -106,7 +110,7 @@ export default function Pool({ history }: RouteComponentProps) {
           <AutoColumn gap="12px">
             <RowBetween padding={'0 8px'}>
               <Text color={theme.text1} fontWeight={500}>
-                Your Pooled Liquidity
+                Your Liquidity
               </Text>
               <Question text="When you add liquidity, you are given pool tokens that represent your share. If you don’t see a pool you joined in this list, try importing a pool below." />
             </RowBetween>
@@ -126,6 +130,14 @@ export default function Pool({ history }: RouteComponentProps) {
             ) : allV2PairsWithLiquidity?.length > 0 || allV1PairsWithLiquidity?.length > 0 ? (
               <>
                 {allV2PairsWithLiquidity}
+                {allV1PairsWithLiquidity?.length > 0 && (
+                  <RowBetween padding={'0 8px'}>
+                    <Text color={theme.text1} fontWeight={500}>
+                      Your V1 Liquidity
+                    </Text>
+                    <Question text="You still have liquidity in Uniswap V1, migrate it to V2 below." />
+                  </RowBetween>
+                )}
                 {allV1PairsWithLiquidity}
               </>
             ) : (

@@ -10,7 +10,7 @@ import { Text } from 'rebass'
 import { Plus } from 'react-feather'
 import { TYPE, StyledInternalLink } from '../../theme'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import { ButtonPrimary, ButtonDropwdown, ButtonDropwdownLight } from '../../components/Button'
+import { ButtonPrimary, ButtonDropdown, ButtonDropdownLight } from '../../components/Button'
 
 import { useToken } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks'
@@ -59,16 +59,16 @@ export default function CreatePool({ location }: RouteComponentProps) {
       <AutoColumn gap="20px">
         <AutoColumn gap="24px">
           {!token0Address ? (
-            <ButtonDropwdown
+            <ButtonDropdown
               onClick={() => {
                 setShowSearch(true)
                 setActiveField(Fields.TOKEN0)
               }}
             >
               <Text fontSize={20}>Select first token</Text>
-            </ButtonDropwdown>
+            </ButtonDropdown>
           ) : (
-            <ButtonDropwdownLight
+            <ButtonDropdownLight
               onClick={() => {
                 setShowSearch(true)
                 setActiveField(Fields.TOKEN0)
@@ -83,13 +83,13 @@ export default function CreatePool({ location }: RouteComponentProps) {
                   {token0?.address === WETH[chainId]?.address && '(default)'}
                 </TYPE.darkGray>
               </Row>
-            </ButtonDropwdownLight>
+            </ButtonDropdownLight>
           )}
           <ColumnCenter>
             <Plus size="16" color="#888D9B" />
           </ColumnCenter>
           {!token1Address ? (
-            <ButtonDropwdown
+            <ButtonDropdown
               onClick={() => {
                 setShowSearch(true)
                 setActiveField(Fields.TOKEN1)
@@ -97,9 +97,9 @@ export default function CreatePool({ location }: RouteComponentProps) {
               disabled={step !== STEP.SELECT_TOKENS}
             >
               <Text fontSize={20}>Select second token</Text>
-            </ButtonDropwdown>
+            </ButtonDropdown>
           ) : (
-            <ButtonDropwdownLight
+            <ButtonDropdownLight
               onClick={() => {
                 setShowSearch(true)
                 setActiveField(Fields.TOKEN1)
@@ -111,7 +111,7 @@ export default function CreatePool({ location }: RouteComponentProps) {
                   {token1?.symbol}
                 </Text>
               </Row>
-            </ButtonDropwdownLight>
+            </ButtonDropdownLight>
           )}
           {pair ? ( // pair already exists - prompt to add liquidity to existing pool
             <AutoRow padding="10px" justify="center">

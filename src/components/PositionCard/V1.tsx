@@ -44,10 +44,11 @@ function V1PositionCard({ token, V1LiquidityBalance, history }: PositionCardProp
             </Text>
           </RowFixed>
         </FixedHeightRow>
+
         <AutoColumn gap="8px">
           <RowBetween marginTop="10px">
             <ButtonSecondary
-              width="58%"
+              width="68%"
               onClick={() => {
                 history.push(`/migrate/v1/${V1LiquidityBalance.token.address}`)
               }}
@@ -57,7 +58,7 @@ function V1PositionCard({ token, V1LiquidityBalance, history }: PositionCardProp
 
             <ButtonSecondary
               style={{ backgroundColor: 'transparent' }}
-              width="38%"
+              width="28%"
               onClick={() => {
                 history.push(`/remove/v1/${V1LiquidityBalance.token.address}`)
               }}

@@ -122,7 +122,11 @@ function NavigationTabs({ location: { pathname }, history }: RouteComponentProps
               <ArrowLink />
             </HistoryLink>
             <ActiveText>Import Pool</ActiveText>
-            <QuestionHelper text={"Use this tool to find pairs that don't automatically appear in the interface."} />
+            <QuestionHelper
+              text={
+                "Use this tool to find pairs that don't automatically appear in the interface. If you're trying to import a V1 pool, select the token you provided liquidity for below."
+              }
+            />
           </RowBetween>
         </Tabs>
       ) : creating ? (

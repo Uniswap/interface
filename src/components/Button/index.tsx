@@ -51,10 +51,10 @@ export const ButtonPrimary = styled(Base)`
   }
   &:disabled {
     background-color: ${({ theme, altDisbaledStyle }) => (altDisbaledStyle ? theme.primary1 : theme.bg3)};
-    color: ${({ theme, altDisbaledStyle }) => (altDisbaledStyle ? 'white' : theme.text3)}
+    color: ${({ theme, altDisbaledStyle }) => (altDisbaledStyle ? 'white' : theme.text3)};
     cursor: auto;
     box-shadow: none;
-    border: 1px solid transparent;;
+    border: 1px solid transparent;
     outline: none;
   }
 `
@@ -197,7 +197,6 @@ export const ButtonEmpty = styled(Base)`
 export const ButtonWhite = styled(Base)`
   border: 1px solid #edeef2;
   background-color: ${({ theme }) => theme.bg1};
-  };
   color: black;
 
   &:focus {
@@ -264,7 +263,7 @@ export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProp
   }
 }
 
-export function ButtonDropwdown({ disabled = false, children, ...rest }: { disabled?: boolean } & ButtonProps) {
+export function ButtonDropdown({ disabled = false, children, ...rest }: { disabled?: boolean } & ButtonProps) {
   return (
     <ButtonPrimary {...rest} disabled={disabled}>
       <RowBetween>
@@ -275,7 +274,7 @@ export function ButtonDropwdown({ disabled = false, children, ...rest }: { disab
   )
 }
 
-export function ButtonDropwdownLight({ disabled = false, children, ...rest }: { disabled?: boolean } & ButtonProps) {
+export function ButtonDropdownLight({ disabled = false, children, ...rest }: { disabled?: boolean } & ButtonProps) {
   return (
     <ButtonOutlined {...rest} disabled={disabled}>
       <RowBetween>
