@@ -17,6 +17,7 @@ import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
 import { ExternalLink, StyledInternalLink } from '../../theme'
 import { YellowCard } from '../Card'
 import { AutoColumn } from '../Column'
+import Settings from '../Settings'
 import Menu from '../Menu'
 
 import Row, { RowBetween } from '../Row'
@@ -31,15 +32,12 @@ const HeaderFrame = styled.div`
   width: 100%;
   top: 0;
   position: absolute;
-
-  pointer-events: none;
-
+  z-index: 2;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     padding: 12px 0 0 0;
     width: calc(100%);
     position: relative;
   `};
-  z-index: 2;
 `
 
 const HeaderElement = styled.div`
@@ -130,6 +128,12 @@ const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
   [ChainId.KOVAN]: 'Kovan'
 }
 
+const BalanceWrapper = styled.div`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
+`
+
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
 
@@ -174,16 +178,17 @@ export default function Header() {
             {!isMobile && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
           </TestnetWrapper>
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            {account && userEthBalance ? (
-              <Text style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userEthBalance?.toSignificant(4)} ETH
-              </Text>
-            ) : null}
+            <BalanceWrapper>
+              {account && userEthBalance ? (
+                <Text style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+                  {userEthBalance?.toSignificant(4)} ETH
+                </Text>
+              ) : null}
+            </BalanceWrapper>
             <Web3Status />
           </AccountElement>
-          <div style={{ pointerEvents: 'auto' }}>
-            <Menu />
-          </div>
+          <Settings />
+          <Menu />
         </HeaderElement>
       </RowBetween>
     </HeaderFrame>

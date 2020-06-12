@@ -18,7 +18,7 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import Slider from '../../components/Slider'
 import TokenLogo from '../../components/TokenLogo'
-import { ROUTER_ADDRESS, DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
+import { ROUTER_ADDRESS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { usePairContract } from '../../hooks/useContract'
 
@@ -31,9 +31,9 @@ import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallbac
 import { Dots } from '../../components/swap/styleds'
 import { useDefaultsFromURLMatchParams, useBurnActionHandlers } from '../../state/burn/hooks'
 import { useDerivedBurnInfo, useBurnState } from '../../state/burn/hooks'
-import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { Field } from '../../state/burn/actions'
 import { useWalletModalToggle } from '../../state/application/hooks'
+import { useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 
 export default function RemoveLiquidity({ match: { params } }: RouteComponentProps<{ tokens: string }>) {
@@ -52,15 +52,14 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
   const isValid = !error
 
   // modal and loading
-  const [showDetailed, setShowDetailed] = useState<boolean>(false) // toggling detailed view
-  const [showAdvanced, setShowAdvanced] = useState<boolean>(false) // toggling slippage, deadline, etc. on and off
-  const [showConfirm, setShowConfirm] = useState<boolean>(false) // show confirmation modal
-  const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // waiting for user confirmaion/rejection
-  const [txHash, setTxHash] = useState<string>('')
+  const [showConfirm, setShowConfirm] = useState<boolean>(false)
+  const [showDetailed, setShowDetailed] = useState<boolean>(false)
+  const [attemptingTxn, setAttemptingTxn] = useState(false) // clicked confirm
 
-  // tx parameters
-  const [deadline, setDeadline] = useState<number>(DEFAULT_DEADLINE_FROM_NOW)
-  const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
+  // txn values
+  const [txHash, setTxHash] = useState<string>('')
+  const [deadline] = useUserDeadline()
+  const [allowedSlippage] = useUserSlippageTolerance()
 
   const formattedAmounts = {
     [Field.LIQUIDITY_PERCENT]: parsedAmounts[Field.LIQUIDITY_PERCENT].equalTo('0')
@@ -591,17 +590,6 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
           </AutoColumn>
         </Wrapper>
       </AppBody>
-
-      {isValid ? (
-        <AdvancedSwapDetailsDropdown
-          rawSlippage={allowedSlippage}
-          deadline={deadline}
-          showAdvanced={showAdvanced}
-          setShowAdvanced={setShowAdvanced}
-          setDeadline={setDeadline}
-          setRawSlippage={setAllowedSlippage}
-        />
-      ) : null}
 
       {pair ? (
         <AutoColumn style={{ minWidth: '20rem', marginTop: '1rem' }}>

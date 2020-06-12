@@ -22,19 +22,14 @@ import { TransferModalHeader } from '../../components/swap/TransferModalHeader'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import TokenLogo from '../../components/TokenLogo'
 import { TokenWarningCards } from '../../components/TokenWarningCard'
-import {
-  DEFAULT_DEADLINE_FROM_NOW,
-  INITIAL_ALLOWED_SLIPPAGE,
-  MIN_ETH,
-  BETTER_TRADE_LINK_THRESHOLD
-} from '../../constants'
+import { INITIAL_ALLOWED_SLIPPAGE, MIN_ETH, BETTER_TRADE_LINK_THRESHOLD } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useApproveCallbackFromTrade, ApprovalState } from '../../hooks/useApproveCallback'
 import { useSendCallback } from '../../hooks/useSendCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
+import { useWalletModalToggle, useToggleSettingsMenu } from '../../state/application/hooks'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
-import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
@@ -46,7 +41,8 @@ import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
-import { PriceSlippageWarningCard } from '../../components/swap/PriceSlippageWarningCard'
+import { useUserSlippageTolerance, useUserDeadline, useExpertModeManager } from '../../state/user/hooks'
+import { ClickableText } from '../Pool/styleds'
 
 export default function Send() {
   useDefaultsFromURLSearch()
@@ -58,6 +54,10 @@ export default function Send() {
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
+
+  // for expert mode
+  const toggleSettings = useToggleSettingsMenu()
+  const [expertMode] = useExpertModeManager()
 
   // sending state
   const [sendingWithSwap, setSendingWithSwap] = useState<boolean>(false)
@@ -102,10 +102,8 @@ export default function Send() {
   const [showConfirm, setShowConfirm] = useState<boolean>(false) // show confirmation modal
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // waiting for user confirmaion/rejection
   const [txHash, setTxHash] = useState<string>('')
-
-  // tx parameters
-  const [deadline, setDeadline] = useState<number>(DEFAULT_DEADLINE_FROM_NOW)
-  const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
+  const [deadline] = useUserDeadline() // custom from user settings
+  const [allowedSlippage] = useUserSlippageTolerance() // custom from user settings
 
   const route = bestTrade?.route
   const userHasSpecifiedInputOutput =
@@ -223,7 +221,8 @@ export default function Send() {
     ((sendingWithSwap && isSwapValid) || (!sendingWithSwap && isSendValid)) &&
     (approval === ApprovalState.NOT_APPROVED ||
       approval === ApprovalState.PENDING ||
-      (approvalSubmitted && approval === ApprovalState.APPROVED))
+      (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
+    !(severity > 3 && !expertMode)
 
   function modalHeader() {
     if (!sendingWithSwap) {
@@ -487,6 +486,20 @@ export default function Send() {
                     <TradePrice showInverted={showInverted} setShowInverted={setShowInverted} trade={bestTrade} />
                   </RowBetween>
 
+                  {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
+                    <RowBetween align="center">
+                      <ClickableText>
+                        <Text fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                          Slippage Tolerance
+                        </Text>
+                      </ClickableText>
+                      <ClickableText>
+                        <Text fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                          {allowedSlippage ? allowedSlippage / 100 : '-'}%
+                        </Text>
+                      </ClickableText>
+                    </RowBetween>
+                  )}
                   {bestTrade && severity > 1 && (
                     <RowBetween>
                       <TYPE.main
@@ -536,7 +549,7 @@ export default function Send() {
                 </ButtonPrimary>
                 <ButtonError
                   onClick={() => {
-                    setShowConfirm(true)
+                    expertMode ? (sendingWithSwap ? onSwap() : onSend()) : setShowConfirm(true)
                   }}
                   width="48%"
                   id="send-button"
@@ -544,23 +557,28 @@ export default function Send() {
                   error={sendingWithSwap && isSwapValid && severity > 2}
                 >
                   <Text fontSize={16} fontWeight={500}>
-                    {`Send${severity > 2 ? ' Anyway' : ''}`}
+                    {severity > 3 && !expertMode ? `Price Impact High` : `Send${severity > 2 ? ' Anyway' : ''}`}
                   </Text>
                 </ButtonError>
               </RowBetween>
             ) : (
               <ButtonError
                 onClick={() => {
-                  setShowConfirm(true)
+                  expertMode ? (sendingWithSwap ? onSwap() : onSend()) : setShowConfirm(true)
                 }}
                 id="send-button"
-                disabled={(sendingWithSwap && !isSwapValid) || (!sendingWithSwap && !isSendValid)}
+                disabled={
+                  (sendingWithSwap && !isSwapValid) ||
+                  (!sendingWithSwap && !isSendValid) ||
+                  (severity > 3 && !expertMode && sendingWithSwap)
+                }
                 error={sendingWithSwap && isSwapValid && severity > 2}
               >
                 <Text fontSize={20} fontWeight={500}>
                   {(sendingWithSwap ? swapError : null) ||
                     sendAmountError ||
                     recipientError ||
+                    (severity > 3 && !expertMode && `Price Impact Too High`) ||
                     `Send${severity > 2 ? ' Anyway' : ''}`}
                 </Text>
               </ButtonError>
@@ -571,21 +589,7 @@ export default function Send() {
       </AppBody>
 
       {bestTrade && (
-        <AdvancedSwapDetailsDropdown
-          trade={bestTrade}
-          rawSlippage={allowedSlippage}
-          deadline={deadline}
-          showAdvanced={showAdvanced}
-          setShowAdvanced={setShowAdvanced}
-          setDeadline={setDeadline}
-          setRawSlippage={setAllowedSlippage}
-        />
-      )}
-
-      {priceImpactWithoutFee && severity > 2 && (
-        <AutoColumn gap="lg" style={{ marginTop: '1rem' }}>
-          <PriceSlippageWarningCard priceSlippage={priceImpactWithoutFee} />
-        </AutoColumn>
+        <AdvancedSwapDetailsDropdown trade={bestTrade} showAdvanced={showAdvanced} setShowAdvanced={setShowAdvanced} />
       )}
     </>
   )

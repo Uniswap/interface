@@ -244,6 +244,9 @@ const ButtonErrorStyle = styled(Base)`
   &:disabled {
     opacity: 50%;
     cursor: auto;
+    box-shadow: none;
+    background-color: ${({ theme }) => theme.red1};
+    border: 1px solid ${({ theme }) => theme.red1};
   }
 `
 
