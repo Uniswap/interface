@@ -18,7 +18,7 @@ export function computeTradePriceBreakdown(
     : ONE_HUNDRED_PERCENT.subtract(
         trade.route.pairs.reduce<Fraction>(
           (currentFee: Fraction): Fraction => currentFee.multiply(INPUT_FRACTION_AFTER_FEE),
-          INPUT_FRACTION_AFTER_FEE
+          ONE_HUNDRED_PERCENT
         )
       )
 
