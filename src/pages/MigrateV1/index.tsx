@@ -1,5 +1,5 @@
 import { JSBI, Token } from '@uniswap/sdk'
-import React, { useCallback, useContext, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { RouteComponentProps } from 'react-router'
 import { ThemeContext } from 'styled-components'
@@ -17,6 +17,9 @@ import { EmptyState } from './EmptyState'
 import V1PositionCard from '../../components/PositionCard/V1'
 import QuestionHelper from '../../components/QuestionHelper'
 import { Dots } from '../../components/swap/styleds'
+import { useAddUserToken } from '../../state/user/hooks'
+import useIsDefaultToken from '../../hooks/useIsDefaultToken'
+import useIsCustomAddedToken from '../../hooks/useIsCustomAddedToken'
 
 export default function MigrateV1({ history }: RouteComponentProps) {
   const theme = useContext(ThemeContext)
@@ -24,7 +27,17 @@ export default function MigrateV1({ history }: RouteComponentProps) {
 
   const [tokenSearch, setTokenSearch] = useState<string>('')
   const handleTokenSearchChange = useCallback(e => setTokenSearch(e.target.value), [setTokenSearch])
-  useToken(tokenSearch)
+
+  // automatically add the search token
+  const token = useToken(tokenSearch)
+  const isDefaultToken = useIsDefaultToken(token)
+  const isCustomAddedToken = useIsCustomAddedToken(token)
+  const addToken = useAddUserToken()
+  useEffect(() => {
+    if (token && !isDefaultToken && !isCustomAddedToken) {
+      addToken(token)
+    }
+  }, [token, isDefaultToken, isCustomAddedToken, addToken])
 
   // get V1 LP balances
   const V1Exchanges = useAllTokenV1Exchanges()

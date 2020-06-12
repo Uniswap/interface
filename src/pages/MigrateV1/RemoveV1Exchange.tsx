@@ -11,7 +11,7 @@ import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow } from '../../components/Row'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
-import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
+import { useToken } from '../../hooks/Tokens'
 import { useV1ExchangeContract } from '../../hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { useIsTransactionPending, useTransactionAdder } from '../../state/transactions/hooks'
@@ -138,7 +138,7 @@ export default function RemoveV1Exchange({
 
   const exchangeContract = useV1ExchangeContract(validatedAddress ? validatedAddress : undefined, true)
   const tokenAddress = useSingleCallResult(exchangeContract, 'tokenAddress', undefined, NEVER_RELOAD)?.result?.[0]
-  const token = useTokenByAddressAndAutomaticallyAdd(tokenAddress)
+  const token = useToken(tokenAddress)
 
   const liquidityToken: Token | undefined = useMemo(
     () =>

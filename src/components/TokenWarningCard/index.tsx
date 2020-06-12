@@ -3,7 +3,6 @@ import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { ALL_TOKENS } from '../../constants/tokens'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
 import { Field } from '../../state/swap/actions'
@@ -13,6 +12,7 @@ import { getEtherscanLink } from '../../utils'
 import PropsOfExcluding from '../../utils/props-of-excluding'
 import QuestionHelper from '../QuestionHelper'
 import TokenLogo from '../TokenLogo'
+import useIsDefaultToken from '../../hooks/useIsDefaultToken'
 
 const Wrapper = styled.div<{ error: boolean }>`
   background: ${({ theme, error }) => transparentize(0.9, error ? theme.red1 : theme.yellow1)};
@@ -68,9 +68,8 @@ interface TokenWarningCardProps extends PropsOfExcluding<typeof Wrapper, 'error'
 
 export default function TokenWarningCard({ token, ...rest }: TokenWarningCardProps) {
   const { chainId } = useActiveWeb3React()
-  const isDefaultToken = Boolean(
-    token && token.address && chainId && ALL_TOKENS[chainId] && ALL_TOKENS[chainId][token.address]
-  )
+
+  const isDefaultToken = useIsDefaultToken(token)
 
   const tokenSymbol = token?.symbol?.toLowerCase() ?? ''
   const tokenName = token?.name?.toLowerCase() ?? ''
