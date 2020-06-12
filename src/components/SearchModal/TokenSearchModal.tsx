@@ -7,7 +7,6 @@ import { ThemeContext } from 'styled-components'
 import Card from '../../components/Card'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
-import { useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useAllTokenBalancesTreatingWETHasETH, useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
 import { CloseIcon, LinkStyledButton } from '../../theme/components'
 import { isAddress } from '../../utils'
@@ -63,8 +62,6 @@ export default function TokenSearchModal({
       }
     : allTokenBalances_ ?? {}
 
-  const removeTokenByAddress = useRemoveUserAddedToken()
-
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
   const filteredTokens: Token[] = useMemo(() => {
@@ -117,7 +114,13 @@ export default function TokenSearchModal({
   const closeTooltip = useCallback(() => setTooltipOpen(false), [setTooltipOpen])
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={70} initialFocusRef={isMobile ? undefined : inputRef}>
+    <Modal
+      isOpen={isOpen}
+      onDismiss={onDismiss}
+      maxHeight={70}
+      initialFocusRef={isMobile ? undefined : inputRef}
+      minHeight={70}
+    >
       <Column style={{ width: '100%' }}>
         <PaddedColumn gap="20px">
           <RowBetween>
@@ -159,13 +162,11 @@ export default function TokenSearchModal({
         <TokenList
           tokens={filteredSortedTokens}
           allTokenBalances={allTokenBalances}
-          onRemoveAddedToken={removeTokenByAddress}
           onTokenSelect={handleTokenSelect}
           otherSelectedText={otherSelectedText}
           otherToken={otherSelectedTokenAddress}
           selectedToken={hiddenToken}
           showSendWithSwap={showSendWithSwap}
-          hideRemove={Boolean(isAddress(searchQuery))}
         />
         <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />
         <Card>

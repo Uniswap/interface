@@ -78,7 +78,13 @@ function PairSearchModal({ history, isOpen, onDismiss }: PairSearchModalProps) {
   })[0]
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={70} initialFocusRef={isMobile ? undefined : inputRef}>
+    <Modal
+      isOpen={isOpen}
+      onDismiss={onDismiss}
+      maxHeight={70}
+      initialFocusRef={isMobile ? undefined : inputRef}
+      minHeight={70}
+    >
       <Column style={{ width: '100%' }}>
         <PaddedColumn gap="20px">
           <RowBetween>
