@@ -15,7 +15,7 @@ import { MIGRATOR_ADDRESS } from '../../constants/abis/migrator'
 import { usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useActiveWeb3React } from '../../hooks'
-import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
+import { useToken } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useV1ExchangeContract, useV2MigratorContract } from '../../hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
@@ -332,7 +332,8 @@ export default function MigrateV1Exchange({
 
   const exchangeContract = useV1ExchangeContract(validatedAddress ? validatedAddress : undefined)
   const tokenAddress = useSingleCallResult(exchangeContract, 'tokenAddress', undefined, NEVER_RELOAD)?.result?.[0]
-  const token = useTokenByAddressAndAutomaticallyAdd(tokenAddress)
+
+  const token = useToken(tokenAddress)
 
   const liquidityToken: Token | undefined = useMemo(
     () =>

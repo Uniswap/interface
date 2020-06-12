@@ -48,7 +48,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
   // burn state
   const { independentField, typedValue } = useBurnState()
   const { tokens, pair, route, parsedAmounts, error } = useDerivedBurnInfo()
-  const { onUserInput } = useBurnActionHandlers()
+  const { onUserInput: _onUserInput } = useBurnActionHandlers()
   const isValid = !error
 
   // modal and loading
@@ -143,6 +143,15 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
         }
       })
   }
+
+  // wrapped onUserInput to clear signatures
+  const onUserInput = useCallback(
+    (field: Field, typedValue: string) => {
+      setSignatureData(null)
+      return _onUserInput(field, typedValue)
+    },
+    [_onUserInput]
+  )
 
   // tx sending
   const addTransaction = useTransactionAdder()
@@ -569,7 +578,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
                     onClick={() => {
                       setShowConfirm(true)
                     }}
-                    disabled={!isValid || signatureData === null}
+                    disabled={!isValid || (signatureData === null && approval !== ApprovalState.APPROVED)}
                     error={!isValid && !!parsedAmounts[Field.TOKEN_A] && !!parsedAmounts[Field.TOKEN_B]}
                   >
                     <Text fontSize={16} fontWeight={500}>

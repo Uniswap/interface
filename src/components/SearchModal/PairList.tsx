@@ -25,13 +25,7 @@ export default function PairList({
   }
 
   return (
-    <FixedSizeList
-      itemSize={54}
-      height={500}
-      itemCount={pairs.length}
-      width="100%"
-      style={{ flex: '1', minHeight: 200 }}
-    >
+    <FixedSizeList itemSize={56} height={500} itemCount={pairs.length} width="100%" style={{ flex: '1' }}>
       {({ index, style }) => {
         const pair = pairs[index]
 

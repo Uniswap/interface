@@ -1,10 +1,10 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { JSBI } from '@uniswap/sdk'
 import { RouteComponentProps } from 'react-router-dom'
 
 import Question from '../../components/QuestionHelper'
-import SearchModal from '../../components/SearchModal'
+import PairSearchModal from '../../components/SearchModal/PairSearchModal'
 import PositionCard from '../../components/PositionCard'
 import { useUserHasLiquidityInAllTokens } from '../../data/V1'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
@@ -63,6 +63,10 @@ export default function Pool({ history }: RouteComponentProps) {
   ))
 
   const hasV1Liquidity = useUserHasLiquidityInAllTokens()
+
+  const handleSearchDismiss = useCallback(() => {
+    setShowPoolSearch(false)
+  }, [setShowPoolSearch])
 
   return (
     <AppBody>
@@ -127,7 +131,7 @@ export default function Pool({ history }: RouteComponentProps) {
             </ColumnCenter>
           </FixedBottom>
         </Positions>
-        <SearchModal isOpen={showPoolSearch} onDismiss={() => setShowPoolSearch(false)} />
+        <PairSearchModal isOpen={showPoolSearch} onDismiss={handleSearchDismiss} />
       </AutoColumn>
     </AppBody>
   )

@@ -1,5 +1,5 @@
 import { JSBI, Pair, Token, TokenAmount, WETH } from '@uniswap/sdk'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Text } from 'rebass'
 import { ButtonDropdownLight } from '../../components/Button'
@@ -7,7 +7,7 @@ import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import PositionCard from '../../components/PositionCard'
 import Row from '../../components/Row'
-import SearchModal from '../../components/SearchModal'
+import TokenSearchModal from '../../components/SearchModal/TokenSearchModal'
 import TokenLogo from '../../components/TokenLogo'
 import { usePair } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
@@ -48,20 +48,19 @@ export default function PoolFinder() {
   const position: TokenAmount = useTokenBalanceTreatingWETHasETH(account, pair?.liquidityToken)
   const poolImported: boolean = !!position && JSBI.greaterThan(position.raw, JSBI.BigInt(0))
 
+  const handleTokenSelect = useCallback(
+    (address: string) => {
+      activeField === Fields.TOKEN0 ? setToken0Address(address) : setToken1Address(address)
+    },
+    [activeField]
+  )
+
+  const handleSearchDismiss = useCallback(() => {
+    setShowSearch(false)
+  }, [setShowSearch])
+
   return (
     <AppBody>
-      <SearchModal
-        isOpen={showSearch}
-        filterType="tokens"
-        onTokenSelect={address => {
-          activeField === Fields.TOKEN0 ? setToken0Address(address) : setToken1Address(address)
-        }}
-        onDismiss={() => {
-          setShowSearch(false)
-        }}
-        hiddenToken={activeField === Fields.TOKEN0 ? token1Address : token0Address}
-      />
-
       <AutoColumn gap="md">
         <ButtonDropdownLight
           onClick={() => {
@@ -145,6 +144,13 @@ export default function PoolFinder() {
           </LightCard>
         )}
       </AutoColumn>
+
+      <TokenSearchModal
+        isOpen={showSearch}
+        onTokenSelect={handleTokenSelect}
+        onDismiss={handleSearchDismiss}
+        hiddenToken={activeField === Fields.TOKEN0 ? token1Address : token0Address}
+      />
     </AppBody>
   )
 }

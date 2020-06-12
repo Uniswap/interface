@@ -400,7 +400,7 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
                       {approvalA !== ApprovalState.APPROVED && (
                         <ButtonPrimary
                           onClick={approveACallback}
-                          disabled={approvalA === ApprovalState.PENDING || !isValid}
+                          disabled={approvalA === ApprovalState.PENDING}
                           width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
                         >
                           {approvalA === ApprovalState.PENDING ? (
@@ -413,7 +413,7 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
                       {approvalB !== ApprovalState.APPROVED && (
                         <ButtonPrimary
                           onClick={approveBCallback}
-                          disabled={approvalB === ApprovalState.PENDING || !isValid}
+                          disabled={approvalB === ApprovalState.PENDING}
                           width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
                         >
                           {approvalB === ApprovalState.PENDING ? (

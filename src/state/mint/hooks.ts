@@ -5,7 +5,7 @@ import { Token, TokenAmount, Route, JSBI, Price, Percent, Pair } from '@uniswap/
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import { setDefaultsFromURLMatchParams, Field, typeInput } from './actions'
-import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
+import { useToken } from '../../hooks/Tokens'
 import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
 import { usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
@@ -42,8 +42,8 @@ export function useDerivedMintInfo(): {
   const dependentField = independentField === Field.TOKEN_A ? Field.TOKEN_B : Field.TOKEN_A
 
   // tokens
-  const tokenA = useTokenByAddressAndAutomaticallyAdd(tokenAAddress)
-  const tokenB = useTokenByAddressAndAutomaticallyAdd(tokenBAddress)
+  const tokenA = useToken(tokenAAddress)
+  const tokenB = useToken(tokenBAddress)
   const tokens: { [field in Field]?: Token } = useMemo(
     () => ({
       [Field.TOKEN_A]: tokenA,

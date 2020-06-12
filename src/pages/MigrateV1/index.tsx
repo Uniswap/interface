@@ -8,7 +8,7 @@ import { AutoRow } from '../../components/Row'
 import { SearchInput } from '../../components/SearchModal/styleds'
 import { useAllTokenV1Exchanges } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
-import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
+import { useToken } from '../../hooks/Tokens'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { LightCard } from '../../components/Card'
@@ -24,7 +24,7 @@ export default function MigrateV1({ history }: RouteComponentProps) {
 
   const [tokenSearch, setTokenSearch] = useState<string>('')
   const handleTokenSearchChange = useCallback(e => setTokenSearch(e.target.value), [setTokenSearch])
-  useTokenByAddressAndAutomaticallyAdd(tokenSearch)
+  useToken(tokenSearch)
 
   // get V1 LP balances
   const V1Exchanges = useAllTokenV1Exchanges()
