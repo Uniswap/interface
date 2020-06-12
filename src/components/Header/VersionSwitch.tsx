@@ -18,7 +18,13 @@ const VersionLabel = styled.span<{ enabled: boolean }>`
     color: ${({ theme, enabled }) => (enabled ? theme.white : theme.primary3)};
   }
 `
-const VersionToggle = styled(Link)<{ enabled: boolean }>`
+
+interface VersionToggleProps extends React.ComponentProps<typeof Link> {
+  enabled: boolean
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const VersionToggle = styled(({ enabled, ...rest }: VersionToggleProps) => <Link {...rest} />)<VersionToggleProps>`
   border-radius: 16px;
   opacity: ${({ enabled }) => (enabled ? 1 : 0.5)};
   cursor: ${({ enabled }) => (enabled ? 'pointer' : 'default')};
