@@ -78,10 +78,6 @@ const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }
   }
 `
 
-const SlippageSelector = styled.div`
-  padding: 0 20px;
-`
-
 export interface SlippageTabsProps {
   rawSlippage: number
   setRawSlippage: (rawSlippage: number) => void
@@ -146,15 +142,14 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
   }
 
   return (
-    <>
-      <RowFixed padding={'0 20px'}>
-        <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-          Set slippage tolerance
-        </TYPE.black>
-        <QuestionHelper text="Your transaction will revert if the price changes unfavorably by more than this percentage." />
-      </RowFixed>
-
-      <SlippageSelector>
+    <AutoColumn gap="md">
+      <AutoColumn gap="sm">
+        <RowFixed>
+          <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+            Slippage tolerance
+          </TYPE.black>
+          <QuestionHelper text="Your transaction will revert if the price changes unfavorably by more than this percentage." />
+        </RowFixed>
         <RowBetween>
           <Option
             onClick={() => {
@@ -220,16 +215,16 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
               : 'Your transaction may be frontrun'}
           </RowBetween>
         )}
-      </SlippageSelector>
+      </AutoColumn>
 
       <AutoColumn gap="sm">
-        <RowFixed padding={'0 20px'}>
+        <RowFixed>
           <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-            Deadline
+            Transaction deadline
           </TYPE.black>
           <QuestionHelper text="Your transaction will revert if it is pending for more than this long." />
         </RowFixed>
-        <RowFixed padding={'0 20px'}>
+        <RowFixed>
           <OptionCustom style={{ width: '80px' }} tabIndex={-1}>
             <Input
               color={!!deadlineError ? 'red' : undefined}
@@ -246,6 +241,6 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
           </TYPE.body>
         </RowFixed>
       </AutoColumn>
-    </>
+    </AutoColumn>
   )
 }

@@ -1,3 +1,4 @@
+import { Version } from './../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
 import { ChainId, JSBI, Token, TokenAmount, Trade, WETH } from '@uniswap/sdk'
 import { ParsedQs } from 'qs'
@@ -13,6 +14,9 @@ import { AppDispatch, AppState } from '../index'
 import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
 import { Field, replaceSwapState, selectToken, switchTokens, typeInput } from './actions'
 import { SwapState } from './reducer'
+import useToggledVersion from '../../hooks/useToggledVersion'
+import { useUserSlippageTolerance } from '../user/hooks'
+import { computeSlippageAdjustedAmounts } from '../../utils/prices'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -83,6 +87,8 @@ export function useDerivedSwapInfo(): {
 } {
   const { account } = useActiveWeb3React()
 
+  const toggledVersion = useToggledVersion()
+
   const {
     independentField,
     typedValue,
@@ -132,12 +138,29 @@ export function useDerivedSwapInfo(): {
     error = error ?? 'Select a token'
   }
 
-  // this check is incorrect, it should check against the maximum amount in
-  // rather than the estimated amount in
-  // const [balanceIn, amountIn] = [tokenBalances[Field.INPUT], parsedAmounts[Field.INPUT]]
-  // if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-  //   error = 'Insufficient ' + amountIn.token.symbol + ' balance'
-  // }
+  const [allowedSlippage] = useUserSlippageTolerance()
+
+  const slippageAdjustedAmounts =
+    bestTrade && allowedSlippage && computeSlippageAdjustedAmounts(bestTrade, allowedSlippage)
+
+  const slippageAdjustedAmountsV1 =
+    v1Trade && allowedSlippage && computeSlippageAdjustedAmounts(v1Trade, allowedSlippage)
+
+  // compare input balance to MAx input based on version
+  const [balanceIn, amountIn] = [
+    tokenBalances[Field.INPUT],
+    toggledVersion === Version.v1
+      ? slippageAdjustedAmountsV1
+        ? slippageAdjustedAmountsV1[Field.INPUT]
+        : null
+      : slippageAdjustedAmounts
+      ? slippageAdjustedAmounts[Field.INPUT]
+      : null
+  ]
+
+  if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
+    error = 'Insufficient ' + amountIn.token.symbol + ' balance'
+  }
 
   return {
     tokens,

@@ -20,18 +20,15 @@ import SwapModalHeader from '../../components/swap/SwapModalHeader'
 import TradePrice from '../../components/swap/TradePrice'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import { TokenWarningCards } from '../../components/TokenWarningCard'
-import {
-  DEFAULT_DEADLINE_FROM_NOW,
-  INITIAL_ALLOWED_SLIPPAGE,
-  MIN_ETH,
-  BETTER_TRADE_LINK_THRESHOLD
-} from '../../constants'
-import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useApproveCallbackFromTrade, ApprovalState } from '../../hooks/useApproveCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
+import { useWalletModalToggle, useToggleSettingsMenu } from '../../state/application/hooks'
+import { useExpertModeManager, useUserSlippageTolerance, useUserDeadline } from '../../state/user/hooks'
+
+import { INITIAL_ALLOWED_SLIPPAGE, MIN_ETH, BETTER_TRADE_LINK_THRESHOLD } from '../../constants'
+import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
-import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
@@ -42,7 +39,7 @@ import {
 import { CursorPointer, TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
-import { PriceSlippageWarningCard } from '../../components/swap/PriceSlippageWarningCard'
+import { ClickableText } from '../Pool/styleds'
 
 export default function Swap() {
   useDefaultsFromURLSearch()
@@ -52,6 +49,14 @@ export default function Swap() {
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
+
+  // for expert mode
+  const toggleSettings = useToggleSettingsMenu()
+  const [expertMode] = useExpertModeManager()
+
+  // get custom setting values for user
+  const [deadline] = useUserDeadline()
+  const [allowedSlippage] = useUserSlippageTolerance()
 
   // swap state
   const { independentField, typedValue } = useSwapState()
@@ -84,10 +89,6 @@ export default function Swap() {
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // waiting for user confirmaion/rejection
   const [txHash, setTxHash] = useState<string>('')
 
-  // tx parameters
-  const [deadline, setDeadline] = useState<number>(DEFAULT_DEADLINE_FROM_NOW)
-  const [allowedSlippage, setAllowedSlippage] = useState<number>(INITIAL_ALLOWED_SLIPPAGE)
-
   const formattedAmounts = {
     [independentField]: typedValue,
     [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(6) : ''
@@ -106,13 +107,6 @@ export default function Swap() {
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
-
-  // show approve flow when: no error on inputs, not approved or pending, or approved in current session
-  const showApproveFlow =
-    !error &&
-    (approval === ApprovalState.NOT_APPROVED ||
-      approval === ApprovalState.PENDING ||
-      (approvalSubmitted && approval === ApprovalState.APPROVED))
 
   // mark when a user has submitted an approval, reset onTokenSelection for input field
   useEffect(() => {
@@ -146,7 +140,6 @@ export default function Swap() {
     if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
       return
     }
-
     setAttemptingTxn(true)
     swapCallback()
       .then(hash => {
@@ -177,6 +170,15 @@ export default function Swap() {
 
   // warnings on slippage
   const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
+
+  // show approve flow when: no error on inputs, not approved or pending, or approved in current session
+  // never show if price impact is above threshold in non expert mode
+  const showApproveFlow =
+    !error &&
+    (approval === ApprovalState.NOT_APPROVED ||
+      approval === ApprovalState.PENDING ||
+      (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
+    !(priceImpactSeverity > 3 && !expertMode)
 
   function modalHeader() {
     return (
@@ -292,6 +294,17 @@ export default function Swap() {
                     <TradePrice trade={bestTrade} showInverted={showInverted} setShowInverted={setShowInverted} />
                   </RowBetween>
 
+                  {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
+                    <RowBetween align="center">
+                      <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                        Slippage Tolerance
+                      </ClickableText>
+                      <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                        {allowedSlippage ? allowedSlippage / 100 : '-'}%
+                      </ClickableText>
+                    </RowBetween>
+                  )}
+
                   {bestTrade && priceImpactSeverity > 1 && (
                     <RowBetween>
                       <TYPE.main
@@ -335,29 +348,35 @@ export default function Swap() {
                 </ButtonPrimary>
                 <ButtonError
                   onClick={() => {
-                    setShowConfirm(true)
+                    expertMode ? onSwap() : setShowConfirm(true)
                   }}
                   width="48%"
                   id="swap-button"
-                  disabled={!isValid || approval !== ApprovalState.APPROVED}
+                  disabled={!isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !expertMode)}
                   error={isValid && priceImpactSeverity > 2}
                 >
                   <Text fontSize={16} fontWeight={500}>
-                    {`Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                    {priceImpactSeverity > 3 && !expertMode
+                      ? `Price Impact High`
+                      : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                   </Text>
                 </ButtonError>
               </RowBetween>
             ) : (
               <ButtonError
                 onClick={() => {
-                  setShowConfirm(true)
+                  expertMode ? onSwap() : setShowConfirm(true)
                 }}
                 id="swap-button"
-                disabled={!isValid}
+                disabled={!isValid || (priceImpactSeverity > 3 && !expertMode)}
                 error={isValid && priceImpactSeverity > 2}
               >
                 <Text fontSize={20} fontWeight={500}>
-                  {error ?? `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                  {error
+                    ? error
+                    : priceImpactSeverity > 3 && !expertMode
+                    ? `Price Impact Too High`
+                    : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                 </Text>
               </ButtonError>
             )}
@@ -367,21 +386,7 @@ export default function Swap() {
       </AppBody>
 
       {bestTrade && (
-        <AdvancedSwapDetailsDropdown
-          trade={bestTrade}
-          rawSlippage={allowedSlippage}
-          deadline={deadline}
-          showAdvanced={showAdvanced}
-          setShowAdvanced={setShowAdvanced}
-          setDeadline={setDeadline}
-          setRawSlippage={setAllowedSlippage}
-        />
-      )}
-
-      {priceImpactWithoutFee && priceImpactSeverity > 2 && (
-        <AutoColumn gap="lg" style={{ marginTop: '1rem' }}>
-          <PriceSlippageWarningCard priceSlippage={priceImpactWithoutFee} />
-        </AutoColumn>
+        <AdvancedSwapDetailsDropdown trade={bestTrade} showAdvanced={showAdvanced} setShowAdvanced={setShowAdvanced} />
       )}
     </>
   )
