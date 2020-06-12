@@ -1,6 +1,5 @@
 import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from './../../constants/index'
 import { createReducer } from '@reduxjs/toolkit'
-import { ChainId, WETH } from '@uniswap/sdk'
 import {
   addSerializedPair,
   addSerializedToken,
@@ -80,21 +79,13 @@ export default createReducer(initialState, builder =>
       if (GIT_COMMIT_HASH && state.lastVersion !== GIT_COMMIT_HASH) {
         state.lastVersion = GIT_COMMIT_HASH
 
-        // Wed May 20, 2020 @ ~9pm central
-        if (state.timestamp < 1590027589111) {
-          // this should remove the user added token from 'eth' for mainnet
-          if (state.tokens[ChainId.MAINNET]) {
-            delete state.tokens[ChainId.MAINNET][WETH[ChainId.MAINNET].address]
-          }
-        }
-
         // slippage isnt being tracked in local storage, reset to default
-        if (!!!state.userSlippageTolerance) {
+        if (typeof state.userSlippageTolerance !== 'number') {
           state.userSlippageTolerance = INITIAL_ALLOWED_SLIPPAGE
         }
 
         // deadline isnt being tracked in local storage, reset to default
-        if (!!!state.userDeadline) {
+        if (typeof state.userDeadline !== 'number') {
           state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
         }
       }
