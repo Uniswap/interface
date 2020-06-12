@@ -171,7 +171,7 @@ export function useAllDummyPairs(): Pair[] {
 
   // pairs saved by users
   const savedSerializedPairs = useSelector<AppState, AppState['user']['pairs']>(({ user: { pairs } }) => pairs)
-  const userPairs = useMemo(
+  const userPairs: Pair[] = useMemo(
     () =>
       Object.values<SerializedPair>(savedSerializedPairs[chainId ?? -1] ?? {}).map(
         pair =>

@@ -1,9 +1,9 @@
 import { parseBytes32String } from '@ethersproject/strings'
 import { ChainId, Token, WETH } from '@uniswap/sdk'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { ALL_TOKENS } from '../constants/tokens'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
-import { useAddUserToken, useUserAddedTokens } from '../state/user/hooks'
+import { useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
 
 import { useActiveWeb3React } from './index'
@@ -99,22 +99,4 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
     tokenName.result,
     tokenNameBytes32.result
   ])
-}
-
-// gets token information by address (typically user input) and
-// automatically adds it for the user if it's a valid token address
-export function useTokenByAddressAndAutomaticallyAdd(tokenAddress?: string): Token | undefined | null {
-  const addToken = useAddUserToken()
-  const token = useToken(tokenAddress)
-  const { chainId } = useActiveWeb3React()
-  const allTokens = useAllTokens()
-
-  useEffect(() => {
-    if (!chainId || !token) return
-    if (WETH[chainId as ChainId]?.address === token.address) return
-    if (allTokens[token.address]) return
-    addToken(token)
-  }, [token, addToken, chainId, allTokens])
-
-  return token
 }
