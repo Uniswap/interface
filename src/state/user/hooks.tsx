@@ -135,60 +135,55 @@ export function useTokenWarningDismissal(chainId?: number, token?: Token): [bool
   }, [chainId, token, dismissalState, dispatch])
 }
 
-export function useAllDummyPairs(skip?: boolean): Pair[] {
+export function useAllDummyPairs(): Pair[] {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
 
   // pinned pairs
-  const pinnedPairs = useMemo(() => (skip ? [] : DUMMY_PAIRS_TO_PIN[chainId as ChainId] ?? []), [chainId])
+  const pinnedPairs = useMemo(() => DUMMY_PAIRS_TO_PIN[chainId as ChainId] ?? [], [chainId])
 
   // pairs for every token against every base
   const generatedPairs: Pair[] = useMemo(
     () =>
-      skip
-        ? []
-        : flatMap(
-            Object.values(tokens)
-              // select only tokens on the current chain
-              .filter(token => token.chainId === chainId),
-            token => {
-              // for each token on the current chain,
-              return (
-                // loop though all bases on the current chain
-                (BASES_TO_TRACK_LIQUIDITY_FOR[chainId as ChainId] ?? [])
-                  // to construct pairs of the given token with each base
-                  .map(base => {
-                    if (base.equals(token)) {
-                      return null
-                    } else {
-                      return new Pair(new TokenAmount(base, ZERO), new TokenAmount(token, ZERO))
-                    }
-                  })
-                  .filter(pair => !!pair) as Pair[]
-              )
-            }
-          ),
-    [skip, tokens, chainId]
+      flatMap(
+        Object.values(tokens)
+          // select only tokens on the current chain
+          .filter(token => token.chainId === chainId),
+        token => {
+          // for each token on the current chain,
+          return (
+            // loop though all bases on the current chain
+            (BASES_TO_TRACK_LIQUIDITY_FOR[chainId as ChainId] ?? [])
+              // to construct pairs of the given token with each base
+              .map(base => {
+                if (base.equals(token)) {
+                  return null
+                } else {
+                  return new Pair(new TokenAmount(base, ZERO), new TokenAmount(token, ZERO))
+                }
+              })
+              .filter(pair => !!pair) as Pair[]
+          )
+        }
+      ),
+    [tokens, chainId]
   )
 
   // pairs saved by users
   const savedSerializedPairs = useSelector<AppState, AppState['user']['pairs']>(({ user: { pairs } }) => pairs)
   const userPairs: Pair[] = useMemo(
     () =>
-      skip
-        ? []
-        : Object.values<SerializedPair>(savedSerializedPairs[chainId ?? -1] ?? {}).map(
-            pair =>
-              new Pair(
-                new TokenAmount(deserializeToken(pair.token0), ZERO),
-                new TokenAmount(deserializeToken(pair.token1), ZERO)
-              )
-          ),
-    [skip, savedSerializedPairs, chainId]
+      Object.values<SerializedPair>(savedSerializedPairs[chainId ?? -1] ?? {}).map(
+        pair =>
+          new Pair(
+            new TokenAmount(deserializeToken(pair.token0), ZERO),
+            new TokenAmount(deserializeToken(pair.token1), ZERO)
+          )
+      ),
+    [savedSerializedPairs, chainId]
   )
 
   return useMemo(() => {
-    if (skip) return []
     const cache: { [pairKey: string]: boolean } = {}
     return (
       pinnedPairs
@@ -203,5 +198,5 @@ export function useAllDummyPairs(skip?: boolean): Pair[] {
           return (cache[pairKey] = true)
         })
     )
-  }, [skip, pinnedPairs, generatedPairs, userPairs])
+  }, [pinnedPairs, generatedPairs, userPairs])
 }
