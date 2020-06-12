@@ -5,7 +5,7 @@ import AppBody from '../AppBody'
 
 import Row, { AutoRow } from '../../components/Row'
 import TokenLogo from '../../components/TokenLogo'
-import SearchModal from '../../components/SearchModal'
+import TokenSearchModal from '../../components/SearchModal/TokenSearchModal'
 import { Text } from 'rebass'
 import { Plus } from 'react-feather'
 import { TYPE, StyledInternalLink } from '../../theme'
@@ -128,9 +128,8 @@ export default function CreatePool({ location }: RouteComponentProps) {
             </ButtonPrimary>
           )}
         </AutoColumn>
-        <SearchModal
+        <TokenSearchModal
           isOpen={showSearch}
-          filterType="tokens"
           onTokenSelect={address => {
             activeField === Fields.TOKEN0 ? setToken0Address(address) : setToken1Address(address)
           }}
