@@ -14,7 +14,7 @@ import { RowFixed } from '../Row'
 import TokenLogo from '../TokenLogo'
 import { FadedSpan, GreySpan, MenuItem, ModalInfo } from './styleds'
 import Loader from '../Loader'
-import isDefaultToken from '../../hooks/useIsDefaultToken'
+import { isDefaultToken, isCustomAddedToken } from '../../utils'
 
 export default function TokenList({
   tokens,
@@ -58,7 +58,7 @@ export default function TokenList({
         const { address, symbol } = token
 
         const isDefault = isDefaultToken(token)
-        const customAdded = Boolean(!isDefault && allTokens[address])
+        const customAdded = isCustomAddedToken(allTokens, token)
         const balance = allTokenBalances[address]
 
         const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)

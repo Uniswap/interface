@@ -8,7 +8,7 @@ import { AutoRow } from '../../components/Row'
 import { SearchInput } from '../../components/SearchModal/styleds'
 import { useAllTokenV1Exchanges } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
-import { useToken } from '../../hooks/Tokens'
+import { useToken, useAllTokens } from '../../hooks/Tokens'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { LightCard } from '../../components/Card'
@@ -18,8 +18,7 @@ import V1PositionCard from '../../components/PositionCard/V1'
 import QuestionHelper from '../../components/QuestionHelper'
 import { Dots } from '../../components/swap/styleds'
 import { useAddUserToken } from '../../state/user/hooks'
-import useIsDefaultToken from '../../hooks/useIsDefaultToken'
-import useIsCustomAddedToken from '../../hooks/useIsCustomAddedToken'
+import { isDefaultToken, isCustomAddedToken } from '../../utils'
 
 export default function MigrateV1({ history }: RouteComponentProps) {
   const theme = useContext(ThemeContext)
@@ -30,14 +29,15 @@ export default function MigrateV1({ history }: RouteComponentProps) {
 
   // automatically add the search token
   const token = useToken(tokenSearch)
-  const isDefaultToken = useIsDefaultToken(token)
-  const isCustomAddedToken = useIsCustomAddedToken(token)
+  const isDefault = isDefaultToken(token)
+  const allTokens = useAllTokens()
+  const isCustomAdded = isCustomAddedToken(allTokens, token)
   const addToken = useAddUserToken()
   useEffect(() => {
-    if (token && !isDefaultToken && !isCustomAddedToken) {
+    if (token && !isDefault && !isCustomAdded) {
       addToken(token)
     }
-  }, [token, isDefaultToken, isCustomAddedToken, addToken])
+  }, [token, isDefault, isCustomAdded, addToken])
 
   // get V1 LP balances
   const V1Exchanges = useAllTokenV1Exchanges()
