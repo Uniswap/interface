@@ -1,3 +1,4 @@
+import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
 import styled, {
   ThemeProvider as StyledComponentsThemeProvider,
@@ -168,9 +169,15 @@ export const TYPE = {
 
 export const FixedGlobalStyle = createGlobalStyle`
 @import url('https://rsms.me/inter/inter.css');
-  html, body, input, textarea, button  { font-family: 'Inter', sans-serif; letter-spacing: -0.018em;}
+
+html, input, textarea, button {
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.018em;
+}
 @supports (font-variation-settings: normal) {
-  html, body, input, textarea, button { font-family: 'Inter var', sans-serif; }
+  html, input, textarea, button {
+    font-family: 'Inter var', sans-serif;
+  }
 }
 
 html,
@@ -196,5 +203,16 @@ export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
   background-color: ${({ theme }) => theme.bg2};
+}
+
+body {
+  min-height: 100vh;
+  background-position: 0 -30vh;
+  background-repeat: no-repeat;
+  background-image: ${({ theme }) =>
+    `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.9, theme.primary1)} 0%, ${transparentize(
+      1,
+      theme.bg1
+    )} 100%)`};
 }
 `

@@ -19,9 +19,12 @@ const VersionLabel = styled.span<{ enabled: boolean }>`
   }
 `
 
-// destructure to not pass custom props to Dialog DOM element on Link
+interface VersionToggleProps extends React.ComponentProps<typeof Link> {
+  enabled: boolean
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const VersionToggle = styled(({ enabled, ...rest }) => <Link {...rest} />)`
+const VersionToggle = styled(({ enabled, ...rest }: VersionToggleProps) => <Link {...rest} />)<VersionToggleProps>`
   border-radius: 16px;
   opacity: ${({ enabled }) => (enabled ? 1 : 0.5)};
   cursor: ${({ enabled }) => (enabled ? 'pointer' : 'default')};

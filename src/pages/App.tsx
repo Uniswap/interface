@@ -11,6 +11,7 @@ import AddLiquidity from './AddLiquidity'
 import CreatePool from './CreatePool'
 import MigrateV1 from './MigrateV1'
 import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
+import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
 import Pool from './Pool'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -49,25 +50,6 @@ const BodyWrapper = styled.div`
   z-index: 1;
 `
 
-const BackgroundGradient = styled.div`
-  width: 100%;
-  height: 170vh;
-  background: ${({ theme }) => `radial-gradient(50% 50% at 50% 50%, ${theme.primary1} 0%, ${theme.bg1} 100%)`};
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  opacity: 0.1;
-  z-index: -1;
-
-  transform: translateY(-70vh);
-
-  @media (max-width: 960px) {
-    height: 300px;
-    width: 100%;
-    transform: translateY(-150px);
-  }
-`
-
 const Marginer = styled.div`
   margin-top: 5rem;
 `
@@ -103,13 +85,13 @@ export default function App() {
                 <Route exact strict path="/remove/:tokens" component={RemoveLiquidity} />
                 <Route exact strict path="/migrate/v1" component={MigrateV1} />
                 <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
+                <Route exact strict path="/remove/v1/:address" component={RemoveV1Exchange} />
                 <Route component={RedirectPathToSwapOnly} />
               </Switch>
             </Web3ReactManager>
             <Marginer />
             <Footer />
           </BodyWrapper>
-          <BackgroundGradient />
         </AppWrapper>
       </Router>
     </Suspense>

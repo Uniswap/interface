@@ -5,7 +5,8 @@ import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import { ROUTER_ADDRESS } from '../constants'
-import { ChainId, JSBI, Percent, TokenAmount } from '@uniswap/sdk'
+import { ALL_TOKENS } from '../constants/tokens'
+import { ChainId, JSBI, Percent, TokenAmount, Token } from '@uniswap/sdk'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -93,4 +94,13 @@ export function getRouterContract(_: number, library: Web3Provider, account?: st
 
 export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
+}
+
+export function isDefaultToken(token?: Token): boolean {
+  return Boolean(token && ALL_TOKENS[token.chainId]?.[token.address])
+}
+
+export function isCustomAddedToken(allTokens: { [address: string]: Token }, token?: Token): boolean {
+  const isDefault = isDefaultToken(token)
+  return Boolean(token && allTokens[token.address] && !isDefault)
 }

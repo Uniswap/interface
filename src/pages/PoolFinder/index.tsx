@@ -1,9 +1,8 @@
-import { JSBI, Pair, Token, TokenAmount } from '@uniswap/sdk'
+import { JSBI, Pair, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
-import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
-import { ButtonDropwdown, ButtonDropwdownLight, ButtonPrimary } from '../../components/Button'
+import { ButtonDropdownLight } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import PositionCard from '../../components/PositionCard'
@@ -23,31 +22,31 @@ enum Fields {
   TOKEN1 = 1
 }
 
-export default function PoolFinder({ history }: RouteComponentProps) {
-  const { account } = useActiveWeb3React()
-  const [showSearch, setShowSearch] = useState<boolean>(false)
-  const [activeField, setActiveField] = useState<number>(Fields.TOKEN0)
+export default function PoolFinder() {
+  const { account, chainId } = useActiveWeb3React()
 
-  const [token0Address, setToken0Address] = useState<string>()
+  const [showSearch, setShowSearch] = useState<boolean>(false)
+  const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
+
+  const [token0Address, setToken0Address] = useState<string>(WETH[chainId].address)
   const [token1Address, setToken1Address] = useState<string>()
   const token0: Token = useToken(token0Address)
   const token1: Token = useToken(token1Address)
 
   const pair: Pair = usePair(token0, token1)
   const addPair = usePairAdder()
-
   useEffect(() => {
     if (pair) {
       addPair(pair)
     }
   }, [pair, addPair])
 
-  const position: TokenAmount = useTokenBalanceTreatingWETHasETH(account, pair?.liquidityToken)
-
   const newPair: boolean =
     pair === null ||
     (!!pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0)))
-  const allowImport: boolean = position && JSBI.greaterThan(position.raw, JSBI.BigInt(0))
+
+  const position: TokenAmount = useTokenBalanceTreatingWETHasETH(account, pair?.liquidityToken)
+  const poolImported: boolean = !!position && JSBI.greaterThan(position.raw, JSBI.BigInt(0))
 
   const handleTokenSelect = useCallback(
     (address: string) => {
@@ -63,100 +62,89 @@ export default function PoolFinder({ history }: RouteComponentProps) {
   return (
     <AppBody>
       <AutoColumn gap="md">
-        {!token0Address ? (
-          <ButtonDropwdown
-            onClick={() => {
-              setShowSearch(true)
-              setActiveField(Fields.TOKEN0)
-            }}
-          >
-            <Text fontSize={20}>Select first token</Text>
-          </ButtonDropwdown>
-        ) : (
-          <ButtonDropwdownLight
-            onClick={() => {
-              setShowSearch(true)
-              setActiveField(Fields.TOKEN0)
-            }}
-          >
+        <ButtonDropdownLight
+          onClick={() => {
+            setShowSearch(true)
+            setActiveField(Fields.TOKEN0)
+          }}
+        >
+          {token0 ? (
             <Row>
               <TokenLogo address={token0Address} />
               <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-                {token0?.symbol}
+                {token0.symbol}
               </Text>
             </Row>
-          </ButtonDropwdownLight>
-        )}
+          ) : (
+            <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
+              Select a Token
+            </Text>
+          )}
+        </ButtonDropdownLight>
+
         <ColumnCenter>
           <Plus size="16" color="#888D9B" />
         </ColumnCenter>
-        {!token1Address ? (
-          <ButtonDropwdown
-            onClick={() => {
-              setShowSearch(true)
-              setActiveField(Fields.TOKEN1)
-            }}
-          >
-            <Text fontSize={20}>Select second token</Text>
-          </ButtonDropwdown>
-        ) : (
-          <ButtonDropwdownLight
-            onClick={() => {
-              setShowSearch(true)
-              setActiveField(Fields.TOKEN1)
-            }}
-          >
+
+        <ButtonDropdownLight
+          onClick={() => {
+            setShowSearch(true)
+            setActiveField(Fields.TOKEN1)
+          }}
+        >
+          {token1 ? (
             <Row>
               <TokenLogo address={token1Address} />
               <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-                {token1?.symbol}
+                {token1.symbol}
               </Text>
             </Row>
-          </ButtonDropwdownLight>
-        )}
-        {allowImport && (
+          ) : (
+            <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
+              Select a Token
+            </Text>
+          )}
+        </ButtonDropdownLight>
+
+        {poolImported && (
           <ColumnCenter
             style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
           >
             <Text textAlign="center" fontWeight={500} color="">
-              Pool Imported!
+              Pool Found!
             </Text>
           </ColumnCenter>
         )}
+
         {position ? (
-          !JSBI.equal(position.raw, JSBI.BigInt(0)) ? (
+          poolImported ? (
             <PositionCard pair={pair} minimal={true} border="1px solid #CED0D9" />
           ) : (
             <LightCard padding="45px 10px">
               <AutoColumn gap="sm" justify="center">
-                <Text textAlign="center">Pool found, you don’t have liquidity on this pair yet.</Text>
-                <StyledInternalLink to={`/add/${token0Address}-${token1Address}`}>
-                  <Text textAlign="center">Add liquidity to this pair instead.</Text>
+                <Text textAlign="center">You don’t have liquidity in this pool yet.</Text>
+                <StyledInternalLink to={`/add/${token0.address}-${token1.address}`}>
+                  <Text textAlign="center">Add liquidity?</Text>
                 </StyledInternalLink>
               </AutoColumn>
             </LightCard>
           )
         ) : newPair ? (
-          <LightCard padding="45px">
+          <LightCard padding="45px 10px">
             <AutoColumn gap="sm" justify="center">
-              <Text color="">No pool found.</Text>
+              <Text textAlign="center">No pool found.</Text>
               <StyledInternalLink to={`/add/${token0Address}-${token1Address}`}>Create pool?</StyledInternalLink>
             </AutoColumn>
           </LightCard>
         ) : (
-          <LightCard padding={'45px'}>
-            <Text color="#C3C5CB" textAlign="center">
-              Select a token pair to find your liquidity.
+          <LightCard padding="45px 10px">
+            <Text textAlign="center">
+              {!account ? 'Connect to a wallet to find pools' : 'Select a token to find your liquidity.'}
             </Text>
           </LightCard>
         )}
-
-        <ButtonPrimary disabled={!allowImport} onClick={() => history.goBack()}>
-          <Text fontWeight={500} fontSize={20}>
-            Close
-          </Text>
-        </ButtonPrimary>
       </AutoColumn>
+
       <TokenSearchModal
         isOpen={showSearch}
         onTokenSelect={handleTokenSelect}

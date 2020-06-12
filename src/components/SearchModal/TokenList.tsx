@@ -1,10 +1,9 @@
-import { ChainId, JSBI, Token, TokenAmount } from '@uniswap/sdk'
+import { JSBI, Token, TokenAmount } from '@uniswap/sdk'
 import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { ALL_TOKENS } from '../../constants/tokens'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
@@ -15,10 +14,7 @@ import { RowFixed } from '../Row'
 import TokenLogo from '../TokenLogo'
 import { FadedSpan, GreySpan, MenuItem, ModalInfo } from './styleds'
 import Loader from '../Loader'
-
-function isDefaultToken(tokenAddress: string, chainId?: number): boolean {
-  return Boolean(chainId && ALL_TOKENS[chainId as ChainId]?.[tokenAddress])
-}
+import { isDefaultToken, isCustomAddedToken } from '../../utils'
 
 export default function TokenList({
   tokens,
@@ -61,8 +57,8 @@ export default function TokenList({
         const token = tokens[index]
         const { address, symbol } = token
 
-        const isDefault = isDefaultToken(address, chainId)
-        const customAdded = Boolean(!isDefault && allTokens[address])
+        const isDefault = isDefaultToken(token)
+        const customAdded = isCustomAddedToken(allTokens, token)
         const balance = allTokenBalances[address]
 
         const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)

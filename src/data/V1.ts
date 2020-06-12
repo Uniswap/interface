@@ -6,6 +6,7 @@ import { useV1FactoryContract } from '../hooks/useContract'
 import { Version } from '../hooks/useToggledVersion'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from '../state/multicall/hooks'
 import { useETHBalances, useTokenBalance, useTokenBalances } from '../state/wallet/hooks'
+import { AddressZero } from '@ethersproject/constants'
 
 export function useV1ExchangeAddress(tokenAddress?: string): string | undefined {
   const contract = useV1FactoryContract()
@@ -39,8 +40,8 @@ export function useAllTokenV1Exchanges(): { [exchangeAddress: string]: Token } {
   return useMemo(
     () =>
       data?.reduce<{ [exchangeAddress: string]: Token }>((memo, { result }, ix) => {
-        const token = allTokens[args[ix][0]]
-        if (result?.[0]) {
+        if (result?.[0] && result[0] !== AddressZero) {
+          const token = allTokens[args[ix][0]]
           memo[result[0]] = token
         }
         return memo
@@ -51,12 +52,13 @@ export function useAllTokenV1Exchanges(): { [exchangeAddress: string]: Token } {
 
 // returns whether any of the tokens in the user's token list have liquidity on v1
 export function useUserHasLiquidityInAllTokens(): boolean | undefined {
-  const exchanges = useAllTokenV1Exchanges()
-
   const { account, chainId } = useActiveWeb3React()
 
+  const exchanges = useAllTokenV1Exchanges()
+
   const fakeLiquidityTokens = useMemo(
-    () => (chainId ? Object.keys(exchanges).map(address => new Token(chainId, address, 18, 'UNI-V1')) : []),
+    () =>
+      chainId ? Object.keys(exchanges).map(address => new Token(chainId, address, 18, 'UNI-V1', 'Uniswap V1')) : [],
     [chainId, exchanges]
   )
 
