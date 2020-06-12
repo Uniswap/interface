@@ -4,7 +4,7 @@ import { useLocation } from 'react-router'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
-import { Version } from '../../hooks/useToggledVersion'
+import { DEFAULT_VERSION, Version } from '../../hooks/useToggledVersion'
 
 import { StyledInternalLink } from '../../theme'
 import { YellowCard } from '../Card'
@@ -20,7 +20,7 @@ export default function BetterTradeLink({ version }: { version: Version }) {
       ...location,
       search: `?${stringify({
         ...search,
-        use: version
+        use: version !== DEFAULT_VERSION ? version : undefined
       })}`
     }
   }, [location, search, version])
