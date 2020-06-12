@@ -5,7 +5,7 @@ import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useV1Trade } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
-import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
+import { useToken } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
@@ -90,8 +90,8 @@ export function useDerivedSwapInfo(): {
     [Field.OUTPUT]: { address: tokenOutAddress }
   } = useSwapState()
 
-  const tokenIn = useTokenByAddressAndAutomaticallyAdd(tokenInAddress)
-  const tokenOut = useTokenByAddressAndAutomaticallyAdd(tokenOutAddress)
+  const tokenIn = useToken(tokenInAddress)
+  const tokenOut = useToken(tokenOutAddress)
 
   const relevantTokenBalances = useTokenBalancesTreatWETHAsETH(account ?? undefined, [
     tokenIn ?? undefined,

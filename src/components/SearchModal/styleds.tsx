@@ -8,8 +8,8 @@ export const ModalInfo = styled.div`
   padding: 1rem 1rem;
   margin: 0.25rem 0.5rem;
   justify-content: center;
+  flex: 1;
   user-select: none;
-  min-height: 200px;
 `
 
 export const FadedSpan = styled(RowFixed)`
@@ -50,12 +50,9 @@ export const PaddedColumn = styled(AutoColumn)`
   padding-bottom: 12px;
 `
 
-const PaddedItem = styled(RowBetween)`
+export const MenuItem = styled(RowBetween)`
   padding: 4px 20px;
   height: 56px;
-`
-
-export const MenuItem = styled(PaddedItem)`
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
   :hover {

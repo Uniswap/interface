@@ -10,7 +10,7 @@ import { SearchInput } from '../../components/SearchModal/styleds'
 import TokenLogo from '../../components/TokenLogo'
 import { useAllTokenV1Exchanges } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
-import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
+import { useToken } from '../../hooks/Tokens'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useTokenBalances } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
@@ -45,7 +45,7 @@ export default function MigrateV1({ history }: RouteComponentProps) {
   const [tokenSearch, setTokenSearch] = useState<string>('')
   const handleTokenSearchChange = useCallback(e => setTokenSearch(e.target.value), [setTokenSearch])
 
-  const searchedToken: Token | undefined = useTokenByAddressAndAutomaticallyAdd(tokenSearch)
+  const searchedToken: Token | undefined = useToken(tokenSearch)
 
   const unmigratedLiquidityExchangeAddresses: TokenAmount[] = useMemo(
     () =>

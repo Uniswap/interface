@@ -1,12 +1,12 @@
 import { Pair, Token } from '@uniswap/sdk'
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { darken } from 'polished'
 import { Field } from '../../state/swap/actions'
 import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
+import TokenSearchModal from '../SearchModal/TokenSearchModal'
 import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
-import SearchModal from '../SearchModal'
 import { RowBetween } from '../Row'
 import { TYPE, CursorPointer } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
@@ -159,6 +159,10 @@ export default function CurrencyInputPanel({
   const userTokenBalance = useTokenBalanceTreatingWETHasETH(account, token)
   const theme = useContext(ThemeContext)
 
+  const handleDismissSearch = useCallback(() => {
+    setModalOpen(false)
+  }, [setModalOpen])
+
   return (
     <InputPanel id={id}>
       <Container hideInput={hideInput}>
@@ -235,12 +239,9 @@ export default function CurrencyInputPanel({
         </InputRow>
       </Container>
       {!disableTokenSelect && (
-        <SearchModal
+        <TokenSearchModal
           isOpen={modalOpen}
-          onDismiss={() => {
-            setModalOpen(false)
-          }}
-          filterType="tokens"
+          onDismiss={handleDismissSearch}
           onTokenSelect={onTokenSelection}
           showSendWithSwap={showSendWithSwap}
           hiddenToken={token?.address}
