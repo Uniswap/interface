@@ -3,13 +3,12 @@ import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { ALL_TOKENS } from '../../constants/tokens'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
 import { Field } from '../../state/swap/actions'
 import { useTokenWarningDismissal } from '../../state/user/hooks'
 import { ExternalLink, TYPE } from '../../theme'
-import { getEtherscanLink } from '../../utils'
+import { getEtherscanLink, isDefaultToken } from '../../utils'
 import PropsOfExcluding from '../../utils/props-of-excluding'
 import QuestionHelper from '../QuestionHelper'
 import TokenLogo from '../TokenLogo'
@@ -68,9 +67,8 @@ interface TokenWarningCardProps extends PropsOfExcluding<typeof Wrapper, 'error'
 
 export default function TokenWarningCard({ token, ...rest }: TokenWarningCardProps) {
   const { chainId } = useActiveWeb3React()
-  const isDefaultToken = Boolean(
-    token && token.address && chainId && ALL_TOKENS[chainId] && ALL_TOKENS[chainId][token.address]
-  )
+
+  const isDefault = isDefaultToken(token)
 
   const tokenSymbol = token?.symbol?.toLowerCase() ?? ''
   const tokenName = token?.name?.toLowerCase() ?? ''
@@ -80,7 +78,7 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
   const allTokens = useAllTokens()
 
   const duplicateNameOrSymbol = useMemo(() => {
-    if (isDefaultToken || !token || !chainId) return false
+    if (isDefault || !token || !chainId) return false
 
     return Object.keys(allTokens).some(tokenAddress => {
       const userToken = allTokens[tokenAddress]
@@ -89,9 +87,9 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
       }
       return userToken.symbol.toLowerCase() === tokenSymbol || userToken.name.toLowerCase() === tokenName
     })
-  }, [isDefaultToken, token, chainId, allTokens, tokenSymbol, tokenName])
+  }, [isDefault, token, chainId, allTokens, tokenSymbol, tokenName])
 
-  if (isDefaultToken || !token || dismissed) return null
+  if (isDefault || !token || dismissed) return null
 
   return (
     <Wrapper error={duplicateNameOrSymbol} {...rest}>
