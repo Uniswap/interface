@@ -105,6 +105,7 @@ export default function TokenSearchModal({
     const input = event.target.value
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input)
+    setTooltipOpen(false)
   }, [])
 
   const openTooltip = useCallback(() => {
