@@ -5,7 +5,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import { Field, typeInput } from './actions'
 import { setDefaultsFromURLMatchParams } from '../mint/actions'
-import { useTokenByAddressAndAutomaticallyAdd } from '../../hooks/Tokens'
+import { useToken } from '../../hooks/Tokens'
 import { Token, Pair, TokenAmount, Percent, JSBI, Route } from '@uniswap/sdk'
 import { usePair } from '../../data/Reserves'
 import { useTokenBalances } from '../wallet/hooks'
@@ -40,12 +40,12 @@ export function useDerivedBurnInfo(): {
   } = useBurnState()
 
   // tokens
-  const tokenA = useTokenByAddressAndAutomaticallyAdd(tokenAAddress)
-  const tokenB = useTokenByAddressAndAutomaticallyAdd(tokenBAddress)
+  const tokenA = useToken(tokenAAddress)
+  const tokenB = useToken(tokenBAddress)
   const tokens: { [field in Extract<Field, Field.TOKEN_A | Field.TOKEN_B>]?: Token } = useMemo(
     () => ({
-      [Field.TOKEN_A]: tokenA,
-      [Field.TOKEN_B]: tokenB
+      [Field.TOKEN_A]: tokenA ?? undefined,
+      [Field.TOKEN_B]: tokenB ?? undefined
     }),
     [tokenA, tokenB]
   )

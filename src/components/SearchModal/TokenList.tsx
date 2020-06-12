@@ -6,8 +6,9 @@ import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { ALL_TOKENS } from '../../constants/tokens'
 import { useActiveWeb3React } from '../../hooks'
+import { useAllTokens } from '../../hooks/Tokens'
+import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
-import { isAddress } from '../../utils'
 import { ButtonSecondary } from '../Button'
 import Column, { AutoColumn } from '../Column'
 import { RowFixed } from '../Row'
@@ -16,8 +17,7 @@ import { FadedSpan, GreySpan, MenuItem, ModalInfo } from './styleds'
 import Loader from '../Loader'
 
 function isDefaultToken(tokenAddress: string, chainId?: number): boolean {
-  const address = isAddress(tokenAddress)
-  return Boolean(chainId && address && ALL_TOKENS[chainId as ChainId]?.[tokenAddress])
+  return Boolean(chainId && ALL_TOKENS[chainId as ChainId]?.[tokenAddress])
 }
 
 export default function TokenList({
@@ -27,39 +27,42 @@ export default function TokenList({
   onTokenSelect,
   otherToken,
   showSendWithSwap,
-  onRemoveAddedToken,
-  otherSelectedText,
-  hideRemove
+  otherSelectedText
 }: {
   tokens: Token[]
   selectedToken: string
   allTokenBalances: { [tokenAddress: string]: TokenAmount }
   onTokenSelect: (tokenAddress: string) => void
-  onRemoveAddedToken: (chainId: number, tokenAddress: string) => void
   otherToken: string
   showSendWithSwap?: boolean
   otherSelectedText: string
-  hideRemove?: boolean
 }) {
   const { t } = useTranslation()
   const { account, chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
+  const allTokens = useAllTokens()
+  const addToken = useAddUserToken()
+  const removeToken = useRemoveUserAddedToken()
 
   if (tokens.length === 0) {
     return <ModalInfo>{t('noToken')}</ModalInfo>
   }
+
   return (
     <FixedSizeList
       width="100%"
       height={500}
       itemCount={tokens.length}
-      itemSize={50}
-      style={{ flex: '1', minHeight: 200 }}
+      itemSize={56}
+      style={{ flex: '1' }}
+      itemKey={index => tokens[index].address}
     >
       {({ index, style }) => {
-        const { address, symbol } = tokens[index]
+        const token = tokens[index]
+        const { address, symbol } = token
 
-        const customAdded = !isDefaultToken(address, chainId)
+        const isDefault = isDefaultToken(address, chainId)
+        const customAdded = Boolean(!isDefault && allTokens[address])
         const balance = allTokenBalances[address]
 
         const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
@@ -81,22 +84,36 @@ export default function TokenList({
                   {otherToken === address && <GreySpan> ({otherSelectedText})</GreySpan>}
                 </Text>
                 <FadedSpan>
-                  <TYPE.main fontWeight={500}>{customAdded && 'Added by user'}</TYPE.main>
-                  {customAdded && !hideRemove && (
-                    <LinkStyledButton
-                      onClick={event => {
-                        event.stopPropagation()
-                        onRemoveAddedToken(chainId, address)
-                      }}
-                      style={{ marginLeft: '4px', fontWeight: 400 }}
-                    >
-                      (Remove)
-                    </LinkStyledButton>
-                  )}
+                  {customAdded ? (
+                    <TYPE.main fontWeight={500}>
+                      Added by user
+                      <LinkStyledButton
+                        onClick={event => {
+                          event.stopPropagation()
+                          removeToken(chainId, address)
+                        }}
+                      >
+                        (Remove)
+                      </LinkStyledButton>
+                    </TYPE.main>
+                  ) : null}
+                  {!isDefault && !customAdded ? (
+                    <TYPE.main fontWeight={500}>
+                      Found by address
+                      <LinkStyledButton
+                        onClick={event => {
+                          event.stopPropagation()
+                          addToken(token)
+                        }}
+                      >
+                        (Add)
+                      </LinkStyledButton>
+                    </TYPE.main>
+                  ) : null}
                 </FadedSpan>
               </Column>
             </RowFixed>
-            <AutoColumn gap="4px" justify="end">
+            <AutoColumn>
               {balance ? (
                 <Text>
                   {zeroBalance && showSendWithSwap ? (
