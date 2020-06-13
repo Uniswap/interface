@@ -37,7 +37,6 @@ describe('Swap', () => {
     cy.get('#swap-currency-input .token-amount-input').should('be.visible')
     cy.get('#swap-currency-input .token-amount-input').type('0.001', { force: true, delay: 200 })
     cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
-    cy.get('#show-advanced').click()
     cy.get('#swap-button').click()
     cy.get('#confirm-swap-or-send').should('contain', 'Confirm Swap')
   })
