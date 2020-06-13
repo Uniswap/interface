@@ -281,29 +281,27 @@ export default function Swap() {
               />
             </>
 
-            {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
-              <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
-                <AutoColumn gap="4px">
-                  <RowBetween align="center">
-                    <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                      Price
-                    </Text>
-                    <TradePrice trade={bestTrade} showInverted={showInverted} setShowInverted={setShowInverted} />
-                  </RowBetween>
+            <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
+              <AutoColumn gap="4px">
+                <RowBetween align="center">
+                  <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                    Price
+                  </Text>
+                  <TradePrice trade={bestTrade} showInverted={showInverted} setShowInverted={setShowInverted} />
+                </RowBetween>
 
-                  {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
-                    <RowBetween align="center">
-                      <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                        Slippage Tolerance
-                      </ClickableText>
-                      <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                        {allowedSlippage ? allowedSlippage / 100 : '-'}%
-                      </ClickableText>
-                    </RowBetween>
-                  )}
-                </AutoColumn>
-              </Card>
-            )}
+                {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
+                  <RowBetween align="center">
+                    <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                      Slippage Tolerance
+                    </ClickableText>
+                    <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                      {allowedSlippage ? allowedSlippage / 100 : '-'}%
+                    </ClickableText>
+                  </RowBetween>
+                )}
+              </AutoColumn>
+            </Card>
           </AutoColumn>
           <BottomGrouping>
             {!account ? (

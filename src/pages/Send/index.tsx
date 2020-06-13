@@ -473,7 +473,7 @@ export default function Send() {
                 }}
               />
             </AutoColumn>
-            {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
+            {sendingWithSwap && (
               <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
                 <AutoColumn gap="4px">
                   <RowBetween align="center">
