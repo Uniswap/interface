@@ -9,11 +9,9 @@ import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import QuestionHelper from '../../components/QuestionHelper'
-import { RowBetween, RowFixed } from '../../components/Row'
+import { RowBetween } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import FormattedPriceImpact from '../../components/swap/FormattedPriceImpact'
 import { ArrowWrapper, BottomGrouping, Dots, Wrapper } from '../../components/swap/styleds'
 import SwapModalFooter from '../../components/swap/SwapModalFooter'
 import SwapModalHeader from '../../components/swap/SwapModalHeader'
@@ -84,7 +82,6 @@ export default function Swap() {
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   // modal and loading
-  const [showAdvanced, setShowAdvanced] = useState<boolean>(false) // toggling slippage, deadline, etc. on and off
   const [showConfirm, setShowConfirm] = useState<boolean>(false) // show confirmation modal
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // waiting for user confirmaion/rejection
   const [txHash, setTxHash] = useState<string>('')
@@ -304,21 +301,6 @@ export default function Swap() {
                       </ClickableText>
                     </RowBetween>
                   )}
-
-                  {bestTrade && priceImpactSeverity > 1 && (
-                    <RowBetween>
-                      <TYPE.main
-                        style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
-                        fontSize={14}
-                      >
-                        Price Impact
-                      </TYPE.main>
-                      <RowFixed>
-                        <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
-                        <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
-                      </RowFixed>
-                    </RowBetween>
-                  )}
                 </AutoColumn>
               </Card>
             )}
@@ -385,9 +367,7 @@ export default function Swap() {
         </Wrapper>
       </AppBody>
 
-      {bestTrade && (
-        <AdvancedSwapDetailsDropdown trade={bestTrade} showAdvanced={showAdvanced} setShowAdvanced={setShowAdvanced} />
-      )}
+      <AdvancedSwapDetailsDropdown trade={bestTrade} />
     </>
   )
 }

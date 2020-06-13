@@ -1,10 +1,10 @@
 import { Trade, TradeType } from '@uniswap/sdk'
 import React, { useContext } from 'react'
-import { ChevronUp, ChevronRight } from 'react-feather'
-import { Text, Flex } from 'rebass'
+import { ChevronRight } from 'react-feather'
+import { Flex } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
-import { CursorPointer, TYPE } from '../../theme'
+import { TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { SectionBreak } from './styleds'
@@ -67,29 +67,21 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
 
 export interface AdvancedSwapDetailsProps {
   trade?: Trade
-  onDismiss: () => void
 }
 
-export function AdvancedSwapDetails({ trade, onDismiss }: AdvancedSwapDetailsProps) {
+export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
   const [allowedSlippage] = useUserSlippageTolerance()
 
+  const showRoute = trade?.route?.path?.length > 2
+
   return (
     <AutoColumn gap="md">
-      <CursorPointer>
-        <RowBetween onClick={onDismiss} padding={'8px 20px'}>
-          <Text fontSize={16} color={theme.text2} fontWeight={500} style={{ userSelect: 'none' }}>
-            Hide Advanced
-          </Text>
-          <ChevronUp color={theme.text2} />
-        </RowBetween>
-      </CursorPointer>
-      <SectionBreak />
       {trade && <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />}
-      {trade?.route?.path?.length > 2 && <SectionBreak />}
-      {trade?.route?.path?.length > 2 && (
-        <AutoColumn style={{ padding: '0 20px' }}>
+      {showRoute && <SectionBreak />}
+      {showRoute && (
+        <AutoColumn style={{ padding: '0 24px' }}>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
               Route
