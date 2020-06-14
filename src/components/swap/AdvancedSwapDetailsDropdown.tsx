@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { animated, useSpring } from 'react-spring'
 import styled from 'styled-components'
 import useLast from '../../hooks/useLast'
