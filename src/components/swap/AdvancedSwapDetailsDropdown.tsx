@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { animated, useSpring } from 'react-spring'
 import styled from 'styled-components'
 import useLast from '../../hooks/useLast'
@@ -21,7 +21,8 @@ const AnimatedFooter = animated(AdvancedDetailsFooter)
 
 export default function AdvancedSwapDetailsDropdown({ trade, ...rest }: AdvancedSwapDetailsProps) {
   const style = useSpring({
-    transform: trade ? 'translateY(0%)' : 'translateY(-100%)'
+    from: { transform: 'translateY(-100%)' },
+    to: { transform: trade ? 'translateY(0%)' : 'translateY(-100%)' }
   })
 
   const lastTrade = useLast(trade)
