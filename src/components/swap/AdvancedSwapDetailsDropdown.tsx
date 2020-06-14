@@ -1,10 +1,9 @@
 import React from 'react'
-import { animated, useSpring } from 'react-spring'
 import styled from 'styled-components'
 import useLast from '../../hooks/useLast'
 import { AdvancedSwapDetails, AdvancedSwapDetailsProps } from './AdvancedSwapDetails'
 
-const AdvancedDetailsFooter = styled.div`
+const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
   padding-top: calc(16px + 2rem);
   padding-bottom: 20px;
   margin-top: -2rem;
@@ -15,21 +14,17 @@ const AdvancedDetailsFooter = styled.div`
   color: ${({ theme }) => theme.text2};
   background-color: ${({ theme }) => theme.advancedBG};
   z-index: -1;
+
+  transform: ${({ show }) => (show ? 'translateY(0%)' : 'translateY(-100%)')};
+  transition: transform 300ms ease-in-out;
 `
 
-const AnimatedFooter = animated(AdvancedDetailsFooter)
-
 export default function AdvancedSwapDetailsDropdown({ trade, ...rest }: AdvancedSwapDetailsProps) {
-  const style = useSpring({
-    from: { transform: 'translateY(-100%)' },
-    to: { transform: trade ? 'translateY(0%)' : 'translateY(-100%)' }
-  })
-
   const lastTrade = useLast(trade)
 
   return (
-    <AnimatedFooter style={style}>
+    <AdvancedDetailsFooter show={Boolean(trade)}>
       <AdvancedSwapDetails {...rest} trade={lastTrade} />
-    </AnimatedFooter>
+    </AdvancedDetailsFooter>
   )
 }
