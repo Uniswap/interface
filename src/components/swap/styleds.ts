@@ -58,7 +58,7 @@ export const StyledNumerical = styled(NumericalInput)`
     color: ${({ theme }) => theme.text4};
   }
 `
-export const StyledBalanceMaxMini = styled.button<{ active?: boolean }>`
+export const StyledBalanceMaxMini = styled.button`
   height: 22px;
   width: 22px;
   background-color: ${({ theme }) => theme.bg2};

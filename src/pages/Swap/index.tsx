@@ -287,7 +287,13 @@ export default function Swap() {
                   <Text fontWeight={500} fontSize={14} color={theme.text2}>
                     Price
                   </Text>
-                  <TradePrice trade={bestTrade} showInverted={showInverted} setShowInverted={setShowInverted} />
+                  <TradePrice
+                    inputToken={tokens[Field.INPUT]}
+                    outputToken={tokens[Field.OUTPUT]}
+                    price={bestTrade?.executionPrice}
+                    showInverted={showInverted}
+                    setShowInverted={setShowInverted}
+                  />
                 </RowBetween>
 
                 {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (

@@ -480,7 +480,13 @@ export default function Send() {
                     <Text fontWeight={500} fontSize={14} color={theme.text2}>
                       Price
                     </Text>
-                    <TradePrice showInverted={showInverted} setShowInverted={setShowInverted} trade={bestTrade} />
+                    <TradePrice
+                      inputToken={tokens[Field.INPUT]}
+                      outputToken={tokens[Field.OUTPUT]}
+                      price={bestTrade?.executionPrice}
+                      showInverted={showInverted}
+                      setShowInverted={setShowInverted}
+                    />
                   </RowBetween>
 
                   {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
