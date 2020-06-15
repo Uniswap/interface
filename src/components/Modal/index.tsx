@@ -18,6 +18,7 @@ const StyledDialogOverlay = styled(({ mobile, ...rest }) => <AnimatedDialogOverl
     align-items: center;
     justify-content: center;
     background-color: transparent;
+    overflow: hidden;
 
     ${({ mobile }) =>
       mobile &&
