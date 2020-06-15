@@ -77,9 +77,7 @@ const MenuItem = styled(ExternalLink)`
   }
 `
 
-const CODE_LINK = !!process.env.REACT_APP_GIT_COMMIT_HASH
-  ? `https://github.com/Uniswap/uniswap-frontend/tree/${process.env.REACT_APP_GIT_COMMIT_HASH}`
-  : 'https://github.com/Uniswap/uniswap-frontend'
+const CODE_LINK = 'https://github.com/Uniswap/uniswap-frontend'
 
 export default function Menu() {
   const node = useRef<HTMLDivElement>()
