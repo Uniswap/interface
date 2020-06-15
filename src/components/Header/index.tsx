@@ -43,6 +43,10 @@ const HeaderFrame = styled.div`
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
+  
+  a {
+    text-decoration: none;
+  }
 `
 
 const Title = styled.div`
@@ -55,12 +59,17 @@ const Title = styled.div`
   }
 `
 
-const TitleText = styled(Row)`
+const TitleText = styled(Row)<{ isDark: boolean }>`
   width: fit-content;
   white-space: nowrap;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
   `};
+  a {
+    font-weight: 600;
+    font-size: 18px;
+    color: ${({ theme, isDark }) => (isDark ? theme.white : theme.primaryText1)};
+  }
 `
 
 const AccountElement = styled.div<{ active: boolean }>`
@@ -94,9 +103,9 @@ const NetworkCard = styled(YellowCard)`
 `
 
 const UniIcon = styled(HistoryLink)<{ to: string }>`
-  transition: transform 0.3s ease;
-  :hover {
-    transform: rotate(-5deg);
+  img {
+    height: 30px;
+    margin: 0px 5px;
   }
 `
 
@@ -142,36 +151,18 @@ export default function Header() {
 
   return (
     <HeaderFrame>
-      <MigrateBanner>
-        Uniswap V2 is live! Read the&nbsp;
-        <ExternalLink href="https://uniswap.org/blog/launch-uniswap-v2/">
-          <b>blog post ↗</b>
-        </ExternalLink>
-        &nbsp;or&nbsp;
-        <StyledInternalLink to="/migrate/v1">
-          <b>migrate your liquidity ↗</b>
-        </StyledInternalLink>
-        .
-      </MigrateBanner>
       <RowBetween padding="1rem">
         <HeaderElement>
           <Title>
             <UniIcon id="link" to="/">
               <img src={isDark ? LogoDark : Logo} alt="logo" />
             </UniIcon>
-            {!isMobile && (
-              <TitleText>
-                <HistoryLink id="link" to="/">
-                  <img
-                    style={{ marginLeft: '4px', marginTop: '4px' }}
-                    src={isDark ? WordmarkDark : Wordmark}
-                    alt="logo"
-                  />
-                </HistoryLink>
-              </TitleText>
-            )}
+            <TitleText isDark={isDark}>
+              <HistoryLink id="link" to="/">
+                DXswap
+              </HistoryLink>
+            </TitleText>
           </Title>
-          <TestnetWrapper style={{ pointerEvents: 'auto' }}>{!isMobile && <VersionSwitch />}</TestnetWrapper>
         </HeaderElement>
         <HeaderElement>
           <TestnetWrapper>
