@@ -1,4 +1,4 @@
-import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from './../../constants/index'
+import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
 import { createReducer } from '@reduxjs/toolkit'
 import {
   addSerializedPair,
@@ -18,8 +18,9 @@ import {
 
 const currentTimestamp = () => new Date().getTime()
 
-interface UserState {
-  lastVersion: string
+export interface UserState {
+  // the timestamp of the last updateVersion action
+  lastUpdateVersionTimestamp?: number
 
   userDarkMode: boolean | null // the user's choice for dark mode or light mode
   matchesDarkMode: boolean // whether the dark mode media query matches
@@ -59,8 +60,7 @@ function pairKey(token0Address: string, token1Address: string) {
   return `${token0Address};${token1Address}`
 }
 
-const initialState: UserState = {
-  lastVersion: '',
+export const initialState: UserState = {
   userDarkMode: null,
   matchesDarkMode: false,
   userExpertMode: false,
@@ -71,25 +71,20 @@ const initialState: UserState = {
   timestamp: currentTimestamp()
 }
 
-const GIT_COMMIT_HASH: string | undefined = process.env.REACT_APP_GIT_COMMIT_HASH
-
 export default createReducer(initialState, builder =>
   builder
     .addCase(updateVersion, state => {
-      if (GIT_COMMIT_HASH && state.lastVersion !== GIT_COMMIT_HASH) {
-        state.lastVersion = GIT_COMMIT_HASH
-
-        // slippage isnt being tracked in local storage, reset to default
-        if (typeof state.userSlippageTolerance !== 'number') {
-          state.userSlippageTolerance = INITIAL_ALLOWED_SLIPPAGE
-        }
-
-        // deadline isnt being tracked in local storage, reset to default
-        if (typeof state.userDeadline !== 'number') {
-          state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
-        }
+      // slippage isnt being tracked in local storage, reset to default
+      if (typeof state.userSlippageTolerance !== 'number') {
+        state.userSlippageTolerance = INITIAL_ALLOWED_SLIPPAGE
       }
-      state.timestamp = currentTimestamp()
+
+      // deadline isnt being tracked in local storage, reset to default
+      if (typeof state.userDeadline !== 'number') {
+        state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
+      }
+
+      state.lastUpdateVersionTimestamp = currentTimestamp()
     })
     .addCase(updateUserDarkMode, (state, action) => {
       state.userDarkMode = action.payload.userDarkMode
