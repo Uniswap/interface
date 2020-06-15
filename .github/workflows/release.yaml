@@ -10,6 +10,7 @@ on:
       - v2
     paths:
       - '.github/workflows/release.yaml'
+      - '.env.production'
 
 jobs:
   bump_version:
