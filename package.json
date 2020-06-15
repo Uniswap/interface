@@ -80,7 +80,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "cross-env REACT_APP_GIT_COMMIT_HASH=$(git show -s --format=%H) react-scripts build",
+    "build": "react-scripts build",
     "ipfs-build": "cross-env PUBLIC_URL=\".\" react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
