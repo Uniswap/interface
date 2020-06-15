@@ -10,11 +10,9 @@ import Card, { BlueCard, GreyCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import QuestionHelper from '../../components/QuestionHelper'
-import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import { AutoRow, RowBetween } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import FormattedPriceImpact from '../../components/swap/FormattedPriceImpact'
 import SwapModalFooter from '../../components/swap/SwapModalFooter'
 import { ArrowWrapper, BottomGrouping, Dots, InputGroup, StyledNumerical, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
@@ -98,7 +96,6 @@ export default function Send() {
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   // modal and loading
-  const [showAdvanced, setShowAdvanced] = useState<boolean>(false) // toggling slippage, deadline, etc. on and off
   const [showConfirm, setShowConfirm] = useState<boolean>(false) // show confirmation modal
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // waiting for user confirmaion/rejection
   const [txHash, setTxHash] = useState<string>('')
@@ -476,14 +473,20 @@ export default function Send() {
                 }}
               />
             </AutoColumn>
-            {!noRoute && tokens[Field.OUTPUT] && tokens[Field.INPUT] && (
+            {sendingWithSwap && (
               <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
                 <AutoColumn gap="4px">
                   <RowBetween align="center">
                     <Text fontWeight={500} fontSize={14} color={theme.text2}>
                       Price
                     </Text>
-                    <TradePrice showInverted={showInverted} setShowInverted={setShowInverted} trade={bestTrade} />
+                    <TradePrice
+                      inputToken={tokens[Field.INPUT]}
+                      outputToken={tokens[Field.OUTPUT]}
+                      price={bestTrade?.executionPrice}
+                      showInverted={showInverted}
+                      setShowInverted={setShowInverted}
+                    />
                   </RowBetween>
 
                   {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
@@ -498,20 +501,6 @@ export default function Send() {
                           {allowedSlippage ? allowedSlippage / 100 : '-'}%
                         </Text>
                       </ClickableText>
-                    </RowBetween>
-                  )}
-                  {bestTrade && severity > 1 && (
-                    <RowBetween>
-                      <TYPE.main
-                        style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
-                        fontSize={14}
-                      >
-                        Price Impact
-                      </TYPE.main>
-                      <RowFixed>
-                        <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
-                        <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
-                      </RowFixed>
                     </RowBetween>
                   )}
                 </AutoColumn>
@@ -588,9 +577,7 @@ export default function Send() {
         </Wrapper>
       </AppBody>
 
-      {bestTrade && (
-        <AdvancedSwapDetailsDropdown trade={bestTrade} showAdvanced={showAdvanced} setShowAdvanced={setShowAdvanced} />
-      )}
+      <AdvancedSwapDetailsDropdown trade={bestTrade} />
     </>
   )
 }

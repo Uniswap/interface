@@ -21,19 +21,6 @@ export const ArrowWrapper = styled.div`
   }
 `
 
-export const AdvancedDropdown = styled.div`
-  padding-top: calc(10px + 2rem);
-  padding-bottom: 10px;
-  margin-top: -2rem;
-  width: 100%;
-  max-width: 400px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  color: ${({ theme }) => theme.text2};
-  background-color: ${({ theme }) => theme.advancedBG};
-  z-index: -1;
-`
-
 export const SectionBreak = styled.div`
   height: 1px;
   width: 100%;
@@ -71,7 +58,7 @@ export const StyledNumerical = styled(NumericalInput)`
     color: ${({ theme }) => theme.text4};
   }
 `
-export const StyledBalanceMaxMini = styled.button<{ active?: boolean }>`
+export const StyledBalanceMaxMini = styled.button`
   height: 22px;
   width: 22px;
   background-color: ${({ theme }) => theme.bg2};

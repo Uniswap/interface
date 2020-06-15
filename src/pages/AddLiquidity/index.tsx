@@ -270,8 +270,8 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
 
   const PriceBar = () => {
     return (
-      <AutoColumn gap="md" justify="space-between">
-        <AutoRow justify="space-between">
+      <AutoColumn gap="md">
+        <AutoRow justify="space-around" gap="4px">
           <AutoColumn justify="center">
             <TYPE.black>{price?.toSignificant(6) ?? '0'}</TYPE.black>
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
