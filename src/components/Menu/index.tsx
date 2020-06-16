@@ -78,8 +78,8 @@ const MenuItem = styled(ExternalLink)`
 `
 
 const CODE_LINK = !!process.env.REACT_APP_GIT_COMMIT_HASH
-  ? `https://github.com/Uniswap/uniswap-frontend/tree/${process.env.REACT_APP_GIT_COMMIT_HASH}`
-  : 'https://github.com/Uniswap/uniswap-frontend'
+  ? `https://github.com/levelkdev/dxswap-dapp/tree/${process.env.REACT_APP_GIT_COMMIT_HASH}`
+  : 'https://github.com/levelkdev/dxswap-dapp'
 
 export default function Menu() {
   const node = useRef<HTMLDivElement>()
@@ -111,25 +111,13 @@ export default function Menu() {
       </StyledMenuButton>
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://uniswap.org/">
+          <MenuItem id="link" href="https://dxdao.eth.link/">
             <Info size={14} />
             About
-          </MenuItem>
-          <MenuItem id="link" href="https://uniswap.org/docs/v2">
-            <BookOpen size={14} />
-            Docs
           </MenuItem>
           <MenuItem id="link" href={CODE_LINK}>
             <Code size={14} />
             Code
-          </MenuItem>
-          <MenuItem id="link" href="https://discord.gg/vXCdddD">
-            <MessageCircle size={14} />
-            Discord
-          </MenuItem>
-          <MenuItem id="link" href="https://uniswap.info/">
-            <PieChart size={14} />
-            Analytics
           </MenuItem>
         </MenuFlyout>
       )}
