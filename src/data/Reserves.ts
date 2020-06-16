@@ -1,6 +1,6 @@
 import { Token, TokenAmount, Pair } from '@uniswap/sdk'
 import { useMemo } from 'react'
-import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
+import { abi as IUniswapV2PairABI } from 'dxswap-core/build/IDXswapPair.json'
 import { Interface } from '@ethersproject/abi'
 
 import { useMultipleContractSingleData } from '../state/multicall/hooks'

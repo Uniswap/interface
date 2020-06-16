@@ -1,8 +1,7 @@
 {
-  "name": "@uniswap/interface",
-  "description": "Uniswap Interface",
-  "homepage": "https://uniswap.exchange",
-  "private": true,
+  "name": "dxswap-dapp",
+  "description": "DXswap Decentralized Application",
+  "private": false,
   "devDependencies": {
     "@ethersproject/address": "^5.0.0-beta.134",
     "@ethersproject/bignumber": "^5.0.0-beta.138",
@@ -32,8 +31,8 @@
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
     "@uniswap/sdk": "^2.0.5",
-    "@uniswap/v2-core": "1.0.0",
-    "@uniswap/v2-periphery": "^1.1.0-beta.0",
+    "dxswap-core": "git://github.com/levelkdev/dxswap-core.git#develop",
+    "dxswap-periphery": "git://github.com/levelkdev/dxswap-periphery.git#develop",
     "@web3-react/core": "^6.0.9",
     "@web3-react/fortmatic-connector": "^6.0.9",
     "@web3-react/injected-connector": "^6.0.7",
