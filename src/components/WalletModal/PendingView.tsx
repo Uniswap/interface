@@ -7,6 +7,7 @@ import WalletConnectData from './WalletConnectData'
 import { walletconnect, injected } from '../../connectors'
 import { darken } from 'polished'
 import Loader from '../Loader'
+import { isMobile } from 'react-device-detect'
 
 const PendingSection = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -72,6 +73,7 @@ export default function PendingView({
   setPendingError,
   tryActivation
 }: {
+  active?: boolean
   uri?: string
   size?: number
   connector?: AbstractConnector
@@ -100,7 +102,11 @@ export default function PendingView({
               </ErrorButton>
             </ErrorGroup>
           ) : connector === walletconnect ? (
-            'Scan QR code with a compatible wallet...'
+            isMobile ? (
+              'Follow prompt in WalletConnect modal'
+            ) : (
+              'Scan QR code with a compatible wallet...'
+            )
           ) : (
             'Initializing...'
           )}

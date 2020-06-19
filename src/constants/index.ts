@@ -90,6 +90,7 @@ export const SUPPORTED_WALLETS =
             iconName: 'walletConnectIcon.svg',
             description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
             href: null,
+            mobile: true,
             color: '#4196FC'
           },
           WALLET_LINK: {

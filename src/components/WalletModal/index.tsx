@@ -157,7 +157,6 @@ export default function WalletModal({
   useEffect(() => {
     const activateWC = uri => {
       setUri(uri)
-      // setWalletView(WALLET_VIEWS.PENDING)
     }
     walletconnect.on(URI_AVAILABLE, activateWC)
     return () => {
