@@ -130,6 +130,53 @@
     margin-left: -82px;
 }
 
+.unlockWrapper {
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.unlockRow {
+    margin-top: 15px;
+}
+
+.unlockToken {
+    width: 140px;
+    text-align: right;
+    margin-right: 15px;
+    line-height: 36px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.unlockButtonWrapper {
+    width: 140px;
+    text-align: left;
+    margin-left: 15px;
+    height: 36px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.unlockButtonWrapper svg {
+    color: white;
+}
+
+.unlockButtonWrapper button {
+    background-color: #327ccb;
+    color: white;
+    font-weight: 400;
+}
+
+.unlockButtonWrapper button:hover {
+    background-color: #4a96ee;
+}
+
+.unlockButtonWrapper > button > span > div {
+    height: 20px !important;
+    width: 20px !important;
+}
+
 @media screen and (max-width: 750px) {
     .loginScreenDescription {
         width: 90%;

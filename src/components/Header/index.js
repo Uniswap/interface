@@ -32,14 +32,18 @@ class Header extends React.Component {
           </div>
           <div className={'buttonsWrapper'}>
             <div className={'tokenInfoButton'}>
-              <Button className={'loadWallet'} onClick={() => this.props.onDisplayInfo()}>
-                Token Sale Info
-              </Button>
+              { !this.props.hideInfo && (
+                <Button className={'loadWallet'} onClick={() => this.props.onDisplayInfo()}>
+                  Token Sale Info
+                </Button>
+              )}
             </div>
             <div className={'purchaseCryptoButton'}>
-              <Button className={'loadWallet'} onClick={() => this.setState({ fiatAdapterOpen: true })}>
-                Buy Crypto
-              </Button>
+              { !this.props.hideBuy && (
+                <Button className={'loadWallet'} onClick={() => this.setState({ fiatAdapterOpen: true })}>
+                  Buy Crypto
+                </Button>
+              )}
             </div>
             <div className={'connectWalletButton'}>
               <Web3Status />

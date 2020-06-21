@@ -72,17 +72,6 @@ class App extends React.Component {
     }
     window.referrer = params.referrer
 
-    if (!this.state.isLoggedIn) {
-      return (
-        <BrowserRouter>
-          <Route path="/login">
-            <Login onLogin={() => this.setState({ isLoggedIn: true })}/>
-          </Route>
-          <Redirect to="/login"/>
-        </BrowserRouter>
-      )
-    }
-
     if (this.state.displayInfoPage) {
       return (
         <BrowserRouter>
@@ -90,6 +79,24 @@ class App extends React.Component {
             <SaleInfo onClose={() => this.setState({ displayInfoPage: false })}/>
           </Route>
           <Redirect to="/info"/>
+        </BrowserRouter>
+      )
+    }
+
+    if (!this.state.isLoggedIn) {
+      return (
+        <BrowserRouter>
+          <Route path="/login">
+            <Suspense fallback={null}>
+              <Web3ReactManager>
+                <HeaderWrapper>
+                  <Header hideInfo hideBuy/>
+                </HeaderWrapper>
+                <Login onLogin={() => this.setState({ isLoggedIn: true })}/>
+              </Web3ReactManager>
+            </Suspense>
+          </Route>
+          <Redirect to="/login"/>
         </BrowserRouter>
       )
     }
