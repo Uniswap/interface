@@ -39,7 +39,6 @@ async function main() {
   await new Promise((success, failure) => {
     const command = 'git push origin master'
     exec(command, (error, stdout) => {
-      // TODO check that stdout doesn't contain text saying "we're behind origin by XXX commits"
       if (!!error || stdout.contains('[rejected]')) {
         const message = 'You must fast forward local/master to be in-line with origin/master'
         failure(message)
