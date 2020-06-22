@@ -54,17 +54,23 @@ function PairSearchModal({ history, isOpen, onDismiss }: PairSearchModalProps) {
     setSearchQuery(checksummedInput || input)
   }
 
+  const filteredPairs = useMemo(() => {
+    return filterPairs(allPairs, searchQuery)
+  }, [allPairs, searchQuery])
+
   const sortedPairList = useMemo(() => {
-    return allPairs.sort((a, b): number => {
+    const query = searchQuery.toLowerCase()
+    const queryMatches = (pair: Pair): boolean =>
+      pair.token0.symbol.toLowerCase() === query || pair.token1.symbol.toLowerCase() === query
+    return filteredPairs.sort((a, b): number => {
+      const [aMatches, bMatches] = [queryMatches(a), queryMatches(b)]
+      if (aMatches && !bMatches) return -1
+      if (bMatches && !aMatches) return 1
       const balanceA = allPairBalances[a.liquidityToken.address]
       const balanceB = allPairBalances[b.liquidityToken.address]
       return pairComparator(a, b, balanceA, balanceB)
     })
-  }, [allPairs, allPairBalances])
-
-  const filteredPairs = useMemo(() => {
-    return filterPairs(sortedPairList, searchQuery)
-  }, [searchQuery, sortedPairList])
+  }, [searchQuery, filteredPairs, allPairBalances])
 
   const selectPair = useCallback(
     (pair: Pair) => {
@@ -110,7 +116,7 @@ function PairSearchModal({ history, isOpen, onDismiss }: PairSearchModalProps) {
         </PaddedColumn>
         <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />
         <PairList
-          pairs={filteredPairs}
+          pairs={sortedPairList}
           focusTokenAddress={focusedToken?.address}
           onAddLiquidity={selectPair}
           onSelectPair={selectPair}
