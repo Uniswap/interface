@@ -39,8 +39,7 @@ async function main() {
   await new Promise((success, failure) => {
     const command = 'git push origin master'
     exec(command, (error, stdout) => {
-      console.log('stdout ', typeof stdout, stdout)
-      if (!!error || stdout.contains('[rejected]')) {
+      if (!!error || (!!stdout && stdout.contains('[rejected]'))) {
         const message = 'You must fast forward local/master to be in-line with origin/master'
         failure(message)
       } else {
