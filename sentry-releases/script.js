@@ -48,8 +48,6 @@ async function main() {
     })
   })
 
-  throw Error('hello')
-
   const envFilePath = '.env.local'
   const oldEnvFileContent = fs.readFileSync(envFilePath).toString('utf8')
   const newEnvFileContent = oldEnvFileContent.replace(/(v\d\.\d+)/, version)
