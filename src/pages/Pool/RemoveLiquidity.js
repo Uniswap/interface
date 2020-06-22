@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import ReactGA from 'react-ga'
 import { createBrowserHistory } from 'history'
-import { ethers } from 'ethers'
+import { ethers, utils } from 'ethers'
 import styled from 'styled-components'
 
 import { useWeb3React, useExchangeContract } from '../../hooks'
@@ -21,7 +21,7 @@ import ArrowDown from '../../assets/svg/SVGArrowDown'
 import WarningCard from '../../components/WarningCard'
 
 // denominated in bips
-const ALLOWED_SLIPPAGE = ethers.utils.bigNumberify(200)
+const ALLOWED_SLIPPAGE = utils.bigNumberify(200)
 
 // denominated in seconds
 const DEADLINE_FROM_NOW = 60 * 15

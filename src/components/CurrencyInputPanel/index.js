@@ -31,7 +31,7 @@ import { ReactComponent as Close } from '../../assets/images/x.svg'
 import Circle from '../../assets/images/circle-grey.svg'
 import * as Sentry from '@sentry/browser'
 
-const GAS_MARGIN = ethers.utils.bigNumberify(1000)
+const GAS_MARGIN = ethers.BigNumber.from(1000)
 
 const SubCurrencySelect = styled.button`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -498,8 +498,7 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
 
       const balanceBigNumber = new BigNumber(allBalances[account][k].value)
 
-      const usdBalance = balanceBigNumber.times(USDRate).div(new BigNumber(10).pow(allTokens[k].decimals))
-      return usdBalance
+      return balanceBigNumber.times(USDRate).div(new BigNumber(10).pow(allTokens[k].decimals))
     } else {
       return null
     }
@@ -549,10 +548,10 @@ function CurrencySelectModal({ isOpen, onDismiss, onTokenSelect, urlAddedTokens,
         let usdBalance
         // only update if we have data
         if (k === 'ETH' && allBalances[account] && allBalances[account][k] && allBalances[account][k].value) {
-          balance = formatEthBalance(ethers.utils.bigNumberify(allBalances[account][k].value))
+          balance = formatEthBalance(ethers.BigNumber.from(allBalances[account][k].value))
           usdBalance = usdAmounts[k]
         } else if (allBalances[account] && allBalances[account][k] && allBalances[account][k].value) {
-          balance = formatTokenBalance(ethers.utils.bigNumberify(allBalances[account][k].value), allTokens[k].decimals)
+          balance = formatTokenBalance(ethers.BigNumber.from(allBalances[account][k].value), allTokens[k].decimals)
           usdBalance = usdAmounts[k]
         }
         return {

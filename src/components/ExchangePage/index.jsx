@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useState } from 'react'
 import ReactGA from 'react-ga'
 import { createBrowserHistory } from 'history'
 import { ethers } from 'ethers'
-import { BigNumber, bigNumberify, formatUnits, parseEther, parseUnits } from 'ethers/utils'
+import { BigNumber } from 'ethers-utils'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 
@@ -46,7 +46,6 @@ import ArrowDown from '../../assets/svg/SVGArrowDown'
 import WarningCard from '../WarningCard'
 import { constructLoopringOrder, toDolomiteOrder } from '../../connectors/Loopring/LoopringOrderHelper'
 import { exchange } from '../../connectors'
-import { Zero } from 'ethers/constants'
 import { getSignableData } from '../../connectors/Loopring/LoopringEIP712Schema'
 
 import * as Sentry from '@sentry/browser'
@@ -65,7 +64,7 @@ const ALLOWED_SLIPPAGE_DEFAULT = 50
 const TOKEN_ALLOWED_SLIPPAGE_DEFAULT = 50
 
 // % above the calculated gas cost that we actually send, denominated in bips
-const GAS_MARGIN = bigNumberify(1000)
+const GAS_MARGIN = ethers.BigNumber.from(1000)
 
 const DownArrowBackground = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -153,10 +152,13 @@ function calculateTokenValueFromOtherValue(valueAmount, books, inputCurrency, ou
         INITIAL_TOKENS_CONTEXT['1'][outputCurrency][DECIMALS] :
         INITIAL_TOKENS_CONTEXT['1'][inputCurrency][DECIMALS]
 
-      const rawPriceAmount = new BigNumber(tuple.price.valueString)
-      const priceAmount = rawPriceAmount.mul(new BigNumber(10).pow(secondaryTokenDecimals - tuple.price.precision))
+      // if (INITIAL_TOKENS_CONTEXT['1'][inputCurrency].symbol === 'USDC') {
+      //   tuple.price.precision = 6
+      // }
+      const priceAmount = new BigNumber(tuple.price.valueString)
 
       const primaryAmount = new BigNumber(tuple.quantity.valueString)
+      // const secondaryAmount = primaryAmount.mul(priceAmount).div(new BigNumber(10).pow(tuple.quantity.precision)).div(new BigNumber(10).pow(18 - tuple.price.precision))
       const secondaryAmount = primaryAmount.mul(priceAmount).div(new BigNumber(10).pow(tuple.quantity.precision))
 
       const tupleInputAmount = isValueAmountOutputValue ? primaryAmount : secondaryAmount
@@ -183,7 +185,7 @@ function calculateTokenValueFromOtherValue(valueAmount, books, inputCurrency, ou
 
 function calculateSlippageBounds(value, token = false, tokenAllowedSlippage, allowedSlippage) {
   if (value) {
-    const offset = value.mul(token ? tokenAllowedSlippage : allowedSlippage).div(bigNumberify(10000))
+    const offset = value.mul(token ? tokenAllowedSlippage : allowedSlippage).div(ethers.BigNumber.from(10000))
     const minimum = value.sub(offset)
     const maximum = value.add(offset)
     return {
@@ -276,19 +278,19 @@ function getExchangeRate(inputValue, inputDecimals, outputValue, outputDecimals,
       outputValue &&
       (outputDecimals || outputDecimals === 0)
     ) {
-      const factor = bigNumberify(10).pow(bigNumberify(18))
+      const factor = ethers.BigNumber.from(10).pow(ethers.BigNumber.from(18))
 
       if (invert) {
         return inputValue
           .mul(factor)
-          .mul(bigNumberify(10).pow(bigNumberify(outputDecimals)))
-          .div(bigNumberify(10).pow(bigNumberify(inputDecimals)))
+          .mul(ethers.BigNumber.from(10).pow(ethers.BigNumber.from(outputDecimals)))
+          .div(ethers.BigNumber.from(10).pow(ethers.BigNumber.from(inputDecimals)))
           .div(outputValue)
       } else {
         return outputValue
           .mul(factor)
-          .mul(bigNumberify(10).pow(bigNumberify(inputDecimals)))
-          .div(bigNumberify(10).pow(bigNumberify(outputDecimals)))
+          .mul(ethers.BigNumber.from(10).pow(ethers.BigNumber.from(inputDecimals)))
+          .div(ethers.BigNumber.from(10).pow(ethers.BigNumber.from(outputDecimals)))
           .div(inputValue)
       }
     }
@@ -355,8 +357,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   const [rawSlippage, setRawSlippage] = useState(() => initialSlippage())
   const [rawTokenSlippage, setRawTokenSlippage] = useState(() => initialSlippage(true))
 
-  const allowedSlippageBig = bigNumberify(rawSlippage)
-  const tokenAllowedSlippageBig = bigNumberify(rawTokenSlippage)
+  const allowedSlippageBig = ethers.BigNumber.from(rawSlippage)
+  const tokenAllowedSlippageBig = ethers.BigNumber.from(rawTokenSlippage)
 
   // analytics
   useEffect(() => {
@@ -461,7 +463,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   useEffect(() => {
     if (independentValue && (independentDecimals || independentDecimals === 0)) {
       try {
-        const parsedValue = parseUnits(independentValue, independentDecimals)
+        const parsedValue = ethers.utils.parseUnits(independentValue, independentDecimals)
         let isPrimary
         if (independentField === INPUT) {
           isPrimary = market[PRIMARY] === effectiveInputCurrency
@@ -486,7 +488,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           setIndependentValueParsed(parsedValue)
           setIndependentError(null)
         }
-      } catch {
+      } catch (error) {
+        console.error('error ', error)
         setIndependentError(t('inputNotValid'))
       }
 
@@ -531,7 +534,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       } else if (inputValueCalculation.lt(INITIAL_TOKENS_CONTEXT['1'][effectiveInputCurrency][MIN_ORDER])) {
         const token = INITIAL_TOKENS_CONTEXT['1'][effectiveInputCurrency]
         const minimumOrder = token[MIN_ORDER]
-        setInputError(`Minimum order is ${formatUnits(minimumOrder.toString(), token[DECIMALS])} ${token[SYMBOL]}`)
+        setInputError(`Minimum order is ${ethers.utils.formatUnits(minimumOrder.toString(), token[DECIMALS])} ${token[SYMBOL]}`)
         setShowUnlock(false)
         setShowWrap(false)
       } else if (inputCurrency === 'ETH') {
@@ -758,7 +761,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       tokenS: loopringOrderData.tokenS,
       amountB: loopringOrderData.amountB,
       amountS: loopringOrderData.amountS,
-      feeAmount: Zero,
+      feeAmount: ethers.constants.Zero,
       validUntil: null,
       transferDataS: null,
       broker: null,
@@ -817,6 +820,10 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       })
       .then(data => {
         const { response, dolomiteOrder } = data
+        if (!!response.error) {
+          console.error('Caught error after submitting order ', response)
+        }
+
         return getIpAddress()
           .then(ipAddress => {
             const priceBN = new BigNumber(response['data']['market_order_effective_price'].amount)
@@ -978,7 +985,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         extraText={inputBalanceFormatted && formatBalance(inputBalanceFormatted)}
         extraTextClickHander={() => {
           if (inputBalance && inputDecimals) {
-            const valueToSet = effectiveInputCurrency === 'ETH' ? inputBalance.sub(parseEther('.1')) : inputBalance
+            const valueToSet = effectiveInputCurrency === 'ETH' ? inputBalance.sub(ethers.utils.parseEther('.1')) : inputBalance
             if (valueToSet.gt(ethers.constants.Zero)) {
               dispatchSwapState({
                 type: 'UPDATE_INDEPENDENT',

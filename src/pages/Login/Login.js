@@ -4,14 +4,13 @@ import './Login.css'
 import DMMLogo from '../../assets/images/dmm-logo.svg'
 import Button from '@material-ui/core/Button'
 import { DELEGATE_ADDRESS, WETH_ADDRESS, DAI_ADDRESS, USDC_ADDRESS } from '../../contexts/Tokens'
-import { ethers } from 'ethers/index'
+import { ethers } from 'ethers'
 import { calculateGasMargin } from '../../utils'
 import * as Sentry from '@sentry/browser/dist/index'
 import { useTokenContract, useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import { useTransactionAdder } from '../../contexts/Transactions'
 import { useAddressAllowance } from '../../contexts/Allowances'
-import { bigNumberify } from 'ethers/utils/index'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 
@@ -25,7 +24,7 @@ export default function Login() {
 
   const addTransaction = useTransactionAdder();
 
-  const GAS_MARGIN = ethers.utils.bigNumberify(1000);
+  const GAS_MARGIN = ethers.BigNumber.from(1000);
 
   const { account } = useWeb3React();
 
@@ -87,7 +86,7 @@ export default function Login() {
                 WETH
               </div>
               <div className={'unlockButtonWrapper'}>
-                  { wethInputAllowance && wethInputAllowance.lt(bigNumberify(1000)) ? (
+                  { wethInputAllowance && wethInputAllowance.lt(ethers.BigNumber.from(1000)) ? (
                     wethUnlocking ? (
                       <Button
                         className={'unlockButton'}
@@ -150,7 +149,7 @@ export default function Login() {
                 DAI
               </div>
               <div className={'unlockButtonWrapper'}>
-                { daiInputAllowance && daiInputAllowance.lt(bigNumberify(1000)) ? (
+                { daiInputAllowance && daiInputAllowance.lt(ethers.BigNumber.from(1000)) ? (
                   daiUnlocking ? (
                     <Button
                       className={'unlockButton'}
@@ -213,7 +212,7 @@ export default function Login() {
                 USDC
               </div>
               <div className={'unlockButtonWrapper'}>
-                { usdcInputAllowance && usdcInputAllowance.lt(bigNumberify(1000)) ? (
+                { usdcInputAllowance && usdcInputAllowance.lt(ethers.BigNumber.from(1000)) ? (
                   usdcUnlocking ? (
                     <Button
                       className={'unlockButton'}

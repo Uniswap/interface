@@ -1,21 +1,21 @@
 import React, {
   createContext,
-  useContext,
-  useReducer,
-  useState,
-  useRef,
-  useMemo,
+  ReactNode,
   useCallback,
+  useContext,
   useEffect,
-  ReactNode
+  useMemo,
+  useReducer,
+  useRef,
+  useState
 } from 'react'
 import { BigNumber } from '@uniswap/sdk'
 import { ethers } from 'ethers'
 
-import { useWeb3React, useDebounce } from '../hooks'
+import { useDebounce, useWeb3React } from '../hooks'
 import { getEtherBalance, getTokenBalance, isAddress } from '../utils'
 import { useBlockNumber } from './Application'
-import { useTokenDetails, useAllTokenDetails } from './Tokens'
+import { useAllTokenDetails, useTokenDetails } from './Tokens'
 import { getUSDPrice } from '../utils/price'
 
 const LOCAL_STORAGE_KEY = 'BALANCES'
@@ -293,12 +293,10 @@ export function Updater() {
               // else, if there's a value, check if it's stale
             } else if (hasValue) {
               const blocksElapsedSinceLastCheck = blockNumber - fetchedAsOf
-              const stale =
-                blocksElapsedSinceLastCheck >=
+              return blocksElapsedSinceLastCheck >=
                 (stateRef.current[chainId][account][tokenAddress].value === '0'
                   ? LONG_BLOCK_TIMEOUT
                   : SHORT_BLOCK_TIMEOUT)
-              return stale
             } else {
               return false
             }
@@ -366,11 +364,9 @@ export function Updater() {
               const blocksElapsedSinceLastCheckToken = blockNumber - fetchedAsOfToken
               const blocksElapsedSinceLastCheckETH = blockNumber - fetchedAsOfETH
 
-              const stale =
-                fetchedAsOfToken !== fetchedAsOfETH ||
+              return fetchedAsOfToken !== fetchedAsOfETH ||
                 blocksElapsedSinceLastCheckToken >= EXCHANGES_BLOCK_TIMEOUT ||
                 blocksElapsedSinceLastCheckETH >= EXCHANGES_BLOCK_TIMEOUT
-              return stale
             } else {
               return false
             }
@@ -413,7 +409,7 @@ export function useAllBalances() {
   return useMemo(() => (typeof chainId === 'number' ? state?.[chainId] ?? {} : {}), [chainId, state])
 }
 
-export function useAddressBalance(address: string, tokenAddress: string): ethers.utils.BigNumber | undefined | null {
+export function useAddressBalance(address: string, tokenAddress: string): ethers.BigNumber | undefined | null {
   const { chainId } = useWeb3React()
   const [state, { startListening, stopListening }] = useBalancesContext()
 
@@ -428,7 +424,7 @@ export function useAddressBalance(address: string, tokenAddress: string): ethers
 
   const value = typeof chainId === 'number' ? state?.[chainId]?.[address]?.[tokenAddress]?.value : undefined
 
-  return useMemo(() => (typeof value === 'string' ? ethers.utils.bigNumberify(value) : value), [value])
+  return useMemo(() => (typeof value === 'string' ? ethers.BigNumber.from(value) : value), [value])
 }
 
 export function useExchangeReserves(tokenAddress: string) {

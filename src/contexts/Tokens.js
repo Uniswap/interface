@@ -10,7 +10,7 @@ import {
   safeAccess
 } from '../utils'
 
-import { BigNumber } from 'ethers/utils'
+import { BigNumber } from 'ethers-utils'
 
 export const NAME = 'name'
 export const SYMBOL = 'symbol'
