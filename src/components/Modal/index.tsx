@@ -141,6 +141,7 @@ export default function Modal({
                 initialFocusRef={initialFocusRef}
                 mobile={true}
               >
+                {initialFocusRef ? null : <div tabIndex={1} />}
                 <Spring // animation for entrance and exit
                   from={{
                     transform: isOpen ? 'translateY(200px)' : 'translateY(100px)'
