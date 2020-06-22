@@ -472,10 +472,10 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         let minValue
         if (isPrimary) {
           const decimalsDiff = INITIAL_TOKENS_CONTEXT['1'][market.primary][DECIMALS] - market[PRIMARY_DECIMALS]
-          minValue = new BigNumber(10).pow(decimalsDiff)
+          minValue = ethers.BigNumber.from(10).pow(decimalsDiff)
         } else {
           const decimalsDiff = INITIAL_TOKENS_CONTEXT['1'][market.secondary][DECIMALS] - market[SECONDARY_DECIMALS]
-          minValue = new BigNumber(10).pow(decimalsDiff)
+          minValue = ethers.BigNumber.from(10).pow(decimalsDiff)
         }
 
         if (parsedValue.lte(ethers.constants.Zero) || parsedValue.gte(ethers.constants.MaxUint256)) {
@@ -648,11 +648,11 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
     const independentPriceDecimals = independentCurrency === DMG_ADDRESS ? primaryMarketDecimals : diffDecimals
 
-    const dependentDecimalsFactor = new BigNumber(10).pow(dependentDecimals)
-    const dependentTruncationDecimalsFactor = new BigNumber(10).pow(dependentDecimals - dependentPriceDecimals)
+    const dependentDecimalsFactor = ethers.BigNumber.from(10).pow(dependentDecimals)
+    const dependentTruncationDecimalsFactor = ethers.BigNumber.from(10).pow(dependentDecimals - dependentPriceDecimals)
 
-    // const independentDecimalsFactor = new BigNumber(10).pow(independentDecimals)
-    const independentTruncationDecimalsFactor = new BigNumber(10).pow(independentDecimals - independentPriceDecimals)
+    // const independentDecimalsFactor = ethers.BigNumber.from(10).pow(independentDecimals)
+    const independentTruncationDecimalsFactor = ethers.BigNumber.from(10).pow(independentDecimals - independentPriceDecimals)
 
     let dependentValueStandardized
     let independentValueParsedStandardized
@@ -683,7 +683,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     } else if (independentField === OUTPUT) {
       // tokenS == SECONDARY == DEPENDENT == INPUT
       // tokenB == PRIMARY == INDEPENDENT == OUTPUT
-      const independentDecimalsFactor = new BigNumber(10).pow(independentDecimals)
+      const independentDecimalsFactor = ethers.BigNumber.from(10).pow(independentDecimals)
 
       independentValueParsedStandardized = independentValueParsed
         .div(independentTruncationDecimalsFactor)
@@ -711,11 +711,12 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
     let wrapPromise = Promise.resolve(undefined)
     if (showWrap && inputCurrency === 'ETH') {
-      let amountToWrap = new BigNumber(loopringOrderData.amountS)
+      let amountToWrap = ethers.BigNumber.from(loopringOrderData.amountS)
       const usableBalance = inputBalance.sub(ethBalanceBuffer) // 0.05
       amountToWrap = amountToWrap.gt(usableBalance) ? usableBalance : amountToWrap
       const estimatedGas = await tokenContract
-        .estimate.deposit({ value: amountToWrap })
+        .estimateGas
+        .deposit({ value: amountToWrap })
         .catch(error => {
           console.error('Error wrapping WETH due to error: ', error)
           return Promise.reject(error)
