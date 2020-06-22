@@ -58,7 +58,7 @@ export const DUMMY_PAIRS_TO_PIN: { readonly [chainId in ChainId]?: Pair[] } = {
   ]
 }
 
-const MAINNET_WALLETS = {
+const TESTNET_CAPABLE_WALLETS = {
   INJECTED: {
     connector: injected,
     name: 'Injected',
@@ -80,9 +80,9 @@ const MAINNET_WALLETS = {
 
 export const SUPPORTED_WALLETS =
   process.env.REACT_APP_CHAIN_ID !== '1'
-    ? MAINNET_WALLETS
+    ? TESTNET_CAPABLE_WALLETS
     : {
-        ...MAINNET_WALLETS,
+        ...TESTNET_CAPABLE_WALLETS,
         ...{
           WALLET_CONNECT: {
             connector: walletconnect,
@@ -90,7 +90,8 @@ export const SUPPORTED_WALLETS =
             iconName: 'walletConnectIcon.svg',
             description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
             href: null,
-            color: '#4196FC'
+            color: '#4196FC',
+            mobile: true
           },
           WALLET_LINK: {
             connector: walletlink,
