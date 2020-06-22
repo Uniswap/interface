@@ -1,7 +1,6 @@
 # DMM DAO Web App
 
-This repository serves as an open source interface for the DMM DAO dashboard - a protocol. This repository was 
-originally forked from [Uniswap](https://uniswap.io),  
+This repository serves as an open source interface for the DMM DAO dashboard - a protocol for earning interest on crypto-based deposits whose interest is backed by real-world assets. This repository was originally forked from [Uniswap](https://uniswap.io),  
 
 - Website: [defimoneymarket.com](https://defimoneymarket.com)
 - Twitter: [@DMMDAO](https://twitter.com/DMMDAO)
