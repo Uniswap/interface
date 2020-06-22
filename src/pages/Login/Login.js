@@ -57,20 +57,26 @@ export default function Login() {
           </div>
           <div className={'loginScreenTitleInner'}>
             <div className={'loginScreenTitle'}>DMG Token Sale</div>
-            <div className={'loginScreenSubtitle'}>Private Round</div>
+            <div className={'loginScreenSubtitle'}>Public Round</div>
           </div>
         </div>
         <div className={'loginScreenDescription'}>
           <div className={'loginScreenLineOne'}>
-            Due to a high level of demand, the private sale has ended after reaching a cap of $2M.
-          </div>
-          <div>
-            The public sale of DMG will occur on June 22.
+            Welcome to the DMG public sale.
           </div>
           <br/>
           <div>
-            If you would like to save time on the day of the public sale, you can unlock your token for trading right now below.
+            The public sale of DMG will occur on June 22 at 9am ET.
           </div>
+          <br/>
+          <div>
+            When the public sale begins, this page will automatically let you in and you will be able to purchase DMG with DAI, ETH, WETH, or USDC.
+          </div>
+          <br/>
+          <div>
+            If you would like to save time on the day of the public sale, you can unlock your token for trading right now below, as well as connect your wallet.
+          </div>
+          <br/>
           <div>
             An additional note is that while you will be able to purchase DMG with ETH, it will be faster to use WETH (Wrapped Ether). Using DAI and USDC will be equally as fast as WETH.
           </div>

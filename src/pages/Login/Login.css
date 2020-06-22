@@ -10,10 +10,12 @@
 
 .loginScreenInner {
     width: 500px;
-    margin: 20vh auto 0;
+    margin: 14vh auto 0;
     color: black;
     font-family: 'Open Sans', sans-serif;
     text-align: center;
+    max-height: 86vh;
+    overflow-y: scroll;
 }
 
 .loginScreenTitleWrapper {
@@ -134,6 +136,7 @@
     width: 100%;
     text-align: center;
     margin-top: 30px;
+    margin-bottom: 40px;
 }
 
 .unlockRow {
