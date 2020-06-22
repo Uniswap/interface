@@ -15,10 +15,10 @@
 
 .loginScreenInner {
     width: 500px;
-    margin: 14vh auto 0;
     color: black;
     font-family: 'Open Sans', sans-serif;
     text-align: center;
+    margin: 14vh auto 150px;
 }
 
 .loginScreenTitleWrapper {

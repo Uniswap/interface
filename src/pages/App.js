@@ -106,7 +106,7 @@ class App extends React.Component {
         <Suspense fallback={null}>
           <AppWrapper>
             <HeaderWrapper>
-              <Header onDisplayInfo={() => this.setState({ displayInfoPage: true })}/>
+              <Header hideInfo hideBuy/>
             </HeaderWrapper>
             <BodyWrapper>
               <Body>
