@@ -141,6 +141,7 @@ export default function Modal({
                 initialFocusRef={initialFocusRef}
                 mobile={true}
               >
+                {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
                 {initialFocusRef ? null : <div tabIndex={1} />}
                 <Spring // animation for entrance and exit
                   from={{
