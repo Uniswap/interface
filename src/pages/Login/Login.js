@@ -65,7 +65,7 @@ export default function Login() {
             Due to a high level of demand, the private sale has ended after reaching a cap of $2M.
           </div>
           <div>
-            The public sale of DMG will occur on June 22.
+            The public sale of DMG will occur on June 22 at 9 AM EST.
           </div>
           <br/>
           <div>
