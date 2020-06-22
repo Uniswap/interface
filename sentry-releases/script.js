@@ -23,25 +23,24 @@ async function main() {
     })
   })
 
-  // await new Promise((success, failure) => {
-  //   const command = 'git fetch; git status'
-  //   exec(command, (error, stdout) => {
-  //     // TODO check that stdout doesn't contain text saying "we're behind origin by XXX commits"
-  //     if (!!error) {
-  //       const message = 'You must fast forward local/master to be in-line with origin/master'
-  //       failure(message)
-  //     } else {
-  //       success()
-  //     }
-  //   })
-  // })
-
   await new Promise((success, failure) => {
     const untrackedMessage = 'untracked'
     const commands = `git diff-index --quiet HEAD -- || echo "${untrackedMessage}";`
     exec(commands, (error, stdout) => {
       if (!!error || stdout.trim().toString() === untrackedMessage) {
         const message = 'There are untracked changes in the repository that must be committed first! Run \`git status\` to see what changed.'
+        failure(message)
+      } else {
+        success()
+      }
+    })
+  })
+
+  await new Promise((success, failure) => {
+    const command = 'git push origin master'
+    exec(command, (error, stdout) => {
+      if (!!error || (!!stdout && stdout.contains('[rejected]'))) {
+        const message = 'You must fast forward local/master to be in-line with origin/master'
         failure(message)
       } else {
         success()
