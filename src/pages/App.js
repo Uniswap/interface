@@ -60,6 +60,23 @@ class App extends React.Component {
     }
   }
 
+  httpGet(url) {
+    const xmlHttp = new XMLHttpRequest()
+    xmlHttp.open('GET', url, false) // false for synchronous request
+    xmlHttp.send(null)
+    return xmlHttp.responseText
+  }
+
+  componentDidMount() {
+    const currentTime = (new Date()).getTime()
+    const serverTime = JSON.parse(this.httpGet('http://api.defimoneymarket.com/version')).data.replace('//', '')
+    const chosenTime = currentTime < serverTime ? currentTime : serverTime
+    const saleTime = 1592830800000
+    setTimeout(() => {
+      this.setState({ isLoggedIn: true })
+    }, saleTime - chosenTime)
+  }
+
   render() {
     const params = getAllQueryParams()
 

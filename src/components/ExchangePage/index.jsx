@@ -153,10 +153,10 @@ function calculateTokenValueFromOtherValue(valueAmount, books, inputCurrency, ou
         INITIAL_TOKENS_CONTEXT['1'][outputCurrency][DECIMALS] :
         INITIAL_TOKENS_CONTEXT['1'][inputCurrency][DECIMALS]
 
-      const rawPriceAmount = new BigNumber(tuple.price.value.toLocaleString('fullwide', { useGrouping: false }))
+      const rawPriceAmount = new BigNumber(tuple.price.valueString)
       const priceAmount = rawPriceAmount.mul(new BigNumber(10).pow(secondaryTokenDecimals - tuple.price.precision))
 
-      const primaryAmount = new BigNumber(tuple.quantity.value.toLocaleString('fullwide', { useGrouping: false }))
+      const primaryAmount = new BigNumber(tuple.quantity.valueString)
       const secondaryAmount = primaryAmount.mul(priceAmount).div(new BigNumber(10).pow(tuple.quantity.precision))
 
       const tupleInputAmount = isValueAmountOutputValue ? primaryAmount : secondaryAmount
