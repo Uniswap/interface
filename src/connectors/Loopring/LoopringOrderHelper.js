@@ -1,9 +1,10 @@
-import { AccountSignatureAlgorithm, decodeSignature, getOrderHash } from './LoopringEIP712Schema'
+import { decodeSignature, getOrderHash } from './LoopringEIP712Schema'
 
 const now = () => Math.round(new Date().getTime() / 1000)
 
 const intToHex = i => {
   if (typeof i === 'string' && i.startsWith('0x')) return i
+  else if (typeof i.toHexString === 'function') return i.toHexString()
   else return `0x${i.toString(16)}`
 }
 const hexToInt = h => parseInt(h, 16)
@@ -75,6 +76,7 @@ export const constructLoopringOrder = (
 export const toDolomiteOrder = (
   order,
   orderSignature,
+  signatureType,
   {
     orderType,
     dependentTransaction,
@@ -97,8 +99,8 @@ export const toDolomiteOrder = (
   const market = `${primaryToken}-${secondaryToken}`
   const orderHash = getOrderHash(order)
 
-  const typedOrderSignature = decodeSignature(orderSignature, AccountSignatureAlgorithm.EIP_712)
-  const signature = toOrderSignature(typedOrderSignature)
+  const typedOrderSignature = !!orderSignature ? decodeSignature(orderSignature, signatureType) : undefined
+  const signature = !!typedOrderSignature ? toOrderSignature(typedOrderSignature) : undefined
 
   return {
     order_hash: orderHash,

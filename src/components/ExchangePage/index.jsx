@@ -6,6 +6,8 @@ import { BigNumber } from 'ethers-utils'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 
+import Web3 from 'web3'
+
 import { useInterval, useTokenContract, useWeb3React } from '../../hooks'
 import { brokenTokens } from '../../constants'
 import {
@@ -46,7 +48,7 @@ import ArrowDown from '../../assets/svg/SVGArrowDown'
 import WarningCard from '../WarningCard'
 import { constructLoopringOrder, toDolomiteOrder } from '../../connectors/Loopring/LoopringOrderHelper'
 import { exchange } from '../../connectors'
-import { getSignableData } from '../../connectors/Loopring/LoopringEIP712Schema'
+import { AccountSignatureAlgorithm, getOrderHash } from '../../connectors/Loopring/LoopringEIP712Schema'
 
 import * as Sentry from '@sentry/browser'
 
@@ -152,13 +154,9 @@ function calculateTokenValueFromOtherValue(valueAmount, books, inputCurrency, ou
         INITIAL_TOKENS_CONTEXT['1'][outputCurrency][DECIMALS] :
         INITIAL_TOKENS_CONTEXT['1'][inputCurrency][DECIMALS]
 
-      // if (INITIAL_TOKENS_CONTEXT['1'][inputCurrency].symbol === 'USDC') {
-      //   tuple.price.precision = 6
-      // }
-      const priceAmount = new BigNumber(tuple.price.valueString)
 
       const primaryAmount = new BigNumber(tuple.quantity.valueString)
-      // const secondaryAmount = primaryAmount.mul(priceAmount).div(new BigNumber(10).pow(tuple.quantity.precision)).div(new BigNumber(10).pow(18 - tuple.price.precision))
+      const priceAmount = new BigNumber(tuple.price.valueString)
       const secondaryAmount = primaryAmount.mul(priceAmount).div(new BigNumber(10).pow(tuple.quantity.precision))
 
       const tupleInputAmount = isValueAmountOutputValue ? primaryAmount : secondaryAmount
@@ -627,6 +625,9 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         // Ignore handled errors
         Sentry.captureException(error)
       }
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Found error ', error)
+      }
     })
   }
 
@@ -767,27 +768,18 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       broker: null,
       tokenRecipient: account
     })
-    const signableData = getSignableData(loopringOrder)
-    const signer = getProviderOrSigner(library, account)
+    const orderHash = getOrderHash(loopringOrder)
 
-    let signaturePromise
-    if (typeof signer.signTypedMessage === 'function') {
-      signaturePromise = signer.signTypedMessage(signableData)
-    } else {
-      signaturePromise = new Promise((respond, reject) => {
-        library.provider.sendAsync(
-          {
-            method: 'eth_signTypedData',
-            params: [account, JSON.stringify(signableData)],
-            from: account
-          },
-          function(err, result) {
-            if (err || result.error) reject(err || result.error.message)
-            else respond(result.result)
-          }
-        )
+    const web3 = new Web3(library.provider)
+    const signaturePromise = new Promise((resolve, reject) => {
+      web3.personal.sign(orderHash, account, (e, r) => {
+        if (!!e) {
+          reject(e)
+        } else {
+          resolve(r)
+        }
       })
-    }
+    })
 
     // We are now going to wait for the user to sign the Loopring order.
     setIsAwaitingSignature(true)
@@ -804,7 +796,8 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           constantNetworkFeePremium: 0,
           perMatchNetworkFee: 0
         }
-        const dolomiteOrder = toDolomiteOrder(loopringOrder, signature, data)
+        // const dolomiteOrder = toDolomiteOrder(loopringOrder, signature, AccountSignatureAlgorithm.EIP_712, data)
+        const dolomiteOrder = toDolomiteOrder(loopringOrder, signature, AccountSignatureAlgorithm.PERSONAL_SIGN, data)
         console.log('dolomiteOrder ', dolomiteOrder)
         if (!!wrapTransactionHash) {
           dolomiteOrder['dependent_transaction_hash'] = wrapTransactionHash

@@ -5,7 +5,7 @@
   "homepage": "https://dao.defimoneymarket.com",
   "private": true,
   "dependencies": {
-    "@dolomite-exchange/dolomite": "^0.1.94",
+    "@dolomite-exchange/dolomite": "^0.1.96",
     "@material-ui/core": "^4.9.14",
     "@reach/dialog": "^0.2.8",
     "@reach/tooltip": "^0.2.0",
@@ -28,6 +28,7 @@
     "eth-sig-util": "^2.5.3",
     "ethereumjs-util": "^7.0.1",
     "ethers": "^5.0.2",
+    "ethers-utils": "^2.1.11",
     "fiat-adapter": "^1.0.4",
     "history": "^4.9.0",
     "i18next": "^15.0.9",

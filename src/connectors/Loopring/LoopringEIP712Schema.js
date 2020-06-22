@@ -37,7 +37,7 @@ export const DOMAIN = {
   version: '2'
 }
 
-export const getSignableData = order => {
+export const getEip712SignableData = order => {
   return {
     types: {
       EIP712Domain: DOMAIN_SCHEMA,
@@ -91,7 +91,7 @@ export const decodeSignature = (signature, algorithm) => {
 }
 
 export const getOrderHash = order => {
-  const typedData = getSignableData(order)
+  const typedData = getEip712SignableData(order)
   console.log('typedData ', typedData)
   const hash = TypedDataUtils.sign(typedData, false)
   return '0x' + hash.toString('hex')

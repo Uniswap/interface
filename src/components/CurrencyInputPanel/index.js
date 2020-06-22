@@ -318,14 +318,14 @@ export default function CurrencyInputPanel({
             onClick={async () => {
               let estimatedGas
               let useUserBalance = false
-              estimatedGas = await tokenContract.estimate
+              estimatedGas = await tokenContract.estimateGas
                 .approve(DELEGATE_ADDRESS, ethers.constants.MaxUint256)
                 .catch(error => {
                   console.error('Error setting max token approval ', error)
                 })
               if (!estimatedGas) {
                 // general fallback for tokens who restrict approval amounts
-                estimatedGas = await tokenContract.estimate.approve(DELEGATE_ADDRESS, userTokenBalance)
+                estimatedGas = await tokenContract.estimateGas.approve(DELEGATE_ADDRESS, userTokenBalance)
                 useUserBalance = true
               }
               tokenContract
