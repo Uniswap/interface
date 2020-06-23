@@ -3,7 +3,6 @@ import ReactGA from 'react-ga'
 import styled from 'styled-components'
 import { isMobile } from 'react-device-detect'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { URI_AVAILABLE } from '@web3-react/walletconnect-connector'
 import usePrevious from '../../hooks/usePrevious'
 import { useWalletModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 
@@ -15,8 +14,9 @@ import { SUPPORTED_WALLETS } from '../../constants'
 import { ExternalLink } from '../../theme'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injected, walletconnect, fortmatic, portis } from '../../connectors'
+import { injected, fortmatic, portis } from '../../connectors'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
+import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -152,19 +152,6 @@ export default function WalletModal({
     }
   }, [walletModalOpen])
 
-  // set up uri listener for walletconnect
-  const [uri, setUri] = useState()
-  useEffect(() => {
-    const activateWC = uri => {
-      setUri(uri)
-      // setWalletView(WALLET_VIEWS.PENDING)
-    }
-    walletconnect.on(URI_AVAILABLE, activateWC)
-    return () => {
-      walletconnect.off(URI_AVAILABLE, activateWC)
-    }
-  }, [])
-
   // close modal when a connection is successful
   const activePrevious = usePrevious(active)
   const connectorPrevious = usePrevious(connector)
@@ -190,6 +177,12 @@ export default function WalletModal({
     })
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
+
+    // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
+    if (connector instanceof WalletConnectConnector && connector.walletConnectProvider?.wc?.uri) {
+      connector.walletConnectProvider = undefined
+    }
+
     activate(connector, undefined, true).catch(error => {
       if (error instanceof UnsupportedChainIdError) {
         activate(connector) // a little janky...can't use setError because the connector isn't set
@@ -345,8 +338,6 @@ export default function WalletModal({
         <ContentWrapper>
           {walletView === WALLET_VIEWS.PENDING ? (
             <PendingView
-              uri={uri}
-              size={220}
               connector={pendingWallet}
               error={pendingError}
               setPendingError={setPendingError}

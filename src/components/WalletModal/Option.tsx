@@ -15,7 +15,7 @@ const InfoCard = styled.button<{ active?: boolean }>`
   border-color: ${({ theme, active }) => (active ? 'transparent' : theme.bg3)};
 `
 
-const OptionCard = styled(InfoCard)`
+const OptionCard = styled(InfoCard as any)`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -30,7 +30,7 @@ const OptionCardLeft = styled.div`
   height: 100%;
 `
 
-const OptionCardClickable = styled(OptionCard)<{ clickable?: boolean }>`
+const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boolean }>`
   margin-top: 0;
   &:hover {
     cursor: ${({ clickable }) => (clickable ? 'pointer' : '')};
@@ -114,7 +114,6 @@ export default function Option({
     <OptionCardClickable id={id} onClick={onClick} clickable={clickable && !active} active={active}>
       <OptionCardLeft>
         <HeaderText color={color}>
-          {' '}
           {active ? (
             <CircleWrapper>
               <GreenCircle>

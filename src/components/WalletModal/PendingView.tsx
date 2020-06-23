@@ -3,8 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Option from './Option'
 import { SUPPORTED_WALLETS } from '../../constants'
-import WalletConnectData from './WalletConnectData'
-import { walletconnect, injected } from '../../connectors'
+import { injected } from '../../connectors'
 import { darken } from 'polished'
 import Loader from '../Loader'
 
@@ -65,28 +64,22 @@ const LoadingWrapper = styled.div`
 `
 
 export default function PendingView({
-  uri = '',
-  size,
   connector,
   error = false,
   setPendingError,
   tryActivation
 }: {
-  uri?: string
-  size?: number
   connector?: AbstractConnector
   error?: boolean
   setPendingError: (error: boolean) => void
   tryActivation: (connector: AbstractConnector) => void
 }) {
-  const isMetamask = window.ethereum && window.ethereum.isMetaMask
+  const isMetamask = window?.ethereum?.isMetaMask
 
   return (
     <PendingSection>
-      {!error && connector === walletconnect && <WalletConnectData size={size} uri={uri} />}
       <LoadingMessage error={error}>
         <LoadingWrapper>
-          {!error && <StyledLoader />}
           {error ? (
             <ErrorGroup>
               <div>Error connecting.</div>
@@ -99,10 +92,11 @@ export default function PendingView({
                 Try Again
               </ErrorButton>
             </ErrorGroup>
-          ) : connector === walletconnect ? (
-            'Scan QR code with a compatible wallet...'
           ) : (
-            'Initializing...'
+            <>
+              <StyledLoader />
+              Initializing...
+            </>
           )}
         </LoadingWrapper>
       </LoadingMessage>
