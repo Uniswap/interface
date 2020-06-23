@@ -623,6 +623,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     onSwapAsync().catch(error => {
       if (error?.code !== 4001 && error?.code !== -32603) {
         // Ignore handled errors
+        console.error('Found error while attempting to swap: ', error)
         Sentry.captureException(error)
       }
       if (process.env.NODE_ENV !== 'production') {
