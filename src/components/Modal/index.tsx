@@ -112,17 +112,10 @@ export default function Modal({
   const [{ y }, set] = useSpring(() => ({ y: 0, config: { mass: 1, tension: 210, friction: 20 } }))
   const bind = useGesture({
     onDrag: state => {
-      let velocity = state.velocity
-      if (velocity < 1) {
-        velocity = 1
-      }
-      if (velocity > 8) {
-        velocity = 8
-      }
       set({
         y: state.down ? state.movement[1] : 0
       })
-      if (velocity > 3 && state.direction[1] > 0) {
+      if (state.velocity > 3 && state.direction[1] > 0) {
         onDismiss()
       }
     }
