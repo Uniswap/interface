@@ -157,7 +157,6 @@ export default function WalletModal({
   useEffect(() => {
     const activateWC = uri => {
       setUri(uri)
-      // setWalletView(WALLET_VIEWS.PENDING)
     }
     walletconnect.on(URI_AVAILABLE, activateWC)
     return () => {
@@ -191,6 +190,7 @@ export default function WalletModal({
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
     activate(connector, undefined, true).catch(error => {
+      window.alert(error)
       if (error instanceof UnsupportedChainIdError) {
         activate(connector) // a little janky...can't use setError because the connector isn't set
       } else {
@@ -215,7 +215,7 @@ export default function WalletModal({
       if (isMobile) {
         //disable portis on mobile for now
         if (option.connector === portis) {
-          return null
+          // return null
         }
 
         if (!window.web3 && !window.ethereum && option.mobile) {
