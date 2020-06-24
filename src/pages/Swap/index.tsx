@@ -59,7 +59,6 @@ export default function Swap() {
   // swap state
   const { independentField, typedValue } = useSwapState()
   const { bestTrade: bestTradeV2, tokenBalances, parsedAmount, tokens, error, v1Trade } = useDerivedSwapInfo()
-
   const toggledVersion = useToggledVersion()
   const bestTrade = {
     [Version.v1]: v1Trade,

@@ -184,7 +184,6 @@ export default function WalletModal({
     }
 
     activate(connector, undefined, true).catch(error => {
-      window.alert(error)
       if (error instanceof UnsupportedChainIdError) {
         activate(connector) // a little janky...can't use setError because the connector isn't set
       } else {
@@ -209,7 +208,7 @@ export default function WalletModal({
       if (isMobile) {
         //disable portis on mobile for now
         if (option.connector === portis) {
-          // return null
+          return null
         }
 
         if (!window.web3 && !window.ethereum && option.mobile) {
