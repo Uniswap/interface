@@ -89,7 +89,8 @@ jobs:
 
             The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to store your settings.
             **Beware** that other sites you access via the _same_ IPFS gateway can read and modify your settings on the Uniswap interface without your permission.
-            You can avoid this issue by using a subdomain IPFS gateway. The preferred gateway URLs below utilize the CIDv1 of the release in the subdomain, and are relatively safer.
+            You can avoid this issue by using a subdomain IPFS gateway, or our alias to the latest release at [app.uniswap.org](https://app.uniswap.org).
+            The preferred URLs below are safe to use.
 
             Preferred URLs:
             - https://${{ steps.convert_cidv0.outputs.cidv1 }}.ipfs.dweb.link/
