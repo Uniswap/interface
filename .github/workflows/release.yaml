@@ -69,7 +69,7 @@ jobs:
           CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
           RECORD_DOMAIN: 'uniswap.org'
           RECORD_NAME: '_dnslink.app'
-          CLOUDFLARE_TOKEN_ZONE_ID: ${{ secrets.CLOUDFLARE_TOKEN_ZONE_ID }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
         uses: textileio/cloudflare-update-dnslink@0fe7b7a1ffc865db3a4da9773f0f987447ad5848
         with:
           cid: ${{ steps.upload.outputs.hash }}
@@ -93,7 +93,7 @@ jobs:
             The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to store your settings.
             **Beware** that other sites you access via the _same_ IPFS gateway can read and modify your settings on the Uniswap interface without your permission.
             You can avoid this issue by using a subdomain IPFS gateway, or our alias to the latest release at [app.uniswap.org](https://app.uniswap.org).
-            The preferred URLs below are safe to use to access this release.
+            The preferred URLs below are safe to use to access this specific release.
 
             Preferred URLs:
             - https://${{ steps.convert_cidv0.outputs.cidv1 }}.ipfs.dweb.link/
