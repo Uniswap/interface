@@ -70,7 +70,7 @@ jobs:
           RECORD_DOMAIN: 'uniswap.org'
           RECORD_NAME: '_dnslink.app'
           CLOUDFLARE_TOKEN_ZONE_ID: ${{ secrets.CLOUDFLARE_TOKEN_ZONE_ID }}
-        uses: textileio/cloudflare-update-dnslink@master
+        uses: textileio/cloudflare-update-dnslink@0fe7b7a1ffc865db3a4da9773f0f987447ad5848
         with:
           cid: ${{ steps.upload.outputs.hash }}
 
