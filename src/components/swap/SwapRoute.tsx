@@ -23,13 +23,13 @@ export default memo(function SwapRoute({ trade }: { trade: Trade }) {
         const isLastItem: boolean = i === path.length - 1
         return (
           <Fragment key={i}>
-            <Flex my="0.5rem" alignItems="center" key={token.address} style={{ flexShrink: 0 }}>
+            <Flex my="0.5rem" alignItems="center" style={{ flexShrink: 0 }}>
               <TokenLogo address={token.address} size="1.5rem" />
               <TYPE.black fontSize={14} color={theme.text1} ml="0.5rem">
                 {token.symbol}
               </TYPE.black>
             </Flex>
-            {isLastItem ? null : <ChevronRight key={i} color={theme.text2} />}
+            {isLastItem ? null : <ChevronRight color={theme.text2} />}
           </Fragment>
         )
       })}
