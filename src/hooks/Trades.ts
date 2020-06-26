@@ -56,7 +56,7 @@ export function useTradeExactIn(amountIn?: TokenAmount, tokenOut?: Token): Trade
 
   return useMemo(() => {
     if (amountIn && tokenOut && allowedPairs.length > 0) {
-      return Trade.bestTradeExactIn(allowedPairs, amountIn, tokenOut)[0] ?? null
+      return Trade.bestTradeExactIn(allowedPairs, amountIn, tokenOut, { maxHops: 2, maxNumResults: 1 })[0] ?? null
     }
     return null
   }, [allowedPairs, amountIn, tokenOut])
@@ -73,7 +73,7 @@ export function useTradeExactOut(tokenIn?: Token, amountOut?: TokenAmount): Trad
 
   return useMemo(() => {
     if (tokenIn && amountOut && allowedPairs.length > 0) {
-      return Trade.bestTradeExactOut(allowedPairs, tokenIn, amountOut)[0] ?? null
+      return Trade.bestTradeExactOut(allowedPairs, tokenIn, amountOut, { maxHops: 2, maxNumResults: 1 })[0] ?? null
     }
     return null
   }, [allowedPairs, tokenIn, amountOut])
