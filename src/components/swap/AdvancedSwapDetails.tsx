@@ -1,19 +1,16 @@
 import { Trade, TradeType } from '@uniswap/sdk'
 import React, { useContext } from 'react'
-import { ChevronRight } from 'react-feather'
-import { Flex } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
+import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
 import { AutoColumn } from '../Column'
-import { SectionBreak } from './styleds'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
-import TokenLogo from '../TokenLogo'
-import flatMap from 'lodash.flatmap'
-import { useUserSlippageTolerance } from '../../state/user/hooks'
+import { SectionBreak } from './styleds'
+import SwapRoute from './SwapRoute'
 
 function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
   const theme = useContext(ThemeContext)
@@ -79,49 +76,19 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   return (
     <AutoColumn gap="md">
       {trade && <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />}
-      {showRoute && <SectionBreak />}
       {showRoute && (
-        <AutoColumn style={{ padding: '0 24px' }}>
-          <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-              Route
-            </TYPE.black>
-            <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
-          </RowFixed>
-          <Flex
-            px="1rem"
-            py="0.5rem"
-            my="0.5rem"
-            style={{ border: `1px solid ${theme.bg3}`, borderRadius: '1rem' }}
-            flexWrap="wrap"
-            width="100%"
-            justifyContent="space-evenly"
-            alignItems="center"
-          >
-            {flatMap(
-              trade.route.path,
-              // add a null in-between each item
-              (token, i, array) => {
-                const lastItem = i === array.length - 1
-                return lastItem ? [token] : [token, null]
-              }
-            ).map((token, i) => {
-              // use null as an indicator to insert chevrons
-              if (token === null) {
-                return <ChevronRight key={i} color={theme.text2} />
-              } else {
-                return (
-                  <Flex my="0.5rem" alignItems="center" key={token.address} style={{ flexShrink: 0 }}>
-                    <TokenLogo address={token.address} size="1.5rem" />
-                    <TYPE.black fontSize={14} color={theme.text1} ml="0.5rem">
-                      {token.symbol}
-                    </TYPE.black>
-                  </Flex>
-                )
-              }
-            })}
-          </Flex>
-        </AutoColumn>
+        <>
+          <SectionBreak />
+          <AutoColumn style={{ padding: '0 24px' }}>
+            <RowFixed>
+              <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+                Route
+              </TYPE.black>
+              <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
+            </RowFixed>
+            <SwapRoute trade={trade} />
+          </AutoColumn>
+        </>
       )}
     </AutoColumn>
   )
