@@ -22,7 +22,7 @@ import Menu from '../Menu'
 
 import Row, { RowBetween } from '../Row'
 import Web3Status from '../Web3Status'
-import { VersionSwitch } from './VersionSwitch'
+import VersionSwitch from './VersionSwitch'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -76,14 +76,13 @@ const AccountElement = styled.div<{ active: boolean }>`
   }
 `
 
-const TestnetWrapper = styled.div`
+const TestnetWrapper = styled.div<{ showSmall: boolean }>`
   white-space: nowrap;
   width: fit-content;
   margin-left: 10px;
+  pointer-events: auto;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
+  ${({ theme, showSmall }) => (!showSmall ? theme.mediaWidth.upToSmall`display: none;` : null)};
 `
 
 const NetworkCard = styled(YellowCard)`
@@ -171,10 +170,12 @@ export default function Header() {
               </TitleText>
             )}
           </Title>
-          <TestnetWrapper style={{ pointerEvents: 'auto' }}>{!isMobile && <VersionSwitch />}</TestnetWrapper>
+          <TestnetWrapper showSmall={true}>
+            <VersionSwitch />
+          </TestnetWrapper>
         </HeaderElement>
         <HeaderElement>
-          <TestnetWrapper>
+          <TestnetWrapper showSmall={false}>
             {!isMobile && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
           </TestnetWrapper>
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>

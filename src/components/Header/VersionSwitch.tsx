@@ -17,6 +17,8 @@ const VersionLabel = styled.span<{ enabled: boolean }>`
     background: ${({ theme, enabled }) => (enabled ? theme.primary1 : 'none')};
     color: ${({ theme, enabled }) => (enabled ? theme.white : theme.primary3)};
   }
+
+  ${({ theme, enabled }) => (enabled ? null : theme.mediaWidth.upToSmall`display: none;`)}
 `
 
 interface VersionToggleProps extends React.ComponentProps<typeof Link> {
@@ -39,7 +41,7 @@ const VersionToggle = styled(({ enabled, ...rest }: VersionToggleProps) => <Link
   }
 `
 
-export function VersionSwitch() {
+export default function VersionSwitch() {
   const version = useToggledVersion()
   const location = useLocation()
   const query = useParsedQueryString()
