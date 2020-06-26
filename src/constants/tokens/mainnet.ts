@@ -1,5 +1,11 @@
 import { Token, ChainId } from '@uniswap/sdk'
 
+export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
+export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
+export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
+export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f5717214004A7f26888', 18, 'COMP', 'Compound')
+export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
+
 export default [
   new Token(ChainId.MAINNET, '0xB6eD7644C69416d67B522e20bC294A9a9B405B31', 8, '0xBTC', '0xBitcoin Token'),
   new Token(ChainId.MAINNET, '0xfC1E690f61EFd961294b3e1Ce3313fBD8aa4f85d', 18, 'aDAI', 'Aave Interest bearing DAI'),
@@ -19,9 +25,9 @@ export default [
   new Token(ChainId.MAINNET, '0x39AA39c021dfbaE8faC545936693aC917d5E7563', 8, 'cUSDC', 'Compound USD Coin'),
   new Token(ChainId.MAINNET, '0xaaAEBE6Fe48E54f431b0C390CfaF0b017d09D42d', 4, 'CEL', 'Celsius'),
   new Token(ChainId.MAINNET, '0x06AF07097C9Eeb7fD685c692751D5C66dB49c215', 18, 'CHAI', 'Chai'),
-  new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f5717214004A7f26888', 18, 'COMP', 'Compound'),
+  COMP,
   new Token(ChainId.MAINNET, '0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359', 18, 'SAI', 'Dai Stablecoin v1.0 (SAI)'),
-  new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin'),
+  DAI,
   new Token(ChainId.MAINNET, '0x0Cf0Ee63788A0849fE5297F3407f701E122cC023', 18, 'DATA', 'Streamr DATAcoin'),
   new Token(ChainId.MAINNET, '0xE0B7927c4aF23765Cb51314A0E0521A9645F0E2A', 9, 'DGD', 'DigixDAO'),
   new Token(ChainId.MAINNET, '0x4f3AfEC4E5a3F2A6a1A411DEF7D7dFe50eE057bF', 9, 'DGX', 'Digix Gold Token'),
@@ -62,7 +68,7 @@ export default [
   new Token(ChainId.MAINNET, '0xd15eCDCF5Ea68e3995b2D0527A0aE0a3258302F8', 18, 'MCX', 'MachiX Token'),
   new Token(ChainId.MAINNET, '0xa3d58c4E56fedCae3a7c43A725aeE9A71F0ece4e', 18, 'MET', 'Metronome'),
   new Token(ChainId.MAINNET, '0x80f222a749a2e18Eb7f676D371F19ad7EFEEe3b7', 18, 'MGN', 'Magnolia Token'),
-  new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker'),
+  MKR,
   new Token(ChainId.MAINNET, '0xec67005c4E498Ec7f55E092bd1d35cbC47C91892', 18, 'MLN', 'Melon Token'),
   new Token(ChainId.MAINNET, '0x957c30aB0426e0C93CD8241E2c60392d08c6aC8e', 0, 'MOD', 'Modum Token'),
   new Token(ChainId.MAINNET, '0xe2f2a5C287993345a840Db3B0845fbC70f5935a5', 18, 'mUSD', 'mStable USD'),
@@ -112,9 +118,9 @@ export default [
   new Token(ChainId.MAINNET, '0x0000000000085d4780B73119b644AE5ecd22b376', 18, 'TUSD', 'TrueUSD'),
   new Token(ChainId.MAINNET, '0x8400D94A5cb0fa0D041a3788e395285d61c9ee5e', 8, 'UBT', 'UniBright'),
   new Token(ChainId.MAINNET, '0x04Fa0d235C4abf4BcF4787aF4CF447DE572eF828', 18, 'UMA', 'UMA Voting Token v1'),
-  new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C'),
+  USDC,
   new Token(ChainId.MAINNET, '0xA4Bdb11dc0a2bEC88d24A3aa1E6Bb17201112eBe', 6, 'USDS', 'StableUSD'),
-  new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD'),
+  USDT,
   new Token(ChainId.MAINNET, '0xeb269732ab75A6fD61Ea60b06fE994cD32a83549', 18, 'USDx', 'dForce'),
   new Token(ChainId.MAINNET, '0x8f3470A7388c05eE4e7AF3d01D8C722b0FF52374', 18, 'VERI', 'Veritaseum'),
   new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC'),

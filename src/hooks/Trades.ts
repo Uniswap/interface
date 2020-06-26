@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Token, TokenAmount, Trade, ChainId, Pair } from '@uniswap/sdk'
+import { Token, TokenAmount, Trade, Pair } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
 
 import { useActiveWeb3React } from './index'
@@ -10,7 +10,7 @@ import { BASES_TO_CHECK_TRADES_AGAINST } from '../constants'
 function useAllCommonPairs(tokenA?: Token, tokenB?: Token): Pair[] {
   const { chainId } = useActiveWeb3React()
 
-  const bases = useMemo(() => BASES_TO_CHECK_TRADES_AGAINST[chainId as ChainId] ?? [], [chainId])
+  const bases: Token[] = chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []
 
   const allPairCombinations: [Token | undefined, Token | undefined][] = useMemo(
     () => [
@@ -31,13 +31,16 @@ function useAllCommonPairs(tokenA?: Token, tokenB?: Token): Pair[] {
   // only pass along valid pairs, non-duplicated pairs
   return useMemo(
     () =>
-      allPairs
-        // filter out invalid pairs
-        .filter((p): p is Pair => !!p)
-        // filter out duplicated pairs
-        .filter(
-          (p, i, pairs) => i === pairs.findIndex(pair => pair?.liquidityToken.address === p.liquidityToken.address)
-        ),
+      Object.values(
+        allPairs
+          // filter out invalid pairs
+          .filter((p): p is Pair => !!p)
+          // filter out duplicated pairs
+          .reduce<{ [pairAddress: string]: Pair }>((memo, curr) => {
+            memo[curr.liquidityToken.address] = memo[curr.liquidityToken.address] ?? curr
+            return memo
+          }, {})
+      ),
     [allPairs]
   )
 }
@@ -53,7 +56,7 @@ export function useTradeExactIn(amountIn?: TokenAmount, tokenOut?: Token): Trade
 
   return useMemo(() => {
     if (amountIn && tokenOut && allowedPairs.length > 0) {
-      return Trade.bestTradeExactIn(allowedPairs, amountIn, tokenOut)[0] ?? null
+      return Trade.bestTradeExactIn(allowedPairs, amountIn, tokenOut, { maxHops: 2, maxNumResults: 1 })[0] ?? null
     }
     return null
   }, [allowedPairs, amountIn, tokenOut])
@@ -70,7 +73,7 @@ export function useTradeExactOut(tokenIn?: Token, amountOut?: TokenAmount): Trad
 
   return useMemo(() => {
     if (tokenIn && amountOut && allowedPairs.length > 0) {
-      return Trade.bestTradeExactOut(allowedPairs, tokenIn, amountOut)[0] ?? null
+      return Trade.bestTradeExactOut(allowedPairs, tokenIn, amountOut, { maxHops: 2, maxNumResults: 1 })[0] ?? null
     }
     return null
   }, [allowedPairs, tokenIn, amountOut])
