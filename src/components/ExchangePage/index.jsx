@@ -5,6 +5,7 @@ import { ethers } from 'ethers'
 import { BigNumber } from 'ethers-utils'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
+import * as foo from './styles.css'
 
 import Web3 from 'web3'
 
@@ -973,6 +974,9 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           currency={outputCurrency}
         />
       )}
+      <div>
+        <h4 className={'temp'}>Trading for DMG is temporarily disabled while liquidity is being added.</h4>
+      </div>
       <CurrencyInputPanel
         title={t('input')}
         urlAddedTokens={urlAddedTokens}
