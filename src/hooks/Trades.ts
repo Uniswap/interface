@@ -1,11 +1,11 @@
-import { useMemo } from 'react'
-import { Token, TokenAmount, Trade, Pair } from '@uniswap/sdk'
+import { Pair, Token, TokenAmount, Trade } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
-
-import { useActiveWeb3React } from './index'
-import { usePairs } from '../data/Reserves'
+import { useMemo } from 'react'
 
 import { BASES_TO_CHECK_TRADES_AGAINST } from '../constants'
+import { usePairs } from '../data/Reserves'
+
+import { useActiveWeb3React } from './index'
 
 function useAllCommonPairs(tokenA?: Token, tokenB?: Token): Pair[] {
   const { chainId } = useActiveWeb3React()
@@ -49,14 +49,11 @@ function useAllCommonPairs(tokenA?: Token, tokenB?: Token): Pair[] {
  * Returns the best trade for the exact amount of tokens in to the given token out
  */
 export function useTradeExactIn(amountIn?: TokenAmount, tokenOut?: Token): Trade | null {
-  const inputToken = amountIn?.token
-  const outputToken = tokenOut
-
-  const allowedPairs = useAllCommonPairs(inputToken, outputToken)
+  const allowedPairs = useAllCommonPairs(amountIn?.token, tokenOut)
 
   return useMemo(() => {
     if (amountIn && tokenOut && allowedPairs.length > 0) {
-      return Trade.bestTradeExactIn(allowedPairs, amountIn, tokenOut, { maxHops: 2, maxNumResults: 1 })[0] ?? null
+      return Trade.bestTradeExactIn(allowedPairs, amountIn, tokenOut, { maxHops: 3, maxNumResults: 1 })[0] ?? null
     }
     return null
   }, [allowedPairs, amountIn, tokenOut])
@@ -66,14 +63,11 @@ export function useTradeExactIn(amountIn?: TokenAmount, tokenOut?: Token): Trade
  * Returns the best trade for the token in to the exact amount of token out
  */
 export function useTradeExactOut(tokenIn?: Token, amountOut?: TokenAmount): Trade | null {
-  const inputToken = tokenIn
-  const outputToken = amountOut?.token
-
-  const allowedPairs = useAllCommonPairs(inputToken, outputToken)
+  const allowedPairs = useAllCommonPairs(tokenIn, amountOut?.token)
 
   return useMemo(() => {
     if (tokenIn && amountOut && allowedPairs.length > 0) {
-      return Trade.bestTradeExactOut(allowedPairs, tokenIn, amountOut, { maxHops: 2, maxNumResults: 1 })[0] ?? null
+      return Trade.bestTradeExactOut(allowedPairs, tokenIn, amountOut, { maxHops: 3, maxNumResults: 1 })[0] ?? null
     }
     return null
   }, [allowedPairs, tokenIn, amountOut])
