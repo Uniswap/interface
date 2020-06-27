@@ -26,9 +26,9 @@ change `REACT_APP_NETWORK_ID` to `"{yourNetworkId}"`, and change `REACT_APP_NETW
 
 Note that the front end only works properly only on kovan ethereum network *for now*.
 
-Factory: (0x40231fd7c05209beb6243afa13fe393a78db03cc)[https://kovan.etherscan.io/address/0x40231fd7c05209beb6243afa13fe393a78db03cc]
-Router: (0x9007224a02d5264ae57db5b55215e200b66cc9fd)[https://kovan.etherscan.io/address/0x9007224a02d5264ae57db5b55215e200b66cc9fd]
-WETH: (0xdc56fc0606c2f3d02cc05d5acc17b7ace4496d6f)[https://kovan.etherscan.io/address/0xdc56fc0606c2f3d02cc05d5acc17b7ace4496d6f#code]
+Factory: (0x5CFc35C07Ca81CCe087e1fEa81096c4A58eE8Ee2)[https://kovan.etherscan.io/address/0x5CFc35C07Ca81CCe087e1fEa81096c4A58eE8Ee2]
+Router: (0x203440fbaa18004bdFB09cd5CdC20f9D17E25694)[https://kovan.etherscan.io/address/0x203440fbaa18004bdFB09cd5CdC20f9D17E25694]
+WETH: (0xd0a1e359811322d97991e03f863a0c30c2cf029c)[https://kovan.etherscan.io/address/0xd0a1e359811322d97991e03f863a0c30c2cf029c]
 
 ## Contributions
 
