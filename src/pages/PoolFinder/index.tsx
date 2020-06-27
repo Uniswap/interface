@@ -1,4 +1,4 @@
-import { JSBI, Pair, Token, TokenAmount, WETH } from '@uniswap/sdk'
+import { JSBI, Pair, Token, TokenAmount, WETH } from 'dxswap-sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Text } from 'rebass'

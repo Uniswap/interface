@@ -1,8 +1,9 @@
-import { ChainId, JSBI, Percent, Token, WETH, Pair, TokenAmount } from '@uniswap/sdk'
+import { ChainId, JSBI, Percent, Token, WETH, Pair, TokenAmount } from 'dxswap-sdk'
 
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
+import { proxies as kovanProxies } from 'dxswap-periphery/.openzeppelin/kovan.json'
 
-export const ROUTER_ADDRESS = '0x9007224a02d5264ae57db5b55215e200b66cc9fd'
+export const ROUTER_ADDRESS = '0x203440fbaa18004bdFB09cd5CdC20f9D17E25694'
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: { readonly [chainId in ChainId]: Token[] } = {
@@ -113,7 +114,7 @@ export const SUPPORTED_WALLETS =
             name: 'Open in Trust Wallet',
             iconName: 'trustWallet.png',
             description: 'iOS and Android app.',
-            href: 'https://link.trustwallet.com/open_url?coin_id=60&url=https://uniswap.exchange/swap',
+            href: 'https://link.trustwallet.com/open_url?coin_id=60&url=https://dxswap.eth.link/swap',
             color: '#1C74CC',
             mobile: true,
             mobileOnly: true

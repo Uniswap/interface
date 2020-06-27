@@ -1,4 +1,4 @@
-import { ChainId, WETH } from '@uniswap/sdk'
+import { ChainId, WETH } from 'dxswap-sdk'
 import React from 'react'
 import { isMobile } from 'react-device-detect'
 import { Link as HistoryLink } from 'react-router-dom'
@@ -22,7 +22,6 @@ import Menu from '../Menu'
 
 import Row, { RowBetween } from '../Row'
 import Web3Status from '../Web3Status'
-import { VersionSwitch } from './VersionSwitch'
 
 const HeaderFrame = styled.div`
   display: flex;

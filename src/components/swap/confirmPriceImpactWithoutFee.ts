@@ -1,5 +1,5 @@
 // gathers additional user consent for a high price impact
-import { Percent } from '@uniswap/sdk'
+import { Percent } from 'dxswap-sdk'
 import { ALLOWED_PRICE_IMPACT_HIGH, PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN } from '../../constants'
 
 export default function confirmPriceImpactWithoutFee(priceImpactWithoutFee: Percent): boolean {

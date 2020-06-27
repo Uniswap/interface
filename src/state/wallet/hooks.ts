@@ -1,4 +1,4 @@
-import { ChainId, JSBI, Token, TokenAmount, WETH } from '@uniswap/sdk'
+import { ChainId, JSBI, Token, TokenAmount, WETH } from 'dxswap-sdk'
 import { useMemo } from 'react'
 import ERC20_INTERFACE from '../../constants/abis/erc20'
 import { useAllTokens } from '../../hooks/Tokens'

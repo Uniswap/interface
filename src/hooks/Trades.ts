@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Token, TokenAmount, Trade, ChainId, Pair } from '@uniswap/sdk'
+import { Token, TokenAmount, Trade, ChainId, Pair } from 'dxswap-sdk'
 import flatMap from 'lodash.flatmap'
 
 import { useActiveWeb3React } from './index'

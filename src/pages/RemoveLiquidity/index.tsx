@@ -1,6 +1,6 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
-import { Percent, WETH } from '@uniswap/sdk'
+import { Percent, WETH } from 'dxswap-sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -95,7 +95,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: 'Uniswap V2',
+      name: 'DXswap',
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address

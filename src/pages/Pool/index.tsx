@@ -1,6 +1,6 @@
 import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { JSBI } from '@uniswap/sdk'
+import { JSBI } from 'dxswap-sdk'
 import { RouteComponentProps } from 'react-router-dom'
 
 import Question from '../../components/QuestionHelper'
@@ -37,29 +37,29 @@ export default function Pool({ history }: RouteComponentProps) {
   const { account } = useActiveWeb3React()
   const [showPoolSearch, setShowPoolSearch] = useState(false)
 
-  // fetch the user's balances of all tracked V2 LP tokens
-  const V2DummyPairs = useAllDummyPairs()
-  const [V2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
+  // fetch the user's balances of all tracked DXswap LP tokens
+  const DXswapDummyPairs = useAllDummyPairs()
+  const [DXswapPairsBalances, fetchingDXswapPairBalances] = useTokenBalancesWithLoadingIndicator(
     account,
-    V2DummyPairs?.map(p => p.liquidityToken)
+    DXswapDummyPairs?.map(p => p.liquidityToken)
   )
-  // fetch the reserves for all V2 pools in which the user has a balance
-  const V2DummyPairsWithABalance = V2DummyPairs.filter(
-    V2DummyPair =>
-      V2PairsBalances[V2DummyPair.liquidityToken.address] &&
-      JSBI.greaterThan(V2PairsBalances[V2DummyPair.liquidityToken.address].raw, JSBI.BigInt(0))
+  // fetch the reserves for all DXswap pools in which the user has a balance
+  const DXswapDummyPairsWithABalance = DXswapDummyPairs.filter(
+    DXswapDummyPair =>
+      DXswapPairsBalances[DXswapDummyPair.liquidityToken.address] &&
+      JSBI.greaterThan(DXswapPairsBalances[DXswapDummyPair.liquidityToken.address].raw, JSBI.BigInt(0))
   )
-  const V2Pairs = usePairs(
-    V2DummyPairsWithABalance.map(V2DummyPairWithABalance => [
-      V2DummyPairWithABalance.token0,
-      V2DummyPairWithABalance.token1
+  const DXswapPairs = usePairs(
+    DXswapDummyPairsWithABalance.map(DXswapDummyPairWithABalance => [
+      DXswapDummyPairWithABalance.token0,
+      DXswapDummyPairWithABalance.token1
     ])
   )
-  const V2IsLoading =
-    fetchingV2PairBalances || V2Pairs?.length < V2DummyPairsWithABalance.length || V2Pairs?.some(V2Pair => !!!V2Pair)
+  const DXswapIsLoading =
+    fetchingDXswapPairBalances || DXswapPairs?.length < DXswapDummyPairsWithABalance.length || DXswapPairs?.some(DXswapPair => !!!DXswapPair)
 
-  const allV2PairsWithLiquidity = V2Pairs.filter(V2Pair => !!V2Pair).map(V2Pair => (
-    <PositionCard key={V2Pair.liquidityToken.address} pair={V2Pair} />
+  const allDXswapPairsWithLiquidity = DXswapPairs.filter(DXswapPair => !!DXswapPair).map(DXswapPair => (
+    <PositionCard key={DXswapPair.liquidityToken.address} pair={DXswapPair} />
   ))
 
   const hasV1Liquidity = useUserHasLiquidityInAllTokens()
@@ -79,7 +79,7 @@ export default function Pool({ history }: RouteComponentProps) {
           }}
         >
           <Text fontWeight={500} fontSize={20}>
-            Join {allV2PairsWithLiquidity?.length > 0 ? 'another' : 'a'} pool
+            Join {allDXswapPairsWithLiquidity?.length > 0 ? 'another' : 'a'} pool
           </Text>
         </ButtonPrimary>
 
@@ -98,14 +98,14 @@ export default function Pool({ history }: RouteComponentProps) {
                   Connect to a wallet to view your liquidity.
                 </TYPE.body>
               </LightCard>
-            ) : V2IsLoading ? (
+            ) : DXswapIsLoading ? (
               <LightCard padding="40px">
                 <TYPE.body color={theme.text3} textAlign="center">
                   <Dots>Loading</Dots>
                 </TYPE.body>
               </LightCard>
-            ) : allV2PairsWithLiquidity?.length > 0 ? (
-              <>{allV2PairsWithLiquidity}</>
+            ) : allDXswapPairsWithLiquidity?.length > 0 ? (
+              <>{allDXswapPairsWithLiquidity}</>
             ) : (
               <LightCard padding="40px">
                 <TYPE.body color={theme.text3} textAlign="center">

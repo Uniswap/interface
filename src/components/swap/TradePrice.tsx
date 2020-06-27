@@ -1,5 +1,5 @@
 import React from 'react'
-import { Trade } from '@uniswap/sdk'
+import { Trade } from 'dxswap-sdk'
 import { useContext } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'

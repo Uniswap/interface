@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { ChainId, Trade, TradeType, WETH } from '@uniswap/sdk'
+import { ChainId, Trade, TradeType, WETH } from 'dxswap-sdk'
 import { useMemo } from 'react'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, ROUTER_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
