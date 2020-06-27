@@ -16,6 +16,7 @@ export default [
   new Token(ChainId.MAINNET, '0x27054b13b1B798B345b591a4d22e6562d47eA75a', 4, 'AST', 'AirSwap Token'),
   new Token(ChainId.MAINNET, '0xBA11D00c5f74255f56a5E366F4F77f5A186d7f55', 18, 'BAND', 'BandToken'),
   new Token(ChainId.MAINNET, '0x0D8775F648430679A709E98d2b0Cb6250d2887EF', 18, 'BAT', 'Basic Attention Token'),
+  new Token(ChainId.MAINNET, '0xba100000625a3754423978a60c9317c58a424e3D', 18, 'BAL', 'Balancer'),
   new Token(ChainId.MAINNET, '0x107c4504cd79C5d2696Ea0030a8dD4e92601B82e', 18, 'BLT', 'Bloom Token'),
   new Token(ChainId.MAINNET, '0x1F573D6Fb3F13d689FF844B4cE37794d79a7FF1C', 18, 'BNT', 'Bancor Network Token'),
   new Token(ChainId.MAINNET, '0x0327112423F3A68efdF1fcF402F6c5CB9f7C33fd', 18, 'BTC++', 'PieDAO BTC++'),
