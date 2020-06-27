@@ -1,4 +1,4 @@
-import { ChainId, Token, WETH } from '@uniswap/sdk'
+import { ChainId, Token, WETH } from 'dxswap-sdk'
 import KOVAN_TOKENS from './kovan'
 import MAINNET_TOKENS from './mainnet'
 import RINKEBY_TOKENS from './rinkeby'

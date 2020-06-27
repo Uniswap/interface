@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
-import { Percent, Pair, JSBI } from '@uniswap/sdk'
+import { Percent, Pair, JSBI } from 'dxswap-sdk'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
@@ -197,12 +197,7 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
                   {poolTokenPercentage ? poolTokenPercentage.toFixed(2) + '%' : '-'}
                 </Text>
               </FixedHeightRow>
-
-              <AutoRow justify="center" marginTop={'10px'}>
-                <ExternalLink href={`https://uniswap.info/pair/${pair?.liquidityToken.address}`}>
-                  View pool information ↗
-                </ExternalLink>
-              </AutoRow>
+              
               <RowBetween marginTop="10px">
                 <ButtonSecondary
                   width="48%"

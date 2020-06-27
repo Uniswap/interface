@@ -1,11 +1,11 @@
-import { Token, TokenAmount, Pair } from '@uniswap/sdk'
+import { Token, TokenAmount, Pair, FACTORY_ADDRESS } from 'dxswap-sdk'
 import { useMemo } from 'react'
-import { abi as IUniswapV2PairABI } from 'dxswap-core/build/IDXswapPair.json'
+import { abi as IDXswapPairABI } from 'dxswap-core/build/contracts/IDXswapPair.json'
 import { Interface } from '@ethersproject/abi'
 
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
 
-const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
+const PAIR_INTERFACE = new Interface(IDXswapPairABI)
 
 /*
  * if loading, return undefined

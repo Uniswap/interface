@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { isAddress } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
-import { WETH } from '@uniswap/sdk'
+import { WETH } from 'dxswap-sdk'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 

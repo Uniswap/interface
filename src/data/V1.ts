@@ -1,4 +1,4 @@
-import { JSBI, Pair, Percent, Route, Token, TokenAmount, Trade, TradeType, WETH } from '@uniswap/sdk'
+import { JSBI, Pair, Percent, Route, Token, TokenAmount, Trade, TradeType, WETH } from 'dxswap-sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
 import { useAllTokens } from '../hooks/Tokens'

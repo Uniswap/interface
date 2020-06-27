@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk'
+import { Token } from 'dxswap-sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'

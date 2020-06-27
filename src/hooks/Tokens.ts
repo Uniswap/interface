@@ -1,5 +1,5 @@
 import { parseBytes32String } from '@ethersproject/strings'
-import { ChainId, Token, WETH } from '@uniswap/sdk'
+import { ChainId, Token, WETH } from 'dxswap-sdk'
 import { useMemo } from 'react'
 import { ALL_TOKENS } from '../constants/tokens'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'

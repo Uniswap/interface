@@ -1,5 +1,5 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
-import { ChainId, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@uniswap/sdk'
+import { ChainId, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from 'dxswap-sdk'
 import React, { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -17,7 +17,7 @@ import { useTotalSupply } from '../../data/TotalSupply'
 import { useActiveWeb3React } from '../../hooks'
 import { useToken } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { useV1ExchangeContract, useV2MigratorContract } from '../../hooks/useContract'
+import { useV1ExchangeContract, useDXswapMigratorContract } from '../../hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { useIsTransactionPending, useTransactionAdder } from '../../state/transactions/hooks'
 import { useETHBalances, useTokenBalance } from '../../state/wallet/hooks'
@@ -161,7 +161,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
   const addTransaction = useTransactionAdder()
   const isMigrationPending = useIsTransactionPending(pendingMigrationHash)
 
-  const migrator = useV2MigratorContract()
+  const migrator = useDXswapMigratorContract()
   const migrate = useCallback(() => {
     if (!minAmountToken || !minAmountETH) return
 
@@ -177,12 +177,12 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
       .then((response: TransactionResponse) => {
         ReactGA.event({
           category: 'Migrate',
-          action: 'V1->V2',
+          action: 'UniswapV1->DXswap',
           label: token?.symbol
         })
 
         addTransaction(response, {
-          summary: `Migrate ${token.symbol} liquidity to V2`
+          summary: `Migrate ${token.symbol} liquidity to DXswap`
         })
         setPendingMigrationHash(response.hash)
       })
@@ -200,7 +200,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
   return (
     <AutoColumn gap="20px">
       <TYPE.body my={9} style={{ fontWeight: 400 }}>
-        This tool will safely migrate your V1 liquidity to V2 with minimal price risk. The process is completely
+        This tool will safely migrate your V1 liquidity to DXswap with minimal price risk. The process is completely
         trustless thanks to the{' '}
         <ExternalLink href={getEtherscanLink(chainId, MIGRATOR_ADDRESS, 'address')}>
           <TYPE.blue display="inline">Uniswap migration contract↗</TYPE.blue>
@@ -211,7 +211,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
       {!isFirstLiquidityProvider && largePriceDifference ? (
         <YellowCard>
           <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
-            It{"'"}s best to deposit liquidity into Uniswap V2 at a price you believe is correct. If the V2 price seems
+            It{"'"}s best to deposit liquidity into DXswap at a price you believe is correct. If the DXswap price seems
             incorrect, you can either make a swap to move the price or wait for someone else to do so.
           </TYPE.body>
           <AutoColumn gap="8px">
@@ -229,7 +229,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
             </RowBetween>
 
             <RowBetween>
-              <TYPE.body>V2 Price:</TYPE.body>
+              <TYPE.body>DXswap Price:</TYPE.body>
               <TYPE.black>
                 {v2SpotPrice?.toSignificant(6)} {token.symbol}/ETH
               </TYPE.black>
@@ -252,7 +252,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
       {isFirstLiquidityProvider && (
         <PinkCard>
           <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
-            You are the first liquidity provider for this pair on Uniswap V2. Your liquidity will be migrated at the
+            You are the first liquidity provider for this pair on DXswap. Your liquidity will be migrated at the
             current V1 price. Your transaction cost also includes the gas to create the pool.
           </TYPE.body>
 
@@ -315,7 +315,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
         </div>
       </LightCard>
       <TYPE.darkGray style={{ textAlign: 'center' }}>
-        {`Your Uniswap V1 ${token.symbol}/ETH liquidity will become Uniswap V2 ${token.symbol}/ETH liquidity.`}
+        {`Your Uniswap V1 ${token.symbol}/ETH liquidity will become DXswap ${token.symbol}/ETH liquidity.`}
       </TYPE.darkGray>
     </AutoColumn>
   )
@@ -363,7 +363,7 @@ export default function MigrateV1Exchange({
           </div>
           <TYPE.mediumHeader>Migrate V1 Liquidity</TYPE.mediumHeader>
           <div>
-            <QuestionHelper text="Migrate your liquidity tokens from Uniswap V1 to Uniswap V2." />
+            <QuestionHelper text="Migrate your liquidity tokens from Uniswap V1 to DXswap." />
           </div>
         </AutoRow>
 
@@ -372,7 +372,7 @@ export default function MigrateV1Exchange({
         ) : validatedAddress && token?.equals(WETH[chainId]) ? (
           <>
             <TYPE.body my={9} style={{ fontWeight: 400 }}>
-              Because Uniswap V2 uses WETH under the hood, your Uniswap V1 WETH/ETH liquidity cannot be migrated. You
+              Because DXswap uses WETH under the hood, your Uniswap V1 WETH/ETH liquidity cannot be migrated. You
               may want to remove your liquidity instead.
             </TYPE.body>
 

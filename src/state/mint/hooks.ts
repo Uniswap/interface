@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Token, TokenAmount, Route, JSBI, Price, Percent, Pair } from '@uniswap/sdk'
+import { Token, TokenAmount, Route, JSBI, Price, Percent, Pair } from 'dxswap-sdk'
 
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
