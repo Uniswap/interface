@@ -2,36 +2,16 @@ import { Placement } from '@popperjs/core'
 import { transparentize } from 'polished'
 import React, { useState } from 'react'
 import { usePopper } from 'react-popper'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import useInterval from '../../hooks/useInterval'
 import Portal from '@reach/portal'
-
-const fadeIn = keyframes`
-  from {
-    opacity : 0;
-  }
-
-  to {
-    opacity : 1;
-  }
-`
-
-const fadeOut = keyframes`
-  from {
-    opacity : 1;
-  }
-
-  to {
-    opacity : 0;
-  }
-`
 
 const PopoverContainer = styled.div<{ show: boolean }>`
   z-index: 9999;
 
-  visibility: ${props => (!props.show ? 'hidden' : 'visible')};
-  animation: ${props => (!props.show ? fadeOut : fadeIn)} 150ms linear;
-  transition: visibility 150ms linear;
+  visibility: ${props => (props.show ? 'visible' : 'hidden')};
+  opacity: ${props => (props.show ? 1 : 0)};
+  transition: visibility 150ms linear, opacity 150ms linear;
 
   background: ${({ theme }) => theme.bg2};
   border: 1px solid ${({ theme }) => theme.bg3};
