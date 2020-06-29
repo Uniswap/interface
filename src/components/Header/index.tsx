@@ -22,7 +22,7 @@ import Menu from '../Menu'
 
 import Row, { RowBetween } from '../Row'
 import Web3Status from '../Web3Status'
-import { VersionSwitch } from './VersionSwitch'
+import VersionSwitch from './VersionSwitch'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -43,6 +43,15 @@ const HeaderFrame = styled.div`
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
+`
+
+const HeaderElementWrap = styled.div`
+  display: flex;
+  align-items: center;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+margin-top: 0.5rem;
+`};
 `
 
 const Title = styled.div`
@@ -70,6 +79,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
   border-radius: 12px;
   white-space: nowrap;
+  width: 100%;
 
   :focus {
     border: 1px solid blue;
@@ -80,10 +90,7 @@ const TestnetWrapper = styled.div`
   white-space: nowrap;
   width: fit-content;
   margin-left: 10px;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
+  pointer-events: auto;
 `
 
 const NetworkCard = styled(YellowCard)`
@@ -120,6 +127,16 @@ const MigrateBanner = styled(AutoColumn)`
   `};
 `
 
+const HeaderControls = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-direction: column;
+    `};
+`
+
 const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
   [ChainId.MAINNET]: null,
   [ChainId.RINKEBY]: 'Rinkeby',
@@ -127,12 +144,6 @@ const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
   [ChainId.GÖRLI]: 'Görli',
   [ChainId.KOVAN]: 'Kovan'
 }
-
-const BalanceWrapper = styled.div`
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;
-  `};
-`
 
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
@@ -153,7 +164,7 @@ export default function Header() {
         </StyledInternalLink>
         .
       </MigrateBanner>
-      <RowBetween padding="1rem">
+      <RowBetween style={{ alignItems: 'flex-start' }} padding="1rem 1rem 0 1rem">
         <HeaderElement>
           <Title>
             <UniIcon id="link" to="/">
@@ -171,25 +182,27 @@ export default function Header() {
               </TitleText>
             )}
           </Title>
-          <TestnetWrapper style={{ pointerEvents: 'auto' }}>{!isMobile && <VersionSwitch />}</TestnetWrapper>
         </HeaderElement>
-        <HeaderElement>
-          <TestnetWrapper>
-            {!isMobile && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
-          </TestnetWrapper>
-          <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            <BalanceWrapper>
+        <HeaderControls>
+          <HeaderElement>
+            <TestnetWrapper>
+              {!isMobile && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
+            </TestnetWrapper>
+            <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
               {account && userEthBalance ? (
                 <Text style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
                   {userEthBalance?.toSignificant(4)} ETH
                 </Text>
               ) : null}
-            </BalanceWrapper>
-            <Web3Status />
-          </AccountElement>
-          <Settings />
-          <Menu />
-        </HeaderElement>
+              <Web3Status />
+            </AccountElement>
+          </HeaderElement>
+          <HeaderElementWrap>
+            <VersionSwitch />
+            <Settings />
+            <Menu />
+          </HeaderElementWrap>
+        </HeaderControls>
       </RowBetween>
     </HeaderFrame>
   )
