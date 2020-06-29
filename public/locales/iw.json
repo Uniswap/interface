@@ -56,7 +56,7 @@
   "youAreSettingExRate": "שער ההמרה יקבע על ידך",
   "totalSupplyIs0": "אין לך טוקנים של נזילות",
   "tokenWorth": "שווי כל טוקן נזילות הינו",
-  "firstLiquidity": "את\ה הראשון\ה שמזרים נזילות למאגר",
+  "firstLiquidity": "אתה הראשוןה שמזרים נזילות למאגר",
   "initialExchangeRate": "ושל האית'ר הינן בערך שווה {{ label }} תוודאו שההפקדה של הטוקן",
   "removeLiquidity": "הוצאה של נזילות",
   "poolTokens": "טוקנים של מאגר הנזילות",
