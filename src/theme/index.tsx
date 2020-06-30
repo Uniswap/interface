@@ -168,8 +168,6 @@ export const TYPE = {
 }
 
 export const FixedGlobalStyle = createGlobalStyle`
-@import url('https://rsms.me/inter/inter.css');
-
 html, input, textarea, button {
   font-family: 'Inter', sans-serif;
   letter-spacing: -0.018em;
