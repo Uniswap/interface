@@ -6,6 +6,7 @@
 An open source interface for Uniswap -- a protocol for decentralized exchange of Ethereum tokens.
 
 - Website: [uniswap.org](https://uniswap.org/)
+- Interface: [app.uniswap.org](https://app.uniswap.org)
 - Docs: [uniswap.org/docs/](https://uniswap.org/docs/)
 - Twitter: [@UniswapProtocol](https://twitter.com/UniswapProtocol)
 - Reddit: [/r/Uniswap](https://www.reddit.com/r/Uniswap/)
@@ -13,9 +14,9 @@ An open source interface for Uniswap -- a protocol for decentralized exchange of
 - Discord: [Uniswap](https://discord.gg/Y7TF6QA)
 - Whitepaper: [Link](https://hackmd.io/C-DvwDSfSxuh-Gd4WKE_ig)
 
-## Accessing the frontend
+## Accessing the Uniswap Interface
 
-To access the front end, use an IPFS gateway link from the
+To access the Uniswap Interface, use an IPFS gateway link from the
 [latest release](https://github.com/Uniswap/uniswap-interface/releases/latest), 
 or visit [app.uniswap.org](https://app.uniswap.org).
 
@@ -27,31 +28,31 @@ or visit [app.uniswap.org](https://app.uniswap.org).
 yarn
 ```
 
-### Configure Environment (optional)
-
-Copy `.env` to `.env.local` and change the appropriate variables.
-
 ### Run
 
 ```bash
 yarn start
 ```
 
-To have the frontend default to a different network, make a copy of `.env` named `.env.local`, 
-change `REACT_APP_NETWORK_ID` to `"{yourNetworkId}"`, and change `REACT_APP_NETWORK_URL` to e.g. 
-`"https://{yourNetwork}.infura.io/v3/{yourKey}"`. 
+### Configuring the environment (optional)
 
-Note that the front end only works properly on testnets where both 
+To have the interface default to a different network when a wallet is not connected:
+
+1. Make a copy of `.env` named `.env.local`
+2. Change `REACT_APP_NETWORK_ID` to `"{YOUR_NETWORK_ID}"`
+3. Change `REACT_APP_NETWORK_URL` to e.g. `"https://{YOUR_NETWORK_ID}.infura.io/v3/{YOUR_INFURA_KEY}"` 
+
+Note that the interface only works on testnets where both 
 [Uniswap V2](https://uniswap.org/docs/v2/smart-contracts/factory/) and 
 [multicall](https://github.com/makerdao/multicall) are deployed.
-The frontend will not work on other networks.
+The interface will not work on other networks.
 
 ## Contributions
 
 **Please open all pull requests against the `master` branch.** 
-CI checks will run against all PRs. 
+CI checks will run against all PRs.
 
-## Accessing Uniswap V1
+## Accessing Uniswap Interface V1
 
 The Uniswap Interface supports swapping against, and migrating or removing liquidity from Uniswap V1. However,
 if you would like to use Uniswap V1, the Uniswap V1 interface for mainnet and testnets is accessible via IPFS gateways 
