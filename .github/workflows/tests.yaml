@@ -2,10 +2,10 @@ name: Tests
 on:
   push:
     branches:
-      - v2
+      - master
   pull_request:
     branches:
-      - v2
+      - master
 jobs:
   integration-tests:
     name: Integration tests
