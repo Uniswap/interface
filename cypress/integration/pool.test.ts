@@ -1,5 +1,5 @@
 describe('Pool', () => {
-  beforeEach(() => cy.visit('/#/pool'))
+  beforeEach(() => cy.visit('/pool'))
   it('can search for a pool', () => {
     cy.get('#join-pool-button').click()
     cy.get('#token-search-input').type('DAI', { delay: 200 })
