@@ -16,8 +16,8 @@ An open source interface for Uniswap -- a protocol for decentralized exchange of
 ## Accessing the frontend
 
 To access the front end, use an IPFS gateway link from the
-[latest release](https://github.com/Uniswap/uniswap-interface/releases/latest)
-or visit [uniswap.exchange](https://uniswap.exchange).
+[latest release](https://github.com/Uniswap/uniswap-interface/releases/latest), 
+or visit [app.uniswap.org](https://app.uniswap.org).
 
 ## Development
 
