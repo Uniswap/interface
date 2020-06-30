@@ -1,7 +1,7 @@
 {
   "name": "@uniswap/interface",
   "description": "Uniswap Interface",
-  "homepage": "https://uniswap.exchange",
+  "homepage": ".",
   "private": true,
   "devDependencies": {
     "@ethersproject/address": "^5.0.0-beta.134",
@@ -81,7 +81,6 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "ipfs-build": "cross-env PUBLIC_URL=\".\" react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
