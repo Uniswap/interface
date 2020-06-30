@@ -7,7 +7,7 @@ on:
   # releases are triggered on changes to this file
   push:
     branches:
-      - v2
+      - master
     paths:
       - '.github/workflows/release.yaml'
       - '.env.production'
