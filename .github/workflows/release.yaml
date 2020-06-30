@@ -47,7 +47,7 @@ jobs:
         run: yarn install --ignore-scripts --frozen-lockfile
 
       - name: Build the IPFS bundle
-        run: yarn ipfs-build
+        run: yarn build
 
       - name: Pin to IPFS
         id: upload
