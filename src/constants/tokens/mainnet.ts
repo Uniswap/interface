@@ -91,7 +91,7 @@ export default [
   new Token(ChainId.MAINNET, '0x459086F2376525BdCebA5bDDA135e4E9d3FeF5bf', 8, 'renBCH', 'renBCH'),
   new Token(ChainId.MAINNET, '0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D', 8, 'renBTC', 'renBTC'),
   new Token(ChainId.MAINNET, '0x1C5db575E2Ff833E46a2E9864C22F4B22E0B37C2', 8, 'renZEC', 'renZEC'),
-  new Token(ChainId.MAINNET, '0x1985365e9f78359a9B6AD760e32412f4a445E862', 18, 'REP', 'Reputation'),
+  new Token(ChainId.MAINNET, '0x1985365e9f78359a9B6AD760e32412f4a445E862', 18, 'REPv1', 'Augur v1 Reputation'),
   new Token(ChainId.MAINNET, '0x9469D013805bFfB7D3DEBe5E7839237e535ec483', 18, 'RING', 'Darwinia Network Native Token'),
   new Token(ChainId.MAINNET, '0x607F4C5BB672230e8672085532f7e901544a7375', 9, 'RLC', 'iEx.ec Network Token'),
   new Token(ChainId.MAINNET, '0xB4EFd85c19999D84251304bDA99E90B92300Bd93', 18, 'RPL', 'Rocket Pool'),
