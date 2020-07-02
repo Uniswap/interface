@@ -11,6 +11,11 @@ import Login from './Login/Login'
 import NavigationTabs from '../components/NavigationTabs'
 import { getAllQueryParams } from '../utils'
 
+import Send from './Send'
+import Pool from './Pool'
+import Vote from './Vote'
+import { isAddress } from '../utils/index'
+
 const Swap = lazy(() => import('./Swap'))
 
 const AppWrapper = styled.div`
@@ -46,7 +51,7 @@ const BodyWrapper = styled.div`
 const Body = styled.div`
   max-width: 35rem;
   width: 90%;
-  margin-top: 150px;
+  margin-top: 50px;
   /* margin: 0 1.25rem 1.25rem 1.25rem; */
 `
 
@@ -113,50 +118,51 @@ class App extends React.Component {
                 <Web3ReactManager>
                   <BrowserRouter>
                     <NavigationTabs/>
-                    {/* this Suspense is for route code-splitting */}
+                    { /*this Suspense is for route code-splitting*/ }
                     <Suspense fallback={null}>
                       <Switch>
                         <Route exact strict path="/swap" component={() => <Swap params={params}/>}/>
-                        {/*<Route*/}
-                        {/*  exact*/}
-                        {/*  strict*/}
-                        {/*  path="/swap/:tokenAddress?"*/}
-                        {/*  render={({ match, location }) => {*/}
-                        {/*    if (isAddress(match.params.tokenAddress)) {*/}
-                        {/*      return (*/}
-                        {/*        <Swap*/}
-                        {/*          location={location}*/}
-                        {/*          initialCurrency={isAddress(match.params.tokenAddress)}*/}
-                        {/*          params={params}*/}
-                        {/*        />*/}
-                        {/*      )*/}
-                        {/*    } else {*/}
-                        {/*      return <Redirect to={{ pathname: '/swap' }} />*/}
-                        {/*    }*/}
-                        {/*  }}*/}
-                        {/*/>*/}
-                        {/*<Route exact strict path="/send" component={() => <Send params={params} />} />*/}
-                        {/*<Route*/}
-                        {/*  exact*/}
-                        {/*  strict*/}
-                        {/*  path="/send/:tokenAddress?"*/}
-                        {/*  render={({ match }) => {*/}
-                        {/*    if (isAddress(match.params.tokenAddress)) {*/}
-                        {/*      return <Send initialCurrency={isAddress(match.params.tokenAddress)} params={params} />*/}
-                        {/*    } else {*/}
-                        {/*      return <Redirect to={{ pathname: '/send' }} />*/}
-                        {/*    }*/}
-                        {/*  }}*/}
-                        {/*/>*/}
-                        {/*<Route*/}
-                        {/*  path={[*/}
-                        {/*    '/add-liquidity',*/}
-                        {/*    '/remove-liquidity',*/}
-                        {/*    '/create-exchange',*/}
-                        {/*    '/create-exchange/:tokenAddress?'*/}
-                        {/*  ]}*/}
-                        {/*  component={() => <Pool params={params} />}*/}
-                        {/*/>*/}
+                        <Route
+                          exact
+                          strict
+                          path="/swap/:tokenAddress?"
+                          render={({ match, location }) => {
+                            if (isAddress(match.params.tokenAddress)) {
+                              return (
+                                <Swap
+                                  location={location}
+                                  initialCurrency={isAddress(match.params.tokenAddress)}
+                                  params={params}
+                                />
+                              )
+                            } else {
+                              return <Redirect to={{ pathname: '/swap' }} />
+                            }
+                          }}
+                        />
+                        <Route exact strict path="/send" component={() => <Send params={params} />} />
+                        <Route
+                          exact
+                          strict
+                          path="/send/:tokenAddress?"
+                          render={({ match }) => {
+                            if (isAddress(match.params.tokenAddress)) {
+                              return <Send initialCurrency={isAddress(match.params.tokenAddress)} params={params} />
+                            } else {
+                              return <Redirect to={{ pathname: '/send' }} />
+                            }
+                          }}
+                        />
+                        <Route
+                          path={[
+                            '/add-liquidity',
+                            '/remove-liquidity',
+                            '/create-exchange',
+                            '/create-exchange/:tokenAddress?'
+                          ]}
+                          component={() => <Pool params={params} />}
+                        />
+                        <Route exact strict path="/vote" component={() => <Vote params={params}/>}/>
                         <Redirect to="/swap"/>
                       </Switch>
                     </Suspense>

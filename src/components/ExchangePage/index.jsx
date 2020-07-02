@@ -69,6 +69,10 @@ const TOKEN_ALLOWED_SLIPPAGE_DEFAULT = 50
 // % above the calculated gas cost that we actually send, denominated in bips
 const GAS_MARGIN = ethers.BigNumber.from(1000)
 
+const Wrapper = styled.div`
+  margin: auto 0;
+`
+
 const DownArrowBackground = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   justify-content: center;
@@ -955,7 +959,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
   }, [newOutputDetected, setShowOutputWarning])
 
   return (
-    <>
+    <Wrapper>
       {showInputWarning && (
         <WarningCard
           onDismiss={() => {
@@ -1149,6 +1153,6 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           {getButtonText()}
         </Button>
       </Flex>
-    </>
+    </Wrapper>
   )
 }
