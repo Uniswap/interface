@@ -123,6 +123,7 @@ export default [
   new Token(ChainId.MAINNET, '0xA4Bdb11dc0a2bEC88d24A3aa1E6Bb17201112eBe', 6, 'USDS', 'StableUSD'),
   USDT,
   new Token(ChainId.MAINNET, '0xeb269732ab75A6fD61Ea60b06fE994cD32a83549', 18, 'USDx', 'dForce'),
+  new Token(ChainId.MAINNET, '0x9A48BD0EC040ea4f1D3147C025cd4076A2e71e3e', 18, 'USD++', 'PieDAO USD++'),
   new Token(ChainId.MAINNET, '0x8f3470A7388c05eE4e7AF3d01D8C722b0FF52374', 18, 'VERI', 'Veritaseum'),
   new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC'),
   new Token(ChainId.MAINNET, '0x09fE5f0236F0Ea5D930197DCE254d77B04128075', 18, 'WCK', 'Wrapped CryptoKitties'),
