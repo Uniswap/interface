@@ -172,15 +172,14 @@ export function useDerivedSwapInfo(): {
   }
 }
 
-function parseCurrencyFromURLParameter(urlParam: any, chainId: number): string {
+function parseCurrencyFromURLParameter(urlParam: any, chainId: number, overrideWETH: boolean): string {
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam)
     if (valid) return valid
     if (urlParam.toLowerCase() === 'eth') return WETH[chainId as ChainId]?.address ?? ''
     if (valid === false) return WETH[chainId as ChainId]?.address ?? ''
   }
-
-  return WETH[chainId as ChainId]?.address
+  return overrideWETH ? '' : WETH[chainId as ChainId]?.address ?? ''
 }
 
 function parseTokenAmountURLParameter(urlParam: any): string {
@@ -191,9 +190,9 @@ function parseIndependentFieldURLParameter(urlParam: any): Field {
   return typeof urlParam === 'string' && urlParam.toLowerCase() === 'output' ? Field.OUTPUT : Field.INPUT
 }
 
-export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId): SwapState {
-  let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, chainId)
-  let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, chainId)
+export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId, overrideETH: boolean): SwapState {
+  let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, chainId, overrideETH)
+  let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, chainId, overrideETH)
   if (inputCurrency === outputCurrency) {
     if (typeof parsedQs.outputCurrency === 'string') {
       inputCurrency = ''
@@ -215,14 +214,16 @@ export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId)
 }
 
 // updates the swap state to use the defaults for a given network
-export function useDefaultsFromURLSearch() {
+// set overrideETH to true if dont want to autopopulate ETH
+export function useDefaultsFromURLSearch(overrideWETH = false) {
   const { chainId } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
   const parsedQs = useParsedQueryString()
 
   useEffect(() => {
     if (!chainId) return
-    const parsed = queryParametersToSwapState(parsedQs, chainId)
+    const parsed = queryParametersToSwapState(parsedQs, chainId, overrideWETH)
+
     dispatch(
       replaceSwapState({
         typedValue: parsed.typedValue,

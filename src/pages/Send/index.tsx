@@ -43,7 +43,8 @@ import { useUserSlippageTolerance, useUserDeadline, useExpertModeManager } from 
 import { ClickableText } from '../Pool/styleds'
 
 export default function Send() {
-  useDefaultsFromURLSearch()
+  // override auto ETH populate to allow for single inputs or swap and send
+  useDefaultsFromURLSearch(true)
 
   // text translation
   // const { t } = useTranslation()
@@ -64,7 +65,19 @@ export default function Send() {
   const [recipientError, setRecipientError] = useState<string | null>('Enter a Recipient')
 
   // trade details, check query params for initial state
-  const { independentField, typedValue } = useSwapState()
+  const {
+    independentField,
+    typedValue,
+    [Field.OUTPUT]: { address: output }
+  } = useSwapState()
+
+  // if output is valid set to sending view (will reset to undefined on remove swap)
+  useEffect(() => {
+    if (output) {
+      setSendingWithSwap(true)
+    }
+  }, [output])
+
   const {
     parsedAmount,
     bestTrade: bestTradeV2,
@@ -133,13 +146,6 @@ export default function Send() {
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(bestTrade)
 
   const { onSwitchTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
-
-  // reset field if sending with with swap is cancled
-  useEffect(() => {
-    if (!sendingWithSwap) {
-      onTokenSelection(Field.OUTPUT, null)
-    }
-  }, [onTokenSelection, sendingWithSwap])
 
   const maxAmountInput: TokenAmount =
     !!tokenBalances[Field.INPUT] &&
@@ -419,7 +425,10 @@ export default function Send() {
                         <ArrowDown size="16" color={theme.text2} onClick={onSwitchTokens} />
                       </ArrowWrapper>
                       <ButtonSecondary
-                        onClick={() => setSendingWithSwap(false)}
+                        onClick={() => {
+                          setSendingWithSwap(false)
+                          onTokenSelection(Field.OUTPUT, null)
+                        }}
                         style={{ marginRight: '0px', width: 'auto', fontSize: '14px' }}
                         padding={'4px 6px'}
                       >
