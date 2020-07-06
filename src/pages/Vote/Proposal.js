@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
 import styled from 'styled-components'
 
-const Wrapper = styled.div`
+const Main = styled.div`
   font-size: 18px;
   font-weight: 500;
   color: black;
   padding: 20px 30px;
   border-bottom: 1px solid #DCDCDC;
+  height: 100%;
+  width: calc(100% - 60px);
+`
+
+const Wrapper = styled.div`
+  height: 100%;
+  width: 80%;
+  display: inline-block;
 `
 
 const Info = styled.div`
@@ -36,6 +44,16 @@ const Status = styled.div`
   `}
 `
 
+const Vote = styled.div`
+  height: 100%;
+  width: 20%;
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #b7c3cc;
+  text-align: center;
+`
+
 const Extra = styled.div`
   font-weight: 700;
 	padding-left: 7px;
@@ -44,18 +62,26 @@ const Extra = styled.div`
 
 export default function Proposal({ id, proposal, status }) {
 	const text = status ? 'Active' : 'Passed'
+	let votes = ['NO VOTE', 'FOR', 'AGAINST', 'DID NOT VOTE']
+	votes = status ? votes.slice(0, 3) : votes.slice(1, 4)
+	const vote = votes[id%3];
 
   return (
-		<Wrapper>
-		  {proposal}
-		  <Info active={status}>
-			  <Status active={status}>
-			  	{text}
-			  </Status>
-			  <Extra>
-			  	{id} &#8226; {`Executed July 2nd, 2020`} 
-			  </Extra>
-			</Info>
-		</Wrapper> 
+		<Main>
+			<Wrapper>
+			  {proposal}
+			  <Info active={status}>
+				  <Status active={status}>
+				  	{text}
+				  </Status>
+				  <Extra>
+				  	{id} &#8226; {`Executed July 2nd, 2020`} 
+				  </Extra>
+				</Info>
+			</Wrapper>
+			<Vote>
+				{vote}
+			</Vote>
+		</Main> 
   )
 }

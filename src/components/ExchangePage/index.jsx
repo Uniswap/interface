@@ -70,7 +70,10 @@ const TOKEN_ALLOWED_SLIPPAGE_DEFAULT = 50
 const GAS_MARGIN = ethers.BigNumber.from(1000)
 
 const Wrapper = styled.div`
-  margin: auto 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `
 
 const DownArrowBackground = styled.div`

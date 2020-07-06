@@ -13,7 +13,7 @@ import { getAllQueryParams } from '../utils'
 
 import Send from './Send'
 import Pool from './Pool'
-import Vote from './Vote'
+import Vote from './Vote/'
 import { isAddress } from '../utils/index'
 
 const Swap = lazy(() => import('./Swap'))
