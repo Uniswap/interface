@@ -37,7 +37,7 @@ function useMockV1Pair(token?: Token): MockV1Pair | undefined {
   const ETHBalance = useETHBalances([v1PairAddress])[v1PairAddress ?? '']
 
   return tokenBalance && ETHBalance && token
-    ? new MockV1Pair(tokenBalance, new TokenAmount(WETH[token.chainId], ETHBalance.toString()))
+    ? new MockV1Pair(tokenBalance, new TokenAmount(WETH[token.chainId], ETHBalance.raw.toString()))
     : undefined
 }
 

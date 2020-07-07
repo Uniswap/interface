@@ -126,7 +126,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
 
   const v1SpotPrice =
     exchangeTokenBalance && exchangeETHBalance
-      ? exchangeTokenBalance.divide(new Fraction(exchangeETHBalance, WEI_DENOM))
+      ? exchangeTokenBalance.divide(new Fraction(exchangeETHBalance.raw, WEI_DENOM))
       : null
 
   const priceDifferenceFraction: Fraction | undefined =

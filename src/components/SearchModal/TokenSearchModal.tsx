@@ -8,7 +8,7 @@ import Card from '../../components/Card'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
 import useInterval from '../../hooks/useInterval'
-import { useAllTokenBalancesTreatingWETHasETH, useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
+import { useAllTokenBalances, useTokenBalance } from '../../state/wallet/hooks'
 import { CloseIcon, LinkStyledButton } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
@@ -55,8 +55,8 @@ export default function TokenSearchModal({
 
   // if the current input is an address, and we don't have the token in context, try to fetch it and import
   const searchToken = useToken(searchQuery)
-  const searchTokenBalance = useTokenBalanceTreatingWETHasETH(account, searchToken)
-  const allTokenBalances_ = useAllTokenBalancesTreatingWETHasETH()
+  const searchTokenBalance = useTokenBalance(account, searchToken)
+  const allTokenBalances_ = useAllTokenBalances()
   const allTokenBalances = searchToken
     ? {
         [searchToken.address]: searchTokenBalance

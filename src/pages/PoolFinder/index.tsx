@@ -14,7 +14,7 @@ import { usePair } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useToken } from '../../hooks/Tokens'
 import { usePairAdder } from '../../state/user/hooks'
-import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
+import { useTokenBalance } from '../../state/wallet/hooks'
 import { StyledInternalLink } from '../../theme'
 import AppBody from '../AppBody'
 
@@ -46,7 +46,7 @@ export default function PoolFinder() {
     pair === null ||
     (!!pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0)))
 
-  const position: TokenAmount | undefined = useTokenBalanceTreatingWETHasETH(account ?? undefined, pair?.liquidityToken)
+  const position: TokenAmount | undefined = useTokenBalance(account ?? undefined, pair?.liquidityToken)
   const poolImported: boolean = !!position && JSBI.greaterThan(position.raw, JSBI.BigInt(0))
 
   const handleTokenSelect = useCallback(

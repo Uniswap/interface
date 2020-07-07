@@ -59,10 +59,7 @@ export function useDerivedMintInfo(
   )
 
   // balances
-  const relevantTokenBalances = useTokenBalancesTreatWETHAsETH(account ?? undefined, [
-    tokens[Field.TOKEN_A],
-    tokens[Field.TOKEN_B]
-  ])
+  const relevantTokenBalances = useTokenBalances(account ?? undefined, [tokens[Field.TOKEN_A], tokens[Field.TOKEN_B]])
   const tokenBalances: { [field in Field]?: TokenAmount } = {
     [Field.TOKEN_A]: relevantTokenBalances?.[tokens[Field.TOKEN_A]?.address ?? ''],
     [Field.TOKEN_B]: relevantTokenBalances?.[tokens[Field.TOKEN_B]?.address ?? '']
