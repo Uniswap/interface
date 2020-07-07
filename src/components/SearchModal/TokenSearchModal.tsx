@@ -7,6 +7,7 @@ import { ThemeContext } from 'styled-components'
 import Card from '../../components/Card'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
+import useInterval from '../../hooks/useInterval'
 import { useAllTokenBalancesTreatingWETHasETH, useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
 import { CloseIcon, LinkStyledButton } from '../../theme/components'
 import { isAddress } from '../../utils'
@@ -110,9 +111,16 @@ export default function TokenSearchModal({
 
   const openTooltip = useCallback(() => {
     setTooltipOpen(true)
-    inputRef.current?.focus()
   }, [setTooltipOpen])
   const closeTooltip = useCallback(() => setTooltipOpen(false), [setTooltipOpen])
+
+  useInterval(
+    () => {
+      setTooltipOpen(false)
+    },
+    tooltipOpen ? 4000 : null,
+    false
+  )
 
   return (
     <Modal
@@ -146,6 +154,7 @@ export default function TokenSearchModal({
               value={searchQuery}
               ref={inputRef}
               onChange={handleInput}
+              onFocus={closeTooltip}
               onBlur={closeTooltip}
             />
           </Tooltip>
