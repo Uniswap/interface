@@ -21,5 +21,5 @@ export default function useInterval(callback: () => void, delay: null | number, 
       return () => clearInterval(id)
     }
     return
-  }, [delay])
+  }, [delay, leading])
 }
