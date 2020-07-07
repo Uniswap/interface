@@ -1,4 +1,3 @@
-import { ChainId, Currency, Pair, Token } from '@uniswap/sdk'
 import React, { useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { useMediaLayout } from 'use-media'
@@ -6,12 +5,8 @@ import { useMediaLayout } from 'use-media'
 import { X } from 'react-feather'
 import { PopupContent } from '../../state/application/actions'
 import { useActivePopups, useRemovePopup } from '../../state/application/hooks'
-import { ExternalLink } from '../../theme'
 import { AutoColumn } from '../Column'
-import DoubleCurrencyLogo from '../DoubleLogo'
-import Row from '../Row'
 import TxnPopup from '../TxnPopup'
-import { Text } from 'rebass'
 
 const StyledClose = styled(X)`
   position: absolute;
@@ -72,47 +67,12 @@ const Popup = styled.div`
   `}
 `
 
-function PoolPopup({ token0, token1 }: { token0: Token; token1: Token }) {
-  const pairAddress: string | null = useMemo(() => {
-    if (!token0 || !token1) return null
-    // just mock it out
-    return Pair.getAddress(
-      new Token(ChainId.MAINNET, token0.address, 18),
-      new Token(ChainId.MAINNET, token1.address, 18)
-    )
-  }, [token0, token1])
-
-  return (
-    <AutoColumn gap={'10px'}>
-      <Text fontSize={20} fontWeight={500}>
-        Pool Imported
-      </Text>
-      <Row>
-        <DoubleCurrencyLogo currency0={token0} currency1={token1} margin={true} />
-        <Text fontSize={16} fontWeight={500}>
-          UNI {token0?.symbol} / {token1?.symbol}
-        </Text>
-      </Row>
-      {pairAddress ? (
-        <ExternalLink href={`https://uniswap.info/pair/${pairAddress}`}>View on Uniswap Info.</ExternalLink>
-      ) : null}
-    </AutoColumn>
-  )
-}
-
 function PopupItem({ content, popKey }: { content: PopupContent; popKey: string }) {
   if ('txn' in content) {
     const {
       txn: { hash, success, summary }
     } = content
     return <TxnPopup popKey={popKey} hash={hash} success={success} summary={summary} />
-  } else if ('poolAdded' in content) {
-    const {
-      poolAdded: { token0, token1 }
-    } = content
-
-    //  todo
-    return null
   }
 }
 
