@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import Cast from './Cast'
 
 const Main = styled.div`
   font-size: 18px;
@@ -52,6 +53,11 @@ const Vote = styled.div`
   font-weight: 600;
   color: #b7c3cc;
   text-align: center;
+
+  ${({ cast }) => cast && `
+      color: black;
+      cursor: pointer;
+  `}
 `
 
 const Extra = styled.div`
@@ -60,11 +66,36 @@ const Extra = styled.div`
 	display: inline-block;
 `
 
+
+
 export default function Proposal({ id, proposal, status }) {
 	const text = status ? 'Active' : 'Passed'
-	let votes = ['NO VOTE', 'FOR', 'AGAINST', 'DID NOT VOTE']
-	votes = status ? votes.slice(0, 3) : votes.slice(1, 4)
-	const vote = votes[id%3];
+	const availableVotes = ['NO VOTE', 'FOR', 'AGAINST', 'DID NOT VOTE']
+	const mod = (b,e) => availableVotes.slice(b, e)
+	const votes = status ? mod(0, 3) : mod(1, 4)
+
+	const v = votes[id%2]; //determines vote based on id - TEMPORARY
+	const [vote, setVote] = useState(v)
+
+	const c = v === 'NO VOTE'
+	const [cast, setCast] = useState(c)
+	const [showCast, changeShowCast] = useState(false)
+
+	const handleClick = (e) => {
+		if(e) {
+			setVote(e)
+			setCast(false)
+		}
+	  changeShowCast(false)
+	}
+
+	const keypress = (e) => {
+	  if(e.keyCode === 27) changeShowCast(false)
+	}
+
+	useEffect(() => {
+    document.addEventListener("keydown", (e)=>keypress(e), false);
+  });	
 
   return (
 		<Main>
@@ -79,9 +110,10 @@ export default function Proposal({ id, proposal, status }) {
 				  </Extra>
 				</Info>
 			</Wrapper>
-			<Vote>
-				{vote}
+			<Vote onClick={() => changeShowCast(cast)} cast={c}>
+				{v}
 			</Vote>
+			{showCast ? <Cast onClick={e => handleClick(e)} vote={(v) => setVote(v)}/> : null}
 		</Main> 
   )
 }

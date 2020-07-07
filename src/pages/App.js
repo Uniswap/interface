@@ -162,7 +162,7 @@ class App extends React.Component {
                           ]}
                           component={() => <Pool params={params} />}
                         />
-                        <Route exact strict path="/vote" component={() => <Vote params={params}/>}/>
+                        <Route exact strict path="/vote" component={() => <Vote/>}/>
                         <Redirect to="/swap"/>
                       </Switch>
                     </Suspense>

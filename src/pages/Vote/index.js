@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import Proposal from './Proposal'
 import styled, {keyframes} from 'styled-components'
 
@@ -64,8 +64,6 @@ const Title = styled.div`
 
 const Proposals = styled.div`
   height: calc(100% - 62px);
-  overflow-y: scroll;
-  position: relative;
 `
 
 const spin = keyframes`
@@ -101,8 +99,13 @@ const Value = styled.div`
 	margin-top: 10px;
 	font-size: 20px;
   font-weight: 500;
-  color: black;
+  color: #b7c3cc;
   display: inline;
+
+  ${({ active }) => active && `
+    color: black;
+  `}
+
 `
 
 const Withdraw = styled.div`
@@ -125,15 +128,18 @@ const Pages = styled.div`
   font-weight: 600;
   margin: 10px;
 `
-const PageWrapper = styled.div`
-  display: inline;
-`
 
 const Page = styled.div`
   margin: 3px;
   display: inline;
   color: #b7c3cc;
   cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 
   ${({ active }) => active && `
       color: black;
@@ -144,6 +150,7 @@ const Page = styled.div`
 `
 
 const num = '0.000000'
+const displayPages = 7;
 
 const Balances = [
 	{
@@ -153,7 +160,7 @@ const Balances = [
 	},
 	{
 		title: 'DMG Earned',
-		val: '0.00000012',
+		val: 'none',
 		button: true
 	}
 ]
@@ -162,20 +169,34 @@ function WithdrawAmount(val) {
 	val > 0 ? console.log('Withdrawn!') : console.log('No funds!')
 }
 
-function display(p, c, l) {
-  if(l < 8) return true
-  return [c, c+1, c+2,l-2, l-1, l].includes(p)
+function display(p, selected, l) {
+  if(l <= displayPages) return true //displays all pages if it is less than the diplayed amount
+
+  const half = (displayPages-1)/2 
+
+  if(p <= displayPages && selected <= half) return true //displays displayed amount pages even if is does not have half on the left
+  if(p > l - displayPages && selected > l - half) return true //displays displayed amount pages even if is does not have half on the right
+
+  const fill = [...Array(half).keys()].map(i => i+1) //gets a half array
+  const left = fill.map(i => selected-i) //uses the half array to find values to left of selected
+  const right = fill.map(i => selected+i) //uses the half array to find values to right of selected
+  return [...left, selected, ...right].includes(p) //combines the selected value and two arrays to check if the value falls in here
 }
 
 export default function Vote() {
-  const [proposals, setProposals] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [page, changePage] = useState(1);
-  const perPage = 5
-  const mp = page * perPage - perPage
+  const [proposals, setProposals] = useState([]); //proposal hook
+  const [loading, setLoading] = useState(true); //loading hook
+  const [page, changePage] = useState(1); //current page hook
+
+  const perPage = 5 //make dynamic
+  const mp = page * perPage - perPage 
   const proposalPage = proposals.slice(mp, mp+perPage)
-  const pages = [...Array(Math.ceil(proposals.length/perPage)).keys()].map(i => i + 1)
+  const pages = [...Array(Math.ceil(proposals.length/perPage)).keys()].map(i => i + 1) //creates pages off of proposals
   const l = pages.length
+
+  const checkChange = (i) => {
+    if(i > 0 && i < l + 1) changePage(i) //does not change the page value if the button is disabled
+  }
 
 	fetch('https://jsonplaceholder.typicode.com/todos')
   .then(response => response.json())
@@ -224,20 +245,15 @@ export default function Vote() {
 		      	))}
 		      </Proposals>
           <Pages>
-            <Page onClick={() => changePage(page - 1)} off={page === 1}> 
+            <Page onClick={() => checkChange(page - 1)} off={page === 1}> 
               {`<`}
             </Page>
             {pages.filter(i => display(i, page, l)).map((p, index) => (
-              <PageWrapper>
-                <Page onClick={() => changePage(p)} active={page === p}>
-                  {p}
-                </Page>
-                <Page>
-                  {index === 2 && l > 7 ? '...' : null}
-                </Page>
-              </PageWrapper>
+              <Page onClick={() => changePage(p)} active={page === p}>
+                {p}
+              </Page>
             ))}
-            <Page onClick={() => changePage(page + 1)} off={page === l}> 
+            <Page onClick={() => checkChange(page + 1)} off={page === l}> 
               {`>`}
             </Page>
           </Pages>
