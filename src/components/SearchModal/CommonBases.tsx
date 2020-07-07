@@ -50,7 +50,7 @@ export default function CommonBases({
               disable={selectedTokenAddress === token.address}
               key={token.address}
             >
-              <CurrencyLogo currency={token} style={{ marginRight: 8 }} />
+              <CurrencyLogo currency={token} />
               <Text fontWeight={500} fontSize={16}>
                 {token.symbol}
               </Text>
