@@ -49,8 +49,8 @@ const Option = styled(FancyButton)<{ active: boolean }>`
 const Input = styled.input`
   background: ${({ theme }) => theme.bg1};
   flex-grow: 1;
-  font-size: 12px;
-  min-width: 20px;
+  font-size: 16px;
+  min-width: 60px;
   outline: none;
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
