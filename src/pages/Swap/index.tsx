@@ -160,7 +160,7 @@ export default function Swap() {
               : (recipientAddress ?? recipient) === account
               ? 'Swap w/o Send + recipient'
               : 'Swap w/ Send',
-          label: [trade?.inputAmount?.token?.symbol, trade?.outputAmount?.token?.symbol, getTradeVersion(trade)].join(
+          label: [trade?.inputAmount?.currency?.symbol, trade?.outputAmount?.currency?.symbol, getTradeVersion(trade)].join(
             '/'
           )
         })

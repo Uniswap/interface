@@ -11,7 +11,7 @@ import { LinkStyledButton, TYPE } from '../../theme'
 import { ButtonSecondary } from '../Button'
 import Column, { AutoColumn } from '../Column'
 import { RowFixed } from '../Row'
-import TokenLogo from '../TokenLogo'
+import CurrencyLogo from '../CurrencyLogo'
 import { FadedSpan, GreySpan, MenuItem, ModalInfo } from './styleds'
 import Loader from '../Loader'
 import { isDefaultToken, isCustomAddedToken } from '../../utils'
@@ -61,7 +61,7 @@ export default function TokenList({
           selected={otherToken === address}
         >
           <RowFixed>
-            <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }} />
+            <CurrencyLogo currency={token} size={'24px'} style={{ marginRight: '14px' }} />
             <Column>
               <Text fontWeight={500}>
                 {symbol}

@@ -11,7 +11,7 @@ import { ExternalLink, TYPE } from '../../theme'
 import { getEtherscanLink, isDefaultToken } from '../../utils'
 import PropsOfExcluding from '../../utils/props-of-excluding'
 import QuestionHelper from '../QuestionHelper'
-import TokenLogo from '../TokenLogo'
+import CurrencyLogo from '../CurrencyLogo'
 
 const Wrapper = styled.div<{ error: boolean }>`
   background: ${({ theme, error }) => transparentize(0.9, error ? theme.red1 : theme.yellow1)};
@@ -103,7 +103,7 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
         <QuestionHelper text={duplicateNameOrSymbol ? DUPLICATE_NAME_HELP_TEXT : HELP_TEXT} />
       </Row>
       <Row>
-        <TokenLogo address={token.address} />
+        <CurrencyLogo currency={token} />
         <div style={{ fontWeight: 500 }}>
           {token && token.name && token.symbol && token.name !== token.symbol
             ? `${token.name} (${token.symbol})`

@@ -12,13 +12,13 @@ import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import DoubleLogo from '../../components/DoubleLogo'
+import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import Slider from '../../components/Slider'
-import TokenLogo from '../../components/TokenLogo'
+import CurrencyLogo from '../../components/CurrencyLogo'
 import { ROUTER_ADDRESS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { usePairContract } from '../../hooks/useContract'
@@ -302,7 +302,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
             {parsedAmounts[Field.TOKEN_A]?.toSignificant(6)}
           </Text>
           <RowFixed gap="4px">
-            <TokenLogo address={tokens[Field.TOKEN_A]?.address} size={'24px'} />
+            <CurrencyLogo currency={tokens[Field.TOKEN_A]} size={'24px'} />
             <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
               {tokens[Field.TOKEN_A]?.symbol}
             </Text>
@@ -316,7 +316,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
             {parsedAmounts[Field.TOKEN_B]?.toSignificant(6)}
           </Text>
           <RowFixed gap="4px">
-            <TokenLogo address={tokens[Field.TOKEN_B]?.address} size={'24px'} />
+            <CurrencyLogo currency={tokens[Field.TOKEN_B]} size={'24px'} />
             <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
               {tokens[Field.TOKEN_B]?.symbol}
             </Text>
@@ -339,11 +339,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
             {'UNI ' + tokens[Field.TOKEN_A]?.symbol + '/' + tokens[Field.TOKEN_B]?.symbol} Burned
           </Text>
           <RowFixed>
-            <DoubleLogo
-              a0={tokens[Field.TOKEN_A]?.address || ''}
-              a1={tokens[Field.TOKEN_B]?.address || ''}
-              margin={true}
-            />
+            <DoubleCurrencyLogo currency0={tokens[Field.TOKEN_A]} currency1={tokens[Field.TOKEN_B]} margin={true} />
             <Text fontWeight={500} fontSize={16}>
               {parsedAmounts[Field.LIQUIDITY]?.toSignificant(6)}
             </Text>
@@ -466,7 +462,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
                         {formattedAmounts[Field.TOKEN_A] || '-'}
                       </Text>
                       <RowFixed>
-                        <TokenLogo address={tokens[Field.TOKEN_A]?.address} style={{ marginRight: '12px' }} />
+                        <CurrencyLogo currency={tokens[Field.TOKEN_A]} style={{ marginRight: '12px' }} />
                         <Text fontSize={24} fontWeight={500} id="remove-liquidity-tokena-symbol">
                           {tokens[Field.TOKEN_A]?.symbol}
                         </Text>
@@ -477,7 +473,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
                         {formattedAmounts[Field.TOKEN_B] || '-'}
                       </Text>
                       <RowFixed>
-                        <TokenLogo address={tokens[Field.TOKEN_B]?.address} style={{ marginRight: '12px' }} />
+                        <CurrencyLogo currency={tokens[Field.TOKEN_B]} style={{ marginRight: '12px' }} />
                         <Text fontSize={24} fontWeight={500} id="remove-liquidity-tokenb-symbol">
                           {tokens[Field.TOKEN_B]?.symbol}
                         </Text>

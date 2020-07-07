@@ -5,8 +5,8 @@ import { darken } from 'polished'
 import { Field } from '../../state/swap/actions'
 import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
 import TokenSearchModal from '../SearchModal/TokenSearchModal'
-import TokenLogo from '../TokenLogo'
-import DoubleLogo from '../DoubleLogo'
+import CurrencyLogo from '../CurrencyLogo'
+import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween } from '../Row'
 import { TYPE, CursorPointer } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
@@ -218,9 +218,9 @@ export default function CurrencyInputPanel({
           >
             <Aligner>
               {isExchange ? (
-                <DoubleLogo a0={pair?.token0.address} a1={pair?.token1.address} size={24} margin={true} />
+                <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
               ) : token?.address ? (
-                <TokenLogo address={token?.address} size={'24px'} />
+                <CurrencyLogo currency={token} size={'24px'} />
               ) : null}
               {isExchange ? (
                 <StyledTokenName className="pair-name-container">

@@ -12,10 +12,12 @@ import { BlueCard, GreyCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import DoubleLogo from '../../components/DoubleLogo'
+import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFlat } from '../../components/Row'
+
+import CurrencyLogo from '../../components/CurrencyLogo'
 
 import { ROUTER_ADDRESS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
@@ -225,7 +227,7 @@ export default function AddLiquidity({
             <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
               {tokens[Field.TOKEN_A]?.symbol + '/' + tokens[Field.TOKEN_B]?.symbol}
             </Text>
-            <DoubleLogo a0={tokens[Field.TOKEN_A]?.address} a1={tokens[Field.TOKEN_B]?.address} size={30} />
+            <DoubleCurrencyLogo currency0={tokens[Field.TOKEN_A]} currency1={tokens[Field.TOKEN_B]} size={30} />
           </RowFlat>
         </LightCard>
       </AutoColumn>
@@ -235,7 +237,7 @@ export default function AddLiquidity({
           <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
             {liquidityMinted?.toSignificant(6)}
           </Text>
-          <DoubleLogo a0={tokens[Field.TOKEN_A]?.address} a1={tokens[Field.TOKEN_B]?.address} size={30} />
+          <DoubleCurrencyLogo currency0={tokens[Field.TOKEN_A]} currency1={tokens[Field.TOKEN_B]} size={30} />
         </RowFlat>
         <Row>
           <Text fontSize="24px">

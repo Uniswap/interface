@@ -1,6 +1,6 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Trade, WETH, TokenAmount } from '@uniswap/sdk'
+import { Trade, TokenAmount, CurrencyAmount, ETHER } from '@uniswap/sdk'
 import { useCallback, useMemo } from 'react'
 import { ROUTER_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
@@ -22,19 +22,18 @@ export enum ApprovalState {
 
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
 export function useApproveCallback(
-  amountToApprove?: TokenAmount,
+  amountToApprove?: CurrencyAmount,
   spender?: string
 ): [ApprovalState, () => Promise<void>] {
   const { account } = useActiveWeb3React()
-
-  const currentAllowance = useTokenAllowance(amountToApprove?.token, account ?? undefined, spender)
-  const pendingApproval = useHasPendingApproval(amountToApprove?.token?.address, spender)
+  const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined
+  const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
+  const pendingApproval = useHasPendingApproval(token?.address, spender)
 
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
-    // we treat WETH as ETH which requires no approvals
-    if (amountToApprove.token.equals(WETH[amountToApprove.token.chainId])) return ApprovalState.APPROVED
+    if (amountToApprove.currency === ETHER) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 
@@ -46,12 +45,16 @@ export function useApproveCallback(
       : ApprovalState.APPROVED
   }, [amountToApprove, currentAllowance, pendingApproval, spender])
 
-  const tokenContract = useTokenContract(amountToApprove?.token?.address)
+  const tokenContract = useTokenContract(token?.address)
   const addTransaction = useTransactionAdder()
 
   const approve = useCallback(async (): Promise<void> => {
     if (approvalState !== ApprovalState.NOT_APPROVED) {
       console.error('approve was called unnecessarily')
+      return
+    }
+    if (!token) {
+      console.error('no token')
       return
     }
 
@@ -83,15 +86,15 @@ export function useApproveCallback(
       })
       .then((response: TransactionResponse) => {
         addTransaction(response, {
-          summary: 'Approve ' + amountToApprove.token.symbol,
-          approval: { tokenAddress: amountToApprove.token.address, spender: spender }
+          summary: 'Approve ' + amountToApprove.currency.symbol,
+          approval: { tokenAddress: token.address, spender: spender }
         })
       })
       .catch((error: Error) => {
         console.debug('Failed to approve token', error)
         throw error
       })
-  }, [approvalState, tokenContract, spender, amountToApprove, addTransaction])
+  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransaction])
 
   return [approvalState, approve]
 }

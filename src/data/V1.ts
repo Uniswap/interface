@@ -1,4 +1,16 @@
-import { JSBI, Pair, Percent, Route, Token, TokenAmount, Trade, TradeType, WETH } from '@uniswap/sdk'
+import {
+  CurrencyAmount,
+  currencyEquals,
+  JSBI,
+  Pair,
+  Percent,
+  Route,
+  Token,
+  TokenAmount,
+  Trade,
+  TradeType,
+  WETH
+} from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
 import { useAllTokens } from '../hooks/Tokens'
@@ -81,7 +93,7 @@ export function useV1Trade(
   isExactIn?: boolean,
   inputToken?: Token,
   outputToken?: Token,
-  exactAmount?: TokenAmount
+  exactAmount?: CurrencyAmount
 ): Trade | undefined {
   const { chainId } = useActiveWeb3React()
 
@@ -127,6 +139,9 @@ export function useV1TradeExchangeAddress(trade: Trade | undefined): string | un
   const tokenAddress: string | undefined = useMemo(() => {
     const tradeVersion = getTradeVersion(trade)
     const isV1 = tradeVersion === Version.v1
+    if (!(trade?.inputAmount instanceof TokenAmount) || !(trade.outputAmount instanceof TokenAmount)) {
+      return undefined
+    }
     return isV1
       ? trade &&
         WETH[trade.inputAmount.token.chainId] &&
@@ -140,6 +155,7 @@ export function useV1TradeExchangeAddress(trade: Trade | undefined): string | un
 
 const ZERO_PERCENT = new Percent('0')
 const ONE_HUNDRED_PERCENT = new Percent('1')
+
 // returns whether tradeB is better than tradeA by at least a threshold
 export function isTradeBetter(
   tradeA: Trade | undefined,
@@ -150,8 +166,8 @@ export function isTradeBetter(
 
   if (
     tradeA.tradeType !== tradeB.tradeType ||
-    !tradeA.inputAmount.token.equals(tradeB.inputAmount.token) ||
-    !tradeB.outputAmount.token.equals(tradeB.outputAmount.token)
+    !currencyEquals(tradeA.inputAmount.currency, tradeB.inputAmount.currency) ||
+    !currencyEquals(tradeB.outputAmount.currency, tradeB.outputAmount.currency)
   ) {
     throw new Error('Trades are not comparable')
   }

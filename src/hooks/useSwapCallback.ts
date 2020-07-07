@@ -32,6 +32,11 @@ enum SwapType {
 
 function getSwapType(trade: Trade | undefined): SwapType | undefined {
   if (!trade) return undefined
+
+  // TODO(moodysalem): replace with currency amount handling logic
+  if (!(trade.inputAmount instanceof TokenAmount)) return undefined
+  if (!(trade.outputAmount instanceof TokenAmount)) return undefined
+
   const chainId = trade.inputAmount.token.chainId
   const inputWETH = trade.inputAmount.token.equals(WETH[chainId])
   const outputWETH = trade.outputAmount.token.equals(WETH[chainId])
@@ -73,7 +78,7 @@ export function useSwapCallback(
   const tradeVersion = getTradeVersion(trade)
   const v1Exchange = useV1ExchangeContract(useV1TradeExchangeAddress(trade), true)
   const inputAllowance = useTokenAllowance(
-    trade?.inputAmount?.token,
+    trade?.inputAmount instanceof TokenAmount ? trade?.inputAmount?.token : undefined,
     account ?? undefined,
     tradeVersion === Version.v1 ? v1Exchange?.address : ROUTER_ADDRESS
   )
@@ -87,7 +92,11 @@ export function useSwapCallback(
       [Field.OUTPUT]: slippageAdjustedOutput
     } = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
-    if (!slippageAdjustedInput || !slippageAdjustedOutput) return null
+    if (!slippageAdjustedInput || !slippageAdjustedOutput || !chainId) return null
+
+    // TODO(moodysalem): replace with currency amount handling logic
+    if (!(trade.inputAmount instanceof TokenAmount)) return null
+    if (!(trade.outputAmount instanceof TokenAmount)) return null
 
     // no allowance
     if (
@@ -275,8 +284,8 @@ export function useSwapCallback(
           ...(value ? { value } : {})
         })
           .then((response: any) => {
-            const inputSymbol = trade.inputAmount.token.symbol
-            const outputSymbol = trade.outputAmount.token.symbol
+            const inputSymbol = trade.inputAmount.currency.symbol
+            const outputSymbol = trade.outputAmount.currency.symbol
             const inputAmount = slippageAdjustedInput.toSignificant(3)
             const outputAmount = slippageAdjustedOutput.toSignificant(3)
 

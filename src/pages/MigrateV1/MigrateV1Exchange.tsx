@@ -1,5 +1,5 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
-import { ChainId, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@uniswap/sdk'
+import { ChainId, Currency, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useCallback, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router'
@@ -24,7 +24,7 @@ import { TYPE, ExternalLink, BackArrow } from '../../theme'
 import { isAddress, getEtherscanLink } from '../../utils'
 import { BodyWrapper } from '../AppBody'
 import { EmptyState } from './EmptyState'
-import TokenLogo from '../../components/TokenLogo'
+import CurrencyLogo from '../../components/CurrencyLogo'
 import { AddressZero } from '@ethersproject/constants'
 import { Text } from 'rebass'
 
@@ -63,7 +63,7 @@ export function V1LiquidityInfo({
   return (
     <>
       <AutoRow style={{ justifyContent: 'flex-start', width: 'fit-content' }}>
-        <TokenLogo size="24px" address={token.address} />
+        <CurrencyLogo size="24px" currency={token} />
         <div style={{ marginLeft: '.75rem' }}>
           <TYPE.mediumHeader>
             {<FormattedPoolTokenAmount tokenAmount={liquidityTokenAmount} />}{' '}
@@ -80,7 +80,7 @@ export function V1LiquidityInfo({
           <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
             {tokenWorth.toSignificant(4)}
           </Text>
-          <TokenLogo size="20px" style={{ marginLeft: '8px' }} address={token.address} />
+          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={token} />
         </RowFixed>
       </RowBetween>
       <RowBetween mb="1rem">
@@ -91,7 +91,7 @@ export function V1LiquidityInfo({
           <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
             {ethWorth.toSignificant(4)}
           </Text>
-          <TokenLogo size="20px" style={{ marginLeft: '8px' }} address={WETH[chainId].address} />
+          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={Currency.ETHER} />
         </RowFixed>
       </RowBetween>
     </>

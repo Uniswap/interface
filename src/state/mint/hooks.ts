@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Token, TokenAmount, Route, JSBI, Price, Percent, Pair } from '@uniswap/sdk'
+import { Token, TokenAmount, Route, JSBI, Price, Percent, Pair, CurrencyAmount } from '@uniswap/sdk'
 
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
@@ -24,7 +24,7 @@ export function useDerivedMintInfo(
   tokens: { [field in Field]?: Token }
   pair?: Pair | null
   tokenBalances: { [field in Field]?: TokenAmount }
-  parsedAmounts: { [field in Field]?: TokenAmount }
+  parsedAmounts: { [field in Field]?: CurrencyAmount }
   price?: Price
   noLiquidity?: boolean
   liquidityMinted?: TokenAmount
@@ -40,8 +40,8 @@ export function useDerivedMintInfo(
   // tokens
   const tokens: { [field in Field]?: Token } = useMemo(
     () => ({
-      [Field.TOKEN_A]: tokenA,
-      [Field.TOKEN_B]: tokenB
+      [Field.TOKEN_A]: tokenA ?? undefined,
+      [Field.TOKEN_B]: tokenB ?? undefined
     }),
     [tokenA, tokenB]
   )
@@ -81,24 +81,19 @@ export function useDerivedMintInfo(
       return
     }
   }, [noLiquidity, otherTypedValue, tokens, dependentField, independentAmount, route])
-  const parsedAmounts = {
+  const parsedAmounts: { [field in Field]: CurrencyAmount | undefined } = {
     [Field.TOKEN_A]: independentField === Field.TOKEN_A ? independentAmount : dependentAmount,
     [Field.TOKEN_B]: independentField === Field.TOKEN_A ? dependentAmount : independentAmount
   }
 
   const price = useMemo(() => {
-    if (
-      noLiquidity &&
-      tokens[Field.TOKEN_A] &&
-      tokens[Field.TOKEN_B] &&
-      parsedAmounts[Field.TOKEN_A] &&
-      parsedAmounts[Field.TOKEN_B]
-    ) {
+    const { [Field.TOKEN_A]: tokenAAmount, [Field.TOKEN_B]: tokenBAmount } = parsedAmounts
+    if (noLiquidity && tokens[Field.TOKEN_A] && tokens[Field.TOKEN_B] && tokenAAmount && tokenBAmount) {
       return new Price(
         tokens[Field.TOKEN_A] as Token,
         tokens[Field.TOKEN_B] as Token,
-        (parsedAmounts[Field.TOKEN_A] as TokenAmount).raw,
-        (parsedAmounts[Field.TOKEN_B] as TokenAmount).raw
+        tokenAAmount.raw,
+        tokenBAmount.raw
       )
     } else if (route) {
       return route.midPrice

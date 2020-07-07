@@ -1,4 +1,4 @@
-import { ChainId, Pair, Token } from '@uniswap/sdk'
+import { ChainId, Currency, Pair, Token } from '@uniswap/sdk'
 import React, { useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { useMediaLayout } from 'use-media'
@@ -8,7 +8,7 @@ import { PopupContent } from '../../state/application/actions'
 import { useActivePopups, useRemovePopup } from '../../state/application/hooks'
 import { ExternalLink } from '../../theme'
 import { AutoColumn } from '../Column'
-import DoubleTokenLogo from '../DoubleLogo'
+import DoubleCurrencyLogo from '../DoubleLogo'
 import Row from '../Row'
 import TxnPopup from '../TxnPopup'
 import { Text } from 'rebass'
@@ -72,13 +72,7 @@ const Popup = styled.div`
   `}
 `
 
-function PoolPopup({
-  token0,
-  token1
-}: {
-  token0: { address?: string; symbol?: string }
-  token1: { address?: string; symbol?: string }
-}) {
+function PoolPopup({ token0, token1 }: { token0: Token; token1: Token }) {
   const pairAddress: string | null = useMemo(() => {
     if (!token0 || !token1) return null
     // just mock it out
@@ -94,7 +88,7 @@ function PoolPopup({
         Pool Imported
       </Text>
       <Row>
-        <DoubleTokenLogo a0={token0?.address ?? ''} a1={token1?.address ?? ''} margin={true} />
+        <DoubleCurrencyLogo currency0={token0} currency1={token1} margin={true} />
         <Text fontSize={16} fontWeight={500}>
           UNI {token0?.symbol} / {token1?.symbol}
         </Text>
@@ -117,7 +111,8 @@ function PopupItem({ content, popKey }: { content: PopupContent; popKey: string 
       poolAdded: { token0, token1 }
     } = content
 
-    return <PoolPopup token0={token0} token1={token1} />
+    //  todo
+    return null
   }
 }
 

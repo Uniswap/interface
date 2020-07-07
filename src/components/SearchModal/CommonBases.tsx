@@ -7,7 +7,7 @@ import { SUGGESTED_BASES } from '../../constants'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'
-import TokenLogo from '../TokenLogo'
+import CurrencyLogo from '../CurrencyLogo'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
@@ -50,7 +50,7 @@ export default function CommonBases({
               disable={selectedTokenAddress === token.address}
               key={token.address}
             >
-              <TokenLogo address={token.address} style={{ marginRight: 8 }} />
+              <CurrencyLogo currency={token} style={{ marginRight: 8 }} />
               <Text fontWeight={500} fontSize={16}>
                 {token.symbol}
               </Text>

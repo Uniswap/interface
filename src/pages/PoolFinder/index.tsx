@@ -9,7 +9,7 @@ import { FindPoolTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row from '../../components/Row'
 import TokenSearchModal from '../../components/SearchModal/TokenSearchModal'
-import TokenLogo from '../../components/TokenLogo'
+import CurrencyLogo from '../../components/CurrencyLogo'
 import { usePair } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useToken } from '../../hooks/Tokens'
@@ -72,7 +72,7 @@ export default function PoolFinder() {
         >
           {token0 ? (
             <Row>
-              <TokenLogo address={token0Address} />
+              <CurrencyLogo currency={token0} />
               <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
                 {token0.symbol}
               </Text>
@@ -96,7 +96,7 @@ export default function PoolFinder() {
         >
           {token1 ? (
             <Row>
-              <TokenLogo address={token1Address} />
+              <CurrencyLogo currency={token1} />
               <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
                 {token1.symbol}
               </Text>
