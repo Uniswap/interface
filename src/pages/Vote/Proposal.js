@@ -69,15 +69,24 @@ const Extra = styled.div`
 
 
 export default function Proposal({ id, proposal, status }) {
-	const text = status ? 'Active' : 'Passed'
-	const availableVotes = ['NO VOTE', 'FOR', 'AGAINST', 'DID NOT VOTE']
+	const availableVotes = ['VOTE', 'FOR', 'AGAINST', 'NO VOTE']
 	const mod = (b,e) => availableVotes.slice(b, e)
-	const votes = status ? mod(0, 3) : mod(1, 4)
+	
+	let votes 
+	let text
+	if(status) {
+		text = 'Active'
+		votes = mod(0,3)
+	}
+	else {
+		text = 'Passed'
+		votes = mod(1,4)
+	}
 
 	const v = votes[id%2]; //determines vote based on id - TEMPORARY
 	const [vote, setVote] = useState(v)
 
-	const c = v === 'NO VOTE'
+	const c = v === 'VOTE'
 	const [cast, setCast] = useState(c)
 	const [showCast, changeShowCast] = useState(false)
 
