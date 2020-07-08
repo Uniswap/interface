@@ -10,6 +10,7 @@ import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow, RowBetween } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
@@ -212,6 +213,7 @@ export default function Swap() {
     <>
       <TokenWarningCards tokens={tokens} />
       <AppBody>
+        <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
           <ConfirmationModal
             isOpen={showConfirm}

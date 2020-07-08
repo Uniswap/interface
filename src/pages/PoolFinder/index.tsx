@@ -5,6 +5,7 @@ import { Text } from 'rebass'
 import { ButtonDropdownLight } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
+import { FindPoolTabs } from '../../components/NavigationTabs'
 import PositionCard from '../../components/PositionCard'
 import Row from '../../components/Row'
 import TokenSearchModal from '../../components/SearchModal/TokenSearchModal'
@@ -61,6 +62,7 @@ export default function PoolFinder() {
 
   return (
     <AppBody>
+      <FindPoolTabs />
       <AutoColumn gap="md">
         <ButtonDropdownLight
           onClick={() => {
