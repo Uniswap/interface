@@ -87,10 +87,10 @@ function NavigationTabs({ location: { pathname }, history }: RouteComponentProps
   useBodyKeyDown('ArrowRight', navigateRight)
   useBodyKeyDown('ArrowLeft', navigateLeft)
 
-  const adding = pathname.match('/add')
-  const removing = pathname.match('/remove')
-  const finding = pathname.match('/find')
-  const creating = pathname.match('/create')
+  const adding = pathname.startsWith('/add')
+  const removing = pathname.startsWith('/remove')
+  const finding = pathname.startsWith('/find')
+  const creating = pathname.startsWith('/create')
 
   return (
     <>
@@ -132,16 +132,12 @@ function NavigationTabs({ location: { pathname }, history }: RouteComponentProps
         </Tabs>
       ) : (
         <Tabs style={{ marginBottom: '20px' }}>
-          {tabOrder.map(({ path, textKey, regex }) => (
-            <StyledNavLink
-              id={`${textKey}-nav-link`}
-              key={path}
-              to={path}
-              isActive={(_, { pathname }) => !!pathname.match(regex)}
-            >
-              {t(textKey)}
-            </StyledNavLink>
-          ))}
+          <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={(_, { pathname }) => pathname.startsWith('/swap')}>
+            {t('swap')}
+          </StyledNavLink>
+          <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={(_, { pathname }) => pathname.startsWith('/pool')}>
+            {t('pool')}
+          </StyledNavLink>
         </Tabs>
       )}
     </>

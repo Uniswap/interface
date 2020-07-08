@@ -146,7 +146,7 @@ export default function Swap() {
 
         ReactGA.event({
           category: 'Swap',
-          action: 'Swap w/o Send',
+          action: recipient === null || recipient === account ? 'Swap w/o Send' : 'Swap w/ Send',
           label: [trade.inputAmount.token.symbol, trade.outputAmount.token.symbol, getTradeVersion(trade)].join('/')
         })
       })
