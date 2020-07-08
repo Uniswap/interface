@@ -264,7 +264,9 @@ export default function Swap() {
                     />
                   </ArrowWrapper>
                   {recipient === null ? (
-                    <LinkStyledButton onClick={() => onChangeRecipient('')}>+ add recipient</LinkStyledButton>
+                    <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
+                      + add recipient
+                    </LinkStyledButton>
                   ) : null}
                 </AutoRow>
               </AutoColumn>
@@ -287,9 +289,12 @@ export default function Swap() {
                   <ArrowWrapper clickable={false}>
                     <ArrowDown size="16" />
                   </ArrowWrapper>
-                  <LinkStyledButton onClick={() => onChangeRecipient(null)}>- remove recipient</LinkStyledButton>
+                  <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
+                    - remove recipient
+                  </LinkStyledButton>
                 </AutoRow>
                 <AddressInputPanel
+                  id="recipient"
                   initialInput={recipient}
                   onChange={({ address }) => {
                     if (address) {

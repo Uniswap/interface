@@ -65,9 +65,11 @@ const Input = styled.input<{ error?: boolean }>`
 `
 
 export default function AddressInputPanel({
+  id,
   initialInput = '',
   onChange
 }: {
+  id?: string
   initialInput?: string
   onChange: (value: { address: string; name?: string }) => void
 }) {
@@ -146,7 +148,7 @@ export default function AddressInputPanel({
   }
 
   return (
-    <InputPanel>
+    <InputPanel id={id}>
       <ContainerRow error={input !== '' && error}>
         <InputContainer>
           <AutoColumn gap="md">
@@ -164,6 +166,7 @@ export default function AddressInputPanel({
               )}
             </RowBetween>
             <Input
+              className="recipient-address-input"
               type="text"
               autoComplete="off"
               autoCorrect="off"

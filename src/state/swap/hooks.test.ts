@@ -64,7 +64,7 @@ describe('hooks', () => {
         [Field.INPUT]: { address: '' },
         typedValue: '20.5',
         independentField: Field.INPUT,
-        recipient: 'abc'
+        recipient: null
       })
     })
 
