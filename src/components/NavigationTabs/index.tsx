@@ -134,7 +134,7 @@ function NavigationTabs({ location: { pathname }, history }: RouteComponentProps
         <Tabs style={{ marginBottom: '20px' }}>
           {tabOrder.map(({ path, textKey, regex }) => (
             <StyledNavLink
-              id={`swap-nav-link`}
+              id={`${textKey}-nav-link`}
               key={path}
               to={path}
               isActive={(_, { pathname }) => !!pathname.match(regex)}
