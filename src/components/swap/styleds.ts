@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { AutoColumn } from '../Column'
 import { Text } from 'rebass'
 
@@ -8,17 +8,18 @@ export const Wrapper = styled.div`
   position: relative;
 `
 
-export const ArrowWrapper = styled.div`
+export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   padding: 2px;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
-  :hover {
-    cursor: pointer;
-    opacity: 0.8;
-  }
+  ${({ clickable }) =>
+    clickable
+      ? css`
+          :hover {
+            cursor: pointer;
+            opacity: 0.8;
+          }
+        `
+      : null}
 `
 
 export const SectionBreak = styled.div`

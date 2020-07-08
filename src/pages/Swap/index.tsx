@@ -10,7 +10,7 @@ import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { RowBetween } from '../../components/Row'
+import { AutoRow, RowBetween } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { ArrowWrapper, BottomGrouping, Dots, Wrapper } from '../../components/swap/styleds'
@@ -61,7 +61,7 @@ export default function Swap() {
   const { independentField, typedValue, recipient } = useSwapState()
   const { bestTrade: bestTradeV2, tokenBalances, parsedAmount, tokens, error, v1Trade } = useDerivedSwapInfo()
   const toggledVersion = useToggledVersion()
-  const bestTrade = {
+  const trade = {
     [Version.v1]: v1Trade,
     [Version.v2]: bestTradeV2
   }[toggledVersion]
@@ -74,8 +74,8 @@ export default function Swap() {
       : undefined
 
   const parsedAmounts = {
-    [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : bestTrade?.inputAmount,
-    [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : bestTrade?.outputAmount
+    [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
+    [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
   }
 
   const { onSwitchTokens, onTokenSelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
@@ -92,7 +92,7 @@ export default function Swap() {
     [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(6) : ''
   }
 
-  const route = bestTrade?.route
+  const route = trade?.route
   const userHasSpecifiedInputOutput =
     !!tokens[Field.INPUT] &&
     !!tokens[Field.OUTPUT] &&
@@ -101,7 +101,7 @@ export default function Swap() {
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const [approval, approveCallback] = useApproveCallbackFromTrade(bestTrade, allowedSlippage)
+  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -127,12 +127,12 @@ export default function Swap() {
   const atMaxAmountInput: boolean =
     maxAmountInput && parsedAmounts[Field.INPUT] ? maxAmountInput.equalTo(parsedAmounts[Field.INPUT]) : undefined
 
-  const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(bestTrade, allowedSlippage)
+  const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
   // the callback to execute the swap
-  const swapCallback = useSwapCallback(bestTrade, allowedSlippage, deadline, recipient)
+  const swapCallback = useSwapCallback(trade, allowedSlippage, deadline, recipient)
 
-  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(bestTrade)
+  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
 
   function onSwap() {
     if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
@@ -147,11 +147,7 @@ export default function Swap() {
         ReactGA.event({
           category: 'Swap',
           action: 'Swap w/o Send',
-          label: [
-            bestTrade.inputAmount.token.symbol,
-            bestTrade.outputAmount.token.symbol,
-            getTradeVersion(bestTrade)
-          ].join('/')
+          label: [trade.inputAmount.token.symbol, trade.outputAmount.token.symbol, getTradeVersion(trade)].join('/')
         })
       })
       .catch(error => {
@@ -202,7 +198,7 @@ export default function Swap() {
         parsedAmounts={parsedAmounts}
         priceImpactWithoutFee={priceImpactWithoutFee}
         slippageAdjustedAmounts={slippageAdjustedAmounts}
-        trade={bestTrade}
+        trade={trade}
       />
     )
   }
@@ -255,17 +251,22 @@ export default function Swap() {
             />
 
             <CursorPointer>
-              <AutoColumn style={{ padding: '0 1rem' }}>
-                <ArrowWrapper>
-                  <ArrowDown
-                    size="16"
-                    onClick={() => {
-                      setApprovalSubmitted(false) // reset 2 step UI for approvals
-                      onSwitchTokens()
-                    }}
-                    color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme.primary1 : theme.text2}
-                  />
-                </ArrowWrapper>
+              <AutoColumn justify="space-between">
+                <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+                  <ArrowWrapper clickable>
+                    <ArrowDown
+                      size="16"
+                      onClick={() => {
+                        setApprovalSubmitted(false) // reset 2 step UI for approvals
+                        onSwitchTokens()
+                      }}
+                      color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme.primary1 : theme.text2}
+                    />
+                  </ArrowWrapper>
+                  {recipient === null ? (
+                    <LinkStyledButton onClick={() => onChangeRecipient('')}>+ add recipient</LinkStyledButton>
+                  ) : null}
+                </AutoRow>
               </AutoColumn>
             </CursorPointer>
             <CurrencyInputPanel
@@ -282,9 +283,12 @@ export default function Swap() {
 
             {recipient !== null ? (
               <>
-                <ArrowWrapper>
-                  <ArrowDown onClick={() => onChangeRecipient(null)} size="16" />
-                </ArrowWrapper>
+                <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+                  <ArrowWrapper clickable={false}>
+                    <ArrowDown size="16" />
+                  </ArrowWrapper>
+                  <LinkStyledButton onClick={() => onChangeRecipient(null)}>- remove recipient</LinkStyledButton>
+                </AutoRow>
                 <AddressInputPanel
                   initialInput={recipient}
                   onChange={({ address }) => {
@@ -295,9 +299,7 @@ export default function Swap() {
                   onError={() => null}
                 />
               </>
-            ) : (
-              <LinkStyledButton onClick={() => onChangeRecipient('')}>(+ Add a recipient)</LinkStyledButton>
-            )}
+            ) : null}
 
             <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
               <AutoColumn gap="4px">
@@ -308,7 +310,7 @@ export default function Swap() {
                   <TradePrice
                     inputToken={tokens[Field.INPUT]}
                     outputToken={tokens[Field.OUTPUT]}
-                    price={bestTrade?.executionPrice}
+                    price={trade?.executionPrice}
                     showInverted={showInverted}
                     setShowInverted={setShowInverted}
                   />
@@ -389,7 +391,7 @@ export default function Swap() {
         </Wrapper>
       </AppBody>
 
-      <AdvancedSwapDetailsDropdown trade={bestTrade} />
+      <AdvancedSwapDetailsDropdown trade={trade} />
     </>
   )
 }
