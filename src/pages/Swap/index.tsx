@@ -1,4 +1,3 @@
-import { formatHandleErrors } from '@jest/core/build/collectHandles'
 import { JSBI, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useContext, useState, useEffect } from 'react'
 import { ArrowDown } from 'react-feather'
