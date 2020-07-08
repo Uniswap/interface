@@ -17,11 +17,6 @@ const tabOrder = [
     regex: /\/swap/
   },
   {
-    path: '/send',
-    textKey: 'send',
-    regex: /\/send/
-  },
-  {
     path: '/pool',
     textKey: 'pool',
     regex: /\/pool/
@@ -139,7 +134,7 @@ function NavigationTabs({ location: { pathname }, history }: RouteComponentProps
         <Tabs style={{ marginBottom: '20px' }}>
           {tabOrder.map(({ path, textKey, regex }) => (
             <StyledNavLink
-              id={`${textKey}-nav-link`}
+              id={`swap-nav-link`}
               key={path}
               to={path}
               isActive={(_, { pathname }) => !!pathname.match(regex)}

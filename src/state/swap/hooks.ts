@@ -12,7 +12,7 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
-import { Field, replaceSwapState, selectToken, switchTokens, typeInput } from './actions'
+import { Field, replaceSwapState, selectToken, setRecipient, switchTokens, typeInput } from './actions'
 import { SwapState } from './reducer'
 import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUserSlippageTolerance } from '../user/hooks'
@@ -26,6 +26,7 @@ export function useSwapActionHandlers(): {
   onTokenSelection: (field: Field, address: string) => void
   onSwitchTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
+  onChangeRecipient: (recipient: string | null) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
   const onTokenSelection = useCallback(
@@ -51,10 +52,18 @@ export function useSwapActionHandlers(): {
     [dispatch]
   )
 
+  const onChangeRecipient = useCallback(
+    (recipient: string | null) => {
+      dispatch(setRecipient({ recipient }))
+    },
+    [dispatch]
+  )
+
   return {
     onSwitchTokens,
     onTokenSelection,
-    onUserInput
+    onUserInput,
+    onChangeRecipient
   }
 }
 
@@ -200,6 +209,7 @@ export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId,
       outputCurrency = ''
     }
   }
+  const parsedTo = isAddress(parsedQs.recipient)
 
   return {
     [Field.INPUT]: {
@@ -209,7 +219,8 @@ export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId,
       address: outputCurrency
     },
     typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
-    independentField: parseIndependentFieldURLParameter(parsedQs.exactField)
+    independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
+    recipient: parsedTo ? parsedTo : null
   }
 }
 
@@ -229,7 +240,8 @@ export function useDefaultsFromURLSearch(overrideWETH = false) {
         typedValue: parsed.typedValue,
         field: parsed.independentField,
         inputTokenAddress: parsed[Field.INPUT].address,
-        outputTokenAddress: parsed[Field.OUTPUT].address
+        outputTokenAddress: parsed[Field.OUTPUT].address,
+        recipient: parsed.recipient
       })
     )
     // eslint-disable-next-line

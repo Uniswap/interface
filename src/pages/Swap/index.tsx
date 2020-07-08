@@ -1,9 +1,11 @@
+import { formatHandleErrors } from '@jest/core/build/collectHandles'
 import { JSBI, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useContext, useState, useEffect } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
+import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -34,7 +36,7 @@ import {
   useSwapActionHandlers,
   useSwapState
 } from '../../state/swap/hooks'
-import { CursorPointer, TYPE } from '../../theme'
+import { CursorPointer, LinkStyledButton, TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
@@ -57,7 +59,7 @@ export default function Swap() {
   const [allowedSlippage] = useUserSlippageTolerance()
 
   // swap state
-  const { independentField, typedValue } = useSwapState()
+  const { independentField, typedValue, recipient } = useSwapState()
   const { bestTrade: bestTradeV2, tokenBalances, parsedAmount, tokens, error, v1Trade } = useDerivedSwapInfo()
   const toggledVersion = useToggledVersion()
   const bestTrade = {
@@ -77,7 +79,7 @@ export default function Swap() {
     [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : bestTrade?.outputAmount
   }
 
-  const { onSwitchTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
+  const { onSwitchTokens, onTokenSelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !error
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -129,7 +131,7 @@ export default function Swap() {
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(bestTrade, allowedSlippage)
 
   // the callback to execute the swap
-  const swapCallback = useSwapCallback(bestTrade, allowedSlippage, deadline)
+  const swapCallback = useSwapCallback(bestTrade, allowedSlippage, deadline, recipient)
 
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(bestTrade)
 
@@ -235,51 +237,62 @@ export default function Swap() {
           />
 
           <AutoColumn gap={'md'}>
-            <>
-              <CurrencyInputPanel
-                field={Field.INPUT}
-                label={independentField === Field.OUTPUT ? 'From (estimated)' : 'From'}
-                value={formattedAmounts[Field.INPUT]}
-                showMaxButton={!atMaxAmountInput}
-                token={tokens[Field.INPUT]}
-                onUserInput={onUserInput}
-                onMax={() => {
-                  maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
-                }}
-                onTokenSelection={address => {
-                  setApprovalSubmitted(false) // reset 2 step UI for approvals
-                  onTokenSelection(Field.INPUT, address)
-                }}
-                otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
-                id="swap-currency-input"
-              />
+            <CurrencyInputPanel
+              field={Field.INPUT}
+              label={independentField === Field.OUTPUT ? 'From (estimated)' : 'From'}
+              value={formattedAmounts[Field.INPUT]}
+              showMaxButton={!atMaxAmountInput}
+              token={tokens[Field.INPUT]}
+              onUserInput={onUserInput}
+              onMax={() => {
+                maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
+              }}
+              onTokenSelection={address => {
+                setApprovalSubmitted(false) // reset 2 step UI for approvals
+                onTokenSelection(Field.INPUT, address)
+              }}
+              otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
+              id="swap-currency-input"
+            />
 
-              <CursorPointer>
-                <AutoColumn style={{ padding: '0 1rem' }}>
-                  <ArrowWrapper>
-                    <ArrowDown
-                      size="16"
-                      onClick={() => {
-                        setApprovalSubmitted(false) // reset 2 step UI for approvals
-                        onSwitchTokens()
-                      }}
-                      color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme.primary1 : theme.text2}
-                    />
-                  </ArrowWrapper>
-                </AutoColumn>
-              </CursorPointer>
-              <CurrencyInputPanel
-                field={Field.OUTPUT}
-                value={formattedAmounts[Field.OUTPUT]}
-                onUserInput={onUserInput}
-                label={independentField === Field.INPUT ? 'To (estimated)' : 'To'}
-                showMaxButton={false}
-                token={tokens[Field.OUTPUT]}
-                onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
-                otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
-                id="swap-currency-output"
+            <CursorPointer>
+              <AutoColumn style={{ padding: '0 1rem' }}>
+                <ArrowWrapper>
+                  <ArrowDown
+                    size="16"
+                    onClick={() => {
+                      setApprovalSubmitted(false) // reset 2 step UI for approvals
+                      onSwitchTokens()
+                    }}
+                    color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme.primary1 : theme.text2}
+                  />
+                </ArrowWrapper>
+              </AutoColumn>
+            </CursorPointer>
+            <CurrencyInputPanel
+              field={Field.OUTPUT}
+              value={formattedAmounts[Field.OUTPUT]}
+              onUserInput={onUserInput}
+              label={independentField === Field.INPUT ? 'To (estimated)' : 'To'}
+              showMaxButton={false}
+              token={tokens[Field.OUTPUT]}
+              onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
+              otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
+              id="swap-currency-output"
+            />
+
+            {recipient !== null ? (
+              <AddressInputPanel
+                onChange={({ address }) => {
+                  if (address) {
+                    onChangeRecipient(address)
+                  }
+                }}
+                onError={() => null}
               />
-            </>
+            ) : (
+              <LinkStyledButton onClick={() => onChangeRecipient('')}>(+ Add a recipient)</LinkStyledButton>
+            )}
 
             <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
               <AutoColumn gap="4px">

@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { Field, replaceSwapState, selectToken, switchTokens, typeInput } from './actions'
+import { Field, replaceSwapState, selectToken, setRecipient, switchTokens, typeInput } from './actions'
 
 export interface SwapState {
   readonly independentField: Field
@@ -10,6 +10,8 @@ export interface SwapState {
   readonly [Field.OUTPUT]: {
     readonly address: string | undefined
   }
+  // the typed recipient address, or null if swap should go to sender
+  readonly recipient: string | null
 }
 
 const initialState: SwapState = {
@@ -20,23 +22,28 @@ const initialState: SwapState = {
   },
   [Field.OUTPUT]: {
     address: ''
-  }
+  },
+  recipient: null
 }
 
 export default createReducer<SwapState>(initialState, builder =>
   builder
-    .addCase(replaceSwapState, (state, { payload: { typedValue, field, inputTokenAddress, outputTokenAddress } }) => {
-      return {
-        [Field.INPUT]: {
-          address: inputTokenAddress
-        },
-        [Field.OUTPUT]: {
-          address: outputTokenAddress
-        },
-        independentField: field,
-        typedValue: typedValue
+    .addCase(
+      replaceSwapState,
+      (state, { payload: { typedValue, recipient, field, inputTokenAddress, outputTokenAddress } }) => {
+        return {
+          [Field.INPUT]: {
+            address: inputTokenAddress
+          },
+          [Field.OUTPUT]: {
+            address: outputTokenAddress
+          },
+          independentField: field,
+          typedValue: typedValue,
+          recipient
+        }
       }
-    })
+    )
     .addCase(selectToken, (state, { payload: { address, field } }) => {
       const otherField = field === Field.INPUT ? Field.OUTPUT : Field.INPUT
       if (address === state[otherField].address) {
@@ -69,5 +76,8 @@ export default createReducer<SwapState>(initialState, builder =>
         independentField: field,
         typedValue
       }
+    })
+    .addCase(setRecipient, (state, { payload: { recipient } }) => {
+      state.recipient = recipient
     })
 )

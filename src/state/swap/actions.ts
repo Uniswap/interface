@@ -13,4 +13,6 @@ export const replaceSwapState = createAction<{
   typedValue: string
   inputTokenAddress?: string
   outputTokenAddress?: string
+  recipient: string | null
 }>('replaceSwapState')
+export const setRecipient = createAction<{ recipient: string | null }>('setRecipient')
