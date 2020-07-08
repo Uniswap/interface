@@ -75,7 +75,7 @@ export default function AddLiquidity({
     poolTokenPercentage,
     error
   } = useDerivedMintInfo(tokenA ?? undefined, tokenB ?? undefined)
-  const { onUserInput } = useMintActionHandlers(noLiquidity)
+  const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
 
   const handleTokenAInput = useCallback(
     (field: string, value: string) => {
@@ -309,7 +309,7 @@ export default function AddLiquidity({
               setShowConfirm(false)
               // if there was a tx hash, we want to clear the input
               if (txHash) {
-                onUserInput(Field.TOKEN_A, '')
+                onFieldAInput('')
               }
               setTxHash('')
             }}
@@ -339,15 +339,14 @@ export default function AddLiquidity({
               </ColumnCenter>
             )}
             <CurrencyInputPanel
-              field={Field.TOKEN_A}
               value={formattedAmounts[Field.TOKEN_A]}
               onUserInput={handleTokenAInput}
               onMax={() => {
-                onUserInput(Field.TOKEN_A, maxAmounts[Field.TOKEN_A]?.toExact() ?? '')
+                maxAmounts[Field.TOKEN_A] && onFieldAInput(maxAmounts[Field.TOKEN_A].toExact())
               }}
               onTokenSelection={handleTokenASelect}
               showMaxButton={!atMaxAmounts[Field.TOKEN_A]}
-              token={tokens[Field.TOKEN_A]}
+              currency={tokens[Field.TOKEN_A]}
               pair={pair}
               id="add-liquidity-input-tokena"
               showCommonBases
@@ -356,15 +355,14 @@ export default function AddLiquidity({
               <Plus size="16" color={theme.text2} />
             </ColumnCenter>
             <CurrencyInputPanel
-              field={Field.TOKEN_B}
               value={formattedAmounts[Field.TOKEN_B]}
               onUserInput={handleTokenBInput}
               onTokenSelection={handleTokenBSelect}
               onMax={() => {
-                onUserInput(Field.TOKEN_B, maxAmounts[Field.TOKEN_B]?.toExact() ?? '')
+                maxAmounts[Field.TOKEN_B] && onFieldBInput(maxAmounts[Field.TOKEN_B].toExact())
               }}
               showMaxButton={!atMaxAmounts[Field.TOKEN_B]}
-              token={tokens[Field.TOKEN_B]}
+              currency={tokens[Field.TOKEN_B]}
               pair={pair}
               id="add-liquidity-input-tokenb"
               showCommonBases

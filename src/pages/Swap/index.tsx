@@ -62,7 +62,7 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
-  const { v1Trade, v2Trade, tokenBalances, parsedAmount, tokens, error } = useDerivedSwapInfo()
+  const { v1Trade, v2Trade, currencyBalances, parsedAmount, currencies, error } = useDerivedSwapInfo()
   const { address: recipientAddress } = useENSAddress(recipient)
   const toggledVersion = useToggledVersion()
   const trade =
@@ -192,7 +192,7 @@ export default function Swap() {
   function modalHeader() {
     return (
       <SwapModalHeader
-        tokens={tokens}
+        tokens={currencies}
         formattedAmounts={formattedAmounts}
         slippageAdjustedAmounts={slippageAdjustedAmounts}
         priceImpactSeverity={priceImpactSeverity}
@@ -221,12 +221,12 @@ export default function Swap() {
 
   // text to show while loading
   const pendingText = `Swapping ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${
-    tokens[Field.INPUT]?.symbol
-  } for ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol}`
+    currencies[Field.INPUT]?.symbol
+  } for ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${currencies[Field.OUTPUT]?.symbol}`
 
   return (
     <>
-      <TokenWarningCards tokens={tokens} />
+      <TokenWarningCards tokens={currencies} />
       <AppBody>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
@@ -254,16 +254,16 @@ export default function Swap() {
               label={independentField === Field.OUTPUT ? 'From (estimated)' : 'From'}
               value={formattedAmounts[Field.INPUT]}
               showMaxButton={!atMaxAmountInput}
-              token={tokens[Field.INPUT]}
+              token={currencies[Field.INPUT]}
               onUserInput={handleTypeInput}
               onMax={() => {
                 maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
               }}
-              onTokenSelection={address => {
+              onCurrencySelect={address => {
                 setApprovalSubmitted(false) // reset 2 step UI for approvals
                 onTokenSelection(Field.INPUT, address)
               }}
-              otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
+              otherSelectedTokenAddress={currencies[Field.OUTPUT]?.address}
               id="swap-currency-input"
             />
 
@@ -277,7 +277,7 @@ export default function Swap() {
                         setApprovalSubmitted(false) // reset 2 step UI for approvals
                         onSwitchTokens()
                       }}
-                      color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme.primary1 : theme.text2}
+                      color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.primary1 : theme.text2}
                     />
                   </ArrowWrapper>
                   {recipient === null ? (
@@ -294,9 +294,9 @@ export default function Swap() {
               onUserInput={handleTypeOutput}
               label={independentField === Field.INPUT ? 'To (estimated)' : 'To'}
               showMaxButton={false}
-              token={tokens[Field.OUTPUT]}
-              onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
-              otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
+              token={currencies[Field.OUTPUT]}
+              onCurrencySelect={address => onTokenSelection(Field.OUTPUT, address)}
+              otherSelectedTokenAddress={currencies[Field.INPUT]?.address}
               id="swap-currency-output"
             />
 
@@ -321,8 +321,8 @@ export default function Swap() {
                     Price
                   </Text>
                   <TradePrice
-                    inputToken={tokens[Field.INPUT]}
-                    outputToken={tokens[Field.OUTPUT]}
+                    inputToken={currencies[Field.INPUT]}
+                    outputToken={currencies[Field.OUTPUT]}
                     price={trade?.executionPrice}
                     showInverted={showInverted}
                     setShowInverted={setShowInverted}
@@ -362,7 +362,7 @@ export default function Swap() {
                   ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
                     'Approved'
                   ) : (
-                    'Approve ' + tokens[Field.INPUT]?.symbol
+                    'Approve ' + currencies[Field.INPUT]?.symbol
                   )}
                 </ButtonPrimary>
                 <ButtonError

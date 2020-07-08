@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk'
+import { Currency, Token } from '@uniswap/sdk'
 import React, { KeyboardEvent, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
@@ -20,30 +20,30 @@ import CommonBases from './CommonBases'
 import { filterTokens } from './filtering'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput } from './styleds'
-import TokenList from './TokenList'
+import CurrencyList from './CurrencyList'
 import SortButton from './SortButton'
 
-interface TokenSearchModalProps {
+interface CurrencySearchModalProps {
   isOpen?: boolean
   onDismiss?: () => void
-  hiddenToken?: string
+  hiddenCurrency?: Currency
   showSendWithSwap?: boolean
-  onTokenSelect?: (address: string) => void
-  otherSelectedTokenAddress?: string
+  onCurrencySelect?: (currency: Currency) => void
+  otherSelectedCurrency?: Currency
   otherSelectedText?: string
   showCommonBases?: boolean
 }
 
-export default function TokenSearchModal({
+export default function CurrencySearchModal({
   isOpen,
   onDismiss,
-  onTokenSelect,
-  hiddenToken,
+  onCurrencySelect,
+  hiddenCurrency,
   showSendWithSwap,
-  otherSelectedTokenAddress,
+  otherSelectedCurrency,
   otherSelectedText,
   showCommonBases = false
-}: TokenSearchModalProps) {
+}: CurrencySearchModalProps) {
   const { t } = useTranslation()
   const { account, chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
@@ -87,12 +87,12 @@ export default function TokenSearchModal({
     ]
   }, [filteredTokens, searchQuery, searchToken, tokenComparator])
 
-  const handleTokenSelect = useCallback(
-    (address: string) => {
-      onTokenSelect(address)
+  const handleCurrencySelect = useCallback(
+    (currency: Currency) => {
+      onCurrencySelect(currency)
       onDismiss()
     },
-    [onDismiss, onTokenSelect]
+    [onDismiss, onCurrencySelect]
   )
 
   // clear the input on open
@@ -174,7 +174,7 @@ export default function TokenSearchModal({
             />
           </Tooltip>
           {showCommonBases && (
-            <CommonBases chainId={chainId} onSelect={handleTokenSelect} selectedTokenAddress={hiddenToken} />
+            <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={hiddenCurrency} />
           )}
           <RowBetween>
             <Text fontSize={14} fontWeight={500}>
@@ -184,13 +184,13 @@ export default function TokenSearchModal({
           </RowBetween>
         </PaddedColumn>
         <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />
-        <TokenList
-          tokens={filteredSortedTokens}
+        <CurrencyList
+          currencies={filteredSortedTokens}
           allTokenBalances={allTokenBalances}
-          onTokenSelect={handleTokenSelect}
+          onCurrencySelect={handleCurrencySelect}
           otherSelectedText={otherSelectedText}
-          otherToken={otherSelectedTokenAddress}
-          selectedToken={hiddenToken}
+          otherCurrency={otherSelectedCurrency}
+          selectedCurrency={hiddenCurrency}
           showSendWithSwap={showSendWithSwap}
         />
         <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />

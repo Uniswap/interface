@@ -1,4 +1,4 @@
-import { JSBI, Pair, Token, TokenAmount, WETH } from '@uniswap/sdk'
+import { Currency, JSBI, Pair, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Text } from 'rebass'
@@ -8,7 +8,7 @@ import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { FindPoolTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row from '../../components/Row'
-import TokenSearchModal from '../../components/SearchModal/TokenSearchModal'
+import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { usePair } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
@@ -50,8 +50,13 @@ export default function PoolFinder() {
   const poolImported: boolean = !!position && JSBI.greaterThan(position.raw, JSBI.BigInt(0))
 
   const handleTokenSelect = useCallback(
-    (address: string) => {
-      activeField === Fields.TOKEN0 ? setToken0Address(address) : setToken1Address(address)
+    (currency: Currency) => {
+      if (!(currency instanceof Token)) return
+      if (activeField === Fields.TOKEN0) {
+        setToken0Address(currency.address)
+      } else {
+        setToken1Address(currency.address)
+      }
     },
     [activeField]
   )
@@ -147,12 +152,12 @@ export default function PoolFinder() {
         )}
       </AutoColumn>
 
-      <TokenSearchModal
+      <CurrencySearchModal
         isOpen={showSearch}
-        onTokenSelect={handleTokenSelect}
+        onCurrencySelect={handleTokenSelect}
         onDismiss={handleSearchDismiss}
         showCommonBases
-        hiddenToken={activeField === Fields.TOKEN0 ? token1Address : token0Address}
+        hiddenCurrency={activeField === Fields.TOKEN0 ? token1 : token0}
       />
     </AppBody>
   )

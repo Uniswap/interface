@@ -165,14 +165,21 @@ export function useMintActionHandlers(
 } {
   const dispatch = useDispatch<AppDispatch>()
 
-  const onUserInput = useCallback(
-    (field: Field, typedValue: string) => {
-      dispatch(typeInput({ field, typedValue, noLiquidity: noLiquidity === true }))
+  const onFieldAInput = useCallback(
+    (typedValue: string) => {
+      dispatch(typeInput({ field: Field.TOKEN_A, typedValue, noLiquidity: noLiquidity === true }))
+    },
+    [dispatch, noLiquidity]
+  )
+  const onFieldBInput = useCallback(
+    (typedValue: string) => {
+      dispatch(typeInput({ field: Field.TOKEN_B, typedValue, noLiquidity: noLiquidity === true }))
     },
     [dispatch, noLiquidity]
   )
 
   return {
-    onUserInput
+    onFieldAInput,
+    onFieldBInput
   }
 }

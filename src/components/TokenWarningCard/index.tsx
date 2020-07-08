@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk'
+import { Currency, Token } from '@uniswap/sdk'
 import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
@@ -127,11 +127,13 @@ const WarningContainer = styled.div`
   padding-right: 1rem;
 `
 
-export function TokenWarningCards({ tokens }: { tokens: { [field in Field]?: Token } }) {
+export function TokenWarningCards({ currencies }: { currencies: { [field in Field]?: Currency } }) {
   return (
     <WarningContainer>
-      {Object.keys(tokens).map(field =>
-        tokens[field] ? <TokenWarningCard style={{ marginBottom: 14 }} key={field} token={tokens[field]} /> : null
+      {Object.keys(currencies).map(field =>
+        currencies[field] instanceof Token ? (
+          <TokenWarningCard style={{ marginBottom: 14 }} key={field} token={currencies[field]} />
+        ) : null
       )}
     </WarningContainer>
   )

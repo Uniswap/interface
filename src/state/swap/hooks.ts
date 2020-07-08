@@ -90,8 +90,8 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
 
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(): {
-  tokens: { [field in Field]?: Token }
-  tokenBalances: { [field in Field]?: TokenAmount }
+  currencies: { [field in Field]?: Currency }
+  currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
   v2Trade: Trade | undefined
   error?: string
@@ -178,8 +178,8 @@ export function useDerivedSwapInfo(): {
   }
 
   return {
-    tokens,
-    tokenBalances,
+    currencies: tokens,
+    currencyBalances: tokenBalances,
     parsedAmount,
     v2Trade: v2Trade ?? undefined,
     error,

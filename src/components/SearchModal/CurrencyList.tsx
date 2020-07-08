@@ -16,20 +16,24 @@ import { FadedSpan, GreySpan, MenuItem, ModalInfo } from './styleds'
 import Loader from '../Loader'
 import { isDefaultToken, isCustomAddedToken } from '../../utils'
 
-export default function TokenList({
-  tokens,
+function currencyKey(currency: Currency): string {
+  return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
+}
+
+export default function CurrencyList({
+  currencies,
   allTokenBalances,
-  selectedToken,
-  onTokenSelect,
-  otherToken,
+  selectedCurrency,
+  onCurrencySelect,
+  otherCurrency,
   showSendWithSwap,
   otherSelectedText
 }: {
-  tokens: Token[]
-  selectedToken: string
-  allTokenBalances: { [tokenAddress: string]: TokenAmount }
-  onTokenSelect: (tokenAddress: string) => void
-  otherToken: string
+  currencies: Currency[]
+  selectedCurrency: Currency
+  allTokenBalances: { [tokenAddress: string]: CurrencyAmount }
+  onCurrencySelect: (currency: Currency) => void
+  otherCurrency: Currency
   showSendWithSwap?: boolean
   otherSelectedText: string
 }) {
@@ -45,27 +49,30 @@ export default function TokenList({
       const token = tokens[index]
       const { address, symbol } = token
 
-      const isDefault = isDefaultToken(token)
-      const customAdded = isCustomAddedToken(allTokens, token)
-      const balance = allTokenBalances[address]
+      const isDefault = isDefaultToken(currency)
+      const customAdded = isCustomAddedToken(allTokens, currency)
+      const balance = allTokenBalances[key]
 
       const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
 
-      return (
-        <MenuItem
-          style={style}
-          key={address}
-          className={`token-item-${address}`}
-          onClick={() => (selectedToken && selectedToken === address ? null : onTokenSelect(address))}
-          disabled={selectedToken && selectedToken === address}
-          selected={otherToken === address}
+      const isSelected = Boolean(selectedCurrency && currencyEquals(currency, selectedCurrency))
+        const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
+
+        return (
+          <MenuItem
+            style={style}
+            key={key}
+          className={`token-item-${key}`}
+          onClick={() => (isSelected ? null : onCurrencySelect(currency))}
+          disabled={isSelected}
+          selected={otherSelected}
         >
           <RowFixed>
-            <CurrencyLogo currency={token} size={'24px'} style={{ marginRight: '14px' }} />
+            <CurrencyLogo currency={currency} size={'24px'} style={{ marginRight: '14px' }} />
             <Column>
               <Text fontWeight={500}>
-                {symbol}
-                {otherToken === address && <GreySpan> ({otherSelectedText})</GreySpan>}
+                {currency.symbol}
+                {otherSelected && <GreySpan> ({otherSelectedText})</GreySpan>}
               </Text>
               <FadedSpan>
                 {customAdded ? (
@@ -74,7 +81,7 @@ export default function TokenList({
                     <LinkStyledButton
                       onClick={event => {
                         event.stopPropagation()
-                        removeToken(chainId, address)
+                        if (currency instanceof Token) removeToken(chainId, currency.address)
                       }}
                     >
                       (Remove)
@@ -87,7 +94,7 @@ export default function TokenList({
                     <LinkStyledButton
                       onClick={event => {
                         event.stopPropagation()
-                        addToken(token)
+                        if (currency instanceof Token) addToken(currency)
                       }}
                     >
                       (Add)

@@ -154,6 +154,12 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
     [_onUserInput]
   )
 
+  const onLiquidityInput = useCallback((typedValue: string): void => onUserInput(Field.LIQUIDITY, typedValue), [
+    onUserInput
+  ])
+  const onTokenAInput = useCallback((typedValue: string): void => onUserInput(Field.TOKEN_A, typedValue), [onUserInput])
+  const onTokenBInput = useCallback((typedValue: string): void => onUserInput(Field.TOKEN_B, typedValue), [onUserInput])
+
   // tx sending
   const addTransaction = useTransactionAdder()
   async function onRemove() {
@@ -488,16 +494,14 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
             {showDetailed && (
               <>
                 <CurrencyInputPanel
-                  field={Field.LIQUIDITY}
                   value={formattedAmounts[Field.LIQUIDITY]}
-                  onUserInput={onUserInput}
+                  onUserInput={onLiquidityInput}
                   onMax={() => {
                     onUserInput(Field.LIQUIDITY_PERCENT, '100')
                   }}
                   showMaxButton={!atMaxAmount}
-                  disableTokenSelect
-                  token={pair?.liquidityToken}
-                  isExchange={true}
+                  disableCurrencySelect
+                  currency={pair?.liquidityToken}
                   pair={pair}
                   id="liquidity-amount"
                 />
@@ -506,14 +510,13 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
                 </ColumnCenter>
                 <CurrencyInputPanel
                   hideBalance={true}
-                  field={Field.TOKEN_A}
                   value={formattedAmounts[Field.TOKEN_A]}
-                  onUserInput={onUserInput}
+                  onUserInput={onTokenAInput}
                   onMax={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')}
                   showMaxButton={!atMaxAmount}
-                  token={tokens[Field.TOKEN_A]}
+                  currency={tokens[Field.TOKEN_A]}
                   label={'Output'}
-                  disableTokenSelect
+                  disableCurrencySelect
                   id="remove-liquidity-tokena"
                 />
                 <ColumnCenter>
@@ -521,14 +524,13 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
                 </ColumnCenter>
                 <CurrencyInputPanel
                   hideBalance={true}
-                  field={Field.TOKEN_B}
                   value={formattedAmounts[Field.TOKEN_B]}
-                  onUserInput={onUserInput}
+                  onUserInput={onTokenBInput}
                   onMax={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')}
                   showMaxButton={!atMaxAmount}
-                  token={tokens[Field.TOKEN_B]}
+                  currency={tokens[Field.TOKEN_B]}
                   label={'Output'}
-                  disableTokenSelect
+                  disableCurrencySelect
                   id="remove-liquidity-tokenb"
                 />
               </>
