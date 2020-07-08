@@ -12,10 +12,13 @@ export default function useENSName(address?: string): string | null {
   const [ENSName, setENSName] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!library || !address) return
     const validated = isAddress(address)
-    if (validated) {
+    if (!library || !validated) {
+      setENSName(null)
+      return
+    } else {
       let stale = false
+      setENSName(null)
       library
         .lookupAddress(validated)
         .then(name => {
@@ -38,7 +41,6 @@ export default function useENSName(address?: string): string | null {
         setENSName(null)
       }
     }
-    return
   }, [library, address])
 
   return ENSName

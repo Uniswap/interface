@@ -286,6 +286,7 @@ export default function Swap() {
                   <ArrowDown onClick={() => onChangeRecipient(null)} size="16" />
                 </ArrowWrapper>
                 <AddressInputPanel
+                  initialInput={recipient}
                   onChange={({ address }) => {
                     if (address) {
                       onChangeRecipient(address)
