@@ -15,13 +15,15 @@ export default function SwapModalHeader({
   formattedAmounts,
   slippageAdjustedAmounts,
   priceImpactSeverity,
-  independentField
+  independentField,
+  recipient
 }: {
   tokens: { [field in Field]?: Token }
   formattedAmounts: { [field in Field]?: string }
   slippageAdjustedAmounts: { [field in Field]?: TokenAmount }
   priceImpactSeverity: number
   independentField: Field
+  recipient: string | null
 }) {
   const theme = useContext(ThemeContext)
 
@@ -71,6 +73,13 @@ export default function SwapModalHeader({
           </TYPE.italic>
         )}
       </AutoColumn>
+      {recipient !== null ? (
+        <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
+          <TYPE.main>
+            Output will be sent to <b>{recipient}</b>
+          </TYPE.main>
+        </AutoColumn>
+      ) : null}
     </AutoColumn>
   )
 }

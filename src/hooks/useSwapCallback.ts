@@ -8,11 +8,11 @@ import { useTokenAllowance } from '../data/Allowances'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getRouterContract, isAddress } from '../utils'
+import { calculateGasMargin, getRouterContract } from '../utils'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { useActiveWeb3React } from './index'
 import { useV1ExchangeContract } from './useContract'
-import useENSName from './useENSName'
+import useENS from './useENS'
 import { Version } from './useToggledVersion'
 
 enum SwapType {
@@ -59,15 +59,16 @@ function getSwapType(trade: Trade | undefined): SwapType | undefined {
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
-  trade?: Trade, // trade to execute, required
+  trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   deadline: number = DEFAULT_DEADLINE_FROM_NOW, // in seconds from now
-  to?: string // recipient of output, optional
+  recipientAddressOrName: string // the ENS name or address of the recipient of the trade
 ): null | (() => Promise<string>) {
   const { account, chainId, library } = useActiveWeb3React()
   const addTransaction = useTransactionAdder()
-  const recipient = to ? isAddress(to) : account
-  const ensName = useENSName(to)
+
+  const { address: recipient } = useENS(recipientAddressOrName)
+
   const tradeVersion = getTradeVersion(trade)
   const v1Exchange = useV1ExchangeContract(useV1TradeExchangeAddress(trade), true)
   const inputAllowance = useTokenAllowance(
@@ -96,7 +97,7 @@ export function useSwapCallback(
     }
 
     return async function onSwap() {
-      if (!chainId || !library || !account) {
+      if (!chainId || !library || !recipient || !account) {
         throw new Error('missing dependencies in onSwap callback')
       }
 
@@ -283,7 +284,7 @@ export function useSwapCallback(
             const outputAmount = slippageAdjustedOutput.toSignificant(3)
 
             const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
-            const withRecipient = recipient === account ? base : `${base} to ${ensName ?? recipient}`
+            const withRecipient = recipient === account ? base : `${base} to ${recipient}`
 
             const withVersion =
               tradeVersion === Version.v2 ? withRecipient : `${withRecipient} on ${tradeVersion.toUpperCase()}`
@@ -318,7 +319,6 @@ export function useSwapCallback(
     account,
     v1Exchange,
     deadline,
-    addTransaction,
-    ensName
+    addTransaction
   ])
 }

@@ -1,3 +1,4 @@
+import useENS from '../../hooks/useENS'
 import { Version } from '../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
 import { ChainId, JSBI, Token, TokenAmount, Trade, WETH } from '@uniswap/sdk'
@@ -108,6 +109,8 @@ export function useDerivedSwapInfo(): {
 
   const tokenIn = useToken(tokenInAddress)
   const tokenOut = useToken(tokenOutAddress)
+  const recipientLookup = useENS(recipient ?? undefined)
+  const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
 
   const relevantTokenBalances = useTokenBalancesTreatWETHAsETH(account ?? undefined, [
     tokenIn ?? undefined,
@@ -148,7 +151,7 @@ export function useDerivedSwapInfo(): {
     error = error ?? 'Select a token'
   }
 
-  if (recipient !== null && !isAddress(recipient)) {
+  if (!to) {
     error = error ?? 'Enter a recipient'
   }
 
@@ -204,8 +207,8 @@ function parseIndependentFieldURLParameter(urlParam: any): Field {
   return typeof urlParam === 'string' && urlParam.toLowerCase() === 'output' ? Field.OUTPUT : Field.INPUT
 }
 
-const ENS_NAME_REGEX = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?/
-const ADDRESS_REGEX = /0x[a-fA-F0-9]{40}/
+const ENS_NAME_REGEX = /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?$/
+const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
 function validatedRecipient(recipient: any): string | null {
   if (typeof recipient !== 'string') return null
   const address = isAddress(recipient)
@@ -260,6 +263,5 @@ export function useDefaultsFromURLSearch() {
         recipient: parsed.recipient
       })
     )
-    // eslint-disable-next-line
-  }, [dispatch, chainId])
+  }, [dispatch, chainId, parsedQs])
 }

@@ -147,7 +147,8 @@ export default function Swap() {
 
         ReactGA.event({
           category: 'Swap',
-          action: recipient === null || recipient === account ? 'Swap w/o Send' : 'Swap w/ Send',
+          action:
+            recipient === null ? 'Swap w/o Send' : recipient === account ? 'Swap w/o Send + recipient' : 'Swap w/ Send',
           label: [trade.inputAmount.token.symbol, trade.outputAmount.token.symbol, getTradeVersion(trade)].join('/')
         })
       })
@@ -183,6 +184,7 @@ export default function Swap() {
         slippageAdjustedAmounts={slippageAdjustedAmounts}
         priceImpactSeverity={priceImpactSeverity}
         independentField={independentField}
+        recipient={recipient}
       />
     )
   }
@@ -295,15 +297,7 @@ export default function Swap() {
                     - remove recipient
                   </LinkStyledButton>
                 </AutoRow>
-                <AddressInputPanel
-                  id="recipient"
-                  initialInput={recipient}
-                  onChange={({ address }) => {
-                    if (address) {
-                      onChangeRecipient(address)
-                    }
-                  }}
-                />
+                <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
               </>
             ) : null}
 
