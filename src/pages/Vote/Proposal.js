@@ -25,7 +25,7 @@ const Info = styled.div`
   color: #b7c3cc;
 
   ${({ active }) => active && `
-      color: #9a6eee;
+    color: #4487CE;
   `}
 `
 const Status = styled.div`
@@ -40,8 +40,8 @@ const Status = styled.div`
   display: inline-block;
 
   ${({ active }) => active && `
-      border: 2px solid #9a6eee;
-      color: #9a6eee;
+    border: 2px solid #4487CE;
+		color: #4487CE;
   `}
 `
 
@@ -55,8 +55,8 @@ const Vote = styled.div`
   text-align: center;
 
   ${({ cast }) => cast && `
-      color: black;
-      cursor: pointer;
+    color: black;
+    cursor: pointer;
   `}
 `
 
@@ -71,7 +71,7 @@ const Extra = styled.div`
 export default function Proposal({ id, proposal, status }) {
 	const availableVotes = ['VOTE', 'FOR', 'AGAINST', 'NO VOTE']
 	const mod = (b,e) => availableVotes.slice(b, e)
-	
+
 	let votes 
 	let text
 	if(status) {
@@ -91,7 +91,9 @@ export default function Proposal({ id, proposal, status }) {
 	const [showCast, changeShowCast] = useState(false)
 
 	const handleClick = (e) => {
-		if(e) {
+		console.log(mod(1,3))
+		console.log(mod(1,3).includes(e))
+		if(mod(1,3).includes(e)) {
 			setVote(e)
 			setCast(false)
 		}
@@ -104,7 +106,9 @@ export default function Proposal({ id, proposal, status }) {
 
 	useEffect(() => {
     document.addEventListener("keydown", (e)=>keypress(e), false);
-  });	
+  })
+
+  const date = 'Executed July 2nd, 2020'
 
   return (
 		<Main>
@@ -115,14 +119,21 @@ export default function Proposal({ id, proposal, status }) {
 				  	{text}
 				  </Status>
 				  <Extra>
-				  	{id} &#8226; {`Executed July 2nd, 2020`} 
+				  	{id} &#8226; {date} 
 				  </Extra>
 				</Info>
 			</Wrapper>
-			<Vote onClick={() => changeShowCast(cast)} cast={c}>
-				{v}
+			<Vote onClick={() => changeShowCast(cast)} cast={cast}>
+				{vote}
 			</Vote>
-			{showCast ? <Cast onClick={e => handleClick(e)} vote={(v) => setVote(v)}/> : null}
+			{showCast ? 
+				<Cast
+					proposal={proposal}
+					time={date}
+					onChange={e => handleClick(e)} 
+					vote={(v) => setVote(v)}/> 
+				: null
+			}
 		</Main> 
   )
 }

@@ -41,6 +41,11 @@ const VotingWallet = styled.div`
   color: black;
   display: inline-block;
   vertical-align: top;
+
+  @media (max-width: 800px) {
+    width: 100%;
+    height: calc(30% - 20px);
+  }
 `
 const GovernanceProposals = styled.div`
   background-color: #FFFFFF;
@@ -52,6 +57,11 @@ const GovernanceProposals = styled.div`
   color: black;
   display: inline-block;
   vertical-align: top;
+
+  @media (max-width: 800px) {
+    width: 100%;
+    height: calc(70% - 20px);
+  }
 `
 
 const Title = styled.div`
@@ -150,6 +160,7 @@ const Page = styled.div`
 `
 
 const num = '0.000000'
+
 const displayPages = 7;
 
 const Balances = [
@@ -188,7 +199,7 @@ export default function Vote() {
   const [loading, setLoading] = useState(true); //loading hook
   const [page, changePage] = useState(1); //current page hook
 
-  const perPage = 5 //make dynamic
+  const perPage = 5//make dynamic
   const mp = page * perPage - perPage 
   const proposalPage = proposals.slice(mp, mp+perPage)
   const pages = [...Array(Math.ceil(proposals.length/perPage)).keys()].map(i => i + 1) //creates pages off of proposals
