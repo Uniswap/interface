@@ -1,4 +1,4 @@
-import { Version } from './../../hooks/useToggledVersion'
+import { Version } from '../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
 import { ChainId, JSBI, Token, TokenAmount, Trade, WETH } from '@uniswap/sdk'
 import { ParsedQs } from 'qs'
@@ -102,7 +102,8 @@ export function useDerivedSwapInfo(): {
     independentField,
     typedValue,
     [Field.INPUT]: { address: tokenInAddress },
-    [Field.OUTPUT]: { address: tokenOutAddress }
+    [Field.OUTPUT]: { address: tokenOutAddress },
+    recipient
   } = useSwapState()
 
   const tokenIn = useToken(tokenInAddress)
@@ -145,6 +146,10 @@ export function useDerivedSwapInfo(): {
 
   if (!tokens[Field.INPUT] || !tokens[Field.OUTPUT]) {
     error = error ?? 'Select a token'
+  }
+
+  if (recipient !== null && !isAddress(recipient)) {
+    error = error ?? 'Enter a recipient'
   }
 
   const [allowedSlippage] = useUserSlippageTolerance()

@@ -281,14 +281,19 @@ export default function Swap() {
             />
 
             {recipient !== null ? (
-              <AddressInputPanel
-                onChange={({ address }) => {
-                  if (address) {
-                    onChangeRecipient(address)
-                  }
-                }}
-                onError={() => null}
-              />
+              <>
+                <ArrowWrapper>
+                  <ArrowDown onClick={() => onChangeRecipient(null)} size="16" />
+                </ArrowWrapper>
+                <AddressInputPanel
+                  onChange={({ address }) => {
+                    if (address) {
+                      onChangeRecipient(address)
+                    }
+                  }}
+                  onError={() => null}
+                />
+              </>
             ) : (
               <LinkStyledButton onClick={() => onChangeRecipient('')}>(+ Add a recipient)</LinkStyledButton>
             )}
