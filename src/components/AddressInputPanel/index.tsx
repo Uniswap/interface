@@ -66,12 +66,10 @@ const Input = styled.input<{ error?: boolean }>`
 
 export default function AddressInputPanel({
   initialInput = '',
-  onChange,
-  onError
+  onChange
 }: {
   initialInput?: string
-  onChange: (val: { address: string; name?: string }) => void
-  onError: (error: boolean, input: string) => void
+  onChange: (value: { address: string; name?: string }) => void
 }) {
   const { chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
@@ -86,9 +84,6 @@ export default function AddressInputPanel({
   useEffect(() => {
     onChange({ address: data.address, name: data.name })
   }, [onChange, data.address, data.name])
-  useEffect(() => {
-    onError(error, input)
-  }, [onError, error, input])
 
   // run parser on debounced input
   useEffect(() => {

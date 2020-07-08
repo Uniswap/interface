@@ -296,7 +296,6 @@ export default function Swap() {
                       onChangeRecipient(address)
                     }
                   }}
-                  onError={() => null}
                 />
               </>
             ) : null}
