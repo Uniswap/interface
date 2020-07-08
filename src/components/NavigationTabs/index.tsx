@@ -12,6 +12,7 @@ const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   border-radius: 3rem;
+  justify-content: space-evenly;
 `
 
 const activeClassName = 'ACTIVE'
@@ -23,7 +24,6 @@ const StyledNavLink = styled(NavLink).attrs({
   align-items: center;
   justify-content: center;
   height: 3rem;
-  flex: 1 0 auto;
   border-radius: 3rem;
   outline: none;
   cursor: pointer;
