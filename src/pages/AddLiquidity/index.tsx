@@ -286,9 +286,17 @@ export default function AddLiquidity({
   )
   const handleTokenBSelect = useCallback(
     (tokenAddress: string) => {
-      history.push(`/add/${currencyIdA ? currencyIdA : 'ETH'}/${currencyId(chainId, tokenAddress)}`)
+      const [tokenAId, tokenBId] = [
+        tokenA ? currencyId(chainId, tokenA.address) : undefined,
+        currencyId(chainId, tokenAddress)
+      ]
+      if (tokenAId === tokenBId) {
+        history.push(`/add/${tokenAId}/${tokenB?.address}`)
+      } else {
+        history.push(`/add/${currencyIdA ? currencyIdA : 'ETH'}/${currencyId(chainId, tokenAddress)}`)
+      }
     },
-    [history, chainId, currencyIdA]
+    [tokenA, chainId, history, tokenB, currencyIdA]
   )
 
   return (
