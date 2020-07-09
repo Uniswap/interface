@@ -27,8 +27,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - run: yarn install
-      # we have to use npm because yarn doesn't run it for whatever reason
-      - run: npm run integration-test
+      - run: yarn build
+      - run: yarn integration-test
 
   unit-tests:
     name: Unit tests
