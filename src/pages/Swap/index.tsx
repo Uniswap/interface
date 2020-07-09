@@ -1,5 +1,5 @@
 import { JSBI, TokenAmount, WETH } from '@uniswap/sdk'
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect, useCallback } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
@@ -61,18 +61,19 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
-  const { bestTrade: bestTradeV2, tokenBalances, parsedAmount, tokens, error, v1Trade } = useDerivedSwapInfo()
+  const { v1Trade, v2Trade, tokenBalances, parsedAmount, tokens, error } = useDerivedSwapInfo()
   const { address: recipientAddress } = useENSAddress(recipient)
   const toggledVersion = useToggledVersion()
-  const trade = {
-    [Version.v1]: v1Trade,
-    [Version.v2]: bestTradeV2
-  }[toggledVersion]
+  const trade =
+    {
+      [Version.v1]: v1Trade,
+      [Version.v2]: v2Trade
+    }[toggledVersion] ?? undefined
 
   const betterTradeLinkVersion: Version | undefined =
-    toggledVersion === Version.v2 && isTradeBetter(bestTradeV2, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
+    toggledVersion === Version.v2 && isTradeBetter(v2Trade, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
       ? Version.v1
-      : toggledVersion === Version.v1 && isTradeBetter(v1Trade, bestTradeV2)
+      : toggledVersion === Version.v1 && isTradeBetter(v1Trade, v2Trade)
       ? Version.v2
       : undefined
 
@@ -85,6 +86,19 @@ export default function Swap() {
   const isValid = !error
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
+  const handleTypeInput = useCallback(
+    (field, value) => {
+      onUserInput(Field.INPUT, value)
+    },
+    [onUserInput]
+  )
+  const handleTypeOutput = useCallback(
+    (field, value) => {
+      onUserInput(Field.OUTPUT, value)
+    },
+    [onUserInput]
+  )
+
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false) // show confirmation modal
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // waiting for user confirmaion/rejection
@@ -92,15 +106,13 @@ export default function Swap() {
 
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: parsedAmounts[dependentField] ? parsedAmounts[dependentField].toSignificant(6) : ''
+    [dependentField]: parsedAmounts[dependentField]?.toSignificant(6) ?? ''
   }
 
   const route = trade?.route
-  const userHasSpecifiedInputOutput =
-    !!tokens[Field.INPUT] &&
-    !!tokens[Field.OUTPUT] &&
-    !!parsedAmounts[independentField] &&
-    parsedAmounts[independentField].greaterThan(JSBI.BigInt(0))
+  const userHasSpecifiedInputOutput = Boolean(
+    tokens[Field.INPUT] && tokens[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
+  )
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
@@ -116,19 +128,22 @@ export default function Swap() {
     }
   }, [approval, approvalSubmitted])
 
-  const maxAmountInput: TokenAmount =
-    !!tokenBalances[Field.INPUT] &&
-    !!tokens[Field.INPUT] &&
-    !!WETH[chainId] &&
-    tokenBalances[Field.INPUT].greaterThan(
-      new TokenAmount(tokens[Field.INPUT], tokens[Field.INPUT].equals(WETH[chainId]) ? MIN_ETH : '0')
-    )
-      ? tokens[Field.INPUT].equals(WETH[chainId])
-        ? tokenBalances[Field.INPUT].subtract(new TokenAmount(WETH[chainId], MIN_ETH))
-        : tokenBalances[Field.INPUT]
-      : undefined
-  const atMaxAmountInput: boolean =
-    maxAmountInput && parsedAmounts[Field.INPUT] ? maxAmountInput.equalTo(parsedAmounts[Field.INPUT]) : undefined
+  let maxAmountInput: TokenAmount | undefined
+  {
+    const inputToken = tokens[Field.INPUT]
+    maxAmountInput =
+      inputToken &&
+      chainId &&
+      WETH[chainId] &&
+      tokenBalances[Field.INPUT]?.greaterThan(
+        new TokenAmount(inputToken, inputToken.equals(WETH[chainId]) ? MIN_ETH : '0')
+      )
+        ? inputToken.equals(WETH[chainId])
+          ? tokenBalances[Field.INPUT]?.subtract(new TokenAmount(WETH[chainId], MIN_ETH))
+          : tokenBalances[Field.INPUT]
+        : undefined
+  }
+  const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
@@ -139,6 +154,9 @@ export default function Swap() {
 
   function onSwap() {
     if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
+      return
+    }
+    if (!swapCallback) {
       return
     }
     setAttemptingTxn(true)
@@ -155,7 +173,9 @@ export default function Swap() {
               : (recipientAddress ?? recipient) === account
               ? 'Swap w/o Send + recipient'
               : 'Swap w/ Send',
-          label: [trade.inputAmount.token.symbol, trade.outputAmount.token.symbol, getTradeVersion(trade)].join('/')
+          label: [trade?.inputAmount?.token?.symbol, trade?.outputAmount?.token?.symbol, getTradeVersion(trade)].join(
+            '/'
+          )
         })
       })
       .catch(error => {
@@ -248,7 +268,7 @@ export default function Swap() {
               value={formattedAmounts[Field.INPUT]}
               showMaxButton={!atMaxAmountInput}
               token={tokens[Field.INPUT]}
-              onUserInput={onUserInput}
+              onUserInput={handleTypeInput}
               onMax={() => {
                 maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
               }}
@@ -284,7 +304,7 @@ export default function Swap() {
             <CurrencyInputPanel
               field={Field.OUTPUT}
               value={formattedAmounts[Field.OUTPUT]}
-              onUserInput={onUserInput}
+              onUserInput={handleTypeOutput}
               label={independentField === Field.INPUT ? 'To (estimated)' : 'To'}
               showMaxButton={false}
               token={tokens[Field.OUTPUT]}

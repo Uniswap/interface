@@ -91,7 +91,7 @@ export function useDerivedSwapInfo(): {
   tokens: { [field in Field]?: Token }
   tokenBalances: { [field in Field]?: TokenAmount }
   parsedAmount: TokenAmount | undefined
-  bestTrade: Trade | null
+  v2Trade: Trade | undefined
   error?: string
   v1Trade: Trade | undefined
 } {
@@ -123,7 +123,7 @@ export function useDerivedSwapInfo(): {
   const bestTradeExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, tokenOut ?? undefined)
   const bestTradeExactOut = useTradeExactOut(tokenIn ?? undefined, !isExactIn ? parsedAmount : undefined)
 
-  const bestTrade = isExactIn ? bestTradeExactIn : bestTradeExactOut
+  const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
 
   const tokenBalances = {
     [Field.INPUT]: relevantTokenBalances?.[tokenIn?.address ?? ''],
@@ -157,8 +157,7 @@ export function useDerivedSwapInfo(): {
 
   const [allowedSlippage] = useUserSlippageTolerance()
 
-  const slippageAdjustedAmounts =
-    bestTrade && allowedSlippage && computeSlippageAdjustedAmounts(bestTrade, allowedSlippage)
+  const slippageAdjustedAmounts = v2Trade && allowedSlippage && computeSlippageAdjustedAmounts(v2Trade, allowedSlippage)
 
   const slippageAdjustedAmountsV1 =
     v1Trade && allowedSlippage && computeSlippageAdjustedAmounts(v1Trade, allowedSlippage)
@@ -183,7 +182,7 @@ export function useDerivedSwapInfo(): {
     tokens,
     tokenBalances,
     parsedAmount,
-    bestTrade,
+    v2Trade: v2Trade ?? undefined,
     error,
     v1Trade
   }
