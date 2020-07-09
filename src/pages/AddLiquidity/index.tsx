@@ -35,27 +35,27 @@ import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { PoolPriceBar } from './PoolPriceBar'
 
-function useTokenById(chainId: ChainId | undefined, tokenId: string | undefined): Token | undefined {
-  const isETH = tokenId?.toUpperCase() === 'ETH'
-  const token = useToken(isETH ? undefined : tokenId)
+function useTokenByCurrencyId(chainId: ChainId | undefined, currencyId: string | undefined): Token | undefined {
+  const isETH = currencyId?.toUpperCase() === 'ETH'
+  const token = useToken(isETH ? undefined : currencyId)
   return isETH && chainId ? WETH[chainId] : token ?? undefined
 }
 
-function tokenId(chainId: ChainId | undefined, tokenAddress: string): string {
+function currencyId(chainId: ChainId | undefined, tokenAddress: string): string {
   return chainId && tokenAddress === WETH[chainId].address ? 'ETH' : tokenAddress
 }
 
 export default function AddLiquidity({
   match: {
-    params: { tokenA: tokenAId, tokenB: tokenBId }
+    params: { currencyIdA: currencyIdA, currencyIdB: currencyIdB }
   },
   history
-}: RouteComponentProps<{ tokenA?: string; tokenB?: string }>) {
+}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
-  const tokenA = useTokenById(chainId, tokenAId)
-  const tokenB = useTokenById(chainId, tokenBId)
+  const tokenA = useTokenByCurrencyId(chainId, currencyIdA)
+  const tokenB = useTokenByCurrencyId(chainId, currencyIdB)
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
@@ -272,15 +272,23 @@ export default function AddLiquidity({
 
   const handleTokenASelect = useCallback(
     (tokenAddress: string) => {
-      history.push(`/add/${tokenId(chainId, tokenAddress)}/${tokenBId ?? ''}`)
+      const [tokenAId, tokenBId] = [
+        currencyId(chainId, tokenAddress),
+        tokenB ? currencyId(chainId, tokenB.address) : undefined
+      ]
+      if (tokenAId === tokenBId) {
+        history.push(`/add/${tokenAId}/${tokenA?.address}`)
+      } else {
+        history.push(`/add/${tokenAId}/${tokenBId}`)
+      }
     },
-    [chainId, history, tokenBId]
+    [chainId, tokenB, history, tokenA]
   )
   const handleTokenBSelect = useCallback(
     (tokenAddress: string) => {
-      history.push(`/add/${tokenAId ?? ''}/${tokenId(chainId, tokenAddress)}`)
+      history.push(`/add/${currencyIdA ? currencyIdA : 'ETH'}/${currencyId(chainId, tokenAddress)}`)
     },
-    [chainId, history, tokenAId]
+    [history, chainId, currencyIdA]
   )
 
   return (
@@ -334,7 +342,6 @@ export default function AddLiquidity({
               showMaxButton={!atMaxAmounts[Field.TOKEN_A]}
               token={tokens[Field.TOKEN_A]}
               pair={pair}
-              label="Input"
               id="add-liquidity-input-tokena"
               showCommonBases
             />
