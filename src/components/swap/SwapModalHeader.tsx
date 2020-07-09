@@ -5,6 +5,7 @@ import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { TYPE } from '../../theme'
+import { isAddress, shortenAddress } from '../../utils'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 import TokenLogo from '../TokenLogo'
@@ -76,7 +77,7 @@ export default function SwapModalHeader({
       {recipient !== null ? (
         <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
           <TYPE.main>
-            Output will be sent to <b>{recipient}</b>
+            Output will be sent to <b>{isAddress(recipient) ? shortenAddress(recipient) : recipient}</b>
           </TYPE.main>
         </AutoColumn>
       ) : null}
