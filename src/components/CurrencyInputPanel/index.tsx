@@ -132,6 +132,7 @@ interface CurrencyInputPanelProps {
   showSendWithSwap?: boolean
   otherSelectedTokenAddress?: string | null
   id: string
+  showCommonBases?: boolean
 }
 
 export default function CurrencyInputPanel({
@@ -150,7 +151,8 @@ export default function CurrencyInputPanel({
   hideInput = false,
   showSendWithSwap = false,
   otherSelectedTokenAddress = null,
-  id
+  id,
+  showCommonBases
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -247,6 +249,7 @@ export default function CurrencyInputPanel({
           hiddenToken={token?.address}
           otherSelectedTokenAddress={otherSelectedTokenAddress}
           otherSelectedText={field === Field.INPUT ? 'Selected as output' : 'Selected as input'}
+          showCommonBases={showCommonBases}
         />
       )}
     </InputPanel>

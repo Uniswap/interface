@@ -336,6 +336,7 @@ export default function AddLiquidity({
               pair={pair}
               label="Input"
               id="add-liquidity-input-tokena"
+              showCommonBases
             />
             <ColumnCenter>
               <Plus size="16" color={theme.text2} />
@@ -352,6 +353,7 @@ export default function AddLiquidity({
               token={tokens[Field.TOKEN_B]}
               pair={pair}
               id="add-liquidity-input-tokenb"
+              showCommonBases
             />
             {tokens[Field.TOKEN_A] && tokens[Field.TOKEN_B] && (
               <>
