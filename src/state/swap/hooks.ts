@@ -91,7 +91,7 @@ export function useDerivedSwapInfo(): {
   tokens: { [field in Field]?: Token }
   tokenBalances: { [field in Field]?: TokenAmount }
   parsedAmount: TokenAmount | undefined
-  bestTrade: Trade | null
+  v2Trade: Trade | undefined
   error?: string
   v1Trade: Trade | undefined
 } {
@@ -183,7 +183,7 @@ export function useDerivedSwapInfo(): {
     tokens,
     tokenBalances,
     parsedAmount,
-    bestTrade,
+    v2Trade: bestTrade,
     error,
     v1Trade
   }

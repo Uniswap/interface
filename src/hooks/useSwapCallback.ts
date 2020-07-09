@@ -62,12 +62,13 @@ export function useSwapCallback(
   trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   deadline: number = DEFAULT_DEADLINE_FROM_NOW, // in seconds from now
-  recipientAddressOrName: string // the ENS name or address of the recipient of the trade
+  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): null | (() => Promise<string>) {
   const { account, chainId, library } = useActiveWeb3React()
   const addTransaction = useTransactionAdder()
 
-  const { address: recipient } = useENS(recipientAddressOrName)
+  const { address: recipientAddress } = useENS(recipientAddressOrName)
+  const recipient = recipientAddressOrName === null ? account : recipientAddress
 
   const tradeVersion = getTradeVersion(trade)
   const v1Exchange = useV1ExchangeContract(useV1TradeExchangeAddress(trade), true)
@@ -284,7 +285,9 @@ export function useSwapCallback(
               recipient === account
                 ? base
                 : `${base} to ${
-                    isAddress(recipientAddressOrName) ? shortenAddress(recipientAddressOrName) : recipientAddressOrName
+                    recipientAddressOrName && isAddress(recipientAddressOrName)
+                      ? shortenAddress(recipientAddressOrName)
+                      : recipientAddressOrName
                   }`
 
             const withVersion =
