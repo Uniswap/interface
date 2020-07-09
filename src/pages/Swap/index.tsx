@@ -295,7 +295,7 @@ export default function Swap() {
                   </ArrowWrapper>
                   {recipient === null ? (
                     <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
-                      + add recipient
+                      + add recipient (optional)
                     </LinkStyledButton>
                   ) : null}
                 </AutoRow>
