@@ -37,9 +37,13 @@ export function useApproveCallback(
     if (amountToApprove.token.equals(WETH[amountToApprove.token.chainId])) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
-    if (pendingApproval) return ApprovalState.PENDING
+
     // amountToApprove will be defined if currentAllowance is
-    return currentAllowance.lessThan(amountToApprove) ? ApprovalState.NOT_APPROVED : ApprovalState.APPROVED
+    return currentAllowance.lessThan(amountToApprove)
+      ? pendingApproval
+        ? ApprovalState.PENDING
+        : ApprovalState.NOT_APPROVED
+      : ApprovalState.APPROVED
   }, [amountToApprove, currentAllowance, pendingApproval, spender])
 
   const tokenContract = useTokenContract(amountToApprove?.token?.address)
