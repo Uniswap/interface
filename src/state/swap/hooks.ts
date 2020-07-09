@@ -262,5 +262,6 @@ export function useDefaultsFromURLSearch() {
         recipient: parsed.recipient
       })
     )
-  }, [dispatch, chainId, parsedQs])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, chainId])
 }
