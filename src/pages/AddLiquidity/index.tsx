@@ -277,7 +277,7 @@ export default function AddLiquidity({
         tokenB ? currencyId(chainId, tokenB.address) : undefined
       ]
       if (tokenAId === tokenBId) {
-        history.push(`/add/${tokenAId}/${tokenA?.address}`)
+        history.push(`/add/${tokenAId}/${tokenA ? currencyId(chainId, tokenA.address) : ''}`)
       } else {
         history.push(`/add/${tokenAId}/${tokenBId}`)
       }
@@ -291,7 +291,7 @@ export default function AddLiquidity({
         currencyId(chainId, tokenAddress)
       ]
       if (tokenAId === tokenBId) {
-        history.push(`/add/${tokenAId}/${tokenB?.address}`)
+        history.push(`/add/${tokenB ? currencyId(chainId, tokenB.address) : ''}/${tokenAId}`)
       } else {
         history.push(`/add/${currencyIdA ? currencyIdA : 'ETH'}/${currencyId(chainId, tokenAddress)}`)
       }
