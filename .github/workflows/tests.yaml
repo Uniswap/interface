@@ -27,7 +27,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - run: yarn install
-      - run: yarn integration-test
+      # we have to use npm because yarn doesn't run it for whatever reason
+      - run: npm run integration-test
 
   unit-tests:
     name: Unit tests
@@ -48,7 +49,7 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - run: yarn install --ignore-scripts --frozen-lockfile
+      - run: yarn install --frozen-lockfile
       - run: yarn test
 
   lint:
@@ -70,6 +71,6 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - run: yarn install --ignore-scripts --frozen-lockfile
+      - run: yarn install --frozen-lockfile
       - run: yarn lint
 
