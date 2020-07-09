@@ -5,7 +5,6 @@ import styled from 'styled-components'
 
 import { SUGGESTED_BASES } from '../../constants'
 import { AutoColumn } from '../Column'
-import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'
 import TokenLogo from '../TokenLogo'
 
@@ -36,12 +35,6 @@ export default function CommonBases({
 }) {
   return (
     <AutoColumn gap="md">
-      <AutoRow>
-        <Text fontWeight={500} fontSize={14}>
-          Common Bases
-        </Text>
-        <QuestionHelper text="These tokens are commonly used in pairs." />
-      </AutoRow>
       <AutoRow gap="4px">
         {(SUGGESTED_BASES[chainId as ChainId] ?? []).map((token: Token) => {
           return (
