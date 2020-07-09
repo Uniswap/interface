@@ -130,7 +130,7 @@ export default function Web3Status() {
   const { active, account, connector, error } = useWeb3React()
   const contextNetwork = useWeb3React(NetworkContextName)
 
-  const ENSName = useENSName(account)
+  const { ENSName } = useENSName(account)
 
   const allTransactions = useAllTransactions()
 

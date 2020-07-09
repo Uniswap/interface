@@ -2,6 +2,7 @@ import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { JSBI } from '@uniswap/sdk'
 import { RouteComponentProps } from 'react-router-dom'
+import { SwapPoolTabs } from '../../components/NavigationTabs'
 
 import Question from '../../components/QuestionHelper'
 import PairSearchModal from '../../components/SearchModal/PairSearchModal'
@@ -70,6 +71,7 @@ export default function Pool({ history }: RouteComponentProps) {
 
   return (
     <AppBody>
+      <SwapPoolTabs active={'pool'} />
       <AutoColumn gap="lg" justify="center">
         <ButtonPrimary
           id="join-pool-button"

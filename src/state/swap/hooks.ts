@@ -1,4 +1,5 @@
-import { Version } from './../../hooks/useToggledVersion'
+import useENS from '../../hooks/useENS'
+import { Version } from '../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
 import { ChainId, JSBI, Token, TokenAmount, Trade, WETH } from '@uniswap/sdk'
 import { ParsedQs } from 'qs'
@@ -12,7 +13,7 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
-import { Field, replaceSwapState, selectToken, switchTokens, typeInput } from './actions'
+import { Field, replaceSwapState, selectToken, setRecipient, switchTokens, typeInput } from './actions'
 import { SwapState } from './reducer'
 import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUserSlippageTolerance } from '../user/hooks'
@@ -26,6 +27,7 @@ export function useSwapActionHandlers(): {
   onTokenSelection: (field: Field, address: string) => void
   onSwitchTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
+  onChangeRecipient: (recipient: string | null) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
   const onTokenSelection = useCallback(
@@ -51,10 +53,18 @@ export function useSwapActionHandlers(): {
     [dispatch]
   )
 
+  const onChangeRecipient = useCallback(
+    (recipient: string | null) => {
+      dispatch(setRecipient({ recipient }))
+    },
+    [dispatch]
+  )
+
   return {
     onSwitchTokens,
     onTokenSelection,
-    onUserInput
+    onUserInput,
+    onChangeRecipient
   }
 }
 
@@ -93,11 +103,14 @@ export function useDerivedSwapInfo(): {
     independentField,
     typedValue,
     [Field.INPUT]: { address: tokenInAddress },
-    [Field.OUTPUT]: { address: tokenOutAddress }
+    [Field.OUTPUT]: { address: tokenOutAddress },
+    recipient
   } = useSwapState()
 
   const tokenIn = useToken(tokenInAddress)
   const tokenOut = useToken(tokenOutAddress)
+  const recipientLookup = useENS(recipient ?? undefined)
+  const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
 
   const relevantTokenBalances = useTokenBalancesTreatWETHAsETH(account ?? undefined, [
     tokenIn ?? undefined,
@@ -138,6 +151,10 @@ export function useDerivedSwapInfo(): {
     error = error ?? 'Select a token'
   }
 
+  if (!to) {
+    error = error ?? 'Enter a recipient'
+  }
+
   const [allowedSlippage] = useUserSlippageTolerance()
 
   const slippageAdjustedAmounts =
@@ -172,14 +189,14 @@ export function useDerivedSwapInfo(): {
   }
 }
 
-function parseCurrencyFromURLParameter(urlParam: any, chainId: number, overrideWETH: boolean): string {
+function parseCurrencyFromURLParameter(urlParam: any, chainId: number): string {
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam)
     if (valid) return valid
     if (urlParam.toLowerCase() === 'eth') return WETH[chainId as ChainId]?.address ?? ''
     if (valid === false) return WETH[chainId as ChainId]?.address ?? ''
   }
-  return overrideWETH ? '' : WETH[chainId as ChainId]?.address ?? ''
+  return WETH[chainId as ChainId]?.address ?? ''
 }
 
 function parseTokenAmountURLParameter(urlParam: any): string {
@@ -190,9 +207,20 @@ function parseIndependentFieldURLParameter(urlParam: any): Field {
   return typeof urlParam === 'string' && urlParam.toLowerCase() === 'output' ? Field.OUTPUT : Field.INPUT
 }
 
-export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId, overrideETH: boolean): SwapState {
-  let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, chainId, overrideETH)
-  let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, chainId, overrideETH)
+const ENS_NAME_REGEX = /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?$/
+const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
+function validatedRecipient(recipient: any): string | null {
+  if (typeof recipient !== 'string') return null
+  const address = isAddress(recipient)
+  if (address) return address
+  if (ENS_NAME_REGEX.test(recipient)) return recipient
+  if (ADDRESS_REGEX.test(recipient)) return recipient
+  return null
+}
+
+export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId): SwapState {
+  let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, chainId)
+  let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, chainId)
   if (inputCurrency === outputCurrency) {
     if (typeof parsedQs.outputCurrency === 'string') {
       inputCurrency = ''
@@ -200,6 +228,8 @@ export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId,
       outputCurrency = ''
     }
   }
+
+  const recipient = validatedRecipient(parsedQs.recipient)
 
   return {
     [Field.INPUT]: {
@@ -209,29 +239,29 @@ export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId,
       address: outputCurrency
     },
     typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
-    independentField: parseIndependentFieldURLParameter(parsedQs.exactField)
+    independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
+    recipient
   }
 }
 
 // updates the swap state to use the defaults for a given network
-// set overrideETH to true if dont want to autopopulate ETH
-export function useDefaultsFromURLSearch(overrideWETH = false) {
+export function useDefaultsFromURLSearch() {
   const { chainId } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
   const parsedQs = useParsedQueryString()
 
   useEffect(() => {
     if (!chainId) return
-    const parsed = queryParametersToSwapState(parsedQs, chainId, overrideWETH)
+    const parsed = queryParametersToSwapState(parsedQs, chainId)
 
     dispatch(
       replaceSwapState({
         typedValue: parsed.typedValue,
         field: parsed.independentField,
         inputTokenAddress: parsed[Field.INPUT].address,
-        outputTokenAddress: parsed[Field.OUTPUT].address
+        outputTokenAddress: parsed[Field.OUTPUT].address,
+        recipient: parsed.recipient
       })
     )
-    // eslint-disable-next-line
-  }, [dispatch, chainId])
+  }, [dispatch, chainId, parsedQs])
 }
