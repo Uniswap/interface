@@ -47,7 +47,7 @@ function currencyId(chainId: ChainId | undefined, tokenAddress: string): string 
 
 export default function AddLiquidity({
   match: {
-    params: { currencyIdA: currencyIdA, currencyIdB: currencyIdB }
+    params: { currencyIdA, currencyIdB }
   },
   history
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
