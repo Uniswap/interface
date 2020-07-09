@@ -312,14 +312,15 @@ export function useSwapCallback(
   }, [
     trade,
     recipient,
-    tradeVersion,
-    allowedSlippage,
-    chainId,
-    inputAllowance,
     library,
     account,
+    tradeVersion,
+    chainId,
+    allowedSlippage,
+    inputAllowance,
     v1Exchange,
     deadline,
+    recipientAddressOrName,
     addTransaction
   ])
 }
