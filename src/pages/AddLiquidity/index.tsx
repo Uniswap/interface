@@ -15,11 +15,9 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import PositionCard from '../../components/PositionCard'
-import Row, { AutoRow, RowBetween, RowFixed, RowFlat } from '../../components/Row'
+import Row, { RowBetween, RowFlat } from '../../components/Row'
 
-import TokenLogo from '../../components/TokenLogo'
-
-import { ONE_BIPS, ROUTER_ADDRESS } from '../../constants'
+import { ROUTER_ADDRESS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -38,6 +36,8 @@ import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
 import { Dots, Wrapper } from '../Pool/styleds'
+import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
+import { PoolPriceBar } from './PoolPriceBar'
 
 export default function AddLiquidity({ match: { params } }: RouteComponentProps<{ tokens: string }>) {
   useDefaultsFromURLMatchParams(params)
@@ -243,76 +243,14 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
 
   const modalBottom = () => {
     return (
-      <>
-        <RowBetween>
-          <TYPE.body>{tokens[Field.TOKEN_A]?.symbol} Deposited</TYPE.body>
-          <RowFixed>
-            <TokenLogo address={tokens[Field.TOKEN_A]?.address} style={{ marginRight: '8px' }} />
-            <TYPE.body>{parsedAmounts[Field.TOKEN_A]?.toSignificant(6)}</TYPE.body>
-          </RowFixed>
-        </RowBetween>
-        <RowBetween>
-          <TYPE.body>{tokens[Field.TOKEN_B]?.symbol} Deposited</TYPE.body>
-          <RowFixed>
-            <TokenLogo address={tokens[Field.TOKEN_B]?.address} style={{ marginRight: '8px' }} />
-            <TYPE.body>{parsedAmounts[Field.TOKEN_B]?.toSignificant(6)}</TYPE.body>
-          </RowFixed>
-        </RowBetween>
-        <RowBetween>
-          <TYPE.body>Rates</TYPE.body>
-          <TYPE.body>
-            {`1 ${tokens[Field.TOKEN_A]?.symbol} = ${price?.toSignificant(4)} ${tokens[Field.TOKEN_B]?.symbol}`}
-          </TYPE.body>
-        </RowBetween>
-        <RowBetween style={{ justifyContent: 'flex-end' }}>
-          <TYPE.body>
-            {`1 ${tokens[Field.TOKEN_B]?.symbol} = ${price?.invert().toSignificant(4)} ${
-              tokens[Field.TOKEN_A]?.symbol
-            }`}
-          </TYPE.body>
-        </RowBetween>
-        <RowBetween>
-          <TYPE.body>Share of Pool:</TYPE.body>
-          <TYPE.body>{noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</TYPE.body>
-        </RowBetween>
-        <ButtonPrimary style={{ margin: '20px 0 0 0' }} onClick={onAdd}>
-          <Text fontWeight={500} fontSize={20}>
-            {noLiquidity ? 'Create Pool & Supply' : 'Confirm Supply'}
-          </Text>
-        </ButtonPrimary>
-      </>
-    )
-  }
-
-  const PriceBar = () => {
-    return (
-      <AutoColumn gap="md">
-        <AutoRow justify="space-around" gap="4px">
-          <AutoColumn justify="center">
-            <TYPE.black>{price?.toSignificant(6) ?? '0'}</TYPE.black>
-            <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              {tokens[Field.TOKEN_B]?.symbol} per {tokens[Field.TOKEN_A]?.symbol}
-            </Text>
-          </AutoColumn>
-          <AutoColumn justify="center">
-            <TYPE.black>{price?.invert().toSignificant(6) ?? '0'}</TYPE.black>
-            <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              {tokens[Field.TOKEN_A]?.symbol} per {tokens[Field.TOKEN_B]?.symbol}
-            </Text>
-          </AutoColumn>
-          <AutoColumn justify="center">
-            <TYPE.black>
-              {noLiquidity && price
-                ? '100'
-                : (poolTokenPercentage?.lessThan(ONE_BIPS) ? '<0.01' : poolTokenPercentage?.toFixed(2)) ?? '0'}
-              %
-            </TYPE.black>
-            <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              Share of Pool
-            </Text>
-          </AutoColumn>
-        </AutoRow>
-      </AutoColumn>
+      <ConfirmAddModalBottom
+        price={price}
+        tokens={tokens}
+        parsedAmounts={parsedAmounts}
+        noLiquidity={noLiquidity}
+        onAdd={onAdd}
+        poolTokenPercentage={poolTokenPercentage}
+      />
     )
   }
 
@@ -399,7 +337,12 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
                     </TYPE.subHeader>
                   </RowBetween>{' '}
                   <LightCard padding="1rem" borderRadius={'20px'}>
-                    <PriceBar />
+                    <PoolPriceBar
+                      tokens={tokens}
+                      poolTokenPercentage={poolTokenPercentage}
+                      noLiquidity={noLiquidity}
+                      price={price}
+                    />
                   </LightCard>
                 </GreyCard>
               </>
