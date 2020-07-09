@@ -4,13 +4,8 @@ on:
   schedule:
     - cron:  '0 12 * * 1-4'
 
-  # releases are triggered on changes to this file
-  push:
-    branches:
-      - master
-    paths:
-      - '.github/workflows/release.yaml'
-      - '.env.production'
+  # manual trigger
+  workflow_dispatch:
 
 jobs:
   bump_version:
