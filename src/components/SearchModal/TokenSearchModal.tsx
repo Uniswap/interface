@@ -9,7 +9,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
 import useInterval from '../../hooks/useInterval'
 import { useAllTokenBalancesTreatingWETHasETH, useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
-import { CloseIcon, LinkStyledButton } from '../../theme/components'
+import { CloseIcon, LinkStyledButton } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import Modal from '../Modal'
@@ -131,7 +131,7 @@ export default function TokenSearchModal({
       minHeight={70}
     >
       <Column style={{ width: '100%' }}>
-        <PaddedColumn gap="20px">
+        <PaddedColumn gap="14px">
           <RowBetween>
             <Text fontWeight={500} fontSize={16}>
               Select a token
