@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text } from 'rebass'
-import { Token } from '@uniswap/sdk'
+import { ChainId, Token } from '@uniswap/sdk'
 
 import { SUGGESTED_BASES } from '../../constants'
 import { AutoColumn } from '../Column'
@@ -21,13 +21,13 @@ export default function CommonBases({
   return (
     <AutoColumn gap="md">
       <AutoRow>
-        <Text fontWeight={500} fontSize={16}>
+        <Text fontWeight={500} fontSize={14}>
           Common Bases
         </Text>
         <QuestionHelper text="These tokens are commonly used in pairs." />
       </AutoRow>
       <AutoRow gap="10px">
-        {(SUGGESTED_BASES[chainId] ?? []).map((token: Token) => {
+        {(SUGGESTED_BASES[chainId as ChainId] ?? []).map((token: Token) => {
           return (
             <BaseWrapper
               gap="6px"

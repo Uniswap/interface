@@ -126,7 +126,7 @@ export default function PoolFinder() {
               <AutoColumn gap="sm" justify="center">
                 <Text textAlign="center">You don’t have liquidity in this pool yet.</Text>
                 <StyledInternalLink to={`/add/${token0.address}-${token1.address}`}>
-                  <Text textAlign="center">Add liquidity?</Text>
+                  <Text textAlign="center">Add liquidity.</Text>
                 </StyledInternalLink>
               </AutoColumn>
             </LightCard>
@@ -151,6 +151,7 @@ export default function PoolFinder() {
         isOpen={showSearch}
         onTokenSelect={handleTokenSelect}
         onDismiss={handleSearchDismiss}
+        showCommonBases
         hiddenToken={activeField === Fields.TOKEN0 ? token1Address : token0Address}
       />
     </AppBody>

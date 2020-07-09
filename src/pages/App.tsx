@@ -7,7 +7,7 @@ import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
-import CreatePool from './CreatePool'
+import { RedirectToAddLiquidity } from './AddLiquidity/redirects'
 import MigrateV1 from './MigrateV1'
 import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
 import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
@@ -71,7 +71,7 @@ export default function App() {
                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
                 <Route exact strict path="/find" component={PoolFinder} />
                 <Route exact strict path="/pool" component={Pool} />
-                <Route exact strict path="/create" component={CreatePool} />
+                <Route exact strict path="/create" component={RedirectToAddLiquidity} />
                 <Route exact strict path="/add/:tokens" component={AddLiquidity} />
                 <Route exact strict path="/remove/:tokens" component={RemoveLiquidity} />
                 <Route exact strict path="/migrate/v1" component={MigrateV1} />

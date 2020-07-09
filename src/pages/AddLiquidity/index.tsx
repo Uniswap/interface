@@ -1,41 +1,43 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { TransactionResponse } from '@ethersproject/providers'
 import { TokenAmount, WETH } from '@uniswap/sdk'
-import React, { useContext, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { ButtonLight, ButtonPrimary, ButtonError } from '../../components/Button'
+import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, GreyCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleLogo from '../../components/DoubleLogo'
+import { AddRemoveTabs } from '../../components/NavigationTabs'
 import PositionCard from '../../components/PositionCard'
 import Row, { AutoRow, RowBetween, RowFixed, RowFlat } from '../../components/Row'
 
 import TokenLogo from '../../components/TokenLogo'
 
-import { ROUTER_ADDRESS, MIN_ETH, ONE_BIPS } from '../../constants'
+import { ONE_BIPS, ROUTER_ADDRESS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
-
-import { useTransactionAdder } from '../../state/transactions/hooks'
-import { TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
-import AppBody from '../AppBody'
-import { Dots, Wrapper } from '../Pool/styleds'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import { useWalletModalToggle } from '../../state/application/hooks'
+import { Field } from '../../state/mint/actions'
 import {
   useDefaultsFromURLMatchParams,
-  useMintState,
   useDerivedMintInfo,
-  useMintActionHandlers
+  useMintActionHandlers,
+  useMintState
 } from '../../state/mint/hooks'
-import { Field } from '../../state/mint/actions'
-import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
-import { useWalletModalToggle } from '../../state/application/hooks'
-import { useUserSlippageTolerance, useUserDeadline, useIsExpertMode } from '../../state/user/hooks'
-import { AddRemoveTabs } from '../../components/NavigationTabs'
+
+import { useTransactionAdder } from '../../state/transactions/hooks'
+import { useIsExpertMode, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
+import { TYPE } from '../../theme'
+import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import AppBody from '../AppBody'
+import { Dots, Wrapper } from '../Pool/styleds'
 
 export default function AddLiquidity({ match: { params } }: RouteComponentProps<{ tokens: string }>) {
   useDefaultsFromURLMatchParams(params)
@@ -64,6 +66,19 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
   } = useDerivedMintInfo()
   const { onUserInput } = useMintActionHandlers()
 
+  const handleTokenAInput = useCallback(
+    (field: string, value: string) => {
+      return onUserInput(Field.TOKEN_A, value)
+    },
+    [onUserInput]
+  )
+  const handleTokenBInput = useCallback(
+    (field: string, value: string) => {
+      return onUserInput(Field.TOKEN_B, value)
+    },
+    [onUserInput]
+  )
+
   const isValid = !error
 
   // modal and loading
@@ -85,17 +100,7 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
   const maxAmounts: { [field in Field]?: TokenAmount } = [Field.TOKEN_A, Field.TOKEN_B].reduce((accumulator, field) => {
     return {
       ...accumulator,
-      [field]:
-        !!tokenBalances[field] &&
-        !!tokens[field] &&
-        !!WETH[chainId] &&
-        tokenBalances[field].greaterThan(
-          new TokenAmount(tokens[field], tokens[field].equals(WETH[chainId]) ? MIN_ETH : '0')
-        )
-          ? tokens[field].equals(WETH[chainId])
-            ? tokenBalances[field].subtract(new TokenAmount(WETH[chainId], MIN_ETH))
-            : tokenBalances[field]
-          : undefined
+      [field]: maxAmountSpend(tokenBalances[field])
     }
   }, {})
 
@@ -103,7 +108,7 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
     (accumulator, field) => {
       return {
         ...accumulator,
-        [field]: maxAmounts[field] && parsedAmounts[field] ? maxAmounts[field].equalTo(parsedAmounts[field]) : undefined
+        [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0')
       }
     },
     {}
@@ -115,37 +120,47 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
 
   const addTransaction = useTransactionAdder()
   async function onAdd() {
+    if (!chainId || !library || !account) return
     const router = getRouterContract(chainId, library, account)
 
+    const { [Field.TOKEN_A]: parsedAmountA, [Field.TOKEN_B]: parsedAmountB } = parsedAmounts
+    const { [Field.TOKEN_A]: tokenA, [Field.TOKEN_B]: tokenB } = tokens
+    if (!parsedAmountA || !parsedAmountB || !tokenA || !tokenB) {
+      return
+    }
+
     const amountsMin = {
-      [Field.TOKEN_A]: calculateSlippageAmount(parsedAmounts[Field.TOKEN_A], noLiquidity ? 0 : allowedSlippage)[0],
-      [Field.TOKEN_B]: calculateSlippageAmount(parsedAmounts[Field.TOKEN_B], noLiquidity ? 0 : allowedSlippage)[0]
+      [Field.TOKEN_A]: calculateSlippageAmount(parsedAmountA, noLiquidity ? 0 : allowedSlippage)[0],
+      [Field.TOKEN_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0]
     }
 
     const deadlineFromNow = Math.ceil(Date.now() / 1000) + deadline
 
-    let estimate, method: Function, args: Array<string | string[] | number>, value: BigNumber | null
-    if (tokens[Field.TOKEN_A].equals(WETH[chainId]) || tokens[Field.TOKEN_B].equals(WETH[chainId])) {
-      const tokenBIsETH = tokens[Field.TOKEN_B].equals(WETH[chainId])
+    let estimate,
+      method: (...args: any) => Promise<TransactionResponse>,
+      args: Array<string | string[] | number>,
+      value: BigNumber | null
+    if (tokenA.equals(WETH[chainId]) || tokenB.equals(WETH[chainId])) {
+      const tokenBIsETH = tokenB.equals(WETH[chainId])
       estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
       args = [
-        tokens[tokenBIsETH ? Field.TOKEN_A : Field.TOKEN_B].address, // token
-        parsedAmounts[tokenBIsETH ? Field.TOKEN_A : Field.TOKEN_B].raw.toString(), // token desired
+        (tokenBIsETH ? tokenA : tokenB).address, // token
+        (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
         amountsMin[tokenBIsETH ? Field.TOKEN_A : Field.TOKEN_B].toString(), // token min
         amountsMin[tokenBIsETH ? Field.TOKEN_B : Field.TOKEN_A].toString(), // eth min
         account,
         deadlineFromNow
       ]
-      value = BigNumber.from(parsedAmounts[tokenBIsETH ? Field.TOKEN_B : Field.TOKEN_A].raw.toString())
+      value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
     } else {
       estimate = router.estimateGas.addLiquidity
       method = router.addLiquidity
       args = [
-        tokens[Field.TOKEN_A].address,
-        tokens[Field.TOKEN_B].address,
-        parsedAmounts[Field.TOKEN_A].raw.toString(),
-        parsedAmounts[Field.TOKEN_B].raw.toString(),
+        tokenA.address,
+        tokenB.address,
+        parsedAmountA.raw.toString(),
+        parsedAmountB.raw.toString(),
         amountsMin[Field.TOKEN_A].toString(),
         amountsMin[Field.TOKEN_B].toString(),
         account,
@@ -349,9 +364,9 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
               disableTokenSelect={true}
               field={Field.TOKEN_A}
               value={formattedAmounts[Field.TOKEN_A]}
-              onUserInput={onUserInput}
+              onUserInput={handleTokenAInput}
               onMax={() => {
-                maxAmounts[Field.TOKEN_A] && onUserInput(Field.TOKEN_A, maxAmounts[Field.TOKEN_A].toExact())
+                onUserInput(Field.TOKEN_A, maxAmounts[Field.TOKEN_A]?.toExact() ?? '')
               }}
               showMaxButton={!atMaxAmounts[Field.TOKEN_A]}
               token={tokens[Field.TOKEN_A]}
@@ -366,9 +381,9 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
               disableTokenSelect={true}
               field={Field.TOKEN_B}
               value={formattedAmounts[Field.TOKEN_B]}
-              onUserInput={onUserInput}
+              onUserInput={handleTokenBInput}
               onMax={() => {
-                maxAmounts[Field.TOKEN_B] && onUserInput(Field.TOKEN_B, maxAmounts[Field.TOKEN_B].toExact())
+                onUserInput(Field.TOKEN_B, maxAmounts[Field.TOKEN_B]?.toExact() ?? '')
               }}
               showMaxButton={!atMaxAmounts[Field.TOKEN_B]}
               token={tokens[Field.TOKEN_B]}
