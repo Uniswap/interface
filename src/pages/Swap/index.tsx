@@ -22,6 +22,7 @@ import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import { TokenWarningCards } from '../../components/TokenWarningCard'
 import { useActiveWeb3React } from '../../hooks'
 import { useApproveCallbackFromTrade, ApprovalState } from '../../hooks/useApproveCallback'
+import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useWalletModalToggle, useToggleSettingsMenu } from '../../state/application/hooks'
 import { useExpertModeManager, useUserSlippageTolerance, useUserDeadline } from '../../state/user/hooks'
@@ -61,6 +62,7 @@ export default function Swap() {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const { bestTrade: bestTradeV2, tokenBalances, parsedAmount, tokens, error, v1Trade } = useDerivedSwapInfo()
+  const { address: recipientAddress } = useENSAddress(recipient)
   const toggledVersion = useToggledVersion()
   const trade = {
     [Version.v1]: v1Trade,
@@ -148,7 +150,11 @@ export default function Swap() {
         ReactGA.event({
           category: 'Swap',
           action:
-            recipient === null ? 'Swap w/o Send' : recipient === account ? 'Swap w/o Send + recipient' : 'Swap w/ Send',
+            recipient === null
+              ? 'Swap w/o Send'
+              : (recipientAddress ?? recipient) === account
+              ? 'Swap w/o Send + recipient'
+              : 'Swap w/ Send',
           label: [trade.inputAmount.token.symbol, trade.outputAmount.token.symbol, getTradeVersion(trade)].join('/')
         })
       })

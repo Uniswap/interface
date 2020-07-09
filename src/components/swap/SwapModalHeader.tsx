@@ -77,7 +77,8 @@ export default function SwapModalHeader({
       {recipient !== null ? (
         <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
           <TYPE.main>
-            Output will be sent to <b>{isAddress(recipient) ? shortenAddress(recipient) : recipient}</b>
+            Output will be sent to{' '}
+            <b title={recipient}>{isAddress(recipient) ? shortenAddress(recipient) : recipient}</b>
           </TYPE.main>
         </AutoColumn>
       ) : null}

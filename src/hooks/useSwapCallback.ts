@@ -1,14 +1,14 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { ChainId, Trade, TradeType, WETH } from '@uniswap/sdk'
+import { Trade, TradeType, WETH } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, ROUTER_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getRouterContract } from '../utils'
+import { calculateGasMargin, getRouterContract, shortenAddress, isAddress } from '../utils'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { useActiveWeb3React } from './index'
 import { useV1ExchangeContract } from './useContract'
@@ -78,7 +78,7 @@ export function useSwapCallback(
   )
 
   return useMemo(() => {
-    if (!trade || !recipient || !tradeVersion) return null
+    if (!trade || !recipient || !library || !account || !tradeVersion || !chainId) return null
 
     // will always be defined
     const {
@@ -90,17 +90,13 @@ export function useSwapCallback(
 
     // no allowance
     if (
-      !trade.inputAmount.token.equals(WETH[chainId as ChainId]) &&
+      !trade.inputAmount.token.equals(WETH[chainId]) &&
       (!inputAllowance || slippageAdjustedInput.greaterThan(inputAllowance))
     ) {
       return null
     }
 
     return async function onSwap() {
-      if (!chainId || !library || !recipient || !account) {
-        throw new Error('missing dependencies in onSwap callback')
-      }
-
       const contract: Contract | null =
         tradeVersion === Version.v2 ? getRouterContract(chainId, library, account) : v1Exchange
       if (!contract) {
@@ -284,7 +280,12 @@ export function useSwapCallback(
             const outputAmount = slippageAdjustedOutput.toSignificant(3)
 
             const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
-            const withRecipient = recipient === account ? base : `${base} to ${recipient}`
+            const withRecipient =
+              recipient === account
+                ? base
+                : `${base} to ${
+                    isAddress(recipientAddressOrName) ? shortenAddress(recipientAddressOrName) : recipientAddressOrName
+                  }`
 
             const withVersion =
               tradeVersion === Version.v2 ? withRecipient : `${withRecipient} on ${tradeVersion.toUpperCase()}`

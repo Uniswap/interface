@@ -6,7 +6,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { getEtherscanLink } from '../../utils'
 import { ExternalLink } from '../../theme'
 import { useAllTransactions } from '../../state/transactions/hooks'
-import { RowFixed } from '../Row'
+import { AutoRow, RowFixed } from '../Row'
 import Loader from '../Loader'
 
 const TransactionWrapper = styled.div``
@@ -50,10 +50,7 @@ export default function Transaction({ hash }: { hash: string }) {
     <TransactionWrapper>
       <TransactionState href={getEtherscanLink(chainId, hash, 'transaction')} pending={pending} success={success}>
         <RowFixed>
-          <TransactionStatusText>{summary ? summary : hash}</TransactionStatusText>
-          <div style={{ flex: 0, marginRight: 8 }}>
-            <LinkIcon size={16} />
-          </div>
+          <TransactionStatusText>{summary ?? hash} ↗</TransactionStatusText>
         </RowFixed>
         <IconWrapper pending={pending} success={success}>
           {pending ? <Loader /> : success ? <CheckCircle size="16" /> : <Triangle size="16" />}
