@@ -62,9 +62,7 @@ export default function TxnPopup({
         {success ? <CheckCircle color={theme.green1} size={24} /> : <AlertCircle color={theme.red1} size={24} />}
       </div>
       <AutoColumn gap="8px">
-        <TYPE.body fontWeight={500}>
-          {summary ? summary : 'Hash: ' + hash.slice(0, 8) + '...' + hash.slice(58, 65)}
-        </TYPE.body>
+        <TYPE.body fontWeight={500}>{summary ?? 'Hash: ' + hash.slice(0, 8) + '...' + hash.slice(58, 65)}</TYPE.body>
         <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>View on Etherscan</ExternalLink>
       </AutoColumn>
       <Fader count={count} />

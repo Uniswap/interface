@@ -188,6 +188,10 @@ body {
   box-sizing: border-box;
 }
 
+button {
+  user-select: none;
+}
+
 html {
   font-size: 16px;
   font-variant: none;

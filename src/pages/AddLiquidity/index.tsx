@@ -35,6 +35,7 @@ import { Field } from '../../state/mint/actions'
 import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useUserSlippageTolerance, useUserDeadline, useIsExpertMode } from '../../state/user/hooks'
+import { AddRemoveTabs } from '../../components/NavigationTabs'
 
 export default function AddLiquidity({ match: { params } }: RouteComponentProps<{ tokens: string }>) {
   useDefaultsFromURLMatchParams(params)
@@ -307,6 +308,7 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
   return (
     <>
       <AppBody>
+        <AddRemoveTabs adding={true} />
         <Wrapper>
           <ConfirmationModal
             isOpen={showConfirm}

@@ -6,39 +6,43 @@ import { useActiveWeb3React } from './index'
  * Does a reverse lookup for an address to find its ENS name.
  * Note this is not the same as looking up an ENS name to find an address.
  */
-export default function useENSName(address?: string): string | null {
+export default function useENSName(address?: string): { ENSName: string | null; loading: boolean } {
   const { library } = useActiveWeb3React()
 
-  const [ENSName, setENSName] = useState<string | null>(null)
+  const [ENSName, setENSName] = useState<{ ENSName: string | null; loading: boolean }>({
+    loading: false,
+    ENSName: null
+  })
 
   useEffect(() => {
-    if (!library || !address) return
     const validated = isAddress(address)
-    if (validated) {
+    if (!library || !validated) {
+      setENSName({ loading: false, ENSName: null })
+      return
+    } else {
       let stale = false
+      setENSName({ loading: true, ENSName: null })
       library
         .lookupAddress(validated)
         .then(name => {
           if (!stale) {
             if (name) {
-              setENSName(name)
+              setENSName({ loading: false, ENSName: name })
             } else {
-              setENSName(null)
+              setENSName({ loading: false, ENSName: null })
             }
           }
         })
         .catch(() => {
           if (!stale) {
-            setENSName(null)
+            setENSName({ loading: false, ENSName: null })
           }
         })
 
       return () => {
         stale = true
-        setENSName(null)
       }
     }
-    return
   }, [library, address])
 
   return ENSName

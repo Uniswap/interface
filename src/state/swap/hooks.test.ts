@@ -18,7 +18,8 @@ describe('hooks', () => {
         [Field.OUTPUT]: { address: '0x6B175474E89094C44Da98b954EedeAC495271d0F' },
         [Field.INPUT]: { address: WETH[ChainId.MAINNET].address },
         typedValue: '20.5',
-        independentField: Field.OUTPUT
+        independentField: Field.OUTPUT,
+        recipient: null
       })
     })
 
@@ -32,7 +33,8 @@ describe('hooks', () => {
         [Field.INPUT]: { address: '' },
         [Field.OUTPUT]: { address: WETH[ChainId.MAINNET].address },
         typedValue: '',
-        independentField: Field.INPUT
+        independentField: Field.INPUT,
+        recipient: null
       })
     })
 
@@ -46,7 +48,58 @@ describe('hooks', () => {
         [Field.OUTPUT]: { address: WETH[ChainId.MAINNET].address },
         [Field.INPUT]: { address: '' },
         typedValue: '20.5',
-        independentField: Field.INPUT
+        independentField: Field.INPUT,
+        recipient: null
+      })
+    })
+
+    test('invalid recipient', () => {
+      expect(
+        queryParametersToSwapState(
+          parse('?outputCurrency=eth&exactAmount=20.5&recipient=abc', { parseArrays: false, ignoreQueryPrefix: true }),
+          ChainId.MAINNET
+        )
+      ).toEqual({
+        [Field.OUTPUT]: { address: WETH[ChainId.MAINNET].address },
+        [Field.INPUT]: { address: '' },
+        typedValue: '20.5',
+        independentField: Field.INPUT,
+        recipient: null
+      })
+    })
+
+    test('valid recipient', () => {
+      expect(
+        queryParametersToSwapState(
+          parse('?outputCurrency=eth&exactAmount=20.5&recipient=0x0fF2D1eFd7A57B7562b2bf27F3f37899dB27F4a5', {
+            parseArrays: false,
+            ignoreQueryPrefix: true
+          }),
+          ChainId.MAINNET
+        )
+      ).toEqual({
+        [Field.OUTPUT]: { address: WETH[ChainId.MAINNET].address },
+        [Field.INPUT]: { address: '' },
+        typedValue: '20.5',
+        independentField: Field.INPUT,
+        recipient: '0x0fF2D1eFd7A57B7562b2bf27F3f37899dB27F4a5'
+      })
+    })
+    test('accepts any recipient', () => {
+      expect(
+        queryParametersToSwapState(
+          parse('?outputCurrency=eth&exactAmount=20.5&recipient=bob.argent.xyz', {
+            parseArrays: false,
+            ignoreQueryPrefix: true
+          }),
+          ChainId.MAINNET
+        )
+      ).toEqual({
+        [Field.OUTPUT]: { address: WETH[ChainId.MAINNET].address },
+        [Field.INPUT]: { address: '' },
+        typedValue: '20.5',
+        independentField: Field.INPUT,
+        recipient: 'bob.argent.xyz'
       })
     })
   })

@@ -1,18 +1,18 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { ChainId, Trade, TradeType, WETH } from '@uniswap/sdk'
+import { Trade, TradeType, WETH } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, ROUTER_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getRouterContract, isAddress } from '../utils'
+import { calculateGasMargin, getRouterContract, shortenAddress, isAddress } from '../utils'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { useActiveWeb3React } from './index'
 import { useV1ExchangeContract } from './useContract'
-import useENSName from './useENSName'
+import useENS from './useENS'
 import { Version } from './useToggledVersion'
 
 enum SwapType {
@@ -59,15 +59,16 @@ function getSwapType(trade: Trade | undefined): SwapType | undefined {
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
-  trade?: Trade, // trade to execute, required
+  trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   deadline: number = DEFAULT_DEADLINE_FROM_NOW, // in seconds from now
-  to?: string // recipient of output, optional
+  recipientAddressOrName: string // the ENS name or address of the recipient of the trade
 ): null | (() => Promise<string>) {
   const { account, chainId, library } = useActiveWeb3React()
   const addTransaction = useTransactionAdder()
-  const recipient = to ? isAddress(to) : account
-  const ensName = useENSName(to)
+
+  const { address: recipient } = useENS(recipientAddressOrName)
+
   const tradeVersion = getTradeVersion(trade)
   const v1Exchange = useV1ExchangeContract(useV1TradeExchangeAddress(trade), true)
   const inputAllowance = useTokenAllowance(
@@ -77,7 +78,7 @@ export function useSwapCallback(
   )
 
   return useMemo(() => {
-    if (!trade || !recipient || !tradeVersion) return null
+    if (!trade || !recipient || !library || !account || !tradeVersion || !chainId) return null
 
     // will always be defined
     const {
@@ -89,17 +90,13 @@ export function useSwapCallback(
 
     // no allowance
     if (
-      !trade.inputAmount.token.equals(WETH[chainId as ChainId]) &&
+      !trade.inputAmount.token.equals(WETH[chainId]) &&
       (!inputAllowance || slippageAdjustedInput.greaterThan(inputAllowance))
     ) {
       return null
     }
 
     return async function onSwap() {
-      if (!chainId || !library || !account) {
-        throw new Error('missing dependencies in onSwap callback')
-      }
-
       const contract: Contract | null =
         tradeVersion === Version.v2 ? getRouterContract(chainId, library, account) : v1Exchange
       if (!contract) {
@@ -283,7 +280,12 @@ export function useSwapCallback(
             const outputAmount = slippageAdjustedOutput.toSignificant(3)
 
             const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
-            const withRecipient = recipient === account ? base : `${base} to ${ensName ?? recipient}`
+            const withRecipient =
+              recipient === account
+                ? base
+                : `${base} to ${
+                    isAddress(recipientAddressOrName) ? shortenAddress(recipientAddressOrName) : recipientAddressOrName
+                  }`
 
             const withVersion =
               tradeVersion === Version.v2 ? withRecipient : `${withRecipient} on ${tradeVersion.toUpperCase()}`
@@ -310,15 +312,15 @@ export function useSwapCallback(
   }, [
     trade,
     recipient,
-    tradeVersion,
-    allowedSlippage,
-    chainId,
-    inputAllowance,
     library,
     account,
+    tradeVersion,
+    chainId,
+    allowedSlippage,
+    inputAllowance,
     v1Exchange,
     deadline,
-    addTransaction,
-    ensName
+    recipientAddressOrName,
+    addTransaction
   ])
 }

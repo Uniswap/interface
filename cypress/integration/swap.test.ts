@@ -40,4 +40,15 @@ describe('Swap', () => {
     cy.get('#swap-button').click()
     cy.get('#confirm-swap-or-send').should('contain', 'Confirm Swap')
   })
+
+  it('add a recipient', () => {
+    cy.get('#add-recipient-button').click()
+    cy.get('#recipient').should('exist')
+  })
+
+  it('remove recipient', () => {
+    cy.get('#add-recipient-button').click()
+    cy.get('#remove-recipient-button').click()
+    cy.get('#recipient').should('not.exist')
+  })
 })
