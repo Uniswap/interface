@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { ThemeContext } from 'styled-components'
-import { JSBI } from '@uniswap/sdk'
+import { Pair } from '@uniswap/sdk'
 import { RouteComponentProps } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 
@@ -26,29 +26,27 @@ export default function Pool({ history }: RouteComponentProps) {
   const { account } = useActiveWeb3React()
 
   // fetch the user's balances of all tracked V2 LP tokens
-  const V2DummyPairs = useAllDummyPairs()
-  const [V2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
-    account,
-    V2DummyPairs?.map(p => p.liquidityToken)
+  const v2DummyPairs = useAllDummyPairs()
+  const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
+    account ?? undefined,
+    v2DummyPairs?.map(p => p.liquidityToken)
   )
   // fetch the reserves for all V2 pools in which the user has a balance
-  const V2DummyPairsWithABalance = V2DummyPairs.filter(
-    V2DummyPair =>
-      V2PairsBalances[V2DummyPair.liquidityToken.address] &&
-      JSBI.greaterThan(V2PairsBalances[V2DummyPair.liquidityToken.address].raw, JSBI.BigInt(0))
+  const v2DummyPairsWithABalance = v2DummyPairs.filter(dummyPair =>
+    v2PairsBalances[dummyPair.liquidityToken.address]?.greaterThan('0')
   )
-  const V2Pairs = usePairs(
-    V2DummyPairsWithABalance.map(V2DummyPairWithABalance => [
+  const v2Pairs = usePairs(
+    v2DummyPairsWithABalance.map(V2DummyPairWithABalance => [
       V2DummyPairWithABalance.token0,
       V2DummyPairWithABalance.token1
     ])
   )
-  const V2IsLoading =
-    fetchingV2PairBalances || V2Pairs?.length < V2DummyPairsWithABalance.length || V2Pairs?.some(V2Pair => !!!V2Pair)
+  const v2IsLoading =
+    fetchingV2PairBalances || v2Pairs?.length < v2DummyPairsWithABalance.length || v2Pairs?.some(V2Pair => !V2Pair)
 
-  const allV2PairsWithLiquidity = V2Pairs.filter(V2Pair => !!V2Pair).map(V2Pair => (
-    <PositionCard key={V2Pair.liquidityToken.address} pair={V2Pair} />
-  ))
+  const allV2PairsWithLiquidity = v2Pairs
+    .filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
+    .map(V2Pair => <PositionCard key={V2Pair.liquidityToken.address} pair={V2Pair} />)
 
   const hasV1Liquidity = useUserHasLiquidityInAllTokens()
 
@@ -57,7 +55,7 @@ export default function Pool({ history }: RouteComponentProps) {
       <AppBody>
         <SwapPoolTabs active={'pool'} />
         <AutoColumn gap="lg" justify="center">
-          <ButtonPrimary id="join-pool-button" style={{ padding: 16 }}>
+          <ButtonPrimary id="join-pool-button" style={{ padding: 16 }} onClick={() => history.push('/add/ETH')}>
             <Text fontWeight={500} fontSize={20}>
               Add Liquidity
             </Text>
@@ -77,7 +75,7 @@ export default function Pool({ history }: RouteComponentProps) {
                   Connect to a wallet to view your liquidity.
                 </TYPE.body>
               </LightCard>
-            ) : V2IsLoading ? (
+            ) : v2IsLoading ? (
               <LightCard padding="40px">
                 <TYPE.body color={theme.text3} textAlign="center">
                   <Dots>Loading</Dots>

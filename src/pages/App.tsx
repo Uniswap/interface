@@ -72,7 +72,9 @@ export default function App() {
                 <Route exact strict path="/find" component={PoolFinder} />
                 <Route exact strict path="/pool" component={Pool} />
                 <Route exact strict path="/create" component={RedirectToAddLiquidity} />
-                <Route exact strict path="/add/:tokens" component={AddLiquidity} />
+                <Route exact path="/add" component={AddLiquidity} />
+                <Route exact path="/add/:tokenA" component={AddLiquidity} />
+                <Route exact path="/add/:tokenA/:tokenB" component={AddLiquidity} />
                 <Route exact strict path="/remove/:tokens" component={RemoveLiquidity} />
                 <Route exact strict path="/migrate/v1" component={MigrateV1} />
                 <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />

@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { TokenAmount, WETH } from '@uniswap/sdk'
+import { ChainId, TokenAmount, WETH, Token } from '@uniswap/sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -19,15 +19,11 @@ import Row, { RowBetween, RowFlat } from '../../components/Row'
 
 import { ROUTER_ADDRESS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
+import { useToken } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
-import {
-  useDefaultsFromURLMatchParams,
-  useDerivedMintInfo,
-  useMintActionHandlers,
-  useMintState
-} from '../../state/mint/hooks'
+import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
@@ -39,11 +35,27 @@ import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { PoolPriceBar } from './PoolPriceBar'
 
-export default function AddLiquidity({ match: { params } }: RouteComponentProps<{ tokens: string }>) {
-  useDefaultsFromURLMatchParams(params)
+function useTokenById(chainId: ChainId | undefined, tokenId: string | undefined): Token | undefined {
+  const isETH = tokenId?.toUpperCase() === 'ETH'
+  const token = useToken(isETH ? undefined : tokenId)
+  return isETH && chainId ? WETH[chainId] : token ?? undefined
+}
 
+function tokenId(chainId: ChainId | undefined, tokenAddress: string): string {
+  return chainId && tokenAddress === WETH[chainId].address ? 'ETH' : tokenAddress
+}
+
+export default function AddLiquidity({
+  match: {
+    params: { tokenA: tokenAId, tokenB: tokenBId }
+  },
+  history
+}: RouteComponentProps<{ tokenA?: string; tokenB?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
+
+  const tokenA = useTokenById(chainId, tokenAId)
+  const tokenB = useTokenById(chainId, tokenBId)
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
@@ -63,8 +75,8 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
     liquidityMinted,
     poolTokenPercentage,
     error
-  } = useDerivedMintInfo()
-  const { onUserInput } = useMintActionHandlers()
+  } = useDerivedMintInfo(tokenA ?? undefined, tokenB ?? undefined)
+  const { onUserInput } = useMintActionHandlers(noLiquidity)
 
   const handleTokenAInput = useCallback(
     (field: string, value: string) => {
@@ -119,12 +131,12 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
   const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.TOKEN_B], ROUTER_ADDRESS)
 
   const addTransaction = useTransactionAdder()
+
   async function onAdd() {
     if (!chainId || !library || !account) return
     const router = getRouterContract(chainId, library, account)
 
     const { [Field.TOKEN_A]: parsedAmountA, [Field.TOKEN_B]: parsedAmountB } = parsedAmounts
-    const { [Field.TOKEN_A]: tokenA, [Field.TOKEN_B]: tokenB } = tokens
     if (!parsedAmountA || !parsedAmountB || !tokenA || !tokenB) {
       return
     }
@@ -258,6 +270,19 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
     tokens[Field.TOKEN_A]?.symbol
   } and ${parsedAmounts[Field.TOKEN_B]?.toSignificant(6)} ${tokens[Field.TOKEN_B]?.symbol}`
 
+  const handleTokenASelect = useCallback(
+    (tokenAddress: string) => {
+      history.push(`/add/${tokenId(chainId, tokenAddress)}/${tokenBId ?? ''}`)
+    },
+    [chainId, history, tokenBId]
+  )
+  const handleTokenBSelect = useCallback(
+    (tokenAddress: string) => {
+      history.push(`/add/${tokenAId ?? ''}/${tokenId(chainId, tokenAddress)}`)
+    },
+    [chainId, history, tokenAId]
+  )
+
   return (
     <>
       <AppBody>
@@ -299,13 +324,13 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
               </ColumnCenter>
             )}
             <CurrencyInputPanel
-              disableTokenSelect={true}
               field={Field.TOKEN_A}
               value={formattedAmounts[Field.TOKEN_A]}
               onUserInput={handleTokenAInput}
               onMax={() => {
                 onUserInput(Field.TOKEN_A, maxAmounts[Field.TOKEN_A]?.toExact() ?? '')
               }}
+              onTokenSelection={handleTokenASelect}
               showMaxButton={!atMaxAmounts[Field.TOKEN_A]}
               token={tokens[Field.TOKEN_A]}
               pair={pair}
@@ -316,10 +341,10 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
               <Plus size="16" color={theme.text2} />
             </ColumnCenter>
             <CurrencyInputPanel
-              disableTokenSelect={true}
               field={Field.TOKEN_B}
               value={formattedAmounts[Field.TOKEN_B]}
               onUserInput={handleTokenBInput}
+              onTokenSelection={handleTokenBSelect}
               onMax={() => {
                 onUserInput(Field.TOKEN_B, maxAmounts[Field.TOKEN_B]?.toExact() ?? '')
               }}

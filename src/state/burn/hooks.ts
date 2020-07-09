@@ -3,8 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
-import { Field, typeInput } from './actions'
-import { setDefaultsFromURLMatchParams } from '../mint/actions'
+import { Field, setBurnDefaultsFromURLMatchParams, typeInput } from './actions'
 import { useToken } from '../../hooks/Tokens'
 import { Token, Pair, TokenAmount, Percent, JSBI, Route } from '@uniswap/sdk'
 import { usePair } from '../../data/Reserves'
@@ -177,11 +176,11 @@ export function useBurnActionHandlers(): {
 }
 
 // updates the burn state to use the appropriate tokens, given the route
-export function useDefaultsFromURLMatchParams(params: { [k: string]: string }) {
+export function useDefaultsFromURLMatchParams(params: { tokens: string }) {
   const { chainId } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
     if (!chainId) return
-    dispatch(setDefaultsFromURLMatchParams({ chainId, params }))
+    dispatch(setBurnDefaultsFromURLMatchParams({ chainId, params }))
   }, [dispatch, chainId, params])
 }
