@@ -1,5 +1,5 @@
 import { JSBI, Token, TokenAmount } from '@uniswap/sdk'
-import React, { useContext } from 'react'
+import React, { CSSProperties, memo, useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
@@ -40,6 +40,103 @@ export default function TokenList({
   const addToken = useAddUserToken()
   const removeToken = useRemoveUserAddedToken()
 
+  const TokenRow = useMemo(() => {
+    return memo(function TokenRow({ index, style }: { index: number; style: CSSProperties }) {
+      const token = tokens[index]
+      const { address, symbol } = token
+
+      const isDefault = isDefaultToken(token)
+      const customAdded = isCustomAddedToken(allTokens, token)
+      const balance = allTokenBalances[address]
+
+      const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
+
+      return (
+        <MenuItem
+          style={style}
+          key={address}
+          className={`token-item-${address}`}
+          onClick={() => (selectedToken && selectedToken === address ? null : onTokenSelect(address))}
+          disabled={selectedToken && selectedToken === address}
+          selected={otherToken === address}
+        >
+          <RowFixed>
+            <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }} />
+            <Column>
+              <Text fontWeight={500}>
+                {symbol}
+                {otherToken === address && <GreySpan> ({otherSelectedText})</GreySpan>}
+              </Text>
+              <FadedSpan>
+                {customAdded ? (
+                  <TYPE.main fontWeight={500}>
+                    Added by user
+                    <LinkStyledButton
+                      onClick={event => {
+                        event.stopPropagation()
+                        removeToken(chainId, address)
+                      }}
+                    >
+                      (Remove)
+                    </LinkStyledButton>
+                  </TYPE.main>
+                ) : null}
+                {!isDefault && !customAdded ? (
+                  <TYPE.main fontWeight={500}>
+                    Found by address
+                    <LinkStyledButton
+                      onClick={event => {
+                        event.stopPropagation()
+                        addToken(token)
+                      }}
+                    >
+                      (Add)
+                    </LinkStyledButton>
+                  </TYPE.main>
+                ) : null}
+              </FadedSpan>
+            </Column>
+          </RowFixed>
+          <AutoColumn>
+            {balance ? (
+              <Text>
+                {zeroBalance && showSendWithSwap ? (
+                  <ButtonSecondary padding={'4px 8px'}>
+                    <Text textAlign="center" fontWeight={500} fontSize={14} color={theme.primary1}>
+                      Send With Swap
+                    </Text>
+                  </ButtonSecondary>
+                ) : balance ? (
+                  balance.toSignificant(6)
+                ) : (
+                  '-'
+                )}
+              </Text>
+            ) : account ? (
+              <Loader />
+            ) : (
+              '-'
+            )}
+          </AutoColumn>
+        </MenuItem>
+      )
+    })
+  }, [
+    account,
+    addToken,
+    allTokenBalances,
+    allTokens,
+    chainId,
+    onTokenSelect,
+    otherSelectedText,
+    otherToken,
+    removeToken,
+    selectedToken,
+    showSendWithSwap,
+    theme.primary1,
+    tokens
+  ])
+
   if (tokens.length === 0) {
     return <ModalInfo>{t('noToken')}</ModalInfo>
   }
@@ -53,86 +150,7 @@ export default function TokenList({
       style={{ flex: '1' }}
       itemKey={index => tokens[index].address}
     >
-      {({ index, style }) => {
-        const token = tokens[index]
-        const { address, symbol } = token
-
-        const isDefault = isDefaultToken(token)
-        const customAdded = isCustomAddedToken(allTokens, token)
-        const balance = allTokenBalances[address]
-
-        const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
-
-        return (
-          <MenuItem
-            style={style}
-            key={address}
-            className={`token-item-${address}`}
-            onClick={() => (selectedToken && selectedToken === address ? null : onTokenSelect(address))}
-            disabled={selectedToken && selectedToken === address}
-            selected={otherToken === address}
-          >
-            <RowFixed>
-              <TokenLogo address={address} size={'24px'} style={{ marginRight: '14px' }} />
-              <Column>
-                <Text fontWeight={500}>
-                  {symbol}
-                  {otherToken === address && <GreySpan> ({otherSelectedText})</GreySpan>}
-                </Text>
-                <FadedSpan>
-                  {customAdded ? (
-                    <TYPE.main fontWeight={500}>
-                      Added by user
-                      <LinkStyledButton
-                        onClick={event => {
-                          event.stopPropagation()
-                          removeToken(chainId, address)
-                        }}
-                      >
-                        (Remove)
-                      </LinkStyledButton>
-                    </TYPE.main>
-                  ) : null}
-                  {!isDefault && !customAdded ? (
-                    <TYPE.main fontWeight={500}>
-                      Found by address
-                      <LinkStyledButton
-                        onClick={event => {
-                          event.stopPropagation()
-                          addToken(token)
-                        }}
-                      >
-                        (Add)
-                      </LinkStyledButton>
-                    </TYPE.main>
-                  ) : null}
-                </FadedSpan>
-              </Column>
-            </RowFixed>
-            <AutoColumn>
-              {balance ? (
-                <Text>
-                  {zeroBalance && showSendWithSwap ? (
-                    <ButtonSecondary padding={'4px 8px'}>
-                      <Text textAlign="center" fontWeight={500} fontSize={14} color={theme.primary1}>
-                        Send With Swap
-                      </Text>
-                    </ButtonSecondary>
-                  ) : balance ? (
-                    balance.toSignificant(6)
-                  ) : (
-                    '-'
-                  )}
-                </Text>
-              ) : account ? (
-                <Loader />
-              ) : (
-                '-'
-              )}
-            </AutoColumn>
-          </MenuItem>
-        )
-      }}
+      {TokenRow}
     </FixedSizeList>
   )
 }

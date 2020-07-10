@@ -1,12 +1,11 @@
-import React, { useState, useContext, useCallback } from 'react'
-import styled, { ThemeContext } from 'styled-components'
-import { JSBI } from '@uniswap/sdk'
-import { RouteComponentProps } from 'react-router-dom'
+import React, { useContext } from 'react'
+import { ThemeContext } from 'styled-components'
+import { Pair } from '@uniswap/sdk'
+import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 
 import Question from '../../components/QuestionHelper'
-import PairSearchModal from '../../components/SearchModal/PairSearchModal'
-import PositionCard from '../../components/PositionCard'
+import FullPositionCard from '../../components/PositionCard'
 import { useUserHasLiquidityInAllTokens } from '../../data/V1'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
@@ -14,7 +13,7 @@ import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
 import { RowBetween } from '../../components/Row'
 import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
-import { AutoColumn, ColumnCenter } from '../../components/Column'
+import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
 import { usePairs } from '../../data/Reserves'
@@ -22,71 +21,47 @@ import { useAllDummyPairs } from '../../state/user/hooks'
 import AppBody from '../AppBody'
 import { Dots } from '../../components/swap/styleds'
 
-const Positions = styled.div`
-  position: relative;
-  width: 100%;
-`
-
-const FixedBottom = styled.div`
-  position: absolute;
-  bottom: -80px;
-  width: 100%;
-`
-
-export default function Pool({ history }: RouteComponentProps) {
+export default function Pool() {
   const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
-  const [showPoolSearch, setShowPoolSearch] = useState(false)
 
   // fetch the user's balances of all tracked V2 LP tokens
-  const V2DummyPairs = useAllDummyPairs()
-  const [V2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
-    account,
-    V2DummyPairs?.map(p => p.liquidityToken)
+  const v2DummyPairs = useAllDummyPairs()
+  const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
+    account ?? undefined,
+    v2DummyPairs?.map(p => p.liquidityToken)
   )
   // fetch the reserves for all V2 pools in which the user has a balance
-  const V2DummyPairsWithABalance = V2DummyPairs.filter(
-    V2DummyPair =>
-      V2PairsBalances[V2DummyPair.liquidityToken.address] &&
-      JSBI.greaterThan(V2PairsBalances[V2DummyPair.liquidityToken.address].raw, JSBI.BigInt(0))
+  const v2DummyPairsWithABalance = v2DummyPairs.filter(dummyPair =>
+    v2PairsBalances[dummyPair.liquidityToken.address]?.greaterThan('0')
   )
-  const V2Pairs = usePairs(
-    V2DummyPairsWithABalance.map(V2DummyPairWithABalance => [
+  const v2Pairs = usePairs(
+    v2DummyPairsWithABalance.map(V2DummyPairWithABalance => [
       V2DummyPairWithABalance.token0,
       V2DummyPairWithABalance.token1
     ])
   )
-  const V2IsLoading =
-    fetchingV2PairBalances || V2Pairs?.length < V2DummyPairsWithABalance.length || V2Pairs?.some(V2Pair => !!!V2Pair)
+  const v2IsLoading =
+    fetchingV2PairBalances || v2Pairs?.length < v2DummyPairsWithABalance.length || v2Pairs?.some(V2Pair => !V2Pair)
 
-  const allV2PairsWithLiquidity = V2Pairs.filter(V2Pair => !!V2Pair).map(V2Pair => (
-    <PositionCard key={V2Pair.liquidityToken.address} pair={V2Pair} />
-  ))
+  const allV2PairsWithLiquidity = v2Pairs
+    .filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
+    .map(V2Pair => <FullPositionCard key={V2Pair.liquidityToken.address} pair={V2Pair} />)
 
   const hasV1Liquidity = useUserHasLiquidityInAllTokens()
 
-  const handleSearchDismiss = useCallback(() => {
-    setShowPoolSearch(false)
-  }, [setShowPoolSearch])
-
   return (
-    <AppBody>
-      <SwapPoolTabs active={'pool'} />
-      <AutoColumn gap="lg" justify="center">
-        <ButtonPrimary
-          id="join-pool-button"
-          padding="16px"
-          onClick={() => {
-            setShowPoolSearch(true)
-          }}
-        >
-          <Text fontWeight={500} fontSize={20}>
-            Join {allV2PairsWithLiquidity?.length > 0 ? 'another' : 'a'} pool
-          </Text>
-        </ButtonPrimary>
+    <>
+      <AppBody>
+        <SwapPoolTabs active={'pool'} />
+        <AutoColumn gap="lg" justify="center">
+          <ButtonPrimary id="join-pool-button" as={Link} style={{ padding: 16 }} to="/add/ETH">
+            <Text fontWeight={500} fontSize={20}>
+              Add Liquidity
+            </Text>
+          </ButtonPrimary>
 
-        <Positions>
-          <AutoColumn gap="12px">
+          <AutoColumn gap="12px" style={{ width: '100%' }}>
             <RowBetween padding={'0 8px'}>
               <Text color={theme.text1} fontWeight={500}>
                 Your Liquidity
@@ -100,7 +75,7 @@ export default function Pool({ history }: RouteComponentProps) {
                   Connect to a wallet to view your liquidity.
                 </TYPE.body>
               </LightCard>
-            ) : V2IsLoading ? (
+            ) : v2IsLoading ? (
               <LightCard padding="40px">
                 <TYPE.body color={theme.text3} textAlign="center">
                   <Dots>Loading</Dots>
@@ -125,16 +100,14 @@ export default function Pool({ history }: RouteComponentProps) {
               </Text>
             </div>
           </AutoColumn>
-          <FixedBottom>
-            <ColumnCenter>
-              <ButtonSecondary width="136px" padding="8px" borderRadius="10px" onClick={() => history.push('/create')}>
-                + Create Pool
-              </ButtonSecondary>
-            </ColumnCenter>
-          </FixedBottom>
-        </Positions>
-        <PairSearchModal isOpen={showPoolSearch} onDismiss={handleSearchDismiss} />
-      </AutoColumn>
-    </AppBody>
+        </AutoColumn>
+      </AppBody>
+
+      <div style={{ display: 'flex', alignItems: 'center', marginTop: '1.5rem' }}>
+        <ButtonSecondary as={Link} style={{ width: 'initial' }} padding="8px" borderRadius="10px" to="/migrate/v1">
+          Migrate V1 Liquidity
+        </ButtonSecondary>
+      </div>
+    </>
   )
 }

@@ -1,47 +1,58 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { TokenAmount, WETH } from '@uniswap/sdk'
-import React, { useContext, useState } from 'react'
+import { TransactionResponse } from '@ethersproject/providers'
+import { ChainId, Token, TokenAmount, WETH } from '@uniswap/sdk'
+import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { ButtonLight, ButtonPrimary, ButtonError } from '../../components/Button'
+import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, GreyCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleLogo from '../../components/DoubleLogo'
-import PositionCard from '../../components/PositionCard'
-import Row, { AutoRow, RowBetween, RowFixed, RowFlat } from '../../components/Row'
+import { AddRemoveTabs } from '../../components/NavigationTabs'
+import { MinimalPositionCard } from '../../components/PositionCard'
+import Row, { RowBetween, RowFlat } from '../../components/Row'
 
-import TokenLogo from '../../components/TokenLogo'
-
-import { ROUTER_ADDRESS, MIN_ETH, ONE_BIPS } from '../../constants'
+import { ROUTER_ADDRESS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
+import { useToken } from '../../hooks/Tokens'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import { useWalletModalToggle } from '../../state/application/hooks'
+import { Field } from '../../state/mint/actions'
+import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
+import { useIsExpertMode, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
 import { Dots, Wrapper } from '../Pool/styleds'
-import {
-  useDefaultsFromURLMatchParams,
-  useMintState,
-  useDerivedMintInfo,
-  useMintActionHandlers
-} from '../../state/mint/hooks'
-import { Field } from '../../state/mint/actions'
-import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
-import { useWalletModalToggle } from '../../state/application/hooks'
-import { useUserSlippageTolerance, useUserDeadline, useIsExpertMode } from '../../state/user/hooks'
-import { AddRemoveTabs } from '../../components/NavigationTabs'
+import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
+import { currencyId } from './currencyId'
+import { PoolPriceBar } from './PoolPriceBar'
 
-export default function AddLiquidity({ match: { params } }: RouteComponentProps<{ tokens: string }>) {
-  useDefaultsFromURLMatchParams(params)
+function useTokenByCurrencyId(chainId: ChainId | undefined, currencyId: string | undefined): Token | undefined {
+  const isETH = currencyId?.toUpperCase() === 'ETH'
+  const token = useToken(isETH ? undefined : currencyId)
+  return isETH && chainId ? WETH[chainId] : token ?? undefined
+}
 
+export default function AddLiquidity({
+  match: {
+    params: { currencyIdA, currencyIdB }
+  },
+  history
+}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
+
+  const tokenA = useTokenByCurrencyId(chainId, currencyIdA)
+  const tokenB = useTokenByCurrencyId(chainId, currencyIdB)
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
@@ -61,8 +72,21 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
     liquidityMinted,
     poolTokenPercentage,
     error
-  } = useDerivedMintInfo()
-  const { onUserInput } = useMintActionHandlers()
+  } = useDerivedMintInfo(tokenA ?? undefined, tokenB ?? undefined)
+  const { onUserInput } = useMintActionHandlers(noLiquidity)
+
+  const handleTokenAInput = useCallback(
+    (field: string, value: string) => {
+      return onUserInput(Field.TOKEN_A, value)
+    },
+    [onUserInput]
+  )
+  const handleTokenBInput = useCallback(
+    (field: string, value: string) => {
+      return onUserInput(Field.TOKEN_B, value)
+    },
+    [onUserInput]
+  )
 
   const isValid = !error
 
@@ -85,17 +109,7 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
   const maxAmounts: { [field in Field]?: TokenAmount } = [Field.TOKEN_A, Field.TOKEN_B].reduce((accumulator, field) => {
     return {
       ...accumulator,
-      [field]:
-        !!tokenBalances[field] &&
-        !!tokens[field] &&
-        !!WETH[chainId] &&
-        tokenBalances[field].greaterThan(
-          new TokenAmount(tokens[field], tokens[field].equals(WETH[chainId]) ? MIN_ETH : '0')
-        )
-          ? tokens[field].equals(WETH[chainId])
-            ? tokenBalances[field].subtract(new TokenAmount(WETH[chainId], MIN_ETH))
-            : tokenBalances[field]
-          : undefined
+      [field]: maxAmountSpend(tokenBalances[field])
     }
   }, {})
 
@@ -103,7 +117,7 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
     (accumulator, field) => {
       return {
         ...accumulator,
-        [field]: maxAmounts[field] && parsedAmounts[field] ? maxAmounts[field].equalTo(parsedAmounts[field]) : undefined
+        [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0')
       }
     },
     {}
@@ -114,38 +128,48 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
   const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.TOKEN_B], ROUTER_ADDRESS)
 
   const addTransaction = useTransactionAdder()
+
   async function onAdd() {
+    if (!chainId || !library || !account) return
     const router = getRouterContract(chainId, library, account)
 
+    const { [Field.TOKEN_A]: parsedAmountA, [Field.TOKEN_B]: parsedAmountB } = parsedAmounts
+    if (!parsedAmountA || !parsedAmountB || !tokenA || !tokenB) {
+      return
+    }
+
     const amountsMin = {
-      [Field.TOKEN_A]: calculateSlippageAmount(parsedAmounts[Field.TOKEN_A], noLiquidity ? 0 : allowedSlippage)[0],
-      [Field.TOKEN_B]: calculateSlippageAmount(parsedAmounts[Field.TOKEN_B], noLiquidity ? 0 : allowedSlippage)[0]
+      [Field.TOKEN_A]: calculateSlippageAmount(parsedAmountA, noLiquidity ? 0 : allowedSlippage)[0],
+      [Field.TOKEN_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0]
     }
 
     const deadlineFromNow = Math.ceil(Date.now() / 1000) + deadline
 
-    let estimate, method: Function, args: Array<string | string[] | number>, value: BigNumber | null
-    if (tokens[Field.TOKEN_A].equals(WETH[chainId]) || tokens[Field.TOKEN_B].equals(WETH[chainId])) {
-      const tokenBIsETH = tokens[Field.TOKEN_B].equals(WETH[chainId])
+    let estimate,
+      method: (...args: any) => Promise<TransactionResponse>,
+      args: Array<string | string[] | number>,
+      value: BigNumber | null
+    if (tokenA.equals(WETH[chainId]) || tokenB.equals(WETH[chainId])) {
+      const tokenBIsETH = tokenB.equals(WETH[chainId])
       estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
       args = [
-        tokens[tokenBIsETH ? Field.TOKEN_A : Field.TOKEN_B].address, // token
-        parsedAmounts[tokenBIsETH ? Field.TOKEN_A : Field.TOKEN_B].raw.toString(), // token desired
+        (tokenBIsETH ? tokenA : tokenB).address, // token
+        (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
         amountsMin[tokenBIsETH ? Field.TOKEN_A : Field.TOKEN_B].toString(), // token min
         amountsMin[tokenBIsETH ? Field.TOKEN_B : Field.TOKEN_A].toString(), // eth min
         account,
         deadlineFromNow
       ]
-      value = BigNumber.from(parsedAmounts[tokenBIsETH ? Field.TOKEN_B : Field.TOKEN_A].raw.toString())
+      value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
     } else {
       estimate = router.estimateGas.addLiquidity
       method = router.addLiquidity
       args = [
-        tokens[Field.TOKEN_A].address,
-        tokens[Field.TOKEN_B].address,
-        parsedAmounts[Field.TOKEN_A].raw.toString(),
-        parsedAmounts[Field.TOKEN_B].raw.toString(),
+        tokenA.address,
+        tokenB.address,
+        parsedAmountA.raw.toString(),
+        parsedAmountB.raw.toString(),
         amountsMin[Field.TOKEN_A].toString(),
         amountsMin[Field.TOKEN_B].toString(),
         account,
@@ -228,82 +252,49 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
 
   const modalBottom = () => {
     return (
-      <>
-        <RowBetween>
-          <TYPE.body>{tokens[Field.TOKEN_A]?.symbol} Deposited</TYPE.body>
-          <RowFixed>
-            <TokenLogo address={tokens[Field.TOKEN_A]?.address} style={{ marginRight: '8px' }} />
-            <TYPE.body>{parsedAmounts[Field.TOKEN_A]?.toSignificant(6)}</TYPE.body>
-          </RowFixed>
-        </RowBetween>
-        <RowBetween>
-          <TYPE.body>{tokens[Field.TOKEN_B]?.symbol} Deposited</TYPE.body>
-          <RowFixed>
-            <TokenLogo address={tokens[Field.TOKEN_B]?.address} style={{ marginRight: '8px' }} />
-            <TYPE.body>{parsedAmounts[Field.TOKEN_B]?.toSignificant(6)}</TYPE.body>
-          </RowFixed>
-        </RowBetween>
-        <RowBetween>
-          <TYPE.body>Rates</TYPE.body>
-          <TYPE.body>
-            {`1 ${tokens[Field.TOKEN_A]?.symbol} = ${price?.toSignificant(4)} ${tokens[Field.TOKEN_B]?.symbol}`}
-          </TYPE.body>
-        </RowBetween>
-        <RowBetween style={{ justifyContent: 'flex-end' }}>
-          <TYPE.body>
-            {`1 ${tokens[Field.TOKEN_B]?.symbol} = ${price?.invert().toSignificant(4)} ${
-              tokens[Field.TOKEN_A]?.symbol
-            }`}
-          </TYPE.body>
-        </RowBetween>
-        <RowBetween>
-          <TYPE.body>Share of Pool:</TYPE.body>
-          <TYPE.body>{noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</TYPE.body>
-        </RowBetween>
-        <ButtonPrimary style={{ margin: '20px 0 0 0' }} onClick={onAdd}>
-          <Text fontWeight={500} fontSize={20}>
-            {noLiquidity ? 'Create Pool & Supply' : 'Confirm Supply'}
-          </Text>
-        </ButtonPrimary>
-      </>
-    )
-  }
-
-  const PriceBar = () => {
-    return (
-      <AutoColumn gap="md">
-        <AutoRow justify="space-around" gap="4px">
-          <AutoColumn justify="center">
-            <TYPE.black>{price?.toSignificant(6) ?? '0'}</TYPE.black>
-            <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              {tokens[Field.TOKEN_B]?.symbol} per {tokens[Field.TOKEN_A]?.symbol}
-            </Text>
-          </AutoColumn>
-          <AutoColumn justify="center">
-            <TYPE.black>{price?.invert().toSignificant(6) ?? '0'}</TYPE.black>
-            <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              {tokens[Field.TOKEN_A]?.symbol} per {tokens[Field.TOKEN_B]?.symbol}
-            </Text>
-          </AutoColumn>
-          <AutoColumn justify="center">
-            <TYPE.black>
-              {noLiquidity && price
-                ? '100'
-                : (poolTokenPercentage?.lessThan(ONE_BIPS) ? '<0.01' : poolTokenPercentage?.toFixed(2)) ?? '0'}
-              %
-            </TYPE.black>
-            <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              Share of Pool
-            </Text>
-          </AutoColumn>
-        </AutoRow>
-      </AutoColumn>
+      <ConfirmAddModalBottom
+        price={price}
+        tokens={tokens}
+        parsedAmounts={parsedAmounts}
+        noLiquidity={noLiquidity}
+        onAdd={onAdd}
+        poolTokenPercentage={poolTokenPercentage}
+      />
     )
   }
 
   const pendingText = `Supplying ${parsedAmounts[Field.TOKEN_A]?.toSignificant(6)} ${
     tokens[Field.TOKEN_A]?.symbol
   } and ${parsedAmounts[Field.TOKEN_B]?.toSignificant(6)} ${tokens[Field.TOKEN_B]?.symbol}`
+
+  const handleTokenASelect = useCallback(
+    (tokenAddress: string) => {
+      const [tokenAId, tokenBId] = [
+        currencyId(chainId, tokenAddress),
+        tokenB ? currencyId(chainId, tokenB.address) : undefined
+      ]
+      if (tokenAId === tokenBId) {
+        history.push(`/add/${tokenAId}/${tokenA ? currencyId(chainId, tokenA.address) : ''}`)
+      } else {
+        history.push(`/add/${tokenAId}/${tokenBId}`)
+      }
+    },
+    [chainId, tokenB, history, tokenA]
+  )
+  const handleTokenBSelect = useCallback(
+    (tokenAddress: string) => {
+      const [tokenAId, tokenBId] = [
+        tokenA ? currencyId(chainId, tokenA.address) : undefined,
+        currencyId(chainId, tokenAddress)
+      ]
+      if (tokenAId === tokenBId) {
+        history.push(`/add/${tokenB ? currencyId(chainId, tokenB.address) : ''}/${tokenAId}`)
+      } else {
+        history.push(`/add/${currencyIdA ? currencyIdA : 'ETH'}/${currencyId(chainId, tokenAddress)}`)
+      }
+    },
+    [tokenA, chainId, history, tokenB, currencyIdA]
+  )
 
   return (
     <>
@@ -346,34 +337,35 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
               </ColumnCenter>
             )}
             <CurrencyInputPanel
-              disableTokenSelect={true}
               field={Field.TOKEN_A}
               value={formattedAmounts[Field.TOKEN_A]}
-              onUserInput={onUserInput}
+              onUserInput={handleTokenAInput}
               onMax={() => {
-                maxAmounts[Field.TOKEN_A] && onUserInput(Field.TOKEN_A, maxAmounts[Field.TOKEN_A].toExact())
+                onUserInput(Field.TOKEN_A, maxAmounts[Field.TOKEN_A]?.toExact() ?? '')
               }}
+              onTokenSelection={handleTokenASelect}
               showMaxButton={!atMaxAmounts[Field.TOKEN_A]}
               token={tokens[Field.TOKEN_A]}
               pair={pair}
-              label="Input"
               id="add-liquidity-input-tokena"
+              showCommonBases
             />
             <ColumnCenter>
               <Plus size="16" color={theme.text2} />
             </ColumnCenter>
             <CurrencyInputPanel
-              disableTokenSelect={true}
               field={Field.TOKEN_B}
               value={formattedAmounts[Field.TOKEN_B]}
-              onUserInput={onUserInput}
+              onUserInput={handleTokenBInput}
+              onTokenSelection={handleTokenBSelect}
               onMax={() => {
-                maxAmounts[Field.TOKEN_B] && onUserInput(Field.TOKEN_B, maxAmounts[Field.TOKEN_B].toExact())
+                onUserInput(Field.TOKEN_B, maxAmounts[Field.TOKEN_B]?.toExact() ?? '')
               }}
               showMaxButton={!atMaxAmounts[Field.TOKEN_B]}
               token={tokens[Field.TOKEN_B]}
               pair={pair}
               id="add-liquidity-input-tokenb"
+              showCommonBases
             />
             {tokens[Field.TOKEN_A] && tokens[Field.TOKEN_B] && (
               <>
@@ -384,7 +376,12 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
                     </TYPE.subHeader>
                   </RowBetween>{' '}
                   <LightCard padding="1rem" borderRadius={'20px'}>
-                    <PriceBar />
+                    <PoolPriceBar
+                      tokens={tokens}
+                      poolTokenPercentage={poolTokenPercentage}
+                      noLiquidity={noLiquidity}
+                      price={price}
+                    />
                   </LightCard>
                 </GreyCard>
               </>
@@ -447,7 +444,7 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
 
       {pair && !noLiquidity ? (
         <AutoColumn style={{ minWidth: '20rem', marginTop: '1rem' }}>
-          <PositionCard pair={pair} minimal={true} />
+          <MinimalPositionCard pair={pair} />
         </AutoColumn>
       ) : null}
     </>

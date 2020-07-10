@@ -1,11 +1,10 @@
-import { useEffect, useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Token, TokenAmount, Route, JSBI, Price, Percent, Pair } from '@uniswap/sdk'
 
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
-import { setDefaultsFromURLMatchParams, Field, typeInput } from './actions'
-import { useToken } from '../../hooks/Tokens'
+import { Field, typeInput } from './actions'
 import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
 import { usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
@@ -17,7 +16,10 @@ export function useMintState(): AppState['mint'] {
   return useSelector<AppState, AppState['mint']>(state => state.mint)
 }
 
-export function useDerivedMintInfo(): {
+export function useDerivedMintInfo(
+  tokenA: Token | undefined,
+  tokenB: Token | undefined
+): {
   dependentField: Field
   tokens: { [field in Field]?: Token }
   pair?: Pair | null
@@ -31,19 +33,11 @@ export function useDerivedMintInfo(): {
 } {
   const { account } = useActiveWeb3React()
 
-  const {
-    independentField,
-    typedValue,
-    otherTypedValue,
-    [Field.TOKEN_A]: { address: tokenAAddress },
-    [Field.TOKEN_B]: { address: tokenBAddress }
-  } = useMintState()
+  const { independentField, typedValue, otherTypedValue } = useMintState()
 
   const dependentField = independentField === Field.TOKEN_A ? Field.TOKEN_B : Field.TOKEN_A
 
   // tokens
-  const tokenA = useToken(tokenAAddress)
-  const tokenB = useToken(tokenBAddress)
   const tokens: { [field in Field]?: Token } = useMemo(
     () => ({
       [Field.TOKEN_A]: tokenA,
@@ -172,16 +166,16 @@ export function useDerivedMintInfo(): {
   }
 }
 
-export function useMintActionHandlers(): {
+export function useMintActionHandlers(
+  noLiquidity: boolean | undefined
+): {
   onUserInput: (field: Field, typedValue: string) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
 
-  const { noLiquidity } = useDerivedMintInfo()
-
   const onUserInput = useCallback(
     (field: Field, typedValue: string) => {
-      dispatch(typeInput({ field, typedValue, noLiquidity: noLiquidity === true ? true : false }))
+      dispatch(typeInput({ field, typedValue, noLiquidity: noLiquidity === true }))
     },
     [dispatch, noLiquidity]
   )
@@ -189,14 +183,4 @@ export function useMintActionHandlers(): {
   return {
     onUserInput
   }
-}
-
-// updates the mint state to use the appropriate tokens, given the route
-export function useDefaultsFromURLMatchParams(params: { [k: string]: string }) {
-  const { chainId } = useActiveWeb3React()
-  const dispatch = useDispatch<AppDispatch>()
-  useEffect(() => {
-    if (!chainId) return
-    dispatch(setDefaultsFromURLMatchParams({ chainId, params }))
-  }, [dispatch, chainId, params])
 }

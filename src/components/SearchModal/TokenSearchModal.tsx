@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk'
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { KeyboardEvent, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
@@ -9,7 +9,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
 import useInterval from '../../hooks/useInterval'
 import { useAllTokenBalancesTreatingWETHasETH, useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
-import { CloseIcon, LinkStyledButton } from '../../theme/components'
+import { CloseIcon, LinkStyledButton } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import Modal from '../Modal'
@@ -122,6 +122,20 @@ export default function TokenSearchModal({
     false
   )
 
+  const handleEnter = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter' && filteredSortedTokens.length > 0) {
+        if (
+          filteredSortedTokens[0].symbol.toLowerCase() === searchQuery.trim().toLowerCase() ||
+          filteredSortedTokens.length === 1
+        ) {
+          handleTokenSelect(filteredSortedTokens[0].address)
+        }
+      }
+    },
+    [filteredSortedTokens, handleTokenSelect, searchQuery]
+  )
+
   return (
     <Modal
       isOpen={isOpen}
@@ -131,7 +145,7 @@ export default function TokenSearchModal({
       minHeight={70}
     >
       <Column style={{ width: '100%' }}>
-        <PaddedColumn gap="20px">
+        <PaddedColumn gap="14px">
           <RowBetween>
             <Text fontWeight={500} fontSize={16}>
               Select a token
@@ -156,6 +170,7 @@ export default function TokenSearchModal({
               onChange={handleInput}
               onFocus={closeTooltip}
               onBlur={closeTooltip}
+              onKeyDown={handleEnter}
             />
           </Tooltip>
           {showCommonBases && (

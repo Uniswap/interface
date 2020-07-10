@@ -14,9 +14,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
 
-import { ExternalLink, StyledInternalLink } from '../../theme'
 import { YellowCard } from '../Card'
-import { AutoColumn } from '../Column'
 import Settings from '../Settings'
 import Menu from '../Menu'
 
@@ -107,26 +105,6 @@ const UniIcon = styled(HistoryLink)<{ to: string }>`
   }
 `
 
-const MigrateBanner = styled(AutoColumn)`
-  width: 100%;
-  padding: 12px 0;
-  display: flex;
-  justify-content: center;
-  background-color: ${({ theme }) => theme.primary5};
-  color: ${({ theme }) => theme.primaryText1};
-  font-weight: 400;
-  text-align: center;
-  pointer-events: auto;
-  a {
-    color: ${({ theme }) => theme.primaryText1};
-  }
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 0;
-    display: none;
-  `};
-`
-
 const HeaderControls = styled.div`
   display: flex;
   flex-direction: row;
@@ -153,17 +131,6 @@ export default function Header() {
 
   return (
     <HeaderFrame>
-      <MigrateBanner>
-        Uniswap V2 is live! Read the&nbsp;
-        <ExternalLink href="https://uniswap.org/blog/launch-uniswap-v2/">
-          <b>blog post ↗</b>
-        </ExternalLink>
-        &nbsp;or&nbsp;
-        <StyledInternalLink to="/migrate/v1">
-          <b>migrate your liquidity ↗</b>
-        </StyledInternalLink>
-        .
-      </MigrateBanner>
       <RowBetween style={{ alignItems: 'flex-start' }} padding="1rem 1rem 0 1rem">
         <HeaderElement>
           <Title>
