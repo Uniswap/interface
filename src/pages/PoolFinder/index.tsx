@@ -29,12 +29,12 @@ export default function PoolFinder() {
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
 
-  const [token0Address, setToken0Address] = useState<string>(WETH[chainId].address)
+  const [token0Address, setToken0Address] = useState<string>(chainId ? WETH[chainId].address : '')
   const [token1Address, setToken1Address] = useState<string>()
-  const token0: Token = useToken(token0Address)
-  const token1: Token = useToken(token1Address)
+  const token0: Token | null | undefined = useToken(token0Address)
+  const token1: Token | null | undefined = useToken(token1Address)
 
-  const pair: Pair = usePair(token0, token1)
+  const pair: Pair | null | undefined = usePair(token0 ?? undefined, token1 ?? undefined)
   const addPair = usePairAdder()
   useEffect(() => {
     if (pair) {
@@ -46,7 +46,7 @@ export default function PoolFinder() {
     pair === null ||
     (!!pair && JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) && JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0)))
 
-  const position: TokenAmount = useTokenBalanceTreatingWETHasETH(account, pair?.liquidityToken)
+  const position: TokenAmount | undefined = useTokenBalanceTreatingWETHasETH(account ?? undefined, pair?.liquidityToken)
   const poolImported: boolean = !!position && JSBI.greaterThan(position.raw, JSBI.BigInt(0))
 
   const handleTokenSelect = useCallback(
@@ -125,7 +125,7 @@ export default function PoolFinder() {
             <LightCard padding="45px 10px">
               <AutoColumn gap="sm" justify="center">
                 <Text textAlign="center">You don’t have liquidity in this pool yet.</Text>
-                <StyledInternalLink to={`/add/${token0.address}-${token1.address}`}>
+                <StyledInternalLink to={`/add/${token0?.address}/${token1?.address}`}>
                   <Text textAlign="center">Add liquidity.</Text>
                 </StyledInternalLink>
               </AutoColumn>
@@ -135,7 +135,7 @@ export default function PoolFinder() {
           <LightCard padding="45px 10px">
             <AutoColumn gap="sm" justify="center">
               <Text textAlign="center">No pool found.</Text>
-              <StyledInternalLink to={`/add/${token0Address}-${token1Address}`}>Create pool?</StyledInternalLink>
+              <StyledInternalLink to={`/add/${token0Address}/${token1Address}`}>Create pool?</StyledInternalLink>
             </AutoColumn>
           </LightCard>
         ) : (

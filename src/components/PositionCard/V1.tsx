@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { RouteComponentProps, withRouter } from 'react-router-dom'
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { Token, TokenAmount, WETH } from '@uniswap/sdk'
 
 import { Text } from 'rebass'
@@ -49,9 +49,9 @@ function V1PositionCard({ token, V1LiquidityBalance, history }: PositionCardProp
           <RowBetween marginTop="10px">
             <ButtonSecondary
               width="68%"
-              onClick={() => {
-                history.push(`/migrate/v1/${V1LiquidityBalance.token.address}`)
-              }}
+              as={Link}
+              to={`/migrate/v1/${V1LiquidityBalance.token.address}`}
+              onClick={() => {}}
             >
               Migrate
             </ButtonSecondary>
@@ -59,9 +59,8 @@ function V1PositionCard({ token, V1LiquidityBalance, history }: PositionCardProp
             <ButtonSecondary
               style={{ backgroundColor: 'transparent' }}
               width="28%"
-              onClick={() => {
-                history.push(`/remove/v1/${V1LiquidityBalance.token.address}`)
-              }}
+              as={Link}
+              to={`/remove/v1/${V1LiquidityBalance.token.address}`}
             >
               Remove
             </ButtonSecondary>

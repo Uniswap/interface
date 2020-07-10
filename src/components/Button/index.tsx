@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { darken, lighten } from 'polished'
+import PropsOfExcluding from '../../utils/props-of-excluding'
 
 import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'
@@ -21,6 +22,7 @@ const Base = styled(RebassButton)<{
   outline: none;
   border: 1px solid transparent;
   color: white;
+  text-decoration: none;
   display: flex;
   justify-content: center;
   flex-wrap: nowrap;

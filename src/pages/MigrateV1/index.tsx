@@ -1,7 +1,5 @@
 import { JSBI, Token } from '@uniswap/sdk'
 import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
-import { ArrowLeft } from 'react-feather'
-import { RouteComponentProps } from 'react-router'
 import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
 import { AutoRow } from '../../components/Row'
@@ -10,7 +8,7 @@ import { useAllTokenV1Exchanges } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useToken, useAllTokens } from '../../hooks/Tokens'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { TYPE } from '../../theme'
+import { BackArrow, TYPE } from '../../theme'
 import { LightCard } from '../../components/Card'
 import { BodyWrapper } from '../AppBody'
 import { EmptyState } from './EmptyState'
@@ -20,7 +18,7 @@ import { Dots } from '../../components/swap/styleds'
 import { useAddUserToken } from '../../state/user/hooks'
 import { isDefaultToken, isCustomAddedToken } from '../../utils'
 
-export default function MigrateV1({ history }: RouteComponentProps) {
+export default function MigrateV1() {
   const theme = useContext(ThemeContext)
   const { account, chainId } = useActiveWeb3React()
 
@@ -68,17 +66,11 @@ export default function MigrateV1({ history }: RouteComponentProps) {
   // should never always be false, because a V1 exhchange exists for WETH on all testnets
   const isLoading = Object.keys(V1Exchanges)?.length === 0 || V1LiquidityBalancesLoading
 
-  const handleBackClick = useCallback(() => {
-    history.push('/pool')
-  }, [history])
-
   return (
     <BodyWrapper style={{ padding: 24 }}>
       <AutoColumn gap="16px">
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
-          <div style={{ cursor: 'pointer' }}>
-            <ArrowLeft onClick={handleBackClick} />
-          </div>
+          <BackArrow to="/pool" />
           <TYPE.mediumHeader>Migrate V1 Liquidity</TYPE.mediumHeader>
           <div>
             <QuestionHelper text="Migrate your liquidity tokens from Uniswap V1 to Uniswap V2." />

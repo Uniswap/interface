@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { ChainId, TokenAmount, WETH, Token } from '@uniswap/sdk'
+import { ChainId, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -33,16 +33,13 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
 import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
+import { currencyId } from './currencyId'
 import { PoolPriceBar } from './PoolPriceBar'
 
 function useTokenByCurrencyId(chainId: ChainId | undefined, currencyId: string | undefined): Token | undefined {
   const isETH = currencyId?.toUpperCase() === 'ETH'
   const token = useToken(isETH ? undefined : currencyId)
   return isETH && chainId ? WETH[chainId] : token ?? undefined
-}
-
-function currencyId(chainId: ChainId | undefined, tokenAddress: string): string {
-  return chainId && tokenAddress === WETH[chainId].address ? 'ETH' : tokenAddress
 }
 
 export default function AddLiquidity({

@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
-import { RouteComponentProps, withRouter } from 'react-router-dom'
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { Percent, Pair, JSBI } from '@uniswap/sdk'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
+import { currencyId } from '../../pages/AddLiquidity/currencyId'
 import { useTokenBalance } from '../../state/wallet/hooks'
 
 import Card, { GreyCard } from '../Card'
@@ -31,7 +32,7 @@ export const HoverCard = styled(Card)`
 `
 
 interface PositionCardProps extends RouteComponentProps<{}> {
-  pair: Pair
+  pair: Pair | undefined | null
   minimal?: boolean
   border?: string
 }
@@ -204,20 +205,10 @@ function PositionCard({ pair, history, border, minimal = false }: PositionCardPr
                 </ExternalLink>
               </AutoRow>
               <RowBetween marginTop="10px">
-                <ButtonSecondary
-                  width="48%"
-                  onClick={() => {
-                    history.push('/add/' + token0?.address + '-' + token1?.address)
-                  }}
-                >
+                <ButtonSecondary as={Link} to={`/add/${currencyId(token0)}/${currencyId(token1)}`} width="48%">
                   Add
                 </ButtonSecondary>
-                <ButtonSecondary
-                  width="48%"
-                  onClick={() => {
-                    history.push('/remove/' + token0?.address + '-' + token1?.address)
-                  }}
-                >
+                <ButtonSecondary as={Link} width="48%" to={`/remove/${token0?.address}-${token1?.address}`}>
                   Remove
                 </ButtonSecondary>
               </RowBetween>

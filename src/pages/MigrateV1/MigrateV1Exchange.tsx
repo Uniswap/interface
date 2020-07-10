@@ -1,7 +1,6 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { ChainId, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useCallback, useMemo, useState } from 'react'
-import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { ButtonConfirmed } from '../../components/Button'
@@ -21,7 +20,7 @@ import { useV1ExchangeContract, useV2MigratorContract } from '../../hooks/useCon
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { useIsTransactionPending, useTransactionAdder } from '../../state/transactions/hooks'
 import { useETHBalances, useTokenBalance } from '../../state/wallet/hooks'
-import { TYPE, ExternalLink } from '../../theme'
+import { TYPE, ExternalLink, BackArrow } from '../../theme'
 import { isAddress, getEtherscanLink } from '../../utils'
 import { BodyWrapper } from '../AppBody'
 import { EmptyState } from './EmptyState'
@@ -344,10 +343,6 @@ export default function MigrateV1Exchange({
   )
   const userLiquidityBalance = useTokenBalance(account, liquidityToken)
 
-  const handleBack = useCallback(() => {
-    history.push('/migrate/v1')
-  }, [history])
-
   // redirect for invalid url params
   if (!validatedAddress || tokenAddress === AddressZero) {
     console.error('Invalid address in path', address)
@@ -358,9 +353,7 @@ export default function MigrateV1Exchange({
     <BodyWrapper style={{ padding: 24 }}>
       <AutoColumn gap="16px">
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
-          <div style={{ cursor: 'pointer' }}>
-            <ArrowLeft onClick={handleBack} />
-          </div>
+          <BackArrow to="/migrate/v1" />
           <TYPE.mediumHeader>Migrate V1 Liquidity</TYPE.mediumHeader>
           <div>
             <QuestionHelper text="Migrate your liquidity tokens from Uniswap V1 to Uniswap V2." />

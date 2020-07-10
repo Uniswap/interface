@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { ThemeContext } from 'styled-components'
 import { Pair } from '@uniswap/sdk'
-import { RouteComponentProps } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 
 import Question from '../../components/QuestionHelper'
@@ -21,7 +21,7 @@ import { useAllDummyPairs } from '../../state/user/hooks'
 import AppBody from '../AppBody'
 import { Dots } from '../../components/swap/styleds'
 
-export default function Pool({ history }: RouteComponentProps) {
+export default function Pool() {
   const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
 
@@ -55,7 +55,7 @@ export default function Pool({ history }: RouteComponentProps) {
       <AppBody>
         <SwapPoolTabs active={'pool'} />
         <AutoColumn gap="lg" justify="center">
-          <ButtonPrimary id="join-pool-button" style={{ padding: 16 }} onClick={() => history.push('/add/ETH')}>
+          <ButtonPrimary id="join-pool-button" as={Link} style={{ padding: 16 }} to="/add/ETH">
             <Text fontWeight={500} fontSize={20}>
               Add Liquidity
             </Text>
@@ -104,12 +104,7 @@ export default function Pool({ history }: RouteComponentProps) {
       </AppBody>
 
       <div style={{ display: 'flex', alignItems: 'center', marginTop: '1.5rem' }}>
-        <ButtonSecondary
-          style={{ width: 'initial' }}
-          padding="8px"
-          borderRadius="10px"
-          onClick={() => history.push('/migrate/v1')}
-        >
+        <ButtonSecondary as={Link} style={{ width: 'initial' }} padding="8px" borderRadius="10px" to="/migrate/v1">
           Migrate V1 Liquidity
         </ButtonSecondary>
       </div>
