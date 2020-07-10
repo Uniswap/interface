@@ -104,7 +104,7 @@ export default function Pool() {
       </AppBody>
 
       <div style={{ display: 'flex', alignItems: 'center', marginTop: '1.5rem' }}>
-        <ButtonSecondary as={Link} style={{ width: 'initial' }} padding="8px" borderRadius="10px" to="/migrate/v1">
+        <ButtonSecondary as={Link} style={{ width: 'initial' }} to="/migrate/v1">
           Migrate V1 Liquidity
         </ButtonSecondary>
       </div>
