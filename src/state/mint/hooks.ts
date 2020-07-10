@@ -4,8 +4,8 @@ import { Token, TokenAmount, Route, JSBI, Price, Percent, Pair, CurrencyAmount }
 
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
+import { useTokenBalances } from '../wallet/hooks'
 import { Field, typeInput } from './actions'
-import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
 import { usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { tryParseAmount } from '../swap/hooks'
