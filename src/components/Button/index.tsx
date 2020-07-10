@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { darken, lighten } from 'polished'
-import PropsOfExcluding from '../../utils/props-of-excluding'
 
 import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'

@@ -13,7 +13,7 @@ import Card, { GreyCard } from '../Card'
 import TokenLogo from '../TokenLogo'
 import DoubleLogo from '../DoubleLogo'
 import { Text } from 'rebass'
-import { ExternalLink } from '../../theme/components'
+import { ExternalLink } from '../../theme'
 import { AutoColumn } from '../Column'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { ButtonSecondary } from '../Button'
@@ -37,7 +37,7 @@ interface PositionCardProps extends RouteComponentProps<{}> {
   border?: string
 }
 
-function PositionCard({ pair, history, border, minimal = false }: PositionCardProps) {
+function PositionCard({ pair, border, minimal = false }: PositionCardProps) {
   const { account } = useActiveWeb3React()
 
   const token0 = pair?.token0

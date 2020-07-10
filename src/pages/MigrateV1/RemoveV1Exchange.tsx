@@ -127,7 +127,6 @@ function V1PairRemoval({
 }
 
 export default function RemoveV1Exchange({
-  history,
   match: {
     params: { address }
   }

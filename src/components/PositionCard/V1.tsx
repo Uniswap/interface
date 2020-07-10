@@ -16,7 +16,7 @@ interface PositionCardProps extends RouteComponentProps<{}> {
   V1LiquidityBalance: TokenAmount
 }
 
-function V1PositionCard({ token, V1LiquidityBalance, history }: PositionCardProps) {
+function V1PositionCard({ token, V1LiquidityBalance }: PositionCardProps) {
   const theme = useContext(ThemeContext)
 
   const { chainId } = useActiveWeb3React()
@@ -47,12 +47,7 @@ function V1PositionCard({ token, V1LiquidityBalance, history }: PositionCardProp
 
         <AutoColumn gap="8px">
           <RowBetween marginTop="10px">
-            <ButtonSecondary
-              width="68%"
-              as={Link}
-              to={`/migrate/v1/${V1LiquidityBalance.token.address}`}
-              onClick={() => {}}
-            >
+            <ButtonSecondary width="68%" as={Link} to={`/migrate/v1/${V1LiquidityBalance.token.address}`}>
               Migrate
             </ButtonSecondary>
 
