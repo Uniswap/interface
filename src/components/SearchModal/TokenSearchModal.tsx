@@ -124,11 +124,16 @@ export default function TokenSearchModal({
 
   const handleEnter = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter' && filteredSortedTokens.length === 1) {
-        handleTokenSelect(filteredSortedTokens[0].address)
+      if (e.key === 'Enter' && filteredSortedTokens.length > 0) {
+        if (
+          filteredSortedTokens[0].symbol.toLowerCase() === searchQuery.trim().toLowerCase() ||
+          filteredSortedTokens.length === 1
+        ) {
+          handleTokenSelect(filteredSortedTokens[0].address)
+        }
       }
     },
-    [filteredSortedTokens, handleTokenSelect]
+    [filteredSortedTokens, handleTokenSelect, searchQuery]
   )
 
   return (
