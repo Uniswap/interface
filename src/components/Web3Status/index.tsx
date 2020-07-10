@@ -5,6 +5,7 @@ import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import { darken, lighten } from 'polished'
 import { Activity } from 'react-feather'
 import useENSName from '../../hooks/useENSName'
+import { useHasSocks } from '../../hooks/useSocksBalance'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { TransactionDetails } from '../../state/transactions/reducer'
 
@@ -143,7 +144,7 @@ export default function Web3Status() {
   const confirmed = sortedRecentTransactions.filter(tx => tx.receipt).map(tx => tx.hash)
 
   const hasPendingTransactions = !!pending.length
-
+  const hasSocks = useHasSocks()
   const toggleWalletModal = useWalletModalToggle()
 
   // handle the logo we want to show with the account
@@ -186,7 +187,9 @@ export default function Web3Status() {
               <Text>{pending?.length} Pending</Text> <Loader stroke="white" />
             </RowBetween>
           ) : (
-            <Text>{ENSName || shortenAddress(account)}</Text>
+            <Text>
+              {hasSocks ? '🧦' : ''} {ENSName || shortenAddress(account)}
+            </Text>
           )}
           {!hasPendingTransactions && getStatusIcon()}
         </Web3StatusConnected>

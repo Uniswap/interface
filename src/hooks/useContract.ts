@@ -3,10 +3,11 @@ import { ChainId } from '@uniswap/sdk'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { useMemo } from 'react'
 import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
+import UNISOCKS_ABI from '../constants/abis/unisocks.json'
 import ERC20_ABI from '../constants/abis/erc20.json'
 import { MIGRATOR_ABI, MIGRATOR_ADDRESS } from '../constants/abis/migrator'
-import { V1_EXCHANGE_ABI, V1_FACTORY_ABI, V1_FACTORY_ADDRESSES } from '../constants/v1'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
+import { V1_EXCHANGE_ABI, V1_FACTORY_ABI, V1_FACTORY_ADDRESSES } from '../constants/v1'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
 
@@ -27,7 +28,7 @@ function useContract(address?: string, ABI?: any, withSignerIfPossible = true): 
 
 export function useV1FactoryContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(V1_FACTORY_ADDRESSES[chainId as ChainId], V1_FACTORY_ABI, false)
+  return useContract(chainId && V1_FACTORY_ADDRESSES[chainId], V1_FACTORY_ABI, false)
 }
 
 export function useV2MigratorContract(): Contract | null {
@@ -52,5 +53,14 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 
 export function useMulticallContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(MULTICALL_NETWORKS[chainId as ChainId], MULTICALL_ABI, false)
+  return useContract(chainId && MULTICALL_NETWORKS[chainId], MULTICALL_ABI, false)
+}
+
+export function useSocksController(): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(
+    chainId === ChainId.MAINNET ? '0x65770b5283117639760beA3F867b69b3697a91dd' : undefined,
+    UNISOCKS_ABI,
+    false
+  )
 }
