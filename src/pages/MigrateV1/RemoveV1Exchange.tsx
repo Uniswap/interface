@@ -1,7 +1,6 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { JSBI, Token, TokenAmount, WETH, Fraction, Percent } from '@uniswap/sdk'
 import React, { useCallback, useMemo, useState } from 'react'
-import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { ButtonConfirmed } from '../../components/Button'
@@ -16,7 +15,7 @@ import { useV1ExchangeContract } from '../../hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { useIsTransactionPending, useTransactionAdder } from '../../state/transactions/hooks'
 import { useTokenBalance, useETHBalances } from '../../state/wallet/hooks'
-import { TYPE } from '../../theme'
+import { BackArrow, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import { BodyWrapper } from '../AppBody'
 import { EmptyState } from './EmptyState'
@@ -128,7 +127,6 @@ function V1PairRemoval({
 }
 
 export default function RemoveV1Exchange({
-  history,
   match: {
     params: { address }
   }
@@ -149,10 +147,6 @@ export default function RemoveV1Exchange({
   )
   const userLiquidityBalance = useTokenBalance(account, liquidityToken)
 
-  const handleBack = useCallback(() => {
-    history.push('/migrate/v1')
-  }, [history])
-
   // redirect for invalid url params
   if (!validatedAddress || tokenAddress === AddressZero) {
     console.error('Invalid address in path', address)
@@ -163,9 +157,7 @@ export default function RemoveV1Exchange({
     <BodyWrapper style={{ padding: 24 }}>
       <AutoColumn gap="16px">
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
-          <div style={{ cursor: 'pointer' }}>
-            <ArrowLeft onClick={handleBack} />
-          </div>
+          <BackArrow to="/migrate/v1" />
           <TYPE.mediumHeader>Remove V1 Liquidity</TYPE.mediumHeader>
           <div>
             <QuestionHelper text="Remove your Uniswap V1 liquidity tokens." />

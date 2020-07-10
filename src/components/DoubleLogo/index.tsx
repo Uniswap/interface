@@ -12,7 +12,7 @@ const TokenWrapper = styled.div<{ margin: boolean; sizeraw: number }>`
 interface DoubleTokenLogoProps {
   margin?: boolean
   size?: number
-  a0: string
+  a0?: string
   a1?: string
 }
 
@@ -27,7 +27,7 @@ const CoveredLogo = styled(TokenLogo)<{ sizeraw: number }>`
 export default function DoubleTokenLogo({ a0, a1, size = 16, margin = false }: DoubleTokenLogoProps) {
   return (
     <TokenWrapper sizeraw={size} margin={margin}>
-      <HigherLogo address={a0} size={size.toString() + 'px'} />
+      {a0 && <HigherLogo address={a0} size={size.toString() + 'px'} />}
       {a1 && <CoveredLogo address={a1} size={size.toString() + 'px'} sizeraw={size} />}
     </TokenWrapper>
   )

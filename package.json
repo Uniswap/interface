@@ -85,10 +85,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
-    "lint:fix": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix",
-    "cy:run": "cypress run",
-    "serve:build": "serve -s build -l 3000",
-    "integration-test": "yarn build && start-server-and-test 'yarn run serve:build' http://localhost:3000 cy:run"
+    "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'"
   },
   "eslintConfig": {
     "extends": "react-app"

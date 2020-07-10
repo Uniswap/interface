@@ -79,7 +79,7 @@ export default createReducer(initialState, builder =>
             fetchingBlockNumber
           }
         } else {
-          if (current.fetchingBlockNumber ?? 0 >= fetchingBlockNumber) return
+          if ((current.fetchingBlockNumber ?? 0) >= fetchingBlockNumber) return
           state.callResults[chainId][callKey].fetchingBlockNumber = fetchingBlockNumber
         }
       })

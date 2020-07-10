@@ -192,6 +192,54 @@ describe('multicall reducer', () => {
         }
       })
     })
+
+    it('updates state to fetching even if already fetching older block', () => {
+      store.dispatch(
+        fetchingMulticallResults({
+          chainId: 1,
+          fetchingBlockNumber: 2,
+          calls: [{ address: DAI_ADDRESS, callData: '0x0' }]
+        })
+      )
+      store.dispatch(
+        fetchingMulticallResults({
+          chainId: 1,
+          fetchingBlockNumber: 3,
+          calls: [{ address: DAI_ADDRESS, callData: '0x0' }]
+        })
+      )
+      expect(store.getState()).toEqual({
+        callResults: {
+          [1]: {
+            [`${DAI_ADDRESS}-0x0`]: { fetchingBlockNumber: 3 }
+          }
+        }
+      })
+    })
+
+    it('does not do update if fetching newer block', () => {
+      store.dispatch(
+        fetchingMulticallResults({
+          chainId: 1,
+          fetchingBlockNumber: 2,
+          calls: [{ address: DAI_ADDRESS, callData: '0x0' }]
+        })
+      )
+      store.dispatch(
+        fetchingMulticallResults({
+          chainId: 1,
+          fetchingBlockNumber: 1,
+          calls: [{ address: DAI_ADDRESS, callData: '0x0' }]
+        })
+      )
+      expect(store.getState()).toEqual({
+        callResults: {
+          [1]: {
+            [`${DAI_ADDRESS}-0x0`]: { fetchingBlockNumber: 2 }
+          }
+        }
+      })
+    })
   })
 
   describe('errorFetchingMulticallResults', () => {

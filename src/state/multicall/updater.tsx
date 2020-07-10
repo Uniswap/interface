@@ -77,8 +77,8 @@ export function outdatedListeningKeys(
     // already fetching it for a recent enough block, don't refetch it
     if (data.fetchingBlockNumber && data.fetchingBlockNumber >= minDataBlockNumber) return false
 
-    // if data is newer than minDataBlockNumber, don't fetch it
-    return !(data.blockNumber && data.blockNumber >= minDataBlockNumber)
+    // if data is older than minDataBlockNumber, fetch it
+    return !data.blockNumber || data.blockNumber < minDataBlockNumber
   })
 }
 

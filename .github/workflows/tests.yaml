@@ -26,7 +26,9 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - run: yarn install
+      - run: yarn install --frozen-lockfile
+      - run: yarn cypress install
+      - run: yarn build
       - run: yarn integration-test
 
   unit-tests:
@@ -48,7 +50,7 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - run: yarn install --ignore-scripts --frozen-lockfile
+      - run: yarn install --frozen-lockfile
       - run: yarn test
 
   lint:
@@ -70,6 +72,6 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - run: yarn install --ignore-scripts --frozen-lockfile
+      - run: yarn install --frozen-lockfile
       - run: yarn lint
 

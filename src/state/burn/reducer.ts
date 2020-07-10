@@ -1,10 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit'
+import { ChainId, WETH } from '@uniswap/sdk'
+import { isAddress } from '../../utils'
 
-import { Field, typeInput } from './actions'
-import { setDefaultsFromURLMatchParams } from '../mint/actions'
-import { parseTokens } from '../mint/reducer'
+import { Field, setBurnDefaultsFromURLMatchParams, typeInput } from './actions'
 
-export interface MintState {
+export interface BurnState {
   readonly independentField: Field
   readonly typedValue: string
   readonly [Field.TOKEN_A]: {
@@ -15,7 +15,7 @@ export interface MintState {
   }
 }
 
-const initialState: MintState = {
+const initialState: BurnState = {
   independentField: Field.LIQUIDITY_PERCENT,
   typedValue: '0',
   [Field.TOKEN_A]: {
@@ -26,9 +26,27 @@ const initialState: MintState = {
   }
 }
 
-export default createReducer<MintState>(initialState, builder =>
+export function parseTokens(chainId: ChainId, tokens: string): string[] {
+  return (
+    tokens
+      // split by '-'
+      .split('-')
+      // map to addresses
+      .map((token): string =>
+        isAddress(token) ? token : token.toLowerCase() === 'ETH'.toLowerCase() ? WETH[chainId]?.address ?? '' : ''
+      )
+      //remove duplicates
+      .filter((token, i, array) => array.indexOf(token) === i)
+      // add two empty elements for cases where the array is length 0
+      .concat(['', ''])
+      // only consider the first 2 elements
+      .slice(0, 2)
+  )
+}
+
+export default createReducer<BurnState>(initialState, builder =>
   builder
-    .addCase(setDefaultsFromURLMatchParams, (state, { payload: { chainId, params } }) => {
+    .addCase(setBurnDefaultsFromURLMatchParams, (state, { payload: { chainId, params } }) => {
       const tokens = parseTokens(chainId, params?.tokens ?? '')
       return {
         independentField: Field.LIQUIDITY_PERCENT,

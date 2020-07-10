@@ -1,4 +1,4 @@
-import { JSBI, TokenAmount, WETH } from '@uniswap/sdk'
+import { JSBI, TokenAmount } from '@uniswap/sdk'
 import React, { useContext, useState, useEffect, useCallback } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -27,7 +27,7 @@ import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useWalletModalToggle, useToggleSettingsMenu } from '../../state/application/hooks'
 import { useExpertModeManager, useUserSlippageTolerance, useUserDeadline } from '../../state/user/hooks'
 
-import { INITIAL_ALLOWED_SLIPPAGE, MIN_ETH, BETTER_TRADE_LINK_THRESHOLD } from '../../constants'
+import { INITIAL_ALLOWED_SLIPPAGE, BETTER_TRADE_LINK_THRESHOLD } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { Field } from '../../state/swap/actions'
@@ -38,6 +38,7 @@ import {
   useSwapState
 } from '../../state/swap/hooks'
 import { CursorPointer, LinkStyledButton, TYPE } from '../../theme'
+import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
@@ -45,7 +46,7 @@ import { ClickableText } from '../Pool/styleds'
 export default function Swap() {
   useDefaultsFromURLSearch()
 
-  const { chainId, account } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
@@ -128,21 +129,7 @@ export default function Swap() {
     }
   }, [approval, approvalSubmitted])
 
-  let maxAmountInput: TokenAmount | undefined
-  {
-    const inputToken = tokens[Field.INPUT]
-    maxAmountInput =
-      inputToken &&
-      chainId &&
-      WETH[chainId] &&
-      tokenBalances[Field.INPUT]?.greaterThan(
-        new TokenAmount(inputToken, inputToken.equals(WETH[chainId]) ? MIN_ETH : '0')
-      )
-        ? inputToken.equals(WETH[chainId])
-          ? tokenBalances[Field.INPUT]?.subtract(new TokenAmount(WETH[chainId], MIN_ETH))
-          : tokenBalances[Field.INPUT]
-        : undefined
-  }
+  const maxAmountInput: TokenAmount | undefined = maxAmountSpend(tokenBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)

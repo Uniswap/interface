@@ -21,6 +21,7 @@ const Base = styled(RebassButton)<{
   outline: none;
   border: 1px solid transparent;
   color: white;
+  text-decoration: none;
   display: flex;
   justify-content: center;
   flex-wrap: nowrap;

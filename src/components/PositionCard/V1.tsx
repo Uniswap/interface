@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { RouteComponentProps, withRouter } from 'react-router-dom'
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { Token, TokenAmount, WETH } from '@uniswap/sdk'
 
 import { Text } from 'rebass'
@@ -16,7 +16,7 @@ interface PositionCardProps extends RouteComponentProps<{}> {
   V1LiquidityBalance: TokenAmount
 }
 
-function V1PositionCard({ token, V1LiquidityBalance, history }: PositionCardProps) {
+function V1PositionCard({ token, V1LiquidityBalance }: PositionCardProps) {
   const theme = useContext(ThemeContext)
 
   const { chainId } = useActiveWeb3React()
@@ -47,21 +47,15 @@ function V1PositionCard({ token, V1LiquidityBalance, history }: PositionCardProp
 
         <AutoColumn gap="8px">
           <RowBetween marginTop="10px">
-            <ButtonSecondary
-              width="68%"
-              onClick={() => {
-                history.push(`/migrate/v1/${V1LiquidityBalance.token.address}`)
-              }}
-            >
+            <ButtonSecondary width="68%" as={Link} to={`/migrate/v1/${V1LiquidityBalance.token.address}`}>
               Migrate
             </ButtonSecondary>
 
             <ButtonSecondary
               style={{ backgroundColor: 'transparent' }}
               width="28%"
-              onClick={() => {
-                history.push(`/remove/v1/${V1LiquidityBalance.token.address}`)
-              }}
+              as={Link}
+              to={`/remove/v1/${V1LiquidityBalance.token.address}`}
             >
               Remove
             </ButtonSecondary>
