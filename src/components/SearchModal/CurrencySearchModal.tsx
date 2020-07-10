@@ -129,11 +129,11 @@ export default function CurrencySearchModal({
           filteredSortedTokens[0].symbol.toLowerCase() === searchQuery.trim().toLowerCase() ||
           filteredSortedTokens.length === 1
         ) {
-          handleTokenSelect(filteredSortedTokens[0].address)
+          handleCurrencySelect(filteredSortedTokens[0])
         }
       }
     },
-    [filteredSortedTokens, handleTokenSelect, searchQuery]
+    [filteredSortedTokens, handleCurrencySelect, searchQuery]
   )
 
   return (
@@ -186,7 +186,7 @@ export default function CurrencySearchModal({
         <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />
         <CurrencyList
           currencies={filteredSortedTokens}
-          allTokenBalances={allTokenBalances}
+          allBalances={allTokenBalances}
           onCurrencySelect={handleCurrencySelect}
           otherSelectedText={otherSelectedText}
           otherCurrency={otherSelectedCurrency}

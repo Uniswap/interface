@@ -1,4 +1,4 @@
-import { JSBI, TokenAmount } from '@uniswap/sdk'
+import { CurrencyAmount, JSBI } from '@uniswap/sdk'
 import React, { useContext, useState, useEffect, useCallback } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -83,18 +83,18 @@ export default function Swap() {
     [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
   }
 
-  const { onSwitchTokens, onTokenSelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
+  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !error
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   const handleTypeInput = useCallback(
-    (field, value) => {
+    (value: string) => {
       onUserInput(Field.INPUT, value)
     },
     [onUserInput]
   )
   const handleTypeOutput = useCallback(
-    (field, value) => {
+    (value: string) => {
       onUserInput(Field.OUTPUT, value)
     },
     [onUserInput]
@@ -112,7 +112,7 @@ export default function Swap() {
 
   const route = trade?.route
   const userHasSpecifiedInputOutput = Boolean(
-    tokens[Field.INPUT] && tokens[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
+    currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
   )
   const noRoute = !route
 
@@ -129,7 +129,7 @@ export default function Swap() {
     }
   }, [approval, approvalSubmitted])
 
-  const maxAmountInput: TokenAmount | undefined = maxAmountSpend(tokenBalances[Field.INPUT])
+  const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
@@ -160,9 +160,11 @@ export default function Swap() {
               : (recipientAddress ?? recipient) === account
               ? 'Swap w/o Send + recipient'
               : 'Swap w/ Send',
-          label: [trade?.inputAmount?.currency?.symbol, trade?.outputAmount?.currency?.symbol, getTradeVersion(trade)].join(
-            '/'
-          )
+          label: [
+            trade?.inputAmount?.currency?.symbol,
+            trade?.outputAmount?.currency?.symbol,
+            getTradeVersion(trade)
+          ].join('/')
         })
       })
       .catch(error => {
@@ -192,7 +194,7 @@ export default function Swap() {
   function modalHeader() {
     return (
       <SwapModalHeader
-        tokens={currencies}
+        currencies={currencies}
         formattedAmounts={formattedAmounts}
         slippageAdjustedAmounts={slippageAdjustedAmounts}
         priceImpactSeverity={priceImpactSeverity}
@@ -226,7 +228,7 @@ export default function Swap() {
 
   return (
     <>
-      <TokenWarningCards tokens={currencies} />
+      <TokenWarningCards currencies={currencies} />
       <AppBody>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
@@ -250,20 +252,19 @@ export default function Swap() {
 
           <AutoColumn gap={'md'}>
             <CurrencyInputPanel
-              field={Field.INPUT}
               label={independentField === Field.OUTPUT ? 'From (estimated)' : 'From'}
               value={formattedAmounts[Field.INPUT]}
               showMaxButton={!atMaxAmountInput}
-              token={currencies[Field.INPUT]}
+              currency={currencies[Field.INPUT]}
               onUserInput={handleTypeInput}
               onMax={() => {
                 maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
               }}
-              onCurrencySelect={address => {
+              onCurrencySelect={currency => {
                 setApprovalSubmitted(false) // reset 2 step UI for approvals
-                onTokenSelection(Field.INPUT, address)
+                onCurrencySelection(Field.INPUT, currency)
               }}
-              otherSelectedTokenAddress={currencies[Field.OUTPUT]?.address}
+              otherCurrency={currencies[Field.OUTPUT]}
               id="swap-currency-input"
             />
 
@@ -289,14 +290,13 @@ export default function Swap() {
               </AutoColumn>
             </CursorPointer>
             <CurrencyInputPanel
-              field={Field.OUTPUT}
               value={formattedAmounts[Field.OUTPUT]}
               onUserInput={handleTypeOutput}
               label={independentField === Field.INPUT ? 'To (estimated)' : 'To'}
               showMaxButton={false}
-              token={currencies[Field.OUTPUT]}
-              onCurrencySelect={address => onTokenSelection(Field.OUTPUT, address)}
-              otherSelectedTokenAddress={currencies[Field.INPUT]?.address}
+              currency={currencies[Field.OUTPUT]}
+              onCurrencySelect={address => onCurrencySelection(Field.OUTPUT, address)}
+              otherCurrency={currencies[Field.INPUT]}
               id="swap-currency-output"
             />
 
@@ -321,8 +321,8 @@ export default function Swap() {
                     Price
                   </Text>
                   <TradePrice
-                    inputToken={currencies[Field.INPUT]}
-                    outputToken={currencies[Field.OUTPUT]}
+                    inputCurrency={currencies[Field.INPUT]}
+                    outputCurrency={currencies[Field.OUTPUT]}
                     price={trade?.executionPrice}
                     showInverted={showInverted}
                     setShowInverted={setShowInverted}

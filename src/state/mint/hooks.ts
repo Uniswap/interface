@@ -161,7 +161,8 @@ export function useDerivedMintInfo(
 export function useMintActionHandlers(
   noLiquidity: boolean | undefined
 ): {
-  onUserInput: (field: Field, typedValue: string) => void
+  onFieldAInput: (typedValue: string) => void
+  onFieldBInput: (typedValue: string) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
 

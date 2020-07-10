@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { ChainId, Token, TokenAmount, WETH } from '@uniswap/sdk'
+import { ChainId, Currency, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -16,8 +16,6 @@ import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFlat } from '../../components/Row'
-
-import CurrencyLogo from '../../components/CurrencyLogo'
 
 import { ROUTER_ADDRESS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
@@ -76,19 +74,6 @@ export default function AddLiquidity({
     error
   } = useDerivedMintInfo(tokenA ?? undefined, tokenB ?? undefined)
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
-
-  const handleTokenAInput = useCallback(
-    (field: string, value: string) => {
-      return onUserInput(Field.TOKEN_A, value)
-    },
-    [onUserInput]
-  )
-  const handleTokenBInput = useCallback(
-    (field: string, value: string) => {
-      return onUserInput(Field.TOKEN_B, value)
-    },
-    [onUserInput]
-  )
 
   const isValid = !error
 
@@ -269,33 +254,27 @@ export default function AddLiquidity({
     tokens[Field.TOKEN_A]?.symbol
   } and ${parsedAmounts[Field.TOKEN_B]?.toSignificant(6)} ${tokens[Field.TOKEN_B]?.symbol}`
 
-  const handleTokenASelect = useCallback(
-    (tokenAddress: string) => {
-      const [tokenAId, tokenBId] = [
-        currencyId(chainId, tokenAddress),
-        tokenB ? currencyId(chainId, tokenB.address) : undefined
-      ]
+  const handleCurrencyASelect = useCallback(
+    (currencyA: Currency) => {
+      const [tokenAId, tokenBId] = [currencyId(currencyA), tokenB ? currencyId(tokenB) : undefined]
       if (tokenAId === tokenBId) {
-        history.push(`/add/${tokenAId}/${tokenA ? currencyId(chainId, tokenA.address) : ''}`)
+        history.push(`/add/${tokenAId}/${tokenA ? currencyId(tokenA) : ''}`)
       } else {
         history.push(`/add/${tokenAId}/${tokenBId}`)
       }
     },
-    [chainId, tokenB, history, tokenA]
+    [tokenB, history, tokenA]
   )
-  const handleTokenBSelect = useCallback(
-    (tokenAddress: string) => {
-      const [tokenAId, tokenBId] = [
-        tokenA ? currencyId(chainId, tokenA.address) : undefined,
-        currencyId(chainId, tokenAddress)
-      ]
+  const handleCurrencyBSelect = useCallback(
+    (currencyB: Currency) => {
+      const [tokenAId, tokenBId] = [tokenA ? currencyId(tokenA) : undefined, currencyId(currencyB)]
       if (tokenAId === tokenBId) {
-        history.push(`/add/${tokenB ? currencyId(chainId, tokenB.address) : ''}/${tokenAId}`)
+        history.push(`/add/${tokenB ? currencyId(tokenB) : ''}/${tokenAId}`)
       } else {
-        history.push(`/add/${currencyIdA ? currencyIdA : 'ETH'}/${currencyId(chainId, tokenAddress)}`)
+        history.push(`/add/${currencyIdA ? currencyIdA : 'ETH'}/${currencyId(currencyB)}`)
       }
     },
-    [tokenA, chainId, history, tokenB, currencyIdA]
+    [tokenA, history, tokenB, currencyIdA]
   )
 
   return (
@@ -340,11 +319,11 @@ export default function AddLiquidity({
             )}
             <CurrencyInputPanel
               value={formattedAmounts[Field.TOKEN_A]}
-              onUserInput={handleTokenAInput}
+              onUserInput={onFieldAInput}
               onMax={() => {
-                maxAmounts[Field.TOKEN_A] && onFieldAInput(maxAmounts[Field.TOKEN_A].toExact())
+                onFieldAInput(maxAmounts[Field.TOKEN_A]?.toExact() ?? '')
               }}
-              onTokenSelection={handleTokenASelect}
+              onCurrencySelect={handleCurrencyASelect}
               showMaxButton={!atMaxAmounts[Field.TOKEN_A]}
               currency={tokens[Field.TOKEN_A]}
               pair={pair}
@@ -356,10 +335,10 @@ export default function AddLiquidity({
             </ColumnCenter>
             <CurrencyInputPanel
               value={formattedAmounts[Field.TOKEN_B]}
-              onUserInput={handleTokenBInput}
-              onTokenSelection={handleTokenBSelect}
+              onUserInput={onFieldBInput}
+              onCurrencySelect={handleCurrencyBSelect}
               onMax={() => {
-                maxAmounts[Field.TOKEN_B] && onFieldBInput(maxAmounts[Field.TOKEN_B].toExact())
+                onFieldBInput(maxAmounts[Field.TOKEN_B]?.toExact() ?? '')
               }}
               showMaxButton={!atMaxAmounts[Field.TOKEN_B]}
               currency={tokens[Field.TOKEN_B]}

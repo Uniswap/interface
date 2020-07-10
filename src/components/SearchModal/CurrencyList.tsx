@@ -1,4 +1,4 @@
-import { JSBI, Token, TokenAmount } from '@uniswap/sdk'
+import { Currency, CurrencyAmount, currencyEquals, ETHER, JSBI, Token } from '@uniswap/sdk'
 import React, { CSSProperties, memo, useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
@@ -22,7 +22,7 @@ function currencyKey(currency: Currency): string {
 
 export default function CurrencyList({
   currencies,
-  allTokenBalances,
+  allBalances,
   selectedCurrency,
   onCurrencySelect,
   otherCurrency,
@@ -31,7 +31,7 @@ export default function CurrencyList({
 }: {
   currencies: Currency[]
   selectedCurrency: Currency
-  allTokenBalances: { [tokenAddress: string]: CurrencyAmount }
+  allBalances: { [tokenAddress: string]: CurrencyAmount }
   onCurrencySelect: (currency: Currency) => void
   otherCurrency: Currency
   showSendWithSwap?: boolean
@@ -44,24 +44,22 @@ export default function CurrencyList({
   const addToken = useAddUserToken()
   const removeToken = useRemoveUserAddedToken()
 
-  const TokenRow = useMemo(() => {
-    return memo(function TokenRow({ index, style }: { index: number; style: CSSProperties }) {
-      const token = tokens[index]
-      const { address, symbol } = token
-
+  const CurrencyRow = useMemo(() => {
+    return memo(function CurrencyRow({ index, style }: { index: number; style: CSSProperties }) {
+      const currency = currencies[index]
+      const key = currencyKey(currency)
       const isDefault = isDefaultToken(currency)
       const customAdded = isCustomAddedToken(allTokens, currency)
-      const balance = allTokenBalances[key]
+      const balance = allBalances[key]
 
       const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
 
       const isSelected = Boolean(selectedCurrency && currencyEquals(currency, selectedCurrency))
-        const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
+      const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
 
-        return (
-          <MenuItem
-            style={style}
-            key={key}
+      return (
+        <MenuItem
+          style={style}
           className={`token-item-${key}`}
           onClick={() => (isSelected ? null : onCurrencySelect(currency))}
           disabled={isSelected}
@@ -131,20 +129,20 @@ export default function CurrencyList({
   }, [
     account,
     addToken,
-    allTokenBalances,
+    allBalances,
     allTokens,
     chainId,
-    onTokenSelect,
+    currencies,
+    onCurrencySelect,
+    otherCurrency,
     otherSelectedText,
-    otherToken,
     removeToken,
-    selectedToken,
+    selectedCurrency,
     showSendWithSwap,
-    theme.primary1,
-    tokens
+    theme.primary1
   ])
 
-  if (tokens.length === 0) {
+  if (currencies.length === 0) {
     return <ModalInfo>{t('noToken')}</ModalInfo>
   }
 
@@ -152,12 +150,12 @@ export default function CurrencyList({
     <FixedSizeList
       width="100%"
       height={500}
-      itemCount={tokens.length}
+      itemCount={currencies.length}
       itemSize={56}
       style={{ flex: '1' }}
-      itemKey={index => tokens[index].address}
+      itemKey={index => currencyKey(currencies[index])}
     >
-      {TokenRow}
+      {CurrencyRow}
     </FixedSizeList>
   )
 }

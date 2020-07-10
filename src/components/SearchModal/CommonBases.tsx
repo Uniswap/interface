@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text } from 'rebass'
-import { ChainId, Token } from '@uniswap/sdk'
+import { ChainId, Currency, currencyEquals, Token } from '@uniswap/sdk'
 import styled from 'styled-components'
 
 import { SUGGESTED_BASES } from '../../constants'
@@ -46,7 +46,7 @@ export default function CommonBases({
         {(SUGGESTED_BASES[chainId as ChainId] ?? []).map((token: Token) => {
           const selected = currencyEquals(selectedCurrency, token)
           return (
-            <BaseWrapper  onClick={() => !selected && onSelect(token)} disable={selected} key={token.address}>
+            <BaseWrapper onClick={() => !selected && onSelect(token)} disable={selected} key={token.address}>
               <CurrencyLogo currency={token} />
               <Text fontWeight={500} fontSize={16}>
                 {token.symbol}

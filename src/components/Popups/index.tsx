@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { useMediaLayout } from 'use-media'
 
