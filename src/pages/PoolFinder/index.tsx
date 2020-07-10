@@ -6,7 +6,7 @@ import { ButtonDropdownLight } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { FindPoolTabs } from '../../components/NavigationTabs'
-import PositionCard from '../../components/PositionCard'
+import { MinimalPositionCard } from '../../components/PositionCard'
 import Row from '../../components/Row'
 import TokenSearchModal from '../../components/SearchModal/TokenSearchModal'
 import TokenLogo from '../../components/TokenLogo'
@@ -120,7 +120,7 @@ export default function PoolFinder() {
 
         {position ? (
           poolImported ? (
-            <PositionCard pair={pair} minimal={true} border="1px solid #CED0D9" />
+            <MinimalPositionCard pair={pair} border="1px solid #CED0D9" />
           ) : (
             <LightCard padding="45px 10px">
               <AutoColumn gap="sm" justify="center">

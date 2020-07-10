@@ -14,7 +14,7 @@ import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
-import PositionCard from '../../components/PositionCard'
+import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import Slider from '../../components/Slider'
@@ -595,7 +595,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
 
       {pair ? (
         <AutoColumn style={{ minWidth: '20rem', marginTop: '1rem' }}>
-          <PositionCard pair={pair} minimal={true} />
+          <MinimalPositionCard pair={pair} />
         </AutoColumn>
       ) : null}
     </>

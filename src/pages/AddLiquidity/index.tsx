@@ -14,7 +14,7 @@ import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
-import PositionCard from '../../components/PositionCard'
+import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFlat } from '../../components/Row'
 
 import { ROUTER_ADDRESS } from '../../constants'
@@ -444,7 +444,7 @@ export default function AddLiquidity({
 
       {pair && !noLiquidity ? (
         <AutoColumn style={{ minWidth: '20rem', marginTop: '1rem' }}>
-          <PositionCard pair={pair} minimal={true} />
+          <MinimalPositionCard pair={pair} />
         </AutoColumn>
       ) : null}
     </>

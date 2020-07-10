@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 
 import Question from '../../components/QuestionHelper'
-import PositionCard from '../../components/PositionCard'
+import FullPositionCard from '../../components/PositionCard'
 import { useUserHasLiquidityInAllTokens } from '../../data/V1'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
@@ -46,7 +46,7 @@ export default function Pool() {
 
   const allV2PairsWithLiquidity = v2Pairs
     .filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
-    .map(V2Pair => <PositionCard key={V2Pair.liquidityToken.address} pair={V2Pair} />)
+    .map(V2Pair => <FullPositionCard key={V2Pair.liquidityToken.address} pair={V2Pair} />)
 
   const hasV1Liquidity = useUserHasLiquidityInAllTokens()
 

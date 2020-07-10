@@ -38,9 +38,9 @@ export default function CommonBases({
     <AutoColumn gap="md">
       <AutoRow>
         <Text fontWeight={500} fontSize={14}>
-          Common Bases
+          Common bases
         </Text>
-        <QuestionHelper text="These tokens are commonly used in pairs." />
+        <QuestionHelper text="These tokens are commonly paired with other tokens." />
       </AutoRow>
       <AutoRow gap="4px">
         {(SUGGESTED_BASES[chainId as ChainId] ?? []).map((token: Token) => {
