@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk'
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { KeyboardEvent, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
@@ -122,6 +122,15 @@ export default function TokenSearchModal({
     false
   )
 
+  const handleEnter = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter' && filteredSortedTokens.length === 1) {
+        handleTokenSelect(filteredSortedTokens[0].address)
+      }
+    },
+    [filteredSortedTokens, handleTokenSelect]
+  )
+
   return (
     <Modal
       isOpen={isOpen}
@@ -156,6 +165,7 @@ export default function TokenSearchModal({
               onChange={handleInput}
               onFocus={closeTooltip}
               onBlur={closeTooltip}
+              onKeyDown={handleEnter}
             />
           </Tooltip>
           {showCommonBases && (
