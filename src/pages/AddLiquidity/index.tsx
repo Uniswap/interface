@@ -327,7 +327,6 @@ export default function AddLiquidity({
               onCurrencySelect={handleCurrencyASelect}
               showMaxButton={!atMaxAmounts[Field.TOKEN_A]}
               currency={currencies[Field.TOKEN_A]}
-              pair={pair}
               id="add-liquidity-input-tokena"
               showCommonBases
             />
@@ -343,7 +342,6 @@ export default function AddLiquidity({
               }}
               showMaxButton={!atMaxAmounts[Field.TOKEN_B]}
               currency={currencies[Field.TOKEN_B]}
-              pair={pair}
               id="add-liquidity-input-tokenb"
               showCommonBases
             />

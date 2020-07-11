@@ -1,18 +1,18 @@
 import { Currency, CurrencyAmount, currencyEquals, ETHER, JSBI, Token } from '@uniswap/sdk'
 import React, { CSSProperties, memo, useContext, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
+import { useETHBalances } from '../../state/wallet/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { ButtonSecondary } from '../Button'
 import Column, { AutoColumn } from '../Column'
 import { RowFixed } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
-import { FadedSpan, MenuItem, ModalInfo } from './styleds'
+import { FadedSpan, MenuItem } from './styleds'
 import Loader from '../Loader'
 import { isDefaultToken, isCustomAddedToken } from '../../utils'
 
@@ -35,20 +35,20 @@ export default function CurrencyList({
   otherCurrency: Currency
   showSendWithSwap?: boolean
 }) {
-  const { t } = useTranslation()
   const { account, chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
   const allTokens = useAllTokens()
   const addToken = useAddUserToken()
   const removeToken = useRemoveUserAddedToken()
+  const ETHBalance = useETHBalances([account])[account]
 
   const CurrencyRow = useMemo(() => {
     return memo(function CurrencyRow({ index, style }: { index: number; style: CSSProperties }) {
-      const currency = currencies[index]
+      const currency = index === 0 ? Currency.ETHER : currencies[index - 1]
       const key = currencyKey(currency)
       const isDefault = isDefaultToken(currency)
       const customAdded = isCustomAddedToken(allTokens, currency)
-      const balance = allBalances[key]
+      const balance = currency === ETHER ? ETHBalance : allBalances[key]
 
       const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
 
@@ -122,6 +122,7 @@ export default function CurrencyList({
       )
     })
   }, [
+    ETHBalance,
     account,
     addToken,
     allBalances,
@@ -136,15 +137,11 @@ export default function CurrencyList({
     theme.primary1
   ])
 
-  if (currencies.length === 0) {
-    return <ModalInfo>{t('noToken')}</ModalInfo>
-  }
-
   return (
     <FixedSizeList
       width="100%"
       height={500}
-      itemCount={currencies.length}
+      itemCount={currencies.length + 1}
       itemSize={56}
       style={{ flex: '1' }}
       itemKey={index => currencyKey(currencies[index])}
