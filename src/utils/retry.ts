@@ -3,7 +3,7 @@ function wait(ms: number): Promise<void> {
 }
 
 function waitRandom(min: number, max: number): Promise<void> {
-  return wait(min + Math.round(Math.random() * (max - min)))
+  return wait(min + Math.round(Math.random() * Math.max(0, max - min)))
 }
 
 /**
