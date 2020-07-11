@@ -5,6 +5,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useMulticallContract } from '../../hooks/useContract'
 import useDebounce from '../../hooks/useDebounce'
 import chunkArray from '../../utils/chunkArray'
+import { retry } from '../../utils/retry'
 import { useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
 import {
@@ -142,7 +143,7 @@ export default function Updater() {
     )
 
     chunkedCalls.forEach((chunk, index) =>
-      fetchChunk(multicallContract, chunk, latestBlockNumber)
+      retry(() => fetchChunk(multicallContract, chunk, latestBlockNumber))
         .then(({ results: returnData, blockNumber: fetchBlockNumber }) => {
           // accumulates the length of all previous indices
           const firstCallKeyIndex = chunkedCalls.slice(0, index).reduce<number>((memo, curr) => memo + curr.length, 0)
