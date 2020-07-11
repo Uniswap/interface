@@ -25,8 +25,8 @@ describe('swap reducer', () => {
       )
 
       expect(store.getState()).toEqual({
-        [Field.OUTPUT]: { address: '0x0000' },
-        [Field.INPUT]: { address: '' },
+        [Field.OUTPUT]: { currencyId: '0x0000' },
+        [Field.INPUT]: { currencyId: '' },
         typedValue: '',
         independentField: Field.INPUT,
         recipient: null
