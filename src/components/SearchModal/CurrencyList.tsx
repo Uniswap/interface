@@ -12,7 +12,7 @@ import { ButtonSecondary } from '../Button'
 import Column, { AutoColumn } from '../Column'
 import { RowFixed } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
-import { FadedSpan, GreySpan, MenuItem, ModalInfo } from './styleds'
+import { FadedSpan, MenuItem, ModalInfo } from './styleds'
 import Loader from '../Loader'
 import { isDefaultToken, isCustomAddedToken } from '../../utils'
 
@@ -26,8 +26,7 @@ export default function CurrencyList({
   selectedCurrency,
   onCurrencySelect,
   otherCurrency,
-  showSendWithSwap,
-  otherSelectedText
+  showSendWithSwap
 }: {
   currencies: Currency[]
   selectedCurrency: Currency
@@ -35,7 +34,6 @@ export default function CurrencyList({
   onCurrencySelect: (currency: Currency) => void
   otherCurrency: Currency
   showSendWithSwap?: boolean
-  otherSelectedText: string
 }) {
   const { t } = useTranslation()
   const { account, chainId } = useActiveWeb3React()
@@ -68,10 +66,7 @@ export default function CurrencyList({
           <RowFixed>
             <CurrencyLogo currency={currency} size={'24px'} style={{ marginRight: '14px' }} />
             <Column>
-              <Text fontWeight={500}>
-                {currency.symbol}
-                {otherSelected && <GreySpan> ({otherSelectedText})</GreySpan>}
-              </Text>
+              <Text fontWeight={500}>{currency.symbol}</Text>
               <FadedSpan>
                 {customAdded ? (
                   <TYPE.main fontWeight={500}>
@@ -135,7 +130,6 @@ export default function CurrencyList({
     currencies,
     onCurrencySelect,
     otherCurrency,
-    otherSelectedText,
     removeToken,
     selectedCurrency,
     showSendWithSwap,

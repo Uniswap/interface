@@ -1,4 +1,4 @@
-import { CurrencyAmount, ETHER, JSBI, TokenAmount } from '@uniswap/sdk'
+import { CurrencyAmount, ETHER, JSBI } from '@uniswap/sdk'
 import { MIN_ETH } from '../constants'
 
 /**
@@ -13,8 +13,6 @@ export function maxAmountSpend(currencyAmount?: CurrencyAmount): CurrencyAmount 
     } else {
       return CurrencyAmount.ether(JSBI.BigInt(0))
     }
-  } else if (currencyAmount instanceof TokenAmount) {
-    return new TokenAmount(currencyAmount.token, JSBI.BigInt(0))
   }
   return currencyAmount
 }

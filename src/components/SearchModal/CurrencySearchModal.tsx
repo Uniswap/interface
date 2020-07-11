@@ -30,7 +30,6 @@ interface CurrencySearchModalProps {
   showSendWithSwap?: boolean
   onCurrencySelect?: (currency: Currency) => void
   otherSelectedCurrency?: Currency
-  otherSelectedText?: string
   showCommonBases?: boolean
 }
 
@@ -41,7 +40,6 @@ export default function CurrencySearchModal({
   hiddenCurrency,
   showSendWithSwap,
   otherSelectedCurrency,
-  otherSelectedText,
   showCommonBases = false
 }: CurrencySearchModalProps) {
   const { t } = useTranslation()
@@ -188,7 +186,6 @@ export default function CurrencySearchModal({
           currencies={filteredSortedTokens}
           allBalances={allTokenBalances}
           onCurrencySelect={handleCurrencySelect}
-          otherSelectedText={otherSelectedText}
           otherCurrency={otherSelectedCurrency}
           selectedCurrency={hiddenCurrency}
           showSendWithSwap={showSendWithSwap}

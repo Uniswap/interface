@@ -264,18 +264,18 @@ export default function AddLiquidity({
         history.push(`/add/${newCurrencyIdA}/${currencyIdB}`)
       }
     },
-    [history, currencyIdB]
+    [currencyIdB, history, currencyIdA]
   )
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
       const newCurrencyIdB = currencyId(currencyB)
       if (currencyIdA === newCurrencyIdB) {
-        history.push(`/add/${newCurrencyIdB}/${currencyIdA}`)
+        history.push(`/add/${currencyIdB}/${newCurrencyIdB}`)
       } else {
-        history.push(`/add/${currencyIdA ? currencyIdA : 'ETH'}/${currencyId(currencyB)}`)
+        history.push(`/add/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
       }
     },
-    [history, currencyIdA]
+    [currencyIdA, history, currencyIdB]
   )
 
   return (

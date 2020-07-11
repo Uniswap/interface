@@ -1,9 +1,10 @@
-import { Currency, CurrencyAmount, ETHER, Pair, Token, Trade, WETH } from '@uniswap/sdk'
+import { Currency, CurrencyAmount, Pair, Token, Trade } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 
 import { BASES_TO_CHECK_TRADES_AGAINST } from '../constants'
 import { usePairs } from '../data/Reserves'
+import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 import { useActiveWeb3React } from './index'
 
@@ -13,10 +14,7 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   const bases: Token[] = chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []
 
   const [tokenA, tokenB] = chainId
-    ? [
-        currencyA instanceof Token ? currencyA : currencyA === ETHER ? WETH[chainId] : undefined,
-        currencyB instanceof Token ? currencyB : currencyB === ETHER ? WETH[chainId] : undefined
-      ]
+    ? [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
     : [undefined, undefined]
 
   const allPairCombinations: [Token | undefined, Token | undefined][] = useMemo(
