@@ -264,7 +264,11 @@ export default function AddLiquidity({
     (currencyB: Currency) => {
       const newCurrencyIdB = currencyId(currencyB)
       if (currencyIdA === newCurrencyIdB) {
-        history.push(`/add/${currencyIdB}/${newCurrencyIdB}`)
+        if (currencyIdB) {
+          history.push(`/add/${currencyIdB}/${newCurrencyIdB}`)
+        } else {
+          history.push(`/add/${newCurrencyIdB}`)
+        }
       } else {
         history.push(`/add/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
       }
