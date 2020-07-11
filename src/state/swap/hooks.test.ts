@@ -1,4 +1,3 @@
-import { ChainId, WETH } from '@uniswap/sdk'
 import { parse } from 'qs'
 import { Field } from './actions'
 import { queryParametersToSwapState } from './hooks'
@@ -11,8 +10,7 @@ describe('hooks', () => {
           parse(
             '?inputCurrency=ETH&outputCurrency=0x6b175474e89094c44da98b954eedeac495271d0f&exactAmount=20.5&exactField=outPUT',
             { parseArrays: false, ignoreQueryPrefix: true }
-          ),
-          ChainId.MAINNET
+          )
         )
       ).toEqual({
         [Field.OUTPUT]: { currencyId: '0x6B175474E89094C44Da98b954EedeAC495271d0F' },
