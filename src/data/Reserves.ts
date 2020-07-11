@@ -1,9 +1,11 @@
-import { Token, TokenAmount, Pair } from '@uniswap/sdk'
+import { TokenAmount, Pair, Currency } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { Interface } from '@ethersproject/abi'
+import { useActiveWeb3React } from '../hooks'
 
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
+import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
 
@@ -12,7 +14,18 @@ const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
  * if no pair created yet, return null
  * if pair already created (even if 0 reserves), return pair
  */
-export function usePairs(tokens: [Token | undefined, Token | undefined][]): (undefined | Pair | null)[] {
+export function usePairs(currencies: [Currency | undefined, Currency | undefined][]): (undefined | Pair | null)[] {
+  const { chainId } = useActiveWeb3React()
+
+  const tokens = useMemo(
+    () =>
+      currencies.map(([currencyA, currencyB]) => [
+        wrappedCurrency(currencyA, chainId),
+        wrappedCurrency(currencyB, chainId)
+      ]),
+    [chainId, currencies]
+  )
+
   const pairAddresses = useMemo(
     () =>
       tokens.map(([tokenA, tokenB]) => {
@@ -38,6 +51,6 @@ export function usePairs(tokens: [Token | undefined, Token | undefined][]): (und
   }, [results, tokens])
 }
 
-export function usePair(tokenA?: Token, tokenB?: Token): undefined | Pair | null {
+export function usePair(tokenA?: Currency, tokenB?: Currency): undefined | Pair | null {
   return usePairs([[tokenA, tokenB]])[0]
 }

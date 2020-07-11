@@ -6,7 +6,7 @@ import { Percent, Pair, JSBI } from '@uniswap/sdk'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTotalSupply } from '../../data/TotalSupply'
-import { currencyId } from '../../pages/AddLiquidity/currencyId'
+import { currencyId } from '../../utils/currencyId'
 import { useTokenBalance } from '../../state/wallet/hooks'
 
 import Card, { GreyCard } from '../Card'
