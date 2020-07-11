@@ -1,4 +1,4 @@
-import { BigNumber } from '@ethersproject/bignumber'
+import { Contract } from '@ethersproject/contracts'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
@@ -8,6 +8,7 @@ import chunkArray from '../../utils/chunkArray'
 import { useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
 import {
+  Call,
   errorFetchingMulticallResults,
   fetchingMulticallResults,
   parseCallKey,
@@ -16,6 +17,26 @@ import {
 
 // chunk calls so we do not exceed the gas limit
 const CALL_CHUNK_SIZE = 500
+
+/**
+ * Fetches a chunk of calls, enforcing a minimum block number constraint
+ * @param multicallContract multicall contract to fetch against
+ * @param chunk chunk of calls to make
+ * @param minBlockNumber minimum block number of the result set
+ */
+async function fetchChunk(
+  multicallContract: Contract,
+  chunk: Call[],
+  minBlockNumber: number
+): Promise<{ results: string[]; blockNumber: number }> {
+  const [resultsBlockNumber, returnData] = await multicallContract.aggregate(
+    chunk.map(obj => [obj.address, obj.callData])
+  )
+  if (resultsBlockNumber.toNumber() < minBlockNumber) {
+    throw new Error('Fetched for old block number')
+  }
+  return { results: returnData, blockNumber: resultsBlockNumber.toNumber() }
+}
 
 /**
  * From the current all listeners state, return each call key mapped to the
@@ -121,9 +142,8 @@ export default function Updater() {
     )
 
     chunkedCalls.forEach((chunk, index) =>
-      multicallContract
-        .aggregate(chunk.map(obj => [obj.address, obj.callData]))
-        .then(([resultsBlockNumber, returnData]: [BigNumber, string[]]) => {
+      fetchChunk(multicallContract, chunk, latestBlockNumber)
+        .then(({ results: returnData, blockNumber: fetchBlockNumber }) => {
           // accumulates the length of all previous indices
           const firstCallKeyIndex = chunkedCalls.slice(0, index).reduce<number>((memo, curr) => memo + curr.length, 0)
           const lastCallKeyIndex = firstCallKeyIndex + returnData.length
@@ -137,7 +157,7 @@ export default function Updater() {
                   memo[callKey] = returnData[i] ?? null
                   return memo
                 }, {}),
-              blockNumber: resultsBlockNumber.toNumber()
+              blockNumber: fetchBlockNumber
             })
           )
         })
