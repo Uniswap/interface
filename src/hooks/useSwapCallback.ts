@@ -1,11 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { Router, Trade, JSBI, Percent } from '@uniswap/sdk'
+import { JSBI, Percent, Router, Trade, TradeType } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { BIPS_BASE, DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getRouterContract, shortenAddress, isAddress } from '../utils'
+import { calculateGasMargin, getRouterContract, isAddress, shortenAddress } from '../utils'
 import { useActiveWeb3React } from './index'
 import { useV1ExchangeContract } from './useContract'
 import useENS from './useENS'
@@ -40,25 +40,31 @@ export function useSwapCallback(
 
       const swapMethods = []
 
-      swapMethods.push(
-        Router.swapCallParameters(trade, {
-          feeOnTransfer: false,
-          allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-          recipient,
-          ttl: deadline
-        })
-      )
+      switch (tradeVersion) {
+        case Version.v2:
+          swapMethods.push(
+            Router.swapCallParameters(trade, {
+              feeOnTransfer: false,
+              allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+              recipient,
+              ttl: deadline
+            })
+          )
 
-      try {
-        swapMethods.push(
-          Router.swapCallParameters(trade, {
-            feeOnTransfer: true,
-            allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-            recipient,
-            ttl: deadline
-          })
-        )
-      } catch (error) {}
+          if (trade.tradeType === TradeType.EXACT_INPUT) {
+            swapMethods.push(
+              Router.swapCallParameters(trade, {
+                feeOnTransfer: true,
+                allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+                recipient,
+                ttl: deadline
+              })
+            )
+          }
+          break
+        case Version.v1:
+          throw new Error('TODO')
+      }
 
       const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
         swapMethods.map(({ args, methodName, value }) =>
@@ -132,7 +138,7 @@ export function useSwapCallback(
                   }`
 
             const withVersion =
-              tradeVersion === Version.v2 ? withRecipient : `${withRecipient} on ${tradeVersion.toUpperCase()}`
+              tradeVersion === Version.v2 ? withRecipient : `${withRecipient} on ${(tradeVersion as any).toUpperCase()}`
 
             addTransaction(response, {
               summary: withVersion
