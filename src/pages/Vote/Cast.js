@@ -80,10 +80,10 @@ export default function Cast({ proposal, time, vote, onChange }) {
 					{time}
 				</Time>
 				<Buttons>
-					<Button color={'#68b04d'} onClick={() => onChange('FOR')}>
+					<Button color={'#44d394'} onClick={() => onChange('FOR')}>
 						FOR
 					</Button>
-					<Button color={'#f44336'} onClick={() => onChange('AGAINST')}>
+					<Button color={'#df5e66'} onClick={() => onChange('AGAINST')}>
 						AGAINST
 					</Button>
 				</Buttons>

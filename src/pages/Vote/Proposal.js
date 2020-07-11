@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Cast from './Cast'
+import { Link } from 'react-router-dom'
 
 const Main = styled.div`
   font-size: 18px;
   font-weight: 500;
   color: black;
   padding: 20px 30px;
-  border-bottom: 1px solid #DCDCDC;
+  border-bottom: 1px solid #f0f3f5;
   height: 100%;
   width: calc(100% - 60px);
 `
@@ -66,7 +67,11 @@ const Extra = styled.div`
 	display: inline-block;
 `
 
-
+const link = {
+	textDecoration: 'none',
+	color: 'black',
+	cursor: 'pointer'
+}
 
 export default function Proposal({ id, proposal, status }) {
 	const availableVotes = ['VOTE', 'FOR', 'AGAINST', 'NO VOTE']
@@ -113,7 +118,9 @@ export default function Proposal({ id, proposal, status }) {
   return (
 		<Main>
 			<Wrapper>
-			  {proposal}
+				<Link to={`/vote/${id}`} style={link}>
+			  	{proposal}
+			  </Link>
 			  <Info active={status}>
 				  <Status active={status}>
 				  	{text}

@@ -13,7 +13,8 @@ import { getAllQueryParams } from '../utils'
 
 import Send from './Send'
 import Pool from './Pool'
-import Vote from './Vote/'
+import Vote from './Vote'
+import Details from './Vote/Details'
 import { isAddress } from '../utils/index'
 
 const Swap = lazy(() => import('./Swap'))
@@ -163,6 +164,7 @@ class App extends React.Component {
                           component={() => <Pool params={params} />}
                         />
                         <Route exact strict path="/vote" component={() => <Vote/>}/>
+                        <Route exact strict path="/vote/:proposal_id" component={() => <Details/>}/>
                         <Redirect to="/swap"/>
                       </Switch>
                     </Suspense>
