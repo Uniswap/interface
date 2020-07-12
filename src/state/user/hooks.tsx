@@ -1,4 +1,4 @@
-import { ChainId, JSBI, Pair, Token, TokenAmount } from '@uniswap/sdk'
+import { ChainId, JSBI, Pair, Token, TokenAmount } from 'dxswap-sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'

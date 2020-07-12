@@ -1,4 +1,4 @@
-import { Token, ChainId } from '@uniswap/sdk'
+import { Token, ChainId } from 'dxswap-sdk'
 
 export default [
   new Token(ChainId.RINKEBY, '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735', 18, 'DAI', 'Dai Stablecoin'),

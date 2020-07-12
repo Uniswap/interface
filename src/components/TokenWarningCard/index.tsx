@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk'
+import { Token } from 'dxswap-sdk'
 import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
@@ -54,7 +54,7 @@ const CloseIcon = styled.div`
 `
 
 const HELP_TEXT = `
-The Uniswap V2 smart contracts are designed to support any ERC20 token on Ethereum. Any token can be
+The DXswap smart contracts are designed to support any ERC20 token on Ethereum. Any token can be
 loaded into the interface by entering its Ethereum address into the search field or passing it as a URL
 parameter.
 `

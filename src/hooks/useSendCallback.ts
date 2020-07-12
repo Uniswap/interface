@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { WETH, TokenAmount, JSBI, ChainId } from '@uniswap/sdk'
+import { WETH, TokenAmount, JSBI, ChainId } from 'dxswap-sdk'
 import { useMemo } from 'react'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useTokenBalanceTreatingWETHasETH } from '../state/wallet/hooks'

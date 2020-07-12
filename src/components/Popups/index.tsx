@@ -1,4 +1,4 @@
-import { ChainId, Pair, Token } from '@uniswap/sdk'
+import { ChainId, Pair, Token } from 'dxswap-sdk'
 import React, { useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { useMediaLayout } from 'use-media'
@@ -99,9 +99,6 @@ function PoolPopup({
           UNI {token0?.symbol} / {token1?.symbol}
         </Text>
       </Row>
-      {pairAddress ? (
-        <ExternalLink href={`https://uniswap.info/pair/${pairAddress}`}>View on Uniswap Info.</ExternalLink>
-      ) : null}
     </AutoColumn>
   )
 }

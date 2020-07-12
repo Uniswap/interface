@@ -1,4 +1,4 @@
-import { JSBI, Pair, TokenAmount } from '@uniswap/sdk'
+import { JSBI, Pair, TokenAmount } from 'dxswap-sdk'
 import React from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'

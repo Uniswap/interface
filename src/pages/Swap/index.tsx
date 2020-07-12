@@ -1,4 +1,4 @@
-import { JSBI, TokenAmount, WETH } from '@uniswap/sdk'
+import { JSBI, TokenAmount, WETH } from 'dxswap-sdk'
 import React, { useContext, useState, useEffect } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -60,17 +60,17 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue } = useSwapState()
-  const { bestTrade: bestTradeV2, tokenBalances, parsedAmount, tokens, error, v1Trade } = useDerivedSwapInfo()
+  const { bestTrade: bestTradeDXswap, tokenBalances, parsedAmount, tokens, error, v1Trade } = useDerivedSwapInfo()
   const toggledVersion = useToggledVersion()
   const bestTrade = {
     [Version.v1]: v1Trade,
-    [Version.v2]: bestTradeV2
+    [Version.v2]: bestTradeDXswap
   }[toggledVersion]
 
   const betterTradeLinkVersion: Version | undefined =
-    toggledVersion === Version.v2 && isTradeBetter(bestTradeV2, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
+    toggledVersion === Version.v2 && isTradeBetter(bestTradeDXswap, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
       ? Version.v1
-      : toggledVersion === Version.v1 && isTradeBetter(v1Trade, bestTradeV2)
+      : toggledVersion === Version.v1 && isTradeBetter(v1Trade, bestTradeDXswap)
       ? Version.v2
       : undefined
 
