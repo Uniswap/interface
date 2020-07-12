@@ -13,6 +13,7 @@ function waitRandom(min: number, max: number): Promise<void> {
  * @param minWait min wait between retries in ms
  * @param maxWait max wait between retries in ms
  */
+// todo: support cancelling the retry
 export function retry<T>(
   fn: () => Promise<T>,
   { n = 3, minWait = 500, maxWait = 1000 }: { n?: number; minWait?: number; maxWait?: number } = {}
