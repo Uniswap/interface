@@ -3,7 +3,7 @@ import { ChainId, JSBI, Percent, Token, WETH, Pair, TokenAmount } from 'dxswap-s
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 import { proxies as kovanProxies } from 'dxswap-periphery/.openzeppelin/kovan.json'
 
-export const ROUTER_ADDRESS = '0x203440fbaa18004bdFB09cd5CdC20f9D17E25694'
+export const ROUTER_ADDRESS = kovanProxies["dxswap-periphery/DXswapRouter"][0].address
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: { readonly [chainId in ChainId]: Token[] } = {

@@ -3,7 +3,7 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
-import { abi as IDXswapRouter02ABI } from 'dxswap-periphery/build/contracts/IDXswapRouter02.json'
+import { abi as IDXswapRouterABI } from 'dxswap-periphery/build/contracts/IDXswapRouter.json'
 import { ROUTER_ADDRESS } from '../constants'
 import { ALL_TOKENS } from '../constants/tokens'
 import { ChainId, JSBI, Percent, TokenAmount, Token } from 'dxswap-sdk'
@@ -89,7 +89,7 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 
 // account is optional
 export function getRouterContract(_: number, library: Web3Provider, account?: string) {
-  return getContract(ROUTER_ADDRESS, IDXswapRouter02ABI, library, account)
+  return getContract(ROUTER_ADDRESS, IDXswapRouterABI, library, account)
 }
 
 export function escapeRegExp(string: string): string {
