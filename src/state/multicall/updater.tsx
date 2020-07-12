@@ -143,7 +143,8 @@ export default function Updater() {
     )
 
     chunkedCalls.forEach((chunk, index) =>
-      retry(() => fetchChunk(multicallContract, chunk, latestBlockNumber))
+      // todo: cancel retries when the block number updates
+      retry(() => fetchChunk(multicallContract, chunk, latestBlockNumber), { n: 10, minWait: 1000, maxWait: 1500 })
         .then(({ results: returnData, blockNumber: fetchBlockNumber }) => {
           // accumulates the length of all previous indices
           const firstCallKeyIndex = chunkedCalls.slice(0, index).reduce<number>((memo, curr) => memo + curr.length, 0)
