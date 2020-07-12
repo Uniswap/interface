@@ -18,6 +18,7 @@ import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFlat } from '../../components/Row'
 
 import { ROUTER_ADDRESS } from '../../constants'
+import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
@@ -60,6 +61,7 @@ export default function AddLiquidity({
     dependentField,
     currencies,
     pair,
+    pairState,
     currencyBalances,
     parsedAmounts,
     price,
@@ -354,7 +356,7 @@ export default function AddLiquidity({
               id="add-liquidity-input-tokenb"
               showCommonBases
             />
-            {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && (
+            {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <>
                 <GreyCard padding="0px" borderRadius={'20px'}>
                   <RowBetween padding="1rem">
@@ -429,7 +431,7 @@ export default function AddLiquidity({
         </Wrapper>
       </AppBody>
 
-      {pair && !noLiquidity ? (
+      {pair && !noLiquidity && pairState !== PairState.INVALID ? (
         <AutoColumn style={{ minWidth: '20rem', marginTop: '1rem' }}>
           <MinimalPositionCard pair={pair} />
         </AutoColumn>

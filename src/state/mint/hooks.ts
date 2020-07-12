@@ -23,6 +23,7 @@ export function useDerivedMintInfo(
   dependentField: Field
   currencies: { [field in Field]?: Currency }
   pair?: Pair | null
+  pairState: PairState
   currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmounts: { [field in Field]?: CurrencyAmount }
   price?: Price
@@ -132,6 +133,10 @@ export function useDerivedMintInfo(
     error = 'Connect Wallet'
   }
 
+  if (pairState === PairState.INVALID) {
+    error = error ?? 'Invalid pair'
+  }
+
   if (!parsedAmounts[Field.CURRENCY_A] || !parsedAmounts[Field.CURRENCY_B]) {
     error = error ?? 'Enter an amount'
   }
@@ -154,6 +159,7 @@ export function useDerivedMintInfo(
     dependentField,
     currencies,
     pair,
+    pairState,
     currencyBalances,
     parsedAmounts,
     price,
