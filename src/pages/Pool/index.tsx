@@ -45,6 +45,7 @@ export default function Pool() {
     fetchingV2PairBalances || v2Pairs?.length < v2DummyPairsWithABalance.length || v2Pairs?.some(V2Pair => !V2Pair)
 
   const allV2PairsWithLiquidity = v2Pairs
+    .map(([, pair]) => pair)
     .filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
     .map(V2Pair => <FullPositionCard key={V2Pair.liquidityToken.address} pair={V2Pair} />)
 

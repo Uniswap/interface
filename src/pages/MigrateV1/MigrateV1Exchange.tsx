@@ -1,17 +1,20 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
-import { ChainId, Currency, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@uniswap/sdk'
+import { AddressZero } from '@ethersproject/constants'
+import { Currency, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useCallback, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router'
+import { Text } from 'rebass'
 import { ButtonConfirmed } from '../../components/Button'
-import { PinkCard, YellowCard, LightCard } from '../../components/Card'
+import { LightCard, PinkCard, YellowCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
+import CurrencyLogo from '../../components/CurrencyLogo'
 import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { Dots } from '../../components/swap/styleds'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { MIGRATOR_ADDRESS } from '../../constants/abis/migrator'
-import { usePair } from '../../data/Reserves'
+import { PairState, usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useActiveWeb3React } from '../../hooks'
 import { useToken } from '../../hooks/Tokens'
@@ -20,13 +23,10 @@ import { useV1ExchangeContract, useV2MigratorContract } from '../../hooks/useCon
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { useIsTransactionPending, useTransactionAdder } from '../../state/transactions/hooks'
 import { useETHBalances, useTokenBalance } from '../../state/wallet/hooks'
-import { TYPE, ExternalLink, BackArrow } from '../../theme'
-import { isAddress, getEtherscanLink } from '../../utils'
+import { BackArrow, ExternalLink, TYPE } from '../../theme'
+import { getEtherscanLink, isAddress } from '../../utils'
 import { BodyWrapper } from '../AppBody'
 import { EmptyState } from './EmptyState'
-import CurrencyLogo from '../../components/CurrencyLogo'
-import { AddressZero } from '@ethersproject/constants'
-import { Text } from 'rebass'
 
 const POOL_TOKEN_AMOUNT_MIN = new Fraction(JSBI.BigInt(1), JSBI.BigInt(1000000))
 const WEI_DENOM = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
@@ -104,10 +104,10 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
   const exchangeETHBalance = useETHBalances([liquidityTokenAmount.token.address])?.[liquidityTokenAmount.token.address]
   const exchangeTokenBalance = useTokenBalance(liquidityTokenAmount.token.address, token)
 
-  const v2Pair = usePair(WETH[chainId as ChainId], token)
-  const isFirstLiquidityProvider: boolean = v2Pair === null
+  const [v2PairState, v2Pair] = usePair(chainId ? WETH[chainId] : undefined, token)
+  const isFirstLiquidityProvider: boolean = v2PairState === PairState.NOT_EXISTS
 
-  const v2SpotPrice = v2Pair?.reserveOf(token)?.divide(v2Pair?.reserveOf(WETH[chainId as ChainId]))
+  const v2SpotPrice = v2Pair?.reserveOf(token)?.divide(v2Pair?.reserveOf(WETH[chainId]))
 
   const [confirmingMigration, setConfirmingMigration] = useState<boolean>(false)
   const [pendingMigrationHash, setPendingMigrationHash] = useState<string | null>(null)

@@ -25,29 +25,31 @@ export function ConfirmAddModalBottom({
   return (
     <>
       <RowBetween>
-        <TYPE.body>{currencies[Field.TOKEN_A]?.symbol} Deposited</TYPE.body>
+        <TYPE.body>{currencies[Field.CURRENCY_A]?.symbol} Deposited</TYPE.body>
         <RowFixed>
-          <CurrencyLogo currency={currencies[Field.TOKEN_A]} style={{ marginRight: '8px' }} />
-          <TYPE.body>{parsedAmounts[Field.TOKEN_A]?.toSignificant(6)}</TYPE.body>
+          <CurrencyLogo currency={currencies[Field.CURRENCY_A]} style={{ marginRight: '8px' }} />
+          <TYPE.body>{parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}</TYPE.body>
         </RowFixed>
       </RowBetween>
       <RowBetween>
-        <TYPE.body>{currencies[Field.TOKEN_B]?.symbol} Deposited</TYPE.body>
+        <TYPE.body>{currencies[Field.CURRENCY_B]?.symbol} Deposited</TYPE.body>
         <RowFixed>
-          <CurrencyLogo currency={currencies[Field.TOKEN_B]} style={{ marginRight: '8px' }} />
-          <TYPE.body>{parsedAmounts[Field.TOKEN_B]?.toSignificant(6)}</TYPE.body>
+          <CurrencyLogo currency={currencies[Field.CURRENCY_B]} style={{ marginRight: '8px' }} />
+          <TYPE.body>{parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}</TYPE.body>
         </RowFixed>
       </RowBetween>
       <RowBetween>
         <TYPE.body>Rates</TYPE.body>
         <TYPE.body>
-          {`1 ${currencies[Field.TOKEN_A]?.symbol} = ${price?.toSignificant(4)} ${currencies[Field.TOKEN_B]?.symbol}`}
+          {`1 ${currencies[Field.CURRENCY_A]?.symbol} = ${price?.toSignificant(4)} ${
+            currencies[Field.CURRENCY_B]?.symbol
+          }`}
         </TYPE.body>
       </RowBetween>
       <RowBetween style={{ justifyContent: 'flex-end' }}>
         <TYPE.body>
-          {`1 ${currencies[Field.TOKEN_B]?.symbol} = ${price?.invert().toSignificant(4)} ${
-            currencies[Field.TOKEN_A]?.symbol
+          {`1 ${currencies[Field.CURRENCY_B]?.symbol} = ${price?.invert().toSignificant(4)} ${
+            currencies[Field.CURRENCY_A]?.symbol
           }`}
         </TYPE.body>
       </RowBetween>

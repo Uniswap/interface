@@ -3,7 +3,7 @@ import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 
 import { BASES_TO_CHECK_TRADES_AGAINST } from '../constants'
-import { usePairs } from '../data/Reserves'
+import { PairState, usePairs } from '../data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 import { useActiveWeb3React } from './index'
@@ -39,9 +39,9 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
       Object.values(
         allPairs
           // filter out invalid pairs
-          .filter((p): p is Pair => !!p)
+          .filter((result): result is [PairState.EXISTS, Pair] => Boolean(result[0] === PairState.EXISTS && result[1]))
           // filter out duplicated pairs
-          .reduce<{ [pairAddress: string]: Pair }>((memo, curr) => {
+          .reduce<{ [pairAddress: string]: Pair }>((memo, [, curr]) => {
             memo[curr.liquidityToken.address] = memo[curr.liquidityToken.address] ?? curr
             return memo
           }, {})

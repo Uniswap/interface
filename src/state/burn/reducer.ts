@@ -7,10 +7,10 @@ import { Field, setBurnDefaultsFromURLMatchParams, typeInput } from './actions'
 export interface BurnState {
   readonly independentField: Field
   readonly typedValue: string
-  readonly [Field.TOKEN_A]: {
+  readonly [Field.CURRENCY_A]: {
     readonly address: string
   }
-  readonly [Field.TOKEN_B]: {
+  readonly [Field.CURRENCY_B]: {
     readonly address: string
   }
 }
@@ -18,10 +18,10 @@ export interface BurnState {
 const initialState: BurnState = {
   independentField: Field.LIQUIDITY_PERCENT,
   typedValue: '0',
-  [Field.TOKEN_A]: {
+  [Field.CURRENCY_A]: {
     address: ''
   },
-  [Field.TOKEN_B]: {
+  [Field.CURRENCY_B]: {
     address: ''
   }
 }
@@ -51,10 +51,10 @@ export default createReducer<BurnState>(initialState, builder =>
       return {
         independentField: Field.LIQUIDITY_PERCENT,
         typedValue: '0',
-        [Field.TOKEN_A]: {
+        [Field.CURRENCY_A]: {
           address: tokens[0]
         },
-        [Field.TOKEN_B]: {
+        [Field.CURRENCY_B]: {
           address: tokens[1]
         }
       }
