@@ -47,8 +47,8 @@ const HeaderElementWrap = styled.div`
   display: flex;
   align-items: center;
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-margin-top: 0.5rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    margin-top: 0.5rem;
 `};
 `
 
@@ -98,21 +98,33 @@ const NetworkCard = styled(YellowCard)`
   padding: 8px 12px;
 `
 
-const UniIcon = styled(HistoryLink)<{ to: string }>`
+const UniIcon = styled.a`
   transition: transform 0.3s ease;
   :hover {
     transform: rotate(-5deg);
   }
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    img { 
+      width: 4.5rem;
+    }
+  `};
 `
 
 const HeaderControls = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: flex-end;
+  align-items: center;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex-direction: column;
-    `};
+    align-items: flex-end;
+  `};
+`
+
+const BalanceText = styled(Text)`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
@@ -134,7 +146,7 @@ export default function Header() {
       <RowBetween style={{ alignItems: 'flex-start' }} padding="1rem 1rem 0 1rem">
         <HeaderElement>
           <Title>
-            <UniIcon id="link" to="/">
+            <UniIcon id="link" href="/">
               <img src={isDark ? LogoDark : Logo} alt="logo" />
             </UniIcon>
             {!isMobile && (
@@ -157,9 +169,9 @@ export default function Header() {
             </TestnetWrapper>
             <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
               {account && userEthBalance ? (
-                <Text style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+                <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
                   {userEthBalance?.toSignificant(4)} ETH
-                </Text>
+                </BalanceText>
               ) : null}
               <Web3Status />
             </AccountElement>
