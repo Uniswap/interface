@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import styled, {keyframes} from 'styled-components'
-import { useLocation } from 'react-router-dom'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 const Main = styled.div`
   height: calc(100vh - 200px);
@@ -68,14 +67,15 @@ const Extra = styled.div`
 `
 
 const Body = styled.div`
-	height: calc(100% - 200px);
   width: 100%;
   margin-top: 20px;
 `
 
 const Card = styled.div`
   background-color: #FFFFFF;
-  width: calc(50% - 20px);
+  ${({ width }) => `
+    width: calc(${width}% - 20px);
+  `}
   border-radius: 5px;
   margin: 10px;
   box-shadow: 1px 1px 8px -4px rgba(0,0,0,.5), 1px 1px 4px -4px rgba(0,0,0,.5);
@@ -153,6 +153,57 @@ const ViewAll = styled.div`
  	color: #b0bdc5;
 `
 
+const Description = styled.div`
+	margin: 20px 30px;
+	font-size: 13px;
+	font-weight: 600;
+`
+
+
+const HistoryWrapper = styled.div`
+	margin: 20px 30px;
+`
+
+const History = styled.div`
+	margin-bottom: 15px;
+`
+
+const Check = styled.div`
+	border-radius: 50%;
+	height: 20px;
+	width: 20px;
+	background-color: #b0bdc5;
+	color: #FFFFFF;
+	font-weight: 700;
+	font-size: 18px;
+	padding: 2px 1px 3px 4px;
+	display: inline-block;
+	vertical-align: middle;
+
+	${({ active }) => active && `
+    background-color: #4487CE;
+  `}
+`
+
+const HistoryInfo = styled.div`
+	display: inline-block;
+	margin-left: 10px;
+	font-weight: 600;
+ 	color: black;
+  vertical-align: middle;
+`
+
+const HistoryTitle = styled.div`
+	font-size: 13px;
+	margin-bottom: 3px;
+`
+
+const HistoryDate = styled.div`
+	font-size: 11px;
+	color: #b0bdc5;
+`
+
+
 const votes = [
 	{
 		title: 'For',
@@ -182,13 +233,25 @@ const votes = [
 	}
 ]
 
+const history = [
+	{
+		title: 'Created',
+		date: 'July 2nd, 2020 - 7:00pm'
+	},
+	{
+		title: 'Active',
+		date: 'July 2nd, 2020 - 7:00pm'
+	},
+]
+
+const description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla non pellentesque eros. Nunc mollis massa vel elit consectetur porta. Phasellus ac facilisis mauris. Integer sollicitudin pretium nibh vel accumsan. Sed porttitor finibus elit, vel aliquam dui maximus in. Sed lobortis quis nunc quis hendrerit. Mauris volutpat ipsum eu dolor ornare tincidunt. Vestibulum nec risus a ante sagittis faucibus. Ut luctus ex diam, vel luctus ligula condimentum rutrum. Donec diam quam, malesuada quis felis eget, placerat venenatis felis. Curabitur tellus neque, elementum ut libero eu, convallis efficitur arcu. Nullam vestibulum, erat molestie lacinia lobortis, nibh augue ornare ante, et sodales arcu nisl in justo. Integer sed quam eu lacus blandit vulputate.'
 
 export default function Details() {
 	const id = useLocation().pathname.split("/")[2];
-	const check = useLocation()
-	console.log = (check)
 	const date = 'Executed July 2nd, 2020'
 	const proposal = 'quis ut nam facilis et officia qui'
+	const status = 'Active'
+
 	const shorten = (a) => `${a.substring(0, 6)}...${a.substring(a.length-4, a.length)}`
 	const addressTitle = (l) => `${l} ${l === 1 ? 'Address' : 'Addresses'}`
 
@@ -205,7 +268,7 @@ export default function Details() {
 			  </Proposal>
 			  <Info active={true}>
 				  <Status active={true}>
-				  	{'Active'}
+				  	{status}
 				  </Status>
 				  <Extra>
 				  	{id} &#8226; {date} 
@@ -218,11 +281,11 @@ export default function Details() {
 					const l = a.length
 					let empty
 					if(l < amount){
-						empty = [...Array(amount-l)].fill({address: '-', vote: '-'}, 0)
+						empty = [...Array(amount-l)].fill({address: '—', vote: '—'}, 0)
 					}
 
 					return(
-						<Card>
+						<Card width={50}>
 							<Title>
 								{title}
 								<Bar>
@@ -251,6 +314,36 @@ export default function Details() {
 						</Card>
 					)})}
 			</Body>
+			<Card width={60}>
+				<Title>
+					Details
+				</Title>
+				<Description>	
+					{description}
+				</Description>
+			</Card>
+			<Card width={40}>
+				<Title>
+					Proposal History
+				</Title>
+				<HistoryWrapper>
+					{history.map(({title, date}) => 
+						<History>
+							<Check active={title === 'Active'}>
+								&#10003;
+							</Check>
+							<HistoryInfo>
+								<HistoryTitle>
+									{title}
+								</HistoryTitle>
+								<HistoryDate>
+									{date}
+								</HistoryDate>
+							</HistoryInfo>
+						</History>
+					)}
+				</HistoryWrapper>
+			</Card>
 		</Main>
 	)
 }
