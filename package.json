@@ -1,7 +1,7 @@
 {
   "name": "dxswap-dapp",
+  "version": "0.1.0",
   "description": "DXswap Decentralized Application",
-  "private": false,
   "devDependencies": {
     "@ethersproject/address": "^5.0.0-beta.134",
     "@ethersproject/bignumber": "^5.0.0-beta.138",
