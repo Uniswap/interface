@@ -149,17 +149,15 @@ export default function Header() {
             <UniIcon id="link" href="/">
               <img src={isDark ? LogoDark : Logo} alt="logo" />
             </UniIcon>
-            {!isMobile && (
-              <TitleText>
-                <HistoryLink id="link" to="/">
-                  <img
-                    style={{ marginLeft: '4px', marginTop: '4px' }}
-                    src={isDark ? WordmarkDark : Wordmark}
-                    alt="logo"
-                  />
-                </HistoryLink>
-              </TitleText>
-            )}
+            <TitleText>
+              <HistoryLink id="link" to="/">
+                <img
+                  style={{ marginLeft: '4px', marginTop: '4px' }}
+                  src={isDark ? WordmarkDark : Wordmark}
+                  alt="logo"
+                />
+              </HistoryLink>
+            </TitleText>
           </Title>
         </HeaderElement>
         <HeaderControls>
