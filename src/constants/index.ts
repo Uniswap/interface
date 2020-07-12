@@ -12,10 +12,13 @@ export const BASES_TO_CHECK_TRADES_AGAINST: { readonly [chainId in ChainId]: Tok
     new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin'),
     new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
   ],
+  [ChainId.KOVAN]: [
+    WETH[ChainId.KOVAN],
+    new Token(ChainId.KOVAN, '0x2090339dc96ad6366faafcb455fff7d4f7c9f761', 18, 'DXD', 'DXdao')
+  ],
   [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
-  [ChainId.KOVAN]: [WETH[ChainId.KOVAN]]
+  [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]]
 }
 
 // used for display in the default list when adding liquidity

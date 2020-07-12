@@ -56,6 +56,8 @@ export default function TokenLogo({
   // hard code to show ETH instead of WETH in UI
   if (address === WETH[chainId].address) {
     return <StyledEthereumLogo src={EthereumLogo} size={size} {...rest} />
+  } else if (address == "0xDd25BaE0659fC06a8d00CD06C7f5A98D71bfB715") {
+    path = "https://gateway.pinata.cloud/ipfs/QmPhoeL14E5SBFBaC4bA3nuRpg3MpxdWVYdPrdXHdQ3EHY/brand/dxdao-blue.png"
   } else if (!error && !BAD_IMAGES[address] && isAddress(address)) {
     path = TOKEN_ICON_API(address)
   } else {
