@@ -6,6 +6,7 @@ import { BIPS_BASE, DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin, getRouterContract, isAddress, shortenAddress } from '../utils'
+import v1SwapArguments from '../utils/v1SwapArguments'
 import { useActiveWeb3React } from './index'
 import { useV1ExchangeContract } from './useContract'
 import useENS from './useENS'
@@ -63,7 +64,14 @@ export function useSwapCallback(
           }
           break
         case Version.v1:
-          throw new Error('TODO')
+          swapMethods.push(
+            v1SwapArguments(trade, {
+              allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+              recipient,
+              ttl: deadline
+            })
+          )
+          break
       }
 
       const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
