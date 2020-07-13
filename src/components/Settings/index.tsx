@@ -156,7 +156,7 @@ export default function SettingsTab() {
 
   return (
     <StyledMenu ref={node}>
-      <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)}>
+      <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
         <ModalContentWrapper>
           <AutoColumn gap="lg">
             <RowBetween style={{ padding: '0 2rem' }}>
@@ -233,7 +233,10 @@ export default function SettingsTab() {
                         toggleExpertMode()
                         setShowConfirmation(false)
                       }
-                    : () => setShowConfirmation(true)
+                    : () => {
+                        toggle()
+                        setShowConfirmation(true)
+                      }
                 }
               />
             </RowBetween>

@@ -21,15 +21,15 @@ enum DeadlineError {
 const FancyButton = styled.button`
   color: ${({ theme }) => theme.text1};
   align-items: center;
-  min-width: 40px;
   height: 2rem;
   border-radius: 36px;
   font-size: 12px;
+  width: auto;
+  min-width: 3rem;
   border: 1px solid ${({ theme }) => theme.bg3};
   outline: none;
   background: ${({ theme }) => theme.bg1};
   :hover {
-    cursor: inherit;
     border: 1px solid ${({ theme }) => theme.bg4};
   }
   :focus {
@@ -48,9 +48,8 @@ const Option = styled(FancyButton)<{ active: boolean }>`
 
 const Input = styled.input`
   background: ${({ theme }) => theme.bg1};
-  flex-grow: 1;
   font-size: 16px;
-  min-width: 60px;
+  width: auto;
   outline: none;
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
@@ -64,6 +63,7 @@ const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }
   height: 2rem;
   position: relative;
   padding: 0 0.75rem;
+  flex: 1;
   border: ${({ theme, active, warning }) => active && `1px solid ${warning ? theme.red1 : theme.primary1}`};
   :hover {
     border: ${({ theme, active, warning }) =>
@@ -76,6 +76,13 @@ const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }
     border: 0px;
     border-radius: 2rem;
   }
+`
+
+const SlippageEmojiContainer = styled.span`
+  color: #f3841e;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none;  
+  `}
 `
 
 export interface SlippageTabsProps {
@@ -182,9 +189,11 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
             <RowBetween>
               {!!slippageInput &&
               (slippageError === SlippageError.RiskyLow || slippageError === SlippageError.RiskyHigh) ? (
-                <span role="img" aria-label="warning" style={{ color: '#F3841E' }}>
-                  ⚠️
-                </span>
+                <SlippageEmojiContainer>
+                  <span role="img" aria-label="warning">
+                    ⚠️
+                  </span>
+                </SlippageEmojiContainer>
               ) : null}
               <Input
                 ref={inputRef}
