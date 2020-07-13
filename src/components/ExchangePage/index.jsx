@@ -857,6 +857,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         if (!!response.error) {
           console.error('Caught error after submitting order ', response)
         }
+        console.log('Dolomite Order Submission Response: ', response)
 
         return getIpAddress()
           .then(ipAddress => {
