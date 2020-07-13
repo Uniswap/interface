@@ -128,7 +128,7 @@ export default function PoolFinder() {
           <ColumnCenter
             style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
           >
-            <Text textAlign="center" fontWeight={500} color="">
+            <Text textAlign="center" fontWeight={500}>
               Pool Found!
             </Text>
           </ColumnCenter>
@@ -160,7 +160,9 @@ export default function PoolFinder() {
           ) : pairState === PairState.INVALID ? (
             <LightCard padding="45px 10px">
               <AutoColumn gap="sm" justify="center">
-                <Text textAlign="center">Invalid pool.</Text>
+                <Text textAlign="center" fontWeight={500}>
+                  Invalid pair.
+                </Text>
               </AutoColumn>
             </LightCard>
           ) : pairState === PairState.LOADING ? (
