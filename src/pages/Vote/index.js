@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Proposal from './Proposal'
-import styled, {keyframes} from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 
 const Main = styled.div`
   height: calc(100vh - 200px);
@@ -150,102 +150,120 @@ const Page = styled.div`
 `
 
 const num = '0.000000'
-const displayPages = 7;
+const displayPages = 7
 
 const Balances = [
-	{
-		title: 'DMG Balance',
-		val: '0.00000000',
-		button: false
-	},
-	{
-		title: 'DMG Earned',
-		val: 'none',
-		button: true
-	}
+  {
+    title: 'DMG Balance',
+    val: '100,000.42',
+    button: false
+  },
+  {
+    title: 'DMG Earned',
+    val: 'N/A',
+    button: true
+  }
 ]
 
 function WithdrawAmount(val) {
-	val > 0 ? console.log('Withdrawn!') : console.log('No funds!')
+  val > 0 ? console.log('Withdrawn!') : console.log('No funds!')
 }
 
 function display(p, selected, l) {
-  if(l <= displayPages) return true //displays all pages if it is less than the diplayed amount
+  if (l <= displayPages) return true //displays all pages if it is less than the diplayed amount
 
-  const half = (displayPages-1)/2 
+  const half = (displayPages - 1) / 2
 
-  if(p <= displayPages && selected <= half) return true //displays displayed amount pages even if is does not have half on the left
-  if(p > l - displayPages && selected > l - half) return true //displays displayed amount pages even if is does not have half on the right
+  if (p <= displayPages && selected <= half) return true //displays displayed amount pages even if is does not have half on the left
+  if (p > l - displayPages && selected > l - half) return true //displays displayed amount pages even if is does not have half on the right
 
-  const fill = [...Array(half).keys()].map(i => i+1) //gets a half array
-  const left = fill.map(i => selected-i) //uses the half array to find values to left of selected
-  const right = fill.map(i => selected+i) //uses the half array to find values to right of selected
+  const fill = [...Array(half).keys()].map(i => i + 1) //gets a half array
+  const left = fill.map(i => selected - i) //uses the half array to find values to left of selected
+  const right = fill.map(i => selected + i) //uses the half array to find values to right of selected
   return [...left, selected, ...right].includes(p) //combines the selected value and two arrays to check if the value falls in here
 }
 
 export default function Vote() {
-  const [proposals, setProposals] = useState([]); //proposal hook
-  const [loading, setLoading] = useState(true); //loading hook
-  const [page, changePage] = useState(1); //current page hook
+  const [proposals, setProposals] = useState([]) //proposal hook
+  const [loading, setLoading] = useState(true) //loading hook
+  const [page, changePage] = useState(1) //current page hook
 
   const perPage = 5 //make dynamic
-  const mp = page * perPage - perPage 
-  const proposalPage = proposals.slice(mp, mp+perPage)
-  const pages = [...Array(Math.ceil(proposals.length/perPage)).keys()].map(i => i + 1) //creates pages off of proposals
+  const mp = page * perPage - perPage
+  const proposalPage = proposals.slice(mp, mp + perPage)
+  const pages = [...Array(Math.ceil(proposals.length / perPage)).keys()].map(i => i + 1) //creates pages off of proposals
   const l = pages.length
 
   const checkChange = (i) => {
-    if(i > 0 && i < l + 1) changePage(i) //does not change the page value if the button is disabled
+    if (i > 0 && i < l + 1) changePage(i) //does not change the page value if the button is disabled
   }
 
-	fetch('https://jsonplaceholder.typicode.com/todos')
-  .then(response => response.json())
-  .then(json => setProposals(json))
-  .then(() => setLoading(false))
+  // fetch('https://jsonplaceholder.typicode.com/todos')
+  // .then(response => response.json())
+  // .then(json => setProposals(json))
+  // .then(() => setLoading(false))
+
+  setTimeout(() => {
+    setProposals([
+      {
+        title: 'Introduce mUSDT',
+        completed: true,
+      },
+      {
+        title: 'Raise the Debt Ceiling for mUSDC',
+        completed: true,
+      },
+      {
+        title: 'Lower the Debt Ceiling for mDAI and mETH',
+        completed: true,
+      }
+    ])
+    setLoading(false)
+  }, 3000)
 
   return (
-  	<Main>
-  		<Votes>
- 				<VoteTitle> 
-  				Votes
-  			</VoteTitle>
-  		<Amount>
-  			{num}
-  		</Amount>
-  		</Votes>
-  		<Voting>
-	  		<VotingWallet>
-	  			<Title>
-	  				Voting Wallet
-	  			</Title>
-	  			{Balances.map(({title, val, button}) => (
-		        <Balance>
-		        	<DMGTitle>
-		        		{title}
-		        	</DMGTitle>
-		        	<Value>
-		        		{val}
-		        	</Value>
-		        	{button ? 
-		        		<Withdraw active={parseFloat(val, 10) > 0} onClick={() => WithdrawAmount(val)}>
-			        		Withdraw
-			        	</Withdraw>
-			       	:null}
-		        </Balance>
-		      ))}
-	  		</VotingWallet>
-	  		<GovernanceProposals>
-	 				<Title>
-	  				Governance Proposals
-	  			</Title>
-	  			<Proposals>
-		 				{loading ? <Loader /> :
-		 				proposalPage.map(({id, title, completed}) => (
-		          <Proposal id={id} proposal={title} status={completed} /> 
-		      	))}
-		      </Proposals>
+    <Main>
+      <Votes>
+        <VoteTitle>
+          Votes
+        </VoteTitle>
+        <Amount>
+          {num}
+        </Amount>
+      </Votes>
+      <Voting>
+        <VotingWallet>
+          <Title>
+            Your Wallet
+          </Title>
+          {Balances.map(({ title, val, button }) => (
+            <Balance>
+              <DMGTitle>
+                {title}
+              </DMGTitle>
+              <Value>
+                {val}
+              </Value>
+              {button ?
+                <Withdraw active={parseFloat(val, 10) > 0} onClick={() => WithdrawAmount(val)}>
+                  Withdraw
+                </Withdraw>
+                : null}
+            </Balance>
+          ))}
+        </VotingWallet>
+        <GovernanceProposals>
+          <Title>
+            Governance Proposals
+          </Title>
+          <Proposals>
+            {loading ? <Loader/> :
+              proposalPage.map(({ id, title, completed }) => (
+                <Proposal id={id} proposal={title} status={completed}/>
+              ))}
+          </Proposals>
           <Pages>
-            <Page onClick={() => checkChange(page - 1)} off={page === 1}> 
+            <Page onClick={() => checkChange(page - 1)} off={page === 1}>
               {`<`}
             </Page>
             {pages.filter(i => display(i, page, l)).map((p, index) => (
@@ -253,12 +271,12 @@ export default function Vote() {
                 {p}
               </Page>
             ))}
-            <Page onClick={() => checkChange(page + 1)} off={page === l}> 
+            <Page onClick={() => checkChange(page + 1)} off={page === l}>
               {`>`}
             </Page>
           </Pages>
-	 			</GovernanceProposals>
-	 		</Voting>
-		</Main>
+        </GovernanceProposals>
+      </Voting>
+    </Main>
   )
 }
