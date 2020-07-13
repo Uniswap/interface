@@ -1,7 +1,6 @@
 import { ChainId, WETH } from '@uniswap/sdk'
 import React from 'react'
 import { isMobile } from 'react-device-detect'
-import { Link as HistoryLink } from 'react-router-dom'
 import { Text } from 'rebass'
 
 import styled from 'styled-components'
@@ -52,7 +51,7 @@ const HeaderElementWrap = styled.div`
 `};
 `
 
-const Title = styled.div`
+const Title = styled.a`
   display: flex;
   align-items: center;
   pointer-events: auto;
@@ -98,7 +97,7 @@ const NetworkCard = styled(YellowCard)`
   padding: 8px 12px;
 `
 
-const UniIcon = styled.a`
+const UniIcon = styled.div`
   transition: transform 0.3s ease;
   :hover {
     transform: rotate(-5deg);
@@ -145,18 +144,12 @@ export default function Header() {
     <HeaderFrame>
       <RowBetween style={{ alignItems: 'flex-start' }} padding="1rem 1rem 0 1rem">
         <HeaderElement>
-          <Title>
-            <UniIcon id="link" href="/">
+          <Title href=".">
+            <UniIcon>
               <img src={isDark ? LogoDark : Logo} alt="logo" />
             </UniIcon>
             <TitleText>
-              <HistoryLink id="link" to="/">
-                <img
-                  style={{ marginLeft: '4px', marginTop: '4px' }}
-                  src={isDark ? WordmarkDark : Wordmark}
-                  alt="logo"
-                />
-              </HistoryLink>
+              <img style={{ marginLeft: '4px', marginTop: '4px' }} src={isDark ? WordmarkDark : Wordmark} alt="logo" />
             </TitleText>
           </Title>
         </HeaderElement>
