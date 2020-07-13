@@ -8,9 +8,9 @@ const Main = styled.div`
   position: absolute;
   top: 140px;
   left: 0;
-	right: 0;
-	margin-left: auto;
-	margin-right: auto;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
 `
 
 const Votes = styled.div`
@@ -33,7 +33,6 @@ const Voting = styled.div`
 const VotingWallet = styled.div`
   background-color: #FFFFFF;
   width: calc(35% - 20px);
-  height: 80%;
   border-radius: 5px;
   margin: 10px;
   margin-bottom: 1rem;
@@ -42,9 +41,8 @@ const VotingWallet = styled.div`
   display: inline-block;
   vertical-align: top;
 
-  @media (max-width: 800px) {
-    width: 100%;
-    height: calc(30% - 20px);
+  @media (max-width: 900px) {
+    width: calc(100% - 20px);
   }
 `
 const GovernanceProposals = styled.div`
@@ -58,9 +56,8 @@ const GovernanceProposals = styled.div`
   display: inline-block;
   vertical-align: top;
 
-  @media (max-width: 800px) {
-    width: 100%;
-    height: calc(70% - 20px);
+  @media (max-width: 900px) {
+    width: calc(100% - 20px);
   }
 `
 
@@ -100,14 +97,14 @@ const Balance = styled.div`
 `
 
 const DMGTitle = styled.div`
-	font-size: 15px;
+  font-size: 15px;
   font-weight: 700;
   color: #b7c3cc;
 `
 
 const Value = styled.div`
-	margin-top: 10px;
-	font-size: 20px;
+  margin-top: 10px;
+  font-size: 20px;
   font-weight: 500;
   color: #b7c3cc;
   display: inline;
@@ -119,7 +116,7 @@ const Value = styled.div`
 `
 
 const Withdraw = styled.div`
-	font-size: 18px;
+  font-size: 18px;
   font-weight: 700;
   color: black;
   display: inline;
@@ -164,20 +161,20 @@ const num = '0.000000'
 const displayPages = 7;
 
 const Balances = [
-	{
-		title: 'DMG Balance',
-		val: '0.00000000',
-		button: false
-	},
-	{
-		title: 'DMG Earned',
-		val: 'none',
-		button: true
-	}
+  {
+    title: 'DMG Balance',
+    val: '0.00000000',
+    button: false
+  },
+  {
+    title: 'DMG Earned',
+    val: 'none',
+    button: true
+  }
 ]
 
 function WithdrawAmount(val) {
-	val > 0 ? console.log('Withdrawn!') : console.log('No funds!')
+  val > 0 ? console.log('Withdrawn!') : console.log('No funds!')
 }
 
 function display(p, selected, l) {
@@ -199,7 +196,7 @@ export default function Vote() {
   const [loading, setLoading] = useState(true); //loading hook
   const [page, changePage] = useState(1); //current page hook
 
-  const perPage = 5//make dynamic
+  const perPage = window.innerWidth > 900 ? 5 : 3//make dynamic
   const mp = page * perPage - perPage 
   const proposalPage = proposals.slice(mp, mp+perPage)
   const pages = [...Array(Math.ceil(proposals.length/perPage)).keys()].map(i => i + 1) //creates pages off of proposals
@@ -217,46 +214,46 @@ export default function Vote() {
   })
 
   return (
-  	<Main>
-  		<Votes>
- 				<VoteTitle> 
-  				Votes
-  			</VoteTitle>
-  		<Amount>
-  			{num}
-  		</Amount>
-  		</Votes>
-  		<Voting>
-	  		<VotingWallet>
-	  			<Title>
-	  				Voting Wallet
-	  			</Title>
-	  			{Balances.map(({title, val, button}) => (
-		        <Balance>
-		        	<DMGTitle>
-		        		{title}
-		        	</DMGTitle>
-		        	<Value>
-		        		{val}
-		        	</Value>
-		        	{button ? 
-		        		<Withdraw active={parseFloat(val, 10) > 0} onClick={() => WithdrawAmount(val)}>
-			        		Withdraw
-			        	</Withdraw>
-			       	:null}
-		        </Balance>
-		      ))}
-	  		</VotingWallet>
-	  		<GovernanceProposals>
-	 				<Title>
-	  				Governance Proposals
-	  			</Title>
-	  			<Proposals>
-		 				{loading ? <Loader /> :
-		 				proposalPage.map(({id, title, completed}) => (
-		          <Proposal id={id} proposal={title} status={completed} /> 
-		      	))}
-		      </Proposals>
+    <Main>
+      <Votes>
+         <VoteTitle> 
+          Votes
+        </VoteTitle>
+      <Amount>
+        {num}
+      </Amount>
+      </Votes>
+      <Voting>
+        <VotingWallet>
+          <Title>
+            Voting Wallet
+          </Title>
+          {Balances.map(({title, val, button}) => (
+            <Balance>
+              <DMGTitle>
+                {title}
+              </DMGTitle>
+              <Value>
+                {val}
+              </Value>
+              {button ? 
+                <Withdraw active={parseFloat(val, 10) > 0} onClick={() => WithdrawAmount(val)}>
+                  Withdraw
+                </Withdraw>
+               :null}
+            </Balance>
+          ))}
+        </VotingWallet>
+        <GovernanceProposals>
+           <Title>
+            Governance Proposals
+          </Title>
+          <Proposals>
+             {loading ? <Loader /> :
+             proposalPage.map(({id, title, completed}) => (
+              <Proposal id={id} proposal={title} status={completed} /> 
+            ))}
+          </Proposals>
           <Pages>
             <Page onClick={() => checkChange(page - 1)} off={page === 1}> 
               {`<`}
@@ -270,8 +267,8 @@ export default function Vote() {
               {`>`}
             </Page>
           </Pages>
-	 			</GovernanceProposals>
-	 		</Voting>
-		</Main>
+         </GovernanceProposals>
+       </Voting>
+    </Main>
   )
 }
