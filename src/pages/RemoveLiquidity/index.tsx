@@ -48,7 +48,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
 
   // burn state
   const { independentField, typedValue } = useBurnState()
-  const { tokens, pair, route, parsedAmounts, error } = useDerivedBurnInfo()
+  const { tokens, pair, parsedAmounts, error } = useDerivedBurnInfo()
   const { onUserInput: _onUserInput } = useBurnActionHandlers()
   const isValid = !error
 
@@ -79,14 +79,18 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
   const atMaxAmount = parsedAmounts[Field.LIQUIDITY_PERCENT]?.equalTo(new Percent('1'))
 
   // pair contract
-  const pairContract: Contract = usePairContract(pair?.liquidityToken?.address)
+  const pairContract: Contract | null = usePairContract(pair?.liquidityToken?.address)
 
   // allowance handling
-  const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number }>(null)
+  const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
   async function onAttemptToApprove() {
+    if (!pairContract || !pair || !library) throw new Error('missing dependencies')
+    const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
+    if (!liquidityAmount) throw new Error('missing liquidity amount')
     // try to gather a signature for permission
     const nonce = await pairContract.nonces(account)
+
     const deadlineForSignature: number = Math.ceil(Date.now() / 1000) + deadline
 
     const EIP712Domain = [
@@ -111,7 +115,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
     const message = {
       owner: account,
       spender: ROUTER_ADDRESS,
-      value: parsedAmounts[Field.LIQUIDITY].raw.toString(),
+      value: liquidityAmount.raw.toString(),
       nonce: nonce.toHexString(),
       deadline: deadlineForSignature
     }
@@ -166,11 +170,16 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
   // tx sending
   const addTransaction = useTransactionAdder()
   async function onRemove() {
+    if (!chainId || !library || !account) throw new Error('missing dependencies')
+    const { [Field.CURRENCY_A]: currencyAmountA, [Field.CURRENCY_B]: currencyAmountB } = parsedAmounts
+    if (!currencyAmountA || !currencyAmountB) {
+      throw new Error('missing currency amounts')
+    }
     const router = getRouterContract(chainId, library, account)
 
     const amountsMin = {
-      [Field.CURRENCY_A]: calculateSlippageAmount(parsedAmounts[Field.CURRENCY_A], allowedSlippage)[0],
-      [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmounts[Field.CURRENCY_B], allowedSlippage)[0]
+      [Field.CURRENCY_A]: calculateSlippageAmount(currencyAmountA, allowedSlippage)[0],
+      [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountB, allowedSlippage)[0]
     }
 
     const tokenBIsETH = tokens[Field.CURRENCY_B].equals(WETH[chainId])
@@ -359,21 +368,25 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
             </Text>
           </RowFixed>
         </RowBetween>
-        {route && (
+        {pair && (
           <>
             <RowBetween>
               <Text color={theme.text2} fontWeight={500} fontSize={16}>
                 Price
               </Text>
               <Text fontWeight={500} fontSize={16} color={theme.text1}>
-                1 {tokens[Field.CURRENCY_A]?.symbol} = {route.midPrice.toSignificant(6)}{' '}
+                1 {tokens[Field.CURRENCY_A]?.symbol} = {pair.priceOf(tokens[Field.CURRENCY_A]).toSignificant(6)}{' '}
                 {tokens[Field.CURRENCY_B]?.symbol}
               </Text>
             </RowBetween>
             <RowBetween>
               <div />
               <Text fontWeight={500} fontSize={16} color={theme.text1}>
-                1 {tokens[Field.CURRENCY_B]?.symbol} = {route.midPrice.invert().toSignificant(6)}{' '}
+                1 {tokens[Field.CURRENCY_B]?.symbol} ={' '}
+                {pair
+                  .priceOf(tokens[Field.CURRENCY_B])
+                  .invert()
+                  .toSignificant(6)}{' '}
                 {tokens[Field.CURRENCY_A]?.symbol}
               </Text>
             </RowBetween>
@@ -543,19 +556,23 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
                 />
               </>
             )}
-            {route && (
+            {pair && (
               <div style={{ padding: '10px 20px' }}>
                 <RowBetween>
                   Price:
                   <div>
-                    1 {tokens[Field.CURRENCY_A]?.symbol} = {route.midPrice.toSignificant(6)}{' '}
+                    1 {tokens[Field.CURRENCY_A]?.symbol} = {pair.priceOf(tokens[Field.CURRENCY_A]).toSignificant(6)}{' '}
                     {tokens[Field.CURRENCY_B]?.symbol}
                   </div>
                 </RowBetween>
                 <RowBetween>
                   <div />
                   <div>
-                    1 {tokens[Field.CURRENCY_B]?.symbol} = {route.midPrice.invert().toSignificant(6)}{' '}
+                    1 {tokens[Field.CURRENCY_B]?.symbol} ={' '}
+                    {pair
+                      .priceOf(tokens[Field.CURRENCY_B])
+                      .invert()
+                      .toSignificant(6)}{' '}
                     {tokens[Field.CURRENCY_A]?.symbol}
                   </div>
                 </RowBetween>

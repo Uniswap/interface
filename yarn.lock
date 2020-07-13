@@ -2526,10 +2526,10 @@
   resolved "https://registry.yarnpkg.com/@uniswap/lib/-/lib-1.1.1.tgz#0afd29601846c16e5d082866cbb24a9e0758e6bc"
   integrity sha512-2yK7sLpKIT91TiS5sewHtOa7YuM8IuBXVl4GZv2jZFys4D2sY7K5vZh6MqD25TPA95Od+0YzCVq6cTF2IKrOmg==
 
-"@uniswap/sdk@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/sdk/-/sdk-3.0.0.tgz#f101385fa27a393f1456891036f4775235293add"
-  integrity sha512-A8e181t7OZPwZR0xj7Qc6ugCrlXMsFOoVmRsWznuLDlQ3zB733wjeb3RpsObeVs9dFUR9hwkVEE7jRHMAAxrdQ==
+"@uniswap/sdk@3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/sdk/-/sdk-3.0.1.tgz#98501943a43705f1cb9a09cd1610c7701128a1fc"
+  integrity sha512-C5NY7FVNUfC4NNX3BqnaJuBTETEQWIIyBeRbyHKzecKi0iP45v5jpQB3CTvd20PFRRJ0Mt6D6Glgd+SshJphAA==
   dependencies:
     "@ethersproject/address" "^5.0.1"
     "@ethersproject/contracts" "^5.0.1"
