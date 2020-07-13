@@ -3,10 +3,9 @@ import styled, {keyframes} from 'styled-components'
 import { Link, useLocation } from 'react-router-dom'
 
 const Main = styled.div`
-  height: calc(100vh - 200px);
-  width: 80vw;
+  width: 70vw;
   position: absolute;
-  top: 140px;
+  top: 100px;
   left: 0;
 	right: 0;
 	margin-left: auto;

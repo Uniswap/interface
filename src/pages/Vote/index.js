@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Proposal from './Proposal'
 import styled, {keyframes} from 'styled-components'
 
@@ -209,10 +209,12 @@ export default function Vote() {
     if(i > 0 && i < l + 1) changePage(i) //does not change the page value if the button is disabled
   }
 
-	fetch('https://jsonplaceholder.typicode.com/todos')
-  .then(response => response.json())
-  .then(json => setProposals(json))
-  .then(() => setLoading(false))
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/todos')
+    .then(response => response.json())
+    .then(json => setProposals(json))
+    .then(() => setLoading(false))
+  })
 
   return (
   	<Main>

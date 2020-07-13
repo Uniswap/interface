@@ -67,8 +67,51 @@ const Button = styled.div`
 
 `
 
+const ErrorMessage = styled.div`
+	margin-top: 20px;
+	color: #cc0000;
+	font-size: 13px;
+	font-weight: 500;
+`
+
+const Bar = styled.div`
+	height: 15px;
+	width: 100%;
+	border-radius: 3px;
+	margin-top: 20px;
+	background-color: #f0f3f5;
+`
+
+const Color = styled.div`
+	height: 100%;
+	width: 50%;
+	border-radius: 3px;
+	background-color: #4487CE;
+	transition: 2s;
+
+	${({ width }) => `
+    width: ${width}
+  `}
+`
+
 export default function Cast({ proposal, time, vote, onChange }) {
 	const [newVote, setNewVote] = useState(false)
+	const [error, setError] = useState(null)
+	const [percent, changePercent] = useState(0)
+
+	const waiting = (choice) => {
+		let test 
+		fetch('https://jsonplaceholder.typicode.com/todos/1')
+    .then(response => response.json())
+    .then(json => test = json)
+    .then(() => changePercent(50))
+    .catch(error => {setError(error)})
+    setError('uh oh') // mock test
+
+    if(test) {
+			onChange(choice)
+		}
+	}
 
 	return (
 		<BackDrop>
@@ -80,13 +123,19 @@ export default function Cast({ proposal, time, vote, onChange }) {
 					{time}
 				</Time>
 				<Buttons>
-					<Button color={'#44d394'} onClick={() => onChange('FOR')}>
+					<Button color={'#44d394'} onClick={() => waiting('FOR')}>
 						FOR
 					</Button>
-					<Button color={'#df5e66'} onClick={() => onChange('AGAINST')}>
+					<Button color={'#df5e66'} onClick={() => waiting('AGAINST')}>
 						AGAINST
 					</Button>
 				</Buttons>
+				<ErrorMessage>
+					{error}
+				</ErrorMessage>
+				<Bar>
+					<Color width={percent}/>
+				</Bar>
 				<Exit onClick={() => onChange(false)}>
 					x
 				</Exit>
