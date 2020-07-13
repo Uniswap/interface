@@ -15,7 +15,6 @@ import { BigNumber } from 'ethers-utils'
 export const NAME = 'name'
 export const SYMBOL = 'symbol'
 export const DECIMALS = 'decimals'
-export const PRICE_DECIMALS = 'priceDecimals'
 export const EXCHANGE_ADDRESS = 'exchangeAddress'
 export const MIN_ORDER = 'minOrder' // in the native currency
 export const PRIMARY = 'primary'
@@ -52,7 +51,6 @@ export const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0x2a1530C4C41db0B0b2bB646CB5Eb1A67b7158667',
       [MIN_ORDER]: new BigNumber('100000000000000000000'),
-      // [MIN_ORDER]: _0,
     },
     [USDC_ADDRESS]: {
       [NAME]: 'USD//C',
@@ -60,7 +58,6 @@ export const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 6,
       [EXCHANGE_ADDRESS]: '0x97deC872013f6B5fB443861090ad931542878126',
       [MIN_ORDER]: new BigNumber('100000000'),
-      // [MIN_ORDER]: _0,
     },
     [WETH_ADDRESS]: {
       [NAME]: 'Wrapped Ether',
@@ -68,15 +65,13 @@ export const INITIAL_TOKENS_CONTEXT = {
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xA2881A90Bf33F03E7a3f803765Cd2ED5c8928dFb',
       [MIN_ORDER]: new BigNumber('500000000000000000'),
-      // [MIN_ORDER]: _0,
     },
     [DMG_ADDRESS]: {
       [NAME]: 'DMM Governance',
       [SYMBOL]: 'DMG',
       [DECIMALS]: 18,
       [EXCHANGE_ADDRESS]: '0xA539BAaa3aCA455c986bB1E25301CEF936CE1B65',
-      [MIN_ORDER]: new BigNumber('10000000000000000000'),
-      // [MIN_ORDER]: _0,
+      [MIN_ORDER]: new BigNumber('80000000000000000000'),
     }
   }
 }

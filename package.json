@@ -5,7 +5,7 @@
   "homepage": "https://dao.defimoneymarket.com",
   "private": true,
   "dependencies": {
-    "@dolomite-exchange/dolomite": "^0.1.96",
+    "@dolomite-exchange/dolomite": "^0.1.98",
     "@material-ui/core": "^4.9.14",
     "@reach/dialog": "^0.2.8",
     "@reach/tooltip": "^0.2.0",
