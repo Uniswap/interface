@@ -1,5 +1,6 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
+import { TransactionResponse } from '@ethersproject/providers'
 import { Percent, WETH } from '@uniswap/sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
@@ -51,6 +52,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
   const { tokens, pair, parsedAmounts, error } = useDerivedBurnInfo()
   const { onUserInput: _onUserInput } = useBurnActionHandlers()
   const isValid = !error
+  const { [Field.CURRENCY_A]: tokenA, [Field.CURRENCY_B]: tokenB } = tokens
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
@@ -182,22 +184,26 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
       [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountB, allowedSlippage)[0]
     }
 
-    const tokenBIsETH = tokens[Field.CURRENCY_B].equals(WETH[chainId])
-    const oneTokenIsETH = tokens[Field.CURRENCY_A].equals(WETH[chainId]) || tokenBIsETH
+    const { [Field.CURRENCY_A]: tokenA, [Field.CURRENCY_B]: tokenB } = tokens
+    if (!tokenA || !tokenB) throw new Error('missing tokens')
+    const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
+    if (!liquidityAmount) throw new Error('missing liquidity amount')
 
+    const tokenBIsWETH = tokenB.equals(WETH[chainId]) ?? false
+    const oneTokenIsWETH = tokenA.equals(WETH[chainId]) || tokenBIsWETH
     const deadlineFromNow = Math.ceil(Date.now() / 1000) + deadline
 
     let methodNames: string[], args: Array<string | string[] | number | boolean>
     // we have approval, use normal remove liquidity
     if (approval === ApprovalState.APPROVED) {
       // removeLiquidityETH
-      if (oneTokenIsETH) {
+      if (oneTokenIsWETH) {
         methodNames = ['removeLiquidityETH', 'removeLiquidityETHSupportingFeeOnTransferTokens']
         args = [
-          tokens[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].address,
-          parsedAmounts[Field.LIQUIDITY].raw.toString(),
-          amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
-          amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
+          tokenBIsWETH ? tokenA.address : tokenB.address,
+          liquidityAmount.raw.toString(),
+          amountsMin[tokenBIsWETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
+          amountsMin[tokenBIsWETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
           account,
           deadlineFromNow
         ]
@@ -206,9 +212,9 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
       else {
         methodNames = ['removeLiquidity']
         args = [
-          tokens[Field.CURRENCY_A].address,
-          tokens[Field.CURRENCY_B].address,
-          parsedAmounts[Field.LIQUIDITY].raw.toString(),
+          tokenA.address,
+          tokenB.address,
+          liquidityAmount.raw.toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
           account,
@@ -219,13 +225,13 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
     // we have a signataure, use permit versions of remove liquidity
     else if (signatureData !== null) {
       // removeLiquidityETHWithPermit
-      if (oneTokenIsETH) {
+      if (oneTokenIsWETH) {
         methodNames = ['removeLiquidityETHWithPermit', 'removeLiquidityETHWithPermitSupportingFeeOnTransferTokens']
         args = [
-          tokens[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].address,
-          parsedAmounts[Field.LIQUIDITY].raw.toString(),
-          amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
-          amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
+          tokenBIsWETH ? tokenA.address : tokenB.address,
+          liquidityAmount.raw.toString(),
+          amountsMin[tokenBIsWETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
+          amountsMin[tokenBIsWETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
           account,
           signatureData.deadline,
           false,
@@ -238,9 +244,9 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
       else {
         methodNames = ['removeLiquidityWithPermit']
         args = [
-          tokens[Field.CURRENCY_A].address,
-          tokens[Field.CURRENCY_B].address,
-          parsedAmounts[Field.LIQUIDITY].raw.toString(),
+          tokenA.address,
+          tokenB.address,
+          liquidityAmount.raw.toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
           account,
@@ -252,7 +258,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
         ]
       }
     } else {
-      console.error('Attempting to confirm without approval or a signature. Please contact support.')
+      throw new Error('Attempting to confirm without approval or a signature. Please contact support.')
     }
 
     const safeGasEstimates = await Promise.all(
@@ -280,7 +286,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
       await router[methodName](...args, {
         gasLimit: safeGasEstimate
       })
-        .then(response => {
+        .then((response: TransactionResponse) => {
           setAttemptingTxn(false)
 
           addTransaction(response, {
@@ -303,12 +309,10 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
             label: [tokens[Field.CURRENCY_A]?.symbol, tokens[Field.CURRENCY_B]?.symbol].join('/')
           })
         })
-        .catch(error => {
+        .catch((error: Error) => {
           setAttemptingTxn(false)
           // we only care if the error is something _other_ than the user rejected the tx
-          if (error?.code !== 4001) {
-            console.error(error)
-          }
+          console.error(error)
         })
     }
   }
@@ -375,18 +379,14 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
                 Price
               </Text>
               <Text fontWeight={500} fontSize={16} color={theme.text1}>
-                1 {tokens[Field.CURRENCY_A]?.symbol} = {pair.priceOf(tokens[Field.CURRENCY_A]).toSignificant(6)}{' '}
+                1 {tokens[Field.CURRENCY_A]?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'}{' '}
                 {tokens[Field.CURRENCY_B]?.symbol}
               </Text>
             </RowBetween>
             <RowBetween>
               <div />
               <Text fontWeight={500} fontSize={16} color={theme.text1}>
-                1 {tokens[Field.CURRENCY_B]?.symbol} ={' '}
-                {pair
-                  .priceOf(tokens[Field.CURRENCY_B])
-                  .invert()
-                  .toSignificant(6)}{' '}
+                1 {tokens[Field.CURRENCY_B]?.symbol} = {tokenB ? pair.priceOf(tokenB).toSignificant(6) : '-'}{' '}
                 {tokens[Field.CURRENCY_A]?.symbol}
               </Text>
             </RowBetween>
@@ -561,18 +561,19 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
                 <RowBetween>
                   Price:
                   <div>
-                    1 {tokens[Field.CURRENCY_A]?.symbol} = {pair.priceOf(tokens[Field.CURRENCY_A]).toSignificant(6)}{' '}
-                    {tokens[Field.CURRENCY_B]?.symbol}
+                    1 {tokenA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {tokenB?.symbol}
                   </div>
                 </RowBetween>
                 <RowBetween>
                   <div />
                   <div>
-                    1 {tokens[Field.CURRENCY_B]?.symbol} ={' '}
-                    {pair
-                      .priceOf(tokens[Field.CURRENCY_B])
-                      .invert()
-                      .toSignificant(6)}{' '}
+                    1 {tokenB?.symbol} ={' '}
+                    {tokenB
+                      ? pair
+                          .priceOf(tokenB)
+                          .invert()
+                          .toSignificant(6)
+                      : '-'}{' '}
                     {tokens[Field.CURRENCY_A]?.symbol}
                   </div>
                 </RowBetween>
