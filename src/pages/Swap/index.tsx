@@ -267,7 +267,7 @@ export default function Swap() {
 
           <AutoColumn gap={'md'}>
             <CurrencyInputPanel
-              label={independentField === Field.OUTPUT ? 'From (estimated)' : 'From'}
+              label={independentField === Field.OUTPUT && !showWrap ? 'From (estimated)' : 'From'}
               value={formattedAmounts[Field.INPUT]}
               showMaxButton={!atMaxAmountInput}
               currency={currencies[Field.INPUT]}
@@ -307,7 +307,7 @@ export default function Swap() {
             <CurrencyInputPanel
               value={formattedAmounts[Field.OUTPUT]}
               onUserInput={handleTypeOutput}
-              label={independentField === Field.INPUT ? 'To (estimated)' : 'To'}
+              label={independentField === Field.INPUT && !showWrap ? 'To (estimated)' : 'To'}
               showMaxButton={false}
               currency={currencies[Field.OUTPUT]}
               onCurrencySelect={address => onCurrencySelection(Field.OUTPUT, address)}
