@@ -1,5 +1,5 @@
 import { isAddress } from '../../utils'
-import { Pair, Token } from '@uniswap/sdk'
+import { Token } from '@uniswap/sdk'
 
 export function filterTokens(tokens: Token[], search: string): Token[] {
   if (search.length === 0) return tokens
@@ -32,29 +32,5 @@ export function filterTokens(tokens: Token[], search: string): Token[] {
     const { symbol, name } = token
 
     return matchesSearch(symbol) || matchesSearch(name)
-  })
-}
-
-export function filterPairs(pairs: Pair[], search: string): Pair[] {
-  if (search.trim().length === 0) return pairs
-
-  const addressSearch = isAddress(search)
-  if (addressSearch) {
-    return pairs.filter(p => {
-      return (
-        p.token0.address === addressSearch ||
-        p.token1.address === addressSearch ||
-        p.liquidityToken.address === addressSearch
-      )
-    })
-  }
-
-  const lowerSearch = search.toLowerCase()
-  return pairs.filter(pair => {
-    const pairExpressionA = `${pair.token0.symbol}/${pair.token1.symbol}`.toLowerCase()
-    if (pairExpressionA.startsWith(lowerSearch)) return true
-    const pairExpressionB = `${pair.token1.symbol}/${pair.token0.symbol}`.toLowerCase()
-    if (pairExpressionB.startsWith(lowerSearch)) return true
-    return filterTokens([pair.token0, pair.token1], search).length > 0
   })
 }
