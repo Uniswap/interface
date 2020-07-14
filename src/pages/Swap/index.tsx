@@ -1,5 +1,5 @@
 import { CurrencyAmount, JSBI } from '@uniswap/sdk'
-import React, { useContext, useState, useEffect, useCallback } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
@@ -13,23 +13,23 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow, RowBetween } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
+import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { ArrowWrapper, BottomGrouping, Dots, Wrapper } from '../../components/swap/styleds'
 import SwapModalFooter from '../../components/swap/SwapModalFooter'
 import SwapModalHeader from '../../components/swap/SwapModalHeader'
 import TradePrice from '../../components/swap/TradePrice'
-import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import { TokenWarningCards } from '../../components/TokenWarningCard'
+
+import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
+import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
-import { useApproveCallbackFromTrade, ApprovalState } from '../../hooks/useApproveCallback'
+import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import { useWalletModalToggle, useToggleSettingsMenu } from '../../state/application/hooks'
-import { useExpertModeManager, useUserSlippageTolerance, useUserDeadline } from '../../state/user/hooks'
-
-import { INITIAL_ALLOWED_SLIPPAGE, BETTER_TRADE_LINK_THRESHOLD } from '../../constants'
-import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
+import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
+import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
@@ -37,6 +37,7 @@ import {
   useSwapActionHandlers,
   useSwapState
 } from '../../state/swap/hooks'
+import { useExpertModeManager, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
 import { CursorPointer, LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
@@ -63,13 +64,20 @@ export default function Swap() {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const { v1Trade, v2Trade, currencyBalances, parsedAmount, currencies, error } = useDerivedSwapInfo()
+  const { wrapType, execute: onWrap, error: wrapError } = useWrapCallback(
+    currencies[Field.INPUT],
+    currencies[Field.OUTPUT],
+    typedValue
+  )
+  const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
   const toggledVersion = useToggledVersion()
-  const trade =
-    {
-      [Version.v1]: v1Trade,
-      [Version.v2]: v2Trade
-    }[toggledVersion] ?? undefined
+  const trade = showWrap
+    ? undefined
+    : {
+        [Version.v1]: v1Trade,
+        [Version.v2]: v2Trade
+      }[toggledVersion]
 
   const betterTradeLinkVersion: Version | undefined =
     toggledVersion === Version.v2 && isTradeBetter(v2Trade, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
@@ -78,10 +86,15 @@ export default function Swap() {
       ? Version.v2
       : undefined
 
-  const parsedAmounts = {
-    [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-    [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
-  }
+  const parsedAmounts = showWrap
+    ? {
+        [Field.INPUT]: parsedAmount,
+        [Field.OUTPUT]: parsedAmount
+      }
+    : {
+        [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
+        [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
+      }
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !error
@@ -107,7 +120,9 @@ export default function Swap() {
 
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: parsedAmounts[dependentField]?.toSignificant(6) ?? ''
+    [dependentField]: showWrap
+      ? parsedAmounts[independentField]?.toExact() ?? ''
+      : parsedAmounts[dependentField]?.toSignificant(6) ?? ''
   }
 
   const route = trade?.route
@@ -281,7 +296,7 @@ export default function Swap() {
                       color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.primary1 : theme.text2}
                     />
                   </ArrowWrapper>
-                  {recipient === null ? (
+                  {recipient === null && !showWrap ? (
                     <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
                       + add recipient (optional)
                     </LinkStyledButton>
@@ -300,7 +315,7 @@ export default function Swap() {
               id="swap-currency-output"
             />
 
-            {recipient !== null ? (
+            {recipient !== null && !showWrap ? (
               <>
                 <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                   <ArrowWrapper clickable={false}>
@@ -314,37 +329,43 @@ export default function Swap() {
               </>
             ) : null}
 
-            <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
-              <AutoColumn gap="4px">
-                <RowBetween align="center">
-                  <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                    Price
-                  </Text>
-                  <TradePrice
-                    inputCurrency={currencies[Field.INPUT]}
-                    outputCurrency={currencies[Field.OUTPUT]}
-                    price={trade?.executionPrice}
-                    showInverted={showInverted}
-                    setShowInverted={setShowInverted}
-                  />
-                </RowBetween>
-
-                {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
+            {showWrap ? null : (
+              <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
+                <AutoColumn gap="4px">
                   <RowBetween align="center">
-                    <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                      Slippage Tolerance
-                    </ClickableText>
-                    <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                      {allowedSlippage ? allowedSlippage / 100 : '-'}%
-                    </ClickableText>
+                    <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                      Price
+                    </Text>
+                    <TradePrice
+                      inputCurrency={currencies[Field.INPUT]}
+                      outputCurrency={currencies[Field.OUTPUT]}
+                      price={trade?.executionPrice}
+                      showInverted={showInverted}
+                      setShowInverted={setShowInverted}
+                    />
                   </RowBetween>
-                )}
-              </AutoColumn>
-            </Card>
+
+                  {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
+                    <RowBetween align="center">
+                      <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                        Slippage Tolerance
+                      </ClickableText>
+                      <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                        {allowedSlippage ? allowedSlippage / 100 : '-'}%
+                      </ClickableText>
+                    </RowBetween>
+                  )}
+                </AutoColumn>
+              </Card>
+            )}
           </AutoColumn>
           <BottomGrouping>
             {!account ? (
               <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+            ) : showWrap ? (
+              <ButtonPrimary disabled={Boolean(wrapError)} onClick={onWrap}>
+                {wrapError ?? (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
+              </ButtonPrimary>
             ) : noRoute && userHasSpecifiedInputOutput ? (
               <GreyCard style={{ textAlign: 'center' }}>
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
