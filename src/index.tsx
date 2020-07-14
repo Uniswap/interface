@@ -34,6 +34,13 @@ if (typeof GOOGLE_ANALYTICS_ID === 'string') {
   ReactGA.initialize('test', { testMode: true, debug: true })
 }
 
+window.addEventListener('error', error => {
+  ReactGA.exception({
+    description: `${error.message} @ ${error.filename}:${error.lineno}:${error.colno}`,
+    fatal: true
+  })
+})
+
 function Updaters() {
   return (
     <>
