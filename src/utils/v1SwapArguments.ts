@@ -26,6 +26,7 @@ export default function v1SwapArguments(trade: Trade, options: Omit<TradeOptions
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
   const inputETH = trade.inputAmount.currency === ETHER
   const outputETH = trade.outputAmount.currency === ETHER
+  if (inputETH && outputETH) throw new Error('ETHER to ETHER')
   const minimumAmountOut = toHex(trade.minimumAmountOut(options.allowedSlippage))
   const maximumAmountIn = toHex(trade.maximumAmountIn(options.allowedSlippage))
   const deadline = deadlineFromNow(options.ttl)
@@ -38,24 +39,19 @@ export default function v1SwapArguments(trade: Trade, options: Omit<TradeOptions
       }
     } else if (outputETH) {
       return {
-        methodName: 'tokenToEthTransferOutput',
-        args: [minimumAmountOut, maximumAmountIn, deadline, options.recipient],
+        methodName: 'tokenToEthTransferInput',
+        args: [maximumAmountIn, minimumAmountOut, deadline, options.recipient],
         value: '0x0'
       }
     } else {
-      if (!(trade.outputAmount.currency instanceof Token)) {
-        throw new Error('invalid transaction')
+      const outputToken = trade.outputAmount.currency
+      // should never happen, needed for type check
+      if (!(outputToken instanceof Token)) {
+        throw new Error('token to token')
       }
       return {
         methodName: 'tokenToTokenTransferInput',
-        args: [
-          maximumAmountIn,
-          minimumAmountOut,
-          '0x1',
-          deadline,
-          options.recipient,
-          trade.outputAmount.currency.address
-        ],
+        args: [maximumAmountIn, minimumAmountOut, '0x1', deadline, options.recipient, outputToken.address],
         value: '0x0'
       }
     }
@@ -73,7 +69,8 @@ export default function v1SwapArguments(trade: Trade, options: Omit<TradeOptions
         value: '0x0'
       }
     } else {
-      if (!(trade.outputAmount.currency instanceof Token)) {
+      const output = trade.outputAmount.currency
+      if (!(output instanceof Token)) {
         throw new Error('invalid output amount currency')
       }
 
@@ -82,10 +79,10 @@ export default function v1SwapArguments(trade: Trade, options: Omit<TradeOptions
         args: [
           minimumAmountOut,
           maximumAmountIn,
-          `0x${MaxUint256.toHexString()}`,
+          MaxUint256.toHexString(),
           deadline,
           options.recipient,
-          trade.outputAmount.currency.address
+          output.address
         ],
         value: '0x0'
       }
