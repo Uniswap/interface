@@ -32,20 +32,20 @@ export const HoverCard = styled(Card)`
 `
 
 interface PositionCardProps {
-  pair: Pair | undefined | null
+  pair: Pair
   border?: string
 }
 
 export function MinimalPositionCard({ pair, border }: PositionCardProps) {
   const { account } = useActiveWeb3React()
 
-  const token0 = pair?.token0
-  const token1 = pair?.token1
+  const token0 = pair.token0
+  const token1 = pair.token1
 
   const [showMore, setShowMore] = useState(false)
 
-  const userPoolBalance = useTokenBalance(account, pair?.liquidityToken)
-  const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
+  const userPoolBalance = useTokenBalance(account, pair.liquidityToken)
+  const totalPoolTokens = useTotalSupply(pair.liquidityToken)
 
   const [token0Deposited, token1Deposited] =
     !!pair &&
@@ -75,7 +75,7 @@ export function MinimalPositionCard({ pair, border }: PositionCardProps) {
               <RowFixed>
                 <DoubleCurrencyLogo currency0={token0} currency1={token1} margin={true} size={20} />
                 <Text fontWeight={500} fontSize={20}>
-                  {token0?.symbol}/{token1?.symbol}
+                  {token0.symbol}/{token1.symbol}
                 </Text>
               </RowFixed>
               <RowFixed>
@@ -87,7 +87,7 @@ export function MinimalPositionCard({ pair, border }: PositionCardProps) {
             <AutoColumn gap="4px">
               <FixedHeightRow>
                 <Text color="#888D9B" fontSize={16} fontWeight={500}>
-                  {token0?.symbol}:
+                  {token0.symbol}:
                 </Text>
                 {token0Deposited ? (
                   <RowFixed>
@@ -101,7 +101,7 @@ export function MinimalPositionCard({ pair, border }: PositionCardProps) {
               </FixedHeightRow>
               <FixedHeightRow>
                 <Text color="#888D9B" fontSize={16} fontWeight={500}>
-                  {token1?.symbol}:
+                  {token1.symbol}:
                 </Text>
                 {token1Deposited ? (
                   <RowFixed>
@@ -124,13 +124,13 @@ export function MinimalPositionCard({ pair, border }: PositionCardProps) {
 export default function FullPositionCard({ pair, border }: PositionCardProps) {
   const { account } = useActiveWeb3React()
 
-  const token0 = pair?.token0
-  const token1 = pair?.token1
+  const token0 = pair.token0
+  const token1 = pair.token1
 
   const [showMore, setShowMore] = useState(false)
 
-  const userPoolBalance = useTokenBalance(account, pair?.liquidityToken)
-  const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
+  const userPoolBalance = useTokenBalance(account, pair.liquidityToken)
+  const totalPoolTokens = useTotalSupply(pair.liquidityToken)
 
   const poolTokenPercentage =
     !!userPoolBalance && !!totalPoolTokens && JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
@@ -172,7 +172,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>
-                  Pooled {token0?.symbol}:
+                  Pooled {token0.symbol}:
                 </Text>
               </RowFixed>
               {token0Deposited ? (
@@ -190,7 +190,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>
-                  Pooled {token1?.symbol}:
+                  Pooled {token1.symbol}:
                 </Text>
               </RowFixed>
               {token1Deposited ? (
@@ -222,7 +222,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
             </FixedHeightRow>
 
             <AutoRow justify="center" marginTop={'10px'}>
-              <ExternalLink href={`https://uniswap.info/pair/${pair?.liquidityToken.address}`}>
+              <ExternalLink href={`https://uniswap.info/pair/${pair.liquidityToken.address}`}>
                 View pool information ↗
               </ExternalLink>
             </AutoRow>
@@ -230,7 +230,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
               <ButtonSecondary as={Link} to={`/add/${currencyId(token0)}/${currencyId(token1)}`} width="48%">
                 Add
               </ButtonSecondary>
-              <ButtonSecondary as={Link} width="48%" to={`/remove/${token0?.address}-${token1?.address}`}>
+              <ButtonSecondary as={Link} width="48%" to={`/remove/${token0.address}-${token1.address}`}>
                 Remove
               </ButtonSecondary>
             </RowBetween>

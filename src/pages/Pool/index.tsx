@@ -52,10 +52,7 @@ export default function Pool() {
   const v2IsLoading =
     fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
 
-  const allV2PairsWithLiquidity = v2Pairs
-    .map(([, pair]) => pair)
-    .filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
-    .map(V2Pair => <FullPositionCard key={V2Pair.liquidityToken.address} pair={V2Pair} />)
+  const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
   const hasV1Liquidity = useUserHasLiquidityInAllTokens()
 
@@ -91,7 +88,11 @@ export default function Pool() {
                 </TYPE.body>
               </LightCard>
             ) : allV2PairsWithLiquidity?.length > 0 ? (
-              <>{allV2PairsWithLiquidity}</>
+              <>
+                {allV2PairsWithLiquidity.map(v2Pair => (
+                  <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
+                ))}
+              </>
             ) : (
               <LightCard padding="40px">
                 <TYPE.body color={theme.text3} textAlign="center">
