@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Proposal from './Proposal'
 import styled, {keyframes} from 'styled-components'
+import { useHistory } from 'react-router-dom'
 
 const Main = styled.div`
   height: calc(100vh - 200px);
@@ -146,10 +147,10 @@ const Page = styled.div`
   user-select: none;
 
   ${({ active }) => active && `
-      color: black;
+    color: black;
   `}
   ${({ off }) => off && `
-      color: white;
+    color: white;
   `}
 `
 
@@ -157,11 +158,16 @@ const Sticky = styled.div`
   background-color: #FFFFFF;
   border-radius: 5px;
   position: absolute;
-  right: calc(-10vw + 20px);
+  right: calc(-10vw - 250px);
   top: calc(100% - 20px);
   box-shadow: 1px 1px 8px -4px rgba(0,0,0,.5), 1px 1px 4px -4px rgba(0,0,0,.5);
   padding: 20px;
-  width: 180px
+  width: 180px;
+  transition: right 2s;
+
+  ${({ active }) => active && `
+    right: calc(-10vw + 20px);
+  `}
 `
 
 const StickyText = styled.div`
@@ -180,7 +186,7 @@ const X = styled.div`
   color: #FFFFFF;
   font-size: 18px;
   text-align: center;
-  padding: 2px 2px 3px 3px;
+  padding: 2px 2px 3px 2px;
   display: inline-block;
   vertical-align: middle;
 `
@@ -224,7 +230,9 @@ export default function Vote(props) {
   const [proposals, setProposals] = useState([]); //proposal hook
   const [loading, setLoading] = useState(true); //loading hook
   const [page, changePage] = useState(1); //current page hook
-  const [sticky, changeVisibility] = useState(true); //loading hook
+  const [sticky, changeVisibility] = useState(false); //loading hook
+  let history = useHistory(); //history hook
+
 
   const perPage = window.innerWidth > 900 ? 5 : 3//make dynamic
   const mp = page * perPage - perPage 
@@ -238,18 +246,23 @@ export default function Vote(props) {
   
   const stick = () => changeVisibility(false)
 
+  const replacement = {
+    pathname: '/vote',
+    state: { badpath: false }
+  }
+
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/todos')
     .then(response => response.json())
     .then(json => setProposals(json))
     .then(() => setLoading(false))
 
-    const location = props.location
-    console.log(location)
-    if(location) {
-      if(location.state.badpath) {
+    const st = history.location.state
+    if(st) {  
+      if(st.badpath) {  
         changeVisibility(true)
         setTimeout(stick, 5000)
+        history.replace(replacement)
       }
     }
   })
@@ -310,16 +323,12 @@ export default function Vote(props) {
           </Pages>
         </GovernanceProposals>
       </Voting>
-      {sticky ? 
-        <div>
-        <Sticky>
-          <X>&#10006;</X>
-          <StickyText>
-            Invalid Proposal ID
-          </StickyText>
-        </Sticky> 
-        </div>
-       : null}
+      <Sticky active={sticky}>
+        <X>&#10006;</X>
+        <StickyText>
+          Invalid Proposal ID
+        </StickyText>
+      </Sticky> 
     </Main>
   )
 }

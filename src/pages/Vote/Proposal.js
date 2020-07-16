@@ -96,8 +96,6 @@ export default function Proposal({ id, proposal, status }) {
 	const [showCast, changeShowCast] = useState(false)
 
 	const handleClick = (e) => {
-		console.log(mod(1,3))
-		console.log(mod(1,3).includes(e))
 		if(mod(1,3).includes(e)) {
 			setVote(e)
 			setCast(false)
