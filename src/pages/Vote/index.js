@@ -85,10 +85,7 @@ const Loader = styled.div`
   width: 60px;
   height: 60px;
   animation: ${spin} 2s linear infinite;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin: 20px auto;
 `
 
 const Balance = styled.div`
@@ -156,6 +153,38 @@ const Page = styled.div`
   `}
 `
 
+const Sticky = styled.div`
+  background-color: #FFFFFF;
+  border-radius: 5px;
+  position: absolute;
+  right: calc(-10vw + 20px);
+  top: calc(100% - 20px);
+  box-shadow: 1px 1px 8px -4px rgba(0,0,0,.5), 1px 1px 4px -4px rgba(0,0,0,.5);
+  padding: 20px;
+  width: 180px
+`
+
+const StickyText = styled.div`
+  display: inline-block;
+  margin-left: 10px;
+  font-weight: 600;
+  color: black;
+  vertical-align: middle;
+`
+
+const X = styled.div`
+  background-color: #df5e66;
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+  color: #FFFFFF;
+  font-size: 18px;
+  text-align: center;
+  padding: 2px 2px 3px 3px;
+  display: inline-block;
+  vertical-align: middle;
+`
+
 const num = '0.000000'
 
 const displayPages = 7;
@@ -191,10 +220,11 @@ function display(p, selected, l) {
   return [...left, selected, ...right].includes(p) //combines the selected value and two arrays to check if the value falls in here
 }
 
-export default function Vote() {
+export default function Vote(props) {
   const [proposals, setProposals] = useState([]); //proposal hook
   const [loading, setLoading] = useState(true); //loading hook
   const [page, changePage] = useState(1); //current page hook
+  const [sticky, changeVisibility] = useState(true); //loading hook
 
   const perPage = window.innerWidth > 900 ? 5 : 3//make dynamic
   const mp = page * perPage - perPage 
@@ -205,12 +235,23 @@ export default function Vote() {
   const checkChange = (i) => {
     if(i > 0 && i < l + 1) changePage(i) //does not change the page value if the button is disabled
   }
+  
+  const stick = () => changeVisibility(false)
 
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/todos')
     .then(response => response.json())
     .then(json => setProposals(json))
     .then(() => setLoading(false))
+
+    const location = props.location
+    console.log(location)
+    if(location) {
+      if(location.state.badpath) {
+        changeVisibility(true)
+        setTimeout(stick, 5000)
+      }
+    }
   })
 
   return (
@@ -267,8 +308,18 @@ export default function Vote() {
               {`>`}
             </Page>
           </Pages>
-         </GovernanceProposals>
-       </Voting>
+        </GovernanceProposals>
+      </Voting>
+      {sticky ? 
+        <div>
+        <Sticky>
+          <X>&#10006;</X>
+          <StickyText>
+            Invalid Proposal ID
+          </StickyText>
+        </Sticky> 
+        </div>
+       : null}
     </Main>
   )
 }

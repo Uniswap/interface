@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
+import styled, {keyframes} from 'styled-components'
 
 const BackDrop = styled.div`
   width: 100vw;
@@ -94,23 +94,50 @@ const Color = styled.div`
   `}
 `
 
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`
+
+const Loader = styled.div`
+  border: 5px solid #f3f3f3; /* Light grey */
+  border-top: 5px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: ${spin} 2s linear infinite;
+  margin: 0 auto;
+`
+
 export default function Cast({ proposal, time, vote, onChange }) {
 	const [newVote, setNewVote] = useState(false)
 	const [error, setError] = useState(null)
 	const [percent, changePercent] = useState(0)
+	const [loading, setLoading] = useState(false); //loading hook
 
+	const load = () => {
+		setLoading(false)
+		setError('uh oh')
+	}
+	
 	const waiting = (choice) => {
-		let test 
-		fetch('https://jsonplaceholder.typicode.com/todos/1')
-    .then(response => response.json())
-    .then(json => test = json)
-    .then(() => changePercent(50))
-    .catch(error => {setError(error)})
-    setError('uh oh') // mock test
+		setError(null)
 
-    if(test) {
-			onChange(choice)
-		}
+		// let test 
+		// fetch('https://jsonplaceholder.typicode.com/todos/1')
+  //   .then(response => response.json())
+  //   .then(json => test = json)
+  //   .then(() => changePercent(50))
+  //   .catch(error => {setError(error)})
+  //   setError('uh oh') // mock test
+
+		setLoading(true)
+    setTimeout(load, 3000)
+  	
+
+  //   if(test) {
+		// 	onChange(choice)
+		// }
 	}
 
 	return (
@@ -133,9 +160,7 @@ export default function Cast({ proposal, time, vote, onChange }) {
 				<ErrorMessage>
 					{error}
 				</ErrorMessage>
-				<Bar>
-					<Color width={percent}/>
-				</Bar>
+				{loading ? <Loader/> : null}
 				<Exit onClick={() => onChange(false)}>
 					x
 				</Exit>

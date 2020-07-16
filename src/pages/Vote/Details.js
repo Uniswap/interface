@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled, {keyframes} from 'styled-components'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, Redirect } from 'react-router-dom'
 
 const Main = styled.div`
   width: 70vw;
@@ -245,8 +245,15 @@ const history = [
 
 const description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla non pellentesque eros. Nunc mollis massa vel elit consectetur porta. Phasellus ac facilisis mauris. Integer sollicitudin pretium nibh vel accumsan. Sed porttitor finibus elit, vel aliquam dui maximus in. Sed lobortis quis nunc quis hendrerit. Mauris volutpat ipsum eu dolor ornare tincidunt. Vestibulum nec risus a ante sagittis faucibus. Ut luctus ex diam, vel luctus ligula condimentum rutrum. Donec diam quam, malesuada quis felis eget, placerat venenatis felis. Curabitur tellus neque, elementum ut libero eu, convallis efficitur arcu. Nullam vestibulum, erat molestie lacinia lobortis, nibh augue ornare ante, et sodales arcu nisl in justo. Integer sed quam eu lacus blandit vulputate.'
 
+function valid(id) {
+	if(id < 0 || id > 200) return false
+	return true
+}
+
 export default function Details() {
 	const id = useLocation().pathname.split("/")[2];
+	if(!valid(id)) return <Redirect to={{pathname: '/vote', state: {badpath: true}}}/>
+
 	const date = 'Executed July 2nd, 2020'
 	const proposal = 'quis ut nam facilis et officia qui'
 	const status = 'Active'
