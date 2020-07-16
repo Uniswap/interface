@@ -226,6 +226,12 @@ function display(p, selected, l) {
   return [...left, selected, ...right].includes(p) //combines the selected value and two arrays to check if the value falls in here
 }
 
+async function getProposals() {
+  let response = await fetch('https://jsonplaceholder.typicode.com/todos')
+  let data = await response.json()
+  return data
+} 
+
 export default function Vote(props) {
   const [proposals, setProposals] = useState([]); //proposal hook
   const [loading, setLoading] = useState(true); //loading hook
@@ -252,10 +258,10 @@ export default function Vote(props) {
   }
 
   useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/todos')
-    .then(response => response.json())
-    .then(json => setProposals(json))
-    .then(() => setLoading(false))
+    getProposals().then(data => {
+      setProposals(data)
+      setLoading(false)
+    })
 
     const st = history.location.state
     if(st) {  

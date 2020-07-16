@@ -109,34 +109,39 @@ const Loader = styled.div`
   margin: 0 auto;
 `
 
+async function castVote() {
+  let response = await fetch('https://jsonplaceholder.typicode.com/todos/1')
+  let data = await response.json()
+  return data
+} 
+
 export default function Cast({ proposal, time, vote, onChange }) {
 	const [newVote, setNewVote] = useState(false)
 	const [error, setError] = useState(null)
-	const [percent, changePercent] = useState(0)
 	const [loading, setLoading] = useState(false); //loading hook
 
 	const load = () => {
 		setLoading(false)
-		setError('uh oh')
+		setError('Error')
 	}
-	
+
 	const waiting = (choice) => {
 		setError(null)
 
+		//commented is the actual code for voting, but for now I am using a fake load then error after 3 seconds
 		// let test 
-		// fetch('https://jsonplaceholder.typicode.com/todos/1')
-  //   .then(response => response.json())
-  //   .then(json => test = json)
-  //   .then(() => changePercent(50))
-  //   .catch(error => {setError(error)})
-  //   setError('uh oh') // mock test
+		// castVote().then(data => {
+  //     test = data
+  //     setLoading(false)
+  //   }).catch(error => setError(error))
+		
 
 		setLoading(true)
     setTimeout(load, 3000)
   	
 
   //   if(test) {
-		// 	onChange(choice)
+		// 	onChange(choice) //add logic to test if vote worked
 		// }
 	}
 

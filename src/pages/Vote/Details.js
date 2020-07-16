@@ -250,13 +250,33 @@ function valid(id) {
 	return true
 }
 
+async function getDetails() {
+  let response = await fetch('https://jsonplaceholder.typicode.com/todos/1')
+  let data = await response.json()
+  return data
+} 
+
 export default function Details() {
 	const id = useLocation().pathname.split("/")[2];
 	if(!valid(id)) return <Redirect to={{pathname: '/vote', state: {badpath: true}}}/>
 
-	const date = 'Executed July 2nd, 2020'
-	const proposal = 'quis ut nam facilis et officia qui'
-	const status = 'Active'
+	//temporary details
+	let date = 'Executed July 2nd, 2020'
+	let proposal = 'quis ut nam facilis et officia qui'
+	let status = 'Active'
+
+//actual logic below
+	// useEffect(() => {
+ //    getDetails().then(data => {
+ //      date = data.date
+ //      proposal = data.proposal
+ //      status = data.status
+ //    }).catch(error => {
+ //    	if(error === 'badID') {
+ //    		return <Redirect to={{pathname: '/vote', state: {badpath: true}}}/>
+ //    	}
+ //    })
+ //  })
 
 	const shorten = (a) => `${a.substring(0, 6)}...${a.substring(a.length-4, a.length)}`
 	const addressTitle = (l) => `${l} ${l === 1 ? 'Address' : 'Addresses'}`
