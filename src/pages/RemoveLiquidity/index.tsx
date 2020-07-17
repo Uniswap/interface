@@ -517,9 +517,9 @@ export default function RemoveLiquidity({
                         </Text>
                       </RowFixed>
                     </RowBetween>
-                    <RowBetween style={{ justifyContent: 'flex-end' }}>
-                      {chainId ? (
-                        oneCurrencyIsETH ? (
+                    {chainId && (oneCurrencyIsWETH || oneCurrencyIsETH) ? (
+                      <RowBetween style={{ justifyContent: 'flex-end' }}>
+                        {oneCurrencyIsETH ? (
                           <StyledInternalLink
                             to={`/remove/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${
                               currencyB === ETHER ? WETH[chainId].address : currencyIdB
@@ -535,9 +535,9 @@ export default function RemoveLiquidity({
                           >
                             Receive ETH
                           </StyledInternalLink>
-                        ) : null
-                      ) : null}
-                    </RowBetween>
+                        ) : null}
+                      </RowBetween>
+                    ) : null}
                   </AutoColumn>
                 </LightCard>
               </>
