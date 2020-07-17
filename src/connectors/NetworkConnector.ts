@@ -47,8 +47,10 @@ class MiniRpcProvider implements AsyncSendable {
   }
 
   public readonly request = async (method: string, params?: unknown[] | object): Promise<unknown> => {
+    let requestHeaders: any = { 'Content-Type': 'application/json' };
     const response = await fetch(this.url, {
       method: 'POST',
+      headers: requestHeaders,
       body: JSON.stringify({
         jsonrpc: '2.0',
         id: 1,
