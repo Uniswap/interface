@@ -28,7 +28,7 @@ describe('Remove Liquidity', () => {
   it('does not crash if ETH is duplicated', () => {
     cy.visit('/remove/0xc778417E063141139Fce010982780140Aa0cD5Ab-0xc778417E063141139Fce010982780140Aa0cD5Ab')
     cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'WETH')
-    cy.get('#remove-liquidity-tokenb-symbol').should('not.contain.text', 'WETH')
+    cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'WETH')
   })
 
   it('token not in storage is loaded', () => {
