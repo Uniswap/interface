@@ -1,74 +1,67 @@
-import { JSBI, Pair, Percent, Token, TokenAmount } from '@uniswap/sdk'
-import { useCallback, useEffect, useMemo } from 'react'
+import { Currency, CurrencyAmount, JSBI, Pair, Percent, TokenAmount } from '@uniswap/sdk'
+import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
-import { useToken } from '../../hooks/Tokens'
+import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import { AppDispatch, AppState } from '../index'
 import { tryParseAmount } from '../swap/hooks'
 import { useTokenBalances } from '../wallet/hooks'
-import { Field, setBurnDefaultsFromURLMatchParams, typeInput } from './actions'
+import { Field, typeInput } from './actions'
 
 export function useBurnState(): AppState['burn'] {
   return useSelector<AppState, AppState['burn']>(state => state.burn)
 }
 
-export function useDerivedBurnInfo(): {
-  tokens: { [Field.CURRENCY_A]?: Token; [Field.CURRENCY_B]?: Token }
+export function useDerivedBurnInfo(
+  currencyA: Currency | undefined,
+  currencyB: Currency | undefined
+): {
   pair?: Pair | null
   parsedAmounts: {
     [Field.LIQUIDITY_PERCENT]: Percent
     [Field.LIQUIDITY]?: TokenAmount
-    [Field.CURRENCY_A]?: TokenAmount
-    [Field.CURRENCY_B]?: TokenAmount
+    [Field.CURRENCY_A]?: CurrencyAmount
+    [Field.CURRENCY_B]?: CurrencyAmount
   }
   error?: string
 } {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
-  const {
-    independentField,
-    typedValue,
-    [Field.CURRENCY_A]: { address: tokenAAddress },
-    [Field.CURRENCY_B]: { address: tokenBAddress }
-  } = useBurnState()
-
-  // tokens
-  const tokenA = useToken(tokenAAddress)
-  const tokenB = useToken(tokenBAddress)
-  const tokens: { [Field.CURRENCY_A]?: Token; [Field.CURRENCY_B]?: Token } = useMemo(
-    () => ({
-      [Field.CURRENCY_A]: tokenA ?? undefined,
-      [Field.CURRENCY_B]: tokenB ?? undefined
-    }),
-    [tokenA, tokenB]
-  )
+  const { independentField, typedValue } = useBurnState()
 
   // pair + totalsupply
-  const [, pair] = usePair(tokens[Field.CURRENCY_A], tokens[Field.CURRENCY_B])
+  const [, pair] = usePair(currencyA, currencyB)
 
   // balances
   const relevantTokenBalances = useTokenBalances(account ?? undefined, [pair?.liquidityToken])
   const userLiquidity: undefined | TokenAmount = relevantTokenBalances?.[pair?.liquidityToken?.address ?? '']
 
+  const [tokenA, tokenB] = [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
+  const tokens = {
+    [Field.CURRENCY_A]: tokenA,
+    [Field.CURRENCY_B]: tokenB,
+    [Field.LIQUIDITY]: pair?.liquidityToken
+  }
+
   // liquidity values
   const totalSupply = useTotalSupply(pair?.liquidityToken)
   const liquidityValueA =
     pair &&
-    tokenA &&
     totalSupply &&
     userLiquidity &&
+    tokenA &&
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
     JSBI.greaterThanOrEqual(totalSupply.raw, userLiquidity.raw)
       ? new TokenAmount(tokenA, pair.getLiquidityValue(tokenA, totalSupply, userLiquidity, false).raw)
       : undefined
   const liquidityValueB =
     pair &&
-    tokenB &&
     totalSupply &&
     userLiquidity &&
+    tokenB &&
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
     JSBI.greaterThanOrEqual(totalSupply.raw, userLiquidity.raw)
       ? new TokenAmount(tokenB, pair.getLiquidityValue(tokenB, totalSupply, userLiquidity, false).raw)
@@ -133,7 +126,7 @@ export function useDerivedBurnInfo(): {
     error = error ?? 'Enter an amount'
   }
 
-  return { tokens, pair, parsedAmounts, error }
+  return { pair, parsedAmounts, error }
 }
 
 export function useBurnActionHandlers(): {
@@ -151,14 +144,4 @@ export function useBurnActionHandlers(): {
   return {
     onUserInput
   }
-}
-
-// updates the burn state to use the appropriate tokens, given the route
-export function useDefaultsFromURLMatchParams(params: { tokens: string }) {
-  const { chainId } = useActiveWeb3React()
-  const dispatch = useDispatch<AppDispatch>()
-  useEffect(() => {
-    if (!chainId) return
-    dispatch(setBurnDefaultsFromURLMatchParams({ chainId, params }))
-  }, [dispatch, chainId, params])
 }

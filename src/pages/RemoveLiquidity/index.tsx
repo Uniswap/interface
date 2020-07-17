@@ -1,8 +1,8 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Percent, WETH } from '@uniswap/sdk'
-import React, { useCallback, useContext, useState } from 'react'
+import { ETHER, Percent } from '@uniswap/sdk'
+import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
@@ -22,26 +22,37 @@ import Slider from '../../components/Slider'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { ROUTER_ADDRESS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
+import { useCurrency } from '../../hooks/Tokens'
 import { usePairContract } from '../../hooks/useContract'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
 import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
 import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
 import { Dots } from '../../components/swap/styleds'
-import { useDefaultsFromURLMatchParams, useBurnActionHandlers } from '../../state/burn/hooks'
+import { useBurnActionHandlers } from '../../state/burn/hooks'
 import { useDerivedBurnInfo, useBurnState } from '../../state/burn/hooks'
 import { Field } from '../../state/burn/actions'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 
-export default function RemoveLiquidity({ match: { params } }: RouteComponentProps<{ tokens: string }>) {
-  useDefaultsFromURLMatchParams(params)
-
+export default function RemoveLiquidity({
+  match: {
+    params: { currencyIdA, currencyIdB }
+  }
+}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
+  const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, library } = useActiveWeb3React()
+  const [tokenA, tokenB] = useMemo(() => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)], [
+    currencyA,
+    currencyB,
+    chainId
+  ])
+
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
@@ -49,10 +60,9 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
 
   // burn state
   const { independentField, typedValue } = useBurnState()
-  const { tokens, pair, parsedAmounts, error } = useDerivedBurnInfo()
+  const { pair, parsedAmounts, error } = useDerivedBurnInfo(currencyA ?? undefined, currencyB ?? undefined)
   const { onUserInput: _onUserInput } = useBurnActionHandlers()
   const isValid = !error
-  const { [Field.CURRENCY_A]: tokenA, [Field.CURRENCY_B]: tokenB } = tokens
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
@@ -162,10 +172,10 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
   const onLiquidityInput = useCallback((typedValue: string): void => onUserInput(Field.LIQUIDITY, typedValue), [
     onUserInput
   ])
-  const onTokenAInput = useCallback((typedValue: string): void => onUserInput(Field.CURRENCY_A, typedValue), [
+  const onCurrencyAInput = useCallback((typedValue: string): void => onUserInput(Field.CURRENCY_A, typedValue), [
     onUserInput
   ])
-  const onTokenBInput = useCallback((typedValue: string): void => onUserInput(Field.CURRENCY_B, typedValue), [
+  const onCurrencyBInput = useCallback((typedValue: string): void => onUserInput(Field.CURRENCY_B, typedValue), [
     onUserInput
   ])
 
@@ -184,26 +194,27 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
       [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountB, allowedSlippage)[0]
     }
 
-    const { [Field.CURRENCY_A]: tokenA, [Field.CURRENCY_B]: tokenB } = tokens
-    if (!tokenA || !tokenB) throw new Error('missing tokens')
+    if (!currencyA || !currencyB) throw new Error('missing tokens')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
-    const tokenBIsWETH = tokenB.equals(WETH[chainId]) ?? false
-    const oneTokenIsWETH = tokenA.equals(WETH[chainId]) || tokenBIsWETH
+    const currencyBIsETH = currencyB === ETHER
+    const oneCurrencyIsETH = currencyA === ETHER || currencyBIsETH
     const deadlineFromNow = Math.ceil(Date.now() / 1000) + deadline
+
+    if (!tokenA || !tokenB) throw new Error('could not wrap')
 
     let methodNames: string[], args: Array<string | string[] | number | boolean>
     // we have approval, use normal remove liquidity
     if (approval === ApprovalState.APPROVED) {
       // removeLiquidityETH
-      if (oneTokenIsWETH) {
+      if (oneCurrencyIsETH) {
         methodNames = ['removeLiquidityETH', 'removeLiquidityETHSupportingFeeOnTransferTokens']
         args = [
-          tokenBIsWETH ? tokenA.address : tokenB.address,
+          currencyBIsETH ? tokenA.address : tokenB.address,
           liquidityAmount.raw.toString(),
-          amountsMin[tokenBIsWETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
-          amountsMin[tokenBIsWETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
+          amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
+          amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
           account,
           deadlineFromNow
         ]
@@ -225,13 +236,13 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
     // we have a signataure, use permit versions of remove liquidity
     else if (signatureData !== null) {
       // removeLiquidityETHWithPermit
-      if (oneTokenIsWETH) {
+      if (oneCurrencyIsETH) {
         methodNames = ['removeLiquidityETHWithPermit', 'removeLiquidityETHWithPermitSupportingFeeOnTransferTokens']
         args = [
-          tokenBIsWETH ? tokenA.address : tokenB.address,
+          currencyBIsETH ? tokenA.address : tokenB.address,
           liquidityAmount.raw.toString(),
-          amountsMin[tokenBIsWETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
-          amountsMin[tokenBIsWETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
+          amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
+          amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
           account,
           signatureData.deadline,
           false,
@@ -294,11 +305,11 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
               'Remove ' +
               parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
               ' ' +
-              tokens[Field.CURRENCY_A]?.symbol +
+              currencyA?.symbol +
               ' and ' +
               parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
               ' ' +
-              tokens[Field.CURRENCY_B]?.symbol
+              currencyB?.symbol
           })
 
           setTxHash(response.hash)
@@ -306,7 +317,7 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
           ReactGA.event({
             category: 'Liquidity',
             action: 'Remove',
-            label: [tokens[Field.CURRENCY_A]?.symbol, tokens[Field.CURRENCY_B]?.symbol].join('/')
+            label: [currencyA?.symbol, currencyB?.symbol].join('/')
           })
         })
         .catch((error: Error) => {
@@ -325,9 +336,9 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
             {parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}
           </Text>
           <RowFixed gap="4px">
-            <CurrencyLogo currency={tokens[Field.CURRENCY_A]} size={'24px'} />
+            <CurrencyLogo currency={currencyA} size={'24px'} />
             <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-              {tokens[Field.CURRENCY_A]?.symbol}
+              {currencyA?.symbol}
             </Text>
           </RowFixed>
         </RowBetween>
@@ -339,9 +350,9 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
             {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}
           </Text>
           <RowFixed gap="4px">
-            <CurrencyLogo currency={tokens[Field.CURRENCY_B]} size={'24px'} />
+            <CurrencyLogo currency={currencyB} size={'24px'} />
             <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-              {tokens[Field.CURRENCY_B]?.symbol}
+              {currencyB?.symbol}
             </Text>
           </RowFixed>
         </RowBetween>
@@ -359,14 +370,10 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
       <>
         <RowBetween>
           <Text color={theme.text2} fontWeight={500} fontSize={16}>
-            {'UNI ' + tokens[Field.CURRENCY_A]?.symbol + '/' + tokens[Field.CURRENCY_B]?.symbol} Burned
+            {'UNI ' + currencyA?.symbol + '/' + currencyB?.symbol} Burned
           </Text>
           <RowFixed>
-            <DoubleCurrencyLogo
-              currency0={tokens[Field.CURRENCY_A]}
-              currency1={tokens[Field.CURRENCY_B]}
-              margin={true}
-            />
+            <DoubleCurrencyLogo currency0={currencyA} currency1={currencyB} margin={true} />
             <Text fontWeight={500} fontSize={16}>
               {parsedAmounts[Field.LIQUIDITY]?.toSignificant(6)}
             </Text>
@@ -379,15 +386,13 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
                 Price
               </Text>
               <Text fontWeight={500} fontSize={16} color={theme.text1}>
-                1 {tokens[Field.CURRENCY_A]?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'}{' '}
-                {tokens[Field.CURRENCY_B]?.symbol}
+                1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}
               </Text>
             </RowBetween>
             <RowBetween>
               <div />
               <Text fontWeight={500} fontSize={16} color={theme.text1}>
-                1 {tokens[Field.CURRENCY_B]?.symbol} = {tokenB ? pair.priceOf(tokenB).toSignificant(6) : '-'}{' '}
-                {tokens[Field.CURRENCY_A]?.symbol}
+                1 {currencyB?.symbol} = {tokenB ? pair.priceOf(tokenB).toSignificant(6) : '-'} {currencyA?.symbol}
               </Text>
             </RowBetween>
           </>
@@ -402,8 +407,8 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
   }
 
   const pendingText = `Removing ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${
-    tokens[Field.CURRENCY_A]?.symbol
-  } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${tokens[Field.CURRENCY_B]?.symbol}`
+    currencyA?.symbol
+  } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencyB?.symbol}`
 
   const liquidityPercentChangeCallback = useCallback(
     (value: number) => {
@@ -490,9 +495,9 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
                         {formattedAmounts[Field.CURRENCY_A] || '-'}
                       </Text>
                       <RowFixed>
-                        <CurrencyLogo currency={tokens[Field.CURRENCY_A]} style={{ marginRight: '12px' }} />
+                        <CurrencyLogo currency={currencyA} style={{ marginRight: '12px' }} />
                         <Text fontSize={24} fontWeight={500} id="remove-liquidity-tokena-symbol">
-                          {tokens[Field.CURRENCY_A]?.symbol}
+                          {currencyA?.symbol}
                         </Text>
                       </RowFixed>
                     </RowBetween>
@@ -501,9 +506,9 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
                         {formattedAmounts[Field.CURRENCY_B] || '-'}
                       </Text>
                       <RowFixed>
-                        <CurrencyLogo currency={tokens[Field.CURRENCY_B]} style={{ marginRight: '12px' }} />
+                        <CurrencyLogo currency={currencyB} style={{ marginRight: '12px' }} />
                         <Text fontSize={24} fontWeight={500} id="remove-liquidity-tokenb-symbol">
-                          {tokens[Field.CURRENCY_B]?.symbol}
+                          {currencyB?.symbol}
                         </Text>
                       </RowFixed>
                     </RowBetween>
@@ -532,10 +537,10 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
                 <CurrencyInputPanel
                   hideBalance={true}
                   value={formattedAmounts[Field.CURRENCY_A]}
-                  onUserInput={onTokenAInput}
+                  onUserInput={onCurrencyAInput}
                   onMax={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')}
                   showMaxButton={!atMaxAmount}
-                  currency={tokens[Field.CURRENCY_A]}
+                  currency={currencyA}
                   label={'Output'}
                   disableCurrencySelect
                   id="remove-liquidity-tokena"
@@ -546,10 +551,10 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
                 <CurrencyInputPanel
                   hideBalance={true}
                   value={formattedAmounts[Field.CURRENCY_B]}
-                  onUserInput={onTokenBInput}
+                  onUserInput={onCurrencyBInput}
                   onMax={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')}
                   showMaxButton={!atMaxAmount}
-                  currency={tokens[Field.CURRENCY_B]}
+                  currency={currencyB}
                   label={'Output'}
                   disableCurrencySelect
                   id="remove-liquidity-tokenb"
@@ -561,20 +566,20 @@ export default function RemoveLiquidity({ match: { params } }: RouteComponentPro
                 <RowBetween>
                   Price:
                   <div>
-                    1 {tokenA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {tokenB?.symbol}
+                    1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}
                   </div>
                 </RowBetween>
                 <RowBetween>
                   <div />
                   <div>
-                    1 {tokenB?.symbol} ={' '}
+                    1 {currencyB?.symbol} ={' '}
                     {tokenB
                       ? pair
                           .priceOf(tokenB)
                           .invert()
                           .toSignificant(6)
                       : '-'}{' '}
-                    {tokens[Field.CURRENCY_A]?.symbol}
+                    {currencyA?.symbol}
                   </div>
                 </RowBetween>
               </div>
