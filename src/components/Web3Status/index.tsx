@@ -126,7 +126,11 @@ function recentTransactionsOnly(a: TransactionDetails) {
   return new Date().getTime() - a.addedTime < 86_400_000
 }
 
-const SOCK = <span style={{ marginTop: -4, marginBottom: -4 }}>🧦</span>
+const SOCK = (
+  <span role="img" aria-label="has socks emoji" style={{ marginTop: -4, marginBottom: -4 }}>
+    🧦
+  </span>
+)
 
 export default function Web3Status() {
   const { t } = useTranslation()
