@@ -418,9 +418,11 @@ export default function RemoveLiquidity({
   )
 
   const oneCurrencyIsETH = currencyA === ETHER || currencyB === ETHER
-  const oneCurrencyIsWETH =
+  const oneCurrencyIsWETH = Boolean(
     chainId &&
-    ((currencyA && currencyEquals(WETH[chainId], currencyA)) || (currencyB && currencyEquals(WETH[chainId], currencyB)))
+      ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
+        (currencyB && currencyEquals(WETH[chainId], currencyB)))
+  )
 
   return (
     <>
