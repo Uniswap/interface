@@ -8,7 +8,7 @@ export interface MintState {
 }
 
 const initialState: MintState = {
-  independentField: Field.TOKEN_A,
+  independentField: Field.CURRENCY_A,
   typedValue: '',
   otherTypedValue: ''
 }

@@ -32,13 +32,19 @@ describe('Add Liquidity', () => {
     )
   })
 
-  it('redirects /add/WETH-token to /add/ETH/token', () => {
+  it('redirects /add/WETH-token to /add/WETH-address/token', () => {
     cy.visit('/add/0xc778417E063141139Fce010982780140Aa0cD5Ab-0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
-    cy.url().should('contain', '/add/ETH/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
+    cy.url().should(
+      'contain',
+      '/add/0xc778417E063141139Fce010982780140Aa0cD5Ab/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85'
+    )
   })
 
-  it('redirects /add/token-WETH to /add/token/ETH', () => {
+  it('redirects /add/token-WETH to /add/token/WETH-address', () => {
     cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85-0xc778417E063141139Fce010982780140Aa0cD5Ab')
-    cy.url().should('contain', '/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/ETH')
+    cy.url().should(
+      'contain',
+      '/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/0xc778417E063141139Fce010982780140Aa0cD5Ab'
+    )
   })
 })

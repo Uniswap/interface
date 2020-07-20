@@ -1,12 +1,11 @@
-import { Pair, Token } from '@uniswap/sdk'
+import { Currency, Pair } from '@uniswap/sdk'
 import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { darken } from 'polished'
-import { Field } from '../../state/swap/actions'
-import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
-import TokenSearchModal from '../SearchModal/TokenSearchModal'
-import TokenLogo from '../TokenLogo'
-import DoubleLogo from '../DoubleLogo'
+import { useCurrencyBalance } from '../../state/wallet/hooks'
+import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
+import CurrencyLogo from '../CurrencyLogo'
+import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween } from '../Row'
 import { TYPE, CursorPointer } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
@@ -117,40 +116,36 @@ const StyledBalanceMax = styled.button`
 
 interface CurrencyInputPanelProps {
   value: string
-  field: string
-  onUserInput: (field: string, val: string) => void
+  onUserInput: (value: string) => void
   onMax?: () => void
   showMaxButton: boolean
   label?: string
-  onTokenSelection?: (tokenAddress: string) => void
-  token?: Token | null
-  disableTokenSelect?: boolean
+  onCurrencySelect?: (currency: Currency) => void
+  currency?: Currency | null
+  disableCurrencySelect?: boolean
   hideBalance?: boolean
-  isExchange?: boolean
   pair?: Pair | null
   hideInput?: boolean
   showSendWithSwap?: boolean
-  otherSelectedTokenAddress?: string | null
+  otherCurrency?: Currency | null
   id: string
   showCommonBases?: boolean
 }
 
 export default function CurrencyInputPanel({
   value,
-  field,
   onUserInput,
   onMax,
   showMaxButton,
   label = 'Input',
-  onTokenSelection = null,
-  token = null,
-  disableTokenSelect = false,
+  onCurrencySelect = null,
+  currency = null,
+  disableCurrencySelect = false,
   hideBalance = false,
-  isExchange = false,
   pair = null, // used for double token logo
   hideInput = false,
   showSendWithSwap = false,
-  otherSelectedTokenAddress = null,
+  otherCurrency = null,
   id,
   showCommonBases
 }: CurrencyInputPanelProps) {
@@ -158,7 +153,7 @@ export default function CurrencyInputPanel({
 
   const [modalOpen, setModalOpen] = useState(false)
   const { account } = useActiveWeb3React()
-  const userTokenBalance = useTokenBalanceTreatingWETHasETH(account, token)
+  const selectedCurrencyBalance = useCurrencyBalance(account, currency)
   const theme = useContext(ThemeContext)
 
   const handleDismissSearch = useCallback(() => {
@@ -183,8 +178,8 @@ export default function CurrencyInputPanel({
                     fontSize={14}
                     style={{ display: 'inline' }}
                   >
-                    {!hideBalance && !!token && userTokenBalance
-                      ? 'Balance: ' + userTokenBalance?.toSignificant(6)
+                    {!hideBalance && !!currency && selectedCurrencyBalance
+                      ? 'Balance: ' + selectedCurrencyBalance?.toSignificant(6)
                       : ' -'}
                   </TYPE.body>
                 </CursorPointer>
@@ -192,63 +187,62 @@ export default function CurrencyInputPanel({
             </RowBetween>
           </LabelRow>
         )}
-        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableTokenSelect}>
+        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableCurrencySelect}>
           {!hideInput && (
             <>
               <NumericalInput
                 className="token-amount-input"
                 value={value}
                 onUserInput={val => {
-                  onUserInput(field, val)
+                  onUserInput(val)
                 }}
               />
-              {account && !!token?.address && showMaxButton && label !== 'To' && (
+              {account && currency && showMaxButton && label !== 'To' && (
                 <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
               )}
             </>
           )}
           <CurrencySelect
-            selected={!!token}
+            selected={!!currency}
             className="open-currency-select-button"
             onClick={() => {
-              if (!disableTokenSelect) {
+              if (!disableCurrencySelect) {
                 setModalOpen(true)
               }
             }}
           >
             <Aligner>
-              {isExchange ? (
-                <DoubleLogo a0={pair?.token0.address} a1={pair?.token1.address} size={24} margin={true} />
-              ) : token?.address ? (
-                <TokenLogo address={token?.address} size={'24px'} />
+              {pair ? (
+                <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
+              ) : currency ? (
+                <CurrencyLogo currency={currency} size={'24px'} />
               ) : null}
-              {isExchange ? (
+              {pair ? (
                 <StyledTokenName className="pair-name-container">
                   {pair?.token0.symbol}:{pair?.token1.symbol}
                 </StyledTokenName>
               ) : (
-                <StyledTokenName className="token-symbol-container" active={Boolean(token && token.symbol)}>
-                  {(token && token.symbol && token.symbol.length > 20
-                    ? token.symbol.slice(0, 4) +
+                <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
+                  {(currency && currency.symbol && currency.symbol.length > 20
+                    ? currency.symbol.slice(0, 4) +
                       '...' +
-                      token.symbol.slice(token.symbol.length - 5, token.symbol.length)
-                    : token?.symbol) || t('selectToken')}
+                      currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
+                    : currency?.symbol) || t('selectToken')}
                 </StyledTokenName>
               )}
-              {!disableTokenSelect && <StyledDropDown selected={!!token?.address} />}
+              {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
             </Aligner>
           </CurrencySelect>
         </InputRow>
       </Container>
-      {!disableTokenSelect && (
-        <TokenSearchModal
+      {!disableCurrencySelect && (
+        <CurrencySearchModal
           isOpen={modalOpen}
           onDismiss={handleDismissSearch}
-          onTokenSelect={onTokenSelection}
+          onCurrencySelect={onCurrencySelect}
           showSendWithSwap={showSendWithSwap}
-          hiddenToken={token?.address}
-          otherSelectedTokenAddress={otherSelectedTokenAddress}
-          otherSelectedText={field === Field.INPUT ? 'Selected as output' : 'Selected as input'}
+          hiddenCurrency={currency}
+          otherSelectedCurrency={otherCurrency}
           showCommonBases={showCommonBases}
         />
       )}

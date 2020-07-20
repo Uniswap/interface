@@ -20,6 +20,7 @@ export default [
   new Token(ChainId.MAINNET, '0x107c4504cd79C5d2696Ea0030a8dD4e92601B82e', 18, 'BLT', 'Bloom Token'),
   new Token(ChainId.MAINNET, '0x1F573D6Fb3F13d689FF844B4cE37794d79a7FF1C', 18, 'BNT', 'Bancor Network Token'),
   new Token(ChainId.MAINNET, '0x0327112423F3A68efdF1fcF402F6c5CB9f7C33fd', 18, 'BTC++', 'PieDAO BTC++'),
+  new Token(ChainId.MAINNET, '0x56d811088235F11C8920698a204A5010a788f4b3', 18, 'BZRX', 'bZx Protocol Token'),
   new Token(ChainId.MAINNET, '0x4F9254C83EB525f9FCf346490bbb3ed28a81C667', 18, 'CELR', 'CelerToken'),
   new Token(ChainId.MAINNET, '0xF5DCe57282A584D2746FaF1593d3121Fcac444dC', 8, 'cSAI', 'Compound Dai'),
   new Token(ChainId.MAINNET, '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', 8, 'cDAI', 'Compound Dai'),

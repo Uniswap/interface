@@ -1,4 +1,4 @@
-import { ChainId, JSBI, Token, TokenAmount, WETH } from '@uniswap/sdk'
+import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import ERC20_INTERFACE from '../../constants/abis/erc20'
 import { useAllTokens } from '../../hooks/Tokens'
@@ -10,7 +10,9 @@ import { useSingleContractMultipleData, useMultipleContractSingleData } from '..
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
  */
-export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [address: string]: JSBI | undefined } {
+export function useETHBalances(
+  uncheckedAddresses?: (string | undefined)[]
+): { [address: string]: CurrencyAmount | undefined } {
   const multicallContract = useMulticallContract()
 
   const addresses: string[] = useMemo(
@@ -32,9 +34,9 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): { [
 
   return useMemo(
     () =>
-      addresses.reduce<{ [address: string]: JSBI | undefined }>((memo, address, i) => {
+      addresses.reduce<{ [address: string]: CurrencyAmount }>((memo, address, i) => {
         const value = results?.[i]?.result?.[0]
-        if (value) memo[address] = JSBI.BigInt(value.toString())
+        if (value) memo[address] = CurrencyAmount.ether(JSBI.BigInt(value.toString()))
         return memo
       }, {}),
     [addresses, results]
@@ -57,7 +59,7 @@ export function useTokenBalancesWithLoadingIndicator(
 
   const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20_INTERFACE, 'balanceOf', [address])
 
-  const anyLoading = balances.some(callState => callState.loading)
+  const anyLoading: boolean = useMemo(() => balances.some(callState => callState.loading), [balances])
 
   return [
     useMemo(
@@ -85,45 +87,6 @@ export function useTokenBalances(
   return useTokenBalancesWithLoadingIndicator(address, tokens)[0]
 }
 
-// contains the hacky logic to treat the WETH token input as if it's ETH to
-// maintain compatibility until we handle them separately.
-export function useTokenBalancesTreatWETHAsETH(
-  address?: string,
-  tokens?: (Token | undefined)[]
-): { [tokenAddress: string]: TokenAmount | undefined } {
-  const { chainId } = useActiveWeb3React()
-  const { tokensWithoutWETH, includesWETH } = useMemo(() => {
-    if (!tokens || tokens.length === 0) {
-      return { includesWETH: false, tokensWithoutWETH: [] }
-    }
-    let includesWETH = false
-    const tokensWithoutWETH = tokens.filter(t => {
-      if (!chainId) return true
-      const isWETH = t?.equals(WETH[chainId as ChainId]) ?? false
-      if (isWETH) includesWETH = true
-      return !isWETH
-    })
-    return { includesWETH, tokensWithoutWETH }
-  }, [tokens, chainId])
-
-  const balancesWithoutWETH = useTokenBalances(address, tokensWithoutWETH)
-  const ETHBalance = useETHBalances(includesWETH ? [address] : [])
-
-  return useMemo(() => {
-    if (!chainId || !address) return {}
-    if (includesWETH) {
-      const weth = WETH[chainId as ChainId]
-      const ethBalance = ETHBalance[address]
-      return {
-        ...balancesWithoutWETH,
-        ...(ethBalance && weth ? { [weth.address]: new TokenAmount(weth, ethBalance) } : null)
-      }
-    } else {
-      return balancesWithoutWETH
-    }
-  }, [balancesWithoutWETH, ETHBalance, includesWETH, address, chainId])
-}
-
 // get the balance for a single token/account combo
 export function useTokenBalance(account?: string, token?: Token): TokenAmount | undefined {
   const tokenBalances = useTokenBalances(account, [token])
@@ -131,18 +94,39 @@ export function useTokenBalance(account?: string, token?: Token): TokenAmount | 
   return tokenBalances[token.address]
 }
 
-// mimics the behavior of useAddressBalance
-export function useTokenBalanceTreatingWETHasETH(account?: string, token?: Token): TokenAmount | undefined {
-  const balances = useTokenBalancesTreatWETHAsETH(account, [token])
-  if (!token) return
-  return balances?.[token.address]
+export function useCurrencyBalances(
+  account?: string,
+  currencies?: (Currency | undefined)[]
+): (CurrencyAmount | undefined)[] {
+  const tokens = useMemo(() => currencies?.filter((currency): currency is Token => currency instanceof Token) ?? [], [
+    currencies
+  ])
+
+  const tokenBalances = useTokenBalances(account, tokens)
+  const containsETH: boolean = useMemo(() => currencies?.some(currency => currency === ETHER) ?? false, [currencies])
+  const ethBalance = useETHBalances(containsETH ? [account] : [])
+
+  return useMemo(
+    () =>
+      currencies?.map(currency => {
+        if (!account || !currency) return
+        if (currency instanceof Token) return tokenBalances[currency.address]
+        if (currency === ETHER) return ethBalance[account]
+        return
+      }) ?? [],
+    [account, currencies, ethBalance, tokenBalances]
+  )
+}
+
+export function useCurrencyBalance(account?: string, currency?: Currency): CurrencyAmount | undefined {
+  return useCurrencyBalances(account, [currency])[0]
 }
 
 // mimics useAllBalances
-export function useAllTokenBalancesTreatingWETHasETH(): { [tokenAddress: string]: TokenAmount | undefined } {
+export function useAllTokenBalances(): { [tokenAddress: string]: TokenAmount | undefined } {
   const { account } = useActiveWeb3React()
   const allTokens = useAllTokens()
   const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
-  const balances = useTokenBalancesTreatWETHAsETH(account ?? undefined, allTokensArray)
+  const balances = useTokenBalances(account ?? undefined, allTokensArray)
   return balances ?? {}
 }

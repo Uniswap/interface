@@ -5,14 +5,13 @@ const Row = styled(Box)<{ align?: string; padding?: string; border?: string; bor
   width: 100%;
   display: flex;
   padding: 0;
-  align-items: center;
-  align-items: ${({ align }) => align && align};
+  align-items: ${({ align }) => (align ? align : 'center')};
   padding: ${({ padding }) => padding};
   border: ${({ border }) => border};
   border-radius: ${({ borderRadius }) => borderRadius};
 `
 
-export const RowBetween = styled(Row)<{ align?: string; padding?: string; border?: string; borderRadius?: string }>`
+export const RowBetween = styled(Row)`
   justify-content: space-between;
 `
 

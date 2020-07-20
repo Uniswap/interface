@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
+import { MouseoverTooltip } from '../Tooltip'
 
 const VersionLabel = styled.span<{ enabled: boolean }>`
   padding: 0.35rem 0.6rem;
@@ -61,10 +62,15 @@ export default function VersionSwitch() {
     [versionSwitchAvailable]
   )
 
-  return (
+  const toggle = (
     <VersionToggle enabled={versionSwitchAvailable} to={toggleDest} onClick={handleClick}>
       <VersionLabel enabled={version === Version.v2 || !versionSwitchAvailable}>V2</VersionLabel>
       <VersionLabel enabled={version === Version.v1 && versionSwitchAvailable}>V1</VersionLabel>
     </VersionToggle>
+  )
+  return versionSwitchAvailable ? (
+    toggle
+  ) : (
+    <MouseoverTooltip text="This page is only compatible with Uniswap V2.">{toggle}</MouseoverTooltip>
   )
 }

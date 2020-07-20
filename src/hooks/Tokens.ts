@@ -1,5 +1,5 @@
 import { parseBytes32String } from '@ethersproject/strings'
-import { ChainId, Token, WETH } from '@uniswap/sdk'
+import { ChainId, Currency, ETHER, Token } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { ALL_TOKENS } from '../constants/tokens'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
@@ -15,26 +15,19 @@ export function useAllTokens(): { [address: string]: Token } {
 
   return useMemo(() => {
     if (!chainId) return {}
-    const tokens = userAddedTokens
-      // reduce into all ALL_TOKENS filtered by the current chain
-      .reduce<{ [address: string]: Token }>(
-        (tokenMap, token) => {
-          tokenMap[token.address] = token
-          return tokenMap
-        },
-        // must make a copy because reduce modifies the map, and we do not
-        // want to make a copy in every iteration
-        { ...ALL_TOKENS[chainId as ChainId] }
-      )
-
-    const weth = WETH[chainId as ChainId]
-    if (weth) {
-      // we have to replace it as a workaround because if it is automatically
-      // fetched by address it will cause an invariant when used in constructing
-      // pairs since we replace the name and symbol with 'ETH' and 'Ether'
-      tokens[weth.address] = weth
-    }
-    return tokens
+    return (
+      userAddedTokens
+        // reduce into all ALL_TOKENS filtered by the current chain
+        .reduce<{ [address: string]: Token }>(
+          (tokenMap, token) => {
+            tokenMap[token.address] = token
+            return tokenMap
+          },
+          // must make a copy because reduce modifies the map, and we do not
+          // want to make a copy in every iteration
+          { ...ALL_TOKENS[chainId as ChainId] }
+        )
+    )
   }, [userAddedTokens, chainId])
 }
 
@@ -99,4 +92,10 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
     tokenName.result,
     tokenNameBytes32.result
   ])
+}
+
+export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
+  const isETH = currencyId?.toUpperCase() === 'ETH'
+  const token = useToken(isETH ? undefined : currencyId)
+  return isETH ? ETHER : token
 }
