@@ -50,7 +50,7 @@ export function useTokenList(url: string): TokenAddressMap {
     if (listState && (listState.loadingRequestId || listState.current || listState.error)) return
     dispatch(fetchTokenList(url) as any)
     return
-  }, [dispatch, listState, listState?.loadingRequestId, url])
+  }, [dispatch, listState, url])
 
   return useMemo(() => {
     if (!listState || !listState.current) return EMPTY_LIST
