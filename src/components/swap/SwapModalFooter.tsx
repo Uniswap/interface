@@ -1,4 +1,4 @@
-import { Percent, TokenAmount, Trade, TradeType } from '@uniswap/sdk'
+import { CurrencyAmount, Percent, Trade, TradeType } from '@uniswap/sdk'
 import React, { useContext } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
@@ -29,10 +29,10 @@ export default function SwapModalFooter({
   showInverted: boolean
   setShowInverted: (inverted: boolean) => void
   severity: number
-  slippageAdjustedAmounts?: { [field in Field]?: TokenAmount }
+  slippageAdjustedAmounts?: { [field in Field]?: CurrencyAmount }
   onSwap: () => any
-  parsedAmounts?: { [field in Field]?: TokenAmount }
-  realizedLPFee?: TokenAmount
+  parsedAmounts?: { [field in Field]?: CurrencyAmount }
+  realizedLPFee?: CurrencyAmount
   priceImpactWithoutFee?: Percent
   confirmText: string
 }) {
@@ -84,8 +84,8 @@ export default function SwapModalFooter({
             {parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.INPUT] && (
               <TYPE.black fontSize={14} marginLeft={'4px'}>
                 {trade?.tradeType === TradeType.EXACT_INPUT
-                  ? parsedAmounts[Field.OUTPUT]?.token?.symbol
-                  : parsedAmounts[Field.INPUT]?.token?.symbol}
+                  ? parsedAmounts[Field.OUTPUT]?.currency?.symbol
+                  : parsedAmounts[Field.INPUT]?.currency?.symbol}
               </TYPE.black>
             )}
           </RowFixed>
@@ -107,7 +107,7 @@ export default function SwapModalFooter({
             <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
           </RowFixed>
           <TYPE.black fontSize={14}>
-            {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + trade?.inputAmount?.token?.symbol : '-'}
+            {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + trade?.inputAmount?.currency?.symbol : '-'}
           </TYPE.black>
         </RowBetween>
       </AutoColumn>

@@ -1,7 +1,8 @@
-import { ChainId, JSBI, Pair, Token, TokenAmount } from '@uniswap/sdk'
+import { ChainId, Pair, Token } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
+import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
@@ -14,11 +15,10 @@ import {
   SerializedPair,
   SerializedToken,
   updateUserDarkMode,
+  updateUserDeadline,
   updateUserExpertMode,
-  updateUserSlippageTolerance,
-  updateUserDeadline
+  updateUserSlippageTolerance
 } from './actions'
-import { BASES_TO_TRACK_LIQUIDITY_FOR, DUMMY_PAIRS_TO_PIN } from '../../constants'
 
 function serializeToken(token: Token): SerializedToken {
   return {
@@ -67,8 +67,7 @@ export function useDarkModeManager(): [boolean, () => void] {
 }
 
 export function useIsExpertMode(): boolean {
-  const userExpertMode = useSelector<AppState, AppState['user']['userExpertMode']>(state => state.user.userExpertMode)
-  return userExpertMode
+  return useSelector<AppState, AppState['user']['userExpertMode']>(state => state.user.userExpertMode)
 }
 
 export function useExpertModeManager(): [boolean, () => void] {
@@ -144,8 +143,6 @@ export function useUserAddedTokens(): Token[] {
   }, [serializedTokensMap, chainId])
 }
 
-const ZERO = JSBI.BigInt(0)
-
 function serializePair(pair: Pair): SerializedPair {
   return {
     token0: serializeToken(pair.token0),
@@ -186,68 +183,79 @@ export function useTokenWarningDismissal(chainId?: number, token?: Token): [bool
   }, [chainId, token, dismissalState, dispatch])
 }
 
-export function useAllDummyPairs(): Pair[] {
+/**
+ * Given two tokens return the liquidity token that represents its liquidity shares
+ * @param tokenA one of the two tokens
+ * @param tokenB the other token
+ */
+export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
+  return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 18, 'UNI-V2', 'Uniswap V2')
+}
+
+/**
+ * Returns all the pairs of tokens that are tracked by the user for the current chain ID.
+ */
+export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
 
   // pinned pairs
-  const pinnedPairs = useMemo(() => DUMMY_PAIRS_TO_PIN[chainId as ChainId] ?? [], [chainId])
+  const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])
 
   // pairs for every token against every base
-  const generatedPairs: Pair[] = useMemo(
+  const generatedPairs: [Token, Token][] = useMemo(
     () =>
-      flatMap(
-        Object.values(tokens)
-          // select only tokens on the current chain
-          .filter(token => token.chainId === chainId),
-        token => {
-          // for each token on the current chain,
-          return (
-            // loop though all bases on the current chain
-            (BASES_TO_TRACK_LIQUIDITY_FOR[chainId as ChainId] ?? [])
-              // to construct pairs of the given token with each base
-              .map(base => {
-                if (base.equals(token)) {
-                  return null
-                } else {
-                  return new Pair(new TokenAmount(base, ZERO), new TokenAmount(token, ZERO))
-                }
-              })
-              .filter(pair => !!pair) as Pair[]
-          )
-        }
-      ),
+      chainId
+        ? flatMap(Object.keys(tokens), tokenAddress => {
+            const token = tokens[tokenAddress]
+            // for each token on the current chain,
+            return (
+              // loop though all bases on the current chain
+              (BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
+                // to construct pairs of the given token with each base
+                .map(base => {
+                  if (base.equals(token)) {
+                    return null
+                  } else {
+                    return [base, token]
+                  }
+                })
+                .filter((p): p is [Token, Token] => p !== null)
+            )
+          })
+        : [],
     [tokens, chainId]
   )
 
   // pairs saved by users
   const savedSerializedPairs = useSelector<AppState, AppState['user']['pairs']>(({ user: { pairs } }) => pairs)
-  const userPairs: Pair[] = useMemo(
-    () =>
-      Object.values<SerializedPair>(savedSerializedPairs[chainId ?? -1] ?? {}).map(
-        pair =>
-          new Pair(
-            new TokenAmount(deserializeToken(pair.token0), ZERO),
-            new TokenAmount(deserializeToken(pair.token1), ZERO)
-          )
-      ),
-    [savedSerializedPairs, chainId]
-  )
+
+  const userPairs: [Token, Token][] = useMemo(() => {
+    if (!chainId || !savedSerializedPairs) return []
+    const forChain = savedSerializedPairs[chainId]
+    if (!forChain) return []
+
+    return Object.keys(forChain).map(pairId => {
+      return [deserializeToken(forChain[pairId].token0), deserializeToken(forChain[pairId].token1)]
+    })
+  }, [savedSerializedPairs, chainId])
+
+  const combinedList = useMemo(() => userPairs.concat(generatedPairs).concat(pinnedPairs), [
+    generatedPairs,
+    pinnedPairs,
+    userPairs
+  ])
 
   return useMemo(() => {
-    const cache: { [pairKey: string]: boolean } = {}
-    return (
-      pinnedPairs
-        .concat(generatedPairs)
-        .concat(userPairs)
-        // filter out duplicate pairs
-        .filter(pair => {
-          const pairKey = `${pair.token0.address}:${pair.token1.address}`
-          if (cache[pairKey]) {
-            return false
-          }
-          return (cache[pairKey] = true)
-        })
-    )
-  }, [pinnedPairs, generatedPairs, userPairs])
+    // dedupes pairs of tokens in the combined list
+    const keyed = combinedList.reduce<{ [key: string]: [Token, Token] }>((memo, [tokenA, tokenB]) => {
+      const sorted = tokenA.sortsBefore(tokenB)
+      const key = sorted ? `${tokenA.address}:${tokenB.address}` : `${tokenB.address}:${tokenA.address}`
+      if (memo[key]) return memo
+      memo[key] = sorted ? [tokenA, tokenB] : [tokenB, tokenA]
+      return memo
+    }, {})
+
+    return Object.keys(keyed).map(key => keyed[key])
+  }, [combinedList])
 }

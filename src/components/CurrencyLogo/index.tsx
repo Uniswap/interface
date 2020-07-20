@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { isAddress } from '../../utils'
-import { useActiveWeb3React } from '../../hooks'
-import { WETH } from '@uniswap/sdk'
+import { Currency, Token } from '@uniswap/sdk'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 
@@ -35,45 +33,46 @@ const StyledEthereumLogo = styled.img<{ size: string }>`
   border-radius: 24px;
 `
 
-export default function TokenLogo({
-  address,
+export default function CurrencyLogo({
+  currency,
   size = '24px',
   ...rest
 }: {
-  address?: string
+  currency?: Currency
   size?: string
   style?: React.CSSProperties
 }) {
   const [, refresh] = useState<number>(0)
-  const { chainId } = useActiveWeb3React()
 
-  let path = ''
-  const validated = isAddress(address)
-  // hard code to show ETH instead of WETH in UI
-  if (validated === WETH[chainId].address) {
-    return <StyledEthereumLogo src={EthereumLogo} size={size} {...rest} />
-  } else if (!NO_LOGO_ADDRESSES[address] && validated) {
-    path = getTokenLogoURL(validated)
-  } else {
+  if (currency instanceof Token) {
+    let path = ''
+    if (!NO_LOGO_ADDRESSES[currency.address]) {
+      path = getTokenLogoURL(currency.address)
+    } else {
+      return (
+        <Emoji {...rest} size={size}>
+          <span role="img" aria-label="Thinking">
+            🤔
+          </span>
+        </Emoji>
+      )
+    }
+
     return (
-      <Emoji {...rest} size={size}>
-        <span role="img" aria-label="Thinking">
-          🤔
-        </span>
-      </Emoji>
+      <Image
+        {...rest}
+        alt={`${currency.name} Logo`}
+        src={path}
+        size={size}
+        onError={() => {
+          if (currency instanceof Token) {
+            NO_LOGO_ADDRESSES[currency.address] = true
+          }
+          refresh(i => i + 1)
+        }}
+      />
     )
+  } else {
+    return <StyledEthereumLogo src={EthereumLogo} size={size} {...rest} />
   }
-
-  return (
-    <Image
-      {...rest}
-      // alt={address}
-      src={path}
-      size={size}
-      onError={() => {
-        NO_LOGO_ADDRESSES[address] = true
-        refresh(i => i + 1)
-      }}
-    />
-  )
 }

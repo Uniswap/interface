@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { ThemeContext } from 'styled-components'
 import { Pair } from '@uniswap/sdk'
 import { Link } from 'react-router-dom'
@@ -17,7 +17,7 @@ import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
 import { usePairs } from '../../data/Reserves'
-import { useAllDummyPairs } from '../../state/user/hooks'
+import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import AppBody from '../AppBody'
 import { Dots } from '../../components/swap/styleds'
 
@@ -26,27 +26,33 @@ export default function Pool() {
   const { account } = useActiveWeb3React()
 
   // fetch the user's balances of all tracked V2 LP tokens
-  const v2DummyPairs = useAllDummyPairs()
+  const trackedTokenPairs = useTrackedTokenPairs()
+  const tokenPairsWithLiquidityTokens = useMemo(
+    () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
+    [trackedTokenPairs]
+  )
+  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
+    tokenPairsWithLiquidityTokens
+  ])
   const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
     account ?? undefined,
-    v2DummyPairs?.map(p => p.liquidityToken)
+    liquidityTokens
   )
-  // fetch the reserves for all V2 pools in which the user has a balance
-  const v2DummyPairsWithABalance = v2DummyPairs.filter(dummyPair =>
-    v2PairsBalances[dummyPair.liquidityToken.address]?.greaterThan('0')
-  )
-  const v2Pairs = usePairs(
-    v2DummyPairsWithABalance.map(V2DummyPairWithABalance => [
-      V2DummyPairWithABalance.token0,
-      V2DummyPairWithABalance.token1
-    ])
-  )
-  const v2IsLoading =
-    fetchingV2PairBalances || v2Pairs?.length < v2DummyPairsWithABalance.length || v2Pairs?.some(V2Pair => !V2Pair)
 
-  const allV2PairsWithLiquidity = v2Pairs
-    .filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
-    .map(V2Pair => <FullPositionCard key={V2Pair.liquidityToken.address} pair={V2Pair} />)
+  // fetch the reserves for all V2 pools in which the user has a balance
+  const liquidityTokensWithBalances = useMemo(
+    () =>
+      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
+        v2PairsBalances[liquidityToken.address]?.greaterThan('0')
+      ),
+    [tokenPairsWithLiquidityTokens, v2PairsBalances]
+  )
+
+  const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
+  const v2IsLoading =
+    fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
+
+  const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
   const hasV1Liquidity = useUserHasLiquidityInAllTokens()
 
@@ -82,7 +88,11 @@ export default function Pool() {
                 </TYPE.body>
               </LightCard>
             ) : allV2PairsWithLiquidity?.length > 0 ? (
-              <>{allV2PairsWithLiquidity}</>
+              <>
+                {allV2PairsWithLiquidity.map(v2Pair => (
+                  <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
+                ))}
+              </>
             ) : (
               <LightCard padding="40px">
                 <TYPE.body color={theme.text3} textAlign="center">

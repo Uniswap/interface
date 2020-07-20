@@ -1,4 +1,4 @@
-import { Fraction, Percent, Token } from '@uniswap/sdk'
+import { Currency, Fraction, Percent } from '@uniswap/sdk'
 import React, { useContext } from 'react'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
@@ -9,12 +9,12 @@ import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
 
 export const PoolPriceBar = ({
-  tokens,
+  currencies,
   noLiquidity,
   poolTokenPercentage,
   price
 }: {
-  tokens: { [field in Field]?: Token }
+  currencies: { [field in Field]?: Currency }
   noLiquidity?: boolean
   poolTokenPercentage?: Percent
   price?: Fraction
@@ -26,13 +26,13 @@ export const PoolPriceBar = ({
         <AutoColumn justify="center">
           <TYPE.black>{price?.toSignificant(6) ?? '0'}</TYPE.black>
           <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-            {tokens[Field.TOKEN_B]?.symbol} per {tokens[Field.TOKEN_A]?.symbol}
+            {currencies[Field.CURRENCY_B]?.symbol} per {currencies[Field.CURRENCY_A]?.symbol}
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
           <TYPE.black>{price?.invert().toSignificant(6) ?? '0'}</TYPE.black>
           <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-            {tokens[Field.TOKEN_A]?.symbol} per {tokens[Field.TOKEN_B]?.symbol}
+            {currencies[Field.CURRENCY_A]?.symbol} per {currencies[Field.CURRENCY_B]?.symbol}
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">

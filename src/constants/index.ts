@@ -1,4 +1,4 @@
-import { ChainId, JSBI, Percent, Token, WETH, Pair, TokenAmount } from '@uniswap/sdk'
+import { ChainId, JSBI, Percent, Token, WETH } from '@uniswap/sdk'
 
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 import { COMP, DAI, MKR, USDC, USDT } from './tokens/mainnet'
@@ -36,38 +36,14 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT]
 }
 
-export const DUMMY_PAIRS_TO_PIN: { readonly [chainId in ChainId]?: Pair[] } = {
+export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
   [ChainId.MAINNET]: [
-    new Pair(
-      new TokenAmount(
-        new Token(ChainId.MAINNET, '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', 8, 'cDAI', 'Compound Dai'),
-        '0'
-      ),
-      new TokenAmount(
-        new Token(ChainId.MAINNET, '0x39AA39c021dfbaE8faC545936693aC917d5E7563', 8, 'cUSDC', 'Compound USD Coin'),
-        '0'
-      )
-    ),
-    new Pair(
-      new TokenAmount(
-        new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C'),
-        '0'
-      ),
-      new TokenAmount(
-        new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD'),
-        '0'
-      )
-    ),
-    new Pair(
-      new TokenAmount(
-        new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin'),
-        '0'
-      ),
-      new TokenAmount(
-        new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD'),
-        '0'
-      )
-    )
+    [
+      new Token(ChainId.MAINNET, '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', 8, 'cDAI', 'Compound Dai'),
+      new Token(ChainId.MAINNET, '0x39AA39c021dfbaE8faC545936693aC917d5E7563', 8, 'cUSDC', 'Compound USD Coin')
+    ],
+    [USDC, USDT],
+    [DAI, USDT]
   ]
 }
 

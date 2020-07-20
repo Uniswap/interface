@@ -8,7 +8,7 @@ describe('mint reducer', () => {
 
   beforeEach(() => {
     store = createStore(reducer, {
-      independentField: Field.TOKEN_A,
+      independentField: Field.CURRENCY_A,
       typedValue: '',
       otherTypedValue: ''
     })
@@ -16,13 +16,13 @@ describe('mint reducer', () => {
 
   describe('typeInput', () => {
     it('sets typed value', () => {
-      store.dispatch(typeInput({ field: Field.TOKEN_A, typedValue: '1.0', noLiquidity: false }))
-      expect(store.getState()).toEqual({ independentField: Field.TOKEN_A, typedValue: '1.0', otherTypedValue: '' })
+      store.dispatch(typeInput({ field: Field.CURRENCY_A, typedValue: '1.0', noLiquidity: false }))
+      expect(store.getState()).toEqual({ independentField: Field.CURRENCY_A, typedValue: '1.0', otherTypedValue: '' })
     })
     it('clears other value', () => {
-      store.dispatch(typeInput({ field: Field.TOKEN_A, typedValue: '1.0', noLiquidity: false }))
-      store.dispatch(typeInput({ field: Field.TOKEN_B, typedValue: '1.0', noLiquidity: false }))
-      expect(store.getState()).toEqual({ independentField: Field.TOKEN_B, typedValue: '1.0', otherTypedValue: '' })
+      store.dispatch(typeInput({ field: Field.CURRENCY_A, typedValue: '1.0', noLiquidity: false }))
+      store.dispatch(typeInput({ field: Field.CURRENCY_B, typedValue: '1.0', noLiquidity: false }))
+      expect(store.getState()).toEqual({ independentField: Field.CURRENCY_B, typedValue: '1.0', otherTypedValue: '' })
     })
   })
 })
