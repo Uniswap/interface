@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk'
+import { Currency, Token } from '@uniswap/sdk'
 import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
@@ -11,7 +11,7 @@ import { ExternalLink, TYPE } from '../../theme'
 import { getEtherscanLink, isDefaultToken } from '../../utils'
 import PropsOfExcluding from '../../utils/props-of-excluding'
 import QuestionHelper from '../QuestionHelper'
-import TokenLogo from '../TokenLogo'
+import CurrencyLogo from '../CurrencyLogo'
 
 const Wrapper = styled.div<{ error: boolean }>`
   background: ${({ theme, error }) => transparentize(0.9, error ? theme.red1 : theme.yellow1)};
@@ -103,7 +103,7 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
         <QuestionHelper text={duplicateNameOrSymbol ? DUPLICATE_NAME_HELP_TEXT : HELP_TEXT} />
       </Row>
       <Row>
-        <TokenLogo address={token.address} />
+        <CurrencyLogo currency={token} />
         <div style={{ fontWeight: 500 }}>
           {token && token.name && token.symbol && token.name !== token.symbol
             ? `${token.name} (${token.symbol})`
@@ -127,11 +127,13 @@ const WarningContainer = styled.div`
   padding-right: 1rem;
 `
 
-export function TokenWarningCards({ tokens }: { tokens: { [field in Field]?: Token } }) {
+export function TokenWarningCards({ currencies }: { currencies: { [field in Field]?: Currency } }) {
   return (
     <WarningContainer>
-      {Object.keys(tokens).map(field =>
-        tokens[field] ? <TokenWarningCard style={{ marginBottom: 14 }} key={field} token={tokens[field]} /> : null
+      {Object.keys(currencies).map(field =>
+        currencies[field] instanceof Token ? (
+          <TokenWarningCard style={{ marginBottom: 14 }} key={field} token={currencies[field]} />
+        ) : null
       )}
     </WarningContainer>
   )

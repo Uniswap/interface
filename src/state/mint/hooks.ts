@@ -1,14 +1,15 @@
+import { Currency, CurrencyAmount, JSBI, Pair, Percent, Price, TokenAmount } from '@uniswap/sdk'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Token, TokenAmount, Route, JSBI, Price, Percent, Pair } from '@uniswap/sdk'
+import { PairState, usePair } from '../../data/Reserves'
+import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
+import { wrappedCurrency, wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
 import { AppDispatch, AppState } from '../index'
-import { Field, typeInput } from './actions'
-import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
-import { usePair } from '../../data/Reserves'
-import { useTotalSupply } from '../../data/TotalSupply'
 import { tryParseAmount } from '../swap/hooks'
+import { useCurrencyBalances } from '../wallet/hooks'
+import { Field, typeInput } from './actions'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -17,109 +18,98 @@ export function useMintState(): AppState['mint'] {
 }
 
 export function useDerivedMintInfo(
-  tokenA: Token | undefined,
-  tokenB: Token | undefined
+  currencyA: Currency | undefined,
+  currencyB: Currency | undefined
 ): {
   dependentField: Field
-  tokens: { [field in Field]?: Token }
+  currencies: { [field in Field]?: Currency }
   pair?: Pair | null
-  tokenBalances: { [field in Field]?: TokenAmount }
-  parsedAmounts: { [field in Field]?: TokenAmount }
+  pairState: PairState
+  currencyBalances: { [field in Field]?: CurrencyAmount }
+  parsedAmounts: { [field in Field]?: CurrencyAmount }
   price?: Price
   noLiquidity?: boolean
   liquidityMinted?: TokenAmount
   poolTokenPercentage?: Percent
   error?: string
 } {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const { independentField, typedValue, otherTypedValue } = useMintState()
 
-  const dependentField = independentField === Field.TOKEN_A ? Field.TOKEN_B : Field.TOKEN_A
+  const dependentField = independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A
 
   // tokens
-  const tokens: { [field in Field]?: Token } = useMemo(
+  const currencies: { [field in Field]?: Currency } = useMemo(
     () => ({
-      [Field.TOKEN_A]: tokenA,
-      [Field.TOKEN_B]: tokenB
+      [Field.CURRENCY_A]: currencyA ?? undefined,
+      [Field.CURRENCY_B]: currencyB ?? undefined
     }),
-    [tokenA, tokenB]
+    [currencyA, currencyB]
   )
 
   // pair
-  const pair = usePair(tokens[Field.TOKEN_A], tokens[Field.TOKEN_B])
-  const noLiquidity =
-    pair === null || (!!pair && JSBI.equal(pair.reserve0.raw, ZERO) && JSBI.equal(pair.reserve1.raw, ZERO))
-
-  // route
-  const route = useMemo(
-    () =>
-      !noLiquidity && pair && tokens[independentField] ? new Route([pair], tokens[Field.TOKEN_A] as Token) : undefined,
-    [noLiquidity, pair, tokens, independentField]
-  )
+  const [pairState, pair] = usePair(currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B])
+  const noLiquidity: boolean =
+    pairState === PairState.NOT_EXISTS ||
+    Boolean(pair && JSBI.equal(pair.reserve0.raw, ZERO) && JSBI.equal(pair.reserve1.raw, ZERO))
 
   // balances
-  const relevantTokenBalances = useTokenBalancesTreatWETHAsETH(account ?? undefined, [
-    tokens[Field.TOKEN_A],
-    tokens[Field.TOKEN_B]
+  const balances = useCurrencyBalances(account ?? undefined, [
+    currencies[Field.CURRENCY_A],
+    currencies[Field.CURRENCY_B]
   ])
-  const tokenBalances: { [field in Field]?: TokenAmount } = {
-    [Field.TOKEN_A]: relevantTokenBalances?.[tokens[Field.TOKEN_A]?.address ?? ''],
-    [Field.TOKEN_B]: relevantTokenBalances?.[tokens[Field.TOKEN_B]?.address ?? '']
+  const currencyBalances: { [field in Field]?: CurrencyAmount } = {
+    [Field.CURRENCY_A]: balances[0],
+    [Field.CURRENCY_B]: balances[1]
   }
 
   // amounts
-  const independentAmount = tryParseAmount(typedValue, tokens[independentField])
+  const independentAmount = tryParseAmount(typedValue, currencies[independentField])
   const dependentAmount = useMemo(() => {
-    if (noLiquidity && otherTypedValue && tokens[dependentField]) {
-      return tryParseAmount(otherTypedValue, tokens[dependentField])
-    } else if (route && independentAmount) {
-      return dependentField === Field.TOKEN_B
-        ? route.midPrice.quote(independentAmount)
-        : route.midPrice.invert().quote(independentAmount)
+    if (noLiquidity && otherTypedValue && currencies[dependentField]) {
+      return tryParseAmount(otherTypedValue, currencies[dependentField])
+    } else if (independentAmount) {
+      const wrappedIndependentAmount = wrappedCurrencyAmount(independentAmount, chainId)
+      const [tokenA, tokenB] = [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
+      if (tokenA && tokenB && wrappedIndependentAmount && pair) {
+        return dependentField === Field.CURRENCY_B
+          ? pair.priceOf(tokenA).quote(wrappedIndependentAmount)
+          : pair.priceOf(tokenB).quote(wrappedIndependentAmount)
+      }
+      return
     } else {
       return
     }
-  }, [noLiquidity, otherTypedValue, tokens, dependentField, independentAmount, route])
-  const parsedAmounts = {
-    [Field.TOKEN_A]: independentField === Field.TOKEN_A ? independentAmount : dependentAmount,
-    [Field.TOKEN_B]: independentField === Field.TOKEN_A ? dependentAmount : independentAmount
+  }, [noLiquidity, otherTypedValue, currencies, dependentField, independentAmount, currencyA, chainId, currencyB, pair])
+  const parsedAmounts: { [field in Field]: CurrencyAmount | undefined } = {
+    [Field.CURRENCY_A]: independentField === Field.CURRENCY_A ? independentAmount : dependentAmount,
+    [Field.CURRENCY_B]: independentField === Field.CURRENCY_A ? dependentAmount : independentAmount
   }
 
   const price = useMemo(() => {
-    if (
-      noLiquidity &&
-      tokens[Field.TOKEN_A] &&
-      tokens[Field.TOKEN_B] &&
-      parsedAmounts[Field.TOKEN_A] &&
-      parsedAmounts[Field.TOKEN_B]
-    ) {
-      return new Price(
-        tokens[Field.TOKEN_A] as Token,
-        tokens[Field.TOKEN_B] as Token,
-        (parsedAmounts[Field.TOKEN_A] as TokenAmount).raw,
-        (parsedAmounts[Field.TOKEN_B] as TokenAmount).raw
-      )
-    } else if (route) {
-      return route.midPrice
+    const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
+    if (noLiquidity && currencyAAmount && currencyBAmount) {
+      return new Price(currencyAAmount.currency, currencyBAmount.currency, currencyAAmount.raw, currencyBAmount.raw)
     } else {
       return
     }
-  }, [noLiquidity, tokens, parsedAmounts, route])
+  }, [noLiquidity, parsedAmounts])
 
   // liquidity minted
   const totalSupply = useTotalSupply(pair?.liquidityToken)
   const liquidityMinted = useMemo(() => {
-    if (pair && totalSupply && parsedAmounts[Field.TOKEN_A] && parsedAmounts[Field.TOKEN_B]) {
-      return pair.getLiquidityMinted(
-        totalSupply,
-        parsedAmounts[Field.TOKEN_A] as TokenAmount,
-        parsedAmounts[Field.TOKEN_B] as TokenAmount
-      )
+    const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
+    const [tokenAmountA, tokenAmountB] = [
+      wrappedCurrencyAmount(currencyAAmount, chainId),
+      wrappedCurrencyAmount(currencyBAmount, chainId)
+    ]
+    if (pair && totalSupply && tokenAmountA && tokenAmountB) {
+      return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)
     } else {
       return
     }
-  }, [pair, totalSupply, parsedAmounts])
+  }, [parsedAmounts, chainId, pair, totalSupply])
 
   const poolTokenPercentage = useMemo(() => {
     if (liquidityMinted && totalSupply) {
@@ -134,29 +124,30 @@ export function useDerivedMintInfo(
     error = 'Connect Wallet'
   }
 
-  if (!parsedAmounts[Field.TOKEN_A] || !parsedAmounts[Field.TOKEN_B]) {
+  if (pairState === PairState.INVALID) {
+    error = error ?? 'Invalid pair'
+  }
+
+  if (!parsedAmounts[Field.CURRENCY_A] || !parsedAmounts[Field.CURRENCY_B]) {
     error = error ?? 'Enter an amount'
   }
 
-  if (
-    parsedAmounts[Field.TOKEN_A] &&
-    tokenBalances?.[Field.TOKEN_A]?.lessThan(parsedAmounts[Field.TOKEN_A] as TokenAmount)
-  ) {
-    error = 'Insufficient ' + tokens[Field.TOKEN_A]?.symbol + ' balance'
+  const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
+
+  if (currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
+    error = 'Insufficient ' + currencies[Field.CURRENCY_A]?.symbol + ' balance'
   }
 
-  if (
-    parsedAmounts[Field.TOKEN_B] &&
-    tokenBalances?.[Field.TOKEN_B]?.lessThan(parsedAmounts[Field.TOKEN_B] as TokenAmount)
-  ) {
-    error = 'Insufficient ' + tokens[Field.TOKEN_B]?.symbol + ' balance'
+  if (currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) {
+    error = 'Insufficient ' + currencies[Field.CURRENCY_B]?.symbol + ' balance'
   }
 
   return {
     dependentField,
-    tokens,
+    currencies,
     pair,
-    tokenBalances,
+    pairState,
+    currencyBalances,
     parsedAmounts,
     price,
     noLiquidity,
@@ -169,18 +160,26 @@ export function useDerivedMintInfo(
 export function useMintActionHandlers(
   noLiquidity: boolean | undefined
 ): {
-  onUserInput: (field: Field, typedValue: string) => void
+  onFieldAInput: (typedValue: string) => void
+  onFieldBInput: (typedValue: string) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
 
-  const onUserInput = useCallback(
-    (field: Field, typedValue: string) => {
-      dispatch(typeInput({ field, typedValue, noLiquidity: noLiquidity === true }))
+  const onFieldAInput = useCallback(
+    (typedValue: string) => {
+      dispatch(typeInput({ field: Field.CURRENCY_A, typedValue, noLiquidity: noLiquidity === true }))
+    },
+    [dispatch, noLiquidity]
+  )
+  const onFieldBInput = useCallback(
+    (typedValue: string) => {
+      dispatch(typeInput({ field: Field.CURRENCY_B, typedValue, noLiquidity: noLiquidity === true }))
     },
     [dispatch, noLiquidity]
   )
 
   return {
-    onUserInput
+    onFieldAInput,
+    onFieldBInput
   }
 }

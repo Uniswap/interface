@@ -126,6 +126,12 @@ function recentTransactionsOnly(a: TransactionDetails) {
   return new Date().getTime() - a.addedTime < 86_400_000
 }
 
+const SOCK = (
+  <span role="img" aria-label="has socks emoji" style={{ marginTop: -4, marginBottom: -4 }}>
+    🧦
+  </span>
+)
+
 export default function Web3Status() {
   const { t } = useTranslation()
   const { active, account, connector, error } = useWeb3React()
@@ -187,9 +193,10 @@ export default function Web3Status() {
               <Text>{pending?.length} Pending</Text> <Loader stroke="white" />
             </RowBetween>
           ) : (
-            <Text>
-              {hasSocks ? '🧦' : ''} {ENSName || shortenAddress(account)}
-            </Text>
+            <>
+              {hasSocks ? SOCK : null}
+              <Text>{ENSName || shortenAddress(account)}</Text>
+            </>
           )}
           {!hasPendingTransactions && getStatusIcon()}
         </Web3StatusConnected>
