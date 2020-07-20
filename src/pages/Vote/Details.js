@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled, {keyframes} from 'styled-components'
+import Cast from './Cast'
 import { Link, useLocation, Redirect } from 'react-router-dom'
 
 const Main = styled.div`
@@ -24,6 +25,7 @@ const link = {
 const Wrapper = styled.div`
 	margin-top: 20px;
 	margin-left: 10px;
+	display: inline-block;
 `
 
 const Proposal = styled.div`
@@ -144,12 +146,16 @@ const Votes = styled.div`
 	float: right;
  	display: inline;
 `
-const ViewAll = styled.div`
+const View = styled.div`
 	padding: 20px 30px;
 	text-align: center;
   font-size: 13px;
  	font-weight: 700;
  	color: #b0bdc5;
+
+ 	${({ active }) => active && `
+    color: black;
+  `}
 `
 
 const Description = styled.div`
@@ -202,6 +208,35 @@ const HistoryDate = styled.div`
 	color: #b0bdc5;
 `
 
+const Vote = styled.div`
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #b7c3cc;
+	float: right; 
+	margin-right: 10px;
+	margin-top: 50px;
+  text-align: center;
+  background-color: #FFFFFF;
+  border: 2px solid #b7c3cc;
+  border-radius: 3px;
+  height: 18px;
+  width: 65px;
+  padding: 3px;
+
+  ${({ cast }) => cast && `
+    color: black;
+    cursor: pointer;
+    border: 2px solid black;
+  `}
+`
+
+const CastWrapper = styled.div`
+  position: absolute;
+	top: -100px;
+	left: -15vw;
+	z-index: 5;
+`
 
 const votes = [
 	{
@@ -226,7 +261,19 @@ const votes = [
 			{
 				address: '0x62b5fc62f3f2277c3c51e672e2faef82a279c7ac1dd9d9416c9ec536ae3d5e63',
 				vote: 0.037
-			}
+			},
+			{
+				address: '0x62b5fc62f3f2277c3c51e672e2faef82a279c7ac1dd9d9416c9ec536ae3d5e63',
+				vote: 0.037
+			},
+			{
+				address: '0x62b5fc62f3f2277c3c51e672e2faef82a279c7ac1dd9d9416c9ec536ae3d5e63',
+				vote: 0.037
+			},
+			{
+				address: '0x62b5fc62f3f2277c3c51e672e2faef82a279c7ac1dd9d9416c9ec536ae3d5e63',
+				vote: 0.037
+			},
 		],
 		color: '#df5e66'
 	}
@@ -257,6 +304,29 @@ async function getDetails() {
 } 
 
 export default function Details() {
+	const [vote, setVote] = useState('VOTE')
+	const [cast, setCast] = useState(true)
+	const [showCast, changeShowCast] = useState(false)
+
+	const per = 3 //can change. Amount originally shown for amount of addresses
+	const [amount, changeAmount] = useState(per) 
+
+	const handleClick = (e) => {
+		if(e) {
+			setVote(e)
+			setCast(false)
+		}
+	  changeShowCast(false)
+	}
+
+	const keypress = (e) => {
+	  if(e.keyCode === 27) changeShowCast(false)
+	}
+
+	useEffect(() => {
+    document.addEventListener("keydown", (e)=>keypress(e), false);
+  })
+
 	const id = useLocation().pathname.split("/")[2];
 	if(!valid(id)) return <Redirect to={{pathname: '/vote', state: {badpath: true}}}/>
 
@@ -280,34 +350,48 @@ export default function Details() {
 
 	const shorten = (a) => `${a.substring(0, 6)}...${a.substring(a.length-4, a.length)}`
 	const addressTitle = (l) => `${l} ${l === 1 ? 'Address' : 'Addresses'}`
-
-	const amount = 3 //can change 
+	const checkChange = (l) => {
+		if(l > amount) changeAmount(l)
+		if(l === amount) changeAmount(per)
+	}
 
 	return (
 		<Main>
 			<Link to={'/vote'} style={link}>
 				&#8592; Overview
 			</Link>
-			<Wrapper>
-				<Proposal>
-			  	{proposal}
-			  </Proposal>
-			  <Info active={true}>
-				  <Status active={true}>
-				  	{status}
-				  </Status>
-				  <Extra>
-				  	{id} &#8226; {date} 
-				  </Extra>
-				</Info>
-			</Wrapper>
+			<div>
+				<Wrapper>
+					<Proposal>
+				  	{proposal}
+				  </Proposal>
+				  <Info active={true}>
+					  <Status active={true}>
+					  	{status}
+					  </Status>
+					  <Extra>
+					  	{id} &#8226; {date} 
+					  </Extra>
+					</Info>
+				</Wrapper>
+				<Vote onClick={() => changeShowCast(cast)} cast={cast}>
+					{vote}
+				</Vote>
+			</div>
 			<Body>
 				{votes.map(({title, val, addresses, color}) => {
-					const a = addresses
+					let a = addresses
 					const l = a.length
 					let empty
+					let display
+
 					if(l < amount){
 						empty = [...Array(amount-l)].fill({address: '—', vote: '—'}, 0)
+						display = [...a, ...empty]
+					}
+					if(l >= amount){
+						a = addresses.slice(0, amount)
+						display = a
 					}
 
 					return(
@@ -320,10 +404,10 @@ export default function Details() {
 							</Title>
 							<Addresses>
 								<AddressTitle>
-									{addressTitle(a.length)}
+									{addressTitle(addresses.length)}
 									<VotesTitle>Votes</VotesTitle>
 								</AddressTitle>
-								{[...a, ...empty].map((address) => {
+								{display.map((address) => {
 									const active = address.address.length > 1
 
 									return(
@@ -334,9 +418,9 @@ export default function Details() {
 									)
 								})}
 							</Addresses>
-							<ViewAll>
-								VIEW ALL
-							</ViewAll>
+							<View onClick={() => checkChange(l)} active={l > amount || l === amount}>
+								{amount === per ? 'VIEW ALL' : 'VIEW LESS'}
+							</View>
 						</Card>
 					)})}
 			</Body>
@@ -370,6 +454,16 @@ export default function Details() {
 					)}
 				</HistoryWrapper>
 			</Card>
+			{showCast ?
+				<CastWrapper>
+					<Cast
+						proposal={proposal}
+						time={date}
+						onChange={e => handleClick(e)} 
+						vote={(v) => setVote(v)}/> 
+				</CastWrapper>
+				: null
+			}
 		</Main>
 	)
 }

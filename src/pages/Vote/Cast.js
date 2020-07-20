@@ -5,10 +5,6 @@ const BackDrop = styled.div`
   width: 100vw;
 	height: 100vh;
 	background-color: rgba(0,0,0,0.5);
-	position: absolute;
-	top: -140px;
-	left: -10vw;
-	z-index: 5;
 `
 
 const Card = styled.div`
@@ -24,6 +20,7 @@ const Card = styled.div`
 	padding: 80px;
 	text-align: center;
 	font-weight: 600;
+	color: black;
 `
 
 const Proposal = styled.div`

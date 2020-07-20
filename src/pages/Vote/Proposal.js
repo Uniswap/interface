@@ -67,6 +67,13 @@ const Extra = styled.div`
 	display: inline-block;
 `
 
+const CastWrapper = styled.div`
+  position: absolute;
+	top: -140px;
+	left: -10vw;
+	z-index: 5;
+`
+
 const link = {
 	textDecoration: 'none',
 	color: 'black',
@@ -132,11 +139,13 @@ export default function Proposal({ id, proposal, status }) {
 				{vote}
 			</Vote>
 			{showCast ? 
-				<Cast
-					proposal={proposal}
-					time={date}
-					onChange={e => handleClick(e)} 
-					vote={(v) => setVote(v)}/> 
+				<CastWrapper>
+					<Cast
+						proposal={proposal}
+						time={date}
+						onChange={e => handleClick(e)} 
+						vote={(v) => setVote(v)}/> 
+				</CastWrapper>
 				: null
 			}
 		</Main> 
