@@ -1,13 +1,13 @@
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, ETHER, Token } from '@uniswap/sdk'
 import { useMemo } from 'react'
+import { useDefaultTokenList } from '../state/lists/hooks'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
 
 import { useActiveWeb3React } from './index'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
-import { useDefaultTokenList } from './useTokenList'
 
 export function useAllTokens(): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
