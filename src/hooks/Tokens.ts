@@ -29,7 +29,7 @@ export function useAllTokens(): { [address: string]: Token } {
           { ...allTokens[chainId] }
         )
     )
-  }, [userAddedTokens, chainId])
+  }, [chainId, userAddedTokens, allTokens])
 }
 
 // parse a name or symbol from a token response

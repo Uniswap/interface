@@ -1,6 +1,6 @@
 import { ChainId, Token } from '@uniswap/sdk'
 import { TokenList } from '@uniswap/token-lists'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { retry } from '../utils/retry'
 
 const DEFAULT_TOKEN_LIST_URL = 'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json'
@@ -13,7 +13,8 @@ function loadList(url: string): Promise<TokenList> {
     fetchCache[url] ?? retry(() => fetch(url).then(res => res.json()), { n: Infinity, minWait: 10000 }))
 }
 
-const EMPTY: AllTokens = {
+const parsedListMap = new WeakMap<TokenList, AllTokens>()
+const EMPTY_LIST: AllTokens = {
   [ChainId.KOVAN]: {},
   [ChainId.RINKEBY]: {},
   [ChainId.ROPSTEN]: {},
@@ -21,11 +22,54 @@ const EMPTY: AllTokens = {
   [ChainId.MAINNET]: {}
 }
 
+function loadAndParseList(url: string): Promise<AllTokens> {
+  return loadList(url).then(list => {
+    const result = parsedListMap.get(list)
+    if (result) {
+      return result
+    } else {
+      try {
+        const parsed = list.tokens.reduce<AllTokens>(
+          (tokenMap, tokenInfo) => {
+            const token = new Token(
+              tokenInfo.chainId,
+              tokenInfo.address,
+              tokenInfo.decimals,
+              tokenInfo.symbol,
+              tokenInfo.name
+            )
+            if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.')
+            return {
+              ...tokenMap,
+              [token.chainId]: {
+                ...tokenMap[token.chainId],
+                [token.address]: token
+              }
+            }
+          },
+          {
+            [ChainId.MAINNET]: {},
+            [ChainId.RINKEBY]: {},
+            [ChainId.GÖRLI]: {},
+            [ChainId.ROPSTEN]: {},
+            [ChainId.KOVAN]: {}
+          }
+        )
+        parsedListMap.set(list, parsed)
+        return parsed
+      } catch (error) {
+        console.error('Failed to parse list', url, error)
+      }
+      return EMPTY_LIST
+    }
+  })
+}
+
 export function useTokenList(url: string): AllTokens {
-  const [tokenList, setTokenList] = useState<TokenList | null>(null)
+  const [tokenList, setTokenList] = useState<AllTokens | null>(null)
   useEffect(() => {
     let stale = false
-    loadList(url).then(tokenList => {
+    loadAndParseList(url).then(tokenList => {
       if (!stale) setTokenList(tokenList)
     })
     return () => {
@@ -33,40 +77,7 @@ export function useTokenList(url: string): AllTokens {
     }
   }, [url])
 
-  return useMemo(() => {
-    if (tokenList === null) return EMPTY
-    try {
-      return tokenList.tokens.reduce<AllTokens>(
-        (tokenMap, tokenInfo) => {
-          const token = new Token(
-            tokenInfo.chainId,
-            tokenInfo.address,
-            tokenInfo.decimals,
-            tokenInfo.symbol,
-            tokenInfo.name
-          )
-          if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.')
-          return {
-            ...tokenMap,
-            [token.chainId]: {
-              ...tokenMap[token.chainId],
-              [token.address]: token
-            }
-          }
-        },
-        {
-          [ChainId.MAINNET]: {},
-          [ChainId.RINKEBY]: {},
-          [ChainId.GÖRLI]: {},
-          [ChainId.ROPSTEN]: {},
-          [ChainId.KOVAN]: {}
-        }
-      )
-    } catch (error) {
-      console.error('Failed to load token list', error)
-      return EMPTY
-    }
-  }, [tokenList])
+  return tokenList ? tokenList : EMPTY_LIST
 }
 
 export function useDefaultTokenList(): AllTokens {
