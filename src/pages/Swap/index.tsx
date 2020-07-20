@@ -43,6 +43,8 @@ import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeve
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 
+import { setDefaultToken } from './util'
+
 export default function Swap() {
   useDefaultsFromURLSearch()
 
@@ -84,6 +86,7 @@ export default function Swap() {
   }
 
   const { onSwitchTokens, onTokenSelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
+  setDefaultToken(onTokenSelection);
   const isValid = !error
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
