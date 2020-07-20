@@ -1,7 +1,7 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { currencyEquals, ETHER, Percent, WETH } from '@uniswap/sdk'
+import { Currency, currencyEquals, ETHER, Percent, WETH } from '@uniswap/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -28,6 +28,7 @@ import { usePairContract } from '../../hooks/useContract'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import { currencyId } from '../../utils/currencyId'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
 import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
@@ -41,6 +42,7 @@ import { useUserDeadline, useUserSlippageTolerance } from '../../state/user/hook
 import { BigNumber } from '@ethersproject/bignumber'
 
 export default function RemoveLiquidity({
+  history,
   match: {
     params: { currencyIdA, currencyIdB }
   }
@@ -424,6 +426,27 @@ export default function RemoveLiquidity({
         (currencyB && currencyEquals(WETH[chainId], currencyB)))
   )
 
+  const handleSelectCurrencyA = useCallback(
+    (currency: Currency) => {
+      if (currencyIdB && currencyId(currency) === currencyIdB) {
+        history.push(`/remove/${currencyId(currency)}/${currencyIdA}`)
+      } else {
+        history.push(`/remove/${currencyId(currency)}/${currencyIdB}`)
+      }
+    },
+    [currencyIdA, currencyIdB, history]
+  )
+  const handleSelectCurrencyB = useCallback(
+    (currency: Currency) => {
+      if (currencyIdA && currencyId(currency) === currencyIdA) {
+        history.push(`/remove/${currencyIdB}/${currencyId(currency)}`)
+      } else {
+        history.push(`/remove/${currencyIdA}/${currencyId(currency)}`)
+      }
+    },
+    [currencyIdA, currencyIdB, history]
+  )
+
   return (
     <>
       <AppBody>
@@ -570,7 +593,7 @@ export default function RemoveLiquidity({
                   showMaxButton={!atMaxAmount}
                   currency={currencyA}
                   label={'Output'}
-                  disableCurrencySelect
+                  onCurrencySelect={handleSelectCurrencyA}
                   id="remove-liquidity-tokena"
                 />
                 <ColumnCenter>
@@ -584,7 +607,7 @@ export default function RemoveLiquidity({
                   showMaxButton={!atMaxAmount}
                   currency={currencyB}
                   label={'Output'}
-                  disableCurrencySelect
+                  onCurrencySelect={handleSelectCurrencyB}
                   id="remove-liquidity-tokenb"
                 />
               </>
