@@ -4,7 +4,7 @@ import { ChevronRight } from 'react-feather'
 import { Flex } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { TYPE } from '../../theme'
-import TokenLogo from '../TokenLogo'
+import CurrencyLogo from '../CurrencyLogo'
 
 export default memo(function SwapRoute({ trade }: { trade: Trade }) {
   const theme = useContext(ThemeContext)
@@ -24,7 +24,7 @@ export default memo(function SwapRoute({ trade }: { trade: Trade }) {
         return (
           <Fragment key={i}>
             <Flex my="0.5rem" alignItems="center" style={{ flexShrink: 0 }}>
-              <TokenLogo address={token.address} size="1.5rem" />
+              <CurrencyLogo currency={token} size="1.5rem" />
               <TYPE.black fontSize={14} color={theme.text1} ml="0.5rem">
                 {token.symbol}
               </TYPE.black>

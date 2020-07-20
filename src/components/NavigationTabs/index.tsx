@@ -66,20 +66,6 @@ export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
   )
 }
 
-export function CreatePoolTabs() {
-  return (
-    <Tabs>
-      <RowBetween style={{ padding: '1rem' }}>
-        <HistoryLink to="/pool">
-          <StyledArrowLeft />
-        </HistoryLink>
-        <ActiveText>Create Pool</ActiveText>
-        <QuestionHelper text={'Use this interface to create a new pool.'} />
-      </RowBetween>
-    </Tabs>
-  )
-}
-
 export function FindPoolTabs() {
   return (
     <Tabs>

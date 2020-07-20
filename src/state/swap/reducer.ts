@@ -1,16 +1,16 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { Field, replaceSwapState, selectToken, setRecipient, switchTokens, typeInput } from './actions'
+import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 
 export interface SwapState {
   readonly independentField: Field
   readonly typedValue: string
   readonly [Field.INPUT]: {
-    readonly address: string | undefined
+    readonly currencyId: string | undefined
   }
   readonly [Field.OUTPUT]: {
-    readonly address: string | undefined
+    readonly currencyId: string | undefined
   }
-  // the typed recipient address, or null if swap should go to sender
+  // the typed recipient address or ENS name, or null if swap should go to sender
   readonly recipient: string | null
 }
 
@@ -18,10 +18,10 @@ const initialState: SwapState = {
   independentField: Field.INPUT,
   typedValue: '',
   [Field.INPUT]: {
-    address: ''
+    currencyId: ''
   },
   [Field.OUTPUT]: {
-    address: ''
+    currencyId: ''
   },
   recipient: null
 }
@@ -30,13 +30,13 @@ export default createReducer<SwapState>(initialState, builder =>
   builder
     .addCase(
       replaceSwapState,
-      (state, { payload: { typedValue, recipient, field, inputTokenAddress, outputTokenAddress } }) => {
+      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId } }) => {
         return {
           [Field.INPUT]: {
-            address: inputTokenAddress
+            currencyId: inputCurrencyId
           },
           [Field.OUTPUT]: {
-            address: outputTokenAddress
+            currencyId: outputCurrencyId
           },
           independentField: field,
           typedValue: typedValue,
@@ -44,30 +44,30 @@ export default createReducer<SwapState>(initialState, builder =>
         }
       }
     )
-    .addCase(selectToken, (state, { payload: { address, field } }) => {
+    .addCase(selectCurrency, (state, { payload: { currencyId, field } }) => {
       const otherField = field === Field.INPUT ? Field.OUTPUT : Field.INPUT
-      if (address === state[otherField].address) {
+      if (currencyId === state[otherField].currencyId) {
         // the case where we have to swap the order
         return {
           ...state,
           independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-          [field]: { address },
-          [otherField]: { address: state[field].address }
+          [field]: { currencyId: currencyId },
+          [otherField]: { currencyId: state[field].currencyId }
         }
       } else {
         // the normal case
         return {
           ...state,
-          [field]: { address }
+          [field]: { currencyId: currencyId }
         }
       }
     })
-    .addCase(switchTokens, state => {
+    .addCase(switchCurrencies, state => {
       return {
         ...state,
         independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-        [Field.INPUT]: { address: state[Field.OUTPUT].address },
-        [Field.OUTPUT]: { address: state[Field.INPUT].address }
+        [Field.INPUT]: { currencyId: state[Field.OUTPUT].currencyId },
+        [Field.OUTPUT]: { currencyId: state[Field.INPUT].currencyId }
       }
     })
     .addCase(typeInput, (state, { payload: { field, typedValue } }) => {
