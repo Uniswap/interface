@@ -9,9 +9,17 @@ const STUB_TOKEN_LIST = {
   tokens: []
 }
 
-const UPDATED_STUB_LIST = {
+const PATCHED_STUB_LIST = {
   ...STUB_TOKEN_LIST,
   version: { ...STUB_TOKEN_LIST.version, patch: STUB_TOKEN_LIST.version.patch + 1 }
+}
+const MINOR_UPDATED_STUB_LIST = {
+  ...STUB_TOKEN_LIST,
+  version: { ...STUB_TOKEN_LIST.version, minor: STUB_TOKEN_LIST.version.minor + 1 }
+}
+const MAJOR_UPDATED_STUB_LIST = {
+  ...STUB_TOKEN_LIST,
+  version: { ...STUB_TOKEN_LIST.version, major: STUB_TOKEN_LIST.version.major + 1 }
 }
 
 describe('list reducer', () => {
@@ -95,17 +103,47 @@ describe('list reducer', () => {
         })
       })
 
-      it('saves to pending if list is newer', () => {
+      it('saves to current if list is newer patch version', () => {
         store.dispatch(fetchTokenList.fulfilled(STUB_TOKEN_LIST, 'request-id', 'fake-url'))
 
-        store.dispatch(fetchTokenList.fulfilled(UPDATED_STUB_LIST, 'request-id', 'fake-url'))
+        store.dispatch(fetchTokenList.fulfilled(PATCHED_STUB_LIST, 'request-id', 'fake-url'))
+        expect(store.getState()).toEqual({
+          byUrl: {
+            'fake-url': {
+              error: null,
+              current: PATCHED_STUB_LIST,
+              loadingRequestId: null,
+              pendingUpdate: null
+            }
+          }
+        })
+      })
+      it('saves to current if list is newer minor version', () => {
+        store.dispatch(fetchTokenList.fulfilled(STUB_TOKEN_LIST, 'request-id', 'fake-url'))
+
+        store.dispatch(fetchTokenList.fulfilled(MINOR_UPDATED_STUB_LIST, 'request-id', 'fake-url'))
+        expect(store.getState()).toEqual({
+          byUrl: {
+            'fake-url': {
+              error: null,
+              current: MINOR_UPDATED_STUB_LIST,
+              loadingRequestId: null,
+              pendingUpdate: null
+            }
+          }
+        })
+      })
+      it('saves to pending if list is newer major version', () => {
+        store.dispatch(fetchTokenList.fulfilled(STUB_TOKEN_LIST, 'request-id', 'fake-url'))
+
+        store.dispatch(fetchTokenList.fulfilled(MAJOR_UPDATED_STUB_LIST, 'request-id', 'fake-url'))
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {
               error: null,
               current: STUB_TOKEN_LIST,
               loadingRequestId: null,
-              pendingUpdate: UPDATED_STUB_LIST
+              pendingUpdate: MAJOR_UPDATED_STUB_LIST
             }
           }
         })
@@ -193,7 +231,7 @@ describe('list reducer', () => {
             error: null,
             current: STUB_TOKEN_LIST,
             loadingRequestId: null,
-            pendingUpdate: UPDATED_STUB_LIST
+            pendingUpdate: PATCHED_STUB_LIST
           }
         }
       })
@@ -202,7 +240,7 @@ describe('list reducer', () => {
         byUrl: {
           'fake-url': {
             error: null,
-            current: UPDATED_STUB_LIST,
+            current: PATCHED_STUB_LIST,
             loadingRequestId: null,
             pendingUpdate: null
           }

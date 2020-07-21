@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { isVersionUpdate } from '@uniswap/token-lists'
+import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { TokenList } from '@uniswap/token-lists/dist/types'
 import { acceptListUpdate, addList, fetchTokenList } from './actions'
 
@@ -33,16 +33,24 @@ export default createReducer(initialState, builder =>
       const current = state.byUrl[url]?.current
 
       // no-op if update does nothing
-      if (current && !isVersionUpdate(current.version, tokenList.version)) {
-        return
-      }
-
-      state.byUrl[url] = {
-        ...state.byUrl[url],
-        loadingRequestId: null,
-        error: null,
-        current: current ?? tokenList,
-        pendingUpdate: current ? tokenList : null
+      if (current) {
+        const type = getVersionUpgrade(current.version, tokenList.version)
+        if (type === VersionUpgrade.NONE) return
+        state.byUrl[url] = {
+          ...state.byUrl[url],
+          loadingRequestId: null,
+          error: null,
+          current: type === VersionUpgrade.MAJOR ? current : tokenList,
+          pendingUpdate: type === VersionUpgrade.MAJOR ? tokenList : null
+        }
+      } else {
+        state.byUrl[url] = {
+          ...state.byUrl[url],
+          loadingRequestId: null,
+          error: null,
+          current: tokenList,
+          pendingUpdate: null
+        }
       }
     })
     .addCase(fetchTokenList.rejected, (state, { error, meta: { requestId, arg: url } }) => {

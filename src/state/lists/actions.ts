@@ -15,7 +15,6 @@ async function getTokenList(url: string): Promise<TokenList> {
     const response = await fetch(url)
     const json = await response.json()
     if (!validator(json)) {
-      debugger
       throw new Error('Failed token list schema validation.')
     }
     return json
