@@ -20,7 +20,6 @@ async function getTokenList(url: string): Promise<TokenList> {
     }
     return json
   } else {
-    debugger
     throw new Error('Unrecognized list URL protocol.')
   }
 }
@@ -29,6 +28,7 @@ const fetchCache: { [url: string]: Promise<TokenList> } = {}
 export const fetchTokenList = createAsyncThunk<TokenList, string>(
   'lists/fetchTokenList',
   (url: string) =>
+    // this makes it so we only ever fetch a list a single time concurrently
     (fetchCache[url] =
       fetchCache[url] ??
       getTokenList(url).catch(error => {

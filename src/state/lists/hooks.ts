@@ -1,9 +1,8 @@
 import { ChainId, Token } from '@uniswap/sdk'
 import { TokenList } from '@uniswap/token-lists'
-import { useEffect, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, AppState } from '../index'
-import { fetchTokenList } from './actions'
+import { useMemo } from 'react'
+import { useSelector } from 'react-redux'
+import { AppState } from '../index'
 
 export type TokenAddressMap = Readonly<{ [chainId in ChainId]: Readonly<{ [tokenAddress: string]: Token }> }>
 
@@ -43,23 +42,15 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
 
 export function useTokenList(url: string): TokenAddressMap {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-  const listState = useMemo(() => lists[url], [lists, url])
-  const dispatch = useDispatch<AppDispatch>()
-
-  useEffect(() => {
-    if (listState && (listState.loadingRequestId || listState.current || listState.error)) return
-    dispatch(fetchTokenList(url) as any)
-    return
-  }, [dispatch, listState, url])
-
   return useMemo(() => {
-    if (!listState || !listState.current) return EMPTY_LIST
-    return listToTokenMap(listState.current)
-  }, [listState])
+    const current = lists[url]?.current
+    if (!current) return EMPTY_LIST
+    return listToTokenMap(current)
+  }, [lists, url])
 }
 
-const DEFAULT_TOKEN_LIST_URL =
-  'https://unpkg.com/@uniswap/default-token-list@1.0.0-beta.1/uniswap-default.tokenlist.json'
+export const DEFAULT_TOKEN_LIST_URL =
+  'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json'
 
 export function useDefaultTokenList(): TokenAddressMap {
   return useTokenList(DEFAULT_TOKEN_LIST_URL)
