@@ -2,6 +2,7 @@ import { ChainId, Token } from '@uniswap/sdk'
 import { TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
+import { DEFAULT_TOKEN_LIST_URL } from '../../constants'
 import { AppState } from '../index'
 
 export type TokenAddressMap = Readonly<{ [chainId in ChainId]: Readonly<{ [tokenAddress: string]: Token }> }>
@@ -49,9 +50,19 @@ export function useTokenList(url: string): TokenAddressMap {
   }, [lists, url])
 }
 
-export const DEFAULT_TOKEN_LIST_URL =
-  'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json'
-
 export function useDefaultTokenList(): TokenAddressMap {
   return useTokenList(DEFAULT_TOKEN_LIST_URL)
+}
+
+// returns all downloaded current lists
+export function useAllLists(): TokenList[] {
+  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+
+  return useMemo(
+    () =>
+      Object.keys(lists)
+        .map(url => lists[url].current)
+        .filter((l): l is TokenList => Boolean(l)),
+    [lists]
+  )
 }

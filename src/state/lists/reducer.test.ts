@@ -1,5 +1,5 @@
 import { createStore, Store } from 'redux'
-import { fetchTokenList, acceptListUpdate } from './actions'
+import { fetchTokenList, acceptListUpdate, addList } from './actions'
 import reducer, { ListsState } from './reducer'
 
 const STUB_TOKEN_LIST = {
@@ -142,6 +142,45 @@ describe('list reducer', () => {
             }
           }
         })
+      })
+    })
+  })
+
+  describe('addList', () => {
+    it('adds the list key to byUrl', () => {
+      store.dispatch(addList('list-id'))
+      expect(store.getState()).toEqual({
+        byUrl: {
+          'list-id': {
+            error: null,
+            current: null,
+            loadingRequestId: null,
+            pendingUpdate: null
+          }
+        }
+      })
+    })
+    it('no op for existing list', () => {
+      store = createStore(reducer, {
+        byUrl: {
+          'fake-url': {
+            error: null,
+            current: STUB_TOKEN_LIST,
+            loadingRequestId: null,
+            pendingUpdate: null
+          }
+        }
+      })
+      store.dispatch(addList('fake-url'))
+      expect(store.getState()).toEqual({
+        byUrl: {
+          'fake-url': {
+            error: null,
+            current: STUB_TOKEN_LIST,
+            loadingRequestId: null,
+            pendingUpdate: null
+          }
+        }
       })
     })
   })

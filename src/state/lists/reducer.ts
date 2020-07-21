@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { isVersionUpdate } from '@uniswap/token-lists'
 import { TokenList } from '@uniswap/token-lists/dist/types'
-import { acceptListUpdate, fetchTokenList } from './actions'
+import { acceptListUpdate, addList, fetchTokenList } from './actions'
 
 export interface ListsState {
   readonly byUrl: {
@@ -57,6 +57,16 @@ export default createReducer(initialState, builder =>
         error: error.message ?? 'Unknown error',
         current: null,
         pendingUpdate: null
+      }
+    })
+    .addCase(addList, (state, { payload: url }) => {
+      if (!state.byUrl[url]) {
+        state.byUrl[url] = {
+          loadingRequestId: null,
+          pendingUpdate: null,
+          current: null,
+          error: null
+        }
       }
     })
     .addCase(acceptListUpdate, (state, { payload: url }) => {

@@ -38,3 +38,4 @@ export const fetchTokenList = createAsyncThunk<TokenList, string>(
 )
 
 export const acceptListUpdate = createAction<string>('lists/acceptListUpdate')
+export const addList = createAction<string>('lists/addList')
