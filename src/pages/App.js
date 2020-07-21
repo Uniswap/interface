@@ -52,8 +52,12 @@ const BodyWrapper = styled.div`
 const Body = styled.div`
   max-width: 35rem;
   width: 90%;
-  margin-top: 50px;
+  margin-top: 30px;
   /* margin: 0 1.25rem 1.25rem 1.25rem; */
+
+  @media (max-width: 1000px) {
+    margin-top: 80px;
+  }
 `
 
 class App extends React.Component {

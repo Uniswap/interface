@@ -11,6 +11,13 @@ const Main = styled.div`
 	right: 0;
 	margin-left: auto;
 	margin-right: auto;
+	overflow-y: scroll;
+
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  ::-webkit-scrollbar { /* Hide scrollbar for Chrome, Safari and Opera */
+    display: none;
+  }
 `
 
 const link = {
@@ -85,8 +92,7 @@ const Card = styled.div`
   vertical-align: top;
 
   @media (max-width: 800px) {
-    width: 100%;
-    height: calc(30% - 20px);
+    width: calc(100% - 20px);
   }
 `
 
@@ -455,14 +461,12 @@ export default function Details() {
 				</HistoryWrapper>
 			</Card>
 			{showCast ?
-				<CastWrapper>
-					<Cast
-						proposal={proposal}
-						time={date}
-						onChange={e => handleClick(e)} 
-						vote={(v) => setVote(v)}/> 
-				</CastWrapper>
-				: null
+				<Cast
+					proposal={proposal}
+					time={date}
+					onChange={e => handleClick(e)} 
+					vote={(v) => setVote(v)}/> 
+			: null
 			}
 		</Main>
 	)

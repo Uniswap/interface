@@ -7,11 +7,23 @@ const Main = styled.div`
   height: calc(100vh - 200px);
   width: 80vw;
   position: absolute;
-  top: 140px;
+  top: 110px;
   left: 0;
   right: 0;
   margin-left: auto;
   margin-right: auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  ::-webkit-scrollbar { /* Hide scrollbar for Chrome, Safari and Opera */
+    display: none;
+  }
+
+  @media (max-width: 1000px) {
+    top: 150px;
+  }
 `
 
 const Votes = styled.div`
@@ -19,6 +31,10 @@ const Votes = styled.div`
   height: 80px;
   color: black;
   font-weight: 600;
+
+  @media (max-width: 1000px) {
+    height: 70px;
+  }
 `
 const VoteTitle = styled.div`
   font-size: 14px;
@@ -157,16 +173,16 @@ const Page = styled.div`
 const Sticky = styled.div`
   background-color: #FFFFFF;
   border-radius: 5px;
-  position: absolute;
-  right: calc(-10vw - 250px);
-  top: calc(100% - 20px);
+  position: fixed;
+  right: -220px;
+  bottom: 15px;
   box-shadow: 1px 1px 8px -4px rgba(0,0,0,.5), 1px 1px 4px -4px rgba(0,0,0,.5);
   padding: 20px;
   width: 180px;
   transition: right 2s;
 
   ${({ active }) => active && `
-    right: calc(-10vw + 20px);
+    right: 15px;
   `}
 `
 
