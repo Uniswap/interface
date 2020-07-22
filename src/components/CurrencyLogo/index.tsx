@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Currency, Token } from '@uniswap/sdk'
+import { Currency, ETHER, Token } from '@uniswap/sdk'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
@@ -8,6 +8,23 @@ import { WrappedTokenInfo } from '../../state/lists/hooks'
 const getTokenLogoURL = address =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 const BAD_URIS: { [tokenAddress: string]: true } = {}
+
+export function parseUri(uri: string): string | undefined {
+  const parsed = new URL(uri)
+  if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+    return uri
+  } else if (parsed.protocol === 'ipfs:') {
+    const hash = parsed.pathname.substring(2)
+    return [`https://cloudflare-ipfs.com/ipfs/${hash}/`, `https://ipfs.infura.io/ipfs/${hash}/`].filter(
+      s => !BAD_URIS[s]
+    )[0]
+  } else if (parsed.protocol === 'ipns:') {
+    const name = parsed.pathname.substring(2)
+    return [`https://cloudflare-ipfs.com/ipns/${name}/`, `https://ipfs.infura.io/ipns/${name}/`].filter(
+      s => !BAD_URIS[s]
+    )[0]
+  }
+}
 
 const Image = styled.img<{ size: string }>`
   width: ${({ size }) => size};
@@ -45,41 +62,49 @@ export default function CurrencyLogo({
 }) {
   const [, refresh] = useState<number>(0)
 
-  if (currency instanceof Token) {
-    let uri: string
-    if (currency instanceof WrappedTokenInfo) {
-      uri = currency.logoURI
-      // fallback to default
-      if (!uri || BAD_URIS[uri]) uri = getTokenLogoURL(currency.address)
-    } else {
-      uri = getTokenLogoURL(currency.address)
-    }
-
-    if (BAD_URIS[uri]) {
-      return (
-        <Emoji {...rest} size={size}>
-          <span role="img" aria-label="Thinking">
-            🤔
-          </span>
-        </Emoji>
-      )
-    }
-
-    return (
-      <Image
-        {...rest}
-        alt={`${currency.name} Logo`}
-        src={uri}
-        size={size}
-        onError={() => {
-          if (currency instanceof Token) {
-            BAD_URIS[uri] = true
-          }
-          refresh(i => i + 1)
-        }}
-      />
-    )
-  } else {
+  if (currency === ETHER) {
     return <StyledEthereumLogo src={EthereumLogo} size={size} {...rest} />
   }
+
+  if (currency instanceof Token) {
+    let uri: string | undefined
+
+    if (currency instanceof WrappedTokenInfo) {
+      if (currency.logoURI && !BAD_URIS[currency.logoURI]) {
+        uri = parseUri(currency.logoURI)
+      }
+    }
+
+    if (!uri) {
+      const defaultUri = getTokenLogoURL(currency.address)
+      if (!BAD_URIS[defaultUri]) {
+        uri = defaultUri
+      }
+    }
+
+    if (uri) {
+      return (
+        <Image
+          {...rest}
+          alt={`${currency.name} Logo`}
+          src={uri}
+          size={size}
+          onError={() => {
+            if (currency instanceof Token) {
+              BAD_URIS[uri] = true
+            }
+            refresh(i => i + 1)
+          }}
+        />
+      )
+    }
+  }
+
+  return (
+    <Emoji {...rest} size={size}>
+      <span role="img" aria-label="Thinking">
+        🤔
+      </span>
+    </Emoji>
+  )
 }
