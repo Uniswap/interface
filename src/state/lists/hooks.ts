@@ -1,11 +1,25 @@
 import { ChainId, Token } from '@uniswap/sdk'
-import { TokenList } from '@uniswap/token-lists'
+import { TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { DEFAULT_TOKEN_LIST_URL } from '../../constants'
 import { AppState } from '../index'
 
-export type TokenAddressMap = Readonly<{ [chainId in ChainId]: Readonly<{ [tokenAddress: string]: Token }> }>
+/**
+ * Token instances created from token info.
+ */
+export class WrappedTokenInfo extends Token {
+  public readonly tokenInfo: TokenInfo
+  constructor(tokenInfo: TokenInfo) {
+    super(tokenInfo.chainId, tokenInfo.address, tokenInfo.decimals, tokenInfo.symbol, tokenInfo.name)
+    this.tokenInfo = tokenInfo
+  }
+  public get logoURI(): string | undefined {
+    return this.tokenInfo.logoURI
+  }
+}
+
+export type TokenAddressMap = Readonly<{ [chainId in ChainId]: Readonly<{ [tokenAddress: string]: WrappedTokenInfo }> }>
 
 /**
  * An empty result, useful as a default.
@@ -18,16 +32,16 @@ const EMPTY_LIST: TokenAddressMap = {
   [ChainId.MAINNET]: {}
 }
 
+const listCache: WeakMap<TokenList, TokenAddressMap> | null =
+  'WeakMap' in window ? new WeakMap<TokenList, TokenAddressMap>() : null
+
 export function listToTokenMap(list: TokenList): TokenAddressMap {
-  return list.tokens.reduce<TokenAddressMap>(
+  const result = listCache?.get(list)
+  if (result) return result
+
+  const map = list.tokens.reduce<TokenAddressMap>(
     (tokenMap, tokenInfo) => {
-      const token = new Token(
-        tokenInfo.chainId,
-        tokenInfo.address,
-        tokenInfo.decimals,
-        tokenInfo.symbol,
-        tokenInfo.name
-      )
+      const token = new WrappedTokenInfo(tokenInfo)
       if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.')
       return {
         ...tokenMap,
@@ -39,6 +53,8 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
     },
     { ...EMPTY_LIST }
   )
+  listCache?.set(list, map)
+  return map
 }
 
 export function useTokenList(url: string): TokenAddressMap {

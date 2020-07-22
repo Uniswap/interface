@@ -24,7 +24,7 @@ export default function Updater(): null {
   useEffect(() => {
     Object.keys(lists).forEach(listUrl => {
       const list = lists[listUrl]
-      if (!list.current && !list.loadingRequestId) {
+      if (!list.current && !list.loadingRequestId && !list.error) {
         dispatch(fetchTokenList(listUrl) as any)
       }
     })

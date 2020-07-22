@@ -1,12 +1,19 @@
 import { createAction } from '@reduxjs/toolkit'
 
-export type PopupContent = {
-  txn: {
-    hash: string
-    success: boolean
-    summary?: string
-  }
-}
+export type PopupContent =
+  | {
+      txn: {
+        hash: string
+        success: boolean
+        summary?: string
+      }
+    }
+  | {
+      listUpdate: {
+        listUrl: string
+        auto: boolean
+      }
+    }
 
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('updateBlockNumber')
 export const toggleWalletModal = createAction<void>('toggleWalletModal')

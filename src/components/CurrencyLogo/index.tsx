@@ -3,10 +3,11 @@ import styled from 'styled-components'
 import { Currency, Token } from '@uniswap/sdk'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import { WrappedTokenInfo } from '../../state/lists/hooks'
 
 const getTokenLogoURL = address =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
-const NO_LOGO_ADDRESSES: { [tokenAddress: string]: true } = {}
+const BAD_URIS: { [tokenAddress: string]: true } = {}
 
 const Image = styled.img<{ size: string }>`
   width: ${({ size }) => size};
@@ -45,10 +46,16 @@ export default function CurrencyLogo({
   const [, refresh] = useState<number>(0)
 
   if (currency instanceof Token) {
-    let path = ''
-    if (!NO_LOGO_ADDRESSES[currency.address]) {
-      path = getTokenLogoURL(currency.address)
+    let uri: string
+    if (currency instanceof WrappedTokenInfo) {
+      uri = currency.logoURI
+      // fallback to default
+      if (!uri || BAD_URIS[uri]) uri = getTokenLogoURL(currency.address)
     } else {
+      uri = getTokenLogoURL(currency.address)
+    }
+
+    if (BAD_URIS[uri]) {
       return (
         <Emoji {...rest} size={size}>
           <span role="img" aria-label="Thinking">
@@ -62,11 +69,11 @@ export default function CurrencyLogo({
       <Image
         {...rest}
         alt={`${currency.name} Logo`}
-        src={path}
+        src={uri}
         size={size}
         onError={() => {
           if (currency instanceof Token) {
-            NO_LOGO_ADDRESSES[currency.address] = true
+            BAD_URIS[uri] = true
           }
           refresh(i => i + 1)
         }}

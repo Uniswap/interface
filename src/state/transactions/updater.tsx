@@ -13,7 +13,7 @@ export default function Updater() {
   const dispatch = useDispatch<AppDispatch>()
   const transactions = useSelector<AppState, AppState['transactions']>(state => state.transactions)
 
-  const allTransactions = transactions[chainId ?? -1] ?? {}
+  const allTransactions = chainId ? transactions[chainId] ?? {} : {}
 
   // show popup on confirm
   const addPopup = useAddPopup()

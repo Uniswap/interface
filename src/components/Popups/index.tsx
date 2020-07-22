@@ -6,7 +6,8 @@ import { X } from 'react-feather'
 import { PopupContent } from '../../state/application/actions'
 import { useActivePopups, useRemovePopup } from '../../state/application/hooks'
 import { AutoColumn } from '../Column'
-import TxnPopup from '../TxnPopup'
+import ListUpdatePopup from './ListUpdatePopup'
+import TxnPopup from './TxnPopup'
 
 const StyledClose = styled(X)`
   position: absolute;
@@ -73,6 +74,11 @@ function PopupItem({ content, popKey }: { content: PopupContent; popKey: string 
       txn: { hash, success, summary }
     } = content
     return <TxnPopup popKey={popKey} hash={hash} success={success} summary={summary} />
+  } else if ('listUpdate' in content) {
+    const {
+      listUpdate: { listUrl, auto }
+    } = content
+    return <ListUpdatePopup popKey={popKey} listUrl={listUrl} auto={auto} />
   }
 }
 
