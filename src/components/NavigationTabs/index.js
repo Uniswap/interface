@@ -118,6 +118,8 @@ const Tabs = styled.div`
   /* border: 1px solid ${({ theme }) => theme.mercuryGray}; */
   margin-bottom: 1rem;
   box-shadow: 1px 1px 8px -4px rgba(0,0,0,.5), 1px 1px 4px -4px rgba(0,0,0,.5);
+  z-index: 100;
+  position: relative;
 `
 
 const Title = styled.div`

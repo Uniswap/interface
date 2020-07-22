@@ -4,7 +4,7 @@ import styled, {keyframes} from 'styled-components'
 import { useHistory } from 'react-router-dom'
 
 const Main = styled.div`
-  height: calc(100vh - 200px);
+  height: calc(100vh - 160px);
   width: 80vw;
   position: absolute;
   top: 110px;
@@ -22,7 +22,12 @@ const Main = styled.div`
   }
 
   @media (max-width: 1000px) {
-    top: 150px;
+    top: 140px;
+    height: calc(100vh - 190px);
+  }
+
+  @media (max-width: 800px) {
+    width: 90vw;
   }
 `
 
@@ -102,7 +107,7 @@ const Loader = styled.div`
   width: 60px;
   height: 60px;
   animation: ${spin} 2s linear infinite;
-  margin: 20px auto;
+  margin: 50px auto;
 `
 
 const Balance = styled.div`
@@ -256,7 +261,9 @@ export default function Vote(props) {
   let history = useHistory(); //history hook
 
 
-  const perPage = window.innerWidth > 900 ? 5 : 3//make dynamic
+  // const perPage = window.innerWidth > 900 ? 5 : 3//make dynamic
+  let perPage = window.innerWidth > 900 ? (window.innerHeight - 230) / 130 : (window.innerHeight - 600) / 130 || 1
+
   const mp = page * perPage - perPage 
   const proposalPage = proposals.slice(mp, mp+perPage)
   const pages = [...Array(Math.ceil(proposals.length/perPage)).keys()].map(i => i + 1) //creates pages off of proposals
@@ -273,13 +280,15 @@ export default function Vote(props) {
     state: { badpath: false }
   }
 
+  //When component mounts - data retrieval and path check
   useEffect(() => {
     getProposals().then(data => {
       setProposals(data)
       setLoading(false)
     })
 
-    const st = history.location.state
+    //If there is a redirect from an invalid proposal ID, a sticky is displayed then history is reset
+    const st = history.location.state 
     if(st) {  
       if(st.badpath) {  
         changeVisibility(true)
@@ -339,7 +348,7 @@ export default function Vote(props) {
                 {p}
               </Page>
             ))}
-            <Page onClick={() => checkChange(page + 1)} off={page === l}> 
+            <Page onClick={() => checkChange(page + 1)} off={page === l || loading}> 
               {`>`}
             </Page>
           </Pages>

@@ -6,6 +6,7 @@ import { Link, useLocation, Redirect } from 'react-router-dom'
 const Main = styled.div`
   width: 70vw;
   position: absolute;
+  height: calc(100vh - 160px);
   top: 100px;
   left: 0;
 	right: 0;
@@ -17,6 +18,16 @@ const Main = styled.div`
   scrollbar-width: none;  /* Firefox */
   ::-webkit-scrollbar { /* Hide scrollbar for Chrome, Safari and Opera */
     display: none;
+  }
+
+  @media (max-width: 1000px) {
+    top: 140px;
+    width: 80vw;
+    height: calc(100vh - 200px);
+  }
+
+  @media (max-width: 800px) {
+    width: 90vw;
   }
 `
 
@@ -217,18 +228,18 @@ const HistoryDate = styled.div`
 const Vote = styled.div`
   display: inline-block;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
   color: #b7c3cc;
 	float: right; 
 	margin-right: 10px;
 	margin-top: 50px;
   text-align: center;
-  background-color: #FFFFFF;
   border: 2px solid #b7c3cc;
   border-radius: 3px;
   height: 18px;
   width: 65px;
   padding: 3px;
+  cursor: pointer;
 
   ${({ cast }) => cast && `
     color: black;

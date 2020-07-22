@@ -17,6 +17,11 @@ const Wrapper = styled.div`
   height: 100%;
   width: 80%;
   display: inline-block;
+
+ 	@media (max-width: 450px) {
+ 		margin-bottom: 10px;
+    width: 100%;
+  }
 `
 
 const Info = styled.div`
@@ -54,6 +59,10 @@ const Vote = styled.div`
   font-weight: 600;
   color: #b7c3cc;
   text-align: center;
+
+  @media (max-width: 450px) {
+    width: 100%;
+  }
 
   ${({ cast }) => cast && `
     color: black;

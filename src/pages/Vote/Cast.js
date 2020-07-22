@@ -8,6 +8,7 @@ const BackDrop = styled.div`
 	position: fixed;
 	top: 0;
 	left: 0;
+	z-index: 110;
 `
 
 const Card = styled.div`
@@ -64,7 +65,6 @@ const Button = styled.div`
   ${({ color }) => `
     background-color: ${color}
   `}
-
 `
 
 const ErrorMessage = styled.div`
