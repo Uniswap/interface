@@ -11,7 +11,7 @@ const validator = new Ajv({ allErrors: true }).compile(schema)
  */
 async function getTokenList(url: string): Promise<TokenList> {
   const parsed = new URL(url)
-  if (parsed.protocol === 'https:') {
+  if (parsed.protocol === 'https:' || (parsed.protocol === 'http:' && window.location.protocol === 'http:')) {
     const response = await fetch(url)
     const json = await response.json()
     if (!validator(json)) {

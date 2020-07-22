@@ -22,7 +22,6 @@ export default function ListUpdatePopup({ popKey, listUrl, auto }: { popKey: str
   const allLists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   const listState = allLists[listUrl]
   const name = listState?.current?.name
-  const version = listState?.current?.version
   const newVersion = listState?.current?.version
 
   const updateList = useCallback(() => {
@@ -38,7 +37,7 @@ export default function ListUpdatePopup({ popKey, listUrl, auto }: { popKey: str
       <AutoColumn gap="8px">
         <TYPE.body fontWeight={500}>
           {auto ? (
-            `The token list "${name}" has been updated from version ${version?.major}.${version?.minor}.${version?.patch} to ${newVersion?.major}.${newVersion?.minor}.${newVersion?.patch}.`
+            `The token list "${name}" has been updated to v${newVersion?.major}.${newVersion?.minor}.${newVersion?.patch}.`
           ) : (
             <span>
               A token list update is available for the list &quot;{name}&quot;. Click{' '}
