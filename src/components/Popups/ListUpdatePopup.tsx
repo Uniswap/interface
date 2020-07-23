@@ -1,33 +1,47 @@
+import { TokenList, Version } from '@uniswap/token-lists'
 import React, { useCallback, useContext } from 'react'
 import { AlertCircle, Info } from 'react-feather'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { ThemeContext } from 'styled-components'
 
-import { AppDispatch, AppState } from '../../state'
+import { AppDispatch } from '../../state'
 import { useRemovePopup } from '../../state/application/hooks'
 import { acceptListUpdate } from '../../state/lists/actions'
-import { LinkStyledButton, TYPE } from '../../theme'
+import { TYPE } from '../../theme'
 
 import { ExternalLink } from '../../theme/components'
+import { ButtonGray, ButtonPrimary } from '../Button'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
 
-export default function ListUpdatePopup({ popKey, listUrl, auto }: { popKey: string; listUrl: string; auto: boolean }) {
+function versionLabel(version: Version): string {
+  return `v${version.major}.${version.minor}.${version.patch}`
+}
+
+export default function ListUpdatePopup({
+  popKey,
+  listUrl,
+  oldList,
+  newList,
+  auto
+}: {
+  popKey: string
+  listUrl: string
+  oldList: TokenList
+  newList: TokenList
+  auto: boolean
+}) {
   const removePopup = useRemovePopup()
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
   const dispatch = useDispatch<AppDispatch>()
   const theme = useContext(ThemeContext)
 
-  const allLists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-  const listState = allLists[listUrl]
-  const name = listState?.current?.name
-  const newVersion = listState?.current?.version
-
   const updateList = useCallback(() => {
+    if (auto) return
     dispatch(acceptListUpdate(listUrl))
     removeThisPopup()
-  }, [dispatch, listUrl, removeThisPopup])
+  }, [auto, dispatch, listUrl, removeThisPopup])
 
   return (
     <AutoRow>
@@ -37,12 +51,25 @@ export default function ListUpdatePopup({ popKey, listUrl, auto }: { popKey: str
       <AutoColumn gap="8px">
         <TYPE.body fontWeight={500}>
           {auto ? (
-            `The token list "${name}" has been updated to v${newVersion?.major}.${newVersion?.minor}.${newVersion?.patch}.`
+            <div>
+              <div>
+                The token list &quot;{oldList.name}&quot; has been updated to {versionLabel(newList.version)}.
+              </div>
+              <div>
+                <ButtonGray onClick={removeThisPopup}>Dismiss</ButtonGray>
+              </div>
+            </div>
           ) : (
-            <span>
-              A token list update is available for the list &quot;{name}&quot;. Click{' '}
-              <LinkStyledButton onClick={updateList}>here</LinkStyledButton> to update.
-            </span>
+            <div>
+              <div>
+                A token list update is available for the list &quot;{oldList.name}&quot; (
+                {versionLabel(oldList.version)} to {versionLabel(newList.version)}).
+              </div>
+              <div>
+                <ButtonPrimary onClick={updateList}>Update list</ButtonPrimary>
+                <ButtonGray onClick={removeThisPopup}>Dismiss</ButtonGray>
+              </div>
+            </div>
           )}
         </TYPE.body>
         <ExternalLink href={listUrl}>View list</ExternalLink>

@@ -76,9 +76,9 @@ function PopupItem({ content, popKey }: { content: PopupContent; popKey: string 
     return <TxnPopup popKey={popKey} hash={hash} success={success} summary={summary} />
   } else if ('listUpdate' in content) {
     const {
-      listUpdate: { listUrl, auto }
+      listUpdate: { listUrl, oldList, newList, auto }
     } = content
-    return <ListUpdatePopup popKey={popKey} listUrl={listUrl} auto={auto} />
+    return <ListUpdatePopup popKey={popKey} listUrl={listUrl} oldList={oldList} newList={newList} auto={auto} />
   }
 }
 
