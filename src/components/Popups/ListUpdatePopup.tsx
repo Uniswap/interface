@@ -11,7 +11,7 @@ import { acceptListUpdate } from '../../state/lists/actions'
 import { TYPE } from '../../theme'
 
 import { ExternalLink } from '../../theme/components'
-import { ButtonGray, ButtonPrimary, ButtonSecondary } from '../Button'
+import { ButtonPrimary, ButtonSecondary } from '../Button'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
 

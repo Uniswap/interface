@@ -19,6 +19,10 @@ import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
+if ('ethereum' in window) {
+  ;(window.ethereum as any).autoRefreshOnNetworkChange = false
+}
+
 function getLibrary(provider: any): Web3Provider {
   const library = new Web3Provider(provider)
   library.pollingInterval = 15000
