@@ -1,26 +1,39 @@
 import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
-import { TokenList } from '@uniswap/token-lists'
+import { TokenList, Version } from '@uniswap/token-lists'
 import schema from '@uniswap/token-lists/src/tokenlist.schema.json'
 import Ajv from 'ajv'
+import uriToHttp from '../../utils/uriToHttp'
 
-const validator = new Ajv({ allErrors: true }).compile(schema)
+const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
 
 /**
- * Contains the logic for resolving a list to a URL
- * @param url list url
+ * Contains the logic for resolving a URL to a valid token list
+ * @param listUrl list url
  */
-async function getTokenList(url: string): Promise<TokenList> {
-  const parsed = new URL(url)
-  if (parsed.protocol === 'https:' || (parsed.protocol === 'http:' && window.location.protocol === 'http:')) {
-    const response = await fetch(url)
+async function getTokenList(listUrl: string): Promise<TokenList> {
+  const urls = uriToHttp(listUrl)
+  for (const url of urls) {
+    let response
+    try {
+      response = await fetch(url)
+      if (!response.ok) continue
+    } catch (error) {
+      console.error(`tried to fetch list ${url} at uri ${url}`)
+      continue
+    }
+
     const json = await response.json()
-    if (!validator(json)) {
-      throw new Error('Failed token list schema validation.')
+    if (!tokenListValidator(json)) {
+      throw new Error(
+        tokenListValidator.errors?.reduce<string>((memo, error) => {
+          const add = `${error.dataPath} ${error.message ?? ''}`
+          return memo.length > 0 ? `${memo}; ${add}` : `${add}`
+        }, '') ?? 'Token list failed validation'
+      )
     }
     return json
-  } else {
-    throw new Error('Unrecognized list URL protocol.')
   }
+  throw new Error('Unrecognized list URL protocol.')
 }
 
 const fetchCache: { [url: string]: Promise<TokenList> } = {}
@@ -38,3 +51,4 @@ export const fetchTokenList = createAsyncThunk<TokenList, string>(
 
 export const acceptListUpdate = createAction<string>('lists/acceptListUpdate')
 export const addList = createAction<string>('lists/addList')
+export const rejectVersionUpdate = createAction<Version>('lists/rejectVersionUpdate')

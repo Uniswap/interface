@@ -103,7 +103,7 @@ describe('list reducer', () => {
         })
       })
 
-      it('saves to current if list is newer patch version', () => {
+      it('does not save to current if list is newer patch version', () => {
         store.dispatch(fetchTokenList.fulfilled(STUB_TOKEN_LIST, 'request-id', 'fake-url'))
 
         store.dispatch(fetchTokenList.fulfilled(PATCHED_STUB_LIST, 'request-id', 'fake-url'))
@@ -111,14 +111,14 @@ describe('list reducer', () => {
           byUrl: {
             'fake-url': {
               error: null,
-              current: PATCHED_STUB_LIST,
+              current: STUB_TOKEN_LIST,
               loadingRequestId: null,
-              pendingUpdate: null
+              pendingUpdate: PATCHED_STUB_LIST
             }
           }
         })
       })
-      it('saves to current if list is newer minor version', () => {
+      it('does not save to current if list is newer minor version', () => {
         store.dispatch(fetchTokenList.fulfilled(STUB_TOKEN_LIST, 'request-id', 'fake-url'))
 
         store.dispatch(fetchTokenList.fulfilled(MINOR_UPDATED_STUB_LIST, 'request-id', 'fake-url'))
@@ -126,14 +126,14 @@ describe('list reducer', () => {
           byUrl: {
             'fake-url': {
               error: null,
-              current: MINOR_UPDATED_STUB_LIST,
+              current: STUB_TOKEN_LIST,
               loadingRequestId: null,
-              pendingUpdate: null
+              pendingUpdate: MINOR_UPDATED_STUB_LIST
             }
           }
         })
       })
-      it('saves to pending if list is newer major version', () => {
+      it('does not save to pending if list is newer major version', () => {
         store.dispatch(fetchTokenList.fulfilled(STUB_TOKEN_LIST, 'request-id', 'fake-url'))
 
         store.dispatch(fetchTokenList.fulfilled(MAJOR_UPDATED_STUB_LIST, 'request-id', 'fake-url'))

@@ -40,8 +40,8 @@ export default createReducer(initialState, builder =>
           ...state.byUrl[url],
           loadingRequestId: null,
           error: null,
-          current: type === VersionUpgrade.MAJOR ? current : tokenList,
-          pendingUpdate: type === VersionUpgrade.MAJOR ? tokenList : null
+          current: current,
+          pendingUpdate: tokenList
         }
       } else {
         state.byUrl[url] = {
