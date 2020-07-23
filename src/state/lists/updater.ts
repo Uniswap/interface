@@ -52,6 +52,8 @@ export default function Updater(): null {
                   content: {
                     listUpdate: {
                       listUrl,
+                      oldList: list.current,
+                      newList: list.pendingUpdate,
                       auto: true
                     }
                   }
