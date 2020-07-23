@@ -43,8 +43,10 @@ export default function Updater(): null {
             throw new Error('unexpected no version bump')
           case VersionUpgrade.PATCH:
           case VersionUpgrade.MINOR:
+          case VersionUpgrade.MAJOR:
+            const min = minVersionBump(list.current.tokens, list.pendingUpdate.tokens)
             // automatically update minor/patch as long as bump matches the min update
-            if (bump >= minVersionBump(list.current.tokens, list.pendingUpdate.tokens)) {
+            if (bump >= min) {
               dispatch(acceptListUpdate(listUrl))
               dispatch(
                 addPopup({
@@ -59,22 +61,28 @@ export default function Updater(): null {
                   }
                 })
               )
+            } else {
+              console.error(
+                `List at url ${listUrl} could not automatically update because the version bump was only PATCH/MINOR while the update had breaking changes and should have been MAJOR`
+              )
             }
             break
-          case VersionUpgrade.MAJOR:
-            dispatch(
-              addPopup({
-                key: listUrl,
-                content: {
-                  listUpdate: {
-                    listUrl,
-                    auto: false,
-                    oldList: list.current,
-                    newList: list.pendingUpdate
-                  }
-                }
-              })
-            )
+
+          // this will be turned on later
+          // case VersionUpgrade.MAJOR:
+          // dispatch(
+          //   addPopup({
+          //     key: listUrl,
+          //     content: {
+          //       listUpdate: {
+          //         listUrl,
+          //         auto: false,
+          //         oldList: list.current,
+          //         newList: list.pendingUpdate
+          //       }
+          //     }
+          //   })
+          // )
         }
       }
     })

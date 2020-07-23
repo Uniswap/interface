@@ -10,7 +10,6 @@ import { useRemovePopup } from '../../state/application/hooks'
 import { acceptListUpdate } from '../../state/lists/actions'
 import { TYPE } from '../../theme'
 
-import { ExternalLink } from '../../theme/components'
 import { ButtonPrimary, ButtonSecondary } from '../Button'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
@@ -46,7 +45,8 @@ export default function ListUpdatePopup({
   return (
     <AutoRow>
       <div style={{ paddingRight: 16 }}>
-        {auto ? <Info color={theme.text2} size={24} /> : <AlertCircle color={theme.red1} size={24} />}
+        {auto ? <Info color={theme.text2} size={24} /> : <AlertCircle color={theme.red1} size={24} />}{' '}
+        <TYPE.subHeader>Token List Update</TYPE.subHeader>
       </div>
       <AutoColumn gap="8px">
         {auto ? (
@@ -69,7 +69,6 @@ export default function ListUpdatePopup({
             </AutoRow>
           </>
         )}
-        <ExternalLink href={listUrl}>View list</ExternalLink>
       </AutoColumn>
     </AutoRow>
   )
