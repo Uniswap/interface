@@ -61,6 +61,20 @@ export default function Updater(): null {
               )
             }
             break
+          case VersionUpgrade.MAJOR:
+            dispatch(
+              addPopup({
+                key: listUrl,
+                content: {
+                  listUpdate: {
+                    listUrl,
+                    auto: false,
+                    oldList: list.current,
+                    newList: list.pendingUpdate
+                  }
+                }
+              })
+            )
         }
       }
     })

@@ -11,7 +11,7 @@ import { acceptListUpdate } from '../../state/lists/actions'
 import { TYPE } from '../../theme'
 
 import { ExternalLink } from '../../theme/components'
-import { ButtonGray, ButtonPrimary } from '../Button'
+import { ButtonGray, ButtonPrimary, ButtonSecondary } from '../Button'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
 
@@ -49,29 +49,26 @@ export default function ListUpdatePopup({
         {auto ? <Info color={theme.text2} size={24} /> : <AlertCircle color={theme.red1} size={24} />}
       </div>
       <AutoColumn gap="8px">
-        <TYPE.body fontWeight={500}>
-          {auto ? (
+        {auto ? (
+          <TYPE.body fontWeight={500}>
+            The token list &quot;{oldList.name}&quot; has been updated to {versionLabel(newList.version)}.
+          </TYPE.body>
+        ) : (
+          <>
             <div>
-              <div>
-                The token list &quot;{oldList.name}&quot; has been updated to {versionLabel(newList.version)}.
-              </div>
-              <div>
-                <ButtonGray onClick={removeThisPopup}>Dismiss</ButtonGray>
-              </div>
+              A token list update is available for the list &quot;{oldList.name}&quot; ({versionLabel(oldList.version)}{' '}
+              to {versionLabel(newList.version)}).
             </div>
-          ) : (
-            <div>
-              <div>
-                A token list update is available for the list &quot;{oldList.name}&quot; (
-                {versionLabel(oldList.version)} to {versionLabel(newList.version)}).
-              </div>
-              <div>
+            <AutoRow>
+              <div style={{ flexGrow: 1, marginRight: 6 }}>
                 <ButtonPrimary onClick={updateList}>Update list</ButtonPrimary>
-                <ButtonGray onClick={removeThisPopup}>Dismiss</ButtonGray>
               </div>
-            </div>
-          )}
-        </TYPE.body>
+              <div style={{ flexGrow: 1 }}>
+                <ButtonSecondary onClick={removeThisPopup}>Dismiss</ButtonSecondary>
+              </div>
+            </AutoRow>
+          </>
+        )}
         <ExternalLink href={listUrl}>View list</ExternalLink>
       </AutoColumn>
     </AutoRow>
