@@ -1,9 +1,9 @@
-import React, { useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import React from 'react'
+import styled from 'styled-components'
 import { useMediaLayout } from 'use-media'
-import { useActivePopups, useRemovePopup } from '../../state/application/hooks'
+import { useActivePopups } from '../../state/application/hooks'
 import { AutoColumn } from '../Column'
-import PopupItem, { Popup, StyledClose } from './PopupItem'
+import PopupItem from './PopupItem'
 
 const MobilePopupWrapper = styled.div<{ height: string | number }>`
   position: relative;
@@ -38,10 +38,8 @@ const FixedPopupColumn = styled(AutoColumn)`
 `
 
 export default function Popups() {
-  const theme = useContext(ThemeContext)
   // get all popups
   const activePopups = useActivePopups()
-  const removePopup = useRemovePopup()
 
   // switch view settings on mobile
   const isMobile = useMediaLayout({ maxWidth: '600px' })
