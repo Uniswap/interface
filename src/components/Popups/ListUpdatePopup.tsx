@@ -1,7 +1,7 @@
 import { TokenList, Version } from '@uniswap/token-lists'
 import React, { useCallback, useContext } from 'react'
 import { AlertCircle, Info } from 'react-feather'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { ThemeContext } from 'styled-components'
 
