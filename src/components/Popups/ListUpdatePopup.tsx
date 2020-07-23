@@ -2,14 +2,11 @@ import { TokenList, Version } from '@uniswap/token-lists'
 import React, { useCallback, useContext } from 'react'
 import { AlertCircle, Info } from 'react-feather'
 import { useDispatch } from 'react-redux'
-
 import { ThemeContext } from 'styled-components'
-
 import { AppDispatch } from '../../state'
 import { useRemovePopup } from '../../state/application/hooks'
 import { acceptListUpdate } from '../../state/lists/actions'
 import { TYPE } from '../../theme'
-
 import { ButtonPrimary, ButtonSecondary } from '../Button'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
@@ -46,12 +43,12 @@ export default function ListUpdatePopup({
     <AutoRow>
       <div style={{ paddingRight: 16 }}>
         {auto ? <Info color={theme.text2} size={24} /> : <AlertCircle color={theme.red1} size={24} />}{' '}
-        <TYPE.subHeader>Token List Update</TYPE.subHeader>
       </div>
-      <AutoColumn gap="8px">
+      <AutoColumn style={{ flex: '1' }} gap="8px">
         {auto ? (
           <TYPE.body fontWeight={500}>
-            The token list &quot;{oldList.name}&quot; has been updated to {versionLabel(newList.version)}.
+            The token list &quot;{oldList.name}&quot; has been updated to{' '}
+            <strong>{versionLabel(newList.version)}</strong>.
           </TYPE.body>
         ) : (
           <>
