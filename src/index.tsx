@@ -12,11 +12,16 @@ import App from './pages/App'
 import store from './state'
 import ApplicationUpdater from './state/application/updater'
 import TransactionUpdater from './state/transactions/updater'
+import ListsUpdater from './state/lists/updater'
 import UserUpdater from './state/user/updater'
 import MulticallUpdater from './state/multicall/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
+
+if ('ethereum' in window) {
+  ;(window.ethereum as any).autoRefreshOnNetworkChange = false
+}
 
 function getLibrary(provider: any): Web3Provider {
   const library = new Web3Provider(provider)
@@ -44,6 +49,7 @@ window.addEventListener('error', error => {
 function Updaters() {
   return (
     <>
+      <ListsUpdater />
       <UserUpdater />
       <ApplicationUpdater />
       <TransactionUpdater />

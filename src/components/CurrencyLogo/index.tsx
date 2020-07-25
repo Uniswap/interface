@@ -1,12 +1,14 @@
+import { Currency, ETHER, Token } from '@uniswap/sdk'
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Currency, Token } from '@uniswap/sdk'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import { WrappedTokenInfo } from '../../state/lists/hooks'
+import uriToHttp from '../../utils/uriToHttp'
 
 const getTokenLogoURL = address =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
-const NO_LOGO_ADDRESSES: { [tokenAddress: string]: true } = {}
+const BAD_URIS: { [tokenAddress: string]: true } = {}
 
 const Image = styled.img<{ size: string }>`
   width: ${({ size }) => size};
@@ -44,35 +46,49 @@ export default function CurrencyLogo({
 }) {
   const [, refresh] = useState<number>(0)
 
-  if (currency instanceof Token) {
-    let path = ''
-    if (!NO_LOGO_ADDRESSES[currency.address]) {
-      path = getTokenLogoURL(currency.address)
-    } else {
-      return (
-        <Emoji {...rest} size={size}>
-          <span role="img" aria-label="Thinking">
-            🤔
-          </span>
-        </Emoji>
-      )
-    }
-
-    return (
-      <Image
-        {...rest}
-        alt={`${currency.name} Logo`}
-        src={path}
-        size={size}
-        onError={() => {
-          if (currency instanceof Token) {
-            NO_LOGO_ADDRESSES[currency.address] = true
-          }
-          refresh(i => i + 1)
-        }}
-      />
-    )
-  } else {
+  if (currency === ETHER) {
     return <StyledEthereumLogo src={EthereumLogo} size={size} {...rest} />
   }
+
+  if (currency instanceof Token) {
+    let uri: string | undefined
+
+    if (currency instanceof WrappedTokenInfo) {
+      if (currency.logoURI && !BAD_URIS[currency.logoURI]) {
+        uri = uriToHttp(currency.logoURI).filter(s => !BAD_URIS[s])[0]
+      }
+    }
+
+    if (!uri) {
+      const defaultUri = getTokenLogoURL(currency.address)
+      if (!BAD_URIS[defaultUri]) {
+        uri = defaultUri
+      }
+    }
+
+    if (uri) {
+      return (
+        <Image
+          {...rest}
+          alt={`${currency.name} Logo`}
+          src={uri}
+          size={size}
+          onError={() => {
+            if (currency instanceof Token) {
+              BAD_URIS[uri] = true
+            }
+            refresh(i => i + 1)
+          }}
+        />
+      )
+    }
+  }
+
+  return (
+    <Emoji {...rest} size={size}>
+      <span role="img" aria-label="Thinking">
+        🤔
+      </span>
+    </Emoji>
+  )
 }

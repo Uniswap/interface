@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
+import { useDefaultTokenList } from '../../state/lists/hooks'
 import { Field } from '../../state/swap/actions'
 import { useTokenWarningDismissal } from '../../state/user/hooks'
 import { ExternalLink, TYPE } from '../../theme'
@@ -67,8 +68,8 @@ interface TokenWarningCardProps extends PropsOfExcluding<typeof Wrapper, 'error'
 
 export default function TokenWarningCard({ token, ...rest }: TokenWarningCardProps) {
   const { chainId } = useActiveWeb3React()
-
-  const isDefault = isDefaultToken(token)
+  const defaultTokens = useDefaultTokenList()
+  const isDefault = isDefaultToken(defaultTokens, token)
 
   const tokenSymbol = token?.symbol?.toLowerCase() ?? ''
   const tokenName = token?.name?.toLowerCase() ?? ''

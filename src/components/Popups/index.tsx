@@ -1,22 +1,9 @@
-import React, { useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import React from 'react'
+import styled from 'styled-components'
 import { useMediaLayout } from 'use-media'
-
-import { X } from 'react-feather'
-import { PopupContent } from '../../state/application/actions'
-import { useActivePopups, useRemovePopup } from '../../state/application/hooks'
+import { useActivePopups } from '../../state/application/hooks'
 import { AutoColumn } from '../Column'
-import TxnPopup from '../TxnPopup'
-
-const StyledClose = styled(X)`
-  position: absolute;
-  right: 10px;
-  top: 10px;
-
-  :hover {
-    cursor: pointer;
-  }
-`
+import PopupItem from './PopupItem'
 
 const MobilePopupWrapper = styled.div<{ height: string | number }>`
   position: relative;
@@ -50,37 +37,9 @@ const FixedPopupColumn = styled(AutoColumn)`
   `};
 `
 
-const Popup = styled.div`
-  display: inline-block;
-  width: 100%;
-  padding: 1em;
-  background-color: ${({ theme }) => theme.bg1};
-  position: relative;
-  border-radius: 10px;
-  padding: 20px;
-  padding-right: 35px;
-  z-index: 2;
-  overflow: hidden;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    min-width: 290px;
-  `}
-`
-
-function PopupItem({ content, popKey }: { content: PopupContent; popKey: string }) {
-  if ('txn' in content) {
-    const {
-      txn: { hash, success, summary }
-    } = content
-    return <TxnPopup popKey={popKey} hash={hash} success={success} summary={summary} />
-  }
-}
-
 export default function Popups() {
-  const theme = useContext(ThemeContext)
   // get all popups
   const activePopups = useActivePopups()
-  const removePopup = useRemovePopup()
 
   // switch view settings on mobile
   const isMobile = useMediaLayout({ maxWidth: '600px' })
@@ -88,14 +47,9 @@ export default function Popups() {
   if (!isMobile) {
     return (
       <FixedPopupColumn gap="20px">
-        {activePopups.map(item => {
-          return (
-            <Popup key={item.key}>
-              <StyledClose color={theme.text2} onClick={() => removePopup(item.key)} />
-              <PopupItem content={item.content} popKey={item.key} />
-            </Popup>
-          )
-        })}
+        {activePopups.map(item => (
+          <PopupItem key={item.key} content={item.content} popKey={item.key} />
+        ))}
       </FixedPopupColumn>
     )
   }
@@ -107,14 +61,9 @@ export default function Popups() {
           {activePopups // reverse so new items up front
             .slice(0)
             .reverse()
-            .map(item => {
-              return (
-                <Popup key={item.key}>
-                  <StyledClose color={theme.text2} onClick={() => removePopup(item.key)} />
-                  <PopupItem content={item.content} popKey={item.key} />
-                </Popup>
-              )
-            })}
+            .map(item => (
+              <PopupItem key={item.key} content={item.content} popKey={item.key} />
+            ))}
         </MobilePopupInner>
       </MobilePopupWrapper>
     )

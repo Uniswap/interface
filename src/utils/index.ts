@@ -5,8 +5,8 @@ import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import { ROUTER_ADDRESS } from '../constants'
-import { ALL_TOKENS } from '../constants/tokens'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@uniswap/sdk'
+import { TokenAddressMap } from '../state/lists/hooks'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -87,7 +87,7 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
 
-  return new Contract(address, ABI, getProviderOrSigner(library, account))
+  return new Contract(address, ABI, getProviderOrSigner(library, account) as any)
 }
 
 // account is optional
@@ -99,12 +99,7 @@ export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
 
-export function isDefaultToken(currency?: Currency): boolean {
+export function isDefaultToken(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
   if (currency === ETHER) return true
-  return Boolean(currency instanceof Token && ALL_TOKENS[currency.chainId]?.[currency.address])
-}
-
-export function isCustomAddedToken(allTokens: { [address: string]: Token }, currency?: Currency): boolean {
-  const isDefault = isDefaultToken(currency)
-  return Boolean(!isDefault && currency instanceof Token && allTokens[currency.address])
+  return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 }
