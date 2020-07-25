@@ -42,8 +42,12 @@ export default function useWrapCallback(
         execute:
           sufficientBalance && inputAmount
             ? async () => {
-                const txReceipt = await wethContract.deposit({ value: `0x${inputAmount.raw.toString(16)}` })
-                addTransaction(txReceipt, { summary: `Wrap ${inputAmount.toSignificant(6)} ETH to WETH` })
+                try {
+                  const txReceipt = await wethContract.deposit({ value: `0x${inputAmount.raw.toString(16)}` })
+                  addTransaction(txReceipt, { summary: `Wrap ${inputAmount.toSignificant(6)} ETH to WETH` })
+                } catch (error) {
+                  console.error('Could not deposit', error)
+                }
               }
             : undefined,
         error: sufficientBalance ? undefined : 'Insufficient ETH balance'
@@ -54,8 +58,12 @@ export default function useWrapCallback(
         execute:
           sufficientBalance && inputAmount
             ? async () => {
-                const txReceipt = await wethContract.withdraw(`0x${inputAmount.raw.toString(16)}`)
-                addTransaction(txReceipt, { summary: `Unwrap ${inputAmount.toSignificant(6)} WETH to ETH` })
+                try {
+                  const txReceipt = await wethContract.withdraw(`0x${inputAmount.raw.toString(16)}`)
+                  addTransaction(txReceipt, { summary: `Unwrap ${inputAmount.toSignificant(6)} WETH to ETH` })
+                } catch (error) {
+                  console.error('Could not withdraw', error)
+                }
               }
             : undefined,
         error: sufficientBalance ? undefined : 'Insufficient WETH balance'

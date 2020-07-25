@@ -1,7 +1,7 @@
 import { parseBytes32String } from '@ethersproject/strings'
-import { ChainId, Currency, ETHER, Token } from '@uniswap/sdk'
+import { Currency, ETHER, Token } from '@uniswap/sdk'
 import { useMemo } from 'react'
-import { ALL_TOKENS } from '../constants/tokens'
+import { useDefaultTokenList } from '../state/lists/hooks'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
@@ -12,6 +12,7 @@ import { useBytes32TokenContract, useTokenContract } from './useContract'
 export function useAllTokens(): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
   const userAddedTokens = useUserAddedTokens()
+  const allTokens = useDefaultTokenList()
 
   return useMemo(() => {
     if (!chainId) return {}
@@ -25,10 +26,10 @@ export function useAllTokens(): { [address: string]: Token } {
           },
           // must make a copy because reduce modifies the map, and we do not
           // want to make a copy in every iteration
-          { ...ALL_TOKENS[chainId as ChainId] }
+          { ...allTokens[chainId] }
         )
     )
-  }, [userAddedTokens, chainId])
+  }, [chainId, userAddedTokens, allTokens])
 }
 
 // parse a name or symbol from a token response

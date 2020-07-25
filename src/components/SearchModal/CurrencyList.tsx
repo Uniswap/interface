@@ -5,6 +5,7 @@ import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
+import { useDefaultTokenList } from '../../state/lists/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
@@ -14,7 +15,7 @@ import { RowFixed } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
 import { FadedSpan, MenuItem } from './styleds'
 import Loader from '../Loader'
-import { isDefaultToken, isCustomAddedToken } from '../../utils'
+import { isDefaultToken } from '../../utils'
 
 function currencyKey(currency: Currency): string {
   return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
@@ -38,6 +39,7 @@ export default function CurrencyList({
   const { account, chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
   const allTokens = useAllTokens()
+  const defaultTokens = useDefaultTokenList()
   const addToken = useAddUserToken()
   const removeToken = useRemoveUserAddedToken()
   const ETHBalance = useETHBalances([account])[account]
@@ -46,8 +48,8 @@ export default function CurrencyList({
     return memo(function CurrencyRow({ index, style }: { index: number; style: CSSProperties }) {
       const currency = index === 0 ? Currency.ETHER : currencies[index - 1]
       const key = currencyKey(currency)
-      const isDefault = isDefaultToken(currency)
-      const customAdded = isCustomAddedToken(allTokens, currency)
+      const isDefault = isDefaultToken(defaultTokens, currency)
+      const customAdded = Boolean(!isDefault && currency instanceof Token && allTokens[currency.address])
       const balance = currency === ETHER ? ETHBalance : allBalances[key]
 
       const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
@@ -129,6 +131,7 @@ export default function CurrencyList({
     allTokens,
     chainId,
     currencies,
+    defaultTokens,
     onCurrencySelect,
     otherCurrency,
     removeToken,
