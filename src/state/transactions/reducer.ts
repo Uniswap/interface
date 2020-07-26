@@ -1,5 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { addTransaction, clearAllTransactions, finalizeTransaction, SerializableTransactionReceipt } from './actions'
+import {
+  addTransaction,
+  checkedTransaction,
+  clearAllTransactions,
+  finalizeTransaction,
+  SerializableTransactionReceipt
+} from './actions'
 
 const now = () => new Date().getTime()
 
@@ -8,12 +14,10 @@ export interface TransactionDetails {
   approval?: { tokenAddress: string; spender: string }
   summary?: string
   receipt?: SerializableTransactionReceipt
+  lastCheckedBlockNumber?: number
   addedTime: number
   confirmedTime?: number
   from: string
-
-  // set to true when we receive a transaction count that exceeds the nonce of this transaction
-  unknownStatus?: boolean
 }
 
 export interface TransactionState {
@@ -22,28 +26,39 @@ export interface TransactionState {
   }
 }
 
-const initialState: TransactionState = {}
+export const initialState: TransactionState = {}
 
 export default createReducer(initialState, builder =>
   builder
-    .addCase(addTransaction, (state, { payload: { chainId, from, hash, approval, summary } }) => {
-      if (state[chainId]?.[hash]) {
+    .addCase(addTransaction, (transactions, { payload: { chainId, from, hash, approval, summary } }) => {
+      if (transactions[chainId]?.[hash]) {
         throw Error('Attempted to add existing transaction.')
       }
-      state[chainId] = state[chainId] ?? {}
-      state[chainId][hash] = { hash, approval, summary, from, addedTime: now() }
+      const txs = transactions[chainId] ?? {}
+      txs[hash] = { hash, approval, summary, from, addedTime: now() }
+      transactions[chainId] = txs
     })
-    .addCase(clearAllTransactions, (state, { payload: { chainId } }) => {
-      if (!state[chainId]) return
-      state[chainId] = {}
+    .addCase(clearAllTransactions, (transactions, { payload: { chainId } }) => {
+      if (!transactions[chainId]) return
+      transactions[chainId] = {}
     })
-    .addCase(finalizeTransaction, (state, { payload: { hash, chainId, receipt } }) => {
-      if (!state[chainId]?.[hash]) {
-        throw Error('Attempted to finalize non-existent transaction.')
+    .addCase(checkedTransaction, (transactions, { payload: { chainId, hash, blockNumber } }) => {
+      const tx = transactions[chainId]?.[hash]
+      if (!tx) {
+        return
       }
-      state[chainId] = state[chainId] ?? {}
-      state[chainId][hash].receipt = receipt
-      state[chainId][hash].unknownStatus = false
-      state[chainId][hash].confirmedTime = now()
+      if (!tx.lastCheckedBlockNumber) {
+        tx.lastCheckedBlockNumber = blockNumber
+      } else {
+        tx.lastCheckedBlockNumber = Math.max(blockNumber, tx.lastCheckedBlockNumber)
+      }
+    })
+    .addCase(finalizeTransaction, (transactions, { payload: { hash, chainId, receipt } }) => {
+      const tx = transactions[chainId]?.[hash]
+      if (!tx) {
+        return
+      }
+      tx.receipt = receipt
+      tx.confirmedTime = now()
     })
 )

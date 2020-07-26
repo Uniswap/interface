@@ -12,6 +12,10 @@ import { useV1ExchangeContract } from './useContract'
 import useENS from './useENS'
 import { Version } from './useToggledVersion'
 
+function isZero(hexNumber: string) {
+  return /^0x0*$/.test(hexNumber)
+}
+
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
@@ -76,7 +80,7 @@ export function useSwapCallback(
 
       const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
         swapMethods.map(({ args, methodName, value }) =>
-          contract.estimateGas[methodName](...args, value ? { value } : {})
+          contract.estimateGas[methodName](...args, value && !isZero(value) ? { value } : {})
             .then(calculateGasMargin)
             .catch(error => {
               console.error(`estimateGas failed for ${methodName}`, error)
@@ -127,7 +131,7 @@ export function useSwapCallback(
 
         return contract[methodName](...args, {
           gasLimit: safeGasEstimate,
-          ...(value ? { value } : {})
+          ...(value && !isZero(value) ? { value } : {})
         })
           .then((response: any) => {
             const inputSymbol = trade.inputAmount.currency.symbol
