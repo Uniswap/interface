@@ -2,79 +2,48 @@ import { Currency, Token } from '@uniswap/sdk'
 import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
-import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
 import { useDefaultTokenList } from '../../state/lists/hooks'
 import { Field } from '../../state/swap/actions'
-import { useTokenWarningDismissal } from '../../state/user/hooks'
 import { ExternalLink, TYPE } from '../../theme'
 import { getEtherscanLink, isDefaultToken } from '../../utils'
 import PropsOfExcluding from '../../utils/props-of-excluding'
-import QuestionHelper from '../QuestionHelper'
 import CurrencyLogo from '../CurrencyLogo'
+import { AutoRow, RowBetween } from '../Row'
+import { AutoColumn } from '../Column'
+import { AlertTriangle } from 'react-feather'
+import { ButtonError } from '../Button'
 
 const Wrapper = styled.div<{ error: boolean }>`
-  background: ${({ theme, error }) => transparentize(0.9, error ? theme.red1 : theme.yellow1)};
-  position: relative;
+  background: ${({ theme }) => transparentize(0.6, theme.white)};
+  padding: 0.75rem;
+  border-radius: 20px;
+`
+
+const WarningContainer = styled.div`
+  max-width: 420px;
+  width: 100%;
   padding: 1rem;
-  /* border: 0.5px solid ${({ theme, error }) => transparentize(0.4, error ? theme.red1 : theme.yellow1)}; */
-  border-radius: 10px;
-  margin-bottom: 20px;
-  display: grid;
-  grid-template-rows: 14px auto auto;
-  grid-row-gap: 14px;
+  background: rgba(242, 150, 2, 0.05);
+  border: 1px solid #f3841e;
+  box-sizing: border-box;
+  border-radius: 20px;
+  margin-bottom: 2rem;
 `
-
-const Row = styled.div`
-  display: flex;
-  align-items: center;
-  justify-items: flex-start;
-  & > * {
-    margin-right: 6px;
-  }
-`
-
-const CloseColor = styled(Close)`
-  color: #aeaeae;
-`
-
-const CloseIcon = styled.div`
-  position: absolute;
-  right: 1rem;
-  top: 12px;
-  &:hover {
-    cursor: pointer;
-    opacity: 0.6;
-  }
-
-  & > * {
-    height: 16px;
-    width: 16px;
-  }
-`
-
-const HELP_TEXT = `
-The Uniswap V2 smart contracts are designed to support any ERC20 token on Ethereum. Any token can be
-loaded into the interface by entering its Ethereum address into the search field or passing it as a URL
-parameter.
-`
-
-const DUPLICATE_NAME_HELP_TEXT = `${HELP_TEXT} This token has the same name or symbol as another token in your list.`
 
 interface TokenWarningCardProps extends PropsOfExcluding<typeof Wrapper, 'error'> {
   token?: Token
+  dismissed: boolean
 }
 
-export default function TokenWarningCard({ token, ...rest }: TokenWarningCardProps) {
+export default function TokenWarningCard({ token, dismissed, ...rest }: TokenWarningCardProps) {
   const { chainId } = useActiveWeb3React()
   const defaultTokens = useDefaultTokenList()
   const isDefault = isDefaultToken(defaultTokens, token)
 
   const tokenSymbol = token?.symbol?.toLowerCase() ?? ''
   const tokenName = token?.name?.toLowerCase() ?? ''
-
-  const [dismissed, dismissTokenWarning] = useTokenWarningDismissal(chainId, token)
 
   const allTokens = useAllTokens()
 
@@ -94,48 +63,84 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
 
   return (
     <Wrapper error={duplicateNameOrSymbol} {...rest}>
-      {duplicateNameOrSymbol ? null : (
-        <CloseIcon onClick={dismissTokenWarning}>
-          <CloseColor />
-        </CloseIcon>
-      )}
-      <Row>
-        <TYPE.subHeader>{duplicateNameOrSymbol ? 'Duplicate token name or symbol' : 'Imported token'}</TYPE.subHeader>
-        <QuestionHelper text={duplicateNameOrSymbol ? DUPLICATE_NAME_HELP_TEXT : HELP_TEXT} />
-      </Row>
-      <Row>
-        <CurrencyLogo currency={token} />
-        <div style={{ fontWeight: 500 }}>
-          {token && token.name && token.symbol && token.name !== token.symbol
-            ? `${token.name} (${token.symbol})`
-            : token.name || token.symbol}
-        </div>
-        <ExternalLink style={{ fontWeight: 400 }} href={getEtherscanLink(chainId, token.address, 'token')}>
-          (View on Etherscan)
-        </ExternalLink>
-      </Row>
-      <Row>
-        <TYPE.italic>Verify this is the correct token before making any transactions.</TYPE.italic>
-      </Row>
+      <AutoRow gap="6px">
+        <AutoColumn gap="24px">
+          <CurrencyLogo currency={token} size={'16px'} />
+          <div> </div>
+        </AutoColumn>
+        <AutoColumn gap="10px" justify="flex-start">
+          <TYPE.main>
+            {token && token.name && token.symbol && token.name !== token.symbol
+              ? `${token.name} (${token.symbol})`
+              : token.name || token.symbol}
+          </TYPE.main>
+          <ExternalLink style={{ fontWeight: 400 }} href={getEtherscanLink(chainId, token.address, 'token')}>
+            <TYPE.blue> (View on Etherscan)</TYPE.blue>
+          </ExternalLink>
+        </AutoColumn>
+      </AutoRow>
     </Wrapper>
   )
 }
 
-const WarningContainer = styled.div`
-  max-width: 420px;
-  width: 100%;
-  padding-left: 1rem;
-  padding-right: 1rem;
-`
-
-export function TokenWarningCards({ currencies }: { currencies: { [field in Field]?: Currency } }) {
+export function TokenWarningCards({
+  currencies,
+  dismissedToken0,
+  dismissedToken1,
+  dismissToken0,
+  dismissToken1
+}: {
+  currencies: { [field in Field]?: Currency }
+  dismissedToken0: boolean
+  dismissedToken1: boolean
+  dismissToken0: (() => void) | null
+  dismissToken1: (() => void) | null
+}) {
   return (
     <WarningContainer>
-      {Object.keys(currencies).map(field =>
-        currencies[field] instanceof Token ? (
-          <TokenWarningCard style={{ marginBottom: 14 }} key={field} token={currencies[field]} />
-        ) : null
-      )}
+      <AutoColumn gap="lg">
+        <AutoRow gap="6px">
+          <AlertTriangle stroke="#F82D3A" />
+          <TYPE.main color={'#F82D3A'}>Token imported</TYPE.main>
+        </AutoRow>
+        <TYPE.body color={'#F82D3A'}>
+          Anyone can create and name any ERC20 token on Ethereum, including creating fake versions of existing tokens
+          and tokens that claim to represent projects that do not have a token.
+        </TYPE.body>
+        <TYPE.body color={'#F82D3A'}>
+          Similar to Etherscan, this site can load arbitrary tokens via token addresses. Please do your own research
+          before interacting with any ERC20 token.
+        </TYPE.body>
+        {Object.keys(currencies).map(field => {
+          return currencies[field] instanceof Token ? (
+            <TokenWarningCard
+              key={field}
+              token={currencies[field]}
+              dismissed={field === Field.INPUT ? dismissedToken0 : dismissedToken1}
+            />
+          ) : null
+        })}
+        <RowBetween>
+          <div />
+          <ButtonError
+            error={true}
+            width={'140px'}
+            padding="0.5rem 1rem"
+            style={{
+              borderRadius: '10px',
+              boxShadow:
+                '0px 0px 1px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 24px 32px rgba(0, 0, 0, 0.04);'
+            }}
+            onClick={() => {
+              dismissToken0 && dismissToken0()
+              dismissToken1 && dismissToken1()
+            }}
+          >
+            <TYPE.body color="white">I understand</TYPE.body>
+          </ButtonError>
+          <div />
+        </RowBetween>
+      </AutoColumn>
     </WarningContainer>
   )
 }
