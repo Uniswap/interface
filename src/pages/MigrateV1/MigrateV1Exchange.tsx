@@ -1,6 +1,6 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { AddressZero } from '@ethersproject/constants'
-import { Currency, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@uniswap/sdk'
+import { Currency, CurrencyAmount, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useCallback, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router'
@@ -28,21 +28,21 @@ import { getEtherscanLink, isAddress } from '../../utils'
 import { BodyWrapper } from '../AppBody'
 import { EmptyState } from './EmptyState'
 
-const POOL_TOKEN_AMOUNT_MIN = new Fraction(JSBI.BigInt(1), JSBI.BigInt(1000000))
+const POOL_CURRENCY_AMOUNT_MIN = new Fraction(JSBI.BigInt(1), JSBI.BigInt(1000000))
 const WEI_DENOM = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 const ZERO = JSBI.BigInt(0)
 const ONE = JSBI.BigInt(1)
 const ZERO_FRACTION = new Fraction(ZERO, ONE)
 const ALLOWED_OUTPUT_MIN_PERCENT = new Percent(JSBI.BigInt(10000 - INITIAL_ALLOWED_SLIPPAGE), JSBI.BigInt(10000))
 
-function FormattedPoolTokenAmount({ tokenAmount }: { tokenAmount: TokenAmount }) {
+function FormattedPoolCurrencyAmount({ currencyAmount }: { currencyAmount: CurrencyAmount }) {
   return (
     <>
-      {tokenAmount.equalTo(JSBI.BigInt(0))
+      {currencyAmount.equalTo(JSBI.BigInt(0))
         ? '0'
-        : tokenAmount.greaterThan(POOL_TOKEN_AMOUNT_MIN)
-        ? tokenAmount.toSignificant(4)
-        : `<${POOL_TOKEN_AMOUNT_MIN.toSignificant(1)}`}
+        : currencyAmount.greaterThan(POOL_CURRENCY_AMOUNT_MIN)
+        ? currencyAmount.toSignificant(4)
+        : `<${POOL_CURRENCY_AMOUNT_MIN.toSignificant(1)}`}
     </>
   )
 }
@@ -56,7 +56,7 @@ export function V1LiquidityInfo({
   token: Token
   liquidityTokenAmount: TokenAmount
   tokenWorth: TokenAmount
-  ethWorth: Fraction
+  ethWorth: CurrencyAmount
 }) {
   const { chainId } = useActiveWeb3React()
 
@@ -66,7 +66,7 @@ export function V1LiquidityInfo({
         <CurrencyLogo size="24px" currency={token} />
         <div style={{ marginLeft: '.75rem' }}>
           <TYPE.mediumHeader>
-            {<FormattedPoolTokenAmount tokenAmount={liquidityTokenAmount} />}{' '}
+            {<FormattedPoolCurrencyAmount currencyAmount={liquidityTokenAmount} />}{' '}
             {token.equals(WETH[chainId]) ? 'WETH' : token.symbol}/ETH
           </TYPE.mediumHeader>
         </div>
@@ -89,7 +89,7 @@ export function V1LiquidityInfo({
         </Text>
         <RowFixed>
           <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-            {ethWorth.toSignificant(4)}
+            <FormattedPoolCurrencyAmount currencyAmount={ethWorth} />
           </Text>
           <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={Currency.ETHER} />
         </RowFixed>
@@ -114,9 +114,9 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
 
   const shareFraction: Fraction = totalSupply ? new Percent(liquidityTokenAmount.raw, totalSupply.raw) : ZERO_FRACTION
 
-  const ethWorth: Fraction = exchangeETHBalance
-    ? new Fraction(shareFraction.multiply(exchangeETHBalance).quotient, WEI_DENOM)
-    : ZERO_FRACTION
+  const ethWorth: CurrencyAmount = exchangeETHBalance
+    ? CurrencyAmount.ether(exchangeETHBalance.multiply(shareFraction).multiply(WEI_DENOM).quotient)
+    : CurrencyAmount.ether(ZERO)
 
   const tokenWorth: TokenAmount = exchangeTokenBalance
     ? new TokenAmount(token, shareFraction.multiply(exchangeTokenBalance.raw).quotient)
