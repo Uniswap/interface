@@ -154,7 +154,7 @@ export default function RemoveV1Exchange({
   }
 
   return (
-    <BodyWrapper style={{ padding: 24 }}>
+    <BodyWrapper style={{ padding: 24 }} id="remove-v1-exchange">
       <AutoColumn gap="16px">
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrow to="/migrate/v1" />
