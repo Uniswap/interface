@@ -2,6 +2,7 @@ import { ChainId } from '@uniswap/sdk'
 import React from 'react'
 import { isMobile } from 'react-device-detect'
 import { Text } from 'rebass'
+import { Link } from 'react-router-dom'
 
 import styled from 'styled-components'
 
@@ -143,7 +144,7 @@ export default function Header() {
   return (
     <HeaderFrame>
       <RowBetween style={{ alignItems: 'flex-start' }} padding="1rem 1rem 0 1rem">
-        <HeaderElement>
+        {/* <HeaderElement>
           <Title href=".">
             <UniIcon>
               <img src={isDark ? LogoDark : Logo} alt="logo" />
@@ -152,7 +153,16 @@ export default function Header() {
               <img style={{ marginLeft: '4px', marginTop: '4px' }} src={isDark ? WordmarkDark : Wordmark} alt="logo" />
             </TitleText>
           </Title>
-        </HeaderElement>
+        </HeaderElement> */}
+        <a
+          rel="noreferrer"
+          target="_blank"
+          style={{ color: 'white', textDecoration: 'none' }}
+          href="https://www.tryroll.com"
+        >
+          <h4 id="title">Roll - Social Money</h4>
+        </a>
+
         <HeaderControls>
           <HeaderElement>
             <TestnetWrapper>

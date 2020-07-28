@@ -1,0 +1,13 @@
+{
+    "repository": {
+        "repositoryArn": "arn:aws:ecr:us-east-1:996458161782:repository/uniswap-exchange",
+        "registryId": "996458161782",
+        "repositoryName": "uniswap-exchange",
+        "repositoryUri": "996458161782.dkr.ecr.us-east-1.amazonaws.com/uniswap-exchange",
+        "createdAt": 1575997427.0,
+        "imageTagMutability": "MUTABLE",
+        "imageScanningConfiguration": {
+            "scanOnPush": false
+        }
+    }
+}
