@@ -1,3 +1,4 @@
+import React from 'react'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, currencyEquals, ETHER, Token } from '@uniswap/sdk-core'
 import { arrayify } from 'ethers/lib/utils'
@@ -104,6 +105,20 @@ export function useIsUserAddedToken(currency: Currency | undefined | null): bool
   }
 
   return !!userAddedTokens.find((token) => currencyEquals(currency, token))
+    const value = userAddedTokens
+      // reduce into all ALL_TOKENS filtered by the current chain
+      .reduce<{ [address: string]: Token }>(
+        (tokenMap, token) => {
+          tokenMap[token.address] = token
+          return tokenMap
+        },
+        // must make a copy because reduce modifies the map, and we do not
+        // want to make a copy in every iteration
+        { ...allTokens[chainId] }
+      )
+
+    return value
+  }, [chainId, userAddedTokens, allTokens])
 }
 
 // parse a name or symbol from a token response

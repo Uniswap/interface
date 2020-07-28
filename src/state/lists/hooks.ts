@@ -27,6 +27,17 @@ const EMPTY_LIST: TokenAddressMap = {
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
   typeof WeakMap !== 'undefined' ? new WeakMap<TokenList, TokenAddressMap>() : null
 
+const buildToken = (rollExchangeToken: any): TokenInfo => {
+  return {
+    address: rollExchangeToken.token.contractAddress,
+    chainId: 1,
+    decimals: rollExchangeToken.token.decimals,
+    logoURI: rollExchangeToken.token.tokenImage,
+    name: rollExchangeToken.token.name,
+    symbol: rollExchangeToken.token.symbol
+  }
+}
+
 export function listToTokenMap(list: TokenList): TokenAddressMap {
   const result = listCache?.get(list)
   if (result) return result
@@ -38,6 +49,8 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
         console.error(new Error(`Duplicate token! ${token.address}`))
         return tokenMap
       }
+      const token = new WrappedTokenInfo(buildToken(tokenInfo))
+      if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.')
       return {
         ...tokenMap,
         [token.chainId]: {
@@ -59,6 +72,14 @@ const TRANSFORMED_DEFAULT_TOKEN_LIST = listToTokenMap(DEFAULT_TOKEN_LIST)
 
 export function useAllLists(): AppState['lists']['byUrl'] {
   return useSelector<AppState, AppState['lists']['byUrl']>((state) => state.lists.byUrl)
+export function useTokenList(url: string): TokenAddressMap {
+  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+
+  return useMemo(() => {
+    const current = lists[url]?.current
+    if (!current) return EMPTY_LIST
+    return listToTokenMap(current)
+  }, [lists, url])
 }
 
 function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
