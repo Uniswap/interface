@@ -7,6 +7,9 @@ import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
 import { Moon, Sun } from 'react-feather'
 import styled from 'styled-components/macro'
+import { Link } from 'react-router-dom'
+
+import styled from 'styled-components'
 
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
@@ -397,6 +400,48 @@ export default function Header() {
           <Menu />
         </HeaderElementWrap>
       </HeaderControls>
+    <HeaderFrame>
+      <RowBetween style={{ alignItems: 'flex-start' }} padding="1rem 1rem 0 1rem">
+        {/* <HeaderElement>
+          <Title href=".">
+            <UniIcon>
+              <img src={isDark ? LogoDark : Logo} alt="logo" />
+            </UniIcon>
+            <TitleText>
+              <img style={{ marginLeft: '4px', marginTop: '4px' }} src={isDark ? WordmarkDark : Wordmark} alt="logo" />
+            </TitleText>
+          </Title>
+        </HeaderElement> */}
+        <a
+          rel="noreferrer"
+          target="_blank"
+          style={{ color: 'white', textDecoration: 'none' }}
+          href="https://www.tryroll.com"
+        >
+          <h4 id="title">Roll - Social Money</h4>
+        </a>
+
+        <HeaderControls>
+          <HeaderElement>
+            <TestnetWrapper>
+              {!isMobile && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
+            </TestnetWrapper>
+            <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
+              {account && userEthBalance ? (
+                <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+                  {userEthBalance?.toSignificant(4)} ETH
+                </BalanceText>
+              ) : null}
+              <Web3Status />
+            </AccountElement>
+          </HeaderElement>
+          <HeaderElementWrap>
+            <VersionSwitch />
+            <Settings />
+            <Menu />
+          </HeaderElementWrap>
+        </HeaderControls>
+      </RowBetween>
     </HeaderFrame>
   )
 }

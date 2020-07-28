@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uniswap-exchange-deployment
+  labels:
+    app: uniswap-exchange
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: uniswap-exchange
+  template:
+    metadata:
+      labels:
+        app: uniswap-exchange
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: uniswap-exchange
+        image: 996458161782.dkr.ecr.us-east-1.amazonaws.com/uniswap-exchange:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        ports:
+        - name: http-server
+          containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: "uniswap-exchange"
+  labels:
+    app: uniswap-exchange
+spec:
+  ports:
+  - port: 80
+    targetPort: http-server
+  selector:
+    app: uniswap-exchange
+  type: ClusterIP

@@ -87,3 +87,7 @@ linked from the [v1.0.0 release](https://github.com/Uniswap/uniswap-interface/re
 - modify src/state/lists/actions.ts getTokenList() to construct the data structure returned from https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json
 
 - modify src/state/lists/hooks.ts listToTokenMap() to build a TokenInfo object based of Roll's json response, allowing the instantiation of a WrappedTokenInfo class
+
+- Update favicon to Roll logo
+
+- Update header `src/components/Header/index.tsx` to use roll header and link to tryroll.com
