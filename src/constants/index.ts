@@ -152,4 +152,4 @@ export const BETTER_TRADE_LINK_THRESHOLD = new Percent(JSBI.BigInt(75), JSBI.Big
 // export const DEFAULT_TOKEN_LIST_URL =
 //   'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json'
 
-export const DEFAULT_TOKEN_LIST_URL = 'http://localhost:9000/v1/tokens/exchange'
+export const DEFAULT_TOKEN_LIST_URL = 'https://api.tryroll.com/v1/tokens/exchange'
