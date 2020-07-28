@@ -32,12 +32,15 @@ const WarningContainer = styled.div`
   margin-bottom: 2rem;
 `
 
+const StyledWarningIcon = styled(AlertTriangle)`
+  stroke: ${({ theme }) => theme.red2};
+`
+
 interface TokenWarningCardProps extends PropsOfExcluding<typeof Wrapper, 'error'> {
   token?: Token
-  dismissed: boolean
 }
 
-export default function TokenWarningCard({ token, dismissed, ...rest }: TokenWarningCardProps) {
+export default function TokenWarningCard({ token, ...rest }: TokenWarningCardProps) {
   const { chainId } = useActiveWeb3React()
   const defaultTokens = useDefaultTokenList()
   const isDefault = isDefaultToken(defaultTokens, token)
@@ -59,7 +62,7 @@ export default function TokenWarningCard({ token, dismissed, ...rest }: TokenWar
     })
   }, [isDefault, token, chainId, allTokens, tokenSymbol, tokenName])
 
-  if (isDefault || !token || dismissed) return null
+  if (isDefault || !token) return null
 
   return (
     <Wrapper error={duplicateNameOrSymbol} {...rest}>
@@ -100,24 +103,21 @@ export function TokenWarningCards({
     <WarningContainer>
       <AutoColumn gap="lg">
         <AutoRow gap="6px">
-          <AlertTriangle stroke="#F82D3A" />
-          <TYPE.main color={'#F82D3A'}>Token imported</TYPE.main>
+          <StyledWarningIcon />
+          <TYPE.main color={'red2'}>Token imported</TYPE.main>
         </AutoRow>
-        <TYPE.body color={'#F82D3A'}>
+        <TYPE.body color={'red2'}>
           Anyone can create and name any ERC20 token on Ethereum, including creating fake versions of existing tokens
           and tokens that claim to represent projects that do not have a token.
         </TYPE.body>
-        <TYPE.body color={'#F82D3A'}>
+        <TYPE.body color={'red2'}>
           Similar to Etherscan, this site can load arbitrary tokens via token addresses. Please do your own research
           before interacting with any ERC20 token.
         </TYPE.body>
         {Object.keys(currencies).map(field => {
-          return currencies[field] instanceof Token ? (
-            <TokenWarningCard
-              key={field}
-              token={currencies[field]}
-              dismissed={field === Field.INPUT ? dismissedToken0 : dismissedToken1}
-            />
+          const dismissed = field === Field.INPUT ? dismissedToken0 : dismissedToken1
+          return currencies[field] instanceof Token && !dismissed ? (
+            <TokenWarningCard key={field} token={currencies[field]} />
           ) : null
         })}
         <RowBetween>

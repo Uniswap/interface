@@ -248,7 +248,8 @@ export default function Swap() {
 
   const [dismissedToken0, dismissToken0] = useTokenWarningDismissal(chainId, currencies[Field.INPUT])
   const [dismissedToken1, dismissToken1] = useTokenWarningDismissal(chainId, currencies[Field.OUTPUT])
-  const showWarning = (!dismissedToken0 && currencies[Field.INPUT]) || (!dismissedToken1 && currencies[Field.OUTPUT])
+  const showWarning =
+    (!dismissedToken0 && !!currencies[Field.INPUT]) || (!dismissedToken1 && !!currencies[Field.OUTPUT])
 
   return (
     <>
