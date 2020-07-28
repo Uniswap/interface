@@ -100,7 +100,7 @@ export function TokenWarningCards({
   dismissToken1: (() => void) | null
 }) {
   return (
-    <WarningContainer>
+    <WarningContainer className="token-warning-container">
       <AutoColumn gap="lg">
         <AutoRow gap="6px">
           <StyledWarningIcon />
@@ -134,7 +134,9 @@ export function TokenWarningCards({
               dismissToken1 && dismissToken1()
             }}
           >
-            <TYPE.body color="white">I understand</TYPE.body>
+            <TYPE.body color="white" className="token-dismiss-button">
+              I understand
+            </TYPE.body>
           </ButtonError>
           <div />
         </RowBetween>
