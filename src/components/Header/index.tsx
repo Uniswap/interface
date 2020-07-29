@@ -415,7 +415,7 @@ export default function Header() {
         <a
           rel="noreferrer"
           target="_blank"
-          style={{ color: 'white', textDecoration: 'none' }}
+          style={{ color: isDark ? 'white' : 'black', textDecoration: 'none' }}
           href="https://www.tryroll.com"
         >
           <h4 id="title">Roll - Social Money</h4>
