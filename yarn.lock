@@ -2681,10 +2681,10 @@
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
 
-"@uniswap/token-lists@^1.0.0-beta.9":
-  version "1.0.0-beta.10"
-  resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.10.tgz#9788fdd65c3720f1f7cc3ef262f507ea3f4ac062"
-  integrity sha512-NCdJC6Zlb62GN9oiYZoI0PMm26G5vu2CnBYAkR4rEPUqqKuxagdqntjOt2XfwklQaeSc9egwXUdbAOTU8wgjyA==
+"@uniswap/token-lists@^1.0.0-beta.11":
+  version "1.0.0-beta.11"
+  resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.11.tgz#365dd55d536c67fa550554c0658391bfbc2930b7"
+  integrity sha512-dGHdb58d+rN7G164ziPP6omb1R0hwBVgs95er83OzXKkVRlLKE/FLSdgpDaTxLj1war+P/hZXw2/ToYcKFsobQ==
 
 "@uniswap/v2-core@1.0.0":
   version "1.0.0"
