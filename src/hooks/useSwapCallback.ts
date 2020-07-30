@@ -222,14 +222,15 @@ export function useSwapCallback(
     }
   }, [
     trade,
-    recipient,
     library,
     account,
     chainId,
+    recipient,
+    loadingGasEstimation,
     indexOfSuccessfulEstimation,
-    swapCalls,
-    gasEstimates,
     recipientAddressOrName,
+    gasEstimates,
+    swapCalls,
     addTransaction
   ])
 }
