@@ -311,7 +311,7 @@ export default function AddLiquidity({
             }}
             attemptingTxn={attemptingTxn}
             hash={txHash}
-            topContent={() => modalHeader()}
+            topContent={modalHeader}
             bottomContent={modalBottom}
             pendingText={pendingText}
             title={noLiquidity ? 'You are creating a pool' : 'You will receive'}
