@@ -1,10 +1,8 @@
-import { Version } from './../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
 import { ChainId, JSBI, Token, TokenAmount, Trade, WETH } from 'dxswap-sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useV1Trade } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useToken } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
@@ -14,7 +12,6 @@ import { AppDispatch, AppState } from '../index'
 import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
 import { Field, replaceSwapState, selectToken, switchTokens, typeInput } from './actions'
 import { SwapState } from './reducer'
-import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
 
@@ -83,11 +80,8 @@ export function useDerivedSwapInfo(): {
   parsedAmount: TokenAmount | undefined
   bestTrade: Trade | null
   error?: string
-  v1Trade: Trade | undefined
 } {
   const { account } = useActiveWeb3React()
-
-  const toggledVersion = useToggledVersion()
 
   const {
     independentField,
@@ -122,9 +116,6 @@ export function useDerivedSwapInfo(): {
     [Field.OUTPUT]: tokenOut ?? undefined
   }
 
-  // get link to trade on v1, if a better rate exists
-  const v1Trade = useV1Trade(isExactIn, tokens[Field.INPUT], tokens[Field.OUTPUT], parsedAmount)
-
   let error: string | undefined
   if (!account) {
     error = 'Connect Wallet'
@@ -143,17 +134,10 @@ export function useDerivedSwapInfo(): {
   const slippageAdjustedAmounts =
     bestTrade && allowedSlippage && computeSlippageAdjustedAmounts(bestTrade, allowedSlippage)
 
-  const slippageAdjustedAmountsV1 =
-    v1Trade && allowedSlippage && computeSlippageAdjustedAmounts(v1Trade, allowedSlippage)
-
   // compare input balance to MAx input based on version
   const [balanceIn, amountIn] = [
     tokenBalances[Field.INPUT],
-    toggledVersion === Version.v1
-      ? slippageAdjustedAmountsV1
-        ? slippageAdjustedAmountsV1[Field.INPUT]
-        : null
-      : slippageAdjustedAmounts
+    slippageAdjustedAmounts
       ? slippageAdjustedAmounts[Field.INPUT]
       : null
   ]
@@ -168,7 +152,6 @@ export function useDerivedSwapInfo(): {
     parsedAmount,
     bestTrade,
     error,
-    v1Trade
   }
 }
 

@@ -19,17 +19,14 @@ import SwapModalFooter from '../../components/swap/SwapModalFooter'
 import { ArrowWrapper, BottomGrouping, Dots, InputGroup, StyledNumerical, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
 import { TransferModalHeader } from '../../components/swap/TransferModalHeader'
-import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import TokenLogo from '../../components/TokenLogo'
 import { TokenWarningCards } from '../../components/TokenWarningCard'
 import { INITIAL_ALLOWED_SLIPPAGE, MIN_ETH, BETTER_TRADE_LINK_THRESHOLD } from '../../constants'
-import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useApproveCallbackFromTrade, ApprovalState } from '../../hooks/useApproveCallback'
 import { useSendCallback } from '../../hooks/useSendCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useWalletModalToggle, useToggleSettingsMenu } from '../../state/application/hooks'
-import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
@@ -72,22 +69,10 @@ export default function Send() {
     bestTrade: bestTradeDXswap,
     tokenBalances,
     tokens,
-    error: swapError,
-    v1Trade
+    error: swapError
   } = useDerivedSwapInfo()
 
-  const toggledVersion = useToggledVersion()
-  const bestTrade = {
-    [Version.v1]: v1Trade,
-    [Version.v2]: bestTradeDXswap
-  }[toggledVersion]
-
-  const betterTradeLinkVersion: Version | undefined =
-    toggledVersion === Version.v2 && isTradeBetter(bestTradeDXswap, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
-      ? Version.v1
-      : toggledVersion === Version.v1 && isTradeBetter(v1Trade, bestTradeDXswap)
-      ? Version.v2
-      : undefined
+  const bestTrade = bestTradeDXswap
 
   const parsedAmounts = {
     [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : bestTrade?.inputAmount,
@@ -177,7 +162,7 @@ export default function Send() {
           label: [
             bestTrade.inputAmount.token.symbol,
             bestTrade.outputAmount.token.symbol,
-            getTradeVersion(bestTrade)
+            'v2'
           ].join('/')
         })
       })
@@ -583,7 +568,6 @@ export default function Send() {
                 </Text>
               </ButtonError>
             )}
-            {betterTradeLinkVersion && <BetterTradeLink version={betterTradeLinkVersion} />}
           </BottomGrouping>
         </Wrapper>
       </AppBody>
