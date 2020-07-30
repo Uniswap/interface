@@ -63,8 +63,15 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
-  const { v1Trade, v2Trade, currencyBalances, parsedAmount, currencies, error } = useDerivedSwapInfo()
-  const { wrapType, execute: onWrap, error: wrapError } = useWrapCallback(
+  const {
+    v1Trade,
+    v2Trade,
+    currencyBalances,
+    parsedAmount,
+    currencies,
+    inputError: swapInputError
+  } = useDerivedSwapInfo()
+  const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],
     currencies[Field.OUTPUT],
     typedValue
@@ -97,7 +104,7 @@ export default function Swap() {
       }
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
-  const isValid = !error
+  const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   const handleTypeInput = useCallback(
@@ -205,7 +212,7 @@ export default function Swap() {
   // show approve flow when: no error on inputs, not approved or pending, or approved in current session
   // never show if price impact is above threshold in non expert mode
   const showApproveFlow =
-    !error &&
+    !swapInputError &&
     (approval === ApprovalState.NOT_APPROVED ||
       approval === ApprovalState.PENDING ||
       (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
@@ -368,8 +375,9 @@ export default function Swap() {
             {!account ? (
               <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
             ) : showWrap ? (
-              <ButtonPrimary disabled={Boolean(wrapError)} onClick={onWrap}>
-                {wrapError ?? (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
+              <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
+                {wrapInputError ??
+                  (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
               </ButtonPrimary>
             ) : noRoute && userHasSpecifiedInputOutput ? (
               <GreyCard style={{ textAlign: 'center' }}>
@@ -417,15 +425,15 @@ export default function Swap() {
                 error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
               >
                 <Text fontSize={20} fontWeight={500}>
-                  {error
-                    ? error
+                  {swapInputError
+                    ? swapInputError
                     : priceImpactSeverity > 3 && !expertMode
                     ? `Price Impact Too High`
                     : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                 </Text>
               </ButtonError>
             )}
-            {!error && swapCallbackError ? (
+            {!swapInputError && swapCallbackError ? (
               <SwapCallbackError>
                 <AlertTriangle style={{ marginRight: 8, minWidth: 42 }} /> <strong>{swapCallbackError}</strong>
               </SwapCallbackError>

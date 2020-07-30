@@ -94,7 +94,7 @@ export function useDerivedSwapInfo(): {
   currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
   v2Trade: Trade | undefined
-  error?: string
+  inputError?: string
   v1Trade: Trade | undefined
 } {
   const { account } = useActiveWeb3React()
@@ -140,21 +140,21 @@ export function useDerivedSwapInfo(): {
   // get link to trade on v1, if a better rate exists
   const v1Trade = useV1Trade(isExactIn, currencies[Field.INPUT], currencies[Field.OUTPUT], parsedAmount)
 
-  let error: string | undefined
+  let inputError: string | undefined
   if (!account) {
-    error = 'Connect Wallet'
+    inputError = 'Connect Wallet'
   }
 
   if (!parsedAmount) {
-    error = error ?? 'Enter an amount'
+    inputError = inputError ?? 'Enter an amount'
   }
 
   if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
-    error = error ?? 'Select a token'
+    inputError = inputError ?? 'Select a token'
   }
 
   if (!to) {
-    error = error ?? 'Enter a recipient'
+    inputError = inputError ?? 'Enter a recipient'
   }
 
   const [allowedSlippage] = useUserSlippageTolerance()
@@ -177,7 +177,7 @@ export function useDerivedSwapInfo(): {
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-    error = 'Insufficient ' + amountIn.currency.symbol + ' balance'
+    inputError = 'Insufficient ' + amountIn.currency.symbol + ' balance'
   }
 
   return {
@@ -185,7 +185,7 @@ export function useDerivedSwapInfo(): {
     currencyBalances,
     parsedAmount,
     v2Trade: v2Trade ?? undefined,
-    error,
+    inputError,
     v1Trade
   }
 }
