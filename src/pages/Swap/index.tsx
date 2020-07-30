@@ -37,7 +37,12 @@ import {
   useSwapActionHandlers,
   useSwapState
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
+import {
+  useExpertModeManager,
+  useUserDeadline,
+  useUserSlippageTolerance,
+  useTokenWarningDismissal
+} from '../../state/user/hooks'
 import { CursorPointer, LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
@@ -47,7 +52,7 @@ import { ClickableText } from '../Pool/styleds'
 export default function Swap() {
   useDefaultsFromURLSearch()
 
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
@@ -241,10 +246,15 @@ export default function Swap() {
     currencies[Field.INPUT]?.symbol
   } for ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${currencies[Field.OUTPUT]?.symbol}`
 
+  const [dismissedToken0] = useTokenWarningDismissal(chainId, currencies[Field.INPUT])
+  const [dismissedToken1] = useTokenWarningDismissal(chainId, currencies[Field.OUTPUT])
+  const showWarning =
+    (!dismissedToken0 && !!currencies[Field.INPUT]) || (!dismissedToken1 && !!currencies[Field.OUTPUT])
+
   return (
     <>
-      <TokenWarningCards currencies={currencies} />
-      <AppBody>
+      {showWarning && <TokenWarningCards currencies={currencies} />}
+      <AppBody disabled={!!showWarning}>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
           <ConfirmationModal
@@ -424,7 +434,6 @@ export default function Swap() {
           </BottomGrouping>
         </Wrapper>
       </AppBody>
-
       <AdvancedSwapDetailsDropdown trade={trade} />
     </>
   )
