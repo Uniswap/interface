@@ -35,7 +35,7 @@ async function getTokenList(listUrl: string): Promise<TokenList> {
       version: {
         major: 1,
         minor: 0,
-        patch: 2
+        patch: 3
       },
       tags: {},
       logoURI: '',
