@@ -14,6 +14,7 @@ import { AutoRow, RowBetween } from '../Row'
 import { AutoColumn } from '../Column'
 import { AlertTriangle } from 'react-feather'
 import { ButtonError } from '../Button'
+import { useTokenWarningDismissal } from '../../state/user/hooks'
 
 const Wrapper = styled.div<{ error: boolean }>`
   background: ${({ theme }) => transparentize(0.6, theme.white)};
@@ -86,19 +87,11 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
   )
 }
 
-export function TokenWarningCards({
-  currencies,
-  dismissedToken0,
-  dismissedToken1,
-  dismissToken0,
-  dismissToken1
-}: {
-  currencies: { [field in Field]?: Currency }
-  dismissedToken0: boolean
-  dismissedToken1: boolean
-  dismissToken0: (() => void) | null
-  dismissToken1: (() => void) | null
-}) {
+export function TokenWarningCards({ currencies }: { currencies: { [field in Field]?: Currency } }) {
+  const { chainId } = useActiveWeb3React()
+  const [dismissedToken0, dismissToken0] = useTokenWarningDismissal(chainId, currencies[Field.INPUT])
+  const [dismissedToken1, dismissToken1] = useTokenWarningDismissal(chainId, currencies[Field.OUTPUT])
+
   return (
     <WarningContainer className="token-warning-container">
       <AutoColumn gap="lg">

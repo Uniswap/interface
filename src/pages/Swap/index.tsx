@@ -246,22 +246,14 @@ export default function Swap() {
     currencies[Field.INPUT]?.symbol
   } for ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${currencies[Field.OUTPUT]?.symbol}`
 
-  const [dismissedToken0, dismissToken0] = useTokenWarningDismissal(chainId, currencies[Field.INPUT])
-  const [dismissedToken1, dismissToken1] = useTokenWarningDismissal(chainId, currencies[Field.OUTPUT])
+  const [dismissedToken0] = useTokenWarningDismissal(chainId, currencies[Field.INPUT])
+  const [dismissedToken1] = useTokenWarningDismissal(chainId, currencies[Field.OUTPUT])
   const showWarning =
     (!dismissedToken0 && !!currencies[Field.INPUT]) || (!dismissedToken1 && !!currencies[Field.OUTPUT])
 
   return (
     <>
-      {showWarning && (
-        <TokenWarningCards
-          currencies={currencies}
-          dismissedToken0={dismissedToken0}
-          dismissedToken1={dismissedToken1}
-          dismissToken0={dismissToken0}
-          dismissToken1={dismissToken1}
-        />
-      )}
+      {showWarning && <TokenWarningCards currencies={currencies} />}
       <AppBody disabled={!!showWarning}>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
