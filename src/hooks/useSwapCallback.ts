@@ -1,19 +1,96 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { JSBI, Percent, Router, Trade, TradeType } from '@uniswap/sdk'
+import { JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { BIPS_BASE, DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin, getRouterContract, isAddress, shortenAddress } from '../utils'
+import isZero from '../utils/isZero'
 import v1SwapArguments from '../utils/v1SwapArguments'
 import { useActiveWeb3React } from './index'
 import { useV1ExchangeContract } from './useContract'
 import useENS from './useENS'
+import useGasEstimates, { EstimatableContractCall, GasEstimateState } from './useGasEstimates'
 import { Version } from './useToggledVersion'
 
-function isZero(hexNumber: string) {
-  return /^0x0*$/.test(hexNumber)
+export enum SwapCallbackState {
+  INVALID,
+  LOADING,
+  VALID
+}
+
+interface SwapCall {
+  contract: Contract
+  parameters: SwapParameters
+}
+
+/**
+ * Returns the swap calls that can be used to make the trade
+ * @param trade trade to execute
+ * @param allowedSlippage user allowed slippage
+ * @param deadline the deadline for the trade
+ * @param recipientAddressOrName
+ */
+function useSwapCallArguments(
+  trade: Trade | undefined, // trade to execute, required
+  allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
+  deadline: number = DEFAULT_DEADLINE_FROM_NOW, // in seconds from now
+  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+): SwapCall[] {
+  const { account, chainId, library } = useActiveWeb3React()
+
+  const { address: recipientAddress } = useENS(recipientAddressOrName)
+  const recipient = recipientAddressOrName === null ? account : recipientAddress
+
+  const v1Exchange = useV1ExchangeContract(useV1TradeExchangeAddress(trade), true)
+
+  return useMemo(() => {
+    const tradeVersion = getTradeVersion(trade)
+    if (!trade || !recipient || !library || !account || !tradeVersion || !chainId) return []
+
+    const contract: Contract | null =
+      tradeVersion === Version.v2 ? getRouterContract(chainId, library, account) : v1Exchange
+    if (!contract) {
+      return []
+    }
+
+    const swapMethods = []
+
+    switch (tradeVersion) {
+      case Version.v2:
+        swapMethods.push(
+          Router.swapCallParameters(trade, {
+            feeOnTransfer: false,
+            allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+            recipient,
+            ttl: deadline
+          })
+        )
+
+        if (trade.tradeType === TradeType.EXACT_INPUT) {
+          swapMethods.push(
+            Router.swapCallParameters(trade, {
+              feeOnTransfer: true,
+              allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+              recipient,
+              ttl: deadline
+            })
+          )
+        }
+        break
+      case Version.v1:
+        swapMethods.push(
+          v1SwapArguments(trade, {
+            allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+            recipient,
+            ttl: deadline
+          })
+        )
+        break
+    }
+    return swapMethods.map(parameters => ({ parameters, contract }))
+  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade, v1Exchange])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
@@ -23,114 +100,85 @@ export function useSwapCallback(
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   deadline: number = DEFAULT_DEADLINE_FROM_NOW, // in seconds from now
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-): null | (() => Promise<string>) {
+): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
+
+  const swapCalls = useSwapCallArguments(trade, allowedSlippage, deadline, recipientAddressOrName)
+  const estimatableSwapCalls: EstimatableContractCall[] = useMemo(
+    () =>
+      swapCalls.map(({ contract, parameters: { methodName, args, value } }) => ({
+        contract,
+        methodName,
+        value,
+        args
+      })),
+    [swapCalls]
+  )
+  const gasEstimates = useGasEstimates(estimatableSwapCalls)
+  const [indexOfSuccessfulEstimation, loadingGasEstimation] = useMemo(
+    () => [
+      gasEstimates.findIndex(([, estimate]) => BigNumber.isBigNumber(estimate)),
+      gasEstimates.some(([state]) => state === GasEstimateState.LOADING)
+    ],
+    [gasEstimates]
+  )
+
   const addTransaction = useTransactionAdder()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
-  const tradeVersion = getTradeVersion(trade)
-  const v1Exchange = useV1ExchangeContract(useV1TradeExchangeAddress(trade), true)
-
   return useMemo(() => {
-    if (!trade || !recipient || !library || !account || !tradeVersion || !chainId) return null
-
-    return async function onSwap() {
-      const contract: Contract | null =
-        tradeVersion === Version.v2 ? getRouterContract(chainId, library, account) : v1Exchange
-      if (!contract) {
-        throw new Error('Failed to get a swap contract')
-      }
-
-      const swapMethods = []
-
-      switch (tradeVersion) {
-        case Version.v2:
-          swapMethods.push(
-            Router.swapCallParameters(trade, {
-              feeOnTransfer: false,
-              allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-              recipient,
-              ttl: deadline
-            })
-          )
-
-          if (trade.tradeType === TradeType.EXACT_INPUT) {
-            swapMethods.push(
-              Router.swapCallParameters(trade, {
-                feeOnTransfer: true,
-                allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-                recipient,
-                ttl: deadline
-              })
-            )
-          }
-          break
-        case Version.v1:
-          swapMethods.push(
-            v1SwapArguments(trade, {
-              allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-              recipient,
-              ttl: deadline
-            })
-          )
-          break
-      }
-
-      const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
-        swapMethods.map(({ args, methodName, value }) =>
-          contract.estimateGas[methodName](...args, value && !isZero(value) ? { value } : {})
-            .then(calculateGasMargin)
-            .catch(error => {
-              console.error(`estimateGas failed for ${methodName}`, error)
-              return undefined
-            })
-        )
-      )
-
-      // we expect failures from left to right, so throw if we see failures
-      // from right to left
-      for (let i = 0; i < safeGasEstimates.length - 1; i++) {
-        // if the FoT method fails, but the regular method does not, we should not
-        // use the regular method. this probably means something is wrong with the fot token.
-        if (BigNumber.isBigNumber(safeGasEstimates[i]) && !BigNumber.isBigNumber(safeGasEstimates[i + 1])) {
-          throw new Error(
-            'An error occurred. Please try raising your slippage. If that does not work, contact support.'
-          )
-        }
-      }
-
-      const indexOfSuccessfulEstimation = safeGasEstimates.findIndex(safeGasEstimate =>
-        BigNumber.isBigNumber(safeGasEstimate)
-      )
-
-      // all estimations failed...
-      if (indexOfSuccessfulEstimation === -1) {
-        // if only 1 method exists, either:
-        // a) the token is doing something weird not related to FoT (e.g. enforcing a whitelist)
-        // b) the token is FoT and the user specified an exact output, which is not allowed
-        if (swapMethods.length === 1) {
-          throw Error(
-            `An error occurred. If either of the tokens you're swapping take a fee on transfer, you must specify an exact input amount.`
-          )
-        }
-        // if 2 methods exists, either:
-        // a) the token is doing something weird not related to FoT (e.g. enforcing a whitelist)
-        // b) the token is FoT and is taking more than the specified slippage
-        else if (swapMethods.length === 2) {
-          throw Error(
-            `An error occurred. If either of the tokens you're swapping take a fee on transfer, you must specify a slippage tolerance higher than the fee.`
-          )
-        } else {
-          throw Error('This transaction would fail. Please contact support.')
-        }
+    if (!trade || !library || !account || !chainId) {
+      return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }
+    }
+    if (!recipient) {
+      if (recipientAddressOrName !== null) {
+        return { state: SwapCallbackState.INVALID, callback: null, error: 'Invalid recipient' }
       } else {
-        const { methodName, args, value } = swapMethods[indexOfSuccessfulEstimation]
-        const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
+        return { state: SwapCallbackState.LOADING, callback: null, error: null }
+      }
+    }
+
+    if (loadingGasEstimation) {
+      return { state: SwapCallbackState.LOADING, callback: null, error: null }
+    }
+
+    const tradeVersion = getTradeVersion(trade)
+
+    if (indexOfSuccessfulEstimation === -1) {
+      return {
+        state: SwapCallbackState.INVALID,
+        callback: null,
+        error: 'Could not compute gas estimation. Try increasing your slippage tolerance.'
+      }
+    }
+
+    // we expect failures from left to right, so throw if we see failures
+    // from right to left
+    for (let i = 0; i < gasEstimates.length - 1; i++) {
+      // if the FoT method fails, but the regular method does not, we should not
+      // use the regular method. this probably means something is wrong with the fot token.
+      if (BigNumber.isBigNumber(gasEstimates[i][1]) && !BigNumber.isBigNumber(gasEstimates[i + 1][1])) {
+        return {
+          state: SwapCallbackState.INVALID,
+          callback: null,
+          error: 'Unexpected error. Try increasing your slippage tolerance. Otherwise, contact support.'
+        }
+      }
+    }
+
+    return {
+      state: SwapCallbackState.VALID,
+      callback: async function onSwap() {
+        const {
+          contract,
+          parameters: { methodName, args, value }
+        } = swapCalls[indexOfSuccessfulEstimation]
+        const safeGasEstimate = gasEstimates[indexOfSuccessfulEstimation][1]
 
         return contract[methodName](...args, {
-          gasLimit: safeGasEstimate,
+          gasLimit: safeGasEstimate && calculateGasMargin(safeGasEstimate),
           ...(value && !isZero(value) ? { value } : {})
         })
           .then((response: any) => {
@@ -169,18 +217,18 @@ export function useSwapCallback(
               throw Error('An error occurred while swapping. Please contact support.')
             }
           })
-      }
+      },
+      error: null
     }
   }, [
     trade,
     recipient,
     library,
     account,
-    tradeVersion,
     chainId,
-    allowedSlippage,
-    v1Exchange,
-    deadline,
+    indexOfSuccessfulEstimation,
+    swapCalls,
+    gasEstimates,
     recipientAddressOrName,
     addTransaction
   ])

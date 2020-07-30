@@ -150,7 +150,12 @@ export default function Swap() {
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
   // the callback to execute the swap
-  const swapCallback = useSwapCallback(trade, allowedSlippage, deadline, recipient)
+  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
+    trade,
+    allowedSlippage,
+    deadline,
+    recipient
+  )
 
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
 
@@ -408,12 +413,14 @@ export default function Swap() {
                   expertMode ? onSwap() : setShowConfirm(true)
                 }}
                 id="swap-button"
-                disabled={!isValid || (priceImpactSeverity > 3 && !expertMode)}
-                error={isValid && priceImpactSeverity > 2}
+                disabled={!isValid || (priceImpactSeverity > 3 && !expertMode) || !!swapCallbackError}
+                error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
               >
                 <Text fontSize={20} fontWeight={500}>
                   {error
                     ? error
+                    : swapCallbackError
+                    ? swapCallbackError
                     : priceImpactSeverity > 3 && !expertMode
                     ? `Price Impact Too High`
                     : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
