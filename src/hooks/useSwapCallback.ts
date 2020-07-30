@@ -214,7 +214,7 @@ export function useSwapCallback(
             // otherwise, the error was unexpected and we need to convey that
             else {
               console.error(`Swap failed`, error, methodName, args, value)
-              throw Error('An error occurred while swapping. Please contact support.')
+              throw new Error('An error occurred while swapping. Please contact support.')
             }
           })
       },

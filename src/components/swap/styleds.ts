@@ -1,8 +1,6 @@
+import { darken } from 'polished'
 import styled, { css } from 'styled-components'
-import { AutoColumn } from '../Column'
 import { Text } from 'rebass'
-
-import NumericalInput from '../NumericalInput'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -30,7 +28,6 @@ export const SectionBreak = styled.div`
 
 export const BottomGrouping = styled.div`
   margin-top: 12px;
-  position: relative;
 `
 
 export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
@@ -44,21 +41,6 @@ export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
       : theme.green1};
 `
 
-export const InputGroup = styled(AutoColumn)`
-  position: relative;
-  padding: 40px 0 20px 0;
-`
-
-export const StyledNumerical = styled(NumericalInput)`
-  text-align: center;
-  font-size: 48px;
-  font-weight: 500px;
-  width: 100%;
-
-  ::placeholder {
-    color: ${({ theme }) => theme.text4};
-  }
-`
 export const StyledBalanceMaxMini = styled.button`
   height: 22px;
   width: 22px;
@@ -111,4 +93,15 @@ export const Dots = styled.span`
       content: '...';
     }
   }
+`
+
+export const SwapCallbackError = styled.div`
+  background-color: ${({ theme }) => theme.red1};
+  border-radius: 1rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  margin-top: 1rem;
+  border: 1px solid ${({ theme }) => darken(0.1, theme.red1)};
+  color: ${({ theme }) => theme.white};
 `

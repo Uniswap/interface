@@ -1,6 +1,6 @@
 import { CurrencyAmount, JSBI } from '@uniswap/sdk'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { ArrowDown } from 'react-feather'
+import { AlertTriangle, ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
@@ -15,7 +15,7 @@ import { AutoRow, RowBetween } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import { ArrowWrapper, BottomGrouping, Dots, Wrapper } from '../../components/swap/styleds'
+import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import SwapModalFooter from '../../components/swap/SwapModalFooter'
 import SwapModalHeader from '../../components/swap/SwapModalHeader'
 import TradePrice from '../../components/swap/TradePrice'
@@ -419,14 +419,17 @@ export default function Swap() {
                 <Text fontSize={20} fontWeight={500}>
                   {error
                     ? error
-                    : swapCallbackError
-                    ? swapCallbackError
                     : priceImpactSeverity > 3 && !expertMode
                     ? `Price Impact Too High`
                     : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                 </Text>
               </ButtonError>
             )}
+            {!error && swapCallbackError ? (
+              <SwapCallbackError>
+                <AlertTriangle style={{ marginRight: 8, minWidth: 42 }} /> <strong>{swapCallbackError}</strong>
+              </SwapCallbackError>
+            ) : null}
             {betterTradeLinkVersion && <BetterTradeLink version={betterTradeLinkVersion} />}
           </BottomGrouping>
         </Wrapper>
