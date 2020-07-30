@@ -5,7 +5,7 @@ import useInterval from '../../hooks/useInterval'
 import { PopupContent } from '../../state/application/actions'
 import { useRemovePopup } from '../../state/application/hooks'
 import ListUpdatePopup from './ListUpdatePopup'
-import TxnPopup from './TxnPopup'
+import TransactionPopup from './TransactionPopup'
 
 export const StyledClose = styled(X)`
   position: absolute;
@@ -68,7 +68,7 @@ export default function PopupItem({ content, popKey }: { content: PopupContent; 
     const {
       txn: { hash, success, summary }
     } = content
-    popupContent = <TxnPopup hash={hash} success={success} summary={summary} />
+    popupContent = <TransactionPopup hash={hash} success={success} summary={summary} />
   } else if ('listUpdate' in content) {
     const {
       listUpdate: { listUrl, oldList, newList, auto }

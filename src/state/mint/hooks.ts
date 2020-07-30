@@ -94,7 +94,7 @@ export function useDerivedMintInfo(
     [Field.CURRENCY_B]: independentField === Field.CURRENCY_A ? dependentAmount : independentAmount
   }
 
-  const token0Price = pair?.token0Price
+  const token1Price = pair?.token1Price
   const price = useMemo(() => {
     if (noLiquidity) {
       const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
@@ -103,9 +103,9 @@ export function useDerivedMintInfo(
       }
       return
     } else {
-      return token0Price
+      return token1Price
     }
-  }, [noLiquidity, token0Price, parsedAmounts])
+  }, [noLiquidity, token1Price, parsedAmounts])
 
   // liquidity minted
   const totalSupply = useTotalSupply(pair?.liquidityToken)

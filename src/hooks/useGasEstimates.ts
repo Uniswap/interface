@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { ChainId } from '@uniswap/sdk'
 import { useEffect, useMemo, useState } from 'react'
 import { useBlockNumber } from '../state/application/hooks'
 import { Call } from '../state/multicall/actions'
@@ -14,6 +13,7 @@ export enum GasEstimateState {
 }
 
 export interface EstimatableContractCall {
+  key: string
   contract: Contract // the contract to call
   methodName: string // the method to call on the contract
   args: (string | string[])[] // args to pass to the call
@@ -22,6 +22,7 @@ export interface EstimatableContractCall {
 
 interface SerializedEstimatableCall extends Call {
   value: string
+  key: string
 }
 
 function toEstimatableCall(estimatable: EstimatableContractCall): SerializedEstimatableCall {
@@ -31,12 +32,9 @@ function toEstimatableCall(estimatable: EstimatableContractCall): SerializedEsti
       estimatable.contract.interface.getFunction(estimatable.methodName),
       estimatable.args
     ),
-    value: estimatable.value
+    value: estimatable.value,
+    key: estimatable.key
   }
-}
-
-function toCallKey(chainId: ChainId, call: SerializedEstimatableCall): string {
-  return `${chainId}:${call.address}:${call.callData}:${isZero(call.value) ? '' : call.value}`
 }
 
 /**
@@ -79,7 +77,7 @@ export default function useGasEstimates(
     if (!library || !chainId || !lastBlockNumber) return
     serializedEstimatableCalls.forEach(call => {
       if (!call) return
-      const key = toCallKey(chainId, call)
+      const key = call.key
       if ((state[key]?.blockNumber ?? 0) >= lastBlockNumber) {
         return
       }
@@ -149,7 +147,7 @@ export default function useGasEstimates(
     return (
       serializedEstimatableCalls?.map(call => {
         if (!call || !chainId) return [GasEstimateState.INVALID, undefined]
-        const result = state[toCallKey(chainId, call)]
+        const result = state[call.key]
         if (!result) return [GasEstimateState.LOADING, undefined]
         const { estimate, error, blockNumber } = result
         const loading = !error && (!estimate || blockNumber !== lastBlockNumber)

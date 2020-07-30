@@ -110,9 +110,10 @@ export function useSwapCallback(
         contract,
         methodName,
         value,
-        args
+        args,
+        key: `${chainId}:${contract.address}:${methodName}:${allowedSlippage}`
       })),
-    [swapCalls]
+    [allowedSlippage, chainId, swapCalls]
   )
   const gasEstimates = useGasEstimates(estimatableSwapCalls)
   const [indexOfSuccessfulEstimation, loadingGasEstimation] = useMemo(
@@ -140,7 +141,7 @@ export function useSwapCallback(
       }
     }
 
-    if (loadingGasEstimation) {
+    if (loadingGasEstimation && indexOfSuccessfulEstimation === -1) {
       return { state: SwapCallbackState.LOADING, callback: null, error: null }
     }
 

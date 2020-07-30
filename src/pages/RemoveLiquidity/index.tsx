@@ -274,12 +274,13 @@ export default function RemoveLiquidity({
       throw new Error('Attempting to confirm without approval or a signature. Please contact support.')
     }
 
-    const safeGasEstimates = await Promise.all(
+    const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
       methodNames.map(methodName =>
         router.estimateGas[methodName](...args)
           .then(calculateGasMargin)
           .catch(error => {
-            console.error(`estimateGas failed for ${methodName}`, error)
+            console.error(`estimateGas failed`, methodName, args, error)
+            return undefined
           })
       )
     )

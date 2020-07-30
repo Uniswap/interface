@@ -433,7 +433,7 @@ export default function Swap() {
                 </Text>
               </ButtonError>
             )}
-            {!swapInputError && swapCallbackError ? (
+            {!swapInputError && trade && swapCallbackError ? (
               <SwapCallbackError>
                 <AlertTriangle style={{ marginRight: 8, minWidth: 42 }} /> <strong>{swapCallbackError}</strong>
               </SwapCallbackError>
