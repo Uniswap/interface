@@ -266,7 +266,7 @@ export default function Swap() {
   return (
     <>
       {showWarning && <TokenWarningCards currencies={currencies} />}
-      <AppBody disabled={!!showWarning}>
+      <AppBody disabled={showWarning}>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
           <ConfirmationModal
@@ -443,7 +443,7 @@ export default function Swap() {
                 </Text>
               </ButtonError>
             )}
-            {!swapInputError && trade && swapCallbackError ? (
+            {swapCallbackError && approval === ApprovalState.APPROVED && !swapInputError && trade ? (
               <SwapCallbackError>
                 <AlertTriangle style={{ marginRight: 8, minWidth: 42 }} /> <strong>{swapCallbackError}</strong>
               </SwapCallbackError>
