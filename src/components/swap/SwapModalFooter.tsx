@@ -20,21 +20,17 @@ export default function SwapModalFooter({
   severity,
   slippageAdjustedAmounts,
   onSwap,
-  parsedAmounts,
   realizedLPFee,
-  priceImpactWithoutFee,
-  confirmText
+  priceImpactWithoutFee
 }: {
-  trade?: Trade
+  trade: Trade
   showInverted: boolean
   setShowInverted: (inverted: boolean) => void
   severity: number
-  slippageAdjustedAmounts?: { [field in Field]?: CurrencyAmount }
+  slippageAdjustedAmounts: { [field in Field]?: CurrencyAmount }
   onSwap: () => any
-  parsedAmounts?: { [field in Field]?: CurrencyAmount }
-  realizedLPFee?: CurrencyAmount
+  realizedLPFee: CurrencyAmount
   priceImpactWithoutFee?: Percent
-  confirmText: string
 }) {
   const theme = useContext(ThemeContext)
 
@@ -71,23 +67,21 @@ export default function SwapModalFooter({
         <RowBetween>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-              {trade?.tradeType === TradeType.EXACT_INPUT ? 'Minimum received' : 'Maximum sold'}
+              {trade.tradeType === TradeType.EXACT_INPUT ? 'Minimum received' : 'Maximum sold'}
             </TYPE.black>
             <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
           </RowFixed>
           <RowFixed>
             <TYPE.black fontSize={14}>
-              {trade?.tradeType === TradeType.EXACT_INPUT
+              {trade.tradeType === TradeType.EXACT_INPUT
                 ? slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4) ?? '-'
                 : slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4) ?? '-'}
             </TYPE.black>
-            {parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.INPUT] && (
-              <TYPE.black fontSize={14} marginLeft={'4px'}>
-                {trade?.tradeType === TradeType.EXACT_INPUT
-                  ? parsedAmounts[Field.OUTPUT]?.currency?.symbol
-                  : parsedAmounts[Field.INPUT]?.currency?.symbol}
-              </TYPE.black>
-            )}
+            <TYPE.black fontSize={14} marginLeft={'4px'}>
+              {trade.tradeType === TradeType.EXACT_INPUT
+                ? trade.outputAmount.currency.symbol
+                : trade.inputAmount.currency.symbol}
+            </TYPE.black>
           </RowFixed>
         </RowBetween>
         <RowBetween>
@@ -107,7 +101,7 @@ export default function SwapModalFooter({
             <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
           </RowFixed>
           <TYPE.black fontSize={14}>
-            {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + trade?.inputAmount?.currency?.symbol : '-'}
+            {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + trade.inputAmount.currency.symbol : '-'}
           </TYPE.black>
         </RowBetween>
       </AutoColumn>
@@ -115,7 +109,7 @@ export default function SwapModalFooter({
       <AutoRow>
         <ButtonError onClick={onSwap} error={severity > 2} style={{ margin: '10px 0 0 0' }} id="confirm-swap-or-send">
           <Text fontSize={20} fontWeight={500}>
-            {confirmText}
+            {severity > 2 ? 'Swap Anyway' : 'Confirm Swap'}
           </Text>
         </ButtonError>
       </AutoRow>

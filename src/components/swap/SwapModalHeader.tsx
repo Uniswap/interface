@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk'
+import { CurrencyAmount, Trade, TradeType } from '@uniswap/sdk'
 import React, { useContext } from 'react'
 import { ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
@@ -7,19 +7,18 @@ import { Field } from '../../state/swap/actions'
 import { TYPE } from '../../theme'
 import { isAddress, shortenAddress } from '../../utils'
 import { AutoColumn } from '../Column'
-import { RowBetween, RowFixed } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
+import { RowBetween, RowFixed } from '../Row'
 import { TruncatedText } from './styleds'
 
 export default function SwapModalHeader({
-  currencies,
+  trade,
   formattedAmounts,
   slippageAdjustedAmounts,
   priceImpactSeverity,
-  independentField,
   recipient
 }: {
-  currencies: { [field in Field]?: Currency }
+  trade: Trade
   formattedAmounts: { [field in Field]?: string }
   slippageAdjustedAmounts: { [field in Field]?: CurrencyAmount }
   priceImpactSeverity: number
@@ -35,9 +34,9 @@ export default function SwapModalHeader({
           {formattedAmounts[Field.INPUT]}
         </TruncatedText>
         <RowFixed gap="4px">
-          <CurrencyLogo currency={currencies[Field.INPUT]} size={'24px'} />
+          <CurrencyLogo currency={trade.inputAmount.currency} size={'24px'} />
           <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-            {currencies[Field.INPUT]?.symbol}
+            {trade.inputAmount.currency.symbol}
           </Text>
         </RowFixed>
       </RowBetween>
@@ -49,18 +48,18 @@ export default function SwapModalHeader({
           {formattedAmounts[Field.OUTPUT]}
         </TruncatedText>
         <RowFixed gap="4px">
-          <CurrencyLogo currency={currencies[Field.OUTPUT]} size={'24px'} />
+          <CurrencyLogo currency={trade.outputAmount.currency} size={'24px'} />
           <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-            {currencies[Field.OUTPUT]?.symbol}
+            {trade.outputAmount.currency.symbol}
           </Text>
         </RowFixed>
       </RowBetween>
       <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
-        {independentField === Field.INPUT ? (
+        {trade.tradeType === TradeType.EXACT_INPUT ? (
           <TYPE.italic textAlign="left" style={{ width: '100%' }}>
             {`Output is estimated. You will receive at least `}
             <b>
-              {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {currencies[Field.OUTPUT]?.symbol}
+              {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {trade.outputAmount.currency.symbol}
             </b>
             {' or the transaction will revert.'}
           </TYPE.italic>
@@ -68,7 +67,7 @@ export default function SwapModalHeader({
           <TYPE.italic textAlign="left" style={{ width: '100%' }}>
             {`Input is estimated. You will sell at most `}
             <b>
-              {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {currencies[Field.INPUT]?.symbol}
+              {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {trade.inputAmount.currency.symbol}
             </b>
             {' or the transaction will revert.'}
           </TYPE.italic>

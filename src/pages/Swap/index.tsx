@@ -224,33 +224,31 @@ export default function Swap() {
     !(priceImpactSeverity > 3 && !expertMode)
 
   function modalHeader() {
-    return (
+    return trade ? (
       <SwapModalHeader
-        currencies={currencies}
+        trade={trade}
         formattedAmounts={formattedAmounts}
         slippageAdjustedAmounts={slippageAdjustedAmounts}
         priceImpactSeverity={priceImpactSeverity}
         independentField={independentField}
         recipient={recipient}
       />
-    )
+    ) : null
   }
 
   function modalBottom() {
-    return (
+    return trade && realizedLPFee ? (
       <SwapModalFooter
-        confirmText={priceImpactSeverity > 2 ? 'Swap Anyway' : 'Confirm Swap'}
         showInverted={showInverted}
         severity={priceImpactSeverity}
         setShowInverted={setShowInverted}
         onSwap={onSwap}
         realizedLPFee={realizedLPFee}
-        parsedAmounts={parsedAmounts}
         priceImpactWithoutFee={priceImpactWithoutFee}
         slippageAdjustedAmounts={slippageAdjustedAmounts}
         trade={trade}
       />
-    )
+    ) : null
   }
 
   // text to show while loading

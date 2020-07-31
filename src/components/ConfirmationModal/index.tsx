@@ -39,8 +39,8 @@ interface ConfirmationModalProps {
   isOpen: boolean
   onDismiss: () => void
   hash: string
-  topContent: () => React.ReactChild
-  bottomContent: () => React.ReactChild
+  topContent: () => React.ReactNode
+  bottomContent: () => React.ReactNode
   attemptingTxn: boolean
   pendingText: string
   title?: string
