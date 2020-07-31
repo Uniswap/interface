@@ -6,7 +6,6 @@ import { RouteComponentProps } from 'react-router-dom'
 import Question from '../../components/QuestionHelper'
 import PairSearchModal from '../../components/SearchModal/PairSearchModal'
 import PositionCard from '../../components/PositionCard'
-import { useUserHasLiquidityInAllTokens } from '../../data/V1'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
 import { Text } from 'rebass'
@@ -62,8 +61,6 @@ export default function Pool({ history }: RouteComponentProps) {
     <PositionCard key={DXswapPair.liquidityToken.address} pair={DXswapPair} />
   ))
 
-  const hasV1Liquidity = useUserHasLiquidityInAllTokens()
-
   const handleSearchDismiss = useCallback(() => {
     setShowPoolSearch(false)
   }, [setShowPoolSearch])
@@ -114,14 +111,6 @@ export default function Pool({ history }: RouteComponentProps) {
               </LightCard>
             )}
 
-            <div>
-              <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
-                {hasV1Liquidity ? 'Uniswap V1 liquidity found!' : "Don't see a pool you joined?"}{' '}
-                <StyledInternalLink id="import-pool-link" to={hasV1Liquidity ? '/migrate/v1' : '/find'}>
-                  {hasV1Liquidity ? 'Migrate now.' : 'Import it.'}
-                </StyledInternalLink>
-              </Text>
-            </div>
           </AutoColumn>
           <FixedBottom>
             <ColumnCenter>

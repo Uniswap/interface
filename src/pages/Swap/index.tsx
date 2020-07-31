@@ -18,7 +18,6 @@ import { ArrowWrapper, BottomGrouping, Dots, Wrapper } from '../../components/sw
 import SwapModalFooter from '../../components/swap/SwapModalFooter'
 import SwapModalHeader from '../../components/swap/SwapModalHeader'
 import TradePrice from '../../components/swap/TradePrice'
-import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import { TokenWarningCards } from '../../components/TokenWarningCard'
 import { useActiveWeb3React } from '../../hooks'
 import { useApproveCallbackFromTrade, ApprovalState } from '../../hooks/useApproveCallback'
@@ -27,8 +26,6 @@ import { useWalletModalToggle, useToggleSettingsMenu } from '../../state/applica
 import { useExpertModeManager, useUserSlippageTolerance, useUserDeadline } from '../../state/user/hooks'
 
 import { INITIAL_ALLOWED_SLIPPAGE, MIN_ETH, BETTER_TRADE_LINK_THRESHOLD } from '../../constants'
-import { getTradeVersion, isTradeBetter } from '../../data/V1'
-import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
@@ -60,19 +57,8 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue } = useSwapState()
-  const { bestTrade: bestTradeDXswap, tokenBalances, parsedAmount, tokens, error, v1Trade } = useDerivedSwapInfo()
-  const toggledVersion = useToggledVersion()
-  const bestTrade = {
-    [Version.v1]: v1Trade,
-    [Version.v2]: bestTradeDXswap
-  }[toggledVersion]
-
-  const betterTradeLinkVersion: Version | undefined =
-    toggledVersion === Version.v2 && isTradeBetter(bestTradeDXswap, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
-      ? Version.v1
-      : toggledVersion === Version.v1 && isTradeBetter(v1Trade, bestTradeDXswap)
-      ? Version.v2
-      : undefined
+  const { bestTrade: bestTradeDXswap, tokenBalances, parsedAmount, tokens, error } = useDerivedSwapInfo()
+  const bestTrade = bestTradeDXswap
 
   const parsedAmounts = {
     [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : bestTrade?.inputAmount,
@@ -152,7 +138,7 @@ export default function Swap() {
           label: [
             bestTrade.inputAmount.token.symbol,
             bestTrade.outputAmount.token.symbol,
-            getTradeVersion(bestTrade)
+            'v2'
           ].join('/')
         })
       })
@@ -380,7 +366,6 @@ export default function Swap() {
                 </Text>
               </ButtonError>
             )}
-            {betterTradeLinkVersion && <BetterTradeLink version={betterTradeLinkVersion} />}
           </BottomGrouping>
         </Wrapper>
       </AppBody>
