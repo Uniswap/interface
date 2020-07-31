@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 
 import { BASES_TO_CHECK_TRADES_AGAINST } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
+import { maxHopsFor } from '../utils/maxHopsFor'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 import { useActiveWeb3React } from './index'
@@ -58,8 +59,9 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
 
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
+      const maxHops = maxHopsFor(currencyAmountIn.currency, currencyOut)
       return (
-        Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 3, maxNumResults: 1 })[0] ?? null
+        Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops, maxNumResults: 1 })[0] ?? null
       )
     }
     return null
@@ -74,9 +76,9 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
 
   return useMemo(() => {
     if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
+      const maxHops = maxHopsFor(currencyIn, currencyAmountOut.currency)
       return (
-        Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 3, maxNumResults: 1 })[0] ??
-        null
+        Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops, maxNumResults: 1 })[0] ?? null
       )
     }
     return null
