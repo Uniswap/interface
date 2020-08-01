@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next'
 
 import Web3 from 'web3'
 
-import { useInterval, useTokenContract, useWeb3React } from '../../hooks'
 import { brokenTokens } from '../../constants'
 import { amountFormatter, calculateGasMargin, isAddress, MIN_DECIMALS, MIN_DECIMALS_EXCHANGE_RATE } from '../../utils'
 import {
