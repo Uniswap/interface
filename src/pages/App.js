@@ -10,7 +10,8 @@ import NavigationTabs from '../components/NavigationTabs'
 import { getAllQueryParams } from '../utils'
 
 import Send from './Send'
-import Vote from './Vote/'
+import Vote from './Vote'
+import Details from './Vote/Details'
 import { isAddress } from '../utils/index'
 
 const Swap = lazy(() => import('./Swap'))
@@ -48,8 +49,12 @@ const BodyWrapper = styled.div`
 const Body = styled.div`
   max-width: 35rem;
   width: 90%;
-  margin-top: 50px;
+  margin-top: 30px;
   /* margin: 0 1.25rem 1.25rem 1.25rem; */
+
+  @media (max-width: 1000px) {
+    margin-top: 80px;
+  }
 `
 
 class App extends React.Component {
@@ -102,6 +107,7 @@ class App extends React.Component {
                         />
                         <Route exact strict path="/burn" component={() => <Send params={params} />} />
                         <Route exact strict path="/vote" component={() => <Vote/>}/>
+                        <Route exact strict path="/vote/:proposal_id" component={() => <Details/>}/>
                         <Redirect to="/swap"/>
                       </Switch>
                     </Suspense>

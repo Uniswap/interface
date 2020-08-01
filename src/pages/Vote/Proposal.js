@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Cast from './Cast'
+import { Link } from 'react-router-dom'
 
 const Main = styled.div`
   font-size: 18px;
   font-weight: 500;
   color: black;
   padding: 20px 30px;
-  border-bottom: 1px solid #DCDCDC;
+  border-bottom: 1px solid #f0f3f5;
   height: 100%;
   width: calc(100% - 60px);
 `
@@ -16,6 +17,11 @@ const Wrapper = styled.div`
   height: 100%;
   width: 80%;
   display: inline-block;
+
+ 	@media (max-width: 450px) {
+ 		margin-bottom: 10px;
+    width: 100%;
+  }
 `
 
 const Info = styled.div`
@@ -54,9 +60,13 @@ const Vote = styled.div`
   color: #b7c3cc;
   text-align: center;
 
+  @media (max-width: 450px) {
+    width: 100%;
+  }
+
   ${({ cast }) => cast && `
-      color: black;
-      cursor: pointer;
+    color: black;
+    cursor: pointer;
   `}
 `
 
@@ -66,7 +76,11 @@ const Extra = styled.div`
 	display: inline-block;
 `
 
-
+const link = {
+	textDecoration: 'none',
+	color: 'black',
+	cursor: 'pointer'
+}
 export default function Proposal({ id, proposal, status }) {
   const availableVotes = ['VOTE', 'FOR', 'AGAINST', 'NO VOTE']
   const mod = (b, e) => availableVotes.slice(b, e)
@@ -89,7 +103,7 @@ export default function Proposal({ id, proposal, status }) {
   const [showCast, changeShowCast] = useState(false)
 
   const handleClick = (e) => {
-    if (e) {
+    if (mod(1,3).includes(e)) {
       setVote(e)
       setCast(false)
     }
@@ -100,27 +114,38 @@ export default function Proposal({ id, proposal, status }) {
     if (e.keyCode === 27) changeShowCast(false)
   }
 
-  useEffect(() => {
-    document.addEventListener('keydown', (e) => keypress(e), false)
+	useEffect(() => {
+    document.addEventListener("keydown", (e)=>keypress(e), false);
   })
 
+  const date = 'Executed July 2nd, 2020'
+
   return (
-    <Main>
-      <Wrapper>
-        {proposal}
-        <Info active={status}>
-          <Status active={status}>
-            {text}
-          </Status>
-          <Extra>
-            {id} &#8226; {`3 days, 14 hours left`}
-          </Extra>
-        </Info>
-      </Wrapper>
-      <Vote onClick={() => changeShowCast(cast)} cast={c}>
-        {v}
-      </Vote>
-      {showCast ? <Cast onClick={e => handleClick(e)} vote={(v) => setVote(v)}/> : null}
-    </Main>
+		<Main>
+			<Wrapper>
+				<Link to={`/vote/${id}`} style={link}>
+			  	{proposal}
+			  </Link>
+			  <Info active={status}>
+				  <Status active={status}>
+				  	{text}
+				  </Status>
+				  <Extra>
+				  	{id} &#8226; {date}
+				  </Extra>
+				</Info>
+			</Wrapper>
+			<Vote onClick={() => changeShowCast(cast)} cast={cast}>
+				{vote}
+			</Vote>
+			{showCast ?
+				<Cast
+					proposal={proposal}
+					time={date}
+					onChange={e => handleClick(e)}
+					vote={(v) => setVote(v)}/>
+				: null
+			}
+		</Main> 
   )
 }

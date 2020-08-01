@@ -1,16 +1,34 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Proposal from './Proposal'
 import styled, { keyframes } from 'styled-components'
+import { useHistory } from 'react-router-dom'
 
 const Main = styled.div`
-  height: calc(100vh - 200px);
+  height: calc(100vh - 160px);
   width: 80vw;
   position: absolute;
-  top: 140px;
+  top: 110px;
   left: 0;
-	right: 0;
-	margin-left: auto;
-	margin-right: auto;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  ::-webkit-scrollbar { /* Hide scrollbar for Chrome, Safari and Opera */
+    display: none;
+  }
+
+  @media (max-width: 1000px) {
+    top: 140px;
+    height: calc(100vh - 190px);
+  }
+
+  @media (max-width: 800px) {
+    width: 90vw;
+  }
 `
 
 const Votes = styled.div`
@@ -18,6 +36,10 @@ const Votes = styled.div`
   height: 80px;
   color: black;
   font-weight: 600;
+
+  @media (max-width: 1000px) {
+    height: 70px;
+  }
 `
 const VoteTitle = styled.div`
   font-size: 14px;
@@ -33,7 +55,6 @@ const Voting = styled.div`
 const VotingWallet = styled.div`
   background-color: #FFFFFF;
   width: calc(35% - 20px);
-  height: 80%;
   border-radius: 5px;
   margin: 10px;
   margin-bottom: 1rem;
@@ -41,6 +62,10 @@ const VotingWallet = styled.div`
   color: black;
   display: inline-block;
   vertical-align: top;
+
+  @media (max-width: 900px) {
+    width: calc(100% - 20px);
+  }
 `
 const GovernanceProposals = styled.div`
   background-color: #FFFFFF;
@@ -52,6 +77,10 @@ const GovernanceProposals = styled.div`
   color: black;
   display: inline-block;
   vertical-align: top;
+
+  @media (max-width: 900px) {
+    width: calc(100% - 20px);
+  }
 `
 
 const Title = styled.div`
@@ -78,10 +107,7 @@ const Loader = styled.div`
   width: 60px;
   height: 60px;
   animation: ${spin} 2s linear infinite;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin: 50px auto;
 `
 
 const Balance = styled.div`
@@ -90,14 +116,14 @@ const Balance = styled.div`
 `
 
 const DMGTitle = styled.div`
-	font-size: 15px;
+  font-size: 15px;
   font-weight: 700;
   color: #b7c3cc;
 `
 
 const Value = styled.div`
-	margin-top: 10px;
-	font-size: 20px;
+  margin-top: 10px;
+  font-size: 20px;
   font-weight: 500;
   color: #b7c3cc;
   display: inline;
@@ -109,7 +135,7 @@ const Value = styled.div`
 `
 
 const Withdraw = styled.div`
-	font-size: 18px;
+  font-size: 18px;
   font-weight: 700;
   color: black;
   display: inline;
@@ -142,14 +168,52 @@ const Page = styled.div`
   user-select: none;
 
   ${({ active }) => active && `
-      color: black;
+    color: black;
   `}
   ${({ off }) => off && `
-      color: white;
+    color: white;
   `}
 `
 
+const Sticky = styled.div`
+  background-color: #FFFFFF;
+  border-radius: 5px;
+  position: fixed;
+  right: -220px;
+  bottom: 15px;
+  box-shadow: 1px 1px 8px -4px rgba(0,0,0,.5), 1px 1px 4px -4px rgba(0,0,0,.5);
+  padding: 20px;
+  width: 180px;
+  transition: right 2s;
+
+  ${({ active }) => active && `
+    right: 15px;
+  `}
+`
+
+const StickyText = styled.div`
+  display: inline-block;
+  margin-left: 10px;
+  font-weight: 600;
+  color: black;
+  vertical-align: middle;
+`
+
+const X = styled.div`
+  background-color: #df5e66;
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+  color: #FFFFFF;
+  font-size: 18px;
+  text-align: center;
+  padding: 2px 2px 3px 2px;
+  display: inline-block;
+  vertical-align: middle;
+`
+
 const num = '0.000000'
+
 const displayPages = 7
 
 const Balances = [
@@ -183,12 +247,22 @@ function display(p, selected, l) {
   return [...left, selected, ...right].includes(p) //combines the selected value and two arrays to check if the value falls in here
 }
 
-export default function Vote() {
+async function getProposals() {
+  let response = await fetch('https://jsonplaceholder.typicode.com/todos')
+  let data = await response.json()
+  return data
+}
+
+export default function Vote(props) {
   const [proposals, setProposals] = useState([]) //proposal hook
   const [loading, setLoading] = useState(true) //loading hook
   const [page, changePage] = useState(1) //current page hook
+  const [sticky, changeVisibility] = useState(false); //loading hook
+  let history = useHistory(); //history hook
 
-  const perPage = 5 //make dynamic
+  // const perPage = window.innerWidth > 900 ? 5 : 3//make dynamic
+  let perPage = window.innerWidth > 900 ? (window.innerHeight - 230) / 130 : (window.innerHeight - 600) / 130 || 1
+
   const mp = page * perPage - perPage
   const proposalPage = proposals.slice(mp, mp + perPage)
   const pages = [...Array(Math.ceil(proposals.length / perPage)).keys()].map(i => i + 1) //creates pages off of proposals
@@ -198,28 +272,30 @@ export default function Vote() {
     if (i > 0 && i < l + 1) changePage(i) //does not change the page value if the button is disabled
   }
 
-  // fetch('https://jsonplaceholder.typicode.com/todos')
-  // .then(response => response.json())
-  // .then(json => setProposals(json))
-  // .then(() => setLoading(false))
+  const stick = () => changeVisibility(false)
 
-  setTimeout(() => {
-    setProposals([
-      {
-        title: 'Introduce mUSDT',
-        completed: true,
-      },
-      {
-        title: 'Raise the Debt Ceiling for mUSDC',
-        completed: true,
-      },
-      {
-        title: 'Lower the Debt Ceiling for mDAI and mETH',
-        completed: true,
+  const replacement = {
+    pathname: '/vote',
+    state: { badpath: false }
+  }
+
+  //When component mounts - data retrieval and path check
+  useEffect(() => {
+    getProposals().then(data => {
+      setProposals(data)
+      setLoading(false)
+    })
+
+    //If there is a redirect from an invalid proposal ID, a sticky is displayed then history is reset
+    const st = history.location.state
+    if(st) {
+      if(st.badpath) {
+        changeVisibility(true)
+        setTimeout(stick, 5000)
+        history.replace(replacement)
       }
-    ])
-    setLoading(false)
-  }, 3000)
+    }
+  })
 
   return (
     <Main>
@@ -271,12 +347,18 @@ export default function Vote() {
                 {p}
               </Page>
             ))}
-            <Page onClick={() => checkChange(page + 1)} off={page === l}>
+            <Page onClick={() => checkChange(page + 1)} off={page === l || loading}>
               {`>`}
             </Page>
           </Pages>
         </GovernanceProposals>
       </Voting>
+    <Sticky active={sticky}>
+        <X>&#10006;</X>
+        <StickyText>
+          Invalid Proposal ID
+        </StickyText>
+      </Sticky>
     </Main>
   )
 }
