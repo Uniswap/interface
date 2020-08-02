@@ -7,6 +7,8 @@ import { useActiveWeb3React } from '../hooks'
 import { useSingleContractMultipleData } from '../state/multicall/hooks'
 import { normalizeToken, wrappedCurrency } from '../utils/wrappedCurrency'
 import { useMooniswapV1FactoryContract } from '../hooks/useContract'
+import { useCurrencyBalances, useTokenBalances } from '../state/wallet/hooks'
+import { V1_MOONISWAP_FACTORY_ADDRESSES } from '../constants/v1'
 
 // const MOONISWAP_PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
@@ -38,20 +40,27 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
 
   const results = useSingleContractMultipleData(useMooniswapV1FactoryContract(), 'pools', tokenPairs)
 
+  // todo: fetch it from Pool not from factory
+  const balResult = useTokenBalances(chainId && V1_MOONISWAP_FACTORY_ADDRESSES[chainId], ...tokens)
+
   return useMemo(() => {
     return results.map((result, i) => {
-      const { result: reserves, loading } = result
+      const { result: loading } = result
       const tokenA = tokens[i][0]
       const tokenB = tokens[i][1]
 
       if (loading) return [PairState.LOADING, null]
       if (!tokenA || !tokenB || tokenA.equals(tokenB)) return [PairState.INVALID, null]
-      if (!reserves) return [PairState.NOT_EXISTS, null]
-      const { reserve0, reserve1 } = reserves
+      if (!result.result) return [PairState.NOT_EXISTS, null]
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
       return [
         PairState.EXISTS,
-        new Pair(new TokenAmount(token0, reserve0.toString()), new TokenAmount(token1, reserve1.toString()))
+        new Pair(
+          // @ts-ignore
+          new TokenAmount(token0, balResult[token0.address].toString()),
+          // @ts-ignore
+          new TokenAmount(token1, balResult[token1.address].toString())
+        )
       ]
     })
   }, [results, tokens])
