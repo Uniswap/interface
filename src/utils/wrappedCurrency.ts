@@ -16,3 +16,11 @@ export function unwrappedToken(token: Token): Currency {
   if (token.equals(WETH[token.chainId])) return ETHER
   return token
 }
+
+////////// MOONISWAP ////////
+export function normalizeToken(currency: Currency | undefined): Token | undefined {
+  if (currency?.symbol === 'ETH') {
+    return new Token(1, '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE', 18, 'ETH', 'Ethereum')
+  }
+  return currency instanceof Token ? currency : undefined
+}

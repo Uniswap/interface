@@ -1,13 +1,15 @@
 import { TokenAmount, Pair, Currency } from '@uniswap/sdk'
 import { useMemo } from 'react'
-import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
-import { Interface } from '@ethersproject/abi'
+// import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
+// import { Interface } from '@ethersproject/abi'
 import { useActiveWeb3React } from '../hooks'
 
-import { useMultipleContractSingleData } from '../state/multicall/hooks'
-import { wrappedCurrency } from '../utils/wrappedCurrency'
+import { useSingleContractMultipleData } from '../state/multicall/hooks'
+import { normalizeToken, wrappedCurrency } from '../utils/wrappedCurrency'
+import { useMooniswapV1FactoryContract } from '../hooks/useContract'
 
-const MOONISWAP_PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
+// const MOONISWAP_PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export enum PairState {
   LOADING,
@@ -20,24 +22,21 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
   const { chainId } = useActiveWeb3React()
 
   const tokens = useMemo(
-    () =>
-      currencies.map(([currencyA, currencyB]) => [
-        wrappedCurrency(currencyA, chainId),
-        wrappedCurrency(currencyB, chainId)
-      ]),
+    () => currencies.map(([currencyA, currencyB]) => [normalizeToken(currencyA), normalizeToken(currencyB)]),
     [chainId, currencies]
   )
 
-  const pairAddresses = useMemo(
+  const tokenPairs: (string[] | undefined)[] = useMemo(
     () =>
       tokens.map(([tokenA, tokenB]) => {
-        return tokenA && tokenB && !tokenA.equals(tokenB) ? Pair.getAddress(tokenA, tokenB) : undefined
+        return tokenA && tokenB && !tokenA.equals(tokenB)
+          ? [tokenA.address, tokenB.address]
+          : [ZERO_ADDRESS, ZERO_ADDRESS]
       }),
     [tokens]
   )
 
-  debugger
-  const results = useMultipleContractSingleData(pairAddresses, MOONISWAP_PAIR_INTERFACE, 'getReserves')
+  const results = useSingleContractMultipleData(useMooniswapV1FactoryContract(), 'pools', tokenPairs)
 
   return useMemo(() => {
     return results.map((result, i) => {
