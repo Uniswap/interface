@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
 
 import { useSingleContractMultipleData } from '../state/multicall/hooks'
-import { normalizeToken, wrappedCurrency } from '../utils/wrappedCurrency'
+import { normalizeToken } from '../utils/wrappedCurrency'
 import { useMooniswapV1FactoryContract } from '../hooks/useContract'
 
 // const MOONISWAP_PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
