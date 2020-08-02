@@ -7,8 +7,11 @@ import { useActiveWeb3React } from '../hooks'
 import { useSingleContractMultipleData } from '../state/multicall/hooks'
 import { normalizeToken } from '../utils/wrappedCurrency'
 import { useMooniswapV1FactoryContract } from '../hooks/useContract'
-import { useCurrencyBalances, useTokenBalances } from '../state/wallet/hooks'
-import { V1_MOONISWAP_FACTORY_ADDRESSES } from '../constants/v1'
+import {
+  // useCurrencyBalances,
+  useTokenBalances
+} from '../state/wallet/hooks'
+import { V1_MOONISWAP_FACTORY_ADDRESSES } from '../constants/v1-mooniswap'
 
 // const MOONISWAP_PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
