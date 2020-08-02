@@ -7,7 +7,7 @@ import { useActiveWeb3React } from '../hooks'
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
-const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
+const MOONISWAP_PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
 
 export enum PairState {
   LOADING,
@@ -36,7 +36,8 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
     [tokens]
   )
 
-  const results = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'getReserves')
+  debugger
+  const results = useMultipleContractSingleData(pairAddresses, MOONISWAP_PAIR_INTERFACE, 'getReserves')
 
   return useMemo(() => {
     return results.map((result, i) => {

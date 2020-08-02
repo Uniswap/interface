@@ -1,8 +1,8 @@
 import { Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from '@uniswap/sdk'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { PairState, usePair } from '../../data/Reserves'
-import { useTotalSupply } from '../../data/TotalSupply'
+import { PairState, usePair } from '../../data-mooniswap/Reserves'
+import { useTotalSupply } from '../../data-mooniswap/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
 import { wrappedCurrency, wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
@@ -17,10 +17,7 @@ export function useMintState(): AppState['mint'] {
   return useSelector<AppState, AppState['mint']>(state => state.mint)
 }
 
-export function useDerivedMintInfo(
-  currencyA: Currency | undefined,
-  currencyB: Currency | undefined
-): {
+export interface MintInfoState {
   dependentField: Field
   currencies: { [field in Field]?: Currency }
   pair?: Pair | null
@@ -32,7 +29,13 @@ export function useDerivedMintInfo(
   liquidityMinted?: TokenAmount
   poolTokenPercentage?: Percent
   error?: string
-} {
+}
+
+export function useDerivedMintInfo(
+  currencyA: Currency | undefined,
+  currencyB: Currency | undefined
+): MintInfoState {
+
   const { account, chainId } = useActiveWeb3React()
 
   const { independentField, typedValue, otherTypedValue } = useMintState()
