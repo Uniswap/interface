@@ -1157,10 +1157,10 @@
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-10.1.0.tgz#f0950bba18819512d42f7197e56c518aa491cf18"
   integrity sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
 
-"@dolomite-exchange/dolomite@^0.1.96":
-  version "0.1.96"
-  resolved "https://registry.yarnpkg.com/@dolomite-exchange/dolomite/-/dolomite-0.1.96.tgz#cac24f19e3559fc987f7b7345b090eaa2ae02963"
-  integrity sha512-583mKWsaDd6uWH/A6Q7AWLXJ6RmFM/OO5U3nreErg6Nomy2gmRFc9Ex1oE8CCjnDa+xd5P7ZqUEq75/rz2Eevw==
+"@dolomite-exchange/dolomite@^0.1.98":
+  version "0.1.98"
+  resolved "https://registry.yarnpkg.com/@dolomite-exchange/dolomite/-/dolomite-0.1.98.tgz#bfc18b8490bd42ea4590ae54501763273aab39d2"
+  integrity sha512-wZbgJJfbC56RWAlrYhDH4cTdUQMbou6Q1brrwZfLUevCrrORetpeSHuP2xVf2dE7AVNUBJhz6FocXp1HNvfoWg==
   dependencies:
     "@babel/polyfill" "^7.8.7"
     bn.js "^5.1.2"

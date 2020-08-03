@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next'
 
 import Web3 from 'web3'
 
-import { useInterval, useTokenContract, useWeb3React } from '../../hooks'
 import { brokenTokens } from '../../constants'
 import { amountFormatter, calculateGasMargin, isAddress, MIN_DECIMALS, MIN_DECIMALS_EXCHANGE_RATE } from '../../utils'
 import {
@@ -759,6 +758,54 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
 
     const orderSide = loopringOrderData.tokenB === DMG_ADDRESS ? 'BUY' : 'SELL'
 
+    const exchangeInfo = await exchange.exchange.getInfo()
+    const rates = await exchange.exchange.getRates()
+    const web3 = new Web3(library.provider)
+
+    const getTakerFee = (amountB, tokenB, secondaryAmount, secondaryToken, exchangeInfo, rates) => {
+      const gasFeeAmount = new BigNumber(exchangeInfo.premiumForSpotTrade[tokenB.ticker].valueBN)
+      const secondaryTokenUsdValue = new BigNumber(web3.toWei(rates[secondaryToken.ticker]['USD']))
+      const _1e18 = new BigNumber('1000000000000000000')
+      const truncationFactor = new BigNumber(10).pow(new BigNumber(INITIAL_TOKENS_CONTEXT['1'][secondaryToken.address][DECIMALS] - 6)) // USD has 6 decimals, always
+      const totalSecondaryUsdValue = secondaryAmount.mul(secondaryTokenUsdValue).div(_1e18).div(truncationFactor)
+
+      let takerFeeBN
+      if (totalSecondaryUsdValue.gte(exchangeInfo.lowerTakerFeePercentageUsd.valueBN)) {
+        takerFeeBN = new BigNumber(web3.toWei(exchangeInfo.lowerTakerFee))
+      } else {
+        takerFeeBN = new BigNumber(web3.toWei(exchangeInfo.takerFee))
+      }
+      const commission = amountB.mul(takerFeeBN).div(_1e18)
+      console.log('gasFeeAmount ', gasFeeAmount)
+      console.log('commission ', commission)
+      return gasFeeAmount.add(commission)
+    }
+
+    let secondaryToken
+    if (loopringOrderData.tokenB === DMG_ADDRESS) {
+      const token = INITIAL_TOKENS_CONTEXT['1'][loopringOrderData.tokenS]
+      secondaryToken = { address: loopringOrderData.tokenS, ticker: token.symbol }
+    } else {
+      const token = INITIAL_TOKENS_CONTEXT['1'][loopringOrderData.tokenB]
+      secondaryToken = { address: loopringOrderData.tokenB, ticker: token.symbol }
+    }
+
+    let secondaryAmount
+    if (loopringOrderData.tokenB === DMG_ADDRESS) {
+      secondaryAmount = new BigNumber(loopringOrderData.amountS)
+    } else {
+      secondaryAmount = new BigNumber(loopringOrderData.amountB)
+    }
+
+    const feeAmount = getTakerFee(
+      new BigNumber(loopringOrderData.amountB),
+      { address: loopringOrderData.tokenB, ticker: INITIAL_TOKENS_CONTEXT['1'][loopringOrderData.tokenB].symbol },
+      secondaryAmount,
+      secondaryToken,
+      exchangeInfo,
+      rates
+    )
+
     loopringOrder = constructLoopringOrder(library, {
       primaryToken: DMG_ADDRESS,
       owner: account,
@@ -766,7 +813,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
       tokenS: loopringOrderData.tokenS,
       amountB: loopringOrderData.amountB,
       amountS: loopringOrderData.amountS,
-      feeAmount: ethers.constants.Zero,
+      feeAmount: feeAmount,
       validUntil: null,
       transferDataS: null,
       broker: null,
@@ -774,7 +821,6 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     })
     const orderHash = getOrderHash(loopringOrder)
 
-    const web3 = new Web3(library.provider)
     const signaturePromise = new Promise((resolve, reject) => {
       web3.personal.sign(orderHash, account, (e, r) => {
         if (!!e) {
@@ -825,6 +871,7 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
         if (!!response.error) {
           console.error('Caught error after submitting order ', response)
         }
+        console.log('Dolomite Order Submission Response: ', response)
 
         return getIpAddress()
           .then(ipAddress => {
@@ -980,9 +1027,6 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           currency={effectiveOutputCurrency}
         />
       )}
-      <div>
-        <h4 className={'temp'}>Trading for DMG is temporarily disabled while liquidity is being added.</h4>
-      </div>
       <CurrencyInputPanel
         title={t('input')}
         urlAddedTokens={urlAddedTokens}
