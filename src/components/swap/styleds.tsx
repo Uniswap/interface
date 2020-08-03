@@ -104,6 +104,7 @@ const SwapCallbackErrorInner = styled.div`
   display: flex;
   align-items: center;
   margin-top: 1rem;
+  width: 100%;
   border: 1px solid ${({ theme }) => darken(0.1, theme.red1)};
   color: ${({ theme }) => theme.white};
 `

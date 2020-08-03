@@ -5,7 +5,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useMulticallContract } from '../../hooks/useContract'
 import useDebounce from '../../hooks/useDebounce'
 import chunkArray from '../../utils/chunkArray'
-import { CancelledError, retry } from '../../utils/retry'
+import { CancelledError, retry, RetryableError } from '../../utils/retry'
 import { useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
 import {
@@ -40,7 +40,7 @@ async function fetchChunk(
   }
   if (resultsBlockNumber.toNumber() < minBlockNumber) {
     console.debug(`Fetched results for old block number: ${resultsBlockNumber.toString()} vs. ${minBlockNumber}`)
-    throw new Error('Fetched for old block number')
+    throw new RetryableError('Fetched for old block number')
   }
   return { results: returnData, blockNumber: resultsBlockNumber.toNumber() }
 }
@@ -157,9 +157,9 @@ export default function Updater() {
       blockNumber: latestBlockNumber,
       cancellations: chunkedCalls.map((chunk, index) => {
         const { cancel, promise } = retry(() => fetchChunk(multicallContract, chunk, latestBlockNumber), {
-          n: 10,
-          minWait: 1000,
-          maxWait: 2000
+          n: Infinity,
+          minWait: 2500,
+          maxWait: 3500
         })
         promise
           .then(({ results: returnData, blockNumber: fetchBlockNumber }) => {
