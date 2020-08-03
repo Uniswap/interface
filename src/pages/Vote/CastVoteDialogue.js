@@ -94,7 +94,7 @@ const Loader = styled.div`
   margin: 0 auto;
 `
 
-export default function CastVote({ proposal, timestamp, onChange }) {
+export default function CastVoteDialogue({ proposal, timestamp, onChange }) {
 	const [error, setError] = useState(null)
 	const [loading, setLoading] = useState(false); //loading hook
 

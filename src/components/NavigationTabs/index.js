@@ -25,9 +25,9 @@ const tabOrder = [
     disabled: true,
   },
   {
-    path: '/vote',
+    path: '/governance/proposals',
     textKey: 'Vote',
-    regex: /\/vote/,
+    regex: /\/governance\/proposals/,
   }
 ]
 
@@ -42,14 +42,7 @@ const Tabs = styled.div`
   box-shadow: 1px 1px 8px -4px rgba(0,0,0,.5), 1px 1px 4px -4px rgba(0,0,0,.5);
   z-index: 100;
   position: relative;
-`
-
-const Title = styled.div`
-  color: #000000;
-  font-size: 2rem;
-  text-align: center;
-  margin-bottom: 25px;
-  font-weight: 200;
+  width: 100%
 `
 
 const activeClassName = 'ACTIVE'

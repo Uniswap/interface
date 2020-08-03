@@ -45,6 +45,7 @@ import { AccountSignatureAlgorithm, getOrderHash } from '../../connectors/Loopri
 import * as Sentry from '@sentry/browser'
 
 import { getDefaultApiKeyHeaders, getIpAddress, routes, sessionId } from '../../utils/api-signer'
+import { useInterval, useTokenContract, useWeb3React } from '../../hooks'
 
 const INPUT = 0
 const OUTPUT = 1
@@ -61,10 +62,8 @@ const TOKEN_ALLOWED_SLIPPAGE_DEFAULT = 50
 const GAS_MARGIN = ethers.BigNumber.from(1000)
 
 const Wrapper = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  width: 100%;
+  margin-top: 32px;
 `
 
 const DownArrowBackground = styled.div`

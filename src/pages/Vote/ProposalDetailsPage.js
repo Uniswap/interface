@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import CastVote from './CastVote'
+import CastVoteDialogue from './CastVoteDialogue'
 import { Link, Redirect, useParams } from 'react-router-dom'
 import { ProposalDetails } from '../../models/ProposalDetails'
 import { useWeb3React } from '../../hooks'
@@ -12,16 +12,8 @@ import { useAllTransactions } from '../../contexts/Transactions'
 import { Spinner } from '../../theme'
 
 const Main = styled.div`
-  width: 70vw;
-  position: absolute;
-  height: calc(100vh - 160px);
-  top: 100px;
-  left: 0;
-	right: 0;
-	margin-left: auto;
-	margin-right: auto;
+  width: 60vw;
 	overflow-y: scroll;
-
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
   ::-webkit-scrollbar { /* Hide scrollbar for Chrome, Safari and Opera */
@@ -110,7 +102,7 @@ const Card = styled.div`
   display: inline-block;
   vertical-align: top;
 
-  @media (max-width: 800px) {
+  @media (max-width: 767px) {
     width: calc(100% - 20px);
   }
 `
@@ -253,7 +245,8 @@ const Vote = styled.div`
   color: #b7c3cc;
 	float: right; 
 	margin-right: 10px;
-	margin-top: 50px;
+	margin-top: 24px;
+	margin-bottom: 16px;
   text-align: center;
   border: 2px solid #b7c3cc;
   border-radius: 3px;
@@ -300,7 +293,7 @@ async function getDetails(proposalId, walletAddress) {
 const CAST_VOTE = 'CAST VOTE'
 const VOTE_CASTING = 'VOTE CASTING'
 
-export default function Details() {
+export default function ProposalDetailsPage() {
   const [vote, setVote] = useState(CAST_VOTE)
   const [cast, setCast] = useState(true)
   const [showCast, changeShowCast] = useState(false)
@@ -378,7 +371,7 @@ export default function Details() {
 
   const proposalId = useParams().proposal_id
   if (!isValidProposalId(proposalId) || proposal === 'BAD') {
-    return <Redirect to={{ pathname: '/vote', state: { isBadPath: true } }}/>
+    return <Redirect to={{ pathname: '/governance/proposals', state: { isBadPath: true } }}/>
   }
 
   voteDetails[0].votesBN = proposal?.votesForBN
@@ -392,7 +385,7 @@ export default function Details() {
 
   return (
     <Main>
-      <Link to={'/vote'} style={link}>
+      <Link to={'/governance/proposals'} style={link}>
         &#8592; Overview
       </Link>
       <div>
@@ -509,7 +502,7 @@ export default function Details() {
         </Vote>
       }
       {showCast ?
-        <CastVote
+        <CastVoteDialogue
           proposal={proposal}
           timestamp={proposal.mostRecentDateText()}
           onChange={e => handleClick(e)}

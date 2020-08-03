@@ -11,7 +11,7 @@ import { getAllQueryParams } from '../utils'
 
 import Send from './Send'
 import Vote from './Vote'
-import Details from './Vote/Details'
+import ProposalDetailsPage from './Vote/ProposalDetailsPage'
 import { isAddress } from '../utils/index'
 
 const Swap = lazy(() => import('./Swap'))
@@ -41,19 +41,25 @@ const BodyWrapper = styled.div`
   width: 100%;
   justify-content: flex-start;
   align-items: center;
-  flex: 1;
-  overflow: auto;
-  padding:bottom: 40px;
+  -webkit-box-align: center;
+  z-index: 1;
+  flex: 1 1 0%;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  padding-bottom: 40px;
+  padding-top: 70px; 
 `
 
 const Body = styled.div`
-  max-width: 35rem;
+  max-width: 540px;
   width: 90%;
-  margin-top: 30px;
-  /* margin: 0 1.25rem 1.25rem 1.25rem; */
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   @media (max-width: 1000px) {
-    margin-top: 80px;
+    margin-top: 16px;
   }
 `
 
@@ -106,8 +112,8 @@ class App extends React.Component {
                           }}
                         />
                         <Route exact strict path="/burn" component={() => <Send params={params} />} />
-                        <Route exact strict path="/vote" component={() => <Vote/>}/>
-                        <Route exact strict path="/vote/:proposal_id" component={() => <Details/>}/>
+                        <Route exact strict path="/governance/proposals" component={() => <Vote/>}/>
+                        <Route exact strict path="/governance/proposals/:proposal_id" component={() => <ProposalDetailsPage/>}/>
                         <Redirect to="/swap"/>
                       </Switch>
                     </Suspense>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Proposal from './Proposal'
+import ProposalItem from './ProposalItem'
 import styled, { keyframes } from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { ProposalSummary } from '../../models/ProposalSummary'
@@ -14,7 +14,7 @@ const Main = styled.div`
   height: calc(100vh - 160px);
   width: 80vw;
   position: absolute;
-  top: 110px;
+  top: 156px;
   left: 0;
   right: 0;
   margin-left: auto;
@@ -281,8 +281,8 @@ export default function Vote() {
   const [sticky, changeVisibility] = useState(false) //loading hook
   let history = useHistory() //history hook
 
-  // const perPage = window.innerWidth > 900 ? 5 : 3//make dynamic
-  const proposalsPerPage = window.innerWidth > 900 ? (window.innerHeight - 230) / 130 : (window.innerHeight - 600) / 130 || 1
+  // const perPage = window.innerWidth > 900 ? 5 : 3 // make dynamic
+  const proposalsPerPage = window.innerWidth > 900 ? (window.innerHeight - 230) / 130 : Math.max(0, (window.innerHeight - 480)) / 130 || 1
 
   const mp = page * proposalsPerPage - proposalsPerPage
   const proposalPage = proposals.slice(mp, mp + proposalsPerPage)
@@ -296,7 +296,7 @@ export default function Vote() {
   const stick = () => changeVisibility(false)
 
   const replacement = {
-    pathname: '/vote',
+    pathname: '/governance/proposals',
     state: { isBadPath: false }
   }
 
@@ -370,7 +370,7 @@ export default function Vote() {
           <Proposals>
             {loading ? <Loader/> :
               proposalPage.map((proposal) => (
-                <Proposal key={`proposal-${proposal.proposalId}`} proposal={proposal} walletAddress={account}/>
+                <ProposalItem key={`proposal-${proposal.proposalId}`} proposal={proposal} walletAddress={account}/>
               ))}
           </Proposals>
           <Pages>

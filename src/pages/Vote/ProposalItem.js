@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import CastVote from './CastVote'
+import CastVoteDialogue from './CastVoteDialogue'
 import { Link } from 'react-router-dom'
 import { AccountVoteInfo } from '../../models/AccountVoteInfo'
 import { ProposalSummary } from '../../models/ProposalSummary'
@@ -84,7 +84,7 @@ const link = {
   cursor: 'pointer'
 }
 
-export default function Proposal(props) {
+export default function ProposalItem(props) {
   const proposal = props.proposal
   const availableVotes = ['VOTE', 'FOR', 'AGAINST', 'NO VOTE']
   const mod = (b, e) => availableVotes.slice(b, e)
@@ -120,7 +120,7 @@ export default function Proposal(props) {
   return (
     <Main>
       <Wrapper>
-        <Link to={`/vote/${proposal.proposalId}`} style={link}>
+        <Link to={`/governance/proposals/${proposal.proposalId}`} style={link}>
           {proposal.title}
         </Link>
         <Info active={proposal.proposalStatus}>
@@ -136,7 +136,7 @@ export default function Proposal(props) {
         {AccountVoteInfo.toFormattedVoteString(voteStatus)}
       </VoteButton>
       {showCastDialogue ?
-        <CastVote
+        <CastVoteDialogue
           proposal={proposal}
           timestamp={proposal.mostRecentDateText()}
           onChange={e => handleClick(e)}
