@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import Cast from './CastVote'
+import CastVote from './CastVote'
 import { Link, Redirect, useParams } from 'react-router-dom'
 import { ProposalDetails } from '../../models/ProposalDetails'
 import { useWeb3React } from '../../hooks'
 import { amountFormatter } from '../../utils'
 import { ReactComponent as ExternalLink } from '../../assets/svg/ExternalLink.svg'
 import { ProposalSummary } from '../../models/ProposalSummary'
+import { AccountVoteInfo } from '../../models/AccountVoteInfo'
+import { useAllTransactions } from '../../contexts/Transactions'
+import { Spinner } from '../../theme'
 
 const Main = styled.div`
   width: 70vw;
@@ -270,23 +273,9 @@ const Vote = styled.div`
   `}
 `
 
-const CastWrapper = styled.div`
-  position: absolute;
-	top: -100px;
-	left: -15vw;
-	z-index: 5;
+const SpinnerWrapper = styled(Spinner)`
+  margin: 0 0.25rem 0 0.25rem;
 `
-
-const history = [
-  {
-    title: 'Created',
-    date: 'July 2nd, 2020 - 7:00pm'
-  },
-  {
-    title: 'Active',
-    date: 'July 2nd, 2020 - 7:00pm'
-  }
-]
 
 function isValidProposalId(proposalId) {
   return !Number.isNaN(Number.parseInt(proposalId))
@@ -308,10 +297,14 @@ async function getDetails(proposalId, walletAddress) {
     })
 }
 
+const CAST_VOTE = 'CAST VOTE'
+const VOTE_CASTING = 'VOTE CASTING'
+
 export default function Details() {
-  const [vote, setVote] = useState('CAST VOTE')
+  const [vote, setVote] = useState(CAST_VOTE)
   const [cast, setCast] = useState(true)
   const [showCast, changeShowCast] = useState(false)
+  const [castHash, setCastHash] = useState('')
 
   const [topVotersAmount, setTopVotersAmount] = useState(3)
 
@@ -337,6 +330,21 @@ export default function Details() {
       color: '#df5e66'
     }
   ]
+
+  const allTransactions = useAllTransactions()
+  const pending = Object.keys(allTransactions).filter(hash => !allTransactions[hash].receipt)
+
+  useEffect(() => {
+    let subscriptionId
+    if (Object.keys(pending).filter(hash => hash === castHash).length === 0) {
+      // The transaction is confirmed
+      subscriptionId = setTimeout(() => {
+        setCastHash('')
+      }, 7500)
+    }
+
+    return () => !!subscriptionId && clearInterval(subscriptionId)
+  }, [castHash, pending])
 
   useEffect(() => {
     const perform = () => {
@@ -379,6 +387,9 @@ export default function Details() {
   voteDetails[1].votesBN = proposal?.votesAgainstBN
   voteDetails[1].topVoters = proposal?.votersAgainst || []
 
+  const displayCastVote = proposal?.proposalStatus === ProposalSummary.statuses.ACTIVE &&
+    (proposal?.account?.voteInfo?.voteStatus === AccountVoteInfo.statuses.NO_VOTE || !proposal?.account?.voteInfo?.voteStatus)
+
   return (
     <Main>
       <Link to={'/vote'} style={link}>
@@ -398,12 +409,16 @@ export default function Details() {
             </Extra>
           </Info>
         </Wrapper>
-        <Vote
-          onClick={() => changeShowCast(cast)}
-          display={proposal?.proposalStatus === ProposalSummary.statuses.ACTIVE}
-          cast={cast}>
-          {vote}
-        </Vote>
+        {!!castHash ?
+          <SpinnerWrapper/> :
+          <Vote
+            onClick={() => changeShowCast(cast)}
+            display={displayCastVote}
+            onVoteCasted={(hash) => setCastHash(hash)}
+            cast={cast}>
+            {vote}
+          </Vote>
+        }
       </div>
       <Body>
         {voteDetails.map(({ title, votesBN, topVoters, color }, index) => {
@@ -412,7 +427,8 @@ export default function Details() {
               <Title>
                 {title}:&nbsp;&nbsp;&nbsp;{amountFormatter(votesBN, 18, 2)}
                 <Bar>
-                  <Color color={color} isWinning={!!votesBN && votesBN.gt(index === 0 ? voteDetails[1].votesBN : voteDetails[0].votesBN)}/>
+                  <Color color={color}
+                         isWinning={!!votesBN && votesBN.gt(index === 0 ? voteDetails[1].votesBN : voteDetails[0].votesBN)}/>
                 </Bar>
               </Title>
               <Addresses>
@@ -424,7 +440,7 @@ export default function Details() {
                   <NoVoters>No votes {title.toLowerCase()} the proposal have been cast</NoVoters>) : (<span/>)}
                 {topVoters.map((topVoter) => {
                   return (
-                    <Address active>
+                    <Address active key={`voter-${topVoter.walletAddress}`}>
                       {shorten(topVoter.walletAddress)}
                       <Votes>
                         {amountFormatter(topVoter.voteInfo?.votesCastedBN)}
@@ -482,12 +498,24 @@ export default function Details() {
           )}
         </HistoryWrapper>
       </Card>
+      {!!castHash ?
+        <SpinnerWrapper/> :
+        <Vote
+          onClick={() => changeShowCast(cast)}
+          display={displayCastVote}
+          onVoteCasted={(hash) => setCastHash(hash)}
+          cast={cast}>
+          {vote}
+        </Vote>
+      }
       {showCast ?
-        <Cast
+        <CastVote
           proposal={proposal}
           timestamp={proposal.mostRecentDateText()}
           onChange={e => handleClick(e)}
-          vote={(v) => setVote(v)}/>
+          onVoteCasted={(hash) => {
+            setCastHash(hash)
+          }}/>
         : null
       }
     </Main>
