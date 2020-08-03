@@ -1,65 +1,35 @@
 import React, { useCallback } from 'react'
-import { withRouter, NavLink } from 'react-router-dom'
+import { NavLink, withRouter } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import { transparentize, darken } from 'polished'
+import { darken, transparentize } from 'polished'
 
-import { useWeb3React, useBodyKeyDown } from '../../hooks'
-import { useAddressBalance } from '../../contexts/Balances'
-import { isAddress } from '../../utils'
-import {
-  useBetaMessageManager,
-  useSaiHolderMessageManager,
-  useGeneralDaiMessageManager
-} from '../../contexts/LocalStorage'
-import { Link } from '../../theme/components'
+import { useBodyKeyDown } from '../../hooks'
 
 const tabOrder = [
   {
     path: '/swap',
-    textKey: 'swap',
-    regex: /\/swap/
+    textKey: 'Swap',
+    regex: /\/swap/,
   },
   {
     path: '/earn',
     textKey: 'Earn',
-    regex: /\/burn/
+    regex: /\/earn/,
+    disabled: true,
   },
   {
-    path: '/burn',
-    textKey: 'Burn',
-    regex: /\/burn/
+    path: '/farm',
+    textKey: 'Farm',
+    regex: /\/farm/,
+    disabled: true,
   },
   {
     path: '/vote',
     textKey: 'Vote',
-    regex: /\/vote/
-  },
-]
-
-const CloseIcon = styled.div`
-  width: 10px !important;
-  top: 0.5rem;
-  right: 1rem;
-  position: absolute;
-  color: ${({ theme }) => theme.wisteriaPurple};
-  :hover {
-    cursor: pointer;
+    regex: /\/vote/,
   }
-`
-
-const WarningHeader = styled.div`
-  margin-bottom: 10px;
-  font-weight: 500;
-  color: #000000;
-`
-
-const WarningFooter = styled.div`
-  margin-top: 10px;
-  font-size: 10px;
-  text-decoration: italic;
-  color: ${({ theme }) => theme.greyText};
-`
+]
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -85,7 +55,7 @@ const Title = styled.div`
 const activeClassName = 'ACTIVE'
 
 const StyledNavLink = styled(NavLink).attrs({
-  activeClassName
+  activeClassName,
 })`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
@@ -100,6 +70,11 @@ const StyledNavLink = styled(NavLink).attrs({
   color: ${({ theme }) => theme.doveGray};
   font-size: 1rem;
   box-sizing: border-box;
+  
+  ${({ disabled }) => disabled && `
+    cursor: default;
+    pointer-events: none;
+  `}
 
   &.${activeClassName} {
     background-color: #327ccb;
@@ -107,7 +82,8 @@ const StyledNavLink = styled(NavLink).attrs({
     box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
     box-sizing: border-box;
     font-weight: 500;
-    color: #FFFFFF;
+    color: #FFF;
+    :focus
     :hover {
       /* border: 1px solid ${({ theme }) => darken(0.1, theme.mercuryGray)}; */
       background-color: #a3c3ea;
@@ -115,8 +91,7 @@ const StyledNavLink = styled(NavLink).attrs({
     }
   }
 
-  :hover,
-  :focus {
+  :hover {
     color: #000;
   }
 `
@@ -146,8 +121,8 @@ function NavigationTabs({ location: { pathname }, history }) {
   return (
     <>
       <Tabs>
-        {tabOrder.map(({ path, textKey, regex }) => (
-          <StyledNavLink key={path} to={path} isActive={(_, { pathname }) => pathname.match(regex)}>
+        {tabOrder.map(({ path, textKey, regex, disabled }) => (
+          <StyledNavLink disabled={disabled} key={path} to={path} isActive={(_, { pathname }) => pathname.match(regex)}>
             {t(textKey)}
           </StyledNavLink>
         ))}

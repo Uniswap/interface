@@ -8,7 +8,9 @@ import { FACTORY_ADDRESSES, SUPPORTED_THEMES } from '../constants'
 import { formatFixed } from '@uniswap/sdk'
 
 import UncheckedJsonRpcSigner from './eth-signer'
-import { ETH_ADDRESS, DMG_ADDRESS } from '../contexts/Tokens'
+import { DMG_ADDRESS, ETH_ADDRESS } from '../contexts/Tokens'
+
+import { BigNumber } from 'ethers-utils'
 
 export const MIN_DECIMALS = 6
 export const MIN_DECIMALS_EXCHANGE_RATE = 8
@@ -24,9 +26,9 @@ export const ERROR_CODES = ['TOKEN_NAME', 'TOKEN_SYMBOL', 'TOKEN_DECIMALS'].redu
 export function safeAccess(object, path) {
   return object
     ? path.reduce(
-        (accumulator, currentValue) => (accumulator && accumulator[currentValue] ? accumulator[currentValue] : null),
-        object
-      )
+      (accumulator, currentValue) => (accumulator && accumulator[currentValue] ? accumulator[currentValue] : null),
+      object
+    )
     : null
 }
 
@@ -279,8 +281,8 @@ export async function getTokenBalance(tokenAddress, address, library) {
 export async function getTokenAllowance(address, tokenAddress, spenderAddress, library) {
   if (!isAddress(address) || !isAddress(tokenAddress) || !isAddress(spenderAddress)) {
     throw Error(
-      "Invalid 'address' or 'tokenAddress' or 'spenderAddress' parameter" +
-        `'${address}' or '${tokenAddress}' or '${spenderAddress}'.`
+      'Invalid \'address\' or \'tokenAddress\' or \'spenderAddress\' parameter' +
+      `'${address}' or '${tokenAddress}' or '${spenderAddress}'.`
     )
   }
 
@@ -296,18 +298,16 @@ export function amountFormatter(amount, baseDecimals = 18, displayDecimals = MIN
   // if balance is falsy, return undefined
   if (!amount) {
     return undefined
-  }
-  // if amount is 0, return
-  else if (amount.isZero()) {
+  } else if (amount.isZero()) {
     return '0'
-  }
-  // amount > 0
-  else {
+  } else {
+    // amount > 0
+
     // amount of 'wei' in 1 'ether'
     const baseAmount = ethers.BigNumber.from(10).pow(ethers.BigNumber.from(baseDecimals))
 
     const minimumDisplayAmount = baseAmount.div(
-      ethers.BigNumber.from(10).pow(ethers.BigNumber.from(displayDecimals))
+      ethers.BigNumber.from('10').pow(ethers.BigNumber.from(displayDecimals))
     )
 
     // if balance is less than the minimum display amount

@@ -82,18 +82,6 @@ const Bar = styled.div`
 	background-color: #f0f3f5;
 `
 
-const Color = styled.div`
-	height: 100%;
-	width: 50%;
-	border-radius: 3px;
-	background-color: #4487CE;
-	transition: 2s;
-
-	${({ width }) => `
-    width: ${width}
-  `}
-`
-
 const spin = keyframes`
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -115,7 +103,7 @@ async function castVote() {
   return data
 } 
 
-export default function Cast({ proposal, time, vote, onChange }) {
+export default function CastVote({ proposal, timestamp, vote, onChange }) {
 	const [newVote, setNewVote] = useState(false)
 	const [error, setError] = useState(null)
 	const [loading, setLoading] = useState(false); //loading hook
@@ -149,10 +137,10 @@ export default function Cast({ proposal, time, vote, onChange }) {
 		<BackDrop>
 			<Card>
 				<Proposal>
-					{proposal}
+					{proposal.title}
 				</Proposal>
 				<Time>
-					{time}
+					{timestamp}
 				</Time>
 				<Buttons>
 					<Button color={'#44d394'} onClick={() => waiting('FOR')}>
