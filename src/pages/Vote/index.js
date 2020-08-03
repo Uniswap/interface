@@ -1,7 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Proposal from './Proposal'
-import styled, {keyframes} from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { useHistory } from 'react-router-dom'
+import { ProposalSummary } from '../../models/ProposalSummary'
+import { useWeb3React } from '../../hooks'
+import { useAddressBalance } from '../../contexts/Balances'
+import BN from 'bn.js'
+import Web3 from 'web3'
+import { DMG_ADDRESS } from '../../contexts/Tokens'
+import { amountFormatter } from '../../utils'
 
 const Main = styled.div`
   height: calc(100vh - 160px);
@@ -214,141 +221,168 @@ const X = styled.div`
 
 const num = '0.000000'
 
-const displayPages = 7;
+const displayPages = 7
 
-const Balances = [
+const balances = [
   {
     title: 'DMG Balance',
-    val: '0.00000000',
+    valueBN: new BN('0'),
     button: false
   },
   {
     title: 'DMG Earned',
-    val: 'none',
+    valueBN: null,
     button: true
   }
 ]
 
-function WithdrawAmount(val) {
-  val > 0 ? console.log('Withdrawn!') : console.log('No funds!')
+function withdrawEarnedDmg(web3, account) {
+  console.log('account ', account, web3)
 }
 
 function display(p, selected, l) {
-  if(l <= displayPages) return true //displays all pages if it is less than the diplayed amount
+  if (l <= displayPages) return true //displays all pages if it is less than the diplayed amount
 
-  const half = (displayPages-1)/2 
+  const half = (displayPages - 1) / 2
 
-  if(p <= displayPages && selected <= half) return true //displays displayed amount pages even if is does not have half on the left
-  if(p > l - displayPages && selected > l - half) return true //displays displayed amount pages even if is does not have half on the right
+  if (p <= displayPages && selected <= half) return true //displays displayed amount pages even if is does not have half on the left
+  if (p > l - displayPages && selected > l - half) return true //displays displayed amount pages even if is does not have half on the right
 
-  const fill = [...Array(half).keys()].map(i => i+1) //gets a half array
-  const left = fill.map(i => selected-i) //uses the half array to find values to left of selected
-  const right = fill.map(i => selected+i) //uses the half array to find values to right of selected
+  const fill = [...Array(half).keys()].map(i => i + 1) //gets a half array
+  const left = fill.map(i => selected - i) //uses the half array to find values to left of selected
+  const right = fill.map(i => selected + i) //uses the half array to find values to right of selected
   return [...left, selected, ...right].includes(p) //combines the selected value and two arrays to check if the value falls in here
 }
 
-async function getProposals() {
-  let response = await fetch('https://jsonplaceholder.typicode.com/todos')
-  let data = await response.json()
-  return data
-} 
+async function getProposals(walletAddress) {
+  const baseUrl = 'https://api.defimoneymarket.com'
+  return fetch(`${baseUrl}/v1/governance/proposals`)
+    .then(response => response.json())
+    .then(response => response.data.map(proposal => new ProposalSummary(proposal)))
+    .then(proposals => {
+      if (walletAddress) {
+        return Promise.all(
+          proposals.map(proposal => {
+            return fetch(`${baseUrl}/v1/governance/proposals/${proposal.proposalId}/results/addresses/${walletAddress}`)
+              .then(response => response.json())
+              .then(response => proposal.withAccount(response.data))
+          })
+        )
+      } else {
+        return proposals
+      }
+    })
+}
 
-export default function Vote(props) {
-  const [proposals, setProposals] = useState([]); //proposal hook
-  const [loading, setLoading] = useState(true); //loading hook
-  const [page, changePage] = useState(1); //current page hook
-  const [sticky, changeVisibility] = useState(false); //loading hook
-  let history = useHistory(); //history hook
-
+export default function Vote() {
+  const [proposals, setProposals] = useState([]) //proposal hook
+  const [loading, setLoading] = useState(true) //loading hook
+  const [page, changePage] = useState(1) //current page hook
+  const [sticky, changeVisibility] = useState(false) //loading hook
+  let history = useHistory() //history hook
 
   // const perPage = window.innerWidth > 900 ? 5 : 3//make dynamic
-  let perPage = window.innerWidth > 900 ? (window.innerHeight - 230) / 130 : (window.innerHeight - 600) / 130 || 1
+  const proposalsPerPage = window.innerWidth > 900 ? (window.innerHeight - 230) / 130 : (window.innerHeight - 600) / 130 || 1
 
-  const mp = page * perPage - perPage 
-  const proposalPage = proposals.slice(mp, mp+perPage)
-  const pages = [...Array(Math.ceil(proposals.length/perPage)).keys()].map(i => i + 1) //creates pages off of proposals
+  const mp = page * proposalsPerPage - proposalsPerPage
+  const proposalPage = proposals.slice(mp, mp + proposalsPerPage)
+  const pages = [...Array(Math.ceil(proposals.length / proposalsPerPage)).keys()].map(i => i + 1) //creates pages off of proposals
   const l = pages.length
 
   const checkChange = (i) => {
-    if(i > 0 && i < l + 1) changePage(i) //does not change the page value if the button is disabled
+    if (i > 0 && i < l + 1) changePage(i) //does not change the page value if the button is disabled
   }
-  
+
   const stick = () => changeVisibility(false)
 
   const replacement = {
     pathname: '/vote',
-    state: { badpath: false }
+    state: { isBadPath: false }
   }
 
-  //When component mounts - data retrieval and path check
-  useEffect(() => {
-    getProposals().then(data => {
-      setProposals(data)
-      setLoading(false)
-    })
+  const { account, library } = useWeb3React()
+  const web3 = new Web3(library.provider)
+  balances[0].valueBN = useAddressBalance(account, DMG_ADDRESS)
 
-    //If there is a redirect from an invalid proposal ID, a sticky is displayed then history is reset
-    const st = history.location.state 
-    if(st) {  
-      if(st.badpath) {  
-        changeVisibility(true)
-        setTimeout(stick, 5000)
-        history.replace(replacement)
-      }
+  // When component mounts - data retrieval and path check
+  useEffect(() => {
+    const perform = () => {
+      getProposals(account).then(data => {
+        setProposals(data)
+        setLoading(false)
+      })
     }
-  })
+
+    perform()
+    const subscriptionId = setInterval(() => {
+      perform()
+    }, 15000)
+
+    return () => clearInterval(subscriptionId)
+  }, [account])
+
+  // If there is a redirect from an invalid proposal ID, a sticky is displayed then history is reset
+  const locationState = history.location.state
+  if (locationState) {
+    if (locationState.isBadPath) {
+      changeVisibility(true)
+      setTimeout(stick, 5000)
+      history.replace(replacement)
+    }
+  }
 
   return (
     <Main>
       <Votes>
-         <VoteTitle> 
+        <VoteTitle>
           Votes
         </VoteTitle>
-      <Amount>
-        {num}
-      </Amount>
+        <Amount>
+          {num}
+        </Amount>
       </Votes>
       <Voting>
         <VotingWallet>
           <Title>
-            Voting Wallet
+            Your Wallet
           </Title>
-          {Balances.map(({title, val, button}) => (
-            <Balance>
+          {balances.map(({ title, valueBN, button }) => (
+            <Balance key={`balance-${title}`}>
               <DMGTitle>
                 {title}
               </DMGTitle>
               <Value>
-                {val}
+                {!valueBN ? 'N/A' : amountFormatter(valueBN, 18, 2)}
               </Value>
-              {button ? 
-                <Withdraw active={parseFloat(val, 10) > 0} onClick={() => WithdrawAmount(val)}>
+              {button ?
+                <Withdraw active={!!valueBN && valueBN.gt(new BN('0'))}
+                          onClick={() => withdrawEarnedDmg(web3, account)}>
                   Withdraw
                 </Withdraw>
-               :null}
+                : null}
             </Balance>
           ))}
         </VotingWallet>
         <GovernanceProposals>
-           <Title>
+          <Title>
             Governance Proposals
           </Title>
           <Proposals>
-             {loading ? <Loader /> :
-             proposalPage.map(({id, title, completed}) => (
-              <Proposal id={id} proposal={title} status={completed} /> 
-            ))}
+            {loading ? <Loader/> :
+              proposalPage.map((proposal) => (
+                <Proposal key={`proposal-${proposal.proposalId}`} proposal={proposal} walletAddress={account}/>
+              ))}
           </Proposals>
           <Pages>
-            <Page onClick={() => checkChange(page - 1)} off={page === 1}> 
+            <Page onClick={() => checkChange(page - 1)} off={page === 1}>
               {`<`}
             </Page>
             {pages.filter(i => display(i, page, l)).map((p, index) => (
-              <Page onClick={() => changePage(p)} active={page === p}>
+              <Page key={`page-${index}`} onClick={() => changePage(p)} active={page === p}>
                 {p}
               </Page>
             ))}
-            <Page onClick={() => checkChange(page + 1)} off={page === l || loading}> 
+            <Page onClick={() => checkChange(page + 1)} off={page === l || loading}>
               {`>`}
             </Page>
           </Pages>
@@ -359,7 +393,7 @@ export default function Vote(props) {
         <StickyText>
           Invalid Proposal ID
         </StickyText>
-      </Sticky> 
+      </Sticky>
     </Main>
   )
 }

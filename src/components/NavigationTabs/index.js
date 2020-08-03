@@ -1,113 +1,35 @@
 import React, { useCallback } from 'react'
-import { withRouter, NavLink } from 'react-router-dom'
+import { NavLink, withRouter } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import { transparentize, darken } from 'polished'
+import { darken, transparentize } from 'polished'
 
-import { useWeb3React, useBodyKeyDown } from '../../hooks'
-import { useAddressBalance } from '../../contexts/Balances'
-import { isAddress } from '../../utils'
-import {
-  useBetaMessageManager,
-  useSaiHolderMessageManager,
-  useGeneralDaiMessageManager
-} from '../../contexts/LocalStorage'
-import { Link } from '../../theme/components'
+import { useBodyKeyDown } from '../../hooks'
 
 const tabOrder = [
   {
     path: '/swap',
-    textKey: 'swap',
-    regex: /\/swap/
+    textKey: 'Swap',
+    regex: /\/swap/,
   },
   {
-    path: '/send',
-    textKey: 'send',
-    regex: /\/send/
+    path: '/earn',
+    textKey: 'Earn',
+    regex: /\/earn/,
+    disabled: true,
   },
   {
-    path: '/add-liquidity',
-    textKey: 'pool',
-    regex: /\/add-liquidity|\/remove-liquidity|\/create-exchange.*/
+    path: '/farm',
+    textKey: 'Farm',
+    regex: /\/farm/,
+    disabled: true,
   },
   {
     path: '/vote',
     textKey: 'Vote',
-    regex: /\/vote/
-  },
+    regex: /\/vote/,
+  }
 ]
-
-const BetaMessage = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  cursor: pointer;
-  flex: 1 0 auto;
-  align-items: center;
-  position: relative;
-  padding: 0.5rem 1rem;
-  padding-right: 2rem;
-  margin-bottom: 1rem;
-  border: 1px solid ${({ theme }) => transparentize(0.6, theme.wisteriaPurple)};
-  background-color: ${({ theme }) => transparentize(0.9, theme.wisteriaPurple)};
-  border-radius: 1rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  text-align: left;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: ${({ theme }) => theme.wisteriaPurple};
-
-  &:after {
-    content: '✕';
-    top: 0.5rem;
-    right: 1rem;
-    position: absolute;
-    color: ${({ theme }) => theme.wisteriaPurple};
-  }
-`
-
-const DaiMessage = styled(BetaMessage)`
-  ${({ theme }) => theme.flexColumnNoWrap}
-  position: relative;
-  word-wrap: wrap;
-  overflow: visible;
-  white-space: normal;
-  padding: 1rem 1rem;
-  padding-right: 2rem;
-  line-height: 1.2rem;
-  cursor: default;
-  color: ${({ theme }) => theme.textColor};
-  div {
-    width: 100%;
-  }
-  &:after {
-    content: '';
-  }
-`
-
-const CloseIcon = styled.div`
-  width: 10px !important;
-  top: 0.5rem;
-  right: 1rem;
-  position: absolute;
-  color: ${({ theme }) => theme.wisteriaPurple};
-  :hover {
-    cursor: pointer;
-  }
-`
-
-const WarningHeader = styled.div`
-  margin-bottom: 10px;
-  font-weight: 500;
-  color: #000000;
-`
-
-const WarningFooter = styled.div`
-  margin-top: 10px;
-  font-size: 10px;
-  text-decoration: italic;
-  color: ${({ theme }) => theme.greyText};
-`
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -133,7 +55,7 @@ const Title = styled.div`
 const activeClassName = 'ACTIVE'
 
 const StyledNavLink = styled(NavLink).attrs({
-  activeClassName
+  activeClassName,
 })`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
@@ -148,42 +70,36 @@ const StyledNavLink = styled(NavLink).attrs({
   color: ${({ theme }) => theme.doveGray};
   font-size: 1rem;
   box-sizing: border-box;
+  
+  ${({ disabled }) => disabled && `
+    cursor: default;
+    pointer-events: none;
+  `}
 
   &.${activeClassName} {
-    background-color: #c3d7f0;
+    background-color: #327ccb;
     border-radius: 3rem;
     box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
     box-sizing: border-box;
     font-weight: 500;
-    color: #000000;
+    color: #FFF;
+    :focus
     :hover {
       /* border: 1px solid ${({ theme }) => darken(0.1, theme.mercuryGray)}; */
       background-color: #a3c3ea;
+      color: #FFF;
     }
   }
 
-  :hover,
-  :focus {
-    color: #000000;
+  :hover {
+    color: #000;
   }
 `
 
 function NavigationTabs({ location: { pathname }, history }) {
   const { t } = useTranslation()
 
-  const [showBetaMessage, dismissBetaMessage] = useBetaMessageManager()
-
-  const [showGeneralDaiMessage, dismissGeneralDaiMessage] = useGeneralDaiMessageManager()
-
-  const [showSaiHolderMessage, dismissSaiHolderMessage] = useSaiHolderMessageManager()
-
-  const { account } = useWeb3React()
-
-  const daiBalance = useAddressBalance(account, isAddress('0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359'))
-
-  const daiPoolTokenBalance = useAddressBalance(account, isAddress('0x09cabEC1eAd1c0Ba254B09efb3EE13841712bE14'))
-
-  const onLiquidityPage = pathname === '/pool' || pathname === '/add-liquidity' || pathname === '/remove-liquidity'
+  // const { account } = useWeb3React()
 
   const navigate = useCallback(
     direction => {
@@ -202,20 +118,15 @@ function NavigationTabs({ location: { pathname }, history }) {
   useBodyKeyDown('ArrowRight', navigateRight)
   useBodyKeyDown('ArrowLeft', navigateLeft)
 
-  const providerMessage =
-    showSaiHolderMessage && daiPoolTokenBalance && !daiPoolTokenBalance.isZero() && onLiquidityPage
-  const generalMessage = showGeneralDaiMessage && daiBalance && !daiBalance.isZero()
-
   return (
     <>
       <Tabs>
-        {tabOrder.map(({ path, textKey, regex }) => (
-          <StyledNavLink key={path} to={path} isActive={(_, { pathname }) => pathname.match(regex)}>
+        {tabOrder.map(({ path, textKey, regex, disabled }) => (
+          <StyledNavLink disabled={disabled} key={path} to={path} isActive={(_, { pathname }) => pathname.match(regex)}>
             {t(textKey)}
           </StyledNavLink>
         ))}
       </Tabs>
-      {/*<Title>DMG Purchase Portal</Title>*/}
     </>
   )
 }

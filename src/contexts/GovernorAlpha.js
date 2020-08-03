@@ -1,0 +1,9 @@
+export const GOVERNOR_ALPHA_ADDRESS = "0xc0dA01a04C3f3E0be433606045bB7017A7323E38"
+
+export const GOVERNORS_CONTEXT = {
+  1: {
+    [GOVERNOR_ALPHA_ADDRESS]: {
+
+    }
+  }
+}

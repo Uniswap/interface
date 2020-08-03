@@ -5,20 +5,12 @@ import { ethers } from 'ethers'
 import { BigNumber } from 'ethers-utils'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
-import * as foo from './styles.css'
 
 import Web3 from 'web3'
 
 import { useInterval, useTokenContract, useWeb3React } from '../../hooks'
 import { brokenTokens } from '../../constants'
-import {
-  amountFormatter,
-  calculateGasMargin,
-  getProviderOrSigner,
-  isAddress,
-  MIN_DECIMALS,
-  MIN_DECIMALS_EXCHANGE_RATE
-} from '../../utils'
+import { amountFormatter, calculateGasMargin, isAddress, MIN_DECIMALS, MIN_DECIMALS_EXCHANGE_RATE } from '../../utils'
 import {
   DECIMALS,
   DELEGATE_ADDRESS,
@@ -794,8 +786,14 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
     // We are now going to wait for the user to sign the Loopring order.
     setIsAwaitingSignature(true)
 
+    exchange.exchange.getInfo().then(response => console.log('response ', response))
+
     return signaturePromise
       .then(signature => {
+        return exchange.exchange.getInfo().then(response => ({ gasFees: response, signature }))
+      })
+      .then(({ signature, gasFees }) => {
+        console.log('gasFees ', gasFees)
         setIsAwaitingSignature(false)
         const data = {
           orderType: 'MARKET',
@@ -806,7 +804,6 @@ export default function ExchangePage({ initialCurrency, sending = false, params 
           constantNetworkFeePremium: 0,
           perMatchNetworkFee: 0
         }
-        // const dolomiteOrder = toDolomiteOrder(loopringOrder, signature, AccountSignatureAlgorithm.EIP_712, data)
         const dolomiteOrder = toDolomiteOrder(loopringOrder, signature, AccountSignatureAlgorithm.PERSONAL_SIGN, data)
         console.log('dolomiteOrder ', dolomiteOrder)
         if (!!wrapTransactionHash) {

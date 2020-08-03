@@ -4,11 +4,14 @@ import copy from 'copy-to-clipboard'
 import { isMobile } from 'react-device-detect'
 
 import { NetworkContextName } from '../constants'
+import DMG_ABI from '../constants/abis/dmg'
 import ERC20_ABI from '../constants/abis/erc20'
 import WETH_ABI from '../constants/abis/weth'
+import GOVERNOR_ALPHA_ABI from '../constants/abis/governor_alpha'
 import { getContract, getFactoryContract, getExchangeContract, isAddress } from '../utils'
 import { injected } from '../connectors'
-import { WETH_ADDRESS } from '../contexts/Tokens'
+import { DMG_ADDRESS, WETH_ADDRESS } from '../contexts/Tokens'
+import { GOVERNOR_ALPHA_ADDRESS } from '../contexts/GovernorAlpha'
 
 export function useWeb3React() {
   const context = useWeb3ReactCore()
@@ -200,6 +203,34 @@ export function useTokenContract(tokenAddress, withSignerIfPossible = true) {
       return null
     }
   }, [tokenAddress, library, withSignerIfPossible, account])
+}
+
+// returns null on errors
+export function useDmgContract(withSignerIfPossible = true) {
+  const { library, account } = useWeb3React()
+
+  return useMemo(() => {
+    try {
+      const abi = DMG_ABI
+      return getContract(DMG_ADDRESS, abi, library, withSignerIfPossible ? account : undefined)
+    } catch {
+      return null
+    }
+  }, [library, withSignerIfPossible, account])
+}
+
+// returns null on errors
+export function useGovernorContract(withSignerIfPossible = true) {
+  const { library, account } = useWeb3React()
+
+  return useMemo(() => {
+    try {
+      const abi = GOVERNOR_ALPHA_ABI
+      return getContract(GOVERNOR_ALPHA_ADDRESS, abi, library, withSignerIfPossible ? account : undefined)
+    } catch {
+      return null
+    }
+  }, [library, withSignerIfPossible, account])
 }
 
 // returns null on errors
