@@ -20,7 +20,7 @@ export function unwrappedToken(token: Token): Currency {
 ////////// MOONISWAP ////////
 export function normalizeToken(currency: Currency | undefined): Token | undefined {
   if (currency?.symbol === 'ETH') {
-    return new Token(1, '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE', 18, 'ETH', 'Ethereum')
+    return new Token(1, '0x0000000000000000000000000000000000000000', 18, 'ETH', 'Ethereum')
   }
   return currency instanceof Token ? currency : undefined
 }

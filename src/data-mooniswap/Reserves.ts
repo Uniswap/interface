@@ -1,19 +1,23 @@
-import { TokenAmount, Pair, Currency } from '@uniswap/sdk'
+import { TokenAmount, Pair, Currency, Token, ETHER } from '@uniswap/sdk'
 import { useMemo } from 'react'
 // import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
-// import { Interface } from '@ethersproject/abi'
+import { Interface } from '@ethersproject/abi'
 import { useActiveWeb3React } from '../hooks'
 
-import { useSingleContractMultipleData } from '../state/multicall/hooks'
+import { NEVER_RELOAD, useMultipleContractSingleData, useSingleContractMultipleData } from '../state/multicall/hooks'
 import { normalizeToken } from '../utils/wrappedCurrency'
 import { useMooniswapV1FactoryContract } from '../hooks/useContract'
 import {
+  useCurrencyBalances,
   // useCurrencyBalances,
   useTokenBalances
 } from '../state/wallet/hooks'
-import { V1_MOONISWAP_FACTORY_ADDRESSES } from '../constants/v1-mooniswap'
+// import { V1_MOONISWAP_FACTORY_ADDRESSES } from '../constants/v1-mooniswap'
+import ERC20ABI from '../constants/abis/erc20.json'
+import { useCurrency } from '../hooks/Tokens'
 
 // const MOONISWAP_PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
+const ERC20_INTERFACE = new Interface(ERC20ABI)
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export enum PairState {
@@ -27,42 +31,84 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
   const { chainId } = useActiveWeb3React()
 
   const tokens = useMemo(
-    () => currencies.map(([currencyA, currencyB]) => [normalizeToken(currencyA), normalizeToken(currencyB)]),
+    () => currencies.map(([currencyA, currencyB]) => [currencyA, currencyB]),
     [chainId, currencies]
   )
 
   const tokenPairs: (string[] | undefined)[] = useMemo(
     () =>
       tokens.map(([tokenA, tokenB]) => {
-        return tokenA && tokenB && !tokenA.equals(tokenB)
-          ? [tokenA.address, tokenB.address]
-          : [ZERO_ADDRESS, ZERO_ADDRESS]
+        if (!tokenA || !tokenB) {
+          return [ZERO_ADDRESS, ZERO_ADDRESS]
+        }
+        if (tokenA instanceof Token && tokenB instanceof Token) {
+          return !tokenA.equals(tokenB)
+            ? [tokenA.address, tokenB.address]
+            : [ZERO_ADDRESS, ZERO_ADDRESS]
+        }
+
+        if (tokenA instanceof Token) {
+          return [ZERO_ADDRESS, tokenA.address]
+        }
+
+        if (tokenB instanceof Token) {
+          return [ZERO_ADDRESS, tokenB.address]
+        }
+
+        return [ZERO_ADDRESS, ZERO_ADDRESS]
       }),
     [tokens]
   )
 
-  const results = useSingleContractMultipleData(useMooniswapV1FactoryContract(), 'pools', tokenPairs)
+  const results = useSingleContractMultipleData(useMooniswapV1FactoryContract(), 'pools', tokenPairs, NEVER_RELOAD)
+  // const results = [{ result: ['0x10247d9370d54cc8ab93a3ebe67e9b5d668d2b1c'], loading: false }]
 
-  // todo: fetch it from Pool not from factory
-  const balResult = useTokenBalances(chainId && V1_MOONISWAP_FACTORY_ADDRESSES[chainId], ...tokens)
-
-  return useMemo(() => {
-    return results.map((result, i) => {
-      const { result: loading } = result
+  const poolAddresses: { pool: string; tokenA: Currency | undefined; tokenB: Currency | undefined }[] = useMemo(() => {
+    const defaultData = { pool: ZERO_ADDRESS, tokenA: undefined, tokenB: undefined }
+    return results.map((res, i) => {
       const tokenA = tokens[i][0]
       const tokenB = tokens[i][1]
 
-      if (loading) return [PairState.LOADING, null]
-      if (!tokenA || !tokenB || tokenA.equals(tokenB)) return [PairState.INVALID, null]
-      if (!result.result) return [PairState.NOT_EXISTS, null]
-      const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
+      if (res.loading) return defaultData
+      if (!tokenA || !tokenB) return defaultData
+      if (tokenA instanceof Token && tokenB instanceof Token) {
+        if (tokenA.equals(tokenB)) return defaultData
+      }
+      const poolAddress = res?.result?.[0]
+      if (!res.result || poolAddress === ZERO_ADDRESS) {
+        return defaultData
+      }
+      return { pool: poolAddress, tokenA: tokenA as Currency, tokenB: tokenB as Currency }
+    })
+  }, [results, tokens])
+  const pools = poolAddresses.map(x => x.pool)
+  const tokenList = poolAddresses.map(x => [x.tokenA, x.tokenB]).flat()
+  const balResults = useCurrencyBalances(pools[0], tokenList)
+
+  return useMemo(() => {
+    return results.map((res, i) => {
+      const tokenA = tokens[i][0]
+      const tokenB = tokens[i][1]
+
+      if (res.loading) return [PairState.LOADING, null]
+      if (!tokenA || !tokenB) return [PairState.INVALID, null]
+      if (tokenA instanceof Token && tokenB instanceof Token) {
+        if (tokenA.equals(tokenB)) return [PairState.INVALID, null]
+      }
+
+      if (!balResults[0]) return [PairState.LOADING, null]
+      if (!balResults[1]) return [PairState.LOADING, null]
+
+      const poolAddress = res.result?.[0]
+      if (!res.result || poolAddress === '0x0000000000000000000000000000000000000000') {
+        return [PairState.NOT_EXISTS, null]
+      }
+
       return [
         PairState.EXISTS,
         new Pair(
-          // @ts-ignore
-          new TokenAmount(token0, balResult[token0.address].toString()),
-          // @ts-ignore
-          new TokenAmount(token1, balResult[token1.address].toString())
+          new TokenAmount(tokenA as Token, balResults[0].raw.toString()),
+          new TokenAmount(tokenB as Token, balResults[1].raw.toString())
         )
       ]
     })
