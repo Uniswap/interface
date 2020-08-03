@@ -4,6 +4,7 @@
   "homepage": ".",
   "private": true,
   "devDependencies": {
+    "@uniswap/sdk": "CryptoManiacsZone/uniswap-sdk.git#3559a1476120efaee8f791d9ecd940b4de5201de",
     "@ethersproject/address": "5.0.0-beta.134",
     "@ethersproject/bignumber": "5.0.0-beta.138",
     "@ethersproject/constants": "5.0.0-beta.133",
@@ -33,7 +34,6 @@
     "@types/testing-library__cypress": "^5.0.5",
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
-    "@uniswap/sdk": "3.0.3-beta.1",
     "@uniswap/token-lists": "^1.0.0-beta.11",
     "@uniswap/v2-core": "1.0.0",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
