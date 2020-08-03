@@ -104,6 +104,8 @@ function useSwapCallArguments(
   }, [account, allowedSlippage, chainId, deadline, library, recipient, trade, v1Exchange])
 }
 
+const DEFAULT_FAILED_SWAP_ERROR = 'Unexpected error. Please try again or contact support.'
+
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
@@ -156,10 +158,10 @@ export function useSwapCallback(
               .catch(gasError => {
                 console.debug('Gas estimate failed, trying eth_call to extract error', call)
 
-                return contract.callStatic[methodName](...args, { ...options, from: account })
+                return contract.callStatic[methodName](...args, options)
                   .then(result => {
                     console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
-                    return { call, error: new Error('Unexpected error. Please contact support.') }
+                    return { call, error: new Error(DEFAULT_FAILED_SWAP_ERROR) }
                   })
                   .catch(callError => {
                     console.debug('Call threw error', call, callError)
@@ -171,30 +173,29 @@ export function useSwapCallback(
                     // - error.errorSignature - "Error(string)" (the EIP 838 sighash; supports future custom errors)
                     // - error.errorArgs - The arguments passed into the error (more relevant post EIP 838 custom errors)
                     // - error.transaction - The call transaction used
-                    console.log(
-                      callError.reason,
-                      callError.address,
-                      callError.args,
-                      callError.method,
-                      callError.errorSignature,
-                      callError.errorArgs,
-                      callError.transaction
-                    )
-                    return { call, error: callError }
+                    let errorMessage: string = DEFAULT_FAILED_SWAP_ERROR
+                    switch (callError.reason) {
+                      case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
+                        errorMessage =
+                          'The transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
+                        break
+                    }
+                    return { call, error: new Error(errorMessage) }
                   })
               })
           })
         )
 
         // a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
-        const indexOfSuccessfulEstimation = estimatedCalls.findIndex(
-          (el, ix, list): boolean => 'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
+        const successfulEstimation = estimatedCalls.find(
+          (el, ix, list): el is SuccessfulCall =>
+            'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
         )
 
-        if (indexOfSuccessfulEstimation === -1) {
-          const lastCall = estimatedCalls[estimatedCalls.length - 1]
-          if ('error' in lastCall) throw lastCall.error
-          throw new Error('Unexpected error. Please contact support.')
+        if (!successfulEstimation) {
+          const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
+          if (errorCalls.length > 0) throw errorCalls[errorCalls.length - 1].error
+          throw new Error(DEFAULT_FAILED_SWAP_ERROR)
         }
 
         const {
@@ -203,7 +204,7 @@ export function useSwapCallback(
             parameters: { methodName, args, value }
           },
           gasEstimate
-        } = estimatedCalls[indexOfSuccessfulEstimation] as SuccessfulCall
+        } = successfulEstimation
 
         return contract[methodName](...args, {
           gasLimit: calculateGasMargin(gasEstimate),
@@ -238,11 +239,10 @@ export function useSwapCallback(
             // if the user rejected the tx, pass this along
             if (error?.code === 4001) {
               throw error
-            }
-            // otherwise, the error was unexpected and we need to convey that
-            else {
+            } else {
+              // otherwise, the error was unexpected and we need to convey that
               console.error(`Swap failed`, error, methodName, args, value)
-              throw new Error('An error occurred while swapping. Please contact support.')
+              throw new Error(DEFAULT_FAILED_SWAP_ERROR)
             }
           })
       },

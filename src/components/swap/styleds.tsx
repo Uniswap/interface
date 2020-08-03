@@ -1,4 +1,6 @@
 import { darken } from 'polished'
+import React from 'react'
+import { AlertTriangle } from 'react-feather'
 import styled, { css } from 'styled-components'
 import { Text } from 'rebass'
 
@@ -95,7 +97,7 @@ export const Dots = styled.span`
   }
 `
 
-export const SwapCallbackError = styled.div`
+const SwapCallbackErrorInner = styled.div`
   background-color: ${({ theme }) => theme.red1};
   border-radius: 1rem;
   padding: 1rem;
@@ -105,3 +107,10 @@ export const SwapCallbackError = styled.div`
   border: 1px solid ${({ theme }) => darken(0.1, theme.red1)};
   color: ${({ theme }) => theme.white};
 `
+export function SwapCallbackError({ error }: { error: string }) {
+  return (
+    <SwapCallbackErrorInner>
+      <AlertTriangle style={{ marginRight: 8, minWidth: 42 }} /> <strong>{error}</strong>
+    </SwapCallbackErrorInner>
+  )
+}

@@ -11,7 +11,7 @@ import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
-import { StyledBalanceMaxMini } from './styleds'
+import { StyledBalanceMaxMini, SwapCallbackError } from './styleds'
 
 export default function SwapModalFooter({
   trade,
@@ -21,7 +21,8 @@ export default function SwapModalFooter({
   slippageAdjustedAmounts,
   onSwap,
   realizedLPFee,
-  priceImpactWithoutFee
+  priceImpactWithoutFee,
+  swapErrorMessage
 }: {
   trade: Trade
   showInverted: boolean
@@ -31,6 +32,7 @@ export default function SwapModalFooter({
   onSwap: () => any
   realizedLPFee: CurrencyAmount
   priceImpactWithoutFee?: Percent
+  swapErrorMessage: string | undefined
 }) {
   const theme = useContext(ThemeContext)
 
@@ -112,6 +114,8 @@ export default function SwapModalFooter({
             {severity > 2 ? 'Swap Anyway' : 'Confirm Swap'}
           </Text>
         </ButtonError>
+
+        {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
       </AutoRow>
     </>
   )

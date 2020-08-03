@@ -6,6 +6,12 @@ function waitRandom(min: number, max: number): Promise<void> {
   return wait(min + Math.round(Math.random() * Math.max(0, max - min)))
 }
 
+export class CancelledError extends Error {
+  constructor() {
+    super('Cancelled')
+  }
+}
+
 /**
  * Retries the function that returns the promise until the promise successfully resolves up to n retries
  * @param fn function to retry
@@ -13,13 +19,42 @@ function waitRandom(min: number, max: number): Promise<void> {
  * @param minWait min wait between retries in ms
  * @param maxWait max wait between retries in ms
  */
-// todo: support cancelling the retry
 export function retry<T>(
   fn: () => Promise<T>,
-  { n = 3, minWait = 500, maxWait = 1000 }: { n?: number; minWait?: number; maxWait?: number } = {}
-): Promise<T> {
-  return fn().catch(error => {
-    if (n === 0) throw error
-    return waitRandom(minWait, maxWait).then(() => retry(fn, { n: n - 1, minWait, maxWait }))
+  { n, minWait, maxWait }: { n: number; minWait: number; maxWait: number }
+): { promise: Promise<T>; cancel: () => void } {
+  let cancelled = false
+  let completed = false
+  let rejectCancelled: (error: Error) => void
+  const promise = new Promise<T>(async (resolve, reject) => {
+    rejectCancelled = reject
+    while (true) {
+      let result: T
+      try {
+        result = await fn()
+        if (!cancelled) {
+          resolve(result)
+          completed = true
+        }
+        break
+      } catch (error) {
+        if (!cancelled && n <= 0) {
+          reject(error)
+          completed = true
+          break
+        }
+        n--
+      }
+      await waitRandom(minWait, maxWait)
+    }
   })
+  return {
+    promise,
+    cancel: () => {
+      if (completed) return
+      cancelled = true
+      completed = true
+      rejectCancelled(new CancelledError())
+    }
+  }
 }

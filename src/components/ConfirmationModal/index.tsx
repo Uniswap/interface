@@ -38,7 +38,7 @@ const CustomLightSpinner = styled(Spinner)<{ size: string }>`
 interface ConfirmationModalProps {
   isOpen: boolean
   onDismiss: () => void
-  hash: string
+  hash: string | undefined
   topContent: () => React.ReactNode
   bottomContent: () => React.ReactNode
   attemptingTxn: boolean
@@ -59,10 +59,10 @@ export default function ConfirmationModal({
   const { chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
-  const transactionBroadcast = !!hash
+  const isTransactionBroadcast = !!hash
 
   // waiting for user to confirm/reject tx _or_ showing info on a tx that has been broadcast
-  if (attemptingTxn || transactionBroadcast) {
+  if (attemptingTxn || isTransactionBroadcast) {
     return (
       <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
         <Wrapper>
@@ -72,7 +72,7 @@ export default function ConfirmationModal({
               <CloseIcon onClick={onDismiss} />
             </RowBetween>
             <ConfirmedIcon>
-              {transactionBroadcast ? (
+              {isTransactionBroadcast ? (
                 <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary1} />
               ) : (
                 <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
@@ -80,7 +80,7 @@ export default function ConfirmationModal({
             </ConfirmedIcon>
             <AutoColumn gap="12px" justify={'center'}>
               <Text fontWeight={500} fontSize={20}>
-                {transactionBroadcast ? 'Transaction Submitted' : 'Waiting For Confirmation'}
+                {isTransactionBroadcast ? 'Transaction Submitted' : 'Waiting For Confirmation'}
               </Text>
               <AutoColumn gap="12px" justify={'center'}>
                 <Text fontWeight={600} fontSize={14} color="" textAlign="center">
@@ -88,7 +88,7 @@ export default function ConfirmationModal({
                 </Text>
               </AutoColumn>
 
-              {transactionBroadcast ? (
+              {isTransactionBroadcast ? (
                 <>
                   <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
                     <Text fontWeight={500} fontSize={14} color={theme.primary1}>

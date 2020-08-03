@@ -1,6 +1,6 @@
 import { CurrencyAmount, JSBI } from '@uniswap/sdk'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { AlertTriangle, ArrowDown } from 'react-feather'
+import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
@@ -60,7 +60,7 @@ export default function Swap() {
 
   // for expert mode
   const toggleSettings = useToggleSettingsMenu()
-  const [expertMode] = useExpertModeManager()
+  const [isExpertMode] = useExpertModeManager()
 
   // get custom setting values for user
   const [deadline] = useUserDeadline()
@@ -126,9 +126,17 @@ export default function Swap() {
   )
 
   // modal and loading
-  const [showConfirm, setShowConfirm] = useState<boolean>(false) // show confirmation modal
-  const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // waiting for user confirmaion/rejection
-  const [txHash, setTxHash] = useState<string>('')
+  const [{ showConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
+    showConfirm: boolean
+    attemptingTxn: boolean
+    swapErrorMessage: string | undefined
+    txHash: string | undefined
+  }>({
+    showConfirm: false,
+    attemptingTxn: false,
+    swapErrorMessage: undefined,
+    txHash: undefined
+  })
 
   const formattedAmounts = {
     [independentField]: typedValue,
@@ -178,11 +186,10 @@ export default function Swap() {
     if (!swapCallback) {
       return
     }
-    setAttemptingTxn(true)
+    setSwapState({ attemptingTxn: true, showConfirm, swapErrorMessage: undefined, txHash: undefined })
     swapCallback()
       .then(hash => {
-        setAttemptingTxn(false)
-        setTxHash(hash)
+        setSwapState({ attemptingTxn: false, showConfirm, swapErrorMessage: undefined, txHash: hash })
 
         ReactGA.event({
           category: 'Swap',
@@ -200,11 +207,7 @@ export default function Swap() {
         })
       })
       .catch(error => {
-        setAttemptingTxn(false)
-        // we only care if the error is something _other_ than the user rejected the tx
-        if (error?.code !== 4001) {
-          console.error(error)
-        }
+        setSwapState({ attemptingTxn: false, showConfirm, swapErrorMessage: error.message, txHash: undefined })
       })
   }
 
@@ -221,7 +224,7 @@ export default function Swap() {
     (approval === ApprovalState.NOT_APPROVED ||
       approval === ApprovalState.PENDING ||
       (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
-    !(priceImpactSeverity > 3 && !expertMode)
+    !(priceImpactSeverity > 3 && !isExpertMode)
 
   function modalHeader() {
     return trade ? (
@@ -247,6 +250,7 @@ export default function Swap() {
         priceImpactWithoutFee={priceImpactWithoutFee}
         slippageAdjustedAmounts={slippageAdjustedAmounts}
         trade={trade}
+        swapErrorMessage={swapErrorMessage}
       />
     ) : null
   }
@@ -261,6 +265,19 @@ export default function Swap() {
   const showWarning =
     (!dismissedToken0 && !!currencies[Field.INPUT]) || (!dismissedToken1 && !!currencies[Field.OUTPUT])
 
+  const onConfirmDismiss = useCallback(() => {
+    setSwapState({
+      showConfirm: false,
+      attemptingTxn: false,
+      txHash: undefined,
+      swapErrorMessage: undefined
+    })
+    // if there was a tx hash, we want to clear the input
+    if (txHash) {
+      onUserInput(Field.INPUT, '')
+    }
+  }, [onUserInput, txHash])
+
   return (
     <>
       {showWarning && <TokenWarningCards currencies={currencies} />}
@@ -270,14 +287,7 @@ export default function Swap() {
           <ConfirmationModal
             isOpen={showConfirm}
             title="Confirm Swap"
-            onDismiss={() => {
-              setShowConfirm(false)
-              // if there was a tx hash, we want to clear the input
-              if (txHash) {
-                onUserInput(Field.INPUT, '')
-              }
-              setTxHash('')
-            }}
+            onDismiss={onConfirmDismiss}
             attemptingTxn={attemptingTxn}
             hash={txHash}
             topContent={modalHeader}
@@ -409,15 +419,26 @@ export default function Swap() {
                 </ButtonPrimary>
                 <ButtonError
                   onClick={() => {
-                    expertMode ? onSwap() : setShowConfirm(true)
+                    if (isExpertMode) {
+                      onSwap()
+                    } else {
+                      setSwapState({
+                        attemptingTxn: false,
+                        swapErrorMessage: undefined,
+                        showConfirm: true,
+                        txHash: undefined
+                      })
+                    }
                   }}
                   width="48%"
                   id="swap-button"
-                  disabled={!isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !expertMode)}
+                  disabled={
+                    !isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)
+                  }
                   error={isValid && priceImpactSeverity > 2}
                 >
                   <Text fontSize={16} fontWeight={500}>
-                    {priceImpactSeverity > 3 && !expertMode
+                    {priceImpactSeverity > 3 && !isExpertMode
                       ? `Price Impact High`
                       : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                   </Text>
@@ -426,26 +447,31 @@ export default function Swap() {
             ) : (
               <ButtonError
                 onClick={() => {
-                  expertMode ? onSwap() : setShowConfirm(true)
+                  if (isExpertMode) {
+                    onSwap()
+                  } else {
+                    setSwapState({
+                      attemptingTxn: false,
+                      swapErrorMessage: undefined,
+                      showConfirm: true,
+                      txHash: undefined
+                    })
+                  }
                 }}
                 id="swap-button"
-                disabled={!isValid || (priceImpactSeverity > 3 && !expertMode) || !!swapCallbackError}
+                disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
                 error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
               >
                 <Text fontSize={20} fontWeight={500}>
                   {swapInputError
                     ? swapInputError
-                    : priceImpactSeverity > 3 && !expertMode
+                    : priceImpactSeverity > 3 && !isExpertMode
                     ? `Price Impact Too High`
                     : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                 </Text>
               </ButtonError>
             )}
-            {swapCallbackError && approval === ApprovalState.APPROVED && !swapInputError && trade ? (
-              <SwapCallbackError>
-                <AlertTriangle style={{ marginRight: 8, minWidth: 42 }} /> <strong>{swapCallbackError}</strong>
-              </SwapCallbackError>
-            ) : null}
+            {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
             {betterTradeLinkVersion && <BetterTradeLink version={betterTradeLinkVersion} />}
           </BottomGrouping>
         </Wrapper>

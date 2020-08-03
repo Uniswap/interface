@@ -12,15 +12,21 @@ describe('retry', () => {
   }
 
   it('works after one fail', async () => {
-    await expect(retry(makeFn(1, 'abc'), { n: 3, maxWait: 0, minWait: 0 })).resolves.toEqual('abc')
+    await expect(retry(makeFn(1, 'abc'), { n: 3, maxWait: 0, minWait: 0 }).promise).resolves.toEqual('abc')
   })
 
   it('works after two fails', async () => {
-    await expect(retry(makeFn(2, 'abc'), { n: 3, maxWait: 0, minWait: 0 })).resolves.toEqual('abc')
+    await expect(retry(makeFn(2, 'abc'), { n: 3, maxWait: 0, minWait: 0 }).promise).resolves.toEqual('abc')
   })
 
   it('throws if too many fails', async () => {
-    await expect(retry(makeFn(4, 'abc'), { n: 3, maxWait: 0, minWait: 0 })).rejects.toThrow('failure')
+    await expect(retry(makeFn(4, 'abc'), { n: 3, maxWait: 0, minWait: 0 }).promise).rejects.toThrow('failure')
+  })
+
+  it('cancel causes promise to reject', async () => {
+    const { promise, cancel } = retry(makeFn(2, 'abc'), { n: 3, minWait: 100, maxWait: 100 })
+    cancel()
+    await expect(promise).rejects.toThrow('Cancelled')
   })
 
   async function checkTime(fn: () => Promise<any>, min: number, max: number) {
@@ -36,7 +42,7 @@ describe('retry', () => {
     for (let i = 0; i < 10; i++) {
       promises.push(
         checkTime(
-          () => expect(retry(makeFn(4, 'abc'), { n: 3, maxWait: 100, minWait: 50 })).rejects.toThrow('failure'),
+          () => expect(retry(makeFn(4, 'abc'), { n: 3, maxWait: 100, minWait: 50 }).promise).rejects.toThrow('failure'),
           150,
           305
         )
