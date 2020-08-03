@@ -39,9 +39,9 @@ import {
 } from '../../state/swap/hooks'
 import {
   useExpertModeManager,
+  useTokenWarningDismissal,
   useUserDeadline,
-  useUserSlippageTolerance,
-  useTokenWarningDismissal
+  useUserSlippageTolerance
 } from '../../state/user/hooks'
 import { CursorPointer, LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
