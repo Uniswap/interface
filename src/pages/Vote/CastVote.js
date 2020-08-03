@@ -111,7 +111,7 @@ export default function CastVote({ proposal, timestamp, onChange }) {
 			.castVote(proposalId, isForProposal)
 			.catch(error => {
 				console.error(`Error getting gas estimation for casting vote with ID ${proposalId}: `, error)
-				return ethers.BigNumber.from(500000);
+				return ethers.BigNumber.from('500000');
 			})
 
 		governorContract
@@ -121,7 +121,6 @@ export default function CastVote({ proposal, timestamp, onChange }) {
 			.then(response => {
 				setLoading(false)
 				addTransaction(response, { proposalId: proposalId })
-
 			})
 			.catch(error => {
 				setLoading(false)
