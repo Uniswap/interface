@@ -83,7 +83,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
   }, [results, tokens])
   const pools = poolAddresses.map(x => x.pool)
   const tokenList = poolAddresses.map(x => [x.tokenA, x.tokenB]).flat()
-  const balResults = useCurrencyBalances(pools[0], tokenList)
+  const balancesResults = useCurrencyBalances(pools[0], tokenList)
 
   return useMemo(() => {
     return results.map((res, i) => {
@@ -96,11 +96,11 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
         if (tokenA.equals(tokenB)) return [PairState.INVALID, null]
       }
 
-      if (!balResults[0]) return [PairState.LOADING, null]
-      if (!balResults[1]) return [PairState.LOADING, null]
+      if (!balancesResults[0]) return [PairState.LOADING, null]
+      if (!balancesResults[1]) return [PairState.LOADING, null]
 
       const poolAddress = res.result?.[0]
-      if (!res.result || poolAddress === '0x0000000000000000000000000000000000000000') {
+      if (!res.result || poolAddress === ZERO_ADDRESS) {
         return [PairState.NOT_EXISTS, null]
       }
 
@@ -111,8 +111,8 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
       return [
         PairState.EXISTS,
         new Pair(
-          new TokenAmount(token0, balResults[0].raw.toString()),
-          new TokenAmount(token1, balResults[1].raw.toString())
+          new TokenAmount(token0, balancesResults[0].raw.toString()),
+          new TokenAmount(token1, balancesResults[1].raw.toString())
         )
       ]
     })
