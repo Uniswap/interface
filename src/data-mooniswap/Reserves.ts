@@ -104,11 +104,15 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
         return [PairState.NOT_EXISTS, null]
       }
 
+      const token0 = normalizeToken(tokenA)
+      const token1 = normalizeToken(tokenB)
+      if (!token0 || !token1) return [PairState.INVALID, null]
+
       return [
         PairState.EXISTS,
         new Pair(
-          new TokenAmount(tokenA as Token, balResults[0].raw.toString()),
-          new TokenAmount(tokenB as Token, balResults[1].raw.toString())
+          new TokenAmount(token0, balResults[0].raw.toString()),
+          new TokenAmount(token1, balResults[1].raw.toString())
         )
       ]
     })
