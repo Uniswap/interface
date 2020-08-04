@@ -27,7 +27,7 @@ export function useApproveCallback(
 ): [ApprovalState, () => Promise<void>] {
   const { account } = useActiveWeb3React()
   const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined
-  const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
+  const currentAllowance = useTokenAllowance(token?.isEther ? undefined : token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
 
   // check the current approval status
@@ -36,6 +36,7 @@ export function useApproveCallback(
     if (amountToApprove.token.equals(ETHER)) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
+    if (!spender) return ApprovalState.UNKNOWN
 
     // amountToApprove will be defined if currentAllowance is
     return currentAllowance.lessThan(amountToApprove)
@@ -45,7 +46,7 @@ export function useApproveCallback(
       : ApprovalState.APPROVED
   }, [amountToApprove, currentAllowance, pendingApproval, spender])
 
-  const tokenContract = useTokenContract(token?.address)
+  const tokenContract = useTokenContract(token?.isEther ? undefined : token?.address)
   const addTransaction = useTransactionAdder()
 
   const approve = useCallback(async (): Promise<void> => {
@@ -57,9 +58,12 @@ export function useApproveCallback(
       console.error('no token')
       return
     }
-
     if (!tokenContract) {
-      console.error('tokenContract is null')
+      console.error('no token')
+      return
+    }
+
+    if (!spender) {
       return
     }
 
