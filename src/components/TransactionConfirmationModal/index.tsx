@@ -150,7 +150,6 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
           <Text fontWeight={400} fontSize={18} color={theme.red1}>
             {message}
           </Text>
-          <TYPE.italic>Slippage can be controlled in the settings panel</TYPE.italic>
         </AutoColumn>
       </Section>
       <BottomSection gap="12px">
