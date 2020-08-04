@@ -8,7 +8,7 @@ import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
-import ConfirmationModal from '../../components/ConfirmationModal'
+import TransactionConfirmationModal from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow, RowBetween } from '../../components/Row'
@@ -284,7 +284,7 @@ export default function Swap() {
       <AppBody disabled={showWarning}>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
-          <ConfirmationModal
+          <TransactionConfirmationModal
             isOpen={showConfirm}
             title="Confirm Swap"
             onDismiss={onConfirmDismiss}

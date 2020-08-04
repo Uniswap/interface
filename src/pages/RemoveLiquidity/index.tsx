@@ -11,7 +11,7 @@ import { ThemeContext } from 'styled-components'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import ConfirmationModal from '../../components/ConfirmationModal'
+import TransactionConfirmationModal from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
@@ -453,7 +453,7 @@ export default function RemoveLiquidity({
       <AppBody>
         <AddRemoveTabs adding={false} />
         <Wrapper>
-          <ConfirmationModal
+          <TransactionConfirmationModal
             isOpen={showConfirm}
             onDismiss={() => {
               setShowConfirm(false)

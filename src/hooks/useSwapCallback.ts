@@ -165,17 +165,10 @@ export function useSwapCallback(
                   })
                   .catch(callError => {
                     console.debug('Call threw error', call, callError)
-                    // error.reason - The Revert reason; this is what you probably care about. :)
-                    // Additionally:
-                    // - error.address - the contract address
-                    // - error.args - [ BigNumber(1), BigNumber(2), BigNumber(3) ] in this case
-                    // - error.method - "someMethod()" in this case
-                    // - error.errorSignature - "Error(string)" (the EIP 838 sighash; supports future custom errors)
-                    // - error.errorArgs - The arguments passed into the error (more relevant post EIP 838 custom errors)
-                    // - error.transaction - The call transaction used
                     let errorMessage: string = DEFAULT_FAILED_SWAP_ERROR
                     switch (callError.reason) {
                       case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
+                      case 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT':
                         errorMessage =
                           'The transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
                         break
