@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from '@uniswap/sdk'
+import { Token, TokenAmount, ETHER, JSBI, Pair, Percent, Price } from '@uniswap/sdk'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { PairState, usePair } from '../../data-mooniswap/Reserves'
@@ -19,11 +19,11 @@ export function useMintState(): AppState['mint'] {
 
 export interface MintInfoState {
   dependentField: Field
-  currencies: { [field in Field]?: Currency }
+  currencies: { [field in Field]?: Token }
   pair?: Pair | null
   pairState: PairState
-  currencyBalances: { [field in Field]?: CurrencyAmount }
-  parsedAmounts: { [field in Field]?: CurrencyAmount }
+  currencyBalances: { [field in Field]?: TokenAmount }
+  parsedAmounts: { [field in Field]?: TokenAmount }
   price?: Price
   noLiquidity?: boolean
   liquidityMinted?: TokenAmount
@@ -31,11 +31,7 @@ export interface MintInfoState {
   error?: string
 }
 
-export function useDerivedMintInfo(
-  currencyA: Currency | undefined,
-  currencyB: Currency | undefined
-): MintInfoState {
-
+export function useDerivedMintInfo(currencyA: Token | undefined, currencyB: Token | undefined): MintInfoState {
   const { account, chainId } = useActiveWeb3React()
 
   const { independentField, typedValue, otherTypedValue } = useMintState()
@@ -43,7 +39,7 @@ export function useDerivedMintInfo(
   const dependentField = independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A
 
   // tokens
-  const currencies: { [field in Field]?: Currency } = useMemo(
+  const currencies: { [field in Field]?: Token } = useMemo(
     () => ({
       [Field.CURRENCY_A]: currencyA ?? undefined,
       [Field.CURRENCY_B]: currencyB ?? undefined
@@ -63,14 +59,14 @@ export function useDerivedMintInfo(
     currencies[Field.CURRENCY_B]
   ])
 
-  const currencyBalances: { [field in Field]?: CurrencyAmount } = {
+  const currencyBalances: { [field in Field]?: TokenAmount } = {
     [Field.CURRENCY_A]: balances[0],
     [Field.CURRENCY_B]: balances[1]
   }
 
   // amounts
-  const independentAmount: CurrencyAmount | undefined = tryParseAmount(typedValue, currencies[independentField])
-  const dependentAmount: CurrencyAmount | undefined = useMemo(() => {
+  const independentAmount: TokenAmount | undefined = tryParseAmount(typedValue, currencies[independentField])
+  const dependentAmount: TokenAmount | undefined = useMemo(() => {
     if (noLiquidity) {
       if (otherTypedValue && currencies[dependentField]) {
         return tryParseAmount(otherTypedValue, currencies[dependentField])
@@ -86,14 +82,14 @@ export function useDerivedMintInfo(
           dependentField === Field.CURRENCY_B
             ? pair.priceOf(tokenA).quote(wrappedIndependentAmount)
             : pair.priceOf(tokenB).quote(wrappedIndependentAmount)
-        return dependentCurrency === ETHER ? CurrencyAmount.ether(dependentTokenAmount.raw) : dependentTokenAmount
+        return dependentCurrency === ETHER ? new TokenAmount(ETHER, dependentTokenAmount.raw) : dependentTokenAmount
       }
       return
     } else {
       return
     }
   }, [noLiquidity, otherTypedValue, currencies, dependentField, independentAmount, currencyA, chainId, currencyB, pair])
-  const parsedAmounts: { [field in Field]: CurrencyAmount | undefined } = {
+  const parsedAmounts: { [field in Field]: TokenAmount | undefined } = {
     [Field.CURRENCY_A]: independentField === Field.CURRENCY_A ? independentAmount : dependentAmount,
     [Field.CURRENCY_B]: independentField === Field.CURRENCY_A ? dependentAmount : independentAmount
   }
@@ -101,7 +97,7 @@ export function useDerivedMintInfo(
   const price = useMemo(() => {
     const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
     if (currencyAAmount && currencyBAmount) {
-      return new Price(currencyAAmount.currency, currencyBAmount.currency, currencyAAmount.raw, currencyBAmount.raw)
+      return new Price(currencyAAmount.token, currencyBAmount.token, currencyAAmount.raw, currencyBAmount.raw)
     }
     return
   }, [parsedAmounts])

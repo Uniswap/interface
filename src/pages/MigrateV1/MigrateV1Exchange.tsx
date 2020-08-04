@@ -1,6 +1,6 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { AddressZero } from '@ethersproject/constants'
-import { Currency, CurrencyAmount, Fraction, JSBI, Percent, Token, TokenAmount, WETH } from '@uniswap/sdk'
+import { Token, TokenAmount, Fraction, JSBI, Percent, ETHER } from '@uniswap/sdk'
 import React, { useCallback, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router'
@@ -35,7 +35,7 @@ const ONE = JSBI.BigInt(1)
 const ZERO_FRACTION = new Fraction(ZERO, ONE)
 const ALLOWED_OUTPUT_MIN_PERCENT = new Percent(JSBI.BigInt(10000 - INITIAL_ALLOWED_SLIPPAGE), JSBI.BigInt(10000))
 
-function FormattedPoolCurrencyAmount({ currencyAmount }: { currencyAmount: CurrencyAmount }) {
+function FormattedPoolCurrencyAmount({ currencyAmount }: { currencyAmount: TokenAmount }) {
   return (
     <>
       {currencyAmount.equalTo(JSBI.BigInt(0))
@@ -56,7 +56,7 @@ export function V1LiquidityInfo({
   token: Token
   liquidityTokenAmount: TokenAmount
   tokenWorth: TokenAmount
-  ethWorth: CurrencyAmount
+  ethWorth: TokenAmount
 }) {
   const { chainId } = useActiveWeb3React()
 
@@ -67,14 +67,14 @@ export function V1LiquidityInfo({
         <div style={{ marginLeft: '.75rem' }}>
           <TYPE.mediumHeader>
             {<FormattedPoolCurrencyAmount currencyAmount={liquidityTokenAmount} />}{' '}
-            {token.equals(WETH[chainId]) ? 'WETH' : token.symbol}/ETH
+            {token.symbol}/ETH
           </TYPE.mediumHeader>
         </div>
       </AutoRow>
 
       <RowBetween my="1rem">
         <Text fontSize={16} fontWeight={500}>
-          Pooled {token.equals(WETH[chainId]) ? 'WETH' : token.symbol}:
+          Pooled {token.symbol}:
         </Text>
         <RowFixed>
           <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
@@ -91,7 +91,7 @@ export function V1LiquidityInfo({
           <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
             <FormattedPoolCurrencyAmount currencyAmount={ethWorth} />
           </Text>
-          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={Currency.ETHER} />
+          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={ETHER} />
         </RowFixed>
       </RowBetween>
     </>
@@ -104,19 +104,19 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
   const exchangeETHBalance = useETHBalances([liquidityTokenAmount.token.address])?.[liquidityTokenAmount.token.address]
   const exchangeTokenBalance = useTokenBalance(liquidityTokenAmount.token.address, token)
 
-  const [v2PairState, v2Pair] = usePair(chainId ? WETH[chainId] : undefined, token)
+  const [v2PairState, v2Pair] = usePair(token)
   const isFirstLiquidityProvider: boolean = v2PairState === PairState.NOT_EXISTS
 
-  const v2SpotPrice = v2Pair?.reserveOf(token)?.divide(v2Pair?.reserveOf(WETH[chainId]))
+  const v2SpotPrice = v2Pair?.reserveOf(token)?.divide(v2Pair?.reserveOf(ETHER))
 
   const [confirmingMigration, setConfirmingMigration] = useState<boolean>(false)
   const [pendingMigrationHash, setPendingMigrationHash] = useState<string | null>(null)
 
   const shareFraction: Fraction = totalSupply ? new Percent(liquidityTokenAmount.raw, totalSupply.raw) : ZERO_FRACTION
 
-  const ethWorth: CurrencyAmount = exchangeETHBalance
-    ? CurrencyAmount.ether(exchangeETHBalance.multiply(shareFraction).multiply(WEI_DENOM).quotient)
-    : CurrencyAmount.ether(ZERO)
+  const ethWorth: TokenAmount = exchangeETHBalance
+    ? new TokenAmount(ETHER, exchangeETHBalance.multiply(shareFraction).multiply(WEI_DENOM).quotient)
+    : new TokenAmount(ETHER, ZERO)
 
   const tokenWorth: TokenAmount = exchangeTokenBalance
     ? new TokenAmount(token, shareFraction.multiply(exchangeTokenBalance.raw).quotient)
@@ -362,7 +362,7 @@ export default function MigrateV1Exchange({
 
         {!account ? (
           <TYPE.largeHeader>You must connect an account.</TYPE.largeHeader>
-        ) : validatedAddress && token?.equals(WETH[chainId]) ? (
+        ) : validatedAddress && token?.equals(ETHER) ? (
           <>
             <TYPE.body my={9} style={{ fontWeight: 400 }}>
               Because Uniswap V2 uses WETH under the hood, your Uniswap V1 WETH/ETH liquidity cannot be migrated. You

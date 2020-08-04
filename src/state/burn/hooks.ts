@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, JSBI, Pair, Percent, TokenAmount } from '@uniswap/sdk'
+import { Token, TokenAmount, JSBI, Pair, Percent } from '@uniswap/sdk'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { usePair } from '../../data/Reserves'
@@ -16,15 +16,15 @@ export function useBurnState(): AppState['burn'] {
 }
 
 export function useDerivedBurnInfo(
-  currencyA: Currency | undefined,
-  currencyB: Currency | undefined
+  currencyA: Token | undefined,
+  currencyB: Token | undefined
 ): {
   pair?: Pair | null
   parsedAmounts: {
     [Field.LIQUIDITY_PERCENT]: Percent
     [Field.LIQUIDITY]?: TokenAmount
-    [Field.CURRENCY_A]?: CurrencyAmount
-    [Field.CURRENCY_B]?: CurrencyAmount
+    [Field.CURRENCY_A]?: TokenAmount
+    [Field.CURRENCY_B]?: TokenAmount
   }
   error?: string
 } {

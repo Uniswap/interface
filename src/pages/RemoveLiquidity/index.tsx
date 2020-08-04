@@ -1,7 +1,7 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, Percent, WETH } from '@uniswap/sdk'
+import { Token, ETHER, Percent } from '@uniswap/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -420,14 +420,9 @@ export default function RemoveLiquidity({
   )
 
   const oneCurrencyIsETH = currencyA === ETHER || currencyB === ETHER
-  const oneCurrencyIsWETH = Boolean(
-    chainId &&
-      ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
-        (currencyB && currencyEquals(WETH[chainId], currencyB)))
-  )
 
   const handleSelectCurrencyA = useCallback(
-    (currency: Currency) => {
+    (currency: Token) => {
       if (currencyIdB && currencyId(currency) === currencyIdB) {
         history.push(`/remove/${currencyId(currency)}/${currencyIdA}`)
       } else {
@@ -437,7 +432,7 @@ export default function RemoveLiquidity({
     [currencyIdA, currencyIdB, history]
   )
   const handleSelectCurrencyB = useCallback(
-    (currency: Currency) => {
+    (currency: Token) => {
       if (currencyIdA && currencyId(currency) === currencyIdA) {
         history.push(`/remove/${currencyIdB}/${currencyId(currency)}`)
       } else {
@@ -542,21 +537,21 @@ export default function RemoveLiquidity({
                         </Text>
                       </RowFixed>
                     </RowBetween>
-                    {chainId && (oneCurrencyIsWETH || oneCurrencyIsETH) ? (
+                    {chainId && false ? (
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${
-                              currencyB === ETHER ? WETH[chainId].address : currencyIdB
+                            to={`/remove/${currencyIdA}/${
+                              currencyIdB
                             }`}
                           >
                             Receive WETH
                           </StyledInternalLink>
-                        ) : oneCurrencyIsWETH ? (
+                        ) : false ? (
                           <StyledInternalLink
                             to={`/remove/${
-                              currencyA && currencyEquals(currencyA, WETH[chainId]) ? 'ETH' : currencyIdA
-                            }/${currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB}`}
+                              currencyIdA
+                            }/${currencyIdB}`}
                           >
                             Receive ETH
                           </StyledInternalLink>
@@ -676,7 +671,7 @@ export default function RemoveLiquidity({
 
       {pair ? (
         <AutoColumn style={{ minWidth: '20rem', marginTop: '1rem' }}>
-          <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
+          <MinimalPositionCard showUnwrapped={false} pair={pair} />
         </AutoColumn>
       ) : null}
     </>

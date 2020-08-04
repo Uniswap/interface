@@ -1,4 +1,4 @@
-import { Currency, Pair } from '@uniswap/sdk'
+import { Token, Pair } from '@uniswap/sdk'
 import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { darken } from 'polished'
@@ -120,14 +120,14 @@ interface CurrencyInputPanelProps {
   onMax?: () => void
   showMaxButton: boolean
   label?: string
-  onCurrencySelect?: (currency: Currency) => void
-  currency?: Currency | null
+  onCurrencySelect?: (currency: Token) => void
+  currency?: Token | null
   disableCurrencySelect?: boolean
   hideBalance?: boolean
   pair?: Pair | null
   hideInput?: boolean
   showSendWithSwap?: boolean
-  otherCurrency?: Currency | null
+  otherCurrency?: Token | null
   id: string
   showCommonBases?: boolean
 }

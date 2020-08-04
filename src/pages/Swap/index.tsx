@@ -1,4 +1,4 @@
-import { CurrencyAmount, JSBI } from '@uniswap/sdk'
+import { TokenAmount, JSBI } from '@uniswap/sdk'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -149,7 +149,7 @@ export default function Swap() {
     }
   }, [approval, approvalSubmitted])
 
-  const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
+  const maxAmountInput: TokenAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
@@ -181,8 +181,8 @@ export default function Swap() {
               ? 'Swap w/o Send + recipient'
               : 'Swap w/ Send',
           label: [
-            trade?.inputAmount?.currency?.symbol,
-            trade?.outputAmount?.currency?.symbol,
+            trade?.inputAmount?.token?.symbol,
+            trade?.outputAmount?.token?.symbol,
             getTradeVersion(trade)
           ].join('/')
         })

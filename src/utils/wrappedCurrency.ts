@@ -1,24 +1,24 @@
-import { ChainId, Currency, CurrencyAmount, ETHER, Token, TokenAmount, WETH } from '@uniswap/sdk'
+import { ChainId, Token, TokenAmount, ETHER } from '@uniswap/sdk'
 
-export function wrappedCurrency(currency: Currency | undefined, chainId: ChainId | undefined): Token | undefined {
-  return chainId && currency === ETHER ? WETH[chainId] : currency instanceof Token ? currency : undefined
+export function wrappedCurrency(currency: Token | undefined, chainId: ChainId | undefined): Token | undefined {
+  return chainId && currency instanceof Token ? currency : undefined
 }
 
 export function wrappedCurrencyAmount(
-  currencyAmount: CurrencyAmount | undefined,
+  currencyAmount: TokenAmount | undefined,
   chainId: ChainId | undefined
 ): TokenAmount | undefined {
-  const token = currencyAmount && chainId ? wrappedCurrency(currencyAmount.currency, chainId) : undefined
+  const token = currencyAmount && chainId ? wrappedCurrency(currencyAmount.token, chainId) : undefined
   return token && currencyAmount ? new TokenAmount(token, currencyAmount.raw) : undefined
 }
 
-export function unwrappedToken(token: Token): Currency {
-  if (token.equals(WETH[token.chainId])) return ETHER
+export function unwrappedToken(token: Token): Token {
+  if (token.equals(ETHER)) return ETHER
   return token
 }
 
 ////////// MOONISWAP ////////
-export function normalizeToken(currency: Currency | undefined): Token | undefined {
+export function normalizeToken(currency: Token | undefined): Token | undefined {
   if (currency?.symbol === 'ETH') {
     return new Token(1, '0x0000000000000000000000000000000000000000', 18, 'ETH', 'Ethereum')
   }

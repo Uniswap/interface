@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { JSBI, Percent, Router, Trade, TradeType } from '@uniswap/sdk'
+import { JSBI, Percent, Trade, TradeType } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { BIPS_BASE, DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
@@ -48,22 +48,24 @@ export function useSwapCallback(
       switch (tradeVersion) {
         case Version.v2:
           swapMethods.push(
-            Router.swapCallParameters(trade, {
-              feeOnTransfer: false,
-              allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-              recipient,
-              ttl: deadline
-            })
+            '0x0' // calldata
+            // Router.swapCallParameters(trade, {
+            //   feeOnTransfer: false,
+            //   allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+            //   recipient,
+            //   ttl: deadline
+            // })
           )
 
           if (trade.tradeType === TradeType.EXACT_INPUT) {
             swapMethods.push(
-              Router.swapCallParameters(trade, {
-                feeOnTransfer: true,
-                allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-                recipient,
-                ttl: deadline
-              })
+              '0x0' // calldata
+              // Router.swapCallParameters(trade, {
+              //   feeOnTransfer: true,
+              //   allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+              //   recipient,
+              //   ttl: deadline
+              // })
             )
           }
           break
@@ -134,8 +136,8 @@ export function useSwapCallback(
           ...(value && !isZero(value) ? { value } : {})
         })
           .then((response: any) => {
-            const inputSymbol = trade.inputAmount.currency.symbol
-            const outputSymbol = trade.outputAmount.currency.symbol
+            const inputSymbol = trade.inputAmount.token.symbol
+            const outputSymbol = trade.outputAmount.token.symbol
             const inputAmount = trade.inputAmount.toSignificant(3)
             const outputAmount = trade.outputAmount.toSignificant(3)
 

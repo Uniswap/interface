@@ -1,4 +1,4 @@
-import { Currency, Token } from '@uniswap/sdk'
+import { Token } from '@uniswap/sdk'
 import React, { KeyboardEvent, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
@@ -26,10 +26,10 @@ import SortButton from './SortButton'
 interface CurrencySearchModalProps {
   isOpen?: boolean
   onDismiss?: () => void
-  hiddenCurrency?: Currency
+  hiddenCurrency?: Token
   showSendWithSwap?: boolean
-  onCurrencySelect?: (currency: Currency) => void
-  otherSelectedCurrency?: Currency
+  onCurrencySelect?: (currency: Token) => void
+  otherSelectedCurrency?: Token
   showCommonBases?: boolean
 }
 
@@ -86,7 +86,7 @@ export default function CurrencySearchModal({
   }, [filteredTokens, searchQuery, searchToken, tokenComparator])
 
   const handleCurrencySelect = useCallback(
-    (currency: Currency) => {
+    (currency: Token) => {
       onCurrencySelect(currency)
       onDismiss()
     },

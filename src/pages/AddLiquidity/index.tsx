@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from '@uniswap/sdk'
+import { Token, ETHER, TokenAmount } from '@uniswap/sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -47,12 +47,6 @@ export default function AddLiquidity({
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
-
-  const oneCurrencyIsWETH = Boolean(
-    chainId &&
-      ((currencyA && currencyEquals(currencyA, WETH[chainId])) ||
-        (currencyB && currencyEquals(currencyB, WETH[chainId])))
-  )
 
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
 
@@ -267,7 +261,7 @@ export default function AddLiquidity({
   } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencies[Field.CURRENCY_B]?.symbol}`
 
   const handleCurrencyASelect = useCallback(
-    (currencyA: Currency) => {
+    (currencyA: Token) => {
       const newCurrencyIdA = currencyId(currencyA)
       if (newCurrencyIdA === currencyIdB) {
         history.push(`/add/${currencyIdB}/${currencyIdA}`)
@@ -278,7 +272,7 @@ export default function AddLiquidity({
     [currencyIdB, history, currencyIdA]
   )
   const handleCurrencyBSelect = useCallback(
-    (currencyB: Currency) => {
+    (currencyB: Token) => {
       const newCurrencyIdB = currencyId(currencyB)
       if (currencyIdA === newCurrencyIdB) {
         if (currencyIdB) {
@@ -437,7 +431,8 @@ export default function AddLiquidity({
 
       {pair && !noLiquidity && pairState !== PairState.INVALID ? (
         <AutoColumn style={{ minWidth: '20rem', marginTop: '1rem' }}>
-          <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
+          {/*<MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />*/}
+          <MinimalPositionCard showUnwrapped={false} pair={pair} />
         </AutoColumn>
       ) : null}
     </>

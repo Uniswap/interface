@@ -1,7 +1,7 @@
 import useENS from '../../hooks/useENS'
 import { Version } from '../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@uniswap/sdk'
+import { Token, TokenAmount, ETHER, JSBI, Trade } from '@uniswap/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -24,14 +24,14 @@ export function useSwapState(): AppState['swap'] {
 }
 
 export function useSwapActionHandlers(): {
-  onCurrencySelection: (field: Field, currency: Currency) => void
+  onCurrencySelection: (field: Field, currency: Token) => void
   onSwitchTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
   const onCurrencySelection = useCallback(
-    (field: Field, currency: Currency) => {
+    (field: Field, currency: Token) => {
       dispatch(
         selectCurrency({
           field,
@@ -69,16 +69,14 @@ export function useSwapActionHandlers(): {
 }
 
 // try to parse a user entered amount for a given token
-export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmount | undefined {
+export function tryParseAmount(value?: string, currency?: Token): TokenAmount | undefined {
   if (!value || !currency) {
     return
   }
   try {
     const typedValueParsed = parseUnits(value, currency.decimals).toString()
     if (typedValueParsed !== '0') {
-      return currency instanceof Token
-        ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
-        : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed))
+      return new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
     }
   } catch (error) {
     // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
@@ -90,9 +88,9 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
 
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(): {
-  currencies: { [field in Field]?: Currency }
-  currencyBalances: { [field in Field]?: CurrencyAmount }
-  parsedAmount: CurrencyAmount | undefined
+  currencies: { [field in Field]?: Token }
+  currencyBalances: { [field in Field]?: TokenAmount }
+  parsedAmount: TokenAmount | undefined
   v2Trade: Trade | undefined
   error?: string
   v1Trade: Trade | undefined
@@ -132,7 +130,7 @@ export function useDerivedSwapInfo(): {
     [Field.OUTPUT]: relevantTokenBalances[1]
   }
 
-  const currencies: { [field in Field]?: Currency } = {
+  const currencies: { [field in Field]?: Token } = {
     [Field.INPUT]: inputCurrency ?? undefined,
     [Field.OUTPUT]: outputCurrency ?? undefined
   }
@@ -177,7 +175,7 @@ export function useDerivedSwapInfo(): {
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-    error = 'Insufficient ' + amountIn.currency.symbol + ' balance'
+    error = 'Insufficient ' + amountIn.token.symbol + ' balance'
   }
 
   return {

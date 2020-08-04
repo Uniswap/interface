@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text } from 'rebass'
-import { ChainId, Currency, currencyEquals, ETHER, Token } from '@uniswap/sdk'
+import { ChainId, Token, currencyEquals, ETHER } from '@uniswap/sdk'
 import styled from 'styled-components'
 
 import { SUGGESTED_BASES } from '../../constants'
@@ -31,8 +31,8 @@ export default function CommonBases({
   selectedCurrency
 }: {
   chainId?: ChainId
-  selectedCurrency?: Currency
-  onSelect: (currency: Currency) => void
+  selectedCurrency?: Token
+  onSelect: (currency: Token) => void
 }) {
   return (
     <AutoColumn gap="md">

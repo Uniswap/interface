@@ -4,7 +4,7 @@
   "homepage": ".",
   "private": true,
   "devDependencies": {
-    "@uniswap/sdk": "CryptoManiacsZone/uniswap-sdk.git#3559a1476120efaee8f791d9ecd940b4de5201de",
+    "@uniswap/sdk": "CryptoManiacsZone/uniswap-sdk.git#v2",
     "@ethersproject/address": "5.0.0-beta.134",
     "@ethersproject/bignumber": "5.0.0-beta.138",
     "@ethersproject/constants": "5.0.0-beta.133",

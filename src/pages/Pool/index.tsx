@@ -16,8 +16,8 @@ import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
-import { usePairs } from '../../data/Reserves'
-import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
+import { usePairs } from '../../data-mooniswap/Reserves'
+import { useTrackedTokenPairs } from '../../state/user/hooks'
 import AppBody from '../AppBody'
 import { Dots } from '../../components/swap/styleds'
 
@@ -27,11 +27,17 @@ export default function Pool() {
 
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
-  const tokenPairsWithLiquidityTokens = useMemo(
-    () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
-    [trackedTokenPairs]
-  )
-  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
+  const pairs = usePairs(trackedTokenPairs)
+
+  const tokenPairsWithLiquidityTokens = pairs.map(([state, pair]) => {
+    if (!pair) {
+      return undefined;
+    }
+    return {
+      liquidityToken: pair?.liquidityToken
+    }
+  })
+  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt?.liquidityToken), [
     tokenPairsWithLiquidityTokens
   ])
   const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
@@ -42,17 +48,19 @@ export default function Pool() {
   // fetch the reserves for all V2 pools in which the user has a balance
   const liquidityTokensWithBalances = useMemo(
     () =>
-      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
-        v2PairsBalances[liquidityToken.address]?.greaterThan('0')
-      ),
+      tokenPairsWithLiquidityTokens.filter((data) => {
+        if (!data) {
+          return undefined
+        }
+        return v2PairsBalances[data.liquidityToken.address]?.greaterThan('0')
+      }),
     [tokenPairsWithLiquidityTokens, v2PairsBalances]
   )
 
-  const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
   const v2IsLoading =
-    fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
+    fetchingV2PairBalances || pairs?.length < liquidityTokensWithBalances.length || pairs?.some(pair => !pair)
 
-  const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
+  const allV2PairsWithLiquidity = pairs.map(([, pair]) => pair).filter((pair): pair is Pair => Boolean(pair))
 
   const hasV1Liquidity = useUserHasLiquidityInAllTokens()
 
