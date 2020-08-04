@@ -1,11 +1,12 @@
-import { CurrencyAmount, Trade, TradeType } from '@uniswap/sdk'
-import React, { useContext } from 'react'
+import { Trade, TradeType } from '@uniswap/sdk'
+import React, { useContext, useMemo } from 'react'
 import { ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { TYPE } from '../../theme'
 import { isAddress, shortenAddress } from '../../utils'
+import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import { RowBetween, RowFixed } from '../Row'
@@ -13,25 +14,27 @@ import { TruncatedText } from './styleds'
 
 export default function SwapModalHeader({
   trade,
-  formattedAmounts,
-  slippageAdjustedAmounts,
-  priceImpactSeverity,
+  allowedSlippage,
   recipient
 }: {
   trade: Trade
-  formattedAmounts: { [field in Field]?: string }
-  slippageAdjustedAmounts: { [field in Field]?: CurrencyAmount }
-  priceImpactSeverity: number
-  independentField: Field
+  allowedSlippage: number
   recipient: string | null
 }) {
+  const slippageAdjustedAmounts = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage), [
+    trade,
+    allowedSlippage
+  ])
+  const { priceImpactWithoutFee } = useMemo(() => computeTradePriceBreakdown(trade), [trade])
+  const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
+
   const theme = useContext(ThemeContext)
 
   return (
     <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
       <RowBetween align="flex-end">
         <TruncatedText fontSize={24} fontWeight={500}>
-          {formattedAmounts[Field.INPUT]}
+          {trade.inputAmount.toSignificant(6)}
         </TruncatedText>
         <RowFixed gap="4px">
           <CurrencyLogo currency={trade.inputAmount.currency} size={'24px'} />
@@ -45,7 +48,7 @@ export default function SwapModalHeader({
       </RowFixed>
       <RowBetween align="flex-end">
         <TruncatedText fontSize={24} fontWeight={500} color={priceImpactSeverity > 2 ? theme.red1 : ''}>
-          {formattedAmounts[Field.OUTPUT]}
+          {trade.outputAmount.toSignificant(6)}
         </TruncatedText>
         <RowFixed gap="4px">
           <CurrencyLogo currency={trade.outputAmount.currency} size={'24px'} />

@@ -1,4 +1,4 @@
-import { CurrencyAmount, JSBI } from '@uniswap/sdk'
+import { CurrencyAmount, JSBI, Trade } from '@uniswap/sdk'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -8,10 +8,7 @@ import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
-import TransactionConfirmationModal, {
-  ConfirmationModalContent,
-  TransactionErrorContent
-} from '../../components/TransactionConfirmationModal'
+import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow, RowBetween } from '../../components/Row'
@@ -19,8 +16,6 @@ import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetai
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
-import SwapModalFooter from '../../components/swap/SwapModalFooter'
-import SwapModalHeader from '../../components/swap/SwapModalHeader'
 import TradePrice from '../../components/swap/TradePrice'
 import { TokenWarningCards } from '../../components/TokenWarningCard'
 
@@ -48,7 +43,7 @@ import {
 } from '../../state/user/hooks'
 import { CursorPointer, LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
+import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 
@@ -129,13 +124,15 @@ export default function Swap() {
   )
 
   // modal and loading
-  const [{ showConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
+  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
     showConfirm: boolean
+    tradeToConfirm: Trade | null
     attemptingTxn: boolean
     swapErrorMessage: string | undefined
     txHash: string | undefined
   }>({
     showConfirm: false,
+    tradeToConfirm: null,
     attemptingTxn: false,
     swapErrorMessage: undefined,
     txHash: undefined
@@ -170,8 +167,6 @@ export default function Swap() {
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
-  const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
-
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
     trade,
@@ -180,7 +175,7 @@ export default function Swap() {
     recipient
   )
 
-  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
+  const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
 
   const handleSwap = useCallback(() => {
     if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
@@ -189,10 +184,10 @@ export default function Swap() {
     if (!swapCallback) {
       return
     }
-    setSwapState({ attemptingTxn: true, showConfirm, swapErrorMessage: undefined, txHash: undefined })
+    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
     swapCallback()
       .then(hash => {
-        setSwapState({ attemptingTxn: false, showConfirm, swapErrorMessage: undefined, txHash: hash })
+        setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
 
         ReactGA.event({
           category: 'Swap',
@@ -210,9 +205,15 @@ export default function Swap() {
         })
       })
       .catch(error => {
-        setSwapState({ attemptingTxn: false, showConfirm, swapErrorMessage: error.message, txHash: undefined })
+        setSwapState({
+          attemptingTxn: false,
+          tradeToConfirm,
+          showConfirm,
+          swapErrorMessage: error.message,
+          txHash: undefined
+        })
       })
-  }, [account, priceImpactWithoutFee, recipient, recipientAddress, showConfirm, swapCallback, trade])
+  }, [tradeToConfirm, account, priceImpactWithoutFee, recipient, recipientAddress, showConfirm, swapCallback, trade])
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
@@ -229,76 +230,18 @@ export default function Swap() {
       (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
     !(priceImpactSeverity > 3 && !isExpertMode)
 
-  const modalHeader = useCallback(() => {
-    return trade ? (
-      <SwapModalHeader
-        trade={trade}
-        formattedAmounts={formattedAmounts}
-        slippageAdjustedAmounts={slippageAdjustedAmounts}
-        priceImpactSeverity={priceImpactSeverity}
-        independentField={independentField}
-        recipient={recipient}
-      />
-    ) : null
-  }, [formattedAmounts, independentField, priceImpactSeverity, recipient, slippageAdjustedAmounts, trade])
-
-  const modalBottom = useCallback(() => {
-    return trade && realizedLPFee ? (
-      <SwapModalFooter
-        showInverted={showInverted}
-        severity={priceImpactSeverity}
-        setShowInverted={setShowInverted}
-        onSwap={handleSwap}
-        realizedLPFee={realizedLPFee}
-        priceImpactWithoutFee={priceImpactWithoutFee}
-        slippageAdjustedAmounts={slippageAdjustedAmounts}
-        trade={trade}
-        swapErrorMessage={swapErrorMessage}
-      />
-    ) : null
-  }, [
-    handleSwap,
-    priceImpactSeverity,
-    priceImpactWithoutFee,
-    realizedLPFee,
-    showInverted,
-    slippageAdjustedAmounts,
-    swapErrorMessage,
-    trade
-  ])
-
-  // text to show while loading
-  const pendingText = `Swapping ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${
-    currencies[Field.INPUT]?.symbol
-  } for ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${currencies[Field.OUTPUT]?.symbol}`
-
   const [dismissedToken0] = useTokenWarningDismissal(chainId, currencies[Field.INPUT])
   const [dismissedToken1] = useTokenWarningDismissal(chainId, currencies[Field.OUTPUT])
   const showWarning =
     (!dismissedToken0 && !!currencies[Field.INPUT]) || (!dismissedToken1 && !!currencies[Field.OUTPUT])
 
   const handleConfirmDismiss = useCallback(() => {
-    setSwapState({ showConfirm: false, attemptingTxn, swapErrorMessage, txHash })
+    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onUserInput(Field.INPUT, '')
     }
-  }, [attemptingTxn, onUserInput, swapErrorMessage, txHash])
-
-  const confirmationContent = useCallback(
-    () =>
-      swapErrorMessage ? (
-        <TransactionErrorContent onDismiss={handleConfirmDismiss} message={swapErrorMessage} />
-      ) : (
-        <ConfirmationModalContent
-          title="Confirm Swap"
-          onDismiss={handleConfirmDismiss}
-          topContent={modalHeader}
-          bottomContent={modalBottom}
-        />
-      ),
-    [handleConfirmDismiss, modalBottom, modalHeader, swapErrorMessage]
-  )
+  }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 
   return (
     <>
@@ -306,13 +249,16 @@ export default function Swap() {
       <AppBody disabled={showWarning}>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
-          <TransactionConfirmationModal
+          <ConfirmSwapModal
             isOpen={showConfirm}
-            onDismiss={handleConfirmDismiss}
+            trade={trade}
             attemptingTxn={attemptingTxn}
-            hash={txHash}
-            content={confirmationContent}
-            pendingText={pendingText}
+            txHash={txHash}
+            recipient={recipient}
+            allowedSlippage={allowedSlippage}
+            onConfirm={handleSwap}
+            swapErrorMessage={swapErrorMessage}
+            onDismiss={handleConfirmDismiss}
           />
 
           <AutoColumn gap={'md'}>
@@ -443,6 +389,7 @@ export default function Swap() {
                       handleSwap()
                     } else {
                       setSwapState({
+                        tradeToConfirm: trade ?? null,
                         attemptingTxn: false,
                         swapErrorMessage: undefined,
                         showConfirm: true,
@@ -471,6 +418,7 @@ export default function Swap() {
                     handleSwap()
                   } else {
                     setSwapState({
+                      tradeToConfirm: trade ?? null,
                       attemptingTxn: false,
                       swapErrorMessage: undefined,
                       showConfirm: true,

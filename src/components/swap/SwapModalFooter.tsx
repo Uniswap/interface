@@ -1,11 +1,16 @@
-import { CurrencyAmount, Percent, Trade, TradeType } from '@uniswap/sdk'
-import React, { useContext } from 'react'
+import { Trade, TradeType } from '@uniswap/sdk'
+import React, { useContext, useMemo, useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { TYPE } from '../../theme'
-import { formatExecutionPrice } from '../../utils/prices'
+import {
+  computeSlippageAdjustedAmounts,
+  computeTradePriceBreakdown,
+  formatExecutionPrice,
+  warningSeverity
+} from '../../utils/prices'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
@@ -15,30 +20,23 @@ import { StyledBalanceMaxMini, SwapCallbackError } from './styleds'
 
 export default function SwapModalFooter({
   trade,
-  showInverted,
-  setShowInverted,
-  severity,
-  slippageAdjustedAmounts,
-  onSwap,
-  realizedLPFee,
-  priceImpactWithoutFee,
+  onConfirm,
+  allowedSlippage,
   swapErrorMessage
 }: {
   trade: Trade
-  showInverted: boolean
-  setShowInverted: (inverted: boolean) => void
-  severity: number
-  slippageAdjustedAmounts: { [field in Field]?: CurrencyAmount }
-  onSwap: () => any
-  realizedLPFee: CurrencyAmount
-  priceImpactWithoutFee?: Percent
+  allowedSlippage: number
+  onConfirm: () => void
   swapErrorMessage: string | undefined
 }) {
+  const [showInverted, setShowInverted] = useState<boolean>(false)
   const theme = useContext(ThemeContext)
-
-  if (!trade) {
-    return null
-  }
+  const slippageAdjustedAmounts = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage), [
+    allowedSlippage,
+    trade
+  ])
+  const { priceImpactWithoutFee, realizedLPFee } = useMemo(() => computeTradePriceBreakdown(trade), [trade])
+  const severity = warningSeverity(priceImpactWithoutFee)
 
   return (
     <>
@@ -109,7 +107,12 @@ export default function SwapModalFooter({
       </AutoColumn>
 
       <AutoRow>
-        <ButtonError onClick={onSwap} error={severity > 2} style={{ margin: '10px 0 0 0' }} id="confirm-swap-or-send">
+        <ButtonError
+          onClick={onConfirm}
+          error={severity > 2}
+          style={{ margin: '10px 0 0 0' }}
+          id="confirm-swap-or-send"
+        >
           <Text fontSize={20} fontWeight={500}>
             {severity > 2 ? 'Swap Anyway' : 'Confirm Swap'}
           </Text>
