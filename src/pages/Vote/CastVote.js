@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Close from '../../assets/svg/close-black-18dp.svg'
 import styled, { keyframes } from 'styled-components'
 import { useGovernorContract } from '../../hooks'
 import { ethers } from 'ethers'
@@ -21,55 +22,74 @@ const Card = styled.div`
 	position: relative;
 	left: 50%;
 	top: 50%;
-	width: 30vw;
+	width: 340px;
 	transform: translate(-50%, -50%);
 	border-radius: 5px;
 	opacity: 1;
 	z-index: 5;
-	padding: 80px;
+	padding: 25px 40px 5px;
 	text-align: center;
 	font-weight: 600;
 	color: black;
 `
 
+const Title = styled.div`
+  font-size: 32px;
+  font-weight: 300;
+  text-align: left;
+  margin-bottom: 6px;
+  color: #0a2a5a;
+`
+
 const Proposal = styled.div`
 	font-size: 20px;
+	text-align: left;
 `
 
 const Time = styled.div`
 	font-size: 12px;
 	color: #4487CE;
+	text-align: left;
+	opacity: 0.6;
 `
 
 const Exit = styled.div`
 	position: absolute;
-	right: 7px;
-	top: 5px;
+	right: 12px;
+	top: 11px;
 	cursor: pointer;
 	font-size: 20px;
 `
 
 const Buttons = styled.div`
 	margin-top: 20px;
+	margin-bottom: 10px;
 `
 
 const Button = styled.div`
 	display: inline-block;
 	color: #FFFFFF;
   text-align: center;
-  border-radius: 3px;
+  border-radius: 5px;
   font-size: 15px;
-  font-weight: 700;
-  height: 19px;
-  width: 85px;
+  font-weight: 600;
   padding: 3px;
   display: inline-block;
   margin: 10px;
   cursor: pointer;
+  height: 28px;
+  width: 56px;
+  padding: 6px 12px;
+  line-height: 28px;
+  transition: opacity 0.2s ease-in-out;
 
   ${({ color }) => `
     background-color: ${color}
   `}
+  
+  :hover {
+    opacity: 0.7;
+  }
 `
 
 const ErrorMessage = styled.div`
@@ -94,7 +114,23 @@ const Loader = styled.div`
   margin: 0 auto;
 `
 
+const Underline = styled.div`
+  height: 2px;
+  background: #327ccb;
+  width: 50px;
+  margin-bottom: 15px;
+  margin-left: 2px;
+`
+
+async function castVote() {
+  let response = await fetch('https://jsonplaceholder.typicode.com/todos/1')
+  let data = await response.json()
+  return data
+} 
+
+//export default function Cast({ proposal, time, vote, onChange }) {
 export default function CastVote({ proposal, timestamp, onChange }) {
+  const [newVote, setNewVote] = useState(false)
 	const [error, setError] = useState(null)
 	const [loading, setLoading] = useState(false); //loading hook
 
@@ -137,6 +173,10 @@ export default function CastVote({ proposal, timestamp, onChange }) {
 	return (
 		<BackDrop>
 			<Card>
+        <Title>
+          Cast your vote
+        </Title>
+        <Underline/>
 				<Proposal>
 					{proposal.title}
 				</Proposal>
@@ -144,11 +184,11 @@ export default function CastVote({ proposal, timestamp, onChange }) {
 					{timestamp}
 				</Time>
 				<Buttons>
-					<Button color={'#44d394'} onClick={() => castVote(true)}>
-						FOR
+					<Button color={'#09b53d'} onClick={() => castVote(true)}>
+						For
 					</Button>
-					<Button color={'#df5e66'} onClick={() => castVote(false)}>
-						AGAINST
+					<Button color={'#d4001e'} onClick={() => castVote(false)}>
+						Against
 					</Button>
 				</Buttons>
 				<ErrorMessage>
@@ -156,7 +196,7 @@ export default function CastVote({ proposal, timestamp, onChange }) {
 				</ErrorMessage>
 				{loading ? <Loader/> : null}
 				<Exit onClick={() => onChange(false)}>
-					X
+					<img src={Close}/>
 				</Exit>
 			</Card>
 		</BackDrop>

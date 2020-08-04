@@ -10,7 +10,7 @@ const Main = styled.div`
   font-weight: 500;
   color: black;
   padding: 20px 30px;
-  border-bottom: 1px solid #f0f3f5;
+  border-bottom: 1px solid #e2e2e2;
   height: 100%;
   width: calc(100% - 60px);
 `
@@ -41,7 +41,7 @@ const Status = styled.div`
   text-align: center;
   background-color: #FFFFFF;
   border: 2px solid #67dc4d;
-  border-radius: 3px;
+  border-radius: 5px;
   height: 15px;
   width: 75px;
   padding: 3px;
@@ -61,6 +61,7 @@ const VoteButton = styled.div`
   font-weight: 600;
   color: #b7c3cc;
   text-align: center;
+  transition: opacity 0.2s ease-in-out;
 
   @media (max-width: 450px) {
     width: 100%;
@@ -69,6 +70,10 @@ const VoteButton = styled.div`
   ${({ cast }) => cast && `
     color: black;
     cursor: pointer;
+    
+    :hover {
+      opacity: 0.7;
+    }
   `}
 `
 
@@ -86,7 +91,7 @@ const link = {
 
 export default function Proposal(props) {
   const proposal = props.proposal
-  const availableVotes = ['VOTE', 'FOR', 'AGAINST', 'NO VOTE']
+  const availableVotes = ['Vote', 'For', 'Against', 'No Vote']
   const mod = (b, e) => availableVotes.slice(b, e)
 
   let initialVoteStatus
