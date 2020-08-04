@@ -4,6 +4,7 @@ import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+import MooniswapABI from '../constants/v1-mooniswap/v1_mooniswap_exchange.json'
 import { ROUTER_ADDRESS } from '../constants'
 import { ChainId, JSBI, Percent, Token, TokenAmount, ETHER } from '@uniswap/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
@@ -93,6 +94,10 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 // account is optional
 export function getRouterContract(_: number, library: Web3Provider, account?: string) {
   return getContract(ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account)
+}
+
+export function getMooniswapContract(_: number, library: Web3Provider, pairAddress: string, account?: string) {
+  return getContract(pairAddress, MooniswapABI, library, account)
 }
 
 export function escapeRegExp(string: string): string {
