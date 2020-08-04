@@ -154,7 +154,7 @@ const StyledNavLink = styled(NavLink).attrs({
     border-radius: 3rem;
     box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
     box-sizing: border-box;
-    font-weight: 500;
+    font-weight: 400;
     color: #000000;
     :hover {
       /* border: 1px solid ${({ theme }) => darken(0.1, theme.mercuryGray)}; */

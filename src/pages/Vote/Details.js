@@ -67,7 +67,7 @@ const Status = styled.div`
   text-align: center;
   background-color: #FFFFFF;
   border: 2px solid #2fdaa5;
-  border-radius: 3px;
+  border-radius: 5px;
   height: 15px;
   width: 50px;
   padding: 3px;
@@ -107,11 +107,16 @@ const Card = styled.div`
   }
 `
 
-const Title = styled.div`
-	font-size: 15px;
-	font-weight: 600;
-	padding: 20px 30px;
-  border-bottom: 1px solid #f0f3f5;
+const Title = styled.div`  
+  font-size: 28px;
+  font-weight: 300;
+  color: #0a2a5a;
+  padding: 20px 0 10px;
+  margin: 0 30px;
+  
+  @media (max-width: 800px) {
+    font-size: 23px;
+  }
 `
 
 const Bar = styled.div`
@@ -119,7 +124,7 @@ const Bar = styled.div`
 	width: 100%;
 	border-radius: 2px;
 	margin-top: 10px;
-	background-color: #f0f3f5;
+	background-color: #e2e2e2;
 `
 
 const Color = styled.div`
@@ -137,7 +142,7 @@ const Addresses = styled.div`
 
 const AddressTitle = styled.div`
 	padding: 20px 30px;
-  border-bottom: 1px solid #f0f3f5;
+  border-bottom: 1px solid #e2e2e2;
   font-size: 13px;
  	font-weight: 700;
  	color: #b0bdc5;
@@ -150,7 +155,7 @@ const VotesTitle = styled.div`
 
 const Address = styled.div`
 	padding: 20px 30px;
-  border-bottom: 1px solid #f0f3f5;
+  border-bottom: 1px solid #e2e2e2;
   font-size: 15px;
  	font-weight: 600;
  	color: #b0bdc5;
@@ -169,21 +174,27 @@ const View = styled.div`
   font-size: 13px;
  	font-weight: 700;
  	color: #b0bdc5;
+ 	cursor: pointer;
+ 	transition: opacity 0.2s ease-in-out;
 
  	${({ active }) => active && `
     color: black;
   `}
+  
+  :hover {
+    opacity: 0.7;
+  }
 `
 
 const Description = styled.div`
-	margin: 20px 30px;
+	margin: 20px 30px 25px;
 	font-size: 13px;
 	font-weight: 600;
 `
 
 
 const HistoryWrapper = styled.div`
-	margin: 20px 30px;
+	margin: 20px 30px 25px;
 `
 
 const History = styled.div`
@@ -235,7 +246,7 @@ const Vote = styled.div`
 	margin-top: 50px;
   text-align: center;
   border: 2px solid #b7c3cc;
-  border-radius: 3px;
+  border-radius: 35px;
   height: 18px;
   width: 65px;
   padding: 3px;
@@ -255,6 +266,14 @@ const CastWrapper = styled.div`
 	z-index: 5;
 `
 
+const Underline = styled.div`
+  height: 2px;
+  background: #327ccb;
+  width: 50px;
+  margin-bottom: 8px;
+  margin-left: 30px;
+`
+
 const votes = [
 	{
 		title: 'For',
@@ -265,7 +284,7 @@ const votes = [
 				vote: 0.037
 			}
 		],
-		color: '#44d394'
+		color: '#09b53d'
 	},
 	{
 		title: 'Against',
@@ -292,7 +311,7 @@ const votes = [
 				vote: 0.037
 			},
 		],
-		color: '#df5e66'
+		color: '#d4001e'
 	}
 ]
 
@@ -321,7 +340,7 @@ async function getDetails() {
 } 
 
 export default function Details() {
-	const [vote, setVote] = useState('VOTE')
+	const [vote, setVote] = useState('Vote')
 	const [cast, setCast] = useState(true)
 	const [showCast, changeShowCast] = useState(false)
 
@@ -436,7 +455,7 @@ export default function Details() {
 								})}
 							</Addresses>
 							<View onClick={() => checkChange(l)} active={l > amount || l === amount}>
-								{amount === per ? 'VIEW ALL' : 'VIEW LESS'}
+								{amount === per ? 'View All' : 'View Fewer'}
 							</View>
 						</Card>
 					)})}
@@ -445,6 +464,7 @@ export default function Details() {
 				<Title>
 					Details
 				</Title>
+        <Underline/>
 				<Description>	
 					{description}
 				</Description>
@@ -453,6 +473,7 @@ export default function Details() {
 				<Title>
 					Proposal History
 				</Title>
+        <Underline/>
 				<HistoryWrapper>
 					{history.map(({title, date}) => 
 						<History>

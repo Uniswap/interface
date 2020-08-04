@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import Proposal from './Proposal'
 import styled, {keyframes} from 'styled-components'
 import { useHistory } from 'react-router-dom'
+import LeftArrow from '../../assets/svg/keyboard_arrow_left-black-18dp.svg';
+import RightArrow from '../../assets/svg/keyboard_arrow_right-black-18dp.svg';
 
 const Main = styled.div`
   height: calc(100vh - 160px);
@@ -14,6 +16,7 @@ const Main = styled.div`
   margin-right: auto;
   overflow-y: scroll;
   overflow-x: hidden;
+  font-family: "Open Sans", sans-serif;
 
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
@@ -33,19 +36,24 @@ const Main = styled.div`
 
 const Votes = styled.div`
   text-align: center;
-  height: 80px;
-  color: black;
+  height: 100px;
+  color: #0a2a5a;
   font-weight: 600;
+  font-family: Lato, sans-serif;
 
   @media (max-width: 1000px) {
     height: 70px;
   }
 `
 const VoteTitle = styled.div`
-  font-size: 14px;
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 0.8px;
 `
 const Amount = styled.div`
-  font-size: 25px;
+  font-size: 48px;
+  font-weight: 600;
+  letter-spacing: 1px;
 `
 const Voting = styled.div`
   height: calc(100% - 100px);
@@ -84,11 +92,15 @@ const GovernanceProposals = styled.div`
 `
 
 const Title = styled.div`
-  font-size: 18px;
-  font-weight: 700;
-  color: black;
-  padding: 20px 30px;
-  border-bottom: 1px solid #DCDCDC;
+  font-size: 28px;
+  font-weight: 300;
+  color: #0a2a5a;
+  padding: 20px 0 10px;
+  margin: 0 30px;
+  
+  @media (max-width: 800px) {
+    font-size: 23px;
+  }
 `
 
 const Proposals = styled.div`
@@ -151,7 +163,7 @@ const Withdraw = styled.div`
 
 const Pages = styled.div`
   text-align: center;
-  font-weight: 600;
+  font-weight: 400;
   margin: 10px;
 `
 
@@ -173,6 +185,10 @@ const Page = styled.div`
   ${({ off }) => off && `
     color: white;
   `}
+  
+  img {
+    margin-bottom: -3px;
+  }
 `
 
 const Sticky = styled.div`
@@ -200,7 +216,7 @@ const StickyText = styled.div`
 `
 
 const X = styled.div`
-  background-color: #df5e66;
+  background-color: #d4001e;
   border-radius: 50%;
   height: 20px;
   width: 20px;
@@ -210,6 +226,14 @@ const X = styled.div`
   padding: 2px 2px 3px 2px;
   display: inline-block;
   vertical-align: middle;
+`
+
+const Underline = styled.div`
+  height: 2px;
+  background: #327ccb;
+  width: 50px;
+  margin-bottom: 8px;
+  margin-left: 30px;
 `
 
 const num = '0.000000'
@@ -262,7 +286,7 @@ export default function Vote(props) {
 
 
   // const perPage = window.innerWidth > 900 ? 5 : 3//make dynamic
-  let perPage = window.innerWidth > 900 ? (window.innerHeight - 230) / 130 : (window.innerHeight - 600) / 130 || 1
+  let perPage = window.innerWidth > 900 ? (window.innerHeight - 350) / 130 : (window.innerHeight - 620) / 130 || 1
 
   const mp = page * perPage - perPage 
   const proposalPage = proposals.slice(mp, mp+perPage)
@@ -304,15 +328,16 @@ export default function Vote(props) {
          <VoteTitle> 
           Votes
         </VoteTitle>
-      <Amount>
-        {num}
-      </Amount>
+        <Amount>
+          {num}
+        </Amount>
       </Votes>
       <Voting>
         <VotingWallet>
           <Title>
             Voting Wallet
           </Title>
+          <Underline/>
           {Balances.map(({title, val, button}) => (
             <Balance>
               <DMGTitle>
@@ -333,6 +358,7 @@ export default function Vote(props) {
            <Title>
             Governance Proposals
           </Title>
+          <Underline/>
           <Proposals>
              {loading ? <Loader /> :
              proposalPage.map(({id, title, completed}) => (
@@ -340,8 +366,8 @@ export default function Vote(props) {
             ))}
           </Proposals>
           <Pages>
-            <Page onClick={() => checkChange(page - 1)} off={page === 1}> 
-              {`<`}
+            <Page onClick={() => checkChange(page - 1)} off={page === 1}>
+              <img src={LeftArrow}/>
             </Page>
             {pages.filter(i => display(i, page, l)).map((p, index) => (
               <Page onClick={() => changePage(p)} active={page === p}>
@@ -349,7 +375,7 @@ export default function Vote(props) {
               </Page>
             ))}
             <Page onClick={() => checkChange(page + 1)} off={page === l || loading}> 
-              {`>`}
+              <img src={RightArrow}/>
             </Page>
           </Pages>
         </GovernanceProposals>

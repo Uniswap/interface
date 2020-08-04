@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styled, {keyframes} from 'styled-components'
+import Close from '../../assets/svg/close-black-18dp.svg'
 
 const BackDrop = styled.div`
   width: 100vw;
@@ -16,55 +17,74 @@ const Card = styled.div`
 	position: relative;
 	left: 50%;
 	top: 50%;
-	width: 30vw;
+	width: 340px;
 	transform: translate(-50%, -50%);
 	border-radius: 5px;
 	opacity: 1;
 	z-index: 5;
-	padding: 80px;
+	padding: 25px 40px 5px;
 	text-align: center;
 	font-weight: 600;
 	color: black;
 `
 
+const Title = styled.div`
+  font-size: 32px;
+  font-weight: 300;
+  text-align: left;
+  margin-bottom: 6px;
+  color: #0a2a5a;
+`
+
 const Proposal = styled.div`
 	font-size: 20px;
+	text-align: left;
 `
 
 const Time = styled.div`
 	font-size: 12px;
 	color: #4487CE;
+	text-align: left;
+	opacity: 0.6;
 `
 
 const Exit = styled.div`
 	position: absolute;
-	right: 7px;
-	top: 5px;
+	right: 12px;
+	top: 11px;
 	cursor: pointer;
 	font-size: 20px;
 `
 
 const Buttons = styled.div`
 	margin-top: 20px;
+	margin-bottom: 10px;
 `
 
 const Button = styled.div`
 	display: inline-block;
 	color: #FFFFFF;
   text-align: center;
-  border-radius: 3px;
+  border-radius: 5px;
   font-size: 15px;
-  font-weight: 700;
-  height: 19px;
-  width: 85px;
+  font-weight: 600;
   padding: 3px;
   display: inline-block;
   margin: 10px;
   cursor: pointer;
+  height: 28px;
+  width: 56px;
+  padding: 6px 12px;
+  line-height: 28px;
+  transition: opacity 0.2s ease-in-out;
 
   ${({ color }) => `
     background-color: ${color}
   `}
+  
+  :hover {
+    opacity: 0.7;
+  }
 `
 
 const ErrorMessage = styled.div`
@@ -77,15 +97,15 @@ const ErrorMessage = styled.div`
 const Bar = styled.div`
 	height: 15px;
 	width: 100%;
-	border-radius: 3px;
+	border-radius: 5px;
 	margin-top: 20px;
-	background-color: #f0f3f5;
+	background-color: #e2e2e2;
 `
 
 const Color = styled.div`
 	height: 100%;
 	width: 50%;
-	border-radius: 3px;
+	border-radius: 5px;
 	background-color: #4487CE;
 	transition: 2s;
 
@@ -107,6 +127,14 @@ const Loader = styled.div`
   height: 30px;
   animation: ${spin} 2s linear infinite;
   margin: 0 auto;
+`
+
+const Underline = styled.div`
+  height: 2px;
+  background: #327ccb;
+  width: 50px;
+  margin-bottom: 15px;
+  margin-left: 2px;
 `
 
 async function castVote() {
@@ -148,6 +176,10 @@ export default function Cast({ proposal, time, vote, onChange }) {
 	return (
 		<BackDrop>
 			<Card>
+        <Title>
+          Cast your vote
+        </Title>
+        <Underline/>
 				<Proposal>
 					{proposal}
 				</Proposal>
@@ -155,11 +187,11 @@ export default function Cast({ proposal, time, vote, onChange }) {
 					{time}
 				</Time>
 				<Buttons>
-					<Button color={'#44d394'} onClick={() => waiting('FOR')}>
-						FOR
+					<Button color={'#09b53d'} onClick={() => waiting('For')}>
+						For
 					</Button>
-					<Button color={'#df5e66'} onClick={() => waiting('AGAINST')}>
-						AGAINST
+					<Button color={'#d4001e'} onClick={() => waiting('Against')}>
+						Against
 					</Button>
 				</Buttons>
 				<ErrorMessage>
@@ -167,7 +199,7 @@ export default function Cast({ proposal, time, vote, onChange }) {
 				</ErrorMessage>
 				{loading ? <Loader/> : null}
 				<Exit onClick={() => onChange(false)}>
-					x
+					<img src={Close}/>
 				</Exit>
 			</Card>
 		</BackDrop>

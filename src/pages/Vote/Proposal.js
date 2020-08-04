@@ -8,7 +8,7 @@ const Main = styled.div`
   font-weight: 500;
   color: black;
   padding: 20px 30px;
-  border-bottom: 1px solid #f0f3f5;
+  border-bottom: 1px solid #e2e2e2;
   height: 100%;
   width: calc(100% - 60px);
 `
@@ -39,7 +39,7 @@ const Status = styled.div`
   text-align: center;
   background-color: #FFFFFF;
   border: 2px solid #2fdaa5;
-  border-radius: 3px;
+  border-radius: 5px;
   height: 15px;
   width: 50px;
   padding: 3px;
@@ -59,6 +59,7 @@ const Vote = styled.div`
   font-weight: 600;
   color: #b7c3cc;
   text-align: center;
+  transition: opacity 0.2s ease-in-out;
 
   @media (max-width: 450px) {
     width: 100%;
@@ -67,6 +68,10 @@ const Vote = styled.div`
   ${({ cast }) => cast && `
     color: black;
     cursor: pointer;
+    
+    :hover {
+      opacity: 0.7;
+    }
   `}
 `
 
@@ -83,7 +88,7 @@ const link = {
 }
 
 export default function Proposal({ id, proposal, status }) {
-	const availableVotes = ['VOTE', 'FOR', 'AGAINST', 'NO VOTE']
+	const availableVotes = ['Vote', 'For', 'Against', 'No Vote']
 	const mod = (b,e) => availableVotes.slice(b, e)
 
 	let votes 
@@ -100,7 +105,7 @@ export default function Proposal({ id, proposal, status }) {
 	const v = votes[id%2]; //determines vote based on id - TEMPORARY
 	const [vote, setVote] = useState(v)
 
-	const c = v === 'VOTE'
+	const c = v === 'Vote'
 	const [cast, setCast] = useState(c)
 	const [showCast, changeShowCast] = useState(false)
 
