@@ -8,7 +8,10 @@ import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
+import TransactionConfirmationModal, {
+  ConfirmationModalContent,
+  TransactionErrorContent
+} from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow, RowBetween } from '../../components/Row'
@@ -266,9 +269,9 @@ export default function Swap() {
     (!dismissedToken0 && !!currencies[Field.INPUT]) || (!dismissedToken1 && !!currencies[Field.OUTPUT])
 
   const handleConfirmDismiss = useCallback(() => {
+    setSwapState({ showConfirm: false, attemptingTxn, swapErrorMessage, txHash })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
-      setSwapState({ showConfirm: false, attemptingTxn, swapErrorMessage, txHash })
       onUserInput(Field.INPUT, '')
     }
   }, [attemptingTxn, onUserInput, swapErrorMessage, txHash])
@@ -284,14 +287,18 @@ export default function Swap() {
             onDismiss={handleConfirmDismiss}
             attemptingTxn={attemptingTxn}
             hash={txHash}
-            content={() => (
-              <ConfirmationModalContent
-                title={'Confirm Swap'}
-                onDismiss={handleConfirmDismiss}
-                topContent={modalHeader}
-                bottomContent={modalBottom}
-              />
-            )}
+            content={() =>
+              swapErrorMessage ? (
+                <TransactionErrorContent onDismiss={handleConfirmDismiss} message={swapErrorMessage} />
+              ) : (
+                <ConfirmationModalContent
+                  title="Confirm Swap"
+                  onDismiss={handleConfirmDismiss}
+                  topContent={modalHeader}
+                  bottomContent={modalBottom}
+                />
+              )
+            }
             pendingText={pendingText}
           />
 

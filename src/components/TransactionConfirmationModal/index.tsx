@@ -2,13 +2,13 @@ import { ChainId } from '@uniswap/sdk'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import Modal from '../Modal'
-import { ExternalLink } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import { Text } from 'rebass'
 import { CloseIcon, Spinner } from '../../theme/components'
 import { RowBetween } from '../Row'
-import { ArrowUpCircle } from 'react-feather'
-import { ButtonPrimary } from '../Button'
-import { AutoColumn, ColumnCenter } from '../Column'
+import { AlertTriangle, ArrowUpCircle } from 'react-feather'
+import { ButtonConfirmed, ButtonPrimary } from '../Button'
+import Column, { AutoColumn, ColumnCenter } from '../Column'
 import Circle from '../../assets/images/blue-loader.svg'
 
 import { getEtherscanLink } from '../../utils'
@@ -130,6 +130,32 @@ export function ConfirmationModalContent({
         {topContent()}
       </Section>
       <BottomSection gap="12px">{bottomContent()}</BottomSection>
+    </Wrapper>
+  )
+}
+
+export function TransactionErrorContent({ message, onDismiss }: { message: string; onDismiss: () => void }) {
+  const theme = useContext(ThemeContext)
+  return (
+    <Wrapper>
+      <Section>
+        <RowBetween>
+          <Text fontWeight={500} fontSize={20}>
+            Error
+          </Text>
+          <CloseIcon onClick={onDismiss} />
+        </RowBetween>
+        <AutoColumn style={{ marginTop: 14 }} gap="20px" justify="center">
+          <AlertTriangle color={theme.red1} size={40} />
+          <Text fontWeight={400} fontSize={18} color={theme.red1}>
+            {message}
+          </Text>
+          <TYPE.italic>Slippage can be controlled in the settings panel</TYPE.italic>
+        </AutoColumn>
+      </Section>
+      <BottomSection gap="12px">
+        <ButtonPrimary onClick={onDismiss}>Dismiss</ButtonPrimary>
+      </BottomSection>
     </Wrapper>
   )
 }
