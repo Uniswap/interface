@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import Cast from './Cast'
+import CastVote from './CastVote'
 import { Link } from 'react-router-dom'
+import { AccountVoteInfo } from '../../models/AccountVoteInfo'
+import { ProposalSummary } from '../../models/ProposalSummary'
 
 const Main = styled.div`
   font-size: 18px;
@@ -31,27 +33,27 @@ const Info = styled.div`
   color: #b7c3cc;
 
   ${({ active }) => active && `
-    color: #4487CE;
+      color: #327ccb;
   `}
 `
 const Status = styled.div`
-  color: #2fdaa5;
+  color: #67dc4d;
   text-align: center;
   background-color: #FFFFFF;
-  border: 2px solid #2fdaa5;
+  border: 2px solid #67dc4d;
   border-radius: 5px;
   height: 15px;
-  width: 50px;
+  width: 75px;
   padding: 3px;
   display: inline-block;
 
   ${({ active }) => active && `
-    border: 2px solid #4487CE;
-		color: #4487CE;
+      border: 2px solid #327ccb;
+      color: #327ccb;
   `}
 `
 
-const Vote = styled.div`
+const VoteButton = styled.div`
   height: 100%;
   width: 20%;
   display: inline-block;
@@ -82,77 +84,70 @@ const Extra = styled.div`
 `
 
 const link = {
-	textDecoration: 'none',
-	color: 'black',
-	cursor: 'pointer'
+  textDecoration: 'none',
+  color: 'black',
+  cursor: 'pointer'
 }
 
-export default function Proposal({ id, proposal, status }) {
-	const availableVotes = ['Vote', 'For', 'Against', 'No Vote']
-	const mod = (b,e) => availableVotes.slice(b, e)
+export default function Proposal(props) {
+  const proposal = props.proposal
+  const availableVotes = ['Vote', 'For', 'Against', 'No Vote']
+  const mod = (b, e) => availableVotes.slice(b, e)
 
-	let votes 
-	let text
-	if(status) {
-		text = 'Active'
-		votes = mod(0,3)
-	}
-	else {
-		text = 'Passed'
-		votes = mod(1,4)
-	}
+  let initialVoteStatus
+  if (!props.walletAddress) {
+    initialVoteStatus = null
+  } else if (
+    proposal.proposalStatus === ProposalSummary.statuses.ACTIVE &&
+    (proposal.account?.voteInfo?.voteStatus === AccountVoteInfo.statuses.NO_VOTE || !proposal.account?.voteInfo)
+  ) {
+    initialVoteStatus = AccountVoteInfo.statuses.VOTE
+  } else {
+    initialVoteStatus = proposal.account?.voteInfo?.voteStatus || AccountVoteInfo.statuses.NO_VOTE
+  }
+  const [voteStatus, setVoteStatus] = useState(initialVoteStatus)
 
-	const v = votes[id%2]; //determines vote based on id - TEMPORARY
-	const [vote, setVote] = useState(v)
+  const initialIsCastedStatus = proposal.proposalStatus === ProposalSummary.statuses.ACTIVE &&
+    !proposal.account?.voteInfo?.voteStatus &&
+    proposal.account?.voteInfo?.voteStatus !== AccountVoteInfo.statuses.NO_VOTE
+  const [isCasted, setCast] = useState(initialIsCastedStatus)
+  const [showCastDialogue, setShowCastDialogue] = useState(false)
 
-	const c = v === 'Vote'
-	const [cast, setCast] = useState(c)
-	const [showCast, changeShowCast] = useState(false)
+  const handleClick = (e) => {
+    if (mod(1, 3).includes(e)) {
+      setVoteStatus(e)
+      setCast(false)
+    }
+    setShowCastDialogue(false)
+  }
 
-	const handleClick = (e) => {
-		if(mod(1,3).includes(e)) {
-			setVote(e)
-			setCast(false)
-		}
-	  changeShowCast(false)
-	}
-
-	const keypress = (e) => {
-	  if(e.keyCode === 27) changeShowCast(false)
-	}
-
-	useEffect(() => {
-    document.addEventListener("keydown", (e)=>keypress(e), false);
-  })
-
-  const date = 'Executed July 2nd, 2020'
 
   return (
-		<Main>
-			<Wrapper>
-				<Link to={`/vote/${id}`} style={link}>
-			  	{proposal}
-			  </Link>
-			  <Info active={status}>
-				  <Status active={status}>
-				  	{text}
-				  </Status>
-				  <Extra>
-				  	{id} &#8226; {date} 
-				  </Extra>
-				</Info>
-			</Wrapper>
-			<Vote onClick={() => changeShowCast(cast)} cast={cast}>
-				{vote}
-			</Vote>
-			{showCast ? 
-				<Cast
-					proposal={proposal}
-					time={date}
-					onChange={e => handleClick(e)} 
-					vote={(v) => setVote(v)}/> 
-				: null
-			}
-		</Main> 
+    <Main>
+      <Wrapper>
+        <Link to={`/vote/${proposal.proposalId}`} style={link}>
+          {proposal.title}
+        </Link>
+        <Info active={proposal.proposalStatus}>
+          <Status active={proposal.proposalStatus}>
+            {proposal.proposalStatusFormatted()}
+          </Status>
+          <Extra>
+            {proposal.proposalId} &#8226; {proposal.mostRecentDateText()}
+          </Extra>
+        </Info>
+      </Wrapper>
+      <VoteButton onClick={() => setShowCastDialogue(isCasted)} cast={isCasted}>
+        {AccountVoteInfo.toFormattedVoteString(voteStatus)}
+      </VoteButton>
+      {showCastDialogue ?
+        <CastVote
+          proposal={proposal}
+          timestamp={proposal.mostRecentDateText()}
+          onChange={e => handleClick(e)}
+          vote={(v) => setVoteStatus(v)}/>
+        : <div/>
+      }
+    </Main>
   )
 }

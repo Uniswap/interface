@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
-import styled, {keyframes} from 'styled-components'
 import Close from '../../assets/svg/close-black-18dp.svg'
+import styled, { keyframes } from 'styled-components'
+import { useGovernorContract } from '../../hooks'
+import { ethers } from 'ethers'
+import { calculateGasMargin } from '../../utils'
+import * as Sentry from '@sentry/browser'
+import { useTransactionAdder } from '../../contexts/Transactions'
 
 const BackDrop = styled.div`
   width: 100vw;
@@ -94,26 +99,6 @@ const ErrorMessage = styled.div`
 	font-weight: 500;
 `
 
-const Bar = styled.div`
-	height: 15px;
-	width: 100%;
-	border-radius: 5px;
-	margin-top: 20px;
-	background-color: #e2e2e2;
-`
-
-const Color = styled.div`
-	height: 100%;
-	width: 50%;
-	border-radius: 5px;
-	background-color: #4487CE;
-	transition: 2s;
-
-	${({ width }) => `
-    width: ${width}
-  `}
-`
-
 const spin = keyframes`
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -143,34 +128,46 @@ async function castVote() {
   return data
 } 
 
-export default function Cast({ proposal, time, vote, onChange }) {
-	const [newVote, setNewVote] = useState(false)
+//export default function Cast({ proposal, time, vote, onChange }) {
+export default function CastVote({ proposal, timestamp, onChange }) {
+  const [newVote, setNewVote] = useState(false)
 	const [error, setError] = useState(null)
 	const [loading, setLoading] = useState(false); //loading hook
 
-	const load = () => {
-		setLoading(false)
-		setError('Error')
-	}
+	const governorContract = useGovernorContract()
+	const addTransaction = useTransactionAdder()
+	const proposalId = proposal.proposalId
 
-	const waiting = (choice) => {
+	const castVote = async (isForProposal) => {
+		const GAS_MARGIN = ethers.BigNumber.from(1000)
+		setLoading(true)
 		setError(null)
 
-		//commented is the actual code for voting, but for now I am using a fake load then error after 3 seconds
-		// let test 
-		// castVote().then(data => {
-  //     test = data
-  //     setLoading(false)
-  //   }).catch(error => setError(error))
-		
+		const estimatedGas = await governorContract.estimateGas
+			.castVote(proposalId, isForProposal)
+			.catch(error => {
+				console.error(`Error getting gas estimation for casting vote with ID ${proposalId}: `, error)
+				return ethers.BigNumber.from(500000);
+			})
 
-		setLoading(true)
-    setTimeout(load, 3000)
-  	
+		governorContract
+			.castVote(proposalId, isForProposal, {
+				gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
+			})
+			.then(response => {
+				setLoading(false)
+				addTransaction(response, { proposalId: proposalId })
 
-  //   if(test) {
-		// 	onChange(choice) //add logic to test if vote worked
-		// }
+			})
+			.catch(error => {
+				setLoading(false)
+				if(error?.code !== 4001) {
+					console.error(`Could not cast vote due to error: `, error)
+					Sentry.captureException(error)
+				} else {
+					console.log('Could not cast vote because the transaction was cancelled')
+				}
+			})
 	}
 
 	return (
@@ -181,16 +178,16 @@ export default function Cast({ proposal, time, vote, onChange }) {
         </Title>
         <Underline/>
 				<Proposal>
-					{proposal}
+					{proposal.title}
 				</Proposal>
 				<Time>
-					{time}
+					{timestamp}
 				</Time>
 				<Buttons>
-					<Button color={'#09b53d'} onClick={() => waiting('For')}>
+					<Button color={'#09b53d'} onClick={() => castVote(true)}>
 						For
 					</Button>
-					<Button color={'#d4001e'} onClick={() => waiting('Against')}>
+					<Button color={'#d4001e'} onClick={() => castVote(false)}>
 						Against
 					</Button>
 				</Buttons>
