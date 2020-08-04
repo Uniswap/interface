@@ -3,15 +3,15 @@
   "version": "0.1.0",
   "description": "DXswap Decentralized Application",
   "devDependencies": {
-    "@ethersproject/address": "^5.0.0-beta.134",
-    "@ethersproject/bignumber": "^5.0.0-beta.138",
-    "@ethersproject/constants": "^5.0.0-beta.133",
-    "@ethersproject/contracts": "^5.0.0-beta.151",
-    "@ethersproject/experimental": "^5.0.0-beta.141",
-    "@ethersproject/providers": "5.0.0-beta.162",
-    "@ethersproject/strings": "^5.0.0-beta.136",
-    "@ethersproject/units": "^5.0.0-beta.132",
-    "@ethersproject/wallet": "^5.0.0-beta.141",
+    "@ethersproject/address": "^5.0.2",
+    "@ethersproject/bignumber": "^5.0.2",
+    "@ethersproject/constants": "^5.0.2",
+    "@ethersproject/contracts": "^5.0.2",
+    "@ethersproject/experimental": "^5.0.1",
+    "@ethersproject/providers": "5.0.2",
+    "@ethersproject/strings": "^5.0.2",
+    "@ethersproject/units": "^5.0.2",
+    "@ethersproject/wallet": "^5.0.2",
     "@popperjs/core": "^2.4.0",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
@@ -104,5 +104,8 @@
       "last 1 safari version"
     ]
   },
-  "license": "GPL-3.0-or-later"
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "react-use": "^15.3.3"
+  }
 }

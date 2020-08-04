@@ -1,5 +1,5 @@
 import { parseUnits } from '@ethersproject/units'
-import { ChainId, JSBI, Token, TokenAmount, Trade, WETH } from 'dxswap-sdk'
+import { ChainId, JSBI, Token, TokenAmount, Trade, WETH, Pair } from 'dxswap-sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,10 +10,13 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
-import { Field, replaceSwapState, selectToken, switchTokens, typeInput } from './actions'
+import { Field, replaceSwapState, selectToken, switchTokens, typeInput, setSwapFee } from './actions'
 import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
+import { useAsync } from 'react-use';
+import { getNetwork } from '@ethersproject/networks'
+import { getDefaultProvider } from '@ethersproject/providers'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -81,7 +84,7 @@ export function useDerivedSwapInfo(): {
   bestTrade: Trade | null
   error?: string
 } {
-  const { account } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
 
   const {
     independentField,
@@ -92,6 +95,24 @@ export function useDerivedSwapInfo(): {
 
   const tokenIn = useToken(tokenInAddress)
   const tokenOut = useToken(tokenOutAddress)
+  
+  // get token pair data with swapFee and protocolFeeDenominator
+  const dispatch = useDispatch<AppDispatch>()
+  const pairData = useAsync(async () => {
+    if (tokenIn && tokenOut) {
+      return await Pair.fetchData(tokenIn, tokenOut, getDefaultProvider(getNetwork(chainId), {quorum: 1}))
+    } else {
+      return null
+    }
+  }, [tokenIn, tokenOut]);
+  useEffect(() => {
+    console.log('Pair data:', pairData)
+    if (pairData && !pairData.loading && pairData.value)
+      dispatch(setSwapFee({
+        swapFee: (pairData.value.swapFee) ? Number(pairData.value.swapFee) : 30,
+        protocolFeeDenominator: (pairData.value.protocolFeeDenominator) ? Number(pairData.value.protocolFeeDenominator) : 5,
+      }))
+  }, [pairData])
 
   const relevantTokenBalances = useTokenBalancesTreatWETHAsETH(account ?? undefined, [
     tokenIn ?? undefined,
@@ -193,7 +214,9 @@ export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId)
       address: outputCurrency
     },
     typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
-    independentField: parseIndependentFieldURLParameter(parsedQs.exactField)
+    independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
+    swapFee: null,
+    protocolFeeDenominator: null
   }
 }
 

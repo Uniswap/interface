@@ -12,5 +12,8 @@ export const replaceSwapState = createAction<{
   field: Field
   typedValue: string
   inputTokenAddress?: string
-  outputTokenAddress?: string
+  outputTokenAddress?: string,
+  protocolFeeDenominator?: number,
+  swapFee?: number
 }>('replaceSwapState')
+export const setSwapFee = createAction<{ swapFee: number; protocolFeeDenominator: number }>('setSwapFee')
