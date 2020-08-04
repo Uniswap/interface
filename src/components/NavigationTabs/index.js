@@ -74,7 +74,7 @@ const StyledNavLink = styled(NavLink).attrs({
     border-radius: 3rem;
     box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadowColor)};
     box-sizing: border-box;
-    font-weight: 500;
+    font-weight: 400;
     color: #FFF;
     :focus
     :hover {
