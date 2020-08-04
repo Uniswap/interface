@@ -2,7 +2,7 @@ import { ChainId } from '@uniswap/sdk'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import Modal from '../Modal'
-import { ExternalLink, TYPE } from '../../theme'
+import { ExternalLink } from '../../theme'
 import { Text } from 'rebass'
 import { CloseIcon, Spinner } from '../../theme/components'
 import { RowBetween } from '../Row'
@@ -145,9 +145,9 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
-        <AutoColumn style={{ marginTop: 14 }} gap="20px" justify="center">
+        <AutoColumn style={{ marginTop: 20 }} gap="20px" justify="center">
           <AlertTriangle color={theme.red1} size={40} />
-          <Text fontWeight={400} fontSize={18} color={theme.red1}>
+          <Text fontWeight={400} fontSize={18} color={theme.red1} style={{ textAlign: 'center', width: '85%' }}>
             {message}
           </Text>
         </AutoColumn>

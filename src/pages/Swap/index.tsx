@@ -182,7 +182,7 @@ export default function Swap() {
 
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
 
-  function onSwap() {
+  const handleSwap = useCallback(() => {
     if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
       return
     }
@@ -212,7 +212,7 @@ export default function Swap() {
       .catch(error => {
         setSwapState({ attemptingTxn: false, showConfirm, swapErrorMessage: error.message, txHash: undefined })
       })
-  }
+  }, [account, priceImpactWithoutFee, recipient, recipientAddress, showConfirm, swapCallback, trade])
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
@@ -229,7 +229,7 @@ export default function Swap() {
       (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
     !(priceImpactSeverity > 3 && !isExpertMode)
 
-  function modalHeader() {
+  const modalHeader = useCallback(() => {
     return trade ? (
       <SwapModalHeader
         trade={trade}
@@ -240,15 +240,15 @@ export default function Swap() {
         recipient={recipient}
       />
     ) : null
-  }
+  }, [formattedAmounts, independentField, priceImpactSeverity, recipient, slippageAdjustedAmounts, trade])
 
-  function modalBottom() {
+  const modalBottom = useCallback(() => {
     return trade && realizedLPFee ? (
       <SwapModalFooter
         showInverted={showInverted}
         severity={priceImpactSeverity}
         setShowInverted={setShowInverted}
-        onSwap={onSwap}
+        onSwap={handleSwap}
         realizedLPFee={realizedLPFee}
         priceImpactWithoutFee={priceImpactWithoutFee}
         slippageAdjustedAmounts={slippageAdjustedAmounts}
@@ -256,7 +256,16 @@ export default function Swap() {
         swapErrorMessage={swapErrorMessage}
       />
     ) : null
-  }
+  }, [
+    handleSwap,
+    priceImpactSeverity,
+    priceImpactWithoutFee,
+    realizedLPFee,
+    showInverted,
+    slippageAdjustedAmounts,
+    swapErrorMessage,
+    trade
+  ])
 
   // text to show while loading
   const pendingText = `Swapping ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${
@@ -276,6 +285,21 @@ export default function Swap() {
     }
   }, [attemptingTxn, onUserInput, swapErrorMessage, txHash])
 
+  const confirmationContent = useCallback(
+    () =>
+      swapErrorMessage ? (
+        <TransactionErrorContent onDismiss={handleConfirmDismiss} message={swapErrorMessage} />
+      ) : (
+        <ConfirmationModalContent
+          title="Confirm Swap"
+          onDismiss={handleConfirmDismiss}
+          topContent={modalHeader}
+          bottomContent={modalBottom}
+        />
+      ),
+    [handleConfirmDismiss, modalBottom, modalHeader, swapErrorMessage]
+  )
+
   return (
     <>
       {showWarning && <TokenWarningCards currencies={currencies} />}
@@ -287,18 +311,7 @@ export default function Swap() {
             onDismiss={handleConfirmDismiss}
             attemptingTxn={attemptingTxn}
             hash={txHash}
-            content={() =>
-              swapErrorMessage ? (
-                <TransactionErrorContent onDismiss={handleConfirmDismiss} message={swapErrorMessage} />
-              ) : (
-                <ConfirmationModalContent
-                  title="Confirm Swap"
-                  onDismiss={handleConfirmDismiss}
-                  topContent={modalHeader}
-                  bottomContent={modalBottom}
-                />
-              )
-            }
+            content={confirmationContent}
             pendingText={pendingText}
           />
 
@@ -427,7 +440,7 @@ export default function Swap() {
                 <ButtonError
                   onClick={() => {
                     if (isExpertMode) {
-                      onSwap()
+                      handleSwap()
                     } else {
                       setSwapState({
                         attemptingTxn: false,
@@ -455,7 +468,7 @@ export default function Swap() {
               <ButtonError
                 onClick={() => {
                   if (isExpertMode) {
-                    onSwap()
+                    handleSwap()
                   } else {
                     setSwapState({
                       attemptingTxn: false,
