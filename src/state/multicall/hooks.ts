@@ -6,7 +6,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import { useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
-import { ETHER, Token, TokenAmount } from '@uniswap/sdk'
+import { ChainId, Token, TokenAmount } from '@uniswap/sdk'
+import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../../constants/multicall'
+
 import {
   addMulticallListeners,
   Call,
@@ -15,6 +17,10 @@ import {
   toCallKey,
   ListenerOptions
 } from './actions'
+import { getContract } from '../../utils'
+import ERC20ABI from '../../constants/abis/erc20.json'
+import { Web3Provider } from '@ethersproject/providers'
+import { ZERO_ADDRESS } from '@uniswap/sdk/dist/constants'
 
 export interface Result extends ReadonlyArray<any> {
   readonly [key: string]: any
@@ -188,21 +194,50 @@ export function useSingleContractMultipleData(
   }, [fragment, contract, results, latestBlockNumber])
 }
 
-export function usePoolAssetsBalances(
+export async function usePoolAssetsBalances(
   pools: Array<{ pool: string, tokenA: Token | undefined, tokenB: Token | undefined }>,
   options?: ListenerOptions
-): Array<{ pool: string, amountA: TokenAmount | undefined, amountB: TokenAmount | undefined }> {
+): Promise<Array<{ pool: string | undefined, amountA: TokenAmount | undefined, amountB: TokenAmount | undefined }>> {
 
-  return pools.map(({ pool, tokenA, tokenB }) => {
+  const { chainId, library } = useActiveWeb3React()
 
-    if (!tokenA || !tokenB) {
+  if (!library) {
+    return Promise.resolve([{ pool: undefined, amountA: undefined, amountB: undefined }])
+  }
+
+  const x = pools.map(async ({ pool, tokenA, tokenB }) => {
+
+    if (!tokenA || !tokenB || !chainId || pool === '0x0000000000000000000000000000000000000000') {
       return { pool, amountA: undefined, amountB: undefined }
     }
 
-    const amountA = tokenA?.isEther ? new TokenAmount(ETHER, '1') : new TokenAmount(tokenA, '2')
-    const amountB = tokenB?.isEther ? new TokenAmount(ETHER, '1') : new TokenAmount(tokenB, '2')
-    return { pool, amountA, amountB }
+    try {
+      let balance0;
+      let balance1;
+      if (!tokenA.isEther) {
+        const contract0 = getContract(tokenA.address, ERC20ABI, library);
+        balance0 = await contract0.balanceOf(pool)
+      } else {
+        const contract0 = getContract(MULTICALL_NETWORKS[chainId], MULTICALL_ABI, library);
+        balance0 = await contract0.getEthBalance(pool)
+      }
+      if (!tokenB.isEther) {
+        const contract1 = getContract(tokenB.address, ERC20ABI, library);
+        balance1 = await contract1.balanceOf(pool)
+      } else {
+        const contract1 = getContract(MULTICALL_NETWORKS[chainId], MULTICALL_ABI, library);
+        balance1 = await contract1.getEthBalance(pool)
+      }
+
+      const amountA = new TokenAmount(tokenA, balance0)
+      const amountB = new TokenAmount(tokenB, balance1)
+      return { pool, amountA, amountB }
+    } catch (e) {
+      return { pool, amountA: undefined, amountB: undefined }
+    }
   })
+
+  return Promise.all(x)
 
   // ERC20_INTERFACE.getFunction(`balanceOf`, [])
   // const

@@ -4,7 +4,6 @@
   "homepage": ".",
   "private": true,
   "devDependencies": {
-    "@uniswap/sdk": "CryptoManiacsZone/uniswap-sdk.git#v2",
     "@ethersproject/address": "5.0.0-beta.134",
     "@ethersproject/bignumber": "5.0.0-beta.138",
     "@ethersproject/constants": "5.0.0-beta.133",
@@ -34,6 +33,7 @@
     "@types/testing-library__cypress": "^5.0.5",
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
+    "@uniswap/sdk": "CryptoManiacsZone/uniswap-sdk.git#v2",
     "@uniswap/token-lists": "^1.0.0-beta.11",
     "@uniswap/v2-core": "1.0.0",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
@@ -106,5 +106,9 @@
       "last 1 safari version"
     ]
   },
-  "license": "GPL-3.0-or-later"
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "promise-hook": "^0.1.4",
+    "react-use-promise": "^0.3.1"
+  }
 }

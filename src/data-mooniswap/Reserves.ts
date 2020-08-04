@@ -5,6 +5,8 @@ import { useActiveWeb3React } from '../hooks'
 
 import { NEVER_RELOAD, usePoolAssetsBalances, useSingleContractMultipleData } from '../state/multicall/hooks'
 import { useMooniswapV1FactoryContract } from '../hooks/useContract'
+// @ts-ignore
+import usePromise from 'react-use-promise'
 // import { useCurrencyBalances } from '../state/wallet/hooks'
 // import { V1_MOONISWAP_FACTORY_ADDRESSES } from '../constants/v1-mooniswap'
 
@@ -73,7 +75,8 @@ export function usePairs(currencies: [Token | undefined, Token | undefined][]): 
   // // todo: use something like useMultipleContractMultipleData() hook for multiple pool addresses
   // const x = useCurrencyBalancesFromManyAccounts(pools, );
   //
-  const balances = usePoolAssetsBalances(pools);
+  const balances$ = usePoolAssetsBalances(pools);
+  const [balances, , state] = usePromise(() => balances$, [pools]);
   // for (let i = 0; i < pools.length; i++) {
   //
   //   // web3 -> getEthBalance
@@ -95,7 +98,7 @@ export function usePairs(currencies: [Token | undefined, Token | undefined][]): 
       const tokenA = tokens[i][0]
       const tokenB = tokens[i][1]
 
-      if (res.loading) return [PairState.LOADING, null]
+      if (res.loading || state !== 'resolved' || !balances || !balances[i].pool || balances[i].pool === ZERO_ADDRESS) return [PairState.LOADING, null]
       if (!tokenA || !tokenB) return [PairState.INVALID, null]
       if (tokenA.equals(tokenB)) return [PairState.INVALID, null]
 
@@ -119,7 +122,7 @@ export function usePairs(currencies: [Token | undefined, Token | undefined][]): 
         )
       ]
     })
-  }, [results, tokens])
+  }, [balances, tokens])
 }
 
 export function usePair(tokenA?: Token, tokenB?: Token): [PairState, Pair | null] {
