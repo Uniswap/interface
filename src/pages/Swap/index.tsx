@@ -126,13 +126,13 @@ export default function Swap() {
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
     showConfirm: boolean
-    tradeToConfirm: Trade | null
+    tradeToConfirm: Trade | undefined
     attemptingTxn: boolean
     swapErrorMessage: string | undefined
     txHash: string | undefined
   }>({
     showConfirm: false,
-    tradeToConfirm: null,
+    tradeToConfirm: undefined,
     attemptingTxn: false,
     swapErrorMessage: undefined,
     txHash: undefined
@@ -243,6 +243,10 @@ export default function Swap() {
     }
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 
+  const handleAcceptChanges = useCallback(() => {
+    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
+  }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
+
   return (
     <>
       {showWarning && <TokenWarningCards currencies={currencies} />}
@@ -252,6 +256,8 @@ export default function Swap() {
           <ConfirmSwapModal
             isOpen={showConfirm}
             trade={trade}
+            originalTrade={tradeToConfirm}
+            onAcceptChanges={handleAcceptChanges}
             attemptingTxn={attemptingTxn}
             txHash={txHash}
             recipient={recipient}
@@ -389,7 +395,7 @@ export default function Swap() {
                       handleSwap()
                     } else {
                       setSwapState({
-                        tradeToConfirm: trade ?? null,
+                        tradeToConfirm: trade,
                         attemptingTxn: false,
                         swapErrorMessage: undefined,
                         showConfirm: true,
@@ -418,7 +424,7 @@ export default function Swap() {
                     handleSwap()
                   } else {
                     setSwapState({
-                      tradeToConfirm: trade ?? null,
+                      tradeToConfirm: trade,
                       attemptingTxn: false,
                       swapErrorMessage: undefined,
                       showConfirm: true,

@@ -4,7 +4,7 @@ import { ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
-import { TYPE } from '../../theme'
+import { LinkStyledButton, TYPE } from '../../theme'
 import { isAddress, shortenAddress } from '../../utils'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { AutoColumn } from '../Column'
@@ -15,11 +15,15 @@ import { TruncatedText } from './styleds'
 export default function SwapModalHeader({
   trade,
   allowedSlippage,
-  recipient
+  recipient,
+  showAcceptChanges,
+  onAcceptChanges
 }: {
   trade: Trade
   allowedSlippage: number
   recipient: string | null
+  showAcceptChanges: boolean
+  onAcceptChanges: () => void
 }) {
   const slippageAdjustedAmounts = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage), [
     trade,
@@ -81,6 +85,14 @@ export default function SwapModalHeader({
           <TYPE.main>
             Output will be sent to{' '}
             <b title={recipient}>{isAddress(recipient) ? shortenAddress(recipient) : recipient}</b>
+          </TYPE.main>
+        </AutoColumn>
+      ) : null}
+      {showAcceptChanges ? (
+        <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
+          <TYPE.main>
+            This trade has changed. Please review and{' '}
+            <LinkStyledButton onClick={onAcceptChanges}>accept changes</LinkStyledButton> to continue.
           </TYPE.main>
         </AutoColumn>
       ) : null}

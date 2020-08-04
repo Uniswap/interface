@@ -22,12 +22,14 @@ export default function SwapModalFooter({
   trade,
   onConfirm,
   allowedSlippage,
-  swapErrorMessage
+  swapErrorMessage,
+  disabledConfirm
 }: {
   trade: Trade
   allowedSlippage: number
   onConfirm: () => void
   swapErrorMessage: string | undefined
+  disabledConfirm: boolean
 }) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
   const theme = useContext(ThemeContext)
@@ -109,6 +111,7 @@ export default function SwapModalFooter({
       <AutoRow>
         <ButtonError
           onClick={onConfirm}
+          disabled={disabledConfirm}
           error={severity > 2}
           style={{ margin: '10px 0 0 0' }}
           id="confirm-swap-or-send"
