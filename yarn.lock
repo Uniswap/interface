@@ -6116,6 +6116,12 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
+"dxswap-core@git://github.com/levelkdev/dxswap-core.git#develop":
+  version "0.1.0"
+  resolved "git://github.com/levelkdev/dxswap-core.git#600b8cbe37458495ab083b5089ce33291f1afab6"
+  dependencies:
+    typescript "^3.9.5"
+
 "dxswap-core@git://github.com/levelkdev/dxswap-core.git#v0.1.0":
   version "0.1.0"
   resolved "git://github.com/levelkdev/dxswap-core.git#18dc3635ff9d1c9b60a92647f2f49bfc6d456efe"
@@ -6128,9 +6134,9 @@ duplexify@^3.4.2, duplexify@^3.6.0:
   dependencies:
     dxswap-core "git://github.com/levelkdev/dxswap-core.git#v0.1.0"
 
-"dxswap-sdk@git://github.com/levelkdev/dxswap-sdk.git#v0.1.0":
-  version "0.1.0"
-  resolved "git://github.com/levelkdev/dxswap-sdk.git#cf509af1456b3d92f352d7c3bf1efde82f568167"
+"dxswap-sdk@git://github.com/levelkdev/dxswap-sdk.git#dynamic-fees-sync":
+  version "2.0.5"
+  resolved "git://github.com/levelkdev/dxswap-sdk.git#8db2752db55ba600e08df3024aa30a08a0e45543"
   dependencies:
     "@ethersproject/address" "^5.0.0-beta.134"
     "@ethersproject/contracts" "^5.0.0-beta.143"
@@ -6139,7 +6145,7 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     "@ethersproject/solidity" "^5.0.0-beta.131"
     big.js "^5.2.2"
     decimal.js-light "^2.5.0"
-    dxswap-core "git://github.com/levelkdev/dxswap-core.git#v0.1.0"
+    dxswap-core "git://github.com/levelkdev/dxswap-core.git#develop"
     jsbi "^3.1.1"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
