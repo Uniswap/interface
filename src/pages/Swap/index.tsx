@@ -8,7 +8,7 @@ import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
-import TransactionConfirmationModal from '../../components/TransactionConfirmationModal'
+import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow, RowBetween } from '../../components/Row'
@@ -265,18 +265,13 @@ export default function Swap() {
   const showWarning =
     (!dismissedToken0 && !!currencies[Field.INPUT]) || (!dismissedToken1 && !!currencies[Field.OUTPUT])
 
-  const onConfirmDismiss = useCallback(() => {
-    setSwapState({
-      showConfirm: false,
-      attemptingTxn: false,
-      txHash: undefined,
-      swapErrorMessage: undefined
-    })
+  const handleConfirmDismiss = useCallback(() => {
     // if there was a tx hash, we want to clear the input
     if (txHash) {
+      setSwapState({ showConfirm: false, attemptingTxn, swapErrorMessage, txHash })
       onUserInput(Field.INPUT, '')
     }
-  }, [onUserInput, txHash])
+  }, [attemptingTxn, onUserInput, swapErrorMessage, txHash])
 
   return (
     <>
@@ -286,12 +281,17 @@ export default function Swap() {
         <Wrapper id="swap-page">
           <TransactionConfirmationModal
             isOpen={showConfirm}
-            title="Confirm Swap"
-            onDismiss={onConfirmDismiss}
+            onDismiss={handleConfirmDismiss}
             attemptingTxn={attemptingTxn}
             hash={txHash}
-            topContent={modalHeader}
-            bottomContent={modalBottom}
+            content={() => (
+              <ConfirmationModalContent
+                title={'Confirm Swap'}
+                onDismiss={handleConfirmDismiss}
+                topContent={modalHeader}
+                bottomContent={modalBottom}
+              />
+            )}
             pendingText={pendingText}
           />
 

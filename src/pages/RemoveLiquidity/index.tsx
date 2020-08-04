@@ -11,7 +11,7 @@ import { ThemeContext } from 'styled-components'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import TransactionConfirmationModal from '../../components/TransactionConfirmationModal'
+import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
@@ -448,6 +448,16 @@ export default function RemoveLiquidity({
     [currencyIdA, currencyIdB, history]
   )
 
+  const handleDismissConfirmation = useCallback(() => {
+    setShowConfirm(false)
+    setSignatureData(null) // important that we clear signature data to avoid bad sigs
+    // if there was a tx hash, we want to clear the input
+    if (txHash) {
+      onUserInput(Field.LIQUIDITY_PERCENT, '0')
+    }
+    setTxHash('')
+  }, [onUserInput, txHash])
+
   return (
     <>
       <AppBody>
@@ -455,21 +465,18 @@ export default function RemoveLiquidity({
         <Wrapper>
           <TransactionConfirmationModal
             isOpen={showConfirm}
-            onDismiss={() => {
-              setShowConfirm(false)
-              setSignatureData(null) // important that we clear signature data to avoid bad sigs
-              // if there was a tx hash, we want to clear the input
-              if (txHash) {
-                onUserInput(Field.LIQUIDITY_PERCENT, '0')
-              }
-              setTxHash('')
-            }}
+            onDismiss={handleDismissConfirmation}
             attemptingTxn={attemptingTxn}
             hash={txHash ? txHash : ''}
-            topContent={modalHeader}
-            bottomContent={modalBottom}
+            content={() => (
+              <ConfirmationModalContent
+                title={'You will receive'}
+                onDismiss={handleDismissConfirmation}
+                topContent={modalHeader}
+                bottomContent={modalBottom}
+              />
+            )}
             pendingText={pendingText}
-            title="You will receive"
           />
           <AutoColumn gap="md">
             <LightCard>

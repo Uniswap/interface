@@ -138,22 +138,18 @@ interface ConfirmationModalProps {
   isOpen: boolean
   onDismiss: () => void
   hash: string | undefined
-  topContent: () => React.ReactNode
-  bottomContent: () => React.ReactNode
+  content: () => React.ReactNode
   attemptingTxn: boolean
   pendingText: string
-  title: string
 }
 
 export default function TransactionConfirmationModal({
   isOpen,
   onDismiss,
-  topContent,
-  bottomContent,
   attemptingTxn,
   hash,
   pendingText,
-  title
+  content
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
@@ -167,12 +163,7 @@ export default function TransactionConfirmationModal({
       ) : hash ? (
         <TransactionSubmittedContent chainId={chainId} hash={hash} onDismiss={onDismiss} />
       ) : (
-        <ConfirmationModalContent
-          onDismiss={onDismiss}
-          bottomContent={bottomContent}
-          title={title}
-          topContent={topContent}
-        />
+        content()
       )}
     </Modal>
   )
