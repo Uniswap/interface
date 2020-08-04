@@ -3,9 +3,9 @@ import { useMemo } from 'react'
 // import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { useActiveWeb3React } from '../hooks'
 
-import { NEVER_RELOAD, useSingleContractMultipleData } from '../state/multicall/hooks'
+import { NEVER_RELOAD, usePoolAssetsBalances, useSingleContractMultipleData } from '../state/multicall/hooks'
 import { useMooniswapV1FactoryContract } from '../hooks/useContract'
-import { useCurrencyBalances } from '../state/wallet/hooks'
+// import { useCurrencyBalances } from '../state/wallet/hooks'
 // import { V1_MOONISWAP_FACTORY_ADDRESSES } from '../constants/v1-mooniswap'
 
 // const MOONISWAP_PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
@@ -49,7 +49,7 @@ export function usePairs(currencies: [Token | undefined, Token | undefined][]): 
   const results = useSingleContractMultipleData(useMooniswapV1FactoryContract(), 'pools', tokenPairs, NEVER_RELOAD)
   // const results = [{ result: ['0x10247d9370d54cc8ab93a3ebe67e9b5d668d2b1c'], loading: false }]
 
-  const poolAddresses: { pool: string; tokenA: Token | undefined; tokenB: Token | undefined }[] = useMemo(() => {
+  const pools: { pool: string; tokenA: Token | undefined; tokenB: Token | undefined }[] = useMemo(() => {
     const defaultData = { pool: ZERO_ADDRESS, tokenA: undefined, tokenB: undefined }
     return results.map((res, i) => {
       const tokenA = tokens[i][0]
@@ -65,14 +65,29 @@ export function usePairs(currencies: [Token | undefined, Token | undefined][]): 
       return { pool: poolAddress, tokenA: tokenA, tokenB: tokenB }
     })
   }, [results, tokens])
-  const pools = poolAddresses.map(x => x.pool)
-  const tokenList = poolAddresses.map(x => [x.tokenA, x.tokenB])
+  //
+  // const pools = poolAddresses.map(x => x.pool)
+  // const tokenList = poolAddresses.map(x => [x.tokenA, x.tokenB])
 
-  const balances: (TokenAmount | undefined)[][] = [];
-  // todo: use something like useMultipleContractMultipleData() hook for multiple pool addresses
+  // const balances: (TokenAmount | undefined)[][] = [];
+  // // todo: use something like useMultipleContractMultipleData() hook for multiple pool addresses
+  // const x = useCurrencyBalancesFromManyAccounts(pools, );
+  //
+  const balances = usePoolAssetsBalances(pools);
   // for (let i = 0; i < pools.length; i++) {
-    const balancesResults = useCurrencyBalances(pools[0], tokenList[0])
-    balances.push(balancesResults)
+  //
+  //   // web3 -> getEthBalance
+  //   //    ->
+  //   //    ->
+  //   //
+  //   // Use Multiple -> Multiple
+  //   //
+  //   // x(poolAddresses) ->  [address, balanceA, balanceB]
+  //   // useCurrencyBalances(pools: [poolAddress, tokenA, tokenB]) -> [balanceA, balanceB]
+  //   // useCurrencyBalances(pools: [poolAddress, tokenA, tokenB]) -> [balanceA, balanceB]
+  //
+  //   const balancesResults = useCurrencyBalances(pools[0], tokenList[0])
+  //   balances.push(balancesResults)
   // }
 
   return useMemo(() => {
@@ -86,8 +101,8 @@ export function usePairs(currencies: [Token | undefined, Token | undefined][]): 
 
       const bal = balances[i]
       if (!bal) return [PairState.LOADING, null]
-      const balA = bal[0]
-      const balB = bal[1]
+      const balA = bal.amountA
+      const balB = bal.amountB
       if (!balA || !balB) return [PairState.LOADING, null]
 
       const poolAddress = res.result?.[0]

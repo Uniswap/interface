@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import { useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
+import { ETHER, Token, TokenAmount } from '@uniswap/sdk'
 import {
   addMulticallListeners,
   Call,
@@ -187,6 +188,59 @@ export function useSingleContractMultipleData(
   }, [fragment, contract, results, latestBlockNumber])
 }
 
+export function usePoolAssetsBalances(
+  pools: Array<{ pool: string, tokenA: Token | undefined, tokenB: Token | undefined }>,
+  options?: ListenerOptions
+): Array<{ pool: string, amountA: TokenAmount | undefined, amountB: TokenAmount | undefined }> {
+
+  return pools.map(({ pool, tokenA, tokenB }) => {
+
+    if (!tokenA || !tokenB) {
+      return { pool, amountA: undefined, amountB: undefined }
+    }
+
+    const amountA = tokenA?.isEther ? new TokenAmount(ETHER, '1') : new TokenAmount(tokenA, '2')
+    const amountB = tokenB?.isEther ? new TokenAmount(ETHER, '1') : new TokenAmount(tokenB, '2')
+    return { pool, amountA, amountB }
+  })
+
+  // ERC20_INTERFACE.getFunction(`balanceOf`, [])
+  // const
+  // contractInterface.getFunction(methodName), [contractInterface, methodName])
+  // return [];
+  // const fragment = useMemo(() => contractInterface.getFunction(methodName), [contractInterface, methodName])
+  // const callData: string | undefined = useMemo(
+  //   () =>
+  //     fragment && isValidMethodArgs(callInputs)
+  //       ? contractInterface.encodeFunctionData(fragment, callInputs)
+  //       : undefined,
+  //   [callInputs, contractInterface, fragment]
+  // )
+  //
+  // const calls = useMemo(
+  //   () =>
+  //     fragment && addresses && addresses.length > 0 && callData
+  //       ? addresses.map<Call | undefined>(address => {
+  //         return address && callData
+  //           ? {
+  //             address,
+  //             callData
+  //           }
+  //           : undefined
+  //       })
+  //       : [],
+  //   [addresses, callData, fragment]
+  // )
+  //
+  // const results = useCallsData(calls, options)
+  //
+  // const latestBlockNumber = useBlockNumber()
+  //
+  // return useMemo(() => {
+  //   return results.map(result => toCallState(result, contractInterface, fragment, latestBlockNumber))
+  // }, [fragment, results, contractInterface, latestBlockNumber])
+}
+
 export function useMultipleContractSingleData(
   addresses: (string | undefined)[],
   contractInterface: Interface,
@@ -207,13 +261,13 @@ export function useMultipleContractSingleData(
     () =>
       fragment && addresses && addresses.length > 0 && callData
         ? addresses.map<Call | undefined>(address => {
-            return address && callData
-              ? {
-                  address,
-                  callData
-                }
-              : undefined
-          })
+          return address && callData
+            ? {
+              address,
+              callData
+            }
+            : undefined
+        })
         : [],
     [addresses, callData, fragment]
   )

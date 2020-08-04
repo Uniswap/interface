@@ -80,6 +80,43 @@ export function useTokenBalancesWithLoadingIndicator(
   ]
 }
 
+// // Used for Pools (Account == Pool)
+// export function useTokenBalanceForMultipleAccounts(
+//   addresses?: string[], // Addresses of the pool
+//   token?: (Token | undefined) // Address of token that we take balance
+// ): [{ [accountAddress: string]: TokenAmount | undefined }, boolean] {
+//
+//   if (!addresses || !token) {
+//     return useMemo(() => {
+//       return [{}, false]
+//     }, [])
+//   }
+//
+//   const erc20Contract = useTokenContract(token?.address)
+//   const callData = addresses?.map(x => [x]) || [] // wrap each param into array
+//
+//   const balances = useSingleContractMultipleData(erc20Contract, 'balanceOf', callData)
+//   const anyLoading: boolean = useMemo(() => balances.some(callState => callState.loading), [balances])
+//
+//   return [
+//     useMemo(
+//       () =>
+//         addresses?.length > 0
+//           ? addresses?.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, pool, i) => {
+//             const value = balances?.[i]?.result?.[0]
+//             const amount = value ? JSBI.BigInt(value.toString()) : undefined
+//             if (amount) {
+//               memo[pool] = new TokenAmount(token, amount)
+//             }
+//             return memo
+//           }, {})
+//           : {},
+//       [addresses, token, balances]
+//     ),
+//     anyLoading
+//   ]
+// }
+
 export function useTokenBalances(
   address?: string,
   tokens?: (Token | undefined)[]
@@ -116,6 +153,34 @@ export function useCurrencyBalances(
     [account, currencies, ethBalance, tokenBalances]
   )
 }
+
+// Use case: Account is Pool
+// export function useCurrencyBalancesFromManyAccounts(
+//   accounts?: string[],
+//   currency?: (Token | undefined)
+// ): (TokenAmount | undefined)[] {
+//
+//   let balances: [{ [accountAddress: string]: TokenAmount | undefined }, boolean] = [{}, false]
+//   let ethBalances: { [address: string]: TokenAmount | undefined } = {}
+//
+//   if (currency?.isEther) {
+//     ethBalances = useETHBalances(accounts)
+//   } else {
+//     balances = useTokenBalanceForMultipleAccounts(accounts, currency)
+//   }
+//
+//   return useMemo(
+//     () =>
+//       accounts?.map((account) => {
+//         if (!account || !currency) return
+//         if (currency.isEther) {
+//           return ethBalances[account]
+//         }
+//         return balances[0][account]
+//       }) ?? [],
+//     [accounts, currency, balances]
+//   )
+// }
 
 export function useCurrencyBalance(account?: string, currency?: Token): TokenAmount | undefined {
   return useCurrencyBalances(account, [currency])[0]
