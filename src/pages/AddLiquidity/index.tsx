@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Token, ETHER, TokenAmount } from '@uniswap/sdk'
+import { ETHER, Token, TokenAmount } from '@uniswap/sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -25,7 +25,12 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../s
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, getMooniswapContract } from '../../utils'
+import {
+  calculateGasMargin,
+  calculateSlippageAmount,
+  getMooniswapContract,
+  getMooniswapFactoryContract
+} from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
 import { Dots, Wrapper } from '../Pool/styleds'
@@ -110,6 +115,55 @@ export default function AddLiquidity({
 
   const addTransaction = useTransactionAdder()
 
+  async function onPoolCreate() {
+    if (!chainId || !library || !account || !currencyA || !currencyB) return
+
+    const mooniswapFactory = getMooniswapFactoryContract(chainId, library, account)
+    const estimate = mooniswapFactory.estimateGas.deploy
+    const method = mooniswapFactory.deploy
+    const args = [
+      currencyA.address, currencyB.address
+    ]
+
+    setAttemptingTxn(true)
+
+    await estimate(...args, {})
+      .then(estimatedGasLimit =>
+        method(...args, {
+          gasLimit: calculateGasMargin(estimatedGasLimit)
+        }).then((response: any) => {
+          setAttemptingTxn(false)
+
+          addTransaction(response, {
+            summary:
+              'Create Pool ' +
+              currencyA.symbol +
+              ' ' +
+              currencyB.symbol
+          })
+
+          setTxHash(response.hash)
+
+          ReactGA.event({
+            category: 'Liquidity',
+            action: 'CreatePool',
+            label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/')
+          })
+
+          setShowConfirm(true)
+        })
+      )
+      .catch(error => {
+        setAttemptingTxn(false)
+        // we only care if the error is something _other_ than the user rejected the tx
+        if (error?.code !== 4001) {
+          console.error(error)
+        }
+      })
+
+    // const estimate = mooniswap.estimateGas.deposit
+  }
+
   async function onAdd() {
     if (!chainId || !library || !account || !pair?.poolAddress) return
     const mooniswap = getMooniswapContract(chainId, library, pair.poolAddress, account)
@@ -121,14 +175,15 @@ export default function AddLiquidity({
 
     let value: BigNumber | null
 
-    const tokenBIsETH = currencyB === ETHER
     const estimate = mooniswap.estimateGas.deposit
     const method = mooniswap.deposit
     const args = [
       [parsedAmountA.raw.toString(), parsedAmountB.raw.toString()],
       calculateSlippageAmount(liquidityMinted, noLiquidity ? 0 : allowedSlippage)[0].toString()
     ]
+
     if (currencyA === ETHER || currencyB === ETHER) {
+      const tokenBIsETH = currencyB === ETHER
       value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
     } else {
       value = null
@@ -208,7 +263,7 @@ export default function AddLiquidity({
         </Row>
         <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
           {`Output is estimated. If the price changes by more than ${allowedSlippage /
-            100}% your transaction will revert.`}
+          100}% your transaction will revert.`}
         </TYPE.italic>
       </AutoColumn>
     )
@@ -231,6 +286,10 @@ export default function AddLiquidity({
     currencies[Field.CURRENCY_A]?.symbol
   } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencies[Field.CURRENCY_B]?.symbol}`
 
+  const pendingTextForCreation = `Creating ${
+    currencies[Field.CURRENCY_A]?.symbol
+  }/${currencies[Field.CURRENCY_B]?.symbol} pool`
+
   const handleCurrencyASelect = useCallback(
     (currencyA: Token) => {
       const newCurrencyIdA = currencyId(currencyA)
@@ -242,6 +301,7 @@ export default function AddLiquidity({
     },
     [currencyIdB, history, currencyIdA]
   )
+
   const handleCurrencyBSelect = useCallback(
     (currencyB: Token) => {
       const newCurrencyIdB = currencyId(currencyB)
@@ -277,11 +337,11 @@ export default function AddLiquidity({
             hash={txHash}
             topContent={modalHeader}
             bottomContent={modalBottom}
-            pendingText={pendingText}
+            pendingText={pairState === PairState.NOT_EXISTS ? pendingTextForCreation : pendingText}
             title={noLiquidity ? 'You are creating a pool' : 'You will receive'}
           />
           <AutoColumn gap="20px">
-            {noLiquidity && (
+            {noLiquidity && (pairState !== PairState.NOT_EXISTS) && (
               <ColumnCenter>
                 <BlueCard>
                   <AutoColumn gap="10px">
@@ -353,47 +413,60 @@ export default function AddLiquidity({
                   approvalA === ApprovalState.PENDING ||
                   approvalB === ApprovalState.NOT_APPROVED ||
                   approvalB === ApprovalState.PENDING) &&
-                  isValid && (
-                    <RowBetween>
-                      {approvalA !== ApprovalState.APPROVED && (
-                        <ButtonPrimary
-                          onClick={approveACallback}
-                          disabled={approvalA === ApprovalState.PENDING}
-                          width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
-                        >
-                          {approvalA === ApprovalState.PENDING ? (
-                            <Dots>Approving {currencies[Field.CURRENCY_A]?.symbol}</Dots>
-                          ) : (
-                            'Approve ' + currencies[Field.CURRENCY_A]?.symbol
-                          )}
-                        </ButtonPrimary>
-                      )}
-                      {approvalB !== ApprovalState.APPROVED && (
-                        <ButtonPrimary
-                          onClick={approveBCallback}
-                          disabled={approvalB === ApprovalState.PENDING}
-                          width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
-                        >
-                          {approvalB === ApprovalState.PENDING ? (
-                            <Dots>Approving {currencies[Field.CURRENCY_B]?.symbol}</Dots>
-                          ) : (
-                            'Approve ' + currencies[Field.CURRENCY_B]?.symbol
-                          )}
-                        </ButtonPrimary>
-                      )}
-                    </RowBetween>
-                  )}
-                <ButtonError
-                  onClick={() => {
-                    expertMode ? onAdd() : setShowConfirm(true)
-                  }}
-                  disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
-                  error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
-                >
-                  <Text fontSize={20} fontWeight={500}>
-                    {error ?? 'Supply'}
-                  </Text>
-                </ButtonError>
+                isValid && (
+                  <RowBetween>
+                    {approvalA !== ApprovalState.APPROVED && (
+                      <ButtonPrimary
+                        onClick={approveACallback}
+                        disabled={approvalA === ApprovalState.PENDING}
+                        width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
+                      >
+                        {approvalA === ApprovalState.PENDING ? (
+                          <Dots>Approving {currencies[Field.CURRENCY_A]?.symbol}</Dots>
+                        ) : (
+                          'Approve ' + currencies[Field.CURRENCY_A]?.symbol
+                        )}
+                      </ButtonPrimary>
+                    )}
+                    {approvalB !== ApprovalState.APPROVED && (
+                      <ButtonPrimary
+                        onClick={approveBCallback}
+                        disabled={approvalB === ApprovalState.PENDING}
+                        width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
+                      >
+                        {approvalB === ApprovalState.PENDING ? (
+                          <Dots>Approving {currencies[Field.CURRENCY_B]?.symbol}</Dots>
+                        ) : (
+                          'Approve ' + currencies[Field.CURRENCY_B]?.symbol
+                        )}
+                      </ButtonPrimary>
+                    )}
+                  </RowBetween>
+                )}
+
+                {pairState === PairState.NOT_EXISTS ? (
+                  <ButtonError
+                    onClick={() => {onPoolCreate()}}
+                    disabled={false}
+                    error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
+                  >
+                    <Text fontSize={20} fontWeight={500}>
+                      {'Create Pool'}
+                    </Text>
+                  </ButtonError>
+                ) : (
+                  <ButtonError
+                    onClick={() => {
+                      expertMode ? onAdd() : setShowConfirm(true)
+                    }}
+                    disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
+                    error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
+                  >
+                    <Text fontSize={20} fontWeight={500}>
+                      {error ?? 'Supply'}
+                    </Text>
+                  </ButtonError>
+                )}
               </AutoColumn>
             )}
           </AutoColumn>
@@ -403,7 +476,7 @@ export default function AddLiquidity({
       {pair && !noLiquidity && pairState !== PairState.INVALID ? (
         <AutoColumn style={{ minWidth: '20rem', marginTop: '1rem' }}>
           {/*<MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />*/}
-          <MinimalPositionCard showUnwrapped={false} pair={pair} />
+          <MinimalPositionCard showUnwrapped={false} pair={pair}/>
         </AutoColumn>
       ) : null}
     </>
