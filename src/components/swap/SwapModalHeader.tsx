@@ -40,7 +40,11 @@ export default function SwapModalHeader({
       <RowBetween align="flex-end">
         <RowFixed gap={'0px'}>
           <CurrencyLogo currency={trade.inputAmount.currency} size={'24px'} style={{ marginRight: '12px' }} />
-          <TruncatedText fontSize={24} fontWeight={500}>
+          <TruncatedText
+            fontSize={24}
+            fontWeight={500}
+            color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.primary1 : ''}
+          >
             {trade.inputAmount.toSignificant(6)}
           </TruncatedText>
         </RowFixed>
@@ -59,7 +63,13 @@ export default function SwapModalHeader({
           <TruncatedText
             fontSize={24}
             fontWeight={500}
-            color={priceImpactSeverity > 2 ? theme.red1 : showAcceptChanges ? theme.primary1 : ''}
+            color={
+              priceImpactSeverity > 2
+                ? theme.red1
+                : showAcceptChanges && trade.tradeType === TradeType.EXACT_INPUT
+                ? theme.primary1
+                : ''
+            }
           >
             {trade.outputAmount.toSignificant(6)}
           </TruncatedText>
@@ -81,7 +91,7 @@ export default function SwapModalHeader({
               style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
               onClick={onAcceptChanges}
             >
-              Continue
+              Accept
             </ButtonPrimary>
           </RowBetween>
         </SwapShowAcceptChanges>
