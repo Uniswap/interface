@@ -1,7 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { TokenList } from '@uniswap/token-lists/dist/types'
-import { acceptListUpdate, addList, fetchTokenList } from './actions'
+import { DEFAULT_TOKEN_LIST_URL } from '../../constants'
+import { acceptListUpdate, addList, fetchTokenList, removeList, selectList } from './actions'
+import UNISWAP_DEFAULT_LIST from '@uniswap/default-token-list/uniswap-default.tokenlist.json'
 
 export interface ListsState {
   readonly byUrl: {
@@ -12,10 +14,19 @@ export interface ListsState {
       readonly error: string | null
     }
   }
+  readonly selectedListUrl: string | undefined
 }
 
 const initialState: ListsState = {
-  byUrl: {}
+  byUrl: {
+    [DEFAULT_TOKEN_LIST_URL]: {
+      error: null,
+      current: UNISWAP_DEFAULT_LIST,
+      loadingRequestId: null,
+      pendingUpdate: null
+    }
+  },
+  selectedListUrl: DEFAULT_TOKEN_LIST_URL
 }
 
 export default createReducer(initialState, builder =>
@@ -67,6 +78,11 @@ export default createReducer(initialState, builder =>
         pendingUpdate: null
       }
     })
+    .addCase(selectList, (state, { payload: url }) => {
+      const list = state.byUrl[url]
+      if (!list || !list.current) return
+      state.selectedListUrl = url
+    })
     .addCase(addList, (state, { payload: url }) => {
       if (!state.byUrl[url]) {
         state.byUrl[url] = {
@@ -76,6 +92,12 @@ export default createReducer(initialState, builder =>
           error: null
         }
       }
+    })
+    .addCase(removeList, (state, { payload: url }) => {
+      if (state.byUrl[url]) {
+        delete state.byUrl[url]
+      }
+      if (state.selectedListUrl === url) state.selectedListUrl = undefined
     })
     .addCase(acceptListUpdate, (state, { payload: url }) => {
       if (!state.byUrl[url]?.pendingUpdate) {

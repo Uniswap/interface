@@ -1,4 +1,4 @@
-import { TokenList, Version } from '@uniswap/token-lists'
+import { TokenList } from '@uniswap/token-lists'
 import React, { useCallback, useContext } from 'react'
 import { AlertCircle, Info } from 'react-feather'
 import { useDispatch } from 'react-redux'
@@ -7,13 +7,10 @@ import { AppDispatch } from '../../state'
 import { useRemovePopup } from '../../state/application/hooks'
 import { acceptListUpdate } from '../../state/lists/actions'
 import { TYPE } from '../../theme'
+import listVersionLabel from '../../utils/listVersionLabel'
 import { ButtonPrimary, ButtonSecondary } from '../Button'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
-
-function versionLabel(version: Version): string {
-  return `v${version.major}.${version.minor}.${version.patch}`
-}
 
 export default function ListUpdatePopup({
   popKey,
@@ -48,13 +45,13 @@ export default function ListUpdatePopup({
         {auto ? (
           <TYPE.body fontWeight={500}>
             The token list &quot;{oldList.name}&quot; has been updated to{' '}
-            <strong>{versionLabel(newList.version)}</strong>.
+            <strong>{listVersionLabel(newList.version)}</strong>.
           </TYPE.body>
         ) : (
           <>
             <div>
-              A token list update is available for the list &quot;{oldList.name}&quot; ({versionLabel(oldList.version)}{' '}
-              to {versionLabel(newList.version)}).
+              A token list update is available for the list &quot;{oldList.name}&quot; (
+              {listVersionLabel(oldList.version)} to {listVersionLabel(newList.version)}).
             </div>
             <AutoRow>
               <div style={{ flexGrow: 1, marginRight: 6 }}>

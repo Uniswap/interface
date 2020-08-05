@@ -19,8 +19,8 @@ import {
   updateUserExpertMode,
   updateUserSlippageTolerance
 } from './actions'
-import { useDefaultTokenList } from '../lists/hooks'
-import { isDefaultToken } from '../../utils'
+import { useSelectedTokenList } from '../lists/hooks'
+import { isTokenOnList } from '../../utils'
 
 function serializeToken(token: Token): SerializedToken {
   return {
@@ -175,14 +175,14 @@ export function useTokenWarningDismissal(chainId?: number, token?: Currency): [b
   const dispatch = useDispatch<AppDispatch>()
 
   // get default list, mark as dismissed if on list
-  const defaultList = useDefaultTokenList()
-  const isDefault = isDefaultToken(defaultList, token)
+  const selectedTokenList = useSelectedTokenList()
+  const isOnList = isTokenOnList(selectedTokenList, token)
 
   return useMemo(() => {
     if (!chainId || !token) return [false, null]
 
     const dismissed: boolean =
-      token instanceof Token ? dismissalState?.[chainId]?.[token.address] === true || isDefault : true
+      token instanceof Token ? dismissalState?.[chainId]?.[token.address] === true || isOnList : true
 
     const callback =
       dismissed || !(token instanceof Token)
@@ -190,7 +190,7 @@ export function useTokenWarningDismissal(chainId?: number, token?: Currency): [b
         : () => dispatch(dismissTokenWarning({ chainId, tokenAddress: token.address }))
 
     return [dismissed, callback]
-  }, [chainId, token, dismissalState, isDefault, dispatch])
+  }, [chainId, token, dismissalState, isOnList, dispatch])
 }
 
 /**

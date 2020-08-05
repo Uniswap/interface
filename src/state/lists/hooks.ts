@@ -66,8 +66,25 @@ export function useTokenList(url: string): TokenAddressMap {
   }, [lists, url])
 }
 
-export function useDefaultTokenList(): TokenAddressMap {
-  return useTokenList(DEFAULT_TOKEN_LIST_URL)
+export function useSelectedListUrl(): string {
+  const selectedListUrl = useSelector<AppState, AppState['lists']['selectedListUrl']>(
+    state => state.lists.selectedListUrl
+  )
+  return selectedListUrl ?? DEFAULT_TOKEN_LIST_URL
+}
+
+export function useSelectedTokenList(): TokenAddressMap {
+  return useTokenList(useSelectedListUrl())
+}
+
+export function useSelectedListInfo(): { current: TokenList | null; pending: TokenList | null; loading: boolean } {
+  const selectedUrl = useSelectedListUrl()
+  const list = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)[selectedUrl]
+  return {
+    current: list?.current ?? null,
+    pending: list?.pendingUpdate ?? null,
+    loading: list?.loadingRequestId !== null
+  }
 }
 
 // returns all downloaded current lists

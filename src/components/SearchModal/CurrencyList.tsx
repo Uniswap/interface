@@ -1,11 +1,12 @@
 import { Currency, CurrencyAmount, currencyEquals, ETHER, JSBI, Token } from '@uniswap/sdk'
-import React, { CSSProperties, memo, useContext, useMemo } from 'react'
+import React, { CSSProperties, memo, useContext, useEffect, useMemo, useRef } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
-import { useDefaultTokenList } from '../../state/lists/hooks'
+import useLast from '../../hooks/useLast'
+import { useSelectedTokenList } from '../../state/lists/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
@@ -15,7 +16,7 @@ import { RowFixed } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
 import { FadedSpan, MenuItem } from './styleds'
 import Loader from '../Loader'
-import { isDefaultToken } from '../../utils'
+import { isTokenOnList } from '../../utils'
 
 function currencyKey(currency: Currency): string {
   return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
@@ -30,26 +31,35 @@ export default function CurrencyList({
   showSendWithSwap
 }: {
   currencies: Currency[]
-  selectedCurrency: Currency
-  allBalances: { [tokenAddress: string]: CurrencyAmount }
+  selectedCurrency: Currency | undefined
+  allBalances: { [tokenAddress: string]: CurrencyAmount | undefined }
   onCurrencySelect: (currency: Currency) => void
-  otherCurrency: Currency
+  otherCurrency: Currency | undefined
   showSendWithSwap?: boolean
 }) {
   const { account, chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
   const allTokens = useAllTokens()
-  const defaultTokens = useDefaultTokenList()
+  const selectedListTokens = useSelectedTokenList()
   const addToken = useAddUserToken()
   const removeToken = useRemoveUserAddedToken()
-  const ETHBalance = useETHBalances([account])[account]
+  const ETHBalances = useETHBalances([account ?? undefined])
+  const ETHBalance = account ? ETHBalances[account] : undefined
+  const lastCurrenciesLength = useLast(currencies)?.length
+  const currenciesLength = currencies.length
+  const fixedList = useRef<FixedSizeList>()
+  useEffect(() => {
+    if (lastCurrenciesLength !== currenciesLength) {
+      fixedList.current?.scrollTo(0)
+    }
+  }, [currenciesLength, lastCurrenciesLength])
 
   const CurrencyRow = useMemo(() => {
     return memo(function CurrencyRow({ index, style }: { index: number; style: CSSProperties }) {
       const currency = index === 0 ? Currency.ETHER : currencies[index - 1]
       const key = currencyKey(currency)
-      const isDefault = isDefaultToken(defaultTokens, currency)
-      const customAdded = Boolean(!isDefault && currency instanceof Token && allTokens[currency.address])
+      const isOnList = isTokenOnList(selectedListTokens, currency)
+      const customAdded = Boolean(!isOnList && currency instanceof Token && allTokens[currency.address])
       const balance = currency === ETHER ? ETHBalance : allBalances[key]
 
       const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
@@ -76,14 +86,14 @@ export default function CurrencyList({
                     <LinkStyledButton
                       onClick={event => {
                         event.stopPropagation()
-                        if (currency instanceof Token) removeToken(chainId, currency.address)
+                        if (chainId && currency instanceof Token) removeToken(chainId, currency.address)
                       }}
                     >
                       (Remove)
                     </LinkStyledButton>
                   </TYPE.main>
                 ) : null}
-                {!isDefault && !customAdded ? (
+                {!isOnList && !customAdded ? (
                   <TYPE.main fontWeight={500}>
                     Found by address
                     <LinkStyledButton
@@ -131,7 +141,7 @@ export default function CurrencyList({
     allTokens,
     chainId,
     currencies,
-    defaultTokens,
+    selectedListTokens,
     onCurrencySelect,
     otherCurrency,
     removeToken,

@@ -4,10 +4,10 @@ import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
-import { useDefaultTokenList } from '../../state/lists/hooks'
+import { useSelectedTokenList } from '../../state/lists/hooks'
 import { Field } from '../../state/swap/actions'
 import { ExternalLink, TYPE } from '../../theme'
-import { getEtherscanLink, isDefaultToken } from '../../utils'
+import { getEtherscanLink, isTokenOnList } from '../../utils'
 import PropsOfExcluding from '../../utils/props-of-excluding'
 import CurrencyLogo from '../CurrencyLogo'
 import { AutoRow, RowBetween } from '../Row'
@@ -43,8 +43,8 @@ interface TokenWarningCardProps extends PropsOfExcluding<typeof Wrapper, 'error'
 
 export default function TokenWarningCard({ token, ...rest }: TokenWarningCardProps) {
   const { chainId } = useActiveWeb3React()
-  const defaultTokens = useDefaultTokenList()
-  const isDefault = isDefaultToken(defaultTokens, token)
+  const selectedTokenList = useSelectedTokenList()
+  const isListed = isTokenOnList(selectedTokenList, token)
 
   const tokenSymbol = token?.symbol?.toLowerCase() ?? ''
   const tokenName = token?.name?.toLowerCase() ?? ''
@@ -52,7 +52,7 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
   const allTokens = useAllTokens()
 
   const duplicateNameOrSymbol = useMemo(() => {
-    if (isDefault || !token || !chainId) return false
+    if (isListed || !token || !chainId) return false
 
     return Object.keys(allTokens).some(tokenAddress => {
       const userToken = allTokens[tokenAddress]
@@ -61,9 +61,9 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
       }
       return userToken.symbol.toLowerCase() === tokenSymbol || userToken.name.toLowerCase() === tokenName
     })
-  }, [isDefault, token, chainId, allTokens, tokenSymbol, tokenName])
+  }, [isListed, token, chainId, allTokens, tokenSymbol, tokenName])
 
-  if (isDefault || !token) return null
+  if (isListed || !token) return null
 
   return (
     <Wrapper error={duplicateNameOrSymbol} {...rest}>
