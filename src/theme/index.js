@@ -6,6 +6,8 @@ import { useDarkModeManager } from '../contexts/LocalStorage'
 
 export * from './components'
 
+export const primaryColor = '#327ccb'
+
 const MEDIA_WIDTHS = {
   upToSmall: 600,
   upToMedium: 960,

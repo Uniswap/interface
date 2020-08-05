@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 import Close from '../../assets/svg/close-black-18dp.svg'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import { useGovernorContract } from '../../hooks'
 import { ethers } from 'ethers'
 import { calculateGasMargin } from '../../utils'
 import * as Sentry from '@sentry/browser'
-import { useTransactionAdder } from '../../contexts/Transactions'
+import { usePendingCastedVotes, useTransactionAdder } from '../../contexts/Transactions'
+import { GOVERNOR_ALPHA_ADDRESS } from '../../contexts/GovernorAlpha'
+import { primaryColor } from '../../theme'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const BackDrop = styled.div`
   width: 100vw;
@@ -62,8 +65,19 @@ const Exit = styled.div`
 `
 
 const Buttons = styled.div`
-	margin-top: 20px;
 	margin-bottom: 10px;
+`
+
+const SpinnerWrapper = styled.div`
+	height: 48px;
+	padding-top: 24px;
+	padding-bottom: 14px;
+`
+
+const TextualBody = styled.div`
+	padding-top: 16px;
+	padding-bottom: 16px;
+	text-align: left;
 `
 
 const Button = styled.div`
@@ -99,21 +113,6 @@ const ErrorMessage = styled.div`
 	font-weight: 500;
 `
 
-const spin = keyframes`
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-`
-
-const Loader = styled.div`
-  border: 5px solid #f3f3f3; /* Light grey */
-  border-top: 5px solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  animation: ${spin} 2s linear infinite;
-  margin: 0 auto;
-`
-
 const Underline = styled.div`
   height: 2px;
   background: #327ccb;
@@ -122,82 +121,108 @@ const Underline = styled.div`
   margin-left: 2px;
 `
 
-async function castVote() {
-  let response = await fetch('https://jsonplaceholder.typicode.com/todos/1')
-  let data = await response.json()
-  return data
-}
-
 //export default function Cast({ proposal, time, vote, onChange }) {
-export default function CastVoteDialogue({ proposal, timestamp, onChange }) {
-  const [newVote, setNewVote] = useState(false)
-	const [error, setError] = useState(null)
-	const [loading, setLoading] = useState(false); //loading hook
+export default function CastVoteDialogue({ proposal, timestamp, votesBN, isDelegating, onChange }) {
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false) //loading hook
 
-	const governorContract = useGovernorContract()
-	const addTransaction = useTransactionAdder()
-	const proposalId = proposal.proposalId
+  const governorContract = useGovernorContract()
+  const addTransaction = useTransactionAdder()
+  const proposalId = proposal.proposalId
+  const isPendingCast = usePendingCastedVotes()
 
-	const castVote = async (isForProposal) => {
-		const GAS_MARGIN = ethers.BigNumber.from(1000)
-		setLoading(true)
-		setError(null)
+  const castVote = async (isForProposal) => {
+    const GAS_MARGIN = ethers.BigNumber.from(1000)
+    setLoading(true)
+    setError(null)
 
-		const estimatedGas = await governorContract.estimateGas
-			.castVote(proposalId, isForProposal)
-			.catch(error => {
-				console.error(`Error getting gas estimation for casting vote with ID ${proposalId}: `, error)
-				return ethers.BigNumber.from('500000');
-			})
+    const estimatedGas = await governorContract.estimateGas
+      .castVote(proposalId, isForProposal)
+      .catch(error => {
+        console.error(`Error getting gas estimation for casting vote with ID ${proposalId}: `, error)
+        return ethers.BigNumber.from('500000')
+      })
 
-		governorContract
-			.castVote(proposalId, isForProposal, {
-				gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
-			})
-			.then(response => {
-				setLoading(false)
-				addTransaction(response, { proposalId: proposalId })
-			})
-			.catch(error => {
-				setLoading(false)
-				if(error?.code !== 4001) {
-					console.error(`Could not cast vote due to error: `, error)
-					Sentry.captureException(error)
-				} else {
-					console.log('Could not cast vote because the transaction was cancelled')
-				}
-			})
-	}
+    governorContract
+      .castVote(proposalId, isForProposal, {
+        gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
+      })
+      .then(response => {
+        setLoading(false)
+        addTransaction(response, { vote: GOVERNOR_ALPHA_ADDRESS })
+      })
+      .catch(error => {
+        setLoading(false)
+        if (error?.code !== 4001) {
+          console.error(`Could not cast vote due to error: `, error)
+          Sentry.captureException(error)
+        } else {
+          console.log('Could not cast vote because the transaction was cancelled')
+        }
+      })
+  }
 
-	return (
-		<BackDrop>
-			<Card>
+  let bodyJsx
+  if (isPendingCast) {
+    bodyJsx = (
+      <>
+        <TextualBody>
+          You currently have a vote that has been casted and is waiting to be confirmed. Please wait for the
+          confirmation to finish.
+        </TextualBody>
+        <CircularProgress style={{ color: primaryColor }}/>
+      </>
+    )
+  } else if (!votesBN || (votesBN.eq(ethers.BigNumber.from('0')) && !isDelegating)) {
+    bodyJsx = (
+      <>
+        <TextualBody>
+          Before voting for the first time, you must activate your wallet. To activate your wallet, go to the &nbsp;
+          <a href={'/governance/proposals'}>home page</a> of the voting dashboard and press the 'Activate Wallet'
+          button.
+        </TextualBody>
+      </>
+    )
+  } else {
+    bodyJsx = (
+      <>
+        {<SpinnerWrapper>
+          {loading ? <CircularProgress style={{ color: primaryColor }}/> :
+            <span>Cast your vote using the options below.</span>}
+        </SpinnerWrapper>}
+        <Buttons>
+          <Button color={'#09b53d'} onClick={() => castVote(true)}>
+            For
+          </Button>
+          <Button color={'#d4001e'} onClick={() => castVote(false)}>
+            Against
+          </Button>
+        </Buttons>
+        <ErrorMessage>
+          {error}
+        </ErrorMessage>
+      </>
+    )
+  }
+
+  return (
+    <BackDrop>
+      <Card>
         <Title>
           Cast your vote
         </Title>
         <Underline/>
-				<Proposal>
-					{proposal.title}
-				</Proposal>
-				<Time>
-					{timestamp}
-				</Time>
-				<Buttons>
-					<Button color={'#09b53d'} onClick={() => castVote(true)}>
-						For
-					</Button>
-					<Button color={'#d4001e'} onClick={() => castVote(false)}>
-						Against
-					</Button>
-				</Buttons>
-				<ErrorMessage>
-					{error}
-				</ErrorMessage>
-				{loading ? <Loader/> : null}
-				<Exit onClick={() => onChange(false)}>
-					<img src={Close} alt={'X'}/>
-				</Exit>
-			</Card>
-		</BackDrop>
-	)
+        <Proposal>
+          {proposal.title}
+        </Proposal>
+        <Time>
+          {timestamp}
+        </Time>
+        {bodyJsx}
+        <Exit onClick={() => onChange(false)}>
+          <img src={Close} alt={'X'}/>
+        </Exit>
+      </Card>
+    </BackDrop>
+  )
 }

@@ -16,6 +16,7 @@ import * as Sentry from '@sentry/browser'
 import { usePendingDelegation, useTransactionAdder } from '../../contexts/Transactions'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { AccountDetails } from '../../models/AccountDetails'
+import { primaryColor } from '../../theme/index'
 
 const Main = styled.div`
   height: calc(100vh - 160px);
@@ -433,8 +434,6 @@ export default function Vote() {
       })
   }
 
-  const primaryColor = '#327ccb'
-
   const getBalanceButton = (index, valueBN, voteCountBN, isDelegating) => {
     if (!voteCountBN) {
       voteCountBN = new BN('0')
@@ -492,13 +491,16 @@ export default function Vote() {
           </Title>
           <Underline/>
           {loading ?
-            (<div style={{ 'text-align': 'center' }}>
+            (<div style={{ textAlign: 'center' }}>
               <CircularProgress style={{ color: primaryColor }}/>
             </div>)
             :
             (<Proposals>
               {proposalPage.map((proposal) => (
-                <ProposalItem key={`proposal-${proposal.proposalId}`} proposal={proposal}
+                <ProposalItem key={`proposal-${proposal.proposalId}`}
+                              proposal={proposal}
+                              isDelegating={!!accountInfo?.voteInfo ? accountInfo?.voteInfo?.isDelegating() : false}
+                              votesBN={accountInfo?.voteInfo?.votesBN}
                               walletAddress={walletAddress}/>
               ))}
             </Proposals>)

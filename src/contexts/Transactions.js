@@ -4,6 +4,7 @@ import { useWeb3React } from '../hooks'
 import { safeAccess } from '../utils'
 import { useBlockNumber } from './Application'
 import { DMG_ADDRESS } from './Tokens'
+import { GOVERNOR_ALPHA_ADDRESS } from './GovernorAlpha'
 
 const RESPONSE = 'response'
 const CUSTOM_DATA = 'CUSTOM_DATA'
@@ -186,6 +187,10 @@ export function usePendingWrapping(tokenAddress) {
 
 export function usePendingDelegation() {
   return usePendingTransaction(DMG_ADDRESS, 'delegate')
+}
+
+export function usePendingCastedVotes() {
+  return usePendingTransaction(GOVERNOR_ALPHA_ADDRESS, 'vote')
 }
 
 function usePendingTransaction(value, customDataKey) {

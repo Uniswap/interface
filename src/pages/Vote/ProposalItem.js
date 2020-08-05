@@ -13,6 +13,13 @@ const Main = styled.div`
   border-bottom: 1px solid #e2e2e2;
   height: 100%;
   width: calc(100% - 60px);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  @media (max-width: 540px) {
+    flex-direction: column;
+  }
 `
 
 const Wrapper = styled.div`
@@ -55,7 +62,6 @@ const Status = styled.div`
 
 const VoteButton = styled.div`
   height: 100%;
-  width: 20%;
   display: inline-block;
   font-size: 15px;
   font-weight: 600;
@@ -63,8 +69,8 @@ const VoteButton = styled.div`
   text-align: center;
   transition: opacity 0.2s ease-in-out;
 
-  @media (max-width: 450px) {
-    width: 100%;
+  @media (max-width: 540px) {
+    margin-top: 12px;
   }
 
   ${({ cast }) => cast && `
@@ -74,6 +80,9 @@ const VoteButton = styled.div`
     :hover {
       opacity: 0.7;
     }
+  `}
+  ${({ disabled }) => disabled && `
+    cursor: none;
   `}
 `
 
@@ -91,36 +100,26 @@ const link = {
 
 export default function ProposalItem(props) {
   const proposal = props.proposal
-  const availableVotes = ['Vote', 'For', 'Against', 'No Vote']
-  const mod = (b, e) => availableVotes.slice(b, e)
+  const proposalVoteInfo = proposal?.account?.proposalVoteInfo
+
+  console.log('proposal ', proposal)
 
   let initialVoteStatus
   if (!props.walletAddress) {
-    initialVoteStatus = null
+    initialVoteStatus = ''
   } else if (
     proposal.proposalStatus === ProposalSummary.statuses.ACTIVE &&
-    (proposal.account?.voteInfo?.voteStatus === AccountProposalVoteInfo.statuses.NO_VOTE || !proposal.account?.voteInfo)
+    (proposalVoteInfo?.voteStatus === AccountProposalVoteInfo.statuses.NO_VOTE || !proposalVoteInfo)
   ) {
     initialVoteStatus = AccountProposalVoteInfo.statuses.VOTE
   } else {
-    initialVoteStatus = proposal.account?.voteInfo?.voteStatus || AccountProposalVoteInfo.statuses.NO_VOTE
+    initialVoteStatus = proposalVoteInfo?.voteStatus || AccountProposalVoteInfo.statuses.NO_VOTE
   }
   const [voteStatus, setVoteStatus] = useState(initialVoteStatus)
 
-  const initialIsCastedStatus = proposal.proposalStatus === ProposalSummary.statuses.ACTIVE &&
-    !proposal.account?.voteInfo?.voteStatus &&
-    proposal.account?.voteInfo?.voteStatus !== AccountProposalVoteInfo.statuses.NO_VOTE
-  const [isCasted, setCast] = useState(initialIsCastedStatus)
   const [showCastDialogue, setShowCastDialogue] = useState(false)
 
-  const handleClick = (e) => {
-    if (mod(1, 3).includes(e)) {
-      setVoteStatus(e)
-      setCast(false)
-    }
-    setShowCastDialogue(false)
-  }
-
+  const isVoteButtonDisabled = voteStatus !== AccountProposalVoteInfo.statuses.VOTE
 
   return (
     <Main>
@@ -137,14 +136,16 @@ export default function ProposalItem(props) {
           </Extra>
         </Info>
       </Wrapper>
-      <VoteButton onClick={() => setShowCastDialogue(isCasted)} cast={isCasted}>
-        {AccountProposalVoteInfo.toFormattedVoteString(voteStatus)}
+      <VoteButton onClick={() => !isVoteButtonDisabled && setShowCastDialogue(true)} disabled={isVoteButtonDisabled}>
+        {AccountProposalVoteInfo.toFormattedVoteButtonString(voteStatus)}
       </VoteButton>
       {showCastDialogue ?
         <CastVoteDialogue
           proposal={proposal}
           timestamp={proposal.mostRecentDateText()}
-          onChange={e => handleClick(e)}
+          isDelegating={props.isDelegating}
+          votesBN={props.votesBN}
+          onChange={(shouldShow) => setShowCastDialogue(shouldShow)}
           vote={(v) => setVoteStatus(v)}/>
         : <div/>
       }

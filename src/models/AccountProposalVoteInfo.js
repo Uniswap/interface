@@ -19,6 +19,10 @@ export class AccountProposalVoteInfo {
     }
   }
 
+  static toFormattedVoteButtonString(voteStatus) {
+    return AccountProposalVoteInfo.toFormattedVoteString(voteStatus).toUpperCase()
+  }
+
   constructor({ vote_status, votes_casted_padded }) {
     this.voteStatus = vote_status
     this.votesCastedBN = ethers.BigNumber.from(votes_casted_padded)

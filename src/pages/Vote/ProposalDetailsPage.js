@@ -10,6 +10,10 @@ import { ProposalSummary } from '../../models/ProposalSummary'
 import { AccountProposalVoteInfo } from '../../models/AccountProposalVoteInfo'
 import { useAllTransactions } from '../../contexts/Transactions'
 import { Spinner } from '../../theme'
+import ReactMarkdown from 'react-markdown'
+import { fromWei } from 'web3-utils'
+import ethers from 'ethers'
+import { AccountDetails } from '../../models/AccountDetails'
 
 const Main = styled.div`
   width: 60vw;
@@ -20,6 +24,10 @@ const Main = styled.div`
     display: none;
   }
 
+  @media (max-width: 100000px) {
+    height: calc(100vh)
+  }
+  
   @media (max-width: 1000px) {
     top: 140px;
     width: 80vw;
@@ -135,10 +143,8 @@ const Color = styled.div`
     background-color: ${color}
   `}
   
-  ${({ isWinning }) => isWinning ? `
-    width: 100%;
-  ` : `
-    width: 50%;
+  ${({ percentage }) => `
+    width: ${percentage}%;
   `}
 `
 const Addresses = styled.div`
@@ -212,7 +218,10 @@ const HistoryWrapper = styled.div`
 `
 
 const History = styled.div`
-	margin-bottom: 15px;
+	margin-bottom: 16px;
+	display: flex;
+	flex-direction: row;
+	align-items: center
 `
 
 const Check = styled.div`
@@ -270,7 +279,7 @@ const Vote = styled.div`
     cursor: pointer;
     border: 2px solid #0a2aa5a;
   `}
-  ${({ display }) => display ? `
+  ${({ displayCastVote }) => displayCastVote ? `
     display: inline-block;
   ` : `
     display: none;
@@ -289,46 +298,6 @@ const Underline = styled.div`
   margin-left: 30px;
 `
 
-const votes = [
-	{
-		title: 'For',
-		val: 0,
-		addresses: [
-			{
-				address: '0x62b5fc62f3f2277c3c51e672e2faef82a279c7ac1dd9d9416c9ec536ae3d5e63',
-				vote: 0.037
-			}
-		],
-		color: '#09b53d'
-	},
-	{
-		title: 'Against',
-		val: 0,
-		addresses: [
-			{
-				address: '0x62b5fc62f3f2277c3c51e672e2faef82a279c7ac1dd9d9416c9ec536ae3d5e63',
-				vote: 0.037
-			},
-			{
-				address: '0x62b5fc62f3f2277c3c51e672e2faef82a279c7ac1dd9d9416c9ec536ae3d5e63',
-				vote: 0.037
-			},
-			{
-				address: '0x62b5fc62f3f2277c3c51e672e2faef82a279c7ac1dd9d9416c9ec536ae3d5e63',
-				vote: 0.037
-			},
-			{
-				address: '0x62b5fc62f3f2277c3c51e672e2faef82a279c7ac1dd9d9416c9ec536ae3d5e63',
-				vote: 0.037
-			},
-			{
-				address: '0x62b5fc62f3f2277c3c51e672e2faef82a279c7ac1dd9d9416c9ec536ae3d5e63',
-				vote: 0.037
-			},
-		],
-		color: '#d4001e'
-	}
-]
 function isValidProposalId(proposalId) {
   return !Number.isNaN(Number.parseInt(proposalId))
 }
@@ -350,10 +319,17 @@ async function getDetails(proposalId, walletAddress) {
 }
 
 const CAST_VOTE = 'Vote'
-const VOTE_CASTING = 'Vote casting'
+
+async function getAccountInfo(walletAddress) {
+  const baseUrl = 'https://api.defimoneymarket.com'
+  return fetch(`${baseUrl}/v1/governance/accounts/${walletAddress}`)
+    .then(response => response.json())
+    .then(response => !!response.data ? new AccountDetails(response.data) : null)
+}
 
 export default function ProposalDetailsPage() {
   const [vote, setVote] = useState(CAST_VOTE)
+  const [accountInfo, setAccountInfo] = useState({})
   const [cast, setCast] = useState(true)
   const [showCast, changeShowCast] = useState(false)
   const [castHash, setCastHash] = useState('')
@@ -368,7 +344,7 @@ export default function ProposalDetailsPage() {
     changeShowCast(false)
   }
 
-  const { account } = useWeb3React()
+  const { account: walletAddress } = useWeb3React()
 
   const [proposal, setProposal] = useState(ProposalDetails.prototype)
 
@@ -400,14 +376,19 @@ export default function ProposalDetailsPage() {
 
   useEffect(() => {
     const perform = () => {
-      getDetails(proposalId, account)
-        .then(proposal => {
-          if (proposal) {
-            setProposal(proposal)
-          } else {
-            setProposal('BAD')
-          }
-        })
+      const proposalDetailsPromise = getDetails(proposalId, walletAddress).then(proposal => {
+        if (proposal) {
+          setProposal(proposal)
+        } else {
+          setProposal('BAD')
+        }
+      })
+
+      const accountInfoPromise = getAccountInfo(walletAddress).then(accountInfo => {
+        setAccountInfo(accountInfo)
+      })
+
+      Promise.all([proposalDetailsPromise, accountInfoPromise])
         .catch(error => {
           setProposal('BAD')
           console.error('Found error ', error)
@@ -420,7 +401,7 @@ export default function ProposalDetailsPage() {
     }, 15000)
 
     return () => clearInterval(subscriptionId)
-  })
+  }, [walletAddress])
 
   const shorten = (a) => `${a.substring(0, 6)}...${a.substring(a.length - 4, a.length)}`
   const addressTitle = (l) => `${l} ${l === 1 ? 'Address' : 'Addresses'}`
@@ -439,8 +420,7 @@ export default function ProposalDetailsPage() {
   voteDetails[1].votesBN = proposal?.votesAgainstBN
   voteDetails[1].topVoters = proposal?.votersAgainst || []
 
-  const displayCastVote = proposal?.proposalStatus === ProposalSummary.statuses.ACTIVE &&
-    (proposal?.account?.voteInfo?.voteStatus === AccountProposalVoteInfo.statuses.NO_VOTE || !proposal?.account?.voteInfo?.voteStatus)
+  const displayCastVote = proposal?.proposalStatus === ProposalSummary.statuses.ACTIVE && !proposal?.isVotingDisabled()
 
   return (
     <Main>
@@ -465,8 +445,7 @@ export default function ProposalDetailsPage() {
           <SpinnerWrapper/> :
           <Vote
             onClick={() => changeShowCast(cast)}
-            display={displayCastVote}
-            onVoteCasted={(hash) => setCastHash(hash)}
+            displayCastVote={displayCastVote}
             cast={cast}>
             {vote}
           </Vote>
@@ -474,13 +453,23 @@ export default function ProposalDetailsPage() {
       </div>
       <Body>
         {voteDetails.map(({ title, votesBN, topVoters, color }, index) => {
+          const _0 = ethers.BigNumber.from('0')
+          const sumVotes = voteDetails
+            .map(vote => vote.votesBN)
+            .filter(votesBN => !!votesBN && votesBN.gt(_0))
+            .reduce((a, b) => a.add(b), _0)
+
+          const _100 = ethers.BigNumber.from('100000000000000000000')
+          const percentageBN = (!!votesBN && votesBN.gt(_0)) ? votesBN.mul(_100).div(sumVotes).toString() : _0.toString()
+          const percentage = parseInt(fromWei(percentageBN)).toString(10)
+
           return (
             <Card width={50} key={`vote-details-${color}`}>
               <Title>
                 {title}:&nbsp;&nbsp;&nbsp;{amountFormatter(votesBN, 18, 2)}
                 <Bar>
                   <Color color={color}
-                         isWinning={!!votesBN && votesBN.gt(index === 0 ? voteDetails[1].votesBN : voteDetails[0].votesBN)}/>
+                         percentage={!!votesBN ? percentage : '50'}/>
                 </Bar>
               </Title>
               <Addresses>
@@ -516,7 +505,7 @@ export default function ProposalDetailsPage() {
         </Title>
         <Underline/>
         <Description>
-          {proposal?.description}
+          <ReactMarkdown source={proposal?.description}/>
         </Description>
       </Card>
       <Card width={40}>
@@ -535,9 +524,9 @@ export default function ProposalDetailsPage() {
                   <HistoryTitle>
                     {breadcrumb.statusFormatted()}
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <Link to={`https://etherscan.io/tx/${breadcrumb.transactionHash}`} target={'_blank'}>
+                    <a href={`https://etherscan.io/tx/${breadcrumb.transactionHash}`} target={'_blank'}>
                       <ExternalLink/>
-                    </Link>
+                    </a>
                   </HistoryTitle>
                 ) : (
                   <HistoryTitle>
@@ -556,8 +545,7 @@ export default function ProposalDetailsPage() {
         <SpinnerWrapper/> :
         <Vote
           onClick={() => changeShowCast(cast)}
-          display={displayCastVote}
-          onVoteCasted={(hash) => setCastHash(hash)}
+          displayCastVote={displayCastVote}
           cast={cast}>
           {vote}
         </Vote>
@@ -567,6 +555,8 @@ export default function ProposalDetailsPage() {
           proposal={proposal}
           timestamp={proposal.mostRecentDateText()}
           onChange={e => handleClick(e)}
+          isDelegating={!!accountInfo?.voteInfo ? accountInfo?.voteInfo?.isDelegating() : false}
+          votesBN={accountInfo?.voteInfo?.votesBN}
           onVoteCasted={(hash) => {
             setCastHash(hash)
           }}/>
