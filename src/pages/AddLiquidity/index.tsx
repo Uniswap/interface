@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Token, ETHER, TokenAmount } from '@uniswap/sdk'
+import { ETHER, Token, TokenAmount } from '@uniswap/sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -25,7 +25,12 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../s
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, getMooniswapContract, getMooniswapFactoryContract } from '../../utils'
+import {
+  calculateGasMargin,
+  calculateSlippageAmount,
+  getMooniswapContract,
+  getMooniswapFactoryContract
+} from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
 import { Dots, Wrapper } from '../Pool/styleds'
@@ -144,6 +149,8 @@ export default function AddLiquidity({
             action: 'CreatePool',
             label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/')
           })
+
+          setShowConfirm(true)
         })
       )
       .catch(error => {
@@ -279,6 +286,10 @@ export default function AddLiquidity({
     currencies[Field.CURRENCY_A]?.symbol
   } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencies[Field.CURRENCY_B]?.symbol}`
 
+  const pendingTextForCreation = `Creating ${
+    currencies[Field.CURRENCY_A]?.symbol
+  }/${currencies[Field.CURRENCY_B]?.symbol} pool`
+
   const handleCurrencyASelect = useCallback(
     (currencyA: Token) => {
       const newCurrencyIdA = currencyId(currencyA)
@@ -326,7 +337,7 @@ export default function AddLiquidity({
             hash={txHash}
             topContent={modalHeader}
             bottomContent={modalBottom}
-            pendingText={pendingText}
+            pendingText={pairState === PairState.NOT_EXISTS ? pendingTextForCreation : pendingText}
             title={noLiquidity ? 'You are creating a pool' : 'You will receive'}
           />
           <AutoColumn gap="20px">
