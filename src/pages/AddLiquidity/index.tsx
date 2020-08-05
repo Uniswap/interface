@@ -446,7 +446,7 @@ export default function AddLiquidity({
                 ) : (
                   <ButtonError
                     onClick={() => {
-                      expertMode ? onPoolCreate() : setShowConfirm(true)
+                      expertMode ? onAdd() : setShowConfirm(true)
                     }}
                     disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
                     error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
