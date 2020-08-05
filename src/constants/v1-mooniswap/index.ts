@@ -4,7 +4,7 @@ import V1_MOONISWAP_EXCHANGE_ABI from './v1_mooniswap_exchange.json'
 import V1_MOONISWAP_FACTORY_ABI from './v1_mooniswap_factory.json'
 
 const V1_MOONISWAP_FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '0x401E434FFA0095F11d3298E778d36eBa0d66D29a',
+  [ChainId.MAINNET]: '0xc12A7e093832E2d2267df225BAca60bD2B74C65F',
   [ChainId.ROPSTEN]: '',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
