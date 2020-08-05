@@ -8,7 +8,7 @@ import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
+import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
@@ -30,8 +30,7 @@ import { calculateGasMargin, calculateSlippageAmount } from '../../utils'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
 import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { Dots } from '../../components/swap/styleds'
+import { useApproveCallback } from '../../hooks/useApproveCallback'
 import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
 import { Field } from '../../state/burn/actions'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -92,8 +91,8 @@ export default function RemoveLiquidity({
   const pairContract: Contract | null = useMooniswapContract(pair?.liquidityToken?.address)
 
   // allowance handling
-  const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
-  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], pairContract?.address)
+  const [, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
+  const [, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], pairContract?.address)
 
   async function onAttemptToApprove() {
     if (!pairContract || !pair || !library) throw new Error('missing dependencies')
@@ -333,7 +332,8 @@ export default function RemoveLiquidity({
             </RowBetween>
           </>
         ) }
-        <ButtonPrimary disabled={ !(approval === ApprovalState.APPROVED || signatureData !== null) }
+        {/*<ButtonPrimary disabled={ !(approval === ApprovalState.APPROVED || signatureData !== null) }*/}
+        <ButtonPrimary disabled={false}
                        onClick={ onRemove }>
           <Text fontWeight={ 500 } fontSize={ 20 }>
             Confirm
@@ -570,27 +570,28 @@ export default function RemoveLiquidity({
                 <ButtonLight onClick={ toggleWalletModal }>Connect Wallet</ButtonLight>
               ) : (
                 <RowBetween>
-                  <ButtonConfirmed
-                    onClick={ onAttemptToApprove }
-                    confirmed={ approval === ApprovalState.APPROVED || signatureData !== null }
-                    disabled={ approval !== ApprovalState.NOT_APPROVED || signatureData !== null }
-                    mr="0.5rem"
-                    fontWeight={ 500 }
-                    fontSize={ 16 }
-                  >
-                    { approval === ApprovalState.PENDING ? (
-                      <Dots>Approving</Dots>
-                    ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
-                      'Approved'
-                    ) : (
-                      'Approve'
-                    ) }
-                  </ButtonConfirmed>
+                  {/*<ButtonConfirmed*/}
+                  {/*  onClick={ onAttemptToApprove }*/}
+                  {/*  confirmed={ approval === ApprovalState.APPROVED || signatureData !== null }*/}
+                  {/*  disabled={ approval !== ApprovalState.NOT_APPROVED || signatureData !== null }*/}
+                  {/*  mr="0.5rem"*/}
+                  {/*  fontWeight={ 500 }*/}
+                  {/*  fontSize={ 16 }*/}
+                  {/*>*/}
+                  {/*  { approval === ApprovalState.PENDING ? (*/}
+                  {/*    <Dots>Approving</Dots>*/}
+                  {/*  ) : approval === ApprovalState.APPROVED || signatureData !== null ? (*/}
+                  {/*    'Approved'*/}
+                  {/*  ) : (*/}
+                  {/*    'Approve'*/}
+                  {/*  ) }*/}
+                  {/*</ButtonConfirmed>*/}
                   <ButtonError
                     onClick={ () => {
                       setShowConfirm(true)
                     } }
-                    disabled={ !isValid || (signatureData === null && approval !== ApprovalState.APPROVED) }
+                    // disabled={ !isValid || (signatureData === null) }
+                    disabled={ !isValid }
                     error={ !isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B] }
                   >
                     <Text fontSize={ 16 } fontWeight={ 500 }>

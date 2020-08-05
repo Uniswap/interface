@@ -21,7 +21,7 @@ export enum ApprovalState {
 }
 
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
-export function useApproveCallback(
+export function   useApproveCallback(
   amountToApprove?: TokenAmount,
   spender?: string
 ): [ApprovalState, () => Promise<void>] {
