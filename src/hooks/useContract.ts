@@ -12,6 +12,7 @@ import { V1_EXCHANGE_ABI, V1_FACTORY_ABI, V1_FACTORY_ADDRESSES } from '../consta
 import { V1_MOONISWAP_FACTORY_ADDRESSES } from '../constants/v1-mooniswap'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
+import { ONE_SPLIT_ABI, ONE_SPLIT_ADDRESSES } from '../constants/one-split'
 
 // returns null on errors
 function useContract(address?: string, ABI?: any, withSignerIfPossible = true): Contract | null {
@@ -72,4 +73,9 @@ export function useSocksController(): Contract | null {
 export function useMooniswapV1FactoryContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(chainId && V1_MOONISWAP_FACTORY_ADDRESSES[chainId], MooniswapFactoryABI, false)
+}
+
+export function useOneSplit(): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId && ONE_SPLIT_ADDRESSES[chainId], ONE_SPLIT_ABI, false)
 }

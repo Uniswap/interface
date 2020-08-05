@@ -1,5 +1,5 @@
 import useENS from '../../hooks/useENS'
-import { Version } from '../../hooks/useToggledVersion'
+import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
 import { Token, TokenAmount, ETHER, JSBI, Trade } from '@uniswap/sdk'
 import { ParsedQs } from 'qs'
@@ -15,9 +15,10 @@ import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
-import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
+import { useSingleCallResult } from '../multicall/hooks'
+import { useOneSplit } from '../../hooks/useContract'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -94,6 +95,7 @@ export function useDerivedSwapInfo(): {
   v2Trade: Trade | undefined
   error?: string
   v1Trade: Trade | undefined
+  v3Trade: Trade | undefined
 } {
   const { account } = useActiveWeb3React()
 
@@ -162,6 +164,22 @@ export function useDerivedSwapInfo(): {
   const slippageAdjustedAmountsV1 =
     v1Trade && allowedSlippage && computeSlippageAdjustedAmounts(v1Trade, allowedSlippage)
 
+  const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+  const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+  const bn1e18 = BigInt("1000000000000000000")
+
+  const params = [
+    currencies[Field.INPUT]?.address ? currencies[Field.INPUT].address !== ZERO_ADDRESS ? currencies[Field.INPUT].address : ETH_ADDRESS : ETH_ADDRESS,
+    currencies[Field.OUTPUT]?.address ? currencies[Field.OUTPUT].address !== ZERO_ADDRESS ? currencies[Field.OUTPUT].address : ETH_ADDRESS : ETH_ADDRESS,
+    parsedAmount?.multiply(bn1e18)?.toFixed(0),
+    0,
+    0
+  ]
+
+  const results = useSingleCallResult(useOneSplit(), 'getExpectedReturn', params)
+  console.log('getExpectedReturn', params, results);
+  const v3Trade = v1Trade
+
   // compare input balance to max input based on version
   const [balanceIn, amountIn] = [
     currencyBalances[Field.INPUT],
@@ -184,7 +202,8 @@ export function useDerivedSwapInfo(): {
     parsedAmount,
     v2Trade: v2Trade ?? undefined,
     error,
-    v1Trade
+    v1Trade,
+    v3Trade,
   }
 }
 

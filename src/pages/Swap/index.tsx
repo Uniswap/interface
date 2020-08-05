@@ -68,7 +68,7 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
-  const { v1Trade, v2Trade, currencyBalances, parsedAmount, currencies, error } = useDerivedSwapInfo()
+  const { v1Trade, v2Trade, v3Trade, currencyBalances, parsedAmount, currencies, error } = useDerivedSwapInfo()
   const { wrapType, execute: onWrap, error: wrapError } = useWrapCallback(
     currencies[Field.INPUT],
     currencies[Field.OUTPUT],
@@ -81,7 +81,8 @@ export default function Swap() {
     ? undefined
     : {
         [Version.v1]: v1Trade,
-        [Version.v2]: v2Trade
+        [Version.v2]: v2Trade,
+        [Version.v3]: v3Trade,
       }[toggledVersion]
 
   const betterTradeLinkVersion: Version | undefined =
