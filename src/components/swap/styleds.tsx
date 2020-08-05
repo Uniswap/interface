@@ -1,4 +1,4 @@
-import { darken, transparentize } from 'polished'
+import { transparentize } from 'polished'
 import React from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled, { css } from 'styled-components'
