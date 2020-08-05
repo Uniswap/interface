@@ -3,6 +3,7 @@ import React from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled, { css } from 'styled-components'
 import { Text } from 'rebass'
+import { AutoColumn } from '../Column'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -104,7 +105,7 @@ const SwapCallbackErrorInner = styled.div`
   align-items: center;
   font-size: 0.825rem;
   width: 100%;
-  padding: 3rem 1.5rem 1rem 1rem;
+  padding: 3rem 1.25rem 1rem 1rem;
   margin-top: -2rem;
   color: ${({ theme }) => theme.red1};
   z-index: -1;
@@ -130,9 +131,17 @@ export function SwapCallbackError({ error }: { error: string }) {
   return (
     <SwapCallbackErrorInner>
       <SwapCallbackErrorInnerAlertTriangle>
-        <AlertTriangle size={24} style={{}} />
+        <AlertTriangle size={24} />
       </SwapCallbackErrorInnerAlertTriangle>
       <p>{error}</p>
     </SwapCallbackErrorInner>
   )
 }
+
+export const SwapShowAcceptChanges = styled(AutoColumn)`
+  background-color: ${({ theme }) => transparentize(0.9, theme.primary1)};
+  color: ${({ theme }) => theme.primary1};
+  padding: 0.5rem;
+  border-radius: 12px;
+  margin-top: 8px;
+`
