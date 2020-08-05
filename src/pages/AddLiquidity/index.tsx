@@ -440,7 +440,7 @@ export default function AddLiquidity({
                     error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
                   >
                     <Text fontSize={20} fontWeight={500}>
-                      {error ?? 'Create Pool'}
+                      {'Create Pool'}
                     </Text>
                   </ButtonError>
                 ) : (
