@@ -2,6 +2,7 @@ import { Contract } from '@ethersproject/contracts'
 import { ChainId } from '@uniswap/sdk'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import MooniswapFactoryABI from '../constants/v1-mooniswap/v1_mooniswap_factory.json'
+import MooniswapHelperABI from '../constants/v1-mooniswap/MooniswapHelper.json'
 import { useMemo } from 'react'
 import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
 import UNISOCKS_ABI from '../constants/abis/unisocks.json'
@@ -9,7 +10,7 @@ import ERC20_ABI from '../constants/abis/erc20.json'
 import { MIGRATOR_ABI, MIGRATOR_ADDRESS } from '../constants/abis/migrator'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { V1_EXCHANGE_ABI, V1_FACTORY_ABI, V1_FACTORY_ADDRESSES } from '../constants/v1'
-import { V1_MOONISWAP_FACTORY_ADDRESSES } from '../constants/v1-mooniswap'
+import { V1_MOONISWAP_FACTORY_ADDRESSES, V1_MOONISWAP_HELPER_ADDRESSES } from '../constants/v1-mooniswap'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
 
@@ -72,4 +73,9 @@ export function useSocksController(): Contract | null {
 export function useMooniswapV1FactoryContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(chainId && V1_MOONISWAP_FACTORY_ADDRESSES[chainId], MooniswapFactoryABI, false)
+}
+
+export function useMooniswapV1HelperContract(): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId && V1_MOONISWAP_HELPER_ADDRESSES[chainId], MooniswapHelperABI, false)
 }
