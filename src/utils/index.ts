@@ -5,9 +5,11 @@ import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import MooniswapABI from '../constants/v1-mooniswap/v1_mooniswap_exchange.json'
+import MooniswapFactoryABI from '../constants/v1-mooniswap/v1_mooniswap_factory.json'
 import { ROUTER_ADDRESS } from '../constants'
 import { ChainId, JSBI, Percent, Token, TokenAmount, ETHER } from '@uniswap/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
+import { V1_MOONISWAP_FACTORY_ADDRESSES } from '../constants/v1-mooniswap'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -98,6 +100,10 @@ export function getRouterContract(_: number, library: Web3Provider, account?: st
 
 export function getMooniswapContract(_: number, library: Web3Provider, pairAddress: string, account?: string) {
   return getContract(pairAddress, MooniswapABI, library, account)
+}
+
+export function getMooniswapFactoryContract( chainId: ChainId, library: Web3Provider, account?: string) {
+  return getContract(V1_MOONISWAP_FACTORY_ADDRESSES[chainId], MooniswapFactoryABI, library, account)
 }
 
 export function escapeRegExp(string: string): string {
