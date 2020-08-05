@@ -1,16 +1,16 @@
 import { AddressZero } from '@ethersproject/constants'
 import {
   BigintIsh,
-  Token,
-  TokenAmount,
   currencyEquals,
   ETHER,
   JSBI,
   Pair,
   Percent,
   Route,
+  Token,
+  TokenAmount,
   Trade,
-  TradeType,
+  TradeType
 } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
@@ -19,15 +19,15 @@ import { useOneSplit, useV1FactoryContract } from '../hooks/useContract'
 import { Version } from '../hooks/useToggledVersion'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from '../state/multicall/hooks'
 import { useTokenBalances } from '../state/wallet/hooks'
-import { Field } from '../state/swap/actions'
 import {
   bn1e18,
   ETH_ADDRESS,
-  FLAG_DISABLE_ALL_SPLIT_SOURCES,
-  FLAG_DISABLE_MOONISWAP,
+  FLAG_DISABLE_ALL_SPLIT_SOURCES, FLAG_DISABLE_ALL_WRAP_SOURCES,
+  FLAG_DISABLE_MOONISWAP, FLAG_DISABLE_MOONISWAP_ALL,
   ZERO_ADDRESS
 } from '../constants/one-split'
 import { tryParseAmount } from '../state/swap/hooks'
+import { PairState, usePair } from '../data-mooniswap/Reserves'
 
 export function useV1ExchangeAddress(tokenAddress?: string): string | undefined {
   const contract = useV1FactoryContract()
@@ -193,23 +193,27 @@ export function useMooniswapTrade(
   const params = [
     inputCurrency?.address ? inputCurrency.address !== ZERO_ADDRESS ? inputCurrency.address : ETH_ADDRESS : ETH_ADDRESS,
     outputCurrency?.address ? outputCurrency.address !== ZERO_ADDRESS ? outputCurrency.address : ETH_ADDRESS : ETH_ADDRESS,
-    parseAmount?.multiply(bn1e18).toFixed(0),
+    inputCurrency?.decimals ? parseAmount?.multiply(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(inputCurrency.decimals))).toFixed(0) : 0,
     1,
-    FLAG_DISABLE_ALL_SPLIT_SOURCES + FLAG_DISABLE_MOONISWAP
+    JSBI.add(FLAG_DISABLE_ALL_WRAP_SOURCES, JSBI.add(FLAG_DISABLE_ALL_SPLIT_SOURCES, FLAG_DISABLE_MOONISWAP_ALL)).toString()
   ]
+
+  const poolPair = usePair(inputCurrency, outputCurrency)
 
   const results = useSingleCallResult(useOneSplit(), 'getExpectedReturn', params)
   console.log('getExpectedReturn', params, results);
-  if(!inputCurrency || !outputCurrency || !parseAmount || !results.result){
-    return undefined
-  }
-  const exactAmount = tryParseAmount(parseInt(results?.result.returnAmount, 16).toString(), outputCurrency)
 
-  const pair = new Pair(
-    new TokenAmount(inputCurrency, parseAmount.multiply(bn1e18).toFixed(0)),
-    new TokenAmount(outputCurrency, parseInt(results.result.returnAmount, 16).toString()),
-    ETH_ADDRESS
-  )
+  if(!inputCurrency || !outputCurrency || !parseAmount || !results.result || poolPair[0] != PairState.EXISTS || !poolPair[1]){
+    return
+  }
+  const exactAmount = tryParseAmount(parseInt(results.result.returnAmount, 16).toString(), outputCurrency)
+
+  // const pair = new Pair(
+  //   new TokenAmount(inputCurrency, parseAmount.multiply(bn1e18).toFixed(0)),
+  //   new TokenAmount(outputCurrency, parseInt(results.result.returnAmount, 16).toString()),
+  //   poolPair[1].poolAddress
+  // )
+  const pair = poolPair[1]
   const pairs: Pair[] = [pair]
 
   const route = inputCurrency && pairs && pairs.length > 0 && new Route(pairs, inputCurrency, outputCurrency)
