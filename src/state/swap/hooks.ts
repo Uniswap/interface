@@ -1,7 +1,7 @@
 import useENS from '../../hooks/useENS'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
-import { Token, TokenAmount, ETHER, JSBI, Trade } from '@uniswap/sdk'
+import { Token, TokenAmount, ETHER, JSBI, Trade, ZERO_ADDRESS } from '@uniswap/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,9 +17,6 @@ import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies
 import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
-import { useSingleCallResult } from '../multicall/hooks'
-import { useOneSplit } from '../../hooks/useContract'
-import { bn1e18, ETH_ADDRESS, ZERO_ADDRESS, FLAG_DISABLE_ALL_SPLIT_SOURCES, FLAG_DISABLE_MOONISWAP } from '../../constants/one-split'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -37,7 +34,7 @@ export function useSwapActionHandlers(): {
       dispatch(
         selectCurrency({
           field,
-          currencyId: currency instanceof Token ? currency.address : currency === ETHER ? 'ETH' : ''
+          currencyId: currency instanceof Token ? currency.address : currency === ETHER ? ZERO_ADDRESS : ''
         })
       )
     },
@@ -112,6 +109,7 @@ export function useDerivedSwapInfo(): {
 
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
+
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
 
@@ -198,10 +196,10 @@ function parseCurrencyFromURLParameter(urlParam: any): string {
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam)
     if (valid) return valid
-    if (urlParam.toUpperCase() === 'ETH') return 'ETH'
-    if (valid === false) return 'ETH'
+    if (urlParam.toUpperCase() === 'ETH') return ZERO_ADDRESS
+    if (valid === false) return ZERO_ADDRESS
   }
-  return 'ETH' ?? ''
+  return ZERO_ADDRESS ?? ''
 }
 
 function parseTokenAmountURLParameter(urlParam: any): string {
@@ -228,7 +226,7 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency)
   if (inputCurrency === outputCurrency) {
     if (typeof parsedQs.outputCurrency === 'string') {
-      inputCurrency = ''
+      inputCurrency = ZERO_ADDRESS
     } else {
       outputCurrency = ''
     }
@@ -259,6 +257,9 @@ export function useDefaultsFromURLSearch() {
     if (!chainId) return
     const parsed = queryParametersToSwapState(parsedQs)
 
+    if (!parsed[Field.INPUT].currencyId || !parsed[Field.OUTPUT].currencyId) {
+      return
+    }
     dispatch(
       replaceSwapState({
         typedValue: parsed.typedValue,
