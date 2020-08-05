@@ -201,25 +201,17 @@ export function useMooniswapTrade(
   const poolPair = usePair(inputCurrency, outputCurrency)
 
   const results = useSingleCallResult(useOneSplit(), 'getExpectedReturn', params)
-  console.log('getExpectedReturn', params, results);
 
   if(!inputCurrency || !outputCurrency || !parseAmount || !results.result || poolPair[0] != PairState.EXISTS || !poolPair[1]){
     return
   }
   const exactAmount = tryParseAmount(JSBI.divide(JSBI.BigInt(results.result.returnAmount), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(outputCurrency.decimals))).toString(), outputCurrency)
 
-  // const pair = new Pair(
-  //   new TokenAmount(inputCurrency, parseAmount.multiply(bn1e18).toFixed(0)),
-  //   new TokenAmount(outputCurrency, parseInt(results.result.returnAmount, 16).toString()),
-  //   poolPair[1].poolAddress
-  // )
   const pair = poolPair[1]
   const pairs: Pair[] = [pair]
 
   const route = inputCurrency && pairs && pairs.length > 0 && new Route(pairs, inputCurrency, outputCurrency)
   try {
-    console.log(1, route)
-    console.log(2, exactAmount)
     mooniswapTrade =
       route && exactAmount
         ? new Trade(route, exactAmount, TradeType.EXACT_OUTPUT)

@@ -84,11 +84,6 @@ export default function Swap() {
         [Version.v2]: v2Trade,
         [Version.v3]: mooniswapTrade,
       }[toggledVersion]
-  console.log(toggledVersion, {
-    [Version.v1]: v1Trade,
-    [Version.v2]: v2Trade,
-    [Version.v3]: mooniswapTrade,
-  })
 
   const betterTradeLinkVersion: Version | undefined =
     toggledVersion === Version.v2 && isTradeBetter(v2Trade, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
