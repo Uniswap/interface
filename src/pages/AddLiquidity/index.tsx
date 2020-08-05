@@ -330,7 +330,7 @@ export default function AddLiquidity({
             title={noLiquidity ? 'You are creating a pool' : 'You will receive'}
           />
           <AutoColumn gap="20px">
-            {noLiquidity && (
+            {noLiquidity && (pairState !== PairState.NOT_EXISTS) && (
               <ColumnCenter>
                 <BlueCard>
                   <AutoColumn gap="10px">
