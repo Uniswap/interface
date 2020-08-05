@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import CastVoteDialogue from './CastVoteDialogue'
 import { Link } from 'react-router-dom'
-import { AccountVoteInfo } from '../../models/AccountVoteInfo'
+import { AccountProposalVoteInfo } from '../../models/AccountProposalVoteInfo'
 import { ProposalSummary } from '../../models/ProposalSummary'
 
 const Main = styled.div`
@@ -99,17 +99,17 @@ export default function ProposalItem(props) {
     initialVoteStatus = null
   } else if (
     proposal.proposalStatus === ProposalSummary.statuses.ACTIVE &&
-    (proposal.account?.voteInfo?.voteStatus === AccountVoteInfo.statuses.NO_VOTE || !proposal.account?.voteInfo)
+    (proposal.account?.voteInfo?.voteStatus === AccountProposalVoteInfo.statuses.NO_VOTE || !proposal.account?.voteInfo)
   ) {
-    initialVoteStatus = AccountVoteInfo.statuses.VOTE
+    initialVoteStatus = AccountProposalVoteInfo.statuses.VOTE
   } else {
-    initialVoteStatus = proposal.account?.voteInfo?.voteStatus || AccountVoteInfo.statuses.NO_VOTE
+    initialVoteStatus = proposal.account?.voteInfo?.voteStatus || AccountProposalVoteInfo.statuses.NO_VOTE
   }
   const [voteStatus, setVoteStatus] = useState(initialVoteStatus)
 
   const initialIsCastedStatus = proposal.proposalStatus === ProposalSummary.statuses.ACTIVE &&
     !proposal.account?.voteInfo?.voteStatus &&
-    proposal.account?.voteInfo?.voteStatus !== AccountVoteInfo.statuses.NO_VOTE
+    proposal.account?.voteInfo?.voteStatus !== AccountProposalVoteInfo.statuses.NO_VOTE
   const [isCasted, setCast] = useState(initialIsCastedStatus)
   const [showCastDialogue, setShowCastDialogue] = useState(false)
 
@@ -138,7 +138,7 @@ export default function ProposalItem(props) {
         </Info>
       </Wrapper>
       <VoteButton onClick={() => setShowCastDialogue(isCasted)} cast={isCasted}>
-        {AccountVoteInfo.toFormattedVoteString(voteStatus)}
+        {AccountProposalVoteInfo.toFormattedVoteString(voteStatus)}
       </VoteButton>
       {showCastDialogue ?
         <CastVoteDialogue

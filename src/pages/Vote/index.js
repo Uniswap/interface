@@ -2,15 +2,20 @@ import React, { useEffect, useState } from 'react'
 import ProposalItem from './ProposalItem'
 import styled, { keyframes } from 'styled-components'
 import { useHistory } from 'react-router-dom'
-import LeftArrow from '../../assets/svg/keyboard_arrow_left-black-18dp.svg';
-import RightArrow from '../../assets/svg/keyboard_arrow_right-black-18dp.svg';
+import LeftArrow from '../../assets/svg/keyboard_arrow_left-black-18dp.svg'
+import RightArrow from '../../assets/svg/keyboard_arrow_right-black-18dp.svg'
 import { ProposalSummary } from '../../models/ProposalSummary'
-import { useWeb3React } from '../../hooks'
+import { useDmgContract, useWeb3React } from '../../hooks'
 import { useAddressBalance } from '../../contexts/Balances'
 import BN from 'bn.js'
 import Web3 from 'web3'
 import { DMG_ADDRESS } from '../../contexts/Tokens'
-import { amountFormatter } from '../../utils'
+import { amountFormatter, calculateGasMargin } from '../../utils'
+import { ethers } from 'ethers'
+import * as Sentry from '@sentry/browser'
+import { usePendingDelegation, useTransactionAdder } from '../../contexts/Transactions'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import { AccountDetails } from '../../models/AccountDetails'
 
 const Main = styled.div`
   height: calc(100vh - 160px);
@@ -137,7 +142,11 @@ const Balance = styled.div`
 const DMGTitle = styled.div`
   font-size: 15px;
   font-weight: 700;
-  color: #b7c3cc;
+  ${({ active }) => active ? `
+    color: black;
+  ` : `
+    color: #b7c3cc;
+  `}
 `
 
 const Value = styled.div`
@@ -165,6 +174,19 @@ const Withdraw = styled.div`
   ${({ active }) => active && `
       color: #2fdaa5;
       cursor: pointer
+  `}
+`
+
+const ActivateWallet = styled.div`
+  font-size: 18px;
+  font-weight: 700;
+  display: inline;
+  cursor: pointer
+  color: #000;
+  float: right;
+
+  ${({ hidden }) => hidden && `
+    display: none;    
   `}
 `
 
@@ -243,25 +265,21 @@ const Underline = styled.div`
   margin-left: 30px;
 `
 
-const num = '0.000000'
-
 const displayPages = 7
 
 const balances = [
   {
     title: 'DMG Balance',
-    valueBN: new BN('0'),
-    button: false
+    valueBN: new BN('0')
   },
   {
     title: 'DMG Earned',
-    valueBN: null,
-    button: true
+    valueBN: null
   }
 ]
 
-function withdrawEarnedDmg(web3, account) {
-  console.log('account ', account, web3)
+function withdrawEarnedDmg(web3, walletAddress) {
+  console.log('walletAddress ', walletAddress, web3)
 }
 
 function display(p, selected, l) {
@@ -298,12 +316,21 @@ async function getProposals(walletAddress) {
     })
 }
 
+async function getAccountInfo(walletAddress) {
+  const baseUrl = 'https://api.defimoneymarket.com'
+  return fetch(`${baseUrl}/v1/governance/accounts/${walletAddress}`)
+    .then(response => response.json())
+    .then(response => !!response.data ? new AccountDetails(response.data) : null)
+}
+
 export default function Vote() {
-  const [proposals, setProposals] = useState([]) //proposal hook
-  const [loading, setLoading] = useState(true) //loading hook
-  const [page, changePage] = useState(1) //current page hook
-  const [sticky, changeVisibility] = useState(false) //loading hook
-  let history = useHistory() //history hook
+  const [proposals, setProposals] = useState([])
+  const [accountInfo, setAccountInfo] = useState({})
+  const [loading, setLoading] = useState(true)
+  const [isActivating, setIsActivating] = useState(false)
+  const [page, changePage] = useState(1)
+  const [sticky, changeVisibility] = useState(false)
+  let history = useHistory()
 
   const proposalsPerPage = window.innerWidth > 900 ? (window.innerHeight - 350) / 130 : Math.max(0, (window.innerHeight - 620)) / 130 || 1
   // const proposalsPerPage = window.innerWidth > 900 ? (window.innerHeight - 350) / 130 : (window.innerHeight - 620) / 130 || 1
@@ -324,15 +351,24 @@ export default function Vote() {
     state: { isBadPath: false }
   }
 
-  const { account, library } = useWeb3React()
+  const { account: walletAddress, library } = useWeb3React()
   const web3 = new Web3(library.provider)
-  balances[0].valueBN = useAddressBalance(account, DMG_ADDRESS)
+  balances[0].valueBN = useAddressBalance(walletAddress, DMG_ADDRESS)
+  balances[0].voteCountBN = accountInfo?.voteInfo?.votesBN
+  balances[0].isDelegating = accountInfo?.voteInfo?.isDelegating()
 
   // When component mounts - data retrieval and path check
   useEffect(() => {
     const perform = () => {
-      getProposals(account).then(data => {
+      const proposalPromise = getProposals(walletAddress).then(data => {
         setProposals(data)
+      })
+
+      const accountInfoPromise = getAccountInfo(walletAddress).then(accountInfo => {
+        setAccountInfo(accountInfo)
+      })
+
+      Promise.all([proposalPromise, accountInfoPromise]).then(() => {
         setLoading(false)
       })
     }
@@ -340,10 +376,10 @@ export default function Vote() {
     perform()
     const subscriptionId = setInterval(() => {
       perform()
-    }, 15000)
+    }, 5000)
 
     return () => clearInterval(subscriptionId)
-  }, [account])
+  }, [walletAddress])
 
   // If there is a redirect from an invalid proposal ID, a sticky is displayed then history is reset
   const locationState = history.location.state
@@ -355,6 +391,73 @@ export default function Vote() {
     }
   }
 
+  const dmgContract = useDmgContract()
+  const addTransaction = useTransactionAdder()
+  const isPendingDelegateTransaction = usePendingDelegation()
+
+  useEffect(() => {
+    const subscriptionId = setTimeout(() => {
+      setIsActivating(isPendingDelegateTransaction)
+    }, 10000)
+
+    return () => clearInterval(subscriptionId)
+  }, [isPendingDelegateTransaction])
+
+  const activateWallet = async () => {
+    const GAS_MARGIN = ethers.BigNumber.from(1000)
+    setIsActivating(true)
+
+    const estimatedGas = await dmgContract.estimateGas
+      .delegate(walletAddress)
+      .catch(error => {
+        console.error(`Error getting gas estimation for delegating with address ${walletAddress}: `, error)
+        return ethers.BigNumber.from('500000')
+      })
+
+    dmgContract
+      .delegate(walletAddress, {
+        gasLimit: calculateGasMargin(estimatedGas, GAS_MARGIN)
+      })
+      .then(response => {
+        setLoading(false)
+        addTransaction(response, { delegate: DMG_ADDRESS })
+      })
+      .catch(error => {
+        setLoading(false)
+        if (error?.code !== 4001) {
+          console.error(`Could not delegate due to error: `, error)
+          Sentry.captureException(error)
+        } else {
+          console.log('Could not delegate because the transaction was cancelled')
+        }
+      })
+  }
+
+  const primaryColor = '#327ccb'
+
+  const getBalanceButton = (index, valueBN, voteCountBN, isDelegating) => {
+    if (!voteCountBN) {
+      voteCountBN = new BN('0')
+    }
+    return (
+      index === 0 ? (
+          isActivating ? (<div style={{ float: 'right', bottom: '15px', position: 'relative' }}>
+              <CircularProgress style={{ color: primaryColor }}/>
+            </div>) :
+            (<ActivateWallet hidden={isDelegating || voteCountBN.gt(new BN('0'))}
+                             onClick={() => activateWallet(web3, walletAddress)}>
+              Activate Wallet
+            </ActivateWallet>)
+        ) :
+        (
+          <Withdraw active={!!valueBN && valueBN.gt(new BN('0'))}
+                    onClick={() => withdrawEarnedDmg(web3, walletAddress)}>
+            Withdraw
+          </Withdraw>
+        )
+    )
+  }
+
   return (
     <Main>
       <Votes>
@@ -362,7 +465,7 @@ export default function Vote() {
           Votes
         </VoteTitle>
         <Amount>
-          {num}
+          {!!accountInfo?.voteInfo?.votesBN ? amountFormatter(accountInfo?.voteInfo?.votesBN, 18, 2) : '0.00'}
         </Amount>
       </Votes>
       <Voting>
@@ -371,20 +474,15 @@ export default function Vote() {
             Your Wallet
           </Title>
           <Underline/>
-          {balances.map(({ title, valueBN, button }) => (
+          {balances.map(({ title, valueBN, voteCountBN, isDelegating }, index) => (
             <Balance key={`balance-${title}`}>
-              <DMGTitle>
+              <DMGTitle active={index === 0}>
                 {title}
               </DMGTitle>
-              <Value>
+              <Value active={index === 0}>
                 {!valueBN ? 'N/A' : amountFormatter(valueBN, 18, 2)}
               </Value>
-              {button ?
-                <Withdraw active={!!valueBN && valueBN.gt(new BN('0'))}
-                          onClick={() => withdrawEarnedDmg(web3, account)}>
-                  Withdraw
-                </Withdraw>
-                : null}
+              {getBalanceButton(index, valueBN, voteCountBN, isDelegating)}
             </Balance>
           ))}
         </VotingWallet>
@@ -393,15 +491,21 @@ export default function Vote() {
             Governance Proposals
           </Title>
           <Underline/>
-          <Proposals>
-            {loading ? <Loader/> :
-              proposalPage.map((proposal) => (
-                <ProposalItem key={`proposal-${proposal.proposalId}`} proposal={proposal} walletAddress={account}/>
+          {loading ?
+            (<div style={{ 'text-align': 'center' }}>
+              <CircularProgress style={{ color: primaryColor }}/>
+            </div>)
+            :
+            (<Proposals>
+              {proposalPage.map((proposal) => (
+                <ProposalItem key={`proposal-${proposal.proposalId}`} proposal={proposal}
+                              walletAddress={walletAddress}/>
               ))}
-          </Proposals>
+            </Proposals>)
+          }
           <Pages>
             <Page onClick={() => checkChange(page - 1)} off={page === 1}>
-              <img src={LeftArrow}/>
+              <img src={LeftArrow} alt={'Left Arrow'}/>
             </Page>
             {pages.filter(i => display(i, page, l)).map((p, index) => (
               <Page key={`page-${index}`} onClick={() => changePage(p)} active={page === p}>
@@ -409,7 +513,7 @@ export default function Vote() {
               </Page>
             ))}
             <Page onClick={() => checkChange(page + 1)} off={page === l || loading}>
-              <img src={RightArrow}/>
+              <img src={RightArrow} alt={'Right Arrow'}/>
             </Page>
           </Pages>
         </GovernanceProposals>

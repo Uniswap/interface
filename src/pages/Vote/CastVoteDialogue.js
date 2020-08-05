@@ -195,7 +195,7 @@ export default function CastVoteDialogue({ proposal, timestamp, onChange }) {
 				</ErrorMessage>
 				{loading ? <Loader/> : null}
 				<Exit onClick={() => onChange(false)}>
-					<img src={Close}/>
+					<img src={Close} alt={'X'}/>
 				</Exit>
 			</Card>
 		</BackDrop>

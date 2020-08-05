@@ -3,6 +3,7 @@ import React, { createContext, useContext, useReducer, useMemo, useCallback, use
 import { useWeb3React } from '../hooks'
 import { safeAccess } from '../utils'
 import { useBlockNumber } from './Application'
+import { DMG_ADDRESS } from './Tokens'
 
 const RESPONSE = 'response'
 const CUSTOM_DATA = 'CUSTOM_DATA'
@@ -183,7 +184,11 @@ export function usePendingWrapping(tokenAddress) {
   return usePendingTransaction(tokenAddress, 'wrapping')
 }
 
-function usePendingTransaction(tokenAddress, customDataKey) {
+export function usePendingDelegation() {
+  return usePendingTransaction(DMG_ADDRESS, 'delegate')
+}
+
+function usePendingTransaction(value, customDataKey) {
   const allTransactions = useAllTransactions()
 
   return (
@@ -192,7 +197,7 @@ function usePendingTransaction(tokenAddress, customDataKey) {
         return false
       } else if (!allTransactions[hash][RESPONSE]) {
         return false
-      } else if (!!customDataKey && allTransactions[hash][RESPONSE][CUSTOM_DATA][customDataKey] !== tokenAddress) {
+      } else if (!!customDataKey && allTransactions[hash][RESPONSE][CUSTOM_DATA][customDataKey] !== value) {
         return false
       } else {
         return true

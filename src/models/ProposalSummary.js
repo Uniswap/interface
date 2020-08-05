@@ -1,5 +1,7 @@
 import moment from 'moment'
-import { AccountInfo } from './AccountInfo'
+import React from 'react'
+// React.lazy(() => import { AccountInfo } from './AccountInfo')
+const AccountInfo = React.lazy(() => import('./AccountSummary'))
 
 export class ProposalSummary {
 

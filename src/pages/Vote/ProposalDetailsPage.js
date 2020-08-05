@@ -7,7 +7,7 @@ import { useWeb3React } from '../../hooks'
 import { amountFormatter } from '../../utils'
 import { ReactComponent as ExternalLink } from '../../assets/svg/ExternalLink.svg'
 import { ProposalSummary } from '../../models/ProposalSummary'
-import { AccountVoteInfo } from '../../models/AccountVoteInfo'
+import { AccountProposalVoteInfo } from '../../models/AccountProposalVoteInfo'
 import { useAllTransactions } from '../../contexts/Transactions'
 import { Spinner } from '../../theme'
 
@@ -440,7 +440,7 @@ export default function ProposalDetailsPage() {
   voteDetails[1].topVoters = proposal?.votersAgainst || []
 
   const displayCastVote = proposal?.proposalStatus === ProposalSummary.statuses.ACTIVE &&
-    (proposal?.account?.voteInfo?.voteStatus === AccountVoteInfo.statuses.NO_VOTE || !proposal?.account?.voteInfo?.voteStatus)
+    (proposal?.account?.voteInfo?.voteStatus === AccountProposalVoteInfo.statuses.NO_VOTE || !proposal?.account?.voteInfo?.voteStatus)
 
   return (
     <Main>

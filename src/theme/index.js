@@ -43,6 +43,8 @@ export default function ThemeProvider({ children }) {
 const theme = darkMode => ({
   white,
   black,
+  primary: '#327ccb',
+  secondary: white,
   textColor: darkMode ? white : '#010101',
   greyText: darkMode ? white : '#6C7284',
 
