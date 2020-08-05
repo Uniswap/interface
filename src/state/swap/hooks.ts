@@ -22,19 +22,21 @@ export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
 }
 
-export function useSwapActionHandlers(): {
+export type SwapActionHandlers = {
   onCurrencySelection: (field: Field, currency: Token) => void
   onSwitchTokens: () => void
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
-} {
+}
+
+export function useSwapActionHandlers(): SwapActionHandlers {
   const dispatch = useDispatch<AppDispatch>()
   const onCurrencySelection = useCallback(
     (field: Field, currency: Token) => {
       dispatch(
         selectCurrency({
           field,
-          currencyId: currency instanceof Token ? currency.address : currency === ETHER ? ZERO_ADDRESS : ''
+          currencyId: currency.address
         })
       )
     },

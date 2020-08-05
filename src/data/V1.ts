@@ -205,7 +205,8 @@ export function useMooniswapTrade(
   if(!inputCurrency || !outputCurrency || !parseAmount || !results.result || poolPair[0] != PairState.EXISTS || !poolPair[1]){
     return
   }
-  const exactAmount = tryParseAmount(JSBI.divide(JSBI.BigInt(results.result.returnAmount), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(outputCurrency.decimals))).toString(), outputCurrency)
+
+  const exactAmount = new TokenAmount(outputCurrency, JSBI.BigInt(results.result.returnAmount))
 
   const pair = poolPair[1]
   const pairs: Pair[] = [pair]
