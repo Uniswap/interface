@@ -1,14 +1,12 @@
 import { Pair, Token, TokenAmount } from '@uniswap/sdk'
 import { useMemo } from 'react'
-// import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { useActiveWeb3React } from '../hooks'
 
-import { NEVER_RELOAD, useSingleContractMultipleData } from '../state/multicall/hooks'
-import { useMooniswapV1FactoryContract } from '../hooks/useContract'
-import { useCurrencyBalances } from '../state/wallet/hooks'
-// import { V1_MOONISWAP_FACTORY_ADDRESSES } from '../constants/v1-mooniswap'
+import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
+import { useMooniswapV1HelperContract } from '../hooks/useContract'
+// @ts-ignore
+import { V1_MOONISWAP_FACTORY_ADDRESSES } from '../constants/v1-mooniswap'
 
-// const MOONISWAP_PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export enum PairState {
@@ -21,90 +19,66 @@ export enum PairState {
 export function usePairs(currencies: [Token | undefined, Token | undefined][]): [PairState, Pair | null][] {
   const { chainId } = useActiveWeb3React()
 
-  const tokens = useMemo(() =>
-    currencies.map(([currencyA, currencyB]) => [currencyA, currencyB]),
-    [chainId, currencies]
-  )
+  const tokenAList: string[] = []
+  const tokenBList: string[] = []
+  const allTokenAList: (Token | undefined)[] = []
+  const allTokenBList: (Token | undefined)[] = []
+  for (let i = 0; i < currencies.length; i++) {
+    const [tokenA, tokenB] = currencies[i]
+    allTokenAList.push(tokenA)
+    allTokenBList.push(tokenB)
+    if (!tokenA || !tokenB) continue
+    if (tokenA.equals(tokenB)) continue
+    tokenAList.push(tokenA.address)
+    tokenBList.push(tokenB.address)
+  }
 
-  const tokenPairs: (string[] | undefined)[] = useMemo(
-    () =>
-      tokens.map(([tokenA, tokenB]) => {
-        if (!tokenA || !tokenB) {
-          return [ZERO_ADDRESS, ZERO_ADDRESS]
-        }
-
-        if (tokenA.isEther) {
-          return [ZERO_ADDRESS, tokenB.address]
-        }
-
-        if (tokenB.isEther) {
-          return [ZERO_ADDRESS, tokenA.address]
-        }
-
-        return [ZERO_ADDRESS, ZERO_ADDRESS]
-      }),
-    [tokens]
-  )
-
-  const results = useSingleContractMultipleData(useMooniswapV1FactoryContract(), 'pools', tokenPairs, NEVER_RELOAD)
-  // const results = [{ result: ['0x10247d9370d54cc8ab93a3ebe67e9b5d668d2b1c'], loading: false }]
-
-  const poolAddresses: { pool: string; tokenA: Token | undefined; tokenB: Token | undefined }[] = useMemo(() => {
-    const defaultData = { pool: ZERO_ADDRESS, tokenA: undefined, tokenB: undefined }
-    return results.map((res, i) => {
-      const tokenA = tokens[i][0]
-      const tokenB = tokens[i][1]
-
-      if (res.loading) return defaultData
-      if (!tokenA || !tokenB) return defaultData
-      if (tokenA.equals(tokenB)) return defaultData
-      const poolAddress = res?.result?.[0]
-      if (!res.result || poolAddress === ZERO_ADDRESS) {
-        return defaultData
-      }
-      return { pool: poolAddress, tokenA: tokenA, tokenB: tokenB }
-    })
-  }, [results, tokens])
-  const pools = poolAddresses.map(x => x.pool)
-  const tokenList = poolAddresses.map(x => [x.tokenA, x.tokenB])
-
-  const balances: (TokenAmount | undefined)[][] = [];
-  // todo: use something like useMultipleContractMultipleData() hook for multiple pool addresses
-  // for (let i = 0; i < pools.length; i++) {
-    const balancesResults = useCurrencyBalances(pools[0], tokenList[0])
-    balances.push(balancesResults)
-  // }
+  const res = useSingleCallResult(useMooniswapV1HelperContract(), 'getPoolDataList', [
+    V1_MOONISWAP_FACTORY_ADDRESSES[chainId || 1],
+    tokenAList,
+    tokenBList
+  ], NEVER_RELOAD)
 
   return useMemo(() => {
-    return results.map((res, i) => {
-      const tokenA = tokens[i][0]
-      const tokenB = tokens[i][1]
+    if (res.loading) return [[PairState.LOADING, null]]
 
-      if (res.loading) return [PairState.LOADING, null]
-      if (!tokenA || !tokenB) return [PairState.INVALID, null]
-      if (tokenA.equals(tokenB)) return [PairState.INVALID, null]
+    const poolDataList = res.result?.[0]
+    let counter = 0
 
-      const bal = balances[i]
-      if (!bal) return [PairState.LOADING, null]
-      const balA = bal[0]
-      const balB = bal[1]
-      if (!balA || !balB) return [PairState.LOADING, null]
+    const pairStates: [PairState, Pair | null][] = []
+    for (let i = 0; i < allTokenAList.length; i++) {
 
-      const poolAddress = res.result?.[0]
-      if (!res.result || poolAddress === ZERO_ADDRESS) {
-        return [PairState.NOT_EXISTS, null]
+      const tokenA = allTokenAList[i]
+      const tokenB = allTokenBList[i]
+      if (!tokenA || !tokenB || tokenA.equals(tokenB)) {
+        pairStates.push([PairState.INVALID, null])
+        continue
       }
 
-      return [
+      const poolData = poolDataList?.[counter]
+      counter++
+      if (!poolData) {
+        pairStates.push([PairState.LOADING, null])
+        continue
+      }
+
+      const poolAddress = poolData.pool
+      if (poolAddress === ZERO_ADDRESS) {
+        pairStates.push([PairState.NOT_EXISTS, null])
+        continue
+      }
+
+      pairStates.push([
         PairState.EXISTS,
         new Pair(
-          new TokenAmount(tokenA, balA.raw.toString()),
-          new TokenAmount(tokenB, balB.raw.toString()),
+          new TokenAmount(tokenA, poolData.balanceA.toString()),
+          new TokenAmount(tokenB, poolData.balanceB.toString()),
           poolAddress
         )
-      ]
-    })
-  }, [results, tokens])
+      ])
+    }
+    return pairStates
+  }, [res])
 }
 
 export function usePair(tokenA?: Token, tokenB?: Token): [PairState, Pair | null] {

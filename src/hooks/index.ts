@@ -13,6 +13,16 @@ export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> & 
   return context.active ? context : contextNetwork
 }
 
+export function useAsync(asyncFn: any, onSuccess: any) {
+  useEffect(() => {
+    let isMounted = true;
+    asyncFn().then((data: any) => {
+      if (isMounted) onSuccess(data);
+    });
+    return () => { isMounted = false };
+  }, [asyncFn, onSuccess]);
+}
+
 export function useEagerConnect() {
   const { activate, active } = useWeb3ReactCore() // specifically using useWeb3ReactCore because of what this hook does
   const [tried, setTried] = useState(false)
