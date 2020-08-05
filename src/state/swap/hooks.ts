@@ -5,7 +5,7 @@ import { Token, TokenAmount, ETHER, JSBI, Trade } from '@uniswap/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useV1Trade } from '../../data/V1'
+import { useMooniswapTrade, useV1Trade } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
@@ -19,6 +19,7 @@ import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
 import { useSingleCallResult } from '../multicall/hooks'
 import { useOneSplit } from '../../hooks/useContract'
+import { bn1e18, ETH_ADDRESS, ZERO_ADDRESS, FLAG_DISABLE_ALL_SPLIT_SOURCES, FLAG_DISABLE_MOONISWAP } from '../../constants/one-split'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -95,7 +96,7 @@ export function useDerivedSwapInfo(): {
   v2Trade: Trade | undefined
   error?: string
   v1Trade: Trade | undefined
-  v3Trade: Trade | undefined
+  mooniswapTrade: Trade | undefined
 } {
   const { account } = useActiveWeb3React()
 
@@ -164,21 +165,7 @@ export function useDerivedSwapInfo(): {
   const slippageAdjustedAmountsV1 =
     v1Trade && allowedSlippage && computeSlippageAdjustedAmounts(v1Trade, allowedSlippage)
 
-  const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
-  const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
-  const bn1e18 = BigInt("1000000000000000000")
-
-  const params = [
-    currencies[Field.INPUT]?.address ? currencies[Field.INPUT].address !== ZERO_ADDRESS ? currencies[Field.INPUT].address : ETH_ADDRESS : ETH_ADDRESS,
-    currencies[Field.OUTPUT]?.address ? currencies[Field.OUTPUT].address !== ZERO_ADDRESS ? currencies[Field.OUTPUT].address : ETH_ADDRESS : ETH_ADDRESS,
-    parsedAmount?.multiply(bn1e18)?.toFixed(0),
-    0,
-    0
-  ]
-
-  const results = useSingleCallResult(useOneSplit(), 'getExpectedReturn', params)
-  console.log('getExpectedReturn', params, results);
-  const v3Trade = v1Trade
+  const mooniswapTrade = useMooniswapTrade(currencies[Field.INPUT], currencies[Field.OUTPUT], parsedAmount)
 
   // compare input balance to max input based on version
   const [balanceIn, amountIn] = [
@@ -203,7 +190,7 @@ export function useDerivedSwapInfo(): {
     v2Trade: v2Trade ?? undefined,
     error,
     v1Trade,
-    v3Trade,
+    mooniswapTrade,
   }
 }
 

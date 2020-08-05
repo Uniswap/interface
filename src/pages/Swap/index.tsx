@@ -68,7 +68,7 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
-  const { v1Trade, v2Trade, v3Trade, currencyBalances, parsedAmount, currencies, error } = useDerivedSwapInfo()
+  const { v1Trade, v2Trade, mooniswapTrade, currencyBalances, parsedAmount, currencies, error } = useDerivedSwapInfo()
   const { wrapType, execute: onWrap, error: wrapError } = useWrapCallback(
     currencies[Field.INPUT],
     currencies[Field.OUTPUT],
@@ -82,8 +82,13 @@ export default function Swap() {
     : {
         [Version.v1]: v1Trade,
         [Version.v2]: v2Trade,
-        [Version.v3]: v3Trade,
+        [Version.v3]: mooniswapTrade,
       }[toggledVersion]
+  console.log(toggledVersion, {
+    [Version.v1]: v1Trade,
+    [Version.v2]: v2Trade,
+    [Version.v3]: mooniswapTrade,
+  })
 
   const betterTradeLinkVersion: Version | undefined =
     toggledVersion === Version.v2 && isTradeBetter(v2Trade, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
@@ -112,12 +117,13 @@ export default function Swap() {
     },
     [onUserInput]
   )
-  const handleTypeOutput = useCallback(
-    (value: string) => {
-      onUserInput(Field.OUTPUT, value)
-    },
-    [onUserInput]
-  )
+  // const handleTypeOutput = useCallback(
+  //   (value: string) => {
+  //     onUserInput(Field.OUTPUT, value)
+  //   },
+  //   [onUserInput]
+  // )
+  const handleNothing = () => {}
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false) // show confirmation modal
@@ -317,7 +323,7 @@ export default function Swap() {
             </CursorPointer>
             <CurrencyInputPanel
               value={formattedAmounts[Field.OUTPUT]}
-              onUserInput={handleTypeOutput}
+              onUserInput={handleNothing}
               label={independentField === Field.INPUT && !showWrap ? 'To (estimated)' : 'To'}
               showMaxButton={false}
               currency={currencies[Field.OUTPUT]}
