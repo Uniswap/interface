@@ -1,6 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import { ChainId } from '@uniswap/sdk'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
+import MooniswapABI from '../constants/v1-mooniswap/v1_mooniswap_exchange.json'
 import MooniswapFactoryABI from '../constants/v1-mooniswap/v1_mooniswap_factory.json'
 import MooniswapHelperABI from '../constants/v1-mooniswap/MooniswapHelper.json'
 import { useMemo } from 'react'
@@ -78,4 +79,8 @@ export function useMooniswapV1FactoryContract(): Contract | null {
 export function useMooniswapV1HelperContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(chainId && V1_MOONISWAP_HELPER_ADDRESSES[chainId], MooniswapHelperABI, false)
+}
+
+export function useMooniswapContract(poolAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(poolAddress, MooniswapABI, withSignerIfPossible)
 }
