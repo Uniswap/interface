@@ -170,7 +170,7 @@ export function useSwapCallback(
                       case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
                       case 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT':
                         errorMessage =
-                          'The transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
+                          'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
                         break
                     }
                     return { call, error: new Error(errorMessage) }

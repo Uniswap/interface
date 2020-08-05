@@ -1,4 +1,4 @@
-import { darken } from 'polished'
+import { darken, transparentize } from 'polished'
 import React from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled, { css } from 'styled-components'
@@ -98,20 +98,41 @@ export const Dots = styled.span`
 `
 
 const SwapCallbackErrorInner = styled.div`
-  background-color: ${({ theme }) => theme.red1};
+  background-color: ${({ theme }) => transparentize(0.9, theme.red1)};
   border-radius: 1rem;
-  padding: 1rem;
   display: flex;
   align-items: center;
-  margin-top: 1rem;
+  font-size: 0.825rem;
   width: 100%;
-  border: 1px solid ${({ theme }) => darken(0.1, theme.red1)};
-  color: ${({ theme }) => theme.white};
+  padding: 3rem 1.5rem 1rem 1rem;
+  margin-top: -2rem;
+  color: ${({ theme }) => theme.red1};
+  z-index: -1;
+  p {
+    padding: 0;
+    margin: 0;
+    font-weight: 500;
+  }
 `
+
+const SwapCallbackErrorInnerAlertTriangle = styled.div`
+  background-color: ${({ theme }) => transparentize(0.9, theme.red1)};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  border-radius: 12px;
+  min-width: 48px;
+  height: 48px;
+`
+
 export function SwapCallbackError({ error }: { error: string }) {
   return (
     <SwapCallbackErrorInner>
-      <AlertTriangle style={{ marginRight: 8, minWidth: 42 }} /> <strong>{error}</strong>
+      <SwapCallbackErrorInnerAlertTriangle>
+        <AlertTriangle size={24} style={{}} />
+      </SwapCallbackErrorInnerAlertTriangle>
+      <p>{error}</p>
     </SwapCallbackErrorInner>
   )
 }

@@ -145,9 +145,9 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
-        <AutoColumn style={{ marginTop: 20 }} gap="20px" justify="center">
-          <AlertTriangle color={theme.red1} size={40} />
-          <Text fontWeight={400} fontSize={18} color={theme.red1} style={{ textAlign: 'center', width: '85%' }}>
+        <AutoColumn style={{ marginTop: 20, padding: '2rem 0' }} gap="24px" justify="center">
+          <AlertTriangle color={theme.red1} style={{ strokeWidth: 1.5 }} size={64} />
+          <Text fontWeight={500} fontSize={16} color={theme.red1} style={{ textAlign: 'center', width: '85%' }}>
             {message}
           </Text>
         </AutoColumn>
