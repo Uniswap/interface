@@ -254,8 +254,7 @@ export default function Swap() {
   const showWarning =
     (!dismissedToken0 && !!currencies[Field.INPUT]) || (!dismissedToken1 && !!currencies[Field.OUTPUT])
 
-  const userBalance = useCurrencyBalance(account, currencyBalances.INPUT?.token)
-  const notEnoughBalance = userBalance && trade && JSBI.lessThan(userBalance.raw, trade.inputAmount.raw)
+  const notEnoughBalance = maxAmountInput && trade && JSBI.lessThan(maxAmountInput.raw, trade.inputAmount.raw)
 
   return (
     <>
