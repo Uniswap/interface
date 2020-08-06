@@ -48,6 +48,7 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
+import { useCurrencyBalance } from '../../state/wallet/hooks'
 
 export default function Swap() {
   useDefaultsFromURLSearch()
@@ -253,6 +254,9 @@ export default function Swap() {
   const showWarning =
     (!dismissedToken0 && !!currencies[Field.INPUT]) || (!dismissedToken1 && !!currencies[Field.OUTPUT])
 
+  const userBalance = useCurrencyBalance(account, currencyBalances.INPUT?.token)
+  const notEnoughBalance = userBalance && trade && JSBI.lessThan(userBalance.raw, trade.inputAmount.raw)
+
   return (
     <>
       {showWarning && <TokenWarningCards currencies={currencies} />}
@@ -399,11 +403,13 @@ export default function Swap() {
                   }}
                   width="48%"
                   id="swap-button"
-                  disabled={!isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !expertMode)}
+                  disabled={!isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !expertMode) || notEnoughBalance}
                   error={isValid && priceImpactSeverity > 2}
                 >
                   <Text fontSize={16} fontWeight={500}>
-                    {priceImpactSeverity > 3 && !expertMode
+                    {notEnoughBalance
+                      ? `Not enough balance`
+                      : priceImpactSeverity > 3 && !expertMode
                       ? `Price Impact High`
                       : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                   </Text>
@@ -415,12 +421,14 @@ export default function Swap() {
                   expertMode ? onSwap() : setShowConfirm(true)
                 }}
                 id="swap-button"
-                disabled={!isValid || (priceImpactSeverity > 3 && !expertMode)}
+                disabled={!isValid || (priceImpactSeverity > 3 && !expertMode) || notEnoughBalance}
                 error={isValid && priceImpactSeverity > 2}
               >
                 <Text fontSize={20} fontWeight={500}>
                   {error
                     ? error
+                    : notEnoughBalance
+                    ? `Not enough balance`
                     : priceImpactSeverity > 3 && !expertMode
                     ? `Price Impact Too High`
                     : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
