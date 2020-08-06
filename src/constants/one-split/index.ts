@@ -12,7 +12,7 @@ const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
 const bn1e18 = JSBI.BigInt("1000000000000000000")
 
 const ONE_SPLIT_ADDRESSES: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '0xdEFF60fFa911FD4B9e3171F3e95a2524C490e935',
+  [ChainId.MAINNET]: '0x76e1D0017A08964Fc48C7Ab189107b670A62D953',
   [ChainId.ROPSTEN]: '',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
