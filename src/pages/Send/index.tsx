@@ -118,7 +118,7 @@ export default function Send() {
 
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(bestTrade, allowedSlippage)
 
-  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(bestTrade)
+  const { priceImpactWithoutFee, realizedLPFeeAmount } = computeTradePriceBreakdown(bestTrade)
 
   const { onSwitchTokens, onTokenSelection, onUserInput } = useSwapActionHandlers()
 
@@ -263,7 +263,7 @@ export default function Send() {
           slippageAdjustedAmounts={slippageAdjustedAmounts}
           priceImpactWithoutFee={priceImpactWithoutFee}
           parsedAmounts={parsedAmounts}
-          realizedLPFee={realizedLPFee}
+          realizedLPFee={realizedLPFeeAmount}
           confirmText={severity > 2 ? 'Send Anyway' : 'Confirm Send'}
         />
       )

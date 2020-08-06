@@ -120,7 +120,7 @@ export default function Swap() {
   // the callback to execute the swap
   const swapCallback = useSwapCallback(bestTrade, allowedSlippage, deadline)
 
-  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(bestTrade)
+  const { priceImpactWithoutFee, realizedLPFeeAmount } = computeTradePriceBreakdown(bestTrade)
 
   function onSwap() {
     if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
@@ -186,7 +186,7 @@ export default function Swap() {
         severity={priceImpactSeverity}
         setShowInverted={setShowInverted}
         onSwap={onSwap}
-        realizedLPFee={realizedLPFee}
+        realizedLPFee={realizedLPFeeAmount}
         parsedAmounts={parsedAmounts}
         priceImpactWithoutFee={priceImpactWithoutFee}
         slippageAdjustedAmounts={slippageAdjustedAmounts}
