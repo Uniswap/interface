@@ -14,6 +14,7 @@ export const replaceSwapState = createAction<{
   inputTokenAddress?: string
   outputTokenAddress?: string,
   protocolFeeDenominator?: number,
-  swapFee?: number
+  swapFees?: { [key: string] : number }
 }>('replaceSwapState')
-export const setSwapFee = createAction<{ swapFee: number; protocolFeeDenominator: number }>('setSwapFee')
+export const setSwapFee = createAction<{ pairAddress: string; swapFee: number }>('setSwapFee')
+export const setProtocolFeeDenominator = createAction<{ protocolFeeDenominator: number }>('setProtocolFeeDenominator')

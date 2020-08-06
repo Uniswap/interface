@@ -10,7 +10,7 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
-import { Field, replaceSwapState, selectToken, switchTokens, typeInput, setSwapFee } from './actions'
+import { Field, replaceSwapState, selectToken, switchTokens, typeInput, setSwapFee, setProtocolFeeDenominator } from './actions'
 import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
@@ -107,11 +107,15 @@ export function useDerivedSwapInfo(): {
   }, [tokenIn, tokenOut]);
   useEffect(() => {
     console.log('Pair data:', pairData)
-    if (pairData && !pairData.loading && pairData.value)
+    if (pairData && !pairData.loading && pairData.value) {
       dispatch(setSwapFee({
-        swapFee: (pairData.value.swapFee) ? Number(pairData.value.swapFee) : 30,
+        pairAddress: (pairData.value.liquidityToken.address),
+        swapFee: (pairData.value.swapFee) ? Number(pairData.value.swapFee) : 30
+      }))
+      dispatch(setProtocolFeeDenominator({
         protocolFeeDenominator: (pairData.value.protocolFeeDenominator) ? Number(pairData.value.protocolFeeDenominator) : 5,
       }))
+    }
   }, [pairData])
 
   const relevantTokenBalances = useTokenBalancesTreatWETHAsETH(account ?? undefined, [
@@ -215,8 +219,8 @@ export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId)
     },
     typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
     independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
-    swapFee: null,
-    protocolFeeDenominator: null
+    swapFees: {},
+    protocolFeeDenominator: 5
   }
 }
 

@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { Field, replaceSwapState, selectToken, switchTokens, typeInput, setSwapFee } from './actions'
+import { Field, replaceSwapState, selectToken, switchTokens, typeInput, setSwapFee, setProtocolFeeDenominator } from './actions'
 import { Pair, Token, ChainId } from 'dxswap-sdk'
 import { useActiveWeb3React } from '../../hooks'
 
@@ -13,7 +13,7 @@ export interface SwapState {
     readonly address: string | undefined
   },
   readonly protocolFeeDenominator: number,
-  readonly swapFee: number
+  readonly swapFees: { [key: string] : number }
 }
 
 const initialState: SwapState = {
@@ -25,13 +25,13 @@ const initialState: SwapState = {
   [Field.OUTPUT]: {
     address: ''
   },
-  swapFee: 30,
+  swapFees: {},
   protocolFeeDenominator: 5
 }
 
 export default createReducer<SwapState>(initialState, builder =>
   builder
-    .addCase(replaceSwapState, (state, { payload: { typedValue, field, inputTokenAddress, outputTokenAddress, protocolFeeDenominator, swapFee } }) => {
+    .addCase(replaceSwapState, (state, { payload: { typedValue, field, inputTokenAddress, outputTokenAddress, protocolFeeDenominator, swapFees } }) => {
       return {
         [Field.INPUT]: {
           address: inputTokenAddress
@@ -41,8 +41,8 @@ export default createReducer<SwapState>(initialState, builder =>
         },
         independentField: field,
         typedValue: typedValue,
-        protocolFeeDenominator: protocolFeeDenominator ? protocolFeeDenominator : 5,
-        swapFee: swapFee ? swapFee : 30
+        protocolFeeDenominator: protocolFeeDenominator ? protocolFeeDenominator : state.protocolFeeDenominator,
+        swapFees: swapFees ? swapFees : state.swapFees
       }
     })
     .addCase(selectToken, (state, { payload: { address, field } }) => {
@@ -78,12 +78,21 @@ export default createReducer<SwapState>(initialState, builder =>
         typedValue
       }
     })
-    .addCase(setSwapFee, (state, { payload: { swapFee, protocolFeeDenominator } }) => {
-      if (state.swapFee != swapFee){
-        console.log('Updating fees in store with', swapFee, protocolFeeDenominator)
+    .addCase(setSwapFee, (state, { payload: { pairAddress, swapFee } }) => {
+      if (state.swapFees[pairAddress] != swapFee){
+        console.log('Updating fees in store with', pairAddress, swapFee)
+        state.swapFees[pairAddress] = swapFee
+        return state
+      }
+    })
+    //
+    // TO DO: Add an updateSwapFees method that will fecth all swapFees and save them
+    //
+    .addCase(setProtocolFeeDenominator, (state, { payload: {  protocolFeeDenominator } }) => {
+      if (state.protocolFeeDenominator != protocolFeeDenominator){
+        console.log('Updating protocolFeeDenominator in store with', protocolFeeDenominator)
         return {
           ...state,
-          swapFee: swapFee,
           protocolFeeDenominator: protocolFeeDenominator
         }
       }

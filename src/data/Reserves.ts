@@ -1,9 +1,11 @@
-import { Token, TokenAmount, Pair, FACTORY_ADDRESS } from 'dxswap-sdk'
+import { Token, TokenAmount, Pair, FACTORY_ADDRESS, JSBI } from 'dxswap-sdk'
 import { useMemo } from 'react'
 import { abi as IDXswapPairABI } from 'dxswap-core/build/contracts/IDXswapPair.json'
 import { Interface } from '@ethersproject/abi'
 
+
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
+import { useSwapState } from '../state/swap/hooks'
 
 const PAIR_INTERFACE = new Interface(IDXswapPairABI)
 
@@ -20,6 +22,8 @@ export function usePairs(tokens: [Token | undefined, Token | undefined][]): (und
       }),
     [tokens]
   )
+  
+  const { swapFees, protocolFeeDenominator } = useSwapState()
 
   const results = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'getReserves')
 
@@ -33,7 +37,13 @@ export function usePairs(tokens: [Token | undefined, Token | undefined][]): (und
       if (!reserves) return null
       const { reserve0, reserve1 } = reserves
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
-      return new Pair(new TokenAmount(token0, reserve0.toString()), new TokenAmount(token1, reserve1.toString()))
+      const swapFee = swapFees[Pair.getAddress(token0, token1)] ? swapFees[Pair.getAddress(token0, token1)] : 30
+      return new Pair(
+        new TokenAmount(token0, reserve0.toString()),
+        new TokenAmount(token1, reserve1.toString()),
+        JSBI.BigInt(swapFee),
+        JSBI.BigInt(protocolFeeDenominator)
+      )
     })
   }, [results, tokens])
 }
