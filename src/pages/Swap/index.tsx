@@ -242,7 +242,7 @@ export default function Swap() {
   const showWarning =
     (!dismissedToken0 && !!currencies[Field.INPUT]) || (!dismissedToken1 && !!currencies[Field.OUTPUT])
 
-  const notEnoughBalance = maxAmountInput && trade && JSBI.lessThan(maxAmountInput.raw, trade.inputAmount.raw)
+  const notEnoughBalance = maxAmountInput && parsedAmount && JSBI.lessThan(maxAmountInput.raw, parsedAmount.raw)
 
   return (
     <>
