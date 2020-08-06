@@ -77,13 +77,14 @@ export default function SwapModalFooter({
           </RowFixed>
           <RowFixed>
             <TYPE.black fontSize={14}>
-                {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4) ?? '-'}
+                {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4) ?? '-'}
             </TYPE.black>
             {parsedAmounts[Field.OUTPUT] && parsedAmounts[Field.INPUT] && (
               <TYPE.black fontSize={14} marginLeft={'4px'}>
-                {trade?.tradeType === TradeType.EXACT_INPUT
-                  ? parsedAmounts[Field.OUTPUT]?.token?.symbol
-                  : parsedAmounts[Field.INPUT]?.token?.symbol}
+                {parsedAmounts[Field.OUTPUT]?.token?.symbol}
+                  {/*{trade?.tradeType === TradeType.EXACT_INPUT*/}
+                  {/*? parsedAmounts[Field.OUTPUT]?.token?.symbol*/}
+                  {/*: parsedAmounts[Field.INPUT]?.token?.symbol}*/}
               </TYPE.black>
             )}
           </RowFixed>

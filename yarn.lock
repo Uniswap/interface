@@ -2670,7 +2670,7 @@
 
 "@uniswap/sdk@CryptoManiacsZone/uniswap-sdk.git#v2":
   version "3.0.4"
-  resolved "https://codeload.github.com/CryptoManiacsZone/uniswap-sdk/tar.gz/1c4cf5322504ac51fb0cd6d5a342456465f3f3c2"
+  resolved "https://codeload.github.com/CryptoManiacsZone/uniswap-sdk/tar.gz/bd2142a507451760bd103807a9ae7fca4b7e7afd"
   dependencies:
     "@ethersproject/address" "^5.0.1"
     "@ethersproject/contracts" "^5.0.1"

@@ -68,7 +68,7 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue } = useSwapState()
-  const { onSwitchTokens, onCurrencySelection, onUserInput, onOutputValue } = useSwapActionHandlers()
+  const { onSwitchTokens, onCurrencySelection, onUserInput } = useSwapActionHandlers()
   const { v1Trade, v2Trade, mooniswapTrade, currencyBalances, parsedAmount, currencies, error } = useDerivedSwapInfo()
 
   const { wrapType, execute: onWrap, error: wrapError } = useWrapCallback(
