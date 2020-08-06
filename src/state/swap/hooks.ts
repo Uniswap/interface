@@ -4,7 +4,7 @@ import { Token, TokenAmount, JSBI, Trade, ZERO_ADDRESS } from '@uniswap/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useMooniswapTrade, useV1Trade } from '../../data/V1'
+import { useMooniswapTrade, useV1Trade } from '../../data-mooniswap/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
@@ -16,6 +16,7 @@ import { Field, receiveOutput, replaceSwapState, selectCurrency, switchCurrencie
 import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
+import { BigNumber } from '@ethersproject/bignumber'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -95,7 +96,7 @@ export function useDerivedSwapInfo(): {
   v2Trade: Trade | undefined
   error?: string
   v1Trade: Trade | undefined
-  mooniswapTrade: Trade | undefined
+  mooniswapTrade: [Trade, BigNumber[]] | [undefined, undefined] | undefined
 } {
   const { account } = useActiveWeb3React()
 

@@ -1,6 +1,6 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Trade, TokenAmount, ETHER } from '@uniswap/sdk'
+import { Trade, TokenAmount, ETHER, ChainId } from '@uniswap/sdk'
 import { useCallback, useMemo } from 'react'
 import { ROUTER_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
@@ -12,6 +12,8 @@ import { calculateGasMargin } from '../utils'
 import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
 import { Version } from './useToggledVersion'
+import { BigNumber } from '@ethersproject/bignumber'
+import { ONE_SPLIT_ADDRESSES } from '../constants/one-split'
 
 export enum ApprovalState {
   UNKNOWN,
@@ -104,12 +106,19 @@ export function   useApproveCallback(
 }
 
 // wraps useApproveCallback in the context of a swap
-export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) {
+export function useApproveCallbackFromTrade(trade?: Trade, distribution?: BigNumber[], allowedSlippage = 0) {
   const amountToApprove = useMemo(
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
     [trade, allowedSlippage]
   )
-  const tradeIsV1 = getTradeVersion(trade) === Version.v1
-  const v1ExchangeAddress = useV1TradeExchangeAddress(trade)
-  return useApproveCallback(amountToApprove, tradeIsV1 ? v1ExchangeAddress : ROUTER_ADDRESS)
+  // const tradeIsV1 = getTradeVersion(trade) === Version.v1
+  // const v1ExchangeAddress = useV1TradeExchangeAddress(trade)
+
+  // const spenderAddress = distribution && distribution?.filter((x: BigNumber) => x && !x.isZero())?.length > 1
+  //   ? ONE_SPLIT_ADDRESSES[ChainId.MAINNET]
+  //   : trade?.route.pairs[0].liquidityToken.address
+
+  const spenderAddress = ONE_SPLIT_ADDRESSES[ChainId.MAINNET]
+
+  return useApproveCallback(amountToApprove, spenderAddress)
 }

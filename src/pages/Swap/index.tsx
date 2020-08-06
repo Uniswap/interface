@@ -54,7 +54,6 @@ export default function Swap() {
 
   const { account, chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
-  const dispatch = useDispatch<AppDispatch>()
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
@@ -83,7 +82,7 @@ export default function Swap() {
     : {
         [Version.v1]: v1Trade,
         [Version.v2]: v2Trade,
-        [Version.v3]: mooniswapTrade,
+        [Version.v3]: mooniswapTrade?.[0],
       }[toggledVersion]
 
   const betterTradeLinkVersion: Version | undefined =
@@ -134,7 +133,7 @@ export default function Swap() {
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
+  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, mooniswapTrade?.[1], allowedSlippage)
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -152,7 +151,7 @@ export default function Swap() {
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
   // the callback to execute the swap
-  const swapCallback = useSwapCallback(trade, allowedSlippage)
+  const swapCallback = useSwapCallback(trade, mooniswapTrade?.[1], allowedSlippage)
 
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
 
