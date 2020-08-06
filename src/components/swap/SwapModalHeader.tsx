@@ -1,66 +1,107 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk'
-import React, { useContext } from 'react'
-import { ArrowDown } from 'react-feather'
+import { Trade, TradeType } from '@uniswap/sdk'
+import React, { useContext, useMemo } from 'react'
+import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { TYPE } from '../../theme'
+import { ButtonPrimary } from '../Button'
 import { isAddress, shortenAddress } from '../../utils'
+import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { AutoColumn } from '../Column'
-import { RowBetween, RowFixed } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
-import { TruncatedText } from './styleds'
+import { RowBetween, RowFixed } from '../Row'
+import { TruncatedText, SwapShowAcceptChanges } from './styleds'
 
 export default function SwapModalHeader({
-  currencies,
-  formattedAmounts,
-  slippageAdjustedAmounts,
-  priceImpactSeverity,
-  independentField,
-  recipient
+  trade,
+  allowedSlippage,
+  recipient,
+  showAcceptChanges,
+  onAcceptChanges
 }: {
-  currencies: { [field in Field]?: Currency }
-  formattedAmounts: { [field in Field]?: string }
-  slippageAdjustedAmounts: { [field in Field]?: CurrencyAmount }
-  priceImpactSeverity: number
-  independentField: Field
+  trade: Trade
+  allowedSlippage: number
   recipient: string | null
+  showAcceptChanges: boolean
+  onAcceptChanges: () => void
 }) {
+  const slippageAdjustedAmounts = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage), [
+    trade,
+    allowedSlippage
+  ])
+  const { priceImpactWithoutFee } = useMemo(() => computeTradePriceBreakdown(trade), [trade])
+  const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
+
   const theme = useContext(ThemeContext)
 
   return (
     <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
       <RowBetween align="flex-end">
-        <TruncatedText fontSize={24} fontWeight={500}>
-          {formattedAmounts[Field.INPUT]}
-        </TruncatedText>
-        <RowFixed gap="4px">
-          <CurrencyLogo currency={currencies[Field.INPUT]} size={'24px'} />
+        <RowFixed gap={'0px'}>
+          <CurrencyLogo currency={trade.inputAmount.currency} size={'24px'} style={{ marginRight: '12px' }} />
+          <TruncatedText
+            fontSize={24}
+            fontWeight={500}
+            color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.primary1 : ''}
+          >
+            {trade.inputAmount.toSignificant(6)}
+          </TruncatedText>
+        </RowFixed>
+        <RowFixed gap={'0px'}>
           <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-            {currencies[Field.INPUT]?.symbol}
+            {trade.inputAmount.currency.symbol}
           </Text>
         </RowFixed>
       </RowBetween>
       <RowFixed>
-        <ArrowDown size="16" color={theme.text2} />
+        <ArrowDown size="16" color={theme.text2} style={{ marginLeft: '4px', minWidth: '16px' }} />
       </RowFixed>
       <RowBetween align="flex-end">
-        <TruncatedText fontSize={24} fontWeight={500} color={priceImpactSeverity > 2 ? theme.red1 : ''}>
-          {formattedAmounts[Field.OUTPUT]}
-        </TruncatedText>
-        <RowFixed gap="4px">
-          <CurrencyLogo currency={currencies[Field.OUTPUT]} size={'24px'} />
+        <RowFixed gap={'0px'}>
+          <CurrencyLogo currency={trade.outputAmount.currency} size={'24px'} style={{ marginRight: '12px' }} />
+          <TruncatedText
+            fontSize={24}
+            fontWeight={500}
+            color={
+              priceImpactSeverity > 2
+                ? theme.red1
+                : showAcceptChanges && trade.tradeType === TradeType.EXACT_INPUT
+                ? theme.primary1
+                : ''
+            }
+          >
+            {trade.outputAmount.toSignificant(6)}
+          </TruncatedText>
+        </RowFixed>
+        <RowFixed gap={'0px'}>
           <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-            {currencies[Field.OUTPUT]?.symbol}
+            {trade.outputAmount.currency.symbol}
           </Text>
         </RowFixed>
       </RowBetween>
+      {showAcceptChanges ? (
+        <SwapShowAcceptChanges justify="flex-start" gap={'0px'}>
+          <RowBetween>
+            <RowFixed>
+              <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
+              <TYPE.main color={theme.primary1}> Price Updated</TYPE.main>
+            </RowFixed>
+            <ButtonPrimary
+              style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
+              onClick={onAcceptChanges}
+            >
+              Accept
+            </ButtonPrimary>
+          </RowBetween>
+        </SwapShowAcceptChanges>
+      ) : null}
       <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
-        {independentField === Field.INPUT ? (
+        {trade.tradeType === TradeType.EXACT_INPUT ? (
           <TYPE.italic textAlign="left" style={{ width: '100%' }}>
             {`Output is estimated. You will receive at least `}
             <b>
-              {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {currencies[Field.OUTPUT]?.symbol}
+              {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {trade.outputAmount.currency.symbol}
             </b>
             {' or the transaction will revert.'}
           </TYPE.italic>
@@ -68,7 +109,7 @@ export default function SwapModalHeader({
           <TYPE.italic textAlign="left" style={{ width: '100%' }}>
             {`Input is estimated. You will sell at most `}
             <b>
-              {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {currencies[Field.INPUT]?.symbol}
+              {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {trade.inputAmount.currency.symbol}
             </b>
             {' or the transaction will revert.'}
           </TYPE.italic>

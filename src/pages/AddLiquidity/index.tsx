@@ -10,7 +10,7 @@ import { ThemeContext } from 'styled-components'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, GreyCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import ConfirmationModal from '../../components/ConfirmationModal'
+import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
@@ -294,27 +294,34 @@ export default function AddLiquidity({
     [currencyIdA, history, currencyIdB]
   )
 
+  const handleDismissConfirmation = useCallback(() => {
+    setShowConfirm(false)
+    // if there was a tx hash, we want to clear the input
+    if (txHash) {
+      onFieldAInput('')
+    }
+    setTxHash('')
+  }, [onFieldAInput, txHash])
+
   return (
     <>
       <AppBody>
         <AddRemoveTabs adding={true} />
         <Wrapper>
-          <ConfirmationModal
+          <TransactionConfirmationModal
             isOpen={showConfirm}
-            onDismiss={() => {
-              setShowConfirm(false)
-              // if there was a tx hash, we want to clear the input
-              if (txHash) {
-                onFieldAInput('')
-              }
-              setTxHash('')
-            }}
+            onDismiss={handleDismissConfirmation}
             attemptingTxn={attemptingTxn}
             hash={txHash}
-            topContent={modalHeader}
-            bottomContent={modalBottom}
+            content={() => (
+              <ConfirmationModalContent
+                title={noLiquidity ? 'You are creating a pool' : 'You will receive'}
+                onDismiss={handleDismissConfirmation}
+                topContent={modalHeader}
+                bottomContent={modalBottom}
+              />
+            )}
             pendingText={pendingText}
-            title={noLiquidity ? 'You are creating a pool' : 'You will receive'}
           />
           <AutoColumn gap="20px">
             {noLiquidity && (
