@@ -23,7 +23,7 @@ export default function useWrapCallback(
   inputCurrency: Currency | undefined,
   outputCurrency: Currency | undefined,
   typedValue: string | undefined
-): { wrapType: WrapType; execute?: undefined | (() => Promise<void>); error?: string } {
+): { wrapType: WrapType; execute?: undefined | (() => Promise<void>); inputError?: string } {
   const { chainId, account } = useActiveWeb3React()
   const wethContract = useWETHContract()
   const balance = useCurrencyBalance(account ?? undefined, inputCurrency)
@@ -50,7 +50,7 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        error: sufficientBalance ? undefined : 'Insufficient ETH balance'
+        inputError: sufficientBalance ? undefined : 'Insufficient ETH balance'
       }
     } else if (currencyEquals(WETH[chainId], inputCurrency) && outputCurrency === ETHER) {
       return {
@@ -66,7 +66,7 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        error: sufficientBalance ? undefined : 'Insufficient WETH balance'
+        inputError: sufficientBalance ? undefined : 'Insufficient WETH balance'
       }
     } else {
       return NOT_APPLICABLE

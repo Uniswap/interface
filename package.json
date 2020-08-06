@@ -4,17 +4,7 @@
   "homepage": ".",
   "private": true,
   "devDependencies": {
-    "@ethersproject/address": "5.0.0-beta.134",
-    "@ethersproject/bignumber": "5.0.0-beta.138",
-    "@ethersproject/constants": "5.0.0-beta.133",
-    "@ethersproject/contracts": "5.0.0-beta.151",
-    "@ethersproject/experimental": "5.0.0-beta.141",
-    "@ethersproject/networks": "5.0.0-beta.136",
-    "@ethersproject/providers": "5.0.0-beta.162",
-    "@ethersproject/solidity": "5.0.2",
-    "@ethersproject/strings": "5.0.0-beta.136",
-    "@ethersproject/units": "5.0.0-beta.132",
-    "@ethersproject/wallet": "5.0.0-beta.141",
+    "@ethersproject/experimental": "^5.0.1",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
@@ -52,6 +42,7 @@
     "eslint-plugin-prettier": "^3.1.3",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^4.0.0",
+    "ethers": "^5.0.7",
     "i18next": "^15.0.9",
     "i18next-browser-languagedetector": "^3.0.1",
     "i18next-xhr-backend": "^2.0.1",
@@ -60,7 +51,6 @@
     "lodash.flatmap": "^4.5.0",
     "polished": "^3.3.2",
     "prettier": "^1.17.0",
-    "qrcode.react": "^0.9.3",
     "qs": "^6.9.4",
     "react": "^16.13.1",
     "react-device-detect": "^1.6.2",
@@ -80,8 +70,10 @@
     "serve": "^11.3.0",
     "start-server-and-test": "^1.11.0",
     "styled-components": "^4.2.0",
-    "typescript": "^3.8.3",
-    "use-media": "^1.4.0"
+    "typescript": "^3.8.3"
+  },
+  "resolutions": {
+    "@walletconnect/web3-provider": "1.1.1-alpha.0"
   },
   "scripts": {
     "start": "react-scripts start",

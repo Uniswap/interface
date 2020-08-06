@@ -91,7 +91,7 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 }
 
 // account is optional
-export function getRouterContract(_: number, library: Web3Provider, account?: string) {
+export function getRouterContract(_: number, library: Web3Provider, account?: string): Contract {
   return getContract(ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account)
 }
 

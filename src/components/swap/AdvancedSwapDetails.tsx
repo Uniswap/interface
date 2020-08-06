@@ -73,23 +73,27 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
 
   const [allowedSlippage] = useUserSlippageTolerance()
 
-  const showRoute = trade?.route?.path?.length > 2
+  const showRoute = Boolean(trade && trade.route.path.length > 2)
 
   return (
     <AutoColumn gap="md">
-      {trade && <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />}
-      {showRoute && (
+      {trade && (
         <>
-          <SectionBreak />
-          <AutoColumn style={{ padding: '0 24px' }}>
-            <RowFixed>
-              <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-                Route
-              </TYPE.black>
-              <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
-            </RowFixed>
-            <SwapRoute trade={trade} />
-          </AutoColumn>
+          <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />
+          {showRoute && (
+            <>
+              <SectionBreak />
+              <AutoColumn style={{ padding: '0 24px' }}>
+                <RowFixed>
+                  <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+                    Route
+                  </TYPE.black>
+                  <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
+                </RowFixed>
+                <SwapRoute trade={trade} />
+              </AutoColumn>
+            </>
+          )}
         </>
       )}
     </AutoColumn>
