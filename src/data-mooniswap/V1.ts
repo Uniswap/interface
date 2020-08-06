@@ -22,11 +22,12 @@ import { useTokenBalances } from '../state/wallet/hooks'
 import {
   ETH_ADDRESS,
   FLAG_DISABLE_ALL_SPLIT_SOURCES,
-  FLAG_DISABLE_ALL_WRAP_SOURCES, FLAG_DISABLE_MOONISWAP_ALL,
+  FLAG_DISABLE_ALL_WRAP_SOURCES, FLAG_DISABLE_MOONISWAP_ALL, ONE_SPLIT_ADDRESSES,
   ZERO_ADDRESS
 } from '../constants/one-split'
 import { PairState, usePair } from './Reserves'
 import { BigNumber } from '@ethersproject/bignumber'
+import { isUseOneSplitContract, maxUint256Div2 } from '../utils'
 
 export function useV1ExchangeAddress(tokenAddress?: string): string | undefined {
   const contract = useV1FactoryContract()
@@ -190,11 +191,15 @@ export function useMooniswapTrade(
 ): [Trade, BigNumber[]] | [undefined, undefined] | undefined {
   let mooniswapTrade: Trade | undefined
 
+  const amount = inputCurrency?.decimals && inputCurrency?.decimals !== 0
+    ? parseAmount?.multiply(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(inputCurrency?.decimals))).toFixed(0)
+    : 0
+
   const params = [
     inputCurrency?.address ? inputCurrency.address !== ZERO_ADDRESS ? inputCurrency.address : ETH_ADDRESS : ETH_ADDRESS,
     outputCurrency?.address ? outputCurrency.address !== ZERO_ADDRESS ? outputCurrency.address : ETH_ADDRESS : ETH_ADDRESS,
-    inputCurrency?.decimals ? parseAmount?.multiply(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(inputCurrency.decimals))).toFixed(0) : 0,
-    1,
+    amount,
+    10,
     JSBI.add(FLAG_DISABLE_ALL_WRAP_SOURCES, JSBI.add(FLAG_DISABLE_ALL_SPLIT_SOURCES, FLAG_DISABLE_MOONISWAP_ALL)).toString()
   ]
 
@@ -202,14 +207,53 @@ export function useMooniswapTrade(
 
   const results = useSingleCallResult(useOneSplit(), 'getExpectedReturn', params)
 
-  if(!inputCurrency || !outputCurrency || !parseAmount || !results.result || poolPair[0] != PairState.EXISTS || !poolPair[1]){
+  if(!inputCurrency || !outputCurrency || !parseAmount || !results.result || (
+    (poolPair[0] != PairState.EXISTS || !poolPair[1]) && !isUseOneSplitContract(results?.result?.distribution))
+  ) {
     return
   }
-
   const exactAmount = new TokenAmount(outputCurrency, JSBI.BigInt(results.result.returnAmount))
 
+  const srcNumerator = inputCurrency.decimals !== 0 ? BigNumber.from('10').pow(inputCurrency.decimals) : BigNumber.from('1')
+  const destNumerator = outputCurrency.decimals !== 0 ? BigNumber.from('10').pow(outputCurrency.decimals) : BigNumber.from('1')
+
+  const proportionSrcToDest = parseAmount.multiply(destNumerator.toString()).divide(exactAmount)
+  const proportionDestToSrc = exactAmount.multiply(srcNumerator.toString()).divide(parseAmount)
+  // const proportionSrcToDest = BigNumber.from(parseAmount.numerator.toString()).mul(destNumerator.toString()).div(results.result.returnAmount)
+  // const proportionDestToSrc = results.result.returnAmount.mul(srcNumerator).div(BigNumber.from(parseAmount.numerator.toString()))
+  console.log({
+    parseAmount: parseAmount.raw.toString(),
+    exactAmount: exactAmount.raw.toString(),
+    srcNumerator: srcNumerator.toString(),
+    destNumerator: destNumerator.toString(),
+    proportionSrcToDest1Numerator: proportionSrcToDest.numerator.toString(),
+    proportionSrcToDest2Denominator: proportionSrcToDest.denominator.toString(),
+    proportionDestToSrc1Numerator: proportionDestToSrc.numerator.toString(),
+    proportionDestToSrc2Denominator: proportionDestToSrc.denominator.toString(),
+  })
+
+  /*
+
+    TokenA: tokenAmountA
+    TokenB: tokenAmountB
+
+    priceAtoB = tokenAmountB / tokenAmountA * 100000
+    priceBtoA = tokenAmountA / tokenAmountB * 100000
+
+
+   */
+
   const pair = poolPair[1]
-  const pairs: Pair[] = [pair]
+  const pairs: Pair[] = pair ? [pair] : [new Pair(
+    // new TokenAmount(inputCurrency, parseAmount.multiply(proportionSrcToDest.multiply(parseAmount.multiply('10000'))).divide(numerator).toFixed(0)),
+    // new TokenAmount(outputCurrency, exactAmount.multiply(proportionDestToSrc.multiply(exactAmount.multiply('10000'))).divide(numerator).toFixed(0)),
+    // new TokenAmount(inputCurrency, '57333158818703015175'),
+    // new TokenAmount(outputCurrency, '47954'),
+    new TokenAmount(inputCurrency, proportionDestToSrc.numerator.toString()),
+    new TokenAmount(outputCurrency, proportionSrcToDest.numerator.toString()),
+
+    ONE_SPLIT_ADDRESSES[1]
+  )]
 
   const route = inputCurrency && pairs && pairs.length > 0 && new Route(pairs, inputCurrency, outputCurrency)
   try {

@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getMooniswapContract, getOneSplit } from '../utils'
+import { calculateGasMargin, getMooniswapContract, getOneSplit, isUseOneSplitContract } from '../utils'
 import { useActiveWeb3React } from './index'
 import { useV1ExchangeContract } from './useContract'
 import { Version } from './useToggledVersion'
@@ -29,7 +29,7 @@ export function useSwapCallback(
   const { account, chainId, library } = useActiveWeb3React()
   const addTransaction = useTransactionAdder()
 
-  const isUseOneSplitContract = distribution && distribution?.filter((x: BigNumber) => x && !x.isZero())?.length > 1;
+  const isOneSplit = isUseOneSplitContract(distribution);
 
   const recipient = account
 
@@ -40,7 +40,7 @@ export function useSwapCallback(
     if (!trade || !recipient || !library || !account || !tradeVersion || !chainId || !distribution) return null
 
     return async function onSwap() {
-      const contract: Contract | null = isUseOneSplitContract
+      const contract: Contract | null = isOneSplit
         ? getOneSplit(chainId, library, account)
         : getMooniswapContract(chainId, library, trade.route.pairs[0].poolAddress, account)
       if (!contract) {
@@ -48,7 +48,7 @@ export function useSwapCallback(
       }
 
       const args: any[] = []
-      if (isUseOneSplitContract) {
+      if (isOneSplit) {
         args.push(...[
           trade.inputAmount.token.address,
           trade.outputAmount.token.address,

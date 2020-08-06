@@ -8,7 +8,7 @@ import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
-import { calculateGasMargin } from '../utils'
+import { calculateGasMargin, isUseOneSplitContract } from '../utils'
 import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
 import { Version } from './useToggledVersion'
@@ -114,7 +114,7 @@ export function useApproveCallbackFromTrade(trade?: Trade, distribution?: BigNum
   // const tradeIsV1 = getTradeVersion(trade) === Version.v1
   // const v1ExchangeAddress = useV1TradeExchangeAddress(trade)
 
-  const spenderAddress = distribution && distribution?.filter((x: BigNumber) => x && !x.isZero())?.length > 1
+  const spenderAddress = isUseOneSplitContract(distribution)
     ? ONE_SPLIT_ADDRESSES[ChainId.MAINNET]
     : trade?.route.pairs[0].liquidityToken.address
 

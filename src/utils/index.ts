@@ -1,6 +1,6 @@
 import { Contract } from '@ethersproject/contracts'
 import { getAddress } from '@ethersproject/address'
-import { AddressZero } from '@ethersproject/constants'
+import { AddressZero, MaxUint256 } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
@@ -45,6 +45,18 @@ export function getEtherscanLink(chainId: ChainId, data: string, type: 'transact
     }
   }
 }
+
+export function isUseOneSplitContract(distribution: BigNumber[] | undefined): boolean {
+  return Boolean(
+    distribution &&
+    (
+      distribution?.filter((x: BigNumber) => x && !x.isZero())?.length > 1 ||
+      distribution[12].isZero()
+    )
+  )
+}
+
+export const maxUint256Div2 = MaxUint256.div(2)
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
 export function shortenAddress(address: string, chars = 4): string {

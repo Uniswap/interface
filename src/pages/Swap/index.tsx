@@ -45,9 +45,7 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from '../../state'
-import { formatUnits } from '@ethersproject/units'
+import { isUseOneSplitContract } from '../../utils'
 
 export default function Swap() {
   useDefaultsFromURLSearch()
@@ -69,6 +67,10 @@ export default function Swap() {
   const { independentField, typedValue } = useSwapState()
   const { onSwitchTokens, onCurrencySelection, onUserInput } = useSwapActionHandlers()
   const { v1Trade, v2Trade, mooniswapTrade, currencyBalances, parsedAmount, currencies, error } = useDerivedSwapInfo()
+
+  const distribution = mooniswapTrade?.[1]
+  console.log(mooniswapTrade?.[0]?.outputAmount)
+  console.log(distribution)
 
   const { wrapType, execute: onWrap, error: wrapError } = useWrapCallback(
     currencies[Field.INPUT],
@@ -133,7 +135,7 @@ export default function Swap() {
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, mooniswapTrade?.[1], allowedSlippage)
+  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, distribution, allowedSlippage)
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -151,7 +153,7 @@ export default function Swap() {
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
   // the callback to execute the swap
-  const swapCallback = useSwapCallback(trade, mooniswapTrade?.[1], allowedSlippage)
+  const swapCallback = useSwapCallback(trade, distribution, allowedSlippage)
 
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
 
@@ -350,7 +352,7 @@ export default function Swap() {
               <ButtonPrimary disabled={Boolean(wrapError)} onClick={onWrap}>
                 {wrapError ?? (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
               </ButtonPrimary>
-            ) : noRoute && userHasSpecifiedInputOutput ? (
+            ) : (noRoute && userHasSpecifiedInputOutput) && !isUseOneSplitContract(distribution) ? (
               <GreyCard style={{ textAlign: 'center' }}>
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
               </GreyCard>
