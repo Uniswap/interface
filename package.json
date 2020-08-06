@@ -72,6 +72,9 @@
     "styled-components": "^4.2.0",
     "typescript": "^3.8.3"
   },
+  "resolutions": {
+    "@walletconnect/web3-provider": "1.1.1-alpha.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
