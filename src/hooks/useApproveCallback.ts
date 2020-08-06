@@ -114,11 +114,9 @@ export function useApproveCallbackFromTrade(trade?: Trade, distribution?: BigNum
   // const tradeIsV1 = getTradeVersion(trade) === Version.v1
   // const v1ExchangeAddress = useV1TradeExchangeAddress(trade)
 
-  // const spenderAddress = distribution && distribution?.filter((x: BigNumber) => x && !x.isZero())?.length > 1
-  //   ? ONE_SPLIT_ADDRESSES[ChainId.MAINNET]
-  //   : trade?.route.pairs[0].liquidityToken.address
-
-  const spenderAddress = ONE_SPLIT_ADDRESSES[ChainId.MAINNET]
+  const spenderAddress = distribution && distribution?.filter((x: BigNumber) => x && !x.isZero())?.length > 1
+    ? ONE_SPLIT_ADDRESSES[ChainId.MAINNET]
+    : trade?.route.pairs[0].liquidityToken.address
 
   return useApproveCallback(amountToApprove, spenderAddress)
 }

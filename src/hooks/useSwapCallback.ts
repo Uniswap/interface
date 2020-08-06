@@ -5,19 +5,19 @@ import { useMemo } from 'react'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getOneSplit } from '../utils'
+import { calculateGasMargin, getMooniswapContract, getOneSplit } from '../utils'
 import { useActiveWeb3React } from './index'
 import { useV1ExchangeContract } from './useContract'
 import { Version } from './useToggledVersion'
 import {
   FLAG_DISABLE_ALL_SPLIT_SOURCES,
   FLAG_DISABLE_ALL_WRAP_SOURCES,
-  FLAG_DISABLE_MOONISWAP_ALL
+  FLAG_DISABLE_MOONISWAP_ALL, ZERO_ADDRESS
 } from '../constants/one-split'
 
-function isZero(hexNumber: string) {
-  return /^0x0*$/.test(hexNumber)
-}
+// function isZero(hexNumber: string) {
+//   return /^0x0*$/.test(hexNumber)
+// }
 
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
@@ -29,6 +29,8 @@ export function useSwapCallback(
   const { account, chainId, library } = useActiveWeb3React()
   const addTransaction = useTransactionAdder()
 
+  const isUseOneSplitContract = distribution && distribution?.filter((x: BigNumber) => x && !x.isZero())?.length > 1;
+
   const recipient = account
 
   const tradeVersion = getTradeVersion(trade)
@@ -38,20 +40,32 @@ export function useSwapCallback(
     if (!trade || !recipient || !library || !account || !tradeVersion || !chainId || !distribution) return null
 
     return async function onSwap() {
-      const contract: Contract | null =
-        tradeVersion === Version.v2 ? getOneSplit(chainId, library, account) : v1Exchange
+      const contract: Contract | null = isUseOneSplitContract
+        ? getOneSplit(chainId, library, account)
+        : getMooniswapContract(chainId, library, trade.route.pairs[0].poolAddress, account)
       if (!contract) {
         throw new Error('Failed to get a swap contract')
       }
 
-      const args: any[] = [
-        trade.inputAmount.token.address,
-        trade.outputAmount.token.address,
-        trade.inputAmount.raw.toString(),
-        trade.inputAmount.multiply(String(10000 - allowedSlippage)).divide(String(10000)).toFixed(0),
-        distribution.map(x => x.toString()),
-        JSBI.add(FLAG_DISABLE_ALL_WRAP_SOURCES, JSBI.add(FLAG_DISABLE_ALL_SPLIT_SOURCES, FLAG_DISABLE_MOONISWAP_ALL)).toString()
-      ]
+      const args: any[] = []
+      if (isUseOneSplitContract) {
+        args.push(...[
+          trade.inputAmount.token.address,
+          trade.outputAmount.token.address,
+          trade.inputAmount.raw.toString(),
+          trade.inputAmount.multiply(String(10000 - allowedSlippage)).divide(String(10000)).toFixed(0),
+          distribution.map(x => x.toString()),
+          JSBI.add(FLAG_DISABLE_ALL_WRAP_SOURCES, JSBI.add(FLAG_DISABLE_ALL_SPLIT_SOURCES, FLAG_DISABLE_MOONISWAP_ALL)).toString()
+        ])
+      } else {
+        args.push(...[
+          trade.inputAmount.token.address,
+          trade.outputAmount.token.address,
+          trade.inputAmount.raw.toString(),
+          trade.inputAmount.multiply(String(10000 - allowedSlippage)).divide(String(10000)).toFixed(0),
+          ZERO_ADDRESS
+        ])
+      }
 
       let value: BigNumber | undefined
       if (trade.inputAmount.token.symbol === 'ETH') {
