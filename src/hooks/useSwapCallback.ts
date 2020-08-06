@@ -2,14 +2,13 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { JSBI, Percent, Trade, TradeType } from '@uniswap/sdk'
 import { useMemo } from 'react'
-import { BIPS_BASE, DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
+import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getRouterContract, isAddress, shortenAddress } from '../utils'
+import { calculateGasMargin, getRouterContract } from '../utils'
 import v1SwapArguments from '../utils/v1SwapArguments'
 import { useActiveWeb3React } from './index'
 import { useV1ExchangeContract } from './useContract'
-import useENS from './useENS'
 import { Version } from './useToggledVersion'
 
 function isZero(hexNumber: string) {
@@ -21,14 +20,11 @@ function isZero(hexNumber: string) {
 export function useSwapCallback(
   trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
-  deadline: number = DEFAULT_DEADLINE_FROM_NOW, // in seconds from now
-  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): null | (() => Promise<string>) {
   const { account, chainId, library } = useActiveWeb3React()
   const addTransaction = useTransactionAdder()
 
-  const { address: recipientAddress } = useENS(recipientAddressOrName)
-  const recipient = recipientAddressOrName === null ? account : recipientAddress
+  const recipient = account
 
   const tradeVersion = getTradeVersion(trade)
   const v1Exchange = useV1ExchangeContract(useV1TradeExchangeAddress(trade), true)
@@ -74,7 +70,7 @@ export function useSwapCallback(
             v1SwapArguments(trade, {
               allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
               recipient,
-              ttl: deadline
+              ttl: 9999999999
             })
           )
           break
@@ -142,14 +138,7 @@ export function useSwapCallback(
             const outputAmount = trade.outputAmount.toSignificant(3)
 
             const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
-            const withRecipient =
-              recipient === account
-                ? base
-                : `${base} to ${
-                    recipientAddressOrName && isAddress(recipientAddressOrName)
-                      ? shortenAddress(recipientAddressOrName)
-                      : recipientAddressOrName
-                  }`
+            const withRecipient = base
 
             const withVersion =
               tradeVersion === Version.v2 ? withRecipient : `${withRecipient} on ${(tradeVersion as any).toUpperCase()}`
@@ -182,8 +171,6 @@ export function useSwapCallback(
     chainId,
     allowedSlippage,
     v1Exchange,
-    deadline,
-    recipientAddressOrName,
     addTransaction
   ])
 }

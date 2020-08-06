@@ -1,10 +1,8 @@
 import { TokenAmount, JSBI } from '@uniswap/sdk'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { ArrowDown } from 'react-feather'
-import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -22,15 +20,14 @@ import TradePrice from '../../components/swap/TradePrice'
 import { TokenWarningCards } from '../../components/TokenWarningCard'
 
 import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
-import { getTradeVersion, isTradeBetter } from '../../data/V1'
+import { isTradeBetter } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
-import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
-import { Field } from '../../state/swap/actions'
+import { Field, receiveOutput } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
   useDerivedSwapInfo,
@@ -39,21 +36,24 @@ import {
 } from '../../state/swap/hooks'
 import {
   useExpertModeManager,
-  useUserDeadline,
   useUserSlippageTolerance,
   useTokenWarningDismissal
 } from '../../state/user/hooks'
-import { CursorPointer, LinkStyledButton, TYPE } from '../../theme'
+import { CursorPointer, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from '../../state'
+import { formatUnits } from '@ethersproject/units'
 
 export default function Swap() {
   useDefaultsFromURLSearch()
 
   const { account, chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
+  const dispatch = useDispatch<AppDispatch>()
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
@@ -63,19 +63,19 @@ export default function Swap() {
   const [expertMode] = useExpertModeManager()
 
   // get custom setting values for user
-  const [deadline] = useUserDeadline()
   const [allowedSlippage] = useUserSlippageTolerance()
 
   // swap state
-  const { independentField, typedValue, recipient } = useSwapState()
+  const { independentField, typedValue } = useSwapState()
+  const { onSwitchTokens, onCurrencySelection, onUserInput, onOutputValue } = useSwapActionHandlers()
   const { v1Trade, v2Trade, mooniswapTrade, currencyBalances, parsedAmount, currencies, error } = useDerivedSwapInfo()
+
   const { wrapType, execute: onWrap, error: wrapError } = useWrapCallback(
     currencies[Field.INPUT],
     currencies[Field.OUTPUT],
     typedValue
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
-  const { address: recipientAddress } = useENSAddress(recipient)
   const toggledVersion = useToggledVersion()
   const trade = showWrap
     ? undefined
@@ -102,7 +102,6 @@ export default function Swap() {
         [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
       }
 
-  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !error
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -112,12 +111,7 @@ export default function Swap() {
     },
     [onUserInput]
   )
-  // const handleTypeOutput = useCallback(
-  //   (value: string) => {
-  //     onUserInput(Field.OUTPUT, value)
-  //   },
-  //   [onUserInput]
-  // )
+
   const handleNothing = () => {}
 
   // modal and loading
@@ -157,7 +151,7 @@ export default function Swap() {
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
   // the callback to execute the swap
-  const swapCallback = useSwapCallback(trade, allowedSlippage, deadline, recipient)
+  const swapCallback = useSwapCallback(trade, allowedSlippage)
 
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
 
@@ -174,20 +168,15 @@ export default function Swap() {
         setAttemptingTxn(false)
         setTxHash(hash)
 
-        ReactGA.event({
-          category: 'Swap',
-          action:
-            recipient === null
-              ? 'Swap w/o Send'
-              : (recipientAddress ?? recipient) === account
-              ? 'Swap w/o Send + recipient'
-              : 'Swap w/ Send',
-          label: [
-            trade?.inputAmount?.token?.symbol,
-            trade?.outputAmount?.token?.symbol,
-            getTradeVersion(trade)
-          ].join('/')
-        })
+        // ReactGA.event({
+        //   category: 'Swap',
+        //   action: account
+        //   label: [
+        //     trade?.inputAmount?.token?.symbol,
+        //     trade?.outputAmount?.token?.symbol,
+        //     getTradeVersion(trade)
+        //   ].join('/')
+        // })
       })
       .catch(error => {
         setAttemptingTxn(false)
@@ -221,7 +210,7 @@ export default function Swap() {
         slippageAdjustedAmounts={slippageAdjustedAmounts}
         priceImpactSeverity={priceImpactSeverity}
         independentField={independentField}
-        recipient={recipient}
+        recipient={account as (string | null)}
       />
     )
   }
@@ -303,7 +292,7 @@ export default function Swap() {
                       size="16"
                       onClick={() => {
                         setApprovalSubmitted(false) // reset 2 step UI for approvals
-                        onSwitchTokens()
+                        onSwitchTokens(formattedAmounts[Field.OUTPUT])
                       }}
                       color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.primary1 : theme.text2}
                     />
@@ -321,20 +310,6 @@ export default function Swap() {
               otherCurrency={currencies[Field.INPUT]}
               id="swap-currency-output"
             />
-
-            {recipient !== null && !showWrap ? (
-              <>
-                <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                  <ArrowWrapper clickable={false}>
-                    <ArrowDown size="16" color={theme.text2} />
-                  </ArrowWrapper>
-                  <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                    - Remove send
-                  </LinkStyledButton>
-                </AutoRow>
-                <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
-              </>
-            ) : null}
 
             {showWrap ? null : (
               <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>

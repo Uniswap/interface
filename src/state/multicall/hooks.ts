@@ -6,8 +6,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import { useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
-import { ChainId, Token, TokenAmount } from '@uniswap/sdk'
-import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../../constants/multicall'
 
 import {
   addMulticallListeners,
@@ -17,10 +15,6 @@ import {
   toCallKey,
   ListenerOptions
 } from './actions'
-import { getContract } from '../../utils'
-import ERC20ABI from '../../constants/abis/erc20.json'
-import { Web3Provider } from '@ethersproject/providers'
-import { ZERO_ADDRESS } from '@uniswap/sdk/dist/constants'
 
 export interface Result extends ReadonlyArray<any> {
   readonly [key: string]: any

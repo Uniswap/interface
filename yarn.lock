@@ -2669,8 +2669,8 @@
   integrity sha512-2yK7sLpKIT91TiS5sewHtOa7YuM8IuBXVl4GZv2jZFys4D2sY7K5vZh6MqD25TPA95Od+0YzCVq6cTF2IKrOmg==
 
 "@uniswap/sdk@CryptoManiacsZone/uniswap-sdk.git#v2":
-  version "3.0.2"
-  resolved "https://codeload.github.com/CryptoManiacsZone/uniswap-sdk/tar.gz/0e86043aad02333c6bfa77457e7d7b761fdb8e1d"
+  version "3.0.4"
+  resolved "https://codeload.github.com/CryptoManiacsZone/uniswap-sdk/tar.gz/1c4cf5322504ac51fb0cd6d5a342456465f3f3c2"
   dependencies:
     "@ethersproject/address" "^5.0.1"
     "@ethersproject/contracts" "^5.0.1"
@@ -12307,6 +12307,11 @@ react-app-polyfill@^1.0.6:
     raf "^3.4.1"
     regenerator-runtime "^0.13.3"
     whatwg-fetch "^3.0.0"
+
+react-async-hook@^3.6.1:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/react-async-hook/-/react-async-hook-3.6.1.tgz#aed3e492d87319392865c83ed7cef3609e2a7fef"
+  integrity sha512-YWBB2feVQF79t5u2raMPHlZ8975Jds+guCvkWVC4kRLDlSCouLsYpQm4DGSqPeHvoHYVVcDfqNayLZAXQmnxnw==
 
 react-clientside-effect@^1.2.2:
   version "1.2.2"

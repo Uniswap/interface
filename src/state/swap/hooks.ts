@@ -1,7 +1,6 @@
-import useENS from '../../hooks/useENS'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
-import { Token, TokenAmount, ETHER, JSBI, Trade, ZERO_ADDRESS } from '@uniswap/sdk'
+import { Token, TokenAmount, JSBI, Trade, ZERO_ADDRESS } from '@uniswap/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,7 +12,7 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import { Field, receiveOutput, replaceSwapState, selectCurrency, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
@@ -24,9 +23,9 @@ export function useSwapState(): AppState['swap'] {
 
 export type SwapActionHandlers = {
   onCurrencySelection: (field: Field, currency: Token) => void
-  onSwitchTokens: () => void
-  onUserInput: (field: Field, typedValue: string) => void
-  onChangeRecipient: (recipient: string | null) => void
+  onSwitchTokens: (outputValue: string) => void
+  onUserInput: (field: Field, typedValue: string) => void,
+  onOutputValue: (outputValue: string) => void
 }
 
 export function useSwapActionHandlers(): SwapActionHandlers {
@@ -43,7 +42,8 @@ export function useSwapActionHandlers(): SwapActionHandlers {
     [dispatch]
   )
 
-  const onSwitchTokens = useCallback(() => {
+  const onSwitchTokens = useCallback((outputValue: string) => {
+    onOutputValue(outputValue)
     dispatch(switchCurrencies())
   }, [dispatch])
 
@@ -54,9 +54,9 @@ export function useSwapActionHandlers(): SwapActionHandlers {
     [dispatch]
   )
 
-  const onChangeRecipient = useCallback(
-    (recipient: string | null) => {
-      dispatch(setRecipient({ recipient }))
+  const onOutputValue = useCallback(
+    (outputValue: string) => {
+      dispatch(receiveOutput({ outputValue }))
     },
     [dispatch]
   )
@@ -65,7 +65,7 @@ export function useSwapActionHandlers(): SwapActionHandlers {
     onSwitchTokens,
     onCurrencySelection,
     onUserInput,
-    onChangeRecipient
+    onOutputValue
   }
 }
 
@@ -106,14 +106,12 @@ export function useDerivedSwapInfo(): {
     typedValue,
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
-    recipient
   } = useSwapState()
 
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
 
-  const recipientLookup = useENS(recipient ?? undefined)
-  const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
+  const to: string | null | undefined = account
 
   const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
     inputCurrency ?? undefined,
@@ -212,16 +210,16 @@ function parseIndependentFieldURLParameter(urlParam: any): Field {
   return typeof urlParam === 'string' && urlParam.toLowerCase() === 'output' ? Field.OUTPUT : Field.INPUT
 }
 
-const ENS_NAME_REGEX = /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?$/
-const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
-function validatedRecipient(recipient: any): string | null {
-  if (typeof recipient !== 'string') return null
-  const address = isAddress(recipient)
-  if (address) return address
-  if (ENS_NAME_REGEX.test(recipient)) return recipient
-  if (ADDRESS_REGEX.test(recipient)) return recipient
-  return null
-}
+// const ENS_NAME_REGEX = /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?$/
+// const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
+// function validatedRecipient(recipient: any): string | null {
+//   if (typeof recipient !== 'string') return null
+//   const address = isAddress(recipient)
+//   if (address) return address
+//   if (ENS_NAME_REGEX.test(recipient)) return recipient
+//   if (ADDRESS_REGEX.test(recipient)) return recipient
+//   return null
+// }
 
 export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency)
@@ -234,7 +232,7 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
     }
   }
 
-  const recipient = validatedRecipient(parsedQs.recipient)
+  const parsedAmount = parseTokenAmountURLParameter(parsedQs.exactAmount)
 
   return {
     [Field.INPUT]: {
@@ -243,9 +241,8 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
     [Field.OUTPUT]: {
       currencyId: outputCurrency
     },
-    typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
-    independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
-    recipient
+    typedValue: parsedAmount,
+    independentField: parseIndependentFieldURLParameter(parsedQs.exactField)
   }
 }
 
@@ -267,8 +264,7 @@ export function useDefaultsFromURLSearch() {
         typedValue: parsed.typedValue,
         field: parsed.independentField,
         inputCurrencyId: parsed[Field.INPUT].currencyId,
-        outputCurrencyId: parsed[Field.OUTPUT].currencyId,
-        recipient: parsed.recipient
+        outputCurrencyId: parsed[Field.OUTPUT].currencyId
       })
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
