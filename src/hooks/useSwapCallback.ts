@@ -1,6 +1,6 @@
-import { BigNumber } from '@ethersproject/bignumber'
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { JSBI, Trade } from '@uniswap/sdk'
+import { JSBI, TokenAmount, Trade } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
@@ -22,6 +22,7 @@ import {
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
+  fromAmount: TokenAmount | undefined,
   trade: Trade | undefined, // trade to execute, required
   distribution: BigNumber[] | undefined,
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE // in bips
@@ -37,7 +38,7 @@ export function useSwapCallback(
   const v1Exchange = useV1ExchangeContract(useV1TradeExchangeAddress(trade), true)
 
   return useMemo(() => {
-    if (!trade || !recipient || !library || !account || !tradeVersion || !chainId || !distribution) return null
+    if (!trade || !recipient || !library || !account || !tradeVersion || !chainId || !distribution || !fromAmount) return null
 
     return async function onSwap() {
       const contract: Contract | null = isOneSplit
@@ -52,8 +53,8 @@ export function useSwapCallback(
         args.push(...[
           trade.inputAmount.token.address,
           trade.outputAmount.token.address,
-          trade.inputAmount.raw.toString(),
-          trade.inputAmount.multiply(String(10000 - allowedSlippage)).divide(String(10000)).toFixed(0),
+          fromAmount?.raw.toString(),
+          fromAmount.multiply(String(10000 - allowedSlippage)).divide(String(10000)).toFixed(0),
           distribution.map(x => x.toString()),
           JSBI.add(FLAG_DISABLE_ALL_WRAP_SOURCES, JSBI.add(FLAG_DISABLE_ALL_SPLIT_SOURCES, FLAG_DISABLE_MOONISWAP_ALL)).toString()
         ])
@@ -69,7 +70,7 @@ export function useSwapCallback(
 
       let value: BigNumber | undefined
       if (trade.inputAmount.token.symbol === 'ETH') {
-          value = BigNumber.from(trade.inputAmount.raw.toString())
+          value = BigNumber.from(fromAmount.raw.toString())
       }
 
       const safeGasEstimate = contract.estimateGas['swap'](...args, value && !value.isZero() ? { value } : {})

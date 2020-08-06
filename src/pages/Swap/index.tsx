@@ -69,6 +69,8 @@ export default function Swap() {
   const { v1Trade, v2Trade, mooniswapTrade, currencyBalances, parsedAmount, currencies, error } = useDerivedSwapInfo()
 
   const distribution = mooniswapTrade?.[1]
+  console.log(parsedAmount?.raw.toString())
+  console.log((mooniswapTrade?.[0]?.inputAmount?.raw.toString()))
   console.log(mooniswapTrade?.[0]?.outputAmount)
   console.log(distribution)
 
@@ -100,7 +102,8 @@ export default function Swap() {
         [Field.OUTPUT]: parsedAmount
       }
     : {
-        [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
+        [Field.INPUT]: parsedAmount,
+        // [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
         [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
       }
 
@@ -153,7 +156,7 @@ export default function Swap() {
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
   // the callback to execute the swap
-  const swapCallback = useSwapCallback(trade, distribution, allowedSlippage)
+  const swapCallback = useSwapCallback(parsedAmount, trade, distribution, allowedSlippage)
 
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
 
