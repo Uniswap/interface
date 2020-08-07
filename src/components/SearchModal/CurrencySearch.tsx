@@ -1,5 +1,5 @@
-import { Currency, Token } from '@uniswap/sdk'
-import React, { KeyboardEvent, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { Currency, ETHER, Token } from '@uniswap/sdk'
+import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
@@ -106,12 +106,16 @@ export function CurrencySearch({
 
   const handleEnter = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter' && filteredSortedTokens.length > 0) {
-        if (
-          filteredSortedTokens[0].symbol?.toLowerCase() === searchQuery.trim().toLowerCase() ||
-          filteredSortedTokens.length === 1
-        ) {
-          handleCurrencySelect(filteredSortedTokens[0])
+      if (e.key === 'Enter') {
+        if (searchQuery.toLowerCase().trim() === 'eth') {
+          handleCurrencySelect(ETHER)
+        } else if (filteredSortedTokens.length > 0) {
+          if (
+            filteredSortedTokens[0].symbol?.toLowerCase() === searchQuery.trim().toLowerCase() ||
+            filteredSortedTokens.length === 1
+          ) {
+            handleCurrencySelect(filteredSortedTokens[0])
+          }
         }
       }
     },
@@ -135,7 +139,7 @@ export function CurrencySearch({
           id="token-search-input"
           placeholder={t('tokenSearchPlaceholder')}
           value={searchQuery}
-          ref={inputRef}
+          ref={inputRef as RefObject<HTMLInputElement>}
           onChange={handleInput}
           onKeyDown={handleEnter}
         />
