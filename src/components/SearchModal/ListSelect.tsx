@@ -1,24 +1,21 @@
-import React, { useCallback, useContext, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
+import { ArrowLeft } from 'react-feather'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
 import { DEFAULT_TOKEN_LIST_URL } from '../../constants'
 import { AppDispatch, AppState } from '../../state'
 import { addList, removeList, selectList } from '../../state/lists/actions'
 import { useSelectedListUrl } from '../../state/lists/hooks'
-import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
+import { CloseIcon, TYPE } from '../../theme'
 import { getTokenList } from '../../utils/getTokenList'
 import listVersionLabel from '../../utils/listVersionLabel'
 import uriToHttp from '../../utils/uriToHttp'
 import { ButtonPrimary, ButtonSecondary } from '../Button'
-import Card from '../Card'
 import Column from '../Column'
-import QuestionHelper from '../QuestionHelper'
-import Row, { AutoRow, RowBetween } from '../Row'
+import Row, { RowBetween } from '../Row'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 
 export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBack: () => void }) {
-  const theme = useContext(ThemeContext)
   const [listUrlInput, setListUrlInput] = useState<string>('')
   const [{ adding, addError }, setAddState] = useState<{ adding: boolean; addError: string | null }>({
     adding: false,
@@ -64,12 +61,17 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
     <Column style={{ width: '100%', flex: '1 1' }}>
       <PaddedColumn gap="14px">
         <RowBetween>
+          <div>
+            <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} />
+          </div>
           <Text fontWeight={500} fontSize={16}>
-            Select a list
-            <QuestionHelper text="Select a token list to change the list of tokens that you use in the Uniswap Interface." />
+            Manage Lists
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
+
+        <Separator />
+
         <Row>
           <SearchInput
             type="text"
@@ -128,16 +130,6 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
           )
         })}
       </div>
-
-      <Separator />
-
-      <Card>
-        <AutoRow justify={'space-between'}>
-          <LinkStyledButton style={{ fontWeight: 500, color: theme.text2, fontSize: 16 }} onClick={onBack}>
-            Back
-          </LinkStyledButton>
-        </AutoRow>
-      </Card>
     </Column>
   )
 }
