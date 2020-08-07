@@ -169,6 +169,26 @@ export const TYPE = {
 }
 
 export const FixedGlobalStyle = createGlobalStyle`
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet" rel="stylesheet');
+
+.mainHeader {
+  font-family: 'Cormorant SC', serif;
+  text-transform: uppercase;
+}
+
+h1.mainHeader {
+  margin: 5px;
+  font-weight: bold;
+}
+h4.mainHeader {
+  margin-top: 10px;
+  margin-bottom: 15px;
+  font-weight: 400;
+  font-family: 'Open Sans';
+}
+
 html, input, textarea, button {
   font-family: 'Inter', sans-serif;
   letter-spacing: -0.018em;
