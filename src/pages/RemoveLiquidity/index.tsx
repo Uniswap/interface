@@ -29,6 +29,7 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
 import { currencyId } from '../../utils/currencyId'
+import useDebouncedChangeHandler from '../../utils/useDebouncedChangeHandler'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
 import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
@@ -458,6 +459,11 @@ export default function RemoveLiquidity({
     setTxHash('')
   }, [onUserInput, txHash])
 
+  const [innerLiquidityPercentage, setInnerLiquidityPercentage] = useDebouncedChangeHandler(
+    Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0)),
+    liquidityPercentChangeCallback
+  )
+
   return (
     <>
       <AppBody>
@@ -499,10 +505,7 @@ export default function RemoveLiquidity({
                 </Row>
                 {!showDetailed && (
                   <>
-                    <Slider
-                      value={Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0))}
-                      onChange={liquidityPercentChangeCallback}
-                    />
+                    <Slider value={innerLiquidityPercentage} onChange={setInnerLiquidityPercentage} />
                     <RowBetween>
                       <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '25')} width="20%">
                         25%

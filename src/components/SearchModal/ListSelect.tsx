@@ -20,23 +20,27 @@ import { PaddedColumn, SearchInput, Separator } from './styleds'
 export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBack: () => void }) {
   const theme = useContext(ThemeContext)
   const [listUrlInput, setListUrlInput] = useState<string>('')
-  const [addError, setAddError] = useState<string | null>(null)
+  const [{ adding, addError }, setAddState] = useState<{ adding: boolean; addError: string | null }>({
+    adding: false,
+    addError: null
+  })
   const handleInput = useCallback(e => {
     setListUrlInput(e.target.value)
   }, [])
   const dispatch = useDispatch<AppDispatch>()
 
   const handleAddList = useCallback(() => {
-    setAddError(null)
+    setAddState({ adding: true, addError: null })
     getTokenList(listUrlInput)
       .then(() => {
         dispatch(addList(listUrlInput))
       })
       .then(() => {
+        setAddState({ adding: false, addError: null })
         setListUrlInput('')
       })
       .catch(error => {
-        setAddError(error.message)
+        setAddState({ adding: false, addError: error.message })
       })
   }, [dispatch, listUrlInput])
 
@@ -75,11 +79,19 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
             onChange={handleInput}
             onKeyDown={handleEnterKey}
           />
-          <ButtonPrimary style={{ maxWidth: '4rem', marginLeft: '1rem' }} onClick={handleAddList} disabled={!validUrl}>
+          <ButtonPrimary
+            style={{ maxWidth: '4rem', marginLeft: '1rem' }}
+            onClick={handleAddList}
+            disabled={adding || !validUrl}
+          >
             Add
           </ButtonPrimary>
         </Row>
-        {addError ? <TYPE.error error>{addError}</TYPE.error> : null}
+        {addError ? (
+          <TYPE.error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>
+            {addError}
+          </TYPE.error>
+        ) : null}
       </PaddedColumn>
 
       <Separator />

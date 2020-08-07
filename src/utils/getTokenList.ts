@@ -11,13 +11,19 @@ const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
  */
 export async function getTokenList(listUrl: string): Promise<TokenList> {
   const urls = uriToHttp(listUrl)
-  for (const url of urls) {
+  for (let i = 0; i < urls.length; i++) {
+    const url = urls[i]
+    const isLast = i === urls.length - 1
     let response
     try {
       response = await fetch(url)
-      if (!response.ok) continue
     } catch (error) {
-      console.error(`failed to fetch list ${listUrl} at uri ${url}`)
+      if (isLast) throw new Error(`Failed to download list ${listUrl}`)
+      continue
+    }
+
+    if (!response.ok) {
+      if (isLast) throw new Error(`Failed to download list ${listUrl}`)
       continue
     }
 

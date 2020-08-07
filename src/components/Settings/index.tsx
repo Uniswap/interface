@@ -8,7 +8,7 @@ import {
   useUserDeadline,
   useDarkModeManager
 } from '../../state/user/hooks'
-import SlippageTabs from '../SlippageTabs'
+import TransactionSettings from '../TransactionSettings'
 import { RowFixed, RowBetween } from '../Row'
 import { TYPE } from '../../theme'
 import QuestionHelper from '../QuestionHelper'
@@ -212,7 +212,7 @@ export default function SettingsTab() {
             <Text fontWeight={600} fontSize={14}>
               Transaction Settings
             </Text>
-            <SlippageTabs
+            <TransactionSettings
               rawSlippage={userSlippageTolerance}
               setRawSlippage={setUserslippageTolerance}
               deadline={deadline}
