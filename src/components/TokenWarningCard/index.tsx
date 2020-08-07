@@ -10,6 +10,7 @@ import { ExternalLink, TYPE } from '../../theme'
 import { getEtherscanLink, isTokenOnList } from '../../utils'
 import PropsOfExcluding from '../../utils/props-of-excluding'
 import CurrencyLogo from '../CurrencyLogo'
+import Modal from '../Modal'
 import { AutoRow, RowBetween } from '../Row'
 import { AutoColumn } from '../Column'
 import { AlertTriangle } from 'react-feather'
@@ -17,7 +18,7 @@ import { ButtonError } from '../Button'
 import { useTokenWarningDismissal } from '../../state/user/hooks'
 
 const Wrapper = styled.div<{ error: boolean }>`
-  background: ${({ theme }) => transparentize(0.6, theme.white)};
+  background: ${({ theme }) => transparentize(0.6, theme.bg3)};
   padding: 0.75rem;
   border-radius: 20px;
 `
@@ -30,7 +31,7 @@ const WarningContainer = styled.div`
   border: 1px solid #f3841e;
   box-sizing: border-box;
   border-radius: 20px;
-  margin-bottom: 2rem;
+  overflow: auto;
 `
 
 const StyledWarningIcon = styled(AlertTriangle)`
@@ -87,53 +88,56 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
   )
 }
 
-export function TokenWarningCards({ currencies }: { currencies: { [field in Field]?: Currency } }) {
+export function TokenWarningModal({ currencies }: { currencies: { [field in Field]?: Currency } }) {
   const { chainId } = useActiveWeb3React()
   const [dismissedToken0, dismissToken0] = useTokenWarningDismissal(chainId, currencies[Field.INPUT])
   const [dismissedToken1, dismissToken1] = useTokenWarningDismissal(chainId, currencies[Field.OUTPUT])
-
+  const showWarning =
+    (!dismissedToken0 && !!currencies[Field.INPUT]) || (!dismissedToken1 && !!currencies[Field.OUTPUT])
   return (
-    <WarningContainer className="token-warning-container">
-      <AutoColumn gap="lg">
-        <AutoRow gap="6px">
-          <StyledWarningIcon />
-          <TYPE.main color={'red2'}>Token imported</TYPE.main>
-        </AutoRow>
-        <TYPE.body color={'red2'}>
-          Anyone can create and name any ERC20 token on Ethereum, including creating fake versions of existing tokens
-          and tokens that claim to represent projects that do not have a token.
-        </TYPE.body>
-        <TYPE.body color={'red2'}>
-          Similar to Etherscan, this site can load arbitrary tokens via token addresses. Please do your own research
-          before interacting with any ERC20 token.
-        </TYPE.body>
-        {Object.keys(currencies).map(field => {
-          const dismissed = field === Field.INPUT ? dismissedToken0 : dismissedToken1
-          return currencies[field] instanceof Token && !dismissed ? (
-            <TokenWarningCard key={field} token={currencies[field]} />
-          ) : null
-        })}
-        <RowBetween>
-          <div />
-          <ButtonError
-            error={true}
-            width={'140px'}
-            padding="0.5rem 1rem"
-            style={{
-              borderRadius: '10px'
-            }}
-            onClick={() => {
-              dismissToken0 && dismissToken0()
-              dismissToken1 && dismissToken1()
-            }}
-          >
-            <TYPE.body color="white" className="token-dismiss-button">
-              I understand
-            </TYPE.body>
-          </ButtonError>
-          <div />
-        </RowBetween>
-      </AutoColumn>
-    </WarningContainer>
+    <Modal isOpen={showWarning} onDismiss={() => null} maxHeight={90}>
+      <WarningContainer className="token-warning-container">
+        <AutoColumn gap="lg">
+          <AutoRow gap="6px">
+            <StyledWarningIcon />
+            <TYPE.main color={'red2'}>Token imported</TYPE.main>
+          </AutoRow>
+          <TYPE.body color={'red2'}>
+            Anyone can create and name any ERC20 token on Ethereum, including creating fake versions of existing tokens
+            and tokens that claim to represent projects that do not have a token.
+          </TYPE.body>
+          <TYPE.body color={'red2'}>
+            The Uniswap Interface can load arbitrary tokens by token addresses. Please take extra caution and do your
+            research when interacting with arbitrary ERC20 tokens.
+          </TYPE.body>
+          {Object.keys(currencies).map(field => {
+            const dismissed = field === Field.INPUT ? dismissedToken0 : dismissedToken1
+            return currencies[field] instanceof Token && !dismissed ? (
+              <TokenWarningCard key={field} token={currencies[field]} />
+            ) : null
+          })}
+          <RowBetween>
+            <div />
+            <ButtonError
+              error={true}
+              width={'140px'}
+              padding="0.5rem 1rem"
+              style={{
+                borderRadius: '10px'
+              }}
+              onClick={() => {
+                dismissToken0 && dismissToken0()
+                dismissToken1 && dismissToken1()
+              }}
+            >
+              <TYPE.body color="white" className="token-dismiss-button">
+                I understand
+              </TYPE.body>
+            </ButtonError>
+            <div />
+          </RowBetween>
+        </AutoColumn>
+      </WarningContainer>
+    </Modal>
   )
 }

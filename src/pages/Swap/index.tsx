@@ -17,7 +17,7 @@ import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
-import { TokenWarningCards } from '../../components/TokenWarningCard'
+import { TokenWarningModal } from '../../components/TokenWarningCard'
 
 import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
@@ -35,12 +35,7 @@ import {
   useSwapActionHandlers,
   useSwapState
 } from '../../state/swap/hooks'
-import {
-  useExpertModeManager,
-  useTokenWarningDismissal,
-  useUserDeadline,
-  useUserSlippageTolerance
-} from '../../state/user/hooks'
+import { useExpertModeManager, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
 import { CursorPointer, LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
@@ -50,7 +45,7 @@ import { ClickableText } from '../Pool/styleds'
 export default function Swap() {
   useDefaultsFromURLSearch()
 
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
@@ -230,11 +225,6 @@ export default function Swap() {
       (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
     !(priceImpactSeverity > 3 && !isExpertMode)
 
-  const [dismissedToken0] = useTokenWarningDismissal(chainId, currencies[Field.INPUT])
-  const [dismissedToken1] = useTokenWarningDismissal(chainId, currencies[Field.OUTPUT])
-  const showWarning =
-    (!dismissedToken0 && !!currencies[Field.INPUT]) || (!dismissedToken1 && !!currencies[Field.OUTPUT])
-
   const handleConfirmDismiss = useCallback(() => {
     setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
     // if there was a tx hash, we want to clear the input
@@ -249,8 +239,8 @@ export default function Swap() {
 
   return (
     <>
-      {showWarning && <TokenWarningCards currencies={currencies} />}
-      <AppBody disabled={showWarning}>
+      <TokenWarningModal currencies={currencies} />
+      <AppBody>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
           <ConfirmSwapModal
