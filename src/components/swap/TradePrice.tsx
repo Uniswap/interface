@@ -27,8 +27,8 @@ export default function TradePrice({
 
   const show = Boolean(inputCurrency && outputCurrency)
   const label = showInverted
-    ? `${outputCurrency?.symbol} per ${inputCurrency?.symbol}`
-    : `${inputCurrency?.symbol} per ${outputCurrency?.symbol}`
+    ? `${outputCurrency?.symbol} / ${inputCurrency?.symbol}`
+    : `${inputCurrency?.symbol} / ${outputCurrency?.symbol}`
 
   return (
     <Text
