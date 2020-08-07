@@ -302,7 +302,7 @@ export default function Swap() {
                   </ArrowWrapper>
                   {recipient === null && !showWrap ? (
                     <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
-                      + {t("Add a send (optional)")}
+                      + {t('Add a send (optional)')}
                     </LinkStyledButton>
                   ) : null}
                 </AutoRow>
@@ -388,7 +388,7 @@ export default function Swap() {
                   ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
                     t('Approved')
                   ) : (
-                     `${t('Approve')} ${currencies[Field.INPUT]?.symbol}`
+                    `${t('Approve')} ${currencies[Field.INPUT]?.symbol}`
                   )}
                 </ButtonPrimary>
                 <ButtonError

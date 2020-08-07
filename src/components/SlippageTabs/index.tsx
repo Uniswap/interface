@@ -157,7 +157,9 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
           <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
             {t('Slippage tolerance')}
           </TYPE.black>
-          <QuestionHelper text={t('Your transaction will revert if the price changes unfavorably by more than this percentage')} />
+          <QuestionHelper
+            text={t('Your transaction will revert if the price changes unfavorably by more than this percentage')}
+          />
         </RowFixed>
         <RowBetween>
           <Option

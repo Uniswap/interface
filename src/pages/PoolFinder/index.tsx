@@ -131,7 +131,7 @@ export default function PoolFinder() {
             style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
           >
             <Text textAlign="center" fontWeight={500}>
-              {t('Pool Found!')} 
+              {t('Pool Found!')}
             </Text>
           </ColumnCenter>
         )}
