@@ -59,14 +59,14 @@ export function colors(darkMode: boolean): Colors {
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#ff007a',
-    primary2: darkMode ? '#3680E7' : '#FF8CC3',
-    primary3: darkMode ? '#4D8FEA' : '#FF99C9',
-    primary4: darkMode ? '#376bad70' : '#F6DDE8',
-    primary5: darkMode ? '#153d6f70' : '#FDEAF1',
+    primary1: darkMode ? '#2172E5' : '#2172E5',
+    primary2: darkMode ? '#3680E7' : '#3680E7',
+    primary3: darkMode ? '#4D8FEA' : '#4D8FEA',
+    primary4: darkMode ? '#376bad70' : '#376bad70',
+    primary5: darkMode ? '#153d6f70' : '#e7e7e7',
 
     // color text
-    primaryText1: darkMode ? '#6da8ff' : '#ff007a',
+    primaryText1: darkMode ? '#6da8ff' : '#474747',
 
     // secondary colors
     secondary1: darkMode ? '#2172E5' : '#ff007a',
@@ -169,6 +169,26 @@ export const TYPE = {
 }
 
 export const FixedGlobalStyle = createGlobalStyle`
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet" rel="stylesheet');
+
+.mainHeader {
+  font-family: 'Cormorant SC', serif;
+  text-transform: uppercase;
+}
+
+h1.mainHeader {
+  margin: 5px;
+  font-weight: bold;
+}
+h4.mainHeader {
+  margin-top: 10px;
+  margin-bottom: 15px;
+  font-weight: 400;
+  font-family: 'Open Sans';
+}
+
 html, input, textarea, button {
   font-family: 'Inter', sans-serif;
   letter-spacing: -0.018em;

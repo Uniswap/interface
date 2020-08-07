@@ -1,6 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
 
+
+export const HeadersPlusBodyWrapper = styled.div<{ disabled?: boolean }>`
+  position: relative;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  
+`
 export const BodyWrapper = styled.div<{ disabled?: boolean }>`
   position: relative;
   max-width: 420px;
@@ -18,5 +26,9 @@ export const BodyWrapper = styled.div<{ disabled?: boolean }>`
  * The styled container element that wraps the content of most pages and the tabs.
  */
 export default function AppBody({ children, disabled }: { children: React.ReactNode; disabled?: boolean }) {
-  return <BodyWrapper disabled={disabled}>{children}</BodyWrapper>
+  return <HeadersPlusBodyWrapper>
+    <h1 className="mainHeader">Mooniswap</h1>
+    <h4 className="mainHeader">boosted uniswap frok from 1inch team</h4>
+    <BodyWrapper disabled={disabled}>{children}</BodyWrapper>
+  </HeadersPlusBodyWrapper>
 }
