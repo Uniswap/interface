@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
-import { Token, TokenAmount, WETH } from '@uniswap/sdk'
+import { Token, TokenAmount } from '@uniswap/sdk'
 
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
@@ -28,7 +28,7 @@ function V1PositionCard({ token, V1LiquidityBalance }: PositionCardProps) {
           <RowFixed>
             <DoubleCurrencyLogo currency0={token} margin={true} size={20} />
             <Text fontWeight={500} fontSize={20} style={{ marginLeft: '' }}>
-              {`${token.equals(WETH[chainId]) ? 'WETH' : token.symbol}/ETH`}
+              {`${token.symbol}/ETH`}
             </Text>
             <Text
               fontSize={12}

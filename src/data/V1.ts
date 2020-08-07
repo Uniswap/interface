@@ -1,8 +1,6 @@
 import { AddressZero } from '@ethersproject/constants'
 import {
   BigintIsh,
-  Currency,
-  CurrencyAmount,
   currencyEquals,
   ETHER,
   JSBI,
@@ -12,16 +10,24 @@ import {
   Token,
   TokenAmount,
   Trade,
-  TradeType,
-  WETH
+  TradeType
 } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
 import { useAllTokens } from '../hooks/Tokens'
-import { useV1FactoryContract } from '../hooks/useContract'
+import { useOneSplit, useV1FactoryContract } from '../hooks/useContract'
 import { Version } from '../hooks/useToggledVersion'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from '../state/multicall/hooks'
-import { useETHBalances, useTokenBalance, useTokenBalances } from '../state/wallet/hooks'
+import { useTokenBalances } from '../state/wallet/hooks'
+import {
+  bn1e18,
+  ETH_ADDRESS,
+  FLAG_DISABLE_ALL_SPLIT_SOURCES, FLAG_DISABLE_ALL_WRAP_SOURCES,
+  FLAG_DISABLE_MOONISWAP, FLAG_DISABLE_MOONISWAP_ALL,
+  ZERO_ADDRESS
+} from '../constants/one-split'
+import { tryParseAmount } from '../state/swap/hooks'
+import { PairState, usePair } from '../data-mooniswap/Reserves'
 
 export function useV1ExchangeAddress(tokenAddress?: string): string | undefined {
   const contract = useV1FactoryContract()
@@ -32,22 +38,15 @@ export function useV1ExchangeAddress(tokenAddress?: string): string | undefined 
 
 export class MockV1Pair extends Pair {
   constructor(etherAmount: BigintIsh, tokenAmount: TokenAmount) {
-    super(tokenAmount, new TokenAmount(WETH[tokenAmount.token.chainId], etherAmount))
+    super(tokenAmount, new TokenAmount(ETHER, etherAmount), '0x0001')
   }
 }
 
-function useMockV1Pair(inputCurrency?: Currency): MockV1Pair | undefined {
-  const token = inputCurrency instanceof Token ? inputCurrency : undefined
-
-  const isWETH = Boolean(token && token.equals(WETH[token.chainId]))
-  const v1PairAddress = useV1ExchangeAddress(isWETH ? undefined : token?.address)
-  const tokenBalance = useTokenBalance(v1PairAddress, token)
-  const ETHBalance = useETHBalances([v1PairAddress])[v1PairAddress ?? '']
-
+function useMockV1Pair(inputCurrency?: Token): MockV1Pair | undefined {
   return useMemo(
     () =>
-      token && tokenBalance && ETHBalance && inputCurrency ? new MockV1Pair(ETHBalance.raw, tokenBalance) : undefined,
-    [ETHBalance, inputCurrency, token, tokenBalance]
+      undefined,
+    []
   )
 }
 
@@ -100,9 +99,9 @@ export function useUserHasLiquidityInAllTokens(): boolean | undefined {
  */
 export function useV1Trade(
   isExactIn?: boolean,
-  inputCurrency?: Currency,
-  outputCurrency?: Currency,
-  exactAmount?: CurrencyAmount
+  inputCurrency?: Token,
+  outputCurrency?: Token,
+  exactAmount?: TokenAmount
 ): Trade | undefined {
   // get the mock v1 pairs
   const inputPair = useMockV1Pair(inputCurrency)
@@ -152,8 +151,8 @@ export function useV1TradeExchangeAddress(trade: Trade | undefined): string | un
     return trade.inputAmount instanceof TokenAmount
       ? trade.inputAmount.token.address
       : trade.outputAmount instanceof TokenAmount
-      ? trade.outputAmount.token.address
-      : undefined
+        ? trade.outputAmount.token.address
+        : undefined
   }, [trade])
   return useV1ExchangeAddress(tokenAddress)
 }
@@ -171,8 +170,8 @@ export function isTradeBetter(
 
   if (
     tradeA.tradeType !== tradeB.tradeType ||
-    !currencyEquals(tradeA.inputAmount.currency, tradeB.inputAmount.currency) ||
-    !currencyEquals(tradeB.outputAmount.currency, tradeB.outputAmount.currency)
+    !currencyEquals(tradeA.inputAmount.token, tradeB.inputAmount.token) ||
+    !currencyEquals(tradeB.outputAmount.token, tradeB.outputAmount.token)
   ) {
     throw new Error('Trades are not comparable')
   }

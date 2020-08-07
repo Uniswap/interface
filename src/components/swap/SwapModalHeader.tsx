@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk'
+import { Token, TokenAmount } from '@uniswap/sdk'
 import React, { useContext } from 'react'
 import { ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
@@ -19,9 +19,9 @@ export default function SwapModalHeader({
   independentField,
   recipient
 }: {
-  currencies: { [field in Field]?: Currency }
+  currencies: { [field in Field]?: Token }
   formattedAmounts: { [field in Field]?: string }
-  slippageAdjustedAmounts: { [field in Field]?: CurrencyAmount }
+  slippageAdjustedAmounts: { [field in Field]?: TokenAmount }
   priceImpactSeverity: number
   independentField: Field
   recipient: string | null

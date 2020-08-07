@@ -1,11 +1,10 @@
-import { Currency, CurrencyAmount, JSBI, Pair, Percent, TokenAmount } from '@uniswap/sdk'
+import { Token, TokenAmount, JSBI, Pair, Percent } from '@uniswap/sdk'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { usePair } from '../../data/Reserves'
+import { usePair } from '../../data-mooniswap/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
-import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import { AppDispatch, AppState } from '../index'
 import { tryParseAmount } from '../swap/hooks'
 import { useTokenBalances } from '../wallet/hooks'
@@ -15,20 +14,22 @@ export function useBurnState(): AppState['burn'] {
   return useSelector<AppState, AppState['burn']>(state => state.burn)
 }
 
-export function useDerivedBurnInfo(
-  currencyA: Currency | undefined,
-  currencyB: Currency | undefined
-): {
+export type DerivedBurnInfo = {
   pair?: Pair | null
   parsedAmounts: {
     [Field.LIQUIDITY_PERCENT]: Percent
-    [Field.LIQUIDITY]?: TokenAmount
-    [Field.CURRENCY_A]?: CurrencyAmount
-    [Field.CURRENCY_B]?: CurrencyAmount
+      [Field.LIQUIDITY]?: TokenAmount
+      [Field.CURRENCY_A]?: TokenAmount
+      [Field.CURRENCY_B]?: TokenAmount
   }
   error?: string
-} {
-  const { account, chainId } = useActiveWeb3React()
+}
+
+export function useDerivedBurnInfo(
+  currencyA: Token | undefined,
+  currencyB: Token | undefined
+): DerivedBurnInfo {
+  const { account } = useActiveWeb3React()
 
   const { independentField, typedValue } = useBurnState()
 
@@ -39,7 +40,7 @@ export function useDerivedBurnInfo(
   const relevantTokenBalances = useTokenBalances(account ?? undefined, [pair?.liquidityToken])
   const userLiquidity: undefined | TokenAmount = relevantTokenBalances?.[pair?.liquidityToken?.address ?? '']
 
-  const [tokenA, tokenB] = [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
+  const [tokenA, tokenB] = [currencyA, currencyB]
   const tokens = {
     [Field.CURRENCY_A]: tokenA,
     [Field.CURRENCY_B]: tokenB,

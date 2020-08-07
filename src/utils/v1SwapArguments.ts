@@ -1,9 +1,9 @@
 import { MaxUint256 } from '@ethersproject/constants'
-import { CurrencyAmount, ETHER, SwapParameters, Token, Trade, TradeOptions, TradeType } from '@uniswap/sdk'
+import { TokenAmount, ETHER, Token, Trade, TradeType } from '@uniswap/sdk'
 import { getTradeVersion } from '../data/V1'
 import { Version } from '../hooks/useToggledVersion'
 
-function toHex(currencyAmount: CurrencyAmount): string {
+function toHex(currencyAmount: TokenAmount): string {
   return `0x${currencyAmount.raw.toString(16)}`
 }
 
@@ -16,7 +16,7 @@ function deadlineFromNow(ttl: number): string {
  * @param trade trade to get v1 arguments for swapping
  * @param options options for swapping
  */
-export default function v1SwapArguments(trade: Trade, options: Omit<TradeOptions, 'feeOnTransfer'>): SwapParameters {
+export default function v1SwapArguments(trade: Trade, options: Omit<any, 'feeOnTransfer'>): any {
   if (getTradeVersion(trade) !== Version.v1) {
     throw new Error('invalid trade version')
   }
@@ -24,8 +24,8 @@ export default function v1SwapArguments(trade: Trade, options: Omit<TradeOptions
     throw new Error('too many pairs')
   }
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
-  const inputETH = trade.inputAmount.currency === ETHER
-  const outputETH = trade.outputAmount.currency === ETHER
+  const inputETH = trade.inputAmount.token === ETHER
+  const outputETH = trade.outputAmount.token === ETHER
   if (inputETH && outputETH) throw new Error('ETHER to ETHER')
   const minimumAmountOut = toHex(trade.minimumAmountOut(options.allowedSlippage))
   const maximumAmountIn = toHex(trade.maximumAmountIn(options.allowedSlippage))
@@ -44,7 +44,7 @@ export default function v1SwapArguments(trade: Trade, options: Omit<TradeOptions
         value: '0x0'
       }
     } else {
-      const outputToken = trade.outputAmount.currency
+      const outputToken = trade.outputAmount.token
       // should never happen, needed for type check
       if (!(outputToken instanceof Token)) {
         throw new Error('token to token')
@@ -69,7 +69,7 @@ export default function v1SwapArguments(trade: Trade, options: Omit<TradeOptions
         value: '0x0'
       }
     } else {
-      const output = trade.outputAmount.currency
+      const output = trade.outputAmount.token
       if (!(output instanceof Token)) {
         throw new Error('invalid output amount currency')
       }

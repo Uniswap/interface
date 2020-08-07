@@ -1,4 +1,4 @@
-import { Token, TokenAmount, WETH } from '@uniswap/sdk'
+import { ETHER, Token, TokenAmount } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokenBalances } from '../../state/wallet/hooks'
@@ -43,9 +43,8 @@ function getTokenComparator(
 
 export function useTokenComparator(inverted: boolean): (tokenA: Token, tokenB: Token) => number {
   const { chainId } = useActiveWeb3React()
-  const weth = WETH[chainId]
   const balances = useAllTokenBalances()
-  const comparator = useMemo(() => getTokenComparator(weth, balances ?? {}), [balances, weth])
+  const comparator = useMemo(() => getTokenComparator(ETHER, balances ?? {}), [balances, ETHER])
   return useMemo(() => {
     if (inverted) {
       return (tokenA: Token, tokenB: Token) => comparator(tokenA, tokenB) * -1

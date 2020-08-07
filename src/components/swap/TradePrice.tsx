@@ -1,5 +1,5 @@
 import React from 'react'
-import { Currency, Price } from '@uniswap/sdk'
+import { Token, Price } from '@uniswap/sdk'
 import { useContext } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
@@ -8,8 +8,8 @@ import { StyledBalanceMaxMini } from './styleds'
 
 interface TradePriceProps {
   price?: Price
-  inputCurrency?: Currency
-  outputCurrency?: Currency
+  inputCurrency?: Token
+  outputCurrency?: Token
   showInverted: boolean
   setShowInverted: (showInverted: boolean) => void
 }

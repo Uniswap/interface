@@ -1,4 +1,4 @@
-import { Currency, Token } from '@uniswap/sdk'
+import { Token } from '@uniswap/sdk'
 import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
@@ -87,7 +87,7 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
   )
 }
 
-export function TokenWarningCards({ currencies }: { currencies: { [field in Field]?: Currency } }) {
+export function TokenWarningCards({ currencies }: { currencies: { [field in Field]?: Token } }) {
   const { chainId } = useActiveWeb3React()
   const [dismissedToken0, dismissToken0] = useTokenWarningDismissal(chainId, currencies[Field.INPUT])
   const [dismissedToken1, dismissToken1] = useTokenWarningDismissal(chainId, currencies[Field.OUTPUT])

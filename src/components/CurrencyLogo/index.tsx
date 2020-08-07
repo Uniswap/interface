@@ -1,4 +1,4 @@
-import { Currency, ETHER, Token } from '@uniswap/sdk'
+import { Token, ETHER } from '@uniswap/sdk'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
@@ -40,7 +40,7 @@ export default function CurrencyLogo({
   size = '24px',
   ...rest
 }: {
-  currency?: Currency
+  currency?: Token
   size?: string
   style?: React.CSSProperties
 }) {

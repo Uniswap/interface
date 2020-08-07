@@ -1,16 +1,20 @@
 import { Contract } from '@ethersproject/contracts'
-import { ChainId, WETH } from '@uniswap/sdk'
+import { ChainId } from '@uniswap/sdk'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
+import MooniswapABI from '../constants/v1-mooniswap/v1_mooniswap_exchange.json'
+import MooniswapFactoryABI from '../constants/v1-mooniswap/v1_mooniswap_factory.json'
+import MooniswapHelperABI from '../constants/v1-mooniswap/MooniswapHelper.json'
 import { useMemo } from 'react'
 import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
 import UNISOCKS_ABI from '../constants/abis/unisocks.json'
 import ERC20_ABI from '../constants/abis/erc20.json'
-import WETH_ABI from '../constants/abis/weth.json'
 import { MIGRATOR_ABI, MIGRATOR_ADDRESS } from '../constants/abis/migrator'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { V1_EXCHANGE_ABI, V1_FACTORY_ABI, V1_FACTORY_ADDRESSES } from '../constants/v1'
+import { V1_MOONISWAP_FACTORY_ADDRESSES, V1_MOONISWAP_HELPER_ADDRESSES } from '../constants/v1-mooniswap'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
+import { ONE_SPLIT_ABI, ONE_SPLIT_ADDRESSES } from '../constants/one-split'
 
 // returns null on errors
 function useContract(address?: string, ABI?: any, withSignerIfPossible = true): Contract | null {
@@ -44,11 +48,6 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
   return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible)
 }
 
-export function useWETHContract(withSignerIfPossible?: boolean): Contract | null {
-  const { chainId } = useActiveWeb3React()
-  return useContract(chainId ? WETH[chainId].address : undefined, WETH_ABI, withSignerIfPossible)
-}
-
 export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(tokenAddress, ERC20_BYTES32_ABI, withSignerIfPossible)
 }
@@ -69,4 +68,25 @@ export function useSocksController(): Contract | null {
     UNISOCKS_ABI,
     false
   )
+}
+
+////// MOONISWAP ////////
+
+export function useMooniswapV1FactoryContract(): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId && V1_MOONISWAP_FACTORY_ADDRESSES[chainId], MooniswapFactoryABI, false)
+}
+
+export function useMooniswapV1HelperContract(): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId && V1_MOONISWAP_HELPER_ADDRESSES[chainId], MooniswapHelperABI, false)
+}
+
+export function useMooniswapContract(poolAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(poolAddress, MooniswapABI, withSignerIfPossible)
+}
+
+export function useOneSplit(): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId && ONE_SPLIT_ADDRESSES[chainId], ONE_SPLIT_ABI, false)
 }

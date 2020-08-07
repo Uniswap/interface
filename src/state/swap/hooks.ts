@@ -1,11 +1,10 @@
-import useENS from '../../hooks/useENS'
-import { Version } from '../../hooks/useToggledVersion'
+import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@uniswap/sdk'
+import { Token, TokenAmount, JSBI, Trade, ZERO_ADDRESS } from '@uniswap/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useV1Trade } from '../../data/V1'
+import { useMooniswapTrade, useV1Trade } from '../../data-mooniswap/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
@@ -13,36 +12,39 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
+import { Field, receiveOutput, replaceSwapState, selectCurrency, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
-import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
+import { BigNumber } from '@ethersproject/bignumber'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
 }
 
-export function useSwapActionHandlers(): {
-  onCurrencySelection: (field: Field, currency: Currency) => void
-  onSwitchTokens: () => void
-  onUserInput: (field: Field, typedValue: string) => void
-  onChangeRecipient: (recipient: string | null) => void
-} {
+export type SwapActionHandlers = {
+  onCurrencySelection: (field: Field, currency: Token) => void
+  onSwitchTokens: (outputValue: string) => void
+  onUserInput: (field: Field, typedValue: string) => void,
+  onOutputValue: (outputValue: string) => void
+}
+
+export function useSwapActionHandlers(): SwapActionHandlers {
   const dispatch = useDispatch<AppDispatch>()
   const onCurrencySelection = useCallback(
-    (field: Field, currency: Currency) => {
+    (field: Field, currency: Token) => {
       dispatch(
         selectCurrency({
           field,
-          currencyId: currency instanceof Token ? currency.address : currency === ETHER ? 'ETH' : ''
+          currencyId: currency.address
         })
       )
     },
     [dispatch]
   )
 
-  const onSwitchTokens = useCallback(() => {
+  const onSwitchTokens = useCallback((outputValue: string) => {
+    onOutputValue(outputValue)
     dispatch(switchCurrencies())
   }, [dispatch])
 
@@ -53,9 +55,9 @@ export function useSwapActionHandlers(): {
     [dispatch]
   )
 
-  const onChangeRecipient = useCallback(
-    (recipient: string | null) => {
-      dispatch(setRecipient({ recipient }))
+  const onOutputValue = useCallback(
+    (outputValue: string) => {
+      dispatch(receiveOutput({ outputValue }))
     },
     [dispatch]
   )
@@ -64,21 +66,19 @@ export function useSwapActionHandlers(): {
     onSwitchTokens,
     onCurrencySelection,
     onUserInput,
-    onChangeRecipient
+    onOutputValue
   }
 }
 
 // try to parse a user entered amount for a given token
-export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmount | undefined {
+export function tryParseAmount(value?: string, currency?: Token): TokenAmount | undefined {
   if (!value || !currency) {
     return
   }
   try {
     const typedValueParsed = parseUnits(value, currency.decimals).toString()
     if (typedValueParsed !== '0') {
-      return currency instanceof Token
-        ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
-        : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed))
+      return new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
     }
   } catch (error) {
     // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
@@ -90,12 +90,13 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
 
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(): {
-  currencies: { [field in Field]?: Currency }
-  currencyBalances: { [field in Field]?: CurrencyAmount }
-  parsedAmount: CurrencyAmount | undefined
+  currencies: { [field in Field]?: Token }
+  currencyBalances: { [field in Field]?: TokenAmount }
+  parsedAmount: TokenAmount | undefined
   v2Trade: Trade | undefined
   error?: string
   v1Trade: Trade | undefined
+  mooniswapTrade: [Trade, BigNumber[]] | [undefined, undefined] | undefined
 } {
   const { account } = useActiveWeb3React()
 
@@ -106,13 +107,12 @@ export function useDerivedSwapInfo(): {
     typedValue,
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
-    recipient
   } = useSwapState()
 
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
-  const recipientLookup = useENS(recipient ?? undefined)
-  const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
+
+  const to: string | null | undefined = account
 
   const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
     inputCurrency ?? undefined,
@@ -132,7 +132,7 @@ export function useDerivedSwapInfo(): {
     [Field.OUTPUT]: relevantTokenBalances[1]
   }
 
-  const currencies: { [field in Field]?: Currency } = {
+  const currencies: { [field in Field]?: Token } = {
     [Field.INPUT]: inputCurrency ?? undefined,
     [Field.OUTPUT]: outputCurrency ?? undefined
   }
@@ -164,6 +164,8 @@ export function useDerivedSwapInfo(): {
   const slippageAdjustedAmountsV1 =
     v1Trade && allowedSlippage && computeSlippageAdjustedAmounts(v1Trade, allowedSlippage)
 
+  const mooniswapTrade = useMooniswapTrade(currencies[Field.INPUT], currencies[Field.OUTPUT], parsedAmount)
+
   // compare input balance to max input based on version
   const [balanceIn, amountIn] = [
     currencyBalances[Field.INPUT],
@@ -177,7 +179,7 @@ export function useDerivedSwapInfo(): {
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-    error = 'Insufficient ' + amountIn.currency.symbol + ' balance'
+    error = 'Insufficient ' + amountIn.token.symbol + ' balance'
   }
 
   return {
@@ -186,7 +188,8 @@ export function useDerivedSwapInfo(): {
     parsedAmount,
     v2Trade: v2Trade ?? undefined,
     error,
-    v1Trade
+    v1Trade,
+    mooniswapTrade,
   }
 }
 
@@ -194,10 +197,10 @@ function parseCurrencyFromURLParameter(urlParam: any): string {
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam)
     if (valid) return valid
-    if (urlParam.toUpperCase() === 'ETH') return 'ETH'
-    if (valid === false) return 'ETH'
+    if (urlParam.toUpperCase() === 'ETH') return ZERO_ADDRESS
+    if (valid === false) return ZERO_ADDRESS
   }
-  return 'ETH' ?? ''
+  return ZERO_ADDRESS ?? ''
 }
 
 function parseTokenAmountURLParameter(urlParam: any): string {
@@ -208,29 +211,29 @@ function parseIndependentFieldURLParameter(urlParam: any): Field {
   return typeof urlParam === 'string' && urlParam.toLowerCase() === 'output' ? Field.OUTPUT : Field.INPUT
 }
 
-const ENS_NAME_REGEX = /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?$/
-const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
-function validatedRecipient(recipient: any): string | null {
-  if (typeof recipient !== 'string') return null
-  const address = isAddress(recipient)
-  if (address) return address
-  if (ENS_NAME_REGEX.test(recipient)) return recipient
-  if (ADDRESS_REGEX.test(recipient)) return recipient
-  return null
-}
+// const ENS_NAME_REGEX = /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?$/
+// const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
+// function validatedRecipient(recipient: any): string | null {
+//   if (typeof recipient !== 'string') return null
+//   const address = isAddress(recipient)
+//   if (address) return address
+//   if (ENS_NAME_REGEX.test(recipient)) return recipient
+//   if (ADDRESS_REGEX.test(recipient)) return recipient
+//   return null
+// }
 
 export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency)
   if (inputCurrency === outputCurrency) {
     if (typeof parsedQs.outputCurrency === 'string') {
-      inputCurrency = ''
+      inputCurrency = ZERO_ADDRESS
     } else {
       outputCurrency = ''
     }
   }
 
-  const recipient = validatedRecipient(parsedQs.recipient)
+  const parsedAmount = parseTokenAmountURLParameter(parsedQs.exactAmount)
 
   return {
     [Field.INPUT]: {
@@ -239,9 +242,8 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
     [Field.OUTPUT]: {
       currencyId: outputCurrency
     },
-    typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
-    independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
-    recipient
+    typedValue: parsedAmount,
+    independentField: parseIndependentFieldURLParameter(parsedQs.exactField)
   }
 }
 
@@ -255,13 +257,15 @@ export function useDefaultsFromURLSearch() {
     if (!chainId) return
     const parsed = queryParametersToSwapState(parsedQs)
 
+    if (!parsed[Field.INPUT].currencyId || !parsed[Field.OUTPUT].currencyId) {
+      return
+    }
     dispatch(
       replaceSwapState({
         typedValue: parsed.typedValue,
         field: parsed.independentField,
         inputCurrencyId: parsed[Field.INPUT].currencyId,
-        outputCurrencyId: parsed[Field.OUTPUT].currencyId,
-        recipient: parsed.recipient
+        outputCurrencyId: parsed[Field.OUTPUT].currencyId
       })
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps

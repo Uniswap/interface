@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, currencyEquals, ETHER, JSBI, Token } from '@uniswap/sdk'
+import { Token, TokenAmount, currencyEquals, ETHER, JSBI } from '@uniswap/sdk'
 import React, { CSSProperties, memo, useContext, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
@@ -17,7 +17,7 @@ import { FadedSpan, MenuItem } from './styleds'
 import Loader from '../Loader'
 import { isDefaultToken } from '../../utils'
 
-function currencyKey(currency: Currency): string {
+function currencyKey(currency: Token): string {
   return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
 }
 
@@ -29,11 +29,11 @@ export default function CurrencyList({
   otherCurrency,
   showSendWithSwap
 }: {
-  currencies: Currency[]
-  selectedCurrency: Currency
-  allBalances: { [tokenAddress: string]: CurrencyAmount }
-  onCurrencySelect: (currency: Currency) => void
-  otherCurrency: Currency
+  currencies: Token[]
+  selectedCurrency: Token
+  allBalances: { [tokenAddress: string]: TokenAmount }
+  onCurrencySelect: (currency: Token) => void
+  otherCurrency: Token
   showSendWithSwap?: boolean
 }) {
   const { account, chainId } = useActiveWeb3React()
@@ -46,7 +46,7 @@ export default function CurrencyList({
 
   const CurrencyRow = useMemo(() => {
     return memo(function CurrencyRow({ index, style }: { index: number; style: CSSProperties }) {
-      const currency = index === 0 ? Currency.ETHER : currencies[index - 1]
+      const currency = index === 0 ? ETHER : currencies[index - 1]
       const key = currencyKey(currency)
       const isDefault = isDefaultToken(defaultTokens, currency)
       const customAdded = Boolean(!isDefault && currency instanceof Token && allTokens[currency.address])

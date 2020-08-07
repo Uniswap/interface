@@ -226,30 +226,30 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
         )}
       </AutoColumn>
 
-      <AutoColumn gap="sm">
-        <RowFixed>
-          <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-            Transaction deadline
-          </TYPE.black>
-          <QuestionHelper text="Your transaction will revert if it is pending for more than this long." />
-        </RowFixed>
-        <RowFixed>
-          <OptionCustom style={{ width: '80px' }} tabIndex={-1}>
-            <Input
-              color={!!deadlineError ? 'red' : undefined}
-              onBlur={() => {
-                parseCustomDeadline({ target: { value: (deadline / 60).toString() } })
-              }}
-              placeholder={(deadline / 60).toString()}
-              value={deadlineInput}
-              onChange={parseCustomDeadline}
-            />
-          </OptionCustom>
-          <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>
-            minutes
-          </TYPE.body>
-        </RowFixed>
-      </AutoColumn>
+    {/*  <AutoColumn gap="sm">*/}
+    {/*    <RowFixed>*/}
+    {/*      <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>*/}
+    {/*        Transaction deadline*/}
+    {/*      </TYPE.black>*/}
+    {/*      <QuestionHelper text="Your transaction will revert if it is pending for more than this long." />*/}
+    {/*    </RowFixed>*/}
+    {/*    <RowFixed>*/}
+    {/*      <OptionCustom style={{ width: '80px' }} tabIndex={-1}>*/}
+    {/*        <Input*/}
+    {/*          color={!!deadlineError ? 'red' : undefined}*/}
+    {/*          onBlur={() => {*/}
+    {/*            parseCustomDeadline({ target: { value: (deadline / 60).toString() } })*/}
+    {/*          }}*/}
+    {/*          placeholder={(deadline / 60).toString()}*/}
+    {/*          value={deadlineInput}*/}
+    {/*          onChange={parseCustomDeadline}*/}
+    {/*        />*/}
+    {/*      </OptionCustom>*/}
+    {/*      <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>*/}
+    {/*        minutes*/}
+    {/*      </TYPE.body>*/}
+    {/*    </RowFixed>*/}
+    {/*  </AutoColumn>*/}
     </AutoColumn>
   )
 }

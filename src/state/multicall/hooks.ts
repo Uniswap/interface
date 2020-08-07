@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import { useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
+
 import {
   addMulticallListeners,
   Call,
@@ -187,6 +188,88 @@ export function useSingleContractMultipleData(
   }, [fragment, contract, results, latestBlockNumber])
 }
 
+// export async function usePoolAssetsBalances(
+//   pools: Array<{ pool: string, tokenA: Token | undefined, tokenB: Token | undefined }>,
+//   options?: ListenerOptions
+// ): Promise<Array<{ pool: string | undefined, amountA: TokenAmount | undefined, amountB: TokenAmount | undefined }>> {
+//
+//   const { chainId, library } = useActiveWeb3React()
+//
+//   if (!library) {
+//     return Promise.resolve([{ pool: undefined, amountA: undefined, amountB: undefined }])
+//   }
+//
+//   const x = pools.map(async ({ pool, tokenA, tokenB }) => {
+//
+//     if (!tokenA || !tokenB || !chainId || pool === '0x0000000000000000000000000000000000000000') {
+//       return { pool, amountA: undefined, amountB: undefined }
+//     }
+//
+//     try {
+//       let balance0;
+//       let balance1;
+//       if (!tokenA.isEther) {
+//         const contract0 = getContract(tokenA.address, ERC20ABI, library);
+//         balance0 = await contract0.balanceOf(pool)
+//       } else {
+//         const contract0 = getContract(MULTICALL_NETWORKS[chainId], MULTICALL_ABI, library);
+//         balance0 = await contract0.getEthBalance(pool)
+//       }
+//       if (!tokenB.isEther) {
+//         const contract1 = getContract(tokenB.address, ERC20ABI, library);
+//         balance1 = await contract1.balanceOf(pool)
+//       } else {
+//         const contract1 = getContract(MULTICALL_NETWORKS[chainId], MULTICALL_ABI, library);
+//         balance1 = await contract1.getEthBalance(pool)
+//       }
+//
+//       const amountA = new TokenAmount(tokenA, balance0)
+//       const amountB = new TokenAmount(tokenB, balance1)
+//       return { pool, amountA, amountB }
+//     } catch (e) {
+//       return { pool, amountA: undefined, amountB: undefined }
+//     }
+//   })
+//
+//   return Promise.all(x)
+//
+//   // ERC20_INTERFACE.getFunction(`balanceOf`, [])
+//   // const
+//   // contractInterface.getFunction(methodName), [contractInterface, methodName])
+//   // return [];
+//   // const fragment = useMemo(() => contractInterface.getFunction(methodName), [contractInterface, methodName])
+//   // const callData: string | undefined = useMemo(
+//   //   () =>
+//   //     fragment && isValidMethodArgs(callInputs)
+//   //       ? contractInterface.encodeFunctionData(fragment, callInputs)
+//   //       : undefined,
+//   //   [callInputs, contractInterface, fragment]
+//   // )
+//   //
+//   // const calls = useMemo(
+//   //   () =>
+//   //     fragment && addresses && addresses.length > 0 && callData
+//   //       ? addresses.map<Call | undefined>(address => {
+//   //         return address && callData
+//   //           ? {
+//   //             address,
+//   //             callData
+//   //           }
+//   //           : undefined
+//   //       })
+//   //       : [],
+//   //   [addresses, callData, fragment]
+//   // )
+//   //
+//   // const results = useCallsData(calls, options)
+//   //
+//   // const latestBlockNumber = useBlockNumber()
+//   //
+//   // return useMemo(() => {
+//   //   return results.map(result => toCallState(result, contractInterface, fragment, latestBlockNumber))
+//   // }, [fragment, results, contractInterface, latestBlockNumber])
+// }
+
 export function useMultipleContractSingleData(
   addresses: (string | undefined)[],
   contractInterface: Interface,
@@ -207,13 +290,13 @@ export function useMultipleContractSingleData(
     () =>
       fragment && addresses && addresses.length > 0 && callData
         ? addresses.map<Call | undefined>(address => {
-            return address && callData
-              ? {
-                  address,
-                  callData
-                }
-              : undefined
-          })
+          return address && callData
+            ? {
+              address,
+              callData
+            }
+            : undefined
+        })
         : [],
     [addresses, callData, fragment]
   )
