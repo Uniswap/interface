@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
+import { BigintIsh } from 'dxswap-sdk'
 
 export enum Field {
   INPUT = 'INPUT',
@@ -11,10 +12,23 @@ export const typeInput = createAction<{ field: Field; typedValue: string }>('typ
 export const replaceSwapState = createAction<{
   field: Field
   typedValue: string
-  inputTokenAddress?: string
+  inputTokenAddress?: string,
   outputTokenAddress?: string,
-  protocolFeeDenominator?: number,
-  swapFees?: { [key: string] : number }
+  swapFees: {
+    [key: string] : {
+      fee: bigint,
+      owner: string 
+    }
+  } | {},
+  protocolFeeDenominator?: Number,
+  protocolFeeTo?: string
 }>('replaceSwapState')
-export const setSwapFee = createAction<{ pairAddress: string; swapFee: number }>('setSwapFee')
-export const setProtocolFeeDenominator = createAction<{ protocolFeeDenominator: number }>('setProtocolFeeDenominator')
+export const setSwapFees = createAction<{
+  swapFees: {
+    [key: string] : {
+      fee: bigint,
+      owner: string 
+    }
+  } | {}
+}>('setSwapFees')
+export const setProtocolFee = createAction<{ protocolFeeDenominator: Number, protocolFeeTo: string }>('setProtocolFee')

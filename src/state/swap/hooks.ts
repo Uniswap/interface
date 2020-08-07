@@ -1,5 +1,5 @@
 import { parseUnits } from '@ethersproject/units'
-import { ChainId, JSBI, Token, TokenAmount, Trade, WETH, Pair } from 'dxswap-sdk'
+import { ChainId, JSBI, Token, TokenAmount, Trade, WETH, Pair, Fees } from 'dxswap-sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,7 +10,7 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
-import { Field, replaceSwapState, selectToken, switchTokens, typeInput, setSwapFee, setProtocolFeeDenominator } from './actions'
+import { Field, replaceSwapState, selectToken, switchTokens, typeInput, setSwapFees, setProtocolFee } from './actions'
 import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
@@ -84,13 +84,13 @@ export function useDerivedSwapInfo(): {
   bestTrade: Trade | null
   error?: string
 } {
-  const { chainId, account } = useActiveWeb3React()
-
+  const { chainId, account, library } = useActiveWeb3React()
   const {
     independentField,
     typedValue,
     [Field.INPUT]: { address: tokenInAddress },
-    [Field.OUTPUT]: { address: tokenOutAddress }
+    [Field.OUTPUT]: { address: tokenOutAddress },
+    protocolFeeTo
   } = useSwapState()
 
   const tokenIn = useToken(tokenInAddress)
@@ -98,25 +98,25 @@ export function useDerivedSwapInfo(): {
   
   // get token pair data with swapFee and protocolFeeDenominator
   const dispatch = useDispatch<AppDispatch>()
-  const pairData = useAsync(async () => {
-    if (tokenIn && tokenOut) {
-      return await Pair.fetchData(tokenIn, tokenOut, getDefaultProvider(getNetwork(chainId), {quorum: 1}))
+  const swapFeesPromise = useAsync(async () => {
+      return await Fees.fetchAllSwapFees(chainId, {}, getDefaultProvider(getNetwork(chainId), { quorum: 1}))
+  }, []);
+  const protocolFeePromise = useAsync(async () => {
+    if (!protocolFeeTo) {
+      return await Fees.fetchProtocolFee(chainId, getDefaultProvider(getNetwork(chainId), { quorum: 1 }))
     } else {
       return null
     }
-  }, [tokenIn, tokenOut]);
+  }, []);
   useEffect(() => {
-    console.log('Pair data:', pairData)
-    if (pairData && !pairData.loading && pairData.value) {
-      dispatch(setSwapFee({
-        pairAddress: (pairData.value.liquidityToken.address),
-        swapFee: (pairData.value.swapFee) ? Number(pairData.value.swapFee) : 30
+    if (swapFeesPromise && !swapFeesPromise.loading && !swapFeesPromise.error && swapFeesPromise.value)
+      dispatch(setSwapFees({ swapFees: swapFeesPromise.value }))
+    if (protocolFeePromise && !protocolFeePromise.loading && !protocolFeePromise.error && protocolFeePromise.value)
+      dispatch(setProtocolFee({
+        protocolFeeDenominator: Number(protocolFeePromise.value.feeDenominator),
+        protocolFeeTo: protocolFeePromise.value.feeReceiver,
       }))
-      dispatch(setProtocolFeeDenominator({
-        protocolFeeDenominator: (pairData.value.protocolFeeDenominator) ? Number(pairData.value.protocolFeeDenominator) : 5,
-      }))
-    }
-  }, [pairData])
+  }, [swapFeesPromise, protocolFeePromise])
 
   const relevantTokenBalances = useTokenBalancesTreatWETHAsETH(account ?? undefined, [
     tokenIn ?? undefined,
@@ -199,7 +199,16 @@ function parseIndependentFieldURLParameter(urlParam: any): Field {
   return typeof urlParam === 'string' && urlParam.toLowerCase() === 'output' ? Field.OUTPUT : Field.INPUT
 }
 
-export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId): SwapState {
+export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId): {
+  independentField: Field,
+  typedValue: string,
+  [Field.INPUT]: {
+    address: string | undefined
+  },
+  [Field.OUTPUT]: {
+    address: string | undefined
+  }
+} {
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, chainId)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, chainId)
   if (inputCurrency === outputCurrency) {
@@ -218,9 +227,7 @@ export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId)
       address: outputCurrency
     },
     typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
-    independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
-    swapFees: {},
-    protocolFeeDenominator: 5
+    independentField: parseIndependentFieldURLParameter(parsedQs.exactField)
   }
 }
 
@@ -238,7 +245,8 @@ export function useDefaultsFromURLSearch() {
         typedValue: parsed.typedValue,
         field: parsed.independentField,
         inputTokenAddress: parsed[Field.INPUT].address,
-        outputTokenAddress: parsed[Field.OUTPUT].address
+        outputTokenAddress: parsed[Field.OUTPUT].address,
+        swapFees: {}
       })
     )
     // eslint-disable-next-line

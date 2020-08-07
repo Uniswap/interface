@@ -37,12 +37,12 @@ export function usePairs(tokens: [Token | undefined, Token | undefined][]): (und
       if (!reserves) return null
       const { reserve0, reserve1 } = reserves
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
-      const swapFee = swapFees[Pair.getAddress(token0, token1)] ? swapFees[Pair.getAddress(token0, token1)] : 30
+      const swapFee = swapFees[Pair.getAddress(token0, token1)] ? swapFees[Pair.getAddress(token0, token1)].fee : BigInt(30)
       return new Pair(
         new TokenAmount(token0, reserve0.toString()),
         new TokenAmount(token1, reserve1.toString()),
-        JSBI.BigInt(swapFee),
-        JSBI.BigInt(protocolFeeDenominator)
+        swapFee,
+        BigInt(protocolFeeDenominator)
       )
     })
   }, [results, tokens])

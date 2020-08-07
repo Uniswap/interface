@@ -40,8 +40,6 @@ export function computeTradePriceBreakdown(
     : realizedLPFee &&
     trade &&
     new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
-  if (trade) console.log(trade.inputAmount.token) 
-  if (realizedLPFee) console.log(realizedLPFee.toSignificant(4))
   return { priceImpactWithoutFee: priceImpactWithoutFeePercent, realizedLPFee, realizedLPFeeAmount }
 }
 
