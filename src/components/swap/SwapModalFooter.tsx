@@ -1,4 +1,4 @@
-import { TokenAmount, Percent, Trade, TradeType } from '@uniswap/sdk'
+import { TokenAmount, Percent, Trade } from '@uniswap/sdk'
 import React, { useContext } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'

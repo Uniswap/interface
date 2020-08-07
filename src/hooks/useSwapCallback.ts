@@ -1,13 +1,12 @@
-import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
+import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { JSBI, TokenAmount, Trade } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../constants'
-import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
+import { getTradeVersion } from '../data/V1'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin, getMooniswapContract, getOneSplit, isUseOneSplitContract } from '../utils'
 import { useActiveWeb3React } from './index'
-import { useV1ExchangeContract } from './useContract'
 import { Version } from './useToggledVersion'
 import {
   FLAG_DISABLE_ALL_SPLIT_SOURCES,
@@ -35,7 +34,7 @@ export function useSwapCallback(
   const recipient = account
 
   const tradeVersion = getTradeVersion(trade)
-  const v1Exchange = useV1ExchangeContract(useV1TradeExchangeAddress(trade), true)
+  // const v1Exchange = useV1ExchangeContract(useV1TradeExchangeAddress(trade), true)
 
   return useMemo(() => {
     if (!trade || !recipient || !library || !account || !tradeVersion || !chainId || !distribution || !fromAmount) return null
@@ -128,7 +127,9 @@ export function useSwapCallback(
     tradeVersion,
     chainId,
     allowedSlippage,
-    v1Exchange,
-    addTransaction
+    addTransaction,
+    distribution,
+    fromAmount,
+    isOneSplit
   ])
 }

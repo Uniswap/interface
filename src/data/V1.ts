@@ -15,19 +15,10 @@ import {
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
 import { useAllTokens } from '../hooks/Tokens'
-import { useOneSplit, useV1FactoryContract } from '../hooks/useContract'
+import { useV1FactoryContract } from '../hooks/useContract'
 import { Version } from '../hooks/useToggledVersion'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from '../state/multicall/hooks'
 import { useTokenBalances } from '../state/wallet/hooks'
-import {
-  bn1e18,
-  ETH_ADDRESS,
-  FLAG_DISABLE_ALL_SPLIT_SOURCES, FLAG_DISABLE_ALL_WRAP_SOURCES,
-  FLAG_DISABLE_MOONISWAP, FLAG_DISABLE_MOONISWAP_ALL,
-  ZERO_ADDRESS
-} from '../constants/one-split'
-import { tryParseAmount } from '../state/swap/hooks'
-import { PairState, usePair } from '../data-mooniswap/Reserves'
 
 export function useV1ExchangeAddress(tokenAddress?: string): string | undefined {
   const contract = useV1FactoryContract()
