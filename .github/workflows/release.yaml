@@ -55,7 +55,7 @@ jobs:
 
       - name: Convert CIDv0 to CIDv1
         id: convert_cidv0
-        uses: mooniswap/convert-cidv0-cidv1@v1.0.0
+        uses: uniswap/convert-cidv0-cidv1@v1.0.0
         with:
           cidv0: ${{ steps.upload.outputs.hash }}
 
@@ -82,12 +82,12 @@ jobs:
             - CIDv0: `${{ steps.upload.outputs.hash }}`
             - CIDv1: `${{ steps.convert_cidv0.outputs.cidv1 }}`
 
-            The latest release is always accessible via our alias to the Cloudflare IPFS gateway at [app.mooniswap.org](https://app.mooniswap.org).
+            The latest release is always accessible via our alias to the Cloudflare IPFS gateway at [mooniswap.exchange](https://mooniswap.exchange).
 
             You can also access the Mooniswap Interface directly from an IPFS gateway.
             The Mooniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to store your settings.
             **Beware** that other sites you access via the _same_ IPFS gateway can read and modify your settings on the Mooniswap interface without your permission.
-            You can avoid this issue by using a subdomain IPFS gateway, or our alias to the latest release at [app.mooniswap.org](https://app.mooniswap.org).
+            You can avoid this issue by using a subdomain IPFS gateway, or our alias to the latest release at [mooniswap.exchange](https://mooniswap.exchange).
             The preferred URLs below are safe to use to access this specific release.
 
             Preferred URLs:
