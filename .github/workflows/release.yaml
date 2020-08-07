@@ -1,8 +1,11 @@
 name: Release
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  # every morning
+#  schedule:
+#    - cron:  '0 12 * * 1-4'
+
+  # manual trigger
+  workflow_dispatch:
 
 jobs:
   bump_version:
