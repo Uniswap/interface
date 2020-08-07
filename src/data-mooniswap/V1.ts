@@ -193,7 +193,7 @@ export function useMooniswapTrade(
 
   const amount = inputCurrency?.decimals && inputCurrency?.decimals !== 0
     ? parseAmount?.multiply(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(inputCurrency?.decimals))).toFixed(0)
-    : 0
+    : parseAmount?.toFixed(0)
 
   const params = [
     inputCurrency?.address ? inputCurrency.address !== ZERO_ADDRESS ? inputCurrency.address : ETH_ADDRESS : ETH_ADDRESS,
@@ -206,7 +206,7 @@ export function useMooniswapTrade(
   const poolPair = usePair(inputCurrency, outputCurrency)
 
   const results = useSingleCallResult(useOneSplit(), 'getExpectedReturn', params)
-
+  console.log(results)
   if(!inputCurrency || !outputCurrency || !parseAmount || !results.result || (
     (poolPair[0] != PairState.EXISTS || !poolPair[1]) && !isUseOneSplitContract(results?.result?.distribution))
   ) {
@@ -249,8 +249,8 @@ export function useMooniswapTrade(
     // new TokenAmount(outputCurrency, exactAmount.multiply(proportionDestToSrc.multiply(exactAmount.multiply('10000'))).divide(numerator).toFixed(0)),
     // new TokenAmount(inputCurrency, '57333158818703015175'),
     // new TokenAmount(outputCurrency, '47954'),
-    new TokenAmount(inputCurrency, proportionDestToSrc.numerator.toString()),
-    new TokenAmount(outputCurrency, proportionSrcToDest.numerator.toString()),
+    new TokenAmount(inputCurrency, proportionDestToSrc.multiply('10000000000000000000000000').numerator.toString()),
+    new TokenAmount(outputCurrency, proportionSrcToDest.multiply('10000000000000000000000000').numerator.toString()),
 
     ONE_SPLIT_ADDRESSES[1]
   )]
