@@ -1,6 +1,6 @@
 import { TokenAmount, JSBI } from '@uniswap/sdk'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { ArrowDown } from 'react-feather'
+import { ArrowDown, ArrowUp } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -298,6 +298,16 @@ export default function Swap() {
                       }}
                       color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.primary1 : theme.text2}
                     />
+                    <span style={{ marginLeft: '-3px' }}>
+                    <ArrowUp
+                      size="16"
+                      onClick={() => {
+                        setApprovalSubmitted(false) // reset 2 step UI for approvals
+                        onSwitchTokens(formattedAmounts[Field.OUTPUT])
+                      }}
+                      color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.primary1 : theme.text2}
+                    />
+                    </span>
                   </ArrowWrapper>
                 </AutoRow>
               </AutoColumn>
