@@ -28,7 +28,6 @@ import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
 import {
   useDefaultsFromURLSearch,
   useDerivedSwapInfo,
@@ -69,10 +68,6 @@ export default function Swap() {
   const { v1Trade, v2Trade, mooniswapTrade, currencyBalances, parsedAmount, currencies, error } = useDerivedSwapInfo()
 
   const distribution = mooniswapTrade?.[1]
-  console.log(parsedAmount?.raw.toString())
-  console.log((mooniswapTrade?.[0]?.inputAmount?.raw.toString()))
-  console.log(mooniswapTrade?.[0]?.outputAmount)
-  console.log(distribution)
 
   const { wrapType, execute: onWrap, error: wrapError } = useWrapCallback(
     currencies[Field.INPUT],

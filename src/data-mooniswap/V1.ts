@@ -28,6 +28,7 @@ import {
 import { PairState, usePair } from './Reserves'
 import { BigNumber } from '@ethersproject/bignumber'
 import { isUseOneSplitContract, maxUint256Div2 } from '../utils'
+import { DAI, USDC } from '../constants'
 
 export function useV1ExchangeAddress(tokenAddress?: string): string | undefined {
   const contract = useV1FactoryContract()
@@ -205,55 +206,43 @@ export function useMooniswapTrade(
 
   const poolPair = usePair(inputCurrency, outputCurrency)
 
+  const poolPairOverEth = usePair(inputCurrency, ETHER)
+  const poolPairOverDai = usePair(inputCurrency, DAI)
+  const poolPairOverUsdc = usePair(inputCurrency, USDC)
+
+  const poolPairUsdcToDest = usePair(USDC, outputCurrency)
+  const poolPairDaiToDest = usePair(DAI, outputCurrency)
+  const poolPairEthToDest = usePair(USDC, outputCurrency)
+
   const results = useSingleCallResult(useOneSplit(), 'getExpectedReturn', params)
-  console.log(results)
-  if(!inputCurrency || !outputCurrency || !parseAmount || !results.result || (
-    (poolPair[0] != PairState.EXISTS || !poolPair[1]) && !isUseOneSplitContract(results?.result?.distribution))
-  ) {
+  if(!inputCurrency || !outputCurrency || !parseAmount || !results.result) {
     return
   }
+
+  const distribution = results.result.distribution
+
+  const pairs: Pair[] = []
+  if (!distribution[31].isZero() && poolPairOverEth[1] && poolPairEthToDest[1]) {
+    pairs.push(poolPairOverEth[1])
+    pairs.push(poolPairEthToDest[1])
+  }
+  if (!distribution[32].isZero() && poolPairOverDai[1] && poolPairDaiToDest[1]) {
+    pairs.push(poolPairOverDai[1])
+    pairs.push(poolPairDaiToDest[1])
+  }
+  if (!distribution[33].isZero() && poolPairOverUsdc[1] && poolPairUsdcToDest[1]) {
+    pairs.push(poolPairOverUsdc[1])
+    pairs.push(poolPairUsdcToDest[1])
+  }
+  if (!distribution[12].isZero() && poolPair[1]) {
+    pairs.push(poolPair[1])
+  }
+
+  if (pairs.length === 0) {
+    return
+  }
+
   const exactAmount = new TokenAmount(outputCurrency, JSBI.BigInt(results.result.returnAmount))
-
-  const srcNumerator = inputCurrency.decimals !== 0 ? BigNumber.from('10').pow(inputCurrency.decimals) : BigNumber.from('1')
-  const destNumerator = outputCurrency.decimals !== 0 ? BigNumber.from('10').pow(outputCurrency.decimals) : BigNumber.from('1')
-
-  const proportionSrcToDest = parseAmount.multiply(destNumerator.toString()).divide(exactAmount)
-  const proportionDestToSrc = exactAmount.multiply(srcNumerator.toString()).divide(parseAmount)
-  // const proportionSrcToDest = BigNumber.from(parseAmount.numerator.toString()).mul(destNumerator.toString()).div(results.result.returnAmount)
-  // const proportionDestToSrc = results.result.returnAmount.mul(srcNumerator).div(BigNumber.from(parseAmount.numerator.toString()))
-  console.log({
-    parseAmount: parseAmount.raw.toString(),
-    exactAmount: exactAmount.raw.toString(),
-    srcNumerator: srcNumerator.toString(),
-    destNumerator: destNumerator.toString(),
-    proportionSrcToDest1Numerator: proportionSrcToDest.numerator.toString(),
-    proportionSrcToDest2Denominator: proportionSrcToDest.denominator.toString(),
-    proportionDestToSrc1Numerator: proportionDestToSrc.numerator.toString(),
-    proportionDestToSrc2Denominator: proportionDestToSrc.denominator.toString(),
-  })
-
-  /*
-
-    TokenA: tokenAmountA
-    TokenB: tokenAmountB
-
-    priceAtoB = tokenAmountB / tokenAmountA * 100000
-    priceBtoA = tokenAmountA / tokenAmountB * 100000
-
-
-   */
-
-  const pair = poolPair[1]
-  const pairs: Pair[] = pair ? [pair] : [new Pair(
-    // new TokenAmount(inputCurrency, parseAmount.multiply(proportionSrcToDest.multiply(parseAmount.multiply('10000'))).divide(numerator).toFixed(0)),
-    // new TokenAmount(outputCurrency, exactAmount.multiply(proportionDestToSrc.multiply(exactAmount.multiply('10000'))).divide(numerator).toFixed(0)),
-    // new TokenAmount(inputCurrency, '57333158818703015175'),
-    // new TokenAmount(outputCurrency, '47954'),
-    new TokenAmount(inputCurrency, proportionDestToSrc.multiply('10000000000000000000000000').numerator.toString()),
-    new TokenAmount(outputCurrency, proportionSrcToDest.multiply('10000000000000000000000000').numerator.toString()),
-
-    ONE_SPLIT_ADDRESSES[1]
-  )]
 
   const route = inputCurrency && pairs && pairs.length > 0 && new Route(pairs, inputCurrency, outputCurrency)
   try {
