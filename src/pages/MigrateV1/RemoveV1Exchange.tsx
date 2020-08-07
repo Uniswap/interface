@@ -39,7 +39,7 @@ function V1PairRemoval({
   liquidityTokenAmount: TokenAmount
   token: Token
 }) {
-  const { chainId } = useActiveWeb3React()
+  // const { chainId } = useActiveWeb3React()
   const totalSupply = useTotalSupply(liquidityTokenAmount.token)
   const exchangeETHBalance = useETHBalances([liquidityTokenAmount.token.address])?.[liquidityTokenAmount.token.address]
   const exchangeTokenBalance = useTokenBalance(liquidityTokenAmount.token.address, token)
@@ -87,7 +87,7 @@ function V1PairRemoval({
         console.error(error)
         setConfirmingRemoval(false)
       })
-  }, [exchangeContract, liquidityTokenAmount, token, chainId, addTransaction])
+  }, [exchangeContract, liquidityTokenAmount, token, addTransaction])
 
   const noLiquidityTokens = !!liquidityTokenAmount && liquidityTokenAmount.equalTo(ZERO)
 

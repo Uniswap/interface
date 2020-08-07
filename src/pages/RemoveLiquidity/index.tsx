@@ -1,4 +1,3 @@
-import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { ETHER, Percent, Token } from '@uniswap/sdk'
@@ -30,11 +29,10 @@ import { calculateGasMargin, calculateSlippageAmount } from '../../utils'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
 import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
-import { useApproveCallback } from '../../hooks/useApproveCallback'
 import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
 import { Field } from '../../state/burn/actions'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
+import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 
 export default function RemoveLiquidity({
@@ -47,8 +45,7 @@ export default function RemoveLiquidity({
   const { account, chainId, library } = useActiveWeb3React()
   const [tokenA, tokenB] = useMemo(() => [currencyA, currencyB], [
     currencyA,
-    currencyB,
-    chainId
+    currencyB
   ])
 
   const theme = useContext(ThemeContext)
@@ -68,7 +65,6 @@ export default function RemoveLiquidity({
 
   // txn values
   const [txHash, setTxHash] = useState<string>('')
-  const [deadline] = useUserDeadline()
   const [allowedSlippage] = useUserSlippageTolerance()
 
   const formattedAmounts = {
@@ -92,71 +88,71 @@ export default function RemoveLiquidity({
 
   // allowance handling
   const [, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
-  const [, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], pairContract?.address)
+  // const [, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], pairContract?.address)
 
-  async function onAttemptToApprove() {
-    if (!pairContract || !pair || !library) throw new Error('missing dependencies')
-    const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
-    if (!liquidityAmount) throw new Error('missing liquidity amount')
-    // try to gather a signature for permission
-    const nonce = await pairContract.nonces(account)
-
-    const deadlineForSignature: number = Math.ceil(Date.now() / 1000) + deadline
-
-    const EIP712Domain = [
-      { name: 'name', type: 'string' },
-      { name: 'version', type: 'string' },
-      { name: 'chainId', type: 'uint256' },
-      { name: 'verifyingContract', type: 'address' }
-    ]
-    const domain = {
-      name: 'Mooniswap',
-      version: '1',
-      chainId: chainId,
-      verifyingContract: pair.liquidityToken.address
-    }
-    const Permit = [
-      { name: 'owner', type: 'address' },
-      { name: 'spender', type: 'address' },
-      { name: 'value', type: 'uint256' },
-      { name: 'nonce', type: 'uint256' },
-      { name: 'deadline', type: 'uint256' }
-    ]
-    const message = {
-      owner: account,
-      spender: pairContract.address,
-      value: liquidityAmount.raw.toString(),
-      nonce: nonce.toHexString(),
-      deadline: deadlineForSignature
-    }
-    const data = JSON.stringify({
-      types: {
-        EIP712Domain,
-        Permit
-      },
-      domain,
-      primaryType: 'Permit',
-      message
-    })
-
-    library
-      .send('eth_signTypedData_v4', [account, data])
-      .then(splitSignature)
-      .then(signature => {
-        setSignatureData({
-          v: signature.v,
-          r: signature.r,
-          s: signature.s,
-          deadline: deadlineForSignature
-        })
-      })
-      .catch(error => {
-        // for all errors other than 4001 (EIP-1193 user rejected request), fall back to manual approve
-        if (error?.code !== 4001) {
-          approveCallback()
-        }
-      })
-  }
+  // async function onAttemptToApprove() {
+  //   if (!pairContract || !pair || !library) throw new Error('missing dependencies')
+  //   const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
+  //   if (!liquidityAmount) throw new Error('missing liquidity amount')
+  //   // try to gather a signature for permission
+  //   const nonce = await pairContract.nonces(account)
+  //
+  //   const deadlineForSignature: number = Math.ceil(Date.now() / 1000) + deadline
+  //
+  //   const EIP712Domain = [
+  //     { name: 'name', type: 'string' },
+  //     { name: 'version', type: 'string' },
+  //     { name: 'chainId', type: 'uint256' },
+  //     { name: 'verifyingContract', type: 'address' }
+  //   ]
+  //   const domain = {
+  //     name: 'Mooniswap',
+  //     version: '1',
+  //     chainId: chainId,
+  //     verifyingContract: pair.liquidityToken.address
+  //   }
+  //   const Permit = [
+  //     { name: 'owner', type: 'address' },
+  //     { name: 'spender', type: 'address' },
+  //     { name: 'value', type: 'uint256' },
+  //     { name: 'nonce', type: 'uint256' },
+  //     { name: 'deadline', type: 'uint256' }
+  //   ]
+  //   const message = {
+  //     owner: account,
+  //     spender: pairContract.address,
+  //     value: liquidityAmount.raw.toString(),
+  //     nonce: nonce.toHexString(),
+  //     deadline: deadlineForSignature
+  //   }
+  //   const data = JSON.stringify({
+  //     types: {
+  //       EIP712Domain,
+  //       Permit
+  //     },
+  //     domain,
+  //     primaryType: 'Permit',
+  //     message
+  //   })
+  //
+  //   library
+  //     .send('eth_signTypedData_v4', [account, data])
+  //     .then(splitSignature)
+  //     .then(signature => {
+  //       setSignatureData({
+  //         v: signature.v,
+  //         r: signature.r,
+  //         s: signature.s,
+  //         deadline: deadlineForSignature
+  //       })
+  //     })
+  //     .catch(error => {
+  //       // for all errors other than 4001 (EIP-1193 user rejected request), fall back to manual approve
+  //       if (error?.code !== 4001) {
+  //         approveCallback()
+  //       }
+  //     })
+  // }
 
   // wrapped onUserInput to clear signatures
   const onUserInput = useCallback(

@@ -78,7 +78,7 @@ export function usePairs(currencies: [Token | undefined, Token | undefined][]): 
       ])
     }
     return pairStates
-  }, [res])
+  }, [res, allTokenAList, allTokenBList])
 }
 
 export function usePair(tokenA?: Token, tokenB?: Token): [PairState, Pair | null] {

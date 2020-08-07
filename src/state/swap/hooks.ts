@@ -43,21 +43,22 @@ export function useSwapActionHandlers(): SwapActionHandlers {
     [dispatch]
   )
 
-  const onSwitchTokens = useCallback((outputValue: string) => {
-    onOutputValue(outputValue)
-    dispatch(switchCurrencies())
-  }, [dispatch])
-
-  const onUserInput = useCallback(
-    (field: Field, typedValue: string) => {
-      dispatch(typeInput({ field, typedValue }))
-    },
-    [dispatch]
-  )
 
   const onOutputValue = useCallback(
     (outputValue: string) => {
       dispatch(receiveOutput({ outputValue }))
+    },
+    [dispatch]
+  )
+
+  const onSwitchTokens = useCallback((outputValue: string) => {
+    onOutputValue(outputValue)
+    dispatch(switchCurrencies())
+  }, [dispatch, onOutputValue])
+
+  const onUserInput = useCallback(
+    (field: Field, typedValue: string) => {
+      dispatch(typeInput({ field, typedValue }))
     },
     [dispatch]
   )
