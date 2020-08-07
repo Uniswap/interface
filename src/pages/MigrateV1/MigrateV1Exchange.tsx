@@ -58,7 +58,7 @@ export function V1LiquidityInfo({
   tokenWorth: TokenAmount
   ethWorth: TokenAmount
 }) {
-  const { chainId } = useActiveWeb3React()
+  // const { chainId } = useActiveWeb3React()
 
   return (
     <>

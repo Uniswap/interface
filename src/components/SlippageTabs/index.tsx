@@ -14,9 +14,9 @@ enum SlippageError {
   RiskyHigh = 'RiskyHigh'
 }
 
-enum DeadlineError {
-  InvalidInput = 'InvalidInput'
-}
+// enum DeadlineError {
+//   InvalidInput = 'InvalidInput'
+// }
 
 const FancyButton = styled.button`
   color: ${({ theme }) => theme.text1};
@@ -98,11 +98,11 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
   const inputRef = useRef<HTMLInputElement>()
 
   const [slippageInput, setSlippageInput] = useState('')
-  const [deadlineInput, setDeadlineInput] = useState('')
+  // const [deadlineInput, setDeadlineInput] = useState('')
 
   const slippageInputIsValid =
     slippageInput === '' || (rawSlippage / 100).toFixed(2) === Number.parseFloat(slippageInput).toFixed(2)
-  const deadlineInputIsValid = deadlineInput === '' || (deadline / 60).toString() === deadlineInput
+  // const deadlineInputIsValid = deadlineInput === '' || (deadline / 60).toString() === deadlineInput
 
   let slippageError: SlippageError
   if (slippageInput !== '' && !slippageInputIsValid) {
@@ -113,10 +113,10 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
     slippageError = SlippageError.RiskyHigh
   }
 
-  let deadlineError: DeadlineError
-  if (deadlineInput !== '' && !deadlineInputIsValid) {
-    deadlineError = DeadlineError.InvalidInput
-  }
+  // let deadlineError: DeadlineError
+  // if (deadlineInput !== '' && !deadlineInputIsValid) {
+  //   deadlineError = DeadlineError.InvalidInput
+  // }
 
   function parseCustomSlippage(event) {
     setSlippageInput(event.target.value)
@@ -135,18 +135,18 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
     }
   }
 
-  function parseCustomDeadline(event) {
-    setDeadlineInput(event.target.value)
-
-    let valueAsInt: number
-    try {
-      valueAsInt = Number.parseInt(event.target.value) * 60
-    } catch {}
-
-    if (typeof valueAsInt === 'number' && !Number.isNaN(valueAsInt) && valueAsInt > 0) {
-      setDeadline(valueAsInt)
-    }
-  }
+  // function parseCustomDeadline(event) {
+  //   setDeadlineInput(event.target.value)
+  //
+  //   let valueAsInt: number
+  //   try {
+  //     valueAsInt = Number.parseInt(event.target.value) * 60
+  //   } catch {}
+  //
+  //   if (typeof valueAsInt === 'number' && !Number.isNaN(valueAsInt) && valueAsInt > 0) {
+  //     setDeadline(valueAsInt)
+  //   }
+  // }
 
   return (
     <AutoColumn gap="md">

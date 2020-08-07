@@ -22,12 +22,11 @@ import { useTokenBalances } from '../state/wallet/hooks'
 import {
   ETH_ADDRESS,
   FLAG_DISABLE_ALL_SPLIT_SOURCES,
-  FLAG_DISABLE_ALL_WRAP_SOURCES, FLAG_DISABLE_MOONISWAP_ALL, ONE_SPLIT_ADDRESSES,
+  FLAG_DISABLE_ALL_WRAP_SOURCES, FLAG_DISABLE_MOONISWAP_ALL,
   ZERO_ADDRESS
 } from '../constants/one-split'
-import { PairState, usePair } from './Reserves'
+import { usePair } from './Reserves'
 import { BigNumber } from '@ethersproject/bignumber'
-import { isUseOneSplitContract, maxUint256Div2 } from '../utils'
 import { DAI, USDC } from '../constants'
 
 export function useV1ExchangeAddress(tokenAddress?: string): string | undefined {
@@ -200,7 +199,7 @@ export function useMooniswapTrade(
     inputCurrency?.address ? inputCurrency.address !== ZERO_ADDRESS ? inputCurrency.address : ETH_ADDRESS : ETH_ADDRESS,
     outputCurrency?.address ? outputCurrency.address !== ZERO_ADDRESS ? outputCurrency.address : ETH_ADDRESS : ETH_ADDRESS,
     amount,
-    10,
+    1,
     JSBI.add(FLAG_DISABLE_ALL_WRAP_SOURCES, JSBI.add(FLAG_DISABLE_ALL_SPLIT_SOURCES, FLAG_DISABLE_MOONISWAP_ALL)).toString()
   ]
 

@@ -70,9 +70,9 @@ export default function Swap() {
   const distribution = mooniswapTrade?.[1]
 
   const { wrapType, execute: onWrap, error: wrapError } = useWrapCallback(
-    currencies[Field.INPUT],
-    currencies[Field.OUTPUT],
-    typedValue
+    // currencies[Field.INPUT],
+    // currencies[Field.OUTPUT],
+    // typedValue
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const toggledVersion = useToggledVersion()

@@ -21,7 +21,7 @@ import {
 } from './actions'
 import { useDefaultTokenList } from '../lists/hooks'
 import { isDefaultToken } from '../../utils'
-import { useV1FactoryContract } from '../../hooks/useContract'
+// import { useV1FactoryContract } from '../../hooks/useContract'
 
 function serializeToken(token: Token): SerializedToken {
   return {
@@ -199,7 +199,7 @@ export function useTokenWarningDismissal(chainId?: number, token?: Token): [bool
  */
 export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
   const symbol = 'MOON-V1' + tokenA.symbol + tokenB.symbol
-  const name = 'Mooniswap V1 ' + '(' + tokenA.symbol + '-' + tokenB.symbol + ')'
+  const name = `Mooniswap V1 (${tokenA.symbol}-${tokenB.symbol})`
   return new Token(tokenA.chainId, '0x000000001', 18, symbol, name)
 }
 

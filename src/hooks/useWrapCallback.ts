@@ -1,10 +1,3 @@
-import { Token } from '@uniswap/sdk'
-import { useMemo } from 'react'
-import { tryParseAmount } from '../state/swap/hooks'
-import { useTransactionAdder } from '../state/transactions/hooks'
-import { useCurrencyBalance } from '../state/wallet/hooks'
-import { useActiveWeb3React } from './index'
-
 export enum WrapType {
   NOT_APPLICABLE,
   WRAP,
@@ -19,17 +12,18 @@ const NOT_APPLICABLE = { wrapType: WrapType.NOT_APPLICABLE }
  * @param typedValue the user input value
  */
 export default function useWrapCallback(
-  inputCurrency: Token | undefined,
-  outputCurrency: Token | undefined,
-  typedValue: string | undefined
+  // inputCurrency: Token | undefined,
+  // outputCurrency: Token | undefined,
+  // typedValue: string | undefined
 ): { wrapType: WrapType; execute?: undefined | (() => Promise<void>); error?: string } {
-  const { chainId, account } = useActiveWeb3React()
-  const balance = useCurrencyBalance(account ?? undefined, inputCurrency)
-  // we can always parse the amount typed as the input currency, since wrapping is 1:1
-  const inputAmount = useMemo(() => tryParseAmount(typedValue, inputCurrency), [inputCurrency, typedValue])
-  const addTransaction = useTransactionAdder()
+  // const { chainId, account } = useActiveWeb3React()
+  // const balance = useCurrencyBalance(account ?? undefined, inputCurrency)
+  // // we can always parse the amount typed as the input currency, since wrapping is 1:1
+  // const inputAmount = useMemo(() => tryParseAmount(typedValue, inputCurrency), [inputCurrency, typedValue])
+  // const addTransaction = useTransactionAdder()
 
-  return useMemo(() => {
-    return NOT_APPLICABLE
-  }, [chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
+  // return useMemo(() => {
+  //   return NOT_APPLICABLE
+  // }, [chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
+  return NOT_APPLICABLE
 }
