@@ -1,6 +1,6 @@
 import React from 'react'
 
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 
 const StyledSVG = styled.svg<{ size: string; stroke?: string, flip?: boolean }>`
   position: absolute;
