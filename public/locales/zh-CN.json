@@ -154,5 +154,14 @@
   "Insufficient ETH balance": "ETH 余额不足",
   "Insufficient WETH balance": "WETH 余额不足",
   "Common bases": "常用代币",
-  "These tokens are commonly paired with other tokens": "常用资金池代币"
+  "These tokens are commonly paired with other tokens": "常用资金池代币",
+  "Disconnect": "取消连接",
+  "Change": "切换",
+  "Copy Address": "复制地址",
+  "Your transactions will appear here...": "你的交易记录将会在此显示...",
+  "Recent Transactions": "最近交易记录",
+  "clear all": "清除全部",
+  "Back": "返回",
+  "Please connect to the appropriate Ethereum network": "请连接有效的以太坊网络",
+  "Connect to a wallet": "连接钱包"
 }
