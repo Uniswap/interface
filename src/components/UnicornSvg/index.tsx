@@ -16,11 +16,11 @@ const StyledSVG = styled.svg<{ size: string; stroke?: string, flip?: boolean , m
   :hover {
     g {
       opacity: 1;
-      transition: .4s;
+      transition: .3s;
       
       path {
-        transition: .4s;
-        stroke-width: 3;
+        transition: .3s;
+        stroke-width: 1;
       }
     }
   }
@@ -28,6 +28,7 @@ const StyledSVG = styled.svg<{ size: string; stroke?: string, flip?: boolean , m
   g {
     opacity: 0.7;
     path {
+      stroke-width: 0;
       stroke: ${({ stroke, theme }) => stroke ?? theme.primary1};
     }
   }
