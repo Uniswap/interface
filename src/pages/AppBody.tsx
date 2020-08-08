@@ -27,6 +27,7 @@ export const BodyWrapper = styled.div<{ disabled?: boolean }>`
  */
 export default function AppBody({ children, disabled }: { children: React.ReactNode; disabled?: boolean }) {
   return <HeadersPlusBodyWrapper>
+    <UnicornSvg mobile={true} />
     <h1 className="mainHeader">Mooniswap</h1>
     <h4 className="mainHeader">Next generation AMM protocol from 1inch team</h4>
     <UnicornSvg />
