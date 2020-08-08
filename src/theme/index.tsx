@@ -183,8 +183,8 @@ h1.mainHeader {
   font-weight: bold;
 }
 h4.mainHeader {
-  margin-top: 10px;
-  margin-bottom: 15px;
+  margin-top: 5px;
+  margin-bottom: 20px;
   font-weight: 400;
   font-family: 'Open Sans';
 }
