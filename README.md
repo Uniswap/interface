@@ -5,17 +5,6 @@
 
 An open source **Fork** of Uniswap interface -- a protocol for decentralized exchange of Ethereum tokens.
 
-**TODO: Detailed explanation**
-
-- Website: [uniswap.org](https://uniswap.org/)
-- Interface: [app.uniswap.org](https://app.uniswap.org)
-- Docs: [uniswap.org/docs/](https://uniswap.org/docs/)
-- Twitter: [@UniswapProtocol](https://twitter.com/UniswapProtocol)
-- Reddit: [/r/Uniswap](https://www.reddit.com/r/Uniswap/)
-- Email: [contact@uniswap.org](mailto:contact@uniswap.org)
-- Discord: [Uniswap](https://discord.gg/Y7TF6QA)
-- Whitepaper: [Link](https://hackmd.io/C-DvwDSfSxuh-Gd4WKE_ig)
-
 ## Accessing the Uniswap Interface
 
 To access the Uniswap Interface, use an IPFS gateway link from the
