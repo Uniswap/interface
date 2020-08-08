@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-
+import UnicornSvg from '../components/UnicornSvg'
 
 export const HeadersPlusBodyWrapper = styled.div<{ disabled?: boolean }>`
   position: relative;
@@ -28,7 +28,9 @@ export const BodyWrapper = styled.div<{ disabled?: boolean }>`
 export default function AppBody({ children, disabled }: { children: React.ReactNode; disabled?: boolean }) {
   return <HeadersPlusBodyWrapper>
     <h1 className="mainHeader">Mooniswap</h1>
-    <h4 className="mainHeader">boosted uniswap frok from 1inch team</h4>
+    <h4 className="mainHeader">boosted uniswap fork from 1inch team</h4>
+    <UnicornSvg />
+    <UnicornSvg flip={true} />
     <BodyWrapper disabled={disabled}>{children}</BodyWrapper>
   </HeadersPlusBodyWrapper>
 }
