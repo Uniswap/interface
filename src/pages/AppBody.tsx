@@ -38,7 +38,7 @@ export default function AppBody({ children, disabled }: { children: React.ReactN
     <div onMouseEnter={() => setHighlight(true)} onMouseLeave={() => setHighlight(false)}>
       <Logo/>
       <img className="mainWordmark" src={isDark ? WhiteWordmark : BlackWordmark} alt="logo" />
-      <h4 className="mainHeader">Next generation AMM protocol by 1inch team</h4>
+      <h4 className="mainHeader">Next generation AMM protocol by 1inch</h4>
     </div>
     <UnicornSvg highlight={highlight} />
     <UnicornSvg highlight={highlight} flip={true} />
