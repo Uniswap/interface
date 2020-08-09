@@ -11,7 +11,7 @@ import { Version } from './useToggledVersion'
 import {
   FLAG_DISABLE_ALL_SPLIT_SOURCES,
   FLAG_DISABLE_ALL_WRAP_SOURCES,
-  FLAG_DISABLE_MOONISWAP_ALL, ZERO_ADDRESS
+  FLAG_DISABLE_MOONISWAP_ALL
 } from '../constants/one-split'
 
 // function isZero(hexNumber: string) {
@@ -58,11 +58,15 @@ export function useSwapCallback(
           JSBI.add(FLAG_DISABLE_ALL_WRAP_SOURCES, JSBI.add(FLAG_DISABLE_ALL_SPLIT_SOURCES, FLAG_DISABLE_MOONISWAP_ALL)).toString()
         ])
       } else {
+        const minReturn = BigNumber.from(trade.outputAmount.raw.toString())
+          .mul(String(10000 - allowedSlippage)).div(String(10000))
+
+        debugger
         args.push(...[
           trade.inputAmount.token.address,
           trade.outputAmount.token.address,
-          trade.inputAmount.raw.toString(),
-          trade.inputAmount.multiply(String(10000 - allowedSlippage)).divide(String(10000)).toFixed(0),
+          fromAmount?.raw.toString(),
+          minReturn.toString(),
           '0x68a17B587CAF4f9329f0e372e3A78D23A46De6b5'
         ])
       }
