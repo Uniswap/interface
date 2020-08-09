@@ -61,7 +61,6 @@ export function useSwapCallback(
         const minReturn = BigNumber.from(trade.outputAmount.raw.toString())
           .mul(String(10000 - allowedSlippage)).div(String(10000))
 
-        debugger
         args.push(...[
           trade.inputAmount.token.address,
           trade.outputAmount.token.address,
