@@ -37,7 +37,7 @@ const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-top: 160px;
+  padding-top: 70px;
   align-items: center;
   flex: 1;
   overflow-y: auto;
@@ -52,7 +52,7 @@ const BodyWrapper = styled.div`
 `
 
 const Marginer = styled.div`
-  margin-top: 5rem;
+  // margin-top: 5rem;
 `
 
 export default function App() {

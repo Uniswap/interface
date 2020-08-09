@@ -59,7 +59,7 @@ export function colors(darkMode: boolean): Colors {
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#2172E5',
+    primary1: darkMode ? '#3A619D' : '#3A619D',
     primary2: darkMode ? '#3680E7' : '#3680E7',
     primary3: darkMode ? '#4D8FEA' : '#4D8FEA',
     primary4: darkMode ? '#376bad70' : '#376bad70',
@@ -182,8 +182,14 @@ h1.mainHeader {
   margin: 5px;
   font-weight: bold;
 }
+
+.mainWordmark {
+  width: 200px;
+  margin-top: 20px;
+}
+
 h4.mainHeader {
-  margin-top: 5px;
+  margin-top: 0;
   margin-bottom: 20px;
   font-weight: 400;
   font-family: 'Open Sans';
@@ -193,10 +199,17 @@ html, input, textarea, button {
   font-family: 'Inter', sans-serif;
   letter-spacing: -0.018em;
 }
+
 @supports (font-variation-settings: normal) {
   html, input, textarea, button {
     font-family: 'Inter var', sans-serif;
     font-display: fallback;
+  }
+}
+
+@media (max-width: ${(MEDIA_WIDTHS as any)['upToSmall']}px) {
+  .mainWordmark, .mainHeader {
+    // display: none
   }
 }
 
