@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import styled from 'styled-components'
 import UnicornSvg from '../components/UnicornSvg'
 
@@ -26,12 +26,16 @@ export const BodyWrapper = styled.div<{ disabled?: boolean }>`
  * The styled container element that wraps the content of most pages and the tabs.
  */
 export default function AppBody({ children, disabled }: { children: React.ReactNode; disabled?: boolean }) {
+  const [highlight, setHighlight] = useState<boolean>(false);
+
   return <HeadersPlusBodyWrapper>
     <UnicornSvg mobile={true} />
-    <h1 className="mainHeader">Mooniswap</h1>
-    <h4 className="mainHeader">Next generation AMM protocol from 1inch team</h4>
-    <UnicornSvg />
-    <UnicornSvg flip={true} />
+    <div onMouseEnter={() => setHighlight(true)} onMouseLeave={() => setHighlight(false)}>
+      <h1 className="mainHeader">Mooniswap</h1>
+      <h4 className="mainHeader">Next generation AMM protocol by 1inch team</h4>
+    </div>
+    <UnicornSvg highlight={highlight} />
+    <UnicornSvg highlight={highlight} flip={true} />
     <BodyWrapper disabled={disabled}>{children}</BodyWrapper>
   </HeadersPlusBodyWrapper>
 }

@@ -3,39 +3,46 @@ import {MEDIA_WIDTHS} from '../../theme/index';
 
 import styled from 'styled-components'
 
-const StyledSVG = styled.svg<{ size: string; stroke?: string, flip?: boolean , mobile?: boolean }>`
+const StyledSVG = styled.svg<{ size: string; stroke?: string, flip?: boolean , highlight?: boolean, mobile?: boolean }>`
   color: #717F94;
   position: absolute;
   top: 85px;
   left: 50%;
   width: 260px;
-  ${({ flip }) => flip ? 'margin-left: 220px;' : 'margin-left: -480px;'}
-  ${({ flip }) => flip ? 'transform:scale(-1,1);' : ''} 
-  ${({ mobile }) => mobile ? 'display: none;' : ''} 
+  opacity: .7;
+  margin-left: ${({ flip }) => flip ? '220px;' : '-480px;'}
   
-  :hover {
-    g {
+  ${({ flip }) => flip && 'transform:scale(-1,1);'} 
+  
+  ${({ mobile }) => mobile
+  ? 'display: none;'
+  : `:hover {
       opacity: 1;
-      transition: .3s;
-      
-      path {
+      g {
         transition: .3s;
-        stroke-width: 1;
+        
+        path {
+          transition: .3s;
+          stroke-width: 1;
+        }
       }
-    }
-  }
+    }`
+} 
+  
+  ${({highlight}) => highlight && `
+      opacity: 1; transition: .3s;
+  `}
  
   g {
-    opacity: 0.7;
     path {
-      stroke-width: 0;
+      stroke-width: ${({ highlight }) => highlight ? '1' : '0'} 
       stroke: ${({ stroke, theme }) => stroke ?? theme.primary1};
     }
   }
   
   @media (max-width: ${(MEDIA_WIDTHS as any)['upToSmall']}px) {
-    ${({ mobile }) => mobile === true 
-      ? `
+    ${({ mobile }) => mobile === true
+  ? `
         display: block;
         position: fixed;
         top: 0;
@@ -47,7 +54,7 @@ const StyledSVG = styled.svg<{ size: string; stroke?: string, flip?: boolean , m
         transform:scale(-1,1);
         z-index: -1;
       `
-      : 'display: none;'} 
+  : 'display: none;'} 
   }
 `
 
@@ -55,17 +62,17 @@ const StyledSVG = styled.svg<{ size: string; stroke?: string, flip?: boolean , m
  * Takes in custom size and stroke for circle color, default to primary color as fill,
  * need ...rest for layered styles on top
  */
-export default function UnicornSvg({ size = '16px', stroke = null, flip = false, mobile = false, ...rest }: { size?: string; stroke?: string, flip?: boolean, mobile?: boolean }) {
+export default function UnicornSvg({ size = '16px', stroke = null, flip = false, highlight = false, mobile = false, ...rest }: { size?: string, stroke?: string, flip?: boolean, highlight?: boolean, mobile?: boolean }) {
   return (
     <StyledSVG width="555" viewBox="0 0 555 881" xmlns="http://www.w3.org/2000/svg"
-               size={size} stroke={stroke} flip={flip} mobile={mobile} {...rest} >
-      <g fill="currentColor" opacity="0.1">
+               size={size} stroke={stroke} flip={flip} highlight={highlight} mobile={mobile} {...rest} >
+      <g fill="currentColor">
         <path
           d="M318.918 282.341C355.268 330.415 368.022 368.094 371.152 393.024C372.732 405.915 373.111 424.399 374.233 431.967C380.724 421.352 383.581 408.913 382.373 396.531C376.32 328.725 321.368 284.048 318.918 282.341Z"
           fill="currentColor"
         />
         <path d="M49.1385 357.604C41.9476 360.938 43.8599 374.982 44.8872 385.125L46.2621 383.545C47.9216 369.153 50.3871 361.222 58.0047 360.353C58.0047 360.29 56.3453 354.271 49.1385 357.604Z"
-            fill="currentColor"
+              fill="currentColor"
         />
         <path
           d="M139.618 271.346C131.179 275.58 118.077 276.986 110.175 278.818C120.053 282.689 134.529 280.588 142.305 276.543C152.499 271.346 156.734 259.418 157.193 248.106C151.63 257.506 148.88 266.669 139.618 271.346Z"
