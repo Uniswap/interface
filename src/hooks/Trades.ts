@@ -42,7 +42,6 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
 
           if (customBasesA && customBasesA.findIndex(base => tokenB.equals(base)) === -1) return false
           if (customBasesB && customBasesB.findIndex(base => tokenA.equals(base)) === -1) return false
-          console.log(tokenA, tokenB, customBasesA, customBasesB, 'allowing')
 
           return true
         }),
