@@ -163,9 +163,10 @@ export default function Swap() {
 
   // mark when a user has submitted an approval, reset onTokenSelection for input field
   useEffect(() => {
-    if (approval === ApprovalState.PENDING) {
+    setApprovalSubmitted(true)
+    /*if (approval === ApprovalState.PENDING) {
       setApprovalSubmitted(true)
-    }
+    }*/
   }, [approval, approvalSubmitted])
 
   // TODO: must check drago balances instead of user balances
