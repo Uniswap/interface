@@ -18,6 +18,7 @@ import { SwapState } from './reducer'
 import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
+import { ROUTER_ADDRESS } from '../../constants/index.ts'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -93,7 +94,8 @@ export function useDerivedSwapInfo(): {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
-  v2Trade: Trade | undefined
+  // v2Trade: Trade | undefined
+  dragoTrade: any | undefined
   inputError?: string
   v1Trade: Trade | undefined
 } {
@@ -181,11 +183,13 @@ export function useDerivedSwapInfo(): {
     inputError = 'Insufficient ' + amountIn.currency.symbol + ' balance'
   }
 
+  const dragoTrade = { ROUTER_ADDRESS, ...v2Trade }
+
   return {
     currencies,
     currencyBalances,
     parsedAmount,
-    v2Trade: v2Trade ?? undefined,
+    dragoTrade: dragoTrade ?? undefined,
     inputError,
     v1Trade
   }
