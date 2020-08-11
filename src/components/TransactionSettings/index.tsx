@@ -1,7 +1,7 @@
 import { JSBI, Percent } from '@uniswap/sdk'
 
 import { darken } from 'polished'
-import React, { useContext, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import Slider from '../../components/Slider'
 import { BIPS_BASE } from '../../constants'
@@ -121,6 +121,13 @@ export default function TransactionSettings({
 
   const maxSlippage = useIsExpertMode() ? 5000 : 500
 
+  const handleSlippageChange = useCallback(
+    (value: number) => {
+      setRawSlippage(value)
+    },
+    [setRawSlippage]
+  )
+
   return (
     <AutoColumn gap="md">
       <AutoColumn gap="sm">
@@ -131,15 +138,7 @@ export default function TransactionSettings({
           <QuestionHelper text="Your transaction will revert if the price changes unfavorably by more than this percentage." />
         </RowFixed>
         <RowBetween>
-          <Slider
-            value={rawSlippage}
-            onChange={value => {
-              setRawSlippage(value)
-            }}
-            step={10}
-            min={0}
-            max={maxSlippage}
-          />
+          <Slider size={18} value={rawSlippage} onChange={handleSlippageChange} step={10} min={0} max={maxSlippage} />
           <div style={{ minWidth: '4rem', textAlign: 'right' }}>
             {new Percent(JSBI.BigInt(rawSlippage), BIPS_BASE).toFixed(2)}%
           </div>

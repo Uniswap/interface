@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import styled from 'styled-components'
 
-const StyledRangeInput = styled.input`
+const StyledRangeInput = styled.input<{ size: number }>`
   -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
   width: 100%; /* Specific width is required for Firefox. */
   background: transparent; /* Otherwise white in Chrome */
@@ -17,8 +17,8 @@ const StyledRangeInput = styled.input`
 
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
-    height: 28px;
-    width: 28px;
+    height: ${({ size }) => size}px;
+    width: ${({ size }) => size}px;
     background-color: #565a69;
     border-radius: 100%;
     border: none;
@@ -33,8 +33,8 @@ const StyledRangeInput = styled.input`
   }
 
   &::-moz-range-thumb {
-    height: 28px;
-    width: 28px;
+    height: ${({ size }) => size}px;
+    width: ${({ size }) => size}px;
     background-color: #565a69;
     border-radius: 100%;
     border: none;
@@ -48,8 +48,8 @@ const StyledRangeInput = styled.input`
   }
 
   &::-ms-thumb {
-    height: 28px;
-    width: 28px;
+    height: ${({ size }) => size}px;
+    width: ${({ size }) => size}px;
     background-color: #565a69;
     border-radius: 100%;
     color: ${({ theme }) => theme.bg1};
@@ -93,9 +93,10 @@ interface InputSliderProps {
   step?: number
   min?: number
   max?: number
+  size?: number
 }
 
-export default function Slider({ value, onChange, min = 0, step = 1, max = 100 }: InputSliderProps) {
+export default function Slider({ value, onChange, min = 0, step = 1, max = 100, size = 28 }: InputSliderProps) {
   const changeCallback = useCallback(
     e => {
       onChange(parseInt(e.target.value))
@@ -105,6 +106,7 @@ export default function Slider({ value, onChange, min = 0, step = 1, max = 100 }
 
   return (
     <StyledRangeInput
+      size={size}
       type="range"
       value={value}
       style={{ width: '90%', marginLeft: 15, marginRight: 15, padding: '15px 0' }}

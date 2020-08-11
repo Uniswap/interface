@@ -343,7 +343,7 @@ export default function Swap() {
                         Slippage Tolerance
                       </ClickableText>
                       <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                        {allowedSlippage ? allowedSlippage / 100 : '-'}%
+                        {allowedSlippage / 100}%
                       </ClickableText>
                     </RowBetween>
                   )}

@@ -1,6 +1,6 @@
 import { Currency, Token } from '@uniswap/sdk'
 import { transparentize } from 'polished'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
@@ -94,6 +94,10 @@ export function TokenWarningModal({ currencies }: { currencies: { [field in Fiel
   const [dismissedToken1, dismissToken1] = useTokenWarningDismissal(chainId, currencies[Field.OUTPUT])
   const showWarning =
     (!dismissedToken0 && !!currencies[Field.INPUT]) || (!dismissedToken1 && !!currencies[Field.OUTPUT])
+
+  const [understandChecked, setUnderstandChecked] = useState(false)
+  const toggleUnderstand = useCallback(() => setUnderstandChecked(uc => !uc), [])
+
   return (
     <Modal isOpen={showWarning} onDismiss={() => null} maxHeight={90}>
       <WarningContainer className="token-warning-container">
@@ -103,12 +107,16 @@ export function TokenWarningModal({ currencies }: { currencies: { [field in Fiel
             <TYPE.main color={'red2'}>Token imported</TYPE.main>
           </AutoRow>
           <TYPE.body color={'red2'}>
-            Anyone can create and name any ERC20 token on Ethereum, including creating fake versions of existing tokens
-            and tokens that claim to represent projects that do not have a token.
+            Anyone can create an ERC20 token on Ethereum with <em>any</em> name, including creating fake versions of
+            existing tokens and tokens that claim to represent projects that do not have a token.
           </TYPE.body>
           <TYPE.body color={'red2'}>
             The Uniswap Interface can load arbitrary tokens by token addresses. Please take extra caution and do your
             research when interacting with arbitrary ERC20 tokens.
+          </TYPE.body>
+          <TYPE.body color={'red2'}>
+            Importantly, if you purchase an arbitrary token on Uniswap,{' '}
+            <strong>you may be unable to sell it back on Uniswap.</strong>
           </TYPE.body>
           {Object.keys(currencies).map(field => {
             const dismissed = field === Field.INPUT ? dismissedToken0 : dismissedToken1
@@ -117,8 +125,13 @@ export function TokenWarningModal({ currencies }: { currencies: { [field in Fiel
             ) : null
           })}
           <RowBetween>
-            <div />
+            <div>
+              <label style={{ cursor: 'pointer' }}>
+                <input type="checkbox" onChange={toggleUnderstand} /> I understand
+              </label>
+            </div>
             <ButtonError
+              disabled={!understandChecked}
               error={true}
               width={'140px'}
               padding="0.5rem 1rem"
@@ -131,10 +144,9 @@ export function TokenWarningModal({ currencies }: { currencies: { [field in Fiel
               }}
             >
               <TYPE.body color="white" className="token-dismiss-button">
-                I understand
+                Continue
               </TYPE.body>
             </ButtonError>
-            <div />
           </RowBetween>
         </AutoColumn>
       </WarningContainer>
