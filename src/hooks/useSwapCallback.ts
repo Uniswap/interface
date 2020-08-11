@@ -104,8 +104,6 @@ function useSwapCallArguments(
   }, [account, allowedSlippage, chainId, deadline, library, recipient, trade, v1Exchange])
 }
 
-const DEFAULT_FAILED_SWAP_ERROR = 'Unexpected error. Please try again or contact support.'
-
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
@@ -161,17 +159,19 @@ export function useSwapCallback(
                 return contract.callStatic[methodName](...args, options)
                   .then(result => {
                     console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
-                    return { call, error: new Error(DEFAULT_FAILED_SWAP_ERROR) }
+                    return { call, error: new Error('Unexpected issue with estimating the gas. Please try again.') }
                   })
                   .catch(callError => {
                     console.debug('Call threw error', call, callError)
-                    let errorMessage: string = DEFAULT_FAILED_SWAP_ERROR
+                    let errorMessage: string
                     switch (callError.reason) {
                       case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
                       case 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT':
                         errorMessage =
                           'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
                         break
+                      default:
+                        errorMessage = `The transaction cannot succeed due to error: ${callError.reason}. This is probably an issue with one of the tokens you are swapping.`
                     }
                     return { call, error: new Error(errorMessage) }
                   })
@@ -188,7 +188,7 @@ export function useSwapCallback(
         if (!successfulEstimation) {
           const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
           if (errorCalls.length > 0) throw errorCalls[errorCalls.length - 1].error
-          throw new Error(DEFAULT_FAILED_SWAP_ERROR)
+          throw new Error('Unexpected error. Please contact support: none of the calls threw an error')
         }
 
         const {
@@ -235,7 +235,7 @@ export function useSwapCallback(
             } else {
               // otherwise, the error was unexpected and we need to convey that
               console.error(`Swap failed`, error, methodName, args, value)
-              throw new Error(DEFAULT_FAILED_SWAP_ERROR)
+              throw new Error(`Swap failed: ${error.message}`)
             }
           })
       },
