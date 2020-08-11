@@ -117,7 +117,8 @@ export function useDerivedSwapInfo(): {
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
 
   // recipientLookup is drago address
-  const relevantTokenBalances = useCurrencyBalances(recipientLookup ?? undefined, [
+  const dragoAddress = recipientLookup.address
+  const relevantTokenBalances = useCurrencyBalances(dragoAddress ?? undefined, [
     inputCurrency ?? undefined,
     outputCurrency ?? undefined
   ])
