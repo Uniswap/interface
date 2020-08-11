@@ -1,19 +1,15 @@
-import { JSBI, Percent } from '@uniswap/sdk'
-
-import { darken } from 'polished'
-import React, { useCallback, useContext, useState } from 'react'
+import React, { useState, useRef, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import Slider from '../../components/Slider'
-import { BIPS_BASE } from '../../constants'
-import { useIsExpertMode } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
-import useDebouncedChangeHandler from '../../utils/useDebouncedChangeHandler'
-import { AutoColumn } from '../Column'
 
 import QuestionHelper from '../QuestionHelper'
+import { TYPE } from '../../theme'
+import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 
+import { darken } from 'polished'
+
 enum SlippageError {
+  InvalidInput = 'InvalidInput',
   RiskyLow = 'RiskyLow',
   RiskyHigh = 'RiskyHigh'
 }
@@ -39,6 +35,15 @@ const FancyButton = styled.button`
   :focus {
     border: 1px solid ${({ theme }) => theme.primary1};
   }
+`
+
+const Option = styled(FancyButton)<{ active: boolean }>`
+  margin-right: 8px;
+  :hover {
+    cursor: pointer;
+  }
+  background-color: ${({ active, theme }) => active && theme.primary1};
+  color: ${({ active, theme }) => (active ? theme.white : theme.text1)};
 `
 
 const Input = styled.input`
@@ -73,40 +78,64 @@ const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }
   }
 `
 
-export interface TransactionSettingsProps {
+const SlippageEmojiContainer = styled.span`
+  color: #f3841e;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none;  
+  `}
+`
+
+export interface SlippageTabsProps {
   rawSlippage: number
   setRawSlippage: (rawSlippage: number) => void
   deadline: number
   setDeadline: (deadline: number) => void
 }
 
-export default function TransactionSettings({
-  rawSlippage: rawSlippageOuter,
-  setRawSlippage: setRawSlippageOuter,
-  deadline,
-  setDeadline
-}: TransactionSettingsProps) {
+export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadline }: SlippageTabsProps) {
   const theme = useContext(ThemeContext)
 
+  const inputRef = useRef<HTMLInputElement>()
+
+  const [slippageInput, setSlippageInput] = useState('')
   const [deadlineInput, setDeadlineInput] = useState('')
 
+  const slippageInputIsValid =
+    slippageInput === '' || (rawSlippage / 100).toFixed(2) === Number.parseFloat(slippageInput).toFixed(2)
   const deadlineInputIsValid = deadlineInput === '' || (deadline / 60).toString() === deadlineInput
 
-  const [rawSlippage, setRawSlippage] = useDebouncedChangeHandler(rawSlippageOuter, setRawSlippageOuter)
-
-  let slippageError: SlippageError | undefined
-  if (rawSlippage < 50) {
+  let slippageError: SlippageError
+  if (slippageInput !== '' && !slippageInputIsValid) {
+    slippageError = SlippageError.InvalidInput
+  } else if (slippageInputIsValid && rawSlippage < 50) {
     slippageError = SlippageError.RiskyLow
-  } else if (rawSlippage > 200) {
+  } else if (slippageInputIsValid && rawSlippage > 500) {
     slippageError = SlippageError.RiskyHigh
   }
 
-  let deadlineError: DeadlineError | undefined
+  let deadlineError: DeadlineError
   if (deadlineInput !== '' && !deadlineInputIsValid) {
     deadlineError = DeadlineError.InvalidInput
   }
 
-  function parseDeadline(event) {
+  function parseCustomSlippage(event) {
+    setSlippageInput(event.target.value)
+
+    let valueAsIntFromRoundedFloat: number
+    try {
+      valueAsIntFromRoundedFloat = Number.parseInt((Number.parseFloat(event.target.value) * 100).toString())
+    } catch {}
+
+    if (
+      typeof valueAsIntFromRoundedFloat === 'number' &&
+      !Number.isNaN(valueAsIntFromRoundedFloat) &&
+      valueAsIntFromRoundedFloat < 5000
+    ) {
+      setRawSlippage(valueAsIntFromRoundedFloat)
+    }
+  }
+
+  function parseCustomDeadline(event) {
     setDeadlineInput(event.target.value)
 
     let valueAsInt: number
@@ -119,15 +148,6 @@ export default function TransactionSettings({
     }
   }
 
-  const maxSlippage = useIsExpertMode() ? 5000 : 500
-
-  const handleSlippageChange = useCallback(
-    (value: number) => {
-      setRawSlippage(value)
-    },
-    [setRawSlippage]
-  )
-
   return (
     <AutoColumn gap="md">
       <AutoColumn gap="sm">
@@ -138,20 +158,68 @@ export default function TransactionSettings({
           <QuestionHelper text="Your transaction will revert if the price changes unfavorably by more than this percentage." />
         </RowFixed>
         <RowBetween>
-          <Slider size={18} value={rawSlippage} onChange={handleSlippageChange} step={10} min={0} max={maxSlippage} />
-          <div style={{ minWidth: '4rem', textAlign: 'right' }}>
-            {new Percent(JSBI.BigInt(rawSlippage), BIPS_BASE).toFixed(2)}%
-          </div>
+          <Option
+            onClick={() => {
+              setSlippageInput('')
+              setRawSlippage(10)
+            }}
+            active={rawSlippage === 10}
+          >
+            0.1%
+          </Option>
+          <Option
+            onClick={() => {
+              setSlippageInput('')
+              setRawSlippage(50)
+            }}
+            active={rawSlippage === 50}
+          >
+            0.5%
+          </Option>
+          <Option
+            onClick={() => {
+              setSlippageInput('')
+              setRawSlippage(100)
+            }}
+            active={rawSlippage === 100}
+          >
+            1%
+          </Option>
+          <OptionCustom active={![10, 50, 100].includes(rawSlippage)} warning={!slippageInputIsValid} tabIndex={-1}>
+            <RowBetween>
+              {!!slippageInput &&
+              (slippageError === SlippageError.RiskyLow || slippageError === SlippageError.RiskyHigh) ? (
+                <SlippageEmojiContainer>
+                  <span role="img" aria-label="warning">
+                    ⚠️
+                  </span>
+                </SlippageEmojiContainer>
+              ) : null}
+              <Input
+                ref={inputRef}
+                placeholder={(rawSlippage / 100).toFixed(2)}
+                value={slippageInput}
+                onBlur={() => {
+                  parseCustomSlippage({ target: { value: (rawSlippage / 100).toFixed(2) } })
+                }}
+                onChange={parseCustomSlippage}
+                color={!slippageInputIsValid ? 'red' : ''}
+              />
+              %
+            </RowBetween>
+          </OptionCustom>
         </RowBetween>
-        {slippageError && (
+        {!!slippageError && (
           <RowBetween
             style={{
               fontSize: '14px',
               paddingTop: '7px',
-              color: '#F3841E'
+              color: slippageError === SlippageError.InvalidInput ? 'red' : '#F3841E'
             }}
           >
-            {slippageError === SlippageError.RiskyLow
+            {slippageError === SlippageError.InvalidInput
+              ? 'Enter a valid slippage percentage'
+              : slippageError === SlippageError.RiskyLow
               ? 'Your transaction may fail'
               : 'Your transaction may be frontrun'}
           </RowBetween>
@@ -170,11 +238,11 @@ export default function TransactionSettings({
             <Input
               color={!!deadlineError ? 'red' : undefined}
               onBlur={() => {
-                parseDeadline({ target: { value: (deadline / 60).toString() } })
+                parseCustomDeadline({ target: { value: (deadline / 60).toString() } })
               }}
               placeholder={(deadline / 60).toString()}
               value={deadlineInput}
-              onChange={parseDeadline}
+              onChange={parseCustomDeadline}
             />
           </OptionCustom>
           <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>
