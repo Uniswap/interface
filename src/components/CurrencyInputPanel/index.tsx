@@ -90,6 +90,7 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 
 `
 
+/*
 const StyledBalanceMax = styled.button`
   height: 28px;
   background-color: ${({ theme }) => theme.primary5};
@@ -113,6 +114,7 @@ const StyledBalanceMax = styled.button`
     margin-right: 0.5rem;
   `};
 `
+*/
 
 interface CurrencyInputPanelProps {
   value: string
