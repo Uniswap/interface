@@ -1,0 +1,460 @@
+[{
+        "constant": false,
+        "inputs": [{
+                "name": "_exchange",
+                "type": "address"
+            },
+            {
+                "components": [{
+                    "name": "assembledData",
+                    "type": "bytes"
+                }],
+                "name": "transactions",
+                "type": "tuple[]"
+            }
+        ],
+        "name": "batchOperateOnExchange",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [{
+            "name": "_transactionFee",
+            "type": "uint256"
+        }],
+        "name": "setTransactionFee",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [{
+                "name": "_exchange",
+                "type": "address"
+            },
+            {
+                "components": [{
+                    "name": "assembledData",
+                    "type": "bytes"
+                }],
+                "name": "transaction",
+                "type": "tuple"
+            }
+        ],
+        "name": "operateOnExchange",
+        "outputs": [{
+            "name": "success",
+            "type": "bool"
+        }],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [{
+                "name": "_enforced",
+                "type": "bool"
+            },
+            {
+                "name": "_kycProvider",
+                "type": "address"
+            }
+        ],
+        "name": "enforceKyc",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [{
+            "name": "_new",
+            "type": "address"
+        }],
+        "name": "setOwner",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [{
+                "name": "hash",
+                "type": "bytes32"
+            },
+            {
+                "name": "signature",
+                "type": "bytes"
+            }
+        ],
+        "name": "isValidSignature",
+        "outputs": [{
+            "name": "isValid",
+            "type": "bool"
+        }],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "totalSupply",
+        "outputs": [{
+            "name": "",
+            "type": "uint256"
+        }],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [],
+        "name": "buyDrago",
+        "outputs": [{
+            "name": "success",
+            "type": "bool"
+        }],
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [{
+                "name": "_newSellPrice",
+                "type": "uint256"
+            },
+            {
+                "name": "_newBuyPrice",
+                "type": "uint256"
+            },
+            {
+                "name": "_signaturevaliduntilBlock",
+                "type": "uint256"
+            },
+            {
+                "name": "_hash",
+                "type": "bytes32"
+            },
+            {
+                "name": "_signedData",
+                "type": "bytes"
+            }
+        ],
+        "name": "setPrices",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "getData",
+        "outputs": [{
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "name": "symbol",
+                "type": "string"
+            },
+            {
+                "name": "sellPrice",
+                "type": "uint256"
+            },
+            {
+                "name": "buyPrice",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [{
+            "name": "_minPeriod",
+            "type": "uint32"
+        }],
+        "name": "changeMinPeriod",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [{
+            "name": "_amount",
+            "type": "uint256"
+        }],
+        "name": "sellDrago",
+        "outputs": [{
+            "name": "success",
+            "type": "bool"
+        }],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [{
+            "name": "_hodler",
+            "type": "address"
+        }],
+        "name": "buyDragoOnBehalf",
+        "outputs": [{
+            "name": "success",
+            "type": "bool"
+        }],
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [{
+            "name": "_who",
+            "type": "address"
+        }],
+        "name": "balanceOf",
+        "outputs": [{
+            "name": "",
+            "type": "uint256"
+        }],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "getEventful",
+        "outputs": [{
+            "name": "",
+            "type": "address"
+        }],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "owner",
+        "outputs": [{
+            "name": "",
+            "type": "address"
+        }],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "getAdminData",
+        "outputs": [{
+                "name": "",
+                "type": "address"
+            },
+            {
+                "name": "feeCollector",
+                "type": "address"
+            },
+            {
+                "name": "dragoDao",
+                "type": "address"
+            },
+            {
+                "name": "ratio",
+                "type": "uint256"
+            },
+            {
+                "name": "transactionFee",
+                "type": "uint256"
+            },
+            {
+                "name": "minPeriod",
+                "type": "uint32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [{
+            "name": "_feeCollector",
+            "type": "address"
+        }],
+        "name": "changeFeeCollector",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "calcSharePrice",
+        "outputs": [{
+            "name": "",
+            "type": "uint256"
+        }],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "getExchangesAuth",
+        "outputs": [{
+            "name": "",
+            "type": "address"
+        }],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [{
+                "name": "_tokenTransferProxy",
+                "type": "address"
+            },
+            {
+                "name": "_tokens",
+                "type": "address[]"
+            },
+            {
+                "name": "_amounts",
+                "type": "uint256[]"
+            }
+        ],
+        "name": "setMultipleAllowances",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [{
+            "name": "_dragoDao",
+            "type": "address"
+        }],
+        "name": "changeDragoDao",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [{
+                "name": "_tokenTransferProxy",
+                "type": "address"
+            },
+            {
+                "name": "_token",
+                "type": "address"
+            },
+            {
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "setAllowance",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "getKycProvider",
+        "outputs": [{
+            "name": "",
+            "type": "address"
+        }],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [{
+            "name": "_ratio",
+            "type": "uint256"
+        }],
+        "name": "changeRatio",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [{
+                "name": "_dragoName",
+                "type": "string"
+            },
+            {
+                "name": "_dragoSymbol",
+                "type": "string"
+            },
+            {
+                "name": "_dragoId",
+                "type": "uint256"
+            },
+            {
+                "name": "_owner",
+                "type": "address"
+            },
+            {
+                "name": "_authority",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "fallback"
+    },
+    {
+        "anonymous": false,
+        "inputs": [{
+                "indexed": true,
+                "name": "old",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "name": "current",
+                "type": "address"
+            }
+        ],
+        "name": "NewOwner",
+        "type": "event"
+    }
+]
