@@ -2,8 +2,9 @@ import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { TokenList } from '@uniswap/token-lists/dist/types'
 import { DEFAULT_TOKEN_LIST_URL } from '../../constants'
+import { updateVersion } from '../user/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList, selectList } from './actions'
-import UNISWAP_DEFAULT_LIST from '@uniswap/default-token-list/uniswap-default.tokenlist.json'
+import UNISWAP_DEFAULT_LIST from '@uniswap/default-token-list'
 
 export interface ListsState {
   readonly byUrl: {
@@ -108,5 +109,8 @@ export default createReducer(initialState, builder =>
         pendingUpdate: null,
         current: state.byUrl[url].pendingUpdate
       }
+    })
+    .addCase(updateVersion, state => {
+      delete state.byUrl['https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json']
     })
 )
