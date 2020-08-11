@@ -6,7 +6,7 @@ import { BIPS_BASE, DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin, getDragoContract, isAddress, shortenAddress } from '../utils'
-import { Dragov2_INTERFACE } from '../constants/abis/dragov2'
+//import { Dragov2_INTERFACE } from '../constants/abis/dragov2'
 import isZero from '../utils/isZero'
 import v1SwapArguments from '../utils/v1SwapArguments'
 import { useActiveWeb3React } from './index'
@@ -72,8 +72,8 @@ function useSwapCallArguments(
     switch (tradeVersion) {
       case Version.v2:
         swapMethods.push(
-          // TODO: Drago.swapCallParameters({receipient, ...trade})
-          Dragov2_INTERFACE.swapCallParameters({ recipient, trade }, {
+          // TODO: Drago.operateOnExchange({receipient, ...trade})
+          Router.swapCallParameters({ recipient, trade }, {
             feeOnTransfer: false,
             allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
             recipient,
