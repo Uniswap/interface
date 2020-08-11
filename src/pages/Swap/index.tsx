@@ -153,8 +153,7 @@ export default function Swap() {
 
   // check whether the user has approved the router on the input token
   // RigoBlock note: protocol handles approvals, approval is true
-  // const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
-  const [approval, approveCallback] = useState<boolean>(true)
+  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   // RigoBlock note: protocol handles approvals, approval is true
