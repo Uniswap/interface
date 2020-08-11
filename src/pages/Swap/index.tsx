@@ -152,10 +152,14 @@ export default function Swap() {
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
+  // RigoBlock note: protocol handles approvals, approval is true
+  // const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
+  const [approval, approveCallback] = useState<boolean>(true)
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
-  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
+  // RigoBlock note: protocol handles approvals, approval is true
+  // const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
+  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(true)
 
   // mark when a user has submitted an approval, reset onTokenSelection for input field
   useEffect(() => {
@@ -164,6 +168,7 @@ export default function Swap() {
     }
   }, [approval, approvalSubmitted])
 
+  // TODO: must check drago balances instead of user balances
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
@@ -323,9 +328,9 @@ export default function Swap() {
                   <ArrowWrapper clickable={false}>
                     <ArrowDown size="16" color={theme.text2} />
                   </ArrowWrapper>
-                  <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
+                  {/*<LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
                     - Remove send
-                  </LinkStyledButton>
+                  </LinkStyledButton>*/}
                 </AutoRow>
                 <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
               </>
