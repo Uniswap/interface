@@ -231,9 +231,9 @@ export default function Swap() {
   // never show if price impact is above threshold in non expert mode
   const showApproveFlow =
     !swapInputError &&
-    (approval === ApprovalState.NOT_APPROVED ||
+    /*(approval === ApprovalState.NOT_APPROVED ||
       approval === ApprovalState.PENDING ||
-      (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
+      (approvalSubmitted && approval === ApprovalState.APPROVED)) &&*/
     !(priceImpactSeverity > 3 && !isExpertMode)
 
   const [dismissedToken0] = useTokenWarningDismissal(chainId, currencies[Field.INPUT])
