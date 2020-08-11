@@ -211,7 +211,7 @@ function parseIndependentFieldURLParameter(urlParam: any): Field {
 const ENS_NAME_REGEX = /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?$/
 const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
 function validatedRecipient(recipient: any): string | null {
-  if (typeof recipient !== 'string') return null
+  if (typeof recipient !== 'string') return ''
   const address = isAddress(recipient)
   if (address) return address
   if (ENS_NAME_REGEX.test(recipient)) return recipient

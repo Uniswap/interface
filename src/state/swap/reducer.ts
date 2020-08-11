@@ -23,7 +23,7 @@ const initialState: SwapState = {
   [Field.OUTPUT]: {
     currencyId: ''
   },
-  recipient: null
+  recipient: ''
 }
 
 export default createReducer<SwapState>(initialState, builder =>
