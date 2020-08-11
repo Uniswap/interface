@@ -94,8 +94,8 @@ export function useDerivedSwapInfo(): {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
-  // v2Trade: Trade | undefined
-  dragoTrade: any | undefined
+  v2Trade: Trade | undefined
+  //dragoTrade: any | undefined
   inputError?: string
   v1Trade: Trade | undefined
 } {
@@ -183,13 +183,14 @@ export function useDerivedSwapInfo(): {
     inputError = 'Insufficient ' + amountIn.currency.symbol + ' balance'
   }
 
-  const dragoTrade = { ROUTER_ADDRESS, ...v2Trade }
+  //const dragoTrade = { ROUTER_ADDRESS, ...v2Trade }
 
   return {
     currencies,
     currencyBalances,
     parsedAmount,
-    dragoTrade: dragoTrade ?? undefined,
+    //dragoTrade: dragoTrade ?? undefined,
+    v2Trade: v2Trade ?? undefined,
     inputError,
     v1Trade
   }
