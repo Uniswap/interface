@@ -96,7 +96,7 @@ export function getRouterContract(_: number, library: Web3Provider, account?: st
   return getContract(ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account)
 }
 
-// account is optional
+// account, recipient are optional
 export function getDragoContract(_: number, library: Web3Provider, account?: string, recipient?: string): Contract {
   return getContract(recipient, Dragov2_ABI, library, account)
 }
