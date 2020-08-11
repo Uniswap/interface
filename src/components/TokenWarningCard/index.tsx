@@ -111,12 +111,11 @@ export function TokenWarningModal({ currencies }: { currencies: { [field in Fiel
             existing tokens and tokens that claim to represent projects that do not have a token.
           </TYPE.body>
           <TYPE.body color={'red2'}>
-            The Uniswap Interface can load arbitrary tokens by token addresses. Please take extra caution and do your
-            research when interacting with arbitrary ERC20 tokens.
+            This interface can load arbitrary tokens by token addresses. Please take extra caution and do your research
+            when interacting with arbitrary ERC20 tokens.
           </TYPE.body>
           <TYPE.body color={'red2'}>
-            Importantly, if you purchase an arbitrary token on Uniswap,{' '}
-            <strong>you may be unable to sell it back on Uniswap.</strong>
+            If you purchase an arbitrary token, <strong>you may be unable to sell it back.</strong>
           </TYPE.body>
           {Object.keys(currencies).map(field => {
             const dismissed = field === Field.INPUT ? dismissedToken0 : dismissedToken1
