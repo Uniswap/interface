@@ -659,7 +659,7 @@ export default function RemoveLiquidity({
                     {approval === ApprovalState.PENDING ? (
                       <Dots>Approving</Dots>
                     ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
-                      'Approved'
+                      'Drago Curabit'
                     ) : (
                       'Approve'
                     )}

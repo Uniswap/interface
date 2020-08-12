@@ -389,7 +389,7 @@ export default function Swap() {
                   {approval === ApprovalState.PENDING ? (
                     <Dots>Approving</Dots>
                   ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
-                    'Approved'
+                    'Drago Curabit'
                   ) : (
                     'Approve ' + currencies[Field.INPUT]?.symbol
                   )}
