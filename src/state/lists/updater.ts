@@ -1,19 +1,13 @@
 import { getVersionUpgrade, minVersionBump, VersionUpgrade } from '@uniswap/token-lists'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { DEFAULT_TOKEN_LIST_URL } from '../../constants'
 import { addPopup } from '../application/actions'
 import { AppDispatch, AppState } from '../index'
-import { acceptListUpdate, addList, fetchTokenList } from './actions'
+import { acceptListUpdate, fetchTokenList } from './actions'
 
 export default function Updater(): null {
   const dispatch = useDispatch<AppDispatch>()
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-
-  // we should always fetch the default token list, so add it
-  useEffect(() => {
-    if (!lists[DEFAULT_TOKEN_LIST_URL]) dispatch(addList(DEFAULT_TOKEN_LIST_URL))
-  }, [dispatch, lists])
 
   // on initial mount, refetch all the lists in storage
   useEffect(() => {

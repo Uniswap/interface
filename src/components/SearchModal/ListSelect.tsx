@@ -2,22 +2,21 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'rebass'
-import { DEFAULT_TOKEN_LIST_URL } from '../../constants'
 import { AppDispatch, AppState } from '../../state'
 import { addList, removeList, selectList } from '../../state/lists/actions'
 import { useSelectedListUrl } from '../../state/lists/hooks'
-import { CloseIcon, TYPE } from '../../theme'
+import { CloseIcon, ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 import { getTokenList } from '../../utils/getTokenList'
 import listVersionLabel from '../../utils/listVersionLabel'
 import uriToHttp from '../../utils/uriToHttp'
-import { ButtonPrimary, ButtonSecondary } from '../Button'
+import { ButtonPrimary } from '../Button'
 import Column from '../Column'
 import Row, { RowBetween } from '../Row'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 
 export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBack: () => void }) {
   const [listUrlInput, setListUrlInput] = useState<string>('')
-  const [{ adding, addError }, setAddState] = useState<{ adding: boolean; addError: string | null }>({
+  const [{ addError }, setAddState] = useState<{ adding: boolean; addError: string | null }>({
     adding: false,
     addError: null
   })
@@ -59,32 +58,38 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
 
   return (
     <Column style={{ width: '100%', flex: '1 1' }}>
-      <PaddedColumn gap="14px">
+      <PaddedColumn>
         <RowBetween>
           <div>
             <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} />
           </div>
-          <Text fontWeight={500} fontSize={16}>
+          <Text fontWeight={500} fontSize={20}>
             Manage Lists
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
+      </PaddedColumn>
 
-        <Separator />
+      <Separator />
 
+      <PaddedColumn gap="14px">
+        <Row>
+          <Text fontWeight={600}>Add a list</Text>
+        </Row>
         <Row>
           <SearchInput
             type="text"
             id="list-add-input"
-            placeholder="ipfs:// or https://"
+            placeholder="https:// or ipfs://"
             value={listUrlInput}
             onChange={handleInput}
             onKeyDown={handleEnterKey}
+            style={{ height: '1.8rem', borderRadius: 6 }}
           />
           <ButtonPrimary
-            style={{ maxWidth: '4rem', marginLeft: '1rem' }}
+            style={{ height: '1.8rem', maxWidth: '4rem', marginLeft: '1rem', borderRadius: 6, padding: '16px 18px' }}
             onClick={handleAddList}
-            disabled={adding || !validUrl}
+            disabled={!validUrl}
           >
             Add
           </ButtonPrimary>
@@ -98,38 +103,48 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
 
       <Separator />
 
-      <div style={{ flex: '1', padding: '1rem' }}>
+      <PaddedColumn gap="14px">
         {Object.keys(lists).map(listUrl => {
           const { current: list } = lists[listUrl]
 
           const isSelected = listUrl === selectedListUrl
 
           return (
-            <div key={listUrl}>
-              <div title={listUrl}>{list?.name ?? listUrl}</div>
-              <div>{list?.version && listVersionLabel(list?.version)}</div>
-              <Row>
-                <ButtonSecondary
-                  onClick={() => {
-                    !isSelected && dispatch(selectList(listUrl))
+            <Row key={listUrl} align="center">
+              <div style={{ marginRight: '1rem' }}>
+                <input
+                  type="radio"
+                  value={listUrl}
+                  checked={isSelected}
+                  onChange={e => {
+                    if (e.target.checked) dispatch(selectList(listUrl))
                   }}
-                  disabled={isSelected}
-                >
-                  {isSelected ? 'Selected' : 'Select'}
-                </ButtonSecondary>
-                <ButtonSecondary
-                  onClick={() => {
-                    dispatch(removeList(listUrl))
-                  }}
-                  disabled={listUrl === DEFAULT_TOKEN_LIST_URL}
-                >
-                  Remove
-                </ButtonSecondary>
-              </Row>
-            </div>
+                />
+              </div>
+              <Column style={{ flex: '1' }}>
+                <Row style={{ marginBottom: 6 }}>
+                  <Text fontWeight={isSelected ? 500 : 400} fontSize={16}>
+                    {list?.name ?? listUrl}
+                  </Text>
+                </Row>
+                <RowBetween>
+                  <div>
+                    <ExternalLink href={listUrl}>View List</ExternalLink>
+                    <LinkStyledButton
+                      onClick={() => {
+                        dispatch(removeList(listUrl))
+                      }}
+                    >
+                      Remove
+                    </LinkStyledButton>
+                  </div>
+                  <div>{list && listVersionLabel(list.version)}</div>
+                </RowBetween>
+              </Column>
+            </Row>
           )
         })}
-      </div>
+      </PaddedColumn>
     </Column>
   )
 }
