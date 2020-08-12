@@ -1,52 +1,34 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
+import { AlertTriangle } from 'react-feather'
+import { ImageProps } from 'rebass'
 
-const BAD_URIS: { [tokenAddress: string]: true } = {}
+const BAD_SRCS: { [tokenAddress: string]: true } = {}
 
-const Image = styled.img`
-  background-color: white;
-  border-radius: 1rem;
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
-`
-
-const Emoji = styled.span<{ size?: string }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: ${({ size }) => size};
-  width: ${({ size }) => size};
-  height: ${({ size }) => size};
-  margin-bottom: -4px;
-`
+export interface LogoProps extends Pick<ImageProps, 'style' | 'alt' | 'className'> {
+  srcs: string[]
+}
 
 /**
- * Renders an image by sequentially trying a list of URIs, and then eventually a fallback image
- * @param uris
- * @constructor
+ * Renders an image by sequentially trying a list of URIs, and then eventually a fallback triangle alert
  */
-export default function Logo({ uris, ...rest }: { uris: string[]; alt: string; style?: React.CSSProperties }) {
+export default function Logo({ srcs, alt, ...rest }: LogoProps) {
   const [, refresh] = useState<number>(0)
 
-  const uri: string | undefined = uris.find(uri => !BAD_URIS[uri])
+  const src: string | undefined = srcs.find(src => !BAD_SRCS[src])
 
-  if (uri) {
+  if (src) {
     return (
-      <Image
+      <img
         {...rest}
-        src={uri}
+        alt={alt}
+        src={src}
         onError={() => {
-          if (uri) BAD_URIS[uri] = true
+          if (src) BAD_SRCS[src] = true
           refresh(i => i + 1)
         }}
       />
     )
   }
 
-  return (
-    <Emoji {...rest}>
-      <span role="img" aria-label="Thinking">
-        🤔
-      </span>
-    </Emoji>
-  )
+  return <AlertTriangle {...rest} />
 }
