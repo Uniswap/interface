@@ -198,7 +198,7 @@ export function useTokenWarningDismissal(chainId?: number, token?: Currency): [b
  * @param tokenA one of the two tokens
  * @param tokenB the other token
  */
-export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
+export function toDXSwapLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
   return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 18, 'DXD', 'DXswap')
 }
 

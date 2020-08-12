@@ -16,7 +16,7 @@ import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
 import { usePairs } from '../../data/Reserves'
-import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
+import { toDXSwapLiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import AppBody from '../AppBody'
 import { Dots } from '../../components/swap/styleds'
 
@@ -24,34 +24,34 @@ export default function Pool() {
   const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
 
-  // fetch the user's balances of all tracked V2 LP tokens
+  // fetch the user's balances of all tracked DXSwap LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
   const tokenPairsWithLiquidityTokens = useMemo(
-    () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
+    () => trackedTokenPairs.map(tokens => ({ liquidityToken: toDXSwapLiquidityToken(tokens), tokens })),
     [trackedTokenPairs]
   )
   const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
     tokenPairsWithLiquidityTokens
   ])
-  const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
+  const [dxSwapPairsBalances, fetchingDXSwapPairBalances] = useTokenBalancesWithLoadingIndicator(
     account ?? undefined,
     liquidityTokens
   )
 
-  // fetch the reserves for all V2 pools in which the user has a balance
+  // fetch the reserves for all DXSwap pools in which the user has a balance
   const liquidityTokensWithBalances = useMemo(
     () =>
       tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
-        v2PairsBalances[liquidityToken.address]?.greaterThan('0')
+        dxSwapPairsBalances[liquidityToken.address]?.greaterThan('0')
       ),
-    [tokenPairsWithLiquidityTokens, v2PairsBalances]
+    [tokenPairsWithLiquidityTokens, dxSwapPairsBalances]
   )
 
-  const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
-  const v2IsLoading =
-    fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
+  const dxSwapPairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
+  const dxSwapIsLoading =
+    fetchingDXSwapPairBalances || dxSwapPairs?.length < liquidityTokensWithBalances.length || dxSwapPairs?.some(DXSwapPair => !DXSwapPair)
 
-  const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
+  const allDXSwapPairsWithLiquidity = dxSwapPairs.map(([, pair]) => pair).filter((dxSwapPair): dxSwapPair is Pair => Boolean(dxSwapPair))
 
   return (
     <>
@@ -78,16 +78,16 @@ export default function Pool() {
                   Connect to a wallet to view your liquidity.
                 </TYPE.body>
               </LightCard>
-            ) : v2IsLoading ? (
+            ) : dxSwapIsLoading ? (
               <LightCard padding="40px">
                 <TYPE.body color={theme.text3} textAlign="center">
                   <Dots>Loading</Dots>
                 </TYPE.body>
               </LightCard>
-            ) : allV2PairsWithLiquidity?.length > 0 ? (
+            ) : allDXSwapPairsWithLiquidity?.length > 0 ? (
               <>
-                {allV2PairsWithLiquidity.map(v2Pair => (
-                  <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
+                {allDXSwapPairsWithLiquidity.map(dxSwapPair => (
+                  <FullPositionCard key={dxSwapPair.liquidityToken.address} pair={dxSwapPair} />
                 ))}
               </>
             ) : (

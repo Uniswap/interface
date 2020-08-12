@@ -64,7 +64,7 @@ export default function Swap() {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
-    v2Trade,
+    dxSwapTrade,
     currencyBalances,
     parsedAmount,
     currencies,
@@ -77,7 +77,7 @@ export default function Swap() {
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
-  const trade = v2Trade
+  const trade = dxSwapTrade
 
   const parsedAmounts = showWrap
     ? {

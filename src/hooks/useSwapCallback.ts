@@ -143,8 +143,8 @@ export function useSwapCallback(
                     console.debug('Call threw error', call, callError)
                     let errorMessage: string
                     switch (callError.reason) {
-                      case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
-                      case 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT':
+                      case 'DXswapRouter: INSUFFICIENT_OUTPUT_AMOUNT':
+                      case 'DXswapRouter: EXCESSIVE_INPUT_AMOUNT':
                         errorMessage =
                           'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
                         break
