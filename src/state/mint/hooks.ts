@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, JSBI, Pair, Percent, Price, TokenAmount } from 'dxswap-sdk'
+import { Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from 'dxswap-sdk'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { PairState, usePair } from '../../data/Reserves'
@@ -50,9 +50,10 @@ export function useDerivedMintInfo(
 
   // pair
   const [pairState, pair] = usePair(currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B])
+  const totalSupply = useTotalSupply(pair?.liquidityToken)
+
   const noLiquidity: boolean =
-    pairState === PairState.NOT_EXISTS ||
-    Boolean(pair && JSBI.equal(pair.reserve0.raw, ZERO) && JSBI.equal(pair.reserve1.raw, ZERO))
+    pairState === PairState.NOT_EXISTS || Boolean(totalSupply && JSBI.equal(totalSupply.raw, ZERO))
 
   // balances
   const balances = useCurrencyBalances(account ?? undefined, [
@@ -65,17 +66,24 @@ export function useDerivedMintInfo(
   }
 
   // amounts
-  const independentAmount = tryParseAmount(typedValue, currencies[independentField])
-  const dependentAmount = useMemo(() => {
-    if (noLiquidity && otherTypedValue && currencies[dependentField]) {
-      return tryParseAmount(otherTypedValue, currencies[dependentField])
+  const independentAmount: CurrencyAmount | undefined = tryParseAmount(typedValue, currencies[independentField])
+  const dependentAmount: CurrencyAmount | undefined = useMemo(() => {
+    if (noLiquidity) {
+      if (otherTypedValue && currencies[dependentField]) {
+        return tryParseAmount(otherTypedValue, currencies[dependentField])
+      }
+      return
     } else if (independentAmount) {
+      // we wrap the currencies just to get the price in terms of the other token
       const wrappedIndependentAmount = wrappedCurrencyAmount(independentAmount, chainId)
       const [tokenA, tokenB] = [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
       if (tokenA && tokenB && wrappedIndependentAmount && pair) {
-        return dependentField === Field.CURRENCY_B
-          ? pair.priceOf(tokenA).quote(wrappedIndependentAmount)
-          : pair.priceOf(tokenB).quote(wrappedIndependentAmount)
+        const dependentCurrency = dependentField === Field.CURRENCY_B ? currencyB : currencyA
+        const dependentTokenAmount =
+          dependentField === Field.CURRENCY_B
+            ? pair.priceOf(tokenA).quote(wrappedIndependentAmount)
+            : pair.priceOf(tokenB).quote(wrappedIndependentAmount)
+        return dependentCurrency === ETHER ? CurrencyAmount.ether(dependentTokenAmount.raw) : dependentTokenAmount
       }
       return
     } else {
@@ -87,17 +95,20 @@ export function useDerivedMintInfo(
     [Field.CURRENCY_B]: independentField === Field.CURRENCY_A ? dependentAmount : independentAmount
   }
 
+  const token0Price = pair?.token0Price
   const price = useMemo(() => {
-    const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
-    if (noLiquidity && currencyAAmount && currencyBAmount) {
-      return new Price(currencyAAmount.currency, currencyBAmount.currency, currencyAAmount.raw, currencyBAmount.raw)
-    } else {
+    if (noLiquidity) {
+      const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
+      if (currencyAAmount && currencyBAmount) {
+        return new Price(currencyAAmount.currency, currencyBAmount.currency, currencyAAmount.raw, currencyBAmount.raw)
+      }
       return
+    } else {
+      return token0Price
     }
-  }, [noLiquidity, parsedAmounts])
+  }, [noLiquidity, token0Price, parsedAmounts])
 
   // liquidity minted
-  const totalSupply = useTotalSupply(pair?.liquidityToken)
   const liquidityMinted = useMemo(() => {
     const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
     const [tokenAmountA, tokenAmountB] = [

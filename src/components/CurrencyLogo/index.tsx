@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Currency, Token, WETH } from 'dxswap-sdk'
+import { Currency, Token, ETHER } from 'dxswap-sdk'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import { WrappedTokenInfo } from '../../state/lists/hooks'
+import uriToHttp from '../../utils/uriToHttp'
 
 const getTokenLogoURL = address =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
-const NO_LOGO_ADDRESSES: { [tokenAddress: string]: true } = {}
+const BAD_URIS: { [tokenAddress: string]: true } = {}
 
 const Image = styled.img<{ size: string }>`
   width: ${({ size }) => size};
@@ -44,40 +46,53 @@ export default function CurrencyLogo({
 }) {
   const [, refresh] = useState<number>(0)
 
-  if (currency instanceof Token) {
-    let path = ''
-    if (!NO_LOGO_ADDRESSES[currency.address]) {
-      path = getTokenLogoURL(currency.address)
-    } else {
-      return (
-        <Emoji {...rest} size={size}>
-          <span role="img" aria-label="Thinking">
-            🤔
-          </span>
-        </Emoji>
-      )
-    }
-    // hard code to show ETH instead of WETH in UI
-    if (currency.address === WETH[currency.chainId].address) {
-      return <StyledEthereumLogo src={EthereumLogo} size={size} {...rest} />
-    } else if (currency.address == "0xDd25BaE0659fC06a8d00CD06C7f5A98D71bfB715") {
-      path = "https://gateway.pinata.cloud/ipfs/QmPhoeL14E5SBFBaC4bA3nuRpg3MpxdWVYdPrdXHdQ3EHY/brand/dxdao-blue.png"
-    }
-    return (
-      <Image
-        {...rest}
-        alt={`${currency.name} Logo`}
-        src={path}
-        size={size}
-        onError={() => {
-          if (currency instanceof Token) {
-            NO_LOGO_ADDRESSES[currency.address] = true
-          }
-          refresh(i => i + 1)
-        }}
-      />
-    )
-  } else {
+  if (currency === ETHER) {
     return <StyledEthereumLogo src={EthereumLogo} size={size} {...rest} />
   }
+
+  if (currency instanceof Token) {
+    let uri: string | undefined
+
+    if (currency instanceof WrappedTokenInfo) {
+      if (currency.logoURI && !BAD_URIS[currency.logoURI]) {
+        uri = uriToHttp(currency.logoURI).filter(s => !BAD_URIS[s])[0]
+      }
+    }
+
+    if (!uri) {
+      const defaultUri = getTokenLogoURL(currency.address)
+      if (!BAD_URIS[defaultUri]) {
+        uri = defaultUri
+      }
+    }
+    
+    if (currency.address == "0xDd25BaE0659fC06a8d00CD06C7f5A98D71bfB715") {
+      uri = "https://gateway.pinata.cloud/ipfs/QmPhoeL14E5SBFBaC4bA3nuRpg3MpxdWVYdPrdXHdQ3EHY/brand/dxdao-blue.png"
+    }
+
+    if (uri) {
+      return (
+        <Image
+          {...rest}
+          alt={`${currency.name} Logo`}
+          src={uri}
+          size={size}
+          onError={() => {
+            if (currency instanceof Token) {
+              BAD_URIS[uri] = true
+            }
+            refresh(i => i + 1)
+          }}
+        />
+      )
+    }
+  }
+
+  return (
+    <Emoji {...rest} size={size}>
+      <span role="img" aria-label="Thinking">
+        🤔
+      </span>
+    </Emoji>
+  )
 }

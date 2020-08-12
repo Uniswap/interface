@@ -10,7 +10,7 @@ import {
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent }>
 
-interface ApplicationState {
+export interface ApplicationState {
   blockNumber: { [chainId: number]: number }
   popupList: PopupList
   walletModalOpen: boolean
@@ -41,12 +41,13 @@ export default createReducer(initialState, builder =>
       state.settingsMenuOpen = !state.settingsMenuOpen
     })
     .addCase(addPopup, (state, { payload: { content, key } }) => {
-      if (key && state.popupList.some(popup => popup.key === key)) return
-      state.popupList.push({
-        key: key || nanoid(),
-        show: true,
-        content
-      })
+      state.popupList = (key ? state.popupList.filter(popup => popup.key !== key) : state.popupList).concat([
+        {
+          key: key || nanoid(),
+          show: true,
+          content
+        }
+      ])
     })
     .addCase(removePopup, (state, { payload: { key } }) => {
       state.popupList.forEach(p => {

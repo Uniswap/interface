@@ -55,7 +55,7 @@ export function colors(darkMode: boolean): Colors {
     bg5: darkMode ? '#565A69' : '#888D9B',
 
     //specialty colors
-    modalBG: darkMode ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.6)',
+    modalBG: darkMode ? 'rgba(0,0,0,42.5)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
@@ -75,6 +75,7 @@ export function colors(darkMode: boolean): Colors {
 
     // other
     red1: '#FF6871',
+    red2: '#F82D3A',
     green1: '#27AE60',
     yellow1: '#FFE270',
     yellow2: '#F3841E'
@@ -171,6 +172,7 @@ export const FixedGlobalStyle = createGlobalStyle`
 html, input, textarea, button {
   font-family: 'Inter', sans-serif;
   letter-spacing: -0.018em;
+  font-display: fallback;
 }
 @supports (font-variation-settings: normal) {
   html, input, textarea, button {

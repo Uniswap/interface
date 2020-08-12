@@ -30,7 +30,7 @@ export default function CommonBases({
   onSelect,
   selectedCurrency
 }: {
-  chainId: ChainId
+  chainId?: ChainId
   selectedCurrency?: Currency
   onSelect: (currency: Currency) => void
 }) {
@@ -52,8 +52,8 @@ export default function CommonBases({
             ETH
           </Text>
         </BaseWrapper>
-        {(SUGGESTED_BASES[chainId as ChainId] ?? []).map((token: Token) => {
-          const selected = currencyEquals(selectedCurrency, token)
+        {(chainId ? SUGGESTED_BASES[chainId] : []).map((token: Token) => {
+          const selected = selectedCurrency instanceof Token && selectedCurrency.address === token.address
           return (
             <BaseWrapper onClick={() => !selected && onSelect(token)} disable={selected} key={token.address}>
               <CurrencyLogo currency={token} style={{ marginRight: 8 }} />

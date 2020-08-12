@@ -2,6 +2,12 @@
 
 An decentralized open source application for DXswap -- a protocol for decentralized exchange of Ethereum tokens governed by a DAO.
 
+## Listing a token
+
+Please see the
+[@uniswap/default-token-list](https://github.com/uniswap/default-token-list) 
+repository.
+
 ## Development
 
 ### Install Dependencies
