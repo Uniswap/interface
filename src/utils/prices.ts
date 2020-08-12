@@ -1,24 +1,27 @@
 import { BLOCKED_PRICE_IMPACT_NON_EXPERT } from './../constants/index'
-import { Fraction, JSBI, Percent, TokenAmount, Trade } from 'dxswap-sdk'
+import { Fraction, JSBI, Percent, TokenAmount, Trade, Pair } from 'dxswap-sdk'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'
 
-const BASE_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
 const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000))
-const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(BASE_FEE)
 
 // computes price breakdown for the trade
 export function computeTradePriceBreakdown(
   trade?: Trade
-): { priceImpactWithoutFee?: Percent; realizedLPFee?: TokenAmount } {
+): { priceImpactWithoutFee?: Percent; realizedLPFee?: Fraction, realizedLPFeeAmount?: TokenAmount } {
   // for each hop in our trade, take away the x*y=k price impact from 0.3% fees
   // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
   const realizedLPFee = !trade
     ? undefined
     : ONE_HUNDRED_PERCENT.subtract(
         trade.route.pairs.reduce<Fraction>(
-          (currentFee: Fraction): Fraction => currentFee.multiply(INPUT_FRACTION_AFTER_FEE),
+          (currentFee: Fraction, currentIndex: Pair): Fraction =>
+          currentFee.multiply(
+            ONE_HUNDRED_PERCENT.subtract(
+              new Percent(JSBI.BigInt(currentIndex.swapFee.toString()), JSBI.BigInt(10000))
+            )
+          ),
           ONE_HUNDRED_PERCENT
         )
       )
@@ -32,12 +35,12 @@ export function computeTradePriceBreakdown(
     : undefined
 
   // the amount of the input that accrues to LPs
-  const realizedLPFeeAmount =
-    realizedLPFee &&
+  const realizedLPFeeAmount = !trade
+    ? undefined
+    : realizedLPFee &&
     trade &&
     new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
-
-  return { priceImpactWithoutFee: priceImpactWithoutFeePercent, realizedLPFee: realizedLPFeeAmount }
+  return { priceImpactWithoutFee: priceImpactWithoutFeePercent, realizedLPFee, realizedLPFeeAmount }
 }
 
 // computes the minimum amount out and maximum amount in for a trade given a user specified allowed slippage in bips

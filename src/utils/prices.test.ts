@@ -13,7 +13,7 @@ describe('prices', () => {
     it('returns undefined for undefined', () => {
       expect(computeTradePriceBreakdown(undefined)).toEqual({
         priceImpactWithoutFee: undefined,
-        realizedLPFee: undefined
+        realizedLPFeeAmount: undefined
       })
     })
 
@@ -21,7 +21,7 @@ describe('prices', () => {
       expect(
         computeTradePriceBreakdown(
           new Trade(new Route([pair12], token1), new TokenAmount(token1, JSBI.BigInt(1000)), TradeType.EXACT_INPUT)
-        ).realizedLPFee
+        ).realizedLPFeeAmount
       ).toEqual(new TokenAmount(token1, JSBI.BigInt(3)))
     })
 
@@ -33,7 +33,7 @@ describe('prices', () => {
             new TokenAmount(token1, JSBI.BigInt(1000)),
             TradeType.EXACT_INPUT
           )
-        ).realizedLPFee
+        ).realizedLPFeeAmount
       ).toEqual(new TokenAmount(token1, JSBI.BigInt(5)))
     })
   })
