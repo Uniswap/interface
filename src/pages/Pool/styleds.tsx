@@ -17,9 +17,13 @@ export const MaxButton = styled.button<{ width: string }>`
   border: 1px solid ${({ theme }) => theme.primary5};
   border-radius: 0.5rem;
   font-size: 1rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 0.25rem 0.5rem;
+  `};
   font-weight: 500;
   cursor: pointer;
-  margin-right: 0.5rem;
+  margin: 0.25rem;
+  overflow: hidden;
   color: ${({ theme }) => theme.primary1};
   :hover {
     border: 1px solid ${({ theme }) => theme.primary1};

@@ -72,21 +72,12 @@ export function useInactiveListener(suppress = false) {
         }
       }
 
-      const handleNetworkChanged = () => {
-        // eat errors
-        activate(injected, undefined, true).catch(error => {
-          console.error('Failed to activate after networks changed', error)
-        })
-      }
-
       ethereum.on('chainChanged', handleChainChanged)
-      ethereum.on('networkChanged', handleNetworkChanged)
       ethereum.on('accountsChanged', handleAccountsChanged)
 
       return () => {
         if (ethereum.removeListener) {
           ethereum.removeListener('chainChanged', handleChainChanged)
-          ethereum.removeListener('networkChanged', handleNetworkChanged)
           ethereum.removeListener('accountsChanged', handleAccountsChanged)
         }
       }

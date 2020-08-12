@@ -88,6 +88,9 @@ const MenuFlyout = styled.span`
   background-color: ${({ theme }) => theme.bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
+
+  border: 1px solid ${({ theme }) => theme.bg3};
+
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -156,7 +159,7 @@ export default function SettingsTab() {
 
   return (
     <StyledMenu ref={node}>
-      <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)}>
+      <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
         <ModalContentWrapper>
           <AutoColumn gap="lg">
             <RowBetween style={{ padding: '0 2rem' }}>
@@ -233,7 +236,10 @@ export default function SettingsTab() {
                         toggleExpertMode()
                         setShowConfirmation(false)
                       }
-                    : () => setShowConfirmation(true)
+                    : () => {
+                        toggle()
+                        setShowConfirmation(true)
+                      }
                 }
               />
             </RowBetween>

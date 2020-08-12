@@ -5,8 +5,8 @@ import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IDXswapRouterABI } from 'dxswap-periphery/build/contracts/IDXswapRouter.json'
 import { ROUTER_ADDRESS } from '../constants'
-import { ALL_TOKENS } from '../constants/tokens'
-import { ChainId, JSBI, Percent, TokenAmount, Token } from 'dxswap-sdk'
+import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from 'dxswap-sdk'
+import { TokenAddressMap } from '../state/lists/hooks'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -25,12 +25,15 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   42: 'kovan.'
 }
 
-export function getEtherscanLink(chainId: ChainId, data: string, type: 'transaction' | 'address'): string {
+export function getEtherscanLink(chainId: ChainId, data: string, type: 'transaction' | 'token' | 'address'): string {
   const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
 
   switch (type) {
     case 'transaction': {
       return `${prefix}/tx/${data}`
+    }
+    case 'token': {
+      return `${prefix}/token/${data}`
     }
     case 'address':
     default: {
@@ -58,7 +61,7 @@ export function basisPointsToPercent(num: number): Percent {
   return new Percent(JSBI.BigInt(num), JSBI.BigInt(10000))
 }
 
-export function calculateSlippageAmount(value: TokenAmount, slippage: number): [JSBI, JSBI] {
+export function calculateSlippageAmount(value: CurrencyAmount, slippage: number): [JSBI, JSBI] {
   if (slippage < 0 || slippage > 10000) {
     throw Error(`Unexpected slippage value: ${slippage}`)
   }
@@ -84,11 +87,11 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
 
-  return new Contract(address, ABI, getProviderOrSigner(library, account))
+  return new Contract(address, ABI, getProviderOrSigner(library, account) as any)
 }
 
 // account is optional
-export function getRouterContract(_: number, library: Web3Provider, account?: string) {
+export function getRouterContract(_: number, library: Web3Provider, account?: string): Contract {
   return getContract(ROUTER_ADDRESS, IDXswapRouterABI, library, account)
 }
 
@@ -96,11 +99,7 @@ export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
 
-export function isDefaultToken(token?: Token): boolean {
-  return Boolean(token && ALL_TOKENS[token.chainId]?.[token.address])
-}
-
-export function isCustomAddedToken(allTokens: { [address: string]: Token }, token?: Token): boolean {
-  const isDefault = isDefaultToken(token)
-  return Boolean(token && allTokens[token.address] && !isDefault)
+export function isDefaultToken(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
+  if (currency === ETHER) return true
+  return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 }

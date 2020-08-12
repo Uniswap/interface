@@ -10,11 +10,6 @@ describe('Landing Page', () => {
     cy.url().should('include', '/swap')
   })
 
-  it('allows navigation to send', () => {
-    cy.get('#send-nav-link').click()
-    cy.url().should('include', '/send')
-  })
-
   it('allows navigation to pool', () => {
     cy.get('#pool-nav-link').click()
     cy.url().should('include', '/pool')

@@ -5,6 +5,7 @@ import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import { darken, lighten } from 'polished'
 import { Activity } from 'react-feather'
 import useENSName from '../../hooks/useENSName'
+import { useHasSocks } from '../../hooks/useSocksBalance'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { TransactionDetails } from '../../state/transactions/reducer'
 
@@ -125,12 +126,18 @@ function recentTransactionsOnly(a: TransactionDetails) {
   return new Date().getTime() - a.addedTime < 86_400_000
 }
 
+const SOCK = (
+  <span role="img" aria-label="has socks emoji" style={{ marginTop: -4, marginBottom: -4 }}>
+    🧦
+  </span>
+)
+
 export default function Web3Status() {
   const { t } = useTranslation()
   const { active, account, connector, error } = useWeb3React()
   const contextNetwork = useWeb3React(NetworkContextName)
 
-  const ENSName = useENSName(account)
+  const { ENSName } = useENSName(account)
 
   const allTransactions = useAllTransactions()
 
@@ -143,7 +150,7 @@ export default function Web3Status() {
   const confirmed = sortedRecentTransactions.filter(tx => tx.receipt).map(tx => tx.hash)
 
   const hasPendingTransactions = !!pending.length
-
+  const hasSocks = useHasSocks()
   const toggleWalletModal = useWalletModalToggle()
 
   // handle the logo we want to show with the account
@@ -186,7 +193,10 @@ export default function Web3Status() {
               <Text>{pending?.length} Pending</Text> <Loader stroke="white" />
             </RowBetween>
           ) : (
-            <Text>{ENSName || shortenAddress(account)}</Text>
+            <>
+              {hasSocks ? SOCK : null}
+              <Text>{ENSName || shortenAddress(account)}</Text>
+            </>
           )}
           {!hasPendingTransactions && getStatusIcon()}
         </Web3StatusConnected>

@@ -1,23 +1,20 @@
 import { createAction } from '@reduxjs/toolkit'
+import { TokenList } from '@uniswap/token-lists'
 
 export type PopupContent =
   | {
       txn: {
         hash: string
-        success?: boolean
+        success: boolean
         summary?: string
       }
     }
   | {
-      poolAdded: {
-        token0?: {
-          address?: string
-          symbol?: string
-        }
-        token1: {
-          address?: string
-          symbol?: string
-        }
+      listUpdate: {
+        listUrl: string
+        oldList: TokenList
+        newList: TokenList
+        auto: boolean
       }
     }
 

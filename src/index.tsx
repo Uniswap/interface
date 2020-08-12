@@ -6,16 +6,22 @@ import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
 import { Provider } from 'react-redux'
 import { NetworkContextName } from './constants'
+import 'inter-ui'
 import './i18n'
 import App from './pages/App'
 import store from './state'
 import ApplicationUpdater from './state/application/updater'
 import TransactionUpdater from './state/transactions/updater'
+import ListsUpdater from './state/lists/updater'
 import UserUpdater from './state/user/updater'
 import MulticallUpdater from './state/multicall/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
+
+if ('ethereum' in window) {
+  ;(window.ethereum as any).autoRefreshOnNetworkChange = false
+}
 
 function getLibrary(provider: any): Web3Provider {
   const library = new Web3Provider(provider)
@@ -33,9 +39,17 @@ if (typeof GOOGLE_ANALYTICS_ID === 'string') {
   ReactGA.initialize('test', { testMode: true, debug: true })
 }
 
+window.addEventListener('error', error => {
+  ReactGA.exception({
+    description: `${error.message} @ ${error.filename}:${error.lineno}:${error.colno}`,
+    fatal: true
+  })
+})
+
 function Updaters() {
   return (
     <>
+      <ListsUpdater />
       <UserUpdater />
       <ApplicationUpdater />
       <TransactionUpdater />

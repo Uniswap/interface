@@ -69,11 +69,11 @@ class CustomizedBridge extends _Eip1193Bridge {
 
 // sets up the injected provider to be a mock ethereum provider with the given mnemonic/index
 Cypress.Commands.overwrite('visit', (original, url, options) => {
-  return original(url, {
+  return original(url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url, {
     ...options,
     onBeforeLoad(win) {
       options && options.onBeforeLoad && options.onBeforeLoad(win)
-      const provider = new JsonRpcProvider('https://rinkeby.infura.io/v3/acb7e55995d04c49bfb52b7141599467', 4)
+      const provider = new JsonRpcProvider('https://rinkeby.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847', 4)
       const signer = new Wallet(PRIVATE_KEY_TEST_NEVER_USE, provider)
       win.ethereum = new CustomizedBridge(signer, provider)
     }
