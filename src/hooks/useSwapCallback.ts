@@ -73,6 +73,7 @@ function useSwapCallArguments(
       case Version.v2:
         swapMethods.push(
           // TODO: Drago.operateOnExchange({receipient, ...trade})
+          // TODO: encode parameters
           Router.swapCallParameters(trade, {
             feeOnTransfer: false,
             allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),

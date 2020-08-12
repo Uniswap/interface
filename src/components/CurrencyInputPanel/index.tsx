@@ -90,7 +90,6 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 
 `
 
-/*
 const StyledBalanceMax = styled.button`
   height: 28px;
   background-color: ${({ theme }) => theme.primary5};
@@ -114,7 +113,6 @@ const StyledBalanceMax = styled.button`
     margin-right: 0.5rem;
   `};
 `
-*/
 
 interface CurrencyInputPanelProps {
   value: string
@@ -199,9 +197,9 @@ export default function CurrencyInputPanel({
                   onUserInput(val)
                 }}
               />
-              {/*{account && currency  && showMaxButton && label !== 'To' && (
+              {account && currency  && showMaxButton && label !== 'To' && (
                 <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
-              )}*/}
+              )}
             </>
           )}
           <CurrencySelect
