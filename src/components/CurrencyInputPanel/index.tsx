@@ -149,12 +149,11 @@ export default function CurrencyInputPanel({
   id,
   showCommonBases
 }: CurrencyInputPanelProps) {
-  const { t } = useTranslation()
-
   const [modalOpen, setModalOpen] = useState(false)
   const { account } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account, currency)
   const theme = useContext(ThemeContext)
+  const { t } = useTranslation()
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
@@ -167,7 +166,7 @@ export default function CurrencyInputPanel({
           <LabelRow>
             <RowBetween>
               <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
-                {label}
+                {t(label)}
               </TYPE.body>
               {account && (
                 <CursorPointer>

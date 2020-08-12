@@ -104,6 +104,7 @@
   "Enter an amount": "输入数量",
   "Enter a recipient": "输入收款地址",
   "Add Liquidity": "添加资金池",
+  "Remove Liquidity": "移除资金池",
   "Your Liquidity": "你的资金池",
   "Connect to a wallet to view your liquidity": "连接钱包，查看资金池",
   "Loading": "加载中",
@@ -163,5 +164,23 @@
   "clear all": "清除全部",
   "Back": "返回",
   "Please connect to the appropriate Ethereum network": "请连接有效的以太坊网络",
-  "Connect to a wallet": "连接钱包"
+  "Connect to a wallet": "连接钱包",
+  "Supply": "供应",
+  "Create Pool & Supply": "创建资金池 & 供应",
+  "Confirm Supply": "确认供应",
+  "Rates": "汇率",
+  "{{symbol}} Deposited": "充值 {{symbol}}",
+  "Input": "输入",
+  "Import Pool": "导入资金池",
+  "Prices and pool share": "价格和资金池份额",
+  "Initial prices and pool share": "初始价格和资金池份额",
+  "Accept": "接受",
+  "Price Updated": "价格已更新",
+  "Output is estimated. If the price changes by more than {{allowedSlippage}}% your transaction will revert"
+  : "如果价格改变超过 {{allowedSlippage}}%，你的交易将会失败",
+  "Output is estimated. You will receive at least ": "你将会收到至少 ",
+  "Input is estimated. You will sell at most ": "你将会转出最多 ",
+  " or the transaction will revert": " 否则交易将失败",
+  "Output will be sent to ": "代币将发送至 ",
+  "Insufficient {{symbol}} balance": "{{symbol}} 余额不足"
 }
