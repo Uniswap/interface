@@ -10,6 +10,8 @@ import { RowBetween } from '../Row'
 import { TYPE, CursorPointer } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
+import { useSwapState } from '../../state/swap/hooks'
+import { isAddress } from '../../utils'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
@@ -153,7 +155,13 @@ export default function CurrencyInputPanel({
 
   const [modalOpen, setModalOpen] = useState(false)
   const { account } = useActiveWeb3React()
-  const selectedCurrencyBalance = useCurrencyBalance(account, currency)
+  const {
+    recipient
+  } = useSwapState()
+  const mockEmptyAddress = '0x9999999999999999999999999999999999999998'
+  const dragoAddress = isAddress(recipient) ? recipient : mockEmptyAddress
+  const selectedCurrencyBalance = useCurrencyBalance(dragoAddress, currency)
+  console.log(recipient, dragoAddress, account)
   const theme = useContext(ThemeContext)
 
   const handleDismissSearch = useCallback(() => {
