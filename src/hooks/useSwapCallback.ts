@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import { BIPS_BASE, DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getDragoContract, isAddress, shortenAddress } from '../utils'
+import { calculateGasMargin, getRouterContract, getDragoContract, isAddress, shortenAddress } from '../utils'
 //import { Dragov2_INTERFACE } from '../constants/abis/dragov2'
 import isZero from '../utils/isZero'
 import v1SwapArguments from '../utils/v1SwapArguments'
@@ -62,7 +62,8 @@ function useSwapCallArguments(
     if (!trade || !recipient || !library || !account || !tradeVersion || !chainId) return []
 
     const contract: Contract | null =
-      tradeVersion === Version.v2 ? getDragoContract(chainId, library, account, recipient) : v1Exchange
+      //tradeVersion === Version.v2 ? getDragoContract(chainId, library, account, recipient) : v1Exchange
+      tradeVersion === Version.v2 ? getRouterContract(chainId, library, account) : v1Exchange
     if (!contract) {
       return []
     }
@@ -138,6 +139,7 @@ export function useSwapCallback(
 
     const tradeVersion = getTradeVersion(trade)
 
+    // TODO: rigoblock calls have always 0 value and instead additional parameter, cannot use eth calls
     return {
       state: SwapCallbackState.VALID,
       callback: async function onSwap(): Promise<string> {
@@ -202,6 +204,7 @@ export function useSwapCallback(
           gasEstimate
         } = successfulEstimation
 
+        // TODO: define dragoContract, methodName "operateOnExchange", attach uniswap router address before args
         return contract[methodName](...args, {
           gasLimit: calculateGasMargin(gasEstimate),
           ...(value && !isZero(value) ? { value, from: account } : { from: account })
