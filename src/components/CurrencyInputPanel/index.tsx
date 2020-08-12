@@ -161,7 +161,6 @@ export default function CurrencyInputPanel({
   const mockEmptyAddress = '0x9999999999999999999999999999999999999998'
   const dragoAddress = isAddress(recipient) ? recipient : mockEmptyAddress
   const selectedCurrencyBalance = useCurrencyBalance(dragoAddress, currency)
-  console.log(recipient, dragoAddress, account)
   const theme = useContext(ThemeContext)
 
   const handleDismissSearch = useCallback(() => {
