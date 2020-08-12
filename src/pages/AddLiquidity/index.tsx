@@ -245,8 +245,10 @@ export default function AddLiquidity({
           </Text>
         </Row>
         <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
-          {t('Output is estimated. If the price changes by more than {{allowedSlippage}}% your transaction will revert', 
-          { allowedSlippage: allowedSlippage / 100})}
+          {t(
+            'Output is estimated. If the price changes by more than {{allowedSlippage}}% your transaction will revert',
+            { allowedSlippage: allowedSlippage / 100 }
+          )}
         </TYPE.italic>
       </AutoColumn>
     )
@@ -375,7 +377,7 @@ export default function AddLiquidity({
                 <GreyCard padding="0px" borderRadius={'20px'}>
                   <RowBetween padding="1rem">
                     <TYPE.subHeader fontWeight={500} fontSize={14}>
-                      {noLiquidity ? t('Initial prices and pool share') : t('Prices and pool share')} 
+                      {noLiquidity ? t('Initial prices and pool share') : t('Prices and pool share')}
                     </TYPE.subHeader>
                   </RowBetween>{' '}
                   <LightCard padding="1rem" borderRadius={'20px'}>

@@ -73,7 +73,9 @@ export default function SwapModalFooter({
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
               {trade.tradeType === TradeType.EXACT_INPUT ? t('Minimum received') : t('Maximum sold')}
             </TYPE.black>
-            <QuestionHelper text={t('Your transaction will revert if the price changes unfavorably by more than this percentage')} />
+            <QuestionHelper
+              text={t('Your transaction will revert if the price changes unfavorably by more than this percentage')}
+            />
           </RowFixed>
           <RowFixed>
             <TYPE.black fontSize={14}>
@@ -102,7 +104,9 @@ export default function SwapModalFooter({
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
               {t('Liquidity Provider Fee')}
             </TYPE.black>
-            <QuestionHelper text={t('A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive')} />
+            <QuestionHelper
+              text={t('A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive')}
+            />
           </RowFixed>
           <TYPE.black fontSize={14}>
             {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + trade.inputAmount.currency.symbol : '-'}
