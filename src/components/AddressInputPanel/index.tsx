@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import useDebounce from '../../hooks/useDebounce'
-
-import { isAddress } from '../../utils'
+import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks'
 import { ExternalLink, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
@@ -24,6 +22,8 @@ const ContainerRow = styled.div<{ error: boolean }>`
   align-items: center;
   border-radius: 1.25rem;
   border: 1px solid ${({ error, theme }) => (error ? theme.red1 : theme.bg2)};
+  transition: border-color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')},
+    color 500ms ${({ error }) => (error ? 'step-end' : 'step-start')};
   background-color: ${({ theme }) => theme.bg1};
 `
 
@@ -39,6 +39,7 @@ const Input = styled.input<{ error?: boolean }>`
   flex: 1 1 auto;
   width: 0;
   background-color: ${({ theme }) => theme.bg1};
+  transition: color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')};
   color: ${({ error, theme }) => (error ? theme.red1 : theme.primary1)};
   overflow: hidden;
   text-overflow: ellipsis;
@@ -64,120 +65,65 @@ const Input = styled.input<{ error?: boolean }>`
   }
 `
 
+interface Value {
+  address: string
+  name?: string
+}
+
 export default function AddressInputPanel({
-  initialInput = '',
-  onChange,
-  onError
+  id,
+  value,
+  onChange
 }: {
-  initialInput?: string
-  onChange: (val: { address: string; name?: string }) => void
-  onError: (error: boolean, input: string) => void
+  id?: string
+  // the typed string value
+  value: string
+  // triggers whenever the typed value changes
+  onChange: (value: string) => void
 }) {
-  const { chainId, library } = useActiveWeb3React()
+  const { chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
-  const [input, setInput] = useState(initialInput ? initialInput : '')
-  const debouncedInput = useDebounce(input, 200)
+  const { address, loading, name } = useENS(value)
 
-  const [data, setData] = useState<{ address: string; name: string }>({ address: undefined, name: undefined })
-  const [error, setError] = useState<boolean>(false)
+  const handleInput = useCallback(
+    event => {
+      const input = event.target.value
+      const withoutSpaces = input.replace(/\s+/g, '')
+      onChange(withoutSpaces)
+    },
+    [onChange]
+  )
 
-  // keep data and errors in sync
-  useEffect(() => {
-    onChange({ address: data.address, name: data.name })
-  }, [onChange, data.address, data.name])
-  useEffect(() => {
-    onError(error, input)
-  }, [onError, error, input])
-
-  // run parser on debounced input
-  useEffect(() => {
-    let stale = false
-    // if the input is an address, try to look up its name
-    if (isAddress(debouncedInput)) {
-      library
-        .lookupAddress(debouncedInput)
-        .then(name => {
-          if (stale) return
-          // if an ENS name exists, set it as the destination
-          if (name) {
-            setInput(name)
-          } else {
-            setData({ address: debouncedInput, name: '' })
-            setError(null)
-          }
-        })
-        .catch(() => {
-          if (stale) return
-          setData({ address: debouncedInput, name: '' })
-          setError(null)
-        })
-    }
-    // otherwise try to look up the address of the input, treated as an ENS name
-    else {
-      if (debouncedInput !== '') {
-        library
-          .resolveName(debouncedInput)
-          .then(address => {
-            if (stale) return
-            // if the debounced input name resolves to an address
-            if (address) {
-              setData({ address: address, name: debouncedInput })
-              setError(null)
-            } else {
-              setError(true)
-            }
-          })
-          .catch(() => {
-            if (stale) return
-            setError(true)
-          })
-      } else if (debouncedInput === '') {
-        setError(true)
-      }
-    }
-
-    return () => {
-      stale = true
-    }
-  }, [debouncedInput, library])
-
-  function onInput(event) {
-    setData({ address: undefined, name: undefined })
-    setError(false)
-    const input = event.target.value
-    const checksummedInput = isAddress(input.replace(/\s/g, '')) // delete whitespace
-    setInput(checksummedInput || input)
-  }
+  const error = Boolean(value.length > 0 && !loading && !address)
 
   return (
-    <InputPanel>
-      <ContainerRow error={input !== '' && error}>
+    <InputPanel id={id}>
+      <ContainerRow error={error}>
         <InputContainer>
           <AutoColumn gap="md">
             <RowBetween>
               <TYPE.black color={theme.text2} fontWeight={500} fontSize={14}>
                 Recipient
               </TYPE.black>
-              {data.address && (
-                <ExternalLink
-                  href={getEtherscanLink(chainId, data.name || data.address, 'address')}
-                  style={{ fontSize: '14px' }}
-                >
+              {address && (
+                <ExternalLink href={getEtherscanLink(chainId, name ?? address, 'address')} style={{ fontSize: '14px' }}>
                   (View on Etherscan)
                 </ExternalLink>
               )}
             </RowBetween>
             <Input
+              className="recipient-address-input"
               type="text"
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
               placeholder="Wallet Address or ENS name"
-              error={input !== '' && error}
-              onChange={onInput}
-              value={input}
+              error={error}
+              pattern="^(0x[a-fA-F0-9]{40})$"
+              onChange={handleInput}
+              value={value}
             />
           </AutoColumn>
         </InputContainer>

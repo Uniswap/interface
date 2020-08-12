@@ -1,9 +1,11 @@
 describe('Send', () => {
-  beforeEach(() => cy.visit('/send'))
+  it('should redirect', () => {
+    cy.visit('/send')
+    cy.url().should('include', '/swap')
+  })
 
-  it('can enter an amount into input', () => {
-    cy.get('#sending-no-swap-input')
-      .type('0.001', { delay: 200 })
-      .should('have.value', '0.001')
+  it('should redirect with url params', () => {
+    cy.visit('/send?outputCurrency=ETH&recipient=bob.argent.xyz')
+    cy.url().should('contain', '/swap?outputCurrency=ETH&recipient=bob.argent.xyz')
   })
 })

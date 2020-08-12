@@ -1,27 +1,30 @@
-import { Token, TokenAmount } from 'dxswap-sdk'
+import { Currency, CurrencyAmount } from 'dxswap-sdk'
 import React, { useContext } from 'react'
 import { ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { TYPE } from '../../theme'
+import { isAddress, shortenAddress } from '../../utils'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
-import TokenLogo from '../TokenLogo'
+import CurrencyLogo from '../CurrencyLogo'
 import { TruncatedText } from './styleds'
 
 export default function SwapModalHeader({
-  tokens,
+  currencies,
   formattedAmounts,
   slippageAdjustedAmounts,
   priceImpactSeverity,
-  independentField
+  independentField,
+  recipient
 }: {
-  tokens: { [field in Field]?: Token }
+  currencies: { [field in Field]?: Currency }
   formattedAmounts: { [field in Field]?: string }
-  slippageAdjustedAmounts: { [field in Field]?: TokenAmount }
+  slippageAdjustedAmounts: { [field in Field]?: CurrencyAmount }
   priceImpactSeverity: number
   independentField: Field
+  recipient: string | null
 }) {
   const theme = useContext(ThemeContext)
 
@@ -32,9 +35,9 @@ export default function SwapModalHeader({
           {formattedAmounts[Field.INPUT]}
         </TruncatedText>
         <RowFixed gap="4px">
-          <TokenLogo address={tokens[Field.INPUT]?.address} size={'24px'} />
+          <CurrencyLogo currency={currencies[Field.INPUT]} size={'24px'} />
           <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-            {tokens[Field.INPUT]?.symbol}
+            {currencies[Field.INPUT]?.symbol}
           </Text>
         </RowFixed>
       </RowBetween>
@@ -46,9 +49,9 @@ export default function SwapModalHeader({
           {formattedAmounts[Field.OUTPUT]}
         </TruncatedText>
         <RowFixed gap="4px">
-          <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'24px'} />
+          <CurrencyLogo currency={currencies[Field.OUTPUT]} size={'24px'} />
           <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-            {tokens[Field.OUTPUT]?.symbol}
+            {currencies[Field.OUTPUT]?.symbol}
           </Text>
         </RowFixed>
       </RowBetween>
@@ -57,7 +60,7 @@ export default function SwapModalHeader({
           <TYPE.italic textAlign="left" style={{ width: '100%' }}>
             {`Output is estimated. You will receive at least `}
             <b>
-              {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {tokens[Field.OUTPUT]?.symbol}
+              {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {currencies[Field.OUTPUT]?.symbol}
             </b>
             {' or the transaction will revert.'}
           </TYPE.italic>
@@ -65,12 +68,20 @@ export default function SwapModalHeader({
           <TYPE.italic textAlign="left" style={{ width: '100%' }}>
             {`Input is estimated. You will sell at most `}
             <b>
-              {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {tokens[Field.INPUT]?.symbol}
+              {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {currencies[Field.INPUT]?.symbol}
             </b>
             {' or the transaction will revert.'}
           </TYPE.italic>
         )}
       </AutoColumn>
+      {recipient !== null ? (
+        <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
+          <TYPE.main>
+            Output will be sent to{' '}
+            <b title={recipient}>{isAddress(recipient) ? shortenAddress(recipient) : recipient}</b>
+          </TYPE.main>
+        </AutoColumn>
+      ) : null}
     </AutoColumn>
   )
 }

@@ -1,5 +1,5 @@
-import { Token } from 'dxswap-sdk'
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { Currency, Token } from 'dxswap-sdk'
+import React, { KeyboardEvent, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
@@ -7,8 +7,9 @@ import { ThemeContext } from 'styled-components'
 import Card from '../../components/Card'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
-import { useAllTokenBalancesTreatingWETHasETH, useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
-import { CloseIcon, LinkStyledButton } from '../../theme/components'
+import useInterval from '../../hooks/useInterval'
+import { useAllTokenBalances, useTokenBalance } from '../../state/wallet/hooks'
+import { CloseIcon, LinkStyledButton } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import Modal from '../Modal'
@@ -19,30 +20,28 @@ import CommonBases from './CommonBases'
 import { filterTokens } from './filtering'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput } from './styleds'
-import TokenList from './TokenList'
+import CurrencyList from './CurrencyList'
 import SortButton from './SortButton'
 
-interface TokenSearchModalProps {
+interface CurrencySearchModalProps {
   isOpen?: boolean
   onDismiss?: () => void
-  hiddenToken?: string
+  hiddenCurrency?: Currency
   showSendWithSwap?: boolean
-  onTokenSelect?: (address: string) => void
-  otherSelectedTokenAddress?: string
-  otherSelectedText?: string
+  onCurrencySelect?: (currency: Currency) => void
+  otherSelectedCurrency?: Currency
   showCommonBases?: boolean
 }
 
-export default function TokenSearchModal({
+export default function CurrencySearchModal({
   isOpen,
   onDismiss,
-  onTokenSelect,
-  hiddenToken,
+  onCurrencySelect,
+  hiddenCurrency,
   showSendWithSwap,
-  otherSelectedTokenAddress,
-  otherSelectedText,
+  otherSelectedCurrency,
   showCommonBases = false
-}: TokenSearchModalProps) {
+}: CurrencySearchModalProps) {
   const { t } = useTranslation()
   const { account, chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
@@ -54,8 +53,8 @@ export default function TokenSearchModal({
 
   // if the current input is an address, and we don't have the token in context, try to fetch it and import
   const searchToken = useToken(searchQuery)
-  const searchTokenBalance = useTokenBalanceTreatingWETHasETH(account, searchToken)
-  const allTokenBalances_ = useAllTokenBalancesTreatingWETHasETH()
+  const searchTokenBalance = useTokenBalance(account, searchToken)
+  const allTokenBalances_ = useAllTokenBalances()
   const allTokenBalances = searchToken
     ? {
         [searchToken.address]: searchTokenBalance
@@ -86,12 +85,12 @@ export default function TokenSearchModal({
     ]
   }, [filteredTokens, searchQuery, searchToken, tokenComparator])
 
-  const handleTokenSelect = useCallback(
-    (address: string) => {
-      onTokenSelect(address)
+  const handleCurrencySelect = useCallback(
+    (currency: Currency) => {
+      onCurrencySelect(currency)
       onDismiss()
     },
-    [onDismiss, onTokenSelect]
+    [onDismiss, onCurrencySelect]
   )
 
   // clear the input on open
@@ -110,9 +109,30 @@ export default function TokenSearchModal({
 
   const openTooltip = useCallback(() => {
     setTooltipOpen(true)
-    inputRef.current?.focus()
   }, [setTooltipOpen])
   const closeTooltip = useCallback(() => setTooltipOpen(false), [setTooltipOpen])
+
+  useInterval(
+    () => {
+      setTooltipOpen(false)
+    },
+    tooltipOpen ? 4000 : null,
+    false
+  )
+
+  const handleEnter = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter' && filteredSortedTokens.length > 0) {
+        if (
+          filteredSortedTokens[0].symbol.toLowerCase() === searchQuery.trim().toLowerCase() ||
+          filteredSortedTokens.length === 1
+        ) {
+          handleCurrencySelect(filteredSortedTokens[0])
+        }
+      }
+    },
+    [filteredSortedTokens, handleCurrencySelect, searchQuery]
+  )
 
   return (
     <Modal
@@ -123,7 +143,7 @@ export default function TokenSearchModal({
       minHeight={70}
     >
       <Column style={{ width: '100%' }}>
-        <PaddedColumn gap="20px">
+        <PaddedColumn gap="14px">
           <RowBetween>
             <Text fontWeight={500} fontSize={16}>
               Select a token
@@ -146,11 +166,13 @@ export default function TokenSearchModal({
               value={searchQuery}
               ref={inputRef}
               onChange={handleInput}
+              onFocus={closeTooltip}
               onBlur={closeTooltip}
+              onKeyDown={handleEnter}
             />
           </Tooltip>
           {showCommonBases && (
-            <CommonBases chainId={chainId} onSelect={handleTokenSelect} selectedTokenAddress={hiddenToken} />
+            <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={hiddenCurrency} />
           )}
           <RowBetween>
             <Text fontSize={14} fontWeight={500}>
@@ -160,13 +182,12 @@ export default function TokenSearchModal({
           </RowBetween>
         </PaddedColumn>
         <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />
-        <TokenList
-          tokens={filteredSortedTokens}
-          allTokenBalances={allTokenBalances}
-          onTokenSelect={handleTokenSelect}
-          otherSelectedText={otherSelectedText}
-          otherToken={otherSelectedTokenAddress}
-          selectedToken={hiddenToken}
+        <CurrencyList
+          currencies={filteredSortedTokens}
+          allBalances={allTokenBalances}
+          onCurrencySelect={handleCurrencySelect}
+          otherCurrency={otherSelectedCurrency}
+          selectedCurrency={hiddenCurrency}
           showSendWithSwap={showSendWithSwap}
         />
         <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />

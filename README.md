@@ -10,19 +10,19 @@ An decentralized open source application for DXswap -- a protocol for decentrali
 yarn
 ```
 
-### Configure Environment (optional)
-
-Copy `.env` to `.env.local` and change the appropriate variables.
-
 ### Run
 
 ```bash
 yarn start
 ```
 
-To have the frontend default to a different network, make a copy of `.env` named `.env.local`, 
-change `REACT_APP_NETWORK_ID` to `"{yourNetworkId}"`, and change `REACT_APP_NETWORK_URL` to e.g. 
-`"https://{yourNetwork}.infura.io/v3/{yourKey}"`. 
+### Configuring the environment (optional)
+
+To have the interface default to a different network when a wallet is not connected:
+
+1. Make a copy of `.env` named `.env.local`
+2. Change `REACT_APP_NETWORK_ID` to `"{YOUR_NETWORK_ID}"`
+3. Change `REACT_APP_NETWORK_URL` to e.g. `"https://{YOUR_NETWORK_ID}.infura.io/v3/{YOUR_INFURA_KEY}"` 
 
 Note that the front end only works properly only on kovan ethereum network *for now*.
 

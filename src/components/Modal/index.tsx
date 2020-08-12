@@ -18,6 +18,7 @@ const StyledDialogOverlay = styled(({ mobile, ...rest }) => <AnimatedDialogOverl
     align-items: center;
     justify-content: center;
     background-color: transparent;
+    overflow: hidden;
 
     ${({ mobile }) =>
       mobile &&
@@ -69,12 +70,10 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
     border-radius: 20px;
     ${({ theme }) => theme.mediaWidth.upToMedium`
       width: 65vw;
-      max-height: 65vh;
       margin: 0;
     `}
     ${({ theme, mobile }) => theme.mediaWidth.upToSmall`
       width:  85vw;
-      max-height: 66vh;
       ${mobile &&
         css`
           width: 100vw;
@@ -84,14 +83,6 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
         `}
     `}
   }
-`
-
-const HiddenCloseButton = styled.button`
-  margin: 0;
-  padding: 0;
-  width: 0;
-  height: 0;
-  border: none;
 `
 
 interface ModalProps {
@@ -118,21 +109,13 @@ export default function Modal({
     leave: { opacity: 0 }
   })
 
-  const [{ xy }, set] = useSpring(() => ({ xy: [0, 0] }))
+  const [{ y }, set] = useSpring(() => ({ y: 0, config: { mass: 1, tension: 210, friction: 20 } }))
   const bind = useGesture({
     onDrag: state => {
-      let velocity = state.velocity
-      if (velocity < 1) {
-        velocity = 1
-      }
-      if (velocity > 8) {
-        velocity = 8
-      }
       set({
-        xy: state.down ? state.movement : [0, 0],
-        config: { mass: 1, tension: 210, friction: 20 }
+        y: state.down ? state.movement[1] : 0
       })
-      if (velocity > 3 && state.direction[1] > 0) {
+      if (state.velocity > 3 && state.direction[1] > 0) {
         onDismiss()
       }
     }
@@ -151,6 +134,8 @@ export default function Modal({
                 initialFocusRef={initialFocusRef}
                 mobile={true}
               >
+                {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
+                {initialFocusRef ? null : <div tabIndex={1} />}
                 <Spring // animation for entrance and exit
                   from={{
                     transform: isOpen ? 'translateY(200px)' : 'translateY(100px)'
@@ -163,18 +148,17 @@ export default function Modal({
                     <animated.div
                       {...bind()}
                       style={{
-                        transform: (xy as any).interpolate((x, y) => `translate3d(${0}px,${y > 0 ? y : 0}px,0)`)
+                        transform: y.interpolate(y => `translateY(${y > 0 ? y : 0}px)`)
                       }}
                     >
                       <StyledDialogContent
-                        ariaLabel="test"
+                        aria-label="dialog content"
                         style={props}
                         hidden={true}
                         minHeight={minHeight}
                         maxHeight={maxHeight}
-                        mobile={isMobile ?? undefined}
+                        mobile={isMobile}
                       >
-                        <HiddenCloseButton onClick={onDismiss} />
                         {children}
                       </StyledDialogContent>
                     </animated.div>
@@ -192,8 +176,13 @@ export default function Modal({
           ({ item, key, props }) =>
             item && (
               <StyledDialogOverlay key={key} style={props} onDismiss={onDismiss} initialFocusRef={initialFocusRef}>
-                <StyledDialogContent hidden={true} minHeight={minHeight} maxHeight={maxHeight} isOpen={isOpen}>
-                  <HiddenCloseButton onClick={onDismiss} />
+                <StyledDialogContent
+                  aria-label="dialog content"
+                  hidden={true}
+                  minHeight={minHeight}
+                  maxHeight={maxHeight}
+                  isOpen={isOpen}
+                >
                   {children}
                 </StyledDialogContent>
               </StyledDialogOverlay>

@@ -3,7 +3,7 @@ import ReactGA from 'react-ga'
 import { Link } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 import { darken } from 'polished'
-import { X } from 'react-feather'
+import { ArrowLeft, X } from 'react-feather'
 
 export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColor: string }>(({ warning, theme }) => ({
   backgroundColor: warning ? theme.red1 : theme.primary1
@@ -153,3 +153,14 @@ export const CursorPointer = styled.div`
     cursor: pointer;
   }
 `
+
+const BackArrowLink = styled(StyledInternalLink)`
+  color: ${({ theme }) => theme.text1};
+`
+export function BackArrow({ to }: { to: string }) {
+  return (
+    <BackArrowLink to={to}>
+      <ArrowLeft />
+    </BackArrowLink>
+  )
+}

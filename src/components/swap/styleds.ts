@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { AutoColumn } from '../Column'
 import { Text } from 'rebass'
 
@@ -8,30 +8,18 @@ export const Wrapper = styled.div`
   position: relative;
 `
 
-export const ArrowWrapper = styled.div`
+export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   padding: 2px;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
-  :hover {
-    cursor: pointer;
-    opacity: 0.8;
-  }
-`
-
-export const AdvancedDropdown = styled.div`
-  padding-top: calc(10px + 2rem);
-  padding-bottom: 10px;
-  margin-top: -2rem;
-  width: 100%;
-  max-width: 400px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  color: ${({ theme }) => theme.text2};
-  background-color: ${({ theme }) => theme.advancedBG};
-  z-index: -1;
+  ${({ clickable }) =>
+    clickable
+      ? css`
+          :hover {
+            cursor: pointer;
+            opacity: 0.8;
+          }
+        `
+      : null}
 `
 
 export const SectionBreak = styled.div`
@@ -71,7 +59,7 @@ export const StyledNumerical = styled(NumericalInput)`
     color: ${({ theme }) => theme.text4};
   }
 `
-export const StyledBalanceMaxMini = styled.button<{ active?: boolean }>`
+export const StyledBalanceMaxMini = styled.button`
   height: 22px;
   width: 22px;
   background-color: ${({ theme }) => theme.bg2};

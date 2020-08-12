@@ -1,165 +1,60 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { ChainId, Trade, TradeType, WETH } from 'dxswap-sdk'
+import { JSBI, Percent, Router, Trade, TradeType } from 'dxswap-sdk'
 import { useMemo } from 'react'
-import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, ROUTER_ADDRESS } from '../constants'
-import { useTokenAllowance } from '../data/Allowances'
-import { Field } from '../state/swap/actions'
+import { BIPS_BASE, DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getRouterContract, isAddress } from '../utils'
-import { computeSlippageAdjustedAmounts } from '../utils/prices'
+import { calculateGasMargin, getRouterContract, isAddress, shortenAddress } from '../utils'
 import { useActiveWeb3React } from './index'
-import useENSName from './useENSName'
-
-enum SwapType {
-  EXACT_TOKENS_FOR_TOKENS,
-  EXACT_TOKENS_FOR_ETH,
-  EXACT_ETH_FOR_TOKENS,
-  TOKENS_FOR_EXACT_TOKENS,
-  TOKENS_FOR_EXACT_ETH,
-  ETH_FOR_EXACT_TOKENS
-}
-
-function getSwapType(trade: Trade | undefined): SwapType | undefined {
-  if (!trade) return undefined
-  const chainId = trade.inputAmount.token.chainId
-  const inputWETH = trade.inputAmount.token.equals(WETH[chainId])
-  const outputWETH = trade.outputAmount.token.equals(WETH[chainId])
-  const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
-  if (isExactIn) {
-    if (inputWETH) {
-      return SwapType.EXACT_ETH_FOR_TOKENS
-    } else if (outputWETH) {
-      return SwapType.EXACT_TOKENS_FOR_ETH
-    } else {
-      return SwapType.EXACT_TOKENS_FOR_TOKENS
-    }
-  } else {
-    if (inputWETH) {
-      return SwapType.ETH_FOR_EXACT_TOKENS
-    } else if (outputWETH) {
-      return SwapType.TOKENS_FOR_EXACT_ETH
-    } else {
-      return SwapType.TOKENS_FOR_EXACT_TOKENS
-    }
-  }
-}
+import useENS from './useENS'
 
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
-  trade?: Trade, // trade to execute, required
+  trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   deadline: number = DEFAULT_DEADLINE_FROM_NOW, // in seconds from now
-  to?: string // recipient of output, optional
+  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): null | (() => Promise<string>) {
   const { account, chainId, library } = useActiveWeb3React()
   const addTransaction = useTransactionAdder()
-  const recipient = to ? isAddress(to) : account
-  const ensName = useENSName(to)
-  const inputAllowance = useTokenAllowance(
-    trade?.inputAmount?.token,
-    account ?? undefined,
-    ROUTER_ADDRESS
-  )
+
+  const { address: recipientAddress } = useENS(recipientAddressOrName)
+  const recipient = recipientAddressOrName === null ? account : recipientAddress
 
   return useMemo(() => {
-    if (!trade || !recipient) return null
-
-    // will always be defined
-    const {
-      [Field.INPUT]: slippageAdjustedInput,
-      [Field.OUTPUT]: slippageAdjustedOutput
-    } = computeSlippageAdjustedAmounts(trade, allowedSlippage)
-
-    if (!slippageAdjustedInput || !slippageAdjustedOutput) return null
-
-    // no allowance
-    if (
-      !trade.inputAmount.token.equals(WETH[chainId as ChainId]) &&
-      (!inputAllowance || slippageAdjustedInput.greaterThan(inputAllowance))
-    ) {
-      return null
-    }
+    if (!trade || !recipient || !library || !account || !chainId) return null
 
     return async function onSwap() {
-      if (!chainId || !library || !account) {
-        throw new Error('missing dependencies in onSwap callback')
-      }
-
       const contract: Contract | null = getRouterContract(chainId, library, account)
       if (!contract) {
         throw new Error('Failed to get a swap contract')
       }
 
-      const path = trade.route.path.map(t => t.address)
+      const swapMethods = []
 
-      const deadlineFromNow: number = Math.ceil(Date.now() / 1000) + deadline
+      swapMethods.push(
+        Router.swapCallParameters(trade, {
+          feeOnTransfer: false,
+          allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+          recipient,
+          ttl: deadline
+        })
+      )
 
-      const swapType = getSwapType(trade)
-
-      // let estimate: Function, method: Function,
-      let methodNames: string[],
-        args: Array<string | string[] | number>,
-        value: BigNumber | null = null
-      switch (swapType) {
-        case SwapType.EXACT_TOKENS_FOR_TOKENS:
-          methodNames = ['swapExactTokensForTokens', 'swapExactTokensForTokensSupportingFeeOnTransferTokens']
-          args = [
-            slippageAdjustedInput.raw.toString(),
-            slippageAdjustedOutput.raw.toString(),
-            path,
+      if (trade.tradeType === TradeType.EXACT_INPUT) {
+        swapMethods.push(
+          Router.swapCallParameters(trade, {
+            feeOnTransfer: true,
+            allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
             recipient,
-            deadlineFromNow
-          ]
-          break
-        case SwapType.TOKENS_FOR_EXACT_TOKENS:
-          methodNames = ['swapTokensForExactTokens']
-          args = [
-            slippageAdjustedOutput.raw.toString(),
-            slippageAdjustedInput.raw.toString(),
-            path,
-            recipient,
-            deadlineFromNow
-          ]
-          break
-        case SwapType.EXACT_ETH_FOR_TOKENS:
-          methodNames = ['swapExactETHForTokens', 'swapExactETHForTokensSupportingFeeOnTransferTokens']
-          args = [slippageAdjustedOutput.raw.toString(), path, recipient, deadlineFromNow]
-          value = BigNumber.from(slippageAdjustedInput.raw.toString())
-          break
-        case SwapType.TOKENS_FOR_EXACT_ETH:
-          methodNames = ['swapTokensForExactETH']
-          args = [
-            slippageAdjustedOutput.raw.toString(),
-            slippageAdjustedInput.raw.toString(),
-            path,
-            recipient,
-            deadlineFromNow
-          ]
-          break
-        case SwapType.EXACT_TOKENS_FOR_ETH:
-          methodNames = ['swapExactTokensForETH', 'swapExactTokensForETHSupportingFeeOnTransferTokens']
-          args = [
-            slippageAdjustedInput.raw.toString(),
-            slippageAdjustedOutput.raw.toString(),
-            path,
-            recipient,
-            deadlineFromNow
-          ]
-          break
-        case SwapType.ETH_FOR_EXACT_TOKENS:
-          methodNames = ['swapETHForExactTokens']
-          args = [slippageAdjustedOutput.raw.toString(), path, recipient, deadlineFromNow]
-          value = BigNumber.from(slippageAdjustedInput.raw.toString())
-          break
-        default:
-          throw new Error(`Unhandled swap type: ${swapType}`)
+            ttl: deadline
+          })
+        )
       }
 
       const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
-        methodNames.map(methodName =>
+        swapMethods.map(({ args, methodName, value }) =>
           contract.estimateGas[methodName](...args, value ? { value } : {})
             .then(calculateGasMargin)
             .catch(error => {
@@ -190,7 +85,7 @@ export function useSwapCallback(
         // if only 1 method exists, either:
         // a) the token is doing something weird not related to FoT (e.g. enforcing a whitelist)
         // b) the token is FoT and the user specified an exact output, which is not allowed
-        if (methodNames.length === 1) {
+        if (swapMethods.length === 1) {
           throw Error(
             `An error occurred. If either of the tokens you're swapping take a fee on transfer, you must specify an exact input amount.`
           )
@@ -198,7 +93,7 @@ export function useSwapCallback(
         // if 2 methods exists, either:
         // a) the token is doing something weird not related to FoT (e.g. enforcing a whitelist)
         // b) the token is FoT and is taking more than the specified slippage
-        else if (methodNames.length === 2) {
+        else if (swapMethods.length === 2) {
           throw Error(
             `An error occurred. If either of the tokens you're swapping take a fee on transfer, you must specify a slippage tolerance higher than the fee.`
           )
@@ -206,7 +101,7 @@ export function useSwapCallback(
           throw Error('This transaction would fail. Please contact support.')
         }
       } else {
-        const methodName = methodNames[indexOfSuccessfulEstimation]
+        const { methodName, args, value } = swapMethods[indexOfSuccessfulEstimation]
         const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
 
         return contract[methodName](...args, {
@@ -214,13 +109,20 @@ export function useSwapCallback(
           ...(value ? { value } : {})
         })
           .then((response: any) => {
-            const inputSymbol = trade.inputAmount.token.symbol
-            const outputSymbol = trade.outputAmount.token.symbol
-            const inputAmount = slippageAdjustedInput.toSignificant(3)
-            const outputAmount = slippageAdjustedOutput.toSignificant(3)
+            const inputSymbol = trade.inputAmount.currency.symbol
+            const outputSymbol = trade.outputAmount.currency.symbol
+            const inputAmount = trade.inputAmount.toSignificant(3)
+            const outputAmount = trade.outputAmount.toSignificant(3)
 
             const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
-            const withRecipient = recipient === account ? base : `${base} to ${ensName ?? recipient}`
+            const withRecipient =
+              recipient === account
+                ? base
+                : `${base} to ${
+                    recipientAddressOrName && isAddress(recipientAddressOrName)
+                      ? shortenAddress(recipientAddressOrName)
+                      : recipientAddressOrName
+                  }`
 
             addTransaction(response, {
               summary: withRecipient
@@ -246,11 +148,10 @@ export function useSwapCallback(
     recipient,
     allowedSlippage,
     chainId,
-    inputAllowance,
     library,
     account,
     deadline,
-    addTransaction,
-    ensName
+    recipientAddressOrName,
+    addTransaction
   ])
 }

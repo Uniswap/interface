@@ -1,8 +1,8 @@
-import { ChainId, WETH } from 'dxswap-sdk'
+import { ChainId } from 'dxswap-sdk'
 import React from 'react'
 import { isMobile } from 'react-device-detect'
-import { Link as HistoryLink } from 'react-router-dom'
 import { Text } from 'rebass'
+import { Link } from 'react-router-dom'
 
 import styled from 'styled-components'
 
@@ -12,11 +12,9 @@ import Wordmark from '../../assets/svg/wordmark.svg'
 import WordmarkDark from '../../assets/svg/wordmark_white.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
-import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
+import { useETHBalances } from '../../state/wallet/hooks'
 
-import { ExternalLink, StyledInternalLink } from '../../theme'
 import { YellowCard } from '../Card'
-import { AutoColumn } from '../Column'
 import Settings from '../Settings'
 import Menu from '../Menu'
 
@@ -48,7 +46,16 @@ const HeaderElement = styled.div`
   }
 `
 
-const Title = styled.div`
+const HeaderElementWrap = styled.div`
+  display: flex;
+  align-items: center;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    margin-top: 0.5rem;
+`};
+`
+
+const Title = styled.a`
   display: flex;
   align-items: center;
   pointer-events: auto;
@@ -78,6 +85,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
   border-radius: 12px;
   white-space: nowrap;
+  width: 100%;
 
   :focus {
     border: 1px solid blue;
@@ -88,10 +96,7 @@ const TestnetWrapper = styled.div`
   white-space: nowrap;
   width: fit-content;
   margin-left: 10px;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
+  pointer-events: auto;
 `
 
 const NetworkCard = styled(YellowCard)`
@@ -101,29 +106,31 @@ const NetworkCard = styled(YellowCard)`
   padding: 8px 12px;
 `
 
-const UniIcon = styled(HistoryLink)<{ to: string }>`
+const UniIcon = styled.div`
   img {
     height: 30px;
-    margin: 0px 5px;
+    margin-right: 5px;
   }
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    img { 
+      width: 4.5rem;
+    }
+  `};
 `
 
-const MigrateBanner = styled(AutoColumn)`
-  width: 100%;
-  padding: 12px 0;
+const HeaderControls = styled.div`
   display: flex;
-  justify-content: center;
-  background-color: ${({ theme }) => theme.primary5};
-  color: ${({ theme }) => theme.primaryText1};
-  font-weight: 400;
-  text-align: center;
-  pointer-events: auto;
-  a {
-    color: ${({ theme }) => theme.primaryText1};
-  }
+  flex-direction: row;
+  align-items: center;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 0;
+    flex-direction: column;
+    align-items: flex-end;
+  `};
+`
+
+const BalanceText = styled(Text)`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
   `};
 `
@@ -136,50 +143,46 @@ const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
   [ChainId.KOVAN]: 'Kovan'
 }
 
-const BalanceWrapper = styled.div`
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;
-  `};
-`
-
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
 
-  const userEthBalance = useTokenBalanceTreatingWETHasETH(account, WETH[chainId])
+  const userEthBalance = useETHBalances([account])[account]
   const [isDark] = useDarkModeManager()
 
   return (
     <HeaderFrame>
-      <RowBetween padding="1rem">
+      <RowBetween style={{ alignItems: 'flex-start' }} padding="1rem 1rem 0 1rem">
         <HeaderElement>
-          <Title>
-            <UniIcon id="link" to="/">
+          <Title href=".">
+            <UniIcon>
               <img src={isDark ? LogoDark : Logo} alt="logo" />
             </UniIcon>
             <TitleText isDark={isDark}>
-              <HistoryLink id="link" to="/">
+              <Link id="link" to="/">
                 DXswap
-              </HistoryLink>
+              </Link>
             </TitleText>
           </Title>
         </HeaderElement>
-        <HeaderElement>
-          <TestnetWrapper>
-            {!isMobile && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
-          </TestnetWrapper>
-          <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            <BalanceWrapper>
+        <HeaderControls>
+          <HeaderElement>
+            <TestnetWrapper>
+              {!isMobile && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
+            </TestnetWrapper>
+            <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
               {account && userEthBalance ? (
-                <Text style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+                <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
                   {userEthBalance?.toSignificant(4)} ETH
-                </Text>
+                </BalanceText>
               ) : null}
-            </BalanceWrapper>
-            <Web3Status />
-          </AccountElement>
-          <Settings />
-          <Menu />
-        </HeaderElement>
+              <Web3Status />
+            </AccountElement>
+          </HeaderElement>
+          <HeaderElementWrap>
+            <Settings />
+            <Menu />
+          </HeaderElementWrap>
+        </HeaderControls>
       </RowBetween>
     </HeaderFrame>
   )
