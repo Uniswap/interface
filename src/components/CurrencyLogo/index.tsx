@@ -1,13 +1,19 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Currency, Token, ETHER } from 'dxswap-sdk'
+import { ChainId, Currency, Token, ETHER, DXD } from 'dxswap-sdk'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import uriToHttp from '../../utils/uriToHttp'
+import { defaultTokens } from '../../constants'
 
-const getTokenLogoURL = address =>
-  `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+const getTokenLogoURL = address => {
+  for (let defaultTokensIndex = 0; defaultTokensIndex < defaultTokens.length; defaultTokensIndex++) {
+    if (defaultTokens[defaultTokensIndex].address == address)
+      return defaultTokens[defaultTokensIndex].logoURI
+  }
+  return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+}
 const BAD_URIS: { [tokenAddress: string]: true } = {}
 
 const Image = styled.img<{ size: string }>`
@@ -46,13 +52,12 @@ export default function CurrencyLogo({
 }) {
   const [, refresh] = useState<number>(0)
 
-  if (currency === ETHER) {
+  if ((currency === ETHER) || (currency.symbol === 'WETH')) {
     return <StyledEthereumLogo src={EthereumLogo} size={size} {...rest} />
   }
 
   if (currency instanceof Token) {
     let uri: string | undefined
-
     if (currency instanceof WrappedTokenInfo) {
       if (currency.logoURI && !BAD_URIS[currency.logoURI]) {
         uri = uriToHttp(currency.logoURI).filter(s => !BAD_URIS[s])[0]
@@ -64,10 +69,6 @@ export default function CurrencyLogo({
       if (!BAD_URIS[defaultUri]) {
         uri = defaultUri
       }
-    }
-    
-    if (currency.address == "0xDd25BaE0659fC06a8d00CD06C7f5A98D71bfB715") {
-      uri = "https://gateway.pinata.cloud/ipfs/QmPhoeL14E5SBFBaC4bA3nuRpg3MpxdWVYdPrdXHdQ3EHY/brand/dxdao-blue.png"
     }
 
     if (uri) {

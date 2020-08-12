@@ -3,6 +3,8 @@ import { TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { DEFAULT_TOKEN_LIST_URL } from '../../constants'
+import { defaultTokens } from '../../constants'
+
 import { AppState } from '../index'
 
 /**
@@ -19,7 +21,7 @@ export class WrappedTokenInfo extends Token {
   }
 }
 
-export type TokenAddressMap = Readonly<{ [chainId in ChainId]: Readonly<{ [tokenAddress: string]: WrappedTokenInfo }> }>
+export type TokenAddressMap = { [chainId in ChainId]: { [tokenAddress: string]: WrappedTokenInfo } }
 
 /**
  * An empty result, useful as a default.
@@ -57,6 +59,16 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
   return map
 }
 
+export function tokenListToTokenMap(list: TokenInfo[]): TokenAddressMap {
+  let map = EMPTY_LIST
+  list.forEach(tokenInfo => {
+      const token = new WrappedTokenInfo(tokenInfo)
+      if (map[token.chainId][token.address] == undefined)
+        map[token.chainId][token.address] = token
+  })
+  return map
+}
+
 export function useTokenList(url: string): TokenAddressMap {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   return useMemo(() => {
@@ -67,7 +79,7 @@ export function useTokenList(url: string): TokenAddressMap {
 }
 
 export function useDefaultTokenList(): TokenAddressMap {
-  return useTokenList(DEFAULT_TOKEN_LIST_URL)
+  return tokenListToTokenMap(defaultTokens)
 }
 
 // returns all downloaded current lists
