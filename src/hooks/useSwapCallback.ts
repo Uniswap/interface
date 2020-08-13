@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import { BIPS_BASE, DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getRouterContract, /*getDragoContract, */isAddress, shortenAddress } from '../utils'
+import { calculateGasMargin, getRouterContract, getDragoContract, isAddress, shortenAddress } from '../utils'
 //import { Dragov2_INTERFACE } from '../constants/abis/dragov2'
 import isZero from '../utils/isZero'
 import v1SwapArguments from '../utils/v1SwapArguments'
@@ -62,8 +62,8 @@ function useSwapCallArguments(
     if (!trade || !recipient || !library || !account || !tradeVersion || !chainId) return []
 
     const contract: Contract | null =
-      //tradeVersion === Version.v2 ? getDragoContract(chainId, library, account, recipient) : v1Exchange
-      tradeVersion === Version.v2 ? getRouterContract(chainId, library, account) : v1Exchange
+      tradeVersion === Version.v2 ? getDragoContract(chainId, library, account, recipient) : v1Exchange
+      //tradeVersion === Version.v2 ? getRouterContract(chainId, library, account) : v1Exchange
     if (!contract) {
       return []
     }
@@ -73,8 +73,6 @@ function useSwapCallArguments(
     switch (tradeVersion) {
       case Version.v2:
         swapMethods.push(
-          // TODO: Drago.operateOnExchange({receipient, ...trade})
-          // TODO: encode parameters
           Router.swapCallParameters(trade, {
             feeOnTransfer: false,
             allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
@@ -119,6 +117,7 @@ export function useSwapCallback(
   const { account, chainId, library } = useActiveWeb3React()
 
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, deadline, recipientAddressOrName)
+  console.log(swapCalls)
 
   const addTransaction = useTransactionAdder()
 
