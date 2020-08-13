@@ -126,7 +126,7 @@ export function TokenWarningModal({ currencies }: { currencies: { [field in Fiel
           <RowBetween>
             <div>
               <label style={{ cursor: 'pointer' }}>
-                <input type="checkbox" onChange={toggleUnderstand} /> I understand
+                <input type="checkbox" className="understand-checkbox" onChange={toggleUnderstand} /> I understand
               </label>
             </div>
             <ButtonError
@@ -134,6 +134,7 @@ export function TokenWarningModal({ currencies }: { currencies: { [field in Fiel
               error={true}
               width={'140px'}
               padding="0.5rem 1rem"
+              className="token-dismiss-button"
               style={{
                 borderRadius: '10px'
               }}
@@ -142,9 +143,7 @@ export function TokenWarningModal({ currencies }: { currencies: { [field in Fiel
                 dismissToken1 && dismissToken1()
               }}
             >
-              <TYPE.body color="white" className="token-dismiss-button">
-                Continue
-              </TYPE.body>
+              <TYPE.body color="white">Continue</TYPE.body>
             </ButtonError>
           </RowBetween>
         </AutoColumn>
