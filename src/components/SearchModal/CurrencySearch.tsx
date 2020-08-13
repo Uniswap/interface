@@ -11,8 +11,9 @@ import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import Card from '../Card'
 import Column from '../Column'
+import ListLogo from '../ListLogo'
 import QuestionHelper from '../QuestionHelper'
-import { AutoRow, RowBetween } from '../Row'
+import Row, { RowBetween } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
 import { filterTokens } from './filtering'
@@ -166,12 +167,17 @@ export function CurrencySearch({
       />
       <Separator />
       <Card>
-        <AutoRow justify={'space-between'}>
-          <TYPE.main>{selectedListInfo.current?.name}</TYPE.main>
+        <RowBetween>
+          {selectedListInfo.current ? (
+            <Row>
+              <ListLogo style={{ marginRight: 8 }} logoURI={selectedListInfo.current.logoURI} />
+              <TYPE.main>{selectedListInfo.current.name}</TYPE.main>
+            </Row>
+          ) : null}
           <LinkStyledButton style={{ fontWeight: 500, color: theme.text2, fontSize: 16 }} onClick={onChangeList}>
             {selectedListInfo.current ? 'Change' : 'Select a list'}
           </LinkStyledButton>
-        </AutoRow>
+        </RowBetween>
       </Card>
     </Column>
   )
