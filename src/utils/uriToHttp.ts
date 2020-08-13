@@ -19,9 +19,6 @@ export default function uriToHttp(uri: string): string[] {
       return []
     }
   } catch (error) {
-    if (uri.toLowerCase().endsWith('.eth')) {
-      return [`https://${uri.toLowerCase()}.link`]
-    }
     return []
   }
 }
