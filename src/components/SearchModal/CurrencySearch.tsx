@@ -25,7 +25,6 @@ interface CurrencySearchProps {
   isOpen: boolean
   onDismiss: () => void
   hiddenCurrency?: Currency
-  showSendWithSwap?: boolean
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency
   showCommonBases?: boolean
@@ -37,7 +36,6 @@ export function CurrencySearch({
   onCurrencySelect,
   otherSelectedCurrency,
   showCommonBases,
-  showSendWithSwap,
   onDismiss,
   isOpen,
   onChangeList
@@ -163,7 +161,6 @@ export function CurrencySearch({
         onCurrencySelect={handleCurrencySelect}
         otherCurrency={otherSelectedCurrency}
         selectedCurrency={hiddenCurrency}
-        showSendWithSwap={showSendWithSwap}
       />
       <Separator />
       <Card>

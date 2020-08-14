@@ -11,7 +11,6 @@ interface CurrencySearchModalProps {
   isOpen: boolean
   onDismiss: () => void
   hiddenCurrency?: Currency
-  showSendWithSwap?: boolean
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency
   showCommonBases?: boolean
@@ -22,7 +21,6 @@ export default function CurrencySearchModal({
   onDismiss,
   onCurrencySelect,
   hiddenCurrency,
-  showSendWithSwap,
   otherSelectedCurrency,
   showCommonBases = false
 }: CurrencySearchModalProps) {
@@ -68,7 +66,6 @@ export default function CurrencySearchModal({
           hiddenCurrency={hiddenCurrency}
           otherSelectedCurrency={otherSelectedCurrency}
           showCommonBases={showCommonBases}
-          showSendWithSwap={showSendWithSwap}
         />
       )}
     </Modal>

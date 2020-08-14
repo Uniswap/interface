@@ -2,6 +2,7 @@ import { getVersionUpgrade, minVersionBump, VersionUpgrade } from '@uniswap/toke
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useInterval from '../../hooks/useInterval'
+import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { addPopup } from '../application/actions'
 import { AppDispatch, AppState } from '../index'
 import { acceptListUpdate, fetchTokenList } from './actions'
@@ -10,9 +11,12 @@ export default function Updater(): null {
   const dispatch = useDispatch<AppDispatch>()
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
 
+  const isWindowVisible = useIsWindowVisible()
+
   const fetchAllListsCallback = useCallback(() => {
+    if (!isWindowVisible) return
     Object.keys(lists).forEach(listUrl => dispatch(fetchTokenList(listUrl) as any))
-  }, [dispatch, lists])
+  }, [dispatch, isWindowVisible, lists])
   // refetch all lists every 10 minutes
   useInterval(fetchAllListsCallback, 1000 * 60 * 10)
 

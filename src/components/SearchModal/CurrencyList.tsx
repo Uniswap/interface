@@ -1,8 +1,7 @@
-import { Currency, CurrencyAmount, currencyEquals, ETHER, JSBI, Token } from '@uniswap/sdk'
-import React, { CSSProperties, memo, useContext, useEffect, useMemo, useRef } from 'react'
+import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@uniswap/sdk'
+import React, { CSSProperties, memo, useEffect, useMemo, useRef } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
 import useLast from '../../hooks/useLast'
@@ -10,7 +9,6 @@ import { useSelectedTokenList } from '../../state/lists/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
-import { ButtonSecondary } from '../Button'
 import Column, { AutoColumn } from '../Column'
 import { RowFixed } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
@@ -27,18 +25,15 @@ export default function CurrencyList({
   allBalances,
   selectedCurrency,
   onCurrencySelect,
-  otherCurrency,
-  showSendWithSwap
+  otherCurrency
 }: {
   currencies: Currency[]
   selectedCurrency: Currency | undefined
   allBalances: { [tokenAddress: string]: CurrencyAmount | undefined }
   onCurrencySelect: (currency: Currency) => void
   otherCurrency: Currency | undefined
-  showSendWithSwap?: boolean
 }) {
   const { account, chainId } = useActiveWeb3React()
-  const theme = useContext(ThemeContext)
   const allTokens = useAllTokens()
   const selectedListTokens = useSelectedTokenList()
   const addToken = useAddUserToken()
@@ -61,8 +56,6 @@ export default function CurrencyList({
       const isOnList = isTokenOnList(selectedListTokens, currency)
       const customAdded = Boolean(!isOnList && currency instanceof Token && allTokens[currency.address])
       const balance = currency === ETHER ? ETHBalance : allBalances[key]
-
-      const zeroBalance = balance && JSBI.equal(JSBI.BigInt(0), balance.raw)
 
       const isSelected = Boolean(selectedCurrency && currencyEquals(currency, selectedCurrency))
       const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
@@ -109,27 +102,7 @@ export default function CurrencyList({
               </FadedSpan>
             </Column>
           </RowFixed>
-          <AutoColumn>
-            {balance ? (
-              <Text>
-                {zeroBalance && showSendWithSwap ? (
-                  <ButtonSecondary padding={'4px 8px'}>
-                    <Text textAlign="center" fontWeight={500} fontSize={14} color={theme.primary1}>
-                      Send With Swap
-                    </Text>
-                  </ButtonSecondary>
-                ) : balance ? (
-                  balance.toSignificant(6)
-                ) : (
-                  '-'
-                )}
-              </Text>
-            ) : account ? (
-              <Loader />
-            ) : (
-              '-'
-            )}
-          </AutoColumn>
+          <AutoColumn>{balance ? <Text>{balance.toSignificant(6)}</Text> : account ? <Loader /> : '-'}</AutoColumn>
         </MenuItem>
       )
     })
@@ -145,9 +118,7 @@ export default function CurrencyList({
     onCurrencySelect,
     otherCurrency,
     removeToken,
-    selectedCurrency,
-    showSendWithSwap,
-    theme.primary1
+    selectedCurrency
   ])
 
   return (
