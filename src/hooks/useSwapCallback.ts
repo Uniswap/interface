@@ -86,12 +86,19 @@ function useSwapCallArguments(
           argsWithEth.unshift(swapParameters.value)
         }
 
-        const encodedSwapCall = AUniswap_INTERFACE.encodeFunctionData(uniswapMethodName, argsWithEth)
+        // TODO: encoding not working as expected, must define params in correct
+        // order and tuple state
+        // TODO: check why this returns weth address,
+        // while EXACT_INPUT case returns 4
+        const fragment =  AUniswap_INTERFACE.getFunction(uniswapMethodName)
+        const callData: string | undefined = fragment /*&& isValidMethodArgs(callInputs)*/
+              ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsWithEth)
+              : undefined
 
         swapMethods.push(
           {
             methodName: 'operateOnExchange',
-            args: [ROUTER_ADDRESS, encodedSwapCall],
+            args: [ROUTER_ADDRESS, [callData]],
             value: '0x0'
           }
           /*Router.swapCallParameters(trade, {
@@ -116,11 +123,15 @@ function useSwapCallArguments(
             argsWithEth.unshift(swapParameters.value)
           }
 
-          const encodedSwapCall = AUniswap_INTERFACE.encodeFunctionData(uniswapMethodName, argsWithEth)
+          const fragment =  AUniswap_INTERFACE.getFunction(uniswapMethodName)
+          const callData: string | undefined = fragment /*&& isValidMethodArgs(callInputs)*/
+                ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsWithEth)
+                : undefined
+
           swapMethods.push(
             {
               methodName: 'operateOnExchange',
-              args: [ROUTER_ADDRESS, encodedSwapCall],
+              args: [ROUTER_ADDRESS, [callData]],
               value : '0x0'
             }
             /*Router.swapCallParameters(trade, {
