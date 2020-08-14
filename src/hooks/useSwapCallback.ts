@@ -5,8 +5,9 @@ import { useMemo } from 'react'
 import { BIPS_BASE, DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, /*getRouterContract, */getDragoContract, isAddress, shortenAddress } from '../utils'
-//import { Dragov2_INTERFACE } from '../constants/abis/dragov2'
+import { calculateGasMargin, getDragoContract, isAddress, shortenAddress } from '../utils'
+import { ROUTER_ADDRESS } from '../constants'
+import { AUniswap_INTERFACE } from '../constants/abis/auniswap'
 import isZero from '../utils/isZero'
 import v1SwapArguments from '../utils/v1SwapArguments'
 import { useActiveWeb3React } from './index'
@@ -72,23 +73,62 @@ function useSwapCallArguments(
 
     switch (tradeVersion) {
       case Version.v2:
+        const swapParameters = Router.swapCallParameters(trade, {
+          feeOnTransfer: false,
+          allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+          recipient,
+          ttl: deadline
+        })
+        const uniswapMethodName = swapParameters.methodName
+        const argsWithEth = swapParameters.args
+
+        if (!isZero(swapParameters.value)) {
+          argsWithEth.unshift(swapParameters.value)
+        }
+
+        const encodedSwapCall = AUniswap_INTERFACE.encodeFunctionData(uniswapMethodName, argsWithEth)
+
         swapMethods.push(
-          Router.swapCallParameters(trade, {
+          {
+            methodName: 'operateOnExchange',
+            args: [ROUTER_ADDRESS, encodedSwapCall],
+            value: '0x0'
+          }
+          /*Router.swapCallParameters(trade, {
             feeOnTransfer: false,
             allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
             recipient,
             ttl: deadline
-          })
+          })*/
         )
 
         if (trade.tradeType === TradeType.EXACT_INPUT) {
+          const swapParameters = Router.swapCallParameters(trade, {
+            feeOnTransfer: true,
+            allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+            recipient,
+            ttl: deadline
+          })
+          const uniswapMethodName = swapParameters.methodName
+          const argsWithEth = swapParameters.args
+
+          if (!isZero(swapParameters.value)) {
+            argsWithEth.unshift(swapParameters.value)
+          }
+
+          const encodedSwapCall = AUniswap_INTERFACE.encodeFunctionData(uniswapMethodName, argsWithEth)
           swapMethods.push(
-            Router.swapCallParameters(trade, {
+            {
+              methodName: 'operateOnExchange',
+              args: [ROUTER_ADDRESS, encodedSwapCall],
+              value : '0x0'
+            }
+            /*Router.swapCallParameters(trade, {
               feeOnTransfer: true,
               allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
               recipient,
               ttl: deadline
-            })
+            })*/
           )
         }
         break
@@ -117,7 +157,6 @@ export function useSwapCallback(
   const { account, chainId, library } = useActiveWeb3React()
 
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, deadline, recipientAddressOrName)
-  console.log(swapCalls)
 
   const addTransaction = useTransactionAdder()
 
@@ -138,7 +177,6 @@ export function useSwapCallback(
 
     const tradeVersion = getTradeVersion(trade)
 
-    // TODO: rigoblock calls have always 0 value and instead additional parameter, cannot use eth calls
     return {
       state: SwapCallbackState.VALID,
       callback: async function onSwap(): Promise<string> {
@@ -203,7 +241,6 @@ export function useSwapCallback(
           gasEstimate
         } = successfulEstimation
 
-        // TODO: define dragoContract, methodName "operateOnExchange", attach uniswap router address before args
         return contract[methodName](...args, {
           gasLimit: calculateGasMargin(gasEstimate),
           ...(value && !isZero(value) ? { value, from: account } : { from: account })
