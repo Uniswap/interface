@@ -108,6 +108,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
       <PaddedColumn gap="14px">
         {Object.keys(lists).map((listUrl, ix, allListUrls) => {
           const { current: list } = lists[listUrl]
+          if (!list) return null
 
           const isSelected = listUrl === selectedListUrl
 

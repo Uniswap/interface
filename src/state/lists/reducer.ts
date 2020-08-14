@@ -18,6 +18,13 @@ export interface ListsState {
   readonly selectedListUrl: string | undefined
 }
 
+const NEW_LIST_STATE: ListsState['byUrl'][string] = {
+  error: null,
+  current: null,
+  loadingRequestId: null,
+  pendingUpdate: null
+}
+
 const initialState: ListsState = {
   byUrl: {
     [DEFAULT_TOKEN_LIST_URL]: {
@@ -25,7 +32,8 @@ const initialState: ListsState = {
       current: UNISWAP_DEFAULT_LIST,
       loadingRequestId: null,
       pendingUpdate: null
-    }
+    },
+    'https://t2crtokens.eth.link': NEW_LIST_STATE
   },
   selectedListUrl: undefined
 }
@@ -81,15 +89,14 @@ export default createReducer(initialState, builder =>
     })
     .addCase(selectList, (state, { payload: url }) => {
       state.selectedListUrl = url
+      // automatically adds list
+      if (!state.byUrl[url]) {
+        state.byUrl[url] = NEW_LIST_STATE
+      }
     })
     .addCase(addList, (state, { payload: url }) => {
       if (!state.byUrl[url]) {
-        state.byUrl[url] = {
-          loadingRequestId: null,
-          pendingUpdate: null,
-          current: null,
-          error: null
-        }
+        state.byUrl[url] = NEW_LIST_STATE
       }
     })
     .addCase(removeList, (state, { payload: url }) => {

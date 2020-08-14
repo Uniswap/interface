@@ -331,7 +331,7 @@ describe('list reducer', () => {
         selectedListUrl: 'fake-url'
       })
     })
-    it('no op if not a valid list identifier', () => {
+    it('selects if not present already', () => {
       store = createStore(reducer, {
         byUrl: {
           'fake-url': {
@@ -351,12 +351,18 @@ describe('list reducer', () => {
             current: STUB_TOKEN_LIST,
             loadingRequestId: null,
             pendingUpdate: PATCHED_STUB_LIST
+          },
+          'fake-url-invalid': {
+            error: null,
+            current: null,
+            loadingRequestId: null,
+            pendingUpdate: null
           }
         },
-        selectedListUrl: undefined
+        selectedListUrl: 'fake-url-invalid'
       })
     })
-    it('no op if list not downloaded yet', () => {
+    it('works if list already added', () => {
       store = createStore(reducer, {
         byUrl: {
           'fake-url': {
@@ -378,7 +384,7 @@ describe('list reducer', () => {
             pendingUpdate: null
           }
         },
-        selectedListUrl: undefined
+        selectedListUrl: 'fake-url'
       })
     })
   })

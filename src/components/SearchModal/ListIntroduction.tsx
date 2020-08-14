@@ -2,28 +2,31 @@ import React, { memo, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { Text } from 'rebass'
 import { AppDispatch } from '../../state'
-import { addList, selectList } from '../../state/lists/actions'
+import { selectList } from '../../state/lists/actions'
 import { ButtonPrimary } from '../Button'
 import { OutlineCard } from '../Card'
 import Column, { AutoColumn } from '../Column'
 import Row from '../Row'
 import { PaddedColumn } from './styleds'
 
-const ListCard = memo(function ListCard({ listName, listUrl }: { listName: string; listUrl: string }) {
+const ListCard = memo(function ListCard({ id, listName, listUrl }: { id: string; listName: string; listUrl: string }) {
   const dispatch = useDispatch<AppDispatch>()
 
-  const selectCoingecko = useCallback(() => {
-    dispatch(addList(listUrl))
+  const handleSelect = useCallback(() => {
     dispatch(selectList(listUrl))
   }, [dispatch, listUrl])
 
   return (
-    <OutlineCard>
+    <OutlineCard id={id}>
       <Row align="center">
         <Text fontWeight={500} style={{ flex: '1' }}>
           {listName}
         </Text>
-        <ButtonPrimary style={{ width: '6rem', padding: '0.5rem 1rem' }} onClick={selectCoingecko}>
+        <ButtonPrimary
+          className="select-button"
+          style={{ width: '6rem', padding: '0.5rem 1rem' }}
+          onClick={handleSelect}
+        >
           Select
         </ButtonPrimary>
       </Row>
@@ -43,9 +46,17 @@ export default function ListIntroduction() {
             You can switch between token lists and add your own custom lists via IPFS, HTTPS and ENS. Get started by
             selecting one below.
           </Text>
-          <ListCard listName={'Kleros Token Curated Registry List'} listUrl={'t2crtokens.eth'} />
-          <ListCard listName={'1inch Exchange Token List'} listUrl={'tokens.1inch.eth'} />
-          <ListCard listName={'Uniswap Default List'} listUrl={'https://tokens.uniswap.org'} />
+          <ListCard
+            id="select-kleros-list"
+            listName={'Kleros Token Curated Registry List'}
+            listUrl={'t2crtokens.eth'}
+          />
+          <ListCard id="select-1inch-list" listName={'1inch Exchange Token List'} listUrl={'tokens.1inch.eth'} />
+          <ListCard
+            id="select-default-uniswap-list"
+            listName={'Uniswap Default List'}
+            listUrl={'https://tokens.uniswap.org'}
+          />
         </AutoColumn>
       </PaddedColumn>
     </Column>
