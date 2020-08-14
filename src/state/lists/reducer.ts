@@ -27,7 +27,7 @@ const initialState: ListsState = {
       pendingUpdate: null
     }
   },
-  selectedListUrl: DEFAULT_TOKEN_LIST_URL
+  selectedListUrl: undefined
 }
 
 export default createReducer(initialState, builder =>
@@ -80,8 +80,6 @@ export default createReducer(initialState, builder =>
       }
     })
     .addCase(selectList, (state, { payload: url }) => {
-      const list = state.byUrl[url]
-      if (!list || !list.current) return
       state.selectedListUrl = url
     })
     .addCase(addList, (state, { payload: url }) => {
@@ -98,7 +96,9 @@ export default createReducer(initialState, builder =>
       if (state.byUrl[url]) {
         delete state.byUrl[url]
       }
-      if (state.selectedListUrl === url) state.selectedListUrl = undefined
+      if (state.selectedListUrl === url) {
+        state.selectedListUrl = Object.keys(state.byUrl)[0]
+      }
     })
     .addCase(acceptListUpdate, (state, { payload: url }) => {
       if (!state.byUrl[url]?.pendingUpdate) {
@@ -112,5 +112,9 @@ export default createReducer(initialState, builder =>
     })
     .addCase(updateVersion, state => {
       delete state.byUrl['https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json']
+      delete state.byUrl['https://unpkg.com/@uniswap/default-token-list@latest']
+      if (state.selectedListUrl && !state.byUrl[state.selectedListUrl]) {
+        delete state.selectedListUrl
+      }
     })
 )

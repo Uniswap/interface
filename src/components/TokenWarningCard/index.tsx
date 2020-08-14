@@ -98,8 +98,9 @@ export function TokenWarningModal({ currencies }: { currencies: { [field in Fiel
   const [understandChecked, setUnderstandChecked] = useState(false)
   const toggleUnderstand = useCallback(() => setUnderstandChecked(uc => !uc), [])
 
+  const handleDismiss = useCallback(() => null, [])
   return (
-    <Modal isOpen={showWarning} onDismiss={() => null} maxHeight={90}>
+    <Modal isOpen={showWarning} onDismiss={handleDismiss} maxHeight={90}>
       <WarningContainer className="token-warning-container">
         <AutoColumn gap="lg">
           <AutoRow gap="6px">
@@ -126,7 +127,13 @@ export function TokenWarningModal({ currencies }: { currencies: { [field in Fiel
           <RowBetween>
             <div>
               <label style={{ cursor: 'pointer' }}>
-                <input type="checkbox" className="understand-checkbox" onChange={toggleUnderstand} /> I understand
+                <input
+                  type="checkbox"
+                  className="understand-checkbox"
+                  checked={understandChecked}
+                  onChange={toggleUnderstand}
+                />{' '}
+                I understand
               </label>
             </div>
             <ButtonError

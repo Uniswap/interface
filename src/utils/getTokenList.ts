@@ -1,16 +1,32 @@
 import { TokenList } from '@uniswap/token-lists'
 import schema from '@uniswap/token-lists/src/tokenlist.schema.json'
 import Ajv from 'ajv'
+import { parseENSAddress } from './parseENSAddress'
 import uriToHttp from './uriToHttp'
 
 const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
 
 /**
- * Contains the logic for resolving a URL to a valid token list
+ * Contains the logic for resolving a list URL to a validated token list
  * @param listUrl list url
+ * @param resolveENSContentHash resolves an ENS name to its ipfs:// or ipns:// url
  */
-export async function getTokenList(listUrl: string): Promise<TokenList> {
-  const urls = uriToHttp(listUrl)
+export async function getTokenList(
+  listUrl: string,
+  resolveENSContentHash: (ensName: string) => Promise<string>
+): Promise<TokenList> {
+  const parsedENS = parseENSAddress(listUrl)
+  let urls: string[]
+  if (parsedENS) {
+    try {
+      urls = uriToHttp(`${await resolveENSContentHash(parsedENS.ensName)}${parsedENS.ensPath ?? ''}`)
+    } catch (error) {
+      console.debug('Failed to resolve URL', error)
+      urls = []
+    }
+  } else {
+    urls = uriToHttp(listUrl)
+  }
   for (let i = 0; i < urls.length; i++) {
     const url = urls[i]
     const isLast = i === urls.length - 1
@@ -30,12 +46,12 @@ export async function getTokenList(listUrl: string): Promise<TokenList> {
 
     const json = await response.json()
     if (!tokenListValidator(json)) {
-      throw new Error(
+      const validationErrors: string =
         tokenListValidator.errors?.reduce<string>((memo, error) => {
           const add = `${error.dataPath} ${error.message ?? ''}`
           return memo.length > 0 ? `${memo}; ${add}` : `${add}`
-        }, '') ?? 'Token list failed validation'
-      )
+        }, '') ?? 'unknown error'
+      throw new Error(`Token list failed validation: ${validationErrors}`)
     }
     return json
   }

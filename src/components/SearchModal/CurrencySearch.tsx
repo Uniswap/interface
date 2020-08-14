@@ -170,7 +170,9 @@ export function CurrencySearch({
         <RowBetween>
           {selectedListInfo.current ? (
             <Row>
-              <ListLogo style={{ marginRight: 8 }} logoURI={selectedListInfo.current.logoURI} />
+              {selectedListInfo.current.logoURI ? (
+                <ListLogo style={{ marginRight: 8 }} logoURI={selectedListInfo.current.logoURI} />
+              ) : null}
               <TYPE.main>{selectedListInfo.current.name}</TYPE.main>
             </Row>
           ) : null}

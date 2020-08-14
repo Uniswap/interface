@@ -2,7 +2,6 @@ import { ChainId, Token } from '@uniswap/sdk'
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { DEFAULT_TOKEN_LIST_URL } from '../../constants'
 import { AppState } from '../index'
 
 /**
@@ -57,20 +56,21 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
   return map
 }
 
-export function useTokenList(url: string): TokenAddressMap {
+export function useTokenList(url: string | undefined): TokenAddressMap {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   return useMemo(() => {
+    if (!url) return EMPTY_LIST
     const current = lists[url]?.current
     if (!current) return EMPTY_LIST
     return listToTokenMap(current)
   }, [lists, url])
 }
 
-export function useSelectedListUrl(): string {
+export function useSelectedListUrl(): string | undefined {
   const selectedListUrl = useSelector<AppState, AppState['lists']['selectedListUrl']>(
     state => state.lists.selectedListUrl
   )
-  return selectedListUrl ?? DEFAULT_TOKEN_LIST_URL
+  return selectedListUrl
 }
 
 export function useSelectedTokenList(): TokenAddressMap {

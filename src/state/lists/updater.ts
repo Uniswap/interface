@@ -1,6 +1,7 @@
 import { getVersionUpgrade, minVersionBump, VersionUpgrade } from '@uniswap/token-lists'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import useInterval from '../../hooks/useInterval'
 import { addPopup } from '../application/actions'
 import { AppDispatch, AppState } from '../index'
 import { acceptListUpdate, fetchTokenList } from './actions'
@@ -9,12 +10,11 @@ export default function Updater(): null {
   const dispatch = useDispatch<AppDispatch>()
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
 
-  // on initial mount, refetch all the lists in storage
-  useEffect(() => {
+  const fetchAllListsCallback = useCallback(() => {
     Object.keys(lists).forEach(listUrl => dispatch(fetchTokenList(listUrl) as any))
-    // we only do this once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch])
+  }, [dispatch, lists])
+  // refetch all lists every 10 minutes
+  useInterval(fetchAllListsCallback, 1000 * 60 * 10)
 
   // whenever a list is not loaded and not loading, try again to load it
   useEffect(() => {

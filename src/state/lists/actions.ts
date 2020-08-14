@@ -9,7 +9,9 @@ export const fetchTokenList = createAsyncThunk<TokenList, string>(
     // this makes it so we only ever fetch a list a single time concurrently
     (fetchCache[url] =
       fetchCache[url] ??
-      getTokenList(url).catch(error => {
+      getTokenList(url, async () => {
+        throw new Error('not yet implemented')
+      }).catch(error => {
         delete fetchCache[url]
         throw error
       }))

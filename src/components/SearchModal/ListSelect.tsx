@@ -5,7 +5,7 @@ import { Text } from 'rebass'
 import { AppDispatch, AppState } from '../../state'
 import { addList, removeList, selectList } from '../../state/lists/actions'
 import { useSelectedListUrl } from '../../state/lists/hooks'
-import { CloseIcon, ExternalLink, LinkStyledButton, TYPE } from '../../theme'
+import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
 import { getTokenList } from '../../utils/getTokenList'
 import listVersionLabel from '../../utils/listVersionLabel'
 import uriToHttp from '../../utils/uriToHttp'
@@ -27,7 +27,9 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
 
   const handleAddList = useCallback(() => {
     setAddState({ adding: true, addError: null })
-    getTokenList(listUrlInput)
+    getTokenList(listUrlInput, async () => {
+      throw new Error('not implemented')
+    })
       .then(() => {
         dispatch(addList(listUrlInput))
       })
@@ -104,14 +106,14 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
       <Separator />
 
       <PaddedColumn gap="14px">
-        {Object.keys(lists).map(listUrl => {
+        {Object.keys(lists).map((listUrl, ix, allListUrls) => {
           const { current: list } = lists[listUrl]
 
           const isSelected = listUrl === selectedListUrl
 
           return (
             <Row key={listUrl} align="center">
-              <div style={{ marginRight: '1rem' }}>
+              <div style={{ marginRight: '1rem', flex: '0' }}>
                 <input
                   type="radio"
                   value={listUrl}
@@ -122,18 +124,22 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
                 />
               </div>
               <Column style={{ flex: '1' }}>
-                <Row style={{ marginBottom: 6 }}>
-                  <Text fontWeight={isSelected ? 500 : 400} fontSize={16}>
-                    {list?.name ?? listUrl}
-                  </Text>
-                </Row>
+                <Text
+                  fontWeight={isSelected ? 500 : 400}
+                  fontSize={16}
+                  style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                  title={listUrl}
+                >
+                  {list?.name ?? listUrl}
+                </Text>
                 <RowBetween>
                   <div>
-                    <ExternalLink href={listUrl}>View List</ExternalLink>
                     <LinkStyledButton
+                      style={{ padding: 0 }}
                       onClick={() => {
                         dispatch(removeList(listUrl))
                       }}
+                      disabled={allListUrls.length === 1}
                     >
                       Remove
                     </LinkStyledButton>

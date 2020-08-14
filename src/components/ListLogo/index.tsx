@@ -14,7 +14,7 @@ export default function ListLogo({
   style,
   size = '24px'
 }: {
-  logoURI?: string
+  logoURI: string
   size?: string
   style?: React.CSSProperties
 }) {
