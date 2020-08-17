@@ -9,7 +9,7 @@ import { calculateGasMargin, getDragoContract, isAddress, shortenAddress } from 
 import { ROUTER_ADDRESS } from '../constants'
 import { AUniswap_INTERFACE } from '../constants/abis/auniswap'
 import isZero from '../utils/isZero'
-import v1SwapArguments from '../utils/v1SwapArguments'
+//import v1SwapArguments from '../utils/v1SwapArguments'
 import { useActiveWeb3React } from './index'
 import { useV1ExchangeContract } from './useContract'
 import useENS from './useENS'
@@ -138,6 +138,7 @@ function useSwapCallArguments(
           )
         }
         break
+/*
       case Version.v1:
         swapMethods.push(
           v1SwapArguments(trade, {
@@ -147,6 +148,7 @@ function useSwapCallArguments(
           })
         )
         break
+*/
     }
     return swapMethods.map(parameters => ({ parameters, contract }))
   }, [account, allowedSlippage, chainId, deadline, library, recipient, trade, v1Exchange])
