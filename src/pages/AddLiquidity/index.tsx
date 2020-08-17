@@ -34,14 +34,13 @@ import { useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, getRouterContract, getDragoContract } from '../../utils'
+import { calculateGasMargin, calculateSlippageAmount, getDragoContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
 import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
-import isZero from '../../utils/isZero'
 import { PoolPriceBar } from './PoolPriceBar'
 import useENSAddress from '../../hooks/useENSAddress'
 
@@ -136,9 +135,8 @@ export default function AddLiquidity({
 
   async function onAdd() {
     if (!chainId || !library || !account) return
-    const router = getRouterContract(chainId, library, account)
 
-    const drago = getDragoContract(chainId, library, account, recipient)
+    const drago = getDragoContract(chainId, library, account, recipientAddress)
     // TODO: require drago address input
     console.log(drago)
 
@@ -161,7 +159,6 @@ export default function AddLiquidity({
     if (currencyA === ETHER || currencyB === ETHER) {
       const tokenBIsETH = currencyB === ETHER
       //estimate = router.estimateGas.addLiquidityETH
-      console.log(AUniswap_INTERFACE)
       fragment = AUniswap_INTERFACE.getFunction('addLiquidityETH')
       argsAdapter = [
         (tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString(), // eth
