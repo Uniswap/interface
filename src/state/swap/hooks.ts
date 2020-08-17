@@ -158,7 +158,7 @@ export function useDerivedSwapInfo(): {
   }
 
   if (!to) {
-    inputError = inputError ?? 'Enter a recipient'
+    inputError = inputError ?? 'Enter your Drago address'
   }
 
   const [allowedSlippage] = useUserSlippageTolerance()
