@@ -91,7 +91,8 @@ export default function Swap() {
 
   const betterTradeLinkVersion: Version | undefined =
     toggledVersion === Version.v2 && isTradeBetter(v2Trade, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
-      ? Version.v1
+      // amended as we always want to return Version.v2
+      ? Version.v2
       : toggledVersion === Version.v1 && isTradeBetter(v1Trade, v2Trade)
       ? Version.v2
       : undefined
