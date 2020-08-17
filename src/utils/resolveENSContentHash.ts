@@ -1,7 +1,8 @@
-import { namehash } from 'ethers/lib/utils'
-import { JsonRpcProvider } from '@ethersproject/providers'
 import { Contract } from '@ethersproject/contracts'
-import { decode, getCodec } from 'content-hash'
+import { JsonRpcProvider } from '@ethersproject/providers'
+import { namehash } from 'ethers/lib/utils'
+import { contenthashToUri } from './contenthashToUri'
+
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
 
 const provider: JsonRpcProvider | undefined = NETWORK_URL ? new JsonRpcProvider(NETWORK_URL) : undefined
@@ -55,22 +56,12 @@ const RESOLVER_ABI = [
   }
 ]
 
-/**
- * Returns the URI representation of the content hash for supported codecs
- * @param contenthash to decode
- */
-export function contenthashToUri(contenthash: string): string {
-  const codec = getCodec(contenthash)
-  switch (codec) {
-    case 'ipns-ns':
-      const ipns = decode(contenthash)
-      return `ipns://${ipns}`
-    case 'ipfs-ns':
-      const ipfs = decode(contenthash)
-      return `ipfs://${ipfs}`
-    default:
-      throw new Error(`Unrecognized codec: ${codec}`)
-  }
+// cache the resolvers since most of them are the public resolver
+const RESOLVERS: { [address: string]: Contract } = {}
+function resolverContract(resolverAddress: string): Contract {
+  return (
+    RESOLVERS[resolverAddress] ?? (RESOLVERS[resolverAddress] = new Contract(resolverAddress, RESOLVER_ABI, provider))
+  )
 }
 
 /**
@@ -81,8 +72,7 @@ export default async function resolveENSContentHash(ensName: string): Promise<st
   if (provider === undefined) throw new Error('No network URL')
 
   const hash = namehash(ensName)
-  const resolver = await ensRegistrarContract.resolver(hash)
-  const resolverContract = new Contract(resolver, RESOLVER_ABI, provider)
-  const contenthash = await resolverContract.contenthash(hash)
+  const resolverAddress = await ensRegistrarContract.resolver(hash)
+  const contenthash = await resolverContract(resolverAddress).contenthash(hash)
   return contenthashToUri(contenthash)
 }

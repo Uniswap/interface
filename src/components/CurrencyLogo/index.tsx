@@ -3,6 +3,7 @@ import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import uriToHttp from '../../utils/uriToHttp'
 import Logo from '../Logo'
@@ -31,20 +32,20 @@ export default function CurrencyLogo({
   size?: string
   style?: React.CSSProperties
 }) {
+  const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
+
   const srcs: string[] = useMemo(() => {
     if (currency === ETHER) return []
 
     if (currency instanceof Token) {
       if (currency instanceof WrappedTokenInfo) {
-        if (currency.logoURI) {
-          return [...uriToHttp(currency.logoURI), getTokenLogoURL(currency.address)]
-        }
+        return [...uriLocations, getTokenLogoURL(currency.address)]
       }
 
       return [getTokenLogoURL(currency.address)]
     }
     return []
-  }, [currency])
+  }, [currency, uriLocations])
 
   if (currency === ETHER) {
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />

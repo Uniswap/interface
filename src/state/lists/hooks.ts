@@ -39,7 +39,7 @@ const EMPTY_LIST: TokenAddressMap = {
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
-  'WeakMap' in window ? new WeakMap<TokenList, TokenAddressMap>() : null
+  typeof WeakMap !== 'undefined' ? new WeakMap<TokenList, TokenAddressMap>() : null
 
 export function listToTokenMap(list: TokenList): TokenAddressMap {
   const result = listCache?.get(list)

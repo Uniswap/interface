@@ -8,6 +8,7 @@ import { useSelectedListUrl } from '../../state/lists/hooks'
 import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
 import getTokenList from '../../utils/getTokenList'
 import listVersionLabel from '../../utils/listVersionLabel'
+import { parseENSAddress } from '../../utils/parseENSAddress'
 import uriToHttp from '../../utils/uriToHttp'
 import { ButtonPrimary } from '../Button'
 import Column from '../Column'
@@ -44,16 +45,16 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
 
   const validUrl: boolean = useMemo(() => {
-    return uriToHttp(listUrlInput).length > 0
+    return uriToHttp(listUrlInput).length > 0 || Boolean(parseENSAddress(listUrlInput))
   }, [listUrlInput])
 
   const handleEnterKey = useCallback(
     e => {
-      if (e.key === 'Enter') {
+      if (validUrl && e.key === 'Enter') {
         handleAddList()
       }
     },
-    [handleAddList]
+    [handleAddList, validUrl]
   )
 
   return (
