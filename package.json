@@ -35,6 +35,7 @@
     "@web3-react/walletconnect-connector": "^6.1.1",
     "@web3-react/walletlink-connector": "^6.0.9",
     "ajv": "^6.12.3",
+    "content-hash": "^2.5.2",
     "copy-to-clipboard": "^3.2.0",
     "cross-env": "^7.0.2",
     "cypress": "^4.11.0",

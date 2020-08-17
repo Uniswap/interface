@@ -6,7 +6,7 @@ import { AppDispatch, AppState } from '../../state'
 import { addList, removeList, selectList } from '../../state/lists/actions'
 import { useSelectedListUrl } from '../../state/lists/hooks'
 import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
-import { getTokenList } from '../../utils/getTokenList'
+import getTokenList from '../../utils/getTokenList'
 import listVersionLabel from '../../utils/listVersionLabel'
 import uriToHttp from '../../utils/uriToHttp'
 import { ButtonPrimary } from '../Button'
@@ -27,9 +27,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
 
   const handleAddList = useCallback(() => {
     setAddState({ adding: true, addError: null })
-    getTokenList(listUrlInput, async () => {
-      throw new Error('not implemented')
-    })
+    getTokenList(listUrlInput)
       .then(() => {
         dispatch(addList(listUrlInput))
       })

@@ -2,6 +2,7 @@ import { TokenList } from '@uniswap/token-lists'
 import schema from '@uniswap/token-lists/src/tokenlist.schema.json'
 import Ajv from 'ajv'
 import { parseENSAddress } from './parseENSAddress'
+import resolveENSContentHash from './resolveENSContentHash'
 import uriToHttp from './uriToHttp'
 
 const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
@@ -9,12 +10,8 @@ const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
 /**
  * Contains the logic for resolving a list URL to a validated token list
  * @param listUrl list url
- * @param resolveENSContentHash resolves an ENS name to its ipfs:// or ipns:// url
  */
-export async function getTokenList(
-  listUrl: string,
-  resolveENSContentHash: (ensName: string) => Promise<string>
-): Promise<TokenList> {
+export default async function getTokenList(listUrl: string): Promise<TokenList> {
   const parsedENS = parseENSAddress(listUrl)
   let urls: string[]
   if (parsedENS) {
