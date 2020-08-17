@@ -64,7 +64,6 @@ function useSwapCallArguments(
 
     const contract: Contract | null =
       tradeVersion === Version.v2 ? getDragoContract(chainId, library, account, recipient) : v1Exchange
-      //tradeVersion === Version.v2 ? getRouterContract(chainId, library, account) : v1Exchange
     if (!contract) {
       return []
     }
@@ -86,10 +85,6 @@ function useSwapCallArguments(
           argsWithEth.unshift(swapParameters.value)
         }
 
-        // TODO: encoding not working as expected, must define params in correct
-        // order and tuple state
-        // TODO: check why this returns weth address,
-        // while EXACT_INPUT case returns 4
         const fragment =  AUniswap_INTERFACE.getFunction(uniswapMethodName)
         const callData: string | undefined = fragment /*&& isValidMethodArgs(callInputs)*/
               ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsWithEth)
