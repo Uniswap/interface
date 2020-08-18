@@ -64,7 +64,7 @@ export default function Swap() {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
-    dxSwapTrade,
+    trade,
     currencyBalances,
     parsedAmount,
     currencies,
@@ -77,7 +77,6 @@ export default function Swap() {
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
-  const trade = dxSwapTrade
 
   const parsedAmounts = showWrap
     ? {
@@ -229,7 +228,7 @@ export default function Swap() {
   const handleAcceptChanges = useCallback(() => {
     setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
-
+  
   return (
     <>
       {showWarning && <TokenWarningCards currencies={currencies} />}

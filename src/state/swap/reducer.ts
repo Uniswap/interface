@@ -17,8 +17,8 @@ export interface SwapState {
       fee: bigint,
       owner: string 
     }
-  } | {},
-  readonly protocolFeeDenominator: Number,
+  } | undefined,
+  readonly protocolFeeDenominator: Number | undefined,
   readonly protocolFeeTo: string | undefined
 }
 
@@ -41,8 +41,9 @@ export default createReducer<SwapState>(initialState, builder =>
   builder
     .addCase(
       replaceSwapState,
-      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId, swapFees, protocolFeeTo, protocolFeeDenominator } }) => {
+      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId } }) => {
         return {
+          ...state,
           [Field.INPUT]: {
             currencyId: inputCurrencyId
           },
@@ -51,10 +52,7 @@ export default createReducer<SwapState>(initialState, builder =>
           },
           independentField: field,
           typedValue: typedValue,
-          recipient,
-          swapFees: swapFees ? swapFees : state.swapFees,
-          protocolFeeDenominator: protocolFeeDenominator ? protocolFeeDenominator : state.protocolFeeDenominator,
-          protocolFeeTo: protocolFeeTo ? protocolFeeTo : state.protocolFeeTo
+          recipient
         }
       }
     )
