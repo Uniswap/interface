@@ -54,7 +54,9 @@ function TokenTags({ currency }: { currency: Currency }) {
   return (
     <div>
       {tags.map(tag => (
-        <Tag title={`${tag.name}: ${tag.description}`}>{tag.name}</Tag>
+        <Tag key={tag.id} title={`${tag.name}: ${tag.description}`}>
+          {tag.name}
+        </Tag>
       ))}
     </div>
   )
