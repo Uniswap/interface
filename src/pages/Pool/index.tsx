@@ -12,7 +12,7 @@ import { StyledInternalLink, TYPE } from '../../theme'
 import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
 import { RowBetween } from '../../components/Row'
-import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
+import { ButtonPrimary/*, ButtonSecondary*/ } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 import AddressInputPanel from '../../components/AddressInputPanel'
 
@@ -124,11 +124,12 @@ export default function Pool() {
         </AutoColumn>
       </AppBody>
 
-      <div style={{ display: 'flex', alignItems: 'center', marginTop: '1.5rem' }}>
+      {/*}<div style={{ display: 'flex', alignItems: 'center', marginTop: '1.5rem' }}>
         <ButtonSecondary as={Link} style={{ width: 'initial' }} to="/migrate/v1">
           Migrate V1 Liquidity
         </ButtonSecondary>
       </div>
+      */}
     </>
   )
 }
