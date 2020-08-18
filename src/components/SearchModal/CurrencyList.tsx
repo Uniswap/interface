@@ -2,14 +2,15 @@ import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@uniswap
 import React, { CSSProperties, memo, useEffect, useMemo, useRef } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
+import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
 import useLast from '../../hooks/useLast'
-import { useSelectedTokenList } from '../../state/lists/hooks'
+import { useSelectedTokenList, WrappedTokenInfo } from '../../state/lists/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
-import Column, { AutoColumn } from '../Column'
+import Column from '../Column'
 import { RowFixed } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
 import { FadedSpan, MenuItem } from './styleds'
@@ -18,6 +19,45 @@ import { isTokenOnList } from '../../utils'
 
 function currencyKey(currency: Currency): string {
   return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
+}
+
+const StyledBalanceText = styled(Text)`
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 5rem;
+  text-overflow: ellipsis;
+`
+
+const Tag = styled.div`
+  background-color: ${({ theme }) => theme.bg3};
+  color: ${({ theme }) => theme.text2};
+  padding: 0.25rem;
+  border-radius: 0.1rem;
+  margin-right: 0.5rem;
+  max-width: 6rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+function Balance({ balance }: { balance: CurrencyAmount }) {
+  return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
+}
+
+function TokenTags({ currency }: { currency: Currency }) {
+  if (!(currency instanceof WrappedTokenInfo)) {
+    return null
+  }
+  const tags = currency.tags
+  if (!tags || tags.length === 0) return null
+
+  return (
+    <div>
+      {tags.map(tag => (
+        <Tag title={`${tag.name}: ${tag.description}`}>{tag.name}</Tag>
+      ))}
+    </div>
+  )
 }
 
 export default function CurrencyList({
@@ -102,7 +142,10 @@ export default function CurrencyList({
               </FadedSpan>
             </Column>
           </RowFixed>
-          <AutoColumn>{balance ? <Text>{balance.toSignificant(6)}</Text> : account ? <Loader /> : '-'}</AutoColumn>
+          <RowFixed>
+            <TokenTags currency={currency} />
+            {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
+          </RowFixed>
         </MenuItem>
       )
     })
