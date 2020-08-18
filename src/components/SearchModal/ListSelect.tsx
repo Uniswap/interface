@@ -138,7 +138,13 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
                     <LinkStyledButton
                       style={{ padding: 0 }}
                       onClick={() => {
-                        dispatch(removeList(listUrl))
+                        if (
+                          window.prompt(
+                            `Please confirm you would like to remove this list by typing its URL:\n${listUrl}`
+                          ) === listUrl
+                        ) {
+                          dispatch(removeList(listUrl))
+                        }
                       }}
                       disabled={allListUrls.length === 1}
                     >

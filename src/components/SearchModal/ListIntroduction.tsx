@@ -29,7 +29,7 @@ const ListCard = memo(function ListCard({ id, listUrl }: { id: string; listUrl: 
   return (
     <OutlineCard id={id}>
       <Row align="center">
-        {list.logoURI ? <ListLogo logoURI={list.logoURI} /> : null}
+        {list.logoURI ? <ListLogo style={{ marginRight: '0.5rem' }} logoURI={list.logoURI} /> : null}
         <Text fontWeight={500} style={{ flex: '1' }}>
           {list.name}
         </Text>
