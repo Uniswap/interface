@@ -17,7 +17,6 @@ export default function Updater() {
         Fetcher.fetchAllSwapFees(chainId, {}, library),
         Fetcher.fetchProtocolFee(chainId, library)
       ]).then(([swapFees, protocolFee]) => {
-        console.log(swapFees, protocolFee)
       if (swapFees)
         dispatch(setSwapFees({ swapFees }))
       if (protocolFee)

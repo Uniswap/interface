@@ -16,13 +16,4 @@ export const replaceSwapState = createAction<{
   outputCurrencyId?: string
   recipient: string | null
 }>('replaceSwapState')
-export const setSwapFees = createAction<{
-  swapFees: {
-    [key: string] : {
-      fee: bigint,
-      owner: string 
-    }
-  } | {}
-}>('setSwapFees')
-export const setProtocolFee = createAction<{ protocolFeeDenominator: Number, protocolFeeTo: string }>('setProtocolFee')
 export const setRecipient = createAction<{ recipient: string | null }>('setRecipient')

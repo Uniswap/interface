@@ -6,7 +6,7 @@ import { useActiveWeb3React } from '../hooks'
 
 
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
-import { useSwapState } from '../state/swap/hooks'
+import { useFeesState } from '../state/fees/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 const PAIR_INTERFACE = new Interface(IDXswapPairABI)
@@ -38,7 +38,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
     [tokens]
   )
   
-  const { swapFees, protocolFeeDenominator } = useSwapState()
+  const { swapFees, protocolFeeDenominator } = useFeesState()
 
   const results = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'getReserves')
 
