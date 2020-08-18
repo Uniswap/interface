@@ -9,6 +9,7 @@ import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
+import { useFeesState } from '../../state/fees/hooks'
 import { ExternalLink } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
@@ -138,6 +139,13 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
     !!userPoolBalance && !!totalPoolTokens && JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
       : undefined
+      
+
+  const pairSwapFee = new Percent(JSBI.BigInt(pair.swapFee.toString()), JSBI.BigInt(10000))
+  
+  const { protocolFeeDenominator } = useFeesState()
+  const pairProtocolFee = new Percent(JSBI.BigInt(pair.swapFee.toString()), JSBI.BigInt(10000))
+    .multiply(protocolFeeDenominator.toString())
 
   const [token0Deposited, token1Deposited] =
     !!pair &&
@@ -220,6 +228,22 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
               </Text>
               <Text fontSize={16} fontWeight={500}>
                 {poolTokenPercentage ? poolTokenPercentage.toFixed(2) + '%' : '-'}
+              </Text>
+            </FixedHeightRow>
+            <FixedHeightRow>
+              <Text fontSize={16} fontWeight={500}>
+                Pool Swap Fee:
+              </Text>
+              <Text fontSize={16} fontWeight={500}>
+                {pairSwapFee ? pairSwapFee.toFixed(2) + '%' : '-'}
+              </Text>
+            </FixedHeightRow>
+            <FixedHeightRow>
+              <Text fontSize={16} fontWeight={500}>
+                Pool Protocol Fee:
+              </Text>
+              <Text fontSize={16} fontWeight={500}>
+                {pairProtocolFee ? pairProtocolFee.toFixed(2) + '%' : '-'}
               </Text>
             </FixedHeightRow>
 
