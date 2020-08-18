@@ -35,7 +35,7 @@ describe('list reducer', () => {
   describe('fetchTokenList', () => {
     describe('pending', () => {
       it('sets pending', () => {
-        store.dispatch(fetchTokenList.pending('request-id', 'fake-url'))
+        store.dispatch(fetchTokenList.pending({ requestId: 'request-id', url: 'fake-url' }))
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {
@@ -62,7 +62,7 @@ describe('list reducer', () => {
           selectedListUrl: undefined
         })
 
-        store.dispatch(fetchTokenList.pending('request-id', 'fake-url'))
+        store.dispatch(fetchTokenList.pending({ requestId: 'request-id', url: 'fake-url' }))
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {
@@ -79,7 +79,9 @@ describe('list reducer', () => {
 
     describe('fulfilled', () => {
       it('saves the list', () => {
-        store.dispatch(fetchTokenList.fulfilled(STUB_TOKEN_LIST, 'request-id', 'fake-url'))
+        store.dispatch(
+          fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
+        )
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {
@@ -94,8 +96,12 @@ describe('list reducer', () => {
       })
 
       it('does not save the list in pending if current is same', () => {
-        store.dispatch(fetchTokenList.fulfilled(STUB_TOKEN_LIST, 'request-id', 'fake-url'))
-        store.dispatch(fetchTokenList.fulfilled(STUB_TOKEN_LIST, 'request-id', 'fake-url'))
+        store.dispatch(
+          fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
+        )
+        store.dispatch(
+          fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
+        )
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {
@@ -110,9 +116,13 @@ describe('list reducer', () => {
       })
 
       it('does not save to current if list is newer patch version', () => {
-        store.dispatch(fetchTokenList.fulfilled(STUB_TOKEN_LIST, 'request-id', 'fake-url'))
+        store.dispatch(
+          fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
+        )
 
-        store.dispatch(fetchTokenList.fulfilled(PATCHED_STUB_LIST, 'request-id', 'fake-url'))
+        store.dispatch(
+          fetchTokenList.fulfilled({ tokenList: PATCHED_STUB_LIST, requestId: 'request-id', url: 'fake-url' })
+        )
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {
@@ -126,9 +136,13 @@ describe('list reducer', () => {
         })
       })
       it('does not save to current if list is newer minor version', () => {
-        store.dispatch(fetchTokenList.fulfilled(STUB_TOKEN_LIST, 'request-id', 'fake-url'))
+        store.dispatch(
+          fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
+        )
 
-        store.dispatch(fetchTokenList.fulfilled(MINOR_UPDATED_STUB_LIST, 'request-id', 'fake-url'))
+        store.dispatch(
+          fetchTokenList.fulfilled({ tokenList: MINOR_UPDATED_STUB_LIST, requestId: 'request-id', url: 'fake-url' })
+        )
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {
@@ -142,9 +156,13 @@ describe('list reducer', () => {
         })
       })
       it('does not save to pending if list is newer major version', () => {
-        store.dispatch(fetchTokenList.fulfilled(STUB_TOKEN_LIST, 'request-id', 'fake-url'))
+        store.dispatch(
+          fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
+        )
 
-        store.dispatch(fetchTokenList.fulfilled(MAJOR_UPDATED_STUB_LIST, 'request-id', 'fake-url'))
+        store.dispatch(
+          fetchTokenList.fulfilled({ tokenList: MAJOR_UPDATED_STUB_LIST, requestId: 'request-id', url: 'fake-url' })
+        )
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {
@@ -161,7 +179,7 @@ describe('list reducer', () => {
 
     describe('rejected', () => {
       it('no-op if not loading', () => {
-        store.dispatch(fetchTokenList.rejected(new Error('abcd'), 'request-id', 'fake-url'))
+        store.dispatch(fetchTokenList.rejected({ requestId: 'request-id', errorMessage: 'abcd', url: 'fake-url' }))
         expect(store.getState()).toEqual({
           byUrl: {},
           selectedListUrl: undefined
@@ -180,7 +198,7 @@ describe('list reducer', () => {
           },
           selectedListUrl: undefined
         })
-        store.dispatch(fetchTokenList.rejected(new Error('abcd'), 'request-id', 'fake-url'))
+        store.dispatch(fetchTokenList.rejected({ requestId: 'request-id', errorMessage: 'abcd', url: 'fake-url' }))
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {

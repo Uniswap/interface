@@ -9,6 +9,7 @@ import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
 import getTokenList from '../../utils/getTokenList'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
+import resolveENSContentHash from '../../utils/resolveENSContentHash'
 import uriToHttp from '../../utils/uriToHttp'
 import { ButtonPrimary } from '../Button'
 import Column from '../Column'
@@ -28,7 +29,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
 
   const handleAddList = useCallback(() => {
     setAddState({ adding: true, addError: null })
-    getTokenList(listUrlInput)
+    getTokenList(listUrlInput, resolveENSContentHash)
       .then(() => {
         dispatch(addList(listUrlInput))
       })

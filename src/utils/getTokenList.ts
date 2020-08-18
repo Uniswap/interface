@@ -2,7 +2,6 @@ import { TokenList } from '@uniswap/token-lists'
 import schema from '@uniswap/token-lists/src/tokenlist.schema.json'
 import Ajv from 'ajv'
 import { parseENSAddress } from './parseENSAddress'
-import resolveENSContentHash from './resolveENSContentHash'
 import uriToHttp from './uriToHttp'
 
 const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
@@ -10,17 +9,23 @@ const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
 /**
  * Contains the logic for resolving a list URL to a validated token list
  * @param listUrl list url
+ * @param resolveENSContentHash resolves an ens name to a contenthash
  */
-export default async function getTokenList(listUrl: string): Promise<TokenList> {
+export default async function getTokenList(
+  listUrl: string,
+  resolveENSContentHash: (ensName: string) => Promise<string>
+): Promise<TokenList> {
   const parsedENS = parseENSAddress(listUrl)
   let urls: string[]
   if (parsedENS) {
+    let contentHashUri
     try {
-      urls = uriToHttp(`${await resolveENSContentHash(parsedENS.ensName)}${parsedENS.ensPath ?? ''}`)
+      contentHashUri = await resolveENSContentHash(parsedENS.ensName)
     } catch (error) {
-      console.debug('Failed to resolve URL', error)
-      urls = []
+      console.debug(`Failed to resolve ENS name: ${parsedENS.ensName}`, error)
+      throw new Error(`Failed to resolve ENS name: ${parsedENS.ensName}`)
     }
+    urls = uriToHttp(`${contentHashUri}${parsedENS.ensPath ?? ''}`)
   } else {
     urls = uriToHttp(listUrl)
   }

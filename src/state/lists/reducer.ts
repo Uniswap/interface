@@ -40,7 +40,7 @@ const initialState: ListsState = {
 
 export default createReducer(initialState, builder =>
   builder
-    .addCase(fetchTokenList.pending, (state, { meta: { arg: url, requestId } }) => {
+    .addCase(fetchTokenList.pending, (state, { payload: { requestId, url } }) => {
       state.byUrl[url] = {
         current: null,
         pendingUpdate: null,
@@ -49,7 +49,7 @@ export default createReducer(initialState, builder =>
         error: null
       }
     })
-    .addCase(fetchTokenList.fulfilled, (state, { payload: tokenList, meta: { arg: url } }) => {
+    .addCase(fetchTokenList.fulfilled, (state, { payload: { requestId, tokenList, url } }) => {
       const current = state.byUrl[url]?.current
 
       // no-op if update does nothing
@@ -73,7 +73,7 @@ export default createReducer(initialState, builder =>
         }
       }
     })
-    .addCase(fetchTokenList.rejected, (state, { error, meta: { requestId, arg: url } }) => {
+    .addCase(fetchTokenList.rejected, (state, { payload: { url, requestId, errorMessage } }) => {
       if (state.byUrl[url]?.loadingRequestId !== requestId) {
         // no-op since it's not the latest request
         return
@@ -82,7 +82,7 @@ export default createReducer(initialState, builder =>
       state.byUrl[url] = {
         ...state.byUrl[url],
         loadingRequestId: null,
-        error: error.message ?? 'Unknown error',
+        error: errorMessage,
         current: null,
         pendingUpdate: null
       }

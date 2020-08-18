@@ -56,7 +56,7 @@ const RESOLVER_ABI = [
   }
 ]
 
-// cache the resolvers since most of them are the public resolver
+// cache the resolver contracts since most of them are the public resolver
 const RESOLVERS: { [address: string]: Contract } = {}
 function resolverContract(resolverAddress: string): Contract {
   return (

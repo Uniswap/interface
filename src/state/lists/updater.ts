@@ -1,11 +1,14 @@
 import { getVersionUpgrade, minVersionBump, VersionUpgrade } from '@uniswap/token-lists'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useInterval from '../../hooks/useInterval'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
+import getTokenList from '../../utils/getTokenList'
+import resolveENSContentHash from '../../utils/resolveENSContentHash'
 import { addPopup } from '../application/actions'
 import { AppDispatch, AppState } from '../index'
 import { acceptListUpdate, fetchTokenList } from './actions'
+import { nanoid } from '@reduxjs/toolkit'
 
 export default function Updater(): null {
   const dispatch = useDispatch<AppDispatch>()
@@ -13,10 +16,25 @@ export default function Updater(): null {
 
   const isWindowVisible = useIsWindowVisible()
 
+  const fetchList = useMemo(() => {
+    return (listUrl: string) => {
+      const requestId = nanoid()
+      dispatch(fetchTokenList.pending({ requestId, url: listUrl }))
+      getTokenList(listUrl, resolveENSContentHash)
+        .then(tokenList => {
+          dispatch(fetchTokenList.fulfilled({ url: listUrl, tokenList, requestId }))
+        })
+        .catch(error => {
+          console.debug(`Failed to get list at url ${listUrl}`, error)
+          dispatch(fetchTokenList.rejected({ url: listUrl, requestId, errorMessage: error.message }))
+        })
+    }
+  }, [dispatch])
+
   const fetchAllListsCallback = useCallback(() => {
     if (!isWindowVisible) return
-    Object.keys(lists).forEach(listUrl => dispatch(fetchTokenList(listUrl) as any))
-  }, [dispatch, isWindowVisible, lists])
+    Object.keys(lists).forEach(listUrl => fetchList(listUrl))
+  }, [fetchList, isWindowVisible, lists])
   // refetch all lists every 10 minutes
   useInterval(fetchAllListsCallback, 1000 * 60 * 10)
 
@@ -24,11 +42,12 @@ export default function Updater(): null {
   useEffect(() => {
     Object.keys(lists).forEach(listUrl => {
       const list = lists[listUrl]
+
       if (!list.current && !list.loadingRequestId && !list.error) {
-        dispatch(fetchTokenList(listUrl) as any)
+        fetchList(listUrl)
       }
     })
-  }, [dispatch, lists])
+  }, [dispatch, fetchList, lists])
 
   // automatically update lists if versions are minor/patch
   useEffect(() => {

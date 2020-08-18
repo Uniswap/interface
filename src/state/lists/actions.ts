@@ -1,19 +1,15 @@
-import { createAction, createAsyncThunk } from '@reduxjs/toolkit'
+import { ActionCreatorWithPayload, createAction } from '@reduxjs/toolkit'
 import { TokenList, Version } from '@uniswap/token-lists'
-import getTokenList from '../../utils/getTokenList'
 
-const fetchCache: { [url: string]: Promise<TokenList> } = {}
-export const fetchTokenList = createAsyncThunk<TokenList, string>(
-  'lists/fetchTokenList',
-  (url: string) =>
-    // this makes it so we only ever fetch a list a single time concurrently
-    (fetchCache[url] =
-      fetchCache[url] ??
-      getTokenList(url).catch(error => {
-        delete fetchCache[url]
-        throw error
-      }))
-)
+export const fetchTokenList: Readonly<{
+  pending: ActionCreatorWithPayload<{ url: string; requestId: string }>
+  fulfilled: ActionCreatorWithPayload<{ url: string; tokenList: TokenList; requestId: string }>
+  rejected: ActionCreatorWithPayload<{ url: string; errorMessage: string; requestId: string }>
+}> = {
+  pending: createAction('lists/fetchTokenList/pending'),
+  fulfilled: createAction('lists/fetchTokenList/fulfilled'),
+  rejected: createAction('lists/fetchTokenList/rejected')
+}
 
 export const acceptListUpdate = createAction<string>('lists/acceptListUpdate')
 export const addList = createAction<string>('lists/addList')
