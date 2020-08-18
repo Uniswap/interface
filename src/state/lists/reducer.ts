@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { TokenList } from '@uniswap/token-lists/dist/types'
-import { DEFAULT_TOKEN_LIST_URL } from '../../constants'
+import { DEFAULT_LIST_OF_LISTS, DEFAULT_TOKEN_LIST_URL } from '../../constants/lists'
 import { updateVersion } from '../user/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList, selectList } from './actions'
 import UNISWAP_DEFAULT_LIST from '@uniswap/default-token-list'
@@ -25,15 +25,20 @@ const NEW_LIST_STATE: ListsState['byUrl'][string] = {
   pendingUpdate: null
 }
 
+type Mutable<T> = { -readonly [P in keyof T]: T[P] extends ReadonlyArray<infer U> ? U[] : T[P] }
+
 const initialState: ListsState = {
   byUrl: {
+    ...DEFAULT_LIST_OF_LISTS.reduce<Mutable<ListsState['byUrl']>>((memo, listUrl) => {
+      memo[listUrl] = NEW_LIST_STATE
+      return memo
+    }, {}),
     [DEFAULT_TOKEN_LIST_URL]: {
       error: null,
       current: UNISWAP_DEFAULT_LIST,
       loadingRequestId: null,
       pendingUpdate: null
-    },
-    'https://t2crtokens.eth.link': NEW_LIST_STATE
+    }
   },
   selectedListUrl: undefined
 }
@@ -51,17 +56,20 @@ export default createReducer(initialState, builder =>
     })
     .addCase(fetchTokenList.fulfilled, (state, { payload: { requestId, tokenList, url } }) => {
       const current = state.byUrl[url]?.current
+      const loadingRequestId = state.byUrl[url]?.loadingRequestId
 
       // no-op if update does nothing
       if (current) {
-        const type = getVersionUpgrade(current.version, tokenList.version)
-        if (type === VersionUpgrade.NONE) return
-        state.byUrl[url] = {
-          ...state.byUrl[url],
-          loadingRequestId: null,
-          error: null,
-          current: current,
-          pendingUpdate: tokenList
+        const upgradeType = getVersionUpgrade(current.version, tokenList.version)
+        if (upgradeType === VersionUpgrade.NONE) return
+        if (loadingRequestId === null || loadingRequestId === requestId) {
+          state.byUrl[url] = {
+            ...state.byUrl[url],
+            loadingRequestId: null,
+            error: null,
+            current: current,
+            pendingUpdate: tokenList
+          }
         }
       } else {
         state.byUrl[url] = {

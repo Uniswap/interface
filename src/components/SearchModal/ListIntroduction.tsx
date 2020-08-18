@@ -1,26 +1,37 @@
-import React, { memo, useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { memo, useCallback, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'rebass'
-import { AppDispatch } from '../../state'
-import { selectList } from '../../state/lists/actions'
+import { AppDispatch, AppState } from '../../state'
+import { addList, selectList } from '../../state/lists/actions'
 import { ButtonPrimary } from '../Button'
 import { OutlineCard } from '../Card'
 import Column, { AutoColumn } from '../Column'
+import ListLogo from '../ListLogo'
 import Row from '../Row'
 import { PaddedColumn } from './styleds'
 
-const ListCard = memo(function ListCard({ id, listName, listUrl }: { id: string; listName: string; listUrl: string }) {
+const ListCard = memo(function ListCard({ id, listUrl }: { id: string; listUrl: string }) {
   const dispatch = useDispatch<AppDispatch>()
+
+  const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const list = listsByUrl[listUrl]?.current
+
+  useEffect(() => {
+    if (!listsByUrl[listUrl]) dispatch(addList(listUrl))
+  }, [dispatch, listUrl, listsByUrl])
 
   const handleSelect = useCallback(() => {
     dispatch(selectList(listUrl))
   }, [dispatch, listUrl])
 
+  if (!list) return null
+
   return (
     <OutlineCard id={id}>
       <Row align="center">
+        {list.logoURI ? <ListLogo logoURI={list.logoURI} /> : null}
         <Text fontWeight={500} style={{ flex: '1' }}>
-          {listName}
+          {list.name}
         </Text>
         <ButtonPrimary
           className="select-button"
@@ -46,17 +57,9 @@ export default function ListIntroduction() {
             You can switch between token lists and add your own custom lists via IPFS, HTTPS and ENS. Get started by
             selecting one below.
           </Text>
-          <ListCard
-            id="select-kleros-list"
-            listName={'Kleros Token Curated Registry List'}
-            listUrl={'t2crtokens.eth'}
-          />
-          <ListCard id="select-1inch-list" listName={'1inch Exchange Token List'} listUrl={'tokens.1inch.eth'} />
-          <ListCard
-            id="select-default-uniswap-list"
-            listName={'Uniswap Default List'}
-            listUrl={'https://tokens.uniswap.org'}
-          />
+          <ListCard id="select-kleros-list" listUrl={'t2crtokens.eth'} />
+          <ListCard id="select-1inch-list" listUrl={'tokens.1inch.eth'} />
+          <ListCard id="select-default-uniswap-list" listUrl={'tokens.uniswap.eth'} />
         </AutoColumn>
       </PaddedColumn>
     </Column>
