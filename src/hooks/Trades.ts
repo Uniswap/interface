@@ -84,7 +84,7 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
       )
     }
     return null
-  }, [allowedPairs, currencyAmountIn, currencyOut])
+  }, [allowedPairs, currencyAmountIn, currencyOut, disableMultihopRouting])
 }
 
 /**
@@ -104,5 +104,5 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
       )
     }
     return null
-  }, [allowedPairs, currencyIn, currencyAmountOut])
+  }, [currencyIn, currencyAmountOut, allowedPairs, disableMultihopRouting])
 }
