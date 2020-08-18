@@ -72,18 +72,6 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
           </TYPE.black>
         </RowBetween>
         
-        <RowBetween>
-          <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-              Protocol Fee %
-            </TYPE.black>
-            <QuestionHelper text="A portion of each trade goes to DXDao." />
-          </RowFixed>
-          <TYPE.black fontSize={14} color={theme.green1}>
-            0%
-          </TYPE.black>
-        </RowBetween>
-        
       </AutoColumn>
     </>
   )

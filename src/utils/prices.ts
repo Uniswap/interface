@@ -46,6 +46,26 @@ export function computeTradePriceBreakdown(
   return { priceImpactWithoutFee: priceImpactWithoutFeePercent, realizedLPFee, realizedLPFeeAmount }
 }
 
+
+// calculates teh protocol fee for a pair and amount
+export function calculateProtocolFee(
+  pair?: Pair, amount?: CurrencyAmount
+): { protocolFee?: Fraction, protocolFeeAmount?: CurrencyAmount } {
+  
+  const protocolFee = (pair) ? 
+    new Percent(JSBI.BigInt(pair.swapFee.toString()), JSBI.BigInt(10000)).divide(pair.protocolFeeDenominator)
+    : undefined
+
+  // the amount of the input that accrues to LPs
+  const protocolFeeAmount = (protocolFee && amount) 
+    ? (amount instanceof TokenAmount
+      ? new TokenAmount(amount.token, protocolFee.multiply(amount.raw).quotient)
+      : CurrencyAmount.ether(protocolFee.multiply(amount.raw).quotient))
+    : undefined
+
+  return { protocolFee, protocolFeeAmount }
+}
+
 // computes the minimum amount out and maximum amount in for a trade given a user specified allowed slippage in bips
 export function computeSlippageAdjustedAmounts(
   trade: Trade | undefined,

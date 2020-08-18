@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from 'dxswap-sdk'
+import { Currency, currencyEquals, ETHER, TokenAmount, WETH, CurrencyAmount, Percent, JSBI } from 'dxswap-sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -30,6 +30,7 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import { calculateProtocolFee } from '../../utils/prices'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
@@ -37,6 +38,7 @@ import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
 import { PoolPriceBar } from './PoolPriceBar'
+import { ProtocolFeeBar } from './ProtocolFeeBar'
 
 export default function AddLiquidity({
   match: {
@@ -87,12 +89,22 @@ export default function AddLiquidity({
   const [deadline] = useUserDeadline() // custom from users settings
   const [allowedSlippage] = useUserSlippageTolerance() // custom from users
   const [txHash, setTxHash] = useState<string>('')
-
+  
   // get formatted amounts
   const formattedAmounts = {
     [independentField]: typedValue,
     [dependentField]: noLiquidity ? otherTypedValue : parsedAmounts[dependentField]?.toSignificant(6) ?? ''
   }
+  const { protocolFee, protocolFeeAmount: protocolFeeAmountIndependantField } = calculateProtocolFee(
+    pair, parsedAmounts[independentField]
+  )
+  const { protocolFeeAmount: protocolFeeAmountDependantField } = calculateProtocolFee(
+    pair, parsedAmounts[dependentField]
+  )
+  const swapFee = (pair) ? 
+    new Percent(JSBI.BigInt(pair.swapFee.toString()), JSBI.BigInt(10000))
+    : undefined
+  const protocolFeeDenominator = (pair) ? Number(pair.protocolFeeDenominator) : undefined
 
   // get the max amounts user can add
   const maxAmounts: { [field in Field]?: TokenAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
@@ -382,6 +394,23 @@ export default function AddLiquidity({
                       poolTokenPercentage={poolTokenPercentage}
                       noLiquidity={noLiquidity}
                       price={price}
+                    />
+                  </LightCard>
+                </GreyCard>
+                
+                <GreyCard padding="0px" borderRadius={'20px'}>
+                  <RowBetween padding="1rem">
+                    <TYPE.subHeader fontWeight={500} fontSize={14}>
+                      Protocol Fees
+                    </TYPE.subHeader>
+                  </RowBetween>{' '}
+                  <LightCard padding="1rem" borderRadius={'20px'}>
+                    <ProtocolFeeBar
+                      feePercentage={protocolFee}
+                      swapFee={swapFee}
+                      protocolFeeDenominator={protocolFeeDenominator}
+                      feeAAmount={protocolFeeAmountIndependantField}
+                      feeBAmount={protocolFeeAmountDependantField}
                     />
                   </LightCard>
                 </GreyCard>
