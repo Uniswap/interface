@@ -25,7 +25,6 @@ export const Popup = styled.div`
   border-radius: 10px;
   padding: 20px;
   padding-right: 35px;
-  z-index: 2;
   overflow: hidden;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`

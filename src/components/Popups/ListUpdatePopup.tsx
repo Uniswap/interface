@@ -1,14 +1,13 @@
-import { TokenList } from '@uniswap/token-lists'
-import React, { useCallback, useContext } from 'react'
-import { AlertCircle, Info } from 'react-feather'
+import { diffTokenLists, TokenList } from '@uniswap/token-lists'
+import React, { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
-import { ThemeContext } from 'styled-components'
+import { Text } from 'rebass'
 import { AppDispatch } from '../../state'
 import { useRemovePopup } from '../../state/application/hooks'
 import { acceptListUpdate } from '../../state/lists/actions'
 import { TYPE } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
-import { ButtonPrimary, ButtonSecondary } from '../Button'
+import { ButtonSecondary } from '../Button'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
 
@@ -28,19 +27,23 @@ export default function ListUpdatePopup({
   const removePopup = useRemovePopup()
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
   const dispatch = useDispatch<AppDispatch>()
-  const theme = useContext(ThemeContext)
 
-  const updateList = useCallback(() => {
+  const handleAcceptUpdate = useCallback(() => {
     if (auto) return
     dispatch(acceptListUpdate(listUrl))
     removeThisPopup()
   }, [auto, dispatch, listUrl, removeThisPopup])
 
+  const { added: tokensAdded, changed: tokensChanged, removed: tokensRemoved } = useMemo(() => {
+    return diffTokenLists(oldList.tokens, newList.tokens)
+  }, [newList.tokens, oldList.tokens])
+  const numTokensChanged = useMemo(
+    () => Object.keys(tokensChanged).reduce((memo, chainId) => memo + Object.keys(tokensChanged[chainId]).length, 0),
+    [tokensChanged]
+  )
+
   return (
     <AutoRow>
-      <div style={{ paddingRight: 16 }}>
-        {auto ? <Info color={theme.text2} size={24} /> : <AlertCircle color={theme.red1} size={24} />}{' '}
-      </div>
       <AutoColumn style={{ flex: '1' }} gap="8px">
         {auto ? (
           <TYPE.body fontWeight={500}>
@@ -50,12 +53,19 @@ export default function ListUpdatePopup({
         ) : (
           <>
             <div>
-              A token list update is available for the list &quot;{oldList.name}&quot; (
-              {listVersionLabel(oldList.version)} to {listVersionLabel(newList.version)}).
+              <Text>
+                An update is available for the token list &quot;{oldList.name}&quot; (
+                {listVersionLabel(oldList.version)} to {listVersionLabel(newList.version)}).
+              </Text>
+              <ul>
+                {tokensAdded.length > 0 ? <li>{tokensAdded.length} tokens added</li> : null}
+                {tokensRemoved.length > 0 ? <li>{tokensRemoved.length} tokens removed</li> : null}
+                {numTokensChanged > 0 ? <li>{numTokensChanged} tokens updated</li> : null}
+              </ul>
             </div>
             <AutoRow>
-              <div style={{ flexGrow: 1, marginRight: 6 }}>
-                <ButtonPrimary onClick={updateList}>Update list</ButtonPrimary>
+              <div style={{ flexGrow: 1, marginRight: 12 }}>
+                <ButtonSecondary onClick={handleAcceptUpdate}>Accept update</ButtonSecondary>
               </div>
               <div style={{ flexGrow: 1 }}>
                 <ButtonSecondary onClick={removeThisPopup}>Dismiss</ButtonSecondary>

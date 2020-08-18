@@ -2,8 +2,9 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'rebass'
+import styled from 'styled-components'
 import { AppDispatch, AppState } from '../../state'
-import { addList, removeList, selectList } from '../../state/lists/actions'
+import { acceptListUpdate, addList, removeList, selectList } from '../../state/lists/actions'
 import { useSelectedListUrl } from '../../state/lists/hooks'
 import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
 import getTokenList from '../../utils/getTokenList'
@@ -16,6 +17,73 @@ import Column from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import Row, { RowBetween } from '../Row'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
+
+const UnpaddedLinkStyledButton = styled(LinkStyledButton)`
+  padding: 0;
+`
+
+function ListRow({ listUrl }: { listUrl: string }) {
+  const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const selectedListUrl = useSelectedListUrl()
+  const dispatch = useDispatch<AppDispatch>()
+  const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
+  if (!list) return null
+
+  const isSelected = listUrl === selectedListUrl
+
+  return (
+    <Row key={listUrl} align="center">
+      <div style={{ marginRight: '1rem', flex: '0' }}>
+        <input
+          type="radio"
+          value={listUrl}
+          checked={isSelected}
+          onChange={e => {
+            if (e.target.checked) dispatch(selectList(listUrl))
+          }}
+        />
+      </div>
+      <Column style={{ flex: '1' }}>
+        <Text
+          fontWeight={isSelected ? 500 : 400}
+          fontSize={16}
+          style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+          title={listUrl}
+        >
+          {list?.name ?? listUrl}
+        </Text>
+        <RowBetween>
+          <div>
+            <UnpaddedLinkStyledButton
+              onClick={() => {
+                if (
+                  window.prompt(`Please confirm you would like to remove this list by typing its URL:\n${listUrl}`) ===
+                  listUrl
+                ) {
+                  dispatch(removeList(listUrl))
+                }
+              }}
+              disabled={Object.keys(listsByUrl).length === 1}
+            >
+              Remove
+            </UnpaddedLinkStyledButton>
+          </div>
+          {pending ? (
+            <UnpaddedLinkStyledButton
+              onClick={() => {
+                dispatch(acceptListUpdate(listUrl))
+              }}
+            >
+              Update to {listVersionLabel(pending.version)}
+            </UnpaddedLinkStyledButton>
+          ) : (
+            <div>{list && listVersionLabel(list.version)}</div>
+          )}
+        </RowBetween>
+      </Column>
+    </Row>
+  )
+}
 
 export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBack: () => void }) {
   const [listUrlInput, setListUrlInput] = useState<string>('')
@@ -43,7 +111,6 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
       })
   }, [dispatch, listUrlInput])
 
-  const selectedListUrl = useSelectedListUrl()
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
 
   const validUrl: boolean = useMemo(() => {
@@ -107,58 +174,10 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
 
       <Separator />
 
-      <PaddedColumn gap="14px">
-        {Object.keys(lists).map((listUrl, ix, allListUrls) => {
-          const { current: list } = lists[listUrl]
-          if (!list) return null
-
-          const isSelected = listUrl === selectedListUrl
-
-          return (
-            <Row key={listUrl} align="center">
-              <div style={{ marginRight: '1rem', flex: '0' }}>
-                <input
-                  type="radio"
-                  value={listUrl}
-                  checked={isSelected}
-                  onChange={e => {
-                    if (e.target.checked) dispatch(selectList(listUrl))
-                  }}
-                />
-              </div>
-              <Column style={{ flex: '1' }}>
-                <Text
-                  fontWeight={isSelected ? 500 : 400}
-                  fontSize={16}
-                  style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
-                  title={listUrl}
-                >
-                  {list?.name ?? listUrl}
-                </Text>
-                <RowBetween>
-                  <div>
-                    <LinkStyledButton
-                      style={{ padding: 0 }}
-                      onClick={() => {
-                        if (
-                          window.prompt(
-                            `Please confirm you would like to remove this list by typing its URL:\n${listUrl}`
-                          ) === listUrl
-                        ) {
-                          dispatch(removeList(listUrl))
-                        }
-                      }}
-                      disabled={allListUrls.length === 1}
-                    >
-                      Remove
-                    </LinkStyledButton>
-                  </div>
-                  <div>{list && listVersionLabel(list.version)}</div>
-                </RowBetween>
-              </Column>
-            </Row>
-          )
-        })}
+      <PaddedColumn gap="14px" style={{ marginBottom: 14 }}>
+        {Object.keys(lists).map(listUrl => (
+          <ListRow key={listUrl} listUrl={listUrl} />
+        ))}
       </PaddedColumn>
     </Column>
   )
