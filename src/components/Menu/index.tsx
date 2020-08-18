@@ -109,7 +109,7 @@ export default function Menu() {
       </StyledMenuButton>
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://beta.rigo.network/">
+          <MenuItem id="link" href="https://rigoblock.com/">
             <Info size={14} />
             About
           </MenuItem>
