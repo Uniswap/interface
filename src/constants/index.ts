@@ -30,21 +30,21 @@ const WETH_ONLY: ChainTokenList = {
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DXD[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR],
-  [ChainId.KOVAN]: [DXD[ChainId.KOVAN]]
+  [ChainId.KOVAN]: [WETH[ChainId.KOVAN], DXD[ChainId.KOVAN]]
 }
 
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT],
-  [ChainId.KOVAN]: [DXD[ChainId.KOVAN]]
+  [ChainId.KOVAN]: [WETH[ChainId.KOVAN], DXD[ChainId.KOVAN]]
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT],
-  [ChainId.KOVAN]: [DXD[ChainId.KOVAN]]
+  [ChainId.KOVAN]: [WETH[ChainId.KOVAN], DXD[ChainId.KOVAN]]
 
 }
 
