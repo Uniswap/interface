@@ -18,7 +18,7 @@ const UTF_8_DECODER = new TextDecoder()
  * Returns the URI representation of the content hash for supported codecs
  * @param contenthash to decode
  */
-export function contenthashToUri(contenthash: string): string {
+export default function contenthashToUri(contenthash: string): string {
   const buff = hexToUint8Array(contenthash)
   const codec = getCodec(buff as Buffer) // the typing is wrong for @types/multicodec
   switch (codec) {

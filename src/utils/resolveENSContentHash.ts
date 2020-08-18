@@ -1,7 +1,6 @@
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { namehash } from 'ethers/lib/utils'
-import { contenthashToUri } from './contenthashToUri'
 
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
 
@@ -73,6 +72,5 @@ export default async function resolveENSContentHash(ensName: string): Promise<st
 
   const hash = namehash(ensName)
   const resolverAddress = await ensRegistrarContract.resolver(hash)
-  const contenthash = await resolverContract(resolverAddress).contenthash(hash)
-  return contenthashToUri(contenthash)
+  return resolverContract(resolverAddress).contenthash(hash)
 }

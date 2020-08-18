@@ -1,5 +1,6 @@
 import { diffTokenLists, TokenList } from '@uniswap/token-lists'
 import React, { useCallback, useMemo } from 'react'
+import ReactGA from 'react-ga'
 import { useDispatch } from 'react-redux'
 import { Text } from 'rebass'
 import { AppDispatch } from '../../state'
@@ -30,6 +31,11 @@ export default function ListUpdatePopup({
 
   const handleAcceptUpdate = useCallback(() => {
     if (auto) return
+    ReactGA.event({
+      category: 'Lists',
+      action: 'Update List from Popup',
+      label: listUrl
+    })
     dispatch(acceptListUpdate(listUrl))
     removeThisPopup()
   }, [auto, dispatch, listUrl, removeThisPopup])

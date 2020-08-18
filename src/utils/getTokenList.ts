@@ -1,6 +1,7 @@
 import { TokenList } from '@uniswap/token-lists'
 import schema from '@uniswap/token-lists/src/tokenlist.schema.json'
 import Ajv from 'ajv'
+import contenthashToUri from './contenthashToUri'
 import { parseENSAddress } from './parseENSAddress'
 import uriToHttp from './uriToHttp'
 
@@ -25,7 +26,7 @@ export default async function getTokenList(
       console.debug(`Failed to resolve ENS name: ${parsedENS.ensName}`, error)
       throw new Error(`Failed to resolve ENS name: ${parsedENS.ensName}`)
     }
-    urls = uriToHttp(`${contentHashUri}${parsedENS.ensPath ?? ''}`)
+    urls = uriToHttp(`${contenthashToUri(contentHashUri)}${parsedENS.ensPath ?? ''}`)
   } else {
     urls = uriToHttp(listUrl)
   }

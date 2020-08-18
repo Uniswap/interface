@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
+import ReactGA from 'react-ga'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -39,7 +40,15 @@ function ListRow({ listUrl }: { listUrl: string }) {
           value={listUrl}
           checked={isSelected}
           onChange={e => {
-            if (e.target.checked) dispatch(selectList(listUrl))
+            if (e.target.checked) {
+              ReactGA.event({
+                category: 'Lists',
+                action: 'Select List',
+                label: listUrl
+              })
+
+              dispatch(selectList(listUrl))
+            }
           }}
         />
       </div>
@@ -56,10 +65,20 @@ function ListRow({ listUrl }: { listUrl: string }) {
           <div>
             <UnpaddedLinkStyledButton
               onClick={() => {
+                ReactGA.event({
+                  category: 'Lists',
+                  action: 'Start Remove List',
+                  label: listUrl
+                })
                 if (
                   window.prompt(`Please confirm you would like to remove this list by typing its URL:\n${listUrl}`) ===
                   listUrl
                 ) {
+                  ReactGA.event({
+                    category: 'Lists',
+                    action: 'Confirm Remove List',
+                    label: listUrl
+                  })
                   dispatch(removeList(listUrl))
                 }
               }}
@@ -71,6 +90,11 @@ function ListRow({ listUrl }: { listUrl: string }) {
           {pending ? (
             <UnpaddedLinkStyledButton
               onClick={() => {
+                ReactGA.event({
+                  category: 'Lists',
+                  action: 'Update List from List Select',
+                  label: listUrl
+                })
                 dispatch(acceptListUpdate(listUrl))
               }}
             >
@@ -97,6 +121,12 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
   const dispatch = useDispatch<AppDispatch>()
 
   const handleAddList = useCallback(() => {
+    ReactGA.event({
+      category: 'Lists',
+      action: 'Add List',
+      label: listUrlInput
+    })
+
     setAddState({ adding: true, addError: null })
     getTokenList(listUrlInput, resolveENSContentHash)
       .then(() => {
