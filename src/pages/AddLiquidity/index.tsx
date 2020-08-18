@@ -124,12 +124,14 @@ export default function AddLiquidity({
   const { onChangeRecipient } = useSwapActionHandlers()
   const { recipient } = useSwapState()
   const { address: recipientAddress } = useENSAddress(recipient)
-  // check whether the user has approved the router on the tokens
-  // TODO: with RigoBlock approvals are automagically set
-  //const [approvalA, approveACallback] = [true, '']
-  //const [approvalB, approveBCallback] = [true, '']
-  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ROUTER_ADDRESS)
-  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ROUTER_ADDRESS)
+
+  let [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ROUTER_ADDRESS)
+  let [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ROUTER_ADDRESS)
+  // RigoBlock already handles approvals, never will have pending approvals unless user error
+  if (account !== undefined) {
+    approvalA = ApprovalState.APPROVED
+    approvalB = ApprovalState.APPROVED
+  }
 
   const addTransaction = useTransactionAdder()
 
