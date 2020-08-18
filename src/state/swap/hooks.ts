@@ -1,6 +1,6 @@
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade, Fetcher } from 'dxswap-sdk'
+import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from 'dxswap-sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,11 +11,10 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, setSwapFees, setProtocolFee } from './actions'
+import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
-import { useAsync } from 'react-use';
 import { getNetwork } from '@ethersproject/networks'
 import { getDefaultProvider } from '@ethersproject/providers'
 
@@ -110,28 +109,6 @@ export function useDerivedSwapInfo(): {
   const outputCurrency = useCurrency(outputCurrencyId)
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
-  
-  // get token pair data with swapFee and protocolFeeDenominator
-  const dispatch = useDispatch<AppDispatch>()
-  const swapFeesPromise = useAsync(async () => {
-      return await Fetcher.fetchAllSwapFees(chainId, {}, getDefaultProvider(getNetwork(chainId), { quorum: 1}))
-  }, []);
-  const protocolFeePromise = useAsync(async () => {
-    if (!protocolFeeTo) {
-      return await Fetcher.fetchProtocolFee(chainId, getDefaultProvider(getNetwork(chainId), { quorum: 1 }))
-    } else {
-      return null
-    }
-  }, []);
-  useEffect(() => {
-    if (swapFeesPromise && !swapFeesPromise.loading && !swapFeesPromise.error && swapFeesPromise.value)
-      dispatch(setSwapFees({ swapFees: swapFeesPromise.value }))
-    if (protocolFeePromise && !protocolFeePromise.loading && !protocolFeePromise.error && protocolFeePromise.value)
-      dispatch(setProtocolFee({
-        protocolFeeDenominator: Number(protocolFeePromise.value.feeDenominator),
-        protocolFeeTo: protocolFeePromise.value.feeReceiver,
-      }))
-  }, [swapFeesPromise, protocolFeePromise])
 
   const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
     inputCurrency ?? undefined,
