@@ -137,8 +137,6 @@ export default function AddLiquidity({
     if (!chainId || !library || !account) return
 
     const drago = getDragoContract(chainId, library, account, recipientAddress)
-    // TODO: require drago address input
-    console.log(drago)
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB) {
@@ -152,8 +150,10 @@ export default function AddLiquidity({
 
     const deadlineFromNow = Math.ceil(Date.now() / 1000) + deadline
 
-    let estimate, fragment,
+    let estimate,
+      fragment,
       method: (...args: any) => Promise<TransactionResponse>,
+      args: Array<string | string[] | number>,
       argsAdapter: Array<string | string[] | number>,
       value: BigNumber | null
     if (currencyA === ETHER || currencyB === ETHER) {
@@ -187,12 +187,12 @@ export default function AddLiquidity({
       value = null
     }
     estimate = drago.estimateGas.operateOnExchange
+    method = drago.operateOnExchange
 
     const callData: string | undefined = fragment /*&& isValidMethodArgs(callInputs)*/
           ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsAdapter)
           : undefined
-    const args = [ROUTER_ADDRESS, [callData]]
-    console.log(callData)
+    args = [ROUTER_ADDRESS, [callData]]
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
