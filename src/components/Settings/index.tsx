@@ -6,7 +6,9 @@ import {
   useUserSlippageTolerance,
   useExpertModeManager,
   useUserDeadline,
-  useDarkModeManager
+  useDarkModeManager,
+  useDisableMultihopRouting,
+  useToggleDisableMultihopRouting
 } from '../../state/user/hooks'
 import SlippageTabs from '../SlippageTabs'
 import { RowFixed, RowBetween } from '../Row'
@@ -157,6 +159,9 @@ export default function SettingsTab() {
     }
   }, [open, toggle])
 
+  const disableMultihopRouting = useDisableMultihopRouting()
+  const toggleDisableMultihopRouting = useToggleDisableMultihopRouting()
+
   return (
     <StyledMenu ref={node}>
       <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
@@ -221,6 +226,17 @@ export default function SettingsTab() {
             <Text fontWeight={600} fontSize={14}>
               Interface Settings
             </Text>
+
+            <RowBetween>
+              <RowFixed>
+                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                  Disable Multihop Routing
+                </TYPE.black>
+                <QuestionHelper text="Disables swap routing through multiple tokens. You will get a worse price, but transactions will cost less gas." />
+              </RowFixed>
+              <Toggle isActive={disableMultihopRouting} toggle={toggleDisableMultihopRouting} />
+            </RowBetween>
+
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>

@@ -14,6 +14,7 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
+  updateMultihopRouting,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
@@ -70,6 +71,20 @@ export function useDarkModeManager(): [boolean, () => void] {
 
 export function useIsExpertMode(): boolean {
   return useSelector<AppState, AppState['user']['userExpertMode']>(state => state.user.userExpertMode)
+}
+
+export function useDisableMultihopRouting(): boolean {
+  return useSelector<AppState, AppState['user']['disableMultihopRouting']>(
+    state => state.user.disableMultihopRouting ?? false
+  )
+}
+
+export function useToggleDisableMultihopRouting(): () => void {
+  const dispatch = useDispatch<AppDispatch>()
+  const current = useDisableMultihopRouting()
+  return useCallback(() => {
+    dispatch(updateMultihopRouting({ multihopRouting: !current }))
+  }, [current, dispatch])
 }
 
 export function useExpertModeManager(): [boolean, () => void] {

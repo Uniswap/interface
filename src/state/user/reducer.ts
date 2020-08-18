@@ -13,7 +13,8 @@ import {
   updateVersion,
   updateUserExpertMode,
   updateUserSlippageTolerance,
-  updateUserDeadline
+  updateUserDeadline,
+  updateMultihopRouting
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
@@ -32,6 +33,9 @@ export interface UserState {
 
   // deadline set by user in minutes, used in all txns
   userDeadline: number
+
+  // whether the interface will try to route swaps through multiple tokens
+  disableMultihopRouting: boolean
 
   tokens: {
     [chainId: number]: {
@@ -66,6 +70,7 @@ export const initialState: UserState = {
   userExpertMode: false,
   userSlippageTolerance: INITIAL_ALLOWED_SLIPPAGE,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
+  disableMultihopRouting: false,
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp()
@@ -84,6 +89,10 @@ export default createReducer(initialState, builder =>
         state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
       }
 
+      if (typeof state.disableMultihopRouting !== 'boolean') {
+        state.disableMultihopRouting = false
+      }
+
       state.lastUpdateVersionTimestamp = currentTimestamp()
     })
     .addCase(updateUserDarkMode, (state, action) => {
@@ -100,6 +109,10 @@ export default createReducer(initialState, builder =>
     })
     .addCase(updateUserSlippageTolerance, (state, action) => {
       state.userSlippageTolerance = action.payload.userSlippageTolerance
+      state.timestamp = currentTimestamp()
+    })
+    .addCase(updateMultihopRouting, (state, action) => {
+      state.disableMultihopRouting = action.payload.multihopRouting
       state.timestamp = currentTimestamp()
     })
     .addCase(updateUserDeadline, (state, action) => {

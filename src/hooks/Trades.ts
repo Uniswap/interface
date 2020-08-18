@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 
 import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
+import { useDisableMultihopRouting } from '../state/user/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 import { useActiveWeb3React } from './index'
@@ -72,11 +73,14 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
  */
 export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?: Currency): Trade | null {
   const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut)
-
+  const disableMultihopRouting = useDisableMultihopRouting()
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
       return (
-        Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 3, maxNumResults: 1 })[0] ?? null
+        Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, {
+          maxHops: disableMultihopRouting ? 1 : 3,
+          maxNumResults: 1
+        })[0] ?? null
       )
     }
     return null
@@ -88,12 +92,15 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
  */
 export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: CurrencyAmount): Trade | null {
   const allowedPairs = useAllCommonPairs(currencyIn, currencyAmountOut?.currency)
+  const disableMultihopRouting = useDisableMultihopRouting()
 
   return useMemo(() => {
     if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
       return (
-        Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 3, maxNumResults: 1 })[0] ??
-        null
+        Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, {
+          maxHops: disableMultihopRouting ? 1 : 3,
+          maxNumResults: 1
+        })[0] ?? null
       )
     }
     return null
