@@ -58,8 +58,26 @@ export default function ListUpdatePopup({
                 {listVersionLabel(oldList.version)} to {listVersionLabel(newList.version)}).
               </Text>
               <ul>
-                {tokensAdded.length > 0 ? <li>{tokensAdded.length} tokens added</li> : null}
-                {tokensRemoved.length > 0 ? <li>{tokensRemoved.length} tokens removed</li> : null}
+                {tokensAdded.length > 0 ? (
+                  <li>
+                    {tokensAdded.map(token => (
+                      <strong key={`${token.chainId}-${token.address}`} title={token.address}>
+                        {token.symbol}
+                      </strong>
+                    ))}{' '}
+                    added
+                  </li>
+                ) : null}
+                {tokensRemoved.length > 0 ? (
+                  <li>
+                    {tokensRemoved.map(token => (
+                      <strong key={`${token.chainId}-${token.address}`} title={token.address}>
+                        {token.symbol}
+                      </strong>
+                    ))}{' '}
+                    removed
+                  </li>
+                ) : null}
                 {numTokensChanged > 0 ? <li>{numTokensChanged} tokens updated</li> : null}
               </ul>
             </div>
