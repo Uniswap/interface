@@ -46,5 +46,37 @@ export const tokens = [
     "decimals": 18,
     "chainId": 42,
     "logoURI": "https://gateway.pinata.cloud/ipfs/QmPhoeL14E5SBFBaC4bA3nuRpg3MpxdWVYdPrdXHdQ3EHY/brand/dxdao-blue.png"
+  },
+  {
+    "name": "Weenus",
+    "address": "0xaff4481d10270f50f203e0763e2597776068cbc5",
+    "symbol": "WEENUS",
+    "decimals": 18,
+    "chainId": 42,
+    "logoURI": "https://github.githubassets.com/images/icons/emoji/unicode/1f4aa.png"
+  },
+  {
+    "name": "Xeenus",
+    "address": "0x022E292b44B5a146F2e8ee36Ff44D3dd863C915c",
+    "symbol": "XEENUS",
+    "decimals": 18,
+    "chainId": 42,
+    "logoURI": "https://github.githubassets.com/images/icons/emoji/unicode/1f4aa.png"
+  },
+  {
+    "name": "Yeenus",
+    "address": "0xc6fDe3FD2Cc2b173aEC24cc3f267cb3Cd78a26B7",
+    "symbol": "YEENUS",
+    "decimals": 8,
+    "chainId": 42,
+    "logoURI": "https://github.githubassets.com/images/icons/emoji/unicode/1f4aa.png"
+  },
+  {
+    "name": "Zeenus",
+    "address": "0x1f9061B953bBa0E36BF50F21876132DcF276fC6e",
+    "symbol": "ZEENUS",
+    "decimals": 0,
+    "chainId": 42,
+    "logoURI": "https://github.githubassets.com/images/icons/emoji/unicode/1f4aa.png"
   }
 ]
