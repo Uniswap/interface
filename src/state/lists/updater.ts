@@ -33,7 +33,7 @@ export default function Updater(): null {
 
   const fetchAllListsCallback = useCallback(() => {
     if (!isWindowVisible) return
-    Object.keys(lists).forEach(listUrl => fetchList(listUrl))
+    Object.keys(lists).forEach(fetchList)
   }, [fetchList, isWindowVisible, lists])
   // refetch all lists every 10 minutes
   useInterval(fetchAllListsCallback, 1000 * 60 * 10)
@@ -60,7 +60,6 @@ export default function Updater(): null {
             throw new Error('unexpected no version bump')
           case VersionUpgrade.PATCH:
           case VersionUpgrade.MINOR:
-          case VersionUpgrade.MAJOR:
             const min = minVersionBump(list.current.tokens, list.pendingUpdate.tokens)
             // automatically update minor/patch as long as bump matches the min update
             if (bump >= min) {
@@ -85,21 +84,20 @@ export default function Updater(): null {
             }
             break
 
-          // this will be turned on later
-          // case VersionUpgrade.MAJOR:
-          // dispatch(
-          //   addPopup({
-          //     key: listUrl,
-          //     content: {
-          //       listUpdate: {
-          //         listUrl,
-          //         auto: false,
-          //         oldList: list.current,
-          //         newList: list.pendingUpdate
-          //       }
-          //     }
-          //   })
-          // )
+          case VersionUpgrade.MAJOR:
+            dispatch(
+              addPopup({
+                key: listUrl,
+                content: {
+                  listUpdate: {
+                    listUrl,
+                    auto: false,
+                    oldList: list.current,
+                    newList: list.pendingUpdate
+                  }
+                }
+              })
+            )
         }
       }
     })

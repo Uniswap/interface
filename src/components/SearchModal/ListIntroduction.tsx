@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'rebass'
 import { AppDispatch, AppState } from '../../state'
 import { addList, selectList } from '../../state/lists/actions'
+import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
 import { OutlineCard } from '../Card'
 import Column, { AutoColumn } from '../Column'
@@ -54,8 +55,10 @@ export default function ListIntroduction() {
             Select a list
           </Text>
           <Text>
-            You can switch between token lists and add your own custom lists via IPFS, HTTPS and ENS. Get started by
-            selecting one below.
+            Token lists are an{' '}
+            <ExternalLink href="https://github.com/uniswap/token-lists">open specification</ExternalLink> for lists of
+            tokens supported by the Uniswap Interface. You can switch between token lists and add your own custom lists
+            via IPFS, HTTPS and ENS. Get started by selecting one below.
           </Text>
           <ListCard id="select-kleros-list" listUrl={'t2crtokens.eth'} />
           <ListCard id="select-1inch-list" listUrl={'tokens.1inch.eth'} />
