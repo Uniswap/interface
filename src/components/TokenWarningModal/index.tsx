@@ -1,21 +1,17 @@
-import { Currency, Token } from '@uniswap/sdk'
+import { Token } from '@uniswap/sdk'
 import { transparentize } from 'polished'
 import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
-import { useSelectedTokenList } from '../../state/lists/hooks'
-import { Field } from '../../state/swap/actions'
 import { ExternalLink, TYPE } from '../../theme'
-import { getEtherscanLink, isTokenOnList } from '../../utils'
-import PropsOfExcluding from '../../utils/props-of-excluding'
+import { getEtherscanLink } from '../../utils'
 import CurrencyLogo from '../CurrencyLogo'
 import Modal from '../Modal'
 import { AutoRow, RowBetween } from '../Row'
 import { AutoColumn } from '../Column'
 import { AlertTriangle } from 'react-feather'
 import { ButtonError } from '../Button'
-import { useTokenWarningDismissal } from '../../state/user/hooks'
 
 const Wrapper = styled.div<{ error: boolean }>`
   background: ${({ theme }) => transparentize(0.6, theme.bg3)};
@@ -38,14 +34,12 @@ const StyledWarningIcon = styled(AlertTriangle)`
   stroke: ${({ theme }) => theme.red2};
 `
 
-interface TokenWarningCardProps extends PropsOfExcluding<typeof Wrapper, 'error'> {
+interface TokenWarningCardProps {
   token?: Token
 }
 
-export default function TokenWarningCard({ token, ...rest }: TokenWarningCardProps) {
+function TokenWarningCard({ token }: TokenWarningCardProps) {
   const { chainId } = useActiveWeb3React()
-  const selectedTokenList = useSelectedTokenList()
-  const isListed = isTokenOnList(selectedTokenList, token)
 
   const tokenSymbol = token?.symbol?.toLowerCase() ?? ''
   const tokenName = token?.name?.toLowerCase() ?? ''
@@ -53,7 +47,7 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
   const allTokens = useAllTokens()
 
   const duplicateNameOrSymbol = useMemo(() => {
-    if (isListed || !token || !chainId) return false
+    if (!token || !chainId) return false
 
     return Object.keys(allTokens).some(tokenAddress => {
       const userToken = allTokens[tokenAddress]
@@ -62,12 +56,12 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
       }
       return userToken.symbol.toLowerCase() === tokenSymbol || userToken.name.toLowerCase() === tokenName
     })
-  }, [isListed, token, chainId, allTokens, tokenSymbol, tokenName])
+  }, [token, chainId, allTokens, tokenSymbol, tokenName])
 
-  if (isListed || !token) return null
+  if (!token) return null
 
   return (
-    <Wrapper error={duplicateNameOrSymbol} {...rest}>
+    <Wrapper error={duplicateNameOrSymbol}>
       <AutoRow gap="6px">
         <AutoColumn gap="24px">
           <CurrencyLogo currency={token} size={'16px'} />
@@ -88,15 +82,10 @@ export default function TokenWarningCard({ token, ...rest }: TokenWarningCardPro
   )
 }
 
-export function TokenWarningModal({ currencies }: { currencies: { [field in Field]?: Currency } }) {
-  const { chainId } = useActiveWeb3React()
-  const [dismissedToken0, dismissToken0] = useTokenWarningDismissal(chainId, currencies[Field.INPUT])
-  const [dismissedToken1, dismissToken1] = useTokenWarningDismissal(chainId, currencies[Field.OUTPUT])
-  const showWarning =
-    (!dismissedToken0 && !!currencies[Field.INPUT]) || (!dismissedToken1 && !!currencies[Field.OUTPUT])
-
+export default function TokenWarningModal({ tokens, onConfirm }: { tokens: Token[]; onConfirm: () => void }) {
   const [understandChecked, setUnderstandChecked] = useState(false)
   const toggleUnderstand = useCallback(() => setUnderstandChecked(uc => !uc), [])
+  const showWarning = tokens.length > 0
 
   const handleDismiss = useCallback(() => null, [])
   return (
@@ -118,15 +107,12 @@ export function TokenWarningModal({ currencies }: { currencies: { [field in Fiel
           <TYPE.body color={'red2'}>
             If you purchase an arbitrary token, <strong>you may be unable to sell it back.</strong>
           </TYPE.body>
-          {Object.keys(currencies).map(field => {
-            const dismissed = field === Field.INPUT ? dismissedToken0 : dismissedToken1
-            return currencies[field] instanceof Token && !dismissed ? (
-              <TokenWarningCard key={field} token={currencies[field]} />
-            ) : null
+          {tokens.map(token => {
+            return <TokenWarningCard key={token.address} token={token} />
           })}
           <RowBetween>
             <div>
-              <label style={{ cursor: 'pointer' }}>
+              <label style={{ cursor: 'pointer', userSelect: 'none' }}>
                 <input
                   type="checkbox"
                   className="understand-checkbox"
@@ -146,8 +132,7 @@ export function TokenWarningModal({ currencies }: { currencies: { [field in Fiel
                 borderRadius: '10px'
               }}
               onClick={() => {
-                dismissToken0 && dismissToken0()
-                dismissToken1 && dismissToken1()
+                onConfirm()
               }}
             >
               <TYPE.body color="white">Continue</TYPE.body>

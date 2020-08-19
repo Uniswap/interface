@@ -17,7 +17,7 @@ import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
-import { TokenWarningModal } from '../../components/TokenWarningCard'
+import TokenWarningModal from '../../components/TokenWarningModal'
 
 import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
@@ -237,9 +237,26 @@ export default function Swap() {
     setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
+  // TODO
+  const handleConfirmTokenWarning = useCallback(() => null, [])
+
+  const handleInputSelect = useCallback(
+    currency => {
+      setApprovalSubmitted(false) // reset 2 step UI for approvals
+      onCurrencySelection(Field.INPUT, currency)
+    },
+    [onCurrencySelection]
+  )
+
+  const handleMaxInput = useCallback(() => {
+    maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
+  }, [maxAmountInput, onUserInput])
+
+  const handleOutputSelect = useCallback(address => onCurrencySelection(Field.OUTPUT, address), [onCurrencySelection])
+
   return (
     <>
-      <TokenWarningModal currencies={currencies} />
+      <TokenWarningModal tokens={[]} onConfirm={handleConfirmTokenWarning} />
       <AppBody>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
@@ -264,13 +281,8 @@ export default function Swap() {
               showMaxButton={!atMaxAmountInput}
               currency={currencies[Field.INPUT]}
               onUserInput={handleTypeInput}
-              onMax={() => {
-                maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
-              }}
-              onCurrencySelect={currency => {
-                setApprovalSubmitted(false) // reset 2 step UI for approvals
-                onCurrencySelection(Field.INPUT, currency)
-              }}
+              onMax={handleMaxInput}
+              onCurrencySelect={handleInputSelect}
               otherCurrency={currencies[Field.OUTPUT]}
               id="swap-currency-input"
             />
@@ -302,7 +314,7 @@ export default function Swap() {
               label={independentField === Field.INPUT && !showWrap ? 'To (estimated)' : 'To'}
               showMaxButton={false}
               currency={currencies[Field.OUTPUT]}
-              onCurrencySelect={address => onCurrencySelection(Field.OUTPUT, address)}
+              onCurrencySelect={handleOutputSelect}
               otherCurrency={currencies[Field.INPUT]}
               id="swap-currency-output"
             />

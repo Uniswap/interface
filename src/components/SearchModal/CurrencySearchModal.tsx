@@ -11,7 +11,7 @@ import { ListSelect } from './ListSelect'
 interface CurrencySearchModalProps {
   isOpen: boolean
   onDismiss: () => void
-  hiddenCurrency?: Currency
+  selectedCurrency?: Currency
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency
   showCommonBases?: boolean
@@ -21,7 +21,7 @@ export default function CurrencySearchModal({
   isOpen,
   onDismiss,
   onCurrencySelect,
-  hiddenCurrency,
+  selectedCurrency,
   otherSelectedCurrency,
   showCommonBases = false
 }: CurrencySearchModalProps) {
@@ -72,7 +72,7 @@ export default function CurrencySearchModal({
           onDismiss={onDismiss}
           onCurrencySelect={handleCurrencySelect}
           onChangeList={handleClickChangeList}
-          hiddenCurrency={hiddenCurrency}
+          selectedCurrency={selectedCurrency}
           otherSelectedCurrency={otherSelectedCurrency}
           showCommonBases={showCommonBases}
         />

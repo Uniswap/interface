@@ -6,7 +6,6 @@ import { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
 import { useSelectedListInfo } from '../../state/lists/hooks'
-import { useAllTokenBalances, useTokenBalance } from '../../state/wallet/hooks'
 import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import Card from '../Card'
@@ -20,11 +19,12 @@ import { filterTokens } from './filtering'
 import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
+import AutoSizer from 'react-virtualized-auto-sizer'
 
 interface CurrencySearchProps {
   isOpen: boolean
   onDismiss: () => void
-  hiddenCurrency?: Currency
+  selectedCurrency?: Currency
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency
   showCommonBases?: boolean
@@ -32,7 +32,7 @@ interface CurrencySearchProps {
 }
 
 export function CurrencySearch({
-  hiddenCurrency,
+  selectedCurrency,
   onCurrencySelect,
   otherSelectedCurrency,
   showCommonBases,
@@ -41,7 +41,7 @@ export function CurrencySearch({
   onChangeList
 }: CurrencySearchProps) {
   const { t } = useTranslation()
-  const { account, chainId } = useActiveWeb3React()
+  const { chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -50,13 +50,6 @@ export function CurrencySearch({
 
   // if the current input is an address, and we don't have the token in context, try to fetch it and import
   const searchToken = useToken(searchQuery)
-  const searchTokenBalance = useTokenBalance(account ?? undefined, searchToken ?? undefined)
-  const allTokenBalances_ = useAllTokenBalances()
-  const allTokenBalances = searchToken
-    ? {
-        [searchToken.address]: searchTokenBalance
-      }
-    : allTokenBalances_ ?? {}
 
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
@@ -143,7 +136,7 @@ export function CurrencySearch({
           onKeyDown={handleEnter}
         />
         {showCommonBases && (
-          <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={hiddenCurrency} />
+          <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
         )}
         <RowBetween>
           <Text fontSize={14} fontWeight={500}>
@@ -155,13 +148,20 @@ export function CurrencySearch({
 
       <Separator />
 
-      <CurrencyList
-        currencies={filteredSortedTokens}
-        allBalances={allTokenBalances}
-        onCurrencySelect={handleCurrencySelect}
-        otherCurrency={otherSelectedCurrency}
-        selectedCurrency={hiddenCurrency}
-      />
+      <div style={{ flex: '1' }}>
+        <AutoSizer disableWidth>
+          {({ height }) => (
+            <CurrencyList
+              height={height}
+              currencies={filteredSortedTokens}
+              onCurrencySelect={handleCurrencySelect}
+              otherCurrency={otherSelectedCurrency}
+              selectedCurrency={selectedCurrency}
+            />
+          )}
+        </AutoSizer>
+      </div>
+
       <Separator />
       <Card>
         <RowBetween>

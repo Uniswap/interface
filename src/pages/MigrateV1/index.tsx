@@ -29,14 +29,14 @@ export default function MigrateV1() {
   // automatically add the search token
   const token = useToken(tokenSearch)
   const selectedTokenListTokens = useSelectedTokenList()
-  const isDefault = isTokenOnList(selectedTokenListTokens, token)
+  const isOnSelectedList = isTokenOnList(selectedTokenListTokens, token)
   const allTokens = useAllTokens()
   const addToken = useAddUserToken()
   useEffect(() => {
-    if (token && !isDefault && !allTokens[token.address]) {
+    if (token && !isOnSelectedList && !allTokens[token.address]) {
       addToken(token)
     }
-  }, [token, isDefault, addToken, allTokens])
+  }, [token, isOnSelectedList, addToken, allTokens])
 
   // get V1 LP balances
   const V1Exchanges = useAllTokenV1Exchanges()
