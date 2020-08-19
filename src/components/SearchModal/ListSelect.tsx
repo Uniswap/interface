@@ -13,7 +13,7 @@ import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
 import resolveENSContentHash from '../../utils/resolveENSContentHash'
 import uriToHttp from '../../utils/uriToHttp'
-import { ButtonPrimary } from '../Button'
+import { ButtonSecondary } from '../Button'
 import Column from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import Row, { RowBetween } from '../Row'
@@ -109,6 +109,14 @@ function ListRow({ listUrl }: { listUrl: string }) {
   )
 }
 
+const AddListButton = styled(ButtonSecondary)`
+  height: 1.8rem;
+  max-width: 4rem;
+  margin-left: 1rem;
+  border-radius: 6px;
+  padding: 16px 18px;
+`
+
 export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBack: () => void }) {
   const [listUrlInput, setListUrlInput] = useState<string>('')
   const [{ addError }, setAddState] = useState<{ adding: boolean; addError: string | null }>({
@@ -121,16 +129,15 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
   const dispatch = useDispatch<AppDispatch>()
 
   const handleAddList = useCallback(() => {
-    ReactGA.event({
-      category: 'Lists',
-      action: 'Add List',
-      label: listUrlInput
-    })
-
     setAddState({ adding: true, addError: null })
     getTokenList(listUrlInput, resolveENSContentHash)
       .then(() => {
         dispatch(addList(listUrlInput))
+        ReactGA.event({
+          category: 'Lists',
+          action: 'Add List',
+          label: listUrlInput
+        })
       })
       .then(() => {
         setAddState({ adding: false, addError: null })
@@ -138,6 +145,11 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
       })
       .catch(error => {
         setAddState({ adding: false, addError: error.message })
+        ReactGA.event({
+          category: 'Lists',
+          action: 'Add List Failed',
+          label: listUrlInput
+        })
       })
   }, [dispatch, listUrlInput])
 
@@ -187,13 +199,9 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
             onKeyDown={handleEnterKey}
             style={{ height: '1.8rem', borderRadius: 6 }}
           />
-          <ButtonPrimary
-            style={{ height: '1.8rem', maxWidth: '4rem', marginLeft: '1rem', borderRadius: 6, padding: '16px 18px' }}
-            onClick={handleAddList}
-            disabled={!validUrl}
-          >
+          <AddListButton onClick={handleAddList} disabled={!validUrl}>
             Add
-          </ButtonPrimary>
+          </AddListButton>
         </Row>
         {addError ? (
           <TYPE.error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>

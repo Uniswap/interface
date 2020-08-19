@@ -32,7 +32,7 @@ export default function contenthashToUri(contenthash: string): string {
       const cid = new CID(data)
       const multihash = decode(cid.multihash)
       if (multihash.name === 'identity') {
-        return `ipns://${UTF_8_DECODER.decode(multihash.digest)}`
+        return `ipns://${UTF_8_DECODER.decode(multihash.digest).trim()}`
       } else {
         return `ipns://${toB58String(cid.multihash)}`
       }

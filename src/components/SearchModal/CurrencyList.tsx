@@ -1,10 +1,9 @@
 import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@uniswap/sdk'
-import React, { CSSProperties, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import useLast from '../../hooks/useLast'
 import { useSelectedTokenList, WrappedTokenInfo } from '../../state/lists/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -157,24 +156,17 @@ export default function CurrencyList({
   currencies,
   selectedCurrency,
   onCurrencySelect,
-  otherCurrency
+  otherCurrency,
+  fixedListRef
 }: {
   height: number
   currencies: Currency[]
   selectedCurrency: Currency | undefined
   onCurrencySelect: (currency: Currency) => void
   otherCurrency: Currency | undefined
+  fixedListRef?: MutableRefObject<FixedSizeList | undefined>
 }) {
-  const lastCurrenciesLength = useLast(currencies)?.length
-  const currenciesLength = currencies.length
-  const fixedList = useRef<FixedSizeList>()
   const itemData = useMemo(() => [Currency.ETHER, ...currencies], [currencies])
-
-  useEffect(() => {
-    if (lastCurrenciesLength !== currenciesLength) {
-      fixedList.current?.scrollTo(0)
-    }
-  }, [currenciesLength, lastCurrenciesLength])
 
   const Row = useCallback(
     ({ data, index, style }) => {
@@ -200,6 +192,7 @@ export default function CurrencyList({
   return (
     <FixedSizeList
       height={height}
+      ref={fixedListRef}
       width="100%"
       itemData={itemData}
       itemCount={itemData.length}

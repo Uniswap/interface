@@ -1,6 +1,7 @@
 import { Currency, ETHER, Token } from '@uniswap/sdk'
 import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
@@ -44,6 +45,7 @@ export function CurrencySearch({
   const { chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
+  const fixedList = useRef<FixedSizeList>()
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
   const allTokens = useAllTokens()
@@ -94,6 +96,7 @@ export function CurrencySearch({
     const input = event.target.value
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input)
+    fixedList.current?.scrollTo(0)
   }, [])
 
   const handleEnter = useCallback(
@@ -157,6 +160,7 @@ export function CurrencySearch({
               onCurrencySelect={handleCurrencySelect}
               otherCurrency={otherSelectedCurrency}
               selectedCurrency={selectedCurrency}
+              fixedListRef={fixedList}
             />
           )}
         </AutoSizer>
@@ -168,7 +172,11 @@ export function CurrencySearch({
           {selectedListInfo.current ? (
             <Row>
               {selectedListInfo.current.logoURI ? (
-                <ListLogo style={{ marginRight: 8 }} logoURI={selectedListInfo.current.logoURI} />
+                <ListLogo
+                  style={{ marginRight: 8 }}
+                  logoURI={selectedListInfo.current.logoURI}
+                  alt={`${selectedListInfo.current.name} list logo`}
+                />
               ) : null}
               <TYPE.main>{selectedListInfo.current.name}</TYPE.main>
             </Row>

@@ -26,7 +26,14 @@ export default async function getTokenList(
       console.debug(`Failed to resolve ENS name: ${parsedENS.ensName}`, error)
       throw new Error(`Failed to resolve ENS name: ${parsedENS.ensName}`)
     }
-    urls = uriToHttp(`${contenthashToUri(contentHashUri)}${parsedENS.ensPath ?? ''}`)
+    let translatedUri
+    try {
+      translatedUri = contenthashToUri(contentHashUri)
+    } catch (error) {
+      console.debug('Failed to translate contenthash to URI', contentHashUri)
+      throw new Error(`Failed to translate contenthash to URI: ${contentHashUri}`)
+    }
+    urls = uriToHttp(`${translatedUri}${parsedENS.ensPath ?? ''}`)
   } else {
     urls = uriToHttp(listUrl)
   }
