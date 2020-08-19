@@ -389,11 +389,12 @@ export default function Swap() {
                 >
                   {approval === ApprovalState.PENDING ? (
                     <Dots>Approving</Dots>
-                  ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
-                    'Drago Curabit'
-                  ) : (
+                  ) : () => /*approvalSubmitted && approval === ApprovalState.APPROVED ? ( */
+                    'Drago Curabit' + currencies[Field.INPUT]?.symbol
+                  /* ) : (
                     'Approve ' + currencies[Field.INPUT]?.symbol
-                  )}
+                  ) */
+                  }
                 </ButtonPrimary>
                 <ButtonError
                   onClick={() => {
@@ -412,7 +413,7 @@ export default function Swap() {
                   width="48%"
                   id="swap-button"
                   disabled={
-                    !isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)
+                    !isValid /*|| approval !== ApprovalState.APPROVED */|| (priceImpactSeverity > 3 && !isExpertMode)
                   }
                   error={isValid && priceImpactSeverity > 2}
                 >
