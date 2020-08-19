@@ -1,6 +1,6 @@
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade, Fetcher } from 'dxswap-sdk'
+import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from 'dxswap-sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,11 +11,10 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, setSwapFees, setProtocolFee } from './actions'
+import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
-import { useAsync } from 'react-use';
 import { getNetwork } from '@ethersproject/networks'
 import { getDefaultProvider } from '@ethersproject/providers'
 
@@ -93,7 +92,7 @@ export function useDerivedSwapInfo(): {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
-  dxSwapTrade: Trade | undefined
+  trade: Trade | undefined
   inputError?: string
 } {
   const { chainId, account, library } = useActiveWeb3React()
@@ -110,28 +109,6 @@ export function useDerivedSwapInfo(): {
   const outputCurrency = useCurrency(outputCurrencyId)
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
-  
-  // get token pair data with swapFee and protocolFeeDenominator
-  const dispatch = useDispatch<AppDispatch>()
-  const swapFeesPromise = useAsync(async () => {
-      return await Fetcher.fetchAllSwapFees(chainId, {}, getDefaultProvider(getNetwork(chainId), { quorum: 1}))
-  }, []);
-  const protocolFeePromise = useAsync(async () => {
-    if (!protocolFeeTo) {
-      return await Fetcher.fetchProtocolFee(chainId, getDefaultProvider(getNetwork(chainId), { quorum: 1 }))
-    } else {
-      return null
-    }
-  }, []);
-  useEffect(() => {
-    if (swapFeesPromise && !swapFeesPromise.loading && !swapFeesPromise.error && swapFeesPromise.value)
-      dispatch(setSwapFees({ swapFees: swapFeesPromise.value }))
-    if (protocolFeePromise && !protocolFeePromise.loading && !protocolFeePromise.error && protocolFeePromise.value)
-      dispatch(setProtocolFee({
-        protocolFeeDenominator: Number(protocolFeePromise.value.feeDenominator),
-        protocolFeeTo: protocolFeePromise.value.feeReceiver,
-      }))
-  }, [swapFeesPromise, protocolFeePromise])
 
   const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
     inputCurrency ?? undefined,
@@ -144,7 +121,7 @@ export function useDerivedSwapInfo(): {
   const bestTradeExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
   const bestTradeExactOut = useTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
-  const dxSwapTrade = isExactIn ? bestTradeExactIn : bestTradeExactOut
+  const trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
@@ -175,7 +152,7 @@ export function useDerivedSwapInfo(): {
 
   const [allowedSlippage] = useUserSlippageTolerance()
 
-  const slippageAdjustedAmounts = dxSwapTrade && allowedSlippage && computeSlippageAdjustedAmounts(dxSwapTrade, allowedSlippage)
+  const slippageAdjustedAmounts = trade && allowedSlippage && computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
   // compare input balance to MAx input based on version
   const [balanceIn, amountIn] = [
@@ -193,7 +170,7 @@ export function useDerivedSwapInfo(): {
     currencies,
     currencyBalances,
     parsedAmount,
-    dxSwapTrade: dxSwapTrade ?? undefined,
+    trade,
     inputError,
   }
 }
@@ -227,7 +204,17 @@ function validatedRecipient(recipient: any): string | null {
   return null
 }
 
-export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
+export function queryParametersToSwapState(parsedQs: ParsedQs): {
+  independentField: Field
+  typedValue: string
+  [Field.INPUT]: {
+    currencyId: string | undefined
+  }
+  [Field.OUTPUT]: {
+    currencyId: string | undefined
+  }
+  recipient: string | null
+} {
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency)
   if (inputCurrency === outputCurrency) {
@@ -249,10 +236,7 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
     },
     typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
     independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
-    recipient,
-    swapFees: {},
-    protocolFeeDenominator: Number(0),
-    protocolFeeTo: null
+    recipient
   }
 }
 
@@ -272,8 +256,7 @@ export function useDefaultsFromURLSearch() {
         field: parsed.independentField,
         inputCurrencyId: parsed[Field.INPUT].currencyId,
         outputCurrencyId: parsed[Field.OUTPUT].currencyId,
-        recipient: parsed.recipient,
-        swapFees: {}
+        recipient: parsed.recipient
       })
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps

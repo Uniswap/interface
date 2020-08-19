@@ -1,7 +1,7 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, Percent, WETH } from 'dxswap-sdk'
+import { Currency, currencyEquals, ETHER, Percent, WETH, JSBI, TokenAmount, Token, CurrencyAmount } from 'dxswap-sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -9,7 +9,7 @@ import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from '../../components/Button'
-import { LightCard } from '../../components/Card'
+import { GreyCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -40,6 +40,10 @@ import { Field } from '../../state/burn/actions'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
+import { calculateProtocolFee } from '../../utils/prices'
+import { ProtocolFeeBar } from '../AddLiquidity/ProtocolFeeBar'
+import { PoolPriceBar } from './PoolPriceBar'
+
 
 export default function RemoveLiquidity({
   history,
@@ -89,6 +93,26 @@ export default function RemoveLiquidity({
     [Field.CURRENCY_B]:
       independentField === Field.CURRENCY_B ? typedValue : parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? ''
   }
+  
+  const currencies = {
+    [Field.CURRENCY_A]: currencyA,
+    [Field.CURRENCY_B]: currencyB 
+  }
+  
+  const { protocolFee, protocolFeeAmount: protocolFeeAmountIndependantField } = calculateProtocolFee(
+    pair, (currencyA === ETHER && parsedAmounts[Field.CURRENCY_A]) 
+      ? CurrencyAmount.ether(parsedAmounts[Field.CURRENCY_A].raw)
+      : parsedAmounts[Field.CURRENCY_A]
+  )
+  const { protocolFeeAmount: protocolFeeAmountDependantField } = calculateProtocolFee(
+    pair, (currencyB === ETHER && parsedAmounts[Field.CURRENCY_B]) 
+      ? CurrencyAmount.ether(parsedAmounts[Field.CURRENCY_B].raw)
+      : parsedAmounts[Field.CURRENCY_B]
+  )
+  const swapFee = (pair) ? 
+  new Percent(JSBI.BigInt(pair.swapFee.toString()), JSBI.BigInt(10000))
+  : undefined
+  const protocolFeeDenominator = (pair) ? Number(pair.protocolFeeDenominator) : undefined
 
   const atMaxAmount = parsedAmounts[Field.LIQUIDITY_PERCENT]?.equalTo(new Percent('1'))
 
@@ -373,7 +397,7 @@ export default function RemoveLiquidity({
       <>
         <RowBetween>
           <Text color={theme.text2} fontWeight={500} fontSize={16}>
-            {'UNI ' + currencyA?.symbol + '/' + currencyB?.symbol} Burned
+            {'DXS ' + currencyA?.symbol + '/' + currencyB?.symbol} Burned
           </Text>
           <RowFixed>
             <DoubleCurrencyLogo currency0={currencyA} currency1={currencyB} margin={true} />
@@ -621,27 +645,37 @@ export default function RemoveLiquidity({
               </>
             )}
             {pair && (
-              <div style={{ padding: '10px 20px' }}>
-                <RowBetween>
-                  Price:
-                  <div>
-                    1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}
-                  </div>
-                </RowBetween>
-                <RowBetween>
-                  <div />
-                  <div>
-                    1 {currencyB?.symbol} ={' '}
-                    {tokenB
-                      ? pair
-                          .priceOf(tokenB)
-                          .invert()
-                          .toSignificant(6)
-                      : '-'}{' '}
-                    {currencyA?.symbol}
-                  </div>
-                </RowBetween>
-              </div>
+              <>
+                <GreyCard padding="0px" borderRadius={'20px'}>
+                  <RowBetween padding="1rem">
+                    <TYPE.subHeader fontWeight={500} fontSize={14}>
+                      Prices
+                    </TYPE.subHeader>
+                  </RowBetween>{' '}
+                  <LightCard padding="1rem" borderRadius={'20px'}>
+                    <PoolPriceBar
+                      currencies={currencies}
+                      price={pair.priceOf(tokenA)}
+                    />
+                  </LightCard>
+                </GreyCard>
+                <GreyCard padding="0px" borderRadius={'20px'}>
+                  <RowBetween padding="1rem">
+                    <TYPE.subHeader fontWeight={500} fontSize={14}>
+                      Protocol Fee
+                    </TYPE.subHeader>
+                  </RowBetween>{' '}
+                  <LightCard padding="1rem" borderRadius={'20px'}>
+                    <ProtocolFeeBar
+                      feePercentage={protocolFee}
+                      swapFee={swapFee}
+                      protocolFeeDenominator={protocolFeeDenominator}
+                      feeAAmount={protocolFeeAmountIndependantField}
+                      feeBAmount={protocolFeeAmountDependantField}
+                    />
+                  </LightCard>
+                </GreyCard>
+              </>
             )}
             <div style={{ position: 'relative' }}>
               {!account ? (

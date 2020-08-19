@@ -56,7 +56,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
             <QuestionHelper text="A portion of each trade (between 0% - 0.30%) goes to liquidity providers as a protocol incentive." />
           </RowFixed>
           <TYPE.black fontSize={14} color={theme.text1}>
-            {realizedLPFee ? `${realizedLPFee.toSignificant(4)} %` : '-'}
+            {realizedLPFee ? `${realizedLPFee.toSignificant(2)} %` : '-'}
           </TYPE.black>
         </RowBetween>
         
@@ -68,19 +68,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
             <QuestionHelper text="The token amount of the swap fee." />
           </RowFixed>
           <TYPE.black fontSize={14} color={theme.text1}>
-            {realizedLPFeeAmount ? `${realizedLPFeeAmount.toSignificant(4)} ${trade.inputAmount.currency.symbol}` : '-'}
-          </TYPE.black>
-        </RowBetween>
-        
-        <RowBetween>
-          <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-              Protocol Fee %
-            </TYPE.black>
-            <QuestionHelper text="A portion of each trade goes to DXDao." />
-          </RowFixed>
-          <TYPE.black fontSize={14} color={theme.green1}>
-            0%
+            {realizedLPFeeAmount ? `${realizedLPFeeAmount.toSignificant(2)} ${trade.inputAmount.currency.symbol}` : '-'}
           </TYPE.black>
         </RowBetween>
         

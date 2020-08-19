@@ -6,7 +6,7 @@ import { useActiveWeb3React } from '../hooks'
 
 
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
-import { useSwapState } from '../state/swap/hooks'
+import { useFeesState } from '../state/fees/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 const PAIR_INTERFACE = new Interface(IDXswapPairABI)
@@ -38,7 +38,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
     [tokens]
   )
   
-  const { swapFees, protocolFeeDenominator } = useSwapState()
+  const { swapFees, protocolFeeDenominator } = useFeesState()
 
   const results = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'getReserves')
 
@@ -53,12 +53,14 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
       if (!reserves) return [PairState.NOT_EXISTS, null]
       const { reserve0, reserve1 } = reserves
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
-      const swapFee = swapFees[Pair.getAddress(token0, token1)] ? swapFees[Pair.getAddress(token0, token1)].fee : BigInt(30)
+      const swapFee = (swapFees && swapFees[Pair.getAddress(token0, token1)].fee)
+        ? swapFees[Pair.getAddress(token0, token1)].fee
+        : BigInt(30)
       return [PairState.EXISTS, new Pair(
         new TokenAmount(token0, reserve0.toString()),
         new TokenAmount(token1, reserve1.toString()),
         swapFee,
-        BigInt(protocolFeeDenominator)
+        protocolFeeDenominator ? BigInt(protocolFeeDenominator) : BigInt(0)
       )]
     })
   }, [results, tokens])

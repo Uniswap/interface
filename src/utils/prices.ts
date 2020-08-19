@@ -9,7 +9,7 @@ const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000))
 // computes price breakdown for the trade
 export function computeTradePriceBreakdown(
   trade?: Trade
-): { priceImpactWithoutFee?: Percent; realizedLPFee?: Fraction, realizedLPFeeAmount?: CurrencyAmount } {
+): { priceImpactWithoutFee?: Percent, realizedLPFee?: Fraction, realizedLPFeeAmount?: CurrencyAmount } {
   // for each hop in our trade, take away the x*y=k price impact from 0.3% fees
   // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
   const realizedLPFee = !trade
@@ -19,7 +19,7 @@ export function computeTradePriceBreakdown(
           (currentFee: Fraction, currentIndex: Pair): Fraction =>
           currentFee.multiply(
             ONE_HUNDRED_PERCENT.subtract(
-              new Percent(JSBI.BigInt(currentIndex.swapFee.toString()), JSBI.BigInt(10000))
+              new Percent(JSBI.BigInt(currentIndex.swapFee.toString()), JSBI.BigInt(100))
             )
           ),
           ONE_HUNDRED_PERCENT
@@ -27,7 +27,9 @@ export function computeTradePriceBreakdown(
       )
 
   // remove lp fees from price impact
-  const priceImpactWithoutFeeFraction = trade && realizedLPFee ? trade.priceImpact.subtract(realizedLPFee) : undefined
+  const priceImpactWithoutFeeFraction = trade && realizedLPFee
+    ? trade.priceImpact.subtract(realizedLPFee)
+    : undefined
 
   // the x*y=k impact
   const priceImpactWithoutFeePercent = priceImpactWithoutFeeFraction
@@ -40,10 +42,30 @@ export function computeTradePriceBreakdown(
     : realizedLPFee &&
     trade &&
     (trade.inputAmount instanceof TokenAmount
-      ? new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
-      : CurrencyAmount.ether(realizedLPFee.multiply(trade.inputAmount.raw).quotient))
+      ? new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).divide(JSBI.BigInt(100)).quotient)
+      : CurrencyAmount.ether(realizedLPFee.multiply(trade.inputAmount.raw).divide(JSBI.BigInt(100)).quotient))
 
   return { priceImpactWithoutFee: priceImpactWithoutFeePercent, realizedLPFee, realizedLPFeeAmount }
+}
+
+
+// calculates teh protocol fee for a pair and amount
+export function calculateProtocolFee(
+  pair?: Pair, amount?: CurrencyAmount
+): { protocolFee?: Fraction, protocolFeeAmount?: CurrencyAmount } {
+  
+  const protocolFee = (pair) ? 
+    new Percent(JSBI.BigInt(pair.swapFee.toString()), JSBI.BigInt(100)).divide(pair.protocolFeeDenominator)
+    : undefined
+
+  // the amount of the input that accrues to LPs
+  const protocolFeeAmount = (protocolFee && amount) 
+    ? (amount instanceof TokenAmount
+      ? new TokenAmount(amount.token, protocolFee.multiply(amount.raw).quotient)
+      : CurrencyAmount.ether(protocolFee.multiply(amount.raw).quotient))
+    : undefined
+
+  return { protocolFee, protocolFeeAmount }
 }
 
 // computes the minimum amount out and maximum amount in for a trade given a user specified allowed slippage in bips

@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, setSwapFees, setProtocolFee } from './actions'
+import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 
 export interface SwapState {
   readonly independentField: Field
@@ -12,13 +12,6 @@ export interface SwapState {
   }
   // the typed recipient address or ENS name, or null if swap should go to sender
   readonly recipient: string | null
-  readonly swapFees: {
-    [key: string] : {
-      fee: bigint,
-      owner: string 
-    }
-  } | {},
-  readonly protocolFeeDenominator: Number,
   readonly protocolFeeTo: string | undefined
 }
 
@@ -32,8 +25,6 @@ const initialState: SwapState = {
     currencyId: ''
   },
   recipient: null,
-  swapFees: {},
-  protocolFeeDenominator: Number(0),
   protocolFeeTo: null
 }
 
@@ -41,8 +32,9 @@ export default createReducer<SwapState>(initialState, builder =>
   builder
     .addCase(
       replaceSwapState,
-      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId, swapFees, protocolFeeTo, protocolFeeDenominator } }) => {
+      (state, { payload: { typedValue, recipient, field, inputCurrencyId, outputCurrencyId } }) => {
         return {
+          ...state,
           [Field.INPUT]: {
             currencyId: inputCurrencyId
           },
@@ -51,10 +43,7 @@ export default createReducer<SwapState>(initialState, builder =>
           },
           independentField: field,
           typedValue: typedValue,
-          recipient,
-          swapFees: swapFees ? swapFees : state.swapFees,
-          protocolFeeDenominator: protocolFeeDenominator ? protocolFeeDenominator : state.protocolFeeDenominator,
-          protocolFeeTo: protocolFeeTo ? protocolFeeTo : state.protocolFeeTo
+          recipient
         }
       }
     )
@@ -89,21 +78,6 @@ export default createReducer<SwapState>(initialState, builder =>
         ...state,
         independentField: field,
         typedValue
-      }
-    })
-    .addCase(setSwapFees, (state, { payload: { swapFees } }) => {
-      console.log('Updating swapFees in store with', swapFees)
-      return {
-        ...state,
-        swapFees
-      }
-    })
-    .addCase(setProtocolFee, (state, { payload: {  protocolFeeDenominator, protocolFeeTo } }) => {
-      console.log('Updating protocolFeeDenominator in store with', protocolFeeDenominator, protocolFeeTo)
-      return {
-        ...state,
-        protocolFeeDenominator,
-        protocolFeeTo
       }
     })
     .addCase(setRecipient, (state, { payload: { recipient } }) => {
