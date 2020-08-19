@@ -60,7 +60,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
         new TokenAmount(token0, reserve0.toString()),
         new TokenAmount(token1, reserve1.toString()),
         swapFee,
-        BigInt(protocolFeeDenominator)
+        protocolFeeDenominator ? BigInt(protocolFeeDenominator) : BigInt(0)
       )]
     })
   }, [results, tokens])
