@@ -1,35 +1,29 @@
 import { Contract } from '@ethersproject/contracts'
-import { JsonRpcProvider } from '@ethersproject/providers'
+import { Provider } from '@ethersproject/abstract-provider'
 import { namehash } from 'ethers/lib/utils'
 
-const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
-
-const provider: JsonRpcProvider | undefined = NETWORK_URL ? new JsonRpcProvider(NETWORK_URL) : undefined
-const ensRegistrarContract = new Contract(
-  '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
-  [
-    {
-      constant: true,
-      inputs: [
-        {
-          name: 'node',
-          type: 'bytes32'
-        }
-      ],
-      name: 'resolver',
-      outputs: [
-        {
-          name: 'resolverAddress',
-          type: 'address'
-        }
-      ],
-      payable: false,
-      stateMutability: 'view',
-      type: 'function'
-    }
-  ],
-  provider
-)
+const REGISTRAR_ABI = [
+  {
+    constant: true,
+    inputs: [
+      {
+        name: 'node',
+        type: 'bytes32'
+      }
+    ],
+    name: 'resolver',
+    outputs: [
+      {
+        name: 'resolverAddress',
+        type: 'address'
+      }
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function'
+  }
+]
+const REGISTRAR_ADDRESS = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
 
 const RESOLVER_ABI = [
   {
@@ -56,21 +50,18 @@ const RESOLVER_ABI = [
 ]
 
 // cache the resolver contracts since most of them are the public resolver
-const RESOLVERS: { [address: string]: Contract } = {}
-function resolverContract(resolverAddress: string): Contract {
-  return (
-    RESOLVERS[resolverAddress] ?? (RESOLVERS[resolverAddress] = new Contract(resolverAddress, RESOLVER_ABI, provider))
-  )
+function resolverContract(resolverAddress: string, provider: Provider): Contract {
+  return new Contract(resolverAddress, RESOLVER_ABI, provider)
 }
 
 /**
  * Fetches and decodes the result of an ENS contenthash lookup on mainnet to a URI
  * @param ensName to resolve
+ * @param provider provider to use to fetch the data
  */
-export default async function resolveENSContentHash(ensName: string): Promise<string> {
-  if (provider === undefined) throw new Error('No network URL')
-
+export default async function resolveENSContentHash(ensName: string, provider: Provider): Promise<string> {
+  const ensRegistrarContract = new Contract(REGISTRAR_ADDRESS, REGISTRAR_ABI, provider)
   const hash = namehash(ensName)
   const resolverAddress = await ensRegistrarContract.resolver(hash)
-  return resolverContract(resolverAddress).contenthash(hash)
+  return resolverContract(resolverAddress, provider).contenthash(hash)
 }
