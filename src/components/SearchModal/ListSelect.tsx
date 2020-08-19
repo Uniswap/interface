@@ -4,12 +4,10 @@ import ReactGA from 'react-ga'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'rebass'
 import styled from 'styled-components'
-import useENSContentHash from '../../hooks/useENSContentHash'
 import { AppDispatch, AppState } from '../../state'
-import { acceptListUpdate, addList, removeList, selectList } from '../../state/lists/actions'
-import { useSelectedListUrl } from '../../state/lists/hooks'
+import { acceptListUpdate, removeList, selectList } from '../../state/lists/actions'
+import { useFetchListCallback, useSelectedListUrl } from '../../state/lists/hooks'
 import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
-import getTokenList from '../../utils/getTokenList'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
 import uriToHttp from '../../utils/uriToHttp'
@@ -125,50 +123,35 @@ const ListContainer = styled(PaddedColumn)`
 
 export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBack: () => void }) {
   const [listUrlInput, setListUrlInput] = useState<string>('')
-  const [{ addError }, setAddState] = useState<{ adding: boolean; addError: string | null }>({
-    adding: false,
-    addError: null
-  })
+
+  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const adding = Boolean(lists[listUrlInput]?.loadingRequestId)
+  const addError = lists[listUrlInput]?.error
+
   const handleInput = useCallback(e => {
     setListUrlInput(e.target.value)
   }, [])
-  const dispatch = useDispatch<AppDispatch>()
-
-  const parsedENS = useMemo(() => parseENSAddress(listUrlInput), [listUrlInput])
-  const contenthash = useENSContentHash(parsedENS?.ensName)
-  const isLoadingContentHash = Boolean(parsedENS && contenthash.loading)
-  const resolveENSContentHash = useCallback(async () => {
-    if (isLoadingContentHash) throw new Error('Loading')
-    if (!parsedENS || !contenthash.contenthash) throw new Error('Invalid ENS name')
-    return contenthash.contenthash
-  }, [contenthash.contenthash, isLoadingContentHash, parsedENS])
+  const fetchList = useFetchListCallback()
 
   const handleAddList = useCallback(() => {
-    setAddState({ adding: true, addError: null })
-    getTokenList(listUrlInput, resolveENSContentHash)
+    if (adding) return
+    fetchList(listUrlInput)
       .then(() => {
-        dispatch(addList(listUrlInput))
+        setListUrlInput('')
         ReactGA.event({
           category: 'Lists',
           action: 'Add List',
           label: listUrlInput
         })
       })
-      .then(() => {
-        setAddState({ adding: false, addError: null })
-        setListUrlInput('')
-      })
-      .catch(error => {
-        setAddState({ adding: false, addError: error.message })
+      .catch(() => {
         ReactGA.event({
           category: 'Lists',
           action: 'Add List Failed',
           label: listUrlInput
         })
       })
-  }, [dispatch, listUrlInput, resolveENSContentHash])
-
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  }, [adding, fetchList, listUrlInput])
 
   const validUrl: boolean = useMemo(() => {
     return uriToHttp(listUrlInput).length > 0 || Boolean(parseENSAddress(listUrlInput))
@@ -232,7 +215,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
             onKeyDown={handleEnterKey}
             style={{ height: '1.8rem', borderRadius: 6 }}
           />
-          <AddListButton onClick={handleAddList} disabled={!validUrl || isLoadingContentHash}>
+          <AddListButton onClick={handleAddList} disabled={!validUrl}>
             Add
           </AddListButton>
         </Row>

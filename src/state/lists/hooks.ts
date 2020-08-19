@@ -1,8 +1,14 @@
+import { nanoid } from '@reduxjs/toolkit'
 import { ChainId, Token } from '@uniswap/sdk'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
-import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
-import { AppState } from '../index'
+import { useCallback, useMemo } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getNetworkLibrary } from '../../connectors'
+import { useActiveWeb3React } from '../../hooks'
+import getTokenList from '../../utils/getTokenList'
+import resolveENSContentHash from '../../utils/resolveENSContentHash'
+import { AppDispatch, AppState } from '../index'
+import { fetchTokenList } from './actions'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -114,5 +120,42 @@ export function useAllLists(): TokenList[] {
         .map(url => lists[url].current)
         .filter((l): l is TokenList => Boolean(l)),
     [lists]
+  )
+}
+
+export function useFetchListCallback(): (listUrl: string) => Promise<TokenList> {
+  const { chainId, library } = useActiveWeb3React()
+  const dispatch = useDispatch<AppDispatch>()
+
+  const ensResolver = useCallback(
+    (ensName: string) => {
+      if (!library || chainId !== ChainId.MAINNET) {
+        const networkLibrary = getNetworkLibrary()
+        if (networkLibrary) {
+          return resolveENSContentHash(ensName, networkLibrary)
+        }
+        throw new Error('Must be connected to mainnet to resolve ENS lists')
+      }
+      return resolveENSContentHash(ensName, library)
+    },
+    [chainId, library]
+  )
+
+  return useCallback(
+    async (listUrl: string) => {
+      const requestId = nanoid()
+      dispatch(fetchTokenList.pending({ requestId, url: listUrl }))
+      return getTokenList(listUrl, ensResolver)
+        .then(tokenList => {
+          dispatch(fetchTokenList.fulfilled({ url: listUrl, tokenList, requestId }))
+          return tokenList
+        })
+        .catch(error => {
+          console.debug(`Failed to get list at url ${listUrl}`, error)
+          dispatch(fetchTokenList.rejected({ url: listUrl, requestId, errorMessage: error.message }))
+          throw error
+        })
+    },
+    [dispatch, ensResolver]
   )
 }

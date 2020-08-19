@@ -1,53 +1,31 @@
-import { nanoid } from '@reduxjs/toolkit'
-import { ChainId } from '@uniswap/sdk'
 import { getVersionUpgrade, minVersionBump, VersionUpgrade } from '@uniswap/token-lists'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import useInterval from '../../hooks/useInterval'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
-import getTokenList from '../../utils/getTokenList'
-import resolveENSContentHash from '../../utils/resolveENSContentHash'
 import { addPopup } from '../application/actions'
 import { AppDispatch, AppState } from '../index'
-import { acceptListUpdate, fetchTokenList } from './actions'
+import { acceptListUpdate } from './actions'
+import { useFetchListCallback } from './hooks'
 
 export default function Updater(): null {
-  const { chainId, library } = useActiveWeb3React()
+  const { library } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
 
   const isWindowVisible = useIsWindowVisible()
 
-  const ensResolver = useCallback(
-    (ensName: string) => {
-      if (!library) throw new Error('No library')
-      if (chainId !== ChainId.MAINNET) throw new Error('Not on mainnet')
-      return resolveENSContentHash(ensName, library)
-    },
-    [chainId, library]
-  )
-
-  const fetchList = useMemo(() => {
-    return (listUrl: string) => {
-      const requestId = nanoid()
-      dispatch(fetchTokenList.pending({ requestId, url: listUrl }))
-      getTokenList(listUrl, ensResolver)
-        .then(tokenList => {
-          dispatch(fetchTokenList.fulfilled({ url: listUrl, tokenList, requestId }))
-        })
-        .catch(error => {
-          console.debug(`Failed to get list at url ${listUrl}`, error)
-          dispatch(fetchTokenList.rejected({ url: listUrl, requestId, errorMessage: error.message }))
-        })
-    }
-  }, [dispatch, ensResolver])
+  const fetchList = useFetchListCallback()
 
   const fetchAllListsCallback = useCallback(() => {
     if (!isWindowVisible) return
-    Object.keys(lists).forEach(fetchList)
+    Object.keys(lists).forEach(url =>
+      fetchList(url).catch(error => console.debug('interval list fetching error', error))
+    )
   }, [fetchList, isWindowVisible, lists])
-  // refetch all lists every 10 minutes
+
+  // fetch all lists every 10 minutes, but only after we initialize library
   useInterval(fetchAllListsCallback, library ? 1000 * 60 * 10 : null)
 
   // whenever a list is not loaded and not loading, try again to load it
@@ -56,10 +34,10 @@ export default function Updater(): null {
       const list = lists[listUrl]
 
       if (!list.current && !list.loadingRequestId && !list.error) {
-        fetchList(listUrl)
+        fetchList(listUrl).catch(error => console.debug('list added fetching error', error))
       }
     })
-  }, [dispatch, fetchList, lists])
+  }, [dispatch, fetchList, library, lists])
 
   // automatically update lists if versions are minor/patch
   useEffect(() => {
