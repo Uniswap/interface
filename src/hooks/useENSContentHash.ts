@@ -1,6 +1,7 @@
 import { namehash } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { useSingleCallResult } from '../state/multicall/hooks'
+import isZero from '../utils/isZero'
 import { useENSRegistrarContract, useENSResolverContract } from './useContract'
 
 /**
@@ -16,12 +17,16 @@ export default function useENSContentHash(ensName?: string | null): { loading: b
     }
   }, [ensName])
   const registrarContract = useENSRegistrarContract(false)
-  const resolverAddress = useSingleCallResult(registrarContract, 'resolver', ensNodeArgument)
-  const resolverContract = useENSResolverContract(resolverAddress.result?.[0], false)
+  const resolverAddressResult = useSingleCallResult(registrarContract, 'resolver', ensNodeArgument)
+  const resolverAddress = resolverAddressResult.result?.[0]
+  const resolverContract = useENSResolverContract(
+    resolverAddress && isZero(resolverAddress) ? undefined : resolverAddress,
+    false
+  )
   const contenthash = useSingleCallResult(resolverContract, 'contenthash', ensNodeArgument)
 
   return {
     contenthash: contenthash.result?.[0] ?? null,
-    loading: resolverAddress.loading || contenthash.loading
+    loading: resolverAddressResult.loading || contenthash.loading
   }
 }

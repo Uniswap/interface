@@ -4,6 +4,7 @@ import ReactGA from 'react-ga'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'rebass'
 import styled from 'styled-components'
+import useENSContentHash from '../../hooks/useENSContentHash'
 import { AppDispatch, AppState } from '../../state'
 import { acceptListUpdate, addList, removeList, selectList } from '../../state/lists/actions'
 import { useSelectedListUrl } from '../../state/lists/hooks'
@@ -11,7 +12,6 @@ import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
 import getTokenList from '../../utils/getTokenList'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
-import resolveENSContentHash from '../../utils/resolveENSContentHash'
 import uriToHttp from '../../utils/uriToHttp'
 import { ButtonSecondary } from '../Button'
 import Column from '../Column'
@@ -117,6 +117,12 @@ const AddListButton = styled(ButtonSecondary)`
   padding: 16px 18px;
 `
 
+const ListContainer = styled(PaddedColumn)`
+  margin-bottom: 14px;
+  flex: 1;
+  overflow: auto;
+`
+
 export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBack: () => void }) {
   const [listUrlInput, setListUrlInput] = useState<string>('')
   const [{ addError }, setAddState] = useState<{ adding: boolean; addError: string | null }>({
@@ -127,6 +133,15 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
     setListUrlInput(e.target.value)
   }, [])
   const dispatch = useDispatch<AppDispatch>()
+
+  const parsedENS = useMemo(() => parseENSAddress(listUrlInput), [listUrlInput])
+  const contenthash = useENSContentHash(parsedENS?.ensName)
+  const isLoadingContentHash = Boolean(parsedENS && contenthash.loading)
+  const resolveENSContentHash = useCallback(async () => {
+    if (isLoadingContentHash) throw new Error('Loading')
+    if (!parsedENS || !contenthash.contenthash) throw new Error('Invalid ENS name')
+    return contenthash.contenthash
+  }, [contenthash.contenthash, isLoadingContentHash, parsedENS])
 
   const handleAddList = useCallback(() => {
     setAddState({ adding: true, addError: null })
@@ -151,7 +166,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
           label: listUrlInput
         })
       })
-  }, [dispatch, listUrlInput])
+  }, [dispatch, listUrlInput, resolveENSContentHash])
 
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
 
@@ -167,6 +182,24 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
     },
     [handleAddList, validUrl]
   )
+
+  const sortedLists = useMemo(() => {
+    const listUrls = Object.keys(lists)
+    return listUrls.sort((u1, u2) => {
+      const { current: l1 } = lists[u1]
+      const { current: l2 } = lists[u2]
+      if (l1 && l2) {
+        return l1.name.toLowerCase() < l2.name.toLowerCase()
+          ? -1
+          : l1.name.toLowerCase() === l2.name.toLowerCase()
+          ? 0
+          : 1
+      }
+      if (l1) return -1
+      if (l2) return 1
+      return 0
+    })
+  }, [lists])
 
   return (
     <Column style={{ width: '100%', flex: '1 1' }}>
@@ -199,7 +232,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
             onKeyDown={handleEnterKey}
             style={{ height: '1.8rem', borderRadius: 6 }}
           />
-          <AddListButton onClick={handleAddList} disabled={!validUrl}>
+          <AddListButton onClick={handleAddList} disabled={!validUrl || isLoadingContentHash}>
             Add
           </AddListButton>
         </Row>
@@ -212,11 +245,11 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
 
       <Separator />
 
-      <PaddedColumn gap="14px" style={{ marginBottom: 14 }}>
-        {Object.keys(lists).map(listUrl => (
+      <ListContainer gap="14px">
+        {sortedLists.map(listUrl => (
           <ListRow key={listUrl} listUrl={listUrl} />
         ))}
-      </PaddedColumn>
+      </ListContainer>
     </Column>
   )
 }
