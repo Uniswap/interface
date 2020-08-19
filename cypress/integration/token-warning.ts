@@ -6,18 +6,18 @@ describe('Warning', () => {
   it('Check that warning is displayed', () => {
     cy.get('.token-warning-container').should('be.visible')
   })
-  it('Check that warning hides after button dismissal.', () => {
+  it('Check that warning hides after button dismissal', () => {
     cy.get('.token-dismiss-button').should('be.disabled')
     cy.get('.understand-checkbox').click()
     cy.get('.token-dismiss-button').should('not.be.disabled')
     cy.get('.token-dismiss-button').click()
     cy.get('.token-warning-container').should('not.be.visible')
   })
-  it('Check supression persists across sessions.', () => {
+  it.only('suppression does not persist across sessions', () => {
     cy.get('.token-warning-container').should('be.visible')
     cy.get('.understand-checkbox').click()
     cy.get('.token-dismiss-button').click()
     cy.reload()
-    cy.get('.token-warning-container').should('not.be.visible')
+    cy.get('.token-warning-container').should('be.visible')
   })
 })

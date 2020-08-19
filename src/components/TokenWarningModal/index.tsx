@@ -82,14 +82,21 @@ function TokenWarningCard({ token }: TokenWarningCardProps) {
   )
 }
 
-export default function TokenWarningModal({ tokens, onConfirm }: { tokens: Token[]; onConfirm: () => void }) {
+export default function TokenWarningModal({
+  isOpen,
+  tokens,
+  onConfirm
+}: {
+  isOpen: boolean
+  tokens: Token[]
+  onConfirm: () => void
+}) {
   const [understandChecked, setUnderstandChecked] = useState(false)
   const toggleUnderstand = useCallback(() => setUnderstandChecked(uc => !uc), [])
-  const showWarning = tokens.length > 0
 
   const handleDismiss = useCallback(() => null, [])
   return (
-    <Modal isOpen={showWarning} onDismiss={handleDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={handleDismiss} maxHeight={90}>
       <WarningContainer className="token-warning-container">
         <AutoColumn gap="lg">
           <AutoRow gap="6px">

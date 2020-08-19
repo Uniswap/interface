@@ -1,5 +1,5 @@
-import { CurrencyAmount, JSBI, Trade } from '@uniswap/sdk'
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import { CurrencyAmount, JSBI, Token, Trade } from '@uniswap/sdk'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
@@ -22,6 +22,7 @@ import TokenWarningModal from '../../components/TokenWarningModal'
 import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
+import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
@@ -43,7 +44,21 @@ import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 
 export default function Swap() {
-  useDefaultsFromURLSearch()
+  const loadedUrlParams = useDefaultsFromURLSearch()
+
+  // token warning stuff
+  const [loadedInputCurrency, loadedOutputCurrency] = [
+    useCurrency(loadedUrlParams?.inputCurrencyId),
+    useCurrency(loadedUrlParams?.outputCurrencyId)
+  ]
+  const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
+  const urlLoadedTokens: Token[] = useMemo(
+    () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
+    [loadedInputCurrency, loadedOutputCurrency]
+  )
+  const handleConfirmTokenWarning = useCallback(() => {
+    setDismissTokenWarning(true)
+  }, [])
 
   const { account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
@@ -237,9 +252,6 @@ export default function Swap() {
     setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
-  // TODO
-  const handleConfirmTokenWarning = useCallback(() => null, [])
-
   const handleInputSelect = useCallback(
     currency => {
       setApprovalSubmitted(false) // reset 2 step UI for approvals
@@ -256,7 +268,11 @@ export default function Swap() {
 
   return (
     <>
-      <TokenWarningModal tokens={[]} onConfirm={handleConfirmTokenWarning} />
+      <TokenWarningModal
+        isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
+        tokens={urlLoadedTokens}
+        onConfirm={handleConfirmTokenWarning}
+      />
       <AppBody>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
