@@ -1,5 +1,6 @@
 import { Currency, ETHER, Token } from '@uniswap/sdk'
 import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
@@ -50,15 +51,31 @@ export function CurrencySearch({
   const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
   const allTokens = useAllTokens()
 
-  // if the current input is an address, and we don't have the token in context, try to fetch it and import
+  // if they input an address, use it
+  const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
+
+  useEffect(() => {
+    if (isAddressSearch) {
+      ReactGA.event({
+        category: 'Currency Select',
+        action: 'Search by address',
+        label: isAddressSearch
+      })
+    }
+  }, [isAddressSearch])
+
+  const showETH: boolean = useMemo(() => {
+    const s = searchQuery.toLowerCase().trim()
+    return s === '' || s === 'e' || s === 'et' || s === 'eth'
+  }, [searchQuery])
 
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
   const filteredTokens: Token[] = useMemo(() => {
-    if (searchToken) return [searchToken]
+    if (isAddressSearch) return searchToken ? [searchToken] : []
     return filterTokens(Object.values(allTokens), searchQuery)
-  }, [searchToken, allTokens, searchQuery])
+  }, [isAddressSearch, searchToken, allTokens, searchQuery])
 
   const filteredSortedTokens: Token[] = useMemo(() => {
     if (searchToken) return [searchToken]
@@ -88,7 +105,7 @@ export function CurrencySearch({
   // clear the input on open
   useEffect(() => {
     if (isOpen) setSearchQuery('')
-  }, [isOpen, setSearchQuery])
+  }, [isOpen])
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
@@ -102,7 +119,8 @@ export function CurrencySearch({
   const handleEnter = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
-        if (searchQuery.toLowerCase().trim() === 'eth') {
+        const s = searchQuery.toLowerCase().trim()
+        if (s === 'eth') {
           handleCurrencySelect(ETHER)
         } else if (filteredSortedTokens.length > 0) {
           if (
@@ -156,6 +174,7 @@ export function CurrencySearch({
           {({ height }) => (
             <CurrencyList
               height={height}
+              showETH={showETH}
               currencies={filteredSortedTokens}
               onCurrencySelect={handleCurrencySelect}
               otherCurrency={otherSelectedCurrency}

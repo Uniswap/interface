@@ -157,7 +157,8 @@ export default function CurrencyList({
   selectedCurrency,
   onCurrencySelect,
   otherCurrency,
-  fixedListRef
+  fixedListRef,
+  showETH
 }: {
   height: number
   currencies: Currency[]
@@ -165,8 +166,9 @@ export default function CurrencyList({
   onCurrencySelect: (currency: Currency) => void
   otherCurrency: Currency | undefined
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
+  showETH: boolean
 }) {
-  const itemData = useMemo(() => [Currency.ETHER, ...currencies], [currencies])
+  const itemData = useMemo(() => (showETH ? [Currency.ETHER, ...currencies] : currencies), [currencies, showETH])
 
   const Row = useCallback(
     ({ data, index, style }) => {
@@ -192,7 +194,7 @@ export default function CurrencyList({
   return (
     <FixedSizeList
       height={height}
-      ref={fixedListRef}
+      ref={fixedListRef as any}
       width="100%"
       itemData={itemData}
       itemCount={itemData.length}

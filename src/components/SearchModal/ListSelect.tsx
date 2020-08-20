@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { memo, useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,14 +22,26 @@ const UnpaddedLinkStyledButton = styled(LinkStyledButton)`
   padding: 0;
 `
 
-function ListRow({ listUrl }: { listUrl: string }) {
+const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
   const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   const selectedListUrl = useSelectedListUrl()
   const dispatch = useDispatch<AppDispatch>()
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
-  if (!list) return null
 
   const isSelected = listUrl === selectedListUrl
+
+  const selectThisList = useCallback(() => {
+    if (isSelected) return
+    ReactGA.event({
+      category: 'Lists',
+      action: 'Select List',
+      label: listUrl
+    })
+
+    dispatch(selectList(listUrl))
+  }, [dispatch, isSelected, listUrl])
+
+  if (!list) return null
 
   return (
     <Row key={listUrl} align="center">
@@ -40,13 +52,7 @@ function ListRow({ listUrl }: { listUrl: string }) {
           checked={isSelected}
           onChange={e => {
             if (e.target.checked) {
-              ReactGA.event({
-                category: 'Lists',
-                action: 'Select List',
-                label: listUrl
-              })
-
-              dispatch(selectList(listUrl))
+              selectThisList()
             }
           }}
         />
@@ -55,10 +61,11 @@ function ListRow({ listUrl }: { listUrl: string }) {
         <Text
           fontWeight={isSelected ? 500 : 400}
           fontSize={16}
-          style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+          style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor: 'pointer' }}
+          onClick={selectThisList}
           title={listUrl}
         >
-          {list?.name ?? listUrl}
+          {list.name}
         </Text>
         <RowBetween>
           <div>
@@ -106,7 +113,7 @@ function ListRow({ listUrl }: { listUrl: string }) {
       </Column>
     </Row>
   )
-}
+})
 
 const AddListButton = styled(ButtonSecondary)`
   height: 1.8rem;
@@ -125,6 +132,7 @@ const ListContainer = styled(PaddedColumn)`
 export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBack: () => void }) {
   const [listUrlInput, setListUrlInput] = useState<string>('')
 
+  const dispatch = useDispatch<AppDispatch>()
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   const adding = Boolean(lists[listUrlInput]?.loadingRequestId)
   const addError = lists[listUrlInput]?.error
@@ -151,8 +159,9 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
           action: 'Add List Failed',
           label: listUrlInput
         })
+        dispatch(removeList(listUrlInput))
       })
-  }, [adding, fetchList, listUrlInput])
+  }, [adding, dispatch, fetchList, listUrlInput])
 
   const validUrl: boolean = useMemo(() => {
     return uriToHttp(listUrlInput).length > 0 || Boolean(parseENSAddress(listUrlInput))
@@ -169,20 +178,24 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
 
   const sortedLists = useMemo(() => {
     const listUrls = Object.keys(lists)
-    return listUrls.sort((u1, u2) => {
-      const { current: l1 } = lists[u1]
-      const { current: l2 } = lists[u2]
-      if (l1 && l2) {
-        return l1.name.toLowerCase() < l2.name.toLowerCase()
-          ? -1
-          : l1.name.toLowerCase() === l2.name.toLowerCase()
-          ? 0
-          : 1
-      }
-      if (l1) return -1
-      if (l2) return 1
-      return 0
-    })
+    return listUrls
+      .filter(listUrl => {
+        return Boolean(lists[listUrl].current)
+      })
+      .sort((u1, u2) => {
+        const { current: l1 } = lists[u1]
+        const { current: l2 } = lists[u2]
+        if (l1 && l2) {
+          return l1.name.toLowerCase() < l2.name.toLowerCase()
+            ? -1
+            : l1.name.toLowerCase() === l2.name.toLowerCase()
+            ? 0
+            : 1
+        }
+        if (l1) return -1
+        if (l2) return 1
+        return 0
+      })
   }, [lists])
 
   return (
@@ -204,13 +217,13 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
       <PaddedColumn gap="14px">
         <Text fontWeight={600}>
           Add a list{' '}
-          <QuestionHelper text="Token lists are an open specification for lists of ERC20 tokens. You can use any token list by entering its URL below. Note that third party token lists can contain fake or malicious ERC20 tokens." />
+          <QuestionHelper text="Token lists are an open specification for lists of ERC20 tokens. You can use any token list by entering its URL below. Beware that third party token lists can contain fake or malicious ERC20 tokens." />
         </Text>
         <Row>
           <SearchInput
             type="text"
             id="list-add-input"
-            placeholder="https:// or ipfs://"
+            placeholder="https:// or ipfs:// or ENS name"
             value={listUrlInput}
             onChange={handleInput}
             onKeyDown={handleEnterKey}
