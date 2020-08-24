@@ -17,29 +17,28 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
     ? [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
     : [undefined, undefined]
 
+  const customBases: Token[] | undefined = chainId ? CUSTOM_BASES[chainId] : undefined
+  const customBasesA: Token[] = tokenA ? customBases[tokenA.address] : []
+  const customBasesB: Token[] = tokenB ? customBases[tokenB.address] : []
+  const basesWithCustom: [...bases, ...customBasesA, ...customBasesB]
+
   const allPairCombinations: [Token, Token][] = useMemo(
     () =>
       [
         // the direct pair
         [tokenA, tokenB],
         // token A against all bases
-        ...bases.map((base): [Token | undefined, Token | undefined] => [tokenA, base]),
+        ...basesWithCustom.map((base): [Token | undefined, Token | undefined] => [tokenA, base]),
         // token B against all bases
-        ...bases.map((base): [Token | undefined, Token | undefined] => [tokenB, base]),
+        ...basesWithCustom.map((base): [Token | undefined, Token | undefined] => [tokenB, base]),
         // each base against all bases
-        ...flatMap(bases, (base): [Token, Token][] => bases.map(otherBase => [base, otherBase]))
+        ...flatMap(basesWithCustom, (base): [Token, Token][] => basesWithCustom.map(otherBase => [base, otherBase]))
       ]
         .filter((tokens): tokens is [Token, Token] => Boolean(tokens[0] && tokens[1]))
         .filter(([tokenA, tokenB]) => {
           if (!chainId) return true
-          const customBases = CUSTOM_BASES[chainId]
           if (!customBases) return true
-
-          const customBasesA: Token[] | undefined = customBases[tokenA.address]
-          const customBasesB: Token[] | undefined = customBases[tokenB.address]
-
-          if (!customBasesA && !customBasesB) return true
-
+          if (!customBasesA.length && !customBasesB.length) return true
           if (customBasesA && customBasesA.findIndex(base => tokenB.equals(base)) === -1) return false
           if (customBasesB && customBasesB.findIndex(base => tokenA.equals(base)) === -1) return false
 
