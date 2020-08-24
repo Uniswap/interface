@@ -188,7 +188,7 @@ export default function SettingsTab() {
                   }
                 }}
               >
-                <Text fontSize={20} fontWeight={500}>
+                <Text fontSize={20} fontWeight={500} id="confirm-expert-mode">
                   Turn On Expert Mode
                 </Text>
               </ButtonError>
@@ -196,7 +196,7 @@ export default function SettingsTab() {
           </AutoColumn>
         </ModalContentWrapper>
       </Modal>
-      <StyledMenuButton onClick={toggle}>
+      <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
         <StyledMenuIcon />
         {expertMode && (
           <EmojiWrapper>
@@ -229,6 +229,7 @@ export default function SettingsTab() {
                 <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
               </RowFixed>
               <Toggle
+                id="toggle-expert-mode-button"
                 isActive={expertMode}
                 toggle={
                   expertMode
