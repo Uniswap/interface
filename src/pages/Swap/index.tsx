@@ -41,7 +41,7 @@ import {
   useUserDeadline,
   useUserSlippageTolerance
 } from '../../state/user/hooks'
-import { CursorPointer, LinkStyledButton, TYPE } from '../../theme'
+import { LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
@@ -285,27 +285,25 @@ export default function Swap() {
               id="swap-currency-input"
             />
 
-            <CursorPointer>
-              <AutoColumn justify="space-between">
-                <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                  <ArrowWrapper clickable>
-                    <ArrowDown
-                      size="16"
-                      onClick={() => {
-                        setApprovalSubmitted(false) // reset 2 step UI for approvals
-                        onSwitchTokens()
-                      }}
-                      color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.primary1 : theme.text2}
-                    />
-                  </ArrowWrapper>
-                  {recipient === null && !showWrap ? (
-                    <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
-                      + Add a send (optional)
-                    </LinkStyledButton>
-                  ) : null}
-                </AutoRow>
-              </AutoColumn>
-            </CursorPointer>
+            <AutoColumn justify="space-between">
+              <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+                <ArrowWrapper clickable>
+                  <ArrowDown
+                    size="16"
+                    onClick={() => {
+                      setApprovalSubmitted(false) // reset 2 step UI for approvals
+                      onSwitchTokens()
+                    }}
+                    color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.primary1 : theme.text2}
+                  />
+                </ArrowWrapper>
+                {recipient === null && !showWrap && isExpertMode ? (
+                  <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
+                    + Add a send (optional)
+                  </LinkStyledButton>
+                ) : null}
+              </AutoRow>
+            </AutoColumn>
             <CurrencyInputPanel
               value={formattedAmounts[Field.OUTPUT]}
               onUserInput={handleTypeOutput}
