@@ -131,5 +131,8 @@ export default createReducer(initialState, builder =>
       if (state.selectedListUrl && !state.byUrl[state.selectedListUrl]) {
         delete state.selectedListUrl
       }
+      if (Object.keys(state.byUrl).length === 0) {
+        state.byUrl = initialState.byUrl
+      }
     })
 )
