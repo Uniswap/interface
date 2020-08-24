@@ -15,6 +15,8 @@ export interface ListsState {
       readonly error: string | null
     }
   }
+  // this contains the default list of lists from the last time the updateVersion was called, i.e. the app was reloaded
+  readonly lastInitializedDefaultListOfLists?: string[]
   readonly selectedListUrl: string | undefined
 }
 
@@ -28,6 +30,7 @@ const NEW_LIST_STATE: ListsState['byUrl'][string] = {
 type Mutable<T> = { -readonly [P in keyof T]: T[P] extends ReadonlyArray<infer U> ? U[] : T[P] }
 
 const initialState: ListsState = {
+  lastInitializedDefaultListOfLists: DEFAULT_LIST_OF_LISTS,
   byUrl: {
     ...DEFAULT_LIST_OF_LISTS.reduce<Mutable<ListsState['byUrl']>>((memo, listUrl) => {
       memo[listUrl] = NEW_LIST_STATE
@@ -126,13 +129,30 @@ export default createReducer(initialState, builder =>
       }
     })
     .addCase(updateVersion, state => {
-      delete state.byUrl['https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json']
-      delete state.byUrl['https://unpkg.com/@uniswap/default-token-list@latest']
-      if (state.selectedListUrl && !state.byUrl[state.selectedListUrl]) {
-        delete state.selectedListUrl
-      }
-      if (Object.keys(state.byUrl).length === 0) {
+      // state loaded from localStorage, but new lists have never been initialized
+      if (!state.lastInitializedDefaultListOfLists) {
         state.byUrl = initialState.byUrl
+        state.selectedListUrl = undefined
+      } else if (state.lastInitializedDefaultListOfLists) {
+        const lastInitializedSet = state.lastInitializedDefaultListOfLists.reduce<Set<string>>(
+          (s, l) => s.add(l),
+          new Set()
+        )
+        const newListOfListsSet = DEFAULT_LIST_OF_LISTS.reduce<Set<string>>((s, l) => s.add(l), new Set())
+
+        DEFAULT_LIST_OF_LISTS.forEach(listUrl => {
+          if (!lastInitializedSet.has(listUrl)) {
+            state.byUrl[listUrl] = NEW_LIST_STATE
+          }
+        })
+
+        state.lastInitializedDefaultListOfLists.forEach(listUrl => {
+          if (!newListOfListsSet.has(listUrl)) {
+            delete state.byUrl[listUrl]
+          }
+        })
       }
+
+      state.lastInitializedDefaultListOfLists = DEFAULT_LIST_OF_LISTS
     })
 )

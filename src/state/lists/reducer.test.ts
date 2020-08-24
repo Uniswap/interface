@@ -1,6 +1,9 @@
 import { createStore, Store } from 'redux'
+import { DEFAULT_LIST_OF_LISTS, DEFAULT_TOKEN_LIST_URL } from '../../constants/lists'
+import { updateVersion } from '../user/actions'
 import { fetchTokenList, acceptListUpdate, addList, removeList, selectList } from './actions'
 import reducer, { ListsState } from './reducer'
+import UNISWAP_DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 
 const STUB_TOKEN_LIST = {
   name: '',
@@ -403,6 +406,126 @@ describe('list reducer', () => {
           }
         },
         selectedListUrl: 'fake-url'
+      })
+    })
+  })
+
+  describe('updateVersion', () => {
+    describe('never initialized', () => {
+      beforeEach(() => {
+        store = createStore(reducer, {
+          byUrl: {
+            'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json': {
+              error: null,
+              current: STUB_TOKEN_LIST,
+              loadingRequestId: null,
+              pendingUpdate: null
+            },
+            'https://unpkg.com/@uniswap/default-token-list@latest': {
+              error: null,
+              current: STUB_TOKEN_LIST,
+              loadingRequestId: null,
+              pendingUpdate: null
+            }
+          },
+          selectedListUrl: undefined
+        })
+        store.dispatch(updateVersion())
+      })
+
+      it('clears the current lists', () => {
+        expect(
+          store.getState().byUrl['https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json']
+        ).toBeUndefined()
+        expect(store.getState().byUrl['https://unpkg.com/@uniswap/default-token-list@latest']).toBeUndefined()
+      })
+
+      it('puts in all the new lists', () => {
+        expect(Object.keys(store.getState().byUrl)).toEqual(DEFAULT_LIST_OF_LISTS)
+      })
+      it('all lists are empty', () => {
+        const s = store.getState()
+        Object.keys(s.byUrl).forEach(url => {
+          if (url === DEFAULT_TOKEN_LIST_URL) {
+            expect(s.byUrl[url]).toEqual({
+              error: null,
+              current: UNISWAP_DEFAULT_TOKEN_LIST,
+              loadingRequestId: null,
+              pendingUpdate: null
+            })
+          } else {
+            expect(s.byUrl[url]).toEqual({
+              error: null,
+              current: null,
+              loadingRequestId: null,
+              pendingUpdate: null
+            })
+          }
+        })
+      })
+      it('sets initialized lists', () => {
+        expect(store.getState().lastInitializedDefaultListOfLists).toEqual(DEFAULT_LIST_OF_LISTS)
+      })
+    })
+    describe('initialized with a different set of lists', () => {
+      beforeEach(() => {
+        store = createStore(reducer, {
+          byUrl: {
+            'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json': {
+              error: null,
+              current: STUB_TOKEN_LIST,
+              loadingRequestId: null,
+              pendingUpdate: null
+            },
+            'https://unpkg.com/@uniswap/default-token-list@latest': {
+              error: null,
+              current: STUB_TOKEN_LIST,
+              loadingRequestId: null,
+              pendingUpdate: null
+            }
+          },
+          selectedListUrl: undefined,
+          lastInitializedDefaultListOfLists: ['https://unpkg.com/@uniswap/default-token-list@latest']
+        })
+        store.dispatch(updateVersion())
+      })
+
+      it('does not remove lists not in last initialized list of lists', () => {
+        expect(
+          store.getState().byUrl['https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json']
+        ).toEqual({
+          error: null,
+          current: STUB_TOKEN_LIST,
+          loadingRequestId: null,
+          pendingUpdate: null
+        })
+      })
+      it('removes lists in the last initialized list of lists', () => {
+        expect(store.getState().byUrl['https://unpkg.com/@uniswap/default-token-list@latest']).toBeUndefined()
+      })
+
+      it('adds all the lists in the default list of lists', () => {
+        expect(Object.keys(store.getState().byUrl)).toContain(DEFAULT_TOKEN_LIST_URL)
+      })
+
+      it('each of those initialized lists is empty', () => {
+        const byUrl = store.getState().byUrl
+        // note we don't expect the uniswap default list to be prepopulated
+        // this is ok.
+        Object.keys(byUrl).forEach(url => {
+          if (url !== 'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json') {
+            expect(byUrl[url]).toEqual({
+              error: null,
+              current: null,
+              loadingRequestId: null,
+              pendingUpdate: null
+            })
+          }
+        })
+      })
+
+      it('sets initialized lists', () => {
+        expect(store.getState().lastInitializedDefaultListOfLists).toEqual(DEFAULT_LIST_OF_LISTS)
       })
     })
   })
