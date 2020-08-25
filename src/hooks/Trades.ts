@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount, Pair, Token, Trade } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
+import union from 'lodash.union'
 import { useMemo } from 'react'
 
 import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from '../constants'
@@ -17,35 +18,28 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
     ? [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
     : [undefined, undefined]
 
+  const customBases = CUSTOM_BASES[chainId]
+  const customBasesA: Token[] = customBases && tokenA ? customBases[tokenA.address] : []
+  const customBasesB: Token[] = customBases && tokenB ? customBases[tokenB.address] : []
+  const basesWithCustom: Token[] = union(bases, customBasesA, customBasesB)
+  console.log(tokenA, customBasesA)
+  console.log(tokenB, customBasesB)
+  console.log(customBases, basesWithCustom)
+
   const allPairCombinations: [Token, Token][] = useMemo(
     () =>
       [
         // the direct pair
         [tokenA, tokenB],
         // token A against all bases
-        ...bases.map((base): [Token | undefined, Token | undefined] => [tokenA, base]),
+        ...basesWithCustom.map((base): [Token | undefined, Token | undefined] => [tokenA, base]),
         // token B against all bases
-        ...bases.map((base): [Token | undefined, Token | undefined] => [tokenB, base]),
+        ...basesWithCustom.map((base): [Token | undefined, Token | undefined] => [tokenB, base]),
         // each base against all bases
-        ...flatMap(bases, (base): [Token, Token][] => bases.map(otherBase => [base, otherBase]))
+        ...flatMap(basesWithCustom, (base): [Token, Token][] => basesWithCustom.map(otherBase => [base, otherBase]))
       ]
-        .filter((tokens): tokens is [Token, Token] => Boolean(tokens[0] && tokens[1]))
-        .filter(([tokenA, tokenB]) => {
-          if (!chainId) return true
-          const customBases = CUSTOM_BASES[chainId]
-          if (!customBases) return true
-
-          const customBasesA: Token[] | undefined = customBases[tokenA.address]
-          const customBasesB: Token[] | undefined = customBases[tokenB.address]
-
-          if (!customBasesA && !customBasesB) return true
-
-          if (customBasesA && customBasesA.findIndex(base => tokenB.equals(base)) === -1) return false
-          if (customBasesB && customBasesB.findIndex(base => tokenA.equals(base)) === -1) return false
-
-          return true
-        }),
-    [tokenA, tokenB, bases, chainId]
+        .filter((tokens): tokens is [Token, Token] => Boolean(tokens[0] && tokens[1])),
+    [tokenA, tokenB, basesWithCustom]
   )
 
   const allPairs = usePairs(allPairCombinations)
