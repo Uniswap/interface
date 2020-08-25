@@ -85,7 +85,8 @@ export default function Updater(): null {
                     oldList: list.current,
                     newList: list.pendingUpdate
                   }
-                }
+                },
+                removeAfterMs: null
               })
             )
         }

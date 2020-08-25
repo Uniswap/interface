@@ -68,17 +68,17 @@ const StyledListUrlText = styled.div`
 `
 
 function ListOrigin({ listUrl }: { listUrl: string }) {
-  const parsed = useMemo(() => parseENSAddress(listUrl), [listUrl])
-  const hostname = useMemo(() => {
-    if (parsed) return undefined
+  const ensName = useMemo(() => parseENSAddress(listUrl)?.ensName, [listUrl])
+  const host = useMemo(() => {
+    if (ensName) return undefined
     try {
       const url = new URL(listUrl)
-      return url.hostname
+      return url.host
     } catch (error) {
       return undefined
     }
-  }, [listUrl, parsed])
-  return <>{parsed?.ensName ?? hostname}</>
+  }, [listUrl, ensName])
+  return <>{ensName ?? host}</>
 }
 
 const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; onBack: () => void }) {
