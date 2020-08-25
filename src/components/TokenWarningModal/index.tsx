@@ -25,7 +25,6 @@ const WarningContainer = styled.div`
   padding: 1rem;
   background: rgba(242, 150, 2, 0.05);
   border: 1px solid #f3841e;
-  box-sizing: border-box;
   border-radius: 20px;
   overflow: auto;
 `

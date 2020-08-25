@@ -143,7 +143,7 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
   if (!list) return null
 
   return (
-    <Row key={listUrl} align="center">
+    <Row key={listUrl} align="center" padding="16px">
       {list.logoURI ? (
         <ListLogo style={{ marginRight: '1rem' }} logoURI={list.logoURI} alt={`${list.name} list logo`} />
       ) : (
@@ -236,12 +236,9 @@ const AddListButton = styled(ButtonSecondary)`
   padding: 10px 18px;
 `
 
-const ListContainer = styled(PaddedColumn)`
-  margin-bottom: 14px;
+const ListContainer = styled.div`
   flex: 1;
   overflow: auto;
-  align-items: flex-start;
-  grid-auto-rows: 44px;
 `
 
 export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBack: () => void }) {
@@ -360,7 +357,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
 
       <Separator />
 
-      <ListContainer gap="20px">
+      <ListContainer>
         {sortedLists.map(listUrl => (
           <ListRow key={listUrl} listUrl={listUrl} onBack={onBack} />
         ))}
