@@ -11,6 +11,7 @@ import { TransactionDetails } from '../../state/transactions/reducer'
 
 import Identicon from '../Identicon'
 import PortisIcon from '../../assets/images/portisIcon.png'
+import TorusIcon from '../../assets/images/torus.svg'
 import WalletModal from '../WalletModal'
 import { ButtonSecondary } from '../Button'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
@@ -21,7 +22,7 @@ import { RowBetween } from '../Row'
 import { shortenAddress } from '../../utils'
 import { useAllTransactions } from '../../state/transactions/hooks'
 import { NetworkContextName } from '../../constants'
-import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
+import { injected, walletconnect, walletlink, fortmatic, portis, torus } from '../../connectors'
 import Loader from '../Loader'
 
 const IconWrapper = styled.div<{ size?: number }>`
@@ -179,6 +180,12 @@ export default function Web3Status() {
       return (
         <IconWrapper size={16}>
           <img src={PortisIcon} alt={''} />
+        </IconWrapper>
+      )
+    } else if (connector === torus) {
+      return (
+        <IconWrapper size={16}>
+          <img src={TorusIcon} alt={''} />
         </IconWrapper>
       )
     }
