@@ -17,11 +17,10 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
     ? [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
     : [undefined, undefined]
 
-  const customBases = CUSTOM_BASES[chainId]
-  const customBasesA: Token[] = customBases && tokenA ? customBases[tokenA.address] : undefined
-  const customBasesB: Token[] = customBases && tokenB ? customBases[tokenB.address] : undefined
-  console.log('customBasesA: ', customBasesA)
-  const allBases = [...bases, ...(customBasesA || []), ...(customBasesB || [])].filter(
+  const customBasesA = CUSTOM_BASES[chainId]?.[tokenA?.address] ?? []
+  const customBasesB = CUSTOM_BASES[chainId]?.[tokenB?.address] ?? []
+
+  const allBases = [...bases, ...customBasesA, ...customBasesB].filter(
     (base, i, allBases) => allBases.findIndex(allBases => allBases.equals(base)) === i
   )
 
