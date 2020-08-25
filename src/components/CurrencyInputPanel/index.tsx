@@ -7,7 +7,7 @@ import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween } from '../Row'
-import { TYPE, CursorPointer } from '../../theme'
+import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
@@ -170,19 +170,17 @@ export default function CurrencyInputPanel({
                 {label}
               </TYPE.body>
               {account && (
-                <CursorPointer>
-                  <TYPE.body
-                    onClick={onMax}
-                    color={theme.text2}
-                    fontWeight={500}
-                    fontSize={14}
-                    style={{ display: 'inline' }}
-                  >
-                    {!hideBalance && !!currency && selectedCurrencyBalance
-                      ? 'Balance: ' + selectedCurrencyBalance?.toSignificant(6)
-                      : ' -'}
-                  </TYPE.body>
-                </CursorPointer>
+                <TYPE.body
+                  onClick={onMax}
+                  color={theme.text2}
+                  fontWeight={500}
+                  fontSize={14}
+                  style={{ display: 'inline', cursor: 'pointer' }}
+                >
+                  {!hideBalance && !!currency && selectedCurrencyBalance
+                    ? 'Balance: ' + selectedCurrencyBalance?.toSignificant(6)
+                    : ' -'}
+                </TYPE.body>
               )}
             </RowBetween>
           </LabelRow>

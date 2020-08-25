@@ -10,26 +10,26 @@ const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
   font-weight: 400;
 `
 
-const StyledToggle = styled.a<{ isActive?: boolean; activeElement?: boolean }>`
+const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
   border-radius: 16px;
   border: 1px solid ${({ theme, isActive }) => (isActive ? theme.primary5 : theme.text4)};
   display: flex;
   width: fit-content;
   cursor: pointer;
-  text-decoration: none;
-  :hover {
-    text-decoration: none;
-  }
+  outline: none;
+  padding: 0;
+  background-color: transparent;
 `
 
 export interface ToggleProps {
+  id?: string
   isActive: boolean
   toggle: () => void
 }
 
-export default function Toggle({ isActive, toggle }: ToggleProps) {
+export default function Toggle({ id, isActive, toggle }: ToggleProps) {
   return (
-    <StyledToggle isActive={isActive} target="_self" onClick={toggle}>
+    <StyledToggle id={id} isActive={isActive} onClick={toggle}>
       <ToggleElement isActive={isActive} isOnSwitch={true}>
         On
       </ToggleElement>
