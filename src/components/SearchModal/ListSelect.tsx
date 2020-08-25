@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo, useState } from 'react'
+import React, { memo, useCallback, useMemo, useState, useEffect, useRef } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,23 +12,87 @@ import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
 import uriToHttp from '../../utils/uriToHttp'
-import { ButtonSecondary } from '../Button'
+import { ButtonPrimary, ButtonSecondary, ButtonOutlined } from '../Button'
+import { ExternalLink } from '../../theme'
+import ListLogo from '../ListLogo'
+import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
+
+import useToggle from '../../hooks/useToggle'
+import { usePopper } from 'react-popper'
+
 import Column from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import Row, { RowBetween } from '../Row'
-import { PaddedColumn, SearchInput, Separator } from './styleds'
+import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
 
 const UnpaddedLinkStyledButton = styled(LinkStyledButton)`
   padding: 0;
+  opacity: ${({ disabled }) => (disabled ? '0.4' : '1')};
+`
+const PopoverContainer = styled.div<{ show: boolean }>`
+  z-index: 100;
+  visibility: ${props => (props.show ? 'visible' : 'hidden')};
+  opacity: ${props => (props.show ? 1 : 0)};
+  transition: visibility 150ms linear, opacity 150ms linear;
+  background: ${({ theme }) => theme.bg2};
+  border: 1px solid ${({ theme }) => theme.bg3};
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+    0px 24px 32px rgba(0, 0, 0, 0.01);
+  color: ${({ theme }) => theme.text2};
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-gap: 8px;
+  font-size: 1rem;
+  text-align: left;
 `
 
-const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
+const StyledMenu = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border: none;
+`
+
+const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; onBack: () => void }) {
   const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   const selectedListUrl = useSelectedListUrl()
   const dispatch = useDispatch<AppDispatch>()
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
 
   const isSelected = listUrl === selectedListUrl
+
+  const [open, toggle] = useToggle(false)
+  const node = useRef<HTMLDivElement>()
+  const [referenceElement, setReferenceElement] = useState<HTMLDivElement>()
+  const [popperElement, setPopperElement] = useState<HTMLDivElement>()
+
+  const { styles, attributes } = usePopper(referenceElement, popperElement, {
+    placement: 'auto',
+    strategy: 'fixed',
+    modifiers: [{ name: 'offset', options: { offset: [8, 8] } }]
+  })
+
+  useEffect(() => {
+    const handleClickOutside = e => {
+      if (node.current?.contains(e.target) ?? false) {
+        return
+      }
+      toggle()
+    }
+
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [open, toggle])
 
   const selectThisList = useCallback(() => {
     if (isSelected) return
@@ -39,61 +103,29 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
     })
 
     dispatch(selectList(listUrl))
-  }, [dispatch, isSelected, listUrl])
+    onBack()
+  }, [dispatch, isSelected, listUrl, onBack])
 
   if (!list) return null
 
   return (
     <Row key={listUrl} align="center">
-      <div style={{ marginRight: '1rem', flex: '0' }}>
-        <input
-          type="radio"
-          value={listUrl}
-          checked={isSelected}
-          onChange={e => {
-            if (e.target.checked) {
-              selectThisList()
-            }
-          }}
-        />
-      </div>
+      {list.logoURI ? (
+        <ListLogo style={{ marginRight: '1rem' }} logoURI={list.logoURI} alt={`${list.name} list logo`} />
+      ) : (
+        <div style={{ width: '24px', height: '24px', marginRight: '1rem' }} />
+      )}
       <Column style={{ flex: '1' }}>
-        <Text
-          fontWeight={isSelected ? 500 : 400}
-          fontSize={16}
-          style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor: 'pointer' }}
-          onClick={selectThisList}
-          title={listUrl}
-        >
-          {list.name}
-        </Text>
-        <RowBetween>
-          <div>
-            <UnpaddedLinkStyledButton
-              onClick={() => {
-                ReactGA.event({
-                  category: 'Lists',
-                  action: 'Start Remove List',
-                  label: listUrl
-                })
-                if (
-                  window.prompt(`Please confirm you would like to remove this list by typing its URL:\n${listUrl}`) ===
-                  listUrl
-                ) {
-                  ReactGA.event({
-                    category: 'Lists',
-                    action: 'Confirm Remove List',
-                    label: listUrl
-                  })
-                  dispatch(removeList(listUrl))
-                }
-              }}
-              disabled={Object.keys(listsByUrl).length === 1}
-            >
-              Remove
-            </UnpaddedLinkStyledButton>
-          </div>
-          {pending ? (
+        <Row>
+          <Text
+            fontWeight={isSelected ? 500 : 400}
+            fontSize={16}
+            style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+            title={listUrl}
+          >
+            {list.name}
+          </Text>
+          {pending && (
             <UnpaddedLinkStyledButton
               onClick={() => {
                 ReactGA.event({
@@ -104,29 +136,118 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
                 dispatch(acceptListUpdate(listUrl))
               }}
             >
-              Update to {listVersionLabel(pending.version)}
+              Update
             </UnpaddedLinkStyledButton>
-          ) : (
-            <div>{list && listVersionLabel(list.version)}</div>
           )}
-        </RowBetween>
+        </Row>
+        <Row
+          style={{
+            marginTop: '4px'
+          }}
+        >
+          <div
+            style={{
+              maxWidth: '160px',
+              opacity: '0.6',
+              marginRight: '.5rem',
+              fontSize: '14px',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}
+          >
+            {listUrl}
+          </div>
+        </Row>
       </Column>
+      <StyledMenu ref={node}>
+        <ButtonOutlined
+          style={{
+            width: '2rem',
+            padding: '.8rem .35rem',
+            borderRadius: '12px',
+            fontSize: '14px',
+            marginRight: '0.5rem'
+          }}
+          onClick={toggle}
+          ref={setReferenceElement}
+        >
+          <DropDown />
+        </ButtonOutlined>
+
+        {open && (
+          <PopoverContainer show={true} ref={setPopperElement} style={styles.popper} {...attributes.popper}>
+            <div>{list && listVersionLabel(list.version)}</div>
+            <SeparatorDark />
+            <ExternalLink target="external" href={`https://tokenlists.org/token-list?url=${listUrl}`}>
+              View List
+            </ExternalLink>
+            <UnpaddedLinkStyledButton
+              style={{ fontSize: '1rem' }}
+              onClick={() => {
+                ReactGA.event({
+                  category: 'Lists',
+                  action: 'Start Remove List',
+                  label: listUrl
+                })
+                if (window.prompt(`Please confirm you would like to remove this list by typing REMOVE`) === `REMOVE`) {
+                  ReactGA.event({
+                    category: 'Lists',
+                    action: 'Confirm Remove List',
+                    label: listUrl
+                  })
+                  dispatch(removeList(listUrl))
+                }
+              }}
+              disabled={Object.keys(listsByUrl).length === 1}
+            >
+              Remove List
+            </UnpaddedLinkStyledButton>
+          </PopoverContainer>
+        )}
+      </StyledMenu>
+      {isSelected ? (
+        <ButtonPrimary
+          disabled={true}
+          className="select-button"
+          style={{ width: '5rem', minWidth: '5rem', padding: '0.5rem .35rem', borderRadius: '12px', fontSize: '14px' }}
+        >
+          Selected
+        </ButtonPrimary>
+      ) : (
+        <>
+          <ButtonPrimary
+            className="select-button"
+            style={{
+              width: '5rem',
+              minWidth: '4.5rem',
+              padding: '0.5rem .35rem',
+              borderRadius: '12px',
+              fontSize: '14px'
+            }}
+            onClick={e => selectThisList()}
+          >
+            Select
+          </ButtonPrimary>
+        </>
+      )}
     </Row>
   )
 })
 
 const AddListButton = styled(ButtonSecondary)`
-  height: 1.8rem;
+  /* height: 1.8rem; */
   max-width: 4rem;
   margin-left: 1rem;
-  border-radius: 6px;
-  padding: 16px 18px;
+  border-radius: 12px;
+  padding: 10px 18px;
 `
 
 const ListContainer = styled(PaddedColumn)`
   margin-bottom: 14px;
   flex: 1;
   overflow: auto;
+  align-items: flex-start;
+  grid-auto-rows: 44px;
 `
 
 export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBack: () => void }) {
@@ -227,7 +348,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
             value={listUrlInput}
             onChange={handleInput}
             onKeyDown={handleEnterKey}
-            style={{ height: '1.8rem', borderRadius: 6 }}
+            style={{ height: '2.75rem', borderRadius: 12, padding: '12px' }}
           />
           <AddListButton onClick={handleAddList} disabled={!validUrl}>
             Add
@@ -242,11 +363,16 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
 
       <Separator />
 
-      <ListContainer gap="14px">
+      <ListContainer gap="20px">
         {sortedLists.map(listUrl => (
-          <ListRow key={listUrl} listUrl={listUrl} />
+          <ListRow key={listUrl} listUrl={listUrl} onBack={onBack} />
         ))}
       </ListContainer>
+      <Separator />
+
+      <ExternalLink style={{ margin: '16px', textAlign: 'center' }} target="external" href="https://tokenlists.org">
+        Browse lists
+      </ExternalLink>
     </Column>
   )
 }

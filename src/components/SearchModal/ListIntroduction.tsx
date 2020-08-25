@@ -5,7 +5,7 @@ import { AppDispatch, AppState } from '../../state'
 import { addList, selectList } from '../../state/lists/actions'
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
-import { OutlineCard } from '../Card'
+import { OutlineCard, GreyCard } from '../Card'
 import Column, { AutoColumn } from '../Column'
 import ListLogo from '../ListLogo'
 import Row from '../Row'
@@ -28,7 +28,7 @@ const ListCard = memo(function ListCard({ id, listUrl }: { id: string; listUrl: 
   if (!list) return null
 
   return (
-    <OutlineCard id={id}>
+    <OutlineCard style={{ padding: '0.5rem .75rem' }} id={id}>
       <Row align="center">
         {list.logoURI ? (
           <ListLogo style={{ marginRight: '0.5rem' }} logoURI={list.logoURI} alt={`${list.name} list logo`} />
@@ -38,7 +38,7 @@ const ListCard = memo(function ListCard({ id, listUrl }: { id: string; listUrl: 
         </Text>
         <ButtonPrimary
           className="select-button"
-          style={{ width: '6rem', padding: '0.5rem 1rem' }}
+          style={{ width: '6rem', padding: '0.5rem .35rem', borderRadius: '12px' }}
           onClick={handleSelect}
         >
           Select
@@ -53,18 +53,26 @@ export default function ListIntroduction() {
     <Column style={{ width: '100%', flex: '1 1' }}>
       <PaddedColumn>
         <AutoColumn gap="14px">
-          <Text fontWeight={500} fontSize={20}>
+          <Text fontWeight={600} fontSize={20}>
             Select a list
           </Text>
-          <Text>
-            Token lists are an{' '}
-            <ExternalLink href="https://github.com/uniswap/token-lists">open specification</ExternalLink> for lists of
-            tokens supported by the Uniswap Interface. You can switch between token lists and add your own custom lists
-            via IPFS, HTTPS and ENS. Get started by selecting one below.
+          <Text style={{ marginBottom: '8px' }}>
+            Get started by selecting a token list below. You can switch between token lists and add your own custom
+            lists via IPFS, HTTPS and ENS.
           </Text>
           <ListCard id="select-kleros-list" listUrl={'t2crtokens.eth'} />
-          <ListCard id="select-1inch-list" listUrl={'tokens.1inch.eth'} />
+          <ListCard
+            id="select-1inch-list"
+            listUrl={'https://www.coingecko.com/tokens_list/uniswap/defi_100/v_0_0_0.json'}
+          />
           <ListCard id="select-default-uniswap-list" listUrl={'tokens.uniswap.eth'} />
+          <GreyCard style={{ marginBottom: '8px', padding: '1rem' }}>
+            <Text fontWeight={400} fontSize={14} style={{ textAlign: 'center' }}>
+              Token lists are an{' '}
+              <ExternalLink href="https://github.com/uniswap/token-lists">open specification</ExternalLink>. Check out{' '}
+              <ExternalLink href="tokenlists.org"> tokenlists.org</ExternalLink> to find more lists.
+            </Text>
+          </GreyCard>
         </AutoColumn>
       </PaddedColumn>
     </Column>

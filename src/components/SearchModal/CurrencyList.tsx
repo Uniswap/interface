@@ -30,12 +30,15 @@ const StyledBalanceText = styled(Text)`
 const Tag = styled.div`
   background-color: ${({ theme }) => theme.bg3};
   color: ${({ theme }) => theme.text2};
-  padding: 0.25rem;
-  border-radius: 0.1rem;
+  font-size: 14px;
+  border-radius: 4px;
+  padding: 0.25rem 0.3rem 0.25rem 0.3rem;
   max-width: 6rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  justify-self: flex-end;
+  margin-right: 4px;
 `
 
 function Balance({ balance }: { balance: CurrencyAmount }) {
@@ -44,18 +47,15 @@ function Balance({ balance }: { balance: CurrencyAmount }) {
 
 const TagContainer = styled.div`
   display: flex;
-  margin-right: 0.8rem;
-  > * + * {
-    margin-left: 0.8rem;
-  }
+  justify-content: flex-end;
 `
 
 function TokenTags({ currency }: { currency: Currency }) {
   if (!(currency instanceof WrappedTokenInfo)) {
-    return null
+    return <span></span>
   }
   const tags = currency.tags
-  if (!tags || tags.length === 0) return null
+  if (!tags || tags.length === 0) return <span></span>
 
   const tag = tags[0]
 
@@ -73,7 +73,9 @@ function TokenTags({ currency }: { currency: Currency }) {
         >
           <Tag>...</Tag>
         </MouseoverTooltip>
-      ) : null}
+      ) : (
+        <span></span>
+      )}
     </TagContainer>
   )
 }
@@ -109,42 +111,40 @@ function CurrencyRow({
       disabled={isSelected}
       selected={otherSelected}
     >
-      <RowFixed>
-        <CurrencyLogo currency={currency} size={'24px'} style={{ marginRight: '14px' }} />
-        <Column>
-          <Text fontWeight={500}>{currency.symbol}</Text>
-          <FadedSpan>
-            {customAdded ? (
-              <TYPE.main fontWeight={500}>
-                Added by user
-                <LinkStyledButton
-                  onClick={event => {
-                    event.stopPropagation()
-                    if (chainId && currency instanceof Token) removeToken(chainId, currency.address)
-                  }}
-                >
-                  (Remove)
-                </LinkStyledButton>
-              </TYPE.main>
-            ) : null}
-            {!isOnSelectedList && !customAdded ? (
-              <TYPE.main fontWeight={500}>
-                Found by address
-                <LinkStyledButton
-                  onClick={event => {
-                    event.stopPropagation()
-                    if (currency instanceof Token) addToken(currency)
-                  }}
-                >
-                  (Add)
-                </LinkStyledButton>
-              </TYPE.main>
-            ) : null}
-          </FadedSpan>
-        </Column>
-      </RowFixed>
-      <RowFixed>
-        <TokenTags currency={currency} />
+      <CurrencyLogo currency={currency} size={'24px'} />
+      <Column>
+        <Text fontWeight={500}>{currency.symbol}</Text>
+        <FadedSpan>
+          {customAdded ? (
+            <TYPE.main fontWeight={500}>
+              Added by user
+              <LinkStyledButton
+                onClick={event => {
+                  event.stopPropagation()
+                  if (chainId && currency instanceof Token) removeToken(chainId, currency.address)
+                }}
+              >
+                (Remove)
+              </LinkStyledButton>
+            </TYPE.main>
+          ) : null}
+          {!isOnSelectedList && !customAdded ? (
+            <TYPE.main fontWeight={500}>
+              Found by address
+              <LinkStyledButton
+                onClick={event => {
+                  event.stopPropagation()
+                  if (currency instanceof Token) addToken(currency)
+                }}
+              >
+                (Add)
+              </LinkStyledButton>
+            </TYPE.main>
+          ) : null}
+        </FadedSpan>
+      </Column>
+      <TokenTags currency={currency} />
+      <RowFixed style={{ justifySelf: 'flex-end' }}>
         {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
       </RowFixed>
     </MenuItem>
