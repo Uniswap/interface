@@ -56,6 +56,29 @@ const StyledMenu = styled.div`
   border: none;
 `
 
+const StyledListUrlText = styled.div`
+  max-width: 160px;
+  opacity: 0.6;
+  margin-right: 0.5rem;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
+function ListOrigin({ listUrl }: { listUrl: string }) {
+  const parsed = useMemo(() => parseENSAddress(listUrl), [listUrl])
+  const hostname = useMemo(() => {
+    if (parsed) return undefined
+    try {
+      const url = new URL(listUrl)
+      return url.hostname
+    } catch (error) {
+      return undefined
+    }
+  }, [listUrl, parsed])
+  return <>{parsed?.ensName ?? hostname}</>
+}
+
 const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; onBack: () => void }) {
   const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   const selectedListUrl = useSelectedListUrl()
@@ -128,19 +151,9 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
             marginTop: '4px'
           }}
         >
-          <div
-            title={listUrl}
-            style={{
-              maxWidth: '160px',
-              opacity: '0.6',
-              marginRight: '.5rem',
-              fontSize: '14px',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis'
-            }}
-          >
-            {listUrl}
-          </div>
+          <StyledListUrlText title={listUrl}>
+            <ListOrigin listUrl={listUrl} />
+          </StyledListUrlText>
         </Row>
       </Column>
       <StyledMenu ref={node}>
