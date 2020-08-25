@@ -6,5 +6,6 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   't2crtokens.eth', // kleros
   'tokens.1inch.eth', // 1inch
   'synths.snx.eth',
-  'https://defiprime.com/defiprime.tokenlist.json'
+  'https://defiprime.com/defiprime.tokenlist.json',
+  'https://umaproject.org/uma.tokenlist.json'
 ]
