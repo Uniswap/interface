@@ -16,7 +16,13 @@ export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597
 export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f5717214004A7f26888', 18, 'COMP', 'Compound')
 export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
-export const SUSD = new Token(ChainId.MAINNET, '0x57Ab1ec28D129707052df4dF418D58a2D46d5f51', 18, 'sUSD', 'Synthetix sUSD')
+export const SUSD = new Token(
+  ChainId.MAINNET,
+  '0x57Ab1ec28D129707052df4dF418D58a2D46d5f51',
+  18,
+  'sUSD',
+  'Synthetix sUSD'
+)
 export const BASED = new Token(ChainId.MAINNET, '0x68A118Ef45063051Eac49c7e647CE5Ace48a68a5', 18, '$BASED', '$BASED')
 
 const WETH_ONLY: ChainTokenList = {
@@ -40,7 +46,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
   [ChainId.MAINNET]: {
     [AMPL.address]: [DAI, WETH[ChainId.MAINNET]],
-    [BASED.address]: [SUSD]
+    [BASED.address]: [SUSD, WETH[ChainId.MAINNET]]
   }
 }
 
