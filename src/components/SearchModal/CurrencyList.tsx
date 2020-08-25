@@ -52,10 +52,11 @@ const TagContainer = styled.div`
 
 function TokenTags({ currency }: { currency: Currency }) {
   if (!(currency instanceof WrappedTokenInfo)) {
-    return <span></span>
+    return <span />
   }
+
   const tags = currency.tags
-  if (!tags || tags.length === 0) return <span></span>
+  if (!tags || tags.length === 0) return <span />
 
   const tag = tags[0]
 
@@ -73,9 +74,7 @@ function TokenTags({ currency }: { currency: Currency }) {
         >
           <Tag>...</Tag>
         </MouseoverTooltip>
-      ) : (
-        <span></span>
-      )}
+      ) : null}
     </TagContainer>
   )
 }
@@ -113,7 +112,9 @@ function CurrencyRow({
     >
       <CurrencyLogo currency={currency} size={'24px'} />
       <Column>
-        <Text fontWeight={500}>{currency.symbol}</Text>
+        <Text title={currency.name} fontWeight={500}>
+          {currency.symbol}
+        </Text>
         <FadedSpan>
           {customAdded ? (
             <TYPE.main fontWeight={500}>
