@@ -35,19 +35,19 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
         ...allBases.map((base): [Token | undefined, Token | undefined] => [tokenB, base]),
         // each base against all bases
         ...flatMap(allBases, (base): [Token, Token][] => allBases.map(otherBase => [base, otherBase]))
-	]
-	.filter((tokens): tokens is [Token, Token] => Boolean(tokens[0] && tokens[1]))
-	.filter(([tokenA, tokenB]) => {
+      ]
+        .filter((tokens): tokens is [Token, Token] => Boolean(tokens[0] && tokens[1]))
+        .filter(([tokenA, tokenB]) => {
           if (!chainId) return true
           const restrictedBases = CUSTOM_BASES[chainId]
-	  if (!restrictedBases) return true
+          if (!restrictedBases) return true
           const restrictedBasesA: Token[] | undefined = restrictedBases[tokenA.address]
-	  const restrictedBasesB: Token[] | undefined = restrictedBases[tokenB.address]
-	  if (!restrictedBasesA && !restrictedBasesB) return true
-	  if (restrictedBasesA && restrictedBasesA.findIndex(base => tokenB.equals(base)) === -1) return false
-	  if (restrictedBasesB && restrictedBasesB.findIndex(base => tokenA.equals(base)) === -1) return false
-	  return true
-	}),
+          const restrictedBasesB: Token[] | undefined = restrictedBases[tokenB.address]
+          if (!restrictedBasesA && !restrictedBasesB) return true
+          if (restrictedBasesA && restrictedBasesA.findIndex(base => tokenB.equals(base)) === -1) return false
+          if (restrictedBasesB && restrictedBasesB.findIndex(base => tokenA.equals(base)) === -1) return false
+          return true
+        }),
     [tokenA, tokenB, allBases, chainId]
   )
 
