@@ -1,26 +1,26 @@
-import React, { memo, useCallback, useMemo, useState, useEffect, useRef } from 'react'
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
+import { usePopper } from 'react-popper'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'rebass'
 import styled from 'styled-components'
+import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
+import { useOnClickOutside } from '../../hooks/useOnClickOutside'
+
+import useToggle from '../../hooks/useToggle'
 import { AppDispatch, AppState } from '../../state'
 import { acceptListUpdate, removeList, selectList } from '../../state/lists/actions'
 import { useSelectedListUrl } from '../../state/lists/hooks'
-import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
+import { CloseIcon, ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
 import uriToHttp from '../../utils/uriToHttp'
-import { ButtonPrimary, ButtonSecondary, ButtonOutlined } from '../Button'
-import { ExternalLink } from '../../theme'
-import ListLogo from '../ListLogo'
-import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
-
-import useToggle from '../../hooks/useToggle'
-import { usePopper } from 'react-popper'
+import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../Button'
 
 import Column from '../Column'
+import ListLogo from '../ListLogo'
 import QuestionHelper from '../QuestionHelper'
 import Row, { RowBetween } from '../Row'
 import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
@@ -75,24 +75,7 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
     modifiers: [{ name: 'offset', options: { offset: [8, 8] } }]
   })
 
-  useEffect(() => {
-    const handleClickOutside = e => {
-      if (node.current?.contains(e.target) ?? false) {
-        return
-      }
-      toggle()
-    }
-
-    if (open) {
-      document.addEventListener('mousedown', handleClickOutside)
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [open, toggle])
+  useOnClickOutside(node, open ? toggle : undefined)
 
   const selectThisList = useCallback(() => {
     if (isSelected) return
@@ -146,6 +129,7 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
           }}
         >
           <div
+            title={listUrl}
             style={{
               maxWidth: '160px',
               opacity: '0.6',
@@ -178,9 +162,7 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
           <PopoverContainer show={true} ref={setPopperElement} style={styles.popper} {...attributes.popper}>
             <div>{list && listVersionLabel(list.version)}</div>
             <SeparatorDark />
-            <ExternalLink target="external" href={`https://tokenlists.org/token-list?url=${listUrl}`}>
-              View List
-            </ExternalLink>
+            <ExternalLink href={`https://tokenlists.org/token-list?url=${listUrl}`}>View list</ExternalLink>
             <UnpaddedLinkStyledButton
               style={{ fontSize: '1rem' }}
               onClick={() => {
@@ -200,7 +182,7 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
               }}
               disabled={Object.keys(listsByUrl).length === 1}
             >
-              Remove List
+              Remove list
             </UnpaddedLinkStyledButton>
           </PopoverContainer>
         )}
@@ -224,7 +206,7 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
               borderRadius: '12px',
               fontSize: '14px'
             }}
-            onClick={e => selectThisList()}
+            onClick={selectThisList}
           >
             Select
           </ButtonPrimary>
@@ -256,15 +238,17 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
   const dispatch = useDispatch<AppDispatch>()
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   const adding = Boolean(lists[listUrlInput]?.loadingRequestId)
-  const addError = lists[listUrlInput]?.error
+  const [addError, setAddError] = useState<string | null>(null)
 
   const handleInput = useCallback(e => {
     setListUrlInput(e.target.value)
+    setAddError(null)
   }, [])
   const fetchList = useFetchListCallback()
 
   const handleAddList = useCallback(() => {
     if (adding) return
+    setAddError(null)
     fetchList(listUrlInput)
       .then(() => {
         setListUrlInput('')
@@ -274,12 +258,13 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
           label: listUrlInput
         })
       })
-      .catch(() => {
+      .catch(error => {
         ReactGA.event({
           category: 'Lists',
           action: 'Add List Failed',
           label: listUrlInput
         })
+        setAddError(error.message)
         dispatch(removeList(listUrlInput))
       })
   }, [adding, dispatch, fetchList, listUrlInput])
@@ -370,7 +355,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
       </ListContainer>
       <Separator />
 
-      <ExternalLink style={{ margin: '16px', textAlign: 'center' }} target="external" href="https://tokenlists.org">
+      <ExternalLink style={{ margin: '16px', textAlign: 'center' }} href="https://tokenlists.org">
         Browse lists
       </ExternalLink>
     </Column>
