@@ -22,9 +22,6 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   const customBasesA: Token[] = customBases && tokenA ? customBases[tokenA.address] : []
   const customBasesB: Token[] = customBases && tokenB ? customBases[tokenB.address] : []
   const basesWithCustom: Token[] = union(bases, customBasesA, customBasesB)
-  console.log(tokenA, customBasesA)
-  console.log(tokenB, customBasesB)
-  console.log(customBases, basesWithCustom)
 
   const allPairCombinations: [Token, Token][] = useMemo(
     () =>
@@ -37,8 +34,7 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
         ...basesWithCustom.map((base): [Token | undefined, Token | undefined] => [tokenB, base]),
         // each base against all bases
         ...flatMap(basesWithCustom, (base): [Token, Token][] => basesWithCustom.map(otherBase => [base, otherBase]))
-      ]
-        .filter((tokens): tokens is [Token, Token] => Boolean(tokens[0] && tokens[1])),
+      ].filter((tokens): tokens is [Token, Token] => Boolean(tokens[0] && tokens[1])),
     [tokenA, tokenB, basesWithCustom]
   )
 
