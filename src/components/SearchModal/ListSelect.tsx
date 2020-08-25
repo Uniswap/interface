@@ -27,8 +27,10 @@ import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
 
 const UnpaddedLinkStyledButton = styled(LinkStyledButton)`
   padding: 0;
+  font-size: 1rem;
   opacity: ${({ disabled }) => (disabled ? '0.4' : '1')};
 `
+
 const PopoverContainer = styled.div<{ show: boolean }>`
   z-index: 100;
   visibility: ${props => (props.show ? 'visible' : 'hidden')};
@@ -112,6 +114,32 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
     onBack()
   }, [dispatch, isSelected, listUrl, onBack])
 
+  const handleAcceptListUpdate = useCallback(() => {
+    if (!pending) return
+    ReactGA.event({
+      category: 'Lists',
+      action: 'Update List from List Select',
+      label: listUrl
+    })
+    dispatch(acceptListUpdate(listUrl))
+  }, [dispatch, listUrl, pending])
+
+  const handleRemoveList = useCallback(() => {
+    ReactGA.event({
+      category: 'Lists',
+      action: 'Start Remove List',
+      label: listUrl
+    })
+    if (window.prompt(`Please confirm you would like to remove this list by typing REMOVE`) === `REMOVE`) {
+      ReactGA.event({
+        category: 'Lists',
+        action: 'Confirm Remove List',
+        label: listUrl
+      })
+      dispatch(removeList(listUrl))
+    }
+  }, [dispatch, listUrl])
+
   if (!list) return null
 
   return (
@@ -131,20 +159,6 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
           >
             {list.name}
           </Text>
-          {pending && (
-            <UnpaddedLinkStyledButton
-              onClick={() => {
-                ReactGA.event({
-                  category: 'Lists',
-                  action: 'Update List from List Select',
-                  label: listUrl
-                })
-                dispatch(acceptListUpdate(listUrl))
-              }}
-            >
-              Update
-            </UnpaddedLinkStyledButton>
-          )}
         </Row>
         <Row
           style={{
@@ -156,7 +170,7 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
           </StyledListUrlText>
         </Row>
       </Column>
-      <StyledMenu ref={node}>
+      <StyledMenu ref={node as any}>
         <ButtonOutlined
           style={{
             width: '2rem',
@@ -172,31 +186,16 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
         </ButtonOutlined>
 
         {open && (
-          <PopoverContainer show={true} ref={setPopperElement} style={styles.popper} {...attributes.popper}>
+          <PopoverContainer show={true} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
             <div>{list && listVersionLabel(list.version)}</div>
             <SeparatorDark />
             <ExternalLink href={`https://tokenlists.org/token-list?url=${listUrl}`}>View list</ExternalLink>
-            <UnpaddedLinkStyledButton
-              style={{ fontSize: '1rem' }}
-              onClick={() => {
-                ReactGA.event({
-                  category: 'Lists',
-                  action: 'Start Remove List',
-                  label: listUrl
-                })
-                if (window.prompt(`Please confirm you would like to remove this list by typing REMOVE`) === `REMOVE`) {
-                  ReactGA.event({
-                    category: 'Lists',
-                    action: 'Confirm Remove List',
-                    label: listUrl
-                  })
-                  dispatch(removeList(listUrl))
-                }
-              }}
-              disabled={Object.keys(listsByUrl).length === 1}
-            >
+            <UnpaddedLinkStyledButton onClick={handleRemoveList} disabled={Object.keys(listsByUrl).length === 1}>
               Remove list
             </UnpaddedLinkStyledButton>
+            {pending && (
+              <UnpaddedLinkStyledButton onClick={handleAcceptListUpdate}>Update list</UnpaddedLinkStyledButton>
+            )}
           </PopoverContainer>
         )}
       </StyledMenu>
