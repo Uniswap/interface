@@ -18,7 +18,9 @@ export default function ListIntroduction({ onSelectList }: { onSelectList: () =>
             You can switch between lists of tokens, as well as add your own custom lists via IPFS, HTTPS and ENS.{' '}
             <i>Start by choosing a list.</i>
           </Text>
-          <ButtonPrimary onClick={onSelectList}>Choose a list</ButtonPrimary>
+          <ButtonPrimary onClick={onSelectList} id="list-introduction-choose-a-list">
+            Choose a list
+          </ButtonPrimary>
           <OutlineCard style={{ marginBottom: '8px', padding: '1rem' }}>
             <Text fontWeight={400} fontSize={14} style={{ textAlign: 'center' }}>
               Token lists are an{' '}

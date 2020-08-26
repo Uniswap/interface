@@ -2564,10 +2564,10 @@
     semver "^7.3.2"
     tsutils "^3.17.1"
 
-"@uniswap/default-token-list@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/default-token-list/-/default-token-list-1.3.0.tgz#fd40e14165b31ff098b031b58ce8ca5ab81b3247"
-  integrity sha512-EsHVHVn7UgtxrhiM6tcBCXic56dTpl1WiKcIZhFyTFkA0vja7iZIJ3FYiYxT56g4hT0B9Lm7ZdBaPvEY3d1/eQ==
+"@uniswap/default-token-list@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/default-token-list/-/default-token-list-1.3.1.tgz#e856aa8e7d4112fcb39229df3023af0da1727699"
+  integrity sha512-nLBSzWGxVlbKby6xtf3ph56NltMyHCk8ohFD97Wub7K0I66YyHKuhyV7NZq05unB8TEWWpYDcdghmgztSv6H8Q==
 
 "@uniswap/lib@1.1.1":
   version "1.1.1"

@@ -81,6 +81,10 @@ function ListOrigin({ listUrl }: { listUrl: string }) {
   return <>{ensName ?? host}</>
 }
 
+function listUrlRowHTMLId(listUrl: string) {
+  return `list-row-${listUrl.replace(/\./g, '-')}`
+}
+
 const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; onBack: () => void }) {
   const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   const selectedListUrl = useSelectedListUrl()
@@ -143,7 +147,7 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
   if (!list) return null
 
   return (
-    <Row key={listUrl} align="center" padding="16px">
+    <Row key={listUrl} align="center" padding="16px" id={listUrlRowHTMLId(listUrl)}>
       {list.logoURI ? (
         <ListLogo style={{ marginRight: '1rem' }} logoURI={list.logoURI} alt={`${list.name} list logo`} />
       ) : (
