@@ -3,7 +3,6 @@ import { createReducer } from '@reduxjs/toolkit'
 import {
   addSerializedPair,
   addSerializedToken,
-  dismissTokenWarning,
   removeSerializedPair,
   removeSerializedToken,
   SerializedPair,
@@ -39,13 +38,6 @@ export interface UserState {
     }
   }
 
-  // the token warnings that the user has dismissed
-  dismissedTokenWarnings?: {
-    [chainId: number]: {
-      [tokenAddress: string]: true
-    }
-  }
-
   pairs: {
     [chainId: number]: {
       // keyed by token0Address:token1Address
@@ -75,11 +67,13 @@ export default createReducer(initialState, builder =>
   builder
     .addCase(updateVersion, state => {
       // slippage isnt being tracked in local storage, reset to default
+      // noinspection SuspiciousTypeOfGuard
       if (typeof state.userSlippageTolerance !== 'number') {
         state.userSlippageTolerance = INITIAL_ALLOWED_SLIPPAGE
       }
 
       // deadline isnt being tracked in local storage, reset to default
+      // noinspection SuspiciousTypeOfGuard
       if (typeof state.userDeadline !== 'number') {
         state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
       }
@@ -115,11 +109,6 @@ export default createReducer(initialState, builder =>
       state.tokens[chainId] = state.tokens[chainId] || {}
       delete state.tokens[chainId][address]
       state.timestamp = currentTimestamp()
-    })
-    .addCase(dismissTokenWarning, (state, { payload: { chainId, tokenAddress } }) => {
-      state.dismissedTokenWarnings = state.dismissedTokenWarnings ?? {}
-      state.dismissedTokenWarnings[chainId] = state.dismissedTokenWarnings[chainId] ?? {}
-      state.dismissedTokenWarnings[chainId][tokenAddress] = true
     })
     .addCase(addSerializedPair, (state, { payload: { serializedPair } }) => {
       if (
