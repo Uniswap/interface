@@ -364,9 +364,9 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
       </ListContainer>
       <Separator />
 
-      <ExternalLink style={{ margin: '16px', textAlign: 'center' }} href="https://tokenlists.org">
-        Browse lists
-      </ExternalLink>
+      <div style={{ padding: '16px', textAlign: 'center' }}>
+        <ExternalLink href="https://tokenlists.org">Browse lists</ExternalLink>
+      </div>
     </Column>
   )
 }
