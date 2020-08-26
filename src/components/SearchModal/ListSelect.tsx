@@ -71,6 +71,10 @@ function ListOrigin({ listUrl }: { listUrl: string }) {
   const ensName = useMemo(() => parseENSAddress(listUrl)?.ensName, [listUrl])
   const host = useMemo(() => {
     if (ensName) return undefined
+    const lowerListUrl = listUrl.toLowerCase()
+    if (lowerListUrl.startsWith('ipfs://') || lowerListUrl.startsWith('ipns://')) {
+      return listUrl
+    }
     try {
       const url = new URL(listUrl)
       return url.host
