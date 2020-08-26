@@ -197,10 +197,14 @@ export function CurrencySearch({
                   alt={`${selectedListInfo.current.name} list logo`}
                 />
               ) : null}
-              <TYPE.main>{selectedListInfo.current.name}</TYPE.main>
+              <TYPE.main id="currency-search-selected-list-name">{selectedListInfo.current.name}</TYPE.main>
             </Row>
           ) : null}
-          <LinkStyledButton style={{ fontWeight: 500, color: theme.text2, fontSize: 16 }} onClick={onChangeList}>
+          <LinkStyledButton
+            style={{ fontWeight: 500, color: theme.text2, fontSize: 16 }}
+            onClick={onChangeList}
+            id="currency-search-change-list-button"
+          >
             {selectedListInfo.current ? 'Change' : 'Select a list'}
           </LinkStyledButton>
         </RowBetween>
