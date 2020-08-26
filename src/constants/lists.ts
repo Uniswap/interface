@@ -12,6 +12,9 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   'stablecoin.cmc.eth',
   'tokenlist.zerion.eth',
   'https://www.coingecko.com/tokens_list/uniswap/defi_100/v_0_0_0.json',
+  'https://app.tryroll.com/tokens.json',
+  'https://raw.githubusercontent.com/compound-finance/token-list/master/compound.tokenlist.json',
+  'ipfs://QmVNCFc3y1DMt8n4K42d8BYubUhQ7FgcNxzEHxSEHszUhL', // aave token list
   'https://defiprime.com/defiprime.tokenlist.json',
   'https://umaproject.org/uma.tokenlist.json'
 ]
