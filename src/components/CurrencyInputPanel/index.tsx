@@ -126,7 +126,6 @@ interface CurrencyInputPanelProps {
   hideBalance?: boolean
   pair?: Pair | null
   hideInput?: boolean
-  showSendWithSwap?: boolean
   otherCurrency?: Currency | null
   id: string
   showCommonBases?: boolean
@@ -144,7 +143,6 @@ export default function CurrencyInputPanel({
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
-  showSendWithSwap = false,
   otherCurrency = null,
   id,
   showCommonBases
@@ -238,8 +236,7 @@ export default function CurrencyInputPanel({
           isOpen={modalOpen}
           onDismiss={handleDismissSearch}
           onCurrencySelect={onCurrencySelect}
-          showSendWithSwap={showSendWithSwap}
-          hiddenCurrency={currency}
+          selectedCurrency={currency}
           otherSelectedCurrency={otherCurrency}
           showCommonBases={showCommonBases}
         />

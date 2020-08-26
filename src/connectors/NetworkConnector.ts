@@ -152,6 +152,10 @@ export class NetworkConnector extends AbstractConnector {
     }, {})
   }
 
+  public get provider(): MiniRpcProvider {
+    return this.providers[this.currentChainId]
+  }
+
   public async activate(): Promise<ConnectorUpdate> {
     return { provider: this.providers[this.currentChainId], chainId: this.currentChainId, account: null }
   }

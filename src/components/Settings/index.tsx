@@ -1,14 +1,14 @@
-import React, { useRef, useEffect, useContext, useState } from 'react'
+import React, { useRef, useContext, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import styled from 'styled-components'
-
+import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import {
   useUserSlippageTolerance,
   useExpertModeManager,
   useUserDeadline,
   useDarkModeManager
 } from '../../state/user/hooks'
-import SlippageTabs from '../SlippageTabs'
+import TransactionSettings from '../TransactionSettings'
 import { RowFixed, RowBetween } from '../Row'
 import { TYPE } from '../../theme'
 import QuestionHelper from '../QuestionHelper'
@@ -138,24 +138,7 @@ export default function SettingsTab() {
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
 
-  useEffect(() => {
-    const handleClickOutside = e => {
-      if (node.current?.contains(e.target) ?? false) {
-        return
-      }
-      toggle()
-    }
-
-    if (open) {
-      document.addEventListener('mousedown', handleClickOutside)
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [open, toggle])
+  useOnClickOutside(node, open ? toggle : undefined)
 
   return (
     <StyledMenu ref={node}>
@@ -212,7 +195,7 @@ export default function SettingsTab() {
             <Text fontWeight={600} fontSize={14}>
               Transaction Settings
             </Text>
-            <SlippageTabs
+            <TransactionSettings
               rawSlippage={userSlippageTolerance}
               setRawSlippage={setUserslippageTolerance}
               deadline={deadline}
