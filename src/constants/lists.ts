@@ -10,6 +10,7 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   'defi.cmc.eth',
   'erc20.cmc.eth',
   'stablecoin.cmc.eth',
+  'tokenlist.zerion.eth',
   'https://defiprime.com/defiprime.tokenlist.json',
   'https://umaproject.org/uma.tokenlist.json'
 ]
