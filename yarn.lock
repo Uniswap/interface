@@ -2587,10 +2587,10 @@
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
 
-"@uniswap/token-lists@^1.0.0-beta.14":
-  version "1.0.0-beta.14"
-  resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.14.tgz#599ae9eb04121736fd2e309a31227b0343d77511"
-  integrity sha512-9+qzJqlQ6U4CE4RrMl1Gkh+ISWfnY/5bO7zFi+UGiJ2IEcZUYJm3bE2AcUc5g6WNAm7CL0uf1FU+fz3JlamOIg==
+"@uniswap/token-lists@^1.0.0-beta.15":
+  version "1.0.0-beta.15"
+  resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.15.tgz#93d2e9b2b2d2cfb0ce7fb4d30fffb685efde4256"
+  integrity sha512-cxubml6fPCjPPr8tWnA3IQkYbTocsZTJWac2C5WRXoHiSd7O4xjuBISdGLT9dW7IojKYpMXnCPJS8kAwqqYXDQ==
 
 "@uniswap/v2-core@1.0.0":
   version "1.0.0"
