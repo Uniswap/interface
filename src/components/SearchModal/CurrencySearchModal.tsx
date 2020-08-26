@@ -56,16 +56,19 @@ export default function CurrencySearchModal({
     })
     setListView(false)
   }, [])
+  const handleSelectListIntroduction = useCallback(() => {
+    setListView(true)
+  }, [])
 
   const selectedListUrl = useSelectedListUrl()
   const noListSelected = !selectedListUrl
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={70} minHeight={noListSelected || listView ? 40 : 70}>
-      {noListSelected ? (
-        <ListIntroduction />
-      ) : listView ? (
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90} minHeight={listView ? 40 : noListSelected ? 0 : 80}>
+      {listView ? (
         <ListSelect onDismiss={onDismiss} onBack={handleClickBack} />
+      ) : noListSelected ? (
+        <ListIntroduction onSelectList={handleSelectListIntroduction} />
       ) : (
         <CurrencySearch
           isOpen={isOpen}
