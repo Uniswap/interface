@@ -118,12 +118,12 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
     deadlineError = DeadlineError.InvalidInput
   }
 
-  function parseCustomSlippage(event) {
-    setSlippageInput(event.target.value)
+  function parseCustomSlippage(value: string) {
+    setSlippageInput(value)
 
     let valueAsIntFromRoundedFloat: number
     try {
-      valueAsIntFromRoundedFloat = Number.parseInt((Number.parseFloat(event.target.value) * 100).toString())
+      valueAsIntFromRoundedFloat = Number.parseInt((Number.parseFloat(value) * 100).toString())
     } catch {}
 
     if (
@@ -135,12 +135,12 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
     }
   }
 
-  function parseCustomDeadline(event) {
-    setDeadlineInput(event.target.value)
+  function parseCustomDeadline(value: string) {
+    setDeadlineInput(value)
 
     let valueAsInt: number
     try {
-      valueAsInt = Number.parseInt(event.target.value) * 60
+      valueAsInt = Number.parseInt(value) * 60
     } catch {}
 
     if (typeof valueAsInt === 'number' && !Number.isNaN(valueAsInt) && valueAsInt > 0) {
@@ -200,9 +200,9 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
                 placeholder={(rawSlippage / 100).toFixed(2)}
                 value={slippageInput}
                 onBlur={() => {
-                  parseCustomSlippage({ target: { value: (rawSlippage / 100).toFixed(2) } })
+                  parseCustomSlippage((rawSlippage / 100).toFixed(2))
                 }}
-                onChange={parseCustomSlippage}
+                onChange={e => parseCustomSlippage(e.target.value)}
                 color={!slippageInputIsValid ? 'red' : ''}
               />
               %
@@ -238,11 +238,11 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
             <Input
               color={!!deadlineError ? 'red' : undefined}
               onBlur={() => {
-                parseCustomDeadline({ target: { value: (deadline / 60).toString() } })
+                parseCustomDeadline((deadline / 60).toString())
               }}
               placeholder={(deadline / 60).toString()}
               value={deadlineInput}
-              onChange={parseCustomDeadline}
+              onChange={e => parseCustomDeadline(e.target.value)}
             />
           </OptionCustom>
           <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>

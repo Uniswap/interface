@@ -200,7 +200,7 @@ const MainWalletAction = styled(WalletAction)`
   color: ${({ theme }) => theme.primary1};
 `
 
-function renderTransactions(transactions) {
+function renderTransactions(transactions: string[]) {
   return (
     <TransactionListWrapper>
       {transactions.map((hash, i) => {
@@ -212,8 +212,8 @@ function renderTransactions(transactions) {
 
 interface AccountDetailsProps {
   toggleWalletModal: () => void
-  pendingTransactions: any[]
-  confirmedTransactions: any[]
+  pendingTransactions: string[]
+  confirmedTransactions: string[]
   ENSName?: string
   openOptions: () => void
 }

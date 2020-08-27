@@ -83,7 +83,7 @@ function V1PairRemoval({
         })
         setPendingRemovalHash(response.hash)
       })
-      .catch(error => {
+      .catch((error: Error) => {
         console.error(error)
         setConfirmingRemoval(false)
       })
