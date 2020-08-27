@@ -17,6 +17,7 @@ import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected, fortmatic, portis } from '../../connectors'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
+import { AbstractConnector } from '@web3-react/abstract-connector'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -128,7 +129,7 @@ export default function WalletModal({
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
-  const [pendingWallet, setPendingWallet] = useState()
+  const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
 
   const [pendingError, setPendingError] = useState<boolean>()
 
@@ -161,7 +162,7 @@ export default function WalletModal({
     }
   }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
 
-  const tryActivation = async connector => {
+  const tryActivation = async (connector: AbstractConnector | undefined) => {
     let name = ''
     Object.keys(SUPPORTED_WALLETS).map(key => {
       if (connector === SUPPORTED_WALLETS[key].connector) {

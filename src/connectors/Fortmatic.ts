@@ -16,6 +16,7 @@ export class FortmaticConnector extends FortmaticConnectorCore {
   async activate() {
     if (!this.fortmatic) {
       const { default: Fortmatic } = await import('fortmatic')
+
       const { apiKey, chainId } = this as any
       if (chainId in CHAIN_ID_NETWORK_ARGUMENT) {
         this.fortmatic = new Fortmatic(apiKey, CHAIN_ID_NETWORK_ARGUMENT[chainId as FormaticSupportedChains])
