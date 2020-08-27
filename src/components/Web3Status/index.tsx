@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react'
+import { AbstractConnector } from '@web3-react/abstract-connector'
 import styled, { css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
@@ -132,9 +133,91 @@ const SOCK = (
   </span>
 )
 
-export default function Web3Status() {
+// eslint-disable-next-line react/prop-types
+function StatusIcon({ connector }: { connector: AbstractConnector }) {
+  if (connector === injected) {
+    return <Identicon />
+  } else if (connector === walletconnect) {
+    return (
+      <IconWrapper size={16}>
+        <img src={WalletConnectIcon} alt={''} />
+      </IconWrapper>
+    )
+  } else if (connector === walletlink) {
+    return (
+      <IconWrapper size={16}>
+        <img src={CoinbaseWalletIcon} alt={''} />
+      </IconWrapper>
+    )
+  } else if (connector === fortmatic) {
+    return (
+      <IconWrapper size={16}>
+        <img src={FortmaticIcon} alt={''} />
+      </IconWrapper>
+    )
+  } else if (connector === portis) {
+    return (
+      <IconWrapper size={16}>
+        <img src={PortisIcon} alt={''} />
+      </IconWrapper>
+    )
+  }
+  return null
+}
+
+function Web3StatusInner() {
   const { t } = useTranslation()
-  const { active, account, connector, error } = useWeb3React()
+  const { account, connector, error } = useWeb3React()
+
+  const { ENSName } = useENSName(account)
+
+  const allTransactions = useAllTransactions()
+
+  const sortedRecentTransactions = useMemo(() => {
+    const txs = Object.values(allTransactions)
+    return txs.filter(recentTransactionsOnly).sort(newTranscationsFirst)
+  }, [allTransactions])
+
+  const pending = sortedRecentTransactions.filter(tx => !tx.receipt).map(tx => tx.hash)
+
+  const hasPendingTransactions = !!pending.length
+  const hasSocks = useHasSocks()
+  const toggleWalletModal = useWalletModalToggle()
+
+  if (account) {
+    return (
+      <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
+        {hasPendingTransactions ? (
+          <RowBetween>
+            <Text>{pending?.length} Pending</Text> <Loader stroke="white" />
+          </RowBetween>
+        ) : (
+          <>
+            {hasSocks ? SOCK : null}
+            <Text>{ENSName || shortenAddress(account)}</Text>
+          </>
+        )}
+        {!hasPendingTransactions && <StatusIcon connector={connector} />}
+      </Web3StatusConnected>
+    )
+  } else if (error) {
+    return (
+      <Web3StatusError onClick={toggleWalletModal}>
+        <NetworkIcon />
+        <Text>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}</Text>
+      </Web3StatusError>
+    )
+  } else {
+    return (
+      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
+        <Text>{t('Connect to a wallet')}</Text>
+      </Web3StatusConnect>
+    )
+  }
+}
+
+export default function Web3Status() {
+  const { active, account } = useWeb3React()
   const contextNetwork = useWeb3React(NetworkContextName)
 
   const { ENSName } = useENSName(account)
@@ -149,81 +232,13 @@ export default function Web3Status() {
   const pending = sortedRecentTransactions.filter(tx => !tx.receipt).map(tx => tx.hash)
   const confirmed = sortedRecentTransactions.filter(tx => tx.receipt).map(tx => tx.hash)
 
-  const hasPendingTransactions = !!pending.length
-  const hasSocks = useHasSocks()
-  const toggleWalletModal = useWalletModalToggle()
-
-  // handle the logo we want to show with the account
-  function getStatusIcon() {
-    if (connector === injected) {
-      return <Identicon />
-    } else if (connector === walletconnect) {
-      return (
-        <IconWrapper size={16}>
-          <img src={WalletConnectIcon} alt={''} />
-        </IconWrapper>
-      )
-    } else if (connector === walletlink) {
-      return (
-        <IconWrapper size={16}>
-          <img src={CoinbaseWalletIcon} alt={''} />
-        </IconWrapper>
-      )
-    } else if (connector === fortmatic) {
-      return (
-        <IconWrapper size={16}>
-          <img src={FortmaticIcon} alt={''} />
-        </IconWrapper>
-      )
-    } else if (connector === portis) {
-      return (
-        <IconWrapper size={16}>
-          <img src={PortisIcon} alt={''} />
-        </IconWrapper>
-      )
-    }
-  }
-
-  function getWeb3Status() {
-    if (account) {
-      return (
-        <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
-          {hasPendingTransactions ? (
-            <RowBetween>
-              <Text>{pending?.length} Pending</Text> <Loader stroke="white" />
-            </RowBetween>
-          ) : (
-            <>
-              {hasSocks ? SOCK : null}
-              <Text>{ENSName || shortenAddress(account)}</Text>
-            </>
-          )}
-          {!hasPendingTransactions && getStatusIcon()}
-        </Web3StatusConnected>
-      )
-    } else if (error) {
-      return (
-        <Web3StatusError onClick={toggleWalletModal}>
-          <NetworkIcon />
-          <Text>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}</Text>
-        </Web3StatusError>
-      )
-    } else {
-      return (
-        <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-          <Text>{t('Connect to a wallet')}</Text>
-        </Web3StatusConnect>
-      )
-    }
-  }
-
   if (!contextNetwork.active && !active) {
     return null
   }
 
   return (
     <>
-      {getWeb3Status()}
+      <Web3StatusInner />
       <WalletModal ENSName={ENSName} pendingTransactions={pending} confirmedTransactions={confirmed} />
     </>
   )

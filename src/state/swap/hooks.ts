@@ -71,7 +71,7 @@ export function useSwapActionHandlers(): {
 // try to parse a user entered amount for a given token
 export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmount | undefined {
   if (!value || !currency) {
-    return
+    return undefined
   }
   try {
     const typedValueParsed = parseUnits(value, currency.decimals).toString()
@@ -85,7 +85,7 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
     console.debug(`Failed to parse input amount: "${value}"`, error)
   }
   // necessary for all paths to return a value
-  return
+  return undefined
 }
 
 const BAD_RECIPIENT_ADDRESSES: string[] = [

@@ -20,6 +20,6 @@ export default function useInterval(callback: () => void, delay: null | number, 
       const id = setInterval(tick, delay)
       return () => clearInterval(id)
     }
-    return
+    return undefined
   }, [delay, leading])
 }
