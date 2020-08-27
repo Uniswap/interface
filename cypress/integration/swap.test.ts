@@ -1,6 +1,5 @@
 describe('Swap', () => {
   beforeEach(() => {
-    cy.clearLocalStorage()
     cy.visit('/swap')
   })
   it('can enter an amount into input', () => {
@@ -59,6 +58,7 @@ describe('Swap', () => {
       cy.get('#toggle-expert-mode-button').click()
       cy.get('#confirm-expert-mode').click()
     })
+
     it('add a recipient is visible', () => {
       cy.get('#add-recipient-button').should('be.visible')
     })
