@@ -8,6 +8,7 @@ import { useSelectedTokenList, WrappedTokenInfo } from '../../state/lists/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
+import { useIsUserAddedToken } from '../../hooks/Tokens'
 import Column from '../Column'
 import { RowFixed } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
@@ -96,7 +97,7 @@ function CurrencyRow({
   const key = currencyKey(currency)
   const selectedTokenList = useSelectedTokenList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency)
-  const customAdded = Boolean(!isOnSelectedList && currency instanceof Token)
+  const customAdded = useIsUserAddedToken(currency)
   const balance = useCurrencyBalance(account ?? undefined, currency)
 
   const removeToken = useRemoveUserAddedToken()
@@ -116,7 +117,7 @@ function CurrencyRow({
           {currency.symbol}
         </Text>
         <FadedSpan>
-          {customAdded ? (
+          {!isOnSelectedList && customAdded ? (
             <TYPE.main fontWeight={500}>
               Added by user
               <LinkStyledButton
