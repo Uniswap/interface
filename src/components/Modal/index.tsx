@@ -86,7 +86,7 @@ export default function Modal({
   onDismiss,
   minHeight = false,
   maxHeight = 50,
-  initialFocusRef = null,
+  initialFocusRef,
   children
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, null, {

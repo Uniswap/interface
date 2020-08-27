@@ -11,9 +11,9 @@ import { ListSelect } from './ListSelect'
 interface CurrencySearchModalProps {
   isOpen: boolean
   onDismiss: () => void
-  selectedCurrency?: Currency
+  selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency) => void
-  otherSelectedCurrency?: Currency
+  otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
 }
 
