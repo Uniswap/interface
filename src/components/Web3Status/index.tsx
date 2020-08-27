@@ -1,29 +1,29 @@
-import React, { useMemo } from 'react'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import styled, { css } from 'styled-components'
-import { useTranslation } from 'react-i18next'
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { darken, lighten } from 'polished'
+import React, { useMemo } from 'react'
 import { Activity } from 'react-feather'
+import { useTranslation } from 'react-i18next'
+import styled, { css } from 'styled-components'
+import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
+import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
+import PortisIcon from '../../assets/images/portisIcon.png'
+import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
+import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
+import { NetworkContextName } from '../../constants'
 import useENSName from '../../hooks/useENSName'
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import { useWalletModalToggle } from '../../state/application/hooks'
+import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/reducer'
+import { shortenAddress } from '../../utils'
+import { ButtonSecondary } from '../Button'
 
 import Identicon from '../Identicon'
-import PortisIcon from '../../assets/images/portisIcon.png'
-import WalletModal from '../WalletModal'
-import { ButtonSecondary } from '../Button'
-import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
-import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
-import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
+import Loader from '../Loader'
 
 import { RowBetween } from '../Row'
-import { shortenAddress } from '../../utils'
-import { useAllTransactions } from '../../state/transactions/hooks'
-import { NetworkContextName } from '../../constants'
-import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
-import Loader from '../Loader'
+import WalletModal from '../WalletModal'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -119,12 +119,8 @@ const NetworkIcon = styled(Activity)`
 `
 
 // we want the latest one to come first, so return negative if a is after b
-function newTranscationsFirst(a: TransactionDetails, b: TransactionDetails) {
+function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
-}
-
-function recentTransactionsOnly(a: TransactionDetails) {
-  return new Date().getTime() - a.addedTime < 86_400_000
 }
 
 const SOCK = (
@@ -175,7 +171,7 @@ function Web3StatusInner() {
 
   const sortedRecentTransactions = useMemo(() => {
     const txs = Object.values(allTransactions)
-    return txs.filter(recentTransactionsOnly).sort(newTranscationsFirst)
+    return txs.filter(isTransactionRecent).sort(newTransactionsFirst)
   }, [allTransactions])
 
   const pending = sortedRecentTransactions.filter(tx => !tx.receipt).map(tx => tx.hash)
@@ -226,7 +222,7 @@ export default function Web3Status() {
 
   const sortedRecentTransactions = useMemo(() => {
     const txs = Object.values(allTransactions)
-    return txs.filter(recentTransactionsOnly).sort(newTranscationsFirst)
+    return txs.filter(isTransactionRecent).sort(newTransactionsFirst)
   }, [allTransactions])
 
   const pending = sortedRecentTransactions.filter(tx => !tx.receipt).map(tx => tx.hash)
