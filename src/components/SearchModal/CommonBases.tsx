@@ -31,7 +31,7 @@ export default function CommonBases({
   selectedCurrency
 }: {
   chainId?: ChainId
-  selectedCurrency?: Currency
+  selectedCurrency?: Currency | null
   onSelect: (currency: Currency) => void
 }) {
   return (

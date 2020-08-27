@@ -163,9 +163,9 @@ export default function CurrencyList({
 }: {
   height: number
   currencies: Currency[]
-  selectedCurrency: Currency | undefined
+  selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency) => void
-  otherCurrency: Currency | undefined
+  otherCurrency?: Currency | null
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
   showETH: boolean
 }) {

@@ -104,48 +104,44 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
     slippageInput === '' || (rawSlippage / 100).toFixed(2) === Number.parseFloat(slippageInput).toFixed(2)
   const deadlineInputIsValid = deadlineInput === '' || (deadline / 60).toString() === deadlineInput
 
-  let slippageError: SlippageError
+  let slippageError: SlippageError | undefined
   if (slippageInput !== '' && !slippageInputIsValid) {
     slippageError = SlippageError.InvalidInput
   } else if (slippageInputIsValid && rawSlippage < 50) {
     slippageError = SlippageError.RiskyLow
   } else if (slippageInputIsValid && rawSlippage > 500) {
     slippageError = SlippageError.RiskyHigh
+  } else {
+    slippageError = undefined
   }
 
-  let deadlineError: DeadlineError
+  let deadlineError: DeadlineError | undefined
   if (deadlineInput !== '' && !deadlineInputIsValid) {
     deadlineError = DeadlineError.InvalidInput
+  } else {
+    deadlineError = undefined
   }
 
-  function parseCustomSlippage(event) {
-    setSlippageInput(event.target.value)
+  function parseCustomSlippage(value: string) {
+    setSlippageInput(value)
 
-    let valueAsIntFromRoundedFloat: number
     try {
-      valueAsIntFromRoundedFloat = Number.parseInt((Number.parseFloat(event.target.value) * 100).toString())
+      const valueAsIntFromRoundedFloat = Number.parseInt((Number.parseFloat(value) * 100).toString())
+      if (!Number.isNaN(valueAsIntFromRoundedFloat) && valueAsIntFromRoundedFloat < 5000) {
+        setRawSlippage(valueAsIntFromRoundedFloat)
+      }
     } catch {}
-
-    if (
-      typeof valueAsIntFromRoundedFloat === 'number' &&
-      !Number.isNaN(valueAsIntFromRoundedFloat) &&
-      valueAsIntFromRoundedFloat < 5000
-    ) {
-      setRawSlippage(valueAsIntFromRoundedFloat)
-    }
   }
 
-  function parseCustomDeadline(event) {
-    setDeadlineInput(event.target.value)
+  function parseCustomDeadline(value: string) {
+    setDeadlineInput(value)
 
-    let valueAsInt: number
     try {
-      valueAsInt = Number.parseInt(event.target.value) * 60
+      const valueAsInt: number = Number.parseInt(value) * 60
+      if (!Number.isNaN(valueAsInt) && valueAsInt > 0) {
+        setDeadline(valueAsInt)
+      }
     } catch {}
-
-    if (typeof valueAsInt === 'number' && !Number.isNaN(valueAsInt) && valueAsInt > 0) {
-      setDeadline(valueAsInt)
-    }
   }
 
   return (
@@ -195,14 +191,15 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
                   </span>
                 </SlippageEmojiContainer>
               ) : null}
+              {/* https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451 */}
               <Input
-                ref={inputRef}
+                ref={inputRef as any}
                 placeholder={(rawSlippage / 100).toFixed(2)}
                 value={slippageInput}
                 onBlur={() => {
-                  parseCustomSlippage({ target: { value: (rawSlippage / 100).toFixed(2) } })
+                  parseCustomSlippage((rawSlippage / 100).toFixed(2))
                 }}
-                onChange={parseCustomSlippage}
+                onChange={e => parseCustomSlippage(e.target.value)}
                 color={!slippageInputIsValid ? 'red' : ''}
               />
               %
@@ -238,11 +235,11 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
             <Input
               color={!!deadlineError ? 'red' : undefined}
               onBlur={() => {
-                parseCustomDeadline({ target: { value: (deadline / 60).toString() } })
+                parseCustomDeadline((deadline / 60).toString())
               }}
               placeholder={(deadline / 60).toString()}
               value={deadlineInput}
-              onChange={parseCustomDeadline}
+              onChange={e => parseCustomDeadline(e.target.value)}
             />
           </OptionCustom>
           <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>
