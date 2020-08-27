@@ -4,10 +4,6 @@
     "strict": true,
     "noImplicitAny": true,
     "alwaysStrict": true,
-    "strictNullChecks": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noFallthroughCasesInSwitch": true
+    "strictNullChecks": true
   }
 }

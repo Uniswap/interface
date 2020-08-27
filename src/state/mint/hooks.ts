@@ -72,7 +72,7 @@ export function useDerivedMintInfo(
       if (otherTypedValue && currencies[dependentField]) {
         return tryParseAmount(otherTypedValue, currencies[dependentField])
       }
-      return
+      return undefined
     } else if (independentAmount) {
       // we wrap the currencies just to get the price in terms of the other token
       const wrappedIndependentAmount = wrappedCurrencyAmount(independentAmount, chainId)
@@ -85,9 +85,9 @@ export function useDerivedMintInfo(
             : pair.priceOf(tokenB).quote(wrappedIndependentAmount)
         return dependentCurrency === ETHER ? CurrencyAmount.ether(dependentTokenAmount.raw) : dependentTokenAmount
       }
-      return
+      return undefined
     } else {
-      return
+      return undefined
     }
   }, [noLiquidity, otherTypedValue, currencies, dependentField, independentAmount, currencyA, chainId, currencyB, pair])
   const parsedAmounts: { [field in Field]: CurrencyAmount | undefined } = {
@@ -95,18 +95,18 @@ export function useDerivedMintInfo(
     [Field.CURRENCY_B]: independentField === Field.CURRENCY_A ? dependentAmount : independentAmount
   }
 
-  const token0Price = pair?.token0Price
   const price = useMemo(() => {
     if (noLiquidity) {
       const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
       if (currencyAAmount && currencyBAmount) {
         return new Price(currencyAAmount.currency, currencyBAmount.currency, currencyAAmount.raw, currencyBAmount.raw)
       }
-      return
+      return undefined
     } else {
-      return token0Price
+      const wrappedCurrencyA = wrappedCurrency(currencyA, chainId)
+      return pair && wrappedCurrencyA ? pair.priceOf(wrappedCurrencyA) : undefined
     }
-  }, [noLiquidity, token0Price, parsedAmounts])
+  }, [chainId, currencyA, noLiquidity, pair, parsedAmounts])
 
   // liquidity minted
   const liquidityMinted = useMemo(() => {
@@ -118,7 +118,7 @@ export function useDerivedMintInfo(
     if (pair && totalSupply && tokenAmountA && tokenAmountB) {
       return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)
     } else {
-      return
+      return undefined
     }
   }, [parsedAmounts, chainId, pair, totalSupply])
 
@@ -126,7 +126,7 @@ export function useDerivedMintInfo(
     if (liquidityMinted && totalSupply) {
       return new Percent(liquidityMinted.raw, totalSupply.add(liquidityMinted).raw)
     } else {
-      return
+      return undefined
     }
   }, [liquidityMinted, totalSupply])
 

@@ -282,6 +282,7 @@ export default function AccountDetails({
         </>
       )
     }
+    return null
   }
 
   const clearAllTransactionsCallback = useCallback(
