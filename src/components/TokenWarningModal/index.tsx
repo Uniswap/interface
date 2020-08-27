@@ -53,7 +53,7 @@ function TokenWarningCard({ token }: TokenWarningCardProps) {
       if (userToken.equals(token)) {
         return false
       }
-      return userToken.symbol.toLowerCase() === tokenSymbol || userToken.name.toLowerCase() === tokenName
+      return userToken.symbol?.toLowerCase() === tokenSymbol || userToken.name?.toLowerCase() === tokenName
     })
   }, [token, chainId, allTokens, tokenSymbol, tokenName])
 
@@ -72,9 +72,11 @@ function TokenWarningCard({ token }: TokenWarningCardProps) {
               ? `${token.name} (${token.symbol})`
               : token.name || token.symbol}{' '}
           </TYPE.main>
-          <ExternalLink style={{ fontWeight: 400 }} href={getEtherscanLink(chainId, token.address, 'token')}>
-            <TYPE.blue title={token.address}>{shortenAddress(token.address)} (View on Etherscan)</TYPE.blue>
-          </ExternalLink>
+          {chainId && (
+            <ExternalLink style={{ fontWeight: 400 }} href={getEtherscanLink(chainId, token.address, 'token')}>
+              <TYPE.blue title={token.address}>{shortenAddress(token.address)} (View on Etherscan)</TYPE.blue>
+            </ExternalLink>
+          )}
         </AutoColumn>
       </AutoRow>
     </Wrapper>

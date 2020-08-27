@@ -81,7 +81,11 @@ export default function PopupItem({
     popupContent = <ListUpdatePopup popKey={popKey} listUrl={listUrl} oldList={oldList} newList={newList} auto={auto} />
   }
 
-  const faderStyle = useSpring({ from: { width: '100%' }, to: { width: '0%' }, config: { duration: removeAfterMs } })
+  const faderStyle = useSpring({
+    from: { width: '100%' },
+    to: { width: '0%' },
+    config: { duration: removeAfterMs ?? undefined }
+  })
 
   return (
     <Popup>
