@@ -29,7 +29,7 @@ export default function MigrateV1() {
   // automatically add the search token
   const token = useToken(tokenSearch)
   const selectedTokenListTokens = useSelectedTokenList()
-  const isOnSelectedList = isTokenOnList(selectedTokenListTokens, token)
+  const isOnSelectedList = isTokenOnList(selectedTokenListTokens, token ?? undefined)
   const allTokens = useAllTokens()
   const addToken = useAddUserToken()
   useEffect(() => {
@@ -41,27 +41,26 @@ export default function MigrateV1() {
   // get V1 LP balances
   const V1Exchanges = useAllTokenV1Exchanges()
   const V1LiquidityTokens: Token[] = useMemo(() => {
-    return Object.keys(V1Exchanges).map(
-      exchangeAddress => new Token(chainId, exchangeAddress, 18, 'UNI-V1', 'Uniswap V1')
-    )
+    return chainId
+      ? Object.keys(V1Exchanges).map(exchangeAddress => new Token(chainId, exchangeAddress, 18, 'UNI-V1', 'Uniswap V1'))
+      : []
   }, [chainId, V1Exchanges])
   const [V1LiquidityBalances, V1LiquidityBalancesLoading] = useTokenBalancesWithLoadingIndicator(
-    account,
+    account ?? undefined,
     V1LiquidityTokens
   )
   const allV1PairsWithLiquidity = V1LiquidityTokens.filter(V1LiquidityToken => {
-    return (
-      V1LiquidityBalances?.[V1LiquidityToken.address] &&
-      JSBI.greaterThan(V1LiquidityBalances[V1LiquidityToken.address].raw, JSBI.BigInt(0))
-    )
+    const balance = V1LiquidityBalances?.[V1LiquidityToken.address]
+    return balance && JSBI.greaterThan(balance.raw, JSBI.BigInt(0))
   }).map(V1LiquidityToken => {
-    return (
+    const balance = V1LiquidityBalances[V1LiquidityToken.address]
+    return balance ? (
       <V1PositionCard
         key={V1LiquidityToken.address}
         token={V1Exchanges[V1LiquidityToken.address]}
-        V1LiquidityBalance={V1LiquidityBalances[V1LiquidityToken.address]}
+        V1LiquidityBalance={balance}
       />
-    )
+    ) : null
   })
 
   // should never always be false, because a V1 exhchange exists for WETH on all testnets

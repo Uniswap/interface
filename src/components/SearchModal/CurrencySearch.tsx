@@ -26,9 +26,9 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 interface CurrencySearchProps {
   isOpen: boolean
   onDismiss: () => void
-  selectedCurrency?: Currency
+  selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency) => void
-  otherSelectedCurrency?: Currency
+  otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
   onChangeList: () => void
 }

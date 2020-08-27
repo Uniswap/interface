@@ -90,7 +90,7 @@ export function useTokenBalances(
 // get the balance for a single token/account combo
 export function useTokenBalance(account?: string, token?: Token): TokenAmount | undefined {
   const tokenBalances = useTokenBalances(account, [token])
-  if (!token) return
+  if (!token) return undefined
   return tokenBalances[token.address]
 }
 
@@ -109,10 +109,10 @@ export function useCurrencyBalances(
   return useMemo(
     () =>
       currencies?.map(currency => {
-        if (!account || !currency) return
+        if (!account || !currency) return undefined
         if (currency instanceof Token) return tokenBalances[currency.address]
         if (currency === ETHER) return ethBalance[account]
-        return
+        return undefined
       }) ?? [],
     [account, currencies, ethBalance, tokenBalances]
   )

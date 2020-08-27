@@ -55,7 +55,7 @@ export default function PopupItem({
   const removePopup = useRemovePopup()
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
   useEffect(() => {
-    if (removeAfterMs === null) return
+    if (removeAfterMs === null) return undefined
 
     const timeout = setTimeout(() => {
       removeThisPopup()
@@ -81,7 +81,11 @@ export default function PopupItem({
     popupContent = <ListUpdatePopup popKey={popKey} listUrl={listUrl} oldList={oldList} newList={newList} auto={auto} />
   }
 
-  const faderStyle = useSpring({ from: { width: '100%' }, to: { width: '0%' }, config: { duration: removeAfterMs } })
+  const faderStyle = useSpring({
+    from: { width: '100%' },
+    to: { width: '0%' },
+    config: { duration: removeAfterMs ?? undefined }
+  })
 
   return (
     <Popup>

@@ -40,11 +40,12 @@ export default function Transaction({ hash }: { hash: string }) {
   const { chainId } = useActiveWeb3React()
   const allTransactions = useAllTransactions()
 
-  const summary = allTransactions?.[hash]?.summary
-  const pending = !allTransactions?.[hash]?.receipt
-  const success =
-    !pending &&
-    (allTransactions[hash].receipt.status === 1 || typeof allTransactions[hash].receipt.status === 'undefined')
+  const tx = allTransactions?.[hash]
+  const summary = tx?.summary
+  const pending = !tx?.receipt
+  const success = !pending && tx && (tx.receipt?.status === 1 || typeof tx.receipt?.status === 'undefined')
+
+  if (!chainId) return null
 
   return (
     <TransactionWrapper>
