@@ -1,6 +1,5 @@
 describe('Swap', () => {
   beforeEach(() => {
-    cy.clearLocalStorage()
     cy.visit('/swap')
   })
 
@@ -13,8 +12,7 @@ describe('Swap', () => {
     cy.get('#list-introduction-choose-a-list').should('not.exist')
   })
 
-  // for some reason local storage is not being properly cleared
-  it.skip('change list', () => {
+  it('change list', () => {
     cy.get('#swap-currency-output .open-currency-select-button').click()
     cy.get('#list-introduction-choose-a-list').click()
     cy.get('#list-row-tokens-uniswap-eth .select-button').click()
