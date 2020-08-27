@@ -167,6 +167,8 @@ export function isTradeBetter(
   tradeB: Trade | undefined,
   minimumDelta: Percent = ZERO_PERCENT
 ): boolean | undefined {
+  if (tradeA && !tradeB) return false
+  if (tradeB && !tradeA) return true
   if (!tradeA || !tradeB) return undefined
 
   if (
