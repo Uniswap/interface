@@ -634,14 +634,7 @@ export default function RemoveLiquidity({
                 <RowBetween>
                   <div />
                   <div>
-                    1 {currencyB?.symbol} ={' '}
-                    {tokenB
-                      ? pair
-                          .priceOf(tokenB)
-                          .invert()
-                          .toSignificant(6)
-                      : '-'}{' '}
-                    {currencyA?.symbol}
+                    1 {currencyB?.symbol} = {tokenB ? pair.priceOf(tokenB).toSignificant(6) : '-'} {currencyA?.symbol}
                   </div>
                 </RowBetween>
               </div>
