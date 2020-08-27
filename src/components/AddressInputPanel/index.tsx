@@ -65,11 +65,6 @@ const Input = styled.input<{ error?: boolean }>`
   }
 `
 
-interface Value {
-  address: string
-  name?: string
-}
-
 export default function AddressInputPanel({
   id,
   value,

@@ -13,6 +13,10 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
+    "noUnusedLocals": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -29,8 +33,7 @@
     "cypress"
   ],
   "include": [
-    "**/*.js",
-    "**/*.ts",
-    "**/*.tsx"
+    "./src/**/*.ts",
+    "./src/**/*.tsx"
   ]
 }

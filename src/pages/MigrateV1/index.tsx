@@ -7,7 +7,7 @@ import { SearchInput } from '../../components/SearchModal/styleds'
 import { useAllTokenV1Exchanges } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
-import { useDefaultTokenList } from '../../state/lists/hooks'
+import { useSelectedTokenList } from '../../state/lists/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { BackArrow, TYPE } from '../../theme'
 import { LightCard } from '../../components/Card'
@@ -17,7 +17,7 @@ import V1PositionCard from '../../components/PositionCard/V1'
 import QuestionHelper from '../../components/QuestionHelper'
 import { Dots } from '../../components/swap/styleds'
 import { useAddUserToken } from '../../state/user/hooks'
-import { isDefaultToken } from '../../utils'
+import { isTokenOnList } from '../../utils'
 
 export default function MigrateV1() {
   const theme = useContext(ThemeContext)
@@ -28,15 +28,15 @@ export default function MigrateV1() {
 
   // automatically add the search token
   const token = useToken(tokenSearch)
-  const defaultTokens = useDefaultTokenList()
-  const isDefault = isDefaultToken(defaultTokens, token)
+  const selectedTokenListTokens = useSelectedTokenList()
+  const isOnSelectedList = isTokenOnList(selectedTokenListTokens, token)
   const allTokens = useAllTokens()
   const addToken = useAddUserToken()
   useEffect(() => {
-    if (token && !isDefault && !allTokens[token.address]) {
+    if (token && !isOnSelectedList && !allTokens[token.address]) {
       addToken(token)
     }
-  }, [token, isDefault, addToken, allTokens])
+  }, [token, isOnSelectedList, addToken, allTokens])
 
   // get V1 LP balances
   const V1Exchanges = useAllTokenV1Exchanges()

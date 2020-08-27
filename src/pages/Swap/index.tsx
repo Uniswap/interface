@@ -1,5 +1,5 @@
-import { CurrencyAmount, JSBI, Trade } from '@uniswap/sdk'
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import { CurrencyAmount, JSBI, Token, Trade } from '@uniswap/sdk'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
@@ -17,11 +17,12 @@ import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
-import { TokenWarningCards } from '../../components/TokenWarningCard'
+import TokenWarningModal from '../../components/TokenWarningModal'
 
 import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
+import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
@@ -35,12 +36,7 @@ import {
   useSwapActionHandlers,
   useSwapState
 } from '../../state/swap/hooks'
-import {
-  useExpertModeManager,
-  useTokenWarningDismissal,
-  useUserDeadline,
-  useUserSlippageTolerance
-} from '../../state/user/hooks'
+import { useExpertModeManager, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
@@ -48,9 +44,23 @@ import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 
 export default function Swap() {
-  useDefaultsFromURLSearch()
+  const loadedUrlParams = useDefaultsFromURLSearch()
 
-  const { account, chainId } = useActiveWeb3React()
+  // token warning stuff
+  const [loadedInputCurrency, loadedOutputCurrency] = [
+    useCurrency(loadedUrlParams?.inputCurrencyId),
+    useCurrency(loadedUrlParams?.outputCurrencyId)
+  ]
+  const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
+  const urlLoadedTokens: Token[] = useMemo(
+    () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
+    [loadedInputCurrency, loadedOutputCurrency]
+  )
+  const handleConfirmTokenWarning = useCallback(() => {
+    setDismissTokenWarning(true)
+  }, [])
+
+  const { account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
@@ -230,11 +240,6 @@ export default function Swap() {
       (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
     !(priceImpactSeverity > 3 && !isExpertMode)
 
-  const [dismissedToken0] = useTokenWarningDismissal(chainId, currencies[Field.INPUT])
-  const [dismissedToken1] = useTokenWarningDismissal(chainId, currencies[Field.OUTPUT])
-  const showWarning =
-    (!dismissedToken0 && !!currencies[Field.INPUT]) || (!dismissedToken1 && !!currencies[Field.OUTPUT])
-
   const handleConfirmDismiss = useCallback(() => {
     setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
     // if there was a tx hash, we want to clear the input
@@ -247,10 +252,30 @@ export default function Swap() {
     setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
+  const handleInputSelect = useCallback(
+    inputCurrency => {
+      setApprovalSubmitted(false) // reset 2 step UI for approvals
+      onCurrencySelection(Field.INPUT, inputCurrency)
+    },
+    [onCurrencySelection]
+  )
+
+  const handleMaxInput = useCallback(() => {
+    maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
+  }, [maxAmountInput, onUserInput])
+
+  const handleOutputSelect = useCallback(outputCurrency => onCurrencySelection(Field.OUTPUT, outputCurrency), [
+    onCurrencySelection
+  ])
+
   return (
     <>
-      {showWarning && <TokenWarningCards currencies={currencies} />}
-      <AppBody disabled={showWarning}>
+      <TokenWarningModal
+        isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
+        tokens={urlLoadedTokens}
+        onConfirm={handleConfirmTokenWarning}
+      />
+      <AppBody>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
           <ConfirmSwapModal
@@ -274,13 +299,8 @@ export default function Swap() {
               showMaxButton={!atMaxAmountInput}
               currency={currencies[Field.INPUT]}
               onUserInput={handleTypeInput}
-              onMax={() => {
-                maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
-              }}
-              onCurrencySelect={currency => {
-                setApprovalSubmitted(false) // reset 2 step UI for approvals
-                onCurrencySelection(Field.INPUT, currency)
-              }}
+              onMax={handleMaxInput}
+              onCurrencySelect={handleInputSelect}
               otherCurrency={currencies[Field.OUTPUT]}
               id="swap-currency-input"
             />
@@ -310,7 +330,7 @@ export default function Swap() {
               label={independentField === Field.INPUT && !showWrap ? 'To (estimated)' : 'To'}
               showMaxButton={false}
               currency={currencies[Field.OUTPUT]}
-              onCurrencySelect={address => onCurrencySelection(Field.OUTPUT, address)}
+              onCurrencySelect={handleOutputSelect}
               otherCurrency={currencies[Field.INPUT]}
               id="swap-currency-output"
             />
@@ -351,7 +371,7 @@ export default function Swap() {
                         Slippage Tolerance
                       </ClickableText>
                       <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                        {allowedSlippage ? allowedSlippage / 100 : '-'}%
+                        {allowedSlippage / 100}%
                       </ClickableText>
                     </RowBetween>
                   )}

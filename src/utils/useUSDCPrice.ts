@@ -27,7 +27,7 @@ export default function useUSDCPrice(currency?: Currency): Price | undefined {
 
   return useMemo(() => {
     if (!currency || !wrapped || !chainId) {
-      return
+      return undefined
     }
     // handle weth/eth
     if (wrapped.equals(WETH[chainId])) {
@@ -61,6 +61,6 @@ export default function useUSDCPrice(currency?: Currency): Price | undefined {
         return new Price(currency, USDC, usdcPrice.denominator, usdcPrice.numerator)
       }
     }
-    return
+    return undefined
   }, [chainId, currency, ethPair, ethPairState, usdcEthPair, usdcEthPairState, usdcPair, usdcPairState, wrapped])
 }
