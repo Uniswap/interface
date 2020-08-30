@@ -1,4 +1,4 @@
-import { ChainId, Token } from '@uniswap/sdk'
+import { ChainId, Token } from '@crisog/uniswap-xdai-sdk'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
@@ -35,7 +35,8 @@ const EMPTY_LIST: TokenAddressMap = {
   [ChainId.RINKEBY]: {},
   [ChainId.ROPSTEN]: {},
   [ChainId.GÖRLI]: {},
-  [ChainId.MAINNET]: {}
+  [ChainId.MAINNET]: {},
+  [ChainId.XDAI]: {}
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =

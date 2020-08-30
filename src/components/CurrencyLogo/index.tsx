@@ -1,4 +1,4 @@
-import { Currency, ETHER, Token } from '@uniswap/sdk'
+import { Currency, ETHER, Token } from '@crisog/uniswap-xdai-sdk'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 

@@ -1,4 +1,4 @@
-import { Currency, Pair } from '@uniswap/sdk'
+import { Currency, Pair } from '@crisog/uniswap-xdai-sdk'
 import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { darken } from 'polished'
