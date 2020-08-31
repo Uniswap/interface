@@ -1,4 +1,5 @@
-import { AbstractConnector } from '@web3-react/abstract-connector'
+//import { AbstractConnector } from '@web3-react/abstract-connector'
+import { AbstractWallet } from '../../wallets/AbstractWallet';
 import React from 'react'
 import styled from 'styled-components'
 import Option from './Option'
@@ -69,10 +70,10 @@ export default function PendingView({
   setPendingError,
   tryActivation
 }: {
-  connector?: AbstractConnector
+  connector?: AbstractWallet
   error?: boolean
   setPendingError: (error: boolean) => void
-  tryActivation: (connector: AbstractConnector) => void
+  tryActivation: (connector: AbstractWallet) => void
 }) {
   const isMetamask = window?.ethereum?.isMetaMask
 

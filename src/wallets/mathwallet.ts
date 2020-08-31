@@ -1,30 +1,15 @@
-import { action, observable } from 'mobx';
+import { AbstractWallet } from './AbstractWallet';
 const { Harmony } = require('@harmony-js/core');
 const defaults = {};
 
-export class MathWallet {
-  network: string;
-  client: typeof Harmony;
-  @observable public isAuthorized: boolean;
-  redirectUrl!: string;
-
+export class MathWallet extends AbstractWallet {
   private mathwallet: any;
-  @observable public isMathWallet = false;
-
-  @observable public sessionType: 'mathwallet' | 'ledger' | 'wallet' | null;
-  @observable public address: string | null;
-  @observable public base16Address: string | null;
-  @observable public balance: string = '0';
+  public isMathWallet = false;
 
   constructor(network: string, client: typeof Harmony) {
-    this.network = network;
-    this.client = client;
+    super(network, client);
 
-    this.isAuthorized = false;
     this.isMathWallet = false;
-    this.sessionType = null;
-    this.address = null;
-    this.base16Address = null;
 
     setTimeout(async () => {
       this.initWallet();
@@ -47,7 +32,7 @@ export class MathWallet {
     }
   }
 
-  @action public signIn() {
+  public signIn() {
     if (!this.mathwallet) {
       this.initWallet();
     }
@@ -64,7 +49,7 @@ export class MathWallet {
     });
   }
 
-  @action public signOut() {
+  public signOut() {
     if (this.sessionType === 'mathwallet' && this.isMathWallet) {
       return this.mathwallet
         .forgetIdentity()
@@ -73,7 +58,6 @@ export class MathWallet {
           this.address = null;
           this.base16Address = null;
           this.isAuthorized = false;
-          this.balance = '0';
 
           this.syncLocalStorage();
 
@@ -106,7 +90,7 @@ export class MathWallet {
     this.base16Address = this.client.crypto.fromBech32(this.address);
   }
 
-  @action public signTransaction(txn: any) {
+  public signTransaction(txn: any) {
     if (this.sessionType === 'mathwallet' && this.isMathWallet) {
       return this.mathwallet.signTransaction(txn);
     }
@@ -118,11 +102,11 @@ export class MathWallet {
     }
   }
 
-  @action public reset() {
+  public reset() {
     Object.assign(this, defaults);
   }
 
-  @action public attachToContract(contract: any): any {
+  public attachToContract(contract: any): any {
     contract.wallet.createAccount();
 
     if (contract.wallet.defaultSigner === "") {
@@ -139,10 +123,10 @@ export class MathWallet {
         return signTx;
       } catch (err) {
 
-        if (err.type == "locked") {
+        if (err.type === "locked") {
           alert("Your MathWallet is locked! Please unlock it and try again!");
           return Promise.reject();
-        } else if (err.type == "networkError") {
+        } else if (err.type === "networkError") {
           // This happens when there's local storage data available after a browser shutdown
           // Despite local storage data being available, when txs are signed a sign in still need to have happened
           // Force sign in, then reinit wallet

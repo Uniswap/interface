@@ -1,33 +1,16 @@
-import { action, observable } from 'mobx';
+import { AbstractWallet } from './AbstractWallet';
 const {HarmonyExtension} = require('@harmony-js/core');
 const { Harmony } = require('@harmony-js/core');
 const defaults = {};
 
-export class OneWallet {
-  network: string;
-  client: typeof Harmony;
-  @observable public isAuthorized: boolean;
-  redirectUrl!: string;
-
+export class OneWallet extends AbstractWallet {
   private onewallet: any;
-  @observable public isOneWallet = false;
-
-  @observable public extension: any;
-
-  @observable public sessionType: 'onewallet' | 'ledger' | 'wallet' | null;
-  @observable public address: string | null;
-  @observable public base16Address: string | null;
-  @observable public balance: string = '0';
+  public isOneWallet = false;
 
   constructor(network: string, client: typeof Harmony) {
-    this.network = network;
-    this.client = client;
+    super(network, client);
 
-    this.isAuthorized = false;
     this.isOneWallet = false;
-    this.sessionType = null;
-    this.address = null;
-    this.base16Address = null;
 
     setTimeout(async () => {
       this.initWallet();
@@ -50,7 +33,7 @@ export class OneWallet {
     }
   }
 
-  @action public signIn() {
+  public signIn() {
     if (!this.onewallet) {
       this.initWallet();
     }
@@ -67,7 +50,7 @@ export class OneWallet {
     });
   }
 
-  @action public signOut() {
+  public signOut() {
     if (this.sessionType === 'onewallet' && this.isOneWallet) {
       return this.onewallet
         .forgetIdentity()
@@ -76,7 +59,6 @@ export class OneWallet {
           this.address = null;
           this.base16Address = null;
           this.isAuthorized = false;
-          this.balance = '0';
 
           this.syncLocalStorage();
 
@@ -120,7 +102,7 @@ export class OneWallet {
     this.base16Address = this.client.crypto.fromBech32(this.address);
   }
 
-  @action public signTransaction(txn: any) {
+  public signTransaction(txn: any) {
     if (this.sessionType === 'onewallet' && this.isOneWallet) {
       return this.onewallet.signTransaction(txn);
     }
@@ -132,11 +114,11 @@ export class OneWallet {
     }
   }
 
-  @action public reset() {
+  public reset() {
     Object.assign(this, defaults);
   }
 
-  @action public attachToContract(contract: any): any {
+  public attachToContract(contract: any): any {
     contract.wallet.createAccount();
 
     if (contract.wallet.defaultSigner === "") {
@@ -153,10 +135,10 @@ export class OneWallet {
         return signTx;
       } catch (err) {
 
-        if (err.type == "locked") {
+        if (err.type === "locked") {
           alert("Your OneWallet is locked! Please unlock it and try again!");
           return Promise.reject();
-        } else if (err.type == "networkError") {
+        } else if (err.type === "networkError") {
           // This happens when there's local storage data available after a browser shutdown
           // Despite local storage data being available, when txs are signed a sign in still need to have happened
           // Force sign in, then reinit wallet

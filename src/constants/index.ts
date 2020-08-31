@@ -1,7 +1,7 @@
 import { ChainId, JSBI, Percent, Token, WETH } from '@uniswap/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
+import { injected, oneWallet, mathWallet } from '../connectors'
 
 export const ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 
@@ -76,7 +76,35 @@ export interface WalletInfo {
   mobileOnly?: true
 }
 
-export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
+export const SUPPORTED_WALLETS: { [key: string]: any } = {
+  INJECTED: {
+    connector: injected,
+    name: 'Injected',
+    iconName: 'arrow-right.svg',
+    description: 'Injected web3 provider.',
+    href: null,
+    color: '#010101',
+    primary: true
+  },
+  ONEWALLET: {
+    connector: oneWallet,
+    name: 'OneWallet',
+    iconName: 'harmony.png',
+    description: 'Easy-to-use browser extension.',
+    href: null,
+    color: '#E8831D'
+  },
+  MATHWALLET: {
+    connector: mathWallet,
+    name: 'MathWallet',
+    iconName: 'mathwallet.png',
+    description: 'Easy-to-use browser extension.',
+    href: null,
+    color: '#E8831D'
+  },
+}
+
+/*export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   INJECTED: {
     connector: injected,
     name: 'Injected',
@@ -138,7 +166,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#4A6C9B',
     mobile: true
   }
-}
+}*/
 
 export const NetworkContextName = 'NETWORK'
 

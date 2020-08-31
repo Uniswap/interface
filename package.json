@@ -107,6 +107,7 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@harmony-js/core": "^0.1.53",
     "mobx": "^5.15.6"
   }
 }
