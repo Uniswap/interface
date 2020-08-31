@@ -10,8 +10,10 @@ import { useActiveWeb3React } from './index'
 
 export function generateAllRoutePairs(tokenA?: Token, tokenB?: Token, chainId?: ChainId): [Token, Token][] {
   const bases: Token[] = chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []
-  const customBasesA = CUSTOM_BASES[chainId]?.[tokenA?.address] ?? []
-  const customBasesB = CUSTOM_BASES[chainId]?.[tokenB?.address] ?? []
+  const customBases = chainId !== undefined ? CUSTOM_BASES[chainId] : undefined
+  const customBasesA = customBases && tokenA ? customBases[tokenA.address] ?? [] : []
+  const customBasesB = customBases && tokenB ? customBases[tokenB.address] ?? [] : []
+
   const allBases = [...bases, ...customBasesA, ...customBasesB].filter(
     (base, i, allBases) => allBases.findIndex(allBases => allBases.equals(base)) === i
   )
@@ -24,9 +26,9 @@ export function generateAllRoutePairs(tokenA?: Token, tokenB?: Token, chainId?: 
     // the direct pair
     [tokenA, tokenB],
     // token A against all bases
-    ...allBases.map((base): [Token, Token] => [tokenA, base]),
+    ...allBases.map((base): [Token | undefined, Token] => [tokenA, base]),
     // token B against all bases
-    ...allBases.map((base): [Token, Token] => [tokenB, base]),
+    ...allBases.map((base): [Token | undefined, Token] => [tokenB, base]),
     // each base against all bases
     ...basePairs
   ]
