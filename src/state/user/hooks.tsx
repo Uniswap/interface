@@ -1,4 +1,5 @@
-import { ChainId, Pair, Token } from '@uniswap/sdk'
+import { ChainID } from '@harmony-js/utils';
+import { Pair, Token } from '@swoop-exchange/sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
@@ -138,7 +139,7 @@ export function useUserAddedTokens(): Token[] {
 
   return useMemo(() => {
     if (!chainId) return []
-    return Object.values(serializedTokensMap[chainId as ChainId] ?? {}).map(deserializeToken)
+    return Object.values(serializedTokensMap[chainId as ChainID] ?? {}).map(deserializeToken)
   }, [serializedTokensMap, chainId])
 }
 

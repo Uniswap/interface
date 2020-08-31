@@ -17,7 +17,8 @@ import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected, fortmatic, portis } from '../../connectors'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { AbstractConnector } from '@web3-react/abstract-connector'
+//import { AbstractConnector } from '@web3-react/abstract-connector'
+import { AbstractWallet } from '../../wallets/AbstractWallet';
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -125,11 +126,12 @@ export default function WalletModal({
   ENSName?: string
 }) {
   // important that these are destructed from the account-specific web3-react context
-  const { active, account, connector, activate, error } = useWeb3React()
+  const { active, account, connector, error } = useWeb3React()
+  //const { active, account, connector, activate, error } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
-  const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
+  const [pendingWallet, setPendingWallet] = useState<AbstractWallet | undefined>()
 
   const [pendingError, setPendingError] = useState<boolean>()
 
@@ -162,7 +164,7 @@ export default function WalletModal({
     }
   }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
 
-  const tryActivation = async (connector: AbstractConnector | undefined) => {
+  const tryActivation = async (connector: AbstractWallet | undefined) => {
     let name = ''
     Object.keys(SUPPORTED_WALLETS).map(key => {
       if (connector === SUPPORTED_WALLETS[key].connector) {
@@ -170,6 +172,7 @@ export default function WalletModal({
       }
       return true
     })
+
     // log selected wallet
     ReactGA.event({
       category: 'Wallet',
@@ -184,14 +187,24 @@ export default function WalletModal({
       connector.walletConnectProvider = undefined
     }
 
-    connector &&
+    connector && connector.signIn()
+    .then(() => {
+      setPendingError(false);
+      setWalletView(WALLET_VIEWS.ACCOUNT);
+      toggleWalletModal();
+    })
+    .catch(error => {
+      setPendingError(true)
+    });
+
+    /*connector &&
       activate(connector, undefined, true).catch(error => {
         if (error instanceof UnsupportedChainIdError) {
           activate(connector) // a little janky...can't use setError because the connector isn't set
         } else {
           setPendingError(true)
         }
-      })
+      })*/
   }
 
   // close wallet modal if fortmatic modal is active
@@ -350,8 +363,8 @@ export default function WalletModal({
           )}
           {walletView !== WALLET_VIEWS.PENDING && (
             <Blurb>
-              <span>New to Ethereum? &nbsp;</span>{' '}
-              <ExternalLink href="https://ethereum.org/wallets/">Learn more about wallets</ExternalLink>
+              <span>New to Harmony? &nbsp;</span>{' '}
+              <ExternalLink href="https://harmony.one/wallets/">Learn more about wallets</ExternalLink>
             </Blurb>
           )}
         </ContentWrapper>

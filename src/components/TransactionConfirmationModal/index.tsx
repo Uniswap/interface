@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk'
+import { ChainID } from '@harmony-js/utils';
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import Modal from '../Modal'
@@ -72,7 +72,7 @@ function TransactionSubmittedContent({
 }: {
   onDismiss: () => void
   hash: string | undefined
-  chainId: ChainId
+  chainId: ChainID
 }) {
   const theme = useContext(ThemeContext)
 
