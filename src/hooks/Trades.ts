@@ -16,26 +16,35 @@ export function generateAllRoutePairs(tokenA?: Token, tokenB?: Token, chainId?: 
     (base, i, allBases) => allBases.findIndex(allBases => allBases.equals(base)) === i
   )
 
+  const basePairs: [Token, Token][] = flatMap(allBases, (base): [Token, Token][] =>
+    allBases.map(otherBase => [base, otherBase])
+  ).filter(([t0, t1]) => t0.address !== t1.address)
+
   return [
     // the direct pair
     [tokenA, tokenB],
     // token A against all bases
-    ...allBases.map((base): [Token | undefined, Token | undefined] => [tokenA, base]),
+    ...allBases.map((base): [Token, Token] => [tokenA, base]),
     // token B against all bases
-    ...allBases.map((base): [Token | undefined, Token | undefined] => [tokenB, base]),
+    ...allBases.map((base): [Token, Token] => [tokenB, base]),
     // each base against all bases
-    ...flatMap(allBases, (base): [Token, Token][] => allBases.map(otherBase => [base, otherBase]))
+    ...basePairs
   ]
     .filter((tokens): tokens is [Token, Token] => Boolean(tokens[0] && tokens[1]))
+    .filter(([t0, t1]) => t0.address !== t1.address)
     .filter(([tokenA, tokenB]) => {
       if (!chainId) return true
       const restrictedBases = CUSTOM_BASES[chainId]
       if (!restrictedBases) return true
+
       const restrictedBasesA: Token[] | undefined = restrictedBases[tokenA.address]
       const restrictedBasesB: Token[] | undefined = restrictedBases[tokenB.address]
+
       if (!restrictedBasesA && !restrictedBasesB) return true
-      if (restrictedBasesA && restrictedBasesA.findIndex(base => tokenB.equals(base)) === -1) return false
-      if (restrictedBasesB && restrictedBasesB.findIndex(base => tokenA.equals(base)) === -1) return false
+
+      if (restrictedBasesA && restrictedBasesA.find(base => tokenB.equals(base))) return false
+      if (restrictedBasesB && restrictedBasesB.find(base => tokenA.equals(base))) return false
+
       return true
     })
 }
@@ -52,6 +61,7 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
     tokenB,
     chainId
   ])
+
   const allPairs = usePairs(allPairCombinations)
 
   // only pass along valid pairs, non-duplicated pairs
@@ -76,7 +86,6 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
  */
 export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?: Currency): Trade | null {
   const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut)
-
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
       return (

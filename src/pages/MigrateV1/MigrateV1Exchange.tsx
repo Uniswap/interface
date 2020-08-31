@@ -67,14 +67,14 @@ export function V1LiquidityInfo({
         <div style={{ marginLeft: '.75rem' }}>
           <TYPE.mediumHeader>
             {<FormattedPoolCurrencyAmount currencyAmount={liquidityTokenAmount} />}{' '}
-            {token.equals(WETH[chainId]) ? 'WETH' : token.symbol}/ETH
+            {chainId && token.equals(WETH[chainId]) ? 'WETH' : token.symbol}/ETH
           </TYPE.mediumHeader>
         </div>
       </AutoRow>
 
       <RowBetween my="1rem">
         <Text fontSize={16} fontWeight={500}>
-          Pooled {token.equals(WETH[chainId]) ? 'WETH' : token.symbol}:
+          Pooled {chainId && token.equals(WETH[chainId]) ? 'WETH' : token.symbol}:
         </Text>
         <RowFixed>
           <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
@@ -107,7 +107,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
   const [v2PairState, v2Pair] = usePair(chainId ? WETH[chainId] : undefined, token)
   const isFirstLiquidityProvider: boolean = v2PairState === PairState.NOT_EXISTS
 
-  const v2SpotPrice = v2Pair?.reserveOf(token)?.divide(v2Pair?.reserveOf(WETH[chainId]))
+  const v2SpotPrice = chainId && v2Pair ? v2Pair.reserveOf(token).divide(v2Pair.reserveOf(WETH[chainId])) : undefined
 
   const [confirmingMigration, setConfirmingMigration] = useState<boolean>(false)
   const [pendingMigrationHash, setPendingMigrationHash] = useState<string | null>(null)
@@ -158,11 +158,11 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
       : tokenWorth?.numerator
 
   const addTransaction = useTransactionAdder()
-  const isMigrationPending = useIsTransactionPending(pendingMigrationHash)
+  const isMigrationPending = useIsTransactionPending(pendingMigrationHash ?? undefined)
 
   const migrator = useV2MigratorContract()
   const migrate = useCallback(() => {
-    if (!minAmountToken || !minAmountETH) return
+    if (!minAmountToken || !minAmountETH || !migrator) return
 
     setConfirmingMigration(true)
     migrator
@@ -194,16 +194,18 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
 
   const largePriceDifference = !!priceDifferenceAbs && !priceDifferenceAbs.lessThan(JSBI.BigInt(5))
 
-  const isSuccessfullyMigrated = !!pendingMigrationHash && !!noLiquidityTokens
+  const isSuccessfullyMigrated = !!pendingMigrationHash && noLiquidityTokens
 
   return (
     <AutoColumn gap="20px">
       <TYPE.body my={9} style={{ fontWeight: 400 }}>
         This tool will safely migrate your V1 liquidity to V2 with minimal price risk. The process is completely
         trustless thanks to the{' '}
-        <ExternalLink href={getEtherscanLink(chainId, MIGRATOR_ADDRESS, 'address')}>
-          <TYPE.blue display="inline">Uniswap migration contract↗</TYPE.blue>
-        </ExternalLink>
+        {chainId && (
+          <ExternalLink href={getEtherscanLink(chainId, MIGRATOR_ADDRESS, 'address')}>
+            <TYPE.blue display="inline">Uniswap migration contract↗</TYPE.blue>
+          </ExternalLink>
+        )}
         .
       </TYPE.body>
 
@@ -242,7 +244,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
 
             <RowBetween>
               <TYPE.body color="inherit">Price Difference:</TYPE.body>
-              <TYPE.black color="inherit">{priceDifferenceAbs.toSignificant(4)}%</TYPE.black>
+              <TYPE.black color="inherit">{priceDifferenceAbs?.toSignificant(4)}%</TYPE.black>
             </RowBetween>
           </AutoColumn>
         </YellowCard>
@@ -336,12 +338,12 @@ export default function MigrateV1Exchange({
 
   const liquidityToken: Token | undefined = useMemo(
     () =>
-      validatedAddress && token
+      validatedAddress && chainId && token
         ? new Token(chainId, validatedAddress, 18, `UNI-V1-${token.symbol}`, 'Uniswap V1')
         : undefined,
     [chainId, validatedAddress, token]
   )
-  const userLiquidityBalance = useTokenBalance(account, liquidityToken)
+  const userLiquidityBalance = useTokenBalance(account ?? undefined, liquidityToken)
 
   // redirect for invalid url params
   if (!validatedAddress || tokenAddress === AddressZero) {
@@ -362,7 +364,7 @@ export default function MigrateV1Exchange({
 
         {!account ? (
           <TYPE.largeHeader>You must connect an account.</TYPE.largeHeader>
-        ) : validatedAddress && token?.equals(WETH[chainId]) ? (
+        ) : validatedAddress && chainId && token?.equals(WETH[chainId]) ? (
           <>
             <TYPE.body my={9} style={{ fontWeight: 400 }}>
               Because Uniswap V2 uses WETH under the hood, your Uniswap V1 WETH/ETH liquidity cannot be migrated. You

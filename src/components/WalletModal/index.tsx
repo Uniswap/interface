@@ -17,6 +17,7 @@ import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected, fortmatic, portis } from '../../connectors'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
+import { AbstractConnector } from '@web3-react/abstract-connector'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -128,7 +129,7 @@ export default function WalletModal({
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
-  const [pendingWallet, setPendingWallet] = useState()
+  const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
 
   const [pendingError, setPendingError] = useState<boolean>()
 
@@ -161,7 +162,7 @@ export default function WalletModal({
     }
   }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
 
-  const tryActivation = async connector => {
+  const tryActivation = async (connector: AbstractConnector | undefined) => {
     let name = ''
     Object.keys(SUPPORTED_WALLETS).map(key => {
       if (connector === SUPPORTED_WALLETS[key].connector) {
@@ -183,13 +184,14 @@ export default function WalletModal({
       connector.walletConnectProvider = undefined
     }
 
-    activate(connector, undefined, true).catch(error => {
-      if (error instanceof UnsupportedChainIdError) {
-        activate(connector) // a little janky...can't use setError because the connector isn't set
-      } else {
-        setPendingError(true)
-      }
-    })
+    connector &&
+      activate(connector, undefined, true).catch(error => {
+        if (error instanceof UnsupportedChainIdError) {
+          activate(connector) // a little janky...can't use setError because the connector isn't set
+        } else {
+          setPendingError(true)
+        }
+      })
   }
 
   // close wallet modal if fortmatic modal is active
@@ -358,7 +360,7 @@ export default function WalletModal({
   }
 
   return (
-    <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={null} maxHeight={90}>
+    <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={false} maxHeight={90}>
       <Wrapper>{getModalContent()}</Wrapper>
     </Modal>
   )

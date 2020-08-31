@@ -30,7 +30,8 @@ function isMethodArg(x: unknown): x is MethodArg {
 
 function isValidMethodArgs(x: unknown): x is MethodArgs | undefined {
   return (
-    x === undefined || (Array.isArray(x) && x.every(y => isMethodArg(y) || (Array.isArray(y) && y.every(isMethodArg))))
+    x === undefined ||
+    (Array.isArray(x) && x.every(xi => isMethodArg(xi) || (Array.isArray(xi) && xi.every(isMethodArg))))
   )
 }
 
@@ -67,7 +68,7 @@ function useCallsData(calls: (Call | undefined)[], options?: ListenerOptions): C
   // update listeners when there is an actual change that persists for at least 100ms
   useEffect(() => {
     const callKeys: string[] = JSON.parse(serializedCallKeys)
-    if (!chainId || callKeys.length === 0) return
+    if (!chainId || callKeys.length === 0) return undefined
     const calls = callKeys.map(key => parseCallKey(key))
     dispatch(
       addMulticallListeners({

@@ -6,7 +6,7 @@ import { MIN_ETH } from '../constants'
  * @param currencyAmount to return max of
  */
 export function maxAmountSpend(currencyAmount?: CurrencyAmount): CurrencyAmount | undefined {
-  if (!currencyAmount) return
+  if (!currencyAmount) return undefined
   if (currencyAmount.currency === ETHER) {
     if (JSBI.greaterThan(currencyAmount.raw, MIN_ETH)) {
       return CurrencyAmount.ether(JSBI.subtract(currencyAmount.raw, MIN_ETH))
