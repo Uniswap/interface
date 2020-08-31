@@ -44,8 +44,8 @@ export function generateAllRoutePairs(tokenA?: Token, tokenB?: Token, chainId?: 
 
       if (!restrictedBasesA && !restrictedBasesB) return true
 
-      if (restrictedBasesA && restrictedBasesA.find(base => tokenB.equals(base))) return false
-      if (restrictedBasesB && restrictedBasesB.find(base => tokenA.equals(base))) return false
+      if (restrictedBasesA && !restrictedBasesA.find(base => tokenB.equals(base))) return false
+      if (restrictedBasesB && !restrictedBasesB.find(base => tokenA.equals(base))) return false
 
       return true
     })
