@@ -18,7 +18,7 @@ import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpa
 import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
-import ProgresSteps from '../../components/ProgressSteps'
+import ProgressSteps from '../../components/ProgressSteps'
 
 import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
@@ -466,7 +466,7 @@ export default function Swap() {
                 </Text>
               </ButtonError>
             )}
-            {showApproveFlow && <ProgresSteps steps={[approval === ApprovalState.APPROVED]} />}
+            {showApproveFlow && <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />}
             {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
             {betterTradeLinkVersion && <BetterTradeLink version={betterTradeLinkVersion} />}
           </BottomGrouping>
