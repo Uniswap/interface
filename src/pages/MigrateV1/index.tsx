@@ -1,4 +1,4 @@
-import { JSBI, Token } from '@uniswap/sdk'
+import { JSBI, Token } from '@swoop-exchange/sdk'
 import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
 import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
@@ -63,7 +63,7 @@ export default function MigrateV1() {
     ) : null
   })
 
-  // should never always be false, because a V1 exhchange exists for WETH on all testnets
+  // should never always be false, because a V1 exhchange exists for WONE on all testnets
   const isLoading = Object.keys(V1Exchanges)?.length === 0 || V1LiquidityBalancesLoading
 
   return (

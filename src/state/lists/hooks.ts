@@ -1,8 +1,10 @@
-import { ChainId, Token } from '@uniswap/sdk'
+import { Token } from '@swoop-exchange/sdk'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
+
+const { ChainID } = require("@harmony-js/utils");
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -25,17 +27,29 @@ export class WrappedTokenInfo extends Token {
   }
 }
 
-export type TokenAddressMap = Readonly<{ [chainId in ChainId]: Readonly<{ [tokenAddress: string]: WrappedTokenInfo }> }>
+export type TokenAddressMap = Readonly<{ [chainId in typeof ChainID]: Readonly<{ [tokenAddress: string]: WrappedTokenInfo }> }>
 
 /**
  * An empty result, useful as a default.
  */
 const EMPTY_LIST: TokenAddressMap = {
-  [ChainId.KOVAN]: {},
-  [ChainId.RINKEBY]: {},
-  [ChainId.ROPSTEN]: {},
-  [ChainId.GÖRLI]: {},
-  [ChainId.MAINNET]: {}
+  [ChainID.HmyMainnet]: {},
+  [ChainID.HmyTestnet]: {},
+
+  [ChainID.Default]: {},
+  [ChainID.EthMainnet]: {},
+  [ChainID.Morden]: {},
+  [ChainID.Ropsten]: {},
+  [ChainID.Rinkeby]: {},
+  [ChainID.RootstockMainnet]: {},
+  [ChainID.RootstockTestnet]: {},
+  [ChainID.Kovan]: {},
+  [ChainID.EtcMainnet]: {},
+  [ChainID.EtcTestnet]: {},
+  [ChainID.Geth]: {},
+  [ChainID.Ganache]: {},
+  [ChainID.HmyLocal]: {},
+  [ChainID.HmyPangaea]: {},
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =

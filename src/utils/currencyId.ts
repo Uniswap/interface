@@ -1,7 +1,7 @@
-import { Currency, ETHER, Token } from '@uniswap/sdk'
+import { Currency, HARMONY, Token } from '@swoop-exchange/sdk'
 
 export function currencyId(currency: Currency): string {
-  if (currency === ETHER) return 'ETH'
+  if (currency === HARMONY) return 'ONE'
   if (currency instanceof Token) return currency.address
   throw new Error('invalid currency')
 }

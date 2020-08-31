@@ -4,7 +4,7 @@ import {
   Currency,
   CurrencyAmount,
   currencyEquals,
-  ETHER,
+  HARMONY,
   JSBI,
   Pair,
   Percent,
@@ -13,8 +13,8 @@ import {
   TokenAmount,
   Trade,
   TradeType,
-  WETH
-} from '@uniswap/sdk'
+  WONE
+} from '@swoop-exchange/sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
 import { useAllTokens } from '../hooks/Tokens'
@@ -32,15 +32,15 @@ export function useV1ExchangeAddress(tokenAddress?: string): string | undefined 
 
 export class MockV1Pair extends Pair {
   constructor(etherAmount: BigintIsh, tokenAmount: TokenAmount) {
-    super(tokenAmount, new TokenAmount(WETH[tokenAmount.token.chainId], etherAmount))
+    super(tokenAmount, new TokenAmount(WONE[tokenAmount.token.chainId], etherAmount))
   }
 }
 
 function useMockV1Pair(inputCurrency?: Currency): MockV1Pair | undefined {
   const token = inputCurrency instanceof Token ? inputCurrency : undefined
 
-  const isWETH = Boolean(token && token.equals(WETH[token.chainId]))
-  const v1PairAddress = useV1ExchangeAddress(isWETH ? undefined : token?.address)
+  const isWONE = Boolean(token && token.equals(WONE[token.chainId]))
+  const v1PairAddress = useV1ExchangeAddress(isWONE ? undefined : token?.address)
   const tokenBalance = useTokenBalance(v1PairAddress, token)
   const ETHBalance = useETHBalances([v1PairAddress])[v1PairAddress ?? '']
 
@@ -108,8 +108,8 @@ export function useV1Trade(
   const inputPair = useMockV1Pair(inputCurrency)
   const outputPair = useMockV1Pair(outputCurrency)
 
-  const inputIsETH = inputCurrency === ETHER
-  const outputIsETH = outputCurrency === ETHER
+  const inputIsETH = inputCurrency === HARMONY
+  const outputIsETH = outputCurrency === HARMONY
 
   // construct a direct or through ETH v1 route
   let pairs: Pair[] = []
