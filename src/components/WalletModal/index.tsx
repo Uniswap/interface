@@ -187,17 +187,15 @@ export default function WalletModal({
       connector.walletConnectProvider = undefined
     }
 
-    if (connector) {
-      connector.signIn()
-      .then(() => {
-        setPendingError(false);
-        setWalletView(WALLET_VIEWS.ACCOUNT);
-        toggleWalletModal();
-      })
-      .catch(error => {
-        setPendingError(true)
-      });
-    }
+    connector && connector.signIn()
+    .then(() => {
+      setPendingError(false);
+      setWalletView(WALLET_VIEWS.ACCOUNT);
+      toggleWalletModal();
+    })
+    .catch(error => {
+      setPendingError(true)
+    });
 
     /*connector &&
       activate(connector, undefined, true).catch(error => {

@@ -1,0 +1,37 @@
+{
+  "name": "Swoop Default List",
+  "logoURI": "http://tools.harmony.one.s3.amazonaws.com/swoop/swoop.png",
+  "keywords": ["Swoop", "exchange", "curated"],
+  "timestamp": "2020-08-31T00:00:00+00:00",
+  "tokens": [
+    {
+      "chainId": 1,
+      "address": "0xFc23fC4520aeba89E831491f1E0C81FD6a9F32fB",
+      "symbol": "WONE",
+      "name": "Wrapped ONE",
+      "decimals": 18,
+      "logoURI": "http://tools.harmony.one.s3.amazonaws.com/swoop/tokens/WONE.png"
+    },
+    {
+      "chainId": 1,
+      "address": "0x7a791E76BF4d4f3b9B492AbB74E5108180bE6B5a",
+      "symbol": "1LINK",
+      "name": "1ChainLink",
+      "decimals": 18,
+      "logoURI": "http://tools.harmony.one.s3.amazonaws.com/swoop/tokens/1LINK.png"
+    },
+    {
+      "chainId": 1,
+      "address": "0x493c9d4362fB4FD1D0C17a6ECad08de33Fc1d8C2",
+      "symbol": "SEED",
+      "name": "Seed",
+      "decimals": 18,
+      "logoURI": "http://tools.harmony.one.s3.amazonaws.com/swoop/tokens/SEED.png"
+    }
+  ],
+  "version": {
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+  }
+}
