@@ -108,6 +108,8 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@harmony-js/core": "^0.1.53",
+    "@swoop-exchange/default-token-list": "https://github.com/SebastianJ/swoop-default-token-list",
+    "@swoop-exchange/sdk": "https://github.com/SebastianJ/swoop-sdk",
     "mobx": "^5.15.6"
   }
 }
