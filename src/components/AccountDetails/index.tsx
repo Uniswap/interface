@@ -1,4 +1,5 @@
 import React, { useCallback, useContext } from 'react'
+import ReactGA from 'react-ga'
 import { useDispatch } from 'react-redux'
 import styled, { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
@@ -8,7 +9,7 @@ import { shortenAddress } from '../../utils'
 import { AutoRow } from '../Row'
 import Copy from './Copy'
 import Transaction from './Transaction'
-import { SUPPORTED_WALLETS } from '../../constants'
+import { SUPPORTED_WALLETS, UserWallet } from '../../constants'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getEtherscanLink } from '../../utils'
 import { injected, walletconnect, walletlink, fortmatic, portis, hmy } from '../../connectors'
@@ -20,6 +21,9 @@ import Identicon from '../Identicon'
 import { ButtonSecondary } from '../Button'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
+
+import { useUserWallet, useUserActiveWallet } from '../../state/user/hooks'
+import { AbstractWallet } from '../../wallets/AbstractWallet'
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
@@ -224,21 +228,70 @@ export default function AccountDetails({
   ENSName,
   openOptions
 }: AccountDetailsProps) {
-  const { account, connector } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const chainId = hmy.chainId;
   const theme = useContext(ThemeContext)
   const dispatch = useDispatch<AppDispatch>()
 
+  const [, setUserWallet] = useUserWallet()
+
+  const [userWallet,] = useUserWallet()
+  const connector = useUserActiveWallet()
+
   function formatConnectorName() {
-    const { ethereum } = window
-    const isMetaMask = !!(ethereum && ethereum.isMetaMask)
-    const name = Object.keys(SUPPORTED_WALLETS)
-      .filter(
-        k =>
-          SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
-      )
-      .map(k => SUPPORTED_WALLETS[k].name)[0]
+
+    let name = '';
+
+    if (userWallet && userWallet.type != null && userWallet.type !== '') {
+      switch (userWallet.type.toLowerCase()) {
+        case 'onewallet':
+          name = 'OneWallet';
+          break;
+        case 'mathwallet':
+          name = 'MathWallet';
+          break;
+        default:
+          name = '';
+      }
+    } else {
+      const { ethereum } = window
+      const isMetaMask = !!(ethereum && ethereum.isMetaMask)
+  
+      name = Object.keys(SUPPORTED_WALLETS)
+        .filter(
+          k =>
+            SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
+        )
+        .map(k => SUPPORTED_WALLETS[k].name)[0]
+    }
+
     return <WalletName>Connected with {name}</WalletName>
+  }
+
+  const tryDeactivation = async (connector: AbstractWallet | undefined) => {
+    let name = ''
+    Object.keys(SUPPORTED_WALLETS).map(key => {
+      if (connector === SUPPORTED_WALLETS[key].connector) {
+        return (name = SUPPORTED_WALLETS[key].name)
+      }
+      return true
+    })
+
+    // log selected wallet
+    ReactGA.event({
+      category: 'Wallet',
+      action: 'Signout Wallet',
+      label: name
+    })
+
+    connector && connector.signOut()
+    .then(() => {
+      setUserWallet({} as UserWallet);
+      toggleWalletModal();
+    })
+    .catch(error => {
+      toggleWalletModal();
+    });
   }
 
   function getStatusIcon() {
@@ -302,11 +355,11 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
-                  {connector !== injected && connector !== walletlink && (
+                  {connector && connector !== injected && connector !== walletlink && (
                     <WalletAction
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                       onClick={() => {
-                        ;(connector as any).close()
+                        tryDeactivation(connector);
                       }}
                     >
                       Disconnect

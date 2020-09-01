@@ -5,6 +5,7 @@ import { isMobile } from 'react-device-detect'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import usePrevious from '../../hooks/usePrevious'
 import { useWalletModalOpen, useWalletModalToggle } from '../../state/application/hooks'
+import { UserWallet } from '../../constants'
 
 import Modal from '../Modal'
 import AccountDetails from '../AccountDetails'
@@ -19,6 +20,8 @@ import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 //import { AbstractConnector } from '@web3-react/abstract-connector'
 import { AbstractWallet } from '../../wallets/AbstractWallet';
+
+import {useUserWallet} from '../../state/user/hooks'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -126,7 +129,7 @@ export default function WalletModal({
   ENSName?: string
 }) {
   // important that these are destructed from the account-specific web3-react context
-  const { active, account, connector, error } = useWeb3React()
+  const { connector, error } = useWeb3React()
   //const { active, account, connector, activate, error } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
@@ -134,6 +137,12 @@ export default function WalletModal({
   const [pendingWallet, setPendingWallet] = useState<AbstractWallet | undefined>()
 
   const [pendingError, setPendingError] = useState<boolean>()
+
+  const [account, setAccount] = useState<string | null>()
+
+  const [active, setActive] = useState<boolean>()
+
+  const [userWallet, setUserWallet] = useUserWallet()
 
   const walletModalOpen = useWalletModalOpen()
   const toggleWalletModal = useWalletModalToggle()
@@ -189,9 +198,18 @@ export default function WalletModal({
 
     connector && connector.signIn()
     .then(() => {
+      let wallet: UserWallet = {
+        type: connector.sessionType,
+        address: connector.base16Address,
+        bech32Address: connector.address
+      };
+
       setPendingError(false);
+      setAccount(connector.address);
+      setActive(true);
+      setUserWallet(wallet);
       setWalletView(WALLET_VIEWS.ACCOUNT);
-      toggleWalletModal();
+      //toggleWalletModal();
     })
     .catch(error => {
       setPendingError(true)
@@ -318,7 +336,7 @@ export default function WalletModal({
         </UpperSection>
       )
     }
-    if (account && walletView === WALLET_VIEWS.ACCOUNT) {
+    if (userWallet && userWallet.address && walletView === WALLET_VIEWS.ACCOUNT) {
       return (
         <AccountDetails
           toggleWalletModal={toggleWalletModal}

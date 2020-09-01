@@ -66,6 +66,12 @@ export const PINNED_PAIRS: { readonly [chainId in typeof ChainID]?: [Token, Toke
   ]
 }
 
+export interface UserWallet {
+  type: string;
+  address: string | null;
+  bech32Address: string | null;
+}
+
 export interface WalletInfo {
   connector?: AbstractConnector
   name: string

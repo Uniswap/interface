@@ -54,7 +54,7 @@ export class MathWallet extends AbstractWallet {
       return this.mathwallet
         .forgetIdentity()
         .then(() => {
-          this.sessionType = null;
+          this.sessionType = '';
           this.address = null;
           this.base16Address = null;
           this.isAuthorized = false;

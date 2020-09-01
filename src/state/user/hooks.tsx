@@ -3,7 +3,7 @@ import { Pair, Token } from '@swoop-exchange/sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
+import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS, UserWallet } from '../../constants'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
@@ -17,8 +17,12 @@ import {
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
-  updateUserSlippageTolerance
+  updateUserSlippageTolerance,
+  updateUserWallet,
 } from './actions'
+
+//import { AbstractWallet } from '../../wallets/AbstractWallet';
+import { oneWallet, mathWallet } from '../../connectors'
 
 function serializeToken(token: Token): SerializedToken {
   return {
@@ -159,6 +163,45 @@ export function usePairAdder(): (pair: Pair) => void {
     },
     [dispatch]
   )
+}
+
+export function useUserWallet(): [UserWallet | null, (wallet: UserWallet | null) => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const userWallet = useSelector<AppState, AppState['user']['userWallet']>(state => {
+    return state.user.userWallet
+  })
+
+  const setUserWallet = useCallback(
+    (userWallet: UserWallet | null) => {
+      dispatch(updateUserWallet({ userWallet }))
+    },
+    [dispatch]
+  )
+
+  return [userWallet, setUserWallet]
+}
+
+export function useUserActiveWallet(): any | null {
+  const userWallet = useSelector<AppState, AppState['user']['userWallet']>(state => {
+    return state.user.userWallet
+  })
+
+  if (userWallet == null) {
+    return null;
+  } else if (userWallet.type == null) {
+    return null;
+  }
+
+  switch (userWallet.type.toLowerCase()) {
+    case 'onewallet': {
+      return oneWallet;
+    }
+    case 'mathwallet': {
+      return mathWallet;
+    }
+    default:
+      return null;
+  }
 }
 
 /**
