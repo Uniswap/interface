@@ -17,8 +17,12 @@ import {
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
-  updateUserSlippageTolerance
+  updateUserSlippageTolerance,
+  updateUserWallet,
 } from './actions'
+
+//import { AbstractWallet } from '../../wallets/AbstractWallet';
+import { oneWallet, mathWallet } from '../../connectors'
 
 function serializeToken(token: Token): SerializedToken {
   return {
@@ -159,6 +163,39 @@ export function usePairAdder(): (pair: Pair) => void {
     },
     [dispatch]
   )
+}
+
+export function useUserWallet(): [string, (wallet: string) => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const userWallet = useSelector<AppState, AppState['user']['userWallet']>(state => {
+    return state.user.userWallet
+  })
+
+  const setUserWallet = useCallback(
+    (userWallet: string) => {
+      dispatch(updateUserWallet({ userWallet }))
+    },
+    [dispatch]
+  )
+
+  return [userWallet, setUserWallet]
+}
+
+export function useUserActiveWallet(): any | null {
+  const userWallet = useSelector<AppState, AppState['user']['userWallet']>(state => {
+    return state.user.userWallet
+  })
+
+  switch (userWallet.toLowerCase()) {
+    case 'onewallet': {
+      return oneWallet;
+    }
+    case 'mathwallet': {
+      return mathWallet;
+    }
+    default:
+      return null;
+  }
 }
 
 /**

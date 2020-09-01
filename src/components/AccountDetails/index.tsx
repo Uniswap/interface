@@ -21,6 +21,9 @@ import { ButtonSecondary } from '../Button'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 
+import { useUserWallet, useUserActiveWallet } from '../../state/user/hooks'
+import { AbstractWallet } from '../../wallets/AbstractWallet'
+
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 1rem 1rem;
@@ -224,20 +227,41 @@ export default function AccountDetails({
   ENSName,
   openOptions
 }: AccountDetailsProps) {
-  const { account, connector } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const chainId = hmy.chainId;
   const theme = useContext(ThemeContext)
   const dispatch = useDispatch<AppDispatch>()
 
+  const [userWallet,] = useUserWallet()
+  const connector = useUserActiveWallet()
+
   function formatConnectorName() {
-    const { ethereum } = window
-    const isMetaMask = !!(ethereum && ethereum.isMetaMask)
-    const name = Object.keys(SUPPORTED_WALLETS)
-      .filter(
-        k =>
-          SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
-      )
-      .map(k => SUPPORTED_WALLETS[k].name)[0]
+
+    let name = '';
+
+    if (userWallet !== '') {
+      switch (userWallet.toLowerCase()) {
+        case 'onewallet':
+          name = 'OneWallet';
+          break;
+        case 'mathwallet':
+          name = 'MathWallet';
+          break;
+        default:
+          name = '';
+      }
+    } else {
+      const { ethereum } = window
+      const isMetaMask = !!(ethereum && ethereum.isMetaMask)
+  
+      name = Object.keys(SUPPORTED_WALLETS)
+        .filter(
+          k =>
+            SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
+        )
+        .map(k => SUPPORTED_WALLETS[k].name)[0]
+    }
+
     return <WalletName>Connected with {name}</WalletName>
   }
 
@@ -302,11 +326,11 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
-                  {connector !== injected && connector !== walletlink && (
+                  {connector && connector !== injected && connector !== walletlink && (
                     <WalletAction
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                       onClick={() => {
-                        ;(connector as any).close()
+                        ;(connector as AbstractWallet).signOut()
                       }}
                     >
                       Disconnect

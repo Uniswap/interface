@@ -55,7 +55,7 @@ export class OneWallet extends AbstractWallet {
       return this.onewallet
         .forgetIdentity()
         .then(() => {
-          this.sessionType = null;
+          this.sessionType = '';
           this.address = null;
           this.base16Address = null;
           this.isAuthorized = false;

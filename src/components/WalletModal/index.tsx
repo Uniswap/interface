@@ -20,6 +20,8 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 //import { AbstractConnector } from '@web3-react/abstract-connector'
 import { AbstractWallet } from '../../wallets/AbstractWallet';
 
+import {useUserWallet} from '../../state/user/hooks'
+
 const CloseIcon = styled.div`
   position: absolute;
   right: 1rem;
@@ -126,7 +128,7 @@ export default function WalletModal({
   ENSName?: string
 }) {
   // important that these are destructed from the account-specific web3-react context
-  const { active, account, connector, error } = useWeb3React()
+  const { connector, error } = useWeb3React()
   //const { active, account, connector, activate, error } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
@@ -134,6 +136,12 @@ export default function WalletModal({
   const [pendingWallet, setPendingWallet] = useState<AbstractWallet | undefined>()
 
   const [pendingError, setPendingError] = useState<boolean>()
+
+  const [account, setAccount] = useState<string | null>()
+
+  const [active, setActive] = useState<boolean>()
+
+  const [, setUserWallet] = useUserWallet()
 
   const walletModalOpen = useWalletModalOpen()
   const toggleWalletModal = useWalletModalToggle()
@@ -190,8 +198,11 @@ export default function WalletModal({
     connector && connector.signIn()
     .then(() => {
       setPendingError(false);
+      setAccount(connector.address);
+      setActive(true);
+      setUserWallet(connector.sessionType);
       setWalletView(WALLET_VIEWS.ACCOUNT);
-      toggleWalletModal();
+      //toggleWalletModal();
     })
     .catch(error => {
       setPendingError(true)

@@ -5,7 +5,7 @@ export abstract class AbstractWallet {
   public isAuthorized: boolean;
   public redirectUrl!: string;
   public extension: any;
-  public sessionType: 'onewallet' | 'mathwallet' | 'ledger' | 'wallet' | null;
+  public sessionType: 'onewallet' | 'mathwallet' | 'ledger' | 'wallet' | '';
   public address: string | null;
   public base16Address: string | null;
 
@@ -14,7 +14,7 @@ export abstract class AbstractWallet {
     this.client = client;
 
     this.isAuthorized = false;
-    this.sessionType = null;
+    this.sessionType = '';
     this.address = null;
     this.base16Address = null;
   }

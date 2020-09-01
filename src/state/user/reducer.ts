@@ -12,7 +12,8 @@ import {
   updateUserDarkMode,
   updateUserExpertMode,
   updateUserSlippageTolerance,
-  updateUserDeadline
+  updateUserDeadline,
+  updateUserWallet
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
@@ -46,6 +47,8 @@ export interface UserState {
   }
 
   timestamp: number
+
+  userWallet: string
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -60,7 +63,8 @@ export const initialState: UserState = {
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
   pairs: {},
-  timestamp: currentTimestamp()
+  timestamp: currentTimestamp(),
+  userWallet: ''
 }
 
 export default createReducer(initialState, builder =>
@@ -98,6 +102,10 @@ export default createReducer(initialState, builder =>
     })
     .addCase(updateUserDeadline, (state, action) => {
       state.userDeadline = action.payload.userDeadline
+      state.timestamp = currentTimestamp()
+    })
+    .addCase(updateUserWallet, (state, action) => {
+      state.userWallet = action.payload.userWallet
       state.timestamp = currentTimestamp()
     })
     .addCase(addSerializedToken, (state, { payload: { serializedToken } }) => {
