@@ -27,7 +27,7 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42, 100]
+  supportedChainIds: [100]
 })
 
 // mainnet only
@@ -47,7 +47,7 @@ export const fortmatic = new FortmaticConnector({
 // mainnet only
 export const portis = new PortisConnector({
   dAppId: PORTIS_ID ?? '',
-  networks: [1]
+  networks: [100]
 })
 
 // mainnet only

@@ -1,9 +1,9 @@
 import { ChainId, JSBI, Percent, Token, WETH } from '@crisog/uniswap-xdai-sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
+import { injected, portis, walletconnect } from '../connectors'
 
-export const ROUTER_ADDRESS = '0x80c69a490c557B9CF0E3Ea637443Ce5a29B5a70B'
+export const ROUTER_ADDRESS = '0xCb8E5897d9adf66443690F5c0d506f60aE5A6cD9'
 
 // a list of tokens by chain
 type ChainTokenList = {
@@ -102,32 +102,6 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
     href: null,
     color: '#4196FC',
-    mobile: true
-  },
-  WALLET_LINK: {
-    connector: walletlink,
-    name: 'Coinbase Wallet',
-    iconName: 'coinbaseWalletIcon.svg',
-    description: 'Use Coinbase Wallet app on mobile device',
-    href: null,
-    color: '#315CF5'
-  },
-  COINBASE_LINK: {
-    name: 'Open in Coinbase Wallet',
-    iconName: 'coinbaseWalletIcon.svg',
-    description: 'Open in Coinbase Wallet app.',
-    href: 'https://go.cb-w.com/mtUDhEZPy1',
-    color: '#315CF5',
-    mobile: true,
-    mobileOnly: true
-  },
-  FORTMATIC: {
-    connector: fortmatic,
-    name: 'Fortmatic',
-    iconName: 'fortmaticIcon.png',
-    description: 'Login using Fortmatic hosted wallet',
-    href: null,
-    color: '#6748FF',
     mobile: true
   },
   Portis: {

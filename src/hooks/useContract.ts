@@ -56,6 +56,9 @@ export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contrac
   let address: string | undefined
   if (chainId) {
     switch (chainId) {
+      case ChainId.XDAI:
+        address = '0x25D2252Ec30de7830b6825D6b4A08E70a581cD6a'
+        break
       case ChainId.MAINNET:
       case ChainId.GÖRLI:
       case ChainId.ROPSTEN:

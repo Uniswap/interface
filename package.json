@@ -4,7 +4,7 @@
   "homepage": ".",
   "private": true,
   "devDependencies": {
-    "@crisog/uniswap-xdai-sdk": "^3.0.4",
+    "@crisog/uniswap-xdai-sdk": "^3.0.10",
     "@ethersproject/experimental": "^5.0.1",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
