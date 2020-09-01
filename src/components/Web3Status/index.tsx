@@ -19,6 +19,8 @@ import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
 import { ButtonSecondary } from '../Button'
 
+import {useUserWallet} from '../../state/user/hooks'
+
 import Identicon from '../Identicon'
 import Loader from '../Loader'
 
@@ -180,7 +182,9 @@ function Web3StatusInner() {
   const hasSocks = useHasSocks()
   const toggleWalletModal = useWalletModalToggle()
 
-  if (account) {
+  const [userWallet,] = useUserWallet()
+
+  if (userWallet && userWallet.address) {
     return (
       <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
         {hasPendingTransactions ? (
@@ -190,7 +194,7 @@ function Web3StatusInner() {
         ) : (
           <>
             {hasSocks ? SOCK : null}
-            <Text>{ENSName || shortenAddress(account)}</Text>
+            <Text>{ENSName || shortenAddress(userWallet.address)}</Text>
           </>
         )}
         {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}

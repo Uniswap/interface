@@ -5,6 +5,7 @@ import { isMobile } from 'react-device-detect'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import usePrevious from '../../hooks/usePrevious'
 import { useWalletModalOpen, useWalletModalToggle } from '../../state/application/hooks'
+import { UserWallet } from '../../constants'
 
 import Modal from '../Modal'
 import AccountDetails from '../AccountDetails'
@@ -197,10 +198,16 @@ export default function WalletModal({
 
     connector && connector.signIn()
     .then(() => {
+      let wallet: UserWallet = {
+        type: connector.sessionType,
+        address: connector.base16Address,
+        bech32Address: connector.address
+      };
+
       setPendingError(false);
       setAccount(connector.address);
       setActive(true);
-      setUserWallet(connector.sessionType);
+      setUserWallet(wallet);
       setWalletView(WALLET_VIEWS.ACCOUNT);
       //toggleWalletModal();
     })
@@ -329,7 +336,7 @@ export default function WalletModal({
         </UpperSection>
       )
     }
-    if (userWallet !== '' && account && walletView === WALLET_VIEWS.ACCOUNT) {
+    if (userWallet && userWallet.address && walletView === WALLET_VIEWS.ACCOUNT) {
       return (
         <AccountDetails
           toggleWalletModal={toggleWalletModal}

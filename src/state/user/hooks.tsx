@@ -3,7 +3,7 @@ import { Pair, Token } from '@swoop-exchange/sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
+import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS, UserWallet } from '../../constants'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
@@ -165,14 +165,14 @@ export function usePairAdder(): (pair: Pair) => void {
   )
 }
 
-export function useUserWallet(): [string, (wallet: string) => void] {
+export function useUserWallet(): [UserWallet | null, (wallet: UserWallet | null) => void] {
   const dispatch = useDispatch<AppDispatch>()
   const userWallet = useSelector<AppState, AppState['user']['userWallet']>(state => {
     return state.user.userWallet
   })
 
   const setUserWallet = useCallback(
-    (userWallet: string) => {
+    (userWallet: UserWallet | null) => {
       dispatch(updateUserWallet({ userWallet }))
     },
     [dispatch]
@@ -186,7 +186,13 @@ export function useUserActiveWallet(): any | null {
     return state.user.userWallet
   })
 
-  switch (userWallet.toLowerCase()) {
+  if (userWallet == null) {
+    return null;
+  } else if (userWallet.type == null) {
+    return null;
+  }
+
+  switch (userWallet.type.toLowerCase()) {
     case 'onewallet': {
       return oneWallet;
     }

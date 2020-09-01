@@ -9,7 +9,7 @@ import { shortenAddress } from '../../utils'
 import { AutoRow } from '../Row'
 import Copy from './Copy'
 import Transaction from './Transaction'
-import { SUPPORTED_WALLETS } from '../../constants'
+import { SUPPORTED_WALLETS, UserWallet } from '../../constants'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getEtherscanLink } from '../../utils'
 import { injected, walletconnect, walletlink, fortmatic, portis, hmy } from '../../connectors'
@@ -242,8 +242,8 @@ export default function AccountDetails({
 
     let name = '';
 
-    if (userWallet !== '') {
-      switch (userWallet.toLowerCase()) {
+    if (userWallet && userWallet.type != null && userWallet.type !== '') {
+      switch (userWallet.type.toLowerCase()) {
         case 'onewallet':
           name = 'OneWallet';
           break;
@@ -286,7 +286,7 @@ export default function AccountDetails({
 
     connector && connector.signOut()
     .then(() => {
-      setUserWallet('');
+      setUserWallet({} as UserWallet);
       toggleWalletModal();
     })
     .catch(error => {

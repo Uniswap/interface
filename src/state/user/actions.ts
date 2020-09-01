@@ -1,5 +1,7 @@
 import { createAction } from '@reduxjs/toolkit'
 
+import { UserWallet } from '../../constants'
+
 export interface SerializedToken {
   chainId: number
   address: string
@@ -27,4 +29,4 @@ export const removeSerializedPair = createAction<{ chainId: number; tokenAAddres
   'user/removeSerializedPair'
 )
 
-export const updateUserWallet = createAction<{ userWallet: string }>('user/updateUserWallet')
+export const updateUserWallet = createAction<{ userWallet: UserWallet | null }>('user/updateUserWallet')

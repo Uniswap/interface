@@ -1,4 +1,4 @@
-import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
+import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW, UserWallet } from '../../constants'
 import { createReducer } from '@reduxjs/toolkit'
 import { updateVersion } from '../global/actions'
 import {
@@ -13,7 +13,7 @@ import {
   updateUserExpertMode,
   updateUserSlippageTolerance,
   updateUserDeadline,
-  updateUserWallet
+  updateUserWallet,
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
@@ -48,7 +48,7 @@ export interface UserState {
 
   timestamp: number
 
-  userWallet: string
+  userWallet: UserWallet | null
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -64,7 +64,7 @@ export const initialState: UserState = {
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
-  userWallet: ''
+  userWallet: {type: '', address: '', bech32Address: ''}
 }
 
 export default createReducer(initialState, builder =>
