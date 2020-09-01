@@ -8,8 +8,8 @@ import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
 
 import config from "../config";
-import { MathWallet } from '../wallets/MathWallet';
-import { OneWallet } from '../wallets/OneWallet';
+import { MathWallet } from '../wallets/mathwallet';
+import { OneWallet } from '../wallets/onewallet';
 import { Hmy } from '../blockchain';
 
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
