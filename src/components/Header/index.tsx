@@ -1,7 +1,8 @@
-import { ChainId } from '@uniswap/sdk'
 import React from 'react'
 import { isMobile } from 'react-device-detect'
 import { Text } from 'rebass'
+
+import { hmy } from '../../connectors'
 
 import styled from 'styled-components'
 
@@ -20,6 +21,8 @@ import Menu from '../Menu'
 import Row, { RowBetween } from '../Row'
 import Web3Status from '../Web3Status'
 import VersionSwitch from './VersionSwitch'
+
+const { ChainID } = require("@harmony-js/utils");
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -126,16 +129,29 @@ const BalanceText = styled(Text)`
   `};
 `
 
-const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
-  [ChainId.MAINNET]: null,
-  [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ROPSTEN]: 'Ropsten',
-  [ChainId.GÖRLI]: 'Görli',
-  [ChainId.KOVAN]: 'Kovan'
+const NETWORK_LABELS: { [chainId in typeof ChainID]: string | null } = {
+  [ChainID.HmyMainnet]: null,
+  [ChainID.HmyTestnet]: null,
+
+  [ChainID.Default]: null,
+  [ChainID.EthMainnet]: null,
+  [ChainID.Morden]: null,
+  [ChainID.Ropsten]: null,
+  [ChainID.Rinkeby]: null,
+  [ChainID.RootstockMainnet]: null,
+  [ChainID.RootstockTestnet]: null,
+  [ChainID.Kovan]: null,
+  [ChainID.EtcMainnet]: null,
+  [ChainID.EtcTestnet]: null,
+  [ChainID.Geth]: null,
+  [ChainID.Ganache]: null,
+  [ChainID.HmyLocal]: null,
+  [ChainID.HmyPangaea]: null,
 }
 
 export default function Header() {
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
+  const chainId = hmy.chainId;
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()

@@ -7,6 +7,11 @@ import { PortisConnector } from '@web3-react/portis-connector'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
 
+import config from "../config";
+import { MathWallet } from '../wallets/MathWallet';
+import { OneWallet } from '../wallets/OneWallet';
+import { Hmy } from '../blockchain';
+
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
@@ -27,7 +32,7 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42]
+  supportedChainIds: [1, 2]
 })
 
 // mainnet only
@@ -57,3 +62,7 @@ export const walletlink = new WalletLinkConnector({
   appLogoUrl:
     'https://mpng.pngfly.com/20181202/bex/kisspng-emoji-domain-unicorn-pin-badges-sticker-unicorn-tumblr-emoji-unicorn-iphoneemoji-5c046729264a77.5671679315437924251569.jpg'
 })
+
+export const hmy = new Hmy(config.network);
+export const mathWallet = new MathWallet(config.network, hmy.client);
+export const oneWallet = new OneWallet(config.network, hmy.client);

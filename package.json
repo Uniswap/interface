@@ -77,7 +77,10 @@
     "serve": "^11.3.0",
     "start-server-and-test": "^1.11.0",
     "styled-components": "^4.2.0",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "@harmony-js/core": "^0.1.53",
+    "@swoop-exchange/default-token-list": "https://github.com/harmony-one/swoop-default-token-list",
+    "@swoop-exchange/sdk": "https://github.com/harmony-one/swoop-sdk.git"
   },
   "resolutions": {
     "@walletconnect/web3-provider": "1.1.1-alpha.0"
