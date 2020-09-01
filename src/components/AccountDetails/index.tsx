@@ -1,4 +1,5 @@
 import React, { useCallback, useContext } from 'react'
+import ReactGA from 'react-ga'
 import { useDispatch } from 'react-redux'
 import styled, { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
@@ -232,6 +233,8 @@ export default function AccountDetails({
   const theme = useContext(ThemeContext)
   const dispatch = useDispatch<AppDispatch>()
 
+  const [, setUserWallet] = useUserWallet()
+
   const [userWallet,] = useUserWallet()
   const connector = useUserActiveWallet()
 
@@ -263,6 +266,32 @@ export default function AccountDetails({
     }
 
     return <WalletName>Connected with {name}</WalletName>
+  }
+
+  const tryDeactivation = async (connector: AbstractWallet | undefined) => {
+    let name = ''
+    Object.keys(SUPPORTED_WALLETS).map(key => {
+      if (connector === SUPPORTED_WALLETS[key].connector) {
+        return (name = SUPPORTED_WALLETS[key].name)
+      }
+      return true
+    })
+
+    // log selected wallet
+    ReactGA.event({
+      category: 'Wallet',
+      action: 'Signout Wallet',
+      label: name
+    })
+
+    connector && connector.signOut()
+    .then(() => {
+      setUserWallet('');
+      toggleWalletModal();
+    })
+    .catch(error => {
+      toggleWalletModal();
+    });
   }
 
   function getStatusIcon() {
@@ -330,7 +359,7 @@ export default function AccountDetails({
                     <WalletAction
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                       onClick={() => {
-                        ;(connector as AbstractWallet).signOut()
+                        tryDeactivation(connector);
                       }}
                     >
                       Disconnect

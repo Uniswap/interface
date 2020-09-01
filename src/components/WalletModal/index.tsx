@@ -141,7 +141,7 @@ export default function WalletModal({
 
   const [active, setActive] = useState<boolean>()
 
-  const [, setUserWallet] = useUserWallet()
+  const [userWallet, setUserWallet] = useUserWallet()
 
   const walletModalOpen = useWalletModalOpen()
   const toggleWalletModal = useWalletModalToggle()
@@ -329,7 +329,7 @@ export default function WalletModal({
         </UpperSection>
       )
     }
-    if (account && walletView === WALLET_VIEWS.ACCOUNT) {
+    if (userWallet !== '' && account && walletView === WALLET_VIEWS.ACCOUNT) {
       return (
         <AccountDetails
           toggleWalletModal={toggleWalletModal}
