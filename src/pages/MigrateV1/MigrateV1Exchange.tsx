@@ -348,14 +348,14 @@ export default function MigrateV1Exchange({
   // redirect for invalid url params
   if (!validatedAddress || tokenAddress === AddressZero) {
     console.error('Invalid address in path', address)
-    return <Redirect to="/migrate/v1" />
+    return <Redirect to="/uniswap/migrate/v1" />
   }
 
   return (
     <BodyWrapper style={{ padding: 24 }}>
       <AutoColumn gap="16px">
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
-          <BackArrow to="/migrate/v1" />
+          <BackArrow to="/uniswap/migrate/v1" />
           <TYPE.mediumHeader>Migrate V1 Liquidity</TYPE.mediumHeader>
           <div>
             <QuestionHelper text="Migrate your liquidity tokens from Uniswap V1 to Uniswap V2." />

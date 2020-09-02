@@ -70,7 +70,7 @@ export function FindPoolTabs() {
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem' }}>
-        <HistoryLink to="/pool">
+        <HistoryLink to="/uniswap/pool">
           <StyledArrowLeft />
         </HistoryLink>
         <ActiveText>Import Pool</ActiveText>
@@ -84,7 +84,7 @@ export function AddRemoveTabs({ adding }: { adding: boolean }) {
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem' }}>
-        <HistoryLink to="/pool">
+        <HistoryLink to="/uniswap/pool">
           <StyledArrowLeft />
         </HistoryLink>
         <ActiveText>{adding ? 'Add' : 'Remove'} Liquidity</ActiveText>
