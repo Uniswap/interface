@@ -43,12 +43,38 @@ export interface Colors {
   green1: Color
   yellow1: Color
   yellow2: Color
+
+  // farms
+  green500: Color
+  red100: Color
+  red200: Color
+  red500: Color
+  grey100: Color
+  grey200: Color
+  grey300: Color
+  grey400: Color
+  grey500: Color
+  grey600: Color
+  grey800: Color
+  primaryLight: Color
+  primaryMain: Color
+  secondaryMain: Color
 }
 
 export interface Grids {
   sm: number
   md: number
   lg: number
+}
+
+export interface Spacing {
+  1: number
+  2: number
+  3: number
+  4: number
+  5: number
+  6: number
+  7: number
 }
 
 declare module 'styled-components' {
@@ -69,5 +95,10 @@ declare module 'styled-components' {
     // css snippets
     flexColumnNoWrap: FlattenSimpleInterpolation
     flexRowNoWrap: FlattenSimpleInterpolation
+
+    // farms
+    siteWidth: number
+    spacing: Spacing
+    topBarSize: number
   }
 }

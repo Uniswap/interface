@@ -78,11 +78,27 @@ export function colors(darkMode: boolean): Colors {
     red2: '#F82D3A',
     green1: '#27AE60',
     yellow1: '#FFE270',
-    yellow2: '#F3841E'
+    yellow2: '#F3841E',
 
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
+
+    // farms
+    green500: '#00D110',
+    red100: '#FFFDFE',
+    red200: '#FFA8C7',
+    red500: '#D1004B',
+    grey100: '#f7f2f4',
+    grey200: '#F0E7EA',
+    grey300: '#e2cfd5',
+    grey400: '#AA8592',
+    grey500: '#80495D',
+    grey600: '#5B2639',
+    grey800: '#2D121B',
+    primaryLight: '#FFA8C7',
+    primaryMain: '#D1004B',
+    secondaryMain: '#00D110'
   }
 }
 
@@ -110,7 +126,20 @@ export function theme(darkMode: boolean): DefaultTheme {
     flexRowNoWrap: css`
       display: flex;
       flex-flow: row nowrap;
-    `
+    `,
+
+    // farms
+    siteWidth: 1200,
+    spacing: {
+      1: 4,
+      2: 8,
+      3: 16,
+      4: 24,
+      5: 32,
+      6: 48,
+      7: 64
+    },
+    topBarSize: 72
   }
 }
 

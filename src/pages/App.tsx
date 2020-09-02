@@ -21,6 +21,8 @@ import RemoveLiquidity from './RemoveLiquidity'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import Farms from './Farms'
+import FarmsProvider from '../contexts/Farms'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -71,20 +73,35 @@ export default function App() {
             <Popups />
             <Web3ReactManager>
               <Switch>
-                <Route exact strict path="/swap" component={Swap} />
-                <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
-                <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
-                <Route exact strict path="/find" component={PoolFinder} />
-                <Route exact strict path="/pool" component={Pool} />
-                <Route exact strict path="/create" component={RedirectToAddLiquidity} />
-                <Route exact path="/add" component={AddLiquidity} />
-                <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
-                <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-                <Route exact strict path="/remove/v1/:address" component={RemoveV1Exchange} />
-                <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
-                <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-                <Route exact strict path="/migrate/v1" component={MigrateV1} />
-                <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
+                <Route path="/farms">
+                  <FarmsProvider>
+                    <Farms />
+                  </FarmsProvider>
+                </Route>
+                <Route exact strict path="/uniswap/swap" component={Swap} />
+                <Route exact strict path="/uniswap/swap/:outputCurrency" component={RedirectToSwap} />
+                <Route exact strict path="/uniswap/send" component={RedirectPathToSwapOnly} />
+                <Route exact strict path="/uniswap/find" component={PoolFinder} />
+                <Route exact strict path="/uniswap/pool" component={Pool} />
+                <Route exact strict path="/uniswap/create" component={RedirectToAddLiquidity} />
+                <Route exact path="/uniswap/add" component={AddLiquidity} />
+                <Route exact path="/uniswap/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
+                <Route exact path="/uniswap/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
+                <Route exact strict path="/uniswap/remove/v1/:address" component={RemoveV1Exchange} />
+                <Route
+                  exact
+                  strict
+                  path="/uniswap/remove/:tokens"
+                  component={RedirectOldRemoveLiquidityPathStructure}
+                />
+                <Route
+                  exact
+                  strict
+                  path="/uniswap/uniswap/remove/:currencyIdA/:currencyIdB"
+                  component={RemoveLiquidity}
+                />
+                <Route exact strict path="/uniswap/migrate/v1" component={MigrateV1} />
+                <Route exact strict path="/uniswap/migrate/v1/:address" component={MigrateV1Exchange} />
                 <Route component={RedirectPathToSwapOnly} />
               </Switch>
             </Web3ReactManager>
