@@ -18,6 +18,7 @@ const StyledMain = styled.div`
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - ${({ theme }) => theme.topBarSize * 2}px);
+  margin-top: -100px;
 `
 
 export default Page
