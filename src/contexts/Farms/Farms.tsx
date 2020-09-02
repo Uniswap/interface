@@ -3,19 +3,29 @@ import React, { useCallback, useEffect, useState } from 'react'
 import Context from './context'
 import { Farm } from './types'
 
-const NAME_FOR_POOL: { [key: string]: string } = {
+const NAME_FOR_DEX: { [key: string]: string } = {
   YFI_DEX: 'YFI Farm',
   UNISWAP_DEX: 'Uniswap'
 }
 
-const ICON_FOR_POOL: { [key: string]: string } = {
+const ICON_FOR_DEX: { [key: string]: string } = {
   YFI_DEX: '🐋',
   UNISWAP_DEX: '🦄'
 }
 
-const SORT_FOR_POOL: { [key: string]: number } = {
+const HOME_FOR_DEX: { [key: string]: string } = {
+  YFI_DEX: '/',
+  UNISWAP_DEX: '/swap'
+}
+
+const SORT_FOR_DEX: { [key: string]: number } = {
   YFI_DEX: 0,
   UNISWAP_DEX: 1
+}
+
+const HIGHLIGHT_FOR_DEX: { [key: string]: boolean } = {
+  YFI_DEX: false,
+  UNISWAP_DEX: true
 }
 
 // eslint-disable-next-line react/prop-types
@@ -24,18 +34,20 @@ const Farms: React.FC = ({ children }) => {
 
   const fetchDexList = useCallback(() => {
     const farmsArr: Farm[] = []
-    const poolKeys = Object.keys(NAME_FOR_POOL)
+    const dexKeys = Object.keys(NAME_FOR_DEX)
 
-    for (let i = 0; i < poolKeys.length; i++) {
-      const poolKey = poolKeys[i]
-      const tokenKey = poolKey.replace('_DEX', '').toLowerCase()
+    for (let i = 0; i < dexKeys.length; i++) {
+      const dexKey = dexKeys[i]
+      const tokenKey = dexKey.replace('_DEX', '').toLowerCase()
 
       try {
         farmsArr.push({
-          name: NAME_FOR_POOL[poolKey],
-          icon: ICON_FOR_POOL[poolKey],
+          name: NAME_FOR_DEX[dexKey],
+          icon: ICON_FOR_DEX[dexKey],
+          home: HOME_FOR_DEX[dexKey],
           id: tokenKey,
-          sort: SORT_FOR_POOL[poolKey]
+          sort: SORT_FOR_DEX[dexKey],
+          highlight: HIGHLIGHT_FOR_DEX[dexKey]
         })
       } catch (e) {
         console.log(e)
