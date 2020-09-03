@@ -1,4 +1,4 @@
-import { ChainId } from '@crisog/uniswap-xdai-sdk'
+import { ChainId } from 'uniswap-xdai-sdk'
 import { createStore, Store } from 'redux'
 import { addPopup, removePopup, toggleSettingsMenu, toggleWalletModal, updateBlockNumber } from './actions'
 import reducer, { ApplicationState } from './reducer'

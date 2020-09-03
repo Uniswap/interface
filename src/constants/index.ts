@@ -1,9 +1,9 @@
-import { ChainId, JSBI, Percent, Token, WETH } from '@crisog/uniswap-xdai-sdk'
+import { ChainId, JSBI, Percent, Token, WETH } from 'uniswap-xdai-sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
 import { injected, portis, walletconnect } from '../connectors'
 
-export const ROUTER_ADDRESS = '0xCb8E5897d9adf66443690F5c0d506f60aE5A6cD9'
+export const ROUTER_ADDRESS = '0x1C232F01118CB8B424793ae03F870aa7D0ac7f77'
 
 // a list of tokens by chain
 type ChainTokenList = {

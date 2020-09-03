@@ -1,4 +1,4 @@
-import { ChainId, JSBI, Pair, Route, Token, TokenAmount, Trade, TradeType } from '@crisog/uniswap-xdai-sdk'
+import { ChainId, JSBI, Pair, Route, Token, TokenAmount, Trade, TradeType } from 'uniswap-xdai-sdk'
 import { computeTradePriceBreakdown } from './prices'
 
 describe('prices', () => {

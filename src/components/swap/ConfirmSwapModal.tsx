@@ -1,4 +1,4 @@
-import { currencyEquals, Trade } from '@crisog/uniswap-xdai-sdk'
+import { currencyEquals, Trade } from 'uniswap-xdai-sdk'
 import React, { useCallback, useMemo } from 'react'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,

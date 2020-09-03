@@ -1,4 +1,4 @@
-import { Trade, TradeType } from '@crisog/uniswap-xdai-sdk'
+import { Trade, TradeType } from 'uniswap-xdai-sdk'
 import React, { useContext, useMemo } from 'react'
 import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'

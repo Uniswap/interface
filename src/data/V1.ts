@@ -14,7 +14,7 @@ import {
   Trade,
   TradeType,
   WETH
-} from '@crisog/uniswap-xdai-sdk'
+} from 'uniswap-xdai-sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
 import { useAllTokens } from '../hooks/Tokens'

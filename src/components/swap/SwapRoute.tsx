@@ -1,4 +1,4 @@
-import { Trade } from '@crisog/uniswap-xdai-sdk'
+import { Trade } from 'uniswap-xdai-sdk'
 import React, { Fragment, memo, useContext } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Flex } from 'rebass'

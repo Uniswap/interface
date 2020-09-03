@@ -1,4 +1,4 @@
-import { ChainId } from '@crisog/uniswap-xdai-sdk'
+import { ChainId } from 'uniswap-xdai-sdk'
 import MULTICALL_ABI from './abi.json'
 
 const MULTICALL_NETWORKS: { [chainId in ChainId]: string } = {

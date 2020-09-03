@@ -1,4 +1,4 @@
-import { Percent } from '@crisog/uniswap-xdai-sdk'
+import { Percent } from 'uniswap-xdai-sdk'
 import React from 'react'
 import { ONE_BIPS } from '../../constants'
 import { warningSeverity } from '../../utils/prices'

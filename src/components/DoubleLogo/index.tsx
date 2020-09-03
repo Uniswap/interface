@@ -1,4 +1,4 @@
-import { Currency } from '@crisog/uniswap-xdai-sdk'
+import { Currency } from 'uniswap-xdai-sdk'
 import React from 'react'
 import styled from 'styled-components'
 import CurrencyLogo from '../CurrencyLogo'

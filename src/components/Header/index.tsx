@@ -1,4 +1,4 @@
-import { ChainId } from '@crisog/uniswap-xdai-sdk'
+import { ChainId } from 'uniswap-xdai-sdk'
 import React from 'react'
 import { isMobile } from 'react-device-detect'
 import { Text } from 'rebass'

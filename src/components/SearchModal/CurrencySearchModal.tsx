@@ -1,4 +1,4 @@
-import { Currency } from '@crisog/uniswap-xdai-sdk'
+import { Currency } from 'uniswap-xdai-sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import ReactGA from 'react-ga'
 import useLast from '../../hooks/useLast'

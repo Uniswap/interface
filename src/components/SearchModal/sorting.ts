@@ -1,4 +1,4 @@
-import { Token, TokenAmount } from '@crisog/uniswap-xdai-sdk'
+import { Token, TokenAmount } from 'uniswap-xdai-sdk'
 import { useMemo } from 'react'
 import { useAllTokenBalances } from '../../state/wallet/hooks'
 

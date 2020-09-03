@@ -1,4 +1,4 @@
-import { CurrencyAmount, ETHER, JSBI } from '@crisog/uniswap-xdai-sdk'
+import { CurrencyAmount, ETHER, JSBI } from 'uniswap-xdai-sdk'
 import { MIN_ETH } from '../constants'
 
 /**

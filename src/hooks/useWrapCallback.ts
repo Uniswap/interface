@@ -1,4 +1,4 @@
-import { Currency, currencyEquals, ETHER, WETH } from '@crisog/uniswap-xdai-sdk'
+import { Currency, currencyEquals, ETHER, WETH } from 'uniswap-xdai-sdk'
 import { useMemo } from 'react'
 import { tryParseAmount } from '../state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
