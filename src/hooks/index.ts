@@ -1,13 +1,50 @@
 import { Web3Provider } from '@ethersproject/providers'
-import { ChainID } from '@harmony-js/utils';
 import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
 import { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { injected } from '../connectors'
 import { NetworkContextName } from '../constants'
+//import { AbstractWallet } from '../wallets/AbstractWallet'
+import { hmy } from '../connectors'
 
-export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> & { chainId?: ChainID } {
+import { useUserWallet, useUserActiveWallet } from '../state/user/hooks'
+import { UserWallet } from '../constants'
+import { Hmy } from '../blockchain'
+
+const { Harmony } = require('@harmony-js/core');
+const { ChainID } = require('@harmony-js/utils');
+
+export interface HmyReactContextInterface {
+  userWallet: UserWallet;
+  wallet: any;
+  wrapper: Hmy, 
+  library: typeof Harmony;
+  chainId: typeof ChainID;
+  account: null | string;
+  bech32Address: null | string;
+  active: boolean;
+  error?: Error;
+}
+
+export function useActiveHmyReact(): HmyReactContextInterface  & { chainId?: typeof ChainID } {
+  const [userWallet,] = useUserWallet()
+
+  let hmyReact: HmyReactContextInterface = {
+    userWallet: userWallet,
+    wallet: useUserActiveWallet(),
+    wrapper: hmy,
+    library: hmy.client,
+    chainId: hmy.chainId,
+    account: userWallet.address,
+    bech32Address: userWallet.bech32Address,
+    active: userWallet.active
+  };
+
+  return hmyReact;
+}
+
+export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> & { chainId?: typeof ChainID } {
   const context = useWeb3ReactCore<Web3Provider>()
   const contextNetwork = useWeb3ReactCore<Web3Provider>(NetworkContextName)
   return context.active ? context : contextNetwork

@@ -16,12 +16,13 @@ import {
   WONE
 } from '@swoop-exchange/sdk'
 import { useMemo } from 'react'
-import { useActiveWeb3React } from '../hooks'
 import { useAllTokens } from '../hooks/Tokens'
 import { useV1FactoryContract } from '../hooks/useContract'
 import { Version } from '../hooks/useToggledVersion'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from '../state/multicall/hooks'
 import { useETHBalances, useTokenBalance, useTokenBalances } from '../state/wallet/hooks'
+
+import { useActiveHmyReact } from '../hooks'
 
 export function useV1ExchangeAddress(tokenAddress?: string): string | undefined {
   const contract = useV1FactoryContract()
@@ -73,7 +74,7 @@ export function useAllTokenV1Exchanges(): { [exchangeAddress: string]: Token } {
 
 // returns whether any of the tokens in the user's token list have liquidity on v1
 export function useUserHasLiquidityInAllTokens(): boolean | undefined {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useActiveHmyReact();
 
   const exchanges = useAllTokenV1Exchanges()
 

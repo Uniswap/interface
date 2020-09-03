@@ -1,4 +1,4 @@
-import { splitSignature } from '@ethersproject/bytes'
+//import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, HARMONY, Percent, WONE } from '@swoop-exchange/sdk'
@@ -21,7 +21,6 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 import Slider from '../../components/Slider'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { ROUTER_ADDRESS } from '../../constants'
-import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { usePairContract } from '../../hooks/useContract'
 
@@ -42,6 +41,8 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 
+import { useActiveHmyReact } from '../../hooks'
+
 export default function RemoveLiquidity({
   history,
   match: {
@@ -49,7 +50,9 @@ export default function RemoveLiquidity({
   }
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
-  const { account, chainId, library } = useActiveWeb3React()
+
+  const { account, chainId, library } = useActiveHmyReact()
+
   const [tokenA, tokenB] = useMemo(() => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)], [
     currencyA,
     currencyB,
@@ -98,12 +101,14 @@ export default function RemoveLiquidity({
 
   // allowance handling
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
-  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
+  //const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
+  const [approval,] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
   async function onAttemptToApprove() {
     if (!pairContract || !pair || !library) throw new Error('missing dependencies')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
     // try to gather a signature for permission
+    /* TODO: re-enable this later!
     const nonce = await pairContract.nonces(account)
 
     const deadlineForSignature: number = Math.ceil(Date.now() / 1000) + deadline
@@ -160,7 +165,7 @@ export default function RemoveLiquidity({
         if (error?.code !== 4001) {
           approveCallback()
         }
-      })
+      })*/
   }
 
   // wrapped onUserInput to clear signatures
@@ -423,9 +428,8 @@ export default function RemoveLiquidity({
 
   const oneCurrencyIsETH = currencyA === HARMONY || currencyB === HARMONY
   const oneCurrencyIsWONE = Boolean(
-    chainId &&
-      ((currencyA && currencyEquals(WONE[chainId], currencyA)) ||
-        (currencyB && currencyEquals(WONE[chainId], currencyB)))
+    //@ts-ignore
+    chainId && ((currencyA && currencyEquals(WONE[chainId], currencyA)) || (currencyB && currencyEquals(WONE[chainId], currencyB)))
   )
 
   const handleSelectCurrencyA = useCallback(
@@ -463,6 +467,9 @@ export default function RemoveLiquidity({
     Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0)),
     liquidityPercentChangeCallback
   )
+
+  //@ts-ignore
+  const woneToken = WONE[chainId]
 
   return (
     <>
@@ -557,8 +564,8 @@ export default function RemoveLiquidity({
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/${currencyA === HARMONY ? WONE[chainId].address : currencyIdA}/${
-                              currencyB === HARMONY ? WONE[chainId].address : currencyIdB
+                            to={`/remove/${currencyA === HARMONY ? woneToken.address : currencyIdA}/${
+                              currencyB === HARMONY ? woneToken.address : currencyIdB
                             }`}
                           >
                             Receive WONE
@@ -566,8 +573,8 @@ export default function RemoveLiquidity({
                         ) : oneCurrencyIsWONE ? (
                           <StyledInternalLink
                             to={`/remove/${
-                              currencyA && currencyEquals(currencyA, WONE[chainId]) ? 'ONE' : currencyIdA
-                            }/${currencyB && currencyEquals(currencyB, WONE[chainId]) ? 'ONE' : currencyIdB}`}
+                              currencyA && currencyEquals(currencyA, woneToken) ? 'ONE' : currencyIdA
+                            }/${currencyB && currencyEquals(currencyB, woneToken) ? 'ONE' : currencyIdB}`}
                           >
                             Receive ETH
                           </StyledInternalLink>

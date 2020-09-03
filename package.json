@@ -79,7 +79,7 @@
     "styled-components": "^4.2.0",
     "typescript": "^3.8.3",
     "@harmony-js/core": "^0.1.53",
-    "@swoop-exchange/default-token-list": "https://github.com/harmony-one/swoop-default-token-list",
+    "@swoop-exchange/default-token-list": "https://github.com/harmony-one/swoop-default-token-list.git",
     "@swoop-exchange/sdk": "https://github.com/harmony-one/swoop-sdk.git"
   },
   "resolutions": {

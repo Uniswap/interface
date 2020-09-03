@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useActiveWeb3React } from '../../hooks'
 import { useAddPopup, useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
 import { checkedTransaction, finalizeTransaction } from './actions'
+
+import { useActiveHmyReact } from '../../hooks'
 
 export function shouldCheck(
   lastBlockNumber: number,
@@ -27,7 +28,7 @@ export function shouldCheck(
 }
 
 export default function Updater(): null {
-  const { chainId, library } = useActiveWeb3React()
+  const { chainId, library } = useActiveHmyReact();
 
   const lastBlockNumber = useBlockNumber()
 
@@ -47,7 +48,7 @@ export default function Updater(): null {
       .forEach(hash => {
         library
           .getTransactionReceipt(hash)
-          .then(receipt => {
+          .then((receipt: any) => {
             if (receipt) {
               dispatch(
                 finalizeTransaction({
@@ -80,7 +81,7 @@ export default function Updater(): null {
               dispatch(checkedTransaction({ chainId, hash, blockNumber: lastBlockNumber }))
             }
           })
-          .catch(error => {
+          .catch((error: any) => {
             console.error(`failed to check transaction hash: ${hash}`, error)
           })
       })

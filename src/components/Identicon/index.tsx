@@ -2,8 +2,9 @@ import React, { useEffect, useRef } from 'react'
 
 import styled from 'styled-components'
 
-import { useActiveWeb3React } from '../../hooks'
 import Jazzicon from 'jazzicon'
+
+import { useActiveHmyReact } from '../../hooks'
 
 const StyledIdenticonContainer = styled.div`
   height: 1rem;
@@ -15,7 +16,7 @@ const StyledIdenticonContainer = styled.div`
 export default function Identicon() {
   const ref = useRef<HTMLDivElement>()
 
-  const { account } = useActiveWeb3React()
+  const { account } = useActiveHmyReact()
 
   useEffect(() => {
     if (account && ref.current) {

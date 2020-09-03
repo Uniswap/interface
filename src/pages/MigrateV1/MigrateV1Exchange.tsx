@@ -16,7 +16,6 @@ import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../../const
 import { MIGRATOR_ADDRESS } from '../../constants/abis/migrator'
 import { PairState, usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
-import { useActiveWeb3React } from '../../hooks'
 import { useToken } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useV1ExchangeContract, useV2MigratorContract } from '../../hooks/useContract'
@@ -24,9 +23,11 @@ import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { useIsTransactionPending, useTransactionAdder } from '../../state/transactions/hooks'
 import { useETHBalances, useTokenBalance } from '../../state/wallet/hooks'
 import { BackArrow, ExternalLink, TYPE } from '../../theme'
-import { getEtherscanLink, isAddress } from '../../utils'
+import { getHarmonyExplorerLink, isAddress } from '../../utils'
 import { BodyWrapper } from '../AppBody'
 import { EmptyState } from './EmptyState'
+
+import { useActiveHmyReact } from '../../hooks'
 
 const POOL_CURRENCY_AMOUNT_MIN = new Fraction(JSBI.BigInt(1), JSBI.BigInt(1000000))
 const WEI_DENOM = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
@@ -58,7 +59,10 @@ export function V1LiquidityInfo({
   tokenWorth: TokenAmount
   ethWorth: CurrencyAmount
 }) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useActiveHmyReact();
+
+  //@ts-ignore
+  const woneToken = WONE[chainId]
 
   return (
     <>
@@ -67,14 +71,14 @@ export function V1LiquidityInfo({
         <div style={{ marginLeft: '.75rem' }}>
           <TYPE.mediumHeader>
             {<FormattedPoolCurrencyAmount currencyAmount={liquidityTokenAmount} />}{' '}
-            {chainId && token.equals(WONE[chainId]) ? 'WONE' : token.symbol}/ETH
+            {chainId && token.equals(woneToken) ? 'WONE' : token.symbol}/ETH
           </TYPE.mediumHeader>
         </div>
       </AutoRow>
 
       <RowBetween my="1rem">
         <Text fontSize={16} fontWeight={500}>
-          Pooled {chainId && token.equals(WONE[chainId]) ? 'WONE' : token.symbol}:
+          Pooled {chainId && token.equals(woneToken) ? 'WONE' : token.symbol}:
         </Text>
         <RowFixed>
           <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
@@ -99,14 +103,16 @@ export function V1LiquidityInfo({
 }
 
 function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount: TokenAmount; token: Token }) {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, wrapper } = useActiveHmyReact();
   const totalSupply = useTotalSupply(liquidityTokenAmount.token)
   const exchangeETHBalance = useETHBalances([liquidityTokenAmount.token.address])?.[liquidityTokenAmount.token.address]
   const exchangeTokenBalance = useTokenBalance(liquidityTokenAmount.token.address, token)
 
+  //@ts-ignore
   const [v2PairState, v2Pair] = usePair(chainId ? WONE[chainId] : undefined, token)
   const isFirstLiquidityProvider: boolean = v2PairState === PairState.NOT_EXISTS
 
+  //@ts-ignore
   const v2SpotPrice = chainId && v2Pair ? v2Pair.reserveOf(token).divide(v2Pair.reserveOf(WONE[chainId])) : undefined
 
   const [confirmingMigration, setConfirmingMigration] = useState<boolean>(false)
@@ -202,7 +208,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
         This tool will safely migrate your V1 liquidity to V2 with minimal price risk. The process is completely
         trustless thanks to the{' '}
         {chainId && (
-          <ExternalLink href={getEtherscanLink(chainId, MIGRATOR_ADDRESS, 'address')}>
+          <ExternalLink href={getHarmonyExplorerLink(wrapper, MIGRATOR_ADDRESS, 'address')}>
             <TYPE.blue display="inline">Uniswap migration contract↗</TYPE.blue>
           </ExternalLink>
         )}
@@ -329,7 +335,8 @@ export default function MigrateV1Exchange({
   }
 }: RouteComponentProps<{ address: string }>) {
   const validatedAddress = isAddress(address)
-  const { chainId, account } = useActiveWeb3React()
+
+  const { account, chainId } = useActiveHmyReact();
 
   const exchangeContract = useV1ExchangeContract(validatedAddress ? validatedAddress : undefined)
   const tokenAddress = useSingleCallResult(exchangeContract, 'tokenAddress', undefined, NEVER_RELOAD)?.result?.[0]
@@ -351,6 +358,9 @@ export default function MigrateV1Exchange({
     return <Redirect to="/migrate/v1" />
   }
 
+  //@ts-ignore
+  const woneToken = WONE[chainId]
+
   return (
     <BodyWrapper style={{ padding: 24 }}>
       <AutoColumn gap="16px">
@@ -364,7 +374,7 @@ export default function MigrateV1Exchange({
 
         {!account ? (
           <TYPE.largeHeader>You must connect an account.</TYPE.largeHeader>
-        ) : validatedAddress && chainId && token?.equals(WONE[chainId]) ? (
+        ) : validatedAddress && chainId && token?.equals(woneToken) ? (
           <>
             <TYPE.body my={9} style={{ fontWeight: 400 }}>
               Because Uniswap V2 uses WONE under the hood, your Uniswap V1 WONE/ONE liquidity cannot be migrated. You

@@ -9,7 +9,6 @@ import { AutoColumn } from '../../components/Column'
 import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow } from '../../components/Row'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
-import { useActiveWeb3React } from '../../hooks'
 import { useToken } from '../../hooks/Tokens'
 import { useV1ExchangeContract } from '../../hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
@@ -25,6 +24,8 @@ import { Dots } from '../../components/swap/styleds'
 import { Contract } from '@ethersproject/contracts'
 import { useTotalSupply } from '../../data/TotalSupply'
 
+import { useActiveHmyReact } from '../../hooks'
+
 const WEI_DENOM = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 const ZERO = JSBI.BigInt(0)
 const ONE = JSBI.BigInt(1)
@@ -39,7 +40,7 @@ function V1PairRemoval({
   liquidityTokenAmount: TokenAmount
   token: Token
 }) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useActiveHmyReact();
   const totalSupply = useTotalSupply(liquidityTokenAmount.token)
   const exchangeETHBalance = useETHBalances([liquidityTokenAmount.token.address])?.[liquidityTokenAmount.token.address]
   const exchangeTokenBalance = useTokenBalance(liquidityTokenAmount.token.address, token)
@@ -60,6 +61,9 @@ function V1PairRemoval({
   const addTransaction = useTransactionAdder()
   const isRemovalPending = useIsTransactionPending(pendingRemovalHash ?? undefined)
 
+  //@ts-ignore
+  const woneToken = WONE[chainId]
+
   const remove = useCallback(() => {
     if (!liquidityTokenAmount) return
 
@@ -79,7 +83,7 @@ function V1PairRemoval({
         })
 
         addTransaction(response, {
-          summary: `Remove ${chainId && token.equals(WONE[chainId]) ? 'WONE' : token.symbol}/ONE V1 liquidity`
+          summary: `Remove ${chainId && token.equals(woneToken) ? 'WONE' : token.symbol}/ONE V1 liquidity`
         })
         setPendingRemovalHash(response.hash)
       })
@@ -87,7 +91,7 @@ function V1PairRemoval({
         console.error(error)
         setConfirmingRemoval(false)
       })
-  }, [exchangeContract, liquidityTokenAmount, token, chainId, addTransaction])
+  }, [exchangeContract, liquidityTokenAmount, token, chainId, addTransaction, woneToken])
 
   const noLiquidityTokens = !!liquidityTokenAmount && liquidityTokenAmount.equalTo(ZERO)
 
@@ -119,7 +123,7 @@ function V1PairRemoval({
       </LightCard>
       <TYPE.darkGray style={{ textAlign: 'center' }}>
         {`Your Uniswap V1 ${
-          chainId && token.equals(WONE[chainId]) ? 'WONE' : token.symbol
+          chainId && token.equals(woneToken) ? 'WONE' : token.symbol
         }/ONE liquidity will be redeemed for underlying assets.`}
       </TYPE.darkGray>
     </AutoColumn>
@@ -132,7 +136,7 @@ export default function RemoveV1Exchange({
   }
 }: RouteComponentProps<{ address: string }>) {
   const validatedAddress = isAddress(address)
-  const { chainId, account } = useActiveWeb3React()
+  const { account, chainId } = useActiveHmyReact();
 
   const exchangeContract = useV1ExchangeContract(validatedAddress ? validatedAddress : undefined, true)
   const tokenAddress = useSingleCallResult(exchangeContract, 'tokenAddress', undefined, NEVER_RELOAD)?.result?.[0]

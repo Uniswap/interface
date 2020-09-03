@@ -1,0 +1,49 @@
+{
+  "name": "Swoop Default List",
+  "timestamp": "2020-09-03T20:52:11.844Z",
+  "version": {
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+  },
+  "tags": {},
+  "logoURI": "https://swoop-exchange.s3-us-west-1.amazonaws.com/swoop.png",
+  "keywords": [
+    "swoop",
+    "default"
+  ],
+  "tokens": [
+    {
+      "chainId": 1,
+      "address": "0x7a791E76BF4d4f3b9B492AbB74E5108180bE6B5a",
+      "symbol": "1LINK",
+      "name": "1ChainLink",
+      "decimals": 18,
+      "logoURI": "https://swoop-exchange.s3-us-west-1.amazonaws.com/tokens/1LINK.png"
+    },
+    {
+      "chainId": 1,
+      "address": "0x493c9d4362fB4FD1D0C17a6ECad08de33Fc1d8C2",
+      "symbol": "1SEED",
+      "name": "1Seed",
+      "decimals": 18,
+      "logoURI": "https://swoop-exchange.s3-us-west-1.amazonaws.com/tokens/1SEED.png"
+    },
+    {
+      "chainId": 1,
+      "address": "0xcBb5B054EC45C69a25c818d6ce02a3c1b9ae6B46",
+      "symbol": "HBTC",
+      "name": "HBTC",
+      "decimals": 18,
+      "logoURI": "https://swoop-exchange.s3-us-west-1.amazonaws.com/tokens/HBTC.png"
+    },
+    {
+      "chainId": 1,
+      "address": "0xCF1a7272439bEd258311d2034220B63e15d019B1",
+      "symbol": "HETH",
+      "name": "HETH",
+      "decimals": 18,
+      "logoURI": "https://swoop-exchange.s3-us-west-1.amazonaws.com/tokens/HETH.png"
+    }
+  ]
+}

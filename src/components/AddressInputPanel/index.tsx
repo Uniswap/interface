@@ -1,12 +1,12 @@
 import React, { useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import useENS from '../../hooks/useENS'
-import { hmy } from '../../connectors'
-//import { useActiveWeb3React } from '../../hooks'
 import { ExternalLink, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
-import { getEtherscanLink } from '../../utils'
+import { getHarmonyExplorerLink } from '../../utils'
+
+import { useActiveHmyReact } from '../../hooks'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -77,7 +77,7 @@ export default function AddressInputPanel({
   // triggers whenever the typed value changes
   onChange: (value: string) => void
 }) {
-  const chainId = hmy.chainId;
+  const { chainId, wrapper } = useActiveHmyReact();
   const theme = useContext(ThemeContext)
 
   const { address, loading, name } = useENS(value)
@@ -103,8 +103,8 @@ export default function AddressInputPanel({
                 Recipient
               </TYPE.black>
               {address && chainId && (
-                <ExternalLink href={getEtherscanLink(chainId, name ?? address, 'address')} style={{ fontSize: '14px' }}>
-                  (View on Etherscan)
+                <ExternalLink href={getHarmonyExplorerLink(wrapper, name ?? address, 'address')} style={{ fontSize: '14px' }}>
+                  (View on Harmony Explorer)
                 </ExternalLink>
               )}
             </RowBetween>

@@ -1,15 +1,15 @@
 import React, { useContext } from 'react'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { Token, TokenAmount, WONE } from '@swoop-exchange/sdk'
-import { hmy } from '../../connectors'
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
 import { ButtonSecondary } from '../Button'
 import { RowBetween, RowFixed } from '../Row'
 import { FixedHeightRow, HoverCard } from './index'
 import DoubleCurrencyLogo from '../DoubleLogo'
-//import { useActiveWeb3React } from '../../hooks'
 import { ThemeContext } from 'styled-components'
+
+import { useActiveHmyReact } from '../../hooks'
 
 interface PositionCardProps extends RouteComponentProps<{}> {
   token: Token
@@ -19,7 +19,7 @@ interface PositionCardProps extends RouteComponentProps<{}> {
 function V1PositionCard({ token, V1LiquidityBalance }: PositionCardProps) {
   const theme = useContext(ThemeContext)
 
-  const chainId = hmy.chainId;
+  const { chainId } = useActiveHmyReact();
   // @ts-ignore
   var wone: any = WONE[chainId];
 

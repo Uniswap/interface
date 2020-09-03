@@ -130,7 +130,6 @@ export default function WalletModal({
 }) {
   // important that these are destructed from the account-specific web3-react context
   const { connector, error } = useWeb3React()
-  //const { active, account, connector, activate, error } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
@@ -201,7 +200,8 @@ export default function WalletModal({
       let wallet: UserWallet = {
         type: connector.sessionType,
         address: connector.base16Address,
-        bech32Address: connector.address
+        bech32Address: connector.address,
+        active: true
       };
 
       setPendingError(false);

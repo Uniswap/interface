@@ -1,11 +1,12 @@
 import { JSBI } from '@swoop-exchange/sdk'
 import { useMemo } from 'react'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
-import { useActiveWeb3React } from './index'
 import { useSocksController } from './useContract'
 
+import { useActiveHmyReact } from '../hooks'
+
 export default function useSocksBalance(): JSBI | undefined {
-  const { account } = useActiveWeb3React()
+  const { account } = useActiveHmyReact()
   const socksContract = useSocksController()
 
   const { result } = useSingleCallResult(socksContract, 'balanceOf', [account ?? undefined], NEVER_RELOAD)

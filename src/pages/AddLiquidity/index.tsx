@@ -19,7 +19,6 @@ import Row, { RowBetween, RowFlat } from '../../components/Row'
 
 import { ROUTER_ADDRESS } from '../../constants'
 import { PairState } from '../../data/Reserves'
-import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -38,22 +37,23 @@ import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
 import { PoolPriceBar } from './PoolPriceBar'
 
+import { useActiveHmyReact } from '../../hooks'
+
 export default function AddLiquidity({
   match: {
     params: { currencyIdA, currencyIdB }
   },
   history
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId, library } = useActiveHmyReact()
   const theme = useContext(ThemeContext)
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
 
   const oneCurrencyIsWONE = Boolean(
-    chainId &&
-      ((currencyA && currencyEquals(currencyA, WONE[chainId])) ||
-        (currencyB && currencyEquals(currencyB, WONE[chainId])))
+    // @ts-ignore
+    chainId && ((currencyA && currencyEquals(currencyA, WONE[chainId])) || (currencyB && currencyEquals(currencyB, WONE[chainId])))
   )
 
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected

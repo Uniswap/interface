@@ -2,9 +2,9 @@ import { Currency, currencyEquals, JSBI, Price, WONE } from '@swoop-exchange/sdk
 import { useMemo } from 'react'
 import { USDC } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
-import { hmy } from '../connectors'
-//import { useActiveWeb3React } from '../hooks'
 import { wrappedCurrency } from './wrappedCurrency'
+
+import { useActiveHmyReact } from '../hooks'
 
 const { ChainID } = require("@harmony-js/utils");
 
@@ -13,7 +13,7 @@ const { ChainID } = require("@harmony-js/utils");
  * @param currency currency to compute the USDC price of
  */
 export default function useUSDCPrice(currency?: Currency): Price | undefined {
-  const { chainId } = hmy.chainId;
+  const { chainId } = useActiveHmyReact();
   const wrapped = wrappedCurrency(currency, chainId)
   const tokenPairs: [Currency | undefined, Currency | undefined][] = useMemo(
     () => [

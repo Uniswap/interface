@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
 import { useSelectedListInfo } from '../../state/lists/hooks'
 import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
@@ -22,6 +21,8 @@ import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import AutoSizer from 'react-virtualized-auto-sizer'
+
+import { useActiveHmyReact } from '../../hooks'
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -43,7 +44,9 @@ export function CurrencySearch({
   onChangeList
 }: CurrencySearchProps) {
   const { t } = useTranslation()
-  const { chainId } = useActiveWeb3React()
+
+  const { chainId } = useActiveHmyReact();
+
   const theme = useContext(ThemeContext)
 
   const fixedList = useRef<FixedSizeList>()
