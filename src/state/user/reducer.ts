@@ -48,7 +48,7 @@ export interface UserState {
 
   timestamp: number
 
-  userWallet: UserWallet | null
+  userWallet: UserWallet
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -64,7 +64,7 @@ export const initialState: UserState = {
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
-  userWallet: {type: '', address: '', bech32Address: ''}
+  userWallet: {type: null, address: null, bech32Address: null, active: false}
 }
 
 export default createReducer(initialState, builder =>

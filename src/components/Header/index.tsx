@@ -2,25 +2,24 @@ import React from 'react'
 import { isMobile } from 'react-device-detect'
 import { Text } from 'rebass'
 
-import { hmy } from '../../connectors'
-
 import styled from 'styled-components'
 
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
 import Wordmark from '../../assets/svg/wordmark.svg'
 import WordmarkDark from '../../assets/svg/wordmark_white.svg'
-import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 
 import { YellowCard } from '../Card'
 import Settings from '../Settings'
-import Menu from '../Menu'
+//import Menu from '../Menu'
 
 import Row, { RowBetween } from '../Row'
 import Web3Status from '../Web3Status'
-import VersionSwitch from './VersionSwitch'
+//import VersionSwitch from './VersionSwitch'
+
+import { useActiveHmyReact } from '../../hooks'
 
 const { ChainID } = require("@harmony-js/utils");
 
@@ -150,8 +149,7 @@ const NETWORK_LABELS: { [chainId in typeof ChainID]: string | null } = {
 }
 
 export default function Header() {
-  const { account } = useActiveWeb3React()
-  const chainId = hmy.chainId;
+  const { account, chainId } = useActiveHmyReact()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
@@ -184,9 +182,9 @@ export default function Header() {
             </AccountElement>
           </HeaderElement>
           <HeaderElementWrap>
-            <VersionSwitch />
+            {/* <VersionSwitch /> */}
             <Settings />
-            <Menu />
+            {/* <Menu /> */}
           </HeaderElementWrap>
         </HeaderControls>
       </RowBetween>

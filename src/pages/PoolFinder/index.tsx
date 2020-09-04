@@ -11,7 +11,6 @@ import { MinimalPositionCard } from '../../components/PositionCard'
 import Row from '../../components/Row'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
 import { PairState, usePair } from '../../data/Reserves'
-import { useActiveWeb3React } from '../../hooks'
 import { usePairAdder } from '../../state/user/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { StyledInternalLink } from '../../theme'
@@ -19,13 +18,15 @@ import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
 
+import { useActiveHmyReact } from '../../hooks'
+
 enum Fields {
   TOKEN0 = 0,
   TOKEN1 = 1
 }
 
 export default function PoolFinder() {
-  const { account } = useActiveWeb3React()
+  const { account } = useActiveHmyReact()
 
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)

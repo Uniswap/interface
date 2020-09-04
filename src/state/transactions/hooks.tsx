@@ -2,17 +2,18 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import { addTransaction } from './actions'
 import { TransactionDetails } from './reducer'
+
+import { useActiveHmyReact } from '../../hooks'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
   response: TransactionResponse,
   customData?: { summary?: string; approval?: { tokenAddress: string; spender: string } }
 ) => void {
-  const { chainId, account } = useActiveWeb3React()
+  const { account, chainId } = useActiveHmyReact();
   const dispatch = useDispatch<AppDispatch>()
 
   return useCallback(
@@ -35,7 +36,7 @@ export function useTransactionAdder(): (
 
 // returns all the transactions for the current chain
 export function useAllTransactions(): { [txHash: string]: TransactionDetails } {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useActiveHmyReact();
 
   const state = useSelector<AppState, AppState['transactions']>(state => state.transactions)
 

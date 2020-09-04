@@ -2,14 +2,13 @@ import React from 'react'
 import styled from 'styled-components'
 import { CheckCircle, Triangle } from 'react-feather'
 
-import { hmy } from '../../connectors'
-
-//import { useActiveWeb3React } from '../../hooks'
-import { getEtherscanLink } from '../../utils'
+import { getHarmonyExplorerLink } from '../../utils'
 import { ExternalLink } from '../../theme'
 import { useAllTransactions } from '../../state/transactions/hooks'
 import { RowFixed } from '../Row'
 import Loader from '../Loader'
+
+import { useActiveHmyReact } from '../../hooks'
 
 const TransactionWrapper = styled.div``
 
@@ -39,7 +38,7 @@ const IconWrapper = styled.div<{ pending: boolean; success?: boolean }>`
 `
 
 export default function Transaction({ hash }: { hash: string }) {
-  const chainId = hmy.chainId;
+  const { chainId, wrapper } = useActiveHmyReact();
   const allTransactions = useAllTransactions()
 
   const tx = allTransactions?.[hash]
@@ -51,7 +50,7 @@ export default function Transaction({ hash }: { hash: string }) {
 
   return (
     <TransactionWrapper>
-      <TransactionState href={getEtherscanLink(chainId, hash, 'transaction')} pending={pending} success={success}>
+      <TransactionState href={getHarmonyExplorerLink(wrapper, hash, 'transaction')} pending={pending} success={success}>
         <RowFixed>
           <TransactionStatusText>{summary ?? hash} ↗</TransactionStatusText>
         </RowFixed>

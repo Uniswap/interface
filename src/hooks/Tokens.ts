@@ -6,11 +6,12 @@ import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
 
-import { useActiveWeb3React } from './index'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
 
+import { useActiveHmyReact } from '../hooks'
+
 export function useAllTokens(): { [address: string]: Token } {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useActiveHmyReact();
   const userAddedTokens = useUserAddedTokens()
   const allTokens = useSelectedTokenList()
 
@@ -46,7 +47,7 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
 // null if loading
 // otherwise returns the token
 export function useToken(tokenAddress?: string): Token | undefined | null {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useActiveHmyReact();
   const tokens = useAllTokens()
 
   const address = isAddress(tokenAddress)

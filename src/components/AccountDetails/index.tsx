@@ -2,17 +2,16 @@ import React, { useCallback, useContext } from 'react'
 import ReactGA from 'react-ga'
 import { useDispatch } from 'react-redux'
 import styled, { ThemeContext } from 'styled-components'
-import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch } from '../../state'
 import { clearAllTransactions } from '../../state/transactions/actions'
-import { shortenAddress } from '../../utils'
+import { shortenHarmonyAddress } from '../../utils'
 import { AutoRow } from '../Row'
 import Copy from './Copy'
 import Transaction from './Transaction'
 import { SUPPORTED_WALLETS, UserWallet } from '../../constants'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { getEtherscanLink } from '../../utils'
-import { injected, walletconnect, walletlink, fortmatic, portis, hmy } from '../../connectors'
+import { getHarmonyExplorerLink } from '../../utils'
+import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
@@ -24,6 +23,8 @@ import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 
 import { useUserWallet, useUserActiveWallet } from '../../state/user/hooks'
 import { AbstractWallet } from '../../wallets/AbstractWallet'
+
+import { useActiveHmyReact } from '../../hooks'
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
@@ -228,14 +229,12 @@ export default function AccountDetails({
   ENSName,
   openOptions
 }: AccountDetailsProps) {
-  const { account } = useActiveWeb3React()
-  const chainId = hmy.chainId;
+  const { userWallet, account, chainId, wrapper, bech32Address } = useActiveHmyReact();
   const theme = useContext(ThemeContext)
   const dispatch = useDispatch<AppDispatch>()
 
   const [, setUserWallet] = useUserWallet()
 
-  const [userWallet,] = useUserWallet()
   const connector = useUserActiveWallet()
 
   function formatConnectorName() {
@@ -388,7 +387,7 @@ export default function AccountDetails({
                     <>
                       <div>
                         {getStatusIcon()}
-                        <p> {account && shortenAddress(account)}</p>
+                        <p> {bech32Address && shortenHarmonyAddress(bech32Address)}</p>
                       </div>
                     </>
                   )}
@@ -404,14 +403,14 @@ export default function AccountDetails({
                             <span style={{ marginLeft: '4px' }}>Copy Address</span>
                           </Copy>
                         )}
-                        {chainId && account && (
+                        {chainId && account && bech32Address && (
                           <AddressLink
                             hasENS={!!ENSName}
                             isENS={true}
-                            href={chainId && getEtherscanLink(chainId, ENSName, 'address')}
+                            href={chainId && getHarmonyExplorerLink(wrapper, bech32Address, 'address')}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
+                            <span style={{ marginLeft: '4px' }}>View on Harmony Explorer</span>
                           </AddressLink>
                         )}
                       </div>
@@ -421,19 +420,19 @@ export default function AccountDetails({
                   <>
                     <AccountControl>
                       <div>
-                        {account && (
-                          <Copy toCopy={account}>
+                        {account && bech32Address && (
+                          <Copy toCopy={bech32Address}>
                             <span style={{ marginLeft: '4px' }}>Copy Address</span>
                           </Copy>
                         )}
-                        {chainId && account && (
+                        {chainId && account && bech32Address && (
                           <AddressLink
                             hasENS={!!ENSName}
                             isENS={false}
-                            href={getEtherscanLink(chainId, account, 'address')}
+                            href={getHarmonyExplorerLink(wrapper, bech32Address, 'address')}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
+                            <span style={{ marginLeft: '4px' }}>View on Harmony Explorer</span>
                           </AddressLink>
                         )}
                       </div>

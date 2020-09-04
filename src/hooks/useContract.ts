@@ -11,29 +11,29 @@ import UNISOCKS_ABI from '../constants/abis/unisocks.json'
 import WETH_ABI from '../constants/abis/weth.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { V1_EXCHANGE_ABI, V1_FACTORY_ABI, V1_FACTORY_ADDRESSES } from '../constants/v1'
-import { getContract } from '../utils'
-import { useActiveWeb3React } from './index'
-import { hmy } from '../connectors'
+import { getHarmonyContract } from '../utils'
+
+import { useActiveHmyReact } from './index'
 
 const { ChainID } = require("@harmony-js/utils");
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
-  const { library, account } = useActiveWeb3React()
+  const { library, wallet } = useActiveHmyReact()
 
   return useMemo(() => {
     if (!address || !ABI || !library) return null
     try {
-      return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
+      return getHarmonyContract(address, ABI, library, withSignerIfPossible && wallet ? wallet : undefined)
     } catch (error) {
       console.error('Failed to get contract', error)
       return null
     }
-  }, [address, ABI, library, withSignerIfPossible, account])
+  }, [address, ABI, library, withSignerIfPossible, wallet])
 }
 
 export function useV1FactoryContract(): Contract | null {
-  const { chainId } = hmy.chainId;
+  const { chainId } = useActiveHmyReact()
   return useContract(chainId && V1_FACTORY_ADDRESSES[chainId], V1_FACTORY_ABI, false)
 }
 
@@ -50,13 +50,13 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 }
 
 export function useWETHContract(withSignerIfPossible?: boolean): Contract | null {
-  const { chainId } = hmy.chainId;
+  const { chainId } = useActiveHmyReact();
   // @ts-ignore
   return useContract(chainId ? WONE[chainId].address : undefined, WETH_ABI, withSignerIfPossible)
 }
 
 export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contract | null {
-  const { chainId } = hmy.chainId;
+  const { chainId } = useActiveHmyReact();
   let address: string | undefined
   if (chainId) {
     switch (chainId) {
@@ -80,12 +80,12 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 }
 
 export function useMulticallContract(): Contract | null {
-  const { chainId } = hmy.chainId;
+  const { chainId } = useActiveHmyReact();
   return useContract(chainId && MULTICALL_NETWORKS[chainId], MULTICALL_ABI, false)
 }
 
 export function useSocksController(): Contract | null {
-  const { chainId } = hmy.chainId;
+  const { chainId } = useActiveHmyReact();
   return useContract(
     chainId === ChainID.HmyMainnet ? '0x65770b5283117639760beA3F867b69b3697a91dd' : undefined,
     UNISOCKS_ABI,

@@ -16,10 +16,10 @@ import { useHasSocks } from '../../hooks/useSocksBalance'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/reducer'
-import { shortenAddress } from '../../utils'
+import { shortenHarmonyAddress } from '../../utils'
 import { ButtonSecondary } from '../Button'
 
-import {useUserWallet} from '../../state/user/hooks'
+import { useActiveHmyReact } from '../../hooks'
 
 import Identicon from '../Identicon'
 import Loader from '../Loader'
@@ -164,8 +164,9 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
 }
 
 function Web3StatusInner() {
+  const { account, bech32Address } = useActiveHmyReact()
   const { t } = useTranslation()
-  const { account, connector, error } = useWeb3React()
+  const { connector, error } = useWeb3React()
 
   const { ENSName } = useENSName(account ?? undefined)
 
@@ -180,11 +181,9 @@ function Web3StatusInner() {
 
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
-  const toggleWalletModal = useWalletModalToggle()
+  const toggleWalletModal = useWalletModalToggle()  
 
-  const [userWallet,] = useUserWallet()
-
-  if (userWallet && userWallet.address) {
+  if (account) {
     return (
       <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
         {hasPendingTransactions ? (
@@ -194,7 +193,7 @@ function Web3StatusInner() {
         ) : (
           <>
             {hasSocks ? SOCK : null}
-            <Text>{ENSName || shortenAddress(userWallet.address)}</Text>
+            <Text>{ENSName || (bech32Address && shortenHarmonyAddress(bech32Address))}</Text>
           </>
         )}
         {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}
@@ -217,7 +216,7 @@ function Web3StatusInner() {
 }
 
 export default function Web3Status() {
-  const { active, account } = useWeb3React()
+  const { account, active } = useActiveHmyReact()
   const contextNetwork = useWeb3React(NetworkContextName)
 
   const { ENSName } = useENSName(account ?? undefined)

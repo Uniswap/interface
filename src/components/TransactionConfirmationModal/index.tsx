@@ -11,8 +11,9 @@ import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Circle from '../../assets/images/blue-loader.svg'
 
-import { getEtherscanLink } from '../../utils'
-import { useActiveWeb3React } from '../../hooks'
+import { getHarmonyExplorerLink } from '../../utils'
+
+import { useActiveHmyReact } from '../../hooks'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -75,6 +76,7 @@ function TransactionSubmittedContent({
   chainId: ChainID
 }) {
   const theme = useContext(ThemeContext)
+  const { wrapper } = useActiveHmyReact();
 
   return (
     <Wrapper>
@@ -92,9 +94,9 @@ function TransactionSubmittedContent({
           </Text>
 
           {chainId && hash && (
-            <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
+            <ExternalLink href={getHarmonyExplorerLink(wrapper, hash, 'transaction')}>
               <Text fontWeight={500} fontSize={14} color={theme.primary1}>
-                View on Etherscan
+                View on Harmony Explorer
               </Text>
             </ExternalLink>
           )}
@@ -178,7 +180,7 @@ export default function TransactionConfirmationModal({
   pendingText,
   content
 }: ConfirmationModalProps) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useActiveHmyReact();
 
   if (!chainId) return null
 

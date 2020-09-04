@@ -3,8 +3,6 @@ import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 're
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
-import { hmy } from '../../connectors'
-import { useActiveWeb3React } from '../../hooks'
 import { useSelectedTokenList, WrappedTokenInfo } from '../../state/lists/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -16,6 +14,8 @@ import { MouseoverTooltip } from '../Tooltip'
 import { FadedSpan, MenuItem } from './styleds'
 import Loader from '../Loader'
 import { isTokenOnList } from '../../utils'
+
+import { useActiveHmyReact } from '../../hooks'
 
 function currencyKey(currency: Currency): string {
   return currency instanceof Token ? currency.address : currency === HARMONY ? 'ONE' : ''
@@ -93,8 +93,7 @@ function CurrencyRow({
   otherSelected: boolean
   style: CSSProperties
 }) {
-  const { account } = useActiveWeb3React()
-  const chainId = hmy.chainId;
+  const { account, chainId } = useActiveHmyReact()
   
   const key = currencyKey(currency)
   const selectedTokenList = useSelectedTokenList()

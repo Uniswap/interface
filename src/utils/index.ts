@@ -9,10 +9,22 @@ import { ChainID } from '@harmony-js/utils';
 import { JSBI, Percent, Token, CurrencyAmount, Currency, HARMONY } from '@swoop-exchange/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 
+import { Hmy } from '../blockchain'
+import { hmy } from '../connectors'
+import { AbstractWallet } from '../wallets/AbstractWallet'
+
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
   try {
     return getAddress(value)
+  } catch {
+    return false
+  }
+}
+
+export function isHarmonyAddress(value: any): string | false {
+  try {
+    return hmy.client.crypto.getAddress(value).raw
   } catch {
     return false
   }
@@ -32,9 +44,26 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainID]: string } = {
   1337: ''
 }
 
+export function getHarmonyExplorerLink(hmy: Hmy, data: string, type: 'transaction' | 'token' | 'address'): string {
+  const prefix = hmy.explorerUrl;
+
+  switch (type) {
+    case 'transaction': {
+      return `${prefix}/tx/${data}`
+    }
+    case 'token': {
+      return `${prefix}/token/${data}`
+    }
+    case 'address':
+    default: {
+      return `${prefix}/address/${data}`
+    }
+  }
+}
+
 export function getEtherscanLink(chainId: ChainID, data: string, type: 'transaction' | 'token' | 'address'): string {
   const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
-
+  
   switch (type) {
     case 'transaction': {
       return `${prefix}/tx/${data}`
@@ -52,6 +81,15 @@ export function getEtherscanLink(chainId: ChainID, data: string, type: 'transact
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
 export function shortenAddress(address: string, chars = 4): string {
   const parsed = isAddress(address)
+  if (!parsed) {
+    throw Error(`Invalid 'address' parameter '${address}'.`)
+  }
+  return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
+}
+
+export function shortenHarmonyAddress(address: string, chars = 4): string {
+  const parsed = isHarmonyAddress(address)
+  
   if (!parsed) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
@@ -98,8 +136,24 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 }
 
 // account is optional
+export function getHarmonyContract(address: string, ABI: any, library: Web3Provider, wallet?: AbstractWallet): any {
+  let contract = hmy.client.contracts.createContract(ABI, address);
+  
+  if (wallet) {
+    contract = wallet.attachToContract(contract);
+  }
+
+  return contract;
+}
+
+// account is optional
 export function getRouterContract(_: number, library: Web3Provider, account?: string): Contract {
   return getContract(ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account)
+}
+
+// account is optional
+export function getHarmonyRouterContract(_: number, library: Web3Provider, wallet?: AbstractWallet): any {
+  return getHarmonyContract(ROUTER_ADDRESS, IUniswapV2Router02ABI, library, wallet)
 }
 
 export function escapeRegExp(string: string): string {

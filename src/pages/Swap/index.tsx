@@ -21,7 +21,6 @@ import TokenWarningModal from '../../components/TokenWarningModal'
 
 import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
-import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
@@ -43,6 +42,8 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 
+import { useActiveHmyReact } from '../../hooks'
+
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
 
@@ -60,7 +61,8 @@ export default function Swap() {
     setDismissTokenWarning(true)
   }, [])
 
-  const { account } = useActiveWeb3React()
+  const { account } = useActiveHmyReact()
+
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected

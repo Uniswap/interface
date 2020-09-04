@@ -1,13 +1,13 @@
 import React, { useContext } from 'react'
 import { AlertCircle, CheckCircle } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components'
-import { hmy } from '../../connectors'
-//import { useActiveWeb3React } from '../../hooks'
 import { TYPE } from '../../theme'
 import { ExternalLink } from '../../theme/components'
-import { getEtherscanLink } from '../../utils'
+import { getHarmonyExplorerLink } from '../../utils'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
+
+import { useActiveHmyReact } from '../../hooks'
 
 const RowNoFlex = styled(AutoRow)`
   flex-wrap: nowrap;
@@ -22,7 +22,7 @@ export default function TransactionPopup({
   success?: boolean
   summary?: string
 }) {
-  const chainId = hmy.chainId;
+  const { chainId, wrapper } = useActiveHmyReact();
 
   const theme = useContext(ThemeContext)
 
@@ -34,7 +34,7 @@ export default function TransactionPopup({
       <AutoColumn gap="8px">
         <TYPE.body fontWeight={500}>{summary ?? 'Hash: ' + hash.slice(0, 8) + '...' + hash.slice(58, 65)}</TYPE.body>
         {chainId && (
-          <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>View on Etherscan</ExternalLink>
+          <ExternalLink href={getHarmonyExplorerLink(wrapper, hash, 'transaction')}>View on Harmony Explorer</ExternalLink>
         )}
       </AutoColumn>
     </RowNoFlex>

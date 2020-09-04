@@ -5,7 +5,6 @@ import { AutoColumn } from '../../components/Column'
 import { AutoRow } from '../../components/Row'
 import { SearchInput } from '../../components/SearchModal/styleds'
 import { useAllTokenV1Exchanges } from '../../data/V1'
-import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
 import { useSelectedTokenList } from '../../state/lists/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
@@ -19,9 +18,11 @@ import { Dots } from '../../components/swap/styleds'
 import { useAddUserToken } from '../../state/user/hooks'
 import { isTokenOnList } from '../../utils'
 
+import { useActiveHmyReact } from '../../hooks'
+
 export default function MigrateV1() {
   const theme = useContext(ThemeContext)
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useActiveHmyReact();
 
   const [tokenSearch, setTokenSearch] = useState<string>('')
   const handleTokenSearchChange = useCallback(e => setTokenSearch(e.target.value), [setTokenSearch])

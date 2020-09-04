@@ -5,7 +5,6 @@ import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS, UserWallet } from '../../constants'
 
-import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
 import { AppDispatch, AppState } from '../index'
 import {
@@ -21,8 +20,9 @@ import {
   updateUserWallet,
 } from './actions'
 
-//import { AbstractWallet } from '../../wallets/AbstractWallet';
 import { oneWallet, mathWallet } from '../../connectors'
+
+import { useActiveHmyReact } from '../../hooks'
 
 function serializeToken(token: Token): SerializedToken {
   return {
@@ -138,7 +138,7 @@ export function useRemoveUserAddedToken(): (chainId: number, address: string) =>
 }
 
 export function useUserAddedTokens(): Token[] {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useActiveHmyReact();
   const serializedTokensMap = useSelector<AppState, AppState['user']['tokens']>(({ user: { tokens } }) => tokens)
 
   return useMemo(() => {
@@ -165,14 +165,14 @@ export function usePairAdder(): (pair: Pair) => void {
   )
 }
 
-export function useUserWallet(): [UserWallet | null, (wallet: UserWallet | null) => void] {
+export function useUserWallet(): [UserWallet, (wallet: UserWallet) => void] {
   const dispatch = useDispatch<AppDispatch>()
   const userWallet = useSelector<AppState, AppState['user']['userWallet']>(state => {
     return state.user.userWallet
   })
 
   const setUserWallet = useCallback(
-    (userWallet: UserWallet | null) => {
+    (userWallet: UserWallet) => {
       dispatch(updateUserWallet({ userWallet }))
     },
     [dispatch]
@@ -217,7 +217,7 @@ export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
  * Returns all the pairs of tokens that are tracked by the user for the current chain ID.
  */
 export function useTrackedTokenPairs(): [Token, Token][] {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useActiveHmyReact();
   const tokens = useAllTokens()
 
   // pinned pairs
