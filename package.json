@@ -4,7 +4,7 @@
   "homepage": ".",
   "private": true,
   "devDependencies": {
-    "@crisog/uniswap-xdai-sdk": "^3.0.10a",
+    "uniswap-xdai-sdk": "^3.0.2-a3",
     "@ethersproject/experimental": "^5.0.1",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
@@ -107,7 +107,5 @@
     ]
   },
   "license": "GPL-3.0-or-later",
-  "dependencies": {
-    "uniswap-xdai-sdk": "^3.0.2-a3"
-  }
+  "dependencies": {}
 }
