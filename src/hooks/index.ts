@@ -18,7 +18,7 @@ const { ChainID } = require('@harmony-js/utils');
 export interface HmyReactContextInterface {
   userWallet: UserWallet;
   wallet: any;
-  wrapper: Hmy, 
+  wrapper: Hmy,
   library: typeof Harmony;
   chainId: typeof ChainID;
   account: null | string;
@@ -30,16 +30,16 @@ export interface HmyReactContextInterface {
 export function useActiveHmyReact(): HmyReactContextInterface  & { chainId?: typeof ChainID } {
   const [userWallet,] = useUserWallet()
 
-  let hmyReact: HmyReactContextInterface = {
+  const hmyReact: HmyReactContextInterface = {
     userWallet: userWallet,
     wallet: useUserActiveWallet(),
     wrapper: hmy,
     library: hmy.client,
     chainId: hmy.chainId,
-    account: userWallet.address,
-    bech32Address: userWallet.bech32Address,
-    active: userWallet.active
-  };
+    account: userWallet ? userWallet.address : null,
+    bech32Address: userWallet ? userWallet.bech32Address : null,
+    active: userWallet ? userWallet.active : false
+  }
 
   return hmyReact;
 }
