@@ -1,4 +1,4 @@
-import { Currency, HARMONY, JSBI, TokenAmount } from '@swoop-exchange/sdk'
+import { Currency, HARMONY, JSBI, TokenAmount } from '@harmony-swoop/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Text } from 'rebass'

@@ -1,4 +1,4 @@
-import { Currency, Pair } from '@swoop-exchange/sdk'
+import { Currency, Pair } from '@harmony-swoop/sdk'
 import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { darken } from 'polished'

@@ -1,4 +1,4 @@
-import { Currency, currencyEquals, JSBI, Price, WONE } from '@swoop-exchange/sdk'
+import { Currency, currencyEquals, JSBI, Price, WONE } from '@harmony-swoop/sdk'
 import { useMemo } from 'react'
 import { USDC } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'

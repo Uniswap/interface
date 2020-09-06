@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { injected } from '../connectors'
 import { NetworkContextName } from '../constants'
-import { CurrencyAmount, JSBI } from '@swoop-exchange/sdk'
+import { CurrencyAmount, JSBI } from '@harmony-swoop/sdk'
 //import { AbstractWallet } from '../wallets/AbstractWallet'
 import { hmy } from '../connectors'
 

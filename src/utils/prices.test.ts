@@ -1,5 +1,5 @@
 import { ChainID } from '@harmony-js/utils';
-import { JSBI, Pair, Route, Token, TokenAmount, Trade, TradeType } from '@swoop-exchange/sdk'
+import { JSBI, Pair, Route, Token, TokenAmount, Trade, TradeType } from '@harmony-swoop/sdk'
 import { computeTradePriceBreakdown } from './prices'
 
 describe('prices', () => {

@@ -1,4 +1,4 @@
-import { Trade, TradeType } from '@swoop-exchange/sdk'
+import { Trade, TradeType } from '@harmony-swoop/sdk'
 import React, { useContext, useMemo } from 'react'
 import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'

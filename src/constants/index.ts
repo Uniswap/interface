@@ -1,4 +1,4 @@
-import { JSBI, Percent, Token, WONE, CurrencyAmount } from '@swoop-exchange/sdk'
+import { JSBI, Percent, Token, WONE, CurrencyAmount } from '@harmony-swoop/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
 import { injected, oneWallet, mathWallet } from '../connectors'

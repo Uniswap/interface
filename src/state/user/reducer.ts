@@ -15,7 +15,7 @@ import {
   updateUserDeadline,
   updateUserWallet,
 } from './actions'
-//import { Currency } from '@swoop-exchange/sdk'
+//import { Currency } from '@harmony-swoop/sdk'
 
 const currentTimestamp = () => new Date().getTime()
 

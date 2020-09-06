@@ -1,4 +1,4 @@
-import { Token, TokenAmount } from '@swoop-exchange/sdk'
+import { Token, TokenAmount } from '@harmony-swoop/sdk'
 import { useMemo } from 'react'
 
 import { useTokenContract } from '../hooks/useContract'

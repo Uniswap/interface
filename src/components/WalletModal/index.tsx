@@ -7,7 +7,7 @@ import usePrevious from '../../hooks/usePrevious'
 import { useWalletModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { UserWallet } from '../../constants'
 
-//import { JSBI, CurrencyAmount } from '@swoop-exchange/sdk'
+//import { JSBI, CurrencyAmount } from '@harmony-swoop/sdk'
 
 import Modal from '../Modal'
 import AccountDetails from '../AccountDetails'
@@ -199,11 +199,9 @@ export default function WalletModal({
 
     connector && connector.signIn()
     .then(() => {
-      console.log(connector)
 
       if (connector.base16Address) {
         connector.client.getBalance(connector.base16Address).then((balance: any) => {
-          console.log(balance)
   
           let wallet: UserWallet = {
             type: connector.sessionType,
@@ -237,7 +235,6 @@ export default function WalletModal({
       }
     })
     .catch((error: any) => {
-      console.log(error)
       setPendingError(true)
     });
 
