@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, HARMONY, TokenAmount, WONE } from '@swoop-exchange/sdk'
+import { Currency, currencyEquals, HARMONY, TokenAmount, WONE } from '@harmony-swoop/sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'

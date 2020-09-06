@@ -1,4 +1,4 @@
-import { Currency } from '@swoop-exchange/sdk'
+import { Currency } from '@harmony-swoop/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import ReactGA from 'react-ga'
 import useLast from '../../hooks/useLast'

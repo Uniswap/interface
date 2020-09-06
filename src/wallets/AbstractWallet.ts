@@ -1,7 +1,10 @@
-const { Harmony } = require('@harmony-js/core');
+//const { Harmony } = require('@harmony-js/core');
+
+import { Hmy } from '../blockchain';
+
 export abstract class AbstractWallet {
   public network: string;
-  public client: typeof Harmony;
+  public client: Hmy;
   public isAuthorized: boolean;
   public redirectUrl!: string;
   public extension: any;
@@ -9,7 +12,7 @@ export abstract class AbstractWallet {
   public address: string | null;
   public base16Address: string | null;
 
-  constructor(network: string, client: typeof Harmony) {
+  constructor(network: string, client: Hmy) {
     this.network = network;
     this.client = client;
 

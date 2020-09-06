@@ -1,5 +1,5 @@
 import { ChainID } from '@harmony-js/utils';
-import { Pair, Token } from '@swoop-exchange/sdk'
+import { Pair, Token } from '@harmony-swoop/sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
@@ -17,7 +17,7 @@ import {
   updateUserDeadline,
   updateUserExpertMode,
   updateUserSlippageTolerance,
-  updateUserWallet,
+  updateUserWallet
 } from './actions'
 
 import { oneWallet, mathWallet } from '../../connectors'

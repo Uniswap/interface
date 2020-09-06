@@ -1,4 +1,4 @@
-import { JSBI, Pair, Percent } from '@swoop-exchange/sdk'
+import { JSBI, Pair, Percent } from '@harmony-swoop/sdk'
 import { darken } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'

@@ -61,15 +61,18 @@ export class Hmy {
   }
 
   public getBech32Address(address: string): string {
-    return this.client.crypto.getAddress(address).bech32;
+    return this.client.client.crypto.getAddress(address).bech32;
   }
 
   public getBase16Address(address: string): string {
-    return this.client.crypto.fromBech32(address);
+    return this.client.client.crypto.fromBech32(address);
   }
 
-  public getBalance(address: string) {
-    return this.client.blockchain.getBalance({ address });
+  public async getBalance(address: string) {
+    let res = await this.client.blockchain.getBalance({ address });
+    let balanceHex = res && res.result;
+    let balance = this.client.utils.hexToNumber(balanceHex);
+    return balance;
   }
 
   public async getBlockNumber() {

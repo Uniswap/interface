@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, currencyEquals, HARMONY, Token } from '@swoop-exchange/sdk'
+import { Currency, CurrencyAmount, currencyEquals, HARMONY, Token } from '@harmony-swoop/sdk'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'

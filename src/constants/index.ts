@@ -1,4 +1,4 @@
-import { JSBI, Percent, Token, WONE } from '@swoop-exchange/sdk'
+import { JSBI, Percent, Token, WONE, CurrencyAmount } from '@harmony-swoop/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
 import { injected, oneWallet, mathWallet } from '../connectors'
@@ -71,6 +71,12 @@ export interface UserWallet {
   address: string | null;
   bech32Address: string | null;
   active: boolean;
+  oneBalance?: string | null;
+}
+
+export interface CurrencyResult {
+  address: string | null;
+  amount: CurrencyAmount | undefined;
 }
 
 export interface WalletInfo {

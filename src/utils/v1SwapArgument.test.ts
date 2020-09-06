@@ -1,4 +1,4 @@
-import { CurrencyAmount, HARMONY, Percent, Route, TokenAmount, Trade } from '@swoop-exchange/sdk'
+import { CurrencyAmount, HARMONY, Percent, Route, TokenAmount, Trade } from '@harmony-swoop/sdk'
 import { DAI, USDC } from '../constants'
 import { MockV1Pair } from '../data/V1'
 import v1SwapArguments from './v1SwapArguments'

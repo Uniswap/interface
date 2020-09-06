@@ -7,6 +7,8 @@ import usePrevious from '../../hooks/usePrevious'
 import { useWalletModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { UserWallet } from '../../constants'
 
+//import { JSBI, CurrencyAmount } from '@harmony-swoop/sdk'
+
 import Modal from '../Modal'
 import AccountDetails from '../AccountDetails'
 import PendingView from './PendingView'
@@ -197,21 +199,42 @@ export default function WalletModal({
 
     connector && connector.signIn()
     .then(() => {
-      let wallet: UserWallet = {
-        type: connector.sessionType,
-        address: connector.base16Address,
-        bech32Address: connector.address,
-        active: true
-      };
 
-      setPendingError(false);
-      setAccount(connector.address);
-      setActive(true);
-      setUserWallet(wallet);
-      setWalletView(WALLET_VIEWS.ACCOUNT);
-      //toggleWalletModal();
+      if (connector.base16Address) {
+        connector.client.getBalance(connector.base16Address).then((balance: any) => {
+  
+          let wallet: UserWallet = {
+            type: connector.sessionType,
+            address: connector.base16Address,
+            bech32Address: connector.address,
+            active: true,
+            oneBalance: balance
+          };
+    
+          setPendingError(false);
+          setAccount(connector.address);
+          setActive(true);
+          setUserWallet(wallet);
+          setWalletView(WALLET_VIEWS.ACCOUNT);
+          //toggleWalletModal();
+        })
+      } else {
+        let wallet: UserWallet = {
+          type: connector.sessionType,
+          address: connector.base16Address,
+          bech32Address: connector.address,
+          active: true
+        };
+  
+        setPendingError(false);
+        setAccount(connector.address);
+        setActive(true);
+        setUserWallet(wallet);
+        setWalletView(WALLET_VIEWS.ACCOUNT);
+        //toggleWalletModal();
+      }
     })
-    .catch(error => {
+    .catch((error: any) => {
       setPendingError(true)
     });
 

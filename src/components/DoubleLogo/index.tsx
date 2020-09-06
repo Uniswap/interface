@@ -1,4 +1,4 @@
-import { Currency } from '@swoop-exchange/sdk'
+import { Currency } from '@harmony-swoop/sdk'
 import React from 'react'
 import styled from 'styled-components'
 import CurrencyLogo from '../CurrencyLogo'

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { injected } from '../connectors'
 import { NetworkContextName } from '../constants'
+import { CurrencyAmount, JSBI } from '@harmony-swoop/sdk'
 //import { AbstractWallet } from '../wallets/AbstractWallet'
 import { hmy } from '../connectors'
 
@@ -21,9 +22,10 @@ export interface HmyReactContextInterface {
   wrapper: Hmy,
   library: typeof Harmony;
   chainId: typeof ChainID;
-  account: null | string;
-  bech32Address: null | string;
+  account: null | string | undefined;
+  bech32Address: null | string | undefined;
   active: boolean;
+  balance?: CurrencyAmount | undefined;
   error?: Error;
 }
 
@@ -38,8 +40,9 @@ export function useActiveHmyReact(): HmyReactContextInterface  & { chainId?: typ
     chainId: hmy.chainId,
     account: userWallet ? userWallet.address : null,
     bech32Address: userWallet ? userWallet.bech32Address : null,
-    active: userWallet ? userWallet.active : false
-  }
+    active: userWallet ? userWallet.active : false,
+    balance: (userWallet.oneBalance) ? CurrencyAmount.ether(JSBI.BigInt(userWallet.oneBalance.toString())) : undefined
+  };
 
   return hmyReact;
 }

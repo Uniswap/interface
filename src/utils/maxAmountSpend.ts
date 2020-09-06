@@ -1,4 +1,4 @@
-import { CurrencyAmount, HARMONY, JSBI } from '@swoop-exchange/sdk'
+import { CurrencyAmount, HARMONY, JSBI } from '@harmony-swoop/sdk'
 import { MIN_ETH } from '../constants'
 
 /**

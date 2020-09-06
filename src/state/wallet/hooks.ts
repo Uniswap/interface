@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, HARMONY, JSBI, Token, TokenAmount } from '@swoop-exchange/sdk'
+import { Currency, CurrencyAmount, HARMONY, JSBI, Token, TokenAmount } from '@harmony-swoop/sdk'
 import { useMemo } from 'react'
 import ERC20_INTERFACE from '../../constants/abis/erc20'
 import { useAllTokens } from '../../hooks/Tokens'
@@ -99,23 +99,30 @@ export function useCurrencyBalances(
   account?: string,
   currencies?: (Currency | undefined)[]
 ): (CurrencyAmount | undefined)[] {
+  const { balance } = useActiveHmyReact()
+  
   const tokens = useMemo(() => currencies?.filter((currency): currency is Token => currency instanceof Token) ?? [], [
     currencies
   ])
 
   const tokenBalances = useTokenBalances(account, tokens)
-  const containsETH: boolean = useMemo(() => currencies?.some(currency => currency === HARMONY) ?? false, [currencies])
-  const ethBalance = useETHBalances(containsETH ? [account] : [])
+  //const containsETH: boolean = useMemo(() => currencies?.some(currency => currency === HARMONY) ?? false, [currencies])
+  //const ethBalance = useETHBalances(containsETH ? [account] : [])
+
+  const mapping: { [address: string]: CurrencyAmount | undefined } = {}
+  if (account) {
+    mapping[account] = balance
+  }
 
   return useMemo(
     () =>
       currencies?.map(currency => {
         if (!account || !currency) return undefined
         if (currency instanceof Token) return tokenBalances[currency.address]
-        if (currency === HARMONY) return ethBalance[account]
+        if (currency === HARMONY) return mapping[account]
         return undefined
       }) ?? [],
-    [account, currencies, ethBalance, tokenBalances]
+    [account, currencies, mapping, tokenBalances]
   )
 }
 

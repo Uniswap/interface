@@ -64,5 +64,5 @@ export const walletlink = new WalletLinkConnector({
 })
 
 export const hmy = new Hmy(config.network);
-export const mathWallet = new MathWallet(config.network, hmy.client);
-export const oneWallet = new OneWallet(config.network, hmy.client);
+export const mathWallet = new MathWallet(config.network, hmy);
+export const oneWallet = new OneWallet(config.network, hmy);

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, HARMONY, JSBI, Pair, Percent, Price, TokenAmount } from '@swoop-exchange/sdk'
+import { Currency, CurrencyAmount, HARMONY, JSBI, Pair, Percent, Price, TokenAmount } from '@harmony-swoop/sdk'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { PairState, usePair } from '../../data/Reserves'

@@ -15,6 +15,7 @@ import {
   updateUserDeadline,
   updateUserWallet,
 } from './actions'
+//import { Currency } from '@harmony-swoop/sdk'
 
 const currentTimestamp = () => new Date().getTime()
 
@@ -64,7 +65,7 @@ export const initialState: UserState = {
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
-  userWallet: {type: null, address: null, bech32Address: null, active: false}
+  userWallet: {type: null, address: null, bech32Address: null, active: false, oneBalance: null}
 }
 
 export default createReducer(initialState, builder =>

@@ -1,4 +1,4 @@
-import { Trade, TradeType } from '@swoop-exchange/sdk'
+import { Trade, TradeType } from '@harmony-swoop/sdk'
 import React, { useContext } from 'react'
 import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'

@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
 import { ChainID } from '@harmony-js/utils';
-import { TokenAmount, Token, Percent, JSBI } from '@swoop-exchange/sdk'
+import { TokenAmount, Token, Percent, JSBI } from '@harmony-swoop/sdk'
 
 import {
   getEtherscanLink,
