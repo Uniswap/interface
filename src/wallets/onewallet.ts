@@ -1,13 +1,15 @@
 import { AbstractWallet } from './AbstractWallet';
+import { Hmy } from '../blockchain';
+
 const {HarmonyExtension} = require('@harmony-js/core');
-const { Harmony } = require('@harmony-js/core');
+//const { Harmony } = require('@harmony-js/core');
 const defaults = {};
 
 export class OneWallet extends AbstractWallet {
   private onewallet: any;
   public isOneWallet = false;
 
-  constructor(network: string, client: typeof Harmony) {
+  constructor(network: string, client: Hmy) {
     super(network, client);
 
     this.isOneWallet = false;
@@ -78,12 +80,12 @@ export class OneWallet extends AbstractWallet {
       this.isOneWallet = true;
 
       this.extension = new HarmonyExtension(this.onewallet);
-      this.extension.provider = this.client.provider;
-      this.extension.messenger = this.client.messenger;
+      this.extension.provider = this.client.client.provider;
+      this.extension.messenger = this.client.client.messenger;
       this.extension.setShardID(0)
-      this.extension.wallet.messenger = this.client.messenger;
-      this.extension.blockchain.messenger = this.client.messenger;
-      this.extension.transactions.messenger = this.client.messenger;
+      this.extension.wallet.messenger = this.client.client.messenger;
+      this.extension.blockchain.messenger = this.client.client.messenger;
+      this.extension.transactions.messenger = this.client.client.messenger;
       this.extension.contracts.wallet = this.extension.wallet
     }
   }
@@ -99,7 +101,7 @@ export class OneWallet extends AbstractWallet {
   }
 
   private setBase16Address(): void {
-    this.base16Address = this.client.crypto.fromBech32(this.address);
+    this.base16Address = this.client.client.crypto.fromBech32(this.address);
   }
 
   public signTransaction(txn: any) {

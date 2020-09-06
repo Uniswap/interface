@@ -17,7 +17,7 @@ import {
   updateUserDeadline,
   updateUserExpertMode,
   updateUserSlippageTolerance,
-  updateUserWallet,
+  updateUserWallet
 } from './actions'
 
 import { oneWallet, mathWallet } from '../../connectors'

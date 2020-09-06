@@ -1,12 +1,13 @@
 import { AbstractWallet } from './AbstractWallet';
-const { Harmony } = require('@harmony-js/core');
+import { Hmy } from '../blockchain';
+//const { Harmony } = require('@harmony-js/core');
 const defaults = {};
 
 export class MathWallet extends AbstractWallet {
   private mathwallet: any;
   public isMathWallet = false;
 
-  constructor(network: string, client: typeof Harmony) {
+  constructor(network: string, client: Hmy) {
     super(network, client);
 
     this.isMathWallet = false;
@@ -87,7 +88,7 @@ export class MathWallet extends AbstractWallet {
   }
 
   private setBase16Address(): void {
-    this.base16Address = this.client.crypto.fromBech32(this.address);
+    this.base16Address = this.client.client.crypto.fromBech32(this.address);
   }
 
   public signTransaction(txn: any) {
