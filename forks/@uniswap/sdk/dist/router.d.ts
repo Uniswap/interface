@@ -23,11 +23,11 @@ export interface TradeOptions {
     feeOnTransfer?: boolean;
 }
 /**
- * The parameters to use in the call to the SushiSwap LP Token Router to execute a trade.
+ * The parameters to use in the call to the Uniswap V2 Router to execute a trade.
  */
 export interface SwapParameters {
     /**
-     * The method to call on the SushiSwap LP Token Router.
+     * The method to call on the Uniswap V2 Router.
      */
     methodName: string;
     /**
@@ -40,7 +40,7 @@ export interface SwapParameters {
     value: string;
 }
 /**
- * Represents the SushiSwap LP Token Router, and has static methods for helping execute trades.
+ * Represents the Uniswap V2 Router, and has static methods for helping execute trades.
  */
 export declare abstract class Router {
     /**
