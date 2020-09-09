@@ -71,6 +71,6 @@ export default function VersionSwitch() {
   return versionSwitchAvailable ? (
     toggle
   ) : (
-    <MouseoverTooltip text="This page is only compatible with Uniswap V2.">{toggle}</MouseoverTooltip>
+    <MouseoverTooltip text="This page is only compatible with SushiSwap LP Token.">{toggle}</MouseoverTooltip>
   )
 }
