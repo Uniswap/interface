@@ -1,11 +1,11 @@
 name: Release
 on:
   # every morning
-  schedule:
-    - cron:  '0 12 * * 1-4'
+#  schedule:
+#    - cron:  '0 12 * * 1-4'
 
   # manual trigger
-  workflow_dispatch:
+#  workflow_dispatch:
 
 jobs:
   bump_version:
