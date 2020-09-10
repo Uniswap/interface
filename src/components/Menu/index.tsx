@@ -109,7 +109,7 @@ export default function Menu() {
             <MessageCircle size={14} />
             Discord
           </MenuItem>
-          <MenuItem id="link" href="https://github.com/jiro-ono/sushiswap-frontend">
+          <MenuItem id="link" href="https://github.com/jiro-ono/sushiswap-classic-interface">
             <Code size={14} />
             Code
           </MenuItem>
