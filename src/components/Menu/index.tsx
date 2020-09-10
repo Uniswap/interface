@@ -78,7 +78,7 @@ const MenuItem = styled(ExternalLink)`
   }
 `
 
-const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
+const CODE_LINK = 'https://github.com/1Hive/uniswap-interface'
 
 export default function Menu() {
   const node = useRef<HTMLDivElement>()
@@ -94,11 +94,11 @@ export default function Menu() {
       </StyledMenuButton>
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://uniswap.org/">
+          <MenuItem id="link" href="https://github.com/1Hive/honeyswap">
             <Info size={14} />
             About
           </MenuItem>
-          <MenuItem id="link" href="https://uniswap.org/docs/v2">
+          <MenuItem id="link" href="https://github.com/1Hive/honeyswap">
             <BookOpen size={14} />
             Docs
           </MenuItem>
@@ -110,7 +110,7 @@ export default function Menu() {
             <MessageCircle size={14} />
             Discord
           </MenuItem>
-          <MenuItem id="link" href="https://uniswap.info/">
+          <MenuItem id="link" href="https://info.honeyswap.org/">
             <PieChart size={14} />
             Analytics
           </MenuItem>
