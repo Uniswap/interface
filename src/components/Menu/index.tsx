@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import useToggle from '../../hooks/useToggle'
+import { useTranslation } from 'react-i18next'
 
 import { ExternalLink } from '../../theme'
 
@@ -82,6 +83,7 @@ const MenuItem = styled(ExternalLink)`
 export default function Menu() {
   const node = useRef<HTMLDivElement>()
   const [open, toggle] = useToggle(false)
+  const { t } = useTranslation()
 
   useOnClickOutside(node, open ? toggle : undefined)
 
@@ -95,23 +97,23 @@ export default function Menu() {
         <MenuFlyout>
           <MenuItem id="link" href="https://sushiswap.vision/">
             <PieChart size={14} />
-            Analytics
+            {t('analytics')}
           </MenuItem>
           <MenuItem id="link" href="https://sushiswapclassic.org/staking">
             <DollarSign size={14} />
-            Stake
+            {t('stake')}
           </MenuItem>
           <MenuItem id="link" href="https://sushiswapclassic.org/farms">
             <Sunrise size={14} />
-            Farm
+            {t('farm')}
           </MenuItem>
           <MenuItem id="link" href="https://discord.gg/eXKPm8">
             <MessageCircle size={14} />
-            Discord
+            {t('discord')}
           </MenuItem>
           <MenuItem id="link" href="https://github.com/jiro-ono/sushiswap-classic-interface">
             <Code size={14} />
-            Code
+            {t('code')}
           </MenuItem>
         </MenuFlyout>
       )}

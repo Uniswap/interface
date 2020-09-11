@@ -3,6 +3,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
+import { useTranslation } from 'react-i18next'
 import { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonConfirmed } from '../../components/Button'
@@ -46,6 +47,7 @@ import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
 
 export default function Swap() {
+  const { t } = useTranslation()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -358,7 +360,7 @@ export default function Swap() {
                   {Boolean(trade) && (
                     <RowBetween align="center">
                       <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                        Price
+                        {t('price')}
                       </Text>
                       <TradePrice
                         price={trade?.executionPrice}
@@ -391,7 +393,7 @@ export default function Swap() {
               </ButtonPrimary>
             ) : noRoute && userHasSpecifiedInputOutput ? (
               <GreyCard style={{ textAlign: 'center' }}>
-                <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
+                <TYPE.main mb="4px">{t('insufficientLiquidityForThisTrade')}</TYPE.main>
               </GreyCard>
             ) : showApproveFlow ? (
               <RowBetween>
