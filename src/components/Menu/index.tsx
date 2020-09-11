@@ -105,7 +105,7 @@ export default function Menu() {
             <Sunrise size={14} />
             Farm
           </MenuItem>
-          <MenuItem id="link" href="https://discord.gg/eXKPm8">
+          <MenuItem id="link" href="https://discord.gg/AgJsrK7">
             <MessageCircle size={14} />
             Discord
           </MenuItem>
