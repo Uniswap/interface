@@ -4,7 +4,6 @@ import { TokenList } from '@uniswap/token-lists/dist/types'
 import { DEFAULT_LIST_OF_LISTS, DEFAULT_TOKEN_LIST_URL } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList, selectList } from './actions'
-import UNISWAP_DEFAULT_LIST from '@uniswap/default-token-list'
 
 export interface ListsState {
   readonly byUrl: {
@@ -36,12 +35,7 @@ const initialState: ListsState = {
       memo[listUrl] = NEW_LIST_STATE
       return memo
     }, {}),
-    [DEFAULT_TOKEN_LIST_URL]: {
-      error: null,
-      current: UNISWAP_DEFAULT_LIST,
-      loadingRequestId: null,
-      pendingUpdate: null
-    }
+    [DEFAULT_TOKEN_LIST_URL]: NEW_LIST_STATE
   },
   selectedListUrl: undefined
 }

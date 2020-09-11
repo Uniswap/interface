@@ -1,13 +1,14 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+node_modules
 
 # testing
 /coverage
 
 # production
-/build
+build
+dist
 
 # misc
 .DS_Store
@@ -32,3 +33,8 @@ package-lock.json
 cypress/videos
 cypress/screenshots
 cypress/fixtures/example.json
+
+*.swp
+
+# parcel
+.cache

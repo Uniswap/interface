@@ -1,0 +1,1042 @@
+{
+  "contractName": "BasicStakeContractMock",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_amount",
+          "type": "uint256"
+        },
+        {
+          "name": "_data",
+          "type": "bytes"
+        }
+      ],
+      "name": "stake",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_user",
+          "type": "address"
+        },
+        {
+          "name": "_amount",
+          "type": "uint256"
+        },
+        {
+          "name": "_data",
+          "type": "bytes"
+        }
+      ],
+      "name": "stakeFor",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "getPersonalStakeUnlockedTimestamps",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "getPersonalStakes",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256[]"
+        },
+        {
+          "name": "",
+          "type": "uint256[]"
+        },
+        {
+          "name": "",
+          "type": "address[]"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "totalStakedFor",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "getPersonalStakeActualAmounts",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "supportsHistory",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "getPersonalStakeForAddresses",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address[]"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "totalStaked",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_amount",
+          "type": "uint256"
+        },
+        {
+          "name": "_data",
+          "type": "bytes"
+        }
+      ],
+      "name": "unstake",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "stakeHolders",
+      "outputs": [
+        {
+          "name": "totalStakedFor",
+          "type": "uint256"
+        },
+        {
+          "name": "personalStakeIndex",
+          "type": "uint256"
+        },
+        {
+          "name": "exists",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "defaultLockInDuration",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "token",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "_stakingToken",
+          "type": "address"
+        },
+        {
+          "name": "_lockInDuration",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "total",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "Staked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "total",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "Unstaked",
+      "type": "event"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.4.25+commit.59dbf8f1\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[{\"name\":\"_amount\",\"type\":\"uint256\"},{\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"stake\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_user\",\"type\":\"address\"},{\"name\":\"_amount\",\"type\":\"uint256\"},{\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"stakeFor\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"getPersonalStakeUnlockedTimestamps\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256[]\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"getPersonalStakes\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256[]\"},{\"name\":\"\",\"type\":\"uint256[]\"},{\"name\":\"\",\"type\":\"address[]\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"totalStakedFor\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"getPersonalStakeActualAmounts\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256[]\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"supportsHistory\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"getPersonalStakeForAddresses\",\"outputs\":[{\"name\":\"\",\"type\":\"address[]\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"totalStaked\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_amount\",\"type\":\"uint256\"},{\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"unstake\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"\",\"type\":\"address\"}],\"name\":\"stakeHolders\",\"outputs\":[{\"name\":\"totalStakedFor\",\"type\":\"uint256\"},{\"name\":\"personalStakeIndex\",\"type\":\"uint256\"},{\"name\":\"exists\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"defaultLockInDuration\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"token\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"name\":\"_stakingToken\",\"type\":\"address\"},{\"name\":\"_lockInDuration\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"user\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"name\":\"total\",\"type\":\"uint256\"},{\"indexed\":false,\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"Staked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"user\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"name\":\"total\",\"type\":\"uint256\"},{\"indexed\":false,\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"Unstaked\",\"type\":\"event\"}],\"devdoc\":{\"methods\":{\"getPersonalStakeActualAmounts(address)\":{\"details\":\"Returns the stake actualAmount for active personal stakes for an addressThese accessors functions are needed until https://github.com/ethereum/web3.js/issues/1241 is solved\",\"params\":{\"_address\":\"address that created the stakes\"},\"return\":\"uint256[] array of actualAmounts\"},\"getPersonalStakeForAddresses(address)\":{\"details\":\"Returns the addresses that each personal stake was created for by an addressThese accessors functions are needed until https://github.com/ethereum/web3.js/issues/1241 is solved\",\"params\":{\"_address\":\"address that created the stakes\"},\"return\":\"address[] array of amounts\"},\"getPersonalStakeUnlockedTimestamps(address)\":{\"details\":\"Returns the timestamps for when active personal stakes for an address will unlockThese accessors functions are needed until https://github.com/ethereum/web3.js/issues/1241 is solved\",\"params\":{\"_address\":\"address that created the stakes\"},\"return\":\"uint256[] array of timestamps\"},\"getPersonalStakes(address)\":{\"details\":\"Helper function to get specific properties of all of the personal stakes created by an address\",\"params\":{\"_address\":\"address The address to query\"},\"return\":\"(uint256[], uint256[], address[]) timestamps array, actualAmounts array, stakedFor array\"},\"stake(uint256,bytes)\":{\"params\":{\"_amount\":\"uint256 the amount of tokens to stake\",\"_data\":\"bytes optional data to include in the Stake event\"}},\"stakeFor(address,uint256,bytes)\":{\"params\":{\"_amount\":\"uint256 the amount of tokens to stake\",\"_data\":\"bytes optional data to include in the Stake event\",\"_user\":\"address the address the tokens are staked for\"}},\"supportsHistory()\":{\"details\":\"Since we don't implement the optional interface, this always returns false\",\"return\":\"bool Whether or not the optional history functions are implemented\"},\"token()\":{\"return\":\"address The address of the ERC20 token used for staking\"},\"totalStaked()\":{\"return\":\"uint256 The number of tokens staked in the contract\"},\"totalStakedFor(address)\":{\"params\":{\"_address\":\"address The address to query\"},\"return\":\"uint256 The number of tokens staked for the given address\"},\"unstake(uint256,bytes)\":{\"details\":\"Unstaking tokens is an atomic operation\\u2014either all of the tokens in a stake, or none of the tokens.Users can only unstake a single stake at a time, it is must be their oldest active stake. Upon releasing that stake, the tokens will be transferred back to their account, and their personalStakeIndex will increment to the next active stake.\",\"params\":{\"_amount\":\"uint256 the amount of tokens to unstake\",\"_data\":\"bytes optional data to include in the Unstake event\"}}},\"title\":\"BasicStakeContractMock\"},\"userdoc\":{\"methods\":{\"stake(uint256,bytes)\":{\"notice\":\"Stakes a certain amount of tokens, this MUST transfer the given amount from the userMUST trigger Staked event\"},\"stakeFor(address,uint256,bytes)\":{\"notice\":\"Stakes a certain amount of tokens, this MUST transfer the given amount from the callerMUST trigger Staked event\"},\"supportsHistory()\":{\"notice\":\"MUST return true if the optional history functions are implemented, otherwise false\"},\"token()\":{\"notice\":\"Address of the token being used by the staking interface\"},\"totalStaked()\":{\"notice\":\"Returns the current total of tokens staked\"},\"totalStakedFor(address)\":{\"notice\":\"Returns the current total of tokens staked for an address\"},\"unstake(uint256,bytes)\":{\"notice\":\"Unstakes a certain amount of tokens, this SHOULD return the given amount of tokens to the user, if unstaking is currently not possible the function MUST revertMUST trigger Unstaked event\"}}}},\"settings\":{\"compilationTarget\":{\"/Users/ceruleanhu/code/defi/cdc/swap/our/cro-staking/contracts/mocks/BasicStakeContractMock.sol\":\"BasicStakeContractMock\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":999999},\"remappings\":[]},\"sources\":{\"/Users/ceruleanhu/code/defi/cdc/swap/our/cro-staking/contracts/ERC900/ERC900.sol\":{\"keccak256\":\"0xdd6d2477acca7375eb407ba5d31166515a68b14d350de951fda5175697a41bec\",\"urls\":[\"bzzr://c3efa56e1274f840c33f3726f1f6ad963cf773966feed9b8bf06115f1d0cba4c\"]},\"/Users/ceruleanhu/code/defi/cdc/swap/our/cro-staking/contracts/ERC900/ERC900BasicStakeContract.sol\":{\"keccak256\":\"0xd79823e3b521662abd1d9ebcad002bcb1e5dea1ee9e169aa70371132ce5fbf01\",\"urls\":[\"bzzr://c0d44de775afaac4ff420797f4e4ba94e9f870e3a2a636ce48ca367d290d2f35\"]},\"/Users/ceruleanhu/code/defi/cdc/swap/our/cro-staking/contracts/mocks/BasicStakeContractMock.sol\":{\"keccak256\":\"0x8e7f47772f608e06c6ef296084f17507f2caaf69530e87cff5f3d763fa7150f5\",\"urls\":[\"bzzr://6eab46da16499f415e761433f3961fc9ac75d90904b24c25521e93d0c53dad2d\"]},\"openzeppelin-solidity/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x6f859ac66b474844c08916cd628b116978fb0f211489a5f45b1fb4a2f7db56b1\",\"urls\":[\"bzzr://761ddde6ebe029775b131a31d4f9d4f1c80f4bae7f13b27421d46fcbc036c662\"]},\"openzeppelin-solidity/contracts/token/ERC20/ERC20.sol\":{\"keccak256\":\"0xd48f887d15d0411901fc331e74a25d7afa63d89a1257e8e3f43ce1b1e8f4a1e3\",\"urls\":[\"bzzr://09c28b5e4b9323a3675abe0d2f53d78ee30b96f20add8b9432f870df3c8e1970\"]},\"openzeppelin-solidity/contracts/token/ERC20/ERC20Basic.sol\":{\"keccak256\":\"0xa36ddb4cd5f04f0f5b7f344819267dd5500467d58949dd012a85876233c9314e\",\"urls\":[\"bzzr://02ed45f8a66dde083a6fae1b27a4f37605c81e3b8a26b7b16dab9537f901535c\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060405160408061101483398101604052805160209091015160008054600160a060020a031916600160a060020a03909316929092178255600155610fb990819061005b90396000f3006080604052600436106100c45763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416630e89439b81146100c95780630ef9635614610129578063201d3be71461019f57806320bf96201461021d5780634b341aed1461032957806366e6360d146103695780637033e4a6146103975780638033f6bc146103c0578063817b1cd2146103ee578063c8fd6ed014610403578063e26ff10a14610461578063e8297da2146104af578063fc0c546a146104c4575b600080fd5b3480156100d557600080fd5b5060408051602060046024803582810135601f81018590048502860185019096528585526101279583359536956044949193909101919081908401838280828437509497506105029650505050505050565b005b34801561013557600080fd5b50604080516020600460443581810135601f810184900484028501840190955284845261012794823573ffffffffffffffffffffffffffffffffffffffff169460248035953695946064949201919081908401838280828437509497506105149650505050505050565b3480156101ab57600080fd5b506101cd73ffffffffffffffffffffffffffffffffffffffff60043516610527565b60408051602080825283518183015283519192839290830191858101910280838360005b838110156102095781810151838201526020016101f1565b505050509050019250505060405180910390f35b34801561022957600080fd5b5061024b73ffffffffffffffffffffffffffffffffffffffff6004351661053d565b60405180806020018060200180602001848103845287818151815260200191508051906020019060200280838360005b8381101561029357818101518382015260200161027b565b50505050905001848103835286818151815260200191508051906020019060200280838360005b838110156102d25781810151838201526020016102ba565b50505050905001848103825285818151815260200191508051906020019060200280838360005b838110156103115781810151838201526020016102f9565b50505050905001965050505050505060405180910390f35b34801561033557600080fd5b5061035773ffffffffffffffffffffffffffffffffffffffff60043516610721565b60408051918252519081900360200190f35b34801561037557600080fd5b506101cd73ffffffffffffffffffffffffffffffffffffffff60043516610749565b3480156103a357600080fd5b506103ac61075e565b604080519115158252519081900360200190f35b3480156103cc57600080fd5b506101cd73ffffffffffffffffffffffffffffffffffffffff60043516610763565b3480156103fa57600080fd5b50610357610778565b34801561040f57600080fd5b5060408051602060046024803582810135601f810185900485028601850190965285855261012795833595369560449491939091019190819084018382808284375094975061081c9650505050505050565b34801561046d57600080fd5b5061048f73ffffffffffffffffffffffffffffffffffffffff60043516610826565b604080519384526020840192909252151582820152519081900360600190f35b3480156104bb57600080fd5b5061035761084a565b3480156104d057600080fd5b506104d9610850565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b61051033836001548461086c565b5050565b61052283836001548461086c565b505050565b6060806105338361053d565b5090949350505050565b73ffffffffffffffffffffffffffffffffffffffff8116600090815260026020818152604080842060018101549381015482519490038085528084028501909301909152606093849384939184918291829181908680156105a8578160200160208202803883390190505b509450856040519080825280602002602001820160405280156105d5578160200160208202803883390190505b50935085604051908082528060200260200182016040528015610602578160200160208202803883390190505b509250866001015491505b600287015482101561071157866001015482039050866002018281548110151561063357fe5b906000526020600020906003020160000154858281518110151561065357fe5b602090810290910101526002870180548390811061066d57fe5b906000526020600020906003020160010154848281518110151561068d57fe5b60209081029091010152600287018054839081106106a757fe5b6000918252602090912060026003909202010154835173ffffffffffffffffffffffffffffffffffffffff909116908490839081106106e257fe5b73ffffffffffffffffffffffffffffffffffffffff90921660209283029091019091015260019091019061060d565b5092999198509650945050505050565b73ffffffffffffffffffffffffffffffffffffffff1660009081526002602052604090205490565b6060806107558361053d565b50949350505050565b600090565b60608061076f8361053d565b95945050505050565b60008054604080517f70a08231000000000000000000000000000000000000000000000000000000008152306004820152905173ffffffffffffffffffffffffffffffffffffffff909216916370a082319160248082019260209290919082900301818787803b1580156107eb57600080fd5b505af11580156107ff573d6000803e3d6000fd5b505050506040513d602081101561081557600080fd5b5051905090565b6105108282610ba7565b60026020526000908152604090208054600182015460039092015490919060ff1683565b60015481565b60005473ffffffffffffffffffffffffffffffffffffffff1690565b60008054604080517f23b872dd00000000000000000000000000000000000000000000000000000000815233600482018190523060248301526044820188905291519193879373ffffffffffffffffffffffffffffffffffffffff16926323b872dd926064808201936020939283900390910190829087803b1580156108f157600080fd5b505af1158015610905573d6000803e3d6000fd5b505050506040513d602081101561091b57600080fd5b5051151561098a57604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600e60248201527f5374616b65207265717569726564000000000000000000000000000000000000604482015290519081900360640190fd5b3360009081526002602052604090206003015460ff1615156109e25733600090815260026020526040902060030180547fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff001660011790555b73ffffffffffffffffffffffffffffffffffffffff8616600090815260026020526040902054610a18908663ffffffff610f6816565b73ffffffffffffffffffffffffffffffffffffffff871660009081526002602081905260408083209390935533825290829020825160608101909352019080610a67428863ffffffff610f6816565b8152602080820189905273ffffffffffffffffffffffffffffffffffffffff8a81166040938401819052855460018082018855600097885296849020865160039092020190815592850151958301959095559290910151600290910180547fffffffffffffffffffffffff000000000000000000000000000000000000000016919092161790557fc65e53b88159e7d2c0fc12a0600072e28ae53ff73b4c1715369c30f16093514286610b1989610721565b866040518084815260200183815260200180602001828103825283818151815260200191508051906020019080838360005b83811015610b63578181015183820152602001610b4b565b50505050905090810190601f168015610b905780820380516001836020036101000a031916815260200191505b5094505050505060405180910390a2505050505050565b33600090815260026020819052604082206001810154910180549091908110610bcc57fe5b9060005260206000209060030201905042816000015411151515610c7757604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152602560248201527f5468652063757272656e74207374616b65206861736e277420756e6c6f636b6560448201527f6420796574000000000000000000000000000000000000000000000000000000606482015290519081900360840190fd5b60018101548314610d0f57604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152603360248201527f54686520756e7374616b6520616d6f756e7420646f6573206e6f74206d61746360448201527f68207468652063757272656e74207374616b6500000000000000000000000000606482015290519081900360840190fd5b60008054604080517fa9059cbb00000000000000000000000000000000000000000000000000000000815233600482015260248101879052905173ffffffffffffffffffffffffffffffffffffffff9092169263a9059cbb926044808401936020939083900390910190829087803b158015610d8a57600080fd5b505af1158015610d9e573d6000803e3d6000fd5b505050506040513d6020811015610db457600080fd5b50511515610e2357604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601860248201527f556e61626c6520746f207769746864726177207374616b650000000000000000604482015290519081900360640190fd5b600181015460028083015473ffffffffffffffffffffffffffffffffffffffff1660009081526020919091526040902054610e639163ffffffff610f7b16565b6002828101805473ffffffffffffffffffffffffffffffffffffffff9081166000908152602093909352604080842094909455600180860184905533845293909220830180549093019092559054167faf01bfc8475df280aca00b578c4a948e6d95700f0db8c13365240f7f973c875484610edd83610721565b856040518084815260200183815260200180602001828103825283818151815260200191508051906020019080838360005b83811015610f27578181015183820152602001610f0f565b50505050905090810190601f168015610f545780820380516001836020036101000a031916815260200191505b5094505050505060405180910390a2505050565b81810182811015610f7557fe5b92915050565b600082821115610f8757fe5b509003905600a165627a7a723058209c144a8f520a9d7eafb37dd564819f8aba3deb7dc7b40f38900ac0de5e0934630029",
+  "deployedBytecode": "0x6080604052600436106100c45763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416630e89439b81146100c95780630ef9635614610129578063201d3be71461019f57806320bf96201461021d5780634b341aed1461032957806366e6360d146103695780637033e4a6146103975780638033f6bc146103c0578063817b1cd2146103ee578063c8fd6ed014610403578063e26ff10a14610461578063e8297da2146104af578063fc0c546a146104c4575b600080fd5b3480156100d557600080fd5b5060408051602060046024803582810135601f81018590048502860185019096528585526101279583359536956044949193909101919081908401838280828437509497506105029650505050505050565b005b34801561013557600080fd5b50604080516020600460443581810135601f810184900484028501840190955284845261012794823573ffffffffffffffffffffffffffffffffffffffff169460248035953695946064949201919081908401838280828437509497506105149650505050505050565b3480156101ab57600080fd5b506101cd73ffffffffffffffffffffffffffffffffffffffff60043516610527565b60408051602080825283518183015283519192839290830191858101910280838360005b838110156102095781810151838201526020016101f1565b505050509050019250505060405180910390f35b34801561022957600080fd5b5061024b73ffffffffffffffffffffffffffffffffffffffff6004351661053d565b60405180806020018060200180602001848103845287818151815260200191508051906020019060200280838360005b8381101561029357818101518382015260200161027b565b50505050905001848103835286818151815260200191508051906020019060200280838360005b838110156102d25781810151838201526020016102ba565b50505050905001848103825285818151815260200191508051906020019060200280838360005b838110156103115781810151838201526020016102f9565b50505050905001965050505050505060405180910390f35b34801561033557600080fd5b5061035773ffffffffffffffffffffffffffffffffffffffff60043516610721565b60408051918252519081900360200190f35b34801561037557600080fd5b506101cd73ffffffffffffffffffffffffffffffffffffffff60043516610749565b3480156103a357600080fd5b506103ac61075e565b604080519115158252519081900360200190f35b3480156103cc57600080fd5b506101cd73ffffffffffffffffffffffffffffffffffffffff60043516610763565b3480156103fa57600080fd5b50610357610778565b34801561040f57600080fd5b5060408051602060046024803582810135601f810185900485028601850190965285855261012795833595369560449491939091019190819084018382808284375094975061081c9650505050505050565b34801561046d57600080fd5b5061048f73ffffffffffffffffffffffffffffffffffffffff60043516610826565b604080519384526020840192909252151582820152519081900360600190f35b3480156104bb57600080fd5b5061035761084a565b3480156104d057600080fd5b506104d9610850565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b61051033836001548461086c565b5050565b61052283836001548461086c565b505050565b6060806105338361053d565b5090949350505050565b73ffffffffffffffffffffffffffffffffffffffff8116600090815260026020818152604080842060018101549381015482519490038085528084028501909301909152606093849384939184918291829181908680156105a8578160200160208202803883390190505b509450856040519080825280602002602001820160405280156105d5578160200160208202803883390190505b50935085604051908082528060200260200182016040528015610602578160200160208202803883390190505b509250866001015491505b600287015482101561071157866001015482039050866002018281548110151561063357fe5b906000526020600020906003020160000154858281518110151561065357fe5b602090810290910101526002870180548390811061066d57fe5b906000526020600020906003020160010154848281518110151561068d57fe5b60209081029091010152600287018054839081106106a757fe5b6000918252602090912060026003909202010154835173ffffffffffffffffffffffffffffffffffffffff909116908490839081106106e257fe5b73ffffffffffffffffffffffffffffffffffffffff90921660209283029091019091015260019091019061060d565b5092999198509650945050505050565b73ffffffffffffffffffffffffffffffffffffffff1660009081526002602052604090205490565b6060806107558361053d565b50949350505050565b600090565b60608061076f8361053d565b95945050505050565b60008054604080517f70a08231000000000000000000000000000000000000000000000000000000008152306004820152905173ffffffffffffffffffffffffffffffffffffffff909216916370a082319160248082019260209290919082900301818787803b1580156107eb57600080fd5b505af11580156107ff573d6000803e3d6000fd5b505050506040513d602081101561081557600080fd5b5051905090565b6105108282610ba7565b60026020526000908152604090208054600182015460039092015490919060ff1683565b60015481565b60005473ffffffffffffffffffffffffffffffffffffffff1690565b60008054604080517f23b872dd00000000000000000000000000000000000000000000000000000000815233600482018190523060248301526044820188905291519193879373ffffffffffffffffffffffffffffffffffffffff16926323b872dd926064808201936020939283900390910190829087803b1580156108f157600080fd5b505af1158015610905573d6000803e3d6000fd5b505050506040513d602081101561091b57600080fd5b5051151561098a57604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600e60248201527f5374616b65207265717569726564000000000000000000000000000000000000604482015290519081900360640190fd5b3360009081526002602052604090206003015460ff1615156109e25733600090815260026020526040902060030180547fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff001660011790555b73ffffffffffffffffffffffffffffffffffffffff8616600090815260026020526040902054610a18908663ffffffff610f6816565b73ffffffffffffffffffffffffffffffffffffffff871660009081526002602081905260408083209390935533825290829020825160608101909352019080610a67428863ffffffff610f6816565b8152602080820189905273ffffffffffffffffffffffffffffffffffffffff8a81166040938401819052855460018082018855600097885296849020865160039092020190815592850151958301959095559290910151600290910180547fffffffffffffffffffffffff000000000000000000000000000000000000000016919092161790557fc65e53b88159e7d2c0fc12a0600072e28ae53ff73b4c1715369c30f16093514286610b1989610721565b866040518084815260200183815260200180602001828103825283818151815260200191508051906020019080838360005b83811015610b63578181015183820152602001610b4b565b50505050905090810190601f168015610b905780820380516001836020036101000a031916815260200191505b5094505050505060405180910390a2505050505050565b33600090815260026020819052604082206001810154910180549091908110610bcc57fe5b9060005260206000209060030201905042816000015411151515610c7757604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152602560248201527f5468652063757272656e74207374616b65206861736e277420756e6c6f636b6560448201527f6420796574000000000000000000000000000000000000000000000000000000606482015290519081900360840190fd5b60018101548314610d0f57604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152603360248201527f54686520756e7374616b6520616d6f756e7420646f6573206e6f74206d61746360448201527f68207468652063757272656e74207374616b6500000000000000000000000000606482015290519081900360840190fd5b60008054604080517fa9059cbb00000000000000000000000000000000000000000000000000000000815233600482015260248101879052905173ffffffffffffffffffffffffffffffffffffffff9092169263a9059cbb926044808401936020939083900390910190829087803b158015610d8a57600080fd5b505af1158015610d9e573d6000803e3d6000fd5b505050506040513d6020811015610db457600080fd5b50511515610e2357604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601860248201527f556e61626c6520746f207769746864726177207374616b650000000000000000604482015290519081900360640190fd5b600181015460028083015473ffffffffffffffffffffffffffffffffffffffff1660009081526020919091526040902054610e639163ffffffff610f7b16565b6002828101805473ffffffffffffffffffffffffffffffffffffffff9081166000908152602093909352604080842094909455600180860184905533845293909220830180549093019092559054167faf01bfc8475df280aca00b578c4a948e6d95700f0db8c13365240f7f973c875484610edd83610721565b856040518084815260200183815260200180602001828103825283818151815260200191508051906020019080838360005b83811015610f27578181015183820152602001610f0f565b50505050905090810190601f168015610f545780820380516001836020036101000a031916815260200191505b5094505050505060405180910390a2505050565b81810182811015610f7557fe5b92915050565b600082821115610f8757fe5b509003905600a165627a7a723058209c144a8f520a9d7eafb37dd564819f8aba3deb7dc7b40f38900ac0de5e0934630029",
+  "sourceMap": "118:464:6:-;;;403:177;8:9:-1;5:2;;;30:1;27;20:12;5:2;403:177:6;;;;;;;;;;;;;;;;;;;2564:12:1;:28;;-1:-1:-1;;;;;;2564:28:1;-1:-1:-1;;;;;2564:28:1;;;;;;;;;-1:-1:-1;536:39:6;118:464;;;;;;;;",
+  "deployedSourceMap": "118:464:6:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;4426:150:1;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;4426:150:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;4426:150:1;;-1:-1:-1;4426:150:1;;-1:-1:-1;;;;;;;4426:150:1;;;4921:163;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;4921:163:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;4921:163:1;;-1:-1:-1;4921:163:1;;-1:-1:-1;;;;;;;4921:163:1;2912:208;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;2912:208:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:100:-1;33:3;30:1;27:10;8:100;;;90:11;;;84:18;71:11;;;64:39;52:2;45:10;8:100;;;12:14;2912:208:1;;;;;;;;;;;;;;;;;7357:960;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;7357:960:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;90:11;;;84:18;71:11;;;64:39;52:2;45:10;8:100;;;12:14;7357:960:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;90:11;;;84:18;71:11;;;64:39;52:2;45:10;8:100;;;12:14;7357:960:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;90:11;;;84:18;71:11;;;64:39;52:2;45:10;8:100;;;12:14;7357:960:1;;;;;;;;;;;;;;;;;;;;;6128:127;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;6128:127:1;;;;;;;;;;;;;;;;;;;;;;;3429:212;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;3429:212:1;;;;;;;7001:77;;8:9:-1;5:2;;;30:1;27;20:12;5:2;7001:77:1;;;;;;;;;;;;;;;;;;;;;;3948:199;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;3948:199:1;;;;;;;6392:99;;8:9:-1;5:2;;;30:1;27;20:12;5:2;6392:99:1;;;;5813:107;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;5813:107:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;5813:107:1;;-1:-1:-1;5813:107:1;;-1:-1:-1;;;;;;;5813:107:1;1029:54;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;1029:54:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;651:36;;8:9:-1;5:2;;;30:1;27;20:12;5:2;651:36:1;;;;6646:77;;8:9:-1;5:2;;;30:1;27;20:12;5:2;6646:77:1;;;;;;;;;;;;;;;;;;;;;;;4426:150;4484:87;4503:10;4521:7;4536:21;;4565:5;4484:11;:87::i;:::-;4426:150;;:::o;4921:163::-;4997:82;5016:5;5029:7;5044:21;;5073:5;4997:11;:82::i;:::-;4921:163;;;:::o;2912:208::-;2997:9;3014:27;3064;3082:8;3064:17;:27::i;:::-;-1:-1:-1;3047:44:1;;2912:208;-1:-1:-1;;;;2912:208:1:o;7357:960::-;7521:22;;;7483:35;7521:22;;;:12;:22;;;;;;;;7608:32;;;;7570:28;;;:35;7684:24;;7570:70;;;7684:24;;;;;;;;;;;;;;7442:9;;;;;;7570:70;7442:9;;;;;;7483:35;;7570:70;7684:24;;;;;;;29:2:-1;21:6;17:15;117:4;105:10;97:6;88:34;136:17;;-1:-1;7684:24:1;;7646:62;;7761:9;7747:24;;;;;;;;;;;;;;;;;;;;;;29:2:-1;21:6;17:15;117:4;105:10;97:6;88:34;136:17;;-1:-1;7747:24:1;;7714:57;;7820:9;7806:24;;;;;;;;;;;;;;;;;;;;;;29:2:-1;21:6;17:15;117:4;105:10;97:6;88:34;136:17;;-1:-1;7806:24:1;;7777:53;;7854:13;:32;;;7842:44;;7837:392;7892:28;;;:35;7888:39;;7837:392;;;7962:13;:32;;;7958:1;:36;7942:52;;8030:13;:28;;8059:1;8030:31;;;;;;;;;;;;;;;;;;;;:49;;;8002:18;8021:5;8002:25;;;;;;;;;;;;;;;;;;:77;8110:28;;;:31;;8139:1;;8110:31;;;;;;;;;;;;;;;;:44;;;8087:13;8101:5;8087:20;;;;;;;;;;;;;;;;;;:67;8181:28;;;:31;;8210:1;;8181:31;;;;;;;;;;;;;;:41;:31;;;;;:41;;8162:16;;8181:41;;;;;8162:9;;8172:5;;8162:16;;;;;;:60;;;;:16;;;;;;;;;;:60;7929:3;;;;;7837:392;;;-1:-1:-1;8250:18:1;;8276:13;;-1:-1:-1;8297:9:1;-1:-1:-1;7357:960:1;-1:-1:-1;;;;;7357:960:1:o;6128:127::-;6213:22;;6191:7;6213:22;;;:12;:22;;;;;:37;;6128:127::o;3429:212::-;3509:9;3526:30;3582:27;3600:8;3582:17;:27::i;:::-;-1:-1:-1;3562:47:1;3429:212;-1:-1:-1;;;;3429:212:1:o;7001:77::-;7049:4;7001:77;:::o;3948:199::-;4027:9;4044:26;4092:27;4110:8;4092:17;:27::i;:::-;4076:43;3948:199;-1:-1:-1;;;;;3948:199:1:o;6392:99::-;6436:7;6458:12;;:28;;;;;;6481:4;6458:28;;;;;;:12;;;;;:22;;:28;;;;;;;;;;;;;;;6436:7;6458:12;:28;;;5:2:-1;;;;30:1;27;20:12;5:2;6458:28:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;6458:28:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;6458:28:1;;-1:-1:-1;6392:99:1;:::o;5813:107::-;5873:42;5894:7;5909:5;5873:13;:42::i;1029:54::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;651:36::-;;;;:::o;6646:77::-;6684:7;6706:12;;;6646:77;:::o;8670:609::-;2300:12;;;:50;;;;;;8810:10;2300:50;;;;;;2336:4;2300:50;;;;;;;;;;;;8810:10;;8822:7;;2300:12;;;:25;;:50;;;;;;;;;;;;;;;;;:12;:50;;;5:2:-1;;;;30:1;27;20:12;5:2;2300:50:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;2300:50:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;2300:50:1;2285:90;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8857:10;8844:24;;;;:12;:24;;;;;:31;;;;;8843:32;8839:91;;;8898:10;8885:24;;;;:12;:24;;;;;:31;;:38;;;;8919:4;8885:38;;;8839:91;8976:22;;;;;;;:12;:22;;;;;:37;:50;;9018:7;8976:50;:41;:50;:::i;:::-;8936:22;;;;;;;:12;:22;;;;;;;;:90;;;;9045:10;9032:24;;;;;;9084:87;;;;;;;;9032:39;;9084:87;9099:36;:15;9119;9099:36;:19;:36;:::i;:::-;9084:87;;;;;;;;;;;;;;;;;;;;27:10:-1;;39:1;23:18;;;45:23;;-1:-1;9032:147:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;9191:83;9084:87;9236:24;9084:87;9236:14;:24::i;:::-;9268:5;9191:83;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;90:11;;;84:18;71:11;;;64:39;52:2;45:10;8:100;;;12:14;9191:83:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8670:609;;;;;;:::o;9552:1179::-;9681:10;9638:27;9668:24;;;:12;:24;;;;;;;9708:43;;;;9668:39;;:84;;:39;;9708:43;9668:84;;;;;;;;;;;;;;;;9638:114;;9887:15;9852:13;:31;;;:50;;9837:113;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;9972:26;;;;:37;;9957:114;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;10281:12;;;:42;;;;;;10303:10;10281:42;;;;;;;;;;;;:12;;;;;:21;;:42;;;;;;;;;;;;;;;;;:12;:42;;;5:2:-1;;;;30:1;27;20:12;5:2;10281:42:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;10281:42:1;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;10281:42:1;10266:92;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;10484:26;;;;10420:12;10433:23;;;;;;10420:37;;;;;;;;;;;;:59;:91;;;:63;:91;:::i;:::-;10365:12;10378:23;;;;;;;;;10365:37;;;;;;;;;;;;;:146;;;;10378:23;10518:26;;;:30;;;10567:10;10554:24;;;;;;:43;;:45;;;;;;;;10627:23;;;10611:115;10658:7;10673:39;10627:23;10673:14;:39::i;:::-;10720:5;10611:115;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;90:11;;;84:18;71:11;;;64:39;52:2;45:10;8:100;;;12:14;10611:115:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;9552:1179;;;:::o;1214:123:11:-;1293:5;;;1311:6;;;;1304:14;;;;1214:123;;;;:::o;1042:110::-;1100:7;1122:6;;;;1115:14;;;;-1:-1:-1;1142:5:11;;;1042:110::o",
+  "source": "pragma solidity ^0.4.24;\n\nimport \"../ERC900/ERC900BasicStakeContract.sol\";\n\n\n/**\n * @title BasicStakeContractMock\n */\ncontract BasicStakeContractMock is ERC900BasicStakeContract {\n  /**\n   * @dev Constructor function\n   * @param _stakingToken ERC20 The address of the token used for staking\n   * @param _lockInDuration uint256 The duration (in seconds) that stakes are required to be locked for\n   */\n  constructor(\n    ERC20 _stakingToken,\n    uint256 _lockInDuration\n  )\n    public\n    ERC900BasicStakeContract(_stakingToken)\n  {\n    defaultLockInDuration = _lockInDuration;\n  }\n}\n",
+  "sourcePath": "/Users/ceruleanhu/code/defi/cdc/swap/our/cro-staking/contracts/mocks/BasicStakeContractMock.sol",
+  "ast": {
+    "absolutePath": "/Users/ceruleanhu/code/defi/cdc/swap/our/cro-staking/contracts/mocks/BasicStakeContractMock.sol",
+    "exportedSymbols": {
+      "BasicStakeContractMock": [
+        1155
+      ]
+    },
+    "id": 1156,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1136,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".24"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:6"
+      },
+      {
+        "absolutePath": "/Users/ceruleanhu/code/defi/cdc/swap/our/cro-staking/contracts/ERC900/ERC900BasicStakeContract.sol",
+        "file": "../ERC900/ERC900BasicStakeContract.sol",
+        "id": 1137,
+        "nodeType": "ImportDirective",
+        "scope": 1156,
+        "sourceUnit": 565,
+        "src": "26:48:6",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 1138,
+              "name": "ERC900BasicStakeContract",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 564,
+              "src": "153:24:6",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_ERC900BasicStakeContract_$564",
+                "typeString": "contract ERC900BasicStakeContract"
+              }
+            },
+            "id": 1139,
+            "nodeType": "InheritanceSpecifier",
+            "src": "153:24:6"
+          }
+        ],
+        "contractDependencies": [
+          67,
+          564
+        ],
+        "contractKind": "contract",
+        "documentation": "@title BasicStakeContractMock",
+        "fullyImplemented": true,
+        "id": 1155,
+        "linearizedBaseContracts": [
+          1155,
+          564,
+          67
+        ],
+        "name": "BasicStakeContractMock",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 1153,
+              "nodeType": "Block",
+              "src": "530:50:6",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 1151,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 1149,
+                      "name": "defaultLockInDuration",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 81,
+                      "src": "536:21:6",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 1150,
+                      "name": "_lockInDuration",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1143,
+                      "src": "560:15:6",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "536:39:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 1152,
+                  "nodeType": "ExpressionStatement",
+                  "src": "536:39:6"
+                }
+              ]
+            },
+            "documentation": "@dev Constructor function\n@param _stakingToken ERC20 The address of the token used for staking\n@param _lockInDuration uint256 The duration (in seconds) that stakes are required to be locked for",
+            "id": 1154,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 1146,
+                    "name": "_stakingToken",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 1141,
+                    "src": "513:13:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_ERC20_$1607",
+                      "typeString": "contract ERC20"
+                    }
+                  }
+                ],
+                "id": 1147,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 1145,
+                  "name": "ERC900BasicStakeContract",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 564,
+                  "src": "488:24:6",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_ERC900BasicStakeContract_$564_$",
+                    "typeString": "type(contract ERC900BasicStakeContract)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "488:39:6"
+              }
+            ],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1144,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1141,
+                  "name": "_stakingToken",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1154,
+                  "src": "420:19:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_ERC20_$1607",
+                    "typeString": "contract ERC20"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 1140,
+                    "name": "ERC20",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 1607,
+                    "src": "420:5:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_ERC20_$1607",
+                      "typeString": "contract ERC20"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1143,
+                  "name": "_lockInDuration",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1154,
+                  "src": "445:23:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1142,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "445:7:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "414:58:6"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1148,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "530:0:6"
+            },
+            "scope": 1155,
+            "src": "403:177:6",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 1156,
+        "src": "118:464:6"
+      }
+    ],
+    "src": "0:583:6"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/ceruleanhu/code/defi/cdc/swap/our/cro-staking/contracts/mocks/BasicStakeContractMock.sol",
+    "exportedSymbols": {
+      "BasicStakeContractMock": [
+        1155
+      ]
+    },
+    "id": 1156,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1136,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".24"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:6"
+      },
+      {
+        "absolutePath": "/Users/ceruleanhu/code/defi/cdc/swap/our/cro-staking/contracts/ERC900/ERC900BasicStakeContract.sol",
+        "file": "../ERC900/ERC900BasicStakeContract.sol",
+        "id": 1137,
+        "nodeType": "ImportDirective",
+        "scope": 1156,
+        "sourceUnit": 565,
+        "src": "26:48:6",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 1138,
+              "name": "ERC900BasicStakeContract",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 564,
+              "src": "153:24:6",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_ERC900BasicStakeContract_$564",
+                "typeString": "contract ERC900BasicStakeContract"
+              }
+            },
+            "id": 1139,
+            "nodeType": "InheritanceSpecifier",
+            "src": "153:24:6"
+          }
+        ],
+        "contractDependencies": [
+          67,
+          564
+        ],
+        "contractKind": "contract",
+        "documentation": "@title BasicStakeContractMock",
+        "fullyImplemented": true,
+        "id": 1155,
+        "linearizedBaseContracts": [
+          1155,
+          564,
+          67
+        ],
+        "name": "BasicStakeContractMock",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 1153,
+              "nodeType": "Block",
+              "src": "530:50:6",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 1151,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 1149,
+                      "name": "defaultLockInDuration",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 81,
+                      "src": "536:21:6",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 1150,
+                      "name": "_lockInDuration",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1143,
+                      "src": "560:15:6",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "536:39:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 1152,
+                  "nodeType": "ExpressionStatement",
+                  "src": "536:39:6"
+                }
+              ]
+            },
+            "documentation": "@dev Constructor function\n@param _stakingToken ERC20 The address of the token used for staking\n@param _lockInDuration uint256 The duration (in seconds) that stakes are required to be locked for",
+            "id": 1154,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 1146,
+                    "name": "_stakingToken",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 1141,
+                    "src": "513:13:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_ERC20_$1607",
+                      "typeString": "contract ERC20"
+                    }
+                  }
+                ],
+                "id": 1147,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 1145,
+                  "name": "ERC900BasicStakeContract",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 564,
+                  "src": "488:24:6",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_ERC900BasicStakeContract_$564_$",
+                    "typeString": "type(contract ERC900BasicStakeContract)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "488:39:6"
+              }
+            ],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1144,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1141,
+                  "name": "_stakingToken",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1154,
+                  "src": "420:19:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_ERC20_$1607",
+                    "typeString": "contract ERC20"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 1140,
+                    "name": "ERC20",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 1607,
+                    "src": "420:5:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_ERC20_$1607",
+                      "typeString": "contract ERC20"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1143,
+                  "name": "_lockInDuration",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1154,
+                  "src": "445:23:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1142,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "445:7:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "414:58:6"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1148,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "530:0:6"
+            },
+            "scope": 1155,
+            "src": "403:177:6",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 1156,
+        "src": "118:464:6"
+      }
+    ],
+    "src": "0:583:6"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.25+commit.59dbf8f1.Emscripten.clang"
+  },
+  "networks": {
+    "3": {
+      "events": {
+        "0xc65e53b88159e7d2c0fc12a0600072e28ae53ff73b4c1715369c30f160935142": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "total",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "Staked",
+          "type": "event"
+        },
+        "0xaf01bfc8475df280aca00b578c4a948e6d95700f0db8c13365240f7f973c8754": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "total",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "Unstaked",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x453097a0944675CB858079ca24d71e4a6eAF8FF1",
+      "transactionHash": "0x79cf660fbed02d1c94b138282180dc697d561813efeb68d3dac96833a8b0e981"
+    },
+    "1599050909225": {
+      "events": {
+        "0xc65e53b88159e7d2c0fc12a0600072e28ae53ff73b4c1715369c30f160935142": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "total",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "Staked",
+          "type": "event"
+        },
+        "0xaf01bfc8475df280aca00b578c4a948e6d95700f0db8c13365240f7f973c8754": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "total",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "Unstaked",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xbe1c5a3a38e02d13dcb910c7990147218a4521cf",
+      "transactionHash": "0xadafada863c9c9e4be98b34d13c74fc7428bd1a9f5950b7400acb0a5977a2c15"
+    }
+  },
+  "schemaVersion": "3.2.4",
+  "updatedAt": "2020-09-03T06:02:18.280Z",
+  "networkType": "ethereum",
+  "devdoc": {
+    "methods": {
+      "getPersonalStakeActualAmounts(address)": {
+        "details": "Returns the stake actualAmount for active personal stakes for an addressThese accessors functions are needed until https://github.com/ethereum/web3.js/issues/1241 is solved",
+        "params": {
+          "_address": "address that created the stakes"
+        },
+        "return": "uint256[] array of actualAmounts"
+      },
+      "getPersonalStakeForAddresses(address)": {
+        "details": "Returns the addresses that each personal stake was created for by an addressThese accessors functions are needed until https://github.com/ethereum/web3.js/issues/1241 is solved",
+        "params": {
+          "_address": "address that created the stakes"
+        },
+        "return": "address[] array of amounts"
+      },
+      "getPersonalStakeUnlockedTimestamps(address)": {
+        "details": "Returns the timestamps for when active personal stakes for an address will unlockThese accessors functions are needed until https://github.com/ethereum/web3.js/issues/1241 is solved",
+        "params": {
+          "_address": "address that created the stakes"
+        },
+        "return": "uint256[] array of timestamps"
+      },
+      "getPersonalStakes(address)": {
+        "details": "Helper function to get specific properties of all of the personal stakes created by an address",
+        "params": {
+          "_address": "address The address to query"
+        },
+        "return": "(uint256[], uint256[], address[]) timestamps array, actualAmounts array, stakedFor array"
+      },
+      "stake(uint256,bytes)": {
+        "params": {
+          "_amount": "uint256 the amount of tokens to stake",
+          "_data": "bytes optional data to include in the Stake event"
+        }
+      },
+      "stakeFor(address,uint256,bytes)": {
+        "params": {
+          "_amount": "uint256 the amount of tokens to stake",
+          "_data": "bytes optional data to include in the Stake event",
+          "_user": "address the address the tokens are staked for"
+        }
+      },
+      "supportsHistory()": {
+        "details": "Since we don't implement the optional interface, this always returns false",
+        "return": "bool Whether or not the optional history functions are implemented"
+      },
+      "token()": {
+        "return": "address The address of the ERC20 token used for staking"
+      },
+      "totalStaked()": {
+        "return": "uint256 The number of tokens staked in the contract"
+      },
+      "totalStakedFor(address)": {
+        "params": {
+          "_address": "address The address to query"
+        },
+        "return": "uint256 The number of tokens staked for the given address"
+      },
+      "unstake(uint256,bytes)": {
+        "details": "Unstaking tokens is an atomic operation—either all of the tokens in a stake, or none of the tokens.Users can only unstake a single stake at a time, it is must be their oldest active stake. Upon releasing that stake, the tokens will be transferred back to their account, and their personalStakeIndex will increment to the next active stake.",
+        "params": {
+          "_amount": "uint256 the amount of tokens to unstake",
+          "_data": "bytes optional data to include in the Unstake event"
+        }
+      }
+    },
+    "title": "BasicStakeContractMock"
+  },
+  "userdoc": {
+    "methods": {
+      "stake(uint256,bytes)": {
+        "notice": "Stakes a certain amount of tokens, this MUST transfer the given amount from the userMUST trigger Staked event"
+      },
+      "stakeFor(address,uint256,bytes)": {
+        "notice": "Stakes a certain amount of tokens, this MUST transfer the given amount from the callerMUST trigger Staked event"
+      },
+      "supportsHistory()": {
+        "notice": "MUST return true if the optional history functions are implemented, otherwise false"
+      },
+      "token()": {
+        "notice": "Address of the token being used by the staking interface"
+      },
+      "totalStaked()": {
+        "notice": "Returns the current total of tokens staked"
+      },
+      "totalStakedFor(address)": {
+        "notice": "Returns the current total of tokens staked for an address"
+      },
+      "unstake(uint256,bytes)": {
+        "notice": "Unstakes a certain amount of tokens, this SHOULD return the given amount of tokens to the user, if unstaking is currently not possible the function MUST revertMUST trigger Unstaked event"
+      }
+    }
+  }
+}

@@ -12,10 +12,9 @@ import PendingView from './PendingView'
 import Option from './Option'
 import { SUPPORTED_WALLETS } from '../../constants'
 import { ExternalLink } from '../../theme'
-import MetamaskIcon from '../../assets/images/metamask.png'
-import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injected, fortmatic, portis } from '../../connectors'
-import { OVERLAY_READY } from '../../connectors/Fortmatic'
+import Icons from './Icons'
+import Close from '../../assets/images/x.svg'
+import { injected, portis } from '../../connectors'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
@@ -194,13 +193,6 @@ export default function WalletModal({
       })
   }
 
-  // close wallet modal if fortmatic modal is active
-  useEffect(() => {
-    fortmatic.on(OVERLAY_READY, () => {
-      toggleWalletModal()
-    })
-  }, [toggleWalletModal])
-
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
@@ -226,8 +218,9 @@ export default function WalletModal({
               link={option.href}
               header={option.name}
               subheader={null}
-              icon={require('../../assets/images/' + option.iconName)}
-            />
+            >
+              <Icons name={option.iconName} />
+            </Option>
           )
         }
         return null
@@ -246,8 +239,9 @@ export default function WalletModal({
                 header={'Install Metamask'}
                 subheader={null}
                 link={'https://metamask.io/'}
-                icon={MetamaskIcon}
-              />
+              >
+                <Icons name="metamask" />
+              </Option>
             )
           } else {
             return null //dont want to return install twice
@@ -280,8 +274,9 @@ export default function WalletModal({
             link={option.href}
             header={option.name}
             subheader={null} //use option.descriptio to bring back multi-line
-            icon={require('../../assets/images/' + option.iconName)}
-          />
+          >
+            <Icons name={option.iconName} />
+          </Option>
         )
       )
     })

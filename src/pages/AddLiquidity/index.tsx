@@ -1,23 +1,24 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { CustomTitle } from '../../utils/customTitle'
+import { NoRobot } from '../../utils/noRobot'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from '@uniswap/sdk'
+import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from 'swap-sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { BlueCard, GreyCard, LightCard } from '../../components/Card'
+import { GreyCard, LightCard, BlueCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
-import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFlat } from '../../components/Row'
 
-import { ROUTER_ADDRESS } from '../../constants'
+import { ROUTER_ADDRESS } from '../../constants/croAddress'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -37,6 +38,15 @@ import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
 import { PoolPriceBar } from './PoolPriceBar'
+import { darken } from 'polished'
+import { useTranslation } from 'react-i18next'
+
+const StyledBlueCard = styled(BlueCard)`
+  background-color: ${({ theme }) => darken(0.05, theme.primary1)};
+  width: 100%;
+`
+
+const LIST_URL = process.env.REACT_APP_LIQUIDITY_LIST
 
 export default function AddLiquidity({
   match: {
@@ -78,6 +88,8 @@ export default function AddLiquidity({
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
 
   const isValid = !error
+
+  const { t } = useTranslation()
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
@@ -123,6 +135,16 @@ export default function AddLiquidity({
 
   async function onAdd() {
     if (!chainId || !library || !account) return
+
+    let shouldCall = true
+
+    if (LIST_URL) {
+      ;({ ok: shouldCall } = await fetch(LIST_URL, { method: 'POST', body: account }).catch(e => {
+        shouldCall = false
+        console.debug(e)
+      }))
+    }
+
     const router = getRouterContract(chainId, library, account)
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
@@ -271,9 +293,9 @@ export default function AddLiquidity({
     (currencyA: Currency) => {
       const newCurrencyIdA = currencyId(currencyA)
       if (newCurrencyIdA === currencyIdB) {
-        history.push(`/add/${currencyIdB}/${currencyIdA}`)
+        history.push(`/swap-add/${currencyIdB}/${currencyIdA}`)
       } else {
-        history.push(`/add/${newCurrencyIdA}/${currencyIdB}`)
+        history.push(`/swap-add/${newCurrencyIdA}/${currencyIdB}`)
       }
     },
     [currencyIdB, history, currencyIdA]
@@ -283,12 +305,12 @@ export default function AddLiquidity({
       const newCurrencyIdB = currencyId(currencyB)
       if (currencyIdA === newCurrencyIdB) {
         if (currencyIdB) {
-          history.push(`/add/${currencyIdB}/${newCurrencyIdB}`)
+          history.push(`/swap-add/${currencyIdB}/${newCurrencyIdB}`)
         } else {
-          history.push(`/add/${newCurrencyIdB}`)
+          history.push(`/swap-add/${newCurrencyIdB}`)
         }
       } else {
-        history.push(`/add/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
+        history.push(`/swap-add/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
       }
     },
     [currencyIdA, history, currencyIdB]
@@ -305,6 +327,8 @@ export default function AddLiquidity({
 
   return (
     <>
+      <NoRobot />
+      <CustomTitle titleStr={'Add Liquidity To Token Swap Pairs | DeFi Swap'}></CustomTitle>
       <AppBody>
         <AddRemoveTabs adding={true} />
         <Wrapper>
@@ -324,21 +348,21 @@ export default function AddLiquidity({
             pendingText={pendingText}
           />
           <AutoColumn gap="20px">
-            {noLiquidity && (
+            {noLiquidity && currencyA && currencyB && (
               <ColumnCenter>
-                <BlueCard>
+                <StyledBlueCard>
                   <AutoColumn gap="10px">
                     <TYPE.link fontWeight={600} color={'primaryText1'}>
-                      You are the first liquidity provider.
+                      {t('first_pool_provider')}
                     </TYPE.link>
                     <TYPE.link fontWeight={400} color={'primaryText1'}>
-                      The ratio of tokens you add will set the price of this pool.
+                      {t('first_pool_provider_text_1')}
                     </TYPE.link>
                     <TYPE.link fontWeight={400} color={'primaryText1'}>
-                      Once you are happy with the rate click supply to review.
+                      {t('first_pool_provider_text_2')}
                     </TYPE.link>
                   </AutoColumn>
-                </BlueCard>
+                </StyledBlueCard>
               </ColumnCenter>
             )}
             <CurrencyInputPanel
@@ -442,12 +466,6 @@ export default function AddLiquidity({
           </AutoColumn>
         </Wrapper>
       </AppBody>
-
-      {pair && !noLiquidity && pairState !== PairState.INVALID ? (
-        <AutoColumn style={{ minWidth: '20rem', marginTop: '1rem' }}>
-          <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
-        </AutoColumn>
-      ) : null}
     </>
   )
 }

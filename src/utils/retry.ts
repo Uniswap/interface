@@ -10,15 +10,27 @@ function waitRandom(min: number, max: number): Promise<void> {
  * This error is thrown if the function is cancelled before completing
  */
 export class CancelledError extends Error {
+  __proto__: Error
   constructor() {
+    const trueProto = new.target.prototype
     super('Cancelled')
+
+    this.__proto__ = trueProto
   }
 }
 
 /**
  * Throw this error if the function should retry
  */
-export class RetryableError extends Error {}
+export class RetryableError extends Error {
+  __proto__: Error
+  constructor(message?: string) {
+    const trueProto = new.target.prototype
+    super(message)
+
+    this.__proto__ = trueProto
+  }
+}
 
 /**
  * Retries the function that returns the promise until the promise successfully resolves up to n retries

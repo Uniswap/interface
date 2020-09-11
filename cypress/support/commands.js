@@ -9,12 +9,12 @@ import { Wallet } from '@ethersproject/wallet'
 import { _Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 
 // never send real ether to this, obviously
-const PRIVATE_KEY_TEST_NEVER_USE = '0xad20c82497421e9784f18460ad2fe84f73569068e98e270b3e63743268af5763'
+const PRIVATE_KEY_TEST_NEVER_USE = '0xec418fc03915685a633a934a776973697313725230e5b0d3f1c39b02077c70e7'
 
 // address of the above key
-export const TEST_ADDRESS_NEVER_USE = '0x0fF2D1eFd7A57B7562b2bf27F3f37899dB27F4a5'
+export const TEST_ADDRESS_NEVER_USE = '0x8F37B3A899d5C8479954d390003Bcd754C03cBb4'
 
-export const TEST_ADDRESS_NEVER_USE_SHORTENED = '0x0fF2...F4a5'
+export const TEST_ADDRESS_NEVER_USE_SHORTENED = '0x8F37...cBb4'
 
 class CustomizedBridge extends _Eip1193Bridge {
   async sendAsync(...args) {
@@ -42,11 +42,12 @@ class CustomizedBridge extends _Eip1193Bridge {
         return Promise.resolve([TEST_ADDRESS_NEVER_USE])
       }
     }
+    //Update here for chain id as well
     if (method === 'eth_chainId') {
       if (isCallbackForm) {
-        callback(null, { result: '0x4' })
+        callback(null, { result: '0x3' })
       } else {
-        return Promise.resolve('0x4')
+        return Promise.resolve('0x3')
       }
     }
     try {
@@ -74,7 +75,7 @@ Cypress.Commands.overwrite('visit', (original, url, options) => {
     onBeforeLoad(win) {
       options && options.onBeforeLoad && options.onBeforeLoad(win)
       win.localStorage.clear()
-      const provider = new JsonRpcProvider('https://rinkeby.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847', 4)
+      const provider = new JsonRpcProvider('https://ropsten.infura.io/v3/83658839196943e3b2119f093b11ee0b', 3)
       const signer = new Wallet(PRIVATE_KEY_TEST_NEVER_USE, provider)
       win.ethereum = new CustomizedBridge(signer, provider)
     }

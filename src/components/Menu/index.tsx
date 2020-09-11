@@ -1,10 +1,9 @@
 import React, { useRef } from 'react'
-import { Info, BookOpen, Code, PieChart, MessageCircle } from 'react-feather'
+import { BookOpen, Code, File, HelpCircle, Info, PieChart } from 'react-feather'
 import styled from 'styled-components'
-import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
+import MenuIcon from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import useToggle from '../../hooks/useToggle'
-
 import { ExternalLink } from '../../theme'
 
 const StyledMenuIcon = styled(MenuIcon)`
@@ -49,7 +48,7 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span`
-  min-width: 8.125rem;
+  min-width: 9rem;
   background-color: ${({ theme }) => theme.bg3};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
@@ -78,8 +77,6 @@ const MenuItem = styled(ExternalLink)`
   }
 `
 
-const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
-
 export default function Menu() {
   const node = useRef<HTMLDivElement>()
   const [open, toggle] = useToggle(false)
@@ -94,25 +91,29 @@ export default function Menu() {
       </StyledMenuButton>
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://uniswap.org/">
+          <MenuItem id="link" href={`${process.env.PUBLIC_URL || ''}/wallet`}>
             <Info size={14} />
             About
           </MenuItem>
-          <MenuItem id="link" href="https://uniswap.org/docs/v2">
+          <MenuItem id="link" href={`${process.env.PUBLIC_URL || ''}/swap-whitepaper`}>
             <BookOpen size={14} />
-            Docs
+            Whitepaper
           </MenuItem>
-          <MenuItem id="link" href={CODE_LINK}>
+          <MenuItem id="link" href={`${process.env.PUBLIC_URL || ''}/swap-info`}>
+            <PieChart size={14} />
+            Analytics
+          </MenuItem>
+          <MenuItem id="link" href={`${process.env.PUBLIC_URL || ''}/swap-faq`}>
+            <HelpCircle size={14} />
+            FAQ
+          </MenuItem>
+          <MenuItem id="link" href={`${process.env.PUBLIC_URL || ''}/swap-github`}>
             <Code size={14} />
             Code
           </MenuItem>
-          <MenuItem id="link" href="https://discord.gg/EwFs3Pp">
-            <MessageCircle size={14} />
-            Discord
-          </MenuItem>
-          <MenuItem id="link" href="https://uniswap.info/">
-            <PieChart size={14} />
-            Analytics
+          <MenuItem id="link" href={`${process.env.PUBLIC_URL || ''}/swap-terms`}>
+            <File size={14} />
+            Terms
           </MenuItem>
         </MenuFlyout>
       )}

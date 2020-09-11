@@ -1,4 +1,4 @@
-import { ChainId, Pair, Token } from '@uniswap/sdk'
+import { ChainId, Pair, Token } from 'swap-sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
@@ -40,18 +40,7 @@ function deserializeToken(serializedToken: SerializedToken): Token {
 }
 
 export function useIsDarkMode(): boolean {
-  const { userDarkMode, matchesDarkMode } = useSelector<
-    AppState,
-    { userDarkMode: boolean | null; matchesDarkMode: boolean }
-  >(
-    ({ user: { matchesDarkMode, userDarkMode } }) => ({
-      userDarkMode,
-      matchesDarkMode
-    }),
-    shallowEqual
-  )
-
-  return userDarkMode === null ? matchesDarkMode : userDarkMode
+  return false
 }
 
 export function useDarkModeManager(): [boolean, () => void] {
@@ -165,8 +154,8 @@ export function usePairAdder(): (pair: Pair) => void {
  * @param tokenA one of the two tokens
  * @param tokenB the other token
  */
-export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
-  return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 18, 'UNI-V2', 'Uniswap V2')
+export function toLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
+  return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 18, 'CRO-SWAP', 'CRO Defi Swap')
 }
 
 /**

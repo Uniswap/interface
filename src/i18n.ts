@@ -9,7 +9,7 @@ i18next
   .use(initReactI18next)
   .init({
     backend: {
-      loadPath: `./locales/{{lng}}.json`
+      loadPath: `${process.env.PUBLIC_URL || ''}/locales/{{lng}}.json`
     },
     react: {
       useSuspense: true

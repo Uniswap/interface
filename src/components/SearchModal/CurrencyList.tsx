@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@uniswap/sdk'
+import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from 'swap-sdk'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
@@ -8,7 +8,6 @@ import { useSelectedTokenList, WrappedTokenInfo } from '../../state/lists/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
-import { useIsUserAddedToken } from '../../hooks/Tokens'
 import Column from '../Column'
 import { RowFixed } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
@@ -97,13 +96,12 @@ function CurrencyRow({
   const key = currencyKey(currency)
   const selectedTokenList = useSelectedTokenList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency)
-  const customAdded = useIsUserAddedToken(currency)
+  const customAdded = Boolean(!isOnSelectedList && currency instanceof Token)
   const balance = useCurrencyBalance(account ?? undefined, currency)
 
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
 
-  // only show add or remove buttons if not on selected list
   return (
     <MenuItem
       style={style}
@@ -118,7 +116,7 @@ function CurrencyRow({
           {currency.symbol}
         </Text>
         <FadedSpan>
-          {!isOnSelectedList && customAdded ? (
+          {customAdded ? (
             <TYPE.main fontWeight={500}>
               Added by user
               <LinkStyledButton

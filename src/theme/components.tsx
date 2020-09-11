@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 import { darken } from 'polished'
 import { ArrowLeft, X } from 'react-feather'
+import Circle from '../assets/images/blue-loader.svg'
 
 export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColor: string }>(({ warning, theme }) => ({
   backgroundColor: warning ? theme.red1 : theme.primary1
@@ -142,11 +143,22 @@ const rotate = keyframes`
   }
 `
 
-export const Spinner = styled.img`
+const Spinner = styled.div`
   animation: 2s ${rotate} linear infinite;
   width: 16px;
   height: 16px;
 `
+
+export const CustomSpinner = styled(Spinner)<{ size: string }>`
+  height: ${({ size }) => size};
+  width: ${({ size }) => size};
+`
+
+export const Loading = ({ size }: { size: string }) => (
+  <CustomSpinner size={size}>
+    <Circle />
+  </CustomSpinner>
+)
 
 const BackArrowLink = styled(StyledInternalLink)`
   color: ${({ theme }) => theme.text1};

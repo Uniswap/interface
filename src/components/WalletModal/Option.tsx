@@ -95,7 +95,7 @@ export default function Option({
   color,
   header,
   subheader = null,
-  icon,
+  children,
   active = false,
   id
 }: {
@@ -108,6 +108,7 @@ export default function Option({
   subheader: React.ReactNode | null
   icon: string
   active?: boolean
+  children: React.ReactNode
   id: string
 }) {
   const content = (
@@ -127,9 +128,7 @@ export default function Option({
         </HeaderText>
         {subheader && <SubHeader>{subheader}</SubHeader>}
       </OptionCardLeft>
-      <IconWrapper size={size}>
-        <img src={icon} alt={'Icon'} />
-      </IconWrapper>
+      <IconWrapper size={size}>{children}</IconWrapper>
     </OptionCardClickable>
   )
   if (link) {

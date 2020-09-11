@@ -1,31 +1,36 @@
-import { splitSignature } from '@ethersproject/bytes'
+import { BigNumber } from '@ethersproject/bignumber'
+import { CustomTitle } from '../../utils/customTitle'
+import { NoRobot } from '../../utils/noRobot'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, Percent, WETH } from '@uniswap/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from '../../components/Button'
+import { Currency, currencyEquals, ETHER, Percent, WETH } from 'swap-sdk'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import CurrencyLogo from '../../components/CurrencyLogo'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
-import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFixed } from '../../components/Row'
-
 import Slider from '../../components/Slider'
-import CurrencyLogo from '../../components/CurrencyLogo'
-import { ROUTER_ADDRESS } from '../../constants'
+import { Dots } from '../../components/swap/styleds'
+import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
+import { ROUTER_ADDRESS } from '../../constants/croAddress'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { usePairContract } from '../../hooks/useContract'
-
+import { useWalletModalToggle } from '../../state/application/hooks'
+import { Field } from '../../state/burn/actions'
+import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
+import { useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
 import { currencyId } from '../../utils/currencyId'
@@ -33,14 +38,6 @@ import useDebouncedChangeHandler from '../../utils/useDebouncedChangeHandler'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
 import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
-import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
-import { Dots } from '../../components/swap/styleds'
-import { useBurnActionHandlers } from '../../state/burn/hooks'
-import { useDerivedBurnInfo, useBurnState } from '../../state/burn/hooks'
-import { Field } from '../../state/burn/actions'
-import { useWalletModalToggle } from '../../state/application/hooks'
-import { useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
-import { BigNumber } from '@ethersproject/bignumber'
 
 export default function RemoveLiquidity({
   history,
@@ -95,72 +92,76 @@ export default function RemoveLiquidity({
 
   // pair contract
   const pairContract: Contract | null = usePairContract(pair?.liquidityToken?.address)
-
   // allowance handling
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
   async function onAttemptToApprove() {
     if (!pairContract || !pair || !library) throw new Error('missing dependencies')
-    const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
-    if (!liquidityAmount) throw new Error('missing liquidity amount')
-    // try to gather a signature for permission
-    const nonce = await pairContract.nonces(account)
 
-    const deadlineForSignature: number = Math.ceil(Date.now() / 1000) + deadline
+    approveCallback()
 
-    const EIP712Domain = [
-      { name: 'name', type: 'string' },
-      { name: 'version', type: 'string' },
-      { name: 'chainId', type: 'uint256' },
-      { name: 'verifyingContract', type: 'address' }
-    ]
-    const domain = {
-      name: 'Uniswap V2',
-      version: '1',
-      chainId: chainId,
-      verifyingContract: pair.liquidityToken.address
-    }
-    const Permit = [
-      { name: 'owner', type: 'address' },
-      { name: 'spender', type: 'address' },
-      { name: 'value', type: 'uint256' },
-      { name: 'nonce', type: 'uint256' },
-      { name: 'deadline', type: 'uint256' }
-    ]
-    const message = {
-      owner: account,
-      spender: ROUTER_ADDRESS,
-      value: liquidityAmount.raw.toString(),
-      nonce: nonce.toHexString(),
-      deadline: deadlineForSignature
-    }
-    const data = JSON.stringify({
-      types: {
-        EIP712Domain,
-        Permit
-      },
-      domain,
-      primaryType: 'Permit',
-      message
-    })
+    //TODO: enable signature flow
+    // const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
+    // if (!liquidityAmount) throw new Error('missing liquidity amount')
+    // // try to gather a signature for permission
+    // const nonce = await pairContract.nonces(account)
 
-    library
-      .send('eth_signTypedData_v4', [account, data])
-      .then(splitSignature)
-      .then(signature => {
-        setSignatureData({
-          v: signature.v,
-          r: signature.r,
-          s: signature.s,
-          deadline: deadlineForSignature
-        })
-      })
-      .catch(error => {
-        // for all errors other than 4001 (EIP-1193 user rejected request), fall back to manual approve
-        if (error?.code !== 4001) {
-          approveCallback()
-        }
-      })
+    // const deadlineForSignature: number = Math.ceil(Date.now() / 1000) + deadline
+
+    // const EIP712Domain = [
+    //   { name: 'name', type: 'string' },
+    //   { name: 'version', type: 'string' },
+    //   { name: 'chainId', type: 'uint256' },
+    //   { name: 'verifyingContract', type: 'address' }
+    // ]
+
+    // const domain = {
+    //   name: 'CRO Swap',
+    //   version: '1',
+    //   chainId: chainId,
+    //   verifyingContract: pair.liquidityToken.address
+    // }
+    // const Permit = [
+    //   { name: 'owner', type: 'address' },
+    //   { name: 'spender', type: 'address' },
+    //   { name: 'value', type: 'uint256' },
+    //   { name: 'nonce', type: 'uint256' },
+    //   { name: 'deadline', type: 'uint256' }
+    // ]
+    // const message = {
+    //   owner: account,
+    //   spender: ROUTER_ADDRESS,
+    //   value: liquidityAmount.raw.toString(),
+    //   nonce: nonce.toHexString(),
+    //   deadline: deadlineForSignature
+    // }
+    // const data = JSON.stringify({
+    //   types: {
+    //     EIP712Domain,
+    //     Permit
+    //   },
+    //   domain,
+    //   primaryType: 'Permit',
+    //   message
+    // })
+
+    // library
+    //   .send('eth_signTypedData_v4', [account, data])
+    //   .then(splitSignature)
+    //   .then(signature => {
+    //     setSignatureData({
+    //       v: signature.v,
+    //       r: signature.r,
+    //       s: signature.s,
+    //       deadline: deadlineForSignature
+    //     })
+    //   })
+    //   .catch(error => {
+    //     // for all errors other than 4001 (EIP-1193 user rejected request), fall back to manual approve
+    //     if (error?.code !== 4001) {
+    //       approveCallback()
+    //     }
+    //   })
   }
 
   // wrapped onUserInput to clear signatures
@@ -275,6 +276,41 @@ export default function RemoveLiquidity({
       throw new Error('Attempting to confirm without approval or a signature. Please contact support.')
     }
 
+    // console.log(methodNames)
+    //   const methodName = methodNames[1]
+    //   //const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
+
+    //   setAttemptingTxn(true)
+    //   await router[methodName](...args)
+    //     .then((response: TransactionResponse) => {
+    //       setAttemptingTxn(false)
+
+    //       addTransaction(response, {
+    //         summary:
+    //           'Remove ' +
+    //           parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+    //           ' ' +
+    //           currencyA?.symbol +
+    //           ' and ' +
+    //           parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+    //           ' ' +
+    //           currencyB?.symbol
+    //       })
+
+    //       setTxHash(response.hash)
+
+    //       ReactGA.event({
+    //         category: 'Liquidity',
+    //         action: 'Remove',
+    //         label: [currencyA?.symbol, currencyB?.symbol].join('/')
+    //       })
+    //     })
+    //     .catch((error: Error) => {
+    //       setAttemptingTxn(false)
+    //       // we only care if the error is something _other_ than the user rejected the tx
+    //       console.error(error)
+    //     })
+
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
       methodNames.map(methodName =>
         router.estimateGas[methodName](...args)
@@ -374,7 +410,7 @@ export default function RemoveLiquidity({
       <>
         <RowBetween>
           <Text color={theme.text2} fontWeight={500} fontSize={16}>
-            {'UNI ' + currencyA?.symbol + '/' + currencyB?.symbol} Burned
+            {currencyA?.symbol + '/' + currencyB?.symbol} Token Burned
           </Text>
           <RowFixed>
             <DoubleCurrencyLogo currency0={currencyA} currency1={currencyB} margin={true} />
@@ -431,9 +467,9 @@ export default function RemoveLiquidity({
   const handleSelectCurrencyA = useCallback(
     (currency: Currency) => {
       if (currencyIdB && currencyId(currency) === currencyIdB) {
-        history.push(`/remove/${currencyId(currency)}/${currencyIdA}`)
+        history.push(`/swap-remove/${currencyId(currency)}/${currencyIdA}`)
       } else {
-        history.push(`/remove/${currencyId(currency)}/${currencyIdB}`)
+        history.push(`/swap-remove/${currencyId(currency)}/${currencyIdB}`)
       }
     },
     [currencyIdA, currencyIdB, history]
@@ -441,9 +477,9 @@ export default function RemoveLiquidity({
   const handleSelectCurrencyB = useCallback(
     (currency: Currency) => {
       if (currencyIdA && currencyId(currency) === currencyIdA) {
-        history.push(`/remove/${currencyIdB}/${currencyId(currency)}`)
+        history.push(`/swap-remove/${currencyIdB}/${currencyId(currency)}`)
       } else {
-        history.push(`/remove/${currencyIdA}/${currencyId(currency)}`)
+        history.push(`/swap-remove/${currencyIdA}/${currencyId(currency)}`)
       }
     },
     [currencyIdA, currencyIdB, history]
@@ -466,6 +502,8 @@ export default function RemoveLiquidity({
 
   return (
     <>
+      <CustomTitle titleStr={'Remove Liquidity From Token Swap Pairs | DeFi Swap'}></CustomTitle>
+      <NoRobot />
       <AppBody>
         <AddRemoveTabs adding={false} />
         <Wrapper>
@@ -557,7 +595,7 @@ export default function RemoveLiquidity({
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${
+                            to={`/swap-remove/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${
                               currencyB === ETHER ? WETH[chainId].address : currencyIdB
                             }`}
                           >
@@ -565,7 +603,7 @@ export default function RemoveLiquidity({
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
-                            to={`/remove/${
+                            to={`/swap-remove/${
                               currencyA && currencyEquals(currencyA, WETH[chainId]) ? 'ETH' : currencyIdA
                             }/${currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB}`}
                           >
@@ -677,12 +715,6 @@ export default function RemoveLiquidity({
           </AutoColumn>
         </Wrapper>
       </AppBody>
-
-      {pair ? (
-        <AutoColumn style={{ minWidth: '20rem', marginTop: '1rem' }}>
-          <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
-        </AutoColumn>
-      ) : null}
     </>
   )
 }

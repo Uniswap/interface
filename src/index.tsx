@@ -11,13 +11,16 @@ import App from './pages/App'
 import store from './state'
 import ApplicationUpdater from './state/application/updater'
 import ListsUpdater from './state/lists/updater'
+import CalculatorUpdater from './state/calculator/updater'
 import MulticallUpdater from './state/multicall/updater'
 import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
+import { Helmet } from 'react-helmet'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
+const showCookieConsent = process.env.NODE_ENV !== 'development'
 
 if ('ethereum' in window) {
   ;(window.ethereum as any).autoRefreshOnNetworkChange = false
@@ -48,12 +51,42 @@ function Updaters() {
       <ApplicationUpdater />
       <TransactionUpdater />
       <MulticallUpdater />
+      <CalculatorUpdater />
     </>
+  )
+}
+
+function CookiesConsentPage() {
+  if (!showCookieConsent) {
+    return null
+  }
+  const cookieBannerKey = process.env.REACT_APP_COOKIE_BANNER_KEY
+  return (
+    <Helmet
+      script={[
+        {
+          type: 'text/javascript',
+          innerHTML: 'function OptanonWrapper() { }'
+        }
+      ]}
+    >
+      <script
+        type="text/javascript"
+        src={`https://cdn.cookielaw.org/consent/${cookieBannerKey}/OtAutoBlock.js`}
+      ></script>
+      <script
+        src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"
+        type="text/javascript"
+        charset="UTF-8"
+        data-domain-script={cookieBannerKey}
+      ></script>
+    </Helmet>
   )
 }
 
 ReactDOM.render(
   <StrictMode>
+    <CookiesConsentPage />
     <FixedGlobalStyle />
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3ProviderNetwork getLibrary={getLibrary}>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="64" viewBox="0 0 64 64">
+    <defs>
+        <linearGradient id="9hdg65dtfc" x1="50%" x2="50%" y1="89.212%" y2="10.541%">
+            <stop offset="0%" stop-color="#002D72"/>
+            <stop offset="100%" stop-color="#002D72" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="5mx7i86r2d" x1="50%" x2="50%" y1="89.212%" y2="10.541%">
+            <stop offset="0%" stop-color="#002D72" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#002D72"/>
+        </linearGradient>
+        <circle id="q4o84cwnua" cx="32" cy="32" r="32"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <g transform="translate(-211 -135) translate(107 135) translate(104)">
+                    <mask id="3rsi1blwib" fill="#fff">
+                        <use xlink:href="#q4o84cwnua"/>
+                    </mask>
+                    <use fill="#F2F2F2" xlink:href="#q4o84cwnua"/>
+                    <g mask="url(#3rsi1blwib)">
+                        <g>
+                            <path fill="#FEFEFE" d="M19.972 0.223L0 11.616 0 34.403 19.972 45.798 39.944 34.403 39.944 11.616z" transform="translate(12 9)"/>
+                            <path fill="#002D72" d="M19.972.223L0 11.616v22.787l19.972 11.395 19.972-11.395V11.616L19.972.223zm-7.885 9.851h15.717l1.895 7.918H10.263l1.824-7.918zm4.528 13.536l-1.714-4.422H25.08l-1.678 4.422.487 4.94-3.916.019h-3.88l.523-4.959zm5 10.184v-1.57l3.518-3.334v-5.262l4.602-2.96 5.252 3.906-7.148 12.305h-2.832l-3.392-3.085zm-16.656-9.22l5.268-3.87 4.656 2.924v5.262l3.518 3.335v1.569l-3.391 3.121h-2.87L4.959 24.574z" transform="translate(12 9)"/>
+                            <g>
+                                <g fill="url(#9hdg65dtfc)" transform="translate(12 9) translate(0 .021) translate(19.887)">
+                                    <path d="M7.952 36.858H5.12l-3.392-3.086v-1.568l3.518-3.335v-5.262l4.602-2.96 5.252 3.906-7.148 12.305zM.085.202v9.851h7.832l1.895 7.918H.085v1.196h5.107L3.514 23.59l.487 4.94-3.916.018v17.23l19.972-11.394V11.595L.085.202z" style="mix-blend-mode:multiply"/>
+                                </g>
+                                <g fill="url(#5mx7i86r2d)" transform="translate(12 9) translate(0 .021)">
+                                    <path d="M18.402 33.772l-3.392 3.122h-2.87L4.958 24.553l5.269-3.87 4.656 2.924v5.262l3.519 3.335v1.568zm-2.31-5.225l.523-4.958-1.714-4.422h5.071v-1.196h-9.709l1.824-7.918h7.885V.203L0 11.594v22.788l19.972 11.394v-17.23h-3.88z" style="mix-blend-mode:multiply"/>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

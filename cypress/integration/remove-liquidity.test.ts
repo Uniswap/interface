@@ -1,28 +1,28 @@
 describe('Remove Liquidity', () => {
   it('redirects', () => {
-    cy.visit('/remove/0xc778417E063141139Fce010982780140Aa0cD5Ab-0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
+    cy.visit('/remove/0x5284fAB1638D281ECC18A8d6645aE2D4af6ebe8F-0xaD6D458402F60fD3Bd25163575031ACDce07538D')
     cy.url().should(
       'contain',
-      '/remove/0xc778417E063141139Fce010982780140Aa0cD5Ab/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85'
+      '/remove/0x5284fAB1638D281ECC18A8d6645aE2D4af6ebe8F/0xaD6D458402F60fD3Bd25163575031ACDce07538D'
     )
   })
 
   it('eth remove', () => {
-    cy.visit('/remove/ETH/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
+    cy.visit('/remove/ETH/0x5284fAB1638D281ECC18A8d6645aE2D4af6ebe8F')
     cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'ETH')
-    cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'MKR')
+    cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'CERU')
   })
 
   it('eth remove swap order', () => {
-    cy.visit('/remove/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/ETH')
-    cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'MKR')
+    cy.visit('/remove/0x5284fAB1638D281ECC18A8d6645aE2D4af6ebe8F/ETH')
+    cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'CERU')
     cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'ETH')
   })
 
   it('loads the two correct tokens', () => {
-    cy.visit('/remove/0xc778417E063141139Fce010982780140Aa0cD5Ab-0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
+    cy.visit('/remove/0xc778417E063141139Fce010982780140Aa0cD5Ab-0x5284fAB1638D281ECC18A8d6645aE2D4af6ebe8F')
     cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'WETH')
-    cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'MKR')
+    cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'CERU')
   })
 
   it('does not crash if ETH is duplicated', () => {
@@ -32,8 +32,8 @@ describe('Remove Liquidity', () => {
   })
 
   it('token not in storage is loaded', () => {
-    cy.visit('/remove/0xb290b2f9f8f108d03ff2af3ac5c8de6de31cdf6d-0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
-    cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'SKL')
-    cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'MKR')
+    cy.visit('/remove/0x5284fAB1638D281ECC18A8d6645aE2D4af6ebe8F-0xaD6D458402F60fD3Bd25163575031ACDce07538D')
+    cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'CERU')
+    cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'DAI')
   })
 })

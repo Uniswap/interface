@@ -14,7 +14,7 @@ import {
   Trade,
   TradeType,
   WETH
-} from '@uniswap/sdk'
+} from 'swap-sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
 import { useAllTokens } from '../hooks/Tokens'
@@ -68,30 +68,6 @@ export function useAllTokenV1Exchanges(): { [exchangeAddress: string]: Token } {
         return memo
       }, {}) ?? {},
     [allTokens, args, data]
-  )
-}
-
-// returns whether any of the tokens in the user's token list have liquidity on v1
-export function useUserHasLiquidityInAllTokens(): boolean | undefined {
-  const { account, chainId } = useActiveWeb3React()
-
-  const exchanges = useAllTokenV1Exchanges()
-
-  const v1ExchangeLiquidityTokens = useMemo(
-    () =>
-      chainId ? Object.keys(exchanges).map(address => new Token(chainId, address, 18, 'UNI-V1', 'Uniswap V1')) : [],
-    [chainId, exchanges]
-  )
-
-  const balances = useTokenBalances(account ?? undefined, v1ExchangeLiquidityTokens)
-
-  return useMemo(
-    () =>
-      Object.keys(balances).some(tokenAddress => {
-        const b = balances[tokenAddress]?.raw
-        return b && JSBI.greaterThan(b, JSBI.BigInt(0))
-      }),
-    [balances]
   )
 }
 

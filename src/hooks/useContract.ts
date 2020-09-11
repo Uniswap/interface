@@ -1,6 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
-import { ChainId, WETH } from '@uniswap/sdk'
-import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
+import { ChainId, WETH, ICroDefiSwapPairInterface } from 'swap-sdk'
 import { useMemo } from 'react'
 import ENS_ABI from '../constants/abis/ens-registrar.json'
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
@@ -13,6 +12,7 @@ import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { V1_EXCHANGE_ABI, V1_FACTORY_ABI, V1_FACTORY_ADDRESSES } from '../constants/v1'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
+import { BASIC_STAKE_ABI, PAUSEABLE_STAKE_ABI } from '../constants/abis/cryptoAbi'
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -51,6 +51,14 @@ export function useWETHContract(withSignerIfPossible?: boolean): Contract | null
   return useContract(chainId ? WETH[chainId].address : undefined, WETH_ABI, withSignerIfPossible)
 }
 
+export function useCROStakeContract(
+  stakeContractAddress: string,
+  isBasic?: boolean,
+  withSignerIfPossible?: boolean
+): Contract | null {
+  return useContract(stakeContractAddress, isBasic ? BASIC_STAKE_ABI : PAUSEABLE_STAKE_ABI, withSignerIfPossible)
+}
+
 export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
   let address: string | undefined
@@ -76,7 +84,7 @@ export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossi
 }
 
 export function usePairContract(pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
-  return useContract(pairAddress, IUniswapV2PairABI, withSignerIfPossible)
+  return useContract(pairAddress, ICroDefiSwapPairInterface.abi, withSignerIfPossible)
 }
 
 export function useMulticallContract(): Contract | null {

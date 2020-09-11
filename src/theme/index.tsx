@@ -41,9 +41,9 @@ export function colors(darkMode: boolean): Colors {
     black,
 
     // text
-    text1: darkMode ? '#FFFFFF' : '#000000',
+    text1: darkMode ? '#FFFFFF' : 'rgb(11, 20, 38, 0.5)',
     text2: darkMode ? '#C3C5CB' : '#565A69',
-    text3: darkMode ? '#6C7284' : '#888D9B',
+    text3: darkMode ? '#6C7284' : '#0b1426',
     text4: darkMode ? '#565A69' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
@@ -59,14 +59,14 @@ export function colors(darkMode: boolean): Colors {
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#ff007a',
-    primary2: darkMode ? '#3680E7' : '#FF8CC3',
-    primary3: darkMode ? '#4D8FEA' : '#FF99C9',
-    primary4: darkMode ? '#376bad70' : '#F6DDE8',
-    primary5: darkMode ? '#153d6f70' : '#FDEAF1',
+    primary1: darkMode ? '#2172E5' : '#1199fa',
+    primary2: darkMode ? '#3680E7' : 'rgba( 17, 153, 250, 0.2)',
+    primary3: darkMode ? '#4D8FEA' : 'rgba( 17, 153, 250, 0.5)',
+    primary4: darkMode ? '#376bad70' : 'rgba( 17, 153, 250, 0.1)',
+    primary5: darkMode ? '#153d6f70' : '#0B2D74',
 
     // color text
-    primaryText1: darkMode ? '#6da8ff' : '#ff007a',
+    primaryText1: darkMode ? '#6da8ff' : '#FFFFFF',
 
     // secondary colors
     secondary1: darkMode ? '#2172E5' : '#ff007a',
@@ -213,10 +213,5 @@ body {
   min-height: 100vh;
   background-position: 0 -30vh;
   background-repeat: no-repeat;
-  background-image: ${({ theme }) =>
-    `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.9, theme.primary1)} 0%, ${transparentize(
-      1,
-      theme.bg1
-    )} 100%)`};
 }
 `

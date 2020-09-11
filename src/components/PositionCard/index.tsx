@@ -1,4 +1,4 @@
-import { JSBI, Pair, Percent } from '@uniswap/sdk'
+import { JSBI, Pair, Percent } from 'swap-sdk'
 import { darken } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -223,16 +223,23 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
               </Text>
             </FixedHeightRow>
 
-            <AutoRow justify="center" marginTop={'10px'}>
-              <ExternalLink href={`https://uniswap.info/pair/${pair.liquidityToken.address}`}>
+            {/*
+            //TODO: add pool detail page link
+             <AutoRow justify="center" marginTop={'10px'}>
+              <ExternalLink href={#}>
                 View pool information ↗
               </ExternalLink>
-            </AutoRow>
+            </AutoRow> 
+            */}
             <RowBetween marginTop="10px">
-              <ButtonSecondary as={Link} to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`} width="48%">
+              <ButtonSecondary as={Link} to={`/swap-add/${currencyId(currency0)}/${currencyId(currency1)}`} width="48%">
                 Add
               </ButtonSecondary>
-              <ButtonSecondary as={Link} width="48%" to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}>
+              <ButtonSecondary
+                as={Link}
+                width="48%"
+                to={`/swap-remove/${currencyId(currency0)}/${currencyId(currency1)}`}
+              >
                 Remove
               </ButtonSecondary>
             </RowBetween>

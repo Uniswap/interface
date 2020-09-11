@@ -10,7 +10,7 @@ const TooltipContainer = styled.div`
 `
 
 interface TooltipProps extends Omit<PopoverProps, 'content'> {
-  text: string
+  text: string | React.ReactNode
 }
 
 export default function Tooltip({ text, ...rest }: TooltipProps) {

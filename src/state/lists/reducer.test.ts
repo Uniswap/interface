@@ -3,7 +3,6 @@ import { DEFAULT_LIST_OF_LISTS, DEFAULT_TOKEN_LIST_URL } from '../../constants/l
 import { updateVersion } from '../global/actions'
 import { fetchTokenList, acceptListUpdate, addList, removeList, selectList } from './actions'
 import reducer, { ListsState } from './reducer'
-import UNISWAP_DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 
 const STUB_TOKEN_LIST = {
   name: '',
@@ -98,25 +97,26 @@ describe('list reducer', () => {
         })
       })
 
-      it('does not save the list in pending if current is same', () => {
-        store.dispatch(
-          fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
-        )
-        store.dispatch(
-          fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
-        )
-        expect(store.getState()).toEqual({
-          byUrl: {
-            'fake-url': {
-              error: null,
-              current: STUB_TOKEN_LIST,
-              loadingRequestId: null,
-              pendingUpdate: null
-            }
-          },
-          selectedListUrl: undefined
-        })
-      })
+      // Crypto.com version => always replace
+      // it('does not save the list in pending if current is same', () => {
+      //   store.dispatch(
+      //     fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
+      //   )
+      //   store.dispatch(
+      //     fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
+      //   )
+      //   expect(store.getState()).toEqual({
+      //     byUrl: {
+      //       'fake-url': {
+      //         error: null,
+      //         current: STUB_TOKEN_LIST,
+      //         loadingRequestId: null,
+      //         pendingUpdate: null
+      //       }
+      //     },
+      //     selectedListUrl: undefined
+      //   })
+      // })
 
       it('does not save to current if list is newer patch version', () => {
         store.dispatch(
@@ -446,21 +446,12 @@ describe('list reducer', () => {
       it('all lists are empty', () => {
         const s = store.getState()
         Object.keys(s.byUrl).forEach(url => {
-          if (url === DEFAULT_TOKEN_LIST_URL) {
-            expect(s.byUrl[url]).toEqual({
-              error: null,
-              current: UNISWAP_DEFAULT_TOKEN_LIST,
-              loadingRequestId: null,
-              pendingUpdate: null
-            })
-          } else {
-            expect(s.byUrl[url]).toEqual({
-              error: null,
-              current: null,
-              loadingRequestId: null,
-              pendingUpdate: null
-            })
-          }
+          expect(s.byUrl[url]).toEqual({
+            error: null,
+            current: null,
+            loadingRequestId: null,
+            pendingUpdate: null
+          })
         })
       })
       it('sets initialized lists', () => {

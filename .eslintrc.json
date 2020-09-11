@@ -4,7 +4,6 @@
     "ecmaVersion": 2020,
     "sourceType": "module",
     "ecmaFeatures": {
-      // Allows for the parsing of JSX
       "jsx": true
     }
   },

@@ -1,25 +1,19 @@
-import { ChainId } from '@uniswap/sdk'
+import { ChainId } from 'swap-sdk'
 import React from 'react'
 import { isMobile } from 'react-device-detect'
 import { Text } from 'rebass'
-
+import { useMedia } from 'react-use'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-
-import Logo from '../../assets/svg/logo.svg'
-import LogoDark from '../../assets/svg/logo_white.svg'
-import Wordmark from '../../assets/svg/wordmark.svg'
-import WordmarkDark from '../../assets/svg/wordmark_white.svg'
+import LogoWhite from '../../assets/images/logo-white.svg'
+import CROIcon from '../../assets/images/cro-icon.png'
 import { useActiveWeb3React } from '../../hooks'
-import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
-
 import { YellowCard } from '../Card'
-import Settings from '../Settings'
 import Menu from '../Menu'
-
-import Row, { RowBetween } from '../Row'
+import { RowBetween } from '../Row'
+import Settings from '../Settings'
 import Web3Status from '../Web3Status'
-import VersionSwitch from './VersionSwitch'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -51,22 +45,15 @@ const HeaderElementWrap = styled.div`
 `};
 `
 
-const Title = styled.a`
+const Title = styled(Link)`
   display: flex;
   align-items: center;
+  margin-right: 8px;
   pointer-events: auto;
 
   :hover {
     cursor: pointer;
   }
-`
-
-const TitleText = styled(Row)`
-  width: fit-content;
-  white-space: nowrap;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;
-  `};
 `
 
 const AccountElement = styled.div<{ active: boolean }>`
@@ -97,16 +84,10 @@ const NetworkCard = styled(YellowCard)`
   padding: 8px 12px;
 `
 
-const UniIcon = styled.div`
-  transition: transform 0.3s ease;
-  :hover {
-    transform: rotate(-5deg);
+const IconContainer = styled.div<{ mobile: boolean }>`
+  img {
+    width: ${({ mobile }) => (mobile ? 'auto' : '10rem')};
   }
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    img { 
-      width: 4.5rem;
-    }
-  `};
 `
 
 const HeaderControls = styled.div`
@@ -136,21 +117,24 @@ const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
 
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
+  const below800 = useMedia('(max-width: 800px)')
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
-  const [isDark] = useDarkModeManager()
 
   return (
     <HeaderFrame>
       <RowBetween style={{ alignItems: 'flex-start' }} padding="1rem 1rem 0 1rem">
         <HeaderElement>
-          <Title href=".">
-            <UniIcon>
-              <img src={isDark ? LogoDark : Logo} alt="logo" />
-            </UniIcon>
-            <TitleText>
-              <img style={{ marginLeft: '4px', marginTop: '4px' }} src={isDark ? WordmarkDark : Wordmark} alt="logo" />
-            </TitleText>
+          <Title to="/home">
+            {below800 ? (
+              <IconContainer mobile>
+                <img src={CROIcon} alt="logo" />
+              </IconContainer>
+            ) : (
+              <IconContainer>
+                <LogoWhite alt="logo" />
+              </IconContainer>
+            )}
           </Title>
         </HeaderElement>
         <HeaderControls>
@@ -168,7 +152,6 @@ export default function Header() {
             </AccountElement>
           </HeaderElement>
           <HeaderElementWrap>
-            <VersionSwitch />
             <Settings />
             <Menu />
           </HeaderElementWrap>
