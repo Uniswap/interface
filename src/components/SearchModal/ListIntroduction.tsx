@@ -1,5 +1,6 @@
 import React from 'react'
 import { Text } from 'rebass'
+import { useTranslation } from 'react-i18next'
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
 import { OutlineCard } from '../Card'
@@ -12,6 +13,7 @@ import listDark from '../../assets/images/token-list/lists-dark.png'
 
 export default function ListIntroduction({ onSelectList }: { onSelectList: () => void }) {
   const [isDark] = useDarkModeManager()
+  const { t } = useTranslation()
 
   return (
     <Column style={{ width: '100%', flex: '1 1' }}>
@@ -31,7 +33,7 @@ export default function ListIntroduction({ onSelectList }: { onSelectList: () =>
             SushiSwap supports token lists. You can add your own custom lists via IPFS, HTTPS and ENS.{' '}
           </Text>
           <ButtonPrimary onClick={onSelectList} id="list-introduction-choose-a-list">
-            Choose a list
+            {t('chooseAList')}
           </ButtonPrimary>
           <OutlineCard style={{ marginBottom: '8px', padding: '1rem' }}>
             <Text fontWeight={400} fontSize={14} style={{ textAlign: 'center' }}>
