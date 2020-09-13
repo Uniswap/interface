@@ -40,6 +40,11 @@ export function colors(darkMode: boolean): Colors {
     white,
     black,
 
+    // gradient colors
+    grd1: darkMode ? '#394F50' : '#FFC3AB',
+    grd2: darkMode ? '#484E45' : '#FAFAE2',
+    grd3: darkMode ? '#394F50' : '#CBF3EF',
+
     // text
     text1: darkMode ? '#FFFFFF' : '#000000',
     text2: darkMode ? '#C3C5CB' : '#565A69',
@@ -59,19 +64,19 @@ export function colors(darkMode: boolean): Colors {
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#ff007a',
-    primary2: darkMode ? '#3680E7' : '#FF8CC3',
-    primary3: darkMode ? '#4D8FEA' : '#FF99C9',
-    primary4: darkMode ? '#376bad70' : '#F6DDE8',
-    primary5: darkMode ? '#153d6f70' : '#FDEAF1',
+    primary1: darkMode ? '#26a697' : '#7CE0D6',
+    primary2: darkMode ? '#45d3c5' : '#7CE0D6',
+    primary3: darkMode ? '#97e7de' : '#7CE0D6',
+    primary4: darkMode ? '#82e3d7' : '#7CE0D6',
+    primary5: darkMode ? '#c1f1eb' : '#7CE0D6',
 
     // color text
-    primaryText1: darkMode ? '#6da8ff' : '#ff007a',
+    primaryText1: darkMode ? '#0f3e39' : '#ffff',
 
     // secondary colors
-    secondary1: darkMode ? '#2172E5' : '#ff007a',
-    secondary2: darkMode ? '#17000b26' : '#F6DDE8',
-    secondary3: darkMode ? '#17000b26' : '#FDEAF1',
+    secondary1: darkMode ? '#30cfbf' : '#7CE0D6',
+    secondary2: darkMode ? '#17000b26' : '#7CE0D6',
+    secondary3: darkMode ? '#17000b26' : '#7CE0D6',
 
     // other
     red1: '#FF6871',
@@ -206,7 +211,10 @@ html {
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.grd1};
+  background: linear-gradient(111.63deg, ${({ theme }) => theme.grd1} 0%, ${({ theme }) => theme.grd2} 49.48%, ${({
+  theme
+}) => theme.grd3} 100%);
 }
 
 body {

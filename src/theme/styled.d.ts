@@ -6,6 +6,11 @@ export interface Colors {
   white: Color
   black: Color
 
+  // gradientes
+  grd1: Color
+  grd2: Color
+  grd3: Color
+
   // text
   text1: Color
   text2: Color
