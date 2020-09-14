@@ -1,4 +1,3 @@
-import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
 import styled, {
   ThemeProvider as StyledComponentsThemeProvider,
@@ -41,37 +40,43 @@ export function colors(darkMode: boolean): Colors {
     black,
 
     // text
-    text1: darkMode ? '#FFFFFF' : '#000000',
-    text2: darkMode ? '#C3C5CB' : '#565A69',
-    text3: darkMode ? '#6C7284' : '#888D9B',
-    text4: darkMode ? '#565A69' : '#C3C5CB',
-    text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    text1: '#FFFFFF',
+    text2: '#C6D5DE',
+    text3: '#6C7284',
+    text4: '#565A69',
+    text5: '#2C2F36',
+    text6: '#414141',
 
     // backgrounds / greys
-    bg1: darkMode ? '#212429' : '#FFFFFF',
-    bg2: darkMode ? '#2C2F36' : '#F7F8FA',
-    bg3: darkMode ? '#40444F' : '#EDEEF2',
-    bg4: darkMode ? '#565A69' : '#CED0D9',
-    bg5: darkMode ? '#6C7284' : '#888D9B',
+    bg1: '#001522',
+    bg2: '#2C2F36',
+    bg3: '#393D47',
+    bg4: '#565A69',
+    bg5: '#6C7284',
+    bg6: '#052235',
+    bg7: '#25435A',
+    bg8: 'linear-gradient(137.27deg, #B1FFBF 3.65%, #FFF16D 100%)',
+    bg9: '#212429',
+    bg10: '#041E2F',
 
     //specialty colors
-    modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
-    advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
+    modalBG: 'rgba(0,0,0,.425)',
+    advancedBG: 'rgba(0,0,0,0.1)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#ff007a',
-    primary2: darkMode ? '#3680E7' : '#FF8CC3',
-    primary3: darkMode ? '#4D8FEA' : '#FF99C9',
-    primary4: darkMode ? '#376bad70' : '#F6DDE8',
-    primary5: darkMode ? '#153d6f70' : '#FDEAF1',
+    primary1: '#F6F37C',
+    primary2: '#3680E7',
+    primary3: '#4D8FEA',
+    primary4: '#376bad70',
+    primary5: '#153d6f70',
 
     // color text
-    primaryText1: darkMode ? '#6da8ff' : '#ff007a',
+    primaryText1: '#6da8ff',
 
     // secondary colors
-    secondary1: darkMode ? '#2172E5' : '#ff007a',
-    secondary2: darkMode ? '#17000b26' : '#F6DDE8',
-    secondary3: darkMode ? '#17000b26' : '#FDEAF1',
+    secondary1: '#019BFF',
+    secondary2: '#17000b26',
+    secondary3: '#17000b26',
 
     // other
     red1: '#FF6871',
@@ -211,12 +216,6 @@ html {
 
 body {
   min-height: 100vh;
-  background-position: 0 -30vh;
-  background-repeat: no-repeat;
-  background-image: ${({ theme }) =>
-    `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.9, theme.primary1)} 0%, ${transparentize(
-      1,
-      theme.bg1
-    )} 100%)`};
+  background-color: ${({ theme }) => theme.bg6};
 }
 `
