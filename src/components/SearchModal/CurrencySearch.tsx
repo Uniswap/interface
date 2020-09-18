@@ -80,6 +80,7 @@ export function CurrencySearch({
     return filterTokens(Object.values(allTokens), searchQuery)
   }, [isAddressSearch, searchToken, allTokens, searchQuery])
 
+
   const filteredSortedTokens: Token[] = useMemo(() => {
     if (searchToken) return [searchToken]
     const sorted = filteredTokens.sort(tokenComparator)

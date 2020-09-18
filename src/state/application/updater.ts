@@ -34,17 +34,26 @@ export default function Updater(): null {
   useEffect(() => {
     if (!library || !chainId || !windowVisible) return undefined
 
+    let timeoutId: any
     setState({ chainId, blockNumber: null })
 
-    /* TODO: re-enable this later!
+    const getLatestBlockNumber = () => {
     library
+      .blockchain
       .getBlockNumber()
+      //@ts-ignore
+      .then(r => +library.utils.hexToNumber(r.result))
       .then(blockNumberCallback)
       .catch((error: any) => console.error(`Failed to get block number for chainId: ${chainId}`, error))
+      .finally(() => timeoutId = setTimeout(getLatestBlockNumber, 15000))
+    }
 
-    library.on('block', blockNumberCallback)*/
+    getLatestBlockNumber()
+
     return () => {
-      //library.removeListener('block', blockNumberCallback)
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
     }
   }, [dispatch, chainId, library, blockNumberCallback, windowVisible])
 

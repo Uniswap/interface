@@ -15,6 +15,7 @@ import { Hmy } from '../blockchain'
 
 const { Harmony } = require('@harmony-js/core');
 const { ChainID } = require('@harmony-js/utils');
+const utils = require('@harmony-js/utils');
 
 export interface HmyReactContextInterface {
   userWallet: UserWallet;
@@ -27,6 +28,7 @@ export interface HmyReactContextInterface {
   active: boolean;
   balance?: CurrencyAmount | undefined;
   error?: Error;
+  utils?: any
 }
 
 export function useActiveHmyReact(): HmyReactContextInterface  & { chainId?: typeof ChainID } {
@@ -41,7 +43,8 @@ export function useActiveHmyReact(): HmyReactContextInterface  & { chainId?: typ
     account: userWallet ? userWallet.address : null,
     bech32Address: userWallet ? userWallet.bech32Address : null,
     active: userWallet ? userWallet.active : false,
-    balance: (userWallet.oneBalance) ? CurrencyAmount.ether(JSBI.BigInt(userWallet.oneBalance.toString())) : undefined
+    balance: (userWallet.oneBalance) ? CurrencyAmount.ether(JSBI.BigInt(userWallet.oneBalance.toString())) : undefined,
+    utils: utils
   };
 
   return hmyReact;

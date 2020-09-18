@@ -7,6 +7,9 @@ import chunkArray from '../../utils/chunkArray'
 import { CancelledError, retry, RetryableError } from '../../utils/retry'
 import { useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
+
+import abi from '../../constants/multicall/abi.json'
+
 import {
   Call,
   errorFetchingMulticallResults,
@@ -26,24 +29,36 @@ const CALL_CHUNK_SIZE = 500
  * @param chunk chunk of calls to make
  * @param minBlockNumber minimum block number of the result set
  */
+const options = { gasPrice: 1000000000, gasLimit: 6721900 }
+
 async function fetchChunk(
   multicallContract: Contract,
   chunk: Call[],
-  minBlockNumber: number
+  minBlockNumber: number,
+  h: any
 ): Promise<{ results: string[]; blockNumber: number }> {
   console.debug('Fetching chunk', multicallContract, chunk, minBlockNumber)
+
   let resultsBlockNumber, returnData
+  const contract = h.library.contracts.createContract(abi, multicallContract.options.address)
+
   try {
-    ;[resultsBlockNumber, returnData] = await multicallContract.aggregate(chunk.map(obj => [obj.address, obj.callData]))
+    //;[resultsBlockNumber, returnData] = await multicallContract.aggregate(chunk.map(obj => [obj.address, obj.callData]))
+    const res = await contract.methods.aggregate(chunk.map(obj => [obj.address, obj.callData])).call(options)
+
+    resultsBlockNumber = res.blockNumber
+    returnData = res.returnData
+
   } catch (error) {
     console.debug('Failed to fetch chunk inside retry', error)
     throw error
   }
-  if (resultsBlockNumber.toNumber() < minBlockNumber) {
+
+  if (resultsBlockNumber < minBlockNumber) {
     console.debug(`Fetched results for old block number: ${resultsBlockNumber.toString()} vs. ${minBlockNumber}`)
     throw new RetryableError('Fetched for old block number')
   }
-  return { results: returnData, blockNumber: resultsBlockNumber.toNumber() }
+  return { results: returnData, blockNumber: resultsBlockNumber }
 }
 
 /**
@@ -112,6 +127,9 @@ export function outdatedListeningKeys(
 }
 
 export default function Updater(): null {
+
+  const h = useActiveHmyReact();
+
   const dispatch = useDispatch<AppDispatch>()
   const state = useSelector<AppState, AppState['multicall']>(state => state.multicall)
   // wait for listeners to settle before triggering updates
@@ -157,7 +175,7 @@ export default function Updater(): null {
     cancellations.current = {
       blockNumber: latestBlockNumber,
       cancellations: chunkedCalls.map((chunk, index) => {
-        const { cancel, promise } = retry(() => fetchChunk(multicallContract, chunk, latestBlockNumber), {
+        const { cancel, promise } = retry(() => fetchChunk(multicallContract, chunk, latestBlockNumber, h), {
           n: Infinity,
           minWait: 2500,
           maxWait: 3500

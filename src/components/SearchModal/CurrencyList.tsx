@@ -43,7 +43,8 @@ const Tag = styled.div`
 `
 
 function Balance({ balance }: { balance: CurrencyAmount }) {
-  return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
+  return <StyledBalanceText title={balance.toExact()}>{
+    balance.toSignificant(4)}</StyledBalanceText>
 }
 
 const TagContainer = styled.div`
@@ -99,6 +100,7 @@ function CurrencyRow({
   const selectedTokenList = useSelectedTokenList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency)
   const customAdded = Boolean(!isOnSelectedList && currency instanceof Token)
+
   const balance = useCurrencyBalance(account ?? undefined, currency)
 
   const removeToken = useRemoveUserAddedToken()

@@ -283,14 +283,21 @@ export default function AccountDetails({
       label: name
     })
 
-    connector && connector.signOut()
-    .then(() => {
+    const maybePromise = connector && connector.signOut()
+
+    if (maybePromise) {
+      maybePromise.then(() => {
       setUserWallet({} as UserWallet);
       toggleWalletModal();
     })
     .catch(error => {
       toggleWalletModal();
     });
+
+    } else {
+      setUserWallet({} as UserWallet);
+      toggleWalletModal();
+    }
   }
 
   function getStatusIcon() {
