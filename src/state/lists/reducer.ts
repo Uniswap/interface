@@ -7,16 +7,6 @@ import { acceptListUpdate, addList, fetchTokenList, removeList, selectList } fro
 import SWOOP_DEFAULT_LIST from '@swoop-exchange/default-token-list'
 //import UNISWAP_DEFAULT_LIST from '@uniswap/default-token-list'
 
-// todo remove
-SWOOP_DEFAULT_LIST.tokens.push({
-  "chainId": 2,
-  "address": "0x1bbd00711064bd497a060c89f2dcc41195b23500",
-  "symbol": "BNB",
-  "name": "BNB",
-  "decimals": 18,
-  "logoURI": "https://swoop-exchange.s3-us-west-1.amazonaws.com/tokens/1LINK.png"
-})
-
 export interface ListsState {
   readonly byUrl: {
     readonly [url: string]: {
