@@ -24,6 +24,8 @@ export const SUSD = new Token(
   'Synthetix sUSD'
 )
 export const BASED = new Token(ChainId.MAINNET, '0x68A118Ef45063051Eac49c7e647CE5Ace48a68a5', 18, '$BASED', '$BASED')
+export const YAM3 = new Token(ChainId.MAINNET, '0x0AaCfbeC6a24756c20D41914F2caba817C0d8521', 18, 'YAM3', 'YAM3')
+export const YUSD = new Token(ChainId.MAINNET, '0x5dbcF33D8c2E976c6b560249878e6F1491Bca25c', 18, 'yUSD', 'yUSD')
 
 const WETH_ONLY: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
@@ -46,7 +48,8 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
   [ChainId.MAINNET]: {
     [AMPL.address]: [DAI, WETH[ChainId.MAINNET]],
-    [BASED.address]: [SUSD, WETH[ChainId.MAINNET]]
+    [BASED.address]: [SUSD, WETH[ChainId.MAINNET]],
+    [YAM3.address]: [YUSD, WETH[ChainId.MAINNET]]
   }
 }
 
