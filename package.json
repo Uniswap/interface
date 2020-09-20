@@ -106,6 +106,6 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "uniswap-fuse-sdk": "^3.0.3-a1"
+    "uniswap-fuse-sdk": "^3.0.3-a2"
   }
 }
