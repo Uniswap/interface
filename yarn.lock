@@ -7590,6 +7590,11 @@ functional-red-black-tree@^1.0.1:
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
+fuse-default-token-list@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/fuse-default-token-list/-/fuse-default-token-list-1.5.1.tgz#381e9739bdaab3837d2bc99865959ecef2f08d38"
+  integrity sha512-/vpQXPY5BsJ9VxYhzTrG7ERRJj0Gkx3wWNAr5XxWaY+63kGroF07o/xZvqW6h6kjU4Euvv98U92ujZOfqVD92w==
+
 gensync@^1.0.0-beta.1:
   version "1.0.0-beta.1"
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.1.tgz#58f4361ff987e5ff6e1e7a210827aa371eaac269"
