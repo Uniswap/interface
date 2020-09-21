@@ -33,7 +33,7 @@ export function useETHBalances(
     addresses.map(address => [address])
   )
 
-  return useMemo(
+  const res = useMemo(
     () =>
       addresses.reduce<{ [address: string]: CurrencyAmount }>((memo, address, i) => {
         const value = results?.[i]?.result?.[0]
@@ -42,6 +42,8 @@ export function useETHBalances(
       }, {}),
     [addresses, results]
   )
+
+  return res
 }
 
 /**
@@ -99,7 +101,7 @@ export function useCurrencyBalances(
   account?: string,
   currencies?: (Currency | undefined)[]
 ): (CurrencyAmount | undefined)[] {
-  const { balance } = useActiveHmyReact()
+  // const { balance } = useActiveHmyReact()
   
   const tokens = useMemo(() => currencies?.filter((currency): currency is Token => currency instanceof Token) ?? [], [
     currencies
@@ -107,12 +109,13 @@ export function useCurrencyBalances(
 
   const tokenBalances = useTokenBalances(account, tokens)
 
-  //const containsETH: boolean = useMemo(() => currencies?.some(currency => currency === HARMONY) ?? false, [currencies])
-  //const ethBalance = useETHBalances(containsETH ? [account] : [])
+  const containsETH: boolean = useMemo(() => currencies?.some(currency => currency === HARMONY) ?? false, [currencies])
+  const ethBalance = useETHBalances(containsETH ? [account] : [])
 
   const mapping: { [address: string]: CurrencyAmount | undefined } = {}
+
   if (account) {
-    mapping[account] = balance
+    mapping[account] = ethBalance[account]
   }
 
   return useMemo(

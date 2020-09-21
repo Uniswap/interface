@@ -1,6 +1,6 @@
 // the Uniswap Default token list lives here
 //export const DEFAULT_TOKEN_LIST_URL = 'tokens.uniswap.eth'
-export const DEFAULT_TOKEN_LIST_URL = 'https://swoop-exchange.s3-us-west-1.amazonaws.com/lists/swoop-default.tokenlist.json'
+export const DEFAULT_TOKEN_LIST_URL = 'https://raw.githubusercontent.com/harmony-one/swoop-interface/harmony-balance/public/tokenlist.json'
 
 export const DEFAULT_LIST_OF_LISTS: string[] = [
   DEFAULT_TOKEN_LIST_URL,

@@ -9,7 +9,7 @@ import LogoDark from '../../assets/svg/logo_white.svg'
 import Wordmark from '../../assets/svg/wordmark.svg'
 import WordmarkDark from '../../assets/svg/wordmark_white.svg'
 import { useDarkModeManager } from '../../state/user/hooks'
-//import { useETHBalances } from '../../state/wallet/hooks'
+import { useETHBalances } from '../../state/wallet/hooks'
 
 import { YellowCard } from '../Card'
 import Settings from '../Settings'
@@ -151,7 +151,7 @@ const NETWORK_LABELS: { [chainId in typeof ChainID]: string | null } = {
 export default function Header() {
   const { account, chainId, balance } = useActiveHmyReact()
 
-  //const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+  const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
 
   const [isDark] = useDarkModeManager()
 
@@ -174,9 +174,9 @@ export default function Header() {
               {!isMobile && chainId && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
             </TestnetWrapper>
             <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-              {account && balance ? (
+              {account && userEthBalance ? (
                 <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                  {balance?.toSignificant(4)} ONE
+                  {userEthBalance?.toSignificant(4)} ONE
                 </BalanceText>
               ) : null}
               <Web3Status />

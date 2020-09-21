@@ -15,6 +15,7 @@ import {
 } from './actions'
 
 import { useActiveHmyReact } from '../../hooks'
+import {MULTICALL_INTERFACE} from '../../constants/multicall/index';
 
 export interface Result extends ReadonlyArray<any> {
   readonly [key: string]: any
@@ -166,7 +167,10 @@ export function useSingleContractMultipleData(
   options?: ListenerOptions
 ): CallState[] {
   // TODO: update this to use hmy's contract interaction version
-  const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
+
+  // todo put it to eth hook
+  const contractInterface = MULTICALL_INTERFACE
+  const fragment = useMemo(() => contractInterface.getFunction(methodName), [contract, methodName])
 
   const calls = useMemo(
     () =>
@@ -174,7 +178,7 @@ export function useSingleContractMultipleData(
         ? callInputs.map<Call>(inputs => {
             return {
               address: contract.address,
-              callData: contract.interface.encodeFunctionData(fragment, inputs)
+              callData: contractInterface.encodeFunctionData(fragment, inputs)
             }
           })
         : [],
@@ -186,7 +190,7 @@ export function useSingleContractMultipleData(
   const latestBlockNumber = useBlockNumber()
 
   return useMemo(() => {
-    return results.map(result => toCallState(result, contract?.interface, fragment, latestBlockNumber))
+    return results.map(result => toCallState(result, contractInterface, fragment, latestBlockNumber))
   }, [fragment, contract, results, latestBlockNumber])
 }
 
