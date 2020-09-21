@@ -324,13 +324,15 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
     <Column style={{ width: '100%', flex: '1 1' }}>
       <PaddedColumn>
         <RowBetween>
-          <div>
+          <div style={{ lineHeight: '0' }}>
             <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} />
           </div>
           <Text fontWeight={500} fontSize={20}>
             Manage Lists
           </Text>
-          <CloseIcon onClick={onDismiss} />
+          <div style={{ lineHeight: '0' }}>
+            <CloseIcon onClick={onDismiss} />
+          </div>
         </RowBetween>
       </PaddedColumn>
 
