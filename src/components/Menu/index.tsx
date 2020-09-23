@@ -94,7 +94,7 @@ export default function Menu() {
       </StyledMenuButton>
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://github.com/1Hive/honeyswap">
+          <MenuItem id="link" href="https://about.1hive.org">
             <Info size={14} />
             About
           </MenuItem>
