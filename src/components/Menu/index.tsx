@@ -98,7 +98,7 @@ export default function Menu() {
             <Info size={14} />
             About
           </MenuItem>
-          <MenuItem id="link" href="https://github.com/1Hive/honeyswap">
+          <MenuItem id="link" href="https://about.1hive.org/docs/honeyswap">
             <BookOpen size={14} />
             Docs
           </MenuItem>
