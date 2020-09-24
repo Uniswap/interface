@@ -6,6 +6,7 @@ on:
   pull_request:
     branches:
       - master
+
 jobs:
   integration-tests:
     name: Integration tests
@@ -16,6 +17,9 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
+          always-auth: true
+          registry-url: https://registry.npmjs.org
+
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -27,9 +31,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - run: yarn install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: yarn cypress install
       - run: yarn build
         env:
+          CI: false
           REACT_APP_NETWORK_URL: "https://mainnet.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847"
       - run: yarn integration-test
 
@@ -42,28 +49,9 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v1
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - run: yarn install --frozen-lockfile
-      - run: yarn test
+          always-auth: true
+          registry-url: https://registry.npmjs.org
 
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '12'
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -75,5 +63,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - run: yarn install --frozen-lockfile
-      - run: yarn lint
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: yarn test
 

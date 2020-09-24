@@ -1,6 +1,6 @@
 import { ChainId } from '@uniswap/sdk'
 import { createStore, Store } from 'redux'
-import { addPopup, removePopup, toggleSettingsMenu, toggleWalletModal, updateBlockNumber } from './actions'
+import { addPopup, ApplicationModal, removePopup, setOpenModal, updateBlockNumber } from './actions'
 import reducer, { ApplicationState } from './reducer'
 
 describe('application reducer', () => {
@@ -9,11 +9,10 @@ describe('application reducer', () => {
   beforeEach(() => {
     store = createStore(reducer, {
       popupList: [],
-      walletModalOpen: false,
-      settingsMenuOpen: false,
       blockNumber: {
         [ChainId.MAINNET]: 3
-      }
+      },
+      openModal: null
     })
   })
 
@@ -40,25 +39,16 @@ describe('application reducer', () => {
     })
   })
 
-  describe('toggleWalletModal', () => {
-    it('toggles wallet modal', () => {
-      store.dispatch(toggleWalletModal())
-      expect(store.getState().walletModalOpen).toEqual(true)
-      store.dispatch(toggleWalletModal())
-      expect(store.getState().walletModalOpen).toEqual(false)
-      store.dispatch(toggleWalletModal())
-      expect(store.getState().walletModalOpen).toEqual(true)
-    })
-  })
-
-  describe('settingsMenuOpen', () => {
-    it('toggles settings menu', () => {
-      store.dispatch(toggleSettingsMenu())
-      expect(store.getState().settingsMenuOpen).toEqual(true)
-      store.dispatch(toggleSettingsMenu())
-      expect(store.getState().settingsMenuOpen).toEqual(false)
-      store.dispatch(toggleSettingsMenu())
-      expect(store.getState().settingsMenuOpen).toEqual(true)
+  describe('setOpenModal', () => {
+    it('set wallet modal', () => {
+      store.dispatch(setOpenModal(ApplicationModal.WALLET))
+      expect(store.getState().openModal).toEqual(ApplicationModal.WALLET)
+      store.dispatch(setOpenModal(ApplicationModal.WALLET))
+      expect(store.getState().openModal).toEqual(ApplicationModal.WALLET)
+      store.dispatch(setOpenModal(ApplicationModal.CLAIM_POPUP))
+      expect(store.getState().openModal).toEqual(ApplicationModal.CLAIM_POPUP)
+      store.dispatch(setOpenModal(null))
+      expect(store.getState().openModal).toEqual(null)
     })
   })
 

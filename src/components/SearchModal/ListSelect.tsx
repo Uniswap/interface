@@ -236,7 +236,6 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
 })
 
 const AddListButton = styled(ButtonSecondary)`
-  /* height: 1.8rem; */
   max-width: 4rem;
   margin-left: 1rem;
   border-radius: 12px;
