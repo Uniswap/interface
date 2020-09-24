@@ -18,10 +18,18 @@ export type PopupContent =
       }
     }
 
-export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('app/updateBlockNumber')
-export const toggleWalletModal = createAction<void>('app/toggleWalletModal')
-export const toggleSettingsMenu = createAction<void>('app/toggleSettingsMenu')
+export enum ApplicationModal {
+  WALLET,
+  SETTINGS,
+  SELF_CLAIM,
+  ADDRESS_CLAIM,
+  CLAIM_POPUP,
+  MENU
+}
+
+export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('application/updateBlockNumber')
+export const setOpenModal = createAction<ApplicationModal | null>('application/setOpenModal')
 export const addPopup = createAction<{ key?: string; removeAfterMs?: number | null; content: PopupContent }>(
-  'app/addPopup'
+  'application/addPopup'
 )
-export const removePopup = createAction<{ key: string }>('app/removePopup')
+export const removePopup = createAction<{ key: string }>('application/removePopup')
