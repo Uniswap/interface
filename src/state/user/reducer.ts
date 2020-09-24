@@ -12,7 +12,8 @@ import {
   updateUserDarkMode,
   updateUserExpertMode,
   updateUserSlippageTolerance,
-  updateUserDeadline
+  updateUserDeadline,
+  toggleURLWarning
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
@@ -46,6 +47,7 @@ export interface UserState {
   }
 
   timestamp: number
+  URLWarningVisible: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -60,7 +62,8 @@ export const initialState: UserState = {
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
   pairs: {},
-  timestamp: currentTimestamp()
+  timestamp: currentTimestamp(),
+  URLWarningVisible: true
 }
 
 export default createReducer(initialState, builder =>
@@ -128,5 +131,8 @@ export default createReducer(initialState, builder =>
         delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)]
       }
       state.timestamp = currentTimestamp()
+    })
+    .addCase(toggleURLWarning, state => {
+      state.URLWarningVisible = !state.URLWarningVisible
     })
 )

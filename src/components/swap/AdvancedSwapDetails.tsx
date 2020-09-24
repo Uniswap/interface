@@ -1,9 +1,9 @@
 import { Trade, TradeType } from '@uniswap/sdk'
 import React, { useContext } from 'react'
-import { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
+import { TYPE, ExternalLink } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
@@ -11,6 +11,16 @@ import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import { SectionBreak } from './styleds'
 import SwapRoute from './SwapRoute'
+
+const InfoLink = styled(ExternalLink)`
+  width: 100%;
+  border: 1px solid ${({ theme }) => theme.bg3};
+  padding: 6px 6px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 14px;
+  color: ${({ theme }) => theme.text1};
+`
 
 function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
   const theme = useContext(ThemeContext)
@@ -94,6 +104,11 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
               </AutoColumn>
             </>
           )}
+          <AutoColumn style={{ padding: '0 24px' }}>
+            <InfoLink href={'https://uniswap.info/pair/' + trade.route.pairs[0].liquidityToken.address} target="_blank">
+              View pair analytics ↗
+            </InfoLink>
+          </AutoColumn>
         </>
       )}
     </AutoColumn>
