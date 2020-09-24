@@ -107,6 +107,6 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "fuse-default-token-list": "^1.5.1",
-    "uniswap-fuse-sdk": "^3.0.3-a2"
+    "uniswap-fuse-sdk": "^3.0.3-a3"
   }
 }
