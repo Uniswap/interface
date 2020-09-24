@@ -5,6 +5,7 @@ import { isMobile } from 'react-device-detect'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
 import { Provider } from 'react-redux'
+import { HashRouter } from 'react-router-dom'
 import { NetworkContextName } from './constants'
 import './i18n'
 import App from './pages/App'
@@ -61,7 +62,9 @@ ReactDOM.render(
           <Updaters />
           <ThemeProvider>
             <ThemedGlobalStyle />
-            <App />
+            <HashRouter>
+              <App />
+            </HashRouter>
           </ThemeProvider>
         </Provider>
       </Web3ProviderNetwork>

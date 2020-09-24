@@ -37,9 +37,13 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
+          always-auth: true
+          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Build the IPFS bundle
         run: yarn build
