@@ -31,14 +31,16 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
 )).attrs({
   'aria-label': 'dialog'
 })`
+  overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
+
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
-    border: 1px solid ${({ theme }) => theme.bg1};
     background-color: ${({ theme }) => theme.bg1};
     box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadow1)};
     padding: 0px;
     width: 50vw;
-    overflow: hidden;
+    overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
+    overflow-x: hidden;
 
     align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
 
@@ -85,7 +87,7 @@ export default function Modal({
   isOpen,
   onDismiss,
   minHeight = false,
-  maxHeight = 50,
+  maxHeight = 90,
   initialFocusRef,
   children
 }: ModalProps) {
