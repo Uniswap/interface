@@ -18,7 +18,7 @@ import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { CardBGImage, CardNoise } from '../earn/styled'
 
-const ClaimPopup = styled(AutoColumn)`
+const StyledClaimPopup = styled(AutoColumn)`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #021d43 100%);
   border-radius: 20px;
   padding: 1.5rem;
@@ -79,7 +79,7 @@ export default function ClaimPopup() {
   return (
     <>
       {showClaimPopup && !showClaimModal && (
-        <ClaimPopup gap="md">
+        <StyledClaimPopup gap="md">
           <CardBGImage />
           <CardNoise />
           <StyledClose stroke="white" onClick={toggleShowClaimPopup} />
@@ -106,7 +106,7 @@ export default function ClaimPopup() {
               Claim your UNI tokens
             </ButtonPrimary>
           </AutoColumn>
-        </ClaimPopup>
+        </StyledClaimPopup>
       )}
     </>
   )
