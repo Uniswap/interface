@@ -1,18 +1,10 @@
 ---
 name: Feature Request
-about: Suggest an idea for this project
+about: Suggest an idea for improving the UX of the Uniswap Interface
 title: ''
 labels: 'improvement'
 assignees: ''
 ---
-
-<!-- 
-DO NOT CREATE A TOKEN LISTING REQUEST IN THIS REPOSITORY.
-YOUR ISSUE WILL BE DELETED. 
-SEE https://github.com/Uniswap/default-token-list#adding-a-token
-
-IF YOU NEED SUPPORT, JOIN THE DISCORD: https://discord.com/invite/EwFs3Pp
--->
 
 **Is your feature request related to a problem? Please describe.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
