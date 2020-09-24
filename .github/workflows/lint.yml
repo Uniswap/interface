@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - master
-  pull_request:
+  pull_request_target:
+    branches:
+      - master
 
 jobs:
   run-linters:
@@ -40,7 +42,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Run linters
-        uses: wearerequired/lint-action@v1
+        uses: wearerequired/lint-action@77d70b9a07ecb93bc98dc46dc27d96c4f004d035
         with:
           github_token: ${{ secrets.github_token }}
           eslint: true
