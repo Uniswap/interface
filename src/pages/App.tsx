@@ -12,9 +12,6 @@ import {
   RedirectOldAddLiquidityPathStructure,
   RedirectToAddLiquidity
 } from './AddLiquidity/redirects'
-import MigrateV1 from './MigrateV1'
-import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
-import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
 import Pool from './Pool'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -80,11 +77,8 @@ export default function App() {
                 <Route exact path="/add" component={AddLiquidity} />
                 <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
                 <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-                <Route exact strict path="/remove/v1/:address" component={RemoveV1Exchange} />
                 <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
                 <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-                <Route exact strict path="/migrate/v1" component={MigrateV1} />
-                <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
                 <Route component={RedirectPathToSwapOnly} />
               </Switch>
             </Web3ReactManager>

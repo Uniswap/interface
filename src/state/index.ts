@@ -14,7 +14,7 @@ import multicall from './multicall/reducer'
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
 // @ts-ignore
-const reduxExtension = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__
+//const reduxExtension = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__
 
 const store = configureStore({
   reducer: {
@@ -26,7 +26,7 @@ const store = configureStore({
     burn,
     multicall,
     lists,
-    reduxExtension: reduxExtension && reduxExtension(),
+    //reduxExtension: reduxExtension && reduxExtension(),
   },
   middleware: [...getDefaultMiddleware({ thunk: false }), save({ states: PERSISTED_KEYS })],
   preloadedState: load({ states: PERSISTED_KEYS })

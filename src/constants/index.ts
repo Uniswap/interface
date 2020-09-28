@@ -71,7 +71,6 @@ export interface UserWallet {
   address: string | null;
   bech32Address: string | null;
   active: boolean;
-  oneBalance?: string | null;
 }
 
 export interface CurrencyResult {

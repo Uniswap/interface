@@ -170,7 +170,7 @@ export function useSingleContractMultipleData(
 
   // todo put it to eth hook
   const contractInterface = MULTICALL_INTERFACE
-  const fragment = useMemo(() => contractInterface.getFunction(methodName), [contract, methodName])
+  const fragment = useMemo(() => contractInterface.getFunction(methodName), [contractInterface, methodName])
 
   const calls = useMemo(
     () =>
@@ -182,7 +182,7 @@ export function useSingleContractMultipleData(
             }
           })
         : [],
-    [callInputs, contract, fragment]
+    [callInputs, contract, contractInterface, fragment]
   )
 
   const results = useCallsData(calls, options)
@@ -191,7 +191,7 @@ export function useSingleContractMultipleData(
 
   return useMemo(() => {
     return results.map(result => toCallState(result, contractInterface, fragment, latestBlockNumber))
-  }, [fragment, contract, results, latestBlockNumber])
+  }, [fragment, contractInterface, results, latestBlockNumber])
 }
 
 export function useMultipleContractSingleData(
