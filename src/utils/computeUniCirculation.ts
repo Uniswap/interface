@@ -38,21 +38,27 @@ function withVesting(before: JSBI, time: BigNumber, amount: number, start: numbe
   if (time.gt(start)) {
     if (time.gte(end)) {
       return JSBI.add(before, JSBI.BigInt(amount))
-    } else if (cliff && time.gte(cliff)) {
-      return JSBI.add(
-        before,
-        JSBI.divide(
-          JSBI.multiply(JSBI.BigInt(amount), JSBI.BigInt(time.sub(start).toString())),
-          JSBI.subtract(JSBI.BigInt(end), JSBI.BigInt(start))
+    } else {
+      if ((typeof cliff === 'number' && time.gte(cliff)) || typeof cliff === 'undefined') {
+        return JSBI.add(
+          before,
+          JSBI.divide(
+            JSBI.multiply(JSBI.BigInt(amount), JSBI.BigInt(time.sub(start).toString())),
+            JSBI.subtract(JSBI.BigInt(end), JSBI.BigInt(start))
+          )
         )
-      )
+      }
     }
   }
   return before
 }
 
-export function computeUniCirculation(uni: Token, blockTimestamp: BigNumber): TokenAmount {
-  let wholeAmount = JSBI.BigInt(USERS_AMOUNT) // users, 15%
+export function computeUniCirculation(
+  uni: Token,
+  blockTimestamp: BigNumber,
+  unclaimedUni: TokenAmount | undefined
+): TokenAmount {
+  let wholeAmount = JSBI.BigInt(USERS_AMOUNT)
 
   // staking rewards
   wholeAmount = withVesting(wholeAmount, blockTimestamp, STAKING_REWARDS_AMOUNT, STAKING_GENESIS, STAKING_END)
@@ -101,5 +107,6 @@ export function computeUniCirculation(uni: Token, blockTimestamp: BigNumber): To
   wholeAmount = withVesting(wholeAmount, blockTimestamp, TEAM_YEAR_3_AMOUNT, TREASURY_BEGIN_YEAR_3, TREASURY_END_YEAR_3)
   wholeAmount = withVesting(wholeAmount, blockTimestamp, TEAM_YEAR_4_AMOUNT, TREASURY_BEGIN_YEAR_4, TREASURY_END_YEAR_4)
 
-  return new TokenAmount(uni, JSBI.multiply(wholeAmount, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))))
+  const total = new TokenAmount(uni, JSBI.multiply(wholeAmount, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))))
+  return unclaimedUni ? total.subtract(unclaimedUni) : total
 }
