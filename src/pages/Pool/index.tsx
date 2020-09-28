@@ -30,6 +30,11 @@ const VoteCard = styled(DataCard)`
   overflow: hidden;
 `
 
+const WarningCard = styled(DataCard)`
+  background: ${({ theme }) => `radial-gradient(76.02% 75.41% at 1.84% 0%, ${theme.red1} 0%, ${theme.black} 100%);`}
+  overflow: hidden;
+`
+
 const TitleRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex-wrap: wrap;
@@ -109,7 +114,7 @@ export default function Pool() {
 
   return (
     <>
-      <PageWrapper>
+      <PageWrapper gap="md">
         <SwapPoolTabs active={'pool'} />
 
         <VoteCard>
@@ -137,6 +142,31 @@ export default function Pool() {
           <CardBGImage />
           <CardNoise />
         </VoteCard>
+        <WarningCard>
+          <CardBGImage />
+          <CardNoise />
+          <CardSection>
+            <AutoColumn gap="md">
+              <RowBetween>
+                <TYPE.white fontWeight={600}>Liquidity provider risks</TYPE.white>
+              </RowBetween>
+              <RowBetween>
+                <TYPE.white fontSize={14}>
+                  {`Liquidity providers assume a risk of impermanent loss. It's possible to end up with less value than your initial input.`}
+                </TYPE.white>
+              </RowBetween>
+              <ExternalLink
+                style={{ color: 'white', textDecoration: 'underline' }}
+                target="_blank"
+                href="https://uniswap.org/docs/v2/advanced-topics/understanding-returns/"
+              >
+                <TYPE.white fontSize={14}>Read more about liquidity provision risks</TYPE.white>
+              </ExternalLink>
+            </AutoColumn>
+          </CardSection>
+          <CardBGImage />
+          <CardNoise />
+        </WarningCard>
 
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
