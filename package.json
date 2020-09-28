@@ -1,6 +1,6 @@
 {
-  "name": "@uniswap/interface",
-  "description": "Uniswap Interface",
+  "name": "@harmony-swoop/interface",
+  "description": "Swoop Interface",
   "homepage": ".",
   "private": true,
   "devDependencies": {

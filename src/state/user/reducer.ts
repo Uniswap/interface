@@ -65,7 +65,7 @@ export const initialState: UserState = {
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
-  userWallet: {type: null, address: null, bech32Address: null, active: false, oneBalance: null}
+  userWallet: {type: null, address: null, bech32Address: null, active: false}
 }
 
 export default createReducer(initialState, builder =>

@@ -149,7 +149,7 @@ const NETWORK_LABELS: { [chainId in typeof ChainID]: string | null } = {
 }
 
 export default function Header() {
-  const { account, chainId, balance } = useActiveHmyReact()
+  const { account, chainId } = useActiveHmyReact()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
 
