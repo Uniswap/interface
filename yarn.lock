@@ -2726,10 +2726,10 @@
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
 
-"@uniswap/token-lists@^1.0.0-beta.16":
-  version "1.0.0-beta.16"
-  resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.16.tgz#17c5e781d490490b4f61a35a9c3106b2b1b6a57f"
-  integrity sha512-+Pu4yUQ8vUPsJW88d3pGEZTkA1T3bC7jI6wgBIcrtkQK90rfUOvgWiwj0mZBuKy/VGDm9AmSnyxYGUW2f0xn4A==
+"@uniswap/token-lists@^1.0.0-beta.17":
+  version "1.0.0-beta.17"
+  resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.17.tgz#a861fe96a0f3de91b01eae05dec05a6a2018b38e"
+  integrity sha512-UVRmSsP/ghJ7Dg8BHYjAZmZL96jHlZKrFoIEuKD3g1E4FbahfwS2j2KAaf6iQuLx6RWo8PQmDZ99rfK6T2xi8w==
 
 "@uniswap/v2-core@1.0.0":
   version "1.0.0"
