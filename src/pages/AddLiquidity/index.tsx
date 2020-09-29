@@ -28,7 +28,7 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../s
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import { calculateGasMargin, calculateSlippageAmount, getHarmonyRouterContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
@@ -45,7 +45,7 @@ export default function AddLiquidity({
   },
   history
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
-  const { account, chainId, library } = useActiveHmyReact()
+  const { account, chainId, library, wallet, wrapper } = useActiveHmyReact()
   const theme = useContext(ThemeContext)
 
   const currencyA = useCurrency(currencyIdA)
@@ -123,7 +123,7 @@ export default function AddLiquidity({
 
   async function onAdd() {
     if (!chainId || !library || !account) return
-    const router = getRouterContract(chainId, library, account)
+    const router = getHarmonyRouterContract(chainId, library, wallet)
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB) {
@@ -143,8 +143,6 @@ export default function AddLiquidity({
       value: BigNumber | null
     if (currencyA === HARMONY || currencyB === HARMONY) {
       const tokenBIsETH = currencyB === HARMONY
-      estimate = router.estimateGas.addLiquidityETH
-      method = router.addLiquidityETH
       args = [
         wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
         (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
@@ -153,10 +151,10 @@ export default function AddLiquidity({
         account,
         deadlineFromNow
       ]
+      estimate = router.methods.addLiquidityONE(args).estimateGas(wrapper.gasOptions())
+      method = router.methods.addLiquidityONE
       value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
     } else {
-      estimate = router.estimateGas.addLiquidity
-      method = router.addLiquidity
       args = [
         wrappedCurrency(currencyA, chainId)?.address ?? '',
         wrappedCurrency(currencyB, chainId)?.address ?? '',
@@ -167,10 +165,15 @@ export default function AddLiquidity({
         account,
         deadlineFromNow
       ]
+      estimate = router.methods.addLiquidity(args).estimateGas(wrapper.gasOptions())
+      method = router.methods.addLiquidity
       value = null
     }
 
     setAttemptingTxn(true)
+
+    console.log(router)
+
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
         method(...args, {

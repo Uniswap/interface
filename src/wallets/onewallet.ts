@@ -136,7 +136,6 @@ export class OneWallet extends AbstractWallet {
         
         return signTx;
       } catch (err) {
-
         if (err.type === "locked") {
           alert("Your OneWallet is locked! Please unlock it and try again!");
           return Promise.reject();

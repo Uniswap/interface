@@ -18,13 +18,13 @@ export function useTransactionAdder(): (
 
   return useCallback(
     (
-      response: TransactionResponse,
+      response: any,
       { summary, approval }: { summary?: string; approval?: { tokenAddress: string; spender: string } } = {}
     ) => {
       if (!account) return
       if (!chainId) return
 
-      const { hash } = response
+      const hash = response.transaction.receipt.transactionHash
       if (!hash) {
         throw Error('No transaction hash found.')
       }

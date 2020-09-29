@@ -46,6 +46,7 @@ export default function Updater(): null {
     Object.keys(transactions)
       .filter(hash => shouldCheck(lastBlockNumber, transactions[hash]))
       .forEach(hash => {
+        console.log(library)
         library
           .getTransactionReceipt(hash)
           .then((receipt: any) => {
