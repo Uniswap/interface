@@ -133,8 +133,11 @@ export default function Pool() {
                 <TYPE.white fontSize={14}>Read more about providing liquidity</TYPE.white>
               </ExternalLink>
               <RowBetween>
+                <TYPE.white fontWeight={600}>Liquidity provider risks</TYPE.white>
+              </RowBetween>
+              <RowBetween>
                 <TYPE.white fontSize={14}>
-                  {`Note: Liquidity providers assume the risk of impermanent losses. Pooling two tokens which have a correlated price is more risky.`}
+                  {`Liquidity providers assume the risk of impermanent loss. It's possible to end up with less value than your initial input.`}
                 </TYPE.white>
               </RowBetween>
               <ExternalLink
@@ -142,7 +145,7 @@ export default function Pool() {
                 target="_blank"
                 href="https://uniswap.org/docs/v2/advanced-topics/understanding-returns"
               >
-                <TYPE.white fontSize={14}>Learn more about the returns and risks associated with providing liquidity</TYPE.white>
+                <TYPE.white fontSize={14}>Learn more about liquidity provision risks</TYPE.white>
               </ExternalLink>
             </AutoColumn>
           </CardSection>
