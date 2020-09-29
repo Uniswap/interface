@@ -5,7 +5,7 @@
   "private": true,
   "devDependencies": {
     "@ethersproject/experimental": "^5.0.1",
-    "@harmony-js/core": "^0.1.53",
+    "@harmony-js/core": "^0.1.55",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
@@ -80,7 +80,8 @@
     "styled-components": "^4.2.0",
     "typescript": "^3.8.3",
     "@harmony-swoop/sdk": "^1.0.2",
-    "@harmony-swoop/default-token-list": "^1.0.0"
+    "@harmony-swoop/default-token-list": "^1.0.0",
+    "@harmony-swoop/periphery": "^1.1.1"
   },
   "resolutions": {
     "@walletconnect/web3-provider": "1.1.1-alpha.0"

@@ -3,7 +3,7 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
-import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+import { abi as IUniswapV2Router02ABI } from '@harmony-swoop/periphery/build/contracts/IUniswapV2Router02.json'
 import { ROUTER_ADDRESS } from '../constants'
 import { ChainID } from '@harmony-js/utils';
 import { JSBI, Percent, Token, CurrencyAmount, Currency, HARMONY } from '@harmony-swoop/sdk'
