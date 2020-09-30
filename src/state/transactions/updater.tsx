@@ -46,9 +46,9 @@ export default function Updater(): null {
     Object.keys(transactions)
       .filter(hash => shouldCheck(lastBlockNumber, transactions[hash]))
       .forEach(hash => {
-        console.log(library)
-        library
-          .getTransactionReceipt(hash)
+        console.log({library, transactions, hash})
+        library.blockchain
+          .getTransactionReceipt({txnHash: hash})
           .then((receipt: any) => {
             if (receipt) {
               dispatch(
