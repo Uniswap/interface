@@ -1,7 +1,7 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, Percent, WETH, JSBI, TokenAmount, Token, CurrencyAmount } from 'dxswap-sdk'
+import { Currency, currencyEquals, ETHER, Percent, WETH, JSBI, CurrencyAmount } from 'dxswap-sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -29,6 +29,7 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
 import { currencyId } from '../../utils/currencyId'
+import useDebouncedChangeHandler from '../../utils/useDebouncedChangeHandler'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
 import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
@@ -101,12 +102,12 @@ export default function RemoveLiquidity({
   
   const { protocolFee, protocolFeeAmount: protocolFeeAmountIndependantField } = calculateProtocolFee(
     pair, (currencyA === ETHER && parsedAmounts[Field.CURRENCY_A]) 
-      ? CurrencyAmount.ether(parsedAmounts[Field.CURRENCY_A].raw)
+      ? CurrencyAmount.ether(parsedAmounts[Field.CURRENCY_A]?.raw ?? '')
       : parsedAmounts[Field.CURRENCY_A]
   )
   const { protocolFeeAmount: protocolFeeAmountDependantField } = calculateProtocolFee(
     pair, (currencyB === ETHER && parsedAmounts[Field.CURRENCY_B]) 
-      ? CurrencyAmount.ether(parsedAmounts[Field.CURRENCY_B].raw)
+      ? CurrencyAmount.ether(parsedAmounts[Field.CURRENCY_B]?.raw ?? '')
       : parsedAmounts[Field.CURRENCY_B]
   )
   const swapFee = (pair) ? 
@@ -482,6 +483,11 @@ export default function RemoveLiquidity({
     setTxHash('')
   }, [onUserInput, txHash])
 
+  const [innerLiquidityPercentage, setInnerLiquidityPercentage] = useDebouncedChangeHandler(
+    Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0)),
+    liquidityPercentChangeCallback
+  )
+
   return (
     <>
       <AppBody>
@@ -523,10 +529,7 @@ export default function RemoveLiquidity({
                 </Row>
                 {!showDetailed && (
                   <>
-                    <Slider
-                      value={Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0))}
-                      onChange={liquidityPercentChangeCallback}
-                    />
+                    <Slider value={innerLiquidityPercentage} onChange={setInnerLiquidityPercentage} />
                     <RowBetween>
                       <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '25')} width="20%">
                         25%
@@ -644,7 +647,7 @@ export default function RemoveLiquidity({
                 />
               </>
             )}
-            {pair && (
+            {pair && tokenA && (
               <>
                 <GreyCard padding="0px" borderRadius={'20px'}>
                   <RowBetween padding="1rem">
@@ -655,7 +658,7 @@ export default function RemoveLiquidity({
                   <LightCard padding="1rem" borderRadius={'20px'}>
                     <PoolPriceBar
                       currencies={currencies}
-                      price={pair.priceOf(tokenA)}
+                      price={pair?.priceOf(tokenA)}
                     />
                   </LightCard>
                 </GreyCard>

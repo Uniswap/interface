@@ -3,8 +3,6 @@ import { useActiveWeb3React } from '../../hooks'
 import { setSwapFees, setProtocolFee } from './actions'
 import { useDispatch } from 'react-redux'
 import { Fetcher } from 'dxswap-sdk'
-import { getNetwork } from '@ethersproject/networks'
-import { getDefaultProvider } from '@ethersproject/providers'
 
 
 export default function Updater() {
@@ -12,7 +10,7 @@ export default function Updater() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (library)
+    if (library && chainId)
       Promise.all([
         Fetcher.fetchAllSwapFees(chainId, {}),
         Fetcher.fetchProtocolFee(chainId)

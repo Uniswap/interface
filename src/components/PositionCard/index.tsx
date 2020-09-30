@@ -10,7 +10,6 @@ import { useTotalSupply } from '../../data/TotalSupply'
 import { useActiveWeb3React } from '../../hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { useFeesState } from '../../state/fees/hooks'
-import { ExternalLink } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { ButtonSecondary } from '../Button'
@@ -19,7 +18,7 @@ import Card, { GreyCard } from '../Card'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { AutoRow, RowBetween, RowFixed } from '../Row'
+import { RowBetween, RowFixed } from '../Row'
 import { Dots } from '../swap/styleds'
 
 export const FixedHeightRow = styled(RowBetween)`
@@ -47,7 +46,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 
   const [showMore, setShowMore] = useState(false)
 
-  const userPoolBalance = useTokenBalance(account, pair.liquidityToken)
+  const userPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)
 
   const [token0Deposited, token1Deposited] =
@@ -132,7 +131,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
 
   const [showMore, setShowMore] = useState(false)
 
-  const userPoolBalance = useTokenBalance(account, pair.liquidityToken)
+  const userPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)
 
   const poolTokenPercentage =

@@ -8,13 +8,13 @@ export interface FeesState {
       owner: string 
     }
   } | undefined,
-  readonly protocolFeeDenominator: Number | undefined
+  readonly protocolFeeDenominator: Number 
   readonly protocolFeeTo: String | undefined
 }
 
 const initialState: FeesState = {
   swapFees: undefined,
-  protocolFeeDenominator: undefined,
+  protocolFeeDenominator: 9,
   protocolFeeTo: undefined
 }
 

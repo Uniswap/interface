@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, TokenAmount, WETH, CurrencyAmount, Percent, JSBI } from 'dxswap-sdk'
+import { Currency, currencyEquals, ETHER, TokenAmount, WETH, Percent, JSBI } from 'dxswap-sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'

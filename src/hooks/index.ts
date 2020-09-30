@@ -82,6 +82,6 @@ export function useInactiveListener(suppress = false) {
         }
       }
     }
-    return
+    return undefined
   }, [active, error, suppress, activate])
 }

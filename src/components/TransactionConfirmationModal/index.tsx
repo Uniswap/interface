@@ -91,11 +91,13 @@ function TransactionSubmittedContent({
             Transaction Submitted
           </Text>
 
-          <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
-            <Text fontWeight={500} fontSize={14} color={theme.primary1}>
-              View on Etherscan
-            </Text>
-          </ExternalLink>
+          {chainId && hash && (
+            <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
+              <Text fontWeight={500} fontSize={14} color={theme.primary1}>
+                View on Etherscan
+              </Text>
+            </ExternalLink>
+          )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>
               Close

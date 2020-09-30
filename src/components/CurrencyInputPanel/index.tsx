@@ -7,7 +7,7 @@ import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween } from '../Row'
-import { TYPE, CursorPointer } from '../../theme'
+import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
@@ -126,7 +126,6 @@ interface CurrencyInputPanelProps {
   hideBalance?: boolean
   pair?: Pair | null
   hideInput?: boolean
-  showSendWithSwap?: boolean
   otherCurrency?: Currency | null
   id: string
   showCommonBases?: boolean
@@ -138,14 +137,13 @@ export default function CurrencyInputPanel({
   onMax,
   showMaxButton,
   label = 'Input',
-  onCurrencySelect = null,
-  currency = null,
+  onCurrencySelect,
+  currency,
   disableCurrencySelect = false,
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
-  showSendWithSwap = false,
-  otherCurrency = null,
+  otherCurrency,
   id,
   showCommonBases
 }: CurrencyInputPanelProps) {
@@ -153,7 +151,7 @@ export default function CurrencyInputPanel({
 
   const [modalOpen, setModalOpen] = useState(false)
   const { account } = useActiveWeb3React()
-  const selectedCurrencyBalance = useCurrencyBalance(account, currency)
+  const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useContext(ThemeContext)
 
   const handleDismissSearch = useCallback(() => {
@@ -170,19 +168,17 @@ export default function CurrencyInputPanel({
                 {label}
               </TYPE.body>
               {account && (
-                <CursorPointer>
-                  <TYPE.body
-                    onClick={onMax}
-                    color={theme.text2}
-                    fontWeight={500}
-                    fontSize={14}
-                    style={{ display: 'inline' }}
-                  >
-                    {!hideBalance && !!currency && selectedCurrencyBalance
-                      ? 'Balance: ' + selectedCurrencyBalance?.toSignificant(6)
-                      : ' -'}
-                  </TYPE.body>
-                </CursorPointer>
+                <TYPE.body
+                  onClick={onMax}
+                  color={theme.text2}
+                  fontWeight={500}
+                  fontSize={14}
+                  style={{ display: 'inline', cursor: 'pointer' }}
+                >
+                  {!hideBalance && !!currency && selectedCurrencyBalance
+                    ? 'Balance: ' + selectedCurrencyBalance?.toSignificant(6)
+                    : ' -'}
+                </TYPE.body>
               )}
             </RowBetween>
           </LabelRow>
@@ -235,13 +231,12 @@ export default function CurrencyInputPanel({
           </CurrencySelect>
         </InputRow>
       </Container>
-      {!disableCurrencySelect && (
+      {!disableCurrencySelect && onCurrencySelect && (
         <CurrencySearchModal
           isOpen={modalOpen}
           onDismiss={handleDismissSearch}
           onCurrencySelect={onCurrencySelect}
-          showSendWithSwap={showSendWithSwap}
-          hiddenCurrency={currency}
+          selectedCurrency={currency}
           otherSelectedCurrency={otherCurrency}
           showCommonBases={showCommonBases}
         />

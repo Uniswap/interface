@@ -1,11 +1,6 @@
 import { ChainId, Token } from 'dxswap-sdk'
-import { TokenInfo, TokenList } from '@uniswap/token-lists'
-import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
-import { DEFAULT_TOKEN_LIST_URL } from '../../constants'
-import { defaultTokens } from '../../constants'
-
-import { AppState } from '../index'
+import { TokenInfo } from '@uniswap/token-lists'
+import { DEFAULT_TOKEN_LIST } from '../../constants'
 
 /**
  * Token instances created from token info.
@@ -34,31 +29,6 @@ const EMPTY_LIST: TokenAddressMap = {
   [ChainId.MAINNET]: {}
 }
 
-const listCache: WeakMap<TokenList, TokenAddressMap> | null =
-  'WeakMap' in window ? new WeakMap<TokenList, TokenAddressMap>() : null
-
-export function listToTokenMap(list: TokenList): TokenAddressMap {
-  const result = listCache?.get(list)
-  if (result) return result
-
-  const map = list.tokens.reduce<TokenAddressMap>(
-    (tokenMap, tokenInfo) => {
-      const token = new WrappedTokenInfo(tokenInfo)
-      if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.')
-      return {
-        ...tokenMap,
-        [token.chainId]: {
-          ...tokenMap[token.chainId],
-          [token.address]: token
-        }
-      }
-    },
-    { ...EMPTY_LIST }
-  )
-  listCache?.set(list, map)
-  return map
-}
-
 export function tokenListToTokenMap(list: TokenInfo[]): TokenAddressMap {
   let map = EMPTY_LIST
   list.forEach(tokenInfo => {
@@ -69,28 +39,6 @@ export function tokenListToTokenMap(list: TokenInfo[]): TokenAddressMap {
   return map
 }
 
-export function useTokenList(url: string): TokenAddressMap {
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-  return useMemo(() => {
-    const current = lists[url]?.current
-    if (!current) return EMPTY_LIST
-    return listToTokenMap(current)
-  }, [lists, url])
-}
-
 export function useDefaultTokenList(): TokenAddressMap {
-  return tokenListToTokenMap(defaultTokens)
-}
-
-// returns all downloaded current lists
-export function useAllLists(): TokenList[] {
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-
-  return useMemo(
-    () =>
-      Object.keys(lists)
-        .map(url => lists[url].current)
-        .filter((l): l is TokenList => Boolean(l)),
-    [lists]
-  )
+  return tokenListToTokenMap(DEFAULT_TOKEN_LIST)
 }

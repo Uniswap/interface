@@ -17,19 +17,34 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
     ? [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
     : [undefined, undefined]
 
+  const basePairs: [Token, Token][] = useMemo(
+    () =>
+      flatMap(bases, (base): [Token, Token][] => bases.map(otherBase => [base, otherBase])).filter(
+        ([t0, t1]) => t0.address !== t1.address
+      ),
+    [bases]
+  )
+
   const allPairCombinations: [Token, Token][] = useMemo(
     () =>
-      [
-        // the direct pair
-        [tokenA, tokenB],
-        // token A against all bases
-        ...bases.map((base): [Token | undefined, Token | undefined] => [tokenA, base]),
-        // token B against all bases
-        ...bases.map((base): [Token | undefined, Token | undefined] => [tokenB, base]),
-        // each base against all bases
-        ...flatMap(bases, (base): [Token, Token][] => bases.map(otherBase => [base, otherBase]))
-      ].filter((tokens): tokens is [Token, Token] => Boolean(tokens[0] && tokens[1])),
-    [tokenA, tokenB, bases, chainId]
+      tokenA && tokenB
+        ? [
+            // the direct pair
+            [tokenA, tokenB],
+            // token A against all bases
+            ...bases.map((base): [Token, Token] => [tokenA, base]),
+            // token B against all bases
+            ...bases.map((base): [Token, Token] => [tokenB, base]),
+            // each base against all bases
+            ...basePairs
+          ]
+            .filter((tokens): tokens is [Token, Token] => Boolean(tokens[0] && tokens[1]))
+            .filter(([t0, t1]) => t0.address !== t1.address)
+            .filter(([tokenA, tokenB]) => {
+              return true
+            })
+        : [],
+    [tokenA, tokenB, bases, basePairs, chainId]
   )
 
   const allPairs = usePairs(allPairCombinations)
@@ -54,23 +69,22 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
 /**
  * Returns the best trade for the exact amount of tokens in to the given token out
  */
-export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?: Currency): Trade | null {
+export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?: Currency): Trade | undefined {
   const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut)
-
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
       return (
         Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 3, maxNumResults: 1 })[0] ?? null
       )
     }
-    return null
+    return undefined
   }, [allowedPairs, currencyAmountIn, currencyOut])
 }
 
 /**
  * Returns the best trade for the token in to the exact amount of token out
  */
-export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: CurrencyAmount): Trade | null {
+export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: CurrencyAmount): Trade | undefined {
   const allowedPairs = useAllCommonPairs(currencyIn, currencyAmountOut?.currency)
 
   return useMemo(() => {
@@ -80,6 +94,6 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
         null
       )
     }
-    return null
+    return undefined
   }, [allowedPairs, currencyIn, currencyAmountOut])
 }

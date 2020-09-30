@@ -31,6 +31,6 @@ export function filterTokens(tokens: Token[], search: string): Token[] {
   return tokens.filter(token => {
     const { symbol, name } = token
 
-    return matchesSearch(symbol) || matchesSearch(name)
+    return (symbol && matchesSearch(symbol)) || (name && matchesSearch(name))
   })
 }

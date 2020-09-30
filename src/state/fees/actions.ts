@@ -1,5 +1,4 @@
 import { createAction } from '@reduxjs/toolkit'
-import { BigintIsh } from 'dxswap-sdk'
 
 export const setSwapFees = createAction<{
   swapFees: {

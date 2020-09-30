@@ -1,5 +1,5 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { ChainId, JSBI, Percent, Token, WETH, DXD, TEST_TOKENS } from 'dxswap-sdk'
+import { ChainId, JSBI, Percent, Token, WETH, DXD } from 'dxswap-sdk'
 import { proxies as kovanProxies } from 'dxswap-periphery/.openzeppelin/kovan.json'
 import { tokens } from './tokens'
 
@@ -160,8 +160,4 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 
-// the Uniswap Default token list lives here
-export const DEFAULT_TOKEN_LIST_URL =
-  'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json'
-  
-export const defaultTokens = tokens
+export const DEFAULT_TOKEN_LIST = tokens

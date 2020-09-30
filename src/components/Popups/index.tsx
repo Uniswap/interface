@@ -35,6 +35,7 @@ const FixedPopupColumn = styled(AutoColumn)`
   right: 1rem;
   max-width: 355px !important;
   width: 100%;
+  z-index: 2;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
@@ -49,7 +50,7 @@ export default function Popups() {
     <>
       <FixedPopupColumn gap="20px">
         {activePopups.map(item => (
-          <PopupItem key={item.key} content={item.content} popKey={item.key} />
+          <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
         ))}
       </FixedPopupColumn>
       <MobilePopupWrapper height={activePopups?.length > 0 ? 'fit-content' : 0}>
@@ -58,7 +59,7 @@ export default function Popups() {
             .slice(0)
             .reverse()
             .map(item => (
-              <PopupItem key={item.key} content={item.content} popKey={item.key} />
+              <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
             ))}
         </MobilePopupInner>
       </MobilePopupWrapper>

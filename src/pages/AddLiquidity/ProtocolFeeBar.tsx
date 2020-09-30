@@ -3,10 +3,8 @@ import React, { useContext } from 'react'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
-import { AutoRow, RowFixed } from '../../components/Row'
+import { AutoRow } from '../../components/Row'
 import QuestionHelper from '../../components/QuestionHelper'
-import { ONE_BIPS } from '../../constants'
-import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
 
 export function ProtocolFeeBar({

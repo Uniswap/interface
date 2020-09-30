@@ -8,8 +8,6 @@ import styled from 'styled-components'
 
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
-import Wordmark from '../../assets/svg/wordmark.svg'
-import WordmarkDark from '../../assets/svg/wordmark_white.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
@@ -146,7 +144,7 @@ const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
 
-  const userEthBalance = useETHBalances([account])[account]
+  const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
 
   return (
@@ -167,7 +165,7 @@ export default function Header() {
         <HeaderControls>
           <HeaderElement>
             <TestnetWrapper>
-              {!isMobile && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
+              {!isMobile && chainId && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
             </TestnetWrapper>
             <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
               {account && userEthBalance ? (

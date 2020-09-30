@@ -1,10 +1,9 @@
-import { Currency, Percent, Price } from 'dxswap-sdk'
+import { Currency, Price } from 'dxswap-sdk'
 import React, { useContext } from 'react'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
 import { AutoRow } from '../../components/Row'
-import { ONE_BIPS } from '../../constants'
 import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
 
