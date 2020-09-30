@@ -14506,10 +14506,10 @@ unique-slug@^2.0.0:
   dependencies:
     imurmurhash "^0.1.4"
 
-uniswap-fuse-sdk@^3.0.3-a3:
-  version "3.0.3-a3"
-  resolved "https://registry.yarnpkg.com/uniswap-fuse-sdk/-/uniswap-fuse-sdk-3.0.3-a3.tgz#32f9bc230961e5fc3d2405ebe1f50bd3002fda10"
-  integrity sha512-E0XBNFme663Q4KDolYyjinZLwc/cmyWabkHay/i84pa4wrQS4oLguy8SH2RVQrZVp1asUReRNTzQOocwzyzePQ==
+uniswap-fuse-sdk@^3.0.3-a4:
+  version "3.0.3-a4"
+  resolved "https://registry.yarnpkg.com/uniswap-fuse-sdk/-/uniswap-fuse-sdk-3.0.3-a4.tgz#cdf3b58c819aac461979f78556508c687dbeed31"
+  integrity sha512-1SA9g9r9g2HTwShuKchl07RX8MBe0YQ2Xm44L5jDjQ1Hi4U3yP6kzxEx0+lZHkxkzUqjh6aRd51MLCG1mWOOGA==
   dependencies:
     "@uniswap/v2-core" "^1.0.0"
     big.js "^5.2.2"
