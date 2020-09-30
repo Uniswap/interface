@@ -45,7 +45,7 @@ export default function AddLiquidity({
   },
   history
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
-  const { account, chainId, library, wallet, wrapper } = useActiveHmyReact()
+  const { account, chainId, library, wallet, wrapper, utils } = useActiveHmyReact()
   const theme = useContext(ThemeContext)
 
   const currencyA = useCurrency(currencyIdA)
@@ -179,19 +179,14 @@ export default function AddLiquidity({
 
     setAttemptingTxn(true)
 
-    console.log({router, args, estimate, method, value})
+    const oneValue = value ? value.toString() : null
 
-
-    // todo value?
-
-    //await estimate(...args, value ? { value } : {})
-     // .then(estimatedGasLimit =>
-      //  method(...args, {
-      //    ...(value ? { value: value.toString() } : {}),
-      //    gasLimit: calculateGasMargin(estimatedGasLimit).toHexString()
     method(...args)
       // @ts-ignore
-      .send(wrapper.gasOptions())
+      .send({
+        value: oneValue,
+        ...wrapper.gasOptions()
+      })
         .then(response => {
           setAttemptingTxn(false)
 
