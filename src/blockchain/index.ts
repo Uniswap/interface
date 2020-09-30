@@ -1,8 +1,11 @@
+import { BigNumber } from '@ethersproject/bignumber'
 const { Harmony } = require('@harmony-js/core');
 const { ChainID, ChainType } = require('@harmony-js/utils');
 
+// todo fine tune values
 const GAS_LIMIT = 6721900;
 const GAS_PRICE = 1000000000;
+
 
 export class Hmy {
   client: typeof Harmony;
@@ -18,6 +21,7 @@ export class Hmy {
     this.network = network.toLowerCase();
     this.gasLimit = gasLimit;
     this.gasPrice = gasPrice;
+
     this.setClient(this.network);
   }
 
@@ -53,10 +57,23 @@ export class Hmy {
     );
   }
 
-  public gasOptions(): any {
+ public gasOptions(): any {
     return {
       gasPrice: this.gasPrice,
       gasLimit: this.gasLimit,
+    }
+  }
+
+  public gasOptionsForEstimation(): any {
+    /*
+    node returns
+    "gas required exceeds allowance (80000000) or always failing transaction"
+    no matter what values client sends
+    not sue but looks gasLimit is hardcoded to 80000000 on the backend side
+    */
+   return {
+      gasPrice: '0x' + this.gasPrice.toString(16),
+      gasLimit: '0x' + this.gasLimit.toString(16),
     }
   }
 

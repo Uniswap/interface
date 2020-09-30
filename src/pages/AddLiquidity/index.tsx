@@ -137,21 +137,24 @@ export default function AddLiquidity({
 
     const deadlineFromNow = Math.ceil(Date.now() / 1000) + deadline
 
+    // todo make estimate work
     let estimate,
       method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
       value: BigNumber | null
     if (currencyA === HARMONY || currencyB === HARMONY) {
       const tokenBIsETH = currencyB === HARMONY
+
       args = [
         wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
         (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
         amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
         amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
         account,
-        deadlineFromNow
+        BigNumber.from(deadlineFromNow).toHexString()
       ]
-      estimate = router.methods.addLiquidityONE(args).estimateGas(wrapper.gasOptions())
+
+      //estimate = await router.methods.addLiquidityONE(...args).estimateGas(wrapper.gasOptionsForEstimation())
       method = router.methods.addLiquidityONE
       value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
     } else {
@@ -163,23 +166,33 @@ export default function AddLiquidity({
         amountsMin[Field.CURRENCY_A].toString(),
         amountsMin[Field.CURRENCY_B].toString(),
         account,
-        deadlineFromNow
+        BigNumber.from(deadlineFromNow).toHexString()
       ]
-      estimate = router.methods.addLiquidity(args).estimateGas(wrapper.gasOptions())
+
+      // estimate = router.methods.addLiquidity(...args).estimateGas(wrapper.gasOptionsForEstimation())
       method = router.methods.addLiquidity
       value = null
     }
 
+    //see comment at Hmy.gasOptionsForEstimation()
+    const estimatedGasLimit = BigNumber.from(1000000000)
+
     setAttemptingTxn(true)
 
-    console.log(router)
+    console.log({router, args, estimate, method, value})
 
-    await estimate(...args, value ? { value } : {})
-      .then(estimatedGasLimit =>
-        method(...args, {
-          ...(value ? { value } : {}),
-          gasLimit: calculateGasMargin(estimatedGasLimit)
-        }).then(response => {
+
+    // todo value?
+
+    //await estimate(...args, value ? { value } : {})
+     // .then(estimatedGasLimit =>
+      //  method(...args, {
+      //    ...(value ? { value: value.toString() } : {}),
+      //    gasLimit: calculateGasMargin(estimatedGasLimit).toHexString()
+    method(...args)
+      // @ts-ignore
+      .send(wrapper.gasOptions())
+        .then(response => {
           setAttemptingTxn(false)
 
           addTransaction(response, {
@@ -194,7 +207,7 @@ export default function AddLiquidity({
               currencies[Field.CURRENCY_B]?.symbol
           })
 
-          setTxHash(response.hash)
+          setTxHash(response.transaction.receipt.transactionHash)
 
           ReactGA.event({
             category: 'Liquidity',
@@ -202,7 +215,6 @@ export default function AddLiquidity({
             label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/')
           })
         })
-      )
       .catch(error => {
         setAttemptingTxn(false)
         // we only care if the error is something _other_ than the user rejected the tx
