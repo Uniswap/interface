@@ -16,7 +16,8 @@ import {
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
-  updateUserSlippageTolerance
+  updateUserSlippageTolerance,
+  toggleURLWarning
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -96,7 +97,7 @@ export function useUserSlippageTolerance(): [number, (slippage: number) => void]
   return [userSlippageTolerance, setUserSlippageTolerance]
 }
 
-export function useUserDeadline(): [number, (slippage: number) => void] {
+export function useUserTransactionTTL(): [number, (slippage: number) => void] {
   const dispatch = useDispatch<AppDispatch>()
   const userDeadline = useSelector<AppState, AppState['user']['userDeadline']>(state => {
     return state.user.userDeadline
@@ -158,6 +159,15 @@ export function usePairAdder(): (pair: Pair) => void {
     },
     [dispatch]
   )
+}
+
+export function useURLWarningVisible(): boolean {
+  return useSelector((state: AppState) => state.user.URLWarningVisible)
+}
+
+export function useURLWarningToggle(): () => void {
+  const dispatch = useDispatch()
+  return useCallback(() => dispatch(toggleURLWarning()), [dispatch])
 }
 
 /**

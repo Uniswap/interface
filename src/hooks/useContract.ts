@@ -2,8 +2,12 @@ import { Contract } from '@ethersproject/contracts'
 import { ChainId, WETH } from 'dxswap-sdk'
 import { abi as IDXswapPairABI } from 'dxswap-core/build/contracts/IDXswapPair.json'
 import { useMemo } from 'react'
-import ENS_ABI from '../constants/abis/ens-registrar.json'
+import {
+  ARGENT_WALLET_DETECTOR_ABI,
+  ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS
+} from '../constants/abis/argent-wallet-detector'
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
+import ENS_ABI from '../constants/abis/ens-registrar.json'
 import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
 import ERC20_ABI from '../constants/abis/erc20.json'
 import WETH_ABI from '../constants/abis/weth.json'
@@ -33,6 +37,15 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 export function useWETHContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(chainId ? WETH[chainId].address : undefined, WETH_ABI, withSignerIfPossible)
+}
+
+export function useArgentWalletDetectorContract(): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(
+    chainId === ChainId.MAINNET ? ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS : undefined,
+    ARGENT_WALLET_DETECTOR_ABI,
+    false
+  )
 }
 
 export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contract | null {

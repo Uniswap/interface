@@ -16,7 +16,7 @@ const Base = styled(RebassButton)<{
   width: ${({ width }) => (width ? width : '100%')};
   font-weight: 500;
   text-align: center;
-  border-radius: 20px;
+  border-radius: 12px;
   border-radius: ${({ borderRadius }) => borderRadius && borderRadius};
   outline: none;
   border: 1px solid transparent;
@@ -110,27 +110,30 @@ export const ButtonGray = styled(Base)`
 `
 
 export const ButtonSecondary = styled(Base)`
-  background-color: ${({ theme }) => theme.primary5};
-  color: ${({ theme }) => theme.primaryText1};
+  border: 1px solid ${({ theme }) => theme.primary4};
+  color: ${({ theme }) => theme.primary1};
+  background-color: transparent;
   font-size: 16px;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
 
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary4};
-    background-color: ${({ theme }) => theme.primary4};
+    border: 1px solid ${({ theme }) => theme.primary3};
   }
   &:hover {
-    background-color: ${({ theme }) => theme.primary4};
+    border: 1px solid ${({ theme }) => theme.primary3};
   }
   &:active {
     box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary4};
-    background-color: ${({ theme }) => theme.primary4};
+    border: 1px solid ${({ theme }) => theme.primary3};
   }
   &:disabled {
-    background-color: ${({ theme }) => theme.primary5};
     opacity: 50%;
     cursor: auto;
+  }
+  a:hover {
+    text-decoration: none;
   }
 `
 
@@ -184,13 +187,13 @@ export const ButtonEmpty = styled(Base)`
   align-items: center;
 
   &:focus {
-    background-color: ${({ theme }) => theme.advancedBG};
+    text-decoration: underline;
   }
   &:hover {
-    background-color: ${({ theme }) => theme.advancedBG};
+    text-decoration: underline;
   }
   &:active {
-    background-color: ${({ theme }) => theme.advancedBG};
+    text-decoration: underline;
   }
   &:disabled {
     opacity: 50%;

@@ -30,11 +30,10 @@ const EMPTY_LIST: TokenAddressMap = {
 }
 
 export function tokenListToTokenMap(list: TokenInfo[]): TokenAddressMap {
-  let map = EMPTY_LIST
+  const map = EMPTY_LIST
   list.forEach(tokenInfo => {
-      const token = new WrappedTokenInfo(tokenInfo)
-      if (map[token.chainId][token.address] == undefined)
-        map[token.chainId][token.address] = token
+    const token = new WrappedTokenInfo(tokenInfo)
+    if (map[token.chainId][token.address] == undefined) map[token.chainId][token.address] = token
   })
   return map
 }
