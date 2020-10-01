@@ -1,6 +1,6 @@
 import { TokenAmount, Pair, Currency } from '@harmony-swoop/sdk'
 import { useMemo } from 'react'
-import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
+import { abi as IUniswapV2PairABI } from '@harmony-swoop/core/build/contracts/IUniswapV2Pair.json'
 import { Interface } from '@ethersproject/abi'
 
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
