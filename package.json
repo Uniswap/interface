@@ -27,10 +27,7 @@
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
     "@uniswap/default-token-list": "^1.3.1",
-    "@uniswap/sdk": "3.0.3-beta.1",
     "@uniswap/token-lists": "^1.0.0-beta.15",
-    "@uniswap/v2-core": "1.0.0",
-    "@uniswap/v2-periphery": "^1.1.0-beta.0",
     "@web3-react/core": "^6.0.9",
     "@web3-react/fortmatic-connector": "^6.0.9",
     "@web3-react/injected-connector": "^6.0.7",
@@ -79,9 +76,10 @@
     "start-server-and-test": "^1.11.0",
     "styled-components": "^4.2.0",
     "typescript": "^3.8.3",
-    "@harmony-swoop/sdk": "^1.0.2",
-    "@harmony-swoop/default-token-list": "^1.0.0",
-    "@harmony-swoop/periphery": "^1.1.1"
+    "@harmony-swoop/core": "^1.1.9",
+    "@harmony-swoop/sdk": "^1.0.4",
+    "@harmony-swoop/default-token-list": "^1.0.1",
+    "@harmony-swoop/periphery": "^1.1.3"
   },
   "resolutions": {
     "@walletconnect/web3-provider": "1.1.1-alpha.0"

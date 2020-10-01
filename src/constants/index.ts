@@ -5,8 +5,8 @@ import { injected, oneWallet, mathWallet } from '../connectors'
 
 const { ChainID } = require("@harmony-js/utils");
 
-// Testnet address: 0xce8894d0b985107267beb1a972d60b7f939ae4ac - deployed: 2020-09-29 18:59 UTC
-export const ROUTER_ADDRESS = '0xce8894d0b985107267beb1a972d60b7f939ae4ac'
+// Testnet address: 0xe2b3e60d7ec40ca543e4b03b828a170350fc74d0 - deployed: 2020-10-01 23:13 UTC
+export const ROUTER_ADDRESS = '0xe2b3e60d7ec40ca543e4b03b828a170350fc74d0'
 
 // a list of tokens by chain
 type ChainTokenList = {
