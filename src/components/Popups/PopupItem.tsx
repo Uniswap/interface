@@ -30,6 +30,9 @@ export const Popup = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     min-width: 290px;
+    &:not(:last-of-type) {
+      margin-right: 35px;
+    }
   `}
 `
 const Fader = styled.div`
