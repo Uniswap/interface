@@ -77,9 +77,9 @@
     "styled-components": "^4.2.0",
     "typescript": "^3.8.3",
     "@harmony-swoop/core": "^1.1.9",
-    "@harmony-swoop/sdk": "^1.0.5",
+    "@harmony-swoop/sdk": "^1.0.6",
     "@harmony-swoop/default-token-list": "^1.0.1",
-    "@harmony-swoop/periphery": "^1.1.4"
+    "@harmony-swoop/periphery": "^1.1.5"
   },
   "resolutions": {
     "@walletconnect/web3-provider": "1.1.1-alpha.0"
