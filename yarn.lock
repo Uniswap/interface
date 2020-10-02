@@ -1848,15 +1848,15 @@
   resolved "https://registry.yarnpkg.com/@harmony-swoop/default-token-list/-/default-token-list-1.0.1.tgz#7be48ee6804fb99d0c664e9457ce1be77f665cc1"
   integrity sha512-XrQesB5jKcMAN8gTg8qTrNcRZn3KuYpRhjAGlTQ+LzrUqXc7wPPKom6vo2Rr1uxcYZuDDUtdUMXx43YKk5kZDw==
 
-"@harmony-swoop/periphery@^1.1.3":
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/@harmony-swoop/periphery/-/periphery-1.1.3.tgz#9f21ee11dfc988e79d8e3d8a998b844347be6f83"
-  integrity sha512-CNw/Esv/4hzsrcwP/dPpJgUSmOt+j7segi6JKO77UFMTwqlhkksViqDbivigLNEPimxBBqJIRSrgmMcSVsIBTg==
+"@harmony-swoop/periphery@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@harmony-swoop/periphery/-/periphery-1.1.4.tgz#617bea87825a6931e68c4c6d316f44c9e3314d09"
+  integrity sha512-yIJNs/4Zfb9K38EifdUtNLFfDBPwaXMfCK1RL7lA/oB3Ikgc8K5MTsp3HpLvuBvPrUJq1etYkfWp/p53/t1fDA==
 
-"@harmony-swoop/sdk@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@harmony-swoop/sdk/-/sdk-1.0.4.tgz#f1be5896aabb2d64a38b30dfed704207252bae48"
-  integrity sha512-Qvi5phaAk2QzuQI64LaQxnu336n+e853Q28dbO3owTi1/RFZqgauFD7hTcOxuLErkD8SaLxpk63BAEKL2Uku/Q==
+"@harmony-swoop/sdk@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@harmony-swoop/sdk/-/sdk-1.0.5.tgz#15ec93f8db51767a9fdd2742b05c55747b5d99e5"
+  integrity sha512-x6wdpJYuuW1aG+iSgARs1YhwlWlorrxfZ8HAymVOP9ZQHqr2LL/P7q9A/wuVhobLmoI3Q607NuunuksTG+O+xw==
   dependencies:
     "@harmony-js/core" "^0.1.53"
     "@harmony-swoop/core" "1.1.1"
@@ -4813,9 +4813,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000844, caniuse-lite@^1.0.30000981, caniuse-lite@^1.0.30001035, caniuse-lite@^1.0.30001109, caniuse-lite@^1.0.30001135:
-  version "1.0.30001141"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001141.tgz#214a196d81aa938b268fb0cb6d8fab23fdf14378"
-  integrity sha512-EHfInJHoQTmlMdVZrEc5gmwPc0zyN/hVufmGHPbVNQwlk7tJfCmQ2ysRZMY2MeleBivALUTyyxXnQjK18XrVpA==
+  version "1.0.30001142"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001142.tgz#a8518fdb5fee03ad95ac9f32a9a1e5999469c250"
+  integrity sha512-pDPpn9ankEpBFZXyCv2I4lh1v/ju+bqb78QfKf+w9XgDAFWBwSYPswXqprRdrgQWK0wQnpIbfwRjNHO1HWqvoQ==
 
 capture-exit@^2.0.0:
   version "2.0.0"
@@ -6677,9 +6677,9 @@ eslint-plugin-react@7.19.0:
     xregexp "^4.3.0"
 
 eslint-plugin-react@^7.19.0:
-  version "7.21.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.21.2.tgz#3bd5d2c4c36d5a0428d0d6dda301ac9a84d681b2"
-  integrity sha512-j3XKvrK3rpBzveKFbgAeGsWb9uz6iUOrR0jixRfjwdFeGSRsXvVTFtHDQYCjsd1/6Z/xvb8Vy3LiI5Reo7fDrg==
+  version "7.21.3"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.21.3.tgz#71655d2af5155b19285ec929dd2cdc67a4470b52"
+  integrity sha512-OI4GwTCqyIb4ipaOEGLWdaOHCXZZydStAsBEPB2e1ZfNM37bojpgO1BoOQbFb0eLVz3QLDx7b+6kYcrxCuJfhw==
   dependencies:
     array-includes "^3.1.1"
     array.prototype.flatmap "^1.2.3"
