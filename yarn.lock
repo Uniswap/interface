@@ -1848,15 +1848,15 @@
   resolved "https://registry.yarnpkg.com/@harmony-swoop/default-token-list/-/default-token-list-1.0.1.tgz#7be48ee6804fb99d0c664e9457ce1be77f665cc1"
   integrity sha512-XrQesB5jKcMAN8gTg8qTrNcRZn3KuYpRhjAGlTQ+LzrUqXc7wPPKom6vo2Rr1uxcYZuDDUtdUMXx43YKk5kZDw==
 
-"@harmony-swoop/periphery@^1.1.4":
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/@harmony-swoop/periphery/-/periphery-1.1.4.tgz#617bea87825a6931e68c4c6d316f44c9e3314d09"
-  integrity sha512-yIJNs/4Zfb9K38EifdUtNLFfDBPwaXMfCK1RL7lA/oB3Ikgc8K5MTsp3HpLvuBvPrUJq1etYkfWp/p53/t1fDA==
+"@harmony-swoop/periphery@^1.1.5":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@harmony-swoop/periphery/-/periphery-1.1.5.tgz#eae2305ab8c51fbdb4ca7014ec228c18b88ee96f"
+  integrity sha512-DzB/AQOH0YwQeB9UnDtgPWKwfGldLZjR+TkvgA7AwFMnolvRBkl/iFLsx7tb46umKQV+6sWDG0fCp4Y89quhAA==
 
-"@harmony-swoop/sdk@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@harmony-swoop/sdk/-/sdk-1.0.5.tgz#15ec93f8db51767a9fdd2742b05c55747b5d99e5"
-  integrity sha512-x6wdpJYuuW1aG+iSgARs1YhwlWlorrxfZ8HAymVOP9ZQHqr2LL/P7q9A/wuVhobLmoI3Q607NuunuksTG+O+xw==
+"@harmony-swoop/sdk@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@harmony-swoop/sdk/-/sdk-1.0.6.tgz#67dc71a4742bb8b062d119e5f15a4ae58add88a2"
+  integrity sha512-EzSP8gensXt2oE1JqgKXRnss21ybF7q8VWp86A+P150qYNGTB3ukF1P4Avre8ldqlzGmunhz0xTEK4d7ypurNQ==
   dependencies:
     "@harmony-js/core" "^0.1.53"
     "@harmony-swoop/core" "1.1.1"
