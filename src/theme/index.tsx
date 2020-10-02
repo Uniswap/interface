@@ -58,6 +58,7 @@ export function colors(darkMode: boolean): Colors {
     bg8: 'linear-gradient(137.27deg, #B1FFBF 3.65%, #FFF16D 100%)',
     bg9: '#212429',
     bg10: '#041E2F',
+    bg11: '#001A2A',
 
     //specialty colors
     modalBG: 'rgba(0,0,0,.425)',
