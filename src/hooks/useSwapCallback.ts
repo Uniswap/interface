@@ -113,7 +113,7 @@ export function useSwapCallback(
   deadline: number = DEFAULT_DEADLINE_FROM_NOW, // in seconds from now
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
-  const { account, chainId, library } = useActiveHmyReact()
+  const { account, chainId, library, wrapper } = useActiveHmyReact()
 
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, deadline, recipientAddressOrName)
 
@@ -145,10 +145,13 @@ export function useSwapCallback(
               parameters: { methodName, args, value },
               contract
             } = call
-            const options = !value || isZero(value) ? {} : { value }
 
-            return contract.estimateGas[methodName](...args, options)
-              .then(gasEstimate => {
+            //const options = !value || isZero(value) ? {} : { value }
+
+            //return contract.estimateGas[methodName](...args, options)
+            return contract.methods[methodName](...args).estimateGas(wrapper.gasOptionsForEstimation())
+              .then(gasEstimateResponse => {
+                let gasEstimate = BigNumber.from(gasEstimateResponse)
                 return {
                   call,
                   gasEstimate
@@ -157,7 +160,13 @@ export function useSwapCallback(
               .catch(gasError => {
                 console.debug('Gas estimate failed, trying eth_call to extract error', call)
 
-                return contract.callStatic[methodName](...args, options)
+                let opts = wrapper.gasOptions()
+                if (value && !isZero(value)) {
+                  opts.value = value
+                }
+
+                //return contract.callStatic[methodName](...args, options)
+                return contract.methods[methodName](...args).send(opts)
                   .then(result => {
                     console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
                     return { call, error: new Error('Unexpected issue with estimating the gas. Please try again.') }
@@ -200,10 +209,22 @@ export function useSwapCallback(
           gasEstimate
         } = successfulEstimation
 
-        return contract[methodName](...args, {
+        /*
+          Original implementation:
+          return contract[methodName](...args, {
           gasLimit: calculateGasMargin(gasEstimate),
           ...(value && !isZero(value) ? { value, from: account } : { from: account })
-        })
+        }).then ...
+        */
+
+        let opts = wrapper.gasOptions()
+        opts.gasLimit = calculateGasMargin(gasEstimate).toNumber()
+        if (value && !isZero(value)) {
+          opts.value = value
+        }
+        opts.from = account
+
+        return contract.methods[methodName](...args).send(opts)
           .then((response: any) => {
             const inputSymbol = trade.inputAmount.currency.symbol
             const outputSymbol = trade.outputAmount.currency.symbol
@@ -227,7 +248,7 @@ export function useSwapCallback(
               summary: withVersion
             })
 
-            return response.hash
+            return response.transaction.receipt.transactionHash
           })
           .catch((error: any) => {
             // if the user rejected the tx, pass this along
@@ -242,5 +263,5 @@ export function useSwapCallback(
       },
       error: null
     }
-  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
+  }, [trade, library, account, wrapper, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
 }
