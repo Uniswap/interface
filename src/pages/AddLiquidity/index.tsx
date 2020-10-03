@@ -28,7 +28,8 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../s
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, getHarmonyRouterContract } from '../../utils'
+//import { calculateGasMargin, calculateSlippageAmount, getHarmonyRouterContract } from '../../utils'
+import { calculateSlippageAmount, getHarmonyRouterContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
@@ -45,7 +46,7 @@ export default function AddLiquidity({
   },
   history
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
-  const { account, chainId, library, wallet, wrapper, utils } = useActiveHmyReact()
+  const { account, chainId, library, wallet, wrapper } = useActiveHmyReact()
   const theme = useContext(ThemeContext)
 
   const currencyA = useCurrency(currencyIdA)
@@ -138,8 +139,8 @@ export default function AddLiquidity({
     const deadlineFromNow = Math.ceil(Date.now() / 1000) + deadline
 
     // todo make estimate work
-    let estimate,
-      method: (...args: any) => Promise<TransactionResponse>,
+    //let estimate,
+    let method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
       value: BigNumber | null
     if (currencyA === HARMONY || currencyB === HARMONY) {
@@ -154,8 +155,8 @@ export default function AddLiquidity({
         BigNumber.from(deadlineFromNow).toHexString()
       ]
 
-      //estimate = await router.methods.addLiquidityONE(...args).estimateGas(wrapper.gasOptionsForEstimation())
-      method = router.methods.addLiquidityONE
+      //estimate = await router.methods.addLiquidityETH(...args).estimateGas(wrapper.gasOptionsForEstimation())
+      method = router.methods.addLiquidityETH
       value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
     } else {
       args = [
@@ -175,7 +176,7 @@ export default function AddLiquidity({
     }
 
     //see comment at Hmy.gasOptionsForEstimation()
-    const estimatedGasLimit = BigNumber.from(1000000000)
+    //const estimatedGasLimit = BigNumber.from(1000000000)
 
     setAttemptingTxn(true)
 
