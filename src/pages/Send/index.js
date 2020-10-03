@@ -37,7 +37,7 @@ class Send extends Component {
   state = {
     inputValue: '',
     outputValue: '',
-    inputCurrency: 'CMT',
+    inputCurrency: 'OETH',
     outputCurrency: '',
     inputAmountB: '',
     lastEditedField: '',
@@ -117,7 +117,7 @@ class Send extends Component {
     const { account, exchangeAddresses, selectors } = this.props;
     const { inputCurrency, inputValue } = this.state;
 
-    if (!inputCurrency || inputCurrency === 'CMT') {
+    if (!inputCurrency || inputCurrency === 'OETH') {
       return false;
     }
 
@@ -155,7 +155,7 @@ class Send extends Component {
       return;
     }
 
-    if (inputCurrency !== 'CMT' && outputCurrency !== 'CMT') {
+    if (inputCurrency !== 'OETH' && outputCurrency !== 'OETH') {
       this.recalcTokenTokenForm();
       return;
     }
@@ -183,8 +183,8 @@ class Send extends Component {
     const exchangeAddressB = fromToken[outputCurrency];
 
     const { value: inputReserveA, decimals: inputDecimalsA } = selectors().getBalance(exchangeAddressA, inputCurrency);
-    const { value: outputReserveA }= selectors().getBalance(exchangeAddressA, 'CMT');
-    const { value: inputReserveB } = selectors().getBalance(exchangeAddressB, 'CMT');
+    const { value: outputReserveA }= selectors().getBalance(exchangeAddressA, 'OETH');
+    const { value: inputReserveB } = selectors().getBalance(exchangeAddressB, 'OETH');
     const { value: outputReserveB, decimals: outputDecimalsB }= selectors().getBalance(exchangeAddressB, outputCurrency);
 
     if (lastEditedField === INPUT) {
@@ -289,7 +289,7 @@ class Send extends Component {
       exchangeRate: oldExchangeRate,
     } = this.state;
 
-    const tokenAddress = [inputCurrency, outputCurrency].filter(currency => currency !== 'CMT')[0];
+    const tokenAddress = [inputCurrency, outputCurrency].filter(currency => currency !== 'OETH')[0];
     const exchangeAddress = fromToken[tokenAddress];
     if (!exchangeAddress) {
       return;
@@ -795,7 +795,7 @@ class Send extends Component {
 export default connect(
   state => ({
     balances: state.web3connect.balances,
-    isConnected: !!state.web3connect.account && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||18),
+    isConnected: !!state.web3connect.account && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||70),
     account: state.web3connect.account,
     web3: state.web3connect.web3,
     exchangeAddresses: state.addresses.exchangeAddresses,
@@ -846,15 +846,15 @@ function getSendType(inputCurrency, outputCurrency) {
     return;
   }
 
-  if (inputCurrency !== 'CMT' && outputCurrency !== 'CMT') {
+  if (inputCurrency !== 'OETH' && outputCurrency !== 'OETH') {
     return 'TOKEN_TO_TOKEN'
   }
 
-  if (inputCurrency === 'CMT') {
+  if (inputCurrency === 'OETH') {
     return 'ETH_TO_TOKEN';
   }
 
-  if (outputCurrency === 'CMT') {
+  if (outputCurrency === 'OETH') {
     return 'TOKEN_TO_ETH';
   }
 

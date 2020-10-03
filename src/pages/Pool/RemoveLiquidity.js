@@ -232,10 +232,10 @@ class RemoveLiquidity extends Component {
 
     return (
       <div>
-        <div className="pool__summary-modal__item">{t("youAreRemoving")} {b(`${+BN(ethWithdrawn).toFixed(7)} CMT`)} {t("and")} {b(`${+minTokenWithdrawn} - ${+maxTokenWithdrawn} ${label}`)} {t("outPool")}</div>
+        <div className="pool__summary-modal__item">{t("youAreRemoving")} {b(`${+BN(ethWithdrawn).toFixed(7)} OETH`)} {t("and")} {b(`${+minTokenWithdrawn} - ${+maxTokenWithdrawn} ${label}`)} {t("outPool")}</div>
         <div className="pool__summary-modal__item">{t("youWillRemove")} {b(+input)} {t("liquidityTokens")}</div>
         <div className="pool__summary-modal__item">{t("totalSupplyIs")} {b(+adjTotalSupply.toFixed(7))}</div>
-        <div className="pool__summary-modal__item">{t("tokenWorth")} {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} CMT {t("and")} {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
+        <div className="pool__summary-modal__item">{t("tokenWorth")} {b(+ethReserve.dividedBy(totalSupply).toFixed(7))} OETH {t("and")} {b(+tokenReserve.dividedBy(totalSupply).toFixed(7))} {label}</div>
       </div>
     );
   }
@@ -311,7 +311,7 @@ class RemoveLiquidity extends Component {
           ? (
             <div className="remove-liquidity__output">
               <div className="remove-liquidity__output-text">
-                {`${ethPer.multipliedBy(input).toFixed(3)} CMT`}
+                {`${ethPer.multipliedBy(input).toFixed(3)} OETH`}
               </div>
               <div className="remove-liquidity__output-plus"> + </div>
               <div className="remove-liquidity__output-text">
@@ -329,18 +329,18 @@ class RemoveLiquidity extends Component {
           <div className="pool__exchange-rate-wrapper">
             <span className="pool__exchange-rate">{t("exchangeRate")}</span>
             <span>
-              {`1 CMT = ${exchangeRate.toFixed(4)} ${label}`}
+              {`1 OETH = ${exchangeRate.toFixed(4)} ${label}`}
             </span>
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">{t("currentPoolSize")}</span>
-            <span>{`${ethReserve.dividedBy(10 ** 18).toFixed(2)} CMT + ${tokenReserve.dividedBy(10 ** tokenDecimals).toFixed(2)} ${label}`}</span>
+            <span>{`${ethReserve.dividedBy(10 ** 18).toFixed(2)} OETH + ${tokenReserve.dividedBy(10 ** tokenDecimals).toFixed(2)} ${label}`}</span>
           </div>
           <div className="pool__exchange-rate-wrapper">
             <span className="swap__exchange-rate">
               {t("yourPoolShare")} ({ownership.multipliedBy(100).toFixed(2)}%)
             </span>
-            <span>{`${ownedEth.toFixed(2)} CMT + ${ownedToken.toFixed(2)} ${label}`}</span>
+            <span>{`${ownedEth.toFixed(2)} OETH + ${ownedToken.toFixed(2)} ${label}`}</span>
           </div>
         </div>
       </OversizedPanel>
@@ -373,7 +373,7 @@ class RemoveLiquidity extends Component {
           errorMessage={errorMessage}
           selectedTokenAddress={tokenAddress}
           onCurrencySelected={this.onTokenSelect}
-          filteredTokens={['CMT']}
+          filteredTokens={['OETH']}
         />
         <OversizedPanel>
           <div className="swap__down-arrow-background">
@@ -401,7 +401,7 @@ class RemoveLiquidity extends Component {
 
 export default connect(
   state => ({
-    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||18),
+    isConnected: Boolean(state.web3connect.account) && state.web3connect.networkId == (process.env.REACT_APP_NETWORK_ID||70),
     web3: state.web3connect.web3,
     balances: state.web3connect.balances,
     account: state.web3connect.account,

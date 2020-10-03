@@ -36,11 +36,11 @@ export default class TokenLogo extends Component {
     let path = '';
     const mainAddress = RINKEBY_TOKEN_MAP[address] ? RINKEBY_TOKEN_MAP[address] : address;
 
-    if (mainAddress === 'CMT') {
+    if (mainAddress === 'OETH') {
       path = EthereumLogo;
     }
 
-    if (!this.state.error && !BAD_IMAGES[mainAddress] && mainAddress !== 'CMT') {
+    if (!this.state.error && !BAD_IMAGES[mainAddress] && mainAddress !== 'OETH') {
       path = `${TOKEN_ICON_API}/${mainAddress.toLowerCase()}.png`;
     }
 

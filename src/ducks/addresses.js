@@ -2,32 +2,32 @@ const TESTNET = {
     "tokenAddresses": {
         "addresses": [
             [
-                "YUAN",
-                "0xc4c97929301eb30ff5c9c3150bbbe553768ffbbe"
+                "ENGL",
+                "0x7743fb03Fb248c2ef473e9f6985d12D6db953C79"
             ],
             [
-                "TIM",
-                "0x0aafb9299daafc32a051086e92847fab1ef85b50"
+                "CLIM",
+                "0x685FE8Cb568C76714e57CaB27790e0f77c264C46"
             ]
         ]
     },
     "exchangeAddresses": {
         "addresses": [
             [
-                "YUAN",
-                "0xaf1a51fdca46190e7703b6cf97470efc92ec6498"
+                "ENGL",
+                "0x5AeC86734172C5C257Eb2a86e705EF375207c5c8"
             ],
             [
-                "TIM",
-                "0x33eda5a874732ee81a0364611d81fd34faf6eccf"
+                "CLIM",
+                "0x92570E6E10fa2196952B039c4A59b5e617Eb9A50"
             ]
         ],
         "fromToken": {
-            "0xc4c97929301eb30ff5c9c3150bbbe553768ffbbe": "0xaf1a51fdca46190e7703b6cf97470efc92ec6498",
-            "0x0aafb9299daafc32a051086e92847fab1ef85b50": "0x33eda5a874732ee81a0364611d81fd34faf6eccf"
+            "0x7743fb03Fb248c2ef473e9f6985d12D6db953C79": "0x5AeC86734172C5C257Eb2a86e705EF375207c5c8",
+            "0x685FE8Cb568C76714e57CaB27790e0f77c264C46": "0x92570E6E10fa2196952B039c4A59b5e617Eb9A50"
         }
     },
-    "factoryAddress": "0x7753d7fb5d93ff9af0cffcd578f7c3bbc3d303ba"
+    "factoryAddress": "0xa80171aB64F9913C5d0Df5b06D00030B4febDD6A"
 };
 
 const MAIN = {
@@ -69,16 +69,16 @@ export const addExchange = ({label, exchangeAddress, tokenAddress}) => (dispatch
 
  export const setAddresses = networkId => {
   switch(networkId) {
-    // CyberMiles Main Net
-    case 18:
-    case '18':
+    // Oasis MAIN Net
+    case 70:
+    case '70':
       return {
         type: SET_ADDRESSES,
         payload: MAIN,
       };
-    // CyberMiles Test Net
-    case 19:
-    case '19':
+    // OASIS TEST Net
+    case 69:
+    case '69':
     default:
       return {
         type: SET_ADDRESSES,

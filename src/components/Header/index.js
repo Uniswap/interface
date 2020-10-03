@@ -85,8 +85,8 @@ class BlockingWarning extends Component {
     } = this.props;
     let content = [];
 
-    const correctNetworkId = process.env.REACT_APP_NETWORK_ID || 18;
-    const correctNetwork = process.env.REACT_APP_NETWORK || 'Main CyberMiles Network';
+    const correctNetworkId = process.env.REACT_APP_NETWORK_ID || 70;
+    const correctNetwork = process.env.REACT_APP_NETWORK || 'OASIS MAIN Network';
 
     const wrongNetwork = networkId != correctNetworkId;
 
@@ -152,7 +152,7 @@ function Header (props) {
       >
         <Logo />
         <div className="header__center-group">
-          <span className="header__title">CyberMiles Exchange</span>
+          <span className="header__title">Oasis Testnet Exchange</span>
         </div>
         <Web3Status isConnected />
       </div>

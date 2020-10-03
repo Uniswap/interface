@@ -64,14 +64,14 @@ export const selectors = () => (dispatch, getState) => {
 
   const getBalance = (address, tokenAddress) => {
     if (process.env.NODE_ENV !== 'production' && !tokenAddress) {
-      console.warn('No token address found - return CMT balance');
+      console.warn('No token address found - return OETH balance');
     }
 
-    if (!tokenAddress || tokenAddress === 'CMT') {
+    if (!tokenAddress || tokenAddress === 'OETH') {
       const balance = state.balances.ethereum[address];
       if (!balance) {
         dispatch(watchBalance({ balanceOf: address }));
-        return Balance(0, 'CMT');
+        return Balance(0, 'OETH');
       }
       return balance;
     } else if (tokenAddress) {
@@ -249,7 +249,7 @@ export const sync = () => async (dispatch, getState) => {
     dispatch({
       type: UPDATE_ETH_BALANCE,
       payload: {
-        balance: Balance(balance, 'CMT', 18),
+        balance: Balance(balance, 'OETH', 18),
         balanceOf: address,
       },
     })
