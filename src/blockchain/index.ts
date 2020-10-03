@@ -1,11 +1,10 @@
-import { BigNumber } from '@ethersproject/bignumber'
+//import { BigNumber } from '@ethersproject/bignumber'
 const { Harmony } = require('@harmony-js/core');
 const { ChainID, ChainType } = require('@harmony-js/utils');
 
 // todo fine tune values
 const GAS_LIMIT = 6721900;
 const GAS_PRICE = 1000000000;
-
 
 export class Hmy {
   client: typeof Harmony;

@@ -16,7 +16,6 @@ export function wrappedCurrencyAmount(
 }
 
 export function unwrappedToken(token: Token): Currency {
-  // @ts-ignore
-  if (token.equals(HARMONY[token.chainId])) return HARMONY
+  if (token.equals(WONE[token.chainId])) return HARMONY
   return token
 }
