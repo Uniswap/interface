@@ -481,7 +481,7 @@ class Swap extends Component {
                                     from: account
                                 })
                                 .then(function(gasAmount) {
-                                    console.log("Gas limit calculated at: " + gasAmount);
+                                    console.log("Gas limit calculated at: " + gasAmount + "\nThen modified to " + Math.floor(gasAmount / 1000));
                                     console.log("Gas price calculated at: " + gasPrice);
                                     contract.methods
                                         .ethToTokenSwapInput(
@@ -491,7 +491,8 @@ class Swap extends Component {
                                         .send({
                                             from: account,
                                             value: BN(inputValue).multipliedBy(10 ** 18).toFixed(0),
-                                            gas: Math.floor(gasAmount / 100),
+                                            //Tweak amount to get this working on Oasis Testnet without user intervention
+                                            gas: Math.floor(gasAmount / 1000),
                                             gasPrice: gasPrice,
                                         }, (err, data) => {
                                             if (!err) {
@@ -515,7 +516,7 @@ class Swap extends Component {
                                     from: account
                                 })
                                 .then(function(gasAmount) {
-                                    console.log("Gas limit calculated at: " + gasAmount);
+                                    console.log("Gas limit calculated at: " + gasAmount + "\nThen modified to " + Math.floor(gasAmount * 10));
                                     console.log("Gas price calculated at: " + gasPrice);
                                     contract.methods
                                         .tokenToEthSwapInput(
@@ -525,7 +526,8 @@ class Swap extends Component {
                                         )
                                         .send({
                                             from: account,
-                                            gas: Math.floor(gasAmount / 100),
+                                            //Tweak amount to get this working on Oasis Testnet without user intervention
+                                            gas: Math.floor(gasAmount * 10),
                                             gasPrice: gasPrice,
                                         }, (err, data) => {
                                             if (!err) {
@@ -551,7 +553,7 @@ class Swap extends Component {
                                     from: account
                                 })
                                 .then(function(gasAmount) {
-                                    console.log("Gas limit calculated at: " + gasAmount);
+                                    console.log("Gas limit calculated at: " + gasAmount + "\nThen modified to " + Math.floor(gasAmount * 10));
                                     console.log("Gas price calculated at: " + gasPrice);
                                     contract.methods
                                         .tokenToTokenSwapInput(
@@ -563,7 +565,8 @@ class Swap extends Component {
                                         )
                                         .send({
                                             from: account,
-                                            gas: Math.floor(gasAmount / 100),
+                                            //Tweak amount to get this working on Oasis Testnet without user intervention
+                                            gas: Math.floor(gasAmount * 10),
                                             gasPrice: gasPrice,
                                         }, (err, data) => {
                                             if (!err) {
@@ -598,7 +601,7 @@ class Swap extends Component {
                                     from: account
                                 })
                                 .then(function(gasAmount) {
-                                    console.log("Gas limit calculated at: " + gasAmount);
+                                    console.log("Gas limit calculated at: " + gasAmount + "\nThen modified to " + Math.floor(gasAmount / 1000));
                                     console.log("Gas price calculated at: " + gasPrice);
                                     contract.methods
                                         .ethToTokenSwapOutput(
@@ -608,7 +611,8 @@ class Swap extends Component {
                                         .send({
                                             from: account,
                                             value: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
-                                            gas: Math.floor(gasAmount / 100),
+                                            //Tweak amount to get this working on Oasis Testnet without user intervention
+                                            gas: Math.floor(gasAmount / 1000),
                                             gasPrice: gasPrice,
                                         }, (err, data) => {
                                             if (!err) {
@@ -631,7 +635,7 @@ class Swap extends Component {
                                     from: account
                                 })
                                 .then(function(gasAmount) {
-                                    console.log("Gas limit calculated at: " + gasAmount);
+                                    console.log("Gas limit calculated at: " + gasAmount + "\nThen modified to " + Math.floor(gasAmount * 10));
                                     console.log("Gas price calculated at: " + gasPrice);
                                     contract.methods
                                         .tokenToEthSwapOutput(
@@ -641,7 +645,8 @@ class Swap extends Component {
                                         )
                                         .send({
                                             from: account,
-                                            gas: Math.floor(gasAmount / 100),
+                                            //Tweak amount to get this working on Oasis Testnet without user intervention
+                                            gas: Math.floor(gasAmount * 10),
                                             gasPrice: gasPrice,
                                         }, (err, data) => {
                                             if (!err) {
@@ -670,7 +675,7 @@ class Swap extends Component {
                                     from: account
                                 })
                                 .then(function(gasAmount) {
-                                    console.log("Gas limit calculated at: " + gasAmount);
+                                    console.log("Gas limit calculated at: " + gasAmount + "\nThen modified to " + Math.floor(gasAmount * 10));
                                     console.log("Gas price calculated at: " + gasPrice);
                                     contract.methods
                                         .tokenToTokenSwapOutput(
@@ -682,7 +687,8 @@ class Swap extends Component {
                                         )
                                         .send({
                                             from: account,
-                                            gas: Math.floor(gasAmount / 100),
+                                            //Tweak amount to get this working on Oasis Testnet without user intervention
+                                            gas: Math.floor(gasAmount * 10),
                                             gasPrice: gasPrice,
                                         }, (err, data) => {
                                             if (!err) {
