@@ -491,7 +491,7 @@ class Swap extends Component {
                                         .send({
                                             from: account,
                                             value: BN(inputValue).multipliedBy(10 ** 18).toFixed(0),
-                                            gas: gasAmount / 100,
+                                            gas: Math.floor(gasAmount / 100),
                                             gasPrice: gasPrice,
                                         }, (err, data) => {
                                             if (!err) {
@@ -525,7 +525,7 @@ class Swap extends Component {
                                         )
                                         .send({
                                             from: account,
-                                            gas: gasAmount / 100,
+                                            gas: Math.floor(gasAmount / 100),
                                             gasPrice: gasPrice,
                                         }, (err, data) => {
                                             if (!err) {
@@ -563,7 +563,7 @@ class Swap extends Component {
                                         )
                                         .send({
                                             from: account,
-                                            gas: gasAmount / 100,
+                                            gas: Math.floor(gasAmount / 100),
                                             gasPrice: gasPrice,
                                         }, (err, data) => {
                                             if (!err) {
@@ -608,7 +608,7 @@ class Swap extends Component {
                                         .send({
                                             from: account,
                                             value: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
-                                            gas: gasAmount / 100,
+                                            gas: Math.floor(gasAmount / 100),
                                             gasPrice: gasPrice,
                                         }, (err, data) => {
                                             if (!err) {
@@ -641,7 +641,7 @@ class Swap extends Component {
                                         )
                                         .send({
                                             from: account,
-                                            gas: gasAmount / 100,
+                                            gas: Math.floor(gasAmount / 100),
                                             gasPrice: gasPrice,
                                         }, (err, data) => {
                                             if (!err) {
@@ -682,7 +682,7 @@ class Swap extends Component {
                                         )
                                         .send({
                                             from: account,
-                                            gas: gasAmount / 100,
+                                            gas: Math.floor(gasAmount / 100),
                                             gasPrice: gasPrice,
                                         }, (err, data) => {
                                             if (!err) {
