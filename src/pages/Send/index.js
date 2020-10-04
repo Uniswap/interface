@@ -491,7 +491,7 @@ class Send extends Component {
                                     from: account,
                                 })
                                 .then(function(gasAmount) {
-                                    console.log("Gas limit calculated at: " + gasAmount + "\nThen modified to " + Math.floor(gasAmount * 10));
+                                    console.log("Gas limit calculated at: " + gasAmount + "\nThen modified to " + Math.floor(gasAmount / 1000));
                                     console.log("Gas price calculated at: " + gasPrice);
                                     contract.methods
                                         .ethToTokenTransferInput(
@@ -503,7 +503,7 @@ class Send extends Component {
                                             from: account,
                                             value: BN(inputValue).multipliedBy(10 ** 18).toFixed(0),
                                             //Tweak amount to get this working on Oasis Testnet without user intervention
-                                            gas: Math.floor(gasAmount * 10),
+                                            gas: Math.floor(gasAmount / 1000),
                                             gasPrice: gasPrice,
                                         }, (err, data) => {
                                             if (!err) {
@@ -615,7 +615,7 @@ class Send extends Component {
                                     from: account,
                                 })
                                 .then(function(gasAmount) {
-                                    console.log("Gas limit calculated at: " + gasAmount + "\nThen modified to " + Math.floor(gasAmount * 10));
+                                    console.log("Gas limit calculated at: " + gasAmount + "\nThen modified to " + Math.floor(gasAmount / 1000));
                                     console.log("Gas price calculated at: " + gasPrice);
                                     contract.methods.ethToTokenTransferOutput(
                                             BN(outputValue).multipliedBy(10 ** outputDecimals).toFixed(0),
@@ -624,7 +624,7 @@ class Send extends Component {
                                         )
                                         .send({
                                             from: account,
-                                            gas: Math.floor(gasAmount * 10),
+                                            gas: Math.floor(gasAmount / 1000),
                                             gasPrice: gasPrice,
                                             value: BN(inputValue).multipliedBy(10 ** inputDecimals).multipliedBy(1 + ALLOWED_SLIPPAGE).toFixed(0),
                                         }, (err, data) => {
