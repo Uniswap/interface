@@ -247,12 +247,12 @@ class AddLiquidity extends Component {
                             from: account
                         })
                         .then(function(gasAmount) {
-                            console.log("Gas limit calculated at: " + gasAmount + "\nThen modified to " + Math.floor(gasAmount * 10));
+                            console.log("Gas limit calculated at: " + gasAmount + "\nThen modified to " + Math.floor(gasAmount / 1000));
                             console.log("Gas price calculated at: " + gasPrice);
                             exchange.methods.addLiquidity(minLiquidity.toFixed(0), maxTokens.toFixed(0), deadline).send({
                                 from: account,
                                 value: ethAmount.toFixed(0),
-                                gas: Math.floor(gasAmount * 10),
+                                gas: Math.floor(gasAmount / 1000),
                                 gasPrice: gasPrice,
                             }, (err, data) => {
                                 this.reset();
