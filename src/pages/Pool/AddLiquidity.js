@@ -243,7 +243,7 @@ class AddLiquidity extends Component {
         try {
             web3.eth.getGasPrice()
                 .then(function(gasPrice) {
-                    exchange.methods.addLiquidity(minLiquidity.toFixed(0), maxTokens.toFixed(0), deadline)..estimateGas({
+                    exchange.methods.addLiquidity(minLiquidity.toFixed(0), maxTokens.toFixed(0), deadline).estimateGas({
                             from: account
                         })
                         .then(function(gasAmount) {
