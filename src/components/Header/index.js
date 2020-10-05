@@ -19,8 +19,8 @@ const links = {
     ios: 'https://itunes.apple.com/us/app/coinbase-wallet/id1278383455'
   },
   trust: {
-    android: 'https://links.trustwalletapp.com/a/key_live_lfvIpVeI9TFWxPCqwU8rZnogFqhnzs4D?&event=openURL&url=https://uniswap.exchange/swap',
-    ios: 'https://links.trustwalletapp.com/a/key_live_lfvIpVeI9TFWxPCqwU8rZnogFqhnzs4D?&event=openURL&url=https://uniswap.exchange/swap',
+    android: 'https://play.google.com/store/apps/details?id=com.wallet.crypto.trustapp',
+    ios: 'https://apps.apple.com/app/apple-store/id1288339409?mt=8',
   },
   metamask: {
     chrome: 'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
