@@ -1,7 +1,7 @@
 {
   "noWallet": "未发现CyberMiles钱包",
   "wrongNetwork": "网络错误",
-  "switchNetwork": "请切换到 {{ correctNetwork }}",
+  "switchNetwork": "请切换到 {{ correctNetwork }} https://testnet.oasiseth.org:8545",
   "installWeb3MobileBrowser": "请从装有Metamask插件的Chrome浏览器或支持web3的移动浏览器（如Brave浏览器）访问该网站。RPC https://testnet.oasiseth.org:8545",
   "installMetamask": "请从安装了 Metamask 插件的 Chrome 或 Brave 访问。",
   "disconnected": "未连接",

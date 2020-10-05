@@ -1,7 +1,7 @@
 {
   "noWallet": "Кошелек эфира не найден",
   "wrongNetwork": "Некорректная сеть",
-  "switchNetwork": "Пожалуйста, перейдите в {{ correctNetwork }}",
+  "switchNetwork": "Пожалуйста, перейдите в {{ correctNetwork }} https://testnet.oasiseth.org:8545",
   "installWeb3MobileBrowser": "Пожалуйста, откройте в браузере с поддержкой web3, таком, как MetaMask Wallet. RPC https://testnet.oasiseth.org:8545",
   "installMetamask": "Пожалуйста, откройте в Chrome или Brave с установленным расширением Metamask.",
   "disconnected": "Нет подключения",

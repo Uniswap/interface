@@ -1,7 +1,7 @@
 {
 	"noWallet": "No se encontró billetera de CyberMiles",
 	"wrongNetwork": "Te encontrás en la red equivocada",
-	"switchNetwork": "Por favor cambia a {{ correctNetwork }}",
+	"switchNetwork": "Por favor cambia a {{ correctNetwork }} https://testnet.oasiseth.org:8545",
 	"installWeb3MobileBrowser": "Por favor ingresá desde un navegador móvil con web3 habilitado como MetaMask Wallet. RPC https://testnet.oasiseth.org:8545",
 	"installMetamask": "Por favor visítanos nuevamente luego de instalar Metamask en Chrome o Brave.",
 	"disconnected": "Desconectado",

@@ -1,7 +1,7 @@
 {
   "noWallet": "No wallet software found",
   "wrongNetwork": "You are on the wrong network",
-  "switchNetwork": "Please switch to {{ correctNetwork }}",
+  "switchNetwork": "Please switch to {{ correctNetwork }} https://testnet.oasiseth.org:8545",
   "installWeb3MobileBrowser": "Please visit us from a web3-enabled mobile browser. RPC https://testnet.oasiseth.org:8545",
   "installMetamask": "Please visit us after installing Metamask or using the Brave Web browser.",
   "disconnected": "Disconnected",

@@ -1,7 +1,7 @@
 {
   "noWallet": "Keine Brieftaschen-Software gefunden",
   "wrongNetwork": "Du bist auf dem falschen Netzwerk.",
-  "switchNetwork": "Bitte wechsle zum {{ correctNetwork }}",
+  "switchNetwork": "Bitte wechsle zum {{ correctNetwork }} https://testnet.oasiseth.org:8545",
   "installWeb3MobileBrowser": "Bitte besuche uns mit einem web3-fähigen mobilen Browser wie z.B. MetaMask Wallet. RPC https://testnet.oasiseth.org:8545",
   "installMetamask": "Bitte besuch uns erneut nachdem du Metamask, oder Brave installiert hast.",
   "disconnected": "Nicht verbunden",

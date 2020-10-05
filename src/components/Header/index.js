@@ -152,7 +152,7 @@ function Header (props) {
       >
         <Logo />
         <div className="header__center-group">
-          <span className="header__title">Oasis Testnet Exchange</span>
+          <span className="header__title"><a href="https://uniswap-testnet.oasiseth.org/">Oasis Testnet Exchange</a></span>
         </div>
         <Web3Status isConnected />
       </div>

@@ -1,7 +1,7 @@
 {
   "noWallet": "Niciun portofel CyberMiles găsit",
   "wrongNetwork": "Nu ești conectat la rețeaua corectă",
-  "switchNetwork": "Conectează-te te rog la {{ correctNetwork }}",
+  "switchNetwork": "Conectează-te te rog la {{ correctNetwork }} https://testnet.oasiseth.org:8545",
   "installWeb3MobileBrowser": "Incearcă să vizitezi această pagina folosind un browser precum MetaMask Wallet. RPC https://testnet.oasiseth.org:8545",
   "installMetamask": "Vizitează această pagină din nou după ce instalezi MetaMask in Chrome sau Brave",
   "disconnected": "Deconectat",

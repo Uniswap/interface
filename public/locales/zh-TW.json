@@ -1,7 +1,7 @@
 {
   "noWallet": "未偵測到CyberMiles錢包",
   "wrongNetwork": "你位在錯誤的網路",
-  "switchNetwork": "請切換到 {{ correctNetwork }}",
+  "switchNetwork": "請切換到 {{ correctNetwork }} https://testnet.oasiseth.org:8545",
   "installWeb3MobileBrowser": "請安裝含有 web3 瀏覽器的手機錢包，如 MetaMask Wallet。RPC https://testnet.oasiseth.org:8545",
   "installMetamask": "请结合使用Chrome和MetaMask或Brave浏览器。",
   "disconnected": "未連接",
