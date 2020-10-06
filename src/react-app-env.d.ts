@@ -1,26 +1,24 @@
 /// <reference types="react-scripts" />
 
-declare module 'jazzicon' {
-  export default function(diameter: number, seed: number): HTMLElement
-}
+import { type } from 'os'
 
-declare module 'fortmatic'
-
-interface Window {
-  ethereum?: {
-    isMetaMask?: true
-    on?: (...args: any[]) => void
-    removeListener?: (...args: any[]) => void
+declare global {
+  interface Window {
+    ethereum?: {
+      isMetaMask?: true
+      on?: (...args: any[]) => void
+      removeListener?: (...args: any[]) => void
+    }
+    web3?: {}
   }
-  web3?: {}
 }
 
-declare module 'content-hash' {
-  declare function decode(x: string): string
-  declare function getCodec(x: string): string
-}
-
-declare module 'multihashes' {
-  declare function decode(buff: Uint8Array): { code: number; name: string; length: number; digest: Uint8Array }
-  declare function toB58String(hash: Uint8Array): string
+declare namespace NodeJS {
+  interface ProcessEnv {
+    NODE_ENV: 'development' | 'production' | 'test'
+    PUBLIC_URL: string
+    REACT_APP_FORTMATIC_KEY: string
+    REACT_APP_PORTIS_ID: string,
+    REACT_APP_INFURA_ID: string
+  }
 }

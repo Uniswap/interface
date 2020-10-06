@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk'
+import { ChainId } from '../../constants'
 import MULTICALL_ABI from './abi.json'
 
 import constants from '../index';

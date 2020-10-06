@@ -1,23 +1,26 @@
-import { ChainId, JSBI, Percent, Token, WETH } from '@uniswap/sdk'
-import { AbstractConnector } from '@web3-react/abstract-connector'
+import { JSBI, Percent, Token, WETH } from '@uniswap/sdk'
 
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
+export const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
+export const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
+const INFURA_ID = process.env.REACT_APP_INFURA_ID
 
-const REACT_APP_CHAIN_ID = parseInt(process.env.REACT_APP_CHAIN_ID as string) as ChainId
-
-
-declare module '@uniswap/sdk' {
-  export enum ChainId {
-    LOCAL = 5777 //Ganache local blockchain
-  }
+//Patches runtime ChainId, for type customization, see types/@uniswap/sdk.d.ts
+export enum ChainId {
+  MAINNET = 1,
+  ROPSTEN = 3,
+  RINKEBY = 4,
+  GÖRLI = 5,
+  KOVAN = 42,
+  LOCAL = 5777
 }
 
 const constants = {
+  supportedChainIds: [ChainId.MAINNET, ChainId.ROPSTEN, ChainId.RINKEBY, ChainId.GÖRLI, ChainId.KOVAN, ChainId.LOCAL],
   [ChainId.MAINNET]: {
+    NETWORK_URL: `https://mainnet.infura.io/v3/${INFURA_ID}`,
     PROPOSAL_LENGTH_IN_DAYS: 7,
     GOVERNANCE_ADDRESS: '0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F',
     ROUTER_ADDRESS: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
-    ZERO_ADDRESS: '0x0000000000000000000000000000000000000000',
     UNI_ADDRESS: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
     MERKLE_DISTRIBUTOR_ADDRESS: '0x090D4613473dEE047c3f2706764f49E0821D256e',
     V1_FACTORY_ADDRESS: '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95',
@@ -45,10 +48,10 @@ const constants = {
     }
   },
   [ChainId.ROPSTEN]: {
+    NETWORK_URL: `https://ropsten.infura.io/v3/${INFURA_ID}`,
     PROPOSAL_LENGTH_IN_DAYS: 7,
     GOVERNANCE_ADDRESS: '0x0000000000000000000000000000000000000000',
     ROUTER_ADDRESS: '0x0000000000000000000000000000000000000000',
-    ZERO_ADDRESS: '0x0000000000000000000000000000000000000000',
     MERKLE_DISTRIBUTOR_ADDRESS: '0x0000000000000000000000000000000000000000',
     V1_FACTORY_ADDRESS: '0x9c83dCE8CA20E9aAF9D3efc003b2ea62aBC08351',
     MULTICALL_ADDRESS: '0x53C43764255c17BD724F74c4eF150724AC50a3ed',
@@ -58,10 +61,10 @@ const constants = {
     }
   },
   [ChainId.RINKEBY]: {
+    NETWORK_URL: `https://rinkeby.infura.io/v3/${INFURA_ID}`,
     PROPOSAL_LENGTH_IN_DAYS: 7,
     GOVERNANCE_ADDRESS: '0x0000000000000000000000000000000000000000',
     ROUTER_ADDRESS: '0x0000000000000000000000000000000000000000',
-    ZERO_ADDRESS: '0x0000000000000000000000000000000000000000',
     UNI_ADDRESS: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
     MERKLE_DISTRIBUTOR_ADDRESS: '0x0000000000000000000000000000000000000000',
     V1_FACTORY_ADDRESS: '0xf5D915570BC477f9B8D6C0E980aA81757A3AaC36',
@@ -72,10 +75,10 @@ const constants = {
     }
   },
   [ChainId.GÖRLI]: {
+    NETWORK_URL: `https://goerli.infura.io/v3/${INFURA_ID}`,
     PROPOSAL_LENGTH_IN_DAYS: 7,
     GOVERNANCE_ADDRESS: '0x0000000000000000000000000000000000000000',
     ROUTER_ADDRESS: '0x0000000000000000000000000000000000000000',
-    ZERO_ADDRESS: '0x0000000000000000000000000000000000000000',
     UNI_ADDRESS: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
     MERKLE_DISTRIBUTOR_ADDRESS: '0x0000000000000000000000000000000000000000',
     V1_FACTORY_ADDRESS: '0x6Ce570d02D73d4c384b46135E87f8C592A8c86dA',
@@ -86,6 +89,7 @@ const constants = {
     }
   },
   [ChainId.KOVAN]: {
+    NETWORK_URL: `https://kovan.infura.io/v3/${INFURA_ID}`,
     PROPOSAL_LENGTH_IN_DAYS: 7,
     GOVERNANCE_ADDRESS: '0x0000000000000000000000000000000000000000',
     ROUTER_ADDRESS: '0x0000000000000000000000000000000000000000',
@@ -100,10 +104,10 @@ const constants = {
     }
   },
   [ChainId.LOCAL]: {
+    NETWORK_URL: 'http://localhost:7545',
     PROPOSAL_LENGTH_IN_DAYS: 7,
     GOVERNANCE_ADDRESS: '0x0000000000000000000000000000000000000000',
     ROUTER_ADDRESS: '0x0000000000000000000000000000000000000000',
-    ZERO_ADDRESS: '0x0000000000000000000000000000000000000000',
     UNI_ADDRESS: '0x0000000000000000000000000000000000000000',
     MERKLE_DISTRIBUTOR_ADDRESS: '0x0000000000000000000000000000000000000000',
     V1_FACTORY_ADDRESS: '0x0000000000000000000000000000000000000000',
@@ -115,9 +119,25 @@ const constants = {
   },
 }
 
-export default constants;
+//webpack error breaks module extension, use raw networkId
+export const NETWORK_URL: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: constants[ChainId.MAINNET].NETWORK_URL,
+  [ChainId.ROPSTEN]: constants[ChainId.ROPSTEN].NETWORK_URL,
+  [ChainId.RINKEBY]: constants[ChainId.RINKEBY].NETWORK_URL,
+  [ChainId.KOVAN]: constants[ChainId.KOVAN].NETWORK_URL,
+  [ChainId.GÖRLI]: constants[ChainId.GÖRLI].NETWORK_URL,
+  5777: constants[ChainId.LOCAL].NETWORK_URL
+}
+export const SUPPORTED_CHAIN_IDS: ChainId[] = constants.supportedChainIds
 
-export const ROUTER_ADDRESS = constants[REACT_APP_CHAIN_ID].ROUTER_ADDRESS
+export const ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: constants[ChainId.MAINNET].ROUTER_ADDRESS,
+  [ChainId.RINKEBY]: constants[ChainId.RINKEBY].ROUTER_ADDRESS,
+  [ChainId.ROPSTEN]: constants[ChainId.ROPSTEN].ROUTER_ADDRESS,
+  [ChainId.GÖRLI]: constants[ChainId.GÖRLI].ROUTER_ADDRESS,
+  [ChainId.KOVAN]: constants[ChainId.KOVAN].ROUTER_ADDRESS,
+  [ChainId.LOCAL]: constants[ChainId.LOCAL].ROUTER_ADDRESS
+}
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
@@ -129,7 +149,9 @@ type ChainTokenList = {
 // TODO this is only approximate, it's actually based on blocks
 export const PROPOSAL_LENGTH_IN_DAYS = 7
 
-export const GOVERNANCE_ADDRESS = constants[REACT_APP_CHAIN_ID].GOVERNANCE_ADDRESS
+export const GOVERNANCE_ADDRESS: { [chainId in ChainId]?: string } = {
+  [ChainId.MAINNET]: constants[ChainId.MAINNET].GOVERNANCE_ADDRESS
+}
 
 export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: constants[ChainId.MAINNET].tokens.UNI,
@@ -197,81 +219,6 @@ export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } 
   ]
 }
 
-export interface WalletInfo {
-  connector?: AbstractConnector
-  name: string
-  iconName: string
-  description: string
-  href: string | null
-  color: string
-  primary?: true
-  mobile?: true
-  mobileOnly?: true
-}
-
-export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
-  INJECTED: {
-    connector: injected,
-    name: 'Injected',
-    iconName: 'arrow-right.svg',
-    description: 'Injected web3 provider.',
-    href: null,
-    color: '#010101',
-    primary: true
-  },
-  METAMASK: {
-    connector: injected,
-    name: 'MetaMask',
-    iconName: 'metamask.png',
-    description: 'Easy-to-use browser extension.',
-    href: null,
-    color: '#E8831D'
-  },
-  WALLET_CONNECT: {
-    connector: walletconnect,
-    name: 'WalletConnect',
-    iconName: 'walletConnectIcon.svg',
-    description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
-    href: null,
-    color: '#4196FC',
-    mobile: true
-  },
-  WALLET_LINK: {
-    connector: walletlink,
-    name: 'Coinbase Wallet',
-    iconName: 'coinbaseWalletIcon.svg',
-    description: 'Use Coinbase Wallet app on mobile device',
-    href: null,
-    color: '#315CF5'
-  },
-  COINBASE_LINK: {
-    name: 'Open in Coinbase Wallet',
-    iconName: 'coinbaseWalletIcon.svg',
-    description: 'Open in Coinbase Wallet app.',
-    href: 'https://go.cb-w.com/mtUDhEZPy1',
-    color: '#315CF5',
-    mobile: true,
-    mobileOnly: true
-  },
-  FORTMATIC: {
-    connector: fortmatic,
-    name: 'Fortmatic',
-    iconName: 'fortmaticIcon.png',
-    description: 'Login using Fortmatic hosted wallet',
-    href: null,
-    color: '#6748FF',
-    mobile: true
-  },
-  Portis: {
-    connector: portis,
-    name: 'Portis',
-    iconName: 'portisIcon.png',
-    description: 'Login using Portis hosted wallet',
-    href: null,
-    color: '#4A6C9B',
-    mobile: true
-  }
-}
 
 export const NetworkContextName = 'NETWORK'
 
@@ -297,3 +244,5 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 export const BETTER_TRADE_LINK_THRESHOLD = new Percent(JSBI.BigInt(75), JSBI.BigInt(10000))
+
+export default constants;

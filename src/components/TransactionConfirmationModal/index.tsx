@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk'
+import { ChainId } from '../../constants'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import Modal from '../Modal'
@@ -184,8 +184,8 @@ export default function TransactionConfirmationModal({
       ) : hash ? (
         <TransactionSubmittedContent chainId={chainId} hash={hash} onDismiss={onDismiss} />
       ) : (
-        content()
-      )}
+            content()
+          )}
     </Modal>
   )
 }

@@ -3,7 +3,7 @@ import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.j
 import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
-import { ChainId } from '@uniswap/sdk'
+import { ChainId } from '../constants'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { useMemo } from 'react'
 import constants, { GOVERNANCE_ADDRESS, MERKLE_DISTRIBUTOR_ADDRESS, UNI } from '../constants'
@@ -108,7 +108,8 @@ export function useMerkleDistributorContract(): Contract | null {
 }
 
 export function useGovernanceContract(): Contract | null {
-  return useContract(GOVERNANCE_ADDRESS, GOVERNANCE_ABI, true)
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId ? GOVERNANCE_ADDRESS[chainId] : undefined, GOVERNANCE_ABI, true)
 }
 
 export function useUniContract(): Contract | null {

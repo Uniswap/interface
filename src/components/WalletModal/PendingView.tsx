@@ -2,7 +2,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import React from 'react'
 import styled from 'styled-components'
 import Option from './Option'
-import { SUPPORTED_WALLETS } from '../../constants'
+import { SUPPORTED_WALLETS } from '../../connectors'
 import { injected } from '../../connectors'
 import { darken } from 'polished'
 import Loader from '../Loader'
@@ -93,11 +93,11 @@ export default function PendingView({
               </ErrorButton>
             </ErrorGroup>
           ) : (
-            <>
-              <StyledLoader />
+              <>
+                <StyledLoader />
               Initializing...
             </>
-          )}
+            )}
         </LoadingWrapper>
       </LoadingMessage>
       {Object.keys(SUPPORTED_WALLETS).map(key => {

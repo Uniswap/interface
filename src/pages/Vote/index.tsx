@@ -15,7 +15,8 @@ import DelegateModal from '../../components/vote/DelegateModal'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { UNI, ZERO_ADDRESS } from '../../constants'
-import { JSBI, TokenAmount, ChainId } from '@uniswap/sdk'
+import { JSBI, TokenAmount } from '@uniswap/sdk'
+import { ChainId } from '../../constants'
 import { shortenAddress, getEtherscanLink } from '../../utils'
 import Loader from '../../components/Loader'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
@@ -173,12 +174,12 @@ export default function Vote() {
             userDelegatee &&
             userDelegatee !== ZERO_ADDRESS &&
             JSBI.notEqual(JSBI.BigInt(0), uniBalance?.raw) ? (
-            <TYPE.body fontWeight={500} mr="6px">
-              <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
-            </TYPE.body>
-          ) : (
-            ''
-          )}
+                  <TYPE.body fontWeight={500} mr="6px">
+                    <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
+                  </TYPE.body>
+                ) : (
+                  ''
+                )}
         </WrapSmall>
         {!showUnlockVoting && (
           <RowBetween>
@@ -201,8 +202,8 @@ export default function Vote() {
                 </AddressButton>
               </RowFixed>
             ) : (
-              ''
-            )}
+                ''
+              )}
           </RowBetween>
         )}
         {allProposals?.length === 0 && (
