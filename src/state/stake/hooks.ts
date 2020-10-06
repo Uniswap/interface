@@ -1,6 +1,6 @@
-import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, WETH, Pair } from '@uniswap/sdk'
+import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Pair } from '@uniswap/sdk'
 import { useMemo } from 'react'
-import { DAI, UNI, USDC, USDT, WBTC } from '../../constants'
+import constants from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
@@ -19,20 +19,20 @@ export const STAKING_REWARDS_INFO: {
 } = {
   [ChainId.MAINNET]: [
     {
-      tokens: [WETH[ChainId.MAINNET], DAI],
-      stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
+      tokens: [constants[ChainId.MAINNET].tokens.WETH, constants[ChainId.MAINNET].tokens.DAI],
+      stakingRewardAddress: constants[ChainId.MAINNET].staking.WETH.DAI.address
     },
     {
-      tokens: [WETH[ChainId.MAINNET], USDC],
-      stakingRewardAddress: '0x7FBa4B8Dc5E7616e59622806932DBea72537A56b'
+      tokens: [constants[ChainId.MAINNET].tokens.WETH, constants[ChainId.MAINNET].tokens.USDC],
+      stakingRewardAddress: constants[ChainId.MAINNET].staking.WETH.USDC.address
     },
     {
-      tokens: [WETH[ChainId.MAINNET], USDT],
-      stakingRewardAddress: '0x6C3e4cb2E96B01F4b866965A91ed4437839A121a'
+      tokens: [constants[ChainId.MAINNET].tokens.WETH, constants[ChainId.MAINNET].tokens.USDT],
+      stakingRewardAddress: constants[ChainId.MAINNET].staking.WETH.USDT.address
     },
     {
-      tokens: [WETH[ChainId.MAINNET], WBTC],
-      stakingRewardAddress: '0xCA35e32e7926b96A9988f61d510E038108d8068e'
+      tokens: [constants[ChainId.MAINNET].tokens.WETH, constants[ChainId.MAINNET].tokens.WBTC],
+      stakingRewardAddress: constants[ChainId.MAINNET].staking.WETH.WBTC.address
     }
   ]
 }
@@ -71,18 +71,18 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     () =>
       chainId
         ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
-            pairToFilterBy === undefined
-              ? true
-              : pairToFilterBy === null
+          pairToFilterBy === undefined
+            ? true
+            : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-                pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
-          ) ?? []
+              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+        ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )
 
-  const uni = chainId ? UNI[chainId] : undefined
+  const uni = chainId ? constants[chainId as ChainId].tokens.UNI : undefined
 
   const rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
 
@@ -191,7 +191,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 
 export function useTotalUniEarned(): TokenAmount | undefined {
   const { chainId } = useActiveWeb3React()
-  const uni = chainId ? UNI[chainId] : undefined
+  const uni = chainId ? constants[chainId as ChainId].tokens.UNI : undefined
   const stakingInfos = useStakingInfo()
 
   return useMemo(() => {

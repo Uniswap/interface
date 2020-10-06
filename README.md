@@ -54,6 +54,9 @@ Note that the interface only works on testnets where both
 [multicall](https://github.com/makerdao/multicall) are deployed.
 The interface will not work on other networks.
 
+### Additional configuration
+To add your own custom tokens, staking, and governance contracts. See the [constants/index.ts](./src/constants/index.ts) file.
+
 ## Contributions
 
 **Please open all pull requests against the `master` branch.** 
