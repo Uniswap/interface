@@ -5,6 +5,13 @@ import { fortmatic, injected, portis, walletconnect, walletlink } from '../conne
 
 const REACT_APP_CHAIN_ID = parseInt(process.env.REACT_APP_CHAIN_ID as string) as ChainId
 
+
+declare module '@uniswap/sdk' {
+  export enum ChainId {
+    LOCAL = 5777 //Ganache local blockchain
+  }
+}
+
 const constants = {
   [ChainId.MAINNET]: {
     PROPOSAL_LENGTH_IN_DAYS: 7,
@@ -91,7 +98,21 @@ const constants = {
       WETH: WETH[ChainId.KOVAN],
       UNI: new Token(ChainId.KOVAN, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap'),
     }
-  }
+  },
+  [ChainId.LOCAL]: {
+    PROPOSAL_LENGTH_IN_DAYS: 7,
+    GOVERNANCE_ADDRESS: '0x0000000000000000000000000000000000000000',
+    ROUTER_ADDRESS: '0x0000000000000000000000000000000000000000',
+    ZERO_ADDRESS: '0x0000000000000000000000000000000000000000',
+    UNI_ADDRESS: '0x0000000000000000000000000000000000000000',
+    MERKLE_DISTRIBUTOR_ADDRESS: '0x0000000000000000000000000000000000000000',
+    V1_FACTORY_ADDRESS: '0x0000000000000000000000000000000000000000',
+    MULTICALL_ADDRESS: '0x0000000000000000000000000000000000000000',
+    tokens: {
+      WETH: new Token(ChainId.LOCAL as ChainId, '0x0000000000000000000000000000000000000000', 18, 'WETH', 'Wrapped Ether'),
+      UNI: new Token(ChainId.LOCAL as ChainId, '0x0000000000000000000000000000000000000000', 18, 'UNI', 'Uniswap'),
+    }
+  },
 }
 
 export default constants;
@@ -115,7 +136,8 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.RINKEBY]: constants[ChainId.RINKEBY].tokens.UNI,
   [ChainId.ROPSTEN]: constants[ChainId.ROPSTEN].tokens.UNI,
   [ChainId.GÖRLI]: constants[ChainId.GÖRLI].tokens.UNI,
-  [ChainId.KOVAN]: constants[ChainId.KOVAN].tokens.UNI
+  [ChainId.KOVAN]: constants[ChainId.KOVAN].tokens.UNI,
+  [ChainId.LOCAL]: constants[ChainId.LOCAL].tokens.UNI
 }
 
 // TODO: specify merkle distributor for mainnet
@@ -130,7 +152,8 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   [ChainId.ROPSTEN]: [constants[ChainId.ROPSTEN].tokens.WETH],
   [ChainId.RINKEBY]: [constants[ChainId.RINKEBY].tokens.WETH],
   [ChainId.GÖRLI]: [constants[ChainId.GÖRLI].tokens.WETH],
-  [ChainId.KOVAN]: [constants[ChainId.KOVAN].tokens.WETH]
+  [ChainId.KOVAN]: [constants[ChainId.KOVAN].tokens.WETH],
+  [ChainId.LOCAL]: [constants[ChainId.LOCAL].tokens.WETH]
 }
 
 /**
@@ -149,7 +172,8 @@ export const SUGGESTED_BASES: ChainTokenList = {
   [ChainId.ROPSTEN]: [constants[ChainId.ROPSTEN].tokens.WETH],
   [ChainId.RINKEBY]: [constants[ChainId.RINKEBY].tokens.WETH],
   [ChainId.GÖRLI]: [constants[ChainId.GÖRLI].tokens.WETH],
-  [ChainId.KOVAN]: [constants[ChainId.KOVAN].tokens.WETH]
+  [ChainId.KOVAN]: [constants[ChainId.KOVAN].tokens.WETH],
+  [ChainId.LOCAL]: [constants[ChainId.LOCAL].tokens.WETH]
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
@@ -158,7 +182,8 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   [ChainId.ROPSTEN]: [constants[ChainId.ROPSTEN].tokens.WETH],
   [ChainId.RINKEBY]: [constants[ChainId.RINKEBY].tokens.WETH],
   [ChainId.GÖRLI]: [constants[ChainId.GÖRLI].tokens.WETH],
-  [ChainId.KOVAN]: [constants[ChainId.KOVAN].tokens.WETH]
+  [ChainId.KOVAN]: [constants[ChainId.KOVAN].tokens.WETH],
+  [ChainId.LOCAL]: [constants[ChainId.LOCAL].tokens.WETH]
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {

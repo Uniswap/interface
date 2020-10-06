@@ -8,7 +8,8 @@ const MULTICALL_NETWORKS: { [chainId in ChainId]: string } = {
   [ChainId.ROPSTEN]: constants[ChainId.ROPSTEN].MULTICALL_ADDRESS,
   [ChainId.RINKEBY]: constants[ChainId.RINKEBY].MULTICALL_ADDRESS,
   [ChainId.GÖRLI]: constants[ChainId.GÖRLI].MULTICALL_ADDRESS,
-  [ChainId.KOVAN]: constants[ChainId.KOVAN].MULTICALL_ADDRESS
+  [ChainId.KOVAN]: constants[ChainId.KOVAN].MULTICALL_ADDRESS,
+  [ChainId.LOCAL]: constants[ChainId.LOCAL].MULTICALL_ADDRESS
 }
 
 export { MULTICALL_ABI, MULTICALL_NETWORKS }

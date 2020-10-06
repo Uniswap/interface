@@ -10,7 +10,8 @@ const V1_FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.ROPSTEN]: constants[ChainId.ROPSTEN].V1_FACTORY_ADDRESS,
   [ChainId.RINKEBY]: constants[ChainId.RINKEBY].V1_FACTORY_ADDRESS,
   [ChainId.GÖRLI]: constants[ChainId.GÖRLI].V1_FACTORY_ADDRESS,
-  [ChainId.KOVAN]: constants[ChainId.KOVAN].V1_FACTORY_ADDRESS
+  [ChainId.KOVAN]: constants[ChainId.KOVAN].V1_FACTORY_ADDRESS,
+  [ChainId.LOCAL]: constants[ChainId.LOCAL].V1_FACTORY_ADDRESS
 }
 
 const V1_FACTORY_INTERFACE = new Interface(V1_FACTORY_ABI)
