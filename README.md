@@ -46,8 +46,10 @@ yarn start
 To have the interface default to a different network when a wallet is not connected:
 
 1. Make a copy of `.env` named `.env.local`
-2. Change `REACT_APP_NETWORK_ID` to `"{YOUR_NETWORK_ID}"`
-3. Change `REACT_APP_NETWORK_URL` to e.g. `"https://{YOUR_NETWORK_ID}.infura.io/v3/{YOUR_INFURA_KEY}"` 
+2. Change `REACT_APP_NETWORK_ID` to `"{YOUR_NETWORK_ID}"` **[DEPRECATED]**
+3. Change `REACT_APP_NETWORK_URL` to e.g. `"https://{YOUR_NETWORK_ID}.infura.io/v3/{YOUR_INFURA_KEY}"` **[DEPRECATED]**
+4. Change `REACT_APP_INFURA_ID` to your Infura ID (for Ethereum Mainnet & Testnets)
+5. Customize [constants/index.ts](./src/constants/index.ts)
 
 Note that the interface only works on testnets where both 
 [Uniswap V2](https://uniswap.org/docs/v2/smart-contracts/factory/) and 
@@ -57,7 +59,7 @@ The interface will not work on other networks.
 #### Custom Contracts
 To add your own custom tokens, staking, and governance contracts. See the [constants/index.ts](./src/constants/index.ts) file.
 
-#### Custom Networks
+#### Custom Networks (multi-network setup)
 This repo was original forked from [Uniswap/uniswap-interface](https://github.com/Uniswap/uniswap-interface). This fork presents an example integration with a local Ganache Test Ethereum blockchain (ChainId.LOCAL = 5777). Use this as an example to easily launch Uniswap on your own EVM blockchain.
 
 All required contracts must already deployed on your network. See [Uniswap/uniswap-v2-core](https://github.com/Uniswap/uniswap-v2-core) for the original V2 contracts, and [leovigna/uniswap-v2-core/tree/truffle-typechain-migrate](https://github.com/leovigna/uniswap-v2-core/tree/truffle-typechain-migrate) for an easy to deploy forked version integrated with Truffle and Typechain. Note this does not deploy the Uniswap Governance and Staking contracts. You will also need a deployed Multicall contract, find a Truffle Migrate forked version at [leovigna/multicall/tree/truffle-typechain-migrate](https://github.com/leovigna/multicall/tree/truffle-typechain-migrate).
