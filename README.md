@@ -54,8 +54,17 @@ Note that the interface only works on testnets where both
 [multicall](https://github.com/makerdao/multicall) are deployed.
 The interface will not work on other networks.
 
-### Additional configuration
+#### Custom Contracts
 To add your own custom tokens, staking, and governance contracts. See the [constants/index.ts](./src/constants/index.ts) file.
+
+#### Custom Networks
+This repo was original forked from [Uniswap/uniswap-interface](https://github.com/Uniswap/uniswap-interface). This fork presents an example integration with a local Ganache Test Ethereum blockchain (ChainId.LOCAL = 5777). Use this as an example to easily launch Uniswap on your own EVM blockchain.
+
+All required contracts must already deployed on your network. See [Uniswap/uniswap-v2-core](https://github.com/Uniswap/uniswap-v2-core) for the original V2 contracts, and [leovigna/uniswap-v2-core/tree/truffle-typechain-migrate](https://github.com/leovigna/uniswap-v2-core/tree/truffle-typechain-migrate) for an easy to deploy forked version integrated with Truffle and Typechain. Note this does not deploy the Uniswap Governance and Staking contracts. You will also need a deployed Multicall contract, find a Truffle Migrate forked version at [leovigna/multicall/tree/truffle-typechain-migrate](https://github.com/leovigna/multicall/tree/truffle-typechain-migrate).
+
+To add your custom network (eg. deploy on your local blockchain or L2 chain), you will have to edit [constants/index.ts](./src/constants/index.ts) to update the `ChainId` enum. Once your added the new ChainId value, make sure to update all required parameters (eg. tokens, ROUTER_ADDRESS, NETWORK_URL etc...).
+
+For Typescript to work you will also have to patch the `@uniswap/sdk` module by editing [types/@uniswap/sdk.d.ts](./src/types/@uniswap/sdk.d.ts).
 
 ## Contributions
 
