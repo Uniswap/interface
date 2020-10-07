@@ -1,4 +1,4 @@
-import { JSBI, Percent, Token, WETH } from '@uniswap/sdk'
+import { WETH as UniWETH, JSBI, Percent, Token } from '@uniswap/sdk'
 
 export const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 export const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
@@ -42,7 +42,7 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     V1_FACTORY_ADDRESS: '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95',
     MULTICALL_ADDRESS: '0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441',
     tokens: {
-      WETH: WETH[ChainId.MAINNET],
+      WETH: UniWETH[ChainId.MAINNET],
       UNI: new Token(ChainId.MAINNET, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap'),
       DAI: new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin'),
       USDC: new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C'),
@@ -72,7 +72,7 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     V1_FACTORY_ADDRESS: '0x9c83dCE8CA20E9aAF9D3efc003b2ea62aBC08351',
     MULTICALL_ADDRESS: '0x53C43764255c17BD724F74c4eF150724AC50a3ed',
     tokens: {
-      WETH: WETH[ChainId.ROPSTEN],
+      WETH: UniWETH[ChainId.ROPSTEN],
       UNI: new Token(ChainId.RINKEBY, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap'),
     }
   },
@@ -86,7 +86,7 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     V1_FACTORY_ADDRESS: '0xf5D915570BC477f9B8D6C0E980aA81757A3AaC36',
     MULTICALL_ADDRESS: '0x42Ad527de7d4e9d9d011aC45B31D8551f8Fe9821',
     tokens: {
-      WETH: WETH[ChainId.RINKEBY],
+      WETH: UniWETH[ChainId.RINKEBY],
       UNI: new Token(ChainId.RINKEBY, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap'),
     }
   },
@@ -100,7 +100,7 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     V1_FACTORY_ADDRESS: '0x6Ce570d02D73d4c384b46135E87f8C592A8c86dA',
     MULTICALL_ADDRESS: '0x77dCa2C955b15e9dE4dbBCf1246B4B85b651e50e',
     tokens: {
-      WETH: WETH[ChainId.GÖRLI],
+      WETH: UniWETH[ChainId.GÖRLI],
       UNI: new Token(ChainId.GÖRLI, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap'),
     }
   },
@@ -115,7 +115,7 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     V1_FACTORY_ADDRESS: '0xD3E51Ef092B2845f10401a0159B2B96e8B6c3D30',
     MULTICALL_ADDRESS: '0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A',
     tokens: {
-      WETH: WETH[ChainId.KOVAN],
+      WETH: UniWETH[ChainId.KOVAN],
       UNI: new Token(ChainId.KOVAN, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap'),
     }
   },
@@ -240,6 +240,17 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.RSK_MAINNET]: constants[ChainId.RSK_MAINNET].tokens.UNI,
   [ChainId.RSK_TESTNET]: constants[ChainId.RSK_TESTNET].tokens.UNI,
   [ChainId.LOCAL]: constants[ChainId.LOCAL].tokens.UNI
+}
+
+export const WETH: { [chainId in ChainId]: Token } = {
+  [ChainId.MAINNET]: constants[ChainId.MAINNET].tokens.WETH,
+  [ChainId.RINKEBY]: constants[ChainId.RINKEBY].tokens.WETH,
+  [ChainId.ROPSTEN]: constants[ChainId.ROPSTEN].tokens.WETH,
+  [ChainId.GÖRLI]: constants[ChainId.GÖRLI].tokens.WETH,
+  [ChainId.KOVAN]: constants[ChainId.KOVAN].tokens.WETH,
+  [ChainId.RSK_MAINNET]: constants[ChainId.RSK_MAINNET].tokens.WETH,
+  [ChainId.RSK_TESTNET]: constants[ChainId.RSK_TESTNET].tokens.WETH,
+  [ChainId.LOCAL]: constants[ChainId.LOCAL].tokens.WETH
 }
 
 // TODO: specify merkle distributor for mainnet
