@@ -31,6 +31,7 @@ interface CurrencySearchProps {
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
   onChangeList: () => void
+  showETH: boolean
 }
 
 export function CurrencySearch({
@@ -40,7 +41,8 @@ export function CurrencySearch({
   showCommonBases,
   onDismiss,
   isOpen,
-  onChangeList
+  onChangeList,
+  showETH: showETHToken
 }: CurrencySearchProps) {
   const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
@@ -64,11 +66,6 @@ export function CurrencySearch({
       })
     }
   }, [isAddressSearch])
-
-  const showETH: boolean = useMemo(() => {
-    const s = searchQuery.toLowerCase().trim()
-    return s === '' || s === 'e' || s === 'et' || s === 'eth'
-  }, [searchQuery])
 
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
@@ -174,7 +171,7 @@ export function CurrencySearch({
           {({ height }) => (
             <CurrencyList
               height={height}
-              showETH={showETH}
+              showETH={showETHToken}
               currencies={filteredSortedTokens}
               onCurrencySelect={handleCurrencySelect}
               otherCurrency={otherSelectedCurrency}

@@ -1,8 +1,10 @@
-import React, { useCallback, useContext } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
+import { BigNumber } from '@ethersproject/bignumber'
+import { TransactionResponse } from '@ethersproject/providers'
 import AppBody from '../AppBody'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { Currency, TokenAmount } from 'uniswap-fuse-sdk'
+import { Currency, TokenAmount, ChainId } from 'uniswap-fuse-sdk'
 import { RouteComponentProps } from 'react-router-dom'
 import { currencyId } from '../../utils/currencyId'
 import { useCurrency } from '../../hooks/Tokens'
@@ -19,11 +21,18 @@ import { DarkBlueCard } from '../../components/Card'
 import fuseLogo from '../../assets/images/fuse-logo-wordmark.svg'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
-import { ROUTER_ADDRESS } from '../../constants'
 import { RowBetween } from '../../components/Row'
 import { Dots } from '../Pool/styleds'
 import { Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks'
+import {
+  getForiegnBridgeContract,
+  getBridgeHomeAddress,
+  getBridgeForeignAddress,
+  calculateGasMargin,
+  getERC677TokenContract
+} from '../../utils'
+import { useTransactionAdder } from '../../state/transactions/hooks'
 
 export default function Bridge({
   match: {
@@ -31,7 +40,7 @@ export default function Bridge({
   },
   history
 }: RouteComponentProps<{ inputCurrencyId?: string }>) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   const inputCurrency = useCurrency(inputCurrencyId)
@@ -41,6 +50,14 @@ export default function Bridge({
   const { currencies, currencyBalances, parsedAmounts, inputError } = useDerivedBridgeInfo(inputCurrency ?? undefined)
 
   const { onFieldInput } = useBridgeActionHandlers()
+
+  // modal and loading
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [, setAttemptingTxn] = useState<boolean>(false)
+
+  // txn values
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [, setTxHash] = useState<string>('')
 
   const handleInputCurrencySelect = useCallback(
     (inputCurrency: Currency) => {
@@ -70,7 +87,80 @@ export default function Bridge({
 
   const toggleWalletModal = useWalletModalToggle()
 
-  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.INPUT], ROUTER_ADDRESS)
+  // set bridge and approval address
+  const homeBridgeChain = Number(process.env.REACT_APP_HOME_BRIDGE_CHAIN)
+  let bridgeAddress: string
+  let approvalAddress
+
+  if (chainId === ChainId.FUSE) {
+    bridgeAddress = getBridgeHomeAddress(homeBridgeChain ?? undefined)
+    approvalAddress = inputCurrencyId
+  } else {
+    bridgeAddress = getBridgeForeignAddress(chainId)
+    approvalAddress = bridgeAddress
+  }
+
+  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.INPUT], approvalAddress)
+
+  const addTransaction = useTransactionAdder()
+
+  async function onTransfer() {
+    if (!chainId || !library || !account) return
+
+    const { [Field.INPUT]: parsedAmountInput } = parsedAmounts
+    if (!parsedAmountInput || !inputCurrencyId) {
+      return
+    }
+
+    let estimate,
+      method: (...args: any) => Promise<TransactionResponse>,
+      args: Array<string | string[] | number>,
+      value: BigNumber | null
+
+    // home
+    if (chainId === ChainId.FUSE) {
+      const tokenContract = getERC677TokenContract(inputCurrencyId, library, account)
+
+      estimate = tokenContract.estimateGas.transferAndCall
+      method = tokenContract.transferAndCall
+      args = [bridgeAddress, parsedAmountInput.raw.toString(), '0x']
+      value = null
+
+      // foreign
+    } else {
+      const bridgeContract = getForiegnBridgeContract(chainId, library, account)
+
+      estimate = bridgeContract.estimateGas['relayTokens(address,uint256)']
+      method = bridgeContract['relayTokens(address,uint256)']
+      args = [inputCurrencyId, parsedAmountInput.raw.toString()]
+      value = null
+    }
+
+    setAttemptingTxn(true)
+
+    await estimate(...args, value ? { value } : {}).then((estimatedGas: BigNumber) => {
+      method(...args, {
+        ...(value ? { value } : {}),
+        gasLimit: calculateGasMargin(estimatedGas)
+      })
+        .then(response => {
+          setAttemptingTxn(false)
+
+          addTransaction(response, {
+            summary: 'Transfer ' + currencies[Field.INPUT]?.symbol
+          })
+
+          setTxHash(response.hash)
+        })
+        .catch(error => {
+          setAttemptingTxn(false)
+
+          if (error?.code !== 4001) {
+            console.log(error)
+          }
+        })
+    })
+  }
 
   return (
     <>
@@ -89,6 +179,7 @@ export default function Bridge({
               currency={inputCurrency}
               showMaxButton={!atMaxAmounts[Field.INPUT]}
               id="bridge-input-token"
+              showETH={false}
             />
           </AutoColumn>
           <ColumnCenter>
@@ -123,7 +214,11 @@ export default function Bridge({
                     )}
                   </RowBetween>
                 )}
-                <ButtonError disabled={approval !== ApprovalState.APPROVED} error={!!parsedAmounts[Field.INPUT]}>
+                <ButtonError
+                  onClick={onTransfer}
+                  disabled={approval !== ApprovalState.APPROVED}
+                  error={!!parsedAmounts[Field.INPUT]}
+                >
                   <Text fontSize={20} fontWeight={500}>
                     {inputError ?? 'Transfer'}
                   </Text>

@@ -7,6 +7,8 @@ import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUnisw
 import { ROUTER_ADDRESS } from '../constants'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from 'uniswap-fuse-sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
+import ForeignMultiAMBErc20ToErc677ABI from '../constants/abis/foreignMultiAMBErc20ToErc677.json'
+import Erc677TokenABI from '../constants/abis/erc677.json'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -109,4 +111,35 @@ export function escapeRegExp(string: string): string {
 export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
   if (currency === ETHER) return true
   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
+}
+
+export function getERC677TokenContract(address: string, library: Web3Provider, account?: string): Contract {
+  return getContract(address, Erc677TokenABI, library, account)
+}
+
+export function getBridgeHomeAddress(chainId?: number): string {
+  switch (chainId) {
+    case ChainId.MAINNET:
+      return '0xc2220646E1E76D5fF3a441eDd9E8EFF0e4A8EF03'
+    case ChainId.ROPSTEN:
+      return '0xAEBC2058780eb0372e7Ee75c11019d26E36894ad'
+    default:
+      throw new Error('Unsupported chainId')
+  }
+}
+
+export function getBridgeForeignAddress(chainId?: number): string {
+  switch (chainId) {
+    case ChainId.MAINNET:
+      return '0xf301d525da003e874DF574BCdd309a6BF0535bb6'
+    case ChainId.ROPSTEN:
+      return '0x68b762A7a68F6D87Fcf2E2EaF7eF48D00cAa2419'
+    default:
+      throw new Error('Unsupported chainId')
+  }
+}
+
+export function getForiegnBridgeContract(chainId: number, library: Web3Provider, account?: string): Contract {
+  const address = getBridgeForeignAddress(chainId)
+  return getContract(address, ForeignMultiAMBErc20ToErc677ABI, library, account)
 }

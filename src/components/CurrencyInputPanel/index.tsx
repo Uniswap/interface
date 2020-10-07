@@ -126,6 +126,7 @@ interface CurrencyInputPanelProps {
   otherCurrency?: Currency | null
   id: string
   showCommonBases?: boolean
+  showETH?: boolean
 }
 
 export default function CurrencyInputPanel({
@@ -142,7 +143,8 @@ export default function CurrencyInputPanel({
   hideInput = false,
   otherCurrency,
   id,
-  showCommonBases
+  showCommonBases,
+  showETH = true
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -236,6 +238,7 @@ export default function CurrencyInputPanel({
           selectedCurrency={currency}
           otherSelectedCurrency={otherCurrency}
           showCommonBases={showCommonBases}
+          showETH={showETH}
         />
       )}
     </InputPanel>
