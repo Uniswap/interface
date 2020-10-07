@@ -180,12 +180,10 @@ export default function AddLiquidity({
 
     setAttemptingTxn(true)
 
-    const oneValue = value ? value.toString() : null
-
     method(...args)
       // @ts-ignore
       .send({
-        value: oneValue,
+        value: value.toString(),
         ...wrapper.gasOptions()
       })
         .then(response => {
