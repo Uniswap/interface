@@ -132,21 +132,20 @@ export default function Pool() {
               >
                 <TYPE.white fontSize={14}>Read more about providing liquidity</TYPE.white>
               </ExternalLink>
-              <RowBetween>
+              <RowBetween style={{ justifyContent: 'flex-start' }}>
                 <TYPE.white fontWeight={600}>Liquidity provider risks</TYPE.white>
+                <ExternalLink
+                  style={{ color: 'white', textDecoration: 'underline', marginLeft: '5px' }}
+                  href="https://uniswap.org/docs/v2/advanced-topics/understanding-returns"
+                >
+                  <TYPE.white fontSize={11}>(Learn more)</TYPE.white>
+                </ExternalLink>
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
                   {`Liquidity providers assume the risk of impermanent loss. It's possible to end up with less value than your initial input.`}
                 </TYPE.white>
               </RowBetween>
-              <ExternalLink
-                style={{ color: 'white', textDecoration: 'underline' }}
-                target="_blank"
-                href="https://uniswap.org/docs/v2/advanced-topics/understanding-returns"
-              >
-                <TYPE.white fontSize={14}>Learn more about liquidity provision risks</TYPE.white>
-              </ExternalLink>
             </AutoColumn>
           </CardSection>
           <CardBGImage />
