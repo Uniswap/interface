@@ -28,6 +28,24 @@ export const injected = new InjectedConnector({
   supportedChainIds: SUPPORTED_CHAIN_IDS
 })
 
+//Patch chainChanged 0xNaN
+//@ts-ignore
+injected.handleChainChanged = (chainId: string | number) => {
+  console.debug("Handling 'chainChanged' event with payload", chainId)
+  if (chainId === "0xNaN") return; //Ignore 0xNaN, when user doesn't set chainId
+  //@ts-ignore
+  injected.emitUpdate({ chainId, provider: window.ethereum })
+}
+
+//Patch networkChanged loading error
+//@ts-ignore
+injected.handleNetworkChanged = (networkId: string | number) => {
+  console.debug("Handling 'networkChanged' event with payload", networkId)
+  if (networkId === "loading") return; //Ignore loading, networkId as causes errors
+  //@ts-ignore
+  injected.emitUpdate({ chainId: networkId, provider: window.ethereum })
+}
+
 // mainnet only
 export const walletconnect = new WalletConnectConnector({
   rpc: { [ChainId.MAINNET]: NETWORK_URL[ChainId.MAINNET] },
