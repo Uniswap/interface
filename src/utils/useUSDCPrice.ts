@@ -1,6 +1,6 @@
-import { ChainId, Currency, currencyEquals, JSBI, Price } from '@uniswap/sdk'
+import { Currency, currencyEquals, JSBI, Price } from '@uniswap/sdk'
 import { useMemo } from 'react'
-import constants from '../constants'
+import constants, { ChainId } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
 import { useActiveWeb3React } from '../hooks'
 import { wrappedCurrency } from './wrappedCurrency'

@@ -3,10 +3,9 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { PortisConnector } from '@web3-react/portis-connector'
-import { ChainId } from '@uniswap/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
-import { NETWORK_URL, SUPPORTED_CHAIN_IDS, FORMATIC_KEY, PORTIS_ID } from '../constants'
+import { ChainId, NETWORK_URL, SUPPORTED_CHAIN_IDS, FORMATIC_KEY, PORTIS_ID } from '../constants'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
 
