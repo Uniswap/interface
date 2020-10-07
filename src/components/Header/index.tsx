@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
 
-import { ChainId } from '../../constants'
+import { NETWORK_LABELS } from '../../constants'
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks'
@@ -258,13 +258,6 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 `}
 `
 
-const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
-  [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ROPSTEN]: 'Ropsten',
-  [ChainId.GÖRLI]: 'Görli',
-  [ChainId.KOVAN]: 'Kovan'
-}
-
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
@@ -329,7 +322,7 @@ export default function Header() {
       <HeaderControls>
         <HeaderElement>
           <HideSmall>
-            {chainId && NETWORK_LABELS[chainId] && (
+            {(chainId === 0 || chainId) && NETWORK_LABELS[chainId] && (
               <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
             )}
           </HideSmall>
