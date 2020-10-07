@@ -9,6 +9,8 @@ const MULTICALL_NETWORKS: { [chainId in ChainId]: string } = {
   [ChainId.RINKEBY]: constants[ChainId.RINKEBY].MULTICALL_ADDRESS,
   [ChainId.GÖRLI]: constants[ChainId.GÖRLI].MULTICALL_ADDRESS,
   [ChainId.KOVAN]: constants[ChainId.KOVAN].MULTICALL_ADDRESS,
+  [ChainId.RSK_MAINNET]: constants[ChainId.RSK_MAINNET].MULTICALL_ADDRESS,
+  [ChainId.RSK_TESTNET]: constants[ChainId.RSK_TESTNET].MULTICALL_ADDRESS,
   [ChainId.LOCAL]: constants[ChainId.LOCAL].MULTICALL_ADDRESS
 }
 

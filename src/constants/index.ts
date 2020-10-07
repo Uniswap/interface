@@ -11,11 +11,27 @@ export enum ChainId {
   RINKEBY = 4,
   GÖRLI = 5,
   KOVAN = 42,
-  LOCAL = 5777
+  LOCAL = 5777,
+  RSK_MAINNET = 30,
+  RSK_TESTNET = 31
 }
 
-const constants = {
-  supportedChainIds: [ChainId.MAINNET, ChainId.ROPSTEN, ChainId.RINKEBY, ChainId.GÖRLI, ChainId.KOVAN, ChainId.LOCAL],
+interface ChainIdConfig {
+  NETWORK_URL: string,
+  ROUTER_ADDRESS: string,
+  MULTICALL_ADDRESS: string,
+  tokens: {
+    WETH: Token,
+    [key: string]: Token
+  },
+  GOVERNANCE_ADDRESS?: string,
+  UNI_ADDRESS?: string,
+  MERKLE_DISTRIBUTOR_ADDRESS?: string,
+  V1_FACTORY_ADDRESS?: string,
+  [key: string]: any
+}
+
+const constants: { [chainId in ChainId]: ChainIdConfig } = {
   [ChainId.MAINNET]: {
     NETWORK_URL: `https://mainnet.infura.io/v3/${INFURA_ID}`,
     PROPOSAL_LENGTH_IN_DAYS: 7,
@@ -103,6 +119,56 @@ const constants = {
       UNI: new Token(ChainId.KOVAN, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap'),
     }
   },
+  [ChainId.RSK_MAINNET]: {
+    NETWORK_URL: 'https://public-node.rsk.co',
+    PROPOSAL_LENGTH_IN_DAYS: 7,
+    GOVERNANCE_ADDRESS: '0x0000000000000000000000000000000000000000',
+    ROUTER_ADDRESS: '0xf55c496bb1058690DB1401c4b9C19F3f44374961',
+    UNI_ADDRESS: '0x0000000000000000000000000000000000000000',
+    MERKLE_DISTRIBUTOR_ADDRESS: '0x0000000000000000000000000000000000000000',
+    V1_FACTORY_ADDRESS: '0x0000000000000000000000000000000000000000',
+    MULTICALL_ADDRESS: '0x4Eeebb5580769Ba6d26bFD07bE636300076d1831',
+    tokens: {
+      WETH: new Token(ChainId.RSK_MAINNET as ChainId, '0x967F8799aF07dF1534d48A95a5C9FEBE92c53AE0', 18, 'WRBTC', 'Wrapped RBTC'),
+      UNI: new Token(ChainId.RSK_MAINNET as ChainId, '0x0000000000000000000000000000000000000000', 18, 'FAKEUNI', 'FakeUniswap'),
+      RIF: new Token(ChainId.RSK_MAINNET as ChainId, '0x2AcC95758f8b5F583470ba265EB685a8F45fC9D5', 18, 'RIF', 'RIF Token'),
+      DOC: new Token(ChainId.RSK_MAINNET as ChainId, '0xe700691dA7b9851F2F35f8b8182c69c53CcaD9Db', 18, 'DOC', 'Dollar on Chain'),
+      BitPRO: new Token(ChainId.RSK_MAINNET as ChainId, '0x440CD83C160De5C96Ddb20246815eA44C7aBBCa8', 18, 'BPRO', 'BitPRO'),
+      rDAI: new Token(ChainId.RSK_MAINNET as ChainId, '0x6B1A73d547F4009a26B8485B63d7015d248Ad406', 18, 'rDAI', 'Dai Stablecoin'),
+      RDOC: new Token(ChainId.RSK_MAINNET as ChainId, '0x2d919F19D4892381D58edeBeca66D5642Cef1a1f', 18, 'RDOC', 'RIF Dollar on Chain'),
+      RPRO: new Token(ChainId.RSK_MAINNET as ChainId, '0xf4d27c56595Ed59B66cC7F03CFF5193e4bd74a61', 18, 'RPRO', 'RIF Pro'),
+      rFLIXX: new Token(ChainId.RSK_MAINNET as ChainId, '0x73c08467E23F7DCB7dDBbc8d05041B74467A498A', 18, 'rFLIXX', 'Flixxo on RSK'),
+      rLINK: new Token(ChainId.RSK_MAINNET as ChainId, '0x14AdaE34beF7ca957Ce2dDe5ADD97ea050123827', 18, 'rLINK', 'ChainLink Token'),
+      rUSDC: new Token(ChainId.RSK_MAINNET as ChainId, '0x5a42221D7AaE8e185BC0054Bb036D9757eC18857', 18, 'rUSDC', 'USD Coin'),
+      rUSDT: new Token(ChainId.RSK_MAINNET as ChainId, '0xe506F698b31a66049BD4653ed934E7a07Cbc5549', 18, 'rUSDT', 'Tether USD')
+    }
+  },
+  [ChainId.RSK_TESTNET]: {
+    NETWORK_URL: 'https://public-node.testnet.rsk.co',
+    PROPOSAL_LENGTH_IN_DAYS: 7,
+    GOVERNANCE_ADDRESS: '0x0000000000000000000000000000000000000000',
+    ROUTER_ADDRESS: '0xf55c496bb1058690DB1401c4b9C19F3f44374961',
+    UNI_ADDRESS: '0x0000000000000000000000000000000000000000',
+    MERKLE_DISTRIBUTOR_ADDRESS: '0x0000000000000000000000000000000000000000',
+    V1_FACTORY_ADDRESS: '0x0000000000000000000000000000000000000000',
+    MULTICALL_ADDRESS: '0x4Eeebb5580769Ba6d26bFD07bE636300076d1831',
+    tokens: {
+      WETH: new Token(ChainId.RSK_TESTNET as ChainId, '0x09B6Ca5E4496238a1F176aEA6bB607db96C2286E', 18, 'WRBTC', 'Wrapped RBTC'),
+      UNI: new Token(ChainId.RSK_TESTNET as ChainId, '0x0000000000000000000000000000000000000000', 18, 'FAKEUNI', 'FakeUniswap'),
+      tRIF: new Token(ChainId.RSK_TESTNET as ChainId, '0x19F64674D8A5B4E652319F5e239eFd3bc969A1fE', 18, 'tRIF', 'tRIF Token'),
+      DOC: new Token(ChainId.RSK_TESTNET as ChainId, '0xCB46c0ddc60D18eFEB0E586C17Af6ea36452Dae0', 18, 'DOC', 'Dollar on Chain'),
+      BPRO: new Token(ChainId.RSK_TESTNET as ChainId, '0x4dA7997A819bb46B6758B9102234c289dD2Ad3bf', 18, 'BPRO', 'BitPRO'),
+      RDOC: new Token(ChainId.RSK_TESTNET as ChainId, '0xC3De9F38581f83e281f260d0DdbaAc0e102ff9F8', 18, 'RDOC', 'RIF Dollar on Chain'),
+      RFPRO: new Token(ChainId.RSK_TESTNET as ChainId, '0x23A1aA7b11e68beBE560a36beC04D1f79357f28d', 18, 'RPRO', 'RIF PRO'),
+      rKovDAI: new Token(ChainId.RSK_TESTNET as ChainId, '0x0d86FCA9Be034A363Cf12c9834Af08D54a10451C', 18, 'rKovDAI', 'Dai Stablecoin'),
+      rKovTUSD: new Token(ChainId.RSK_TESTNET as ChainId, '0x0a8d098e31A60DA2b9c874d97dE6e6B385C28E9D', 18, 'rKovTUSD', 'True USD'),
+      rKovWETH: new Token(ChainId.RSK_TESTNET as ChainId, '0xd15cDD74DfF1A6A81Ca639B038839B126BC01FF9', 18, 'rKovWETH', 'Wrapped Ether'),
+      rKovZRX: new Token(ChainId.RSK_TESTNET as ChainId, '0x823b3d62Cb5a4ED97f26eD9888ea721b569Afe27', 18, 'rKovZRX', '0x Protocol'),
+      rKovLINK: new Token(ChainId.RSK_TESTNET as ChainId, '0x8bBbd80981FE76d44854D8DF305e8985c19f0e78', 18, 'rKovLINK', 'ChainLink Token'),
+      rKovUSDC: new Token(ChainId.RSK_TESTNET as ChainId, '0x6117C9529F15c52e2d3188d5285C745B757b5825', 18, 'rKovUSDC', 'USD Coin'),
+      rKovUSDT: new Token(ChainId.RSK_TESTNET as ChainId, '0xcdc8ccBbFB6407c53118fE47259e8d00C81F42CD', 18, 'rKovUSDT', 'Tether USD')
+    }
+  },
   [ChainId.LOCAL]: {
     NETWORK_URL: 'http://localhost:7545',
     PROPOSAL_LENGTH_IN_DAYS: 7,
@@ -114,7 +180,7 @@ const constants = {
     MULTICALL_ADDRESS: '0x0000000000000000000000000000000000000000',
     tokens: {
       WETH: new Token(ChainId.LOCAL as ChainId, '0x0000000000000000000000000000000000000000', 18, 'WETH', 'Wrapped Ether'),
-      UNI: new Token(ChainId.LOCAL as ChainId, '0x0000000000000000000000000000000000000000', 18, 'UNI', 'Uniswap'),
+      UNI: new Token(ChainId.LOCAL as ChainId, '0x0000000000000000000000000000000000000000', 18, 'FAKEUNI', 'FakeUniswap'),
     }
   },
 }
@@ -126,9 +192,19 @@ export const NETWORK_URL: { [chainId in ChainId]: string } = {
   [ChainId.RINKEBY]: constants[ChainId.RINKEBY].NETWORK_URL,
   [ChainId.KOVAN]: constants[ChainId.KOVAN].NETWORK_URL,
   [ChainId.GÖRLI]: constants[ChainId.GÖRLI].NETWORK_URL,
-  5777: constants[ChainId.LOCAL].NETWORK_URL
+  [ChainId.RSK_MAINNET]: constants[ChainId.RSK_MAINNET].NETWORK_URL,
+  [ChainId.RSK_TESTNET]: constants[ChainId.RSK_TESTNET].NETWORK_URL,
+  [ChainId.LOCAL]: constants[ChainId.LOCAL].NETWORK_URL
 }
-export const SUPPORTED_CHAIN_IDS: ChainId[] = constants.supportedChainIds
+export const SUPPORTED_CHAIN_IDS: ChainId[] = [
+  ChainId.MAINNET,
+  ChainId.ROPSTEN,
+  ChainId.RINKEBY,
+  ChainId.GÖRLI,
+  ChainId.KOVAN,
+  ChainId.RSK_MAINNET,
+  ChainId.RSK_TESTNET,
+  ChainId.LOCAL]
 
 export const ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: constants[ChainId.MAINNET].ROUTER_ADDRESS,
@@ -136,6 +212,8 @@ export const ROUTER_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ROPSTEN]: constants[ChainId.ROPSTEN].ROUTER_ADDRESS,
   [ChainId.GÖRLI]: constants[ChainId.GÖRLI].ROUTER_ADDRESS,
   [ChainId.KOVAN]: constants[ChainId.KOVAN].ROUTER_ADDRESS,
+  [ChainId.RSK_MAINNET]: constants[ChainId.RSK_MAINNET].ROUTER_ADDRESS,
+  [ChainId.RSK_TESTNET]: constants[ChainId.RSK_TESTNET].ROUTER_ADDRESS,
   [ChainId.LOCAL]: constants[ChainId.LOCAL].ROUTER_ADDRESS
 }
 
@@ -159,6 +237,8 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.ROPSTEN]: constants[ChainId.ROPSTEN].tokens.UNI,
   [ChainId.GÖRLI]: constants[ChainId.GÖRLI].tokens.UNI,
   [ChainId.KOVAN]: constants[ChainId.KOVAN].tokens.UNI,
+  [ChainId.RSK_MAINNET]: constants[ChainId.RSK_MAINNET].tokens.UNI,
+  [ChainId.RSK_TESTNET]: constants[ChainId.RSK_TESTNET].tokens.UNI,
   [ChainId.LOCAL]: constants[ChainId.LOCAL].tokens.UNI
 }
 
@@ -175,7 +255,9 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   [ChainId.RINKEBY]: [constants[ChainId.RINKEBY].tokens.WETH],
   [ChainId.GÖRLI]: [constants[ChainId.GÖRLI].tokens.WETH],
   [ChainId.KOVAN]: [constants[ChainId.KOVAN].tokens.WETH],
-  [ChainId.LOCAL]: [constants[ChainId.LOCAL].tokens.WETH]
+  [ChainId.RSK_MAINNET]: [constants[ChainId.RSK_MAINNET].tokens.WETH, constants[ChainId.RSK_MAINNET].tokens.DOC],
+  [ChainId.RSK_TESTNET]: [constants[ChainId.RSK_TESTNET].tokens.WETH, constants[ChainId.RSK_TESTNET].tokens.DOC],
+  [ChainId.LOCAL]: [constants[ChainId.LOCAL].tokens.WETH],
 }
 
 /**
@@ -195,6 +277,8 @@ export const SUGGESTED_BASES: ChainTokenList = {
   [ChainId.RINKEBY]: [constants[ChainId.RINKEBY].tokens.WETH],
   [ChainId.GÖRLI]: [constants[ChainId.GÖRLI].tokens.WETH],
   [ChainId.KOVAN]: [constants[ChainId.KOVAN].tokens.WETH],
+  [ChainId.RSK_MAINNET]: [constants[ChainId.RSK_MAINNET].tokens.WETH, constants[ChainId.RSK_MAINNET].tokens.DOC],
+  [ChainId.RSK_TESTNET]: [constants[ChainId.RSK_TESTNET].tokens.WETH, constants[ChainId.RSK_TESTNET].tokens.DOC],
   [ChainId.LOCAL]: [constants[ChainId.LOCAL].tokens.WETH]
 }
 
@@ -205,6 +289,8 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   [ChainId.RINKEBY]: [constants[ChainId.RINKEBY].tokens.WETH],
   [ChainId.GÖRLI]: [constants[ChainId.GÖRLI].tokens.WETH],
   [ChainId.KOVAN]: [constants[ChainId.KOVAN].tokens.WETH],
+  [ChainId.RSK_MAINNET]: [constants[ChainId.RSK_MAINNET].tokens.WETH, constants[ChainId.RSK_MAINNET].tokens.DOC],
+  [ChainId.RSK_TESTNET]: [constants[ChainId.RSK_TESTNET].tokens.WETH, constants[ChainId.RSK_TESTNET].tokens.DOC],
   [ChainId.LOCAL]: [constants[ChainId.LOCAL].tokens.WETH]
 }
 

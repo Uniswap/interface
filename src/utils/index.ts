@@ -23,6 +23,8 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   [ChainId.RINKEBY]: 'rinkeby.',
   [ChainId.GÖRLI]: 'goerli.',
   [ChainId.KOVAN]: 'kovan.',
+  [ChainId.RSK_MAINNET]: '',
+  [ChainId.RSK_TESTNET]: '',
   [ChainId.LOCAL]: ''
 }
 

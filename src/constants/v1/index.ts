@@ -5,7 +5,7 @@ import V1_FACTORY_ABI from './v1_factory.json'
 
 import constants from '../index';
 
-const V1_FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
+const V1_FACTORY_ADDRESSES: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: constants[ChainId.MAINNET].V1_FACTORY_ADDRESS,
   [ChainId.ROPSTEN]: constants[ChainId.ROPSTEN].V1_FACTORY_ADDRESS,
   [ChainId.RINKEBY]: constants[ChainId.RINKEBY].V1_FACTORY_ADDRESS,
