@@ -12,6 +12,8 @@ import { useV1ExchangeContract } from './useContract'
 import useENS from './useENS'
 import { Version } from './useToggledVersion'
 
+import { hexToNumber } from '@harmony-js/utils';
+
 import { useActiveHmyReact } from '../hooks'
 
 export enum SwapCallbackState {
@@ -162,7 +164,7 @@ export function useSwapCallback(
 
                 let opts = wrapper.gasOptions()
                 if (value && !isZero(value)) {
-                  opts.value = value
+                  opts.value = hexToNumber(value);
                 }
 
                 //return contract.callStatic[methodName](...args, options)
@@ -218,9 +220,9 @@ export function useSwapCallback(
         */
 
         let opts = wrapper.gasOptions()
-        opts.gasLimit = calculateGasMargin(gasEstimate).toNumber()
+        //opts.gasLimit = calculateGasMargin(gasEstimate).toNumber()
         if (value && !isZero(value)) {
-          opts.value = value
+          opts.value = hexToNumber(value);
         }
         opts.from = account
 
