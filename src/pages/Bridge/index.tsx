@@ -88,7 +88,7 @@ export default function Bridge({
   const toggleWalletModal = useWalletModalToggle()
 
   // set bridge and approval address
-  const homeBridgeChain = Number(process.env.REACT_APP_HOME_BRIDGE_CHAIN)
+  const homeBridgeChain = ChainId.MAINNET
   let bridgeAddress: string
   let approvalAddress
 
@@ -123,7 +123,7 @@ export default function Bridge({
 
       estimate = tokenContract.estimateGas.transferAndCall
       method = tokenContract.transferAndCall
-      args = [bridgeAddress, parsedAmountInput.raw.toString(), '0x']
+      args = [bridgeAddress, parsedAmountInput.raw.toString(), []]
       value = null
 
       // foreign
@@ -216,8 +216,8 @@ export default function Bridge({
                 )}
                 <ButtonError
                   onClick={onTransfer}
-                  disabled={approval !== ApprovalState.APPROVED}
-                  error={!!parsedAmounts[Field.INPUT]}
+                  disabled={approval !== ApprovalState.APPROVED || !!inputError}
+                  error={!!inputError}
                 >
                   <Text fontSize={20} fontWeight={500}>
                     {inputError ?? 'Transfer'}
