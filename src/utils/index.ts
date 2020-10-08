@@ -51,6 +51,32 @@ export function getEtherscanLink(chainId: ChainId, data: string, type: 'transact
   }
 }
 
+export function getEtherscanLinkText(chainId: number): string {
+  switch (chainId) {
+    case ChainId.FUSE:
+      return 'View on Fuse Explorer'
+    case ChainId.MAINNET:
+      return 'View on Etherscan'
+    case ChainId.ROPSTEN:
+      return 'View on Etherscan'
+    default:
+      return 'View on Etherscan'
+  }
+}
+
+export function getNativeCurrencySymbol(chainId?: number): string {
+  switch (chainId) {
+    case ChainId.FUSE:
+      return 'FUSE'
+    case ChainId.MAINNET:
+      return 'ETH'
+    case ChainId.ROPSTEN:
+      return 'ETH'
+    default:
+      return 'FUSE'
+  }
+}
+
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
 export function shortenAddress(address: string, chars = 4): string {
   const parsed = isAddress(address)
