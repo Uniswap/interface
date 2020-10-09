@@ -1,6 +1,6 @@
 //import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
-import { TransactionResponse } from '@ethersproject/providers'
+//import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, HARMONY, Percent, WONE } from '@harmony-swoop/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
@@ -51,7 +51,7 @@ export default function RemoveLiquidity({
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
 
-  const { account, chainId, library, wallet } = useActiveHmyReact()
+  const { account, chainId, library, wallet, wrapper } = useActiveHmyReact()
 
   const [tokenA, tokenB] = useMemo(() => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)], [
     currencyA,
@@ -102,11 +102,14 @@ export default function RemoveLiquidity({
   // allowance handling
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   //const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
-  const [approval,] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
+  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
   async function onAttemptToApprove() {
     if (!pairContract || !pair || !library) throw new Error('missing dependencies')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
+
+    return approveCallback()
+
     // try to gather a signature for permission
     /* TODO: re-enable this later!
     const nonce = await pairContract.nonces(account)
@@ -282,8 +285,11 @@ export default function RemoveLiquidity({
 
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
       methodNames.map(methodName =>
-        router.estimateGas[methodName](...args)
-          .then(calculateGasMargin)
+        router.methods[methodName](...args).estimateGas(wrapper.gasOptionsForEstimation())
+          .then(gasEstimateResponse => {
+            let gasEstimate = BigNumber.from(gasEstimateResponse)
+            return calculateGasMargin(gasEstimate)
+          })
           .catch(error => {
             console.error(`estimateGas failed`, methodName, args, error)
             return undefined
@@ -300,13 +306,15 @@ export default function RemoveLiquidity({
       console.error('This transaction would fail. Please contact support.')
     } else {
       const methodName = methodNames[indexOfSuccessfulEstimation]
-      const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
+      //const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
 
       setAttemptingTxn(true)
-      await router[methodName](...args, {
-        gasLimit: safeGasEstimate
-      })
-        .then((response: TransactionResponse) => {
+
+      let gasOptions = wrapper.gasOptions()
+      //gasOptions.gasLimit = safeGasEstimate.toString()
+
+      await router.methods[methodName](...args).send(gasOptions)
+        .then((response: any) => {
           setAttemptingTxn(false)
 
           addTransaction(response, {
@@ -321,7 +329,7 @@ export default function RemoveLiquidity({
               currencyB?.symbol
           })
 
-          setTxHash(response.hash)
+          setTxHash(response.transaction.receipt.transactionHash)
 
           ReactGA.event({
             category: 'Liquidity',
@@ -576,7 +584,7 @@ export default function RemoveLiquidity({
                               currencyA && currencyEquals(currencyA, woneToken) ? 'ONE' : currencyIdA
                             }/${currencyB && currencyEquals(currencyB, woneToken) ? 'ONE' : currencyIdB}`}
                           >
-                            Receive ETH
+                            Receive ONE
                           </StyledInternalLink>
                         ) : null}
                       </RowBetween>

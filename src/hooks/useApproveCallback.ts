@@ -8,7 +8,7 @@ import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
-//import { calculateGasMargin } from '../utils'
+import { calculateGasMargin } from '../utils'
 import { useTokenContract } from './useContract'
 import { Version } from './useToggledVersion'
 
@@ -75,15 +75,17 @@ export function useApproveCallback(
     }
 
     let useExact = false
-    /*
-    const estimatedGas = await tokenContract.estimateGas.approve(spender, MaxUint256).catch(() => {
+    const estimatedGas = await tokenContract.methods.approve(spender, MaxUint256).estimateGas(wrapper.gasOptionsForEstimation()).catch(() => {
       // general fallback for tokens who restrict approval amounts
       useExact = true
-      return tokenContract.estimateGas.approve(spender, amountToApprove.raw.toString())
-    })*/
+      return tokenContract.methods.approve(spender, amountToApprove.raw.toString()).estimateGas(wrapper.gasOptionsForEstimation())
+    })
+
+    let gasOptions = wrapper.gasOptions();
+    gasOptions.gasLimit = calculateGasMargin(estimatedGas);
 
     return tokenContract.methods
-      .approve(spender, useExact ? amountToApprove.raw.toString() : MaxUint256.toString()).send(wrapper.gasOptions())
+      .approve(spender, useExact ? amountToApprove.raw.toString() : MaxUint256.toString()).send(gasOptions)
       .then((response: any) => {
         addTransaction(response, {
           summary: 'Approve ' + amountToApprove.currency.symbol,
