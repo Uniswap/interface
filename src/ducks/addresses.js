@@ -3,11 +3,11 @@ const TESTNET = {
         "addresses": [
             [
                 "ENGL",
-                "0x7743fb03Fb248c2ef473e9f6985d12D6db953C79"
+                "0x984718904f853A004F145d133dEAb0c1dE50466B"
             ],
             [
                 "CLIM",
-                "0x685FE8Cb568C76714e57CaB27790e0f77c264C46"
+                "0x61950E81019caDC560036125B262EF0CAa705896"
             ]
         ]
     },
@@ -23,8 +23,8 @@ const TESTNET = {
             ]
         ],
         "fromToken": {
-            "0x7743fb03Fb248c2ef473e9f6985d12D6db953C79": "0x5AeC86734172C5C257Eb2a86e705EF375207c5c8",
-            "0x685FE8Cb568C76714e57CaB27790e0f77c264C46": "0x92570E6E10fa2196952B039c4A59b5e617Eb9A50"
+            "0x984718904f853A004F145d133dEAb0c1dE50466B": "0x5AeC86734172C5C257Eb2a86e705EF375207c5c8",
+            "0x61950E81019caDC560036125B262EF0CAa705896": "0x92570E6E10fa2196952B039c4A59b5e617Eb9A50"
         }
     },
     "factoryAddress": "0xa80171aB64F9913C5d0Df5b06D00030B4febDD6A"
