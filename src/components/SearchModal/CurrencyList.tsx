@@ -15,7 +15,7 @@ import CurrencyLogo from '../CurrencyLogo'
 import { MouseoverTooltip } from '../Tooltip'
 import { FadedSpan, MenuItem } from './styleds'
 import Loader from '../Loader'
-import { isTokenOnList } from '../../utils'
+import { isTokenOnList, getCurrencySymbol } from '../../utils'
 
 function currencyKey(currency: Currency): string {
   return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
@@ -115,7 +115,7 @@ function CurrencyRow({
       <CurrencyLogo currency={currency} size={'24px'} />
       <Column>
         <Text title={currency.name} fontWeight={500}>
-          {currency.symbol}
+          {getCurrencySymbol(currency, chainId)}
         </Text>
         <FadedSpan>
           {!isOnSelectedList && customAdded ? (

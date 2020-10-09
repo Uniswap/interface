@@ -1,4 +1,4 @@
-import { CurrencyAmount, JSBI, Token, Trade } from 'uniswap-fuse-sdk'
+import { CurrencyAmount, JSBI, Token, Trade, ChainId } from 'uniswap-fuse-sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -44,6 +44,7 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
+import { getDefaultMainnetCurrency } from '../../utils'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -53,6 +54,7 @@ export default function Swap() {
     useCurrency(loadedUrlParams?.inputCurrencyId),
     useCurrency(loadedUrlParams?.outputCurrencyId)
   ]
+
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
@@ -62,7 +64,7 @@ export default function Swap() {
     setDismissTokenWarning(true)
   }, [])
 
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
@@ -149,6 +151,8 @@ export default function Swap() {
     swapErrorMessage: undefined,
     txHash: undefined
   })
+
+  const defaultCurrency = useCurrency(getDefaultMainnetCurrency())
 
   const formattedAmounts = {
     [independentField]: typedValue,
@@ -299,7 +303,7 @@ export default function Swap() {
               label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
               value={formattedAmounts[Field.INPUT]}
               showMaxButton={!atMaxAmountInput}
-              currency={currencies[Field.INPUT]}
+              currency={chainId === ChainId.MAINNET ? defaultCurrency : currencies[Field.INPUT]}
               onUserInput={handleTypeInput}
               onMax={handleMaxInput}
               onCurrencySelect={handleInputSelect}

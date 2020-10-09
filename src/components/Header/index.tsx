@@ -5,7 +5,7 @@ import { Text } from 'rebass'
 
 import styled from 'styled-components'
 
-import Logo from '../../assets/svg/fuse_logo.svg'
+import Logo from '../../assets/images/fuse-logo-wordmark.png'
 import { useActiveWeb3React } from '../../hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 

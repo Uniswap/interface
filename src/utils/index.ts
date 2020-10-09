@@ -169,3 +169,19 @@ export function getForiegnBridgeContract(chainId: number, library: Web3Provider,
   const address = getBridgeForeignAddress(chainId)
   return getContract(address, ForeignMultiAMBErc20ToErc677ABI, library, account)
 }
+
+export function getCurrencySymbol(currency: Currency | null | undefined, chainId: number | undefined) {
+  if (chainId === ChainId.MAINNET || chainId === ChainId.ROPSTEN) {
+    if (currency === ETHER) {
+      return 'ETH'
+    } else {
+      return currency?.symbol
+    }
+  } else {
+    return currency?.symbol
+  }
+}
+
+export function getDefaultMainnetCurrency() {
+  return '0x970b9bb2c0444f5e81e9d0efb84c8ccdcdcaf84d'
+}
