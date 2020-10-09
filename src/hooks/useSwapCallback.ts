@@ -5,7 +5,8 @@ import { useMemo } from 'react'
 import { BIPS_BASE, DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getHarmonyRouterContract, isAddress, shortenAddress } from '../utils'
+// import { calculateGasMargin, getHarmonyRouterContract, isAddress, shortenAddress } from '../utils'
+import { getHarmonyRouterContract, isAddress, shortenAddress } from '../utils'
 import isZero from '../utils/isZero'
 import v1SwapArguments from '../utils/v1SwapArguments'
 import { useV1ExchangeContract } from './useContract'
@@ -208,7 +209,7 @@ export function useSwapCallback(
             contract,
             parameters: { methodName, args, value }
           },
-          gasEstimate
+          //gasEstimate
         } = successfulEstimation
 
         /*
