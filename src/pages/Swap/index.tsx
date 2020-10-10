@@ -258,8 +258,11 @@ export default function Swap() {
     setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
+  const [inputSelected, setInputSelected] = useState<boolean>(false)
+
   const handleInputSelect = useCallback(
     inputCurrency => {
+      setInputSelected(true)
       setApprovalSubmitted(false) // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency)
     },
@@ -303,7 +306,13 @@ export default function Swap() {
               label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
               value={formattedAmounts[Field.INPUT]}
               showMaxButton={!atMaxAmountInput}
-              currency={chainId === ChainId.MAINNET ? defaultCurrency : currencies[Field.INPUT]}
+              currency={
+                chainId === ChainId.MAINNET
+                  ? inputSelected
+                    ? currencies[Field.INPUT]
+                    : defaultCurrency
+                  : currencies[Field.INPUT]
+              }
               onUserInput={handleTypeInput}
               onMax={handleMaxInput}
               onCurrencySelect={handleInputSelect}
