@@ -9,15 +9,14 @@ import { CardSection, DataCard } from '../../components/earn/styled'
 import { ArrowLeft } from 'react-feather'
 import { ButtonPrimary } from '../../components/Button'
 import { ProposalStatus } from './styled'
-import { useProposalData, useUserVotes, useUserDelegatee, ProposalData } from '../../state/governance/hooks'
+import { useProposalData, useUserVotesAsOfBlock, ProposalData } from '../../state/governance/hooks'
 import { useTimestampFromBlock } from '../../hooks/useTimestampFromBlock'
 import { DateTime } from 'luxon'
 import ReactMarkdown from 'react-markdown'
 import VoteModal from '../../components/vote/VoteModal'
 import { TokenAmount, JSBI } from '@uniswap/sdk'
-import { useTokenBalance } from '../../state/wallet/hooks'
 import { useActiveWeb3React } from '../../hooks'
-import { UNI, ZERO_ADDRESS, PROPOSAL_LENGTH_IN_DAYS, COMMON_CONTRACT_NAMES } from '../../constants'
+import { PROPOSAL_LENGTH_IN_DAYS, COMMON_CONTRACT_NAMES } from '../../constants'
 import { isAddress, getEtherscanLink } from '../../utils'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
@@ -102,7 +101,7 @@ export default function VotePage({
     params: { id }
   }
 }: RouteComponentProps<{ id: string }>) {
-  const { account, chainId } = useActiveWeb3React()
+  const { chainId } = useActiveWeb3React()
 
   // get data for this specific proposal
   const proposalData: ProposalData | undefined = useProposalData(id)
@@ -132,13 +131,15 @@ export default function VotePage({
   const againstPercentage: string =
     proposalData && totalVotes ? ((proposalData.againstCount * 100) / totalVotes).toFixed(0) + '%' : '0%'
 
-  // show delegation option if they have have a balance, have not delegated
-  const availableVotes: TokenAmount | undefined = useUserVotes()
-  const uniBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, chainId ? UNI[chainId] : undefined)
-  const userDelegatee: string | undefined = useUserDelegatee()
-  const showUnlockVoting = Boolean(
-    uniBalance && JSBI.notEqual(uniBalance.raw, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
-  )
+  // only count available votes as of the proposal start block
+  const availableVotes: TokenAmount | undefined = useUserVotesAsOfBlock(proposalData?.startBlock ?? undefined)
+
+  // only show voting if user has > 0 votes at proposal start block and proposal is active,
+  const showvotingButtons =
+    availableVotes &&
+    JSBI.greaterThan(availableVotes.raw, JSBI.BigInt(0)) &&
+    proposalData &&
+    proposalData.status === 'active'
 
   // show links in propsoal details if content is an address
   // if content is contract with common name, replace address with common name
@@ -171,23 +172,9 @@ export default function VotePage({
                 ? 'Voting ends approximately ' + (endDate && endDate.toLocaleString(DateTime.DATETIME_FULL))
                 : ''}
             </TYPE.main>
-            {showUnlockVoting && endDate && endDate > now && (
-              <ButtonPrimary
-                style={{ width: 'fit-content' }}
-                padding="8px"
-                borderRadius="8px"
-                onClick={toggelDelegateModal}
-              >
-                Unlock Voting
-              </ButtonPrimary>
-            )}
           </RowBetween>
         </AutoColumn>
-        {!showUnlockVoting &&
-        availableVotes &&
-        JSBI.greaterThan(availableVotes?.raw, JSBI.BigInt(0)) &&
-        endDate &&
-        endDate > now ? (
+        {showvotingButtons ? (
           <RowFixed style={{ width: '100%', gap: '12px' }}>
             <ButtonPrimary
               padding="8px"
