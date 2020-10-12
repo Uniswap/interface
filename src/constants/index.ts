@@ -34,6 +34,12 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
 }
 
+export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
+  '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984': 'UNI',
+  '0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F': 'Governance Alpha',
+  '0x1a9C8182C09F50C8318d769245beA52c32BE35BC': 'Timelock'
+}
+
 // TODO: specify merkle distributor for mainnet
 export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: '0x090D4613473dEE047c3f2706764f49E0821D256e'
