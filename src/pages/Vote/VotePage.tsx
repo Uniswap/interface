@@ -9,19 +9,20 @@ import { CardSection, DataCard } from '../../components/earn/styled'
 import { ArrowLeft } from 'react-feather'
 import { ButtonPrimary } from '../../components/Button'
 import { ProposalStatus } from './styled'
-import { useProposalData, useUserVotes, useUserDelegatee, ProposalData } from '../../state/governance/hooks'
+import { useProposalData, useUserVotesAsOfBlock, ProposalData, useUserDelegatee } from '../../state/governance/hooks'
 import { useTimestampFromBlock } from '../../hooks/useTimestampFromBlock'
 import { DateTime } from 'luxon'
 import ReactMarkdown from 'react-markdown'
 import VoteModal from '../../components/vote/VoteModal'
 import { TokenAmount, JSBI } from '@uniswap/sdk'
-import { useTokenBalance } from '../../state/wallet/hooks'
 import { useActiveWeb3React } from '../../hooks'
-import { UNI, ZERO_ADDRESS, PROPOSAL_LENGTH_IN_DAYS, COMMON_CONTRACT_NAMES } from '../../constants'
+import { PROPOSAL_LENGTH_IN_DAYS, COMMON_CONTRACT_NAMES, UNI, ZERO_ADDRESS } from '../../constants'
 import { isAddress, getEtherscanLink } from '../../utils'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
 import DelegateModal from '../../components/vote/DelegateModal'
+import { GreyCard } from '../../components/Card'
+import { useTokenBalance } from '../../state/wallet/hooks'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -102,7 +103,7 @@ export default function VotePage({
     params: { id }
   }
 }: RouteComponentProps<{ id: string }>) {
-  const { account, chainId } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
 
   // get data for this specific proposal
   const proposalData: ProposalData | undefined = useProposalData(id)
@@ -132,11 +133,21 @@ export default function VotePage({
   const againstPercentage: string =
     proposalData && totalVotes ? ((proposalData.againstCount * 100) / totalVotes).toFixed(0) + '%' : '0%'
 
-  // show delegation option if they have have a balance, have not delegated
-  const availableVotes: TokenAmount | undefined = useUserVotes()
+  // only count available votes as of the proposal start block
+  const availableVotes: TokenAmount | undefined = useUserVotesAsOfBlock(proposalData?.startBlock ?? undefined)
+
+  // only show voting if user has > 0 votes at proposal start block and proposal is active,
+  const showVotingButtons =
+    availableVotes &&
+    JSBI.greaterThan(availableVotes.raw, JSBI.BigInt(0)) &&
+    proposalData &&
+    proposalData.status === 'active'
+
   const uniBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, chainId ? UNI[chainId] : undefined)
   const userDelegatee: string | undefined = useUserDelegatee()
-  const showUnlockVoting = Boolean(
+
+  // in blurb link to home page if they are able to unlock
+  const showLinkForUnlock = Boolean(
     uniBalance && JSBI.notEqual(uniBalance.raw, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
   )
 
@@ -171,23 +182,22 @@ export default function VotePage({
                 ? 'Voting ends approximately ' + (endDate && endDate.toLocaleString(DateTime.DATETIME_FULL))
                 : ''}
             </TYPE.main>
-            {showUnlockVoting && endDate && endDate > now && (
-              <ButtonPrimary
-                style={{ width: 'fit-content' }}
-                padding="8px"
-                borderRadius="8px"
-                onClick={toggelDelegateModal}
-              >
-                Unlock Voting
-              </ButtonPrimary>
-            )}
           </RowBetween>
+          {proposalData && proposalData.status === 'active' && !showVotingButtons && (
+            <GreyCard>
+              <TYPE.black>
+                Only UNI votes that were self delegated or delegated to another address before block{' '}
+                {proposalData.startBlock} are eligible for voting.{' '}
+                {showLinkForUnlock && (
+                  <span>
+                    <StyledInternalLink to="/vote">Unlock voting</StyledInternalLink> to prepare for the next proposal.
+                  </span>
+                )}
+              </TYPE.black>
+            </GreyCard>
+          )}
         </AutoColumn>
-        {!showUnlockVoting &&
-        availableVotes &&
-        JSBI.greaterThan(availableVotes?.raw, JSBI.BigInt(0)) &&
-        endDate &&
-        endDate > now ? (
+        {showVotingButtons ? (
           <RowFixed style={{ width: '100%', gap: '12px' }}>
             <ButtonPrimary
               padding="8px"
