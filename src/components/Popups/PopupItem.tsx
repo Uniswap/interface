@@ -73,6 +73,7 @@ export default function PopupItem({
     const {
       txn: { hash, success, summary }
     } = content
+
     popupContent = <TransactionPopup hash={hash} success={success} summary={summary} />
   } else if ('listUpdate' in content) {
     const {

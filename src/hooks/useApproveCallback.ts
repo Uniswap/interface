@@ -1,4 +1,5 @@
 import { MaxUint256 } from '@ethersproject/constants'
+//import { BigNumber } from '@ethersproject/bignumber'
 //import { TransactionResponse } from '@ethersproject/providers'
 import { Trade, TokenAmount, CurrencyAmount, HARMONY } from '@harmony-swoop/sdk'
 import { useCallback, useMemo } from 'react'
@@ -8,7 +9,7 @@ import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
-import { calculateGasMargin } from '../utils'
+//import { calculateGasMargin } from '../utils'
 import { useTokenContract } from './useContract'
 import { Version } from './useToggledVersion'
 
@@ -75,14 +76,16 @@ export function useApproveCallback(
     }
 
     let useExact = false
-    const estimatedGas = await tokenContract.methods.approve(spender, MaxUint256).estimateGas(wrapper.gasOptionsForEstimation()).catch(() => {
+    // There seems to be an issue with gas estimations - the estimation appear to be correct but the txs won't properly propagate/get accepted
+    // When using the default high gas limit of 6721900 txs will get confirmed tho
+    /*const estimatedGas = await tokenContract.methods.approve(spender, MaxUint256.toString()).estimateGas(wrapper.gasOptionsForEstimation()).catch(() => {
       // general fallback for tokens who restrict approval amounts
       useExact = true
       return tokenContract.methods.approve(spender, amountToApprove.raw.toString()).estimateGas(wrapper.gasOptionsForEstimation())
-    })
+    })*/
 
     let gasOptions = wrapper.gasOptions();
-    gasOptions.gasLimit = calculateGasMargin(estimatedGas);
+    //gasOptions.gasLimit = calculateGasMargin(BigNumber.from(estimatedGas)).toNumber();
 
     return tokenContract.methods
       .approve(spender, useExact ? amountToApprove.raw.toString() : MaxUint256.toString()).send(gasOptions)

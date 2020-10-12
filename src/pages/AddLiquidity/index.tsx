@@ -175,6 +175,8 @@ export default function AddLiquidity({
       value = null
     }
 
+    let valueString: string | null = (value) ? value.toString() : null;
+
     //see comment at Hmy.gasOptionsForEstimation()
     //const estimatedGasLimit = BigNumber.from(1000000000)
 
@@ -183,7 +185,7 @@ export default function AddLiquidity({
     method(...args)
       // @ts-ignore
       .send({
-        value: value.toString(),
+        value: valueString,
         ...wrapper.gasOptions()
       })
         .then(response => {
