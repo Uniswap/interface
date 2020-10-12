@@ -2,7 +2,6 @@ import React from 'react'
 // import { darken } from 'polished'
 // import { useTranslation } from 'react-i18next'
 
-import Switch from '../Switch'
 import styled from 'styled-components'
 
 const MarketsCard = styled.div`
@@ -15,7 +14,6 @@ const MarketsCard = styled.div`
 const MarketsCardHeader = styled.div`
   display: flex;
   flex-flow: inherit;
-  align-items: center;
   justify-content: space-between;
   font-size: 1.1rem;
   padding: 1rem 1.75rem;
@@ -67,7 +65,7 @@ function SupplyMarkets() {
 
   return (
     <MarketsCard>
-      <MarketsCardHeader>Supply Markets</MarketsCardHeader>
+      <MarketsCardHeader>Borrow Markets</MarketsCardHeader>
       <AssetWrap>
         <AssetWrapLabels>
           <AssetLabel textAlign={'left'}>Asset</AssetLabel>
@@ -80,31 +78,31 @@ function SupplyMarkets() {
             <div style={{ justifySelf: 'start' }}>BTC</div>
             <div>0.01%</div>
             <div>0 BTC</div>
-            <Switch />
+            <div>0.00</div>
           </AssetItem>
           <AssetItem>
             <div style={{ justifySelf: 'start' }}>BTC</div>
             <div>0.01%</div>
             <div>0 BTC</div>
-            <Switch />
+            <div>0.00</div>
           </AssetItem>
           <AssetItem>
             <div style={{ justifySelf: 'start' }}>BTC</div>
             <div>0.01%</div>
             <div>0 BTC</div>
-            <Switch />
+            <div>0.00</div>
           </AssetItem>
           <AssetItem>
             <div style={{ justifySelf: 'start' }}>BTC</div>
             <div>0.01%</div>
             <div>0 BTC</div>
-            <Switch />
+            <div>0.00</div>
           </AssetItem>
           <AssetItem>
             <div style={{ justifySelf: 'start' }}>BTC</div>
             <div>0.01%</div>
             <div>0 BTC</div>
-            <Switch />
+            <div>0.00</div>
           </AssetItem>
         </AssetItemWrap>
       </AssetWrap>

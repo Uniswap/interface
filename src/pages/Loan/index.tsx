@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import Summary from '../../components/Summary'
 import SupplyMarkets from '../../components/SupplyMarkets'
+import BorrowMarkets from '../../components/BorrowMarkets'
 // import { RowBetween } from '../../components/Row'
 // import Loader from '../../components/Loader'
 
@@ -21,9 +22,8 @@ const PageWrapper = styled(AutoColumn)`
 const MarketsWrap = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  align-items: center;
   justify-content: space-between;
-  align-items: center;
+  align-items: start;
   flex-direction: row;
   gap: 1.3rem;
   width: 100%;
@@ -52,7 +52,7 @@ export default function Loan() {
       <Summary></Summary>
       <MarketsWrap>
         <SupplyMarkets></SupplyMarkets>
-        <SupplyMarkets></SupplyMarkets>
+        <BorrowMarkets></BorrowMarkets>
       </MarketsWrap>
     </PageWrapper>
   )
