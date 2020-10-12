@@ -193,7 +193,7 @@ body {
 }
 
  a {
-   color: #2172E5;
+   color: ${colors(false).blue1}; 
  }
 
 * {
