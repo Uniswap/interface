@@ -58,6 +58,10 @@ const AssetItem = styled.div<{ justifyItems?: string }>`
   font-weight: 500;
   letter-spacing: 0;
   transition: none;
+  :hover {
+    border-left: 2px solid #1de9b6;
+    background: rgba(4, 169, 245, 0.05);
+  }
 `
 
 function SupplyMarkets() {

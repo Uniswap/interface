@@ -27,7 +27,6 @@ const SummaryFrame = styled.div`
 const SummaryElement = styled.div`
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
 `
 
 const SummaryTitle = styled.div`
