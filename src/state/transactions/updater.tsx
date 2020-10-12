@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useAddPopup, useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
 import { checkedTransaction, finalizeTransaction } from './actions'
-
 import { useActiveHmyReact } from '../../hooks'
 
 export function shouldCheck(
@@ -49,7 +48,9 @@ export default function Updater(): null {
         //console.log({library, transactions, hash})
         library.blockchain
           .getTransactionReceipt({txnHash: hash})
-          .then((receipt: any) => {
+          .then((response: any) => {
+            let receipt: any = response.result
+
             if (receipt) {
               dispatch(
                 finalizeTransaction({
@@ -72,7 +73,7 @@ export default function Updater(): null {
                 {
                   txn: {
                     hash,
-                    success: receipt.status === 1,
+                    success: receipt.status === '0x1',
                     summary: transactions[hash]?.summary
                   }
                 },

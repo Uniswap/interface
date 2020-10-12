@@ -1,4 +1,4 @@
-import { TransactionResponse } from '@ethersproject/providers'
+//import { TransactionResponse } from '@ethersproject/providers'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -10,7 +10,7 @@ import { useActiveHmyReact } from '../../hooks'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
-  response: TransactionResponse,
+  response: any,
   customData?: { summary?: string; approval?: { tokenAddress: string; spender: string } }
 ) => void {
   const { account, chainId } = useActiveHmyReact();
