@@ -44,7 +44,6 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
-import { getDefaultMainnetCurrency } from '../../utils'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -152,8 +151,6 @@ export default function Swap() {
     txHash: undefined
   })
 
-  const defaultCurrency = useCurrency(getDefaultMainnetCurrency())
-
   const formattedAmounts = {
     [independentField]: typedValue,
     [dependentField]: showWrap
@@ -258,11 +255,8 @@ export default function Swap() {
     setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
-  const [inputSelected, setInputSelected] = useState<boolean>(false)
-
   const handleInputSelect = useCallback(
     inputCurrency => {
-      setInputSelected(true)
       setApprovalSubmitted(false) // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency)
     },
@@ -276,6 +270,20 @@ export default function Swap() {
   const handleOutputSelect = useCallback(outputCurrency => onCurrencySelection(Field.OUTPUT, outputCurrency), [
     onCurrencySelection
   ])
+
+  if (chainId === ChainId.MAINNET || chainId === ChainId.ROPSTEN) {
+    return (
+      <>
+        <AppBody>
+          <Wrapper>
+            <SwapPoolTabs active={'swap'} />
+            Trading available only on Fuse network, use the bridge tab to move tokens to the Fuse network, then change
+            the network to Fuse to trade them
+          </Wrapper>
+        </AppBody>
+      </>
+    )
+  }
 
   return (
     <>
@@ -306,13 +314,7 @@ export default function Swap() {
               label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
               value={formattedAmounts[Field.INPUT]}
               showMaxButton={!atMaxAmountInput}
-              currency={
-                chainId === ChainId.MAINNET
-                  ? inputSelected
-                    ? currencies[Field.INPUT]
-                    : defaultCurrency
-                  : currencies[Field.INPUT]
-              }
+              currency={currencies[Field.INPUT]}
               onUserInput={handleTypeInput}
               onMax={handleMaxInput}
               onCurrencySelect={handleInputSelect}

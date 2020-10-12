@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import { ThemeContext } from 'styled-components'
-import { Pair } from 'uniswap-fuse-sdk'
+import { Pair, ChainId } from 'uniswap-fuse-sdk'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 
@@ -19,11 +19,11 @@ import { useActiveWeb3React } from '../../hooks'
 import { usePairs } from '../../data/Reserves'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import AppBody from '../AppBody'
-import { Dots } from '../../components/swap/styleds'
+import { Dots, Wrapper } from '../../components/swap/styleds'
 
 export default function Pool() {
   const theme = useContext(ThemeContext)
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
@@ -55,6 +55,20 @@ export default function Pool() {
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
   const hasV1Liquidity = useUserHasLiquidityInAllTokens()
+
+  if (chainId === ChainId.MAINNET || chainId === ChainId.ROPSTEN) {
+    return (
+      <>
+        <AppBody>
+          <Wrapper>
+            <SwapPoolTabs active={'pool'} />
+            Trading available only on Fuse network, use the bridge tab to move tokens to the Fuse network, then change
+            the network to Fuse to trade them
+          </Wrapper>
+        </AppBody>
+      </>
+    )
+  }
 
   return (
     <>

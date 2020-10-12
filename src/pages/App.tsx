@@ -21,6 +21,7 @@ import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import { RightFlashIcon, LeftFlashIcon } from '../components/FlashIcon'
 import Bridge from './Bridge'
 import { RedirectPathToBridge } from './Bridge/redirects'
+import { RedirectToDefault } from './redirects'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -85,7 +86,7 @@ export default function App() {
                 <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
                 <Route exact strict path="/bridge" component={Bridge} />
                 <Route exact strict path="/bridge/:inputCurrencyId" component={RedirectPathToBridge} />
-                <Route component={RedirectPathToSwapOnly} />
+                <Route component={RedirectToDefault} />
               </Switch>
             </Web3ReactManager>
             <Marginer />
