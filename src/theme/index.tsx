@@ -192,6 +192,10 @@ body {
   padding: 0;
 }
 
+ a {
+   color: #2172E5;
+ }
+
 * {
   box-sizing: border-box;
 }

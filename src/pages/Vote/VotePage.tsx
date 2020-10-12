@@ -17,8 +17,11 @@ import VoteModal from '../../components/vote/VoteModal'
 import { TokenAmount, JSBI } from '@uniswap/sdk'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { useActiveWeb3React } from '../../hooks'
-import { UNI, ZERO_ADDRESS, PROPOSAL_LENGTH_IN_DAYS } from '../../constants'
+import { UNI, ZERO_ADDRESS, PROPOSAL_LENGTH_IN_DAYS, COMMON_CONTRACT_NAMES } from '../../constants'
 import { isAddress, getEtherscanLink } from '../../utils'
+import { ApplicationModal } from '../../state/application/actions'
+import { useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
+import DelegateModal from '../../components/vote/DelegateModal'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -108,7 +111,12 @@ export default function VotePage({
   const [support, setSupport] = useState<boolean>(true)
 
   // modal for casting votes
-  const [showModal, setShowModal] = useState<boolean>(false)
+  const showVoteModal = useModalOpen(ApplicationModal.VOTE)
+  const toggleVoteModal = useToggleVoteModal()
+
+  // toggle for showing delegation modal
+  const showDelegateModal = useModalOpen(ApplicationModal.DELEGATE)
+  const toggelDelegateModal = useToggleDelegateModal()
 
   // get and format date from data
   const startTimestamp: number | undefined = useTimestampFromBlock(proposalData?.startBlock)
@@ -133,21 +141,19 @@ export default function VotePage({
   )
 
   // show links in propsoal details if content is an address
+  // if content is contract with common name, replace address with common name
   const linkIfAddress = (content: string) => {
     if (isAddress(content) && chainId) {
-      return <ExternalLink href={getEtherscanLink(chainId, content, 'address')}>{content}</ExternalLink>
+      const commonName = COMMON_CONTRACT_NAMES[content] ?? content
+      return <ExternalLink href={getEtherscanLink(chainId, content, 'address')}>{commonName}</ExternalLink>
     }
     return <span>{content}</span>
   }
 
   return (
     <PageWrapper gap="lg" justify="center">
-      <VoteModal
-        isOpen={showModal}
-        onDismiss={() => setShowModal(false)}
-        proposalId={proposalData?.id}
-        support={support}
-      />
+      <VoteModal isOpen={showVoteModal} onDismiss={toggleVoteModal} proposalId={proposalData?.id} support={support} />
+      <DelegateModal isOpen={showDelegateModal} onDismiss={toggelDelegateModal} title="Unlock Votes" />
       <ProposalInfo gap="lg" justify="start">
         <RowBetween style={{ width: '100%' }}>
           <ArrowWrapper to="/vote">
@@ -162,7 +168,7 @@ export default function VotePage({
               {endDate && endDate < now
                 ? 'Voting ended ' + (endDate && endDate.toLocaleString(DateTime.DATETIME_FULL))
                 : proposalData
-                ? 'Voting ends approximately' + (endDate && endDate.toLocaleString(DateTime.DATETIME_FULL))
+                ? 'Voting ends approximately ' + (endDate && endDate.toLocaleString(DateTime.DATETIME_FULL))
                 : ''}
             </TYPE.main>
             {showUnlockVoting && endDate && endDate > now && (
@@ -170,7 +176,7 @@ export default function VotePage({
                 style={{ width: 'fit-content' }}
                 padding="8px"
                 borderRadius="8px"
-                onClick={() => setShowModal(true)}
+                onClick={toggelDelegateModal}
               >
                 Unlock Voting
               </ButtonPrimary>
@@ -188,7 +194,7 @@ export default function VotePage({
               borderRadius="8px"
               onClick={() => {
                 setSupport(true)
-                setShowModal(true)
+                toggleVoteModal()
               }}
             >
               Vote For
@@ -198,7 +204,7 @@ export default function VotePage({
               borderRadius="8px"
               onClick={() => {
                 setSupport(false)
-                setShowModal(true)
+                toggleVoteModal()
               }}
             >
               Vote Against
@@ -260,7 +266,7 @@ export default function VotePage({
           })}
         </AutoColumn>
         <AutoColumn gap="md">
-          <TYPE.mediumHeader fontWeight={600}>Overview</TYPE.mediumHeader>
+          <TYPE.mediumHeader fontWeight={600}>Description</TYPE.mediumHeader>
           <MarkDownWrapper>
             <ReactMarkdown source={proposalData?.description} />
           </MarkDownWrapper>

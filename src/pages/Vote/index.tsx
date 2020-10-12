@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 import { TYPE, ExternalLink } from '../../theme'
@@ -19,6 +19,8 @@ import { JSBI, TokenAmount, ChainId } from '@uniswap/sdk'
 import { shortenAddress, getEtherscanLink } from '../../utils'
 import Loader from '../../components/Loader'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
+import { useModalOpen, useToggleDelegateModal } from '../../state/application/hooks'
+import { ApplicationModal } from '../../state/application/actions'
 
 const PageWrapper = styled(AutoColumn)``
 
@@ -102,7 +104,10 @@ const EmptyProposals = styled.div`
 
 export default function Vote() {
   const { account, chainId } = useActiveWeb3React()
-  const [showModal, setShowModal] = useState<boolean>(false)
+
+  // toggle for showing delegation modal
+  const showDelegateModal = useModalOpen(ApplicationModal.DELEGATE)
+  const toggelDelegateModal = useToggleDelegateModal()
 
   // get data to list all proposals
   const allProposals: ProposalData[] = useAllProposalData()
@@ -120,8 +125,8 @@ export default function Vote() {
   return (
     <PageWrapper gap="lg" justify="center">
       <DelegateModal
-        isOpen={showModal}
-        onDismiss={() => setShowModal(false)}
+        isOpen={showDelegateModal}
+        onDismiss={toggelDelegateModal}
         title={showUnlockVoting ? 'Unlock Votes' : 'Update Delegation'}
       />
       <TopSection gap="md">
@@ -161,7 +166,7 @@ export default function Vote() {
               style={{ width: 'fit-content' }}
               padding="8px"
               borderRadius="8px"
-              onClick={() => setShowModal(true)}
+              onClick={toggelDelegateModal}
             >
               Unlock Voting
             </ButtonPrimary>
@@ -195,7 +200,7 @@ export default function Vote() {
                   >
                     {userDelegatee === account ? 'Self' : shortenAddress(userDelegatee)}
                   </StyledExternalLink>
-                  <TextButton onClick={() => setShowModal(true)} style={{ marginLeft: '4px' }}>
+                  <TextButton onClick={toggelDelegateModal} style={{ marginLeft: '4px' }}>
                     (edit)
                   </TextButton>
                 </AddressButton>

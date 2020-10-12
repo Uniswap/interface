@@ -51,6 +51,14 @@ export function useToggleSelfClaimModal(): () => void {
   return useToggleModal(ApplicationModal.SELF_CLAIM)
 }
 
+export function useToggleDelegateModal(): () => void {
+  return useToggleModal(ApplicationModal.DELEGATE)
+}
+
+export function useToggleVoteModal(): () => void {
+  return useToggleModal(ApplicationModal.VOTE)
+}
+
 // returns a function that allows adding a popup
 export function useAddPopup(): (content: PopupContent, key?: string) => void {
   const dispatch = useDispatch()
