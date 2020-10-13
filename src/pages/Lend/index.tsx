@@ -41,7 +41,7 @@ const MarketsWrap = styled.div`
 //   background-color: ${({ theme }) => theme.bg1};
 // `
 
-export default function Loan() {
+export default function Lend() {
   // const DataRow = styled(RowBetween)`
   //   ${({ theme }) => theme.mediaWidth.upToSmall`
   //   flex-direction: column;
