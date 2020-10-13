@@ -31,7 +31,6 @@ export class CToken extends Token {
   public readonly isListed?: boolean
   public readonly collateralFactorMantissa?: number
 
-
   constructor(chainId: ChainId, cAddress: string, address: string, decimals: number, cSymbol?: string, cName?: string, symbol?: string, name?: string,
     supplyRatePerBlock?: number, borrowRatePerBlock?: number, supplyBalance?: number, borrowBalance?: number,
     liquidity?: number, canBeCollateral?: boolean, underlyingPrice?: number, isListed?: boolean, collateralFactorMantissa?: number) {
