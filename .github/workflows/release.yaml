@@ -1,8 +1,7 @@
 name: Release
 on:
-  # every morning
-#  schedule:
-#    - cron:  '0 12 * * 1-4'
+  schedule:
+    - cron:  '0 12 * * 1-4' # every day 12:00 UTC Monday-Thursday
 
   # manual trigger
   workflow_dispatch:
@@ -42,8 +41,6 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Build the IPFS bundle
         run: yarn build

@@ -192,6 +192,10 @@ body {
   padding: 0;
 }
 
+ a {
+   color: ${colors(false).blue1}; 
+ }
+
 * {
   box-sizing: border-box;
 }
