@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import Summary from '../../components/Summary'
 import SupplyMarkets from '../../components/SupplyMarkets'
 import BorrowMarkets from '../../components/BorrowMarkets'
+import { useCTokens } from '../../data/CToken'
 // import { RowBetween } from '../../components/Row'
 // import Loader from '../../components/Loader'
 
@@ -47,6 +48,14 @@ export default function Loan() {
   // `};
   // `
 
+  let cTokenList: [number, string, string, number, string, string, string, string][] = [
+    [42, '0x4a77faee9650b09849ff459ea1476eab01606c7a', '0x482dC9bB08111CB875109B075A40881E48aE02Cd', 18, 'cBAT', 'Compound BAT', 'BAT', 'Basic Attention Token'], // bat
+    [42, '0x4a92e71227d294f041bd82dd8f78591b75140d63', '0xb7a4F3E9097C08dA09517b5aB877F7a917224ede', 6, 'cUSDC', 'Compound USDC', 'USDC', 'USD Coin'], // usdc
+    [42, '0x41b5844f4680a8c38fbb695b7f9cfd1f64474a72', '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'cETH', 'Compound ETH', 'WETH', 'Wrapped Ether'] // eth
+  ]
+  let result = useCTokens(cTokenList, undefined)
+  console.log('rrrresult', result)
+  
   return (
     <PageWrapper gap="lg" justify="center">
       <Summary></Summary>
