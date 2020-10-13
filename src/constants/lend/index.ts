@@ -1,6 +1,7 @@
 import { Interface } from '@ethersproject/abi'
 import { ChainId } from '@uniswap/sdk'
 import COMPTROLLER_ABI from './comptroller.json'
+import CHAINLINK_PRICE_ORACLE_PROXY_ABI from './chainlink_price_oracle_proxy.json'
 
 const COMPTROLLER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b',
@@ -8,6 +9,14 @@ const COMPTROLLER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.RINKEBY]: '0x2eaa9d77ae4d8f9cdd9faacd44016e746485bddb',
   [ChainId.GÖRLI]: '0x627ea49279fd0de89186a58b8758ad02b6be2867',
   [ChainId.KOVAN]: '0x5eae89dc1c671724a672ff0630122ee834098657'
+}
+
+const ORACLE_ADDRESSES: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: '0x0000000000000000000000000000000000000000',
+  [ChainId.ROPSTEN]: '0x0000000000000000000000000000000000000000',
+  [ChainId.RINKEBY]: '0x0000000000000000000000000000000000000000',
+  [ChainId.GÖRLI]: '0x0000000000000000000000000000000000000000',
+  [ChainId.KOVAN]: '0xbBdE93962Ca9fe39537eeA7380550ca6845F8db7'
 }
 
 const CTOKEN_LISTS: { [chainId in ChainId]: [string, string, number, string, string, string, string][] } = {
@@ -28,5 +37,6 @@ const CTOKEN_LISTS: { [chainId in ChainId]: [string, string, number, string, str
 }
 
 const COMPTROLLER_INTERFACE = new Interface(COMPTROLLER_ABI)
+const CHAINLINK_PRICE_ORACLE_PROXY = new Interface(CHAINLINK_PRICE_ORACLE_PROXY_ABI)
 
-export { COMPTROLLER_ADDRESSES, CTOKEN_LISTS, COMPTROLLER_INTERFACE, COMPTROLLER_ABI }
+export { COMPTROLLER_ADDRESSES, ORACLE_ADDRESSES, CTOKEN_LISTS, COMPTROLLER_INTERFACE, CHAINLINK_PRICE_ORACLE_PROXY, COMPTROLLER_ABI, CHAINLINK_PRICE_ORACLE_PROXY_ABI }
