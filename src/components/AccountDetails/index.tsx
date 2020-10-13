@@ -4,14 +4,14 @@ import styled, { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch } from '../../state'
 import { clearAllTransactions } from '../../state/transactions/actions'
-import { shortenAddress, getEtherscanLinkText } from '../../utils'
+import { shortenAddress, getExplorerLinkText } from '../../utils'
 import { AutoRow } from '../Row'
 import Copy from './Copy'
 import Transaction from './Transaction'
 
 import { SUPPORTED_WALLETS } from '../../constants'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { getEtherscanLink } from '../../utils'
+import { getExplorerLink } from '../../utils'
 import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
@@ -355,10 +355,10 @@ export default function AccountDetails({
                           <AddressLink
                             hasENS={!!ENSName}
                             isENS={true}
-                            href={chainId && getEtherscanLink(chainId, ENSName, 'address')}
+                            href={chainId && getExplorerLink(chainId, ENSName, 'address')}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>{getEtherscanLinkText(chainId)}</span>
+                            <span style={{ marginLeft: '4px' }}>{getExplorerLinkText(chainId)}</span>
                           </AddressLink>
                         )}
                       </div>
@@ -377,10 +377,10 @@ export default function AccountDetails({
                           <AddressLink
                             hasENS={!!ENSName}
                             isENS={false}
-                            href={getEtherscanLink(chainId, account, 'address')}
+                            href={getExplorerLink(chainId, account, 'address')}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>{getEtherscanLinkText(chainId)}</span>
+                            <span style={{ marginLeft: '4px' }}>{getExplorerLinkText(chainId)}</span>
                           </AddressLink>
                         )}
                       </div>

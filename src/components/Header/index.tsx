@@ -109,7 +109,7 @@ const BalanceText = styled(Text)`
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
-  [ChainId.MAINNET]: 'Mainnet',
+  [ChainId.MAINNET]: 'Ethereum',
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ROPSTEN]: 'Ropsten',
   [ChainId.GÖRLI]: 'Görli',

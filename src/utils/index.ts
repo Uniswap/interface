@@ -28,7 +28,7 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   122: 'fuse.'
 }
 
-export function getEtherscanLink(chainId: ChainId, data: string, type: 'transaction' | 'token' | 'address'): string {
+export function getExplorerLink(chainId: ChainId, data: string, type: 'transaction' | 'token' | 'address'): string {
   let prefix
 
   if (chainId === 122) {
@@ -51,7 +51,7 @@ export function getEtherscanLink(chainId: ChainId, data: string, type: 'transact
   }
 }
 
-export function getEtherscanLinkText(chainId: number): string {
+export function getExplorerLinkText(chainId: number): string {
   switch (chainId) {
     case ChainId.FUSE:
       return 'View on Fuse Explorer'
