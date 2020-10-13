@@ -73,7 +73,7 @@ export function useCTokens(cTokenList: [number, string, string, number, string, 
     return supplyRatePerBlockResults.map((supplyRatePerBlockResult, i) => {
       const { result: supplyRatePerBlockValue, loading: supplyRatePerBlockResultLoading } = supplyRatePerBlockResult
       const { result: borrowRatePerBlockValue, loading: borrowRatePerBlockResultLoading } = borrowRatePerBlockResults[i]
-      const { result: accountSnapshotValue, loading: accountSnapshotResultLoading } = accountSnapshotResults[i]
+      const { result: accountSnapshotValue, loading: accountSnapshotResultLoading } = accountSnapshotResults.length !== 0 ? accountSnapshotResults[i] : { result: [0, 0, 0, 0], loading: false }
       const { result: cashValue, loading: cashResultLoading } = cashResults[i]
 
       if (supplyRatePerBlockResultLoading) return [CTokenState.LOADING, null]
